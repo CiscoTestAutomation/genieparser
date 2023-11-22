@@ -1,0 +1,13 @@
+9600-HA#show install rollback id 5
+
+Rollback id - 5 (Created on 2021-10-21 16:34:06.000000000 +0000)
+Label: No Label
+Description: No Description
+Reload required: NO
+State (St): I - Inactive, U - Activated & Uncommitted,
+            C - Activated & Committed, D - Deactivated & Uncommitted
+--------------------------------------------------------------------------------
+Type  St   Filename/Version
+--------------------------------------------------------------------------------
+IMG   C    17.08.01.0.148528
+SMU   C    /flash1/user/cat9k_iosxe.2021-10-06_22.52_shidogra.53.CSCxx12353.SSA.smu.bin

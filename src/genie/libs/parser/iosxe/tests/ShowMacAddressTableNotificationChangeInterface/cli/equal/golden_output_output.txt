@@ -1,0 +1,5 @@
+show mac address-table notification change interface HundredGigE 2/0/27
+MAC Notification Feature is Disabled on the switch
+Interface                      MAC Added Trap MAC Removed Trap
+---------                      -------------- ----------------
+HundredGigE2/0/27              Disabled       Disabled        

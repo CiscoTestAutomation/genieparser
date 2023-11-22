@@ -1,0 +1,43 @@
+Profile Name: CiscoTAC-1
+    Profile status: ACTIVE
+    Profile mode: Full Reporting
+    Reporting Data: Smart Call Home, Smart Licensing
+    Preferred Message Format: xml
+    Message Size Limit: 3145728 Bytes
+    Transport Method: http
+    HTTP  address: http://www.test1.com
+    Other address(es): default
+
+    Periodic configuration info message is scheduled every 1 day of the month at 09:15
+
+    Periodic inventory info message is scheduled every 1 day of the month at 09:00
+
+    Alert-group               Severity
+    ------------------------  ------------
+    crash                     debugging
+    diagnostic                minor
+    environment               warning
+    inventory                 normal
+
+    Syslog-Pattern            Severity
+    ------------------------  ------------
+    APF-.-WLC_.*              warning
+    .*                        major
+
+Profile Name: sds
+    Profile status: ACTIVE
+    Profile mode: Full Reporting
+    Reporting Data: Smart Call Home
+    Preferred Message Format: xml
+    Message Size Limit: 3145728 Bytes
+    Transport Method: http and email
+    HTTP  address: http://www.test1.com
+    Email address(es): Not yet set up
+
+    Alert-group               Severity
+    ------------------------  ------------
+    N/A                       N/A
+
+    Syslog-Pattern            Severity
+    ------------------------  ------------
+    N/A                       N/A

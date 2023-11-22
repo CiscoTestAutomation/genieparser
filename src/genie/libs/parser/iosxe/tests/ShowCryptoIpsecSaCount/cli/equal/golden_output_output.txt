@@ -1,0 +1,1 @@
+IPsec SA total: 8, active: 8, rekeying: 0, unused: 0, invalid: 0

@@ -1,0 +1,11 @@
+Stackwise Virtual Link(SVL) Neighbors Information:
+--------------------------------------------------
+Switch  SVL     Local Port                         Remote Port
+------  ---     ----------                         -----------
+1       1       HundredGigE1/1/0/19                HundredGigE2/1/0/23              
+                HundredGigE1/5/0/17                HundredGigE2/1/0/24 
+                FiftyGigE1/6/0/33               
+2       1       HundredGigE2/1/0/23                HundredGigE1/1/0/19              
+                HundredGigE2/1/0/24                HundredGigE1/5/0/17   
+                FiftyGigE2/6/0/29
+

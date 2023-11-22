@@ -1,0 +1,13 @@
+========================================
+          Umbrella Statistics           
+========================================
+ Total Packets               : 57057
+ DNSCrypt queries            : 0
+ DNSCrypt responses          : 0
+ DNS queries                 : 32321
+ DNS bypassed queries(Regex) : 0
+ DNS responses(Umbrella)     : 24693
+ DNS responses(Other)        : 37
+ Aged queries                : 7628
+ Dropped pkts                : 0
+

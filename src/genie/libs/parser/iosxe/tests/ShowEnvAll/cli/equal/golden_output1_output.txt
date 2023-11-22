@@ -1,0 +1,28 @@
+show env all
+Sensor List: Environmental Monitoring 
+ Sensor          Location        State               Reading       Range(min-max)       
+ PS1 Vout        1               GOOD               12000 mV          na
+ PS1 Curout      1               GOOD               25000 mA          na
+ PS1 Powout      1               GOOD              300000 mW          na
+ PS1 Hotspot     1               GOOD                  24 Celsius     na
+ PS1 Fan Status  1               GOOD               43008 rpm         na
+ PS1 Status word 1               GOOD                   0             na
+ PS2 Vout        1               NOT PRESENT            0 mV          na
+ PS2 CURout      1               NOT PRESENT            0 mA          na
+ PS2 Powout      1               NOT PRESENT            0 mW          na
+ PS2 Hotspot     1               NOT PRESENT            0 Celsius     na
+ PS2 Fan Status  1               NOT PRESENT            0 rpm         na
+ PS2 Status word 1               NOT PRESENT            0             na
+ SYSTEM INLET    1               GREEN                 23 Celsius   0 - 56
+ SYSTEM OUTLET   1               GREEN                 28 Celsius   0 - 125
+ SYSTEM HOTSPOT  1               GREEN                 38 Celsius   0 - 125
+
+Switch   FAN     Speed   State   Airflow direction
+---------------------------------------------------
+  1       1     5160      OK     Front to Back
+  1       2     5205      OK     Front to Back
+
+SW  PID                 Serial#     Status           Sys Pwr  PoE Pwr  Watts
+--  ------------------  ----------  ---------------  -------  -------  -----
+1A  PWR-C6-125WAC       LIT23283LP3  OK              Good     n/a      125 
+1B  Not Present

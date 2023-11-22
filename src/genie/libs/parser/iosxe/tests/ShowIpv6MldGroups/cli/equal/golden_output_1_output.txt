@@ -1,0 +1,6 @@
+show ipv6 mld groups
+MLD Connected Group Membership
+Group Address                           Interface                                             Uptime    Expires
+FF1E::1                                 Te1/0/3                                              00:01:49  00:02:53
+FF1E::2                                 Te1/0/3                                              00:01:49  00:02:53
+FF1E::3                                 Te1/0/3                                              00:01:49  00:02:53

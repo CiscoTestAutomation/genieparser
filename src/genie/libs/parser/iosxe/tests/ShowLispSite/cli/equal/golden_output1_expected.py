@@ -1,132 +1,83 @@
 expected_output = {
-    "site_names": {
-        "site_uci": {
-            1: {
-                "last_register": "never",
-                "up": "no",
-                "who_last_registered": "--",
-                "inst_id": 4097,
-                "eid_prefix": "10.10.64.0/27",
-            },
-            2: {
-                "last_register": "2w4d",
-                "up": "yes#",
-                "who_last_registered": "10.1.64.71:36820",
-                "inst_id": 4097,
-                "eid_prefix": "10.10.64.2/32",
-            },
-            3: {
-                "last_register": "2w4d",
-                "up": "yes#",
-                "who_last_registered": "10.1.64.71:36820",
-                "inst_id": 4097,
-                "eid_prefix": "10.10.64.6/32",
-            },
-            4: {
-                "last_register": "2w4d",
-                "up": "yes#",
-                "who_last_registered": "10.1.64.106:51580",
-                "inst_id": 4097,
-                "eid_prefix": "10.10.64.7/32",
-            },
-            5: {
-                "last_register": "2w4d",
-                "up": "yes#",
-                "who_last_registered": "10.1.64.106:51580",
-                "inst_id": 4097,
-                "eid_prefix": "10.10.64.18/32",
-            },
-            6: {
-                "last_register": "never",
-                "up": "no",
-                "who_last_registered": "--",
-                "inst_id": 4099,
-                "eid_prefix": "10.19.22.0/26",
-            },
-            7: {
-                "last_register": "02:05:11",
-                "up": "yes#",
-                "who_last_registered": "10.1.64.71:36820",
-                "inst_id": 4099,
-                "eid_prefix": "10.19.22.2/32",
-            },
-            8: {
-                "last_register": "2d16h",
-                "up": "yes#",
-                "who_last_registered": "10.1.64.106:51580",
-                "inst_id": 4099,
-                "eid_prefix": "10.19.22.3/32",
-            },
-            9: {
-                "last_register": "00:33:39",
-                "up": "yes#",
-                "who_last_registered": "10.1.64.71:36820",
-                "inst_id": 4099,
-                "eid_prefix": "10.19.22.21/32",
-            },
-            10: {
-                "last_register": "never",
-                "up": "no",
-                "who_last_registered": "--",
-                "inst_id": 4099,
-                "eid_prefix": "10.19.22.64/27",
-            },
-            11: {
-                "last_register": "4w3d",
-                "up": "yes#",
-                "who_last_registered": "10.1.64.76:30688",
-                "inst_id": 4099,
-                "eid_prefix": "10.19.22.66/32",
-            },
-            12: {
-                "last_register": "never",
-                "up": "no",
-                "who_last_registered": "--",
-                "inst_id": 4099,
-                "eid_prefix": "10.19.22.96/27",
-            },
-            13: {
-                "last_register": "3w5d",
-                "up": "yes#",
-                "who_last_registered": "10.1.64.71:36820",
-                "inst_id": 4099,
-                "eid_prefix": "10.19.22.112/32",
-            },
-            14: {
-                "last_register": "never",
-                "up": "no",
-                "who_last_registered": "--",
-                "inst_id": 4099,
-                "eid_prefix": "2001:DB8:211:F5D7::/66",
-            },
-            15: {
-                "last_register": "never",
-                "up": "no",
-                "who_last_registered": "--",
-                "inst_id": 4099,
-                "eid_prefix": "2001:DB8:211:F5D7:4000::/66",
-            },
-            16: {
-                "last_register": "4w3d",
-                "up": "yes#",
-                "who_last_registered": "10.1.64.76:30688",
-                "inst_id": 4099,
-                "eid_prefix": "2001:DB8:4228:510:502A:1ADA:1ADA:1ADA/128",
-            },
-            17: {
-                "last_register": "never",
-                "up": "no",
-                "who_last_registered": "--",
-                "inst_id": 4100,
-                "eid_prefix": "10.19.20.0/25",
-            },
-            18: {
-                "last_register": "01:05:05",
-                "up": "yes#",
-                "who_last_registered": "10.1.64.106:51580",
-                "inst_id": 4100,
-                "eid_prefix": "10.19.20.55/32",
-            },
+    'lisp_id': {
+        0: {
+            'site_name': {
+                'Shire': {
+                    'instance_id': {
+                        0: {
+                            'eid_prefix': {
+                                '1.1.1.0/24': {
+                                    'last_registered': 'never',
+                                    'who_last_registered': '--',
+                                    'up': 'no'
+                                    }
+                                }
+                            },
+                        4100: {
+                            'eid_prefix': {
+                                '192.168.1.0/24': {
+                                    'last_registered': 'never',
+                                    'who_last_registered': '--',
+                                    'up': 'no'
+                                    },
+                                '192.168.1.71/32': {
+                                    'last_registered': '00:02:12',
+                                    'who_last_registered': '11.11.11.11',
+                                    'port': 33079,
+                                    'up': 'yes'
+                                    },
+                                '194.168.1.0/24': {
+                                    'last_registered': 'never',
+                                    'who_last_registered': '--',
+                                    'up': 'no'
+                                    },
+                                '194.168.1.72/32': {
+                                    'last_registered': '00:02:08',
+                                    'who_last_registered': '22.22.22.22',
+                                    'port': 27643,
+                                    'up': 'yes'
+                                    },
+                                '2001:192:168:1::/64': {
+                                    'last_registered': 'never',
+                                    'who_last_registered': '--',
+                                    'up': 'no'
+                                    },
+                                '2001:192:168:1::71/128': {
+                                    'last_registered': '00:02:12',
+                                    'who_last_registered': '11.11.11.11',
+                                    'port': 33079 ,
+                                    'up': 'yes'
+                                    },
+                                '2001:194:168:1::/64': {
+                                    'last_registered': 'never',
+                                    'who_last_registered': '--',
+                                    'up': 'no'
+                                    },
+                                '2001:194:168:1::72/128': {
+                                    'last_registered': '00:02:08',
+                                    'who_last_registered': '22.22.22.22',
+                                    'port': 27643,
+                                    'up': 'yes'
+                                    }
+                                }
+                            },
+                        4101: {
+                            'eid_prefix': {
+                                '193.168.1.0/24': {
+                                    'last_registered': 'never',
+                                    'who_last_registered': '--',
+                                    'up': 'no'
+                                    },
+                                '2001:193:168:1::/64': {
+                                    'last_registered': 'never',
+                                    'who_last_registered': '--',
+                                    'up': 'no'
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
-}

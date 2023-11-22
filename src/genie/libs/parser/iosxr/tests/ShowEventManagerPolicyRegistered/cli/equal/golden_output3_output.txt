@@ -1,0 +1,4 @@
+RP/0/RSP0/CPU0:ios#show event manager policy registered user | include eem_cli_exec_file.tcl
+Thu Dec  2 16:35:52.373 UTC
+1    script    user    syslog              Off   Wed Sep 15 11:29:18 2021  eem_cli_exec_file.tcl
+

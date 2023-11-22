@@ -1,0 +1,8 @@
+LISP remote-locator-set default-etr-locator-set-ipv4 Information
+RLOC Pri/Wgt/Metric Inst Domain-ID/MH-ID ETR SI/ID
+10.0.1.2 255/1 /- 4098 0/0 Service SS/1
+10.0.1.2 1/1 /- 4099 0/0 Service SS/1
+10.0.1.5 1/1 /0 4098 0/0 Default P /-
+10.0.1.5 1/1 /0 4099 0/0 Default P /-
+10.0.11.2 255/1 /- 4098 0/0 Service SS/1
+10.0.11.2 255/1 /- 4099 0/0 Service SS/1

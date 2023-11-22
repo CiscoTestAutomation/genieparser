@@ -1,0 +1,18 @@
+RP/0/RP0/CPU0:ios#show rip ipv6 statistics
+Thu Nov 18 15:29:33.474 UTC
+
+RIPv6 statistics:
+Total messages sent:        105706
+Message send failures:      0
+Regular updates sent:       105702
+Queries responsed to:       0
+RIB updates:                6
+Total packets received:     69131
+Discarded packets:          16293
+Discarded routes:           0
+Packet received at standby: 0
+Number of routes allocated: 5
+Number of paths allocated:  5
+Route malloc failures:      0
+Path malloc failures:       0
+

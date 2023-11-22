@@ -1,0 +1,62 @@
+Device: 70d3.79be.7557 on port GigabitEthernet3/0/12
+----------------------------------------------------------------------------
+Proto Type:Name                       Len Value                       Text
+DHCP    60:class-identifier            10 3C 08 63 69 73 63 6F 70 6E  <.ciscopn
+                                          70                          p
+DHCP    55:parameter-request-list      10 37 08 01 06 0F 2C 03 21 96  7....,.!^V
+                                          2B                          +
+DHCP    12:host-name                   14 0C 0C 53 69 68 73 69 68 69  ..Sihsihi
+                                          73 72 72 72 72              srrrr
+DHCP    61:client-identifier           32 3D 1E 00 63 69 73 63 6F 2D  =..cisco-
+                                          37 30 64 33 2E 37 39 62 65  70d3.79be
+                                          2E 37 35 35 37 2D 47 69 31  .7557-Gi1
+                                          2F 30 2F 31 31              /0/11
+CDP     22:mgmt-address-type           17 00 16 00 11 00 00 00 01 01  .........
+                                          01 CC 00 04 45 45 00 3B     .L..EE.;
+CDP     11:duplex-type                  5 00 0B 00 05 01              .....
+CDP      9:vtp-mgmt-domain-type         9 00 09 00 09 63 68 65 63 6B  ....check
+CDP      4:capabilities-type            8 00 04 00 08 00 00 00 28     .......(
+CDP      3:port-id-type                25 00 03 00 19 47 69 67 61 62  ....Gigab
+                                          69 74 45 74 68 65 72 6E 65  itEtherne
+                                          74 31 2F 30 2F 31 31        t1/0/11
+CDP      2:address-type                17 00 02 00 11 00 00 00 01 01  .........
+                                          01 CC 00 04 45 45 00 3B     .L..EE.;
+CDP      6:platform-type               19 00 06 00 13 63 69 73 63 6F  ....cisco
+                                          20 43 39 33 30 30 2D 32 34   C9300-24
+                                          50                          P
+CDP      5:version-type               299 00 05 01 2B 43 69 73 63 6F  ...+Cisco
+                                          20 49 4F 53 20 53 6F 66 74   IOS Soft
+                                          77 61 72 65 20 5B 42 65 6E  ware [Ben
+                                          67 61 6C 75 72 75 5D 2C 20  galuru], 
+                                          43 61 74 61 6C 79 73 74 20  Catalyst 
+                                          4C 33 20 53 77 69 74 63 68  L3 Switch
+                                          20 53 6F 66 74 77 61 72 65   Software
+                                          20 28 43 41 54 39 4B 5F 49   (CAT9K_I
+                                          4F 53 58 45 29 2C 20 45 78  OSXE), Ex
+                                          70 65 72 69 6D 65 6E 74 61  perimenta
+                                          6C 20 56 65 72 73 69 6F 6E  l Version
+                                          20 31 37 2E 37 2E 32 30 32   17.7.202
+                                          31 30 38 30 37 3A 31 39 34  10807:194
+                                          39 35 35 20 5B 53 32 43 2D  955 [S2C-
+                                          62 75 69 6C 64 2D 70 6F 6C  build-pol
+                                          61 72 69 73 5F 64 65 76 2D  aris_dev-
+                                          31 34 33 38 33 30 2D 2F 6E  143830-/n
+                                          6F 62 61 63 6B 75 70 2F 6D  obackup/m
+                                          63 70 72 65 2F 42 4C 44 2D  cpre/BLD-
+                                          42 4C 44 5F 50 4F 4C 41 52  BLD_POLAR
+                                          49 53 5F 44 45 56 5F 4C 41  IS_DEV_LA
+                                          54 45 53 54 5F 32 30 32 31  TEST_2021
+                                          30 38 30 37 5F 31 39 34 37  0807_1947
+                                          35 38 20 31 31 39 5D 0A 43  58 119].C
+                                          6F 70 79 72 69 67 68 74 20  opyright 
+                                          28 63 29 20 31 39 38 36 2D  (c) 1986-
+                                          32 30 32 31 20 62 79 20 43  2021 by C
+                                          69 73 63 6F 20 53 79 73 74  isco Syst
+                                          65 6D 73 2C 20 49 6E 63 2E  ems, Inc.
+                                          0A 43 6F 6D 70 69 6C 65 64  .Compiled
+                                          20 53 61 74 20 30 37 2D 41   Sat 07-A
+                                          75 67 2D 32 31 20 31 39 3A  ug-21 19:
+                                          30 34 20 62 79 20 6D 63 70  04 by mcp
+                                          72 65                       re
+CDP      1:device-name                 18 00 01 00 12 6E 79 71 75 69  ....nyqui
+                                          73 74 32 2D 73 6A 63 32 34    

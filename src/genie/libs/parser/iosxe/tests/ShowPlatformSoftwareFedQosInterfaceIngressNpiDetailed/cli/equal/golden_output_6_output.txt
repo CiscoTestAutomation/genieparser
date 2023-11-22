@@ -1,0 +1,53 @@
+***********************************************************************************
+ [HundredGigE1/0/3, map1_table, Ingress]: CGID = 0x92B890
+***********************************************************************************
+  cgid: 0x92B890
+  No of classes: 1
+  TCG ref count: 1
+  Filter state: UP TO DATE
+  VMR state: DIRTY
+
+  ============================================================
+   Classmap Information
+  ============================================================
+  Class name: class-default(cgid: 0x92B890, clid: 0x639)
+    TCCG ref count: 1
+    NULL Bind count: 1
+    Class seq no.: 0xFFFFFFFF
+    No of child classes: 0
+    Filter: FILTER_MATCH_ANY
+      Value: 0x0
+
+  ============================================================
+   TCG Information
+  ============================================================
+  NPI TCG Values:
+    Config state: VALID
+    Operational state: IN HARDWARE
+    Parent Info: [0x0, 0x0, 0]
+    No of Child TCGs: 0
+    Mark Action count: 1
+    Police Action count: 1
+    Queue Action count: 0
+    No of TCCGs: 1
+
+   TCCG 0:
+    Class-map name: class-default(0x639)
+    Child cgid: 0x0
+    Null Bind: True
+      Action 0
+        Action Type: Marking
+        Marking Method : Tablemap
+        QoS Group: 255
+        Traffic Class: 255
+        Discard Class: 255
+        Table id: 0x3B8D
+        Table Name: t1
+        Map: L2 COS -> Traffic Class
+          1 -> 7
+          2 -> 6
+          3 -> 5
+          4 -> 4
+          5 -> 2
+        Default value: 0
+        Default Behavior: Copy

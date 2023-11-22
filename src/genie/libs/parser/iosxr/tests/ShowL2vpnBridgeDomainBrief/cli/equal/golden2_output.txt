@@ -1,0 +1,5 @@
+Bridge Group:Bridge-Domain Name  ID    State          Num ACs/up   Num PWs/up    Num PBBs/up Num VNIs/up
+-------------------------------- ----- -------------- ------------ ------------- ----------- -----------
+Dasdnalsdnalk:D-dasdasdasdwa
+                                 0     up             1/1          1/1           0/0         0/0
+d:s-VLAN_20                      1     up             2/2          1/1           0/0         0/0

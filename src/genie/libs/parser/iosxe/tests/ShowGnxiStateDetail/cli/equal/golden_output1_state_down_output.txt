@@ -1,0 +1,51 @@
+Settings
+========
+  Server: Disabled
+  Server port: 50052
+  Secure server: Disabled
+  Secure server port: 9339
+  Secure client authentication: Disabled
+  Secure trustpoint:
+  Secure client trustpoint:
+  Secure password authentication: Disabled
+
+GNMI
+====
+  Admin state: Disabled
+  Oper status: Down
+  State: Provisioned
+
+  gRPC Server
+  -----------
+    Admin state: Disabled
+    Oper status: Down
+
+  Configuration service
+  ---------------------
+    Admin state: Disabled
+    Oper status: Down
+
+  Telemetry service
+  -----------------
+    Admin state: Disabled
+    Oper status: Down
+
+GNOI
+====
+
+  Cert Management service
+  -----------------
+    Admin state: Disabled
+    Oper status: Down
+
+  OS Image service
+  ----------------
+    Admin state: Disabled
+    Oper status: Down
+    Supported: Not supported on this platform
+
+  Factory Reset service
+  ---------------------
+    Admin state: Disabled
+    Oper status: Down
+    Supported: Not supported on this platform

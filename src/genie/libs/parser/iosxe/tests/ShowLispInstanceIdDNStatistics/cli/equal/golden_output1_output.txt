@@ -1,0 +1,11 @@
+=================================================
+Output for router lisp 0
+=================================================
+LISP EID Statistics for instance ID 16777214
+  Active DN IAF count:                              1 
+  Active DN local eid map count:                    1 
+  Active DN etr ems registration link count:        2
+  UDP Map-Register (send/recv):                     1/0
+  TCP Map-Register (send/recv):                     1/0
+  UDP Map-Notify (send/recv):                       0/2
+  TCP Map-Notify (send/recv):                       0/5

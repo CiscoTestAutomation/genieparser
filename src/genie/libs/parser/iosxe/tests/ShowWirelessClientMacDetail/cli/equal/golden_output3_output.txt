@@ -1,0 +1,150 @@
+Client MAC Address : 1cbf.cee6.9419
+Client MAC Type : Universally Administered Address
+Client DUID: NA
+Client IPv4 Address : 10.28.50.67
+Client Username : Cisco SVS
+AP MAC Address : 3c41.0e3b.c420
+AP Name: DMZ-AP-1
+AP slot : 1
+Client State : Associated
+Policy Profile : TEST-DMZ-En_Global_NF_5d6f92e7
+Flex Profile : default-flex-profile
+Wireless LAN Id: 17
+WLAN Profile Name: TEST-DMZ-En_Global_NF_5d6f92e7
+Wireless LAN Network Name (SSID): TEST-DMZ-Enterprise
+BSSID : 3c41.0e3b.c42f
+Connected For : 396317 seconds
+Protocol : 802.11ac
+Channel : 48
+Client IIF-ID : 0xa0000002
+Association Id : 1
+Authentication Algorithm : Open System
+Idle state timeout : N/A
+Re-Authentication Timeout : 1800 sec (Remaining time: 1574 sec)
+Session Warning Time : Timer not running
+Input Policy Name  : None
+Input Policy State : None
+Input Policy Source : None
+Output Policy Name  : None
+Output Policy State : None
+Output Policy Source : None
+WMM Support : Enabled
+U-APSD Support : Disabled
+Fastlane Support : Disabled
+Client Active State : Active
+Power Save : OFF
+Current Rate : m8 ss2
+Supported Rates : 6.0,9.0,12.0,18.0,24.0,36.0,48.0,54.0
+AAA QoS Rate Limit Parameters:
+  QoS Average Data Rate Upstream             : 0 (kbps)
+  QoS Realtime Average Data Rate Upstream    : 0 (kbps)
+  QoS Burst Data Rate Upstream               : 0 (kbps)
+  QoS Realtime Burst Data Rate Upstream      : 0 (kbps)
+  QoS Average Data Rate Downstream           : 0 (kbps)
+  QoS Realtime Average Data Rate Downstream  : 0 (kbps)
+  QoS Burst Data Rate Downstream             : 0 (kbps)
+  QoS Realtime Burst Data Rate Downstream    : 0 (kbps)
+Mobility:
+  Move Count                  : 0
+  Mobility Role               : Local
+  Mobility Roam Type          : None
+  Mobility Complete Timestamp : 02/15/2022 18:02:56 UTC
+Client Join Time:
+  Join Time Of Client : 02/17/2022 16:33:45 UTC
+Client State Servers : None
+Client ACLs : None
+Policy Manager State: Run
+Last Policy Manager State : IP Learn Complete
+Client Entry Create Time : 563766 seconds
+Policy Type : WPA2
+Encryption Cipher : CCMP (AES)
+Authentication Key Management : 802.1x
+Transition Disable Bitmap : None
+User Defined (Private) Network : Disabled
+User Defined (Private) Network Drop Unicast : Disabled
+Encrypted Traffic Analytics : No
+Protected Management Frame - 802.11w : No
+EAP Type : EAP-TLS
+VLAN Override after Webauth : No
+VLAN : ENT-VLAN-DMZ
+Multicast VLAN : 0
+WiFi Direct Capabilities:
+  WiFi Direct Capable           : No
+Central NAT : DISABLED
+Session Manager:
+  Point of Attachment : capwap_90000006
+  IIF ID             : 0x90000006
+  Authorized         : TRUE
+  Session timeout    : 1800
+  Common Session ID: 02321C0A00000026FE8D3B2D
+  Acct Session ID  : 0x00000007
+  Last Tried Aaa Server Details:
+    Server IP : 172.16.18.2
+  Auth Method Status List
+    Method : Dot1x
+        SM State         : AUTHENTICATED
+        SM Bend State    : IDLE
+  Local Policies:
+    Service Template : wlan_svc_TEST-DMZ-En_Global_NF_5d6f92e7_local (priority 254)
+        Absolute-Timer   : 1800
+  Server Policies:
+        VLAN             : ENT-VLAN-DMZ
+  Resultant Policies:
+        VLAN Name        : ENT-VLAN-DMZ
+        VLAN             : 20
+        Absolute-Timer   : 1800
+DNS Snooped IPv4 Addresses : None
+DNS Snooped IPv6 Addresses : None
+Client Capabilities
+  CF Pollable : Not implemented
+  CF Poll Request : Not implemented
+  Short Preamble : Not implemented
+  PBCC : Not implemented
+  Channel Agility : Not implemented
+  Listen Interval : 0
+Fast BSS Transition Details :
+  Reassociation Timeout : 20
+11v BSS Transition : Implemented
+11v DMS Capable : No
+QoS Map Capable : No
+FlexConnect Data Switching : Central
+FlexConnect Dhcp Status : Central
+FlexConnect Authentication : Central
+Client Statistics:
+  Number of Bytes Received from Client : 12844445
+  Number of Bytes Sent to Client : 10484743
+  Number of Packets Received from Client : 102748
+  Number of Packets Sent to Client : 58259
+  Number of Policy Errors : 0
+  Radio Signal Strength Indicator : -27 dBm
+  Signal to Noise Ratio : 56 dB
+Fabric status : Disabled
+Radio Measurement Enabled Capabilities
+  Capabilities: Neighbor Report, Passive Beacon Measurement, Active Beacon Measurement, AP Channel Report
+Client Scan Report Time : Timer not running
+Client Scan Reports
+Assisted Roaming Neighbor List
+Nearby AP Statistics:
+EoGRE : Pending Classification
+Device Classification Information:
+  Device Type      : Microsoft-Workstation
+  Device Name      : MSFT 5.0
+  Protocol Map     : 0x000009  (OUI, DHCP)
+  Device Protocol  : DHCP
+    Type             : 12   19
+    Data             : 13
+    00000000  00 0c 00 0f 44 45 53 4b  54 4f 50 2d 37 51 55 36  |....DESKTOP-7QU6|
+    00000010  44 4a 30                                          |DJ0             |
+    Type             : 60   12
+    Data             : 0c
+    00000000  00 3c 00 08 4d 53 46 54  20 35 2e 30               |.<..MSFT 5.0    |
+    Type             : 55   18
+    Data             : 12
+    00000000  00 37 00 0e 01 03 06 0f  1f 21 2b 2c 2e 2f 77 79  |.7.......!+,./wy|
+    00000010  f9 fc                                             |..              |
+Max Client Protocol Capability: 802.11ac Wave 2
+WiFi to Cellular Steering : Not implemented
+Cellular Capability : N/A
+Advanced Scheduling Requests Details:
+  Apple Specific Requests(ASR) Capabilities/Statistics:
+    Regular ASR support: DISABLED

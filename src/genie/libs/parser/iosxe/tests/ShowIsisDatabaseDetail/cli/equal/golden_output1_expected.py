@@ -14,42 +14,77 @@ expected_output = {
                         "overload_bit": 0,
                         "area_address": "49.0001",
                         "nlpid": "0xCC 0x8E",
-                        "topology": {"ipv4": {"code": "0x0"}, "ipv6": {"code": "0x2"}},
+                        "topology": {
+                            "ipv4": {
+                                "code": "0x0"
+                            },
+                            "ipv6": {
+                                "code": "0x2"
+                            }
+                        },
                         "hostname": "R1_xe",
                         "extended_is_neighbor": {
-                            "R1_xe.02": {"neighbor_id": "R1_xe.02", "metric": 10},
-                            "R1_xe.01": {"neighbor_id": "R1_xe.01", "metric": 10},
+                            "R1_xe.02": [
+                                {
+                                    "neighbor_id": "R1_xe.02",
+                                    "metric": 10
+                                }
+                            ],
+                            "R1_xe.01": [
+                                {
+                                    "neighbor_id": "R1_xe.01",
+                                    "metric": 10
+                                }
+                            ]
                         },
                         "mt_is_neighbor": {
-                            "R1_xe.02": {"neighbor_id": "R1_xe.02", "metric": 10},
-                            "R1_xe.01": {"neighbor_id": "R1_xe.01", "metric": 10},
+                            "R1_xe.02": [
+                                {
+                                    "neighbor_id": "R1_xe.02",
+                                    "metric": 10
+                                }
+                            ],
+                            "R1_xe.01": [
+                                {
+                                    "neighbor_id": "R1_xe.01",
+                                    "metric": 10
+                                }
+                            ]
                         },
                         "ip_address": "10.13.115.1",
                         "ipv4_internal_reachability": {
-                            "10.12.115.0/24": {
-                                "ip_prefix": "10.12.115.0",
-                                "prefix_len": "24",
-                                "metric": 10,
-                            },
-                            "10.13.115.0/24": {
-                                "ip_prefix": "10.13.115.0",
-                                "prefix_len": "24",
-                                "metric": 10,
-                            },
+                            "10.12.115.0/24": [
+                                {
+                                    "ip_prefix": "10.12.115.0",
+                                    "prefix_len": "24",
+                                    "metric": 10
+                                }
+                            ],
+                            "10.13.115.0/24": [
+                                {
+                                    "ip_prefix": "10.13.115.0",
+                                    "prefix_len": "24",
+                                    "metric": 10
+                                }
+                            ]
                         },
                         "ipv6_address": "2001:10:13:115::1",
                         "mt_ipv6_reachability": {
-                            "2001:10:12:115::/64": {
-                                "ip_prefix": "2001:10:12:115::",
-                                "prefix_len": "64",
-                                "metric": 10,
-                            },
-                            "2001:10:13:115::/64": {
-                                "ip_prefix": "2001:10:13:115::",
-                                "prefix_len": "64",
-                                "metric": 10,
-                            },
-                        },
+                            "2001:10:12:115::/64": [
+                                {
+                                    "ip_prefix": "2001:10:12:115::",
+                                    "prefix_len": "64",
+                                    "metric": 10
+                                }
+                            ],
+                            "2001:10:13:115::/64": [
+                                {
+                                    "ip_prefix": "2001:10:13:115::",
+                                    "prefix_len": "64",
+                                    "metric": 10
+                                }
+                            ]
+                        }
                     },
                     "R1_xe.01-00": {
                         "local_router": True,
@@ -61,16 +96,28 @@ expected_output = {
                         "p_bit": 0,
                         "overload_bit": 0,
                         "extended_is_neighbor": {
-                            "R1_xe.00": {"neighbor_id": "R1_xe.00", "metric": 0},
-                            "R2_xr.00": {"neighbor_id": "R2_xr.00", "metric": 0},
+                            "R1_xe.00": [
+                                {
+                                    "neighbor_id": "R1_xe.00",
+                                    "metric": 0
+                                }
+                            ],
+                            "R2_xr.00": [
+                                {
+                                    "neighbor_id": "R2_xr.00",
+                                    "metric": 0
+                                }
+                            ]
                         },
                         "ipv4_interarea_reachability": {
-                            "10.100.100.0/24":{
-                                "ip_prefix": "10.100.100.0",
-                                "prefix_len": "24",
-                                "metric": 10,
-                            }
-                        },
+                            "10.100.100.0/24": [
+                                {
+                                    "ip_prefix": "10.100.100.0",
+                                    "prefix_len": "24",
+                                    "metric": 10
+                                }
+                            ]
+                        }
                     },
                     "R1_xe.02-00": {
                         "local_router": True,
@@ -82,9 +129,19 @@ expected_output = {
                         "p_bit": 0,
                         "overload_bit": 0,
                         "extended_is_neighbor": {
-                            "R1_xe.00": {"neighbor_id": "R1_xe.00", "metric": 0},
-                            "R3_nx.00": {"neighbor_id": "R3_nx.00", "metric": 0},
-                        },
+                            "R1_xe.00": [
+                                {
+                                    "neighbor_id": "R1_xe.00",
+                                    "metric": 0
+                                }
+                            ],
+                            "R3_nx.00": [
+                                {
+                                    "neighbor_id": "R3_nx.00",
+                                    "metric": 0
+                                }
+                            ]
+                        }
                     },
                     "R2_xr.00-00": {
                         "lsp_sequence_num": "0x00000120",
@@ -96,64 +153,107 @@ expected_output = {
                         "overload_bit": 0,
                         "area_address": "49.0001",
                         "extended_is_neighbor": {
-                            "R1_xe.01": {"neighbor_id": "R1_xe.01", "metric": 10},
-                            "R2_xr.03": {"neighbor_id": "R2_xr.03", "metric": 10},
+                            "R1_xe.01": [
+                                {
+                                    "neighbor_id": "R1_xe.01",
+                                    "metric": 10
+                                }
+                            ],
+                            "R2_xr.03": [
+                                {
+                                    "neighbor_id": "R2_xr.03",
+                                    "metric": 10
+                                }
+                            ]
                         },
                         "nlpid": "0xCC 0x8E",
                         "ip_address": "10.16.2.2",
                         "ipv4_internal_reachability": {
-                            "10.16.2.2/32": {
-                                "ip_prefix": "10.16.2.2",
-                                "prefix_len": "32",
-                                "metric": 10,
-                            },
-                            "10.12.115.0/24": {
-                                "ip_prefix": "10.12.115.0",
-                                "prefix_len": "24",
-                                "metric": 10,
-                            },
-                            "10.23.115.0/24": {
-                                "ip_prefix": "10.23.115.0",
-                                "prefix_len": "24",
-                                "metric": 10,
-                            },
+                            "10.16.2.2/32": [
+                                {
+                                    "ip_prefix": "10.16.2.2",
+                                    "prefix_len": "32",
+                                    "metric": 10
+                                }
+                            ],
+                            "10.12.115.0/24": [
+                                {
+                                    "ip_prefix": "10.12.115.0",
+                                    "prefix_len": "24",
+                                    "metric": 10
+                                }
+                            ],
+                            "10.23.115.0/24": [
+                                {
+                                    "ip_prefix": "10.23.115.0",
+                                    "prefix_len": "24",
+                                    "metric": 10
+                                }
+                            ]
                         },
                         "ipv4_interarea_reachability": {
-                            "10.200.200.0/24":{
-                                "ip_prefix": "10.200.200.0",
-                                "prefix_len": "24",
-                                "metric": 10,
-                            },
-                            "10.220.220.0/24":{
-                                "ip_prefix": "10.220.220.0",
-                                "prefix_len": "24",
-                                "metric": 10,
-                            }
+                            "10.200.200.0/24": [
+                                {
+                                    "ip_prefix": "10.200.200.0",
+                                    "prefix_len": "24",
+                                    "metric": 10
+                                }
+                            ],
+                            "10.220.220.0/24": [
+                                {
+                                    "ip_prefix": "10.220.220.0",
+                                    "prefix_len": "24",
+                                    "metric": 10
+                                }
+                            ]
                         },
                         "hostname": "R2_xr",
                         "mt_is_neighbor": {
-                            "R1_xe.01": {"neighbor_id": "R1_xe.01", "metric": 10},
-                            "R2_xr.03": {"neighbor_id": "R2_xr.03", "metric": 10},
+                            "R1_xe.01": [
+                                {
+                                    "neighbor_id": "R1_xe.01",
+                                    "metric": 10
+                                }
+                            ],
+                            "R2_xr.03": [
+                                {
+                                    "neighbor_id": "R2_xr.03",
+                                    "metric": 10
+                                }
+                            ]
                         },
                         "ipv6_address": "2001:2:2:2::2",
                         "mt_ipv6_reachability": {
-                            "2001:2:2:2::2/128": {
-                                "ip_prefix": "2001:2:2:2::2",
-                                "prefix_len": "128",
-                                "metric": 10,
-                            },
-                            "2001:10:12:115::/64": {
-                                "ip_prefix": "2001:10:12:115::",
-                                "prefix_len": "64",
-                                "metric": 10,
-                            },
-                            "2001:10:23:115::/64": {
-                                "ip_prefix": "2001:10:23:115::",
-                                "prefix_len": "64",
-                                "metric": 10,
-                            },
+                            "2001:2:2:2::2/128": [
+                                {
+                                    "ip_prefix": "2001:2:2:2::2",
+                                    "prefix_len": "128",
+                                    "metric": 10
+                                }
+                            ],
+                            "2001:10:12:115::/64": [
+                                {
+                                    "ip_prefix": "2001:10:12:115::",
+                                    "prefix_len": "64",
+                                    "metric": 10
+                                }
+                            ],
+                            "2001:10:23:115::/64": [
+                                {
+                                    "ip_prefix": "2001:10:23:115::",
+                                    "prefix_len": "64",
+                                    "metric": 10
+                                }
+                            ]
                         },
-                        "topology": {"ipv4": {"code": "0x0"}, "ipv6": {"code": "0x2"}},
+                        "topology": {
+                            "ipv4": {
+                                "code": "0x0"
+                            },
+                            "ipv6": {
+                                "code": "0x2"
+                            }
+                        }
                     },
                     "R2_xr.03-00": {
                         "lsp_sequence_num": "0x00000118",
@@ -164,9 +264,19 @@ expected_output = {
                         "p_bit": 0,
                         "overload_bit": 0,
                         "extended_is_neighbor": {
-                            "R2_xr.00": {"neighbor_id": "R2_xr.00", "metric": 0},
-                            "R3_nx.00": {"neighbor_id": "R3_nx.00", "metric": 0},
-                        },
+                            "R2_xr.00": [
+                                {
+                                    "neighbor_id": "R2_xr.00",
+                                    "metric": 0
+                                }
+                            ],
+                            "R3_nx.00": [
+                                {
+                                    "neighbor_id": "R3_nx.00",
+                                    "metric": 0
+                                }
+                            ]
+                        }
                     },
                     "R3_nx.00-00": {
                         "lsp_sequence_num": "0x00000193",
@@ -180,51 +290,90 @@ expected_output = {
                         "nlpid": "0xCC 0x8E",
                         "router_id": "10.36.3.3",
                         "ip_address": "10.36.3.3",
-                        "topology": {"ipv6": {"code": "0x2"}, "ipv4": {"code": "0x0"}},
+                        "topology": {
+                            "ipv6": {
+                                "code": "0x2"
+                            },
+                            "ipv4": {
+                                "code": "0x0"
+                            }
+                        },
                         "hostname": "R3_nx",
                         "mt_is_neighbor": {
-                            "R2_xr.03": {"neighbor_id": "R2_xr.03", "metric": 40},
-                            "R1_xe.02": {"neighbor_id": "R1_xe.02", "metric": 40},
+                            "R2_xr.03": [
+                                {
+                                    "neighbor_id": "R2_xr.03",
+                                    "metric": 40
+                                }
+                            ],
+                            "R1_xe.02": [
+                                {
+                                    "neighbor_id": "R1_xe.02",
+                                    "metric": 40
+                                }
+                            ]
                         },
                         "extended_is_neighbor": {
-                            "R2_xr.03": {"neighbor_id": "R2_xr.03", "metric": 40},
-                            "R1_xe.02": {"neighbor_id": "R1_xe.02", "metric": 40},
+                            "R2_xr.03": [
+                                {
+                                    "neighbor_id": "R2_xr.03",
+                                    "metric": 40
+                                }
+                            ],
+                            "R1_xe.02": [
+                                {
+                                    "neighbor_id": "R1_xe.02",
+                                    "metric": 40
+                                }
+                            ]
                         },
                         "ipv4_internal_reachability": {
-                            "10.36.3.3/32": {
-                                "ip_prefix": "10.36.3.3",
-                                "prefix_len": "32",
-                                "metric": 1,
-                            },
-                            "10.13.115.0/24": {
-                                "ip_prefix": "10.13.115.0",
-                                "prefix_len": "24",
-                                "metric": 40,
-                            },
-                            "10.23.115.0/24": {
-                                "ip_prefix": "10.23.115.0",
-                                "prefix_len": "24",
-                                "metric": 40,
-                            },
+                            "10.36.3.3/32": [
+                                {
+                                    "ip_prefix": "10.36.3.3",
+                                    "prefix_len": "32",
+                                    "metric": 1
+                                }
+                            ],
+                            "10.13.115.0/24": [
+                                {
+                                    "ip_prefix": "10.13.115.0",
+                                    "prefix_len": "24",
+                                    "metric": 40
+                                }
+                            ],
+                            "10.23.115.0/24": [
+                                {
+                                    "ip_prefix": "10.23.115.0",
+                                    "prefix_len": "24",
+                                    "metric": 40
+                                }
+                            ]
                         },
                         "mt_ipv6_reachability": {
-                            "2001:3:3:3::3/128": {
-                                "ip_prefix": "2001:3:3:3::3",
-                                "prefix_len": "128",
-                                "metric": 1,
-                            },
-                            "2001:10:13:115::/64": {
-                                "ip_prefix": "2001:10:13:115::",
-                                "prefix_len": "64",
-                                "metric": 40,
-                            },
-                            "2001:10:23:115::/64": {
-                                "ip_prefix": "2001:10:23:115::",
-                                "prefix_len": "64",
-                                "metric": 40,
-                            },
-                        },
-                    },
+                            "2001:3:3:3::3/128": [
+                                {
+                                    "ip_prefix": "2001:3:3:3::3",
+                                    "prefix_len": "128",
+                                    "metric": 1
+                                }
+                            ],
+                            "2001:10:13:115::/64": [
+                                {
+                                    "ip_prefix": "2001:10:13:115::",
+                                    "prefix_len": "64",
+                                    "metric": 40
+                                }
+                            ],
+                            "2001:10:23:115::/64": [
+                                {
+                                    "ip_prefix": "2001:10:23:115::",
+                                    "prefix_len": "64",
+                                    "metric": 40
+                                }
+                            ]
+                        }
+                    }
                 },
                 2: {
                     "R1_xe.00-00": {
@@ -238,52 +387,91 @@ expected_output = {
                         "overload_bit": 0,
                         "area_address": "49.0001",
                         "nlpid": "0xCC 0x8E",
-                        "topology": {"ipv4": {"code": "0x0"}, "ipv6": {"code": "0x2"}},
+                        "topology": {
+                            "ipv4": {
+                                "code": "0x0"
+                            },
+                            "ipv6": {
+                                "code": "0x2"
+                            }
+                        },
                         "hostname": "R1_xe",
                         "extended_is_neighbor": {
-                            "R1_xe.02": {"neighbor_id": "R1_xe.02", "metric": 10},
-                            "R1_xe.01": {"neighbor_id": "R1_xe.01", "metric": 10},
+                            "R1_xe.02": [
+                                {
+                                    "neighbor_id": "R1_xe.02",
+                                    "metric": 10
+                                }
+                            ],
+                            "R1_xe.01": [
+                                {
+                                    "neighbor_id": "R1_xe.01",
+                                    "metric": 10
+                                }
+                            ]
                         },
                         "mt_is_neighbor": {
-                            "R1_xe.02": {"neighbor_id": "R1_xe.02", "metric": 10},
-                            "R1_xe.01": {"neighbor_id": "R1_xe.01", "metric": 10},
+                            "R1_xe.02": [
+                                {
+                                    "neighbor_id": "R1_xe.02",
+                                    "metric": 10
+                                }
+                            ],
+                            "R1_xe.01": [
+                                {
+                                    "neighbor_id": "R1_xe.01",
+                                    "metric": 10
+                                }
+                            ]
                         },
                         "ip_address": "10.13.115.1",
                         "ipv4_internal_reachability": {
-                            "10.12.115.0/24": {
-                                "ip_prefix": "10.12.115.0",
-                                "prefix_len": "24",
-                                "metric": 10,
-                            },
-                            "10.13.115.0/24": {
-                                "ip_prefix": "10.13.115.0",
-                                "prefix_len": "24",
-                                "metric": 10,
-                            },
-                            "10.23.115.0/24": {
-                                "ip_prefix": "10.23.115.0",
-                                "prefix_len": "24",
-                                "metric": 20,
-                            },
+                            "10.12.115.0/24": [
+                                {
+                                    "ip_prefix": "10.12.115.0",
+                                    "prefix_len": "24",
+                                    "metric": 10
+                                }
+                            ],
+                            "10.13.115.0/24": [
+                                {
+                                    "ip_prefix": "10.13.115.0",
+                                    "prefix_len": "24",
+                                    "metric": 10
+                                }
+                            ],
+                            "10.23.115.0/24": [
+                                {
+                                    "ip_prefix": "10.23.115.0",
+                                    "prefix_len": "24",
+                                    "metric": 20
+                                }
+                            ]
                         },
                         "ipv6_address": "2001:10:13:115::1",
                         "mt_ipv6_reachability": {
-                            "2001:10:12:115::/64": {
-                                "ip_prefix": "2001:10:12:115::",
-                                "prefix_len": "64",
-                                "metric": 10,
-                            },
-                            "2001:10:13:115::/64": {
-                                "ip_prefix": "2001:10:13:115::",
-                                "prefix_len": "64",
-                                "metric": 10,
-                            },
-                            "2001:10:23:115::/64": {
-                                "ip_prefix": "2001:10:23:115::",
-                                "prefix_len": "64",
-                                "metric": 20,
-                            },
-                        },
+                            "2001:10:12:115::/64": [
+                                {
+                                    "ip_prefix": "2001:10:12:115::",
+                                    "prefix_len": "64",
+                                    "metric": 10
+                                }
+                            ],
+                            "2001:10:13:115::/64": [
+                                {
+                                    "ip_prefix": "2001:10:13:115::",
+                                    "prefix_len": "64",
+                                    "metric": 10
+                                }
+                            ],
+                            "2001:10:23:115::/64": [
+                                {
+                                    "ip_prefix": "2001:10:23:115::",
+                                    "prefix_len": "64",
+                                    "metric": 20
+                                }
+                            ]
+                        }
                     },
                     "R1_xe.01-00": {
                         "local_router": True,
@@ -295,16 +483,28 @@ expected_output = {
                         "p_bit": 0,
                         "overload_bit": 0,
                         "extended_is_neighbor": {
-                            "R1_xe.00": {"neighbor_id": "R1_xe.00", "metric": 0},
-                            "R2_xr.00": {"neighbor_id": "R2_xr.00", "metric": 0},
+                            "R1_xe.00": [
+                                {
+                                    "neighbor_id": "R1_xe.00",
+                                    "metric": 0
+                                }
+                            ],
+                            "R2_xr.00": [
+                                {
+                                    "neighbor_id": "R2_xr.00",
+                                    "metric": 0
+                                }
+                            ]
                         },
                         "ipv4_interarea_reachability": {
-                            "10.100.100.0/24":{
-                                "ip_prefix": "10.100.100.0",
-                                "prefix_len": "24",
-                                "metric": 10,
-                            }
-                        },
+                            "10.100.100.0/24": [
+                                {
+                                    "ip_prefix": "10.100.100.0",
+                                    "prefix_len": "24",
+                                    "metric": 10
+                                }
+                            ]
+                        }
                     },
                     "R1_xe.02-00": {
                         "local_router": True,
@@ -316,9 +516,19 @@ expected_output = {
                         "p_bit": 0,
                         "overload_bit": 0,
                         "extended_is_neighbor": {
-                            "R1_xe.00": {"neighbor_id": "R1_xe.00", "metric": 0},
-                            "R3_nx.00": {"neighbor_id": "R3_nx.00", "metric": 0},
-                        },
+                            "R1_xe.00": [
+                                {
+                                    "neighbor_id": "R1_xe.00",
+                                    "metric": 0
+                                }
+                            ],
+                            "R3_nx.00": [
+                                {
+                                    "neighbor_id": "R3_nx.00",
+                                    "metric": 0
+                                }
+                            ]
+                        }
                     },
                     "R2_xr.00-00": {
                         "lsp_sequence_num": "0x00000120",
@@ -330,84 +540,135 @@ expected_output = {
                         "overload_bit": 0,
                         "area_address": "49.0001",
                         "extended_is_neighbor": {
-                            "R1_xe.01": {"neighbor_id": "R1_xe.01", "metric": 10},
-                            "R2_xr.03": {"neighbor_id": "R2_xr.03", "metric": 10},
+                            "R1_xe.01": [
+                                {
+                                    "neighbor_id": "R1_xe.01",
+                                    "metric": 10
+                                }
+                            ],
+                            "R2_xr.03": [
+                                {
+                                    "neighbor_id": "R2_xr.03",
+                                    "metric": 10
+                                }
+                            ]
                         },
                         "nlpid": "0xCC 0x8E",
                         "ip_address": "10.16.2.2",
                         "ipv4_internal_reachability": {
-                            "10.16.2.2/32": {
-                                "ip_prefix": "10.16.2.2",
-                                "prefix_len": "32",
-                                "metric": 10,
-                            },
-                            "10.12.115.0/24": {
-                                "ip_prefix": "10.12.115.0",
-                                "prefix_len": "24",
-                                "metric": 10,
-                            },
-                            "10.23.115.0/24": {
-                                "ip_prefix": "10.23.115.0",
-                                "prefix_len": "24",
-                                "metric": 10,
-                            },
-                            "10.36.3.3/32": {
-                                "ip_prefix": "10.36.3.3",
-                                "prefix_len": "32",
-                                "metric": 11,
-                            },
-                            "10.13.115.0/24": {
-                                "ip_prefix": "10.13.115.0",
-                                "prefix_len": "24",
-                                "metric": 20,
-                            },
+                            "10.16.2.2/32": [
+                                {
+                                    "ip_prefix": "10.16.2.2",
+                                    "prefix_len": "32",
+                                    "metric": 10
+                                }
+                            ],
+                            "10.12.115.0/24": [
+                                {
+                                    "ip_prefix": "10.12.115.0",
+                                    "prefix_len": "24",
+                                    "metric": 10
+                                }
+                            ],
+                            "10.23.115.0/24": [
+                                {
+                                    "ip_prefix": "10.23.115.0",
+                                    "prefix_len": "24",
+                                    "metric": 10
+                                }
+                            ],
+                            "10.36.3.3/32": [
+                                {
+                                    "ip_prefix": "10.36.3.3",
+                                    "prefix_len": "32",
+                                    "metric": 11
+                                }
+                            ],
+                            "10.13.115.0/24": [
+                                {
+                                    "ip_prefix": "10.13.115.0",
+                                    "prefix_len": "24",
+                                    "metric": 20
+                                }
+                            ]
                         },
                         "ipv4_interarea_reachability": {
-                            "10.200.200.0/24":{
-                                "ip_prefix": "10.200.200.0",
-                                "prefix_len": "24",
-                                "metric": 10,
-                            },
-                            "10.220.220.0/24":{
-                                "ip_prefix": "10.220.220.0",
-                                "prefix_len": "24",
-                                "metric": 10,
-                            }
+                            "10.200.200.0/24": [
+                                {
+                                    "ip_prefix": "10.200.200.0",
+                                    "prefix_len": "24",
+                                    "metric": 10
+                                }
+                            ],
+                            "10.220.220.0/24": [
+                                {
+                                    "ip_prefix": "10.220.220.0",
+                                    "prefix_len": "24",
+                                    "metric": 10
+                                }
+                            ]
                         },
                         "hostname": "R2_xr",
                         "mt_is_neighbor": {
-                            "R1_xe.01": {"neighbor_id": "R1_xe.01", "metric": 10},
-                            "R2_xr.03": {"neighbor_id": "R2_xr.03", "metric": 10},
+                            "R1_xe.01": [
+                                {
+                                    "neighbor_id": "R1_xe.01",
+                                    "metric": 10
+                                }
+                            ],
+                            "R2_xr.03": [
+                                {
+                                    "neighbor_id": "R2_xr.03",
+                                    "metric": 10
+                                }
+                            ]
                         },
                         "ipv6_address": "2001:2:2:2::2",
                         "mt_ipv6_reachability": {
-                            "2001:2:2:2::2/128": {
-                                "ip_prefix": "2001:2:2:2::2",
-                                "prefix_len": "128",
-                                "metric": 10,
-                            },
-                            "2001:10:12:115::/64": {
-                                "ip_prefix": "2001:10:12:115::",
-                                "prefix_len": "64",
-                                "metric": 10,
-                            },
-                            "2001:10:23:115::/64": {
-                                "ip_prefix": "2001:10:23:115::",
-                                "prefix_len": "64",
-                                "metric": 10,
-                            },
-                            "2001:3:3:3::3/128": {
-                                "ip_prefix": "2001:3:3:3::3",
-                                "prefix_len": "128",
-                                "metric": 11,
-                            },
-                            "2001:10:13:115::/64": {
-                                "ip_prefix": "2001:10:13:115::",
-                                "prefix_len": "64",
-                                "metric": 20,
-                            },
+                            "2001:2:2:2::2/128": [
+                                {
+                                    "ip_prefix": "2001:2:2:2::2",
+                                    "prefix_len": "128",
+                                    "metric": 10
+                                }
+                            ],
+                            "2001:10:12:115::/64": [
+                                {
+                                    "ip_prefix": "2001:10:12:115::",
+                                    "prefix_len": "64",
+                                    "metric": 10
+                                }
+                            ],
+                            "2001:10:23:115::/64": [
+                                {
+                                    "ip_prefix": "2001:10:23:115::",
+                                    "prefix_len": "64",
+                                    "metric": 10
+                                }
+                            ],
+                            "2001:3:3:3::3/128": [
+                                {
+                                    "ip_prefix": "2001:3:3:3::3",
+                                    "prefix_len": "128",
+                                    "metric": 11
+                                }
+                            ],
+                            "2001:10:13:115::/64": [
+                                {
+                                    "ip_prefix": "2001:10:13:115::",
+                                    "prefix_len": "64",
+                                    "metric": 20
+                                }
+                            ]
                         },
-                        "topology": {"ipv4": {"code": "0x0"}, "ipv6": {"code": "0x2"}},
+                        "topology": {
+                            "ipv4": {
+                                "code": "0x0"
+                            },
+                            "ipv6": {
+                                "code": "0x2"
+                            }
+                        }
                     },
                     "R2_xr.03-00": {
                         "lsp_sequence_num": "0x00000118",
@@ -418,9 +679,19 @@ expected_output = {
                         "p_bit": 0,
                         "overload_bit": 0,
                         "extended_is_neighbor": {
-                            "R2_xr.00": {"neighbor_id": "R2_xr.00", "metric": 0},
-                            "R3_nx.00": {"neighbor_id": "R3_nx.00", "metric": 0},
-                        },
+                            "R2_xr.00": [
+                                {
+                                    "neighbor_id": "R2_xr.00",
+                                    "metric": 0
+                                }
+                            ],
+                            "R3_nx.00": [
+                                {
+                                    "neighbor_id": "R3_nx.00",
+                                    "metric": 0
+                                }
+                            ]
+                        }
                     },
                     "R3_nx.00-00": {
                         "lsp_sequence_num": "0x00000192",
@@ -434,52 +705,91 @@ expected_output = {
                         "nlpid": "0xCC 0x8E",
                         "router_id": "10.36.3.3",
                         "ip_address": "10.36.3.3",
-                        "topology": {"ipv6": {"code": "0x2"}, "ipv4": {"code": "0x0"}},
+                        "topology": {
+                            "ipv6": {
+                                "code": "0x2"
+                            },
+                            "ipv4": {
+                                "code": "0x0"
+                            }
+                        },
                         "hostname": "R3_nx",
                         "mt_is_neighbor": {
-                            "R2_xr.03": {"neighbor_id": "R2_xr.03", "metric": 40},
-                            "R1_xe.02": {"neighbor_id": "R1_xe.02", "metric": 40},
+                            "R2_xr.03": [
+                                {
+                                    "neighbor_id": "R2_xr.03",
+                                    "metric": 40
+                                }
+                            ],
+                            "R1_xe.02": [
+                                {
+                                    "neighbor_id": "R1_xe.02",
+                                    "metric": 40
+                                }
+                            ]
                         },
                         "extended_is_neighbor": {
-                            "R2_xr.03": {"neighbor_id": "R2_xr.03", "metric": 40},
-                            "R1_xe.02": {"neighbor_id": "R1_xe.02", "metric": 40},
+                            "R2_xr.03": [
+                                {
+                                    "neighbor_id": "R2_xr.03",
+                                    "metric": 40
+                                }
+                            ],
+                            "R1_xe.02": [
+                                {
+                                    "neighbor_id": "R1_xe.02",
+                                    "metric": 40
+                                }
+                            ]
                         },
                         "ipv4_internal_reachability": {
-                            "10.36.3.3/32": {
-                                "ip_prefix": "10.36.3.3",
-                                "prefix_len": "32",
-                                "metric": 1,
-                            },
-                            "10.13.115.0/24": {
-                                "ip_prefix": "10.13.115.0",
-                                "prefix_len": "24",
-                                "metric": 40,
-                            },
-                            "10.23.115.0/24": {
-                                "ip_prefix": "10.23.115.0",
-                                "prefix_len": "24",
-                                "metric": 40,
-                            },
+                            "10.36.3.3/32": [
+                                {
+                                    "ip_prefix": "10.36.3.3",
+                                    "prefix_len": "32",
+                                    "metric": 1
+                                }
+                            ],
+                            "10.13.115.0/24": [
+                                {
+                                    "ip_prefix": "10.13.115.0",
+                                    "prefix_len": "24",
+                                    "metric": 40
+                                }
+                            ],
+                            "10.23.115.0/24": [
+                                {
+                                    "ip_prefix": "10.23.115.0",
+                                    "prefix_len": "24",
+                                    "metric": 40
+                                }
+                            ]
                         },
                         "mt_ipv6_reachability": {
-                            "2001:3:3:3::3/128": {
-                                "ip_prefix": "2001:3:3:3::3",
-                                "prefix_len": "128",
-                                "metric": 1,
-                            },
-                            "2001:10:13:115::/64": {
-                                "ip_prefix": "2001:10:13:115::",
-                                "prefix_len": "64",
-                                "metric": 40,
-                            },
-                            "2001:10:23:115::/64": {
-                                "ip_prefix": "2001:10:23:115::",
-                                "prefix_len": "64",
-                                "metric": 40,
-                            },
-                        },
-                    },
-                },
+                            "2001:3:3:3::3/128": [
+                                {
+                                    "ip_prefix": "2001:3:3:3::3",
+                                    "prefix_len": "128",
+                                    "metric": 1
+                                }
+                            ],
+                            "2001:10:13:115::/64": [
+                                {
+                                    "ip_prefix": "2001:10:13:115::",
+                                    "prefix_len": "64",
+                                    "metric": 40
+                                }
+                            ],
+                            "2001:10:23:115::/64": [
+                                {
+                                    "ip_prefix": "2001:10:23:115::",
+                                    "prefix_len": "64",
+                                    "metric": 40
+                                }
+                            ]
+                        }
+                    }
+                }
             }
         },
         "test1": {
@@ -496,40 +806,65 @@ expected_output = {
                         "overload_bit": 0,
                         "area_address": "49.0001",
                         "nlpid": "0xCC 0x8E",
-                        "topology": {"ipv4": {"code": "0x0"}, "ipv6": {"code": "0x2"}},
+                        "topology": {
+                            "ipv4": {
+                                "code": "0x0"
+                            },
+                            "ipv6": {
+                                "code": "0x2"
+                            }
+                        },
                         "hostname": "R1_xe",
                         "extended_is_neighbor": {
-                            "R1_xe.02": {"neighbor_id": "R1_xe.02", "metric": 10}
+                            "R1_xe.02": [
+                                {
+                                    "neighbor_id": "R1_xe.02",
+                                    "metric": 10
+                                }
+                            ]
                         },
                         "mt_is_neighbor": {
-                            "R1_xe.02": {"neighbor_id": "R1_xe.02", "metric": 10}
+                            "R1_xe.02": [
+                                {
+                                    "neighbor_id": "R1_xe.02",
+                                    "metric": 10
+                                }
+                            ]
                         },
                         "ip_address": "10.13.115.1",
                         "ipv4_internal_reachability": {
-                            "10.12.115.0/24": {
-                                "ip_prefix": "10.12.115.0",
-                                "prefix_len": "24",
-                                "metric": 10,
-                            },
-                            "10.13.115.0/24": {
-                                "ip_prefix": "10.13.115.0",
-                                "prefix_len": "24",
-                                "metric": 10,
-                            },
+                            "10.12.115.0/24": [
+                                {
+                                    "ip_prefix": "10.12.115.0",
+                                    "prefix_len": "24",
+                                    "metric": 10
+                                }
+                            ],
+                            "10.13.115.0/24": [
+                                {
+                                    "ip_prefix": "10.13.115.0",
+                                    "prefix_len": "24",
+                                    "metric": 10
+                                }
+                            ]
                         },
                         "ipv6_address": "2001:10:13:115::1",
                         "mt_ipv6_reachability": {
-                            "2001:10:12:115::/64": {
-                                "ip_prefix": "2001:10:12:115::",
-                                "prefix_len": "64",
-                                "metric": 10,
-                            },
-                            "2001:10:13:115::/64": {
-                                "ip_prefix": "2001:10:13:115::",
-                                "prefix_len": "64",
-                                "metric": 10,
-                            },
-                        },
+                            "2001:10:12:115::/64": [
+                                {
+                                    "ip_prefix": "2001:10:12:115::",
+                                    "prefix_len": "64",
+                                    "metric": 10
+                                }
+                            ],
+                            "2001:10:13:115::/64": [
+                                {
+                                    "ip_prefix": "2001:10:13:115::",
+                                    "prefix_len": "64",
+                                    "metric": 10
+                                }
+                            ]
+                        }
                     },
                     "R1_xe.02-00": {
                         "local_router": True,
@@ -541,9 +876,19 @@ expected_output = {
                         "p_bit": 0,
                         "overload_bit": 0,
                         "extended_is_neighbor": {
-                            "R1_xe.00": {"neighbor_id": "R1_xe.00", "metric": 0},
-                            "R3_nx.00": {"neighbor_id": "R3_nx.00", "metric": 0},
-                        },
+                            "R1_xe.00": [
+                                {
+                                    "neighbor_id": "R1_xe.00",
+                                    "metric": 0
+                                }
+                            ],
+                            "R3_nx.00": [
+                                {
+                                    "neighbor_id": "R3_nx.00",
+                                    "metric": 0
+                                }
+                            ]
+                        }
                     },
                     "R3_nx.00-00": {
                         "lsp_sequence_num": "0x00000191",
@@ -557,49 +902,78 @@ expected_output = {
                         "nlpid": "0xCC 0x8E",
                         "router_id": "10.36.3.3",
                         "ip_address": "10.36.3.3",
-                        "topology": {"ipv6": {"code": "0x2"}, "ipv4": {"code": "0x0"}},
+                        "topology": {
+                            "ipv6": {
+                                "code": "0x2"
+                            },
+                            "ipv4": {
+                                "code": "0x0"
+                            }
+                        },
                         "hostname": "R3_nx",
                         "mt_is_neighbor": {
-                            "R1_xe.02": {"neighbor_id": "R1_xe.02", "metric": 40}
+                            "R1_xe.02": [
+                                {
+                                    "neighbor_id": "R1_xe.02",
+                                    "metric": 40
+                                }
+                            ]
                         },
                         "extended_is_neighbor": {
-                            "R1_xe.02": {"neighbor_id": "R1_xe.02", "metric": 40}
+                            "R1_xe.02": [
+                                {
+                                    "neighbor_id": "R1_xe.02",
+                                    "metric": 40
+                                }
+                            ]
                         },
                         "ipv4_internal_reachability": {
-                            "10.36.3.3/32": {
-                                "ip_prefix": "10.36.3.3",
-                                "prefix_len": "32",
-                                "metric": 1,
-                            },
-                            "10.13.115.0/24": {
-                                "ip_prefix": "10.13.115.0",
-                                "prefix_len": "24",
-                                "metric": 40,
-                            },
-                            "10.23.115.0/24": {
-                                "ip_prefix": "10.23.115.0",
-                                "prefix_len": "24",
-                                "metric": 40,
-                            },
+                            "10.36.3.3/32": [
+                                {
+                                    "ip_prefix": "10.36.3.3",
+                                    "prefix_len": "32",
+                                    "metric": 1
+                                }
+                            ],
+                            "10.13.115.0/24": [
+                                {
+                                    "ip_prefix": "10.13.115.0",
+                                    "prefix_len": "24",
+                                    "metric": 40
+                                }
+                            ],
+                            "10.23.115.0/24": [
+                                {
+                                    "ip_prefix": "10.23.115.0",
+                                    "prefix_len": "24",
+                                    "metric": 40
+                                }
+                            ]
                         },
                         "mt_ipv6_reachability": {
-                            "2001:3:3:3::3/128": {
-                                "ip_prefix": "2001:3:3:3::3",
-                                "prefix_len": "128",
-                                "metric": 1,
-                            },
-                            "2001:10:13:115::/64": {
-                                "ip_prefix": "2001:10:13:115::",
-                                "prefix_len": "64",
-                                "metric": 40,
-                            },
-                            "2001:10:23:115::/64": {
-                                "ip_prefix": "2001:10:23:115::",
-                                "prefix_len": "64",
-                                "metric": 40,
-                            },
-                        },
-                    },
+                            "2001:3:3:3::3/128": [
+                                {
+                                    "ip_prefix": "2001:3:3:3::3",
+                                    "prefix_len": "128",
+                                    "metric": 1
+                                }
+                            ],
+                            "2001:10:13:115::/64": [
+                                {
+                                    "ip_prefix": "2001:10:13:115::",
+                                    "prefix_len": "64",
+                                    "metric": 40
+                                }
+                            ],
+                            "2001:10:23:115::/64": [
+                                {
+                                    "ip_prefix": "2001:10:23:115::",
+                                    "prefix_len": "64",
+                                    "metric": 40
+                                }
+                            ]
+                        }
+                    }
                 },
                 2: {
                     "R1_xe.00-00": {
@@ -613,50 +987,79 @@ expected_output = {
                         "overload_bit": 0,
                         "area_address": "49.0001",
                         "nlpid": "0xCC 0x8E",
-                        "topology": {"ipv4": {"code": "0x0"}, "ipv6": {"code": "0x2"}},
+                        "topology": {
+                            "ipv4": {
+                                "code": "0x0"
+                            },
+                            "ipv6": {
+                                "code": "0x2"
+                            }
+                        },
                         "hostname": "R1_xe",
                         "extended_is_neighbor": {
-                            "R1_xe.02": {"neighbor_id": "R1_xe.02", "metric": 10}
+                            "R1_xe.02": [
+                                {
+                                    "neighbor_id": "R1_xe.02",
+                                    "metric": 10
+                                }
+                            ]
                         },
                         "mt_is_neighbor": {
-                            "R1_xe.02": {"neighbor_id": "R1_xe.02", "metric": 10}
+                            "R1_xe.02": [
+                                {
+                                    "neighbor_id": "R1_xe.02",
+                                    "metric": 10
+                                }
+                            ]
                         },
                         "ip_address": "10.13.115.1",
                         "ipv4_internal_reachability": {
-                            "10.12.115.0/24": {
-                                "ip_prefix": "10.12.115.0",
-                                "prefix_len": "24",
-                                "metric": 10,
-                            },
-                            "10.13.115.0/24": {
-                                "ip_prefix": "10.13.115.0",
-                                "prefix_len": "24",
-                                "metric": 10,
-                            },
-                            "10.23.115.0/24": {
-                                "ip_prefix": "10.23.115.0",
-                                "prefix_len": "24",
-                                "metric": 50,
-                            },
+                            "10.12.115.0/24": [
+                                {
+                                    "ip_prefix": "10.12.115.0",
+                                    "prefix_len": "24",
+                                    "metric": 10
+                                }
+                            ],
+                            "10.13.115.0/24": [
+                                {
+                                    "ip_prefix": "10.13.115.0",
+                                    "prefix_len": "24",
+                                    "metric": 10
+                                }
+                            ],
+                            "10.23.115.0/24": [
+                                {
+                                    "ip_prefix": "10.23.115.0",
+                                    "prefix_len": "24",
+                                    "metric": 50
+                                }
+                            ]
                         },
                         "ipv6_address": "2001:10:13:115::1",
                         "mt_ipv6_reachability": {
-                            "2001:10:12:115::/64": {
-                                "ip_prefix": "2001:10:12:115::",
-                                "prefix_len": "64",
-                                "metric": 10,
-                            },
-                            "2001:10:13:115::/64": {
-                                "ip_prefix": "2001:10:13:115::",
-                                "prefix_len": "64",
-                                "metric": 10,
-                            },
-                            "2001:10:23:115::/64": {
-                                "ip_prefix": "2001:10:23:115::",
-                                "prefix_len": "64",
-                                "metric": 50,
-                            },
-                        },
+                            "2001:10:12:115::/64": [
+                                {
+                                    "ip_prefix": "2001:10:12:115::",
+                                    "prefix_len": "64",
+                                    "metric": 10
+                                }
+                            ],
+                            "2001:10:13:115::/64": [
+                                {
+                                    "ip_prefix": "2001:10:13:115::",
+                                    "prefix_len": "64",
+                                    "metric": 10
+                                }
+                            ],
+                            "2001:10:23:115::/64": [
+                                {
+                                    "ip_prefix": "2001:10:23:115::",
+                                    "prefix_len": "64",
+                                    "metric": 50
+                                }
+                            ]
+                        }
                     },
                     "R1_xe.02-00": {
                         "local_router": True,
@@ -668,9 +1071,19 @@ expected_output = {
                         "p_bit": 0,
                         "overload_bit": 0,
                         "extended_is_neighbor": {
-                            "R1_xe.00": {"neighbor_id": "R1_xe.00", "metric": 0},
-                            "R3_nx.00": {"neighbor_id": "R3_nx.00", "metric": 0},
-                        },
+                            "R1_xe.00": [
+                                {
+                                    "neighbor_id": "R1_xe.00",
+                                    "metric": 0
+                                }
+                            ],
+                            "R3_nx.00": [
+                                {
+                                    "neighbor_id": "R3_nx.00",
+                                    "metric": 0
+                                }
+                            ]
+                        }
                     },
                     "R3_nx.00-00": {
                         "lsp_sequence_num": "0x00000191",
@@ -684,51 +1097,80 @@ expected_output = {
                         "nlpid": "0xCC 0x8E",
                         "router_id": "10.36.3.3",
                         "ip_address": "10.36.3.3",
-                        "topology": {"ipv6": {"code": "0x2"}, "ipv4": {"code": "0x0"}},
+                        "topology": {
+                            "ipv6": {
+                                "code": "0x2"
+                            },
+                            "ipv4": {
+                                "code": "0x0"
+                            }
+                        },
                         "hostname": "R3_nx",
                         "mt_is_neighbor": {
-                            "R1_xe.02": {"neighbor_id": "R1_xe.02", "metric": 40}
+                            "R1_xe.02": [
+                                {
+                                    "neighbor_id": "R1_xe.02",
+                                    "metric": 40
+                                }
+                            ]
                         },
                         "extended_is_neighbor": {
-                            "R1_xe.02": {"neighbor_id": "R1_xe.02", "metric": 40}
+                            "R1_xe.02": [
+                                {
+                                    "neighbor_id": "R1_xe.02",
+                                    "metric": 40
+                                }
+                            ]
                         },
                         "ipv4_internal_reachability": {
-                            "10.36.3.3/32": {
-                                "ip_prefix": "10.36.3.3",
-                                "prefix_len": "32",
-                                "metric": 1,
-                            },
-                            "10.13.115.0/24": {
-                                "ip_prefix": "10.13.115.0",
-                                "prefix_len": "24",
-                                "metric": 40,
-                            },
-                            "10.23.115.0/24": {
-                                "ip_prefix": "10.23.115.0",
-                                "prefix_len": "24",
-                                "metric": 40,
-                            },
+                            "10.36.3.3/32": [
+                                {
+                                    "ip_prefix": "10.36.3.3",
+                                    "prefix_len": "32",
+                                    "metric": 1
+                                }
+                            ],
+                            "10.13.115.0/24": [
+                                {
+                                    "ip_prefix": "10.13.115.0",
+                                    "prefix_len": "24",
+                                    "metric": 40
+                                }
+                            ],
+                            "10.23.115.0/24": [
+                                {
+                                    "ip_prefix": "10.23.115.0",
+                                    "prefix_len": "24",
+                                    "metric": 40
+                                }
+                            ]
                         },
                         "mt_ipv6_reachability": {
-                            "2001:3:3:3::3/128": {
-                                "ip_prefix": "2001:3:3:3::3",
-                                "prefix_len": "128",
-                                "metric": 1,
-                            },
-                            "2001:10:13:115::/64": {
-                                "ip_prefix": "2001:10:13:115::",
-                                "prefix_len": "64",
-                                "metric": 40,
-                            },
-                            "2001:10:23:115::/64": {
-                                "ip_prefix": "2001:10:23:115::",
-                                "prefix_len": "64",
-                                "metric": 40,
-                            },
-                        },
-                    },
-                },
+                            "2001:3:3:3::3/128": [
+                                {
+                                    "ip_prefix": "2001:3:3:3::3",
+                                    "prefix_len": "128",
+                                    "metric": 1
+                                }
+                            ],
+                            "2001:10:13:115::/64": [
+                                {
+                                    "ip_prefix": "2001:10:13:115::",
+                                    "prefix_len": "64",
+                                    "metric": 40
+                                }
+                            ],
+                            "2001:10:23:115::/64": [
+                                {
+                                    "ip_prefix": "2001:10:23:115::",
+                                    "prefix_len": "64",
+                                    "metric": 40
+                                }
+                            ]
+                        }
+                    }
+                }
             }
-        },
+        }
     }
 }

@@ -1,0 +1,54 @@
+=================================================
+Output for router lisp 0 instance-id 101
+=================================================
+LISP ETR IPv4 Mapping Database for EID-table vrf red (IID 101), LSBs: 0x0
+Entries total 2, no-route 2, inactive 0, do-not-register 0
+
+192.168.1.0/24, locator-set RLOC *** NO ROUTE TO EID PREFIX ***
+  Uptime: 08:46:09, Last-change: 08:46:09
+  Domain-ID: unset
+  Locator       Pri/Wgt  Source     State
+  100.31.31.31    1/1    cfg-addr   site-self, reachable
+  100.23.23.23    1/1    cfg-addr   site-other, unknown
+  100.44.44.44 *** missing in configuration ***
+  Map-server       Uptime         ACK  Domain-ID 
+  100.31.31.31     10:00:06       No   0         
+  100.32.32.32     10:00:06       No   0         
+
+          
+=================================================
+Output for router lisp 0 instance-id 103
+=================================================
+LISP ETR IPv6 Mapping Database for EID-table vrf green (IID 103), LSBs: 0x0
+Entries total 3, no-route 3, inactive 3, do-not-register 3
+          
+*** ALL ACTIVE LOCAL EID PREFIXES HAVE NO ROUTE ***
+***    REPORTING LOCAL RLOCS AS UNREACHABLE     ***
+          
+::/0, locator-set RLOC *** NO ROUTE TO EID PREFIX ***
+  Uptime: 00:00:05, Last-change: 00:00:05
+  Domain-ID: 101
+  Locator                    Pri/Wgt  Source     State
+  E80::AEDE:48FF:FE00:1111 *** missing in configuration ***
+  E80::AEDE:48FF:FE00:1112   10/10    cfg-addr   no-route
+  Map-server       Uptime         ACK  Domain-ID 
+  100.31.31.31     never          Yes  101         
+  100.32.32.32     never          No   0         
+          
+=================================================
+Output for router lisp 1 instance-id 104
+=================================================
+          
+LISP ETR MAC Mapping Database for LISP 1 EID-table Vlan 101 (IID 104), LSBs: 0x0
+Entries total 1, no-route 1, inactive 0, do-not-register 0
+          
+*** ALL ACTIVE LOCAL EID PREFIXES HAVE NO ROUTE ***
+***    REPORTING LOCAL RLOCS AS UNREACHABLE     ***
+          
+0000.0000.0000/0, locator-set RLOC3 *** NO ROUTE TO EID PREFIX ***
+  Uptime: 00:02:14, Last-change: 00:02:14
+  Domain-ID: unset
+  Locator       Pri/Wgt  Source     State
+  100.44.44.44    1/1    cfg-addr   no-route
+  Map-server       Uptime         ACK  Domain-ID 
+  100.31.31.31     never          No   0     

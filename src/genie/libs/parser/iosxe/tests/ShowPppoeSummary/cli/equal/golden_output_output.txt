@@ -1,0 +1,2 @@
+show pppoe summary
+1 client session

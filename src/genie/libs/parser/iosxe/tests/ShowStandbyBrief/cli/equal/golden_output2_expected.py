@@ -1,0 +1,31 @@
+expected_output = {
+    'interface':{
+        'Vl500':{
+            'grp':20,
+            'priority':100,
+            'is_preempt_enabled':True,
+            'state':'Active',
+            'active':'local',
+            'standby':'100.1.50.2',
+            'virtual_ip':'100.1.50.254'
+        },
+        'Vl501':{
+            'grp':21,
+            'priority':100,
+            'is_preempt_enabled':True,
+            'state':'Active',
+            'active':'local',
+            'standby':'100.1.51.2',
+            'virtual_ip':'100.1.51.254'
+        },
+        'Vl502':{
+            'grp':22,
+            'priority':100,
+            'is_preempt_enabled':True,
+            'state':'Active',
+            'active':'local',
+            'standby':'100.1.52.2',
+            'virtual_ip':'100.1.52.254'
+        }
+    }
+}

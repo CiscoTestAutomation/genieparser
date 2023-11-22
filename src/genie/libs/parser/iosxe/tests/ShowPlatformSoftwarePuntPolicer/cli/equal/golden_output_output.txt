@@ -1,0 +1,94 @@
+pm9004#show platform software punt-policer
+
+Per Punt-Cause Policer Configuration and Packet Counters
+
+
+Punt                                Config Rate(pps)     Conform Packets                   Dropped Packets               Config Burst(pkts)  Config Alert
+Cause  Description                   Normal   High     Normal           High             Normal           High             Normal   High     Normal   High
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+  2    IPv4 Options                  4000     3000     0                0                0                0                4000     3000     Off      Off
+  3    Layer2 control and legacy     40000    10000    298852           3586680          0                0                40000    10000    Off      Off
+  4    PPP Control                   2000     1000     0                0                0                0                2000     1000     Off      Off
+  5    CLNS IS-IS Control            40000    10000    0                0                0                0                40000    10000    Off      Off
+  6    HDLC keepalives               2000     1000     0                0                0                0                2000     1000     Off      Off
+  7    ARP request or response       2000     1000     0                123723           0                0                2000     1000     Off      Off
+  8    Reverse ARP request or repso  2000     1000     0                0                0                0                2000     1000     Off      Off
+  9    Frame-relay LMI Control       2000     1000     0                0                0                0                2000     1000     Off      Off
+ 10    Incomplete adjacency          2000     1000     0                15371            0                0                2000     1000     Off      Off
+ 11    For-us data                   40000    5000     14762            24837888         0                0                40000    5000     Off      Off
+ 12    Mcast Directly Connected Sou  2000     1000     0                0                0                0                2000     1000     Off      Off
+ 13    Mcast IPv4 Options data pack  2000     1000     0                0                0                0                2000     1000     Off      Off
+ 15    MPLS TTL expired              5120     2000     0                0                0                0                5120     2000     Off      Off
+ 16    MPLS Reserved label (ie: 0-1  5120     2000     0                0                0                0                5120     2000     Off      Off
+ 18    IPV6 Hop-by-hop Options       2000     1000     0                0                0                0                2000     1000     Off      Off
+ 19    Mcast Internal Copy           2000     1000     0                0                0                0                2000     1000     Off      Off
+ 23    Mcast IGMP Unroutable         2000     1000     0                0                0                0                2000     1000     Off      Off
+ 24    Glean adjacency               2000     5000     0                46158            0                0                2000     5000     Off      Off
+ 25    Mcast PIM signaling           2000     1000     0                0                0                0                2000     1000     Off      Off
+ 27    Subscriber session control    10000    40000    0                102452           0                0                10000    40000    Off      Off
+ 29    RP handled ICMP               2000     1000     0                0                0                0                2000     1000     Off      Off
+ 30    RP injected For-us data       20000    1000     0                0                0                0                20000    1000     Off      Off
+ 32    SBC RTP DTMF                  2000     1000     0                0                0                0                2000     1000     Off      Off
+ 33    Pseudowire VCCV control chan  2000     1000     0                0                0                0                2000     1000     Off      Off
+ 35    Ethernet slow protocol (ie:   2000     1000     0                0                0                0                2000     1000     Off      Off
+ 44    L2TP session                  1048     1000     0                0                0                0                1048     1000     Off      Off
+ 45    BFD control                   2000     5000     0                18               0                0                2000     5000     Off      Off
+ 51    DMVPN NHRP redirect           2000     1000     0                0                0                0                2000     1000     Off      Off
+ 52    PFR monitored prefix logging  2000     1000     0                0                0                0                2000     1000     Off      Off
+ 53    PFR top talkers logging       2000     1000     0                0                0                0                2000     1000     Off      Off
+ 54    PFR top talkers application   2000     1000     0                0                0                0                2000     1000     Off      Off
+ 55    For-us control                20000    20000    0                443111           0                0                20000    20000    Off      Off
+ 56    RP injected for-us control    2000     2000     512              0                0                0                2000     2000     Off      Off
+ 58    Layer2 bridge domain data pa  2000     1000     0                0                0                0                2000     1000     Off      Off
+ 60    IP subnet or broadcast packe  2000     1000     2304             0                0                0                2000     1000     Off      Off
+ 61    Ethernet CFM packet           2000     1000     0                0                0                0                2000     1000     Off      Off
+ 62    Ethernet CFM notify packet    2000     1000     0                0                0                0                2000     1000     Off      Off
+ 63    LISP LSB NOTIFICATION         2000     1000     0                0                0                0                2000     1000     Off      Off
+ 64    Service Engine packet         5000     1000     0                0                0                0                5000     1000     Off      Off
+ 65    L2BD Control packet from FIA  2000     1000     0                0                0                0                2000     1000     Off      Off
+ 66    L2BD Control Message from CP  2000     1000     0                0                0                0                2000     1000     Off      Off
+ 67    MFR_LIP_CONTROL               2000     1000     0                0                0                0                2000     1000     Off      Off
+ 69    OTV Control packet            2000     1000     0                0                0                0                2000     1000     Off      Off
+ 70    OTV ARP packet                2000     1000     0                0                0                0                2000     1000     Off      Off
+ 73    STP BPDU's                    2000     4000     0                0                0                0                2000     4000     Off      Off
+ 74    ACL log                       2000     1000     0                0                0                0                2000     1000     Off      Off
+ 75    EPC                           40000    1000     0                0                0                0                40000    1000     Off      Off
+ 76    Lisp Dynamic eid              2000     1000     0                0                0                0                2000     1000     Off      Off
+ 77    L2 Control packet             2000     1000     0                0                0                0                2000     1000     Off      Off
+ 79    dhcp snoop                    2000     1000     0                0                0                0                2000     1000     Off      Off
+ 80    Metric Mediation Agent recor  2400     1000     0                0                0                0                24000    1000     Off      Off
+ 81    IPv6 DMVPN NHRP redirect      2000     1000     0                0                0                0                2000     1000     Off      Off
+ 82    Ethernet CFM packet from cor  2000     1000     0                0                0                0                2000     1000     Off      Off
+ 83    Ethernet CFM punt fwd packet  2000     1000     0                0                0                0                2000     1000     Off      Off
+ 84    PTP punt fwd packet           8192     8192     0                0                0                0                8192     8192     Off      Off
+ 85    ISDN D-Channel raw packet     2000     1000     0                0                0                0                2000     1000     Off      Off
+ 87    IPv6 FHS SG dropped packet    2000     2000     0                0                0                0                2000     2000     Off      Off
+ 88    IPv6 FHS Data glean packet    2000     1000     0                0                0                0                2000     1000     Off      Off
+ 89    SBC DSP pkts                  2000     1000     0                0                0                0                2000     1000     Off      Off
+ 90    Raw Socket Data packet        2000     1000     0                0                0                0                2000     1000     Off      Off
+ 91    SSLVPN session control        2000     5000     0                0                0                0                2000     5000     Off      Off
+ 92    ICMP unreachables for ACL de  2000     1000     0                0                0                0                2000     1000     Off      Off
+ 93    CENT Smart Probe packet       2000     1000     0                0                0                0                2000     1000     Off      Off
+ 95    Autonomic Network Channel Di  2000     1000     0                0                0                0                2000     1000     Off      Off
+ 97    Packets to LFTS               2000     1000     30424            0                0                0                2000     1000     Off      Off
+ 98    VLAN Auto Sense FSOL          2000     1000     0                0                0                0                2000     1000     Off      Off
+102    Source Verify inconclusive    2000     1000     0                0                0                0                2000     1000     Off      Off
+104    mpls receive adj              2000     2000     0                0                0                0                2000     2000     Off      Off
+105    MKA EAPoL packet              2000     1000     0                0                0                0                2000     1000     Off      Off
+106    ICMP Unreachable              1048     1000     0                0                0                0                1048     1000     Off      Off
+112    QoS CAC Flow Report           2000     1000     0                0                0                0                2000     1000     Off      Off
+113    Active identity               2000     1000     0                0                0                0                2000     1000     Off      Off
+114    BGP Overlay Tunnel packet     2000     1000     0                0                0                0                2000     1000     Off      Off
+115    Lisp gsmr enabled             2000     1000     0                0                0                0                2000     1000     Off      Off
+120    SBC RTP FWD DTMF              2000     1000     0                0                0                0                2000     1000     Off      Off
+121    Path Manager                  2000     1000     0                0                0                0                2000     1000     Off      Off
+127    Path Manager TTL expired      2000     1000     0                0                0                0                2000     1000     Off      Off
+128    L3 PTP message                2000     1000     0                0                0                0                2000     1000     Off      Off
+140    EFP dot1x Packets             2000     1000     0                0                0                0                2000     1000     Off      Off
+141    DMVPN GAL label check         2000     1000     0                0                0                0                2000     1000     Off      Off
+143    epbr packets                  2000     1000     0                0                0                0                2000     1000     Off      Off
+144    PMIPv6 control packets        2000     5000     0                0                0                0                2000     5000     Off      Off
+147    Mcast UDLR                    2000     1000     0                0                0                0                2000     1000     Off      Off
+148    L2BD SISF ctrl                2000     4000     0                0                0                0                2000     4000     Off      Off
+150    SR TWAMP PROBE                2000     1000     0                0                0                0                2000     1000     Off      Off
+156    BFD L2 control                2000     5000     0                0                0                0                2000     5000     Off      Off

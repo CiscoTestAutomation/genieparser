@@ -1,0 +1,36 @@
+LISP forwarding state for EID table IPv6:red
+  Instance ID                  4100
+  EID VRF                      red (0x2)
+    IPv4
+      Configured roles         ETR|PITR
+      EID table                IPv4:red
+      ALT table                <null>
+      Locator status bits      Disabled
+      Nonce                    N/A
+      TTL Propagation          Enabled
+      Table Suppression        Disabled
+      SGT Policy Fwd           Disabled
+    IPv6
+      Configured roles         ETR|PITR
+      EID table                IPv6:red
+      ALT table                <null>
+      Locator status bits      Disabled
+      Nonce                    N/A
+      TTL Propagation          Enabled
+      Table Suppression        Disabled
+      SGT Policy Fwd           Disabled
+    L2
+      Configured role          DISABLED
+      L2 Domain ID             0
+      IPv4 Unnum I/F           N/A
+      IPv6 Unnum I/F           N/A
+    RLOC transport VRF         Default (0x0)
+      IPv4 RLOC table          IPv4:Default
+      IPv6 RLOC table          IPv6:Default
+      IPv4 path MTU discovery  min  576 max 65535
+      IPv6 path MTU discovery  min 1280 max 65535
+      IPv4 RLOC fltr handle    0x0
+      IPv6 RLOC fltr handle    0x0
+    LISP router ID             0
+    LISP virtual interface     LISP0.4100
+    User                       LISP

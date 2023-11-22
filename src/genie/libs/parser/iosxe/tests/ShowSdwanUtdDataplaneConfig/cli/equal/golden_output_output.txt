@@ -1,0 +1,12 @@
+utd-dp config context 0
+context-flag      25493505
+engine            Standard
+state             enabled
+sn-redirect       fail-open
+redirect-type     divert
+threat-inspection not-enabled
+defense-mode      not-enabled
+domain-filtering  not-enabled
+url-filtering     not-enabled
+all-interface     enabled
+file-inspection   enabled

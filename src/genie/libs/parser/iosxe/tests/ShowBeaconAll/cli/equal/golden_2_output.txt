@@ -1,0 +1,13 @@
+show beacon all
+Slot#           Beacon Status
+---------------------------------
+ 1                  OFF
+ 2                  OFF
+*3                  OFF
+ 4                  OFF
+---------------------------------
+Power-Supply#   Beacon Status
+---------------------------------
+ 1                  OFF
+--------------------------------
+FANTRAY BEACON:     OFF

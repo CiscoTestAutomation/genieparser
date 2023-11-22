@@ -327,7 +327,13 @@ class ShowNetconfYangStatusSchema(MetaParser):
     schema = {
         'status': str,
         'ssh_port': str,
-        'candidate_datastore_status': str
+        'candidate_datastore_status': str,
+        Optional('side_effect_sync'): str,
+        Optional('turbocli'): str,
+        Optional('hostkey_algorithm'): ListOf(str),
+        Optional('encryption_algorithm'): ListOf(str),
+        Optional('mac_algorithm'): ListOf(str),
+        Optional('kex_algorithm'): ListOf(str)
     }
 
 class ShowNetconfYangStatus(ShowNetconfYangStatusSchema):
@@ -347,6 +353,18 @@ class ShowNetconfYangStatus(ShowNetconfYangStatusSchema):
         p2 = re.compile(r'^netconf-yang ssh port:\s+(?P<ssh_port>\d+)$')
         # netconf-yang candidate-datastore: enabled
         p3 = re.compile(r'^netconf-yang candidate-datastore:\s+(?P<candidate_datastore_status>\S+)$')
+        # netconf-yang side-effect-sync: enabled
+        p4 = re.compile(r'^netconf-yang side-effect-sync:\s+(?P<side_effect_sync>\S+)$')
+        # netconf-yang turbocli: disabled
+        p5 = re.compile(r'^netconf-yang turbocli:\s+(?P<turbocli>\S+)$')
+        # netconf-yang ssh hostkey algorithms: rsa-sha2-256,rsa-sha2-512,ssh-rsa
+        p6 = re.compile(r'^netconf-yang ssh hostkey algorithms:\s+(?P<hostkey_algorithm>\S+)$')
+        # netconf-yang ssh encryption algorithms: aes128-ctr,aes192-ctr,aes256-ctr,aes128-cbc,aes256-cbc
+        p7 = re.compile(r'^netconf-yang ssh encryption algorithms:\s+(?P<encryption_algorithm>\S+)$')
+        # netconf-yang ssh MAC algorithms: hmac-sha2-256,hmac-sha2-512,hmac-sha1
+        p8 = re.compile(r'^netconf-yang ssh MAC algorithms:\s+(?P<mac_algorithm>\S+)$')
+        # netconf-yang ssh KEX algorithms: diffie-hellman-group14-sha1,diffie-hellman-group14-sha256,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group16-sha512
+        p9 = re.compile(r'^netconf-yang ssh KEX algorithms:\s+(?P<kex_algorithm>\S+)$')
 
         ret_dict = {}
 
@@ -370,5 +388,41 @@ class ShowNetconfYangStatus(ShowNetconfYangStatusSchema):
             if m3:
                 group = m3.groupdict()
                 ret_dict['candidate_datastore_status'] = group.pop('candidate_datastore_status')
+
+            # netconf-yang side-effect-sync: enabled
+            m4 = p4.match(line)
+            if m4:
+                group = m4.groupdict()
+                ret_dict['side_effect_sync'] = group.pop('side_effect_sync')
+
+            # netconf-yang turbocli: disabled
+            m5 = p5.match(line)
+            if m5:
+                group = m5.groupdict()
+                ret_dict['turbocli'] = group.pop('turbocli')
+
+            # netconf-yang ssh hostkey algorithms: rsa-sha2-256,rsa-sha2-512,ssh-rsa
+            m6 = p6.match(line)
+            if m6:
+                group = m6.groupdict()
+                ret_dict['hostkey_algorithm'] = list(group.pop('hostkey_algorithm').strip().split(','))
+
+            # netconf-yang ssh encryption algorithms: aes128-ctr,aes192-ctr,aes256-ctr,aes128-cbc,aes256-cbc
+            m7 = p7.match(line)
+            if m7:
+                group = m7.groupdict()
+                ret_dict['encryption_algorithm'] = list(group.pop('encryption_algorithm').strip().split(','))
+
+            # netconf-yang ssh MAC algorithms: hmac-sha2-256,hmac-sha2-512,hmac-sha1
+            m8 = p8.match(line)
+            if m8:
+                group = m8.groupdict()
+                ret_dict['mac_algorithm'] = list(group.pop('mac_algorithm').strip().split(','))
+
+            # netconf-yang ssh KEX algorithms: diffie-hellman-group14-sha1,diffie-hellman-group14-sha256,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group16-sha512
+            m9 = p9.match(line)
+            if m9:
+                group = m9.groupdict()
+                ret_dict['kex_algorithm'] = list(group.pop('kex_algorithm').strip().split(','))
 
         return ret_dict

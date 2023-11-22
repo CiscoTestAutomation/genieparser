@@ -1,0 +1,23 @@
+vrrp vpn 1
+
+interfaces ge2/3.101
+
+  groups 1
+
+   virtual-ip             182.210.210.201
+
+   virtual-mac            00:00:5e:00:01:01
+
+   priority               115
+
+   real-priority          105
+
+   vrrp-state             primary
+
+   omp-state              up
+
+   advertisement-timer    1
+
+   primary-down-timer     3
+
+   last-state-change-time 2022-01-24T06:56:20+00:00

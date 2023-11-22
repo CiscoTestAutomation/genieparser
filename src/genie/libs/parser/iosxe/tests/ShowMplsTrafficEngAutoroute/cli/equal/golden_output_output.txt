@@ -1,0 +1,4 @@
+MPLS TE autorouting enabled
+  destination 2.2.2.2, area ospf 1  area 0, has 1 tunnels
+    Tunnel100   (load balancing metric 4000000, nexthop 2.2.2.2)
+                (flags: Announce)

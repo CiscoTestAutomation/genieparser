@@ -1,0 +1,5 @@
+REP Segment 55
+BridgeName                       PortName   Edge Role
+-------------------------------- ---------- ---- ----
+fr1                              Tw2/0/3    Pri* Open
+fr1                              Gi1/0/3    Sec* Alt

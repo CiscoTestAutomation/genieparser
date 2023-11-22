@@ -1,0 +1,6 @@
+For asic 0 core 0
+
+Module 0 - SupDeviceId[0][0] 
+
+deviceType                : 0x448
+deviceVersion             : 0x1

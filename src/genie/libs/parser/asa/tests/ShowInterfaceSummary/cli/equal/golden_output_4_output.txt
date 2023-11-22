@@ -1,0 +1,9 @@
+Interface Management0/0 "management", is up, line protocol is up
+        Description: blabla-01 gi1/0/11
+        MAC address a29e.3600.0006, MTU 1500
+        IP address 1.1.1.1, subnet mask 255.255.255.0
+        Management-only interface. Blocked 0 through-the-device packets
+
+Interface  "nlp_int_tap", is up, line protocol is up
+        MAC address a29e.3600.0080, MTU 1500
+        IP address 169.254.21.1, subnet mask 255.255.255.248

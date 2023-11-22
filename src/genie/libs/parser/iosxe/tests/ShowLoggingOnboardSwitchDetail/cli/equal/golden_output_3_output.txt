@@ -1,0 +1,23 @@
+show logging onboard switch 1 temperature detail
+
+--------------------------------------------------------------------------------
+TEMPERATURE SUMMARY INFORMATION
+--------------------------------------------------------------------------------
+Number of sensors          : 12
+--------------------------------------------------------------------------------
+Sensor                    ID         Normal Range          Maximum Sensor Value
+--------------------------------------------------------------------------------
+SYSTEM INLET              0          0 - 45                42
+SYSTEM OUTLET             1          0 - 80                53
+SYSTEM HOTSPOT            2          0 - 115               68
+PS1 INLET                 3          0 - 50                49
+PS1 OUTLET                4          0 - 85                42
+PS1 HOTSPOT               5          0 - 120               49
+PS2 INLET                 6          0 - 50                0
+PS2 OUTLET                7          0 - 85                0
+PS2 HOTSPOT               8          0 - 120               0
+SYSTEM FAN(RPS)           9          0 - 100               42
+PS1 FAN(RPS)              10         0 - 100               127
+PS2 FAN(RPS)              11         0 - 100               0
+
+--------------------------------------------------------------------------------

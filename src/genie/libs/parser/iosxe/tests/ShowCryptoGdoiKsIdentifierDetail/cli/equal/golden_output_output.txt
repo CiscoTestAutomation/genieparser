@@ -1,0 +1,14 @@
+KS Sender ID (KSSID) Information for Group bw6000:
+
+    Transform Mode           : Non-Counter (Non-Suite-B)
+    Re-initializing          : No
+    SID Length (Group Size)  : 24 bits (MEDIUM)
+    Current KSSID In-Use     : none
+    Last GMSID Used          : none
+
+    KSSID(s) Assigned        : none
+    KSSID(s) Used            : none
+    KSSID(s) Used (Old)      : none
+    Available KSSID(s)       : none
+
+    REMAINING SIDs: none

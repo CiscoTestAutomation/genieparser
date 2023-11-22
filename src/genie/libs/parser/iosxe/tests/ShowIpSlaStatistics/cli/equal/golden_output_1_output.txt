@@ -1,0 +1,13 @@
+show ip sla statistics 1
+IPSLAs Latest Operation Statistics
+
+IPSLA operation id: 1
+Latest RTT: NoConnection/Busy/Timeout
+Latest operation start time: 06:39:18 UTC Wed Oct 13 2021
+Latest operation return code: Timeout
+Latest DNS RTT: 0 ms
+Latest TCP Connection RTT: 2 ms
+Latest HTTP Transaction RTT: 0 ms
+Number of successes: 0
+Number of failures: 27
+Operation time to live: Forever

@@ -1,0 +1,9 @@
+ Service-policy queueing output: parent
+
+Class-map: tc7 (match-all)
+0 packets
+Match: traffic-class 7
+Queueing
+queue limit 7500000 bytes
+(total drops) 0
+(bytes output) 0

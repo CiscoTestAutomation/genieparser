@@ -154,10 +154,10 @@ class ShowRadiusStatistics(ShowRadiusStatisticsSchema):
     """
     Parser for show radius statistics 
     """
+    cli_command = 'show radius statistics'    
 
     def cli(self, output=None):
-        # Cli command 
-        cmd = 'show radius statistics'
+        
 
         #----------------------------------------------------------------
         # Maximum inQ length:             NA         NA         0
@@ -248,7 +248,7 @@ class ShowRadiusStatistics(ShowRadiusStatisticsSchema):
         ret_dict = {}
 
         if output is None:
-            out = self.device.execute(cmd)
+            out = self.device.execute(self.cli_command)
         else:
             out = output
 
@@ -403,10 +403,10 @@ class ShowRadiusServerGroupAll(ShowRadiusServerGroupAllSchema):
     """
     Parser for show radius server-group all
     """
-
+    cli_command = 'show radius server-group all'
+      
     def cli(self, output=None):
-        # Cli command 
-        cmd = 'show radius server-group all'
+            
 
         # Server group radius
         p1 = re.compile(r'(^Server\s+group)\s+(.*)')
@@ -435,7 +435,7 @@ class ShowRadiusServerGroupAll(ShowRadiusServerGroupAllSchema):
         server_trans = {}
         server_dict = {}
         if output is None:
-            out = self.device.execute(cmd)
+            out = self.device.execute(self.cli_command)
         else:
             out = output
 

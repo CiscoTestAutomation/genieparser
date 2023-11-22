@@ -1,0 +1,8 @@
+Telemetry subscription stats:
+
+Subscription ID  Msgs Sent  Msgs Drop  Records Sent Connection Info
+---------------- ---------- ---------- ------------ -----------------------------------------
+2147483651       31492      0          52507846     admin                                                                     
+2147483650       31492      0          52507846     admin                                                                     
+2147483649       31492      0          52507846     admin                                                                     
+2147483648       31492      0          52507846     admin    

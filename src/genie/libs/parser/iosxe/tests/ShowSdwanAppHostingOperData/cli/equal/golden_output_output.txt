@@ -1,0 +1,126 @@
+pm9005#show sdwan app-hosting oper-data
+app-hosting-oper-data app utd
+ details state            RUNNING
+ details package-information name UTD-Snort-Feature
+ details package-information path /bootflash/.UTD_IMAGES/iox-utd_1.0.4_SV2.9.16.1_XE17.7.tar
+ details package-information application name utd
+ details package-information application installed-version 1.0.4_SV2.9.16.1_XE17.7
+ details package-information application description "Unified Threat Defense"
+ details package-information application type LXC
+ details package-information application owner ioxm
+ details package-information application activation-allowed true
+ details package-information application author ""
+ details package-information signing key-type ""
+ details package-information signing method ""
+ details package-information licensing name ""
+ details package-information licensing version ""
+ details package-information url-path ""
+ details detailed-guest-status processes name ""
+ details detailed-guest-status processes status ""
+ details detailed-guest-status processes pid ""
+ details detailed-guest-status processes uptime ""
+ details detailed-guest-status processes memory ""
+ details activated-profile-name cloud-medium
+ details resource-reservation disk 1111
+ details resource-reservation memory 3072
+ details resource-reservation cpu 0
+ details resource-reservation vcpu 0
+ details resource-reservation cpu-percent 50
+ details guest-interface  ""
+ details resource-admission state ""
+ details resource-admission disk-space ""
+ details resource-admission memory ""
+ details resource-admission cpu 0
+ details resource-admission vcpus ""
+ details docker-run-opts  ""
+ details command          ""
+ details entry-point      ""
+ details health-status    0
+ details last-health-probe-error ""
+ details last-health-probe-output ""
+ details pkg-run-opt      ""
+ details ieobc-mac-addr   33:33:3a:33:33:3a
+ utilization name utd
+ utilization cpu-util requested-application-util 0
+ utilization cpu-util actual-application-util 3
+ utilization cpu-util cpu-state ""
+ utilization memory-util memory-allocation 3072
+ utilization memory-util memory-used 335636
+                RX       RX     RX      TX       TX     TX
+NAME     ALIAS  PACKETS  BYTES  ERRORS  PACKETS  BYTES  ERRORS
+----------------------------------------------------------------
+dp_1_0   net2   0        0      0       30       1260   0
+dp_1_1   net3   0        0      0       0        0      0
+ieobc_1  ieobc  190      11175  0       190      12303  0
+
+ storage-utils storage-util disk
+  alias       ""
+  rd-bytes    0
+  rd-requests 0
+  errors      0
+  wr-bytes    0
+  wr-requests 0
+  capacity    1137664
+  available   255382
+  used        882282
+  usage       ""
+NAME                         TYPE          ALIAS
+----------------------------------------------------
+                             Serial/Trace  serial3
+dp_1_0                       NIC           net2
+dp_1_1                       NIC           net3
+_rootfs                      Disk
+ieobc_1                      NIC           ieobc
+/opt/var                     Disk
+/tmp/HTX-IOX                 Disk
+/opt/var/core                Disk
+/tmp/binos-IOX               Disk
+watchdog-506.0               Watchdog
+/tmp/xml/UtdAmp-IOX          Disk
+/tmp/xml/UtdDaq-IOX          Disk
+/tmp/xml/UtdTls-IOX          Disk
+/tmp/xml/UtdUrlf-IOX         Disk
+/tmp/xml/UtdDaqWcapi-IOX     Disk
+/tmp/xml/UtdIpsAlert-IOX     Disk
+/tmp/xml/UtdLogMappings-IOX  Disk
+
+                   ATTACHED   IPV4       NETWORK  IPV6
+MAC ADDRESS        INTERFACE  ADDRESS    NAME     ADDRESS
+-----------------------------------------------------------
+54:0e:00:0b:0c:02  eth0       0.0.0.0    ieobc_1  ::
+f8:6b:d9:c0:cc:5e  eth2       0.0.0.0    dp_1_0   ::
+f8:6b:d9:c0:cc:5f  eth1       192.0.2.2  dp_1_1   ::
+
+ pkg-policy iox-pkg-policy-invalid
+app-hosting-oper-data app-resources global
+ cpu "system CPU"
+  quota          98
+  available      48
+  quota-unit     48608
+  available-unit 23808
+ memory memory
+  quota     4096
+  available 1024
+ storage-device harddisk
+  quota     512000
+  available 13516
+ storage-device bootflash
+  quota     1000
+  available 1000
+ storage-device volume-group
+  quota     14896
+  available 0
+ storage-device "CAF persist-disk"
+  quota     14534
+  available 12840
+app-hosting-oper-data app-notifications event
+ timestamp      2022-04-25T18:08:36.189866+00:00
+ severity-level minor
+ host-name      pm9005
+ vrf-name       ""
+ app-id         utd
+ ev-type        im-iox-enable
+ status         im-app-pass
+ message        "utd is started\nCurrent is in RUNNING\n"
+ app-state      im-state-running
+app-hosting-oper-data app-globals iox-enabled true

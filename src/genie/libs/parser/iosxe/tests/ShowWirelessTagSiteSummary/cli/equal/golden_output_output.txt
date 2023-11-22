@@ -1,0 +1,12 @@
+
+Number of Site Tags: 7
+
+Site Tag Name                     Description
+------------------------------------------------------------------------
+sometag                           Some description
+flexsit1
+flexsit2                          flexsit2
+flexsit3
+dot1xsite1                        Site 123
+dot1xsite2
+default-site-tag                  default site tag

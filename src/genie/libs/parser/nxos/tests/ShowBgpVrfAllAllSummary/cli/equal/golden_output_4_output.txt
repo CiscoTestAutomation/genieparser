@@ -1,0 +1,15 @@
+
+BGP summary information for VRF default, address family IPv4 Unicast
+BGP router identifier 10.4.1.1, local AS number 100
+BGP table version is 2, IPv4 Unicast config peers 1, capable peers 0
+0 network entries and 0 paths using 0 bytes of memory
+BGP attribute entries [0/0], BGP AS path entries [0/0]
+BGP community entries [0/0], BGP clusterlist entries [1/4]
+Dampening configured, 0 history paths, 0 dampened paths
+
+Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+10.16.2.5         4   200       0       0        0    0    0     5w6d Shut (Admin)
+10.10.80.1      4 4210410100
+                         578124  577455     3272    0    0     9w3d 297        
+
+BGP summary information for VRF default, address family IPv6 Unicast

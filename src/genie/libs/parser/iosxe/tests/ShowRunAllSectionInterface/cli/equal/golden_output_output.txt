@@ -1,0 +1,55 @@
+show running-config all | sec interface Port-channel93
+interface Port-channel93
+ mvrp timer leave-all 1000
+ mvrp timer leave 60
+ mvrp timer join 20
+ no mvrp timer periodic
+ no mvrp
+ switchport
+ switchport access vlan 100
+ switchport trunk native vlan 1
+ switchport trunk native vlan tag
+ switchport trunk allowed vlan all
+ no switchport autostate exclude
+ switchport private-vlan trunk encapsulation dot1q
+ switchport private-vlan trunk native vlan tag
+ switchport mode access
+ no switchport nonegotiate
+ no switchport protected
+ no switchport block multicast
+ no switchport block unicast
+ no switchport vepa enabled
+ no switchport app-interface
+ no ip arp inspection trust
+ ip arp inspection limit rate 15 burst interval 1
+ ip arp inspection limit rate 15
+ logging event link-status
+ load-interval 300
+ carrier-delay 2
+ no shutdown
+ no medium p2p
+ ipv6 mld snooping tcn flood
+ mpls mtu 1500
+ mpls mldp
+ snmp trap mac-notification change added
+ snmp trap mac-notification change removed
+ snmp trap link-status
+ bfd enable
+ arp arpa
+ arp timeout 14400
+ spanning-tree port-priority 128
+ spanning-tree cost 0
+ hold-queue 2000 in
+ hold-queue 40 out
+ ip igmp snooping tcn flood
+ ip dhcp snooping limit rate 18446744073709551615
+ no ip dhcp snooping trust
+ ip dhcp snooping information option allow-untrusted
+ no bgp-policy accounting input
+ no bgp-policy accounting output
+ no bgp-policy accounting input source
+ no bgp-policy accounting output source
+ no bgp-policy source ip-prec-map
+ no bgp-policy source ip-qos-map
+ no bgp-policy destination ip-prec-map
+ no bgp-policy destination ip-qos-map

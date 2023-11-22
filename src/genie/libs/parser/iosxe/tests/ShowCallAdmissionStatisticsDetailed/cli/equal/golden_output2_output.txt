@@ -1,0 +1,17 @@
+CAC New Model (SRSM) is ACTIVE
+CAC statistics duration:  372898(seconds)
+Total calls rejected 3381, accepted 48667
+Current hardware CAC status is: Not Dropping
+Total call Session charges: 0, limit 350
+
+CPU utilization: Five Sec Average CPU Load, Current actual CPU: 3%, Limit: 80%
+
+CAC Events:
+        Reject reason          Times of activation   Duration of activation(secs)     Rejected calls
+        CPU-limit:                       3354                   116                        33541234
+        SessionCharges:                  27                     0                          27
+        LowPlatformResource:             0                      0                          0
+        Session Limit:                   9876543                0                          0
+
+Total dropped FSOL packets at data plane: 0
+

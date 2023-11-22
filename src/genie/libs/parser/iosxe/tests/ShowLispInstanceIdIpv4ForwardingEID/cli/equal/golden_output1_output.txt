@@ -1,0 +1,5 @@
+Prefix                 Fwd action  Locator status bits   encap_iid
+0.0.0.0/0              signal      0x00000000            N/A
+  packets/bytes       0/0
+192.168.1.0/24         signal      0x00000000            N/A
+  packets/bytes       0/0

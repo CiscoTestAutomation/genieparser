@@ -1,0 +1,32 @@
+expected_output = {
+        'timer': {
+            'session_cleanup':  '48.241',
+            'session_cleanup_iso':  '2022-01-15T08:54:35Z',
+            'renew_timer':  '291d23:54:53.214',
+            'renew_timer_iso':  '2022-11-04T03:01:26Z',
+            'shadow_timer': '985d11:54:30.614',
+            'shadow_timer_iso': '2024-09-26T20:48:17Z',
+            'poll_timer':   '57.782',
+            'poll_timer_iso':   '2022-01-16T05:02:44Z',
+            'expiry_alert_id':  '304d23:58:41.613',
+            'expiry_alert_id_iso':  '2022-11-16T08:52:28Z',
+            'expiry_alert_ca':  '1034d23:54:30.571',
+            'expiry_alert_ca_iso':  '2024-11-15T08:48:17Z',
+            'crl_expire':   '5:54:30.889',
+            'crl_expire_iso':   '2022-01-15T14:48:17Z',
+            'crl_update':   '5:54:30.889',
+            'crl_update_iso':   '2022-01-15T14:48:17Z',
+            'crl_dwnld_retry':  '4:33.164',
+            'crl_dwnld_retry_iso':  '2022-01-16T05:06:20Z',
+            'trustpool_timer':  '2656d17:01:54.955',
+            'trustpool_timer_iso':  '2029-04-25T01:55:41Z',
+            'est_connect_retry':    '6.908',
+            'est_connect_retry_iso':    '2020-05-02T04:10:40Z',
+            'cs_crl_update':    '5:54:30.810',
+            'cs_crl_update_iso': '2022-01-15T14:48:17Z',
+            'cs_shadow_gen':    '1094d23:34:30.810',
+            'cs_shadow_gen_iso':    '2025-01-14T08:28:17Z',
+            'cs_cert_expiry':   '1094d23:54:30.569',
+            'cs_cert_expiry_iso':   '2025-01-14T08:48:17Z'
+        }
+    } 

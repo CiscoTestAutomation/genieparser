@@ -1,0 +1,37 @@
+show evpn evi vpn-id 1 inclusive-multicast detail
+Wed Mar  2 01:23:38.989 PST
+
+VPN-ID     Encap  EtherTag   Originating IP
+---------- ------ ---------- ----------------------------------------
+1          SRv6   0          1.1.1.1
+    TEPid  : 0xffffffff
+    PMSI Type: 6
+    Nexthop: ::
+    SR-TE Info: N/A
+    SID    : cafe:0:128:e1aa::
+    Source : Local
+    E-Tree : Root
+1          SRv6   0          2.2.2.2
+    TEPid  : 0x05000001
+    PMSI Type: 6
+    Nexthop: 2.2.2.2
+    SR-TE Info: N/A
+    SID    : cafe:0:200:e001::
+    Source : Remote
+    E-Tree : Root
+1          SRv6   0          3.3.3.3
+    TEPid  : 0x05000003
+    PMSI Type: 6
+    Nexthop: 3.3.3.3
+    SR-TE Info: N/A
+    SID    : cafe:0:300:e001::
+    Source : Remote
+    E-Tree : Root
+1          SRv6   0          4.4.4.4
+    TEPid  : 0x05000002
+    PMSI Type: 6
+    Nexthop: 4.4.4.4
+    SR-TE Info: N/A
+    SID    : cafe:0:400:e001::
+    Source : Remote
+    E-Tree : Root

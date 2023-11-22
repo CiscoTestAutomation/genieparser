@@ -1,0 +1,13 @@
+Displaying data for domain number 0
+=======================================
+
+Profile Type : DOT1AS
+Profile State: enabled
+clocksource 160
+Grandmaster: FALSE
+gm_capable: TRUE
+gm_present: TRUE
+neighbor propagation delay threshold: 800 ns
+Transport Method : 802.3
+Message general ip dscp  : 59
+Message event ip dscp    : 47

@@ -1,0 +1,21 @@
+
+BGP routing table entry for 2001:2:2:2::2/128, version 11
+Paths: (2 available, best #2, table default)
+  Not advertised to any peer
+  Refresh Epoch 1
+  5000
+    ::FFFF:1.1.1.4 (metric 11) from 1.1.1.1 (1.1.1.1)
+      Origin IGP, metric 0, localpref 100, valid, internal
+      Originator: 1.1.1.4, Cluster list: 1.1.1.1
+      mpls labels in/out nolabel/16
+      rx pathid: 0x1, tx pathid: 0
+      Updated on Jan 31 2022 22:43:15 PST
+  Refresh Epoch 1
+  5000
+    ::FFFF:1.1.1.3 (metric 11) from 1.1.1.1 (1.1.1.1)
+      Origin IGP, metric 0, localpref 100, valid, internal, best
+      Originator: 1.1.1.3, Cluster list: 1.1.1.1
+      mpls labels in/out nolabel/16
+      rx pathid: 0x0, tx pathid: 0x0
+      Updated on Jan 31 2022 22:43:15 PST
+

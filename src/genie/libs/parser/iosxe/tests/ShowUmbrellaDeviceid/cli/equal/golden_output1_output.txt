@@ -1,0 +1,5 @@
+Device registration details
+
+Interface Name          Tag              Status          Device-id 
+
+GigabitEthernet2/0/7    9200_9300_tag   REQ QUEUED      -

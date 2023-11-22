@@ -1,0 +1,40 @@
+expected_output = {
+    '10.1.1.2': {
+        'conn_capability': 'IPv4-IPv6-Subnet',
+        'conn_hold_time': 120,
+        'conn_inst': 1,
+        'conn_status': 'On',
+        'conn_version': 5,
+        'duration': '0:00:02:09 (dd:hr:mm:sec)',
+        'local_mode': 'SXP Speaker',
+        'peer_ip': '10.1.1.2',
+        'source_ip': '10.1.1.1',
+        'tcp_conn_fd': '1',
+        'tcp_conn_pwd': 'none'
+    },
+    '20.1.1.2': {
+        'conn_capability': 'IPv4-IPv6-Subnet',
+        'conn_hold_time': 120,
+        'conn_inst': 1,
+        'conn_status': 'On',
+        'conn_version': 5,
+        'duration': '0:00:00:30 (dd:hr:mm:sec)',
+        'local_mode': 'SXP Speaker',
+        'peer_ip': '20.1.1.2',
+        'source_ip': '20.1.1.1',
+        'tcp_conn_fd': '2',
+        'tcp_conn_pwd': 'none'
+    },
+    'default_key_chain': 'Not Set',
+    'default_key_chain_name': 'Not Applicable',
+    'default_pwd': 'Not Set',
+    'default_source_ip': 'Not Set',
+    'export_traverse_limit': 'Not Set',
+    'highest_version': 5,
+    'import_traverse_limit': 'Not Set',
+    'reconcile_period': 120,
+    'retry_period': 120,
+    'retry_timer': 'not running',
+    'sxp_status': 'Enabled',
+    'total_sxp_connections': 2
+}

@@ -1,0 +1,16 @@
+Total connections                  : 1149291
+Max concurrent connections         : 739
+Current active connections         : 619
+Total connection resets            : 0
+Total original bytes               : 1205 GB
+Total optimized bytes              : 672 GB
+Overall reduction ratio            : 44%
+Disk size used                     : 94%
+Cache details:
+  Cache status                       : Active
+  Cache Size                         : 59132 MB
+  Cache used                         : 94%
+  Oldest data in cache               : 02:04:31
+  Replaced(last hour): size          : 0 MB
+
+

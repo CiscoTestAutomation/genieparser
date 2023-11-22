@@ -1,0 +1,10 @@
+Switch#  Role    Mac Address     Version   Mode  Configured  State 
+ --------------------------------------------------------------------------------------------------------------------
+ *1      Active   4cbc.4897.ec80    V00     N+1     None       Ready               
+  2      Member   f8b7.e24e.a400    P2B     N+1     None       Ready               
+  3      Standby  046c.9d1f.0500    P1B     N+1     None       Ready               
+  4      Member   34f8.e78e.b080    P1B     N+1     None       Ready               
+  5      Member   6c41.0ed9.6480    V02     N+1     None       Ready               
+  6      Member   6c71.0d44.ab80    V02     N+1     None       Ready               
+  7      Member   f87b.2077.f600    P2A     N+1     None       Ready               
+  8      Member   10b3.c62f.9a00    V02     N+1     None       Ready

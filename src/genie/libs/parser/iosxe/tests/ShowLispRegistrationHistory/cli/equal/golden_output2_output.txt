@@ -1,0 +1,39 @@
+Map-Server registration history
+Roam = Did host move to a new location?
+WLC = Did registration come from a Wireless Controller?
+Prefix qualifier: + = Register Event, - = Deregister Event, * = AR register event
+
+Timestamp (EST)      Instance Proto Roam WLC Source           
+                                             EID prefix / Locator
+*Dec  1 09:34:15.025 16777214 UDP   No   No  12.1.1.6         
+                                           + 0.0.0.0/0
+*Dec  1 09:34:17.164 16777214 UDP   Yes  No  11.1.2.2         
+                                           + 0.0.0.0/0
+*Dec  1 09:34:17.164 16777214 UDP   Yes  No  10.1.1.1         
+                                           + 0.0.0.0/0
+*Dec  1 09:34:17.164      101 UDP   No   No  10.1.1.1         
+                                           + aabb.cc00.c901/48
+*Dec  1 09:34:17.164     4100 UDP   No   No  10.1.1.1         
+                                           + 192.168.1.71/32
+*Dec  1 09:34:17.164     4100 UDP   No   No  10.1.1.1         
+                                           + 2001:192:168:1::71/128
+*Dec  1 09:34:17.168 16777214 TCP   No   No  11.11.11.11      
+                                           + 0.0.0.0/0
+*Dec  1 09:34:17.168     4100 TCP   No   No  11.11.11.11      
+                                           + 192.168.1.71/32
+*Dec  1 09:34:17.168     4100 TCP   No   No  11.11.11.11      
+                                           + 2001:192:168:1::71/128
+*Dec  1 09:34:17.168      101 TCP   No   No  11.11.11.11      
+                                           + aabb.cc00.c901/48
+*Dec  1 09:34:17.168      101 TCP   No   No  11.11.11.11      
+                                           +*2001:192:168:1::71/128 / aabb.cc00.c901
+*Dec  1 09:34:17.168      101 TCP   No   No  11.11.11.11      
+                                           +*FE80::A8BB:CCFF:FE00:C901/128 / aabb.cc00.c901
+*Dec  1 09:34:17.168      101 TCP   No   No  11.11.11.11      
+                                           +*192.168.1.71/32 / aabb.cc00.c901
+*Dec  1 09:34:20.769 16777214 TCP   Yes  No  66.66.66.66      
+                                           + 0.0.0.0/0
+*Dec  1 09:34:21.286 16777214 TCP   Yes  No  22.22.22.22      
+                                           + 0.0.0.0/0
+*Dec  1 09:42:03.972     4100 TCP   No   No  22.22.22.22      
+                                           + 194.168.1.72/32

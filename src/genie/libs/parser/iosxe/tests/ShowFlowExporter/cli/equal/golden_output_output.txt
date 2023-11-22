@@ -1,0 +1,13 @@
+Flow Exporter StealthWatch_Exporter:
+  Description:              Export NetFlow to StealthWatch
+  Export protocol:          NetFlow Version 9
+  Transport Configuration:
+    Destination type:       IP
+    Destination IP address: 19.1.1.19
+    Source IP address:      4.4.1.1
+    Transport Protocol:     UDP
+    Destination Port:       2055
+    Source Port:            50714
+    DSCP:                   0x0
+    TTL:                    255
+    Output Features:        Used

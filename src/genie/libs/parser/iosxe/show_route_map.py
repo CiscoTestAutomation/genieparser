@@ -4,6 +4,8 @@ IOSXE parsers for the following show commands:
 
     * 'show route-map all'
     * 'show route-map {name}'
+    * 'show table-map {map}'
+    * 'show table-map'
     
 '''
 
@@ -577,3 +579,83 @@ class ShowRouteMapAll(ShowRouteMapAllSchema):
                     continue
 
         return route_map_dict
+
+# ==========================================================================================
+# Parser Schema for 'show table-map {map}'
+# ==========================================================================================
+
+class ShowTableMapSchema(MetaParser):
+    """Schema for show table-map {map}"""
+    schema = {
+        'table_map':{
+            Any(): {
+                'default': str,
+                'index': {
+                    Any():{
+                        'from': int,
+                        'to': int 
+                    }
+                }
+            }         
+        }
+    } 
+# ==========================================================================================
+# Parser for 'show table-map {map}'
+# ==========================================================================================
+
+class ShowTableMap(ShowTableMapSchema):
+    """Parser for show table-map {map}"""
+    cli_command = ['show table-map', 'show table-map {map}']
+    
+    def cli(self, map=None, output=None):
+        if output is None:
+            if map:
+                cmd = self.cli_command[1].format(map=map)
+            else:
+                cmd = self.cli_command[0]
+            
+            output = self.device.execute(cmd)
+        
+        # Table Map t1
+        p1 = re.compile(r'^Table Map (?P<table_map>\S+)$')
+        
+        # from 8 to 16
+        # from 16 to 32
+        p2 = re.compile(r'^(from (?P<from>\d+)\s+to\s+(?P<to>\d+))$')
+
+        # default copy
+        # default 8
+        p3 = re.compile(r'^default (?P<default>\w+)$')
+
+        ret_dict = {}
+        
+        counter = 0 #counter for events 
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # Table Map t1
+            m = p1.match(line)
+            if m:
+                table_dict = ret_dict.setdefault('table_map', {}).setdefault(m.groupdict()['table_map'], {})
+                counter = 0
+                continue
+            
+            # from 8 to 16
+            # from 16 to 32
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                profile = table_dict.setdefault('index',{}).setdefault(int(counter),{})
+                profile['from'] = int(group['from'])
+                profile['to'] = int(group['to'])
+                counter += 1
+                continue
+            
+            # default copy
+            # default 8
+            m = p3.match(line)
+            if m:
+                table_dict['default'] = m.groupdict()['default']
+                continue
+
+        return ret_dict

@@ -1,0 +1,33 @@
+<Mon Sep 27 11:25:36>
+ Verifying image bootflash:/nxos.9.3.7.bin. for boot variable "nxos".
+ -- SUCCESS <Mon Sep 27 11:26:28>
+
+<Mon Sep 27 11:26:28>
+ Verifying image type.
+ -- SUCCESS <Mon Sep 27 11:26:35>
+
+
+<Mon Sep 27 11:26:36>
+ Preparing "nxos" version info using image bootflash:/nxos.9.3.7.bin.
+ -- SUCCESS <Mon Sep 27 11:26:37>
+
+<Mon Sep 27 11:26:37>
+ Preparing "bios" version info using image bootflash:/nxos.9.3.7.bin.
+ -- SUCCESS <Mon Sep 27 11:26:40>
+
+<Mon Sep 27 11:26:55>
+
+"Running-config contains configuration that is incompatible with the new image (strict incompatibility).
+ Please run 'show incompatibility-all nxos <image>' command to find out which feature needs to be disabled.".
+
+<Mon Sep 27 11:26:55>
+ Performing module support checks.
+ -- SUCCESS <Mon Sep 27 11:27:01>
+
+<Mon Sep 27 11:27:01>
+ Notifying services about system upgrade.
+ -- FAIL. <Mon Sep 27 11:27:13>
+Return code 0x437F0001 ((null)).
+Pre-upgrade check failed. Return code 0x437F0001 ((null)).
+
+Service "__inst_001__eigrp" in vdc 1: EIGRP  ISSU config check failed, ISSU may cause traffic disruption

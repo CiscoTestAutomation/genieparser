@@ -1,0 +1,3 @@
+Port         Name         Status       Reason               Err-disabled Vlans
+
+Te1/0/3      SPAN-ERSPAN- err-disabled storm-control

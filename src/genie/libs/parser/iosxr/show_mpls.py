@@ -14,11 +14,13 @@ IOSXR parsers for the following show commands:
     * 'show mpls interfaces {interface}'
     * 'show mpls forwarding'
     * 'show mpls forwarding vrf {vrf}'
+    * 'show mpls forwarding prefix {prefix}'
     * 'show mpls ldp igp sync'
     * 'show mpls ldp graceful-restart'
     * 'show mpls ldp nsr summary'
     * 'show mpls traffic-eng tunnels tabular'
     * 'show mpls traffic-eng tunnels {tunnel_id}'
+    * 'show mpls ldp interface brief'
 '''
 
 # Python
@@ -274,6 +276,17 @@ class ShowMplsLdpDiscoverySchema(MetaParser):
                                             Optional('transport_ip_addr'): str
                                         }
                                     }
+                                },
+                            }
+                        },
+                        Optional('targeted_hellos'): {
+                            Any(): {
+                                Any(): {
+                                    Optional('xmit'): bool,
+                                    Optional('recv'): bool,
+                                    Optional('active'): bool,
+                                    Optional('passive'): bool,
+                                    Optional('active/passive'): bool
                                 }
                             }
                         }
@@ -499,6 +512,8 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
                 targeted_dict.update({'xmit': True if group['xmit'] else False})
                 targeted_dict.update({'recv': True if group['recv'] else False})
                 targeted_dict.update({'active': True if group['status'] == 'active' else False})
+                targeted_dict.update({'passive': True if group['status'] == 'passive' else False})
+                targeted_dict.update({'active/passive': True if group['status'] == 'active/passive' else False})
                 continue
             
         return result_dict
@@ -1879,6 +1894,7 @@ class ShowMplsForwardingVrf(ShowMplsForwardingVrfSchema):
 # ======================================================
 # Schema for
 #   * 'show mpls forwarding'
+#   * 'show mpls forwarding prefix {prefix}'
 # ======================================================
 class ShowMplsForwardingSchema(MetaParser):
     schema = {
@@ -1906,15 +1922,20 @@ class ShowMplsForwardingSchema(MetaParser):
 # ======================================================
 # Parser for 
 #   * 'show mpls forwarding'
+#   * 'show mpls forwarding prefix {prefix}'
 # ======================================================
 class ShowMplsForwarding(ShowMplsForwardingSchema, ShowMplsForwardingVrf):
 
-    cli_command = ['show mpls forwarding']
+    cli_command = ['show mpls forwarding','show mpls forwarding prefix {prefix}']
 
-    def cli(self, output=None):
+    def cli(self,prefix=None, output=None):
 
         if output is None:
-            out = self.device.execute(self.cli_command[0])
+            if prefix:
+                command = self.cli_command[1].format(prefix=prefix)
+            else:
+                command = self.cli_command[0]
+            out = self.device.execute(command)
         else:
             out = output
 
@@ -1936,8 +1957,8 @@ class ShowMplsLdpBindingsSchema(MetaParser):
         'lib_entry': {
             Any(): {
                 'rev': int,
-                'local_binding': {
-                    'label': str
+                Optional('local_binding'): {
+                    'label': str,
                 },
                 Optional('remote_bindings'): {
                     Optional('peer_count'): int,
@@ -1984,7 +2005,6 @@ class ShowMplsLdpBindings(ShowMplsLdpBindingsSchema):
         # 10.145.95.95:0       16002
         # lsr:10.255.255.255:0, label:16 
         p4 = re.compile(r'^(?:lsr:)?(?P<lsr_id>[\d\.\:]+),? +(?:label:)?(?P<remote_label>\S+)')
-        
 
         for line in output.splitlines():
             line = line.strip() # strip whitespace from beginning and end
@@ -2022,7 +2042,6 @@ class ShowMplsLdpBindings(ShowMplsLdpBindingsSchema):
             m = p4.match(line)
             if m:
                 group = m.groupdict()
-                    
                 lsr_id = remote_dict.setdefault('label', {}).\
                             setdefault(group['remote_label'],{}).\
                             setdefault('lsr_id', {}).\
@@ -2031,7 +2050,6 @@ class ShowMplsLdpBindings(ShowMplsLdpBindingsSchema):
                 lsr_id.update({'label': group['remote_label']})
                 lsr_id.update({'lsr_id': group['lsr_id']})
                 continue
-                
             
         return result_dict
 
@@ -2489,7 +2507,7 @@ class ShowMplsLdpIgpSyncSchema(MetaParser):
                     Any(): {
                         Optional('sync'): {
                         Optional('status'): str,
-                        Optional('delay'): str,
+                        Optional('delay'): Or(int, str),
                         Optional('peers'):{
                             Any():{
                                 Optional('graceful_restart'): bool
@@ -2521,25 +2539,29 @@ class ShowMplsLdpIgpSync(ShowMplsLdpIgpSyncSchema):
         ret_dict = {}
 
         # HundredGigE0/0/0/0:
-        p1 = re.compile(r'^(?P<interface>[\w]+[\/\d]+):$')
+        # Bundle-Ether40051:
+        p1 = re.compile(r'^(?P<interface>[\w-]+[\/\d]+):$')
 
         # VRF: 'default' (0x60000000)
         p2 = re.compile(r'^VRF:\s+\'(?P<vrf>\S+)\'\s+\((?P<vrf_index>.+)\)$')
 
         # Sync delay: Disabled
-        p3 = re.compile(r'^Sync +delay:\s+(?P<delay>\S+)$')
+        # Sync delay: 5 sec
+        p3 = re.compile(r'^Sync +delay:\s+(?P<delay>\w+)(?: sec)?$')
 
         # Sync status: Ready
         p4 = re.compile(r'^Sync +status:\s+(?P<status>.+)$')
 
         # 63.63.63.63:0   (GR)
-        p5 = re.compile(r'^(?P<peers>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:\d{1,3})\s+?(?P<gr_flag>\(GR\))?$')
+        # 10.120.0.10:0
+        p5 = re.compile(r'^(?P<peers>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:\d{1,3})\s*(?P<gr_flag>\(GR\))?$')
 
         for line in out.splitlines():
             line = line.strip()
 
 
             # HundredGigE0/0/0/0:
+            # Bundle-Ether40051:
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -2559,11 +2581,15 @@ class ShowMplsLdpIgpSync(ShowMplsLdpIgpSyncSchema):
                 continue
 
             # Sync delay: Disabled
+            # Sync delay: 5 sec
             m = p3.match(line)
             if m:
                 group = m.groupdict()
                 sync_dict = interface_dict.setdefault('sync', {})
-                sync_dict.update({'delay': group['delay']})
+                try:
+                    sync_dict.update({'delay': int(group['delay'])})
+                except ValueError:
+                    sync_dict.update({'delay': group['delay']})
                 continue
 
             # Sync status: Ready
@@ -2575,16 +2601,18 @@ class ShowMplsLdpIgpSync(ShowMplsLdpIgpSyncSchema):
                 continue
 
             # 63.63.63.63:0   (GR)
+            # 10.120.0.10:0
             m = p5.match(line)
             if m:
                 group = m.groupdict()
                 peers = group['peers']
-                peers_dict = sync_dict.setdefault('peers', {}).\
-                    setdefault(peers, {})
+                peers_dict = sync_dict.setdefault('peers', {})\
+                                      .setdefault(peers, {})
 
+                gr_flag = False
                 if group['gr_flag']:
                     gr_flag = True
-                    peers_dict.update({'graceful_restart': gr_flag})
+                peers_dict.update({'graceful_restart': gr_flag})
                 continue
 
         return ret_dict
@@ -3450,4 +3478,69 @@ class ShowMplsTrafficEngTunnelsTunnelid(ShowMplsTrafficEngTunnelsTunnelidSchema)
         return ret_dict
 
 
+# ======================================================
+# Schema for 'show mpls ldp interface brief'
+# ======================================================
+class ShowMplsLdpInterfaceBriefSchema(MetaParser):
+    """Schema for
+    show mpls ldp interface brief
+    """
 
+    schema = {
+        'vrf': {
+            Any(): {
+                'interface_name': {
+                    Any(): {
+                        'config': str,
+                        'enabled': str,
+                        'igp_auto_cfg': int,
+                        'te_mesh_grp_cfg': str
+                    }
+                }
+            }
+        }
+    }
+
+class ShowMplsLdpInterfaceBrief(ShowMplsLdpInterfaceBriefSchema):
+    """
+        Parser for show mpls ldp interface brief
+    """
+    cli_command = ['show mpls ldp interface brief']
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command[0])
+        else:
+            output = output
+
+        # initial return dictionary
+        result_dict = {}
+
+        # BE10            default             Y      Y       1            N/A
+        # Gi0/0/0/1       default             Y      Y       1            N/A
+        # Gi0/0/0/2       vrf_1             Y      Y       1            N/A
+        # Gi0/0/0/2.200   -                   N      N       0            N/A
+        p1 = re.compile(r'^(?P<interface_name>\S+)\s+(?P<vrf_name>[_\w-]+)\s+(?P<config>[Y|N])\s+(?P<enabled>[Y|N])\s+(?P<igp_auto_cfg>\d+)\s+(?P<te_mesh_grp_cfg>[N\/A]+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # BE10            default             Y      Y       1            N/A
+            # Gi0/0/0/1       default             Y      Y       1            N/A
+            # Gi0/0/0/2       vrf_1             Y      Y       1            N/A
+            # Gi0/0/0/2.200   -                   N      N       0            N/A
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                intf = Common.convert_intf_name(group['interface_name'])
+                vrf_dict = result_dict.setdefault('vrf', {}). \
+                    setdefault(group['vrf_name'], {})
+                int_dict = vrf_dict.setdefault('interface_name', {}). \
+                    setdefault(intf, {})
+                int_dict['config'] = group['config']
+                int_dict['enabled'] = group['enabled']
+                int_dict['igp_auto_cfg'] = int(group['igp_auto_cfg'])
+                int_dict['te_mesh_grp_cfg'] = group['te_mesh_grp_cfg']
+                continue
+
+        return result_dict

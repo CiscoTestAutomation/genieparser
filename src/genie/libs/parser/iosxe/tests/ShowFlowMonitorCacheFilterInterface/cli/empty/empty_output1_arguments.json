@@ -1,0 +1,7 @@
+{
+    "name": "m4out",
+    "int_type": "interface",
+    "direction": "output",
+    "interface_name": "g1/0/13",
+    "top": "top 2"
+}

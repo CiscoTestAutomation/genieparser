@@ -1,0 +1,7 @@
+VLAN   ADJ_ID      ADJ_KEY          Encap  Link   siHandle         riHandle         diHandle         Obj_type   
+
+--------------------------------------------------------------------------------------------------------------
+
+201    89          0x100000059      VXLAN  V4     0x7fd728bf1be8   0x7fd728bf17a8   0x0              CP         
+
+200    97          0x100000061      VXLAN  V4     0x0              0x0              0x0              CP  

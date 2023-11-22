@@ -4,6 +4,7 @@ NXOS parsers for the following show commands:
     * show spanning-tree detail
     * show spanning-tree mst detail
     * show spanning-tree summary
+    * show spanning-tree issu-impact
 '''
 
 
@@ -43,17 +44,17 @@ class ShowSpanningTreeMstSchema(MetaParser):
                             'port_priority' : int,
                             'port_id': str,
                             'port_state' : str,
-                            'bridge_assurance_inconsistent': bool,
-                            'vpc_peer_link_inconsistent' : bool,
+                            Optional('bridge_assurance_inconsistent'): bool,
+                            Optional('vpc_peer_link_inconsistent'): bool,
                             'designated_root_priority': int,
                             'designated_root_address': str,
                             'designated_root_cost': int,
                             'designated_bridge_priority': int,
                             'designated_bridge_address': str,
                             'designated_bridge_port_id': str,
-                            'designated_regional_root_cost': int,
-                            'designated_regional_root_priority': int,
-                            'designated_regional_root_address': str,
+                            Optional('designated_regional_root_cost'): int,
+                            Optional('designated_regional_root_priority'): int,
+                            Optional('designated_regional_root_address'): str,
                             Optional('broken_reason'): str,
                             Optional('designated_port_num'): str,
                             Optional('timers') :{
@@ -96,7 +97,7 @@ class ShowSpanningTreeMst(ShowSpanningTreeMstSchema):
 
         ret_dict = {}
         p1_1 = re.compile(r'^##### MST(?P<mst_id>\d+) +\s+vlans\s+mapped: '
-                          r'+\s+(?P<vlan>\w+\-\w+,\w+\-\w+)$')
+                          r'+\s+(?P<vlan>[\w+\-\w+,]{1,})$')
             
         p2_1 = re.compile(r'^Bridge +\saddress\s+(?P<b_address>\w+\.\w+.\w+)'
                           r' +\spriority +\s(?P<b_priority>\d+)\s+\(\d+\s+sysid'
@@ -111,9 +112,9 @@ class ShowSpanningTreeMst(ShowSpanningTreeMstSchema):
                           r'(?P<forward_delay>\d+),\s+max\s+age\s+(?P<max_age>\d+), '
                           r'((txholdcount|max hops))\ *\s(?P<holdcount_or_maxhops>\d+)$')
 
-        p5_1 = re.compile(r'^(?P<port_channel>\w+)\sof\s+\w+\s+is\s+(?P<port_state>\w+)\s+'
-                          r'\(Bridge Assurance\s+(?P<bridge_assurance_inconsistent>\w+), '
-                          r'VPC Peer-link\s+(?P<vpc_peer_link_inconsistent>\w+)$')
+        p5_1 = re.compile(r'^(?P<interface_name>\w+[\/\w+]{0,})\sof\s+\w+\s+is\s+(?P<port_state>\w+'
+                          r'(\s\w+)?)(\s+\(Bridge Assurance\s+(?P<bridge_assurance_inconsistent>\w+), '
+                          r'VPC Peer-link\s+(?P<vpc_peer_link_inconsistent>\w+)\)?)?$')
 
         p6_1 = re.compile(r'^Port\s+info +\sport\s+id +\s(?P<port_id>\d+\.*\d+)'
                           r' +\spriority +\s(?P<port_priority>\d+)'
@@ -190,18 +191,20 @@ class ShowSpanningTreeMst(ShowSpanningTreeMstSchema):
                 continue
 
             # Po30 of MST0 is broken (Bridge Assurance Inconsistent, VPC Peer-link Inconsistent)str
+            # Po1 of MST0 is designated forwarding
+            # Eth1/1 of MST0 is designated forwarding
             m = p5_1.match(line)
             if m:
-                intf = Common.convert_intf_name(m.groupdict()['port_channel'])
+                intf = Common.convert_intf_name(m.groupdict()['interface_name'])
                 intf_dict = instances_dict.setdefault('interfaces', {}).setdefault(intf, {})
                 intf_dict['name'] = intf
                 intf_dict['port_state'] = m.groupdict()['port_state']
-
-                bridge_consistency = True if 'inconsistent' in m.groupdict()['bridge_assurance_inconsistent'].lower() else False
-                intf_dict['bridge_assurance_inconsistent'] = bridge_consistency
-                bridge_consistency = True if 'inconsisten' in m.groupdict()['vpc_peer_link_inconsistent'].lower() else False
-                intf_dict['vpc_peer_link_inconsistent'] = bridge_consistency
-
+                if m.groupdict()['bridge_assurance_inconsistent']:
+                    bridge_consistency = True if 'inconsistent' in m.groupdict()['bridge_assurance_inconsistent'].lower() else False
+                    intf_dict['bridge_assurance_inconsistent'] = bridge_consistency
+                    bridge_consistency = True if 'inconsisten' in m.groupdict()['vpc_peer_link_inconsistent'].lower() else False
+                    intf_dict['vpc_peer_link_inconsistent'] = bridge_consistency
+                   
                 continue
 
             # Port info             port id       128.4125  priority    128  cost   500      
@@ -915,3 +918,131 @@ class ShowErrdisableRecovery(ShowErrdisableRecoverySchema):
                 continue
 
         return ret_dict
+
+class ShowSpanningTreeIssuImpactSchema(MetaParser):
+    """Schema for show spanning-tree issu-impact"""
+    schema = {
+        'criteria1': {
+            'value': str,
+            'status': str,
+        },
+        'criteria2': {
+            'value': str,
+            'status': str,
+        },
+        'criteria3': {
+            'value': str,
+            'status': str,
+            Optional('non_edge_port'): {
+                Any(): {
+                    'vlan': int,
+                    'role': str,
+                    'sts': str,
+                    'tree_type': str,
+                    'instance': str,
+                },
+            },
+        },
+        'issu_proceed_status': str
+    }
+
+class ShowSpanningTreeIssuImpact(ShowSpanningTreeIssuImpactSchema):
+    """Schema for show spanning-tree issu-impact."""
+
+    cli_command = [
+        'show spanning-tree issu-impact'
+    ]
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command[0])
+
+        parsed_dict = {}
+
+        # 1. No Topology change must be active in any STP instance
+        p1_a = re.compile(r'^1. (?P<value1>No Topology change must be active in any STP instance)$')
+
+        # Criteria 1 PASSED !!
+        p1_b = re.compile(r'^Criteria 1 (?P<status1>[\w]+)')
+
+        # 2. Bridge assurance(BA) should not be active on any port (except MCT)
+        p2_a = re.compile(r'^2. (?P<value2>Bridge assurance\(BA\) should not be active on any port).*$')
+
+        # Criteria 2 PASSED !!
+        p2_b = re.compile(r'^Criteria 2 (?P<status2>[\w]+)')
+
+        # 3. There should not be any Non Edge Designated Forwarding port (except MCT)
+        p3_a = re.compile(r'^3. (?P<value3>There should not be any Non Edge Designated Forwarding port).*$')
+
+        # Criteria 3 FAILED
+        p3_b = re.compile(r'^Criteria 3 (?P<status3>[\w]+)')
+
+        # Ethernet1/21        1 Desg FWD  MST           0
+        # Ethernet1/20        1 Desg FWD  MST           0
+        p4 = re.compile(
+            r'^(?P<port>[\w]+\/\d+)\s+(?P<vlan>[\d]+)\s+(?P<role>[\w]+)\s+(?P<sts>[\w]+)\s+(?P<tree_type>[\w]+)\s+(?P<instance>[\d]+)$')
+
+        # ISSU Cannot Proceed! Change the above Config
+        p5 = re.compile(r'^(?P<proceed>ISSU [\w\s]+).*$')
+
+        for line in out.splitlines():
+            line_strip = line.strip()
+            m = p1_a.match(line_strip)
+            if m:
+                group = m.groupdict()
+                criteria1 = parsed_dict.setdefault('criteria1', {})
+                criteria1['value'] = group['value1']
+                continue
+
+            m = p1_b.match(line_strip)
+            if m:
+                group = m.groupdict()
+                criteria1['status'] = group['status1']
+                continue
+
+            m = p2_a.match(line_strip)
+            if m:
+                group = m.groupdict()
+                criteria2 = parsed_dict.setdefault('criteria2', {})
+                criteria2['value'] = group['value2']
+                continue
+
+            m = p2_b.match(line_strip)
+            if m:
+                group = m.groupdict()
+                criteria2['status'] = group['status2']
+                continue
+
+            m = p3_a.match(line_strip)
+            if m:
+                group = m.groupdict()
+                criteria3 = parsed_dict.setdefault('criteria3', {})
+                criteria3['value'] = group['value3']
+                continue
+
+            m = p3_b.match(line_strip)
+            if m:
+                group = m.groupdict()
+                criteria3['status'] = group['status3']
+                continue
+
+            m = p4.match(line_strip)
+            if m:
+                group = m.groupdict()
+                portedge = group['port']
+                result_dict = criteria3.setdefault('non_edge_port', {}).setdefault(portedge, {})
+                result_dict['vlan'] = int(group['vlan'])
+                result_dict['role'] = group['role']
+                result_dict['sts'] = group['sts']
+                result_dict['tree_type'] = group['tree_type']
+                result_dict['instance'] = group['instance']
+                continue
+
+            m = p5.match(line_strip)
+            if m:
+                group = m.groupdict()
+                parsed_dict['issu_proceed_status'] = group['proceed']
+                continue
+
+        return parsed_dict
+

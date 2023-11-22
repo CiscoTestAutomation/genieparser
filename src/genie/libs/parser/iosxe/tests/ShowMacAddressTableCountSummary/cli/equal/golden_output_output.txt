@@ -1,0 +1,6 @@
+mac_gen1#show mac address-table count summary 
+Total Dynamic Address Count  : 15
+Total Static  Address Count  : 0
+Total Mac Address In Use     : 15
+Total Mac Address Space Available: 65521
+

@@ -1,0 +1,3 @@
+[Wed Jul 21 20:31:27.000] VLAN 10, From Et0/0 MAC aabb.cc00.0100: NDP::NA, FE80::A8BB:CCFF:FE00:100, Drop reason=Packet accepted but not forwarded
+[Wed Jul 21 20:31:27.000] VLAN 10, From Et0/0 MAC aabb.cc00.0100: NDP::RA, FE80::A8BB:CCFF:FE00:100, Drop reason=Packet not authorized on port
+[Wed Jul 21 20:31:28.000] VLAN 10, From Et0/0 MAC aabb.cc00.0100: NDP::NA, A::1, Drop reason=Packet accepted but not forwarded

@@ -1,0 +1,6 @@
+Key: U - Unicast, B - Broadcast, M - Multicast, UU - Unknown Unicast
+Interface       Filter State   Upper        Lower        Current         Action     Type
+---------       -------------  -----------  -----------  -------------   ---------  ----
+Gi1/0/12        Link Down           10.00%       10.00%          0.00%        None     B
+Gi1/0/12        Link Down           20.00%       20.00%          0.00%        None     U
+Tw1/0/18        Forwarding           0.20%        0.10%          0.00%        None     U

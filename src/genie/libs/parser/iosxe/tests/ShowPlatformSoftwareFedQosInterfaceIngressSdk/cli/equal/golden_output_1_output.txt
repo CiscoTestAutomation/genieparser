@@ -1,0 +1,152 @@
+
+***********************************************************************************
+ [HundredGigE1/0/5, map1, Ingress]: CGID = 0x738310
+***********************************************************************************
+  cgid: 0x738310
+  No of classes: 4
+  TCG ref count: 1
+  Filter state: UP TO DATE
+  VMR state: UP TO DATE
+
+  ============================================================
+   SDK: Ingress QOS Profile information
+  ============================================================
+  OID: 0x82E
+  Ref Count: 1
+  No of  Counter: 1
+  No of meters: 3
+  Tunnel Mode: RE-EVALUATE
+  Need filter table update: UPTODATE
+
+  DSCP      Remap   Encap   Qos Group   TC  DP  Meter MCOffset
+  ----      -----   -----   ---------   --  --  ----- --------
+   0          0       0         0       0   G     Y      3
+   1          1       0         0       0   G     Y      3
+   2          2       0         0       0   G     Y      3
+   3          3       0         0       0   G     Y      3
+   4          4       0         0       0   G     Y      3
+   5          5       0         0       0   G     Y      3
+   6          6       0         0       0   G     Y      3
+   7          7       0         0       0   G     Y      3
+   8          8       1         0       0   G     Y      3
+   9          9       1         0       0   G     Y      3
+   10         10      1         0       0   G     Y      3
+   11         11      1         0       0   G     Y      3
+   12         12      1         0       0   G     Y      3
+   13         13      1         0       0   G     Y      3
+   14         14      1         0       0   G     Y      3
+   15         15      1         0       0   G     Y      3
+   16         16      2         0       7   G     Y      3
+   17         17      2         0       0   G     Y      3
+   18         18      2         0       0   G     Y      3
+   19         19      2         0       0   G     Y      3
+   20         20      2         0       0   G     Y      3
+   21         21      2         0       0   G     Y      3
+   22         22      2         0       0   G     Y      3
+   23         23      2         0       0   G     Y      3
+   24         24      3         0       7   G     Y      3
+   25         25      3         0       0   G     Y      3
+   26         26      3         0       0   G     Y      3
+   27         27      3         0       0   G     Y      3
+   28         28      3         0       0   G     Y      3
+   29         29      3         0       0   G     Y      3
+   30         30      3         0       0   G     Y      3
+   31         31      3         0       0   G     Y      3
+   32         32      4         0       7   G     Y      3
+   33         33      4         0       0   G     Y      3
+   34         34      4         0       0   G     Y      3
+   35         35      4         0       0   G     Y      3
+   36         36      4         0       0   G     Y      3
+   37         37      4         0       0   G     Y      3
+   38         38      4         0       0   G     Y      3
+   39         39      4         0       0   G     Y      3
+   40         40      5         0       7   G     Y      3
+   41         41      5         0       0   G     Y      3
+   42         42      5         0       0   G     Y      3
+   43         43      5         0       0   G     Y      3
+   44         44      5         0       0   G     Y      3
+   45         45      5         0       0   G     Y      3
+   46         46      5         0       7   G     Y      3
+   47         47      5         0       0   G     Y      3
+   48         48      6         0       7   G     Y      3
+   49         49      6         0       0   G     Y      3
+   50         50      6         0       0   G     Y      3
+   51         51      6         0       0   G     Y      3
+   52         52      6         0       0   G     Y      3
+   53         53      6         0       0   G     Y      3
+   54         54      6         0       0   G     Y      3
+   55         55      6         0       0   G     Y      3
+   56         56      7         0       7   G     Y      3
+   57         57      7         0       0   G     Y      3
+   58         58      7         0       0   G     Y      3
+   59         59      7         0       0   G     Y      3
+   60         60      7         0       0   G     Y      3
+   61         61      7         0       0   G     Y      3
+   62         62      7         0       0   G     Y      3
+   63         63      7         0       0   G     Y      3
+
+   COS_DEI   Remap   Encap   Qos Group   TC  DP  Meter MCOffset
+   -------   -----   -----   ---------   --  --  ----- --------
+   0          0       0         0       0   G     Y      3
+   1          1       0         0       0   G     Y      3
+   2          2       1         0       0   G     Y      3
+   3          3       1         0       0   G     Y      3
+   4          4       2         0       0   G     Y      3
+   5          5       2         0       0   G     Y      3
+   6          6       3         0       0   G     Y      3
+   7          7       3         0       0   G     Y      3
+   8          8       4         0       7   G     Y      3
+   9          9       4         0       7   G     Y      3
+   10         10      5         0       7   G     Y      3
+   11         11      5         0       7   G     Y      3
+   12         12      6         0       0   G     Y      3
+   13         13      6         0       0   G     Y      3
+   14         14      7         0       0   G     Y      3
+   15         15      7         0       0   G     Y      3
+
+   EXP      Remap   Encap   Qos Group   TC  DP  Meter MCOffset
+   ---      -----   -----   ---------   --  --  ----- --------
+   0          0       0         0       0   G     Y      3
+   1          1       1         0       0   G     Y      3
+   2          2       2         0       0   G     Y      3
+   3          3       3         0       0   G     Y      3
+   4          4       4         0       0   G     Y      3
+   5          5       5         0       0   G     Y      3
+   6          6       6         0       0   G     Y      3
+   7          7       7         0       0   G     Y      3
+
+  ============================================================
+   SDK: Bind Information
+  ============================================================
+  Port Type: L3
+  IQP counter size: 0
+  IQP Counter OID: 0x0
+  Meter Type: EXACT
+  Meter set OID: 0x831
+  No of meters: 4
+    Meter Set info
+    ...............
+    CIR: 988769472
+    EIR: 988769472
+    Profile OID: 0x832
+    Action Profile OID: 0x110
+
+    CIR: 988769472
+    EIR: 988769472
+    Profile OID: 0x832
+    Action Profile OID: 0x110
+
+    CIR: 988769472
+    EIR: 988769472
+    Profile OID: 0x832
+    Action Profile OID: 0x110
+
+    CIR: 0
+    EIR: 0
+    Profile OID: 0xFFFFFFFF
+    Action Profile OID: 0xFFFFFFFF
+
+  System port OID: 0x0
+  Port OID: 0x0
+  Speed: 10000000000
+  Port Internal State: Active

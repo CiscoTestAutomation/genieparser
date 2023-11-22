@@ -1,0 +1,24 @@
+show ip nhrp traffic interface tunnel100 detail
+Global statistics:
+ Packet Queue size: 0[0](1)
+   Sent: Total 21133
+         69 Resolution Request  73 Resolution Reply  20949 Registration Request
+         0 Registration Reply  42 Purge Request  0 Purge Reply
+         0 Error Indication  0 Traffic Indication  0 Redirect Suppress
+   Rcvd: Total 12339
+         73 Resolution Request  41 Resolution Reply  0 Registration Request
+         12143 Registration Reply  41 Purge Request  0 Purge Reply
+         0 Error Indication  41 Traffic Indication  0 Redirect Suppress
+Tunnel100: Max-send limit:10000Pkts/10Sec, Usage:0%
+   Sent: Total 5387
+         69 Resolution Request  73 Resolution Reply  5204 Registration Request
+         0 Registration Reply  41 Purge Request  0 Purge Reply
+         0 Error Indication  0 Traffic Indication  0 Redirect Suppress
+   Rcvd: Total 5372
+         73 Resolution Request  41 Resolution Reply  0 Registration Request
+         5176 Registration Reply  41 Purge Request  0 Purge Reply
+         0 Error Indication  41 Traffic Indication  0 Redirect Suppress
+   Fwd: Total 0
+         0 Resolution Request  0 Resolution Reply  0 Registration Request
+         0 Registration Reply  0 Purge Request  0 Purge Reply
+         0 Error Indication  0 Traffic Indication  0 Redirect Suppress

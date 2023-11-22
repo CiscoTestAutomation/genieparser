@@ -1,0 +1,242 @@
+Active Multicast Sources - sending >= 4 kbps
+VRF vrf3001
+Group: 228.1.1.1
+  Source: 161.1.1.2,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 238 sec)
+   HW Rate: 1000 pps/3875 kbps(1sec)
+Group: 228.1.1.2
+  Source: 161.1.1.2,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 238 sec)
+   HW Rate: 1000 pps/3875 kbps(1sec)
+Group: 228.1.1.3
+  Source: 161.1.1.2,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 238 sec)
+   HW Rate: 1000 pps/3875 kbps(1sec)
+Group: 228.1.1.4
+  Source: 161.1.1.2,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 238 sec)
+   HW Rate: 1000 pps/3875 kbps(1sec)
+Group: 228.1.1.5
+  Source: 161.1.1.2,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 238 sec)
+   HW Rate: 999 pps/3874 kbps(1sec)
+Group: 228.1.1.6
+  Source: 161.1.1.2,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 238 sec)
+   HW Rate: 1000 pps/3875 kbps(1sec)
+Group: 228.1.1.7
+  Source: 161.1.1.2,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 238 sec)
+   HW Rate: 1000 pps/3875 kbps(1sec)
+Group: 228.1.1.8
+  Source: 161.1.1.2,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 238 sec)
+   HW Rate: 1000 pps/3875 kbps(1sec)
+Group: 228.1.1.9
+  Source: 161.1.1.2,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 238 sec)
+   HW Rate: 1000 pps/3875 kbps(1sec)
+Group: 228.1.1.10
+  Source: 161.1.1.2,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 238 sec)
+   HW Rate: 1000 pps/3875 kbps(1sec)
+Group: 228.2.1.1
+  Source: 151.1.1.2,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 238 sec)
+   HW Rate: 1000 pps/4000 kbps(1sec)
+Group: 228.2.1.2
+  Source: 151.1.1.2,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 238 sec)
+   HW Rate: 1000 pps/4000 kbps(1sec)
+Group: 228.2.1.3
+  Source: 151.1.1.2,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 238 sec)
+   HW Rate: 1000 pps/4000 kbps(1sec)
+Group: 228.2.1.4
+  Source: 151.1.1.2,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 238 sec)
+   HW Rate: 1000 pps/4000 kbps(1sec)
+Group: 228.2.1.5
+  Source: 151.1.1.2,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 238 sec)
+   HW Rate: 1000 pps/4000 kbps(1sec)
+Group: 228.2.1.6
+  Source: 151.1.1.2,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 238 sec)
+   HW Rate: 1000 pps/4000 kbps(1sec)
+Group: 228.2.1.7
+  Source: 151.1.1.2,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 238 sec)
+   HW Rate: 1000 pps/4000 kbps(1sec)
+Group: 228.2.1.8
+  Source: 151.1.1.2,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 238 sec)
+   HW Rate: 1000 pps/4000 kbps(1sec)
+Group: 228.2.1.9
+  Source: 151.1.1.2,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 238 sec)
+   HW Rate: 1000 pps/4000 kbps(1sec)
+Group: 228.2.1.10
+  Source: 151.1.1.2,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 238 sec)
+   HW Rate: 1000 pps/4000 kbps(1sec)
+Group: 229.1.1.1
+  RP-tree,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 220 sec)
+   HW Rate: 1000 pps/3875 kbps(1sec)
+Group: 229.1.1.2
+  RP-tree,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 220 sec)
+   HW Rate: 1000 pps/3875 kbps(1sec)
+Group: 229.1.1.3
+  RP-tree,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 220 sec)
+   HW Rate: 1000 pps/3875 kbps(1sec)
+Group: 229.1.1.4
+  RP-tree,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 220 sec)
+   HW Rate: 1000 pps/3875 kbps(1sec)
+Group: 229.1.1.5
+  RP-tree,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 220 sec)
+   HW Rate: 1000 pps/3875 kbps(1sec)
+Group: 229.1.1.6
+  RP-tree,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 220 sec)
+   HW Rate: 1000 pps/3875 kbps(1sec)
+Group: 229.1.1.7
+  RP-tree,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 220 sec)
+   HW Rate: 1000 pps/3875 kbps(1sec)
+Group: 229.1.1.8
+  RP-tree,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 220 sec)
+   HW Rate: 1000 pps/3875 kbps(1sec)
+Group: 229.1.1.9
+  RP-tree,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 220 sec)
+   HW Rate: 1000 pps/3875 kbps(1sec)
+Group: 229.1.1.10
+  RP-tree,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 220 sec)
+   HW Rate: 1000 pps/3875 kbps(1sec)
+Group: 229.2.1.1
+  RP-tree,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 257 sec)
+   HW Rate: 1000 pps/4000 kbps(1sec)
+Group: 229.2.1.2
+  RP-tree,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 257 sec)
+   HW Rate: 1000 pps/4000 kbps(1sec)
+Group: 229.2.1.3
+  RP-tree,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 257 sec)
+   HW Rate: 1000 pps/4000 kbps(1sec)
+Group: 229.2.1.4
+  RP-tree,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 257 sec)
+   HW Rate: 1000 pps/4000 kbps(1sec)
+Group: 229.2.1.5
+  RP-tree,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 257 sec)
+   HW Rate: 1000 pps/4000 kbps(1sec)
+Group: 229.2.1.6
+  RP-tree,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 257 sec)
+   HW Rate: 1000 pps/4000 kbps(1sec)
+Group: 229.2.1.7
+  RP-tree,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 257 sec)
+   HW Rate: 1000 pps/4000 kbps(1sec)
+Group: 229.2.1.8
+  RP-tree,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 257 sec)
+   HW Rate: 1000 pps/4000 kbps(1sec)
+Group: 229.2.1.9
+  RP-tree,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 257 sec)
+   HW Rate: 1000 pps/4000 kbps(1sec)
+Group: 229.2.1.10
+  RP-tree,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 257 sec)
+   HW Rate: 1000 pps/4000 kbps(1sec)
+Group: 232.1.1.1
+  Source: 161.1.1.3,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 217 sec)
+   HW Rate: 1000 pps/3875 kbps(1sec)
+Group: 232.1.1.2
+  Source: 161.1.1.3,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 217 sec)
+   HW Rate: 1000 pps/3875 kbps(1sec)
+Group: 232.1.1.3
+  Source: 161.1.1.3,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 217 sec)
+   HW Rate: 1000 pps/3875 kbps(1sec)
+Group: 232.1.1.4
+  Source: 161.1.1.3,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 217 sec)
+   HW Rate: 1000 pps/3875 kbps(1sec)
+Group: 232.1.1.5
+  Source: 161.1.1.3,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 217 sec)
+   HW Rate: 1000 pps/3875 kbps(1sec)
+Group: 232.1.1.6
+  Source: 161.1.1.3,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 217 sec)
+   HW Rate: 1000 pps/3875 kbps(1sec)
+Group: 232.1.1.7
+  Source: 161.1.1.3,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 217 sec)
+   HW Rate: 1000 pps/3875 kbps(1sec)
+Group: 232.1.1.8
+  Source: 161.1.1.3,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 217 sec)
+   HW Rate: 1000 pps/3875 kbps(1sec)
+Group: 232.1.1.9
+  Source: 161.1.1.3,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 217 sec)
+   HW Rate: 1000 pps/3875 kbps(1sec)
+Group: 232.1.1.10
+  Source: 161.1.1.3,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 217 sec)
+   HW Rate: 1000 pps/3875 kbps(1sec)
+Group: 232.2.1.1
+  Source: 151.1.1.3,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 255 sec)
+   HW Rate: 1000 pps/4000 kbps(1sec)
+Group: 232.2.1.2
+  Source: 151.1.1.3,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 255 sec)
+   HW Rate: 1000 pps/4000 kbps(1sec)
+Group: 232.2.1.3
+  Source: 151.1.1.3,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 255 sec)
+   HW Rate: 1000 pps/4000 kbps(1sec)
+Group: 232.2.1.4
+  Source: 151.1.1.3,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 255 sec)
+   HW Rate: 1000 pps/4000 kbps(1sec)
+Group: 232.2.1.5
+  Source: 151.1.1.3,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 255 sec)
+   HW Rate: 1000 pps/4000 kbps(1sec)
+Group: 232.2.1.6
+  Source: 151.1.1.3,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 255 sec)
+   HW Rate: 1000 pps/4000 kbps(1sec)
+Group: 232.2.1.7
+  Source: 151.1.1.3,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 255 sec)
+   HW Rate: 1000 pps/4000 kbps(1sec)
+Group: 232.2.1.8
+  Source: 151.1.1.3,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 255 sec)
+   HW Rate: 1000 pps/4000 kbps(1sec)
+Group: 232.2.1.9
+  Source: 151.1.1.3,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 255 sec)
+   HW Rate: 1000 pps/4000 kbps(1sec)
+Group: 232.2.1.10
+  Source: 151.1.1.3,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 255 sec)
+   HW Rate: 1000 pps/4000 kbps(1sec)

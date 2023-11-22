@@ -1,0 +1,23 @@
+show cef ipv6 fc00:a000:1000:101::2/128 detail
+Tue Jun 27 11:53:30.785 UTC
+fc00:a000:1000:101::2/128, version 83, SRv6 Headend, internal 0x5000001 0x40 (ptr 0x7914cf2c) [1], 0x0 (0x0), 0x0 (0x7a0cf918)
+ Updated May 31 13:26:22.019
+ Prefix Len 128, traffic index 0, precedence n/a, priority 4
+  gateway array (0x78b67aa8) reference count 1, flags 0x2010, source rib (7), 0 backups
+                [1 type 3 flags 0x48441 (0x78c13a40) ext 0x0 (0x0)]
+  LW-LDI[type=0, refc=0, ptr=0x0, sh-ldi=0x0]
+  gateway array update type-time 1 May 31 13:26:22.019
+ LDI Update time May 31 13:26:22.019
+
+  Level 1 - Load distribution: 0
+  [0] via fc00:c000:1002::/128, recursive
+
+   via fc00:c000:1002::/128, 11 dependencies, recursive [flags 0x6000]
+    path-idx 0 NHID 0x0 [0x7914c1ac 0x0]
+    next hop fc00:c000:1002::/128 via fc00:c000:1002::/48
+    SRv6 H.Encaps.Red SID-list {fc00:c000:1002:e003::}
+
+    Load distribution: 0 (refcount 1)
+
+    Hash  OK  Interface                 Address
+    0     Y   Bundle-Ether12            fe80::bee7:12ff:fe1f:abb5

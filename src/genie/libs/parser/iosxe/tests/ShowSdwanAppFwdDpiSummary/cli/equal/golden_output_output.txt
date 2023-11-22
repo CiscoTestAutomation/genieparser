@@ -1,0 +1,8 @@
+pm9005#show sdwan app-fwd dpi summary
+                                                              ACTIVE  INACTIVE
+                                                              FLOWS   FLOWS
+                    CACHE   CURRENT  HIGH       FLOWS  FLOWS  TIMED   TIMED
+NAME                SIZE    ENTRIES  WATERMARK  ADDED  AGED   OUT     OUT
+--------------------------------------------------------------------------------
+sdwan_flow_monitor  512000  0        7          1590   1591   1355    236
+

@@ -1,0 +1,12 @@
+IPv4 Crypto ISAKMP SA
+ 
+C-id  Local           Remote          I-VRF  Status Encr Hash   Auth DH Lifetime Cap.
+ 
+29609 100.0.10.2      100.13.220.2     RED      ACTIVE aes  sha    psk  16 00:01:47 D  
+       Engine-id:Conn-id =  SW:12609
+ 
+29493 100.0.10.2      100.12.134.2           ACTIVE aes  sha    psk  16 00:01:12 D  
+       Engine-id:Conn-id =  SW:12493
+         
+IPv6 Crypto ISAKMP SA
+

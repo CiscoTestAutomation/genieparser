@@ -1,0 +1,31 @@
+=== OCE ===
+
+OCE Type: EVPN Encap OCE, Number of children: 1
+  Flags: 0x02
+  Atom flags: 0000
+  Next hop: 99.99.4.100
+  EFI Name: nve1.VNI301700
+  Next hw oce ptr: 0x4a2bffe0
+=== OCE ===
+
+OCE Type: VxLAN Header OCE, Number of children: 1
+  Encap str: 8000000 6212400
+  Next hw oce ptr: 0x49700740
+=== OCE ===
+
+OCE Type: Adjacency, Number of children: 0
+Adj Type: IPV4 Adjacency
+Encap Len: 28
+L3 MTU: 9216
+Adj Flags: 0x0000
+Fixup Flags: 0x0001
+    ADJ_GRE
+Output UIDB: 262090
+Interface Name: Tunnel0
+Encap: 45 00 00 00 00 00 00 00 ff 11 ed 5e 63 63 03 64
+       63 63 04 64 12 b5 12 b5 00 00 00 00
+Next Hop Address: 99.99.4.100
+Lisp Fixup HW Ptr: 0x4966a3a0
+Next HW OCE Ptr: 00000000
+Fixup_Flags_2: 0xd0000
+    ADJ_FLAG_2_ROUTE_PTR

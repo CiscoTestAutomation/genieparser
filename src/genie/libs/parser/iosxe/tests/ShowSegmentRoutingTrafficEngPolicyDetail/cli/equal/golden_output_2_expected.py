@@ -32,7 +32,8 @@ expected_output = {
                                 }
                             }
                         }
-                    }
+                    },
+                    "type": "CLI"
                 }
             }
         },

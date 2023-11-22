@@ -1,0 +1,26 @@
+IPv4 Role-based permissions default:
+        Permit IP-00
+IPv4 Role-based permissions from group 42:Untrusted to group Unknown:
+        Deny IP-00
+IPv4 Role-based permissions from group 199:FAILED_AUTH to group Unknown:
+        Deny IP-00
+IPv4 Role-based permissions from group 22:Untrusted to group 22:Untrusted:
+        Deny IP-00
+IPv4 Role-based permissions from group 100:Tech to group 6:Trusted:
+        NFS-08
+        ACCESS-01
+        Deny IP-00
+IPv4 Role-based permissions from group 101:Mars to group 5:Trusted:
+        Deny IP-00
+IPv4 Role-based permissions from group 111:Technicolor to group 9:Printers:
+        PRINTING-10
+        GENERIC-14
+        Deny IP-00
+IPv4 Role-based permissions from group 102:Moon to group 6:Printers:
+        ICMP-01
+        PRINTING-10
+        Deny IP-00
+IPv4 Role-based permissions from group 199:FAILED_AUTH to group 9999:QUARANTINE_REDIRECT_PORTAL:
+        Deny IP-00
+RBACL Monitor All for Dynamic Policies : FALSE
+RBACL Monitor All for Configured Policies : FALSE

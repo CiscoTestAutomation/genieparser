@@ -47,6 +47,8 @@ class ShowMacsecSummary(ShowMacsecSummarySchema):
         p1 = re.compile(r'^(?P<interface>\S+\d+\/\d+\/\d+)\s+(?P<transmit_sc>\d+)\s+(?P<receive_sc>\d+)')
 
         ret_dict = {}
+        if out != '':
+            res_dict = ret_dict.setdefault('interfaces', {})
         for line in out.splitlines():
             line = line.strip()
 
@@ -55,7 +57,7 @@ class ShowMacsecSummary(ShowMacsecSummarySchema):
                 group = m.groupdict()
                 interface = Common.convert_intf_name \
                     (intf=group['interface'].strip())
-                intf_dict = ret_dict.setdefault('interfaces', {}).setdefault(interface,{})
+                intf_dict = res_dict.setdefault(interface,{})
                 intf_dict['transmit_sc'] = group['transmit_sc']
                 intf_dict['receive_sc'] = group['receive_sc']
 

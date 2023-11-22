@@ -7,6 +7,7 @@ expected_output = {
         "image_id": "s72033_rp-ADVENTERPRISEK9_WAN-M",
         "compiled_by": "kellythw",
         "compiled_date": "Thu 23-Nov-06 06:26",
+        "copyright_years": "1986-2006",
         "image_type": "production image",
         "rom": "System Bootstrap, Version 12.2(17r)S4, RELEASE SOFTWARE (fc1)",
         "bootldr": "s72033_rp Software (s72033_rp-ADVENTERPRISEK9_WAN-M), Version 12.2(18)SXF7, RELEASE SOFTWARE (fc1)",

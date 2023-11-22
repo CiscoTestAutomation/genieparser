@@ -1,0 +1,16 @@
+VLAN0010
+  Spanning tree enabled protocol rstp
+  Root ID    Priority    32778
+             Address     00a5.bf53.d400
+             This bridge is the root
+             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+ 
+  Bridge ID  Priority    32778  (priority 32768 sys-id-ext 10)
+             Address     00a5.bf53.d400
+             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+             Aging Time  300 sec
+ 
+Interface           Role Sts Cost      Prio.Nbr Type
+------------------- ---- --- --------- -------- --------------------------------
+Gi1/0/4             Desg FWD 20000     128.4    P2p Edge
+Po1                 Desg FWD 10000     128.3049 P2p

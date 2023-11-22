@@ -1,0 +1,7 @@
+9600-HA#show install rollback
+
+ID      Label                            Description
+-------------------------------------------------------
+5       No Label                         No Description
+4       No Label                         No Description
+5       No Label                         No Description

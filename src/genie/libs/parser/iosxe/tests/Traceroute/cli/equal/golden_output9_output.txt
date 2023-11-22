@@ -1,0 +1,9 @@
+
+traceroute 192.168.0.20
+Type escape sequence to abort.
+Tracing the route to 192.168.0.20
+VRF info: (vrf in name/id, vrf out name/id)
+1 192.168.0.22 [AS 2516] 0 msec 0 msec 1 msec
+2 192.168.0.23 [AS 2516] 1 msec 1 msec 2 msec
+3 fake1.cisco.com (192.168.0.24) [AS 2516] 2 msec 2 msec 2 msec
+4 fake2.cisco.com (192.168.0.25) [AS 2516] 2 msec

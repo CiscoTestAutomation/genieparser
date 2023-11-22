@@ -1,0 +1,10 @@
+Forwarding Manager policy-defn Redirect action metadata
+
+Service ID: 3861840337, Service VRF ID: 0, Firewall mode: Routed
+Service Selector: 255, Service IP address: 172.18.0.2
+Number of RLOCs: 1
+  Priority    Weightage    VNID        RLOC IP address                      
+  ------------------------------------------------------------------------
+  0           10           4097        60.60.60.62                          
+
+

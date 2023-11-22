@@ -1,0 +1,33 @@
+MRP ring 4
+
+Profile         : 200 ms
+Mode            : Auto-Manager
+Priority        : 40960
+Operational Mode: Manager
+From            : CLI
+License         : Not Applicable
+Gateway         :
+ Status         : Disabled
+Best Manager    :
+ MAC Address    : 04:A7:41:4D:20:07
+ Priority       : 40960
+
+Network Topology: Ring
+Network Status  : OPEN
+Port1:                                     Port2:
+ MAC Address    :04:A7:41:4D:20:07          MAC Address    :04:A7:41:4D:20:08
+ Interface      :Gi1/0/7                    Interface      :Gi1/0/8
+ Status         :Forwarding                 Status         :Forwarding
+
+VLAN ID     : 141
+Domain Name : RING4
+Domain ID   : FFFFFFFF-FFFF-FFFF-FFFF-AAAAAAAAAAAE
+
+Topology Change Request Interval        : 10ms
+Topology Change Repeat Count            : 3
+Short Test Frame Interval               : 10ms
+Default Test Frame Interval             : 20ms
+Operational Test Frame Interval         : 20ms
+Test Monitoring Interval Count          : 3
+Test Monitoring Extended Interval Count : N/A
+

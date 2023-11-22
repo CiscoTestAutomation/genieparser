@@ -922,18 +922,19 @@ class ShowStandbyDelay(ShowStandbyDelaySchema):
 
         return hsrp_delay_dict
 
-# =================
+# =========================
 # Schema for:
-#  * 'show standby brief:'
-# =================
+#  * 'show standby brief'
+# =========================
 class ShowStandbyBriefSchema(MetaParser):
     """Schema for show standby brief:"""
     
     schema = {
-        'interface': {
+        Any(): {
             Any(): {
                 'grp': int,
                 'priority': int,
+                Optional('is_preempt_enabled'): bool,
                 'state': str,
                 'active': str,
                 'standby': str,
@@ -942,44 +943,110 @@ class ShowStandbyBriefSchema(MetaParser):
         },
     }
 
-# =================
+# ========================
 # Parser for:
-#  * 'show standby brief:'
-# =================
+#  * 'show standby brief'
+# ========================
 class ShowStandbyBrief(ShowStandbyBriefSchema):
     '''Parser for show standby brief'''
-    
+
     cli_command = 'show standby brief'
 
     def cli(self, output=None):
-       
+
         if output is None:
             # get output from device
-            out = self.device.execute(self.cli_command)
-        else:
-            out = output
+            output = self.device.execute(self.cli_command)
 
         # initial variables
         ret_dict = {}
 
-        #Vl1309      1    110   Active  local           40.1.31.1       40.1.31.100
-        p0 = re.compile(r"^(?P<interface>\w+)\s+(?P<grp>\d+)\s+(?P<priority>\d+)\s+(?P<state>\w+)\s+(?P<active>\w+)\s+(?P<standby>[\w:.]+)\s+(?P<virtual_ip>[\w:.]+)$")
-        
-        for line in out.splitlines():
+        # Vl11        11   200 P Active  local           11.11.11.4      11.11.11.5
+        p0 = re.compile(r"^(?P<interface>\w+)\s+(?P<grp>\d+)\s+(?P<priority>\d+)\s+((?P<is_preempt_enabled>\S+)\s+)?(?P<state>\w+)\s+(?P<active>[\w:.]+)\s+(?P<standby>[\w:.]+)\s+(?P<virtual_ip>[\w:.]+)$")
+        # FE80::5:73FF:FEA0:0
+        p1 = re.compile(r"(?P<virtual_ip>[\w:.]+)$")
+        # Vl11        0    200 P Active  local           FE80::2E5A:FFF:FE1C:2064
+        p2 = re.compile(r"^(?P<interface>\w+)\s+(?P<grp>\d+)\s+(?P<priority>\d+)\s+((?P<is_preempt_enabled>\S+)\s+)?(?P<state>\w+)\s+(?P<active>[\w:.]+)\s+(?P<standby>[\w:]+)$")
+        # unknown         FE80::5:73FF:FEA0:0
+        p3 = re.compile(r"(?P<standby>[\w:.]+)\s+(?P<virtual_ip>[\w:.]+)$")
+        # Vl11        0    50  P Speak   FE80::2E5A:FFF:FE1C:2064
+        p4 = re.compile(r"^(?P<interface>\w+)\s+(?P<grp>\d+)\s+(?P<priority>\d+)\s+((?P<is_preempt_enabled>\S+)\s+)?(?P<state>\w+)\s+(?P<active>[\w:.]+)$")
+
+        ret_dict = {}
+        last_matched = None
+
+        for line in output.splitlines():
             line = line.strip()
-            
-            #Vl1309      1    110   Active  local           40.1.31.1       40.1.31.100
+
+            # Vl11        11   200 P Active  local           11.11.11.4      11.11.11.5
             m = p0.match(line)
             if m:
                 group = m.groupdict()
-                interface = group['interface']
-                stby_dict = ret_dict.setdefault('interface', {}).setdefault(interface, {})
-                stby_dict['grp']  = int(group['grp'])
-                stby_dict['priority']  = int(group['priority'])
-                stby_dict['state']  = group['state']
-                stby_dict['active']  = group['active']
-                stby_dict['standby']  = group['standby']
-                stby_dict['virtual_ip']  = group['virtual_ip']
-                continue
+                if ':' not in m.group('virtual_ip'):
+                    interface = group['interface']
+                    stby_dict = ret_dict.setdefault('interface', {}).setdefault(interface, {})
+                    stby_dict['grp']  = int(group['grp'])
+                    stby_dict['priority']  = int(group['priority'])
+                    if m.group('is_preempt_enabled'):
+                        enable = group['is_preempt_enabled'] == 'P'
+                        stby_dict['is_preempt_enabled']  = enable
+                    stby_dict['state']  = group['state']
+                    stby_dict['active']  = group['active']
+                    stby_dict['standby']  = group['standby']
+                    stby_dict['virtual_ip']  = group['virtual_ip']
+                    continue
+
+            # FE80::5:73FF:FEA0:0 
+            m = p1.match(line)
+            if m:
+                if last_matched:
+                    if ':' in m.group('virtual_ip'):
+                        last_matched['virtual_ip'] = m.group('virtual_ip')
+                        continue
            
+           # Vl11        0    200 P Active  local           FE80::2E5A:FFF:FE1C:2064
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                if ':' in group['standby']:
+                    last_matched = {
+                        'grp': int(group['grp']),
+                        'priority': int(group['priority']),
+                        'state': group['state'],
+                        'active': group['active'],
+                        'standby': group['standby']
+                    }
+                    if m.group('is_preempt_enabled'):
+                        enable = group['is_preempt_enabled'] == 'P'
+                        last_matched['is_preempt_enabled']  = enable
+                    ret_dict.setdefault('ipv6_interface', {}).setdefault(group['interface'], last_matched)
+                    continue
+           
+            # unknown         FE80::5:73FF:FEA0:0
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                if ':' in m.group('virtual_ip'):
+                    last_matched['standby'] = m.group('standby')
+                    last_matched['virtual_ip'] = m.group('virtual_ip')
+                    continue
+
+            # Vl11        0    200 P FE80::2E5A:FFF:FE1C:2064  local  
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                if ':' in group['active']:
+                    last_matched = {
+                        'grp': int(group['grp']),
+                        'priority': int(group['priority']),
+                        'state': group['state'],
+                        'active': group['active'],
+                    }
+                    if m.group('is_preempt_enabled'):
+                        enable = group['is_preempt_enabled'] == 'P'
+                        last_matched['is_preempt_enabled']  = enable
+                    ret_dict.setdefault('ipv6_interface', {}).setdefault(group['interface'], last_matched)
+                    continue
+
         return ret_dict
+        

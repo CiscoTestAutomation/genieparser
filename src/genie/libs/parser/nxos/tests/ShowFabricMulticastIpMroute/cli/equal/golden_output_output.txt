@@ -1,0 +1,25 @@
+
+VRF "default" Fabric mroute Database VNI: 0
+
+VRF "vxlan-1001" Fabric mroute Database VNI: 201001
+Fabric Mroute: (*, 227.1.1.1/32) ptr: 0x563f3549b27c flags: 0 uptime: 22:15:41
+  RD-RT ext comm Route-Import:
+  Interested Fabric Nodes:
+    This node, uptime: 22:15:41    RPF Neighbor: 102.1.1.1
+
+Fabric Mroute: (181.1.11.44/32, 225.4.1.1/32) ptr: 0x7f20383f6b8c flags: 0 uptime: 22:15:41
+  RD-RT ext comm Route-Import:  0b 64 64 64 04 03 e9 00 01 5a 5a 5a 04 00 03 e8 03 00 00
+  Interested Fabric Nodes:
+    This node, uptime: 22:15:41    RPF Neighbor: 100.100.100.4
+
+VRF "vxlan-1002" Fabric mroute Database VNI: 201002
+
+Fabric Mroute: (*, 227.1.1.1/32) ptr: 0x563f3549b27c flags: 0 uptime: 22:15:41
+  RD-RT ext comm Route-Import:
+  Interested Fabric Nodes:
+    100.100.100.2 (core), uptime: 22:15:41    RPF Neighbor: 102.1.1.1
+
+Fabric Mroute: (181.1.11.44/32, 225.4.1.1/32) ptr: 0x7f20383f6b8c flags: 0 uptime: 22:15:41
+  RD-RT ext comm Route-Import:  0b 64 64 64 04 03 e9 00 01 5a 5a 5a 04 00 03 e8 03 00 00
+  Interested Fabric Nodes:
+    100.100.100.2 (fabric), uptime: 22:15:41    RPF Neighbor: 100.100.100.4

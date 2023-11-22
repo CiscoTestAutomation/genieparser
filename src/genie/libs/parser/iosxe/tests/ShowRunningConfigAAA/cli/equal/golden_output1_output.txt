@@ -1,0 +1,17 @@
+show running-config aaa
+!
+aaa authentication login default local
+aaa authorization exec default local 
+username lab privilege 15 password 0 lab
+!
+!
+!
+!
+!
+!
+!
+aaa new-model
+aaa session-id common
+!
+!
+

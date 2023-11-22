@@ -1,0 +1,11 @@
+SXP Node ID(generated):0x0C010103(12.1.1.3)
+IP-SGT Mappings as follows:
+IPv4,SGT: <10.1.1.8 , 5>
+IPv4,SGT: <10.1.1.10 , 9>
+IPv4,SGT: <10.1.1.11 , 89:SGT_089>
+IPv4,SGT: <10.1.1.18 , 87>
+IPv6,SGT: <2001::6 , 22>
+IPv6,SGT: <2001::60 , 208:SGT_208>
+IPv6,SGT: <2001::80 , 26:SGT_026>
+IPv6,SGT: <2001::89 , 26>
+Total number of IP-SGT Mappings: 8

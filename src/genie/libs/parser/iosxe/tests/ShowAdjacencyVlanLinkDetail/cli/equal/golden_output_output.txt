@@ -1,0 +1,14 @@
+# golden_output_output.txt
+#
+# Copyright (c) 2022 by Cisco Systems, Inc.
+# All rights reserved.
+
+VTEP1#show adj vlan3 abcd:2::2 link ipv4 det
+Protocol Interface Address
+IP Vlan3 ABCD:2::2(6)
+0 packets, 0 bytes
+epoch 0
+sourced in sev-epoch 4
+Encap length 14
+AABBCC81F600AABBCC81F5000800
+VXLAN Transport tunnel

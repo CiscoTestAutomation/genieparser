@@ -220,7 +220,8 @@ class ShowIpArpDetailVrfAll(ShowIpArpDetailVrfAllSchema):
 		p1 = re.compile(r'^(?P<address>[\d\.]+) +(?P<age>[\d+\-\:]+) '
 						r'+(?P<mac>[\w\.]+) +(?P<interface>\S+) '
 						r'+(?P<physical_interface>\S+)'
-						r'( +(?P<flag>[\*\w\+\#]+))?$')
+						r'( +(?P<flag>[\*\w\+\#]+))?'
+						r'( +(?P<vrf>\S+))?$')
 
 		for line in out.splitlines():
 			line = line.strip()

@@ -1,0 +1,221 @@
+Crypto Gdoi Group Name :bw600-IPV6_eft 
+        Group handle: 1073741835, Local Key Server handle: 1073741845
+
+        Local Address: 16.16.16.1 
+        Local Priority: 200      
+        Local KS Role: Secondary , Local KS Status: Alive     
+        Local KS version: 1.0.27
+        Local COOP version: 1.0.8 
+        Secondary Timers: 
+                Sec Primary Periodic Time: 30 
+                Remaining Time: 21, Retries: 0
+                Invalid ANN PST recvd: 0
+                New GM Temporary Blocking Enforced?: No
+                Per-user timer remaining time: 0
+                Antireplay Sequence Number: 109
+        Peer Sessions:
+        Session 1:
+                Server handle: 1073741844
+                Peer Address: 15.15.15.1
+                Peer Version: 1.0.27
+                Peer COOP version: 1.0.8 
+                COOP Protocol: base
+                Peer Priority: 245             
+                Peer KS Role: Primary   , Peer KS Status: Alive     
+                Antireplay Sequence Number: 395
+
+                IKE status: Established
+                Counters:
+                    Ann msgs sent: 107
+                    Ann msgs sent with reply request: 1
+                    Ann msgs recv: 394 
+                    Ann msgs recv with reply request: 1
+                    Packet sent drops: 1 
+                    Packet Recv drops: 0 
+                    Total bytes sent: 105136 
+                    Total bytes recv: 352635
+
+Crypto Gdoi Group Name :bw-suiteB-v6 
+        Group handle: 1073741837, Local Key Server handle: 1073741855
+
+        Local Address: 16.16.16.1 
+        Local Priority: 200      
+        Local KS Role: Secondary , Local KS Status: Alive     
+        Local KS version: 1.0.27
+        Local COOP version: 1.0.8 
+        Secondary Timers: 
+                Sec Primary Periodic Time: 30 
+                Remaining Time: 15, Retries: 0
+                Invalid ANN PST recvd: 0
+                New GM Temporary Blocking Enforced?: No
+                Per-user timer remaining time: 0
+                Antireplay Sequence Number: 110
+        Peer Sessions:
+        Session 1:
+                Server handle: 1073741854
+                Peer Address: 15.15.15.1
+                Peer Version: 1.0.27
+                Peer COOP version: 1.0.8 
+                COOP Protocol: base
+                Peer Priority: 245             
+                Peer KS Role: Primary   , Peer KS Status: Alive     
+                Antireplay Sequence Number: 395
+
+                IKE status: Established
+                Counters:
+                    Ann msgs sent: 108
+                    Ann msgs sent with reply request: 1
+                    Ann msgs recv: 394 
+                    Ann msgs recv with reply request: 1
+                    Packet sent drops: 1 
+                    Packet Recv drops: 0 
+                    Total bytes sent: 109221 
+                    Total bytes recv: 363381
+
+Crypto Gdoi Group Name :bw600-IPV6 
+        Group handle: 1073741839, Local Key Server handle: 1073741846
+
+        Local Address: 16.16.16.1 
+        Local Priority: 200      
+        Local KS Role: Secondary , Local KS Status: Alive     
+        Local KS version: 1.0.27
+        Local COOP version: 1.0.8 
+        Secondary Timers: 
+                Sec Primary Periodic Time: 30 
+                Remaining Time: 21, Retries: 0
+                Invalid ANN PST recvd: 0
+                New GM Temporary Blocking Enforced?: No
+                Per-user timer remaining time: 0
+                Antireplay Sequence Number: 108
+        Peer Sessions:
+        Session 1:
+                Server handle: 1073741847
+                Peer Address: 15.15.15.1
+                Peer Version: 1.0.27
+                Peer COOP version: 1.0.8 
+                COOP Protocol: base
+                Peer Priority: 245             
+                Peer KS Role: Primary   , Peer KS Status: Alive     
+                Antireplay Sequence Number: 394
+
+                IKE status: Established
+                Counters:
+                    Ann msgs sent: 106
+                    Ann msgs sent with reply request: 1
+                    Ann msgs recv: 393 
+                    Ann msgs recv with reply request: 1
+                    Packet sent drops: 1 
+                    Packet Recv drops: 0 
+                    Total bytes sent: 107153 
+                    Total bytes recv: 362180
+
+Crypto Gdoi Group Name :bw6000 
+        Group handle: 1073741842, Local Key Server handle: 1073741858
+
+        Local Address: 16.16.16.1 
+        Local Priority: 200      
+        Local KS Role: Secondary , Local KS Status: Alive     
+        Local KS version: 1.0.27
+        Local COOP version: 1.0.8 
+        Secondary Timers: 
+                Sec Primary Periodic Time: 30 
+                Remaining Time: 11, Retries: 0
+                Invalid ANN PST recvd: 0
+                New GM Temporary Blocking Enforced?: No
+                Per-user timer remaining time: 0
+                Antireplay Sequence Number: 6
+        Peer Sessions:
+        Session 1:
+                Server handle: 1073741859
+                Peer Address: 15.15.15.1
+                Peer Version: 1.0.27
+                Peer COOP version: 1.0.8 
+                COOP Protocol: base
+                Peer Priority: 245             
+                Peer KS Role: Primary   , Peer KS Status: Alive     
+                Antireplay Sequence Number: 317
+
+                IKE status: Established
+                Counters:
+                    Ann msgs sent: 4
+                    Ann msgs sent with reply request: 1
+                    Ann msgs recv: 316 
+                    Ann msgs recv with reply request: 1
+                    Packet sent drops: 1 
+                    Packet Recv drops: 0 
+                    Total bytes sent: 2290 
+                    Total bytes recv: 302383
+
+Crypto Gdoi Group Name :bw6000_eft 
+        Group handle: 1073741844, Local Key Server handle: 1073741864
+
+        Local Address: 16.16.16.1 
+        Local Priority: 200      
+        Local KS Role: Secondary , Local KS Status: Alive     
+        Local KS version: 1.0.27
+        Local COOP version: 1.0.8 
+        Secondary Timers: 
+                Sec Primary Periodic Time: 30 
+                Remaining Time: 11, Retries: 0
+                Invalid ANN PST recvd: 0
+                New GM Temporary Blocking Enforced?: No
+                Per-user timer remaining time: 0
+                Antireplay Sequence Number: 6
+        Peer Sessions:
+        Session 1:
+                Server handle: 1073741865
+                Peer Address: 15.15.15.1
+                Peer Version: 1.0.27
+                Peer COOP version: 1.0.8 
+                COOP Protocol: base
+                Peer Priority: 245             
+                Peer KS Role: Primary   , Peer KS Status: Alive     
+                Antireplay Sequence Number: 317
+
+                IKE status: Established
+                Counters:
+                    Ann msgs sent: 4
+                    Ann msgs sent with reply request: 1
+                    Ann msgs recv: 316 
+                    Ann msgs recv with reply request: 1
+                    Packet sent drops: 1 
+                    Packet Recv drops: 0 
+                    Total bytes sent: 2162 
+                    Total bytes recv: 280871
+
+Crypto Gdoi Group Name :bw-suiteB 
+        Group handle: 1073741848, Local Key Server handle: 1073741872
+
+        Local Address: 16.16.16.1 
+        Local Priority: 200      
+        Local KS Role: Secondary , Local KS Status: Alive     
+        Local KS version: 1.0.27
+        Local COOP version: 1.0.8 
+        Secondary Timers: 
+                Sec Primary Periodic Time: 30 
+                Remaining Time: 16, Retries: 0
+                Invalid ANN PST recvd: 0
+                New GM Temporary Blocking Enforced?: No
+                Per-user timer remaining time: 0
+                Antireplay Sequence Number: 6
+        Peer Sessions:
+        Session 1:
+                Server handle: 1073741873
+                Peer Address: 15.15.15.1
+                Peer Version: 1.0.27
+                Peer COOP version: 1.0.8 
+                COOP Protocol: base
+                Peer Priority: 245             
+                Peer KS Role: Primary   , Peer KS Status: Alive     
+                Antireplay Sequence Number: 317
+
+                IKE status: Established
+                Counters:
+                    Ann msgs sent: 4
+                    Ann msgs sent with reply request: 1
+                    Ann msgs recv: 316 
+                    Ann msgs recv with reply request: 1
+                    Packet sent drops: 1 
+                    Packet Recv drops: 0 
+                    Total bytes sent: 2282 
+                    Total bytes recv: 299927

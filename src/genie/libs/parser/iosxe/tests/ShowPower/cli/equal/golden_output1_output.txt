@@ -1,0 +1,18 @@
+show power detail
+Switch:1
+
+Power                                                    Fan States
+Supply  Model No              Type  Capacity  Status     0     1
+------  --------------------  ----  --------  ---------  -----------
+PS1     C9K-PWR-1500WAC-R     ac    1500 W    active     good  n.a. 
+PS2     C9K-PWR-1500WAC-R     ac    n.a.      bad-input  n.a.  n.a. 
+
+Fan                 Fan States
+Tray    Status      0     1    
+------  ----------  -----------
+FT1     active      good  good 
+FT2     active      good  good 
+FT3     active      good  good 
+FT4     active      good  good 
+FT5     active      good  good 
+FT6     active      good  good

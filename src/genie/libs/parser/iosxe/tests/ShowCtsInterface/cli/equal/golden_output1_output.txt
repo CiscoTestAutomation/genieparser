@@ -1,0 +1,101 @@
+Global Dot1x feature is Disabled
+Interface TenGigabitEthernet0/1/3.30:
+    CTS is enabled, mode:    MANUAL
+    IFC state:               OPEN
+    Interface Active for      2d14h
+    Authentication Status:   NOT APPLICABLE
+        Peer identity:       "unknown"
+        Peer's advertised capabilities: ""
+    Authorization Status:    SUCCEEDED
+        Peer SGT:            60
+        Peer SGT assignment: Untrusted
+    SAP Status:              NOT APPLICABLE
+    Propagate SGT:           Enabled
+    Cache Info:
+        Expiration            : N/A
+        Cache applied to link : NONE
+
+    Statistics:
+        authc success:              0
+        authc reject:               0
+        authc failure:              0
+        authc no response:          0
+        authc logoff:               0
+        sap success:                0
+        sap fail:                   0
+        authz success:              0
+        authz fail:                 0
+        port auth fail:             0
+
+    L3 IPM:   active. Security Group = 60,                         Name is unavailable. 
+
+    CTS sgt-caching Ingress : Disabled
+
+    CTS sgt-caching Egress  : Disabled
+
+
+Interface Tunnel10000010:
+    CTS is enabled, mode:    MANUAL
+    IFC state:               OPEN
+    Interface Active for      2d13h
+    Authentication Status:   NOT APPLICABLE
+        Peer identity:       "unknown"
+        Peer's advertised capabilities: ""
+    Authorization Status:    NOT APPLICABLE
+    SAP Status:              NOT APPLICABLE
+    Propagate SGT:           Enabled
+    Cache Info:
+        Expiration            : N/A
+        Cache applied to link : NONE
+
+    Statistics:
+        authc success:              0
+        authc reject:               0
+        authc failure:              0
+        authc no response:          0
+        authc logoff:               0
+        sap success:                0
+        sap fail:                   0
+        authz success:              0
+        authz fail:                 0
+        port auth fail:             0
+
+    L3 IPM:   disabled.
+
+    CTS sgt-caching Ingress : Disabled
+
+    CTS sgt-caching Egress  : Disabled
+
+
+Interface Tunnel10000011:
+    CTS is enabled, mode:    MANUAL
+    IFC state:               OPEN
+    Interface Active for      2d13h
+    Authentication Status:   NOT APPLICABLE
+        Peer identity:       "unknown"
+        Peer's advertised capabilities: ""
+    Authorization Status:    NOT APPLICABLE
+    SAP Status:              NOT APPLICABLE
+    Propagate SGT:           Enabled
+    Cache Info:
+        Expiration            : N/A
+        Cache applied to link : NONE
+
+    Statistics:
+        authc success:              0
+        authc reject:               0
+        authc failure:              0
+        authc no response:          0
+        authc logoff:               0
+        sap success:                0
+        sap fail:                   0
+        authz success:              0
+        authz fail:                 0
+        port auth fail:             0
+
+    L3 IPM:   disabled.
+
+    CTS sgt-caching Ingress : Disabled
+
+    CTS sgt-caching Egress  : Disabled
+

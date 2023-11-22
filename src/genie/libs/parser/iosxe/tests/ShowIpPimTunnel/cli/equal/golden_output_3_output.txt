@@ -1,0 +1,8 @@
+Tunnel2* 
+  Type  : PIM Encap
+  RP    : Embedded RP Tunnel
+  Source: 77:77:77::77
+Tunnel21* 
+  Type  : PIM Encap
+  RP    : 66:66:66::66
+  Source: 77:77:77::77

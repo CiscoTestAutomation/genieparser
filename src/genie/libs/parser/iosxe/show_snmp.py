@@ -7,6 +7,7 @@ IOSXE parsers for the following show commands:
 
 # Python
 import re
+from urllib.parse import non_hierarchical
 
 # Metaparser
 from genie.metaparser import MetaParser
@@ -91,7 +92,7 @@ class ShowSnmpSchema(MetaParser):
 
     schema = {
         "chassis": str,
-        "contact": str,
+        Optional("contact"): str,
         Optional("location"): Optional(str),
         "snmp_input": {
             "packet_count": int,
@@ -185,7 +186,7 @@ class ShowSnmp(ShowSnmpSchema):
         p_chassis = re.compile(r"Chassis:\s+(?P<chassis>\S+)$")
 
         # Contact: "something@cisco.com"
-        p_contact = re.compile(r"Contact:\s+(?P<contact>\S+)")
+        p_contact = re.compile(r"Contact:\s+(?P<contact>.*)$")
 
         # Location: "To be filled in"
         p_location_not_filled = re.compile(r"Location:\s+\"To\s+be\s+filled\s+in\"$")
@@ -848,14 +849,532 @@ class ShowSnmpMibIfmibIfindex(ShowSnmpMibIfmibIfindexSchema):
         interface_dict = {}
 
         #GigabitEthernet3/0/28: Ifindex = 36
-        p1 =  re.compile(r'(?P<interface_index>\S+) +Ifindex = +(?P<ifIndex>\d+)$')
+        #unrouted VLAN 1003: Ifindex = 7
+        p1 =  re.compile(r'^(?P<interface_index>(unrouted\sVLAN\s)?\S+) +Ifindex = +(?P<ifIndex>\d+)$')
 
         for line in out.splitlines():
+            #GigabitEthernet3/0/28: Ifindex = 36
+            #unrouted VLAN 1003: Ifindex = 7
             m = p1.match(line)
-            group = m.groupdict()
-            intf = Common.convert_intf_name(group.pop('interface_index')) 
-            intf = (intf.split(':'))[0]
-            int_dict = interface_dict.setdefault('interface',{}).setdefault(intf, group)
-            interface_dict.update() 
+            if m:
+                group = m.groupdict()
+                intf = Common.convert_intf_name(group.pop('interface_index'))
+                intf = (intf.split(':'))[0]
+                interface_dict.setdefault('interface',{}).setdefault(intf, group)
 
         return interface_dict
+
+
+class ShowSnmpEngineidSchema(MetaParser):
+    """Schema for show snmp engineid"""
+
+    schema = {
+        'local_engineid': str,
+        Optional('remote_engineid'): {
+            Any(): {
+                'ip_address': str,
+                'port': str
+            }
+        }
+    }
+
+
+class ShowSnmpEngineid(ShowSnmpEngineidSchema):
+    """Parser for show snmp engineid"""
+
+    cli_command = 'show snmp engineid'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        
+        # Local SNMP engineID: 800000090300046C9D014D00
+        p1 = re.compile(r'^Local\s+SNMP\s+engineID:\s+(?P<local_engineid>\w+)$')
+
+        # Remote Engine ID          IP-addr    Port
+        # 800000090300046C9D014D11       3.3.32.2         4
+        p2 = re.compile(r'^(?P<remote_engineid>\w+)\s+(?P<ip_address>[\d\.]+)\s+(?P<port>\d+)$')
+
+        ret_dict = dict()
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Local SNMP engineID: 800000090300046C9D014D00
+            match = p1.match(line)
+            if match:
+                ret_dict.update(match.groupdict())
+                continue
+            
+            # 800000090300046C9D014D11       3.3.32.2         4
+            match = p2.match(line)
+            if match:
+                remote_engineid = match.groupdict()['remote_engineid']
+                snmp_dict = ret_dict.setdefault('remote_engineid', {}).setdefault(remote_engineid, {})
+                snmp_dict['ip_address'] = match.groupdict()['ip_address']
+                snmp_dict['port'] = match.groupdict()['port']
+                continue
+        
+        return ret_dict
+
+
+class ShowSnmpCommunitySchema(MetaParser):
+    """Schema for show snmp community"""
+
+    schema = {
+        'community': {
+            Any(): {
+                'index': str,
+                'security_name': str,
+                'storage_type': str,
+                'storage_status': str
+            }
+        }
+    }
+
+
+class ShowSnmpCommunity(ShowSnmpCommunitySchema):
+    """Parser for show snmp community"""
+
+    cli_command = 'show snmp community'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        
+        # Community name: admin
+        p1 = re.compile(r'^Community\s+name:\s+(?P<community>\S+)$')
+
+        # Community Index: admin
+        p2 = re.compile(r'^Community\s+Index:\s+(?P<index>\S+)$')
+
+        # Community SecurityName: admin
+        p3 = re.compile(r'^Community\s+SecurityName:\s+(?P<security_name>\w+)$')
+
+        # storage-type: nonvolatile        active
+        p4 = re.compile(r'^storage-type:\s+(?P<storage_type>\S+)\s+(?P<storage_status>\w+)$')
+
+        ret_dict = dict()
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Community name: admin
+            match = p1.match(line)
+            if match:
+                comm_dict = ret_dict.setdefault('community', {}).setdefault(match.groupdict()['community'], {})
+                continue
+
+            # Community Index: admin
+            match = p2.match(line)
+            if match:
+                comm_dict.update(match.groupdict())
+                continue
+
+            # Community SecurityName: admin
+            match = p3.match(line)
+            if match:
+                comm_dict.update(match.groupdict())
+                continue
+
+            # storage-type: nonvolatile        active
+            match = p4.match(line)
+            if match:
+                comm_dict.update(match.groupdict())
+                continue
+        
+        return ret_dict
+
+
+class ShowSnmpMibBulkstatTransferSchema(MetaParser):
+    """Schema for show snmp mib bulkstat transfer"""
+    schema = {
+        Optional('tansfer_name'): {
+            Any(): {
+                Optional('primary_url'): str,
+                Optional('file_name'): {
+                    Any(): {
+                        'time_left': int,
+                        'state': str,
+                        Optional('retries_left'): int
+                    }
+                }
+            }
+        }
+    }
+
+
+class ShowSnmpMibBulkstatTransfer(ShowSnmpMibBulkstatTransferSchema):
+    """Parser for show snmp mib bulkstat transfer"""
+
+    cli_command = 'show snmp mib bulkstat transfer'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        
+        # Transfer Name : myTransfer1
+        p1 = re.compile(r'^Transfer\s+Name\s+:\s+(?P<tansfer_name>\S+)$')
+
+        # Primary URL tftp://192.168.0.70/auto/tftp-sjpreg/logsTransfer
+        p2 = re.compile(r'^Primary\s+URL\s+(?P<primary_url>\S+)$')
+
+        # ifmib_Router_020421_100554683 : 173 : Retry (2 Retry attempt(s) Left)
+        p3 = re.compile(r'^(?P<file_name>\S+)\s+:\s+(?P<time_left>\d+)\s+:\s+(?P<state>\w+)[\s\()]*(?P<retries_left>\d+)?(Retry)?.*$')
+
+        ret_dict = dict()
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Transfer Name : myTransfer1
+            match = p1.match(line)
+            if match:
+                trans_dict = ret_dict.setdefault('tansfer_name', {}).setdefault(match.groupdict()['tansfer_name'], {})
+                continue
+
+            # Primary URL tftp://192.168.0.70/auto/tftp-sjpreg/logsTransfer
+            match = p2.match(line)
+            if match:
+                trans_dict.update(match.groupdict())
+                continue
+
+            # ifmib_Router_020421_100554683 : 173 : Retry (2 Retry attempt(s) Left)
+            match = p3.match(line)
+            if match:
+                match_dict = match.groupdict()
+                file_dict = trans_dict.setdefault('file_name', {}).setdefault(match_dict['file_name'], {})
+                file_dict['time_left'] = int(match_dict['time_left'])
+                file_dict['state'] = match_dict['state']
+                if match_dict['retries_left']:
+                    file_dict['retries_left'] = int(match_dict['retries_left'])
+                continue
+        
+        return ret_dict
+
+# ==========================================================================================
+# Parser Schema for 'Show Environment Stack'
+# ==========================================================================================
+
+class ShowEnvironmentStackSchema(MetaParser):
+    """
+    Schema for
+        * 'show environment stack'
+    """
+
+    schema = {
+        'switch_id': {
+            Any(): {
+                'fan': {
+                    Any(): {
+                        'switch': int,
+                        'speed': int,
+                        'state': str,
+                        'airflow_direction': str,
+                    }
+                },
+                'fan_name': {
+                    Any(): {
+                        'status': str,
+                    }
+                },
+                'system_temperature': str,
+                'type': {
+                    Any(): {
+                        'temperature_value_Cel': int,
+                        'temperature_state': str,
+                        'yellow_threshold_Cel': int,
+                        'red_threshold_Cel': int
+                    }
+                }
+            }
+        }
+    }
+
+# ==========================================================================================
+# Parser for 'Show Environment Stack'
+# ==========================================================================================
+
+class ShowEnvironmentStack(ShowEnvironmentStackSchema):
+    """
+    Parser for
+        * 'show environment stack'
+    """
+    cli_command = ['show environment stack']
+
+    def cli(self, output=None):
+        cmd = self.cli_command[0]
+
+        if output is None:
+            output = self.device.execute(self.cli_command[0])
+        
+        # initializing dictionary
+        ret_dict = {}
+
+        # SWITCH: 1
+        p1 = re.compile(r'^\s*SWITCH: (?P<switch_id>\d+)$')
+
+        #  1       1     14240     OK     Front to Back
+        p2 = re.compile(r'^\s*(?P<switch>\d+)\s+(?P<fan>\d+)\s+(?P<speed>\d+)\s+(?P<state>\w+)\s+(?P<airflow_direction>[\w\ ]+)$')
+
+        # FAN PS-1 is NOT PRESENT
+        p3 = re.compile(r'^\s*FAN (?P<fan_name>\S+) is (?P<fan_status>[\w\s]+)$')
+
+        # Switch 1: SYSTEM TEMPERATURE is OK
+        p4 = re.compile(r'^Switch \d+: SYSTEM TEMPERATURE is (?P<sys_temp_status>[\w\s]+)$')
+
+        # Inlet Temperature Value: 37 Degree Celsius
+        p5 = re.compile(r'^(?P<type>\w+) Temperature Value: (?P<temp_val>\d+) Degree Celsius$')
+
+        # Temperature State: GREEN
+        p6 = re.compile(r'^Temperature State: (?P<temp_state>\w+)$')
+
+        # Yellow Threshold : 46 Degree Celsius
+        p7 = re.compile(r'^Yellow Threshold *: (?P<yellow_threshold>\d+) Degree Celsius$')
+
+        # Red Threshold    : 56 Degree Celsius
+        p8 = re.compile(r'^Red Threshold *: (?P<red_threshold>\d+) Degree Celsius$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # SWITCH: 1
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict = ret_dict.setdefault('switch_id',{}).setdefault(group['switch_id'],{})
+                continue
+
+            #  1       1     14240     OK     Front to Back
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                fan_dict= root_dict.setdefault('fan',{}).setdefault(group['fan'],{})
+                fan_dict['switch']= int(group['switch'])
+                fan_dict['speed'] = int(group['speed'])
+                fan_dict['state'] = group['state']
+                fan_dict['airflow_direction'] = group['airflow_direction']
+                continue
+
+            # FAN PS-1 is NOT PRESENT
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                fan_dict = root_dict.setdefault('fan_name',{}).setdefault(group['fan_name'],{})
+                fan_dict['status'] = group['fan_status']
+                continue
+
+            # Switch 1: SYSTEM TEMPERATURE is OK
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict['system_temperature'] = group['sys_temp_status']
+                continue
+
+            # Inlet Temperature Value: 37 Degree Celsius
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                type_dict = root_dict.setdefault('type',{}).setdefault(group['type'],{})
+                type_dict['temperature_value_Cel'] = int(group['temp_val'])
+                continue
+
+            # Temperature State: GREEN
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                type_dict['temperature_state'] = group['temp_state']
+                continue
+
+            # Yellow Threshold : 46 Degree Celsius
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                type_dict['yellow_threshold_Cel'] = int(group['yellow_threshold'])
+                continue
+
+            # Red Threshold    : 56 Degree Celsius
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                type_dict['red_threshold_Cel'] = int(group['red_threshold'])
+                continue
+
+        return ret_dict
+
+# ==========================================================================================
+# Parser Schema for 'show controllers power inline module'
+# ==========================================================================================
+
+class ShowControllersPowerInlineModuleSchema(MetaParser):
+    """
+    Schema for
+        * 'show controllers power inline module'
+    """
+
+    schema = {
+        'alchemy_instance': {
+            Any():{
+                'address': str,
+                'type': {
+                    Any(): {
+                        int: str
+                    },
+                },
+                'poe_command_id': {
+                    Any(): {
+                        int: int
+                    },
+                },
+            },
+        }
+    }
+
+# ==========================================================================================
+# Parser for 'show controllers power inline module'
+# ==========================================================================================
+
+class ShowControllersPowerInlineModule(ShowControllersPowerInlineModuleSchema):
+    """
+    Parser for
+        * 'show controllers power inline module'
+    """
+    cli_command = 'show controllers power inline module {module}'
+
+    def cli(self, module, output=None):
+        cmd = self.cli_command.format(module=module)
+
+        if output is None:
+            output = self.device.execute(cmd)
+
+        # initializing dictionary
+        ret_dict = {}
+
+        # Alchemy instance 0, address 0
+        p1 = re.compile(r'^Alchemy instance (?P<alchemy_instance>\S+), address (?P<address>\S+)$')
+
+        # Command 0 on each port : 0    0    0    0    0    0    0    0    0    0    0    0   
+        p2 = re.compile(r'^ *(?P<cmd_id>[\w\s]+) on each port *: *(?P<val>[\w\s\-]+) *$')
+
+        # Pending event flag    : N     N     N     N     N     N     N     N     N     N     N     N    
+        p3 = re.compile(r'^ *(?P<type>[\w\s]+): *(?P<val>[\w\s\-]+) *$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Alchemy instance 0, address 0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict = ret_dict.setdefault('alchemy_instance',{}).setdefault(group['alchemy_instance'],{})
+                root_dict['address'] = group['address']
+                continue
+
+            # Command 0 on each port : 0    0    0    0    0    0    0    0    0    0    0    0   
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                cmd_dict = root_dict.setdefault('poe_command_id',{}).setdefault(group['cmd_id'],{})
+                cmd_dict.update({
+                    k:int(v)
+                    for k, v in enumerate(
+                        group['val'].split(),1)
+                })
+                continue
+
+            # Pending event flag    : N     N     N     N     N     N     N     N     N     N     N     N    
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                type_dict = root_dict.setdefault('type',{}).setdefault(group['type'].strip(),{})
+                type_dict.update({
+                    k:v
+                    for k, v in enumerate(
+                        group['val'].split(),1)
+                })
+                continue
+
+        return ret_dict
+
+# ==========================================================================================
+# Parser Schema for 'snmp get'
+# ==========================================================================================
+
+class SnmpGetIfIndexSchema(MetaParser):
+    """
+    Schema for
+        * 'snmp get'
+    """
+    schema = {
+        Optional("reqid"): int,
+        Optional("errstat"): int,
+        Optional("erridx"): int,        
+        'mib': {
+            Any():{
+                'mib': str,
+                'ifindex': str,
+                'name': str,
+                Optional('counter'): str
+            },
+        }
+    }
+
+# ==========================================================================================
+# Parser for 'snmp get'
+# ==========================================================================================
+
+class SnmpGetIfIndex(SnmpGetIfIndexSchema):
+    """
+    Parser for
+        * 'snmp get'
+    """
+    cli_command = 'snmp get v{version} {ip} {community_str} oid {mibifindex}'
+
+    def cli(self, version, ip, community_str, mibifindex, output=None):
+        cmd = self.cli_command.format(version=version, ip=ip, community_str=community_str, mibifindex=mibifindex)
+
+        if output is None:
+            output = self.device.execute(cmd)
+
+        # initializing dictionary
+        ret_dict = {}
+
+        # ifInUcastPkts.109 = NO_SUCH_INSTANCE_EXCEPTION  
+        # IF-MIB::ifDescr.66 = STRING: TwentyFiveGigE1/0/24.2001
+        # IF-MIB::ifInUcastPkts.109 = NO_SUCH_INSTANCE_EXCEPTION
+        # IF-MIB::ifHCOutUcastPkts.66 = Counter64: 2
+        # ifHCOutUcastPkts.66 = Counter64: 2
+        # ifOutUcastPkts.22 = 105
+        # ifOutUcastPkts.22 = 105xxx 
+        # IF-MIB::ifOutUcastPkts.22 = 105xxx
+        # IF-MIB::ifOutUcastPkts.22 = 105
+        p1 = re.compile(r'^(IF-MIB::)?(?P<mib>[\w\s]+).(?P<ifindex>[\w]+) = ?(?P<name>[\w]+)?:? ?(?P<counter>[\w\s\-\/\.]+)?$')
+
+        # SNMP Response: reqid 10, errstat 0, erridx 0
+        p2 = re.compile(r'^SNMP Response: reqid (?P<reqid>\d+), errstat (?P<errstat>\d+), erridx (?P<erridx>\d+)$')
+
+        ret_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+
+            # SNMP Response: reqid 10, errstat 0, erridx 0      
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                mib_dict = ret_dict.setdefault('mib', {}).setdefault(group['mib'], {})  
+                mib_dict.update({k:v for k, v in group.items() if v and k != 'mib'})
+                mib_dict['mib'] = group['mib']
+                if group['counter']:
+                    mib_dict['counter'] = group['counter']
+                mib_dict['name'] = group['name']
+                mib_dict['ifindex'] = group['ifindex']
+                continue
+
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['reqid'] = int(group['reqid'])
+                ret_dict['errstat'] = int(group['errstat'])
+                ret_dict['erridx'] = int(group['erridx'])
+
+        return ret_dict

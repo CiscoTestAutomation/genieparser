@@ -1,0 +1,10 @@
+RP/0/RP0/CPU0:ios#show rip ipv6 vrf vrf1 database
+Thu Nov 18 15:29:19.095 UTC
+
+Routes held in RIP's topology database:
+1::3/128
+    [1] via fe80::20c:29ff:feec:f4, next hop fe80::20c:29ff:feec:f4, Uptime: 0s, GigabitEthernet0/0/0/1
+2::3/128
+    [0]    directly connected, Loopback3
+12:0:0:2::/64
+    [0]    directly connected, GigabitEthernet0/0/0/1

@@ -1,0 +1,13 @@
+ SXP              : Disabled
+ Highest Version Supported: 5
+ Default Password : Not Set
+ Default Key-Chain: Not Set
+ Default Key-Chain Name: Not Applicable
+ Default Source IP: Not Set
+Connection retry open period: 120 secs
+Reconcile period: 120 secs
+Retry open timer is not running
+Peer-Sequence traverse limit for export: Not Set
+Peer-Sequence traverse limit for import: Not Set
+
+There are no SXP Connections.

@@ -1,0 +1,9 @@
+LISP remote-locator-set default-etr-locator-set-ipv6 Information
+
+ RLOC          Pri/Wgt/Metric     Inst       Domain-ID/MH-ID  ETR       SI/ID          
+ 100.88.88.88  255/100/-          101                0/0      Default   
+ 100.88.88.88  255/100/-          102                0/0      Default   
+ 100.88.88.88  255/100/-          103                0/0      Default   
+ 100.99.99.99  255/100/-          104                0/0      Default   
+ 100.99.99.99  255/100/-          105                0/0      Default   
+ 100.99.99.99  255/100/-          106                0/0      Default   

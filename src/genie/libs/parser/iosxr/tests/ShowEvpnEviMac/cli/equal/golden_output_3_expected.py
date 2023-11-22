@@ -1,0 +1,36 @@
+expected_output = {
+    'vpn_id':{
+        2:{
+            'mac_address':{
+                '0012.0001.0002':{
+                    'encap':'SRv6',
+                    'ip_address':'::',
+                    'next_hop':'Bundle-Ether1.2',
+                    'label':0,
+                    'sid':'cafe:0:128:e1ab::'
+                },
+                '0012.0002.0002':{
+                    'encap':'SRv6',
+                    'ip_address':'::',
+                    'next_hop':'Bundle-Ether1.2',
+                    'label':0,
+                    'sid':'cafe:0:128:e1ab::'
+                },
+                '0034.0001.0002':{
+                    'encap':'SRv6',
+                    'ip_address':'::',
+                    'next_hop':'3.3.3.3',
+                    'label':'IMP-NULL',
+                    'sid':'cafe:0:300:e002::'
+                },
+                '0034.0002.0002':{
+                    'encap':'SRv6',
+                    'ip_address':'::',
+                    'next_hop':'3.3.3.3',
+                    'label':'IMP-NULL',
+                    'sid':'cafe:0:300:e002::'
+                }
+            }
+        }
+    }
+}

@@ -20,12 +20,12 @@ expected_output = {
          "protocol":"up",
          "status":"up"
       },
-      "Nu0":{
+      "Null0":{
          "description":"",
          "protocol":"up",
          "status":"up"
       },
-      "Mg0/RP0/CPU0/0":{
+      "MgmtEth0/RP0/CPU0/0":{
          "description":"",
          "protocol":"up",
          "status":"up"

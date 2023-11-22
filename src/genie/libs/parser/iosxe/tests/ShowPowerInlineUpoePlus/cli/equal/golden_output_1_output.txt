@@ -1,6 +1,7 @@
 Interface   Admin  Type Oper-State      Power(Watts)    Class   Device Name
             State       Alt-A,B      Allocated Utilized  Alt-A,B 
 ----------- ------ ---- ----------  --------- --------- ------- -----------
+Gi1/0/3     auto   n/a  off           0.0       0.0       n/a             
 Gi1/0/4     auto   SP   on            4.0       3.8       1       Ieee PD
 Gi1/0/15    auto   SS   on,on         60.0      10.5      6       Ieee PD
 Gi1/0/23    auto   DS   on,on         45.4      26.9      3,4     Ieee PD

@@ -1,0 +1,11 @@
+interface Tunnel1
+ ip address 192.168.1.1 255.255.255.0
+ ip access-group Tu1-ipsec-ds-ipv4-in in
+ ip access-group Tu1-ipsec-ds-ipv4-out out
+ ipv6 enable
+ ipv6 traffic-filter Tu1-ipsec-ds-ipv6-in in
+ ipv6 traffic-filter Tu1-ipsec-ds-ipv6-out out
+ tunnel source GigabitEthernet1
+ tunnel mode ipsec dual-overlay
+ tunnel destination 30.30.30.2
+ tunnel protection ipsec profile prof

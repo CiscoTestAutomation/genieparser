@@ -1,0 +1,3 @@
+RP/0/RSP0/CPU0:P-9001-1#show cdp
+
+% CDP is not enabled 

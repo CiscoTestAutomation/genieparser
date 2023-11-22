@@ -1,0 +1,4 @@
+IPv4 Role-based permissions default:
+        Permit IP-00
+RBACL Monitor All for Dynamic Policies : FALSE
+RBACL Monitor All for Configured Policies : FALSE

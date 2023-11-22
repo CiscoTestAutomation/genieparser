@@ -1,0 +1,24 @@
+show cef vrf **iid ipv6 ::ffff:10.0.0.1 detail
+Tue Jun 27 11:49:29.728 UTC
+::ffff:10.0.0.1/128, version 32, SRv6 Headend, IID (EVPN-MH), internal 0x1000001 0x0 (ptr 0x78d3fe50) [1], 0x0 (0x0), 0x0 (0x7a0cfaf8)
+ Updated Jun  2 10:49:26.121
+ Prefix Len 128, traffic index 0, precedence n/a, priority 0
+  gateway array (0x78b67e48) reference count 2, flags 0x2010, source rib (7), 0 backups
+                [1 type 3 flags 0x40441 (0x78c13b78) ext 0x0 (0x0)]
+  LW-LDI[type=0, refc=0, ptr=0x0, sh-ldi=0x0]
+  gateway array update type-time 1 Jun  2 10:49:26.120
+ LDI Update time Jun 15 10:49:52.373
+
+  Level 1 - Load distribution: 0
+  [0] via fc00:c000:2003::/128, recursive
+
+   via fc00:c000:2003::/128, 9 dependencies, recursive [flags 0x0]
+    path-idx 0 NHID 0x0 [0x7914c6bc 0x0]
+    next hop VRF - 'default', table - 0xe0800000
+    next hop fc00:c000:2003::/128 via fc00:c000:2003::/48
+    SRv6 H.Encaps.L2.Red SID-list {fc00:c000:2003:e005::}
+
+    Load distribution: 0 (refcount 1)
+
+    Hash  OK  Interface                 Address
+    0     Y   Bundle-Ether111           fe80::96ae:f0ff:fe8e:c0da

@@ -1,0 +1,25 @@
+expected_output={
+     'tunnel_id': {
+         1: {
+             'active_time': 2854,
+             'auth_sign': 'psk',
+             'auth_verify': 'psk',
+             'ce_id': 1406,
+             'dh_grp': 20,
+             'encryption': 'aes-gcm',
+             'fvrf': 'none',
+             'hash': 'none',
+             'ivrf': 'none',
+             'keysize': 256,
+             'life_time': 86400,
+             'local': '4.4.4.1/4500',
+             'local_spi': '409A5870608E1C87',
+             'prf': 'sha384',
+             'remote': '10.1.1.1/4500',
+             'remote_spi': '20858C98BE7EE1A9',
+             'remote_subnets': [],
+             'session_id': 60,
+             'status': 'ready',
+         },
+     },
+ }

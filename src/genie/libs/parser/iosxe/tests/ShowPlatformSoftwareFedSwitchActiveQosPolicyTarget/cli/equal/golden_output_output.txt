@@ -1,0 +1,15 @@
+TCG summary for policy: system-cpp-policy
+
+Loc Interface             IIF-ID           Dir tccg Child #m/p/q  State:(cfg,opr)
+--- --------------------- ---------------- --- ---- ----- ------- ---------------
+?:255 Control Plane         0x00000001000001 OUT   22     0 0/21/0  VALID,SET_INHW  0x7f76a395ca08
+?:0 CoPP-Queue-0          0x0000000100000d OUT   22     0 0/21/0  VALID,SET_INHW  0x7f76a39624c8
+?:0 CoPP-Queue-1          0x0000000100000e OUT   22     0 0/21/0  VALID,SET_INHW  0x7f76a3967148
+
+
+TCG summary for policy: AutoQos-4.0-CiscoPhone-Input-Policy
+
+Loc Interface             IIF-ID           Dir tccg Child #m/p/q  State:(cfg,opr)
+--- --------------------- ---------------- --- ---- ----- ------- ---------------
+L:0 FiveGigabitEthernet1/0/2 0x00000000000009  IN    4     0 3/2/0   VALID,SET_INHW  0x7f76a39fb868
+L:0 FiveGigabitEthernet1/0/8 0x0000000000000f  IN    4     0 3/2/0   VALID,SET_INHW  0x7f76a39fda98

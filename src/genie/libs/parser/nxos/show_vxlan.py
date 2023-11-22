@@ -62,16 +62,16 @@ class ShowL2routeEvpnImetAllDetail(ShowL2routeEvpnImetAllDetailSchema):
         # excute command to get output
         out = output if output else self.device.execute(self.cli_command)
 
-        # Topology ID  VNI         Prod  IP Addr                                 Eth Tag PMSI-Flags Flags   Type Label(VNI)  Tunnel ID                               NFN Bitmap  
+        # Topology ID  VNI         Prod  IP Addr                                 Eth Tag PMSI-Flags Flags   Type Label(VNI)  Tunnel ID                               NFN Bitmap
         # -----------  ----------- ----- --------------------------------------- ------- ---------- ------- ---- ----------- --------------------------------------- ----------
-        # 201          20001       BGP   2001:db8:646:a2bb:0:abcd:1234:3                  0       0          -       6    20001        2001:db8:646:a2bb:0:abcd:1234:3                  32          
-        # 201          20001       BGP   2001:db8:646:a2bb:0:abcd:5678:1                  0       0          -       6    20001        2001:db8:646:a2bb:0:abcd:5678:1                  32          
+        # 201          20001       BGP   2001:db8:646:a2bb:0:abcd:1234:3                  0       0          -       6    20001        2001:db8:646:a2bb:0:abcd:1234:3                  32
+        # 201          20001       BGP   2001:db8:646:a2bb:0:abcd:5678:1                  0       0          -       6    20001        2001:db8:646:a2bb:0:abcd:5678:1                  32
 
 
-        p1 = re.compile(r'^(?P<topo_id>[\d]+) + (?P<vni>[\d]+)' 
-                         ' + (?P<prod_type>[\w]+) * (?P<ip_addr>[\w\:]+)' 
-                         ' + (?P<eth_tag_id>[\d]+) + + (?P<pmsi_flags>[\d]+)' 
-                         ' + (?P<flags>[\w-]) + (?P<type>[\d]+) + (?P<vni_label>[\d]+)' 
+        p1 = re.compile(r'^(?P<topo_id>[\d]+) + (?P<vni>[\d]+)'
+                         ' + (?P<prod_type>[\w]+) * (?P<ip_addr>[\w\:]+)'
+                         ' + (?P<eth_tag_id>[\d]+) + + (?P<pmsi_flags>[\d]+)'
+                         ' + (?P<flags>[\w-]) + (?P<type>[\d]+) + (?P<vni_label>[\d]+)'
                          ' + (?P<tunnel_id>[\w\:]+) + (?P<client_nfn>[\d]+)$')
 
         result_dict = {}
@@ -88,7 +88,7 @@ class ShowL2routeEvpnImetAllDetail(ShowL2routeEvpnImetAllDetailSchema):
                             setdefault(vni, {}).\
                             setdefault('ip', {}).\
                             setdefault(ip, {})
-                
+
                 vni_dict['topo_id'] = int(group['topo_id'])
                 vni_dict['vni'] = vni
                 vni_dict['prod_type'] = group['prod_type']
@@ -150,8 +150,8 @@ class ShowNvePeers(ShowNvePeersSchema):
         # Interface Peer-IP          State LearnType Uptime   Router-Mac
         # nve1      192.168.16.1      Up    CP        01:15:09 n/a
         # nve1      192.168.106.1        Up    CP        00:03:05 5e00.00ff.0209
-        # nve1      2001:db8:646:a2bb:0:abcd:1234:3                  Up    CP        21:47:20 5254.00ff.3162   
-        # nve1      2001:db8:646:a2bb:0:abcd:1234:5                  Up    CP        21:47:20 5254.00ff.3a82   
+        # nve1      2001:db8:646:a2bb:0:abcd:1234:3                  Up    CP        21:47:20 5254.00ff.3162
+        # nve1      2001:db8:646:a2bb:0:abcd:1234:5                  Up    CP        21:47:20 5254.00ff.3a82
         # nve1      172.31.201.40   Down  CP        0.000000 n/a
 
         p1 = re.compile(r'^\s*(?P<nve_name>[\w\/]+) +(?P<peer_ip>[\w\.\:]+) +(?P<peer_state>[\w]+)'
@@ -420,12 +420,16 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
 
         if interface:
             nve_list.append(interface)
-        if not interface:
+        elif output:
+            # Output is given, do not attempt discovery of interfaces from a
+            # different command.
+            # Add a placeholder to the nve_list just to perform one iteration of
+            # the parsing loop.
+            nve_list.append('placeholder')
+        elif not interface and not output:
+            # No interface given, and no output given, find nve interfaces
             cmd1 = 'show interface | i nve'
-            if not output:
-                out1 = self.device.execute(cmd1)
-            else:
-                out1 = output
+            out1 = self.device.execute(cmd1)
             # Init vars
 
             # nve1 is down (other)
@@ -456,6 +460,9 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
         p5_1 = re.compile(r'^\s*Source-Interface: +(?P<source_if>[\w\/]+) +\(primary: +(?P<primary_ip>[\w\.\:]+)\)')
         p5_2 = re.compile(r'^\s*Anycast-Interface: +(?P<anycast_if>[\w\/]+) +\(secondary: +(?P<secondary_ip>[\w\.\:]+)\)')
 
+        # Source - Interface: loopback1(primary: 100: 100:100::6, secondary: 0.0.0.0)
+        p5_3 = re.compile(r'^\s*Source-Interface: +(?P<source_if>[\w\/]+)'                      
+                        ' +\(primary: +(?P<primary_ip>[\w\.\:]+), +secondary: +(?P<secondary_ip>[\w\.]+)\)$')
 
         p6 = re.compile(r'^\s*Source +Interface +State: +(?P<source_state>[\w]+)$')
         p7 = re.compile(r'^\s*IR +Capability +Mode: +(?P<mode>[\w]+)$')
@@ -486,7 +493,7 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
         p25 = re.compile(r'Multisite +delay-restore +time +left: +(?P<multisite_convergence_time_left>\d+) +seconds$')
         # Multisite dci-advertise-pip configured: True
         p26 = re.compile(r'Multisite +dci-advertise-pip +configured: +(?P<multisite_dci_advertise_pip>\S+)')
-        
+
         for nve in nve_list:
             if not output:
                 out = self.device.execute(self.cli_command.format(interface=nve))
@@ -534,6 +541,7 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
                 m = p5.match(line)
                 m_1 = p5_1.match(line)
                 m_2 = p5_2.match(line)
+                m_3 = p5_3.match(line)
                 if m:
                     group = m.groupdict()
                     nve_dict.update({k:v for k,v in group.items()})
@@ -547,6 +555,9 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
                     nve_dict.update({'anycast_if': group2.pop('anycast_if')})
                     nve_dict.update({'secondary_ip': group2.pop('secondary_ip')})
                     continue
+                if m_3:
+                    group3 = m_3.groupdict()
+                    nve_dict.update({k:v for k,v in group3.items()})
 
                 m = p5.match(line)
                 if m:
@@ -1521,11 +1532,12 @@ class ShowL2routeMacIpAllDetail(ShowL2routeMacIpAllDetailSchema):
         #            SOO: 774975538
         #            L3-Info: 10001
         # 101         fa16.3eff.0987 HMM    --            0          10.111.1.3    Local
-        # 101         fa16.3eff.e94e BGP    --            0          10.111.8.3    10.84.66.66 
+        # 101         fa16.3eff.e94e BGP    --            0          10.111.8.3    10.84.66.66
         # 101         0011.00ff.0034 BGP  10.36.3.2                      10.70.0.2
+        # 202         0011.01ff.0002 BGP    --            0         2001:db8:646::5678:1 6:1:1::2
         p1 = re.compile(r'^\s*(?P<topo_id>[\d]+) +(?P<mac_addr>[\w\.]+) +(?P<mac_ip_prod_type>[\w\,]+)'
-                        '( +(?P<mac_ip_flags>[\w\,\-]+))?( +(?P<seq_num>[\d]+))? +(?P<host_ip>[\w\/\.]+)'
-                        ' +(?P<next_hop1>[\w\/\.]+)$')
+                        '( +(?P<mac_ip_flags>[\w\,\-]+))?( +(?P<seq_num>[\d]+))? +(?P<host_ip>[\w\/\.\:]+)'
+                        ' +(?P<next_hop1>[\w\/\.\:]+)$')
 
         p2 = re.compile(r'^\s*Sent +To: +(?P<sent_to>[\w]+)$')
         p3 = re.compile(r'^\s*SOO: +(?P<soo>[\d]+)$')
@@ -1534,10 +1546,11 @@ class ShowL2routeMacIpAllDetail(ShowL2routeMacIpAllDetailSchema):
         # Topology    Mac Address    Host IP         Prod   Flags         Seq No     Next-Hops
         # ----------- -------------- --------------- ------ ---------- ---------------
         # 101         0000.9cff.2293 10.111.1.3     BGP    --            0         10.76.23.23
-        # 201         0011.01ff.0001 10.1.1.2       BGP    --            0         2001:db8:646:a2bb:0:abcd:5678:1   
-        p5 = re.compile(r'^\s*(?P<topo_id>[\d]+) +(?P<mac_addr>[\w\.]+) +(?P<host_ip>[\w\/\.]+)'
+        # 201         0011.01ff.0001 10.1.1.2       BGP    --            0         2001:db8:646:a2bb:0:abcd:5678:1
+        # 202         0011.01ff.0001 5:1:1:1::2     BGP    --            0         2001:db8:646:a2bb:0:abcd:5678:1
+        p5 = re.compile(r'^\s*(?P<topo_id>[\d]+) +(?P<mac_addr>[\w\.]+) +(?P<host_ip>[\w\/\.\:]+)'
                         ' +(?P<mac_ip_prod_type>[\w\,]+)'
-                        ' +(?P<mac_ip_flags>[\w\,\-]+) +(?P<seq_num>[\d]+) +(?P<next_hop1>[\w\/\.]+)$')
+                        ' +(?P<mac_ip_flags>[\w\,\-]+) +(?P<seq_num>[\d]+) +(?P<next_hop1>[\w\/\.\:]+)$')
 
         for line in out.splitlines():
             if line:
@@ -1895,7 +1908,7 @@ class ShowRunningConfigNvOverlay(ShowRunningConfigNvOverlaySchema):
         #   multisite mcast-group 226.1.1.1
         p18 = re.compile(r'^multisite mcast-group +(?P<multisite_mcast_group>[\d\.]+)$')
 
-        
+
         for line in out.splitlines():
             line = line.strip()
 
@@ -2001,7 +2014,7 @@ class ShowRunningConfigNvOverlay(ShowRunningConfigNvOverlaySchema):
             if m:
                 interface = m.groupdict().pop('interface')
                 continue
-            
+
             # interface port-channel11
             # interface Ethernet1/1
             m = p13.match(line)
@@ -2365,21 +2378,25 @@ class ShowFabricMulticastIpSaAdRoute(ShowFabricMulticastIpSaAdRouteSchema):
         p1 = re.compile(r'^\s*VRF +\"(?P<vrf_name>\S+)\" +MVPN +SA +AD +Route +Database'
                         ' +VNI: +(?P<vnid>[\d]+)$')
 
-        # Src Active AD Route: (10.111.1.3/32, 238.8.4.101/32) uptime: 00:01:01
-        p2 = re.compile(r'^\s*Src +Active +AD +Route: +\((?P<saddr>[\w\/\.]+), +(?P<gaddr>[\w\/\.]+)\)'
+        # Src Active AD route: (1.1.11.3/32, 226.0.0.1/32) uptime: 00:12:32
+        # SA-AD Route: (1.1.11.3/32, 226.0.0.1/32) uptime: 00:12:32
+        p2 = re.compile(r'((^\s*SA\-AD +Route:)|(^\s*Src +Active +AD +route:)) +\((?P<saddr>[\w\/\.]+), +(?P<gaddr>[\w\/\.]+)\)'
                         ' +uptime: +(?P<uptime>[\w\.\:]+)$')
+
         #  Interested Fabric Nodes:
         p3 = re.compile(r'^\s*Interested Fabric Nodes:$')
 
+
         #    This node, uptime: 00:01:01
+        #    100.100.100.4, uptime: 00:01:01
         p4 = re.compile(r'^\s*(?P<interested_fabric_nodes>[\w\s\.]+), +uptime: +(?P<interest_uptime>[\w\.\:]+)$')
 
         for line in out.splitlines():
-            if line:
-                line = line.rstrip()
-            else:
+            if not line:
                 continue
+            line = line.strip()
 
+            # VRF "vni_10100" MVPN SA AD Route Database VNI: 10100
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -2388,6 +2405,7 @@ class ShowFabricMulticastIpSaAdRoute(ShowFabricMulticastIpSaAdRouteSchema):
                 vrf_dict.update({'vnid': group['vnid']})
                 continue
 
+            # SA-AD Route: (1.1.11.3/32, 226.0.0.1/32) uptime: 00:12:32
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -2403,6 +2421,8 @@ class ShowFabricMulticastIpSaAdRoute(ShowFabricMulticastIpSaAdRouteSchema):
                 saddr_dict.update({'uptime': group['uptime']})
                 continue
 
+            #    This node, uptime: 00:01:01
+            #    100.100.100.4, uptime: 00:01:01
             m = p4.match(line)
             if m:
                 group = m.groupdict()
@@ -2412,6 +2432,150 @@ class ShowFabricMulticastIpSaAdRoute(ShowFabricMulticastIpSaAdRouteSchema):
                 interested_dict.update({'uptime': group['interest_uptime']})
                 continue
 
+        return result_dict
+
+# ==========================================================
+#  schema for show fabric multicast ipv4 mroute vrf all
+# ==========================================================
+class ShowFabricMulticastIpMrouteSchema(MetaParser):
+    """Schema for:
+        show fabric multicast ipv4 mroute
+        show fabric multicast ipv4 mroute vrf <vrf>
+        show fabric multicast ipv4 mroute vrf all"""
+
+    schema ={
+        "multicast": {
+            "vrf": {
+                Any(): {
+                    "vnid": str,
+                    Optional("address_family"): {
+                        Any(): {
+                            "fabric_mroutes": {
+                                "gaddr": {
+                                    Any(): {
+                                        "grp_len": int,
+                                        "saddr": {
+                                            Any(): {
+                                                Optional("src_len"): int,
+                                                "uptime": str,
+                                                Optional("rd_rt_ext_vri"): str,
+                                                Optional("interested_fabric_nodes"): {
+                                                    Any(): {
+                                                        "uptime": str,
+                                                        "rpfneighbor": str,
+                                                        Optional("loc"): str,
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+# ===========================================================
+#  Parser for show fabric multicast ipv4 mroute vrf all
+# ==========================================================
+class ShowFabricMulticastIpMroute(ShowFabricMulticastIpMrouteSchema):
+    """parser for:
+        show fabric multicast ipv4 mroute
+        show fabric multicast ipv4 mroute vrf <vrf>
+        show fabric multicast ipv4 mroute vrf all"""
+
+    cli_command = ['show fabric multicast ipv4 mroute vrf {vrf}','show fabric multicast ipv4 mroute']
+    exclude = [
+        'uptime']
+
+    def cli(self,vrf="",output=None):
+        if vrf:
+            cmd = self.cli_command[0].format(vrf=vrf)
+        else:
+            vrf = "default"
+            cmd = self.cli_command[1]
+
+        if output is None:
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        result_dict = {}
+
+        # VRF "trm-vxlan-3001" Fabric mroute Database VNI: 203001
+
+        p1 = re.compile(r'^\s*VRF +\"(?P<vrf_name>\S+)\" +Fabric +mroute +Database'\
+                        ' +VNI: +(?P<vnid>[\d]+)$')
+
+
+        # Fabric Mroute: (179.1.12.11 / 32, 225.1.1.1 / 32) ptr: 0x56207780cbcc flags:0 uptime:00:01:01
+
+        p2 = re.compile(r'^\s*Fabric +Mroute: +\((?P<saddr>[\w\/\.\*]+), +(?P<gaddr>[\w\/\.]+)\) +ptr: +0[xX][0-9a-'\
+                        'fA-F]+ flags: +[0-9]+ +uptime: +(?P<uptime>[\w\.\:]+)$')
+
+        # RD-RT ext comm Route-Import:  0b 64 64 64 06 0b b9 00 01 5a 5a 5a 06 80 0b e8 03 00 00
+        p3 = re.compile(r'^\s*RD-RT ext comm Route-Import: +(?P<vri>[\w\s]+)$')
+        #  Interested Fabric Nodes:
+        p4 = re.compile(r'^\s*Interested Fabric Nodes:$')
+
+        #   This node, uptime: 00:30:25    RPF Neighbor: 102.1.1.1
+        #   100.100.100.1 (core), uptime: 00:30:25    RPF Neighbor: 102.1.1.1
+        p5 = re.compile(r'^\s*(?P<interested_fabric_nodes>[\w\s\.]+) *(\((?P<loc>[\w]+)\))? *, +uptime: +'\
+                         '(?P<interest_uptime>[\w\.\:]+) +RPF +Neighbor: +(?P<rpfneighbor>[\w\/\.]+)$')
+
+        for line in out.splitlines():
+            if not line:
+                continue
+            line = line.strip()
+
+            # VRF "trm-vxlan-3001" Fabric mroute Database VNI: 203001
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                vrf_dict = result_dict.setdefault('multicast', {}).setdefault('vrf', {}).\
+                    setdefault(group['vrf_name'], {})
+                vrf_dict.update({'vnid': group['vnid']})
+                continue
+
+            # Fabric Mroute: (179.1.12.11 / 32, 225.1.1.1 / 32) ptr: 0x56207780cbcc flags:0 uptime:00:01:01
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                address_family_dict = vrf_dict.setdefault('address_family', {}).setdefault('ipv4', {})
+                saddr = group['saddr']
+                gaddr = group['gaddr']
+                gaddr_dict = address_family_dict.setdefault('fabric_mroutes', {}).\
+                    setdefault('gaddr', {}).setdefault(gaddr ,{})
+                gaddr_dict.update({'grp_len': int(gaddr.split('/')[1])})
+                saddr_dict = gaddr_dict.setdefault('saddr', {}).setdefault(saddr, {})
+                if saddr != "*":
+                    saddr_dict.update({'src_len': int(saddr.split('/')[1])})
+                saddr_dict.update({'uptime': group['uptime']})
+                continue
+            # RD-RT ext comm Route-Import:  0b 64 64 64 06 0b b9 00 01 5a 5a 5a 06 80 0b e8 03 00 00
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                group["rd_rt_ext_vri"] = group['vri'].strip()
+                saddr_dict.update({'rd_rt_ext_vri': group['rd_rt_ext_vri']})
+
+            #   This node, uptime: 00:30:25    RPF Neighbor: 102.1.1.1
+            #   100.100.100.1 (core), uptime: 00:30:25    RPF Neighbor: 102.1.1.1
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                group['interested_fabric_nodes'] = group['interested_fabric_nodes'].strip()
+                group['loc'] = group['loc']
+                interested_dict = saddr_dict.setdefault('interested_fabric_nodes', {}).\
+                    setdefault(group['interested_fabric_nodes'], {})
+                interested_dict.update({'uptime': group['interest_uptime']})
+                interested_dict.update({'rpfneighbor': group['rpfneighbor']})
+                if group.get('loc',None):
+                    interested_dict.update({'loc': group['loc']})
+                continue
         return result_dict
 
 

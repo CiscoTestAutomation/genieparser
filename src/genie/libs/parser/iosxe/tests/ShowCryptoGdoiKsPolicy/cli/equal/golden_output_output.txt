@@ -1,0 +1,35 @@
+Key Server Policy:
+For group getvpn1 (handle: 0x40000002) server 1.1.1.1 (handle: 0x40000002):
+
+  # of teks : 2  Seq num : 0
+  KEK POLICY (transport type : Unicast)
+    spi : 0xEEB0E9A2BBD4C71AF1034F6B24EB8022
+    management alg     : disabled      encrypt alg           : AES
+    crypto iv length   : 16            key size              : 32
+    orig life(sec)     : 1200          remaining life(sec)   : 787
+    time to rekey (sec): 552
+    sig hash algorithm : enabled       sig key length        : 550
+    sig size           : 512
+    sig key name       : REKEYRSA
+    acknowledgement    : Cisco
+
+  TEK POLICY (encaps : ENCAPS_TUNNEL)
+    spi                : 0xEE021924
+    access-list        : acl1
+    transform          : esp-256-aes esp-sha256-hmac
+    alg key size       : 32            sig key size          : 32
+    orig life(sec)     : 600           remaining life(sec)   : 188
+    tek life(sec)      : 600           elapsed time(sec)     : 412
+    override life(sec) : 0             antireplay window size: 64
+    time to rekey (sec): 62
+
+
+  TEK POLICY (encaps : ENCAPS_TUNNEL)
+    spi                : 0x3A14695B
+    access-list        : acl1
+    transform          : esp-256-aes esp-sha256-hmac
+    alg key size       : 32            sig key size          : 32
+    orig life(sec)     : 600           remaining life(sec)   : 0
+    tek life(sec)      : 600           elapsed time(sec)     : 887
+    override life(sec) : 0             antireplay window size: 64
+    time to rekey (sec): n/a

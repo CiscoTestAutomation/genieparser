@@ -1,0 +1,13 @@
+Service Name   : service_INFRA_VN
+Service ID     : 2068955985
+Ref count      : 2
+Stale          : FALSE
+    Firewall mode      : routed
+    Service IP         : 172.18.0.2
+    Service Locator    : 255
+    VRF ID             : 0
+    Vnid               : 4097
+    RLOC Status        : Received
+    no.of rlocs        : 1
+      *1. RLOC IP: 60.60.60.62    Weight: 10    Priority: 0
+    Owner              : GPP

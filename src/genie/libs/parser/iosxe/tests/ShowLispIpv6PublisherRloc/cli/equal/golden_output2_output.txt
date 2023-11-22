@@ -1,0 +1,7 @@
+LISP ETR IPv6 Publisher Table for LISP 0 EID-table vrf blue (IID 102)
+Publisher state: Established, Publisher epoch 0, Entries total 1
+
+2001:172:168:1::/64, Epoch: 0, Last Published: 00:01:25
+                     TTL: never, State complete
+  Locator        Pri/Wgt  State     Encap-IID
+  2001:2:2:2::2   50/50   up        -

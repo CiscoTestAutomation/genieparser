@@ -1,0 +1,8 @@
+IPv6 Multicast Routing Table for VRF "default"
+
+
+(2001::222:1:1:1234/128, ff1e:1111::1:0/128), uptime: 00:04:03, ipv6 m6rib pim6 
+  Incoming interface: Ethernet1/33.10, RPF nbr: 2001::222:1:1:1234, internal
+  Outgoing interface list: (count: 2)
+    Ethernet1/26, uptime: 00:02:58, pim6
+	Vlan200, uptime: 00:02:58, m6rib, (bridge-only)

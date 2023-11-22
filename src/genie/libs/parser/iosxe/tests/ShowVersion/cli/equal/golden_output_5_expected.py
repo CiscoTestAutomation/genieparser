@@ -8,6 +8,8 @@ expected_output = {
         "image_type": "developer image",
         "compiled_date": "Thu 02-Jul-20 19:19",
         "compiled_by": "mcpre",
+        "copyright_years": "1986-2020",
+        "location": "Amsterdam",
         "rom": "IOS-XE ROMMON",
         "bootldr": "System Bootstrap, Version 17.3.1r[FC2], RELEASE SOFTWARE (P)",
         "hostname": "sisf-c9500-vtep-1",
@@ -34,6 +36,17 @@ expected_output = {
         "processor_type": "X86",
         "rtr_type": "C9500-24Y4C",
         "chassis_sn": "CAT1111L41F",
+        'switch_num': {
+            '1': {
+                'mac_address': '1c:2b:d4:ff:4c:ca',
+                'mb_assembly_num': '1111',
+                'mb_rev_num': '2',
+                'mb_sn': 'CAT1111L41F',
+                'model_num': 'C9500-24Y4C',
+                'model_rev_num': 'V02',
+                'system_sn': 'CAT1111L41F'
+            }
+        },
         "number_of_intfs": {
             "Virtual Ethernet": "1",
             "TwentyFive Gigabit Ethernet": "24",

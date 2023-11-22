@@ -1,0 +1,713 @@
+NAME: "Chassis", DESCR: "Cisco Catalyst 9400 Series 7 Slot Chassis"
+PID: C9407R            , VID: V00  , SN: FXS1939Q442
+
+NAME: "Backplane", DESCR: "Cisco Catalyst 9400 Series 7 Slot Chassis Backplane"
+PID:                   , VID:      , SN:
+
+NAME: "slot 1", DESCR: "Cisco Catalyst 9400 Series Carrier Card Module Container"
+PID:                   , VID:      , SN:
+
+NAME: "Slot 1 Linecard", DESCR: "Cisco Catalyst 9400 Series 48-Port 10/100/1000 (RJ-45)"
+PID: C9400-LC-48T      , VID: V00  , SN: JAE204700Q4
+
+NAME: "Slot 1 Temp:   Outlet", DESCR: "Temp:   Outlet"
+PID:                   , VID:      , SN:
+
+NAME: "Slot 1 Temp:    Inlet", DESCR: "Temp:    Inlet"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet1/0/1", DESCR: "GigabitEthernet1/0/1"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet1/0/2", DESCR: "GigabitEthernet1/0/2"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet1/0/3", DESCR: "GigabitEthernet1/0/3"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet1/0/4", DESCR: "GigabitEthernet1/0/4"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet1/0/5", DESCR: "GigabitEthernet1/0/5"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet1/0/6", DESCR: "GigabitEthernet1/0/6"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet1/0/7", DESCR: "GigabitEthernet1/0/7"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet1/0/8", DESCR: "GigabitEthernet1/0/8"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet1/0/9", DESCR: "GigabitEthernet1/0/9"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet1/0/10", DESCR: "GigabitEthernet1/0/10"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet1/0/11", DESCR: "GigabitEthernet1/0/11"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet1/0/12", DESCR: "GigabitEthernet1/0/12"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet1/0/13", DESCR: "GigabitEthernet1/0/13"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet1/0/14", DESCR: "GigabitEthernet1/0/14"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet1/0/15", DESCR: "GigabitEthernet1/0/15"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet1/0/16", DESCR: "GigabitEthernet1/0/16"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet1/0/17", DESCR: "GigabitEthernet1/0/17"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet1/0/18", DESCR: "GigabitEthernet1/0/18"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet1/0/19", DESCR: "GigabitEthernet1/0/19"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet1/0/20", DESCR: "GigabitEthernet1/0/20"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet1/0/21", DESCR: "GigabitEthernet1/0/21"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet1/0/22", DESCR: "GigabitEthernet1/0/22"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet1/0/23", DESCR: "GigabitEthernet1/0/23"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet1/0/24", DESCR: "GigabitEthernet1/0/24"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet1/0/25", DESCR: "GigabitEthernet1/0/25"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet1/0/26", DESCR: "GigabitEthernet1/0/26"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet1/0/27", DESCR: "GigabitEthernet1/0/27"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet1/0/28", DESCR: "GigabitEthernet1/0/28"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet1/0/29", DESCR: "GigabitEthernet1/0/29"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet1/0/30", DESCR: "GigabitEthernet1/0/30"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet1/0/31", DESCR: "GigabitEthernet1/0/31"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet1/0/32", DESCR: "GigabitEthernet1/0/32"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet1/0/33", DESCR: "GigabitEthernet1/0/33"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet1/0/34", DESCR: "GigabitEthernet1/0/34"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet1/0/35", DESCR: "GigabitEthernet1/0/35"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet1/0/36", DESCR: "GigabitEthernet1/0/36"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet1/0/37", DESCR: "GigabitEthernet1/0/37"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet1/0/38", DESCR: "GigabitEthernet1/0/38"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet1/0/39", DESCR: "GigabitEthernet1/0/39"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet1/0/40", DESCR: "GigabitEthernet1/0/40"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet1/0/41", DESCR: "GigabitEthernet1/0/41"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet1/0/42", DESCR: "GigabitEthernet1/0/42"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet1/0/43", DESCR: "GigabitEthernet1/0/43"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet1/0/44", DESCR: "GigabitEthernet1/0/44"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet1/0/45", DESCR: "GigabitEthernet1/0/45"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet1/0/46", DESCR: "GigabitEthernet1/0/46"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet1/0/47", DESCR: "GigabitEthernet1/0/47"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet1/0/48", DESCR: "GigabitEthernet1/0/48"
+PID:                   , VID:      , SN:
+
+NAME: "slot 2", DESCR: "Cisco Catalyst 9400 Series Carrier Card Module Container"
+PID:                   , VID:      , SN:
+
+NAME: "slot 3", DESCR: "Cisco Catalyst 9400 Series Carrier Card Module Container"
+PID:                   , VID:      , SN:
+
+NAME: "slot 4", DESCR: "Cisco Catalyst 9400 Series Carrier Card Module Container"
+PID:                   , VID:      , SN:
+
+NAME: "slot 5", DESCR: "Cisco Catalyst 9400 Series Carrier Card Module Container"
+PID:                   , VID:      , SN:
+
+NAME: "slot 6", DESCR: "Cisco Catalyst 9400 Series Carrier Card Module Container"
+PID:                   , VID:      , SN:
+
+NAME: "Slot 6 Linecard", DESCR: "Cisco Catalyst 9400 Series 24-Port 1 Gigabit Ethernet (SFP)"
+PID: C9400-LC-24S      , VID: V00  , SN: JAE2143016D
+
+NAME: "slot 7", DESCR: "Cisco Catalyst 9400 Series Carrier Card Module Container"
+PID:                   , VID:      , SN:
+
+NAME: "Slot 7 Linecard", DESCR: "Cisco Catalyst 9400 Series 48-Port 10/100/1000 (RJ-45)"
+PID: C9400-LC-48T      , VID: V01  , SN: JAE213205G9
+
+NAME: "Slot 7 V1: VX1", DESCR: "V1: VX1"
+PID:                   , VID:      , SN:
+
+NAME: "Slot 7 V1: VX2", DESCR: "V1: VX2"
+PID:                   , VID:      , SN:
+
+NAME: "Slot 7 V1: VX3", DESCR: "V1: VX3"
+PID:                   , VID:      , SN:
+
+NAME: "Slot 7 V1: VX4", DESCR: "V1: VX4"
+PID:                   , VID:      , SN:
+
+NAME: "Slot 7 V1: VX5", DESCR: "V1: VX5"
+PID:                   , VID:      , SN:
+
+NAME: "Slot 7 V1: VX6", DESCR: "V1: VX6"
+PID:                   , VID:      , SN:
+
+NAME: "Slot 7 V1: VX7", DESCR: "V1: VX7"
+PID:                   , VID:      , SN:
+
+NAME: "Slot 7 V1: VX8", DESCR: "V1: VX8"
+PID:                   , VID:      , SN:
+
+NAME: "Slot 7 V1: VX9", DESCR: "V1: VX9"
+PID:                   , VID:      , SN:
+
+NAME: "Slot 7 V1: VX10", DESCR: "V1: VX10"
+PID:                   , VID:      , SN:
+
+NAME: "Slot 7 V1: VX11", DESCR: "V1: VX11"
+PID:                   , VID:      , SN:
+
+NAME: "Slot 7 Temp:   Outlet", DESCR: "Temp:   Outlet"
+PID:                   , VID:      , SN:
+
+NAME: "Slot 7 Temp:    Inlet", DESCR: "Temp:    Inlet"
+PID:                   , VID:      , SN:
+
+NAME: "Slot 7 HotSwap: Volts", DESCR: "HotSwap: Volts"
+PID:                   , VID:      , SN:
+
+NAME: "Slot 7 HotSwap: Power", DESCR: "HotSwap: Power"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet7/0/1", DESCR: "GigabitEthernet7/0/1"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet7/0/2", DESCR: "GigabitEthernet7/0/2"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet7/0/3", DESCR: "GigabitEthernet7/0/3"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet7/0/4", DESCR: "GigabitEthernet7/0/4"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet7/0/5", DESCR: "GigabitEthernet7/0/5"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet7/0/6", DESCR: "GigabitEthernet7/0/6"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet7/0/7", DESCR: "GigabitEthernet7/0/7"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet7/0/8", DESCR: "GigabitEthernet7/0/8"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet7/0/9", DESCR: "GigabitEthernet7/0/9"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet7/0/10", DESCR: "GigabitEthernet7/0/10"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet7/0/11", DESCR: "GigabitEthernet7/0/11"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet7/0/12", DESCR: "GigabitEthernet7/0/12"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet7/0/13", DESCR: "GigabitEthernet7/0/13"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet7/0/14", DESCR: "GigabitEthernet7/0/14"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet7/0/15", DESCR: "GigabitEthernet7/0/15"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet7/0/16", DESCR: "GigabitEthernet7/0/16"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet7/0/17", DESCR: "GigabitEthernet7/0/17"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet7/0/18", DESCR: "GigabitEthernet7/0/18"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet7/0/19", DESCR: "GigabitEthernet7/0/19"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet7/0/20", DESCR: "GigabitEthernet7/0/20"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet7/0/21", DESCR: "GigabitEthernet7/0/21"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet7/0/22", DESCR: "GigabitEthernet7/0/22"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet7/0/23", DESCR: "GigabitEthernet7/0/23"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet7/0/24", DESCR: "GigabitEthernet7/0/24"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet7/0/25", DESCR: "GigabitEthernet7/0/25"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet7/0/26", DESCR: "GigabitEthernet7/0/26"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet7/0/27", DESCR: "GigabitEthernet7/0/27"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet7/0/28", DESCR: "GigabitEthernet7/0/28"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet7/0/29", DESCR: "GigabitEthernet7/0/29"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet7/0/30", DESCR: "GigabitEthernet7/0/30"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet7/0/31", DESCR: "GigabitEthernet7/0/31"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet7/0/32", DESCR: "GigabitEthernet7/0/32"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet7/0/33", DESCR: "GigabitEthernet7/0/33"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet7/0/34", DESCR: "GigabitEthernet7/0/34"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet7/0/35", DESCR: "GigabitEthernet7/0/35"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet7/0/36", DESCR: "GigabitEthernet7/0/36"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet7/0/37", DESCR: "GigabitEthernet7/0/37"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet7/0/38", DESCR: "GigabitEthernet7/0/38"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet7/0/39", DESCR: "GigabitEthernet7/0/39"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet7/0/40", DESCR: "GigabitEthernet7/0/40"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet7/0/41", DESCR: "GigabitEthernet7/0/41"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet7/0/42", DESCR: "GigabitEthernet7/0/42"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet7/0/43", DESCR: "GigabitEthernet7/0/43"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet7/0/44", DESCR: "GigabitEthernet7/0/44"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet7/0/45", DESCR: "GigabitEthernet7/0/45"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet7/0/46", DESCR: "GigabitEthernet7/0/46"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet7/0/47", DESCR: "GigabitEthernet7/0/47"
+PID:                   , VID:      , SN:
+
+NAME: "GigabitEthernet7/0/48", DESCR: "GigabitEthernet7/0/48"
+PID:                   , VID:      , SN:
+
+NAME: "slot R0", DESCR: "Cisco Catalyst 9400 Series Routing Processor Module Container"
+PID:                   , VID:      , SN:
+
+NAME: "Slot 3 Supervisor", DESCR: "Cisco Catalyst 9400 Series Supervisor 1 Module"
+PID: C9400-SUP-1       , VID: V00  , SN: JAE210204A9
+
+NAME: "Slot 3 USB Container", DESCR: "USB Container"
+PID:                   , VID:      , SN:
+
+NAME: "Slot 3 SATA Container", DESCR: "SATA Container"
+PID:                   , VID:      , SN:
+
+NAME: "Te3/0/1 Container", DESCR: "TenGigabitEthernet3/0/1 Container"
+PID:                   , VID:      , SN:
+
+NAME: "TenGigabitEthernet3/0/1", DESCR: "SFP+ 10GBASE-SR"
+PID: SFP-10G-SR          , VID: V03  , SN: AVD2043AV06
+
+NAME: "Te3/0/1 Module Temperature Sensor", DESCR: "Te3/0/1 Module Temperature Sensor"
+PID:                   , VID:      , SN:
+
+NAME: "Te3/0/1 Supply Voltage Sensor", DESCR: "Te3/0/1 Supply Voltage Sensor"
+PID:                   , VID:      , SN:
+
+NAME: "Te3/0/1 Bias Current Sensor", DESCR: "Te3/0/1 Bias Current Sensor"
+PID:                   , VID:      , SN:
+
+NAME: "Te3/0/1 Transmit Power Sensor", DESCR: "Te3/0/1 Transmit Power Sensor"
+PID:                   , VID:      , SN:
+
+NAME: "Te3/0/1 Receive Power Sensor", DESCR: "Te3/0/1 Receive Power Sensor"
+PID:                   , VID:      , SN:
+
+NAME: "Te3/0/2 Container", DESCR: "TenGigabitEthernet3/0/2 Container"
+PID:                   , VID:      , SN:
+
+NAME: "Te3/0/3 Container", DESCR: "TenGigabitEthernet3/0/3 Container"
+PID:                   , VID:      , SN:
+
+NAME: "Te3/0/4 Container", DESCR: "TenGigabitEthernet3/0/4 Container"
+PID:                   , VID:      , SN:
+
+NAME: "Te3/0/5 Container", DESCR: "TenGigabitEthernet3/0/5 Container"
+PID:                   , VID:      , SN:
+
+NAME: "Te3/0/6 Container", DESCR: "TenGigabitEthernet3/0/6 Container"
+PID:                   , VID:      , SN:
+
+NAME: "Te3/0/7 Container", DESCR: "TenGigabitEthernet3/0/7 Container"
+PID:                   , VID:      , SN:
+
+NAME: "Te3/0/8 Container", DESCR: "TenGigabitEthernet3/0/8 Container"
+PID:                   , VID:      , SN:
+
+NAME: "Fo3/0/9 Container", DESCR: "FortyGigabitEthernet3/0/9 Container"
+PID:                   , VID:      , SN:
+
+NAME: "Fo3/0/10 Container", DESCR: "FortyGigabitEthernet3/0/10 Container"
+PID:                   , VID:      , SN:
+
+NAME: "Ap3/0/1 Container", DESCR: "AppGigabitEthernet3/0/1 Container"
+PID:                   , VID:      , SN:
+
+NAME: "Slot 3 Temp: Coretemp", DESCR: "Temp: Coretemp"
+PID:                   , VID:      , SN:
+
+NAME: "Slot 3 Temp: UADP", DESCR: "Temp: UADP"
+PID:                   , VID:      , SN:
+
+NAME: "Slot 3 V1: VX1", DESCR: "V1: VX1"
+PID:                   , VID:      , SN:
+
+NAME: "Slot 3 V1: VX2", DESCR: "V1: VX2"
+PID:                   , VID:      , SN:
+
+NAME: "Slot 3 V1: VX3", DESCR: "V1: VX3"
+PID:                   , VID:      , SN:
+
+NAME: "Slot 3 V1: VX4", DESCR: "V1: VX4"
+PID:                   , VID:      , SN:
+
+NAME: "Slot 3 V1: VX5", DESCR: "V1: VX5"
+PID:                   , VID:      , SN:
+
+NAME: "Slot 3 V1: VX6", DESCR: "V1: VX6"
+PID:                   , VID:      , SN:
+
+NAME: "Slot 3 V1: VX7", DESCR: "V1: VX7"
+PID:                   , VID:      , SN:
+
+NAME: "Slot 3 V1: VX8", DESCR: "V1: VX8"
+PID:                   , VID:      , SN:
+
+NAME: "Slot 3 V1: VX9", DESCR: "V1: VX9"
+PID:                   , VID:      , SN:
+
+NAME: "Slot 3 V1: VX10", DESCR: "V1: VX10"
+PID:                   , VID:      , SN:
+
+NAME: "Slot 3 V1: VX11", DESCR: "V1: VX11"
+PID:                   , VID:      , SN:
+
+NAME: "Slot 3 V1: VX12", DESCR: "V1: VX12"
+PID:                   , VID:      , SN:
+
+NAME: "Slot 3 V1: VX13", DESCR: "V1: VX13"
+PID:                   , VID:      , SN:
+
+NAME: "Slot 3 V1: VX14", DESCR: "V1: VX14"
+PID:                   , VID:      , SN:
+
+NAME: "Slot 3 Temp:   outlet", DESCR: "Temp:   outlet"
+PID:                   , VID:      , SN:
+
+NAME: "Slot 3 Temp:    inlet", DESCR: "Temp:    inlet"
+PID:                   , VID:      , SN:
+
+NAME: "Slot 3 CPU", DESCR: "CPU"
+PID:                   , VID:      , SN:
+
+NAME: "slot R1", DESCR: "Cisco Catalyst 9400 Series Routing Processor Module Container"
+PID:                   , VID:      , SN:
+
+NAME: "Slot 4 Supervisor", DESCR: "Cisco Catalyst 9400 Series Supervisor 1 Module"
+PID: C9400-SUP-1       , VID: V00  , SN: JAE2050073X
+
+NAME: "Slot 4 USB Container", DESCR: "USB Container"
+PID:                   , VID:      , SN:
+
+NAME: "Slot 4 SATA Container", DESCR: "SATA Container"
+PID:                   , VID:      , SN:
+
+NAME: "Te4/0/1 Container", DESCR: "TenGigabitEthernet4/0/1 Container"
+PID:                   , VID:      , SN:
+
+NAME: "TenGigabitEthernet4/0/1", DESCR: "SFP+ 10GBASE-SR"
+PID: SFP-10G-SR          , VID: V03  , SN: AGA16344HG7
+
+NAME: "Te4/0/1 Module Temperature Sensor", DESCR: "Te4/0/1 Module Temperature Sensor"
+PID:                   , VID:      , SN:
+
+NAME: "Te4/0/1 Supply Voltage Sensor", DESCR: "Te4/0/1 Supply Voltage Sensor"
+PID:                   , VID:      , SN:
+
+NAME: "Te4/0/1 Bias Current Sensor", DESCR: "Te4/0/1 Bias Current Sensor"
+PID:                   , VID:      , SN:
+
+NAME: "Te4/0/1 Transmit Power Sensor", DESCR: "Te4/0/1 Transmit Power Sensor"
+PID:                   , VID:      , SN:
+
+NAME: "Te4/0/1 Receive Power Sensor", DESCR: "Te4/0/1 Receive Power Sensor"
+PID:                   , VID:      , SN:
+
+NAME: "Te4/0/2 Container", DESCR: "TenGigabitEthernet4/0/2 Container"
+PID:                   , VID:      , SN:
+
+NAME: "Te4/0/3 Container", DESCR: "TenGigabitEthernet4/0/3 Container"
+PID:                   , VID:      , SN:
+
+NAME: "Te4/0/4 Container", DESCR: "TenGigabitEthernet4/0/4 Container"
+PID:                   , VID:      , SN:
+
+NAME: "Te4/0/5 Container", DESCR: "TenGigabitEthernet4/0/5 Container"
+PID:                   , VID:      , SN:
+
+NAME: "Te4/0/6 Container", DESCR: "TenGigabitEthernet4/0/6 Container"
+PID:                   , VID:      , SN:
+
+NAME: "Te4/0/7 Container", DESCR: "TenGigabitEthernet4/0/7 Container"
+PID:                   , VID:      , SN:
+
+NAME: "Te4/0/8 Container", DESCR: "TenGigabitEthernet4/0/8 Container"
+PID:                   , VID:      , SN:
+
+NAME: "Fo4/0/9 Container", DESCR: "FortyGigabitEthernet4/0/9 Container"
+PID:                   , VID:      , SN:
+
+NAME: "Fo4/0/10 Container", DESCR: "FortyGigabitEthernet4/0/10 Container"
+PID:                   , VID:      , SN:
+
+NAME: "Ap4/0/1 Container", DESCR: "AppGigabitEthernet4/0/1 Container"
+PID:                   , VID:      , SN:
+
+NAME: "Slot 4 Temp: Coretemp", DESCR: "Temp: Coretemp"
+PID:                   , VID:      , SN:
+
+NAME: "Slot 4 Temp: UADP", DESCR: "Temp: UADP"
+PID:                   , VID:      , SN:
+
+NAME: "Slot 4 V1: VX1", DESCR: "V1: VX1"
+PID:                   , VID:      , SN:
+
+NAME: "Slot 4 V1: VX2", DESCR: "V1: VX2"
+PID:                   , VID:      , SN:
+
+NAME: "Slot 4 V1: VX3", DESCR: "V1: VX3"
+PID:                   , VID:      , SN:
+
+NAME: "Slot 4 V1: VX4", DESCR: "V1: VX4"
+PID:                   , VID:      , SN:
+
+NAME: "Slot 4 V1: VX5", DESCR: "V1: VX5"
+PID:                   , VID:      , SN:
+
+NAME: "Slot 4 V1: VX6", DESCR: "V1: VX6"
+PID:                   , VID:      , SN:
+
+NAME: "Slot 4 V1: VX7", DESCR: "V1: VX7"
+PID:                   , VID:      , SN:
+
+NAME: "Slot 4 V1: VX8", DESCR: "V1: VX8"
+PID:                   , VID:      , SN:
+
+NAME: "Slot 4 V1: VX9", DESCR: "V1: VX9"
+PID:                   , VID:      , SN:
+
+NAME: "Slot 4 V1: VX10", DESCR: "V1: VX10"
+PID:                   , VID:      , SN:
+
+NAME: "Slot 4 V1: VX11", DESCR: "V1: VX11"
+PID:                   , VID:      , SN:
+
+NAME: "Slot 4 V1: VX12", DESCR: "V1: VX12"
+PID:                   , VID:      , SN:
+
+NAME: "Slot 4 V1: VX13", DESCR: "V1: VX13"
+PID:                   , VID:      , SN:
+
+NAME: "Slot 4 V1: VX14", DESCR: "V1: VX14"
+PID:                   , VID:      , SN:
+
+NAME: "Slot 4 Temp:   outlet", DESCR: "Temp:   outlet"
+PID:                   , VID:      , SN:
+
+NAME: "Slot 4 Temp:    inlet", DESCR: "Temp:    inlet"
+PID:                   , VID:      , SN:
+
+NAME: "Slot 4 CPU", DESCR: "CPU"
+PID:                   , VID:      , SN:
+
+NAME: "slot F0", DESCR: "Cisco Catalyst 9400 Series Slot"
+PID:                   , VID:      , SN:
+
+NAME: "slot F1", DESCR: "Cisco Catalyst 9400 Series Slot"
+PID:                   , VID:      , SN:
+
+NAME: "Power Supply Bay 1", DESCR: "Cisco Catalyst 9400 Series Power Supply Bay Module Container"
+PID:                   , VID:      , SN:
+
+NAME: "Power Supply Bay 2", DESCR: "Cisco Catalyst 9400 Series Power Supply Bay Module Container"
+PID:                   , VID:      , SN:
+
+NAME: "Power Supply Bay 3", DESCR: "Cisco Catalyst 9400 Series Power Supply Bay Module Container"
+PID:                   , VID:      , SN:
+
+NAME: "Power Supply Bay 4", DESCR: "Cisco Catalyst 9400 Series Power Supply Bay Module Container"
+PID:                   , VID:      , SN:
+
+NAME: "Power Supply Bay 5", DESCR: "Cisco Catalyst 9400 Series Power Supply Bay Module Container"
+PID:                   , VID:      , SN:
+
+NAME: "Power Supply Module 5", DESCR: "Cisco Catalyst 9400 Series 3200W AC Power Supply"
+PID: C9400-PWR-3200AC  , VID: V00  , SN: DTM1942035L
+
+NAME: "Power Supply 5", DESCR: "Cisco Catalyst 9400 Series Power Supply"
+PID:                   , VID:      , SN:
+
+NAME: "Fan 5/1", DESCR: "Cisco Catalyst 9400 Series Fan"
+PID:                   , VID:      , SN:
+
+NAME: "Fan 5/2", DESCR: "Cisco Catalyst 9400 Series Fan"
+PID:                   , VID:      , SN:
+
+NAME: "Power Supply Bay 6", DESCR: "Cisco Catalyst 9400 Series Power Supply Bay Module Container"
+PID:                   , VID:      , SN:
+
+NAME: "Power Supply Bay 7", DESCR: "Cisco Catalyst 9400 Series Power Supply Bay Module Container"
+PID:                   , VID:      , SN:
+
+NAME: "Power Supply Bay 8", DESCR: "Cisco Catalyst 9400 Series Power Supply Bay Module Container"
+PID:                   , VID:      , SN:
+
+NAME: "Power Supply Module 8", DESCR: "Cisco Catalyst 9400 Series 3200W AC Power Supply"
+PID: C9400-PWR-3200AC  , VID: V00  , SN: DTM200602P8
+
+NAME: "Power Supply 8", DESCR: "Cisco Catalyst 9400 Series Power Supply"
+PID:                   , VID:      , SN:
+
+NAME: "Fan 8/1", DESCR: "Cisco Catalyst 9400 Series Fan"
+PID:                   , VID:      , SN:
+
+NAME: "Fan 8/2", DESCR: "Cisco Catalyst 9400 Series Fan"
+PID:                   , VID:      , SN:
+
+NAME: "Fan Tray Bay", DESCR: "Cisco Catalyst 9400 Series Fan Tray Bay Module Container"
+PID:                   , VID:      , SN:
+
+NAME: "Fan Tray", DESCR: "Cisco Catalyst 9400 Series 7 Slot Chassis Fan Tray"
+PID: C9407-FAN         , VID: V00  , SN: FXS1939Q442
+
+NAME: "Fan 17/1", DESCR: "Cisco Catalyst 9400 Series Fan"
+PID:                   , VID:      , SN:
+
+NAME: "Fan 17/2", DESCR: "Cisco Catalyst 9400 Series Fan"
+PID:                   , VID:      , SN:
+
+NAME: "Fan 17/3", DESCR: "Cisco Catalyst 9400 Series Fan"
+PID:                   , VID:      , SN:
+
+NAME: "Fan 17/4", DESCR: "Cisco Catalyst 9400 Series Fan"
+PID:                   , VID:      , SN:
+
+NAME: "Fan 17/5", DESCR: "Cisco Catalyst 9400 Series Fan"
+PID:                   , VID:      , SN:
+
+NAME: "Fan 17/6", DESCR: "Cisco Catalyst 9400 Series Fan"
+PID:                   , VID:      , SN:
+
+NAME: "Fan 17/7", DESCR: "Cisco Catalyst 9400 Series Fan"
+PID:                   , VID:      , SN:
+
+NAME: "Fan 17/8", DESCR: "Cisco Catalyst 9400 Series Fan"
+PID:                   , VID:      , SN:
+
+NAME: "Fan 17/9", DESCR: "Cisco Catalyst 9400 Series Fan"
+PID:                   , VID:      , SN:
+
+NAME: "Fan 17/10", DESCR: "Cisco Catalyst 9400 Series Fan"
+PID:                   , VID:      , SN:
+
+NAME: "Fan 17/11", DESCR: "Cisco Catalyst 9400 Series Fan"
+PID:                   , VID:      , SN:
+
+NAME: "Fan 17/12", DESCR: "Cisco Catalyst 9400 Series Fan"
+PID:                   , VID:      , SN:
+
+NAME: "Internal POE Bay", DESCR: "Cisco Catalyst 9400 Series Slot"
+PID:                   , VID:      , SN:

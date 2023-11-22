@@ -1,0 +1,12 @@
+# Entropy source       Type Status  Requests Entropy Bits
+1 ACT-2                 HW  Working     44     384/16896   
+2 randfill              SW  Working     46     128/5888    (*)
+3 getrandombytes        SW  Working     46     160/7360    (*)
+
+Secure mode enabled
+(*) - The entropy collected from SW sources were not counted as a part of
+      achieving the entropy target
+
+Fresh entropy collected once every 60 minutes
+Entropy most recently collected 0 minutes ago
+Entropy target = 256 bits; entropy actually collected = 384 bits

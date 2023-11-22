@@ -799,3 +799,79 @@ class ShowBfdNeighborsDetails(ShowBfdNeighborsDetailsSchema):
 				continue
 
 		return ret_dict
+
+# =================================================
+#  Schema for 'show bfd summary host'
+# =================================================
+class ShowBfdSummaryHostSchema(MetaParser):
+	"""schema for show bfd summary host"""
+	schema = {		
+		'software_session': {
+			'sw_session_configured': int,
+			'sw_session_up': int,
+			'sw_session_down': int
+		},
+		'hardware_session': {
+   			'hw_session_configured': int,
+			'hw_session_up': int,
+			'hw_session_down': int
+		},
+		'total_session': {
+   			'total_session_configured': int,
+			'total_session_up': int,
+   			'total_session_down': int
+		}
+    }
+
+# ===================================================
+#  Parser for 'show bfd summary host'
+# ===================================================
+class ShowBfdSummaryHost(ShowBfdSummaryHostSchema):
+	"""Parser for show bfd summary host"""
+	cli_command = 'show bfd summary host'
+	def cli(self, output=None):
+		if output is None:
+			out = self.device.execute(self.cli_command)
+		else:
+			out = output
+		
+		#sw 3 3 0
+		p1 = re.compile(r'Software +(?P<sw_session_configured>[\d]+) +(?P<sw_session_up>[\d]+) +(?P<sw_session_down>[\d]+)')
+		#hw 0 0 0
+		p2 = re.compile(r'Hardware +(?P<hw_session_configured>[\d]+) +(?P<hw_session_up>[\d]+) +(?P<hw_session_down>[\d]+)')
+		#Total 3 3 0
+		p3 = re.compile(r'Total +(?P<total_session_configured>[\d]+) +(?P<total_session_up>[\d]+) +(?P<total_session_down>[\d]+)')
+		#initial return dictionary
+		ret_dict = {}
+		for line in out.splitlines():
+			line=line.strip()			
+			
+			#sw 3 3 0
+			m = p1.match(line)
+			if m:
+				group = m.groupdict()
+				software_session = ret_dict.setdefault('software_session', {})
+				software_session.update({'sw_session_configured': int(group['sw_session_configured'])})
+				software_session.update({'sw_session_up': int(group['sw_session_up'])})
+				software_session.update({'sw_session_down': int(group['sw_session_down'])})
+				continue
+
+			# hw 0 0 0
+			m = p2.match(line)
+			if m:
+				group = m.groupdict()
+				hardware_session = ret_dict.setdefault('hardware_session', {})
+				hardware_session.update({'hw_session_configured': int(group['hw_session_configured'])})
+				hardware_session.update({'hw_session_up': int(group['hw_session_up'])})
+				hardware_session.update({'hw_session_down': int(group['hw_session_down'])})
+				continue
+			# Total 3 3 0
+			m = p3.match(line)
+			if m:
+				group = m.groupdict()
+				total_session = ret_dict.setdefault('total_session', {})
+				total_session.update({'total_session_configured': int(group['total_session_configured'])})
+				total_session.update({'total_session_up': int(group['total_session_up'])})
+				total_session.update({'total_session_down': int(group['total_session_down'])})
+				continue
+		return(ret_dict)

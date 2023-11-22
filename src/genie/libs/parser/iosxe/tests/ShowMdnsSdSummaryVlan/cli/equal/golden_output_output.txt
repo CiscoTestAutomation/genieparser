@@ -1,11 +1,11 @@
-        VLAN : 1101
-        mDNS Gateway : Enabled
-        mDNS Service Policy : default-mdns-service-policy
-        Active Query :
-        Status       : Enabled
-        Periodicity mins : 30 
-        Transport Type : IPv4
-        Service Instance Suffix : Not-Configured
-        mDNS Query Type : ALL
-        SDG Agent IP : 10.1.1.2
-        Source Interface : Vlan4025
+VLAN : 1101
+mDNS Gateway : Enabled
+mDNS Service Policy : default-mdns-service-policy
+Active Query : Enabled
+Status       : Enabled
+             : Periodicity 30 minutes 
+Transport Type : IPv4
+Service Instance Suffix : Not-Configured
+mDNS Query Type : ALL
+SDG Agent IP : 10.1.1.2
+Source Interface : Vlan4025

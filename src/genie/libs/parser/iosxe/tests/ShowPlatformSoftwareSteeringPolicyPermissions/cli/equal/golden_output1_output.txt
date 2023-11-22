@@ -1,0 +1,5 @@
+Forwarding Manager steering-policy cell Information
+
+  sgt       dgt      Policy ID    
+--------------------------------
+  3053      4003     3861840217

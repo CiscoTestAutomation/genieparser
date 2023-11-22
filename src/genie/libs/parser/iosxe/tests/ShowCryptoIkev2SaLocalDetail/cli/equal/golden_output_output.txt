@@ -1,0 +1,21 @@
+Tunnel-id Local                 Remote                fvrf/ivrf            Status
+1         4.4.4.1/4500          10.1.1.1/4500         none/none            READY 
+      Encr: AES-GCM, keysize: 256, PRF: SHA384, Hash: None, DH Grp:20, Auth sign: PSK, Auth verify: PSK
+      Life/Active Time: 86400/2856 sec
+      CE id: 1406, Session-id: 60
+      Local spi: 409A5870608E1C87       Remote spi: 20858C98BE7EE1A9
+      Status Description: Negotiation done
+      Local id: 4.4.4.1
+      Remote id: 10.1.1.1
+      Local req msg id:  288            Remote req msg id:  285      
+      Local next msg id: 288            Remote next msg id: 285      
+      Local req queued:  288            Remote req queued:  285      
+      Local window:      5              Remote window:      5        
+      DPD configured for 10 seconds, retry 2
+      Fragmentation not  configured.
+      Dynamic Route Update: enabled
+      Extended Authentication not configured.
+      NAT-T is detected inside
+      Cisco Trust Security SGT is disabled
+      Initiator of SA : Yes
+      Pushed IP address: 66.6.6.4

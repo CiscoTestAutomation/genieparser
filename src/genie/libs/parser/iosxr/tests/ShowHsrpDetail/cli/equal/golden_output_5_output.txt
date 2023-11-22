@@ -1,0 +1,27 @@
+GigabitEthernet0/0/0/3 - IPv4 Group 2 (version 1)
+  Label s1 (1 slaves)
+  Local state is Active, priority 100, may preempt
+  Hellotime 1000 msec holdtime 2000 msec
+  Configured hellotime 1000 msec holdtime 2000 msec
+  Minimum delay 1 sec, reload delay 5 sec
+  Hot standby IP address is 12.0.0.1 configured
+  Active router is local
+  Standby router is unknown expired
+  Standby virtual mac address is 549f.c66e.9aa3 configured, state is active
+  Authentication text, string "ciscov4"
+  5 state changes, last state change 13:36:27
+  State change history:
+  Jun 12 14:04:35.644 UTC  Init     -> Init     Recovered from checkpoint
+  Jun 12 14:04:40.402 UTC  Init     -> Listen   Delay timer expired
+  Jun 12 14:04:42.403 UTC  Listen   -> Speak    Active timer expired
+  Jun 12 14:04:44.403 UTC  Speak    -> Standby  Standby timer expired
+  Jun 12 14:04:44.403 UTC  Standby  -> Active   Active timer expired
+  Last coup sent:       Never
+  Last coup received:   Never
+  Last resign sent:     Never
+  Last resign received: Never
+GigabitEthernet0/0/0/3.20 - IPv4 Group 20 (version 1)
+  Slave to s1
+  Local state is Active
+  Hot standby IP address is 19.0.0.1 configured
+  Standby virtual mac address is 0000.0c07.ac14, state is active

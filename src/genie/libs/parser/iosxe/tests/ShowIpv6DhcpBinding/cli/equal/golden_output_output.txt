@@ -1,0 +1,9 @@
+Client: FE80::210:94FF:FE00:1 
+  DUID: 000100015368CA64001094000001
+  Username : unassigned
+  VRF : default
+  IA NA: IA ID 0x00000000, T1 43200, T2 69120
+    Address: 3001::5428:C8B5:383C:3B59
+            preferred lifetime 86400, valid lifetime 172800
+            expires at Mar 16 2022 08:15 AM (74976 seconds)
+

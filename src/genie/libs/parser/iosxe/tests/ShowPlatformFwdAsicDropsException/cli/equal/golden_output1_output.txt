@@ -1,0 +1,141 @@
+
+****EXCEPTION STATS ASIC INSTANCE 0 (asic/core 0/0)****
+=================================================================================
+ Asic/core |                NAME                  |   prev   |  current  |  delta   
+=================================================================================
+0  0  NO_EXCEPTION                                   354755520   354757713    2193    
+0  0  IPV4_CHECKSUM_ERROR                            0          0           0       
+0  0  ROUTED_AND_IP_OPTIONS_EXCEPTION                2          2           0       
+0  0  CTS_FILTERED_EXCEPTION                         0          0           0       
+0  0  SIA_TTL_ZERO                                   0          0           0       
+0  0  ALLOW_NATIVE_EXCEPTION_COUNT                   0          0           0       
+0  0  ALLOW_DOT1Q_EXCEPTION_COUNT                    348        348         0       
+0  0  ALLOW_PRIORITY_TAGGED_EXCEPTION_COUNT          0          0           0       
+0  0  ALLOW_UNKNOWN_ETHER_TYPE_EXCEPTION             0          0           0       
+0  0  IP_SOURCE_GUARD_VIOLATION                      0          0           0       
+0  0  SECURE_L3IF_LEARNING_VIOLATION                 0          0           0       
+0  0  AUTH_DRIVEN_DROP                               0          0           0       
+0  0  VLAN_LOADBALANCE_GROUP_DENY                    0          0           0       
+0  0  RPF_UNICAST_FAIL                               0          0           0       
+0  0  RPF_UNICAST_FAIL_SUPPRESS                      0          0           0       
+0  0  RPF_UNICAST_CHECK_INCOMPLETE                   0          0           0       
+0  0  RPF_MULTICAST_FAIL                             0          0           0       
+0  0  PKT_DROP_COUNT                                 2994630    2994630     0       
+0  0  SOURCE_ROUTE_EXCEPTION                         0          0           0       
+0  0  IGR_MISC_FATAL_ERROR                           2994279    2994279     0       
+0  0  BLOCK_FORWARD                                  351        351         0       
+0  0  POLICER_DROP                                   0          0           0       
+0  0  DENY_ROUTE                                     0          0           0       
+0  0  DENY_BRIDGE                                    0          0           0       
+0  0  STATIC_MAC_VIOLATION                           0          0           0       
+0  0  STATIC_IP_VIOLATION                            0          0           0       
+0  0  FPM_DROP_PACKET                                0          0           0       
+0  0  IGR_EXCEPTION_L4_ERROR                         0          0           0       
+0  0  IGR_EXCEPTION_L5_ERROR                         0          0           0       
+0  0  IGR_EXCEPTION_HARDWARE_PARSE_EXCEPTION         0          0           0       
+0  0  IGR_EXCEPTION_INVALID_VLAN_DROP                0          0           0       
+0  0  IGR_EXCEPTION_31                               0          0           0       
+0  0  FRAGMENTING_IPV4_WITH_OPTIONS                  0          0           0       
+0  0  FRAGMENTING_IPV6_WITH_EXTENSIONS               0          0           0       
+0  0  ICMP_REDIRECT                                  0          0           0       
+0  0  MTU_FAIL_PUNT_TO_CPU_NO_IP_UNREACHABLE         0          0           0       
+0  0  LINK_LOCAL_CHECK_FAIL_NO_IP_UNREACHABLE        0          0           0       
+0  0  IP_UNICAST_TTL_REACHED_ZERO                    0          0           0       
+0  0  MISC_FATAL_ERROR                               0          0           0       
+0  0  STP_OR_FLEXLINK_DROP                           0          0           0       
+0  0  PROTECTED_PORT_DROP                            0          0           0       
+0  0  PVLAN_ISOLATED_CHECK_FAILED                    0          0           0       
+0  0  PVLAN_COMMUNITY_CHECK_FAILED                   0          0           0       
+0  0  DEJA_VU_CHECK_FAILED                           0          0           0       
+0  0  NOT_VLAN_LOAD_BALANCE_GROUP_ALLOWED            0          0           0       
+0  0  RSPAN_DROP                                     0          0           0       
+0  0  SPLIT_HORIZON_DROP                             0          0           0       
+0  0  SYSTEM_TTL_DROP                                0          0           0       
+0  0  PRUNED                                         0          0           0       
+0  0  DENY_NO_IP_UNREACHABLE                         0          0           0       
+0  0  IP_MULTICAST_TTL_REACHED_ZERO                  0          0           0       
+0  0  MTU_FAIL_DROP_BRIDGED                          0          0           0       
+0  0  MTU_FAIL_DROP_BRIDGED_IP_ROUTED                0          0           0       
+0  0  MTU_FAIL_ERSPAN                                0          0           0       
+0  0  LINK_LOCAL_CHECK_FAIL_L3M_VALID                0          0           0       
+0  0  MTU_FAIL_PUNT_TO_CPU_NOT_NO_IP_UNREACHABLE     0          0           0       
+0  0  LINK_LOCAL_CHECK_FAIL_NOT_NO_IP_UNREACHABLE    0          0           0       
+0  0  COPY_TO_CPU                                    0          0           0       
+0  0  EGR_L3_ERROR                                   0          0           0       
+0  0  EGR_L4_ERROR                                   0          0           0       
+0  0  EGR_L5_ERROR                                   0          0           0       
+0  0  EGR_HARDWARE_PARSE_EXCEPTION                   0          0           0       
+0  0  EGR_SHOW_FORWARD_DROP                          0          0           0       
+0  0  SGT_CACHING_NEEDED                             0          0           0       
+
+
+****EXCEPTION STATS ASIC INSTANCE 1 (asic/core 0/1)****
+=================================================================================
+ Asic/core |                NAME                  |   prev   |  current  |  delta   
+=================================================================================
+0  1  NO_EXCEPTION                                   920930697   1229125589    308194892
+0  1  IPV4_CHECKSUM_ERROR                            0          0           0       
+0  1  ROUTED_AND_IP_OPTIONS_EXCEPTION                0          0           0       
+0  1  CTS_FILTERED_EXCEPTION                         0          0           0       
+0  1  SIA_TTL_ZERO                                   0          0           0       
+0  1  ALLOW_NATIVE_EXCEPTION_COUNT                   8          12          4       
+0  1  ALLOW_DOT1Q_EXCEPTION_COUNT                    0          0           0       
+0  1  ALLOW_PRIORITY_TAGGED_EXCEPTION_COUNT          0          0           0       
+0  1  ALLOW_UNKNOWN_ETHER_TYPE_EXCEPTION             0          0           0       
+0  1  IP_SOURCE_GUARD_VIOLATION                      0          0           0       
+0  1  SECURE_L3IF_LEARNING_VIOLATION                 0          0           0       
+0  1  AUTH_DRIVEN_DROP                               0          0           0       
+0  1  VLAN_LOADBALANCE_GROUP_DENY                    0          0           0       
+0  1  RPF_UNICAST_FAIL                               0          0           0       
+0  1  RPF_UNICAST_FAIL_SUPPRESS                      0          0           0       
+0  1  RPF_UNICAST_CHECK_INCOMPLETE                   0          0           0       
+0  1  RPF_MULTICAST_FAIL                             0          0           0       
+0  1  PKT_DROP_COUNT                                 394391031   394574785    183754  
+0  1  SOURCE_ROUTE_EXCEPTION                         0          0           0       
+0  1  IGR_MISC_FATAL_ERROR                           9635990    9635990     0       
+0  1  BLOCK_FORWARD                                  10         14          4       
+0  1  POLICER_DROP                                   0          0           0       
+0  1  DENY_ROUTE                                     0          0           0       
+0  1  DENY_BRIDGE                                    0          0           0       
+0  1  STATIC_MAC_VIOLATION                           0          0           0       
+0  1  STATIC_IP_VIOLATION                            0          0           0       
+0  1  FPM_DROP_PACKET                                0          0           0       
+0  1  IGR_EXCEPTION_L4_ERROR                         0          0           0       
+0  1  IGR_EXCEPTION_L5_ERROR                         0          0           0       
+0  1  IGR_EXCEPTION_HARDWARE_PARSE_EXCEPTION         0          0           0       
+0  1  IGR_EXCEPTION_INVALID_VLAN_DROP                0          0           0       
+0  1  IGR_EXCEPTION_31                               0          0           0       
+0  1  FRAGMENTING_IPV4_WITH_OPTIONS                  0          0           0       
+0  1  FRAGMENTING_IPV6_WITH_EXTENSIONS               0          0           0       
+0  1  ICMP_REDIRECT                                  0          0           0       
+0  1  MTU_FAIL_PUNT_TO_CPU_NO_IP_UNREACHABLE         383083972   383267722    183750  
+0  1  LINK_LOCAL_CHECK_FAIL_NO_IP_UNREACHABLE        0          0           0       
+0  1  IP_UNICAST_TTL_REACHED_ZERO                    1671059    1671059     0       
+0  1  MISC_FATAL_ERROR                               0          0           0       
+0  1  STP_OR_FLEXLINK_DROP                           0          0           0       
+0  1  PROTECTED_PORT_DROP                            0          0           0       
+0  1  PVLAN_ISOLATED_CHECK_FAILED                    0          0           0       
+0  1  PVLAN_COMMUNITY_CHECK_FAILED                   0          0           0       
+0  1  DEJA_VU_CHECK_FAILED                           0          0           0       
+0  1  NOT_VLAN_LOAD_BALANCE_GROUP_ALLOWED            0          0           0       
+0  1  RSPAN_DROP                                     0          0           0       
+0  1  SPLIT_HORIZON_DROP                             0          0           0       
+0  1  SYSTEM_TTL_DROP                                0          0           0       
+0  1  PRUNED                                         0          0           0       
+0  1  DENY_NO_IP_UNREACHABLE                         0          0           0       
+0  1  IP_MULTICAST_TTL_REACHED_ZERO                  0          0           0       
+0  1  MTU_FAIL_DROP_BRIDGED                          0          0           0       
+0  1  MTU_FAIL_DROP_BRIDGED_IP_ROUTED                0          0           0       
+0  1  MTU_FAIL_ERSPAN                                0          0           0       
+0  1  LINK_LOCAL_CHECK_FAIL_L3M_VALID                0          0           0       
+0  1  MTU_FAIL_PUNT_TO_CPU_NOT_NO_IP_UNREACHABLE     383083974   383267722    183748  
+0  1  LINK_LOCAL_CHECK_FAIL_NOT_NO_IP_UNREACHABLE    0          0           0       
+0  1  COPY_TO_CPU                                    0          0           0       
+0  1  EGR_L3_ERROR                                   0          0           0       
+0  1  EGR_L4_ERROR                                   0          0           0       
+0  1  EGR_L5_ERROR                                   0          0           0       
+0  1  EGR_HARDWARE_PARSE_EXCEPTION                   0          0           0       
+0  1  EGR_SHOW_FORWARD_DROP                          0          0           0       
+0  1  SGT_CACHING_NEEDED                             0          0           0       
+
+

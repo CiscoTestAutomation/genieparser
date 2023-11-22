@@ -1,0 +1,53 @@
+Memory usage         22132
+Address pools        1
+Database agents      0
+Automatic bindings   10
+Manual bindings      0
+Expired bindings     0
+Malformed messages   0
+Secure arp entries   0
+Renew messages       0
+Workspace timeouts   0
+Static routes        0
+Relay bindings       0
+Relay bindings active        0
+Relay bindings terminated    0
+Relay bindings selecting     0
+
+Message              Received
+BOOTREQUEST          0
+DHCPDISCOVER         354
+DHCPREQUEST          364
+DHCPDECLINE          0
+DHCPRELEASE          1
+DHCPINFORM           0
+DHCPVENDOR           0
+BOOTREPLY            0
+DHCPOFFER            0
+DHCPACK              0
+DHCPNAK              0
+
+Message              Sent
+BOOTREPLY            0
+DHCPOFFER            11
+DHCPACK              11
+DHCPNAK              0
+
+Message              Forwarded
+BOOTREQUEST          0
+DHCPDISCOVER         0
+DHCPREQUEST          0
+DHCPDECLINE          0
+DHCPRELEASE          0
+DHCPINFORM           0
+DHCPVENDOR           0
+BOOTREPLY            0
+DHCPOFFER            0
+DHCPACK              0
+DHCPNAK              0
+
+DHCP-DPM Statistics
+Offer notifications sent        0
+Offer callbacks received        0
+Classname requests sent         0
+Classname callbacks received    0

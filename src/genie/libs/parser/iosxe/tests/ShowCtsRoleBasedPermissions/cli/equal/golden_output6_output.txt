@@ -1,0 +1,6 @@
+IPv4 Role-based permissions from group 111:Technicolor to group 9:Printers:
+        PRINTING-10
+        GENERIC-14
+        Deny IP-00
+RBACL Monitor All for Dynamic Policies : FALSE
+RBACL Monitor All for Configured Policies : FALSE

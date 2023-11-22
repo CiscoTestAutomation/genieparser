@@ -1,0 +1,167 @@
+Loopback99 is up, line protocol is up
+  Internet Address 174.20.72.26/32, Interface ID 48, Area 0
+  Attached via Network Statement
+  Process ID 94, Router ID 246.132.205.143, Network Type LOOPBACK, Cost: 1
+  Topology-MTID    Cost    Disabled    Shutdown      Topology Name
+        0           1         no          no            Base
+  Loopback interface is treated as a stub Host
+Loopback0 is up, line protocol is up
+  Internet Address 245.132.205.143/32, Interface ID 49, Area 0
+  Attached via Network Statement
+  Process ID 94, Router ID 246.132.205.143, Network Type POINT_TO_POINT, Cost: 1
+  Topology-MTID    Cost    Disabled    Shutdown      Topology Name
+        0           1         no          no            Base
+  Transmit Delay is 1 sec, State POINT_TO_POINT
+  Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+    oob-resync timeout 40
+    No Hellos (Passive interface)
+  Supports Link-local Signaling (LLS)
+  Cisco NSF helper support enabled
+  IETF NSF helper support enabled
+  Can be protected by per-prefix Loop-Free FastReroute
+  Can be used for per-prefix Loop-Free FastReroute repair paths
+  Not Protected by per-prefix TI-LFA
+  Index 1/5/5, flood queue length 0
+  Next 0x0(0)/0x0(0)/0x0(0)
+  Last flood scan length is 0, maximum is 0
+  Last flood scan time is 0 msec, maximum is 0 msec
+  Neighbor Count is 0, Adjacent neighbor count is 0
+  Suppress hello for 0 neighbor(s)
+TenGigabitEthernet0/4/0 is up, line protocol is up
+  Internet Address 175.20.248.226/30, Interface ID 31, Area 0
+  Attached via Network Statement
+  Process ID 94, Router ID 245.132.205.143, Network Type POINT_TO_POINT, Cost: 181
+  Topology-MTID    Cost    Disabled    Shutdown      Topology Name
+        0           181       no          no            Base
+  Transmit Delay is 1 sec, State POINT_TO_POINT
+  Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+    oob-resync timeout 40
+    Hello due in 00:00:08
+  Supports Link-local Signaling (LLS)
+  Cisco NSF helper support enabled
+  IETF NSF helper support enabled
+  Can be protected by per-prefix Loop-Free FastReroute
+  Can be used for per-prefix Loop-Free FastReroute repair paths
+  Not Protected by per-prefix TI-LFA
+  Index 1/9/9, flood queue length 0
+  Next 0x0(0)/0x0(0)/0x0(0)
+  Last flood scan length is 1, maximum is 24
+  Last flood scan time is 0 msec, maximum is 16 msec
+  Neighbor Count is 1, Adjacent neighbor count is 1
+    Adjacent with neighbor 246.132.205.236
+  Suppress hello for 0 neighbor(s)
+  Cryptographic authentication enabled
+    Youngest key id is 1
+GigabitEthernet0/5/6 is up, line protocol is up
+  Internet Address 172.30.79.17/30, Interface ID 45, Area 0
+  Attached via Network Statement
+  Process ID 94, Router ID 246.132.205.143, Network Type POINT_TO_POINT, Cost: 50
+  Topology-MTID    Cost    Disabled    Shutdown      Topology Name
+        0           50        no          no            Base
+  Transmit Delay is 1 sec, State POINT_TO_POINT
+  Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+    oob-resync timeout 40
+    Hello due in 00:00:05
+  Supports Link-local Signaling (LLS)
+  Cisco NSF helper support enabled
+  IETF NSF helper support enabled
+  Can be protected by per-prefix Loop-Free FastReroute
+  Can be used for per-prefix Loop-Free FastReroute repair paths
+  Not Protected by per-prefix TI-LFA
+  Index 1/8/8, flood queue length 0
+  Next 0x0(0)/0x0(0)/0x0(0)
+  Last flood scan length is 1, maximum is 9
+  Last flood scan time is 0 msec, maximum is 12 msec
+  Neighbor Count is 0, Adjacent neighbor count is 0
+  Suppress hello for 0 neighbor(s)
+Tunnel101 is administratively down, line protocol is down
+  Interface is unnumbered, Interface ID 55, Area 0
+  Using address of Loopback0 (245.132.205.143)
+  Attached via Network Statement
+  Process ID 94, Router ID 245.132.205.143, Network Type POINT_TO_POINT, Cost: 65535
+  Topology-MTID    Cost    Disabled    Shutdown      Topology Name
+        0           65535     no          no            Base
+  Transmit Delay is 1 sec, State DOWN
+  Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+    oob-resync timeout 40
+    No Hellos (Passive interface)
+Tunnel100 is administratively down, line protocol is down
+  Interface is unnumbered, Interface ID 54, Area 0
+  Using address of Loopback0 (245.132.205.143)
+  Attached via Network Statement
+  Process ID 94, Router ID 246.132.205.143, Network Type POINT_TO_POINT, Cost: 65535
+  Topology-MTID    Cost    Disabled    Shutdown      Topology Name
+        0           65535     no          no            Base
+  Transmit Delay is 1 sec, State DOWN
+  Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+    oob-resync timeout 40
+    No Hellos (Passive interface)
+Port-channel1 is up, line protocol is up
+  Internet Address 175.30.79.42/30, Interface ID 50, Area 0
+  Attached via Network Statement
+  Process ID 94, Router ID 246.132.205.143, Network Type POINT_TO_POINT, Cost: 20
+  Topology-MTID    Cost    Disabled    Shutdown      Topology Name
+        0           20        no          no            Base
+  Transmit Delay is 1 sec, State POINT_TO_POINT
+  Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+    oob-resync timeout 40
+    Hello due in 00:00:05
+  Supports Link-local Signaling (LLS)
+  Cisco NSF helper support enabled
+  IETF NSF helper support enabled
+  Can be protected by per-prefix Loop-Free FastReroute
+  Can be used for per-prefix Loop-Free FastReroute repair paths
+  Not Protected by per-prefix TI-LFA
+  Index 1/4/4, flood queue length 0
+  Next 0x0(0)/0x0(0)/0x0(0)
+  Last flood scan length is 1, maximum is 64
+  Last flood scan time is 0 msec, maximum is 12 msec
+  Neighbor Count is 1, Adjacent neighbor count is 1
+    Adjacent with neighbor 246.132.205.144
+  Suppress hello for 0 neighbor(s)
+Port-channel3 is up, line protocol is up
+  Internet Address 175.30.75.158/30, Interface ID 51, Area 0
+  Attached via Network Statement
+  Process ID 94, Router ID 245.132.205.143, Network Type POINT_TO_POINT, Cost: 7
+  Topology-MTID    Cost    Disabled    Shutdown      Topology Name
+        0           7         no          no            Base
+  Transmit Delay is 1 sec, State POINT_TO_POINT
+  Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+    oob-resync timeout 40
+    Hello due in 00:00:04
+  Supports Link-local Signaling (LLS)
+  Cisco NSF helper support enabled
+  IETF NSF helper support enabled
+  Can be protected by per-prefix Loop-Free FastReroute
+  Can be used for per-prefix Loop-Free FastReroute repair paths
+  Not Protected by per-prefix TI-LFA
+  Index 1/3/3, flood queue length 0
+  Next 0x0(0)/0x0(0)/0x0(0)
+  Last flood scan length is 4, maximum is 8
+  Last flood scan time is 0 msec, maximum is 12 msec
+  Neighbor Count is 1, Adjacent neighbor count is 1
+    Adjacent with neighbor 246.132.205.141
+  Suppress hello for 0 neighbor(s)
+Port-channel7 is up, line protocol is up
+  Internet Address 172.30.73.158/30, Interface ID 53, Area 0
+  Attached via Network Statement
+  Process ID 94, Router ID 245.133.205.143, Network Type POINT_TO_POINT, Cost: 7
+  Topology-MTID    Cost    Disabled    Shutdown      Topology Name
+        0           7         no          no            Base
+  Transmit Delay is 1 sec, State POINT_TO_POINT
+  Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+    oob-resync timeout 40
+    Hello due in 00:00:00
+  Supports Link-local Signaling (LLS)
+  Cisco NSF helper support enabled
+  IETF NSF helper support enabled
+  Can be protected by per-prefix Loop-Free FastReroute
+  Can be used for per-prefix Loop-Free FastReroute repair paths
+  Not Protected by per-prefix TI-LFA
+  Index 1/2/2, flood queue length 0
+  Next 0x0(0)/0x0(0)/0x0(0)
+  Last flood scan length is 4, maximum is 8
+  Last flood scan time is 0 msec, maximum is 8 msec
+  Neighbor Count is 1, Adjacent neighbor count is 1
+    Adjacent with neighbor 245.132.205.141
+  Suppress hello for 0 neighbor(s)

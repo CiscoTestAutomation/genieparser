@@ -1,0 +1,24 @@
+PRABS_Prom_PE1#sh pla sof fed sw ac mpls rlist
+RLIST id: 0xf0001aeb State: 1 {OK} Flags: 0x0 remote_ifs: 0 packets: 0 (0 pps approx.)
+DI: 0x7fb68d4b3058 REP_RI: 0x7fb5d7dbc9e8 SI: 0x7fb5df431798
+Rentries:
+1. Port-channel11 Port-channel11 0022.bdfd.3640 Label: 16567 Flags: 0x0
+obj_id: 0x78a7 obj_type: LABEL RI: 0x7fb5e162f648 (2400) rw_type: PSH1 (119)
+
+RLIST id: 0xf0001aea State: 1 {OK} Flags: 0x0 remote_ifs: 0 packets: 0 (0 pps approx.)
+DI: 0x7fb5dd222868 REP_RI: 0x7fb5d65e08c8 SI: 0x7fb5e4a6b288
+Rentries:
+1. Port-channel11 Port-channel11 0022.bdfd.3640 Label: 16567 Flags: 0x0
+obj_id: 0x78a7 obj_type: LABEL RI: 0x7fb5e162f648 (2400) rw_type: PSH1 (119)
+
+RLIST id: 0xf0001ae9 State: 1 {OK} Flags: 0x0 remote_ifs: 0 packets: 0 (0 pps approx.)
+DI: 0x7fb5f2bf86e8 REP_RI: 0x7fb68dd082c8 SI: 0x7fb5df030fb8
+Rentries:
+1. Lspvif0 --------- 0000.0000.0000 Label: 1048577 Flags: 0x0
+obj_id: 0x76ca obj_type: LABEL RI: 0x7fb5e43694d8 (74) rw_type: POP2IP_LSM (217)
+
+RLIST id: 0xf0001ae8 State: 1 {OK} Flags: 0x0 remote_ifs: 0 packets: 38793 (0 pps approx.)
+DI: 0x7fb5ebe77278 REP_RI: 0x7fb5f22aebe8 SI: 0x7fb5e41e6fe8
+Rentries:
+1. Lspvif0 --------- 0000.0000.0000 Label: 1048577 Flags: 0x0
+obj_id: 0x76cb obj_type: LABEL RI: 0x7fb5ead93958 (68) rw_type: POP2IP_LSM (217)

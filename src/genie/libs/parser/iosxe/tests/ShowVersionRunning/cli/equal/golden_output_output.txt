@@ -1,0 +1,152 @@
+show version running
+Package: Provisioning File, version: n/a, status: active
+  Role: provisioning file
+  File: consolidated:packages.conf, on: RP0
+  Built: n/a, by: n/a
+  File SHA1 checksum: 5320a1aa65add90d5c7cfb0ccf4d5a68f6a4fe39
+
+Package: rpbase, version: BLD_POLARIS_DEV_LATEST_20211108_175756, status: active
+  Role: rp_base
+  File: consolidated:cat9k-rpbase.BLD_POLARIS_DEV_LATEST_20211108_175756.SSA.pkg, on: RP0
+  Built: 2021-11-08_11.20, by: mcpre
+  File SHA1 checksum: ac93b8faa50c0c5b3d1e3f044e914ad3df34ccc5
+
+Package: rpboot, version: BLD_POLARIS_DEV_LATEST_20211108_175756, status: active
+  Role: rp_boot
+  File: consolidated:cat9k-rpboot.BLD_POLARIS_DEV_LATEST_20211108_175756.SSA.pkg, on: RP0
+  Built: 2021-11-08_11.20, by: mcpre
+  File SHA1 checksum: n/a
+
+Package: guestshell, version: BLD_POLARIS_DEV_LATEST_20211108_175756, status: active
+  Role: guestshell
+  File: consolidated:cat9k-guestshell.BLD_POLARIS_DEV_LATEST_20211108_175756.SSA.pkg, on: RP0/0
+  Built: 2021-11-08_11.20, by: mcpre
+  File SHA1 checksum: c42ea329f864e9eb830cf5a7e99864e488496558
+
+Package: rpbase, version: BLD_POLARIS_DEV_LATEST_20211108_175756, status: active
+  Role: rp_daemons
+  File: consolidated:cat9k-rpbase.BLD_POLARIS_DEV_LATEST_20211108_175756.SSA.pkg, on: RP0/0
+  Built: 2021-11-08_11.20, by: mcpre
+  File SHA1 checksum: ac93b8faa50c0c5b3d1e3f044e914ad3df34ccc5
+
+Package: rpbase, version: BLD_POLARIS_DEV_LATEST_20211108_175756, status: active
+  Role: rp_iosd
+  File: consolidated:cat9k-rpbase.BLD_POLARIS_DEV_LATEST_20211108_175756.SSA.pkg, on: RP0/0
+  Built: 2021-11-08_11.20, by: mcpre
+  File SHA1 checksum: ac93b8faa50c0c5b3d1e3f044e914ad3df34ccc5
+
+Package: rpbase, version: BLD_POLARIS_DEV_LATEST_20211108_175756, status: active
+  Role: rp_security
+  File: consolidated:cat9k-rpbase.BLD_POLARIS_DEV_LATEST_20211108_175756.SSA.pkg, on: RP0/0
+  Built: 2021-11-08_11.20, by: mcpre
+  File SHA1 checksum: ac93b8faa50c0c5b3d1e3f044e914ad3df34ccc5
+
+Package: webui, version: BLD_POLARIS_DEV_LATEST_20211108_175756, status: active
+  Role: rp_webui
+  File: consolidated:cat9k-webui.BLD_POLARIS_DEV_LATEST_20211108_175756.SSA.pkg, on: RP0/0
+  Built: 2021-11-08_11.20, by: mcpre
+  File SHA1 checksum: 836bc1e3e0b6fa3c4ef24239a76ef7f9896456c7
+
+Package: srdriver, version: BLD_POLARIS_DEV_LATEST_20211108_175756, status: active
+  Role: srdriver
+  File: consolidated:cat9k-srdriver.BLD_POLARIS_DEV_LATEST_20211108_175756.SSA.pkg, on: RP0/0
+  Built: 2021-11-08_11.20, by: mcpre
+  File SHA1 checksum: f0a09b32013bcdde0f9ed18583dd60d290cf02ab
+
+Package: rpbase, version: BLD_POLARIS_DEV_LATEST_20211108_175756, status: n/a
+  Role: rp_base
+  File: consolidated:cat9k-rpbase.BLD_POLARIS_DEV_LATEST_20211108_175756.SSA.pkg, on: RP1
+  Built: 2021-11-08_11.20, by: mcpre
+  File SHA1 checksum: ac93b8faa50c0c5b3d1e3f044e914ad3df34ccc5
+
+Package: rpboot, version: BLD_POLARIS_DEV_LATEST_20211108_175756, status: n/a
+  Role: rp_boot
+  File: consolidated:cat9k-rpboot.BLD_POLARIS_DEV_LATEST_20211108_175756.SSA.pkg, on: RP1
+  Built: 2021-11-08_11.20, by: mcpre
+  File SHA1 checksum: n/a
+
+Package: wlc, version: BLD_POLARIS_DEV_LATEST_20211108_175756, status: n/a
+  Role: rp_wlc
+  File: consolidated:cat9k-wlc.BLD_POLARIS_DEV_LATEST_20211108_175756.SSA.pkg, on: RP1
+  Built: 2021-11-08_11.20, by: mcpre
+  File SHA1 checksum: 76aa35c084aacb3f7944e9b52d873d4405c4145c
+
+Package: guestshell, version: BLD_POLARIS_DEV_LATEST_20211108_175756, status: n/a
+  Role: guestshell
+  File: consolidated:cat9k-guestshell.BLD_POLARIS_DEV_LATEST_20211108_175756.SSA.pkg, on: RP1/0
+  Built: 2021-11-08_11.20, by: mcpre
+  File SHA1 checksum: c42ea329f864e9eb830cf5a7e99864e488496558
+
+Package: rpbase, version: BLD_POLARIS_DEV_LATEST_20211108_175756, status: n/a
+  Role: rp_daemons
+  File: consolidated:cat9k-rpbase.BLD_POLARIS_DEV_LATEST_20211108_175756.SSA.pkg, on: RP1/0
+  Built: 2021-11-08_11.20, by: mcpre
+  File SHA1 checksum: ac93b8faa50c0c5b3d1e3f044e914ad3df34ccc5
+
+Package: rpbase, version: BLD_POLARIS_DEV_LATEST_20211108_175756, status: n/a
+  Role: rp_iosd
+  File: consolidated:cat9k-rpbase.BLD_POLARIS_DEV_LATEST_20211108_175756.SSA.pkg, on: RP1/0
+  Built: 2021-11-08_11.20, by: mcpre
+  File SHA1 checksum: ac93b8faa50c0c5b3d1e3f044e914ad3df34ccc5
+
+Package: rpbase, version: BLD_POLARIS_DEV_LATEST_20211108_175756, status: n/a
+  Role: rp_security
+  File: consolidated:cat9k-rpbase.BLD_POLARIS_DEV_LATEST_20211108_175756.SSA.pkg, on: RP1/0
+  Built: 2021-11-08_11.20, by: mcpre
+  File SHA1 checksum: ac93b8faa50c0c5b3d1e3f044e914ad3df34ccc5
+
+Package: webui, version: BLD_POLARIS_DEV_LATEST_20211108_175756, status: n/a
+  Role: rp_webui
+  File: consolidated:cat9k-webui.BLD_POLARIS_DEV_LATEST_20211108_175756.SSA.pkg, on: RP1/0
+  Built: 2021-11-08_11.20, by: mcpre
+  File SHA1 checksum: 836bc1e3e0b6fa3c4ef24239a76ef7f9896456c7
+
+Package: srdriver, version: BLD_POLARIS_DEV_LATEST_20211108_175756, status: n/a
+  Role: srdriver
+  File: /tmp/sw/isos/cat9k-srdriver.BLD_POLARIS_DEV_LATEST_20211108_175756.SSA.pkg, on: RP1/0
+  Built: 2021-11-08_11.20, by: mcpre
+  File SHA1 checksum: f0a09b32013bcdde0f9ed18583dd60d290cf02ab
+
+Package: cc_srdriver, version: BLD_POLARIS_DEV_LATEST_20211108_175756, status: active
+  Role: cc_srdriver
+  File: consolidated:cat9k-cc_srdriver.BLD_POLARIS_DEV_LATEST_20211108_175756.SSA.pkg, on: SLOT1
+  Built: 2021-11-08_11.20, by: mcpre
+  File SHA1 checksum: 685a30ff7ddb5383b30b72abbd1468980882987f
+
+Package: cc_srdriver, version: BLD_POLARIS_DEV_LATEST_20211108_175756, status: active
+  Role: cc_srdriver
+  File: consolidated:cat9k-cc_srdriver.BLD_POLARIS_DEV_LATEST_20211108_175756.SSA.pkg, on: SLOT2
+  Built: 2021-11-08_11.20, by: mcpre
+  File SHA1 checksum: 685a30ff7ddb5383b30b72abbd1468980882987f
+
+Package: cc_srdriver, version: BLD_POLARIS_DEV_LATEST_20211108_175756, status: active
+  Role: cc_srdriver
+  File: consolidated:cat9k-cc_srdriver.BLD_POLARIS_DEV_LATEST_20211108_175756.SSA.pkg, on: SLOT3
+  Built: 2021-11-08_11.20, by: mcpre
+  File SHA1 checksum: 685a30ff7ddb5383b30b72abbd146898088293
+  Built: 2021-11-08_11.20, by: mcpre
+  File SHA1 checksum: 685a30ff7ddb5383b30b72abbd1468980882987f
+
+Package: cc_srdriver, version: BLD_POLARIS_DEV_LATEST_20211108_175756, status: active
+  Role: cc_srdriver
+  File: consolidated:cat9k-cc_srdriver.BLD_POLARIS_DEV_LATEST_20211108_175756.SSA.pkg, on: SLOT4
+  Built: 2021-11-08_11.20, by: mcpre
+  File SHA1 checksum: 685a30ff7ddb5383b30b72abbd1468980882987f
+
+Package: cc_srdriver, version: BLD_POLARIS_DEV_LATEST_20211108_175756, status: active
+  Role: cc_srdriver
+  File: consolidated:cat9k-cc_srdriver.BLD_POLARIS_DEV_LATEST_20211108_175756.SSA.pkg, on: SLOT5
+  Built: 2021-11-08_11.20, by: mcpre
+  File SHA1 checksum: 685a30ff7ddb5383b30b72abbd1468980882987f
+
+Package: cc_srdriver, version: BLD_POLARIS_DEV_LATEST_20211108_175756, status: active
+  Role: cc_srdriver
+  File: consolidated:cat9k-cc_srdriver.BLD_POLARIS_DEV_LATEST_20211108_175756.SSA.pkg, on: SLOT6
+  Built: 2021-11-08_11.20, by: mcpre
+  File SHA1 checksum: 685a30ff7ddb5383b30b72abbd1468980882987f
+
+Package: cc_srdriver, version: BLD_POLARIS_DEV_LATEST_20211108_175756, status: active
+  Role: cc_srdriver
+  File: consolidated:cat9k-cc_srdriver.BLD_POLARIS_DEV_LATEST_20211108_175756.SSA.pkg, on: SLOT7
+  Built: 2021-11-08_11.20, by: mcpre
+  File SHA1 checksum: 685a30ff7ddb5383b30b72abbd1468980882987f    

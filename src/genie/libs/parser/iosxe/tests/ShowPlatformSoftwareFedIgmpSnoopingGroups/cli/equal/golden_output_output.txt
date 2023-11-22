@@ -1,0 +1,11 @@
+Vlan:20 Group:229.1.1.1
+---------------------------------
+Member ports   :
+        TenGigabitEthernet1/0/1
+        nve1.VNI60020(0x200000063)
+CCK_epoch      : 255
+Failure Flags  : 0
+DI handle      : 0x7f4f6eb39be8
+REP RI handle  : 0x7f4f6eb39fc8
+SI handle      : 0x7f4f6eb3af08
+HTM handle     : 0x7f4f6eb41728

@@ -1,0 +1,170 @@
+# golden_output_2_expected.py
+#
+# Copyright (c) 2021 by Cisco Systems, Inc.
+# All rights reserved.
+
+EVPN instance:       1 (VLAN Based)
+  RD:                10.10.10.10:1 (auto)
+  Import-RTs:        1:1 
+  Export-RTs:        1:1 
+  Per-EVI Label:     none
+  State:             Established
+  Replication Type:  Ingress (global)
+  Encapsulation:     mpls
+  IP Local Learn:    Enabled (global)
+  Adv. Def. Gateway: Disabled (global)
+  Adv. Multicast:    Disabled (global)
+  Bridge Domain:     1
+    Ethernet-Tag:    0
+    BUM Label:       1002
+    Per-BD Label:    1003
+    BDI Label:       none
+    State:           Established
+    Flood Suppress:  Attached
+    Access If:       
+    Pseudoports:
+      Ethernet0/1 service instance 1
+        Routes: 1 MAC, 1 MAC/IP
+      Ethernet0/2 service instance 1 (DF state: forwarding)
+        Routes: 0 MAC, 0 MAC/IP
+      Ethernet0/3 service instance 1 (DF state: PE-to-CE BUM blocked)
+        Routes: 0 MAC, 0 MAC/IP
+    Peers:
+      15.15.15.15
+        Routes: 0 MAC, 0 MAC/IP, 1 IMET, 1 EAD
+      20.20.20.20
+        Routes: 0 MAC, 0 MAC/IP, 1 IMET, 1 EAD
+      25.25.25.25
+        Routes: 2 MAC, 2 MAC/IP, 1 IMET, 1 EAD
+      26.26.26.26
+        Routes: 0 MAC, 0 MAC/IP, 1 IMET, 1 EAD
+      30.30.30.30
+        Routes: 0 MAC, 0 MAC/IP, 1 IMET, 1 EAD
+
+EVPN instance:       2 (VLAN Bundle)
+  RD:                10.10.10.10:2 (auto)
+  Import-RTs:        1:2 
+  Export-RTs:        1:2 
+  Per-EVI Label:     none
+  State:             Established
+  Replication Type:  Ingress (global)
+  Encapsulation:     mpls
+  IP Local Learn:    Enabled (global)
+  Adv. Def. Gateway: Disabled (global)
+  Adv. Multicast:    Disabled (global)
+  Bridge Domain:     2
+    Ethernet-Tag:    0
+    BUM Label:       1004
+    Per-BD Label:    1005
+    BDI Label:       none
+    State:           Established
+    Flood Suppress:  Attached
+    Access If:       
+    Pseudoports:
+      Ethernet0/1 service instance 2
+        Routes: 1 MAC, 1 MAC/IP
+      Ethernet0/2 service instance 2 (DF state: forwarding)
+        Routes: 0 MAC, 0 MAC/IP
+      Ethernet0/3 service instance 2 (DF state: PE-to-CE BUM blocked)
+        Routes: 1 MAC, 1 MAC/IP
+    Peers:
+      15.15.15.15
+        Routes: 0 MAC, 0 MAC/IP, 1 IMET, 1 EAD
+      20.20.20.20
+        Routes: 0 MAC, 0 MAC/IP, 1 IMET, 1 EAD
+      25.25.25.25
+        Routes: 2 MAC, 2 MAC/IP, 1 IMET, 1 EAD
+      26.26.26.26
+        Routes: 0 MAC, 0 MAC/IP, 1 IMET, 1 EAD
+      30.30.30.30
+        Routes: 0 MAC, 0 MAC/IP, 1 IMET, 1 EAD
+
+EVPN instance:       3 (VLAN Aware)
+  RD:                10.10.10.10:3 (auto)
+  Import-RTs:        1:3 
+  Export-RTs:        1:3 
+  Per-EVI Label:     none
+  State:             Established
+  Replication Type:  Ingress (global)
+  Encapsulation:     mpls
+  IP Local Learn:    Enabled (global)
+  Adv. Def. Gateway: Disabled (global)
+  Adv. Multicast:    Disabled (global)
+  Bridge Domain:     3
+    Ethernet-Tag:    3
+    BUM Label:       1006
+    Per-BD Label:    1007
+    BDI Label:       none
+    State:           Established
+    Flood Suppress:  Attached
+    Access If:       
+    Pseudoports:
+      Ethernet0/1 service instance 3
+        Routes: 1 MAC, 1 MAC/IP
+      Ethernet0/2 service instance 3 (DF state: blocked)
+        Routes: 0 MAC, 0 MAC/IP
+      Ethernet0/3 service instance 3 (DF state: PE-to-CE BUM blocked)
+        Routes: 0 MAC, 0 MAC/IP
+    Peers:
+      15.15.15.15
+        Routes: 0 MAC, 0 MAC/IP, 1 IMET, 1 EAD
+      20.20.20.20
+        Routes: 0 MAC, 0 MAC/IP, 1 IMET, 1 EAD
+      25.25.25.25
+        Routes: 1 MAC, 1 MAC/IP, 1 IMET, 1 EAD
+      26.26.26.26
+        Routes: 0 MAC, 0 MAC/IP, 1 IMET, 1 EAD
+      30.30.30.30
+        Routes: 0 MAC, 0 MAC/IP, 1 IMET, 1 EAD
+  Bridge Domain:     4
+    Ethernet-Tag:    4
+    BUM Label:       1008
+    Per-BD Label:    1009
+    BDI Label:       none
+    State:           Established
+    Flood Suppress:  Attached
+    Access If:       
+    Pseudoports:
+      Ethernet0/1 service instance 4
+        Routes: 1 MAC, 1 MAC/IP
+      Ethernet0/2 service instance 4 (DF state: forwarding)
+        Routes: 0 MAC, 0 MAC/IP
+      Ethernet0/3 service instance 4 (DF state: PE-to-CE BUM blocked)
+        Routes: 1 MAC, 1 MAC/IP
+    Peers:
+      15.15.15.15
+        Routes: 0 MAC, 0 MAC/IP, 1 IMET, 1 EAD
+      20.20.20.20
+        Routes: 0 MAC, 0 MAC/IP, 1 IMET, 1 EAD
+      25.25.25.25
+        Routes: 1 MAC, 1 MAC/IP, 1 IMET, 1 EAD
+      26.26.26.26
+        Routes: 0 MAC, 0 MAC/IP, 1 IMET, 1 EAD
+      30.30.30.30
+        Routes: 0 MAC, 0 MAC/IP, 1 IMET, 1 EAD
+  Bridge Domain:     5
+    Ethernet-Tag:    5
+    BUM Label:       1010
+    Per-BD Label:    1011
+    BDI Label:       none
+    State:           Established
+    Flood Suppress:  Attached
+    Access If:       
+    Pseudoports:
+      Ethernet0/1 service instance 5
+        Routes: 1 MAC, 1 MAC/IP
+      Ethernet0/2 service instance 5 (DF state: blocked)
+        Routes: 0 MAC, 0 MAC/IP
+      Ethernet0/3 service instance 5 (DF state: forwarding)
+        Routes: 0 MAC, 0 MAC/IP
+    Peers:
+      15.15.15.15
+        Routes: 0 MAC, 0 MAC/IP, 1 IMET, 1 EAD
+      20.20.20.20
+        Routes: 0 MAC, 0 MAC/IP, 1 IMET, 1 EAD
+      25.25.25.25
+        Routes: 1 MAC, 1 MAC/IP, 1 IMET, 1 EAD
+      26.26.26.26
+        Routes: 0 MAC, 0 MAC/IP, 1 IMET, 1 EAD
+      30.30.30.30
+        Routes: 0 MAC, 0 MAC/IP, 1 IMET, 1 EAD

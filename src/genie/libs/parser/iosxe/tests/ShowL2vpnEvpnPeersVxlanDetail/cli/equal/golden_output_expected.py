@@ -25,6 +25,18 @@ expected_output = {
                         'imet': 1,
                         'total': 1
                     }
+                },
+                '20013': {
+                    'local_vni': '20013',
+                    'interface': 'nve1',
+                    'up_time': '00:15:49',
+                    'number_of_routes': {
+                        'ead_per_evi': 0,
+                        'mac': 1,
+                        'mac_ip': 1,
+                        'imet': 1,
+                        'total': 3
+                    }
                 }
             }
         }

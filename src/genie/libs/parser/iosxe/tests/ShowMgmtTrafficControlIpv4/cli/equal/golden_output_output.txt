@@ -1,0 +1,3 @@
+Interface List: HundredGigE1/0/3
+Protocol List: telnet netconf
+IP Address:  3.3.3.3

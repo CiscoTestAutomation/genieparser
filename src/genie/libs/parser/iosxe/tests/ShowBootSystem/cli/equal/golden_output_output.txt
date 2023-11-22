@@ -1,8 +1,12 @@
-BOOT variable = bootflash:packages.conf;
-MANUAL_BOOT variable = no
-BAUD variable = 9600
-ENABLE_BREAK variable does not exist
-BOOTMODE variable does not exist
-IPXE_TIMEOUT variable does not exist
-CONFIG_FILE variable does not exist
- 
+---------------------------
+Switch 1
+---------------------------
+Current Boot Variables:
+BOOT variable does not exist
+
+Boot Variables on next reload:
+BOOT variable does not exist
+Manual Boot = yes
+Enable Break = yes
+Boot Mode = DEVICE
+iPXE Timeout = 0

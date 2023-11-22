@@ -1,0 +1,73 @@
+Current Subscriber Statistics:
+Number of sessions currently up: 2
+Number of sessions currently pending: 0
+Number of sessions currently authenticated: 0
+Number of sessions currently unauthenticated: 2
+Highest number of sessions ever up at one time: 31998
+Mean up-time duration of sessions: 00:14:58
+Total number of sessions up so far: 64132
+Mean call rate per minute: 203, per hour: 12826
+Number of calls in last one hour: 4
+Number of sessions failed to come up: 32045
+
+Current Lite Session Statistics:
+Number of lite sessions currently up: 0
+Number of lite sessions up so far: 32024
+Number of lite sessions converted to full session: 32014
+Number of lite sessions conversion in progress: 0
+Number of lite sessions failed to convert to dedicated sessions: 5
+Number of account logons failed to find lite sessions: 0
+Mean call rate per minute: 101, per hour: 6404
+Number of lite session failed to come up: 0
+ PBHK zero: 0
+ Default Session not in Connected State 0
+
+Current Flow Statistics:
+Number of flows currently up: 32
+Highest number of flows ever up at one time: 71855
+Mean up-time duration of flows: 00:13:19
+Number of flows failed to come up: 0
+Total number of flows up so far: 160306
+
+Access type based session count:
+IP-Interface sessions = 2
+
+IP/DHCP session type count:
+
+Feature Installation Count:
+                                    Direction
+Feature Name              None       Inbound    Outbound  
+L4 Redirect               0          4          2         
+
+Switch Id Cleanup Statistics:
+Number of sessions having invalid SMGR handle: 0
+Number of sessions having invalid policy handle: 0
+Number of sessions having invalid LTERM handle: 0
+Number of sessions having invalid SIP handle: 0
+
+Lterm Error Statistics:
+
+Lterm session delete errors:
+L2hw Switch:   17
+
+SHDBs in use    : 8       
+SHDBs allocated : 64132   
+SHDBs freed     : 64124   
+
+SHDB handles associated with each client type
+
+Client Name     Count
+===========    =======
+LTerm          2       
+AAA            2       
+CCM            2       
+SSS FM         8       
+IPSUB          0       
+IP_IF          2       
+COA            0       
+COA cluster    0       
+ISG Classifier 2       
+CCM Group      2       
+PM             2       
+PM cluster     0  
+

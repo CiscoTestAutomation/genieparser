@@ -1,0 +1,60 @@
+Available:8850.0(w)  Used:2512.8(w)  Remaining:6337.2(w)
+
+Codes: DS - Dual Signature device, SS - Single Signature device 
+       SP - Single Pairset device 
+
+Interface   Admin  Type Oper-State       Power(Watts)     Class   Device Name
+            State       Alt-A,B       Allocated Utilized  Alt-A,B  
+----------- ------ ---- ------------- --------- --------- ------- -----------
+
+Te7/0/1     auto   DS   on,on         90.0      5.2       5,5     Ieee PD            
+Te7/0/2     auto   DS   on,on         90.0      5.2       5,5     Ieee PD            
+Te7/0/3     auto   DS   on,on         90.0      5.5       5,5     Ieee PD            
+Te7/0/4     auto   DS   on,on         90.0      5.5       5,5     Ieee PD            
+Te7/0/5     auto   DS   on,on         90.0      5.1       5,5     Ieee PD            
+Te7/0/6     auto   DS   on,on         90.0      5.2       5,5     Ieee PD            
+Te7/0/7     auto   DS   on,on         90.0      5.2       5,5     Ieee PD            
+Te7/0/8     auto   DS   on,on         90.0      5.5       5,5     Ieee PD            
+Te7/0/9     auto   DS   on,on         90.0      5.5       5,5     Ieee PD            
+Te7/0/10    auto   DS   on,on         90.0      5.2       5,5     Ieee PD            
+Te7/0/11    auto   DS   on,on         90.0      5.2       5,5     Ieee PD            
+Te7/0/12    auto   DS   on,on         90.0      5.5       5,5     Ieee PD            
+Te7/0/13    auto   DS   on,on         90.0      5.5       5,5     Ieee PD            
+Te7/0/14    auto   DS   on,on         90.0      5.5       5,5     Ieee PD            
+Te7/0/15    auto   DS   on,on         90.0      5.2       5,5     Ieee PD            
+Te7/0/16    auto   DS   on,on         90.0      5.5       5,5     Ieee PD            
+Te7/0/17    auto   DS   on,on         90.0      5.2       5,5     Ieee PD            
+Te7/0/18    auto   DS   on,on         90.0      5.2       5,5     Ieee PD            
+Te7/0/19    auto   DS   on,on         90.0      5.5       5,5     Ieee PD            
+Te7/0/20    auto   DS   on,on         90.0      5.5       5,5     Ieee PD            
+Te7/0/21    auto   DS   on,on         90.0      5.5       5,5     Ieee PD            
+Te7/0/22    auto   DS   on,on         90.0      5.5       5,5     Ieee PD            
+Te7/0/23    auto   DS   on,on         90.0      5.5       5,5     Ieee PD            
+Te7/0/24    auto   DS   on,on         90.0      5.5       5,5     Ieee PD            
+Te7/0/25    auto   SP   on            4.0       3.6       1       Ieee PD            
+Te7/0/26    auto   SP   on            7.0       6.7       2       Ieee PD            
+Te7/0/27    auto   SP   on            15.4      14.5      3       Ieee PD            
+Te7/0/28    auto   SP   on            30.0      29.9      4       Ieee PD            
+Te7/0/29    auto   SP   on            4.0       3.6       1       Ieee PD            
+Te7/0/30    auto   SP   on            7.0       6.7       2       Ieee PD            
+Te7/0/31    auto   SP   on            15.4      14.7      3       Ieee PD            
+Te7/0/32    auto   SP   on            30.0      29.2      4       Ieee PD            
+Te7/0/33    auto   n/a  off           0.0       0.0       n/a                        
+Te7/0/34    auto   n/a  off           0.0       0.0       n/a                        
+Te7/0/35    auto   n/a  off           0.0       0.0       n/a                        
+Te7/0/36    auto   n/a  off           0.0       0.0       n/a                        
+Te7/0/37    auto   SS   on,off        30.0      20.4      4       Ieee PD            
+Te7/0/38    auto   n/a  off           0.0       0.0       n/a                        
+Te7/0/39    auto   n/a  off           0.0       0.0       n/a                        
+Te7/0/40    auto   n/a  off           0.0       0.0       n/a                        
+Te7/0/41    auto   n/a  off           0.0       0.0       n/a                        
+Te7/0/42    auto   n/a  off           0.0       0.0       n/a                        
+Te7/0/43    auto   n/a  off           0.0       0.0       n/a                        
+Te7/0/44    auto   n/a  off           0.0       0.0       n/a                        
+Te7/0/45    auto   n/a  off           0.0       0.0       n/a                        
+Te7/0/46    auto   n/a  off           0.0       0.0       n/a                        
+Te7/0/47    auto   n/a  off           0.0       0.0       n/a                        
+Te7/0/48    auto   n/a  off           0.0       0.0       n/a                        
+--------- ------ ---------- ---------- ---------- ------------------- -----
+
+Totals:            33   on          2302.8   258.0  

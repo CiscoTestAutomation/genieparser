@@ -1,0 +1,10 @@
+show running-config interface Port-channel93
+Building configuration...
+
+Current configuration : 137 bytes
+!
+interface Port-channel93
+ switchport access vlan 100
+ switchport mode access
+ ip dhcp snooping information option allow-untrusted
+end

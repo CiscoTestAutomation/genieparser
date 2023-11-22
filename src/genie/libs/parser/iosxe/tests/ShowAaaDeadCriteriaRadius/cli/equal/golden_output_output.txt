@@ -1,0 +1,22 @@
+show aaa dead-criteria radius 11.19.12.66 auth-port 1645 acct-port 1646      
+RADIUS: No server group specified. Using radius
+RADIUS Server Dead Criteria:
+=============================
+Server Details: 
+    Address   : 11.19.12.66
+    Auth Port : 1645
+    Acct Port : 1646
+Server Group  : radius
+Dead Criteria Details:
+    Configured Retransmits   : 3
+    Configured Timeout       : 5
+    Estimated Outstanding Access Transactions: 0
+    Estimated Outstanding Accounting Transactions: 0
+    Dead Detect Time         : 10s
+    Computed Retransmit Tries: 10
+Statistics Gathered Since Last Successful Transaction
+=====================================================
+    Max Computed Outstanding Transactions: 1
+    Max Computed Dead Detect Time: 10s
+    Max Computed Retransmits : 10
+

@@ -1,0 +1,7 @@
+interface Vlan1023
+ ip address 20.1.1.1 255.255.255.252
+ ip ospf 1 area 0
+ no lisp mobility liveness test
+ lisp mobility 20_1_1_0-global-IPV4
+end
+

@@ -1,0 +1,44 @@
+
+
+expected_output = {
+    "vpn_id":{
+        1:{
+            "ethernet_segment_id":{
+                "0012.1212.1212.1212.1212":{
+                    "es_index":{
+                        1:{
+                            "encap":"SRv6",
+                            "ether_tag":"0",
+                            "internal_id":"None"
+                        }
+                    }
+                },
+                "0034.3434.3434.3434.3434":{
+                    "es_index":{
+                        1:{
+                            "encap":"SRv6",
+                            "ether_tag":"0",
+                            "internal_id":"::ffff:10.0.0.71",
+                            "pathlists":{
+                                "summary":{
+                                    "nexthop":{
+                                        "3.3.3.3":{
+                                            "tep_id":"0x05000003",
+                                            "df_role":"P",
+                                            "sid":"cafe:0:300:e000::"
+                                        },
+                                        "4.4.4.4":{
+                                            "tep_id":"0x00000000",
+                                            "df_role":"B",
+                                            "sid":"cafe:0:400:e000::"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

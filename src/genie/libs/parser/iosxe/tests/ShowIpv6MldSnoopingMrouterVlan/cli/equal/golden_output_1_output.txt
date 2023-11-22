@@ -1,0 +1,3 @@
+Vlan    ports
+----    -----
+ 777    Po10(dynamic), Router

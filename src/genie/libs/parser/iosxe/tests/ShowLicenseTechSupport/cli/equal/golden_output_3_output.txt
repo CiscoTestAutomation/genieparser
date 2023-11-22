@@ -1,0 +1,377 @@
+Load for five secs: 0%/0%; one minute: 0%; five minutes: 0%
+Time source is NTP, 14:10:53.416 UTC Sat May 21 2022
+
+Smart Licensing Tech Support info
+
+Smart Licensing Status
+======================
+
+Smart Licensing is ENABLED
+
+Export Authorization Key:
+  Features Authorized:
+    <none>
+
+Utility:
+  Status: DISABLED
+
+Smart Licensing Using Policy:
+  Status: ENABLED
+
+Account Information:
+  Smart Account: <none>
+  Virtual Account: <none>
+
+Data Privacy:
+  Sending Hostname: yes
+    Callhome hostname privacy: DISABLED
+    Smart Licensing hostname privacy: DISABLED
+  Version privacy: DISABLED
+
+Transport:
+  Type: cslu
+  Cslu address: http://172.19.180.22:8182/cslu/v1/pi
+  Proxy:
+    Address: <empty>
+    Port: <empty>
+    Username: <empty>
+    Password: <empty>
+  Server Identity Check: True
+  VRF: <empty>
+
+Miscellaneous:
+  Custom Id: <empty>
+
+Policy:
+  Policy in use: Merged from multiple sources.
+  Reporting ACK required: yes (CISCO default)
+  Unenforced/Non-Export Perpetual Attributes:
+    First report requirement (days): 365 (CISCO default)
+    Reporting frequency (days): 0 (CISCO default)
+    Report on change (days): 90 (CISCO default)
+  Unenforced/Non-Export Subscription Attributes:
+    First report requirement (days): 90 (CISCO default)
+    Reporting frequency (days): 90 (CISCO default)
+    Report on change (days): 90 (CISCO default)
+  Enforced (Perpetual/Subscription) License Attributes:
+    First report requirement (days): 0 (CISCO default)
+    Reporting frequency (days): 0 (CISCO default)
+    Report on change (days): 0 (CISCO default)
+  Export (Perpetual/Subscription) License Attributes:
+    First report requirement (days): 0 (CISCO default)
+    Reporting frequency (days): 0 (CISCO default)
+    Report on change (days): 0 (CISCO default)
+
+Usage Reporting:
+  Last ACK received: <none>
+  Next ACK deadline: Apr 06 13:28:03 2023 UTC
+  Reporting push interval: 30  days State(2) InPolicy(365)
+  Next ACK push check: <none>
+  Next report push: May 21 07:54:06 2022 UTC
+  Last report push: <none>
+  Last report file write: <none>
+
+License Usage
+=============
+Handle: 1
+  License: network-essentials
+  Entitlement Tag: regid.2017-03.com.cisco.essentialsk9,1.0_90406ae8-385e-43aa-ac98-91da0ea270e2
+  Description: C9300-24 Network Essentials
+  Count: 3
+  Version: 1.0
+  Status: IN USE(15)
+  Status time: May 21 06:53:32 2022 UTC
+  Request Time: May 21 06:53:42 2022 UTC
+  Export status: NOT RESTRICTED
+  Feature Name: network-essentials
+  Feature Description: C9300-24 Network Essentials
+  Enforcement type: NOT ENFORCED
+  License type: Perpetual
+  Measurements:
+    ENTITLEMENT:
+      Interval: 00:15:00
+      Current Value: 3
+      Current Report: 1649251641       Previous: 1649251640
+  Soft Enforced: True
+
+Handle: 5
+  License: air-network-advantage
+  Entitlement Tag: regid.2018-06.com.cisco.DNA_NWStack,1.0_e7244e71-3ad5-4608-8bf0-d12f67c80896
+  Description: air-network-advantage
+  Count: 0
+  Version: 1.0
+  Status: NOT IN USE(1)
+  Status time: May 21 07:53:36 2022 UTC
+  Request Time: None
+  Export status: NOT RESTRICTED
+  Feature Name: air-network-advantage
+  Feature Description: air-network-advantage
+  Enforcement type: NOT ENFORCED
+  License type: Perpetual
+  Measurements:
+    ENTITLEMENT:
+      Interval: 00:15:00
+      Current Value: 0
+      Current Report: 0       Previous: 0
+  Soft Enforced: True
+
+Handle: 6
+  License: air-dna-advantage
+  Entitlement Tag: regid.2017-08.com.cisco.AIR-DNA-A,1.0_b6308627-3ab0-4a11-a3d9-586911a0d790
+  Description: air-dna-advantage
+  Count: 0
+  Version: 1.0
+  Status: NOT IN USE(1)
+  Status time: May 21 07:53:36 2022 UTC
+  Request Time: None
+  Export status: NOT RESTRICTED
+  Feature Name: air-dna-advantage
+  Feature Description: air-dna-advantage
+  Enforcement type: NOT ENFORCED
+  License type: Subscription
+  Measurements:
+    ENTITLEMENT:
+      Interval: 00:15:00
+      Current Value: 0
+      Current Report: 0       Previous: 0
+  Soft Enforced: True
+
+Product Information
+===================
+UDI: PID:C9300-24UX,SN:FCW2134L00C
+
+HA UDI List:
+    Active:PID:C9300-24UX,SN:FCW2134L00C
+    Standby:PID:C9300-24U,SN:FOC2129Z02H
+    Member:PID:C9300-24T,SN:FCW2125L07Y
+
+Agent Version
+=============
+Smart Agent for Licensing: 5.5.11_rel/31
+
+Upcoming Scheduled Jobs
+=======================
+Current time: May 21 14:10:53 2022 UTC
+Daily: May 22 06:53:34 2022 UTC (16 hours, 42 minutes, 41 seconds remaining)
+Authorization Renewal: Expired Not Rescheduled
+Init Flag Check: Expired Not Rescheduled
+Reservation configuration mismatch between nodes in HA mode: Expired Not Rescheduled
+Start Utility Measurements: May 21 14:23:36 2022 UTC (12 minutes, 43 seconds remaining)
+Send Utility RUM reports: May 22 07:54:06 2022 UTC (17 hours, 43 minutes, 13 seconds remaining)
+Save unreported RUM Reports: May 21 15:08:46 2022 UTC (57 minutes, 53 seconds remaining)
+Data Synchronization: May 21 14:56:35 2022 UTC (45 minutes, 42 seconds remaining)
+External Event: Feb 05 13:28:02 2023 UTC (259 days, 23 hours, 17 minutes, 9 seconds remaining)
+Operational Model: Expired Not Rescheduled
+
+Communication Statistics:
+=======================
+Communication Level Allowed: INDIRECT
+Overall State: <empty>
+Trust Establishment:
+  Attempts: Total=0, Success=0, Fail=0  Ongoing Failure: Overall=0 Communication=0
+  Last Response: <none>
+    Failure Reason: <none>
+  Last Success Time: <none>
+  Last Failure Time: <none>
+Trust Acknowledgement:
+  Attempts: Total=0, Success=0, Fail=0  Ongoing Failure: Overall=0 Communication=0
+  Last Response: <none>
+    Failure Reason: <none>
+  Last Success Time: <none>
+  Last Failure Time: <none>
+Usage Reporting:
+  Attempts: Total=0, Success=0, Fail=0  Ongoing Failure: Overall=0 Communication=0
+  Last Response: <none>
+    Failure Reason: <none>
+  Last Success Time: <none>
+  Last Failure Time: <none>
+Result Polling:
+  Attempts: Total=0, Success=0, Fail=0  Ongoing Failure: Overall=0 Communication=0
+  Last Response: <none>
+    Failure Reason: <none>
+  Last Success Time: <none>
+  Last Failure Time: <none>
+Authorization Request:
+  Attempts: Total=0, Success=0, Fail=0  Ongoing Failure: Overall=0 Communication=0
+  Last Response: <none>
+    Failure Reason: <none>
+  Last Success Time: <none>
+  Last Failure Time: <none>
+Authorization Confirmation:
+  Attempts: Total=0, Success=0, Fail=0  Ongoing Failure: Overall=0 Communication=0
+  Last Response: <none>
+    Failure Reason: <none>
+  Last Success Time: <none>
+  Last Failure Time: <none>
+Authorization Return:
+  Attempts: Total=0, Success=0, Fail=0  Ongoing Failure: Overall=0 Communication=0
+  Last Response: <none>
+    Failure Reason: <none>
+  Last Success Time: <none>
+  Last Failure Time: <none>
+Trust Sync:
+  Attempts: Total=0, Success=0, Fail=0  Ongoing Failure: Overall=0 Communication=0
+  Last Response: <none>
+    Failure Reason: <none>
+  Last Success Time: <none>
+  Last Failure Time: <none>
+Hello Message:
+  Attempts: Total=11, Success=0, Fail=11  Ongoing Failure: Overall=11 Communication=11
+  Last Response: NO REPLY on May 21 13:56:36 2022 UTC
+    Failure Reason: <none>
+  Last Success Time: <none>
+  Last Failure Time: May 21 13:56:36 2022 UTC
+
+License Certificates
+====================
+Production Cert: True
+Not registered. No certificates installed
+
+HA Info
+==========
+RP Role: Active
+Chassis Role: Active
+Behavior Role: Active
+RMF: True
+CF: True
+CF State: Stateless
+Message Flow Allowed: False
+
+Reservation Info
+================
+License reservation: DISABLED
+
+Overall status:
+  Active: PID:C9300-24UX,SN:FCW2134L00C
+      Reservation status: NOT INSTALLED
+      Request code: <none>
+      Last return code: <none>
+      Last Confirmation code: <none>
+      Reservation authorization code: <none>
+  Standby: PID:C9300-24U,SN:FOC2129Z02H
+      Reservation status: NOT INSTALLED
+      Request code: <none>
+      Last return code: <none>
+      Last Confirmation code: <none>
+      Reservation authorization code: <none>
+  Member: PID:C9300-24T,SN:FCW2125L07Y
+      Reservation status: NOT INSTALLED
+      Request code: <none>
+      Last return code: <none>
+      Last Confirmation code: <none>
+      Reservation authorization code: <none>
+
+Specified license reservations:
+
+Purchased Licenses:
+  No Purchase Information Available
+
+Usage Report Summary:
+=====================
+Total: 3,  Purged: 0(0)
+Total Acknowledged Received: 0,  Waiting for Ack: 0(3)
+Available to Report: 3  Collecting Data: 1
+Maximum Display: 3  In Storage: 3,  MIA: 0(0)
+Report Module Status: Ready
+
+Other Info
+==========
+Software ID: regid.2017-05.com.cisco.C9300,v1_727af1d9-6c39-4444-b301-863f81445b72
+Agent State: authorized
+TS enable: True
+Transport: cslu
+Locale: en_US.UTF-8
+Debug flags: 0x7
+Privacy Send Hostname: True
+Privacy Send IP: True
+Build type:: Production
+sizeof(char)  : 1
+sizeof(int)   : 4
+sizeof(long)  : 4
+sizeof(char *): 8
+sizeof(time_t): 4
+sizeof(size_t): 8
+Endian: Big
+Write Erase Occurred: False
+XOS version: 0.12.0.0
+Config Persist Received: False
+Message Version: 1.3
+connect_info.name: <empty>
+connect_info.version: <empty>
+connect_info.additional: <empty>
+connect_info.prod: False
+connect_info.capabilities: <empty>
+agent.capabilities: UTILITY, DLC, AppHA, MULTITIER, EXPORT_2, OK_TRY_AGAIN, POLICY_USAGE
+Check Point Interface: True
+Config Management Interface: False
+License Map Interface: True
+HA Interface: True
+Trusted Store Interface: True
+Platform Data Interface: True
+Crypto Version 2 Interface: False
+SAPluginMgmtInterfaceMutex: True
+SAPluginMgmtIPDomainName: True
+SmartTransportVRFSupport: True
+SmartAgentClientWaitForServer: 2000
+SmartAgentCmReTrySend: True
+SmartAgentClientIsUnified: True
+SmartAgentCmClient: True
+SmartAgentClientName: UnifiedClient
+builtInEncryption: True
+enableOnInit: True
+routingReadyByEvent: True
+systemInitByEvent: True
+SmartTransportServerIdCheck: True
+SmartTransportProxySupport: True
+SmartAgentTelemetryRumReportMax: 1000
+SmartAgentRumTelemetryRumStoreMin: 500
+SmartAgentPolicyDisplayFormat: 0
+SmartAgentReportOnUpgrade: False
+SmartAgentIndividualRUMEncrypt: 2
+SmartAgentMaxRumMemory: 50
+SmartAgentConcurrentThreadMax: 10
+SmartAgentPolicyControllerModel: False
+SmartAgentPolicyModel: True
+SmartAgentFederalLicense: True
+SmartAgentMultiTenant: False
+attr365DayEvalSyslog: True
+checkPointWriteOnly: False
+SmartAgentDelayCertValidation: False
+enableByDefault: False
+conversionAutomatic: False
+conversionAllowed: False
+storageEncryptDisable: False
+storageLoadUnencryptedDisable: False
+TSPluginDisable: False
+bypassUDICheck: False
+loggingAddTStamp: False
+loggingAddTid: True
+HighAvailabilityOverrideEvent: UnknownPlatformEvent
+platformIndependentOverrideEvent: UnknownPlatformEvent
+platformOverrideEvent: SmartAgentSystemDataListChanged
+WaitForHaRole: False
+standbyIsHot: True
+chkPtType: 2
+delayCommInit: False
+roleByEvent: True
+maxTraceLength: 150
+traceAlwaysOn: True
+debugFlags: 0
+Event log max size: 5120 KB
+Event log current size: 90 KB
+P:C9300-24UX,S:FCW2134L00C: No Trust Data
+P:C9300-24U,S:FOC2129Z02H: No Trust Data
+P:C9300-24T,S:FCW2125L07Y: No Trust Data
+Overall Trust: No ID
+Clock sync-ed with NTP: True
+
+Platform Provided Mapping Table
+===============================
+  C9300-24UX: Total licenses found: 215
+Enforced Licenses:
+  P:C9300-24UX,S:FCW2134L00C:
+    No PD enforced licenses
+  P:C9300-24U,S:FOC2129Z02H:
+    No PD enforced licenses
+  P:C9300-24T,S:FCW2125L07Y:
+    No PD enforced licenses 

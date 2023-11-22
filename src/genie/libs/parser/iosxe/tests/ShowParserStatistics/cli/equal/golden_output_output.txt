@@ -1,0 +1,25 @@
+show parser statistics
+Last configuration file parsed: Number of Commands: 0, Time: 0 ms
+
+Parser cache: enabled, 856 hits, 1245 misses
+
+Active startup time:           0       
+Standby startup time:          0       
+Copy to running-config time:   0       
+Bulksync time:                 0       
+Top 10 slowest command:
+ Function        Time (ms)     Command                                  When
+ 0x5604C4273080     1191      copy flash:/BTRACE__C9300-48P__000001__   2022/01/14 04:02:51.818 UTC
+ 0x5604C4279D90     1530      verify /md5 flash:cat9k-rpboot.BLD_POLA   2022/01/14 04:00:45.563 UTC
+ 0x5604C400CCC0     2002      ping vrf Mgmt-vrf 10.106.16.20            2022/01/25 06:18:53.303 UTC
+ 0x5604C4278BF0     2866      delete /force /recursive crashinfo:/tra   2022/01/14 04:01:38.300 UTC
+ 0x5604C03ACC10     2912      install remove inactive                   2022/01/25 06:37:08.655 UTC
+ 0x5604C03ACC10     3458      request platform software crft collect    2022/01/14 04:01:30.205 UTC
+ 0x5604C03ACC10     3732      install remove inactive                   2022/01/14 03:56:34.759 UTC
+ 0x5604C03ACC10     3807      install remove inactive                   2022/01/14 03:58:51.311 UTC
+ 0x5604C03ACC10     24053     request platform software trace archive   2022/01/14 04:02:48.595 UTC
+ 0x5604C4273080     138291    copy tftp://10.106.16.20//auto/tftp-blr   2022/01/25 06:45:20.381 UTC
+Parser last bootup cache hits:
+  Bootup hits: 0
+  Bootup misses: 0
+  Bootup clear parser cache: 0

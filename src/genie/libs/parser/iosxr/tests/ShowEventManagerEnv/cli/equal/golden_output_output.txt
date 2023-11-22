@@ -1,0 +1,11 @@
+RP/0/RSP0/CPU0:ios#show event manager environment
+Thu Dec  2 16:49:53.518 UTC
+
+No. Name                          Value
+1   _eem_show_platform            EEM script test message 1
+2   _wdtimer                      180
+3   _log_file                     /tmp/wdtimer_file.log
+4   _watchdog_time                100
+5   _show_cmd                     show event manager policy available
+6   _cron_entry                   0-59/2 0-23/1 * * 0-7
+

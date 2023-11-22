@@ -1,81 +1,81 @@
 
 serial3/1
-Service-policy output: pol
-Class-map: silver (match-all)
-    366 packets, 87840 bytes
-    30 second offered rate 15000 bps, drop rate 300 bps
-    Match: ip precedence 1
-    Queueing
-    Output Queue: Conversation 266
-    Bandwidth 10 (%)
-    (pkts matched/bytes matched) 363/87120
-    depth/total drops/no-buffer drops) 147/38/0
-    exponential weight: 9
-    mean queue depth: 25920
-    class     Transmitted       Random drop      Tail drop     Minimum Maximum Mark
-              pkts/bytes        pkts/bytes       pkts/bytes    thresh  thresh  prob
-                                                               (bytes)  (bytes)
-    0             0/0               0/0               0/0      20000    40000  1/10
-    1           328/78720          38/9120            0/0      22000    40000  1/10
-    2             0/0               0/0               0/0      24000    40000  1/10
-    3             0/0               0/0               0/0      26000    40000  1/10
-    4             0/0               0/0               0/0      28000    40000  1/10
+    Service-policy output: pol
+        Class-map: silver (match-all)
+            366 packets, 87840 bytes
+            30 second offered rate 15000 bps, drop rate 300 bps
+            Match: ip precedence 1
+            Queueing
+            Output Queue: Conversation 266
+            Bandwidth 10 (%)
+            (pkts matched/bytes matched) 363/87120
+            depth/total drops/no-buffer drops) 147/38/0
+                exponential weight: 9
+                mean queue depth: 25920
+                class     Transmitted       Random drop      Tail drop     Minimum Maximum Mark
+                        pkts/bytes        pkts/bytes       pkts/bytes    thresh  thresh  prob
+                                                                        (bytes)  (bytes)
+                0             0/0               0/0               0/0      20000    40000  1/10
+                1           328/78720          38/9120            0/0      22000    40000  1/10
+                2             0/0               0/0               0/0      24000    40000  1/10
+                3             0/0               0/0               0/0      26000    40000  1/10
+                4             0/0               0/0               0/0      28000    40000  1/10
 
-    policy wred-policy
-        class prec2
-            bandwidth 1000
-            random-detect
-            random-detect precedence 2 100 bytes 200 bytes 10
-        class class-default
-            random-detect
-            random-detect precedence 4 150 bytes 300 bytes 15
-            random-detect precedence 6 200 bytes 400 bytes 5
+            policy wred-policy
+                class prec2
+                    bandwidth 1000
+                    random-detect
+                    random-detect precedence 2 100 bytes 200 bytes 10
+                class class-default
+                    random-detect
+                    random-detect precedence 4 150 bytes 300 bytes 15
+                    random-detect precedence 6 200 bytes 400 bytes 5
         
 Ethernet0/0/1
-Service-policy output: wred-policy (1177)
-Class-map: prec2 (match-all) (1178/10)
-    0 packets, 0 bytes
-    5 minute offered rate 0 bps, drop rate 0 bps
-    Match: ip precedence 2  (1179)
-    Queueing
-    queue limit 62500 bytes
-    (queue depth/total drops/no-buffer drops) 0/0/0
-    (pkts queued/bytes queued) 0/0
-    bandwidth 1000 (kbps)
-    Exp-weight-constant: 9 (1/512)
-    Mean queue depth: 0 bytes
-    class     Transmitted       Random drop      Tail drop Minimum        Maximum     Mark
-              pkts/bytes        pkts/bytes       pkts/bytes thresh         thresh     prob
-                                                             bytes         bytes
-    0             0/0               0/0              0/0     15625         31250     1/10
-    1             0/0               0/0              0/0     17578         31250     1/10
-    2             0/0               0/0              0/0       100           200     1/10
-    3             0/0               0/0              0/0     21484         31250     1/10
-    4             0/0               0/0              0/0     23437         31250     1/10
-    5             0/0               0/0              0/0     25390         31250     1/10
-    6             0/0               0/0              0/0     27343         31250     1/10
-    7             0/0               0/0              0/0     29296         31250     1/10
-Class-map: class-default (match-any) (1182/0)
-    0 packets, 0 bytes
-    5 minute offered rate 0 bps, drop rate 0 bps
-    Match: any  (1183)
-    0 packets, 0 bytes
-    5 minute rate 0 bps
-    queue limit 562500 bytes
-    (queue depth/total drops/no-buffer drops) 0/0/0
-    (pkts queued/bytes queued) 0/0
-    Exp-weight-constant: 9 (1/512)
-    Mean queue depth: 0 bytes
-    class     Transmitted       Random drop      Tail drop Minimum        Maximum     Mark
-              pkts/bytes        pkts/bytes       pkts/bytes thresh         thresh     prob
-                                                             bytes         bytes
-    0             0/0               0/0              0/0     140625        281250     1/10
-    1             0/0               0/0              0/0     158203        281250     1/10
-    2             0/0               0/0              0/0     175781        281250     1/10
-    3             0/0               0/0              0/0     193359        281250     1/10
-    4             0/0               0/0              0/0        150           300     1/15
-    5             0/0               0/0              0/0     228515        281250     1/10
-    6             0/0               0/0              0/0        200           400     1/5
-    7             0/0               0/0              0/0     263671        281250     1/10
+    Service-policy output: wred-policy (1177)
+        Class-map: prec2 (match-all) (1178/10)
+            0 packets, 0 bytes
+            5 minute offered rate 0 bps, drop rate 0 bps
+            Match: ip precedence 2  (1179)
+            Queueing
+            queue limit 62500 bytes
+            (queue depth/total drops/no-buffer drops) 0/0/0
+            (pkts queued/bytes queued) 0/0
+            bandwidth 1000 (kbps)
+                Exp-weight-constant: 9 (1/512)
+                Mean queue depth: 0 bytes
+                class     Transmitted       Random drop      Tail drop Minimum        Maximum     Mark
+                        pkts/bytes        pkts/bytes       pkts/bytes thresh         thresh     prob
+                                                                        bytes         bytes
+                0             0/0               0/0              0/0     15625         31250     1/10
+                1             0/0               0/0              0/0     17578         31250     1/10
+                2             0/0               0/0              0/0       100           200     1/10
+                3             0/0               0/0              0/0     21484         31250     1/10
+                4             0/0               0/0              0/0     23437         31250     1/10
+                5             0/0               0/0              0/0     25390         31250     1/10
+                6             0/0               0/0              0/0     27343         31250     1/10
+                7             0/0               0/0              0/0     29296         31250     1/10
+        Class-map: class-default (match-any) (1182/0)
+            0 packets, 0 bytes
+            5 minute offered rate 0 bps, drop rate 0 bps
+            Match: any  (1183)
+            0 packets, 0 bytes
+            5 minute rate 0 bps
+            queue limit 562500 bytes
+            (queue depth/total drops/no-buffer drops) 0/0/0
+            (pkts queued/bytes queued) 0/0
+                Exp-weight-constant: 9 (1/512)
+                Mean queue depth: 0 bytes
+                class     Transmitted       Random drop      Tail drop Minimum        Maximum     Mark
+                        pkts/bytes        pkts/bytes       pkts/bytes thresh         thresh     prob
+                                                                        bytes         bytes
+                0             0/0               0/0              0/0     140625        281250     1/10
+                1             0/0               0/0              0/0     158203        281250     1/10
+                2             0/0               0/0              0/0     175781        281250     1/10
+                3             0/0               0/0              0/0     193359        281250     1/10
+                4             0/0               0/0              0/0        150           300     1/15
+                5             0/0               0/0              0/0     228515        281250     1/10
+                6             0/0               0/0              0/0        200           400     1/5
+                7             0/0               0/0              0/0     263671        281250     1/10
             
     

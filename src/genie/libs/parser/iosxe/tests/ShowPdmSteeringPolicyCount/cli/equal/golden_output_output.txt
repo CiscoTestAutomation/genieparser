@@ -1,0 +1,3 @@
+
+dist01#sh pdm steering policy | count service_INFRA_VN
+Number of lines which match regexp = 2100

@@ -1,0 +1,13 @@
+Available:4800(w)  Used:692(w)  Remaining:4108(w)
+
+Interface Admin  Oper            Power(Watts)     Device              Class
+                            From PS    To Device                    
+--------- ------ ---------- ---------- ---------- ------------------- -----
+
+Gi1/1     auto   off        0.0        0.0        n/a                 n/a  
+Gi1/19    auto   on         16.2       15.4       CTS-CODEC-inTouch   0    
+Gi2/5     auto   on         11.1       10.5       IP Phone 7937       3    
+Gi5/48    auto   on         27.5       26.1       AIR-AP2802I-B-K9    4    
+--------- ------ ---------- ---------- ---------- ------------------- -----
+
+Totals:          48   on    692.8      658.1 

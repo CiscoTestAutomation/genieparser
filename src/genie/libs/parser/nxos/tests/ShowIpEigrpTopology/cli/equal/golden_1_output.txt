@@ -1,0 +1,22 @@
+IP-EIGRP Topology Table for AS(1)/ID(10.0.0.1) VRF default
+
+Codes: P - Passive, A - Active, U - Update, Q - Query, R - Reply,
+    r - reply Status, s - sia Status 
+
+P 10.1.1.0/24, 1 successors, FD is 2816
+        via Connected, Ethernet1/2
+P 10.121.0.0/24, 1 successors, FD is 51200
+        via Rstatic (51200/0)
+        via 10.1.1.2 (3072/576), Ethernet1/2
+P 10.81.1.0/24, 1 successors, FD is 51200
+        via Rstatic (51200/0)
+        via 10.1.1.2 (3072/576), Ethernet1/2
+P 10.121.2.0/24, 1 successors, FD is 51200
+        via Rstatic (51200/0)
+        via 10.1.1.2 (3072/576), Ethernet1/2
+P 10.121.3.0/24, 1 successors, FD is 51200
+        via Rstatic (51200/0)
+        via 10.1.1.2 (3072/576), Ethernet1/2
+P 10.121.4.0/24, 1 successors, FD is Inaccessible
+        via Rstatic (51200/0)
+        via 10.1.1.2 (3072/576), Ethernet1/2

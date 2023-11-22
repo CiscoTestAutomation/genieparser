@@ -1,0 +1,12 @@
+Confd Status: Unknown
+
+Process              Status              State
+-------------------------------------------------------
+nesd                 Running             Reset
+syncfd               Running             Reset
+ncsshd               Running             Not Applicable
+dmiauthd             Running             Init
+nginx                Running             Not Applicable
+ndbmand              Running             Init
+pubd                 Running             Init
+gnmib                Not Running         Not Applicable

@@ -1,0 +1,13 @@
+show ip nhrp nhs tunnel 100 detail
+Legend: E=Expecting replies, R=Responding, W=Waiting, D=Dynamic
+Tunnel100:
+100.0.0.100  RE  NBMA Address: 101.1.1.1 priority = 0 cluster = 0  req-sent 105434  req-failed 0  repl-recv 105434 (00:00:58 ago)
+ Current Request ID: 35914 (Ack: 35914)
+ Protection Socket Requested: FALSE
+172.16.0.1   E  priority = 0 cluster = 0  req-sent 124175  req-failed 0  repl-recv 0
+ Current Request ID: 57
+ Protection Socket Requested: FALSE
+
+
+Pending Registration Requests:
+Registration Request: Reqid 57, Ret 64  NHS 172.16.0.1 expired

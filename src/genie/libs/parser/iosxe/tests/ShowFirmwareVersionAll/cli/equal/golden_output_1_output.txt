@@ -1,0 +1,14 @@
+Slot  Device Name / Model           Firmware Version      Firmware Version    Mismatch
+----- ----------------------------- --------------------- ------------------- ---------
+ 3    Supervisor Rommon (Active)    17.1.1[FC2]           N/A                 N/A
+ -    Eth Lan Spi                   0x800005d3            N/A                 N/A
+ PS5  Fantray                       17012402              N/A                 N/A
+ 3    Supervisor CPLD
+        IO FPGA                     1901211e              21071424            Yes
+        Flash FPGA                  190308b9              201221ba            Yes
+ N/A  No Line Card                  N/A                   N/A                 N/A
+
+Slot      Device Name / Model                     Firmware Version
+--------- --------------------------------------- -----------------------------
+ PS2       Power Supply (PS PRI, PS_SEC, PS_I2C)   (00.05.01, 00.02.01, N/A)
+ PS3       Power Supply (PS PRI, PS_SEC, PS_I2C)   (00.05.01, 00.01.01, N/A)

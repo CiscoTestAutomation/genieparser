@@ -1,0 +1,17 @@
+RP/0/RSP0/CPU0:ios#show event manager policy registered user
+Thu Dec  2 16:29:22.612 UTC
+No.  Class     Type    Event Type          Trap  Time Registered           Name
+1    script    user    syslog              Off   Wed Sep 15 11:29:18 2021  eem_cli_exec_file.tcl
+ pattern {EEM script test message 1}
+ nice 0 queue-priority normal maxrun 100.000 scheduler rp_primary Secu none
+ persist_time: 3600 seconds,  username: lab
+
+2    script    user    timer watchdog      Off   Fri Sep 17 08:04:28 2021  tm_watchdog_cli.tcl
+ name {watchtimer} time 180.000
+ nice 0 queue-priority normal maxrun 20.000 scheduler rp_primary Secu none
+ persist_time: 3600 seconds,  username: lab
+
+3    script    user    timer cron          Off   Fri Sep 17 08:42:03 2021  tm_cron.tcl
+ name {crontimer2} cron entry {0-59/2 0-23/1 * * 0-7}
+ nice 0 queue-priority normal maxrun 20.000 scheduler rp_primary Secu none
+ persist_time: 3600 seconds,  username: lab

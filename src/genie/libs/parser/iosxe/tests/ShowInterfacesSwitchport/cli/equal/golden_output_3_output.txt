@@ -1,0 +1,23 @@
+Name: Gi1/1
+Switchport: Enabled
+Administrative Mode: static access
+Operational Mode: static access (member of bundle Po17)
+Administrative Trunking Encapsulation: negotiate
+Operational Trunking Encapsulation: native
+Operational Dot1q Ethertype:  0x8100
+Negotiation of Trunking: Off
+Access Mode VLAN: 607 (<SANITIZED>)
+Trunking Native Mode VLAN: 1 (default)
+Administrative Native VLAN tagging: enabled
+Operational Native VLAN tagging: disabled
+Voice VLAN: none
+Administrative private-vlan host-association: none
+Administrative private-vlan mapping: none
+Operational private-vlan: none
+Trunking VLANs Enabled: ALL
+Pruning VLANs Enabled: 2-1001
+Capture Mode Disabled
+Capture VLANs Allowed: ALL
+
+Unknown unicast blocked: disabled
+Unknown multicast blocked: disabled

@@ -58,14 +58,14 @@ class ShowInterfaceSummary(ShowInterfaceSummarySchema):
     def cli(self, output=None):
         if output is None:
             # excute command to get output
-            out = self.device.execute(self.cli_command)
-        else:
-            out = output
+            output = self.device.execute(self.cli_command)
 
         ret_dict = {}
 
         # Interface Vlan100 "pod10", is up, line protocol is up
-        p1 = re.compile(r'^Interface +(?P<interface>\S+) +"(?P<name>\S*)", +is +'
+        # Interface GigabitEthernet0/5 "", is administratively down, line protocol is up
+        # Interface "nlp_int_tap", is up, line protocol is up
+        p1 = re.compile(r'^Interface +((?P<interface>\S+) +)?"(?P<name>\S*)", +is +'
             '(?P<link_status>[\w\s]+), +line +protocol +is +(?P<line_protocol>\w+)$')
 
         # MAC address aa11.bbff.ee55, MTU 1500
@@ -80,15 +80,19 @@ class ShowInterfaceSummary(ShowInterfaceSummarySchema):
         p4 = re.compile(r'^(?P<interface_state>Available) +but +'
             '(?P<config_status>not +configured) +via +(?P<config_issue>\S*)$')
 
-        for line in out.splitlines():
+        for line in output.splitlines():
             line = line.strip()
 
             # Interface Vlan100 "pod10", is up, line protocol is up
             # Interface GigabitEthernet0/5 "", is administratively down, line protocol is up
+            # Interface "nlp_int_tap", is up, line protocol is up
             m = p1.match(line)
             if m:
                 groups = m.groupdict()
-                interface = groups['interface']
+                if groups['interface']:
+                    interface = groups['interface']
+                else:
+                    interface = groups['name']
                 instance_dict = ret_dict.setdefault('interfaces', {}). \
                     setdefault(interface, {})
                 instance_dict.update({'name': groups['name']})
@@ -145,9 +149,10 @@ class ShowInterfaceSummary(ShowInterfaceSummarySchema):
                 groups = m.groupdict()
                 if groups['interface_state'] == 'Available' \
                         and groups['config_status'] == 'not configured':
-                    instance_dict.update({'interface_state': True})
-                    instance_dict.update({'config_status': False})
-                    instance_dict.update({'config_issue': groups['config_issue']})
+                    instance_dict.update({
+                        'interface_state': True,
+                        'config_status': False,
+                        'config_issue': groups['config_issue']})
                 continue
 
         return ret_dict

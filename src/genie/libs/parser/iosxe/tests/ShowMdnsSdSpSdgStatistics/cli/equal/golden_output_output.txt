@@ -1,8 +1,7 @@
 One min, 5 mins, 1 hour
-          
 Average Input rate (pps) : 0, 0, 0
 Average Output rate (pps) : 0, 0, 0
-Messages sent:
+Messages received:
 Query : 15050
 ANY query : 0
 Advertisements : 2684
@@ -13,7 +12,7 @@ Service-peer cache clear : 0
 Resync response : 0
 Srvc Discovery response : 0
 Keep-Alive : 5421
-Messages received:
+Messages sent:
 Query response : 0
 ANY Query response : 0
 Cache-sync : 60

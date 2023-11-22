@@ -1,0 +1,2 @@
+Pro Inside global      Inside local       Outside local      Outside global
+--- 135.0.0.1          35.0.0.1           ---                ---

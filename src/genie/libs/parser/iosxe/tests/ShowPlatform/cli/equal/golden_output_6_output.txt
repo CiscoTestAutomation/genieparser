@@ -1,0 +1,19 @@
+Chassis type: C8300-1N1S-4T2X
+
+Slot      Type                State                 Insert time (ago) 
+--------- ------------------- --------------------- ----------------- 
+0         C8300-1N1S-4T2X     ok                    8w6d          
+ 0/0      4x1G-2xSFP+         ok                    8w6d          
+1         C8300-1N1S-4T2X     ok                    8w6d          
+R0        C8300-1N1S-4T2X     ok, active            8w6d          
+F0        C8300-1N1S-4T2X     ok, active            8w6d          
+P0        Unknown             empty                 never         
+P1        PWR-4430-AC         incompatible          8w6d          
+P2        C8300-FAN-1R        ok                    8w6d          
+
+Slot      CPLD Version        Firmware Version                        
+--------- ------------------- --------------------------------------- 
+0         19121329            1RU-20191104                        
+1         19121329            1RU-20191104                        
+R0        19121329            1RU-20191104                        
+F0        19121329            1RU-20191104

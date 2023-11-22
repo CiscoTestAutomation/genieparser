@@ -760,7 +760,8 @@ class ShowSegmentRoutingTrafficEngPolicySchema(MetaParser):
             },
             Optional("candidate_paths"): {
                 "preference": {
-                    Any(): {
+                    Any() : {
+                        Optional("type"): str,
                         Optional("constraints"): {
                             "affinity": {
                                 Any(): list
@@ -860,14 +861,14 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
         p1 = re.compile(r'^Name: +(?P<name>\S+) +\(Color: +(?P<color>\d+)\s+End-point: *(?P<end_point>\S+)?\)$')
 
         # Status:
-        #     Admin: up, Operational: up for 09:38:18 (since 08-28 20:56:55.275)
+        # Admin: up, Operational: up for 09:38:18 (since 08-28 20:56:55.275)
         p2 = re.compile(r'^Admin: +(?P<admin>\S+), +Operational: +(?P<oper>\S+)'
                         ' +for +(?P<time>\S+) +\(since (?P<since>\S+\s+\S+)\)$')
 
         # Candidate-paths:
-        #     Preference 400:
-        p3 = re.compile(r'^Preference\s+(?P<preference>\d+)\s*\S*$')
-
+        # Preference 400:
+        # Preference 1 (CLI):
+        p3 = re.compile(r'^Preference +(?P<preference>\d+)[:\s]*(\((?P<type>\w+)\))?\s*\w*:')
         #     Dynamic (pce) (inactive)
         #     Dynamic (active)
         p4 = re.compile(r'^Dynamic( +(?P<pce>\(pce.*\)))? +\((?P<status>\w+)\)$')
@@ -877,9 +878,8 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
                          '+(?P<metric_type>[\S]+)$')
 
         #         Metric Type: IGP, Path Accumulated Metric: 2200
-        p6 = re.compile(r'^Metric +Type: +(?P<metric_type>[\S]+), Path +Accumulated '
-                         '+Metric: +(?P<path_accumulated_metric>[\d]+)$')
-
+        p6 = re.compile(r'^Metric +Type: +(?P<metric_type>[\S]+)(, Path +Accumulated '
+                '+Metric: +(?P<path_accumulated_metric>[\d]+))?$')
         #         16063 [Prefix-SID, 10.169.196.241]
         #         16072 [Prefix-SID, 10.189.5.253 - 10.189.6.253]
         #         16063
@@ -984,6 +984,8 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
                 pref = int(group['preference'])
                 pref_dict = policy_dict.setdefault("candidate_paths", {}).\
                             setdefault('preference', {}).setdefault(pref, {})
+                if group['type']:
+                    pref_dict.update({'type': group['type']})
                 hop_index = 0
                 continue
 
@@ -1015,8 +1017,9 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
                 group = m.groupdict()
                 path_dict.update({'metric_type': group['metric_type']})
 
-                metric = int(group['path_accumulated_metric'])
-                path_dict.update({'path_accumulated_metric': metric})
+                if group['path_accumulated_metric']:
+                   metric = int(group['path_accumulated_metric'])
+                   path_dict.update({'path_accumulated_metric': metric})
                 continue
 
             #   16063 [Prefix-SID, 10.169.196.241]

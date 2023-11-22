@@ -1,0 +1,78 @@
+show diagnostic result switch 1 module 1 test all detail
+
+Current bootup diagnostic level: minimal
+
+
+  Test results: (. = Pass, F = Fail, U = Untested)
+
+  ___________________________________________________________________________
+
+    1) TestGoldPktLoopback:
+
+   Port  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24
+   ----------------------------------------------------------------------------
+         U  U  U  U  U  U  U  U  U  U  U  U  U  U  U  U  U  U  U  U  U  U  U  U
+
+   Port 25 26 27 28 29 30 31 32 33 34 35 36
+   ----------------------------------------
+         U  U  U  U  U  U  U  U  U  U  U  U
+
+
+          Error code ------------------> 3 (DIAG_SKIPPED)
+          Total run count -------------> 0
+          Last test testing type ------> n/a
+          Last test execution time ----> n/a
+          First test failure time -----> n/a
+          Last test failure time ------> n/a
+          Last test pass time ---------> n/a
+          Total failure count ---------> 0
+          Consecutive failure count ---> 0
+  ___________________________________________________________________________
+
+    2) TestFantray ---------------------> .
+
+          Error code ------------------> 0 (DIAG_SUCCESS)
+          Total run count -------------> 220
+          Last test testing type ------> Health Monitoring
+          Last test execution time ----> May 24 2022 14:06:04
+          First test failure time -----> n/a
+          Last test failure time ------> n/a
+          Last test pass time ---------> May 24 2022 14:06:04
+          Total failure count ---------> 0
+          Consecutive failure count ---> 0
+  ___________________________________________________________________________
+    3) TestPhyLoopback:
+
+   Port  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24
+   ----------------------------------------------------------------------------
+         U  U  U  U  U  U  U  U  U  U  U  U  U  U  U  U  U  U  U  U  U  U  U  U
+
+   Port 25 26 27 28 29 30 31 32 33 34 35 36
+   ----------------------------------------
+         U  U  U  U  U  U  U  U  U  U  U  U
+
+
+          Error code ------------------> 3 (DIAG_SKIPPED)
+          Total run count -------------> 0
+          Last test testing type ------> n/a
+          Last test execution time ----> n/a
+          First test failure time -----> n/a
+          Last test failure time ------> n/a
+          Last test pass time ---------> n/a
+          Total failure count ---------> 0
+          Consecutive failure count ---> 0
+  ___________________________________________________________________________
+
+    4) TestThermal ---------------------> .
+
+          Error code ------------------> 0 (DIAG_SUCCESS)
+          Total run count -------------> 247
+          Last test testing type ------> Health Monitoring
+          Last test execution time ----> May 24 2022 14:06:52
+          First test failure time -----> n/a
+          Last test failure time ------> n/a
+          Last test pass time ---------> May 24 2022 14:06:52
+          Total failure count ---------> 0
+          Consecutive failure count ---> 0
+  ___________________________________________________________________________
+

@@ -1,0 +1,49 @@
+Load for five secs: 1%/0%; one minute: 0%; five minutes: 0%
+Time source is NTP, 12:19:01.163 UTC Tue Nov 16 2021
+
+License Authorization:
+  Status: Not Applicable
+
+network-advantage (C9300-24 Network Advantage):
+  Description: C9300-24 Network Advantage
+  Count: 2
+  Version: 1.0
+  Status: IN USE
+  Export status: NOT RESTRICTED
+  Feature Name: network-advantage
+  Feature Description: C9300-24 Network Advantage
+  Enforcement type: NOT ENFORCED
+  License type: Perpetual
+
+dna-advantage (C9300-24 DNA Advantage):
+  Description: C9300-24 DNA Advantage
+  Count: 2
+  Version: 1.0
+  Status: IN USE
+  Export status: NOT RESTRICTED
+  Feature Name: dna-advantage
+  Feature Description: C9300-24 DNA Advantage
+  Enforcement type: NOT ENFORCED
+  License type: Subscription
+
+network-advantage (C9300-48 Network Advantage):
+  Description: C9300-48 Network Advantage
+  Count: 1
+  Version: 1.0
+  Status: IN USE
+  Export status: NOT RESTRICTED
+  Feature Name: network-advantage
+  Feature Description: C9300-48 Network Advantage
+  Enforcement type: NOT ENFORCED
+  License type: Perpetual
+
+dna-advantage (C9300-48 DNA Advantage):
+  Description: C9300-48 DNA Advantage
+  Count: 1
+  Version: 1.0
+  Status: IN USE
+  Export status: NOT RESTRICTED
+  Feature Name: dna-advantage
+  Feature Description: C9300-48 DNA Advantage
+  Enforcement type: NOT ENFORCED
+  License type: Subscription

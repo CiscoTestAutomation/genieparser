@@ -1,0 +1,10 @@
+Building configuration...
+
+Derived configuration : 113 bytes
+!
+interface Vlan4044
+ vrf forwarding test
+ ip unnumbered Loopback0
+ ipv6 unnumbered Loopback0
+ no autostate
+end

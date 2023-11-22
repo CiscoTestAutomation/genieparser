@@ -1,0 +1,73 @@
+IPv4 local RIB for IS-IS process 1
+
+IPV4 unicast topology base (TID 0, TOPOID 0x0) =================
+Repair path attributes:
+    DS - Downstream, LC - Linecard-Disjoint, NP - Node-Protecting
+    PP - Primary-Path, SR - SRLG-Disjoint
+
+
+Flex-algo 128
+
+4.4.4.4/32  prefix attr X:0 R:0 N:1  source router id: 4.4.4.4  SID index 604 - Bound
+  [115/L2/20] via 24.24.1.2(GigabitEthernet0/2/0) asr1k-40.00-00, from 4.4.4.4, tag 0
+     LSP 2/2/5324(5324), prefix attr: X:0 R:0 N:1
+     Source router id: 4.4.4.4
+      Prefix-SID index: 604, R:0 N:1 P:0 E:0 V:0 L:0
+     label: implicit-null
+
+7.7.7.7/32  prefix attr X:0 R:0 N:1  SID index 607 - Bound
+  [115/L2/30] via 24.24.1.2(GigabitEthernet0/2/0) asr1k-40.00-00, from 7.7.7.7, tag 0
+     LSP 2/15/5322(5322), prefix attr: X:0 R:0 N:1
+      Prefix-SID index: 607, R:0 N:1 P:0 E:0 V:0 L:0
+     label: 100607
+
+10.10.10.10/32  prefix attr X:0 R:0 N:1  SID index 610 - Bound
+  [115/L2/30] via 24.24.1.2(GigabitEthernet0/2/0) asr1k-40.00-00, from 10.10.10.10, tag 0
+     LSP 2/17/5322(5322), prefix attr: X:0 R:0 N:1
+      Prefix-SID index: 610, R:0 N:1 P:0 E:0 V:0 L:0
+     label: 100610
+
+Flex-algo 129
+
+Flex-algo 140
+
+Flex-algo 141
+
+Flex-algo 142
+
+Flex-algo 143
+
+Flex-algo 144
+
+Flex-algo 145
+
+Flex-algo 146
+          
+Flex-algo 147
+
+Flex-algo 148
+
+Flex-algo 149
+
+Flex-algo 150
+
+Flex-algo 151
+
+Flex-algo 152
+
+Flex-algo 153
+
+Flex-algo 154
+
+Flex-algo 155
+
+Flex-algo 156
+
+Flex-algo 157
+
+          
+IPv4 local RIB for IS-IS process 2
+
+IPV4 unicast topology base (TID 0, TOPOID 0x0) =================
+
+Flex-algo 128

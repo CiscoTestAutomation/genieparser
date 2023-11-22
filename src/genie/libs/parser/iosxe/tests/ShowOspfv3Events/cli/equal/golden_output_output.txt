@@ -1,0 +1,7 @@
+
+          OSPFv3 5 address-family ipv6 (router-id 1.1.1.1)
+
+1    *Oct 10 13:19:29.499: End of SPF, SPF time 0ms, next wait-interval 200ms
+2    *Oct 10 13:19:29.499: Starting SPF, wait-interval 50ms
+3    *Oct 10 13:19:29.449: Schedule SPF, Area 0, Change in LSA type RLSID 0.0.0.0, Adv-Rtr 1.1.1.1
+4    *Oct 10 13:19:29.449: Generate Changed Type-0x2001 LSA, LSID 0.0.0.0, Seq# 80000001, Age 0, Area 0

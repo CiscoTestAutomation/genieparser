@@ -1,0 +1,33 @@
+Diagnostics test suite attributes:
+B/C/* - Bypass bootup level test / Complete bootup level test / NA
+P/*   - Per port test / NA
+M/S/* - Only applicable to active / standby unit / NA
+D/N/* - Disruptive test / Non-disruptive test / NA
+H/O/* - Always enabled monitoring test / Conditionally enabled test / NA
+F/*   - Fixed monitoring interval test / NA
+X/*   - Not a health monitoring test / NA
+E/*   - Sup to line card test / NA
+L/*   - Exclusively run this test / NA
+T/*   - Not an ondemand test / NA
+A/I/* - Monitoring is active / Monitoring is inactive / NA
+
+
+Module 2: 48x10/25G + 4x40/100G Ethernet Module
+
+                                                       Testing Interval
+ID     Name                               Attributes      (hh:mm:ss)
+____   __________________________________ ____________   _________________
+ 1)    ASICRegisterCheck------------->     ***N******A     00:01:00
+ 2)    PrimaryBootROM---------------->     ***N******A     24:00:00
+ 3)    SecondaryBootROM-------------->     ***N******A     24:00:00
+ 4)    OBFL-------------------------->     C**N******A     00:30:00
+ 5)    ACT2-------------------------->     ***N******A     00:30:00
+ 6)    BootFlash--------------------->     ***N**X****     -NA-
+ 7)    AsicMemory-------------------->     C**D**X**T*     -NA-
+ 8)    FpgaRegTest------------------->     ***N******A     00:00:30
+ 9)    Pcie-------------------------->     C**N**X**T*     -NA-
+10)    InternalPortMonitoring-------->     ***N******A     00:01:00
+11)    PortLoopback------------------>     *P*N**XE***     -NA-
+12)    L2ACLRedirect----------------->     *P*N***E**A     00:01:00
+13)    BootupPortLoopback------------>     CP*N**XE*T*     -NA-
+

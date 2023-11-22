@@ -1,0 +1,13 @@
+R4_iosv#show bgp all neighbors 10.106.101.1 advertised-routes
+For address family: IPv4 Unicast
+BGP table version is 1531435, local router ID is 10.250.102.43
+Status codes: s suppressed, d damped, h history, * valid, > best, i - internal,
+              r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter,
+              x best-external, a additional-path, c RIB-compressed,
+Origin codes: i - IGP, e - EGP, ? - incomplete
+RPKI validation codes: V valid, I invalid, N Not found
+
+     Network          Next Hop            Metric LocPrf Weight Path
+ *>  10.1.17.0/24     192.168.14.52          5288             0 65114 ?
+ *>  10.1.94.17/32   192.168.12.168           0             0 65115.1 i
+ *>  10.1.94.18/32   192.168.12.168           0             0 65115.1 65115.1 65115.1 i

@@ -1,0 +1,38 @@
+pm9004#show platform hardware qfp active infra punt stat type per | ex _0_
+Global Per Cause Statistics
+
+  Number of punt causes =   160
+
+  Per Punt Cause Statistics
+                                                        Packets               Packets
+  Counter ID  Punt Cause Name                           Received              Transmitted
+  ------------------------------------------------------------------------------------------------
+  003         Layer2 control and legacy                 3888454               3888454
+  007         ARP request or response                   123809                123809
+  010         Incomplete adjacency                      15382                 15382
+  011         For-us data                               24882279              24882279
+  021         RP<->QFP keepalive                        307824                307824
+  024         Glean adjacency                           46191                 46191
+  026         QFP ICMP generated packet                 16183                 16183
+  027         Subscriber session control                102592                102592
+  045         BFD control                               18                    18
+  055         For-us control                            443436                443436
+  056         RP injected for-us control                512                   512
+  060         IP subnet or broadcast packet             2304                  2304
+  097         Packets to LFTS                           30448                 30448
+
+
+  Number of inject causes = 56
+
+  Per Inject Cause Statistics
+                                                        Packets               Packets
+  Counter ID  Inject Cause Name                         Received              Transmitted
+  ------------------------------------------------------------------------------------------------
+  001         L2 control/legacy                         51607                 51607
+  002         QFP destination lookup                    290837                288727
+  003         QFP IPv4/v6 nexthop lookup                6                     6
+  007         QFP adjacency-id lookup                   473405                473405
+  009         QFP ICMP generated packet                 16183                 16174
+  012         ARP request or response                   123871                123871
+  015         PPPoE discovery packet                    43968                 43968
+  016         PPPoE session packet                      58624                 58624

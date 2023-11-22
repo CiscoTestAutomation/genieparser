@@ -1,0 +1,5 @@
+RP/0/RSP0/CPU0:ios#show event manager policy available user | include eem_cli_exec_file.tcl
+Fri Dec  3 10:17:37.235 UTC
+
+1   user      Tue Sep 14 15:10:07 2021      eem_cli_exec_file.tcl
+

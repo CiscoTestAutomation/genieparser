@@ -1,0 +1,24 @@
+NAV-XXXXXXXE#sh cdp ne det
+Device ID: DIST-FAIL
+Entry address(es):
+IP address: XXXXXXXXXXXXx
+IP address: XXXXXXXXXXXXXXX
+Platform: PS5-22V, Capabilities: Trans-Bridge
+Interface: GigabitEthernet0/5, Port ID (outgoing port):
+Holdtime : 86 sec
+
+Version :
+XS5.ar2313.v4.0.2.4996.120423.0959
+
+advertisement version: 1
+Management address(es):
+
+Device ID: NAV-SW-XXXXXXXXXXXXXX
+Entry address(es):
+IP address: XXXXXXXXXXXXXXXXX
+Platform: cisco WS-C3560-24TS, Capabilities: Switch IGMP
+Interface: GigabitEthernet0/13, Port ID (outgoing port): FastEthernet0/24
+Holdtime : 125 sec
+
+Version :
+Cisco IOS Software, C3560 Software (C3560-IPSERVICESK9-M), Version 15.0(1)SE, RELEASE SOFTWARE (fc1)

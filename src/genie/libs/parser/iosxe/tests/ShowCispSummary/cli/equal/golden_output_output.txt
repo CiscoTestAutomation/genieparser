@@ -1,0 +1,4 @@
+CISP is running on the following interface(s):
+----------------------------------------------
+   Gi1/0/4 (Authenticator)
+   Gi1/0/3 (Supplicant)

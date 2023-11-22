@@ -1,0 +1,7 @@
+Object identifier: 1510
+  Description: PREFIX 10.1.1.1/32 (Table id 1)
+  Status: Modify/delete-failed
+
+Object identifier: 1777
+  Description: PREFIX 1.1.1.1/32 (Table id 1)
+  Status: Create-failed

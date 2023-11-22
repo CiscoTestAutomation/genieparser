@@ -1,0 +1,14 @@
+spk1-dc1#show platform hardware qfp active feature ipsec data drop
+------------------------------------------------------------------------
+Drop Type  Name                                     Packets             
+------------------------------------------------------------------------
+        4  IN_US_V4_PKT_SA_NOT_FOUND_SPI                           67643
+        8  IN_US_CL_V4_PKT_FAILED_POLICY                           11019
+
+
+       32  OUT_V4_PKT_HIT_INVALID_SA                               28583
+       33  OUT_V4_PKT_HIT_IKE_START_SP                        1763263723
+       44  OUT_OCT_HARD_EXPIRY                                   3223664
+
+       66  OCT_GEN_NOTIFY_SOFT_EXPIRY                          159949980
+       68  OCT_PKT_HIT_INVALID_SA                                   2797

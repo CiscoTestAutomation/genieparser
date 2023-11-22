@@ -1,0 +1,33 @@
+Module   Available     Used     Remaining
+          (Watts)     (Watts)    (Watts)
+------   ---------   --------   ---------
+4           865.0       90.0       775.0
+Interface Admin  Oper       Power   Device              Class Max
+                            (Watts)
+--------- ------ ---------- ------- ------------------- ----- ----
+Gi4/0/1   auto   off        0.0     n/a                 n/a   60.0
+Gi4/0/2   auto   off        0.0     n/a                 n/a   60.0
+Gi4/0/3   auto   off        0.0     n/a                 n/a   60.0
+Gi4/0/4   auto   off        0.0     n/a                 n/a   60.0
+Gi4/0/5   auto   on         15.4    CIVS-IPC-6000P      0     60.0
+Gi4/0/6   auto   off        0.0     n/a                 n/a   60.0
+Gi4/0/7   auto   off        0.0     n/a                 n/a   60.0
+Gi4/0/8   auto   on         6.3     IP Phone 8841       2     60.0
+Gi4/0/9   auto   off        0.0     n/a                 n/a   60.0
+Gi4/0/10  auto   off        0.0     n/a                 n/a   60.0
+Gi4/0/11  auto   on         15.4    CIVS-IPC-6000P      0     60.0
+Gi4/0/12  auto   on         15.4    CIVS-IPC-4300       3     60.0
+Gi4/0/13  auto   on         3.8     IP Phone 6945       1     60.0
+Gi4/0/14  auto   on         3.8     IP Phone 6945       1     60.0
+Gi4/0/15  auto   on         3.8     IP Phone 6945       1     60.0
+Gi4/0/16  auto   off        0.0     n/a                 n/a   60.0
+Gi4/0/17  auto   on         3.8     IP Phone 6945       1     60.0
+Gi4/0/18  auto   on         3.8     IP Phone 6945       1     60.0
+Gi4/0/19  auto   off        0.0     n/a                 n/a   60.0
+Gi4/0/20  auto   on         6.3     IP Phone 8841       2     60.0
+Gi4/0/21  auto   off        0.0     n/a                 n/a   60.0
+Gi4/0/22  auto   off        0.0     n/a                 n/a   60.0
+Gi4/0/23  auto   off        0.0     n/a                 n/a   60.0
+Gi4/0/24  auto   on         12.0    IP Phone 7965       3     60.0
+--------- ------ ---------- ---------- ---------- ------ -----
+Totals:          11   on    90.0

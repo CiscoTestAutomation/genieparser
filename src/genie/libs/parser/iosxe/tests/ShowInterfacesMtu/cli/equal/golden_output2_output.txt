@@ -1,0 +1,3 @@
+Port         Name               MTU
+Fo1/0/1                         1500
+

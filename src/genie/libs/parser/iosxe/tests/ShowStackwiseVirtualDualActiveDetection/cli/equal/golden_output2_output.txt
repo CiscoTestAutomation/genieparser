@@ -1,0 +1,12 @@
+In dual-active recovery mode: No
+Recovery Reload: Enabled
+
+Dual-Active-Detection Configuration:
+-------------------------------------
+Switch  Dad port                        Status
+------  ------------                    ---------
+1       HundredGigE1/0/7                up
+        HundredGigE1/0/8                up
+2       HundredGigE2/0/7                up
+        HundredGigE2/0/8                up
+

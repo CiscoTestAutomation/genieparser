@@ -1,0 +1,52 @@
+1/1 is DOWN Loopback No
+Cable Length 50cm     Neighbor NONE
+Link Ok Yes Sync Ok Yes Link Active No
+Changes to LinkOK 0
+Five minute input rate  0 bytes/sec
+Five minute output rate 0 bytes/sec
+    0 bytes input
+    0 bytes output
+CRC Errors
+            Data CRC 0 
+        Ringword CRC 0 
+        InvRingWord  0 
+        PcsCodeWord 0 
+1/2 is OK Loopback No
+Cable Length 50cm     Neighbor 2
+Link Ok Yes Sync Ok Yes Link Active Yes
+Changes to LinkOK 2
+Five minute input rate  18 bytes/sec
+Five minute output rate 0 bytes/sec
+    10756024 bytes input
+    0 bytes output
+CRC Errors
+            Data CRC 0 
+        Ringword CRC 0 
+        InvRingWord  0 
+        PcsCodeWord 0 
+2/1 is OK Loopback No
+Cable Length 50cm     Neighbor 1
+Link Ok Yes Sync Ok Yes Link Active Yes
+Changes to LinkOK 1
+Five minute input rate  2489 bytes/sec
+Five minute output rate 15 bytes/sec
+    817400398 bytes input
+    9071644 bytes output
+CRC Errors
+            Data CRC 0 
+        Ringword CRC 0 
+        InvRingWord  0 
+        PcsCodeWord 0 
+2/2 is DOWN Loopback No
+Cable Length 50cm     Neighbor NONE
+Link Ok Yes Sync Ok Yes Link Active No
+Changes to LinkOK 0
+Five minute input rate  0 bytes/sec
+Five minute output rate 0 bytes/sec
+    0 bytes input
+    0 bytes output
+CRC Errors
+            Data CRC 0 
+        Ringword CRC 0 
+        InvRingWord  0 
+        PcsCodeWord 0 

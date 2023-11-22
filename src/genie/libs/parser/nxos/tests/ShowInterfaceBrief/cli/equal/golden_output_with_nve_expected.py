@@ -64,6 +64,13 @@ expected_output = {
                 'type': 'eth',
                 'vlan': '1'
             }
+        },
+        'vlan': {
+            'Vlan2': {
+                'reason': 'VLAN/BD is down',
+                'status': 'down',
+                'type': '--'
+            }
         }
     }
 }

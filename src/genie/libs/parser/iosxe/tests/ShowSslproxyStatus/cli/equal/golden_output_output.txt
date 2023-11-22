@@ -14,6 +14,7 @@
         Unsupported Cipher Suites      : drop
         Failure Mode Action            : close
         Min TLS Ver                    : TLS Version 1.1
+        Dual-Side Optimization         : TRUE
 
         Status
         ------

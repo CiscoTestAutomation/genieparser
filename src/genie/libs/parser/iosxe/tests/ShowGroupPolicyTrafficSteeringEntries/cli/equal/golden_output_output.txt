@@ -1,0 +1,71 @@
+Group-policy traffic-steering Entries Info
+==========================================
+Peer name                = Unknown-2057
+Peer SGT                 = 2057-01
+Entry State              = COMPLETE
+Entry last refresh       = 10:32:00 UTC Fri Oct 15 2021
+Requested_elements       = 0x00001401
+    POLICY_RBACL_ACE
+    POLICY_RBACL_SRC_LIST_REQ
+Received_elements        = 0x00000C80
+    POLICY_RBACL_SRC_LIST
+    POLICY_RBACL_ACE
+    POLICY_RBACL_REFRESH_PERIOD
+Installed_elements        = 0x00000C80
+    POLICY_RBACL_SRC_LIST
+    POLICY_RBACL_ACE
+    POLICY_RBACL_REFRESH_PERIOD
+Received peer policy   (0x00000000), policy_flag = 0x00000000
+Installed peer policy (0x7F3ADDAFEA08), policy_flag = 0x00400001
+Staled peer policy (0x00000000), policy_flag = 0x00000000
+Installed sgt policy  (0x7F3ADDAFF308), policy_flag = 0x41400001
+SGT  policy last refresh = 10:32:00 UTC Fri Oct 15 2021
+SGT policy refresh time  = 86400
+Policy expires in   0:23:59:55 (dd:hr:mm:sec)
+Policy refreshes in 0:23:59:55 (dd:hr:mm:sec)
+Retry_timer                  = not running
+Entry status                 = UNKNOWN
+
+Peer name                = Unknown-3053
+Peer SGT                 = 3053-01
+Entry State              = COMPLETE
+Entry last refresh       = 10:30:42 UTC Fri Oct 15 2021
+Requested_elements       = 0x00001401
+    POLICY_RBACL_ACE
+    POLICY_RBACL_SRC_LIST_REQ
+Received_elements        = 0x00000C80
+    POLICY_RBACL_SRC_LIST
+    POLICY_RBACL_ACE
+    POLICY_RBACL_REFRESH_PERIOD
+Installed_elements        = 0x00000C80
+    POLICY_RBACL_SRC_LIST
+    POLICY_RBACL_ACE
+    POLICY_RBACL_REFRESH_PERIOD
+Received peer policy   (0x00000000), policy_flag = 0x00000000
+Installed peer policy (0x7F3ADDAFEC08), policy_flag = 0x00400001
+Staled peer policy (0x00000000), policy_flag = 0x00000000
+Installed sgt policy  (0x7F3ADDAFF1B8), policy_flag = 0x41400001
+SGT  policy last refresh = 10:30:42 UTC Fri Oct 15 2021
+SGT policy refresh time  = 86400
+Policy expires in   0:23:58:37 (dd:hr:mm:sec)
+Policy refreshes in 0:23:58:37 (dd:hr:mm:sec)
+Retry_timer                  = not running
+Entry status                 = UNKNOWN
+
+Peer name                = Unknown-65521
+Peer SGT                 = 65521
+Entry State              = FAILURE
+Entry last refresh       = 00:00:00 UTC Mon Jan 1 1900
+Requested_elements       = 0x00000081
+    POLICY_RBACL_SRC_LIST
+Received_elements        = 0x00000000
+Installed_elements        = 0x00000000
+Received peer policy   (0x7F3ADDAFEB08), policy_flag = 0x00000005
+Installed peer policy (0x00000000), policy_flag = 0x00000000
+Staled peer policy (0x00000000), policy_flag = 0x00000000
+Refresh_timer            = not running
+Retry_timer                  = running
+Entry status                 = UNKNOWN
+
+
+

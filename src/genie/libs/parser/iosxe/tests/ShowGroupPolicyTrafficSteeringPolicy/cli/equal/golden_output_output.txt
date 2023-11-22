@@ -1,0 +1,24 @@
+Traffic-Steering SGT Policy
+===========================
+SGT: 3053-01
+SGT Policy Flag: 0x41400001
+Traffic-Steering Source List:
+  Source SGT: 3053-01, Destination SGT: 4003-01
+  steer_type = 80
+  steer_index = 1
+  name   = Contract2-03
+  IP protocol version = IPV4
+  refcnt = 1
+  flag   = 0x41400000
+  stale  = FALSE
+  Traffic-Steering ACEs:
+    1 redirect 6 any 16000 service service_INFRA_VN
+    2 redirect 17 any 12000 service service_INFRA_VN
+
+Traffic-Steering Destination List: Not exist
+Traffic-Steering Multicast List: Not exist
+Traffic-Steering Policy Lifetime = 86400 secs
+Traffic-Steering Policy Last update time = 05:51:21 UTC Wed Sep 29 2021
+Policy expires in 0:23:58:12 (dd:hr:mm:sec)
+Policy refreshes in 0:23:58:12 (dd:hr:mm:sec)
+

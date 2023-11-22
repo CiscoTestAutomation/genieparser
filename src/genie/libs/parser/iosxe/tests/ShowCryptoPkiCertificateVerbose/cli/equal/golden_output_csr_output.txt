@@ -1,0 +1,61 @@
+Certificate
+  Status: Available
+  Version: 3
+  Certificate Serial Number (hex): 02
+  Certificate Usage: General Purpose
+  Issuer: 
+    cn=ROOT
+  Subject:
+    Name: pki-reg7
+    Serial Number: 9HI3W7WA3K8
+    serialNumber=9HI3W7WA3K8+hostname=pki-reg7
+  Validity Date: 
+    start date: 21:58:50 IST Nov 10 2021
+    end   date: 21:58:50 IST Nov 10 2022
+  Subject Key Info:
+    Public Key Algorithm: rsaEncryption
+    RSA Public Key: (2048 bit)
+  Signature Algorithm: SHA1 with RSA Encryption
+  Fingerprint MD5: D9E4599D C573463B 07F2FBD6 620DB523 
+  Fingerprint SHA1: E8E0731C D31EA142 A23066D7 4178D696 2D9815E0 
+  X509v3 extensions:
+    X509v3 Key Usage: A0000000
+      Digital Signature
+      Key Encipherment
+    X509v3 Subject Key ID: 2F6A8670 6934D26E C27965E8 67C70441 BEF2EAFC 
+    X509v3 Authority Key ID: 31DEF8AC 8ED9E5F0 CDBC4749 61BED767 0CF75DB2 
+    Authority Info Access:
+  Cert install time: 21:58:51 IST Nov 10 2021 
+  Associated Trustpoints: client 
+  Key Label: client
+
+CA Certificate
+  Status: Available
+  Version: 3
+  Certificate Serial Number (hex): 01
+  Certificate Usage: Signature
+  Issuer: 
+    cn=ROOT
+  Subject: 
+    cn=ROOT
+  Validity Date: 
+    start date: 21:57:41 IST Nov 10 2021
+    end   date: 21:57:41 IST Nov 9 2024
+  Subject Key Info:
+    Public Key Algorithm: rsaEncryption
+    RSA Public Key: (2048 bit)
+  Signature Algorithm: MD5 with RSA Encryption
+  Fingerprint MD5: 4465EC15 A40804EF B989164B 461B7E42 
+  Fingerprint SHA1: 5C3C2759 5E925BEA 0B6C8ADE 7844278A 49E2D60B 
+  X509v3 extensions:
+    X509v3 Key Usage: 86000000
+      Digital Signature
+      Key Cert Sign
+      CRL Signature
+    X509v3 Subject Key ID: 31DEF8AC 8ED9E5F0 CDBC4749 61BED767 0CF75DB2 
+    X509v3 Basic Constraints:
+        CA: TRUE
+    X509v3 Authority Key ID: 31DEF8AC 8ED9E5F0 CDBC4749 61BED767 0CF75DB2 
+    Authority Info Access:
+  Cert install time: 21:57:41 IST Nov 10 2021 
+  Associated Trustpoints: client ROOT 

@@ -1,0 +1,98 @@
+GROUP INFORMATION
+
+    Group Name               : getvpn1
+    Group Identity           : 1223
+    Group Type               : GDOI (ISAKMP)
+    Crypto Path              : ipv4
+    Key Management Path      : ipv4
+    Rekeys received          : 25
+    IPSec SA Direction       : Both
+
+     Group Server list       : 1.1.1.1
+
+Group Member Information For Group getvpn1:
+    IPSec SA Direction       : Both
+    ACL Received From KS     : gdoi_group_getvpn1_temp_acl
+
+    Group member             : 3.3.1.1         vrf: None
+       Local addr/port       : 3.3.1.1/848
+       Remote addr/port      : 1.1.1.1/848
+       fvrf/ivrf             : None/None
+       Version               : 1.0.26
+       Registration status   : Registered
+       Registered with       : 1.1.1.1
+       Re-registers in       : 332 sec
+       Succeeded registration: 1
+       Attempted registration: 1
+       Last rekey from       : 1.1.1.1
+       Last rekey seq num    : 0
+       Unicast rekey received: 25
+       Rekey ACKs sent       : 25
+       Rekey Rcvd(hh:mm:ss)  : 00:03:27
+       PFS Rekey received    : 0
+       DP Error Monitoring   : OFF
+       IPSEC init reg executed    : 0
+       IPSEC init reg postponed   : 0
+       Active TEK Number     : 1
+       SA Track (OID/status) : disabled
+       Fail-Close Revert : Disabled
+
+       allowable rekey cipher: any
+       allowable rekey hash  : any
+       allowable transformtag: any ESP
+
+    Rekeys cumulative
+       Total received        : 25
+       After latest register : 25
+       Rekey Acks sents      : 25
+
+ ACL Downloaded From KS 1.1.1.1:
+   access-list   deny ip host 11.23.33.33 host 24.54.55.55
+   access-list   deny ip host 41.23.32.37 host 44.58.59.55
+   access-list   deny esp any any
+   access-list   deny udp any any port = 3784
+   access-list   deny udp any any port = 3785
+   access-list   deny udp any port = 3785 any
+   access-list   deny tcp any any port = 179
+   access-list   deny tcp any port = 179 any
+   access-list   deny tcp any any port = 22
+   access-list   deny tcp any port = 22 any
+   access-list   deny ospf any any
+   access-list   deny pim any 224.0.0.0 0.0.0.255
+   access-list   deny udp any any port = 123
+   access-list   deny udp any any port = 514
+   access-list   deny udp any port = 500 any port = 500
+   access-list   deny udp any port = 848 any
+   access-list   deny udp any any port = 848
+   access-list   deny ip any 10.90.0.0 0.0.255.255
+   access-list   deny ip 10.90.0.0 0.0.255.255 any
+   access-list   permit ip 25.25.0.0 0.0.255.255 15.15.0.0 0.0.255.255
+   access-list   permit ip 15.15.0.0 0.0.255.255 25.25.0.0 0.0.255.255
+   access-list   permit ip 16.16.0.0 0.0.255.255 26.26.0.0 0.0.255.255
+
+KEK POLICY:
+    Rekey Transport Type     : Unicast
+    Lifetime (secs)          : 992
+    Encrypt Algorithm        : AES
+    Key Size                 : 256
+    Sig Hash Algorithm       : HMAC_AUTH_SHA
+    Sig Key Length (bits)    : 4400
+
+TEK POLICY for the current KS-Policy ACEs Downloaded:
+  GigabitEthernet0/0/1:
+    IPsec SA:
+        spi: 0x5A69F51E(1516893470)
+        transform: esp-256-aes esp-sha256-hmac
+        sa timing:remaining key lifetime (sec): (393)
+        Anti-Replay(Counter Based) : 64
+        tag method : disabled
+        alg key size: 32 (bytes)
+        sig key size: 32 (bytes)
+        encaps: ENCAPS_TUNNEL
+
+
+KGS POLICY:
+  REG_GM: local_addr 3.3.1.1
+
+P2P POLICY:
+  REG_GM: local_addr 3.3.1.1

@@ -9,6 +9,7 @@ expected_output = {
     "label": "RELEASE SOFTWARE (fc2)",
     'compiled_date': 'Fri 05-Aug-11 00:32',
     'compiled_by': 'prod_rel_team',
+    'copyright_years': '1986-2011',
     'rom': 'System Bootstrap, Version 15.0(1r)M13, RELEASE SOFTWARE (fc1)',
     'hostname': 'best-c3945-IOS3',
     'uptime': '1 hour, 20 minutes',

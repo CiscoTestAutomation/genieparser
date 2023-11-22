@@ -13,3 +13,5 @@
   Peer delay request interval(log mean): 0
   Sync fault limit: 500000000
  ptp role primary : Disabled
+ ptp destination mac : 01.80.C2.00.00.0E
+Local port priority : 128

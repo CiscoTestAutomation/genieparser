@@ -1,0 +1,5 @@
+LISP MAC Mapping Cache for EID-table Vlan 210 (IID 8188), 1 entries
+
+0017.0100.0001/48, uptime: 18:20:24, expires: 05:39:35, via map-reply, complete, local-to-site
+  Locator   Uptime    State  Pri/Wgt     Encap-IID
+  1.1.1.10  18:20:24  up      10/10        -

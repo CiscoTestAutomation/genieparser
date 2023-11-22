@@ -1,0 +1,12 @@
+vrf definition ce1
+ rd 2:2
+ !
+ address-family ipv4
+  route-target export 1:1
+  route-target import 1:1
+ exit-address-family
+ !
+ address-family ipv6
+  route-target export 1:1
+  route-target import 1:1
+ exit-address-family

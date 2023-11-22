@@ -1,0 +1,9 @@
+ Table Map DSd-sds
+ from 0 to 34
+ from 3 to 44
+ default copy
+
+ Table Map Esd_Sdd
+ from 22 to 24
+ from 32 to 44
+ default 8

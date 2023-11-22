@@ -1,0 +1,29 @@
+Leader Automatic Channel Assignment
+  Channel Assignment Mode                    : AUTO
+  Channel Update Interval                    : 600 seconds
+  Anchor time (Hour of the day)              : 0
+  Channel Update Contribution
+    Noise                                    : Enable
+    Interference                             : Enable
+    Load                                     : Disable
+    Device Aware                             : Disable
+  CleanAir Event-driven RRM option           : Disabled
+  Zero Wait DFS                              : Disabled
+  Channel Assignment Leader                  : vidya-ewlc-5 (9.4.62.51) (2001:9:4:62::51)
+  Last Run                                   : 691 seconds ago
+
+  DCA Sensitivity Level                      : MEDIUM : 15 dB
+  DCA 802.11n/ac Channel Width               : best
+  DBS Max Channel Width                      : 40 MHz
+  DCA Minimum Energy Limit                   : -95 dBm
+  Channel Energy Levels
+    Minimum                                  : -68 dBm
+    Average                                  : -66 dBm
+    Maximum                                  : -64 dBm
+  Channel Dwell Times
+    Minimum                                  : 2 days 2 hours 52 minutes 25 seconds 
+    Average                                  : 3 days 11 hours 58 minutes 52 seconds 
+    Maximum                                  : 3 days 23 hours 13 minutes 12 seconds 
+  802.11a 5 GHz Auto-RF Channel List
+    Allowed Channel List                     : 36,40,44,48,149,153,157,161
+    Unused Channel List                      : 52,56,60,64,100,104,108,112,116,120,124,128,132,136,140,144,165,169,173

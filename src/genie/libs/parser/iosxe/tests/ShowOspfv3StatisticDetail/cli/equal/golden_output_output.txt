@@ -1,0 +1,14 @@
+
+          OSPFv3 5 address-family ipv6 (router-id 1.1.1.1)
+
+  Area 0: SPF algorithm executed 1 times
+
+SPF 1 executed 16:03:11 ago, SPF type Full
+  SPF calculation time (in msec):
+  SPT    Prefix D-Int  Sum    D-Sum  Ext    D-Ext  Total
+  0      0      0      0      0      0      0      0
+  LSIDs processed R:1 N:0 Prefix:0 SN:0 SA:0 X7:0
+  Change record R
+  LSAs changed 1
+  Changed LSAs. Recorded is Advertising Router, LSID and LS type:
+  1.1.1.1/0(R)

@@ -1,0 +1,4 @@
+RP/0/RSP0/CPU0:ios#show event manager policy registered system | include tm_crash_hist.tcl
+Thu Dec  2 16:38:11.282 UTC
+1    script    system  timer cron          Off   Tue Sep 21 07:00:11 2021  tm_crash_hist.tcl
+

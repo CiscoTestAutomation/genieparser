@@ -1,0 +1,23 @@
+NAME: "c93xx Stack", DESCR: "c93xx Stack"
+PID: C9300-24U         , VID: V01  , SN: FCW2130G0MY
+
+NAME: "Switch 1", DESCR: "C9300-24U - Provisioned"
+PID: C9300-24U         , VID:      , SN:
+
+NAME: "Switch 2", DESCR: "C9300-24U"
+PID: C9300-24U         , VID: V01  , SN: FCW2130G0MY
+
+NAME: "StackPort2/1", DESCR: "StackPort2/1"
+PID: STACK-T1-50CM     , VID: 01   , SN: MOC2228A36B
+
+NAME: "StackPort2/2", DESCR: "StackPort2/2"
+PID: STACK-T1-50CM     , VID: V01  , SN: LCC1922G4NM
+
+NAME: "Switch 2 - Power Supply A Container", DESCR: "Switch 2 - C9300-24U - Power Supply A Container"
+PID:                   , VID:      , SN:
+
+NAME: "Switch 2 - Power Supply A", DESCR: "Switch 2 - Power Supply A"
+PID: PWR-C1-1100WAC    , VID: V02  , SN: DTN2128V8GE
+
+NAME: "Switch 2 - Power Supply B Container", DESCR: "Switch 2 - C9300-24U - Power Supply B Container"
+PID:                   , VID:      , SN:

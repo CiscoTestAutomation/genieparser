@@ -1,0 +1,12 @@
+show install active
+[ R0 R1 ] Active Package(s) Information:
+State (St): I - Inactive, U - Activated & Uncommitted,
+            C - Activated & Committed, D - Deactivated & Uncommitted
+--------------------------------------------------------------------------------
+Type  St   Filename/Version
+--------------------------------------------------------------------------------
+IMG   C    17.08.01.0.149429
+
+--------------------------------------------------------------------------------
+Auto abort timer: inactive
+--------------------------------------------------------------------------------    

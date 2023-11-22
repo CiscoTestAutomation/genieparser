@@ -1,0 +1,6 @@
+Interface: Tunnel2238, IPv4 NHRP Details
+Type:Unknown, NHRP Peers:1,
+
+Ent Peer NBMA Addr Peer Tunnel Add State UpDn Tm Attrb
+----- --------------- --------------- ----- -------- -----
+ 1 UNKNOWN           172.28.172.30  NHRP    never    IX

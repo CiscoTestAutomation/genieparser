@@ -1,0 +1,11 @@
+IKEv2 proposal: default
+     Encryption : AES-CBC-256
+     Integrity  : SHA512 SHA384
+     PRF        : SHA512 SHA384
+     DH Group   : DH_GROUP_256_ECP/Group 19 DH_GROUP_2048_MODP/Group 14 DH_GROUP_521_ECP/Group 21 DH_GROUP_1536_MODP/Group 5
+IKEv2 proposal: ikev2proposal
+     Encryption : AES-CBC-128
+     Integrity  : SHA96
+     PRF        : SHA1
+     DH Group   : DH_GROUP_4096_MODP/Group 16
+

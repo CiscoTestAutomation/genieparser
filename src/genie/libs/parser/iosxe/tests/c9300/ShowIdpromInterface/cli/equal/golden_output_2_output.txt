@@ -1,0 +1,63 @@
+General SFP Information
+-----------------------------------------------
+Identifier            :   SFP/SFP+
+Ext.Identifier        :   SFP function is defined by two-wire interface ID only
+Connector             :   LC connector
+Transceiver
+ 10/40GE Comp code       :   10G BASE-SR
+ SONET Comp code      :   Unknown
+ GE Comp code         :   Unknown
+ Link length          :   Unknown
+ Technology           :   Unknown
+ Media                :   Unknown
+ Speed                :   Unknown
+Encoding              :   64B/66B
+BR_Nominal            :   10300 Mbps
+Length(9um)-km        :   GBIC does not support single mode fibre
+Length(9um)           :   GBIC does not support single mode fibre
+Length(50um)          :   80 m
+Length(62.5um)        :   20 m
+Length(Copper)        :   GBIC does not support 50 micron multi mode OM4 fibre
+Vendor Name           :   CISCO-AVAGO
+Vendor Part Number    :   SFBR-709SMZ-CS1
+Vendor Revision       :   0x47 0x34 0x2E 0x31
+Vendor Serial Number  :   AVD2043A7EP
+Wavelength            :   850.00 nm
+CC_BASE               :   0x17
+-----------------------------------------------
+
+Extended ID Fields
+-----------------------------------------------
+Options               :   0x00 0x1A
+BR, max               :   0x00
+BR, min               :   0x00
+Date code             :   161031
+Diag monitoring       :   Implemented
+Internally calibrated :   Yes
+Exeternally calibrated:   No
+Rx.Power measurement  :   Avg.Power
+Address Change        :   Not Required
+CC_EXT                :   0x32
+-----------------------------------------------
+
+Other Information
+-----------------------------------------------
+Chk for link status   : 00
+Flow control Receive  : ON
+Flow control Send     : Off
+Administrative Speed  : 10000
+Administrative Duplex : full
+Operational Speed     : 10000
+Operational Duplex    : full
+-----------------------------------------------
+
+SEEPROM contents (hex):
+ 0x00: 03 04 07 10 00 00 00 00 00 00 00 06 67 00 00 00
+ 0x10: 08 02 00 1E 43 49 53 43 4F 2D 41 56 41 47 4F 20
+ 0x20: 20 20 20 20 00 00 17 6A 53 46 42 52 2D 37 30 39
+ 0x30: 53 4D 5A 2D 43 53 31 20 47 34 2E 31 03 52 00 17
+ 0x40: 00 1A 00 00 41 56 44 32 30 34 33 41 37 45 50 20
+ 0x50: 20 20 20 20 31 36 31 30 33 31 20 20 68 F0 03 32
+ 0x60: 00 00 06 84 7D F0 E8 94 82 A7 C0 5C 2D CF 0C 40
+ 0x70: 94 85 52 00 00 00 00 00 00 00 00 00 3B 87 64 B7
+-----------------------------------------------

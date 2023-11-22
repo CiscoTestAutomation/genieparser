@@ -1,0 +1,18 @@
+Extended IP access list Gi2/0/24#v4#33476254
+10 permit ip any any
+Extended IP access list IP-Adm-V4-Int-ACL-global
+10 permit tcp any any eq www
+Extended IP access list IP-Adm-V4-LOGOUT-ACL
+10 permit tcp any host 200.1.1.1 eq www
+Extended IP access list implicit_deny
+10 deny ip any any
+Extended IP access list implicit_permit
+10 permit ip any any
+Extended IP access list meraki-fqdn-dns
+Extended IP access list preauth_v4
+10 permit udp any any eq domain
+20 permit tcp any any eq domain
+30 permit udp any eq bootps any
+40 permit udp any any eq bootpc
+50 permit udp any eq bootpc any
+60 deny ip any any

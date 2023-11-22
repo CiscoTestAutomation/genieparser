@@ -1,0 +1,81 @@
+Group state = L2 
+Ports: 2   Maxports = 16
+Port-channels: 1 Max Port-channels = 16
+Protocol:   LACP
+Minimum Links: 0
+
+
+        Ports in the group:
+        -------------------
+Port: Twe1/0/13
+------------
+
+Port state    = Up Mstr Assoc In-Bndl 
+Channel group = 1           Mode = Active          Gcchange = -
+Port-channel  = Po1         GC   =   -             Pseudo port-channel = Po1
+Port index    = 0           Load = 0x00            Protocol =   LACP
+
+Flags:  S - Device is sending Slow LACPDUs   F - Device is sending fast LACPDUs.
+        A - Device is in active mode.        P - Device is in passive mode.
+
+Local information:
+                                LACP port    Admin     Oper    Port        Port
+Port          Flags   State     Priority     Key       Key     Number      State
+Twe1/0/13     SA      bndl      200          0x1       0x1     0x10E       0x3D  
+
+ Partner's information:
+
+                     LACP port                      Admin  Oper   Port    Port
+Port          Flags  Priority  Dev ID          Age  key    Key    Number  State
+Twe1/0/13     SA     32768     6cb2.ae4a.54c0   6s  0x0    0x1    0x804   0x3D  
+
+Age of the port in the current state: 0d:00h:03m:14s
+
+Port: Twe1/0/15
+------------
+
+Port state    = Up Mstr Assoc Hot-stdby Not-in-Bndl 
+Channel group = 1           Mode = Active          Gcchange = -
+Port-channel  = null        GC   =   -             Pseudo port-channel = Po1
+Port index    = 0           Load = 0x00            Protocol =   LACP
+
+Flags:  S - Device is sending Slow LACPDUs   F - Device is sending fast LACPDUs.
+        A - Device is in active mode.        P - Device is in passive mode.
+
+Local information:
+                                LACP port    Admin     Oper    Port        Port
+Port          Flags   State     Priority     Key       Key     Number      State
+Twe1/0/15     FA      hot-sby   300          0x1       0x1     0x110       0xF   
+
+ Partner's information:
+
+                     LACP port                      Admin  Oper   Port    Port
+Port          Flags  Priority  Dev ID          Age  key    Key    Number  State
+Twe1/0/15     FA     32768     6cb2.ae4a.54c0   0s  0x0    0x1    0x803   0xF   
+
+Age of the port in the current state: 0d:00h:03m:16s
+
+        Port-channels in the group: 
+        ---------------------------
+
+Port-channel: Po1    (Primary Aggregator)
+
+------------
+
+Age of the Port-channel   = 0d:00h:10m:38s
+Logical slot/port   = 9/1          Number of ports = 1
+HotStandBy port = Twe1/0/15 
+Port state          = Port-channel Ag-Inuse 
+Protocol            =   LACP
+Port security       = Disabled
+Fast-switchover     = disabled
+Fast-switchover Dampening = disabled
+
+Ports in the Port-channel: 
+
+Index   Load   Port        EC state        No of bits
+------+------+------+------------------+-----------
+  0     00     Twe1/0/13      Active             0
+
+Time since last port bundled:    0d:00h:03m:14s     Twe1/0/13
+Time since last port Un-bundled: 0d:00h:03m:16s     Twe1/0/15

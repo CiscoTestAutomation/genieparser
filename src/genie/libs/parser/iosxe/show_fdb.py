@@ -4,6 +4,7 @@
      *  show mac address-table vlan {vlan}
      *  show mac address-table aging-time
      *  show mac address-table learning
+     *  show mac address-table interface {interface}
 """
 # Python
 import re
@@ -20,7 +21,12 @@ from genie.metaparser.util.schemaengine import Schema, \
 
 # import parser utils
 from genie.libs.parser.utils.common import Common
+import re
 
+from genie.libs.parser.utils.common import Common
+from genie.metaparser import MetaParser
+from genie.metaparser.util.schemaengine import (And, Any, Default, Optional,
+                                                Or, Schema, Use)
 
 class ShowMacAddressTableSchema(MetaParser):
     """Schema for show mac address-table"""
@@ -58,13 +64,19 @@ class ShowMacAddressTable(ShowMacAddressTableSchema):
     """Parser for show mac address-table"""
 
     cli_command = ['show mac address-table',
-                   'show mac address-table vlan {vlan}']
+                   'show mac address-table vlan {vlan}',
+                   'show mac address-table interface {interface}',
+                   'show mac address-table interface {interface} vlan {vlan}']
 
-    def cli(self, vlan='', output=None):
+    def cli(self, vlan='', interface='', output=None):
         if output is None:
             # get output from device
-            if vlan:
+            if interface and vlan:
+                out = self.device.execute(self.cli_command[3].format(interface=interface,vlan=vlan))
+            elif vlan:
                 out = self.device.execute(self.cli_command[1].format(vlan=vlan))
+            elif interface:
+                out = self.device.execute(self.cli_command[2].format(interface=interface))
             else:
                 out = self.device.execute(self.cli_command[0])
         else:
@@ -380,8 +392,8 @@ class ShowMacAddressMacVlanSchema(MetaParser):
                  {Any(): 
                      {'VlanID' : str,
                       'Type'   : str,     
-                      'Ports'  : str  				
-                    }                
+                      'Ports'  : str
+                    }
                 },
             }
 
@@ -397,27 +409,27 @@ class ShowMacAddressMacVlan(ShowMacAddressMacVlanSchema):
     def cli(self, mac="", vlan="", output=None):
        
         if output is None:
-            cmd = self.cli_command.format(mac=mac,vlan=vlan) 
-            # Execute command to get output from device            
-            out = self.device.execute(cmd)            
+            cmd = self.cli_command.format(mac=mac,vlan=vlan)
+            # Execute command to get output from device       
+            out = self.device.execute(cmd)
         else:
             out = output
 
         # 10    0017.0100.0001    DYNAMIC     Fo1/0/24
-        p1 = re.compile(r'^(?P<vlanid>\d+) +(?P<mac>[\w\.]+) +(?P<type>\w+) +(?P<port>\S+)$') 	
+        p1 = re.compile(r'^(?P<vlanid>\d+) +(?P<mac>[\w\.]+) +(?P<type>\w+) +(?P<port>\S+)$')
         
         # initial variables
         ret_dict = {}
         
         for line in out.splitlines():
             line = line.strip()
-            if not line: 
+            if not line:
                 continue
 
             # 10    0017.0100.0001    DYNAMIC     Fo1/0/24
             m = p1.match(line)
             if m:
-                group    = m.groupdict()  
+                group    = m.groupdict()
                 vlanId  = group['vlanid']
                 macAddr = group['mac']
                 typ     = group['type']
@@ -429,4 +441,167 @@ class ShowMacAddressMacVlan(ShowMacAddressMacVlanSchema):
                 final_dict['Ports']  = intf
                 continue
 
-        return ret_dict                
+        return ret_dict
+
+
+
+# ======================================================
+# Parser for 'show mac address-table notification change '
+# ======================================================
+
+class ShowMacAddressTableNotificationChangeSchema(MetaParser):
+    """Schema for show mac address-table notification change"""
+
+    schema = {
+        'mac_notification_feature': str,
+        'Int_btwn_notifictn_trps': str,
+        'no_of_mac_addr_added': str,
+        'no_of_mac_addr_rmvd': str,
+        'no_of_notifictns': str,
+        'max_no_of_entries': str,
+        'current_history_tablen': str,
+        'mac_notificatn_trps': str,
+    }
+
+class ShowMacAddressTableNotificationChange(ShowMacAddressTableNotificationChangeSchema):
+    """Parser for show mac address-table notification change"""
+
+    cli_command = 'show mac address-table notification change'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # MAC Notification Feature is Disabled on the switch
+        p1 = re.compile(r"^MAC\s+Notification\s+Feature\s+is\s+(?P<mac_notification_feature>\w+)\s+on\s+the\s+switch$")
+        # Interval between Notification Traps : 1 secs
+        p2 = re.compile(r"^Interval\s+between\s+Notification\s+Traps\s+:\s+(?P<Int_btwn_notifictn_trps>\d+)\s+secs$")
+        # Number of MAC Addresses Added : 0
+        p3 = re.compile(r"^Number\s+of\s+MAC\s+Addresses\s+Added\s+:\s+(?P<no_of_mac_addr_added>\d+)$")
+        # Number of MAC Addresses Removed : 0
+        p4 = re.compile(r"^Number\s+of\s+MAC\s+Addresses\s+Removed\s+:\s+(?P<no_of_mac_addr_rmvd>\d+)$")
+        # Number of Notifications sent to NMS : 0
+        p5 = re.compile(r"^Number\s+of\s+Notifications\s+sent\s+to\s+NMS\s+:\s+(?P<no_of_notifictns>\d+)$")
+        # Maximum Number of entries configured in History Table : 1
+        p6 = re.compile(r"^Maximum\s+Number\s+of\s+entries\s+configured\s+in\s+History\s+Table\s+:\s+(?P<max_no_of_entries>\d+)$")
+        # Current History Table Length : 0
+        p7 = re.compile(r"^Current\s+History\s+Table\s+Length\s+:\s+(?P<current_history_tablen>\d+)$")
+        # MAC Notification Traps are Enabled
+        p8 = re.compile(r"^MAC\s+Notification\s+Traps\s+are\s+(?P<mac_notificatn_trps>\w+)$")
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+
+            # MAC Notification Feature is Disabled on the switch
+            m = p1.match(line)
+            if m:
+                dict_val = m.groupdict()
+                ret_dict['mac_notification_feature'] = dict_val['mac_notification_feature']
+                continue
+
+            # Interval between Notification Traps : 1 secs
+            m = p2.match(line)
+            if m:
+                dict_val = m.groupdict()
+                ret_dict['Int_btwn_notifictn_trps'] = dict_val['Int_btwn_notifictn_trps']
+                continue
+
+            # Number of MAC Addresses Added : 0
+            m = p3.match(line)
+            if m:
+                dict_val = m.groupdict()
+                ret_dict['no_of_mac_addr_added'] = dict_val['no_of_mac_addr_added']
+                continue
+
+            # Number of MAC Addresses Removed : 0
+            m = p4.match(line)
+            if m:
+                dict_val = m.groupdict()
+                ret_dict['no_of_mac_addr_rmvd'] = dict_val['no_of_mac_addr_rmvd']
+                continue
+
+            # Number of Notifications sent to NMS : 0
+            m = p5.match(line)
+            if m:
+                dict_val = m.groupdict()
+                ret_dict['no_of_notifictns'] = dict_val['no_of_notifictns']
+                continue
+
+            # Maximum Number of entries configured in History Table : 1
+            m = p6.match(line)
+            if m:
+                dict_val = m.groupdict()
+                ret_dict['max_no_of_entries'] = dict_val['max_no_of_entries']
+                continue
+
+            # Current History Table Length : 0
+            m = p7.match(line)
+            if m:
+                dict_val = m.groupdict()
+                ret_dict['current_history_tablen'] = dict_val['current_history_tablen']
+                continue
+
+            # MAC Notification Traps are Enabled
+            m = p8.match(line)
+            if m:
+                dict_val = m.groupdict()
+                ret_dict['mac_notificatn_trps'] = dict_val['mac_notificatn_trps']
+                continue
+
+
+        return ret_dict
+
+
+
+# ======================================================
+# Parser for 'show mac address-table notification change interface {interface}'
+# ======================================================
+
+class ShowMacAddressTableNotificationChangeInterfaceSchema(MetaParser):
+    """Schema for show mac address-table notification change interface HundredGigE 2/0/25"""
+
+    schema = {
+        'mac_notification_feature': str,
+        'interface': str,
+        'mac_added_trap': str,
+        'mac_rmvd_trap': str,
+    }
+
+
+class ShowMacAddressTableNotificationChangeInterface(ShowMacAddressTableNotificationChangeInterfaceSchema):
+    """Parser for show mac address-table notification change interface HundredGigE 2/0/25"""
+
+    cli_command = 'show mac address-table notification change interface {interface}'
+
+    def cli(self, interface= '', output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(interface=interface))
+
+        # MAC Notification Feature is Disabled on the switch
+        p1 = re.compile(r"^MAC\s+Notification\s+Feature\s+is\s+(?P<mac_notification_feature>\w+)\s+on\s+the\s+switch$")
+        # HundredGigE2/0/25              Disabled       Disabled        
+        p2 = re.compile(r"^(?P<interface>\S+)\s+(?P<mac_added_trap>\w+)\s+(?P<mac_rmvd_trap>\w+)$")
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # MAC Notification Feature is Disabled on the switch
+            m = p1.match(line)
+            if m:
+                dict_val = m.groupdict()
+                ret_dict['mac_notification_feature'] = dict_val['mac_notification_feature']
+                continue
+
+            # HundredGigE2/0/25              Disabled       Disabled        
+            m = p2.match(line)
+            if m:
+                dict_val = m.groupdict()
+                ret_dict['interface'] = dict_val['interface']
+                ret_dict['mac_added_trap'] = dict_val['mac_added_trap']
+                ret_dict['mac_rmvd_trap'] = dict_val['mac_rmvd_trap']
+                continue
+        
+        return ret_dict

@@ -1,0 +1,30 @@
+<Tue Sep 28 02:55:56>
+ Verifying image bootflash:/nxos.9.3.7.bin for boot variable "nxos".
+ -- SUCCESS <Tue Sep 28 02:57:04>
+
+<Tue Sep 28 02:57:04>
+ Verifying image type.
+ -- SUCCESS <Tue Sep 28 02:57:14>
+
+<Tue Sep 28 02:57:15>
+ Preparing "nxos" version info using image bootflash:/nxos.9.3.7.bin.
+ -- SUCCESS <Tue Sep 28 02:57:16>
+
+<Tue Sep 28 02:57:16>
+ Preparing "bios" version info using image bootflash:/nxos.9.3.7.bin.
+ -- SUCCESS <Tue Sep 28 02:57:19>
+
+<Tue Sep 28 02:58:14>
+ Performing module support checks.
+ -- SUCCESS <Tue Sep 28 02:58:21>
+
+<Tue Sep 28 02:58:21>
+ Notifying services about system upgrade.
+ -- SUCCESS <Tue Sep 28 02:58:35>
+
+
+
+Compatibility check is done:
+Module  bootable          Impact  Install-type  Reason
+------  --------  --------------  ------------  ------
+     1       yes      disruptive          none  default upgrade is not hitless

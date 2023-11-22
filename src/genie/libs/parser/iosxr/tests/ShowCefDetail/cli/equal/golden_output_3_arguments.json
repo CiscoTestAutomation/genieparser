@@ -1,0 +1,5 @@
+{
+    "vrf_name": "**iid",
+    "ip_type": "ipv6",
+    "prefix": "::ffff:10.0.0.1"
+}

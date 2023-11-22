@@ -1,0 +1,153 @@
+ott-lisp-c9k-115#show ip bgp l2vpn evpn evi 11 detail 
+
+Route Distinguisher: 3.3.3.3:11
+BGP routing table entry for [2][3.3.3.3:11][0][48][AABBCCDD0011][32][192.168.2.100]/24, version 30
+  Paths: (2 available, best #2, table evi_11)
+  Advertised to update-groups:
+     1         
+  Refresh Epoch 2
+  1 2, imported path from [2][5.5.5.5:11][0][48][AABBCCDD0011][32][192.168.2.100]/24 (global)
+    55.55.55.55 (via default) from 1.1.1.1 (1.1.1.1)
+      Origin incomplete, localpref 100, valid, external, multipath(oldest)
+      EVPN ESI: 00000000000000000000, Label1 10000
+      Extended Community: RT:3:11 RT:3:100 ENCAP:8 EVPN DEF GW:0:0 
+        Router MAC:AC4A.67A4.7151
+      rx pathid: 0, tx pathid: 0
+      Updated on Nov 26 2021 03:55:42 EST
+  Refresh Epoch 1
+  Local
+    :: (via default) from 0.0.0.0 (3.3.3.3)
+      Origin incomplete, localpref 100, weight 32768, valid, sourced, local, multipath, best
+      EVPN ESI: 00000000000000000000, Label1 10000
+      Extended Community: RT:3:11 RT:3:100 ENCAP:8 EVPN DEF GW:0:0 
+        Router MAC:AC4A.67A4.1A51
+      Local irb vxlan vtep:
+        vrf:Red, l3-vni:100000
+        local router mac:AC4A.67A4.1A51
+        core-irb interface:Vlan100
+        vtep-ip:33.33.33.33
+      rx pathid: 0, tx pathid: 0x0
+      Updated on Nov 26 2021 03:52:01 EST
+BGP routing table entry for [2][3.3.3.3:11][0][48][AABBCCDD0011][128][2001:192:168:2::100]/36, version 31
+  Paths: (2 available, best #2, table evi_11)
+  Advertised to update-groups:
+     1         
+  Refresh Epoch 2
+  1 2, imported path from [2][5.5.5.5:11][0][48][AABBCCDD0011][128][2001:192:168:2::100]/36 (global)
+    55.55.55.55 (via default) from 1.1.1.1 (1.1.1.1)
+      Origin incomplete, localpref 100, valid, external, multipath(oldest)
+      EVPN ESI: 00000000000000000000, Label1 10000
+      Extended Community: RT:3:11 RT:3:100 ENCAP:8 EVPN DEF GW:0:0 
+        Router MAC:AC4A.67A4.7151
+      rx pathid: 0, tx pathid: 0
+      Updated on Nov 26 2021 03:55:42 EST
+  Refresh Epoch 1
+  Local
+    :: (via default) from 0.0.0.0 (3.3.3.3)
+      Origin incomplete, localpref 100, weight 32768, valid, sourced, local, multipath, best
+      EVPN ESI: 00000000000000000000, Label1 10000
+      Extended Community: RT:3:11 RT:3:100 ENCAP:8 EVPN DEF GW:0:0 
+        Router MAC:AC4A.67A4.1A51
+      Local irb vxlan vtep:
+        vrf:Red, l3-vni:100000
+        local router mac:AC4A.67A4.1A51
+        core-irb interface:Vlan100
+        vtep-ip:33.33.33.33
+      rx pathid: 0, tx pathid: 0x0
+      Updated on Nov 26 2021 03:52:01 EST
+BGP routing table entry for [2][3.3.3.3:11][0][48][D4E880B0D802][0][*]/20, version 4
+  Paths: (1 available, best #1, table evi_11)
+  Advertised to update-groups:
+     1         
+  Refresh Epoch 1
+  Local
+    :: (via default) from 0.0.0.0 (3.3.3.3)
+      Origin incomplete, localpref 100, weight 32768, valid, sourced, local, best
+      EVPN ESI: 00000000000000000000, Label1 10000
+      Extended Community: RT:3:11 ENCAP:8
+      Local irb vxlan vtep:
+        vrf:Red, l3-vni:100000
+        local router mac:AC4A.67A4.1A51
+        core-irb interface:Vlan100
+        vtep-ip:33.33.33.33
+      rx pathid: 0, tx pathid: 0x0
+      Updated on Nov 26 2021 03:52:01 EST
+BGP routing table entry for [2][3.3.3.3:11][0][48][D4E880B0D802][32][192.168.2.1]/24, version 5
+  Paths: (1 available, best #1, table evi_11)
+  Advertised to update-groups:
+     1         
+  Refresh Epoch 1
+  Local
+    :: (via default) from 0.0.0.0 (3.3.3.3)
+      Origin incomplete, localpref 100, weight 32768, valid, sourced, local, best
+      EVPN ESI: 00000000000000000000, Label1 10000, Label2 100000
+      Extended Community: RT:3:11 RT:3:100 ENCAP:8 Router MAC:AC4A.67A4.1A51
+      Local irb vxlan vtep:
+        vrf:Red, l3-vni:100000
+        local router mac:AC4A.67A4.1A51
+        core-irb interface:Vlan100
+        vtep-ip:33.33.33.33
+      rx pathid: 0, tx pathid: 0x0
+      Updated on Nov 26 2021 03:52:01 EST
+BGP routing table entry for [2][3.3.3.3:11][0][48][D4E880B0D802][128][2001:192:168:2::1]/36, version 6
+  Paths: (1 available, best #1, table evi_11)
+  Advertised to update-groups:
+     1         
+  Refresh Epoch 1
+  Local
+    :: (via default) from 0.0.0.0 (3.3.3.3)
+      Origin incomplete, localpref 100, weight 32768, valid, sourced, local, best
+      EVPN ESI: 00000000000000000000, Label1 10000, Label2 100000
+      Extended Community: RT:3:11 RT:3:100 ENCAP:8 Router MAC:AC4A.67A4.1A51
+      Local irb vxlan vtep:
+        vrf:Red, l3-vni:100000
+        local router mac:AC4A.67A4.1A51
+        core-irb interface:Vlan100
+        vtep-ip:33.33.33.33
+      rx pathid: 0, tx pathid: 0x0
+      Updated on Nov 26 2021 03:52:01 EST
+BGP routing table entry for [2][3.3.3.3:11][0][48][D4E880B0D802][128][FE80::D6E8:80FF:FEB0:D802]/36, version 7
+  Paths: (1 available, best #1, table evi_11)
+  Advertised to update-groups:
+     1         
+  Refresh Epoch 1
+  Local
+    :: (via default) from 0.0.0.0 (3.3.3.3)
+      Origin incomplete, localpref 100, weight 32768, valid, sourced, local, best
+      EVPN ESI: 00000000000000000000, Label1 10000, Label2 100000
+      Extended Community: RT:3:11 RT:3:100 ENCAP:8 Router MAC:AC4A.67A4.1A51
+      Local irb vxlan vtep:
+        vrf:Red, l3-vni:100000
+        local router mac:AC4A.67A4.1A51
+        core-irb interface:Vlan100
+        vtep-ip:33.33.33.33
+      rx pathid: 0, tx pathid: 0x0
+      Updated on Nov 26 2021 03:52:01 EST
+BGP routing table entry for [3][3.3.3.3:11][0][32][33.33.33.33]/17, version 14
+  Paths: (1 available, best #1, table evi_11)
+  Advertised to update-groups:
+     1         
+  Refresh Epoch 1
+  Local
+    :: (via default) from 0.0.0.0 (3.3.3.3)
+      Origin incomplete, localpref 100, weight 32768, valid, sourced, local, best
+      Extended Community: RT:3:11 ENCAP:8
+      PMSI Attribute: Flags:0x0, Tunnel type:IR, length 4, vni:10000 tunnel identifier: 0000 0000
+      Local irb vxlan vtep:
+        vrf:Red, l3-vni:100000
+        local router mac:AC4A.67A4.1A51
+        core-irb interface:Vlan100
+        vtep-ip:33.33.33.33
+      rx pathid: 0, tx pathid: 0x0
+      Updated on Nov 26 2021 03:52:01 EST
+BGP routing table entry for [3][3.3.3.3:11][0][32][55.55.55.55]/17, version 34
+  Paths: (1 available, best #1, table evi_11)
+  Not advertised to any peer
+  Refresh Epoch 2
+  1 2, imported path from [3][5.5.5.5:11][0][32][55.55.55.55]/17 (global)
+    55.55.55.55 (via default) from 1.1.1.1 (1.1.1.1)
+      Origin incomplete, localpref 100, valid, external, best
+      Extended Community: RT:3:11 ENCAP:8
+      PMSI Attribute: Flags:0x0, Tunnel type:IR, length 4, vni:10000 tunnel identifier: < Tunnel Endpoint: 55.55.55.55 >
+      rx pathid: 0, tx pathid: 0x0
+      Updated on Nov 26 2021 03:55:42 EST

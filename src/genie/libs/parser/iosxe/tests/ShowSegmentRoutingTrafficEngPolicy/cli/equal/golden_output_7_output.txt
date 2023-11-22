@@ -1,0 +1,16 @@
+show segment-routing traffic-eng policy name SRTE_POL_1
+
+Name: SRTE_POL_1 (Color: 1 End-point: 4.4.4.4)
+  Owners : CLI
+  Status:
+    Admin: up, Operational: up for 00:01:41 (since 10-21 07:10:38.262)
+  Candidate-paths:
+    Preference 1 (CLI):
+      Dynamic (active)
+        Metric Type: TE, Path Accumulated Metric: 30
+          24321 [Prefix-SID, 4.4.4.4]
+  Attributes:
+    Binding SID: 18
+      Allocation mode: dynamic
+      State: Programmed
+

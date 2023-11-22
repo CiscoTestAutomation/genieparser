@@ -1,0 +1,14 @@
+                     -----------  MAC  ----------- 
+ Site name            Configured Registered Incons
+Shire                         1          2      0
+
+Site-registration limit for router lisp 0:              0
+Site-registration count for router lisp 0:              6
+Number of configured sites:                             1
+Number of registered sites:                             1
+Sites with inconsistent registrations:                  0
+MAC
+  Number of configured EID prefixes:                    1
+  Number of registered EID prefixes:                    2
+  Instance-Service site-registration limit:             0
+  Registration-history size/limit:                      5/1000

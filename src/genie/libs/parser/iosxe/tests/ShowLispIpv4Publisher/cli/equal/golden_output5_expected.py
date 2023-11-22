@@ -8,11 +8,13 @@ expected_output = {
                             "state": "ETR Map-Server not found",
                             "session": "Down",
                             "pubsub_state": "Off",
+                            "type": "L",
                         },
                         "44.44.44.44": {
                             "state": "Reachable",
                             "session": "Up",
                             "pubsub_state": "Established",
+                            "type": "L",
                         },
                     }
                 }

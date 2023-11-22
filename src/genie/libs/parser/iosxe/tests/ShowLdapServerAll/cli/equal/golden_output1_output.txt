@@ -1,0 +1,30 @@
+Switch-9500#show ldap server all
+Server Information for Test-LDAP
+================================
+Server name             :Test-LDAP
+Server Address          :11.15.24.254
+Server listening Port   :389
+Bind Root-dn            :CN=smordi,CN=Users,DC=smordi,DC=world
+Server mode             :Non-Secure
+Cipher Suite            :0x00
+Authentication Seq      :Search first. Then Bind/Compare password next
+Authentication Procedure:Bind with user password
+Base-Dn                 :CN=Users,DC=smordi,DC=world
+Request timeout         :30
+Deadtime in Mins        :0
+State                   :ALIVE
+---------------------------------
+* LDAP STATISTICS *
+Total messages  [Sent:0, Received:0]
+Response delay(ms) [Average:0, Maximum:0]
+Total search    [Request:0, ResultEntry:0, ResultDone:0]
+Total bind      [Request:0, Response:0]
+Total extended  [Request:0, Response:0]
+Total compare   [Request:0, Response:0]
+Search [Success:0, Failures:0]
+Bind   [Success:0, Failures:0]
+Missing attrs in Entry [0]
+Connection   [Closes:0, Aborts:0, Fails:0, Timeouts:0]
+----------------------------------
+No. of active connections   :0
+---------------------------------

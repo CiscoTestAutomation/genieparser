@@ -1,0 +1,11 @@
+show interfaces Port-channel10 counter etherchannel
+
+Port               InOctets    InUcastPkts    InMcastPkts    InBcastPkts
+Po10             1017983578              0        1988293              0
+Twe1/0/11         610789930              0        1192971              0
+Twe2/0/11         407193648              0         795322              0
+
+Port              OutOctets   OutUcastPkts   OutMcastPkts   OutBcastPkts
+Po10             1017991774             31        1988368              0
+Twe1/0/11         508999511             16         994235              0
+Twe2/0/11         508992263             15         994133              0

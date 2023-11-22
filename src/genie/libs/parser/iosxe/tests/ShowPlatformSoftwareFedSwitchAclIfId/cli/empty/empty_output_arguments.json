@@ -1,0 +1,5 @@
+{
+    "switch" : "1",
+    "mode" : "acl",
+    "if_id" : "0x1A4BFF14"
+}

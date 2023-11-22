@@ -1,0 +1,6 @@
+show endpoint-tracker tracker-group
+
+Tracker Name            Element trackers name    Status                 RTT in msec       Probe ID
+group-udp-tcp-10001     tcp-10002, udp-10002      UP(UP OR UP)          1, 1              7, 8
+group2                  track1, track2            UP(UP OR UP)          14, 14            201, 202
+group3                  track1, track2            DOWN(DOWN OR DOWN)    Timeout, Timeout  0, 0

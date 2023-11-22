@@ -1,0 +1,35 @@
+LISP Site Registration Information
+
+Site name: site1
+Allowed configured locators: any
+Requested EID-prefix:
+
+  EID-prefix: 192.168.1.0/24 instance-id 4100 
+    First registered:     00:06:31
+    Last registered:      00:06:31
+    Routing table tag:    0
+    Origin:               Dynamic, more specific of 0.0.0.0/0
+    Merge active:         Yes
+    Proxy reply:          Yes
+    Skip Publication:     No
+    Force Withdraw:       No
+    TTL:                  1d00h
+    State:                complete
+    Extranet IID:         Unspecified
+    Registration errors:  
+      Authentication failures:   0
+      Allowed locators mismatch: 0
+    ETR 100.99.99.99:30343, last registered 00:06:31, proxy-reply, map-notify
+                            TTL 1d00h, merge, hash-function sha1
+                            state complete, no security-capability
+                            nonce 0xA69D707A-0x447BF56A
+                            xTR-ID 0xD0C06D20-0xAF0B90F4-0x19419FE7-0x33E596CD
+                            site-ID unspecified
+                            Domain-ID 1
+                            Multihoming-ID 1
+                            sourced by reliable transport
+      Locator       Local  State      Pri/Wgt  Scope       RDP      
+      100.99.99.99  yes    up          10/50   IPv4 none   [-]      
+    Merged locators
+      Locator       Local  State      Pri/Wgt  Scope        Registering ETR          RDP             
+      100.99.99.99  yes    up          10/50   IPv4 none    100.99.99.99:30343       [-]

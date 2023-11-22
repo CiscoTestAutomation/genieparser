@@ -6,6 +6,8 @@ expected_output = {
         "chassis_sn": "FCW2223G0B9",
         "compiled_by": "mcpre",
         "compiled_date": "Tue 02-Mar-21 00:07",
+        "copyright_years": "1986-2021",
+        "location": "Bengaluru",
         "curr_config_register": "0x102",
         "disks": {
             "crashinfo:.": {

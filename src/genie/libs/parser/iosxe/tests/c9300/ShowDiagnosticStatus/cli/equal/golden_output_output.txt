@@ -1,0 +1,19 @@
+show diagnostic status
+
+<BU> - Bootup Diagnostics, <HM> - Health Monitoring Diagnostics,
+<OD> - OnDemand Diagnostics, <SCH> - Scheduled Diagnostics
+
+====== ================================= =============================== ======
+Card   Description                       Current Running Test            Run by
+------ --------------------------------- ------------------------------- ------
+1      C9300-24UX                        DiagThermalTest                 <HM>
+                                         DiagFanTest                     <HM>
+                                         DiagScratchRegisterTest         <HM>
+                                         TestPortTxMonitoring            <HM>
+                                         TestConsistencyCheckL2          <HM>
+                                         TestConsistencyCheckL3          <HM>
+                                         TestConsistencyCheckMcast       <HM>
+                                         TestConsistencyCheckL2m         <HM>
+                                         TestConsistencyCheckL3m         <HM>
+
+====== ================================= =============================== ======

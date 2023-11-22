@@ -1,0 +1,5 @@
+EIGRP-IPv4 VR(test) Address-Family Interfaces for AS(100)
+           VRF(1)
+                              Xmit Queue   PeerQ        Mean   Pacing Time   Multicast    Pending
+Interface              Peers  Un/Reliable  Un/Reliable  SRTT   Un/Reliable   Flow Timer   Routes
+Gi0/0/0.1                0        0/0       0/0           0       0/0            0           0

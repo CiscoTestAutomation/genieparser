@@ -1,16 +1,9 @@
-
-204-MSMR#show lisp all extranet ext1 instance-id 103
-Output for router lisp 0
-
------------------------------------------------------
-LISP Extranet table
-Home Instance ID: 103
-Total entries: 6
-Provider/Subscriber  Inst ID    EID prefix
-Provider             103        10.121.88.0/24
-Provider             103        10.220.100.0/24
-Provider             103        192.168.195.0/24
-Subscriber           102        172.16.1.0/24
-Subscriber           101        192.168.0.0/24
-Subscriber           101        192.168.9.0/24
-        
+LISP Extranet policy table
+Home Instance ID: 101
+Prov/Sub    Source      InstID     EID prefix
+Provider    Dynamic     103        88.88.88.0/24
+Provider    Dynamic     103        100.100.100.0/24
+Provider    Dynamic     103        200.200.200.0/24
+Subscriber  Dynamic     101        192.168.0.1/32
+Subscriber  Dynamic     101        192.168.9.1/32
+Total entries: 5

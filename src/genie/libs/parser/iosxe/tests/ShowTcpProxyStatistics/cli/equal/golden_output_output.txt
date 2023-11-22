@@ -66,6 +66,10 @@ Invalid Flow Entries : 0
    DRE Resume Done	                   : 0
    DRE Resume msg to be Sent           : 0
    DRE Resume msg Sent                 : 0
+   DRE Bypass Hints Sent               : 0
+   DRE SMB Bypass Success Received     : 0
+   DRE HTTP Bypass Success Received    : 0
+   DRE Bypass Received From Peer       : 0
    EV SSL Pause Process                : 0
    EV SNORT Pause Process              : 0
    EV DRE Pause Process                : 0

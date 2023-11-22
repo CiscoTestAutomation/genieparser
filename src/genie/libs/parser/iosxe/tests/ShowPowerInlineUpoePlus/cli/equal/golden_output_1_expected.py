@@ -1,5 +1,14 @@
 expected_output = {
     "interface": {
+        'GigabitEthernet1/0/3': {
+            'admin_state': 'auto',
+            'allocated_power': 0.0,
+            'class': 'n/a',
+            'device': '',
+            'oper_state': 'off',
+            'type': 'n/a',
+            'utilized_power': 0.0
+        },
         "GigabitEthernet1/0/4": {
             "allocated_power": 4.0,
             "utilized_power": 3.8,

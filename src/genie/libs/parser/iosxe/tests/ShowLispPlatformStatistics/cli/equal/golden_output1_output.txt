@@ -1,0 +1,71 @@
+FIB notications received/processed:                    35669/35669
+    Invalid received/processed:                          0/0
+    Data packet signal received/processed:               35669/35669
+    L2 data packet signal received/processed:            0/0
+    Status report received/processed:                    0/0
+    Dyn-EID detected received/processed:                 0/0
+    Dyn-EID decap stale detected received/processed:     0/0
+    L2 dyn-EID decap stale detected received/processed:  0/0
+    Dyn-EID adjacency discover received/processed:       0/0
+    delete map-cache received/processed:                 0/0
+  L2 RIB statistics:
+    Remote update requests:                              0
+    Local update requests:                               5
+    Delete requests:                                     1
+    Update test:                                         0
+    Delete test:                                         0
+    Message sent:                                        6
+    Message received:                                    6
+    Unknown message received:                            0
+    Send Error:                                          0
+    Number of times blocked (flow control):              0
+  Dropped notications from CEF:                          0
+  Total notications from CEF:                            35669
+  Dropped control packets in input queue:                0
+    High priority input queue:                           0
+    Normal priority input queue:                         0
+  Deferred packet transmission:                          0/0
+    DDT referral deferred/dropped:                       0/0
+    DDT request deferred/dropped:                        0/0
+    DDT query deferred/dropped:                          0/0
+    Map-Request deferred/dropped:                        0/0
+    Map-Register deferred/dropped:                       0/0
+    Map-Reply deferred/dropped:                          0/0
+    MR negative Map-Reply deferred/dropped:              0/0
+    MR Map-Request fwd deferred/dropped:                 0/0
+    MS Map-Request fwd deferred/dropped:                 0/0
+    MS proxy Map-Reply deferred/dropped:                 0/0
+    xTR mcast Map-Notify deferred/dropped:               0/0
+    MS Info-Reply deferred/dropped:                      0/0
+    MS Map-Notify deferred/dropped:                      0/0
+    RTR Map-Register fwd deferred/dropped:               0/0
+    RTR Map-Notify fwd deferred/dropped:                 0/0
+    ETR Info-Request deferred/dropped:                   0/0
+Errors:
+  Invalid IP version drops:                              0
+IPv4 UDP control packets:
+  Rcvd total packets:                                    0
+  Rcvd invalid vrf:                                      0
+  Rcvd invalid IP header:                                0
+  Rcvd invalid protocol:                                 0
+  Rcvd invalid size:                                     0
+  Rcvd invalid port:                                     0
+  Rcvd invalid checksum:                                 0
+  Rcvd unsupported LISP:                                 0
+  Rcvd not LISP control:                                 0
+  Rcvd unknown LISP control:                             0
+  Sent total packets:                                    0
+  Sent flow controlled:                                  0
+IPv6 UDP control packets:
+  Rcvd total packets:                                    0
+  Rcvd invalid vrf:                                      0
+  Rcvd invalid IP header:                                0
+  Rcvd invalid protocol:                                 0
+  Rcvd invalid size:                                     0
+  Rcvd invalid port:                                     0
+  Rcvd invalid checksum:                                 0
+  Rcvd unsupported LISP:                                 0
+  Rcvd not LISP control:                                 0
+  Rcvd unknown LISP control:                             0
+  Sent total packets:                                    0
+  Sent flow controlled:                                  0

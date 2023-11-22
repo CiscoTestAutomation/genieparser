@@ -1,0 +1,7 @@
+Checking incompatible configuration(s):
+---------------------------------------
+No incompatible configurations
+
+Checking dynamic incompatibilities:
+-----------------------------------
+No incompatible configurations

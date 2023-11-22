@@ -1,0 +1,22 @@
+Crypto session current status
+ 
+Code: C - IKE Configuration mode, D - Dead Peer Detection    
+K - Keepalives, N - NAT-traversal, T - cTCP encapsulation    
+X - IKE Extended Authentication, F - IKE Fragmentation
+R - IKE Auto Reconnect, U - IKE Dynamic Route Update
+S - SIP VPN
+ 
+Interface: Tunnel1
+Profile: IKEV2_PROFILE
+Uptime: 00:00:31
+Session status: UP-ACTIVE    
+Peer: 10.1.1.1 port 4500 fvrf: (none) ivrf: (none)
+      Phase1_id: 10.1.1.1
+      Desc: (none)
+  Session ID: 78 
+  IKEv2 SA: local 4.4.4.1/4500 remote 10.1.1.1/4500 Active
+          Capabilities:DNU connid:1 lifetime:23:59:29
+  IPSEC FLOW: permit ip 0.0.0.0/0.0.0.0 0.0.0.0/0.0.0.0
+        Active SAs: 2, origin: crypto map
+        Inbound:  #pkts dec'ed 2 drop 0 life (KB/Sec) 4607999/3569
+        Outbound: #pkts enc'ed 0 drop 0 life (KB/Sec) 4608000/3569

@@ -4,6 +4,7 @@ expected_output = {
          "port_channel_member": False
       },
       "enabled": True,
+      "is_deleted": False,
       "line_protocol":"up",
       "oper_status":"up",
       "connected": True,

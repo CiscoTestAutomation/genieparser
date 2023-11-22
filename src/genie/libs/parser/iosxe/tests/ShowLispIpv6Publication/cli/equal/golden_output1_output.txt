@@ -1,5 +1,5 @@
 206-PxTR#show lisp instance-id 4100 ipv6 publication
-LISP Publication Information
+Publication Information for LISP 0 EID-table vrf red (IID 4100)
 Entries total 2
 Publisher       Last        EID Prefix               Locators        Encap-IID
                 Published                                            

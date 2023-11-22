@@ -1,0 +1,9 @@
+Total no of vlan mappings configured: 2
+Interface Twe1/0/12:
+VLANs on wire                    Translated VLAN     Operation
+------------------------------   ---------------     --------------
+10                                    20             1-to-1
+Interface Twe2/0/1:
+VLANs on wire                    Translated VLAN     Operation
+------------------------------   ---------------     --------------
+10                                    20             1-to-1

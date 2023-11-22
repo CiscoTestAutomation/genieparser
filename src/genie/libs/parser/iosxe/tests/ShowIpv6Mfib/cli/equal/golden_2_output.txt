@@ -1,0 +1,7 @@
+ (2000::1:1,FF05::1) Flags: HW
+   SW Forwarding: 9/0/144/0, Other: 0/0/0
+   HW Forwarding:   38797693/396/166/513, Other: 0/0/0
+   Null0 Flags: A
+   GigabitEthernet1/0/6 Flags: F NS
+     Pkts: 0/0/0    Rate: 0 pps
+

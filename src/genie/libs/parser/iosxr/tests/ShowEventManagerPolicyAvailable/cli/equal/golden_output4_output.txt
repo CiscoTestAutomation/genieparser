@@ -1,0 +1,4 @@
+RP/0/RSP0/CPU0:ios#show event manager policy available system | include tm_cli_cmd.tcl
+Fri Dec  3 10:31:16.405 UTC
+
+10  system    Thu Jul 22 14:23:12 2021      tm_cli_cmd.tcl

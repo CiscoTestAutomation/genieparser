@@ -1,0 +1,14 @@
+C9300-48P#show install package flash:cat9k_iosxe.2021-05-20_12.18_mcpre.0.CSCvq24042.SSA.smu.bin
+
+Name: cat9k_iosxe.2021-05-20_12.18_mcpre.0.CSCvq24042.SSA.smu.bin
+Version: 17.07.01.0.138316.1621538306..Cupertino
+Platform: CAT9K
+Package Type: SMU
+Defect ID: CSCvq24042
+Package State: Inactive
+Supersedes List: {}
+SMU Fixes List: {}
+SMU ID: 0
+SMU Type: non-reload
+SMU Compatible with Version: 17.07.01.0.138316
+SMUImpact:        

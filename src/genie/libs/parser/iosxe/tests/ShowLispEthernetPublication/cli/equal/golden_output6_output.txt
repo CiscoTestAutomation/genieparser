@@ -1,0 +1,9 @@
+=================================================
+Output for router lisp 0 instance-id 101
+=================================================
+LISP Publication Information
+Entries total 2
+EID Prefix        Last        Publisher           Encap-IID
+                  Published                                            
+aabb.cc00.c901/48 1d10h       100:100:100:100::   -
+aabb.cc00.d101/48 1d10h       100:100:100:100::   -

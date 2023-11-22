@@ -1,0 +1,22 @@
+show aaa method-lists authentication
+authen queue=AAA_ML_AUTHEN_LOGIN
+  name=default valid=TRUE id=0 :state=ALIVE : SERVER_GROUP radius SERVER_GROUP radius SERVER_GROUP radius SERVER_GROUP radius
+authen queue=AAA_ML_AUTHEN_ENABLE
+  name=default valid=TRUE id=0 :state=ALIVE : ENABLE  SERVER_GROUP radius SERVER_GROUP tacacs+
+authen queue=AAA_ML_AUTHEN_PPP
+authen queue=AAA_ML_AUTHEN_SGBP
+authen queue=AAA_ML_AUTHEN_ARAP
+authen queue=AAA_ML_AUTHEN_DOT1X
+  name= pvt_authen_0 valid=TRUE id=97000002 :state=DEAD : SERVER_GROUP  private_sg-0
+authen queue=AAA_ML_AUTHEN_8021X
+authen queue=AAA_ML_AUTHEN_EAPOUDP
+authen queue=AAA_ML_AUTHEN_WEBAUTH
+authen queue=AAA_ML_AUTHEN_CONNECTEDAPPS
+permanent lists
+  name= Permanent Enable None valid=TRUE id=0 :state=ALIVE : ENABLE  NONE 
+  name= Permanent Enable valid=TRUE id=0 :state=ALIVE : ENABLE 
+  name= Permanent None valid=TRUE id=0 :state=ALIVE : NONE 
+  name= Permanent Local valid=TRUE id=0 :state=ALIVE : LOCAL 
+  name= Permanent rcmd valid=TRUE id=0 :state=ALIVE : RCMD 
+Switch-9500#
+

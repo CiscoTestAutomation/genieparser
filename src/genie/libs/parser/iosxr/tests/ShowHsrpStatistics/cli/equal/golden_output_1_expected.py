@@ -1,0 +1,42 @@
+expected_output = {
+     "hsrp":{
+         "statistics":{
+            "invalid_packets_received":{
+               "conflicting_source_ip":0,
+               "failed_authentication":0,
+               "inoperational_group":0,
+               "invalid_hello_time":0,
+               "invalid_opcode":0,
+               "mismatching_unsupported_versions":0,
+               "mismatching_virtual_ip":0,
+               "too_long":0,
+               "too_short":0,
+               "total_invalid_received":0,
+               "unknown_group":0
+            },
+            "packets_sent":{
+               "adver":0,
+               "coup":0,
+               "hello":515267,
+               "resign":0,
+               "total_sent":515267
+            },
+            "protocol":{
+               "active":0,
+               "init":0,
+               "learn":0,
+               "listen":1,
+               "speak":1,
+               "standby":1
+            },
+            "valid_packets_received":{
+               "adver":0,
+               "coup":0,
+               "hello":515420,
+               "resign":0,
+               "total_received":515420
+            }
+         }
+    }
+  
+}

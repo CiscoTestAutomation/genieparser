@@ -1,0 +1,7 @@
+NAT64 Statistics
+
+NAT64 Prefix Statistics
+Stateful Prefix: 1001::/96
+Packets translated (IPv4 -> IPv6): 0
+Packets translated (IPv6 -> IPv4): 0
+Packets dropped: 0

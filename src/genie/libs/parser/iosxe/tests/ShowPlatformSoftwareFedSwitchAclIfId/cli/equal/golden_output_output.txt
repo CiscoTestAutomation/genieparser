@@ -1,0 +1,32 @@
+########################################################
+#########                             ##################
+########    Printing Interface Info    #################
+#########                             ##################
+########################################################
+##  INTFACE INFO: (INTF_TYPE: Group)
+########################################################
+INTERFACE: Client MAC 00da.5516.1903
+MAC 00da.5516.1903
+########################################################
+    intfinfo: 0x73e7d8169408
+    Interface handle: 0x3f0001ad
+    Interface Type: Group
+    if-id: 0x000000001a4bff14
+------------
+Direction:  Input
+Protocol Type:IPv4
+    Policy Intface Handle: 0x1b00011f
+    Policy Handle: 0x80000ba
+
+
+########################################################
+#########                             ##################
+########       Policy information      #################
+#########                             ##################
+########################################################
+Policy handle       : 0x080000ba
+Policy name         : implicit_deny_v6!implicit_deny:xACSACLx-IPV6-PERMIT_ALL_IPV6_TRAFFIC-61117e44!xACSACLx-IP-PERMIT_ALL_IPV4_TRAFFIC-57f6b0d3:
+ID                  : 1296
+Protocol            : [3] IPV4
+Feature             : [40] AAL_FEATURE_GACL
+Number of ACLs      : 1

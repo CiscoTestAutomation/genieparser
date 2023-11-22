@@ -1,0 +1,24 @@
+For ISSU to Proceed, Check the Following Criteria :
+1. No Topology change must be active in any STP instance
+2. Bridge assurance(BA) should not be active on any port (except MCT)
+3. There should not be any Non Edge Designated Forwarding port (except MCT)
+4. ISSU criteria must be met on the VPC Peer Switch as well
+
+Following are the statistics on this switch
+
+
+No Active Topology change Found!
+Criteria 1 PASSED !!
+
+No Ports with BA Enabled Found!
+Criteria 2 PASSED!!
+
+List of all the Non-Edge Ports
+
+Port             VLAN Role Sts Tree Type Instance
+---------------- ---- ---- --- --------- ---------
+Ethernet1/21        1 Desg FWD  MST           0
+Ethernet1/20        1 Desg FWD  MST           0
+
+Criteria 3 FAILED !!
+ISSU Cannot Proceed! Change the above Config

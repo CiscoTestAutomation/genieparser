@@ -12,6 +12,7 @@ IOSXE parsers for the following commands
     * 'show ipv6 eigrp interfaces'
     * 'show ipv6 eigrp interfaces detail'
     * 'show ip eigrp interfaces detail'
+    * 'show ipv6 eigrp topology {ipv6_address}'
 '''
 
 # Python
@@ -692,7 +693,10 @@ class ShowIpv6EigrpNeighborsDetail(ShowIpEigrpNeighborsDetailSuperParser,
 
 class ShowEigrpInterfacesSchema(MetaParser):
 
-    ''' Schema for "show ip eigrp interfaces" '''
+    ''' Schema for
+        * "show ip eigrp interfaces"
+        * "show ip eigrp vrf <vrf> interfaces"
+    '''
 
 # These are the key-value pairs to add to the parsed dictionary
     schema = {
@@ -757,7 +761,7 @@ class ShowEigrpInterfacesSchema(MetaParser):
 class ShowEigrpInterfacesSuperParser(ShowEigrpInterfacesSchema):
 
     # Defines a function to run the cli_command
-    def cli(self, output=None):
+    def cli(self, vrf='', output=None):
         out = output
 
         # Initializes the Python dictionary variable
@@ -770,6 +774,9 @@ class ShowEigrpInterfacesSuperParser(ShowEigrpInterfacesSchema):
             r'EIGRP\-(?P<address_family>IPv4|IPv6)\s+(VR\((?P<name>\w+)\)\s+Address\-Family\s+)?'
             r'Interfaces\s+for\s+AS\(\s*(?P<auto_sys>[\S]+)\)\s*(?:VRF\((?P<vrf>\S+)\))?$'
         )
+
+        # VRF(1)
+        p1_2 = re.compile(r"VRF\((?P<vrf>\S+)\)")
 
         # Defines the regex for the second line of device output. Example is:
         # Xmit Queue   PeerQ        Mean   Pacing Time   Multicast    Pending
@@ -846,6 +853,14 @@ class ShowEigrpInterfacesSuperParser(ShowEigrpInterfacesSchema):
                     instance_dict.update({'named_mode': False})
                     
 
+                continue
+
+            # VRF(1)
+            m = p1_2.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict_copy = parsed_dict['vrf']['default'].copy()
+                parsed_dict['vrf'] = {group['vrf']: parsed_dict_copy}
                 continue
 
             # Processes the matched patterns for the second line of output
@@ -1016,9 +1031,13 @@ class ShowEigrpTopologySuperParser(ShowIpEigrpTopologySchema):
 
         # EIGRP-IPv4 Topology Table for AS(10)/ID(10.169.0.2)
         # EIGRP-IPv4 Topology Table for AS(10)/ID(10.169.0.2) VRF(red)
-        r1 = re.compile(r'^EIGRP\-(?P<address_family>IPv4|IPv6)\s*'
-        'Topology\s*Table\s*for\s*\w+\(\s*(?P<as_num>\d+)\)\/\w+\(\s*(?P<eigrp_id>\S+)\)\s*'
-        '(?:VRF\((?P<vrf>\S+)\))?$')
+        # EIGRP-IPv4 VR(test) Topology Table for AS(100)/ID(10.114.254.5)
+        r1 = re.compile(r'^EIGRP\-(?P<address_family>IPv4|IPv6)\s*(VR\((?P<process_name>\w+)\))?\s*'
+                        r'Topology\s*Table\s*for\s*\w+\(\s*(?P<as_num>\d+)\)\/\w+\(\s*(?P<eigrp_id>\S+)\)'
+                        r'\s*(?:VRF\((?P<vrf>\S+)\))?$')
+
+        # Topology(base) TID(0) VRF(1)
+        r1_2 = re.compile(r'(Topology\((?P<topology_base>\w+)\)\s+TID\((?P<topology_id>\d+)\)\s+)\s*(?:VRF\((?P<vrf>\S+)\))$')
 
         # IPv6-EIGRP Topology Table for AS(1)/ID(2001:0DB8:10::/64)
         # IPv6-EIGRP Topology Table for AS(1)/ID(2001:0DB8:10::/64) VRF(red)
@@ -1051,12 +1070,22 @@ class ShowEigrpTopologySuperParser(ShowIpEigrpTopologySchema):
             
             # EIGRP-IPv4 Topology Table for AS(10)/ID(10.169.0.2)
             # EIGRP-IPv4 Topology Table for AS(10)/ID(10.169.0.2) VRF(red)
+            # EIGRP-IPv4 VR(test) Topology Table for AS(100)/ID(10.114.254.5)
             result = r1.match(line)
             if result:
                 address_family = result.groupdict()['address_family']
                 as_num = result.groupdict()['as_num']
                 eigrp_id = result.groupdict()['eigrp_id']
 
+                if result.groupdict()['vrf']:
+                    vrf = result.groupdict()['vrf']
+                else:
+                    vrf = 'default'
+                continue
+
+            # Topology(base) TID(0) VRF(1)
+            result = r1_2.match(line)
+            if result:
                 if result.groupdict()['vrf']:
                     vrf = result.groupdict()['vrf']
                 else:
@@ -1125,23 +1154,33 @@ class ShowEigrpTopologySuperParser(ShowIpEigrpTopologySchema):
                 route_dict['known_via'] = known_via
                 continue
 
+
         return parsed_dict
 
 
 class ShowIpEigrpInterfaces(ShowEigrpInterfacesSuperParser, ShowEigrpInterfacesSchema):
 
-    ''' Parser for "show ip eigrp interfaces"'''
+    '''
+    Parser for:
+        "show ip eigrp interfaces"
+        "show ip eigrp vrf <vrf> interfaces"
+    '''
 
-    cli_command = 'show ip eigrp interfaces'
+    cli_command = ['show ip eigrp vrf {vrf} interfaces',
+                    'show ip eigrp interfaces']
 
     # Defines a function to run the cli_command
-    def cli(self, output=None):
+    def cli(self, vrf='', output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if vrf:
+                cmd = self.cli_command[0].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[1]
+            out = self.device.execute(cmd)
         else:
             out = output
 
-        return super().cli(output=out)
+        return super().cli(output=out, vrf=vrf)
 
 
 class ShowIpv6EigrpInterfaces(ShowEigrpInterfacesSuperParser, ShowEigrpInterfacesSchema):
@@ -1232,3 +1271,314 @@ class ShowIpv6EigrpTopology(ShowEigrpTopologySuperParser, ShowIpEigrpTopologySch
             output = self.device.execute(cmd)
         
         return super().cli(output=output, address_family='ipv4', vrf=vrf)
+
+# ==========================================================================================
+# Parser Schema for 'show eigrp address-family ipv6 vrf {vrf} {num} neighbors {interface}'
+# ==========================================================================================
+
+class ShowEigrpAddressFamilyIpv6VrfNeighborsSchema(MetaParser):
+    """
+    Schema for
+        * 'show eigrp address-family ipv6 vrf {vrf} {num} neighbors {interface}'
+    """
+
+    schema = {
+        'eigrp_ipv6_vr': str,
+        'address_family_neighbor_as': int,
+        'vrf': {
+            'h' : {
+                int: {
+                    Optional('address'): {
+                        Any(): Any()
+                    },
+                    'interface': str,
+                    'hold_uptime_sec': int,
+                    'uptime': str,
+                    'srtt_ms': int,
+                    'rto': int,
+                    'q_cnt': int,
+                    'seq_num': int
+                }
+            }
+        },
+    }
+
+# ==========================================================================================
+# Parser for 'show eigrp address-family ipv6 vrf {vrf} {num} neighbors {interface}'
+# ==========================================================================================
+
+class ShowEigrpAddressFamilyIpv6VrfNeighbors(ShowEigrpAddressFamilyIpv6VrfNeighborsSchema):
+    """
+    Parser for
+        * 'show eigrp address-family ipv6 vrf {vrf} {num} neighbors {interface}'
+    """
+    cli_command = 'show eigrp address-family ipv6 vrf {vrf} {num} neighbors {interface}'
+
+    def cli(self, vrf, num, interface, output=None):
+
+        if output is None:
+            output = self.device.execute(self.cli_command.format(vrf=vrf, num=num, interface=interface))
+
+        # initializing dictionary
+        ret_dict = {}
+
+        # EIGRP-IPv6 VR(test) Address-Family Neighbors for AS(200)
+        p1 = re.compile(r'^EIGRP-IPv6 VR\((?P<vr>[\w\s]+)\) Address-Family Neighbors for AS\((?P<as>\d+)\)$')
+
+        # 0   Link-local address:     Gi1/0/1                  11 00:12:46 1598  5000  0  3
+        p2 = re.compile(r'^(?P<h>\d+)\s+(?P<add_type>[\S\s]+):\s+(?P<interface>\S+)\s+(?P<hold>\d+)\s+(?P<uptime>\S+)\s+(?P<srtt>\d+)\s+(?P<rto>\d+)\s+(?P<q_cnt>\d+)\s+(?P<seq_num>\d+)$')
+
+        # FE80::2A5:BFFF:FE53:D442
+        p3 = re.compile(r'\s*(?P<address>[\w\:]+)$')
+        add_type =""
+        for line in output.splitlines():
+            line = line.strip()
+
+            # EIGRP-IPv6 VR(test) Address-Family Neighbors for AS(200)
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['eigrp_ipv6_vr'] = group['vr']
+                ret_dict['address_family_neighbor_as'] = int(group['as'])
+                continue
+
+            # 0   Link-local address:     Gi1/0/1                  11 00:12:46 1598  5000  0  3
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict = ret_dict.setdefault('vrf',{}).setdefault('h',{}).setdefault(int(group['h']),{})
+                add_type = group['add_type']
+                add_dict = root_dict.setdefault('address',{})
+                root_dict['interface'] = group['interface']
+                root_dict['hold_uptime_sec'] = int(group['hold'])
+                root_dict['uptime'] = group['uptime']
+                root_dict['srtt_ms'] = int(group['srtt'])
+                root_dict['rto'] = int(group['rto'])
+                root_dict['q_cnt'] = int(group['q_cnt'])
+                root_dict['seq_num'] = int(group['seq_num'])
+                continue
+
+            # FE80::2A5:BFFF:FE53:D442
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                add_dict[add_type]= group['address']
+                continue
+
+        return ret_dict
+
+class ShowIpv6EigrpTopologyEntrySchema(MetaParser):
+    """
+        Schema for 'show ipv6 eigrp topology {ipv6_address}'
+    """
+
+    schema = {
+        Any(): {
+            'autonomous_system_number': int,
+            'router_id': str,
+            'state': str,
+            'query_origin_flag': int,
+            'num_successors': int,
+            'feasible_distance': int,
+            'descriptor_blocks': {
+                Any(): {
+                    'interface': str,
+                    'from': str,
+                    'send_flag': str,
+                    'composite_metric': str,
+                    'route': str,
+                    'vector_metrics': {
+                        'minimum_bandwidth': int,
+                        'total_delay': int,
+                        'reliability': str,
+                        'load': str,
+                        'minimum_mtu': int,
+                        'hop_count': int,
+                        'originating_router': str
+                    }
+                }
+            }
+        }
+    }
+
+class ShowIpv6EigrpTopologyEntry(ShowIpv6EigrpTopologyEntrySchema):
+    """
+        Parser for:
+            'show ipv6 eigrp topology {ipv6_address}'
+    """
+
+    cli_command = 'show ipv6 eigrp topology {ipv6_address}'
+
+    def cli(self, ipv6_address, output=None):
+        if output is None:
+            output = self.device.execute(
+                self.cli_command.format(ipv6_address=ipv6_address)
+            )
+
+        # EIGRP-IPv6 Topology Entry for AS(101)/ID(10.9.1.1) for 5001::/64
+        p1 = re.compile(
+            r'^EIGRP-IPv6\s+Topology\s+Entry\s+for\s+AS\('
+            r'(?P<autonomous_system_number>\d+)\)/ID\((?P<router_id>[\d\.]+)\)'
+            r'\s+for\s+(?P<ipv6_subnet>[\d\w:/]+)$'
+        )
+
+        # State is Passive, Query origin flag is 1, 1 Successor(s), FD is 3072
+        p2 = re.compile(
+            r'^State\s+is\s+(?P<state>\w+),\s+Query\s+origin\s+flag\s+is\s+'
+            r'(?P<query_origin_flag>\d+),\s+(?P<num_successors>\d+)\s+'
+            r'Successor\(s\),\s+FD\s+is\s+(?P<feasible_distance>\d+)$'
+        )
+
+        # FE80::20C:29FF:FE5C:FB0A (vmi2), from FE80::20C:29FF:FE5C:FB0A, Send flag is 0x0
+        p3 = re.compile(
+            r'^(?P<link_local_address>[\w:]+)\s+\((?P<interface>[\w\d/]+)\),'
+            r'\s+from\s+(?P<from>[\w:]+),\s+Send\s+flag\s+is\s+'
+            r'(?P<send_flag>[\dx]+)$'
+        )
+
+        # Composite metric is (3072/2816), route is Internal
+        p4 = re.compile(
+            r'^Composite\s+metric\s+is\s+\((?P<composite_metric>[\d/]+)\),'
+            r'\s+route\s+is\s+(?P<route>\w+)$'
+        )
+
+        # Minimum bandwidth is 1000000 Kbit
+        p5 = re.compile(
+            r'^Minimum\s+bandwidth\s+is\s+(?P<minimum_bandwidth>\d+)'
+            r'\s+Kbit$'
+        )
+
+        # Total delay is 20 microseconds
+        p6 = re.compile(
+            r'^Total\s+delay\s+is\s+(?P<total_delay>\d+)\s+microseconds$'
+        )
+
+        # Reliability is 255/255
+        p7 = re.compile(
+            r'^Reliability\s+is\s+(?P<reliability>[\d/]+)$'
+        )
+
+        # Load is 1/255
+        p8 = re.compile(
+            r'^Load\s+is\s+(?P<load>[\d/]+)$'
+        )
+
+        # Minimum MTU is 1492
+        p9 = re.compile(
+            r'^Minimum\s+MTU\s+is\s+(?P<minimum_mtu>\d+)$'
+        )
+
+        # Hop count is 1
+        p10 = re.compile(
+            r'^Hop\s+count\s+is\s+(?P<hop_count>\d+)$'
+        )
+
+        # Originating router is 11.9.1.1
+        p11 = re.compile(
+            r'^Originating\s+router\s+is\s+(?P<originating_router>[\d\.]+)$'
+        )
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # EIGRP-IPv6 Topology Entry for AS(101)/ID(10.9.1.1) for 5001::/64
+            m = p1.match(line)
+            if m:
+                groupdict = m.groupdict()
+                subnet_dict = ret_dict.setdefault(groupdict['ipv6_subnet'], {})
+                subnet_dict['autonomous_system_number'] = \
+                    int(groupdict['autonomous_system_number'])
+                subnet_dict['router_id'] = groupdict['router_id']
+
+            # State is Passive, Query origin flag is 1, 1 Successor(s), FD is 3072
+            m = p2.match(line)
+            if m:
+                groupdict = m.groupdict()
+                subnet_dict['state'] = groupdict['state']
+                subnet_dict['query_origin_flag'] = \
+                    int(groupdict['query_origin_flag'])
+                subnet_dict['num_successors'] = \
+                    int(groupdict['num_successors'])
+                subnet_dict['feasible_distance'] = \
+                    int(groupdict['feasible_distance'])
+
+            # FE80::20C:29FF:FE5C:FB0A (vmi2), from FE80::20C:29FF:FE5C:FB0A, Send flag is 0x0
+            m = p3.match(line)
+            if m:
+                groupdict = m.groupdict()
+                descriptor_blocks = \
+                    subnet_dict.setdefault('descriptor_blocks', {})
+                descriptor_block = \
+                    descriptor_blocks.setdefault(groupdict['link_local_address'], {})
+                descriptor_block['interface'] = groupdict['interface']
+                descriptor_block['from'] = groupdict['from']
+                descriptor_block['send_flag'] = groupdict['send_flag']
+
+            # Composite metric is (3072/2816), route is Internal
+            m = p4.match(line)
+            if m:
+                groupdict = m.groupdict()
+                descriptor_block['composite_metric'] = groupdict['composite_metric']
+                descriptor_block['route'] = groupdict['route']
+
+            # Minimum bandwidth is 1000000 Kbit
+            m = p5.match(line)
+            if m:
+                groupdict = m.groupdict()
+                vector_metrics = \
+                    descriptor_block.setdefault('vector_metrics', {})
+                vector_metrics['minimum_bandwidth'] = \
+                    int(groupdict['minimum_bandwidth'])
+
+            # Total delay is 20 microseconds
+            m = p6.match(line)
+            if m:
+                groupdict = m.groupdict()
+                vector_metrics = \
+                    descriptor_block.setdefault('vector_metrics', {})
+                vector_metrics['total_delay'] = int(groupdict['total_delay'])
+
+            # Reliability is 255/255
+            m = p7.match(line)
+            if m:
+                groupdict = m.groupdict()
+                vector_metrics = \
+                    descriptor_block.setdefault('vector_metrics', {})
+                vector_metrics['reliability'] = groupdict['reliability']
+
+            # Load is 1/255
+            m = p8.match(line)
+            if m:
+                groupdict = m.groupdict()
+                vector_metrics = \
+                    descriptor_block.setdefault('vector_metrics', {})
+                vector_metrics['load'] = groupdict['load']
+
+            # Minimum MTU is 1492
+            m = p9.match(line)
+            if m:
+                groupdict = m.groupdict()
+                vector_metrics = \
+                    descriptor_block.setdefault('vector_metrics', {})
+                vector_metrics['minimum_mtu'] = int(groupdict['minimum_mtu'])
+
+            # Hop count is 1
+            m = p10.match(line)
+            if m:
+                groupdict = m.groupdict()
+                vector_metrics = \
+                    descriptor_block.setdefault('vector_metrics', {})
+                vector_metrics['hop_count'] = int(groupdict['hop_count'])
+
+            # Originating router is 11.9.1.1
+            m = p11.match(line)
+            if m:
+                groupdict = m.groupdict()
+                vector_metrics = \
+                    descriptor_block.setdefault('vector_metrics', {})
+                vector_metrics['originating_router'] = \
+                    groupdict['originating_router']
+
+        return ret_dict

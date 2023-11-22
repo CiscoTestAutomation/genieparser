@@ -1,0 +1,93 @@
+Tag 1:
+IS-IS Level-1 Link State Database:
+LSPID                 LSP Seq Num  LSP Checksum  LSP Holdtime/Rcvd      ATT/P/OL
+r1.00-00            * 0x00000010   0x1378                1180/*         0/0/0  (1)
+  Area Address: 49
+  NLPID:        0xCC 0x8E
+  Topology:     IPv4 (0x0)
+                IPv6 (0x2 ATT)
+  Router ID:    11.11.11.11
+  Router CAP:   11.11.11.11, D:0, S:0
+    Flex algorithm: 128 Metric-Type: Min-delay Alg-type: SPF Priority: 100
+      Flex-algo Exclude-any Ext Admin Group:
+       0x00000000 0x00000000 0x00000002
+      Flex-algo Include-any Ext Admin Group:
+       0x00000000 0x00000000 0x00000002
+      Flex-algo Include-all Ext Admin Group:
+       0x00000000 0x00000000 0x00000002
+    Segment Routing: I:1 V:0, SRGB Base: 16000 Range: 8000
+    Segment Routing Local Block: SRLB Base: 15000 Range: 1000
+    Node-MSD
+      MSD: 16
+    Segment Routing Algorithms: SPF, Strict-SPF, Flex-algo 128
+    Flex algorithm: 128 Metric-Type: IGP Alg-type: SPF Priority: 128
+  Hostname: r1
+  Metric: 10         IS-Extended r2.00
+    Adjacency SID Value:19 F:0 B:0 V:1 L:1 S:0 P:0 Weight:0
+    Adjacency SID Value:20 F:0 B:1 V:1 L:1 S:0 P:0 Weight:0
+    Local Interface ID: 1, Remote Interface ID: 1
+    Interface IP Address: 100.0.0.1
+    Neighbor IP Address: 100.0.0.2
+    Reservable Global Pool BW: 0 kbits/sec
+    Global Pool BW Unreserved:
+      [0]:        0 kbits/sec, [1]:        0 kbits/sec
+      [2]:        0 kbits/sec, [3]:        0 kbits/sec
+      [4]:        0 kbits/sec, [5]:        0 kbits/sec
+      [6]:        0 kbits/sec, [7]:        0 kbits/sec
+    Uni Link Delay(Avg.) A-bit:0 Value:100
+    Uni Link Delay(Min/Max) A-bit:0 Min:100 Max:100
+    Uni Link Delay(Var.) Value:0
+    Affinity: 0x80000200
+    Extended Affinity:
+        0x80000200
+    Admin. Weight: 150
+    Physical LINK BW: 2000000 kbits/sec
+    ASLA: L flag: 0, SA-Length 1, UDA-Length 0
+    Standard Applications:  FLEX-ALGO
+             Bit mask:  0x10
+     Appl spec Ext Admin Group:
+        0x00000000 0x00000000 0x00000000 0x00000000
+        0x00000000 0x00000000 0x00000000 0x80000000
+     Appl spec Admin Group: 0x00000001
+     Appl spec Uni Link Delay(Min/Max) A-bit:0 Min:100 Max:100
+  Metric: 10         IS (MT-IPv6) r2.00
+    Local Interface ID: 1, Remote Interface ID: 1
+    Interface IPV6 Address: 100:1:1:1:1:1:1:10
+    Neighbor IPV6 Address: 100:1:1:1:1:1:1:12
+  Metric: 10         IS (MT-IPv6) r2.00
+    Local Interface ID: 2, Remote Interface ID: 2
+    Interface IPV6 Address: 101:1:1:1:1:1:1:10
+    Neighbor IPV6 Address: 101:1:1:1:1:1:1:12
+  IP Address:   11.11.11.11
+  Metric: 0          IP 11.11.11.11/32
+    Prefix-attr: X:0 R:0 N:1
+    Prefix-SID Index: 11, Algorithm: SPF, R:0 N:1 P:0 E:0 V:0 L:0
+    Prefix-SID Index: 101, Algorithm: Flex-algo 128, R:0 N:1 P:0 E:0 V:0 L:0
+    Source Router ID: 11.11.11.11
+  Metric: 10         IP 100.0.0.0/24
+    Prefix-attr: X:0 R:0 N:0
+  IPv6 Address: 111::111
+  Metric: 10         IPv6 (MT-IPv6) 100:1:1:1:1:1:1:0/112
+    Prefix-attr: X:0 R:0 N:0
+  Metric: 0          IPv6 (MT-IPv6) 111::111/128
+    Prefix-attr: X:0 R:0 N:1
+  Metric: 10         IPv6 (MT-IPv6) 101:1:1:1:1:1:1:0/112
+    Prefix-attr: X:0 R:0 N:0
+r1.00-01            * 0x00000001   0x60DB                1172/*         0/0/0  (4)
+  Metric: 10         IS-Extended r2.00
+    Adjacency SID Value:25 F:0 B:0 V:1 L:1 S:0 P:0 Weight:0
+    Adjacency SID Value:26 F:0 B:1 V:1 L:1 S:0 P:0 Weight:0
+    Local Interface ID: 2, Remote Interface ID: 2
+    Interface IP Address: 100.0.1.1
+    Neighbor IP Address: 100.0.1.2
+    Reservable Global Pool BW: 0 kbits/sec
+    Global Pool BW Unreserved:
+      [0]:        0 kbits/sec, [1]:        0 kbits/sec
+      [2]:        0 kbits/sec, [3]:        0 kbits/sec
+      [4]:        0 kbits/sec, [5]:        0 kbits/sec
+      [6]:        0 kbits/sec, [7]:        0 kbits/sec
+    Admin. Weight: 10
+    Physical LINK BW: 10000 kbits/sec
+    Affinity: 0x00000000
+  Metric: 10         IP 100.0.1.0/24
+    Prefix-attr: X:0 R:0 N:0

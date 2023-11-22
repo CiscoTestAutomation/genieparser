@@ -1,0 +1,8 @@
+Number of APs: 1
+
+CC = Country Code
+RD = Regulatory Domain
+
+AP Name                          Slots AP Model             Ethernet MAC   Radio MAC      CC   RD   IP Address                                State        Location
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+APF8B7.E2C4.1120                 2     AIR-AP1852I-B-K9     f8b7.e2c4.1120 f8b7.e2c4.9b60 US   -B   20.20.13.142                              Registered   default location

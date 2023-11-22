@@ -1,0 +1,46 @@
+LISP ETR IPv4 Mapping Database for LISP 0 EID-table vrf internet (IID 5000), LSBs: 0x3
+Entries total 7, no-route 0, inactive 0, do-not-register 0
+
+51.51.0.0/16, import from publication cfg prop, inherited from default locator-set RLOC, auto-discover-rlocs, proxy
+  Uptime: 01:30:26, Last-change: 01:30:26
+  Service-Insertion: N/A
+  Extranet-IID: 5000  (Sourced by Config Propagation)
+  Locator       Pri/Wgt  Source     State
+  100.88.88.88   10/50   cfg-intf   site-self, reachable
+88.88.0.0/16, import from publication, inherited from default locator-set RLOC, auto-discover-rlocs, proxy
+  Uptime: 01:26:41, Last-change: 01:26:41
+  Service-Insertion: N/A
+  Extranet-IID: 5000  (Sourced by Config Propagation)
+  Locator       Pri/Wgt  Source     State
+  100.88.88.88   10/50   cfg-intf   site-self, reachable
+  100.99.99.99   10/50   auto-disc  site-other, report-reachable
+172.168.0.0/16, import from publication cfg prop, inherited from default locator-set RLOC, auto-discover-rlocs, proxy
+  Uptime: 01:30:26, Last-change: 01:30:26
+  Service-Insertion: N/A
+  Extranet-IID: 4100  (Sourced by Config Propagation)
+  Locator       Pri/Wgt  Source     State
+  100.88.88.88   10/50   cfg-intf   site-self, reachable
+173.168.0.0/16, import from publication cfg prop, inherited from default locator-set RLOC, auto-discover-rlocs, proxy
+  Uptime: 01:30:26, Last-change: 01:30:26
+  Service-Insertion: N/A
+  Extranet-IID: 4101  (Sourced by Config Propagation)
+  Locator       Pri/Wgt  Source     State
+  100.88.88.88   10/50   cfg-intf   site-self, reachable
+182.168.0.0/16, import from publication cfg prop, inherited from default locator-set RLOC, auto-discover-rlocs, proxy
+  Uptime: 01:30:26, Last-change: 01:30:26
+  Service-Insertion: N/A
+  Extranet-IID: 4100  (Sourced by Config Propagation)
+  Locator       Pri/Wgt  Source     State
+  100.88.88.88   10/50   cfg-intf   site-self, reachable
+192.168.0.0/16, import from publication cfg prop, inherited from default locator-set RLOC, auto-discover-rlocs, proxy
+  Uptime: 01:30:26, Last-change: 01:30:26
+  Service-Insertion: N/A
+  Extranet-IID: 4100  (Sourced by Config Propagation)
+  Locator       Pri/Wgt  Source     State
+  100.88.88.88   10/50   cfg-intf   site-self, reachable
+193.168.0.0/16, import from publication cfg prop, inherited from default locator-set RLOC, auto-discover-rlocs, proxy
+  Uptime: 01:30:26, Last-change: 01:30:26
+  Service-Insertion: N/A
+  Extranet-IID: 4101  (Sourced by Config Propagation)
+  Locator       Pri/Wgt  Source     State
+  100.88.88.88   10/50   cfg-intf   site-self, reachable

@@ -1,0 +1,12 @@
+FT1:
+Inlet:8985 RPM, Outlet:10717 RPM, PWM:32%
+FT2:
+Inlet:9032 RPM, Outlet:10717 RPM, PWM:32%
+FT3:
+Inlet:9032 RPM, Outlet:10857 RPM, PWM:32%
+FT4:
+Inlet:9079 RPM, Outlet:10764 RPM, PWM:32%
+FT5:
+Inlet:8798 RPM, Outlet:10951 RPM, PWM:32%
+FT6:
+Inlet:9032 RPM, Outlet:10904 RPM, PWM:32%

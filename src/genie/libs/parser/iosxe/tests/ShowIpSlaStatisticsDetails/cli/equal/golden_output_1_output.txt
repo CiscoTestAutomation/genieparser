@@ -1,0 +1,10 @@
+IPSLA operation id: 50
+Latest RTT: 5 milliseconds
+Latest operation start time: 06:45:19 UTC Wed Oct 13 2021
+Latest operation return code: OK
+Over thresholds occurred: FALSE
+Number of successes: 57
+Number of failures: 1
+Operation time to live: Forever
+Operational state of entry: Active
+Last time this entry was reset: Never

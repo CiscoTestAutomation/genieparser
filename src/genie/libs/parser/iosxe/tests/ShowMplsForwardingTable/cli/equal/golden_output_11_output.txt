@@ -1,0 +1,23 @@
+sh mpls forwarding-table | s gid
+16    [T]  No Label   [gid 1179655 (0x00120007)][V]   \
+                                       104620936     aggregate/vrf3001
+17    [T]  No Label   [gid 1179656 (0x00120008)][V]   \
+                                       104621448     aggregate/vrf3001
+18    [T]  No Label   [gid 1179657 (0x00120009)][V]   \
+                                       104621448     aggregate/vrf3001
+19    [T]  No Label   [gid 1179658 (0x0012000A)][V]   \
+                                       104621960     aggregate/vrf3001
+20    [T]  No Label   [gid 1179651 (0x00120003)][V]   \
+                                       104619912     aggregate/vrf3001
+21    [T]  No Label   [gid 1179652 (0x00120004)][V]   \
+                                       104619912     aggregate/vrf3001
+22    [T]  No Label   [gid 1179650 (0x00120002)][V]   \
+                                       104618888     aggregate/vrf3001
+23    [T]  No Label   [gid 1179653 (0x00120005)][V]   \
+                                       104620424     aggregate/vrf3001
+25    [T]  No Label   [gid 1179649 (0x00120001)][V]   \
+                                       104618888     aggregate/vrf3001
+30    [T]  No Label   [gid 1179648 (0x00120000)][V]   \
+                                       1710835976    aggregate/vrf3001
+36    [T]  No Label   [gid 1179654 (0x00120006)][V]   \
+                                       104620424     aggregate/vrf3001

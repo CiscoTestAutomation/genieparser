@@ -1,0 +1,6 @@
+  Subscription ID: 2147483648
+  Sensor Type: yang-push periodic
+    Filter type: xpath
+    Filter selector: /if:interfaces-state/interface[name="GigabitEthernet0/0"]/oper-status
+  Data Collectors
+    DC: confd periodic, SubFilter: /if:interfaces-state/interface[name="GigabitEthernet0/0"]/oper-status

@@ -1,0 +1,5 @@
+Telemetry connections
+
+Index Peer Address               Port  VRF Source Address             State      State Description
+----- -------------------------- ----- --- -------------------------- ---------- --------------------
+ 7087 5.39.24.105                28103 0   172.16.0.2                 Connecting Reconnecting for protocol cntp-tcp

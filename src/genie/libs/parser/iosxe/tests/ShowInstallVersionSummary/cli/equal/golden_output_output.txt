@@ -1,0 +1,84 @@
+Location: R0
+  Version: 17.10.01.0.161965
+    Version Extension: 1656318100
+    Version State: Activated & Committed
+    Filename: 
+    CW_IMAGE: 
+    Checksum: 
+    Package List:
+      Package Type: IMG
+        Package Name: /flash1/user/cat9k-lni.BLD_POLARIS_DEV_LATEST_20220627_072021_V17_10_0_17.SSA.pkg
+        Package State: Activated & Committed
+      Package Type: IMG
+        Package Name: /flash1/user/cat9k-wlc.BLD_POLARIS_DEV_LATEST_20220627_072021_V17_10_0_17.SSA.pkg
+        Package State: Activated & Committed
+      Package Type: IMG
+        Package Name: /flash1/user/cat9k-webui.BLD_POLARIS_DEV_LATEST_20220627_072021_V17_10_0_17.SSA.pkg
+        Package State: Activated & Committed
+      Package Type: IMG
+        Package Name: /flash1/user/cat9k-rpbase.BLD_POLARIS_DEV_LATEST_20220627_072021_V17_10_0_17.SSA.pkg
+        Package State: Activated & Committed
+      Package Type: IMG
+        Package Name: /flash1/user/cat9k-rpboot.BLD_POLARIS_DEV_LATEST_20220627_072021_V17_10_0_17.SSA.pkg
+        Package State: Activated & Committed
+      Package Type: IMG
+        Package Name: /flash1/user/cat9k-sipspa.BLD_POLARIS_DEV_LATEST_20220627_072021_V17_10_0_17.SSA.pkg
+        Package State: Activated & Committed
+      Package Type: IMG
+        Package Name: /flash1/user/cat9k-espbase.BLD_POLARIS_DEV_LATEST_20220627_072021_V17_10_0_17.SSA.pkg
+        Package State: Activated & Committed
+      Package Type: IMG
+        Package Name: /flash1/user/cat9k-sipbase.BLD_POLARIS_DEV_LATEST_20220627_072021_V17_10_0_17.SSA.pkg
+        Package State: Activated & Committed
+      Package Type: IMG
+        Package Name: /flash1/user/cat9k-srdriver.BLD_POLARIS_DEV_LATEST_20220627_072021_V17_10_0_17.SSA.pkg
+        Package State: Activated & Committed
+      Package Type: IMG
+        Package Name: /flash1/user/cat9k-guestshell.BLD_POLARIS_DEV_LATEST_20220627_072021_V17_10_0_17.SSA.pkg
+        Package State: Activated & Committed
+      Package Type: IMG
+        Package Name: /flash1/user/cat9k-cc_srdriver.BLD_POLARIS_DEV_LATEST_20220627_072021_V17_10_0_17.SSA.pkg
+        Package State: Activated & Committed
+
+
+Location: R1
+  Version: 17.10.01.0.161965
+    Version Extension: 1656318100
+    Version State: Activated & Committed
+    Filename: 
+    CW_IMAGE: 
+    Checksum: 
+    Package List:
+      Package Type: IMG
+        Package Name: /flash1/user/cat9k-lni.BLD_POLARIS_DEV_LATEST_20220627_072021_V17_10_0_17.SSA.pkg
+        Package State: Activated & Committed
+      Package Type: IMG
+        Package Name: /flash1/user/cat9k-wlc.BLD_POLARIS_DEV_LATEST_20220627_072021_V17_10_0_17.SSA.pkg
+        Package State: Activated & Committed
+      Package Type: IMG
+        Package Name: /flash1/user/cat9k-webui.BLD_POLARIS_DEV_LATEST_20220627_072021_V17_10_0_17.SSA.pkg
+        Package State: Activated & Committed
+      Package Type: IMG
+        Package Name: /flash1/user/cat9k-rpbase.BLD_POLARIS_DEV_LATEST_20220627_072021_V17_10_0_17.SSA.pkg
+        Package State: Activated & Committed
+      Package Type: IMG
+        Package Name: /flash1/user/cat9k-rpboot.BLD_POLARIS_DEV_LATEST_20220627_072021_V17_10_0_17.SSA.pkg
+        Package State: Activated & Committed
+      Package Type: IMG
+        Package Name: /flash1/user/cat9k-sipspa.BLD_POLARIS_DEV_LATEST_20220627_072021_V17_10_0_17.SSA.pkg
+        Package State: Activated & Committed
+      Package Type: IMG
+        Package Name: /flash1/user/cat9k-espbase.BLD_POLARIS_DEV_LATEST_20220627_072021_V17_10_0_17.SSA.pkg
+        Package State: Activated & Committed
+      Package Type: IMG
+        Package Name: /flash1/user/cat9k-sipbase.BLD_POLARIS_DEV_LATEST_20220627_072021_V17_10_0_17.SSA.pkg
+        Package State: Activated & Committed
+      Package Type: IMG
+        Package Name: /flash1/user/cat9k-srdriver.BLD_POLARIS_DEV_LATEST_20220627_072021_V17_10_0_17.SSA.pkg
+        Package State: Activated & Committed
+      Package Type: IMG
+        Package Name: /flash1/user/cat9k-guestshell.BLD_POLARIS_DEV_LATEST_20220627_072021_V17_10_0_17.SSA.pkg
+        Package State: Activated & Committed
+      Package Type: IMG
+        Package Name: /flash1/user/cat9k-cc_srdriver.BLD_POLARIS_DEV_LATEST_20220627_072021_V17_10_0_17.SSA.pkg
+        Package State: Activated & Committed

@@ -116,10 +116,15 @@ class ShowMplsMldpRoot(ShowMplsMldpRootSchema):
             return ret_dict
             
         ##Path(s)     : 26.1.1.2         LDP nbr: 3.3.3.3:0         Port-channel30
-        p1 = re.compile(r"^Path\(s\)\s+\:\s+(?P<path>\S+)\s+[a-zA-z ]+:\s+(?P<ldp_neigh>\S+)\s+(?P<interface>[a-zA-Z0-9\- ]+)$")
+        ##Path(s)     : 191.1.1.2        LDP nbr: 2.2.2.2:0         Port-channel20.1
+        ##Path(s)     : 191.1.1.2        LDP nbr: 2.2.2.2:0         HundredGigE1/0/52.1
+        p1 = re.compile(r"^Path\(s\)\s+\:\s+(?P<path>\S+)\s+[a-zA-z ]+:\s+(?P<ldp_neigh>\S+)\s+(?P<interface>\S+)$")
         
         ##Interface   : Port-channel30 (via unicast RT)
-        p2 = re.compile(r"^Interface\s+\:\s+(?P<interface>\S+)\s+\(via(?P<learnet_via>[a-zA-Z ]+)\)$")
+        p2 = re.compile(r"^Interface\s+\:\s+(?P<interface>\S+)\s+\(via\s+(?P<learnet_via>[a-zA-Z ]+)\)$")
+        
+        ## Root node    : 5.5.5.5  (we are the root)
+        p3 = re.compile(r"^Root\s+node\s+:\s+(?P<root_node>\S+).*$")
         
         for line in out.splitlines():
             line=line.strip()
@@ -127,24 +132,23 @@ class ShowMplsMldpRoot(ShowMplsMldpRootSchema):
                 res=line.split(":")
                 
                 ##Root node    : 5.5.5.5
-                if "Root node" in line:
-                    root_dict=ret_dict.setdefault("root_node",{}).setdefault(res[1].strip(),{})
+                m=p3.match(line)
+                if m:
+                    root_dict=ret_dict.setdefault("root_node",{}).setdefault(m.groupdict()['root_node'],{})
                     continue
                 
                 ##Path(s)     : 26.1.1.2         LDP nbr: 3.3.3.3:0         Port-channel30
                 m=p1.match(line)
                 if m:
-                    r1=m.groupdict()
-                    for key,value in r1.items():
-                        root_dict.update({key.strip().lower().replace(" ","_"):value.strip()})
+                    group=m.groupdict()
+                    root_dict.update(group)
                     continue
                 
                 ##Interface   : Port-channel30 (via unicast RT)
                 m=p2.match(line)
                 if m:
-                    r2=m.groupdict()
-                    for key,value in r2.items():
-                        root_dict.update({key.strip().lower().replace(" ","_"):value.strip()})
+                    group=m.groupdict()
+                    root_dict.update(group)
                     continue
                     
                 ##Metric      : 4
@@ -204,7 +208,8 @@ class ShowMplsMldpNeighbors(ShowMplsMldpNeighborsSchema):
         p1 =re.compile(r"^MLDP peer ID\s+\:\s+(?P<mldp_peer>\S+)\,\s+uptime\s+(?P<uptime>\S+)\s+(?P<peer_state>\w+)\,$")
         
         ##LDP GR         : Enabled
-        p2 = re.compile(r"^LDP GR\s+\:\s+(?P<ldp_gr_state>\S+)$")
+        ##LDP GR         :  Enabled (we are in restart mode)
+        p2 = re.compile(r"^LDP GR\s+\:\s+(?P<ldp_gr_state>.*)$")
         
         ##: Reconnect time: 120 Seconds
         ##: Instance: 2

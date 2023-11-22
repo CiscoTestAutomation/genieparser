@@ -1,0 +1,27 @@
+show ethernet cfm statistics
+
+BRAIN MAC: 4c77.6dad.ea53
+DomainName: UNINET
+MA Name: UNINET_VERLEANDROVALLE-17_5005
+MPID: 1561
+  Last clearing of counters: never
+  CCMs:
+    Transmitted:              28029   Rcvd Seq Errors:        0
+  LTRs:
+    Unexpected Rcvd:              0
+    Total Tx LTR:                 0
+    Total Rx Valid LTR:           0
+    Total Rx Invalid LTR:         0
+    Rx Invalid Relay Action:      0
+  LTMs:
+    Total Tx LTM:                 0
+    Total Rx Valid LTM:           0
+    Total Rx Invalid LTM:         0
+  LBRs:
+    Transmitted:                  0   Rcvd Seq Errors:        0
+    Rcvd in order:                0   Rcvd Bad MSDU:          0
+    Rx Invalid LBR:               0
+  LBMs:
+    Total Tx LBM:                 0
+    Total Rx Valid LBM:           0
+    Total Rx Invalid LBM:         0

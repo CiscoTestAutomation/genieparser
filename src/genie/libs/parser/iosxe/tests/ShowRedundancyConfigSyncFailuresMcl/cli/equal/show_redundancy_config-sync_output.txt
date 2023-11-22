@@ -1,0 +1,5 @@
+#show redundancy config-sync failures mcl
+Mismatched Command List
+-----------------------
+
+The list is Empty

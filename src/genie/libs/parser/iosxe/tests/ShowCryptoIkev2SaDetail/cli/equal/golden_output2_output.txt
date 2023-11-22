@@ -1,0 +1,49 @@
+Tunnel-id Local                 Remote                fvrf/ivrf            Status
+973       92.1.121.1/500        22.1.1.2/500          none/121             READY
+      Encr: AES-CBC, keysize: 256, PRF: SHA256, Hash: SHA256, DH Grp:19, Auth sign: PSK, Auth verify: PSK
+      Life/Active Time: 86400/12689 sec
+      CE id: 76468, Session-id: 17155
+      Status Description: Negotiation done
+      Local spi: 000D3669857A0F82       Remote spi: E0419B1DB02DE6AE
+      Local id: user2621@cisco.com
+      Remote id: 22.1.1.2
+      Local req msg id:  214            Remote req msg id:  6
+      Local next msg id: 214            Remote next msg id: 6
+      Local req queued:  214            Remote req queued:  6
+      Local window:      5              Remote window:      5
+      DPD configured for 60 seconds, retry 3
+      Fragmentation not  configured.
+      Dynamic Route Update: enabled
+      Extended Authentication not configured.
+      NAT-T is not detected
+      Cisco Trust Security SGT is disabled
+      Initiator of SA : Yes
+      Pushed IP address: 8.1.9.4
+      Remote subnets:
+      10.0.0.0 255.0.0.0
+      13.0.0.0 255.0.0.0
+      17.0.0.0 255.0.0.0
+      23.0.0.0 255.0.0.0
+      19.0.0.0 255.0.0.0
+
+Tunnel-id Local                 Remote                fvrf/ivrf            Status
+4         10.1.1.2/4500         10.1.1.1/4500         none/none            READY 
+      Encr: AES-GCM, keysize: 256, PRF: SHA384, Hash: None, DH Grp:20, Auth sign: PSK, Auth verify: PSK
+      Life/Active Time: 86400/4006 sec
+      CE id: 0, Session-id: 59
+      Local spi: 5D4519820D6B9F4A       Remote spi: 65D3D6F7D18D5A47
+      Status Description: Negotiation done
+      Local id: 10.1.1.2
+      Remote id: 10.1.1.1
+      Local req msg id:  402            Remote req msg id:  400      
+      Local next msg id: 402            Remote next msg id: 400      
+      Local req queued:  402            Remote req queued:  400      
+      Local window:      5              Remote window:      5        
+      DPD configured for 10 seconds, retry 2
+      Fragmentation not  configured.
+      Dynamic Route Update: enabled
+      Extended Authentication not configured.
+      NAT-T is detected inside
+      Cisco Trust Security SGT is disabled
+      Initiator of SA : Yes
+      Pushed IP address: 66.6.6.11

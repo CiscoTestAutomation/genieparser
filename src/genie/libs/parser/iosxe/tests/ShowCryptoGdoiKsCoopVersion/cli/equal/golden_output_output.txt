@@ -1,0 +1,5 @@
+Cooperative key server infra Version : 2.0.0 
+Client : KS_POLICY_CLIENT Version : 2.0.0 
+Client : GROUP_MEMBER_CLIENT Version : 2.0.1 
+Client : SID_CLIENT Version : 1.0.1
+

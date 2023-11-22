@@ -1,0 +1,74 @@
+***********************************************************************************
+ [Port-channel10, map1, Ingress]: CGID = 0x738310 
+***********************************************************************************
+  cgid: 0x738310
+  No of classes: 4
+  TCG ref count: 1
+  Filter state: UP TO DATE
+  VMR state: UP TO DATE
+
+  ============================================================
+   Classmap Information
+  ============================================================
+  Class name: cs1(cgid: 0x738310, clid: 0x6A611)
+    TCCG ref count: 1
+    NULL Bind count: 1
+    Class seq no.: 0x1FFFFF
+    No of child classes: 0
+    Filter: FILTER_MATCH_IP_DSCP
+      Value: 0x8
+
+  Class name: cs5(cgid: 0x738310, clid: 0x6A651)
+    TCCG ref count: 1
+    NULL Bind count: 1
+    Class seq no.: 0x3FFFFE
+    No of child classes: 0
+    Filter: FILTER_MATCH_IP_DSCP
+      Value: 0x28
+
+  Class name: aclv4(cgid: 0x738310, clid: 0xC16261)
+    TCCG ref count: 1
+    NULL Bind count: 1
+    Class seq no.: 0x5FFFFD
+    No of child classes: 0
+
+  Class name: class-default(cgid: 0x738310, clid: 0x639)
+    TCCG ref count: 1
+    NULL Bind count: 1
+    Class seq no.: 0xFFFFFFFF
+    No of child classes: 0
+    Filter: FILTER_MATCH_ANY
+      Value: 0x0
+
+  ============================================================
+   TCG Information
+  ============================================================
+  NPI TCG Values:
+    Config state: VALID
+    Operational state: IN HARDWARE
+    Parent Info: [0x0, 0x0, 0]
+    No of Child TCGs: 0
+    Mark Action count: 0
+    Police Action count: 3
+    Queue Action count: 0
+    No of TCCGs: 4
+
+   TCCG 0:
+    Class-map name: cs1(0x6A611)
+    Child cgid: 0x0
+    Null Bind: True
+
+   TCCG 1:
+    Class-map name: cs5(0x6A651)
+    Child cgid: 0x0
+    Null Bind: True
+
+   TCCG 2:
+    Class-map name: aclv4(0xC16261)
+    Child cgid: 0x0
+    Null Bind: True
+
+   TCCG 3:
+    Class-map name: class-default(0x639)
+    Child cgid: 0x0
+    Null Bind: True

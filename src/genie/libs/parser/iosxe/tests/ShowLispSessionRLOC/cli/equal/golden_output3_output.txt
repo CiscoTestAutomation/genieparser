@@ -1,0 +1,33 @@
+Peer address:     44.44.44.44:4342
+Local address:    11.11.11.11:55239
+Session Type:     Active
+Session State:    Up (16:24:12)
+Session RTT:      0 ms  (16:24:12)
+Messages in/out:  44/15
+Bytes in/out:     1938/1076
+Fatal errors:     0
+Rcvd unsupported: 0
+Rcvd invalid VRF: 0
+Rcvd override:    0
+Rcvd malformed:   0
+Sent deferred:    1
+SSO redundancy:   N/A
+Auth Type:        None 
+
+Accepting Users:  0
+Users:            14
+  Type                      ID                                      In/Out    State
+  Pubsub subscriber         lisp 0 IID 101 AFI MAC                   4/0      Off
+  ETR Reliable Registration lisp 0 IID 16777214 AFI IPv4             4/2      TCP
+  ETR Reliable Registration lisp 0 IID 102 AFI MAC                   0/1      TCP
+  Pubsub subscriber         lisp 0 IID 102 AFI MAC                   4/0      Off
+  ETR Reliable Registration lisp 0 IID 4100 AFI IPv4                 2/2      TCP
+  Pubsub subscriber         lisp 0 IID 4100 AFI IPv4                 2/0      Off
+  ETR Reliable Registration lisp 0 IID 4100 AFI IPv6                 2/2      TCP
+  Pubsub subscriber         lisp 0 IID 4100 AFI IPv6                 2/0      Off
+  ETR Reliable Registration lisp 0 IID 4101 AFI IPv4                 0/1      TCP
+  Pubsub subscriber         lisp 0 IID 4101 AFI IPv4                 2/0      Off
+  ETR Reliable Registration lisp 0 IID 4101 AFI IPv6                 0/1      TCP
+  Pubsub subscriber         lisp 0 IID 4101 AFI IPv6                 2/0      Off
+  ETR Reliable Registration lisp 0 IID 101 AFI MAC                   2/5      TCP
+  Capability Exchange       N/A                                      1/1      waiting

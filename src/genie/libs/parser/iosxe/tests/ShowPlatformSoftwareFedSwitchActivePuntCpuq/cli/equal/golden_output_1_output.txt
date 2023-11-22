@@ -1,0 +1,30 @@
+Punt CPU Q Statistics
+===========================================
+
+CPU Q Id                       : 18
+CPU Q Name                     : CPU_Q_TRANSIT_TRAFFIC
+Packets received from ASIC     : 64564
+Send to IOSd total attempts    : 64564
+Send to IOSd failed count      : 0
+RX suspend count               : 0
+RX unsuspend count             : 0
+RX unsuspend send count        : 0
+RX unsuspend send failed count : 0
+RX consumed count              : 0
+RX dropped count               : 0
+RX non-active dropped count    : 0
+RX conversion failure dropped  : 0
+RX INTACK count                : 15377
+RX packets dq'd after intack   : 0
+Active RxQ event               : 16723
+RX spurious interrupt          : 1831
+RX phy_idb fetch failed: 0
+RX table_id fetch failed: 0
+RX invalid punt cause: 0
+
+Replenish Stats for all rxq:
+-------------------------------------------
+Number of replenish            : 20055
+Number of replenish suspend    : 0
+Number of replenish un-suspend : 0
+-------------------------------------------

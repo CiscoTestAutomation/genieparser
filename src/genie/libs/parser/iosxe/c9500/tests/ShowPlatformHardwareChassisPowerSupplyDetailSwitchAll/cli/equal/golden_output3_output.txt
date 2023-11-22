@@ -1,0 +1,42 @@
+show platform hardware chassis power-supply detail switch standby all
+PS1:
+Input Voltage   :       3.0000 V
+Input Current   :       0.0000 A
+Input Power     :       0.0000 W
+Output Voltage  :       0.0000 V
+Output Current  :       0.0000 A
+Output power    :       0.0000 W
+Temperature1    :      26.2500 C
+Temperature2    :      23.2500 C
+Temperature3    :      26.2500 C
+PS2:
+Input Voltage   :     227.5000 V
+Input Current   :       1.7773 A
+Input Power     :     397.5000 W
+Output Voltage  :      12.0503 V
+Output Current  :      29.9688 A
+Output power    :     361.0000 W
+Temperature1    :      23.0000 C
+Temperature2    :      23.7500 C
+Temperature3    :      22.0000 C
+PS3:
+Input Voltage   :       3.5000 V
+Input Current   :       0.0000 A
+Input Power     :       0.0000 W
+Output Voltage  :       0.0000 V
+Output Current  :       0.0000 A
+Output power    :       0.0000 W
+Temperature1    :      26.0000 C
+Temperature2    :      23.2500 C
+Temperature3    :      25.7500 C
+PS4:
+Input Voltage   :     227.0000 V
+Input Current   :       1.7695 A
+Input Power     :     395.5000 W
+Output Voltage  :      12.0522 V
+Output Current  :      29.6875 A
+Output power    :     357.5000 W
+Temperature1    :      23.7500 C
+Temperature2    :      24.2500 C
+Temperature3    :      22.7500 C
+

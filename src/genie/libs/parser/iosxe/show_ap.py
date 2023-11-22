@@ -1,7 +1,7 @@
 import re
 
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any, Optional
+from genie.metaparser.util.schemaengine import Any, Optional, Or
 
 
 # ====================
@@ -13,18 +13,21 @@ class ShowApSummarySchema(MetaParser):
 
     schema = {
         "ap_neighbor_count": int,
-        "ap_name": {
+        Optional("ap_name"): {
             str: {
                 "slots_count": int,
                 "ap_model": str,
                 "ethernet_mac": str,
                 "radio_mac": str,
                 "location": str,
+                "country": str,
+                Optional("regulatory_domain"): str,
                 "ap_ip_address": str,
                 "state": str
             }
         }
     }
+
 
 # ====================
 # Parser for:
@@ -40,28 +43,42 @@ class ShowApSummary(ShowApSummarySchema):
             out = self.device.execute(self.cli_command)
         else:
             out = output
+
         
         ap_summary_dict = {}
-        # Number of APs: 149
+        # Number of APs: 3
         #
         # AP Name                            Slots    AP Model  Ethernet MAC    Radio MAC       Location                          Country     IP Address                                 State
         # -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         # a121-cap22                       2      9130AXI   a4b2.32ff.2db9  2c57.41ff.b979  Fab A  UK          10.6.33.106                               Registered
         # a132-cap15                       2      9130AXI   a4b2.32ff.b3d5  2c57.41ff.f2c0  Fab A  UK          10.6.32.146                               Registered
         # a111-cap27                       2      9130AXI   a4b2.32ff.b3ed  2c57.41ff.f380  Fab A  UK          10.6.32.118.                              Registered
-        # a112-cap11                       2      9130AXI   a4b2.32ff.b362  2c57.41ff.f720  Fab A  UK          10.6.33.160                               Registered
-        # a112-cap10                       2      9130AXI   a4b2.32ff.b5b1  2c57.41ff.d1a0  Fab A  UK          10.6.33.102                               Registered
-        # a112-cap17                       2      9130AXI   a4b2.32ff.b5c5  2c57.41ff.d240  Fab A  UK          10.6.32.203                               Registered
-        # a112-cap14                       2      9130AXI   a4b2.32ff.b5c9  2c57.41ff.d260  Fab A  UK          10.6.32.202                               Registered
-        # a122-cap09                       2      9130AXI   a4b2.32ff.b5e1  2c57.41ff.d320  Fab A  UK          10.6.33.133                               Registered
-        # a131-cap43                       2      9130AXI   a4b2.32ff.b5e5  2c57.41ff.d340  Fab A  UK          10.6.33.93                                Registered
-        # a122-cap08                       2      9130AXI   a4b2.32ff.b5e9  2c57.41ff.d360  Fab A  UK          10.6.32.166                               Registered
 
-        # Number of APs: 149
+
+        # Number of APs: 3
         ap_neighbor_count_capture = re.compile(r"^Number\s+of\s+APs:\s+(?P<ap_neighbor_count>\d+)")
-        # a121-cap22                       2      9130AXI   a4b2.32ff.2db9  2c57.41ff.b979  Fab A  UK          10.6.33.106                               Registered
-        ap_neighbor_info_capture = re.compile(
-            r"^(?P<ap_name>\S+)\s+(?P<slots_count>\d+)\s+(?P<ap_model>\S+)\s+(?P<ethernet_mac>\S+)\s+(?P<radio_mac>\S+)(?P<location>.*)\s+(?P<ap_ip_address>\d+\.\d+\.\d+\.\d+)\s+(?P<state>(Registered))")
+
+        # AP002C.C862.E708  2      AIR-AP1815I-A-K9      002c.c862.e708  002c.c88a.fd20  default location    US    9.4.57.241    Registered
+        if "Country Code" not in out and "Regulatory Domain" not in out:
+            ap_neighbor_info_capture = re.compile(
+                   r"^(?P<ap_name>\S+)\s+(?P<slots_count>\d+)\s+(?P<ap_model>\S+)\s+" 
+                   "(?P<ethernet_mac>\S+)\s+(?P<radio_mac>\S+)\s+(?P<location>.*)\s+" 
+                   "(?P<country>\S+)\s+(?P<ap_ip_address>\d+\.\d+\.\d+\.\d+)\s+" 
+                   "(?P<state>(Registered))")
+        else:
+            # For the new output
+            # CC = Country Code
+            # RD = Regulatory Domain
+            #
+            # AP Name                          Slots AP Model             Ethernet MAC   Radio MAC      CC   RD   IP Address                                State        Location
+            # ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+            # APF8B7.E2C4.1120                 2     AIR-AP1852I-B-K9     f8b7.e2c4.1120 f8b7.e2c4.9b60 US   -B   20.20.13.142                              Registered   default location
+            ap_neighbor_info_capture = re.compile(
+                r"^(?P<ap_name>\S+)\s+(?P<slots_count>\d+)\s+(?P<ap_model>\S+)\s+"
+                "(?P<ethernet_mac>\S+)\s+(?P<radio_mac>\S+)\s+(?P<country>.*)\s+"
+                "(?P<regulatory_domain>\S+)\s+(?P<ap_ip_address>\d+\.\d+\.\d+\.\d+)\s+"
+                "(?P<state>(Registered))\s+(?P<location>.*)")
+
 
         remove_lines = ('AP Name', '----')
 
@@ -316,18 +333,22 @@ class ShowApDot115GhzChannelSchema(MetaParser):
                 "device_aware": str,
             },
             "clean_air": str,
+            Optional("zero_wait"): str,
             "wlc_leader_name": str,
-            "wlc_leader_ip": str,
+            Optional("wlc_leader_ip"): str,
+            Optional("wlc_leader_ipv4"): str,
+            Optional("wlc_leader_ipv6"): str,
             "last_run_seconds": int,
             "dca_level": str,
+            Optional("dca_aggressive"): str,
             "dca_db": int,
-            "chan_width_mhz": int,
-            "max_chan_width_mhz": int,
-            "dca_min_energy_dbm": float,
+            "chan_width_mhz": Or(int, str),
+            "max_chan_width_mhz": Or(int, float),
+            "dca_min_energy_dbm": Or(float, int),
             "channel_energy_levels" : {
-                "min_dbm": float,
-                "average_dbm": float,
-                "max_dbm": float,               
+                "min_dbm": Or(float, int),
+                "average_dbm": Or(float, int),
+                "max_dbm": Or(float, int),
             },
             "channel_dwell_times": {
                 "minimum": str,
@@ -335,11 +356,9 @@ class ShowApDot115GhzChannelSchema(MetaParser):
                 "max": str,
             },
             "allowed_channel_list": str,
-            "unused_channel_list": str
+            "unused_channel_list": str,
         }
     }
-
-
 
 # ===============================
 # Parser for:
@@ -368,7 +387,7 @@ class ShowApDot115GhzChannel(ShowApDot115GhzChannelSchema):
         #     Load                                     : Disable
         #     Device Aware                             : Disable
         #   CleanAir Event-driven RRM option           : Disabled
-        #   Channel Assignment Leader                  : sj-00a-ewlc1 (10.7.5.133)
+        #   Channel Assignment Leader                  : sj-00a-ewlc (9.4.62.51) (2001:9:4:62::51)
         #   Last Run                                   : 15995 seconds ago
         #
         #   DCA Sensitivity Level                      : MEDIUM : 15 dB
@@ -380,12 +399,12 @@ class ShowApDot115GhzChannel(ShowApDot115GhzChannelSchema):
         #     Average                                  : -82 dBm
         #     Maximum                                  : -81 dBm
         #   Channel Dwell Times
-        #     Minimum                                  : 4 hours 9 minutes 54 seconds
-        #     Average                                  : 4 hours 24 minutes 54 seconds
-        #     Maximum                                  : 4 hours 26 minutes 35 seconds
+        #     Minimum                                  : 2 days 21 hours 20 minutes 14 seconds 
+        #     Average                                  : 4 days 6 hours 26 minutes 41 seconds 
+        #     Maximum                                  : 4 days 17 hours 41 minutes 1 second  
         #   802.11a 5 GHz Auto-RF Channel List
-        #     Allowed Channel List                     : 36,40,44,48,52,56,60,64,100,104,108,112,116,120,124,128,132,136,140,144,149,153,157,161
-        #     Unused Channel List                      : 165
+        #     Allowed Channel List                     : 36,40,44,48,149,153,157,161 
+        #     Unused Channel List                      : 52,56,60,64,100,104,108,112,116,120,124,128,132,136,140,144,165,169,173 
 
         lead_auto_chan_assn_capture = re.compile(r"^Leader\s+Automatic\s+Channel\s+Assignment$")
         #   Channel Assignment Mode                    : AUTO
@@ -409,15 +428,16 @@ class ShowApDot115GhzChannel(ShowApDot115GhzChannelSchema):
         clean_air_capture = re.compile(
             r"^CleanAir\s+Event-driven\s+RRM\s+option\s+:\s+(?P<clean_air>(Enabled|Disabled))$")
         #   Channel Assignment Leader                  : sj-00a-ewlc1 (10.7.5.133)
-        chan_assn_leader_capture = re.compile(
-            r"^Channel\s+Assignment\s+Leader\s+:\s+(?P<wlc_leader_name>\S+)\s+(?P<wlc_leader_ip>\(\d+\.\d+\.\d+\.\d+\))$")
+        #   Channel Assignment Leader                  : vidya-ewlc-5 (9.4.62.51) (2001:9:4:62::51) 
+        chan_assn_leader_capture = re.compile('^Channel\s+Assignment\s+Leader\s+:\s+(?P<wlc_leader_name>\S+)\s+((?P<wlc_leader_ip>\(\d+\.\d+\.\d+\.\d+\))|(?P<wlc_leader_ipv4>\(\d+\.\d+\.\d+\.\d+\))\s+(?P<wlc_leader_ipv6>\(\d+\:\d+\:\d+\:\d+\::\d+\)))$')
         #   Last Run                                   : 15995 seconds ago
         last_run_capture = re.compile(r"^Last\s+Run\s+:\s+(?P<last_run_seconds>\d+)\s+seconds\s+ago$")
         #   DCA Sensitivity Level                      : MEDIUM : 15 dB
         dca_sensitivity_capture = re.compile(
             r"^DCA\s+Sensitivity\s+Level\s+:\s+(?P<dca_level>\S+)\s+:\s+(?P<dca_db>\d+)\s+dB$")
         #   DCA 802.11n/ac Channel Width               : 80 MHz
-        dca_chan_width_capture = re.compile(r"^DCA\s+802\.11n\/ac\s+Channel\s+Width\s+:\s+(?P<chan_width>\d+)\s+MHz$")
+        #   DCA 802.11n/ac Channel Width               : best 
+        dca_chan_width_capture = re.compile(r"^DCA\s+802\.11n\/ac\s+Channel\s+Width\s+:\s+((?P<chan_width>(\d+\S+|\S+)))")
         #   DBS Max Channel Width                      : 80 MHz
         dbs_max_chan_width_capture = re.compile(
             r"^DBS\s+Max\s+Channel\s+Width\s+:\s+(?P<max_chan_width>\d+)\s+MHz$")
@@ -435,20 +455,25 @@ class ShowApDot115GhzChannel(ShowApDot115GhzChannelSchema):
         #   Channel Dwell Times
         chan_dwell_times_capture = re.compile(r"^Channel\s+Dwell\s+Times$")
         #     Minimum                                  : 4 hours 9 minutes 54 seconds
-        chan_dwell_minimum_capture = re.compile(
-            r"^Minimum\s+:\s+(?P<chan_dwell_min_hours>\d+)\s+hours\s+(?P<chan_dwell_min_minutes>\d+)\s+minutes\s+(?P<chan_dwell_min_seconds>\d+)\s+seconds$")
+        #     Minimum                                  : 2 days 2 hours 52 minutes 25 seconds 
+        chan_dwell_minimum_capture = re.compile(r"^Minimum\s+:\s+((?P<chan_dwell_min_days>\d+)\s+(day|days)\s+)?((?P<chan_dwell_min_hours>\d+)\s+(hour|hours)\s+)?((?P<chan_dwell_min_minutes>\d+)\s+(minute|minutes)\s+)?(?P<chan_dwell_min_seconds>\d+)\s+(second|seconds)$")
         #     Average                                  : 4 hours 24 minutes 54 seconds
-        chan_dwell_average_capture = re.compile(
-            r"^Average\s+:\s+(?P<chan_dwell_average_hours>\d+)\s+hours\s+(?P<chan_dwell_average_minutes>\d+)\s+minutes\s+(?P<chan_dwell_average_second>\d+)\s+seconds$")
+        #     Average                                  : 3 days 11 hours 58 minutes 52 seconds 
+        chan_dwell_average_capture = re.compile(  r"^Average\s+:\s+((?P<chan_dwell_average_days>\d+)\s+(day|days)\s+)?((?P<chan_dwell_average_hours>\d+)\s+(hour|hours)\s+)?((?P<chan_dwell_average_minutes>\d+)\s+(minute|minutes)\s+)?(?P<chan_dwell_average_second>\d+)\s+(second|seconds)$")
         #     Maximum                                  : 4 hours 26 minutes 35 seconds
-        chan_dwell_max_capture = re.compile(
-            r"^Maximum\s+:\s+(?P<chan_dwell_max_hours>\d+)\s+hours\s+(?P<chan_dwell_max_minutes>\d+)\s+minutes\s+(?P<chan_dwell_max_seconds>\d+)\s+seconds$")
-        #   802.11a 5 GHz Auto-RF Channel List
+        #     Maximum                                  : 3 days 23 hours 13 minutes 12 seconds 
+        chan_dwell_max_capture = re.compile(r"^Maximum\s+:\s+((?P<chan_dwell_max_days>\d+)\s+(day|days)\s+)?((?P<chan_dwell_max_hours>\d+)\s+(hour|hours)\s+)?((?P<chan_dwell_max_minutes>\d+)\s+(minute|minutes)\s+)?(?P<chan_dwell_max_seconds>\d+)\s+(second|seconds)$")
+
+        # 802.11a 5 GHz Auto-RF Channel List
         channel_list_capture = re.compile(r"^802.11a\s+5\s+GHz\s+Auto-RF\s+Channel\s+List$")
-        #     Allowed Channel List                     : 36,40,44,48,52,56,60,64,100,104,108,112,116,120,124,128,132,136,140,144,149,153,157,161
+        # Allowed Channel List             : 36,40,44,48,52,56,60,64,100,104,108,112,116,120,124,128,132,136,140,144,149,153,157,161
         allowed_channel_list_capture = re.compile(r"^Allowed\s+Channel\s+List\s+:\s+(?P<allowed_channel_list>\S+)$")
-        #     Unused Channel List                      : 165
-        unused_channel_list_capture = re.compile(r"^Unused\s+Channel\s+List\s+:\s+(?P<unused_channel_list>\d+)$")
+        # Unused Channel List              : 52,56,60,64,100,104,108,112,116,120,124,128,132,136,140,144,165,169,173 
+        unused_channel_list_capture = re.compile(r"^Unused\s+Channel\s+List\s+:\s+(?P<unused_channel_list>\S+)$") 
+        # Zero Wait DFS                    : Disabled 
+        zero_wait_capture = re.compile(r"^Zero\s+Wait\s+DFS\s+:\s+(?P<zero_wait>(Enabled|Disabled))$") 
+        # DCA Aggressive Remaining Cycle   : 6(60 minutes)
+        dca_aggressive_capture = re.compile(r"^DCA\s+Aggressive\s+Remaining\s+Cycle\s+:\s+(?P<dca_aggressive>\S+\s+\w+\S)") 
 
 
         def change_data_type(value):
@@ -537,15 +562,31 @@ class ShowApDot115GhzChannel(ShowApDot115GhzChannelSchema):
                 clean_air = groups['clean_air']
                 show_ap_dot11_5ghz_channel_dict['channel_assignment'].update({'clean_air': clean_air})
                 continue
+            #  Zero Wait DFS                              : Disabled 
+            elif zero_wait_capture.match(line):
+                zero_wait_capture_match = zero_wait_capture.match(line)
+                groups = zero_wait_capture_match.groupdict()
+                zero_wait = groups['zero_wait']
+                show_ap_dot11_5ghz_channel_dict['channel_assignment'].update({'zero_wait': zero_wait})
+                continue
             #   Channel Assignment Leader                  : sj-00a-ewlc1 (10.7.5.133)
+            #   Channel Assignment Leader                  : vidya-ewlc-5 (9.4.62.51) (2001:9:4:62::51) 
             elif chan_assn_leader_capture.match(line):
                 chan_assn_leader_capture_match = chan_assn_leader_capture.match(line)
                 groups = chan_assn_leader_capture_match.groupdict()
                 wlc_leader_name = groups['wlc_leader_name']
                 wlc_leader_ip = groups['wlc_leader_ip']
+                wlc_leader_ipv4 = groups['wlc_leader_ipv4']
+                wlc_leader_ipv6 = groups['wlc_leader_ipv6']
                 show_ap_dot11_5ghz_channel_dict['channel_assignment'].update({'wlc_leader_name': wlc_leader_name})
-                show_ap_dot11_5ghz_channel_dict['channel_assignment'].update(
-                    {'wlc_leader_ip': wlc_leader_ip.replace('(', '').replace(')', '')})
+                if wlc_leader_ipv6:
+                    show_ap_dot11_5ghz_channel_dict['channel_assignment'].update(
+                        {'wlc_leader_ipv4': wlc_leader_ipv4.replace('(', '').replace(')', '')})
+                    show_ap_dot11_5ghz_channel_dict['channel_assignment'].update(
+                        {'wlc_leader_ipv6': wlc_leader_ipv6.replace('(', '').replace(')', '')})
+                else:
+                    show_ap_dot11_5ghz_channel_dict['channel_assignment'].update(
+                        {'wlc_leader_ip': wlc_leader_ip.replace('(', '').replace(')', '')})
                 continue
             #   Last Run                                   : 15995 seconds ago
             elif last_run_capture.match(line):
@@ -563,7 +604,15 @@ class ShowApDot115GhzChannel(ShowApDot115GhzChannelSchema):
                 show_ap_dot11_5ghz_channel_dict['channel_assignment'].update({'dca_level': dca_level})
                 show_ap_dot11_5ghz_channel_dict['channel_assignment'].update({'dca_db': dca_db})
                 continue
+            #  DCA Aggressive Remaining Cycle             : 6(60 minutes)
+            elif dca_aggressive_capture.match(line):
+                dca_aggressive_capture_match = dca_aggressive_capture.match(line)
+                groups = dca_aggressive_capture_match.groupdict()
+                dca_aggressive = groups['dca_aggressive']
+                show_ap_dot11_5ghz_channel_dict['channel_assignment'].update({'dca_aggressive': dca_aggressive})
+                continue
             #   DCA 802.11n/ac Channel Width               : 80 MHz
+            #   DCA 802.11n/ac Channel Width               : best 
             elif dca_chan_width_capture.match(line):
                 dca_chan_width_capture_match = dca_chan_width_capture.match(line)
                 groups = dca_chan_width_capture_match.groupdict()
@@ -623,33 +672,61 @@ class ShowApDot115GhzChannel(ShowApDot115GhzChannelSchema):
                     show_ap_dot11_5ghz_channel_dict["channel_assignment"].update({ "channel_dwell_times" : {} })
                 continue
             #     Minimum                                  : 4 hours 9 minutes 54 seconds
+            #     Minimum                                  : 2 days 21 hours 20 minutes 14 seconds  
             elif chan_dwell_minimum_capture.match(line):
                 chan_dwell_minimum_capture_match = chan_dwell_minimum_capture.match(line)
                 groups = chan_dwell_minimum_capture_match.groupdict()
+                chan_dwell_min_days = groups['chan_dwell_min_days']
                 chan_dwell_min_hours = groups['chan_dwell_min_hours']
                 chan_dwell_min_minutes = groups['chan_dwell_min_minutes']
                 chan_dwell_min_seconds = groups['chan_dwell_min_seconds']
-                chan_dwell_minimum = chan_dwell_min_hours + ' hours ' + chan_dwell_min_minutes + ' minutes ' + chan_dwell_min_seconds + ' seconds'
+                if chan_dwell_min_days:
+                    chan_dwell_minimum = chan_dwell_min_days + ' days ' + chan_dwell_min_hours + ' hours ' + chan_dwell_min_minutes + ' minutes ' + chan_dwell_min_seconds + ' seconds'
+
+                elif chan_dwell_min_hours:
+                    chan_dwell_minimum = chan_dwell_min_hours + ' hours ' + chan_dwell_min_minutes + ' minutes ' + chan_dwell_min_seconds + ' seconds'
+                elif chan_dwell_min_minutes:
+                    chan_dwell_minimum = chan_dwell_min_minutes + ' minutes ' + chan_dwell_min_seconds + ' seconds'
+                else:
+                    chan_dwell_minimum = chan_dwell_min_seconds + ' seconds'
                 show_ap_dot11_5ghz_channel_dict['channel_assignment']["channel_dwell_times"].update({'minimum': chan_dwell_minimum})
                 continue
             #     Average                                  : 4 hours 24 minutes 54 seconds
+            #     Average                                  : 4 days 6 hours 26 minutes 41 seconds 
             elif chan_dwell_average_capture.match(line):
                 chan_dwell_average_capture_match = chan_dwell_average_capture.match(line)
                 groups = chan_dwell_average_capture_match.groupdict()
+                chan_dwell_average_days = groups['chan_dwell_average_days']
                 chan_dwell_average_hours = groups['chan_dwell_average_hours']
                 chan_dwell_average_minutes = groups['chan_dwell_average_minutes']
                 chan_dwell_average_seconds = groups['chan_dwell_average_second']
-                chan_dwell_average = chan_dwell_average_hours + ' hours ' + chan_dwell_average_minutes + ' minutes ' + chan_dwell_average_seconds + ' seconds'
+                if chan_dwell_average_days:
+                    chan_dwell_average = chan_dwell_average_days + ' days ' + chan_dwell_average_hours + ' hours ' + chan_dwell_average_minutes + ' minutes ' + chan_dwell_average_seconds + ' seconds'
+                elif chan_dwell_average_hours:
+                    chan_dwell_average = chan_dwell_average_hours + ' hours ' + chan_dwell_average_minutes + ' minutes ' + chan_dwell_average_seconds + ' seconds'
+                elif chan_dwell_average_minutes:
+                    chan_dwell_average = chan_dwell_average_minutes + ' minutes ' + chan_dwell_average_seconds + ' seconds'
+                else:
+                    chan_dwell_average = chan_dwell_average_seconds + ' seconds'
                 show_ap_dot11_5ghz_channel_dict['channel_assignment']["channel_dwell_times"].update({'average': chan_dwell_average})
                 continue
             #     Maximum                                  : 4 hours 26 minutes 35 seconds
+            #     Maximum                                  : 4 days 17 hours 41 minutes 1 second  
             elif chan_dwell_max_capture.match(line):
                 chan_dwell_max_capture_match = chan_dwell_max_capture.match(line)
                 groups = chan_dwell_max_capture_match.groupdict()
+                chan_dwell_max_days = groups['chan_dwell_max_days']
                 chan_dwell_max_hours = groups['chan_dwell_max_hours']
                 chan_dwell_max_minutes = groups['chan_dwell_max_minutes']
                 chan_dwell_max_seconds = groups['chan_dwell_max_seconds']
-                chan_dwell_max = chan_dwell_max_hours + ' hours ' + chan_dwell_max_minutes + ' minutes ' + chan_dwell_max_seconds + ' seconds'
+                if chan_dwell_max_days:
+                    chan_dwell_max = chan_dwell_max_days + ' days ' + chan_dwell_max_hours + ' hours ' + chan_dwell_max_minutes + ' minutes ' + chan_dwell_max_seconds + ' seconds'
+                elif chan_dwell_max_hours:
+                    chan_dwell_max = chan_dwell_max_hours + ' hours ' + chan_dwell_max_minutes + ' minutes ' + chan_dwell_max_seconds + ' seconds'
+                elif chan_dwell_max_minutes:
+                    chan_dwell_max = chan_dwell_max_minutes + ' minutes ' + chan_dwell_max_seconds + ' seconds'
+                else:
+                    chan_dwell_max = chan_dwell_max_seconds + ' seconds'
                 show_ap_dot11_5ghz_channel_dict['channel_assignment']["channel_dwell_times"].update({'max': chan_dwell_max})
                 continue
             #   802.11a 5 GHz Auto-RF Channel List
@@ -657,7 +734,7 @@ class ShowApDot115GhzChannel(ShowApDot115GhzChannelSchema):
                 channel_list_capture_match = channel_list_capture.match(line)
                 groups = channel_list_capture_match.groupdict()
                 continue
-            #     Allowed Channel List                     : 36,40,44,48,52,56,60,64,100,104,108,112,116,120,124,128,132,136,140,144,149,153,157,161
+            # Allowed Channel List             : 36,40,44,48,52,56,60,64,100,104,108,112,116,120,124,128,132,136,140,144,149,153,157,161
             elif allowed_channel_list_capture.match(line):
                 allowed_channel_list_capture_match = allowed_channel_list_capture.match(line)
                 groups = allowed_channel_list_capture_match.groupdict()
@@ -665,7 +742,7 @@ class ShowApDot115GhzChannel(ShowApDot115GhzChannelSchema):
                 show_ap_dot11_5ghz_channel_dict['channel_assignment'].update(
                     {'allowed_channel_list': allowed_channel_list})
                 continue
-            #     Unused Channel List                      : 165
+            #     Unused Channel List                      : 52,56,60,64,100,104,108,112,116,120,124,128,132,136,140,144,165,169,173 
             elif unused_channel_list_capture.match(line):
                 unused_channel_list_capture_match = unused_channel_list_capture.match(line)
                 groups = unused_channel_list_capture_match.groupdict()
@@ -1127,6 +1204,7 @@ class ShowApCdpNeighbor(ShowApCdpNeighborSchema):
 
         return ap_cdp_neighbor_dict
 
+
 # =============================
 # Schema for:
 #  * 'show ap config general'
@@ -1264,11 +1342,15 @@ class ShowApConfigGeneralSchema(MetaParser):
 class ShowApConfigGeneral(ShowApConfigGeneralSchema):
     """Parser for show ap config general"""
 
-    cli_command = 'show ap config general'
+    cli_command = ['show ap name {ap_name} config general','show ap config general']
 
-    def cli(self, output=None):
+    def cli(self, ap_name='', output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if ap_name:
+                cmd = self.cli_command[0].format(ap_name=ap_name)
+            else:
+                cmd = self.cli_command[1]
+            out = self.device.execute(cmd)	
         else:
             out = output
             
@@ -2780,7 +2862,7 @@ class ShowApTagSummary(ShowApTagSummarySchema):
                 continue
 
         return ap_info_obj    
-
+        
 
 class ShowApStatusSchema(MetaParser):
     """Schema for show ap status."""
@@ -2826,3 +2908,245 @@ class ShowApStatus(ShowApStatusSchema):
         return ret_dict
 
 
+# ========================================
+# Schema for:
+#  * 'show ap ble summary'
+# ========================================
+class ShowApBleSummarySchema(MetaParser):
+    """ Schema for :
+        show ap ble summary"""
+
+    schema = {
+       Any(): {'ap_model': str,
+               'eth_mac': str,
+               'intf_state': str,
+               'admin_state': str,
+               'ble_mode': str,
+               'ble_mac': str,
+               'ble_profile': str,
+               'scan_state': str}
+    }
+
+# ========================================
+# Parser for:
+#  * 'show ap ble summary'
+# ========================================
+class ShowApBleSummary(ShowApBleSummarySchema):
+    """Parser for :
+        show ap ble summary"""
+
+    cli_command = 'show ap ble summary'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        ret_dict = {}
+
+        p1 = re.compile(
+            # AP Name       AP Model            AP Ethernet MAC         BLE Interface State     BLE Admin State         BLE mode                BLE MAC                 BLE Profile         Scan State
+            # AP3-02        AIR-AP4800-B-K9     4001.7ab2.c3e4          Close                   Up                      Base (Native)           2471.891b.c302          No Advertisement    Enabled
+            r'(?P<ap_name>(^[\w_\-]+))\s+(?P<ap_model>([A-Z0-9\-]+))\s+(?P<eth_mac>(([0-9a-fA-F]{4}\.){2}[0-9a-fA-F]{4}))\s+(?P<intf_state>([a-zA-Z]+\s*[a-zA-Z]+))\s+(?P<admin_state>(Up|Down|Not Configured))\s+(?P<ble_mode>((Base|Advanced)\s\((Native|IOx)\)|Unknown))\s+(?P<ble_mac>(([0-9a-fA-F]{4}\.){2}[0-9a-fA-F]{4}|Unknown))\s+(?P<ble_profile>([\w\s\-\.]*|Unknown))\s+(?P<scan_state>(Enabled|Disabled|Not Configured))$'
+            )
+
+        for line in output.splitlines():
+            line = line.strip()
+            # AP3-02        AIR-AP4800-B-K9     4001.7ab2.c3e4          Close                   Up                      Base (Native)           2471.891b.c302          No Advertisement    Enabled
+            m = re.match(p1, line)
+            if m:
+                rgx_dict = m.groupdict()
+                ap_name_dict = ret_dict.setdefault(rgx_dict['ap_name'], {})
+                rgx_dict.pop('ap_name')
+                ap_name_dict.update({key: value.strip() for key, value in rgx_dict.items()})
+                continue
+        return ret_dict
+
+# ========================================
+# Schema for:
+#  * 'show ap image'
+# ========================================
+
+
+class ShowApImageSchema(MetaParser):
+    """Schema for show ap image."""
+
+    schema = {
+        "total_number_of_aps": int,
+        "number_of_aps": {
+            "initiated":int,
+            "downloading": int,
+            "predownloading": int,
+            "completed_downloading": int,
+            "completed_predownloading": int,
+            "not_supported": int,
+            "failed_to_predownload": int,
+            "predownload_in_progress": str,
+        },
+        Optional("ap_name"): {
+            str: {
+                "primary_image": str,
+                "backup_image": str,
+                "predownload_status": str,
+                "predownload_version": str,
+                "next_retry_time": str,
+                "retry_count": int,
+                "method": str
+            }
+        }
+    }
+
+
+# ========================================
+# Parser for:
+#  * 'show ap image'
+# ========================================
+
+class ShowApImage(ShowApImageSchema):
+    """Parser for show ap image"""
+
+    cli_command = 'show ap image'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        ap_image_dict = dict()
+        if "Number of APs" in out:
+            ap_image_dict['number_of_aps'] = {}
+        """Total number of APs  : 5
+
+
+            Number of APs 
+                    Initiated                  : 0
+                    Downloading                : 0
+                    Predownloading             : 0
+                    Completed downloading      : 4
+                    Completed predownloading   : 0
+                    Not Supported              : 0
+                    Failed to Predownload      : 0
+                    Predownload in progress    : No
+            AP Name                           Primary Image          Backup Image            Predownload Status   Predownload Version  Next Retry Time   Retry Count   Method
+            ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+            AP002a.106d.2e10                  17.13.0.44             0.0.0.0                    None                  0.0.0.0             N/A                 0           N/A
+            wsimap-0001                       17.13.0.44             8.3.15.109                 None                  0.0.0.0             N/A                 0           N/A
+            AP501C.B0BC.1448                  17.13.0.44             17.13.0.30                 None                  0.0.0.0             N/A                 0           N/A
+            AP4001.7AB2.C1B6                  17.13.0.44             17.13.0.30                 None                  0.0.0.0             N/A                 0           N/A
+            APF4DB.E651.2280                  17.13.0.44             17.13.0.30                 None                  0.0.0.0             N/A                 0           N/A"""
+        total_number_of_aps = re.compile(r"^Total\s+number\sof\s+APs\s+:\s+(?P<total_number_of_ap>\d+)")
+
+        ap_image_info_capture = re.compile(
+            r"^(?P<ap_name>\S+)\s+(?P<primary_image>\d+\.\d+\.\d+\.\d+)\s+(?P<backup_image>\d+\.\d+\.\d+\.\d+)\s+"
+            "(?P<predownload_status>\S+)\s+(?P<predownload_version>\d+\.\d+\.\d+\.\d+)\s+(?P<next_retry_time>\S+)\s+"
+            "(?P<retry_count>\d+)\s+(?P<method>.*)")
+
+        remove_lines = ('AP Name', '----')
+
+        initiated_aps = re.compile(r"^Initiated\s+:\s+(?P<initiated>\d+)")
+        downloading_aps = re.compile(r"^Downloading\s+:\s+(?P<downloading>\d+)")
+        predownloading_aps = re.compile(r"^Predownloading\s+:\s+(?P<predownloading>\d+)")
+        completed_downloading_aps = re.compile(r"^Completed\s+downloading\s+:\s+(?P<completed_downloading>\d+)")
+        completed_predownloading_aps = re.compile(
+            r"^Completed\s+predownloading\s+:\s+(?P<completed_predownloading>\d+)")
+        not_supported_aps = re.compile(r"^Not\s+Supported\s+:\s+(?P<not_supported>\d+)")
+        failed_to_predownload_aps = re.compile(r"^Failed\s+to\s+Predownload\s+:\s+(?P<failed_to_predownload>\d+)")
+        predownload_in_progress = re.compile(r"^Predownload\s+in\s+progress\s+:\s+(?P<predownload_in_progress>\S+)")
+
+        # Remove unwanted lines from raw text
+        def filter_lines(raw_output, remove_lines):
+            # Remove empty lines
+            clean_lines = list(filter(None, raw_output.splitlines()))
+            rendered_lines = []
+            for clean_line in clean_lines:
+                clean_line_strip = clean_line.strip()
+                # Remove lines unwanted lines from list of "remove_lines"
+                if not clean_line_strip.startswith(remove_lines):
+                    rendered_lines.append(clean_line_strip)
+            return rendered_lines
+
+        out_filter = filter_lines(raw_output=out, remove_lines=remove_lines)
+
+        ap_image_data = {}
+
+        for line in out_filter:
+            # Total number of APs  : 5
+            if total_number_of_aps.match(line):
+                total_number_of_aps_match = total_number_of_aps.match(line)
+                groups = total_number_of_aps_match.groupdict()
+                ap_image_count = int(groups['total_number_of_ap'])
+                ap_image_dict['total_number_of_aps'] = ap_image_count
+
+            elif initiated_aps.match(line):
+                # Initiated                  : 0
+                initiated_aps_match = initiated_aps.match(line)
+                groups = initiated_aps_match.groupdict()
+                initiated_aps_count = int(groups['initiated'])
+                ap_image_dict['number_of_aps']['initiated'] = initiated_aps_count
+            elif downloading_aps.match(line):
+                #Downloading                : 0
+                downloading_aps_match = downloading_aps.match(line)
+                groups = downloading_aps_match.groupdict()
+                downloading_aps_count = int(groups['downloading'])
+                ap_image_dict['number_of_aps']['downloading'] = downloading_aps_count
+            elif predownloading_aps.match(line):
+                #Predownloading             : 0
+                predownloading_aps_match = predownloading_aps.match(line)
+                groups = predownloading_aps_match.groupdict()
+                predownloading_aps_count = int(groups['predownloading'])
+                ap_image_dict['number_of_aps']['predownloading'] = predownloading_aps_count
+            elif completed_downloading_aps.match(line):
+                #Completed downloading      : 4
+                completed_downloading_aps_match = completed_downloading_aps.match(line)
+                groups = completed_downloading_aps_match.groupdict()
+                completed_downloading_aps_count = int(groups['completed_downloading'])
+                ap_image_dict['number_of_aps']['completed_downloading'] = completed_downloading_aps_count
+            elif completed_predownloading_aps.match(line):
+                #Completed predownloading   : 0
+                completed_predownloading_aps_match = completed_predownloading_aps.match(line)
+                groups = completed_predownloading_aps_match.groupdict()
+                completed_predownloading_aps_count = int(groups['completed_predownloading'])
+                ap_image_dict['number_of_aps']['completed_predownloading'] = completed_predownloading_aps_count
+            elif not_supported_aps.match(line):
+                #Not Supported              : 0
+                not_supported_aps_match = not_supported_aps.match(line)
+                groups = not_supported_aps_match.groupdict()
+                not_supported_aps_count = int(groups['not_supported'])
+                ap_image_dict['number_of_aps']['not_supported'] = not_supported_aps_count
+            elif failed_to_predownload_aps.match(line):
+                #Failed to Predownload      : 0
+                failed_to_predownload_aps_match = failed_to_predownload_aps.match(line)
+                groups = failed_to_predownload_aps_match.groupdict()
+                failed_to_predownload_aps_count = int(groups['failed_to_predownload'])
+                ap_image_dict['number_of_aps']['failed_to_predownload'] = failed_to_predownload_aps_count
+            elif predownload_in_progress.match(line):
+                #Predownload in progress    : No
+                predownload_in_progress_aps_match = predownload_in_progress.match(line)
+                groups = predownload_in_progress_aps_match.groupdict()
+                predownload_in_progress_aps = str(groups['predownload_in_progress'])
+                ap_image_dict['number_of_aps']['predownload_in_progress'] = predownload_in_progress_aps
+
+            # AP4001.7AB2.C1B6                  17.13.0.44             17.13.0.30                 None                  0.0.0.0             N/A                 0           N/A
+            elif ap_image_info_capture.match(line):
+                ap_image_info_match = ap_image_info_capture.match(line)
+                groups = ap_image_info_match.groupdict()
+                # ap name is the key to place all the ap neighbor info
+                ap_name = ''
+                # Loop over all regex matches found
+                for k, v in groups.items():
+                    # If the key value is ap_name, update the outer ap_name variable with the ap_name regex match
+                    if k == 'ap_name':
+                        ap_name = v
+                    else:
+                        if v.isdigit():
+                            v = int(v)
+                        else:
+                            v = v.strip()
+                        if not ap_image_dict.get("ap_name", {}):
+                            ap_image_dict["ap_name"] = {}
+                        ap_image_dict['ap_name'][ap_name] = {}
+                        ap_image_data.update({k: v})
+                ap_image_dict['ap_name'][ap_name].update(ap_image_data)
+                ap_image_data = {}
+                continue
+
+        return ap_image_dict

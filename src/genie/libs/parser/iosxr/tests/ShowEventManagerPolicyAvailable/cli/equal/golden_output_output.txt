@@ -1,0 +1,24 @@
+RP/0/RSP0/CPU0:ios#show event manager policy registered
+Fri Dec  3 10:21:05.715 UTC
+
+No. Type      TimeCreated                   Name
+1   user      Tue Sep 14 15:10:07 2021      eem_cli_exec_file.tcl
+2   user      Tue Sep 14 15:10:22 2021      fd_syslog.tcl
+3   user      Wed Sep  8 06:59:12 2021      fd_syslog_nice.tcl
+4   user      Wed Sep  8 07:00:31 2021      fd_syslog_occur.tcl
+5   user      Wed Sep  8 07:01:25 2021      fd_syslog_period.tcl
+6   system    Thu Jul 22 14:16:45 2021      isis_adj_group_routing_xr.tcl
+7   system    Thu Jul 22 14:23:12 2021      periodic_diag_cmds.tcl
+8   system    Thu Jul 22 14:23:12 2021      periodic_proc_avail.tcl
+9   system    Thu Jul 22 14:23:12 2021      periodic_sh_log.tcl
+10  system    Thu Jul 22 14:23:55 2021      rcmd_diags.tcl
+11  system    Thu Jul 22 14:23:55 2021      rcmd_frr_diags.tcl
+12  system    Thu Jul 22 14:23:55 2021      rcmd_ldp_rlfa_diags.tcl
+13  user      Thu Sep 23 09:50:54 2021      reload.tcl
+14  system    Thu Jul 22 14:23:12 2021      sch.tcl
+15  system    Thu Jul 22 14:26:16 2021      sl_sysdb_timeout.tcl
+16  system    Thu Jul 22 14:23:12 2021      tm_cli_cmd.tcl
+17  system    Thu Jul 22 14:23:12 2021      tm_crash_hist.tcl
+18  user      Tue Sep 14 15:10:12 2021      tm_cron.tcl
+19  user      Tue Sep 14 15:10:11 2021      tm_watchdog_cli.tcl
+

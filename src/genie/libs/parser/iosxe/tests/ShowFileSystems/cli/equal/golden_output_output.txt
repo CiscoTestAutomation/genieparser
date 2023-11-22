@@ -1,0 +1,29 @@
+PI-9300-Stack-102#show file systems
+File Systems:
+
+       Size(b)       Free(b)      Type  Flags  Prefixes
+             -             -    opaque     rw   system:
+             -             -    opaque     rw   tmpsys:
+    1651314688     696320000      disk     rw   crashinfo: crashinfo-1:
+    1651507200             0      disk     rw   crashinfo-2: stby-crashinfo:
+    1651507200             0      disk     rw   crashinfo-3:
+*  11353194496    4835155968      disk     rw   flash: bootflash: flash-1:
+   11353980928    3943694336      disk     rw   flash-2: stby-flash:
+   11353980928    4922015744      disk     rw   flash-3:
+    3940040704    3790381056      disk     ro   webui:
+             -             -    opaque     rw   null:
+             -             -    opaque     ro   tar:
+             -             -   network     rw   tftp:
+       2097152       2056462     nvram     rw   nvram:
+             -             -    opaque     wo   syslog:
+             -             -   network     rw   rcp:
+             -             -   network     rw   http:
+             -             -   network     rw   ftp:
+             -             -   network     rw   scp:
+             -             -   network     rw   sftp:
+             -             -   network     rw   https:
+             -             -    opaque     ro   cns:
+       2097152       2056462     nvram     rw   stby-nvram:
+             -             -     nvram     rw   stby-rcsf:
+             -             -    opaque     rw   revrcsf:
+

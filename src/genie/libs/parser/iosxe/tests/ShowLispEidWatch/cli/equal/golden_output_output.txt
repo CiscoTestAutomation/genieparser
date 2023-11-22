@@ -1,0 +1,56 @@
+LISP EID watch information for router 0
+
+Client : Test 0
+Process ID : 871
+Connection to LISP control process : DISABLED
+IPC end point : 1
+Client notifications : Pending
+
+LISP IPv4 EID Watches for Table (RLOC mapping in vrf default IPv4) IID (101), 1 watch entries
+  Watch entries for prefix 0.0.0.0/0
+   1.1.1.1
+   1.1.1.2
+
+LISP EID watch information for router 0
+
+Client : Test11
+Process ID : 817
+Connection to LISP control process : ENABLED
+IPC end point : 2
+Client notifications : Delivered
+
+LISP IPv6 EID Watches for Table (RLOC mapping in vrf default IPv6) IID (102), 1 watch entries
+  Watch entries for prefix ::/0
+   E80::AEDE:48FF:FE00:1111
+   E80::AEDE:48FF:FE00:1112
+
+LISP EID watch information for router 1
+
+Client : Ok
+Process ID : 187
+Connection to LISP control process : ENABLED
+IPC end point : 1
+Client notifications : Delivered
+
+LISP MAC EID Watches for Table (RLOC mapping in Vlan 101) IID (102), 1 watch entries
+  Watch entries for prefix 0000.0000.0000/0
+   f100.a551.0501
+   f100.a551.0502
+
+LISP EID watch information for router 2
+
+
+LISP EID watch information for router 3
+
+Client : Ok
+Process ID : 187
+Connection to LISP control process : ENABLED
+IPC end point : 1
+Client notifications : Delivered
+
+LISP MAC EID Watches for Table (RLOC mapping in Vlan 101) IID (103), 3 watch entries
+  Watch entries for prefix 0000.0000.0000/0
+   ffff.aaaa.bbbb
+   ffff.aaaa.cccc
+
+LISP EID watch information for router 4

@@ -1,0 +1,13 @@
+PI-9300-Stack-103#show boot
+---------------------------
+Switch 1
+---------------------------
+Current Boot Variables:
+BOOT variable = flash:packages.conf;
+
+Boot Variables on next reload:
+BOOT variable = flash:packages.conf;
+Manual Boot = no
+Enable Break = yes
+Boot Mode = DEVICE
+iPXE Timeout = 0

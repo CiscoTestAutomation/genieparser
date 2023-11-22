@@ -1,0 +1,10 @@
+show evpn evi vpn-id 1 inclusive-multicast
+Wed Mar  2 01:18:51.262 PST
+
+VPN-ID     Encap  EtherTag   Originating IP
+---------- ------ ---------- ----------------------------------------
+1          SRv6   0          1.1.1.1
+1          SRv6   0          2.2.2.2
+1          SRv6   0          3.3.3.3
+1          SRv6   0          4.4.4.4
+RP/0/RP0/CPU0:tb1-r1#

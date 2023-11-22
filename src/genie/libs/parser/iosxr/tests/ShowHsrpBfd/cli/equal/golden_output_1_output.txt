@@ -1,0 +1,6 @@
+Fri Apr 29 16:43:15.936 UTC
+BFD Interface    Destination IP  State    Intv Mult HSRP Interface   Grp 
+-------------    --------------  -----    ---- ---- --------------   ----
+Gi0/2/0/17       12.0.0.2        inactive   15    3 Gi0/2/0/17         10
+Gi0/2/0/17       12::2           inactive   15    3 Gi0/2/0/17         30
+

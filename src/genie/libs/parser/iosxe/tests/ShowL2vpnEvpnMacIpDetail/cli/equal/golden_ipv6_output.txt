@@ -1,0 +1,24 @@
+IP Address:                192.168.101.11
+EVPN Instance:             3
+Vlan:                      103
+MAC Address:               0051.a101.0011
+Ethernet Segment:          0000.0000.0000.0000.0000
+Ethernet Tag ID:           0
+Next Hop(s):               V:20103 ABCD:1::2
+Local Address:             ABCD:2::2
+Sequence Number:           0
+IP Duplication Detection:  Timer not running
+Label2 included:           No
+
+IP Address:                192.168.101.12
+EVPN Instance:             3
+Vlan:                      103
+MAC Address:               0051.a101.0011
+Ethernet Segment:          0000.0000.0000.0000.0000
+Ethernet Tag ID:           0
+Next Hop(s):               V:20103 ABCD:1::2
+                           V:20103 ABCD:1::3
+Local Address:             ABCD:2::2
+Sequence Number:           0
+IP Duplication Detection:  Timer not running
+Label2 included:           No

@@ -1,0 +1,11 @@
+show capability feature monitor erspan-source
+ERSPAN Source Session:ERSPAN Source Session Supported: TRUE
+No of Rx ERSPAN source session: 8
+No of Tx ERSPAN source session: 8
+ERSPAN Header Type supported: II and III
+ACL filter Supported: TRUE
+SGT filter Supported: TRUE
+Fragmentation Supported: TRUE
+Truncation Supported: TRUE
+Sequence number Supported: FALSE
+QOS Supported: TRUE

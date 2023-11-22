@@ -1,0 +1,67 @@
+Certificate
+  Status: Available
+  Version: 3
+  Certificate Serial Number (hex): 03
+  Certificate Usage: General Purpose
+  Issuer:
+    cn=RSA-CA
+    o=cisco
+  Subject:
+    Name: ROUTER
+    IP Address: 100.100.100.1
+    cn=ROUTER
+    ou=PKI
+    o=cisco
+  Validity Date:
+    start date: 15:33:15 IST Nov 20 2021
+    end   date: 15:33:15 IST Nov 19 2026
+  Subject Key Info:
+    Public Key Algorithm: rsaEncryption
+    RSA Public Key: (2048 bit)
+  Signature Algorithm: SHA256 with RSA Encryption
+  Fingerprint MD5: DE8CC8FA B9E41665 31DDED4A 1A2A6191
+  Fingerprint SHA1: 9E349A47 A2227F86 E87336CE 3D260431 D4F11472
+  X509v3 extensions:
+    X509v3 Key Usage: B0000000
+      Digital Signature
+      Key Encipherment
+      Data Encipherment
+    X509v3 Subject Alternative Name:
+
+        IP Address : 100.100.100.1
+        OtherNames :
+    Authority Info Access:
+  Cert install time: 15:33:42 IST Nov 20 2021
+Cert install time in nsec: 1637402622832948992
+  Associated Trustpoints: openssl_test
+  Key Label: openssl_test
+
+CA Certificate
+  Status: Available
+  Version: 3
+  Certificate Serial Number (hex): 55722CE2042FD3DD40C3013FF430616170845853
+  Certificate Usage: Signature
+  Issuer:
+    cn=RSA-CA
+    o=cisco
+  Subject:
+    cn=RSA-CA
+    o=cisco
+  Validity Date:
+    start date: 15:32:34 IST Nov 20 2021
+    end   date: 15:32:34 IST Nov 18 2031
+  Subject Key Info:
+    Public Key Algorithm: rsaEncryption
+    RSA Public Key: (2048 bit)
+  Signature Algorithm: SHA256 with RSA Encryption
+  Fingerprint MD5: 1CFCED12 50E0E6DB 7DA87BE5 926ECDE3
+  Fingerprint SHA1: EF28E980 73B28C7F 41F80804 73B446EF 5B1BE3D4
+  X509v3 extensions:
+    X509v3 Key Usage: 86000000
+      Digital Signature
+      Key Cert Sign
+      CRL Signature
+    Authority Info Access:
+  Cert install time: 15:33:42 IST Nov 20 2021
+Cert install time in nsec: 1637402622665949952
+  Associated Trustpoints: openssl_test

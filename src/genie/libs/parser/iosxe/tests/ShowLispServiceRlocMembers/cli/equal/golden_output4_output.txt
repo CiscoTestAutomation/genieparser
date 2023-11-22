@@ -1,0 +1,11 @@
+04-MSMR#show lisp all instance-id 101 ipv6 server rloc members 
+
+=====================================================
+Output for router lisp 0
+=====================================================
+LISP RLOC Membership for router lisp 0 IID 101
+Entries: 2 valid / 2 total, Distribution disabled
+
+RLOC                                    Origin                       Valid
+10:16:2:2::                             Registration                 Yes
+10:1:8:8::                              Registration                 Yes

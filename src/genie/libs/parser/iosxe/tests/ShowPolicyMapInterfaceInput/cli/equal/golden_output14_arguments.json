@@ -1,0 +1,4 @@
+{
+    "interface": "HundredGigE1/0/3",
+    "class_name": "cm-dscp6"
+}

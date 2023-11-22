@@ -1,0 +1,96 @@
+sh vrrp detail
+GigabitEthernet0/0/2.150 - Group 2 - Address-Family IPv4
+  State is INIT (No layer3 interface address)
+  State duration 6 hours 40 mins 47 secs
+  Virtual IP address is no address
+  Virtual MAC address is 0000.5E00.0102
+  Advertisement interval is 1000 msec
+  Preemption enabled
+  Priority is 250
+  State change reason is VRRP_INIT
+  Tloc preference not configured, value 0
+  Master Router is unknown, priority is unknown
+  Master Advertisement interval is unknown
+  Master Down interval is unknown
+  FLAGS: 1/0
+  VRRPv3 Advertisements: sent 0 (errors 0) - rcvd 0
+  VRRPv2 Advertisements: sent 0 (errors 0) - rcvd 0
+  Group Discarded Packets: 0
+    VRRPv2 incompatibility: 0
+    IP Address Owner conflicts: 0
+    Invalid address count: 0
+    IP address configuration mismatch : 0
+    Invalid Advert Interval: 0
+    Adverts received in Init state: 0
+    Invalid group other reason: 0
+  Group State transition:
+    Init to master: 0
+    Init to backup: 0
+    Backup to master: 0
+    Master to backup: 0
+    Master to init: 0
+    Backup to init: 0
+GigabitEthernet0/0/6.101 - Group 1 - Address-Family IPv4
+  State is BACKUP
+  State duration 5 hours 41 mins 27 secs
+  Virtual IP address is 192.105.105.201
+  Virtual MAC address is 0000.5E00.0101
+  Advertisement interval is 1000 msec
+  Preemption enabled
+  Priority is 200
+  State change reason is VRRP_PREEMPT
+  Tloc preference not configured, value 0
+    Track object omp state UP shutdown
+  Master Router is 192.105.105.91, priority is 220
+  Master Advertisement interval is 1000 msec (learned)
+  Master Down interval is 3218 msec (expires in 3066 msec)
+  FLAGS: 0/1
+  VRRPv3 Advertisements: sent 23 (errors 0) - rcvd 26331
+  VRRPv2 Advertisements: sent 23 (errors 0) - rcvd 2
+  Group Discarded Packets: 26361
+    VRRPv2 incompatibility: 26329
+    IP Address Owner conflicts: 0
+    Invalid address count: 0
+    IP address configuration mismatch : 0
+    Invalid Advert Interval: 0
+    Adverts received in Init state: 32
+    Invalid group other reason: 0
+  Group State transition:
+    Init to master: 0
+    Init to backup: 2 (Last change Tue Feb 15 07:17:16.662)
+    Backup to master: 2 (Last change Tue Feb 15 07:17:19.881)
+    Master to backup: 1 (Last change Tue Feb 15 07:17:37.384)
+    Master to init: 1 (Last change Tue Feb 15 07:12:56.285)
+    Backup to init: 0
+GigabitEthernet0/0/6.102 - Group 2 - Address-Family IPv4
+  State is MASTER
+  State duration 5 hours 41 mins 37 secs
+  Virtual IP address is 192.105.105.202
+  Virtual MAC address is 0000.5E00.0102
+  Advertisement interval is 3000 msec
+  Preemption enabled
+  Priority is 100
+  State change reason is VRRP_MASTER_NO_RESP
+  Tloc preference not configured, value 0
+    Track object omp state UP shutdown
+  Master Router is 192.105.105.102 (local), priority is 100
+  Master Advertisement interval is 3000 msec (expires in 1304 msec)
+  Master Down interval is unknown
+  FLAGS: 1/1
+  VRRPv3 Advertisements: sent 7598 (errors 0) - rcvd 3592
+  VRRPv2 Advertisements: sent 7598 (errors 0) - rcvd 1
+  Group Discarded Packets: 3623
+    VRRPv2 incompatibility: 3591
+    IP Address Owner conflicts: 0
+    Invalid address count: 0
+    IP address configuration mismatch : 3593
+    Invalid Advert Interval: 0
+    Adverts received in Init state: 32
+    Invalid group other reason: 0
+  Group State transition:
+    Init to master: 0
+    Init to backup: 2 (Last change Tue Feb 15 07:17:16.663)
+    Backup to master: 2 (Last change Tue Feb 15 07:17:27.491)
+    Master to backup: 0
+    Master to init: 1 (Last change Tue Feb 15 07:12:56.286)
+    Backup to init: 0

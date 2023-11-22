@@ -1,0 +1,27 @@
+CTS Server Radius Load Balance = ENABLED
+Method = least-outstanding
+Batch size = 50
+Ignore preferred server
+Server Group Deadtime = 20 secs (default)
+Global Server Liveness Automated Test Deadtime = 20 secs
+Global Server Liveness Automated Test Idle Time = 60 mins
+Global Server Liveness Automated Test = ENABLED (default)
+
+Preferred list, 1 server(s):
+*Server: 10.15.20.102, port 1812, A-ID 87B3503255C4384485BB808DC24C6F55
+Status = ALIVE
+auto-test = TRUE, idle-time = 120 mins, deadtime = 20 secs
+Installed list: SL1-1E6E6AE57D4E2A9B320D1844C68BA291, 3 server(s):
+*Server: 10.15.20.102, port 1812, A-ID 87B3503255C4384485BB808DC24C6F55
+Status = ALIVE
+auto-test = TRUE, idle-time = 60 mins, deadtime = 20 secs
+*Server: 10.15.20.101, port 1812, A-ID 255C438487B3503485BBC6F55808DC24
+Status = ALIVE
+auto-test = TRUE, idle-time = 60 mins, deadtime = 20 secs
+Installed list: SL2-1E6E6AE57D4E2A9B320D1844C68BA293, 3 server(s):
+*Server: 10.0.0.1, port 1812, A-ID 04758B1F05D8C1439F27F9509E07CFB6.
+Status = ALIVE
+auto-test = TRUE, idle-time = 60 mins, deadtime = 20 secs
+*Server: 10.0.0.2, port 1812, A-ID 04758B1F05D8C1439F27F9509E07CFB6.
+Status = DEAD
+auto-test = TRUE, idle-time = 60 mins, deadtime = 20 secs 

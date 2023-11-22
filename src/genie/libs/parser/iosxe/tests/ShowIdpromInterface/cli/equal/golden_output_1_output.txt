@@ -1,0 +1,17 @@
+IDPROM for transceiver GigabitEthernet1/0/2:
+  Description                               = SFP or SFP+ optics (type 3)
+  Transceiver Type:                         = GE LX (20)
+  Product Identifier (PID)                  = GLC-LH-SMD          
+  Vendor Revision                           = 1.0 
+  Serial Number (SN)                        = ACW24291ZUU     
+  Vendor Name                               = CISCO-ACCELINK  
+  Vendor OUI (IEEE company ID)              = 00.1C.AD (7341)
+  CLEI code                                 = WOTRB9YBAB
+  Cisco part number                         = 10-2625-02
+  Device State                              = Enabled.
+  Date code (yy/mm/dd)                      = 20/07/20
+  Connector type                            = LC.
+  Encoding                                  = 8B10B (1)
+  Nominal bitrate                           = GE (1300 Mbits/s)
+  Minimum bit rate as % of nominal bit rate = not specified
+  Maximum bit rate as % of nominal bit rate = not specified

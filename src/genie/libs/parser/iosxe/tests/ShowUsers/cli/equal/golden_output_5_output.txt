@@ -1,0 +1,7 @@
+    Line       User       Host(s)              Idle       Location
+*  0 con 0                idle                 00:00:00   
+
+  Interface    User               Mode         Idle     Peer Address
+  Vi2.1        lns@cisco.com      PPPoVPDN     -        21.21.21.3
+
+

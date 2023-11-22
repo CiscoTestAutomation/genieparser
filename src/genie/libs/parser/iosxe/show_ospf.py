@@ -29,6 +29,11 @@ IOSXE parsers for the following show commands:
     * show ip ospf {process_id} segment-routing global-block
     * show ip ospf segment-routing
     * show ip ospf database opaque-area adv-router {address}
+    * show ipv6 ospf neighbor
+    * show ipv6 ospf neighbor {interface}
+    * show ip ospf rib redistribution
+    * show ipv6 ospf interface {interface}
+    * show ipv6 ospf neighbor detail
 '''
 
 # Python
@@ -347,6 +352,8 @@ class ShowIpOspf(ShowIpOspfSchema):
 
         # Init vars
         ret_dict = {}
+        max_lsa = False
+        redist_max_prefix = False
         af = 'ipv4' # this is ospf - always ipv4
 
         p1 = re.compile(r'(?:^VRF +(?P<vrf>(\S+)) +in +)?Routing +Process'
@@ -398,7 +405,7 @@ class ShowIpOspf(ShowIpOspfSchema):
                             '(?:, +includes +(?P<redist>(subnets)) +in +redistribution)?'
                             '(?:, +(?P<nssa>(nssa areas only)))?$')
 
-        p12_4 = re.compile(r'^Maximum +number +of +redistributed +prefixes'
+        p12_4 = re.compile(r'^Maximum +limit +of +redistributed +prefixes'
                             ' +(?P<num_prefix>(\d+))'
                             '(?: +\((?P<warn>(warning-only))\))?')
 
@@ -482,7 +489,7 @@ class ShowIpOspf(ShowIpOspfSchema):
                             ' +(?P<num>(\d+))$')
 
         p33 = re.compile(r'^Maximum +number +of +non +self-generated +LSA'
-                            ' +allowed +(?P<max_lsa>(\d+))$')
+                            ' +allowed +(?P<max_lsa>(\d+))(?: +\((?P<warn>(warning-only))\))?')
 
         p33_1 = re.compile(r'^Current +number +of +non +self\-generated +LSA +(?P<max_lsa_current>\d+)$')
 
@@ -754,6 +761,7 @@ class ShowIpOspf(ShowIpOspfSchema):
             # Maximum number of redistributed prefixes 3000 (warning-only)
             m = p12_4.match(line)
             if m:
+                redist_max_prefix = True
                 if 'max_prefix' not in sub_dict['redistribution']:
                     sub_dict['redistribution']['max_prefix'] = {}
                 sub_dict['redistribution']['max_prefix']['num_of_prefix'] = \
@@ -766,7 +774,8 @@ class ShowIpOspf(ShowIpOspfSchema):
 
             # Threshold for warning message 70%
             m = p12_5.match(line)
-            if m:
+            if m and redist_max_prefix:
+                redist_max_prefix = False
                 if 'max_prefix' not in sub_dict['redistribution']:
                     sub_dict['redistribution']['max_prefix'] = {}
                 sub_dict['redistribution']['max_prefix']['prefix_thld'] = \
@@ -1028,17 +1037,22 @@ class ShowIpOspf(ShowIpOspfSchema):
                 continue
 
             # Maximum number of non self-generated LSA allowed 123
+            # Maximum number of non self-generated LSA allowed 123 warning-only
             m = p33.match(line)
             if m:
+                max_lsa = True
                 if 'database_control' not in sub_dict:
                     sub_dict['database_control'] = {}
                 sub_dict['database_control']['max_lsa'] = \
                     int(m.groupdict()['max_lsa'])
+                if m.groupdict()['warn']:
+                    sub_dict['database_control']['max_lsa_warning_only'] = True
                 continue
 
             # Current number of non self-generated LSA 0
             m = p33_1.match(line)
-            if m:
+            if m and max_lsa:
+                max_lsa = False
                 if 'database_control' not in sub_dict:
                     sub_dict['database_control'] = {}
                 sub_dict['database_control']['max_lsa_current'] = \
@@ -1788,8 +1802,8 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                             ' +(?P<enable>(unknown|up|down)), +line +protocol'
                             ' +is +(?P<line_protocol>(up|down))'
                             '(?: +\(\S+\))?$')
- 
-        p2 = re.compile(r'^Internet +Address +(?P<address>(\S+)),'
+        # Internet Address 0.0.0.1/30|Interface is unnumbered, Interface ID 55, Area 0
+        p2 = re.compile(r'^(Internet +Address|Interface +is) +(?P<address>(\S+)),'
                             '(?: +Interface +ID +(?P<intf_id>(\d+)),)?'
                             ' +Area +(?P<area>(\S+))(?:, +Attached +via'
                             ' +(?P<attach>(.*)))?$')
@@ -2853,11 +2867,11 @@ class ShowIpOspfInterface2(ShowIpOspfInterface2Schema):
         * 'show ip ospf interface__'
     '''
 
-    cmd = 'show ip ospf interface__'
+    cli_command = 'show ip ospf interface__'
 
     def cli(self, output=None):
         if output is None:
-            out = self.device.execute(self.cmd)
+            out = self.device.execute(self.cli_command)
         else:
             out = output
 
@@ -2873,8 +2887,8 @@ class ShowIpOspfInterface2(ShowIpOspfInterface2Schema):
                             ' +(?P<enable>(unknown|up|down)), +line +protocol'
                             ' +is +(?P<line_protocol>(up|down))'
                             '(?: +\(\S+\))?$')
- 
-        p2 = re.compile(r'^Internet +Address +(?P<address>(\S+)),'
+        # Internet Address 0.0.0.1/30|Interface is unnumbered, Interface ID 55, Area 0
+        p2 = re.compile(r'^(Internet +Address|Interface +is) +(?P<address>(\S+)),'
                             '(?: +Interface +ID +(?P<intf_id>(\d+)),)?'
                             ' +Area +(?P<area>(\S+))(?:, +Attached +via'
                             ' +(?P<attach>(.*)))?$')
@@ -5580,12 +5594,13 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
             m = p11_1.match(line)
             if m:
                 db_topo_dict['flags'] = "E"
+                db_topo_dict['metric_type'] = 2
                 continue
 
             # Metric Type: 1 (Comparable directly to link state metric)
             m = p11_2.match(line)
             if m:
-                # Do nothing
+                db_topo_dict['metric_type'] = 1
                 continue
 
             # TOS: 0
@@ -6442,6 +6457,7 @@ class ShowIpOspfDatabaseExternalSchema(MetaParser):
                                                                             {Any(): 
                                                                                 {'mt_id': int,
                                                                                 Optional('flags'): str,
+                                                                                Optional('metric_type'): int,
                                                                                 'metric': int,
                                                                                 'forwarding_address': str,
                                                                                 'external_route_tag': int},
@@ -8685,12 +8701,16 @@ class ShowIpOspfTraffic(ShowIpOspfTrafficSchema):
 # Schema for:
 #   * 'show ip ospf neighbor'
 #   * 'show ip ospf neighbor {interface}'
+#   * 'show ip ospf {process_id} neighbor'
+#   * 'show ip ospf {process_id} neighbor {interface}'
 # ===========================
 class ShowIpOspfNeighborSchema(MetaParser):
 
     ''' Schema for:
         * 'show ip ospf neighbor'
         * 'show ip ospf neighbor {interface}'
+        * 'show ip ospf {process_id} neighbor'
+        * 'show ip ospf {process_id} neighbor {interface}'
     '''
 
     schema = {
@@ -8713,25 +8733,35 @@ class ShowIpOspfNeighborSchema(MetaParser):
 # Parser for:
 #   * 'show ip ospf neighbor'
 #   * 'show ip ospf neighbor {interface}'
+#   * 'show ip ospf {process_id} neighbor'
+#   * 'show ip ospf {process_id} neighbor {interface}'
 # ===========================
 class ShowIpOspfNeighbor(ShowIpOspfNeighborSchema):
 
     ''' Parser for:
         * 'show ip ospf neighbor'
         * 'show ip ospf neighbor {interface}'
+        * 'show ip ospf {process_id} neighbor'
+        * 'show ip ospf {process_id} neighbor {interface}'
     '''
 
     cli_command = [
         'show ip ospf neighbor {interface}',
-        'show ip ospf neighbor']
+        'show ip ospf neighbor',
+        'show ip ospf {process_id} neighbor',
+        'show ip ospf {process_id} neighbor {interface}']
     exclude = ['dead_time']
 
-    def cli(self, interface='', output=None):
+    def cli(self, interface='', output=None, process_id=''):
 
         if output is None:
             # Execute command on device
-            if interface:
+            if interface and process_id:
+                cmd = self.cli_command[3].format(process_id=process_id, interface=interface)
+            elif interface:
                 cmd = self.cli_command[0].format(interface=interface)
+            elif process_id:
+                cmd = self.cli_command[2].format(process_id=process_id)
             else:
                 cmd = self.cli_command[1]
 
@@ -10296,3 +10326,1523 @@ class ShowIpOspfDatabaseOpaqueAreaTypeExtLinkAdvRouter(ShowIpOspfDatabaseOpaqueA
             output = self.device.execute(self.cli_command.format(address=address))
 
         return super().cli(db_type='opaque', out=output)
+
+class ShowIpOspfDatabaseOpaqueAreaTypeTrafficEngineeringSelfOriginate(ShowIpOspfDatabaseOpaqueAreaSchema, ShowIpOspfDatabaseTypeParser):
+    """ Parser for:
+            * show ip ospf database opaque-area type traffic-engineering self-originate
+    """
+    cli_command = 'show ip ospf database opaque-area type traffic-engineering self-originate'
+
+    def cli(self, output=None):
+        if not output:
+            output = self.device.execute(self.cli_command)
+
+        return super().cli(db_type='opaque', out=output)
+
+# ===========================
+# Schema for:
+#   * 'show ipv6 ospf neighbor'
+#   * 'show ipv6 ospf neighbor {interface}'
+# ===========================
+class ShowIpv6OspfNeighborSchema(MetaParser):
+
+    ''' Schema for:
+        * 'show ipv6 ospf neighbor'
+        * 'show ipv6 ospf neighbor {interface}'
+    '''
+
+    schema = {
+        'interfaces':
+            {Any():
+                {'neighbors':
+                    {Any():
+                        {'priority': int,
+                        'state': str,
+                        'dead_time': str,
+                        'interface_id': int,
+                        },
+                    },
+                },
+            },
+        }
+
+# ===========================
+# Parser for:
+#   * 'show ipv6 ospf neighbor'
+#   * 'show ipv6 ospf neighbor {interface}'
+# ===========================
+class ShowIpv6OspfNeighbor(ShowIpv6OspfNeighborSchema):
+    ''' Parser for:
+        * 'show ipv6 ospf neighbor'
+        * 'show ipv6 ospf neighbor {interface}'
+    '''
+    cli_command = [
+        'show ipv6 ospf neighbor {interface}',
+        'show ipv6 ospf neighbor']
+    exclude = ['dead_time']
+
+    def cli(self, interface='', output=None):
+
+        if output is None:
+            # Execute command on device
+            if interface:
+                output = self.device.execute(self.cli_command[0].format(interface=interface))
+            else:
+                output = self.device.execute(self.cli_command[1])
+
+        # Init vars
+        ret_dict = {}
+
+        # Neighbor ID     Pri   State           Dead Time   Interface ID   Interface
+        # 172.16.197.253 128   FULL/DR         00:00:30          21       GigabitEthernet0/0/1
+        # 10.169.197.252   0   FULL/  -        00:00:36          23       GigabitEthernet2
+
+        p1 = re.compile(r'^(?P<neighbor>\S+) +(?P<pri>\d+) +(?P<state>\S+(?:\s+\S+)?)'
+                        ' +(?P<dead_time>\S+) +(?P<interface_id>\S+) +(?P<interface>\S+)$')
+
+        for line in output.splitlines():
+
+            line = line.strip()
+            m = p1.match(line)
+            if m:
+                neighbor = m.groupdict()['neighbor']
+                interface = m.groupdict()['interface']
+
+                # Build Dict
+
+                intf_dict = ret_dict.setdefault('interfaces', {}).setdefault(interface, {})
+                nbr_dict = intf_dict.setdefault('neighbors', {}).setdefault(neighbor, {})
+
+                # Set values
+                nbr_dict['priority'] = int(m.groupdict()['pri'])
+                nbr_dict['state'] = str(m.groupdict()['state'])
+                nbr_dict['dead_time'] = str(m.groupdict()['dead_time'])
+                nbr_dict['interface_id'] = int(m.groupdict()['interface_id'])
+                continue
+
+        return ret_dict
+
+# =================================================================
+# Schema for:
+#   * 'show ip ospf database database-summary detail'
+#   * 'show ip ospf {process_id }database database-summary detail'
+# =================================================================
+
+class ShowIpOspfDatabaseSummaryDetailSchema(MetaParser):
+
+    ''' Schema for:
+        * 'show ip ospf database database-summary detail'
+        * 'show ip ospf {process_id} database database-summary detail'
+    '''
+
+    schema = {
+        'vrf':{
+            Any():{
+                'instance':{
+                    Any():{
+                        Any():{
+                            'router':{
+                                'count': int,
+                                'delete': int,
+                                'maxage': int,
+                            },
+                            'network':{
+                                'count': int,
+                                'delete': int,
+                                'maxage': int,
+                            },
+                            'summary_net':{
+                                'count': int,
+                                'delete': int,
+                                'maxage': int,
+                            },
+                            'summary_asbr':{
+                                'count': int,
+                                'delete': int,
+                                'maxage': int,
+                            },
+                            'type_5_ext':{
+                                'count': int,
+                                'delete': int,
+                                'maxage': int,
+                            },
+                            'type_7_ext':{
+                                'count': int,
+                                'delete': int,
+                                'maxage': int,
+                            },
+                            'opaque_link':{
+                                'count': int,
+                                'delete': int,
+                                'maxage': int,
+                            },
+                            'opaque_area':{
+                                'count': int,
+                                'delete': int,
+                                'maxage': int,
+                            },
+                            'opaque_as':{
+                                'count': int,
+                                'delete': int,
+                                'maxage': int,
+                            },
+                            'total':{
+                                'count': int,
+                                'delete': int,
+                                'maxage': int,
+                            },
+                        },
+                    },            
+                },
+            },
+        },
+    }        
+
+# ================================================================
+# Parser for:
+#   * 'show ip ospf database database-summary detail'
+#   * 'show ip ospf {process_id} database database-summary detail'
+# ================================================================
+class ShowIpOspfDatabaseSummaryDetail(ShowIpOspfDatabaseSummaryDetailSchema):
+
+    ''' Parser for:
+        * 'show ip ospf database database-summary detail'
+        * "show ip ospf {process_id} database database-summary detail"
+    '''
+
+    cli_command = ['show ip ospf database database-summary detail', 'show ip ospf {process_id} database database-summary detail']
+
+    def cli(self, process_id=None, output=None):
+
+        if not output:
+            if process_id:
+                output = self.device.execute(self.cli_command[1].format(process_id=process_id))
+            else:
+                output = self.device.execute(self.cli_command[0])
+
+        # Init variables
+        ret_dict = {}
+        vrf = 'default'
+
+        # OSPF Router with ID (10.36.3.3) (Process ID 1)
+        # OSPF Router with ID (20.3.5.6) (Process ID 2, VRF VRF1)
+        p0 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>(\S+))\) +\(Process +ID +(?P<instance>(\d+))'
+                        r'(?:, +VRF +(?P<vrf>(\S+)))?\)$')
+
+        # Router 22.22.22.22 LSA summary
+        p1 = re.compile('^Router +(?P<router_ip>(\S+)) +LSA +summary$')
+
+        #LSA Type      Count    Delete   Maxage
+        #Router        2        0        0
+        #Network       2        0        0
+        #Summary Net   2        0        0
+        #Summary ASBR  2        0        0
+        #Type-5 Ext    0        0        0
+        #Type-7 Ext    0        0        0
+        #Opaque Link   0        0        0
+        #Opaque Area   0        0        0
+        #Opaque AS     0        0        0
+        #Total         8        0        0
+        
+        p2 = re.compile(r'^(?P<lsa_type>(Router|Network|Summary Net|Summary ASBR|'
+                r'Type-5 Ext|Type-7 Ext|Opaque Link|Opaque Area|Opaque AS|Total))'
+                r' +(?P<count>(\d+)) +(?P<delete>(\d+)) +(?P<maxage>(\d+))')
+
+        for line in output.splitlines():
+            line = line.strip()
+            m = p0.match(line)
+            if m:
+                group = m.groupdict()
+                instance = str(group['instance'])
+                if group['vrf']:
+                    vrf = str(group['vrf'])
+                else:
+                    vrf = 'default'
+
+                ospf_dict = ret_dict.setdefault('vrf', {}).setdefault(vrf, {}).setdefault('instance', {}).setdefault(instance, {})
+                continue
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                item = group['router_ip']
+                lsa_dict = ospf_dict.setdefault(item, {})
+                continue
+
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                lsa_type = group['lsa_type'].strip().lower().replace(" ", "_").replace("-", "_")
+                tmp_dict = lsa_dict.setdefault(lsa_type, {})
+                tmp_dict['count'] = int(group['count'])
+                tmp_dict['delete'] = int(group['delete'])
+                tmp_dict['maxage'] = int(group['maxage'])
+        
+        return ret_dict
+
+
+class ShowIpOspfNsrSchema(MetaParser):
+    """Schema for show ip ospf nsr"""
+
+    schema = {
+        'redundancy_state': str,
+        'peer_redundancy_state': str,
+        'ospf_num': int,
+        'ospf_id': str,
+        'sequence_num': int,
+        'sync_operations': int,
+        'check_time': str,
+        'check_date': str,
+        'lsa_count': int,
+        'checksum': str,
+    }
+
+
+class ShowIpOspfNsr(ShowIpOspfNsrSchema):
+    """Parser for show ip ospf nsr"""
+
+    cli_command = 'show ip ospf nsr'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Redundancy state: ACTIVE
+        p1 = re.compile(r"^Redundancy\s+state:\s+(?P<redundancy_state>\w+)$")
+        
+        # Peer redundancy state: STANDBY HOT
+        p2 = re.compile(r"^Peer\s+redundancy\s+state:\s+(?P<peer_redundancy_state>\S+\s+\S+)$")
+        
+        # Routing Process "ospf 50" with ID 2.200.1.2
+        p3 = re.compile(r"^Routing\s+Process\s+\"ospf\s+(?P<ospf_num>\d+)\"\s+with\s+ID\s+(?P<ospf_id>(\d{1,3}\.){3}\d{1,3})$")
+        
+        # Checkpoint message sequence number: 12358
+        p4 = re.compile(r"^Checkpoint\s+message\s+sequence\s+number:\s+(?P<sequence_num>\d+)$")
+        
+        # Bulk sync operations:  1
+        p5 = re.compile(r"^Bulk\s+sync\s+operations:\s+(?P<sync_operations>\d+)$")
+        
+        # Next sync check time:  20:29:44.061 IST Thu Oct 6 2022
+        p6 = re.compile(r"^Next\s+sync\s+check\s+time:\s+(?P<check_time>\S+)\s+(?P<check_date>\S+\s+\S+\s+\S+\s+\S+\s+\S+)$")
+        
+        # LSA Count: 60, Checksum Sum 0x001DF372
+        p7 = re.compile(r"^LSA\s+Count:\s+(?P<lsa_count>\d+),\s+Checksum\s+Sum\s+(?P<checksum>\S+)$")
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Redundancy state: ACTIVE
+            match_obj = p1.match(line)
+            if match_obj:
+                dict_val = match_obj.groupdict()
+                ret_dict['redundancy_state'] = dict_val['redundancy_state']
+                continue
+
+            # Peer redundancy state: STANDBY HOT
+            match_obj = p2.match(line)
+            if match_obj:
+                dict_val = match_obj.groupdict()
+                ret_dict['peer_redundancy_state'] = dict_val['peer_redundancy_state']
+                continue
+
+            # Routing Process "ospf 50" with ID 2.200.1.2
+            match_obj = p3.match(line)
+            if match_obj:
+                dict_val = match_obj.groupdict()
+                ret_dict['ospf_num'] = int(dict_val['ospf_num'])
+                ret_dict['ospf_id'] = dict_val['ospf_id']
+                continue
+
+            # Checkpoint message sequence number: 12358
+            match_obj = p4.match(line)
+            if match_obj:
+                dict_val = match_obj.groupdict()
+                ret_dict['sequence_num'] = int(dict_val['sequence_num'])
+                continue
+            
+            # Bulk sync operations:  1
+            match_obj = p5.match(line)
+            if match_obj:
+                dict_val = match_obj.groupdict()
+                ret_dict['sync_operations'] = int(dict_val['sync_operations'])
+                continue
+
+            # Next sync check time:  20:29:44.061 IST Thu Oct 6 2022
+            match_obj = p6.match(line)
+            if match_obj:
+                dict_val = match_obj.groupdict()
+                ret_dict['check_time'] = dict_val['check_time']
+                ret_dict['check_date'] = dict_val['check_date']
+                continue
+
+            # LSA Count: 60, Checksum Sum 0x001DF372
+            match_obj = p7.match(line)
+            if match_obj:
+                dict_val = match_obj.groupdict()
+                ret_dict['lsa_count'] = int(dict_val['lsa_count'])
+                ret_dict['checksum'] = dict_val['checksum']
+                continue
+
+        return ret_dict
+
+# ====================
+# Schema for:
+#  * 'show ip ospf database database-summary'
+# ====================
+class ShowIpOspfDatabaseDatabaseSummarySchema(MetaParser):
+    ''' Schema for "show ip ospf database database-summary" '''
+
+    schema = {
+        Optional('instance'): {
+            Any(): {    # OSPF PID
+                'router_id': str,
+                'area_summary': {
+                    Any(): {     # Area Num
+                        'router': {
+                            'count': int,
+                            'delete': int,
+                            'maxage': int
+                        },
+                        'network': {
+                            'count': int,
+                            'delete': int,
+                            'maxage': int
+                        },
+                        'summary_net': {
+                            'count': int,
+                            'delete': int,
+                            'maxage': int
+                        },
+                        'summary_asbr': {
+                            'count': int,
+                            'delete': int,
+                            'maxage': int
+                        },
+                        'type_7_ext': {
+                            'count': int,
+                            'delete': int,
+                            'maxage': int
+                        },
+                        'prefixes_redist_type_7': int,
+                        'opaque_link': {
+                            'count': int,
+                            'delete': int,
+                            'maxage': int
+                        },
+                        'opaque_area': {
+                            'count': int,
+                            'delete': int,
+                            'maxage': int
+                        },
+                        'subtotal': {
+                            'count': int,
+                            'delete': int,
+                            'maxage': int
+                        },
+                    }   
+                },
+                'process_summary': {
+                    Any(): {         # OSPF PID
+                        'router': {
+                            'count': int,
+                            'delete': int,
+                            'maxage': int
+                        },
+                        'network': {
+                            'count': int,
+                            'delete': int,
+                            'maxage': int
+                        },
+                        'summary_net': {
+                            'count': int,
+                            'delete': int,
+                            'maxage': int
+                        },
+                        'summary_asbr': {
+                            'count': int,
+                            'delete': int,
+                            'maxage': int
+                        },
+                        'type_7_ext': {
+                            'count': int,
+                            'delete': int,
+                            'maxage': int
+                        },
+                        'opaque_link': {
+                            'count': int,
+                            'delete': int,
+                            'maxage': int
+                        },
+                        'opaque_area': {
+                            'count': int,
+                            'delete': int,
+                            'maxage': int
+                        },
+                        'type_5_ext': {
+                            'count': int,
+                            'delete': int,
+                            'maxage': int
+                        },
+                        'prefixes_redist_type_5': int,
+                        'opaque_as': {
+                            'count': int,
+                            'delete': int,
+                            'maxage': int
+                        },
+                        'total': {
+                            'count': int,
+                            'delete': int,
+                            'maxage': int
+                        },
+                        'non_self': int
+                    }   
+                }
+            }
+        }
+    }
+
+
+
+# ====================
+# Parser for:
+#  * 'show ip ospf database database-summary'
+# ====================
+class ShowIpOspfDatabaseDatabaseSummary(ShowIpOspfDatabaseDatabaseSummarySchema):
+    ''' Parser for "show ip ospf database database-summary" '''
+
+    #                 OSPF Router with ID (192.168.0.1) (Process ID 1)
+
+    # Area 0 database summary
+    #   LSA Type      Count    Delete   Maxage
+    #   Router        0        0        0       
+    #   Network       0        0        0       
+    #   Summary Net   0        0        0       
+    #   Summary ASBR  0        0        0       
+    #   Type-7 Ext    0        0        0       
+    #     Prefixes redistributed in Type-7  0
+    #   Opaque Link   0        0        0       
+    #   Opaque Area   0        0        0       
+    #   Subtotal      0        0        0       
+
+    # Area 1 database summary
+    #   LSA Type      Count    Delete   Maxage
+    #   Router        0        0        0       
+    #   Network       0        0        0       
+    #   Summary Net   0        0        0       
+    #   Summary ASBR  0        0        0       
+    #   Type-7 Ext    0        0        0       
+    #     Prefixes redistributed in Type-7  0
+    #   Opaque Link   0        0        0       
+    #   Opaque Area   0        0        0       
+    #   Subtotal      0        0        0       
+
+    # Process 1 database summary
+    #   LSA Type      Count    Delete   Maxage
+    #   Router        0        0        0       
+    #   Network       0        0        0       
+    #   Summary Net   0        0        0       
+    #   Summary ASBR  0        0        0       
+    #   Type-7 Ext    0        0        0       
+    #   Opaque Link   0        0        0       
+    #   Opaque Area   0        0        0       
+    #   Type-5 Ext    0        0        0       
+    #       Prefixes redistributed in Type-5  0
+    #   Opaque AS     0        0        0       
+    #   Total         0        0        0       
+    #   Non-self      0       
+
+    #             OSPF Router with ID (102.102.102.102) (Process ID 202)
+
+    # Area 0 database summary
+    #   LSA Type      Count    Delete   Maxage
+    #   Router        2        0        0       
+    #   Network       1        0        0       
+    #   Summary Net   2        0        0       
+    #   Summary ASBR  0        0        0       
+    #   Type-7 Ext    0        0        0       
+    #     Prefixes redistributed in Type-7  0
+    #   Opaque Link   0        0        0       
+    #   Opaque Area   0        0        0       
+    #   Subtotal      5        0        0       
+
+    # Area 1 database summary
+    #   LSA Type      Count    Delete   Maxage
+    #   Router        2        0        0       
+    #   Network       1        0        0       
+    #   Summary Net   2        0        0       
+    #   Summary ASBR  0        0        0       
+    #   Type-7 Ext    0        0        0       
+    #     Prefixes redistributed in Type-7  0
+    #   Opaque Link   0        0        0       
+    #   Opaque Area   0        0        0       
+    #   Subtotal      5        0        0       
+
+    # Process 202 database summary
+    #   LSA Type      Count    Delete   Maxage
+    #   Router        4        0        0       
+    #   Network       2        0        0       
+    #   Summary Net   4        0        0       
+    #   Summary ASBR  0        0        0       
+    #   Type-7 Ext    0        0        0       
+    #   Opaque Link   0        0        0       
+    #   Opaque Area   0        0        0       
+    #   Type-5 Ext    0        0        0       
+    #       Prefixes redistributed in Type-5  0
+    #   Opaque AS     0        0        0       
+    #   Total         10       0        0       
+    #   Non-self      3       
+
+    cli_command = 'show ip ospf database database-summary'
+
+    # Define a function to run the cli_command
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        parsed_dict = {}
+
+        # Define RegExes for each possible kind of line
+
+        #                 OSPF Router with ID (192.168.0.1) (Process ID 1)
+        p1 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>(\S+))\) +\(Process +ID +(?P<ospf_pid>(\d+))\)$')
+
+        # Area 0 database summary
+        p2 = re.compile(r'^Area +(?P<area_no>(\d+)) +database +summary$')
+
+        #   Router        0        0        0 
+        p3 = re.compile(r'^Router +(?P<count>(\d+)) +(?P<delete>(\d+)) +(?P<maxage>(\d+)) *$')
+
+        #   Network       0        0        0       
+        p4 = re.compile(r'^Network +(?P<count>(\d+)) +(?P<delete>(\d+)) +(?P<maxage>(\d+)) *$')
+
+        #   Summary Net   0        0        0       
+        p5 = re.compile(r'^Summary +Net +(?P<count>(\d+)) +(?P<delete>(\d+)) +(?P<maxage>(\d+)) *$')
+
+        #   Summary ASBR  0        0        0       
+        p6 = re.compile(r'^Summary +ASBR +(?P<count>(\d+)) +(?P<delete>(\d+)) +(?P<maxage>(\d+)) *$')
+
+        #   Type-7 Ext    0        0        0       
+        p7 = re.compile(r'^Type-7 +Ext +(?P<count>(\d+)) +(?P<delete>(\d+)) +(?P<maxage>(\d+)) *$')
+
+        #     Prefixes redistributed in Type-7  0
+        p8 = re.compile(r'^Prefixes +redistributed +in +Type-7 +(?P<prefixes_redist_type_7>(\d+))$')
+
+        #   Opaque Link   0        0        0       
+        p9 = re.compile(r'^Opaque +Link +(?P<count>(\d+)) +(?P<delete>(\d+)) +(?P<maxage>(\d+)) *$')
+
+        #   Opaque Area   0        0        0       
+        p10 = re.compile(r'^Opaque +Area +(?P<count>(\d+)) +(?P<delete>(\d+)) +(?P<maxage>(\d+)) *$')
+
+        #   Subtotal      0        0        0       
+        p11 = re.compile(r'^Subtotal +(?P<count>(\d+)) +(?P<delete>(\d+)) +(?P<maxage>(\d+)) *$')
+
+        # Process 1 database summary
+        p12 = re.compile(r'^Process +(?P<ospf_pid>(\d+)) +database +summary$')
+  
+        #   Type-5 Ext    0        0        0      
+        p13 = re.compile(r'^Type-5 +Ext +(?P<count>(\d+)) +(?P<delete>(\d+)) +(?P<maxage>(\d+)) *$')
+
+        #       Prefixes redistributed in Type-5  0
+        p14 = re.compile(r'^Prefixes +redistributed +in +Type-5 +(?P<prefixes_redist_type_5>(\d+))$')
+
+        #   Opaque AS     0        0        0       
+        p15 = re.compile(r'^Opaque +AS +(?P<count>(\d+)) +(?P<delete>(\d+)) +(?P<maxage>(\d+)) *$')
+
+        #   Total         0        0        0       
+        p16 = re.compile(r'^Total +(?P<count>(\d+)) +(?P<delete>(\d+)) +(?P<maxage>(\d+)) *$')
+
+        #   Non-self      0   
+        p17 = re.compile(r'^Non-self +(?P<non_self_count>(\d+)) *$')
+
+
+        area_summary_update = False
+        process_summary_update = False
+
+        ospf_instance_dict = None
+        ospf_area_summary_dict = None
+        ospf_process_summary_dict = None
+
+
+        # Iterate over output lines to check which pattern is matched
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Try matching pattern 1
+            #                 OSPF Router with ID (192.168.0.1) (Process ID 1)
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_instance_dict = parsed_dict.setdefault("instance",{}).setdefault(group["ospf_pid"],{})
+                ospf_instance_dict.update({
+                    'router_id': group["router_id"],
+                    'area_summary': {},
+                    'process_summary': {}
+                })
+                continue
+
+            # Try matching pattern 2
+            # Area 0 database summary
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_area_summary_dict = ospf_instance_dict['area_summary'].setdefault(group["area_no"],{})
+                area_summary_update = True
+                process_summary_update = False
+                ospf_area_summary_dict.update({
+                    'router': None,
+                    'network': None,
+                    'summary_net': None,
+                    'summary_asbr': None,
+                    'type_7_ext': None,
+                    'prefixes_redist_type_7': None,
+                    'opaque_link': None,
+                    'opaque_area': None,
+                    'subtotal': None
+                })
+                continue
+
+            # Try matching pattern 3
+            #   Router        0        0        0 
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                if area_summary_update==True:
+                    ospf_area_summary_dict.update({
+                        'router': {
+                            'count': int(group["count"]),
+                            'delete': int(group["delete"]),
+                            'maxage': int(group["maxage"])
+                        }
+                    })
+                elif process_summary_update==True:
+                    ospf_process_summary_dict.update({
+                        'router': {
+                            'count': int(group["count"]),
+                            'delete': int(group["delete"]),
+                            'maxage': int(group["maxage"])
+                        }
+                    })
+
+                continue
+
+            # Try matching pattern 4
+            #   Network       0        0        0       
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                if area_summary_update==True:
+                    ospf_area_summary_dict.update({
+                        'network': {
+                            'count': int(group["count"]),
+                            'delete': int(group["delete"]),
+                            'maxage': int(group["maxage"])
+                        }
+                    })
+                elif process_summary_update==True:
+                    ospf_process_summary_dict.update({
+                        'network': {
+                            'count': int(group["count"]),
+                            'delete': int(group["delete"]),
+                            'maxage': int(group["maxage"])
+                        }
+                    })
+
+                continue
+
+            # Try matching pattern 5
+            #   Summary Net   0        0        0       
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                if area_summary_update==True:
+                    ospf_area_summary_dict.update({
+                        'summary_net': {
+                            'count': int(group["count"]),
+                            'delete': int(group["delete"]),
+                            'maxage': int(group["maxage"])
+                        }
+                    })
+                elif process_summary_update==True:
+                    ospf_process_summary_dict.update({
+                        'summary_net': {
+                            'count': int(group["count"]),
+                            'delete': int(group["delete"]),
+                            'maxage': int(group["maxage"])
+                        }
+                    })
+
+                continue
+
+            # Try matching pattern 6
+            #   Summary ASBR  0        0        0       
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                if area_summary_update==True:
+                    ospf_area_summary_dict.update({
+                        'summary_asbr': {
+                            'count': int(group["count"]),
+                            'delete': int(group["delete"]),
+                            'maxage': int(group["maxage"])
+                        }
+                    })
+                elif process_summary_update==True:
+                    ospf_process_summary_dict.update({
+                        'summary_asbr': {
+                            'count': int(group["count"]),
+                            'delete': int(group["delete"]),
+                            'maxage': int(group["maxage"])
+                        }
+                    })
+
+                continue
+
+            # Try matching pattern 7
+            #   Type-7 Ext    0        0        0       
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                if area_summary_update==True:
+                    ospf_area_summary_dict.update({
+                        'type_7_ext': {
+                            'count': int(group["count"]),
+                            'delete': int(group["delete"]),
+                            'maxage': int(group["maxage"])
+                        }
+                    })
+                elif process_summary_update==True:
+                    ospf_process_summary_dict.update({
+                        'type_7_ext': {
+                            'count': int(group["count"]),
+                            'delete': int(group["delete"]),
+                            'maxage': int(group["maxage"])
+                        }
+                    })
+
+                continue
+
+            # Try matching pattern 8
+            #     Prefixes redistributed in Type-7  0
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                if area_summary_update==True:
+                    ospf_area_summary_dict.update({
+                        'prefixes_redist_type_7': int(group["prefixes_redist_type_7"])
+                    })
+
+                continue
+
+            # Try matching pattern 9
+            #   Opaque Link   0        0        0       
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                if area_summary_update==True:
+                    ospf_area_summary_dict.update({
+                        'opaque_link': {
+                            'count': int(group["count"]),
+                            'delete': int(group["delete"]),
+                            'maxage': int(group["maxage"])
+                        }
+                    })
+                elif process_summary_update==True:
+                    ospf_process_summary_dict.update({
+                        'opaque_link': {
+                            'count': int(group["count"]),
+                            'delete': int(group["delete"]),
+                            'maxage': int(group["maxage"])
+                        }
+                    })
+
+                continue
+
+            # Try matching pattern 10
+            #   Opaque Area   0        0        0       
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                if area_summary_update==True:
+                    ospf_area_summary_dict.update({
+                        'opaque_area': {
+                            'count': int(group["count"]),
+                            'delete': int(group["delete"]),
+                            'maxage': int(group["maxage"])
+                        }
+                    })
+                elif process_summary_update==True:
+                    ospf_process_summary_dict.update({
+                        'opaque_area': {
+                            'count': int(group["count"]),
+                            'delete': int(group["delete"]),
+                            'maxage': int(group["maxage"])
+                        }
+                    })
+
+                continue
+
+            # Try matching pattern 11
+            #   Subtotal      0        0        0       
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                if area_summary_update==True:
+                    ospf_area_summary_dict.update({
+                        'subtotal': {
+                            'count': int(group["count"]),
+                            'delete': int(group["delete"]),
+                            'maxage': int(group["maxage"])
+                        }
+                    })
+
+                continue
+
+            # Try matching pattern 12
+            # Process 1 database summary
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_process_summary_dict = ospf_instance_dict['process_summary'].setdefault(group["ospf_pid"],{})
+                process_summary_update = True
+                area_summary_update = False
+                ospf_process_summary_dict.update({
+                    'router': None,
+                    'network': None,
+                    'summary_net': None,
+                    'summary_asbr': None,
+                    'type_7_ext': None,
+                    'opaque_link': None,
+                    'opaque_area': None,
+                    'type_5_ext': None,
+                    'prefixes_redist_type_5': None,
+                    'opaque_as': None,
+                    'total': None,
+                    'non_self': None
+                })
+                continue
+
+            # Try matching pattern 13
+            #   Type-5 Ext    0        0        0      
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                if process_summary_update==True:
+                    ospf_process_summary_dict.update({
+                        'type_5_ext': {
+                            'count': int(group["count"]),
+                            'delete': int(group["delete"]),
+                            'maxage': int(group["maxage"])
+                        }
+                    })
+                continue
+
+            # Try matching pattern 14
+            #       Prefixes redistributed in Type-5  0
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                if process_summary_update==True:
+                    ospf_process_summary_dict.update({
+                        'prefixes_redist_type_5': int(group["prefixes_redist_type_5"])
+                    })
+                continue
+
+            # Try matching pattern 15
+            #   Opaque AS     0        0        0       
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                if process_summary_update==True:
+                    ospf_process_summary_dict.update({
+                        'opaque_as': {
+                            'count': int(group["count"]),
+                            'delete': int(group["delete"]),
+                            'maxage': int(group["maxage"])
+                        }
+                    })
+                continue
+
+            # Try matching pattern 16
+            #   Total         0        0        0       
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                if process_summary_update==True:
+                    ospf_process_summary_dict.update({
+                        'total': {
+                            'count': int(group["count"]),
+                            'delete': int(group["delete"]),
+                            'maxage': int(group["maxage"])
+                        }
+                    })
+                continue
+
+            # Try matching pattern 17
+            #   Non-self      0   
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                if process_summary_update==True:
+                    ospf_process_summary_dict.update({
+                        'non_self': int(group["non_self_count"])
+                    })
+                continue
+        
+            
+        return parsed_dict
+    
+
+# =================================================================
+# Schema for:
+#   * 'show ip ospf rib redistribution'
+# =================================================================
+class ShowIpOspfRibRedistributionSchema(MetaParser):
+    """Schema for show ip ospf rib redistribution
+    """
+    schema = {
+        "instance": {
+            Any(): {
+                "router_id": str,
+                "mtid": int,
+                Optional("network"): {
+                    Any(): {
+                        "type": int,
+                        "metric": int,
+                        "tag": int,
+                        "origin": str,
+                        Optional("via_network"): str,
+                        Optional("interface"): str,
+                    }
+                },
+            }
+        }
+    }
+
+
+# ========================================================
+# Parser for:
+#   * 'Show ip ospf rib redistribution'
+# ========================================================
+class ShowIpOspfRibRedistribution(ShowIpOspfRibRedistributionSchema):
+    """ Parser for show ip ospf rib redistribution
+    """
+    cli_command = 'show ip ospf rib redistribution'
+    
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # OSPF Router with ID (10.4.1.1) (Process ID 100)
+        p1 = re.compile(r'OSPF+ Router +with +ID +\((?P<router_id>\S+)\)+\s+\(Process +ID +(?P<instance>\d+)\)')
+
+        # Base Topology (MTID 0)
+        p2 = re.compile(r'Base +Topology +\(MTID (?P<mtid>\d+)\)$')
+
+        # 40.0.0.1/32, type 2, metric 20, tag 0, from IS-IS Router
+        p3 = re.compile(r'(?P<network>\S+), type (?P<type>\d+), metric (?P<metric>\d+), tag (?P<tag>\d+), from (?P<from>.*)$')
+        
+        # via 40.60.1.40, Ethernet0/2
+        # via Null0
+        p4 = re.compile(r'via ((?P<via_network>\S+),)?\s*(?P<interface>\S+)')
+
+        # initial variables
+        ret_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+
+            # OSPF Router with ID (10.4.1.1) (Process ID 65109)
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                router_id = str(IPAddress(group['router_id']))
+                instance = int(group['instance'])
+
+                # Create dict
+                process_id_dict = ret_dict.setdefault('instance',{}).\
+                                           setdefault(instance,{})
+                process_id_dict.update({'router_id': router_id})
+                continue
+
+            #         Base Topology (MTID 0)
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                mtid = group['mtid']
+                process_id_dict.update({'mtid': int(mtid)}) 
+                continue
+
+            # 40.0.0.1/32, type 2, metric 20, tag 0, from IS-IS Router
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                network = group['network']
+                type = group['type']
+                metric = group['metric']
+                tag = group['tag']
+                origin = group['from']
+                network_dict = process_id_dict.setdefault('network',{}).setdefault(network,{})
+                network_dict.update(type= int(type), metric = int(metric), tag = int(tag), origin = origin)                
+                continue
+
+            #  via 40.60.1.40, Ethernet0/2
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                via_network = group['via_network']
+                interface= group['interface']
+                interface= group['interface']
+                if via_network is not None:
+                    network_dict.update({'via_network': str(IPAddress(via_network))})
+                else:
+                    network_dict.update({'via_network': 'None'})
+                 
+                network_dict.update({'interface': interface})
+                continue
+
+        return ret_dict    
+
+
+# =================================================================
+# Schema for:
+#   * 'show ipv6 ospf interface'
+# =================================================================
+
+class ShowIpv6OspfInterfaceSchema(MetaParser):
+    """ Schema for show ipv6 ospf interface {interface} """
+
+    schema = {
+        'interface': {
+            Any(): {
+                'interface_status': str,
+                'line_status': str,
+                'connect_status': str,
+                'link_local_address': str,
+                'interface_id': int,
+                'if_index': str,
+                'area': int,
+                'process_id': int,
+                'instance_id': int,
+                'router_id': str,
+                'network_type': str,
+                'cost': int,
+                'transmit_delay': str,
+                'state': str,
+                'timer_intervals': {
+                    'hello': int,
+                    'dead': int,
+                    'wait': int,
+                    'retransmit': int,
+                    'hello_due': str
+                },
+                'graceful_restart_helper_support': str,
+                'flood_list': {
+                    'index': str,
+                    'next': str,
+                    'flood_queue_length': int,
+                    'last_flood_scan': {
+                        'scan_length': int,
+                        'scan_length_maximum': int,
+                        'scan_time_msec': int,
+                        'scan_time_maximum_msec': int
+                    },
+                },
+                'neighbor_count': int,
+                'adjacent_neighbor_count': int,
+                'adjacent_neighbor_address': str,
+                'suppressed_hello_neighbor_count': int
+            }
+        }
+    }
+
+
+# =================================================================
+# Parser for:
+#   * 'show ipv6 ospf interface'
+# =================================================================
+
+class ShowIpv6OspfInterface(ShowIpv6OspfInterfaceSchema):
+    """ Parser for show ipv6 ospf interface {interface}"""
+
+    cli_command = 'show ipv6 ospf interface {interface}'
+
+    def cli(self, interface, output=None):
+        if output is None:
+            cmd = self.cli_command.format(interface=interface)
+        
+        output = self.device.execute(cmd)
+
+        # TwentyFiveGigE1/0/3 is up, line protocol is up (connected)
+        p1 = re.compile(r'^(?P<interface>[\S]+) is (?P<interface_status>[\S]+), line protocol is (?P<line_status>[\S]+)\s+\((?P<connect_status>[\S]+)\)$')
+
+        # Link Local Address FE80::2A7:42FF:FED7:4CFF, Interface ID 5 (snmp-if-index)
+        p2 = re.compile(r'^Link Local Address (?P<link_local_address>[\S]+), Interface ID (?P<interface_id>[\d]+)\s+\((?P<if_index>[\S]+)\)$')
+
+        # Area 0, Process ID 1, Instance ID 0, Router ID 109.0.0.1
+        p3 = re.compile(r'^Area (?P<area>[\d]+), Process ID (?P<process_id>[\d]+), Instance ID (?P<instance_id>[\d]+), Router ID (?P<router_id>[\S]+)$')
+
+        # Network Type POINT_TO_POINT, Cost: 1
+        p4 = re.compile(r'^Network Type (?P<network_type>[\S]+), Cost: (?P<cost>[\d]+)$')
+        
+        # Transmit Delay is 1 sec, State POINT_TO_POINT
+        p5 = re.compile(r'^Transmit Delay is (?P<transmit_delay>[\d\s\w]+), State (?P<state>[\S]+)$')
+
+        # Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+        p6 = re.compile(r'^Timer intervals configured, Hello (?P<hello>[\d]+), Dead (?P<dead>[\d]+), Wait (?P<wait>[\d]+), Retransmit (?P<retransmit>[\d]+)$')
+
+        # Hello due in 00:00:08
+        p6_1 = re.compile(r'^Hello due in (?P<hello_due>\S+)$')
+        
+        # Graceful restart helper support enabled
+        p7 = re.compile(r'^Graceful restart helper support (?P<graceful_restart_helper_support>[\S]+)$')
+
+        # Index 1/4/4, flood queue length 0
+        p8 = re.compile(r'^Index (?P<index>\S+), flood queue length (?P<flood_queue_length>\d+)$')
+
+        # Next 0x0(0)/0x0(0)/0x0(0)
+        p9 = re.compile(r'^Next (?P<next>\S+)$')
+
+        # Last flood scan length is 3, maximum is 3
+        p10 = re.compile(r'^Last flood scan length is (?P<scan_length>\d+), maximum is (?P<scan_length_maximum>\d+)$')
+
+        # Last flood scan time is 0 msec, maximum is 0 msec
+        p11 = re.compile(r'^Last flood scan time is (?P<scan_time_msec>\d+) msec, maximum is (?P<scan_time_maximum_msec>\d+) msec$')
+
+        # Neighbor Count is 1, Adjacent neighbor count is 1
+        p12 = re.compile(r'^Neighbor Count is (?P<neighbor_count>[\d]+), Adjacent neighbor count is (?P<adjacent_neighbor_count>[\d]+)$')
+
+        # Adjacent with neighbor 109.0.0.5
+        p13 = re.compile(r'^Adjacent with neighbor (?P<adjacent_neighbor_address>[\S]+)$')
+
+        # Suppress hello for 0 neighbor(s)
+        p14 = re.compile(r'^Suppress hello for (?P<suppressed_hello_neighbor_count>\d+) neighbor\(s\)$')
+        
+        ret_dict ={}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # TwentyFiveGigE1/0/3 is up, line protocol is up (connected)
+            m = p1.match(line)
+            if m:
+                dict_val = m.groupdict()
+                int_dict = ret_dict.setdefault('interface', {}).setdefault(Common.convert_intf_name(dict_val['interface']), {})
+                int_dict['interface_status'] = dict_val['interface_status']
+                int_dict['line_status'] = dict_val['line_status']
+                int_dict['connect_status'] = dict_val['connect_status']
+                continue
+
+            # Link Local Address FE80::2A7:42FF:FED7:4CFF, Interface ID 5 (snmp-if-index)
+            m = p2.match(line)
+            if m:
+                dict_val = m.groupdict()
+                int_dict['link_local_address'] = dict_val['link_local_address']
+                int_dict['interface_id'] = int(dict_val['interface_id'])
+                int_dict['if_index'] = dict_val['if_index']
+                continue
+            
+            # Area 0, Process ID 1, Instance ID 0, Router ID 109.0.0.1
+            m = p3.match(line)
+            if m:
+                dict_val = m.groupdict()
+                int_dict['area'] = int(dict_val['area'])
+                int_dict['process_id'] = int(dict_val['process_id'])
+                int_dict['instance_id'] = int(dict_val['instance_id'])
+                int_dict['router_id'] = dict_val['router_id']
+                continue
+            
+            # Network Type POINT_TO_POINT, Cost: 1
+            m = p4.match(line)
+            if m:
+                dict_val = m.groupdict()
+                int_dict['network_type'] = dict_val['network_type']
+                int_dict['cost'] = int(dict_val['cost'])
+                continue
+
+            # Transmit Delay is 1 sec, State POINT_TO_POINT
+            m = p5.match(line)
+            if m:
+                dict_val = m.groupdict()
+                int_dict['transmit_delay'] = dict_val['transmit_delay']
+                int_dict['state'] = dict_val['state']
+                continue
+            
+            # Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+            m = p6.match(line)
+            if m:
+                dict_val = m.groupdict()
+                timer_intervals_dict = int_dict.setdefault('timer_intervals', {})
+                timer_intervals_dict['hello'] = int(dict_val['hello'])
+                timer_intervals_dict['dead'] = int(dict_val['dead'])
+                timer_intervals_dict['wait'] = int(dict_val['wait'])
+                timer_intervals_dict['retransmit'] = int(dict_val['retransmit'])
+                continue
+
+            # Hello due in 00:00:08
+            m = p6_1.match(line)
+            if m:
+                int_dict.setdefault('timer_intervals', {}).setdefault('hello_due', m.groupdict()['hello_due'])
+                continue
+
+            # Graceful restart helper support enabled
+            m = p7.match(line)
+            if m:
+                int_dict['graceful_restart_helper_support'] = m.groupdict()['graceful_restart_helper_support']
+                continue
+            
+            # Index 1/4/4, flood queue length 0
+            m = p8.match(line)
+            if m:
+                flood_dict = int_dict.setdefault('flood_list', {})
+                flood_dict['index'] = m.groupdict()['index']
+                flood_dict['flood_queue_length'] = int(m.groupdict()['flood_queue_length'])
+                continue
+
+            # Next 0x0(0)/0x0(0)/0x0(0)
+            m = p9.match(line)
+            if m:
+                flood_dict['next'] = m.groupdict()['next']
+                continue
+
+            # Last flood scan length is 3, maximum is 3
+            m = p10.match(line)
+            if m:
+                last_flood_scan_dict = flood_dict.setdefault('last_flood_scan', {})
+                last_flood_scan_dict['scan_length'] = int(m.groupdict()['scan_length'])
+                last_flood_scan_dict['scan_length_maximum'] = int(m.groupdict()['scan_length_maximum'])
+                continue
+
+            # Last flood scan time is 0 msec, maximum is 0 msec
+            m = p11.match(line)
+            if m:
+                last_flood_scan_dict['scan_time_msec'] = int(m.groupdict()['scan_time_msec'])
+                last_flood_scan_dict['scan_time_maximum_msec'] = int(m.groupdict()['scan_time_maximum_msec'])
+                continue
+
+            # Neighbor Count is 1, Adjacent neighbor count is 1
+            m = p12.match(line)
+            if m:
+                dict_val = m.groupdict()
+                int_dict['neighbor_count'] = int(dict_val['neighbor_count'])
+                int_dict['adjacent_neighbor_count'] = int(dict_val['adjacent_neighbor_count'])
+                continue
+            
+            # Adjacent with neighbor 109.0.0.5
+            m = p13.match(line)
+            if m:
+                dict_val = m.groupdict()
+                int_dict['adjacent_neighbor_address'] = dict_val['adjacent_neighbor_address']
+                continue
+
+            # Suppress hello for 0 neighbor(s)
+            m = p14.match(line)
+            if m:
+                int_dict['suppressed_hello_neighbor_count'] = int(m.groupdict()['suppressed_hello_neighbor_count'])
+                continue
+
+        return ret_dict
+
+
+# =================================================================
+# Schema for:
+#   * 'show ipv6 ospf interface'
+# =================================================================
+
+class ShowIpv6OspfNeighborDetailSchema(MetaParser):
+    """ Schema for ShowIpv6OspfNeighborDetail """
+
+    schema = {
+        'router_id': {
+            Any():{
+                'process_id':{
+                    Any():{
+                        'neighbor': {
+                            Any():{
+                                'area': int,
+                                'interface': str,
+                                'interface_id': str,
+                                'link_local_address': str,
+                                'priority': int,
+                                'state': str,
+                                'state_changes': int,
+                                'hello_options': str,
+                                'hello_bits': str,
+                                'dbd_options': str,
+                                'dbd_bits': str,
+                                'dead_timer': str,
+                                'neighbor_up_time': str,
+                                'index': str,
+                                'retransmission_length': int,
+                                'number_of_transmission': int,
+                                'first': str,
+                                'next': str,
+                                'last_retransmission_length': int,
+                                'retransmission_length_maximum': int,
+                                'last_retransmission_time': int,
+                                'retransmission_time_maximum': int
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+# =================================================================
+# Parser for:
+#   * 'show ipv6 ospf interface'
+# =================================================================
+
+class ShowIpv6OspfNeighborDetail(ShowIpv6OspfNeighborDetailSchema):
+    """ Parser for ShowIpv6OspfNeighborDetail """
+
+    cli_command = 'show ipv6 ospf neighbor detail'
+
+    def cli(self, output=None):
+        if output is None:
+            cmd = self.cli_command
+        
+        output = self.device.execute(cmd)
+
+        # OSPFv3 Router with ID (109.0.0.5) (Process ID 1)
+        p1 = re.compile(r'^OSPFv3 Router with ID \((?P<router_id>[\S]+)\)\s+\(Process ID (?P<process_id>[\d]+)\)$')
+
+        # Neighbor 109.0.0.1
+        p2 = re.compile(r'^Neighbor (?P<neighbor>[\S]+)$')
+
+        # In the area 0 via interface HundredGigE1/0/7
+        p3 = re.compile(r'^In the area (?P<area>[\d]+)\s+via interface (?P<interface>[\S]+)$')
+
+        # Neighbor: interface-id 5, link-local address FE80::2A7:42FF:FED7:4CFF
+        p4 = re.compile(r'^Neighbor: interface-id (?P<interface_id>[\d]+),\s+link-local address (?P<link_local_address>[\S]+)$')
+
+        # Neighbor priority is 0, State is FULL, 6 state changes
+        p5 = re.compile(r'^Neighbor priority is (?P<priority>[\d]+), State is (?P<state>[\S]+), (?P<state_changes>[\d]+) state changes$')
+
+        # Options is 0x000013 in Hello (V6-Bit, E-Bit, R-Bit)
+        p6 = re.compile(r'^Options is (?P<hello_options>[\S]+) in Hello \((?P<hello_bits>[\S\s]+)\)$')
+
+        # Options is 0x000013 in DBD (V6-Bit, E-Bit, R-Bit)
+        p7 = re.compile(r'^Options is (?P<dbd_options>[\S]+) in DBD \((?P<dbd_bits>[\S\s]+)\)$')
+
+        # Dead timer due in 00:00:39
+        p8 = re.compile(r'^Dead timer due in (?P<dead_timer>\S+)$')
+        
+        # Neighbor is up for 17:54:26
+        p9 = re.compile(r'^Neighbor is up for (?P<neighbor_up_time>\S+)$')
+        
+        # Index 1/2/2, retransmission queue length 0, number of retransmission 0
+        p10 = re.compile(r'^Index (?P<index>\S+)\, retransmission queue length (?P<retransmission_length>\d+)\, number of retransmission (?P<number_of_transmission>\d+)$')
+        
+        # First 0x0(0)/0x0(0)/0x0(0) Next 0x0(0)/0x0(0)/0x0(0)
+        p11 = re.compile(r'^First (?P<first>\S+) Next (?P<next>\S+)$')
+
+        # Last retransmission scan length is 0, maximum is 0
+        p12 = re.compile(r'^Last retransmission scan length is (?P<last_retransmission_length>\d+)\, maximum is (?P<retransmission_length_maximum>\d+)$')
+
+        # Last retransmission scan time is 0 msec, maximum is 0 msec
+        p13 = re.compile(r'^Last retransmission scan time is (?P<last_retransmission_time>\d+) msec\, maximum is (?P<retransmission_time_maximum>\d+) msec$')
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # OSPFv3 Router with ID (109.0.0.5) (Process ID 1)
+            m = p1.match(line)
+            if m:
+                dict_val = m.groupdict()
+                process_dict = ret_dict.setdefault('router_id', {}).setdefault(dict_val['router_id'], {})
+                neighbor_dict = process_dict.setdefault('process_id', {}).setdefault(dict_val['process_id'], {})
+                continue
+
+            # Neighbor 109.0.0.1
+            m = p2.match(line)
+            if m:
+                dict_val = m.groupdict()
+                sub_dict = neighbor_dict.setdefault('neighbor', {}).setdefault(dict_val['neighbor'], {})
+                continue
+
+            # In the area 0 via interface HundredGigE1/0/7
+            m = p3.match(line)
+            if m:
+                dict_val = m.groupdict()
+                sub_dict['area'] = int(dict_val['area'])
+                sub_dict['interface'] = dict_val['interface']
+                continue
+            
+            # Neighbor: interface-id 5, link-local address FE80::2A7:42FF:FED7:4CFF
+            m = p4.match(line)
+            if m:
+                dict_val = m.groupdict()
+                sub_dict['interface_id'] = dict_val['interface_id']
+                sub_dict['link_local_address'] = dict_val['link_local_address']
+                continue
+
+            # Neighbor priority is 0, State is FULL, 6 state changes
+            m = p5.match(line)
+            if m:
+                dict_val = m.groupdict()
+                sub_dict['priority'] = int(dict_val['priority'])
+                sub_dict['state'] = dict_val['state']
+                sub_dict['state_changes'] = int(dict_val['state_changes'])
+                continue
+
+            # Options is 0x000013 in Hello (V6-Bit, E-Bit, R-Bit)
+            m = p6.match(line)
+            if m:
+                dict_val = m.groupdict()
+                sub_dict['hello_options'] = dict_val['hello_options']
+                sub_dict['hello_bits'] = dict_val['hello_bits']
+                continue
+
+            # Options is 0x000013 in DBD (V6-Bit, E-Bit, R-Bit)
+            m = p7.match(line)
+            if m:
+                dict_val = m.groupdict()
+                sub_dict['dbd_options'] = dict_val['dbd_options']
+                sub_dict['dbd_bits'] = dict_val['dbd_bits']
+                continue
+
+            # Dead timer due in 00:00:39
+            m = p8.match(line)
+            if m:
+                sub_dict['dead_timer'] = m.groupdict()['dead_timer']
+                continue
+            
+            # Neighbor is up for 17:54:26
+            m = p9.match(line)
+            if m:
+                sub_dict['neighbor_up_time'] = m.groupdict()['neighbor_up_time']
+                continue
+
+            # Index 1/2/2, retransmission queue length 0, number of retransmission 0
+            m = p10.match(line)
+            if m:
+                dict_val = m.groupdict()
+                sub_dict['index'] = dict_val['index']
+                sub_dict['retransmission_length'] = int(dict_val['retransmission_length'])
+                sub_dict['number_of_transmission'] = int(dict_val['number_of_transmission'])
+                continue
+
+            # First 0x0(0)/0x0(0)/0x0(0) Next 0x0(0)/0x0(0)/0x0(0)
+            m = p11.match(line)
+            if m:
+                sub_dict['first'] = m.groupdict()['first']
+                sub_dict['next'] = m.groupdict()['first']
+
+            # Last retransmission scan length is 0, maximum is 0
+            m = p12.match(line)
+            if m:
+                sub_dict['last_retransmission_length'] = int(m.groupdict()['last_retransmission_length'])
+                sub_dict['retransmission_length_maximum'] = int(m.groupdict()['retransmission_length_maximum'])
+
+            # Last retransmission scan time is 0 msec, maximum is 0 msec
+            m = p13.match(line)
+            if m:
+                sub_dict['last_retransmission_time'] = int(m.groupdict()['last_retransmission_time'])
+                sub_dict['retransmission_time_maximum'] = int(m.groupdict()['retransmission_time_maximum'])
+
+        return ret_dict

@@ -1,0 +1,19 @@
+show frequency synchronization interfaces GigabitEthernet0/0/0/16
+Fri Jan 13 11:19:13.351 UTC
+Interface GigabitEthernet0/0/0/16 (up)
+  Wait-to-restore time 5 minutes
+  SSM Enabled
+    Peer Up for 1d05h, last SSM received 0.549s ago
+    Peer has come up 2 times and timed out 0 times
+    ESMC SSMs        Total  Information     Event    DNU/DUS
+      Sent:         107715       107714         1          0
+      Received:     107715       107714         1          0
+  Input:
+    Down - not assigned for selection
+    Supports frequency
+  Output:
+    Selected source: PTP [0/RSP0/CPU0]
+    Selected source QL: Opt-I/PRC
+    Effective QL: Opt-I/PRC
+    Extended QL data not being sent
+  Next selection points: SPA_RX_0

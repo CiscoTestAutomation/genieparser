@@ -1,0 +1,72 @@
+Controller VDSL 0/2/0 is UP
+
+Daemon Status:          UP 
+
+                        XTU-R (DS)              XTU-C (US)
+Chip Vendor ID:         'BDCM'                   'BDCM'
+Chip Vendor Specific:   0x0000                   0xA41B
+Chip Vendor Country:    0xB500                   0xB500
+Modem Vendor ID:        'CSCO'                   '    '
+Modem Vendor Specific:  0x4602                   0x0000
+Modem Vendor Country:   0xB500                   0x0000
+Serial Number Near:     FGL214893R1 C1112-8P 16.9.7    
+Serial Number Far:      
+Modem Version Near:     16.9.7
+Modem Version Far:      0xa41b
+
+Modem Status:           TC Sync (Showtime!) 
+DSL Config Mode:        AUTO 
+Trained Mode:           G.993.2 (VDSL2) Profile 17a
+
+TC Mode:                PTM 
+Selftest Result:        0x00 
+DELT configuration:     disabled 
+DELT state:             not running 
+
+Failed full inits:      0
+Short inits:            0
+Failed short inits:     0
+
+Modem FW  Version:      4.16L.05
+Modem PHY Version:      B2pvfbH043j.d26u
+Modem PHY Source:       System
+
+Line 0:
+
+                        XTU-R (DS)              XTU-C (US)
+Trellis:                 ON                      ON
+SRA:                     enabled                 enabled
+SRA count:               0                       0
+Bit swap:                enabled                 enabled
+Bit swap count:          150                     3815
+Line Attenuation:         2.0 dB                  0.0 dB
+Signal Attenuation:       0.0 dB                  0.0 dB
+Noise Margin:            20.4 dB                 6.1 dB
+Attainable Rate:        157223 kbits/s           57590 kbits/s
+Actual Power:           14.5 dBm                - 4.2 dBm
+Per Band Status:        D1      D2      D3      U0      U1      U2      U3
+Line Attenuation(dB):   0.3     2.3     3.6     N/A     0.3     1.5     N/A
+Signal Attenuation(dB): 0.2     2.2     3.6     N/A     0.0     0.8     N/A
+Noise Margin(dB):       20.4    20.3    20.5    N/A     6.1     6.1     N/A
+Total FECC:             886793                   29811
+Total ES:               24                       952
+Total SES:              7                        21
+Total LOSS:             0                        0
+Total UAS:              140                      140
+Total LPRS:             0                        0
+Total LOFS:             0                        0
+Total LOLS:             0                        0
+
+
+                  DS Channel1     DS Channel0   US Channel1       US Channel0
+Speed (kbps):             NA          100014            NA             57746
+SRA Previous Speed:       NA               0            NA                 0
+Previous Speed:           NA          100014            NA             57823
+Reed-Solomon EC:          NA           85666            NA              6420
+CRC Errors:               NA             608            NA              1908
+Header Errors:            NA           21172            NA                 0
+Interleave (ms):          NA            7.00            NA              0.00
+Actual INP:               NA            1.01            NA              0.00
+
+Training Log :  Stopped
+Training Log Filename : flash:vdsllog.bin

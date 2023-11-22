@@ -1,0 +1,53 @@
+Chassis Type: C9407R              
+
+Switch Number 1 
+
+Mod Ports Card Type                                   Model          Serial No.
+---+-----+--------------------------------------+--------------+--------------
+1   24   24-port 25/10 Gig (SFP28/SFP+/SFP)          C9400-LC-24XY    JAE26351TLU
+2   48   48-Port UPOE+ mGig (RJ-45)                  C9400-LC-48HX    JAE25380LZR
+4   10   Supervisor 2XL Module                       C9400X-SUP-2XL   JAE2432006A
+5   12   12-port 40/100 Gig (QSFP/QSFP28)            C9400-LC-12QC    JAE262317UE
+6   48   48-Port 10/100/1000 (RJ-45)                 C9400-LC-48T     JAE220504RY
+7   48   48-Port UPOE 10/100/1000 (RJ-45)            C9400-LC-48U     JAE2132075L
+
+Mod MAC addresses                    Hw   Fw           Sw                 Status
+---+--------------------------------+----+------------+------------------+--------
+1   341B.2DA3.C160 to 341B.2DA3.C177 0.2  17.8.0.15     S2C                ok         
+2   D4EB.6817.9890 to D4EB.6817.98BF 0.6  17.8.0.15     S2C                ok         
+4   380E.4D5A.9776 to 380E.4D5A.977F 0.3  17.8.0.15     S2C                ok         
+5   F8E5.7EE1.85BC to F8E5.7EE1.85C7 0.4  17.8.0.15     S2C                ok         
+6   005D.73D2.90E4 to 005D.73D2.9113 1.1  17.8.0.15     S2C                ok         
+7   E4AA.5D5A.157C to E4AA.5D5A.15AB 1.0  17.8.0.15     S2C                ok         
+
+Mod Redundancy Role     Operating Mode  Configured Mode  Redundancy Status
+---+-------------------+---------------+---------------+------------------
+4   Standby             sso             sso              Standby Hot      
+
+Switch Number 2 
+
+Mod Ports Card Type                                   Model          Serial No.
+---+-----+--------------------------------------+--------------+--------------
+1   48   48-Port 10 Gigabit Ethernet (SFP+)          C9400-LC-48XS    JAE25260X32
+2   48   48-Port UPOE w/ 24p mGig 24p RJ-45          C9400-LC-48UX    JAE22270FWS
+4   10   Supervisor 2 Module                         C9400X-SUP-2     JAE252803WV
+5   48   48-Port UPOE 10/100/1000 (RJ-45)            C9400-LC-48U     JAE221107LP
+6   48   48-Port POE+ 10/100/1000 (RJ-45)            C9400-LC-48P     JAD23271BA4
+7   12   12-port 40/100 Gig (QSFP/QSFP28)            C9400-LC-12QC    JAE262317UW
+
+Mod MAC addresses                    Hw   Fw           Sw                 Status
+---+--------------------------------+----+------------+------------------+--------
+1   74AD.9878.D5F0 to 74AD.9878.D61F 0.3  17.12.1r[FC1] S2C                ok         
+2   B08B.CFA1.5110 to B08B.CFA1.513F 1.0  17.12.1r[FC1] S2C                ok         
+4   380E.4D5A.9836 to 380E.4D5A.983F 0.4  17.12.1r[FC1] S2C                ok         
+5   28AC.9EF4.1848 to 28AC.9EF4.1877 1.1  17.12.1r[FC1] S2C                ok         
+6   A453.0E8F.FE68 to A453.0E8F.FE97 1.0  17.12.1r[FC1] S2C                ok         
+7   F8E5.7EE1.8580 to F8E5.7EE1.858B 0.4  17.12.1r[FC1] S2C                ok         
+
+Mod Redundancy Role     Operating Mode  Configured Mode  Redundancy Status
+---+-------------------+---------------+---------------+------------------
+4   Active              sso             sso              Active           
+
+Chassis 1 MAC address range: 44 addresses from 380e.4d5a.9740 to 380e.4d5a.976b 
+
+Chassis 2 MAC address range: 44 addresses from 380e.4d5a.9800 to 380e.4d5a.982b 

@@ -4,6 +4,7 @@ expected_output = {
         "chassis_sn": "FXS1729E2TD",
         "compiled_by": "prod_rel_team",
         "compiled_date": "Tue 23-Oct-12 23:51",
+        "copyright_years": "1986-2012",
         "curr_config_register": "0x2101",
         "hostname": "switchname",
         "image_id": "cat4500e-UNIVERSALK9-M",

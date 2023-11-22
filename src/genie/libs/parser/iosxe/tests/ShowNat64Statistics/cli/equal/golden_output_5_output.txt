@@ -1,0 +1,8 @@
+NAT64 Statistics
+
+NAT64 Interface Statistics
+FortyGigabitEthernet2/0/7.10 (IPv4 configured, IPv6 not configured):
+Stateful Prefix: 2800:1503:2000:1:1::/96
+    Packets translated (IPv4 -> IPv6): 16
+    Packets translated (IPv6 -> IPv4): 722725
+    Packets dropped: 807260

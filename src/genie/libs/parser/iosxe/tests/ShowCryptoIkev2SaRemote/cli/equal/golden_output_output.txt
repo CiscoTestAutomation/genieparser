@@ -1,0 +1,6 @@
+Tunnel-id Local                 Remote                fvrf/ivrf            Status 
+1184      101.0.10.2/500        100.201.33.252/500    none/none            READY  
+      Encr: AES-CBC, keysize: 192, PRF: SHA512, Hash: SHA512, DH Grp:16, Auth sign: PSK, Auth verify: PSK
+      Life/Active Time: 86400/19 sec
+      CE id: 76998, Session-id: 1790326
+      Local spi: 39125EA1EB1B358D       Remote spi: 29C6416947D54ECA

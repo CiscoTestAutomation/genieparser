@@ -1,0 +1,2 @@
+        Class AutoQos-4.0-Output-Priority-Queue
+      priority level 1 10 (%)

@@ -6,6 +6,7 @@ expected_output = {
         "curr_config_register": "0xF",
         "compiled_by": "prod_rel_team",
         "compiled_date": "Wed 26-Jun-13 09:56",
+        "copyright_years": "1986-2013",
         "hostname": "R5",
         "image_id": "C3750E-UNIVERSALK9-M",
         "image_type": "production image",

@@ -17,6 +17,8 @@ IOSXR parsers for the following show commands:
     * show ospf {process_id} database router
     * show ospf all-inclusive database router
     * show ospf interface brief
+    * show ospf {process_name} summary
+    * show ospf {process_name} vrf {vrf_name} summary
 """
 
 # Python
@@ -5579,7 +5581,7 @@ class ShowOspfNeighborSchema(MetaParser):
                         'dead_time': str,
                         'address': str,
                         'interface': str,
-                        'up_time': str
+                        Optional('up_time'): str
                     }
                 },
                 Optional('total_neighbor_count'): int
@@ -5781,22 +5783,23 @@ class ShowOspfInterfaceBrief(ShowOspfInterfaceBriefSchema):
             r'(?P<ip_addr>\S+) +(?P<cost>[0-9]+) +(?P<state>\S+) +(?P<nbrs_count>[0-9]+)\/(?P<nbrs_f>[0-9]+).*$')
 
         for line in out.splitlines():
-            
+
             # Lo0                mpls1 0               17.17.17.17/32     1     LOOP  0/0
             m = p1.match(line)
             if m:
                 group = m.groupdict()
                 area = group['area']
                 interface = group['interface']
+                pid = group['pid']
                 interface_dict = ret_dict.setdefault('instance', {}).\
-                    setdefault('default', {}).\
+                    setdefault(pid, {}).\
                     setdefault('areas', {}).\
                     setdefault(area, {}).\
                     setdefault('interfaces', {}).\
                     setdefault(interface, {})
                 interface_dict.update({
                     'name': interface,
-                    'process_id': group['pid'],
+                    'process_id': pid,
                     'area': group['area'],
                     'ip_address': group['ip_addr'],
                     'state': group['state'],
@@ -5851,6 +5854,10 @@ class ShowOspfInterfaceSchema(MetaParser):
                                             "primary_label": str,
                                             "backup_label": str,
                                             "srte_label": str,
+                                        },
+                                        Optional("ldp_status"): {
+                                            "ldp_sync": str,
+                                            "sync_status": str
                                         },
                                         Optional("forward_reference"): str,
                                         Optional("unnumbered"): bool,
@@ -5907,7 +5914,13 @@ class ShowOspfInterfaceSchema(MetaParser):
                                                 Optional('dr_router_id'): str,
                                                 Optional('router_id'): str,
                                             }
-                                        }
+                                        },
+                                        Optional("authentication"): {
+                                            "auth_trailer_key": {
+                                                "crypto_algorithm": str,
+                                                Optional("youngest_key_id"): int,
+                                            },
+                                        },
                                     },
                                 },
                             },
@@ -5958,6 +5971,9 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
 
         ret_dict = {}
 
+        # crypo_algorithm dict
+        crypto_dict = {"message digest": "md5", "clear text": "simple"}        
+
         # initialization of vrf dict
         if out:
             vrfs_dict = ret_dict.setdefault('vrf', {})
@@ -5969,7 +5985,7 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
         p2 = re.compile(r'^Interfaces +for +OSPF +(?P<ospf_instance>\S+), +VRF +(?P<vrf_name>\S+)$')
 
         # Loopback0 is up, line protocol is up
-        p3 = re.compile(r'^(?P<interface>\S+) +is +(?P<interface_enable>unknown|up|down), +line +protocol +is +'
+        p3 = re.compile(r'^(?P<interface>\S+) +is +(?P<interface_enable>unknown|up|down|administratively down), +line +protocol +is +'
                         r'(?P<line_protocol>up|down)$')
 
         # Internet Address 10.36.3.3/32, Area 0
@@ -6069,6 +6085,18 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
         # Loopback interface is treated as a stub Host
         p28 = re.compile(r'^Loopback +interface +is +treated +as +a +stub +Host$')
 
+        # Clear text authentication enabled
+        # Message digest authentication enabled
+        p29 = re.compile(r"^(?P<auth>([a-zA-Z\s]+)) +authentication +enabled$")
+
+        # Youngest key id is 1
+        p30 = re.compile(r"^Youngest +key +id +is +(?P<young>(\d+))$")
+
+        # LDP Sync Enabled, Sync Status: Achieved
+        # LDP Sync Enabled, Sync Status: Not Achieved
+        p31 = re.compile(r"^LDP\s+Sync\s+(?P<ldp_sync>[a-zA-Z]+),\s+Sync\s+Status:\s+(?P<sync_status>[a-zA-Z ]+)$")
+
+        
         for line in out.splitlines():
             line = line.strip()
 
@@ -6097,9 +6125,22 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
             # Loopback0 is up, line protocol is up
             m = p3.match(line)
             if m:
+                
                 interface = m.groupdict()['interface']
                 interface_enable = m.groupdict()['interface_enable']
                 line_protocol = m.groupdict()['line_protocol']
+
+                try:
+                    ospf_dict
+                except NameError:
+                    vrf_dict = vrfs_dict.setdefault('default', {})
+                    # initialize vrf dict
+                    instance_dict = vrf_dict \
+                        .setdefault('address_family', {}) \
+                        .setdefault('ipv4', {}) \
+                        .setdefault('instance', {})
+                    # just having a default key in the case where there isn't ospf_instance 
+                    ospf_dict = instance_dict.setdefault("process_id", {})
 
                 interfaces_dict = ospf_dict.setdefault('interfaces', {})
                 interface_dict = interfaces_dict.setdefault(interface, {})
@@ -6138,7 +6179,13 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
             # Process ID mpls1, Router ID 25.97.1.1, Network Type LOOPBACK, Cost: 1
             m = p5.match(line)
             if m:
+
                 process_id = m.groupdict()['process_id']
+                try:
+                    # Updating the default key "process_id" with the actual process_id value
+                    instance_dict[process_id] = instance_dict.pop("process_id")
+                except KeyError:
+                    pass
                 router_id = m.groupdict()['router_id']
                 interface_type = m.groupdict()['interface_type']
                 cost = m.groupdict()['cost']
@@ -6393,5 +6440,153 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
             # if there is no 'default' vrf in the output, remove its initial empty dict
             if 'default' in ret_dict['vrf'] and not ret_dict['vrf']['default']:
                 ret_dict['vrf'].pop('default', None)
+            
+            # Clear text authentication enabled
+            # Message digest authentication enabled
+            m = p29.match(line)
+            if m:
+                authentication = interface_dict.setdefault("authentication", {})
+                auth_trailer = authentication.setdefault("auth_trailer_key", {})
+                auth = str(m.groupdict()["auth"]).lower()
+                auth_trailer["crypto_algorithm"] = crypto_dict[auth]
+                continue
+
+            # Youngest key id is 1
+            m = p30.match(line)
+            if m:
+                auth_trailer["youngest_key_id"] = int(m.groupdict()["young"])
+                continue
+
+            # LDP Sync Enabled, Sync Status: Achieved
+            # LDP Sync Enabled, Sync Status: Not Achieved
+            m = p31.match(line)
+            if m:
+                ldp_sync = m.groupdict()['ldp_sync']
+                sync_status = m.groupdict()['sync_status']
+
+                ldp_status_dict = interface_dict.setdefault('ldp_status', {})
+                ldp_status_dict['ldp_sync'] = ldp_sync
+                ldp_status_dict['sync_status'] = sync_status
+                continue
 
         return ret_dict
+
+# ======================================================
+# parser schema for:
+#          * show ospf {process_name} summary
+#          * show ospf {process_name} vrf {vrf_name} summary
+# ======================================================
+class ShowOspfSummarySchema(MetaParser):
+    """Schema details for:
+          * show ospf {process_name} summary
+          * show ospf {process_name} vrf {vrf_name} summary
+    """
+    schema = {
+        'routing_process': {
+            Any(): {
+                'routing_process': int,
+                'vrf_name': str,
+                'ospf_interfaces': int,
+                'ospf_interfaces_up': int,
+                'ospf_virtual_interfaces_up': int,
+                'ospf_sham_link_interfaces_up': int,
+                'neighbors': int,
+                'neighbors_adjacent': int,
+                'areas': int,
+                'lsa_type': {
+                    'router': int,
+                    'network': int,
+                    'summary_net': int,
+                    'summary_asbr': int,
+                    'type_7_ext': int,
+                    'opaque_link': int,
+                    'opaque_area': int,
+                    'type_5_ext': int,
+                    'opaque_as': int
+                }
+            }
+        }
+    }
+
+# ======================================================
+# parser for:
+#          * show ospf {process_name} summary
+#          * show ospf {process_name} vrf {vrf_name} summary
+# ======================================================
+class ShowOspfSummary(ShowOspfSummarySchema):
+    """parser details for:
+         * show ospf {process_name} summary
+         * show ospf {process_name} vrf {vrf_name} summary
+    """
+
+    cli_command = ['show ospf {process_name} summary',
+                   'show ospf {process_name} vrf {vrf_name} summary']
+
+    def cli(self, process_name, vrf_name=None, output=None):
+        if output is None:
+            if vrf_name:
+                out = self.device.execute(
+                    self.cli_command[1].format(process_name=process_name, \
+                                               vrf_name=vrf_name))
+            else:
+                out = self.device.execute(
+                    self.cli_command[0].format(process_name=process_name))
+        else:
+            out = output
+
+        result_dict = {}
+
+        if vrf_name == None:
+            vrf_name = 'default'
+
+        # Routing process "ospf 1"
+        # Routing process "ospf 1000 VRF v5000"
+        p1 = re.compile(r'^Routing\s+process\s+"ospf\s+(?P<routing_process>\d+)(?:\s+VRF\s+(?P<vrf_name>\w+))?"$')
+
+        # Number of OSPF interfaces 4
+        # Number of OSPF interfaces up 4
+        p2 = re.compile(r'^Number\s+of\s+(?P<key_name>[A-Za-z -]+)\s+(?P<value_name>\d+)$')
+
+        # Summary ASBR : 0
+        # Type-7 Ext : 0
+        # Opaque Link : 0
+        p3 = re.compile(r'^(?P<key_name>[\w\- ]+)\s+:\s+(?P<value_name>\d+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Routing process "ospf 1"
+            # Routing process "ospf 1000 VRF v5000"
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                process_id_dict = result_dict.setdefault('routing_process', {}). \
+                    setdefault(group['routing_process'], {})
+                process_id_dict['routing_process'] = int(group['routing_process'])
+                process_id_dict['vrf_name'] = vrf_name
+                continue
+
+            # Number of OSPF interfaces 4
+            # Number of OSPF interfaces up 4
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                key_name = group['key_name'].lower()
+                key_name = re.sub("\s|-", "_", key_name)
+                value_name = int(group['value_name'])
+                process_id_dict[key_name] = value_name
+                continue
+
+            # Summary ASBR : 0
+            # Type-7 Ext : 0
+            # Opaque Link : 0
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                key_name = group['key_name'].lower().strip()
+                key_name = re.sub("\s|-", "_", key_name)
+                value_name = int(group['value_name'])
+                lsa_dict = process_id_dict.setdefault('lsa_type', {})
+                lsa_dict[key_name] = value_name
+
+        return result_dict

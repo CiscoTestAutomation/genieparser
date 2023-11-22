@@ -28,6 +28,7 @@ class ShowIpStaticRouteSchema(MetaParser):
                                             Optional('outgoing_interface'): str,
                                             Optional('active'): bool,
                                             Optional('preference'): int,
+                                            Optional('owner_code'): str,
                                         },
                                     },
                                     Optional('next_hop_list'): {
@@ -37,6 +38,7 @@ class ShowIpStaticRouteSchema(MetaParser):
                                             Optional('next_hop'): str,
                                             Optional('outgoing_interface'): str,
                                             Optional('preference'): int,
+                                            Optional('owner_code'): str,
                                         },
                                     },
                                 },
@@ -156,6 +158,9 @@ class ShowIpStaticRoute(ShowIpStaticRouteSchema):
                         result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
                             ['next_hop']['outgoing_interface'][interface]['preference'] = int(if_preference)
 
+                        result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
+                            ['next_hop']['outgoing_interface'][interface]['owner_code'] = code
+
                     else:
                         if 'next_hop_list' not in result_dict['vrf'][vrf]['address_family'][af]['routes'][route][
                             'next_hop']:
@@ -181,6 +186,10 @@ class ShowIpStaticRoute(ShowIpStaticRouteSchema):
                                 ['next_hop_list'][index]['outgoing_interface'] = interface
                         result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
                             ['next_hop_list'][index]['preference'] = if_preference_int
+
+                        result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
+                            ['next_hop_list'][index]['owner_code'] = code
+
                 continue
 
         return result_dict

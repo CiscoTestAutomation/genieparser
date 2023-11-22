@@ -69,7 +69,10 @@ class InterfaceSchema(MetaParser):
                         Optional("speed"): str,
                         "status": str,
                         Optional("vlanId"): str,
-                        Optional("voiceVlan"): str
+                        Optional("voiceVlan"): str,
+                        Optional("mtu"): str,
+                        Optional("owningEntityId"): str,
+                        Optional("poweroverethernet"): int,
                     }
                 }
             }

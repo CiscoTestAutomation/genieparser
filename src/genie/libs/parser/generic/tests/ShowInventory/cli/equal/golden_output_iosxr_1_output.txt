@@ -1,0 +1,17 @@
+NAME: "module 0/RSP0/CPU0", DESCR: "ASR9K Route Switch Processor with 440G/slot Fabric and 6GB"
+PID: A9K-RSP440-TR, VID: V05, SN: FOC1808NEND
+
+NAME: "module 0/RSP1/CPU0", DESCR: "ASR9K Route Switch Processor with 440G/slot Fabric and 6GB"
+PID: A9K-RSP440-TR, VID: V05, SN: FOC1808NEP5
+
+NAME: "module 0/0/CPU0", DESCR: "80G Modular Linecard, Service Edge Optimized"
+PID: A9K-MOD80-SE, VID: V06, SN: FOC1821NEET
+
+NAME: "module 0/0/0", DESCR: "ASR 9000 20-port 1GE Modular Port Adapter"
+PID: A9K-MPA-20X1GE, VID: V02, SN: FOC1811N49J
+
+NAME: "module mau 0/0/0/0", DESCR: "Unknown or Unsupported CPAK Module"
+PID: GLC-T               , VID: N/A, SN: 00000MTC160107LP
+
+NAME: "module mau 0/0/0/1", DESCR: "Unknown or Unsupported CPAK Module"
+PID: GLC-T               , VID: N/A, SN: 00000MTC17150731

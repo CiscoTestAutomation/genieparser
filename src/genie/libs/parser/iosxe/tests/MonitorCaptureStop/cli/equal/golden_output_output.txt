@@ -1,0 +1,9 @@
+Capture statistics collected at software:
+        Capture duration - 56 seconds
+        Packets received - 0
+        Packets dropped - 0
+        Packets oversized - 0
+
+Bytes dropped in asic - 0
+
+Stopped capture point : cap1

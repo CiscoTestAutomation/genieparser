@@ -1,0 +1,16 @@
+IDPROM for transceiver TenGigabitEthernet4/0/1:
+  Description                               = SFP or SFP+ optics (type 3)
+  Transceiver Type:                         = 10G AOC10M (420)
+  Product Identifier (PID)                  = SFP-10G-AOC10M
+  Vendor Revision                           = B1
+  Serial Number (SN)                        = AVP2448K1K3-B
+  Vendor Name                               = CISCO-AVAGO
+  Vendor OUI (IEEE company ID)              = 00.17.6A (5994)
+  CLEI code                                 = CMPQABBCAA
+  Cisco part number                         = 10-2846-01
+  Vendor part number                        = AFBR-2CAR10Z-CS1
+  Device State                              = Enabled.
+  Date code (yy/mm/dd)                      = 20/11/26
+  Connector type                            = Copper pigtail.
+  Encoding                                  = unspecified (0)
+  Nominal bitrate                           =  (10300 Mbits/s)

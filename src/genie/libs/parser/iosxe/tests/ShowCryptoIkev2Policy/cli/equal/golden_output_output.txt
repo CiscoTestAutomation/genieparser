@@ -1,0 +1,10 @@
+ IKEv2 policy : default
+      Match fvrf : any
+      Match address local : any
+      Proposal    : default
+
+ IKEv2 policy : ikev2policy
+      Match fvrf  : global
+      Match address local : any
+      Proposal    : ikev2proposal
+

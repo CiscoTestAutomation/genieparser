@@ -1,0 +1,88 @@
+Forwarding Manager Interfaces Information
+
+
+
+Name                                ID              QFP ID       
+
+---------------------------------------------------------------
+
+Loopback999999                      42                42         
+
+CEOBC                               43                43         
+
+HundredGigE0/2                      4                 4          
+
+Port-channel241                     44                44         
+
+HundredGigE1/0/1                   1030              1030        
+
+HundredGigE1/0/3                   1032              1032        
+
+HundredGigE1/0/4                   1033              1033        
+
+HundredGigE1/0/5                   1034              1034        
+
+HundredGigE1/0/6                   1035              1035        
+
+HundredGigE1/0/7                   1036              1036        
+
+HundredGigE1/0/9                   1038              1038        
+
+HundredGigE1/0/10                  1039              1039        
+
+HundredGigE1/0/11                  1040              1040        
+
+HundredGigE1/0/12                  1041              1041        
+
+HundredGigE1/0/13                  1158              1158        
+
+HundredGigE1/0/14                  1043              1043        
+
+FourHundredGigE1/0/15              1044              1044        
+
+FourHundredGigE1/0/16              1045              1045        
+
+FourHundredGigE1/0/17              1046              1046        
+
+FourHundredGigE1/0/18              1047              1047        
+
+FourHundredGigE1/0/19              1048              1048        
+
+FourHundredGigE1/0/20              1049              1049        
+
+FourHundredGigE1/0/21              1050              1050        
+
+FourHundredGigE1/0/22              1051              1051        
+
+HundredGigE1/0/23                  1052              1052        
+
+HundredGigE1/0/24                  1053              1053        
+
+HundredGigE1/0/25                  1054              1054        
+
+HundredGigE1/0/26                  1055              1055        
+
+HundredGigE1/0/27                  1056              1056        
+
+HundredGigE1/0/28                  1057              1057        
+
+HundredGigE1/0/29                  1058              1058        
+
+HundredGigE1/0/30                  1159              1159        
+
+HundredGigE1/0/31                  1060              1060        
+
+HundredGigE1/0/32                  1061              1061        
+
+HundredGigE1/0/33                  1062              1062        
+
+HundredGigE1/0/34                  1063              1063        
+
+HundredGigE1/0/35                  1064              1064        
+
+HundredGigE1/0/36                  1065              1065        
+
+AppGigabitEthernet1/0/1            1066              1066        
+
+AppGigabitEthernet1/0/2            1067              1067        
+

@@ -1,0 +1,83 @@
+show aaa method-lists all
+authen queue=AAA_ML_AUTHEN_LOGIN
+  name=default valid=TRUE id=0 :state=ALIVE : SERVER_GROUP radius SERVER_GROUP radius SERVER_GROUP radius SERVER_GROUP radius
+authen queue=AAA_ML_AUTHEN_ENABLE
+  name=default valid=TRUE id=0 :state=ALIVE : ENABLE  SERVER_GROUP radius SERVER_GROUP tacacs+
+authen queue=AAA_ML_AUTHEN_PPP
+authen queue=AAA_ML_AUTHEN_SGBP
+authen queue=AAA_ML_AUTHEN_ARAP
+authen queue=AAA_ML_AUTHEN_DOT1X
+  name= pvt_authen_0 valid=TRUE id=97000002 :state=DEAD : SERVER_GROUP  private_sg-0
+authen queue=AAA_ML_AUTHEN_8021X
+authen queue=AAA_ML_AUTHEN_EAPOUDP
+authen queue=AAA_ML_AUTHEN_WEBAUTH
+authen queue=AAA_ML_AUTHEN_CONNECTEDAPPS
+permanent lists
+  name= Permanent Enable None valid=TRUE id=0 :state=ALIVE : ENABLE  NONE 
+  name= Permanent Enable valid=TRUE id=0 :state=ALIVE : ENABLE 
+  name= Permanent None valid=TRUE id=0 :state=ALIVE : NONE 
+  name= Permanent Local valid=TRUE id=0 :state=ALIVE : LOCAL 
+  name= Permanent rcmd valid=TRUE id=0 :state=ALIVE : RCMD 
+author queue=AAA_ML_AUTHOR_SHELL
+  name=default valid=TRUE id=0 :state=ALIVE : LOCAL 
+author queue=AAA_ML_AUTHOR_NET
+author queue=AAA_ML_AUTHOR_CONN
+author queue=AAA_ML_AUTHOR_IPMOBILE
+author queue=AAA_ML_AUTHOR_RM
+author queue=AAA_ML_AUTHOR_CONFIG
+author queue=AAA_ML_AUTHOR_AUTH_PROXY
+author queue=AAA_ML_AUTHOR_PREAUTH
+author queue=AAA_ML_AUTHOR_FLTSV
+author queue=AAA_ML_AUTHOR_SUBSCRIBER_SERVICE
+author queue=AAA_ML_AUTHOR_CREDENTIAL_DOWNLOAD
+author queue=AAA_ML_AUTHOR_PREPAID
+author queue=AAA_ML_AUTHOR_POLICY_IF
+author queue=AAA_ML_AUTHOR_CONNECTEDAPPS
+author queue=AAA_ML_AUTHOR_COMMAND
+author queue=AAA_ML_AUTHOR_COMMAND
+author queue=AAA_ML_AUTHOR_COMMAND
+author queue=AAA_ML_AUTHOR_COMMAND
+author queue=AAA_ML_AUTHOR_COMMAND
+author queue=AAA_ML_AUTHOR_COMMAND
+author queue=AAA_ML_AUTHOR_COMMAND
+author queue=AAA_ML_AUTHOR_COMMAND
+author queue=AAA_ML_AUTHOR_COMMAND
+author queue=AAA_ML_AUTHOR_COMMAND
+author queue=AAA_ML_AUTHOR_COMMAND
+author queue=AAA_ML_AUTHOR_COMMAND
+author queue=AAA_ML_AUTHOR_COMMAND
+author queue=AAA_ML_AUTHOR_COMMAND
+author queue=AAA_ML_AUTHOR_COMMAND
+author queue=AAA_ML_AUTHOR_COMMAND
+permanent lists
+  name= local-list valid=TRUE id=0 :state=ALIVE : LOCAL 
+acct queue=AAA_ML_ACCT_SHELL
+acct queue=AAA_ML_ACCT_AUTH_PROXY
+acct queue=AAA_ML_ACCT_NET
+acct queue=AAA_ML_ACCT_CONN
+acct queue=AAA_ML_ACCT_SYSTEM
+acct queue=AAA_ML_ACCT_RESOURCE
+acct queue=AAA_ML_ACCT_RM
+acct queue=AAA_ML_ACCT_DOT1X
+acct queue=AAA_ML_ACCT_IDENTITY
+acct queue=AAA_ML_ACCT_CONNECTEDAPPS
+acct queue=AAA_ML_ACCT_COMMAND
+acct queue=AAA_ML_ACCT_COMMAND
+acct queue=AAA_ML_ACCT_COMMAND
+acct queue=AAA_ML_ACCT_COMMAND
+acct queue=AAA_ML_ACCT_COMMAND
+acct queue=AAA_ML_ACCT_COMMAND
+acct queue=AAA_ML_ACCT_COMMAND
+acct queue=AAA_ML_ACCT_COMMAND
+acct queue=AAA_ML_ACCT_COMMAND
+acct queue=AAA_ML_ACCT_COMMAND
+acct queue=AAA_ML_ACCT_COMMAND
+acct queue=AAA_ML_ACCT_COMMAND
+acct queue=AAA_ML_ACCT_COMMAND
+acct queue=AAA_ML_ACCT_COMMAND
+acct queue=AAA_ML_ACCT_COMMAND
+acct queue=AAA_ML_ACCT_COMMAND
+permanent lists
+  name= Permanent None valid=TRUE id=0 Action=NOT_SET :state=ALIVE :
+Switch-9500#
+

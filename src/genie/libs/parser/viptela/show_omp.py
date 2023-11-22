@@ -460,7 +460,7 @@ class ShowOmpRoutes(ShowOmpRoutesSchema):
         p2 = re.compile(r'(?P<from_peer>[\d\.\/]+)\s+(?P<path_id>\d+)\s+(?P<label>\d+)\s+(?P<status>\S+)\s+(?P<attr_type>\S+)\s+(?P<tloc_ip>[\d\.\/]+)\s+(?P<color>\S+)\s+(?P<encap>\S+)\s+(?P<preference>\S+)')
 
         index = 1
-        prefix = peer = ""
+        peer = ""
 
         for line in out.splitlines():
             line = line.strip()
@@ -503,6 +503,14 @@ class ShowOmpRoutes(ShowOmpRoutesSchema):
                 if peer != group['from_peer']:
                     peer = group['from_peer']
                     index = 1
+
+                if vpn is not None:
+                    route_info = parsed_dict.setdefault('vrf', {}).setdefault(vpn, {}).setdefault('prefixes',{}).setdefault(prefix, {})
+                else:
+                    route_info = parsed_dict.setdefault('vrf', {}).setdefault(vrf, {}).setdefault('prefixes',{}).setdefault(prefix, {})
+
+                route_info['prefix'] = prefix
+                route_info.setdefault('from_peer', {})
 
                 from_peer_dict = route_info['from_peer'].setdefault(peer, {})
                 from_peer_dict['peer'] = peer

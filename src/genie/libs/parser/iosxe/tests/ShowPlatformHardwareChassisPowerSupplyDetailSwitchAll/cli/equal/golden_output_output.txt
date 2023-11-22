@@ -1,0 +1,23 @@
+PS1:
+Input Voltage   :     120.7500 V
+Output Voltage  :      12.0625 V
+Input Power     :     463.5000 W
+Output Power    :     419.0000 W
+Input Current   :       3.8750 A
+Output Current  :      34.7500 A
+Temperature1    :      37.0000 C
+Temperature2    :      60.0000 C
+Temperature3    :      44.0000 C
+Fan Speed 1     :   12784.0000 RPM
+
+PS2:
+Input Voltage   :       0.0000 V
+Output Voltage  :       0.0000 V
+Input Power     :       0.0000 W
+Output Power    :       0.0000 W
+Input Current   :       0.0000 A
+Output Current  :       0.0000 A
+Temperature1    :       0.0000 C
+Temperature2    :       0.0000 C
+Temperature3    :       0.0000 C
+Fan Speed 1     :       0.0000 RPM

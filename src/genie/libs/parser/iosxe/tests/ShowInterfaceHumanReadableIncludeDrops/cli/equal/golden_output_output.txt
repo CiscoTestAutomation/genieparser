@@ -1,0 +1,2 @@
+Input queue: 0/2000/0/0 (size/max/drops/flushes); Total output drops: 0
+    0 unknown protocol drops

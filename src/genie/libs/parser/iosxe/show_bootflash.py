@@ -10,7 +10,7 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any, Optional
+from genie.metaparser.util.schemaengine import Any, Optional, Or
 
 # parser utils
 from genie.libs.parser.utils.common import Common
@@ -84,13 +84,15 @@ class ShowBootflash(ShowBootflashSchema):
 class ShowBootSystemSchema(MetaParser):
     """Schema for show boot system"""
     schema = {
-        'boot_variable':str,
-        'manual_boot_variable':str,
-        'baud':int,
-        Optional('ipxe_timeout'):str,
-        Optional('bootmode'):str,
+        'boot_variable': Or(str, None),
+        Optional('manual_boot_variable'): str,
+        Optional('is_manual_boot'): bool,
+        Optional('baud'): int,
+        Optional('ipxe_timeout'): Or(int, str),
+        Optional('bootmode'): str,
+        Optional('is_boot_mode'): bool,
         Optional('enable_break'): bool,
-        Optional('config_file'):str,
+        Optional('config_file'): str,
     }
 
 # ================= 
@@ -108,78 +110,176 @@ class ShowBootSystem(ShowBootSystemSchema):
             output = self.device.execute(self.cli_command)
 
         ret_dict={}
-        #BOOT variable = flash:packages.conf;
-        p1=re.compile('^BOOT variable \=\s+(?P<boot>\S+)$')
+
+        # BOOT variable = flash:packages.conf; 
+        # Regexp has been updated to take care when boot variable is not set 
+        p1 = re.compile(r'(^BOOT variable ((\=\s+(?P<boot>\S+))|(does not exist))$)')
         
-        #MANUAL_BOOT variable = no
-        p2=re.compile('^MANUAL_BOOT variable\s+\=\s+(?P<manual>yes|no)$')
+        # MANUAL_BOOT variable = no
+        p2 = re.compile('^MANUAL_BOOT variable\s+\=\s+(?P<manual>yes|no)$')
 
-        #BAUD variable = 9600
-        p3=re.compile('^BAUD variable\s+\=\s+(?P<baud>\d+)$')
+        # Manual Boot = no
+        p2_1 = re.compile('^Manual\sBoot\s+\=\s+(?P<manual>yes|no)$')
 
-        #IPXE_TIMEOUT variable = 0
-        p4=re.compile('^IPXE_TIMEOUT variable\s+\=\s+(?P<ipxe>\d+)$')
+        # BAUD variable = 9600
+        p3 = re.compile('^BAUD variable\s+\=\s+(?P<baud>\d+)$')
 
-        #BOOTMODE variable = yes
-        p5=re.compile('^BOOTMODE variable\s+\=\s+(?P<boot_mode>yes|no)$')
+        # IPXE_TIMEOUT variable = 0
+        p4 = re.compile('^IPXE_TIMEOUT variable\s+\=\s+(?P<ipxe>\d+)$')
 
-        #Enable Break = yes
-        p6=re.compile('^Enable Break\s+\=\s+(?P<enable>yes|no)$')
+        # iPXE Timeout = 0
+        p4_1 = re.compile('^iPXE\sTimeout\s+\=\s+(?P<ipxe>\d+)$')
 
-        #Config file         = flash:/config.text
-        p7=re.compile('^Config file\s+\=\s+(?P<config>\S+)$')
+        # BOOTMODE variable = yes
+        p5 = re.compile('^BOOTMODE variable\s+\=\s+(?P<boot_mode>yes|no)$')
+
+        # Boot Mode = DEVICE
+        p5_1 = re.compile('^Boot\sMode\s+\=\s+(?P<boot_mode>\S+)$')
+
+        # Enable Break = yes
+        p6 = re.compile('^Enable Break\s+\=\s+(?P<enable>yes|no)$')
+
+        # Config file         = flash:/config.text
+        p7 = re.compile('^Config file\s+\=\s+(?P<config>\S+)$')
         
         for line in output.splitlines():
             line=line.strip()
             
-            #BOOT variable = flash:packages.conf;
-            m=p1.match(line)
+            # BOOT variable = flash:packages.conf;
+            m = p1.match(line)
             if m:
                 group=m.groupdict()
-                ret_dict.setdefault('boot_variable',group['boot'])
+                ret_dict.setdefault('boot_variable', group['boot'])
                 continue
                 
-            #MANUAL_BOOT variable = no
-            m=p2.match(line)
+            # MANUAL_BOOT variable = no
+            m = p2.match(line)
             if m:
                 group=m.groupdict()
-                ret_dict.setdefault('manual_boot_variable',group['manual'])
+                ret_dict.setdefault('manual_boot_variable', group['manual'])
+                continue
+
+            # Manual Boot = no
+            m = p2_1.match(line)
+            if m:
+                group = m.groupdict()
+                manual = group['manual'] == 'yes'
+                ret_dict.setdefault('is_manual_boot', manual)
                 continue
                 
-            #BAUD variable = 9600
-            m=p3.match(line)
+            # BAUD variable = 9600
+            m = p3.match(line)
             if m:
                 group=m.groupdict()
-                ret_dict.setdefault('baud',int(group['baud']))
+                ret_dict.setdefault('baud', int(group['baud']))
                 continue
                 
-            #IPXE_TIMEOUT variable = 0
-            m=p4.match(line) 
+            # IPXE_TIMEOUT variable = 0
+            m = p4.match(line) 
             if m:
                 group=m.groupdict()
-                ret_dict.setdefault('ipxe_timeout',group['ipxe'])
+                ret_dict.setdefault('ipxe_timeout', int(group['ipxe']))
+                continue
+
+            # iPXE Timeout = 0
+            m = p4_1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault('ipxe_timeout', int(group['ipxe']))
                 continue
                 
-            #BOOTMODE variable = yes
-            m=p5.match(line)
+            # BOOTMODE variable = yes
+            m = p5.match(line)
             if m:
                 group=m.groupdict()
-                ret_dict.setdefault('bootmode',group['boot_mode'])
+                is_boot_mode = group['boot_mode'] == 'yes'
+                ret_dict.setdefault('is_boot_mode', is_boot_mode)
+                continue
+
+            # Boot Mode = DEVICE
+            m = p5_1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault('bootmode', group['boot_mode'])
                 continue
             
-            #Enable Break = yes
-            m=p6.match(line)
+            # Enable Break = yes
+            m = p6.match(line)
             if m:
                 group=m.groupdict()
-                ret_dict.setdefault('enable_break',group['enable'])
+                enable = group['enable'] == 'yes'
+                ret_dict.setdefault('enable_break', enable)
                 continue
             
             # Config file         = flash:/config.text
-            m =p7.match(line)
+            m = p7.match(line)
             if m:
                 group=m.groupdict()
-                ret_dict.setdefault('config_file',group['config'])
+                ret_dict.setdefault('config_file', group['config'])
                 continue
                 
-        return ret_dict     
+        return ret_dict    
+
+# =========================
+# Schema for:
+#  * 'show usb0:'
+# =========================
+
+class ShowUSBSchema(MetaParser):
+    """Schema for show usb0."""
+    schema = {
+        'bytes_available': int,
+        'bytes_used': int,
+        'files': {
+            Any(): {
+                'file_length': int,
+                'file_date': str,
+                'file_name': str
+                }
+            }
+    }
+
+# =================
+# Parser for:
+#  * 'show usb0:'
+# =================
+class ShowUSB(ShowUSBSchema):
+    """Parser for show usb0:"""
+
+    cli_command = 'show usb0:'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # 13755338752 bytes available (489017344 bytes used)
+        p1 = re.compile(r"(?P<bytes_available>\d+)\s+bytes available\s+\((?P<bytes_used>\d+)\s+bytes used\)")
+        #12         11 Oct 12 2020 07:27:04 +00:00 /vol/usb0/System Volume Information
+        p2 = re.compile(r"(?P<file_index>\d+)\s+(?P<file_length>\d+)\s+(?P<file_date>[a-zA-Z]+\s+\d+\s+\d+\s+[0-9:.]+\s+[0-9+:]+)\s+(?P<file_name>.*)")
+
+        # initial variables
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line_strip = line.strip()
+            # 13755338752 bytes available (489017344 bytes used)
+            m = p1.match(line_strip)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({k:int(v) for k, v in group.items()})
+                continue
+            #12         11 Oct 12 2020 07:27:04 +00:00 /vol/usb0/System Volume Information
+            m = p2.match(line_strip)
+            if m:
+                group=m.groupdict()
+                index=int(group['file_index'])
+                if 'files' not in ret_dict:
+                    ret_dict['files']={}
+                if index not in ret_dict['files']:
+                    ret_dict['files'][index]={}
+                ret_dict['files'][index]['file_length']=int(group['file_length'])
+                ret_dict['files'][index]['file_date']=group['file_date']
+                ret_dict['files'][index]['file_name']=group['file_name']
+
+        return ret_dict 
  

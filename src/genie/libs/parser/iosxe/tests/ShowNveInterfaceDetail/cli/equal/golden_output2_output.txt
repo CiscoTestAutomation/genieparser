@@ -1,0 +1,9 @@
+Interface: nve1, State: Admin Up, Oper Up
+Encapsulation: Vxlan IPv4
+Multicast BUM encapsulation: Vxlan IPv4
+BGP host reachability: Enabled, VxLAN dport: 4789
+VNI number: L3CP 2 L2CP 12 L2DP 0
+source-interface: Loopback2 (primary: UNKNOWN vrf: 0)
+tunnel interface: Tunnel1
+   Pkts In   Bytes In   Pkts Out  Bytes Out
+         0          0          0          0

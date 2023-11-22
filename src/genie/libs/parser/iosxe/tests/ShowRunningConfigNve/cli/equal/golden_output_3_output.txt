@@ -1,0 +1,39 @@
+Current configuration : 892 bytes
+l2vpn evpn
+ replication-type static
+ router-id Loopback1
+!
+l2vpn evpn instance 101 vlan-based
+ encapsulation vxlan
+ replication-type static
+!
+l2vpn evpn instance 102 vlan-based
+ encapsulation vxlan
+ replication-type ingress
+!
+!
+vlan configuration 101
+ member evpn-instance 101 vni 10101
+vlan configuration 102
+ member evpn-instance 102 vni 10102
+!
+interface nve1
+ no ip address
+ source-interface Loopback1
+ host-reachability protocol bgp
+ member vni 10101 mcast-group 225.0.0.101
+ member vni 10102 ingress-replication
+!
+router bgp 65001
+ !
+ address-family l2vpn evpn
+  neighbor 172.16.255.1 activate
+  neighbor 172.16.255.1 send-community extended
+  neighbor 172.16.255.1 inherit peer-policy LEAF-EVPN-PEER-POLICY
+  neighbor 172.16.255.2 activate
+  neighbor 172.16.255.2 send-community extended
+  neighbor 172.16.255.2 inherit peer-policy LEAF-EVPN-PEER-POLICY
+ exit-address-family
+ !
+!
+end

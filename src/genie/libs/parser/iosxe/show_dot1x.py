@@ -4,6 +4,7 @@
      *  show dot1x all details
      *  show dot1x all statistics
      *  show dot1x all summary
+     *  show dot1x statistics
 """
 # Python
 import re
@@ -495,3 +496,271 @@ class ShowDot1xAllCount(ShowDot1xAllCountSchema):
                     int(m.groupdict()['total'])
                 continue
         return ret_dict
+
+
+# ======================================================
+# Schema for 'show dot1x statistics '
+# ======================================================
+
+class ShowDot1xStatisticsSchema(MetaParser):
+    """Schema for show dot1x statistics"""
+
+    schema = {
+        'dot1x_stats': {
+            'rx_start': int,
+            'rx_logoff': int,
+            'rx_resp': int,
+            'rx_resp_id': int,
+            'rx_req': int,
+            'rx_invalid': int,
+            'rx_len_err': int,
+            'rx_total': int,
+            'tx_start': int,
+            'tx_logoff': int,
+            'tx_resp': int,
+            'tx_req': int,
+            're_tx_req': int,
+            're_tx_req_fail': int,
+            'tx_req_id': int,
+            're_tx_req_id': int,
+            're_tx_req_id_fail': int,
+            'tx_total': int,
+        },
+    }
+
+# ======================================================
+# Parser for 'show dot1x statistics '
+# ======================================================
+class ShowDot1xStatistics(ShowDot1xStatisticsSchema):
+    """Parser for show dot1x statistics"""
+
+    cli_command = 'show dot1x statistics'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # RxStart = 2     RxLogoff = 0    RxResp = 14      RxRespID = 32
+        p1 = re.compile(r"^RxStart\s+=\s+(?P<rx_start>\d+)\s+RxLogoff\s+=\s+(?P<rx_logoff>\d+)\s+RxResp\s+=\s+(?P<rx_resp>\d+)\s+RxRespID\s+=\s+(?P<rx_resp_id>\d+)$")
+        # RxReq = 0       RxInvalid = 0   RxLenErr = 0
+        p1_1 = re.compile(r"^RxReq\s+=\s+(?P<rx_req>\d+)\s+RxInvalid\s+=\s+(?P<rx_invalid>\d+)\s+RxLenErr\s+=\s+(?P<rx_len_err>\d+)$")
+        # RxTotal = 53
+        p1_2 = re.compile(r"^RxTotal\s+=\s+(?P<rx_total>\d+)$")
+        # TxStart = 0     TxLogoff = 0    TxResp = 0
+        p1_3 = re.compile(r"^TxStart\s+=\s+(?P<tx_start>\d+)\s+TxLogoff\s+=\s+(?P<tx_logoff>\d+)\s+TxResp\s+=\s+(?P<tx_resp>\d+)$")
+        # TxReq = 16       ReTxReq = 0     ReTxReqFail = 0
+        p1_4 = re.compile(r"^TxReq\s+=\s+(?P<tx_req>\d+)\s+ReTxReq\s+=\s+(?P<re_tx_req>\d+)\s+ReTxReqFail\s+=\s+(?P<re_tx_req_fail>\d+)$")
+        # TxReqID = 36         ReTxReqID = 2       ReTxReqIDFail = 0
+        p1_5 = re.compile(r"^TxReqID\s+=\s+(?P<tx_req_id>\d+)\s+ReTxReqID\s+=\s+(?P<re_tx_req_id>\d+)\s+ReTxReqIDFail\s+=\s+(?P<re_tx_req_id_fail>\d+)$")
+        # TxTotal = 81
+        p1_6 = re.compile(r"^TxTotal\s+=\s+(?P<tx_total>\d+)$")
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+
+            # RxStart = 2     RxLogoff = 0    RxResp = 14      RxRespID = 32
+            match_obj = p1.match(line)
+            if match_obj:
+                dict_val = match_obj.groupdict()
+                if 'dot1x_stats' not in ret_dict:
+                    dot1x_stats = ret_dict.setdefault('dot1x_stats', {})
+                dot1x_stats['rx_start'] = int(dict_val['rx_start'])
+                dot1x_stats['rx_logoff'] = int(dict_val['rx_logoff'])
+                dot1x_stats['rx_resp'] = int(dict_val['rx_resp'])
+                dot1x_stats['rx_resp_id'] = int(dict_val['rx_resp_id'])
+                continue
+
+            # RxReq = 0       RxInvalid = 0   RxLenErr = 0
+            match_obj = p1_1.match(line)
+            if match_obj:
+                dict_val = match_obj.groupdict()
+                if 'dot1x_stats' not in ret_dict:
+                    dot1x_stats = ret_dict.setdefault('dot1x_stats', {})
+                dot1x_stats['rx_req'] = int(dict_val['rx_req'])
+                dot1x_stats['rx_invalid'] = int(dict_val['rx_invalid'])
+                dot1x_stats['rx_len_err'] = int(dict_val['rx_len_err'])
+                continue
+
+            # RxTotal = 53
+            match_obj = p1_2.match(line)
+            if match_obj:
+                dict_val = match_obj.groupdict()
+                if 'dot1x_stats' not in ret_dict:
+                    dot1x_stats = ret_dict.setdefault('dot1x_stats', {})
+                dot1x_stats['rx_total'] = int(dict_val['rx_total'])
+                continue
+
+            # TxStart = 0     TxLogoff = 0    TxResp = 0
+            match_obj = p1_3.match(line)
+            if match_obj:
+                dict_val = match_obj.groupdict()
+                if 'dot1x_stats' not in ret_dict:
+                    dot1x_stats = ret_dict.setdefault('dot1x_stats', {})
+                dot1x_stats['tx_start'] = int(dict_val['tx_start'])
+                dot1x_stats['tx_logoff'] = int(dict_val['tx_logoff'])
+                dot1x_stats['tx_resp'] = int(dict_val['tx_resp'])
+                continue
+
+            # TxReq = 16       ReTxReq = 0     ReTxReqFail = 0
+            match_obj = p1_4.match(line)
+            if match_obj:
+                dict_val = match_obj.groupdict()
+                if 'dot1x_stats' not in ret_dict:
+                    dot1x_stats = ret_dict.setdefault('dot1x_stats', {})
+                dot1x_stats['tx_req'] = int(dict_val['tx_req'])
+                dot1x_stats['re_tx_req'] = int(dict_val['re_tx_req'])
+                dot1x_stats['re_tx_req_fail'] = int(dict_val['re_tx_req_fail'])
+                continue
+
+            # TxReqID = 36         ReTxReqID = 2       ReTxReqIDFail = 0
+            match_obj = p1_5.match(line)
+            if match_obj:
+                dict_val = match_obj.groupdict()
+                if 'dot1x_stats' not in ret_dict:
+                    dot1x_stats = ret_dict.setdefault('dot1x_stats', {})
+                dot1x_stats['tx_req_id'] = int(dict_val['tx_req_id'])
+                dot1x_stats['re_tx_req_id'] = int(dict_val['re_tx_req_id'])
+                dot1x_stats['re_tx_req_id_fail'] = int(dict_val['re_tx_req_id_fail'])
+                continue
+
+            # TxTotal = 81
+            match_obj = p1_6.match(line)
+            if match_obj:
+                dict_val = match_obj.groupdict()
+                if 'dot1x_stats' not in ret_dict:
+                    dot1x_stats = ret_dict.setdefault('dot1x_stats', {})
+                dot1x_stats['tx_total'] = int(dict_val['tx_total'])
+                continue
+
+
+        return ret_dict
+
+# ======================================
+# Parser for 'show dot1x interface {interface} statistics'
+# ======================================
+class ShowDot1xInterfaceStatisticsSchema(MetaParser):
+    """Schema for show dot1x interface statistics"""
+    schema = {
+        'interface': {
+            Any(): {
+                'type': {
+                    Any():{
+                        'rxtotal':int,
+                        'txtotal':int,
+                        'rxversion':int,
+                        'lastrxsrcmac':str,
+                        Optional('rxreq'): int,
+                        Optional('rxlenerr'):int,
+                        Optional('txstart'):int,
+                        Optional('txlogoff'):int,
+                        Optional('txresp'):int,
+                        Optional('rxlogoff'):int,
+                        Optional('rxstart'): int,
+                        Optional('rxresp'):int,
+                        Optional('rxrespid'):int,
+                        Optional('rxinvalid'):int,
+                        Optional('txreq'):int,
+                        Optional('txreqid'):int,
+                    },
+                },
+            },
+        },
+    }
+
+class ShowDot1xInterfaceStatistics(ShowDot1xInterfaceStatisticsSchema):
+    """Parser for show dot1x Interface Statistics"""
+
+    cli_command= 'show dot1x interface {interface} statistics'
+
+    def cli(self, interface, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(interface=interface))
+
+        # initial return dictionary
+        result_dict = {}
+
+        # Dot1x Authenticator Port Statistics for FortyGigabitEthernet1/1/1
+        # Dot1x Supplicant Port Statistics for FortyGigabitEthernet1/1/1
+        p1 = re.compile(r'^(Dot1x\s+(?P<type>[\w]+)+\s+Port\s+Statistics\s+for\s+(?P<interface>[\w\d\/]+))$')
+
+        # RxStart = 0 RxLogoff = 0 RxResp = 3 RxRespID = 1
+        p2 = re.compile(r'^(RxStart\s+=+\s+(?P<rxstart>[\d]+)+\s+RxLogoff\s+=+\s+(?P<rxlogoff>[\d]+)+\s+RxResp\s+=+\s+(?P<rxresp>[\d]+)+\s+RxRespID+\s+=+\s+(?P<rxrespid>[\d]+))$')
+
+        # RxInvalid = 0 RxLenErr = 0 RxTotal = 5
+        p3 = re.compile(r'^(RxInvalid\s+=+\s+(?P<rxinvalid>[\d]+)+\s+RxLenErr\s+=+\s+(?P<rxlenerr>[\d]+)+\s+RxTotal\s+=+\s+(?P<rxtotal>[\d]+))$')
+
+        # TxReq = 4 TxReqID = 1 TxTotal = 5
+        p4 = re.compile(r'^(TxReq\s+=+\s+(?P<txreq>[\d]+)+\s+TxReqID\s+=+\s+(?P<txreqid>[\d]+)+\s+TxTotal\s+=+\s+(?P<txtotal>[\d]+))$')
+
+        # RxVersion = 3 LastRxSrcMAC = 0027.90bf.c931
+        # RxVersion = 0 LastRxSrcMAC = 0027.90bf.c931
+        p5 = re.compile(r'^(RxVersion\s+=+\s+(?P<rxversion>[\d]+)+\s+LastRxSrcMAC\s+=+\s+(?P<lastrxsrcmac>\w+\.\w+\.\w+))$')
+
+        # RxReq = 24 RxInvalid = 0 RxLenErr = 0 RxTotal = 28
+        p6 = re.compile(r'^(RxReq\s+=+\s+(?P<rxreq>[\d]+)+\s+RxInvalid\s+=+\s+(?P<rxinvalid>[\d]+)+\s+RxLenErr\s+=+\s+(?P<rxlenerr>[\d]+)+\s+RxTotal\s+=+\s+(?P<rxtotal>[\d]+))$')
+
+        # TxStart = 8 TxLogoff = 4 TxResp = 24 TxTotal = 36
+        p7 = re.compile(r'^(TxStart\s+=+\s+(?P<txstart>[\d]+)+\s+TxLogoff\s+=+\s+(?P<txlogoff>[\d]+)+\s+TxResp\s+=+\s+(?P<txresp>[\d]+)+\s+TxTotal\s+=+\s+(?P<txtotal>[\d]+))$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # Dot1x Authenticator Port Statistics for FortyGigabitEthernet1/1/1
+            # Dot1x Supplicant Port Statistics for FortyGigabitEthernet1/1/1
+            m = p1.match(line)
+            if m:
+                type_dict = result_dict.setdefault('interface', {}).setdefault(Common.convert_intf_name(m.groupdict()['interface']), {})
+                object_type=m.groupdict()['type'].strip()
+                ret_dict= type_dict.setdefault('type', {}).setdefault(object_type, {})
+                continue
+            
+            # RxStart = 0 RxLogoff = 0 RxResp = 3 RxRespID = 1
+            m = p2.match(line)
+            if m:
+                ret_dict['rxlogoff']=int(m.groupdict()['rxlogoff'])
+                ret_dict['rxresp']=int(m.groupdict()['rxresp'])
+                ret_dict['rxrespid']=int(m.groupdict()['rxrespid'])
+                continue
+        
+            # RxInvalid = 0 RxLenErr = 0 RxTotal = 5
+            m = p3.match(line)
+            if m:  
+                ret_dict['rxinvalid']=int(m.groupdict()['rxinvalid'])
+                ret_dict['rxlenerr']=int(m.groupdict()['rxlenerr'])
+                ret_dict['rxtotal']=int(m.groupdict()['rxtotal'])
+                continue
+
+            # TxReq = 4 TxReqID = 1 TxTotal = 5
+            m = p4.match(line)
+            if m:    
+                ret_dict['txreq']=int(m.groupdict()['txreq'])
+                ret_dict['txreqid']=int(m.groupdict()['txreqid'])
+                ret_dict['txtotal']=int(m.groupdict()['txtotal'])
+                continue
+            # RxVersion = 3 LastRxSrcMAC = 0027.90bf.c931
+            # RxVersion = 0 LastRxSrcMAC = 0027.90bf.c931
+            m = p5.match(line)
+            if m:    
+                ret_dict['rxversion']=int(m.groupdict()['rxversion'])
+                ret_dict['lastrxsrcmac']=m.groupdict()['lastrxsrcmac']
+                continue
+        
+            # RxReq = 24 RxInvalid = 0 RxLenErr = 0 RxTotal = 28 
+            m = p6.match(line)
+            if m:    
+                ret_dict['rxinvalid']=int(m.groupdict()['rxinvalid'])
+                ret_dict['rxlenerr']=int(m.groupdict()['rxlenerr'])
+                ret_dict['rxtotal']=int(m.groupdict()['rxtotal'])
+                continue
+        
+            # TxStart = 8 TxLogoff = 4 TxResp = 24 TxTotal = 36
+            m = p7.match(line)
+            if m:    
+                ret_dict['txstart']=int(m.groupdict()['txstart'])
+                ret_dict['txlogoff']=int(m.groupdict()['txlogoff'])
+                ret_dict['txresp']=int(m.groupdict()['txresp']) 
+                ret_dict['txtotal']=int(m.groupdict()['txtotal'])
+                continue
+
+        return result_dict

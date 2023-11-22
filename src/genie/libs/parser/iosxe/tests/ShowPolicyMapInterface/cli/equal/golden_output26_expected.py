@@ -18,7 +18,7 @@ expected_output = {
                                 ],
                                 "match_evaluation": "match-all",
                                 "packets": 0,
-                                "qos_set": {}
+                                "qos_set": {"mpls_experimental_imposition": 1},
                             }
                         }
                     }

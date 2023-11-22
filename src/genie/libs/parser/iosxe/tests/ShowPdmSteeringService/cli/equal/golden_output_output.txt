@@ -1,0 +1,5 @@
+Steering Service service_red
+    mode routed address 172.18.0.6 selector 255 vnid 4099
+Steering Service service_INFRA_VN
+    mode routed address 172.18.0.2 selector 255 vnid 4097
+

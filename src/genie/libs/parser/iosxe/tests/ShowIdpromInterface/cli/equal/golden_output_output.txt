@@ -1,0 +1,15 @@
+IDPROM for transceiver :
+  Description                               = QSFP28 optics (type 134)
+  Transceiver Type:                         = QSFP 100GE CU1M (464)
+  Product Identifier (PID)                  = QSFP-100G-CU1M
+  Vendor Revision                           = A
+  Serial Number (SN)                        = APF230202WJ-A
+  Vendor Name                               = CISCO-AMPHENOL
+  Vendor OUI (IEEE company ID)              = 78.A7.14 (7907092)
+  CLEI code                                 = CMPQACECAA
+  Cisco part number                         = 37-1666-01
+  Device State                              = Enabled.
+  Date code (yy/mm/dd)                      = 19/01/13
+  Connector type                            = No separable connector
+  Encoding                                  = 64B66B
+  Nominal bitrate per channel               = 25GE (25500 Mbits/s)

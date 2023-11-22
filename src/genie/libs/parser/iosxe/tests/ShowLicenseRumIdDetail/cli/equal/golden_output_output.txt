@@ -1,0 +1,13 @@
+Smart Licensing Usage Report Detail:
+====================================
+Report Id: 1634211151
+  Metric Name: ENTITLEMENT
+  Feature Name: dna-advantage
+  Metric Value: regid.2017-05.com.cisco.c9300_dna_advantage,1.0_411773c3-2116-4c10-94a4-5d357fe6ff18
+  UDI: PID:C9300-24UX,SN:FCW2303D16Y
+  Previous Report Id: 0,    Next Report Id: 1634211155
+  State: ACK,      State Change Reason: ACKED
+  Start Time: Oct 14 11:32:40 2021 UTC,      End Time: Oct 14 11:32:48 2021 UTC
+  Storage State: DELETED
+  Transaction ID: 0
+  Transaction Message: <none>

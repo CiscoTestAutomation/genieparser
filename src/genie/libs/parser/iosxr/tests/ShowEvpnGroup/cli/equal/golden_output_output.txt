@@ -1,0 +1,12 @@
+
+EVPN Group: 1
+
+  state: Ready
+
+  Core Interfaces:
+     Bundle-Ether2: up
+     TenGigE0/1/0/6/1: up
+
+  Access Interfaces:
+     Bundle-Ether1: up
+

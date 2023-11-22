@@ -1,0 +1,20 @@
+(*,224.0.0.0/4) Flags: C
+
+(*,224.0.1.40) RPF nbr: 0.0.0.0 Flags: C
+  Vlan100 Flags: F IC NS
+
+(*,232.0.0.0/8) Flags:
+
+(20.0.0.2,232.1.1.2) RPF nbr: 2.2.2.2 Flags:
+  Vlan500 Flags: A	VXLAN Encap/Decap	Next-hop: (0.0.0.0, 1.4.0.0)
+  Vlan100 Flags: F NS
+
+(20.0.0.4,232.1.1.2) RPF nbr: 0.0.0.0 Flags:
+  Vlan100 Flags: F NS
+
+(20.0.0.5,232.1.1.2) RPF nbr: 0.0.0.0 Flags:
+  Vlan100 Flags: F NS
+
+(30.0.0.2,232.1.1.1) RPF nbr: 0.0.0.0 Flags:
+  Vlan500 Flags: F	VXLAN Encap/Decap	Next-hop: (239.1.1.0, 1.4.0.0)
+  Vlan100 Flags: A

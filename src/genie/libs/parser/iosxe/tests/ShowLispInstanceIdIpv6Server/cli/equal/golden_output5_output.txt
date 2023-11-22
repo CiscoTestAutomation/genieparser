@@ -1,0 +1,9 @@
+LISP Site Registration Information
+* = Some locators are down or unreachable
+# = Some registrations are sourced by reliable transport
+
+Site Name      Last      Up     Who Last             Inst     EID Prefix
+               Register         Registered           ID
+Shire          never     no     --                   4100     2001:192:168:1::/64
+               7w0d      yes#   11.11.11.11:65042    4100     2001:192:168:1::71/128
+               never     no     --                   4100     2001:194:168:1::/64

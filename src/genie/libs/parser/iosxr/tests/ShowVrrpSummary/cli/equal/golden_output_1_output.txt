@@ -1,0 +1,17 @@
+                        IPv4                    IPv6
+State          Sessions Slaves Total  Sessions Slaves Total
+-----          -------- ------ -----  -------- ------ -----
+ALL               2      0     2        1      0     1    
+
+MASTER (owner)    0      0     0        0      0     0    
+MASTER            0      0     0        1      0     1    
+BACKUP            1      0     1        0      0     0    
+INIT              1      0     1        0      0     0    
+
+2    VRRP IPv4 interfaces    (1    up,     1    down)
+1    VRRP IPv6 interfaces    (1    up,     0    down)
+2    Virtual IPv4 addresses  (0    active, 2    inactive)
+1    Virtual IPv6 addresses  (1    active, 0    inactive)
+2    Tracked Objects    (0    up, 2    down)
+1    IPv4 BFD sessions        (0    up, 0    down, 1    inactive)
+0    IPv6 BFD sessions        (0    up, 0    down, 0    inactive)

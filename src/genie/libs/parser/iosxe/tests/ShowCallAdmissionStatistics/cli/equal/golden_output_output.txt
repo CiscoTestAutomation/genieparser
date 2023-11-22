@@ -1,0 +1,5 @@
+CAC New Model (SRSM) is ACTIVE
+CAC statistics duration:  2(seconds)
+Total calls rejected 0, accepted 0
+Current hardware CAC status is: Not Dropping
+

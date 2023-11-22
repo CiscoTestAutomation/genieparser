@@ -1,0 +1,24 @@
+2022-01-12 16:17:18,190: %UNICON-INFO: +++ ABC1-DEF2G with via 'cli' and alias 'vty-1': executing command 'show lisp service ipv4 summary' +++
+
+show lisp service ipv4 summary
+Router-lisp ID:   0
+Instance count:   10
+Key: DB - Local EID Database entry count (@ - RLOC check pending
+                                          * - RLOC consistency problem),
+     DB no route - Local EID DB entries with no matching RIB route,
+     Cache - Remote EID mapping cache size, IID - Instance ID,
+     Role - Configured Role
+
+                      Interface    DB  DB no  Cache Incom Cache
+EID VRF name             (.IID)  size  route   size plete  Idle Role
+default              LISP0.4097     0      0      2  0.0%  0.0% ETR-PITR-PETR
+BISNET_VN            LISP0.4099     1      0      8  0.0%  0.0% ETR-PITR-PETR
+
+Number of eid-tables:                                 2
+Total number of database entries:                     1 (inactive 0)
+Maximum database entries:                        212992
+EID-tables with inconsistent locators:                0
+Total number of map-cache entries:                   10
+Maximum map-cache entries:                       212992
+EID-tables with incomplete map-cache entries:         0
+EID-tables pending map-cache update to FIB:           0

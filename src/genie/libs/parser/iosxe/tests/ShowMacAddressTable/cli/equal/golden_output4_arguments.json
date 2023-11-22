@@ -1,0 +1,4 @@
+{
+    "interface": "GigabitEthernet3/0/3",
+    "vlan": "1000"
+}

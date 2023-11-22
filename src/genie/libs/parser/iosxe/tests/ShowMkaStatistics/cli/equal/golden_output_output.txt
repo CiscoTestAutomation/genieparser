@@ -1,0 +1,67 @@
+MKA Global Statistics
+=====================
+MKA Session Totals
+   Secured.................... 3
+   Fallback Secured........... 2
+   Reauthentication Attempts.. 4
+
+   Deleted (Secured).......... 2
+   Keepalive Timeouts......... 0
+
+CA Statistics
+   Pairwise CAKs Derived...... 4
+   Pairwise CAK Rekeys........ 4
+   Group CAKs Generated....... 0
+   Group CAKs Received........ 0
+
+SA Statistics
+   SAKs Generated............. 0
+   SAKs Rekeyed............... 1479
+   SAKs Received.............. 1480
+   SAK Responses Received..... 0
+
+MKPDU Statistics
+   MKPDUs Validated & Rx...... 44937
+      "Distributed SAK"..... 1480
+      "Distributed CAK"..... 0
+   MKPDUs Transmitted......... 91067
+      "Distributed SAK"..... 0
+      "Distributed CAK"..... 0
+
+MKA Error Counter Totals
+========================
+Session Failures
+   Bring-up Failures................ 0
+   Reauthentication Failures........ 0
+   Duplicate Auth-Mgr Handle........ 0
+
+SAK Failures
+   SAK Generation................... 0
+   Hash Key Generation.............. 0
+   SAK Encryption/Wrap.............. 0
+   SAK Decryption/Unwrap............ 0
+   SAK Cipher Mismatch.............. 0
+
+CA Failures
+   Group CAK Generation............. 0
+   Group CAK Encryption/Wrap........ 0
+   Group CAK Decryption/Unwrap...... 0
+   Pairwise CAK Derivation.......... 0
+   CKN Derivation................... 0
+   ICK Derivation................... 0
+   KEK Derivation................... 0
+   Invalid Peer MACsec Capability... 0
+
+MACsec Failures
+   Rx SC Creation................... 0
+   Tx SC Creation................... 0
+   Rx SA Installation............... 0
+   Tx SA Installation............... 0
+
+MKPDU Failures
+   MKPDU Tx............................... 0
+   MKPDU Rx ICV Verification.............. 44647
+   MKPDU Rx Fallback ICV Verification..... 0
+   MKPDU Rx Validation.................... 0
+   MKPDU Rx Bad Peer MN................... 0
+   MKPDU Rx Non-recent Peerlist MN........ 0

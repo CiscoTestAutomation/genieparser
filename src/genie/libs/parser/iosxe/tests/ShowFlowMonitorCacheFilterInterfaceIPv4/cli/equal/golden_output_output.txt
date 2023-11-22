@@ -1,0 +1,100 @@
+  Cache type:                               Normal (Platform cache)
+  Cache size:                              1000000
+  Current entries:                               4
+  High Watermark:                          1003016
+
+  Flows added:                           117109833
+  Flows not added:                      64898686427
+  Flows aged:                            117109829
+    - Active timeout      (    60 secs)     998967
+    - Inactive timeout    (    10 secs)      24862
+    - Emergency aged                     116086000
+
+IPV4 SOURCE ADDRESS:                  121.0.5.2
+IPV4 DESTINATION ADDRESS:             106.0.5.2
+TRNS SOURCE PORT:                     1025
+TRNS DESTINATION PORT:                80
+IP VPN ID:                            5
+IP PROTOCOL:                          17
+tcp flags:                            0x18
+interface input:                      Hu0/1/2.5
+interface output:                     Null
+counter bytes long:                   52151670
+counter packets long:                 132724
+timestamp abs first:                  21:59:00.799
+timestamp abs last:                   21:59:14.094
+flow end reason:                      Not determined
+connection initiator:                 Initiator
+interface overlay session id input:   0
+interface overlay session id output:  0
+connection connection id long:        0xE8A6F00000D94B8B
+drop cause id:                        19
+counter bytes drop long:              52151670
+sdwan sla not met :                   0
+sdwan preferred color not met :       0
+sdwan queue id :                      2
+counter packets drop long:            132724
+ip tos:                               0x00
+ip dscp:                              0x00
+ip dscp output:                       0x00
+application name:                     layer7 unknown
+
+IPV4 SOURCE ADDRESS:                  121.0.5.2
+IPV4 DESTINATION ADDRESS:             106.0.5.2
+TRNS SOURCE PORT:                     1026
+TRNS DESTINATION PORT:                80
+IP VPN ID:                            5
+IP PROTOCOL:                          17
+tcp flags:                            0x18
+interface input:                      Hu0/1/2.5
+interface output:                     Null
+counter bytes long:                   54090192
+counter packets long:                 136904
+timestamp abs first:                  21:59:00.799
+timestamp abs last:                   21:59:14.512
+flow end reason:                      Not determined
+connection initiator:                 Initiator
+interface overlay session id input:   0
+interface overlay session id output:  0
+connection connection id long:        0xD7621DB0002B05DB
+drop cause id:                        19
+counter bytes drop long:              54090192
+sdwan sla not met :                   0
+sdwan preferred color not met :       0
+sdwan queue id :                      2
+counter packets drop long:            136904
+ip tos:                               0x00
+ip dscp:                              0x00
+ip dscp output:                       0x00
+application name:                     layer7 unknown
+
+IPV4 SOURCE ADDRESS:                  121.0.5.2
+IPV4 DESTINATION ADDRESS:             106.0.5.2
+TRNS SOURCE PORT:                     1027
+TRNS DESTINATION PORT:                80
+IP VPN ID:                            5
+IP PROTOCOL:                          17
+tcp flags:                            0x18
+interface input:                      Hu0/1/2.5
+interface output:                     Null
+counter bytes long:                   55500950
+counter packets long:                 141207
+timestamp abs first:                  21:59:00.799
+timestamp abs last:                   21:59:14.943
+flow end reason:                      Not determined
+connection initiator:                 Initiator
+interface overlay session id input:   0
+interface overlay session id output:  0
+connection connection id long:        0xB832BEA000853FEB
+drop cause id:                        19
+counter bytes drop long:              55500950
+sdwan sla not met :                   0
+sdwan preferred color not met :       0
+sdwan queue id :                      2
+counter packets drop long:            141207
+ip tos:                               0x00
+ip dscp:                              0x00
+ip dscp output:                       0x00
+application name:                     layer7 unknown
+
+Matched 3 flows

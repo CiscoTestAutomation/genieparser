@@ -1,0 +1,4 @@
+show cef path sets summary
+ Path Set Id 0x00000004   Num Paths 1
+ Path Set Id 0x00000006   Num Paths 1
+ Path Set Id 0x0000000C   Num Paths 1

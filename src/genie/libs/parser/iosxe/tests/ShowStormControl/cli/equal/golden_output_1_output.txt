@@ -1,0 +1,4 @@
+Key: U - Unicast, B - Broadcast, M - Multicast
+Interface       Filter State   Upper        Lower        Current         Action     Type
+---------       -------------  -----------  -----------  -------------   ---------  ----
+Gi0/2/0         Link Down            0.70%        0.70%          0.00%    Shutdown     B

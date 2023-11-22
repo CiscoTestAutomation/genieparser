@@ -1,0 +1,10 @@
+Subscription Summary
+====================
+Maximum supported: 128
+
+Subscription     Total       Valid      Invalid
+-----------------------------------------------
+All              4           2          2
+Dynamic          1           1          0
+Configured       2           1          1
+Permanent        1           0          1

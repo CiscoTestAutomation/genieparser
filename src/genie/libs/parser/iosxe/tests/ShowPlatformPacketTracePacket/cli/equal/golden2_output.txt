@@ -1,0 +1,783 @@
+Packet: 0           CBUG ID: 104
+Summary
+  Input     : INJ.2
+  Output    : GigabitEthernet1
+  State     : FWD
+  Timestamp
+    Start   : 19591545483878568 ns (07/27/2021 09:34:27.497712 UTC)
+    Stop    : 19591545483897048 ns (07/27/2021 09:34:27.497731 UTC)
+Path Trace
+  Feature: IPV4(Output)
+    Input       : internal0/0/rp:0
+    Output      : GigabitEthernet1
+    Source      : 172.20.2.54
+    Destination : 172.20.2.55
+    Protocol    : 6 (TCP)
+      SrcPort   : 22
+      DstPort   : 43520
+  Feature: CFT
+    API                   : cft_handle_pkt
+    packet capabilities   : 0x000000af
+    input vrf_idx         : 0
+    calling feature       : STILE
+    direction             : Output
+    triplet.vrf_idx       : 0
+    triplet.network_start : 0x00000000
+    triplet.triplet_flags : 0x00000000
+    triplet.counter       : 0
+    cft_bucket_number     : 206290
+    cft_l3_payload_size   : 84
+    cft_pkt_ind_flags     : 0x00000140
+    cft_pkt_ind_valid     : 0x00009bff
+    tuple.src_ip          : 172.20.2.54
+    tuple.dst_ip          : 172.20.2.55
+    tuple.src_port        : 22
+    tuple.dst_port        : 43520
+    tuple.vrfid           : 0
+    tuple.l4_protocol     : TCP
+    tuple.l3_protocol     : IPV4
+    pkt_sb_state          : 0
+    pkt_sb.num_flows      : 0
+    pkt_sb.tuple_epoch    : 0
+    returned cft_error    : 0
+    returned fid          : 0xe9328b50
+  Feature: NBAR
+    Packet number in flow: N/A
+    Classification state: Final
+    Classification name: ssh
+    Classification ID: [IANA-L4:22]
+    Classification source: Unknown
+    Number of matched sub-classifications: 0
+    Number of extracted fields: 0
+    Is PA (split) packet: False
+    TPH-MQC bitmask value: 0x0
+Packet: 1           CBUG ID: 105
+Summary
+  Input     : GigabitEthernet1
+  Output    : internal0/0/rp:0
+  State     : PUNT 11  (For-us data)
+  Timestamp
+    Start   : 19591545484115512 ns (07/27/2021 09:34:27.497949 UTC)
+    Stop    : 19591545484138496 ns (07/27/2021 09:34:27.497972 UTC)
+Path Trace
+  Feature: IPV4(Input)
+    Input       : GigabitEthernet1
+    Output      : <unknown>
+    Source      : 172.20.2.55
+    Destination : 172.20.2.54
+    Protocol    : 6 (TCP)
+      SrcPort   : 43520
+      DstPort   : 22
+  Feature: CFT
+    API                   : cft_handle_pkt
+    packet capabilities   : 0x000000af
+    input vrf_idx         : 0
+    calling feature       : STILE
+    direction             : Input
+    triplet.vrf_idx       : 0
+    triplet.network_start : 0x00000000
+    triplet.triplet_flags : 0x00000000
+    triplet.counter       : 0
+    cft_bucket_number     : 206290
+    cft_l3_payload_size   : 20
+    cft_pkt_ind_flags     : 0x00000002
+    cft_pkt_ind_valid     : 0x00009bff
+    tuple.src_ip          : 172.20.2.55
+    tuple.dst_ip          : 172.20.2.54
+    tuple.src_port        : 43520
+    tuple.dst_port        : 22
+    tuple.vrfid           : 0
+    tuple.l4_protocol     : TCP
+    tuple.l3_protocol     : IPV4
+    pkt_sb_state          : 0
+    pkt_sb.num_flows      : 0
+    pkt_sb.tuple_epoch    : 0
+    returned cft_error    : 0
+    returned fid          : 0xe9328b50
+  Feature: NBAR
+    Packet number in flow: N/A
+    Classification state: Final
+    Classification name: ssh
+    Classification ID: [IANA-L4:22]
+    Classification source: Unknown
+    Number of matched sub-classifications: 0
+    Number of extracted fields: 0
+    Is PA (split) packet: False
+    TPH-MQC bitmask value: 0x0
+  Feature: QOS
+    Direction   : Ingress
+    Action      : SET
+    Fields      : DSCP
+
+IOSd Path Flow: Packet: 1    CBUG ID: 105
+  Feature: INFRA
+    Pkt Direction: IN
+    Packet Rcvd From DATAPLANE
+
+  Feature: IP
+    Pkt Direction: IN
+    Packet Enqueued in IP layer
+    Source      : 172.20.2.55
+    Destination : 172.20.2.54
+    Interface   : GigabitEthernet1
+
+  Feature: TCP
+    Pkt Direction: IN
+    tcp0: I NoTCB 172.20.2.55:43520 172.20.2.54:22 seq 1565917635 ACK 140302929  WIN 63840
+
+Packet: 2           CBUG ID: 106
+Summary
+  Input     : GigabitEthernet1
+  Output    : internal0/0/rp:0
+  State     : PUNT 3   (Layer2 control and legacy)
+  Timestamp
+    Start   : 19591545665723976 ns (07/27/2021 09:34:27.679557 UTC)
+    Stop    : 19591545665748044 ns (07/27/2021 09:34:27.679582 UTC)
+Path Trace
+  Feature: QOS
+    Direction   : Ingress
+    Action      : SET
+    Fields      : DSCP
+
+IOSd Path Flow: Packet: 2    CBUG ID: 106
+  Feature: INFRA
+    Pkt Direction: IN
+    Packet Rcvd From DATAPLANE
+Packet: 3           CBUG ID: 107
+Summary
+  Input     : GigabitEthernet1
+  Output    : GigabitEthernet1
+  State     : CONS Packet Consumed
+  Timestamp
+    Start   : 19591545845287552 ns (07/27/2021 09:34:27.859121 UTC)
+    Stop    : 19591545845364724 ns (07/27/2021 09:34:27.859198 UTC)
+Path Trace
+  Feature: IPV4(Input)
+    Input       : GigabitEthernet1
+    Output      : <unknown>
+    Source      : 172.20.2.68
+    Destination : 172.20.2.54
+    Protocol    : 1 (ICMP)
+  Feature: CFT
+    API                   : cft_handle_pkt
+    packet capabilities   : 0x000000af
+    input vrf_idx         : 0
+    calling feature       : STILE
+    direction             : Input
+    triplet.vrf_idx       : 0
+    triplet.network_start : 0x00000000
+    triplet.triplet_flags : 0x00000000
+    triplet.counter       : 0
+    cft_bucket_number     : 206290
+    cft_l3_payload_size   : 44
+    cft_pkt_ind_flags     : 0x00000000
+    cft_pkt_ind_valid     : 0x00000935
+    tuple.src_ip          : 172.20.2.68
+    tuple.dst_ip          : 172.20.2.54
+    tuple.src_port        : 0
+    tuple.dst_port        : 1024
+    tuple.vrfid           : 47016
+    tuple.l4_protocol     : ICMP
+    tuple.l3_protocol     : IPV4
+    pkt_sb_state          : 0
+    pkt_sb.num_flows      : 0
+    pkt_sb.tuple_epoch    : 0
+    returned cft_error    : 14
+    returned fid          : 0x00000000
+  Feature: NBAR
+    Packet number in flow: N/A
+    Classification state: Final
+    Classification name: ping
+    Classification ID: [CANA-L7:479]
+    Classification source: Unknown
+    Number of matched sub-classifications: 0
+    Number of extracted fields: 0
+    Is PA (split) packet: False
+    TPH-MQC bitmask value: 0x0
+  Feature: QOS
+    Direction   : Ingress
+    Action      : SET
+    Fields      : DSCP
+  Feature: ICMPV4(Input)
+    Input       : GigabitEthernet1
+    Output      : <unknown>
+    Type        : 8 (Echo)
+    Code        : 0 (No Code)
+Packet: 4           CBUG ID: 108
+Summary
+  Input     : INJ.9
+  Output    : GigabitEthernet1
+  State     : FWD
+  Timestamp
+    Start   : 19591545845712644 ns (07/27/2021 09:34:27.859546 UTC)
+    Stop    : 19591545845732000 ns (07/27/2021 09:34:27.859566 UTC)
+Path Trace
+  Feature: IPV4(Output)
+    Input       : internal0/0/recycle:0
+    Output      : GigabitEthernet1
+    Source      : 172.20.2.54
+    Destination : 172.20.2.68
+    Protocol    : 1 (ICMP)
+  Feature: CFT
+    API                   : cft_handle_pkt
+    packet capabilities   : 0x000000af
+    input vrf_idx         : 0
+    calling feature       : STILE
+    direction             : Output
+    triplet.vrf_idx       : 0
+    triplet.network_start : 0x00000000
+    triplet.triplet_flags : 0x00000000
+    triplet.counter       : 0
+    cft_bucket_number     : 206290
+    cft_l3_payload_size   : 44
+    cft_pkt_ind_flags     : 0x00000000
+    cft_pkt_ind_valid     : 0x00000935
+    tuple.src_ip          : 172.20.2.54
+    tuple.dst_ip          : 172.20.2.68
+    tuple.src_port        : 1
+    tuple.dst_port        : 0
+    tuple.vrfid           : 65530
+    tuple.l4_protocol     : ICMP
+    tuple.l3_protocol     : IPV4
+    pkt_sb_state          : 0
+    pkt_sb.num_flows      : 0
+    pkt_sb.tuple_epoch    : 0
+    returned cft_error    : 14
+    returned fid          : 0x00000000
+  Feature: NBAR
+    Packet number in flow: N/A
+    Classification state: Final
+    Classification name: ping
+    Classification ID: [CANA-L7:479]
+    Classification source: Unknown
+    Number of matched sub-classifications: 0
+    Number of extracted fields: 0
+    Is PA (split) packet: False
+    TPH-MQC bitmask value: 0x0
+Packet: 5           CBUG ID: 109
+Summary
+  Input     : GigabitEthernet1
+  Output    : internal0/0/rp:0
+  State     : PUNT 11  (For-us data)
+  Timestamp
+    Start   : 19591546227952496 ns (07/27/2021 09:34:28.241786 UTC)
+    Stop    : 19591546228013744 ns (07/27/2021 09:34:28.241847 UTC)
+Path Trace
+  Feature: IPV4(Input)
+    Input       : GigabitEthernet1
+    Output      : <unknown>
+    Source      : 172.20.2.55
+    Destination : 172.20.2.54
+    Protocol    : 6 (TCP)
+      SrcPort   : 43520
+      DstPort   : 22
+  Feature: CFT
+    API                   : cft_handle_pkt
+    packet capabilities   : 0x000000af
+    input vrf_idx         : 0
+    calling feature       : STILE
+    direction             : Input
+    triplet.vrf_idx       : 0
+    triplet.network_start : 0x00000000
+    triplet.triplet_flags : 0x00000000
+    triplet.counter       : 0
+    cft_bucket_number     : 206290
+    cft_l3_payload_size   : 68
+    cft_pkt_ind_flags     : 0x00000002
+    cft_pkt_ind_valid     : 0x00009bff
+    tuple.src_ip          : 172.20.2.55
+    tuple.dst_ip          : 172.20.2.54
+    tuple.src_port        : 43520
+    tuple.dst_port        : 22
+    tuple.vrfid           : 0
+    tuple.l4_protocol     : TCP
+    tuple.l3_protocol     : IPV4
+    pkt_sb_state          : 0
+    pkt_sb.num_flows      : 0
+    pkt_sb.tuple_epoch    : 0
+    returned cft_error    : 0
+    returned fid          : 0xe9328b50
+  Feature: NBAR
+    Packet number in flow: N/A
+    Classification state: Final
+    Classification name: ssh
+    Classification ID: [IANA-L4:22]
+    Classification source: Unknown
+    Number of matched sub-classifications: 0
+    Number of extracted fields: 0
+    Is PA (split) packet: False
+    TPH-MQC bitmask value: 0x0
+  Feature: QOS
+    Direction   : Ingress
+    Action      : SET
+    Fields      : DSCP
+
+IOSd Path Flow: Packet: 5    CBUG ID: 109
+  Feature: INFRA
+    Pkt Direction: IN
+    Packet Rcvd From DATAPLANE
+
+  Feature: IP
+    Pkt Direction: IN
+    Packet Enqueued in IP layer
+    Source      : 172.20.2.55
+    Destination : 172.20.2.54
+    Interface   : GigabitEthernet1
+
+  Feature: TCP
+    Pkt Direction: IN
+    tcp0: I NoTCB 172.20.2.55:43520 172.20.2.54:22 seq 1565917635 DATA 48 ACK 140302929 PSH  WIN 63840
+
+Packet: 6           CBUG ID: 110
+Summary
+  Input     : GigabitEthernet1
+  Output    : internal0/0/rp:0
+  State     : PUNT 11  (For-us data)
+  Timestamp
+    Start   : 19591546228029200 ns (07/27/2021 09:34:28.241863 UTC)
+    Stop    : 19591546228037636 ns (07/27/2021 09:34:28.241871 UTC)
+Path Trace
+  Feature: IPV4(Input)
+    Input       : GigabitEthernet1
+    Output      : <unknown>
+    Source      : 172.20.2.55
+    Destination : 172.20.2.54
+    Protocol    : 6 (TCP)
+      SrcPort   : 43520
+      DstPort   : 22
+  Feature: CFT
+    API                   : cft_handle_pkt
+    packet capabilities   : 0x000000af
+    input vrf_idx         : 0
+    calling feature       : STILE
+    direction             : Input
+    triplet.vrf_idx       : 0
+    triplet.network_start : 0x00000000
+    triplet.triplet_flags : 0x00000000
+    triplet.counter       : 0
+    cft_bucket_number     : 206290
+    cft_l3_payload_size   : 84
+    cft_pkt_ind_flags     : 0x00000002
+    cft_pkt_ind_valid     : 0x00009bff
+    tuple.src_ip          : 172.20.2.55
+    tuple.dst_ip          : 172.20.2.54
+    tuple.src_port        : 43520
+    tuple.dst_port        : 22
+    tuple.vrfid           : 0
+    tuple.l4_protocol     : TCP
+    tuple.l3_protocol     : IPV4
+    pkt_sb_state          : 0
+    pkt_sb.num_flows      : 0
+    pkt_sb.tuple_epoch    : 0
+    returned cft_error    : 0
+    returned fid          : 0xe9328b50
+  Feature: NBAR
+    Packet number in flow: N/A
+    Classification state: Final
+    Classification name: ssh
+    Classification ID: [IANA-L4:22]
+    Classification source: Unknown
+    Number of matched sub-classifications: 0
+    Number of extracted fields: 0
+    Is PA (split) packet: False
+    TPH-MQC bitmask value: 0x0
+  Feature: QOS
+    Direction   : Ingress
+    Action      : SET
+    Fields      : DSCP
+
+IOSd Path Flow: Packet: 6    CBUG ID: 110
+  Feature: INFRA
+    Pkt Direction: IN
+    Packet Rcvd From DATAPLANE
+
+  Feature: IP
+    Pkt Direction: IN
+    Packet Enqueued in IP layer
+    Source      : 172.20.2.55
+    Destination : 172.20.2.54
+    Interface   : GigabitEthernet1
+
+  Feature: TCP
+    Pkt Direction: IN
+    tcp0: I NoTCB 172.20.2.55:43520 172.20.2.54:22 seq 1565917683 DATA 64 ACK 140302929 PSH  WIN 63840
+
+Packet: 7           CBUG ID: 111
+Summary
+  Input     : INJ.2
+  Output    : GigabitEthernet1
+  State     : FWD
+  Timestamp
+    Start   : 19591546228922980 ns (07/27/2021 09:34:28.242756 UTC)
+    Stop    : 19591546228941180 ns (07/27/2021 09:34:28.242775 UTC)
+Path Trace
+  Feature: IPV4(Output)
+    Input       : internal0/0/rp:0
+    Output      : GigabitEthernet1
+    Source      : 172.20.2.54
+    Destination : 172.20.2.55
+    Protocol    : 6 (TCP)
+      SrcPort   : 22
+      DstPort   : 43520
+  Feature: CFT
+    API                   : cft_handle_pkt
+    packet capabilities   : 0x000000af
+    input vrf_idx         : 0
+    calling feature       : STILE
+    direction             : Output
+    triplet.vrf_idx       : 0
+    triplet.network_start : 0x00000000
+    triplet.triplet_flags : 0x00000000
+    triplet.counter       : 0
+    cft_bucket_number     : 206290
+    cft_l3_payload_size   : 20
+    cft_pkt_ind_flags     : 0x00000140
+    cft_pkt_ind_valid     : 0x00009bff
+    tuple.src_ip          : 172.20.2.54
+    tuple.dst_ip          : 172.20.2.55
+    tuple.src_port        : 22
+    tuple.dst_port        : 43520
+    tuple.vrfid           : 0
+    tuple.l4_protocol     : TCP
+    tuple.l3_protocol     : IPV4
+    pkt_sb_state          : 0
+    pkt_sb.num_flows      : 0
+    pkt_sb.tuple_epoch    : 0
+    returned cft_error    : 0
+    returned fid          : 0xe9328b50
+  Feature: NBAR
+    Packet number in flow: N/A
+    Classification state: Final
+    Classification name: ssh
+    Classification ID: [IANA-L4:22]
+    Classification source: Unknown
+    Number of matched sub-classifications: 0
+    Number of extracted fields: 0
+    Is PA (split) packet: False
+    TPH-MQC bitmask value: 0x0
+Packet: 8           CBUG ID: 112
+Summary
+  Input     : INJ.2
+  Output    : GigabitEthernet1
+  State     : FWD
+  Timestamp
+    Start   : 19591546247232308 ns (07/27/2021 09:34:28.261066 UTC)
+    Stop    : 19591546247257128 ns (07/27/2021 09:34:28.261091 UTC)
+Path Trace
+  Feature: IPV4(Output)
+    Input       : internal0/0/rp:0
+    Output      : GigabitEthernet1
+    Source      : 172.20.2.54
+    Destination : 172.20.2.55
+    Protocol    : 6 (TCP)
+      SrcPort   : 22
+      DstPort   : 43520
+  Feature: CFT
+    API                   : cft_handle_pkt
+    packet capabilities   : 0x000000af
+    input vrf_idx         : 0
+    calling feature       : STILE
+    direction             : Output
+    triplet.vrf_idx       : 0
+    triplet.network_start : 0x00000000
+    triplet.triplet_flags : 0x00000000
+    triplet.counter       : 0
+    cft_bucket_number     : 206290
+    cft_l3_payload_size   : 84
+    cft_pkt_ind_flags     : 0x00000140
+    cft_pkt_ind_valid     : 0x00009bff
+    tuple.src_ip          : 172.20.2.54
+    tuple.dst_ip          : 172.20.2.55
+    tuple.src_port        : 22
+    tuple.dst_port        : 43520
+    tuple.vrfid           : 0
+    tuple.l4_protocol     : TCP
+    tuple.l3_protocol     : IPV4
+    pkt_sb_state          : 0
+    pkt_sb.num_flows      : 0
+    pkt_sb.tuple_epoch    : 0
+    returned cft_error    : 0
+    returned fid          : 0xe9328b50
+  Feature: NBAR
+    Packet number in flow: N/A
+    Classification state: Final
+    Classification name: ssh
+    Classification ID: [IANA-L4:22]
+    Classification source: Unknown
+    Number of matched sub-classifications: 0
+    Number of extracted fields: 0
+    Is PA (split) packet: False
+    TPH-MQC bitmask value: 0x0
+Packet: 9           CBUG ID: 113
+Summary
+  Input     : GigabitEthernet1
+  Output    : internal0/0/rp:0
+  State     : PUNT 11  (For-us data)
+  Timestamp
+    Start   : 19591546247508160 ns (07/27/2021 09:34:28.261342 UTC)
+    Stop    : 19591546247554520 ns (07/27/2021 09:34:28.261388 UTC)
+Path Trace
+  Feature: IPV4(Input)
+    Input       : GigabitEthernet1
+    Output      : <unknown>
+    Source      : 172.20.2.55
+    Destination : 172.20.2.54
+    Protocol    : 6 (TCP)
+      SrcPort   : 43520
+      DstPort   : 22
+  Feature: CFT
+    API                   : cft_handle_pkt
+    packet capabilities   : 0x000000af
+    input vrf_idx         : 0
+    calling feature       : STILE
+    direction             : Input
+    triplet.vrf_idx       : 0
+    triplet.network_start : 0x00000000
+    triplet.triplet_flags : 0x00000000
+    triplet.counter       : 0
+    cft_bucket_number     : 206290
+    cft_l3_payload_size   : 20
+    cft_pkt_ind_flags     : 0x00000002
+    cft_pkt_ind_valid     : 0x00009bff
+    tuple.src_ip          : 172.20.2.55
+    tuple.dst_ip          : 172.20.2.54
+    tuple.src_port        : 43520
+    tuple.dst_port        : 22
+    tuple.vrfid           : 0
+    tuple.l4_protocol     : TCP
+    tuple.l3_protocol     : IPV4
+    pkt_sb_state          : 0
+    pkt_sb.num_flows      : 0
+    pkt_sb.tuple_epoch    : 0
+    returned cft_error    : 0
+    returned fid          : 0xe9328b50
+  Feature: NBAR
+    Packet number in flow: N/A
+    Classification state: Final
+    Classification name: ssh
+    Classification ID: [IANA-L4:22]
+    Classification source: Unknown
+    Number of matched sub-classifications: 0
+    Number of extracted fields: 0
+    Is PA (split) packet: False
+    TPH-MQC bitmask value: 0x0
+  Feature: QOS
+    Direction   : Ingress
+    Action      : SET
+    Fields      : DSCP
+
+IOSd Path Flow: Packet: 9    CBUG ID: 113
+  Feature: INFRA
+    Pkt Direction: IN
+    Packet Rcvd From DATAPLANE
+
+  Feature: IP
+    Pkt Direction: IN
+    Packet Enqueued in IP layer
+    Source      : 172.20.2.55
+    Destination : 172.20.2.54
+    Interface   : GigabitEthernet1
+
+  Feature: TCP
+    Pkt Direction: IN
+    tcp0: I NoTCB 172.20.2.55:43520 172.20.2.54:22 seq 1565917747 ACK 140302993  WIN 63840
+
+Packet: 10          CBUG ID: 114
+Summary
+  Input     : INJ.2
+  Output    : GigabitEthernet1
+  State     : FWD
+  Timestamp
+    Start   : 19591546247823740 ns (07/27/2021 09:34:28.261657 UTC)
+    Stop    : 19591546247842752 ns (07/27/2021 09:34:28.261676 UTC)
+Path Trace
+  Feature: IPV4(Output)
+    Input       : internal0/0/rp:0
+    Output      : GigabitEthernet1
+    Source      : 172.20.2.54
+    Destination : 172.20.2.55
+    Protocol    : 6 (TCP)
+      SrcPort   : 22
+      DstPort   : 43520
+  Feature: CFT
+    API                   : cft_handle_pkt
+    packet capabilities   : 0x000000af
+    input vrf_idx         : 0
+    calling feature       : STILE
+    direction             : Output
+    triplet.vrf_idx       : 0
+    triplet.network_start : 0x00000000
+    triplet.triplet_flags : 0x00000000
+    triplet.counter       : 0
+    cft_bucket_number     : 206290
+    cft_l3_payload_size   : 84
+    cft_pkt_ind_flags     : 0x00000140
+    cft_pkt_ind_valid     : 0x00009bff
+    tuple.src_ip          : 172.20.2.54
+    tuple.dst_ip          : 172.20.2.55
+    tuple.src_port        : 22
+    tuple.dst_port        : 43520
+    tuple.vrfid           : 0
+    tuple.l4_protocol     : TCP
+    tuple.l3_protocol     : IPV4
+    pkt_sb_state          : 0
+    pkt_sb.num_flows      : 0
+    pkt_sb.tuple_epoch    : 0
+    returned cft_error    : 0
+    returned fid          : 0xe9328b50
+  Feature: NBAR
+    Packet number in flow: N/A
+    Classification state: Final
+    Classification name: ssh
+    Classification ID: [IANA-L4:22]
+    Classification source: Unknown
+    Number of matched sub-classifications: 0
+    Number of extracted fields: 0
+    Is PA (split) packet: False
+    TPH-MQC bitmask value: 0x0
+Packet: 11          CBUG ID: 115
+Summary
+  Input     : GigabitEthernet1
+  Output    : internal0/0/rp:0
+  State     : PUNT 11  (For-us data)
+  Timestamp
+    Start   : 19591546248064016 ns (07/27/2021 09:34:28.261898 UTC)
+    Stop    : 19591546248087028 ns (07/27/2021 09:34:28.261921 UTC)
+Path Trace
+  Feature: IPV4(Input)
+    Input       : GigabitEthernet1
+    Output      : <unknown>
+    Source      : 172.20.2.55
+    Destination : 172.20.2.54
+    Protocol    : 6 (TCP)
+      SrcPort   : 43520
+      DstPort   : 22
+  Feature: CFT
+    API                   : cft_handle_pkt
+    packet capabilities   : 0x000000af
+    input vrf_idx         : 0
+    calling feature       : STILE
+    direction             : Input
+    triplet.vrf_idx       : 0
+    triplet.network_start : 0x00000000
+    triplet.triplet_flags : 0x00000000
+    triplet.counter       : 0
+    cft_bucket_number     : 206290
+    cft_l3_payload_size   : 20
+    cft_pkt_ind_flags     : 0x00000002
+    cft_pkt_ind_valid     : 0x00009bff
+    tuple.src_ip          : 172.20.2.55
+    tuple.dst_ip          : 172.20.2.54
+    tuple.src_port        : 43520
+    tuple.dst_port        : 22
+    tuple.vrfid           : 0
+    tuple.l4_protocol     : TCP
+    tuple.l3_protocol     : IPV4
+    pkt_sb_state          : 0
+    pkt_sb.num_flows      : 0
+    pkt_sb.tuple_epoch    : 0
+    returned cft_error    : 0
+    returned fid          : 0xe9328b50
+  Feature: NBAR
+    Packet number in flow: N/A
+    Classification state: Final
+    Classification name: ssh
+    Classification ID: [IANA-L4:22]
+    Classification source: Unknown
+    Number of matched sub-classifications: 0
+    Number of extracted fields: 0
+    Is PA (split) packet: False
+    TPH-MQC bitmask value: 0x0
+  Feature: QOS
+    Direction   : Ingress
+    Action      : SET
+    Fields      : DSCP
+
+IOSd Path Flow: Packet: 11    CBUG ID: 115
+  Feature: INFRA
+    Pkt Direction: IN
+    Packet Rcvd From DATAPLANE
+
+  Feature: IP
+    Pkt Direction: IN
+    Packet Enqueued in IP layer
+    Source      : 172.20.2.55
+    Destination : 172.20.2.54
+    Interface   : GigabitEthernet1
+
+  Feature: TCP
+    Pkt Direction: IN
+    tcp0: I NoTCB 172.20.2.55:43520 172.20.2.54:22 seq 1565917747 ACK 140303057  WIN 63840
+
+Packet: 12          CBUG ID: 116
+Summary
+  Input     : GigabitEthernet1
+  Output    : internal0/0/rp:0
+  State     : PUNT 7   (ARP request or response)
+  Timestamp
+    Start   : 19591546313336480 ns (07/27/2021 09:34:28.327170 UTC)
+    Stop    : 19591546313417684 ns (07/27/2021 09:34:28.327251 UTC)
+Path Trace
+  Feature: QOS
+    Direction   : Ingress
+    Action      : SET
+    Fields      : DSCP
+
+IOSd Path Flow: Packet: 12    CBUG ID: 116
+  Feature: INFRA
+    Pkt Direction: IN
+    Packet Rcvd From DATAPLANE
+Packet: 13          CBUG ID: 117
+Summary
+  Input     : GigabitEthernet1
+  Output    : internal0/0/rp:0
+  State     : PUNT 7   (ARP request or response)
+  Timestamp
+    Start   : 19591546313425888 ns (07/27/2021 09:34:28.327259 UTC)
+    Stop    : 19591546313430732 ns (07/27/2021 09:34:28.327264 UTC)
+Path Trace
+  Feature: QOS
+    Direction   : Ingress
+    Action      : SET
+    Fields      : DSCP
+
+IOSd Path Flow: Packet: 13    CBUG ID: 117
+  Feature: INFRA
+    Pkt Direction: IN
+    Packet Rcvd From DATAPLANE
+Packet: 14          CBUG ID: 118
+Summary
+  Input     : GigabitEthernet1
+  Output    : internal0/0/rp:0
+  State     : PUNT 7   (ARP request or response)
+  Timestamp
+    Start   : 19591546313663560 ns (07/27/2021 09:34:28.327497 UTC)
+    Stop    : 19591546313685620 ns (07/27/2021 09:34:28.327519 UTC)
+Path Trace
+  Feature: QOS
+    Direction   : Ingress
+    Action      : SET
+    Fields      : DSCP
+
+IOSd Path Flow: Packet: 14    CBUG ID: 118
+  Feature: INFRA
+    Pkt Direction: IN
+    Packet Rcvd From DATAPLANE
+Packet: 15          CBUG ID: 119
+Summary
+  Input     : GigabitEthernet1
+  Output    : internal0/0/rp:0
+  State     : PUNT 7   (ARP request or response)
+  Timestamp
+    Start   : 19591546314397664 ns (07/27/2021 09:34:28.328231 UTC)
+    Stop    : 19591546314411992 ns (07/27/2021 09:34:28.328246 UTC)
+Path Trace
+  Feature: QOS
+    Direction   : Ingress
+    Action      : SET
+    Fields      : DSCP
+
+IOSd Path Flow: Packet: 15    CBUG ID: 119
+  Feature: INFRA
+    Pkt Direction: IN
+    Packet Rcvd From DATAPLANE

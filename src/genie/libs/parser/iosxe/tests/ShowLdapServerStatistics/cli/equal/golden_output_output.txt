@@ -1,0 +1,14 @@
+Switch-9500#show ldap server Test-LDAP statistics
+---------------------------------
+* LDAP STATISTICS *
+Total messages  [Sent:0, Received:0]
+Response delay(ms) [Average:0, Maximum:0]
+Total search    [Request:0, ResultEntry:0, ResultDone:0]
+Total bind      [Request:0, Response:0]
+Total extended  [Request:0, Response:0]
+Total compare   [Request:0, Response:0]
+Search [Success:0, Failures:0]
+Bind   [Success:0, Failures:0]
+Missing attrs in Entry [0]
+Connection   [Closes:0, Aborts:0, Fails:0, Timeouts:0]
+----------------------------------

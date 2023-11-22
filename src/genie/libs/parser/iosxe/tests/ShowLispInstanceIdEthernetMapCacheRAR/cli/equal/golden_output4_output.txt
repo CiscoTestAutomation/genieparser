@@ -1,0 +1,28 @@
+=================================================
+Output for router lisp 0 instance-id 101
+=================================================
+% EID table not enabled for MAC.
+
+=================================================
+Output for router lisp 0 instance-id 102
+=================================================
+% EID table not enabled for MAC.
+
+=================================================
+Output for router lisp 0 instance-id 1031
+=================================================
+LISP MAC Mapping Cache for LISP 0 EID-table Vlan 101 (IID 1031), 1 entries
+
+aabb.cc00.ca00/48, uptime: 00:00:56, expires: 00:59:03, via map-reply, complete, local-to-site
+  Locator                    Uptime    State       Pri/Wgt     Encap-IID
+  192.168.3.3                00:00:56  admin-down  255/0         -
+  FE80::A8BB:CCFF:FE00:CA00  00:00:56  admin-down  255/0         -
+
+=================================================
+Output for router lisp 0 instance-id 1032
+=================================================
+LISP MAC Mapping Cache for LISP 0 EID-table Vlan 102 (IID 1032), 1 entries
+
+aabb.cc00.cb00/48, uptime: 00:32:58, expires: 00:27:01, via map-reply, complete, local-to-site
+  Locator                    Uptime    State       Pri/Wgt     Encap-IID
+  FE80::A8BB:CCFF:FE00:CB00  00:32:58  admin-down  255/0         -

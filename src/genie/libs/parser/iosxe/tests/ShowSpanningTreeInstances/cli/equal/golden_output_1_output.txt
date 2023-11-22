@@ -1,0 +1,1 @@
+MAX STP instances supported is 4093

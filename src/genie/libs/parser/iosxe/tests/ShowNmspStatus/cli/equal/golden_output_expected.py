@@ -1,0 +1,12 @@
+expected_output = {'1.1.1.1': {'active': 'Active',
+                               'tx_echo_resp': 14,
+                               'rx_echo_req': 14,
+                               'tx_data': 1595,
+                               'rx_data': 300,
+                               'transport': 'HTTPS'},
+                   '2001:bebe::1': {'active': 'Inactive',
+                                    'tx_echo_resp': 0,
+                                    'rx_echo_req': 0,
+                                    'tx_data': 1,
+                                    'rx_data': 0,
+                                    'transport': 'TLS'}}

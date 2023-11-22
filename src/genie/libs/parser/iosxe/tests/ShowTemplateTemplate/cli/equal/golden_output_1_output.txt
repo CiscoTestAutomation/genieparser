@@ -1,0 +1,6 @@
+
+Template                                         Class      Type
+--------                                         -----      ----
+test                                             owner      User
+ BOUND: Twe1/0/1               Twe1/0/2               Twe1/0/3
+        Twe1/0/4               Twe1/0/5

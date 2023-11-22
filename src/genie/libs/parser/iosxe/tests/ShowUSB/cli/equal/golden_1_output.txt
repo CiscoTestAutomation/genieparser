@@ -1,0 +1,13 @@
+-#- --length-- ---------date/time--------- path
+  1      32768 Jan 01 1970 05:30:00.0000000000 +00:00 /vol/usb0/
+  2      16384 Oct 13 2021 21:46:14.0000000000 +00:00 /vol/usb0/System Volume Information
+  3         12 Oct 13 2021 21:46:14.0000000000 +00:00 /vol/usb0/System Volume Information/WPSettings.dat
+  4         76 Oct 13 2021 21:46:16.0000000000 +00:00 /vol/usb0/System Volume Information/IndexerVolumeGuid
+  5 1297291296 May 16 2023 16:08:44.0000000000 +00:00 /vol/usb0/asr1000rpx86-universalk9.17.11.01.0.1295.SSA.bin
+  6  777134622 May 30 2023 18:41:24.0000000000 +00:00 /vol/usb0/c8000aep-universalk9.17.11.01.0.1295.SSA.bin
+  7      16384 Jul 02 2023 17:21:24.0000000000 +00:00 /vol/usb0/test
+  8  783963222 Jul 02 2023 17:22:04.0000000000 +00:00 /vol/usb0/test/c8000aep-universalk9.17.12.01.0.1405.SSA.bin
+  9      16384 Jul 27 2023 16:09:24.0000000000 +00:00 /vol/usb0/usb_sub_dir1
+
+27910094848 bytes available (2858942464 bytes used)
+

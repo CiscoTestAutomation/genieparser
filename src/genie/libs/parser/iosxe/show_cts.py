@@ -2,6 +2,7 @@ import re
 
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Optional, Any
+from genie.parsergen import oper_fill_tabular
 
 # ===================================
 # Schema for:
@@ -398,11 +399,58 @@ class ShowCtsRoleBasedCountersSchema(MetaParser):
 class ShowCtsRoleBasedCounters(ShowCtsRoleBasedCountersSchema):
     """Parser for show cts role-based counters"""
 
-    cli_command = 'show cts role-based counters'
+    cli_command = [
+        'show cts role-based counters',
+        'show cts role-based counters {ipv4}',
+        'show cts role-based counters {ipv6}',
+        'show cts role-based counters {default}',
+        'show cts role-based counters {default} {ipv4}',
+        'show cts role-based counters {default} {ipv6}',
+        'show cts role-based counters from {from_sgt}',
+        'show cts role-based counters from {from_sgt} {ipv4}',
+        'show cts role-based counters from {from_sgt} {ipv6}',
+        'show cts role-based counters from {from_sgt} to {to_sgt}',
+        'show cts role-based counters from {from_sgt} to {to_sgt} {ipv4}',
+        'show cts role-based counters from {from_sgt} to {to_sgt} {ipv6}',
+        'show cts role-based counters from {to_sgt}',
+        'show cts role-based counters from {to_sgt} {ipv4}',
+        'show cts role-based counters from {to_sgt} {ipv6}'
+    ]
 
-    def cli(self, output=None):
+    def cli(self, ipv4=None, ipv6=None, from_sgt=None, to_sgt=None, default=None, output=None):
+        if from_sgt and to_sgt and ipv4:
+            cmd = self.cli_command[10].format(from_sgt=from_sgt, to_sgt=to_sgt, ipv4=ipv4)
+        elif from_sgt and to_sgt and ipv6:
+            cmd = self.cli_command[11].format(from_sgt=from_sgt, to_sgt=to_sgt, ipv6=ipv6)
+        elif from_sgt and to_sgt:
+            cmd = self.cli_command[9].format(from_sgt=from_sgt, to_sgt=to_sgt)
+        elif to_sgt and ipv4:
+            cmd = self.cli_command[13].format(to_sgt=to_sgt, ipv4=ipv4)
+        elif to_sgt and ipv6:
+            cmd = self.cli_command[14].format(to_sgt=to_sgt, ipv6=ipv6)
+        elif to_sgt:
+            cmd = self.cli_command[12].format(to_sgt=to_sgt)
+        elif from_sgt and ipv4:
+            cmd = self.cli_command[7].format(from_sgt=from_sgt, ipv4=ipv4)
+        elif from_sgt and ipv6:
+            cmd = self.cli_command[8].format(from_sgt=from_sgt, ipv6=ipv6)
+        elif from_sgt:
+            cmd = self.cli_command[6].format(from_sgt=from_sgt)
+        elif default and ipv4:
+            cmd = self.cli_command[4].format(default=default, ipv4=ipv4)
+        elif default and ipv6:
+            cmd = self.cli_command[5].format(default=default, ipv6=ipv6)
+        elif default:
+            cmd = self.cli_command[3].format(default=default)
+        elif ipv4:
+            cmd = self.cli_command[1].format(ipv4=ipv4)
+        elif ipv6:
+            cmd = self.cli_command[2].format(ipv6=ipv6)
+        else:
+            cmd = self.cli_command[0]
+
         if output is None:
-            out = self.device.execute(self.cli_command)
+            out = self.device.execute(cmd)
         else:
             out = output
 
@@ -419,7 +467,7 @@ class ShowCtsRoleBasedCounters(ShowCtsRoleBasedCountersSchema):
                                          r"(?P<sw_permit_count>\d+)\s+(?P<hw_permit_count>\d+)\s+"
                                          r"(?P<sw_monitor_count>\d+)\s+(?P<hw_monitor_count>\d+)")
 
-        remove_lines = ('Role-based IPv4 counters', 'From')
+        remove_lines = ('Role-based IPv4 counters', 'Role-based IPv6 counters', 'From')
 
         # Remove unwanted lines from raw text
         def filter_lines(raw_output, remove_lines):
@@ -1798,14 +1846,14 @@ class ShowCtsRbacl(ShowCtsRbaclSchema):
 #  * 'show cts role-based permissions'
 # ====================================
 class ShowCtsRoleBasedPermissionsSchema(MetaParser):
-    """Schema for show cts role-based permissions."""
+    """Schema for show cts role-based permissions"""
 
     schema = {
         "indexes": {
             int: {
                 Optional("policy_name"): str,
-                "action_policy": str,
-                "action_policy_group": str,
+                Optional("action_policy"): str,
+                Optional("action_policy_group"): str,
                 Optional("src_grp_id"): int,
                 Optional("src_grp_name"): str,
                 Optional("unknown_group"): str,
@@ -1827,121 +1875,144 @@ class ShowCtsRoleBasedPermissionsSchema(MetaParser):
 class ShowCtsRoleBasedPermissions(ShowCtsRoleBasedPermissionsSchema):
     """Parser for show cts role-based permissions"""
 
-    cli_command = 'show cts role-based permissions'
+    cli_command = [
+        'show cts role-based permissions',
+        'show cts role-based permissions {ipv4}',
+        'show cts role-based permissions {ipv6}',
+        'show cts role-based permissions {default}',
+        'show cts role-based permissions {default} {ipv4}',
+        'show cts role-based permissions {default} {ipv6}',
+        'show cts role-based permissions from {from_sgt}',
+        'show cts role-based permissions from {from_sgt} {ipv4}',
+        'show cts role-based permissions from {from_sgt} {ipv6}',
+        'show cts role-based permissions from {from_sgt} to {to_sgt}',
+        'show cts role-based permissions from {from_sgt} to {to_sgt} {ipv4}',
+        'show cts role-based permissions from {from_sgt} to {to_sgt} {ipv6}',
+        'show cts role-based permissions from {to_sgt}',
+        'show cts role-based permissions from {to_sgt} {ipv4}',
+        'show cts role-based permissions from {to_sgt} {ipv6}'
+    ]
 
-    def cli(self, output=None):
-        if output is None:
-            out = self.device.execute(self.cli_command)
+    def cli(self, ipv4=None, ipv6=None, from_sgt=None, to_sgt=None, default=None, output=None):
+        if from_sgt and to_sgt and ipv4:
+            cmd = self.cli_command[10].format(from_sgt=from_sgt, to_sgt=to_sgt, ipv4=ipv4)
+        elif from_sgt and to_sgt and ipv6:
+            cmd = self.cli_command[11].format(from_sgt=from_sgt, to_sgt=to_sgt, ipv6=ipv6)
+        elif from_sgt and to_sgt:
+            cmd = self.cli_command[9].format(from_sgt=from_sgt, to_sgt=to_sgt)
+        elif to_sgt and ipv4:
+            cmd = self.cli_command[13].format(to_sgt=to_sgt, ipv4=ipv4)
+        elif to_sgt and ipv6:
+            cmd = self.cli_command[14].format(to_sgt=to_sgt, ipv6=ipv6)
+        elif to_sgt:
+            cmd = self.cli_command[12].format(to_sgt=to_sgt)
+        elif from_sgt and ipv4:
+            cmd = self.cli_command[7].format(from_sgt=from_sgt, ipv4=ipv4)
+        elif from_sgt and ipv6:
+            cmd = self.cli_command[8].format(from_sgt=from_sgt, ipv6=ipv6)
+        elif from_sgt:
+            cmd = self.cli_command[6].format(from_sgt=from_sgt)
+        elif default and ipv4:
+            cmd = self.cli_command[4].format(default=default, ipv4=ipv4)
+        elif default and ipv6:
+            cmd = self.cli_command[5].format(default=default, ipv6=ipv6)
+        elif default:
+            cmd = self.cli_command[3].format(default=default)
+        elif ipv4:
+            cmd = self.cli_command[1].format(ipv4=ipv4)
+        elif ipv6:
+            cmd = self.cli_command[2].format(ipv6=ipv6)
         else:
-            out = output
+            cmd = self.cli_command[0]
 
-        cts_rb_permissions_dict = {}
+        if output is None:
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
 
         # IPv4 Role-based permissions default:
-        rb_default_capture = re.compile(r"^IPv4\s+Role-based\s+permissions\s+(?P<default_group>default)")
+        # IPv4 Role-based permissions default (configured):
+        p1 = re.compile(r"^(IPv4|IPv6)\s+Role-based\s+permissions\s+(?P<default_group>default).*:$")
+        
         # IPv4 Role-based permissions from group 42:Untrusted to group Unknown:
-        rb_permissions_capture = re.compile(
-            r"^IPv4\s+Role-based\s+permissions\s+from\s+group\s+(?P<src_grp_id>\d+):(?P<src_grp_name>\S+)\s+to\s+group\s((?P<unknown_group>Unknown)|(?P<dst_group_id>\d+):(?P<dst_group_name>\S+)):")
-        #         Deny IP-00
-        policy_action_capture = re.compile(r"^(?P<action_policy>(Permit|Deny))\s+(?P<action_policy_group>\S+)")
+        # IPv4 Role-based permissions from group Unknown to group 100 (configured):
+        # IPv4 Role-based permissions from group 100 to group 200 (configured):
+        p2 = re.compile(
+            r"^(IPv4|IPv6)\s+Role-based\s+permissions\s+from\s+group\s+(?P<src_grp_id>\d+)?:?(?P<src_grp_name>\S+)?\s+to\s+group\s((?P<unknown_group>Unknown)|(?P<dst_group_id>\d+)(:(?P<dst_group_name>\S+))?).*:$")
+        
         # ACCESS-01
-        policy_group_capture = re.compile(r"^(?P<policy_group>\w+-\d+)")
+        # SGACL_PERMIT_IPv6
+        p3 = re.compile(r"^(?P<policy_group>\S+)$")
+
+        #         Deny IP-00
+        p4 = re.compile(r"^(?P<action_policy>(Permit|Deny))\s+(?P<action_policy_group>\S+)$")
+        
         # RBACL Monitor All for Dynamic Policies : FALSE
-        monitor_dynamic_capture = re.compile(
-            r"^RBACL\s+Monitor\s+All\s+for\s+Dynamic\s+Policies\s+:\s+(?P<monitor_dynamic>(TRUE|FALSE))")
+        p5 = re.compile(
+            r"^RBACL\s+Monitor\s+All\s+for\s+Dynamic\s+Policies\s+:\s+(?P<monitor_dynamic>(TRUE|FALSE))$")
+        
         #RBACL Monitor All for Configured Policies : FALSE
-        monitor_configured_capture = re.compile(
-            r"^RBACL\s+Monitor\s+All\s+for\s+Configured\s+Policies\s+:\s+(?P<monitor_configured>(TRUE|FALSE))")
+        p6 = re.compile(
+            r"^RBACL\s+Monitor\s+All\s+for\s+Configured\s+Policies\s+:\s+(?P<monitor_configured>(TRUE|FALSE))$")
 
-        # Remove unwanted lines from raw text
-        def filter_lines(raw_output):
-            # Remove empty lines
-            clean_lines = list(filter(None, raw_output.splitlines()))
-            rendered_lines = []
-            for clean_line in clean_lines:
-                clean_line_strip = clean_line.strip()
-                rendered_lines.append(clean_line_strip)
-            return rendered_lines
-
-        out = filter_lines(raw_output=out)
-
-        # Index value for each policy which will increment as it matches a new policy
-        policy_index = 1
         # Index value for each policy group which will increment as it matches a new policy group
         policy_group_index = 1
-        # Used to populate data for each policy and the policy index will be used as the key.
-        policy_data = {}
 
-        for line in out:
+        for line in output.splitlines():
+            line = line.strip()
+
             # IPv4 Role-based permissions default:
-            if rb_default_capture.match(line):
-                policy_group_index = 1
-                rb_default_match = rb_default_capture.match(line)
-                groups = rb_default_match.groupdict()
-                default_group = groups['default_group']
-                policy_data = {'policy_name': default_group}
-                if not cts_rb_permissions_dict.get('indexes', {}):
-                    cts_rb_permissions_dict['indexes'] = {}
+            m = p1.match(line)
+            if m:
+                cts_indexs_dict = ret_dict.setdefault('indexes', {})
+                cts_rb_permissions_dict = cts_indexs_dict.setdefault(policy_group_index, {})
+                cts_rb_permissions_dict['policy_name'] = m.groupdict()['default_group']
+                policy_group_index += 1
                 continue
+            
             # IPv4 Role-based permissions from group 42:Untrusted to group Unknown:
-            elif rb_permissions_capture.match(line):
-                policy_group_index = 1
-                rb_permissions_match = rb_permissions_capture.match(line)
-                groups = rb_permissions_match.groupdict()
-                policy_data = {}
-                if not cts_rb_permissions_dict.get('indexes', {}):
-                    cts_rb_permissions_dict['indexes'] = {}
+            m = p2.match(line)
+            if m:
+                groups = m.groupdict()
+                cts_indexs_dict = ret_dict.setdefault('indexes', {})
+                cts_rb_permissions_dict = cts_indexs_dict.setdefault(policy_group_index, {})
+                policy_group_index += 1
                 for k, v in groups.items():
                     if v:
                         if v.isdigit():
                             v = int(v)
-                        policy_data.update({k: v})
+                        cts_rb_permissions_dict[k] = v
                 continue
+            
             # ACCESS-01
-            elif policy_group_capture.match(line):
-                policy_group_match = policy_group_capture.match(line)
-                groups = policy_group_match.groupdict()
+            m = p3.match(line)
+            if m:
+                groups = m.groupdict()
                 policy_group = groups['policy_group']
-                if not policy_data.get('policy_groups', []):
-                    policy_data['policy_groups'] = []
-                policy_data['policy_groups'].append(policy_group)
+                cts_rb_permissions_dict.setdefault('policy_groups', []).append(policy_group)
                 continue
-            #         Deny IP-00
-            elif policy_action_capture.match(line):
-                policy_action_match = policy_action_capture.match(line)
-                groups = policy_action_match.groupdict()
-                action_policy = groups['action_policy']
-                action_policy_group = groups['action_policy_group']
+            
+            # Deny IP-00
+            m = p4.match(line)
+            if m:
+                groups = m.groupdict()
                 for k, v in groups.items():
-                    policy_data.update({k: v})
-                cts_rb_permissions_dict['indexes'][policy_index] = policy_data
-                policy_index = policy_index + 1
+                    cts_rb_permissions_dict[k] = v
                 continue
+
             # RBACL Monitor All for Dynamic Policies : FALSE
-            elif monitor_dynamic_capture.match(line):
-                monitor_dynamic_match = monitor_dynamic_capture.match(line)
-                groups = monitor_dynamic_match.groupdict()
-                monitor_dynamic = groups['monitor_dynamic']
-                if monitor_dynamic == 'FALSE':
-                    monitor_dynamic = False
-                else:
-                    monitor_dynamic = True
-                cts_rb_permissions_dict['indexes']['monitor_dynamic'] = monitor_dynamic
+            m = p5.match(line)
+            if m:
+                cts_indexs_dict['monitor_dynamic'] = m.groupdict()['monitor_dynamic'] != 'FALSE'
                 continue
+            
             # RBACL Monitor All for Configured Policies : FALSE
-            elif monitor_configured_capture.match(line):
-                monitor_configured_match = monitor_configured_capture.match(line)
-                groups = monitor_configured_match.groupdict()
-                monitor_configured = groups['monitor_configured']
-                if monitor_configured == 'FALSE':
-                    monitor_configured = False
-                else:
-                    monitor_configured = True
-                cts_rb_permissions_dict['indexes']['monitor_configured'] = monitor_configured
+            m = p6.match(line)
+            if m:
+                cts_indexs_dict['monitor_configured'] = m.groupdict()['monitor_configured'] != 'FALSE'
                 continue
 
-        return cts_rb_permissions_dict
-
+        return ret_dict
 
 
 # =====================================
@@ -2194,13 +2265,14 @@ class ShowCtsInterfaceSchema(MetaParser):
 class ShowCtsInterface(ShowCtsInterfaceSchema):
     """Parser for show cts interface"""
 
-    cli_command = 'show cts interface'
+    cli_command = ['show cts interface', 'show cts interface {interface}']
 
-    def cli(self, output=None):
+    def cli(self, interface=None,output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
-        else:
-            out = output
+            if interface:
+                output = self.device.execute(self.cli_command[1].format(interface=interface))
+            else:
+                output = self.device.execute(self.cli_command[0])
 
         ret_dict = {}
 
@@ -2208,7 +2280,9 @@ class ShowCtsInterface(ShowCtsInterfaceSchema):
         p1 = re.compile(r'^Global Dot1x feature is\s+(?P<global_dot1x_feature>\w+)')
 
         # TenGigabitEthernet1/0/6:
-        p2 = re.compile(r'^Interface\s+(?P<interface>\S+\d+\/\d+\/\d+):')
+        # Tunnel100: 
+        # TenGigabitEthernet1/0/6.30:
+        p2 = re.compile(r'^Interface\s+(?P<interface>\S+\d+\/\d+\/\d+|Tunnel\d+|\S+\d+\/\d+\/\d+\.\d+):')
 
         # CTS_status : enabled,mode: MANUAL
         p3 = re.compile(r'^CTS\s+is\s+(?P<cts_status>\S+),\s+mode:\s+(?P<mode>\S+)')
@@ -2282,7 +2356,7 @@ class ShowCtsInterface(ShowCtsInterfaceSchema):
         # L3_IPM:   disabled.
         p26 = re.compile(r'^L3 IPM:\s+(?P<l3_ipm>\S+).')
 
-        for line in out.splitlines():
+        for line in output.splitlines():
             line = line.strip()
 
             # Global Dot1x feature is Disabled
@@ -2466,4 +2540,1352 @@ class ShowCtsInterface(ShowCtsInterfaceSchema):
 
         return ret_dict
 
+class ShowCtsRolebasedSgtMapIpSchema(MetaParser):
+
+    ''' Schema for "show cts role-based sgt-map {ip}" '''
+
+    schema = {
+        Any(): {
+            'ip': str,
+            'sgt': str,
+            'source': str,
+        }
+    }
+
+class ShowCtsRolebasedSgtMapIp(ShowCtsRolebasedSgtMapIpSchema):
+    """Schema for show cts role-based sgt-map {ip}"""
+
+    cli_command = ['show cts role-based sgt-map {ip}',
+                   'show cts role-based sgt-map vrf {vrf} {ip}']
+    def cli(self, ip, vrf = None, output=None):
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[1].format(vrf=vrf, ip=ip)
+            else:
+                cmd = self.cli_command[0].format(ip=ip)
+            output = self.device.execute(cmd)
+        return oper_fill_tabular(
+            header_fields=['IP Address', 'SGT', 'Source'],
+            label_fields= ['ip', 'sgt', 'source'],
+            device_output=output,
+            device_os='iosxe',
+            index=[0]
+        ).entries
+
+
+class ShowCtsRoleBasedSgtMapAllSchema(MetaParser):
+    """
+        Schema for :
+            show cts role-based sgt-map all
+            show cts role-based sgt-map all vrf <vrf> all
+    """
+    schema = {
+        Optional('ipv4_sgt_bindings'): {
+            Any(): {
+                'ip_address': str,
+                'sgt': int,
+                'source': str
+            },
+            Optional('total_active'): int,
+            Optional('total_cli'): int,
+            Optional('total_sxp'): int,
+            Optional('total_internal'): int,
+            Optional('total_local'): int,
+            Optional('total_l3if'): int,
+            Optional('total_vlan'): int
+        },
+        Optional('ipv6_sgt_bindings'): {
+            Any(): {
+                'ip_address': str,
+                'sgt': int,
+                'source': str
+            },
+            Optional('total_active'): int,
+            Optional('total_cli'): int,
+            Optional('total_sxp'): int,
+            Optional('total_internal'): int,
+            Optional('total_local'): int,
+            Optional('total_l3if'): int,
+            Optional('total_vlan'): int
+        }
+    }
+
+
+class ShowCtsRoleBasedSgtMapAll(ShowCtsRoleBasedSgtMapAllSchema):
+    """
+        Parser for :
+            show cts role-based sgt-map all
+            show cts role-based sgt-map all vrf <vrf> all
+    """
+
+    cli_command = ['show cts role-based sgt-map all', 'show cts role-based sgt-map vrf {vrf} all']
+
+    def cli(self, vrf='', output=None):
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[1].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[0]
+            output = self.device.execute(cmd)
+
+        # initial return dictionary
+        result_dict = {}
+
+        # Active IPv4-SGT Bindings Information
+        # Active IPv6-SGT Bindings Information
+        p0 = re.compile(r'^Active\s+(?P<sgt_type>([\w\-\s]+))\s+Information$')
+
+        # 1.1.1.2 2 SXP
+        # 1.1.1.3 3 SXP
+        p1 = re.compile(r'^(?P<ip_address>(\S+))\s+(?P<sgt>(\d+))\s+(?P<source>(\w+))$')
+
+        # Total number of SXP bindings = 51
+        # Total number of active bindings = 51
+        # Total number of SXP bindings = 2
+        # Total number of active bindings = 2
+        # Total number of L3IF     bindings = 2
+        # Total number of VLAN     bindings = 1
+        p2 = re.compile(r'^Total\s+number\s+of\s+(?P<binding_type>(\S+))\s+bindings\s+=\s+(?P<binding_count>(\d+))$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # skip empty lines
+            if not line:
+                continue
+
+            # Active IPv4-SGT Bindings Information
+            # Active IPv6-SGT Bindings Information
+            m0 = p0.match(line)
+            if m0:
+                group = m0.groupdict()
+                group = group['sgt_type'].lower().replace('-', '_').replace(' ', '_')
+                sgt_dict = result_dict.setdefault(group, {})
+                continue
+
+            # 1.1.1.2 2 SXP
+            # 1.1.1.3 3 SXP
+            m1 = p1.match(line)
+            if m1:
+                sgt_ip_group = m1.groupdict()
+                sgt_ip_group['ip_address'] = sgt_ip_group['ip_address'].lower()
+                sgt_ip_group['source'] = sgt_ip_group['source'].lower()
+                sgt_ip_group['sgt'] = int(sgt_ip_group['sgt'])
+                sgt_dict[sgt_ip_group['ip_address']] = sgt_ip_group
+                continue
+
+            # Total number of SXP bindings = 51
+            # Total number of active bindings = 51
+            # Total number of SXP bindings = 2
+            # Total number of active bindings = 2
+            # Total number of L3IF     bindings = 2
+            # Total number of VLAN     bindings = 1
+            m2 = p2.match(line)
+            if m2:
+                total_sgt_group = m2.groupdict()
+                sgt_dict[f"total_{total_sgt_group['binding_type'].lower()}"] = \
+                    int(total_sgt_group['binding_count'])
+
+        return result_dict
+
+
+class ShowCtsSxpConnectionsSchema(MetaParser):
+    """
+        Schema for:
+            show cts sxp connections
+            show cts sxp connections vrf <vrf>
+    """
+    schema = {
+        Optional('total_sxp_connections'): int,
+        'default_key_chain': str,
+        'default_key_chain_name': str,
+        'default_pwd': str,
+        'default_source_ip': str,
+        'export_traverse_limit': str,
+        'highest_version': int,
+        'import_traverse_limit': str,
+        'reconcile_period': int,
+        'retry_period': int,
+        'retry_timer': str,
+        'sxp_status': str,
+        Any(): {
+            Optional('conn_capability'): str,
+            Optional('conn_hold_time'): int,
+            Optional('speaker_conn_hold_time'): int,
+            Optional('listener_conn_hold_time'): int,
+            'conn_inst': int,
+            'conn_status': str,
+            'conn_version': int,
+            'duration': str,
+            'local_mode': str,
+            'peer_ip': str,
+            'source_ip': str,
+            'tcp_conn_fd': str,
+            'tcp_conn_pwd': str
+        }
+    }
+
+class ShowCtsSxpConnections(ShowCtsSxpConnectionsSchema):
+    """
+        Parser for:
+            show cts sxp connections
+            show cts sxp connections vrf <vrf>
+    """
+
+    cli_command = ['show cts sxp connections', 'show cts sxp connections vrf {vrf}']
+
+    def cli(self, vrf='', output=None):
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[1].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[0]
+            output = self.device.execute(cmd)
+
+        # initial return dictionary
+        result_dict = {}
+
+        #  SXP              : Enabled
+        p1 = re.compile(r"^SXP\s+:\s+(?P<sxp_status>(Disabled|Enabled))$")
+        #  Highest Version Supported: 4
+        p2 = re.compile(r"^Highest\s+Version\s+Supported:\s+(?P<highest_version>\d+)$")
+        #  Default Password : Set
+        p3 = re.compile(r"^Default\s+Password\s+:\s+(?P<default_pwd>(Not\s+Set|Set))$")
+        #  Default Key-Chain: Not Set
+        p4 = re.compile(r"^Default\s+Key-Chain:\s+(?P<default_key_chain>(Not\s+Set|Set))$")
+        #  Default Key-Chain Name: Not Applicable
+        p5 = re.compile(r"^Default\s+Key-Chain\s+Name:\s+(?P<default_key_chain_name>(Not\s+Applicable|\S+))$")
+        #  Default Source IP: 192.168.2.24
+        p6 = re.compile(r"^Default\s+Source\s+IP:\s+(?P<default_source_ip>(Not\s+Set|[\d+\.]+))$")
+        # Connection retry open period: 120 secs
+        p7 = re.compile(r"^Connection\s+retry\s+open\s+period:\s+(?P<retry_period>\d+)\s+secs$")
+        # Reconcile period: 120 secs
+        p8 = re.compile(r"^Reconcile\s+period:\s+(?P<reconcile_period>\d+)\s+secs$")
+        # Retry open timer is not running
+        p9 = re.compile(r"^Retry\s+open\s+timer\s+is\s+(?P<retry_timer>(not\s+running|running))$")
+        # Peer-Sequence traverse limit for export: Not Set
+        p10 = re.compile(r"^Peer-Sequence\s+traverse\s+limit\s+for\s+export:\s+(?P<export_traverse_limit>(Not\s+Set|\S+))$")
+        # Peer-Sequence traverse limit for import: Not Set
+        p11 = re.compile(r"^Peer-Sequence\s+traverse\s+limit\s+for\s+import:\s+(?P<import_traverse_limit>(Not\s+Set|\S+))$")
+        # Peer IP          : 10.1.1.2
+        p12 = re.compile(r"^Peer\s+IP\s+:\s+(?P<peer_ip>[\d\.]+)$")
+        # Source IP        : 10.1.1.1
+        p13 = re.compile(r"^Source\s+IP\s+:\s+(?P<source_ip>[\d\.]+)$")
+        # Conn status      : On
+        p14 = re.compile(r"^Conn\s+status\s+:\s+(?P<conn_status>.*$)$")
+        # Conn version     : 5
+        p15 = re.compile(r"^Conn\s+version\s+:\s+(?P<conn_version>\d+)$")
+        # Conn capability  : IPv4-IPv6-Subnet
+        p16 = re.compile(r"^Conn\s+capability\s+:\s+(?P<conn_capability>\S+)$")
+        # Conn hold time   : 120 seconds
+        p17 = re.compile(r"^Conn\s+hold\s+time\s+:\s+(?P<conn_hold_time>\d+)\s+seconds$")
+        # Local mode       : SXP Speaker
+        p18 = re.compile(r"^Local\s+mode\s+:\s+(?P<local_mode>.*$)$")
+        # Connection inst# : 1
+        p19 = re.compile(r"^Connection\s+inst#\s+:\s+(?P<conn_inst>\d+)$")
+        # TCP conn fd      : 1
+        p20 = re.compile(r"^TCP\s+conn\s+fd\s+:\s+(?P<tcp_conn_fd>.*$)$")
+        # TCP conn password: none
+        p21 = re.compile(r"^TCP\s+conn\s+password:\s+(?P<tcp_conn_pwd>.*$)$")
+        # Duration since last state change: 0:00:02:09 (dd:hr:mm:sec)
+        p22 = re.compile(r"^Duration\s+since\s+last\s+state\s+change:\s+(?P<duration>.*)$")
+        # Total num of SXP Connections = 2
+        p23 = re.compile(r"^Total\s+num\s+of\s+SXP\s+Connections\s+=\s+(?P<total_sxp_connections>\d+)$")
+        # Speaker Conn hold time   : 120 seconds
+        p24 = re.compile(r"^Speaker\s+Conn\s+hold\s+time\s+:\s+(?P<speaker_conn_hold_time>\d+)\s+seconds$")
+        # Listener Conn hold time   : 120 seconds
+        p25 = re.compile(r"^Listener\s+Conn\s+hold\s+time\s+:\s+(?P<listener_conn_hold_time>\d+)\s+seconds$")
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # skip empty lines
+            if not line:
+                continue
+
+            #  SXP              : Enabled
+            m1 = p1.match(line)
+            if m1:
+                group = m1.groupdict()
+                result_dict.update(group)
+                continue
+
+            #  Highest Version Supported: 4
+            m2 = p2.match(line)
+            if m2:
+                group = m2.groupdict()
+                group['highest_version'] = int(group['highest_version'])
+                result_dict.update(group)
+                continue
+
+            #  Default Password : Set
+            m3 = p3.match(line)
+            if m3:
+                group = m3.groupdict()
+                result_dict.update(group)
+                continue
+
+            #  Default Key-Chain: Not Set
+            m4 = p4.match(line)
+            if m4:
+                group = m4.groupdict()
+                result_dict.update(group)
+                continue
+
+            #  Default Key-Chain Name: Not Applicable
+            m5 = p5.match(line)
+            if m5:
+                group = m5.groupdict()
+                result_dict.update(group)
+                continue
+
+            #  Default Source IP: 192.168.2.24
+            m6 = p6.match(line)
+            if m6:
+                group = m6.groupdict()
+                result_dict.update(group)
+                continue
+
+            # Connection retry open period: 120 secs
+            m7 = p7.match(line)
+            if m7:
+                group = m7.groupdict()
+                group['retry_period'] = int(group['retry_period'])
+                result_dict.update(group)
+                continue
+
+            # Reconcile period: 120 secs
+            m8 = p8.match(line)
+            if m8:
+                group = m8.groupdict()
+                group['reconcile_period'] = int(group['reconcile_period'])
+                result_dict.update(group)
+                continue
+
+            # Retry open timer is not running
+            m9 = p9.match(line)
+            if m9:
+                group = m9.groupdict()
+                result_dict.update(group)
+                continue
+
+            # Peer-Sequence traverse limit for export: Not Set
+            m10 = p10.match(line)
+            if m10:
+                group = m10.groupdict()
+                result_dict.update(group)
+                continue
+
+            # Peer-Sequence traverse limit for import: Not Set
+            m11 = p11.match(line)
+            if m11:
+                group = m11.groupdict()
+                result_dict.update(group)
+                continue
+
+            # Peer IP          : 10.1.1.2
+            m12 = p12.match(line)
+            if m12:
+                group = m12.groupdict()
+                peer_dict = result_dict.setdefault(group['peer_ip'], group)
+                continue
+
+            # Source IP        : 10.1.1.1
+            m13 = p13.match(line)
+            if m13:
+                group = m13.groupdict()
+                peer_dict.update(group)
+                continue
+
+            # Conn status      : On
+            # Conn status      : On (Speaker) :: On (Listener)
+            m14 = p14.match(line)
+            if m14:
+                group = m14.groupdict()
+                peer_dict.update(group)
+                continue
+
+            # Conn version     : 5
+            m15 = p15.match(line)
+            if m15:
+                group = m15.groupdict()
+                group['conn_version'] = int(group['conn_version'])
+                peer_dict.update(group)
+                continue
+
+            # Conn capability  : IPv4-IPv6-Subnet
+            m16 = p16.match(line)
+            if m16:
+                group = m16.groupdict()
+                peer_dict.update(group)
+                continue
+
+            # Conn hold time   : 120 seconds
+            m17 = p17.match(line)
+            if m17:
+                group = m17.groupdict()
+                group['conn_hold_time'] = int(group['conn_hold_time'])
+                peer_dict.update(group)
+                continue
+
+            # Local mode       : SXP Speaker
+            # Local mode       : Both
+            m18 = p18.match(line)
+            if m18:
+                group = m18.groupdict()
+                peer_dict.update(group)
+                continue
+
+            # Connection inst# : 1
+            m19 = p19.match(line)
+            if m19:
+                group = m19.groupdict()
+                group['conn_inst'] = int(group['conn_inst'])
+                peer_dict.update(group)
+                continue
+
+            # TCP conn fd      : 1
+            # TCP conn fd      : 1(Speaker) 2(Listener)
+            m20 = p20.match(line)
+            if m20:
+                group = m20.groupdict()
+                group['tcp_conn_fd'] = group['tcp_conn_fd']
+                peer_dict.update(group)
+                continue
+
+            # TCP conn password: none
+            # TCP conn password: default SXP password
+            m21 = p21.match(line)
+            if m21:
+                group = m21.groupdict()
+                peer_dict.update(group)
+                continue
+
+            # Duration since last state change: 0:00:02:09 (dd:hr:mm:sec)
+            m22 = p22.match(line)
+            if m22:
+                group = m22.groupdict()
+                peer_dict.update(group)
+                continue
+
+            # Total num of SXP Connections = 2
+            m23 = p23.match(line)
+            if m23:
+                group = m23.groupdict()
+                group["total_sxp_connections"] = int(group["total_sxp_connections"])
+                result_dict.update(group)
+                continue
+
+            # Speaker Conn hold time   : 120 seconds
+            m24 = p24.match(line)
+            if m24:
+                group = m24.groupdict()
+                group["speaker_conn_hold_time"] = int(group["speaker_conn_hold_time"])
+                peer_dict.update(group)
+                continue
+
+            # Listener Conn hold time   : 120 seconds
+            m25 = p25.match(line)
+            if m25:
+                group = m25.groupdict()
+                group["listener_conn_hold_time"] = int(group["listener_conn_hold_time"])
+                peer_dict.update(group)
+                continue
+
+        return result_dict
+
+
+class ShowCtsSxpSgtMapBriefSchema(MetaParser):
+    """
+        Schema for:
+            show cts sxp sgt-map brief
+            show cts sxp sgt-map vrf <vrf> brief
+    """
+    schema = {
+        'ip_sgt_mapping': {
+            Optional('ipv4'): {
+                Any(): int
+            },
+            Optional('ipv6'): {
+                Any(): int
+            },
+            Optional('total_ip_sgt_mappings'): int
+        }
+    }
+
+class ShowCtsSxpSgtMapBrief(ShowCtsSxpSgtMapBriefSchema):
+    """
+        Parser for:
+            show cts sxp sgt-map brief
+            show cts sxp sgt-map vrf <vrf> brief
+    """
+
+    cli_command = ['show cts sxp sgt-map brief', 'show cts sxp sgt-map vrf {vrf} brief']
+
+    def cli(self, vrf='', output=None):
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[1].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[0]
+            output = self.device.execute(cmd)
+
+        # initial return dictionary
+        result_dict = {}
+
+        # IPv4,SGT: <10.1.1.8 , 5>
+        # IPv4,SGT: <10.1.1.10 , 9>
+        # IPv4,SGT: <10.1.1.11 , 89>
+        # IPv4,SGT: <10.1.1.18 , 87>
+        p0 = re.compile(r'^IPv4,SGT:\s+\<(?P<ip_address>[\d\.]+)\s+,\s+(?P<sgt>\d+)[:\w]*\>$')
+
+        # IPv6,SGT: <2001::6 , 22>
+        # IPv6,SGT: <2001::60 , 208>
+        # IPv6,SGT: <2001::80 , 26>
+        # IPv6,SGT: <2001::89 , 26>
+        p1 = re.compile(r'^IPv6,SGT:\s+\<(?P<ip_address>[\w:]+)\s+,\s+(?P<sgt>\d+)[:\w]*\>$')
+
+        # Total number of IP-SGT Mappings: 8
+        p2 = re.compile(r'^Total\s+number\s+of\s+IP-SGT\s+Mappings:\s+(?P<total_ip_sgt_mappings>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # skip empty lines
+            if not line:
+                continue
+
+            map_dict = result_dict.setdefault('ip_sgt_mapping', {})
+
+            # IPv4,SGT: <10.1.1.8 , 5>
+            # IPv4,SGT: <10.1.1.10 , 9:SGT_009>
+            # IPv4,SGT: <10.1.1.11 , 89:SGT_089>
+            # IPv4,SGT: <10.1.1.18 , 87>
+            m0 = p0.match(line)
+            if m0:
+                ipv4_group = m0.groupdict()
+                ipv4_group['sgt'] = int(ipv4_group['sgt'])
+                v4_dict = map_dict.setdefault('ipv4', {})
+                v4_dict[ipv4_group['ip_address']] = ipv4_group['sgt']
+                continue
+
+            # IPv6,SGT: <2001::6 , 22:SGT_022>
+            # IPv6,SGT: <2001::60 , 208>
+            # IPv6,SGT: <2001::80 , 26>
+            # IPv6,SGT: <2001::89 , 26>
+            m1 = p1.match(line)
+            if m1:
+                ipv6_group = m1.groupdict()
+                ipv6_group['sgt'] = int(ipv6_group['sgt'])
+                v6_dict = map_dict.setdefault('ipv6', {})
+                v6_dict[ipv6_group['ip_address'].lower()] = ipv6_group['sgt']
+                continue
+
+            # Total number of IP-SGT Mappings: 8
+            m2 = p2.match(line)
+            if m2:
+                total_group = m2.groupdict()
+                total_group['total_ip_sgt_mappings'] = int(total_group['total_ip_sgt_mappings'])
+                map_dict['total_ip_sgt_mappings'] = total_group['total_ip_sgt_mappings']
+
+        return result_dict
+
+class ShowCtsServerListSchema(MetaParser):
+    """
+        Schema for:
+            show cts server-list
+    """
+    schema = {
+        Optional('load_balance_status'): str,
+        Optional('load_balance_method'): str,
+        Optional('batch_size'): int,
+        Optional('ignore_preferred_server'): bool,
+        Optional('server_group_dead_time'): int,
+        Optional('server_group_dead_time_unit'): str,
+        Optional('global_server_liveness_automated_test'): {
+            Optional('dead_time'): int,
+            Optional('dead_time_unit'): str,
+            Optional('idle_time'): int,
+            Optional('idle_time_unit'): str,
+            Optional('status'): str
+        },
+        Optional('preferred_list'): {
+            Any(): {
+                Optional("server_ip"): str,
+                Optional("port_number"): int,
+                Optional("a_id"): str,
+                Optional("status"): str,
+                Optional("auto_test_status"): bool,
+                Optional("keywrap_enable"): bool,
+                Optional("idle_time"): int,
+                Optional("dead_time"): int,
+                Optional("idle_time_unit"): str,
+                Optional("dead_time_unit"): str,
+            }
+        },
+        Optional('installed_list'): {
+            Any(): {
+                Any(): {
+                    Optional("server_ip"): str,
+                    Optional("port_number"): int,
+                    Optional("a_id"): str,
+                    Optional("status"): str,
+                    Optional("auto_test_status"): bool,
+                    Optional("keywrap_enable"): bool,
+                    Optional("idle_time"): int,
+                    Optional("dead_time"): int,
+                    Optional("idle_time_unit"): str,
+                    Optional("dead_time_unit"): str,
+                }
+            }
+        },
+        Optional('http_server_list'): {
+            Any(): {
+                Optional('server_state'): str,
+                Optional('ipv4_address'): {
+                    Any(): str
+                },
+                Optional('ipv6_address'): {
+                    Any(): str
+                },
+                Optional('domain_name'): {
+                    Any(): str
+                },
+                Optional('trustpoint_name'): str,
+                Optional('port_number'): int,
+                Optional('trustpoint_chain'): str
+            }
+        }
+    }
+
+class ShowCtsServerList(ShowCtsServerListSchema):
+    """
+        Parser for:
+            show cts server-list
+    """
+
+    cli_command = 'show cts server-list'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # initial return dictionary
+        result_dict = {}
+
+        # CTS Server Radius Load Balance = ENABLED
+        p1 = re.compile(r'^CTS\s+Server\s+Radius\s+Load\s+Balance\s+=\s+(?P<load_balance_status>\S+)$')
+        # Method = least-outstanding
+        p2 = re.compile(r'^Method\s+=\s+(?P<load_balance_method>\S+)$')
+        # Batch size = 50
+        p3 = re.compile(r'^Batch\s+size\s+=\s+(?P<batch_size>\d+)$')
+        # Ignore preferred server
+        p4 = re.compile(r'^Ignore\s+preferred\s+server$')
+        # Server Group Deadtime = 20 secs (default)
+        p5 = re.compile(r'^Server\s+Group\s+Deadtime\s+=\s+(?P<server_group_dead_time>\d+)\s+'
+        '(?P<server_group_dead_time_unit>\S+)')
+        # Global Server Liveness Automated Test Deadtime = 20 secs
+        p6 = re.compile(r'^Global\s+Server\s+Liveness\s+Automated\s+Test\s+Deadtime\s+=\s+'
+        '(?P<dead_time>\d+)\s+(?P<dead_time_unit>\S+)$')
+        # Global Server Liveness Automated Test Idle Time = 60 mins
+        p7 = re.compile(r'^Global\s+Server\s+Liveness\s+Automated\s+Test\s+Idle\s+Time\s+=\s+'
+        '(?P<idle_time>\d+)\s+(?P<idle_time_unit>\S+)$')
+        # Global Server Liveness Automated Test = ENABLED (default)
+        p8 = re.compile(r'^Global\s+Server\s+Liveness\s+Automated\s+Test\s+=\s+'
+        '(?P<status>.*)$')
+        # Preferred list, 1 server(s):
+        p9 = re.compile(r'^Preferred\s+list.*$')
+        # Installed list: SL1-1E6E6AE57D4E2A9B320D1844C68BA291, 3 server(s):
+        p10 = re.compile(r'^Installed\s+list:\s+(?P<list_name>\S+),.*$')
+        # *Server: 10.15.20.102, port 1812, A-ID 87B3503255C4384485BB808DC24C6F55
+        p11 = re.compile(r'^\*Server:\s+(?P<server_ip>[\d\.]+),\s+port\s+(?P<port_number>\d+),\s+A-ID\s+(?P<a_id>\S+)$')
+        # Status = ALIVE
+        p12 = re.compile(r'^Status\s+=\s+(?P<status>\S+)$')
+        # auto-test = TRUE, keywrap-enable = FALSE, idle-time = 120 mins, deadtime = 20 secs
+        # auto-test = TRUE, idle-time = 120 mins, deadtime = 20 secs
+        p13 = re.compile(r'^auto-test\s+=\s+(?P<auto_test_status>\S+),\s+(keywrap-enable\s+=\s+'
+        '(?P<keywrap_enable>\S+),\s+)?idle-time\s+=\s+(?P<idle_time>\d+)\s+(?P<idle_time_unit>\S+),'
+        '\s+deadtime\s+=\s+(?P<dead_time>\d+)\s+(?P<dead_time_unit>\S+)$')
+        # HTTP Server-list:
+        p14 = re.compile(r'^HTTP\s+Server\-list:$')
+        # Server Name  : cts-auto-cls1-ise1.cisco.com
+        p15 = re.compile(r'^Server\s+Name\s+:\s+(?P<server_name>\S+)$')
+        # Server State : ALIVE
+        p16 = re.compile(r'^Server\s+State\s+:\s+(?P<server_state>\S+)$')
+        # IPv4 Address     : 10.76.119.180 (Unreachable)
+        # IPv4 Address     : 100.100.100.101 (Reachable)
+        p17 = re.compile(r'^IPv4\s+Address\s+:\s+(?P<ipv4_address>[\d\.]+)\s+\((?P<ipv4_status>\w+)\)$')
+        # IPv6 Address     : 1000::101 (Reachable)
+        # IPv6 Address     : 1100::101 (Reachable)
+        p18 = re.compile(r'^IPv6\s+Address\s+:\s+(?P<ipv6_address>[\w:]+)\s+\((?P<ipv6_status>\w+)\)$')
+        # Domain-name      : cts-auto-cls1-ise1.cisco.com (Reachable)
+        p19 = re.compile(r'^Domain-name\s+:\s+(?P<domain_name>\S+)\s+\((?P<domain_status>\w+)\)$')
+        # Trustpoint       : cts_tp_cts-auto-cls1-ise1.cisco.com_0
+        p20 = re.compile(r'^Trustpoint\s+:\s+(?P<trustpoint_name>\S+)$')
+        # Port-num         : 9063
+        p21 = re.compile(r'^Port-num\s+:\s+(?P<port_num>\d+)$')
+        # Trustpoint chain : NOT CONFIGURED
+        p22 = re.compile(r'^Trustpoint\s+chain\s+:\s+(?P<trustpoint_chain>.*)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # CTS Server Radius Load Balance = ENABLED
+            m = p1.match(line)
+            if m:
+                result_dict.update(m.groupdict())
+                continue
+
+            # Method = least-outstanding
+            m = p2.match(line)
+            if m:
+                result_dict.update(m.groupdict())
+                continue
+
+            # Batch size = 50
+            m = p3.match(line)
+            if m:
+                batch_dict = m.groupdict()
+                batch_dict['batch_size'] = int(batch_dict['batch_size'])
+                result_dict.update(batch_dict)
+                continue
+
+            # Ignore preferred server
+            m = p4.match(line)
+            if m:
+                result_dict.update({'ignore_preferred_server': True})
+                continue
+
+            # Server Group Deadtime = 20 secs (default)
+            m = p5.match(line)
+            if m:
+                server_group_dict = m.groupdict()
+                server_group_dict['server_group_dead_time'] = int(server_group_dict['server_group_dead_time'])
+                result_dict.update(server_group_dict)
+                continue
+
+            # Global Server Liveness Automated Test Deadtime = 20 secs
+            m = p6.match(line)
+            if m:
+                auto_test_dict = result_dict.setdefault("global_server_liveness_automated_test", {})
+                dead_time_dict = m.groupdict()
+                dead_time_dict['dead_time'] = int(dead_time_dict['dead_time'])
+                auto_test_dict.update(dead_time_dict)
+                continue
+
+            # Global Server Liveness Automated Test Idle Time = 60 mins
+            m = p7.match(line)
+            if m:
+                auto_test_dict = result_dict.setdefault("global_server_liveness_automated_test", {})
+                idle_time_dict = m.groupdict()
+                idle_time_dict['idle_time'] = int(idle_time_dict['idle_time'])
+                auto_test_dict.update(idle_time_dict)
+                continue
+
+            # Global Server Liveness Automated Test = ENABLED (default)
+            m = p8.match(line)
+            if m:
+                auto_test_dict = result_dict.setdefault("global_server_liveness_automated_test", {})
+                auto_test_dict.update(m.groupdict())
+                continue
+
+            # Preferred list, 1 server(s):
+            m = p9.match(line)
+            if m:
+                server_list_dict = result_dict.setdefault('preferred_list', {})
+                continue
+
+            # Installed list: SL1-1E6E6AE57D4E2A9B320D1844C68BA291, 3 server(s):
+            m = p10.match(line)
+            if m:
+                server_list_dict = result_dict.setdefault('installed_list', {}).setdefault(
+                    m.groupdict()['list_name'], {})
+                continue
+
+            # *Server: 10.15.20.102, port 1812, A-ID 87B3503255C4384485BB808DC24C6F55
+            m = p11.match(line)
+            if m:
+                server_detail = m.groupdict()
+                server_detail['port_number'] = int(server_detail['port_number'])
+                server_status_dict = server_list_dict.setdefault(server_detail['server_ip'], {})
+                server_status_dict.update(server_detail)
+                continue
+
+            # Status = ALIVE
+            m = p12.match(line)
+            if m:
+                server_status_dict.update(m.groupdict())
+                continue
+
+            # auto-test = TRUE, keywrap-enable = FALSE, idle-time = 120 mins, deadtime = 20 secs
+            # auto-test = TRUE, idle-time = 120 mins, deadtime = 20 secs
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                server_status_dict['auto_test_status'] = group['auto_test_status'] == 'TRUE'
+                if group["keywrap_enable"]:
+                    server_status_dict['keywrap_enable'] =  group ['keywrap_enable'] == 'TRUE'
+                server_status_dict['dead_time'] = int(group['dead_time'])
+                server_status_dict['idle_time'] = int(group['idle_time'])
+                server_status_dict['dead_time_unit'] = group['dead_time_unit']
+                server_status_dict['idle_time_unit'] = group['idle_time_unit']
+                continue
+
+            # HTTP Server-list:
+            m = p14.match(line)
+            if m:
+                http_dict = result_dict.setdefault('http_server_list', {})
+                continue
+
+            # Server Name  : cts-auto-cls1-ise1.cisco.com
+            m = p15.match(line)
+            if m:
+                name_group = m.groupdict()
+                server_dict = http_dict.setdefault(name_group['server_name'], {})
+                continue
+                
+            # Server State : ALIVE
+            m = p16.match(line)
+            if m:
+                state_group = m.groupdict()
+                server_dict['server_state'] = state_group['server_state']
+                continue
+
+            # IPv4 Address     : 10.76.119.180 (Unreachable)
+            # IPv4 Address     : 100.100.100.101 (Reachable)
+            m = p17.match(line)
+            if m:
+                ipv4_group = m.groupdict()
+                ipv4_dict = server_dict.setdefault('ipv4_address', {})
+                ipv4_dict[ipv4_group['ipv4_address']] = ipv4_group['ipv4_status']
+                continue
+
+            # IPv6 Address     : 1000::101 (Reachable)
+            # IPv6 Address     : 1100::101 (Reachable)
+            m = p18.match(line)
+            if m:
+                ipv6_group = m.groupdict()
+                ipv6_dict = server_dict.setdefault('ipv6_address', {})
+                ipv6_dict[ipv6_group['ipv6_address']] = ipv6_group['ipv6_status']
+                continue
+
+            # Domain-name      : cts-auto-cls1-ise1.cisco.com (Reachable)
+            m = p19.match(line)
+            if m:
+                domain_group = m.groupdict()
+                domain_dict = server_dict.setdefault('domain_name', {})
+                domain_dict[domain_group['domain_name']] = domain_group['domain_status']
+                continue
+
+            # Trustpoint       : cts_tp_cts-auto-cls1-ise1.cisco.com_0
+            m = p20.match(line)
+            if m:
+                tp_name_group = m.groupdict()
+                server_dict['trustpoint_name'] = tp_name_group['trustpoint_name']
+                continue
+
+            # Port-num         : 9063
+            m = p21.match(line)
+            if m:
+                port_num_group = m.groupdict()
+                server_dict['port_number'] = int(port_num_group['port_num'])
+                continue
+
+            # Trustpoint chain : NOT CONFIGURED
+            m = p22.match(line)
+            if m:
+                tp_chain_group = m.groupdict()
+                server_dict['trustpoint_chain'] = tp_chain_group['trustpoint_chain']
+                continue
+
+        return result_dict
+# =====================================
+# Schema for:
+#  * 'show cts policy-server statistics all'
+#  * 'show cts policy-server statistics active'
+#  * 'show cts policy-server statistics name <server_name>'
+# =====================================
+class ShowCtsPolicyServerStatisticsSchema(MetaParser):
+    """
+        Schema for:
+            show cts policy-server statistics all
+    """
+    schema = {
+        "cts_policy_server_stats": {
+            Any(): {  
+                "server_state": str,
+                "num_of_req_sent": int,
+                "num_of_req_sent_fail": int,
+                "num_of_res_recv_fail": int,
+                "num_of_res_recv": int,
+                "http_200_ok": int,
+                "http_400_badreq":int,
+                "http_401_unauthorized_req": int,
+                "http_403_req_forbidden": int,
+                "http_404_notfound": int,           
+                "http_408_reqtimeout": int,
+                "http_415_unsupported_media": int,
+                "http_500_servererr": int,
+                "http_501_req_nosupport": int,
+                "http_503_service_unavailable": int,
+                "http_429_too_many_requests" : int,
+                "tcp_or_tls_handshake_err": int,
+                "http_other_err" : int   
+
+            }
+        }
+    }
+# =====================================
+# Parser for:
+#  * 'show cts policy-server statistics all'
+#  * 'show cts policy-server statistics active'
+#  * 'show cts policy-server statistics name <server_name>'
+# =====================================
+class ShowCtsPolicyServerStatistics(ShowCtsPolicyServerStatisticsSchema):
+    """
+        Parser for:
+            show cts policy-server statistics all
+            show cts policy-server statistics active
+            show cts policy-server statistics name <server_name>
+
+    """
+    cli_command = ['show cts policy-server statistics all', 
+                 'show cts policy-server statistics active', 
+                 'show cts policy-server statistics name {server_name}']
+
+    def cli(self, all=None, active=None, server_name=None, output=None):
+        if output is None:
+            if server_name:
+                cmd = self.cli_command[2].format(server_name=server_name)
+            elif active:
+                cmd = self.cli_command[1]
+            elif all:
+                cmd = self.cli_command[0]
+            else:
+                cmd = self.cli_command[0]
+            output = self.device.execute(cmd)
+            
+            output.lower()
+
+        # initial return dictionary
+        result_dict = {}
+        
+        # Server Name  : cts-auto-cls1-ise1.cisco.com
+        p0 = re.compile(r'^server +name +: +(?P<server_name>\S+)$')
+        # Server State : DEAD
+        p1 = re.compile(r'^server +state +: +(?P<server_state>\S+)$')
+        # Number of Request sent        : 8
+        p2 = re.compile(r'^number +of +request +sent +: +(?P<num_of_req_sent>\d+)$')
+        # Number of Request sent fail   : 1
+        p3 = re.compile(r'^number +of +request +sent +fail +: +(?P<num_of_req_sent_fail>\d+)$')
+        # Number of Response received   : 5
+        p4 = re.compile(r'^number +of +response +received +: +(?P<num_of_res_recv>\d+)$')
+        # Number of Response recv fail  : 3
+        p5 = re.compile(r'^number +of +response +recv +fail +: +(?P<num_of_res_recv_fail>\d+)$')
+        #     HTTP 200 OK                 : 5
+        p6 = re.compile('^http +200 +ok +: +(?P<http_200_ok>\d+)$')
+        #     HTTP 400 BadReq             : 0
+        p7 = re.compile('^http +400 +badreq +: +(?P<http_400_badreq>\d+)$')
+        #     HTTP 401 UnAuthorized Req   : 1
+        p8 = re.compile('^http +401 +unauthorized +req +: +(?P<http_401_unauthorized_req>\d+)$')
+        #     HTTP 403 Req Forbidden      : 0
+        p9 = re.compile('^http +403 +req +forbidden +: +(?P<http_403_req_forbidden>\d+)$')
+        #     HTTP 404 NotFound           : 0
+        p10 = re.compile('^http +404 +notfound +: +(?P<http_404_notfound>\d+)$')
+        #     HTTP 408 ReqTimeout         : 0
+        p11 = re.compile('^http +408 +reqtimeout +: +(?P<http_408_reqtimeout>\d+)$')
+        #     HTTP 415 UnSupported Media  : 0
+        p12 = re.compile('^http +415 +unsupported +media +: +(?P<http_415_unsupported_media>\d+)$')
+        #     HTTP 500 ServerErr          : 0
+        p13 = re.compile('^http +500 +servererr +: +(?P<http_500_servererr>\d+)$')
+        #     HTTP 501 Req NoSupport      : 0
+        p14 = re.compile('^http +501 +req +nosupport +: +(?P<http_501_req_nosupport>\d+)$')
+        #     HTTP 503 Service Unavailable: 0
+        p15 = re.compile('^http +503 +service +unavailable *: +(?P<http_503_service_unavailable>\d+)$')
+        #     HTTP 429 Too Many Requests  : 0
+        p16 = re.compile('^http +429 +too +many +requests +: +(?P<http_429_too_many_requests>\d+)$')
+        #     TCP or TLS handshake error  : 2
+        p17 = re.compile('^tcp +or +tls +handshake +error +: +(?P<tcp_or_tls_handshake_err>\d+)$')
+        #     HTTP Other Error            : 0
+        p18 = re.compile('^http +other +error +: +(?P<http_other_err>\d+)$')
+       
+        for line in output.splitlines():
+            line = line.strip()
+
+            # skip empty lines
+            if not line:
+                continue
+
+            map_dict = result_dict.setdefault('cts_policy_server_stats', {})
+            print(line)
+            m0 = p0.match(line)
+            if m0:
+                
+                policy_dict = map_dict.setdefault(m0.group('server_name'), {})
+                continue
+
+            m1 = p1.match(line)
+            if m1:
+                policy_dict['server_state'] = m1.group('server_state')
+                continue
+
+            m2 = p2.match(line)
+            if m2:
+                policy_dict['num_of_req_sent']= int(m2.group('num_of_req_sent'))
+                continue
+            m3 = p3.match(line)
+            if m3:
+                policy_dict['num_of_req_sent_fail']= int(m3.group('num_of_req_sent_fail'))
+                continue
+            m4 = p4.match(line)
+            if m4:
+                policy_dict['num_of_res_recv']= int(m4.group('num_of_res_recv'))
+                continue
+            m5 = p5.match(line)
+            if m5:
+                policy_dict['num_of_res_recv_fail']= int(m5.group('num_of_res_recv_fail'))
+                continue
+            m6 = p6.match(line)
+            if m6:
+                policy_dict['http_200_ok']= int(m6.group('http_200_ok'))
+                continue
+            m7 = p7.match(line)
+            if m7:
+                policy_dict['http_400_badreq']= int(m7.group('http_400_badreq'))
+                continue
+            m8 = p8.match(line)
+            if m8:
+                policy_dict['http_401_unauthorized_req']= int(m8.group('http_401_unauthorized_req'))
+                continue
+            m9 = p9.match(line)
+            if m9:
+                policy_dict['http_403_req_forbidden']= int(m9.group('http_403_req_forbidden'))
+                continue
+            m10 = p10.match(line)
+            if m10:
+                policy_dict['http_404_notfound']= int(m10.group('http_404_notfound'))
+                continue
+                
+            m11 = p11.match(line)
+            if m11:
+                policy_dict['http_408_reqtimeout']= int(m11.group('http_408_reqtimeout'))
+                continue
+            m12 = p12.match(line)
+            if m12:
+                policy_dict['http_415_unsupported_media']= int(m12.group('http_415_unsupported_media'))
+                continue
+            m13 = p13.match(line)
+            if m13:
+                policy_dict['http_500_servererr']= int(m13.group('http_500_servererr'))
+                continue
+            m14 = p14.match(line)
+            if m14:
+                policy_dict['http_501_req_nosupport']= int(m14.group('http_501_req_nosupport'))
+                continue
+            m15 = p15.match(line)
+            if m15:
+                policy_dict['http_503_service_unavailable']= int(m15.group('http_503_service_unavailable'))
+                continue
+            m16 = p16.match(line)
+            if m16:
+                policy_dict['http_429_too_many_requests']= int(m16.group('http_429_too_many_requests'))
+                continue
+            m17 = p17.match(line)
+            if m17:
+                policy_dict['tcp_or_tls_handshake_err']= int(m17.group('tcp_or_tls_handshake_err'))
+                continue
+            m18 = p18.match(line)
+            if m18:
+                policy_dict['http_other_err']= int(m18.group('http_other_err'))
+                continue
+        return result_dict
+
+# =====================================
+# Schema for:
+#  * 'show cts policy-server details all'
+#  * 'show cts policy-server details active'
+#  * 'show cts policy-server details name <server_name>'
+# =====================================
+class ShowCtsPolicyServerDetailsSchema(MetaParser):
+    """
+        Schema for:
+            show cts policy-server details all
+    """
+    
+    schema = {
+        "cts_policy_server_details": {
+            
+            Any(): {
+                "server_status": str,
+                Optional("ipv4_address"): {
+                    Any(): str
+                }, 
+                Optional("ipv6_address"): {
+                    Any(): str
+                },
+                Optional("domain_name"): {
+                    Any() : str
+                },
+                Optional("trustpoint")      : str,
+                Optional("port_num")        : int,
+                Optional("retransmit_count") : int,
+                Optional("timeout")         : int,
+                Optional("app_content_type") : str,
+                Optional("trustpoint_chain") : str    
+                
+            }
+        }
+    }
+
+# =====================================
+# Parser for:
+#  * 'show cts policy-server details all'
+#  * 'show cts policy-server details active'
+#  * 'show cts policy-server details name <server_name>'
+# =====================================
+class ShowCtsPolicyServerDetails(ShowCtsPolicyServerDetailsSchema):
+    """
+        Parser for:
+            show cts policy-server details all
+            show cts policy-server details active
+            show cts policy-server details name <server_name>
+
+    """
+    cli_command = ['show cts policy-server details all', 
+                 'show cts policy-server details active', 
+                 'show cts policy-server details name {server_name}']
+
+    def cli(self, all=None, active=None, server_name=None, output=None):
+        if output is None:
+            if server_name:
+                cmd = self.cli_command[2].format(server_name=server_name)
+            elif active:
+                cmd = self.cli_command[1]
+            elif all:
+                cmd = self.cli_command[0]
+            else:
+                cmd = self.cli_command[0]
+            output = self.device.execute(cmd)
+            
+            output.lower()
+
+        # initial return dictionary
+        results_dict = {}
+        
+        # Server Name  : cts-auto-cls1-ise1.cisco.com
+        p0 = re.compile(r'^server +name +: +(?P<server_name>\S+)$')
+        # Server Status : Inactive
+        p1 = re.compile(r'^server +status +: +(?P<server_status>\S+)$')
+        # IPv4 Address     : 10.76.119.181 (Reachable)
+        p2 = re.compile(r'^ipv4\s+address\s*: +(?P<ipv4_address>\S+)(:?\s*\((?P<ipv4_status>\S+)\))?$')
+        # Domain-name      : cts-auto-cls1-ise3.cisco.com (Reachable)
+        p3 = re.compile(r'^domain-name\s*: +(?P<domain_name>\S+) +\((?P<domain_status>\S+)\)$')
+        # Trustpoint       : cts_tp_cts-auto-cls1-ise3.cisco.com_2
+        p4 = re.compile(r'^trustpoint +: +(?P<trustpoint>\S+)$')
+        # Port-num         : 9063
+        p5 = re.compile(r'^port-num +: +(?P<port_num>\d+)$')
+        #     Retransmit count : 3
+        p6 = re.compile('^retransmit +count +: +(?P<retransmit_count>\d+)$')
+        #     Timeout          : 15
+        p7 = re.compile('^timeout +: +(?P<timeout>\d+)$')
+        #    App Content type : JSON
+        p8 = re.compile('^app +content +type +: +(?P<app_content_type>\S+)$')
+        #    Trustpoint chain : NOT CONFIGURED
+        p9 = re.compile('^trustpoint +chain +: +(?P<trustpoint_chain>.*)$')
+        # IPv6 Address     : 1100::101 (Reachable)
+        p10 = re.compile(r'^ipv6\s+address\s+:\s+(?P<ipv6_address>[\w:]+)(:?\s*\((?P<ipv6_status>\w+)\))?$')
+        
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # skip empty lines
+            if not line:
+                continue
+
+            maps_dict = results_dict.setdefault('cts_policy_server_details', {})
+            
+            # Server Name  : cts-auto-cls1-ise1.cisco.com
+            m0 = p0.match(line)
+            if m0:
+                details_dict = maps_dict.setdefault(m0.group('server_name'), {})
+                continue
+            # Server Status : Inactive
+            m1 = p1.match(line)
+            if m1:
+                details_dict['server_status'] = m1.group('server_status')
+                continue
+            # IPv4 Address     : 10.76.119.181 (Reachable)
+            m2 = p2.match(line)
+            if m2:
+                ipv4_grp = m2.groupdict()
+                ipv4_dict = details_dict.setdefault('ipv4_address', {})
+                if ipv4_grp['ipv4_status']:
+                    ipv4_dict[ipv4_grp['ipv4_address']] = ipv4_grp['ipv4_status']
+                else:
+                    ipv4_dict[ipv4_grp['ipv4_address']] = 'NA'
+                continue
+            # Domain-name      : cts-auto-cls1-ise1.cisco.com (Reachable)
+            m3 = p3.match(line)
+            if m3:
+                domain_group = m3.groupdict()
+                domain_dict = details_dict.setdefault('domain_name', {})
+                domain_dict[domain_group['domain_name']] = domain_group['domain_status']
+            # Trustpoint       : cts_tp_cts-auto-cls1-ise3.cisco.com_2
+            m4 = p4.match(line)
+            if m4:
+                details_dict['trustpoint']= m4.group('trustpoint')
+                continue
+            # Port-num         : 9063
+            m5 = p5.match(line)
+            if m5:
+                details_dict['port_num']= int(m5.group('port_num'))
+                continue
+            #     Retransmit count : 3
+            m6 = p6.match(line)
+            if m6:
+                details_dict['retransmit_count']= int(m6.group('retransmit_count'))
+                continue
+            #     Timeout          : 15
+            m7 = p7.match(line)
+            if m7:
+                details_dict['timeout']= int(m7.group('timeout'))
+                continue
+            #    App Content type : JSON
+            m8 = p8.match(line)
+            if m8:
+                details_dict['app_content_type']= m8.group('app_content_type')
+                continue
+            #    Trustpoint chain : NOT CONFIGURED
+            m9 = p9.match(line)
+            if m9:
+                details_dict['trustpoint_chain']= m9.group('trustpoint_chain')
+                continue
+            # IPv6 Address     : 1100::101 (Reachable)
+            m10 = p10.match(line)
+            if m10:
+                ipv6_grp = m10.groupdict()
+                ipv6_dict = details_dict.setdefault('ipv6_address', {})
+                
+                if ipv6_grp['ipv6_status']:
+                    ipv6_dict[ipv6_grp['ipv6_address']] = ipv6_grp['ipv6_status']
+                else:
+                    ipv6_dict[ipv6_grp['ipv6_address']] = 'NA'
+                continue
+        
+        return results_dict
+
+class ShowPlatformSoftwareFedActiveAclSgaclSchema(MetaParser):
+    """Schema for show platform software fed active acl sgacl cell all"""
+
+    schema = {
+        'active_acl_sgacl_cell':{
+            Any():{
+                Optional('sgt'): int,
+                Optional('dgt'): int,
+                Optional('monitor_mode'): int,
+                Optional('counter_oid'): int,
+                Optional('acl_cg_id'): str
+            }
+        }
+    }
+
+class ShowPlatformSoftwareFedActiveAclSgacl(ShowPlatformSoftwareFedActiveAclSgaclSchema):
+    """
+    show platform software fed {instance} acl sgacl cell all
+    """
+    cli_command = [
+                    'show platform software fed {instance} acl sgacl cell all',
+                    'show platform software fed {switch} {instance} acl sgacl cell all'                                                  
+                  ]
+    
+    def cli(self, instance="",switch="", output=None):
+                        
+        if output is None:            
+            if switch:
+                cmd = self.cli_command[1].format(switch=switch,instance=instance)
+            else:
+                cmd = self.cli_command[0].format(instance=instance)
+                    
+            output = self.device.execute(cmd)
+            
+        ret_dict = {}
+        index = 1
+
+        #SGT       DGT     Monitor-Mode    Counter-OID   ACL-CG-ID
+        #0      0                0            2610             529
+        p1 = re.compile(r'^(?P<sgt>\d+)\s+(?P<dgt>\d+)\s+(?P<monitor_mode>\d+)\s+(?P<counter_oid>\d+)\s+(?P<acl_cg_id>\S+)$')
+        
+        for line in output.splitlines(): 
+            line = line.strip()
+            
+            #SGT       DGT     Monitor-Mode    Counter-OID   ACL-CG-ID
+            #0      0                0            2610             529
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                active_acl_sgacl_cell = ret_dict.setdefault('active_acl_sgacl_cell', {}).setdefault(index,{})
+                active_acl_sgacl_cell['sgt'] = int(group['sgt'])
+                active_acl_sgacl_cell['dgt'] = int(group['dgt'])
+                active_acl_sgacl_cell['monitor_mode'] = int(group['monitor_mode'])
+                active_acl_sgacl_cell['counter_oid'] = int(group['counter_oid'])
+                active_acl_sgacl_cell['acl_cg_id'] = group['acl_cg_id']
+                index += 1
+                
+        return ret_dict
+# ==============================================
+# Parser for 'show cts interface summary'
+# ==============================================
+class ShowCtsInterfaceSummarySchema(MetaParser):
+    """Schema for show cts interface summary
+    """
+    schema = {
+        'interface': {
+            Any(): {
+                'mode': str,
+                'ifc_state': str,
+                'dot1x_role': str,
+                'peer_id': str,
+                'ifc_cache': str,
+                'critical_authentication': str
+            }
+        }
+    }
+
+
+class ShowCtsInterfaceSummary(ShowCtsInterfaceSummarySchema):
+    """Parser for 'show cts interface summary'
+    """
+    cli_command = 'show cts interface summary'
+
+    def cli(self, output=None):
+        if output is None:
+            # get output from device
+            output = self.device.execute(self.cli_command)
+
+        # initial return dictionary
+        ret_dict = {}
+        
+        # CTS Interfaces
+        # ---------------------
+        # Interface                      Mode    IFC-state dot1x-role peer-id    IFC-cache    Critical-Authentication
+        # -----------------------------------------------------------------------------
+        # Twe1/0/12                      MANUAL  INIT      unknown    unknown    invalid  Invalid 
+        # Twe1/0/19                      MANUAL  INIT      unknown    unknown    invalid  Invalid 
+        p1 = re.compile(r'^(?P<interface>\w+\d+/\d+/\d+)\s+(?P<mode>\S+)\s+(?P<ifc_state>\S+)\s+(?P<dot1x_role>\S+)\s+(?P<peer_id>\S+)\s+(?P<ifc_cache>\S+)\s+(?P<critical_authentication>\S+)$')     
+
+        for line in output.splitlines():
+            line = line.strip()
+            # Twe1/0/19                      MANUAL  INIT      unknown    unknown    invalid  Invalid 
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()  
+                final_dict = ret_dict.setdefault('interface', {}).setdefault(group["interface"], {})
+                final_dict.update({
+                    "mode": group["mode"],
+                    "ifc_state": group["ifc_state"],
+                    "dot1x_role": group["dot1x_role"],
+                    "peer_id": group["peer_id"],
+                    "ifc_cache": group["ifc_cache"],
+                    "critical_authentication": group["critical_authentication"]})          
+        return ret_dict
 

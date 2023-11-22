@@ -1,0 +1,31 @@
+sh aaa memory 
+  Allocator-Name                  In-use/Allocated            Count
+  ----------------------------------------------------------------------------
+  AAA Acct Rec ch           :        252/10248      (  2%) [      3] Chunk
+  AAA Acct AVLnod           :         84/4556       (  1%) [      3] Chunk
+  AAA AttrL Hdr             :        736/65756      (  1%) [     23] Chunk
+  AAA AttrL Sub             :       6256/65756      (  9%) [     23] Chunk
+  AAA DB Elt Chun           :        228/65756      (  0%) [      3] Chunk
+  AAA Acct DB chu           :        564/31412      (  1%) [      3] Chunk
+  AAA Unique Id Hash Table  :       4096/4148       ( 98%) [      1] 
+  AAA chunk                 :          0/17800      (  0%) [      0] Chunk
+  AAA Large Chunk           :          0/65756      (  0%) [      0] Chunk
+  AAA Huge Chunk            :          0/65756      (  0%) [      0] Chunk
+  AAA Interface Struct      :        960/1116       ( 86%) [      3] 
+  AAA General DB            :       2100/2256       ( 93%) [      3] 
+  AAA String Malloc         :        188/240        ( 78%) [      1] 
+
+  Total allocated: 0.398 Mb, 408 Kb, 418356 bytes
+
+
+AAA Low Memory Statistics:
+__________________________
+  Authentication low-memory threshold      : 3%
+  Accounting low-memory threshold          : 2%
+
+
+  AAA Unique ID Failure                    : 0
+  Local server  Packet dropped             : 0
+  CoA  Packet dropped                      : 0
+  PoD  Packet dropped                      : 0
+

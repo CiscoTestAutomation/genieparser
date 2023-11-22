@@ -1,0 +1,18 @@
+BGP routing table entry for [3][1.1.1.3:3][0][32][1.1.1.3]/17, version 2
+Paths: (1 available, best #1, table evi_3)
+  Advertised to update-groups:
+     1
+  Refresh Epoch 1
+  Local
+    :: (via default) from 0.0.0.0 (1.1.1.1)
+      Origin incomplete, localpref 100, weight 32768, valid, sourced, local, best
+      Extended Community: RT:1:3 ENCAP:8 EVPN Mcast Flags:3
+      PMSI Attribute: Flags:0x0, Tunnel type:IR, length 16, vni:20103 tunnel identifier: 0000 0000
+      Local irb vxlan vtep:
+        vrf:not found, l3-vni:0
+        local router mac:0000.0000.0000
+        core-irb interface:(not found)
+        vtep-ip:ABCD:1::2
+        sec-vtep-ip:UNKNOWN
+      rx pathid: 0, tx pathid: 0x0
+      Updated on Nov 20 2021 16:35:02 EST

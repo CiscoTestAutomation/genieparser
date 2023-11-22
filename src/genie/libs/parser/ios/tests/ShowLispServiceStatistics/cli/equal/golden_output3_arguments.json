@@ -1,4 +1,3 @@
 {
-    "service": "ethernet",
-    "instance_id": "*"
+    "service": "ethernet"
 }

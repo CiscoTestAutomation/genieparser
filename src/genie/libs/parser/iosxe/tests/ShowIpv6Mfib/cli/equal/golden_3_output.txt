@@ -1,0 +1,7 @@
+ (2000::1:1,FF05::1) Flags: HW
+   SW Forwarding: 1/0/174/0, Other: 0/0/0
+   HW Forwarding:   38715783/402/178/560, Other: 0/0/0
+   GigabitEthernet1/0/1 Flags: A
+   Tunnel1, VXLAN v6 Decap Flags: F NS
+     Pkts: 0/0/1    Rate: 0 pps
+

@@ -1,0 +1,179 @@
+Frame 1: 117 bytes on wire (936 bits), 117 bytes captured (936 bits) on interface /tmp/epc_ws/wif_to_ts_pipe, id 0
+    Interface id: 0 (/tmp/epc_ws/wif_to_ts_pipe)
+        Interface name: /tmp/epc_ws/wif_to_ts_pipe
+    Encapsulation type: Ethernet (1)
+    Arrival Time: Feb  3, 2023 16:58:35.770592000 UTC
+    [Time shift for this packet: 0.000000000 seconds]
+    Epoch Time: 1675443515.770592000 seconds
+    [Time delta from previous captured frame: 0.000000000 seconds]
+    [Time delta from previous displayed frame: 0.000000000 seconds]
+    [Time since reference or first frame: 0.000000000 seconds]
+    Frame Number: 1
+    Frame Length: 117 bytes (936 bits)
+    Capture Length: 117 bytes (936 bits)
+    [Frame is marked: False]
+    [Frame is ignored: False]
+    [Protocols in frame: eth:ethertype:ip:udp:radius]
+Ethernet II, Src: 70:ea:1a:03:8b:c0 (70:ea:1a:03:8b:c0), Dst: 70:ea:1a:03:8b:c0 (70:ea:1a:03:8b:c0)
+    Destination: 70:ea:1a:03:8b:c0 (70:ea:1a:03:8b:c0)
+        Address: 70:ea:1a:03:8b:c0 (70:ea:1a:03:8b:c0)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Source: 70:ea:1a:03:8b:c0 (70:ea:1a:03:8b:c0)
+        Address: 70:ea:1a:03:8b:c0 (70:ea:1a:03:8b:c0)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Type: IPv4 (0x0800)
+Internet Protocol Version 4, Src: 94.94.94.94, Dst: 100.8.12.110
+    0100 .... = Version: 4
+    .... 0101 = Header Length: 20 bytes (5)
+    Differentiated Services Field: 0x48 (DSCP: AF21, ECN: Not-ECT)
+        0100 10.. = Differentiated Services Codepoint: Assured Forwarding 21 (18)
+        .... ..00 = Explicit Congestion Notification: Not ECN-Capable Transport (0)
+    Total Length: 103
+    Identification: 0x1e3d (7741)
+    Flags: 0x0000
+        0... .... .... .... = Reserved bit: Not set
+        .0.. .... .... .... = Don't fragment: Not set
+        ..0. .... .... .... = More fragments: Not set
+    Fragment offset: 0
+    Time to live: 255
+    Protocol: UDP (17)
+    Header checksum: 0x6fce [validation disabled]
+    [Header checksum status: Unverified]
+    Source: 94.94.94.94
+    Destination: 100.8.12.110
+User Datagram Protocol, Src Port: 1645, Dst Port: 1812
+    Source Port: 1645
+    Destination Port: 1812
+    Length: 83
+    Checksum: 0x79e2 [unverified]
+    [Checksum Status: Unverified]
+    [Stream index: 0]
+    [Timestamps]
+        [Time since first frame: 0.000000000 seconds]
+        [Time since previous frame: 0.000000000 seconds]
+RADIUS Protocol
+    Code: Access-Request (1)
+    Packet identifier: 0x49 (73)
+    Length: 75
+    Authenticator: cb385867fdd8e1e01473fd0dae56af6d
+    Attribute Value Pairs
+        AVP: t=Unknown-Attribute(1) l=7 val=61646d6931
+            Type: 1
+            Length: 7
+            Unknown-Attribute: 61646d6931
+        AVP: t=Unknown-Attribute(2) l=18 val=de2e1220403ad69ac311aff628afb75d
+            Type: 2
+            Length: 18
+            Unknown-Attribute: de2e1220403ad69ac311aff628afb75d
+        AVP: t=Unknown-Attribute(5) l=6 val=00000002
+            Type: 5
+            Length: 6
+            Unknown-Attribute: 00000002
+        AVP: t=Unknown-Attribute(87) l=6 val=74747932
+            Type: 87
+            Length: 6
+            Unknown-Attribute: 74747932
+        AVP: t=Unknown-Attribute(61) l=6 val=00000005
+            Type: 61
+            Length: 6
+            Unknown-Attribute: 00000005
+        AVP: t=Unknown-Attribute(6) l=6 val=00000001
+            Type: 6
+            Length: 6
+            Unknown-Attribute: 00000001
+        AVP: t=Unknown-Attribute(4) l=6 val=5e5e5e5e
+            Type: 4
+            Length: 6
+            Unknown-Attribute: 5e5e5e5e
+
+Frame 2: 118 bytes on wire (944 bits), 118 bytes captured (944 bits) on interface /tmp/epc_ws/wif_to_ts_pipe, id 0
+    Interface id: 0 (/tmp/epc_ws/wif_to_ts_pipe)
+        Interface name: /tmp/epc_ws/wif_to_ts_pipe
+    Encapsulation type: Ethernet (1)
+    Arrival Time: Feb  3, 2023 16:58:49.657611000 UTC
+    [Time shift for this packet: 0.000000000 seconds]
+    Epoch Time: 1675443529.657611000 seconds
+    [Time delta from previous captured frame: 13.887019000 seconds]
+    [Time delta from previous displayed frame: 13.887019000 seconds]
+    [Time since reference or first frame: 13.887019000 seconds]
+    Frame Number: 2
+    Frame Length: 118 bytes (944 bits)
+    Capture Length: 118 bytes (944 bits)
+    [Frame is marked: False]
+    [Frame is ignored: False]
+    [Protocols in frame: eth:ethertype:ip:udp:radius]
+Ethernet II, Src: 70:ea:1a:03:8b:c0 (70:ea:1a:03:8b:c0), Dst: 70:ea:1a:03:8b:c0 (70:ea:1a:03:8b:c0)
+    Destination: 70:ea:1a:03:8b:c0 (70:ea:1a:03:8b:c0)
+        Address: 70:ea:1a:03:8b:c0 (70:ea:1a:03:8b:c0)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Source: 70:ea:1a:03:8b:c0 (70:ea:1a:03:8b:c0)
+        Address: 70:ea:1a:03:8b:c0 (70:ea:1a:03:8b:c0)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Type: IPv4 (0x0800)
+Internet Protocol Version 4, Src: 94.94.94.94, Dst: 100.8.12.110
+    0100 .... = Version: 4
+    .... 0101 = Header Length: 20 bytes (5)
+    Differentiated Services Field: 0x48 (DSCP: AF21, ECN: Not-ECT)
+        0100 10.. = Differentiated Services Codepoint: Assured Forwarding 21 (18)
+        .... ..00 = Explicit Congestion Notification: Not ECN-Capable Transport (0)
+    Total Length: 104
+    Identification: 0x1e5e (7774)
+    Flags: 0x0000
+        0... .... .... .... = Reserved bit: Not set
+        .0.. .... .... .... = Don't fragment: Not set
+        ..0. .... .... .... = More fragments: Not set
+    Fragment offset: 0
+    Time to live: 255
+    Protocol: UDP (17)
+    Header checksum: 0x6fac [validation disabled]
+    [Header checksum status: Unverified]
+    Source: 94.94.94.94
+    Destination: 100.8.12.110
+User Datagram Protocol, Src Port: 1645, Dst Port: 1812
+    Source Port: 1645
+    Destination Port: 1812
+    Length: 84
+    Checksum: 0xb8fb [unverified]
+    [Checksum Status: Unverified]
+    [Stream index: 0]
+    [Timestamps]
+        [Time since first frame: 13.887019000 seconds]
+        [Time since previous frame: 13.887019000 seconds]
+RADIUS Protocol
+    Code: Access-Request (1)
+    Packet identifier: 0x4a (74)
+    Length: 76
+    Authenticator: af1f39ee844524283a36de5dff80e0ce
+    Attribute Value Pairs
+        AVP: t=Unknown-Attribute(1) l=8 val=61646d696e31
+            Type: 1
+            Length: 8
+            Unknown-Attribute: 61646d696e31
+        AVP: t=Unknown-Attribute(2) l=18 val=f96bd2370283bcccc2d5d8b2d05afb26
+            Type: 2
+            Length: 18
+            Unknown-Attribute: f96bd2370283bcccc2d5d8b2d05afb26
+        AVP: t=Unknown-Attribute(5) l=6 val=00000002
+            Type: 5
+            Length: 6
+            Unknown-Attribute: 00000002
+        AVP: t=Unknown-Attribute(87) l=6 val=74747932
+            Type: 87
+            Length: 6
+            Unknown-Attribute: 74747932
+        AVP: t=Unknown-Attribute(61) l=6 val=00000005
+            Type: 61
+            Length: 6
+            Unknown-Attribute: 00000005
+        AVP: t=Unknown-Attribute(6) l=6 val=00000001
+            Type: 6
+            Length: 6
+            Unknown-Attribute: 00000001
+        AVP: t=Unknown-Attribute(4) l=6 val=5e5e5e5e
+            Type: 4
+            Length: 6
+            Unknown-Attribute: 5e5e5e5e

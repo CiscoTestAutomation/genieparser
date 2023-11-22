@@ -1,0 +1,9 @@
+show cable tdr interface TwoGigabitEthernet1/0/1
+TDR test last run on: August 04 10:46:24
+
+Interface   Speed Local pair Pair length        Remote pair Pair status
+---------   ----- ---------- ------------------ ----------- --------------------
+Tw1/0/1     2500M Pair A     0    +/- 10 meters Pair A      Not Supported
+                  Pair B     0    +/- 10 meters Pair A      Not Supported
+                  Pair C     0    +/- 10 meters Pair A      Not Supported
+                  Pair D     0    +/- 10 meters Pair A      Not Supported

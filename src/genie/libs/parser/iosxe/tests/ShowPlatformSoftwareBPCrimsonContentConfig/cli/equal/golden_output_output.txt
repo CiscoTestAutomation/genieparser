@@ -1,0 +1,35 @@
+show platform software bp crimson content config
+Node    Priority
+1       1
+
+FIPSKEY
+4D56F017FFC920A5FA0EF11397788E917931D1D1AE48F9C0
+
+Node    Domain    Mode          Router-ID
+1       1         Aggregation   0.0.0.0                    
+
+Configured SVL Links:
+Link ID: 1 (no ip configured)
+
+Configured SVL Ports:
+Interface                     Link    Slot:Bay:Port
+HundredGigE1/0/13             1       1:0:13
+HundredGigE1/0/14             1       1:0:14
+
+
+Node    Priority
+2       1
+
+FIPSKEY
+34293A39A7802377DF8783DF687A44FDBDA3984C2AEACCB0
+
+Node    Domain    Mode          Router-ID
+2       1         Aggregation   0.0.0.0                    
+
+Configured SVL Links:
+Link ID: 1 (no ip configured)
+
+Configured SVL Ports:
+Interface                     Link    Slot:Bay:Port
+HundredGigE2/0/13             1       1:0:13
+HundredGigE2/0/14             1       1:0:14

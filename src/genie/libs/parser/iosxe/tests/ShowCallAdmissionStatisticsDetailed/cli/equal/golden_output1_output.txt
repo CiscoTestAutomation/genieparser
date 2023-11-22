@@ -1,0 +1,8 @@
+CAC New Model (SRSM) is INACTIVE
+CAC statistics duration:  0(seconds)
+Total calls rejected 0, accepted 0
+Current hardware CAC status is: Not Dropping
+
+
+Total dropped FSOL packets at data plane: 0
+

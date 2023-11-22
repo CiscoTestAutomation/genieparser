@@ -1,0 +1,73 @@
+Packet: 11          CBUG ID: 115
+Summary
+  Input     : GigabitEthernet1
+  Output    : internal0/0/rp:0
+  State     : PUNT 11  (For-us data)
+  Timestamp
+    Start   : 19591546248064016 ns (07/27/2021 09:34:28.261898 UTC)
+    Stop    : 19591546248087028 ns (07/27/2021 09:34:28.261921 UTC)
+Path Trace
+  Feature: IPV4(Input)
+    Input       : GigabitEthernet1
+    Output      : <unknown>
+    Source      : 172.20.2.55
+    Destination : 172.20.2.54
+    Protocol    : 6 (TCP)
+      SrcPort   : 43520
+      DstPort   : 22
+  Feature: CFT
+    API                   : cft_handle_pkt
+    packet capabilities   : 0x000000af
+    input vrf_idx         : 0
+    calling feature       : STILE
+    direction             : Input
+    triplet.vrf_idx       : 0
+    triplet.network_start : 0x00000000
+    triplet.triplet_flags : 0x00000000
+    triplet.counter       : 0
+    cft_bucket_number     : 206290
+    cft_l3_payload_size   : 20
+    cft_pkt_ind_flags     : 0x00000002
+    cft_pkt_ind_valid     : 0x00009bff
+    tuple.src_ip          : 172.20.2.55
+    tuple.dst_ip          : 172.20.2.54
+    tuple.src_port        : 43520
+    tuple.dst_port        : 22
+    tuple.vrfid           : 0
+    tuple.l4_protocol     : TCP
+    tuple.l3_protocol     : IPV4
+    pkt_sb_state          : 0
+    pkt_sb.num_flows      : 0
+    pkt_sb.tuple_epoch    : 0
+    returned cft_error    : 0
+    returned fid          : 0xe9328b50
+  Feature: NBAR
+    Packet number in flow: N/A
+    Classification state: Final
+    Classification name: ssh
+    Classification ID: [IANA-L4:22]
+    Classification source: Unknown
+    Number of matched sub-classifications: 0
+    Number of extracted fields: 0
+    Is PA (split) packet: False
+    TPH-MQC bitmask value: 0x0
+  Feature: QOS
+    Direction   : Ingress
+    Action      : SET
+    Fields      : DSCP
+
+IOSd Path Flow: Packet: 11    CBUG ID: 115
+  Feature: INFRA
+    Pkt Direction: IN
+    Packet Rcvd From DATAPLANE
+
+  Feature: IP
+    Pkt Direction: IN
+    Packet Enqueued in IP layer
+    Source      : 172.20.2.55
+    Destination : 172.20.2.54
+    Interface   : GigabitEthernet1
+
+  Feature: TCP
+    Pkt Direction: IN
+    tcp0: I NoTCB 172.20.2.55:43520 172.20.2.54:22 seq 1565917747 ACK 140303057  WIN 63840

@@ -1,0 +1,163 @@
+show interfaces tunnel 10
+Tunnel10 is up, line protocol is down
+  Hardware is Tunnel
+  Internet address is 1.1.1.3/24
+  MTU 9980 bytes, BW 100 Kbit/sec, DLY 50000 usec,
+     reliability 255/255, txload 1/255, rxload 1/255
+  Encapsulation TUNNEL, loopback not set
+  Keepalive not set
+  Tunnel linestate evaluation down - no output interface
+  Tunnel source 1.1.10.10, destination 1.1.10.11
+  Tunnel protocol/transport AURP
+  Tunnel TTL 255
+  Tunnel transport MTU 1480 bytes
+  Tunnel transmit bandwidth 10000000 (kbps)
+  Tunnel receive bandwidth 1000000 (kbps)
+  Last input never, output never, output hang never
+  Last clearing of "show interface" counters 17:00:12
+  Input queue: 0/375/0/0 (size/max/drops/flushes); Total output drops: 0
+  Queueing strategy: fifo
+  Output queue: 0/0 (size/max)
+  5 minute input rate 0 bits/sec, 0 packets/sec
+  5 minute output rate 0 bits/sec, 0 packets/sec
+     0 packets input, 0 bytes, 0 no buffer
+     Received 0 broadcasts (0 IP multicasts)
+     0 runts, 0 giants, 0 throttles
+     0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort
+     0 packets output, 0 bytes, 0 underruns
+     Output 0 broadcasts (0 IP multicasts)
+     0 output errors, 0 collisions, 0 interface resets
+     0 unknown protocol drops
+     0 output buffer failures, 0 output buffers swapped out
+Tunnel4 is up, line protocol is down
+  Hardware is Tunnel
+  MTU 9976 bytes, BW 100 Kbit/sec, DLY 50000 usec,
+     reliability 255/255, txload 1/255, rxload 1/255
+  Encapsulation TUNNEL, loopback not set
+  Keepalive not set
+  Tunnel linestate evaluation down - no IPv4 tunnel destination address
+  Tunnel source 192.168.1.100
+  Tunnel protocol/transport GRE/IP
+    Key disabled, sequencing disabled
+    Checksumming of packets disabled
+  Tunnel TTL 255, Fast tunneling enabled
+  Tunnel transport MTU 1476 bytes
+  Tunnel transmit bandwidth 8000 (kbps)
+  Tunnel receive bandwidth 8000 (kbps)
+  Last input never, output never, output hang never
+  Last clearing of "show interface" counters 00:02:56
+  Input queue: 0/375/0/0 (size/max/drops/flushes); Total output drops: 0
+  Queueing strategy: fifo
+  Output queue: 0/0 (size/max)
+  5 minute input rate 0 bits/sec, 0 packets/sec
+  5 minute output rate 0 bits/sec, 0 packets/sec
+     0 packets input, 0 bytes, 0 no buffer
+     Received 0 broadcasts (0 IP multicasts)
+     0 runts, 0 giants, 0 throttles
+     0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort
+     0 packets output, 0 bytes, 0 underruns
+     Output 0 broadcasts (0 IP multicasts)
+     0 output errors, 0 collisions, 0 interface resets
+     0 unknown protocol drops
+     0 output buffer failures, 0 output buffers swapped out
+Tunnel5 is up, line protocol is down
+  Hardware is Tunnel
+  MTU 9976 bytes, BW 100 Kbit/sec, DLY 50000 usec,
+     reliability 255/255, txload 1/255, rxload 1/255
+  Encapsulation TUNNEL, loopback not set
+  Keepalive not set
+  Tunnel linestate evaluation down - no output interface
+  Tunnel source 7.7.7.7 (Loopback100), destination 7.7.7.8
+   Tunnel Subblocks:
+      src-track:
+         Tunnel5 source tracking subblock associated with Loopback100
+          Set of tunnels with source Loopback100, 1 member (includes iterators), on interface <OK>
+  Tunnel protocol/transport GRE/IP
+    Key disabled, sequencing disabled
+    Checksumming of packets disabled
+  Tunnel TTL 255, Fast tunneling enabled
+  Tunnel transport MTU 1476 bytes
+  Tunnel transmit bandwidth 8000 (kbps)
+  Tunnel receive bandwidth 8000 (kbps)
+  Last input never, output never, output hang never
+  Last clearing of "show interface" counters 00:01:30
+  Input queue: 0/375/0/0 (size/max/drops/flushes); Total output drops: 0
+  Queueing strategy: fifo
+  Output queue: 0/0 (size/max)
+  5 minute input rate 0 bits/sec, 0 packets/sec
+  5 minute output rate 0 bits/sec, 0 packets/sec
+     0 packets input, 0 bytes, 0 no buffer
+     Received 0 broadcasts (0 IP multicasts)
+     0 runts, 0 giants, 0 throttles
+     0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort
+     0 packets output, 0 bytes, 0 underruns
+     Output 0 broadcasts (0 IP multicasts)
+     0 output errors, 0 collisions, 0 interface resets
+     0 unknown protocol drops
+     0 output buffer failures, 0 output buffers swapped out
+Tunnel6 is up, line protocol is down
+  Hardware is Tunnel
+  MTU 9976 bytes, BW 100 Kbit/sec, DLY 50000 usec,
+     reliability 255/255, txload 1/255, rxload 1/255
+  Encapsulation TUNNEL, loopback not set
+  Keepalive not set
+  Tunnel linestate evaluation down - no output interface
+  Tunnel source UNKNOWN, destination 1.2.3.4
+  Tunnel protocol/transport GRE/IP
+    Key disabled, sequencing disabled
+    Checksumming of packets disabled
+  Tunnel TTL 255, Fast tunneling enabled
+  Tunnel transport MTU 1476 bytes
+  Tunnel transmit bandwidth 8000 (kbps)
+  Tunnel receive bandwidth 8000 (kbps)
+  Last input never, output never, output hang never
+  Last clearing of "show interface" counters 00:00:38
+  Input queue: 0/375/0/0 (size/max/drops/flushes); Total output drops: 0
+  Queueing strategy: fifo
+  Output queue: 0/0 (size/max)
+  5 minute input rate 0 bits/sec, 0 packets/sec
+  5 minute output rate 0 bits/sec, 0 packets/sec
+     0 packets input, 0 bytes, 0 no buffer
+     Received 0 broadcasts (0 IP multicasts)
+     0 runts, 0 giants, 0 throttles
+     0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort
+     0 packets output, 0 bytes, 0 underruns
+     Output 0 broadcasts (0 IP multicasts)
+     0 output errors, 0 collisions, 0 interface resets
+     0 unknown protocol drops
+     0 output buffer failures, 0 output buffers swapped out
+Tunnel7 is up, line protocol is down
+  Hardware is Tunnel
+  MTU 9976 bytes, BW 100 Kbit/sec, DLY 50000 usec,
+     reliability 255/255, txload 1/255, rxload 1/255
+  Encapsulation TUNNEL, loopback not set
+  Keepalive not set
+  Tunnel linestate evaluation down - no IPv4 tunnel destination address
+  Tunnel source 9.45.21.231 (GigabitEthernet2)
+   Tunnel Subblocks:
+      src-track:
+         Tunnel7 source tracking subblock associated with GigabitEthernet2
+          Set of tunnels with source GigabitEthernet2, 1 member (includes iterators), on interface <OK>
+  Tunnel protocol/transport GRE/IP
+    Key disabled, sequencing disabled
+    Checksumming of packets disabled
+  Tunnel TTL 255, Fast tunneling enabled
+  Tunnel transport MTU 1476 bytes
+  Tunnel transmit bandwidth 8000 (kbps)
+  Tunnel receive bandwidth 8000 (kbps)
+  Last input never, output never, output hang never
+  Last clearing of "show interface" counters 00:00:45
+  Input queue: 0/375/0/0 (size/max/drops/flushes); Total output drops: 0
+  Queueing strategy: fifo
+  Output queue: 0/0 (size/max)
+  5 minute input rate 0 bits/sec, 0 packets/sec
+  5 minute output rate 0 bits/sec, 0 packets/sec
+     0 packets input, 0 bytes, 0 no buffer
+     Received 0 broadcasts (0 IP multicasts)
+     0 runts, 0 giants, 0 throttles
+     0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort
+     0 packets output, 0 bytes, 0 underruns
+     Output 0 broadcasts (0 IP multicasts)
+     0 output errors, 0 collisions, 0 interface resets
+     0 unknown protocol drops
+     0 output buffer failures, 0 output buffers swapped out

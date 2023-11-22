@@ -7,6 +7,7 @@
 import re
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any, Or, Optional
+from genie.libs.parser.utils.common import Common
 
 
 # ==============================
@@ -96,12 +97,12 @@ class ShowDmvpn(ShowDmvpnSchema):
         #                           172.30.90.25   UP    6d12h     S
         #     2 172.29.134.1       172.30.72.72    UP 00:29:40   DT2
         #                          172.30.72.72    UP 00:29:40   DT1
-        p3 = re.compile(r'((?P<ent>(\d+))'
-                        r' +(?P<peers>[a-z0-9\.\:]+)'
+        p3 = re.compile(r'^((?P<ent>(\d+))'
+                        r' +(?P<peers>([a-z0-9\.\:]+|UNKNOWN))'
                         r' +)?(?P<tunnel_addr>[a-z0-9\.\:]+)'
                         r' +(?P<state>[a-zA-Z]+)'
                         r' +(?P<time>(\d+\w)+|never|[0-9\:]+)'
-                        r' +(?P<attrb>(\w)+)')
+                        r' +(?P<attrb>(\w)+)$')
 
         # Defines the "for" loop, to pattern match each line of output
 
@@ -180,3 +181,40 @@ class ShowDmvpn(ShowDmvpnSchema):
 
         return parsed_dict
 
+
+# =================================================
+# Schema for 'show dmvpn | count Status: {service}'
+# =================================================
+class ShowDmvpnCountStatusSchema(MetaParser):
+    schema = {
+        'count': int
+    }
+    
+# ================================================
+# Parser for:
+# 'show dmvpn | count Status: {service}'
+# ================================================
+class ShowDmvpnCountStatus(ShowDmvpnCountStatusSchema):
+ 
+    cli_command = ['show dmvpn | count Status: {service}', 'show dmvpn | count {service}']
+
+
+    def cli(self, ipv6= False, service='', output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command[int(ipv6)])
+        dict_count = {}
+
+        # Number of lines which match regexp = 2648
+        p1 = re.compile(r"^Number of lines which match regexp\s*=\s*(?P<count>[\d]+)$")
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Number of lines which match regexp = 2648
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                count = int(groups['count'])
+                dict_count['count'] = count
+
+        return dict_count

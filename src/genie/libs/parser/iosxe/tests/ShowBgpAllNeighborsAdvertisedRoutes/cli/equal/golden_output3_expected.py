@@ -14,8 +14,7 @@ expected_output = {
                                             "next_hop": "10.4.1.1",
                                             "origin_codes": "e",
                                             "path": "200 33299 51178 47751 {27016}",
-                                            "path_type": "i",
-                                            "status_codes": "*>",
+                                            "status_codes": "*>i",
                                             "weight": 0,
                                         }
                                     }
@@ -28,8 +27,7 @@ expected_output = {
                                             "next_hop": "10.4.1.1",
                                             "origin_codes": "e",
                                             "path": "200 33299 51178 47751 {27016}",
-                                            "path_type": "i",
-                                            "status_codes": "*>",
+                                            "status_codes": "*>i",
                                             "weight": 0,
                                         }
                                     }
@@ -42,8 +40,7 @@ expected_output = {
                                             "next_hop": "10.4.1.1",
                                             "origin_codes": "e",
                                             "path": "200 33299 51178 47751 {27016}",
-                                            "path_type": "i",
-                                            "status_codes": "*>",
+                                            "status_codes": "*>i",
                                             "weight": 0,
                                         }
                                     }
@@ -56,8 +53,7 @@ expected_output = {
                                             "next_hop": "10.4.1.1",
                                             "origin_codes": "e",
                                             "path": "200 33299 51178 47751 {27016}",
-                                            "path_type": "i",
-                                            "status_codes": "*>",
+                                            "status_codes": "*>i",
                                             "weight": 0,
                                         }
                                     }
@@ -70,8 +66,7 @@ expected_output = {
                                             "next_hop": "10.4.1.1",
                                             "origin_codes": "e",
                                             "path": "200 33299 51178 47751 {27016}",
-                                            "path_type": "i",
-                                            "status_codes": "*>",
+                                            "status_codes": "*>i",
                                             "weight": 0,
                                         }
                                     }

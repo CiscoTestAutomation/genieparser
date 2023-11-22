@@ -17,8 +17,7 @@ expected_output = {
                                             "path": "5918",
                                         },
                                         2: {
-                                            "status_codes": "*b",
-                                            "path_type": "a",
+                                            "status_codes": "*b a",
                                             "next_hop": "192.168.36.120",
                                             "origin_codes": "?",
                                             "weight": 0,

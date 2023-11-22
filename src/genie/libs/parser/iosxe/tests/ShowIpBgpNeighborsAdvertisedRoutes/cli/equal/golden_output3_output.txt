@@ -22,3 +22,6 @@ RPKI validation codes: V valid, I invalid, N Not found
  *>i 10.105.146.0/25  10.250.6.1            3328    300      0 65000 ?
  *>i 10.105.146.128/25
                        10.250.6.1            3328    300      0 65000 ?
+
+ Total number of prefixes 12
+ 

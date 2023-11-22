@@ -1,0 +1,55 @@
+ FiftyGigE6/0/11
+
+Service-policy queueing output: parent
+
+Class-map: class-default (match-any)
+0 packets
+Match: any
+Queueing
+queue limit 7500000 bytes
+(total drops) 0
+(bytes output) 0
+shape (average) cir 2000000000, bc 8000000, be 8000000
+target shape rate 2000000000
+
+Service-policy queueing : child
+
+queue stats for all priority classes:
+Queueing
+priority level 1
+queue limit 96000 bytes
+(total drops) 0
+(bytes output) 0
+
+queue stats for all priority classes:
+Queueing
+priority level 2
+queue limit 96000 bytes
+(total drops) 0
+(bytes output) 0
+
+Class-map: tc7 (match-all)
+0 packets
+Match: traffic-class 7
+shape (average) cir 1000000000, bc 4000000, be 4000000
+target shape rate 1000000000
+Priority: Strict,
+
+Priority Level: 1
+
+Class-map: tc6 (match-all)
+0 packets
+Match: traffic-class 6
+shape (average) cir 1000000000, bc 4000000, be 4000000
+target shape rate 1000000000
+Priority: Strict,
+
+Priority Level: 2
+
+Class-map: class-default (match-any)
+0 packets
+Match: any
+
+queue limit 7500000 bytes
+(total drops) 0
+(bytes output) 0

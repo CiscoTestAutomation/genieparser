@@ -1,0 +1,1 @@
+expected_output = {'no_of_active_connections': 0}

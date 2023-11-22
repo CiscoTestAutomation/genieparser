@@ -1,0 +1,6 @@
+DHCPv6 pool: pool20
+  Active clients: 0
+DHCPv6 pool: pool1
+  Address allocation prefix: 2510:1::/64 valid 300 preferred 300 (1 in use, 0 conflicts)
+  Domain name: cisco.com
+  Active clients: 1

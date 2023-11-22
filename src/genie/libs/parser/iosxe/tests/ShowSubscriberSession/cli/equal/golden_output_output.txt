@@ -1,0 +1,8 @@
+Codes: Lterm - Local Term, Fwd - forwarded, unauth - unathenticated, authen -
+authenticated, TC Ct. - Number of Traffic Classes on the main session
+
+Current Subscriber Information: Total sessions 1
+Uniq ID Interface    State    Service     Up-time  TC Ct. Identifier
+3601    Vi2.1        authen   Lterm       00:00:04 0      user1@airtel.com
+3602    Vi2.1        authen   Lterm       00:00:04 0      user1@airtel.com
+

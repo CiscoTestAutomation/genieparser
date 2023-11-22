@@ -1,0 +1,14 @@
+Load for five secs: 4%/0%; one minute: 8%; five minutes: 6%
+Time source is NTP, 00:28:55.994 PDT Wed Dec 15 2021
+portDB has 3 entries for interface Gi1/0/12, 3 dynamic 
+Codes: L - Local, S - Static, ND - Neighbor Discovery, ARP - Address Resolution Protocol, DH4 - IPv4 DHCP, DH6 - IPv6 DHCP, PKT - Other Packet, API - API created
+Preflevel flags (prlvl):
+0001:MAC and LLA match     0002:Orig trunk            0004:Orig access           
+0008:Orig trusted trunk    0010:Orig trusted access   0020:DHCP assigned         
+0040:Cga authenticated     0080:Cert authenticated    0100:Statically assigned   
+
+
+    Network Layer Address                    Link Layer Address     Interface  vlan       prlvl      age        state      Time left       
+ND  2005:5000:5000:2:200:39FF:FE60:A206      0000.3960.a206         Gi1/0/12   169        0005       42s        REACHABLE  261 s try 0     
+ND  FE80::200:39FF:FE60:A206                 0000.3960.a206         Gi1/0/12   169        0005       4mn        REACHABLE  34 s try 0      
+DH6 2005:5000:5000:2:F15C:A17E:A5F8:4AC8     0000.3960.a206         Gi1/0/12   169        0024       4mn        REACHABLE  16 s try 0(157413 s)

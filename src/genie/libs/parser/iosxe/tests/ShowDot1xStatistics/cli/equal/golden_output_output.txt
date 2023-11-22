@@ -1,0 +1,11 @@
+sh dot1x statistics 
+Dot1x Global Statistics for
+--------------------------------------------
+RxStart = 2     RxLogoff = 0    RxResp = 14      RxRespID = 32
+RxReq = 0       RxInvalid = 0   RxLenErr = 0
+RxTotal = 53
+
+TxStart = 0     TxLogoff = 0    TxResp = 0
+TxReq = 16       ReTxReq = 0     ReTxReqFail = 0
+TxReqID = 36         ReTxReqID = 2       ReTxReqIDFail = 0
+TxTotal = 81

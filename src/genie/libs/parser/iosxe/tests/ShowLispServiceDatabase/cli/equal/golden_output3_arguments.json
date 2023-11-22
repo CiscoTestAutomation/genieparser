@@ -1,4 +1,4 @@
 {
-    "service": "ethernet",
-    "instance_id": "*"
+    "service": "ipv6",
+    "instance_id": "4100"
 }

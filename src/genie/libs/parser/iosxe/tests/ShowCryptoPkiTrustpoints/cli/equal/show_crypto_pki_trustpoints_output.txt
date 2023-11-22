@@ -1,0 +1,62 @@
+Trustpoint SLA-TrustPoint:
+    Subject Name:
+    cn=Cisco Licensing Root CA
+    o=Cisco
+          Serial Number (hex): 01
+    Certificate configured.
+
+
+Trustpoint CISCO_IDEVID_SUDI:
+    Subject Name:
+    cn=ACT2 SUDI CA
+    o=Cisco
+          Serial Number (hex): 61096E7D00000000000C
+    Certificate configured.
+
+
+Trustpoint CISCO_IDEVID_SUDI0:
+    Subject Name:
+    cn=Cisco Root CA 2048
+    o=Cisco Systems
+          Serial Number (hex): 5FF87B282B54DC8D42A315B568C9ADFF
+    Certificate configured.
+
+
+Trustpoint TP-self-signed-1504826562:
+    Subject Name:
+    cn=IOS-Self-Signed-Certificate-1504826562
+          Serial Number (hex): 01
+    Persistent self-signed certificate trust point
+    Using key label TP-self-signed-1504826562
+
+
+Trustpoint CISCO_IDEVID_CMCA2_SUDI:
+    Subject Name:
+    cn=Cisco Manufacturing CA SHA2
+    o=Cisco
+          Serial Number (hex): 02
+    Certificate configured.
+
+
+Trustpoint CISCO_IDEVID_CMCA2_SUDI0:
+    Subject Name:
+    cn=Cisco Root CA M2
+    o=Cisco
+          Serial Number (hex): 01
+    Certificate configured.
+
+
+Trustpoint CISCO_IDEVID_CMCA_SUDI:
+    Subject Name:
+    cn=Cisco Manufacturing CA
+    o=Cisco Systems
+          Serial Number (hex): 6A6967B3000000000003
+    Certificate configured.
+
+
+Trustpoint CISCO_IDEVID_CMCA_SUDI0:
+    Subject Name:
+    cn=Cisco Root CA 2048
+    o=Cisco Systems
+          Serial Number (hex): 5FF87B282B54DC8D42A315B568C9ADFF
+    Certificate configured.

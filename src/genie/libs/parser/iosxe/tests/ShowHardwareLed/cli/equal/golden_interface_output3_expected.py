@@ -1,0 +1,32 @@
+expected_output = {
+    'system': 'GREEN', 
+    'express_setup': 'BLACK',
+    'dc_a': 'GREEN',
+    'dc_b': 'BLACK', 
+    'alarm-out': 'GREEN', 
+    'alarm-in1': 'GREEN',
+    'alarm-in2': 'GREEN',
+    'number_of_ports_in_status': '20',
+    'status': {
+        'GigabitEthernet1/1': 'BLINK_GREEN-BLACK', 
+        'GigabitEthernet1/2': 'BLACK-BLINK_GREEN',
+        'GigabitEthernet1/3': 'BLACK', 
+        'GigabitEthernet1/4': 'BLINK_GREEN',
+        'GigabitEthernet1/5': 'BLINK_GREEN',
+        'GigabitEthernet1/6': 'BLINK_GREEN', 
+        'GigabitEthernet1/7': 'BLINK_GREEN',
+        'GigabitEthernet1/8': 'BLINK_GREEN', 
+        'GigabitEthernet1/9': 'BLINK_GREEN', 
+        'GigabitEthernet1/10': 'BLACK',
+        'GigabitEthernet1/11': 'BLACK',
+        'GigabitEthernet1/12': 'BLACK',
+        'GigabitEthernet1/13': 'BLACK', 
+        'GigabitEthernet1/14': 'BLACK', 
+        'GigabitEthernet1/15': 'BLACK',
+        'GigabitEthernet1/16': 'BLACK',
+        'GigabitEthernet1/17': 'BLACK',
+        'GigabitEthernet1/18': 'BLACK',
+        'GigabitEthernet1/19': 'BLACK', 
+        'GigabitEthernet1/20': 'BLINK_GREEN'
+        }
+    }

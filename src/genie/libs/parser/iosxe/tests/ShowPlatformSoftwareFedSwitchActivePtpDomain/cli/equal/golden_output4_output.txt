@@ -1,0 +1,18 @@
+Displaying data for domain number 0
+
+=======================================
+
+
+Profile Type : DEFAULT
+
+Profile State: enabled
+
+Clock Mode : BOUNDARY CLOCK
+
+Delay Mechanism: : END-TO-END
+
+PTP clock : 1970-1-12 18:3:10
+
+mean_path_delay 0 nanoseconds
+
+Transport Method : 802.3

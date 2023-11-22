@@ -1,0 +1,27 @@
+VRF red
+ (*,224.0.0.0/4) Flags: C
+   SW Forwarding: 0/0/0/0, Other: 41613/41613/0
+ (*,224.0.1.40) Flags: C
+   SW Forwarding: 0/0/0/0, Other: 0/0/0
+   Vlan100 Flags: F IC NS
+     Pkts: 0/0/0    Rate: 0 pps
+ (*,232.0.0.0/8) Flags:
+   SW Forwarding: 0/0/0/0, Other: 0/0/0
+ (30.0.0.2,232.1.1.1) Flags:
+   SW Forwarding: 0/0/0/0, Other: 0/0/0
+   Vlan100 Flags: A
+   Vlan500, VXLAN v4 Encap (50000, 239.1.1.0) Flags: F
+     Pkts: 0/0/0    Rate: 0 pps
+ (20.0.0.2,232.1.1.2) Flags:
+   SW Forwarding: 0/0/0/0, Other: 0/0/0
+   Vlan500, VXLAN Decap Flags: A
+   Vlan100 Flags: F NS
+     Pkts: 0/0/0    Rate: 0 pps
+ (20.0.0.4,232.1.1.2) Flags:
+   SW Forwarding: 0/0/0/0, Other: 0/0/0
+   Vlan100 Flags: F NS
+     Pkts: 0/0/0    Rate: 0 pps
+ (20.0.0.5,232.1.1.2) Flags:
+   SW Forwarding: 0/0/0/0, Other: 0/0/0
+   Vlan100 Flags: F NS
+     Pkts: 0/0/0    Rate: 0 pps

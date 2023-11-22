@@ -1,0 +1,8 @@
+  Telemetry receivers
+
+  Name                              Type        Profile               State       Explanation
+  --------------------------------------------------------------------------------------------------------------------------------------------
+  test0                             protocol                          Valid
+  test1                             protocol                          Valid
+
+

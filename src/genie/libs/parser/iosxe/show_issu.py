@@ -3,6 +3,7 @@
 IOSXE parsers for the following show commands:
    * show issu state detail
    * show issu rollback-timer
+   * show issu clients
 '''
 
 # Python
@@ -46,9 +47,20 @@ class ShowIssuStateDetailSchema(MetaParser):
                 Optional('variable_store'): str,
                 Optional('issu_state'): str,
                 Optional('rp_state'): str,
+                Optional('current_status'): str,
+                Optional('previous_operation'): str,
+                Optional('system_check'): {
+                    Optional('platform_issu_support'): str,
+                    Optional('standby_online'): str,
+                    Optional('autoboot_enabled'): str,
+                    Optional('sso_mode'): str,
+                    Optional('install_boot'): str,
+                    Optional('valid_boot_media'): str,
+                    Optional('opertional_mode'): str,
                 },
             },
-        }
+        },
+    }
 
 # ====================================
 #  Parser for 'show issu state detail'
@@ -68,6 +80,8 @@ class ShowIssuStateDetail(ShowIssuStateDetailSchema):
 
         # Init parsed dict
         ret_dict = {}
+        slot_info = False
+        default_slot = 'R0'
 
         # Compile regexp patterns
 
@@ -137,6 +151,36 @@ class ShowIssuStateDetail(ShowIssuStateDetailSchema):
         # Variable Store = PrstVbl
         p18 = re.compile(r'Variable\s+Store\s*=\s*(?P<variable_store>.+)')
 
+        # Current ISSU Status: Disabled
+        p19 = re.compile(r'^Current +ISSU +Status: +(?P<current_status>(\S+))$')
+        
+        # Previous ISSU Operation: N/A
+        p20 = re.compile(r'^Previous +ISSU +Operation: +(?P<previous_operation>(\S+))$')
+
+        # System Check                        Status
+        p21 = re.compile(r'^System +Check +Status$')
+
+        # Platform ISSU Support               No
+        p22 = re.compile(r'^Platform +ISSU +Support +(?P<platform_issu_support>(\S+))$')
+
+        # Standby Online                      No
+        p23 = re.compile(r'^Standby +Online +(?P<standby_online>(\S+))$')
+
+        # Autoboot Enabled                    Yes
+        p24 = re.compile(r'^Autoboot +Enabled +(?P<autoboot_enabled>(\S+))$')
+
+        # SSO Mode                            No
+        p25 = re.compile(r'^SSO +Mode +(?P<sso_mode>(\S+))$')
+
+        # Install Boot                        No
+        p26 = re.compile(r'^Install +Boot +(?P<install_boot>(\S+))$')
+
+        # Valid Boot Media                    Yes
+        p27 = re.compile(r'^Valid +Boot +Media +(?P<valid_boot_media>(\S+))$')
+
+        # Operational Mode                    HA-REMOTE
+        p28 = re.compile(r'^Operational +Mode +(?P<opertional_mode>(\S+))$')
+
         # Parse all lines
         for line in out.splitlines():
             line = line.strip()
@@ -149,12 +193,16 @@ class ShowIssuStateDetail(ShowIssuStateDetailSchema):
                 slot = m.groupdict()['slot']
                 slot_dict = ret_dict.setdefault('slot', {}).setdefault(slot, {})
                 slot_dict['issu_in_progress'] = False
+                slot_info = True
                 continue
 
             # No ISSU operation is in progress
             # p1 = re.compile(r'^No ISSU operation is in progress$')
             m = p1.match(line)
             if m:
+                if slot_info is False:
+                    slot_dict = ret_dict.setdefault('slot', {}).setdefault(default_slot, {})
+                    slot_info = True
                 if 'slot' in ret_dict:
                     slot_dict['issu_in_progress'] = False
                 continue
@@ -313,6 +361,87 @@ class ShowIssuStateDetail(ShowIssuStateDetailSchema):
                 slot_dict['variable_store'] = variable_store
                 continue
 
+            # Current ISSU Status: Disabled
+            # p19 = re.compile(r'^Current +ISSU +Status: +(?P<current_status>(\S+))$')
+            m = p19.match(line)
+            if m:
+                if slot_info is False:
+                    slot_dict = ret_dict.setdefault('slot', {}).setdefault(default_slot, {})
+                    slot_info = True
+                current_status = m.groupdict()['current_status']
+                slot_dict['current_status'] = current_status
+                continue
+
+            # Previous ISSU Operation: N/A
+            # p20 = re.compile(r'^Previous +ISSU +Operation: +(?P<previous_operation>([\S\/]+))$')
+            m = p20.match(line)
+            if m:
+                previous_operation = m.groupdict()['previous_operation']
+                slot_dict['previous_operation'] = previous_operation
+                continue
+
+            # System Check                        Status
+            # p21 = re.compile(r'^System +Check +Status$')
+            m = p21.match(line)
+            if m:
+                slot_dict.setdefault('system_check', {})
+                continue
+
+            # Platform ISSU Support               No
+            # p22 = re.compile(r'^Platform +ISSU +Support +(?P<platform_issu_support>(\S+))$')
+            m = p22.match(line)
+            if m:
+                platform_issu_support = m.groupdict()['platform_issu_support']
+                slot_dict['system_check']['platform_issu_support'] = platform_issu_support
+                continue
+
+            # Standby Online                      No
+            # p23 = re.compile(r'^Standby +Online +(?P<standby_online>(\S+))$')
+            m = p23.match(line)
+            if m:
+                standby_online = m.groupdict()['standby_online']
+                slot_dict['system_check']['standby_online'] = standby_online
+                continue
+
+            # Autoboot Enabled                    Yes
+            # p24 = re.compile(r'^Autoboot +Enabled +(?P<autoboot_enabled>(\S+))$')
+            m = p24.match(line)
+            if m:
+                autoboot_enabled = m.groupdict()['autoboot_enabled']
+                slot_dict['system_check']['autoboot_enabled'] = autoboot_enabled
+                continue
+
+            # SSO Mode                            No
+            # p25 = re.compile(r'^SSO +Mode +(?P<sso_mode>(\S+))$')
+            m = p25.match(line)
+            if m:
+                sso_mode = m.groupdict()['sso_mode']
+                slot_dict['system_check']['sso_mode'] = sso_mode
+                continue
+
+            # Install Boot                        No
+            # p26 = re.compile(r'^Install +Boot +(?P<install_boot>(\S+))$')
+            m = p26.match(line)
+            if m:
+                install_boot = m.groupdict()['install_boot']
+                slot_dict['system_check']['install_boot'] = install_boot
+                continue
+
+            # Valid Boot Media                    Yes
+            # p27 = re.compile(r'^Valid +Boot +Media +(?P<valid_boot_media>(\S+))$')
+            m = p27.match(line)
+            if m:
+                valid_boot_media = m.groupdict()['valid_boot_media']
+                slot_dict['system_check']['valid_boot_media'] = valid_boot_media
+                continue
+
+            # Operational Mode                    HA-REMOTE 
+            #p28 = re.compile(r'^Operational +Mode +(?P<opertional_mode>(\S+))$')
+            m = p28.match(line)
+            if m:
+                opertional_mode = m.groupdict()['opertional_mode']
+                slot_dict['system_check']['opertional_mode'] = opertional_mode
+                continue
 
         return ret_dict
 
@@ -390,4 +519,77 @@ class ShowIssuRollbackTimer(ShowIssuRollbackTimerSchema):
                 ret_dict['rollback_timer_time'] = group['rollback_time']                
                 continue
 
+        return ret_dict
+
+
+class ShowIssuClientsSchema(MetaParser):
+    """Schema for show issu clients"""
+    schema = {
+        'issu_clients':
+            {Any():
+                {
+                'client_id': int,
+                'client_name': str,
+                'entity_count': int,
+                },
+            'base_client_name': list,
+        },
+    }
+
+
+class ShowIssuClients(ShowIssuClientsSchema):
+    """Parser for show issu rollback-timer"""
+
+    cli_command = ['show issu clients']
+
+    def cli(self,output=None):
+        if output is None:
+            # Execute command to get output from device
+            out = self.device.execute(self.cli_command[0])
+
+        # Init parsed dict
+        ret_dict = {}
+        #ret_dict['base_client_name'] =[]
+        
+
+        # Compile regexp patterns
+        # Client_ID = 2, Client_Name = ISSU Proto client,  Entity_Count = 1
+        p0 = re.compile(r'^Client_ID += +(?P<client_id>\d+), +Client_Name += +(?P<client_name>[\w ]+), +Entity_Count += +(?P<entity_count>\d+)$')
+
+        #Base Clients:
+        p1 = re.compile(r'^Base +Clients:$')
+
+        # Client_Name = ISSU Proto client
+        p2 = re.compile(r'^Client_Name += +(?P<base_client_name>[\w ]+)$')
+
+        # Parse all lines
+        for line in out.splitlines():
+            line = line.strip()
+            
+            # Client_ID = 2, Client_Name = ISSU Proto client,  Entity_Count = 1
+            #p0 = re.compile(r'^\s+Client_ID += +(?P<client_id>\d+), +Client_Name += +(?P<client_name>[\w ]+), +Entity_Count += +(?P<entity_count>\d+)'$)
+            m = p0.match(line)
+            if m:
+                group = m.groupdict()
+                issu_clients_dict = ret_dict.setdefault('issu_clients', {}).setdefault(int(group['client_id']), {})
+                issu_clients_dict.update({'client_id': int(group['client_id'])})
+                issu_clients_dict.update({'client_name': group['client_name']})
+                issu_clients_dict.update({'entity_count': int(group['entity_count'])})
+                continue
+
+            #Base Clients:
+            #p1 = re.compile(r'^Base +Clients:$')
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                continue
+
+            # Client_Name = ISSU Proto client
+            #p2 = re.compile(r'^\s+Client_Name += +(?P<base_client_name>[\w ]+)$')
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                base_clients_dict = ret_dict.setdefault('issu_clients', {}).setdefault('base_client_name', [])
+                base_clients_dict.append(group['base_client_name'])
+                continue
         return ret_dict

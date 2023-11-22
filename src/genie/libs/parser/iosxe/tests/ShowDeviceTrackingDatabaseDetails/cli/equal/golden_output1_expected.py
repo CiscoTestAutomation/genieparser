@@ -15,7 +15,10 @@ expected_output =  {
         "reachable": 2,
         "stale": 1,
         "total": 5,
-        "verify": 1
+        "verify": 1,
+        "incomplete": 1,
+        "creating": 1,
+        "tentative": 1,
     },
     "device": {
         1: {
@@ -97,6 +100,38 @@ expected_output =  {
             "state": "DOWN",
             "time_left": "N/A",
             "vlan_id": 100
-        }
+        },
+        6: {
+            "age": "38959mn",
+            "client_id": "0000.0000.0000",
+            "dev_code": "DH6",
+            "filter": "no",
+            "in_crimson": "yes",
+            "interface": "Twe1/0/1",
+            "link_layer_address": "000a.000b.000c(D)",
+            "mode": "trunk",
+            "network_layer_address": "2001::1",
+            "policy": "",
+            "pref_level_code": 100,
+            "state": "DOWN",
+            "time_left": "123 s(456 s)",
+            "vlan_id": 100
+        }, 
+        7: {
+            "age": "3mn",
+            "client_id": "0001.0003.0002",
+            "dev_code": "DH4",
+            "filter": "no",
+            "in_crimson": "yes",
+            "interface": "Gi1/0/23",
+            "link_layer_address": "0001.0003.0002(R)",
+            "mode": "access",
+            "network_layer_address": "110.0.0.3",
+            "policy": "(unspecified)              LISP-DT-GUARD-VLAN-MULTI-IP (Device-tracking)",
+            "pref_level_code": 24,
+            "state": "REACHABLE",
+            "time_left": "12 s try 0(6722 s)",
+            "vlan_id": 110
+        } 
     }
     }

@@ -1,0 +1,19 @@
+----------------------------------------------------------------------
+Client MAC      TTL Vlan ID  Location ID  User Role
+----------------------------------------------------------------------
+
+PTR Name: _afpovertcp._tcp.local
+4c5d.3c1f.eb75  120 602      Default      none
+4c5d.3c1f.eb75  85  603      Default      none
+4c5d.3c1f.eb75  115 604      Default      none
+4c5d.3c1f.ebf5  115 702      Default      none
+4c5d.3c1f.ebf5  129 703      Default      none
+
+PTR Name: _airplay._tcp.local
+4c5d.3c1f.eb75  120 602      Default      none
+4c5d.3c1f.eb75  85  603      Default      none
+4c5d.3c1f.eb75  115 604      Default      none
+4c5d.3c1f.ebf5  115 702      Default      none
+4c5d.3c1f.ebf5  129 703      Default      none
+
+PTR Name: _companion-link._tcp.local

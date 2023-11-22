@@ -1,0 +1,27 @@
+Zone-pair: CU_107->DEFAULT 
+Service-policy inspect : TEST
+
+    Class-map: TEST (match-any)  
+      Match: access-group name HBN2
+      Inspect
+        Packet inspection statistics [process switch:fast switch]
+        udp packets: [0:84014582]
+        tcp packets: [0:23764980]
+
+        Session creations since subsystem startup or last reset 30
+        Current session counts (estab/half-open/terminating) [10:0:0]
+        Maxever session counts (estab/half-open/terminating) [10:0:0]
+        Last session created 16:42:32
+        Last statistic reset never
+        Last session creation rate 0
+        Last half-open session total 0
+
+    Class-map: ICMP (match-all)  
+      Match: protocol icmp
+      Pass
+        0 packets, 0 bytes
+
+    Class-map: class-default (match-any)  
+      Match: any 
+      Drop
+        6986043 packets, 3423161070 bytes

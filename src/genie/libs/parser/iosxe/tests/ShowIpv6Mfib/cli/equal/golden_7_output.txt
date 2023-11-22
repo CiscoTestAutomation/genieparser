@@ -1,0 +1,69 @@
+Entry Flags:    C - Directly Connected, S - Signal, IA - Inherit A flag,
+                ET - Data Rate Exceeds Threshold, K - Keepalive
+                DDE - Data Driven Event, HW - Hardware Installed
+                ME - MoFRR ECMP entry, MNE - MoFRR Non-ECMP entry, MP - MFIB
+                MoFRR Primary, RP - MRIB MoFRR Primary, P - MoFRR Primary
+                MS  - MoFRR  Entry in Sync, MC - MoFRR entry in MoFRR Client,
+                e   - Encap helper tunnel flag.
+I/O Item Flags: IC - Internal Copy, NP - Not platform switched,
+                NS - Negate Signalling, SP - Signal Present,
+                A - Accept, F - Forward, RA - MRIB Accept, RF - MRIB Forward,
+                MA - MFIB Accept, A2 - Accept backup,
+                RA2 - MRIB Accept backup, MA2 - MFIB Accept backup
+
+Forwarding Counts: Pkt Count/Pkts per second/Avg Pkt Size/Kbits per second
+Other counts:      Total/RPF failed/Other drops
+I/O Item Counts:   HW Pkt Count/FS Pkt Count/PS Pkt Count   Egress Rate in pps
+Default
+ (*,FF09::11) Flags: C K HW
+   0x8C  OIF-IC count: 0, OIF-A count: 1
+   SW Forwarding: 0/0/0/0, Other: 0/0/0
+   HW Forwarding:   0/0/0/0, Other: 0/0/0
+   GigabitEthernet1/0/1 Flags: RA A MA NS
+   L2LISP0.1501, L2LISP v6 Decap Flags: RF F NS
+     CEF: OCE (lisp decap)
+     Pkts: 0/0/0    Rate: 0 pps
+   L2LISP0.1502, L2LISP v6 Decap Flags: RF F NS
+     CEF: OCE (lisp decap)
+     Pkts: 0/0/0    Rate: 0 pps
+ (2001:100:11:11::11,FF09::11) Flags: K HW DDE
+   0x8D  OIF-IC count: 0, OIF-A count: 1
+   SW Forwarding: 0/0/0/0, Other: 0/0/0
+   HW Forwarding:   3135/1/122/1, Other: 0/0/0
+   Null0 Flags: RA A MA
+   GigabitEthernet1/0/1 Flags: RF F NS
+     CEF: Adjacency with MAC: 333300000011525400047F1586DD
+     Pkts: 0/0/0    Rate: 0 pps
+ (2001:100:22:22::22,FF09::11) Flags: K HW DDE
+   0x9F  OIF-IC count: 0, OIF-A count: 1
+   SW Forwarding: 0/0/0/0, Other: 0/0/0
+   HW Forwarding:   1568/0/134/0, Other: 0/0/0
+   GigabitEthernet1/0/1 Flags: RA A MA
+   L2LISP0.1501, L2LISP v6 Decap Flags: RF F NS
+     CEF: OCE (lisp decap)
+     Pkts: 0/0/0    Rate: 0 pps
+   L2LISP0.1502, L2LISP v6 Decap Flags: RF F NS
+     CEF: OCE (lisp decap)
+     Pkts: 0/0/0    Rate: 0 pps
+ (2001:100:33:33::33,FF09::11) Flags: K HW DDE
+   0x9D  OIF-IC count: 0, OIF-A count: 1
+   SW Forwarding: 0/0/0/0, Other: 0/0/0
+   HW Forwarding:   1568/0/134/0, Other: 0/0/0
+   GigabitEthernet1/0/1 Flags: RA A MA
+   L2LISP0.1501, L2LISP v6 Decap Flags: RF F NS
+     CEF: OCE (lisp decap)
+     Pkts: 0/0/0    Rate: 0 pps
+   L2LISP0.1502, L2LISP v6 Decap Flags: RF F NS
+     CEF: OCE (lisp decap)
+     Pkts: 0/0/0    Rate: 0 pps
+ (2001:100:88:88:88:88:88:88,FF09::11) Flags: K HW DDE
+   0x9E  OIF-IC count: 0, OIF-A count: 1
+   SW Forwarding: 0/0/0/0, Other: 0/0/0
+   HW Forwarding:   1567/0/134/0, Other: 0/0/0
+   GigabitEthernet1/0/1 Flags: RA A MA
+   L2LISP0.1501, L2LISP v6 Decap Flags: RF F NS
+     CEF: OCE (lisp decap)
+     Pkts: 0/0/0    Rate: 0 pps
+   L2LISP0.1502, L2LISP v6 Decap Flags: RF F NS
+     CEF: OCE (lisp decap)
+     Pkts: 0/0/0    Rate: 0 pps

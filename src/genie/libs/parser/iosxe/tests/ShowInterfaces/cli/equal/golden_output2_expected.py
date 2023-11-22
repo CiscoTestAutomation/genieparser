@@ -2,6 +2,7 @@ expected_output = {
     "Vlan1": {
         "port_channel": {"port_channel_member": False},
         "enabled": False,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "autostate": True,
@@ -65,6 +66,7 @@ expected_output = {
     "Vlan15": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "autostate": True,
@@ -128,6 +130,7 @@ expected_output = {
     "Vlan101": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "autostate": True,
@@ -192,6 +195,7 @@ expected_output = {
     "Vlan102": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "autostate": True,
@@ -256,6 +260,7 @@ expected_output = {
     "Vlan103": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "autostate": True,
@@ -320,6 +325,7 @@ expected_output = {
     "Vlan104": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "autostate": True,
@@ -384,6 +390,7 @@ expected_output = {
     "Vlan105": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "autostate": True,
@@ -448,6 +455,7 @@ expected_output = {
     "Vlan106": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "autostate": True,
@@ -512,6 +520,7 @@ expected_output = {
     "Vlan107": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "autostate": True,
@@ -576,6 +585,7 @@ expected_output = {
     "Vlan108": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "autostate": True,
@@ -640,6 +650,7 @@ expected_output = {
     "Vlan109": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "autostate": True,
@@ -704,6 +715,7 @@ expected_output = {
     "Vlan110": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "autostate": True,
@@ -768,6 +780,7 @@ expected_output = {
     "Vlan111": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "autostate": True,
@@ -832,6 +845,7 @@ expected_output = {
     "Vlan112": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "autostate": True,
@@ -896,6 +910,7 @@ expected_output = {
     "Vlan113": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "autostate": True,
@@ -960,6 +975,7 @@ expected_output = {
     "Vlan114": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "autostate": True,
@@ -1024,6 +1040,7 @@ expected_output = {
     "Vlan115": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "autostate": True,
@@ -1088,6 +1105,7 @@ expected_output = {
     "Vlan116": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "autostate": True,
@@ -1152,6 +1170,7 @@ expected_output = {
     "Vlan117": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "autostate": True,
@@ -1216,6 +1235,7 @@ expected_output = {
     "Vlan118": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "autostate": True,
@@ -1280,6 +1300,7 @@ expected_output = {
     "Vlan119": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "autostate": True,
@@ -1344,6 +1365,7 @@ expected_output = {
     "Vlan120": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "autostate": True,
@@ -1408,6 +1430,7 @@ expected_output = {
     "Vlan121": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "autostate": True,
@@ -1472,6 +1495,7 @@ expected_output = {
     "Vlan122": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "autostate": True,
@@ -1536,6 +1560,7 @@ expected_output = {
     "Vlan123": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "autostate": True,
@@ -1600,6 +1625,7 @@ expected_output = {
     "Vlan124": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "autostate": True,
@@ -1664,6 +1690,7 @@ expected_output = {
     "Vlan125": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "autostate": True,
@@ -1728,6 +1755,7 @@ expected_output = {
     "Vlan126": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "autostate": True,
@@ -1792,6 +1820,7 @@ expected_output = {
     "Vlan127": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "autostate": True,
@@ -1856,6 +1885,7 @@ expected_output = {
     "Vlan128": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "autostate": True,
@@ -1920,6 +1950,7 @@ expected_output = {
     "Vlan129": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "autostate": True,
@@ -1984,6 +2015,7 @@ expected_output = {
     "Vlan130": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "autostate": True,
@@ -2048,6 +2080,7 @@ expected_output = {
     "Vlan131": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "autostate": True,
@@ -2112,6 +2145,7 @@ expected_output = {
     "Vlan132": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "autostate": True,
@@ -2176,6 +2210,7 @@ expected_output = {
     "Vlan133": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "autostate": True,
@@ -2240,6 +2275,7 @@ expected_output = {
     "Vlan134": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "autostate": True,
@@ -2304,6 +2340,7 @@ expected_output = {
     "Vlan135": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "autostate": True,
@@ -2368,6 +2405,7 @@ expected_output = {
     "Vlan136": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "autostate": True,
@@ -2432,6 +2470,7 @@ expected_output = {
     "Vlan137": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "autostate": True,
@@ -2496,6 +2535,7 @@ expected_output = {
     "Vlan138": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "autostate": True,
@@ -2560,6 +2600,7 @@ expected_output = {
     "Vlan139": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "autostate": True,
@@ -2624,6 +2665,7 @@ expected_output = {
     "Vlan140": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "autostate": True,
@@ -2688,6 +2730,7 @@ expected_output = {
     "GigabitEthernet0/0": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "type": "RP management port",
@@ -2767,6 +2810,7 @@ expected_output = {
     "FortyGigabitEthernet1/0/1": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "connected": False,
@@ -2852,6 +2896,7 @@ expected_output = {
             "port_channel_int": "Port-channel2",
         },
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "connected": True,
@@ -2934,6 +2979,7 @@ expected_output = {
     "FortyGigabitEthernet1/0/3": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "connected": False,
@@ -3019,6 +3065,7 @@ expected_output = {
             "port_channel_int": "Port-channel2",
         },
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "connected": True,
@@ -3101,6 +3148,7 @@ expected_output = {
     "FortyGigabitEthernet1/0/5": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "connected": False,
@@ -3183,6 +3231,7 @@ expected_output = {
     "FortyGigabitEthernet1/0/6": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "connected": False,
@@ -3265,6 +3314,7 @@ expected_output = {
     "FortyGigabitEthernet1/0/7": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "connected": False,
@@ -3347,6 +3397,7 @@ expected_output = {
     "FortyGigabitEthernet1/0/8": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "connected": False,
@@ -3429,6 +3480,7 @@ expected_output = {
     "FortyGigabitEthernet1/0/9": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "connected": False,
@@ -3511,6 +3563,7 @@ expected_output = {
     "FortyGigabitEthernet1/0/10": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "connected": False,
@@ -3593,6 +3646,7 @@ expected_output = {
     "FortyGigabitEthernet1/0/11": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "connected": False,
@@ -3675,6 +3729,7 @@ expected_output = {
     "FortyGigabitEthernet1/0/12": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "connected": False,
@@ -3757,6 +3812,7 @@ expected_output = {
     "FortyGigabitEthernet1/0/13": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "connected": False,
@@ -3839,6 +3895,7 @@ expected_output = {
     "FortyGigabitEthernet1/0/14": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "connected": False,
@@ -3921,6 +3978,7 @@ expected_output = {
     "FortyGigabitEthernet1/0/15": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "connected": False,
@@ -4003,6 +4061,7 @@ expected_output = {
     "FortyGigabitEthernet1/0/16": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "connected": False,
@@ -4085,6 +4144,7 @@ expected_output = {
     "FortyGigabitEthernet1/0/17": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "connected": False,
@@ -4167,6 +4227,7 @@ expected_output = {
     "FortyGigabitEthernet1/0/18": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "connected": False,
@@ -4249,6 +4310,7 @@ expected_output = {
     "FortyGigabitEthernet1/0/19": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "connected": False,
@@ -4331,6 +4393,7 @@ expected_output = {
     "FortyGigabitEthernet1/0/20": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "connected": False,
@@ -4413,6 +4476,7 @@ expected_output = {
     "FortyGigabitEthernet1/0/21": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "connected": False,
@@ -4497,6 +4561,7 @@ expected_output = {
     "FortyGigabitEthernet1/0/22": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "connected": False,
@@ -4579,6 +4644,7 @@ expected_output = {
     "FortyGigabitEthernet1/0/23": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "connected": False,
@@ -4661,6 +4727,7 @@ expected_output = {
     "FortyGigabitEthernet1/0/24": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "connected": False,
@@ -4743,6 +4810,7 @@ expected_output = {
     "FortyGigabitEthernet1/0/25": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "connected": False,
@@ -4825,6 +4893,7 @@ expected_output = {
     "FortyGigabitEthernet1/0/26": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "connected": False,
@@ -4907,6 +4976,7 @@ expected_output = {
     "FortyGigabitEthernet1/0/27": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "connected": False,
@@ -4989,6 +5059,7 @@ expected_output = {
     "FortyGigabitEthernet1/0/28": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "connected": False,
@@ -5071,6 +5142,7 @@ expected_output = {
     "FortyGigabitEthernet1/0/29": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "connected": False,
@@ -5153,6 +5225,7 @@ expected_output = {
     "FortyGigabitEthernet1/0/30": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "connected": False,
@@ -5235,6 +5308,7 @@ expected_output = {
     "FortyGigabitEthernet1/0/31": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "connected": False,
@@ -5317,6 +5391,7 @@ expected_output = {
     "FortyGigabitEthernet1/0/32": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "connected": False,
@@ -5399,6 +5474,7 @@ expected_output = {
     "HundredGigE1/0/33": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "connected": False,
@@ -5481,6 +5557,7 @@ expected_output = {
     "HundredGigE1/0/34": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "connected": False,
@@ -5563,6 +5640,7 @@ expected_output = {
     "HundredGigE1/0/35": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "auto_negotiate": False,
         "oper_status": "up",
@@ -5646,6 +5724,7 @@ expected_output = {
     "HundredGigE1/0/35.1": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "connected": True,
@@ -5675,6 +5754,7 @@ expected_output = {
     "HundredGigE1/0/35.2": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "connected": True,
@@ -5704,6 +5784,7 @@ expected_output = {
     "HundredGigE1/0/35.3": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "connected": True,
@@ -5733,6 +5814,7 @@ expected_output = {
     "HundredGigE1/0/35.4": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "connected": True,
@@ -5762,6 +5844,7 @@ expected_output = {
     "HundredGigE1/0/35.5": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "connected": True,
@@ -5791,6 +5874,7 @@ expected_output = {
     "HundredGigE1/0/35.6": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "connected": True,
@@ -5820,6 +5904,7 @@ expected_output = {
     "HundredGigE1/0/35.7": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "connected": True,
@@ -5849,6 +5934,7 @@ expected_output = {
     "HundredGigE1/0/35.8": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "connected": True,
@@ -5878,6 +5964,7 @@ expected_output = {
     "HundredGigE1/0/35.9": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "connected": True,
@@ -5907,6 +5994,7 @@ expected_output = {
     "HundredGigE1/0/35.10": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "connected": True,
@@ -5936,6 +6024,7 @@ expected_output = {
     "HundredGigE1/0/35.11": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "connected": True,
@@ -5965,6 +6054,7 @@ expected_output = {
     "HundredGigE1/0/35.12": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "connected": True,
@@ -5994,6 +6084,7 @@ expected_output = {
     "HundredGigE1/0/35.13": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "connected": True,
@@ -6023,6 +6114,7 @@ expected_output = {
     "HundredGigE1/0/35.14": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "connected": True,
@@ -6052,6 +6144,7 @@ expected_output = {
     "HundredGigE1/0/35.15": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "connected": True,
@@ -6081,6 +6174,7 @@ expected_output = {
     "HundredGigE1/0/35.16": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "connected": True,
@@ -6110,6 +6204,7 @@ expected_output = {
     "HundredGigE1/0/35.17": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "connected": True,
@@ -6139,6 +6234,7 @@ expected_output = {
     "HundredGigE1/0/35.18": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "connected": True,
@@ -6168,6 +6264,7 @@ expected_output = {
     "HundredGigE1/0/35.19": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "connected": True,
@@ -6197,6 +6294,7 @@ expected_output = {
     "HundredGigE1/0/35.20": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "connected": True,
@@ -6226,6 +6324,7 @@ expected_output = {
     "HundredGigE1/0/35.101": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "connected": True,
@@ -6255,6 +6354,7 @@ expected_output = {
     "HundredGigE1/0/35.102": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "connected": True,
@@ -6284,6 +6384,7 @@ expected_output = {
     "HundredGigE1/0/35.103": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "connected": True,
@@ -6313,6 +6414,7 @@ expected_output = {
     "HundredGigE1/0/35.104": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "connected": True,
@@ -6342,6 +6444,7 @@ expected_output = {
     "HundredGigE1/0/35.105": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "connected": True,
@@ -6371,6 +6474,7 @@ expected_output = {
     "HundredGigE1/0/35.106": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "connected": True,
@@ -6400,6 +6504,7 @@ expected_output = {
     "HundredGigE1/0/35.107": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "connected": True,
@@ -6429,6 +6534,7 @@ expected_output = {
     "HundredGigE1/0/35.108": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "connected": True,
@@ -6458,6 +6564,7 @@ expected_output = {
     "HundredGigE1/0/35.109": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "connected": True,
@@ -6487,6 +6594,7 @@ expected_output = {
     "HundredGigE1/0/35.110": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "connected": True,
@@ -6516,6 +6624,7 @@ expected_output = {
     "HundredGigE1/0/36": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "connected": False,
@@ -6598,6 +6707,7 @@ expected_output = {
     "HundredGigE1/0/37": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "connected": False,
@@ -6680,6 +6790,7 @@ expected_output = {
     "HundredGigE1/0/38": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "connected": False,
@@ -6762,6 +6873,7 @@ expected_output = {
     "HundredGigE1/0/39": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "connected": False,
@@ -6844,6 +6956,7 @@ expected_output = {
     "HundredGigE1/0/40": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "connected": False,
@@ -6926,6 +7039,7 @@ expected_output = {
     "HundredGigE1/0/41": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "connected": True,
@@ -7009,6 +7123,7 @@ expected_output = {
     "HundredGigE1/0/42": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "connected": False,
@@ -7091,6 +7206,7 @@ expected_output = {
     "HundredGigE1/0/43": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "connected": False,
@@ -7173,6 +7289,7 @@ expected_output = {
     "HundredGigE1/0/44": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "connected": False,
@@ -7255,6 +7372,7 @@ expected_output = {
     "HundredGigE1/0/45": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "connected": False,
@@ -7337,6 +7455,7 @@ expected_output = {
     "HundredGigE1/0/46": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "connected": False,
@@ -7419,6 +7538,7 @@ expected_output = {
     "HundredGigE1/0/47": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "connected": False,
@@ -7501,6 +7621,7 @@ expected_output = {
     "HundredGigE1/0/48": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "auto_negotiate": False,
@@ -7584,6 +7705,7 @@ expected_output = {
     "HundredGigE1/0/48.1": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "connected": True,
@@ -7613,6 +7735,7 @@ expected_output = {
     "HundredGigE1/0/48.2": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "connected": True,
@@ -7642,6 +7765,7 @@ expected_output = {
     "HundredGigE1/0/48.3": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "connected": True,
@@ -7671,6 +7795,7 @@ expected_output = {
     "HundredGigE1/0/48.4": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "connected": True,
@@ -7700,6 +7825,7 @@ expected_output = {
     "HundredGigE1/0/48.5": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "connected": True,
@@ -7729,6 +7855,7 @@ expected_output = {
     "HundredGigE1/0/48.6": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "connected": True,
@@ -7758,6 +7885,7 @@ expected_output = {
     "HundredGigE1/0/48.7": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "connected": True,
@@ -7787,6 +7915,7 @@ expected_output = {
     "HundredGigE1/0/48.8": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "connected": True,
@@ -7816,6 +7945,7 @@ expected_output = {
     "HundredGigE1/0/48.9": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "connected": True,
@@ -7845,6 +7975,7 @@ expected_output = {
     "HundredGigE1/0/48.10": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "connected": True,
@@ -7874,6 +8005,7 @@ expected_output = {
     "Bluetooth0/4": {
         "port_channel": {"port_channel_member": False},
         "enabled": False,
+        "is_deleted": False,
         "line_protocol": "down",
         "oper_status": "down",
         "type": "BT management port",
@@ -7954,6 +8086,7 @@ expected_output = {
         },
         "port_speed": "40gb/s",
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "connected": True,
@@ -8035,6 +8168,7 @@ expected_output = {
     "Loopback1": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "type": "Loopback",
@@ -8097,6 +8231,7 @@ expected_output = {
     "Loopback10": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "type": "Loopback",
@@ -8158,6 +8293,7 @@ expected_output = {
     "Loopback101": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "type": "Loopback",
@@ -8220,6 +8356,7 @@ expected_output = {
     "Loopback102": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "type": "Loopback",
@@ -8282,6 +8419,7 @@ expected_output = {
     "Tunnel0": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "type": "Tunnel",
@@ -8290,6 +8428,14 @@ expected_output = {
         "mtu": 1452,
         "bandwidth": 100,
         "reliability": "255/255",
+        "tunnel_destination_ip": "::",
+        "tunnel_source_ip": "2001:db8:9b4a:ffe5::1",
+        "tunnel_source_interface": "Vlan102",
+        "tunnel_protocol": "PIM/IPv6",
+        "tunnel_receive_bandwidth": 8000,
+        "tunnel_transmit_bandwidth": 8000,
+        "tunnel_transport_mtu": 1452,
+        "tunnel_ttl": 65,
         "txload": "1/255",
         "rxload": "1/255",
         "encapsulations": {"encapsulation": "tunnel"},
@@ -8343,6 +8489,7 @@ expected_output = {
     "Tunnel1": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "type": "Tunnel",
@@ -8352,6 +8499,14 @@ expected_output = {
         "bandwidth": 100,
         "reliability": "255/255",
         "txload": "1/255",
+        "tunnel_destination_ip": "10.154.1.1",
+        "tunnel_source_ip": "10.154.1.2",
+        "tunnel_source_interface": "Loopback102",
+        "tunnel_protocol": "GRE/IP",
+        "tunnel_receive_bandwidth": 8000,
+        "tunnel_transmit_bandwidth": 8000,
+        "tunnel_transport_mtu": 1476,
+        "tunnel_ttl": 255,
         "rxload": "1/255",
         "encapsulations": {"encapsulation": "tunnel"},
         "last_input": "never",
@@ -8404,6 +8559,7 @@ expected_output = {
     "Tunnel2": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "type": "Tunnel",
@@ -8413,6 +8569,14 @@ expected_output = {
         "bandwidth": 100,
         "reliability": "255/255",
         "txload": "1/255",
+        "tunnel_destination_ip": "10.154.1.1",
+        "tunnel_source_ip": "10.154.1.2",
+        "tunnel_source_interface": "Loopback102",
+        "tunnel_protocol": "GRE/IP",
+        "tunnel_receive_bandwidth": 8000,
+        "tunnel_transmit_bandwidth": 8000,
+        "tunnel_transport_mtu": 1476,
+        "tunnel_ttl": 255,
         "rxload": "1/255",
         "encapsulations": {"encapsulation": "tunnel"},
         "last_input": "never",
@@ -8465,6 +8629,7 @@ expected_output = {
     "Tunnel3": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "type": "Tunnel",
@@ -8474,6 +8639,14 @@ expected_output = {
         "bandwidth": 100,
         "reliability": "255/255",
         "txload": "1/255",
+        "tunnel_destination_ip": "10.154.1.1",
+        "tunnel_source_ip": "10.154.1.2",
+        "tunnel_source_interface": "Loopback102",
+        "tunnel_protocol": "GRE/IP",
+        "tunnel_receive_bandwidth": 8000,
+        "tunnel_transmit_bandwidth": 8000,
+        "tunnel_transport_mtu": 1476,
+        "tunnel_ttl": 255,
         "rxload": "1/255",
         "encapsulations": {"encapsulation": "tunnel"},
         "last_input": "never",
@@ -8526,6 +8699,7 @@ expected_output = {
     "Tunnel4": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "type": "Tunnel",
@@ -8535,6 +8709,14 @@ expected_output = {
         "bandwidth": 100,
         "reliability": "255/255",
         "txload": "1/255",
+        "tunnel_destination_ip": "10.154.1.1",
+        "tunnel_source_ip": "10.154.1.2",
+        "tunnel_source_interface": "Loopback102",
+        "tunnel_protocol": "GRE/IP",
+        "tunnel_receive_bandwidth": 8000,
+        "tunnel_transmit_bandwidth": 8000,
+        "tunnel_transport_mtu": 1476,
+        "tunnel_ttl": 255,
         "rxload": "1/255",
         "encapsulations": {"encapsulation": "tunnel"},
         "last_input": "never",
@@ -8587,6 +8769,7 @@ expected_output = {
     "Tunnel5": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "type": "Tunnel",
@@ -8595,6 +8778,14 @@ expected_output = {
         "mtu": 17868,
         "bandwidth": 100,
         "reliability": "255/255",
+        "tunnel_destination_ip": "10.154.1.1",
+        "tunnel_source_ip": "10.154.1.2",
+        "tunnel_source_interface": "Loopback102",
+        "tunnel_protocol": "GRE/IP",
+        "tunnel_receive_bandwidth": 8000,
+        "tunnel_transmit_bandwidth": 8000,
+        "tunnel_transport_mtu": 1476,
+        "tunnel_ttl": 255,
         "txload": "1/255",
         "rxload": "1/255",
         "encapsulations": {"encapsulation": "tunnel"},
@@ -8648,6 +8839,7 @@ expected_output = {
     "Tunnel6": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "type": "Tunnel",
@@ -8657,6 +8849,14 @@ expected_output = {
         "bandwidth": 100,
         "reliability": "255/255",
         "txload": "1/255",
+        "tunnel_destination_ip": "10.154.1.1",
+        "tunnel_source_ip": "10.154.1.2",
+        "tunnel_source_interface": "Loopback102",
+        "tunnel_protocol": "GRE/IP",
+        "tunnel_receive_bandwidth": 8000,
+        "tunnel_transmit_bandwidth": 8000,
+        "tunnel_transport_mtu": 1476,
+        "tunnel_ttl": 255,
         "rxload": "1/255",
         "encapsulations": {"encapsulation": "tunnel"},
         "last_input": "never",
@@ -8709,6 +8909,7 @@ expected_output = {
     "Tunnel7": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "type": "Tunnel",
@@ -8717,6 +8918,14 @@ expected_output = {
         "mtu": 17868,
         "bandwidth": 100,
         "reliability": "255/255",
+        "tunnel_destination_ip": "10.154.1.1",
+        "tunnel_source_ip": "10.154.1.2",
+        "tunnel_source_interface": "Loopback102",
+        "tunnel_protocol": "GRE/IP",
+        "tunnel_receive_bandwidth": 8000,
+        "tunnel_transmit_bandwidth": 8000,
+        "tunnel_transport_mtu": 1476,
+        "tunnel_ttl": 255,
         "txload": "1/255",
         "rxload": "1/255",
         "encapsulations": {"encapsulation": "tunnel"},
@@ -8770,6 +8979,7 @@ expected_output = {
     "Tunnel8": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "type": "Tunnel",
@@ -8779,6 +8989,14 @@ expected_output = {
         "bandwidth": 100,
         "reliability": "255/255",
         "txload": "1/255",
+        "tunnel_destination_ip": "10.154.1.1",
+        "tunnel_source_ip": "10.154.1.2",
+        "tunnel_source_interface": "Loopback102",
+        "tunnel_protocol": "GRE/IP",
+        "tunnel_receive_bandwidth": 8000,
+        "tunnel_transmit_bandwidth": 8000,
+        "tunnel_transport_mtu": 1476,
+        "tunnel_ttl": 255,
         "rxload": "1/255",
         "encapsulations": {"encapsulation": "tunnel"},
         "last_input": "never",
@@ -8831,6 +9049,7 @@ expected_output = {
     "Tunnel9": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "type": "Tunnel",
@@ -8840,6 +9059,14 @@ expected_output = {
         "bandwidth": 100,
         "reliability": "255/255",
         "txload": "1/255",
+        "tunnel_destination_ip": "10.154.1.1",
+        "tunnel_source_ip": "10.154.1.2",
+        "tunnel_source_interface": "Loopback102",
+        "tunnel_protocol": "GRE/IP",
+        "tunnel_receive_bandwidth": 8000,
+        "tunnel_transmit_bandwidth": 8000,
+        "tunnel_transport_mtu": 1476,
+        "tunnel_ttl": 255,
         "rxload": "1/255",
         "encapsulations": {"encapsulation": "tunnel"},
         "last_input": "never",
@@ -8892,6 +9119,7 @@ expected_output = {
     "Tunnel10": {
         "port_channel": {"port_channel_member": False},
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "type": "Tunnel",
@@ -8901,6 +9129,14 @@ expected_output = {
         "bandwidth": 100,
         "reliability": "255/255",
         "txload": "40/255",
+        "tunnel_destination_ip": "10.154.1.1",
+        "tunnel_source_ip": "10.154.1.2",
+        "tunnel_source_interface": "Loopback102",
+        "tunnel_protocol": "GRE/IP",
+        "tunnel_receive_bandwidth": 8000,
+        "tunnel_transmit_bandwidth": 8000,
+        "tunnel_transport_mtu": 1476,
+        "tunnel_ttl": 255,
         "rxload": "135/255",
         "encapsulations": {"encapsulation": "tunnel"},
         "last_input": "00:00:00",

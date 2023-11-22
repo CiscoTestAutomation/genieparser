@@ -1,0 +1,25 @@
+=================================================
+Output for router lisp 0 instance-id 5000
+=================================================
+Publication Information for LISP 0 EID-table vrf internet (IID 5000)
+
+  EID-prefix: 51.51.0.0/16
+    First published:      10:24:38
+    Last published:       10:24:36
+    Exported to:          local-eid
+
+    Publisher 100.78.78.78:4342, last published 10:24:36, TTL never, Expires: never
+                                 publisher epoch 0, entry epoch 0
+                                 entry-state unknown
+                                 xTR-ID unspecified
+                                 site-ID unspecified
+                                 Domain-ID extranet
+                                 Multihoming-ID unspecified
+
+    Publisher 100.77.77.77:4342, last published 10:24:38, TTL never, Expires: never
+                                 publisher epoch 0, entry epoch 0
+                                 entry-state unknown
+                                 xTR-ID unspecified
+                                 site-ID unspecified
+                                 Domain-ID extranet
+                                 Multihoming-ID unspecified

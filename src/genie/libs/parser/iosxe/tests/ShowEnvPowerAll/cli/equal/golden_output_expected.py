@@ -7,7 +7,7 @@ expected_output = {
                 },
                 "2": {
                     'pid': 'PWR-C1-715WAC',
-                    'serial_number': 'LIT150119Z1',
+                    'serial_number': 'LIT150119Z1', 
                     'status': 'ok',
                     'system_power': 'good',
                     'poe_power': 'good',

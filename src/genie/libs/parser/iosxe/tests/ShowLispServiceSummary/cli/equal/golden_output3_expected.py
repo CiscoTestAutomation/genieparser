@@ -34,6 +34,8 @@ expected_output = {
                             "total_db_entries_inactive": 0,
                             "total_eid_tables": 2,
                             "total_map_cache_entries": 4,
+                            "maximum_db_entries": 5120,
+                            "maximum_map_cache_entries": 5120
                         }
                     },
                 }

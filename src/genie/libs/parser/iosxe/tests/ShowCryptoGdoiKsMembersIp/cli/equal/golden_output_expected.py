@@ -1,0 +1,35 @@
+expected_output = {
+   "groups":{
+      "bw-suiteB-v6":{
+         "group_members":{
+            "42.42.42.1":{
+               "gm_state":"Registered",
+               "gm_version":"1.0.25",
+               "group_id":2002,
+               "group_name":"bw-suiteB-v6",
+               "group_type":"GDOI (ISAKMP)",
+               "key_server_id":"15.15.15.1",
+               "rcvd_seq_num":{
+                  "seq1":0,
+                  "seq2":0,
+                  "seq3":0,
+                  "seq4":0
+               },
+               "rekey_acks_missed":0,
+               "rekey_acks_rcvd":0,
+               "rekeys_retries":0,
+               "rekeys_sent":0,
+               "sent_seq_num":{
+                  "seq1":0,
+                  "seq2":0,
+                  "seq3":0,
+                  "seq4":0
+               }
+            }
+         },
+         "last_rekey_duration":1,
+         "rekeys_sent":0,
+         "retransmits_num":0
+      }
+   }
+}

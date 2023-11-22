@@ -1,0 +1,22 @@
+# golden_output_2_output.txt
+#
+# Copyright (c) 2021 by Cisco Systems, Inc.
+# All rights reserved.
+
+iosxe_router#show l2vpn service all
+Legend: St=State    XC St=State in the L2VPN Service      Prio=Priority
+        UP=Up       DN=Down            AD=Admin Down      IA=Inactive
+        SB=Standby  HS=Hot Standby     RV=Recovering      NH=No Hardware
+        m=manually selected
+
+  Interface          Group       Encapsulation                   Prio  St  XC St
+  ---------          -----       -------------                   ----  --  -----
+VPWS name: test_conn, State: UP
+  Description: TEST_LOCAL_CONN_DESCRIPTION
+  Gi0/1/0            left        Gi0/1/0:7(Ethernet)             0     UP  UP
+  Gi0/1/3            right       Gi0/1/3:10(Ethernet)            0     UP  UP
+VPWS name: test_conn2, State: DN
+  Description: TEST_LOCAL_CONN_DESC_2
+  Gi0/1/1            left        Gi0/1/1:8(Ethernet)             0     DN  DN
+  Gi0/1/2            right       Gi0/1/2:9(Ethernet)             0     DN  DN
+

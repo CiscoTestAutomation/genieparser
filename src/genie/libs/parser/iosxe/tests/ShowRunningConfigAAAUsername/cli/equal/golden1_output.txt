@@ -6,3 +6,4 @@ username testuser2 common-criteria-policy Test-CC password 0 password
 username testuser3 secret 9 $9$DOm9h7QgsEREnU$.W5Hbwmwi0rqlw40XwiRSHABLSwg85DrRgKfIi8/hKM
 username testuser4 one-time password 0 password
 username testuser5 common-criteria-policy Test-CC secret 9 $9$UuxZCcqGu2IgBU$teHrzSPJK5FgLH0YAnUezoA1JwaqGBcJI4Xb6c3S7tU
+username testuser6 privilege 15 secret 9 $9$oNguEA9um9vRx.$MsDk0DOy1rzBjKAcySWdNjoKcA7GetG9YNnKOs8S67A

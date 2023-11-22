@@ -1,0 +1,6 @@
+Bindings from all pools not associated with VRF:
+IP address      Client-ID/ 		Lease expiration    Type       State      Interface
+		        Hardware address/
+		        User name
+
+

@@ -1,0 +1,54 @@
+
+expected_output = {
+"routes":{
+      "1::1/128":{
+         "index":{
+            1:{
+               "metric":1,
+               "next_hop":"fe80::20c:29ff:feec:ea",
+               "up_time":"5s",
+               "interface":"GigabitEthernet0/0/0/0"
+            }
+         }
+      },
+      "2::2/128":{
+         "index":{
+            1:{
+               "metric":0,
+               "route_type":"connected",
+               "interface":"Loopback0"
+            }
+         }
+      },
+      "12:0:0:1::/64":{
+         "index":{
+            1:{
+               "metric":0,
+               "route_type":"connected",
+               "interface":"GigabitEthernet0/0/0/0"
+            }
+         }
+      },
+      "13:0:0:1::/64":{
+         "index":{
+            1:{
+               "metric":1,
+               "next_hop":"fe80::20c:29ff:feec:ea",
+               "up_time":"5s",
+               "interface":"GigabitEthernet0/0/0/0"
+            }
+         }
+      },
+      "13:0:0:2::/64":{
+         "index":{
+            1:{
+               "metric":1,
+               "next_hop":"fe80::20c:29ff:feec:ea",
+               "up_time":"5s",
+               "interface":"GigabitEthernet0/0/0/0"
+            }
+         }
+      }
+   }
+}        
+

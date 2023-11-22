@@ -1,0 +1,61 @@
+
+vEdge# show sdwan control connection-history
+
+
+Legend for Errors
+ACSRREJ    - Challenge rejected by peer.               NOVMCFG   - No cfg in vmanage for device.
+BDSGVERFL  - Board ID Signature Verify Failure.        NOZTPEN   - No/Bad chassis-number entry in ZTP.
+BIDNTPR    - Board ID not Initialized.                 OPERDOWN  - Interface went oper down.
+BIDNTVRFD  - Peer Board ID Cert not verified.          ORPTMO    - Server's peer timed out.
+BIDSIG    - Board ID signing failure.                  RMGSPR    - Remove Global saved peer.
+CERTEXPRD  - Certificate Expired                       RXTRDWN   - Received Teardown.
+CRTREJSER  - Challenge response rejected by peer.      RDSIGFBD  - Read Signature from Board ID failed.
+CRTVERFL   - Fail to verify Peer Certificate.          SERNTPRES - Serial Number not present.
+CTORGNMMIS - Certificate Org name mismatch.            SSLNFAIL  - Failure to create new SSL context.
+DCONFAIL   - DTLS connection failure.                  STNMODETD - Teardown extra vBond in STUN server mode.
+DEVALC     - Device memory Alloc failures.             SYSIPCHNG - System-IP changed.
+DHSTMO     - DTLS HandShake Timeout.                   SYSPRCH   - System property changed
+DISCVBD    - Disconnect vBond after register reply.    TMRALC    - Timer Object Memory Failure.
+DISTLOC    - TLOC Disabled.                            TUNALC    - Tunnel Object Memory Failure.
+DUPCLHELO  - Recd a Dup Client Hello, Reset Gl Peer.   TXCHTOBD  - Failed to send challenge to BoardID.
+DUPSER     - Duplicate Serial Number.                  UNMSGBDRG - Unknown Message type or Bad Register msg.
+DUPSYSIPDEL- Duplicate System IP.                      UNAUTHEL  - Recd Hello from Unauthenticated peer.
+HAFAIL     - SSL Handshake failure.                    VBDEST    - vDaemon process terminated.
+IP_TOS     - Socket Options failure.                   VECRTREV  - vEdge Certification revoked.
+LISFD      - Listener Socket FD Error.                 VSCRTREV  - vSmart Certificate revoked.
+MGRTBLCKD  - Migration blocked. Wait for local TMO.    VB_TMO    - Peer vBond Timed out.
+MEMALCFL   - Memory Allocation Failure.                VM_TMO    - Peer vManage Timed out.
+NOACTVB    - No Active vBond found to connect.         VP_TMO    - Peer vEdge Timed out.
+NOERR      - No Error.                                 VS_TMO    - Peer vSmart Timed out.
+NOSLPRCRT  - Unable to get peer's certificate.         XTVMTRDN  - Teardown extra vManage.
+NEWVBNOVMNG- New vBond with no vMng connections.       XTVSTRDN  - Teardown extra vSmart.
+NTPRVMINT  - Not preferred interface to vManage.       STENTRY    - Delete same tloc stale entry.
+HWCERTREN  - Hardware vEdge Enterprise Cert Renewed    HWCERTREV - Hardware vEdge Enterprise Cert Revoked.
+EMBARGOFAIL - Embargo check failed                     REGIDMIS  - Region ID set mismatch.
+REGIDCHG   - Region ID config update                   CRTVERCRLFL - Fail to verify Peer Certificate Due to CRL.
+
+                                                                       PEER                      PEER
+PEER     PEER     PEER             SITE        DOMAIN PEER             PRIVATE  PEER             PUBLIC                                   LOCAL      REMOTE     REPEAT
+TYPE     PROTOCOL SYSTEM IP        ID          ID     PRIVATE IP       PORT     PUBLIC IP        PORT    LOCAL COLOR      STATE           ERROR      ERROR      COUNT ORGANIZATION            DOWNTIME
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+vbond    dtls     0.0.0.0          0           0      184.118.1.19     12346    184.118.1.19     12346   gold             connect         DCONFAIL   NOERR      0     2022-01-19T06:18:57+0000
+vmanage  dtls     10.0.0.2         100         0      184.118.1.31     12746    184.118.1.31     12746   gold             tear_down       DISTLOC    NOERR      2     2022-01-19T06:18:27+0000
+vsmart   dtls     10.0.0.3         100         1      184.118.1.21     12346    184.118.1.21     12346   gold             tear_down       DISTLOC    NOERR      2     2022-01-19T06:18:27+0000
+vbond    dtls     0.0.0.0          0           0      184.118.1.19     12346    184.118.1.19     12346   gold             tear_down       DISTLOC    NOERR      2     2022-01-19T06:18:27+0000
+vmanage  dtls     10.0.0.2         100         0      184.118.1.31     12746    184.118.1.31     12746   gold             tear_down       DISTLOC    NOERR      4     2021-12-21T15:05:22+0000
+vsmart   dtls     10.0.0.3         100         1      184.118.1.21     12346    184.118.1.21     12346   gold             tear_down       DISTLOC    NOERR      4     2021-12-21T15:05:22+0000
+vbond    dtls     0.0.0.0          0           0      184.118.1.19     12346    184.118.1.19     12346   gold             tear_down       DISTLOC    NOERR      4     2021-12-21T15:05:22+0000
+vmanage  dtls     10.0.0.2         100         0      184.118.1.31     12746    184.118.1.31     12746   gold             tear_down       DISTLOC    NOERR      13    2021-12-21T06:54:07+0000
+vsmart   dtls     10.0.0.3         100         1      184.118.1.21     12346    184.118.1.21     12346   gold             tear_down       DISTLOC    NOERR      13    2021-12-21T06:54:07+0000
+vbond    dtls     0.0.0.0          0           0      184.118.1.19     12346    184.118.1.19     12346   gold             tear_down       DISTLOC    NOERR      13    2021-12-21T06:54:07+0000
+vbond    dtls     0.0.0.0          0           0      184.118.1.19     12346    184.118.1.19     12346   gold             connect         DCONFAIL   NOERR      3     2021-12-21T06:50:19+0000
+vbond    dtls     0.0.0.0          0           0      184.118.1.19     12346    184.118.1.19     12346   gold             tear_down       DISTLOC    NOERR      1     2021-12-17T14:36:12+0000
+vmanage  dtls     10.0.0.2         100         0      184.118.1.31     12746    184.118.1.31     12746   gold             tear_down       DISTLOC    NOERR      2     2021-12-17T04:57:19+0000
+vsmart   dtls     10.0.0.3         100         1      184.118.1.21     12346    184.118.1.21     12346   gold             tear_down       DISTLOC    NOERR      2     2021-12-17T04:57:19+0000
+vbond    dtls     0.0.0.0          0           0      184.118.1.19     12346    184.118.1.19     12346   gold             tear_down       DISTLOC    NOERR      2     2021-12-17T04:57:19+0000
+vbond    dtls     0.0.0.0          0           0      184.118.1.19     12346    184.118.1.19     12346   gold             tear_down       DISTLOC    NOERR      0     2021-12-17T04:55:11+0000
+vmanage  dtls     10.0.0.2         100         0      184.118.1.31     12746    184.118.1.31     12746   gold             tear_down       DISTLOC    NOERR      7     2021-12-16T19:28:22+0000
+vsmart   dtls     10.0.0.3         100         1      184.118.1.21     12346    184.118.1.21     12346   gold             tear_down       DISTLOC    NOERR      7     2021-12-16T19:28:22+0000
+vbond    dtls     0.0.0.0          0           0      184.118.1.19     12346    184.118.1.19     12346   gold             tear_down       DISTLOC    NOERR      7     2021-12-16T19:28:22+0000
+vbond    dtls     0.0.0.0          0           0      184.118.1.19     12346    184.118.1.19     12346   gold             tear_down       DISTLOC    NOERR      4     2021-12-16T17:40:20+0000
+vbond    dtls     0.0.0.0          0           0      184.118.1.19     12346    184.118.1.19     12346   gold             connect         DCONFAIL   NOERR      1     2021-12-15T04:19:41+0000

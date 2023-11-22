@@ -23,6 +23,7 @@ expected_output = {
                                                                         0: {
                                                                             "external_route_tag": 0,
                                                                             "flags": "E",
+                                                                            "metric_type": 2,
                                                                             "forwarding_address": "0.0.0.0",
                                                                             "metric": 20,
                                                                             "mt_id": 0,

@@ -1,0 +1,5 @@
+{
+    "vrf_name": "SRV6_L3VPN_BE",
+    "ip_type": "ipv6",
+    "prefix": "fd00::3/128"
+}

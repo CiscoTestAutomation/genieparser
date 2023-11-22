@@ -1,0 +1,9 @@
+pm9005#show sdwan app-fwd cflowd statistics
+      data_packets             :      1448063
+      template_packets         :      5639
+      total-packets            :      62525
+      flow-refresh             :      34649
+      flow-ageout              :      19962
+      flow-end-detected        :      0
+      flow-end-forced          :      0
+      flow-rate-limit-drop     :      0

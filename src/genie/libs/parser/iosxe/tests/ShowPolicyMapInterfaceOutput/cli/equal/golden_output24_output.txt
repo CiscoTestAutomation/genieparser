@@ -1,0 +1,25 @@
+ GigabitEthernet1/0/16 
+
+  Service-policy output: WIRED-EGRESS-POLICY
+
+    queue stats for all priority classes:
+      Queueing
+      priority level 1
+      
+      (total drops) 0
+      (bytes output) 7798308
+
+    queue stats for all priority classes:
+      Queueing
+      priority level 2
+      
+      (total drops) 0
+      (bytes output) 0
+
+    Class-map: AutoQos-4.0-Output-Multimedia-Conf-Queue (match-any)  
+      0 packets
+      Match:  dscp af41 (34) af42 (36) af43 (38)
+      Match: cos  4 
+      Priority: 20% (200000 kbps), burst bytes 5000000, 
+      
+      Priority Level: 2

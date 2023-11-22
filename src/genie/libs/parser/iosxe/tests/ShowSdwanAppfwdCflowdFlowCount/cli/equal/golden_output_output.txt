@@ -1,0 +1,4 @@
+pm9005#show sdwan app-fwd cflowd flow-count
+VPN  COUNT
+------------
+*    3

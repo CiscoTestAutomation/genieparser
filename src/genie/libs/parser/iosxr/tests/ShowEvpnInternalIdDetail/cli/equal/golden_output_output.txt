@@ -1,0 +1,20 @@
+VPN-ID     Encap  Ethernet Segment Id         EtherTag     Internal ID
+---------- ------ --------------------------- ----------   -----------
+1          SRv6   0012.1212.1212.1212.1212    0            None
+   Multi-paths resolved: FALSE (Remote single-active)
+    Reason: No valid MAC paths
+   Multi-paths Internal ID: None
+    EAD/ES  (B) 2.2.2.2
+    EAD/EVI     2.2.2.2                                   cafe:0:200:e000::
+
+1          SRv6   0034.3434.3434.3434.3434    0            ::ffff:10.0.0.71
+   Multi-paths resolved: TRUE (Remote single-active)
+   Multi-paths Internal ID: ::ffff:10.0.0.71
+    MAC         3.3.3.3                                   cafe:0:300:e000::
+    EAD/ES  (P) 3.3.3.3
+            (B) 4.4.4.4
+    EAD/EVI     3.3.3.3                                   cafe:0:300:e000::
+                4.4.4.4                                   cafe:0:400:e000::
+   Summary pathlist:
+ 0x05000003 (P) 3.3.3.3                                   cafe:0:300:e000::
+ 0x00000000 (B) 4.4.4.4                                   cafe:0:400:e000::

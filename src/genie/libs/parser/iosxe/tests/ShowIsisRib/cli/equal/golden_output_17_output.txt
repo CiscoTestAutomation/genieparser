@@ -1,0 +1,9 @@
+IPv4 local RIB for IS-IS process 1
+
+IPV4 unicast topology base (TID 0, TOPOID 0x0) =================
+4.4.4.4/32  prefix attr X:0 R:0 N:1  source router id: 4.4.4.4 SID index Invalid by SRMS
+  [115/L2/35] via 23.23.23.1(GigabitEthernet0/0/8) asr1k-23.00-00, from 4.4.4.4, tag 0
+     LSP 4/7/2651(2651), prefix attr: X:0 R:0 N:1
+     Source router id: 4.4.4.4
+      Prefix-SID index: 604, R:0 N:1 P:0 E:0 V:0 L:0
+     label: 100604 

@@ -1,0 +1,14 @@
+Messages received                16
+Messages sent                    13
+Messages discarded               3
+Messages could not be sent       0
+
+Messages                         Received
+SOLICIT                          8
+REQUEST                          5
+RELEASE                          3
+
+Messages                         Sent
+ADVERTISE                        5
+REPLY                            8
+

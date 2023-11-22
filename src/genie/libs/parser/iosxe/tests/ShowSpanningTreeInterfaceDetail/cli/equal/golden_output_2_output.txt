@@ -1,0 +1,9 @@
+ Port 238 (GigabitEthernet3/0/46) of MST0 is designated learning
+   Port path cost 20000, Port priority 128, Port Identifier 128.238.
+   Designated root has priority 32768, address 046c.9df1.6e80
+   Designated bridge has priority 32768, address 7488.bbb1.6d80
+   Designated port id is 128.238, designated path cost 0
+   Timers: message age 0, forward delay 13, hold 0
+   Number of transitions to forwarding state: 0
+   Link type is point-to-point by default, Internal
+   BPDU: sent 9, received 0

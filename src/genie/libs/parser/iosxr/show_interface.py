@@ -2988,21 +2988,31 @@ class ShowInterfacesDescription(ShowInterfacesDescriptionSchema):
         result_dict = {}
         index = 1
 
+
         # Interface 		Status 		Protocol 	Description
+        p1 = re.compile(r'^Interface\s+Status\s+Protocol\s+Description$')
+
         # PO0/0     		admin down  down 		First POS interface
-        p1 = re.compile(r'^(?P<interface>\S+)\s+(?P<status>\S+([\s+](\S+))?)\s+'
+        p2 = re.compile(r'^(?P<interface>\S+)\s+(?P<status>\S+([\s+](\S+))?)\s+'
                         r'(?P<protocol>\S+)\s*(?: +(?P<description>.*))?$')
 
         for line in out.splitlines():
             line = line.strip()
             line = line.replace('\t', '')
-            # Interface Status Protocol Description
-            # Et0/0 		up	 up
+
+            # Interface 		Status 		Protocol 	Description
             m = p1.match(line)
-            if m and m.groupdict()['protocol'] != 'Protocol':
+            if m:
+                result_dict['interfaces'] = {}
+                continue
+
+
+            # Et0/0 		up	 up
+            m = p2.match(line)
+            if m and "interfaces" in result_dict:
                 group = m.groupdict()
-                interface = Common.convert_intf_name(group['interface'])
-                intf_dict = result_dict.setdefault('interfaces', {}).setdefault(interface, {})
+                interface = Common.convert_intf_name(group['interface'], os="iosxr")
+                intf_dict = result_dict['interfaces'].setdefault(interface, {})
                 intf_dict['status'] = group['status']
                 intf_dict['protocol'] = group['protocol']
                 if group['description'] is not None:
@@ -3033,3 +3043,66 @@ class ShowIpv6Interface(ShowIpv6VrfAllInterface):
             out = output
 
         return super().cli(output=out)
+
+
+#############################################################################
+# Parser For show interface summary
+#############################################################################
+
+class ShowInterfaceSummarySchema(MetaParser):
+    """schema for show interface summary
+    """
+
+    schema = {
+        'interface_types': {
+            Any(): {
+                'total': str,
+                'up': str,
+                'down': str,
+                'admin_down': str,
+            }
+        }
+    }
+
+
+class ShowInterfaceSummary(ShowInterfaceSummarySchema):
+    """parser for show interface summary
+    """
+
+    cli_command = 'show interface summary'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # IFT_FORTYGETHERNET      2        1        0        1
+        p1 = re.compile(r'^(?P<type>\w+|ALL TYPES)\s+(?P<total>\d+)\s+(?P<up>\d+)\s+(?P<down>\d+)\s+(?P<admin_down>\d+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+
+                # Replace whitespaces with _ to create valid dict key (e.g: ALL TYPES => ALL_TYPES)
+                interface_type = group['type'].replace(" ", "_")
+                total = group['total']
+                up = group['up']
+                down = group['down']
+                admin_down = group['admin_down']
+
+                interface_dict = ret_dict.setdefault('interface_types', {}).setdefault(interface_type, {})
+
+                interface_dict.update({
+                    'total': total,
+                    'up': up,
+                    'down': down,
+                    'admin_down': admin_down
+                })
+
+        return ret_dict

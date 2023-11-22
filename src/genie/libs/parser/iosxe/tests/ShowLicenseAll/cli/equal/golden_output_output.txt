@@ -1,0 +1,143 @@
+Load for five secs: 1%/0%; one minute: 0%; five minutes: 0%
+Time source is NTP, 15:09:55.102 UTC Wed Nov 10 2021
+
+Smart Licensing Status
+======================
+
+Smart Licensing is ENABLED
+
+Export Authorization Key:
+  Features Authorized:
+    <none>
+
+Utility:
+  Status: DISABLED
+
+Smart Licensing Using Policy:
+  Status: ENABLED
+
+Account Information:
+  Smart Account: <none>
+  Virtual Account: <none>
+
+Data Privacy:
+  Sending Hostname: yes
+    Callhome hostname privacy: DISABLED
+    Smart Licensing hostname privacy: DISABLED
+  Version privacy: DISABLED
+
+Transport:
+  Type: Callhome
+
+Miscellaneous:
+  Custom Id: <empty>
+
+Policy:
+  Policy in use: Merged from multiple sources.
+  Reporting ACK required: yes (CISCO default)
+  Unenforced/Non-Export Perpetual Attributes:
+    First report requirement (days): 365 (CISCO default)
+    Reporting frequency (days): 0 (CISCO default)
+    Report on change (days): 90 (CISCO default)
+  Unenforced/Non-Export Subscription Attributes:
+    First report requirement (days): 90 (CISCO default)
+    Reporting frequency (days): 90 (CISCO default)
+    Report on change (days): 90 (CISCO default)
+  Enforced (Perpetual/Subscription) License Attributes:
+    First report requirement (days): 0 (CISCO default)
+    Reporting frequency (days): 0 (CISCO default)
+    Report on change (days): 0 (CISCO default)
+  Export (Perpetual/Subscription) License Attributes:
+    First report requirement (days): 0 (CISCO default)
+    Reporting frequency (days): 0 (CISCO default)
+    Report on change (days): 0 (CISCO default)
+
+Usage Reporting:
+  Last ACK received: <none>
+  Next ACK deadline: Feb 07 10:32:11 2022 UTC
+  Reporting push interval: 30  days
+  Next ACK push check: <none>
+  Next report push: Nov 10 11:32:02 2021 UTC
+  Last report push: <none>
+  Last report file write: <none>
+
+Trust Code Installed: <none>
+
+License Usage
+=============
+
+network-advantage (C9300-24 Network Advantage):
+  Description: C9300-24 Network Advantage
+  Count: 2
+  Version: 1.0
+  Status: IN USE
+  Export status: NOT RESTRICTED
+  Feature Name: network-advantage
+  Feature Description: C9300-24 Network Advantage
+  Enforcement type: NOT ENFORCED
+  License type: Perpetual
+
+dna-advantage (C9300-24 DNA Advantage):
+  Description: C9300-24 DNA Advantage
+  Count: 2
+  Version: 1.0
+  Status: IN USE
+  Export status: NOT RESTRICTED
+  Feature Name: dna-advantage
+  Feature Description: C9300-24 DNA Advantage
+  Enforcement type: NOT ENFORCED
+  License type: Subscription
+
+network-advantage (C9300-48 Network Advantage):
+  Description: C9300-48 Network Advantage
+  Count: 1
+  Version: 1.0
+  Status: IN USE
+  Export status: NOT RESTRICTED
+  Feature Name: network-advantage
+  Feature Description: C9300-48 Network Advantage
+  Enforcement type: NOT ENFORCED
+  License type: Perpetual
+
+dna-advantage (C9300-48 DNA Advantage):
+  Description: C9300-48 DNA Advantage
+  Count: 1
+  Version: 1.0
+  Status: IN USE
+  Export status: NOT RESTRICTED
+  Feature Name: dna-advantage
+  Feature Description: C9300-48 DNA Advantage
+  Enforcement type: NOT ENFORCED
+  License type: Subscription
+
+Product Information
+===================
+UDI: PID:C9300-24UX,SN:FCW2303D16Y
+
+HA UDI List:
+    Active:PID:C9300-24UX,SN:FCW2303D16Y
+    Standby:PID:C9300-24U,SN:FHH2043P09E
+    Member:PID:C9300-48T,SN:FCW2139L056
+
+Agent Version
+=============
+Smart Agent for Licensing: 5.3.10_rel/25
+
+License Authorizations
+======================
+Overall status:
+  Active: PID:C9300-24UX,SN:FCW2303D16Y
+      Status: NOT INSTALLED
+  Standby: PID:C9300-24U,SN:FHH2043P09E
+      Status: NOT INSTALLED
+  Member: PID:C9300-48T,SN:FCW2139L056
+      Status: NOT INSTALLED
+
+Purchased Licenses:
+  No Purchase Information Available
+
+Usage Report Summary:
+=====================
+Total: 12,  Purged: 0
+Total Acknowledged Received: 0,  Waiting for Ack: 0
+Available to Report: 12  Collecting Data: 4

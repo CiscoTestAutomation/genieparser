@@ -1,0 +1,40 @@
+Number of Crypto Socket connections 4
+
+   Tu1 Peers (local/remote): 85.45.1.1/10.0.0.2 
+       Local Ident  (addr/mask/port/prot): (85.45.1.1/255.255.255.255/0/47)
+       Remote Ident (addr/mask/port/prot): (10.0.0.2/255.255.255.255/0/47)
+       IPSec Profile: "star"
+       Socket State: Open
+       Client: "TUNNEL SEC" (Client State: Active)
+   Tu2 Peers (local/remote): 85.45.2.1/10.0.0.2 
+       Local Ident  (addr/mask/port/prot): (85.45.2.1/255.255.255.255/0/47)
+       Remote Ident (addr/mask/port/prot): (10.0.0.2/255.255.255.255/0/47)
+       IPSec Profile: "star"
+       Socket State: Open
+       Client: "TUNNEL SEC" (Client State: Active)
+   Tu3 Peers (local/remote): 85.45.3.1/10.0.0.2 
+       Local Ident  (addr/mask/port/prot): (85.45.3.1/255.255.255.255/0/47)
+       Remote Ident (addr/mask/port/prot): (10.0.0.2/255.255.255.255/0/47)
+        TRUE Ident (addr/mask/prot/port): {LOCAL -> REMOTE}
+             0.0.0.0/0.0.0.0/0/0 -> 0.0.0.0/0.0.0.0/0/0
+             ::/0/0/0 -> ::/0/0/0
+       IPSec Profile: "star"
+       Socket State: Open
+       Client: "TUNNEL SEC" (Client State: Active)
+   Tu20 Peers (local/remote): 21.1.1.1/22.1.1.1 
+       Local Ident  (addr/mask/port/prot): (0.0.0.0/0.0.0.0/0/0)
+       Remote Ident (addr/mask/port/prot): (0.0.0.0/0.0.0.0/0/0)
+        TRUE  ident (addr/mask/prot/port): {LOCAL -> REMOTE}
+             172.18.1.0/255.255.255.0/0/0 -> 10.4.0.0/255.255.255.0/0/0
+             172.17.1.0/255.255.255.0/0/0 -> 10.4.0.0/255.255.255.0/0/0
+             172.17.1.0/255.255.255.0/0/0 -> 10.1.0.0/255.255.255.0/0/0
+             172.16.1.0/255.255.255.0/0/0 -> 10.1.0.0/255.255.255.0/0/0
+             6664:3038:6162:6364::/64/0/0 -> 6664:3038:6665:6564::/64/0/0
+       IPSec Profile: "IPSEC_PROFILE"
+       Socket State: Open
+       Client: "TUNNEL SEC" (Client State: Active)
+Crypto Sockets in Listen state:
+Client: "TUNNEL SEC" Profile: "star" Map-name: "Tunnel1-head-0"
+Client: "TUNNEL SEC" Profile: "star" Map-name: "Tunnel2-head-0"
+Client: "TUNNEL SEC" Profile: "star" Map-name: "Tunnel3-head-0"
+Client: "TUNNEL SEC" Profile: "IPSEC_PROFILE" Map-name: "Tunnel20-head-0"

@@ -4,6 +4,7 @@ expected_output = {
         "chassis_sn": "CAT1733U070",
         "compiled_by": "prod_rel_team",
         "compiled_date": "Mon 19-Mar-18 16:39",
+        "copyright_years": "1986-2018",
         "returned_to_rom_at": "15:57:52 CDT Mon Sep 24 2018",
         "returned_to_rom_by": "reload",
         "last_reload_type": "Normal Reload",

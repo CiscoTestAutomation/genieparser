@@ -1,0 +1,9 @@
+security-info authentication-type deprecated
+security-info rekey  86400
+security-info replay-window 8192
+security-info encryption-supported AES_GCM_256
+security-info fips-mode Disabled
+security-info pairwise-keying Disabled
+security-info pwk-sym-rekey Enabled
+security-info extended-ar-window Disabled
+security-info integrity-type "ip-udp-esp esp"

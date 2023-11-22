@@ -1,0 +1,18 @@
+show ip sla statistics aggregated 1
+IPSLAs aggregated statistics
+
+IPSLA operation id: 1
+Type of operation: http
+Start Time Index: 04:21:11 UTC Thu Nov 18 2021
+DNS RTT: 0
+TCP Connection RTT: 56
+HTTP Transaction RTT: 360
+Number of successes: 60
+Number of failures: 0
+
+Start Time Index: 05:21:11 UTC Thu Nov 18 2021
+DNS RTT: 0
+TCP Connection RTT: 22
+HTTP Transaction RTT: 135
+Number of successes: 23
+Number of failures: 0

@@ -1,0 +1,94 @@
+IPv4 redistribution RIB for IS-IS process 1
+
+IPV4 unicast base topology (TID 0, TOPOID 0x0) =================
+====== Level 1 ======
+12.1.0.0/24
+  [Connected/10] 
+22.22.22.22/32
+  [Connected/10]  prefix-SID index: 22, R:0 N:1 P:0 E:0 V:0 L:0
+  strict-SPF SID index: 202, R:0 N:1 P:0 E:0 V:0 L:0
+  flex-algo 129 SID index: 122, R:0 N:1 P:0 E:0 V:0 L:0 map 0x1
+    prefix-metric: 0, not advertised
+  flex-algo 150 SID index: 222, R:0 N:1 P:0 E:0 V:0 L:0 map 0x1
+    prefix-metric: 0, not advertised
+  flex-algo 190 SID index: 290, R:0 N:1 P:0 E:0 V:0 L:0 map 0x1
+    prefix-metric: 0, not advertised
+  flex-algo 200 SID index: 322, R:0 N:1 P:0 E:0 V:0 L:0 map 0x1
+    prefix-metric: 0, not advertised
+  prefix attr: X:0 R:0 N:1
+  source router id: 22.22.22.22
+24.1.0.0/24
+  [Connected/10] 
+====== Level 2 ======
+1.1.1.1/32
+  [ISIS/20] isis prefix-SID index: 11, R:1 N:1 P:1 E:0 V:0 L:0
+  strict-SPF SID index: 101, R:1 N:1 P:1 E:0 V:0 L:0
+  flex-algo 129 SID index: 111, R:0 N:1 P:0 E:0 V:0 L:0 map 0x0
+    prefix-metric: 20, not advertised
+  flex-algo 150 SID index: 211, R:0 N:1 P:0 E:0 V:0 L:0 map 0x0
+    prefix-metric: 20, not advertised
+  flex-algo 200 SID index: 201, R:0 N:1 P:0 E:0 V:0 L:0 map 0x0
+    prefix-metric: 20, not advertised
+  prefix attr: X:0 R:1 N:1
+  source router id: 1.1.1.1
+12.1.0.0/24
+  [Connected/10] 
+12.3.0.0/24
+  [ISIS/20] isis
+  prefix attr: X:0 R:1 N:0
+13.1.0.0/24
+  [ISIS/20] isis
+  prefix attr: X:0 R:1 N:0
+22.22.22.22/32
+  [Connected/10]  prefix-SID index: 22, R:0 N:1 P:0 E:0 V:0 L:0
+  strict-SPF SID index: 202, R:0 N:1 P:0 E:0 V:0 L:0
+  flex-algo 129 SID index: 122, R:0 N:1 P:0 E:0 V:0 L:0 map 0x1
+    prefix-metric: 0, not advertised
+  flex-algo 150 SID index: 222, R:0 N:1 P:0 E:0 V:0 L:0 map 0x1
+    prefix-metric: 0, not advertised
+  flex-algo 190 SID index: 290, R:0 N:1 P:0 E:0 V:0 L:0 map 0x1
+    prefix-metric: 0, not advertised
+  flex-algo 200 SID index: 322, R:0 N:1 P:0 E:0 V:0 L:0 map 0x1
+    prefix-metric: 0, not advertised
+  prefix attr: X:0 R:0 N:1
+  source router id: 22.22.22.22
+24.1.0.0/24
+  [Connected/10] 
+24.2.0.0/24
+  [Connected/0] external 
+44.44.44.44/32
+  [ISIS/0] external  prefix-SID index: 44, R:1 N:0 P:1 E:0 V:0 L:0
+  strict-SPF SID index: 404, R:1 N:0 P:1 E:0 V:0 L:0
+  flex-algo 200 SID index: 204, R:1 N:0 P:1 E:0 V:0 L:0 map 0x0
+    prefix-metric: 20, not advertised
+  prefix attr: X:1 R:0 N:0
+45.2.0.0/24
+  [ISIS/0] external 
+  prefix attr: X:1 R:0 N:0
+          
+          
+IPv4 redistribution RIB for IS-IS process 2
+          
+IPV4 unicast base topology (TID 0, TOPOID 0x0) =================
+====== Level 1 ======
+12.2.0.0/24
+  [Connected/10] 
+24.2.0.0/24
+  [Connected/10] 
+====== Level 2 ======
+12.2.0.0/24
+  [Connected/10] 
+24.2.0.0/24
+  [Connected/10] 
+44.44.44.44/32
+  [ISIS/20] isis prefix-SID index: 44, R:1 N:1 P:1 E:0 V:0 L:0
+  strict-SPF SID index: 404, R:1 N:1 P:1 E:0 V:0 L:0
+  flex-algo 160 SID index: 344, R:0 N:1 P:0 E:0 V:0 L:0 map 0x0
+    prefix-metric: 20, not advertised
+  flex-algo 200 SID index: 204, R:0 N:1 P:0 E:0 V:0 L:0 map 0x0
+    prefix-metric: 20, not advertised
+  prefix attr: X:0 R:1 N:1
+45.2.0.0/24
+  [ISIS/20] isis
+  prefix attr: X:0 R:1 N:0
+

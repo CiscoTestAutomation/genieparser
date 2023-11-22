@@ -1,0 +1,22 @@
+Tunnel-id Local                 Remote                fvrf/ivrf            Status 
+1184      101.0.10.2/500        100.201.33.252/500    none/none            READY  
+      Encr: AES-CBC, keysize: 192, PRF: SHA512, Hash: SHA512, DH Grp:16, Auth sign: PSK, Auth verify: PSK
+      Life/Active Time: 86400/23 sec
+      CE id: 76998, Session-id: 1790326
+      Local spi: 39125EA1EB1B358D       Remote spi: 29C6416947D54ECA
+      Status Description: Negotiation done
+      Local id: 101.0.10.2
+      Remote id: 100.201.33.252
+      Local req msg id:  0              Remote req msg id:  4         
+      Local next msg id: 0              Remote next msg id: 4         
+      Local req queued:  0              Remote req queued:  4         
+      Local window:      5              Remote window:      5         
+      DPD configured for 0 seconds, retry 0
+      Fragmentation not  configured.
+      Dynamic Route Update: enabled
+      Extended Authentication not configured.
+      NAT-T is not detected  
+      Cisco Trust Security SGT is disabled
+      Initiator of SA : No
+      PEER TYPE: IOS-XE
+

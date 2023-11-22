@@ -1,0 +1,73 @@
+Thu Aug 17 08:58:10.939 UTC
+Legend: pp = Partially Programmed.
+Bridge group: SRv6_ELAN, bridge-domain: SRv6_ELAN_Dual_Homing, id: 0, state: up, ShgId: 0, MSTi: 0
+  Coupled state: disabled
+  VINE state: EVPN Native
+  MAC learning: enabled
+  MAC withdraw: enabled
+    MAC withdraw for Access PW: enabled
+    MAC withdraw sent on: bridge port up
+    MAC withdraw relaying (access to access): disabled
+  Flooding:
+    Broadcast & Multicast: enabled
+    Unknown unicast: enabled
+  MAC aging time: 300 s, Type: inactivity
+  MAC limit: 4000, Action: none, Notification: syslog
+  MAC limit reached: no, threshold: 75%
+  MAC port down flush: enabled
+  MAC Secure: disabled, Logging: disabled
+  Split Horizon Group: none
+  E-Tree: Root
+  Dynamic ARP Inspection: disabled, Logging: disabled
+  IP Source Guard: disabled, Logging: disabled
+  DHCPv4 Snooping: disabled
+  DHCPv4 Snooping profile: none
+  IGMP Snooping: disabled
+  IGMP Snooping profile: none
+  MLD Snooping profile: none
+  Storm Control: disabled
+  Bridge MTU: 1500
+  MIB cvplsConfigIndex: 1
+  Filter MAC addresses:
+  P2MP PW: disabled
+  Multicast Source: Not Set
+  Create time: 10/08/2023 09:10:11 (6d23h ago)
+  No status change since creation
+  ACs: 1 (0 up), VFIs: 0, PWs: 0 (0 up), PBBs: 0 (0 up), VNIs: 0 (0 up)
+  List of EVPNs:
+    EVPN, state: up
+      evi: 1002 (SRv6)
+      XC ID 0x80000003
+     Statistics:
+       packets: received 0 (unicast 0), sent 0
+       bytes: received 0 (unicast 0), sent 0
+       MAC move: 0
+  List of ACs:
+    AC: Bundle-Ether5.1002, state is down (Segment-down)
+      Type VLAN; Num Ranges: 1
+      Rewrite Tags: []
+      VLAN ranges: [1002, 1002]
+      MTU 1500; XC ID 0xc0000004; interworking none; MSTi 7
+      MAC learning: enabled
+      Flooding:
+        Broadcast & Multicast: enabled
+        Unknown unicast: enabled
+      MAC aging time: 300 s, Type: inactivity
+      MAC limit: 4000, Action: none, Notification: syslog
+      MAC limit reached: no, threshold: 75%
+      MAC port down flush: enabled
+      MAC Secure: disabled, Logging: disabled
+      Split Horizon Group: none
+      E-Tree: Root
+      Dynamic ARP Inspection: disabled, Logging: disabled
+      IP Source Guard: disabled, Logging: disabled
+      DHCPv4 Snooping: disabled
+      DHCPv4 Snooping profile: none
+      IGMP Snooping: disabled
+      IGMP Snooping profile: none
+      MLD Snooping profile: none
+      Storm Control: bridge-domain policer
+      Static MAC addresses:
+  List of Access PWs:
+  List of VFIs:
+  List of Access VFIs:

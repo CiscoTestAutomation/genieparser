@@ -1,0 +1,17 @@
+Tracing MPLS Label Switched Path to 20.20.20.20/32, timeout is 2 seconds
+
+Codes: '!' - success, 'Q' - request not sent, '.' - timeout,
+  'L' - labeled output interface, 'B' - unlabeled output interface, 
+  'D' - DS Map mismatch, 'F' - no FEC mapping, 'f' - FEC mismatch,
+  'M' - malformed request, 'm' - unsupported tlvs, 'N' - no label entry, 
+  'P' - no rx intf label prot, 'p' - premature termination of LSP, 
+  'R' - transit router, 'I' - unknown upstream index,
+  'l' - Label switched with FEC change, 'd' - see DDMAP for return code,
+  'X' - unknown return code, 'x' - return code 0
+
+Type escape sequence to abort.
+  0 87.1.1.1 MRU 1500 [Labels: 86 Exp: 0]
+L 1 87.1.1.2 MRU 1500 [Labels: 436 Exp: 0] 4 ms
+L 2 174.1.1.1 MRU 1500 [Labels: 337 Exp: 0] 4 ms
+L 3 171.1.1.2 MRU 1500 [Labels: implicit-null Exp: 0] 3 ms
+! 4 77.1.1.1 1 ms

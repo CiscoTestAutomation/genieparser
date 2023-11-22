@@ -1,0 +1,8 @@
+Device#sh ip eigrp vrf 1 topology
+EIGRP-IPv4 VR(test) Topology Table for AS(100)/ID(10.114.254.5)
+           Topology(base) TID(0) VRF(1)
+Codes: P - Passive, A - Active, U - Update, Q - Query, R - Reply,
+       r - reply Status, s - sia Status
+
+P 10.114.11.12/30, 1 successors, FD is 1310720
+        via Connected, GigabitEthernet0/0/0.1

@@ -1,6 +1,6 @@
 expected_output = {
     "chassis": "FCE2310A48M",
-    "contact": "something@cisco.com",
+    "contact": "something@cisco.com someone2@cisco.com",
     "location": "To be filled in",
     "snmp_input": {
         "packet_count": 35072424,

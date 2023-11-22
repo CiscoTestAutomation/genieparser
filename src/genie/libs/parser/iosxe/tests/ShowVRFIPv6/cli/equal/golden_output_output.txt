@@ -1,0 +1,2 @@
+Name                             Default RD            Protocols   Interfaces
+vrf21                            21:1                  ipv4,ipv6   Vl21

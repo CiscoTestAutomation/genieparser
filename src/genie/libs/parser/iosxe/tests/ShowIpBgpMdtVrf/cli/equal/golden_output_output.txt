@@ -1,0 +1,13 @@
+show ip bgp ipv4 mdt vrf vpn144
+BGP table version is 1149, local router ID is 6.6.6.6
+Status codes: s suppressed, d damped, h history, * valid, > best, i - internal, 
+              r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter, 
+              x best-external, a additional-path, c RIB-compressed, 
+              t secondary path, L long-lived-stale,
+Origin codes: i - IGP, e - EGP, ? - incomplete
+RPKI validation codes: V valid, I invalid, N Not found
+
+     Network          Next Hop            Metric LocPrf Weight Path
+Route Distinguisher: 144:1 (default for vrf vpn144)
+ *>   6.6.6.6/32       0.0.0.0                                0 ?
+ *>i  20.20.20.20/32   20.20.20.20              0    100      0 ?

@@ -1,0 +1,17 @@
+Proto   Original IPv4         Translated IPv4
+        Translated IPv6       Original IPv6
+--------------------------------------------------------
+udp     1.1.1.2:63            [1001:0:101:102::]:63
+        5.5.5.5:63            [2009::2]:63
+        
+        created: 3 Jun 2022 16:23:45, last-used: 3 Jun 2022 16:23:45,
+        timeout: 300000, left 00:00:02,
+        use_count: 0, id: 44, parent-id(src/dst): 18/27
+        
+---     ---                   ---
+        5.5.5.5               2009::2
+        
+        created: 3 Jun 2022 11:08:47, last-used: 3 Jun 2022 16:23:45
+        use_count: 1, config-id: 18
+
+Total number of translations: 2

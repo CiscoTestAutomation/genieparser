@@ -1,4 +1,4 @@
-"""ping.py
+"""monitor.py
 
 JunOS parsers for the following show commands:
     * monitor interface traffic

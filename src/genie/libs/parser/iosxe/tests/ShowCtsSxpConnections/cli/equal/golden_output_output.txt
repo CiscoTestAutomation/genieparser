@@ -1,0 +1,41 @@
+ SXP              : Enabled
+ Highest Version Supported: 5
+ Default Password : Not Set
+ Default Key-Chain: Not Set
+ Default Key-Chain Name: Not Applicable
+ Default Source IP: Not Set
+Connection retry open period: 120 secs
+Reconcile period: 120 secs
+Retry open timer is not running
+Peer-Sequence traverse limit for export: Not Set
+Peer-Sequence traverse limit for import: Not Set
+----------------------------------------------
+Peer IP          : 10.1.1.2
+Source IP        : 10.1.1.1
+Conn status      : On
+Conn version     : 5
+Conn capability  : IPv4-IPv6-Subnet
+Conn hold time   : 120 seconds
+Local mode       : SXP Speaker
+Connection inst# : 1
+TCP conn fd      : 1
+TCP conn password: none
+Keepalive timer is running
+Duration since last state change: 0:00:02:09 (dd:hr:mm:sec)
+
+----------------------------------------------
+Peer IP          : 20.1.1.2
+Source IP        : 20.1.1.1
+Conn status      : On
+Conn version     : 5
+Conn capability  : IPv4-IPv6-Subnet
+Conn hold time   : 120 seconds
+Local mode       : SXP Speaker
+Connection inst# : 1
+TCP conn fd      : 2
+TCP conn password: none
+Keepalive timer is running
+Duration since last state change: 0:00:00:30 (dd:hr:mm:sec)
+
+
+Total num of SXP Connections = 2

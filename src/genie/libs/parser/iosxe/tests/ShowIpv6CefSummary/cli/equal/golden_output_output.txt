@@ -1,0 +1,5 @@
+IPv6 CEF is enabled and running centrally.
+VRF Default
+ 19 prefixes (19/0 fwd/non-fwd)
+ Table id 0x1E000000
+ Database epoch:        0 (19 entries at this epoch)

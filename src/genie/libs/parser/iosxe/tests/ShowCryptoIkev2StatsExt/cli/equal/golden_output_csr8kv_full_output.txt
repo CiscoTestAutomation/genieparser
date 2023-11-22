@@ -1,0 +1,44 @@
+--------------------------------------------------------------
+AAA OPERATION                                PASSED     FAILED
+--------------------------------------------------------------
+RECEIVING PSKEY                                   0          0
+AUTHENTICATION USING EAP                      23986          0
+START ACCOUNTING                               3990          0
+STOP ACCOUNTING                                3186          0
+AUTHORIZATION                                     0          0
+--------------------------------------------------------------
+IPSEC OPERATION                              PASSED     FAILED
+--------------------------------------------------------------
+IPSEC POLICY VERIFICATION                      8895          0
+SA CREATION                                    8895          0
+SA DELETION                                   16182          0
+---------------------------------------------------------------
+CRYPTO ENGINE OPERATION                      PASSED     FAILED
+---------------------------------------------------------------
+DH PUBKEY GENERATED                           11432          0
+DH SHARED SECKEY GENERATED                    11432          0
+SIGNATURE SIGN                                 4000          0
+SIGNATURE VERIFY                                  0          0
+--------------------------------------------------------------
+PKI OPERATION                                PASSED     FAILED
+--------------------------------------------------------------
+VERIFY CERTIFICATE                                0          0
+FETCHING CERTIFICATE USING HTTP                   0          0
+FETCHING PEER CERTIFICATE USING HTTP              0          0
+GET ISSUERS                                   13054          0
+GET CERTIFICATES FROM ISSUERS                  6518          0
+GET DN FROM CERT                                  0          0
+--------------------------------------------------------------
+GKM OPERATION                                PASSED     FAILED
+--------------------------------------------------------------
+GET_POLICY                                        0          0
+SET_POLICY                                        0          0
+--------------------------------------------------------------
+PPK SKS  OPERATION                           PASSED     FAILED
+--------------------------------------------------------------
+PPK GET CAP                                       0          0
+PPK GET KEY                                       0          0
+--------------------------------------------------------------
+IKE PREROUTE IDB VERIFICATION OPERATION      PASSED     FAILED
+--------------------------------------------------------------
+IKE PREROUTE IDB VERIFICATION                     0          0

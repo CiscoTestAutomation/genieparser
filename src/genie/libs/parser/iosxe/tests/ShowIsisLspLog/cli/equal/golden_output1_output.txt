@@ -1,0 +1,11 @@
+-9500-1#show isis lsp-log
+
+   Level 1 LSP log
+  When       Count             Interface         Triggers
+00:04:09        3                            CONFIG OTVINFOCHG
+00:02:33        2 FortyGigabitEthernet2/0/   NEWADJ DIS
+
+   Level 2 LSP log
+  When       Count             Interface         Triggers
+00:04:09        3                            CONFIG OTVINFOCHG
+00:02:32        2 FortyGigabitEthernet2/0/   NEWADJ DIS

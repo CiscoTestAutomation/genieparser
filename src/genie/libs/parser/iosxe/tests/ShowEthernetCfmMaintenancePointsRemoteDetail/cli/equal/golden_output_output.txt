@@ -1,0 +1,18 @@
+show ethernet cfm maintenance-points remote detail
+
+Version: IEEE-CFM
+MAC Address: 7070.8bba.3801
+Domain Name: UNINET
+Domain ID: UNINET
+MA Name: UNINET_VERLEANDROVALLE-17_5005
+Level: 7
+EVC: UNINET_VERLEANDROVALLE-17_5005
+Bridge Domain: 100
+MPID: 1562
+Incoming Port(s): Gi2/0/4
+CC Lifetime(sec): 3.500
+Age of Last CC Message(sec): 0
+CC Packet Statistics: 28091/0 (Received/Error)
+MEP interface status: Up
+MEP port status: Up
+Receive RDI: FALSE

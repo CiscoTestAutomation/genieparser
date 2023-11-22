@@ -1,0 +1,32 @@
+Protocol:
+  Transitions to Active:                  0
+  Transitions to Standby:                 1
+  Transitions to Speak:                   1
+  Transitions to Listen:                  1
+  Transitions to Learn:                   0
+  Transitions to Init:                    0
+
+Packets Sent:                        515267
+  Hello:                             515267
+  Resign:                                 0
+  Coup:                                   0
+  Adver:                                  0
+
+Valid Packets Received:              515420
+  Hello:                             515420
+  Resign:                                 0
+  Coup:                                   0
+  Adver:                                  0
+
+Invalid Packets Received:                 0
+  Too long:                               0
+  Too short:                              0
+  Mismatching/unsupported versions:       0
+  Invalid opcode:                         0
+  Unknown group:                          0
+  Inoperational group:                    0
+  Conflicting Source IP:                  0
+  Failed Authentication:                  0
+  Invalid Hello Time:                     0
+  Mismatching Virtual IP:                 0
+

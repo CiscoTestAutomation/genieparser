@@ -1,0 +1,8 @@
+Active IPv4-SGT Bindings Information
+
+IP Address              SGT     Source
+============================================
+Active IPv6-SGT Bindings Information
+
+IP Address                                  SGT     Source
+================================================================

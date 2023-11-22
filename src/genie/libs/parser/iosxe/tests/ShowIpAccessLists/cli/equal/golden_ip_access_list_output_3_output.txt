@@ -1,0 +1,3 @@
+Role-based IP access list Default_SGACL_1-02 (downloaded)
+    10 permit icmp (480 matches)
+   

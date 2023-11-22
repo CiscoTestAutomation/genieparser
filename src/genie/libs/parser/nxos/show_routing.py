@@ -221,8 +221,8 @@ class ShowRoutingVrfAll(ShowRoutingVrfAllSchema):
                             r'(?P<protocol>\w+)(\-(?P<process>\w+))?,? *'
                             r'(?P<attribute>\w+)?,? *'
                             r'(tag *(?P<tag>\w+))?,? *(?P<vpn>[a-zA-Z\(\)\-]+)?'
-                            r',?( +segid: +(?P<segid>\d+))?,?( +tunnelid: +'
-                            r'(?P<tunnelid>[0-9x]+))?,?( +encap: +'
+                            r',?( +segid:? +(?P<segid>\d+))?,?( +tunnelid: +'
+                            r'(?P<tunnelid>[0-9a-fA-Fx]+))?,?( +encap: +'
                             r'(?P<encap>[a-zA-Z0-9]+))?$')
             m = p3.match(line)
             if m:
@@ -487,6 +487,7 @@ class ShowIpRouteSchema(MetaParser):
                                 Optional('active'): bool,
                                 Optional('direct'): bool,
                                 Optional('pervasive'): bool,
+                                Optional('all_best'): str,
                                 Optional('next_hop'): {
                                     Optional('outgoing_interface'): {
                                         Any(): {  # interface  if there is no next_hop
@@ -715,12 +716,14 @@ class ShowIpRoute(ShowIpRouteSchema):
         # 192.168.1.1/32, ubest/mbest: 1/0, pending ufdm
         # 192.168.1.0/24, ubest/mbest: 1/0, attached, direct, pervasive
         # 192.168.1.1/32, ubest/mbest: 1/0, attached, pervasive
+        # 100.1.1.1/32, ubest/mbest: 2/0, all-best (0x63636363)
 
         p2 = re.compile(r'^(?P<route>[\w\/\.\:]+), +(ubest/mbest: +'
                         r'(?P<ubest_mbest>[\d\/]+)( +time)?)?((?P<ubest>\d+) '
                         r'+ucast +next-hops, +(?P<mbest>\d+) +mcast +next-hops)?'
                         r'(, +(?P<attached>[\w]+))?( +(?P<attached2>[\w]+))?'
-                        r'(\,)?( +(?P<direct>direct))?(\,)?( +(?P<pervasive>pervasive))?$')
+                        r'(\,)?( +(?P<direct>direct))?(\,)?( +(?P<pervasive>pervasive))?'
+                        r'(, +(all-best +\((?P<all_best>[0-9x]+)\))?)?$')
 
         # *via 10.2.3.2, Eth1/4, [1/0], 01:01:30, static
         # *via 10.1.3.1, Eth1/2, [110/41], 01:01:18, ospf-1, intra
@@ -740,9 +743,9 @@ class ShowIpRoute(ShowIpRouteSchema):
                         r' +(?P<date>[0-9][\w\:]+)?,?( +(?P<source_protocol>[\w\-]+))?,?'
                         r'( +(?P<source_protocol_status>[\w-]+))?,?( +tag +(?P<tag>[\d]+))?,?'
                         r'( +\((?P<hidden>hidden)\))?'
-                        r'\s*(?P<vpn>[a-zA-Z\(\)\-]+)?,?( +segid: +(?P<segid>\d+))?,?'
+                        r'\s*(?P<vpn>[a-zA-Z\(\)\-]+)?,?( +segid:? +(?P<segid>\d+))?,?'
                         r'( +\((?P<asymmetric>Asymmetric)\))?'
-                        r'( +tunnelid: +(?P<tunnelid>[0-9x]+))?,?( +encap: +(?P<encap>[a-zA-Z0-9]+))?$')
+                        r'( +tunnelid: +(?P<tunnelid>[0-9a-fA-Fx]+))?,?( +encap: +(?P<encap>[a-zA-Z0-9]+))?$')
 
         #    tag 100
         p4 = re.compile(r'^tag +(?P<tag>\d+)$')
@@ -776,6 +779,7 @@ class ShowIpRoute(ShowIpRouteSchema):
             # 192.168.1.1/32, ubest/mbest: 1/0, pending ufdm
             # 192.168.1.0/24, ubest/mbest: 1/0, attached, direct, pervasive
             # 192.168.1.1/32, ubest/mbest: 1/0, attached, pervasive
+            # 100.1.1.1/32, ubest/mbest: 2/0, all-best (0x63636363)
             m = p2.match(line)
             if m:
                 groups = m.groupdict()
@@ -806,6 +810,9 @@ class ShowIpRoute(ShowIpRouteSchema):
                 if groups['pervasive']:
                     pervasive = True if 'pervasive' in groups['pervasive'] else False
 
+                if groups['all_best']:
+                    all_best = groups['all_best']
+
                 # if vrf:
                 if 'vrf' not in result_dict:
                     routes_dict = result_dict.setdefault('vrf', {}).setdefault('default', {}). \
@@ -829,6 +836,9 @@ class ShowIpRoute(ShowIpRouteSchema):
 
                 if pervasive:
                     route_dict.update({'pervasive': pervasive})
+
+                if groups['all_best']:
+                    route_dict.update({'all_best': all_best})
 
                 continue
 

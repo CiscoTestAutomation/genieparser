@@ -1,0 +1,24 @@
+Switch#sh logging onboard rp active temperature detail 
+
+--------------------------------------------------------------------------------
+TEMPERATURE SUMMARY INFORMATION
+--------------------------------------------------------------------------------
+Number of sensors          : 15
+--------------------------------------------------------------------------------
+Sensor                    ID         Normal Range          Maximum Sensor Value 
+--------------------------------------------------------------------------------
+SYSTEM OUTLET-A           35         0 - 70                121                  
+SYSTEM OUTLET-B           36         0 - 60                121                  
+SYSTEM INLET-A            37         0 - 50                121                  
+SYSTEM INLET-B            38         0 - 45                121                  
+Temp: UADP_0_0            39         0 - 105               121                  
+Temp: UADP_0_1            40         0 - 105               121                  
+Temp: UADP_0_2            41         0 - 105               121                  
+Temp: UADP_0_3            42         0 - 105               121                  
+Temp: UADP_0_4            43         0 - 105               121                  
+Temp: UADP_0_5            44         0 - 105               121                  
+Temp: UADP_0_6            45         0 - 105               121                  
+Temp: UADP_0_7            46         0 - 105               121                  
+Temp: UADP_0_8            47         0 - 105               121                  
+Temp: Coretemp            58         0 - 105               49                   
+Temp: OutletDB            59         0 - 105               41                   

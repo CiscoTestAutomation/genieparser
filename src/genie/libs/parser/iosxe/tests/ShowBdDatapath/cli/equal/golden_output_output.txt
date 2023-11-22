@@ -1,0 +1,46 @@
+QFP L2BD Bridge Domain information
+
+
+BD id                  : 2450
+State enabled          : Yes
+Aging timeout (sec)    : 1800
+Aging active entry     : Yes
+Max mac limit          : 65536
+Unkwn mac limit flood  : Yes
+mac_learn_enabled      : Yes
+mac_learn_controled    : Yes
+Unknown unicast olist  : Yes
+otv_aed_enabled : No
+otv_enabled : No
+mcast_snooping_enabled : No
+Feature : evpn
+SISF snoop protocols   : arp, ndp, dhcpv4, dhcpv6
+Mac learned            : 22
+BDI outer vtag         : 00000000
+BDI inner vtag         : 00000000
+
+Replication tree info:
+  Global replication    : depth encode 0X3000001, (head 0X49FF5828)
+  Split-horizon-group 0 : depth encode 00000000, (head 00000000)
+  Split-horizon-group 1 : depth encode 00000000, (head 00000000)
+
+Bridge Domain statistics
+
+Total bridged                pkts : 1704       bytes: 139176
+Total unknown unicast        pkts : 0          bytes: 0
+Total broadcasted            pkts : 167        bytes: 19706
+Total to BDI                 pkts : 0          bytes: 0
+Total injected               pkts : 0          bytes: 0
+Total mac-sec violation drop pkts : 0          bytes: 0
+Total mac-sec move drop      pkts : 0          bytes: 0
+Total mac-sec unknown drop   pkts : 0          bytes: 0
+Total source filter drop     pkts : 0          bytes: 0
+Total bfib policy drop       pkts : 0          bytes: 0
+Total replication start drop pkts : 0          bytes: 0
+Total recycle tail drop      pkts : 0          bytes: 0
+Total static MAC move drop   pkts : 0          bytes: 0
+Total BD disabled drop       pkts : 0          bytes: 0
+Total STP state drop         pkts : 0          bytes: 0
+Total UUF suppression drop   pkts : 0          bytes: 0
+Total sisf ctrl punt         pkts : 1725       bytes: 142086
+Total sisf ctrl drop         pkts : 0          bytes: 0

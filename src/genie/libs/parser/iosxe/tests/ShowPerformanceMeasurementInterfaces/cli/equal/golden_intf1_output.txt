@@ -1,0 +1,93 @@
+
+arizona-131#show performance-measurement interfaces
+Interface Name: Ethernet0/0 (ifh: 0x2)
+  Delay-Measurement           : Enabled
+  Loss-Measurement            : Disabled
+  Local IPV4 Address          : 19.1.1.3
+  Local IPV6 Address          : ::
+  State                       : Up
+
+  Delay Measurement session:
+    Session ID                : 1
+    Profile name              : Not configured
+
+    Last advertisement:
+      No advertisements have occured
+
+    Next advertisement:
+      Check scheduled in 2 more probes (roughly every 120 seconds)
+      No probes completed
+
+    Liveness Detection:
+      Session Creation Timestamp: 10-18 12:56:46.731
+      Session State: Down
+      Last State Change Timestamp: 10-18 12:58:47.578
+      Missed count   [consecutive]: 173
+      Received count [consecutive]: 0
+      Backoff                     : 1
+      Unique Path Name            : Path-1
+      Loss in Last Interval       : 100 % [TX: 3 RX: 0]
+
+Interface Name: Ethernet1/2 (ifh: 0x8)
+  Delay-Measurement           : Enabled
+  Loss-Measurement            : Enabled
+  Local IPV4 Address          : 1.2.3.3
+  Local IPV6 Address          : 1:2:3:3::1
+  State                       : Up
+
+  Delay Measurement session:
+    Session ID                : 3
+    Profile name              : Not configured
+
+    Last advertisement:
+      Advertised at: 12:58:47 10-18 2021 (398 seconds ago)
+      Advertised reason: First advertisement
+      Advertised anomaly: INACTIVE
+      Advertised delays (uSec): avg: 747, min: 496, max: 5628, variance: 234
+
+    Next advertisement:
+      Check scheduled in 2 more probes (roughly every 120 seconds)
+      Aggregated delays (uSec): avg: 769, min: 687, max: 882, variance: 82
+      Rolling average (uSec): 757
+
+    Liveness Detection:
+      Session Creation Timestamp: 10-18 12:56:46.732
+      Session State: Up
+      Last State Change Timestamp: 10-18 12:57:08.097
+      Missed count   [consecutive]: 0
+      Received count [consecutive]: 166
+      Backoff                     : 0
+      Unique Path Name            : Path-3
+      Loss in Last Interval       : 0 % [TX: 3 RX: 3]
+
+  Loss Measurement session:
+    Session ID                : 4
+    Profile name              : Not configured
+
+    Last advertisement:
+      Advertised at: 12:57:47 10-18 2021 (458 seconds ago)
+      Advertised reason: First advertisement
+      Advertised anomaly: ACTIVE
+    Advertised loss(%) [Capped @ 50.331642%]: avg: 0.000000, min: 0.000000, max: 0.000000, variance: 0.000000
+
+    Next advertisement:
+      Check scheduled at the end of the current probe (roughly every 120 seconds)
+      Aggregated loss(%) [Capped @ 50.331642%]: avg: 0.000000, min: 0.000000, max: 0.000000, variance: 0.000000
+      Rolling average (%): 0.000000
+
+    Liveness Detection:
+      Session Creation Timestamp: 10-18 12:56:46.732
+      Session State: Up
+      Last State Change Timestamp: 10-18 12:57:17.221
+      Missed count   [consecutive]: 0
+      Received count [consecutive]: 33
+      Backoff                     : 0
+      Unique Path Name            : Path-3
+      Loss in Last Interval       : 0 % [TX: 3 RX: 3]
+
+Interface Name: Serial2/0 (ifh: 0xA)
+  Delay-Measurement           : Disabled
+  Loss-Measurement            : Disabled
+  Local IPV4 Address          : 0.0.0.0
+  Local IPV6 Address          : ::
+  State                       : Down

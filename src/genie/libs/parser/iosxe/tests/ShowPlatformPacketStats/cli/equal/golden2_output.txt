@@ -1,0 +1,12 @@
+Packets Summary
+  Matched  1
+  Traced   11
+Packets Received
+  Ingress  12
+  Inject   13
+Packets Processed
+  Forward  14
+  Punt     15
+  Drop     16
+  Consume  17
+

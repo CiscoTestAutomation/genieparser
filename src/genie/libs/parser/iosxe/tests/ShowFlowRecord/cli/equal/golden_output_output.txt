@@ -1,0 +1,36 @@
+flow record wireless avc basic:
+  Description:        Basic IPv4 Wireless AVC template
+  No. of users:       0
+  Total field space:  78 bytes
+  Fields:
+    match ipv4 protocol
+    match ipv4 source address
+    match ipv4 destination address
+    match transport source-port
+    match transport destination-port
+    match flow direction
+    match application name
+    match wireless ssid
+    collect counter bytes long
+    collect counter packets long
+    collect wireless ap mac address
+    collect wireless client mac address
+
+flow record wireless avc ipv6 basic:
+  Description:        Basic IPv6 Wireless AVC template
+  No. of users:       0
+  Total field space:  102 bytes
+  Fields:
+    match ipv6 protocol
+    match ipv6 source address
+    match ipv6 destination address
+    match transport source-port
+    match transport destination-port
+    match flow direction
+    match wireless ssid
+    collect counter bytes long
+    collect counter packets long
+    collect application name
+    collect wireless ap mac address
+    collect wireless client mac address
+

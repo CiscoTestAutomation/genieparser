@@ -1,0 +1,13 @@
+Confd Status: Started
+
+
+Process              Status              State
+-------------------------------------------------------
+nesd                 Running             Active
+syncfd               Running             Active
+ncsshd               Running             Not Applicable
+dmiauthd             Running             Active
+nginx                Running             Not Applicable
+ndbmand              Running             Active
+pubd                 Not Running         Failed
+gnmib                Running             Not Applicable

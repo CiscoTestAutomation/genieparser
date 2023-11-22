@@ -1,0 +1,55 @@
+Device:lightweight-ap
+Default Macro:CISCO_LWAP_AUTO_SMARTPORT
+Current Macro:CISCO_LWAP_AUTO_SMARTPORT
+Configurable Parameters:ACCESS_VLAN
+Defaults Parameters:ACCESS_VLAN=1
+Current Parameters:ACCESS_VLAN=1
+
+Device:access-point
+Default Macro:CISCO_AP_AUTO_SMARTPORT
+Current Macro:CISCO_AP_AUTO_SMARTPORT
+Configurable Parameters:NATIVE_VLAN
+Defaults Parameters:NATIVE_VLAN=1
+Current Parameters:NATIVE_VLAN=1
+
+Device:phone
+Default Macro:CISCO_PHONE_AUTO_SMARTPORT
+Current Macro:CISCO_PHONE_AUTO_SMARTPORT
+Configurable Parameters:ACCESS_VLAN VOICE_VLAN
+Defaults Parameters:ACCESS_VLAN=1 VOICE_VLAN=2
+Current Parameters:ACCESS_VLAN=1 VOICE_VLAN=2
+
+Device:router
+Default Macro:CISCO_ROUTER_AUTO_SMARTPORT
+Current Macro:CISCO_ROUTER_AUTO_SMARTPORT
+Configurable Parameters:NATIVE_VLAN
+Defaults Parameters:NATIVE_VLAN=1
+Current Parameters:NATIVE_VLAN=1
+
+Device:switch
+Default Macro:CISCO_SWITCH_AUTO_SMARTPORT
+Current Macro:CISCO_SWITCH_AUTO_SMARTPORT
+Configurable Parameters:NATIVE_VLAN
+Defaults Parameters:NATIVE_VLAN=1
+Current Parameters:NATIVE_VLAN=1
+
+Device:ip-camera
+Default Macro:CISCO_IP_CAMERA_AUTO_SMARTPORT
+Current Macro:CISCO_IP_CAMERA_AUTO_SMARTPORT
+Configurable Parameters:ACCESS_VLAN
+Defaults Parameters:ACCESS_VLAN=1
+Current Parameters:ACCESS_VLAN=1
+
+Device:media-player
+Default Macro:CISCO_DMP_AUTO_SMARTPORT
+Current Macro:CISCO_DMP_AUTO_SMARTPORT
+Configurable Parameters:ACCESS_VLAN
+Defaults Parameters:ACCESS_VLAN=1
+Current Parameters:ACCESS_VLAN=1
+
+Device:Light
+Default Macro:CISCO_LIGHT_AUTO_SMARTPORT
+Current Macro:CISCO_LIGHT_AUTO_SMARTPORT
+Configurable Parameters:ACCESS_VLAN
+Defaults Parameters:ACCESS_VLAN=1
+Current Parameters:ACCESS_VLAN=1

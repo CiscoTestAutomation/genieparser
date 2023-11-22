@@ -1,0 +1,14 @@
+Tag nSVL-1:
+
+ISIS level-1 node information for Switch.00
+IP interface address: 1.1.1.1 (LSP #0)
+LSP index: 1
+SR capable: No, Strict-SPF capable: No
+
+ISIS level-1 node information for Switch.00
+LSP index: 3
+SR capable: No, Strict-SPF capable: No
+
+ISIS level-1 node information for Switch.01
+LSP index: 4
+SR capable: No, Strict-SPF capable: No

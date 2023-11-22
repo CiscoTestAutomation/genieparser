@@ -1,0 +1,21 @@
+expected_output = {
+    'RX unexpected packet count': 11,
+    'RX invalid punt header': 0,
+    'RX invalid inject packet': 0,
+    'RX if_id lookup fail': 0,
+    'RX dad if_id lookup fail': 0,
+    'RX invalid ipc packet len': 0, 
+    'RX invalid ctrl packet len': 0, 
+    'RX ipc read err': 0, 
+    'RX ipc write err': 0,
+    'RX ipc ioctl err': 0, 
+    'RX zero len': 0, 
+    'RX getbuf failed': 0, 
+    'HW init socket err': 0, 
+    'invalid cyan iosdbp filename': 0,
+    'TX err ctrl packet': 0, 
+    'TX err dad packet': 0, 
+    'TX err ipc packet': 0,
+    'TX send error': 0, 
+    'TX dad send error': 0
+    }

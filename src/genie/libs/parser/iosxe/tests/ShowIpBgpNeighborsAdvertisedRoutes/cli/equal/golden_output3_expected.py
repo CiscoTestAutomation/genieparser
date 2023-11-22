@@ -9,8 +9,7 @@ expected_output = {
                                 "0.0.0.0": {
                                     "index": {
                                         1: {
-                                            "status_codes": "r>",
-                                            "path_type": "i",
+                                            "status_codes": "r>i",
                                             "next_hop": "10.250.6.1",
                                             "origin_codes": "i",
                                             "metric": 0,
@@ -23,8 +22,7 @@ expected_output = {
                                 "10.0.0.0": {
                                     "index": {
                                         1: {
-                                            "status_codes": "*>",
-                                            "path_type": "i",
+                                            "status_codes": "*>i",
                                             "next_hop": "10.250.6.1",
                                             "origin_codes": "?",
                                             "metric": 768,
@@ -37,8 +35,7 @@ expected_output = {
                                 "10.1.100.23/32": {
                                     "index": {
                                         1: {
-                                            "status_codes": "*>",
-                                            "path_type": "i",
+                                            "status_codes": "*>i",
                                             "next_hop": "10.250.6.1",
                                             "origin_codes": "i",
                                             "metric": 0,
@@ -51,8 +48,7 @@ expected_output = {
                                 "10.1.138.0/24": {
                                     "index": {
                                         1: {
-                                            "status_codes": "*>",
-                                            "path_type": "i",
+                                            "status_codes": "*>i",
                                             "next_hop": "10.250.6.1",
                                             "origin_codes": "?",
                                             "metric": 3328,
@@ -65,8 +61,7 @@ expected_output = {
                                 "10.2.28.11/32": {
                                     "index": {
                                         1: {
-                                            "status_codes": "*>",
-                                            "path_type": "i",
+                                            "status_codes": "*>i",
                                             "next_hop": "10.250.6.1",
                                             "origin_codes": "?",
                                             "metric": 51968,
@@ -90,8 +85,7 @@ expected_output = {
                                 "10.100.248.128/26": {
                                     "index": {
                                         1: {
-                                            "status_codes": "*>",
-                                            "path_type": "i",
+                                            "status_codes": "*>i",
                                             "next_hop": "10.250.6.1",
                                             "origin_codes": "?",
                                             "metric": 3328,
@@ -104,8 +98,7 @@ expected_output = {
                                 "10.105.144.128/25": {
                                     "index": {
                                         1: {
-                                            "status_codes": "*>",
-                                            "path_type": "i",
+                                            "status_codes": "*>i",
                                             "next_hop": "10.250.6.1",
                                             "origin_codes": "?",
                                             "metric": 3328,
@@ -118,8 +111,7 @@ expected_output = {
                                 "10.105.145.0/25": {
                                     "index": {
                                         1: {
-                                            "status_codes": "*>",
-                                            "path_type": "i",
+                                            "status_codes": "*>i",
                                             "next_hop": "10.250.6.1",
                                             "origin_codes": "?",
                                             "metric": 3328,
@@ -132,8 +124,7 @@ expected_output = {
                                 "10.105.145.128/25": {
                                     "index": {
                                         1: {
-                                            "status_codes": "*>",
-                                            "path_type": "i",
+                                            "status_codes": "*>i",
                                             "next_hop": "10.250.6.1",
                                             "origin_codes": "?",
                                             "metric": 3328,
@@ -146,8 +137,7 @@ expected_output = {
                                 "10.105.146.0/25": {
                                     "index": {
                                         1: {
-                                            "status_codes": "*>",
-                                            "path_type": "i",
+                                            "status_codes": "*>i",
                                             "next_hop": "10.250.6.1",
                                             "origin_codes": "?",
                                             "metric": 3328,
@@ -160,8 +150,7 @@ expected_output = {
                                 "10.105.146.128/25": {
                                     "index": {
                                         1: {
-                                            "status_codes": "*>",
-                                            "path_type": "i",
+                                            "status_codes": "*>i",
                                             "next_hop": "10.250.6.1",
                                             "origin_codes": "?",
                                             "metric": 3328,

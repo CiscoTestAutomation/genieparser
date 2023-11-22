@@ -1,0 +1,26 @@
+Group Member Information For Group getvpn1:
+    IPSec SA Direction       : Both
+    ACL Received From KS     : gdoi_group_getvpn1_temp_acl
+
+    Group member             : 3.3.1.1         vrf: None
+       Local addr/port       : 3.3.1.1/848
+       Remote addr/port      : 1.1.1.1/848
+       fvrf/ivrf             : None/None
+       Version               : 1.0.26
+       Registration status   : Registered
+       Registered with       : 1.1.1.1
+       Re-registers in       : 518 sec
+       Succeeded registration: 1
+       Attempted registration: 1
+       Last rekey from       : 1.1.1.1
+       Last rekey seq num    : 1
+       Unicast rekey received: 26
+       Rekey ACKs sent       : 26
+       Rekey Rcvd(hh:mm:ss)  : 00:00:19
+       PFS Rekey received    : 0
+       DP Error Monitoring   : OFF
+       IPSEC init reg executed    : 0
+       IPSEC init reg postponed   : 0
+       Active TEK Number     : 2
+       SA Track (OID/status) : disabled
+       Fail-Close Revert : Disabled

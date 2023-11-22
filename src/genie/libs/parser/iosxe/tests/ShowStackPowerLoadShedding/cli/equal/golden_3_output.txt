@@ -1,0 +1,13 @@
+    Power Stack                      Stack   Stack    Total   Rsvd    Alloc   Sw_Avail Num  Num
+    Name                             Mode    Topolgy  Pwr(W)  Pwr(W)  Pwr(W)   Pwr(W)  SW   PS
+    --------------------             ------  -------  ------  ------  ------  ------  ----- -----
+    Powerstack-2                     SP-PS   Ring     6600    30      1762    4808      3    6
+
+    Power Stack           Priority  Consumd  Consumd  Consumd  Alloc    Alloc
+SW  Name                  Sw-Hi-Lo  Sw(W)    Hi(W)    Lo(W)    Hi(W)    Lo(W)
+--  --------------------  --------  -------  -------  -------  -------  -------
+1   Powerstack-2           1-12-21  173.8    0.0      8.8      0.0      22.3
+2   Powerstack-2           2-11-20  223.8    0.0      5.2      0.0      16.6
+3   Powerstack-2           3-13-22  131.6    0.0      40.8     0.0      69.0
+--  --------------------  --------  -------  -------  -------  -------  -------
+Totals:                             529.1    0.0      54.9     0.0      107.8
