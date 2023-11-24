@@ -56,10 +56,10 @@ class ShowVlanInternalUsage(ShowVlanInternalUsageSchema):
 
             m = p0.match(line)
             if m:
-                internal_vlan_dict=parsed_dict.setdefault('Internal Vlan', {})
-                Usage=m.groupdict()['Usage']
-                VLAN=m.groupdict()['VLAN']
-                internal_vlan_dict[VLAN] = {}
-                internal_vlan_dict[VLAN]['Usage']=Usage
+                internal_vlan_dict = parsed_dict.setdefault('internal_vlan', {})
+                usage = m.groupdict()['Usage']
+                vlan = m.groupdict()['VLAN']
+                vlan_dict = internal_vlan_dict[vlan].set_default(vlan, {})
+                vlan_dict['usage'] = usage
                 continue
         return parsed_dict
