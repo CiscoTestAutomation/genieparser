@@ -19,7 +19,7 @@ class ShowVlanInternalUsageSchema(MetaParser):
         show vlan internal usage"""
 
     schema = {
-        'Internal Vlan': {
+        'internal_vlan': {
             Any(): {
                         'Usage': str,
             },
