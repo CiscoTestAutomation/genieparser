@@ -1,0 +1,5 @@
+hema-archer-sj12# show macsec  mka session  interface  Eth1/97/1 details  
+-----------------------------------
+Macsec is shutdown
+-----------------------------------
+hema-archer-sj12# 

@@ -1,0 +1,18 @@
+stack3-nyquist-1#sh access-session interface gigabitEthernet 2/0/24 details
+Interface:  GigabitEthernet2/0/24
+IIF-ID:  0x126A8510
+MAC Address:  0025.0100.0005
+IPv6 Address:  fe80::225:1ff:fe00:5
+               1555:10::5ced:6cc3:825b:39da
+               1555:10::225:1ff:fe00:5
+IPv4 Address:  Unknown
+User-Name:  user_dot1x_ipv6_105
+Status:  Authorized
+Domain:  DATA
+Oper host mode:  multi-auth
+Oper control dir:  both
+Session timeout:  N/A
+Common Session ID:  D401060A0000002BABFD33BD
+Acct Session ID:  0x00000019
+Handle:  0xcf000021
+Current Policy:  Dot1x_MAB

@@ -1,0 +1,5 @@
+hema-archer-sj12# show macsec  mka  session 
+-----------------------------------
+Macsec is shutdown
+-----------------------------------
+hema-archer-sj12# 

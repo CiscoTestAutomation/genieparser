@@ -3708,8 +3708,15 @@ class ShowInterfaceStatus(ShowInterfaceStatusSchema):
         # Eth102/1/1    xxx (Gb1) [test_s] connected 110       full    a-1000
         # Eth102/1/2    yyy (Gb1) [test_s] connected trunk     full    a-1000
         # Eth102/1/3    zzz (Eth1, test_st connected 205       full    a-1000
-        p1 = re.compile(r'^(?P<interface>[\w\/]+)\s+(?P<name>(\w+\s\w+\s\d|[\w-]+|[\w\s\(\)\[\]_,]+))\s+(?P<status>(\w+\s\d|\w+))\s+(?P<vlan>(\w+))\s+(?P<duplex_code>(\w+))\s+(?P<port_speed>([\w-]+))(\s*(?P<type>([\w-]+)))?$')
-        
+        # Po102         VPC PO access      connected 10        full    10G     --
+        # nve1 -- connected -- auto auto --
+        # Po101         vPC Peer-link      connected trunk     full    10G     -- 
+        # Eth1/1        --                 connected routed    full    100G    QSFP-100G-SR1.2
+        # Eth1/7        ig1ezsit-ucs01-A:e connected trunk     full    10G     10Gbase-SR 
+        p1 = re.compile(r'^(?P<interface>[\w\/]+)\s+(?P<name>(\w+\s\w+\s\d|[\w\-\, \*\.\/\:]+|[\w\s\(\)\[\]_,]+))\s+'
+                        r'(?P<status>(connected|disabled|sfpAbsent|noOperMem))\s+(?P<vlan>[\w\-]+)\s+(?P<duplex_code>(\w+))\s+'
+                        r'(?P<port_speed>[\w\-]+)\s*(?P<type>[\w\-\.\s]+)?$')
+ 
         # Eth1/5 *** L2 L3-CIS-N connected trunk full a-1000 1000base-T
         # Eth1/4 *** FEX 2248TP  connected 1     full a-10G  Fabric Exte
         
@@ -3729,7 +3736,7 @@ class ShowInterfaceStatus(ShowInterfaceStatusSchema):
                 interface = Common.convert_intf_name(group['interface'])
                 intf_dict = result_dict.setdefault('interfaces', {}).setdefault(interface, {})
                 if group['name'] is not None:
-                    intf_dict['name'] =(group['name'])
+                    intf_dict['name'] =group['name'].strip()
                 if group['status'] is not None:
                     intf_dict['status'] =(group['status'])
                 if group['vlan'] is not None:
@@ -5111,7 +5118,9 @@ class ShowInterfaceCounters(ShowInterfaceCountersSchema):
                         r'(?P<out_ucast_pkts>OutUcastPkts)|(?P<out_bcast_pkts>OutBcastPkts))')
 
         #Eth1/46                                  21454282                           199828
-        p1 = re.compile(r'(?P<interface>\S+)\s+(?P<val1>\d+)\s+(?P<val2>\d+)')
+        # Vlan2                                     --                                --
+        p1 = re.compile(
+            r'(?P<interface>\S+)\s+(?P<val1>(?:\d+)|(?:--))\s+(?P<val2>(?:\d+)|(?:--))')
 
         for line in out.splitlines():
             line = line.rstrip()
@@ -5131,8 +5140,10 @@ class ShowInterfaceCounters(ShowInterfaceCountersSchema):
                 if interface not in intfs_dict.keys():
                     intfs_dict.setdefault(interface, {})
 
-                intfs_dict[interface][key1] = int(m.groupdict()['val1'])
-                intfs_dict[interface][key2] = int(m.groupdict()['val2'])
+                intfs_dict[interface][key1] = int(
+                    0 if m.groupdict()['val1'] == '--' else m.groupdict()['val1'])
+                intfs_dict[interface][key2] = int(
+                    0 if m.groupdict()['val2'] == '--' else m.groupdict()['val2'])
                 continue
 
         return result_dict

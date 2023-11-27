@@ -424,6 +424,8 @@ class ShowRunInterfaceSchema(MetaParser):
                 Optional('input_sampler'): str,
                 Optional('output_sampler'): str,
                 Optional('pim_mode'): str,
+                Optional('policy_type'): str,
+                Optional('output_name'): str,
                 Optional('switchport_protected'): bool,
                 Optional('switchport_block_unicast'): bool,
                 Optional('switchport_block_multicast'): bool,
@@ -843,6 +845,9 @@ class ShowRunInterface(ShowRunInterfaceSchema):
         
         # ip pim sparse-dense-mode
         p111 = re.compile(r'^ip +pim +(?P<pim_mode>[\S]+)$')
+
+        # service-policy type queueing output 2p6q
+        p112 = re.compile(r'^service-policy +type +(?P<policy_type>[\S]+) +output +(?P<output_name>[\S]+)$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -1719,6 +1724,16 @@ class ShowRunInterface(ShowRunInterfaceSchema):
                 group = m.groupdict()
                 intf_dict.update(
                         {'pim_mode': group['pim_mode']})
+                continue
+            
+            # service-policy type queuing output 2p6q
+            m = p112.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({
+                    'policy_type': group['policy_type'],
+                    'output_name': group['output_name']
+                })
                 continue
 
         return config_dict

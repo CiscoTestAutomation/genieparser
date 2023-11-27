@@ -23,6 +23,9 @@ IOSXE parser for the following show commands:
    * show nat64 translations vrf {vrf_name}
    * show nat64 prefix stateful static-routes prefix {prefix} vrf {vrf_name}
    * show ip nat redundancy
+   * show nat66 statistics
+   * show nat66 nd
+   * show nat66 prefix
 '''
 # Python
 import re
@@ -1551,7 +1554,7 @@ class ShowNat66StatisticsSchema(MetaParser):
     schema = {
         "nat66_statistics": {
             "global_stats": {
-                "enable_count": int,
+                Optional("enable_count"): int,
                 "packets_translated": {
                     "in_to_out": int,
                     "out_to_in": int,
@@ -1571,8 +1574,9 @@ class ShowNat66Statistics(ShowNat66StatisticsSchema):
 
         ret_dict = dict()
         global_stats_dict = dict()
-
-        # Global Stats: enable count 4
+        # NAT66 Statistics
+        p0 = re.compile(r'^NAT66 +Statistics$')
+        # Global Stats: enable count 4 or Global Stats:
         p1 = re.compile(r'^Global +Stats: +enable +count +(?P<enable_count>\d+)$')
         # Packets translated (In -> Out)
         #     : 25
@@ -1583,11 +1587,15 @@ class ShowNat66Statistics(ShowNat66StatisticsSchema):
         p2_3 = re.compile(r'^: +(?P<nat66_pkt_count>\d+)$')
         for line in output.splitlines():
             line = line.strip()
+            # NAT66 Statistics
+            m = p0.match(line)
+            if m:
+                global_stats_dict = ret_dict.setdefault('nat66_statistics', {}).setdefault('global_stats', {})
+                continue
             # Global Stats: enable count 4
             m = p1.match(line)
             if m:
                 groups = m.groupdict()
-                global_stats_dict = ret_dict.setdefault('nat66_statistics', {}).setdefault('global_stats', {})
                 global_stats_dict['enable_count'] = int(groups['enable_count'])
                 continue
             #    Packets translated (In -> Out)

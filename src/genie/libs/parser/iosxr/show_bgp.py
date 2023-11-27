@@ -2305,6 +2305,8 @@ class ShowBgpInstanceNeighborsDetailSchema(MetaParser):
                                  Optional('remove_private_as'): bool,
                                  Optional('keepalive_interval'): int,
                                  Optional('holdtime'): int,
+                                 Optional('configured_keepalive_interval'): int,
+                                 Optional('configured_holdtime'): int,
                                  Optional('min_acceptable_hold_time'): int,
                                  Optional('link_state'): str,
                                  Optional('router_id'): str,
@@ -2372,6 +2374,19 @@ class ShowBgpInstanceNeighborsDetailSchema(MetaParser):
                                  Optional('minimum_time_between_adv_runs'): int,
                                  Optional('inbound_message'): str,
                                  Optional('outbound_message'): str,
+                                 Optional('bfd'):{
+                                    Optional('bfd_status'): str,
+                                    Optional('session_status'): str,
+                                    Optional('mininterval'): int,
+                                    Optional('multiplier'): int
+                                 },
+                                 Optional('messages'): {
+                                    Optional(Any()): {
+                                        Optional('messages_count'): int,
+                                        Optional('notifications'): int,
+                                        Optional('queue'): int
+                                    }
+                                 },
                                  Optional('address_family'):
                                     {Any():
                                         {Optional('enabled'): bool,
@@ -2430,7 +2445,9 @@ class ShowBgpInstanceNeighborsDetailSchema(MetaParser):
                                          Optional('last_reset'): str,
                                          Optional('reset_reason'): str,                                                     
                                          Optional('connections_established'): int,
-                                         Optional('connections_dropped'): int
+                                         Optional('connections_dropped'): int,
+                                         Optional('ttl_security'): str,
+                                         Optional('external_bgp_neighbor_hop_count'): int
                                         },
                                     Optional('transport'):
                                         {Optional('local_host'): str,
@@ -2561,8 +2578,9 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
         p24 = re.compile(r'^TCP *Initial *Sync *Done :(?: *(?P<tcp_initial_sync_done>[a-zA-Z0-9\-\s]+))?$')
         p25 = re.compile(r'^Enforcing *first *AS is *(?P<enforcing_first_as>[a-z]+)$')
         p26 =  re.compile(r'^Multi-protocol *capability *(?P<multiprotocol_capability>[a-zA-Z\s]+)$')
-        p27 = re.compile(r'^Neighbor +capabilities: +Adv +Rcvd$')
-        p27_1= re.compile(r'^(Address +family +)?(?P<name>[a-zA-Z0-9\s\-]+): *(?P<adv>(Y|y)es|(N|n)o) *(?P<rcvd>(Y|y)es|(N|n)o+)$')
+        p27 = re.compile(r'^Neighbor +capabilities:?:( +Adv +Rcvd)?$')
+        p27_1= re.compile(r'^(Address +family +)?(?P<name>[a-zA-Z0-9\s\-]+)(?: +\(GR Awareness\))?: *(?:(?P<adv>(Y|y)es|(N|n)o|advertised+)'
+                          r'(?: \(old \+ new\))?)?(?:( +and))? *(?:(?P<rcvd>(Y|y)es|(N|n)o|received+)(?: \(old \+ new\))?)$')
         p28 = re.compile(r'^InQ *depth: *(?P<message_stats_input_queue>[0-9]+), *OutQ *depth: *(?P<message_stats_output_queue>[0-9]+)$')
         p29 = re.compile(r'^(?P<name>[a-zA-Z\s]+) *: *'
                             '(?P<last_sent>\w+ *\d+ *[\d\:\.]+) *'
@@ -2619,6 +2637,14 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
         p65 = re.compile(r'^AS +override +is +set$')
         p66 = re.compile(r'^Default +information +originate: +(?P<route_map>[\w\s\-]:)$')
         p67 = re.compile(r'^site\-of\-origin +(?P<soo>[\w\:]+)$')
+        p68 = re.compile(r'^TTL\s+security\s+is\s+(?P<ttl_security>\w+)$')
+        p69 = re.compile(r'^External\s+BGP\s+neighbor\s+may\s+be\s+up\s+to\s+(?P<external_bgp_neighbor_hop_count>\d+)\s+hops\s+away\.$')
+        p70 = re.compile(r'^BFD\s+(?P<bfd_status>\w+)\s+\(session\s+(?P<session_status>\w+)\):\s+mininterval:\s+(?P<mininterval>\d+)\s+multiplier:\s+(?P<multiplier>\d+)$')
+        p71 = re.compile(r'^Graceful\s+restart\s+is\s+(?P<graceful_restart>[a-zA-Z]+)$')
+        p72 = re.compile(r'^Restart\s+time\s+is\s+(?P<graceful_restart_restart_time>\d+)\s+seconds$')
+        p73 = re.compile(r'^Stale\s+path\s+timeout\s+time\s+is\s+(?P<graceful_restart_stalepath_time>\d+)\s+seconds$')
+        p74 = re.compile(r'^(?P<messages_type>[Received|Sent]+)\s+(?P<messages_count>\d+)\s+messages,\s+(?P<notifications>\d+)\s+notifications,\s+(?P<queue>\d+)\s+in\s+queue$')
+
         for line in out.splitlines():
             line = line.strip()
 
@@ -2764,8 +2790,8 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
 
             m = p9.match(line)
             if m:
-                sub_dict['holdtime'] = int(m.groupdict()['holdtime'])
-                sub_dict['keepalive_interval'] = \
+                sub_dict['configured_holdtime'] = int(m.groupdict()['holdtime'])
+                sub_dict['configured_keepalive_interval'] = \
                     int(m.groupdict()['keepalive_interval'])
                 sub_dict['min_acceptable_hold_time'] = \
                     int(m.groupdict()['min_acceptable_hold_time'])
@@ -2956,6 +2982,7 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
                 continue
 
             # Neighbor capabilities:            Adv         Rcvd
+            # Neighbor capabilities:
 
             m = p27.match(line)
             if m:
@@ -2965,12 +2992,20 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
             #    Route refresh:                  Yes         No
             #    4-byte AS:                      Yes         No
             #    Address family IPv4 Unicast:    Yes         Yes
+            #    Route refresh: advertised (old + new) and received (old + new)
+            #    Graceful Restart (GR Awareness): received
+            #    4-byte AS: advertised and received
+            #    Address family IPv4 Unicast: advertised and received
 
             m = p27_1.match(line)
             if m:
+                adv = ''
+                rcvd = ''
                 name = m.groupdict()['name'].lower()
-                adv = 'advertised' if m.groupdict()['adv'].lower() == 'yes' else ''
-                rcvd = 'received' if m.groupdict()['rcvd'].lower() == 'yes' else ''
+                if m.groupdict()['adv']:
+                    adv = 'advertised' if m.groupdict()['adv'].lower() in ['yes', 'advertised'] else ''
+                if m.groupdict()['rcvd']:
+                    rcvd = 'received' if m.groupdict()['rcvd'].lower() in ['yes', 'received'] else ''
                 # mapping ops name
 
                 if 'enhanced refresh' in name:
@@ -3438,6 +3473,84 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
             m = p67.match(line)
             if m:
                 sub_dict['address_family'][address_family]['soo'] = m.groupdict()['soo']
+                continue
+
+            # TTL security is configured
+
+            m = p68.match(line)
+            if m:
+                if 'bgp_session_transport' not in sub_dict:
+                    sub_dict['bgp_session_transport'] = {}
+                if 'connection' not in sub_dict['bgp_session_transport']:
+                    sub_dict['bgp_session_transport']['connection'] = {}
+
+                # ttl_security = m.groupdict()['ttl_security']
+                ttl_security = 'enabled'
+
+                sub_dict['bgp_session_transport']['connection']['ttl_security'] = ttl_security
+                continue
+
+            # External BGP neighbor may be up to 100 hops away.
+
+            m = p69.match(line)
+            if m:
+                if 'bgp_session_transport' not in sub_dict:
+                    sub_dict['bgp_session_transport'] = {}
+                if 'connection' not in sub_dict['bgp_session_transport']:
+                    sub_dict['bgp_session_transport']['connection'] = {}
+
+                external_bgp_neighbor_hop_count = int(m.groupdict()['external_bgp_neighbor_hop_count'])
+
+                sub_dict['bgp_session_transport']['connection']['external_bgp_neighbor_hop_count'] = external_bgp_neighbor_hop_count
+                continue
+
+            # BFD enabled (session up): mininterval: 150 multiplier: 3
+
+            m = p70.match(line)
+            if m:
+                sub_dict['bfd'] = {}
+                sub_dict['bfd']['bfd_status'] = m.groupdict()['bfd_status']
+                sub_dict['bfd']['session_status'] = m.groupdict()['session_status']
+                sub_dict['bfd']['mininterval'] = int(m.groupdict()['mininterval'])
+                sub_dict['bfd']['multiplier'] = int(m.groupdict()['multiplier'])
+                continue
+
+            # Graceful restart is enabled
+
+            m = p71.match(line)
+            if m:
+                if m.groupdict()['graceful_restart'] == 'enabled':
+                    graceful_restart = True
+                sub_dict['graceful_restart'] = graceful_restart
+                continue
+
+            # Restart time is 120 seconds
+
+            m = p72.match(line)
+            if m:
+                sub_dict['graceful_restart_restart_time'] = int(m.groupdict()['graceful_restart_restart_time'])
+                continue
+
+            # Stale path timeout time is 360 seconds
+
+            m = p73.match(line)
+            if m:
+                sub_dict['graceful_restart_stalepath_time'] = int(m.groupdict()['graceful_restart_stalepath_time'])
+                continue
+
+            # Received 86 messages, 0 notifications, 0 in queue
+            # Sent 86 messages, 0 notifications, 0 in queue
+
+            m = p74.match(line)
+            if m:
+                messages_type = m.groupdict()['messages_type'].lower()
+                if 'messages' not in sub_dict:
+                    sub_dict['messages'] = {}
+                if messages_type not in sub_dict['messages']:
+                    sub_dict['messages'][messages_type] = {}
+                sub_dict['messages'][messages_type]['messages_count'] = int(m.groupdict()['messages_count'])
+                sub_dict['messages'][messages_type]['notifications'] = int(m.groupdict()['notifications'])
+                sub_dict['messages'][messages_type]['queue'] = int(m.groupdict()['queue'])
                 continue
 
         return ret_dict

@@ -1,0 +1,5 @@
+show macsec mka summary
+Interface          Status   Cipher (Operational)   Key-Server   MACSEC-policy                    Keychain                         Fallback-keychain
+------------------ -------- ---------------------- ------------ -------------------------------- -------------------------------- --------------------------------
+Ethernet1/97/1     Init     No Cipher              Yes          Test-MP1                         Test-KC1                         no keychain
+Ethernet1/97/2     Secured  GCM-AES-256            Yes          Test-MP2                         Test-KC2                         no keychain

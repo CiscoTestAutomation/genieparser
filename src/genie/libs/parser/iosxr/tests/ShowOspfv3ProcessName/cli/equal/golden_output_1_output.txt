@@ -1,0 +1,46 @@
+show ospfv3 200
+Wed Apr 19 11:29:11.354 UTC
+
+ Routing Process "ospfv3 200" with ID 1.100.1.1
+ Role: Primary Active
+ NSR (Non-stop routing) is Enabled
+ It is an autonomous system boundary router
+ Redistributing External Routes from,
+    connected
+    Maximum number of redistributed prefixes 10240
+    Threshold for warning message 75%
+ Initial SPF schedule delay 50 msecs
+ Minimum hold time between two consecutive SPFs 200 msecs
+ Maximum wait time between two consecutive SPFs 5000 msecs
+ Initial LSA throttle delay 50 msecs
+ Minimum hold time for LSA throttle 200 msecs
+ Maximum wait time for LSA throttle 5000 msecs
+ Minimum LSA arrival 100 msecs
+ LSA group pacing timer 240 secs
+ Interface flood pacing timer 33 msecs
+ Retransmission pacing timer 66 msecs
+ Maximum number of configured interfaces 1024
+ Maximum number of configured paths 64
+ Number of external LSA 6. Checksum Sum 0x0285c9
+ Number of areas in this router is 1. 1 normal 0 stub 0 nssa
+ Auto cost is enabled. Reference bandwidth 100
+ SNMP trap is enabled
+    ospfv3IfStateChange
+    ospfv3VirtIfStateChange
+    ospfv3NbrStateChange
+    ospfv3VirtNbrStateChange
+    ospfv3IfConfigError
+    ospfv3IfRxBadPacket
+    ospfv3VirtIfRxBadPacket
+    ospfv3RestartStatusChange
+    ospfv3VirtNbrRestartHelperStatusChange
+    Area BACKBONE(0)
+        Number of interfaces in this area is 1
+        SPF algorithm executed 3 times
+        Number of LSA 5. Checksum Sum 0x01ec6e
+        Number of DCbitless LSA 0
+        Number of indication LSA 0
+        Number of DoNotAge LSA 0
+        Flood list length 0
+        Number of LFA enabled interfaces 0, LFA revision 0
+        Number of Per Prefix LFA enabled interfaces 0

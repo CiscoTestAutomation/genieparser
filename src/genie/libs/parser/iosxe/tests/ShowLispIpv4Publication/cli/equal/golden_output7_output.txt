@@ -1,0 +1,5 @@
+Publication Information for LISP 0 EID-table vrf red (IID 101)
+Entries total 1
+Publisher            Last        EID Prefix               Locator Encap-IID
+                     Published
+13.13.13.13          00:00:54    192.168.0.0/16           -       -

@@ -7,7 +7,7 @@ expected_output =  {
             'is_empty': 'Yes',
             'profile_oid': {
                 '2117': {
-                    'associated_voq_offsets': '2',
+                    'associated_voq_offsets': ['2'],
                     'cgm_type': 'Unicast',
                     'device_id': '0',
                     'for_speeds': '0',
@@ -17,7 +17,7 @@ expected_output =  {
                     'profile_reference_count': '1',
                 },
                 '433': {
-                    'associated_voq_offsets': '0',
+                    'associated_voq_offsets': ['0', '1', '3', '4'],
                     'cgm_type': 'Unicast',
                     'device_id': '0',
                     'fcn_enabled': 'Disabled',
@@ -61,7 +61,7 @@ expected_output =  {
                     'red_enabled': 'Enabled',
                 },
                 '606': {
-                    'associated_voq_offsets': '1',
+                    'associated_voq_offsets': ['1'],
                     'cgm_type': 'Unicast',
                     'device_id': '0',
                     'fcn_enabled': 'Disabled',
