@@ -2300,7 +2300,8 @@ class ShowPolicyMapSchema(MetaParser):
                     Any(): {
                         Optional('priority_level'): {
                             Any(): {
-                                'kbps': int}},
+                                'kbps': int,
+                                'percent': int}},
                         Optional('police'): {
                             Optional('rate_pps'): int,
                             Optional('rate'): int,
@@ -2334,6 +2335,7 @@ class ShowPolicyMapSchema(MetaParser):
                         Optional('set'): str,
                         Optional('conform_burst'): int,
                         Optional('priority'): bool,
+                        Optional('priority_percent'): int,
                         Optional('priority_kbps'): int,
                         Optional('priority_levels'): int,
                         Optional('peak_burst'): int,
@@ -2525,6 +2527,10 @@ class ShowPolicyMap(ShowPolicyMapSchema):
 
         # priority level 1
         p10_1 = re.compile(r'^priority +level +(?P<priority_levels>(\d+))$')
+        # priority 8 (%)
+
+        p10_2 = re.compile(r'^priority +(?P<priority_percent>(\d+)) .*$')
+        
 
         # Set cos 5
         # set dscp cs1
@@ -2842,6 +2848,12 @@ class ShowPolicyMap(ShowPolicyMapSchema):
             if m:
                 priority_level = int(m.groupdict()['priority_levels'])
                 class_map_dict['priority_levels'] = priority_level
+
+            m = p10_2.match(line)
+            if m:
+                class_map_dict['priority'] = True
+                priority_percent = int(m.groupdict()['priority_percent'])
+                class_map_dict['priority_percent'] = priority_percent
 
                 continue
 
