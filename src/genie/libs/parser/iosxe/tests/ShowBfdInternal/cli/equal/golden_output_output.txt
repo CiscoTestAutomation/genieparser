@@ -1,0 +1,8 @@
+Cleanup timer hits: 0
+Pseudo pre-emptive process count: 16552 min/max/avg: 5/17/6 last: 5 ms ago
+Interrupt send count: 944 min/max/avg: 1/892/106 last: 256 ms ago
+Workload credits: 12 allocated, 7500 max
+
+IPv4 Sessions
+NeighAddr                              LD/RD         RH/RS     State     Int
+12.0.0.20                               1/1          Up        Up        Gi1/0/21

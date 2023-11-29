@@ -1,0 +1,68 @@
+# show macsec  mka session  interface  Eth1/97/1 details 
+Detailed Status for MKA Session
+-----------------------------------
+
+Interface Name          : Ethernet1/97/1
+    Session Status                      : INITIALIZING - Searching for Peer (Waiting to receive first Peer MKPDU)
+    Local Tx-SCI                        : c4f7.d530.1484/0001
+    Local Tx-SSCI                       : 0
+    MKA Port Identifier                 : 0
+    CAK Name (CKN)                      : 10000000
+    CA Authentication Mode              : PRIMARY-PSK
+    Member Identifier (MI)              : B3034A0893A7762D5CC0439C
+    Message Number (MN)                 : 7515
+    MKA Policy Name                     : Test-MP1
+    Key Server Priority                 : 16
+    Key Server                          : Yes
+    Include ICV                         : No
+    SAK Cipher Suite                    : GCM-AES-256
+    SAK Cipher Suite (Operational)      : No Cipher
+    Replay Window Size                  : 148809600
+    Confidentiality Offset              : CONF-OFFSET-0
+    Confidentiality Offset (Operational): CONF-OFFSET-0
+    Latest SAK Status                   : No RX-Tx
+    Latest SAK AN                       : 0
+    Latest SAK KI                       : 00000000000000000000000000000000
+    Latest SAK KN                       : 0
+    Last SAK key time                   : Not Applicable
+    CA Peer Count                       : 1
+    Eapol dest mac                      : 0180.c200.0003
+    Ether-type                          : 0x888e
+Peer Status:
+    Peer MI                             : 001100000001000100000001
+    RxSCI                               : 0011.0000.0001/0001
+    Peer CAK                            : Match
+    Latest Rx MKPDU                     : 15:47:12 PST Mon May 08 2023
+
+Interface Name          : Ethernet1/97/2
+    Session Status                      : SECURED - Secured MKA Session with MACsec
+    Local Tx-SCI                        : c4f7.d530.1485/0001
+    Local Tx-SSCI                       : 1
+    MKA Port Identifier                 : 1
+    CAK Name (CKN)                      : 10100000
+    CA Authentication Mode              : PRIMARY-PSK
+    Member Identifier (MI)              : 783DEDF82AF6A5D3CBA13CB6
+    Message Number (MN)                 : 7516
+    MKA Policy Name                     : Test-MP2
+    Key Server Priority                 : 16
+    Key Server                          : Yes
+    Include ICV                         : No
+    SAK Cipher Suite                    : GCM-AES-256
+    SAK Cipher Suite (Operational)      : GCM-AES-256
+    Replay Window Size                  : 148809600
+    Confidentiality Offset              : CONF-OFFSET-0
+    Confidentiality Offset (Operational): CONF-OFFSET-0
+    Latest SAK Status                   : Rx & TX
+    Latest SAK AN                       : 0
+    Latest SAK KI                       : 783DEDF82AF6A5D3CBA13CB600000001
+    Latest SAK KN                       : 1
+    Last SAK key time                   : 11:36:51 PST Mon May 08 2023
+    CA Peer Count                       : 1
+    Eapol dest mac                      : 0180.c200.0003
+    Ether-type                          : 0x888e
+Peer Status:
+    Peer MI                             : 002700000001000100000001
+    RxSCI                               : 0027.0000.0001/0001
+    Peer CAK                            : Match
+    Latest Rx MKPDU                     : 15:47:11 PST Mon May 08 2023
+

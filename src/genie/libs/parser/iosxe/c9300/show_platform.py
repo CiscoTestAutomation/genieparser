@@ -99,6 +99,22 @@ class ShowInventory(ShowInventorySchema):
 class ShowEnvironmentAllSchema(MetaParser):
     """Schema for show environment all"""
     schema = {
+        Optional('sensor_list'): {
+            'location':{ 
+                Any():{
+                    'sensor':{
+                        Any():{
+                            'state': str,
+                            'reading':str,
+                            Optional('range'):{
+                                'min' : str,
+                                'max': str,
+                            } 
+                        }
+                    }
+                }
+            }
+        },
         'switch': {
             Any(): {
                 'fan': {
@@ -164,6 +180,11 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
         # initial return dictionary
         ret_dict = {}
 
+        #  Sensor          Location        State               Reading       Range(min-max)
+        #  PS1 Vout        2               GOOD               56125 mV          na
+        #  PS1 Vin         2               GOOD              205000 mV        90 - 264
+        p0 = re.compile(r'^(?P<sensor>(\w+ \w+))\s+(?P<location>\d)\s+(?P<state>(\w+( \w+)?))\s+(?P<reading>(\w+ \w+))\s+(?P<min>[\w ]+)(( - )?(?P<max>[\w]+)?)$')
+
         # Switch 1 FAN 1 is OK
         p1 = re.compile(r'^Switch +(?P<switch>\d+) +FAN +(?P<fan>\d+) +is +(?P<state>[\w\s]+)$')
 
@@ -213,6 +234,26 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
 
         for line in out.splitlines():
             line = line.strip()
+
+            #  Sensor          Location        State               Reading       Range(min-max)
+            #  PS1 Vout        2               GOOD               56125 mV          na
+            #  PS1 Vin         2               GOOD              205000 mV        90 - 264
+            m = p0.match(line)
+            if m:
+                group = m.groupdict()
+                sensor_dict = ret_dict.setdefault('sensor_list', {}) \
+                    .setdefault('location', {}).setdefault(group['location'], {}) \
+                        .setdefault('sensor', {}).setdefault(group['sensor'], {})
+                sensor_dict.update({"state": group['state']})
+                sensor_dict.update({"reading": group['reading']})
+                range_dict = sensor_dict.setdefault('range',{})
+                if group['min'] != 'na':
+                    range_dict.update({"min": group['min']})
+                    range_dict.update({"max": group['max']}) 
+                else:
+                    range_dict.update({'min': 'na'})
+                    range_dict.update({'max': 'na'})
+                continue
 
             # Switch 1 FAN 1 is OK
             m = p1.match(line)

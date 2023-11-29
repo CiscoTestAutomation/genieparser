@@ -1,0 +1,4 @@
+vrf VN_1 ID 0x2 UP users  EID
+  Topology IPv4 UP, topoid 0x2, locks 2, RIB registered
+    User EID, top ID 0, IID 4105, lock count 4, RIB watch count 0
+  Topology IPv6 DOWN, topoid 0x503316482, locks 0, RIB no

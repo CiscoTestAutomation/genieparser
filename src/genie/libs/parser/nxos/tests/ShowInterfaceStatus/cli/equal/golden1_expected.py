@@ -1,13 +1,5 @@
 expected_output = {
    "interfaces":{
-      "Port":{
-         "name":"Name",
-         "status":"Status",
-         "vlan":"Vlan",
-         "duplex_code":"Duplex",
-         "port_speed":"Speed",
-         "type":"Type"
-      },
       "Ethernet1/1":{
          "name":"KeepAlive",
          "status":"connected",
@@ -91,6 +83,30 @@ expected_output = {
          "vlan":"205",
          "duplex_code":"full",
          "port_speed":"a-1000"
+      },
+      "Port-channel102":{
+         "name":"VPC PO access",
+         "status":"connected",
+         "vlan":"10",
+         "duplex_code":"full",
+         "port_speed":"10G",
+         "type":"--"
+      },
+      "Nve1":{
+         "name":"--",
+         "status":"connected",
+         "vlan":"--",
+         "duplex_code":"auto",
+         "port_speed":"auto",
+         "type":"--"
+      },
+      "Port-channel101":{
+         "name":"vPC Peer-link",
+         "status":"connected",
+         "vlan":"trunk",
+         "duplex_code":"full",
+         "port_speed":"10G",
+         "type":"--"
       }
    }
 }

@@ -1,0 +1,35 @@
+show macsec mka session interface Eth1/97/2 details
+Detailed Status for MKA Session
+-----------------------------------
+
+Interface Name          : Ethernet1/97/2
+    Session Status                      : SECURED - Secured MKA Session with MACsec
+    Local Tx-SCI                        : c4f7.d530.1485/0001
+    Local Tx-SSCI                       : 1
+    MKA Port Identifier                 : 1
+    CAK Name (CKN)                      : 10100000
+    CA Authentication Mode              : PRIMARY-PSK
+    Member Identifier (MI)              : 783DEDF82AF6A5D3CBA13CB6
+    Message Number (MN)                 : 7385
+    MKA Policy Name                     : Test-MP2
+    Key Server Priority                 : 16
+    Key Server                          : Yes
+    Include ICV                         : No
+    SAK Cipher Suite                    : GCM-AES-256
+    SAK Cipher Suite (Operational)      : GCM-AES-256
+    Replay Window Size                  : 148809600
+    Confidentiality Offset              : CONF-OFFSET-0
+    Confidentiality Offset (Operational): CONF-OFFSET-0
+    Latest SAK Status                   : Rx & TX
+    Latest SAK AN                       : 0
+    Latest SAK KI                       : 783DEDF82AF6A5D3CBA13CB600000001
+    Latest SAK KN                       : 1
+    Last SAK key time                   : 11:36:51 PST Mon May 08 2023
+    CA Peer Count                       : 1
+    Eapol dest mac                      : 0180.c200.0003
+    Ether-type                          : 0x888e
+Peer Status:
+    Peer MI                             : 002700000001000100000001
+    RxSCI                               : 0027.0000.0001/0001
+    Peer CAK                            : Match
+    Latest Rx MKPDU                     : 15:42:49 PST Mon May 08 2023

@@ -1,0 +1,41 @@
+SONiC Software Version: SONiC.HEAD.32-21ea29a
+Distribution: Debian 9.8
+Kernel: 4.9.0-8-amd64
+Build commit: 21ea29a
+Build date: Fri Mar 22 01:55:48 UTC 2019
+Built by: johnar@jenkins-worker-4
+
+Platform: x86_64-mlnx_msn2700-r0
+HwSKU: Mellanox-SN2700
+ASIC: mellanox
+ASIC Count: 1
+Serial Number: MT1822K07815
+Model Number: MSN2700-CS2FO
+Hardware Rev: A1
+Uptime: 14:40:15 up 3 min,  1 user,  load average: 1.26, 1.45, 0.66
+Date: Fri 22 Mar 2019 14:40:15
+
+Docker images:
+REPOSITORY                 TAG                 IMAGE ID            SIZE
+docker-syncd-brcm          HEAD.32-21ea29a     434240daff6e        362MB
+docker-syncd-brcm          latest              434240daff6e        362MB
+docker-orchagent-brcm      HEAD.32-21ea29a     e4f9c4631025        287MB
+docker-orchagent-brcm      latest              e4f9c4631025        287MB
+docker-nat                 HEAD.32-21ea29a     46075edc1c69        305MB
+docker-nat                 latest              46075edc1c69        305MB
+docker-lldp-sv2            HEAD.32-21ea29a     9681bbfea3ac        275MB
+docker-lldp-sv2            latest              9681bbfea3ac        275MB
+docker-dhcp-relay          HEAD.32-21ea29a     2db34c7bc6f4        257MB
+docker-dhcp-relay          latest              2db34c7bc6f4        257MB
+docker-database            HEAD.32-21ea29a     badc6fc84cdb        256MB
+docker-database            latest              badc6fc84cdb        256MB
+docker-snmp-sv2            HEAD.32-21ea29a     e2776e2a30b7        295MB
+docker-snmp-sv2            latest              e2776e2a30b7        295MB
+docker-teamd               HEAD.32-21ea29a     caf957cd2ad1        275MB
+docker-teamd               latest              caf957cd2ad1        275MB
+docker-router-advertiser   HEAD.32-21ea29a     b1a62023958c        255MB
+docker-router-advertiser   latest              b1a62023958c        255MB
+docker-platform-monitor    HEAD.32-21ea29a     40b40a4b2164        287MB
+docker-platform-monitor    latest              40b40a4b2164        287MB
+docker-fpm-quagga          HEAD.32-21ea29a     546036fe6838        282MB
+docker-fpm-quagga          latest              546036fe6838        282MB

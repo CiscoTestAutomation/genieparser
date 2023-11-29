@@ -1,0 +1,113 @@
+RP/0/0/CPU0:XRv9k-PE1#show bgp neighbors 50.1.1.8
+Fri Jul 7 09:36:35.537 UTC
+
+BGP neighbor is 50.1.1.8
+Remote AS 100, local AS 100, internal link
+Remote router ID 50.1.1.8
+BGP state = Established, up for 2d00h
+NSR State: None
+Last read 00:00:54, Last read before reset 2d00h
+Hold time is 180, keepalive interval is 60 seconds
+Configured hold time: 180, keepalive: 60, min acceptable hold time: 3
+Last write 00:00:55, attempted 19, written 19
+Second last write 00:01:55, attempted 19, written 19
+Last write before reset 2d00h, attempted 19, written 19
+Second last write before reset 2d00h, attempted 19, written 19
+Last write pulse rcvd Jul 7 09:35:40.671 last full not set pulse count 8654
+Last write pulse rcvd before reset 2d00h
+Socket not armed for io, armed for read, armed for write
+Last write thread event before reset 2d00h, second last 2d00h
+Last KA expiry before reset 2d00h, second last 2d00h
+Last KA error before reset 00:00:00, KA not sent 00:00:00
+Last KA start before reset 2d00h, second last 2d00h
+Precedence: internet
+Non-stop routing is enabled
+Graceful restart is enabled
+Restart time is 120 seconds
+Stale path timeout time is 360 seconds
+Multi-protocol capability received
+Neighbor capabilities:
+Route refresh: advertised (old + new) and received (old + new)
+Graceful Restart (GR Awareness): received
+4-byte AS: advertised and received
+Address family IPv4 Unicast: advertised and received
+Address family VPNv4 Unicast: advertised and received
+Address family IPv6 Unicast: advertised and received
+Address family VPNv6 Unicast: advertised and received
+Address family L2VPN VPLS: advertised and received
+Address family L2VPN EVPN: advertised and received
+Received 4383 messages, 1 notifications, 0 in queue
+Sent 4385 messages, 1 notifications, 0 in queue
+Minimum time between advertisement runs is 0 secs
+Inbound message logging enabled, 3 messages buffered
+Outbound message logging enabled, 3 messages buffered
+
+BGP neighbor is 80.11.1.2
+Remote AS 5000, local AS 100, external link
+Remote router ID 70.1.1.1
+BGP state = Established, up for 4w6d
+NSR State: None
+Last read 00:00:21, Last read before reset 4w6d
+Hold time is 180, keepalive interval is 60 seconds
+Configured hold time: 180, keepalive: 60, min acceptable hold time: 3
+Last write 00:00:43, attempted 19, written 19
+Second last write 00:01:43, attempted 19, written 19
+Last write before reset 4w6d, attempted 19, written 19
+Second last write before reset 4w6d, attempted 19, written 19
+Last write pulse rcvd Jun 8 10:05:28.237 last full not set pulse count 111857
+Last write pulse rcvd before reset 4w6d
+Socket not armed for io, armed for read, armed for write
+Last write thread event before reset 4w6d, second last 4w6d
+Last KA expiry before reset 4w6d, second last 4w6d
+Last KA error before reset 00:00:00, KA not sent 00:00:00
+Last KA start before reset 4w6d, second last 4w6d
+Precedence: internet
+Non-stop routing is enabled
+Graceful restart is enabled
+Restart time is 120 seconds
+Stale path timeout time is 360 seconds
+Enforcing first AS is enabled
+Multi-protocol capability received
+Neighbor capabilities:
+Route refresh: advertised (old + new) and received (old + new)
+Graceful Restart (GR Awareness): received
+4-byte AS: advertised and received
+Address family IPv4 Unicast: advertised and received
+Received 58559 messages, 0 notifications, 0 in queue
+Sent 53439 messages, 2 notifications, 0 in queue
+Minimum time between advertisement runs is 30 secs
+Inbound message logging enabled, 3 messages buffered
+Outbound message logging enabled, 3 messages buffered
+
+For Address Family: IPv4 Unicast
+BGP neighbor version 1322
+Update group: 0.3 Filter-group: 0.1 No Refresh request being processed
+AF-dependent capabilities:
+Graceful Restart capability advertised
+Local restart time is 120, RIB purge time is 600 seconds
+Maximum stalepath time is 360 seconds
+Extended Nexthop Encoding: advertised
+Route refresh request: received 0, sent 0
+Policy for incoming advertisements is PASS-ALL
+Policy for outgoing advertisements is PASS-ALL
+1 accepted prefixes, 1 are bestpaths
+Exact no. of prefixes denied : 0.
+Cumulative no. of prefixes denied: 0.
+Prefix advertised 393, suppressed 2, withdrawn 365
+Maximum prefixes allowed 1048576
+Threshold for warning message 75%, restart interval 0 min
+An EoR was received during read-only mode
+Last ack version 1322, Last synced ack version 0
+Outstanding version objects: current 0, max 3
+Additional-paths operation: None
+Advertise routes with local-label via Unicast SAFI
+
+Connections established 3; dropped 2
+Local host: 80.11.1.1, Local port: 31495, IF Handle: 0x00000120
+Foreign host: 80.11.1.2, Foreign port: 179
+Last reset 4w6d, due to User clear requested (CEASE notification sent - administrative reset)
+Time since last notification sent to neighbor: 4w6d
+Error Code: administrative reset
+Notification data sent:
+None
+TTL security is configured

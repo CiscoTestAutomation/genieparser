@@ -1,0 +1,181 @@
+--------------------------------------------------------------------------------
+Port          Name               Status    Vlan      Duplex  Speed   Type
+--------------------------------------------------------------------------------
+Eth1/1        bil-bca-fs01       connected f-path    full    10G     SFP-H10GB-C
+Eth1/2        bil-bca-fs01       connected f-path    full    10G     SFP-H10GB-C
+Eth1/3        bil-bca-ds01, Eth1 connected trunk     full    10G     10Gbase-SR 
+Eth1/4        --                 sfpAbsent 1         full    10G     --         
+Eth1/5        bil-bca-fs02       connected f-path    full    10G     SFP-H10GB-C
+Eth1/6        bil-bca-fs02       connected f-path    full    10G     SFP-H10GB-C
+Eth1/7        ig1ezsit-ucs01-A:e connected trunk     full    10G     10Gbase-SR 
+Eth1/8        ig1ezsit-ucs01-A:e connected trunk     full    10G     10Gbase-SR 
+Eth1/9        bil-bca-fa02       connected f-path    full    10G     SFP-H10GB-C
+Eth1/10       bil-bca-fa02       connected f-path    full    10G     SFP-H10GB-C
+Eth1/11       FEX104             connected 1         full    10G     Fabric Exte
+Eth1/12       FEX104             connected 1         full    10G     Fabric Exte
+Eth1/13       FEX102             connected 1         full    10G     Fabric Exte
+Eth1/14       FEX102             connected 1         full    10G     Fabric Exte
+Eth1/15       ig1ezsit-ucs01-B:e connected trunk     full    10G     10Gbase-SR 
+Eth1/16       ig1ezsit-ucs01-B:e connected trunk     full    10G     10Gbase-SR 
+Eth1/17       ig1ezsit-ucs01-A:e connected trunk     full    10G     10Gbase-SR 
+Eth1/18       ig1ezsit-ucs01-B:e connected trunk     full    10G     10Gbase-SR 
+Eth1/19       --                 sfpAbsent 1         full    10G     --         
+Eth1/20       --                 sfpAbsent 1         full    10G     --         
+Eth1/21       FEX101             connected 1         full    10G     Fabric Exte
+Eth1/22       FEX101             connected 1         full    10G     Fabric Exte
+Eth1/23       FEX101             connected 1         full    10G     Fabric Exte
+Eth1/24       FEX101             connected 1         full    10G     Fabric Exte
+Eth1/25       --                 sfpAbsent 1         full    10G     --         
+Eth1/26       --                 sfpAbsent 1         full    10G     --         
+Eth1/27       --                 sfpAbsent 1         full    10G     --         
+Eth1/28       --                 sfpAbsent 1         full    10G     --         
+Eth1/29       --                 sfpAbsent 1         full    10G     --         
+Eth1/30       bil-bxx-tsw01:e1/1 connected 1         full    10G     10Gbase-SR 
+Eth1/31       Monitor port for l disabled  trunk     full    1000    SFP-1000BAS
+Eth1/32       SZSCT--sv-trunk    connected trunk     full    1000    SFP-1000bas
+Po99          bil-bca-fa02:Po99  connected f-path    full    a-10G   --         
+Po101         FEX101             connected 1         full    a-10G   --         
+Po102         FEX102             connected 1         full    a-10G   --         
+Po104         FEX104             connected 1         full    a-10G   --         
+Po999         bil-bca-ds01, bil- noOperMem trunk     auto    auto    --         
+Po1061        bil-bca-fs01:Po106 connected f-path    full    a-10G   --         
+Po1063        bil-bca-fs02:Po106 connected f-path    full    a-10G   --         
+Po1311        myhiset4rhi1_311_3 connected trunk     full    a-1000  --         
+Po1312        hi2_testing        connected trunk     full    a-1000  --         
+Po1314        SZSCT-_hiset4lb1   connected trunk     full    a-10G   --         
+Po1317        hiset4rhi1         connected trunk     full    a-1000  --         
+Po1318        hiset4rhi2         connected trunk     full    a-1000  --         
+Po2314        hiset4lb2          connected trunk     full    a-10G   --         
+Po3001        ig1ezsit-ucs01-A:p connected trunk     full    a-10G   --         
+Po3003        ig1ezsit-ucs01-B:p connected trunk     full    a-10G   --         
+Po3005        ig1ezsit-ucs01-A:p connected trunk     full    a-10G   --         
+Po3007        ig1ezsit-ucs01-B:p connected trunk     full    a-10G   --         
+mgmt0         ipx-bil-ms-217-2:G connected routed    full    a-1000  --         
+Eth101/1/1    SZSCT--sv-2056     connected 2056      full    1000    1000base-SX
+Eth101/1/2    SZSCT--sv-2058     connected 2058      full    1000    1000base-SX
+Eth101/1/3    SZSCT--sv-2528     connected 2528      full    10G     10Gbase-LR 
+Eth101/1/4    --                 sfpAbsent 1         full    10G     --         
+Eth101/1/5    ey1szsct-isbc11:ET connected trunk     full    1000    1000base-LH
+Eth101/1/6    ey1szsct-isbc11:hk connected trunk     full    10G     10Gbase-LR 
+Eth101/1/7    ey1szsct-isbc01:ET connected trunk     full    1000    1000base-LH
+Eth101/1/8    **ipz-bil20016-s-t connected trunk     full    10G     10Gbase-LR 
+Eth101/1/9    --                 sfpAbsent 1         full    10G     --         
+Eth101/1/10   --                 sfpAbsent 1         full    10G     --         
+Eth101/1/11   vimaphet-disbc01:E connected 2045      full    1000    1000base-T 
+Eth101/1/12   SZSCT-_2046        connected 2046      full    1000    1000base-T 
+Eth101/1/13   vimaphet-disbc01:E connected trunk     full    1000    1000base-T 
+Eth101/1/14   SZSCT_OAM-_2045    connected 2045      full    1000    1000base-T 
+Eth101/1/15   --                 disabled  1         full    10G     1000base-T 
+Eth101/1/16   --                 disabled  1         full    10G     1000base-T 
+Eth101/1/17   --                 disabled  1         full    10G     1000base-LH
+Eth101/1/18   LAWFUL-INTERCEPT   connected 2046      full    10G     10Gbase-SR 
+Eth101/1/19   vimaphet-disbc01:h connected trunk     full    1000    1000base-SX
+Eth101/1/20   ey1szsct-isbc05:ET connected trunk     full    1000    1000base-LH
+Eth101/1/21   SZSCT--sv-2060     connected 2060      full    1000    1000base-SX
+Eth101/1/22   SZSCT--sv-2062     connected 2062      full    1000    1000base-SX
+Eth101/1/23   Link to SZSCT-_his connected trunk     full    10G     10Gbase-LR 
+Eth101/1/24   Link to SZSCT-_his connected trunk     full    10G     10Gbase-LR 
+Eth101/1/25   Trunk to ey1szsct- connected 2528      full    1000    1000base-SX
+Eth101/1/26   Trunk to ey1szsct- connected 2046      full    1000    1000base-SX
+Eth101/1/27   ey1szsct-isbc05:hk connected trunk     full    10G     10Gbase-LR 
+Eth101/1/28   ey1szsct-isbc05:hk connected trunk     full    10G     10Gbase-LR 
+Eth101/1/29   ey1szsct-isbc15:ET connected trunk     full    1000    1000base-LH
+Eth101/1/30   ey1szsct-isbc15:hk connected trunk     full    10G     10Gbase-LR 
+Eth101/1/31   --                 sfpAbsent 1         full    10G     --         
+Eth101/1/32   --                 disabled  1         full    10G     1000base-LH
+Eth102/1/1    SZSCT--sv-2047     connected 2047      full    a-100              
+Eth102/1/2    SZSCT--sv-2047     connected 2047      full    a-100              
+Eth102/1/3    SZSCT--sv-2047     connected 2047      full    a-1000             
+Eth102/1/4    SZSCT--sv-2106     connected 2106      full    a-1000             
+Eth102/1/5    SZSCT_OAM--sv-2527 connected 2527      full    a-1000             
+Eth102/1/6    SZSCT--sv-2056     connected 2056      full    a-1000             
+Eth102/1/7    SZSCT--sv-2047     connected 2047      full    a-1000             
+Eth102/1/8    SZSCT--sv-2058     connected 2058      full    a-1000             
+Eth102/1/9    SZSCT_OAM--sv-2045 connected 2045      full    a-1000             
+Eth102/1/10   SZSCT_OAM--sv-2045 connected 2045      full    a-1000             
+Eth102/1/11   SZSCT--sv-2528     connected 2528      full    a-1000             
+Eth102/1/12   SZSCT_OAM--sv-2045 connected 2045      full    a-1000             
+Eth102/1/13   SZSCT--sv-2528     connected 2528      full    a-1000             
+Eth102/1/14   SZSCT_OAM--sv-2045 connected 2045      full    a-1000             
+Eth102/1/15   Radisys Trunk Site connected 2050      full    a-1000             
+Eth102/1/16   *** Link to ip-dsy disabled  trunk     auto    auto               
+Eth102/1/17   SZSCT_OAM--sv-2527 disabled  2527      auto    auto               
+Eth102/1/18   SZSCT_OAM--sv-2045 connected 2045      full    a-1000             
+Eth102/1/19   SZSCT_OAM--sv-2527 connected 2527      full    a-1000             
+Eth102/1/20   SZSCT_OAM--sv-2045 connected 2045      full    a-1000             
+Eth102/1/21   SZSIT_OAM--sv-2100 connected 2101      full    a-1000             
+Eth102/1/22   ey1szsct-isbc01:ET connected 2045      full    a-1000             
+Eth102/1/23   NAP-10.67.221.47-M disabled  2045      auto    auto               
+Eth102/1/24   SZSCT_Signalling-s connected 2528      full    a-1000             
+Eth102/1/25   SZSCT_OAM--sv-2133 connected 2133      full    a-1000             
+Eth102/1/26   SZSCT_OAM--sv-2134 connected trunk     full    a-1000             
+Eth102/1/27   --                 disabled  1         auto    auto               
+Eth102/1/28   SZSCT_OAM--sv-2045 connected 2045      full    a-1000             
+Eth102/1/29   *** UPSE GDVPEP Mo connected 2045      full    a-1000             
+Eth102/1/30   Sig-a temporaer st connected 2528      full    1000               
+Eth102/1/31   Sig-b temporaer st connected 2048      full    1000               
+Eth102/1/32   OAM_a-b temporaer  connected 2045      full    1000               
+Eth102/1/33   SZSCT_Signalling-s connected 2528      full    a-1000             
+Eth102/1/34   SZSIT_OAM--sv-2045 connected 2045      full    100                
+Eth102/1/35   --                 disabled  1         auto    auto               
+Eth102/1/36   --                 disabled  1         auto    auto               
+Eth102/1/37   --                 disabled  1         auto    auto               
+Eth102/1/38   --                 disabled  1         auto    auto               
+Eth102/1/39   SZSCT_OAM--sv-2527 connected 2527      full    1000               
+Eth102/1/40   --                 disabled  1         auto    auto               
+Eth102/1/41   ey1szsct-isbc11:ET connected 2527      full    1000               
+Eth102/1/42   --                 disabled  1         auto    auto               
+Eth102/1/43   ey1szsct-isbc01:ET connected trunk     full    a-1000             
+Eth102/1/44   ey1szsct-isbc01:ET connected 2527      full    1000               
+Eth102/1/45   --                 disabled  1         auto    auto               
+Eth102/1/46   VoIP-IC_Temporary_ connected 2106      full    a-1000             
+Eth102/1/47   VoIP-IC_Temporary_ disabled  2106      auto    auto               
+Eth102/1/48   SZSCT--sv-2528:gdv connected 2106      full    a-1000             
+Eth104/1/1    SZSCT--sv-trunk    connected trunk     full    a-1000             
+Eth104/1/2    --                 disabled  1         auto    auto               
+Eth104/1/3    ig1ezsit-ucs01-B:m connected 2045      full    a-1000             
+Eth104/1/4    OCOM-ig1-2306      disabled  2306      auto    auto               
+Eth104/1/5    --                 disabled  1         auto    auto               
+Eth104/1/6    --                 disabled  1         auto    auto               
+Eth104/1/7    --                 disabled  1         auto    auto               
+Eth104/1/8    --                 disabled  1         auto    auto               
+Eth104/1/9    --                 disabled  1         auto    auto               
+Eth104/1/10   Link to ESPIN-DB-V connected trunk     full    a-1000             
+Eth104/1/11   Link to ESPIN-DB-V connected trunk     full    a-1000             
+Eth104/1/12   Link to hiset4rhi1 connected trunk     full    a-1000             
+Eth104/1/13   Link to hiset4rhi2 connected trunk     full    a-1000             
+Eth104/1/14   --                 disabled  1         auto    auto               
+Eth104/1/15   --                 disabled  1         auto    auto               
+Eth104/1/16   --                 disabled  1         auto    auto               
+Eth104/1/17   --                 disabled  1         auto    auto               
+Eth104/1/18   --                 disabled  1         auto    auto               
+Eth104/1/19   --                 disabled  1         auto    auto               
+Eth104/1/20   --                 disabled  1         auto    auto               
+Eth104/1/21   --                 disabled  1         auto    auto               
+Eth104/1/22   --                 disabled  1         auto    auto               
+Eth104/1/23   --                 disabled  1         auto    auto               
+Eth104/1/24   --                 disabled  1         auto    auto               
+Eth104/1/25   --                 disabled  1         auto    auto               
+Eth104/1/26   --                 disabled  1         auto    auto               
+Eth104/1/27   --                 disabled  1         auto    auto               
+Eth104/1/28   --                 disabled  1         auto    auto               
+Eth104/1/29   --                 disabled  1         auto    auto               
+Eth104/1/30   --                 disabled  1         auto    auto               
+Eth104/1/31   --                 disabled  1         auto    auto               
+Eth104/1/32   --                 disabled  1         auto    auto               
+Eth104/1/33   --                 disabled  1         auto    auto               
+Eth104/1/34   --                 disabled  1         auto    auto               
+Eth104/1/35   --                 disabled  1         auto    auto               
+Eth104/1/36   --                 disabled  1         auto    auto               
+Eth104/1/37   --                 disabled  1         auto    auto               
+Eth104/1/38   --                 disabled  1         auto    auto               
+Eth104/1/39   --                 disabled  1         auto    auto               
+Eth104/1/40   --                 disabled  1         auto    auto               
+Eth104/1/41   ey1szsct-isbc16:ET connected 2527      full    a-1000             
+Eth104/1/42   --                 disabled  1         auto    auto               
+Eth104/1/43   ey1szsct-isbc05:ET connected trunk     full    a-1000             
+Eth104/1/44   ey1szsct-isbc05:ET connected 2527      full    a-1000             
+Eth104/1/45   --                 disabled  1         auto    auto               
+Eth104/1/46   --                 disabled  1         auto    auto               
+Eth104/1/47   --                 disabled  1         auto    auto               
+Eth104/1/48   --                 disabled  1         auto    auto              

@@ -1,0 +1,7 @@
+GigabitEthernet1/0/11 is up, line protocol is up
+    IPv6 is enabled, link-local address is FE80::F816:3EFF:FE19:ABBA
+    No Virtual link-local address(es):
+    Global unicast address(es):
+      2001:db8:8548:1::1, subnet is 2001:db8:8548:1::/64
+    ND advertised default router preference is Medium
+    Hosts use DHCP to obtain routable addresses.

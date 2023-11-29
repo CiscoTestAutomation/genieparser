@@ -3225,6 +3225,14 @@ class ShowIpv6Interface(ShowIpv6InterfaceSchema):
                 ret_dict[intf]['addresses_config_method'] = \
                     m.groupdict()['addr_conf_method']
                 continue
+            
+            # Hosts use DHCP to obtain routable addresses.
+            p18_1 = re.compile(r'^Hosts +use +(?P<addr_conf_method>[\w\s]+) +to +obtain +routable +addresses.$')
+            m = p18_1.match(line)
+            if m:
+                ret_dict[intf]['addresses_config_method'] = \
+                    m.groupdict()['addr_conf_method']
+                continue
 
             # Interface is unnumbered. Using address of Loopback0
             p19 = re.compile(r'^Interface +is +unnumbered. +Using +address +of'

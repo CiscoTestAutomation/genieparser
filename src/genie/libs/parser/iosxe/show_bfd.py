@@ -875,3 +875,143 @@ class ShowBfdSummaryHost(ShowBfdSummaryHostSchema):
 				total_session.update({'total_session_down': int(group['total_session_down'])})
 				continue
 		return(ret_dict)
+
+
+
+#---------------------------------
+# Schema for 'show bfd internal'
+#---------------------------------
+class ShowBfdInternalSchema(MetaParser):
+	'''Schema for show bfd internal'''
+	schema = {
+		'cleanup_timer_hits': int,
+		'pseudo_preemptive':{
+				'pseudo_count': int,
+				'min': int,
+				'max': int,
+				'avg': int,
+				'last': int
+		},
+		'interrupt_send_count':{
+			'interrupt_count': int,
+			'min': int,
+			'max': int,
+			'avg': int,
+			'last': int
+		},
+		'workload_credits':{
+			'credits': int,
+			'max': int
+		},
+		'ipv4_sessions':{
+			'interface':{
+				Any():{
+					'neigh_addr':{
+						Any():{
+							'ld_rd': str,
+							'rh_rs': str,
+							'state': str
+						}
+					}
+				}
+			}
+		}
+	}
+
+#---------------------------------
+# Parser for 'show bfd internal'
+#---------------------------------
+class ShowBfdInternal(ShowBfdInternalSchema):
+	'''Parser for show bfd internal'''
+	cli_command = 'show bfd internal'
+
+	def cli(self, output=None):
+		if output is None:
+			out = self.device.execute(self.cli_command)
+		else:
+			out = output
+
+
+		# Cleanup timer hits: 0
+		p01 = re.compile(r'^Cleanup +timer +hits: +(?P<cleanup_timer_hits>\d+)$')
+
+		# Pseudo pre-emptive process count: 16552 min/max/avg: 5/17/6 last: 5ms ago
+		p02 = re.compile(r'^Pseudo pre-emptive process count:\s+(?P<pseudo_count>\d+)\s+min/max/avg:\s+(?P<min>\d+)/(?P<max>\d+)/(?P<avg>\d+)\s+last:\s+(?P<last>\d+)+\s+ms ago$')
+
+		# Interrupt send count: 994 min/max/avg: 1/892/106 last: 256 ms ago
+		p03 = re.compile(r'^Interrupt +send +count: +(?P<interrupt_count>\d+)\s+min/max/avg:\s+(?P<min>\d+)/(?P<max>\d+)/(?P<avg>\d+)\s+last:\s+(?P<last>\d+)+\s+ms ago$')
+
+		# Workload credits: 12 allocated, 7500 max
+		p04 = re.compile(r'^Workload +credits:\s+(?P<credits>\d+)\s+allocated,+\s+(?P<max>\d+)\s+max$')
+
+		# IPv4 sessions
+		p05 = re.compile(r'^IPv4 +[Ss]essions$')
+
+		# 12.0.0.20                               1/1        Up             Up       Gi1/0/21
+		p06 = re.compile(r'^(?P<neigh_addr>[\w\.]+)\s+(?P<ld_rd>\d+\/\d+)\s+(?P<rh_rs>\w+)\s+(?P<state>\w+)\s+(?P<interface>[\w\W]+)$')
+
+
+		ret_dict = {}
+
+		for line in out.splitlines():
+			line = line.strip()
+
+			# Cleanup timer hits: 0
+			m = p01.match(line)
+			if m:
+				group = m.groupdict()
+				ret_dict['cleanup_timer_hits']=int(group['cleanup_timer_hits'])
+				continue
+
+			# Pseudo pre-emptive process count: 16552 min/max/avg: 5/17/6 last: 5ms ago
+			m = p02.match(line)
+			if m:
+				group = m.groupdict()
+				pseudo_dict = ret_dict.setdefault('pseudo_preemptive',{})
+				pseudo_dict['pseudo_count'] = int(group['pseudo_count'])
+				pseudo_dict['max'] = int(group['max'])
+				pseudo_dict['min'] = int(group['min'])
+				pseudo_dict['avg'] = int(group['avg'])
+				pseudo_dict['last'] = int(group['last'])
+				continue
+
+			# Interrupt send count: 994 min/max/avg: 1/892/106 last: 256 ms ago
+			m = p03.match(line)
+			if m:
+				group = m.groupdict()
+				interrupt_dict = ret_dict.setdefault('interrupt_send_count', {})
+				interrupt_dict['interrupt_count'] = int(group['interrupt_count'])
+				interrupt_dict['max'] = int(group['max'])
+				interrupt_dict['min'] = int(group['min'])
+				interrupt_dict['avg'] = int(group['avg'])
+				interrupt_dict['last'] = int(group['last'])
+				continue
+
+			# Workload credits: 12 allocated, 7500 max
+			m = p04.match(line)
+			if m:
+				group = m.groupdict()
+				workload_dict = ret_dict.setdefault('workload_credits', {})
+				workload_dict['credits'] = int(group['credits'])
+				workload_dict['max'] = int(group['max'])
+				continue
+
+			# IPv4 sessions
+			m = p05.match(line)
+			if m:
+				intf_dict = ret_dict.setdefault('ipv4_sessions', {})
+				continue
+
+
+			# 12.0.0.20                               1/1        Up             Up       Gi1/0/21
+			m = p06.match(line)
+			if m:
+				group = m.groupdict()
+				ipv4_dict = intf_dict.setdefault('interface', {}).setdefault(group['interface'],{})
+				neigh_dict = ipv4_dict.setdefault('neigh_addr', {}).setdefault(group['neigh_addr'],{})
+				neigh_dict['ld_rd'] = group['ld_rd']
+				neigh_dict['rh_rs'] = group['rh_rs']
+				neigh_dict['state'] = group['state']
+				continue
+
+		return ret_dict

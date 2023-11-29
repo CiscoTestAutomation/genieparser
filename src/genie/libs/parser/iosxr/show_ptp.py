@@ -1,9 +1,7 @@
 """ show_ptp.py
-
 IOSXR parsers for the following commands:
-
     * 'show ptp platform servo'
-
+    * 'show ptp foreign-masters brief'
 """
 
 # Python
@@ -126,7 +124,7 @@ class ShowPtpPlatformServo(ShowPtpPlatformServoSchema):
 
         # Last setTime: 1.000000000 flag:0 Last stepTime:262310484, Last adjustFreq:9999988
         # Last setTime: 273.000000000 flag:0  Last stepTime:105006084, Last adjustFreq:-19615
-        p16 = re.compile(r'^Last\s+setTime:\s+(?P<last_set_time>[\d.]+)\s+flag:(?P<flag>\d+)\s+Last\s+stepTime:(?P<last_step_time>\d+),\s+Last\s+adjustFreq:(?P<last_adjust_freq>[-\d]+)$')
+        p16 = re.compile(r'^Last\s+setTime:\s+(?P<last_set_time>[-\d.]+)\s+flag:(?P<flag>\d+)\s+Last\s+stepTime:(?P<last_step_time>[-\d]+),\s+Last\s+adjustFreq:(?P<last_adjust_freq>[-\d]+)$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -285,6 +283,63 @@ class ShowPtpPlatformServo(ShowPtpPlatformServoSchema):
                 ptp_dict.update({'last_step_time': last_step_time})
                 last_adjust_freq = int(group['last_adjust_freq'])
                 ptp_dict.update({'last_adjust_freq': last_adjust_freq})
+                continue
+
+        return ret_dict
+
+class ShowPtpForeignMastersBriefSchema(MetaParser):
+    ''' Schema for:
+            * 'show ptp foreign-masters brief'
+    '''
+
+    schema = {
+        'interface_name': {
+            Any(): {
+                'transport': str,
+                'address': str,
+                'cfg_pri': str,
+                'priority1': int,
+                'state': list
+            }
+        }
+    }
+
+
+# ================================
+# Parser for 'show ptp foreign-masters brief'
+# ================================
+class ShowPtpForeignMastersBrief(ShowPtpForeignMastersBriefSchema):
+
+    cli_command = ['show ptp foreign-masters brief']
+
+    def cli(self, output=None):
+
+        if output is None:
+            output = self.device.execute(self.cli_command[0])
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # Gi0/0/0/19 IPv4 192.168.254.1 None 128 Q,GM
+        # Gi0/0/0/16        Ethernet  8478.ac6c.0aa2            None     128    M,Q
+        # Te0/0/2/1         Ethernet  8478.ac6c.0a91            None     128    M,Q,GM
+        p1 = re.compile(r'^(?P<interface_name>\S+)\s+(?P<transport>\w+)\s+(?P<address>\S+)\s+(?P<cfg_pri>[None]+)\s+(?P<priority1>\d+)\s+(?P<state>[A-Z,]+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Gi0/0/0/19 IPv4 192.168.254.1 None 128 Q,GM
+            # Gi0/0/0/16        Ethernet  8478.ac6c.0aa2            None     128    M,Q
+            # Te0/0/2/1         Ethernet  8478.ac6c.0a91            None     128    M,Q,GM
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                int_dict = ret_dict.setdefault('interface_name',{}).setdefault(group['interface_name'],{})
+                int_dict.update({'transport': group['transport']})
+                int_dict.update({'address': group['address']})
+                int_dict.update({'cfg_pri': group['cfg_pri']})
+                int_dict.update({'priority1': int(group['priority1'])})
+                int_dict.update({'state': group['state'].split(',')})
                 continue
 
         return ret_dict
