@@ -1,0 +1,7 @@
+ Policy Map map1
+    Class cs1
+      priority 9 (%)
+    Class cs2
+      bandwidth 9 (%)
+    Class cs3
+      bandwidth 31 (%)
