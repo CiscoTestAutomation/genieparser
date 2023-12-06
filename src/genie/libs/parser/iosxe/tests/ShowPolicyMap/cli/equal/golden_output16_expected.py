@@ -1,19 +1,16 @@
 expected_output = {
-    "policy_map": {
-        "name": "map1",
-        "classes": [
-            {
-                "name": "cs1",
-                "priority_percent": 9,
+    'policy_map': {
+        'Policy-Map 1': {
+            'class': {
+                'Class-1': {
+                    'priority': True,
+                    'priority_percent': 18,
                 },
-            {
-                "name": "cs2",
-                "bandwidth_percent": 9,
+                'Class-2': {
                 },
-            {
-                "name": "cs2",
-                "bandwidth_percent": 31,
-                }
-            ]
-        }
-    }
+                'Class-3': {
+                },
+            },
+        },
+    },
+}
