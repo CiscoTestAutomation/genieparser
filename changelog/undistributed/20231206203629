@@ -1,0 +1,6 @@
+--------------------------------------------------------------------------------
+                            Fix
+--------------------------------------------------------------------------------
+* NXOS
+    * Modified ShowBgpVrfAllAllSummary:
+        * Added support for parsing 3 lines when v6 neighbor and AS require 3 line output
