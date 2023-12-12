@@ -334,3 +334,40 @@ class ShowIpv6MfibSummary(ShowIpv6MfibSummarySchema):
                 ret_dict['star_g_m_entry'] = int(dict_val['star_g_m_entry'])
                 continue
         return ret_dict
+
+# ======================================================
+# Parser for 'show ip mfib | count <interface>'
+# ======================================================
+
+class ShowIpMfibCountSchema(MetaParser):
+    """Schema for show ip mfib count"""
+
+    schema = {
+        'number_of_lines': int,
+    }
+
+class ShowIpMfibCount(ShowIpMfibCountSchema):
+    """Parser for show ip mfib count"""
+
+    cli_command = 'show ip mfib | count {interface}'
+
+    def cli(self, interface, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(interface=interface))
+            
+        # Number of lines which match regexp = 6500
+        p1 = re.compile(r"^Number of lines which match regexp\s+= (?P<number_of_lines>\S+)$")
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Number of lines which match regexp = 6500
+            m = p1.match(line)
+            if m:
+                dict_val = m.groupdict()
+                ret_dict['number_of_lines'] = int(dict_val['number_of_lines'])
+                continue
+
+        return ret_dict

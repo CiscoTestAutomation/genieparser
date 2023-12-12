@@ -3474,7 +3474,7 @@ class ShowBgpVrfAllAllSummarySchema(MetaParser):
                         {'address_family':
                             {Any():
                                 {'neighbor_table_version': int,
-                                'as': int,
+                                'as': Or(int,float),
                                 'msg_rcvd': int,
                                 'msg_sent': int,
                                 'tbl_ver': int,
@@ -3588,13 +3588,13 @@ class ShowBgpVrfAllAllSummary(ShowBgpVrfAllAllSummarySchema):
                             '(?P<val2>[0-9]+) +modified, +'
                             '(?P<val3>[0-9]+) +filtered +received +paths +'
                             'using +(?P<val4>[0-9]+) +bytes$')
-        p8 = re.compile(r'^\s*(?P<neighbor>[a-zA-Z0-9\.\:]+) +(?P<v>[0-9]+)'
-                            ' +(?P<as>[0-9]+) +(?P<msg_rcvd>[0-9]+)'
-                            ' +(?P<msg_sent>[0-9]+) +(?P<tbl_ver>[0-9]+)'
-                            ' +(?P<inq>[0-9]+) +(?P<outq>[0-9]+)'
-                            ' +(?P<up_down>[a-zA-Z0-9\:]+)'
-                            ' +(?P<state_pfxrcd>(?P<state>[a-zA-Z\s\(\)]+)?'
-                            '(?P<prx_rcd>\d+)?([\w\(\)\s]+)?)$')
+        p8 = re.compile(r'^\s*(?P<neighbor>[a-zA-Z0-9\.\:]+)\s+(?P<v>[0-9]+)'
+                            '\s+(?P<as>[0-9.]+)\s+(?P<msg_rcvd>[0-9]+)'
+                            '\s+(?P<msg_sent>[0-9]+)\s+(?P<tbl_ver>[0-9]+)'
+                            '\s+(?P<inq>[0-9]+)\s+(?P<outq>[0-9]+)'
+                            '\s+(?P<up_down>[a-zA-Z0-9\:]+)'
+                            '\s+(?P<state_pfxrcd>(?P<state>[a-zA-Z\s\(\)]+)?'
+                            '\s*(?P<prx_rcd>\d+)?([\w\(\)\s]+)?)$')
         p8_1 = re.compile(r'^\s*(?P<neighbor>[a-zA-Z0-9\.\:]+)$')
         p8_2 = re.compile(r'^\s*(?P<v>[0-9]+) +(?P<as>[0-9]+)'
                             ' +(?P<msg_rcvd>[0-9]+) +(?P<msg_sent>[0-9]+)'
@@ -3702,6 +3702,9 @@ class ShowBgpVrfAllAllSummary(ShowBgpVrfAllAllSummarySchema):
 
             # Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
             # 10.16.2.10        4     0       0       0        0    0    0     5w6d Idle 
+            
+            # Neighbor        V    AS    MsgRcvd    MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+            # 2.2.2.2    4 1.57920      29146      29136      152    0    0 04:52:49 12   
             m = p8.match(line)
             if m:
                 # Add neighbor to dictionary
@@ -3721,7 +3724,10 @@ class ShowBgpVrfAllAllSummary(ShowBgpVrfAllAllSummarySchema):
 
                 # Add keys for this address_family
                 nbr_af_dict['neighbor_table_version'] = int(m.groupdict()['v'])
-                nbr_af_dict['as'] = int(m.groupdict()['as'])
+                try:
+                    nbr_af_dict['as'] = int(m.groupdict()['as'])
+                except:
+                    nbr_af_dict['as'] = float(m.groupdict()['as'])
                 nbr_af_dict['msg_rcvd'] = int(m.groupdict()['msg_rcvd'])
                 nbr_af_dict['msg_sent'] = int(m.groupdict()['msg_sent'])
                 nbr_af_dict['tbl_ver'] = int(m.groupdict()['tbl_ver'])
@@ -4720,7 +4726,7 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutes(ShowBgpVrfAllNeighborsAdvertisedRou
                             r'(?P<path_type>(i|e|c|l|a|r|I))'
                             r'(?P<prefix>[a-zA-Z0-9\.\:\/\[\]\,]+)'
                             r' +(?P<next_hop>[a-zA-Z0-9\.\:]+)'
-                            r' +(?P<numbers>[a-zA-Z0-9\s\(\)\{\}]+)'
+                            r' +(?P<numbers>[a-zA-Z0-9\.\s\(\)\{\}]+)'
                             r' +(?P<origin_codes>(i|e|\?|\&|\|))$')
         p10 = re.compile(r'^\s*(?P<status_codes>(\*\>|s|x|S|d|h|\*|\>|\s)+)'
                             r'(?P<path_type>(i|e|c|l|a|r|I))?'
@@ -4739,7 +4745,7 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutes(ShowBgpVrfAllNeighborsAdvertisedRou
                         r'(?P<weight>[0-9]+)'
                         r'(?: *(?P<path>[0-9\{\}\s]+))?$')
         p13 = re.compile(r'^(?P<weight>[0-9]+)'
-                        r' +(?P<path>[0-9\{\}\s]+)$')
+                        r' +(?P<path>[0-9\.\{\}\s]+)$')
         p14 = re.compile(r'^\s*Route +Distinguisher *: +(?P<route_distinguisher>'
                         r'(\S+))(?: +\((?:VRF +(?P<default_vrf>\w+)|L2VNI +'
                         r'(?P<rd_l2vni>\d+)|L3VNI +(?P<rd_l3vni>\d+))\))?$')
@@ -4939,6 +4945,7 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutes(ShowBgpVrfAllNeighborsAdvertisedRou
             # *>r10.16.2.0/24         0.0.0.0               4444        100      32768 ?
             # *>i10.49.0.0/16         10.106.101.1                        100          0 10 20 30 40 50 60 70 80 90 i
             # *>i10.4.2.0/24         10.106.102.4                        100          0 {62112 33492 4872 41787 13166 50081 21461 58376 29755 1135} i
+            # *>e100.100.100.120/30 10.10.2.1                                      0 {64102.333 64201 64202} 64203 64500.2345 i
             m = p9.match(line)
             # *&i10.145.1.0/24        192.168.151.2                0        100          0 ?
             m1 = p10.match(line)

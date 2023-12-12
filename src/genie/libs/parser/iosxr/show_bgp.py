@@ -48,6 +48,10 @@ IOSXR parsers for the following show commands:
     * 'show bgp vrf {vrf_name} {address_family} {prefix}'
     * 'show bgp {address_family} vrf {vrf_name} {prefix}'
     * 'show bgp vrf {vrf_name} {address_family} {prefix} detail'
+    * 'show bgp vrf {vrf}'
+    * 'show bgp vrf {vrf} {summary}'
+    * 'show bgp vrf {vrf} {address_family} summary'
+    * 'show bgp vrf {vrf} {address_family} {value}'
 """
 
 # Python
@@ -2301,6 +2305,8 @@ class ShowBgpInstanceNeighborsDetailSchema(MetaParser):
                                  Optional('remove_private_as'): bool,
                                  Optional('keepalive_interval'): int,
                                  Optional('holdtime'): int,
+                                 Optional('configured_keepalive_interval'): int,
+                                 Optional('configured_holdtime'): int,
                                  Optional('min_acceptable_hold_time'): int,
                                  Optional('link_state'): str,
                                  Optional('router_id'): str,
@@ -2368,6 +2374,19 @@ class ShowBgpInstanceNeighborsDetailSchema(MetaParser):
                                  Optional('minimum_time_between_adv_runs'): int,
                                  Optional('inbound_message'): str,
                                  Optional('outbound_message'): str,
+                                 Optional('bfd'):{
+                                    Optional('bfd_status'): str,
+                                    Optional('session_status'): str,
+                                    Optional('mininterval'): int,
+                                    Optional('multiplier'): int
+                                 },
+                                 Optional('messages'): {
+                                    Optional(Any()): {
+                                        Optional('messages_count'): int,
+                                        Optional('notifications'): int,
+                                        Optional('queue'): int
+                                    }
+                                 },
                                  Optional('address_family'):
                                     {Any():
                                         {Optional('enabled'): bool,
@@ -2426,7 +2445,9 @@ class ShowBgpInstanceNeighborsDetailSchema(MetaParser):
                                          Optional('last_reset'): str,
                                          Optional('reset_reason'): str,                                                     
                                          Optional('connections_established'): int,
-                                         Optional('connections_dropped'): int
+                                         Optional('connections_dropped'): int,
+                                         Optional('ttl_security'): str,
+                                         Optional('external_bgp_neighbor_hop_count'): int
                                         },
                                     Optional('transport'):
                                         {Optional('local_host'): str,
@@ -2557,8 +2578,9 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
         p24 = re.compile(r'^TCP *Initial *Sync *Done :(?: *(?P<tcp_initial_sync_done>[a-zA-Z0-9\-\s]+))?$')
         p25 = re.compile(r'^Enforcing *first *AS is *(?P<enforcing_first_as>[a-z]+)$')
         p26 =  re.compile(r'^Multi-protocol *capability *(?P<multiprotocol_capability>[a-zA-Z\s]+)$')
-        p27 = re.compile(r'^Neighbor +capabilities: +Adv +Rcvd$')
-        p27_1= re.compile(r'^(Address +family +)?(?P<name>[a-zA-Z0-9\s\-]+): *(?P<adv>(Y|y)es|(N|n)o) *(?P<rcvd>(Y|y)es|(N|n)o+)$')
+        p27 = re.compile(r'^Neighbor +capabilities:?:( +Adv +Rcvd)?$')
+        p27_1= re.compile(r'^(Address +family +)?(?P<name>[a-zA-Z0-9\s\-]+)(?: +\(GR Awareness\))?: *(?:(?P<adv>(Y|y)es|(N|n)o|advertised+)'
+                          r'(?: \(old \+ new\))?)?(?:( +and))? *(?:(?P<rcvd>(Y|y)es|(N|n)o|received+)(?: \(old \+ new\))?)$')
         p28 = re.compile(r'^InQ *depth: *(?P<message_stats_input_queue>[0-9]+), *OutQ *depth: *(?P<message_stats_output_queue>[0-9]+)$')
         p29 = re.compile(r'^(?P<name>[a-zA-Z\s]+) *: *'
                             '(?P<last_sent>\w+ *\d+ *[\d\:\.]+) *'
@@ -2615,6 +2637,14 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
         p65 = re.compile(r'^AS +override +is +set$')
         p66 = re.compile(r'^Default +information +originate: +(?P<route_map>[\w\s\-]:)$')
         p67 = re.compile(r'^site\-of\-origin +(?P<soo>[\w\:]+)$')
+        p68 = re.compile(r'^TTL\s+security\s+is\s+(?P<ttl_security>\w+)$')
+        p69 = re.compile(r'^External\s+BGP\s+neighbor\s+may\s+be\s+up\s+to\s+(?P<external_bgp_neighbor_hop_count>\d+)\s+hops\s+away\.$')
+        p70 = re.compile(r'^BFD\s+(?P<bfd_status>\w+)\s+\(session\s+(?P<session_status>\w+)\):\s+mininterval:\s+(?P<mininterval>\d+)\s+multiplier:\s+(?P<multiplier>\d+)$')
+        p71 = re.compile(r'^Graceful\s+restart\s+is\s+(?P<graceful_restart>[a-zA-Z]+)$')
+        p72 = re.compile(r'^Restart\s+time\s+is\s+(?P<graceful_restart_restart_time>\d+)\s+seconds$')
+        p73 = re.compile(r'^Stale\s+path\s+timeout\s+time\s+is\s+(?P<graceful_restart_stalepath_time>\d+)\s+seconds$')
+        p74 = re.compile(r'^(?P<messages_type>[Received|Sent]+)\s+(?P<messages_count>\d+)\s+messages,\s+(?P<notifications>\d+)\s+notifications,\s+(?P<queue>\d+)\s+in\s+queue$')
+
         for line in out.splitlines():
             line = line.strip()
 
@@ -2760,8 +2790,8 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
 
             m = p9.match(line)
             if m:
-                sub_dict['holdtime'] = int(m.groupdict()['holdtime'])
-                sub_dict['keepalive_interval'] = \
+                sub_dict['configured_holdtime'] = int(m.groupdict()['holdtime'])
+                sub_dict['configured_keepalive_interval'] = \
                     int(m.groupdict()['keepalive_interval'])
                 sub_dict['min_acceptable_hold_time'] = \
                     int(m.groupdict()['min_acceptable_hold_time'])
@@ -2952,6 +2982,7 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
                 continue
 
             # Neighbor capabilities:            Adv         Rcvd
+            # Neighbor capabilities:
 
             m = p27.match(line)
             if m:
@@ -2961,12 +2992,20 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
             #    Route refresh:                  Yes         No
             #    4-byte AS:                      Yes         No
             #    Address family IPv4 Unicast:    Yes         Yes
+            #    Route refresh: advertised (old + new) and received (old + new)
+            #    Graceful Restart (GR Awareness): received
+            #    4-byte AS: advertised and received
+            #    Address family IPv4 Unicast: advertised and received
 
             m = p27_1.match(line)
             if m:
+                adv = ''
+                rcvd = ''
                 name = m.groupdict()['name'].lower()
-                adv = 'advertised' if m.groupdict()['adv'].lower() == 'yes' else ''
-                rcvd = 'received' if m.groupdict()['rcvd'].lower() == 'yes' else ''
+                if m.groupdict()['adv']:
+                    adv = 'advertised' if m.groupdict()['adv'].lower() in ['yes', 'advertised'] else ''
+                if m.groupdict()['rcvd']:
+                    rcvd = 'received' if m.groupdict()['rcvd'].lower() in ['yes', 'received'] else ''
                 # mapping ops name
 
                 if 'enhanced refresh' in name:
@@ -3434,6 +3473,84 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
             m = p67.match(line)
             if m:
                 sub_dict['address_family'][address_family]['soo'] = m.groupdict()['soo']
+                continue
+
+            # TTL security is configured
+
+            m = p68.match(line)
+            if m:
+                if 'bgp_session_transport' not in sub_dict:
+                    sub_dict['bgp_session_transport'] = {}
+                if 'connection' not in sub_dict['bgp_session_transport']:
+                    sub_dict['bgp_session_transport']['connection'] = {}
+
+                # ttl_security = m.groupdict()['ttl_security']
+                ttl_security = 'enabled'
+
+                sub_dict['bgp_session_transport']['connection']['ttl_security'] = ttl_security
+                continue
+
+            # External BGP neighbor may be up to 100 hops away.
+
+            m = p69.match(line)
+            if m:
+                if 'bgp_session_transport' not in sub_dict:
+                    sub_dict['bgp_session_transport'] = {}
+                if 'connection' not in sub_dict['bgp_session_transport']:
+                    sub_dict['bgp_session_transport']['connection'] = {}
+
+                external_bgp_neighbor_hop_count = int(m.groupdict()['external_bgp_neighbor_hop_count'])
+
+                sub_dict['bgp_session_transport']['connection']['external_bgp_neighbor_hop_count'] = external_bgp_neighbor_hop_count
+                continue
+
+            # BFD enabled (session up): mininterval: 150 multiplier: 3
+
+            m = p70.match(line)
+            if m:
+                sub_dict['bfd'] = {}
+                sub_dict['bfd']['bfd_status'] = m.groupdict()['bfd_status']
+                sub_dict['bfd']['session_status'] = m.groupdict()['session_status']
+                sub_dict['bfd']['mininterval'] = int(m.groupdict()['mininterval'])
+                sub_dict['bfd']['multiplier'] = int(m.groupdict()['multiplier'])
+                continue
+
+            # Graceful restart is enabled
+
+            m = p71.match(line)
+            if m:
+                if m.groupdict()['graceful_restart'] == 'enabled':
+                    graceful_restart = True
+                sub_dict['graceful_restart'] = graceful_restart
+                continue
+
+            # Restart time is 120 seconds
+
+            m = p72.match(line)
+            if m:
+                sub_dict['graceful_restart_restart_time'] = int(m.groupdict()['graceful_restart_restart_time'])
+                continue
+
+            # Stale path timeout time is 360 seconds
+
+            m = p73.match(line)
+            if m:
+                sub_dict['graceful_restart_stalepath_time'] = int(m.groupdict()['graceful_restart_stalepath_time'])
+                continue
+
+            # Received 86 messages, 0 notifications, 0 in queue
+            # Sent 86 messages, 0 notifications, 0 in queue
+
+            m = p74.match(line)
+            if m:
+                messages_type = m.groupdict()['messages_type'].lower()
+                if 'messages' not in sub_dict:
+                    sub_dict['messages'] = {}
+                if messages_type not in sub_dict['messages']:
+                    sub_dict['messages'][messages_type] = {}
+                sub_dict['messages'][messages_type]['messages_count'] = int(m.groupdict()['messages_count'])
+                sub_dict['messages'][messages_type]['notifications'] = int(m.groupdict()['notifications'])
+                sub_dict['messages'][messages_type]['queue'] = int(m.groupdict()['queue'])
                 continue
 
         return ret_dict
@@ -8324,3 +8441,517 @@ class ShowBgpVrfAfPrefixDetail(ShowBgpVrfAfPrefix):
 
         # Call super
         return super().cli(vrf_name=vrf_name, address_family=address_family, prefix=prefix, output=output)
+
+# ============================================
+# Parser for:
+# 'show bgp vrf {vrf}'
+# 'show bgp vrf {vrf} {summary}'
+# 'show bgp vrf {vrf} {address_family} summary'
+# 'show bgp vrf {vrf} {address_family} {value}'
+# ============================================
+
+class ShowBgpVrfSchema(MetaParser):
+
+    """ Schema for:
+        'show bgp vrf {vrf}'
+        'show bgp vrf {vrf} {summary}'
+        'show bgp vrf {vrf} {address_family} summary'
+        'show bgp vrf {vrf} {address_family} {value}'
+    """
+
+    schema = {
+        'vrf': {
+            Any(): {
+                'address_family': {
+                    Any(): {
+                        Optional('router_identifier'): str,
+                        Optional('vrf_id'): str,
+                        Optional('local_as'): Or(int, str),
+                        Optional('vrf_state'): str,
+                        Optional('bgp_vrf'): str,
+                        Optional('bgp_route_distinguisher'): str,
+                        Optional('non_stop_routing'): bool,
+                        Optional('table_state'): str,
+                        Optional('table_id'): str,
+                        Optional('rd_version'): int,
+                        Optional('bgp_table_version'): int,
+                        Optional('nsr_initial_initsync_version'): str,
+                        Optional('nsr_issu_sync_group_versions'): str,
+                        Optional('nsr_initial_init_ver_status'): str,
+                        Optional('processed_prefix'): int,
+                        Optional('processed_paths'): int,
+                        Optional('default_vrf'): str,
+                        Optional('route_distinguisher'): str,
+                        Optional('prefix'): {
+                            Any(): {
+                                Optional('index'): {
+                                    Any(): {
+                                        Optional('next_hop'): str,
+                                        Optional('status_codes'): str,
+                                        Optional('metric'): str,
+                                        Optional('locprf'): str,
+                                        Optional('weight'): str,
+                                        Optional('path'): str,
+                                        Optional('origin_codes'): str,
+                                        Optional('local_sid'): str,
+                                        Optional('alloc_mode'): str,
+                                        Optional('locator'): str
+                                    },
+                                },
+                            },
+                        },
+                        Optional('process'): {
+                            Any(): {
+                                'rcvtblver': int,
+                                'brib_rib': int,
+                                'labelver': int,
+                                'importver': int,
+                                'sendtblver': int,
+                                'standbyver': int
+                            }
+                        },
+                        Optional('neighbor'): {
+                            Any(): {
+                                'remote_as': Or(int, str),
+                                'tbl_ver': int,
+                                'spk': int,   
+                                'msg_rcvd': int,
+                                'msg_sent': int,
+                                'input_queue': int,
+                                'output_queue': int,
+                                'up_down': str,
+                                'state_pfxrcd': str,
+                            }
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+# ============================================================
+# Parser for:
+# 'show bgp vrf {vrf}'
+# 'show bgp vrf {vrf} {summary}'
+# 'show bgp vrf {vrf} {address_family} summary'
+# 'show bgp vrf {vrf} {address_family} {value}'
+# ============================================================
+class ShowBgpVrf(ShowBgpVrfSchema):
+
+    '''Parser for:
+        'show bgp vrf {vrf}'
+        'show bgp vrf {vrf} {summary}'
+        'show bgp vrf {vrf} {address_family} summary'
+        'show bgp vrf {vrf} {address_family} {value}'
+    '''
+
+    cli_command = ['show bgp vrf {vrf}',
+                   'show bgp vrf {vrf} {summary}',
+                   'show bgp vrf {vrf} {address_family} summary',
+                   'show bgp vrf {vrf} {address_family} {value}']
+
+    def cli(self, vrf=None, address_family=None, summary=None, value=None, output=None):
+
+        # Execute command
+        if output is None:
+            if value:
+                command = self.cli_command[3].format(vrf=vrf,address_family=address_family,value=value)
+            elif vrf and address_family:
+                command = self.cli_command[2].format(vrf=vrf,address_family=address_family)
+            elif vrf and summary:
+                command = self.cli_command[1].format(vrf=vrf,summary=summary)
+            else:
+                command = self.cli_command[0].format(vrf=vrf)
+            output = self.device.execute(command)
+
+        # initial return dictionary
+        ret_dict = {}
+        last_prefix = None
+        pfx_dict = None
+
+        if address_family == None:
+            address_family = 'ipv4 unicast'
+
+        if address_family:
+            if value != None and 'ipv4' in address_family:
+                address_family = 'ipv4 unicast'
+            elif value != None and 'ipv6' in address_family:
+                address_family = 'ipv6 unicast'
+
+        # VRF: VRF1
+        p1 = re.compile(r'^\s*VRF: +(?P<vrf>(\S+))$')
+
+        # BGP VRF VRF1, state: Active
+        p2 = re.compile(r'^\s*BGP +VRF +(?P<bgp_vrf>(\S+)), +state:'
+                        r' +(?P<vrf_state>(\S+))$')
+
+        # BGP Route Distinguisher: 1.100.1.1:0
+        # BGP Route Distinguisher: 200:1
+        # BGP Route Distinguisher: 172.16.2.90:1
+        p3 = re.compile(r'^BGP\s+Route\s+Distinguisher:\s+(?P<route_distinguisher>\S+)$')
+
+        # VRF ID: 0x60000001
+        p4 = re.compile(r'^\s*VRF +ID: +(?P<vrf_id>(\S+))$')
+
+        # BGP router identifier 10.4.1.1, local AS number 100
+        # BGP router identifier 10.10.10.108, local AS number 65108.65108
+        p5 = re.compile(r'^\s*BGP +router +identifier +(?P<router_identifier>(\S+)),'
+                        r' +local +AS +number +(?P<local_as>([\d\.]+))$')
+
+        # Non-stop routing is enabled
+        p6 = re.compile(r'^\s*Non-stop +routing is enabled$')
+
+        # BGP table state: Active
+        p7 = re.compile(r'^\s*BGP +table +state: +(?P<table_state>[a-zA-Z]+)$')
+
+        # Table ID: 0xe0000010   RD version: 43
+        p8 = re.compile(r'^\s*Table +ID: +(?P<table_id>[a-z0-9]+) +RD +version:'
+                         r' +(?P<rd_version>[0-9]+)$')
+
+        # BGP main routing table version 43
+        p9 = re.compile(r'^\s*BGP +main +routing +table +version'
+                         r' +(?P<bgp_table_version>[0-9]+)$')
+
+        # BGP NSR Initial initsync version 11 (Reached)
+        p10 = re.compile(r'^\s*BGP +NSR +Initial +initsync +version'
+                         r' +(?P<nsr_initial_initsync_version>[0-9]+)'
+                         r' +\((?P<nsr_initial_init_ver_status>[a-zA-Z]+)\)$')
+
+        # BGP NSR/ISSU Sync-Group versions 0/0
+        p11 = re.compile(r'^\s*BGP +NSR/ISSU +Sync-Group +versions'
+                         r' +(?P<nsr_issu_sync_group_versions>[0-9\/\s]+)$')
+
+        # Route Distinguisher: 200:1 (default for vrf VRF1)
+        # Route Distinguisher: 172.16.2.90:1000 (default for vrf EVPN-Multicast-BTV)
+        # Route Distinguisher: 172.16.2.88:1000
+        p12 = re.compile(r'^\s*Route +Distinguisher:'
+                         r' +(?P<route_distinguisher>\S+)'
+                         r'(?: +\(default +for +vrf +(?P<default_vrf>\S+)\))?$')
+
+        # *> 10.1.1.0/24        10.186.5.5              2219             0 200 33299 51178 47751 {27016} e
+        # * i                   10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
+        # *>i10.9.2.0/24        10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
+        # *>i10.169.1.0/24      10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        # *>i192.168.111.0/24       10.189.99.98                                                    0       0 i
+        # *> 10.7.7.7/32        10.10.10.107             0             0 65107.65107 ?
+        p13 = re.compile(r'^(?P<status_codes>(i|s|x|S|d|h|\*|\>|\s)+)'
+                         r' *(?P<prefix>(?P<ip>[0-9\.\:\[\]]+)\/(?P<mask>\d+))?'
+                         r' +(?P<next_hop>\S+) +(?P<number>[\d\.\s\{\}]+)'
+                         r'(?: *(?P<origin_codes>(i|e|\?)))?$')
+
+        # Processed 40 prefixes, 50 paths
+        p14 = re.compile(r'^\s*Processed +(?P<processed_prefix>[0-9]+)'
+                         r' +prefixes, +(?P<processed_paths>[0-9]+) +paths$')
+
+        # BGP is operating in STANDALONE mode.
+        p15 = re.compile(r'BGP *is *operating *in *'
+                        '(?P<operation_mode>\w+) *mode$')
+
+        # Process       RcvTblVer   bRIB/RIB   LabelVer  ImportVer  SendTblVer  StandbyVer
+        #Speaker              19         19         19         19          19           0
+        p16 = re.compile(r'^\s*(?P<process>[a-zA-Z]+) *(?P<rcvtblver>[0-9]+)'
+                         ' *(?P<brib_rib>[0-9]+) *(?P<labelver>[0-9]+)'
+                         ' *(?P<importver>[0-9]+) *(?P<sendtblver>[0-9]+)'
+                         ' *(?P<standbyver>[0-9]+)$')
+
+        # Neighbor        Spk    AS MsgRcvd MsgSent   TblVer  InQ OutQ  Up/Down  St/PfxRcd
+        # 192.168.2.2       0   200     353     353       19    0    0 05:49:05          3
+        p17 = re.compile(r'^\s*(?P<neighbor>[a-zA-Z0-9\.\:]+) +(?P<spk>[0-9]+)'
+                           ' +(?P<remote_as>[0-9\.]+) +(?P<msg_rcvd>[0-9]+)'
+                           ' +(?P<msg_sent>[0-9]+)'
+                           ' +(?P<tbl_ver>[0-9]+) +(?P<input_queue>[0-9]+)'
+                           ' +(?P<output_queue>[0-9]+) +(?P<up_down>[a-z0-9\:]+)'
+                           ' +(?P<state_pfxrcd>.+)$')
+
+        # *> 1.1.1.1/32         fc00:c000:1001:e000::                       per-vrf      MAIN
+        # *>i3.3.3.3/32         NO SRv6 Sid                                 -            -
+        # * i                   NO SRv6 Sid                                 -            -
+        p18 = re.compile(r'^(?P<status_codes>(i|s|x|S|d|h|\*|\>|\s)+)\s*'
+                         '(?P<prefix>(?P<ip>[.0-9a-fA-F:]+)\/(?P<mask>\d+))?\s+'
+                         '(?P<local_sid>[ \w:]+)\s+(?P<alloc_mode>[\w-]+)\s+'
+                         '(?P<locator>[\w-]+)$')
+
+        # *>ifc00:a000:2000:200::3/128
+        # *> fd00:ffff:100:11::/64
+        p19 = re.compile(r'^(?P<status_codes>(i|s|x|S|d|h|\*|\>|\s)+)\s*'
+                         '(?P<prefix>(?P<ip>[\w:]+)\/(?P<mask>\d+))$')
+
+        # fc00:c000:1001:e001::                       per-vrf      MAIN
+        # NO SRv6 Sid                                 -            -
+        p20 = re.compile(r'^(?P<local_sid>[\da-fA-F:|NO SRv6 Sid]+)\s+(?P<alloc_mode>[\w-]+)'
+                         '\s+(?P<locator>[\w-]+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # VRF: VRF1
+            m = p1.match(line)
+            if m:
+                vrf = m.groupdict()['vrf'].lower()
+                vrf_dict = ret_dict.setdefault('vrf', {}).setdefault(vrf, {})
+
+                address_family = address_family.replace(' ','_').lower()
+                af_dict = vrf_dict.setdefault('address_family', {}).setdefault(address_family, {})
+                continue
+
+            # BGP VRF VRF1, state: Active
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                bgp_vrf = group['bgp_vrf'].lower()
+                vrf_state = group['vrf_state'].lower()
+                if 'vrf' in ret_dict:
+                    af_dict['bgp_vrf'] = bgp_vrf
+                    af_dict['vrf_state'] = vrf_state
+                else:
+                    vrf_dict = ret_dict.setdefault('vrf', {}).setdefault(bgp_vrf, {})
+
+                    address_family = address_family.replace(' ','_').lower()
+                    af_dict = vrf_dict.setdefault('address_family', {}).setdefault(address_family, {})
+
+                    af_dict['bgp_vrf'] = bgp_vrf
+                    af_dict['vrf_state'] = vrf_state
+                continue
+
+            # BGP Route Distinguisher: 1.100.1.1:0
+            # BGP Route Distinguisher: 200:1
+            # BGP Route Distinguisher: 172.16.2.90:1
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                af_dict['bgp_route_distinguisher'] = group['route_distinguisher']
+                continue
+
+            # VRF ID: 0x60000001
+            m = p4.match(line)
+            if m:
+                vrf_id = m.groupdict()['vrf_id']
+                af_dict['vrf_id'] = vrf_id
+                continue
+
+            # BGP router identifier 10.4.1.1, local AS number 100
+            # BGP router identifier 10.10.10.108, local AS number 65108.65108
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                af_dict['router_identifier'] = group['router_identifier']
+              
+                try:
+                    af_dict['local_as']= int(group['local_as'])
+                except:
+                    af_dict['local_as']= group['local_as']
+                continue 
+
+            # Non-stop routing is enabled
+            m = p6.match(line)
+            if m:
+                af_dict['non_stop_routing'] = True
+                continue
+
+            # BGP table state: Active
+            m = p7.match(line)
+            if m:
+                af_dict['table_state'] = m.groupdict()['table_state'].lower()
+                continue
+
+            # Table ID: 0x0   RD version: 0
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                af_dict['table_id'] = group['table_id']
+                af_dict['rd_version'] = int(group['rd_version'])
+                continue
+
+            # BGP main routing table version 43
+            m = p9.match(line)
+            if m:
+                af_dict['bgp_table_version'] = int(m.groupdict()['bgp_table_version'])
+                continue
+
+            # BGP NSR Initial initsync version 11 (Reached)
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                af_dict['nsr_initial_initsync_version'] = group['nsr_initial_initsync_version']
+                af_dict['nsr_initial_init_ver_status'] = group['nsr_initial_init_ver_status'].lower()
+                continue
+
+            # BGP NSR/ISSU Sync-Group versions 0/0
+            m = p11.match(line)
+            if m:
+                af_dict['nsr_issu_sync_group_versions'] = \
+                                m.groupdict()['nsr_issu_sync_group_versions']
+                continue
+
+            # Route Distinguisher: 200:1 (default for vrf VRF1)
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                rd = group['route_distinguisher']
+                
+                af_dict['route_distinguisher'] = rd
+                if group['default_vrf']:
+                    af_dict['default_vrf'] = group['default_vrf'].lower()
+                continue
+
+            # *> 10.1.1.0/24        10.186.5.5              2219             0 200 33299 51178 47751 {27016} e
+            # * i                   10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
+            # *>i10.9.2.0/24        10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
+            # *>i10.169.1.0/24      10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+            # *>i192.168.111.0/24       10.189.99.98                                                    0       0 i
+            # *> 10.7.7.7/32        10.10.10.107             0             0 65107.65107 ?
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                prefix = group['prefix']
+                if prefix:
+                    last_prefix = prefix
+                    index = 1
+                else:
+                    index += 1
+                # Set dict
+                pfx_dict = af_dict.setdefault('prefix', {}).setdefault(last_prefix, {}).\
+                                   setdefault('index', {}).setdefault(index, {})
+                # Set keys
+                pfx_dict['next_hop'] = group['next_hop']
+                pfx_dict['status_codes'] = group['status_codes'].strip().replace(" ", "")
+                if group['origin_codes']:
+                    pfx_dict['origin_codes'] = group['origin_codes']
+                
+                # Parse and set the numbers
+                group_num = group['number']
+                m1 = re.compile(r'^(?P<metric>[0-9]+)  +(?P<locprf>[0-9]+)  +(?P<weight>[0-9]+) (?P<path>[0-9\.\{\}\s]+)$').match(group_num)
+                m2 = re.compile(r'^(?P<value>[0-9]+)(?P<space>\s{2,20})(?P<weight>[0-9]+) (?P<path>[0-9\.\{\}\s]+)$').match(group_num)
+                m3 = re.compile(r'^(?P<weight>[0-9]+) (?P<path>(([\d\.]+\s)|(\{[\d\.]+\}\s))+)$').match(group_num)
+                m4 = re.compile(r'^(?P<locprf>(\d+)) +(?P<weight>(\d+))$').match(group_num.strip())
+                if m1:
+                    pfx_dict['metric'] = m1.groupdict()['metric']
+                    pfx_dict['locprf'] = m1.groupdict()['locprf']
+                    pfx_dict['weight'] = m1.groupdict()['weight']
+                    pfx_dict['path'] = m1.groupdict()['path'].strip()
+                elif m2:
+                    if len(m2.groupdict()['space']) > 8:
+                        pfx_dict['metric'] = m2.groupdict()['value']
+                    else:
+                        pfx_dict['locprf'] = m2.groupdict()['value']
+
+                    pfx_dict['weight'] = m2.groupdict()['weight']
+                    pfx_dict['path'] = m2.groupdict()['path'].strip()
+                elif m3:
+                    pfx_dict['weight'] = m3.groupdict()['weight']
+                    pfx_dict['path'] = m3.groupdict()['path'].strip()
+                elif m4:
+                    pfx_dict['locprf'] = m4.groupdict()['locprf']
+                    pfx_dict['weight'] = m4.groupdict()['weight']
+                continue
+
+            # Processed 40 prefixes, 50 paths
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                af_dict['processed_prefix'] = int(group['processed_prefix'])
+                af_dict['processed_paths'] = int(group['processed_paths'])
+                continue
+
+            # BGP is operating in STANDALONE mode.
+            m = p15.match(line)
+            if m:
+                operation_mode = m.groupdict()['operation_mode'].lower()
+                af_dict['operation_mode'] = operation_mode
+                continue
+
+            # Process       RcvTblVer   bRIB/RIB   LabelVer  ImportVer  SendTblVer  StandbyVer
+            # Speaker              63         63         63         63          63           0
+            m = p16.match(line)
+            if m:
+                process = str(m.groupdict()['process'])
+                if 'process' not in af_dict:
+                    af_dict['process'] = {}
+                if process not in af_dict['process']:
+                    af_dict['process'][process] = {}
+                af_dict['process'][process]['rcvtblver'] =  int(m.groupdict()['rcvtblver'])
+                af_dict['process'][process]['brib_rib'] =  int(m.groupdict()['brib_rib'])
+                af_dict['process'][process]['labelver'] =  int(m.groupdict()['labelver'])
+                af_dict['process'][process]['importver'] =  int(m.groupdict()['importver'])
+                af_dict['process'][process]['sendtblver'] =  int(m.groupdict()['sendtblver'])
+                af_dict['process'][process]['standbyver'] =  int(m.groupdict()['standbyver'])
+                continue 
+
+            # Neighbor        Spk    AS msg_rcvd msg_sent   TblVer  InQ OutQ  Up/Down  St/PfxRcd
+            # 10.1.5.5          0   200      60      62       63    0    0 00:57:32          0
+            # 10.16.2.2           0   100       0       0        0    0    0 00:00:00 Idle
+            # 10.0.0.35         0   200       0       0        0    0    0 00:00:00 Idle (Admin)!
+            m = p17.match(line)
+            if m:
+                neighbor = str(m.groupdict()['neighbor'])
+                if 'neighbor' not in af_dict:
+                    af_dict['neighbor'] = {}
+                if neighbor not in af_dict['neighbor']:
+                    af_dict['neighbor'][neighbor] = {}
+
+                try:
+                    af_dict['neighbor'][neighbor]['remote_as'] = int(m.groupdict()['remote_as'])
+                except:
+                    af_dict['neighbor'][neighbor]['remote_as'] = m.groupdict()['remote_as']
+
+                af_dict['neighbor'][neighbor]['spk'] = int(m.groupdict()['spk'])                
+                af_dict['neighbor'][neighbor]['msg_rcvd'] = int(m.groupdict()['msg_rcvd'])
+                af_dict['neighbor'][neighbor]['msg_sent'] = int(m.groupdict()['msg_sent'])
+                af_dict['neighbor'][neighbor]['tbl_ver'] = int(m.groupdict()['tbl_ver'])
+                af_dict['neighbor'][neighbor]['input_queue'] = int(m.groupdict()['input_queue'])
+                af_dict['neighbor'][neighbor]['output_queue'] = int(m.groupdict()['output_queue'])
+                af_dict['neighbor'][neighbor]['up_down'] =  str(m.groupdict()['up_down'])
+                af_dict['neighbor'][neighbor]['state_pfxrcd'] = str(m.groupdict()['state_pfxrcd'])
+                continue
+
+            # *> 1.1.1.1/32         fc00:c000:1001:e000::                       per-vrf      MAIN
+            # *>i3.3.3.3/32         NO SRv6 Sid                                 -            -
+            # * i                   NO SRv6 Sid                                 -            -
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                prefix = group['prefix']
+                if prefix:
+                    last_prefix = prefix
+                    index = 1
+                else:
+                    index += 1
+                # Set dict
+                pfx_dict = af_dict.setdefault('prefix', {}).setdefault(last_prefix, {}).\
+                                   setdefault('index', {}).setdefault(index, {})
+                # Set keys
+                pfx_dict['local_sid'] = group['local_sid'].strip()
+                pfx_dict['status_codes'] = group['status_codes'].strip().replace(" ", "")
+                pfx_dict['alloc_mode'] = group['alloc_mode']
+                pfx_dict['locator'] = group['locator'].lower()
+                continue
+
+            # *>ifc00:a000:2000:200::3/128
+            # *> fd00:ffff:100:11::/64
+            m = p19.match(line)
+            if m:
+                group = m.groupdict()
+                prefix = group['prefix']
+                if prefix:
+                    last_prefix = prefix
+                    index = 1
+                else:
+                    index += 1
+                # Set dict
+                pfx_dict = af_dict.setdefault('prefix', {}).setdefault(last_prefix, {}).\
+                                   setdefault('index', {}).setdefault(index, {})
+                # Set keys
+                pfx_dict['status_codes'] = group['status_codes'].strip().replace(" ", "")
+                continue
+
+            # fc00:c000:1001:e001::                       per-vrf      MAIN
+            # NO SRv6 Sid                                 -            -
+            m = p20.match(line)
+            if m:
+                group = m.groupdict()
+                pfx_dict['local_sid'] = group['local_sid'].strip()
+                pfx_dict['alloc_mode'] = group['alloc_mode']
+                pfx_dict['locator'] = group['locator'].lower()
+                continue
+
+        return ret_dict

@@ -351,7 +351,7 @@ class ShowAccessSessionMacDetailsSchema(MetaParser):
                 'iif_id': str,
                 'ipv6_address': str,
                 'ipv4_address': str,
-                'user_name': str,
+                Optional('user_name'): str,
                 'status': str,
                 'domain': str,
                 'oper_host_mode': str,
@@ -365,7 +365,14 @@ class ShowAccessSessionMacDetailsSchema(MetaParser):
                 'acct_session_id': str,
                 'handle': str,
                 'current_policy': str,
+                Optional('local_policies'): {
+                    Optional('url_redirect_acl_v6'): str,
+                    Optional('preauth_acl_v6'): str,
+                    Optional('url_redirect_acl_v4'): str,
+                    Optional('preauth_acl_v4'): str,
+                },
                 'server_policies': {
+                    Optional('filter_id'): str,
                     Optional('session_timeout'): int,
                     Optional('vlan_group'): int,
                     Optional('acs_acl'): str
@@ -428,8 +435,26 @@ class ShowAccessSessionMacDetails(ShowAccessSessionMacDetailsSchema):
         # Session timeout:  135s (server), Remaining: 82s
         p5 = re.compile(r'^Session timeout:\s+(?P<server>\d+)s \(server\), Remaining: (?P<remaining>\d+)s$')
 
+        # Local Policies:
+        p5_1 = re.compile(r'^Local Policies:$')
+
+        # URL Redirect ACL: IP-Adm-V6-Int-ACL-global
+        p5_2 = re.compile(r'^URL Redirect ACL:\s+(?P<url_redirect_acl_v6>[A-Za-z\-6]+)$')
+
+        # Preauth ACL: preauth_v6
+        p5_3 = re.compile(r'Preauth ACL:\s+(?P<preauth_acl_v6>[A-Za-z\_6]+)$')
+
+        # URL Redirect ACL: IP-Adm-V4-Int-ACL-global
+        p5_4 = re.compile(r'^URL Redirect ACL:\s+(?P<url_redirect_acl_v4>[A-Za-z\-4]+)$')
+
+        # Preauth ACL: preauth_v4
+        p5_5 = re.compile(r'Preauth ACL:\s+(?P<preauth_acl_v4>[A-za-z\_4]+)$')
+
         # Server Policies:
         p6 = re.compile(r'^Server Policies:$')
+
+        # Filter-ID: Webauth_ACL
+        p6_1 = re.compile(r'^Filter-ID: (?P<filter_id>\w+)$')
 
         # Session-Timeout: 135 sec
         p7 = re.compile(r'^Session-Timeout: (?P<session_timeout>\d+) sec$')
@@ -498,10 +523,46 @@ class ShowAccessSessionMacDetails(ShowAccessSessionMacDetailsSchema):
                 session_dict['remaining'] = int(m.groupdict()['remaining'])
                 continue
 
+            # Local Policies:
+            m = p5_1.match(line)
+            if m:
+                local_policies_dict = mac_dict.setdefault('local_policies', {})
+                continue
+
+            # URL Redirect ACL: IP-Adm-V6-Int-ACL-global
+            m = p5_2.match(line)
+            if m:
+                local_policies_dict['url_redirect_acl_v6'] = m.groupdict()['url_redirect_acl_v6']
+                continue
+
+            # Preauth ACL: preauth_v6
+            m = p5_3.match(line)
+            if m:
+                local_policies_dict['preauth_acl_v6'] = m.groupdict()['preauth_acl_v6']
+                continue
+
+            # URL Redirect ACL: IP-Adm-V4-Int-ACL-global
+            m = p5_4.match(line)
+            if m:
+                local_policies_dict['url_redirect_acl_v4'] = m.groupdict()['url_redirect_acl_v4']
+                continue
+
+            # Preauth ACL: preauth_v4
+            m = p5_5.match(line)
+            if m:
+                local_policies_dict['preauth_acl_v4'] = m.groupdict()['preauth_acl_v4']
+                continue
+
             # Server Policies:
             m = p6.match(line)
             if m:
                 server_policies_dict = mac_dict.setdefault('server_policies', {})
+                continue
+
+            # Filter-ID: Webauth_ACL
+            m = p6_1.match(line)
+            if m:
+                server_policies_dict['filter_id'] = m.groupdict()['filter_id']
                 continue
 
             # Session-Timeout: 135 sec

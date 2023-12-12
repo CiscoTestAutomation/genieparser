@@ -1,0 +1,11 @@
+show macsec mka session
+Interface          Local-TxSCI                      # Peers            Status             Key-Server         Auth Mode
+------------------ -------------------------------- ------------------ ------------------ ------------------ ------------------
+Ethernet1/97/1     c4f7.d530.1484/0001              0                  Init               Yes                PRIMARY-PSK
+Ethernet1/97/2     c4f7.d530.1485/0001              1                  Secured            Yes                PRIMARY-PSK
+------------------ -------------------------------- ------------------ ------------------ ------------------ ------------------
+Total Number of Sessions : 2
+        Secured Sessions : 1
+        Pending Sessions : 1
+
+

@@ -225,17 +225,19 @@ class ShowIpMroute(ShowIpMrouteSchema):
         # Outgoing interface list: Null
         # Outgoing interface list:
         p4 =  re.compile(r'^Outgoing +interface +list:|^Immediate +Outgoing +interface +list:'
+                         '|^Inherited +Outgoing +interface +list:'
                          '( *(?P<intf>\w+))?$')       
         # Vlan5, Forward/Dense, 00:03:25/00:00:00, H
         # Vlan5, Forward/Dense, 00:04:35/00:02:30
         # ATM0/0, VCD 14, Forward/Sparse, 00:03:57/00:02:53
         # POS4/0, Forward, 00:02:06/00:03:27
         # LISP0.4100, (172.24.0.3, 232.0.0.199), Forward/Sparse, 00:10:33/stopped
+        # LISP0.101, NH 100:44:44::44, Forward, 04:54:20/00:03:09
         # Vlan500, VXLAN v4 Encap: (50000, 225.2.2.2), Forward/Sparse, 00:00:54/00:02:05
         # Vlan500, VXLAN v6 Encap: (50000, FF13::1), Forward/Sparse, 00:17:31/stopped, flags:
         p5 = re.compile(r'^(?P<outgoing_interface>[a-zA-Z0-9\/\.\-]+)(\,\s+)?'
                             '(VCD +(?P<vcd>\d+))?(\,\s+)?'
-                            '(NH)?(\s+)?(\(?(?P<lisp_mcast_source>[0-9\.]+)(\,\s+)?(?P<lisp_mcast_group>[0-9\.]+)?\)?)?(\,\s+)?'
+                            '(NH)?(\s+)?(\(?(?P<lisp_mcast_source>[0-9\.:]+)(\,\s+)?(?P<lisp_mcast_group>[0-9\.]+)?\)?)?(\,\s+)?'
                             '(VXLAN +(?P<vxlan_version>[a-z0-9]+)(\s+)?(Encap:)?(\s+)?(\(?(?P<vxlan_vni>[0-9]+)(\,\s+)?(?P<vxlan_nxthop>[\w\:\.]+)?\)?)?)?(\,\s+)?'
                             '(?P<state_mode>[\w\-\/-]+)(\,\s+)?'
                             '(?P<uptime>[a-zA-Z0-9\:]+)\/'
@@ -898,6 +900,7 @@ class ShowConsistencyCheckerMcastStartAllSchema(MetaParser):
     """Schema for 
         * 'show consistency-checker mcast {layer} start all'
         * 'show consistency-checker mcast {layer} start {address} {source}',
+        * 'show consistency-checker mcast {layer} start {address}',
         * 'show consistency-checker mcast {layer} start vrf {instance_name} {address} {source}',
         * 'show consistency-checker mcast {layer} start vlan {vlan_id} {address}'
     """
@@ -912,14 +915,16 @@ class ShowConsistencyCheckerMcastStartAllSchema(MetaParser):
 
 class ShowConsistencyCheckerMcastStartAll(ShowConsistencyCheckerMcastStartAllSchema):
     """Parser for 
-        * 'show consistency-checker mcast {layer} start all'
+        * 'show consistency-checker mcast {layer} start all',
         * 'show consistency-checker mcast {layer} start {address} {source}',
+        * 'show consistency-checker mcast {layer} start {address}',
         * 'show consistency-checker mcast {layer} start vrf {instance_name} {address} {source}',
         * 'show consistency-checker mcast {layer} start vlan {vlan_id} {address}'
     """
 
     cli_command = ['show consistency-checker mcast {layer} start all',
     'show consistency-checker mcast {layer} start {address} {source}',
+    'show consistency-checker mcast {layer} start {address}',
     'show consistency-checker mcast {layer} start vrf {instance_name} {address} {source}',
     'show consistency-checker mcast {layer} start vlan {vlan_id} {address}'
     ]
@@ -927,9 +932,11 @@ class ShowConsistencyCheckerMcastStartAll(ShowConsistencyCheckerMcastStartAllSch
     def cli(self, layer, source=None, address=None, instance_name=None, vlan_id=None, output=None):
         if output is None:
             if instance_name and address and source:
-                cmd = self.cli_command[2].format(layer=layer, instance_name=instance_name, address=address, source=source)
+                cmd = self.cli_command[3].format(layer=layer, instance_name=instance_name, address=address, source=source)
+            elif address and source is None:
+                cmd = self.cli_command[2].format(layer=layer, address=address)
             elif vlan_id and address:
-                cmd = self.cli_command[3].format(layer=layer, vlan_id=vlan_id, address=address)
+                cmd = self.cli_command[4].format(layer=layer, vlan_id=vlan_id, address=address)
             elif address and source:
                 cmd = self.cli_command[1].format(layer=layer, address=address, source=source)
             else:
@@ -1048,12 +1055,13 @@ class ShowConsistencyCheckerRunIdSchema(MetaParser):
                             Optional('inherited'):int,
                             Optional('missing'):int,
                             Optional('stale'):int,
-                            Optional('others'):int
+                            Optional('others'):int,
+                            Optional('hardware'):int,
                     },
                 },
             },
         },
-        'switch': {
+        Optional('switch'): {
             Any(): {
                 'process': {
                     Any(): {
@@ -1093,7 +1101,7 @@ class ShowConsistencyCheckerRunId(ShowConsistencyCheckerRunIdSchema):
         # Object-Type    Start-time                Entries  Exceptions  Flags
         #  l2m_vlan      2023/04/28 03:51:03         72         0       F GD Hw HS
         #  l2m_group     2023/04/28 03:51:03          0         0       F GD Hw HS
-        p2 = re.compile(r'^(?P<object_type>[\w\s\_]+)\s+(?P<starttime>(\d+\/){2}\d+.\d+:\d+:\d+)\s+(?P<entries>[\d]+)\s+(?P<exceptions>[\d]+)\s+(?P<fulltable>[\w]+)\s+(?P<garbagedetector>[\w]+)\s+(?P<hwcheck>[\w]+)\s+(?P<hwshadow>[\w]+)$')
+        p2 = re.compile(r'^(?P<object_type>[\w\s\_]+)\s+(?P<starttime>(\d+\/){2}\d+.\d+:\d+:\d+)\s+(?P<entries>[\d]+)\s+(?P<exceptions>[\d]+)\s+\b(?P<fulltable>F)?\b\s+\b(?P<garbagedetector>GD)?\b\s+\b(?P<hwcheck>Hw)?\b\s+\b(?P<hwshadow>HS)?\b$')
 
         # Object-Type       Start-time                State           A/  I/  M/  S/Oth 
         #  l2m_vlan       2023/04/28 03:51:03      Consistent        0/  0/  0/  0/  0
@@ -1109,6 +1117,9 @@ class ShowConsistencyCheckerRunId(ShowConsistencyCheckerRunIdSchema):
         # l2m_group      2023/05/08 05:05:36     Consistent         0/  0/  0/  0/  0/  0
         p5 = re.compile(r'^(?P<object_type>[\w\s\-]+)\s+(?P<starttime>(\d+\/){2}\d+.\d+:\d+:\d+)\s+(?P<state>[\w]+)\s+(?P<actual>[\d]+)/\s+(?P<inherited>[\d]+)/\s+(?P<missing>[\d]+)/\s+(?P<stale>[\d]+)/\s+(?P<hardware>[\d]+)/\s+(?P<others>[\d]+)$')
 
+        # l3m_entry      2023/11/03 12:37:18        1012         0    F Hw HS
+        p6 = re.compile(r'^(?P<object_type>[\w\s\_]+)\s+(?P<starttime>(\d+\/){2}\d+.\d+:\d+:\d+)\s+(?P<entries>[\d]+)\s+(?P<exceptions>[\d]+)\s+\b(?P<fulltable>F+)?\b\s+\b(?P<hwcheck>Hw)?\b\s+\b(?P<hwshadow>HS)?\b$')
+        
         ret_dict = {}
 
         for line in output.splitlines():
@@ -1156,11 +1167,13 @@ class ShowConsistencyCheckerRunId(ShowConsistencyCheckerRunIdSchema):
             # Switch: 1 Process: FMAN-FP
             # Switch: 1 Process: FED
             m = p4.match(line)
+            flag = 0
             if m:
                 consistency_checker = m.groupdict()['switch']
                 key_chain_dict = ret_dict.setdefault('switch', {}).setdefault(consistency_checker, {})
                 key_name = m.groupdict()['process_type']
                 process_dict = key_chain_dict.setdefault('process', {}).setdefault(key_name, {})
+                flag = 1
                 continue
 
             # Object-Type    Start-time              State              A/  I/  M/  S/ HW/Oth
@@ -1168,16 +1181,42 @@ class ShowConsistencyCheckerRunId(ShowConsistencyCheckerRunIdSchema):
             # l2m_group      2023/05/08 05:05:36     Consistent         0/  0/  0/  0/  0/  0
             m = p5.match(line)
             if m:
+                if flag == 1:
+                    object_type=m.groupdict()['object_type'].strip()
+                    object_dict1= process_dict.setdefault('object_type', {}).setdefault(object_type, {})
+                    object_dict1['starttime']=m.groupdict()['starttime']
+                    object_dict1['state']=m.groupdict()['state']
+                    object_dict1['actual']=int(m.groupdict()['actual'])
+                    object_dict1['inherited']=int(m.groupdict()['inherited'])
+                    object_dict1['missing']=int(m.groupdict()['missing'])
+                    object_dict1['stale']=int(m.groupdict()['stale'])
+                    object_dict1['others']=int(m.groupdict()['others'])
+                    object_dict1['hardware']=int(m.groupdict()['hardware'])
+                    continue
+                else:
+                    object_type=m.groupdict()['object_type'].strip()
+                    object_dict= process_dict.setdefault('object_type', {}).setdefault(object_type, {})
+                    object_dict['starttime']=m.groupdict()['starttime']
+                    object_dict['state']=m.groupdict()['state']
+                    object_dict['actual']=int(m.groupdict()['actual'])
+                    object_dict['inherited']=int(m.groupdict()['inherited'])
+                    object_dict['missing']=int(m.groupdict()['missing'])
+                    object_dict['stale']=int(m.groupdict()['stale'])
+                    object_dict['others']=int(m.groupdict()['others'])
+                    object_dict['hardware']=int(m.groupdict()['hardware'])
+                    continue
+            
+            m=p6.match(line)
+            if m:
                 object_type=m.groupdict()['object_type'].strip()
                 object_dict= process_dict.setdefault('object_type', {}).setdefault(object_type, {})
                 object_dict['starttime']=m.groupdict()['starttime']
-                object_dict['state']=m.groupdict()['state']
-                object_dict['actual']=int(m.groupdict()['actual'])
-                object_dict['inherited']=int(m.groupdict()['inherited'])
-                object_dict['missing']=int(m.groupdict()['missing'])
-                object_dict['stale']=int(m.groupdict()['stale'])
-                object_dict['others']=int(m.groupdict()['others'])
-                object_dict['hardware']=int(m.groupdict()['hardware'])
+                object_dict['entries']=int(m.groupdict()['entries'])
+                object_dict['exceptions']=int(m.groupdict()['exceptions'])
+                object_dict['fulltable']=m.groupdict()['fulltable']
+                object_dict['hwcheck']=m.groupdict()['hwcheck']
+                object_dict['hwshadow']=m.groupdict()['hwshadow']
                 continue
-
+                    
         return ret_dict
+    

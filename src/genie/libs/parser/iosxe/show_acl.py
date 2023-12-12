@@ -15,7 +15,8 @@ from genie.metaparser.util.schemaengine import (Schema,
                                                 Or,
                                                 And,
                                                 Default,
-                                                Use)
+                                                Use,
+                                                ListOf)
 
 # import parser utils
 from genie.libs.parser.utils.common import Common
@@ -913,6 +914,76 @@ class ShowPlatformSoftwareFedSwitchActiveAcl(ShowPlatformSoftwareFedSwitchActive
                 ingress_ipv4 = ret_dict.setdefault('cpu', {})
                 ingress_ipv4['asic_value'] = dict_val['asic_value']
                 ingress_ipv4['counter'] = int(dict_val['counter'])
+                continue
+
+        return ret_dict
+
+class ShowObjectGroupNameSchema(MetaParser):
+    """Schema for show object-group name {group_name}"""
+    schema = {
+        'object_group': {
+            Any(): {
+                Optional('host_address'): ListOf(str),
+                Optional('services'): ListOf(str)
+            }     
+        }        
+    }
+
+
+class ShowObjectGroupName(ShowObjectGroupNameSchema):
+    """Parser for show object-group name {group_name}"""
+
+    cli_command = 'show object-group name {group_name}'
+
+    def cli(self, group_name, output=None):
+        if output is None:          
+            out = self.device.execute(self.cli_command.format(group_name=group_name))
+        else:
+            out = output
+       
+        ret_dict = {}       
+        
+        # V6-Network object group v6-net1
+        # V6-Service object group v6-serv1
+        p1 = re.compile(r'^(?P<object_group>[\w\-]+)\s+object\s+group\s+(?:(?P<group_name>[\w\-]+))?$')
+
+        # Ipv6
+        # ipv4
+        # tcp-udp
+        # sctp        
+        p2 = re.compile(r'^(?P<services>\S+)$')
+
+        # host 2040:1::3
+        p3 = re.compile(r'^host\s+(?P<address>[\w\:]+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # V6-Network object group v6-net1
+            # V6-Service object group v6-serv1
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()              
+                group_dict = ret_dict.setdefault('object_group', {}).setdefault(group['object_group'], {})                  
+                continue            
+            
+            # ipv6
+            # ipv4
+            # tcp-udp
+            # sctp
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                proto_dict = group_dict.setdefault('services', [])
+                proto_dict.append(group['services'])
+                continue
+
+            # host 2040:1::3
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                host_dict = group_dict.setdefault('host_address', [])
+                host_dict.append(group['address'])          
                 continue
 
         return ret_dict

@@ -28,7 +28,7 @@ class ShowRomvarSchema(MetaParser):
             Optional("license_active_level"): str,
             Optional("license_boot_level"): str,
             Optional("stack"): str,
-            "boot": list,
+            Optional("boot"): list,
             Optional("switch_priority"): int,
             Optional("chassis_ha_local_ip"): str,
             Optional("chassis_ha_remote_ip"): str,
@@ -631,36 +631,42 @@ class ShowRomvar(ShowRomvarSchema):
 
         return romvar_dict
 
-# ======================================================
-# Parser for 'show rom-mon switch 3 r0 '
-# ======================================================
+# =======================================================
+# Schema for 'show rom-mon switch {switch_num} {process}'
+# =======================================================
 
 class ShowRomMonSwitchR0Schema(MetaParser):
-    """Schema for show rom-mon switch 3 r0"""
+    """Schema for show rom-mon switch {switch_num} {process}"""
 
     schema = {
                 'version': str,
-                'copyright': str,
-                'vendor': str,
+                'build_type': str,
+                Optional('copyright'): str,
+                Optional('vendor'): str,
                 'day': str,
                 'date': str,
                 'time': str,
                 'username': str,
 	}
 
+# =======================================================
+# Parser for 'show rom-mon switch {switch_num} {process}'
+# =======================================================
 class ShowRomMonSwitchR0(ShowRomMonSwitchR0Schema):
-    """Parser for show rom-mon switch 3 r0"""
+    """Parser for show rom-mon switch {switch_num} {process}"""
 
     cli_command = 'show rom-mon switch {switch_num} {process}'
 
     def cli(self, switch_num, process, output=None):
         if output is None:
-            output = self.device.execute(self.cli_command.format(switch_num=switch_num,process=process))
+            output = self.device.execute(self.cli_command.format(switch_num=switch_num, process=process))
             
         # System Bootstrap, Version 17.11.1r[FC1], DEVELOPMENT SOFTWARE
-        p1 = re.compile(r"^System\s+Bootstrap,\s+Version\s+(?P<version>\S+),\s+DEVELOPMENT\s+SOFTWARE$")
+        p1 = re.compile(r"^System\s+Bootstrap,\s+Version\s+(?P<version>\S+),\s+(?P<build_type>[\w\(\)\s]+)$")
+        
         # Copyright (c) 1994-2022 by cisco Systems, Inc.
         p2 = re.compile(r"^Copyright\s+\(c\)\s+(?P<copyright>\S+)\s+by\s+(?P<vendor>\S+\s+\S+),\s+Inc\.$")
+        
         # Compiled Wed 02/08/2023 14:20:19.45 by sapitcha
         p3 = re.compile(r"^Compiled\s+(?P<day>\w+)\s+(?P<date>\S+)\s+(?P<time>\S+)\s+by\s+(?P<username>\w+)$")
 
@@ -673,6 +679,7 @@ class ShowRomMonSwitchR0(ShowRomMonSwitchR0Schema):
             if m:
                 dict_val = m.groupdict()
                 ret_dict['version'] = dict_val['version']
+                ret_dict['build_type'] = dict_val['build_type']
                 continue
 
             # Copyright (c) 1994-2022 by cisco Systems, Inc.

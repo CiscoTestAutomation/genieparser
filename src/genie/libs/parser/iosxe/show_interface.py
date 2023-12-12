@@ -3225,6 +3225,14 @@ class ShowIpv6Interface(ShowIpv6InterfaceSchema):
                 ret_dict[intf]['addresses_config_method'] = \
                     m.groupdict()['addr_conf_method']
                 continue
+            
+            # Hosts use DHCP to obtain routable addresses.
+            p18_1 = re.compile(r'^Hosts +use +(?P<addr_conf_method>[\w\s]+) +to +obtain +routable +addresses.$')
+            m = p18_1.match(line)
+            if m:
+                ret_dict[intf]['addresses_config_method'] = \
+                    m.groupdict()['addr_conf_method']
+                continue
 
             # Interface is unnumbered. Using address of Loopback0
             p19 = re.compile(r'^Interface +is +unnumbered. +Using +address +of'
@@ -5528,5 +5536,60 @@ class ShowInterfacesVlanMapping(ShowInterfacesVlanMappingSchema):
                 vlan_dict['trans_vlan'] = int(dict_val['trans_vlan'])
                 vlan_dict['operation'] = dict_val['operation']
                 continue
+
+        return ret_dict
+
+# ======================================================
+# Parser for 'show interface <interface> human-readable | i drops'
+# ======================================================
+class ShowInterfaceHumanReadableIncludeDropsSchema(MetaParser):
+    """Schema for show interface human-readable include drops"""
+
+    schema = {
+        'unknown_protocol_drops': int,
+        'size': int,
+        'max': int,
+        'drops': int,
+        'flushes': int,
+        'total_output_drops': int
+    }
+
+class ShowInterfaceHumanReadableIncludeDrops(ShowInterfaceHumanReadableIncludeDropsSchema):
+    """Parser for show interface human-readable include drops"""
+
+    cli_command = 'show interface {interface} human-readable | i drops'
+
+    def cli(self, interface, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(interface=interface))
+            
+        #   Input queue: 0/2000/0/0 (size/max/drops/flushes); Total output drops: 0
+
+        p1 = re.compile(r"^Input queue: (?P<size>\d+)/(?P<max>\d+)/(?P<drops>\d+)/(?P<flushes>\d+)\s+\(size/max/drops/flushes\); Total output drops:\s+(?P<total_output_drops>\d+)$")
+
+        # 0 unknown protocol drops
+        p2 = re.compile(r"^(?P<unknown_protocol_drops>\d+)\s+unknown protocol drops$")
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            #   Input queue: 0/2000/0/0 (size/max/drops/flushes); Total output drops: 0
+            m = p1.match(line)
+            if m:
+                dict_val = m.groupdict()
+                ret_dict['size'] = int(dict_val['size'])
+                ret_dict['max'] = int(dict_val['max'])
+                ret_dict['drops'] = int(dict_val['drops'])
+                ret_dict['flushes'] = int(dict_val['flushes'])
+                ret_dict['total_output_drops'] = int(dict_val['total_output_drops'])
+                continue
+
+            # 0 unknown protocol drops
+            m = p2.match(line)
+            if m:
+                dict_val = m.groupdict()
+                ret_dict['unknown_protocol_drops'] = int(dict_val['unknown_protocol_drops'])
 
         return ret_dict

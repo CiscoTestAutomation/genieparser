@@ -1,0 +1,39 @@
+show bgp vrf SRV6_L3VPN_BE ipv6 unicast local-sids
+Mon Mar 20 17:42:33.087 UTC
+BGP VRF SRV6_L3VPN_BE, state: Active
+BGP Route Distinguisher: 100:1
+VRF ID: 0x60000002
+BGP router identifier 10.0.0.1, local AS number 100
+Non-stop routing is enabled
+BGP table state: Active
+Table ID: 0xe0800002   RD version: 86
+BGP main routing table version 86
+BGP NSR Initial initsync version 5 (Reached)
+BGP NSR/ISSU Sync-Group versions 0/0
+
+Status codes: s suppressed, d damped, h history, * valid, > best
+              i - internal, r RIB-failure, S stale, N Nexthop-discard
+Origin codes: i - IGP, e - EGP, ? - incomplete
+   Network            Local Sid                                   Alloc mode   Locator
+Route Distinguisher: 100:1 (default for vrf SRV6_L3VPN_BE)
+*> fc00:a000:1000:100::1/128
+                      fc00:c000:1001:e001::                       per-vrf      MAIN
+*>ifc00:a000:1000:100::2/128
+                      NO SRv6 Sid                                 -            -
+* i                   NO SRv6 Sid                                 -            -
+*>ifc00:a000:2000:200::3/128
+                      NO SRv6 Sid                                 -            -
+* i                   NO SRv6 Sid                                 -            -
+*> fd00::1/128        fc00:c000:1001:e001::                       per-vrf      MAIN
+*>ifd00::3/128        NO SRv6 Sid                                 -            -
+* i                   NO SRv6 Sid                                 -            -
+*> fd00:ffff:100:11::/64
+                      fc00:c000:1001:e001::                       per-vrf      MAIN
+*>ifd00:ffff:100:12::/64
+                      NO SRv6 Sid                                 -            -
+* i                   NO SRv6 Sid                                 -            -
+*>ifd00:ffff:200:13::/64
+                      NO SRv6 Sid                                 -            -
+* i                   NO SRv6 Sid                                 -            -
+
+Processed 8 prefixes, 13 paths

@@ -48,12 +48,12 @@ class ShowPlatformHardwareFedActiveTcamUtilization(ShowPlatformHardwareFedActive
     show platform hardware fed switch active fwd-asic resource tcam utilization """
 
     cli_command = ['show platform hardware fed active fwd-asic resource tcam utilization',
-                   'show platform hardware fed {switch} active fwd-asic resource tcam utilization']
+                   'show platform hardware fed {switch} {mode} fwd-asic resource tcam utilization']
 
-    def cli(self, switch=None, output=None):
+    def cli(self, switch=None, mode="active", output=None):
         if output is None:
-            if switch:
-                cmd = self.cli_command[1].format(switch=switch)
+            if switch and mode:
+                cmd = self.cli_command[1].format(switch=switch, mode=mode)
             else:
                 cmd = self.cli_command[0]
             output = self.device.execute(cmd)
@@ -133,14 +133,14 @@ class ShowPlatformTcamPbrNat(ShowPlatformTcamPbrNatSchema):
     show platform hardware fed active fwd-asic resource tcam table pbr record 0 format 0 | begin {nat_region} 
     """
 
-    cli_command = ['show platform hardware fed {switch} active fwd-asic resource tcam table pbr record 0 format 0 | begin {nat_region}',
+    cli_command = ['show platform hardware fed {switch} {switch_type} fwd-asic resource tcam table pbr record 0 format 0 | begin {nat_region}',
                    'show platform hardware fed active fwd-asic resource tcam table pbr record 0 format 0 | begin {nat_region}']
     
-    def cli(self, nat_region, switch="", output=None):
+    def cli(self, nat_region, switch="", switch_type="active", output=None):
         
         if output is None:
             if switch:  
-                cmd = self.cli_command[0].format(switch=switch, nat_region=nat_region)
+                cmd = self.cli_command[0].format(switch=switch, nat_region=nat_region, switch_type=switch_type)
             else:
                 cmd = self.cli_command[1].format(nat_region=nat_region)
             output = self.device.execute(cmd)

@@ -1,0 +1,21 @@
+show ospf 1000 vrf v5000 summary
+Mon Apr 17 10:17:30.416 UTC
+
+Routing process "ospf 1000 VRF v5000"
+Number of OSPF interfaces 2
+Number of OSPF interfaces up 0
+Number of OSPF virtual interfaces up 0
+Number of OSPF sham-link interfaces up 0
+Number of neighbors 0
+Number of neighbors adjacent 0
+Number of areas 1
+ LSA Type       Count
+ Router        : 0
+ Network       : 0
+ Summary Net   : 0
+ Summary ASBR  : 0
+ Type-7 Ext    : 0
+ Opaque Link   : 0
+ Opaque Area   : 0
+ Type-5 Ext    : 0
+ Opaque AS     : 0

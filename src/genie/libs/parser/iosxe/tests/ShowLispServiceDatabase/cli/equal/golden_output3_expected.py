@@ -63,6 +63,7 @@ expected_output = {
                                 'uptime': '01:08:34',
                                 'last_change': '01:08:34',
                                 'domain_id': 'local',
+                                'service_insertion': 'N/A',
                                 'locators': {
                                     '11:11:11:11::': {
                                         'priority': 10,

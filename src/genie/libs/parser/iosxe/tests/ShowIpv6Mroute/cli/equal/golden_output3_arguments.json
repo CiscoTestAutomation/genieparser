@@ -1,0 +1,6 @@
+{
+    "vrf": "red",
+    "source": "192:168:3::1",
+    "group": "FF45::1",
+    "address_family": "ipv6"
+}

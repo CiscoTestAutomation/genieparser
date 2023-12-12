@@ -1,0 +1,19 @@
+show lisp instance-id 4097 ipv4 database
+LISP ETR IPv4 Mapping Database for EID-table default (IID 4097), LSBs: 0x1
+Entries total 2, no-route 0, inactive 0, do-not-register 2
+
+100.64.232.1/32, dynamic-eid CIP_INFRA_VN_AP_POOL-IPV4, do not register, inherited from default locator-set rloc_b2f5589b-a3ac-4dcb-a816-7f421e0a683e
+  Uptime: 7w3d, Last-change: 7w3d
+  Domain-ID: unset
+  Service-Insertion: N/A (0)
+  Locator       Pri/Wgt  Source     State
+  100.64.245.5   10/10   cfg-intf   site-self, reachable
+    Affinity-id: 20 , 20
+100.66.249.1/32, dynamic-eid EXTENDED_NODES-IPV4, do not register, inherited from default locator-set rloc_b2f5589b-a3ac-4dcb-a816-7f421e0a683e
+  Uptime: 7w1d, Last-change: 7w1d
+  Domain-ID: unset
+  Service-Insertion: N/A (0)
+  Locator       Pri/Wgt  Source     State
+  100.64.245.5   10/10   cfg-intf   site-self, reachable
+    Affinity-id: 101
+CIP-DC1-FES-01#

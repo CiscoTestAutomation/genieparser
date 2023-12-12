@@ -1,0 +1,18 @@
+Debug flags: 0x8000
+Seq 0: slot=0 slot_port=1 bay=0 port=1 Name:MetaMgr0_0_1
+ MetanoiaPort=1 SFP type: 1 State: 2 cnt=312
+MAC:00:00:00:00:00:00 Choice:0
+hw interface:GigabitEthernet0/0/1 sw interface:GigabitEthernet0/0/1
+Firmware file: /etc/SFP_V5311-T-R_CSP.b, size=491520, version=1_62_8463
+Upgrade file: [], size=0, version= offset=0x0
+Upgrade file info: 
+SFP version: 1_62_8463
+Notification Seq: 0x1 cnt: 0x1 Stat Cycle:255
+VDSL State: 5
+EBM Tx: 360759 Rx: 360759
+EBM Wait Timeout: 0 Rx Loss: 0
+G994 vid CO: BDCM CPE: META
+Serial No CO:  CPE: MET21160F61 V5311TR 1_62_8463
+Version CO:  CPE: 1_62_8463 MT5311
+Capability CO: 000000000000000200 CPE: 040004000C01000300
+Line Attn: UP: 65535 DOWN: 13

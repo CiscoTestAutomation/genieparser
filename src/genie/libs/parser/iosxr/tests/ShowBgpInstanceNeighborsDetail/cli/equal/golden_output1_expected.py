@@ -34,6 +34,20 @@ expected_output = {
                             "minimum_time_between_adv_runs": 0,
                             "inbound_message": "3",
                             "outbound_message": "3",
+                            "configured_holdtime": 180,
+                            "configured_keepalive_interval": 60,
+                            "messages": {
+                                "received": {
+                                    "messages_count": 44766,
+                                    "notifications": 0,
+                                    "queue": 0,
+                                },
+                                "sent": {
+                                    "messages_count": 40667,
+                                    "notifications": 1,
+                                    "queue": 0,
+                                },
+                            },
                             "address_family": {
                                 "ipv4 unicast": {
                                     "neighbor_version": 7,
@@ -60,6 +74,11 @@ expected_output = {
                                     "send_multicast_attributes": True,
                                     "additional_routes_local_label": "Unicast SAFI",
                                 }
+                            },
+                            "bgp_negotiated_capabilities": {
+                                "four_octets_asn": "advertised received",
+                                "ipv4_unicast": "advertised received",
+                                "route_refresh": "advertised received",
                             },
                             "bgp_session_transport": {
                                 "connection": {

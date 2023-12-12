@@ -1,0 +1,9 @@
+Building configuration...
+
+Current configuration : 131 bytes
+!
+interface GigabitEthernet1/0/9
+ no switchport
+ ip address 161.1.1.1 255.255.255.0
+ service-policy type queueing output 2p6q
+end

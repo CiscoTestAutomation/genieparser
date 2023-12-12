@@ -1,0 +1,4 @@
+show macsec mka session interface Eth1/97/2
+Interface          Local-TxSCI                      # Peers            Status             Key-Server         Auth Mode
+------------------ -------------------------------- ------------------ ------------------ ------------------ ------------------
+Ethernet1/97/2     c4f7.d530.1485/0001              1                  Secured            Yes                PRIMARY-PSK

@@ -1,0 +1,11 @@
+
+##### MST1    vlans mapped:   2-25
+Bridge        address cc7f.763d.9a00  priority      32769 (32768 sysid 1)
+Root          address 40b5.c11e.e000  priority      4097  (4096 sysid 1)
+              port    Tw1/0/23        cost          20000     rem hops 19
+
+
+Interface                        Role Sts Cost      Prio.Nbr Type
+----------------                 ---- --- --------- -------- --------------------------------
+Tw1/0/2                          Altn BLK 20000     128.2    P2p
+Tw1/0/23                         Root FWD 20000     128.23   P2p

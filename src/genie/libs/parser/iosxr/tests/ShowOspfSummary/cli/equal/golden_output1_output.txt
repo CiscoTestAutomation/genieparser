@@ -1,0 +1,22 @@
+show ospf 1 summary
+Wed Apr 12 02:42:02.526 UTC
+
+Routing process "ospf 1" 
+Number of OSPF interfaces 4
+Number of OSPF interfaces up 4
+Number of OSPF virtual interfaces up 0
+Number of OSPF sham-link interfaces up 0
+Number of neighbors 2
+Number of neighbors adjacent 2
+Number of areas 2
+ LSA Type       Count
+ Router        : 9
+ Network       : 0
+ Summary Net   : 23
+ Summary ASBR  : 0
+ Type-7 Ext    : 0
+ Opaque Link   : 0
+ Opaque Area   : 0
+ Type-5 Ext    : 0
+ Opaque AS     : 0
+ 

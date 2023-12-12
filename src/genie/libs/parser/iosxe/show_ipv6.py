@@ -1146,6 +1146,7 @@ class ShowIpv6Mfib(ShowIpv6MfibSchema):
         mfib_dict = {}
         sub_dict = {}
         outgoing = False
+        egress_data = {}
         #Default
         #VRF vrf1
         p1 = re.compile(r'^(VRF\s+)?(?P<vrf>[\w]+)$')
@@ -1156,7 +1157,7 @@ class ShowIpv6Mfib(ShowIpv6MfibSchema):
         # (2001:70:1:1::10,FF05:1:1::1) Flags: HW
         p3 = re.compile(r'^\((?P<source_address>[\w\:\.\*\/]+)\,'
                      '(?P<multicast_group>[\w\:\.\/]+)\)'
-                     '\s+Flags\:\s+(?P<mfib_flags>[\w\s]+)$')
+                     '\s+Flags\:\s*(?P<mfib_flags>[\w\s]*)$')
         #0x1AF0  OIF-IC count: 0, OIF-A count: 1
         p4 = re.compile(r'\w+ +OIF-IC count: +(?P<oif_ic_count>[\w]+)'
                    '\, +OIF-A count: +(?P<oif_a_count>[\w]+)$')
@@ -1192,9 +1193,10 @@ class ShowIpv6Mfib(ShowIpv6MfibSchema):
         #Tunnel1, VXLAN v6 Decap Flags: F NS
         # Vlan200, VXLAN v4 Encap (10100, 239.1.1.1) Flags: F
         #L2LISP0.1502, L2LISP v6 Decap Flags: F NS
+        #LISP0.101, 100:88:88::88 Flags: F
         p8 = re.compile(r'^(?P<egress_if>[\w\.\/]+)'
                         r'(\,\s+L2LISP\s*v6\s*Decap\s*)?'
-                        r'(\,\s+\(?(?P<egress_rloc>[\w\.]+)(\,\s+)?(?P<egress_underlay_mcast>[\w\.]+)?\)?)?'
+                        r'(\,\s+\(?(?P<egress_rloc>[\w:\.]+)(\,\s+)?(?P<egress_underlay_mcast>[\w\.]+)?\)?)?'
                         r'(\,\s+VXLAN +(?P<egress_vxlan_version>[v0-9]+)?(\s+)?(?P<egress_vxlan_cap>[\w]+)(\s+)?'
                         r'(\(?(?P<egress_vxlan_vni>[0-9]+)(\,\s+)?(?P<egress_vxlan_nxthop>[\w:.]+)?\)?)?)?'
                         r'\s+Flags\:\s?(?P<egress_flags>F[\s\w]+|[\s\w]+\s+F[\s\w]+|F$|[\s\w]+\s+F$|$)')

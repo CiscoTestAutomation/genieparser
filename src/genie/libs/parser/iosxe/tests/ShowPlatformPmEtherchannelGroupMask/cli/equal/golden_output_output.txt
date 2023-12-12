@@ -1,0 +1,9 @@
+Group Mask Table for port-channel:10
+-------------------------------------
+EC Channel-Group               : 10
+EC Channel-Group Mac           : 0077.8d99.410e
+# Of Active Ports              : 2
+If Name                                  If Id                  EC Index 
++------------------------------------+----------------+-----------------+
+TenGigabitEthernet2/0/13                  0x16                    0    
+TenGigabitEthernet2/0/14                  0x17                    1    

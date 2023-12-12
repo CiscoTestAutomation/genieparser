@@ -128,6 +128,7 @@ IOSXE parsers for the following show commands:
     * show lisp remote-locator-set name {remote_locator_name}
     * show lisp {lisp_id} remote-locator-set {remote_locator_type}
     * show lisp {lisp_id} remote-locator-set name {remote_locator_name}
+    * show lisp vrf {vrf}
 '''
 
 # Python
@@ -2520,7 +2521,9 @@ class ShowLispDatabaseSuperParserSchema(MetaParser):
                                             'weight': int,
                                             'source': str,
                                             'location': str,
-                                            'state': str
+                                            'state': str,
+                                            Optional('affinity_id_x'): int,
+                                            Optional('affinity_id_y'): int
                                             }
                                         }
                                     }
@@ -2570,8 +2573,9 @@ class ShowLispDatabaseSuperParser(ShowLispDatabaseSuperParserSchema):
         # Domain-ID: local
         p5 = re.compile(r'^Domain-ID:\s+(?P<domain_id>\S+)$')
 
+        # Service-Insertion: N/A 
         # Service-Insertion: N/A (0)
-        p6 = re.compile(r'^Service-Insertion: (?P<service_insertion>[\S\s]+)+\((?P<service_insertion_id>\d+)\)$')
+        p6 = re.compile(r'^Service-Insertion: (?P<service_insertion>[^\s]+)\s?(\((?P<service_insertion_id>\d+)\))?$')
 
         # SGT: 10
         p7 = re.compile(r'^SGT:\s+(?P<sgt>\d+)$')
@@ -2581,6 +2585,9 @@ class ShowLispDatabaseSuperParser(ShowLispDatabaseSuperParserSchema):
         p8 = re.compile(r'^(?P<locators>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|([a-fA-F\d\:]+))'
                         r'\s+(?P<priority>\d+)\/(?P<weight>\d+)\s+(?P<source>\S+)'
                         r'\s+(?P<location>\S+),\s(?P<state>\S+)$')
+
+        # Affinity-id: 20 , 20
+        p9 = re.compile(r'^Affinity-id:\s+(?P<affinity_id_x>\d+)(\s+,\s+(?P<affinity_id_y>\d+))?$')
 
         lisp_id = "default"
 
@@ -2665,14 +2672,16 @@ class ShowLispDatabaseSuperParser(ShowLispDatabaseSuperParserSchema):
                 eid_dict.update({'domain_id':domain_id})
                 continue
 
+            # Service-Insertion: N/A 
             # Service-Insertion: N/A (0)
             m = p6.match(line)
             if m:
                 group = m.groupdict()
                 service_insertion = group['service_insertion'].strip()
-                instance_id = int(group['service_insertion_id'])
-                eid_dict.update({'service_insertion':service_insertion,
-                                 'service_insertion_id':instance_id})
+                service_insertion_id = group['service_insertion_id']
+                eid_dict.update({'service_insertion':service_insertion})
+                if service_insertion_id is not None:
+                    eid_dict.update({'service_insertion_id':int(service_insertion_id)})
                 continue
 
             # SGT: 10
@@ -2701,6 +2710,15 @@ class ShowLispDatabaseSuperParser(ShowLispDatabaseSuperParserSchema):
                                      'source':source,
                                      'location':location,
                                      'state':state})
+                continue
+            
+            # Affinity-id: 20 , 20
+            m = p9.match(line)
+            if m:
+                groups = m.groupdict()
+                if groups['affinity_id_y']:
+                    locator_dict.update({'affinity_id_y':int(groups['affinity_id_y'])})
+                locator_dict.update({'affinity_id_x':int(groups['affinity_id_x'])})
                 continue
         return ret_dict
 
@@ -5772,9 +5790,10 @@ class ShowLispIpv4Publication(ShowLispIpv4PublicationSchema):
 
         # 44.44.44.44     1d21h       192.168.1.71/32          11.11.11.11     -
         # 44:44:44:44::   1d21h       192.168.1.71/32          11.11.11.11     -
+        # 13.13.13.13     00:00:54    192.168.0.0/16           -       -
         p3 = re.compile(r"^(?P<publisher_ip>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|([a-fA-F\d\:]+))\s+"
                         r"(?P<last_published>\S+)\s+(?P<eid_prefix>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\/\d{1,2})\s+"
-                        r"(?P<rloc>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|([a-fA-F\d\:]+))\s+(?P<encap_iid>\S+)$")
+                        r"(?P<rloc>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|([a-fA-F\d\:]+)|-)\s+(?P<encap_iid>\S+)$")
 
         # New format (Locators are no longer displayed in the output)
 
@@ -5807,6 +5826,7 @@ class ShowLispIpv4Publication(ShowLispIpv4PublicationSchema):
 
             # 44.44.44.44     1d21h       192.168.1.71/32          11.11.11.11
             # 44:44:44:44::   1d21h       192.168.1.71/32          11.11.11.11     -
+            # 13.13.13.13     00:00:54    192.168.0.0/16           -       -
             m = p3.match(line)
             if m:
                 groups = m.groupdict()
@@ -5883,9 +5903,10 @@ class ShowLispIpv6Publication(ShowLispIpv4PublicationSchema):
         p2 = re.compile(r"^Entries\s+total\s+(?P<total_entries>\d+)")
 
         # 100.14.14.14    01:11:02    2001:192:168:1::2/128    100.11.11.11    -
+        # 13.13.13.13     00:00:54    192.168.0.0/16           -       -
         p3 = re.compile(r"^(?P<publisher_ip>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|([a-fA-F\d\:]+))\s+"
                         r"(?P<last_published>\S+)\s+(?P<eid_prefix>[a-fA-F\d\:]+\/\d{1,3})\s+"
-                        r"(?P<rloc>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|([a-fA-F\d\:]+))\s+(?P<encap_iid>\S+)$")
+                        r"(?P<rloc>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|([a-fA-F\d\:]+)|-)\s+(?P<encap_iid>\S+)$")
 
         # New format (Locators are no longer displayed in the output)
 
@@ -5916,6 +5937,7 @@ class ShowLispIpv6Publication(ShowLispIpv4PublicationSchema):
                 continue
 
             # 100.14.14.14    01:11:02    2001:192:168:1::2/128    100.11.11.11    -
+            # 13.13.13.13     00:00:54    192.168.0.0/16           -       -
             m = p3.match(line)
             if m:
                 groups = m.groupdict()
@@ -7530,7 +7552,7 @@ class ShowLispPublicationPrefixSuperParser(ShowLispPublicationPrefixSchema):
                 publish_dict.update({'port':port})
                 continue
 
-	    # last published 16:02:47, TTL never
+        # last published 16:02:47, TTL never
             m = p22.match(line)
             if m:
                 groups = m.groupdict()
@@ -8864,11 +8886,11 @@ class ShowLispDatabaseEidSchema(MetaParser):
                                 Optional('weight'): int,
                                 Optional('source'): str,
                                 Optional('state'): str,
-                                'config_missing': bool
+                                'config_missing': bool,
+                                Optional('affinity_id_x'): int,
+                                Optional('affinity_id_y'): int
                             }
                         },
-                        Optional('affinity_id_x'): int,
-                        Optional('affinity_id_y'): int,
                         Optional('map_servers'): {
                             str: { # map-server address
                                 'uptime': str,
@@ -9092,10 +9114,9 @@ class ShowLispDatabaseEid(ShowLispDatabaseEidSchema):
             m = p12_1.match(line)
             if m:
                 group = m.groupdict()
-                affinity_id_x = int(group['affinity_id_x'])
-                instance_id_dict.update({'affinity_id_x':affinity_id_x})
                 if group['affinity_id_y']:
-                    instance_id_dict.update({'affinity_id_y':int(group['affinity_id_y'])})
+                    locator_dict.update({'affinity_id_y':int(group['affinity_id_y'])})
+                locator_dict.update({'affinity_id_x':int(group['affinity_id_x'])})
                 continue
 
             #  Map-server       Uptime         ACK  Domain-ID
@@ -12116,7 +12137,9 @@ class ShowLispIpMapCachePrefixSchema(MetaParser):
                                 Optional('reject_reason'): str,
                                 Optional('rloc_probe_sent'): str,
                                 Optional('rloc_probe_in'): str,
-                                Optional('itr_rloc'): str
+                                Optional('itr_rloc'): str,
+                                Optional('affinity_id_x'): int,
+                                Optional('affinity_id_y'): int
                                 }
                             }
                         }
@@ -12223,6 +12246,9 @@ class ShowLispIpMapCachePrefixSuperParser(ShowLispIpMapCachePrefixSchema):
         p16 = re.compile(r"^Latched\s+to\s+ITR-RLOC:\s+"
                          r"(?P<itr_rloc>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|([a-fA-F\d\:]+))$")
 
+        # Affinity-id: 20 , 20
+        p17 = re.compile(r'^Affinity-id:\s+(?P<affinity_id_x>\d+)(\s+,\s+(?P<affinity_id_y>\d+))?$')
+        
         for line in output.splitlines():
             line = line.strip()
 
@@ -12413,6 +12439,15 @@ class ShowLispIpMapCachePrefixSuperParser(ShowLispIpMapCachePrefixSchema):
                 groups = m.groupdict()
                 itr_rloc = groups['itr_rloc']
                 locators_dict.update({'itr_rloc':itr_rloc})
+                continue
+            
+            # Affinity-id: 20 , 20
+            m = p17.match(line)
+            if m:
+                groups = m.groupdict()
+                if groups['affinity_id_y']:
+                    locators_dict.update({'affinity_id_y':int(groups['affinity_id_y'])})
+                locators_dict.update({'affinity_id_x':int(groups['affinity_id_x'])})
                 continue
         return ret_dict
 
@@ -15277,11 +15312,12 @@ class ShowLispInstanceIdServiceSchema(MetaParser):
                                 },
                             },
                         'encapsulation_type': str,
-                        }
+                        Optional('ethernet_fast_detection'): bool
                     }
                 }
             }
         }
+    }
 
 
 class ShowLispInstanceIdService(ShowLispInstanceIdServiceSchema):
@@ -15534,6 +15570,10 @@ class ShowLispInstanceIdService(ShowLispInstanceIdServiceSchema):
 
         # Encapsulation type:                       vxlan
         p63 = re.compile(r'Encapsulation type:\s+(?P<encapsulation_type>\S+)$')
+
+        # Ethernet Fast Detection:                  enabled
+        # Ethernet Fast Detection:                  disabled
+        p64 = re.compile(r'^Ethernet Fast Detection:\s+(?P<eth_fast_detect>enabled|disabled)$')
 
         count = 0
         for line in out.splitlines():
@@ -16138,6 +16178,7 @@ class ShowLispInstanceIdService(ShowLispInstanceIdServiceSchema):
                                 setdefault(vlans,{})
                 source_dict.update({'address':address,
                                     'interface':interface})
+                continue
 
             # Encapsulation type:                       vxlan
             m = p63.match(line)
@@ -16146,6 +16187,16 @@ class ShowLispInstanceIdService(ShowLispInstanceIdServiceSchema):
                 encapsulation_type = group['encapsulation_type']
                 instance_dict.update({'encapsulation_type':encapsulation_type})
                 continue
+
+            # Ethernet Fast Detection:                  enabled
+            # Ethernet Fast Detection:                  disabled
+            m = p64.match(line)
+            if m:
+                group = m.groupdict()
+                fast_detect = group['eth_fast_detect'] == 'enabled'
+                instance_dict.update({'ethernet_fast_detection': fast_detect})
+                continue
+
         return ret_dict
 
 
@@ -18952,7 +19003,7 @@ class ShowLispPublicationConfigPropSuperSchema(MetaParser):
                                                 'epoch': {
                                                     'publisher': int,
                                                     'entry': int
-	                            		            },
+                                                    },
                                                 'entry_state': str,
                                                 'xtr_id': str,
                                                 'domain_id': str,
@@ -19667,3 +19718,124 @@ class ShowLispDecapsulationFilterParser(ShowLispDecapsulationFilterSchema):
                 continue
 
         return ret_dict
+
+class ShowLispVrfSchema(MetaParser):
+
+    ''' Schema for "show lisp vrf {vrf}" '''
+    schema = {
+    'vrf': {
+        Any(): {
+            'iid': {
+                Any(): {
+                    'lock_count': int,
+                    'top_id': int,
+                    'watch_count': int
+                }
+            },
+            'v4_topoid': {
+                Any(): {
+                    'lock_no': int,
+                    'rib': str,
+                    'status': str
+                }
+            },
+            'v6_topoid': {
+                Any(): {
+                    'lock_no': int,
+                    'rib': str,
+                    'status': str
+                }
+            },
+            'vrf_id': str
+        }
+    }
+}
+    
+class ShowLispVrf(ShowLispVrfSchema):
+
+    ''' Parser for "show lisp vrf {vrf}"'''
+    cli_command = [
+                    'show lisp vrf {vrf}',
+                  ]
+
+    def cli(self, vrf, output=None):
+        if output is None:
+            cmd = self.cli_command[0].format(vrf=vrf)            
+            output = self.device.execute(cmd)
+        # Init vars
+        ret_dict = {}
+    
+        # vrf VN_1 ID 0x2 UP users  EID
+        p1 = re.compile(r'vrf\s+(?P<vrf>\S+)+\s+ID\s+(?P<vrf_id>\S+)\s+UP\s+users+\s+EID$')
+        
+        # Topology IPv4 UP, topoid 0x2, locks 2, RIB registered
+        p2 = re.compile(r'Topology\s+IPv4\s+(?P<status>\w+),\s+topoid\s+(?P<v4_topoid>\S+),\s+locks\s+(?P<lock_no>(\d+)),\s+RIB\s+(?P<rib>\S+)$')
+    
+        # User EID, top ID 0, IID 4105, lock count 4, RIB watch count 0
+        p3 = re.compile(
+            r'User\s+EID,\s+top\s+ID (?P<top_id>(\d+)),\s+IID (?P<iid>(\d+)),\s+lock\s+count (?P<lock_count>(\d+)),\s+RIB\s+watch\s+count (?P<watch_count>(\d+))$')
+    
+        # Topology IPv6 DOWN, topoid 0x503316482, locks 0, RIB no
+        p4 = re.compile(r'Topology\s+IPv6\s+(?P<status>\w+),\s+topoid\s+(?P<v6_topoid>\S+),\s+locks\s+(?P<lock_no>(\d+)),\s+RIB\s+(?P<rib>\S+)$')
+    
+        for line in output.splitlines():
+            line = line.strip()
+    
+            # Sessions for VRF default, total: 7, established: 4
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                vrf = group['vrf']
+                vrf_id = group['vrf_id']
+                vrf_dict = ret_dict.setdefault('vrf', {}). \
+                    setdefault(vrf, {})
+                vrf_dict['vrf_id'] = group['vrf_id']
+                continue
+            
+            # Topology IPv4 UP, topoid 0x2, locks 2, RIB registered
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                v4_topoid = group['v4_topoid']
+                status = group['status']
+                lock_no = group['lock_no']
+                rib = group['rib']
+                topo_dict = vrf_dict.setdefault('v4_topoid', {}). \
+                    setdefault(v4_topoid, {})
+                topo_dict['status'] = group['status']
+                topo_dict['lock_no'] = int(group['lock_no'])
+                topo_dict['rib'] = group['rib']
+                continue
+    
+            # User EID, top ID 0, IID 4105, lock count 4, RIB watch count 0
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                top_id = group['top_id']
+                iid = group['iid']
+                lock_count = group['lock_count']
+                watch_count = group['watch_count']
+                topo_dict = vrf_dict.setdefault('iid', {}). \
+                    setdefault(iid, {})
+                topo_dict['top_id'] = int(group['top_id'])
+                topo_dict['lock_count'] = int(group['lock_count'])
+                topo_dict['watch_count'] = int(group['watch_count'])
+                continue
+    
+            # Topology IPv6 DOWN, topoid 0x503316482, locks 0, RIB no
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                status = group['status']
+                v6_topoid = group['v6_topoid']
+                lock_no = group['lock_no']
+                rib = group['rib']
+                topo_dict = vrf_dict.setdefault('v6_topoid', {}). \
+                    setdefault(v6_topoid, {})
+                topo_dict['status'] = group['status']
+                topo_dict['lock_no'] = int(group['lock_no'])
+                topo_dict['rib'] = group['rib']
+                continue
+    
+        return ret_dict
+

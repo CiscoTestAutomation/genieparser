@@ -1,0 +1,60 @@
+
+show isis interface TenGigE0/0/0/6
+
+TenGigE0/0/0/6              Enabled
+  Adjacency Formation:      Enabled
+  Prefix Advertisement:     Enabled
+  IPv4 BFD:                 Disabled
+  IPv6 BFD:                 Disabled
+  BFD Min Interval:         150
+  BFD Multiplier:           3
+  RSI SRLG:                 Registered
+  Bandwidth:                10000000
+
+  Circuit Type:             level-2-only (Configured: level-1-2)
+  Media Type:               P2P
+  Circuit Number:           0
+  Extended Circuit Number:  88
+  Last IIH Received:        07:27:37 (6.09 sec ago), 1497 octets
+  Last IIH Sent:            07:27:43 (0.05 sec ago), 1497 octets
+  Sending next P2P IIH in:  8 s
+
+  Level-2
+    Adjacency Count:        1
+    LSP Pacing Interval:    33 ms
+    PSNP Entry Queue Size:  0
+    Hello Interval:         10 s
+    Hello Multiplier:       3
+
+  CLNS I/O
+    Protocol State:         Up
+    MTU:                    1497
+    SNPA:                   ccb6.c8d2.5206
+    Layer-2 Multicast:
+      All ISs:              Listening
+
+  IPv4 Unicast Topology:    Enabled
+    Adjacency Formation:    Running
+    Prefix Advertisement:   Running
+          Policy (L1/L2):   -/-
+    Metric (L1/L2):         10/10
+    Metric fallback:
+      Bandwidth (L1/L2):    Inactive/Inactive
+      Anomaly (L1/L2):      Inactive/Inactive
+    Weight (L1/L2):         0/0
+    MPLS Max Label Stack:   3/3/12/0 (PRI/BKP/SRTE/SRAT)
+    MPLS LDP Sync (L1/L2):  Disabled/Disabled
+    FRR (L1/L2):            L1 Not Enabled     L2 Not Enabled
+      FRR Type:             None               None
+
+  IPv4 Address Family:      Enabled
+    Protocol State:         Up
+    Forwarding Address(es): 11.1.12.9
+    Global Prefix(es):      11.1.12.8/30 (0)
+
+  LSP Transmission is:      idle
+  LSP Transmit Timer in:    0 ms
+  LSP Burst Size:           9 LSPs in the next 0 ms
+  LSP Rexmit Queue Size:    0
+
+  PME Link Delays and Loss:

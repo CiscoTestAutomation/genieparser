@@ -1,0 +1,54 @@
+SONiC Software Version: SONiC.azure_cisco_202205.5324-dirty-20230707.044127
+SONiC OS Version: 11
+Distribution: Debian 11.7
+Kernel: 5.10.0-18-2-amd64
+Build commit: a2dedc96c
+Build date: Fri Jul  7 14:22:57 UTC 2023
+Built by: sonicci@sonic-ci-7-lnx
+
+Platform: x86_64-8201_32fh_o-r0
+HwSKU: 32x400Gb
+ASIC: cisco-8000
+ASIC Count: 1
+Serial Number: FOC2217FQXV
+Model Number: 8201-32FH-O
+Hardware Revision: 0.33
+Uptime: 17:07:15 up 15 min,  1 user,  load average: 0.82, 1.00, 0.90
+Date: Thu 02 Nov 2023 17:07:15
+
+Docker images:
+REPOSITORY                    TAG                                             IMAGE ID       SIZE
+docker-macsec                 latest                                          44ef5532977a   332MB
+docker-gbsyncd-cisco          azure_cisco_202205.5324-dirty-20230707.044127   c96b6201f4f5   492MB
+docker-gbsyncd-cisco          latest                                          c96b6201f4f5   492MB
+docker-teamd                  azure_cisco_202205.5324-dirty-20230707.044127   b3dcb1c44c25   330MB
+docker-teamd                  latest                                          b3dcb1c44c25   330MB
+docker-platform-monitor       azure_cisco_202205.5324-dirty-20230707.044127   eb2b3aea0d54   440MB
+docker-platform-monitor       latest                                          eb2b3aea0d54   440MB
+docker-orchagent              azure_cisco_202205.5324-dirty-20230707.044127   12eebc057df1   347MB
+docker-orchagent              latest                                          12eebc057df1   347MB
+docker-fpm-frr                azure_cisco_202205.5324-dirty-20230707.044127   74a1b527be83   359MB
+docker-fpm-frr                latest                                          74a1b527be83   359MB
+docker-syncd-cisco            azure_cisco_202205.5324-dirty-20230707.044127   2ab83730ef15   946MB
+docker-syncd-cisco            latest                                          2ab83730ef15   946MB
+docker-sflow                  azure_cisco_202205.5324-dirty-20230707.044127   b00f7b7c365d   326MB
+docker-sflow                  latest                                          b00f7b7c365d   326MB
+docker-nat                    azure_cisco_202205.5324-dirty-20230707.044127   81e0c39ef289   328MB
+docker-nat                    latest                                          81e0c39ef289   328MB
+docker-dhcp-relay             latest                                          b3af60f661d0   323MB
+docker-sonic-telemetry        azure_cisco_202205.5324-dirty-20230707.044127   a033ad9728b7   394MB
+docker-sonic-telemetry        latest                                          a033ad9728b7   394MB
+docker-snmp                   azure_cisco_202205.5324-dirty-20230707.044127   c1babf96afa6   363MB
+docker-snmp                   latest                                          c1babf96afa6   363MB
+docker-router-advertiser      azure_cisco_202205.5324-dirty-20230707.044127   98b6a74e7789   314MB
+docker-router-advertiser      latest                                          98b6a74e7789   314MB
+docker-mux                    azure_cisco_202205.5324-dirty-20230707.044127   2aa574b9ff08   362MB
+docker-mux                    latest                                          2aa574b9ff08   362MB
+docker-lldp                   azure_cisco_202205.5324-dirty-20230707.044127   0efda330fb64   356MB
+docker-lldp                   latest                                          0efda330fb64   356MB
+docker-database               azure_cisco_202205.5324-dirty-20230707.044127   27ddcd0018fe   314MB
+docker-database               latest                                          27ddcd0018fe   314MB
+docker-sonic-mgmt-framework   azure_cisco_202205.5324-dirty-20230707.044127   80b51acc8a09   456MB
+docker-sonic-mgmt-framework   latest                                          80b51acc8a09   456MB
+docker-ipxeserver-cisco       azure_cisco_202205.5324-dirty-20230707.044127   81dd2b2512ed   659MB
+docker-ipxeserver-cisco       latest                                          81dd2b2512ed   659MB

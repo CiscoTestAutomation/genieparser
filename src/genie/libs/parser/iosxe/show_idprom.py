@@ -424,6 +424,7 @@ class ShowIdpromInterfaceSchema(MetaParser):
             'serial_number': str, 
             'vendor_name': str,
             'vendor_oui': str,
+            Optional('vendor_part_number'): str,
             'clei_code': str,
             'cisco_part_number': str,
             'device_state': str, 
@@ -494,6 +495,9 @@ class ShowIdpromInterface(ShowIdpromInterfaceSchema):
         
         # Nominal bitrate per channel    = 25GE (25500 Mbits/s)
         p15 = re.compile('^Nominal bitrate per channel\s+=\s+(?P<nominal_bitrate_per_channel>.*)$')
+
+        # Vendor part number                        = AFBR-2CAR10Z-CS1
+        p16 = re.compile('^Vendor part number\s+=\s+(?P<vendor_part_number>\S+)$')
 
         for line in output.splitlines():
             line=line.strip()
@@ -601,7 +605,14 @@ class ShowIdpromInterface(ShowIdpromInterfaceSchema):
                 group=m.groupdict()
                 root_dict['nominal_bitrate_per_channel'] = group['nominal_bitrate_per_channel']
                 continue				
-                
+            
+            # Vendor part number                        = AFBR-2CAR10Z-CS1
+            m=p16.match(line)
+            if m:
+                group=m.groupdict()
+                root_dict['vendor_part_number'] = group['vendor_part_number']
+                continue
+
         return ret_dict     
 
 

@@ -1,0 +1,101 @@
+AVB Class-A
+    Priority Code Point     : 3
+    VLAN                    : 2302
+    Core ports              : 2
+    Boundary ports          : 39
+
+AVB Class-B
+    Priority Code Point     : 2
+    VLAN                    : 2302
+    Core ports              : 1
+    Boundary ports          : 40
+
+--------------------------------------------------------------------------------
+Interface    State       Delay    PCP  VID  Information
+--------------------------------------------------------------------------------
+     Gi1/0/1        down      N/A                        Oper state not up
+----
+     Gi1/0/2          up    136ns                                         
+   Class-  A        core             3 2302                               
+   Class-  B        core             2 2302                               
+----
+     Gi1/0/3        down      N/A                        Oper state not up
+----
+     Gi1/0/4        down      N/A                        Oper state not up
+----
+     Gi1/0/5        down      N/A                        Oper state not up
+----
+     Gi1/0/6        down      N/A                        Oper state not up
+----
+     Gi1/0/7        down      N/A                        Oper state not up
+----
+     Gi1/0/8        down      N/A                        Oper state not up
+----
+     Gi1/0/9          up      N/A                    Port is not asCapable
+----
+    Gi1/0/10        down      N/A                        Oper state not up
+----
+    Gi1/0/11        down      N/A                        Oper state not up
+----
+    Gi1/0/12        down      N/A                        Oper state not up
+----
+    Gi1/0/13        down      N/A                        Oper state not up
+----
+    Gi1/0/14          up      N/A                    Port is not asCapable
+----
+    Gi1/0/15        down      N/A                        Oper state not up
+----      
+    Gi1/0/16        down      N/A                        Oper state not up
+----
+    Gi1/0/17        down      N/A                        Oper state not up
+----
+    Gi1/0/18          up    296ns                                         
+   Class-  A        core             3    2                               
+   Class-  B    boundary             0    0                               
+----
+    Gi1/0/19        down      N/A                        Oper state not up
+----
+    Gi1/0/20        down      N/A                        Oper state not up
+----
+    Gi1/0/21        down      N/A                        Oper state not up
+----
+    Gi1/0/22        down      N/A                        Oper state not up
+----
+    Gi1/0/23        down      N/A                        Oper state not up
+----
+    Gi1/0/24        down      N/A                        Oper state not up
+----
+     Gi1/1/1        down      N/A                        Oper state not up
+----
+     Gi1/1/2        down      N/A                        Oper state not up
+----
+     Gi1/1/3        down      N/A                        Oper state not up
+----
+     Gi1/1/4        down      N/A                        Oper state not up
+----
+     Te1/1/1        down      N/A                        Oper state not up
+----
+     Te1/1/2        down      N/A                        Oper state not up
+----
+     Te1/1/3        down      N/A                        Oper state not up
+----
+     Te1/1/4        down      N/A                        Oper state not up
+----
+     Te1/1/5        down      N/A                        Oper state not up
+----
+     Te1/1/6        down      N/A                        Oper state not up
+----
+     Te1/1/7        down      N/A                        Oper state not up
+----
+     Te1/1/8        down      N/A                        Oper state not up
+----
+     Fo1/1/1        down      N/A                        Oper state not up
+----      
+     Fo1/1/2        down      N/A                        Oper state not up
+----
+    Twe1/1/1        down      N/A                        Oper state not up
+----
+    Twe1/1/2        down      N/A                        Oper state not up
+----
+     Ap1/0/1        down      N/A                        Oper state not up
+----

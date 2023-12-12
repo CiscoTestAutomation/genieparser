@@ -1,0 +1,15 @@
+show romvar
+----------------------------------
+ROMMON variables for Active Switch
+----------------------------------
+AUTO_SWITCH_CONSOLE_DISABLE=0
+BAUD=9600
+BSI=0
+CONSOLE_MIRRORING_DISABLE=0
+LICENSE_BOOT_LEVEL=network-essentials,all:CAT9K_VIRTUAL;
+LICENSE_SUITE=
+RANDOM_NUM=2064249823
+RET_2_RCALTS=
+SWITCH_NUMBER=1
+TEMPLATE=access
+USB_DISABLE=0

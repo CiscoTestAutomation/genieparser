@@ -1,0 +1,4 @@
+          OSPFv3 1 address-family ipv6 (router-id 1.1.1.1)
+
+Neighbor ID     Pri   State           Dead Time   Interface ID    Interface
+2.2.2.2           0   FULL/  -        00:00:39    11              GigabitEthernet1/0/21

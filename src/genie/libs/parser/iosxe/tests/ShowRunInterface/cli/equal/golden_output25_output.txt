@@ -1,0 +1,10 @@
+Building configuration...
+
+Current configuration : 113 bytes
+!
+interface GigabitEthernet1/0/9
+ no switchport
+ no ip address
+ ip pim sparse-dense-mode
+ ip igmp version 3
+end
