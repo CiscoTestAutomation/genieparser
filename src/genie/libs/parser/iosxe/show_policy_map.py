@@ -2300,8 +2300,7 @@ class ShowPolicyMapSchema(MetaParser):
                     Any(): {
                         Optional('priority_level'): {
                             Any(): {
-                                'kbps': int,
-                                },
+                                'kbps': int}},
                         Optional('police'): {
                             Optional('rate_pps'): int,
                             Optional('rate'): int,
