@@ -1213,3 +1213,60 @@ class ShowVlanBrief(ShowVlanBriefSchema):
                 continue   
 
         return ret_dict
+
+# =================================================
+# Parser for 'show vlan internal usage' command
+#Author: Mehdi Cherifi
+#Twitter: https://twitter.com/LocketKeepsake
+#Github: https://github.com/cherifimehdi
+# =================================================
+
+class ShowVlanInternalUsageSchema(MetaParser):
+    """Schema for: show vlan internal usage"""
+
+    schema = {
+        'internal_vlan': {
+            Any(): {
+                        'usage': str,
+            },
+        }
+    }
+
+class ShowVlanInternalUsage(ShowVlanInternalUsageSchema):
+    """Parser for: show vlan internal usage"""
+
+    cli_command = 'show vlan internal usage'
+
+    def cli(self, output=None):
+
+        if output is None:
+
+            out = self.device.execute(self.cli_command)
+
+        else:
+
+            out = output
+
+
+    #VLAN Usage
+    #---- --------------------
+    #1006 GigabitEthernet0/0
+    #1007 GigabitEthernet0/1
+    #1008 GigabitEthernet0/2
+
+        #pattern to capture 'VLAN' and 'Usage'
+        p0 = re.compile(r'^(?P<VLAN>[0-9]+)\s+(?P<Usage>.+)$')
+        parsed_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p0.match(line)
+            if m:
+                internal_vlan_dict = parsed_dict.setdefault('internal_vlan', {})
+                usage = m.groupdict()['Usage']
+                vlan = m.groupdict()['VLAN']
+                internal_vlan_dict[vlan] = {}
+                internal_vlan_dict[vlan]['usage'] = usage
+                continue
+        return parsed_dict
