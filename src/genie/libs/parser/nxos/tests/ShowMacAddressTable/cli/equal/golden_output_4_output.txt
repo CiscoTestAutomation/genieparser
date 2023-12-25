@@ -1,0 +1,11 @@
+Legend:
+        * - primary entry, G - Gateway MAC, (R) - Routed MAC, O - Overlay MAC
+        age - seconds since last seen,+ - primary entry using vPC Peer-Link,
+        (T) - True, (F) - False, C - ControlPlane MAC, ~ - vsan
+---------+-----------------+--------+---------+------+----+------------------
+*   10     0000.0c07.ac0a   dynamic  0         F      F    Po4
+*  191     b4de.31f2.4a10   dynamic  0         F      F    Eth1/20
+*  392     40ce.2423.1f0b   dynamic  0         F      F    Po100
+G   43     0000.0c9f.f02b   static   -         F      F    Vlan43(R)
+* 3156     0000.0c9f.fc54   static   -         F      F    Drop(R)
+G 3156     a023.9f38.f6bf   static   -         F      F    SVI_DOWN_FLOOD(R)

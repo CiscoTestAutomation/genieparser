@@ -85,11 +85,12 @@ class ShowMacAddressTableBase(ShowMacAddressTableBaseSchema):
         # 4000     5e00.c0ff.0007   static   ~~~         F      F    sup-eth1(R)
         # +  390     000f.53ff.1f1d   dynamic  0         F      F    Po125
         # 100 0000.0000.1112 dynamic NA F F Po100
+        # * 3156     0000.0c9f.fc54   static   -         F      F    Drop(R)
         p1 = re.compile(r'^(?P<entry>[\w\*\+] )?\s*(?P<vlan>All|[\d\-]+) '
             '+(?P<mac_address>[0-9a-z\.\:]+) +(?P<mac_type>[a-z]+) '
             '+(?P<age>[0-9\-\~]+|NA) '
             '+(?P<secure>[A-Z]+) +(?P<ntfy>[A-Z]+) '
-            '+(?P<drop>(drop|Drop))?'
+            '+(?P<drop>(drop|Drop\(R\)|Drop))?'
             '(?P<ports>[a-zA-Z0-9\/\.\(\)\-\s]+)?$')
 
         for line in out.splitlines():
@@ -122,11 +123,11 @@ class ShowMacAddressTableBase(ShowMacAddressTableBaseSchema):
                 secure = str(group['secure'])
                 ntfy = str(group['ntfy'])
                 intf_dict.update({'mac_type': str(group['mac_type'])})
-                intf_dict.update({'age': str(group['age'])})                
+                intf_dict.update({'age': str(group['age'])})
                 mac_dict.update({'secure': str(group['secure'])})
                 mac_dict.update({'ntfy': str(group['ntfy'])})
                 continue
-                
+
         return ret_dict
 
 
@@ -150,7 +151,7 @@ class ShowMacAddressTableVni(ShowMacAddressTableBase, ShowMacAddressTableBaseSch
             out = self.device.execute(cmd)
         else:
             out = output
-            
+
         # C 1001     0000.04ff.b1b1   dynamic  0         F      F    nve1(10.9.0.101)
         # * 1001     00f1.00ff.0000   dynamic  0         F      F    Eth1/11
         # get return dictionary
