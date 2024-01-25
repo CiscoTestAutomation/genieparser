@@ -29,7 +29,7 @@ from netaddr import IPAddress, IPNetwork
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional
+from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional, ListOf
 
 
 # ==================================================
@@ -5649,14 +5649,21 @@ class ShowOspfNeighborSchema(MetaParser):
         'vrfs': {
             Any(): {
                 'neighbors': {
-                    Optional(Any()): {  # neighbor_id
+                    Optional(Any()): Or({ # neighbor_id
                         'priority': str,
                         'state': str,
                         'dead_time': str,
                         'address': str,
                         'interface': str,
                         Optional('up_time'): str
-                    }
+                    }, ListOf({
+                        'priority': str,
+                        'state': str,
+                        'dead_time': str,
+                        'address': str,
+                        'interface': str,
+                        Optional('up_time'): str
+                    }))
                 },
                 Optional('total_neighbor_count'): int
             }
@@ -5777,11 +5784,23 @@ class ShowOspfNeighbor(ShowOspfNeighborSchema):
 
                 neighbor_dict = neighbors_dict.setdefault(neighbor_id, {})
 
-                neighbor_dict['priority'] = priority
-                neighbor_dict['state'] = state
-                neighbor_dict['dead_time'] = dead_time
-                neighbor_dict['address'] = address
-                neighbor_dict['interface'] = interface
+                if neighbor_dict:
+                    if not isinstance(neighbors_dict[neighbor_id], list):
+                        neighbors_dict[neighbor_id] = [neighbor_dict]
+
+                    neighbors_dict[neighbor_id].append({
+                        'priority': priority,
+                        'state': state,
+                        'dead_time': dead_time,
+                        'address': address,
+                        'interface': interface
+                    })
+                else:
+                    neighbor_dict['priority'] = priority
+                    neighbor_dict['state'] = state
+                    neighbor_dict['dead_time'] = dead_time
+                    neighbor_dict['address'] = address
+                    neighbor_dict['interface'] = interface
 
                 continue
 
@@ -5789,8 +5808,11 @@ class ShowOspfNeighbor(ShowOspfNeighborSchema):
             m = p3.match(line)
             if m:
                 up_time = m.groupdict()['up_time']
-                neighbor_dict['up_time'] = up_time
 
+                if not isinstance(neighbors_dict[neighbor_id], list):
+                    neighbor_dict['up_time'] = up_time
+                else:
+                    neighbors_dict[neighbor_id][-1]['up_time'] = up_time
                 continue
 
             # Total neighbor count: 2

@@ -115,8 +115,8 @@ class ShowVersion(ShowVersionSchema):
         ios_os_version_platform_pattern = re.compile(r'^(?!.*XE Software.*)(Cisco IOS Software|IOS \(\S+\))(?: \[.*\])?,?\s*(?P<alternate_platform>.+)?\s+Software \((?P<platform>[^\-]+).*\),(?: Experimental)? Version (?P<version>[\w\.\:\(\)]+),?.*$')
 
         # Cisco CISCO1941/K9 (revision 1.0) with 491520K/32768K bytes of memory.
-        ios_pid_pattern = re.compile(r'^[Cc]isco (?P<pid>\S+) \(.*\).* with \S+ bytes of(?: physical)? memory.$')
-
+        # cisco CW9164I-ROW ARMv8 Processor rev 4 (v8l) with 1780316/936396K bytes of memo
+        ios_pid_pattern = re.compile(r'^[Cc]isco (?P<pid>\S+) .*? with \S+ bytes of(?: physical)? mem.*$')
 
         # ********************************************
         # *                  JUNOS                   *
@@ -150,8 +150,14 @@ class ShowVersion(ShowVersionSchema):
         # ********************************************
 
         # 15.3.3
-        viptella_os_pattern = re.compile(r'^(?P<version>\d+(?:\.\d+)?(?:\.\d+)?)$')
+        viptella_os_pattern = re.compile(r'^(?P<version>[\d+\.]+)$')
 
+        # ********************************************
+        # *                 Wireless                 *
+        # ********************************************
+
+        # AP Running Image : 17.12.0.78
+        wireless_ap_pattern = re.compile(r'^AP Running Image\s*:\s*(?P<version>[\d+.]+)$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -365,6 +371,18 @@ class ShowVersion(ShowVersionSchema):
             m = viptella_os_pattern.match(line)
             if m:
                 ret_dict['os'] = 'viptella'
+                ret_dict['version'] = m.groupdict()['version']
+                continue
+
+            # ********************************************
+            # *                 Wireless                 *
+            # ********************************************
+
+            # AP Running Image     : 17.14.0.21
+            m = wireless_ap_pattern.match(line)
+            if m:
+                ret_dict['os'] = 'cheetah'
+                ret_dict['platform'] = 'ap'
                 ret_dict['version'] = m.groupdict()['version']
                 continue
 

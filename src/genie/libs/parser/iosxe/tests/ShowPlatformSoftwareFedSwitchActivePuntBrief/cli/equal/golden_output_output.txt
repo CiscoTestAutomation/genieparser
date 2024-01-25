@@ -1,0 +1,9 @@
+Statistics for all causes
+
+Cause  Cause Info                      Rcvd                 Dropped
+------------------------------------------------------------------------------
+0      Reserved                        0                    1
+7      ARP request or response         201                  0
+55     For-us control                  685                  0
+96     Layer2 control protocols        930                  0
+------------------------------------------------------------------------------

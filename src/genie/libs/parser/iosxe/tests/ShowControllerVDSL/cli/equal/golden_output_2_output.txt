@@ -1,0 +1,73 @@
+Controller VDSL 0/2/0 is UP
+
+Daemon Status:		UP 
+
+			XTU-R (DS)		XTU-C (US)
+Chip Vendor ID:		'BDCM'			 'BDCM'
+Chip Vendor Specific:   0x0000			 0xA41B
+Chip Vendor Country:    0xB500			 0xB500
+Modem Vendor ID:	'CSCO'			 '    '
+Modem Vendor Specific:  0x4602			 0x0000
+Modem Vendor Country:   0xB500			 0x0000
+Serial Number Near:     FGL21319250 C1113-8P 17.14.2023
+Serial Number Far:      
+Modem Version Near:     17.14.20231113:01251
+Modem Version Far:      0xa41b
+
+Modem Status:		TC Sync (Showtime!) 
+DSL Config Mode:	AUTO 
+Trained Mode:		G.993.2 (VDSL2) Profile 17a
+
+TC Mode:		PTM 
+Selftest Result:	0x00 
+DELT configuration:	disabled 
+DELT state:		not running 
+
+Failed full inits:	0
+Short inits:		0
+Failed short inits:	0
+
+Modem FW  Version:	4.16L.05
+Modem PHY Version:	A2pvfbH043j.d26u
+Modem PHY Source:	System
+
+Line 0:
+
+			XTU-R (DS)		XTU-C (US)
+Trellis:		 ON			 ON
+SRA: 			 enabled		 enabled
+SRA count: 		 0			 0
+Bit swap: 		 enabled		 enabled
+Bit swap count:		 0			 0
+Line Attenuation:	  0.9 dB		  0.0 dB
+Signal Attenuation:	  0.0 dB		  0.0 dB
+Noise Margin:		 20.0 dB		 6.8 dB
+Attainable Rate:	154476 kbits/s		 61662 kbits/s
+Actual Power:		14.5 dBm		- 4.3 dBm
+Per Band Status:       	D1 	D2 	D3 	U0 	U1 	U2 	U3
+Line Attenuation(dB):   0.3	0.8	1.5	N/A	0.5	0.6	N/A	
+Signal Attenuation(dB): 0.3	0.8	1.5	N/A	0.0	0.0	N/A	
+Noise Margin(dB):       20.0	20.0	19.9	N/A	6.8	6.8	N/A	
+Total FECC:		518			 0
+Total ES:		0			 0
+Total SES:		0			 0
+Total LOSS:		0			 0
+Total UAS:		0			 0
+Total LPRS:		0			 0
+Total LOFS:		0			 0
+Total LOLS:		0			 0
+
+
+ 		  DS Channel1	  DS Channel0	US Channel1	  US Channel0
+Speed (kbps):		  NA	      100014		NA	       60015
+SRA Previous Speed:	  NA	           0		NA	           0
+Previous Speed:		  NA	           0		NA	           0
+Reed-Solomon EC:	  NA	         518		NA	           0
+CRC Errors:		  NA	           0		NA	           0
+Header Errors:		  NA	           0		NA	           0
+Interleave (ms):	  NA	        7.00		NA	        0.00
+Actual INP:		  NA	        1.01		NA	        0.00
+
+Training Log :	Stopped
+Training Log Filename :	flash:vdsllog.bin
+

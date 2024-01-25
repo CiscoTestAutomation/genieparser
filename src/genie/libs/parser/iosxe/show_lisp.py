@@ -9712,7 +9712,7 @@ class ShowLispEthernetMapCachePrefixSchema(MetaParser):
                                 "expiry_time": str,
                                 "via": str,
                                 "map_reply_state": str,
-                                "prefix_location": str,
+                                Optional("prefix_location"): str,
                                 "source_type": str,
                                 "last_modified": str,
                                 "source_ip": str,
@@ -9741,11 +9741,11 @@ class ShowLispEthernetMapCachePrefixSchema(MetaParser):
                                             "time": str,
                                             "rtt": int,
                                             "rtt_unit": str,
-                                        },
+                                        }
                                     }
-                                },
+                                }
                             }
-                        },
+                        }
                     }
                 }
             }
@@ -9820,7 +9820,10 @@ class ShowLispEthernetMapCachePrefix(ShowLispEthernetMapCachePrefixSchema):
                         r'\s(?P<entries>\d+)\sentries$')
 
         # 0017.0100.0001/48, uptime: 01:09:06, expires: 22:50:53, via map-reply, complete, local-to-site
-        p3 = re.compile(r'^(?P<eid_prefix>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\/\d{1,2})|([a-fA-F\d\:]+\/\d{1,3})|(([a-fA-F\d]{4}\.){2}[a-fA-F\d]{4}\/\d{1,2})),\suptime:\s(?P<uptime>\S+),\sexpires:\s(?P<expiry_time>\S+),\s+via\s(?P<via>\S+),\s(?P<map_reply_state>\S+),\s(?P<prefix_location>\S+)$')
+	# aabb.cc00.ca00/48, uptime: 00:00:08, expires: 23:59:51, via map-reply, complete
+        p3 = re.compile(r'^(?P<eid_prefix>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\/\d{1,2})|([a-fA-F\d\:]+\/\d{1,3})|'
+                        r'(([a-fA-F\d]{4}\.){2}[a-fA-F\d]{4}\/\d{1,2})),\suptime:\s(?P<uptime>\S+),\sexpires:\s(?P<expiry_time>\S+),'
+                        r'\s+via\s(?P<via>\S+),\s(?P<map_reply_state>\S+)(,\s(?P<prefix_location>\S+))?$')
 
         # Sources: map-reply
         p4 = re.compile(r'^Sources:\s(?P<source_type>\S+)$')

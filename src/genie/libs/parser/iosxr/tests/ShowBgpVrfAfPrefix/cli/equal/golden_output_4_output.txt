@@ -1,0 +1,29 @@
+show bgp vpnv4 unicast vrf SR_L3VPN_BE 192.85.1.0/24
+Mon Nov 27 12:45:41.106 UTC
+BGP routing table entry for 192.85.1.0/24, Route Distinguisher: 10.0.0.1:100
+Versions:
+  Process           bRIB/RIB  SendTblVer
+  Speaker                  16           16
+    Local Label: 24023
+Last Modified: Nov 25 09:12:20.372 for 2d03h
+Paths: (2 available, best #2)
+  Advertised to update-groups (with more than one peer):
+    0.2 
+  Path #1: Received by speaker 0
+  Not advertised to any peer
+  65535
+    10.0.0.2 (metric 10) from 10.0.0.11 (10.0.0.2)
+      Received Label 24022 
+      Origin incomplete, metric 0, localpref 100, valid, internal, backup, add-path, import-candidate, imported
+      Received Path ID 1, Local Path ID 2, version 16
+      Extended community: SoO:100:1 RT:100:1 
+      Originator: 10.0.0.2, Cluster list: 10.0.0.11
+      Source AFI: VPNv4 Unicast, Source VRF: default, Source Route Distinguisher: 10.0.0.2:100
+  Path #2: Received by speaker 0
+  Advertised to update-groups (with more than one peer):
+    0.2 
+  65535
+    192.168.111.2 from 192.168.111.2 (5.5.5.5)
+      Origin incomplete, metric 0, localpref 100, valid, external, best, group-best, import-candidate
+      Received Path ID 0, Local Path ID 1, version 9
+      Extended community: SoO:100:1 RT:100:1 

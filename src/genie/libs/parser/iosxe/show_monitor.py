@@ -121,7 +121,8 @@ class ShowMonitor(ShowMonitorSchema):
         p7 = re.compile(r'^Filter +Access-Group: +(?P<filter_access_group>(\d+))$')
 
         # Destination Ports      : Gi0/1/6 Gi0/1/2
-        p8 = re.compile(r'^Destination +Ports +: +(?P<destination_ports>([a-zA-Z0-9\/\s]+))$')
+        # Destination Ports        : Po24,Po26,Po28,Po30,Po32,Po34,Po36,Po38,Po40,Po46-50
+        p8 = re.compile(r'^Destination +Ports +: +(?P<destination_ports>([\w\/\s\-\,\.]+))$')
 
         # Destination IP Address : 172.18.197.254
         p9 = re.compile(r'^Destination +IP +Address +: +(?P<destination_ip_address>([0-9\.\:]+))$')

@@ -1,0 +1,4 @@
+interface vlan 200
+  vrf member TEST
+  ip address 10.1.1.1/30
+  fabric forwarding mode anycast-gateway

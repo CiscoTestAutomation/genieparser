@@ -141,6 +141,9 @@ import re
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any, ListOf, Optional
 
+# Libs
+from genie.libs.parser.utils.common import Common
+
 # =============================================
 # Schema for 'show l2route evpn mac ip detail'
 # =============================================
@@ -2630,6 +2633,125 @@ class ShowL2routeEvpnMulticastRoute(ShowL2routeEvpnMulticastRouteschema):
                     'source': group['source'],
                     'nexthops': group['next_hops'],
                 })
+                continue
+
+        return parser_dict
+
+
+# ==============================================
+# Schema for 'show l2route evpn es'
+# ==============================================
+class ShowL2routeEvpnEsschema(MetaParser):
+    """ Schema for show l2route evpn es
+                   show l2route evpn es esi <esi>
+                   show l2route evpn es origin-rtr <origin_rtr>
+                   show l2route evpn es origin-rtr <origin_rtr> esi <esi>
+                   show l2route evpn es producer <producer>
+                   show l2route evpn es producer <producer> esi <esi>
+                   show l2route evpn es producer <producer> origin-rtr <origin_rtr>
+                   show l2route evpn es producer <producer> origin-rtr <origin_rtr> esi <esi>
+
+    """
+
+    schema = {
+        'esi' : {
+            str : {
+                'orig_rtr' : {
+                    str : {
+                        'producer': str,
+                        'next_hop': str,
+                        'nfn_bitmap': str,
+                        Optional('l2vni_id'): int
+                    },
+                }
+            },
+        }
+    }
+
+
+
+# ==============================================
+# Parser for 'show l2route evpn es'
+# ==============================================
+class ShowL2routeEvpnEs(ShowL2routeEvpnEsschema):
+    """ Parser for show l2route evpn es
+                   show l2route evpn es esi <esi>
+                   show l2route evpn es origin-rtr <origin_rtr>
+                   show l2route evpn es origin-rtr <origin_rtr> esi <esi>                   
+                   show l2route evpn es producer <producer>
+                   show l2route evpn es producer <producer> esi <esi>
+                   show l2route evpn es producer <producer> origin-rtr <origin_rtr>
+                   show l2route evpn es producer <producer> origin-rtr <origin_rtr> esi <esi>
+
+    """
+
+    cli_command = [
+        'show l2route evpn es',
+        'show l2route evpn es esi {esi}',
+        'show l2route evpn es origin-rtr {origin_rtr}',
+        'show l2route evpn es origin-rtr {origin_rtr} esi {esi}',
+        'show l2route evpn es producer {producer}',
+        'show l2route evpn es producer {producer} origin-rtr {origin_rtr}',
+        'show l2route evpn es producer {producer} origin-rtr {origin_rtr} esi {esi}'                
+    ]
+
+    def cli(self, output=None, esi=None, origin_rtr=None, producer=None):
+        if not output:
+            if producer:
+                if origin_rtr:                    
+                    if esi:
+                        cli_cmd = self.cli_command[6].format(
+                                producer=producer, origin_rtr=origin_rtr,
+                                esi=esi)
+                    else:
+                        cli_cmd = self.cli_command[5].format(
+                                producer=producer, origin_rtr=origin_rtr)
+                else:
+                    cli_cmd = self.cli_command[4].format(
+                            producer=producer)
+            elif origin_rtr:
+                if esi:
+                    cli_cmd = self.cli_command[3].format(
+                            origin_rtr=origin_rtr, esi=esi)
+                else:
+                    cli_cmd = self.cli_command[2].format(
+                            origin_rtr=origin_rtr)
+            elif esi:
+                cli_cmd = self.cli_command[1].format(
+                        esi=esi)
+            else:
+                cli_cmd = self.cli_command[0]
+            cli_output = self.device.execute(cli_cmd)
+        else:
+            cli_output = output
+
+        #                     ESI   Orig Router IP  Prod    Next Hop(s)         NFN Bitmap
+        #0034.3434.3434.3434.3434   10.0.0.13       BGP     V:0 10.0.0.13          0
+        #01F4.BD9E.EBB1.8000.0600   10.0.0.14       L2VPN             Po6          0
+        
+        p1 = re.compile(r'^(?P<esi>[0-9a-fA-F\.]+)\s+(?P<orig_rtr>[0-9a-fA-F.:]+)\s+(?P<producer>\w+)\s+'
+                        r'(?P<l2vni_id>V:\d+)?\s+(?P<next_hop>([0-9a-fA-F.:]+)|([\w\/\.\-\:]+))\s+(?P<nfn_bitmap>[0-9a-fA-F]+)$')
+
+        parser_dict = {}
+        for line in cli_output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                esi_dict = parser_dict.setdefault('esi',{})
+                esis = esi_dict.setdefault(group['esi'],{})
+                orig_rtr_dict = esis.setdefault('orig_rtr',{})
+                orig_rtrs = orig_rtr_dict.setdefault(group['orig_rtr'],{})
+                orig_rtrs.update({
+                    'producer': group['producer'],
+                    'next_hop': Common.convert_intf_name(intf=group['next_hop']),
+                    'nfn_bitmap': group['nfn_bitmap']
+                })
+                if group['l2vni_id'] is not None:
+                    orig_rtrs.update({'l2vni_id': int(group['l2vni_id'].split(':')[1])})
                 continue
 
         return parser_dict

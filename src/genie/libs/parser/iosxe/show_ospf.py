@@ -11846,3 +11846,188 @@ class ShowIpv6OspfNeighborDetail(ShowIpv6OspfNeighborDetailSchema):
                 sub_dict['retransmission_time_maximum'] = int(m.groupdict()['retransmission_time_maximum'])
 
         return ret_dict
+
+# ===========================================================
+# Schema for:
+#   * 'show ip ospf {process_id} rib {route}'
+# =================================================================
+ 
+class ShowIpOspfRibRouteSchema(MetaParser):
+ 
+    ''' Schema for:
+        * 'show ip ospf {process_id} rib {route}'
+    '''
+
+    schema = {
+        'vrf':{
+            Any():{
+                'instance':{
+                    Any():{
+                        Optional('network'):{
+                        Any(): {
+                            'route_type': str,
+                            'cost': int,
+                            'area': str,
+                            'total_paths': int,
+                            'nexthop_ip':
+                                {Any():
+                                    {'interface':
+                                        {Any():
+                                            {Optional('label'): int,
+                                            Optional('strict_label'): int,
+                                            Optional('cost'): int,
+                                            'flags': list,
+                                            Optional('repair'):
+                                                {'nexthop_ip': str,
+                                                 'interface': str,
+                                                 Optional('label'): int,
+                                                 Optional('strict_label'): int,
+                                                 'cost': int,
+                                                 'flags': list,
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+# ================================================================
+# Parser for:
+#   * 'show ip ospf {process_id} rib {route}'
+# ================================================================
+
+class ShowIpOspfRibRoute(ShowIpOspfRibRouteSchema):
+ 
+    ''' Parser for:
+        * "show ip ospf rib {route}"
+        * "show ip ospf {process_id} rib {route}"
+    '''
+ 
+    cli_command = ['show ip ospf rib {route}', 'show ip ospf {process_id} rib {route}']
+ 
+    def cli(self, process_id=None, route=None, output=None):
+ 
+        if not output:
+            if process_id:
+                output = self.device.execute(self.cli_command[1].format(process_id=process_id, route=route))
+            else:
+                output = self.device.execute(self.cli_command[0].format(route=route))
+        # OSPF Router with ID (10.36.3.3) (Process ID 1)
+        # OSPF Router with ID (20.3.5.6) (Process ID 2, VRF VRF1)
+        p0 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>(\S+))\) +\(Process +ID +(?P<instance>(\d+))'
+                        r'(?:, +VRF +(?P<vrf>(\S+)))?\)$')
+  
+        # 20.20.20.0/24, Intra, cost 10, area 0
+        p1 = re.compile(r'^\*\>?\s+(?P<network>\S+),\s+(?P<route_type>\S+),\s+cost\s+(?P<cost>\d+),\s+area\s+(?P<area>\d+)*$')
+        
+        # via 40.60.1.40, Ethernet0/2
+        # via 40.60.1.40, Ethernet0/2, label 16001, strict label 17001
+        # via 40.60.1.40, Ethernet0/2, label 16001, strict label 17001, cost 100
+        # via Null0
+        p2 = re.compile(r'via ((?P<nexthop_ip>\S+),)?\s*(?P<interface>[A-Za-z0-9./-]+)(,\s+label\s+(?P<label>\d+))?(,\s+strict\s+label\s+(?P<strict_label>\d+))?(,\s+cost\s+(?P<cost>\d+))?')
+
+        # Flags: RIB, MFI
+        p3 = re.compile(r'Flags: (?P<flags>[\S\s]+)')
+        
+        # repair path via 40.60.1.40, Ethernet0/2, label 16001, strict label 17001, cost 100
+        p4 = re.compile(r'.*repair path via (?P<nexthop_ip>\S+),\s*(?P<interface>[A-Za-z0-9./-]+)(,\s+label\s+(?P<label>\d+))?(,\s+strict\s+label\s+(?P<strict_label>\d+))?(,\s+cost\s+(?P<cost>\d+))?')
+
+        # initial variables
+        ret_dict = {}
+        network_dict = {}
+        af = 'ipv4' # this is ospf - always ipv4
+        vrf = '' # default vrf
+        primary_path = False
+        repair_path = False
+
+        for line in output.splitlines():
+            line = line.strip()
+            # OSPF Router with ID (10.36.3.3) (Process ID 1)
+            # OSPF Router with ID (20.3.5.6) (Process ID 2, VRF VRF1)
+            m = p0.match(line)
+            if m:
+                group = m.groupdict()
+                instance = str(group['instance'])
+                if group['vrf']:
+                    vrf = str(group['vrf'])
+                else:
+                    vrf = 'default'
+                ospf_dict = ret_dict.setdefault('vrf', {}).setdefault(vrf, {}).setdefault('instance', {}).setdefault(instance, {})
+                continue
+            # 20.20.20.0/24, Intra, cost 10, area 0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                network = group['network']
+                route_type = group['route_type']
+                cost = group['cost']
+                area = group['area']
+                network_dict = ospf_dict.setdefault('network', {}).setdefault(network, {})
+                network_dict['route_type'] = group['route_type']
+                network_dict['cost'] = int(group['cost'])
+                network_dict['area'] = group['area']
+                network_dict.update(total_paths = 0)
+                continue
+            #  via 40.60.1.40, Ethernet0/2, label 16001, strict label 17001, cost 100
+            m = p2.match(line)
+            if m:
+                primary_path = True
+                repair_path = False
+                group = m.groupdict()
+                nexthop_ip  = group['nexthop_ip']
+                interface   = group['interface']
+                label        = group['label']
+                strict_label = group['strict_label']
+                cost        = group['cost']
+                if nexthop_ip is None:
+                    nexthop_ip = 'None'
+                nexthop_ip_dict = network_dict.setdefault('nexthop_ip', {}).setdefault(nexthop_ip, {})
+                interface_dict = nexthop_ip_dict.setdefault('interface', {}).setdefault(interface, {})
+                if (label):
+                    interface_dict['label'] = int(label)
+                if (strict_label):
+                    interface_dict['strict_label'] = int(strict_label)
+                if (cost):
+                    interface_dict['cost'] = int(cost)
+                network_dict['total_paths'] = network_dict['total_paths'] + 1
+                continue
+            # Flags: RIB, MFI
+            m = p3.match(line)
+            if m:
+                if (primary_path):
+                    group = m.groupdict()
+                    flags = group['flags']
+                    interface_dict['flags'] = flags.replace(" ", "").split(",")
+                elif (repair_path):
+                    group = m.groupdict()
+                    flags = group['flags']
+                    repair_dict['flags'] = flags.replace(" ", "").split(",")
+                continue
+            # repair path via 40.60.1.40, Ethernet0/2, label 16001, strict label 17001, cost 100
+            m = p4.match(line)
+            if m:
+                repair_path = True
+                primary_path = False
+                group = m.groupdict()
+                nexthop_ip  = group['nexthop_ip']
+                interface   = group['interface']
+                label        = group['label']
+                strict_label = group['strict_label']
+                cost        = group['cost']
+                repair_dict = interface_dict.setdefault('repair', {})
+                repair_dict['nexthop_ip'] = nexthop_ip
+                repair_dict['interface'] = interface
+                if (label):
+                    repair_dict['label'] = int(label)
+                if (strict_label):
+                    repair_dict['strict_label'] = int(strict_label)
+                if (cost):
+                    repair_dict['cost'] = int(cost)
+                continue
+
+        return ret_dict

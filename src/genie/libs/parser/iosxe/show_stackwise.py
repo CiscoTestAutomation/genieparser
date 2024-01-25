@@ -232,7 +232,7 @@ class ShowStackwiseVirtualDualActiveDetectionPagp(ShowStackwiseVirtualDualActive
                 continue
             match9 = p9.match(line)
             if match9:
-                pagp_dad_obj['channel_group'] = {}
+                pagp_dad_obj.setdefault('channel_group', {})
                 channel_group = int(match9.group("channel_group"))
                 pagp_dad_obj['channel_group'][channel_group] = {}
                 pagp_dad_obj['channel_group'][channel_group]['port'] = {}

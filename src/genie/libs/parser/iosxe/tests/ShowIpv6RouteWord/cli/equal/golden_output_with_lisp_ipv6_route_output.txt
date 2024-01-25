@@ -1,0 +1,8 @@
+Routing entry for ::/0
+  Known via "lisp", distance 254, metric 1
+  Tag 2, type LISP destinations-summary
+  Route count is 1/1, share count 0
+  Routing paths:
+    directly connected via LISP0
+      Route metric is 1, traffic share count is 1
+      Last updated 00:00:03 ago
