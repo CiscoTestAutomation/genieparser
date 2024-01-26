@@ -1,0 +1,4 @@
+Interface Port-channel2:
+    CTS is disabled.
+
+    L3 IPM:   disabled.
