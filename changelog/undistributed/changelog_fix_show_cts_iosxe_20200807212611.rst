@@ -11,3 +11,4 @@
         * Added conditional to cts_dict so mode key is not generated if cts is disabled
     * Modified golden_output2_expected test data
         * Added expected output for Port-channel interfaces
+    * Added golden_output4 test data & expected results
