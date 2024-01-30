@@ -1,6 +1,6 @@
 expected_output={
     'interfaces': {
-        'port-channel2': {
+        'Port-channel2': {
             'cts': {
                 'cts_status': 'disabled'
             },
