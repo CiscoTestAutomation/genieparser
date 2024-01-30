@@ -87,39 +87,3 @@ Interface TenGigabitEthernet2/0/13:
         port auth fail:             0
 
     L3 IPM:   disabled.
-
-
-Interface Port-channel2:
-    CTS is disabled.
-
-    L3 IPM:   disabled.
-
-
-Interface Port-channel20:
-    CTS is disabled.
-
-    L3 IPM:   disabled.
-
-
-Interface Port-channel22:
-    CTS is disabled.
-
-    L3 IPM:   disabled.
-
-
-Interface Port-channel47:
-    CTS is disabled.
-
-    L3 IPM:   disabled.
-
-
-Interface Port-channel58:
-    CTS is disabled.
-
-    L3 IPM:   disabled.
-
-
-Interface Port-channel69:
-    CTS is disabled.
-
-    L3 IPM:   disabled.
