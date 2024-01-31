@@ -22,6 +22,11 @@ expected_output = {
                                     "hw_total":0,
                                     "hw_rpf_failed":0,
                                     "hw_other_drops":0,
+                                    "incoming_interfaces": {
+                                        "Port-channel101": {
+                                            "ingress_flags": "A"
+                                        }
+                                    },
                                     "outgoing_interfaces":{
                                         "L2LISP0.699":{
                                             "egress_flags":"F NS",

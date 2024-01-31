@@ -3831,6 +3831,12 @@ class ShowEnvironmentSuperParser(ShowEnvironmentSchema):
         # ---------------------------------------------------
         # 1     1 35840     OK
         p1_2 = re.compile(r'^(?P<switch>\d+)\s+(?P<fan>\d+)\s+(?P<speed>\d+)\s+(?P<state>\w+)$')
+
+        # Switch	 FAN	 Speed	 State	 Airflow direction
+        # ---------------------------------------------------
+        # 2  	      1	      5600 	  OK	 Front to Back
+        p1_3 = re.compile(r'^(?P<switch>\d+)\s+(?P<fan>\d+)\s+(?P<speed>\d+)\s+(?P<state>\w+)\s+(?P<direction>[\w\s]+)$')
+
         # FAN PS-1 is NOT PRESENT
         # FAN PS-2 is OK
         p2 = re.compile(r'^FAN\s+PS\-(?P<ps>\d+)\s+is\s+(?P<state>[\w\s]+)$')
@@ -3946,6 +3952,21 @@ class ShowEnvironmentSuperParser(ShowEnvironmentSchema):
                 fan = group['fan']
                 root_dict = ret_dict.setdefault('switch', {}).setdefault(switch, {})
                 root_dict.setdefault('fan', {}).setdefault(fan, {}).setdefault('state', group['state'].lower())
+                continue
+
+            # Switch	 FAN	 Speed	 State	 Airflow direction
+            # ---------------------------------------------------
+            # 2  	      1	      5600 	  OK	 Front to Back
+            m = p1_3.match(line)
+            if m:
+                group = m.groupdict()
+                switch = group['switch']
+                fan = group['fan']
+                root_dict = ret_dict.setdefault('switch', {}).setdefault(switch, {})
+                fan_dict = root_dict.setdefault('fan', {}).setdefault(fan, {})
+                fan_dict['state'] = group['state'].lower()
+                fan_dict['speed'] = int(group['speed'])
+                fan_dict['direction'] = group['direction'].lower()
                 continue
 
             # FAN PS-1 is OK
@@ -4308,7 +4329,7 @@ class ShowModuleSchema(MetaParser):
                 'ports':int,
                 'card_type':str,
                 'model':str,
-                'serial':str,
+                Optional('serial'):str,
                 'mac_address':str,
                 'hw':str,
                 'fw':str,
@@ -4380,13 +4401,13 @@ class ShowModule(ShowModuleSchema):
         # ---+-----+--------------------------------------+--------------+--------------
         # 1   38   Cisco Catalyst 9500X-28C8D Switch           C9500X-28C8D     FDO25030SLN
 
-        p2=re.compile(r'^(?P<mod>\d+) *(?P<ports>\d+) +(?P<card_type>.*) +(?P<model>\S+) +(?P<serial>\S+)$')
+        p2=re.compile(r'^(?P<mod>\d+) +(?P<ports>\d+) +(?P<card_type>[\w\/()\-\+]+(?: [\w\/()\-\+]+)*) +(?P<model>\S+)(\s+)?(?P<serial>\S+)?$')
 
         # Mod MAC addresses                    Hw   Fw           Sw                 Status
         # ---+--------------------------------+----+------------+------------------+--------
         # 1   F87A.4125.1400 to F87A.4125.147D 0.2  17.7.0.41     BLD_POLARIS_DEV_LA ok
 
-        p3=re.compile(r'^(?P<mod>\d+) *(?P<mac_address>[\w\.]+) .*(?P<hw>\d+.?\d+?) +(?P<fw>\S+) +(?P<sw>\S+) +(?P<status>\S+)$')
+        p3=re.compile(r'^(?P<mod>\d+) +(?P<mac_address>([\w\.]+ +to +[\w\.]+)|unknown) +(?P<hw>\S+) +(?P<fw>\S+) +(?P<sw>\S+) +(?P<status>\S+)$')
 
         # Mod Redundancy Role     Operating Redundancy Mode Configured Redundancy Mode
         # ---+-------------------+-------------------------+---------------------------
@@ -4439,6 +4460,8 @@ class ShowModule(ShowModuleSchema):
                     switch_dict = s_dict.setdefault('module', {}).setdefault(int(switch), {})
                 else:
                     switch_dict = ret_dict.setdefault('module', {}).setdefault(int(switch), {})
+                if not group.get('serial'):
+                    group.pop('serial')
                 switch_dict.update({k: v.strip() for k, v in group.items()})
                 switch_dict['ports']=int(group['ports'])
                 continue
@@ -4675,6 +4698,29 @@ class ShowProcessesCpuSortedSchema(MetaParser):
                   show processes cpu sorted <1min|5min|5sec> | exclude <WORD>"""
 
     schema = {
+        Optional('core'): {
+            Any(): {
+                Optional('five_sec_cpu_interrupts'): int,
+                Optional('five_sec_cpu_total'): int,
+                Optional('one_min_cpu'): int,
+                Optional('five_min_cpu'): int,
+                Optional('zero_cpu_processes'): list,
+                Optional('nonzero_cpu_processes'): list,
+                Optional('sort'):{
+                    Any(): {
+                        'runtime': int,
+                        'invoked': int,
+                        'usecs': int,
+                        'five_sec_cpu': float,
+                        'one_min_cpu': float,
+                        'five_min_cpu': float,
+                        'tty': int,
+                        'pid': int,
+                        'process': str
+                    },
+                },
+            },
+        },
         Optional('five_sec_cpu_interrupts'): int,
         Optional('five_sec_cpu_total'): int,
         Optional('one_min_cpu'): int,
@@ -4746,27 +4792,39 @@ class ShowProcessesCpuSorted(ShowProcessesCpuSortedSchema):
         index = 0
 
         # initial regexp pattern
-        p1 = re.compile(r'^CPU +utilization +for +five +seconds: +'
-                        '(?P<five_sec_cpu_total>\d+)\%\/(?P<five_sec_cpu_interrupts>\d+)\%;'
-                        ' +one +minute: +(?P<one_min_cpu>\d+)\%;'
-                        ' +five +minutes: +(?P<five_min_cpu>\d+)\%$')
+        #Core 0 : CPU utilization for five seconds: 5%/1%; one minute: 6%; five minutes: 6%
+        p1 = re.compile(r'^(Core\s+(?P<core>[\w\s]+): +)?CPU +utilization +for +five +seconds: '
+                        r'+(?P<five_sec_cpu_total>\d+)\%(\/(?P<five_sec_cpu_interrupts>\d+)\%)?; +one +minute: '
+                        r'+(?P<one_min_cpu>\d+)\%; +five +minutes: +(?P<five_min_cpu>\d+)\%$')
 
-        p2 = re.compile(r'^(?P<pid>\d+) +(?P<runtime>\d+) +(?P<invoked>\d+) +(?P<usecs>\d+) +'
-                        '(?P<five_sec_cpu>[\d\.]+)\% +(?P<one_min_cpu>[\d\.]+)\% +'
-                        '(?P<five_min_cpu>[\d\.]+)\% +(?P<tty>\d+) +'
-                        '(?P<process>[\w\-\/\s]+)$')
+        #PID    Runtime(ms) Invoked  uSecs  5Sec     1Min     5Min     TTY   Process
+        # 5782   2045595     13521147 208    4.52     6.10     5.85     0     iosd
+        # 22     1520051     62763660 24     0.02     0.02     0.02     0     sirq-net-rx/1
+        p2 = re.compile(r'^(?P<pid>\d+) +(?P<runtime>\d+) +(?P<invoked>\d+) +(?P<usecs>\d+) +(?P<five_sec_cpu>[\d\.]+)(\%)? +'
+                        r'(?P<one_min_cpu>[\d\.]+)(\%)? +(?P<five_min_cpu>[\d\.]+)(\%)? +(?P<tty>\d+) +(?P<process>.+)$')
 
         for line in out.splitlines():
             line = line.strip()
 
             # CPU utilization for five seconds: 5%/1%; one minute: 6%; five minutes: 6%
+            #Core 0 : CPU utilization for five seconds: 5%/1%; one minute: 6%; five minutes: 6%
             m = p1.match(line)
             if m:
-                ret_dict.update({k: int(v) for k, v in m.groupdict().items()})
+                group = m.groupdict()
+                if group['core'] is None:
+                    ret_dict.update({k:int(v) for k, v in m.groupdict().items() if k != 'core'})
+                else:
+                    cpu_dict = ret_dict.setdefault('core', {}).setdefault(group['core'], {})
+                    cpu_dict.update({k:int(v) for k, v in m.groupdict().items() if v is not None and k != 'core'})
+
                 continue
 
             # PID Runtime(ms)     Invoked      uSecs   5Sec   1Min   5Min TTY Process
             # 539     6061647    89951558         67  0.31%  0.36%  0.38%   0 HSRP Common
+
+            # PID    Runtime(ms) Invoked  uSecs  5Sec     1Min     5Min     TTY   Process
+            # 5782   2045595     13521147 208    4.52     6.10     5.85     0     iosd
+            # 22     1520051     62763660 24     0.02     0.02     0.02     0     sirq-net-rx/1
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -4915,10 +4973,10 @@ class ShowEnvironmentSchema(MetaParser):
                         'state': str,
                         'reading': str,
                         Optional('threshold'): {
-                            'minor': int,
-                            'major': int,
-                            'critical': int,
-                            'shutdown': int,
+                            Optional('minor'): int,
+                            Optional('major'): int,
+                            Optional('critical'): int,
+                            Optional('shutdown'): int,
                             'celsius' : bool
                         },
                     },
@@ -4968,7 +5026,10 @@ class ShowEnvironment(ShowEnvironmentSchema):
         #  R0          3570MB2_0: VOU  Normal          1000 mV            na
         #  R0          Temp: Outlet_A  Normal          34   Celsius       (55 ,60 ,65 ,75 )(Celsius)
         #  R0          Temp: UADP_0_4  Normal          45   Celsius       (105,110,120,124)(Celsius)
-        p4 = re.compile(r'^(?P<slot>\S+) +(?P<sensor_name>.+?)\s+(?P<state>Normal|Fan +Speed +\d+%)\s+(?P<reading>\d+\s*\S+\s*?\S*?)(\s*?(?P<threshold>na|\([\d,\s]+\)(\(Celsius\))?))?$')
+
+        #R0 Temp: Inlet Critical 47 Celsius (na ,na ,47 ,na )(Celsius)
+        #R0 Temp: Internal Normal 47 Celsius (na ,na ,na ,na )(Celsius)
+        p4 = re.compile(r'^(?P<slot>\S+) +(?P<sensor_name>.+?)\s+(?P<state>Normal|Critical|Warning|Fan +Speed +\d+%)\s+(?P<reading>\d+\s*\S+\s*?\S*?)(\s*?(?P<threshold>na|\([\d|na,\s]+\)(\(Celsius\))?))?$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -5029,7 +5090,8 @@ class ShowEnvironment(ShowEnvironmentSchema):
 
                     threshold_names = ['minor', 'major','critical', 'shutdown']
                     for threshold_name, threshold_value in zip(threshold_names, threshold.strip('()').split(',')):
-                        threshold_dict[threshold_name] = int(threshold_value.strip())
+                        if 'na' not in threshold_value:
+                            threshold_dict[threshold_name] = int(threshold_value.strip())
 
 
         return ret_dict
@@ -8418,7 +8480,8 @@ class ShowPlatformTcamUtilizationSchema(MetaParser):
 class ShowPlatformTcamUtilization(ShowPlatformTcamUtilizationSchema):
     """Parser for show platform hardware fed sw active fwd-asic resource tcam utilization """
 
-    cli_command = ['show platform hardware fed {switch} {mode} fwd-asic resource tcam utilization', 'show platform hardware fed active fwd-asic resource tcam utilization']
+    cli_command = ['show platform hardware fed {switch} {mode} fwd-asic resource tcam utilization',
+                   'show platform hardware fed active fwd-asic resource tcam utilization']
 
     def cli(self, output=None, switch='', mode=None):
         if output is None:
@@ -19818,11 +19881,17 @@ class ShowPlatformSoftwareFedIgmpSnoopingSchema(MetaParser):
 class ShowPlatformSoftwareFedIgmpSnooping(ShowPlatformSoftwareFedIgmpSnoopingSchema):
     """Parser for show Platform Software Fed igmp snooping"""
 
-    cli_command = 'show platform software fed {state} ip igmp snooping vlan {vlan}'
+    cli_command = ['show platform software fed {switch_var} {state} ip igmp snooping vlan {vlan}',
+        'show platform software fed {state} ip igmp snooping vlan {vlan}']
 
-    def cli(self, state='', vlan='', output=None):
+    def cli(self, state='', vlan='', switch_var=None, output=None):
         if output is None:
-            output = self.device.execute(self.cli_command.format(state=state, vlan=vlan))
+            if switch_var:
+                cmd = self.cli_command[0].format(state=state, switch_var=switch_var, vlan=vlan)
+            else:
+                cmd = self.cli_command[1].format(state=state, vlan=vlan)
+            output = self.device.execute(cmd)
+
         platform_dict = {}
 
         # Vlan 20
@@ -19830,7 +19899,7 @@ class ShowPlatformSoftwareFedIgmpSnooping(ShowPlatformSoftwareFedIgmpSnoopingSch
         # IGMPSN Enabled : On
 
         # Vlan 20
-        p0 = re.compile(r'^Vlan\s+(?P<vlan>\d+)$')
+        p0 = re.compile(r'^Vlan\:?\s+(?P<vlan>\d+)$')
 
         # IGMPSN Enabled : On
         p1 = re.compile('^IGMPSN\s+Enabled\s+:\s+(?P<igmp_en>[\s\w\s]+)$')
@@ -19872,16 +19941,19 @@ class ShowPlatformSoftwareFedIgmpSnooping(ShowPlatformSoftwareFedIgmpSnoopingSch
         p13 = re.compile('L3mcast\\s+Adj\\s+:(?P<l3m_adj>.*)')
 
         # Mrouter PortQ :
-        p14 = re.compile('^Mrouter\s+PortQ\s+:\s*')
+        p14 = re.compile('^Mrouter\s+[P|p]ort[Q|s]\s+:\s*')
         # nve1.VNI60020(0x200000071)
         p14_1 = re.compile("([A-Za-z]*\d[-().]*){10,}")
 
+        # port:Port-channel100 (ec_member:HundredGigE2/5/0/2)
+        p14_2 = re.compile("^port:(?P<port>[\w\-\.]+)\s+\S+$")
+
         # Flood PortQ :
-        p15 = re.compile('^Flood PortQ\s+:\s*')
+        p15 = re.compile('^Flood [P|p]ort[Q|s]\s+:\s*')
         # TenGigabitEthernet7/0/13
         # FiveGigabitEthernet1/0/2
         # GigabitEthernet2/0/31
-        p15_1 = re.compile('^[A-Za-z]+[\d\/]+$')
+        p15_1 = re.compile('^[A-Za-z-]+[\d\/\.]+$')
 
         # REP RI handle : 0x0
         p16 = re.compile('^REP\s+RI\s+handle\s+:\s+(?P<rep_han>[\s\w\s]+)$')
@@ -19995,6 +20067,11 @@ class ShowPlatformSoftwareFedIgmpSnooping(ShowPlatformSoftwareFedIgmpSnoopingSch
                 elif floodport_flag == 1:
                     floodport_list.append(m.group(0))
 
+            # port:Port-channel100 (ec_member:HundredGigE2/5/0/2)
+            m = p14_2.match(line)
+            if m:
+                if mroute_port_flag == 1:
+                    mroute_list.append(m.groupdict()['port'].strip())
 
             # TenGigabitEthernet7/0/13
             # FiveGigabitEthernet1/0/2
@@ -23819,18 +23896,26 @@ class ShowPlatformSoftwareFedSwitchActiveVpSummaryVlanSchema(MetaParser):
 class ShowPlatformSoftwareFedSwitchActiveVpSummaryVlan(ShowPlatformSoftwareFedSwitchActiveVpSummaryVlanSchema):
     """Parser for show platform software fed switch active vp summary vlan <vlan>"""
 
-    cli_command = 'show platform software fed switch {switch} vp summary vlan {vlan}'
+    cli_command = ['show platform software fed {switch_var} {switch} vp summary vlan {vlan}',
+        'show platform software fed {switch} vp summary vlan {vlan}']
 
-    def cli(self, switch=None, vlan=None, output=None):
+    def cli(self, switch=None, vlan=None, switch_var=None, output=None):
         if output is None:
-            output = self.device.execute(self.cli_command.format(switch=switch,vlan=vlan))
+            if switch_var:
+                cmd = self.cli_command[0].format(switch=switch, switch_var=switch_var, vlan=vlan)
+            else:
+                cmd = self.cli_command[1].format(switch=switch, vlan=vlan)
+
+            output = self.device.execute(cmd, timeout=600)
+
 
         #               32          100         none            1  forwarding          No                No
-        p1 = re.compile(r"^\s+(?P<if_id>\d+)\s+(?P<vlan_id>\d+)\s+(?P<pvlan_mode>\w+)\s+(?P<pvlan_vlan>\d+)\s+(?P<stp_state>\w+)\s+(?P<vtp_pruned>\w+)\s+(?P<untagged>\w+)\s+$")
+        p1 = re.compile(r"^(?P<if_id>\d+)\s+(?P<vlan_id>\d+)\s+(?P<pvlan_mode>\w+)\s+(?P<pvlan_vlan>\d+)\s+(?P<stp_state>\w+)\s+(?P<vtp_pruned>\w+)\s+(?P<untagged>\w+)$")
 
         ret_dict = {}
 
         for line in output.splitlines():
+            line=line.strip()
 
             #               32          100         none            1  forwarding          No                No
             match_obj = p1.match(line)
@@ -25581,7 +25666,8 @@ class ShowPlatformSoftwareMonitorSession(ShowPlatformSoftwareMonitorSessionSchem
         p3 = re.compile(r"^Prev\s+type:\s+(?P<prev_type>[\w\s]+)$")
 
         # Ingress Src Ports: Fif2/0/2
-        p4 = re.compile(r"^Ingress\s+Src\s+Ports:\s+(?P<ingress_source_ports>\S+)$")
+        # Ingress Src Ports: Po23 Po25 Po27 Po29 Po31 Po33 Po35 Po37 Po39 Po41 Po42 Po43 Po44 Po45
+        p4 = re.compile(r"^Ingress\s+Src\s+Ports:\s+(?P<ingress_source_ports>.+)$")
 
         # Egress Src Ports: Fif2/0/4
         p5 = re.compile(r"^Egress\s+Src\s+Ports:\s+(?P<egress_source_ports>\S+)$")
@@ -35280,9 +35366,20 @@ class ShowPlatformSoftwareDistributedIpsecTunnelInfo(ShowPlatformSoftwareDistrib
                 list_index_dict['platform'] = match_dict['platform']
                 list_key_num += 1
                 continue
-        
-        return ret_dict
 
+            #|       INTERFACE |      IF_ID | SADB_ID | SW_NUM | ASIC |
+            #|       Tunnel201 | 0x00000216 |       1 |      1 |    0 |
+
+            m = p3.match(line)
+            if m:
+                match_dict = m.groupdict()
+                list_index_dict = ret_dict.setdefault('svti_tunnel',{}).setdefault(match_dict['tunnel_int'],{})
+                list_index_dict['asic_id'] = int(match_dict['asic_id'])
+                list_index_dict['switch_number'] = int(match_dict['switch_number'])
+                list_index_dict['if_id'] = match_dict['if_id']
+                list_index_dict['sbad_info'] = int(match_dict['sbad_info'])
+
+        return ret_dict
 
 # ======================================================
 # Parser for 'show platform software access-list {switch} {mode} FP {switch_var} og-lkup-ids'

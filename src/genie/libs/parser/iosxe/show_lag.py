@@ -1650,7 +1650,8 @@ class ShowEtherchannelProtocol(ShowEtherchannelProtocolSchema):
         p1 = re.compile(r"^Group:\s+(?P<group>\d+)$")
 
         # Protocol:   -  (Mode ON)
-        p1_1 = re.compile(r"^Protocol:\s+-\s+\(?(?P<protocol>[\w\s]+)\)?$")
+        # Protocol:  LACP
+        p1_1 = re.compile(r"^Protocol:\s+-?\s+\(?(?P<protocol>[\w\s]+)\)?$")
 
         ret_dict = {}
 

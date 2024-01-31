@@ -1,0 +1,24 @@
+show ipv6 mfib 2222::2 ff13::1
+Entry Flags:    C - Directly Connected, S - Signal, IA - Inherit A flag,
+                ET - Data Rate Exceeds Threshold, K - Keepalive
+                DDE - Data Driven Event, HW - Hardware Installed
+                ME - MoFRR ECMP entry, MNE - MoFRR Non-ECMP entry, MP - MFIB 
+                MoFRR Primary, RP - MRIB MoFRR Primary, P - MoFRR Primary
+                MS  - MoFRR  Entry in Sync, MC - MoFRR entry in MoFRR Client,
+                e   - Encap helper tunnel flag.
+I/O Item Flags: IC - Internal Copy, NP - Not platform switched,
+                NS - Negate Signalling, SP - Signal Present,
+                A - Accept, F - Forward, RA - MRIB Accept, RF - MRIB Forward,
+                MA - MFIB Accept, A2 - Accept backup,
+                RA2 - MRIB Accept backup, MA2 - MFIB Accept backup
+
+Forwarding Counts: Pkt Count/Pkts per second/Avg Pkt Size/Kbits per second
+Other counts:      Total/RPF failed/Other drops
+I/O Item Counts:   HW Pkt Count/FS Pkt Count/PS Pkt Count   Egress Rate in pps
+Default
+ (2222::2,FF13::1) Flags: HW
+   SW Forwarding: 1/0/134/0, Other: 0/0/0
+   HW Forwarding:   750/0/140/0, Other: 0/0/0
+   Null0 Flags: A
+   Port-channel5 Flags: F NS
+     Pkts: 0/0/0    Rate: 0 pps

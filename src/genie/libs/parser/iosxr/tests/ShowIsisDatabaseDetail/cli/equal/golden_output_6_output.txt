@@ -1,0 +1,105 @@
+show isis database detail
+Tue Dec  5 15:17:11.847 UTC
+
+IS-IS SRv6_Region (Level-2) Link State Database
+LSPID                 LSP Seq Num  LSP Checksum  LSP Holdtime/Rcvd  ATT/P/OL
+PE1A.00-00          * 0x00004d2f   0xa72b        502  /*            0/0/0
+  Area Address:   49.0510.0010
+  NLPID:          0x8e
+  MT:             IPv6 Unicast                                 0/0/0
+  IPv6 Address:   fc00:a000:1000::1
+  Hostname:       PE1A
+  Router Cap:     0.0.0.0 D:0 S:0
+  SRv6 Locator:   MT (IPv6 Unicast) fc00:c000:1001::/48 D:0 Metric: 0 Algorithm: 0
+  SRv6 Locator:   MT (IPv6 Unicast) fc00:c001:1001::/48 D:0 Metric: 0 Algorithm: 128
+  Metric: 10         MT (IPv6 Unicast) IS-Extended PE2A.00
+  Metric: 10         MT (IPv6 Unicast) IS-Extended P5A.00
+  Metric: 0          MT (IPv6 Unicast) IPv6 fc00:a000:1000::1/128
+  Metric: 10         MT (IPv6 Unicast) IPv6 fc00:b000::1:2:0/126
+  Metric: 10         MT (IPv6 Unicast) IPv6 fc00:b000::1:11:0/126
+  Metric: 1          MT (IPv6 Unicast) IPv6 fc00:c000:1001::/48
+PE2A.00-00            0x00004307   0x4aa4        473  /1200         0/0/0
+  Area Address:   49.0510.0010
+  NLPID:          0x8e
+  MT:             IPv6 Unicast                                 0/0/0
+  IPv6 Address:   fc00:a000:1000::2
+  Hostname:       PE2A
+  Router Cap:     0.0.0.0 D:0 S:0
+  SRv6 Locator:   MT (IPv6 Unicast) fc00:c000:1002::/48 D:0 Metric: 0 Algorithm: 0
+  SRv6 Locator:   MT (IPv6 Unicast) fc00:c001:1002::/48 D:0 Metric: 0 Algorithm: 128
+  Metric: 10         MT (IPv6 Unicast) IS-Extended PE1A.00
+  Metric: 10         MT (IPv6 Unicast) IS-Extended P6A.00
+  Metric: 0          MT (IPv6 Unicast) IPv6 fc00:a000:1000::2/128
+  Metric: 10         MT (IPv6 Unicast) IPv6 fc00:b000::1:2:0/126
+  Metric: 10         MT (IPv6 Unicast) IPv6 fc00:b000::2:12:0/126
+  Metric: 1          MT (IPv6 Unicast) IPv6 fc00:c000:1002::/48
+P5A.00-00             0x00001f75   0xa448        505  /1200         0/0/0
+  Area Address:   49.0510.0010
+  NLPID:          0x8e
+  MT:             IPv6 Unicast                                 0/0/0
+  IPv6 Address:   fc00:a000:1000::11
+  Hostname:       P5A
+  Router Cap:     0.0.0.0 D:0 S:0
+  SRv6 Locator:   MT (IPv6 Unicast) fc00:c000:1011::/48 D:0 Metric: 0 Algorithm: 0
+  SRv6 Locator:   MT (IPv6 Unicast) fc00:c000:2003::/48 D:1 Metric: 10 Algorithm: 0
+  SRv6 Locator:   MT (IPv6 Unicast) fc00:c000:2004::/48 D:1 Metric: 10 Algorithm: 0
+  SRv6 Locator:   MT (IPv6 Unicast) fc00:c000:2013::/48 D:1 Metric: 11 Algorithm: 0
+  SRv6 Locator:   MT (IPv6 Unicast) fc00:c000:2014::/48 D:1 Metric: 10 Algorithm: 0
+  SRv6 Locator:   MT (IPv6 Unicast) fc00:c001:1011::/48 D:0 Metric: 0 Algorithm: 128
+  SRv6 Locator:   MT (IPv6 Unicast) fc00:c001:2003::/48 D:1 Metric: 100 Algorithm: 128
+  SRv6 Locator:   MT (IPv6 Unicast) fc00:c001:2004::/48 D:1 Metric: 100 Algorithm: 128
+  SRv6 Locator:   MT (IPv6 Unicast) fc00:c001:2013::/48 D:1 Metric: 100 Algorithm: 128
+  SRv6 Locator:   MT (IPv6 Unicast) fc00:c001:2014::/48 D:1 Metric: 100 Algorithm: 128
+  Metric: 10         MT (IPv6 Unicast) IS-Extended PE1A.00
+  Metric: 10         MT (IPv6 Unicast) IS-Extended P6A.00
+  Metric: 0          MT (IPv6 Unicast) IPv6 fc00:a000:1000::11/128
+  Metric: 20         MT (IPv6 Unicast) IPv6-Ext-InAr fc00:a000:1000::15/128
+  Metric: 20         MT (IPv6 Unicast) IPv6-Ext-InAr fc00:a000:2000::3/128
+  Metric: 20         MT (IPv6 Unicast) IPv6-Ext-InAr fc00:a000:2000::4/128
+  Metric: 10         MT (IPv6 Unicast) IPv6 fc00:b000::1:11:0/126
+  Metric: 10         MT (IPv6 Unicast) IPv6 fc00:b000::11:12:4/126
+  Metric: 1          MT (IPv6 Unicast) IPv6 fc00:c000:1011::/48
+  Metric: 10         MT (IPv6 Unicast) IPv6-Ext-InAr fc00:a000:2000::13/128
+  Metric: 10         MT (IPv6 Unicast) IPv6-Ext-InAr fc00:a000:2000::14/128
+  Metric: 10         MT (IPv6 Unicast) IPv6-Ext-InAr fc00:c000:2003::/48
+  Metric: 10         MT (IPv6 Unicast) IPv6-Ext-InAr fc00:c000:2004::/48
+  Metric: 11         MT (IPv6 Unicast) IPv6-Ext-InAr fc00:c000:2013::/48
+  Metric: 10         MT (IPv6 Unicast) IPv6-Ext-InAr fc00:c000:2014::/48
+P6A.00-00             0x0000602e   0xb740        500  /1200         0/0/0
+  Area Address:   49.0510.0010
+  NLPID:          0x8e
+  MT:             IPv6 Unicast                                 0/0/0
+  IPv6 Address:   fc00:a000:1000::12
+  Hostname:       P6A
+  Router Cap:     0.0.0.0 D:0 S:0
+  SRv6 Locator:   MT (IPv6 Unicast) fc00:c000:1011::/48 D:1 Metric: 11 Algorithm: 0
+  SRv6 Locator:   MT (IPv6 Unicast) fc00:c000:1012::/48 D:0 Metric: 0 Algorithm: 0
+  SRv6 Locator:   MT (IPv6 Unicast) fc00:c000:2003::/48 D:1 Metric: 10 Algorithm: 0
+  SRv6 Locator:   MT (IPv6 Unicast) fc00:c000:2004::/48 D:1 Metric: 10 Algorithm: 0
+  SRv6 Locator:   MT (IPv6 Unicast) fc00:c000:2013::/48 D:1 Metric: 10 Algorithm: 0
+  SRv6 Locator:   MT (IPv6 Unicast) fc00:c000:2014::/48 D:1 Metric: 11 Algorithm: 0
+  SRv6 Locator:   MT (IPv6 Unicast) fc00:c001:1011::/48 D:1 Metric: 100 Algorithm: 128
+  SRv6 Locator:   MT (IPv6 Unicast) fc00:c001:1012::/48 D:0 Metric: 0 Algorithm: 128
+  SRv6 Locator:   MT (IPv6 Unicast) fc00:c001:2003::/48 D:1 Metric: 100 Algorithm: 128
+  SRv6 Locator:   MT (IPv6 Unicast) fc00:c001:2004::/48 D:1 Metric: 100 Algorithm: 128
+  SRv6 Locator:   MT (IPv6 Unicast) fc00:c001:2013::/48 D:1 Metric: 100 Algorithm: 128
+  SRv6 Locator:   MT (IPv6 Unicast) fc00:c001:2014::/48 D:1 Metric: 100 Algorithm: 128
+  Metric: 10         MT (IPv6 Unicast) IS-Extended PE2A.00
+  Metric: 10         MT (IPv6 Unicast) IS-Extended P5A.00
+  Metric: 0          MT (IPv6 Unicast) IPv6 fc00:a000:1000::12/128
+  Metric: 10         MT (IPv6 Unicast) IPv6-Ext-InAr fc00:a000:2000::3/128
+  Metric: 10         MT (IPv6 Unicast) IPv6-Ext-InAr fc00:a000:2000::4/128
+  Metric: 10         MT (IPv6 Unicast) IPv6-Ext-InAr fc00:a000:2000::13/128
+  Metric: 10         MT (IPv6 Unicast) IPv6 fc00:b000::2:12:0/126
+  Metric: 11         MT (IPv6 Unicast) IPv6-Ext-InAr fc00:c000:1011::/48
+  Metric: 1          MT (IPv6 Unicast) IPv6 fc00:c000:1012::/48
+  Metric: 10         MT (IPv6 Unicast) IPv6-Ext-InAr fc00:c000:2003::/48
+  Metric: 10         MT (IPv6 Unicast) IPv6-Ext-InAr fc00:c000:2004::/48
+  Metric: 10         MT (IPv6 Unicast) IPv6-Ext-InAr fc00:c000:2013::/48
+  Metric: 10         MT (IPv6 Unicast) IPv6-Ext-InAr fc00:a000:1000::11/128
+  Metric: 10         MT (IPv6 Unicast) IPv6-Ext-InAr fc00:a000:1000::15/128
+  Metric: 10         MT (IPv6 Unicast) IPv6-Ext-InAr fc00:a000:2000::14/128
+  Metric: 10         MT (IPv6 Unicast) IPv6 fc00:b000::11:12:4/126
+  Metric: 11         MT (IPv6 Unicast) IPv6-Ext-InAr fc00:c000:2014::/48
+
+ Total Level-2 LSP count: 4     Local Level-2 LSP count: 1

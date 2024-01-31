@@ -57,7 +57,7 @@ import xml.etree.ElementTree as ET
 # Metaparser
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Optional, Or, And,\
-                                         Default, Use
+                                         Default, Use, ListOf
 
 # Parser
 from genie.libs.parser.yang.bgp_openconfig_yang import BgpOpenconfigYang
@@ -285,7 +285,7 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
         p30 = re.compile(r'^\s*(?P<type>(Export|Import|EVPN Export|'
                             'EVPN Import|MVPN Export|MVPN Import)) +RT +list'
                             ' *:(?: +(?P<rt_list>[0-9\:]+))?$')
-        p31 = re.compile(r'^\s*(?P<rt_list>(\d+)\:(\d+))$')
+        p31 = re.compile(r'^\s*(?P<rt_list>((\w+)\:(\d+))(\s+(\w+)\:(\d+))?)$')
         p32 = re.compile(r'^\s*Label +mode *: +(?P<label_mode>[a-zA-Z\-]+)$')
         p32_1 = re.compile(r'^\s*Is +a +Route\-reflector$')
         p33 = re.compile(r'^\s*Aggregate +label *:'
@@ -695,6 +695,8 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
 
             # 100:1
             # 400:400
+            # ASnumber:100 ASnumber:91100
+            # ASnumber:91100
             m = p31.match(line)
             if m:
                 values = values + ' ' + m.groupdict()['rt_list']
@@ -6116,8 +6118,8 @@ class ShowRunningConfigBgpSchema(MetaParser):
                                     Optional('af_aggregate_address_ipv4_mask'): int,
                                     Optional('af_aggregate_address_as_set'): bool,
                                     Optional('af_aggregate_address_summary_only'): bool,
-                                    Optional('af_network_number'): str,
-                                    Optional('af_network_mask'): int,
+                                    Optional('af_network_number'): Or(str, ListOf(str)),
+                                    Optional('af_network_mask'): Or(int, ListOf(int)),
                                     Optional('af_network_route_map'): str,
                                     Optional('af_redist_isis'): str,
                                     Optional('af_redist_isis_metric'): str,
@@ -6781,8 +6783,21 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                         #    network { <af_network_number>/<ip-prefix> } [ route-map <rmap-name> ] +
                         m = p32.match(line)
                         if m:
-                            bgp_af_dict['af_network_number'] = str(m.groupdict()['af_network_number'])
-                            bgp_af_dict['af_network_mask'] = int(m.groupdict()['af_network_mask'])
+                            group = m.groupdict()
+                            if 'af_network_number' in bgp_af_dict:
+                                if not isinstance(bgp_af_dict['af_network_number'], list):
+                                    bgp_af_dict['af_network_number'] = [bgp_af_dict['af_network_number']]
+                                bgp_af_dict['af_network_number'].append(group['af_network_number'])
+                            else:
+                                bgp_af_dict.update({'af_network_number': group['af_network_number']})
+                            
+                            if 'af_network_mask' in bgp_af_dict:
+                                if not isinstance(bgp_af_dict['af_network_mask'], list):
+                                    bgp_af_dict['af_network_mask'] = [bgp_af_dict['af_network_mask']]
+                                bgp_af_dict['af_network_mask'].append(int(group['af_network_mask']))
+                            else:
+                                bgp_af_dict.update({'af_network_mask': int(group['af_network_mask'])})
+                                
                             if m.groupdict()['af_network_route_map']:
                                 bgp_af_dict['af_network_route_map'] = str(m.groupdict()['af_network_route_map'])
                             continue
@@ -10400,6 +10415,12 @@ class ShowBgpL2vpnEvpnSummary(ShowBgpL2vpnEvpnSummarySchema):
         # 172.16.205.8    4   200     130     139      155    0    0 02:05:01 0
         # 90:90:90::3     4   500     200     300      400    0    0 03:52:17 0
 
+        # Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+        # 1.1.1.1   4 4444444444
+        #                         121842  120925     5549    0    0    11w6d 142       
+        # 1.1.1.2   4 4444444444
+        #                         118316  117369     5549    0    0     3w4d 142  
+
         p1 = re.compile(r'^\s*BGP +summary +information +for +VRF +(?P<vrf_name_out>[\w]+),'
                         ' +address +family +(?P<af_name>[\w\s]+)$')
         p2 = re.compile(
@@ -10420,6 +10441,14 @@ class ShowBgpL2vpnEvpnSummary(ShowBgpL2vpnEvpnSummarySchema):
             r'^\s*(?P<neighborid>[\w\.\:]+) +(?P<neighborversion>[\d]+) +(?P<neighboras>[\d]+) +(?P<msgrecvd>[\d]+)'
             ' +(?P<msgsent>[\d]+) +(?P<neighbortableversion>[\d]+) +(?P<inq>[\d]+) +(?P<outq>[\d]+)'
             ' +(?P<time>[\w\:]+) +(?P<prefixreceived>[\w\s\)\(]+)$')
+        
+        p8a = re.compile(
+            r'^\s*(?P<neighborid>[\w\.\:]+) +(?P<neighborversion>[\d]+) +((?P<neighboras>[\d]+)[\n]*)$')
+        
+        p8b = re.compile(
+            r'^\s*((?P<msgrecvd>[\d]+)'
+            ' +(?P<msgsent>[\d]+) +(?P<neighbortableversion>[\d]+) +(?P<inq>[\d]+) +(?P<outq>[\d]+)'
+            ' +(?P<time>[\w\:]+) +(?P<prefixreceived>[\w\s\)\(]+))$')
 
         for line in out.splitlines():
             if line:
@@ -10492,6 +10521,35 @@ class ShowBgpL2vpnEvpnSummary(ShowBgpL2vpnEvpnSummarySchema):
                 except ValueError:
                     neighbor_dict.update({'state': prefixreceived.lower()})
                 continue
+
+            m = p8a.match(line)
+            if m:
+                group = m.groupdict()
+                neighborid = group.pop('neighborid')
+                neighbor_dict = af_dict.setdefault('neighbor',{}).setdefault(neighborid, {})
+
+                neighbor_dict.update({'neighbor':neighborid})
+                neighbor_dict.update({'remoteas': int(group.pop('neighboras'))})
+                neighbor_dict.update({'version': int(group.pop('neighborversion'))})
+                continue
+
+            m = p8b.match(line)
+            if m:
+                group = m.groupdict()
+                neighbor_dict.update({'msgrecvd': int(group.pop('msgrecvd'))})
+                neighbor_dict.update({'msgsent': int(group.pop('msgsent'))})
+                neighbor_dict.update({'neighbortableversion': int(group.pop('neighbortableversion'))})
+                neighbor_dict.update({'inq': int(group.pop('inq'))})
+                neighbor_dict.update({'outq': int(group.pop('outq'))})
+                neighbor_dict.update({'time': group.pop('time')})
+                prefixreceived = group.pop('prefixreceived')
+                try:
+                    neighbor_dict.update({'prefixreceived': int(prefixreceived)})
+                    neighbor_dict.update({'state': 'established'})
+                except ValueError:
+                    neighbor_dict.update({'state': prefixreceived.lower()})
+                continue
+
 
         return result_dict
 

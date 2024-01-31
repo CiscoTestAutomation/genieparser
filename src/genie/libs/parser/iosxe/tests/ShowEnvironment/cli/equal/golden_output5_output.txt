@@ -1,0 +1,35 @@
+Number of Critical alarms: 1
+Number of Major alarms: 4
+Number of Minor alarms: 0
+
+Slot Sensor Current State Reading Threshold(Minor,Major,Critical,Shutdown)
+
+P2 RPM: fan0 Warning 25800 RPM na
+P2 RPM: fan1 Warning 25320 RPM na
+P2 RPM: fan2 Warning 25920 RPM na
+P2 RPM: fan3 Warning 25500 RPM na
+P2 P: pwr Normal 34 Watts na
+R0 Temp: Inlet Critical 47 Celsius (na ,na ,47 ,na )(Celsius)
+R0 Temp: Internal Normal 47 Celsius (na ,na ,na ,na )(Celsius)
+R0 Temp: Outlet Normal 50 Celsius (na ,na ,75 ,na )(Celsius)
+R0 Temp: CPU Normal 53 Celsius (na ,na ,100,na )(Celsius)
+R0 V: 12v Normal 11917 mV na
+R0 V: 5v Normal 5059 mV na
+R0 V: 3.3v Normal 3323 mV na
+R0 V: 3.0v Normal 2995 mV na
+R0 V: 2.5v Normal 2493 mV na
+R0 V: 1.35v CPU Normal 1351 mV na
+R0 V: 1.8v Normal 1822 mV na
+R0 V: 1.2v Normal 1198 mV na
+R0 V: VNN CPU Normal 977 mV na
+R0 V: 1.1v Normal 1073 mV na
+R0 V: 1.0v Normal 999 mV na
+R0 V: 1.8v CPU Normal 1832 mV na
+R0 V: DDR Normal 1535 mV na
+R0 V: 3.3v STBY Normal 3384 mV na
+R0 V: 1.5v Normal 1514 mV na
+R0 V: 1.0v CPU Normal 991 mV na
+R0 V: VCC CPU Normal 858 mV na
+R0 V: 0.75v Normal 763 mV na
+R0 I: 12v Normal 6 A na
+R0 P: pwr Normal 62 Watts na

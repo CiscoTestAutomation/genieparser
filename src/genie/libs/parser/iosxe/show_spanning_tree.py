@@ -1415,9 +1415,9 @@ class ShowSpanningTreeInterface(ShowSpanningTreeInterfaceSchema):
             output = self.device.execute(self.cli_command.format(interface=interface))
 
         # VLAN0100            Desg FWD 20000     128.13   P2p Edge
+        #                                                 P2p Peer (STP)
         p1 = re.compile(r"^(?P<vlan>\S+)\s+(?P<role>\S+)\s+(?P<status>\S+)\s+(?P<cost>\d+)\s+(?P<port_priority>\d+)\.("
-                r"?P<port_number>\d+)\s+(?P<type>[\w\s]*)$") 
-
+                r"?P<port_number>\d+)\s+(?P<type>[\w\s\(\)]*)$") 
         ret_dict = {}
 
         for line in output.splitlines():

@@ -1,0 +1,75 @@
+expected_output = {
+   "vrf":{
+      "SR_L3VPN_BE":{
+         "address_family":{
+            "vpnv4_unicast":{
+               "prefix":"192.85.1.0/24",
+               "rd":"10.0.0.1:100",
+               "local_label":"24023",
+               "last_modified":"Nov 25 09:12:20.372 for 2d03h",
+               "paths":{
+                  "total_available_paths":2,
+                  "best_path":2,
+                  "path":{
+                     "1":{
+                        "as_path":{
+                           "65535":{
+                              "bgp_peer_neighbor_ip":{
+                                 "10.0.0.2":{
+                                    "metric":10,
+                                    "bgp_peer_neighbor_ip":"10.0.0.2",
+                                    "origin_neighbors_ip":"10.0.0.11",
+                                    "origin_router_id":"10.0.0.2",
+                                    "received_label":"24022",
+                                    "origin_metric":0,
+                                    "localpref":100,
+                                    "origin_codes":"?",
+                                    "backup":"backup",
+                                    "add_path":"add-path",
+                                    "import_candidate":"import-candidate",
+                                    "imported":"imported",
+                                    "status_codes":"*i",
+                                    "received_path_id":1,
+                                    "local_path_id":2,
+                                    "version":16,
+                                    "extended_community":"SoO:100:1 RT:100:1",
+                                    "originator":"10.0.0.2",
+                                    "cluster_list":"10.0.0.11",
+                                    "source_afi":"VPNv4 Unicast",
+                                    "source_vrf":"default",
+                                    "source_rd":"10.0.0.2:100"
+                                 }
+                              }
+                           }
+                        }
+                     },
+                     "2":{
+                        "as_path":{
+                           "65535":{
+                              "bgp_peer_neighbor_ip":{
+                                 "192.168.111.2":{
+                                    "bgp_peer_neighbor_ip":"192.168.111.2",
+                                    "origin_neighbors_ip":"192.168.111.2",
+                                    "origin_router_id":"5.5.5.5",
+                                    "origin_metric":0,
+                                    "localpref":100,
+                                    "origin_codes":"?",
+                                    "group_best":"group-best",
+                                    "import_candidate":"import-candidate",
+                                    "status_codes":"*>",
+                                    "received_path_id":0,
+                                    "local_path_id":1,
+                                    "version":9,
+                                    "extended_community":"SoO:100:1 RT:100:1"
+                                 }
+                              }
+                           }
+                        }
+                     }
+                  }
+               }
+            }
+         }
+      }
+   }
+}

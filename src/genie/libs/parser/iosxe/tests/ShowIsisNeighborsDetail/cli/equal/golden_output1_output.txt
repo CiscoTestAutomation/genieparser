@@ -1,0 +1,14 @@
+Tag 1:
+System Id       Type Interface     IP Address      State Holdtime Circuit Id
+7600              L1   Et0/1                       INIT    24       rudy.105 
+  Area Address(es): 50.1234 49.1234
+  SNPA: aabb.cc00.9d20  
+  State Changed: 00:02:07
+  Format: Phase IV
+  Remote TID: 0(parallel adjacency suppressed)
+  Local TID:  0
+  Interface name: Ethernet4/0
+  Neighbor Circuit Id: 17
+  Remote BFD Support: (MTID:0, IPV6) (MTID:0, IPV4)
+  BFD enabled: (MTID:0, ipv4) (MTID:2, ipv6)
+

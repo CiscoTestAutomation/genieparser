@@ -98,11 +98,11 @@ expected_output = {
     },
     'overlay_interfaces': {
         'Loopback11': {
-            'ipv4': '10.1.11.11255.255.255.0',
+            'ipv4': '10.1.11.11 255.255.255.0',
             'vrf': 'green'
         },
         'Loopback12': {
-            'ipv4': '10.1.12.12255.255.255.0',
+            'ipv4': '10.1.12.12 255.255.255.0',
             'vrf': 'blue'
         }
     },
@@ -117,7 +117,7 @@ expected_output = {
                     'ip_address': '10.1.1.2'
                 }
             },
-            'ipv4': '10.1.101.1255.255.255.0',
+            'ipv4': '10.1.101.1 255.255.255.0',
             'ipv6': ['2001:101::1/64'],
             'svi_type': 'access',
             'vrf': 'green'
@@ -132,7 +132,7 @@ expected_output = {
                     'ip_address': '10.1.1.2'
                 }
             },
-            'ipv4': '10.1.102.1255.255.255.0',
+            'ipv4': '10.1.102.1 255.255.255.0',
             'ipv6': ['2001:102::1/64'],
             'svi_type': 'access',
             'vrf': 'green'
@@ -149,7 +149,7 @@ expected_output = {
                     'reachable_over': 'vrf green'
                 }
             },
-            'ipv4': '10.1.201.1255.255.255.0',
+            'ipv4': '10.1.201.1 255.255.255.0',
             'ipv6': ['2001:201::1/64'],
             'svi_type': 'access',
             'vrf': 'blue'
@@ -166,7 +166,7 @@ expected_output = {
                     'reachable_over': 'vrf green'
                 }
             },
-            'ipv4': '10.1.202.1255.255.255.0',
+            'ipv4': '10.1.202.1 255.255.255.0',
             'ipv6': ['2001:202::1/64'],
             'svi_type': 'access',
             'vrf': 'blue'

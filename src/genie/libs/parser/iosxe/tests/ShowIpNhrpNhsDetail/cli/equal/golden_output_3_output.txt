@@ -1,0 +1,3 @@
+Legend: E=Expecting replies, R=Responding, W=Waiting, D=Dynamic
+Tunnel1:
+10.0.0.1 RE priority = 0 cluster = 0 req-sent 34560 req-failed 0 repl-recv 26580 (00:03:14 ago)

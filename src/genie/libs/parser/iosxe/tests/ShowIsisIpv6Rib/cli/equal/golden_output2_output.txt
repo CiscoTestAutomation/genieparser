@@ -1,0 +1,45 @@
+IS-IS IPv6 process 1, local RIB
+* FCCC:CCC1:AA33::/48
+    via FE80::A8BB:CCFF:FE00:6500/Ethernet0/0, type L2  metric 20 tag 0 -
+    prefix attr: X:0 R:0 N:0
+     repair path: via FE80::A8BB:CCFF:FE00:6902/Ethernet2/0 metric: 110 (LC,DS,NP,SR)
+      TI-LFA link-protecting
+        SRv6-Fwd-Id 25165856
+        Q node: R7 SID FCCC:CCC1:AA66:E000::
+      repair source: R3, metric to pfx: 130
+* 100:100::/64
+    via FE80::A8BB:CCFF:FE02:5E20/Ethernet0/2, type L2  metric 20 tag 0 
+    prefix attr: X:0 R:0 N:0
+     (installed)
+     repair path: via FE80::A8BB:CCFF:FE02:5A10/Ethernet0/1.139 metric: 130 (DS,SR)
+      TI-LFA link-protecting
+        SRv6-Fwd-Id 25165861
+        P node: r604 SID CAFE:0:604::
+        Q node: r605 SID CAFE:0:604:E002::
+      repair source: r606, metric to pfx: 150
+* 666::666/128  prefix attr X:0 R:0 N:1  source router id: 666::666
+    via ULOOP_EP SRv6-Fwd-Id 25165865, type L1  metric 65 tag 0
+        P node: R4 SID FCCC:CCC1:D1::
+    prefix attr: X:0 R:0 N:1
+     (installed)
+             - - - - - -
+    via FE80::A8BB:CCFF:FE00:9C10/Ethernet0/1, type L1  metric 65 tag 0
+    prefix attr: X:0 R:0 N:1
+    source router id: 666::666
+* FCCC:CCC1:AA77::/48
+    via ULOOP_EP SRv6-Fwd-Id 25165858, type L2  metric 110 tag 0
+        P node: R6 SID FCCC:CCC1:AA66::
+        Q node: R7 SID FCCC:CCC1:AA66:E000::
+    prefix attr: X:0 R:0 N:1
+             - - - - - -
+    via FE80::A8BB:CCFF:FE00:6902/Ethernet2/0, type L2  metric 110 tag 0
+    prefix attr: X:0 R:0 N:1
+  2001:DB8:88:1::/64
+    via FE80::210:7BFF:FEC2:ACC9/GigabitEthernet2/0/0, type L2  metric 20 LSP [3/7]
+* 111:111::/64
+    via ::/Null0, type Sum metric 30 tag 0
+* 2001:DB8:45A::/64
+    via FE80::210:7BFF:FEC2:ACC9/GigabitEthernet2/0/0, type L1  metric 20 LSP [C/6]
+    via FE80::210:7BFF:FEC2:ACCC/GigabitEthernet2/1/0, type L1  metric 20 LSP [C/6]
+    via FE80::210:7BFF:FEC2:ACC9/GigabitEthernet2/0/0, type L2  metric 20 LSP [3/7]
+    via FE80::210:7BFF:FEC2:ACCC/GigabitEthernet2/1/0, type L2  metric 20 LSP [3/7]

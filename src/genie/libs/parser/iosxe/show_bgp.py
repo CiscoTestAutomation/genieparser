@@ -4843,7 +4843,7 @@ class ShowBgpNeighborsAdvertisedRoutesSuperParser(ShowBgpNeighborsAdvertisedRout
         p1 = re.compile(r'^\s*For +address +family:'
                             ' +(?P<address_family>[a-zA-Z0-9\s\-\_]+)$')
 
-        p3_1 = re.compile(r'^\s*(?P<status_codes>(s|d|h|\*|\>|i|r|S|m|b|f|x|a|c|t|L|\s)+)?'
+        p3_1 = re.compile(r'^\s*(?P<status_codes>(s|d|h|\*|\>|i|r|S|m|b|f|x|a|c|t|L|\s)+)?(?=[\d|\[])'
                             '(?P<path_type>(i|e|c|l|a|r|I))?(\s)?'
                             '(?P<prefix>[a-zA-Z0-9\.\:\/\[\]\,]+)'
                             '(?: *(?P<next_hop>[a-zA-Z0-9\.\:\/\[\]\,]+))?$')

@@ -79,5 +79,6 @@ expected_output = {
             "out_buffer_failure": 0,
             "out_buffers_swapped": 0,
         },
+        "carrier_transitions": 0,
     }
 }

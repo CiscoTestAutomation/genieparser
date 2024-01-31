@@ -1,0 +1,45 @@
+show ip ospf 1 rib 4.4.4.4
+
+            OSPF Router with ID (1.1.1.1) (Process ID 1)
+
+
+                Base Topology (MTID 0)
+
+OSPF local RIB
+Codes: * - Best, > - Installed in global RIB
+LSA: type/LSID/originator
+
+*>  4.4.4.4/32, Intra, cost 21, area 0
+     SPF Instance 257, age 3d19h
+      contributing LSA: 10/7.0.0.0/4.4.4.4 (area 0)
+     SID: 4, Properties: Sid, LblRegd, SidIndex, N-Flag, TeAnn
+     Strict SPF SID: 104, Properties: Sid, LblRegd, SidIndex, N-Flag, TeAnn
+     Flags: RIB, HiPrio
+      via 13.1.19.2, Ethernet0/2.19, label 16004, strict label 16104
+       Flags: RIB, MFI
+       LSA: 1/4.4.4.4/4.4.4.4
+       Source: 4.4.4.4 (area 0)
+      PostConvrg repair path via 12.1.11.2, Ethernet0/0.11, label 16004, strict label 16104, cost 21
+       Flags: RIB, Repair, PostConvrg, IntfDj, BcastDj, PrimPath, NodeProt, Downstr, LoadShare
+       LSA: 1/4.4.4.4/4.4.4.4
+      via 13.1.17.2, Ethernet0/2.17, label 16004, strict label 16104
+       Flags: RIB, MFI
+       LSA: 1/4.4.4.4/4.4.4.4
+       Source: 4.4.4.4 (area 0)
+      PostConvrg repair path via 12.1.14.2, Ethernet0/0.14, label 16004, strict label 16104, cost 21
+       Flags: RIB, Repair, PostConvrg, IntfDj, BcastDj, PrimPath, NodeProt, Downstr, LoadShare
+       LSA: 1/4.4.4.4/4.4.4.4
+      via 13.1.20.2, Ethernet0/2.20, label 16004, strict label 16104
+       Flags: RIB, MFI
+       LSA: 1/4.4.4.4/4.4.4.4
+       Source: 4.4.4.4 (area 0)
+      PostConvrg repair path via 13.1.17.2, Ethernet0/2.17, label 16004, strict label 16104, cost 21
+       Flags: RIB, Repair, PostConvrg, IntfDj, BcastDj, PrimPath, Downstr, LoadShare
+       LSA: 1/4.4.4.4/4.4.4.4
+      via 13.1.18.2, Ethernet0/2.18, label 16004, strict label 16104
+       Flags: RIB, MFI
+       LSA: 1/4.4.4.4/4.4.4.4
+       Source: 4.4.4.4 (area 0)
+      PostConvrg repair path via 13.1.12.2, Ethernet0/2.12, label 16004, strict label 16104, cost 21
+       Flags: RIB, Repair, PostConvrg, IntfDj, BcastDj, PrimPath, Downstr, LoadShare
+       LSA: 1/4.4.4.4/4.4.4.4
