@@ -1,0 +1,31 @@
+Switch1#show stackwise-virtual dual-active-detection pagp
+Load for five secs: 1%/0%; one minute: 1%; five minutes: 1%
+Time source is NTP, 19:58:16.384 CET Mon Nov 13 2023
+Pagp dual-active detection enabled: Yes
+In dual-active recovery mode: No
+Recovery Reload: Enabled
+
+
+Channel group 11
+          Dual-Active     Partner              Partner       Partner
+Port      Detect Capable  Name                 Port          Version
+Twe1/0/1  Yes             Switch2.lan Te1/1/1       1.1
+Twe2/0/1  Yes             Switch2.lan Te2/1/1       1.1
+
+Channel group 12
+          Dual-Active     Partner              Partner       Partner
+Port      Detect Capable  Name                 Port          Version
+Twe1/0/2  No              Switch3.lan                 None          N/A
+Twe2/0/2  No              Switch3.lan                 None          N/A
+
+Channel group 13
+          Dual-Active     Partner              Partner       Partner
+Port      Detect Capable  Name                 Port          Version
+Twe1/0/3  No              Switch4.lan Te1/1/1       N/A
+Twe2/0/3  No              Switch4.lan Te2/1/1       N/A
+
+Channel group 14
+          Dual-Active     Partner              Partner       Partner
+Port      Detect Capable  Name                 Port          Version
+Twe1/0/4  No              Switch5.lan Te1/1/1       N/A
+Twe2/0/4  No              Switch4.lan Te2/1/1       N/A

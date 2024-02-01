@@ -66,8 +66,6 @@ class ShowControllerVDSLSchema(MetaParser):
             Optional('total_lprs'): int,
             Optional('total_lofs'): int,
             Optional('total_lols'): int,
-            Optional('modem_fw__version'): str,
-            Optional('modem_phy_version'): str,
         },
         Optional('serial_number_near'): str,
         Optional('modem_version_far'): str,        
@@ -80,6 +78,8 @@ class ShowControllerVDSLSchema(MetaParser):
         Optional('failed_full_inits'): int,
         Optional('short_inits'): int,
         Optional('failed_short_inits'): int,
+        Optional('modem_fw_version'): str,
+        Optional('modem_phy_version'): str,
         Optional('modem_phy_source'): str,
         Optional('training_log'): str,
         Optional('training_log_filename'): str,
@@ -313,7 +313,7 @@ class ShowControllerVDSL(ShowControllerVDSLSchema):
             m = p2_11.match(line)
             if m:
                 group = m.groupdict()
-                param = group['param'].lower().replace(" ", "_")
+                param = re.sub(' +', ' ', group['param'].lower()).replace(" ", "_")
                 ctrl_dict[param] = group['vl']
 
             # Modem PHY Version: A2pv6F039x8.d26d

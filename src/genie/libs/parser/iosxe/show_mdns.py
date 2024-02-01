@@ -2625,3 +2625,54 @@ class ShowMdnsSdCache(ShowMdnsSdCacheSchema):
                 continue    
         return ret_dict
         
+class ShowMdnsSdCacheRemoteSchema(MetaParser):
+    """ Schema for
+    
+        * show mdns-sd cache remote
+    """
+    schema = {
+        'mdns_cache_services': {
+            Any(): {
+                'name': str, 
+                'ttl_remaining': str, 
+                'vlan_id':  int,
+                'loc_id': str, 
+                'user_role':  str,
+            },
+        },
+    }
+                        
+class ShowMdnsSdCacheRemote(ShowMdnsSdCacheRemoteSchema):
+    """ Parser for
+    
+        * show mdns-sd cache remote
+           
+    """
+    
+    cli_command = 'show mdns-sd cache remote'
+
+    def cli(self, output=None):
+
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+        #[<NAME>]   [<TTL/Remaining>]   [Vlan-Id]   [Location ID]   [<User Role>]        
+        p1 = re.compile(r'^\s*(?P<NAME>[\w._]+)\s+(?P<TTL_Remaining>\d+/\d+)\s+(?P<vlan>\d+)\s+(?P<Location_id>[\w\.\:]+)\s+(?P<User_Role>.*)$')
+        
+        for line in output.splitlines():
+            line = line.strip()
+            #[<NAME>]   [<TYPE>]    [<TTL>/Remaining]   [Vlan-Id/If-name] [Mac Address] [<RR Record Data>]                     
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                mdns_cache_services = group['NAME']
+                mdns_cache_dict = ret_dict.setdefault('mdns_cache_services', {}).setdefault(mdns_cache_services, {})
+                mdns_cache_dict['loc_id'] = group['Location_id']
+                mdns_cache_dict['name'] = group['NAME']
+                mdns_cache_dict['vlan_id'] = int(group['vlan'])
+                mdns_cache_dict['ttl_remaining'] = group['TTL_Remaining']               
+                mdns_cache_dict['user_role'] = group['User_Role']
+                continue    
+        return ret_dict       
+        

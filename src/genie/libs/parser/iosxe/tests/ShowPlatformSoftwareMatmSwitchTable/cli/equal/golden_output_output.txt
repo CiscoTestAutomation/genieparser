@@ -1,0 +1,8 @@
+Tbl_Type   Tbl_ID  Num_MAC  Aging  AOM_ID/OM_PTR
+MAT_VLAN        1        5    300  OM: 0x348027c558 
+MAT_VLAN       10        2    300  OM: 0x34803a3e30 
+MAT_VLAN       20        2    300  OM: 0x34803a3fe8 
+MAT_VLAN       30        0    300  OM: 0x34803aa3a8 
+MAT_VLAN     4093        1    300  OM: 0x3480285ce0 
+MAT_IND         1       21    300  OM: 0x3480246e08 
+MAT_L3IF     4096        0    300  OM: 0x348027c6f0

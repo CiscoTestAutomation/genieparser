@@ -13,7 +13,7 @@ import pkg_resources
 from json.decoder import JSONDecodeError
 
 from pyats.log.utils import banner
-from pyats import configuration as cfg
+from pyats.configuration import configuration as cfg
 
 from genie.libs import parser
 from genie.abstract import Lookup

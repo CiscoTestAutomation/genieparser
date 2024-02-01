@@ -29,7 +29,7 @@ from netaddr import IPAddress, IPNetwork
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional
+from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional, ListOf
 from genie.libs.parser.utils.common import Common
 
 #============================================
@@ -3631,13 +3631,19 @@ class ShowIsisDatabaseDetailSchema(MetaParser):
                                 Optional('router_cap'): str,
                                 Optional('area_address'): str,
                                 Optional('nlpid'): list,
-                                Optional('mt_srv6_locator'):{
+                                Optional('mt_srv6_locator'): Or({
                                     'locator_prefix': str,
                                     'locator_prefix_length': int,
                                     'd_flag': int,
                                     'metric': int,
                                     'algorithm': int
-                                },
+                                }, ListOf({
+                                    'locator_prefix': str,
+                                    'locator_prefix_length': int,
+                                    'd_flag': int,
+                                    'metric': int,
+                                    'algorithm': int
+                                })),
                                 Optional('ip_address'): str,
                                 Optional('ipv6_address'): str,
                                 Optional('hostname'): str,
@@ -3786,8 +3792,8 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
 
         # Metric: 10         MT (IPv6 Unicast) IPv6 2001:db8:3:3:3::3/128
         # Metric: 10         MT (IPv6 Unicast) IPv6 2001:db8:10:2::/64
-        r9 = re.compile(r'Metric\s*:\s*(?P<metric>\d+)\s+MT\s*\(IPv(4|6)\s+'
-                        r'\w+\)\s*(?P<ip_version>IPv(4|6))\s+(?P<ip_address>\S+)')
+        r9 = re.compile(r'^Metric\s*:\s*(?P<metric>\d+)\s+MT\s*\(IPv(4|6)\s+'
+                        r'\w+\)\s*(?P<ip_version>IPv(4|6))\s+(?P<ip_address>\S+)$')
 
         # Metric: 10   IPv6 (MT-IPv6) 2001:0DB8::/64
         # Metric: 10         IPv6 2001:2:2:2::2/128
@@ -3877,6 +3883,10 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
         r25 = re.compile(r'^SRv6\s+Locator:\s+MT\s+\(.*\)\s+(?P<locator_prefix>[\w:]+)\/'
                          r'(?P<locator_prefix_length>\d+)\s+D:(?P<d_flag>\d+)\s+Metric:\s+'
                          r'(?P<metric>\d+)\s+Algorithm:\s+(?P<algorithm>\d+)$')
+
+        # Metric: 10         MT (IPv6 Unicast) IPv6-Ext-InAr fc00:a000:2000::3/128
+        r26 = re.compile(r'^Metric\s*:\s*(?P<metric>\d+)\s+MT\s*\(IPv(4|6)\s+'
+                        r'\w+\)\s*((?P<ip_version>IPv(4|6))[\-a-zA-Z]*)\s+(?P<ip_address>\S+)$')
 
         parsed_output = {}
 
@@ -4274,13 +4284,43 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
                 d_flag = int(group['d_flag'])
                 metric = int(group['metric'])
                 algorithm = int(group['algorithm'])
+                record ={
+                    'locator_prefix': locator_prefix,
+                    'locator_prefix_length': locator_prefix_length,
+                    'd_flag': d_flag,
+                    'metric': metric,
+                    'algorithm': algorithm
+                }
                 mt_srv6_locator_dict = lspid_dict.setdefault('mt_srv6_locator', {})
-                mt_srv6_locator_dict['locator_prefix'] = locator_prefix
-                mt_srv6_locator_dict['locator_prefix_length'] = locator_prefix_length
-                mt_srv6_locator_dict['d_flag'] = d_flag
-                mt_srv6_locator_dict['metric'] = metric
-                mt_srv6_locator_dict['algorithm'] = algorithm
+                if 'locator_prefix' in mt_srv6_locator_dict:
+                    if not isinstance(mt_srv6_locator_dict, list):
+                        lspid_dict['mt_srv6_locator'] = [lspid_dict.pop('mt_srv6_locator')]
+
+                    lspid_dict['mt_srv6_locator'].append(record)
+                elif isinstance(mt_srv6_locator_dict, list):
+                    if 'locator_prefix' in mt_srv6_locator_dict[0]:
+                        lspid_dict['mt_srv6_locator'].append(record)
+                else:
+                    lspid_dict['mt_srv6_locator'].update(record)
                 continue
+
+            # Metric: 20         MT (IPv6 Unicast) IPv6-Ext-InAr fc00:a000:2000::3/128
+            result = r26.match(line)
+            if result:
+                group = result.groupdict()
+                metric = int(group['metric'])
+                ip_address = group['ip_address']
+                ip_version = group['ip_version'].lower()
+                if 'mt_{ip_version}_reachability' not in lspid_dict:
+                    mt_dict = lspid_dict\
+                        .setdefault('mt_{ip_version}_reachability'\
+                        .format(ip_version=ip_version), {})\
+                        .setdefault(ip_address, {})
+                ip_prefix_list = ip_address.split('/')
+                mt_dict['ip_prefix'] = ip_prefix_list[0]
+                if len(ip_prefix_list) > 1:
+                    mt_dict['prefix_length'] = ip_prefix_list[1]
+                mt_dict['metric'] = metric
 
         return parsed_output
 

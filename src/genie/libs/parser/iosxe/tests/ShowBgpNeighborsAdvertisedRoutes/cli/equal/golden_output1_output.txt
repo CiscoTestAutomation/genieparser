@@ -1,0 +1,26 @@
+BGP table version is 407, local router ID is 10.121.1.1
+Status codes: s suppressed, d damped, h history, * valid, > best, i - internal, 
+              r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter, 
+              x best-external, a additional-path, c RIB-compressed, 
+              t secondary path,
+Origin codes: i - IGP, e - EGP, ? - incomplete
+RPKI validation codes: V valid, I invalid, N Not found
+
+     Network          Next Hop            Metric LocPrf Weight Path
+ r>i  0.0.0.0          10.121.1.2               0    300      0 209 64520 ?
+ *>i  10.120.0.0/16    10.121.1.2               0    300      0 209 64520 i
+ *>   10.121.0.0/16    0.0.0.0                            32768 i
+ *>i  10.122.0.0/16    10.121.1.2               0    300      0 209 64522 i
+ *>i  10.123.0.0/16    10.121.1.2               0    300      0 209 64523 i
+ *>i  10.250.54.0/24   10.121.1.2               0    300      0 209 64520 ?
+ *>i  159.140.61.0/24  10.121.1.2               0    300      0 209 64522 64522 64522 ?
+ *>i  159.140.67.0/24  10.121.1.2               0    300      0 209 64522 64522 64522 ?
+ *>i  162.135.0.0      10.121.1.2               0    300      0 209 64522 64522 64522 ?
+ *>i  192.168.120.0/30 10.121.1.2               0    300      0 209 i
+ *>i  192.168.120.8/30 10.121.1.2               0    300      0 209 i
+ *>i  192.168.120.16/30
+                       10.121.1.2               0    300      0 209 i
+ *>i  192.168.120.24/30
+                       10.121.1.2               0    300      0 209 i
+
+Total number of prefixes 13 

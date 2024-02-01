@@ -1,0 +1,324 @@
+C8300-B5#sh sdwan omp routes                                                                            
+Generating output, this might take time, please wait ...                                                                                                                  
+Code:                                                                                                                                                                     
+C   -> chosen                                                                                                                                                             
+I   -> installed                                                                                                                                                          
+Red -> redistributed                                                                                                                                                      
+Rej -> rejected                                                                                                                                                           
+L   -> looped                                                                                                                                                             
+R   -> resolved                                                                                                                                                           
+S   -> stale                                                                                                                                                              
+Ext -> extranet                                                                                                                                                           
+Inv -> invalid                                                                                                                                                            
+Stg -> staged                                                                                                                                                             
+IA  -> On-demand inactive                                                                                                                                                 
+U   -> TLOC unresolved                                                                                                                                                    
+BR-R -> border-router reoriginated                                                                                                                                        
+TGW-R -> transport-gateway reoriginated                                                                                                                                   
+                                                                                                                                                                          
+                                                                                                                                                AFFINITY                  
+
+                                                      PATH                      ATTRIBUTE                                                       GROUP                     
+
+TENANT    VPN    PREFIX              FROM PEER        ID     LABEL    STATUS    TYPE       TLOC IP          COLOR            ENCAP  PREFERENCE  NUMBER      REGION ID   REGION PATH                                                                                                                                                                 
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------                                                                                                                                                           
+0         10     0.0.0.0/0           1.1.1.4          453    1003     C,I,R     installed  10.255.255.131   biz-internet     ipsec  -           None        None        - 
+
+                                     1.1.1.5          549    1003     C,R       installed  10.255.255.131   biz-internet     ipsec  -           None        None        - 
+
+0         10     10.0.0.0/8          1.1.1.4          1540   1002     C,I,R     installed  10.255.255.101   mpls             ipsec  -           None        None        - 
+
+                                     1.1.1.4          1541   1002     C,I,R     installed  10.255.255.101   biz-internet     ipsec  -           None        None        - 
+
+                                     1.1.1.4          1588   1002     C,I,R     installed  10.255.255.100   mpls             ipsec  -           None        None        - 
+
+                                     1.1.1.5          1503   1002     C,R       installed  10.255.255.101   mpls             ipsec  -           None        None        - 
+
+                                     1.1.1.5          1504   1002     C,R       installed  10.255.255.101   biz-internet     ipsec  -           None        None        - 
+
+                                     1.1.1.5          1607   1002     C,R       installed  10.255.255.100   mpls             ipsec  -           None        None        - 
+
+0         10     10.9.0.0/16         1.1.1.4          553    1002     C,I,R     installed  10.255.255.101   mpls             ipsec  -           None        None        - 
+
+                                     1.1.1.4          554    1002     C,I,R     installed  10.255.255.101   biz-internet     ipsec  -           None        None        - 
+
+                                     1.1.1.5          569    1002     C,R       installed  10.255.255.101   mpls             ipsec  -           None        None        - 
+
+                                     1.1.1.5          570    1002     C,R       installed  10.255.255.101   biz-internet     ipsec  -           None        None        - 
+
+0         10     10.10.10.0/24       1.1.1.4          1271   1002     R         installed  10.255.255.10    mpls             ipsec  -           None        None        - 
+
+                                     1.1.1.4          1272   1002     C,I,R     installed  10.255.255.10    biz-internet     ipsec  -           None        None        - 
+
+                                     1.1.1.4          1449   1002     R         installed  10.255.255.11    biz-internet     ipsec  -           None        None        - 
+
+                                     1.1.1.5          516    1002     R         installed  10.255.255.10    mpls             ipsec  -           None        None        - 
+
+                                     1.1.1.5          517    1002     C,R       installed  10.255.255.10    biz-internet     ipsec  -           None        None        - 
+
+                                     1.1.1.5          1209   1002     R         installed  10.255.255.11    biz-internet     ipsec  -           None        None        - 
+
+0         10     10.16.23.56/29      1.1.1.4          411    1004     C,I,R     installed  10.255.255.86    biz-internet     ipsec  -           None        None        - 
+
+                                     1.1.1.5          321    1004     C,R       installed  10.255.255.86    biz-internet     ipsec  -           None        None        - 
+
+0         10     10.30.0.0/30        1.1.1.4          207    1007     C,I,R     installed  10.255.255.30    biz-internet     ipsec  -           None        None        - 
+
+                                     1.1.1.4          737    1007     C,I,R     installed  10.255.255.30    mpls             ipsec  -           None        None        - 
+
+                                     1.1.1.5          359    1007     C,R       installed  10.255.255.30    biz-internet     ipsec  -           None        None        - 
+
+                                     1.1.1.5          743    1007     C,R       installed  10.255.255.30    mpls             ipsec  -           None        None        - 
+
+0         10     10.30.0.12/30       1.1.1.4          279    1003     C,I,R     installed  10.255.255.31    biz-internet     ipsec  -           None        None        - 
+
+                                     1.1.1.5          353    1003     C,R       installed  10.255.255.31    biz-internet     ipsec  -           None        None        - 
+
+0         10     10.30.10.0/24       1.1.1.4          280    1003     C,I,R     installed  10.255.255.31    biz-internet     ipsec  -           None        None        - 
+
+                                     1.1.1.5          353    1003     C,R       installed  10.255.255.31    biz-internet     ipsec  -           None        None        - 
+
+0         10     10.31.23.56/29      1.1.1.4          5      1004     C,I,R     installed  10.255.255.88    biz-internet     ipsec  -           None        None        - 
+
+                                     1.1.1.5          5      1004     C,R       installed  10.255.255.88    biz-internet     ipsec  -           None        None        - 
+
+0         10     10.40.0.0/30        1.1.1.4          1137   1004     C,I,R     installed  10.255.255.40    biz-internet     ipsec  -           None        None        - 
+
+                                     1.1.1.5          941    1004     C,R       installed  10.255.255.40    biz-internet     ipsec  -           None        None        - 
+
+0         10     10.40.0.8/30        1.1.1.4          1476   1004     C,I,R     installed  10.255.255.40    biz-internet     ipsec  -           None        None        - 
+
+                                     1.1.1.5          1161   1004     C,R       installed  10.255.255.40    biz-internet     ipsec  -           None        None        - 
+
+0         10     10.40.10.0/24       1.1.1.4          1492   1004     C,I,R     installed  10.255.255.40    biz-internet     ipsec  -           None        None        - 
+
+                                     1.1.1.5          1175   1004     C,R       installed  10.255.255.40    biz-internet     ipsec  -           None        None        - 
+
+0         10     10.50.0.0/30        0.0.0.0          66     1004     C,Red,R   installed  10.255.255.50    mpls             ipsec  -           None        None        - 
+
+                                     0.0.0.0          68     1004     C,Red,R   installed  10.255.255.50    biz-internet     ipsec  -           None        None        - 
+
+0         10     10.50.0.12/30       0.0.0.0          66     1004     C,Red,R   installed  10.255.255.50    mpls             ipsec  -           None        None        - 
+
+                                     0.0.0.0          68     1004     C,Red,R   installed  10.255.255.50    biz-internet     ipsec  -           None        None        - 
+
+                                     1.1.1.4          537    1002     Inv,U     installed  10.255.255.51    biz-internet     ipsec  -           None        None        - 
+
+                                     1.1.1.5          267    1002     Inv,U     installed  10.255.255.51    biz-internet     ipsec  -           None        None        - 
+
+0         10     10.50.5.0/24        1.1.1.4          5      1003     C,I,R     installed  10.255.255.130   biz-internet     ipsec  -           None        None        - 
+
+                                     1.1.1.5          5      1003     C,R       installed  10.255.255.130   biz-internet     ipsec  -           None        None        - 
+
+0         10     10.50.10.0/24       0.0.0.0          66     1004     C,Red,R   installed  10.255.255.50    mpls             ipsec  -           None        None        - 
+
+                                     0.0.0.0          68     1004     C,Red,R   installed  10.255.255.50    biz-internet     ipsec  -           None        None        - 
+
+                                     1.1.1.4          1265   1002     Inv,U     installed  10.255.255.51    biz-internet     ipsec  -           None        None        - 
+
+                                     1.1.1.5          478    1002     Inv,U     installed  10.255.255.51    biz-internet     ipsec  -           None        None        - 
+
+0         10     10.100.10.0/24      1.1.1.4          1545   1002     C,I,R     installed  10.255.255.101   mpls             ipsec  -           None        None        - 
+
+                                     1.1.1.4          1546   1002     C,I,R     installed  10.255.255.101   biz-internet     ipsec  -           None        None        - 
+
+                                     1.1.1.4          1593   1002     C,I,R     installed  10.255.255.100   mpls             ipsec  -           None        None        - 
+
+                                     1.1.1.5          1512   1002     C,R       installed  10.255.255.101   mpls             ipsec  -           None        None        - 
+
+                                     1.1.1.5          1513   1002     C,R       installed  10.255.255.101   biz-internet     ipsec  -           None        None        - 
+
+                                     1.1.1.5          1616   1002     C,R       installed  10.255.255.100   mpls             ipsec  -           None        None        - 
+
+0         10     172.16.253.0/24     1.1.1.4          678    1002     C,I,R     installed  10.255.255.100   mpls             ipsec  -           None        None        - 
+
+                                     1.1.1.5          775    1002     C,R       installed  10.255.255.100   mpls             ipsec  -           None        None        - 
+
+0         10     172.16.253.20/30    1.1.1.4          677    1002     C,I,R     installed  10.255.255.100   mpls             ipsec  -           None        None        - 
+
+                                     1.1.1.5          777    1002     C,R       installed  10.255.255.100   mpls             ipsec  -           None        None        - 
+
+0         10     172.16.253.24/30    1.1.1.4          676    1002     C,I,R     installed  10.255.255.100   mpls             ipsec  -           None        None        - 
+
+                                     1.1.1.5          777    1002     C,R       installed  10.255.255.100   mpls             ipsec  -           None        None        - 
+
+0         10     172.16.253.28/30    1.1.1.4          553    1002     C,I,R     installed  10.255.255.101   mpls             ipsec  -           None        None        - 
+
+                                     1.1.1.4          554    1002     C,I,R     installed  10.255.255.101   biz-internet     ipsec  -           None        None        - 
+
+                                     1.1.1.5          568    1002     C,R       installed  10.255.255.101   mpls             ipsec  -           None        None        - 
+
+                                     1.1.1.5          569    1002     C,R       installed  10.255.255.101   biz-internet     ipsec  -           None        None        - 
+
+0         10     172.16.253.32/30    1.1.1.4          555    1002     C,I,R     installed  10.255.255.101   mpls             ipsec  -           None        None        - 
+
+                                     1.1.1.4          556    1002     C,I,R     installed  10.255.255.101   biz-internet     ipsec  -           None        None        - 
+
+                                     1.1.1.5          568    1002     C,R       installed  10.255.255.101   mpls             ipsec  -           None        None        - 
+
+                                     1.1.1.5          569    1002     C,R       installed  10.255.255.101   biz-internet     ipsec  -           None        None        - 
+
+0         10     192.168.6.0/24      1.1.1.4          577    1003     C,I,R     installed  10.255.255.131   biz-internet     ipsec  -           None        None        - 
+
+                                     1.1.1.5          613    1003     C,R       installed  10.255.255.131   biz-internet     ipsec  -           None        None        - 
+
+0         10     192.168.9.0/24      1.1.1.4          978    1003     C,I,R     installed  10.255.255.131   biz-internet     ipsec  -           None        None        - 
+
+                                     1.1.1.5          1035   1003     C,R       installed  10.255.255.131   biz-internet     ipsec  -           None        None        - 
+
+0         30     10.0.0.0/8          1.1.1.4          366    1003     C,I,R     installed  10.255.255.101   mpls             ipsec  -           None        None        - 
+
+                                     1.1.1.4          367    1003     C,I,R     installed  10.255.255.101   biz-internet     ipsec  -           None        None        - 
+
+                                     1.1.1.4          398    1003     C,I,R     installed  10.255.255.100   mpls             ipsec  -           None        None        - 
+
+                                     1.1.1.5          375    1003     C,R       installed  10.255.255.101   mpls             ipsec  -           None        None        - 
+
+                                     1.1.1.5          376    1003     C,R       installed  10.255.255.101   biz-internet     ipsec  -           None        None        - 
+
+                                     1.1.1.5          421    1003     C,R       installed  10.255.255.100   mpls             ipsec  -           None        None        - 
+
+0         30     10.10.30.0/24       1.1.1.4          328    1003     R         installed  10.255.255.10    mpls             ipsec  -           None        None        - 
+
+                                     1.1.1.4          329    1003     C,I,R     installed  10.255.255.10    biz-internet     ipsec  -           None        None        - 
+
+                                     1.1.1.4          378    1003     R         installed  10.255.255.11    biz-internet     ipsec  -           None        None        - 
+
+                                     1.1.1.5          127    1003     R         installed  10.255.255.10    mpls             ipsec  -           None        None        - 
+
+                                     1.1.1.5          128    1003     C,R       installed  10.255.255.10    biz-internet     ipsec  -           None        None        - 
+
+                                     1.1.1.5          196    1003     R         installed  10.255.255.11    biz-internet     ipsec  -           None        None        - 
+
+0         30     10.30.0.4/30        1.1.1.4          35     1009     C,I,R     installed  10.255.255.30    biz-internet     ipsec  -           None        None        - 
+
+                                     1.1.1.4          127    1009     C,I,R     installed  10.255.255.30    mpls             ipsec  -           None        None        - 
+
+                                     1.1.1.5          94     1009     C,R       installed  10.255.255.30    biz-internet     ipsec  -           None        None        - 
+
+                                     1.1.1.5          128    1009     C,R       installed  10.255.255.30    mpls             ipsec  -           None        None        - 
+
+0         30     10.30.0.16/30       1.1.1.4          19     1004     C,I,R     installed  10.255.255.31    biz-internet     ipsec  -           None        None        - 
+
+                                     1.1.1.5          57     1004     C,R       installed  10.255.255.31    biz-internet     ipsec  -           None        None        - 
+
+0         30     10.30.30.0/24       1.1.1.4          19     1004     C,I,R     installed  10.255.255.31    biz-internet     ipsec  -           None        None        - 
+
+                                     1.1.1.5          57     1004     C,R       installed  10.255.255.31    biz-internet     ipsec  -           None        None        - 
+
+0         30     10.50.0.4/30        0.0.0.0          66     1005     C,Red,R   installed  10.255.255.50    mpls             ipsec  -           None        None        - 
+
+                                     0.0.0.0          68     1005     C,Red,R   installed  10.255.255.50    biz-internet     ipsec  -           None        None        - 
+
+0         30     10.50.0.16/30       0.0.0.0          66     1005     C,Red,R   installed  10.255.255.50    mpls             ipsec  -           None        None        - 
+
+                                     0.0.0.0          68     1005     C,Red,R   installed  10.255.255.50    biz-internet     ipsec  -           None        None        - 
+
+                                     1.1.1.4          87     1003     Inv,U     installed  10.255.255.51    biz-internet     ipsec  -           None        None        - 
+
+                                     1.1.1.5          61     1003     Inv,U     installed  10.255.255.51    biz-internet     ipsec  -           None        None        - 
+
+0         30     10.50.30.0/24       0.0.0.0          66     1005     C,Red,R   installed  10.255.255.50    mpls             ipsec  -           None        None        - 
+
+                                     0.0.0.0          68     1005     C,Red,R   installed  10.255.255.50    biz-internet     ipsec  -           None        None        - 
+
+                                     1.1.1.4          184    1003     Inv,U     installed  10.255.255.51    biz-internet     ipsec  -           None        None        - 
+
+                                     1.1.1.5          116    1003     Inv,U     installed  10.255.255.51    biz-internet     ipsec  -           None        None        - 
+
+0         30     10.100.30.0/24      1.1.1.4          366    1003     C,I,R     installed  10.255.255.101   mpls             ipsec  -           None        None        - 
+
+                                     1.1.1.4          367    1003     C,I,R     installed  10.255.255.101   biz-internet     ipsec  -           None        None        - 
+
+                                     1.1.1.4          398    1003     C,I,R     installed  10.255.255.100   mpls             ipsec  -           None        None        - 
+
+                                     1.1.1.5          375    1003     C,R       installed  10.255.255.101   mpls             ipsec  -           None        None        - 
+
+                                     1.1.1.5          376    1003     C,R       installed  10.255.255.101   biz-internet     ipsec  -           None        None        - 
+
+                                     1.1.1.5          421    1003     C,R       installed  10.255.255.100   mpls             ipsec  -           None        None        - 
+
+0         30     172.16.253.0/24     1.1.1.4          365    1003     C,I,R     installed  10.255.255.101   mpls             ipsec  -           None        None        - 
+
+                                     1.1.1.4          366    1003     C,I,R     installed  10.255.255.101   biz-internet     ipsec  -           None        None        - 
+
+                                     1.1.1.4          397    1003     C,I,R     installed  10.255.255.100   mpls             ipsec  -           None        None        - 
+
+                                     1.1.1.5          375    1003     C,R       installed  10.255.255.101   mpls             ipsec  -           None        None        - 
+
+                                     1.1.1.5          376    1003     C,R       installed  10.255.255.101   biz-internet     ipsec  -           None        None        - 
+
+                                     1.1.1.5          420    1003     C,R       installed  10.255.255.100   mpls             ipsec  -           None        None        - 
+
+0         30     172.16.253.52/30    1.1.1.4          163    1003     C,I,R     installed  10.255.255.100   mpls             ipsec  -           None        None        - 
+
+                                     1.1.1.5          205    1003     C,R       installed  10.255.255.100   mpls             ipsec  -           None        None        - 
+
+0         30     172.16.253.56/30    1.1.1.4          340    1003     C,I,R     installed  10.255.255.100   mpls             ipsec  -           None        None        - 
+
+                                     1.1.1.5          337    1003     C,R       installed  10.255.255.100   mpls             ipsec  -           None        None        - 
+
+0         30     172.16.253.60/30    1.1.1.4          138    1003     C,I,R     installed  10.255.255.101   mpls             ipsec  -           None        None        - 
+
+                                     1.1.1.4          139    1003     C,I,R     installed  10.255.255.101   biz-internet     ipsec  -           None        None        - 
+
+                                     1.1.1.5          148    1003     C,R       installed  10.255.255.101   mpls             ipsec  -           None        None        - 
+
+                                     1.1.1.5          149    1003     C,R       installed  10.255.255.101   biz-internet     ipsec  -           None        None        - 
+
+0         30     172.16.253.64/30    1.1.1.4          177    1003     C,I,R     installed  10.255.255.101   mpls             ipsec  -           None        None        - 
+
+                                     1.1.1.4          178    1003     C,I,R     installed  10.255.255.101   biz-internet     ipsec  -           None        None        - 
+
+                                     1.1.1.5          214    1003     C,R       installed  10.255.255.101   mpls             ipsec  -           None        None        - 
+
+                                     1.1.1.5          215    1003     C,R       installed  10.255.255.101   biz-internet     ipsec  -           None        None        - 
+
+0         40     10.10.40.0/24       1.1.1.4          176    1004     R         installed  10.255.255.10    mpls             ipsec  -           None        None        - 
+
+                                     1.1.1.4          177    1004     C,I,R     installed  10.255.255.10    biz-internet     ipsec  -           None        None        - 
+
+                                     1.1.1.4          190    1004     R         installed  10.255.255.11    biz-internet     ipsec  -           None        None        - 
+
+                                     1.1.1.5          63     1004     R         installed  10.255.255.10    mpls             ipsec  -           None        None        - 
+
+                                     1.1.1.5          64     1004     C,R       installed  10.255.255.10    biz-internet     ipsec  -           None        None        - 
+
+                                     1.1.1.5          84     1004     R         installed  10.255.255.11    biz-internet     ipsec  -           None        None        - 
+
+0         40     10.30.0.8/30        1.1.1.4          17     1010     C,I,R     installed  10.255.255.30    biz-internet     ipsec  -           None        None        - 
+
+                                     1.1.1.4          73     1010     C,I,R     installed  10.255.255.30    mpls             ipsec  -           None        None        - 
+
+                                     1.1.1.5          50     1010     C,R       installed  10.255.255.30    biz-internet     ipsec  -           None        None        - 
+
+                                     1.1.1.5          60     1010     C,R       installed  10.255.255.30    mpls             ipsec  -           None        None        - 
+
+0         40     10.30.0.20/30       1.1.1.4          9      1005     C,I,R     installed  10.255.255.31    biz-internet     ipsec  -           None        None        - 
+
+                                     1.1.1.5          30     1005     C,R       installed  10.255.255.31    biz-internet     ipsec  -           None        None        - 
+
+0         40     10.30.40.0/24       1.1.1.4          9      1005     C,I,R     installed  10.255.255.31    biz-internet     ipsec  -           None        None        - 
+
+                                     1.1.1.5          30     1005     C,R       installed  10.255.255.31    biz-internet     ipsec  -           None        None        - 
+
+0         40     10.50.0.8/30        0.0.0.0          66     1006     C,Red,R   installed  10.255.255.50    mpls             ipsec  -           None        None        - 
+
+                                     0.0.0.0          68     1006     C,Red,R   installed  10.255.255.50    biz-internet     ipsec  -           None        None        - 
+
+0         40     10.50.0.20/30       0.0.0.0          66     1006     C,Red,R   installed  10.255.255.50    mpls             ipsec  -           None        None        - 
+
+                                     0.0.0.0          68     1006     C,Red,R   installed  10.255.255.50    biz-internet     ipsec  -           None        None        - 
+
+                                     1.1.1.4          45     1004     Inv,U     installed  10.255.255.51    biz-internet     ipsec  -           None        None        - 
+
+                                     1.1.1.5          34     1004     Inv,U     installed  10.255.255.51    biz-internet     ipsec  -           None        None        - 
+
+0         40     10.50.40.0/24       0.0.0.0          66     1006     C,Red,R   installed  10.255.255.50    mpls             ipsec  -           None        None        - 
+
+                                     0.0.0.0          68     1006     C,Red,R   installed  10.255.255.50    biz-internet     ipsec  -           None        None        - 
+
+                                     1.1.1.4          99     1004     Inv,U     installed  10.255.255.51    biz-internet     ipsec  -           None        None        - 
+
+                                     1.1.1.5          63     1004     Inv,U     installed  10.255.255.51    biz-internet     ipsec  -           None        None        - 
+

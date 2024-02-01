@@ -95,41 +95,41 @@ expected_output = {
     },
     'overlay_interfaces': {
         'Loopback11': {
-            'ipv4': '10.1.11.11255.255.255.0',
+            'ipv4': '10.1.11.11 255.255.255.0',
             'vrf': 'green'},
         'Loopback12': {
-            'ipv4': '10.1.12.12255.255.255.0',
+            'ipv4': '10.1.12.12 255.255.255.0',
             'vrf': 'blue'},
         'Loopback256': {
-            'ipv4': '10.2.255.255255.255.255.255',
+            'ipv4': '10.2.255.255 255.255.255.255',
             'name': 'RP loopback for VRF blue',
             'pim_enable': True,
             'vrf': 'blue'}
     },
     'svis': {
         '101': {
-            'ipv4': '10.1.101.1255.255.255.0',
+            'ipv4': '10.1.101.1 255.255.255.0',
             'ipv6': ['2001:101::1/64'],
             'pim_enable': True,
             'svi_type': 'access',
             'vrf': 'green'
         },
         '102': {
-            'ipv4': '10.1.102.1255.255.255.0',
+            'ipv4': '10.1.102.1 255.255.255.0',
             'ipv6': ['2001:102::1/64'],
             'pim_enable': True,
             'svi_type': 'access',
             'vrf': 'green'
         },
         '201': {
-            'ipv4': '10.1.201.1255.255.255.0',
+            'ipv4': '10.1.201.1 255.255.255.0',
             'ipv6': ['2001:201::1/64'],
             'pim_enable': True,
             'svi_type': 'access',
             'vrf': 'blue'
         },
         '202': {
-            'ipv4': '10.1.202.1255.255.255.0',
+            'ipv4': '10.1.202.1 255.255.255.0',
             'ipv6': ['2001:202::1/64'],
             'pim_enable': True,
             'svi_type': 'access',
@@ -182,6 +182,9 @@ expected_output = {
                 'ipv4': {
                     'mdt_auto_discovery': 'vxlan',
                     'mdt_default_vxlan': '239.1.1.1',
+                    'data_mdt_group': '225.2.2.0',
+                    'data_mdt_group_mask': '0.0.0.255',
+                    'data_mdt_threshold': 111,
                     'route_target_export': ['2:2',
                                             '2:2 '
                                             'stitching'],
@@ -203,6 +206,9 @@ expected_output = {
                 'ipv4': {
                     'mdt_auto_discovery': 'vxlan',
                     'mdt_default_vxlan': '239.1.1.2',
+                    'data_mdt_group': '225.2.3.0',
+                    'data_mdt_group_mask': '0.0.0.255',
+                    'data_mdt_threshold': 111,
                     'route_target_export': ['1:1',
                                             '1:1 '
                                             'stitching'],

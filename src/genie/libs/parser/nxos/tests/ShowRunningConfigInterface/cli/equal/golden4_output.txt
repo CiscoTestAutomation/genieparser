@@ -1,0 +1,7 @@
+interface Ethernet1/1
+  description genie test
+  no switchport
+  mtu 9216
+  vrf member TEST
+  ip address 10.1.1.1/30
+  ip address 10.2.1.1/30 secondary

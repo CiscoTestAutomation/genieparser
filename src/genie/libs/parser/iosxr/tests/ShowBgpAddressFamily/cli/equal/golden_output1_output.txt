@@ -1,0 +1,37 @@
+show bgp ipv4 unicast
+Wed Nov 22 16:36:21.454 UTC
+BGP router identifier 50.1.1.1, local AS number 100
+BGP generic scan interval 60 secs
+Non-stop routing is enabled
+BGP table state: Active
+Table ID: 0xe0000000   RD version: 1230
+BGP main routing table version 1230
+BGP NSR Initial initsync version 6 (Reached)
+BGP NSR/ISSU Sync-Group versions 0/0
+Dampening enabled
+BGP scan interval 60 secs
+
+Status codes: s suppressed, d damped, h history, * valid, > best
+              i - internal, r RIB-failure, S stale, N Nexthop-discard
+Origin codes: i - IGP, e - EGP, ? - incomplete
+   Network            Next Hop            Metric LocPrf Weight Path
+*>i10.1.16.0/21       50.1.1.4                 0    100      0 ?
+* i                   50.1.1.5                 0    100      0 ?
+*                     80.11.1.2                0             0 5000 ?
+*>i50.1.1.4/32        50.1.1.4                 0    100      0 ?
+*>i50.1.1.5/32        50.1.1.5                 0    100      0 ?
+*>i60.111.4.0/30      50.1.1.5                 0    100      0 ?
+*>i60.111.6.0/30      50.1.1.4                 0    100      0 ?
+*>i60.111.9.0/30      50.1.1.4                 0    100      0 ?
+*>i60.111.10.0/30     50.1.1.5                 0    100      0 ?
+*>i70.1.1.1/32        50.1.1.4                 0    100      0 i
+* i                   50.1.1.5                 0    100      0 i
+*                     80.11.1.2                0             0 5000 ?
+*> 70.1.1.2/32        80.11.1.2                0             0 5000 ?
+*> 80.11.1.0/30       80.11.1.2                0             0 5000 ?
+*>i80.21.1.0/30       50.1.1.5                 0    100      0 ?
+*                     80.11.1.2                0             0 5000 ?
+*>i80.33.1.0/30       50.1.1.4                 0    100      0 ?
+*>i100.1.1.5/32       50.1.1.5                 0    100      0 ?
+
+Processed 13 prefixes, 18 paths
