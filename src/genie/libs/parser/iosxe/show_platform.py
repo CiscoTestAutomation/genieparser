@@ -35344,6 +35344,9 @@ class ShowPlatformSoftwareDistributedIpsecTunnelInfo(ShowPlatformSoftwareDistrib
         #   SW_NUM   ASIC   # of TUNNELS     PLATFORM  
         #  |  2   |   0    |       2     |    C9300X   |
         p2 = re.compile(r'\s+\|\s+(?P<switch_number>-?\d+)\s+\|\s+(?P<asic_value>-?\d+)\s+\|\s+(?P<num_of_tunnel>-?\d+)\s+\|\s+(?P<platform>\S+)\s+\|$')
+        #|       INTERFACE |      IF_ID | SADB_ID | SW_NUM | ASIC |
+        #|       Tunnel201 | 0x00000216 |       1 |      1 |    0 |
+        p3 = re.compile(r'^\s+\|\s+(?P<tunnel_int>Tunnel\d+)\s+\|\s+(?P<if_id>\w+)\s+\|\s+(?P<sbad_info>\d+)\s+\|\s+(?P<switch_number>\d+)\s+\|\s+(?P<asic_id>\d+)\s+\|')
 
         for line in output.splitlines():            
             
