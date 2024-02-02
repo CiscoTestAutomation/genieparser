@@ -2846,6 +2846,7 @@ class ShowPolicyMap(ShowPolicyMapSchema):
             if m:
                 priority_level = int(m.groupdict()['priority_levels'])
                 class_map_dict['priority_levels'] = priority_level
+                continue
 
             # priority 9 (%)
             m = p10_2.match(line)
@@ -2853,7 +2854,6 @@ class ShowPolicyMap(ShowPolicyMapSchema):
                 class_map_dict['priority'] = True
                 priority_percent = int(m.groupdict()['priority_percent'])
                 class_map_dict['priority_percent'] = priority_percent
-
                 continue
 
             # Set cos 5
