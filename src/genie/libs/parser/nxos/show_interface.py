@@ -45,7 +45,7 @@ import re
 
 # metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Optional
+from genie.metaparser.util.schemaengine import Any, Optional, Schema
 
 # import parser utils
 from genie.libs.parser.utils.common import Common
@@ -3120,7 +3120,9 @@ class ShowRunningConfigInterfaceSchema(MetaParser):
                              },
                         Optional('mtu'): int,
                         Optional('ip_address'): str,
+                        Optional('ip_address_secondary'): str,
                         Optional('vrf_member'): str,
+                        Optional('fabric_forwarding_mode'): str,
                         }
                    },
               }
@@ -3163,7 +3165,8 @@ class ShowRunningConfigInterface(ShowRunningConfigInterfaceSchema):
 
         # interface nve1
         # interface Ethernet1/1
-        p1 = re.compile(r'^interface +(?P<intf_name>\S+)$')
+        # interface vlan 200
+        p1 = re.compile(r'^interface +(?P<intf_name>.*)$')
 
         # no shutdown
         p2 = re.compile(r'^\s*no shutdown$')
@@ -3220,13 +3223,19 @@ class ShowRunningConfigInterface(ShowRunningConfigInterfaceSchema):
         p16 = re.compile(r'^mtu +(?P<mtu>\S+)$')
 
         # ip address 10.10.6.73/30
-        p17 = re.compile(r'^ip address +(?P<ip_address>[a-z0-9\.]+.*)$')
+        p17 = re.compile(r'^ip address +(?P<ip_address>[0-9\./]+)$')
 
         # vrf member TEST
         p18 = re.compile(r'^vrf member +(?P<vrf_member>\S+)$')
 
         # no switchport
         p19 = re.compile(r'^no switchport$')
+
+        # fabric forwarding mode anycast-gateway
+        p20 = re.compile(r'^\s*fabric forwarding mode +(?P<fabric_forwarding_mode>[a-z\-]+)$')
+
+        # ip address 10.2.1.1/30 secondary
+        p21 = re.compile(r'^ip address +(?P<ip_address_secondary>[0-9\./]+) secondary$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -3372,6 +3381,19 @@ class ShowRunningConfigInterface(ShowRunningConfigInterfaceSchema):
             m = p19.match(line)
             if m:
                 interface_dict.update({'switchport': False})
+                continue
+
+            m = p20.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict.update({'fabric_forwarding_mode': group['fabric_forwarding_mode']})
+                continue
+
+            # ip address 10.2.1.1/30 secondary
+            m = p21.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict.update({'ip_address_secondary': group['ip_address_secondary']})
                 continue
 
         return ret_dict
@@ -3693,7 +3715,16 @@ class ShowInterfaceStatus(ShowInterfaceStatusSchema):
         flag = False
 
         # Interface     Name                Status    Reason
-        p0 = re.compile(r'Interface\s+Name\s+Status\s+Reason')
+        header_p0 = re.compile(r'Interface\s+Name\s+Status\s+Reason')
+        
+        # Captures the below header:
+        #
+        # Port          Name               Status    Vlan      Duplex  Speed   Type
+        #
+        # This is not technically needed, since the p1 pattern does not match the header, but
+        # explicitly matching the header ensures this data never incorrectly makes it into the
+        # parsed output.
+        header_p1 = re.compile(r"Port\s+Name\s+Status\s+Vlan\s+Duplex\s+Speed\s+Type")
 
         # Port          Name               Status    Vlan      Duplex  Speed   Type
         # --------------------------------------------------------------------------------
@@ -3708,8 +3739,26 @@ class ShowInterfaceStatus(ShowInterfaceStatusSchema):
         # Eth102/1/1    xxx (Gb1) [test_s] connected 110       full    a-1000
         # Eth102/1/2    yyy (Gb1) [test_s] connected trunk     full    a-1000
         # Eth102/1/3    zzz (Eth1, test_st connected 205       full    a-1000
-        p1 = re.compile(r'^(?P<interface>[\w\/]+)\s+(?P<name>(\w+\s\w+\s\d|[\w-]+|[\w\s\(\)\[\]_,]+))\s+(?P<status>(\w+\s\d|\w+))\s+(?P<vlan>(\w+))\s+(?P<duplex_code>(\w+))\s+(?P<port_speed>([\w-]+))(\s*(?P<type>([\w-]+)))?$')
-        
+        # Po102         VPC PO access      connected 10        full    10G     --
+        # nve1 -- connected -- auto auto --
+        # Po101         vPC Peer-link      connected trunk     full    10G     -- 
+        # Eth1/1        --                 connected routed    full    100G    QSFP-100G-SR1.2
+        # Eth1/7        ig1ezsit-ucs01-A:e connected trunk     full    10G     10Gbase-SR 
+        p1 = re.compile(
+            r'^(?P<interface>\w\S+)\s+'
+            r'(?P<name>.+?)\s+'
+            # Statuses are hard-coded here. They serve as an anchor for the rest of the regular
+            # expression. This is needed because the name capture group can be any arbitrary string
+            # containing any number of blank spaces. This makes it very difficult to use a regular
+            # expression to dynamically match the status column, so hard-coding offers a happy
+            # middle ground.
+            r'(?P<status>connected|disabled|sfpAbsent|noOperMem|notconnec|xcvrAbsen|down)\s+'
+            r'(?P<vlan>\S+)\s+'
+            r'(?P<duplex_code>\S+)\s+'
+            r'(?P<port_speed>\S+)\s*'
+            r'(?P<type>(\S+|Fa\S+\sExt\S+))?\s*$'
+        )
+ 
         # Eth1/5 *** L2 L3-CIS-N connected trunk full a-1000 1000base-T
         # Eth1/4 *** FEX 2248TP  connected 1     full a-10G  Fabric Exte
         
@@ -3719,17 +3768,18 @@ class ShowInterfaceStatus(ShowInterfaceStatusSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            m = p0.match(line)
-            if m:
+            m1 = header_p0.match(line)
+            m2 = header_p1.match(line)
+            if m1 or m2:
                 flag = True
                 continue
             m = p1.match(line) 
-            if m :
+            if m:
                 group = m.groupdict()
                 interface = Common.convert_intf_name(group['interface'])
                 intf_dict = result_dict.setdefault('interfaces', {}).setdefault(interface, {})
                 if group['name'] is not None:
-                    intf_dict['name'] =(group['name'])
+                    intf_dict['name'] =group['name'].strip()
                 if group['status'] is not None:
                     intf_dict['status'] =(group['status'])
                 if group['vlan'] is not None:
@@ -5111,7 +5161,9 @@ class ShowInterfaceCounters(ShowInterfaceCountersSchema):
                         r'(?P<out_ucast_pkts>OutUcastPkts)|(?P<out_bcast_pkts>OutBcastPkts))')
 
         #Eth1/46                                  21454282                           199828
-        p1 = re.compile(r'(?P<interface>\S+)\s+(?P<val1>\d+)\s+(?P<val2>\d+)')
+        # Vlan2                                     --                                --
+        p1 = re.compile(
+            r'(?P<interface>\S+)\s+(?P<val1>(?:\d+)|(?:--))\s+(?P<val2>(?:\d+)|(?:--))')
 
         for line in out.splitlines():
             line = line.rstrip()
@@ -5131,8 +5183,10 @@ class ShowInterfaceCounters(ShowInterfaceCountersSchema):
                 if interface not in intfs_dict.keys():
                     intfs_dict.setdefault(interface, {})
 
-                intfs_dict[interface][key1] = int(m.groupdict()['val1'])
-                intfs_dict[interface][key2] = int(m.groupdict()['val2'])
+                intfs_dict[interface][key1] = int(
+                    0 if m.groupdict()['val1'] == '--' else m.groupdict()['val1'])
+                intfs_dict[interface][key2] = int(
+                    0 if m.groupdict()['val2'] == '--' else m.groupdict()['val2'])
                 continue
 
         return result_dict

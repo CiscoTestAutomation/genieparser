@@ -12,3 +12,6 @@ Eth1/19       --                 connected 105       full    10G     SFP-H10GB-C
 Eth102/1/1    xxx (Gb1) [test_s] connected 110       full    a-1000
 Eth102/1/2    yyy (Gb1) [test_s] connected trunk     full    a-1000
 Eth102/1/3    zzz (Eth1, test_st connected 205       full    a-1000
+Po102         VPC PO access      connected 10        full    10G     --
+nve1 -- connected -- auto auto --
+Po101         vPC Peer-link      connected trunk     full    10G     --

@@ -1,0 +1,6 @@
+206-PxTR#show lisp 0 instance-id 101 ipv6 publication
+Publication Information for LISP 0 EID-table vrf red (IID 101)
+Entries total 1
+Publisher       Last        EID Prefix               Locators Encap-IID
+                Published                                            
+100.100.100.100 3d20h       2001:192:168:1::/64      -        -

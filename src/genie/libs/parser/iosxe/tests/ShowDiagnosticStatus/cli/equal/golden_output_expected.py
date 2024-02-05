@@ -1,0 +1,33 @@
+expected_output={
+   "diagnostic_status":{
+      "card":1,
+      "description":"C9300-24UX",
+      "run_by":"HM"
+   },
+   "current_running_test":{
+      "DiagFanTest":{
+         "run_by":"HM"
+      },
+      "DiagScratchRegisterTest":{
+         "run_by":"HM"
+      },
+      "TestPortTxMonitoring":{
+         "run_by":"HM"
+      },
+      "TestConsistencyCheckL2":{
+         "run_by":"HM"
+      },
+      "TestConsistencyCheckL3":{
+         "run_by":"HM"
+      },
+      "TestConsistencyCheckMcast":{
+         "run_by":"HM"
+      },
+      "TestConsistencyCheckL2m":{
+         "run_by":"HM"
+      },
+      "TestConsistencyCheckL3m":{
+         "run_by":"HM"
+      }
+   }
+}

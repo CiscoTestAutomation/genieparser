@@ -1,0 +1,6 @@
+show interface Ethernet1/1 status
+
+--------------------------------------------------------------------------------
+Port          Name               Status    Vlan      Duplex  Speed   Type
+--------------------------------------------------------------------------------
+Eth1/1        --                 connected routed    full    100G    QSFP-100G-SR1.2

@@ -424,6 +424,8 @@ class ShowRunInterfaceSchema(MetaParser):
                 Optional('input_sampler'): str,
                 Optional('output_sampler'): str,
                 Optional('pim_mode'): str,
+                Optional('policy_type'): str,
+                Optional('output_name'): str,
                 Optional('switchport_protected'): bool,
                 Optional('switchport_block_unicast'): bool,
                 Optional('switchport_block_multicast'): bool,
@@ -840,9 +842,12 @@ class ShowRunInterface(ShowRunInterfaceSchema):
 
         #  ip flow monitor m4out sampler fnf_sampler output
         p110 = re.compile(r'^ip +flow +monitor +(?P<flow_monitor_out_sampler>[\w]+) +sampler +(?P<output_sampler>[\w]+) +output$')
-        
+
         # ip pim sparse-dense-mode
         p111 = re.compile(r'^ip +pim +(?P<pim_mode>[\S]+)$')
+
+        # service-policy type queueing output 2p6q
+        p112 = re.compile(r'^service-policy +type +(?P<policy_type>[\S]+) +output +(?P<output_name>[\S]+)$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -1712,13 +1717,23 @@ class ShowRunInterface(ShowRunInterfaceSchema):
                 intf_dict.update(
                         {'output_sampler': group['output_sampler']})
                 continue
-            
+
             # ip pim sparse-dense-mode
             m = p111.match(line)
             if m:
                 group = m.groupdict()
                 intf_dict.update(
                         {'pim_mode': group['pim_mode']})
+                continue
+            
+            # service-policy type queuing output 2p6q
+            m = p112.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({
+                    'policy_type': group['policy_type'],
+                    'output_name': group['output_name']
+                })
                 continue
 
         return config_dict
@@ -3406,12 +3421,17 @@ class ShowRunningConfigNveSchema(MetaParser):
                     Any(): {
                         Optional('mdt_default_vxlan'): str,
                         Optional('mdt_auto_discovery'): str,
+                        Optional('data_mdt_group'): str,
+                        Optional('data_mdt_group_mask'): str,
+                        Optional('data_mdt_threshold'): int,
                         Optional('bgp_inter_as'): bool,
                         Optional('mdt_overlay'): str,
                         Optional('strict_rpf_check'): bool,
                         Optional('route_target_import'): ListOf(str),
                         Optional('route_target_export'): ListOf(str),
                         Optional('route_target_both'): ListOf(str),
+                        Optional('rp_address'): str,
+                        Optional('register_source'): str,
                     },
                 },
             },
@@ -3640,6 +3660,20 @@ class ShowRunningConfigNve(ShowRunningConfigNveSchema):
         #   mdt strict-rpf interface
         p5_3 = re.compile(r'^mdt +strict\-rpf +interface$')
 
+        #  ip pim vrf green rp-address 10.2.255.255
+        #  ipv6 pim vrf green rp-address FC00:2:255::255
+        p5_4 = re.compile(r'^(?P<ip>ip|ipv6) pim vrf (?P<vrf>\w+) rp\-address (?P<ip_addr>[\da-fA-F:|\d.]+)$')
+
+        #  ip pim vrf green register-source Loopback11
+        #  ipv6 pim vrf green register-source Loopback11
+        p5_5 = re.compile(r'^(?P<ip>ip|ipv6) pim vrf (?P<vrf>\w+) register\-source (?P<reg_source>[\w\d]+)$')
+
+        #  mdt data vxlan 225.2.2.0 0.0.0.255
+        p5_6 = re.compile(r'^mdt +data +vxlan +(?P<group_addr>[\d.]+) +(?P<mask>[\d.]+)$')
+
+        #  mdt data threshold 111
+        p5_7 = re.compile(r'^mdt +data +threshold +(?P<threshold>\d+)$')
+
         ret_dict = {}
         bgp_asn = ''
         if_name = ''
@@ -3655,6 +3689,7 @@ class ShowRunningConfigNve(ShowRunningConfigNveSchema):
 
         for line in output.splitlines():
             line = line.strip()
+
             # l2vpn evpn
             m = p1_0.match(line)
             if m:
@@ -3876,7 +3911,7 @@ class ShowRunningConfigNve(ShowRunningConfigNveSchema):
                     m = p3_8.match(line)
                     if m:
                         group = m.groupdict()
-                        ip_addr = group['ipv4']+group['mask']
+                        ip_addr = group['ipv4']+' '+group['mask']
                         if group['sec']:
                             current_dict.setdefault('secondary_ip_address', []).append(ip_addr)
                         else:
@@ -4165,6 +4200,44 @@ class ShowRunningConfigNve(ShowRunningConfigNveSchema):
                 if m:
                     af_dict['strict_rpf_check'] = True
                     continue
+
+                #   mdt data vxlan 225.2.2.0 0.0.0.255
+                m = p5_6.match(line)
+                if m:
+                    group = m.groupdict()
+                    af_dict['data_mdt_group'] = group['group_addr']
+                    af_dict['data_mdt_group_mask'] = group['mask']
+                    continue
+
+                #   mdt data threshold 111
+                m = p5_7.match(line)
+                if m:
+                    af_dict['data_mdt_threshold'] = int(m.groupdict()['threshold'])
+                    continue
+
+            # ip pim vrf green rp-address 10.2.255.255
+            # ipv6 pim vrf green rp-address FC00:2:255::255
+            m = p5_4.match(line)
+            if m:
+                group = m.groupdict()
+                if group['ip'] == 'ip':
+                    ip = 'ipv4'
+                else:
+                    ip = group['ip']
+                ret_dict.setdefault('vrf', {}).setdefault(group['vrf'], {}).setdefault('address_family', {}).setdefault(ip, {}).setdefault('rp_address', group['ip_addr'])
+                continue
+
+            # ip pim vrf green register-source Loopback11
+            # ipv6 pim vrf green register-source Loopback11
+            m = p5_5.match(line)            
+            if m:
+                group = m.groupdict()
+                if group['ip'] == 'ip':
+                    ip = 'ipv4'
+                else:
+                    ip = group['ip']
+                ret_dict.setdefault('vrf', {}).setdefault(group['vrf'], {}).setdefault('address_family', {}).setdefault(ip, {}).setdefault('register_source', group['reg_source'])
+                continue
 
             if bgp_asn or vrf_defn:
 

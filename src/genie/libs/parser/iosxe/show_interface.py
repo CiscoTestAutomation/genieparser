@@ -134,6 +134,7 @@ class ShowInterfacesSchema(MetaParser):
                 Optional('tunnel_receive_bandwidth'): int,
                 Optional('tunnel_protection'): str,
                 Optional('tunnel_profile'): str,
+                Optional('carrier_transitions'): int,
                 Optional('queues'): {
                     Optional('input_queue_size'): int,
                     Optional('input_queue_max'): int,
@@ -533,6 +534,9 @@ class ShowInterfaces(ShowInterfacesSchema):
         # Tunnel Protection profile
         p52 = re.compile(r'^Tunnel +protection +via +(?P<tunnel_protection>[\w]+) +\(profile \"(?P<tunnel_profile>[\w]+)\"\)')
 
+        # 3 carrier transitions
+        p53 = re.compile(r'^(?P<carrier_transitions>\d+)\s+carrier transitions$')
+
         interface_dict = {}
         unnumbered_dict = {}
         for line in out.splitlines():
@@ -805,6 +809,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                 group = m.groupdict()
                 sub_dict = interface_dict.setdefault(interface, {})
                 sub_dict['carrier_delay'] = int(group['carrier_delay'])
+                continue
 
             # Asymmetric Carrier-Delay Up Timer is 2 sec
             # Asymmetric Carrier-Delay Down Timer is 10 sec
@@ -819,6 +824,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                     sub_dict['carrier_delay_up'] = int(group['carrier_delay'])
                 else:
                     sub_dict['carrier_delay_down'] = int(group['carrier_delay'])
+                continue
 
             # ARP type: ARPA, ARP Timeout 04:00:00
             m = p13.match(line)
@@ -1253,30 +1259,35 @@ class ShowInterfaces(ShowInterfacesSchema):
             if m:
                 group = m.groupdict()
                 interface_dict[interface].update({'tunnel_protocol': group['tunnel_protocol']})
+                continue
 
             # Tunnel TTL 255
             m = p48.match(line)
             if m:
                 group = m.groupdict()
                 interface_dict[interface].update({'tunnel_ttl': int(group['tunnel_ttl'])})
+                continue
 
             # Tunnel transport MTU 1480 bytes
             m = p49.match(line)
             if m:
                 group = m.groupdict()
                 interface_dict[interface].update({'tunnel_transport_mtu': int(group['tunnel_transport_mtu'])})
+                continue
 
             # Tunnel transmit bandwidth 10000000 (kbps)
             m = p50.match(line)
             if m:
                 group = m.groupdict()
                 interface_dict[interface].update({'tunnel_transmit_bandwidth': int(group['tunnel_transmit_bandwidth'])})
+                continue
 
             # Tunnel receive bandwidth 10000000 (kbps)
             m = p51.match(line)
             if m:
                 group = m.groupdict()
                 interface_dict[interface].update({'tunnel_receive_bandwidth': int(group['tunnel_receive_bandwidth'])})
+                continue
 
             m = p52.match(line)
             if m:
@@ -1285,6 +1296,14 @@ class ShowInterfaces(ShowInterfacesSchema):
                     interface_dict[interface].update({'tunnel_protection': group['tunnel_protection']})
                 if group['tunnel_profile']:
                     interface_dict[interface].update({'tunnel_profile': group['tunnel_profile']})
+                continue
+
+            # 3 carrier transitions
+            m = p53.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict[interface]['carrier_transitions'] = int(group['carrier_transitions'])
+                continue
 
         # create strucutre for unnumbered interface
         if not unnumbered_dict:
@@ -3221,6 +3240,14 @@ class ShowIpv6Interface(ShowIpv6InterfaceSchema):
             # Hosts use stateless autoconfig for addresses.
             p18 = re.compile(r'^Hosts +use +(?P<addr_conf_method>[\w\s]+) +for +addresses.$')
             m = p18.match(line)
+            if m:
+                ret_dict[intf]['addresses_config_method'] = \
+                    m.groupdict()['addr_conf_method']
+                continue
+            
+            # Hosts use DHCP to obtain routable addresses.
+            p18_1 = re.compile(r'^Hosts +use +(?P<addr_conf_method>[\w\s]+) +to +obtain +routable +addresses.$')
+            m = p18_1.match(line)
             if m:
                 ret_dict[intf]['addresses_config_method'] = \
                     m.groupdict()['addr_conf_method']

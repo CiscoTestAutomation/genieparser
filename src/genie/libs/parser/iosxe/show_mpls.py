@@ -1688,6 +1688,8 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
                    'show mpls forwarding-table {prefix} {mask} algo {algo}',
                    'show mpls forwarding-table | sect {filter}']
 
+    exclude = ['bytes_label_switched']
+
     def cli(self, vrf="", prefix="",tunnelid="", filter="", mask="", algo="", output=None):
         if output is None:
             if vrf:

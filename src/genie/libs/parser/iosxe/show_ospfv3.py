@@ -2248,3 +2248,72 @@ class ShowOspfv3RibRedistribution(ShowOspfv3RibRedistributionSchema):
                 continue
 
         return ret_dict
+
+
+# ======================================================
+# schema for 'show ospfv3 neighbor {interface}'
+# ======================================================
+
+class ShowOspfv3NeighborInterfaceSchema(MetaParser):
+    """Schema for show ospfv3 neighbor {interface}"""
+
+    schema = {
+        'ospfv3_process_id': int,
+        'address_family': str,
+        'router_id': str,
+        'neighbors': {
+            Any(): {
+                'priority': int,
+                'state': str,
+                'dead_time': str,
+                'interface_id': int,
+                'interface_name': str
+            }
+        }
+    }
+
+#=============================================================
+# Parser for 'show ospfv3 neighbor {interface}'
+#=============================================================
+
+class ShowOspfv3NeighborInterface(ShowOspfv3NeighborInterfaceSchema):
+    """Parser for show ospfv3 neighbor {interface}"""
+
+    cli_command = 'show ospfv3 neighbor {interface}'
+
+    def cli(self, interface='', output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(interface=interface))
+
+        ret_dict = {}
+        # OSPFv3 1 address-family ipv6 (router-id 1.1.1.1)
+        p1 = re.compile(r'^OSPFv3\s+(?P<ospfv3_process_id>\d+)\s+address-family\s+(?P<address_family>\S+)\s+\(router-id\s+(?P<router_id>[\d.]+)\)$')
+
+        # Neighbor ID     Pri   State           Dead Time   Interface ID    Interface
+        # 2.2.2.2           0   FULL/  -        00:00:39    11              GigabitEthernet1/0/21
+        p2 = re.compile(r'^(?P<neighbor_id>[\d.]+)\s+(?P<priority>\d)\s+(?P<state>\S+/\s*[\S-]+)\s+(?P<dead_time>[\d:]+)\s+(?P<interface_id>\d+)\s+(?P<interface_name>\S+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['ospfv3_process_id'] = int(group['ospfv3_process_id'])
+                ret_dict['address_family'] = group['address_family']
+                ret_dict['router_id'] = group['router_id']
+                ret_dict['neighbors'] = {}
+                continue
+
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                neighbor_id = group['neighbor_id']
+                neighbor_dict = ret_dict['neighbors'].setdefault(neighbor_id, {})
+                neighbor_dict['priority'] = int(group['priority'])
+                neighbor_dict['state'] = group['state']
+                neighbor_dict['dead_time'] = group['dead_time']
+                neighbor_dict['interface_id'] = int(group['interface_id'])
+                neighbor_dict['interface_name'] = group['interface_name']
+
+        return ret_dict

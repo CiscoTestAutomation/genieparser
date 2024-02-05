@@ -331,12 +331,16 @@ class ShowPlatformFedActiveTcamUtilizationSchema(MetaParser):
 class ShowPlatformFedActiveTcamUtilization(ShowPlatformFedActiveTcamUtilizationSchema):
     """ Parser for show platform hardware fed active fwd-asic resource tcam utilization"""
 
-    cli_command = "show platform hardware fed active fwd-asic resource tcam utilization"
+    cli_command = ['show platform hardware fed switch {mode} fwd-asic resource tcam utilization',
+                   'show platform hardware fed active fwd-asic resource tcam utilization']
 
-    def cli(self, output=None):
-
+    def cli(self, output=None, mode=None):
         if output is None:
-            output = self.device.execute(self.cli_command)
+            if mode:
+                cmd = self.cli_command[0].format(mode=mode)
+            else:
+                cmd = self.cli_command[1]
+            output = self.device.execute(cmd)
 
         # initial return dictionary
         slice_dict = {}
@@ -819,13 +823,13 @@ class ShowPlatformTcamUtilizationswitchStandbySchema(MetaParser):
 #  * 'show platform hardware fed sw standby fwd-asic resource tcam utilization'
 # =========================================================
 class ShowPlatformSwitchStandbyTcamUtilization(ShowPlatformTcamUtilizationswitchStandbySchema):
-    """Parser for show platform hardware fed sw standby fwd-asic resource tcam utilization """
+    """Parser for show platform hardware fed {switch} standby fwd-asic resource tcam utilization """
 
-    cli_command = 'show platform hardware fed switch standby fwd-asic resource tcam utilization'
+    cli_command = 'show platform hardware fed {switch} standby fwd-asic resource tcam utilization'
 
-    def cli(self, output=None):
+    def cli(self, switch, output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
+            out = self.device.execute(self.cli_command.format(switch=switch))
         else:
             out = output
 

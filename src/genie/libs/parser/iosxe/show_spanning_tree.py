@@ -42,6 +42,7 @@ class ShowSpanningTreeSummarySchema(MetaParser):
         Optional('pvst_simulation'): bool,
         Optional('pvst_simulation_status'): str,
         Optional('platform_pvst_simulation'): bool,
+        Optional('bpdu_sender_conflict'): bool,
         Optional("configured_pathcost"): {
             'method': str,
             Optional('operational_value'): str,
@@ -116,7 +117,8 @@ class ShowSpanningTreeSummary(ShowSpanningTreeSummarySchema):
                    'Bridge Assurance': 'bridge_assurance',
                    'BackboneFast': 'backbone_fast',
                    'PVST Simulation': 'pvst_simulation',
-                   'Platform PVST Simulation': 'platform_pvst_simulation'}
+                   'Platform PVST Simulation': 'platform_pvst_simulation',
+                   'BPDU sender conflict': 'bpdu_sender_conflict'}
 
         for line in out.splitlines():
             line = line.strip()
@@ -887,6 +889,7 @@ class ShowSpanningTreeSchema(MetaParser):
         Any(): {     # mstp, pvst, rapid_pvst
             Any(): {   # mst_instances, vlans
                 Any(): {
+                    Optional('vlans_mapped'): str,
                     Any(): { # root, bridge
                         'priority':  int,
                         'address': str,
@@ -894,10 +897,12 @@ class ShowSpanningTreeSchema(MetaParser):
                         Optional('port'): int,
                         Optional('interface'): str,
                         Optional('configured_bridge_priority'): int,
+                        Optional('configured_root_priority'): int,
                         Optional('sys_id_ext'): int,
-                        'hello_time': int,
-                        'max_age': int,
-                        'forward_delay': int,
+                        Optional('rem_hops'):int,
+                        Optional('hello_time'): int,
+                        Optional('max_age'): int,
+                        Optional('forward_delay'): int,
                         Optional('aging_time'):  int,
                     },
                     'interfaces': {
@@ -960,6 +965,19 @@ class ShowSpanningTree(ShowSpanningTreeSchema):
 
         # initial regexp pattern
         p1 = re.compile(r'^(MST|VLAN)(?P<inst>\d+)$')
+
+        # #####MST1    vlans mapped:   2-25
+        p1_1 = re.compile(r'^\S* MST(?P<inst>\d+)\s+vlans\s+mapped:\s+(?P<vlans_mapped>\d+-\d+)$')
+
+        # Bridge        address cc7f.763d.9a00  priority      32769 (32768 sysid 1)
+        p1_2 = re.compile(r'^Bridge\s+address\s+(?P<address>[\w\.]+)\s+priority\s+(?P<priority>\d+)(?:\s+\((?P<configured_bridge_priority>\d+)\s+sysid\s+(?P<sys_id_ext>\d+)\))?$')
+
+        # Root          address 40b5.c11e.e000  priority      4097  (4096 sysid 1)
+        p1_3 = re.compile(r'^Root\s+address\s+(?P<address>[\w\.]+)\s+priority\s+(?P<priority>\d+)(?:\s+\((?P<configured_root_priority>\d+)\s+sysid\s+(?P<sys_id_ext>\d+)\))?$')
+
+        # port    Tw1/0/23        cost          20000     rem hops 19
+        p1_4 = re.compile(r'^\s*port\s+(?P<interface>\S+)\s+cost\s+(?P<cost>\d+)\s+rem\s+hops\s+(?P<rem_hops>\d+)$')
+
         p2 = re.compile(r'^Spanning +tree +enabled p+rotocol +(?P<mode>\w+)$')
         p3 = re.compile(r'^Root +ID +Priority +(?P<priority>\d+)$')
         p4 = re.compile(r'^Bridge +ID +Priority +(?P<priority>\d+)'
@@ -988,7 +1006,43 @@ class ShowSpanningTree(ShowSpanningTreeSchema):
             if m:
                 inst = int(m.groupdict()['inst'])
                 continue
-            
+
+            # #####MST1    vlans mapped:   2-25
+            m = p1_1.match(line)
+            if m:
+                inst = int(m.groupdict()['inst'])
+                mode_dict = ret_dict.setdefault('mstp', {})
+                inst_dict = mode_dict.setdefault('mst_instances', {}).\
+                setdefault(inst, {})
+                inst_dict['vlans_mapped'] = m.groupdict()['vlans_mapped']
+                continue
+
+            # Bridge        address cc7f.763d.9a00  priority      32769 (32768 sysid 1)
+            m = p1_2.match(line)
+            if m:
+                role_dict = inst_dict.setdefault('bridge', {})
+                role_dict['address'] = m.groupdict()['address']
+                role_dict['priority'] = int(m.groupdict()['priority'])
+                role_dict['configured_bridge_priority'] = int(m.groupdict()['configured_bridge_priority'])
+                continue
+
+            # Root          address 40b5.c11e.e000  priority      4097  (4096 sysid 1)
+            m = p1_3.match(line)
+            if m:
+                role_dict = inst_dict.setdefault('root', {})
+                role_dict['address'] = m.groupdict()['address']
+                role_dict['priority'] = int(m.groupdict()['priority'])
+                role_dict['configured_bridge_priority'] = int(m.groupdict()['configured_root_priority'])
+                continue
+
+            # port Tw1/0/23 cost 20000 rem hops 19
+            m = p1_4.match(line)
+            if m:
+                role_dict['interface'] = Common.convert_intf_name(m.groupdict().pop('interface'))
+                role_dict['cost'] = int(m.groupdict()['cost'])
+                role_dict['rem_hops'] = int(m.groupdict()['rem_hops'])
+                continue
+
             # Spanning tree enabled protocol rstp
             m = p2.match(line)
             if m:
@@ -996,7 +1050,7 @@ class ShowSpanningTree(ShowSpanningTreeSchema):
                 inst_dict = mode_dict.setdefault(self.MODE_INST_MAP[m.groupdict()['mode']], {}).\
                     setdefault(inst, {})
                 continue
-            
+
             # Root ID    Priority    24776
             m = p3.match(line)
             if m:
@@ -1361,9 +1415,9 @@ class ShowSpanningTreeInterface(ShowSpanningTreeInterfaceSchema):
             output = self.device.execute(self.cli_command.format(interface=interface))
 
         # VLAN0100            Desg FWD 20000     128.13   P2p Edge
+        #                                                 P2p Peer (STP)
         p1 = re.compile(r"^(?P<vlan>\S+)\s+(?P<role>\S+)\s+(?P<status>\S+)\s+(?P<cost>\d+)\s+(?P<port_priority>\d+)\.("
-                r"?P<port_number>\d+)\s+(?P<type>[\w\s]*)$") 
-
+                r"?P<port_number>\d+)\s+(?P<type>[\w\s\(\)]*)$") 
         ret_dict = {}
 
         for line in output.splitlines():

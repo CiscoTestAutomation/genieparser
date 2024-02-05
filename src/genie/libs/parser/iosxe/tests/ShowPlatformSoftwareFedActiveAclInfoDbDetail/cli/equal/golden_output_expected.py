@@ -1,4 +1,4 @@
-expected_output =   {
+expected_output = {
     'cg_name': {
         'acl-1': {
             'asic': 0,
@@ -19,7 +19,7 @@ expected_output =   {
                         'M': {
                             'dst_port': '0x0',
                             'frag': '0x0',
-                            'proto': '0x0',
+                            'proto': '0xff',
                             'src_port': '0x0',
                             'tcp_flg': '0x0',
                             'tcp_op': '0x0',
@@ -27,7 +27,7 @@ expected_output =   {
                         'V': {
                             'dst_port': '0x0',
                             'frag': '0x0',
-                            'proto': '0x0',
+                            'proto': '0x1',
                             'src_port': '0x0',
                             'tcp_flg': '0x0',
                             'tcp_op': '0x0',
@@ -35,6 +35,22 @@ expected_output =   {
                     },
                     'result': '0x0',
                     'tost': {
+                        'M': {
+                            'cos': '0x0',
+                            'dst_obj': '0x0',
+                            'src_obj': '0x0',
+                            'tos': '0x0',
+                            'ttl': '0x0',
+                            'v4_opt': '0x0',
+                        },
+                        'V': {
+                            'cos': '0x0',
+                            'dst_obj': '0x0',
+                            'src_obj': '0x0',
+                            'tos': '0x0',
+                            'ttl': '0x0',
+                            'v4_opt': '0x0',
+                        },
                     },
                 },
                 '20': {
@@ -47,7 +63,7 @@ expected_output =   {
                         'M': {
                             'dst_port': '0x0',
                             'frag': '0x0',
-                            'proto': '0x0',
+                            'proto': '0xff',
                             'src_port': '0x0',
                             'tcp_flg': '0x0',
                             'tcp_op': '0x0',
@@ -55,7 +71,7 @@ expected_output =   {
                         'V': {
                             'dst_port': '0x0',
                             'frag': '0x0',
-                            'proto': '0x0',
+                            'proto': '0x59',
                             'src_port': '0x0',
                             'tcp_flg': '0x0',
                             'tcp_op': '0x0',
@@ -63,6 +79,22 @@ expected_output =   {
                     },
                     'result': '0x0',
                     'tost': {
+                        'M': {
+                            'cos': '0x0',
+                            'dst_obj': '0x0',
+                            'src_obj': '0x0',
+                            'tos': '0x0',
+                            'ttl': '0x0',
+                            'v4_opt': '0x0',
+                        },
+                        'V': {
+                            'cos': '0x0',
+                            'dst_obj': '0x0',
+                            'src_obj': '0x0',
+                            'tos': '0x0',
+                            'ttl': '0x0',
+                            'v4_opt': '0x0',
+                        },
                     },
                 },
                 '30': {
@@ -75,7 +107,7 @@ expected_output =   {
                         'M': {
                             'dst_port': '0x0',
                             'frag': '0x0',
-                            'proto': '0x0',
+                            'proto': '0xff',
                             'src_port': '0x0',
                             'tcp_flg': '0x0',
                             'tcp_op': '0x0',
@@ -83,7 +115,7 @@ expected_output =   {
                         'V': {
                             'dst_port': '0x0',
                             'frag': '0x0',
-                            'proto': '0x0',
+                            'proto': '0x6',
                             'src_port': '0x0',
                             'tcp_flg': '0x0',
                             'tcp_op': '0x0',
@@ -91,6 +123,22 @@ expected_output =   {
                     },
                     'result': '0x0',
                     'tost': {
+                        'M': {
+                            'cos': '0x0',
+                            'dst_obj': '0x0',
+                            'src_obj': '0x0',
+                            'tos': '0x0',
+                            'ttl': '0x0',
+                            'v4_opt': '0x0',
+                        },
+                        'V': {
+                            'cos': '0x0',
+                            'dst_obj': '0x0',
+                            'src_obj': '0x0',
+                            'tos': '0x0',
+                            'ttl': '0x0',
+                            'v4_opt': '0x0',
+                        },
                     },
                 },
                 '40': {
@@ -119,6 +167,22 @@ expected_output =   {
                     },
                     'result': '0x1',
                     'tost': {
+                        'M': {
+                            'cos': '0x0',
+                            'dst_obj': '0x0',
+                            'src_obj': '0x0',
+                            'tos': '0x0',
+                            'ttl': '0x0',
+                            'v4_opt': '0x0',
+                        },
+                        'V': {
+                            'cos': '0x0',
+                            'dst_obj': '0x0',
+                            'src_obj': '0x0',
+                            'tos': '0x0',
+                            'ttl': '0x0',
+                            'v4_opt': '0x0',
+                        },
                     },
                 },
                 '4294967295': {
@@ -147,6 +211,22 @@ expected_output =   {
                     },
                     'result': '0x0',
                     'tost': {
+                        'M': {
+                            'cos': '0x0',
+                            'dst_obj': '0x0',
+                            'src_obj': '0x0',
+                            'tos': '0x0',
+                            'ttl': '0x0',
+                            'v4_opt': '0x0',
+                        },
+                        'V': {
+                            'cos': '0x0',
+                            'dst_obj': '0x0',
+                            'src_obj': '0x0',
+                            'tos': '0x0',
+                            'ttl': '0x0',
+                            'v4_opt': '0x0',
+                        },
                     },
                 },
             },
@@ -170,7 +250,7 @@ expected_output =   {
                         'M': {
                             'dst_port': '0x0',
                             'frag': '0x0',
-                            'proto': '0x0',
+                            'proto': '0xff',
                             'src_port': '0x0',
                             'tcp_flg': '0x0',
                             'tcp_op': '0x0',
@@ -178,7 +258,7 @@ expected_output =   {
                         'V': {
                             'dst_port': '0x0',
                             'frag': '0x0',
-                            'proto': '0x0',
+                            'proto': '0x1',
                             'src_port': '0x0',
                             'tcp_flg': '0x0',
                             'tcp_op': '0x0',
@@ -186,6 +266,22 @@ expected_output =   {
                     },
                     'result': '0x0',
                     'tost': {
+                        'M': {
+                            'cos': '0x0',
+                            'dst_obj': '0x0',
+                            'src_obj': '0x0',
+                            'tos': '0x0',
+                            'ttl': '0x0',
+                            'v4_opt': '0x0',
+                        },
+                        'V': {
+                            'cos': '0x0',
+                            'dst_obj': '0x0',
+                            'src_obj': '0x0',
+                            'tos': '0x0',
+                            'ttl': '0x0',
+                            'v4_opt': '0x0',
+                        },
                     },
                 },
                 '20': {
@@ -214,6 +310,22 @@ expected_output =   {
                     },
                     'result': '0x1',
                     'tost': {
+                        'M': {
+                            'cos': '0x0',
+                            'dst_obj': '0x0',
+                            'src_obj': '0x0',
+                            'tos': '0x0',
+                            'ttl': '0x0',
+                            'v4_opt': '0x0',
+                        },
+                        'V': {
+                            'cos': '0x0',
+                            'dst_obj': '0x0',
+                            'src_obj': '0x0',
+                            'tos': '0x0',
+                            'ttl': '0x0',
+                            'v4_opt': '0x0',
+                        },
                     },
                 },
                 '30': {
@@ -242,6 +354,22 @@ expected_output =   {
                     },
                     'result': '0x0',
                     'tost': {
+                        'M': {
+                            'cos': '0x0',
+                            'dst_obj': '0x0',
+                            'src_obj': '0x0',
+                            'tos': '0x0',
+                            'ttl': '0x0',
+                            'v4_opt': '0x0',
+                        },
+                        'V': {
+                            'cos': '0x0',
+                            'dst_obj': '0x0',
+                            'src_obj': '0x0',
+                            'tos': '0x0',
+                            'ttl': '0x0',
+                            'v4_opt': '0x0',
+                        },
                     },
                 },
                 '4294967295': {
@@ -270,6 +398,22 @@ expected_output =   {
                     },
                     'result': '0x0',
                     'tost': {
+                        'M': {
+                            'cos': '0x0',
+                            'dst_obj': '0x0',
+                            'src_obj': '0x0',
+                            'tos': '0x0',
+                            'ttl': '0x0',
+                            'v4_opt': '0x0',
+                        },
+                        'V': {
+                            'cos': '0x0',
+                            'dst_obj': '0x0',
+                            'src_obj': '0x0',
+                            'tos': '0x0',
+                            'ttl': '0x0',
+                            'v4_opt': '0x0',
+                        },
                     },
                 },
             },

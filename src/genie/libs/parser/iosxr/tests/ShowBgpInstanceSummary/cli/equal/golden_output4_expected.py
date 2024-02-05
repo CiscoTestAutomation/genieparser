@@ -16,6 +16,7 @@ expected_output = {
                             "nsr_initial_initsync_version": 11,
                             "nsr_initial_init_ver_status": "reached",
                             "nsr_issu_sync_group_versions": "0/0",
+                            "scan_interval": 60,
                             "operation_mode": "standalone",
                             "process": {
                                 "Speaker": {
@@ -40,6 +41,7 @@ expected_output = {
                             "nsr_initial_initsync_version": 11,
                             "nsr_initial_init_ver_status": "reached",
                             "nsr_issu_sync_group_versions": "0/0",
+                            "scan_interval": 60,
                             "operation_mode": "standalone",
                             "process": {
                                 "Speaker": {

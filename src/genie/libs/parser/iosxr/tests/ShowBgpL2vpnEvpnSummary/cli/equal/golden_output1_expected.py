@@ -1,0 +1,68 @@
+expected_output = {
+   "instance":{
+      "all":{
+         "vrf":{
+            "default":{
+               "address_family":{
+                  "l2vpn evpn":{
+                     "router_id":"50.1.1.1",
+                     "local_as":100,
+                     "generic_scan_interval":60,
+                     "non_stop_routing":"enabled",
+                     "table_state":"active",
+                     "table_id":"0x0",
+                     "bgp_table_version":323,
+                     "nsr_initial_initsync_version":1,
+                     "nsr_initial_init_ver_status":"reached",
+                     "nsr_issu_sync_group_versions":"0/0",
+                     "scan_interval":60,
+                     "operation_mode":"standalone",
+                     "process":{
+                        "Speaker":{
+                           "rcvtblver":323,
+                           "brib_rib":323,
+                           "labelver":323,
+                           "importver":323,
+                           "sendtblver":323,
+                           "standbyver":0
+                        }
+                     }
+                  }
+               },
+               "neighbor":{
+                  "50.1.1.4":{
+                     "address_family":{
+                        "l2vpn evpn":{
+                           "spk":0,
+                           "msg_rcvd":163199,
+                           "msg_sent":163235,
+                           "tbl_ver":323,
+                           "input_queue":0,
+                           "output_queue":0,
+                           "up_down":"11w3d",
+                           "state_pfxrcd":"1"
+                        }
+                     },
+                     "remote_as":100
+                  },
+                  "50.1.1.8":{
+                     "address_family":{
+                        "l2vpn evpn":{
+                           "spk":0,
+                           "msg_rcvd":63471,
+                           "msg_sent":64594,
+                           "tbl_ver":0,
+                           "input_queue":0,
+                           "output_queue":0,
+                           "up_down":"11w5d",
+                           "state_pfxrcd":"Idle (Admin)"
+                        }
+                     },
+                     "remote_as":100
+                  }
+               }
+            }
+         }
+      }
+   }
+}

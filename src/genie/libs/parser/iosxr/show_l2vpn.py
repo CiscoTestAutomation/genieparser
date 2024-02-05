@@ -1189,22 +1189,37 @@ class ShowL2vpnBridgeDomainDetailSchema(MetaParser):
                                     Any(): {
                                         'pw_id': {
                                             Any(): {
-                                                'ac_id': str,
+                                                Optional('ac_id'): str,
                                                 'state': str,
+                                                Optional('pw_class'): str,
                                                 'xc_id': str,
                                                 'encapsulation': str,
+                                                Optional('protocol'): str,
                                                 'source_address': str,
-                                                'encap_type': str,
+                                                Optional('encap_type'): str,
                                                 'control_word': str,
                                                 'sequencing': str,
+                                                Optional('pw_type'): str,
+                                                Optional('interworking'): str,
+                                                Optional('pw_backup_disable_delay'): int,
                                                 Optional('lsp'): {
                                                     'state': str,
-                                                    'evpn': {
+                                                    Optional('evpn'): {
                                                         Any(): {
                                                             'local': str,
                                                             'remote': str,
                                                             Optional('remote_type'): list,
                                                             Optional('local_type'): list
+                                                        }
+                                                    },
+                                                    Optional('pw'): {
+                                                        'load_balance': {
+                                                            'local': str,
+                                                            'remote': str
+                                                        },
+                                                        'pw_status_tlv': {
+                                                            'local': str,
+                                                            'remote': str
                                                         }
                                                     },
                                                     Optional('mpls'): {
@@ -1215,6 +1230,10 @@ class ShowL2vpnBridgeDomainDetailSchema(MetaParser):
                                                             Optional('local_type'): list
                                                         }
                                                     }
+                                                },
+                                                Optional('flow_label_flags'): {
+                                                    'configured': str,
+                                                    'negotiated': str
                                                 },
                                                 Optional('status_code'): str,
                                                 'create_time': str,
@@ -1320,7 +1339,7 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
             out = output
         
         ret_dict = {}
-        vfi_obj_dict = {}
+        access_pw_line_no = 0
         interface_found = False
         label_found = False
         
@@ -1447,7 +1466,7 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
                         r'is +(?P<state>[\S ]+)$')
 
         # PW class mpls, XC ID 0xff000001
-        p27 = re.compile(r'^PW +class +(?P<pw_class>\w+), +XC +ID +(?P<xc_id>\S+)$')
+        p27 = re.compile(r'^PW +class +(?P<pw_class>.+), +XC +ID +(?P<xc_id>\S+)$')
 
         # PW class not set
         p27_1 = re.compile(r'^PW +class +(?P<pw_class>[\S ]+)$')
@@ -1642,9 +1661,10 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
         # Flow Label flags configured (Tx=1,Rx=1), negotiated (Tx=0,Rx=0)
         p87 = re.compile(r'Flow Label flags \w+ (?P<configured>[\(\w=\,\)]+),\s+\w+\s+(?P<negotiated>[\(\w=\,\)]+)')
 
-        for line in out.splitlines():
+        for index, line in enumerate(out.splitlines(), start=1):
             original_line = line
             line = line.strip()
+
             # Bridge group: g1, bridge-domain: bd1, id: 0, state: up, ShgId: 0, MSTi: 0
             # Bridge group: EVPN-Multicast, bridge-domain: EVPN-Multicast-BTV, id: 0, state: up, ShgId: 0, MSTi: 0
             m = p1.match(line)
@@ -2047,6 +2067,8 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
             m = p23.match(line)
             if m:
                 dict_type = 'access_pw'
+                vfi_obj_dict = bridge_domain_dict.setdefault('access_pw', {}).setdefault(bridge_domain, {})
+                access_pw_line_no = index
                 label_found = False
                 continue
 
@@ -2055,6 +2077,8 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
             if m:
                 dict_type = 'vfi'
                 label_found = False
+                if access_pw_line_no + 1 == index:
+                    del bridge_domain_dict['access_pw']
                 continue
 
             # PW: neighbor 10.4.1.1, PW ID 1, state is up ( established )
@@ -2541,6 +2565,12 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
                 pw_id = group['pw_id']
                 ac_id = group['ac_id']
                 state = group['state']
+
+                # Delete bridge_domain dict which we set in regex p23
+                # so instead of bridge domain, we can set 'EVPN' as a key
+                # which is a value of type_found
+                del bridge_domain_dict['access_pw'][bridge_domain]
+
                 pw_id_dict = bridge_domain_dict.setdefault('access_pw', {}). \
                     setdefault(type_found, {}). \
                     setdefault('neighbor', {}). \

@@ -23,6 +23,9 @@ IOSXE parser for the following show commands:
    * show nat64 translations vrf {vrf_name}
    * show nat64 prefix stateful static-routes prefix {prefix} vrf {vrf_name}
    * show ip nat redundancy
+   * show nat66 statistics
+   * show nat66 nd
+   * show nat66 prefix
 '''
 # Python
 import re
@@ -1551,7 +1554,7 @@ class ShowNat66StatisticsSchema(MetaParser):
     schema = {
         "nat66_statistics": {
             "global_stats": {
-                "enable_count": int,
+                Optional("enable_count"): int,
                 "packets_translated": {
                     "in_to_out": int,
                     "out_to_in": int,
@@ -1571,8 +1574,9 @@ class ShowNat66Statistics(ShowNat66StatisticsSchema):
 
         ret_dict = dict()
         global_stats_dict = dict()
-
-        # Global Stats: enable count 4
+        # NAT66 Statistics
+        p0 = re.compile(r'^NAT66 +Statistics$')
+        # Global Stats: enable count 4 or Global Stats:
         p1 = re.compile(r'^Global +Stats: +enable +count +(?P<enable_count>\d+)$')
         # Packets translated (In -> Out)
         #     : 25
@@ -1583,11 +1587,15 @@ class ShowNat66Statistics(ShowNat66StatisticsSchema):
         p2_3 = re.compile(r'^: +(?P<nat66_pkt_count>\d+)$')
         for line in output.splitlines():
             line = line.strip()
+            # NAT66 Statistics
+            m = p0.match(line)
+            if m:
+                global_stats_dict = ret_dict.setdefault('nat66_statistics', {}).setdefault('global_stats', {})
+                continue
             # Global Stats: enable count 4
             m = p1.match(line)
             if m:
                 groups = m.groupdict()
-                global_stats_dict = ret_dict.setdefault('nat66_statistics', {}).setdefault('global_stats', {})
                 global_stats_dict['enable_count'] = int(groups['enable_count'])
                 continue
             #    Packets translated (In -> Out)
@@ -1750,4 +1758,173 @@ class ShowNat66Nd(ShowNat66NdSchema):
             ret_dict.setdefault('nat66_nd', {}).setdefault('ipv6_nd_entries', ipv6_nd_entries_list)
         if disable_flag:
             ret_dict.setdefault('nat66_nd', {}).setdefault('nat66_nd_disabled', disable_flag)
+        return ret_dict
+
+
+class ShowPlatformSoftwareFedSwitchActiveNatAclSchema(MetaParser):
+    """
+    Schema for show platform software fed switch active nat acl
+    """
+    schema = {
+        'index':{
+            Any():{
+              'type': str,                          
+              'protocol': str,
+              'src_port': str,
+              'dst_port': str, 
+              'src_addr': str, 
+              'dst_addr': str,                           
+            },
+        },
+        'ace_count': int,
+        'oid': str,   
+    }
+      
+class ShowPlatformSoftwareFedSwitchActiveNatAcl(ShowPlatformSoftwareFedSwitchActiveNatAclSchema):
+    """
+    show platform software fed switch active nat acl
+    """
+    
+    cli_command = ['show platform software fed {switch} {mode} nat acl',
+                   'show platform software fed active nat acl']           
+    
+    def cli(self, switch=None, mode=None, output=None):
+        
+        if output is None:
+            if switch and mode:
+                cmd = self.cli_command[0].format(switch=switch, mode=mode)
+            else:
+                cmd = self.cli_command[1]
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+        index = 1
+        index_dict = {}
+        
+        #  Type | Protocol | Src Port | Dst Port |        Src Addr |        Dst Addr |
+        # ----------------------------------------------------------------------------
+        #  SNAT |      any |        - |        - |        12.0.0.0 |         0.0.0.0 |
+        #  DNAT |      any |        - |        - |         0.0.0.0 |        36.0.0.2 |
+        p0 = re.compile(r'^(?P<type>\S+)\s+\|+\s+(?P<protocol>\S+)\s+\|+\s+(?P<src_port>\S+)\s+\|+\s+(?P<dst_port>\S+)\s+\|+\s+(?P<src_addr>[\d\.]+)\s+\|+\s+(?P<dst_addr>[\d\.]+)\s+\|$')
+        
+        # Ace Count : 2
+        p1 = re.compile(r'^Ace Count +: +(?P<ace_count>\d+)$')
+        
+        # Oid       : 1082
+        p2 = re.compile(r'^Oid +: +(?P<oid>\S+)$')
+      
+        for line in output.splitlines(): 
+            line = line.strip()   
+             
+            #  Type | Protocol | Src Port | Dst Port |        Src Addr |        Dst Addr |
+            # ----------------------------------------------------------------------------
+            #  SNAT |      any |        - |        - |        12.0.0.0 |         0.0.0.0 |
+            #  DNAT |      any |        - |        - |         0.0.0.0 |        36.0.0.2 |
+            m = p0.match(line)
+            if m:
+                group = m.groupdict()
+                index_dict = ret_dict.setdefault('index', {}).setdefault(index,{})
+                index_dict['type'] = group['type']
+                index_dict['protocol'] = group['protocol']
+                index_dict['src_port'] = group['src_port']
+                index_dict['dst_port'] = group['dst_port']
+                index_dict['src_addr'] = group['src_addr']
+                index_dict['dst_addr'] = group['dst_addr']
+                index += 1
+                continue
+                
+            # Ace Count : 2
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['ace_count'] = int(group['ace_count'])
+                continue
+                
+            # Oid       : 1082
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['oid'] = group['oid']
+                continue
+   
+        return ret_dict
+        
+        
+class ShowPlatformSoftwareFedSwitchActiveNatFlowsSchema(MetaParser):
+    """
+    Schema for show platform software fed switch active nat flows
+    """
+    schema = {
+        'index':{
+            Any():{
+              'flow_id': str,                          
+              'vrf': str,
+              'protocol': str,
+              'il_ip_port': str, 
+              'ig_ip_port': str, 
+              'ol_ip_port': str,  
+              'og_ip_port': str,                          
+            },
+        },
+        'no_of_flows': int,  
+    }
+      
+class ShowPlatformSoftwareFedSwitchActiveNatFlows(ShowPlatformSoftwareFedSwitchActiveNatFlowsSchema):
+    """
+    show platform software fed switch active nat flows
+    """
+    
+    cli_command = ['show platform software fed {switch} {mode} nat flows',
+                   'show platform software fed active nat flows']     
+    
+    def cli(self, switch=None, mode=None, output=None):
+        
+        if output is None:
+            if switch and mode:
+                cmd = self.cli_command[0].format(switch=switch, mode=mode)
+            else:
+                cmd = self.cli_command[1]
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+        index = 1
+        index_dict = {}
+        
+        #              Flow ID |   VRF | Protocol |          IL_IP : Port |          IG_IP : Port |          OL_IP : Port |          OG_IP : Port |
+        # ------------------------------------------------------------------------------------------------------------------------------------------
+        #                  0xa |     0 |      tcp |        12.0.0.2:60    |        36.0.0.2:60    |        22.0.0.2:60    |        22.0.0.2:60    |
+        #                  0xb |     0 |      udp |        12.0.0.2:63    |        36.0.0.2:63    |        22.0.0.2:63    |        22.0.0.2:63    |
+        p0 = re.compile(r'^(?P<flow_id>\w+)\s+\|+\s+(?P<vrf>\d+)\s+\|+\s+(?P<protocol>\S+)\s+\|\s+(?P<il_ip_port>[\d\.\:]+)\s+\|\s+(?P<ig_ip_port>[\d\.\:]+)\s+\|\s+(?P<ol_ip_port>[\d\.\:]+)\s+\|\s+(?P<og_ip_port>[\d\.\:]+)\s+\|$')
+        
+        # Number of Flows : 2
+        p1 = re.compile(r'^Number of Flows +: +(?P<no_of_flows>\d+)$')
+      
+        for line in output.splitlines(): 
+            line = line.strip()   
+             
+            #              Flow ID |   VRF | Protocol |          IL_IP : Port |          IG_IP : Port |          OL_IP : Port |          OG_IP : Port |
+            # ------------------------------------------------------------------------------------------------------------------------------------------
+            #                  0xa |     0 |      tcp |        12.0.0.2:60    |        36.0.0.2:60    |        22.0.0.2:60    |        22.0.0.2:60    |
+            #                  0xb |     0 |      udp |        12.0.0.2:63    |        36.0.0.2:63    |        22.0.0.2:63    |        22.0.0.2:63    |
+            m = p0.match(line)
+            if m:
+                group = m.groupdict()
+                index_dict = ret_dict.setdefault('index', {}).setdefault(index,{})
+                index_dict['flow_id'] = group['flow_id']
+                index_dict['vrf'] = group['vrf']
+                index_dict['protocol'] = group['protocol']
+                index_dict['il_ip_port'] = group['il_ip_port']
+                index_dict['ig_ip_port'] = group['ig_ip_port']
+                index_dict['ol_ip_port'] = group['ol_ip_port']
+                index_dict['og_ip_port'] = group['og_ip_port']
+                index += 1
+                continue
+                
+            # Number of Flows : 2
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['no_of_flows'] = int(group['no_of_flows'])
+                continue
+       
         return ret_dict

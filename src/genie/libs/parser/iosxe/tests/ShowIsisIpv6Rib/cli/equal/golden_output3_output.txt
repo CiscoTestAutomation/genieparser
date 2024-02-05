@@ -1,0 +1,7 @@
+IS-IS IPv6 process 1, local RIB
+  12:12::/64
+    via FE80::A8BB:CCFF:FE00:9C10/Ethernet0/1, type L1  metric 20 tag 0 
+    prefix attr: X:0 R:0 N:0
+  13:13::/64
+    via FE80::A8BB:CCFF:FE00:9D20/Ethernet0/2, type L1  metric 20 tag 0 
+    prefix attr: X:0 R:0 N:0

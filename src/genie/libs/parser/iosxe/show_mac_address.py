@@ -354,3 +354,64 @@ class ShowMacAddresstableDynamicVlanCount(ShowMacAddresstableDynamicVlanCountSch
                 continue
 
         return ret_dict
+
+# ==========================================================================================
+# Parser Schema for 'show platform software matm switch {switch} {slot} table'
+# ==========================================================================================
+
+class ShowPlatformSoftwareMatmSwitchTableSchema(MetaParser):
+    """
+    Schema for
+        * 'show platform software matm switch {switch} {slot} table'
+    """
+    schema = {
+        'tbl_type': {
+            Any():{
+                'tbl_id': {
+                    int: {
+                        'num_mac': int,
+                        'aging': int,
+                        'aom_id_om_ptr': str
+                    }
+                }
+            }
+        }
+    }
+
+# ==========================================================================================
+# Parser for 'show platform software matm switch {switch} {slot} table'
+# ==========================================================================================
+
+class ShowPlatformSoftwareMatmSwitchTable(ShowPlatformSoftwareMatmSwitchTableSchema):
+    """
+    Parser for
+        * 'show platform software matm switch {switch} {slot} table'
+    """
+    cli_command = 'show platform software matm switch {switch} {slot} table'
+
+    def cli(self, switch, slot, output=None):
+
+        if output is None:
+            output = self.device.execute(self.cli_command.format(switch=switch, slot=slot))
+
+        # initializing dictionary
+        ret_dict = {}
+
+        # Tbl_Type   Tbl_ID  Num_MAC  Aging  AOM_ID/OM_PTR
+        # MAT_VLAN        1        4    300  205 created
+        # MAT_VLAN       10        1    300  524 created
+        p1 = re.compile(r'^(?P<tbl_type>\S+) *(?P<tbl_id>\d+) *(?P<num_mac>\d+) *(?P<aging>\d+) *(?P<aom_id_om_ptr>.*)$')
+        for line in output.splitlines():
+            line = line.strip()
+            # MAT_VLAN        1        4    300  205 created
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                type_dict = ret_dict.setdefault('tbl_type',{}).setdefault(group['tbl_type'].lower(),{})
+                id_dict = type_dict.setdefault('tbl_id',{}).setdefault(int(group['tbl_id']),{})
+                id_dict['num_mac'] = int(group['num_mac'])
+                id_dict['aging'] = int(group['aging'])
+                id_dict['aom_id_om_ptr'] = group['aom_id_om_ptr']
+                continue
+
+        return ret_dict

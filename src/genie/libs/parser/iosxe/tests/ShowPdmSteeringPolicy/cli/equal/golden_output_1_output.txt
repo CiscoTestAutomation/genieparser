@@ -1,0 +1,6 @@
+Steering Policy contract_4(Mirror)_b64b1f72dbf4_v0
+    1 redirect protocol 17 src-port any dst-port any service service_VN_1_cdda4819 (0 match)
+Steering Policy contract_4_9ff0903c7983_v0
+    1 redirect protocol 17 src-port any dst-port any service service_INFRA_VN_cdda4819 (0 match)
+Steering Policy contract_4_56751dd17e06_v0
+    1 redirect protocol 17 src-port any dst-port any service service_VN_1_cdda4819 (0 match)

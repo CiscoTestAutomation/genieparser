@@ -1,0 +1,12 @@
+BGP summary information for VRF default, address family L2VPN EVPN
+BGP router identifier 4.4.4.4, local AS number 4444444444
+BGP table version is 5549, L2VPN EVPN config peers 2, capable peers 2
+293 network entries and 442 paths using 72332 bytes of memory
+BGP attribute entries [110/18920], BGP AS path entries [5/54]
+BGP community entries [0/0], BGP clusterlist entries [8/32]
+
+Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+1.1.1.1   4 4444444444
+                         121842  120925     5549    0    0    11w6d 142       
+1.1.1.2   4 4444444444
+                         118316  117369     5549    0    0     3w4d 142  

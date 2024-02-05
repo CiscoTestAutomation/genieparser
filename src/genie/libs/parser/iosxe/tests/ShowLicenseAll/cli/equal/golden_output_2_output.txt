@@ -1,0 +1,111 @@
+Smart Licensing Status
+======================
+
+Smart Licensing is ENABLED
+
+License Conversion:
+  Automatic Conversion Enabled: False
+  Last Data Push: <none>
+  Last File Export: <none>
+
+Export Authorization Key:
+  Features Authorized:
+    <none>
+
+Utility:
+  Status: DISABLED
+
+Smart Licensing Using Policy:
+  Status: ENABLED
+  Reporting Mode: STANDARD
+
+Account Information:
+  Smart Account: BU Production Test As of Dec 18 11:02:51 2023 PDT
+  Virtual Account: Cat9K-FranklinDT 
+Data Privacy:
+  Sending Hostname: yes
+    Callhome hostname privacy: DISABLED
+    Smart Licensing hostname privacy: DISABLED
+  Version privacy: DISABLED
+
+Transport:
+  Type: Smart
+  URL: https://smartreceiver.cisco.com/licservice/license
+  Proxy:
+    Address: 173.36.224.109
+    Port: 80
+    Username: <empty>
+    Password: <empty>
+  VRF: <empty>
+
+Miscellaneous:
+  Custom Id: <empty> 
+Policy:
+  Policy in use: Installed On Oct 24 15:07:43 2023 PDT
+  Policy name: SLE Policy
+  Reporting ACK required: yes (Customer Policy)
+  Unenforced/Non-Export Perpetual Attributes:
+    First report requirement (days): 30 (Customer Policy)
+    Reporting frequency (days): 60 (Customer Policy)
+    Report on change (days): 60 (Customer Policy)
+  Unenforced/Non-Export Subscription Attributes:
+    First report requirement (days): 120 (Customer Policy)
+    Reporting frequency (days): 111 (Customer Policy)
+    Report on change (days): 111 (Customer Policy)
+  Enforced (Perpetual/Subscription) License Attributes:
+    First report requirement (days): 30 (Customer Policy)
+    Reporting frequency (days): 90 (Customer Policy)
+    Report on change (days): 60 (Customer Policy)
+  Export (Perpetual/Subscription) License Attributes:
+    First report requirement (days): 30 (Customer Policy)
+    Reporting frequency (days): 30 (Customer Policy)
+    Report on change (days): 30 (Customer Policy) 
+Usage Reporting:
+  Last ACK received: Dec 18 11:05:11 2023 PDT
+  Next ACK deadline: Feb 16 11:05:11 2024 PDT
+  Reporting push interval: 30  days
+  Next ACK push check: <none>
+  Next report push: Jan 17 11:00:18 2024 PDT
+  Last report push: Dec 18 11:00:18 2023 PDT
+  Last report file write: <none>
+
+Trust Code Installed:
+  Active: PID:C9407R,SN:FXS2119Q2U7
+    INSTALLED on Nov 22 11:34:47 2023 PDT
+  Standby: PID:C9407R,SN:FXS2119Q2U7
+    INSTALLED on Nov 22 11:34:47 2023 PDT 
+Product Information
+===================
+UDI: PID:C9407R,SN:FXS2119Q2U7
+
+HA UDI List:
+    Active:PID:C9407R,SN:FXS2119Q2U7
+    Standby:PID:C9407R,SN:FXS2119Q2U7
+
+Agent Version
+=============
+Smart Agent for Licensing: 5.11.2_rel/6
+
+License Authorizations
+======================
+Last Data Push: <none>
+Last File Export: <none>
+
+Overall status:
+  Active: PID:C9407R,SN:FXS2119Q2U7
+    Status: NOT INSTALLED
+  Standby: PID:C9407R,SN:FXS2119Q2U7
+    Status: NOT INSTALLED 
+Purchased Licenses:
+  No Purchase Information Available
+
+Usage Report Summary:
+=====================
+Total: 70,  Purged: 0
+Total Acknowledged Received: 64,  Waiting for Ack: 0
+Available to Report: 6  Collecting Data: 2
+
+Device Telemetry Report Summary:
+================================
+Data Channel: AVAILABLE
+Reports on disk: 0

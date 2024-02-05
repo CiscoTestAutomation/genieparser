@@ -14121,3 +14121,64 @@ class ShowCryptoMap(ShowCryptoMapSchema):
                 continue
 
         return ret_dict
+
+# =================================================
+#  Schema for 'show crypto pki certificates pem server'
+# =================================================
+class ShowCryptoPkiCertificatesPemServerSchema(MetaParser):
+    """Schema for show crypto pki certificates pem server"""
+   
+    schema = {
+        "self_signed_ca_certificate": str,
+        "general_purpose_certificate": str,
+    }   
+
+# ============================================
+# Parser for
+#   'show crypto pki certificates pem server'
+# ===========================================
+
+class ShowCryptoPkiCertificatesPemServer(ShowCryptoPkiCertificatesPemServerSchema):
+    """
+    Parser for
+        * 'show crypto pki certificates pem server'
+    """
+
+    cli_command = 'show crypto pki certificates pem server'
+
+    # Defines a function to run the cli_command
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        ret_dict = {}
+        
+        # % Self-signed CA certificate:
+        # % General Purpose Certificate:
+        p1 = re.compile(r'^% +(?P<key_name>.*):$')
+
+        key_name = None
+    
+        for line in out.splitlines():
+            line = line.strip()
+
+            if not line:
+                continue
+            
+            # % Self-signed CA certificate:
+            # % General Purpose Certificate:
+            m = p1.match(line)
+            if m:
+                key_name = m.groupdict()['key_name'].lower().replace(' ', '_').replace('-', '_')
+                ret_dict[key_name] = ''
+                continue
+
+            if key_name:
+                if "END CERTIFICATE" in line:
+                    ret_dict[key_name] += line
+                else:
+                    ret_dict[key_name] += line+'\n'
+                
+        return ret_dict

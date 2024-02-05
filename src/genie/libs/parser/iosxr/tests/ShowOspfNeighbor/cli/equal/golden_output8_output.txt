@@ -1,0 +1,15 @@
+Thu Nov 23 12:45:19.310 UTC
+
+Indicates MADJ interface
+Indicates Neighbor awaiting BFD session up
+Neighbors for OSPF 1
+
+Neighbor ID Pri State Dead Time Address Interface
+10.0.0.13 1 EXSTART/BDR 00:00:39 10.13.14.1 Bundle-Ether1314.511
+Neighbor is up for 00:00:38
+10.0.0.4 1 FULL/BDR 00:00:38 10.4.14.1 Bundle-Ether414
+Neighbor is up for 2d01h
+10.0.0.13 1 FULL/BDR 00:00:34 10.13.14.5 Bundle-Ether1314.510
+Neighbor is up for 17w1d
+
+Total neighbor count: 3

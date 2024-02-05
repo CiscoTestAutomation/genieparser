@@ -1,0 +1,21 @@
+show bgp l2vpn evpn summary
+Wed Nov 22 15:39:42.931 UTC
+BGP router identifier 50.1.1.1, local AS number 100
+BGP generic scan interval 60 secs
+Non-stop routing is enabled
+BGP table state: Active
+Table ID: 0x0
+BGP main routing table version 323
+BGP NSR Initial initsync version 1 (Reached)
+BGP NSR/ISSU Sync-Group versions 0/0
+BGP scan interval 60 secs
+
+BGP is operating in STANDALONE mode.
+
+
+Process       RcvTblVer   bRIB/RIB   LabelVer  ImportVer  SendTblVer  StandbyVer
+Speaker             323        323        323        323         323           0
+
+Neighbor        Spk    AS MsgRcvd MsgSent   TblVer  InQ OutQ  Up/Down  St/PfxRcd
+50.1.1.4          0   100  163199  163235      323    0    0    11w3d          1
+50.1.1.8          0   100   63471   64594        0    0    0    11w5d Idle (Admin)

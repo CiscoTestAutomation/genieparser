@@ -1,0 +1,14 @@
+LISP MAC Mapping Cache for LISP 0 EID-table Vlan 101 (IID 1031), 1 entries
+
+aabb.cc00.ca00/48, uptime: 00:00:08, expires: 23:59:51, via map-reply, complete
+  Sources: map-reply
+  State: complete, last modified: 00:00:08, map-source: 11.11.11.11
+  Active, Packets out: 0(0 bytes)
+  Encapsulating dynamic-EID traffic
+  Locator      Uptime    State  Pri/Wgt     Encap-IID
+  11.11.11.11  00:00:08  up      10/50        -
+    Last up-down state change:         00:00:08, state change count: 1
+    Last route reachability change:    00:00:08, state change count: 1
+    Last priority / weight change:     never/never
+    RLOC-probing loc-status algorithm:
+      Last RLOC-probe sent:            00:00:08 (rtt 1ms)

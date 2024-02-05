@@ -6,14 +6,15 @@ from genie.libs.parser.iosxe.show_vlan import ShowVlan as ShowVlan_iosxe, \
                                               ShowVlanMtu as ShowVlanMtu_iosxe,\
                                               ShowVlanAccessMap as ShowVlanAccessMap_iosxe,\
                                               ShowVlanRemoteSpan as ShowVlanRemoteSpan_iosxe,\
-                                              ShowVlanFilter as ShowVlanFilter_iosxe
+                                              ShowVlanFilter as ShowVlanFilter_iosxe,\
+                                              ShowVlanInternalUsage as ShowVlanInternalUsage_iosxe
 
 
 class ShowVlan(ShowVlan_iosxe):
     pass
 
 class ShowVlanMtu(ShowVlanMtu_iosxe):
-   pass
+    pass
 
 
 class ShowVlanAccessMap(ShowVlanAccessMap_iosxe):
@@ -24,4 +25,7 @@ class ShowVlanRemoteSpan(ShowVlanRemoteSpan_iosxe):
     pass
 
 class ShowVlanFilter(ShowVlanFilter_iosxe):
+    pass
+
+class ShowVlanInternalUsage(ShowVlanInternalUsage_iosxe):
     pass

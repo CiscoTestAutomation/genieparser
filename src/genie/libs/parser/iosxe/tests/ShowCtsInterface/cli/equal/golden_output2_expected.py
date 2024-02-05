@@ -106,6 +106,42 @@ expected_output={
         'port_auth_fail': 0
       },
       'l3_ipm': 'disabled'
+    },
+    'Port-channel2': {
+      'cts': {
+        'cts_status': 'disabled'
+      },
+      'l3_ipm': 'disabled'
+    },
+    'Port-channel20': {
+      'cts': {
+        'cts_status': 'disabled'
+      },
+      'l3_ipm': 'disabled'
+    },
+    'Port-channel22': {
+      'cts': {
+        'cts_status': 'disabled'
+      },
+      'l3_ipm': 'disabled'
+    },
+    'Port-channel47': {
+      'cts': {
+        'cts_status': 'disabled'
+      },
+      'l3_ipm': 'disabled'
+    },
+    'Port-channel58': {
+      'cts': {
+        'cts_status': 'disabled'
+      },
+      'l3_ipm': 'disabled'
+    },
+    'Port-channel69': {
+      'cts': {
+        'cts_status': 'disabled'
+      },
+      'l3_ipm': 'disabled'
     }
   }
 }

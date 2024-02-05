@@ -1,0 +1,7 @@
+Object identifier: 1895
+Description: PLC: contract_4_28eadb333777_v0 idx: 2090904497
+Obj type id: 765
+Obj type: Hawkeye policy-defn
+Status: Pending-issue, Epoch: 0, Client data: 0x4f0875b8
+Pre-lock count: 1
+Post-lock count: 2

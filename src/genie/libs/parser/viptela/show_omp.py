@@ -388,6 +388,7 @@ class ShowOmpRoutesSchema(MetaParser):
                 'prefixes': {
                     Any(): {
                         'prefix': str,
+                        Optional('tenant'): str,
                         'from_peer': {
                             Any(): {
                                 'peer': str,
@@ -401,7 +402,10 @@ class ShowOmpRoutesSchema(MetaParser):
                                         'tloc_ip': str,
                                         'color': str,
                                         'encap': str,
-                                        'preference': str
+                                        'preference': str,
+                                        Optional('affinity'): str,
+                                        Optional('region_id'): str,
+                                        Optional('region_path'):str
                                     }
                                 }
                             }
@@ -452,12 +456,24 @@ class ShowOmpRoutes(ShowOmpRoutesSchema):
         # VPN    PREFIX              FROM PEER        ID     LABEL    STATUS    TYPE       TLOC IP          COLOR            ENCAP  PREFERENCE
         # --------------------------------------------------------------------------------------------------------------------------------------
         # 4      10.0.0.0/8          1.1.1.3          936    1002     C,I,R     installed  100.1.1.1        green            ipsec  200
-        p1 = re.compile(r'(?P<vrf>\d+)\s+(?P<prefix>[\d\.\/]+)\s+(?P<from_peer>[\d\.\/]+)\s+(?P<path_id>\d+)\s+(?P<label>\d+)\s+(?P<status>\S+)\s+(?P<attr_type>\S+)\s+(?P<tloc_ip>[\d\.\/]+)\s+(?P<color>\S+)\s+(?P<encap>\S+)\s+(?P<preference>\S+)')
+
+        #                                                                                                                                                 AFFINITY                  
+        #                                                       PATH                      ATTRIBUTE                                                       GROUP                     
+        # TENANT    VPN    PREFIX              FROM PEER        ID     LABEL    STATUS    TYPE       TLOC IP          COLOR            ENCAP  PREFERENCE  NUMBER      REGION ID   REGION PATH                                                                                                                                                                 
+        # -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------                                                                                                                                                           
+        # 0         10     0.0.0.0/0           1.1.1.4          453    1003     C,I,R     installed  10.255.255.131   biz-internet     ipsec  -           None        None        - 
+        p1 = re.compile(r'((?P<tenant>\d+)\s+)?(?P<vrf>\d+)\s+(?P<prefix>[\d\.\/]+)\s+(?P<from_peer>[\d\.\/]+)\s+(?P<path_id>\d+)\s+(?P<label>\d+)\s+(?P<status>\S+)\s+(?P<attr_type>\S+)\s+(?P<tloc_ip>[\d\.\/]+)\s+(?P<color>\S+)\s+(?P<encap>\S+)\s+(?P<preference>\S+)(\s+(?P<affinity>\w+)\s+(?P<region_id>\w+)\s+(?P<region_path>\S+))?')
 
         #                            1.1.1.3          937    1002     C,I,R     installed  100.1.1.1        blue             ipsec  200         
         #                            1.1.1.3          938    1002     C,I,R     installed  100.1.1.2        green            ipsec  200         
         #                            1.1.1.3          939    1002     C,I,R     installed  100.1.1.2        blue             ipsec  200 
-        p2 = re.compile(r'(?P<from_peer>[\d\.\/]+)\s+(?P<path_id>\d+)\s+(?P<label>\d+)\s+(?P<status>\S+)\s+(?P<attr_type>\S+)\s+(?P<tloc_ip>[\d\.\/]+)\s+(?P<color>\S+)\s+(?P<encap>\S+)\s+(?P<preference>\S+)')
+
+        #                                                                                                                                                         AFFINITY                  
+        #                                                       PATH                      ATTRIBUTE                                                       GROUP                     
+        # TENANT    VPN    PREFIX              FROM PEER        ID     LABEL    STATUS    TYPE       TLOC IP          COLOR            ENCAP  PREFERENCE  NUMBER      REGION ID   REGION PATH                                                                                                                                                                 
+        # -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------                                                                                                                                                      
+        #                                      1.1.1.5          549    1003     C,R       installed  10.255.255.131   biz-internet     ipsec  -           None        None        - 
+        p2 = re.compile(r'(?P<from_peer>[\d\.\/]+)\s+(?P<path_id>\d+)\s+(?P<label>\d+)\s+(?P<status>\S+)\s+(?P<attr_type>\S+)\s+(?P<tloc_ip>[\d\.\/]+)\s+(?P<color>\S+)\s+(?P<encap>\S+)\s+(?P<preference>\S+)(\s+(?P<affinity>\w+)\s+(?P<region_id>\w+)\s+(?P<region_path>\S+))?')
 
         index = 1
         peer = ""
@@ -466,11 +482,15 @@ class ShowOmpRoutes(ShowOmpRoutesSchema):
             line = line.strip()
 
             # 4      10.0.0.0/8          1.1.1.3          936    1002     C,I,R     installed  100.1.1.1        green            ipsec  200
+            # 0         10     0.0.0.0/0           1.1.1.4          453    1003     C,I,R     installed  10.255.255.131   biz-internet     ipsec  -           None        None        - 
             m = p1.match(line)
             if m:
                 group = m.groupdict()
                 if group['vrf']:
-                    vrf = group['vrf']
+                    vrf = group['vrf']                
+                
+                if group['tenant']:
+                    tenant = group['tenant']
                 if prefix != group['prefix'] or peer != group['from_peer']:
                     prefix = group['prefix']
                     peer = group['from_peer']
@@ -478,6 +498,8 @@ class ShowOmpRoutes(ShowOmpRoutesSchema):
 
                 route_info = parsed_dict.setdefault('vrf', {}).setdefault(vrf, {}).setdefault('prefixes', {}).setdefault(prefix, {})
                 route_info['prefix'] = prefix
+                if group['tenant']:
+                    route_info['tenant'] = tenant
                 route_info.setdefault('from_peer', {})
 
                 from_peer_dict = route_info['from_peer'].setdefault(peer, {})
@@ -493,9 +515,16 @@ class ShowOmpRoutes(ShowOmpRoutesSchema):
                 idx_dict['color'] = group['color']
                 idx_dict['encap'] = group['encap']
                 idx_dict['preference'] = group['preference']
+                if group['affinity']:
+                    idx_dict['affinity'] = group['affinity']
+                if group['region_id']:
+                    idx_dict['region_id'] = group['region_id']
+                if group['region_path']:
+                    idx_dict['region_path'] = group['region_path']
                 index += 1
 
             #                            1.1.1.3          937    1002     C,I,R     installed  100.1.1.1        blue             ipsec  200
+            #                                      1.1.1.5          549    1003     C,R       installed  10.255.255.131   biz-internet     ipsec  -           None        None        -
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -525,6 +554,12 @@ class ShowOmpRoutes(ShowOmpRoutesSchema):
                 idx_dict['color'] = group['color']
                 idx_dict['encap'] = group['encap']
                 idx_dict['preference'] = group['preference']
+                if group['affinity']:
+                    idx_dict['affinity'] = group['affinity']
+                if group['region_id']:
+                    idx_dict['region_id'] = group['region_id']
+                if group['region_path']:
+                    idx_dict['region_path'] = group['region_path']
                 index += 1
 
         return parsed_dict

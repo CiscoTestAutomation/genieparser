@@ -20,7 +20,7 @@ Is Empty       : Yes
     Profile reference count: 73
     Is Reserved            : Yes
     For speeds             : 10000000000
-    Associated VOQ Offsets : 0
+    Associated VOQ Offsets : 0, 1, 3, 4
     HBM Enabled            : Enabled
     HBM Block Size         : 6144
     RED Enabled            : Enabled

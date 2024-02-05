@@ -1,0 +1,55 @@
+2023-11-09 13:00:59,864: %UNICON-INFO: +++ P1B with via 'ssh': executing command 'show ospf database' +++
+show ospf database
+Thu Nov  9 13:03:33.568 UTC
+
+
+            OSPF Router with ID (10.0.0.11) (Process ID 1)
+
+                Router Link States (Area 0)
+
+Link ID         ADV Router      Age         Seq#       Checksum Link count
+10.0.0.1        10.0.0.1        1820        0x80000189 0x00d66f 2
+10.0.0.11       10.0.0.11       1519        0x8000018a 0x00af77 2
+
+                Net Link States (Area 0)
+
+Link ID         ADV Router      Age         Seq#       Checksum
+10.1.11.2       10.0.0.11       1519        0x80000183 0x002646
+
+                Summary Net Link States (Area 0)
+
+Link ID         ADV Router      Age         Seq#       Checksum
+10.0.0.13       10.0.0.11       1519        0x80000166 0x002e7a
+10.11.13.0      10.0.0.11       1519        0x80000186 0x004041
+
+                Router Link States (Area 1)
+
+Link ID         ADV Router      Age         Seq#       Checksum Link count
+10.0.0.11       10.0.0.11       1519        0x80000187 0x001a20 1
+10.0.0.13       10.0.0.13       1716        0x80000187 0x00a667 2
+
+                Net Link States (Area 1)
+
+Link ID         ADV Router      Age         Seq#       Checksum
+10.11.13.1      10.0.0.11       1519        0x80000183 0x002233
+
+                Summary Net Link States (Area 1)
+
+Link ID         ADV Router      Age         Seq#       Checksum
+10.0.0.1        10.0.0.11       1519        0x80000166 0x00a60e
+10.0.0.11       10.0.0.11       1519        0x80000163 0x003e70
+10.1.11.0       10.0.0.11       1519        0x80000186 0x00cebe
+
+                Summary ASB Link States (Area 1)
+
+Link ID         ADV Router      Age         Seq#       Checksum
+10.0.0.1        10.0.0.11       1519        0x80000186 0x004e46
+
+                Type-5 AS External Link States
+
+Link ID         ADV Router      Age         Seq#       Checksum Tag
+1.1.1.1         10.0.0.1        1820        0x80000163 0x00919c 0
+2.2.2.2         10.0.0.1        1820        0x80000163 0x0063c6 0
+10.0.0.1        10.0.0.1        1820        0x80000183 0x00f214 0
+10.1.11.0       10.0.0.1        1820        0x80000183 0x006599 0
+RP/0/RP0/CPU0:P1B#
