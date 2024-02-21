@@ -9123,15 +9123,20 @@ class ShowBgpAddressFamily(ShowBgpAddressFamilySchema):
         'show bgp'
         'show bgp {address_family}'
     '''
+    cli_command = [
+        'show bgp',
+        'show bgp {address_family}',
+        'show bgp {address_family} community {community}',
+        'show bgp {address_family} community {community} {exact_match}',]
 
-    cli_command = ['show bgp',
-                   'show bgp {address_family}']
+    def cli(self, address_family=None, community=None, exact_match=None, output=None):
 
-    def cli(self, address_family=None, output=None):
-
-        # Execute command
         if output is None:
-            if address_family:
+            if address_family and community and exact_match:
+                command = self.cli_command[3].format(address_family=address_family, community=community, exact_match=exact_match)
+            elif address_family and community:
+                command = self.cli_command[2].format(address_family=address_family, community=community)
+            elif address_family:
                 command = self.cli_command[1].format(address_family=address_family)
             else:
                 command = self.cli_command[0]
