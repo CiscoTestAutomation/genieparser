@@ -3518,7 +3518,6 @@ class ShowCtsPolicyServerStatistics(ShowCtsPolicyServerStatisticsSchema):
                 continue
 
             map_dict = result_dict.setdefault('cts_policy_server_stats', {})
-            print(line)
             m0 = p0.match(line)
             if m0:
                 

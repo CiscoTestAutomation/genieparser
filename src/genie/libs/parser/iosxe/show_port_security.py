@@ -382,3 +382,38 @@ class ShowPortSecurityAddress(ShowPortSecurityAddressSchema):
                 continue
 
         return ret_dict
+
+# ==========================================
+# Parser for:
+#   * 'show port-security interface {interface} address | count {match}'
+# ==========================================
+class ShowPortSecurityInterfaceCountSchema(MetaParser):
+    schema = {
+        'count': int
+    }
+
+class ShowPortSecurityInterfaceCount(ShowPortSecurityInterfaceCountSchema):
+    """Parser for:
+        show port-security interface {interface} address | count {match}
+    """
+    cli_command = 'show port-security interface {interface} address | count {match}'
+
+    def cli(self, interface='', match='', output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(interface=interface, match=match))
+        dict_count = {}
+
+        # Number of lines which match regexp = 240
+        p1 = re.compile(r"^Number of lines which match regexp\s*=\s*(?P<count>[\d]+)$")
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Number of lines which match regexp = 240
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                count = int(groups['count'])
+                dict_count['count'] = count
+
+        return dict_count

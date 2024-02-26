@@ -1,0 +1,26 @@
+Telemetry protocol manager stats:
+
+Con str                : 161.44.237.28:45000:0:172.16.0.6
+Sockfd                 : 138
+Protocol               : native
+State                  : CNDP_STATE_CONNECTED
+Table id               : 0
+Wait Mask              :
+Connection Retries     : 0
+Send Retries           : 0
+Pending events         : 0
+Session requests       : 1
+Session replies        : 1
+Source ip              : 172.16.0.6
+Bytes Sent             : 1727
+Msgs Sent              : 3
+Msgs Received          : 0
+Creation time:         : Thu Jan 18 20:12:48:817
+Last connected time:   : Thu Jan 18 20:12:48:886
+Last disconnect time:  :
+Last error:            :
+Connection flaps:      : 0
+Last flap Reason:      :
+Keep Alive Timeouts:   : 0
+Last Transport Error   :
+

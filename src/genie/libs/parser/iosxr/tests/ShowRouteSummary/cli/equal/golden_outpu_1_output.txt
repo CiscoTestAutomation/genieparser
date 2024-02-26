@@ -1,0 +1,11 @@
+show route summary
+Wed Oct 11 16:00:37.081 UTC
+Route Source                     Routes     Backup     Deleted     Memory(bytes)
+connected                        3          2          0           1080         
+local                            5          0          0           1080         
+dagr                             0          0          0           0            
+te-client                        0          0          0           0            
+bgp 100                          6          0          0           1296         
+static                           0          0          0           0            
+application fib_mgr              0          0          0           0            
+Total                            14         2          0           3456         

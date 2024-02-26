@@ -10,34 +10,69 @@ import re
 # Metaparser
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any, Optional, Or
-
+from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
 
 # =======================================================================
 # Parser Schema for 'show ethernet cfm maintenance-points remote detail'
 # =======================================================================
 
 
+class CustOrSchema(Or):
+    """
+    Make Json will call items of schema object
+    as Or type object does not have items attribute
+    define items attribute here
+    """
+
+    def items(self):
+        return self.schemas[0].items()
+
+
 class ShowEthernetCfmMaintenancePointsRemoteDetailSchema(MetaParser):
     """Schema for "show ethernet cfm maintenance-points remote detail" """
 
-    schema = {
-                'version': str,
-                'mac_address': str,
-                'domain_name': str,
-                'domain_id': str,
-                'ma_name': str,
-                'level': int,
-                'evc': str,
-                'bridge_domain': int,
-                'mpid': int,
-                'incoming_port': str,
-                'cc_lifetime': str,
-                'age_of_last_cc_message': int,
-                'cc_packet_statistics': str,
-                'mep_interface_status': str,
-                'mep_port_status': str,
-                'receive_rdi': str
-            }
+    schema1 = {
+        Any(): {  # 1, 2 ,3, ...
+            'version': str,
+            'mac_address': str,
+            'domain_name': str,
+            'domain_id': str,
+            'ma_name': str,
+            'level': int,
+            'evc': str,
+            'bridge_domain': int,
+            'mpid': int,
+            'incoming_port': str,
+            'cc_lifetime': str,
+            'age_of_last_cc_message': int,
+            'cc_packet_statistics': str,
+            'mep_interface_status': str,
+            'mep_port_status': str,
+            'receive_rdi': str,
+        },
+        'total_remote_meps': int,
+        'total_mep_port_up': int,
+        'total_mep_intf_up': int,
+    }
+    schema2 = {
+        'version': str,
+        'mac_address': str,
+        'domain_name': str,
+        'domain_id': str,
+        'ma_name': str,
+        'level': int,
+        'evc': str,
+        'bridge_domain': int,
+        'mpid': int,
+        'incoming_port': str,
+        'cc_lifetime': str,
+        'age_of_last_cc_message': int,
+        'cc_packet_statistics': str,
+        'mep_interface_status': str,
+        'mep_port_status': str,
+        'receive_rdi': str,
+    }
+    schema = CustOrSchema(schema1, schema2)
 
 
 # ================================================================
@@ -46,7 +81,7 @@ class ShowEthernetCfmMaintenancePointsRemoteDetailSchema(MetaParser):
 
 
 class ShowEthernetCfmMaintenancePointsRemoteDetail(ShowEthernetCfmMaintenancePointsRemoteDetailSchema):
-    """ parser for "show ethernet cfm maintenance-points remote detail" """
+    """parser for "show ethernet cfm maintenance-points remote detail" """
 
     cli_command = "show ethernet cfm maintenance-points remote detail"
 
@@ -55,6 +90,8 @@ class ShowEthernetCfmMaintenancePointsRemoteDetail(ShowEthernetCfmMaintenancePoi
             output = self.device.execute(self.cli_command)
 
         parsed_dict = {}
+        # compatibale with previous partial format
+        partial_flag = True
 
         # Version: IEEE-CFM
         p1 = re.compile(r'^(Version:+\s+(?P<version>[A-Z-]+))$')
@@ -69,13 +106,13 @@ class ShowEthernetCfmMaintenancePointsRemoteDetail(ShowEthernetCfmMaintenancePoi
         p4 = re.compile(r'^(Domain\sID:\s(?P<domain_id>\w+)$)')
 
         # MA Name: UNINET_VERLEANDROVALLE-17_5005
-        p5 = re.compile(r'^(MA\sName:\s(?P<ma_name>[A-Z0-9-_]+)$)')
+        p5 = re.compile(r'^(MA\sName:\s(?P<ma_name>\S+)$)')
 
         # Level: 7
         p6 = re.compile(r'^(Level:\s(?P<level>\d+$))')
 
         # EVC: UNINET_VERLEANDROVALLE-17_5005
-        p7 = re.compile(r'^(EVC:\s(?P<evc>[A-Z0-9-_]+)$)')
+        p7 = re.compile(r'^(EVC:\s(?P<evc>\S+)$)')
 
         # Bridge Domain: 100
         p8 = re.compile(r'^(Bridge\sDomain:\s(?P<bridge_domain>\d+$)$)')
@@ -104,6 +141,12 @@ class ShowEthernetCfmMaintenancePointsRemoteDetail(ShowEthernetCfmMaintenancePoi
         # Receive RDI: FALSE
         p16 = re.compile(r'^(Receive\sRDI:\s(?P<receive_rdi>\w+)$)')
 
+        # Total Remote MEPs: 4
+        p17 = re.compile(r'^(Total\sRemote\sMEPs:\s(?P<total_remote_meps>\d+)$)')
+
+        index = 1
+        total_mep_port_up = 0
+        total_mep_intf_up = 0
         for line in output.splitlines():
             line = line.strip()
 
@@ -112,7 +155,9 @@ class ShowEthernetCfmMaintenancePointsRemoteDetail(ShowEthernetCfmMaintenancePoi
             if m:
                 group = m.groupdict()
                 version = group['version']
-                parsed_dict.update({'version': version})
+                if not parsed_dict.get(index, None):
+                    parsed_dict.update({index: {}})
+                parsed_dict[index].update({'version': version})
                 continue
 
             # MAC Address: 7070.8bba.3801
@@ -120,7 +165,7 @@ class ShowEthernetCfmMaintenancePointsRemoteDetail(ShowEthernetCfmMaintenancePoi
             if m:
                 group = m.groupdict()
                 mac_address = group['mac_address']
-                parsed_dict.update({'mac_address': mac_address})
+                parsed_dict[index].update({'mac_address': mac_address})
                 continue
 
             # Domain Name: UNINET
@@ -128,7 +173,7 @@ class ShowEthernetCfmMaintenancePointsRemoteDetail(ShowEthernetCfmMaintenancePoi
             if m:
                 group = m.groupdict()
                 domain_name = group['domain_name']
-                parsed_dict.update({'domain_name': domain_name})
+                parsed_dict[index].update({'domain_name': domain_name})
                 continue
 
             # Domain ID: UNINET
@@ -136,7 +181,7 @@ class ShowEthernetCfmMaintenancePointsRemoteDetail(ShowEthernetCfmMaintenancePoi
             if m:
                 group = m.groupdict()
                 domain_id = group['domain_id']
-                parsed_dict.update({'domain_id': domain_id})
+                parsed_dict[index].update({'domain_id': domain_id})
                 continue
 
             # MA Name: UNINET_VERLEANDROVALLE-17_5005
@@ -144,7 +189,7 @@ class ShowEthernetCfmMaintenancePointsRemoteDetail(ShowEthernetCfmMaintenancePoi
             if m:
                 group = m.groupdict()
                 ma_name = group['ma_name']
-                parsed_dict.update({'ma_name': ma_name})
+                parsed_dict[index].update({'ma_name': ma_name})
                 continue
 
             # Level: 7
@@ -152,7 +197,7 @@ class ShowEthernetCfmMaintenancePointsRemoteDetail(ShowEthernetCfmMaintenancePoi
             if m:
                 group = m.groupdict()
                 level = int(group['level'])
-                parsed_dict.update({'level': level})
+                parsed_dict[index].update({'level': level})
                 continue
 
             # EVC: UNINET_VERLEANDROVALLE-17_5005
@@ -160,7 +205,7 @@ class ShowEthernetCfmMaintenancePointsRemoteDetail(ShowEthernetCfmMaintenancePoi
             if m:
                 group = m.groupdict()
                 evc = group['evc']
-                parsed_dict.update({'evc': evc})
+                parsed_dict[index].update({'evc': evc})
                 continue
 
             # Bridge Domain: 100
@@ -168,7 +213,7 @@ class ShowEthernetCfmMaintenancePointsRemoteDetail(ShowEthernetCfmMaintenancePoi
             if m:
                 group = m.groupdict()
                 bridge_domain = int(group['bridge_domain'])
-                parsed_dict.update({'bridge_domain': bridge_domain})
+                parsed_dict[index].update({'bridge_domain': bridge_domain})
                 continue
 
             # MPID: 1562
@@ -176,7 +221,7 @@ class ShowEthernetCfmMaintenancePointsRemoteDetail(ShowEthernetCfmMaintenancePoi
             if m:
                 group = m.groupdict()
                 mpid = int(group['mpid'])
-                parsed_dict.update({'mpid': mpid})
+                parsed_dict[index].update({'mpid': mpid})
                 continue
 
             # Incoming Port(s): Gi2/0/4
@@ -184,7 +229,7 @@ class ShowEthernetCfmMaintenancePointsRemoteDetail(ShowEthernetCfmMaintenancePoi
             if m:
                 group = m.groupdict()
                 incoming_port = group['incoming_port']
-                parsed_dict.update({'incoming_port': incoming_port})
+                parsed_dict[index].update({'incoming_port': incoming_port})
                 continue
 
             # CC Lifetime(sec): 3.500
@@ -192,7 +237,7 @@ class ShowEthernetCfmMaintenancePointsRemoteDetail(ShowEthernetCfmMaintenancePoi
             if m:
                 group = m.groupdict()
                 cc_lifetime = group['cc_lifetime']
-                parsed_dict.update({'cc_lifetime': cc_lifetime})
+                parsed_dict[index].update({'cc_lifetime': cc_lifetime})
                 continue
 
             # Age of Last CC Message(sec): 0
@@ -200,7 +245,7 @@ class ShowEthernetCfmMaintenancePointsRemoteDetail(ShowEthernetCfmMaintenancePoi
             if m:
                 group = m.groupdict()
                 age_of_last_cc_message = int(group['age_of_last_cc_message'])
-                parsed_dict.update({'age_of_last_cc_message': age_of_last_cc_message})
+                parsed_dict[index].update({'age_of_last_cc_message': age_of_last_cc_message})
                 continue
 
             # CC Packet Statistics: 28091/0 (Received/Error)
@@ -208,7 +253,7 @@ class ShowEthernetCfmMaintenancePointsRemoteDetail(ShowEthernetCfmMaintenancePoi
             if m:
                 group = m.groupdict()
                 cc_packet_statistics = group['cc_packet_statistics']
-                parsed_dict.update({'cc_packet_statistics': cc_packet_statistics})
+                parsed_dict[index].update({'cc_packet_statistics': cc_packet_statistics})
                 continue
 
             # MEP interface status: Up
@@ -216,7 +261,9 @@ class ShowEthernetCfmMaintenancePointsRemoteDetail(ShowEthernetCfmMaintenancePoi
             if m:
                 group = m.groupdict()
                 mep_interface_status = group['mep_interface_status']
-                parsed_dict.update({'mep_interface_status': mep_interface_status})
+                parsed_dict[index].update({'mep_interface_status': mep_interface_status})
+                if mep_interface_status == 'Up':
+                    total_mep_intf_up += 1
                 continue
 
             # MEP port status: Up
@@ -224,7 +271,9 @@ class ShowEthernetCfmMaintenancePointsRemoteDetail(ShowEthernetCfmMaintenancePoi
             if m:
                 group = m.groupdict()
                 mep_port_status = group['mep_port_status']
-                parsed_dict.update({'mep_port_status': mep_port_status})
+                parsed_dict[index].update({'mep_port_status': mep_port_status})
+                if mep_port_status == 'Up':
+                    total_mep_port_up += 1
                 continue
 
             # Receive RDI: FALSE
@@ -232,9 +281,26 @@ class ShowEthernetCfmMaintenancePointsRemoteDetail(ShowEthernetCfmMaintenancePoi
             if m:
                 group = m.groupdict()
                 receive_rdi = group['receive_rdi']
-                parsed_dict.update({'receive_rdi': receive_rdi})
+                parsed_dict[index].update({'receive_rdi': receive_rdi})
+                index += 1
                 continue
 
+            # Total Remote MEPs: 4
+            m = p17.match(line)
+            if m:
+                partial_flag = False
+                group = m.groupdict()
+                total_remote_meps = group['total_remote_meps']
+                parsed_dict.update({'total_remote_meps': int(total_remote_meps)})
+                parsed_dict.update({'total_mep_port_up': total_mep_port_up})
+                parsed_dict.update({'total_mep_intf_up': total_mep_intf_up})
+                break
+        if partial_flag:
+            if not parsed_dict.get(1, None):
+                # empty case
+                return None
+            else:
+                return parsed_dict.get(1, {})
         return parsed_dict
 
 
@@ -253,22 +319,15 @@ class ShowEthernetCfmStatisticsSchema(MetaParser):
         'mpid': {
             Any(): {
                 'counters_last_clearing': str,
-                'ccms': {
-                    'transmitted': int,
-                    'rcvd_seq_errors': int
-                },
+                'ccms': {'transmitted': int, 'rcvd_seq_errors': int},
                 'ltrs': {
                     'unexpected_received': int,
                     'total_tx_ltr': int,
                     'total_rx_valid_ltr': int,
                     'total_rx_invalid_ltr': int,
-                    'rx_invalid_relay_action': int
+                    'rx_invalid_relay_action': int,
                 },
-                'ltms': {
-                    'total_tx_ltm': int,
-                    'total_rx_valid_ltm': int,
-                    'total_rx_invalid_ltm': int
-                },
+                'ltms': {'total_tx_ltm': int, 'total_rx_valid_ltm': int, 'total_rx_invalid_ltm': int},
                 'lbrs': {
                     'transmitted': int,
                     'rcvd_seq_errors': int,
@@ -276,13 +335,9 @@ class ShowEthernetCfmStatisticsSchema(MetaParser):
                     'rcvd_bad_msdu': int,
                     'rx_invalid_lbr': int,
                 },
-                'lbms': {
-                    'total_tx_lbm': int,
-                    'total_rx_valid_lbm': int,
-                    'total_rx_invalid_lbm': int
-                }
+                'lbms': {'total_tx_lbm': int, 'total_rx_valid_lbm': int, 'total_rx_invalid_lbm': int},
             }
-        }
+        },
     }
 
 
@@ -290,8 +345,9 @@ class ShowEthernetCfmStatisticsSchema(MetaParser):
 # Parser for 'show ethernet cfm statistics'
 # ==========================================
 
+
 class ShowEthernetCfmStatistics(ShowEthernetCfmStatisticsSchema):
-    """ parser for "show ethernet cfm statistics" """
+    """parser for "show ethernet cfm statistics" """
 
     cli_command = "show ethernet cfm statistics"
 

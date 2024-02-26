@@ -1,0 +1,2 @@
+Drive Supported: Yes, Locking Enabled: No, Locked: No, Partitioned: Yes, TAM Object: No
+

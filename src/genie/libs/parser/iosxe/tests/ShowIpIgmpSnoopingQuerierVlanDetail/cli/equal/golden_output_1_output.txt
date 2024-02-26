@@ -1,0 +1,26 @@
+show ip igmp snooping querier vlan 10 detail
+
+Global IGMP switch querier status
+--------------------------------------------------------
+admin state                    : Enabled
+admin version                  : 2
+source IP address              : 0.0.0.0
+query-interval (sec)           : 100
+max-response-time (sec)        : 10
+querier-timeout (sec)          : 120
+tcn query count                : 10
+tcn query interval (sec)       : 10
+
+Vlan 10:   IGMP switch querier status
+--------------------------------------------------------
+admin state                    : Enabled (state inherited)
+admin version                  : 2
+source IP address              : 10.1.1.1
+query-interval (sec)           : 100
+max-response-time (sec)        : 10
+querier-timeout (sec)          : 120
+tcn query count                : 10
+tcn query interval (sec)       : 10
+operational state              : Non-Querier
+operational version            : 2
+tcn query pending count        : 0

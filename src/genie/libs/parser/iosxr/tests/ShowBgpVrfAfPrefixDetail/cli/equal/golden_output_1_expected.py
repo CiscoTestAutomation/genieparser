@@ -32,6 +32,7 @@ expected_output = {
                                                 'local_path_id': 1,
                                                 'version': 181,
                                                 'extended_community': 'RT:100:1',
+                                                'if_handle': '0x00000000',
                                                 'originator': '10.0.0.3',
                                                 'cluster_list': '10.0.0.11, 10.0.0.13',
                                                 'psid_type': {
@@ -90,6 +91,7 @@ expected_output = {
                                                 'local_path_id': 0,
                                                 'version': 0,
                                                 'extended_community': 'RT:100:1',
+                                                'if_handle': '0x00000000',
                                                 'originator': '10.0.0.3',
                                                 'cluster_list': '10.0.0.12, 10.0.0.13',
                                                 'psid_type': {

@@ -58,11 +58,12 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
 
         # No platform
         # R5.cisco.com Gig 0/0 125 R B Gig 0/0
+        # kanntp01-01         Eth1/3         168    H         FAS8020       e0c
         p1 = re.compile(r'^(?P<device_id>\S+) +'
                         '(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
                         '(?P<hold_time>\d+) +(?P<capability>[RTBSHIVDrs\s]+)'
                         '(?: +(?P<platform>[\w\-]+) )? +'
-                        '(?P<port_id>(vmnic|Eth|Te|Gig|Fas|Lo|Po|Tu|mgmt|cont)[a-zA-Z0-9\/\-]+)$')
+                        '(?P<port_id>(vmnic|Eth|Te|Gig|Fas|Lo|Po|Tu|mgmt|cont|e)[a-zA-Z0-9\/\-]+)$')
 
         # device6 Gig 0 157 R S I C887VA-W- WGi 0
         # switchB                Ethernet2/3     177     R S I    WS-C2960-24TC Ethernet1/4

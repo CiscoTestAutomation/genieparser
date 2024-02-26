@@ -1799,3 +1799,94 @@ class ShowRouteAllSummary(ShowRouteAllSummarySchema):
                 continue
 
         return ret_dict
+
+# ====================================================
+#  schema for show route summary
+# ====================================================
+class ShowRouteSummarySchema(MetaParser):
+    """Schema for :
+       show route summary"""
+
+    schema = {
+        'total_route_source': {
+            'routes': int,
+            'backup': int,
+            'deleted': int,
+            'memory_bytes': int,
+        },
+        'route_source': {
+            Any(): {
+                Any(): {
+                    'routes': int,
+                    'backup': int,
+                    'deleted': int,
+                    'memory_bytes': int,
+                },
+                Optional('routes'): int,
+                Optional('backup'): int,
+                Optional('deleted'): int,
+                Optional('memory_bytes'): int,
+            }
+        },
+    }
+
+
+# ====================================================
+#  parser for show route summary
+# ====================================================
+class ShowRouteSummary(ShowRouteSummarySchema):
+    """Parser for :
+       show route summary"""
+
+    cli_command = ['show route summary']
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command[0])
+        
+        # Route Source                     Routes     Backup     Deleted     Memory(bytes)
+        # connected                        3          2          0           1080         
+        # local                            5          0          0           1080         
+        # dagr                             0          0          0           0            
+        # te-client                        0          0          0           0            
+        # bgp 100                          6          0          0           1296         
+        # static                           0          0          0           0            
+        # application fib_mgr              0          0          0           0            
+        # Total                            14         2          0           3456 
+        
+        p1 = re.compile(
+            r'^(?P<protocol>[a-zA-Z0-9(\-|\_)]+) +(?P<instance>[a-zA-Z0-9\.(\-|\_)]+)* * +('
+            r'?P<routes>\d+) +(?P<backup>\d+) +(?P<deleted>\d+) +(?P<memory_bytes>\d+)')
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # Route Source                     Routes     Backup     Deleted     Memory(bytes)
+            # connected                        3          2          0           1080         
+            # local                            5          0          0           1080         
+            # dagr                             0          0          0           0            
+            # te-client                        0          0          0           0            
+            # bgp 100                          6          0          0           1296         
+            # static                           0          0          0           0            
+            # application fib_mgr              0          0          0           0            
+            # Total                            14         2          0           3456 
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                vrf_rs_dict = ret_dict.setdefault('route_source', {})
+                protocol = group.pop('protocol')
+                instance = group.pop('instance')
+                if protocol == 'Total':
+                    protocol_dict = ret_dict.setdefault('total_route_source', {})
+                else:
+                    protocol_dict = vrf_rs_dict.setdefault(protocol, {})
+                group = {k: int(v) for k, v in group.items() if v is not None}
+                if instance is not None:
+                    protocol_dict.setdefault(instance, {}).update(group)
+                else:                   
+                    protocol_dict.update(group)
+                continue
+
+        return ret_dict

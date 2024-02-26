@@ -15,6 +15,7 @@ class ShowVersionSchema(MetaParser):
         'version': str,
         Optional('platform'): str,
         Optional('pid'): str,
+        Optional('operating_mode'): str,
     }
 
 
@@ -84,6 +85,8 @@ class ShowVersion(ShowVersionSchema):
 
         # Model Number                       : C9300-24P
         iosxe_backup_pid_pattern = re.compile(r'^Model\s+Number\s+\:\s+(?P<pid>.+)$')
+        # Router operating mode: Controller-Managed
+        iosxe_sdwan_controller_mode = re.compile(r'^Router operating mode:\s+(?P<mode>\S+)\s*$')
 
         # ********************************************
         # *                  IOSXR                   *
@@ -246,7 +249,11 @@ class ShowVersion(ShowVersionSchema):
             if m:
                 ret_dict['pid'] = m.groupdict()['pid']
                 continue
-
+            # Controller Mode
+            m = iosxe_sdwan_controller_mode.match(line)
+            if m:
+                ret_dict['operating_mode'] = m.groupdict().get('mode')
+                continue
             # ********************************************
             # *                  IOSXR                   *
             # ********************************************

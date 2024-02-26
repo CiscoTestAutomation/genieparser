@@ -1,0 +1,35 @@
+show bgp ipv6 unicast fc00:a000:1000:101::2/128 detail
+Tue Jan 30 10:00:21.635 UTC
+BGP routing table entry for fc00:a000:1000:101::2/128
+Versions:
+  Process           bRIB/RIB  SendTblVer
+  Speaker                1003         1003
+Last Modified: Jan 29 05:43:06.637 for 1d04h
+Paths: (2 available, best #1)
+  Not advertised to any peer
+  Path #1: Received by speaker 0
+  Not advertised to any peer
+  Local
+    fc00:a000:1000::2 (metric 10) from fc00:a000:1000::11 (10.0.0.2), if-handle 0x00000000
+      Origin IGP, metric 0, localpref 100, valid, internal, best, group-best
+      Received Path ID 0, Local Path ID 1, version 1003
+      Originator: 10.0.0.2, Cluster list: 10.0.0.11
+      PSID-Type:L3, SubTLV Count:1, R:0x00,
+       SubTLV:
+        T:1(Sid information), Sid:fc00:c000:1002:e008::, F:0x00, R2:0x00, Behavior:62, R3:0x00, SS-TLV Count:1
+         SubSubTLV:
+          T:1(Sid structure):
+           Length [Loc-blk,Loc-node,Func,Arg]:[32,16,16,0], Tpose-len:0, Tpose-offset:0
+  Path #2: Received by speaker 0
+  Not advertised to any peer
+  Local
+    fc00:a000:1000::2 (metric 10) from fc00:a000:1000::12 (10.0.0.2), if-handle 0x00000000
+      Origin IGP, metric 0, localpref 100, valid, internal
+      Received Path ID 0, Local Path ID 0, version 0
+      Originator: 10.0.0.2, Cluster list: 10.0.0.12
+      PSID-Type:L3, SubTLV Count:1, R:0x00,
+       SubTLV:
+        T:1(Sid information), Sid:fc00:c000:1002:e008::, F:0x00, R2:0x00, Behavior:62, R3:0x00, SS-TLV Count:1
+         SubSubTLV:
+          T:1(Sid structure):
+           Length [Loc-blk,Loc-node,Func,Arg]:[32,16,16,0], Tpose-len:0, Tpose-offset:0

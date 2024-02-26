@@ -36,7 +36,6 @@ class ShowInventory(ShowInventorySchema):
     cli_command = 'show inventory'
 
     def cli(self, output=None):
-        print("-------------- new c9300 parser -------------------")
         if output is None:
             out = self.device.execute(self.cli_command)
         else:

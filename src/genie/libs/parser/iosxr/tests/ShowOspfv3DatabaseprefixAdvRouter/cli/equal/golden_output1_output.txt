@@ -1,0 +1,23 @@
+ 
+ OSPFv3 Router with ID (10.0.0.3) (Process ID 1)
+
+            Intra Area Prefix Link States (Area 0)
+
+  Routing Bit Set on this LSA
+  LS age: 146
+  LS Type: Intra-Area-Prefix-LSA
+  Link State ID: 0
+  Advertising Router: 10.0.0.3
+  LS Seq Number: 800007e7
+  Checksum: 0x64ad
+  Length: 92
+  Referenced LSA Type: 2001
+  Referenced Link State ID: 0
+  Referenced Advertising Router: 10.0.0.3
+  Number of Prefixes: 3
+  Prefix Address: fc00:b000::3:13:0
+  Prefix Length: 126, Options: None, Metric: 1, Priority: Low
+  Prefix Address: fc00:b000::3:4:0
+  Prefix Length: 126, Options: None, Metric: 1, Priority: Low
+  Prefix Address: fc00:a000:2000::3
+  Prefix Length: 128, Options: LA , Metric: 0, Priority: Medium

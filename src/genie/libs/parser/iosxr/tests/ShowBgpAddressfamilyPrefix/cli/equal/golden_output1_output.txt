@@ -1,0 +1,33 @@
+BGP routing table entry for 101.0.0.1/32
+Versions:
+  Process           bRIB/RIB  SendTblVer
+  Speaker                2859         2859
+Last Modified: Jan 31 21:14:05.696 for 1d09h
+Paths: (2 available, best #1)
+  Advertised IPv4 Unicast paths to peers (in unique update groups):
+    192.168.214.2   
+  Path #1: Received by speaker 0
+  Advertised IPv4 Unicast paths to peers (in unique update groups):
+    192.168.214.2   
+  Local
+    fc00:a000:1000::1 (metric 20) from fc00:a000:2000::13 (10.0.0.1)
+      Origin IGP, metric 0, localpref 100, valid, internal, best, group-best
+      Received Path ID 0, Local Path ID 1, version 2859
+      Originator: 10.0.0.1, Cluster list: 10.0.0.13, 10.0.0.15, 10.0.0.11
+      PSID-Type:L3, SubTLV Count:1
+       SubTLV:
+        T:1(Sid information), Sid:fc00:c000:1001:e008::, Behavior:63, SS-TLV Count:1
+         SubSubTLV:
+          T:1(Sid structure):
+  Path #2: Received by speaker 0
+  Not advertised to any peer
+  Local
+    fc00:a000:1000::1 (metric 20) from fc00:a000:2000::14 (10.0.0.1)
+      Origin IGP, metric 0, localpref 100, valid, internal
+      Received Path ID 0, Local Path ID 0, version 0
+      Originator: 10.0.0.1, Cluster list: 10.0.0.14, 10.0.0.15, 10.0.0.11
+      PSID-Type:L3, SubTLV Count:1
+       SubTLV:
+        T:1(Sid information), Sid:fc00:c000:1001:e008::, Behavior:63, SS-TLV Count:1
+         SubSubTLV:
+          T:1(Sid structure):

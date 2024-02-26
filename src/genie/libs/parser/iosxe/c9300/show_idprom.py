@@ -4,9 +4,7 @@ IOSXE C9300 parsers for the following show commands:
 """
 
 # Python
-from asyncore import poll3
 import re
-import logging
 # Metaparser
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional

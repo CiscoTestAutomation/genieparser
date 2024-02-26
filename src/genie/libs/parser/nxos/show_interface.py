@@ -45,7 +45,7 @@ import re
 
 # metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any, Optional, Schema
+from genie.metaparser.util.schemaengine import Schema, Any, Optional, ListOf
 
 # import parser utils
 from genie.libs.parser.utils.common import Common
@@ -1131,6 +1131,7 @@ class ShowIpInterfaceVrfAllSchema(MetaParser):
             {'vrf': str,
              'interface_status': str,
              'iod': int,
+             Optional('mode'): ListOf(str),
              Optional('ipv4'):
                  {Any():
                       {Optional('ip'): str,
@@ -1144,7 +1145,7 @@ class ShowIpInterfaceVrfAllSchema(MetaParser):
                   Optional('unnumbered'):
                       {'interface_ref': str,
                        },
-                  'counters':
+                  Optional('counters'):
                       {'unicast_packets_sent': int,
                        'unicast_packets_received': int,
                        'unicast_packets_forwarded': int,
@@ -1189,18 +1190,18 @@ class ShowIpInterfaceVrfAllSchema(MetaParser):
                   },
              Optional('multicast_groups'): list,
              Optional('multicast_groups_address'): str,
-             'ip_mtu': int,
-             'proxy_arp': str,
-             'local_proxy_arp': str,
-             'multicast_routing': str,
-             'icmp_redirects': str,
-             'directed_broadcast': str,
+             Optional('ip_mtu'): int,
+             Optional('proxy_arp'): str,
+             Optional('local_proxy_arp'): str,
+             Optional('multicast_routing'): str,
+             Optional('icmp_redirects'): str,
+             Optional('directed_broadcast'): str,
              Optional('ip_forwarding'): str,
-             'icmp_unreachable': str,
-             'icmp_port_unreachable': str,
-             'unicast_reverse_path': str,
-             'load_sharing': str,
-             'int_stat_last_reset': str,
+             Optional('icmp_unreachable'): str,
+             Optional('icmp_port_unreachable'): str,
+             Optional('unicast_reverse_path'): str,
+             Optional('load_sharing'): str,
+             Optional('int_stat_last_reset'): str,
              Optional('wccp_redirect_outbound'): str,
              Optional('wccp_redirect_inbound'): str,
              Optional('wccp_redirect_exclude'): str
@@ -1282,9 +1283,10 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                 continue
 
             # Ethernet2/1, Interface status: protocol-up/link-up/admin-up, iod: 36,
+            # lo2, Interface status: protocol-up/link-up/admin-up, iod: 7, mode: anycast-mac,external
             p2 = re.compile(r'^\s*(?P<interface>[a-zA-Z0-9\/\-\.]+), *Interface'
                             ' *status: *(?P<interface_status>[a-z\-\/\s]+),'
-                            ' *iod: *(?P<iod>[0-9]+),$')
+                            ' *iod: *(?P<iod>[0-9]+),(?: *mode: *(?P<mode>[a-zA-Z0-9\-\,]+))?$')
             m = p2.match(line)
             if m:
                 interface = m.groupdict()['interface']
@@ -1298,6 +1300,10 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                     = interface_status
                 ip_interface_vrf_all_dict[interface]['iod'] = iod
                 ip_interface_vrf_all_dict[interface]['vrf'] = vrf
+                
+                if m.groupdict()['mode']:
+                    mode = m.groupdict()['mode']
+                    ip_interface_vrf_all_dict[interface]['mode'] = mode.split(',')
 
                 # init multicast groups list to empty for this interface
                 multicast_groups = []
@@ -3696,7 +3702,6 @@ class ShowInterfaceStatus(ShowInterfaceStatusSchema):
     """parser for
         * show interface status
         * show interfaces {interfaces} status
-
     """
 
     cli_command = ['show interface status', 'show interface {interface} status']
