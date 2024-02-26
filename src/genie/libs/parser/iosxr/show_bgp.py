@@ -8697,8 +8697,8 @@ class ShowBgpVrf(ShowBgpVrfSchema):
         # *>i192.168.111.0/24       10.189.99.98                                                    0       0 i
         # *> 10.7.7.7/32        10.10.10.107             0             0 65107.65107 ?
         p13 = re.compile(r'^(?P<status_codes>(i|s|x|S|d|h|\*|\>|\s)+)'
-                         r' *(?P<prefix>(?P<ip>[0-9\.\:\[\]]+)\/(?P<mask>\d+))?'
-                         r' +(?P<next_hop>\S+) +(?P<number>[\d\.\s\{\}]+)'
+                         r' *(?P<prefix>(?P<ip>[0-9a-f\.\:\[\]]+)\/(?P<mask>\d+))?[\n\r]*'
+                         r' +(?P<next_hop>\S+)[\n\r]* +(?P<number>[\d\.\s\{\}]+)'
                          r'(?: *(?P<origin_codes>(i|e|\?)))?$')
 
         # Processed 40 prefixes, 50 paths
