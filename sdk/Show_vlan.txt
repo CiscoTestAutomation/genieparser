@@ -1,0 +1,15 @@
+
+ Status and Counters - VLAN Information
+
+  Maximum VLANs to support : 256
+  Primary VLAN : DEFAULT_VLAN
+  Management VLAN :
+
+  VLAN ID Name                             | Status     Voice Jumbo
+  ------- -------------------------------- + ---------- ----- -----
+  1       DEFAULT_VLAN                     | Port-based No    No
+  2       VLAN80_DATA_192.168.2.0          | Port-based No    No
+  3       VLAN81_VOICE_192.168.3.0         | Port-based No    No
+  101     VLAN101-Security-192.168.101.0   | Port-based No    No
+  102     VLAN102-MGMT-192.168.102.0       | Port-based No    No
+

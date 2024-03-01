@@ -1,0 +1,9 @@
+Transceiver Technical Information:
+
+                     Product      Serial             Part
+ Port    Type        Number       Number             Number
+ ------- ----------- ------------ ------------------ ----------
+ 1/A4    SFP+SR      J9150A       N031818B2003       1990-4065
+ 2/A4    SFP+SR      J9150A       N031818B2004       1990-4065
+
+* third-party transceiver

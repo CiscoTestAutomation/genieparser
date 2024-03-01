@@ -1,0 +1,15 @@
+Stack ID         : 00011234-56654321
+MAC Address      : 040973-768d45
+Stack Topology   : Ring
+Stack Status     : Active
+Split Policy     : One-Fragment-Up
+Uptime           : 2d 2h 10m
+Software Version : KB.16.10.0009
+
+ Mbr
+ ID  Mac Address       Model                                 Pri Status
+ --- ----------------- ------------------------------------- --- ---------------
+  1  123456-654321    Aruba JL076A 3810M-40G-8SR-PoE+-1-... 255 Commander
+  2  123456-654322     Aruba JL076A 3810M-40G-8SR-PoE+-1-... 128 Member
+  3  123456-654323     Aruba JL076A 3810M-40G-8SR-PoE+-1-... 128 Standby
+  4  123456-654324     Aruba JL076A 3810M-40G-8SR-PoE+-1-... 128 Member
