@@ -1,0 +1,39 @@
+show bgp l2vpn evpn rd 10.0.0.1:1001 [1][0000.0000.0000.0001.0500][10001]/120 detail
+Tue Jan 30 09:30:59.705 UTC
+BGP routing table entry for [1][0000.0000.0000.0001.0500][10001]/120, Route Distinguisher: 10.0.0.1:1001
+Versions:
+  Process           bRIB/RIB  SendTblVer
+  Speaker                6620         6620
+Last Modified: Jan 29 05:22:58.696 for 1d04h
+Paths: (2 available, best #1)
+  Not advertised to any peer
+  Path #1: Received by speaker 0
+  Not advertised to any peer
+  Local
+    fc00:a000:1000::1 (metric 20) from fc00:a000:2000::13 (10.0.0.1), if-handle 0x00000000
+      Received Label 0xe00200
+      Origin IGP, localpref 100, valid, internal, best, group-best, import-candidate, not-in-vrf
+      Received Path ID 1, Local Path ID 1, version 6620
+      Extended community: EVPN L2 ATTRS:0x02:0 RT:100:1001 
+      Originator: 10.0.0.1, Cluster list: 10.0.0.13, 10.0.0.15, 10.0.0.11
+      PSID-Type:L2, SubTLV Count:1, R:0x00,
+       SubTLV:
+        T:1(Sid information), Sid:fc00:c000:1001::, F:0x00, R2:0x00, Behavior:65, R3:0x00, SS-TLV Count:1
+         SubSubTLV:
+          T:1(Sid structure):
+           Length [Loc-blk,Loc-node,Func,Arg]:[32,16,16,0], Tpose-len:16, Tpose-offset:48
+  Path #2: Received by speaker 0
+  Not advertised to any peer
+  Local
+    fc00:a000:1000::1 (metric 20) from fc00:a000:2000::14 (10.0.0.1), if-handle 0x00000000
+      Received Label 0xe00200
+      Origin IGP, localpref 100, valid, internal, not-in-vrf
+      Received Path ID 1, Local Path ID 0, version 0
+      Extended community: EVPN L2 ATTRS:0x02:0 RT:100:1001 
+      Originator: 10.0.0.1, Cluster list: 10.0.0.14, 10.0.0.15, 10.0.0.11
+      PSID-Type:L2, SubTLV Count:1, R:0x00,
+       SubTLV:
+        T:1(Sid information), Sid:fc00:c000:1001::, F:0x00, R2:0x00, Behavior:65, R3:0x00, SS-TLV Count:1
+         SubSubTLV:
+          T:1(Sid structure):
+           Length [Loc-blk,Loc-node,Func,Arg]:[32,16,16,0], Tpose-len:16, Tpose-offset:48

@@ -18,6 +18,7 @@ IOSXR parsers for the following show commands:
     * 'dir {directory} location {location}'
     * 'show processes memory detail'
     * 'show processes memory detail | include <WORD>'
+    * 'show filesystem location all'
 '''
 
 # Python
@@ -1827,5 +1828,74 @@ class ShowProcessesMemoryDetail(ShowProcessesMemoryDetailSchema):
                     k: int(v) if v.isdigit() else v
                     for k, v in group.items()
                 })
+
+        return ret_dict
+
+# ==============================================
+# Parser for 'show filesystem location all'
+# ==============================================
+
+class ShowFilesystemLocationAllSchema(MetaParser):
+    """Schema for show filesystem location all"""
+
+    schema = {
+        'node': {
+            Any(): {
+                'file_systems': {
+                    Any(): {
+                    'total_size': int,
+                    'free_size': int,
+                    'type': str,
+                    'flags': str,
+                    'prefixes': str,
+                    }
+                }
+            }
+        }
+    }
+
+class ShowFilesystemLocationAll(ShowFilesystemLocationAllSchema):
+
+    cli_command = ['show filesystem location all']
+
+    def cli(self, output=None):
+
+        if output is None:
+            output = self.device.execute(self.cli_command[0])
+
+        # node:  node0_RP0_CPU0
+        p1 = re.compile(r'^node:\s+(?P<node>\S+)$')
+
+        # 3962216448   3926405120  flash-disk     rw  apphost:
+        p2 = re.compile(r'^(?P<total_size>\d+)\s*(?P<free_size>\d+)\s*(?P<type>\S*)\s*(?P<flags>\S*)\s*(?P<prefixes>[\S\s]+)$')
+
+        # initial return dictionary
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # node:  node0_RP0_CPU0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                node_dict = ret_dict.setdefault('node', {}).setdefault(group['node'], {})
+                index = 0
+                continue
+
+            # 3962216448   3926405120  flash-disk     rw  apphost:
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                index += 1
+                file_systems_dict = node_dict.setdefault('file_systems', {}).setdefault(index, {})
+                file_systems_dict.update({
+                    'total_size': int(group['total_size']),
+                    'free_size': int(group['free_size']),
+                    'type': group['type'],
+                    'flags': group['flags'],
+                    'prefixes': group['prefixes'],
+                    })
+                continue
 
         return ret_dict

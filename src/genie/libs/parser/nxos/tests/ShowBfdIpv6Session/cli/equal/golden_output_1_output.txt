@@ -1,0 +1,10 @@
+P1# show bfd ipv6 neighbors 
+
+OurAddr                          NeighAddr                        
+ LD/RD                 RH/RS           Holdown(mult)     State       Int                   Vrf                              Type    
+2001:db8:12::1                   2001:db8:12::2                   
+ 1090519054/1090519043 Up              6000(3)           Up          Eth1/35               default                          SH      
+2001:db8:10::1                   2001:db8:10::2                   
+ 1090519056/1090519047 Up              6000(3)           Up          Eth1/33               default                          SH      
+fe80::1                          fe80::2                          
+ 1090519058/1090519045 Up              150(3)            Up          Eth1/34               default                          SH 

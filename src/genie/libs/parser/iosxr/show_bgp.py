@@ -7983,7 +7983,7 @@ class ShowBgpVrfAfPrefixSchema(MetaParser):
                 'address_family': {
                     Any(): {
                         'prefix': str,
-                        'rd': str,
+                        Optional('rd'): str,
                         'last_modified': str,
                         Optional('local_label'): str,
                         'paths': {
@@ -8000,10 +8000,11 @@ class ShowBgpVrfAfPrefixSchema(MetaParser):
                                                     Optional('metric'): int,
                                                     'origin_neighbors_ip': str,
                                                     'origin_router_id': str,
+                                                    Optional('if_handle'): str,
                                                     'bgp_peer_neighbor_ip': str,
                                                     Optional('originator'): str,
                                                     Optional('received_label'): str,
-                                                    'origin_metric': int,
+                                                    Optional('origin_metric'): int,
                                                     Optional('weight'): int,
                                                     'localpref': int,
                                                     'origin_codes': str,
@@ -8013,11 +8014,12 @@ class ShowBgpVrfAfPrefixSchema(MetaParser):
                                                     Optional('add_path'): str,
                                                     Optional('import_candidate'): str,
                                                     Optional('imported'): str,
+                                                    Optional('not_in_vrf'): str,
                                                     Optional('redistributed'): str,
                                                     'received_path_id': int,
                                                     'local_path_id': int,
                                                     'version': int,
-                                                    'extended_community': str,
+                                                    Optional('extended_community'): str,
                                                     Optional('cluster_list'): str,
                                                     Optional('source_afi'): str,
                                                     Optional('source_vrf'): str,
@@ -8073,12 +8075,22 @@ class ShowBgpVrfAfPrefix(ShowBgpVrfAfPrefixSchema):
     '''
 
     cli_command = ['show bgp vrf {vrf_name} {address_family} {prefix}',
-                   'show bgp {address_family} vrf {vrf_name} {prefix}']
+                   'show bgp {address_family} vrf {vrf_name} {prefix}',
+                   'show bgp {address_family} rd {route_rd} detail',
+                   'show bgp {address_family} {route} detail']
 
-    def cli(self, vrf_name=None, address_family=None, prefix=None, output=None):
+    def cli(self, vrf_name=None, address_family=None, prefix=None, route=None, route_rd=None, output=None):
 
         if output is None:
-            if address_family == 'ipv4' or address_family == 'ipv6':
+            if route_rd:
+                out = self.device.execute(self.cli_command[2].\
+                                      format(address_family=address_family,\
+                                             route_rd=route_rd))
+            elif route:
+                out = self.device.execute(self.cli_command[3].\
+                                      format(address_family=address_family,\
+                                             route=route))
+            elif address_family == 'ipv4' or address_family == 'ipv6':
                 out = self.device.execute(self.cli_command[0].\
                                       format(vrf_name=vrf_name,\
                                              address_family=address_family,\
@@ -8092,8 +8104,10 @@ class ShowBgpVrfAfPrefix(ShowBgpVrfAfPrefixSchema):
             out = output
         
         # BGP routing table entry for 2000:71:1:1::1/128, Route Distinguisher: 50.1.1.4:2
-        p1 = re.compile(r'^BGP\s+routing\s+table\s+entry\s+for\s+(?P<prefix>(?P<ip>[a-z0-9.:\/]+'
-                        r')\/(?P<mask>\d+)),\s+Route\s+Distinguisher:\s+(?P<rd>[\d.:]+)$')
+        # BGP routing table entry for [1][0000.0000.0000.0001.0500][10001]/120, Route Distinguisher: 10.0.0.1:1001
+        # BGP routing table entry for fc00:a000:1000:101::2/128
+        p1 = re.compile(r'^BGP\s+routing\s+table\s+entry\s+for\s+(?P<prefix>(?P<ip>[a-z0-9.:\/\[\]]+)\/(?P<mask>\d+))'
+                        r'(?:,\s+Route\s+Distinguisher:\s+(?P<rd>[\d.:]+))?$')
 
         # Last Modified: Mar 27 02:45:20.105 for 1d15h
         p2 = re.compile(r'^Last +Modified: (?P<last_modified>.*)$')
@@ -8123,8 +8137,10 @@ class ShowBgpVrfAfPrefix(ShowBgpVrfAfPrefixSchema):
         # 50.1.1.1 (metric 4) from 50.1.1.8 (50.1.1.1)
         # 2000:90:33:1::2 from 2000:90:33:1::2 (70.3.3.3)
         # :: from :: (50.1.1.4)
+        # fc00:a000:1000::1 (metric 30) from fc00:a000:2000::14 (10.0.0.1), if-handle 0x00000000
         p9 = re.compile(r'^(?P<bgp_peer_neighbor_ip>[\w.:]+)\s+(?:\(metric\s+(?P<metric>\d+)\)\s+)?'
-                        r'from\s+(?P<origin_neighbors_ip>[\w.:]+)\s*(?:\((?P<origin_router_id>[\w.:]+)\))?')
+                        r'from\s+(?P<origin_neighbors_ip>[\w.:]+)\s*(?:\((?P<origin_router_id>[\w.:]+)\))?'
+                        r'(?:,\s+if-handle\s+(?P<if_handle>[\w]+))?')
 
         # Local Label: 24023
         # Received Label 24000
@@ -8135,6 +8151,7 @@ class ShowBgpVrfAfPrefix(ShowBgpVrfAfPrefixSchema):
         # Origin IGP, metric 0, localpref 100, valid, external, best, group-best, import-candidate
         # Origin incomplete, metric 0, localpref 100, weight 32768, valid, redistributed, best, group-best, import-candidate
         # Origin incomplete, metric 0, localpref 100, valid, internal, backup, add-path, import-candidate, imported
+        # Origin IGP, localpref 100, valid, internal, best, group-best, import-candidate, not-in-vrf
         p11 = re.compile(r'^Origin +(?P<origin>[a-zA-Z]+),'
                          r'(?: +metric (?P<metric>[0-9]+),?)?'
                          r'(?: +localpref (?P<localpref>[0-9]+),?)?'
@@ -8147,7 +8164,8 @@ class ShowBgpVrfAfPrefix(ShowBgpVrfAfPrefixSchema):
                          r'(?: (?P<backup>backup),*)?'
                          r'(?: (?P<add_path>add-path),*)?'
                          r'(?: (?P<import_candidate>import-candidate?),*)?'
-                         r'(?: (?P<imported>imported?),*)?')
+                         r'(?: (?P<imported>imported?),*)?'
+                         r'(?:\s+(?P<not_in_vrf>not-in-vrf))?')
 
         #  Received Path ID 0, Local Path ID 0, version 715
         p12 = re.compile(r'^Received\s+Path\s+ID\s+(?P<received_path_id>(\d+)),\s+'
@@ -8187,6 +8205,8 @@ class ShowBgpVrfAfPrefix(ShowBgpVrfAfPrefixSchema):
 
         # Initialize dictionary
         ret_dict = {}
+        if vrf_name == None:
+            vrf_name = 'default'
         next_line_update_group = False
         if address_family:
             if 'ipv4' in address_family:
@@ -8198,6 +8218,8 @@ class ShowBgpVrfAfPrefix(ShowBgpVrfAfPrefixSchema):
             line = line.strip()
 
             # BGP routing table entry for 2000:71:1:1::1/128, Route Distinguisher: 50.1.1.4:2
+            # BGP routing table entry for [1][0000.0000.0000.0001.0500][10001]/120, Route Distinguisher: 10.0.0.1:1001
+            # BGP routing table entry for fc00:a000:1000:101::2/128
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -8208,7 +8230,8 @@ class ShowBgpVrfAfPrefix(ShowBgpVrfAfPrefixSchema):
                                     setdefault(address_family, {})
                 
                 vrf_dict['prefix'] = group['prefix']
-                vrf_dict['rd'] = group['rd']
+                if group['rd']:
+                    vrf_dict['rd'] = group['rd']
                 continue
 
             # Last Modified: Mar 27 02:45:20.105 for 1d15h
@@ -8279,6 +8302,7 @@ class ShowBgpVrfAfPrefix(ShowBgpVrfAfPrefixSchema):
             # 50.1.1.1 (metric 4) from 50.1.1.8 (50.1.1.1)
             # 2000:90:33:1::2 from 2000:90:33:1::2 (70.3.3.3)
             # :: from :: (50.1.1.4)
+            # fc00:a000:1000::1 (metric 30) from fc00:a000:2000::14 (10.0.0.1), if-handle 0x00000000
             m = p9.match(line)
             if m:
                 group = m.groupdict()
@@ -8289,6 +8313,8 @@ class ShowBgpVrfAfPrefix(ShowBgpVrfAfPrefixSchema):
                 next_hop_dict['bgp_peer_neighbor_ip'] = bgp_peer_neighbor_ip
                 next_hop_dict['origin_neighbors_ip'] = group['origin_neighbors_ip']
                 next_hop_dict['origin_router_id'] = group['origin_router_id']
+                if group['if_handle']:
+                    next_hop_dict['if_handle'] = group['if_handle']
                 continue
 
             # Local Label: 24023
@@ -8309,6 +8335,7 @@ class ShowBgpVrfAfPrefix(ShowBgpVrfAfPrefixSchema):
             # Origin IGP, metric 0, localpref 100, valid, external, best, group-best, import-candidate
             # Origin incomplete, metric 0, localpref 100, weight 32768, valid, redistributed, best, group-best, import-candidate
             # Origin incomplete, metric 0, localpref 100, valid, internal, backup, add-path, import-candidate, imported
+            # Origin IGP, localpref 100, valid, internal, best, group-best, import-candidate, not-in-vrf
             m = p11.match(line)
             if m:
                 group = m.groupdict()
@@ -8341,6 +8368,8 @@ class ShowBgpVrfAfPrefix(ShowBgpVrfAfPrefixSchema):
                     next_hop_dict['imported'] = group['imported']
                 if group['redistributed']:
                     next_hop_dict['redistributed'] = group['redistributed']
+                if group['not_in_vrf']:
+                    next_hop_dict['not_in_vrf'] = group['not_in_vrf']
 
                 if group['valid']:
                     status_codes += '*'
@@ -9384,3 +9413,351 @@ class ShowBgpAddressFamily(ShowBgpAddressFamilySchema):
                 continue
 
         return ret_dict
+
+# ======================================================================
+# Schema for 'show bgp {address_family} {prefix}'
+# ======================================================================
+class ShowBgpAddressfamilyPrefixSchema(MetaParser):
+    '''Schema for:
+        * 'show bgp {address_family} {bgp_prefix}'
+    '''
+
+    schema = {
+        'address_family': {
+            Any(): {
+                'prefix': str,
+                'last_modified': str,
+                'paths':{
+                    'total_available_paths': int,
+                    'best_path': int,
+                    'path': {
+                        Any(): {
+                            Optional('advertised_peer_pe'): str,
+                            Optional('advertised_peer_ce'): str,
+                            'as_path': {
+                                Any(): {
+                                    'bgp_peer_neighbor_ip': {
+                                        Any(): 
+                                        {
+                                            Optional('metric'): int,
+                                            'origin_neighbors_ip': str,
+                                            'origin_router_id': str,
+                                            'bgp_peer_neighbor_ip': str,
+                                            Optional('originator'): str,
+                                            Optional('received_label'): str,
+                                            'origin_metric': int,
+                                            Optional('weight'): int,
+                                            'localpref': int,
+                                            'origin_codes': str,
+                                            'status_codes': str,
+                                            'received_path_id': int,
+                                            'local_path_id': int,
+                                            'version': int,
+                                            Optional('cluster_list'): ListOf(str),
+                                            Optional('source_afi'): str,
+                                            Optional('source_vrf'): str,
+                                            Optional('source_rd'): str,
+                                            Optional('psid_type'): {
+                                                Any(): {
+                                                    'psid_type': str,
+                                                    'subtlv_count': int,
+                                                    'subtlv': {
+                                                        't_value': int,
+                                                        'sid_value': str,
+                                                        'behaviour': str,
+                                                        'sstlv_count': int,
+                                                         Optional('subsubtlv'): {
+                                                             't_value':int
+                                                             
+                                                         }
+                                                        
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+# ======================================================================
+# Parser for 'show bgp {address_family} {bgp_prefix}'
+# ======================================================================
+class ShowBgpAddressfamilyPrefix(ShowBgpAddressfamilyPrefixSchema):
+    '''Parser for:
+        * 'show bgp {address_family} {bgp_prefix}'
+    '''
+
+    cli_command = ['show bgp {address_family} {bgp_prefix}']
+
+    def cli(self, address_family='', bgp_prefix='', output=None):
+        
+        ret_dict = {}
+        
+        if output is None:
+            out = self.device.execute(self.cli_command[0].format(address_family=address_family, bgp_prefix=bgp_prefix))
+        else:
+            out = output
+        
+        # BGP routing table entry for fc00:a000:1000:101::1/128    
+        p1 = re.compile(r'^BGP +routing +table +entry +for +(?P<prefix>[a-z0-9+.:]+.[0-9]+)')
+        
+        # Last Modified: Nov  2 09:48:44.893 for 05:33:53
+        p2 = re.compile(r'^Last +Modified: (?P<last_modified>.*)$')
+        
+        # Paths: (2 available, best #1)
+        p3 = re.compile(r'^Paths:\s+\((?P<total_available_paths>\d+)\s+available,\s+best\s+#(?P<best_path>\d+)\)$')
+        
+        # Not advertised to any peer
+        p4 = re.compile(r'^Not\s+advertised\s+to\s+any\s+peer$')
+
+        # Advertised to PE peers (in unique update groups):
+        # Advertised to CE peers (in unique update groups):
+        p5 = re.compile(r'^Advertised\s+to\s+(?P<peer_name>[a-zA-Z0-9]+)\s+peers\s+\(in\s+unique\s+update\s+groups\):$')
+        
+        # Path #1: Received by speaker 0
+        p6 = re.compile(r'^Path\s+#(?P<path_num>\d+):.*$')
+        
+        # 7000
+        # Local
+        p7 = re.compile(r'^(?P<as_path>[a-zA-Z0-9]+)$')
+
+        # 50.1.1.1 (metric 4) from 50.1.1.8 (50.1.1.1)
+        # 2000:90:33:1::2 from 2000:90:33:1::2 (70.3.3.3)
+        # :: from :: (50.1.1.4)
+        p8 = re.compile(r'^(?P<bgp_peer_neighbor_ip>[\w.:]+)\s+(?:\(metric\s+(?P<metric>\d+)\)\s+)?'
+                        r'from\s+(?P<origin_neighbors_ip>[\w.:]+)\s*(?:\((?P<origin_router_id>[\w.:]+)\))?')
+        
+        # Origin incomplete, metric 0, localpref 100, valid, internal, best, group-best, import-candidate, imported
+        # Origin IGP, metric 0, localpref 100, valid, external, best, group-best, import-candidate
+        # Origin incomplete, metric 0, localpref 100, weight 32768, valid, redistributed, best, group-best, import-candidate
+        # Origin incomplete, metric 0, localpref 100, valid, internal, backup, add-path, import-candidate, imported
+        p9 = re.compile(r'^Origin +(?P<origin>[a-zA-Z]+),'
+                         r'(?: +metric (?P<metric>[0-9]+),?)?'
+                         r'(?: +localpref (?P<localpref>[0-9]+),?)?'
+                         r'(?: +weight (?P<weight>[0-9]+),?)?'
+                         r'(?: +(?P<valid>valid?),)?'
+                         r'(?: (?P<redistributed>redistributed?),)?'
+                         r'(?: +(?P<state>(internal|external|local)?),)?(\,*)?'
+                         r'(?: (?P<best>best))?(\,*)?'
+                         r'(?: (?P<group_best>group-best?),*)?'
+                         r'(?: (?P<backup>backup),*)?'
+                         r'(?: (?P<add_path>add-path),*)?'
+                         r'(?: (?P<import_candidate>import-candidate?),*)?'
+                         r'(?: (?P<imported>imported?),*)?')
+                         
+         #  Received Path ID 0, Local Path ID 0, version 715
+        p10 = re.compile(r'^Received\s+Path\s+ID\s+(?P<received_path_id>(\d+)),\s+'
+                         r'Local\s+Path\s+ID\s+(?P<local_path_id>(\d+)),\s+'
+                         r'version\s+(?P<version>(\d+))$')
+                         
+        # Extended community: RT:100:1001
+        p11 = re.compile(r'^Extended\s+community:(?:\s+(?P<extended_community>.*))?$')
+        
+        # Originator: 50.1.1.1, Cluster list: 50.1.1.8
+        # Originator: 10.0.0.3, Cluster list: 10.0.0.11, 10.0.0.13
+        p12 = re.compile(r'^Originator:\s+(?P<originator>[\d.]+),\s+Cluster\s+list:\s+(?P<cluster_list>[\d., ]+)$')
+        
+        # PSID-Type:L3, SubTLV Count:1, R:0x00,
+        p13 = re.compile(r'^PSID-Type:(?P<psid_type>\w+),\s+SubTLV\s+Count:(?P<subtlv_count>\d+)$')
+        
+         # SubTLV:
+        # SubSubTLV:
+        p14 = re.compile(r'^(?P<tlv_name>SubTLV|SubSubTLV):$')
+        
+        # T:1(Sid information), Sid:fc00:c000:2003::, F:0x00, R2:0x00, Behavior:62, R3:0x00, SS-TLV Count:1
+        p15 = re.compile(r'T:(?P<t_value>\d+)\(Sid\s+information\),\s+Sid:(?P<sid_value>[a-f0-9.:]+),\s+Behavior:(?P<behaviour>\d+),\s+SS-TLV\s+Count:(?P<sstlv_count>\d+)$')
+        
+        # T:1(Sid structure):
+        p16 = re.compile(r'^T:(?P<t_value>\d+)\(Sid\s+structure\):$')
+        
+        # Initialize dictionary
+       
+        next_line_update_group = False
+        if address_family:
+            if 'ipv4' in address_family:
+                address_family = 'ipv4 unicast'
+            elif 'ipv6' in address_family:
+                address_family = 'ipv6 unicast'
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # BGP routing table entry for 101.0.0.1/32
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                address_family = address_family.replace(' ','_')
+                vrf_dict = ret_dict.setdefault('address_family', {}).\
+                                    setdefault(address_family, {})
+                vrf_dict['prefix'] = group['prefix']
+                continue
+            
+            # Last Modified: Mar 27 02:45:20.105 for 1d15h
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                vrf_dict['last_modified'] = group['last_modified']
+                continue
+            
+            # Paths: (1 available, best #1)
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                paths_dict = vrf_dict.setdefault('paths', {})
+                paths_dict['total_available_paths'] = int(group['total_available_paths'])
+                paths_dict['best_path'] = int(group['best_path'])
+                continue
+            
+            # Not advertised to any peer
+            m = p4.match(line)
+            if m:
+                next_line_update_group = False
+                continue
+
+            # Advertised to PE peers (in unique update groups):
+            # Advertised to CE peers (in unique update groups):
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                peer_name = group['peer_name']
+                next_line_update_group = True
+                continue
+            
+            # Path #1: Received by speaker 0
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                path = int(group['path_num'])
+                each_path_dict = paths_dict.setdefault('path', {}).setdefault(path,{})
+                continue
+            
+            # 7000
+            # Local
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                as_path = group['as_path']
+                as_path_dict = each_path_dict.setdefault('as_path', {}).setdefault(as_path, {})
+                continue
+
+            # 50.1.1.1 (metric 4) from 50.1.1.8 (50.1.1.1)
+            # 2000:90:33:1::2 from 2000:90:33:1::2 (70.3.3.3)
+            # :: from :: (50.1.1.4)
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                bgp_peer_neighbor_ip = group['bgp_peer_neighbor_ip']
+                next_hop_dict = as_path_dict.setdefault('bgp_peer_neighbor_ip', {}).setdefault(bgp_peer_neighbor_ip, {})
+                if group['metric']:
+                    next_hop_dict['metric'] = int(group['metric'])
+                next_hop_dict['bgp_peer_neighbor_ip'] = bgp_peer_neighbor_ip
+                next_hop_dict['origin_neighbors_ip'] = group['origin_neighbors_ip']
+                next_hop_dict['origin_router_id'] = group['origin_router_id']
+                continue
+            
+            # Origin incomplete, metric 0, localpref 100, valid, internal, best, group-best, import-candidate, imported
+            # Origin IGP, metric 0, localpref 100, valid, external, best, group-best, import-candidate
+            # Origin incomplete, metric 0, localpref 100, weight 32768, valid, redistributed, best, group-best, import-candidate
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                status_codes = ''
+                if group['metric']:
+                    next_hop_dict['origin_metric'] = int(group['metric'])
+                if group['localpref']:
+                    next_hop_dict['localpref'] = int(group['localpref'])
+                if group['weight']:
+                    next_hop_dict['weight'] = int(group['weight'])
+
+                if group['origin']:
+                    origin = str(group['origin'])
+                    if origin == 'incomplete':
+                        next_hop_dict['origin_codes'] = '?'
+                    elif origin == 'EGP':
+                        next_hop_dict['origin_codes'] = 'e'
+                    else:
+                        next_hop_dict['origin_codes'] = 'i'
+
+                if group['valid']:
+                    status_codes += '*'
+                if group['best']:
+                    status_codes = status_codes.rstrip()
+                    status_codes += '>'
+                if group['state']:
+                    state = group['state']
+                    if state == 'internal':
+                        status_codes += 'i'
+                next_hop_dict['status_codes'] = status_codes
+                continue
+            
+            # Received Path ID 0, Local Path ID 0, version 715
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                next_hop_dict['received_path_id'] = int(group['received_path_id'])
+                next_hop_dict['local_path_id'] = int(group['local_path_id'])
+                next_hop_dict['version'] = int(group['version'])
+                continue
+            
+            # Extended community: RT:100:1001
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                value = group['extended_community']
+                next_hop_dict['extended_community'] = value
+                continue
+            
+            # Originator: 50.1.1.1, Cluster list: 50.1.1.8
+            # Originator: 10.0.0.3, Cluster list: 10.0.0.11, 10.0.0.13
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                next_hop_dict['originator'] = group['originator']
+                cluster_list = group['cluster_list']
+                cluster_list_str = cluster_list
+                cluster_list = cluster_list_str.split(', ')
+                next_hop_dict['cluster_list'] = cluster_list
+                continue
+            
+            #  PSID-Type:L3, SubTLV Count:1
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                psid_type = group['psid_type']
+                psid_dict = next_hop_dict.setdefault('psid_type', {}). \
+                    setdefault(psid_type, {})
+                psid_dict['psid_type'] = psid_type
+                psid_dict['subtlv_count'] = int(group['subtlv_count'])
+                continue
+            # SubTLV:    
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                subtlv_dict = psid_dict.setdefault('subtlv',{})
+            
+            # T:1(Sid information), Sid:fc00:c000:2003::, F:0x00, R2:0x00, Behavior:62, R3:0x00, SS-TLV Count:1
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                subtlv_dict['t_value'] = int(group['t_value'])
+                subtlv_dict['sid_value'] = group['sid_value']
+                subtlv_dict['behaviour'] = group['behaviour']
+                subtlv_dict['sstlv_count'] = int(group['sstlv_count'])
+                continue
+            
+            # T:1(Sid structure):
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                t_dict = subtlv_dict.setdefault('subsubtlv' , {})
+                t_dict['t_value'] = int(group['t_value'])
+                continue
+        return ret_dict
+        
+        

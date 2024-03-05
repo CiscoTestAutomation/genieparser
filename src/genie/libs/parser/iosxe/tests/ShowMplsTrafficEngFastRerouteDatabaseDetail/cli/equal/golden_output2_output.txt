@@ -1,0 +1,53 @@
+FRR Database Summary:
+  Protected interfaces    : 3
+  Protected LSPs/Sub-LSPs : 3
+  Backup tunnels          : 3
+  Active interfaces       : 0
+  FRR Active tunnels      : 0
+
+P2P LSPs:
+
+ Tun ID: 13, LSP ID: 2, Source: 1.1.1.1
+ Destination: 3.3.3.3
+  State        : ready
+  InLabel      : 29
+  OutLabel     : Te0/0/8:implicit-null
+  FRR OutLabel : Tu232:implicit-null
+
+ Tun ID: 14, LSP ID: 10, Source: 1.1.1.1
+ Destination: 4.4.4.4
+  State        : ready
+  InLabel      : 30
+  OutLabel     : Gi0/0/5:23
+  FRR OutLabel : Tu23:23
+
+ Tun ID: 141, LSP ID: 10, Source: 1.1.1.1
+ Destination: 4.4.4.4
+  State        : ready
+  InLabel      : 19
+  OutLabel     : Twe0/0/16:22
+  FRR OutLabel : Tu231:22
+
+P2MP Sub-LSPs:
+
+ Tun ID: 18, LSP ID: 9, Source: 1.1.1.1
+ Destination: 3.3.3.3
+  State        : ready
+  InLabel      : 39
+  OutLabel     : Te0/0/7:implicit-null
+  FRR OutLabel : Tu232:implicit-null
+
+ Tun ID: 22, LSP ID: 7, Source: 1.1.1.1
+ Destination: 4.4.4.4
+  State        : ready
+  InLabel      : 49
+  OutLabel     : Gi0/0/7:23
+  FRR OutLabel : Tu23:23
+
+ Tun ID: 151, LSP ID: 6, Source: 1.1.1.1
+ Destination: 4.4.4.4
+  State        : ready
+  InLabel      : 59
+  OutLabel     : Twe0/0/7:22
+  FRR OutLabel : Tu231:22
+

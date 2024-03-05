@@ -1,0 +1,71 @@
+show ethernet cfm maintenance-points remote detail
+
+Version: IEEE-CFM
+MAC Address: 4464.3c26.4000
+Domain Name: mydomain
+Domain ID: mydomain
+MA Name: ser_0
+Level: 2
+EVC: evc_0
+Bridge Domain: 2
+MPID: 4001
+Incoming Port(s): Te0/0/0 Service Instance 1
+CC Lifetime(sec): 35
+Age of Last CC Message(sec): 4
+CC Packet Statistics: 2533125/15308 (Received/Error)
+MEP interface status: Up
+MEP port status: Up
+Receive RDI: FALSE
+
+Version: IEEE-CFM
+MAC Address: 4464.3c26.4000
+Domain Name: mydomain
+Domain ID: mydomain
+MA Name: ser_1
+Level: 2
+EVC: evc_1
+Bridge Domain: 3
+MPID: 4002
+Incoming Port(s): Te0/0/0 Service Instance 2
+CC Lifetime(sec): 35
+Age of Last CC Message(sec): 3
+CC Packet Statistics: 2537917/15369 (Received/Error)
+MEP interface status: Up
+MEP port status: Up
+Receive RDI: FALSE
+
+Version: IEEE-CFM
+MAC Address: 4464.3c26.4000
+Domain Name: mydomain
+Domain ID: mydomain
+MA Name: ser_2
+Level: 2
+EVC: evc_2
+Bridge Domain: 4
+MPID: 4003
+Incoming Port(s): Te0/0/0 Service Instance 3
+CC Lifetime(sec): 35
+Age of Last CC Message(sec): 1
+CC Packet Statistics: 2532262/15306 (Received/Error)
+MEP interface status: Up
+MEP port status: Up
+Receive RDI: FALSE
+
+Version: IEEE-CFM
+MAC Address: 4464.3c26.4000
+Domain Name: mydomain
+Domain ID: mydomain
+MA Name: ser_3
+Level: 2
+EVC: evc_3
+Bridge Domain: 5
+MPID: 4004
+Incoming Port(s): Te0/0/0 Service Instance 4
+CC Lifetime(sec): 35
+Age of Last CC Message(sec): 3
+CC Packet Statistics: 2539653/15373 (Received/Error)
+MEP interface status: Up
+MEP port status: Up
+Receive RDI: FALSE
+
+Total Remote MEPs: 4

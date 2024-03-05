@@ -29,7 +29,6 @@ class ShowClock(ShowClockSchema):
     cli_command = 'show clock'
 
     def cli(self, output=None):
-        print("-------------- new ext parser -------------------")
         if output is None:
             out = self.device.execute(self.cli_command)
         else:

@@ -2778,17 +2778,17 @@ class ShowIsisIpv6Rib(ShowIsisIpv6RibSchema):
         p8 = re.compile(r'^repair\s*path:\s*via\s*(?P<nh_addr>'
                         r'[0-9a-fA-F:]+)/(?P<interface>'
                         r'[a-zA-Z0-9/.]+)\s*metric:\s*(?P<metric>\d+)'
-                        r'\s*\(((?P<pp>PP),)?((?P<lc>LC),)?((?P<ds>DS)'
-                        r',)?((?P<np>NP),)?((?P<sr>SR))?\)$')
+                        r'\s*\((?P<pp>PP)?,?(?P<lc>LC)?,?(?P<ds>DS)?'
+                        r',?(?P<np>NP)?,?(?P<sr>SR)?\)$')
 
         # TI-LFA link-protecting
         # local LFA
         # TI-LFA node/SRLG-protecting
         # TI-LFA node-protecting
         # TI-LFA SRLG-protecting
-        p9 = re.compile(r'(?P<lfa_type>local LFA|TI-LFA link-protecting'
-                        r'|TI-LFA node/SRLG-protecting|TI-LFA'
-                        r'node-protecting|TI-LFA SRLG-protecting)$')
+        p9 = re.compile(r'(?P<lfa_type>local\s+LFA|TI-LFA\s+link-protecting'
+                        r'|TI-LFA\s+node/SRLG-protecting|TI-LFA\s+'
+                        r'node-protecting|TI-LFA\s+SRLG-protecting)$')
 
         # SRv6-Fwd-Id 25165857
         p10 = re.compile(r'SRv6-Fwd-Id\s*(?P<srv6_fwid>\d+)$')   
@@ -4191,6 +4191,67 @@ class ShowIsisMicroloopAvoidanceFlexAlgo(ShowIsisMicroloopAvoidanceFlexAlgoSchem
                  flex_dict['runningl1']=group['RunningL1']
                  flex_dict['runningl2']=group['RunningL2']
                  continue
+        return ret_dict 
+
+class ShowIsisIpv6MicroloopAvoidanceSchema(MetaParser):
+    """
+    Schema for show isis ipv6 microloop-avoidance
+    """
+    schema = {
+       "tag" : {
+          Any():{
+               "algo":{
+                    Any():{
+                        "state" : str,
+                        "delay" : int,
+                        Optional("running_l1"): bool,
+                        Optional("running_l2"): bool
+                    },
+                },
+            },
+        }
+    } 
+
+class ShowIsisIpv6MicroloopAvoidance(ShowIsisIpv6MicroloopAvoidanceSchema):
+    """ Parser for show isis ipv6 microloop-avoidance"""
+
+    cli_command = 'show isis ipv6 microloop-avoidance'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+       
+        # initial variables
+        ret_dict = {}
+        # Tag: srtest
+        p1 = re.compile(r'Tag\:\s+(?P<isis_tag>\w+)')
+
+        # Algo  State            Delay  Running(L1/L2)
+        # 0   Segment-Routing    5000   FALSE/NA
+        p2 = re.compile(r'(?P<algo_id>\d+)\s+(?P<state>[\w\-]+)\s+(?P<delay>\d+)\s+(?P<Running_L1>\S+)\/(?P<Running_L2>\S+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Tag 1:
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict = ret_dict.setdefault('tag',{},).setdefault((group['isis_tag']),{})
+                continue
+            ##Algo  State            Delay  Running(L1/L2)
+            ##0   Segment-Routing  5000   FALSE/NA
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                flex_dict = root_dict.setdefault('algo',{},).setdefault((group['algo_id']),{})
+                flex_dict['state']=group['state']
+                flex_dict['delay']=int(group['delay'])
+                if group['Running_L1'] != "NA":
+                    flex_dict['running_l1']=(group['Running_L1'] == "TRUE")
+                if group['Running_L2'] != "NA":
+                    flex_dict['running_l2']=(group['Running_L2'] == "TRUE")
+                continue
         return ret_dict 
 
 

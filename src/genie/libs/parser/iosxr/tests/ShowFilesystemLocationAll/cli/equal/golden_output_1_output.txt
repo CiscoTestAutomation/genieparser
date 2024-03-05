@@ -1,0 +1,24 @@
+show filesystem location all
+Wed Jan 31 10:33:34.174 UTC
+
+ node:  node0_RP0_CPU0
+------------------------------------------------------------------
+File Systems:
+
+      Size(b)      Free(b)        Type  Flags  Prefixes
+            0            0     network     rw  ftp:
+   3962216448   3926405120  flash-disk     rw  apphost:
+            0            0     network     rw  tftp:
+  24467337216  22803652608    harddisk     rw  harddisk:
+    480907264    478617600       flash     rw  /misc/config
+   2069835776   2051518464  flash-disk     rw  disk0:
+
+ node:  node0_0_CPU0
+------------------------------------------------------------------
+File Systems:
+
+      Size(b)      Free(b)        Type  Flags  Prefixes
+   2069835776   2063699968  flash-disk     rw  disk0:
+    480907264    480137216       flash     rw  /misc/config
+   3962216448   3926405120  flash-disk     rw  apphost:
+RP/0/RP0/CPU0:PE1A#

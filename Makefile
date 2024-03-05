@@ -45,7 +45,7 @@ TRUSTED_HOST  = pyats-pypi.cisco.com
 
 # Development pkg requirements
 RELATED_PKGS = genie.libs.parser
-DEPENDENCIES = xmltodict requests
+DEPENDENCIES = xmltodict requests "netaddr<1.0.0"
 
 ifeq ($(MAKECMDGOALS), devnet)
 	BUILD_CMD += --devnet

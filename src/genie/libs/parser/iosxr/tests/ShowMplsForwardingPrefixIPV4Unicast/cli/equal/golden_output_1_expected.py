@@ -1,0 +1,20 @@
+expected_output = {
+    "local_label":{
+      "24004":{
+         "outgoing_label":{
+            "24004":{
+               "prefix_or_id":{
+                  "10.0.0.12/32":{
+                     "outgoing_interface":{
+                        "Bundle-Ether12":{
+                           "next_hop":"10.1.2.2",
+                           "bytes_switched":919314
+                        }
+                     }
+                  }
+               }
+            }
+         }
+      }
+   }
+}

@@ -2099,12 +2099,35 @@ class ShowPlatformTcamUtilizationSchema(MetaParser):
         show platform hardware fed active fwd-asic resource tcam utilization
     """
     schema = {
-        'resource': {
+        Optional('resource'): {
             Any(): {
                 'slice': {
                     Any(): {
                         'used': int,
                         'free': int
+                    }
+                }
+            }
+        },
+        Optional('asic'): {
+            Any(): {
+                'table': {
+                    Any(): {
+                        'subtype': {
+                            Any(): {
+                                'dir': {
+                                    Any(): {
+                                        'max': str,
+                                        'used': str,
+                                        'used_percent': str,
+                                        'v4': str,
+                                        'v6': str,
+                                        'mpls': str,
+                                        'other': str,
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -2119,12 +2142,15 @@ class ShowPlatformTcamUtilization(ShowPlatformTcamUtilizationSchema):
     """
 
     cli_command = ['show platform hardware fed {switch} {mode} fwd-asic resource tcam utilization',
-                   'show platform hardware fed active fwd-asic resource tcam utilization']
+                   'show platform hardware fed active fwd-asic resource tcam utilization',
+                   'show platform hardware fed switch {mode} fwd-asic resource tcam utilization']
 
     def cli(self, switch=None, mode=None, output=None):
         if output is None:
             if switch and mode:
                 cmd = self.cli_command[0].format(switch=switch, mode=mode)
+            elif mode:
+                cmd = self.cli_command[2].format(mode=mode)
             else:
                 cmd = self.cli_command[1]
             output = self.device.execute(cmd)
@@ -2139,6 +2165,16 @@ class ShowPlatformTcamUtilization(ShowPlatformTcamUtilizationSchema):
         p1 = re.compile(r'(?P<resource>.+)\s+(?P<slice0_used>\d+)\s+(?P<slice0_free>\d+)\s+(?P<slice1_used>\d+)\s+'
                         r'(?P<slice1_free>\d+)\s+(?P<slice2_used>\d+)\s+(?P<slice2_free>\d+)\s+(?P<slice3_used>\d+)\s+'
                         r'(?P<slice3_free>\d+)\s+(?P<slice4_used>\d+)\s+(?P<slice4_free>\d+)\s+(?P<slice5_used>\d+)\s+(?P<slice5_free>\d+)$')
+
+        # CAM Utilization for ASIC  [0]
+        p2 = re.compile(r'CAM +Utilization +for +ASIC  +\[+(?P<asic>(\d+))\]$')
+
+        # CTS Cell Matrix/VPN
+        # Label                  TCAM         O         512        1    0.20%        0        0        0        1
+        # CTS Cell Matrix/VPN
+        # Label                  TCAM         O        1024        1    0.10%        0        0        0        1
+        # Mac Address Table      EM           I       16384       45    0.27%        0        0        0       45
+        p3 = re.compile(r'(?P<table>.*(\S+)) +(?P<subtype>\S+) +(?P<dir>\S+) +(?P<max>\d+) +(?P<used>\d+) +(?P<used_percent>\S+\%) +(?P<v4>\d+) +(?P<v6>\d+) +(?P<mpls>\d+) +(?P<other>\d+)$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -2170,6 +2206,36 @@ class ShowPlatformTcamUtilization(ShowPlatformTcamUtilizationSchema):
                 slice_dict = resource_dict.setdefault('slice').setdefault(5, {})
                 slice_dict['used'] = int(group['slice5_used'])
                 slice_dict['free'] = int(group['slice5_free'])
+                continue
+
+            # CAM Utilization for ASIC  [0]
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                asic = group['asic']
+                asic_dict = ret_dict.setdefault('asic', {}).setdefault(asic, {})
+                continue
+
+            # CTS Cell Matrix/VPN
+            # Label                  TCAM         O         512        1    0.20%        0        0        0        1
+            # CTS Cell Matrix/VPN
+            # Label                  TCAM         O        1024        1    0.10%        0        0        0        1
+            # Mac Address Table      EM           I       16384       45    0.27%        0        0        0       45
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                table_ = group.pop('table')
+                if table_ == 'Label':
+                    table_ = 'CTS Cell Matrix/VPN Label'
+                subtype_ = group.pop('subtype')
+                dir_ = group.pop('dir')
+                dir_dict = asic_dict.setdefault('table', {}). \
+                            setdefault(table_, {}). \
+                            setdefault('subtype', {}). \
+                            setdefault(subtype_, {}). \
+                            setdefault('dir', {}). \
+                            setdefault(dir_, {})
+                dir_dict.update({k: v for k, v in group.items()})
                 continue
 
         return ret_dict

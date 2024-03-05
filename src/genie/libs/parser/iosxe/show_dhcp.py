@@ -473,3 +473,71 @@ class ShowIpv6DhcpInterface(ShowIpv6DhcpInterfaceSchema):
                 continue
 
         return ret_dict
+
+class ShowIpDhcpSnoopingBidingInterface(MetaParser):
+    schema = {
+        'count': int
+    }
+
+
+# ==========================================
+# Parser for:
+#   * 'show ip dhcp snooping binding interface {interface} | count {match}'
+# ==========================================
+
+class ShowIpDhcpSnoopingBibdingInterfaceCount(ShowIpDhcpSnoopingBidingInterface):
+    """Parser for:
+        show ip dhcp snooping binding interface {interface} | count {match}
+    """
+    cli_command = 'show ip dhcp snooping binding interface {interface} | count {match}'
+
+    def cli(self, interface='', match='', output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(interface=interface, match=match))    
+        dict_count = {}
+
+        # Number of lines which match regexp = 240
+        p1 = re.compile(r"^Number of lines which match regexp\s*=\s*(?P<count>[\d]+)$")
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Number of lines which match regexp = 240
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                count = int(groups['count'])
+                dict_count['count'] = count
+
+        return dict_count
+
+# ==========================================
+# Parser for:
+#   * 'show ip verify source interface {interface} | count {match}'
+# ==========================================
+
+class ShowIpVerifySourceInterfaceCount(ShowIpDhcpSnoopingBidingInterface):
+    """Parser for:
+        show ip verify source interface {interface} | count {match}
+    """
+    cli_command = 'show ip verify source interface {interface} | count {match}'
+
+    def cli(self, interface='', match='', output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(interface=interface, match=match))
+        dict_count = {}
+
+        # Number of lines which match regexp = 240
+        p1 = re.compile(r"^Number of lines which match regexp\s*=\s*(?P<count>[\d]+)$")
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Number of lines which match regexp = 240
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                count = int(groups['count'])
+                dict_count['count'] = count
+
+        return dict_count

@@ -1,0 +1,12 @@
+P2P                       Protect  BW         Backup
+Protected LSP             I/F      BPS:Type   Tunnel:Label  State  Level   Type 
+-------------             -------- --------   ------------- ------ -----   ------
+
+P2MP
+*Protected Sub-LSP                       Protect BW         Backup
+src_lspid[subid]->dst_tunid              I/F     BPS:Type   Tunnel:Label  State
+---------------------------              ------- --------   ------------- ------
+
+* Sub-LSP identifier format: <TunSrc>_<LSP_ID>[SubgroupID]-><TunDst>_<Tun_ID>
+  Note: Sub-LSP identifier may be truncated.
+  Use 'detail' display for the complete key.

@@ -1,0 +1,8 @@
+Wed Feb  7 20:18:57.149 UTC
+Line "con0_RP0_CPU0", Location "0/RP0/CPU0", Type "Console"
+Length: 0 lines, Width: 0 columns
+Baud rate (TX/RX) is 9600, "No" Parity, 2 stopbits, 8 databits
+Template: console
+Capabilities: Timestamp Enabled
+Allowed transports are none.
+RP/0/RP0/CPU0:pp-5508-r1-pod2#

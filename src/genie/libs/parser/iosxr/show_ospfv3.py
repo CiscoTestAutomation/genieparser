@@ -1713,3 +1713,125 @@ class ShowOspfv3VrfAllInclusiveDatabasePrefix(ShowOspfv3VrfAllInclusiveDatabaseP
                 continue
 
         return ret_dict
+
+# =============================================================
+# Schema for 'show ospfv3 database prefix adv-router {ip_address}'
+# =============================================================
+class ShowOspfv3DatabaseprefixAdvRouterSchema(MetaParser):
+    """Schema for show ospfv3 database prefix adv-router {ip_address}
+    """
+    schema = {
+        'vrf': {
+            Any(): {
+               'address_family': {
+                      Any(): {
+                        'instance': {
+                            Any(): {
+                                "router_id": str,
+                                 Optional('area'): {
+                                     Any(): {
+                                         "area_id": int,
+                                         Optional('advertising_router'): str,
+                                         Optional('prefix_address'): str,
+                                     }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }          
+
+# =============================================================
+#  Parser for "show ospfv3 database prefix adv-router {ip_address}"
+# =============================================================
+class ShowOspfv3DatabaseprefixAdvRouter(ShowOspfv3DatabaseprefixAdvRouterSchema):
+    """ Parser for show ospfv3 database prefix adv-router {ip_address}
+    """
+    cli_command = ['show ospfv3 database prefix adv-router {ip_address}']
+
+    def cli(self, ip_address='', output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command[0].format(ip_address=ip_address))
+
+
+        # Init vars
+        ret_dict = {}
+        address_family = 'ipv4'
+
+
+        #OSPF Router with ID (10.0.0.3) (Process ID 37)
+        p1 = re.compile(r'^OSPFv3 +Router +with +ID +\((?P<router_id>(\S+))\) '
+                        r'+\(Process +ID +(?P<instance>(\S+))(?:, +VRF +(?P<vrf>(\S+)))?\)$')
+        
+        #Router Link States (Area 0)
+        p2 = re.compile(r'^(?P<lsa_type>([a-zA-Z0-9\s\D]+)) +Link +States +\(Area'
+                        ' +(?P<area>(\S+))\)$')
+        
+        #Advertising Router: 10.0.0.3
+        p3 = re.compile(r'^Advertising Router: +(?P<advertising_router>(\S+))$')
+        
+        #Prefix Address: fc00:a000:2000::3
+        p4 = re.compile(r'^Prefix Address: +(?P<prefix_address>(\S+))$')
+        
+        for line in output.splitlines():
+            line = line.strip()
+
+            # OSPF Router with ID (10.94.1.1) (Process ID mpls1)
+            m = p1.match(line)
+
+            if m:
+                group = m.groupdict()
+                router_id = group['router_id']
+                instance = group['instance']
+                if group['vrf']:
+                    vrf = group['vrf']
+                else:
+                    vrf = 'default'
+
+                # Create dict
+                ospf_dict = ret_dict.setdefault('vrf', {}). \
+                    setdefault(vrf, {}). \
+                    setdefault('address_family', {}). \
+                    setdefault(address_family, {}). \
+                    setdefault('instance', {}). \
+                    setdefault(instance, {})
+                continue
+            
+            # Router Link States (Area 0)
+            # Intra Area Prefix Link States (Area 0)
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+
+                # Set area
+                if group['area']:
+                    try:
+                        int(group['area'])
+                        area = str(IPAddress(group['area']))
+                    except Exception:
+                        area = group['area']
+                else:
+                    area = '0.0.0.0'
+
+                ospf_dict['router_id'] = router_id
+                area_dict = ospf_dict.setdefault('area', {}). \
+                    setdefault(area, {})
+                area_dict['area_id'] = int(group['area'])
+
+                continue
+            
+            # Advertising Router: 10.0.0.3
+            m = p3.match(line)
+            if m:
+                area_dict["advertising_router"] = m.groupdict()["advertising_router"]
+                continue
+            
+            # Prefix Address: fc00:a000:2000::3
+            m = p4.match(line)
+            if m:
+                area_dict["prefix_address"] = m.groupdict()["prefix_address"]
+                continue
+            
+        return ret_dict

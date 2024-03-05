@@ -1,0 +1,25 @@
+ACL statistics
+
+ACL Binds:                           0
+ACL Bind Errors:                     0
+ACL Unbinds:                         0
+ACL Unbind Errors:                   0
+ACL Rebinds:                         0
+ACL Rebind Errors:                   0
+ACL Edits:                           0
+ACL Edit Errors:                     0
+OG Creates:                          0
+OG Create Errors:                    0
+OG Deletes:                          0
+OG Delete Errors:                    0
+OG Edits:                            0
+OG Edit Errors:                      0
+IPv4 Ingress ACL Deny:               0
+IPv4 Egress ACL Deny:                0
+IPv4 ACL Implicit Deny:              0
+IPv6 Ingress ACL Deny:               0
+IPv6 Egress ACL Deny:                0
+IPv6 ACL Implicit Deny:              0
+Mac Ingress ACL Deny:                0
+Mac Egress ACL Deny:                 0
+Mac ACL Implicit Deny:               0

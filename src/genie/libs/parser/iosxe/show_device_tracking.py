@@ -2409,3 +2409,40 @@ class ShowDeviceTrackingMessages(ShowDeviceTrackingMessagesSchema):
                 continue
 
         return device_tracking_messages_dict
+
+class ShowDeviceTrackingDatabaseInterface(MetaParser):
+    schema = {
+        'count': int
+    }
+
+
+# ==========================================
+# Parser for:
+#   * 'show device-tracking database {interface} | count {match}'
+# ==========================================
+
+class ShowDeviceTrackingDatabaseInterfaceCount(ShowDeviceTrackingDatabaseInterface):
+    """Parser for:
+        show device-tracking database interface {interface} | count {match}
+    """
+    cli_command = 'show device-tracking database interface {interface} | count {match}'
+
+    def cli(self, interface='', match='', output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(interface=interface, match=match))    
+        dict_count = {}
+
+        # Number of lines which match regexp = 240
+        p1 = re.compile(r"^Number of lines which match regexp\s*=\s*(?P<count>[\d]+)$")
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Number of lines which match regexp = 240
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                count = int(groups['count'])
+                dict_count['count'] = count
+
+        return dict_count

@@ -47,7 +47,7 @@ class ShowPtpPlatformServoSchema(MetaParser):
             'set_time': int,
             'step_time': int,
             'adjust_freq': int,
-            'adjust_freq_time': int,
+            Optional('adjust_freq_time'): int,
             'last_set_time': float,
             'flag': int,
             'last_step_time': int,
@@ -120,11 +120,13 @@ class ShowPtpPlatformServo(ShowPtpPlatformServoSchema):
 
         # setTime():1854 stepTime():7989 adjustFreq():789 adjustFreqTime():437113
         # setTime():2  stepTime():1  adjustFreq():420942 adjustFreqTime():0
-        p15 = re.compile(r'^setTime\(\):(?P<set_time>\d+)\s+stepTime\(\):(?P<step_time>\d+)\s+adjustFreq\(\):(?P<adjust_freq>\d+)\s+adjustFreqTime\(\):(?P<adjust_freq_time>\d+)$')
+        # setTime():0  stepTime():0 adjustFreq():0
+        p15 = re.compile(r'^setTime\(\):(?P<set_time>\d+)\s+stepTime\(\):(?P<step_time>\d+)\s+adjustFreq\(\):(?P<adjust_freq>\d+)(?:\s+adjustFreqTime\(\):(?P<adjust_freq_time>\d+))?$')
 
         # Last setTime: 1.000000000 flag:0 Last stepTime:262310484, Last adjustFreq:9999988
         # Last setTime: 273.000000000 flag:0  Last stepTime:105006084, Last adjustFreq:-19615
-        p16 = re.compile(r'^Last\s+setTime:\s+(?P<last_set_time>[-\d.]+)\s+flag:(?P<flag>\d+)\s+Last\s+stepTime:(?P<last_step_time>[-\d]+),\s+Last\s+adjustFreq:(?P<last_adjust_freq>[-\d]+)$')
+        # Last setTime: 0.000000000 flag:0  Last stepTime:0 Last adjustFreq:0
+        p16 = re.compile(r'^Last\s+setTime:\s+(?P<last_set_time>[-\d.]+)\s+flag:(?P<flag>\d+)\s+Last\s+stepTime:(?P<last_step_time>[-\d]+)(?:(,))?\s+Last\s+adjustFreq:(?P<last_adjust_freq>[-\d]+)$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -266,8 +268,9 @@ class ShowPtpPlatformServo(ShowPtpPlatformServoSchema):
                 ptp_dict.update({'step_time': step_time})
                 adjust_freq = int(group['adjust_freq'])
                 ptp_dict.update({'adjust_freq': adjust_freq})
-                adjust_freq_time = int(group['adjust_freq_time'])
-                ptp_dict.update({'adjust_freq_time': adjust_freq_time})
+                if group['adjust_freq_time']:
+                    adjust_freq_time = int(group['adjust_freq_time'])
+                    ptp_dict.update({'adjust_freq_time': adjust_freq_time})
                 continue
 
             # Last setTime: 1.000000000 flag:0 Last stepTime:262310484, Last adjustFreq:9999988

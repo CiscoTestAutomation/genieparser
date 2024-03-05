@@ -85,6 +85,10 @@ class ShowFipsStatus(ShowFipsStatusSchema):
         # Switch and Stacking are not running in fips mode
         p2 = re.compile(r'^Switch and Stacking are (?P<fips_state>[\S\s]+) in fips mode')
 
+        # Switch is not running in fips mode
+        # Switch is running in fips mode
+        p3 = re.compile(r'^Switch is (?P<fips_state>[\S\s]+) in fips mode$')
+
         for line in output.splitlines():
             line = line.strip()
             # Switch is in Fips Not-Configured state and not SESA Ready
@@ -111,5 +115,12 @@ class ShowFipsStatus(ShowFipsStatusSchema):
             if m:
                 ret_dict['fips_state'] = m.groupdict()['fips_state']
                 continue
-        
+            
+            # Switch is not running in fips mode
+            # Switch is running in fips mode
+            m = p3.match(line)
+            if m:
+                ret_dict['fips_state'] = m.groupdict()['fips_state']
+                continue
+
         return ret_dict
