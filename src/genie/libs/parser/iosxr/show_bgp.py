@@ -8697,8 +8697,8 @@ class ShowBgpVrf(ShowBgpVrfSchema):
         # *>i192.168.111.0/24       10.189.99.98                                                    0       0 i
         # *> 10.7.7.7/32        10.10.10.107             0             0 65107.65107 ?
         p13 = re.compile(r'^(?P<status_codes>(i|s|x|S|d|h|\*|\>|\s)+)'
-                         r' *(?P<prefix>(?P<ip>[0-9\.\:\[\]]+)\/(?P<mask>\d+))?'
-                         r' +(?P<next_hop>\S+) +(?P<number>[\d\.\s\{\}]+)'
+                         r' *(?P<prefix>(?P<ip>[0-9a-f\.\:\[\]]+)\/(?P<mask>\d+))?[\n\r]*'
+                         r' +(?P<next_hop>\S+)[\n\r]* +(?P<number>[\d\.\s\{\}]+)'
                          r'(?: *(?P<origin_codes>(i|e|\?)))?$')
 
         # Processed 40 prefixes, 50 paths
@@ -9123,15 +9123,20 @@ class ShowBgpAddressFamily(ShowBgpAddressFamilySchema):
         'show bgp'
         'show bgp {address_family}'
     '''
+    cli_command = [
+        'show bgp',
+        'show bgp {address_family}',
+        'show bgp {address_family} community {community}',
+        'show bgp {address_family} community {community} {exact_match}',]
 
-    cli_command = ['show bgp',
-                   'show bgp {address_family}']
-
-    def cli(self, address_family=None, output=None):
-
+    def cli(self, address_family=None, community=None, exact_match=None, output=None):
         # Execute command
         if output is None:
-            if address_family:
+            if address_family and community and exact_match:
+                command = self.cli_command[3].format(address_family=address_family, community=community, exact_match=exact_match)
+            elif address_family and community:
+                command = self.cli_command[2].format(address_family=address_family, community=community)
+            elif address_family:
                 command = self.cli_command[1].format(address_family=address_family)
             else:
                 command = self.cli_command[0]
@@ -9194,8 +9199,8 @@ class ShowBgpAddressFamily(ShowBgpAddressFamilySchema):
         # *>i192.168.111.0/24       10.189.99.98                                                    0       0 i
         # *> 10.7.7.7/32        10.10.10.107             0             0 65107.65107 ?
         p11 = re.compile(r'^(?P<status_codes>(i|s|x|S|d|h|\*|\>|\s)+)'
-                         r' *(?P<prefix>(?P<ip>[0-9\.\:\[\]]+)\/(?P<mask>\d+))?'
-                         r' +(?P<next_hop>\S+) +(?P<number>[\d\.\s\{\}]+)'
+                         r' *(?P<prefix>(?P<ip>[0-9a-f\.\:\[\]]+)\/(?P<mask>\d+))?[\n\r]*'
+                         r' +(?P<next_hop>\S+)[\n\r]* +(?P<number>[\d\.\s\{\}]+)'
                          r'(?: *(?P<origin_codes>(i|e|\?)))?$')
 
         # Processed 40 prefixes, 50 paths
