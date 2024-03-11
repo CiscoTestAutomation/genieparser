@@ -326,3 +326,156 @@ class ShowRoute(ShowRouteSchema):
                 index += 1
 
         return ret_dict
+
+
+# =============================================
+# Parser for 'show route bgp'
+# =============================================
+class ShowRouteBgp(ShowRouteSchema):
+    """Parser for
+        * show route bgp
+    """
+
+    cli_command = 'show route bgp'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        ret_dict = {}
+        # strip this patter from the original text
+        # Codes: L - Local, C - connected, S - static, I - IGRP, R - RIP, M - mobile, B - BGP
+        # D - EIGRP, E - EGP, EX - EIGRP external, O - OSPF, I - IGRP, IA - OSPF inter area
+        # N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+        # E1 - OSPF external type 1, E2 - OSPF external type 2, E - EGP
+        # i - IS-IS, L1 - IS-IS level-1, L2 - IS-IS level-2, ia - IS-IS inter area
+        # * - candidate default, su - IS-IS summary, U - per-user static route, o - ODR
+        # P - periodic downloaded static route, + - replicated route
+        # SI - Static InterVRF
+        p1 = re.sub(r'(?ms)(Codes:.+?)replicated\sroute(\s*SI\s-\sStatic\sInterVRF)?', '', out)
+
+        lines = [x.strip() for x in p1.splitlines()]
+        entries = dict()
+        last_entry = str()
+        clean_lines = list()
+
+        for line in lines:
+            if re.match(r'(^[A-Z]{1,2})', line):
+                entries[line] = list()
+                last_entry = line
+            else:
+                if last_entry == '':
+                    continue
+
+                entries[last_entry].append(line)
+
+        for k, v in entries.items():
+            clean_lines.append(' '.join(k.split()) + " " + " ".join(v))
+
+        # clean_lines now holds a list of entries in a single line (easier for parsing)
+        # Gateway of last resort is X.Y.Z.44 to network 0.0.0.0
+        # B        X.Y.Z.137 255.255.255.255 [20/0] via X.Y.Z.15, 1w0d
+        # B        X.Y.Z.138 255.255.255.255 [20/0] via X.Y.Z.15, 1w0d
+        # B        X.Y.Z.140 255.255.255.255 [20/0] via X.Y.Z.45, 1w0d
+        # B        X.Y.Z.141 255.255.255.255 [20/0] via X.Y.Z.45, 1w0d
+        # B        X.Y.Z.160 255.255.255.255 [20/5] via X.Y.Z.21, 1w0d
+        # B        X.Y.Z.161 255.255.255.255 [20/5] via X.Y.Z.21, 1w0d
+        # B        X.Y.Z.164 255.255.255.255 [20/5] via X.Y.Z.21, 1w0d
+        # B        X.Y.Z.165 255.255.255.255 [20/5] via X.Y.Z.21, 1w0d
+        # B        X.Y.Z.166 255.255.255.255 [20/0] via X.Y.Z.33, 2d17h
+        # B        X.Y.Z.252 255.255.255.255 [20/0] via X.Y.Z.17, 1w0d
+        # B        X.Y.Z.253 255.255.255.255 [20/0] via X.Y.Z.17, 1w0d
+
+        # [110/11] via 10.20.192.3, 1w1d, wan3 [110/11] via 10.20.192.4, 1w1d, wan4
+
+        # B X.Y.Z.253 255.255.255.255 [20/0] via X.Y.X.17, 1w0d
+        p2 = re.compile(r'(?P<code>\S+)\s(?P<network>\S+)\s(?P<subnet>\S+)\s\[(?P<route_preference>[\d\/]+)\]')
+        # [20/0] via 172.25.141.2, 7w0d
+        p3 = re.compile(r'\[(?P<route_preference>[\d\/]+)\]\svia\s+(?P<next_hop>\S+),\s(?P<date>\S+)')
+
+
+
+        if not clean_lines:
+            return
+
+        dict_ipv4 = ret_dict.setdefault('vrf', {}).setdefault('default', {}). \
+            setdefault('address_family', {}).setdefault('ipv4', {})
+        dict_routes = dict_ipv4.setdefault('routes', {})
+
+        for line in clean_lines:
+            index = 1
+            groups = dict()
+            next_hops = list()
+
+            target_dict = dict_routes
+
+            if line.startswith('B'):
+                """ BGP """
+
+                m = p2.match(line)
+                if m:
+                    groups = m.groupdict()
+
+                groups['code'] = line[0]
+                groups['network'], groups['subnet'] = line.split()[1], line.split()[2]
+                next_hops = [m.groupdict() for m in p3.finditer(line)]
+
+            else:
+                continue
+
+            prefix_length = str(IPAddress(groups['subnet']).netmask_bits())
+            combined_ip = groups['network'] + '/' + prefix_length
+            dict_route = target_dict.setdefault(combined_ip, {})
+
+            if '*' in groups['code']:
+                dict_route.update({'candidate_default': True})
+                groups['code'] = groups['code'].strip('*')
+            else:
+                dict_route.update({'candidate_default': False})
+
+            dict_route.update({'active': True})
+
+            if 'date' not in groups.keys() and next_hops:
+                date = next_hops[0].get('date')
+            else:
+                date = groups.get('date')
+            if date:
+                dict_route.update({'date': date})
+
+            dict_route.update({'route': combined_ip})
+
+            dict_route.update({'source_protocol_codes': groups['code']})
+            dict_route.update({'source_protocol': self.source_protocol_dict[groups['code']].lower()})
+
+            if 'route_preference' not in groups.keys() and next_hops:
+                route_preference = next_hops[0]['route_preference']
+
+            else:
+                route_preference = groups.get('route_preference')
+
+            if route_preference:
+                if '/' in route_preference:
+                    route_preference, metric = map(int, route_preference.split('/'))
+                    dict_route.update({'metric': metric})
+                else:
+                    route_preference = int(route_preference)
+                dict_route.update({'route_preference': route_preference})
+
+            if not next_hops and groups.get('context_name'):
+                dict_next_hop = dict_route.setdefault('next_hop', {})
+                dict_next_hop.update({'outgoing_interface_name': {
+                    groups['context_name']: {'outgoing_interface_name': groups['context_name']}
+                }})
+
+            for nh in next_hops:
+                dict_next_hop = dict_route.setdefault('next_hop', {}).setdefault('next_hop_list', {}).setdefault(index,
+                                                                                                                  {})
+                dict_next_hop.update({'index': index})
+                dict_next_hop.update({'next_hop': nh.get('next_hop')})
+                if nh.get('context_name'):
+                    dict_next_hop.update({'outgoing_interface_name': nh.get('context_name')})
+                index += 1
+
+        return ret_dict
