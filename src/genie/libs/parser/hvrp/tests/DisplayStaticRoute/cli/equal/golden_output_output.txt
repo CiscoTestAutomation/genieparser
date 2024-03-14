@@ -1,0 +1,11 @@
+ip route-static 0.0.0.0 0.0.0.0 192.168.12.42 preference 1
+ip route-static 0.0.0.0 0.0.0.0 1.1.1.2 track bfd-session aa
+ip route-static 145.7.64.247 255.255.255.255 NULL0 preference 250
+ip route-static 145.13.71.128 255.255.255.128 192.168.12.42 preference 1
+ip route-static 145.13.71.128 255.255.255.128 NULL0 preference 250
+ip route-static 145.13.76.0 255.255.255.0 192.168.12.42 preference 1
+ip route-static 145.13.76.0 255.255.255.0 NULL0 preference 250
+ip route-static 192.168.28.0 255.255.255.0 192.168.12.42 preference 1
+ip route-static 192.168.28.0 255.255.255.0 NULL0 preference 250 description testroute
+ipv6 route-static :: 0 2001:67C:2504:F009::15A preference 1 description testroute-2
+ipv6 route-static 2A07:3500:1BC0:: 49 2A07:3500:1BC0::F001:1002 description testroute-3
