@@ -1,0 +1,7 @@
+Facility        Default Severity        Current Session Severity
+--------        ----------------        ------------------------
+aaa                     3                       5
+
+0(emergencies)          1(alerts)       2(critical)
+3(errors)               4(warnings)     5(notifications)
+6(information)          7(debugging)
