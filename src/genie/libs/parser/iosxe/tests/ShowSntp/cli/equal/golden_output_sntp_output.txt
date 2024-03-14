@@ -1,0 +1,5 @@
+SNTP server                Stratum   Version    Last Received
+192.168.131.58              3           4        15w5d     
+192.168.131.59              3           4        15w5d     
+172.18.1.10                 16          4        never     
+192.168.131.59              3           4        00:01:00      Synced
