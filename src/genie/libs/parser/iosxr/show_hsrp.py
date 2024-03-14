@@ -229,8 +229,8 @@ class ShowHsrpDetailSchema(MetaParser):
             'interface': str,
             Optional('bfd'): {
                 'enabled': bool,
-                'detection_multiplier': int,
-                'interval': int,
+                Optional('detection_multiplier'): int,
+                Optional('interval'): int,
             },            Optional('use_bia'): bool,
             Optional('delay'): {
                 'minimum_delay': int,
