@@ -65,7 +65,7 @@ class ShowVrf(ShowVrfSchema):
         # test                             10.116.83.34:100      ipv4,ipv6   Lo100
         # ce1                              <being deleted>       ipv4,ipv6   Et1/0
         # * ce1                              2:2                   ipv4,ipv6
-        p1 = re.compile(r'^(((?P<being_deleted>\*))\s+)?(?P<vrf>[\w\d\-\.]+)\s+(?P<rd>\<not +set\>|<being deleted>|[\.\d\:]+)(?:\s+(?P<protocols>[(?:ipv\d)\,]+))?(?:\s+(?P<intf>[\S\s]+))?$')
+        p1 = re.compile(r'^(((?P<being_deleted>\*))\s+)?(?P<vrf>[\S]+)\s+(?P<rd>\<not +set\>|<being deleted>|[\.\d\:]+)(?:\s+(?P<protocols>[(?:ipv\d)\,]+))?(?:\s+(?P<intf>[\S\s]+))?$')
 
         # Lo300
         # Gi2.390
@@ -282,7 +282,7 @@ class ShowVrfDetailSuperParser(ShowVrfDetailSchema):
                         r'current +count +(?P<count>\d+)$')
 
         # VRF label distribution protocol: not configured
-        p10 = re.compile(r'^VRF +label +distribution +protocol: +(?P<vrf_label>[\w\s\-]+)$')
+        p10 = re.compile(r'^VRF +label +distribution +protocol: +(?P<vrf_label>[\S]+)$')
 
         # VRF label allocation mode: per-prefix
         p11 = re.compile(r'^VRF +label +allocation +mode: +(?P<mode>[\w\s\-]+)'
@@ -591,7 +591,7 @@ class ShowVRFIPv6(ShowVRFIPv6Schema):
             output = self.device.execute(self.cli_command.format(vrf=vrf))
             
         res_dict = {}
-        p1 = re.compile(r'^(?P<vrf>[\w\d]+)+\s+(?P<default_rd>[\d\:\d]+)+\s+(?P<protocols>[\w\,\w]+)\s+\s\s(?P<interface>[\w\d]+)*$')
+        p1 = re.compile(r'^(?P<vrf>[\S]+)+\s+(?P<default_rd>[\d\:\d]+)+\s+(?P<protocols>[\w\,\w]+)\s+\s\s(?P<interface>[\w\d]+)*$')
         for line in output.splitlines():
             line = line.strip()
             # vrf21                                21:1              ipv4,ipv6   Vl21'''
@@ -648,7 +648,7 @@ class ShowPlatformSoftwareCefIpVrf(ShowPlatformSoftwareCefIpVrfSchema):
             output = self.device.execute(self.cli_command.format(protocol=protocol, option=option, ip=ip,mask=mask))
 
         # VRF Default
-        p1 = re.compile(r'^VRF\s+(?P<vrf_name>[\w\s\-]+)$')
+        p1 = re.compile(r'^VRF\s+(?P<vrf_name>[\S]+)$')
 
         # ------------------ show ip route vrf Default 11.1.6.1 255.255.255.0 ------------------
         # ------------------ show ip cef vrf vrf1000 11.1.6.1 255.255.255.0 internal ------------------
