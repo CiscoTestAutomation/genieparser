@@ -74,8 +74,8 @@ class ShowIsisSegmentRoutingPrefixSidMap(ShowIsisSegmentRoutingPrefixSidMapSchem
         p1 = re.compile(r'^IS-IS (?P<isis_id>\d+) (?P<status>\w+) policy$')
 
         # Prefix               SID Index    Range        Flags
-        # 10.4.1.100/32         100          20          
-        # 10.4.1.150/32         150          10          
+        # 10.4.1.100/32         100          20
+        # 10.4.1.150/32         150          10
         p2 = re.compile(r'(?P<prefix>[\w\.\/]+)\s+(?P<sid_index>\d+)'
                         '\s+(?P<range>\d+)(\s+(?P<flags>)[\w\s]+$)?')
 
@@ -159,8 +159,8 @@ class ShowOspfSegmentRoutingPrefixSidMap(ShowOspfSegmentRoutingPrefixSidMapSchem
                         'ID (?P<process_id>\d+)$')
 
         # Prefix               SID Index    Range        Flags
-        # 10.4.1.100/32         100          20          
-        # 10.4.1.150/32         150          10          
+        # 10.4.1.100/32         100          20
+        # 10.4.1.150/32         150          10
         p2 = re.compile(r'(?P<prefix>[\w\.\/]+)\s+(?P<sid_index>\d+)'
                         '\s+(?P<range>\d+)(\s+(?P<flags>)[\w\s]+$)?')
 
@@ -1100,7 +1100,7 @@ class ShowPceLspDetail(ShowPceLspDetailSchema):
                         'S:(?P<s_flag>\d+) R:(?P<r_flag>\d+) A:'
                         '(?P<a_flag>\d+) O:(?P<o_flag>\d+)$')
 
-        #   Reported path: 
+        #   Reported path:
         p9 = re.compile(r'^(?P<specified_path>\w+) path:$')
 
         p10 = re.compile(r'^Metric type: (?P<metric_type>\w+), '
@@ -1260,7 +1260,7 @@ class ShowSegmentRoutingLocalBlockInconsistenciesSchema(MetaParser):
 
 
 class ShowSegmentRoutingLocalBlockInconsistencies(ShowSegmentRoutingLocalBlockInconsistenciesSchema):
-    ''' Parser for: 
+    ''' Parser for:
         * show segment-routing local-block inconsistencies
     '''
 
@@ -1325,7 +1325,7 @@ class ShowSegmentRoutingMappingServerPrefixSidMapIPV4(ShowSegmentRoutingMappingS
 
         ret_dict = {}
 
-        # 10.186.1.0/24          400          300          
+        # 10.186.1.0/24          400          300
         p1 = re.compile(r'(?P<prefix>[\w\.\/]+)\s+(?P<sid_index>\d+)'
                         '\s+(?P<range>\d+)(\s+(?P<flags>)[\w\s]+$)?')
         # Number of mapping entries: 2
@@ -1581,3 +1581,4 @@ class ShowSegmentRoutingSrv6Locator(ShowSegmentRoutingSrv6LocatorSchema):
                 continue
 
         return ret_dict
+
