@@ -52,11 +52,10 @@ class ShowClock(ShowClockSchema):
         # initial regexp pattern
         # 05:26:38.035 EST Wed JAN 4 2019
         # *05:26:38.035 EST Wed JAN 4 2019
-        p1 = re.compile(
-            r"^\*?(?P<time>[\d\:\.]+) +(?P<timezone>\w+)"
-            " +(?P<day_of_week>\w+) +(?P<month>\w+) +"
-            "(?P<day>\d+) +(?P<year>\d+)$"
-        )
+        # 05:26:38.035 UTC+2 Wed JAN 4 2019
+        p1 = re.compile(r'^\*?(?P<time>[\d\:\.]+) +(?P<timezone>\S+) '
+                        r'+(?P<day_of_week>\w+) +(?P<month>\w+) +(?P<day>\d+) '
+                        r'+(?P<year>\d+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -65,7 +64,9 @@ class ShowClock(ShowClockSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict.update({k: str(v) for k, v in group.items()})
+                group['day_of_week'] = group['day_of_week'].capitalize()
+                group['month'] = group['month'].capitalize()
+                ret_dict.update({k: v for k, v in group.items()})
                 continue
 
         return ret_dict
@@ -626,4 +627,3 @@ class ShowSystemIntegrityAllTrustChainNonce(ShowSystemIntegrityAllTrustChainNonc
                                         elif sub_child2.tag.endswith('version'):
                                             sign_dict.update({'version': int(sub_child2.text)})
         return ret_dict
-

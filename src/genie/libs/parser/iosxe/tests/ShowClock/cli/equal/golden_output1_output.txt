@@ -1,0 +1,5 @@
+Router#show clock
+Load for five secs: 1%/0%; one minute: 2%; five minutes: 3%
+Time source is NTP, 05:26:38.035 UTC+2 Wed JAN 4 2019
+
+05:26:38.035 UTC+2 Wed JAN 4 2019
