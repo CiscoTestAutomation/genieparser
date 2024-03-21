@@ -1,0 +1,18 @@
+LISP Prefix List information for router lisp 0
+
+Prefix List: site2list
+    Number of entries: 1       
+    Users:
+    IID 5000     IPv6  Import Publication  
+    IID 5000     IPv6  ITR Map Resolver    3130:3130:3130:3130:3130:3130:3130:3130
+    IID 5000     IPv6  ITR Map Resolver    3120:3120:3120:3120:3120:3120:3120:3120
+    IID 101      IPv6  Import Publication  
+    IID 101      IPv6  ITR Map Resolver    3130:3130:3130:3130:3130:3130:3130:3130
+    IID 101      IPv6  ITR Map Resolver    3120:3120:3120:3120:3120:3120:3120:3120
+    IID 10       MAC   ITR Map Resolver    3130:3130:3130:3130:3130:3130:3130:3130
+    IID 10       MAC   ITR Map Resolver    3120:3120:3120:3120:3120:3120:3120:3120
+    Entries:
+	2001:1820:1680:2000::/64
+	    Sources: static, publication
+	    Number of publications sourcing this entry: 2
+	    First added: 00:01:06, last verified: by publication, 00:00:00

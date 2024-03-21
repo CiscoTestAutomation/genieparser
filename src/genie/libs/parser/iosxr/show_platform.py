@@ -683,6 +683,11 @@ class ShowInstallCommitSummarySchema(MetaParser):
         Optional('active_packages'): Any(),
         Optional('num_committed_packages'): int,
         Optional('sdr'): list,
+        Optional('label'): str,
+        Optional('software_hash'): str,
+        Optional('optional_packages'): {str: str},
+        Optional('mandatory_packages'): {str: str},
+        Optional('committed_fixes'): {str: str},
         }
 
 class ShowInstallCommitSummary(ShowInstallCommitSummarySchema):
@@ -697,17 +702,64 @@ class ShowInstallCommitSummary(ShowInstallCommitSummarySchema):
             out = output
         # Init vars
         install_commit_dict = {}
+        sdr = False
         previous_line_sdr = False
         previous_line_committed_packages = False
         previous_line_active_packages = False
 
+        #SDRs:
+        p1 = re.compile(r'\s*SDRs:*$')
+
+        # disk0:xrvr-full-x-6.2.1.23I
+        # disk0:asr9k-mini-px-6.1.21.15I
+        # xrv9k-xr-6.2.2.14I version=6.2.2.14I [Boot image]
+        p2 = re.compile(r'\s*Committed +Packages:'
+                        ' *(?P<num_committed_packages>[0-9]+)?$')
+        
+        # disk0:xrvr-full-x-6.2.1.23I
+        # disk0:asr9k-mini-px-6.1.21.15I
+        # xrv9k-xr-6.2.2.14I version=6.2.2.14I [Boot image]
+        p3 = re.compile(r'\s*Active +Packages:'
+                        ' *(?P<num_active_packages>[0-9]+)?$')
+        
+        # Committed Packages: XR: 201    All: 1532
+        p4 = re.compile(r'^Committed +Packages: +XR: +(?P<xr>[\d]+)\s+All: +(?P<all>[\d]+)$')
+
+        # Label:              7.10.2-meta_7102_fcs_01_25_2024
+        p5 = re.compile(r'^Label:\s+(?P<label>[\w\.\-]+)$')
+
+        # Software Hash:      454175afbe3ad586c3b39a79db238b53844fe794723ea99fa00ac1acd5442359
+        p6 = re.compile(r'^Software +Hash:\s+(?P<sh>[\w]+)$')
+
+        # Optional Packages                                                        Version
+        # ---------------------------------------------------- ---------------------------
+        # xr-8000-netflow                                                   7.10.2v1.0.0-1
+        # xr-bgp                                                            7.10.2v1.0.0-1
+        p7 = re.compile(r'^(?P<optionalpackages>[\w\-]+)\s+(?P<version>[\w\.\-]+)$')
+
+        # Mandatory Packages with Committed Bugfixes                               Version
+        # xr-8000-core                                                      7.10.2v1.0.1-1
+        # xr-8000-cpa-npu                                                   7.10.2v1.0.2-1
+        p8 = re.compile(r'^(?P<mandatory_packages>[\w\-]+)\s+(?P<version>[\w\.\-]+)$')
+
+        # Committed Fixes (count: 6):
+        p9 = re.compile(r"Committed Fixes \(count: (?P<count>\d+)\):")
+
+        # CSCwh02785: xr-fib
+        # CSCwh80170: xr-8000-cpa-npu
+        # CSCwi62344: xr-8000-core, xr-8000-cpa-npu, xr-8000-leabaofa, xr-networkboot
+        p10 = re.compile(r'^\s*(?P<bug_id>CSC\w+): (?P<package_name>[\w\-\,\ ]+)$')
+
         for line in out.splitlines():
             line = line.rstrip()
+            if line.startswith('-'):
+                continue
 
-            p1 = re.compile(r'\s*SDRs:*$')
+            #SDRs:
             m = p1.match(line)
             if m:
                 previous_line_sdr = True
+                sdr = True
                 continue
 
             if previous_line_sdr:
@@ -715,47 +767,100 @@ class ShowInstallCommitSummary(ShowInstallCommitSummarySchema):
                 install_commit_dict.setdefault('sdr', []).append(str(line).strip())
                 continue
 
+            if sdr:
 
-            # disk0:xrvr-full-x-6.2.1.23I
-            # disk0:asr9k-mini-px-6.1.21.15I
-            # xrv9k-xr-6.2.2.14I version=6.2.2.14I [Boot image]
-            p2 = re.compile(r'\s*Committed +Packages:'
-                             ' *(?P<num_committed_packages>[0-9]+)?$')
-            m = p2.match(line)
-            if m:
-                previous_line_committed_packages = True
-                if 'committed_packages' not in install_commit_dict:
-                    install_commit_dict['committed_packages'] = []
-                if m.groupdict()['num_committed_packages']:
-                    install_commit_dict['num_committed_packages'] = \
-                        int(m.groupdict()['num_committed_packages'])
-                continue
-
-            if previous_line_committed_packages and line is not None:
-                clean_line = str(line).strip()
-                if line and '/' not in line:
-                    install_commit_dict['committed_packages'].append(clean_line)
+                # disk0:xrvr-full-x-6.2.1.23I
+                # disk0:asr9k-mini-px-6.1.21.15I
+                # xrv9k-xr-6.2.2.14I version=6.2.2.14I [Boot image]
+                m = p2.match(line)
+                if m:
+                    previous_line_committed_packages = True
+                    if 'committed_packages' not in install_commit_dict:
+                        install_commit_dict['committed_packages'] = []
+                    if m.groupdict()['num_committed_packages']:
+                        install_commit_dict['num_committed_packages'] = \
+                            int(m.groupdict()['num_committed_packages'])
                     continue
 
-            # disk0:xrvr-full-x-6.2.1.23I
-            # disk0:asr9k-mini-px-6.1.21.15I
-            # xrv9k-xr-6.2.2.14I version=6.2.2.14I [Boot image]
-            p2 = re.compile(r'\s*Active +Packages:'
-                            ' *(?P<num_active_packages>[0-9]+)?$')
-            m = p2.match(line)
-            if m:
-                previous_line_active_packages = True
-                if 'active_packages' not in install_commit_dict:
-                    install_commit_dict['active_packages'] = []
-                if m.groupdict()['num_active_packages']:
-                    install_commit_dict['num_active_packages'] = \
-                        int(m.groupdict()['num_active_packages'])
-                continue
-            if previous_line_active_packages and line is not None:
-                clean_line = str(line).strip()
-                if line and '/' not in line:
-                    install_commit_dict['active_packages'].append(clean_line)
+                if previous_line_committed_packages and line is not None:
+                    clean_line = str(line).strip()
+                    if line and '/' not in line:
+                        install_commit_dict['committed_packages'].append(clean_line)
+                        continue
+
+                # disk0:xrvr-full-x-6.2.1.23I
+                # disk0:asr9k-mini-px-6.1.21.15I
+                # xrv9k-xr-6.2.2.14I version=6.2.2.14I [Boot image]
+                m = p3.match(line)
+                if m:
+                    previous_line_active_packages = True
+                    if 'active_packages' not in install_commit_dict:
+                        install_commit_dict['active_packages'] = []
+                    if m.groupdict()['num_active_packages']:
+                        install_commit_dict['num_active_packages'] = \
+                            int(m.groupdict()['num_active_packages'])
                     continue
+                if previous_line_active_packages and line is not None:
+                    clean_line = str(line).strip()
+                    if line and '/' not in line:
+                        install_commit_dict['active_packages'].append(clean_line)
+                        continue
+            else :
+
+                # Committed Packages: XR: 201    All: 1532
+                m = p4.match(line)
+                if m:
+                    group = m.groupdict()
+                    commit_dict = install_commit_dict.setdefault('committed_packages', {})
+                    commit_dict.update({'XR': group['xr']})
+                    commit_dict.update({'All': group['all']})
+
+                # Label:              7.10.2-meta_7102_fcs_01_25_2024
+                m = p5.match(line)
+                if m:
+                    group = m.groupdict()
+                    install_commit_dict.update({'label': group['label']})
+    
+                # Software Hash:      454175afbe3ad586c3b39a79db238b53844fe794723ea99fa00ac1acd5442359
+                m = p6.match(line)
+                if m:
+                    group = m.groupdict()
+                    install_commit_dict.update({'software_hash': group['sh']})
+                
+                # Optional Packages                                                        Version
+                # ---------------------------------------------------- ---------------------------
+                # xr-8000-netflow                                                   7.10.2v1.0.0-1
+                # xr-bgp                                                            7.10.2v1.0.0-1
+                m = p7.match(line)
+                if m:
+                    group = m.groupdict()
+                    commit_dict = install_commit_dict.setdefault('optional_packages', {})
+                    commit_dict.update({group['optionalpackages']: group['version']})
+
+                # Mandatory Packages with Committed Bugfixes                               Version
+                # xr-8000-core                                                      7.10.2v1.0.1-1
+                # xr-8000-cpa-npu                                                   7.10.2v1.0.2-1
+                m = p8.match(line)
+                if m:
+                    group = m.groupdict()
+                    commit_dict = install_commit_dict.setdefault('mandatory_packages', {})
+                    commit_dict.update({group['mandatory_packages']: group['version']})   
+                
+                # Committed Fixes (count: 6):
+                m = p9.match(line)
+                if m:
+                    group = m.groupdict()
+                    commit_dict = install_commit_dict.setdefault('committed_fixes', {})
+                    commit_dict.update({'count': group['count']})
+
+                # CSCwh02785: xr-fib
+                # CSCwh80170: xr-8000-cpa-npu
+                # CSCwi62344: xr-8000-core, xr-8000-cpa-npu, xr-8000-leabaofa, xr-networkboot
+                m = p10.match(line)
+                if m:
+                    group = m.groupdict()
+                    commit_dict = install_commit_dict.setdefault('committed_fixes', {})
+                    commit_dict.update({group['bug_id']: group['package_name']})
 
         return install_commit_dict
 

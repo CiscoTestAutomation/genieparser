@@ -1,0 +1,11 @@
+Hardware Path Information: 
+ESI Layer:
+	Ingress Path Information:
+		Remap table entry:
+		  Valid flag 1
+		  BAF Port 10
+		  Input uIDB 53
+	Egress Path Information:
+		ESI channel 0xa000007
+		BAF header 0x0
+

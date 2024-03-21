@@ -2553,8 +2553,8 @@ class ShowLispDatabaseSuperParser(ShowLispDatabaseSuperParserSchema):
 
         # Entries total 2, no-route 0, inactive 0, do-not-register 1
         p2 = re.compile(r'^Entries\s+total\s+(?P<total>\d+),\s+no-route\s+'
-                        r'(?P<no_route>\d),\s+inactive\s+(?P<inactive>\d+),'
-                        r'\s+do-not-register\s+(?P<do_not_register>\d+)$')
+                        r'(?P<no_route>\d),\s+inactive\s+(?P<inactive>\d+)'
+                        r'(,\s+do-not-register\s+(?P<do_not_register>\d+))?$')
 
         # aabb.cc00.c901/48, dynamic-eid Auto-L2-group-101, inherited from default locator-set RLOC *** NO ROUTE TO EID PREFIX ***
         p3 = re.compile(r'^(?P<eid>([a-fA-F\d]{4}\.){2}[a-fA-F\d]{4}|'
@@ -2619,12 +2619,12 @@ class ShowLispDatabaseSuperParser(ShowLispDatabaseSuperParserSchema):
                 total = int(group['total'])
                 no_route = int(group['no_route'])
                 inactive = int(group['inactive'])
-                do_not_reg_count = int(group['do_not_register'])
                 entries_dict = lisp_id_dict.setdefault('entries',{})
                 entries_dict.update({'total':total,
                                      'no_route':no_route,
-                                     'inactive':inactive,
-                                     'do_not_register':do_not_reg_count})
+                                     'inactive':inactive})
+                if group['do_not_register']:
+                    entries_dict['do_not_register'] = int(group['do_not_register'])
                 continue
 
             #  aabb.cc00.c901/48, dynamic-eid Auto-L2-group-101, inherited from default locator-set RLOC *** NO ROUTE TO EID PREFIX ***
@@ -5987,20 +5987,39 @@ class ShowLispPrefixListSchema(MetaParser):
                         Optional('users'):
                             ListOf({
                                 Optional(str): str
-                                }),
-                        'entries':{
+                            }),
+                        Optional('prefix_list_users'): {
+                            'instance_id': {
+                                int: {
+                                    'address_family': {
+                                        str: {
+                                            'users': {
+                                                str: {
+                                                    Optional('address'): ListOf(str)
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        Optional('entries'):{
                             str:{
                                 'sources': str,
                                 'first_added': str,
                                 'last_verified_by':  str,
-                                'last_verified': str
-                                }
+                                'last_verified': str,
+                                 Optional('source_list'): ListOf(str),
+                                 Optional('number_of_rib_sources'): int,
+                                 Optional('number_of_publication_sources'): int,
+                                 Optional('number_of_site_registration_sources'): int
                             }
                         }
                     }
                 }
             }
         }
+    }
 
 
 '''Parser for "show lisp prefix-list"'''
@@ -6035,25 +6054,31 @@ class ShowLispPrefixList(ShowLispPrefixListSchema):
         p3 = re.compile(r"^\s+Number\s+of\s+entries:\s+(?P<no_entries>\d+)")
 
         #ITR Map Resolver    100.100.100.100|2001:192:168:1::
-        p4 = re.compile(r"^\s+ITR\s+Map\s+Resolver\s+(?P<itr_map_resolver_ip>[0-9a-fA-F\d:]+|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})$")
+        #IID 5000     IPv6  ITR Map Resolver    3130:3130:3130:3130:3130:3130:3130:3130
+        p4 = re.compile(r"^\s+(IID\s+)?(?P<iid>\d+)?\s*(?P<afi>\w+)?\s*ITR\s+Map\s+Resolver\s+(?P<itr_map_resolver_ip>[0-9a-fA-F\d:]+|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})$")
 
         #ETR Map Server      44.44.44.44|2001:192:168:1::
-        p5 = re.compile(r"^\s+ETR\s+Map\s+Server\s+(?P<etr_map_server_ip>[0-9a-fA-F\d:]+|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})$")
+        #IID 5000     IPv6  ETR Map Server      3130:3130:3130:3130:3130:3130:3130:3130
+        p5 = re.compile(r"^\s+(IID\s+)?(?P<iid>\d+)?\s*(?P<afi>\w+)?\s*ETR\s+Map\s+Server\s+(?P<etr_map_server_ip>[0-9a-fA-F\d:]+|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})$")
 
         #Import Publication
-        p6 = re.compile(r"^\s+Import\s+Publication(?P<import_publication>\s)")
-
-        #Import
-        p7 = re.compile(r"^\s+Import(?P<import>\s)")
+        #IID 5000     IPv6  Import Publication
+        p6 = re.compile(r"^\s+(IID\s+)?(?P<iid>\d+)?\s*(?P<afi>\w+)?\s*Import\s+Publication(?P<import_publication>\s)")
 
         #Route Import
-        p8 = re.compile(r"^\s+Route\s+Import(?P<route_import>\s)")
+        #IID 5000     IPv6  Route Import
+        p7 = re.compile(r"^\s+(IID\s+)?(?P<iid>\d+)?\s*(?P<afi>\w+)?\s*Route\s+Import(?P<route_import>\s)")
+
+        #Import
+        #IID 5000     IPv6  Import
+        p8 = re.compile(r"^\s+(IID\s+)?(?P<iid>\d+)?\s*(?P<afi>\w+)?\s*Import(?P<import>\s)")
 
         #192.168.1.0/24|2001:192:168:1::/64
         p9 = re.compile(r"^\s+(?P<eid_prefix>[0-9a-fA-F\d:]+\/\d+|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\/\d{1,2})$")
 
         #Sources: static
-        p10 = re.compile(r"^\s+Sources:\s+(?P<prefix_source>\S+)$")
+        #Sources: static, publication
+        p10 = re.compile(r"^\s+Sources:\s+(?P<prefix_source>.+)$")
 
         #First added: 00:09:20
         p11 = re.compile(r"^\s+First added:\s+(?P<first_added>\S+),")
@@ -6063,6 +6088,15 @@ class ShowLispPrefixList(ShowLispPrefixListSchema):
 
         #00:09:20
         p13 = re.compile(r"^\s+First added:\s+\S+\s+last verified:\s\S+\s+\S+,\s+(?P<last_verified>\S+)")
+
+        #Number of publications sourcing this entry: 2
+        p14 = re.compile(r"^\s+Number of publications sourcing this entry: (?P<pub_source_count>\d+)")
+
+        #Number of route imports sourcing this entry: 2
+        p15 = re.compile(r"^\s+Number of route imports sourcing this entry: (?P<rib_source_count>\d+)")
+
+        #Number of site registrations sourcing this entry: 2
+        p16 = re.compile(r"^\s+Number of site registrations sourcing this entry: (?P<site_reg_source_count>\d+)")
 
         for line in output.splitlines():
             #LISP Prefix List information for router lisp 0
@@ -6092,60 +6126,151 @@ class ShowLispPrefixList(ShowLispPrefixListSchema):
                 continue
 
             #ITR Map Resolver    100.100.100.100|2001:192:168:1::
+            #IID 5000     IPv6  ITR Map Resolver    3130:3130:3130:3130:3130:3130:3130:3130
             m=p4.match(line)
             if m:
                 groups = m.groupdict()
                 itr_ip = groups['itr_map_resolver_ip']
-                itr_list = prefix_dict.setdefault('users',[])
-                itr_dict = {}
-                itr_dict.update({'itr_map_resolver' : itr_ip})
-                itr_list.append(itr_dict)
-                itr_dict={}
-                prefix_dict.update({'users':itr_list})
+                user_list = prefix_dict.setdefault('users',[])
+                user_list.append({'itr_map_resolver' : itr_ip})
+
+                if groups['iid'] is None or groups['afi'] is None:
+                    continue
+
+                plu_iid = int(groups['iid'])
+                plu_afi = groups['afi']
+                plu_dict = prefix_dict.setdefault('prefix_list_users', {})
+
+                plu_instance_dict = \
+                    plu_dict.setdefault('instance_id', {}) \
+                            .setdefault(plu_iid, {})
+
+                plu_afi_dict = \
+                    plu_instance_dict.setdefault('address_family', {}) \
+                                     .setdefault(plu_afi, {})
+
+                plu_user_imr_address_list = \
+                    plu_afi_dict.setdefault('users', {}) \
+                                .setdefault('itr_map_resolver', {}) \
+                                .setdefault('address', [])
+
+                plu_user_imr_address_list.append(itr_ip)
                 continue
 
             #ETR Map Server      44.44.44.44|2001:192:168:1::
+            #IID 5000     IPv6  ETR Map Server      3130:3130:3130:3130:3130:3130:3130:3130
             m=p5.match(line)
             if m:
                 groups = m.groupdict()
                 etr_ip = groups['etr_map_server_ip']
-                itr_dict.update({'etr_map_server' : etr_ip})
-                itr_list.append(itr_dict)
-                itr_dict = {}
-                prefix_dict.update({'users':itr_list})
+                user_list = prefix_dict.setdefault('users',[])
+                user_list.append({'etr_map_server' : etr_ip})
+
+                if groups['iid'] is None or groups['afi'] is None:
+                    continue
+
+                plu_iid = int(groups['iid'])
+                plu_afi = groups['afi']
+                plu_dict = prefix_dict.setdefault('prefix_list_users', {})
+
+                plu_instance_dict = \
+                    plu_dict.setdefault('instance_id', {}) \
+                            .setdefault(plu_iid, {})
+
+                plu_afi_dict = \
+                    plu_instance_dict.setdefault('address_family', {}) \
+                                     .setdefault(plu_afi, {})
+
+                plu_user_ems_address_list = \
+                    plu_afi_dict.setdefault('users', {}) \
+                                .setdefault('etr_map_server', {}) \
+                                .setdefault('address', [])
+
+                plu_user_ems_address_list.append(etr_ip)
                 continue
 
             #Import Publication
+            #IID 5000     IPv6  Import Publication
             m=p6.match(line)
             if m:
                 groups = m.groupdict()
                 import_user = groups['import_publication']
-                itr_dict.update({'import_publication' : import_user})
-                itr_list.append(itr_dict)
-                itr_dict = {}
-                prefix_dict.update({'users':itr_list})
-                continue
+                user_list = prefix_dict.setdefault('users',[])
+                user_list.append({'import_publication' : import_user})
 
-            #Import
-            m=p7.match(line)
-            if m:
-                groups = m.groupdict()
-                import_publication = groups['import']
-                itr_dict.update({'import' : import_publication})
-                itr_list.append(itr_dict)
-                itr_dict = {}
-                prefix_dict.update({'users':itr_list})
+                if groups['iid'] is None or groups['afi'] is None:
+                    continue
+
+                plu_iid = int(groups['iid'])
+                plu_afi = groups['afi']
+                plu_dict = prefix_dict.setdefault('prefix_list_users', {})
+
+                plu_instance_dict = \
+                    plu_dict.setdefault('instance_id', {}) \
+                            .setdefault(plu_iid, {})
+
+                plu_afi_dict = \
+                    plu_instance_dict.setdefault('address_family', {}) \
+                                     .setdefault(plu_afi, {})
+
+                plu_afi_dict.setdefault('users', {}) \
+                            .setdefault('import_publication', {})
                 continue
 
             #Route Import
-            m=p8.match(line)
+            #IID 5000     IPv6  Route Import
+            m=p7.match(line)
             if m:
                 groups = m.groupdict()
                 route_import = groups['route_import']
-                itr_dict.update({'route_import' : route_import})
-                itr_list.append(itr_dict)
-                itr_dict = {}
-                prefix_dict.update({'users':itr_list})
+                user_list = prefix_dict.setdefault('users',[])
+                user_list.append({'route_import' : route_import})
+
+                if groups['iid'] is None or groups['afi'] is None:
+                    continue
+
+                plu_iid = int(groups['iid'])
+                plu_afi = groups['afi']
+                plu_dict = prefix_dict.setdefault('prefix_list_users', {})
+
+                plu_instance_dict = \
+                    plu_dict.setdefault('instance_id', {}) \
+                            .setdefault(plu_iid, {})
+
+                plu_afi_dict = \
+                    plu_instance_dict.setdefault('address_family', {}) \
+                                     .setdefault(plu_afi, {})
+
+                plu_afi_dict.setdefault('users', {}) \
+                            .setdefault('route_import', {})
+                continue
+
+            #Import
+            #IID 5000     IPv6  Import
+            m=p8.match(line)
+            if m:
+                groups = m.groupdict()
+                import_publication = groups['import']
+                user_list = prefix_dict.setdefault('users',[])
+                user_list.append({'import' : import_publication})
+
+                if groups['iid'] is None or groups['afi'] is None:
+                    continue
+
+                plu_iid = int(groups['iid'])
+                plu_afi = groups['afi']
+                plu_dict = prefix_dict.setdefault('prefix_list_users', {})
+
+                plu_instance_dict = \
+                    plu_dict.setdefault('instance_id', {}) \
+                            .setdefault(plu_iid, {})
+
+                plu_afi_dict = \
+                    plu_instance_dict.setdefault('address_family', {}) \
+                                     .setdefault(plu_afi, {})
+
+                plu_afi_dict.setdefault('users', {}) \
+                            .setdefault('import_site_registration', {})
                 continue
 
             #192.168.1.0/24|2001:192:168:1::/64
@@ -6153,7 +6278,7 @@ class ShowLispPrefixList(ShowLispPrefixListSchema):
             if m:
                 groups = m.groupdict()
                 resolver_ip = groups['eid_prefix']
-                dynamic_eid_dict = \
+                prefix_list_entry_dict = \
                     prefix_dict.setdefault('entries', {})\
                                     .setdefault(resolver_ip, {})
                 continue
@@ -6163,7 +6288,13 @@ class ShowLispPrefixList(ShowLispPrefixListSchema):
             if m:
                 groups = m.groupdict()
                 source = groups['prefix_source']
-                dynamic_eid_dict.update({'sources' : source})
+                prefix_list_entry_dict.update({'sources' : source})
+
+                prefix_list_entry_source_list = \
+                    prefix_list_entry_dict.setdefault('source_list', [])
+                source_list = source.split(',')
+                for source_elm in source_list:
+                    prefix_list_entry_source_list.append(source_elm.strip())
                 continue
 
             #First added: 00:09:20
@@ -6171,20 +6302,45 @@ class ShowLispPrefixList(ShowLispPrefixListSchema):
             if m:
                 groups = m.groupdict()
                 first_add = groups['first_added']
-                dynamic_eid_dict.update({'first_added' : first_add})
+                prefix_list_entry_dict.update({'first_added' : first_add})
 
                 m=p12.match(line)
                 if m:
                     groups = m.groupdict()
                     last_verified_by = groups['last_verified_by']
-                    dynamic_eid_dict.update({'last_verified_by' : last_verified_by})
+                    prefix_list_entry_dict.update({'last_verified_by' : last_verified_by})
 
                 #00:09:20
                 m=p13.match(line)
                 if m:
                     groups = m.groupdict()
                     last_Verified = groups['last_verified']
-                    dynamic_eid_dict.update({'last_verified' : last_Verified})
+                    prefix_list_entry_dict.update({'last_verified' : last_Verified})
+
+            #Number of publications sourcing this entry: 2
+            m=p14.match(line)
+            if m:
+                groups = m.groupdict()
+                pub_source_count = int(groups['pub_source_count'])
+                prefix_list_entry_dict.update({'number_of_publication_sources' : pub_source_count})
+                continue
+
+            #Number of route imports sourcing this entry: 2
+            m=p15.match(line)
+            if m:
+                groups = m.groupdict()
+                rib_source_count = int(groups['rib_source_count'])
+                prefix_list_entry_dict.update({'number_of_rib_sources' : rib_source_count})
+                continue
+
+            #Number of site registrations sourcing this entry: 2
+            m=p16.match(line)
+            if m:
+                groups = m.groupdict()
+                site_reg_source_count = int(groups['site_reg_source_count'])
+                prefix_list_entry_dict.update({'number_of_site_registration_sources' : site_reg_source_count})
+                continue
+
         return lisp_prefix_dict
 
 class ShowLispRouteImportMapCacheSchema(MetaParser):
@@ -7186,10 +7342,10 @@ class ShowLispPublicationPrefixSchema(MetaParser):
                                                 Optional('affinity_id_x'): int,
                                                 Optional('affinity_id_y'): int,
                                                 Optional('rdp'): str
-                                                }
                                             }
                                         }
-                                    },
+                                    }
+                                },
                                 Optional('merged_locators'): {
                                     str: {
                                         'priority': int,
@@ -7197,7 +7353,15 @@ class ShowLispPublicationPrefixSchema(MetaParser):
                                         'state': str, # (up|down)
                                         'encap_iid': str,
                                         'rdp_len': int,
-                                        'src_add': str
+                                        'src_add': str,
+                                        'publishers': { # Same as src_add
+                                            str: {
+                                               'priority': int,
+                                                'weight': int,
+                                                'state': str,
+                                                'encap_iid': str,
+                                                'rdp_len': int
+                                            }
                                         }
                                     }
                                 }
@@ -7207,6 +7371,7 @@ class ShowLispPublicationPrefixSchema(MetaParser):
                 }
             }
         }
+    }
 
 
 '''Parser for "show lisp {lisp_id} instance-id {instance_id} ipv4 publication {eid_prefix | detail}"'''
@@ -7459,14 +7624,26 @@ class ShowLispPublicationPrefixSuperParser(ShowLispPublicationPrefixSchema):
                 encap_iid = groups['encap_iid']
                 rdp_len = int(groups['rdp_len'])
                 src_add = groups['src_add']
-                merged_dict =  eid_prefix_dict.setdefault('merged_locators',{})\
-                                            .setdefault(merged_locators,{})
+                merged_dict = eid_prefix_dict.setdefault('merged_locators',{})\
+                                             .setdefault(merged_locators,{})
                 merged_dict.update({'priority':priority})
                 merged_dict.update({'weight':weight})
                 merged_dict.update({'state':state})
                 merged_dict.update({'encap_iid':encap_iid})
                 merged_dict.update({'rdp_len':rdp_len})
                 merged_dict.update({'src_add':src_add})
+
+                # Merge Locator Information
+                #     Locator           Pri/Wgt  State     Encap-IID  RDP-Len Src-Address
+                #     100.88.88.88       10/50   up        -          0       100.44.44.44
+                #     100.88.88.88       10/50   up        -          1       100.78.78.78
+                merged_publisher_dict = merged_dict.setdefault('publishers',{}) \
+                                                   .setdefault(src_add,{})
+                merged_publisher_dict.update({'priority':priority})
+                merged_publisher_dict.update({'weight':weight})
+                merged_publisher_dict.update({'state':state})
+                merged_publisher_dict.update({'encap_iid':encap_iid})
+                merged_publisher_dict.update({'rdp_len':rdp_len})
                 continue
 
             # 22.22.22.22   10/10   up        -      [-]
@@ -12242,7 +12419,7 @@ class ShowLispIpMapCachePrefixSuperParser(ShowLispIpMapCachePrefixSchema):
 
         # Next RLOC-probe in:              00:47:14
         p15 = re.compile(r"^Next\s+RLOC-probe\s+in:\s+"
-                         r"(?P<rloc_probe_sent>\d{2}:\d{2}:\d{2})$")
+                         r"(?P<rloc_probe_in>\d{2}:\d{2}:\d{2})$")
 
         # Latched to ITR-RLOC:             104.104.104.104
         # Latched to ITR-RLOC:             104:104:104:104::

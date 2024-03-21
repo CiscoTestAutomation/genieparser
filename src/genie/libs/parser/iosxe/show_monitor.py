@@ -30,32 +30,35 @@ class ShowMonitorSchema(MetaParser):
     ''' Schema for "show monitor" '''
 
     schema = {
-        'session':
-            {Any():
-                 {'type':str,
-                  Optional('status'):str,
-                  Optional('source_ports'):
-                      {Any(): str,
-                      },
-                  Optional('source_subinterfaces'):
-                      {Any(): str,
-                      },
-                  Optional('source_vlans'):
-                      {Any():str,
-                      },
-                  Optional('filter_access_group'): int,
-                  Optional('destination_ports'): str,
-                  Optional('destination_ip_address'): str,
-                  Optional('destination_erspan_id'): str,
-                  Optional('origin_ip_address'): str,
-                  Optional('source_erspan_id'): str,
-                  Optional('source_ip_address'): str,
-                  Optional('source_rspan_vlan'): int,
-                  Optional('dest_rspan_vlan'): int,
-                  Optional('mtu'): int,
-                  },
+        'session': {
+            Any(): {
+                'type':str,
+                Optional('status'):str,
+                Optional('source_ports'): {
+                    Any(): str,
+                },
+                Optional('source_subinterfaces'): {
+                    Any(): str,
+                },
+                Optional('source_vlans'): {
+                    Any():str,
+                },
+                Optional('source_efps'): {
+                    Any():str,
+                },
+                Optional('filter_access_group'): int,
+                Optional('destination_ports'): str,
+                Optional('destination_ip_address'): str,
+                Optional('destination_erspan_id'): str,
+                Optional('origin_ip_address'): str,
+                Optional('source_erspan_id'): str,
+                Optional('source_ip_address'): str,
+                Optional('source_rspan_vlan'): int,
+                Optional('dest_rspan_vlan'): int,
+                Optional('mtu'): int,
             },
-        }
+        },
+    }
 
 
 # =========================================
@@ -84,8 +87,6 @@ class ShowMonitor(ShowMonitorSchema):
 
         # Init vars
         ret_dict = {}
-        src_ports = False
-        source_subintfs = False
 
         # Session 1
         p1 = re.compile(r'Session +(?P<session>(\d+))')
@@ -103,19 +104,15 @@ class ShowMonitor(ShowMonitorSchema):
 
         #    TX Only            : Gi0/1/4
         #    Both               : Gi0/1/4
-        p4_2 = re.compile(r'(?P<key>(TX Only|Both)) *: +(?P<src_val>(\S+))$')
+        #    RX Only            : 20
+        #    RX Only            : Twe2/0/3
+        p4_2 = re.compile(r'(?P<key>(TX Only|Both|RX Only)) *: +(?P<src_val>(\S+))$')
 
         # Source Subinterfaces:
-        p5_1 = re.compile(r'^Source +Subinterfaces:$')
-
-        # Both: Gi2/2/0.100
-        #p5_2 = re.compile(r'^(?P<key>(Both)) *: +(?P<val>([\w\/\.]+))$')
+        p5_1 = re.compile(r'^Source +Subinterfaces\s*:$')
 
         # Source VLANs           :
         p6_1 = re.compile(r'^Source +VLANs +:$')
-
-        # RX Only            : 20
-        p6_2 = re.compile(r'^(?P<key>(RX Only)) *: +(?P<rx_val>(\d+))$')
 
         # Filter Access-Group: 100
         p7 = re.compile(r'^Filter +Access-Group: +(?P<filter_access_group>(\d+))$')
@@ -148,6 +145,9 @@ class ShowMonitor(ShowMonitorSchema):
         # MTU                    : 1464
         p16 = re.compile(r'^MTU +: +(?P<mtu>([0-9]+))$')
 
+        # Source EFPs           :
+        p17 = re.compile(r'^Source +EFPs +:$')
+
         for line in out.splitlines():
 
             line = line.strip()
@@ -173,44 +173,30 @@ class ShowMonitor(ShowMonitorSchema):
             # Source Ports           :
             m = p4_1.match(line)
             if m:
-                src_ports_dict = session_dict.setdefault('source_ports', {})
-                src_ports = True
-                source_subintfs = False
+                tx_rx_dict = session_dict.setdefault('source_ports', {})
                 continue
 
-            #    TX Only            : Gi0/1/4
-            #    Both               : Gi0/1/4
+            # TX Only            : Gi0/1/4
+            # Both               : Gi0/1/4
+            # RX Only              : Twe2/0/3
             m = p4_2.match(line)
             if m:
                 group = m.groupdict()
                 key = group['key'].lower().replace(" ", "_")
                 # Set keys
-                if src_ports:
-                    src_ports_dict[key] = group['src_val']
-                elif source_subintfs:
-                    source_sub_dict[key] = group['src_val']
+                tx_rx_dict[key] = group['src_val']
                 continue
 
             # Source Subinterfaces:
             m = p5_1.match(line)
             if m:
-                source_sub_dict = session_dict.setdefault('source_subinterfaces', {})
-                src_ports = False
-                source_subintfs = True
+                tx_rx_dict = session_dict.setdefault('source_subinterfaces', {})
                 continue
 
             # Source VLANs           :
             m = p6_1.match(line)
             if m:
-                source_vlan_dict = session_dict.setdefault('source_vlans', {})
-                continue
-
-            # RX Only            : 20
-            m = p6_2.match(line)
-            if m:
-                group = m.groupdict()
-                key = group['key'].lower().replace(" ", "_")
-                source_vlan_dict[key] = group['rx_val']
+                tx_rx_dict = session_dict.setdefault('source_vlans', {})
                 continue
 
             # Filter Access-Group: 100
@@ -271,6 +257,12 @@ class ShowMonitor(ShowMonitorSchema):
             m = p16.match(line)
             if m:
                 session_dict['mtu'] = int(m.groupdict()['mtu'])
+                continue
+
+            # Source EFPs              :
+            m = p17.match(line)
+            if m:
+                tx_rx_dict = session_dict.setdefault('source_efps', {})
                 continue
 
         return ret_dict

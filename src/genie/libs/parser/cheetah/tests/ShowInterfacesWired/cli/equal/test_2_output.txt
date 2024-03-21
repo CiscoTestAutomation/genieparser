@@ -1,0 +1,14 @@
+# show interfaces wired 0
+wired0    Link encap:Ethernet  HWaddr D4:C9:3C:E6:B8:48  
+	  inet addr: 9.4.17.158  Bcast: 9.4.17.255  Mask: 255.255.255.0
+          UP BROADCAST RUNNING PROMISC MULTICAST  MTU:1600  Metric:1
+          collisions:0 txqueuelen:80 
+	  full Duplex, 1000 Mb/s
+
+	  5 minute input rate 2786 bits/sec, 2 packets/sec
+	  5 minute output rate 942 bits/sec, 0 packets/sec
+Wired0 Port Statistics:
+RX PKTS    :       216610184/14          TX PKTS    :         8818878/1         
+RX BYTES   :     35331894561/1232        TX BYTES   :      1854544178/68        
+RX DROPS   :               0/0          
+

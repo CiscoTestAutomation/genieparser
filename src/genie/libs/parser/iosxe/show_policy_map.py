@@ -1978,24 +1978,24 @@ class ShowPolicyMapControlPlaneClassMapSchema(MetaParser):
                     Optional('extended_limit'): int,
                     Optional('conformed'): {
                         Optional('packets'): int,
-                        'bytes': int,
-                        'bps': int,
+                        Optional('bytes'): int,
+                        Optional('bps'): int,
                         Optional('actions'): {
                             Any(): Or(bool, str),
                         }
                     },
                     Optional('exceeded'): {
                         Optional('packets'): int,
-                        'bytes': int,
-                        'bps': int,
+                        Optional('bytes'): int,
+                        Optional('bps'): int,
                         Optional('actions'): {
                             Any(): Or(bool, str),
                         }
                     },
                     Optional('violated'): {
                         Optional('packets'): int,
-                        'bytes': int,
-                        'bps': int,
+                        Optional('bytes'): int,
+                        Optional('bps'): int,
                         Optional('actions'): {
                             Any(): Or(bool, str),
                         }

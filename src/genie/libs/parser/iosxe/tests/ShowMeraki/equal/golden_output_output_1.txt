@@ -1,0 +1,4 @@
+Switch                 Serial                                           Migration
+Num    PID             Number         Meraki ID       Mac Address       Status       Mode
+-----------------------------------------------------------------------------------------------
+1   C9300-48P          FJC2345T05A    Q5TE-5HWS-J3G8  6c41.0ed8.1780    Registered   C9K-C

@@ -1,0 +1,5 @@
+show sd-routing control local-properties wan ipv6
+                               PUBLIC  PRIVATE                                  PRIVATE
+INTERFACE                      PORT    IPv6                                     PORT     STATE   
+-----------------------------------------------------------------------------------------------
+TenGigabitEthernet0/0/4        65100   ::                                       65100    up      

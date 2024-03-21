@@ -1,0 +1,4 @@
+show sd-routing control local-properties vbond
+INDEX    IP                                       PORT    
+--------------------------------------------------------
+0        70.70.70.125                             12346   

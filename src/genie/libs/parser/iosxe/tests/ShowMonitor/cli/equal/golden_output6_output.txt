@@ -1,0 +1,31 @@
+Session 1
+---------
+Type                     : Local Session
+Description              : -
+Source Ports             :
+    RX Only              : None
+    TX Only              : None
+    Both                 : Twe2/0/3
+Source Subinterfaces     :
+    RX Only              : None
+    TX Only              : None
+    Both                 : None
+Source VLANs             :
+    RX Only              : None
+    TX Only              : None
+    Both                 : None
+Source Drop-cause        : None
+Source EFPs              :
+    RX Only              : None
+    TX Only              : None
+    Both                 : None
+Source RSPAN VLAN        : None
+Destination Ports        : Twe1/0/3
+    Encapsulation        : Native
+          Ingress        : Disabled
+Filter VLANs             : None
+Filter SGT               : None
+Dest RSPAN VLAN          : None
+IP Access-group          : None
+MAC Access-group         : None
+IPv6 Access-group        : None

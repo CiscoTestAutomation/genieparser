@@ -4,7 +4,10 @@ expected_output = {
     'type': 'Console',
     'length': 0,
     'width': 0,
-    'baud_rate': 9600,
+    'baud_rate': {
+        'tx': 9600,
+        'rx': 9600
+    },
     'parity': 'No',
     'stopbits': 2,
     'databits': 8,

@@ -1,0 +1,51 @@
+# show interfaces dot11Radio 1
+Dot11Radio1 is DOWN, line protocol is DOWN
+      Hardware is 802.11 5.0G Radio, channel is 149
+      Radio MAC is 70:6D:15:C0:87:60
+
+      Dot11Radio1     Link encap:Ethernet  HWaddr 70:6D:15:C0:87:60
+                BROADCAST MULTICAST  MTU:1500  Metric:1
+                RX packets:3 errors:0 dropped:0 overruns:0 frame:0
+                TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+                collisions:0 txqueuelen:1000
+                RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+                Interrupt:102 Memory:f8400000-f8600000
+
+      ML_TYPE: NON_ML	DOT11 Statistics (Cumulative Total/Last 5 Seconds):
+      RECEIVER                                TRANSMITTER
+      Host Rx K Bytes:             0/0        Host Tx K Bytes:             0/0
+      Unicasts Rx:                 0/0        Unicasts Tx:                 0/0
+      Broadcasts Rx:               0/0        Broadcasts Tx:               0/0
+      Beacons Rx:                  0/0        Beacons Tx:                  0/0
+      Probes Rx:                   0/0        Probes Tx:                   0/0
+      Multicasts Rx:               0/0        Multicasts Tx:               0/0
+      Mgmt Packets Rx:             0/0        Mgmt Packets Tx:             0/0
+      Ctrl Frames Rx:              0/0        Ctrl Frames Tx:              0/0
+      RTS received:                0/0        RTS transmitted:             0/0
+      Duplicate frames:            0/0        CTS not received:            0/0
+      MIC errors:                  0/0        WEP errors:                  0/0
+      FCS errors:                  0/0        Retries:                     0/0
+      Key Index errors:            0/0        Tx Failures:                 0/0
+                                              Tx Drops:                    0/0
+      Rate Statistics for Radio::
+      ML_TYPE: ML	DOT11 Statistics (Cumulative Total/Last 5 Seconds):
+      RECEIVER                                TRANSMITTER
+      Host Rx K Bytes:             0/0        Host Tx K Bytes:             0/0
+      Unicasts Rx:                 0/0        Unicasts Tx:                 0/0
+      Broadcasts Rx:               0/0        Broadcasts Tx:               0/0
+      Beacons Rx:                  0/0        Beacons Tx:                  0/0
+      Probes Rx:                   0/0        Probes Tx:                   0/0
+      Multicasts Rx:               0/0        Multicasts Tx:               0/0
+      Mgmt Packets Rx:             0/0        Mgmt Packets Tx:             0/0
+      Ctrl Frames Rx:              0/0        Ctrl Frames Tx:              0/0
+      RTS received:                0/0        RTS transmitted:             0/0
+      Duplicate frames:            0/0        CTS not received:            0/0
+      MIC errors:                  0/0        WEP errors:                  0/0
+      FCS errors:                  0/0        Retries:                     0/0
+      Key Index errors:            0/0        Tx Failures:                 0/0
+                                              Tx Drops:                    0/0
+      Rate Statistics for Radio::
+
+
+      Beacons missed: 0-30s 31-60s 61-90s 90s+
+                           0      0      0    0

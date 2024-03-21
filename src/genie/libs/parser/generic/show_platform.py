@@ -162,6 +162,17 @@ class ShowVersion(ShowVersionSchema):
         # AP Running Image : 17.12.0.78
         wireless_ap_pattern = re.compile(r'^AP Running Image\s*:\s*(?P<version>[\d+.]+)$')
 
+        # Product/Model Number                 : AIR-AP4800-D-K9
+        wireless_pid_pattern = re.compile(r'^Product/Model Number\s*:\s*(?P<pid>\S+)\s*$')
+
+
+        # ********************************************
+        # *                 Wireless                 *
+        # ********************************************
+
+        # AP Running Image : 17.12.0.78
+        wireless_ap_pattern = re.compile(r'^AP Running Image\s*:\s*(?P<version>[\d+.]+)$')
+
         for line in output.splitlines():
             line = line.strip()
 
@@ -391,6 +402,12 @@ class ShowVersion(ShowVersionSchema):
                 ret_dict['os'] = 'cheetah'
                 ret_dict['platform'] = 'ap'
                 ret_dict['version'] = m.groupdict()['version']
+                continue
+
+            # Product/Model Number                 : AIR-AP4800-D-K9
+            m = wireless_pid_pattern.match(line)
+            if m:
+                ret_dict['pid'] = m.groupdict()['pid']
                 continue
 
         return ret_dict

@@ -1,0 +1,13 @@
+show interfaces status module 3
+
+Port         Name               Status       Vlan       Duplex  Speed Type
+Twe3/0/1                        notconnect   1            auto  a-25G unknown
+Twe3/0/2                        connected    routed       full    10G SFP-10GBase-CX1
+Twe3/0/3                        notconnect   1            auto  a-25G unknown
+Twe3/0/4                        notconnect   1            auto  a-25G unknown
+Hu3/0/5                         inactive     1            auto   auto unknown
+Hu3/0/6                         notconnect   1            auto a-100G unknown
+Hu3/0/7                         inactive     1            auto   auto unknown
+Hu3/0/8                         inactive     1            auto   auto unknown
+Ap3/0/1                         connected    1          a-full  a-10G unknown
+Ap3/0/2                         connected    1          a-full  a-10G unknown

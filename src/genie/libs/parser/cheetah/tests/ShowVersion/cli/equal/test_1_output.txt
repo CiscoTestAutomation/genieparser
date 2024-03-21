@@ -1,0 +1,36 @@
+Cisco AP Software, (ap3g3), [wng-bld-lnx15:/san3/jenkins-ci/workspace/postcommit-master-cisco-platforms-6885/label/ci_barbados]
+Technical Support: http://www.cisco.com/techsupport
+Copyright (c) 1986-2024 by Cisco Systems, Inc.
+Compiled Sun Jan 14 00:13:59 GMT 2024
+
+ROM: Bootstrap program is U-Boot boot loader
+BOOTLDR: U-Boot boot loader Version 2013.01-ge1c49d93a (Jul 28 2023 - 09:08:14)
+
+AP5C5A.C752.01DC uptime is 0 days, 9 hours, 54 minutes
+Last reload time   : Tue Jan 23 19:26:02 UTC 2024
+Last reload reason : Image Upgrade
+ 
+cisco AIR-AP4800-D-K9 ARMv7 Processor rev 1 (v7l) with 1028320/528608K bytes of memory.
+Processor board ID FGL2325A4YP
+AP Running Image     : 17.15.0.10
+Primary Boot Image   : 17.15.0.10
+Backup Boot Image    : 17.15.0.8
+Primary Boot Image Hash: 8084019f7d71c36ca841f23b8089b7f3e3008cf360da0b49c30c1b468b7e090fef649c1ac7f7dff564f023a795f47ede202024fe7e2a1ae229d69e9ece865ddc
+Backup  Boot Image Hash: 6b563a9e688f24196d72661309291367bb52e49683e3f6b98feba06ccf22ea03a2ec0b194c5e41f7166138bc3a0fe0d7a9aa1d005295fb29669253eea08a64ba
+1 Multigigabit Ethernet interfaces
+1 Gigabit Ethernet interfaces
+3 802.11 Radios
+Radio Driver version : 9.0.5.5-W8964
+Radio FW version : 9.1.8.1
+NSS FW version : 2.4.32
+
+Base ethernet MAC Address            : 5C:5A:C7:52:01:DC
+Part Number                          : 73-018776-02
+PCA Assembly Number                  : 000-00000-00
+PCA Revision Number                  : 
+PCB Serial Number                    : FOC23206BHY
+Top Assembly Part Number             : 068-100533-01
+Top Assembly Serial Number           : FGL2325A4YP
+Top Revision Number                  : A0
+Product/Model Number                 : AIR-AP4800-D-K9
+

@@ -173,9 +173,12 @@ IOSXE parsers for the following show commands:
     * 'show file information {file}'
     * 'show file descriptors detail'
     * 'show platform software fed switch {switch} {mode} if-id {if_id}'
+    * 'show platform hardware qfp {status} interface if-name {interface} path'
     * 'show platform software steering-policy forwarding-manager switch {switch} F0 policy-aom-info'
     * 'show platform software steering-policy forwarding-manager F0 policy-aom-info'
     * 'show platform software object-manager switch {switch} F0 object {object}'
+    * 'show platform software fed switch active nat interfaces'
+    * 'show platform software fed switch active nat rules'
     * 'show platform software memory database fed {switch} {switch_var} callsite'
     * 'show platform software memory database fed {switch_var} callsite'
     * 'show diagnostics status'
@@ -2520,7 +2523,7 @@ class ShowInventory(ShowInventorySchema):
 
         # Slot 2 Linecard
         # Slot 3 Supervisor
-        p1_8 = re.compile(r'^Slot \d Linecard|Slot \d Supervisor$')
+        p1_8 = re.compile(r'^Slot \d Linecard|Slot \d Supervisor|Slot \d Router$')
 
         # PID: ASR-920-24SZ-IM   , VID: V01  , SN: CAT1902V19M
         # PID: SFP-10G-LR        , VID: CSCO , SN: CD180456291
@@ -16273,15 +16276,19 @@ class ShowPlatformTcamPbr(ShowPlatformTcamPbrSchema):
     """
 
     cli_command = ['show platform hardware fed {switch} active fwd-asic resource tcam table pbr record 0 format 0 | begin {nat_region}',
-                   'show platform hardware fed active fwd-asic resource tcam table pbr record 0 format 0 | begin {nat_region}']
+                   'show platform hardware fed active fwd-asic resource tcam table pbr record 0 format 0 | begin {nat_region}',
+                   'show platform hardware fed switch {switch_type} fwd-asic resource tcam table pbr record 0 format 0 | begin {nat_region}']
 
-    def cli(self, nat_region, switch="", output=None):
+    def cli(self, nat_region, switch="", switch_type="", output=None):
 
         if output is None:
             if switch:
                 cmd = self.cli_command[0].format(switch=switch,nat_region=nat_region)
             else:
-                 cmd = self.cli_command[1].format(nat_region=nat_region)
+                if switch_type:
+                    cmd = self.cli_command[2].format(nat_region=nat_region, switch_type=switch_type)
+                else:
+                    cmd = self.cli_command[1].format(nat_region=nat_region)
 
             output = self.device.execute(cmd)
 
@@ -19973,6 +19980,7 @@ class ShowPlatformSoftwareFedIgmpSnoopingSchema(MetaParser):
              Any(): {
                 Optional('igmp_en'): str,
                 Optional('pimsn_en'): str,
+                Optional('snoop_state'): str,
                 Optional('flood_md'): str,
                 Optional('op_state'): str,
                 Optional('stp_tcn_flood'): str,
@@ -20017,6 +20025,9 @@ class ShowPlatformSoftwareFedIgmpSnooping(ShowPlatformSoftwareFedIgmpSnoopingSch
         # IGMPSN Enabled : On
         p1 = re.compile('^IGMPSN\s+Enabled\s+:\s+(?P<igmp_en>[\s\w\s]+)$')
 
+        # Snoop State     : ON
+        p1_1 = re.compile('^Snoop\s+State\s+:\s+(?P<snoop_state>[\w\s]+)$')
+
         # PIMSN Enabled : Off
         p2 = re.compile('^PIMSN\s+Enabled\s+:\s+(?P<pimsn_en>[\s\w\s]+)$')
 
@@ -20027,7 +20038,8 @@ class ShowPlatformSoftwareFedIgmpSnooping(ShowPlatformSoftwareFedIgmpSnoopingSch
         p4 = re.compile('^Oper\s+State\s+:\s+(?P<op_state>[\s\w\s]+)$')
 
         # STP TCN Flood : Off
-        p5 = re.compile('^STP\s+TCN\s+Flood\s+:\s+(?P<stp_tcn_flood>[\s\w\s]+)$')
+        # STP TCN State : Off
+        p5 = re.compile('^STP\s+TCN\s+(Flood|State)\s+:\s+(?P<stp_tcn_flood>[\s\w\s]+)$')
 
         # Routing Enabled : On
         p6 = re.compile('^Routing\s+Enabled\s+:\s+(?P<route_en>[\s\w\s]+)$')
@@ -20058,8 +20070,11 @@ class ShowPlatformSoftwareFedIgmpSnooping(ShowPlatformSoftwareFedIgmpSnoopingSch
         # nve1.VNI60020(0x200000071)
         p14_1 = re.compile("([A-Za-z]*\d[-().]*){10,}")
 
+        # port:Port-channel10 (ec_member:HundredGigE1/0/5) (group_oif:0) (mrouter_flag:1)
         # port:Port-channel100 (ec_member:HundredGigE2/5/0/2)
-        p14_2 = re.compile("^port:(?P<port>[\w\-\.]+)\s+\S+$")
+        # port:Port-channel0 (ec_member:HundredGigE1/0/5) (group_oif:0)
+        # port:Port-channel77        
+        p14_2 = re.compile("^port:(?P<port>[\w\-\.]+)(\s+(?P<left>.*))?$")
 
         # Flood PortQ :
         p15 = re.compile('^Flood [P|p]ort[Q|s]\s+:\s*')
@@ -20089,6 +20104,12 @@ class ShowPlatformSoftwareFedIgmpSnooping(ShowPlatformSoftwareFedIgmpSnoopingSch
             if m:
                 mac_dict['igmp_en'] = m.groupdict()['igmp_en']
                 continue
+
+            # Snoop State     : ON
+            m = p1_1.match(line)
+            if m:
+                mac_dict['snoop_state'] = m.groupdict()['snoop_state']
+                continue                
 
             # PIMSN Enabled : Off
             m = p2.match(line)
@@ -28592,8 +28613,8 @@ class ShowPlatformSoftwareFedActiveMonitorSchema(MetaParser):
     schema = {
         'session_type': str,
         'source_ports': {
-            'rx': list,
-            'tx': list
+            Optional('rx'): list,
+            Optional('tx'): list
         },
         Optional('destination_ports'): list,
         Optional('source_vlans'): list,
@@ -28636,7 +28657,8 @@ class ShowPlatformSoftwareFedActiveMonitor(ShowPlatformSoftwareFedActiveMonitorS
         p1 = re.compile(r'^Session Type\s+:\s+(?P<session_type>[\w\s]+)$')
 
         # Source Ports         : RX: GigabitEthernet1/0/1 TenGigabitEthernet1/1/3 TX: None
-        p2 = re.compile(r'^Source Ports\s+: RX:\s+(?P<rx>[\w\/\s]+)\sTX:\s+(?P<tx>[\w\/\s]+)$')
+        # Source Ports         : RX: FourHundredGigE1/0/31 TX:
+        p2 = re.compile(r'^Source Ports\s+: RX:\s+(?P<rx>[\w\/\s]+)\sTX:\s*(?P<tx>[\w\/\s]+)?$')
 
         # Destination Ports    : TwoGigabitEthernet1/0/13
         p3 = re.compile(r'^Destination Ports\s+:\s+(?P<destination_ports>[\w\/\s]+(?<!None))$')
@@ -28721,8 +28743,10 @@ class ShowPlatformSoftwareFedActiveMonitor(ShowPlatformSoftwareFedActiveMonitorS
             m = p2.match(line)
             if m:
                 port_dict = ret_dict.setdefault('source_ports', {})
-                port_dict['rx'] = m.groupdict()['rx'].split()
-                port_dict['tx'] = m.groupdict()['tx'].split()
+                if m.groupdict()['rx']:
+                    port_dict['rx'] = m.groupdict()['rx'].split()
+                if m.groupdict()['tx']:
+                    port_dict['tx'] = m.groupdict()['tx'].split()
                 continue
 
             m = p3.match(line)
@@ -35444,6 +35468,90 @@ class ShowPlatformHardwareQfpActiveFeatureNat66DatapathPrefix(ShowPlatformHardwa
 
         return ret_dict
 
+
+class ShowPlatformHardwareQfpInterfaceIfnamepathSchema(MetaParser):
+    """Parser for show platform hardware qfp {status} interface if-name {interface} path"""
+
+
+    schema = {
+        Optional('valid_flag'): int,
+        Optional('baf_port'): int,
+        Optional('input_uIDB'): int,
+        Optional('esi_channel'): str,
+        Optional('baf_header'): str,
+            
+    }   
+            
+
+class ShowPlatformHardwareQfpInterfaceIfnamepath(ShowPlatformHardwareQfpInterfaceIfnamepathSchema):
+    """Parser for show platform hardware qfp {status} interface if-name {interface} path"""
+
+    cli_command = 'show platform hardware qfp {status} interface if-name {interface} path'
+
+    def cli(self, status, interface, output=None):
+
+        if output is None:
+            cmd = self.cli_command.format(status=status, interface=interface)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        
+         #Valid flag 1
+        p1 = re.compile(r'^\s*Valid\s+flag\s+(?P<valid_flag>\d+)$')
+        
+         #BAF Port
+        p2 = re.compile(r'^\s*BAF\s+Port\s+(?P<baf_port>\d+)$')
+        
+        #Input uIDB
+        p3 = re.compile(r'^\s*Input\s+uIDB\s+(?P<input_uidb>\d+)$')
+        
+        #ESI channel
+        p4 = re.compile(r'^\s*ESI\s+channel\s+(?P<esi_channel>0x[a-fA-F\d]+)$')
+        
+        #BAF header
+        p5 = re.compile(r'^\s*BAF\s+header\s+(?P<baf_header>0x[\da-fA-F]+)$')
+        
+        # initial return dictionary
+        ret_dict = {}
+        
+        for line in out.splitlines():
+        
+            #Valid flag 1
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['valid_flag'] = int(group['valid_flag'])
+                continue
+            
+            #BAF Port 8
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['baf_port'] = int(group['baf_port'])
+                continue
+            
+            #Input uIDB 49
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['input_uIDB'] = int(group['input_uidb'])
+                continue
+
+            #ESI channel 0x8000007
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['esi_channel'] = group['esi_channel']
+                continue
+                
+            #BAF header 0x0
+            m5 = p5.match(line)
+            if m5:
+                group = m5.groupdict()
+                ret_dict['baf_header'] = group['baf_header']
+
+        return ret_dict
 class ShowPlatformSoftwareDistributedIpsecTunnelInfoSchema(MetaParser):
     """Schema for show platform software distributed-ipsec tunnel-info"""
 
@@ -35731,6 +35839,7 @@ class ShowPlatformSoftwareSteeringPolicyAomInfo(ShowPlatformSoftwareSteeringPoli
         # contract_4_28eadb333777_v0        2090904497    1895        1        1900
         # contract_4(Mirror)_b4675385cca2_  2090904057    1903        1        1907
 
+
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -35871,6 +35980,696 @@ class ShowPlatformSoftwareObjectManagerF0Object(ShowPlatformSoftwareObjectManage
                 obj_dict['post_lock_count'] = int(group['post_lock_count'])
                 continue 
         return ret_dict
+
+# ============================================================================
+#  Schema for
+#  * 'show platform software iomd {lc no} macsec interface {port no} detail'
+# ============================================================================
+
+class ShowPlatformSoftwareIomdMacsecInterfacePortDetailSchema(MetaParser):
+    schema = {
+        'tx': {
+            'tx_port': int,
+            'tx_sub_port': int,
+            'tx_index': int,
+            'tx_prev_an': int,
+            'tx_cur_an': int,
+            'tx_encrypt': int,
+            'tx_vlan': int,
+	        'tx_end_station': int,
+		    'tx_scb': int,
+		    'tx_next_pn': int,
+		    'tx_key_len': int,
+	        'tx_hashkey_len': int,
+	        'tx_bypass': int,
+		    'tx_conf_offset': int,
+            'tx_cipher': str
+        },
+        'common': {
+            'delay_protection': int,
+            'install_rx_cnt': int,
+            'install_tx_cnt': int,
+            'del_rx_cnt': int,
+            'instal_rx_fail_cnt': int,
+            'install_tx_fail_cnt': int,
+            'del_rx_fail_cnt': int,
+            'rx_an_cnt': int,
+            'common_port': int,
+		    'common_sub_port': int,
+		    'common_index': str
+        },
+        'rx': {
+            'rx_port': int,
+            'rx_sub_port': int,
+            'rx_index': int,
+            'rx_prev_an': int,
+            'rx_cur_an': int,
+            'rx_replay_protect': int,
+            'replay_window_size': int,
+            'decrypt_frames': int,
+            'validate_frames': int,
+            'rx_next_pn': int,
+            'rx_key_len': int,
+	        'rx_hashkey_len': int,
+	        'rx_bypass': int,
+		    'rx_conf_offset': int,
+            'rx_cipher': str
+        },
+        'device':{
+            'id': list
+        }
+    }
+
+
+class ShowPlatformSoftwareIomdMacsecInterfacePortDetail(ShowPlatformSoftwareIomdMacsecInterfacePortDetailSchema):
+
+    """
+    Parser for
+    * 'show platform software iomd {lc no} macsec interface {port no} detail'
+    """
+
+    cli_command = "show platform software iomd {lc_no} macsec interface {port_no} detail"
+
+    def cli(self, lc_no, port_no, output=None):
+        if output is None:
+            cmd = self.cli_command.format(lc_no=lc_no, port_no=port_no)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+        tx_match = rx_match = False
+
+        #Port:10, Subport:0, Tx SC index:0
+        p1 = re.compile(r'Port:(?P<tx_port>-?\d+),\s+Subport:(?P<tx_sub_port>-?\d+),\s+Tx\s+SC\s+index:(?P<tx_index>-?\d+)$')
+
+        #Prev AN: 1, Cur AN: 2
+        p1_1 = re.compile(r'Prev\s+AN:\s+(?P<tx_prev_an>-?\d+),\s+Cur\s+AN:\s+(?P<tx_cur_an>-?\d+)$')
+
+        #encrypt: 1
+        p1_2 = re.compile(r'encrypt:\s+(?P<tx_encrypt>-?\d+)$')
+
+        #vlan: 1
+        p1_3 = re.compile(r'vlan:\s+(?P<tx_vlan>-?\d+)$')
+
+        #end_station: 0
+        p1_4 = re.compile(r'end_station:\s+(?P<tx_end_station>-?\d+)$')
+		
+        #scb: 0
+        p1_5 = re.compile(r'scb:\s+(?P<tx_scb>-?\d+)$')
+        
+        #nextPn: 1
+        p1_6 = re.compile(r'nextPn:\s+(?P<tx_next_pn>-?\d+)$')
+        
+        #key_len: 32
+        p1_7 = re.compile(r'key_len:\s+(?P<tx_key_len>-?\d+)$')
+
+        #hashkey_len: 16
+        p1_8 = re.compile(r'hashkey_len:\s+(?P<tx_hashkey_len>-?\d+)$')
+        
+        #bypass: 0
+        p1_9 = re.compile(r'bypass:\s+(?P<tx_bypass>-?\d+)$')
+
+        #conf_offset: 0
+        p1_10 = re.compile(r'conf_offset:\s+(?P<tx_conf_offset>-?\d+)$')
+
+        #cipher: GCM_AES_256
+        p1_11 = re.compile(r'cipher:\s+(?P<tx_cipher>\S+)$')
+
+        #Macsec hash data: Port: 10, Subport: 0, sa_index: -2130706432
+        p2 = re.compile(r'Macsec\s+hash\s+data:\s+Port:\s+(?P<common_port>-?\d+),\s+Subport:\s+(?P<common_sub_port>-?\d+),\s+sa_index:\s+(?P<common_index>\S+)$')
+        
+        #Install Rx Count 715
+        p2_1 = re.compile(r'Install\s+Rx\s+Count\s+(?P<install_rx_cnt>-?\d+)$')
+
+        #Install Tx Count 715
+        p2_2 = re.compile(r'Install\s+Tx\s+Count\s+(?P<install_tx_cnt>-?\d+)$')
+
+        #Delete Rx Count 711
+        p2_3 = re.compile(r'Delete\s+Rx\s+Count\s+(?P<del_rx_cnt>-?\d+)$')
+
+        #Install Rx Fail Count 3
+        p2_4 = re.compile(r'Install\s+Rx\s+Fail\s+Count\s+(?P<instal_rx_fail_cnt>-?\d+)$')
+
+        #Install Tx Fail Count 0
+        p2_5 = re.compile(r'Install\s+Tx\s+Fail\s+Count\s+(?P<install_tx_fail_cnt>-?\d+)$')
+
+        #Delete Rx Fail Count 0
+        p2_6 = re.compile(r'Delete\s+Rx\s+Fail\s+Count\s+(?P<del_rx_fail_cnt>-?\d+)$')
+
+        #Rx SA Same AN Count 3
+        p2_7 = re.compile(r'Rx\s+SA\s+Same\s+AN\s+Count\s+(?P<rx_an_cnt>-?\d+)$')
+
+        #Delay protection: 0
+        p2_8 = re.compile(r'Delay\s+protection:\s+(?P<delay_protection>-?\d+)$')
+
+        #Port:10, Subport:0, Rx SC index:0
+        p3 = re.compile(r'Port:(?P<rx_port>-?\d+),\s+Subport:(?P<rx_sub_port>-?\d+),\s+Rx\s+SC\s+index:(?P<rx_index>-?\d+)$')
+
+        #Prev AN: 1, Cur AN: 2
+        p3_1 = re.compile(r'Prev\s+AN:\s+(?P<rx_prev_an>-?\d+),\s+Cur\s+AN:\s+(?P<rx_cur_an>-?\d+)$')
+
+        #replay_protect: 1
+        p3_2 = re.compile(r'replay_protect:\s+(?P<rx_replay_protect>-?\d+)$')
+
+        #replay_window_size: 0
+        p3_3 = re.compile(r'replay_window_size:\s+(?P<replay_window_size>-?\d+)$')
+
+        #decrypt_frames: 1
+        p3_4 = re.compile(r'decrypt_frames:\s+(?P<decrypt_frames>-?\d+)$')
+
+        #validate_frames: 1
+        p3_5 = re.compile(r'validate_frames:\s+(?P<validate_frames>-?\d+)$')
+        
+        #nextPn: 0
+        p3_6 = re.compile(r'nextPn:\s+(?P<rx_next_pn>-?\d+)$')
+        
+        #key_len: 32
+        p3_7 = re.compile(r'key_len:\s+(?P<rx_key_len>-?\d+)$')
+
+        #hashkey_len: 16
+        p3_8 = re.compile(r'hashkey_len:\s+(?P<rx_hashkey_len>-?\d+)$')
+
+        #bypass: 0
+        p3_9 = re.compile(r'bypass:\s+(?P<rx_bypass>-?\d+)$')
+
+        #conf_offset: 0
+        p3_10 = re.compile(r'conf_offset:\s+(?P<rx_conf_offset>-?\d+)$')
+
+        #cipher: GCM_AES_256
+        p3_11 = re.compile(r'cipher:\s+(?P<rx_cipher>\S+)$')
+
+        #DeviceID 0
+        p4 = re.compile(r'DeviceID\s+(?P<id>-?\d+)$')
+
+        for line in output.splitlines():
+            #Port:10, Subport:0, Tx SC index:0
+            m = p1.match(line)
+            if m:
+                match_dict = m.groupdict()
+                TX_dict = ret_dict.setdefault('tx', {})
+                TX_dict['tx_port'] = int(match_dict['tx_port'])
+                TX_dict['tx_sub_port'] = int(match_dict['tx_sub_port'])
+                TX_dict['tx_index'] = int(match_dict['tx_index'])
+                tx_match = True
+                continue
+
+            if tx_match:
+                #Prev AN: 1, Cur AN: 2
+                m = p1_1.match(line)
+                if m:
+                    match_dict = m.groupdict()
+                    TX_dict['tx_prev_an'] = int(match_dict['tx_prev_an'])
+                    TX_dict['tx_cur_an'] = int(match_dict['tx_cur_an'])
+                    continue
+
+                #encrypt: 1
+                m = p1_2.match(line)
+                if m:
+                    match_dict = m.groupdict()
+                    TX_dict['tx_encrypt'] = int(match_dict['tx_encrypt'])
+                    continue
+
+                #vlan: 1
+                m = p1_3.match(line)
+                if m:
+                    match_dict = m.groupdict()
+                    TX_dict['tx_vlan'] = int(match_dict['tx_vlan'])
+                    continue
+            
+                #end_station: 0
+                m = p1_4.match(line)
+                if m:
+                    match_dict = m.groupdict()
+                    TX_dict['tx_end_station'] = int(match_dict['tx_end_station'])
+                    continue
+
+                #scb: 0
+                m = p1_5.match(line)
+                if m:
+                    match_dict = m.groupdict()
+                    TX_dict['tx_scb'] = int(match_dict['tx_scb'])
+                    continue
+
+                #nextPn: 1  
+                m = p1_6.match(line)
+                if m:
+                    match_dict = m.groupdict()
+                    TX_dict['tx_next_pn'] = int(match_dict['tx_next_pn'])
+                    continue
+
+                #key_len: 32  
+                m = p1_7.match(line)
+                if m:
+                    match_dict = m.groupdict()
+                    TX_dict['tx_key_len'] = int(match_dict['tx_key_len'])
+                    continue
+                
+                #hashkey_len: 16
+                m = p1_8.match(line)
+                if m:
+                    match_dict = m.groupdict()
+                    TX_dict['tx_hashkey_len'] = int(match_dict['tx_hashkey_len'])
+                    continue
+                
+                #bypass: 0
+                m = p1_9.match(line)
+                if m:
+                    match_dict = m.groupdict()
+                    TX_dict['tx_bypass'] = int(match_dict['tx_bypass'])
+                    continue
+
+                #conf_offset: 0  
+                m = p1_10.match(line)
+                if m:
+                    match_dict = m.groupdict()
+                    TX_dict['tx_conf_offset'] = int(match_dict['tx_conf_offset'])
+                    continue
+
+                #cipher: GCM_AES_256  
+                m = p1_11.match(line)
+                if m:
+                    match_dict = m.groupdict()
+                    TX_dict['tx_cipher'] = str(match_dict['tx_cipher'])
+                    tx_match = False
+                    continue
+
+            #Macsec hash data: Port: 10, Subport: 0, sa_index: -2130706432
+            m = p2.match(line)
+            if m:
+                match_dict = m.groupdict()
+                COMMON_dict = ret_dict.setdefault('common', {})
+                COMMON_dict['common_port'] = int(match_dict['common_port'])
+                COMMON_dict['common_sub_port'] = int(match_dict['common_sub_port'])
+                COMMON_dict['common_index'] = str(match_dict['common_index'])
+                continue
+
+            #Install Rx Count 715
+            m = p2_1.match(line)
+            if m:
+                match_dict = m.groupdict()
+                COMMON_dict['install_rx_cnt'] = int(match_dict['install_rx_cnt'])
+                continue
+            
+            #Install Tx Count 715
+            m = p2_2.match(line)
+            if m:
+                match_dict = m.groupdict()
+                COMMON_dict['install_tx_cnt'] = int(match_dict['install_tx_cnt'])
+                continue
+
+            #Delete Rx Count 711
+            m = p2_3.match(line)
+            if m:
+                match_dict = m.groupdict()
+                COMMON_dict['del_rx_cnt'] = int(match_dict['del_rx_cnt'])
+                continue
+
+            #Install Rx Fail Count 3
+            m = p2_4.match(line)
+            if m:
+                match_dict = m.groupdict()
+                COMMON_dict['instal_rx_fail_cnt'] = int(match_dict['instal_rx_fail_cnt'])
+                continue
+
+            #Install Tx Fail Count 0
+            m = p2_5.match(line)
+            if m:
+                match_dict = m.groupdict()
+                COMMON_dict['install_tx_fail_cnt'] = int(match_dict['install_tx_fail_cnt'])
+                continue
+
+            #Delete Rx Fail Count 0
+            m = p2_6.match(line)
+            if m:
+                match_dict = m.groupdict()
+                COMMON_dict['del_rx_fail_cnt'] = int(match_dict['del_rx_fail_cnt'])
+                continue
+
+            #Rx SA Same AN Count 3
+            m = p2_7.match(line)
+            if m:
+                match_dict = m.groupdict()
+                COMMON_dict['rx_an_cnt'] = int(match_dict['rx_an_cnt'])
+                continue
+
+            #Delay protection: 0
+            m = p2_8.match(line)
+            if m:
+                match_dict = m.groupdict()
+                COMMON_dict['delay_protection'] = int(match_dict['delay_protection'])
+                continue
+
+            #Port:10, Subport:0, Rx SC index:0
+            m = p3.match(line)
+            if m:
+                match_dict = m.groupdict()
+                RX_dict = ret_dict.setdefault('rx', {})
+                RX_dict['rx_port'] = int(match_dict['rx_port'])
+                RX_dict['rx_sub_port'] = int(match_dict['rx_sub_port'])
+                RX_dict['rx_index'] = int(match_dict['rx_index'])
+                rx_match = True
+                continue
+
+            if rx_match:
+                #Prev AN: 1, Cur AN: 2
+                m = p3_1.match(line)
+                if m:
+                    match_dict = m.groupdict()
+                    RX_dict['rx_prev_an'] = int(match_dict['rx_prev_an'])
+                    RX_dict['rx_cur_an'] = int(match_dict['rx_cur_an'])
+                    continue
+
+                #replay_protect: 1
+                m = p3_2.match(line)
+                if m:
+                    match_dict = m.groupdict()
+                    RX_dict['rx_replay_protect'] = int(match_dict['rx_replay_protect'])
+                    continue
+
+                #replay_window_size: 0
+                m = p3_3.match(line)
+                if m:
+                    match_dict = m.groupdict()
+                    RX_dict['replay_window_size'] = int(match_dict['replay_window_size'])
+                    continue
+
+                #decrypt_frames: 1
+                m = p3_4.match(line)
+                if m:
+                    match_dict = m.groupdict()
+                    RX_dict['decrypt_frames'] = int(match_dict['decrypt_frames'])
+                    continue
+
+                #validate_frames: 1
+                m = p3_5.match(line)
+                if m:
+                    match_dict = m.groupdict()
+                    RX_dict['validate_frames'] = int(match_dict['validate_frames'])
+                    continue
+
+                #nextPn: 0  
+                m = p3_6.match(line)
+                if m:
+                    match_dict = m.groupdict()
+                    RX_dict['rx_next_pn'] = int(match_dict['rx_next_pn'])
+                    continue
+
+                #key_len: 32  
+                m = p3_7.match(line)
+                if m:
+                    match_dict = m.groupdict()
+                    RX_dict['rx_key_len'] = int(match_dict['rx_key_len'])
+                    continue
+
+                #hashkey_len: 16  
+                m = p3_8.match(line)
+                if m:
+                    match_dict = m.groupdict()
+                    RX_dict['rx_hashkey_len'] = int(match_dict['rx_hashkey_len'])
+                    continue
+
+                #bypass: 0  
+                m = p3_9.match(line)
+                if m:
+                    match_dict = m.groupdict()
+                    RX_dict['rx_bypass'] = int(match_dict['rx_bypass'])
+                    continue
+
+                #conf_offset: 0  
+                m = p3_10.match(line)
+                if m:
+                    match_dict = m.groupdict()
+                    RX_dict['rx_conf_offset'] = int(match_dict['rx_conf_offset'])
+                    continue
+
+                #cipher: GCM_AES_256  
+                m = p3_11.match(line)
+                if m:
+                    match_dict = m.groupdict()
+                    RX_dict['rx_cipher'] = str(match_dict['rx_cipher'])
+                    rx_match = False
+                    continue
+            
+            #DeviceID 0
+            m = p4.match(line)
+            if m :
+                match_dict = m.groupdict()
+                id = int(match_dict['id'])
+                if 'device' not in ret_dict:
+                    ret_dict['device'] = {'id': []}
+                ret_dict['device']['id'].append(id)
+                continue
+                  
+        return ret_dict
+
+# ============================================================================
+#  Schema for
+#  * 'show platform hardware iomd {lc_no} macsec port {port_no} sub-port {sub_port1} {sub_port2} | i Free'
+# ============================================================================
+
+class ShowPlatformHardwareIomdMacsecPortSubportSchema(MetaParser):
+    schema = {
+        'device': {
+            int: {
+                'free_SA': int,
+                'used_SA': int
+            }
+        }
+    }
+
+class ShowPlatformHardwareIomdMacsecPortSubport(ShowPlatformHardwareIomdMacsecPortSubportSchema):
+
+    """
+      Parser for
+      * 'show platform hardware iomd {lc_no} macsec port {port_no} sub-port {sub_port1} {sub_port2} | i Free'
+    """
+    cli_command = "show platform hardware iomd {lc_no} macsec port {port_no} sub-port {sub_port1} {sub_port2} | i Free"
+    def cli(self, lc_no, port_no, sub_port1, sub_port2, output=None):
+        if output is None:
+            cmd = self.cli_command.format(lc_no=lc_no, port_no=port_no,sub_port1=sub_port1,sub_port2=sub_port2)
+            output = self.device.execute(cmd)
+        ret_dict = {}		
+        list_key_num = 1
+
+        #Secy_Device SA Idx count: No of Free SA 507, Used SA 5
+        p1 = re.compile(r'Secy_Device\s+SA\s+Idx\s+count:\s+No\s+of\s+Free\s+SA\s+(?P<free_SA>-?\d+),\s+Used\s+SA\s+(?P<used_SA>-?\d+)$')
+
+        for line in output.splitlines():	
+            #Secy_Device SA Idx count: No of Free SA 507, Used SA 5
+            m = p1.match(line)
+            if m:
+                match_dict = m.groupdict()	
+                list_index_dict = ret_dict
+                list_index_dict = list_index_dict.setdefault('device', {})
+                list_index_dict = list_index_dict.setdefault(list_key_num, {})
+                list_index_dict['free_SA'] = int(match_dict['free_SA'])
+                list_index_dict['used_SA'] = int(match_dict['used_SA'])
+                list_key_num += 1
+                continue
+		
+        return ret_dict
+    
+        
+class ShowPlatformSoftwareFedSwitchActiveNatInterfacesSchema(MetaParser):
+    """
+    Schema for show platform software fed switch active nat interfaces
+    """
+    schema = {
+        'index':{
+            Any():{
+              'interface_name': str,                          
+              'interface_id': str,
+              'domain': str,                          
+            },
+        },
+        'number_of_interfaces': int,   
+    }
+
+class ShowPlatformSoftwareFedSwitchActiveNatInterfaces(ShowPlatformSoftwareFedSwitchActiveNatInterfacesSchema):
+    """
+    show platform software fed switch active nat interfaces
+    """
+
+    cli_command = ['show platform software fed {switch} {mode} nat interfaces',
+                   'show platform software fed active nat interfaces']           
+
+    def cli(self, switch='', mode='', output=None):
+
+        if output is None:
+            if switch and mode:
+                cmd = self.cli_command[0].format(switch=switch, mode=mode)
+            else:
+                cmd = self.cli_command[1]
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+        index = 1
+
+        #                 Interface Name |         Interface ID |  Domain |
+        # ------------------------------------------------------------------
+        #          GigabitEthernet1/0/23 |                0x44e | outside |
+        #                         Vlan11 |                0x450 |  inside |
+        p0 = re.compile(r'^(?P<interface_name>\S+)\s+\|+\s+(?P<interface_id>\w+)\s+\|+\s+(?P<domain>\S+)\s+\|$')
+
+        # Number of Interfaces : 2
+        p1 = re.compile(r'^Number of Interfaces +: +(?P<number_of_interfaces>\d+)$')
+
+        for line in output.splitlines(): 
+            line = line.strip()   
+
+            #                 Interface Name |         Interface ID |  Domain |
+            # ------------------------------------------------------------------
+            #          GigabitEthernet1/0/23 |                0x44e | outside |
+            #                         Vlan11 |                0x450 |  inside |
+            m = p0.match(line)
+            if m:
+                group = m.groupdict()
+                index_dict = ret_dict.setdefault('index', {}).setdefault(index,{})
+                index_dict['interface_name'] = group['interface_name']
+                index_dict['interface_id'] = group['interface_id']
+                index_dict['domain'] = group['domain']
+                index += 1
+                continue
+
+            # Number of Interfaces : 2
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['number_of_interfaces'] = int(group['number_of_interfaces'])
+                continue
+  
+        return ret_dict
+        
+        
+class ShowPlatformSoftwareFedSwitchActiveNatRulesSchema(MetaParser):
+    """
+    Schema for show platform software fed switch active nat rules
+    """
+    schema = {
+        'rules':{
+            Optional(Or('static', 'dynamic')): {
+              Optional('index'): {
+                  int: {
+                    Optional('rule_id'): str,                          
+                    Optional('type'): str, 
+                    Optional('domain'): str, 
+                    Optional('vrf'): int, 
+                    Optional('protocol'): str, 
+                    Optional('local_ip'): str, 
+                    Optional('local_port'): int, 
+                    Optional('global_ip'): str, 
+                    Optional('global_port'): int, 
+                    Optional('network'): int,  
+                    Optional('acl'): str,   
+                    Optional('pool_interface_ip'): str, 
+                    Optional('overload'): str,                   
+                  },
+              },
+              'number_of_rules': int,
+            },
+        },     
+    }
+
+class ShowPlatformSoftwareFedSwitchActiveNatRules(ShowPlatformSoftwareFedSwitchActiveNatRulesSchema):
+    """
+    show platform software fed switch active nat rules
+    """
+
+    cli_command = ['show platform software fed {switch} {mode} nat rules',
+                   'show platform software fed active nat rules']           
+
+    def cli(self, switch='', mode='', output=None):
+
+        if output is None:
+            if switch and mode:
+                cmd = self.cli_command[0].format(switch=switch, mode=mode)
+            else:
+                cmd = self.cli_command[1]
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+        index = 1
+        
+        # STATIC Rules:
+        p0 = re.compile(r'^STATIC Rules:$')
+
+        # Rule ID | Type |  Domain |   VRF | Protocol |        Local IP |  Port |       Global IP |  Port | Network |
+        # ---------------------------------------------------------------------------------------------------------------
+        # 0xc     |  1-1 |  inside |     0 |      any |        15.0.0.1 |     0 |       135.0.0.1 |     0 |      32 |
+        
+        p1 = re.compile(r'^(?P<rule_id>\S+)\s+\|+\s+(?P<type>\d+-\d+|\s|\w+\/\w+)\s+\|+\s+(?P<domain>\w+)\s+\|+\s+(?P<vrf>\d+)\s+\|+\s+(?P<protocol>\S+)\s+\|+\s+(?P<local_ip>\S+)\s+\|+\s+(?P<local_port>\d+)\s+\|+\s+(?P<global_ip>\S+)\s+\|+\s+(?P<global_port>\d+)\s+\|+\s+(?P<network>\d+)\s+\|$')
+
+        # DYNAMIC Rules:
+        p2 = re.compile(r'^DYNAMIC Rules:$')
+
+        # Rule ID    |    Type |   VRF |                  Acl |    Pool/Interface_IP | Overload |
+        # ----------------------------------------------------------------------------------------
+        # 0x80000001 |  Inside |     0 |                    1 |            pool_in_1 |       No |
+        p3 = re.compile(r'^(?P<rule_id>\S+)\s+\|+\s+(?P<type>\w+)\s+\|+\s+(?P<vrf>\d+)\s+\|+\s+(?P<acl>\S+)\s+\|+\s+(?P<pool_interface_ip>\S+)\s+\|+\s+(?P<overload>\S+)\s+\|$')
+
+        # Number of Rules : 2
+        p4 = re.compile(r'^Number of Rules +: +(?P<number_of_rules>\d+)$')
+        
+        for line in output.splitlines():
+            line = line.strip()
+        
+            # STATIC Rules:
+            m = p0.match(line)
+            if m:
+                group = m.groupdict()
+                rules = ret_dict.setdefault('rules', {})
+                rule_dict = rules.setdefault('static', {})
+    
+            # Rule ID | Type |  Domain |   VRF | Protocol |        Local IP |  Port |       Global IP |  Port | Network |
+            # ---------------------------------------------------------------------------------------------------------------
+            # 0xc     |  1-1 |  inside |     0 |      any |        15.0.0.1 |     0 |       135.0.0.1 |     0 |      32 |
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                index_dict = rule_dict.setdefault('index', {}).setdefault(index, {})
+                index_dict['rule_id'] = group['rule_id']
+                index_dict['type'] = group['type']
+                index_dict['domain'] = group['domain']
+                index_dict['vrf'] = int(group['vrf'])
+                index_dict['protocol'] = group['protocol']
+                index_dict['local_ip'] = group['local_ip']
+                index_dict['local_port'] = int(group['local_port'])
+                index_dict['global_ip'] = group['global_ip']
+                index_dict['global_port'] = int(group['global_port'])
+                index_dict['network'] = int(group['network'])
+                index += 1
+    
+            # DYNAMIC Rules:
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                rules = ret_dict.setdefault('rules', {})
+                rule_dict = rules.setdefault('dynamic', {})
+    
+            # Rule ID    |    Type |   VRF |                  Acl |    Pool/Interface_IP | Overload |
+            # ----------------------------------------------------------------------------------------
+            # 0x80000001 |  Inside |     0 |                    1 |            pool_in_1 |       No |
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                index_dict = rule_dict.setdefault('index', {}).setdefault(index, {})
+                index_dict['rule_id'] = group['rule_id']
+                index_dict['type'] = group['type']
+                index_dict['vrf'] = int(group['vrf'])
+                index_dict['acl'] = group['acl']
+                index_dict['pool_interface_ip'] = group['pool_interface_ip']
+                index_dict['overload'] = group['overload']
+                index += 1        
+    
+            # Number of Rules : 2
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                rule_dict['number_of_rules'] = int(group['number_of_rules'])
+                continue         
+        
+        return ret_dict
+
 
 # ======================================================
 # Parser for 'show platform software memory database fed switch active callsite'
@@ -36060,3 +36859,66 @@ class ShowPlatformSoftwareFedSwitchActivePuntBrief(ShowPlatformSoftwareFedSwitch
                 continue
 
         return ret_dict
+
+
+# ======================================================
+# Parser for 'show platform software fed active fnf sw-stats-show'
+# ======================================================
+class ShowPlatformSoftwareFedSwitchActiveFnfSwStatsShowSchema(MetaParser):
+    """Schema for show platform software fed active fnf sw-stats-show"""
+    schema = {
+        'fnf_statistics': {
+            Any(): {
+                Optional('id') : int,
+                'value' : int,
+            },
+        },
+    }
+
+class ShowPlatformSoftwareFedSwitchActiveFnfSwStatsShow(
+    ShowPlatformSoftwareFedSwitchActiveFnfSwStatsShowSchema):
+    """Parser for show platform software fed active fnf sw-stats-show"""
+
+    cli_command = ['show platform software fed {switch} {switch_var} fnf sw-stats-show',
+                   'show platform software fed {switch_var} fnf sw-stats-show']
+
+    def cli(self, switch_var, switch="", output=None):
+        if output is None:
+            if switch:
+                cmd = self.cli_command[0].format(switch= switch, switch_var=switch_var)
+            else:
+                cmd = self.cli_command[1].format(switch_var=switch_var)
+            output = self.device.execute(cmd)
+
+        # monitor_action_message_rcvd:                    4
+        # exporter_action_message_rcvd:                   0
+        p1 = re.compile(r"(?P<statistic>[\w\_]+):\s+(?P<value>[\d]+)$")
+
+        # 110: num_fin_rst_skip_flow_pend_del:    0
+        # 111: num_wdavc_del_pend_set_same_state_warn: 0
+        p2 = re.compile(r"^(?P<id>\d+):\s+(?P<statistic>[\w\_]+):\s+(?P<value>[\d]+)$")
+
+        ret_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+
+            # monitor_action_message_rcvd:                    4
+            m = p1.match(line)
+            if m:
+                dict_val = m.groupdict()
+                fnf_dict = ret_dict.setdefault('fnf_statistics', {}).setdefault(dict_val['statistic'], {})
+                fnf_dict['value'] = int(dict_val['value'])
+                continue
+
+            # 110: num_fin_rst_skip_flow_pend_del:    0
+            m = p2.match(line)
+            if m:
+                dict_val = m.groupdict()
+                fnf_dict = ret_dict.setdefault('fnf_statistics', {}).setdefault(dict_val['statistic'], {})
+                fnf_dict['value'] = int(dict_val['value'])
+                fnf_dict['id'] = int(dict_val['id'])
+                continue
+
+        return ret_dict
+        
+

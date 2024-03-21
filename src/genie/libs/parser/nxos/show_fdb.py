@@ -107,24 +107,29 @@ class ShowMacAddressTableBase(ShowMacAddressTableBaseSchema):
                 .setdefault(mac_address,{})
                 mac_dict.update({'mac_address': mac_address})
                 if group['entry']:
-                    mac_dict.update({'entry': str(group['entry']).strip()})
+                    mac_dict.update({'entry': group['entry'].strip()})
                 if not str(group['drop']) == 'None':
-                    intf_dict = mac_dict.setdefault('drop',{})
-                    intf_dict.update({'drop': True})
-                port = str(group['ports'])
-                if not port == 'None':
+                    drop_dict = mac_dict.setdefault('drop',{})
+                    drop_dict.update({
+                        'drop': True,
+                        'mac_type': group['mac_type'],
+                        'age': group['age']
+                    })
+                port = group['ports']
+                if port is not None:
                     converted_port = Common.convert_intf_name(group['ports'])
                     intf_dict = mac_dict.setdefault('interfaces',{})\
                     .setdefault(converted_port,{})
                     intf_dict.update({'interface': converted_port})
-                mac_type = str(group['mac_type'])
-                age = str(group['age'])
-                secure = str(group['secure'])
-                ntfy = str(group['ntfy'])
-                intf_dict.update({'mac_type': str(group['mac_type'])})
-                intf_dict.update({'age': str(group['age'])})                
-                mac_dict.update({'secure': str(group['secure'])})
-                mac_dict.update({'ntfy': str(group['ntfy'])})
+                intf_dict.update({
+                    'mac_type': group['mac_type'],
+                    'age': group['age']
+                })
+                mac_dict.update({
+                    'secure': group['secure'],
+                    'ntfy': group['ntfy']
+                })
+                
                 continue
                 
         return ret_dict

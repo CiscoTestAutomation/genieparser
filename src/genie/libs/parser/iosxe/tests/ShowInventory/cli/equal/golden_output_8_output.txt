@@ -1,0 +1,50 @@
+NAME: "Chassis", DESCR: "Cisco Catalyst Series C9500X-28C8D Chassis"
+PID: C9500X-28C8D      , VID: V00  , SN: FDO2446001V
+
+NAME: "Slot 1 Router", DESCR: "Cisco Catalyst 9500X-28C8D Switch"
+PID: C9500X-28C8D      , VID: V00  , SN: FDO24460AFL
+
+NAME: "HundredGigE1/0/1", DESCR: "QSFP 40GE AOC3M"
+PID: QSFP-H40G-AOC3M     , VID: V02  , SN: DTS2232A211-A
+
+NAME: "HundredGigE1/0/2", DESCR: "QSFP 40GE AOC3M"
+PID: QSFP-H40G-AOC3M     , VID: V02  , SN: DTS2232A214-A
+
+NAME: "HundredGigE1/0/3", DESCR: "QSFP 40GE AOC3M"
+PID: QSFP-H40G-AOC3M     , VID: V02  , SN: DTS2232A213-A
+
+NAME: "HundredGigE1/0/4", DESCR: "QSFP 40GE AOC3M"
+PID: QSFP-H40G-AOC3M     , VID: V02  , SN: DTS2232A206-A
+
+NAME: "HundredGigE1/0/5", DESCR: "QSFP 40GE AOC3M"
+PID: QSFP-H40G-AOC3M     , VID: V02  , SN: DTS2232A216-B
+
+NAME: "HundredGigE1/0/10", DESCR: "QSFP 40GE AOC3M"
+PID: QSFP-H40G-AOC3M     , VID: V02  , SN: DTS2231B039-B
+
+NAME: "HundredGigE1/0/11", DESCR: "QSFP 40GE AOC3M"
+PID: QSFP-H40G-AOC3M     , VID: V02  , SN: DTS2231B044-A
+
+NAME: "HundredGigE1/0/12", DESCR: "QSFP 40GE AOC3M"
+PID: QSFP-H40G-AOC3M     , VID: V02  , SN: DTS2231B045-A
+
+NAME: "Power Supply Module 2", DESCR: "Cisco Catalyst 9500X Series 1.5KW-AC Reverse Air Flow Power Supply"
+PID: C9K-PWR-1500WAC-R , VID: V00  , SN: QCS24466146
+
+NAME: "Fan Tray 1", DESCR: "Cisco Catalyst 9500X Series 1RU Reverse Air Flow"
+PID: C9K-FAN-1U-R      , VID: V00  , SN: ACI24460UFM
+
+NAME: "Fan Tray 2", DESCR: "Cisco Catalyst 9500X Series 1RU Reverse Air Flow"
+PID: C9K-FAN-1U-R      , VID: V00  , SN: ACI24460UNJ
+
+NAME: "Fan Tray 3", DESCR: "Cisco Catalyst 9500X Series 1RU Reverse Air Flow"
+PID: C9K-FAN-1U-R      , VID: V00  , SN: ACI24460UPP
+
+NAME: "Fan Tray 4", DESCR: "Cisco Catalyst 9500X Series 1RU Reverse Air Flow"
+PID: C9K-FAN-1U-R      , VID: V00  , SN: ACI24460UR9
+
+NAME: "Fan Tray 5", DESCR: "Cisco Catalyst 9500X Series 1RU Reverse Air Flow"
+PID: C9K-FAN-1U-R      , VID: V00  , SN: ACI24460UNT
+
+NAME: "Fan Tray 6", DESCR: "Cisco Catalyst 9500X Series 1RU Reverse Air Flow"
+PID: C9K-FAN-1U-R      , VID: V00  , SN: ACI24460URA 

@@ -1703,16 +1703,20 @@ class ShowPlatformFedTcamPbrNat(ShowPlatformFedTcamPbrNatSchema):
     """
 
     cli_command = ['show platform hardware fed {switch} active fwd-asic resource tcam table pbr record 0 format 0 | begin {nat_region}',
-                   'show platform hardware fed active fwd-asic resource tcam table pbr record 0 format 0 | begin {nat_region}']
+                   'show platform hardware fed active fwd-asic resource tcam table pbr record 0 format 0 | begin {nat_region}',
+                   'show platform hardware fed switch {switch_type} fwd-asic resource tcam table pbr record 0 format 0 | begin {nat_region}']
 
-    def cli(self, nat_region, switch="", output=None):
+    def cli(self, nat_region, switch="", switch_type="", output=None):
 
         if output is None:
             if switch:
                 cmd = self.cli_command[0].format(switch=switch,nat_region=nat_region)
             else:
-                cmd = self.cli_command[1].format(nat_region=nat_region)
-
+                if switch_type:
+                    cmd = self.cli_command[2].format(nat_region=nat_region, switch_type=switch_type)
+                else:
+                    cmd = self.cli_command[1].format(nat_region=nat_region)
+  
             output = self.device.execute(cmd)
 
         # initial variables

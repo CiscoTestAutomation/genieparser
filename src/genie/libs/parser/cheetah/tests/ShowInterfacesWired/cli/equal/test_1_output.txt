@@ -1,0 +1,14 @@
+# show interfaces wired 0
+wired0    Link encap:Ethernet  HWaddr 5C:5A:C7:52:01:DC eMac Status: UP
+	  inet addr: 9.2.46.109  Bcast: 9.2.46.255  Mask: 255.255.255.0
+          UP BROADCAST RUNNING PROMISC MULTICAST  MTU:2400  Metric:1
+          collisions:0 txqueuelen:80 
+	  full Duplex, 1000 Mb/s
+
+	  5 minute input rate 25514 bits/sec, 20 packets/sec
+	  5 minute output rate 4911 bits/sec, 1 packets/sec
+Wired0 Port Statistics:
+ID         :               0             TYPE       :               0
+RX PKTS    :         2123343/141         TX PKTS    :          109143/6         
+RX OCTETS  :       349752895/54141       TX OCTETS  :        61400488/1453      
+RX ERR     :              52/0           TX ERR     :               0/0          

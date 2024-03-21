@@ -45,6 +45,9 @@ class ShowVtpPassword(ShowVtpPasswordSchema):
         # VTP Password: password-string
         p2 = re.compile(r'^VTP +Password: +(?P<val>\S+)$')
 
+        # VTP Password: password-string
+        p3 = re.compile(r'^VTP +Password is +(?P<val>\S+)$')
+
         for line in out.splitlines():
             line = line.strip()
 
@@ -61,6 +64,13 @@ class ShowVtpPassword(ShowVtpPasswordSchema):
                 sub_dict = ret_dict.setdefault('vtp', {})
                 sub_dict['configured'] = True
                 sub_dict['password'] = m.groupdict()['val']
+                continue
+
+            # VTP Password True/false
+            m = p3.match(line)
+            if m:
+                sub_dict = ret_dict.setdefault('vtp', {})
+                sub_dict['configured'] = True
                 continue
 
         return ret_dict

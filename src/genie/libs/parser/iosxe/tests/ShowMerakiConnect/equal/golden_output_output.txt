@@ -1,0 +1,57 @@
+Service meraki connect: enable
+
+Meraki Tunnel Config
+------------------------------------
+  Fetch State:                Config fetch succeeded
+  Fetch Fail:                 no failure
+  Last Fetch(UTC):            2015-01-04 10:46:06
+  Next Fetch(UTC):            2015-01-04 11:53:13
+  Config Server:              cs556-2037.meraki.com
+  Primary:                    usw.nt.meraki.com
+  Secondary:                  use.nt.meraki.com
+  Client IPv6 Addr:           FD0A:9B09:1F7:1:229:C2FF:FE9A:8E00
+
+Meraki Tunnel State
+------------------------------------
+  Primary:                    Up
+  Secondary:                  Up
+  Primary Last Change(UTC):   2015-01-04 06:59:43
+  Secondary Last Change(UTC): 2015-01-04 06:59:43
+  Client Last Restart(UTC):   2015-01-04 06:59:32
+
+Meraki Tunnel Interface
+------------------------------------
+  Status:                     Enable
+  Rx Packets:                 20658
+  Tx Packets:                 18532
+  Rx Errors:                  0
+  Tx Errors:                  0
+  Rx Drop Packets:            0
+  Tx Drop Packets:            0
+
+Meraki Device Registration
+------------------------------------
+  url:                        https://catalyst.meraki.com/nodes/register
+  Device Number:              1
+  PID:                        C9300-24U
+  Serial Number:              FJC2342S0TH
+  Meraki ID:                  Q5TC-J9PK-HK4R
+  Mac Address:                6C:71:0D:3D:EA:80
+  Status:                     Registered
+  Timestamp(UTC):             2015-01-04 06:59:22
+
+  Device Number:              2
+  PID:                        C9300-24T
+  Serial Number:              FJC2401U0E5
+  Meraki ID:                  Q5TB-4ZR3-DCKP
+  Mac Address:                5C:E1:76:50:C9:80
+  Status:                     Registered
+  Timestamp(UTC):             2015-01-04 06:59:22
+
+  Device Number:              3
+  PID:                        C9300-24UX
+  Serial Number:              FCW2248D19Q
+  Meraki ID:                  Q5TD-GJZW-GLBA
+  Mac Address:                00:29:C2:9A:8E:00
+  Status:                     Registered
+  Timestamp(UTC):             2015-01-04 06:59:20

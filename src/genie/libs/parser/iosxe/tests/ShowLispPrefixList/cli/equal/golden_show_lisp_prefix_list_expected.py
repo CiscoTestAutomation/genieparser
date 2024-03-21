@@ -50,24 +50,28 @@ expected_output = {
                     'entries': {
                         '2001:192:168:1::/64': {
                             'sources': 'static',
+                            'source_list': ['static'],
                             'first_added': '22:56:16',
                             'last_verified_by': 'by static',
                             'last_verified': '22:56:16'
                             },
                         '2001:193:168:1::/64': {
                             'sources': 'static',
+                            'source_list': ['static'],
                             'first_added': '22:56:16',
                             'last_verified_by': 'by static',
                             'last_verified': '22:56:16'
                             },
                         '192.168.1.0/24': {
                             'sources': 'static',
+                            'source_list': ['static'],
                             'first_added': '22:56:16',
                             'last_verified_by': 'by static',
                             'last_verified': '22:56:16'
                             },
                         '193.168.1.0/24': {
                             'sources': 'static',
+                            'source_list': ['static'],
                             'first_added': '22:56:16',
                             'last_verified_by': 'by static',
                             'last_verified': '22:56:16'

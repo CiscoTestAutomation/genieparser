@@ -7476,3 +7476,65 @@ class ShowIPNameServer(ShowIPNameServerSchema):
                ip_flow.append(line)
                continue
         return parsed_dict
+
+class ShowIpSocketsSchema(MetaParser):
+    """Schema for show ip sockets"""
+
+    schema = {
+        'index':{
+            Any():{
+                Optional('proto'): int,
+                Optional('remote'): str,
+                Optional('remote_port'): int,
+                Optional('local'): str,
+                Optional('local_port'): int,
+                Optional('in'): int,
+                Optional('out'): int,
+                Optional('stat'): int,
+                Optional('tty'): int,
+                Optional('output_if'): Or(str, None)
+            }
+        }
+    }
+
+class ShowIpSockets(ShowIpSocketsSchema):
+    """
+    show ip sockets
+    """
+
+    cli_command = 'show ip sockets'
+    
+    def cli(self, output=None):
+        
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+        index = 1
+
+        #Proto        Remote      Port      Local       Port  In Out  Stat TTY OutputIF
+        #17           0.0.0.0      0       --any--      2228   0  0    211   0
+        p1 = re.compile(r'^(?P<proto>[\d]+)\s+(?P<remote>[\d.]+)\s+(?P<remote_port>\d+)\s+(?P<local>\S+)\s+(?P<local_port>\d+)\s+(?P<in>\d+)\s+(?P<out>\d+)\s+(?P<stat>\d+)\s+(?P<tty>\d+)(\s+(?P<output_if>[\S]+))?$')
+
+        
+        for line in output.splitlines(): 
+            line = line.strip()
+            
+            #Proto        Remote      Port      Local       Port  In Out  Stat TTY OutputIF
+            #17           0.0.0.0      0       --any--      2228   0  0    211   0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                index_dict = ret_dict.setdefault('index', {}).setdefault(index,{})
+                index_dict['proto'] = int(group['proto'])
+                index_dict['remote'] = group['remote']
+                index_dict['remote_port'] = int(group['remote_port'])
+                index_dict['local'] = group['local']
+                index_dict['local_port'] = int(group['local_port'])
+                index_dict['in'] = int(group['in'])
+                index_dict['out'] = int(group['out'])
+                index_dict['stat'] = int(group['stat'])
+                index_dict['tty'] = int(group['tty'])
+                index_dict['output_if'] = group['output_if']
+                index += 1
+        return ret_dict

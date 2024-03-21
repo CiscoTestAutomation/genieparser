@@ -1,0 +1,5 @@
+{
+    "neighbor": "100.103.0.5",
+    "address_family": "vpnv4 unicast",
+    "vrf":"1018"
+}

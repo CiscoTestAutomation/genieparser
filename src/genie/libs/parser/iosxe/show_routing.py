@@ -3481,21 +3481,27 @@ class ShowBannerMotd(ShowBannerMotdSchema):
 
         if output is None:
             output = self.device.execute(self.cli_command)
-        
+
         # initializing dictionary
         ret_dict = {}
 
-        # cisco banner test msg
-        p1 = re.compile(r'^(?P<banner>[\S\s]+)$')
+        strng = ''
+        #new banner msg
+        # '''
+        # ============================================================
+        # This system is for Cisco.com authorized use only. It is
+        # monitored to detect improper use and other illicit activity.
+        # There is no expectation of privacy while using this system.
+        # ============================================================
+        # '''
+        p1 = re.compile(r'[^a-zA-Z0-9.\s]')
 
         for line in output.splitlines():
             line = line.strip()
-
-            # cisco banner test msg
-            m = p1.match(line)
-            if m:
-                group = m.groupdict()
-                ret_dict['banner_motd'] = group['banner']
-                continue
+            
+            m = re.sub(p1,'', line)
+            if m != ' ':
+                strng = strng+m+' '
+                ret_dict['banner_motd'] = strng.strip()
 
         return ret_dict

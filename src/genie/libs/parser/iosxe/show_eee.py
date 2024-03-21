@@ -31,7 +31,13 @@ class ShowEeeStatusInterfaceSchema(MetaParser):
                 'eee_mode': str,
                 'rx_lpi': str,
                 'tx_lpi': str,
-                'wake_error': int
+                'wake_error': int,
+                Optional('asic_eee_status'): {
+                    'rx_lpi': str,
+                    'tx_lpi': str,
+                    'link_fault_status': str,
+                    'sync_status': str
+                }
             }
         }
     }
@@ -53,13 +59,24 @@ class ShowEeeStatusInterface(ShowEeeStatusInterfaceSchema):
         p1 = re.compile(r"^EEE\(efficient-ethernet\):\s+(?P<eee_mode>.*)$")
         
         # Rx LPI Status          :  None/Low Power/Received
+        # Rx LPI Status          :  Receiving LPI
         p2 = re.compile(r"^Rx\s+LPI\s+Status\s+:\s+(?P<rx_lpi>.*)$")
         
         # Tx LPI Status          :  None/Low Power/Received
+        # Tx LPI Status          :  Transmitting LPI
         p3 = re.compile(r"^Tx\s+LPI\s+Status\s+:\s+(?P<tx_lpi>.*)$")
 
         # Wake Error Count       :  0
         p4 = re.compile(r"^Wake Error Count\s+:\s+(?P<wake_error>\d+)$")
+
+        # ASIC EEE STATUS
+        p5 = re.compile(r"^ASIC EEE STATUS$")
+
+        # Link Fault Status      :  Link Up
+        p6 = re.compile(r"^Link Fault Status\s+:\s+(?P<link_fault_status>.*)$")
+
+        # Sync Status            :  Code group synchronization with data stream lost
+        p7 = re.compile(r"^Sync Status\s+:\s+(?P<sync_status>.*)$")
 
         ret_dict = {}
 
@@ -95,6 +112,24 @@ class ShowEeeStatusInterface(ShowEeeStatusInterfaceSchema):
             m = p4.match(line)
             if m:
                 int_dict['wake_error'] = int(m.groupdict()['wake_error'])
+                continue
+
+            # ASIC EEE STATUS
+            m = p5.match(line)
+            if m:
+                int_dict = int_dict.setdefault('asic_eee_status', {})
+                continue
+
+            # Link Fault Status      :  Link Up
+            m = p6.match(line)
+            if m:
+                int_dict['link_fault_status'] = m.groupdict()['link_fault_status']
+                continue
+
+            # Sync Status            :  Code group synchronization with data stream lost
+            m = p7.match(line)
+            if m:
+                int_dict['sync_status'] = m.groupdict()['sync_status']
                 continue
 
         return ret_dict
