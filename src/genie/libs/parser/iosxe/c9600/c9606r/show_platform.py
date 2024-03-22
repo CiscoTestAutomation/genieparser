@@ -4,9 +4,8 @@ IOSXE c9606r parser for the following show command:
    * show platform hardware fed active fwd-asic resource tcam utilization
    * show platform hardware fed active fwd-asic resource tcam table pbr record 0 format 0 | begin {nat_region}
    * show ip nat translations
-   
+   * show platform hardware fed {switch} active fwd-asic resource tcam utilization
 '''
-# Python
 import re
 
 # Metaparser
@@ -16,7 +15,8 @@ from genie.metaparser.util.schemaengine import Schema, Any, Optional
 
 
 class ShowPlatformHardwareFedActiveTcamUtilizationSchema(MetaParser):
-    """Schema for show platform hardware fed active fwd-asic resource tcam utilization """
+    """Schema for show platform hardware fed active fwd-asic resource tcam utilization
+    'show platform hardware fed {switch} active fwd-asic resource tcam utilization' """
     schema = {
         'asic': {
             Any(): {
@@ -44,13 +44,22 @@ class ShowPlatformHardwareFedActiveTcamUtilizationSchema(MetaParser):
     }
     
 class ShowPlatformHardwareFedActiveTcamUtilization(ShowPlatformHardwareFedActiveTcamUtilizationSchema):
-    """Parser for show platform hardware fed active fwd-asic resource tcam utilization """
+    """Parser for show platform hardware fed active fwd-asic resource tcam utilization
+    show platform hardware fed switch active fwd-asic resource tcam utilization """
 
-    cli_command = 'show platform hardware fed active fwd-asic resource tcam utilization'
+    cli_command = ['show platform hardware fed active fwd-asic resource tcam utilization',
+                   'show platform hardware fed switch {mode} fwd-asic resource tcam utilization',
+                   'show platform hardware fed {switch} {mode} fwd-asic resource tcam utilization']
 
-    def cli(self, output=None):
+    def cli(self, switch=None, mode=None, output=None):
         if output is None:
-            output = self.device.execute(self.cli_command)
+            if switch and mode:
+                cmd = self.cli_command[2].format(switch=switch, mode=mode)
+            elif mode:
+                cmd = self.cli_command[1].format(mode=mode)
+            else:
+                cmd = self.cli_command[0]
+            output = self.device.execute(cmd)
 
         # initial return dictionary
         ret_dict = {}
@@ -127,13 +136,20 @@ class ShowPlatformTcamPbrNat(ShowPlatformTcamPbrNatSchema):
     show platform hardware fed active fwd-asic resource tcam table pbr record 0 format 0 | begin {nat_region} 
     """
 
-    cli_command = 'show platform hardware fed active fwd-asic resource tcam table pbr record 0 format 0 | begin {nat_region}'
+    cli_command = ['show platform hardware fed {switch} {switch_type} fwd-asic resource tcam table pbr record 0 format 0 | begin {nat_region}',
+                   'show platform hardware fed active fwd-asic resource tcam table pbr record 0 format 0 | begin {nat_region}',
+                   'show platform hardware fed switch {switch_type} fwd-asic resource tcam table pbr record 0 format 0 | begin {nat_region}']
     
-    def cli(self, nat_region, output=None):
+    def cli(self, nat_region, switch="", switch_type="", output=None):
         
-        cmd = self.cli_command.format(nat_region=nat_region)
-
         if output is None:
+            if switch:  
+                cmd = self.cli_command[0].format(switch=switch, nat_region=nat_region, switch_type=switch_type)
+            else:
+                if switch_type:
+                    cmd = self.cli_command[2].format(nat_region=nat_region, switch_type=switch_type)
+                else:
+                    cmd = self.cli_command[1].format(nat_region=nat_region)
             output = self.device.execute(cmd)
 
         # initial variables
@@ -197,7 +213,7 @@ class ShowPlatformTcamPbrNat(ShowPlatformTcamPbrNatSchema):
                 group = m.groupdict()
                 index_dict['ad'] = group['ad']
                 continue
-      
+    
         return ret_dict
         
 class ShowNatTranslationsSchema(MetaParser):

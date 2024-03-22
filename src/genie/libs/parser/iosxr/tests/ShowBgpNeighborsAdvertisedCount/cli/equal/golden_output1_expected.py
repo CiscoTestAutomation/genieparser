@@ -1,0 +1,1 @@
+expected_output = { "prefixes_advertised": 4567 }

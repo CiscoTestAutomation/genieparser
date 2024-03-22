@@ -1,0 +1,31 @@
+show access-session mac 000c.2911.69b9 details
+            Interface:  GigabitEthernet2/0/24
+               IIF-ID:  0x39BDCD22
+          MAC Address:  000c.2911.69b9
+         IPv6 Address:  Unknown
+         IPv4 Address:  101.1.0.2
+               Status:  Unauthorized
+               Domain:  UNKNOWN
+       Oper host mode:  multi-auth
+     Oper control dir:  both
+      Session timeout:  N/A
+    Common Session ID:  910C140B000000258F543887
+      Acct Session ID:  Unknown
+               Handle:  0x3700001b
+       Current Policy:  WA_logout_vip
+
+
+Local Policies:
+     URL Redirect ACL: IP-Adm-V6-Int-ACL-global
+          Preauth ACL: preauth_v6
+     URL Redirect ACL: IP-Adm-V4-Int-ACL-global
+          Preauth ACL: preauth_v4
+
+Server Policies:
+
+
+Method status list:
+       Method           State
+      webauth           Running
+
+

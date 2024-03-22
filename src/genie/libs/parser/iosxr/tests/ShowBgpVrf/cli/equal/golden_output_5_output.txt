@@ -1,0 +1,27 @@
+show bgp vrf VRF_1 ipv6 unicast summary
+Thu Jan 26 17:34:15.065 UTC
+BGP VRF VRF_1, state: Active
+BGP Route Distinguisher: 50.1.1.4:0
+VRF ID: 0x60000002
+BGP router identifier 50.1.1.4, local AS number 100
+Non-stop routing is enabled
+BGP table state: Active
+Table ID: 0xe0800011   RD version: 1412
+BGP main routing table version 1412
+BGP NSR Initial initsync version 6 (Reached)
+BGP NSR/ISSU Sync-Group versions 0/0
+
+BGP is operating in STANDALONE mode.
+
+
+Process       RcvTblVer   bRIB/RIB   LabelVer  ImportVer  SendTblVer  StandbyVer
+Speaker            1412       1412       1412       1412        1412           0
+
+Some configured eBGP neighbors (under default or non-default vrfs)
+do not have both inbound and outbound policies configured for IPv6 Unicast
+address family. These neighbors will default to sending and/or
+receiving no routes and are marked with '!' in the output below.
+Use the 'show bgp neighbor <nbr_address>' command for details.
+
+Neighbor        Spk    AS MsgRcvd MsgSent   TblVer  InQ OutQ  Up/Down  St/PfxRcd
+2000:90:33:1::2   0  7000  243875  222416     1412    0    0    11w3d          1

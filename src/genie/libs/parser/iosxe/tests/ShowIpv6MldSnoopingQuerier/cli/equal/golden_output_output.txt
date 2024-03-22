@@ -1,0 +1,11 @@
+Vlan      IP Address               MLD Version  Port
+-------------------------------------------------------------
+1         FE80:0:9D35:8473:A8BB:CCFF:FE00:400
+                                   v2            Switch
+101       FE80:0:9D36:F78B:A8BB:CCFF:FE00:400
+                                   v2            Switch
+103       FE80::A                  v1            Et0/0
+1006      FE80:0:9D36:631B:A8BB:CCFF:FE00:400
+                                   v2            Switch
+1007      FE80:0:9D35:FB33:A8BB:CCFF:FE00:400
+                                  v2            Switch

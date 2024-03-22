@@ -1,0 +1,17 @@
+Address-resolution data for router lisp 0 instance-id 101
+
+Site name: Shire
+
+Host Address:         FE80::A8BB:CCFF:FE00:D101/128
+Hardware Address:     aabb.cc00.d101
+First registered:     2d21h
+Last registered:      2d21h
+Registration errors:  
+  Authentication failures:   0
+ ETR 22:22:22:22::.61588
+  Last registered:       2d21h
+  TTL:                   1d00h
+  xTR-ID:                0x468F12CB-0xF23A6F87-0x8298E0E0-0xBD2728D2
+  Site-ID:               unspecified
+  Registered addr:       aabb.cc00.d101
+  L3 Instance ID:        4100

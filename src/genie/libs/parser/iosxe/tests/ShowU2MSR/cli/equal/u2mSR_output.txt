@@ -1,0 +1,45 @@
+Vif1:
+  unicast service reflect info:
+    vif name: Vif1
+    vif if_handle: 5997
+    replica count: 1
+    replica rule HW addr: 0x00000000e9d2fd00
+    hash val: 10
+    prefix: 33.0.0.0/24
+    replica node info:
+      source filter: 66.1.1.0/24
+      translated source: 122.2.2.0
+      translated destination: 233.23.2.0/24
+      replica rule HW addr: 0x00000000ed1a5500
+      match: octets 0 packets 0
+  unicast service reflect info:
+    vif name: Vif1
+    vif if_handle: 5997
+    replica count: 1
+    replica rule HW addr: 0x00000000e9d2fd60
+    hash val: 4
+    prefix: 200.0.0.0/24
+    replica node info:
+      translated source: 100.1.1.1
+      translated destination: 225.225.225.0/24
+      replica rule HW addr: 0x00000000ed1a55c0
+      match: octets 0 packets 0
+  unicast service reflect info:
+    vif name: Vif1
+    vif if_handle: 5997
+    ingress name: GigabitEthernet5
+    ingress if_handle: 10
+    replica count: 2
+    replica rule HW addr: 0x00000000e9d2fd30
+    hash val: 2
+    prefix: 66.0.0.7/32
+    replica node info:
+      translated source: 10.1.1.3
+      translated destination: 239.4.4.0/32
+      replica rule HW addr: 0x00000000ed1a5580
+      match: octets 0 packets 0
+    replica node info:
+      translated source: 10.1.1.2
+      translated destination: 239.3.3.0/32
+      replica rule HW addr: 0x00000000ed1a5540
+      match: octets 0 packets 0

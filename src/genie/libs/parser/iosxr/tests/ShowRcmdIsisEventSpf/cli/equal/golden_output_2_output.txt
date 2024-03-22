@@ -1,0 +1,15 @@
+Fri Oct 14 05:41:25.709 UTC
+Legend:                       
+SPF                      - ISIS process level SPF counter.                                                    
+Trigger Time             - Absolute time when the SPF was triggered (in mmm dd hh:mm:ss.msec).                
+Dur                      - Duration of the ISIS SPF computation (msecs).                                      
+Type                     - Type of SPF run.                                                                   
+Critical/High/Medium/Low - Priority based on the configure prefix prioritization policy.                      
+For each priority        - Total prefixes affected and time taken for their programming (msecs) for IP and MPLS.                  
+^  no route change #  threshold exceeded ~ incomplete data * collection pending                               
+
+Reporting SPF Events for ISIS Instance : isis1
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+   SPF    |    Trigger Time    |  Dur   |Type | LSPs |          Critical           |            High             |           Medium            |             Low             
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  5        Oct 12 06:41:51.562     1     FULL    3              0 / - / -                     0 / - / -                   1 / 278 / 282                 1 / 282 / 282         

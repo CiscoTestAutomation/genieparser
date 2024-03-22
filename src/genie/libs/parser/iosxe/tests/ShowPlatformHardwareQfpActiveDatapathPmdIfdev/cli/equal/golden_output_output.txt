@@ -1,0 +1,46 @@
+pm9005#show platform hardware qfp active datapath pmd ifdev
+Port#0 - Name: fpe0
+  State Information
+    Bind name      : 0000:0b:10.0
+    Driver         : net_e1000_igb_vf
+    MAC Address    : f86b.d9c0.cbe0
+    Device         : RUNNING
+    CIO State      : ENABLED, if_type 0, uidb_index 1023, module_id 65535, flags 0x1
+    CIO Events     : Enable 2, Disable 1
+    Tx_Drain       : FALSE
+    Vdev Pause     : Inactive
+    Admin State    : Up
+    Oper State     : Up (Up)
+    Link state chg : Up 1, Down 0
+    Events         : Remove 0, Reset 1, Link up 0, Link dn 0
+    Events         : Bond del 0, Unknown 0
+    Vdev Rmv Pendng: 0
+    Attach Attempts: 50
+  Attributes
+    RECONFIGURE_SUPPORTED
+    RX_OFFLOAD_CRC_STRIP_SUPPORTED
+    RX_OFFLOAD_VLAN_FILTER_SUPPORTED
+    RX_VLAN_TAG_INSERT_NEEDED
+    RX_VLAN_TAG_SWAP_NEEDED
+    MAC_FILTER_API_SUPPORTED
+    ALWAYS_MC_PROMISC
+    SET_MC_ADDR_API_SUPPORTED
+    PAUSE_RESUME_SUPPORTED
+  Configuration
+    Promiscuous    : Admin DISABLED, Override DISABLED, Multicast ENABLED
+    MTU config     : 1526
+      cur/min/max  : 1500/68/65535
+    Trans VLAN     : 0
+    Map QID Num    : 0
+    Map QID Id     : 0
+    Rx ring size   : 0
+    Tx ring size   : 0
+    Rx Active Q Num: 1
+    Rx Total Q Num : 1
+    Rx CIO Q Num   : 1
+    Rx Desc Num
+      Queue 0      : 1024
+    Tx Q Num       : 1
+    Tx Desc Num
+      Queue 0      : 1024
+    Num VLANs      : 0

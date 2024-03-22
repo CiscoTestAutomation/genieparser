@@ -1,0 +1,80 @@
+
+sh performance-measurement summary 
+
+Total interfaces                              : 5
+Total SR Policies                             : 3
+Total endpoints                               : 2
+Maximum PPS                                   : 2000 pkts/sec
+Dual-color gre bit-position                   : 11
+
+Interface Delay-Measurement:
+  Total sessions                              : 2
+  Counters:
+    Packets:
+      Total sent                              : 288628
+      Total received                          : 0
+    Errors:
+      Total sent errors                       : 14
+      Total received errors                   : 0
+    Probes:
+      Total started                           : 28866
+      Total completed                         : 0
+      Total incomplete                        : 28864
+      Total advertisements                    : 0
+
+SR Policy Delay-Measurement:
+  Total sessions                              : 7
+  Counters:
+    Packets:
+      Total sent                              : 3030386
+      Total received                          : 3030374
+    Errors:
+      Total sent errors                       : 0
+      Total received errors                   : 3
+    Probes:
+      Total started                           : 101024
+      Total completed                         : 101017
+      Total incomplete                        : 7
+      Total advertisements                    : 688
+
+Endpoint Delay-Measurement:
+  Total sessions                              : 2
+  Counters:
+    Packets:
+      Total sent                              : 288630
+      Total received                          : 288630
+    Errors:
+      Total sent errors                       : 14
+      Total received errors                   : 4
+    Probes:
+      Total started                           : 28866
+      Total completed                         : 28859
+      Total incomplete                        : 5
+      Total advertisements                    : 421
+
+Interface Loss-Measurement:
+  Total sessions                              : 1
+  Counters:
+    Packets:
+      Total sent                              : 14
+      Total received                          : 13
+    Errors:
+      Total sent errors                       : 0
+      Total received errors                   : 0
+    Probes:
+      Total started                           : 8
+      Total completed                         : 7
+      Total incomplete                        : 0
+      Total advertisements                    : 1
+
+Global Counters:
+  Total packets sent                          : 3607644
+  Total query packets received                : 3319004
+  Total invalid session id                    : 0
+  Total no session                            : 0
+
+HW Support for MPLS-GAL [RFC6374] timestamp   : Yes
+HW Support for IPv4 TWAMP [RF5357] timestamp  : Yes
+HW Support for IPv6 TWAMP [RF5357] timestamp  : No
+HW Support for 64 bit timestamp               : Yes
+HW Support for IPv4 UDP Cheksum               : Yes

@@ -1,0 +1,32 @@
+  Cache type:                               Normal (Platform cache)
+  Cache size:                                10000
+  Current entries:                               2
+
+  Flows added:                                   2
+  Flows aged:                                    0
+
+IPV4 SOURCE ADDRESS:       113.1.1.2
+IPV4 DESTINATION ADDRESS:  224.0.0.5
+TRNS SOURCE PORT:          0
+TRNS DESTINATION PORT:     0
+INTERFACE OUTPUT:          Twe1/0/29
+IP VERSION:                4
+IP TOS:                    0xC0
+IP PROTOCOL:               89
+tcp flags:                 0x00
+counter bytes long:        96
+counter packets long:      1
+fw fw event:               1
+
+IPV4 SOURCE ADDRESS:       0.0.0.0
+IPV4 DESTINATION ADDRESS:  255.255.255.255
+TRNS SOURCE PORT:          68
+TRNS DESTINATION PORT:     67
+INTERFACE OUTPUT:          Twe1/0/29
+IP VERSION:                4
+IP TOS:                    0x00
+IP PROTOCOL:               17
+tcp flags:                 0x00
+counter bytes long:        1380
+counter packets long:      4
+fw fw event:               1

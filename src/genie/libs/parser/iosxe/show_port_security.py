@@ -291,3 +291,129 @@ class ShowPortSecurityInterface(ShowPortSecurityInterfaceSchema):
                 continue
 
         return intf_dict
+
+# ==============================================
+# Parser for 'show port-security address'
+# ==============================================
+class ShowPortSecurityAddressSchema(MetaParser):
+    """Schema for show port-security address
+    """
+
+    schema = {
+        Optional('interfaces'): {
+            Any(): {
+                'vlan': int,
+                'mac': str,
+                'type': str,
+                Optional('remaining_age'): str,
+            }
+        },
+        'total_addr_in_system': int,
+        'max_addr_limit_in_system': int
+    }
+
+class ShowPortSecurityAddress(ShowPortSecurityAddressSchema):
+    """Parser for 'show port-security address'
+    """
+
+    cli_command = ['show port-security address']
+
+    def cli(self, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command[0])
+        else:
+            out = output
+
+        '''               Secure Mac Address Table
+        -------------------------------------------------------------------------------
+        Vlan    Mac Address       Type                          Ports   Remaining Age
+                                                                        (mins)    
+        ----    -----------       ----                          -----   -------------
+        1047    00da.5516.1905    SecureSticky                  Gi3/0/5      -
+        1047    00da.5516.1906    SecureSticky                  Gi3/0/6      -
+        1047    00da.5516.1907    SecureSticky                  Gi3/0/7      -
+        1047    00da.5516.1908    SecureSticky                  Gi3/0/8      -
+        -------------------------------------------------------------------------------
+        Total Addresses in System (excluding one mac per port)     : 0
+        Max Addresses limit in System (excluding one mac per port) : 4096
+        '''
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # 1047    00da.5516.1905    SecureSticky                  Gi3/0/5      -
+        p1 = re.compile(r'(^(?P<vlan>\d+)\s+(?P<mac>[\w\.]+)\s+(?P<type>\w+)\s+(?P<port>[\w\/]+)\s+(?P<remaining_age>[\w\-]+))$')
+
+        # Total Addresses in System (excluding one mac per port)     : 0
+        p2 = re.compile(r'^Total +Addresses +in +System +\(excluding +one +mac +per +port\)\s+\:\s('
+                        r'?P<total_addr_in_system>\d+)$')
+                        
+        # Max Addresses limit in System (excluding one mac per port) : 4096
+        p3 = re.compile(r'^Max +Addresses +limit +in +System +\(excluding +one +mac +per +port\)\s+\:\s('
+                        r'?P<max_addr_limit_in_system>\d+)$')
+        for line in out.splitlines():
+            line = line.strip()
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict = ret_dict.setdefault('interfaces', {})
+                interface = group['port']
+                intf_dict[interface] = {}
+                intf_dict[interface]['vlan'] = int(group['vlan'])
+                intf_dict[interface]['mac'] = group['mac']
+                intf_dict[interface]['type'] = group['type']
+                if group['remaining_age'] != '-':
+                    intf_dict[interface]['remaining_age'] = group['remaining_age']
+                continue
+            
+            # Total Addresses in System (excluding one mac per port)     : 0
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['total_addr_in_system'] = int(group['total_addr_in_system'])
+                continue
+            
+            # Max Addresses limit in System (excluding one mac per port) : 4096
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['max_addr_limit_in_system'] = int(group['max_addr_limit_in_system'])
+                continue
+
+        return ret_dict
+
+# ==========================================
+# Parser for:
+#   * 'show port-security interface {interface} address | count {match}'
+# ==========================================
+class ShowPortSecurityInterfaceCountSchema(MetaParser):
+    schema = {
+        'count': int
+    }
+
+class ShowPortSecurityInterfaceCount(ShowPortSecurityInterfaceCountSchema):
+    """Parser for:
+        show port-security interface {interface} address | count {match}
+    """
+    cli_command = 'show port-security interface {interface} address | count {match}'
+
+    def cli(self, interface='', match='', output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(interface=interface, match=match))
+        dict_count = {}
+
+        # Number of lines which match regexp = 240
+        p1 = re.compile(r"^Number of lines which match regexp\s*=\s*(?P<count>[\d]+)$")
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Number of lines which match regexp = 240
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                count = int(groups['count'])
+                dict_count['count'] = count
+
+        return dict_count

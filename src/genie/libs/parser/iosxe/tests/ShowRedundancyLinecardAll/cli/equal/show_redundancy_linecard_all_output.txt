@@ -1,0 +1,8 @@
+              LC     My         Peer       Peer     Peer
+Slot Subslot  Group  State      State      Slot     Subslot  Role     Mode
+-------------------------------------------------------------------------------
+ 9   -        0      Active     Stdby Warm 0        -        Active   Primary
+ 0   -        0      -          -          Multiple None     Standby  Secondary
+ 1   -        None   Active     -          None     None     Active   None
+ 2   -        None   Active     -          None     None     Active   None
+ 3   -        None   Active     -          None     None     Active   None

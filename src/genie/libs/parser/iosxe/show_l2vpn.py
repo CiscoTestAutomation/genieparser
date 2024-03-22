@@ -11,6 +11,11 @@ IOSXE parsers for the following show commands:
     * show l2vpn vfi name {name} detail
     * show vfi name {name}
     * show l2vpn service all
+    * show l2vpn service interface {interface}
+    * show l2vpn service name {name}
+    * show l2vpn service xconnect all
+    * show l2vpn service xconnect interface {interface}
+    * show l2vpn service xconnect name {name}
     * show ethernet service instance
     * show ethernet service instance id {service_instance_id} interface {interface} detail
     * show ethernet service instance id {service_instance_id} interface {interface} stats
@@ -161,6 +166,17 @@ IOSXE parsers for the following show commands:
     * show l2vpn evpn peers vxlan vni <vni_id> address <peer_addr> detail
     * show l2vpn evpn peers vxlan interface <nve_interface> detail
     * show l2vpn evpn peers vxlan interface <nve_interface> address <peer_addr> detail
+    * show l2vpn evpn summary
+    * show l2vpn evpn evi detail
+    * show l2vpn evpn evi <evi> detail
+    * show l2vpn evpn multicast local
+    * show l2vpn evpn multicast remote
+    * show l2vpn evpn capabilities
+    * show running-config | section l2vpn evpn
+    * show l2vpn evpn vpws vc id detail
+    * show l2vpn evpn vpws vc id <vc_id> detail
+    * show l2vpn evpn vpws vc preferred-path
+    * show l2vpn evpn default-gateway
 
 Copyright (c) 2021 by Cisco Systems, Inc.
 All rights reserved.
@@ -178,7 +194,7 @@ from genie.metaparser.util.schemaengine import Schema, \
                                          And, \
                                          Default, \
                                          Use
-
+from genie.parsergen import oper_fill_tabular
 # import parser utils
 from genie.libs.parser.utils.common import Common
 
@@ -1173,17 +1189,23 @@ class ShowL2vpnVfi(ShowL2vpnVfiSchema):
         return ret_dict
 
 # ===================================
-# Parser for 'show l2vpn service all'
+# Schema for 'show l2vpn service all'
 # ===================================
 class ShowL2vpnServiceAllSchema(MetaParser):
     """Schema for show l2vpn service all
+                  show l2vpn service interface {interface}
+                  show l2vpn service name {name}
+                  show l2vpn service xconnect all
+                  show l2vpn service xconnect interface {interface}
+                  show l2vpn service xconnect name {name}
     """
 
     schema = {
         'vpls_name': {
             Any(): {
                 'state': str,
-                'interface': {
+               Optional('description'): str,
+                Optional('interface'): {
                     Any(): {
                         Optional('group'): str,
                         'encapsulation': str,
@@ -1196,47 +1218,75 @@ class ShowL2vpnServiceAllSchema(MetaParser):
         }
     }
 
-
+# ===================================
+# Parser for 'show l2vpn service all'
+# ===================================
 class ShowL2vpnServiceAll(ShowL2vpnServiceAllSchema):
-    """Parser for show l2vpn service all
-    """
+    """Parser for  show l2vpn service all
+                   show l2vpn service interface {interface}
+                   show l2vpn service name {name}
+                   show l2vpn service xconnect all
+                   show l2vpn service xconnect interface {interface}
+                   show l2vpn service xconnect name {name}
+     """
 
-    cli_command = 'show l2vpn service all'
+    cli_command = [
+                  'show l2vpn service all',
+                  'show l2vpn service interface {interface}',
+                  'show l2vpn service name {name}',
+                  'show l2vpn service {xconnect} all',
+                  'show l2vpn service {xconnect} interface {interface}',
+                  'show l2vpn service {xconnect} name {name}'
+    ]
 
-    def cli(self, output=None):
+    def cli(self, interface=None, name=None, xconnect=None, output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if xconnect and interface:
+                cli_cmd = self.cli_command[4].format(xconnect=xconnect, interface=interface)
+            elif xconnect and name:
+                cli_cmd = self.cli_command[5].format(xconnect=xconnect, name=name)
+            elif xconnect:
+                cli_cmd = self.cli_command[3].format(xconnect=xconnect)
+            elif interface:
+                cli_cmd = self.cli_command[1].format(interface=interface)
+            elif name:
+                cli_cmd = self.cli_command[2].format(name=name)
+            else:
+                cli_cmd = self.cli_command[0]
+            out = self.device.execute(cli_cmd)
         else:
             out = output
+
+        if not out:
+            return
 
         # initial return dictionary
         ret_dict = {}
 
-        # initial regexp pattern
-        # Legend: St=State    XC St=State in the L2VPN Service      Prio=Priority
-        #         UP=Up       DN=Down            AD=Admin Down      IA=Inactive
-        #         SB=Standby  HS=Hot Standby     RV=Recovering      NH=No Hardware
-        #         m=manually selected
-
-        #   Interface          Group       Encapsulation                   Prio  St  XC St
-        #   ---------          -----       -------------                   ----  --  -----
         # VPLS name: VPLS-2051, State: UP
         # XC name: serviceWire1, State: UP
         # VPWS name: Gi1/1/1-1001, State: UP
-        #   or
         # VPWS name: Gi3-SI:2842, State: UP
-        p1 = re.compile(r'^[\w]+ +name: +(?P<name>[\w\d\-\/:]+), +State: +(?P<state>\w+)$')
+        p1 = re.compile(r'^\w+ +name: +(?P<name>[\w\d\-\/:]+), +State: +(?P<state>\w+)$')
 
-        #   pw100214           core_pw     1:2051(MPLS)                    0     UP  UP  
-        #   pw100001                       VPLS-2051(VFI)                  0     UP  UP   
+        #   pw100214           core_pw     1:2051(MPLS)                    0     UP  UP
+        #   pw100001                       VPLS-2051(VFI)                  0     UP  UP
         #   Eth2/1:20          access_conn EVC 55                  0     UP  UP
         #   Pw2                core        MPLS 10.144.6.6:200        1     SB  IA
         #   Te0/1/3                        Te0/1/3:1900(Eth VLAN)          0     UP  UP
         p2 = re.compile(r'^(?P<pw_intf>\S+)( +(?P<group>\S+))? +(?P<encapsulation>\S+(?:\s\S+|\(.+\))) +(?P<priority>\d+) +(?P<intf_state>\w+) +(?P<state_in_l2vpn_service>[\w\-]+)$')
 
+        #   Description: none
+        #   Description: Any_String
+        p3 = re.compile(r'^\s*Description:\s+(?P<description>\S+)')
+
         for line in out.splitlines():
             line = line.strip()
 
+            # VPLS name: VPLS-2051, State: UP
+            # XC name: serviceWire1, State: UP
+            # VPWS name: Gi1/1/1-1001, State: UP
+            # VPWS name: Gi3-SI:2842, State: UP
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -1246,6 +1296,10 @@ class ShowL2vpnServiceAll(ShowL2vpnServiceAllSchema):
                 final_dict['state'] = group['state']
                 continue
 
+            #   pw100214           core_pw     1:2051(MPLS)                    0     UP  UP
+            #   pw100001                       VPLS-2051(VFI)                  0     UP  UP
+            #   Eth2/1:20          access_conn EVC 55                  0     UP  UP
+            #   Pw2                core        MPLS 10.144.6.6:200        1     SB  IA
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -1263,8 +1317,14 @@ class ShowL2vpnServiceAll(ShowL2vpnServiceAllSchema):
                     group['state_in_l2vpn_service']
                 continue
 
-        return ret_dict
+            #   Description: none
+            #   Description: Any_String
+            m = p3.match(line)
+            if m:
+                final_dict['description'] = m.groupdict()['description']
+                continue
 
+        return ret_dict
 
 # ===================================
 # Parser for 'show l2vpn vfi name {name} detail'
@@ -1467,13 +1527,13 @@ class ShowL2vpnEvpnEthernetSegmentDetailSchema(MetaParser):
 
     schema = {
         Any(): {
-            'interface': str,
+            'interface': list,
             'redundancy_mode': str,
             'df_wait_time': int,
             'split_horizon_label': int,
             'state': str,
             'encap_type': str,
-            'ordinal': int,
+            'ordinal': Or(int, str),
             'core_isolation': str,
             Optional('rd'): {
                 Any (): {
@@ -1503,9 +1563,9 @@ class ShowL2vpnEvpnEthernetSegmentDetail(ShowL2vpnEvpnEthernetSegmentDetailSchem
         if output is None:
             # Execute command
             if interface:
-                cli_cmd = self.device.execute(self.cli_command[0].format(interface=interface))
+                cli_cmd = self.cli_command[0].format(interface=interface)
             else:
-                cli_cmd = self.device.execute(self.cli_command[1])
+                cli_cmd = self.cli_command[1]
             cli_output = self.device.execute(cli_cmd)
         else:
             cli_output = output
@@ -1514,6 +1574,7 @@ class ShowL2vpnEvpnEthernetSegmentDetail(ShowL2vpnEvpnEthernetSegmentDetailSchem
         p1 = re.compile(r'^EVPN +Ethernet +Segment +ID: +(?P<eth_seg>[0-9a-fA-F\.]+)$')
 
         # Interface:              Po1
+        # Interface:              pw100002 pw100003 pw100005 pw100006
         p2 = re.compile(r'^Interface: +(?P<intf>.*)$')
 
         # Redundancy mode:        all-active
@@ -1526,30 +1587,40 @@ class ShowL2vpnEvpnEthernetSegmentDetail(ShowL2vpnEvpnEthernetSegmentDetailSchem
         p5 = re.compile(r'^Split +Horizon +label: +(?P<sh_label>\d+)$')
 
         # State:                  Ready
-        p6 = re.compile(r'^State: +(?P<state>\w+)$')
+        # State:                  Port Down
+        p6 = re.compile(r'^State: +(?P<state>[\w\(\): ]+)$')
 
         # Encapsulation:          mpls
         p7 = re.compile(r'^Encapsulation: +(?P<encap_type>\w+)$')
 
         # Ordinal:                1
-        p8 = re.compile(r'^Ordinal: +(?P<ordinal>\d+)$')
+        # Ordinal:                Not available
+        p8 = re.compile(r'^Ordinal: +(?P<ordinal>[\d\w ]+)$')
 
         # Core Isolation:         No
-        p9 = re.compile(r'^Core +Isolation: +(?P<core_iso>\w+)$')
+        # Core Isolation:         Yes (error disable)
+        p9 = re.compile(r'^Core +Isolation: +(?P<core_iso>[\w\(\) ]+)$')
 
         # RD:                     4.4.4.3:1
-        p10 = re.compile(r'^RD: +(?P<rd>[0-9\.:]+)$')
+        # RD:                     Not set
+        p10 = re.compile(r'^RD: +(?P<rd>[0-9\.:\w ]+)$')
 
         # Export-RTs:           100:2
         p11 = re.compile(r'^Export-RTs: +(?P<export_rt>[0-9: ]+)$')
 
+        #                       1:12 1:13 1:14 1:21 1:22 
+        p11_1 = re.compile(r'^(?P<export_rt>[0-9: ]+)$')
+
         # Forwarder List:         3.3.3.3 4.4.4.3
-        p12 = re.compile(r'^Forwarder +List: +(?P<fwd>[0-9\. /]+)$')
+        # Forwarder List:         
+        p12 = re.compile(r'^Forwarder +List: *(?P<fwd>[0-9\. ]*)$')
 
         parser_dict = {}
 
         if not cli_output:
             return
+
+        export_rts_multiline = False
 
         for line in cli_output.splitlines():
             line = line.strip()
@@ -1562,10 +1633,14 @@ class ShowL2vpnEvpnEthernetSegmentDetail(ShowL2vpnEvpnEthernetSegmentDetailSchem
                 continue
 
             #  Interface:              Po1
+            #  Interface:              pw100002 pw100003 pw100005 pw100006
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                eth_seg.update({'interface': Common.convert_intf_name(group['intf'])})
+                intf = group['intf']
+                intf_list = eth_seg.setdefault('interface', [])
+                for item in intf.split():
+                    intf_list.append(Common.convert_intf_name(item))
                 continue
 
             #  Redundancy mode:        all-active
@@ -1589,6 +1664,7 @@ class ShowL2vpnEvpnEthernetSegmentDetail(ShowL2vpnEvpnEthernetSegmentDetailSchem
                 eth_seg.update({'split_horizon_label': int(group['sh_label'])})
                 continue
             #  State:                  Ready
+            #  State:                  Port Down
             m = p6.match(line)
             if m:
                 group = m.groupdict()
@@ -1601,18 +1677,24 @@ class ShowL2vpnEvpnEthernetSegmentDetail(ShowL2vpnEvpnEthernetSegmentDetailSchem
                 eth_seg.update({'encap_type': group['encap_type']})
                 continue
             #  Ordinal:                1
+            #  Ordinal:                Not available
             m = p8.match(line)
             if m:
                 group = m.groupdict()
-                eth_seg.update({'ordinal': int(group['ordinal'])})
+                ordinal = group['ordinal']
+                if ordinal.isnumeric():
+                    ordinal = int(ordinal)
+                eth_seg.update({'ordinal': ordinal})
                 continue
             #  Core Isolation:         No
+            #  Core Isolation:         Yes (error disable)
             m = p9.match(line)
             if m:
                 group = m.groupdict()
                 eth_seg.update({'core_isolation': group['core_iso']})
                 continue
             #  RD:                     4.4.4.3:1
+            #  RD:                     Not set
             m = p10.match(line)
             if m:
                 group = m.groupdict()
@@ -1623,21 +1705,33 @@ class ShowL2vpnEvpnEthernetSegmentDetail(ShowL2vpnEvpnEthernetSegmentDetailSchem
             #    Export-RTs:           100:2
             m = p11.match(line)
             if m:
+                export_rts_multiline = True
                 group = m.groupdict()
                 export_rt = group['export_rt']
                 export_rt_list = rt_dict.setdefault('export_rt', [])
                 for item in export_rt.split():
                     export_rt_list.append(item)
                 continue
+            elif export_rts_multiline:
+                #                       1:12 1:13 1:14 1:21 1:22 
+                m = p11_1.match(line)
+                if m:
+                    group = m.groupdict()
+                    export_rt = group['export_rt']
+                    for item in export_rt.split():
+                        export_rt_list.append(item)
 
             #  Forwarder List:         3.3.3.3 4.4.4.3
+            #  Forwarder List:         
             m = p12.match(line)
             if m:
+                export_rts_multiline = False
                 group = m.groupdict()
                 fwd = group['fwd']
                 fwd_list = eth_seg.setdefault('forwarder_list', [])
-                for item in fwd.split():
-                    fwd_list.append(item) 
+                if fwd:
+                    for item in fwd.split():
+                        fwd_list.append(item) 
                 continue
 
         return parser_dict
@@ -1726,8 +1820,8 @@ class ShowL2vpnEvpnMacSchema(MetaParser):
                    show l2vpn evpn mac vlan {vlan_id}
                    show l2vpn evpn mac vlan {vlan_id} address {mac_addr}
                    show l2vpn evpn mac vlan {vlan_id} duplicate
-                   show l2vpn evpn mac vlan {vlan_id} local
-                   show l2vpn evpn mac vlan {vlan_id} remote
+                   show l2vpn evpn mac vlan {vlan_id} {local}
+                   show l2vpn evpn mac vlan {vlan_id} {remote}
     """
 
     schema = {
@@ -1774,8 +1868,8 @@ class ShowL2vpnEvpnMac(ShowL2vpnEvpnMacSchema):
                    show l2vpn evpn mac vlan {vlan_id}
                    show l2vpn evpn mac vlan {vlan_id} address {mac_addr}
                    show l2vpn evpn mac vlan {vlan_id} duplicate
-                   show l2vpn evpn mac vlan {vlan_id} local
-                   show l2vpn evpn mac vlan {vlan_id} remote
+                   show l2vpn evpn mac vlan {vlan_id} {local}
+                   show l2vpn evpn mac vlan {vlan_id} {remote}
     """
 
     cli_command = ['show l2vpn evpn mac',
@@ -1790,11 +1884,12 @@ class ShowL2vpnEvpnMac(ShowL2vpnEvpnMacSchema):
                    'show l2vpn evpn mac vlan {vlan_id}',
                    'show l2vpn evpn mac vlan {vlan_id} address {mac_addr}',
                    'show l2vpn evpn mac vlan {vlan_id} duplicate',
-                   'show l2vpn evpn mac vlan {vlan_id} local',
-                   'show l2vpn evpn mac vlan {vlan_id} remote'
+                   'show l2vpn evpn mac vlan {vlan_id} {local}',
+                   'show l2vpn evpn mac vlan {vlan_id} {remote}'
     ]
 
-    def cli(self, output=None, mac_addr=None, mac_type=None, bd_id=None, evi_id=None, vlan_id=None):
+    def cli(self, output=None, mac_addr=None, mac_type=None, bd_id=None, 
+            evi_id=None, vlan_id=None, local=None, remote=None):
         if not output:
             # Only these CLI options for mac_type are supported.
             if mac_type and mac_type != 'local' and mac_type != 'remote' and mac_type != 'duplicate':
@@ -1808,6 +1903,10 @@ class ShowL2vpnEvpnMac(ShowL2vpnEvpnMacSchema):
                 cli_cmd += ' evi {evi_id}'.format(evi_id=evi_id)
             elif vlan_id:
                 cli_cmd += ' vlan {vlan_id}'.format(vlan_id=vlan_id)
+                if local:
+                    cli_cmd += ' local'
+                elif remote:
+                    cli_cmd += ' remote'
 
             if mac_type:
                 cli_cmd += ' {mac_type}'.format(mac_type=mac_type)
@@ -2032,10 +2131,12 @@ class ShowL2vpnEvpnMacDetail(ShowL2vpnEvpnMacDetailSchema):
         p5 = re.compile(r'^Ethernet Tag ID:\s+(?P<eth_tag>\d+)$')
 
         # Next Hop(s):                L:17 Ethernet1/0 service instance 12
+        # Next Hop(s):                V:1000111 BD-VIF1112
+        p6 = re.compile(r'^Next Hop\(s\):\s+(?P<next_hop>[\w\/\s\.:-]+)$')
         #                             L:17 3.3.3.1
         #                             L:17 5.5.5.1
-        p6 = re.compile(r'^Next Hop\(s\):\s+(?P<next_hop>[\w\/\s\.:]+)$')
-        p7 = re.compile(r'^(?P<next_hop>[\w\/\s\.:]+)$')
+        #                             V:1000111 BD-VIF1112
+        p7 = re.compile(r'^(?P<next_hop>[\w\/\s\.:-]+)$')
 
         # Local Address:              4.4.4.1
         p8 = re.compile(r'^Local Address:\s+(?P<local_addr>[a-zA-Z0-9\.:]+)$')
@@ -2854,8 +2955,8 @@ class ShowL2vpnEvpnMacIpDetail(ShowL2vpnEvpnMacIpDetailSchema):
         # Next Hop(s):               L:17 Ethernet1/0 service instance 12
         #                            L:17 3.3.3.1
         #                            L:17 5.5.5.1
-        p7 = re.compile(r'^Next Hop\(s\):\s+(?P<next_hop>[\w\/\s\.:]+)$')
-        p8 = re.compile(r'^(?P<next_hop>[\w\/\s\.:]+)$')
+        p7 = re.compile(r'^Next Hop\(s\):\s+(?P<next_hop>[\w\/\s\.:-]+)$')
+        p8 = re.compile(r'^(?P<next_hop>[\w\/\s\.:-]+)$')
 
         # Local Address:             4.4.4.1
         p9 = re.compile(r'^Local Address:\s+(?P<local_addr>[a-zA-Z0-9\.:]+)$')
@@ -3637,7 +3738,7 @@ class ShowL2vpnEvpnDefaultGatewayDetailSchema(MetaParser):
                             Any(): {
                                 'source': {
                                     Any(): {
-                                        'eth_tag': int,
+                                        Optional('eth_tag'): int,
                                         'mac_addr': str,
                                         'valid': bool,
                                     },
@@ -3769,6 +3870,37 @@ class ShowL2vpnEvpnDefaultGatewayDetail(ShowL2vpnEvpnDefaultGatewayDetailSchema)
                 continue
 
         return parsed_dict
+
+
+class ShowL2vpnEvpnDefaultGateway(ShowL2vpnEvpnDefaultGatewayDetailSchema):
+    """ 
+        Parser for show l2vpn evpn default-gateway
+    """
+
+    cli_command = 'show l2vpn evpn default-gateway'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Y   192.168.1.201             1     201   a0f8.4910.bccc Vl201
+        p1 = re.compile(r'^(?P<valid>\w+)\s+(?P<dg_addr>\S+)\s+(?P<evi>\d+)\s+(?P<vlan>\d+)\s+(?P<mac_addr>\S+)\s+(?P<source>\S+)$')
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Y   192.168.1.201             1     201   a0f8.4910.bccc Vl201
+            m = p1.match(line)
+            if m:
+                reg_dict = m.groupdict()
+                source_dict = ret_dict.setdefault('evi', {}).setdefault(reg_dict['evi'], {}).setdefault('bd_id', {}).setdefault(reg_dict['vlan'], {}).setdefault('dg_addr', {}).setdefault(reg_dict['dg_addr'], {}).setdefault('source', {}).setdefault(reg_dict['source'], {})
+                source_dict['mac_addr'] = reg_dict['mac_addr']
+                source_dict['valid'] = reg_dict['valid'] == 'Y'
+                continue
+
+        return ret_dict
 
 
 # ====================================================
@@ -3941,5 +4073,1888 @@ class ShowL2vpnAtomPreferredPath(ShowL2vpnAtomPreferredPathSchema):
                         'available': int(group['avail_bandwidth']),
                         'reserved': int(group['reserved_bandwidth'])
                     })
+
+        return ret_dict
+
+# ============================================
+# Schema for 'show l2vpn evpn summary'
+# ============================================
+class ShowL2vpnEvpnSummarySchema(MetaParser):
+    """ Schema for show l2vpn evpn summary """
+    schema = {
+        'evis': {
+            'total': int,
+            Optional('vlan_aware'): int,
+            Optional('vlan_based'): int,
+            Optional('vlan_bundle'): int,
+        },
+        'router_id': str,
+        'glb_rep_type': str,
+        'bgp': {
+            'asn': int,
+            'evpn_af_configured': bool,
+        },
+        'mac_addresses': {
+            'local': int,
+            'remote': int,
+            'duplicate': int,
+            'total': int,
+        },
+        'mac_dup': {
+            'seconds': int,
+            'limit': int,
+        },
+        Optional('bridge_domains'): int,
+        Optional('label_alloc_mode'): str,
+        Optional('arp_flood_suppression'): bool,
+        Optional('dhcp_flood_suppression'): bool,
+        Optional('core_connected'): bool,
+        Optional('ip_dup'): {
+            'seconds': int,
+            'limit': int,
+        },
+        Optional('ip_addresses'): {
+            'local': int,
+            'remote': int,
+            'duplicate': int,
+            'total': int,
+        },
+        Optional('adv_def_gateway'): bool,
+        Optional('def_gateway_addresses'): {
+            'local': int,
+            'remote': int,
+            'total': int,
+        },
+        Optional('max_rt_per_ead_es'): int,
+        Optional('mh_aliasing'): bool,
+        Optional('glb_ip_local_learn'): bool,
+        Optional('ip_local_learn_limit'): {
+            'ipv4': int,
+            'ipv6': int,
+        },
+        Optional('ip_local_learn_timer'): {
+            'down': int,
+            'poll': int,
+            'reachable': int,
+            'stale': int,
+        },
+        Optional('auto_rt'): str,
+        Optional('adv_mcast'): bool,
+    }
+
+# ==================================================
+# Parser for 'show l2vpn evpn summary'
+# ==================================================
+class ShowL2vpnEvpnSummary(ShowL2vpnEvpnSummarySchema):
+    """ Parser for show l2vpn evpn summary """
+
+    cli_command = 'show l2vpn evpn summary'
+
+    def cli(self, output=None):
+
+        # Init vars
+        parsed_dict = {}
+        mac_address = False
+        ip_address = False
+        dg_address = False
+        ip_limits = False
+        ip_timers = False
+
+        if output is None:
+            # Execute command
+            output = self.device.execute(self.cli_command)
+
+
+        # EVPN Instances (excluding point-to-point): 1
+        p1 = re.compile(r'^EVPN Instances \(excluding point-to-point\):'
+                        r'\s+(?P<evis>\d+)$')
+
+        # VLAN Aware:   1
+        p2 = re.compile(r'^VLAN Aware:\s+(?P<evis>\d+)$')
+
+        # VLAN Based:   1
+        p3 = re.compile(r'^VLAN Based:\s+(?P<evis>\d+)$')
+
+        # VLAN Bundle:   1
+        p4 = re.compile(r'^VLAN Bundle:\s+(?P<evis>\d+)$')
+
+        # Vlans: 1
+        # Bridge Domains: 10
+        p5 = re.compile(r'^(Vlans|Bridge Domains): (?P<bds>\d+)$')
+
+        # BGP: ASN 1, address-family l2vpn evpn configured
+        p6 = re.compile(r'^BGP: ASN (?P<asn>\d+), '
+                        r'address-family l2vpn evpn (?P<af>[\w ]+)$')
+
+        # Router ID: 20.20.20.20
+        p7 = re.compile(r'^Router ID:\s+(?P<id>[0-9a-fA-F\.:]+)$')
+
+        # Label Allocation Mode: Per-BD
+        p8 = re.compile(r'^Label Allocation Mode:\s+(?P<mode>[\w\-]+)$')
+
+        # Global Replication Type: Static
+        p9 = re.compile(r'^Global Replication Type:\s+(?P<type>[\w\- ]+)$')
+
+        # ARP/ND Flooding Suppression: Enabled
+        p10 = re.compile(r'^ARP\/ND Flooding Suppression:\s+(?P<enable>\w+)$')
+
+        # DHCP Relay Flooding Suppression: Disabled
+        p11 = re.compile(r'^DHCP Relay Flooding Suppression:'
+                         r'\s+(?P<enable>\w+)$')
+
+        # Connectivity to Core: UP
+        p12 = re.compile(r'^Connectivity to Core:\s+(?P<status>\w+)$')
+
+        # MAC Duplication: seconds 10 limit 100
+        p13 = re.compile(r'^MAC Duplication: seconds (?P<seconds>\d+) '
+                         r'limit (?P<limit>\d+)$')
+
+        # MAC Addresses: 25
+        p14 = re.compile(r'^MAC Addresses:\s+(?P<total>\d+)$')
+
+        # IP Duplication: seconds 180 limit 5
+        p15 = re.compile(r'^IP Duplication: seconds (?P<seconds>\d+) '
+                         r'limit (?P<limit>\d+)$')
+
+        # IP Addresses: 14
+        p16 = re.compile(r'^IP Addresses:\s+(?P<total>\d+)$')
+
+        # Advertise Default Gateway: No
+        p17 = re.compile(r'^Advertise Default Gateway:\s+(?P<enable>\w+)$')
+
+        # Default Gateway Addresses: 1
+        p18 = re.compile(r'^Default Gateway Addresses:\s+(?P<total>\d+)$')
+
+        # Local:     11
+        p19 = re.compile(r'^Local:\s+(?P<local>\d+)$')
+
+        # Remote:    12
+        p20 = re.compile(r'^Remote:\s+(?P<remote>\d+)$')
+
+        # Duplicate: 2
+        p21 = re.compile(r'^Duplicate:\s+(?P<duplicate>\d+)$')
+
+        # Maximum number of Route Targets per EAD-ES route: 200
+        p22 = re.compile(r'^Maximum number of Route Targets '
+                         r'per EAD-ES route: (?P<rts>\d+)$')
+
+        # Multi-home aliasing: Enabled
+        p23 = re.compile(r'^Multi-home aliasing:\s+(?P<enable>\w+)$')
+
+        # Global IP Local Learn: Enabled
+        p24 = re.compile(r'^Global IP Local Learn:\s+(?P<enable>[\w ]+)$')
+
+        # IP local learning limits
+        p25 = re.compile(r'^IP local learning limits$')
+
+        # IPv4: 4 addresses per-MAC
+        p26 = re.compile(r'^IPv4: (?P<ipv4>\d+) addresses per-MAC$')
+
+        # IPv6: 12 addresses per-MAC
+        p27 = re.compile(r'^IPv6: (?P<ipv6>\d+) addresses per-MAC$')
+
+        # IP local learning timers
+        p28 = re.compile(r'^IP local learning timers$')
+
+        # Down:      10 minutes
+        p29 = re.compile(r'^Down:\s+(?P<down>\d+) minutes$')
+
+        # Poll:      1 minutes
+        p30 = re.compile(r'^Poll:\s+(?P<poll>\d+) minutes$')
+
+        # Reachable: 5 minutes
+        p31 = re.compile(r'^Reachable:\s+(?P<reachable>\d+) minutes$')
+
+        # Stale:     30 minutes
+        p32 = re.compile(r'^Stale:\s+(?P<stale>\d+) minutes$')
+
+        # Auto route-target: evi-id based
+        p33 = re.compile(r'^Auto route-target:\s+(?P<type>[\w\- ]+)$')
+
+        # Advertise Multicast: Yes
+        p34 = re.compile(r'^Advertise Multicast:\s+(?P<enable>\w+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # EVPN Instances (excluding point-to-point): 1
+            m = p1.match(line)
+            if m:
+                evis_dict = parsed_dict.setdefault('evis', {})
+                evis_dict['total'] = int(m.groupdict()['evis'])
+                continue
+
+            # VLAN Aware:   1
+            m = p2.match(line)
+            if m:
+                evis_dict['vlan_aware'] = int(m.groupdict()['evis'])
+                continue
+
+            # VLAN Based:   1
+            m = p3.match(line)
+            if m:
+                evis_dict['vlan_based'] = int(m.groupdict()['evis'])
+                continue
+
+            # VLAN Bundle:   1
+            m = p4.match(line)
+            if m:
+                evis_dict['vlan_bundle'] = int(m.groupdict()['evis'])
+                continue
+
+            # Vlans: 1
+            # Bridge Domains: 10
+            m = p5.match(line)
+            if m:
+                parsed_dict['bridge_domains'] = int(m.groupdict()['bds'])
+                continue
+
+            # BGP: ASN 1, address-family l2vpn evpn configured
+            m = p6.match(line)
+            if m:
+                bgp_dict = parsed_dict.setdefault('bgp', {})
+                bgp_dict['asn'] = int(m.groupdict()['asn'])
+                if m.groupdict()['af'] == 'configured':
+                    bgp_dict['evpn_af_configured'] = True
+                else:
+                    bgp_dict['evpn_af_configured'] = False
+                continue
+
+            # Router ID: 20.20.20.20
+            m = p7.match(line)
+            if m:
+                parsed_dict['router_id'] = str(m.groupdict()['id'])
+                continue
+
+            # Label Allocation Mode: Per-BD
+            m = p8.match(line)
+            if m:
+                parsed_dict['label_alloc_mode'] = str(m.groupdict()['mode'])
+                continue
+
+            # Global Replication Type: Static
+            m = p9.match(line)
+            if m:
+                parsed_dict['glb_rep_type'] = str(m.groupdict()['type'])
+                continue
+
+            # ARP/ND Flooding Suppression: Enabled
+            m = p10.match(line)
+            if m:
+                if m.groupdict()['enable'].lower() == 'enabled':
+                    parsed_dict['arp_flood_suppression'] = True
+                else:
+                    parsed_dict['arp_flood_suppression'] = False
+                continue
+
+            # DHCP Relay Flooding Suppression: Disabled
+            m = p11.match(line)
+            if m:
+                if m.groupdict()['enable'].lower() == 'enabled':
+                    parsed_dict['dhcp_flood_suppression'] = True
+                else:
+                    parsed_dict['dhcp_flood_suppression'] = False
+                continue
+
+            # Connectivity to Core: UP
+            m = p12.match(line)
+            if m:
+                if m.groupdict()['status'].lower() == 'up':
+                    parsed_dict['core_connected'] = True
+                else:
+                    parsed_dict['core_connected'] = False
+                continue
+
+            # MAC Duplication: seconds 10 limit 100
+            m = p13.match(line)
+            if m:
+                mac_dup_dict = parsed_dict.setdefault('mac_dup', {})
+                mac_dup_dict['seconds'] = int(m.groupdict()['seconds'])
+                mac_dup_dict['limit'] = int(m.groupdict()['limit'])
+                continue
+
+            # MAC Addresses: 25
+            m = p14.match(line)
+            if m:
+                mac_address = True
+                mac_addr_dict = parsed_dict.setdefault('mac_addresses', {})
+                mac_addr_dict['total'] = int(m.groupdict()['total'])
+                continue
+
+            # IP Duplication: seconds 180 limit 5
+            m = p15.match(line)
+            if m:
+                ip_dup_dict = parsed_dict.setdefault('ip_dup', {})
+                ip_dup_dict['seconds'] = int(m.groupdict()['seconds'])
+                ip_dup_dict['limit'] = int(m.groupdict()['limit'])
+                continue
+
+            # IP Addresses: 14
+            m = p16.match(line)
+            if m:
+                ip_address = True
+                ip_addr_dict = parsed_dict.setdefault('ip_addresses', {})
+                ip_addr_dict['total'] = int(m.groupdict()['total'])
+                continue
+
+            # Advertise Default Gateway: No
+            m = p17.match(line)
+            if m:
+                if m.groupdict()['enable'].lower() == 'yes':
+                    parsed_dict['adv_def_gateway'] = True
+                else:
+                    parsed_dict['adv_def_gateway'] = False
+                continue
+
+            # Default Gateway Addresses: 1
+            m = p18.match(line)
+            if m:
+                dg_address = True
+                dg_addr_dict = parsed_dict.setdefault('def_gateway_addresses',
+                                                      {})
+                dg_addr_dict['total'] = int(m.groupdict()['total'])
+                continue
+
+            # Local:     11
+            m = p19.match(line)
+            if m:
+                if dg_address:
+                    dg_addr_dict['local'] = int(m.groupdict()['local'])
+                elif ip_address:
+                    ip_addr_dict['local'] = int(m.groupdict()['local'])
+                elif mac_address:
+                    mac_addr_dict['local'] = int(m.groupdict()['local'])
+                continue
+
+            # Remote:    12
+            m = p20.match(line)
+            if m:
+                if dg_address:
+                    dg_addr_dict['remote'] = int(m.groupdict()['remote'])
+                elif ip_address:
+                    ip_addr_dict['remote'] = int(m.groupdict()['remote'])
+                elif mac_address:
+                    mac_addr_dict['remote'] = int(m.groupdict()['remote'])
+                continue
+
+            # Duplicate: 2
+            m = p21.match(line)
+            if m:
+                dup = m.groupdict()['duplicate']
+                if ip_address:
+                    ip_addr_dict['duplicate'] = int(dup)
+                elif mac_address:
+                    mac_addr_dict['duplicate'] = int(dup)
+                continue
+
+            # Maximum number of Route Targets per EAD-ES route: 200
+            m = p22.match(line)
+            if m:
+                parsed_dict['max_rt_per_ead_es'] = int(m.groupdict()['rts'])
+                continue
+
+            # Multi-home aliasing: Enabled
+            m = p23.match(line)
+            if m:
+                if m.groupdict()['enable'].lower() == 'enabled':
+                    parsed_dict['mh_aliasing'] = True
+                else:
+                    parsed_dict['mh_aliasing'] = False
+                continue
+
+            # Global IP Local Learn: Enabled
+            m = p24.match(line)
+            if m:
+                if m.groupdict()['enable'].lower() == 'enabled':
+                    parsed_dict['glb_ip_local_learn'] = True
+                else:
+                    parsed_dict['glb_ip_local_learn'] = False
+                continue
+
+            # IP local learning limits
+            m = p25.match(line)
+            if m:
+                ip_limits = True
+                ip_limit_dict = parsed_dict.setdefault('ip_local_learn_limit',
+                                                       {})
+                continue
+
+            # IPv4: 4 addresses per-MAC
+            m = p26.match(line)
+            if m and ip_limits:
+                ip_limit_dict['ipv4'] = int(m.groupdict()['ipv4'])
+                continue
+
+            # IPv6: 12 addresses per-MAC
+            m = p27.match(line)
+            if m and ip_limits:
+                ip_limit_dict['ipv6'] = int(m.groupdict()['ipv6'])
+                continue
+
+            # IP local learning timers
+            m = p28.match(line)
+            if m:
+                ip_timers = True
+                ip_timer_dict = parsed_dict.setdefault('ip_local_learn_timer',
+                                                       {})
+                continue
+
+            # Down:      10 minutes
+            m = p29.match(line)
+            if m and ip_timers:
+                ip_timer_dict['down'] = int(m.groupdict()['down'])
+                continue
+
+            # Poll:      1 minutes
+            m = p30.match(line)
+            if m and ip_timers:
+                ip_timer_dict['poll'] = int(m.groupdict()['poll'])
+                continue
+
+            # Reachable: 5 minutes
+            m = p31.match(line)
+            if m and ip_timers:
+                ip_timer_dict['reachable'] = int(m.groupdict()['reachable'])
+                continue
+
+            # Stale:     30 minutes
+            m = p32.match(line)
+            if m and ip_timers:
+                ip_timer_dict['stale'] = int(m.groupdict()['stale'])
+                continue
+
+            # Auto route-target: evi-id based
+            m = p33.match(line)
+            if m:
+                parsed_dict['auto_rt'] = str(m.groupdict()['type'])
+                continue
+
+            # Advertise Multicast: Yes
+            m = p34.match(line)
+            if m:
+                if m.groupdict()['enable'].lower() == 'yes':
+                    parsed_dict['adv_mcast'] = True
+                else:
+                    parsed_dict['adv_mcast'] = False
+                continue
+
+        return parsed_dict
+
+# ============================================
+# Schema for 'show l2vpn evpn evi detail'
+# ============================================
+class ShowL2vpnEvpnEviDetailSchema(MetaParser):
+    """ Schema for show l2vpn evpn evi detail """
+
+    schema = {
+        Any(): {
+            'evi_type': str,
+            'encap_type': str,
+            'state': str,
+            Optional('rd'): str,
+            Optional('rd_type'): str,
+            Optional('import_rt'): str,
+            Optional('export_rt'): str,
+            Optional('per_evi_label'): str,
+            Optional('replication_type'): str,
+            Optional('re_orig_rt5'): bool,
+            Optional('ip_local_learn'): bool,
+            Optional('adv_def_gateway'): bool,
+            Optional('adv_mcast'): bool,
+            Optional('bridge_domain'): {
+                Any(): {
+                    'etag': int,
+                    'state': str,
+                    Optional('flood_suppress'): bool,
+                    Optional('core_if'): str,
+                    Optional('access_if'): str,
+                    Optional('nve_if'): str,
+                    Optional('rmac'): str,
+                    Optional('core_vlan'): int,
+                    Optional('l2vni'): int,
+                    Optional('l3vni'): int,
+                    Optional('vtep_ip'): str,
+                    Optional('vtep_ip_sec'): str,
+                    Optional('mcast_ip'): str,
+                    Optional('vrf'): str,
+                    Optional('ipv4_irb'): bool,
+                    Optional('ipv6_irb'): bool,
+                    Optional('bum_label'): int,
+                    Optional('per_bd_label'): int,
+                    Optional('bdi_label'): int,
+                    Optional('pseudo_port'): {
+                        Any(): {
+                            Optional('mac_routes'): int,
+                            Optional('mac_ip_routes'): int,
+                            Optional('per_ce_label'): int,
+                            Optional('df_state'): str,
+                            Optional('access_vfi'): str,
+                            Optional('peer'): str,
+                            Optional('vc'): int,
+                            Optional('esi'): str,
+                        },
+                    },
+                    Optional('peer'): {
+                        Any(): {
+                            'mac_routes': int,
+                            'mac_ip_routes': int,
+                            'imet_routes': int,
+                            'ead_routes': int,
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+
+# ==================================================
+# Parser for 'show l2vpn evpn evi detail'
+# ==================================================
+class ShowL2vpnEvpnEviDetail(ShowL2vpnEvpnEviDetailSchema):
+    """ Parser for show l2vpn evpn evi detail """
+
+    cli_command = ['show l2vpn evpn evi detail',
+                   'show l2vpn evpn evi {evi} detail']
+
+    def cli(self, evi=None, output=None):
+
+        # Init vars
+        parsed_dict = {}
+
+        if output is None:
+            # Execute command
+            if evi:
+                output = self.device.execute(
+                    self.cli_command[1].format(evi=evi))
+            else:
+                output = self.device.execute(self.cli_command[0])
+  
+
+        # EVPN instance:       1 (VLAN Based)
+        p1 = re.compile(r'^EVPN instance:\s+(?P<evi>\d+)\s+\((?P<type>.*)\)$')
+
+        # RD:                20.20.20.20:1 (auto)
+        p2 = re.compile(r'^RD:\s+(?P<rd>[0-9a-fA-F\.:]+)\s+\((?P<type>\w+)\)$')
+
+        # Import-RTs:        1:1
+        # Import-RTs:        1:100 995:95 997:97 998:98 999:99
+        p3 = re.compile(r'^Import-RTs:\s+(?P<rt>[\d:\s]+)')
+
+        # Export-RTs:        1:1
+        # Export-RTs:        1:100 995:95 997:97 998:98 999:99
+        p4 = re.compile(r'^Export-RTs:\s+(?P<rt>[\d:\s]+)')
+
+        # Per-EVI Label:     none
+        p5 = re.compile(r'^Per-EVI Label:\s+(?P<label>\d+|none)$')
+
+        # State:             Established
+        # State:             No BGP, Incomplete
+        p6 = re.compile(r'^State:\s+(?P<state>[\w\s,]+)$')
+
+        # Replication Type:  Static (global)
+        p7 = re.compile(r'^Replication Type:\s+(?P<type>[\w\-\s]+)')
+
+        # Encapsulation:     vxlan
+        p8 = re.compile(r'^Encapsulation:\s+(?P<enctype>\w+)')
+
+        # IP Local Learn:    Enabled (global)
+        p9 = re.compile(r'^IP Local Learn:\s+(?P<enable>[\w\s]+)')
+
+        # Adv. Def. Gateway: Disabled (global)
+        p10 = re.compile(r'^Adv. Def. Gateway:\s+(?P<enable>\w+)')
+
+        # Re-originate RT5:  Disabled
+        p11 = re.compile(r'^Re-originate RT5:\s+(?P<enable>\w+)')
+
+        # Adv. Multicast:    Enabled (global)
+        p12 = re.compile(r'^Adv. Multicast:\s+(?P<enable>\w+)')
+
+        # Vlan:              100
+        # Bridge Domain:     1
+        p13 = re.compile(r'^(Vlan|Bridge Domain):\s+(?P<bd_id>\d+)$')
+
+        # Ethernet-Tag:    0
+        p14 = re.compile(r'^Ethernet-Tag:\s+(?P<etag>\d+)$')
+
+        # Flood Suppress:  Attached
+        p15 = re.compile(r'^Flood Suppress:\s+(?P<attach>\w+)$')
+
+        # Core If:         Vlan500
+        p16 = re.compile(r'^Core If:\s+(?P<name>\w*)$')
+
+        # Access If:       Vlan100
+        p17 = re.compile(r'^Access If:\s+(?P<name>\w*)$')
+
+        # NVE If:          nve1
+        p18 = re.compile(r'^NVE If:\s+(?P<name>\w+)$')
+
+        # RMAC:            0000.0000.0000
+        p19 = re.compile(r'^RMAC:\s+(?P<mac>[A-Fa-f0-9:\.]+)$')
+
+        # Core Vlan:       0
+        p20 = re.compile(r'^Core Vlan:\s+(?P<vlan>\d+)$')
+
+        # L2 VNI:          10000
+        p21 = re.compile(r'^L2 VNI:\s+(?P<vni>\d+)$')
+
+        # L3 VNI:          0
+        p22 = re.compile(r'^L3 VNI:\s+(?P<vni>\d+)$')
+
+        # VTEP IP:         1.20.20.20
+        p23 = re.compile(r'^VTEP IP:\s+(?P<addr>UNKNOWN|[A-Fa-f0-9:\.]+)$')
+
+        # MCAST IP:        227.0.0.1
+        p24 = re.compile(r'^MCAST IP:\s+(?P<addr>UNKNOWN|[A-Fa-f0-9:\.]+)')
+
+        # VRF:             Red
+        p25 = re.compile(r'^VRF:\s+(?P<vrf>\w*)$')
+
+        # IPv4 IRB:        Enabled (Asymmetric)
+        p26 = re.compile(r'^IPv4 IRB:\s+(?P<enable>\w+)')
+
+        # IPv6 IRB:        Disabled
+        p27 = re.compile(r'^IPv6 IRB:\s+(?P<enable>\w+)')
+
+        # BUM Label:       1002
+        p28 = re.compile(r'^BUM Label:\s+((?P<label>\d+)|none)$')
+
+        # Per-BD Label:    1003
+        p29 = re.compile(r'^Per-BD Label:\s+((?P<label>\d+)|none)$')
+
+        # BDI Label:       none
+        p30 = re.compile(r'^BDI Label:\s+((?P<label>\d+)|none)$')
+
+        # Pseudoports:
+        p31 = re.compile(r'^Pseudoports( \(Labels\))?:$')
+
+        # Ethernet0/1 service instance 1
+        # Ethernet0/3 service instance 1 (DF state: PE-to-CE BUM blocked)
+        p32 = re.compile(r'^(?P<pp_name>[\w\/\.\-]+ service instance \d+)'
+                         r'( \(((?P<label>\d+)|none)\))?'
+                         r'( \(DF state: (?P<state>[\w\- ]+)\))?$')
+
+        # pseudowire100002 (Access VFI VFI10: Peer 5.5.5.5, VC 10)
+        # pseudowire100003 (Access PW: Peer 5.5.5.5, VC 10) (DF state: blocked)
+        p33 = re.compile(
+            r'^(?P<pp_name>pseudowire\d+)'
+            r' \((((Access )?VFI (?P<access_vfi>\w+))|(Access PW)):'
+            r' ((Peer (?P<addr>[A-Fa-f0-9:\.]+), VC (?P<vc>\d+))'
+            r'|(no peer info))\)'
+            r'( \(((?P<label>\d+)|none)\))?'
+            r'( \(DF state: (?P<state>[\w\-\s]+)\))?$')
+
+        # Routes: 1 MAC, 1 MAC/IP
+        p34 = re.compile(r'^Routes:\s+(?P<mac>\d+) MAC,'
+                         r'\s+(?P<mac_ip>\d+) MAC\/IP$')
+
+        # Peers:
+        p35 = re.compile(r'^Peers:$')
+
+        # 15.15.15.15
+        p36 = re.compile(r'^(?P<addr>[A-Fa-f0-9:\.]+)$')
+
+        # Routes: 0 MAC, 0 MAC/IP, 1 IMET, 1 EAD
+        p37 = re.compile(r'^Routes:\s+(?P<mac>\d+) MAC,'
+                         r'\s+(?P<mac_ip>\d+) MAC\/IP,'
+                         r'\s+(?P<imet>\d+) IMET,'
+                         r'\s+(?P<ead>\d+) EAD$')
+
+        # Sec. VTEP IP:    1.1.1.2
+        p38 = re.compile(r'^Sec\. VTEP IP:\s+(?P<addr>UNKNOWN|[A-Fa-f\d:.]+)$')
+
+        # ESI: 0000.0000.0000.0000.0001
+        p39 = re.compile(r'^ESI:\s+(?P<esi>[0-9a-fA-F\.]+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # EVPN instance:       1 (VLAN Based)
+            m = p1.match(line)
+            if m:
+                bd_id = None
+                pseudoport = None
+                peer = None
+                pp_section = False
+                peer_section = False
+                evi = m.groupdict()['evi']
+                evi_dict = parsed_dict.setdefault(evi, {})
+                evi_dict['evi_type'] = str(m.groupdict()['type'])
+                continue
+
+            # RD:                20.20.20.20:1 (auto)
+            m = p2.match(line)
+            if m:
+                evi_dict['rd'] = str(m.groupdict()['rd'])
+                evi_dict['rd_type'] = str(m.groupdict()['type'])
+                continue
+
+            # Import-RTs:        1:1
+            m = p3.match(line)
+            if m:
+                evi_dict['import_rt'] = str(m.groupdict()['rt'])
+                continue
+
+            # Export-RTs:        1:1
+            m = p4.match(line)
+            if m:
+                evi_dict['export_rt'] = str(m.groupdict()['rt'])
+                continue
+
+            # Per-EVI Label:     none
+            m = p5.match(line)
+            if m:
+                evi_dict['per_evi_label'] = str(m.groupdict()['label'])
+                continue
+
+            # State:             Established
+            m = p6.match(line)
+            if m:
+                state = str(m.groupdict()['state'])
+                if bd_id is None:
+                    evi_dict['state'] = state
+                else:
+                    parsed_dict[evi]['bridge_domain'][bd_id]['state'] = state
+                continue
+
+            # Replication Type:  Static (global)
+            m = p7.match(line)
+            if m:
+                rep_type = m.groupdict()['type'].rstrip()
+                evi_dict['replication_type'] = str(rep_type)
+                continue
+
+            # Encapsulation:     vxlan
+            m = p8.match(line)
+            if m:
+                evi_dict['encap_type'] = str(m.groupdict()['enctype'])
+                continue
+
+            # IP Local Learn:    Enabled (global)
+            m = p9.match(line)
+            if m:
+                ip_local = m.groupdict()['enable'].rstrip().lower()
+                if ip_local == 'enabled' or ip_local == 'enable':
+                    evi_dict['ip_local_learn'] = True
+                else:
+                    evi_dict['ip_local_learn'] = False
+                continue
+
+            # Adv. Def. Gateway: Disabled (global)
+            m = p10.match(line)
+            if m:
+                if m.groupdict()['enable'].lower() == 'enabled':
+                    evi_dict['adv_def_gateway'] = True
+                else:
+                    evi_dict['adv_def_gateway'] = False
+                continue
+
+            # Re-originate RT5:  Disabled
+            m = p11.match(line)
+            if m:
+                if m.groupdict()['enable'].lower() == 'enabled':
+                    evi_dict['re_orig_rt5'] = True
+                else:
+                    evi_dict['re_orig_rt5'] = False
+                continue
+
+            # Adv. Multicast:    Enabled (global)
+            m = p12.match(line)
+            if m:
+                if m.groupdict()['enable'].lower() == 'enabled':
+                    evi_dict['adv_mcast'] = True
+                else:
+                    evi_dict['adv_mcast'] = False
+                continue
+
+            # Vlan:              100
+            # Bridge Domain:     1
+            m = p13.match(line)
+            if m:
+                pseudoport = None
+                peer = None
+                pp_section = False
+                peer_section = False
+                bd_id = m.groupdict()['bd_id']
+                bd_dict = evi_dict.setdefault(
+                    'bridge_domain', {}).setdefault(bd_id, {})
+                continue
+
+            # Ethernet-Tag:    0
+            m = p14.match(line)
+            if m:
+                bd_dict['etag'] = int(m.groupdict()['etag'])
+                continue
+
+            # Flood Suppress:  Attached
+            m = p15.match(line)
+            if m:
+                if m.groupdict()['attach'].lower() == 'attached':
+                    bd_dict['flood_suppress'] = True
+                else:
+                    bd_dict['flood_suppress'] = False
+                continue
+
+            # Core If:         Vlan500
+            m = p16.match(line)
+            if m:
+                bd_dict['core_if'] = str(m.groupdict()['name'])
+                continue
+
+            # Access If:       Vlan100
+            m = p17.match(line)
+            if m:
+                bd_dict['access_if'] = str(m.groupdict()['name'])
+                continue
+
+            # NVE If:          nve1
+            m = p18.match(line)
+            if m:
+                bd_dict['nve_if'] = str(m.groupdict()['name'])
+                continue
+
+            # RMAC:            0000.0000.0000
+            m = p19.match(line)
+            if m:
+                bd_dict['rmac'] = str(m.groupdict()['mac'])
+                continue
+
+            # Core Vlan:       0
+            m = p20.match(line)
+            if m:
+                bd_dict['core_vlan'] = int(m.groupdict()['vlan'])
+                continue
+
+            # L2 VNI:          10000
+            m = p21.match(line)
+            if m:
+                bd_dict['l2vni'] = int(m.groupdict()['vni'])
+                continue
+
+            # L3 VNI:          0
+            m = p22.match(line)
+            if m:
+                bd_dict['l3vni'] = int(m.groupdict()['vni'])
+                continue
+
+            # VTEP IP:         1.20.20.20
+            m = p23.match(line)
+            if m:
+                bd_dict['vtep_ip'] = str(m.groupdict()['addr'])
+                continue
+
+            # Sec. VTEP IP:    1.1.1.2
+            m = p38.match(line)
+            if m:
+                bd_dict['vtep_ip_sec'] = str(m.groupdict()['addr'])
+                continue
+
+            # MCAST IP:        227.0.0.1
+            m = p24.match(line)
+            if m:
+                bd_dict['mcast_ip'] = str(m.groupdict()['addr'])
+                continue
+
+            # VRF:             Red
+            m = p25.match(line)
+            if m:
+                bd_dict['vrf'] = str(m.groupdict()['vrf'])
+                continue
+
+            # IPv4 IRB:        Enabled (Asymmetric)
+            m = p26.match(line)
+            if m:
+                if m.groupdict()['enable'].lower() == 'enabled':
+                    bd_dict['ipv4_irb'] = True
+                else:
+                    bd_dict['ipv4_irb'] = False
+                continue
+
+            # IPv6 IRB:        Disabled
+            m = p27.match(line)
+            if m:
+                if m.groupdict()['enable'].lower() == 'enabled':
+                    bd_dict['ipv6_irb'] = True
+                else:
+                    bd_dict['ipv6_irb'] = False
+                continue
+
+            # BUM Label:       1002
+            m = p28.match(line)
+            if m:
+                if m.groupdict()['label']:
+                    bd_dict['bum_label'] = int(m.groupdict()['label'])
+                continue
+
+            # Per-BD Label:    1003
+            m = p29.match(line)
+            if m:
+                if m.groupdict()['label']:
+                    bd_dict['per_bd_label'] = int(m.groupdict()['label'])
+                continue
+
+            # BDI Label:       none
+            m = p30.match(line)
+            if m:
+                if m.groupdict()['label']:
+                    bd_dict['bdi_label'] = int(m.groupdict()['label'])
+                continue
+
+            # Pseudoports:
+            m = p31.match(line)
+            if m:
+                peer = None
+                pp_section = True
+                pp_dict = bd_dict.setdefault('pseudo_port', {})
+                continue
+
+            # Ethernet0/1 service instance 1
+            # Ethernet0/3 service instance 1 (DF state: PE-to-CE BUM blocked)
+            m = p32.match(line)
+            if m and pp_section:
+                pseudoport = str(m.groupdict()['pp_name'])
+                if pseudoport not in pp_dict:
+                    pp_dict[pseudoport] = {}
+                if m.groupdict()['label']:
+                    pp_dict[pseudoport]['per_ce_label'] = int(
+                        m.groupdict()['label'])
+                if m.groupdict()['state']:
+                    pp_dict[pseudoport]['df_state'] = str(
+                        m.groupdict()['state'])
+                continue
+
+            # pseudowire100002 (Access VFI VFI10: Peer 5.5.5.5, VC 10)
+            # pseudowire100003 (Access PW: Peer 5.5.5.5, VC 10) (DF state: blocked)
+            m = p33.match(line)
+            if m and pp_section:
+                pseudoport = str(m.groupdict()['pp_name'])
+                if pseudoport not in pp_dict:
+                    pp_dict[pseudoport] = {}
+                if m.groupdict()['access_vfi']:
+                    pp_dict[pseudoport]['access_vfi'] = str(
+                        m.groupdict()['access_vfi'])
+                if m.groupdict()['addr']:
+                    pp_dict[pseudoport]['peer'] = str(m.groupdict()['addr'])
+                if m.groupdict()['vc']:
+                    pp_dict[pseudoport]['vc'] = int(m.groupdict()['vc'])
+                if m.groupdict()['label']:
+                    pp_dict[pseudoport]['per_ce_label'] = int(
+                        m.groupdict()['label'])
+                if m.groupdict()['state']:
+                    pp_dict[pseudoport]['df_state'] = str(
+                        m.groupdict()['state'])
+                continue
+
+            # Routes: 1 MAC, 1 MAC/IP
+            m = p34.match(line)
+            if m and pseudoport is not None:
+                macs = m.groupdict()['mac']
+                macips = m.groupdict()['mac_ip']
+                pp_dict[pseudoport]['mac_routes'] = int(macs)
+                pp_dict[pseudoport]['mac_ip_routes'] = int(macips)
+                continue
+
+            # ESI: 0000.0000.0000.0000.0001
+            m = p39.match(line)
+            if m and pseudoport is not None:
+                esi = m.groupdict()['esi']
+                pp_dict[pseudoport]['esi'] = str(esi)
+                continue
+
+            # Peers:
+            m = p35.match(line)
+            if m:
+                pseudoport = None
+                peer_section = True
+                pp_section = False
+                peer_dict = bd_dict.setdefault('peer', {})
+                continue
+
+            # 15.15.15.15
+            m = p36.match(line)
+            if m and peer_section and peer is None:
+                peer = str(m.groupdict()['addr'])
+                if peer not in peer_dict:
+                    peer_dict[peer] = {}
+                continue
+
+            # Routes: 0 MAC, 0 MAC/IP, 1 IMET, 1 EAD
+            m = p37.match(line)
+            if m and peer is not None:
+                peer_dict[peer]['mac_routes'] = int(m.groupdict()['mac'])
+                peer_dict[peer]['mac_ip_routes'] = int(m.groupdict()['mac_ip'])
+                peer_dict[peer]['imet_routes'] = int(m.groupdict()['imet'])
+                peer_dict[peer]['ead_routes'] = int(m.groupdict()['ead'])
+                peer = None
+                continue
+
+        return parsed_dict
+
+# ============================================
+# Schema for 'show l2vpn evpn multicast local'
+# ============================================
+class ShowL2vpnEvpnMcastLocalSchema(MetaParser):
+    """ Schema for show l2vpn evpn multicast local """
+    schema = {
+        Any(): {
+            Any(): {
+                Any(): {
+                    Any(): {
+                        'evi': str,
+                        'vlan': str,
+                        'interface': str,
+                        'src_grp': str,
+                        'version': str,
+                        'filter_mode': str,
+                    },
+                },
+            },
+        },
+    }
+
+
+# ==================================================
+# Parser for 'show l2vpn evpn multicast local'
+# ==================================================
+class ShowL2vpnEvpnMcastLocal(ShowL2vpnEvpnMcastLocalSchema):
+    """ Parser for show l2vpn evpn multicast local """
+
+    cli_command = 'show l2vpn evpn multicast local'
+
+    def cli(self, output=None):
+
+        # Init vars
+        parsed_dict = {}
+
+        if output is None:
+            # Execute command
+            show_output = self.device.execute(self.cli_command)
+        else:
+            show_output = output
+
+        parsed_dict = oper_fill_tabular(
+            header_fields=["EVI", "VLAN", "Interface",
+                           "Version", "Filter", "\(Source, Group\)"],
+            label_fields=['evi', 'vlan', 'interface', 'version',
+                          'filter_mode', 'src_grp'],
+            index=[0, 1, 2, 5],
+            device_output=show_output,
+            device_os='iosxe'
+        ).entries
+
+        return parsed_dict
+
+# ============================================
+# Schema for 'show l2vpn evpn multicast remote'
+# ============================================
+class ShowL2vpnEvpnMcastRemoteSchema(MetaParser):
+    """ Schema for show l2vpn evpn multicast remote """
+    schema = {
+        Any(): {
+            Any(): {
+                Any(): {
+                    Any(): {
+                        'evi': str,
+                        'vlan': str,
+                        'originator': str,
+                        'src_grp': str,
+                        'version': str,
+                        'filter_mode': str,
+                    },
+                },
+            },
+        },
+    }
+
+
+# ==================================================
+# Parser for 'show l2vpn evpn multicast remote'
+# ==================================================
+class ShowL2vpnEvpnMcastRemote(ShowL2vpnEvpnMcastRemoteSchema):
+    """ Parser for: show l2vpn evpn multicast remote """
+
+    cli_command = 'show l2vpn evpn multicast remote'
+
+    def cli(self, output=None):
+
+        # Init vars
+        parsed_dict = {}
+
+        if output is None:
+            # Execute command
+            show_output = self.device.execute(self.cli_command)
+        else:
+            show_output = output
+
+        parsed_dict = oper_fill_tabular(
+            header_fields=["EVI", "VLAN", "Originator",
+                           "Version", "Filter", "\(Source, Group\)"],
+            label_fields=['evi', 'vlan', 'originator', 'version',
+                          'filter_mode', 'src_grp'],
+            index=[0, 1, 2, 5],
+            device_output=show_output,
+            device_os='iosxe'
+        ).entries
+
+        return parsed_dict
+
+# =====================================================
+# Schema for 'show l2vpn evpn capabilities'
+# =====================================================
+class ShowL2vpnEvpnCapSchema(MetaParser):
+    """Schema for show l2vpn evpn capabilities"""
+
+    schema = {
+        'vlanbased_evi': bool,
+        'vlanbundle_evi': bool,
+        'vlanaware_evi': bool,
+        'ingress_rep': bool,
+        'p2mp_rep': bool,
+        'mp2mp_rep': bool,
+        'static_rep': bool,
+        'perbd_label': bool,
+        'perce_label': bool,
+        'perevi_label': bool,
+        'floodsp_ar': bool,
+        'floodsp_dhcprelay': bool,
+        'vlan_config_mode': bool,
+        'mpls_encap': bool,
+        'vxlan_encap': bool,
+        'mh_aliasing': bool,
+        'vpls_stitching': bool,
+        'vpls_seamless': bool,
+        'mh_red_aa': bool,
+        'mn_red_sa': bool,
+        'es_old_config': bool,
+        'ip_local_learn': bool,
+        'vpls_stitch_dh_sa': bool,
+        'l2trm_ipv4': bool,
+        'l2trm_ipv6': bool,
+        'l2trm_srcg_fwd': bool,
+        'vpws_prefered_path_srte': bool,
+    }
+
+
+# =====================================================
+# Parser for 'show l2vpn evpn capabilities'
+# =====================================================
+class ShowL2vpnEvpnCap(ShowL2vpnEvpnCapSchema):
+    """Parser for show l2vpn evpn capabilities"""
+
+    cli_command = 'show l2vpn evpn capabilities'
+
+    def cli(self, output=None):
+        if output is None:
+            show_output = self.device.execute(self.cli_command)
+        else:
+            show_output = output
+
+        # initial return dictionary
+        parsed_dict = {}
+
+        # EVPN Platform Capabilities
+        p0 = re.compile(r'^EVPN Platform Capabilities$')
+        # VLAN-based EVPN Instance: supported
+        p1 = re.compile(r'^VLAN-based EVPN Instance: supported$')
+        # VLAN-bundle EVPN Instance: supported
+        p2 = re.compile(r'^VLAN-bundle EVPN Instance: supported$')
+        # VLAN-aware EVPN Instance: supported
+        p3 = re.compile(r'^VLAN-aware EVPN Instance: supported$')
+        # Ingress replication type: supported
+        p4 = re.compile(r'^Ingress replication type: supported$')
+        # Point-to-multipoint replication type: supported
+        p5 = re.compile(r'^Point-to-multipoint replication type: supported$')
+        # Multipoint-to-multipoint replication type: supported
+        p6 = re.compile(r'^Multipoint-to-multipoint '
+                        r'replication type: supported$')
+        # Static replication type: supported
+        p7 = re.compile(r'^Static replication type: supported$')
+        # Per-BD MPLS label allocation mode: supported
+        p8 = re.compile(r'^Per-BD MPLS label allocation mode: supported$')
+        # Per-CE MPLS label allocation mode: supported
+        p9 = re.compile(r'^Per-CE MPLS label allocation mode: supported$')
+        # Per-EVI MPLS label allocation mode: supported
+        p10 = re.compile(r'^Per-EVI MPLS label allocation mode: supported$')
+        # Address resolution flooding suppression: supported
+        p11 = re.compile(r'^Address resolution flooding '
+                         r'suppression: supported$')
+        # DHCP Relay flooding suppression: supported
+        p12 = re.compile(r'^DHCP Relay flooding suppression: supported$')
+        # VLAN configuration mode: supported
+        p13 = re.compile(r'^VLAN configuration mode: supported$')
+        # MPLS encapsulation: supported
+        p14 = re.compile(r'^MPLS encapsulation: supported$')
+        # VxLAN encapsulation: supported
+        p15 = re.compile(r'^VxLAN encapsulation: supported$')
+        # Multi-homing aliasing: supported
+        p16 = re.compile(r'^Multi-homing aliasing: supported$')
+        # VPLS stitching: supported
+        p17 = re.compile(r'^VPLS stitching: supported$')
+        # VPLS seamless integration: supported
+        p18 = re.compile(r'^VPLS seamless integration: supported$')
+        # Multi-homing all active redundancy mode: supported
+        p19 = re.compile(r'^Multi-homing all active '
+                         r'redundancy mode: supported$')
+        # Multi-homing single active redundancy mode: supported
+        p20 = re.compile(r'^Multi-homing single active '
+                         r'redundancy mode: supported$')
+        # Ethernet Segment old config model: supported
+        p21 = re.compile(r'^Ethernet Segment old config model: supported$')
+        # IP local learning: supported
+        p22 = re.compile(r'^IP local learning: supported$')
+        # VPLS stitching single-active dual-homing: supported
+        p23 = re.compile(r'^VPLS stitching single-active '
+                         r'dual-homing: supported$')
+        # Layer 2 Tenant Routed Multicast IPv4: supported
+        p24 = re.compile(r'^Layer 2 Tenant Routed Multicast IPv4: supported$')
+        # Layer 2 Tenant Routed Multicast IPv6: supported
+        p25 = re.compile(r'^Layer 2 Tenant Routed Multicast IPv6: supported$')
+        # Layer 2 multicast source specific forwarding: supported
+        p26 = re.compile(r'^Layer 2 multicast source specific '
+                         r'forwarding: supported$')
+        # VPWS Preferred Path SRTE Policy: supported
+        p27 = re.compile(r'^VPWS Preferred Path SRTE Policy: supported$')
+
+        for line in show_output.splitlines():
+            line = line.strip()
+
+            # EVPN Platform Capabilities
+            m = p0.match(line)
+            if m:
+                parsed_dict['vlanbased_evi'] = False
+                parsed_dict['vlanbundle_evi'] = False
+                parsed_dict['vlanaware_evi'] = False
+                parsed_dict['ingress_rep'] = False
+                parsed_dict['p2mp_rep'] = False
+                parsed_dict['mp2mp_rep'] = False
+                parsed_dict['static_rep'] = False
+                parsed_dict['perbd_label'] = False
+                parsed_dict['perce_label'] = False
+                parsed_dict['perevi_label'] = False
+                parsed_dict['floodsp_ar'] = False
+                parsed_dict['floodsp_dhcprelay'] = False
+                parsed_dict['vlan_config_mode'] = False
+                parsed_dict['mpls_encap'] = False
+                parsed_dict['vxlan_encap'] = False
+                parsed_dict['mh_aliasing'] = False
+                parsed_dict['vpls_stitching'] = False
+                parsed_dict['vpls_seamless'] = False
+                parsed_dict['mh_red_aa'] = False
+                parsed_dict['mn_red_sa'] = False
+                parsed_dict['es_old_config'] = False
+                parsed_dict['ip_local_learn'] = False
+                parsed_dict['vpls_stitch_dh_sa'] = False
+                parsed_dict['l2trm_ipv4'] = False
+                parsed_dict['l2trm_ipv6'] = False
+                parsed_dict['l2trm_srcg_fwd'] = False
+                parsed_dict['vpws_prefered_path_srte'] = False
+                continue
+
+            # VLAN-based EVPN Instance: supported
+            m = p1.match(line)
+            if m:
+                parsed_dict['vlanbased_evi'] = True
+                continue
+
+            # VLAN-bundle EVPN Instance: supported
+            m = p2.match(line)
+            if m:
+                parsed_dict['vlanbundle_evi'] = True
+                continue
+
+            # VLAN-aware EVPN Instance: supported
+            m = p3.match(line)
+            if m:
+                parsed_dict['vlanaware_evi'] = True
+                continue
+
+            # Ingress replication type: supported
+            m = p4.match(line)
+            if m:
+                parsed_dict['ingress_rep'] = True
+                continue
+
+            # Point-to-multipoint replication type: supported
+            m = p5.match(line)
+            if m:
+                parsed_dict['p2mp_rep'] = True
+                continue
+
+            # Multipoint-to-multipoint replication type: supported
+            m = p6.match(line)
+            if m:
+                parsed_dict['mp2mp_rep'] = True
+                continue
+
+            # Static replication type: supported
+            m = p7.match(line)
+            if m:
+                parsed_dict['static_rep'] = True
+                continue
+
+            # Per-BD MPLS label allocation mode: supported
+            m = p8.match(line)
+            if m:
+                parsed_dict['perbd_label'] = True
+                continue
+
+            # Per-CE MPLS label allocation mode: supported
+            m = p9.match(line)
+            if m:
+                parsed_dict['perce_label'] = True
+                continue
+
+            # Per-EVI MPLS label allocation mode: supported
+            m = p10.match(line)
+            if m:
+                parsed_dict['perevi_label'] = True
+                continue
+
+            # Address resolution flooding suppression: supported
+            m = p11.match(line)
+            if m:
+                parsed_dict['floodsp_ar'] = True
+                continue
+
+            # DHCP Relay flooding suppression: supported
+            m = p12.match(line)
+            if m:
+                parsed_dict['floodsp_dhcprelay'] = True
+                continue
+
+            # VLAN configuration mode: supported
+            m = p13.match(line)
+            if m:
+                parsed_dict['vlan_config_mode'] = True
+                continue
+
+            # MPLS encapsulation: supported
+            m = p14.match(line)
+            if m:
+                parsed_dict['mpls_encap'] = True
+                continue
+
+            # VxLAN encapsulation: supported
+            m = p15.match(line)
+            if m:
+                parsed_dict['vxlan_encap'] = True
+                continue
+
+            # Multi-homing aliasing: supported
+            m = p16.match(line)
+            if m:
+                parsed_dict['mh_aliasing'] = True
+                continue
+
+            # VPLS stitching: supported
+            m = p17.match(line)
+            if m:
+                parsed_dict['vpls_stitching'] = True
+                continue
+
+            # VPLS seamless integration: supported
+            m = p18.match(line)
+            if m:
+                parsed_dict['vpls_seamless'] = True
+                continue
+
+            # Multi-homing all active redundancy mode: supported
+            m = p19.match(line)
+            if m:
+                parsed_dict['mh_red_aa'] = True
+                continue
+
+            # Multi-homing single active redundancy mode: supported
+            m = p20.match(line)
+            if m:
+                parsed_dict['mn_red_sa'] = True
+                continue
+
+            # Ethernet Segment old config model: supported
+            m = p21.match(line)
+            if m:
+                parsed_dict['es_old_config'] = True
+                continue
+
+            # IP local learning: supported
+            m = p22.match(line)
+            if m:
+                parsed_dict['ip_local_learn'] = True
+                continue
+
+            # VPLS stitching single-active dual-homing: supported
+            m = p23.match(line)
+            if m:
+                parsed_dict['vpls_stitch_dh_sa'] = True
+                continue
+
+            # Layer 2 Tenant Routed Multicast IPv4: supported
+            m = p24.match(line)
+            if m:
+                parsed_dict['l2trm_ipv4'] = True
+                continue
+
+            # Layer 2 Tenant Routed Multicast IPv6: supported
+            m = p25.match(line)
+            if m:
+                parsed_dict['l2trm_ipv6'] = True
+                continue
+
+            # Layer 2 multicast source specific forwarding: supported
+            m = p26.match(line)
+            if m:
+                parsed_dict['l2trm_srcg_fwd'] = True
+                continue
+
+            # VPWS Preferred Path SRTE Policy: supported
+            m = p27.match(line)
+            if m:
+                parsed_dict['vpws_prefered_path_srte'] = True
+                continue
+
+        return parsed_dict
+
+# =====================================================
+# Schema for 'show running-config | section l2vpn evpn'
+# =====================================================
+class ShowRunSectionL2vpnEvpnSchema(MetaParser):
+    """Schema for show running-config | section l2vpn evpn"""
+
+    schema = {
+        'floodsup_ar_disable': bool,
+        'floodsup_dhcprelay_disable': bool,
+        'mh_alias_disable': bool,
+        'dgw_advertise': bool,
+        'mcast_advertise': bool,
+        Optional('reptype'): str,
+        Optional('evis'): {
+            Any(): {
+                'srvinst': str,
+                'dgw_advertise': bool,
+                'mcast_advertise': bool,
+                Optional('encaptype'): str,
+                Optional('reptype'): str,
+            },
+        },
+    }
+
+
+# =====================================================
+# Parser for 'show running-config | section l2vpn evpn'
+# =====================================================
+class ShowRunSectionL2vpnEvpn(ShowRunSectionL2vpnEvpnSchema):
+    """Parser for show running-config | section l2vpn evpn """
+
+    cli_command = 'show running-config | section l2vpn evpn'
+
+    def cli(self, output=None):
+        if output is None:
+            show_output = self.device.execute(self.cli_command)
+        else:
+            show_output = output
+
+        # initial return dictionary
+        parsed_dict = {}
+
+        # l2vpn evpn
+        p1 = re.compile(r'^l2vpn evpn$')
+
+        # l2vpn evpn instance 2 vlan-based
+        p2 = re.compile(r'^l2vpn evpn instance '
+                        r'(?P<evi>\d+) (?P<srvinst>[\w-]+)$')
+
+        # replication-type ingress
+        p3 = re.compile(r'^replication-type (?P<reptype>\w+)$')
+
+        # flooding-suppression address-resolution disable
+        p4 = re.compile(r'^flooding-suppression address-resolution disable$')
+
+        # multihoming aliasing disable
+        p5 = re.compile(r'^multihoming aliasing disable$')
+
+        # default-gateway advertise
+        p6 = re.compile(r'^default-gateway advertise$')
+
+        # multicast advertise
+        p7 = re.compile(r'^multicast advertise$')
+
+        # encapsulation vxlan
+        p8 = re.compile(r'^encapsulation (?P<encaptype>\w+)$')
+
+        # default-gateway advertise enable/disable
+        p9 = re.compile(r'^default-gateway advertise (?P<dgadv>\w+)$')
+
+        # multicast advertise enable/disable
+        p10 = re.compile(r'^multicast advertise (?P<mcadv>\w+)$')
+
+        # flooding-suppression dhcp-relay disable
+        p11 = re.compile(r'^flooding-suppression dhcp-relay disable$')
+
+        floodsup_ar_disable = False
+        floodsup_dhcprelay_disable = False
+        mh_alias_disable = False
+        dgw_adver = False
+        mcast_adver = False
+
+        set_evi = False
+        for line in show_output.splitlines():
+            line = line.strip()
+
+            # l2vpn evpn
+            m = p1.match(line)
+            if m:
+                parsed_dict['floodsup_ar_disable'] = floodsup_ar_disable
+                parsed_dict['floodsup_dhcprelay_disable'] = floodsup_dhcprelay_disable
+                parsed_dict['mh_alias_disable'] = mh_alias_disable
+                parsed_dict['dgw_advertise'] = dgw_adver
+                parsed_dict['mcast_advertise'] = mcast_adver
+                continue
+
+            # l2vpn evpn instance 2 vlan-based
+            m = p2.match(line)
+            if m:
+                evis_dict = parsed_dict.setdefault('evis', {})
+                evi = m.groupdict()['evi']
+                evi_dict = evis_dict.setdefault(evi, {})
+                evi_dict['srvinst'] = str(m.groupdict()['srvinst'])
+                evi_dict['dgw_advertise'] = dgw_adver
+                evi_dict['mcast_advertise'] = mcast_adver
+                if 'reptype' in parsed_dict:
+                    evi_dict['reptype'] = parsed_dict['reptype']
+                set_evi = True
+                continue
+
+            # replication-type ingress
+            m = p3.match(line)
+            if m:
+                if set_evi:
+                    evi_dict['reptype'] = str(m.groupdict()['reptype'])
+                else:
+                    parsed_dict['reptype'] = str(m.groupdict()['reptype'])
+                continue
+
+            # flooding-suppression address-resolution disable
+            m = p4.match(line)
+            if m:
+                parsed_dict['floodsup_ar_disable'] = True
+                continue
+
+            # flooding-suppression dhcp-relay disable
+            m = p11.match(line)
+            if m:
+                parsed_dict['floodsup_dhcprelay_disable'] = True
+                continue
+
+            # multihoming aliasing disable
+            m = p5.match(line)
+            if m:
+                parsed_dict['mh_alias_disable'] = True
+                continue
+
+            # default-gateway advertise
+            m = p6.match(line)
+            if m:
+                parsed_dict['dgw_advertise'] = True
+                dgw_adver = True
+                continue
+
+            # multicast advertise
+            m = p7.match(line)
+            if m:
+                parsed_dict['mcast_advertise'] = True
+                mcast_adver = True
+                continue
+
+            # encapsulation vxlan
+            m = p8.match(line)
+            if m:
+                if set_evi:
+                    evi_dict['encaptype'] = str(m.groupdict()['encaptype'])
+                continue
+
+            # default-gateway advertise enable/disable
+            m = p9.match(line)
+            if m:
+                if set_evi:
+                    if 'enable' == str(m.groupdict()['dgadv']):
+                        evi_dict['dgw_advertise'] = True
+                    elif 'disable' == str(m.groupdict()['dgadv']):
+                        evi_dict['dgw_advertise'] = False
+                continue
+
+            # multicast advertise enable/disable
+            m = p10.match(line)
+            if m:
+                if set_evi:
+                    if 'enable' == str(m.groupdict()['mcadv']):
+                        evi_dict['mcast_advertise'] = True
+                    elif 'disable' == str(m.groupdict()['mcadv']):
+                        evi_dict['mcast_advertise'] = False
+                continue
+
+        return parsed_dict
+
+# ============================================
+# Schema for 'show l2vpn evpn vpws vc id detail'
+# ============================================
+class ShowL2vpnEvpnVpwsVcSchema(MetaParser):
+    """ Schema for show l2vpn evpn vpws vc id detail """
+
+    schema = {
+            'vc_name': str,
+            'vc_state': str,
+            'evi': int,
+            Optional('source'): int,
+            Optional('target'): int,
+            Optional('local_label'): int,
+            Optional('remote_label'): int,
+            Optional('next_hop'): str,
+            Optional('access_if'): str,
+            Optional('access_if_state'): str,
+            Optional('access_member_state'): str,
+            Optional('output_if'): str,
+            Optional('output_label_stack'): str,
+            Optional('preferred_path'): str,
+            Optional('default_path'): str,
+            Optional('rx_pak'): int,
+            Optional('tx_pak'): int,
+    }
+
+
+# ==================================================
+# Parser for 'show l2vpn evpn vpws vc id detail'
+# ==================================================
+class ShowL2vpnEvpnVpwsVc(ShowL2vpnEvpnVpwsVcSchema):
+    """ Parser for: show l2vpn evpn vpws vc id {vc_id} detail """
+
+    cli_command = 'show l2vpn evpn vpws vc id {vc_id} detail'
+
+    def cli(self, vc_id=None, output=None):
+
+        # Init vars
+        parsed_dict = {}
+
+        if output is None:
+            # Execute command
+            if vc_id:
+                show_output = self.device.execute(self.cli_command.format(vc_id=vc_id))
+            else:
+                show_output = None
+        else:
+            show_output = output
+
+
+        # EVPN name: vc100, state: up, type: point-to-point
+        p1 = re.compile(r'^EVPN name:\s+(?P<vc_name>[^,]+), state:\s+(?P<vc_state>[^,]+), type:\s+point-to-point$')
+
+        # EVPN ID: 100
+        p2 = re.compile(r'^EVPN ID:\s+(?P<evi>\d+)$')
+
+        # VPWS Service Instance ID: Source 1, Target 2
+        p3 = re.compile(r'^\s*VPWS Service Instance ID:\s+Source\s+(?P<source>\d+), Target\s+(?P<target>\d+)$')
+
+        # Labels: Local 18, Remote 16
+        p4 = re.compile(r'^\s*Labels:\s+Local\s+(?P<local_label>\d+), Remote\s+(?P<remote_label>\d+)$')
+
+        # Next Hop Address: 20.20.20.20
+        p5 = re.compile(r'^\s*Next Hop Address:\s+(?P<next_hop>[A-Fa-f0-9:\.]+)$')
+
+        # Associated member interface Et1/2 up, Et1/2 status is up
+        p6 = re.compile(r'^\s*Associated member interface\s+(?P<access_if>\S+)\s+(?P<access_member_state>[^,]+)(\S+\s+){4}(?P<access_if_state>.*)$')
+
+        # Output interface: Tu65536, imposed label stack {24321 16}
+        p7 = re.compile(r'^\s*Output interface:\s+(?P<output_if>.*), imposed label stack {(?P<output_label_stack>[^}]+)')
+
+        # Preferred path:   active
+        p8 = re.compile(r'^\s*Preferred path:\s+(?P<preferred_path>.*)$')
+
+        # Default path: ready
+        p9 = re.compile(r'^\s*Default path:\s+(?P<default_path>.*)$')
+
+        # Rx Counters
+        # 0 input transit packets, 0 bytes
+        p10 = re.compile(r'^\s*(?P<rx_pak>\S+)\s+input transit packets')
+        # 0 drops
+
+        # Tx Counters
+        # 0 output transit packets, 0 bytes
+        p11 = re.compile(r'^\s*(?P<tx_pak>\S+)\s+output transit packets')
+        # 0 drops
+
+        for line in show_output.splitlines():
+            line = line.strip()
+
+            # EVPN name: vc100, state: up, type: point-to-point
+            m = p1.match(line)
+            if m:
+                parsed_dict['vc_name'] = str(m.groupdict()['vc_name'])
+                parsed_dict['vc_state'] = str(m.groupdict()['vc_state'])
+                continue
+
+            # EVPN ID: 100
+            m = p2.match(line)
+            if m:
+                parsed_dict['evi'] = int(m.groupdict()['evi'])
+                continue
+
+            # VPWS Service Instance ID: Source 1, Target 2
+            m = p3.match(line)
+            if m:
+                parsed_dict['source'] = int(m.groupdict()['source'])
+                parsed_dict['target'] = int(m.groupdict()['target'])
+                continue
+
+            # Labels: Local 18, Remote 16
+            m = p4.match(line)
+            if m:
+                parsed_dict['local_label'] = int(m.groupdict()['local_label'])
+                parsed_dict['remote_label'] = int(m.groupdict()['remote_label'])
+                continue
+
+            # Next Hop Address: 20.20.20.20
+            m = p5.match(line)
+            if m:
+                parsed_dict['next_hop'] = str(m.groupdict()['next_hop'])
+                continue
+
+            # Associated member interface Et1/2 up, Et1/2 status is up
+            m = p6.match(line)
+            if m:
+                parsed_dict['access_if'] = str(m.groupdict()['access_if'])
+                parsed_dict['access_if_state'] = str(m.groupdict()['access_if_state'])
+                parsed_dict['access_member_state'] = str(m.groupdict()['access_member_state'])
+                continue
+
+            # Output interface: Tu65536, imposed label stack {24321 16}
+            m = p7.match(line)
+            if m:
+                parsed_dict['output_if'] = str(m.groupdict()['output_if'])
+                parsed_dict['output_label_stack'] = str(m.groupdict()['output_label_stack'])
+                continue
+
+            # Preferred path:   active
+            m = p8.match(line)
+            if m:
+                parsed_dict['preferred_path'] = str(m.groupdict()['preferred_path'])
+                continue
+
+            # Default path: ready
+            m = p9.match(line)
+            if m:
+                parsed_dict['default_path'] = str(m.groupdict()['default_path'])
+                continue
+
+            # Rx Counters
+            # 0 input transit packets, 0 bytes
+            m = p10.match(line)
+            if m:
+                parsed_dict['rx_pak'] = int(m.groupdict()['rx_pak'])
+                continue
+
+            # Tx Counters
+            # 0 output transit packets, 0 bytes
+            m = p11.match(line)
+            if m:
+                parsed_dict['tx_pak'] = int(m.groupdict()['tx_pak'])
+                continue
+
+        return parsed_dict
+
+# ============================================
+# Schema for 'show l2vpn evpn vpws vc preferred-path'
+# ============================================
+class ShowL2vpnEvpnVpwsVcPreferredPathSchema(MetaParser):
+    """ Schema for show l2vpn evpn vpws vc preferred-path """
+    schema = {
+        Any(): {
+                    'Tunnel': str,
+                    'EVPN ID': str,
+                    'Source': str,
+                    'Target': str,
+                    'Name': str,
+                    'Status': str,
+                },
+    }
+
+
+# ==================================================
+# Parser for 'show l2vpn evpn vpws vc preferred-path'
+# ==================================================
+class ShowL2vpnEvpnVpwsVcPreferredPath(ShowL2vpnEvpnVpwsVcPreferredPathSchema):
+    """ Parser for: show l2vpn evpn vpws vc preferred-path """
+
+    cli_command = 'show l2vpn evpn vpws vc preferred-path'
+
+    def cli(self, output=None):
+
+        # Init vars
+        parsed_dict = {}
+
+        if output is None:
+            # Execute command
+            show_output = self.device.execute(self.cli_command)
+        else:
+            show_output = output
+
+        if show_output:
+            parsed_dict = oper_fill_tabular(header_fields=["Tunnel", "EVPN ID", "Source", "Target", "Name", "Status"],
+                                            device_output=show_output,
+                                            device_os='iosxe', index=[1]).entries
+        return parsed_dict
+
+
+# ============================================
+# Schema for 'show l2vpn atom vc'
+# ============================================
+class ShowL2vpnAtomVcSchema(MetaParser):
+    """Schema for show l2vpn atom vc"""
+
+    schema = {
+        'name': {
+            Any(): {
+                'interface': {
+                    Any(): {
+                        'peer_id': str,
+                        'vc_id': int,
+                        'type': str,
+                        'status': str                        
+                    }
+                }
+            }
+        }
+    }
+
+# ======================================================
+# Parser for 'show l2vpn atom vc '
+# ======================================================
+class ShowL2vpnAtomVc(ShowL2vpnAtomVcSchema):
+    """Parser for show l2vpn atom vc"""
+    
+    cli_command = 'show l2vpn atom vc'
+    
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+
+        # Interface Peer ID        VC ID      Type   Name                     Status
+        p1 = re.compile(r"^(?P<interface>[\w\d]+)\s+(?P<peer_id>[\d\:\.]+)\s+(?P<vc_id>\d+)\s+(?P<type>\w+)\s+(?P<name>[\w\d]+)\s+(?P<status>\w+)$")
+
+        for line in output.splitlines():
+            line = line.rstrip()
+
+            # Interface Peer ID        VC ID      Type   Name                     Status
+            m = p1.match(line)
+            if m:
+                name = m.groupdict()['name']
+                key_chain_dict = ret_dict.setdefault('name', {}).setdefault(name, {})
+                key_name = Common.convert_intf_name(m.groupdict()['interface'])
+                process_dict = key_chain_dict.setdefault('interface', {}).setdefault(key_name, {})
+                process_dict['peer_id']=m.groupdict()['peer_id']
+                process_dict['status']=m.groupdict()['status']
+                process_dict['vc_id']=int(m.groupdict()['vc_id'])
+                process_dict['type']=m.groupdict()['type']
+                continue
 
         return ret_dict

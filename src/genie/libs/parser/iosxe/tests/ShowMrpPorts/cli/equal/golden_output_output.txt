@@ -1,0 +1,176 @@
+
+Ring ID : 1
+PortName                Status
+--------------------------------------
+Gi1/0/1                 Forwarding
+Gi1/0/2                 Blocked
+
+
+
+Ring ID : 2
+PortName                Status
+--------------------------------------
+Gi1/0/3                 Forwarding
+Gi1/0/4                 Forwarding
+
+
+
+Ring ID : 3
+PortName                Status
+--------------------------------------
+Gi1/0/5                 Forwarding
+Gi1/0/6                 Blocked
+
+
+
+Ring ID : 4
+PortName                Status
+--------------------------------------
+n/a                     n/a
+n/a                     n/a
+
+
+
+Ring ID : 5
+PortName                Status
+--------------------------------------
+n/a                     n/a
+n/a                     n/a
+
+
+
+Ring ID : 6
+PortName                Status
+--------------------------------------
+n/a                     n/a
+n/a                     n/a
+
+
+
+Ring ID : 7
+PortName                Status
+--------------------------------------
+n/a                     n/a
+n/a                     n/a
+
+
+
+Ring ID : 8
+PortName                Status
+--------------------------------------
+n/a                     n/a
+n/a                     n/a
+
+
+
+Ring ID : 9
+PortName                Status
+--------------------------------------
+n/a                     n/a
+n/a                     n/a
+
+
+
+Ring ID : 10
+PortName                Status
+--------------------------------------
+n/a                     n/a
+n/a                     n/a
+
+
+
+Ring ID : 11
+PortName                Status
+--------------------------------------
+n/a                     n/a
+n/a                     n/a
+
+
+
+Ring ID : 12
+PortName                Status
+--------------------------------------
+n/a                     n/a
+n/a                     n/a
+
+
+
+Ring ID : 13
+PortName                Status
+--------------------------------------
+n/a                     n/a
+n/a                     n/a
+
+
+
+Ring ID : 14
+PortName                Status
+--------------------------------------
+n/a                     n/a
+n/a                     n/a
+
+
+
+Ring ID : 15
+PortName                Status
+--------------------------------------
+n/a                     n/a
+n/a                     n/a
+
+
+
+Ring ID : 16
+PortName                Status
+--------------------------------------
+n/a                     n/a
+n/a                     n/a
+
+
+
+Ring ID : 17
+PortName                Status
+--------------------------------------
+n/a                     n/a
+n/a                     n/a
+
+
+
+Ring ID : 18
+PortName                Status
+--------------------------------------
+n/a                     n/a
+n/a                     n/a
+
+
+
+Ring ID : 19
+PortName                Status
+--------------------------------------
+n/a                     n/a
+n/a                     n/a
+
+
+
+Ring ID : 20
+PortName                Status
+--------------------------------------
+n/a                     n/a
+n/a                     n/a
+
+
+
+Ring ID : 21
+PortName                Status
+--------------------------------------
+n/a                     n/a
+n/a                     n/a
+
+
+
+Ring ID : 22
+PortName                Status
+--------------------------------------
+n/a                     n/a
+n/a                     n/a
+
+

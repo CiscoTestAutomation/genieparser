@@ -1,0 +1,5 @@
+# show macsec mka statistics
+-----------------------------------
+Macsec is shutdown
+-----------------------------------
+# 

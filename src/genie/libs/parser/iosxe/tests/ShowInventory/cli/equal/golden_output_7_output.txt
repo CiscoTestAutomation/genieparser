@@ -1,0 +1,72 @@
+NAME: "Switch 1 Chassis", DESCR: "Cisco Catalyst Series C9500X-28C8D Chassis"
+PID: C9500X-28C8D      , VID: V00  , SN: FDO24460AE5
+
+NAME: "Switch 1 Slot 1 Supervisor", DESCR: "Cisco Catalyst 9500X-28C8D Switch"
+PID: C9500X-28C8D      , VID: V00  , SN: FDO24460AE5
+
+NAME: "HundredGigE1/0/1", DESCR: "QSFP 100GE CU3M"
+PID: QSFP-100G-CU3M      , VID: V01  , SN: APF25020BCA-B
+
+NAME: "FourHundredGigE1/0/15", DESCR: "QSFP 100GE CU2M"
+PID: QSFP-100G-CU2M      , VID: V01  , SN: APF2303003L-A
+
+NAME: "Switch 1 Power Supply Module 1", DESCR: "Cisco Catalyst Series C9500 1.5KW-AC Reverse Air Flow  Power Supply"
+PID: C9K-PWR-1500WAC-R , VID: V00  , SN: QCS2446613K
+
+NAME: "Switch 1 Power Supply Module 2", DESCR: "Cisco Catalyst Series C9500 1.5KW-AC Reverse Air Flow  Power Supply"
+PID: C9K-PWR-1500WAC-R , VID: V00  , SN: QCS2502614B
+
+NAME: "Switch 1 Fan Tray 1", DESCR: "Cisco Catalyst Series C9500 1RU Reverse Air Flow"
+PID: C9K-FAN-1U-R      , VID: V00  , SN: ACI24460UD6
+
+NAME: "Switch 1 Fan Tray 2", DESCR: "Cisco Catalyst Series C9500 1RU Reverse Air Flow"
+PID: C9K-FAN-1U-R      , VID: V00  , SN: ACI24460UCU
+
+NAME: "Switch 1 Fan Tray 3", DESCR: "Cisco Catalyst Series C9500 1RU Reverse Air Flow"
+PID: C9K-FAN-1U-R      , VID: V00  , SN: ACI24460UFF
+
+NAME: "Switch 1 Fan Tray 4", DESCR: "Cisco Catalyst Series C9500 1RU Reverse Air Flow"
+PID: C9K-FAN-1U-R      , VID: V00  , SN: ACI24460UEV
+
+NAME: "Switch 1 Fan Tray 5", DESCR: "Cisco Catalyst Series C9500 1RU Reverse Air Flow"
+PID: C9K-FAN-1U-R      , VID: V00  , SN: ACI24460UEK
+
+NAME: "Switch 1 Fan Tray 6", DESCR: "Cisco Catalyst Series C9500 1RU Reverse Air Flow"
+PID: C9K-FAN-1U-R      , VID: V00  , SN: ACI24460UFX
+
+NAME: "Switch 2 Chassis", DESCR: "Cisco Catalyst Series C9500X-28C8D Chassis"
+PID: C9500X-28C8D      , VID: V00  , SN: FDO25130VEC
+
+NAME: "Switch 2 Slot 1 Supervisor", DESCR: "Cisco Catalyst 9500X-28C8D Switch"
+PID: C9500X-28C8D      , VID: V00  , SN: FDO25130VEC
+
+NAME: "HundredGigE2/0/1", DESCR: "QSFP 100GE CU3M"
+PID: QSFP-100G-CU3M      , VID: V01  , SN: APF25020BCA-A
+
+NAME: "FourHundredGigE2/0/15", DESCR: "QSFP 100GE CU2M"
+PID: QSFP-100G-CU2M      , VID: V01  , SN: APF2303003L-B
+
+NAME: "Switch 2 Power Supply Module 1", DESCR: "Cisco Catalyst Series C9500 1.5KW-AC Reverse Air Flow  Power Supply"
+PID: C9K-PWR-1500WAC-R , VID: V00  , SN: QCS2514610Z
+
+NAME: "Switch 2 Power Supply Module 2", DESCR: "Cisco Catalyst Series C9500 1.5KW-AC Reverse Air Flow  Power Supply"
+PID: C9K-PWR-1500WAC-R , VID: V00  , SN: QCS25146149
+
+NAME: "Switch 2 Fan Tray 1", DESCR: "Cisco Catalyst Series C9500 1RU Reverse Air Flow"
+PID: C9K-FAN-1U-R      , VID: V00  , SN: ACI25140NQF
+
+NAME: "Switch 2 Fan Tray 2", DESCR: "Cisco Catalyst Series C9500 1RU Reverse Air Flow"
+PID: C9K-FAN-1U-R      , VID: V00  , SN: ACI25140NT3
+
+NAME: "Switch 2 Fan Tray 3", DESCR: "Cisco Catalyst Series C9500 1RU Reverse Air Flow"
+PID: C9K-FAN-1U-R      , VID: V00  , SN: ACI251110KV
+
+NAME: "Switch 2 Fan Tray 4", DESCR: "Cisco Catalyst Series C9500 1RU Reverse Air Flow"
+PID: C9K-FAN-1U-R      , VID: V00  , SN: ACI25140NU8
+
+NAME: "Switch 2 Fan Tray 5", DESCR: "Cisco Catalyst Series C9500 1RU Reverse Air Flow"
+PID: C9K-FAN-1U-R      , VID: V00  , SN: ACI251110MU
+
+NAME: "Switch 2 Fan Tray 6", DESCR: "Cisco Catalyst Series C9500 1RU Reverse Air Flow"
+PID: C9K-FAN-1U-R      , VID: V00  , SN: ACI251110EQ
+

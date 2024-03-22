@@ -1,0 +1,194 @@
+
+arizona-131#show performance-measurement interfaces d p
+Interface Name: Ethernet0/0 (ifh: 0x2)
+  Delay-Measurement           : Enabled
+  Loss-Measurement            : Disabled
+  Local IPV4 Address          : 19.1.1.3
+  Local IPV6 Address          : ::
+  State                       : Up
+  MPLS Caps                   : Not created
+
+  Delay Measurement session:
+    Session ID                : 1
+    Profile name              : Not configured
+
+    Last advertisement:
+      No advertisements have occured
+
+    Next advertisement:
+      Check scheduled in 2 more probes (roughly every 120 seconds)
+      No probes completed
+
+    Last Error:
+      0 0 packet sent error. INVALID_OUT_IF
+      Timestamp: 13:11:32 10-18 2021
+
+    Current Probe:
+      Started at 13:11:17 10-18 2021 (16 seconds ago)
+      Packets Sent: 6, received: 0
+      Measured delays (uSec): avg: 0, min: 0, max: 0, variance: 0
+      Probe samples:
+        No History
+      Next probe scheduled at 13:11:47 10-18 2021 (in 14 seconds)
+      Next burst packet will be sent in 2 seconds
+
+    Liveness Detection:
+      Session Creation Timestamp: 10-18 12:56:46.731
+      Session State: Down
+      Last State Change Timestamp: 10-18 12:58:47.578
+      Missed count   [consecutive]: 296
+      Received count [consecutive]: 0
+      Backoff                     : 1
+      Unique Path Name            : Path-1
+      Loss in Last Interval       : 100 % [TX: 6 RX: 0]
+
+Interface Name: Ethernet0/1 (ifh: 0x8)
+  Delay-Measurement : Enabled
+  Loss-Measurement : Enabled
+  Local IPV4 Address : 1.2.3.3
+  Local IPV6 Address : 1:2:3:3::1
+  State : Up
+  MPLS Caps : Not created
+
+  Delay Measurement session:
+  Session ID : 3
+  Profile name : Not configured
+
+  Last advertisement:
+    Advertised at: 05:15:42 11-02 2021 (4901 seconds ago)
+    Advertised reason: First advertisement
+    Advertised anomaly: INACTIVE
+    Advertised delays (uSec): avg: 752, min: 575, max: 947, variance: 99
+
+  Next advertisement:
+    Check scheduled at the end of the current probe (roughly every 120 seconds)
+    Aggregated delays (uSec): avg: 383, min: 313, max: 499, variance: 51
+    Rolling average (uSec): 395
+
+  Last Error:
+    Unknown destination address type 0. 
+    Timestamp: 05:14:27 11-02 2021
+
+  Current Probe:
+    Started at 06:37:12 11-02 2021 (11 seconds ago)
+    Packets Sent: 4, received: 4
+    Measured delays (uSec): avg: 410, min: 353, max: 436, variance: 57
+    Probe samples:
+      Packet Rx Timestamp       Measured Delay (nsec)
+      06:37:21 11-02 2021       432500        
+      06:37:18 11-02 2021       436500        
+      06:37:15 11-02 2021       419000        
+      06:37:12 11-02 2021       353500        
+    Next probe scheduled at 06:37:41 11-02 2021 (in 18 seconds)
+    Burst completed
+  
+  Liveness Detection: 
+    Session Creation Timestamp: 11-02 05:14:11.582 
+    Session State: Up 
+    Last State Change Timestamp: 11-02 05:14:30.696 
+    Missed count   [consecutive]: 0 
+    Received count [consecutive]: 1658 
+    Backoff                     : 0 
+    Unique Path Name            : Path-3     
+    Loss in Last Interval       : 0 % [TX: 4 RX: 4] 
+
+Interface Name: Ethernet1/2 (ifh: 0x8)
+  Delay-Measurement           : Enabled
+  Loss-Measurement            : Enabled
+  Local IPV4 Address          : 1.2.3.3
+  Local IPV6 Address          : 1:2:3:3::1
+  State                       : Up
+  MPLS Caps                   : Not created
+
+  Delay Measurement session:
+    Session ID                : 3
+    Profile name              : Not configured
+
+    Last advertisement:
+      Advertised at: 12:58:47 10-18 2021 (766 seconds ago)
+      Advertised reason: First advertisement
+      Advertised anomaly: INACTIVE
+      Advertised delays (uSec): avg: 747, min: 496, max: 5628, variance: 234
+
+    Next advertisement:
+      Check scheduled in 2 more probes (roughly every 120 seconds)
+      Aggregated delays (uSec): avg: 758, min: 683, max: 872, variance: 75
+      Rolling average (uSec): 757
+
+    Last Error:
+      Unknown destination address type 0.
+      Timestamp: 12:57:05 10-18 2021
+
+    Current Probe:
+      Started at 13:11:17 10-18 2021 (16 seconds ago)
+      Packets Sent: 6, received: 6
+      Measured delays (uSec): avg: 779, min: 738, max: 879, variance: 41
+      Probe samples:
+        Packet Rx Timestamp       Measured Delay (nsec)
+        13:11:32 10-18 2021       879500
+        13:11:29 10-18 2021       742500
+        13:11:26 10-18 2021       738500
+        13:11:23 10-18 2021       768000
+        13:11:20 10-18 2021       781500
+        13:11:17 10-18 2021       768000
+      Next probe scheduled at 13:11:46 10-18 2021 (in 13 seconds)
+      Next burst packet will be sent in 1 seconds
+
+    Liveness Detection:
+      Session Creation Timestamp: 10-18 12:56:46.732
+      Session State: Up
+      Last State Change Timestamp: 10-18 12:57:08.097
+      Missed count   [consecutive]: 0
+      Received count [consecutive]: 289
+      Backoff                     : 0
+      Unique Path Name            : Path-3
+      Loss in Last Interval       : 0 % [TX: 6 RX: 6]
+
+  Loss Measurement session:
+    Session ID                : 4
+    Profile name              : Not configured
+
+    Last advertisement:
+      Advertised at: 12:57:47 10-18 2021 (826 seconds ago)
+      Advertised reason: First advertisement
+      Advertised anomaly: INACTIVE
+    Advertised loss(%) [Capped @ 50.331642%]: avg: 0.000000, min: 0.000000, max: 0.000000, variance: 0.000000
+
+    Next advertisement:
+      Check scheduled at the end of the current probe (roughly every 120 seconds)
+      Aggregated loss(%) [Capped @ 50.331642%]: avg: 0.000000, min: 0.000000, max: 0.000000, variance: 0.000000
+      Rolling average (%): 0.000000
+
+    Last Error:
+      Unknown destination address type 0.
+      Timestamp: 12:57:02 10-18 2021
+
+    Current Probe:
+      Started at 13:10:47 10-18 2021 (46 seconds ago)
+      Packets Sent: 4, received: 4
+      Measured loss(%) [Capped @ 50.331642%]: avg: 0.000000, min: 0.000000, max: 0.000000, variance: 0.000000
+      Probe samples:
+        Rx Timestamp              Last TX    TX         Last RX    RX         Col  Loss(0-100%)   
+        13:11:17 10-18 2021       55         56         56         57         0  0.000000
+        13:11:02 10-18 2021       54         55         55         56         1  0.000000
+      Next probe scheduled at 13:11:46 10-18 2021 (in 13 seconds)
+      Next burst packet will be sent in 13 seconds
+
+    Liveness Detection:
+      Session Creation Timestamp: 10-18 12:56:46.732
+      Session State: Up
+      Last State Change Timestamp: 10-18 12:57:17.221
+      Missed count   [consecutive]: 0
+      Received count [consecutive]: 58
+      Backoff                     : 0
+      Unique Path Name            : Path-3
+      Loss in Last Interval       : 0 % [TX: 4 RX: 4]
+
+Interface Name: Serial2/0 (ifh: 0xA)
+  Delay-Measurement           : Disabled
+  Loss-Measurement            : Disabled
+  Local IPV4 Address          : 0.0.0.0
+  Local IPV6 Address          : ::
+  State                       : Down
+  MPLS Caps                   : Not created
+

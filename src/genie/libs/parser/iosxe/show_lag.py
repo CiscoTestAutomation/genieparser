@@ -17,6 +17,7 @@
      *  show etherchannel <port_channel> summary
      *  show etherchannel load-balancing
      *  show lacp neighbor detail
+     *  show etherchannel <channel_group> detail
 """
 # Python
 import re
@@ -1116,3 +1117,560 @@ class ShowLacpNeighborDetail(ShowLacpNeighborDetailSchema):
                 continue
 
         return result_dict
+
+
+class ShowEtherChannelDetailSchema(MetaParser):
+    '''Schema for show etherchannel {channel_group} detail'''
+    schema = {
+        'group_state': str,
+        'ports': int,
+        'max_ports': int,
+        'port_channels': int,
+        'max_port_channels': int,
+        'protocol': str,
+        'minimum_links': int,
+        Optional('port'): {
+            Any(): {
+                'port_state': str,
+                'channel_group': int,
+                'gcchange': str,
+                'mode': str,
+                'port_channel': str,
+                'gc': str,
+                'pseudo_port_channel': str, 
+                'port_index': int,
+                'load': str,
+                'protocol': str,
+                'age': str,
+                'local_information': {
+                    'port': {
+                        Any(): {
+                            'flags': str,
+                            'state': str,
+                            'lacp_priority': int,
+                            'admin_key': str,
+                            'oper_key': str,
+                            'port_number': str,
+                            'port_state': str
+                        }
+                    }
+                },
+                'partner_information': {
+                    'port': {
+                        Any(): {
+                            'flags': str,
+                            'dev_id': str,
+                            'age': str,
+                            'lacp_priority': int,
+                            'admin_key': str,
+                            'oper_key': str,
+                            'port_number': str,
+                            'port_state': str
+                        }
+                    }
+                }            
+            }
+        },
+        Optional('port_channel'): {
+            Any(): {
+                'age': str,
+                'logical_slot': str,
+                'number_of_ports': int,
+                'hot_standby': str,
+                'state': str,
+                'protocol': str,
+                'port_security': str,
+                'fast_switchover': str,
+                'dampening': str,
+                Optional('last_port_bundled'): {
+                    'time': str,
+                    'port': str
+                },
+                Optional('last_port_unbundled'): {
+                    'time': str,
+                    'port': str
+                },             
+                'port': {
+                    Any(): {
+                        'index': int,
+                        'load': str,
+                        'ec_state': str,
+                        'no_of_bits': int
+                    }
+                } 
+            }
+        }
+    }
+
+
+class ShowEtherChannelDetail(ShowEtherChannelDetailSchema):
+    '''Parser for show etherchannel {channel_group} detail'''
+
+    cli_command = 'show etherchannel {channel_group} detail'
+
+    def cli(self, channel_group="", output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(channel_group=channel_group))
+        
+        # Group state = L2
+        p1 = re.compile(r'^Group state = (?P<group_state>\w+)$')
+
+        # Ports: 2   Maxports = 16
+        p2 = re.compile(r'^Ports:\s+(?P<ports>\d+)\s+Maxports =\s+(?P<max_ports>\d+)$')
+
+        # Port-channels: 1 Max Port-channels = 16
+        p3 = re.compile(r'^Port-channels:\s(?P<port_channels>\d+)\s+Max Port-channels =\s(?P<max_port_channels>\d+)$')
+
+        # Protocol:   LACP
+        p4 = re.compile(r'^Protocol:\s+(?P<protocol>\w+)$')
+
+        # Minimum Links: 0
+        p5 = re.compile(r'^Minimum Links:\s+(?P<minimum_links>\d+)$')
+
+        # Port: Twe1/0/13
+        p6 = re.compile(r'^Port:\s+(?P<port>[\w/\.]+)$')
+
+        # Port state    = Up Mstr Assoc In-Bndl 
+        p7 = re.compile(r'^Port state    =\s+(?P<port_state>.+)$')
+
+        # Channel group = 1           Mode = Active          Gcchange = -
+        p8 = re.compile(r'^Channel\sgroup\s=\s+(?P<channel_group>\d+)\s+Mode\s=\s(?P<mode>\w+)\s+Gcchange\s=\s(?P<gcchange>\S+)$')
+
+        # Port-channel  = Po1         GC   =   -             Pseudo port-channel = Po1
+        p9 = re.compile(r'^Port-channel\s+=\s(?P<port_channel>\w+)\s+GC\s+=\s+(?P<gc>\S+)\s+Pseudo\sport-channel\s=\s(?P<pseudo_port_channel>\w+)$')
+
+        # Port index    = 0           Load = 0x00            Protocol =   LACP
+        p10 = re.compile(r'^Port\sindex\s+=\s(?P<port_index>\d+)\s+Load\s=\s(?P<load>\w+)\s+Protocol\s=\s+(?P<protocol>\S+)$')
+
+        # Age of the port in the current state: 0d:00h:03m:14s
+        p11 = re.compile(r'^Age of the port in the current state:\s(?P<age>\S+)$')
+
+        # Twe1/0/13     SA      bndl      200          0x1       0x1     0x10E       0x3D
+        p12 = re.compile(r'^(?P<port>[\w/\.]+)\s+(?P<flags>\w+)\s+(?P<state>\S+)\s+(?P<lacp_priority>\d+)\s+(?P<admin_key>\w+)\s+(?P<oper_key>\w+)\s+(?P<port_number>\w+)\s+(?P<port_state>\w+)$')
+
+        # Twe1/0/13     SA     32768     6cb2.ae4a.54c0   6s  0x0    0x1    0x804   0x3D 
+        p13 = re.compile(r'^(?P<port>[\w/\.]+)\s+(?P<flags>\w+)\s+(?P<lacp_priority>\d+)\s+(?P<dev_id>[a-f0-9\.]+)\s+(?P<age>\w+)\s+(?P<admin_key>\w+)\s+(?P<oper_key>\w+)\s+(?P<port_number>\w+)\s+(?P<port_state>\w+)$')
+
+        # Port-channel: Po1    (Primary Aggregator)
+        p14 = re.compile(r'^Port\-channel:\s(?P<port_channel>\S+).+$')
+
+        # Age of the Port-channel   = 0d:00h:10m:38s
+        p15 = re.compile(r'^Age of the Port\-channel\s+=\s(?P<age>\S+)$')
+
+        # Logical slot/port   = 9/1          Number of ports = 1
+        p16 = re.compile(r'^Logical slot/port\s+=\s(?P<logical_slot>\S+)\s+Number of ports =\s(?P<number_of_ports>\d+)$')
+
+        # HotStandBy port = Twe1/0/15 
+        p17 = re.compile(r'^HotStandBy port =\s(?P<hot_standby>[\w/\.]+)$')
+
+        # Port state          = Port-channel Ag-Inuse 
+        p18 = re.compile(r'^Port state          =\s(?P<state>.+)$')
+
+        # Protocol            =   LACP
+        p19 = re.compile(r'^Protocol\s+=\s+(?P<protocol>\S+)$')
+
+        # Port security       = Disabled
+        p20 = re.compile(r'^Port security\s+=\s(?P<port_security>\S+)$')
+
+        # Fast-switchover     = disabled
+        p21 = re.compile(r'^Fast\-switchover\s+=\s(?P<fast_switchover>\S+)$')
+
+        # Fast-switchover Dampening = disabled
+        p22 = re.compile(r'^Fast\-switchover Dampening =\s(?P<dampening>\S+)$')
+
+        # Time since last port bundled:    0d:00h:03m:14s     Twe1/0/13
+        p23 = re.compile(r'^Time since last port bundled:\s+(?P<time>\S+)\s+(?P<port>\S+)$')
+
+        # Time since last port Un-bundled: 0d:00h:03m:16s     Twe1/0/15
+        p24 = re.compile(r'^Time since last port Un\-bundled:\s+(?P<time>\S+)\s+(?P<port>\S+)$')
+
+        #   0     00     Twe1/0/13      Active             0
+        p25 = re.compile(r'^(?P<index>\d+)\s+(?P<load>\w+)\s+(?P<port>[\w/\.]+)\s+(?P<ec_state>\S+)\s+(?P<no_of_bits>\d+)$')
+
+        ret_dict = dict()
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Group state = L2
+            m = p1.match(line)
+            if m:
+                ret_dict.update(m.groupdict())
+                continue
+
+            # Ports: 2   Maxports = 16
+            m = p2.match(line)
+            if m:
+                ret_dict.setdefault('ports', int(m.groupdict()['ports']))
+                ret_dict.setdefault('max_ports', int(m.groupdict()['max_ports']))
+                continue
+            
+            # Port-channels: 1 Max Port-channels = 16
+            m = p3.match(line)
+            if m:
+                ret_dict.setdefault('port_channels', int(m.groupdict()['port_channels']))
+                ret_dict.setdefault('max_port_channels', int(m.groupdict()['max_port_channels']))
+                continue
+            
+            # Protocol:   LACP
+            m = p4.match(line)
+            if m:
+                ret_dict.update(m.groupdict())
+                continue
+            
+            # Minimum Links: 0
+            m = p5.match(line)
+            if m:
+                ret_dict.setdefault('minimum_links', int(m.groupdict()['minimum_links']))
+                continue
+            
+            # Port: Twe1/0/13
+            m = p6.match(line)
+            if m:
+                port_dict = ret_dict.setdefault('port', {}).setdefault(Common.convert_intf_name(m.groupdict()['port']), {})
+                continue
+            
+            # Port state    = Up Mstr Assoc In-Bndl 
+            m = p7.match(line)
+            if m:
+                port_dict.update(m.groupdict())
+                continue
+            
+            # Channel group = 1           Mode = Active
+            m = p8.match(line)
+            if m:
+                port_dict.setdefault('channel_group', int(m.groupdict()['channel_group']))
+                port_dict.setdefault('mode', m.groupdict()['mode'])
+                port_dict.setdefault('gcchange', m.groupdict()['gcchange'])
+                continue
+            
+            # Port-channel  = Po1         GC   =   -             Pseudo port-channel = Po1
+            m = p9.match(line)
+            if m:
+                port_dict.update(m.groupdict())
+                continue
+            
+            # Port index    = 0           Load = 0x00            Protocol =   LACP
+            m = p10.match(line)
+            if m:
+                port_dict.setdefault('port_index', int(m.groupdict()['port_index']))
+                port_dict.setdefault('load', m.groupdict()['load'])
+                port_dict.setdefault('protocol', m.groupdict()['protocol'])
+                continue
+            
+            # Age of the port in the current state: 0d:00h:03m:14s
+            m = p11.match(line)
+            if m:
+                port_dict.update(m.groupdict())
+                continue
+            
+            # Twe1/0/13     SA      bndl      200          0x1       0x1     0x10E       0x3D
+            m = p12.match(line)
+            if m:
+                output = m.groupdict()
+                local_dict = port_dict.setdefault('local_information', {}).setdefault('port', {}).setdefault(Common.convert_intf_name(output['port']), {})
+                local_dict.setdefault('flags', output['flags'])
+                local_dict.setdefault('state', output['state'])
+                local_dict.setdefault('lacp_priority', int(output['lacp_priority']))
+                local_dict.setdefault('admin_key', output['admin_key'])
+                local_dict.setdefault('oper_key', output['oper_key'])
+                local_dict.setdefault('port_number', output['port_number'])
+                local_dict.setdefault('port_state', output['port_state'])
+                continue
+            
+            # Twe1/0/13     SA     32768     6cb2.ae4a.54c0   6s  0x0    0x1    0x804   0x3D 
+            m = p13.match(line)
+            if m:
+                output = m.groupdict()
+                par_dict = port_dict.setdefault('partner_information', {}).setdefault('port', {}).setdefault(Common.convert_intf_name(output['port']), {})
+                par_dict.setdefault('flags', output['flags'])
+                par_dict.setdefault('dev_id', output['dev_id'])
+                par_dict.setdefault('lacp_priority', int(output['lacp_priority']))
+                par_dict.setdefault('age', output['age'])
+                par_dict.setdefault('admin_key', output['admin_key'])
+                par_dict.setdefault('oper_key', output['oper_key'])
+                par_dict.setdefault('port_number', output['port_number'])
+                par_dict.setdefault('port_state', output['port_state'])
+                continue
+            
+            # Port-channel: Po1
+            m = p14.match(line)
+            if m:
+                channel_dict = ret_dict.setdefault('port_channel', {}).setdefault(m.groupdict()['port_channel'], {})
+                continue
+            
+            # Age of the Port-channel   = 0d:00h:10m:38s
+            m = p15.match(line)
+            if m:
+                channel_dict.update(m.groupdict())
+                continue
+                        
+            # Logical slot/port   = 9/1          Number of ports = 1
+            m = p16.match(line)
+            if m:
+                channel_dict.setdefault('logical_slot', m.groupdict()['logical_slot'])
+                channel_dict.setdefault('number_of_ports', int(m.groupdict()['number_of_ports']))
+                continue
+               
+            # HotStandBy port = Twe1/0/15 
+            m = p17.match(line)
+            if m:
+                channel_dict.setdefault('hot_standby', Common.convert_intf_name(m.groupdict()['hot_standby']))
+                continue
+                        
+            # Port state          = Port-channel Ag-Inuse 
+            m = p18.match(line)
+            if m:
+                channel_dict.update(m.groupdict())
+                continue
+
+            # Protocol            =   LACP
+            m = p19.match(line)
+            if m:
+                channel_dict.update(m.groupdict())
+                continue
+
+            # Port security       = Disabled
+            m = p20.match(line)
+            if m:
+                channel_dict.update(m.groupdict())
+                continue
+
+            # Fast-switchover     = disabled
+            m = p21.match(line)
+            if m:
+                channel_dict.update(m.groupdict())
+                continue
+
+            # Fast-switchover Dampening = disabled
+            m = p22.match(line)
+            if m:
+                channel_dict.update(m.groupdict())
+                continue
+            
+            # Time since last port bundled:    0d:00h:03m:14s     Twe1/0/13
+            m = p23.match(line)
+            if m:
+                last_dct = channel_dict.setdefault('last_port_bundled', {})
+                last_dct.setdefault('time', m.groupdict()['time'])
+                last_dct.setdefault('port', Common.convert_intf_name(m.groupdict()['port']))
+                continue
+                       
+            # Time since last port Un-bundled: 0d:00h:03m:16s     Twe1/0/15
+            m = p24.match(line)
+            if m:
+                unbld_dict = channel_dict.setdefault('last_port_unbundled', {})
+                unbld_dict.setdefault('time', m.groupdict()['time'])
+                unbld_dict.setdefault('port', Common.convert_intf_name(m.groupdict()['port']))
+                continue
+                       
+            #   0     00     Twe1/0/13      Active             0
+            m = p25.match(line)
+            if m:
+                output = m.groupdict()
+                port_dict = channel_dict.setdefault('port', {}).setdefault(Common.convert_intf_name(output['port']), {})
+                port_dict.setdefault('index', int(output['index']))
+                port_dict.setdefault('ec_state', output['ec_state'])
+                port_dict.setdefault('load', output['load'])
+                port_dict.setdefault('no_of_bits', int(output['no_of_bits']))
+                continue
+        
+        return ret_dict
+
+
+
+class ShowEtherchannelPortChannelSchema(MetaParser):
+
+    """Schema for show etherchannel port-channel"""
+
+    schema = {
+        'port_channel': {
+            Any(): {
+                'age': str,
+                'logical_slot': str,
+                'number_of_ports': int,
+                Optional('gc'): str,
+                'protocol': str,
+                'port_security': str,
+                'switchover': str,
+                'dampening': str,
+                'ports': {
+                    Any(): {
+                        'ec_state': str,
+                        'bits': int,
+                        'load': str,
+                        'index': int
+                    }
+                }
+            }
+        }
+    }
+
+
+class ShowEtherchannelPortChannel(ShowEtherchannelPortChannelSchema):
+
+    """Parser for show etherchannel port-channel"""
+
+    cli_command = 'show etherchannel {number} port-channel'
+
+    def cli(self, number='', output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(number=number))
+
+        # Port-channel: Po1
+        p1 = re.compile(r"^Port-channel:\s+(?P<port_channel>\S+).*$")
+
+        # Age of the Port-channel   = 0d:00h:01m:16s
+        p2 = re.compile(r"^Age of the Port-channel\s+=\s+(?P<age>\S+)$")
+
+        # Logical slot/port   = 35/1          Number of ports = 2
+        p3 = re.compile(r"^Logical slot/port\s+=\s+(?P<logical_slot>\S+)\s+Number\s+of\s+ports\s+=\s+("
+                          r"?P<number_of_ports>\d+)$")
+
+        # GC                  = 0x00010001      HotStandBy port = null
+        p4 = re.compile(r"^GC\s+=\s+(?P<gc>\S+)\s+HotStandBy\s+port\s+=\s+null$")
+
+        # Protocol            =   PAgP
+        p5 = re.compile(r"^Protocol\s+=\s+(?P<protocol>\w+)$")
+
+        # Port security       = Disabled
+        p6 = re.compile(r"^Port security\s+=\s+(?P<port_security>\w+)$")
+
+        # Fast-switchover     = disabled
+        p7 = re.compile(r"^Fast-switchover\s+=\s+(?P<switchover>\w+)$"
+                          )
+
+        # Fast-switchover Dampening = disabled
+        p8 = re.compile(r"^Fast-switchover Dampening\s+=\s+(?P<dampening>\w+)$")
+
+        #   0     00     Tw1/0/14       Desirable-Sl       0
+        p9 = re.compile(r"^(?P<index>\d+)\s+(?P<load>\d+)\s+(?P<port>\S+)\s+(?P<ec_state>\S+)\s+(?P<bits>\d+)$")
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Port-channel: Po1
+            match = p1.match(line)
+            if match:
+                dict_val = match.groupdict()
+                port_channel_var = dict_val['port_channel']
+                port_channel_dict = ret_dict.setdefault('port_channel', {}).setdefault(port_channel_var, {})
+                continue
+
+            # Age of the Port-channel   = 0d:00h:01m:16s
+            match = p2.match(line)
+            if match:
+                dict_val = match.groupdict()
+                port_channel_dict['age'] = dict_val['age']
+                continue
+
+            # Logical slot/port   = 35/1          Number of ports = 2
+            match = p3.match(line)
+            if match:
+                dict_val = match.groupdict()
+                port_channel_dict['logical_slot'] = dict_val['logical_slot']
+                port_channel_dict['number_of_ports'] = int(dict_val['number_of_ports'])
+                continue
+
+            # GC                  = 0x00010001      HotStandBy port = null
+            match = p4.match(line)
+            if match:
+                dict_val = match.groupdict()
+                port_channel_dict['gc'] = dict_val['gc']
+                continue
+
+            # Protocol            =   PAgP
+            match = p5.match(line)
+            if match:
+                dict_val = match.groupdict()
+                port_channel_dict['protocol'] = dict_val['protocol']
+                continue
+
+            # Port security       = Disabled
+            match = p6.match(line)
+            if match:
+                dict_val = match.groupdict()
+                port_channel_dict['port_security'] = dict_val['port_security']
+                continue
+
+            # Fast-switchover     = disabled
+            match = p7.match(line)
+            if match:
+                dict_val = match.groupdict()
+                port_channel_dict['switchover'] = dict_val['switchover']
+                continue
+
+            # Fast-switchover Dampening = disabled
+            match = p8.match(line)
+            if match:
+                dict_val = match.groupdict()
+                port_channel_dict['dampening'] = dict_val['dampening']
+                continue
+
+            #   0     00     Tw1/0/14       Desirable-Sl       0
+            match = p9.match(line)
+            if match:
+                dict_val = match.groupdict()
+                ports_dict = port_channel_dict.setdefault('ports', {}).setdefault(dict_val['port'], {})
+                ports_dict['ec_state'] = dict_val['ec_state']
+                ports_dict['bits'] = int(dict_val['bits'])
+                ports_dict['load'] = dict_val['load']
+                ports_dict['index'] = int(dict_val['index'])
+                continue
+
+        return ret_dict
+
+
+class ShowEtherchannelProtocolSchema(MetaParser):
+
+    """Schema for show etherchannel protocol"""
+
+    schema = {
+        'group': {
+            Any(): {
+                'protocol': str
+            }
+        }
+    }
+
+
+class ShowEtherchannelProtocol(ShowEtherchannelProtocolSchema):
+
+    """Parser for show etherchannel protocol"""
+
+    cli_command = 'show etherchannel protocol'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Group: 1
+        p1 = re.compile(r"^Group:\s+(?P<group>\d+)$")
+
+        # Protocol:   -  (Mode ON)
+        # Protocol:  LACP
+        p1_1 = re.compile(r"^Protocol:\s+-?\s+\(?(?P<protocol>[\w\s]+)\)?$")
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Group: 1
+            match = p1.match(line)
+            if match:
+                dict_val = match.groupdict()
+                group_var = dict_val['group']
+                group_dict = ret_dict.setdefault('group', {}).setdefault(group_var, {})
+                continue
+
+            # Protocol:   -  (Mode ON)
+            match = p1_1.match(line)
+            if match:
+                dict_val = match.groupdict()
+                group_dict['protocol'] = dict_val['protocol']
+                continue
+
+        return ret_dict

@@ -1,0 +1,5 @@
+{
+    "switch": "switch",
+    "mode": "active",
+    "interface": "hundredGigE 1/0/5"
+}

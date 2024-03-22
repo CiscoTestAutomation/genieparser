@@ -1,0 +1,14 @@
+--------------------------------------------------------------------------------
+UPTIME SUMMARY INFORMATION
+--------------------------------------------------------------------------------
+First customer power on : 06/22/2021 12:35:40
+Total uptime            :  0  years  16 weeks  1  days  18 hours  40 minutes
+Total downtime          :  2177 years  8  weeks  0  days  6  hours  0  minutes
+Number of resets        : 640
+Number of slot changes  : 1
+Current reset reason    : Reload Command
+Current reset timestamp : 11/11/2019 03:44:28
+Current slot            : 1
+Chassis type            : C9606R
+Current uptime          :  0  years  0  weeks  0  days  2  hours  0  minutes
+-------------------------------------------------------------------------------- 

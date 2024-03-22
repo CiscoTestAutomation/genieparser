@@ -1,0 +1,17 @@
+nxos# show running-config bgp
+
+!Command: show running-config bgp
+!Running configuration last done at: Fri Aug  5 17:22:38 2022
+!Time: Fri Aug  5 17:31:52 2022
+
+version 9.3(8) Bios:version
+feature bgp
+
+router bgp 65535
+  address-family ipv4 unicast
+  vrf test1
+    neighbor 1.1.1.1
+      description SimpleDescription
+  vrf test2
+    neighbor 2.2.2.2
+      description More-"complex" Description_1234!

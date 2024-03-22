@@ -1,0 +1,8 @@
+Client name          Handle     WalkQ  WalkQ by Owner
+NAT_ROUTE              1          0      0   
+OMP                    2          0      0   
+OMP TLOC/Network       3          0      0   
+IP Static Route        4          0      0   
+IP Static Default Ne   5          0      0   
+App Route              6          0      0   
+NVE MGR rwatch         7          0      0   

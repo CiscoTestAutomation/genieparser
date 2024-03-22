@@ -1,0 +1,652 @@
+from-vsmart sla-class raghav-test-Bulk-Data
+ loss    21
+ latency 300
+ jitter  100
+from-vsmart sla-class raghav-test-Default
+ loss    18
+ latency 300
+ jitter  100
+ fallback-best-tunnel
+  criteria         loss latency jitter
+  loss-variance    10
+  latency-variance 100
+  jitter-variance  200
+from-vsmart data-policy _vpn_list_Site7-Data-Policy
+ direction from-service
+ vpn-list vpn_11
+  sequence 1
+   match
+    source-ip 0.0.0.0/0
+    dscp      24
+   action accept
+    count DP_DSCP_24_Match_-2032887342
+    set
+     local-tloc-list
+      color    public-internet gold
+      encap    ipsec
+      restrict
+  sequence 11
+   match
+    source-ip 0.0.0.0/0
+    app-list  App_List
+   action accept
+    count DP_APP_LIST_MATCH_-2032887342
+    set
+     local-tloc-list
+      color    public-internet gold
+      encap    ipsec
+      restrict
+  sequence 21
+   match
+    source-data-prefix-list site8_vpn11_ipv4
+   action accept
+    count nat_vrf_11_-2032887342
+    nat pool 11
+  sequence 31
+   match
+    source-ip 0.0.0.0/0
+   action accept
+    loss-protection forward-error-correction always
+  default-action accept
+ vpn-list vpn_23
+  sequence 1
+   match
+    source-data-prefix-list      site1_vpn10_ipv4
+    destination-data-prefix-list site6_service_ipv4_red
+    app-list                     WEB_TOOLS_APP
+    dns-app-list                 Microsoft_Apps
+    source-port                  1024
+    destination-port             8080
+    protocol                     23 56 80
+    dscp                         14
+    tcp                          syn
+    plp                          high
+    traffic-to                   core
+    destination-region           primary-region
+    packet-length                1-4096
+    dns                          request
+   action accept
+    count  test_-1743798427
+    nat pool 23
+    cflowd
+    set
+     local-tloc-list
+      color blue bronze
+      encap ipsec
+     next-hop         10.0.0.1
+     next-hop-loose
+     policer          site6_policer
+     dscp             45
+     forwarding-class Net-Mgmt
+     vpn              10
+     vip-tloc-pref-list 0
+      tloc-label 1002
+      tloc-ip    8.8.8.1
+      tloc-color public-internet
+      tloc-encap ipsec
+     vip-tloc-pref-list 1
+      tloc-label 1007
+      tloc-ip    8.8.8.3
+      tloc-color public-internet
+      tloc-encap ipsec
+     tloc-list        HUB2
+  sequence 11
+   match
+    source-ip    0.0.0.0/0
+    app-list     APP_BULK_DATA
+    dns-app-list Microsoft_Apps
+   action accept
+    nat use-vpn 0
+    nat fallback
+    log
+    tcp-optimization
+    loss-protection forward-error-correction adaptive
+    redirect-dns     umbrella
+    set
+     next-hop 10.0.0.1
+     service FW
+     service vpn 23
+     service tloc 10.101.7.2
+     service tloc color public-internet
+     service tloc encap ipsec
+  sequence 21
+   match
+    source-ip          0.0.0.0/0
+    destination-ip     0.0.0.0/0
+    dscp               15
+    destination-region secondary-region
+   action accept
+    loss-protection forward-error-correction always
+    set
+     vip-tloc-pref-list 0
+      tloc-ip    8.8.8.1
+      tloc-color public-internet
+      tloc-encap ipsec
+     vip-tloc-pref-list 1
+      tloc-ip    8.8.8.3
+      tloc-color public-internet
+      tloc-encap ipsec
+     service   IDP
+     service vpn 11
+     service tloc-list HUB2
+  sequence 31
+   match
+    source-ip          10.10.2.0/24
+    traffic-to         service
+    destination-region other-region
+   action accept
+    loss-protection packet-duplication
+    set
+     service appqoe
+     service vpn 11
+     service tloc 10.102.7.2
+     service tloc color 3g
+     service tloc encap ipsec
+  sequence 41
+   match
+    source-ip          0.0.0.0/0
+    dns-app-list       Telnet
+    source-port        1024
+    traffic-to         access
+    destination-region other-region
+   action accept
+    redirect-dns host
+  default-action accept
+from-vsmart cflowd-template cflowd-test
+ flow-active-timeout    600
+ flow-inactive-timeout  60
+ template-refresh       600
+ flow-sampling-interval 1
+ protocol               ipv4
+ customized-ipv4-record-fields
+  collect-tos
+  no collect-dscp-output
+ collector vpn 10 address 10.0.0.1 port 1024 transport transport_udp
+  source-interface GigabitEthernet0/0/0
+from-vsmart app-route-policy _vpn_23_Site7-AAR-Policy
+ vpn-list vpn_10
+  sequence 1
+   match
+    source-data-prefix-list site1_vpn10_ipv4
+    destination-ip          10.99.99.0/24
+    app-list                raghav-ops-admin-mgmt
+    dns-app-list            Google_Apps
+    source-port             1024
+    destination-port        5676
+    protocol                34 56 87
+    dscp                    11 12 13 14
+    plp                     low
+    traffic-to              access
+    destination-region      primary-region
+    dns                     request
+   action
+    count                      testing-counter_-2070586118
+    log
+    backup-sla-preferred-color bronze
+    sla-class       raghav-test-Bulk-Data
+    no sla-class strict
+    sla-class preferred-color biz-internet custom1
+  sequence 11
+   match
+    source-ip 0.0.0.0/0
+    app-list  Google_Apps
+    dscp      11 12 13
+   action
+    sla-class       raghav-test-Bulk-Data
+    sla-class strict
+    sla-class preferred-color biz-internet custom1
+  sequence 21
+   match
+    source-ip           0.0.0.0/0
+    cloud-saas-app-list gotomeeting_apps
+   action
+    cloud-saas allow-local
+  sequence 31
+   match
+    source-ip 0.0.0.0/0
+    app-list  Google_Apps
+   action
+    sla-class             raghav-test-Default
+    no sla-class strict
+    sla-class preferred-color blue gold custom1
+    sla-class fallback-to-best-path
+from-vsmart policer site6_policer
+ rate   3000000
+ burst  150000
+ exceed drop
+from-vsmart lists vpn-list vpn_10
+ vpn 10
+from-vsmart lists vpn-list vpn_11
+ vpn 11
+from-vsmart lists vpn-list vpn_23
+ vpn 23
+from-vsmart lists app-list APP_BULK_DATA
+ app cisco-jabber-im
+ app ftp
+ app ftp-data
+ app ftp_data
+ app jabber
+ app netblt
+ app rsync
+from-vsmart lists app-list App_List
+ app-family app-fam-2
+ app-family application-service
+ app-family application_service
+ app-family audio-video
+ app-family audio_video
+ app-family behavioral
+ app-family database
+ app-family encrypted
+ app-family erp
+ app-family file-transfer
+ app-family file_server
+ app-family file_transfer
+ app-family game
+ app-family instant-messaging
+ app-family mail
+ app-family microsoft-office
+ app-family microsoft_office
+ app-family middleware
+ app-family network-management
+ app-family network-service
+ app-family network_management
+ app-family network_service
+ app-family peer-to-peer
+ app-family peer_to_peer
+ app-family printer
+ app-family security-service
+ app-family security_service
+ app-family terminal
+ app-family thin-client
+ app-family thin_client
+ app-family tunneling
+ app-family web
+ app-family webmail
+from-vsmart lists app-list Google_Apps
+ app android-updates
+ app blogger
+ app chrome_update
+ app gcs
+ app gmail
+ app gmail_basic
+ app gmail_chat
+ app gmail_drive
+ app gmail_mobile
+ app google
+ app google-docs
+ app google-downloads
+ app google-earth
+ app google-photos
+ app google-play
+ app google-plus
+ app google-services
+ app google-services-audio
+ app google-services-media
+ app google-services-video
+ app google_accounts
+ app google_ads
+ app google_analytics
+ app google_appengine
+ app google_cache
+ app google_calendar
+ app google_classroom
+ app google_code
+ app google_desktop
+ app google_docs
+ app google_earth
+ app google_gen
+ app google_groups
+ app google_localguides
+ app google_maps
+ app google_photos
+ app google_picasa
+ app google_play
+ app google_play_music
+ app google_plus
+ app google_safebrowsing
+ app google_skymap
+ app google_spaces
+ app google_sprayscape
+ app google_tags
+ app google_toolbar
+ app google_translate
+ app google_trusted_store
+ app google_weblight
+ app googlebot
+ app gstatic
+ app gtalk
+ app gtalk-chat
+ app gtalk-ft
+ app gtalk-video
+ app gtalk-voip
+ app hangouts
+ app hangouts-audio
+ app hangouts-chat
+ app hangouts-file-transfer
+ app hangouts-media
+ app hangouts-video
+ app picasa
+ app youtube
+ app youtube_hd
+ app ytimg
+from-vsmart lists app-list Microsoft_Apps
+ app bing
+ app excel_online
+ app groove
+ app hockeyapp
+ app live_groups
+ app live_hotmail
+ app live_mesh
+ app live_storage
+ app livemail_mobile
+ app lync
+ app lync_online
+ app microsoft
+ app ms-lync
+ app ms-lync-audio
+ app ms-lync-control
+ app ms-lync-video
+ app ms-office-365
+ app ms-office-web-apps
+ app ms-services
+ app ms-update
+ app ms_communicator
+ app ms_onenote
+ app ms_planner
+ app ms_sway
+ app ms_translator
+ app office365
+ app office_docs
+ app onedrive
+ app outlook
+ app outlook-web-service
+ app owa
+ app powerpoint_online
+ app share-point
+ app sharepoint
+ app sharepoint_admin
+ app sharepoint_blog
+ app sharepoint_calendar
+ app sharepoint_document
+ app sharepoint_online
+ app skydrive
+ app skydrive_login
+ app skype
+ app windows-azure
+ app windows_azure
+ app windows_marketplace
+ app windows_update
+ app windowslive
+ app windowslivespace
+ app windowsmedia
+ app word_online
+ app xbox
+ app xbox_music
+ app xbox_video
+ app xboxlive
+ app xboxlive_marketplace
+ app yammer
+from-vsmart lists app-list Telnet
+ app telnet
+ app tnvip
+from-vsmart lists app-list WEB_TOOLS_APP
+ app http
+ app https
+ app ssh
+ app sshell
+from-vsmart lists app-list gotomeeting_apps
+ app citrix
+ app citrix_online
+ app citrix_pvs
+ app gotomeeting
+ app ica
+ app jedi
+from-vsmart lists app-list raghav-ops-admin-mgmt
+ app 914c/g
+ app acap
+ app active-directory
+ app agentx
+ app alpes
+ app aminet
+ app aruba-papi
+ app asip-webadmin
+ app asipregistry
+ app at-echo
+ app at-nbp
+ app at-zis
+ app auditd
+ app auth
+ app auth-service
+ app bacnet
+ app bacnet_vlc
+ app bb
+ app cdc
+ app chargen
+ app chshell
+ app cisco-controller
+ app cisco-cta
+ app cisco-fna
+ app cisco-nac
+ app cisco-rtmt
+ app cisco-sd-avc
+ app cisco-stealthwatch
+ app cisco-sys
+ app cisco-tna
+ app cisco_sdavc
+ app cmip-agent
+ app cmip-man
+ app codaauth2
+ app compressnet
+ app cpq-wbem
+ app crs
+ app cryptoadmin
+ app csnet-ns
+ app ctf
+ app cvc_hostd
+ app cycleserv
+ app cycleserv2
+ app daytime
+ app dcp
+ app decauth
+ app decvms-sysmgt
+ app dhcp
+ app dhcp-failover
+ app dhcp-failover2
+ app dhcp6
+ app dhcpv6
+ app dhcpv6-client
+ app dhcpv6-server
+ app dn6-nlm-aud
+ app dns
+ app dnsix
+ app echo
+ app elcsd
+ app entrust-aaas
+ app entrust-aams
+ app entrust-ash
+ app entrust-kmsh
+ app entrust-sps
+ app exec
+ app fcp
+ app finger
+ app fln-spx
+ app gkrellm
+ app go-login
+ app gss-http
+ app ha-cluster
+ app hassle
+ app hdap
+ app hello-port
+ app hmmp-ind
+ app hmmp-op
+ app hostname
+ app hp-alarm-mgr
+ app hp-collector
+ app hp-managed-node
+ app http-mgmt
+ app icmp
+ app icmp6
+ app ident
+ app igmp
+ app ipcserver
+ app ipfix
+ app ipv6-icmp
+ app ipx_in_ip
+ app iso-tsap
+ app kerberos
+ app kerberos-adm
+ app keyserver
+ app klogin
+ app kpasswd
+ app krb5
+ app kshell
+ app lanserver
+ app ldap
+ app ldaps
+ app llmnr
+ app locus-con
+ app locus-map
+ app login
+ app mac-srvr-admin
+ app masqdialer
+ app mdns
+ app micromuse-lm
+ app monitor
+ app mptn
+ app mrm
+ app ms-netlogon
+ app ms-win-dns
+ app msft-gc
+ app msft-gc-ssl
+ app name
+ app nas
+ app nbns
+ app ncp
+ app ndsauth
+ app nest-protocol
+ app netbios-dgm
+ app netbios-ns
+ app netbios-ssn
+ app netflow
+ app netrjs-1
+ app netrjs-2
+ app netrjs-3
+ app netrjs-4
+ app netviewdm1
+ app netviewdm2
+ app netviewdm3
+ app netware-ip
+ app new-rwho
+ app nextstep
+ app nicname
+ app nlogin
+ app nmap
+ app novadigm
+ app npmp-gui
+ app npmp-local
+ app npmp-trap
+ app nqs
+ app nsiiops
+ app nsrmp
+ app ntp
+ app nxedit
+ app opalis-robot
+ app osu-nms
+ app passgo
+ app passgo-tivoli
+ app password-chg
+ app photuris
+ app ping
+ app pkix-3-ca-ra
+ app pkix-timestamp
+ app ptp-event
+ app purenoise
+ app pwdgen
+ app qbikgdp
+ app quotad
+ app radius
+ app rescap
+ app rje
+ app rlogin
+ app rlp
+ app rmonitor
+ app rmt
+ app rrp
+ app rsh
+ app rsh-spx
+ app rsvp
+ app rsvp-encap-1
+ app rsvp-encap-2
+ app rtelnet
+ app sco-dtmgr
+ app sco-inetmgr
+ app sco-sysmgr
+ app sco-websrvrmg3
+ app sco-websrvrmgr
+ app sdnskmp
+ app secure-ldap
+ app secure-telnet
+ app server-ipx
+ app sgmp
+ app sgmp-traps
+ app shell
+ app shrinkwrap
+ app smsp
+ app snare
+ app snmp
+ app sntp-heartbeat
+ app src
+ app srmp
+ app ssh
+ app sshell
+ app statsrv
+ app stuns
+ app sun-dr
+ app supdup
+ app synoptics-trap
+ app synotics-broker
+ app synotics-relay
+ app syslog
+ app systat
+ app tacacs
+ app tacacs_plus
+ app telnet
+ app telnets
+ app time
+ app timed
+ app tnvip
+ app traceroute-linux
+ app ulp
+ app urm
+ app utime
+ app uucp
+ app uucp-rlogin
+ app websense
+ app whoami
+ app whois
+ app whois++
+ app wins
+ app x-bone-ctl
+ app xdmcp
+ app xns
+ app xns-auth
+ app xns-ch
+ app xns-time
+from-vsmart lists data-prefix-list site1_vpn10_ipv4
+ ip-prefix 10.10.1.0/24
+from-vsmart lists data-prefix-list site6_service_ipv4_red
+ ip-prefix 10.10.6.32/27
+from-vsmart lists data-prefix-list site8_vpn11_ipv4
+ ip-prefix 10.11.8.0/24
+from-vsmart lists tloc-list HUB2
+ tloc 8.8.8.1 color public-internet encap ipsec
+ tloc 8.8.8.3 color public-internet encap ipsec
+from-vsmart lists preferred-color-group color_list
+ primary-preference
+  color-preference biz-internet
+  path-preference  direct-path
+ secondary-preference
+  color-preference bronze
+  path-preference  multi-hop-path
+ tertiary-preference
+  color-preference custom1

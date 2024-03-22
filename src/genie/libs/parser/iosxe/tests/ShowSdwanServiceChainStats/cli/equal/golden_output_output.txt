@@ -1,0 +1,8 @@
+Service-Chain ID: 1
+  Global stats: 56068
+  Service: Firewall
+    Tx pkt: 56068
+    Rx pkt: 56068
+  Service: IDS
+    Tx pkt: 56068
+    Rx pkt: 56068

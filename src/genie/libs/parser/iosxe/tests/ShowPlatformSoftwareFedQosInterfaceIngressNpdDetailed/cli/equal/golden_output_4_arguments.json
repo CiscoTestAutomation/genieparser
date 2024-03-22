@@ -1,0 +1,5 @@
+{
+    "switch": "switch",
+    "mode": "1",
+    "interface": "port-channel 10"
+}

@@ -1,0 +1,8 @@
+
+          OSPFv3 5 address-family ipv6 (router-id 132.1.1.134)
+
+  Graceful Restart enabled
+    restart-interval limit: 3 sec
+    Router is running in SSO mode
+  Graceful Restart helper support enabled
+    Number of neighbors performing Graceful Restart is 4

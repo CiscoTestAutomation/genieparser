@@ -339,9 +339,10 @@ class ShowClnsProtocolSchema(MetaParser):
 
     schema = {
         'instance': {
-             Any(): {
+            Any(): {
                 'system_id': str,
                 'nsel': str,
+                Optional('lsp_mtu'): int,
                 Optional('process_handle'): str,
                 'is_type': str,
                 Optional('manual_area_address'): list,
@@ -355,10 +356,10 @@ class ShowClnsProtocolSchema(MetaParser):
                 'distance_for_l2_clns_routes': int,
                 'rrr_level': str,
                 'metrics': {
-                  'generate_narrow': str,
-                  'accept_narrow': str,
-                  'generate_wide': str,
-                  'accept_wide': str,
+                    'generate_narrow': str,
+                    'accept_narrow': str,
+                    'generate_wide': str,
+                    'accept_wide': str,
                 }
             }
         }
@@ -377,7 +378,7 @@ class ShowClnsProtocol(ShowClnsProtocolSchema):
 
         # initial return dictionary
         result_dict = {}
-        manaual_area_address_flag = False
+        manual_area_address_flag = False
         routing_area_address_flag = False
         redistribute = False
 
@@ -386,7 +387,8 @@ class ShowClnsProtocol(ShowClnsProtocolSchema):
         # IS-IS Router: test
         p1 = re.compile(r'^\s*IS-IS Router: +(?P<tag_process>[\S\s]+?)( +\((?P<tag>\w+)\))?$')
         # System Id: 2222.22ff.4444.00  IS-Type: level-1-2
-        p2 = re.compile(r'^\s*System Id: +(?P<system_id>[\w\.]+) +IS\-Type: +(?P<is_type>[\w\-]+)$')
+        # System Id: 0000.0000.0002.00  IS-Type: level-2  lsp-mtu: 1492
+        p2 = re.compile(r'^\s*System Id: +(?P<system_id>[\w\.]+) +IS\-Type: +(?P<is_type>[\w\-]+)(\s+lsp-mtu:\s+(?P<lsp_mtu>\d+))?$')
         # Manual area address(es):
         p3 = re.compile(r'^\s*Manual +area +address\(es\):$')
         # 49.0001
@@ -399,7 +401,8 @@ class ShowClnsProtocol(ShowClnsProtocolSchema):
         # Loopback1 - IP - IPv6
         p7 = re.compile(r'^\s*(?P<interface>[A-Za-z]+[\d/.]+) \- +(?P<topology>[\w\-\ ]+)$')
         # Redistribute:
-        p8 = re.compile(r'^\s*Redistribute:$')
+        # Redistribute(CLNS):
+        p8 = re.compile(r'^\s*Redistribute(\(CLNS\))?:$')
         #   static (on by default)
         p9 = re.compile(r'^(?P<space>\s{4})(?P<redistribute>[a-z\s\(\)]+)$')
         # Distance for L2 CLNS routes: 110
@@ -435,18 +438,21 @@ class ShowClnsProtocol(ShowClnsProtocolSchema):
                 continue
 
             # System Id: 2222.22ff.4444.00  IS-Type: level-1-2
+            # System Id: 0000.0000.0002.00  IS-Type: level-2  lsp-mtu: 1492
             m = p2.match(line)
             if m:
                 group = m.groupdict()
                 clns_dict.update({'is_type': group['is_type']})
                 clns_dict.update({'system_id': group['system_id'][:-3]})
                 clns_dict.update({'nsel': group['system_id'][-2:]})
+                if group['lsp_mtu']:
+                    clns_dict.update({'lsp_mtu': int(group['lsp_mtu'])})
                 continue
 
             # Manual area address(es):
             m = p3.match(line)
             if m:
-                manaual_area_address_flag = True
+                manual_area_address_flag = True
                 routing_area_address_flag = False
                 manual_area_list = []
                 continue
@@ -455,7 +461,7 @@ class ShowClnsProtocol(ShowClnsProtocolSchema):
             m = p4.match(line)
             if m:
                 group = m.groupdict()
-                if manaual_area_address_flag:
+                if manual_area_address_flag:
                     manual_area_list.append(group['area_address'])
                     clns_dict.update({'manual_area_address': manual_area_list})
 
@@ -468,7 +474,7 @@ class ShowClnsProtocol(ShowClnsProtocolSchema):
             m = p5.match(line)
             if m:
                 routing_area_address_flag = True
-                manaual_area_address_flag = False
+                manual_area_address_flag = False
                 routing_area_list = []
                 continue
 
@@ -605,7 +611,8 @@ class ShowClnsNeighborsDetail(ShowClnsNeighborsDetailSchema):
         # R7              Gi4           5e00.c0ff.060d      Up     26        L2   M-ISIS
         # R2_xr           Gi2.115       fa16.3eff.9418      Up     26        L1L2 M-ISIS
         # Genie           Te0/3/0       sdfs.0asd.49sd      Up     25        L1   IS-IS //missing neighbor, instead Genie2 shows in JSON.
-        p2 = re.compile(r'^(?P<system_id>[\w\.]+) +(?P<interface>\S+) '
+        # CIP-DC1-FBS-02  Po1.10        2cab.eb4f.3f4f      Up     8         L1L2 IS-IS
+        p2 = re.compile(r'^(?P<system_id>[\w\-\.]+) +(?P<interface>\S+) '
                         r'+(?P<snpa>[\w\.]+) +(?P<state>\w+) +'
                         r'(?P<holdtime>\d+) +(?P<level>[L\d]+) +'
                         r'(?P<protocol>[\S ]+)$')
@@ -764,9 +771,10 @@ class ShowClnsIsNeighborsDetail(ShowClnsIsNeighborsDetailSchema):
         # System Id       Interface     State  Type Priority  Circuit Id         Format
         # R7              Gi4           Up     L2   64        R2.01              Phase V
         # R3_nx           Gi3.115       Up     L1L2 64/64     R1_xe.02           Phase V
-        p2 = re.compile(r'^(?P<system_id>[\w\.]+)\s+(?P<interface>\S+)\s+'
-                        '(?P<state>\w+)\s+(?P<type>\S+)\s+(?P<priority>\d+)'
-                        '(\/\d+)*\s+(?P<circuit_id>[\w\.]+)\s+(?P<format>[\S\s]+)$')
+        # CIP-DC1-FBS-02  Po1.10        Up     L1L2 64/64     CIP-DC1-FBS-02.01  Phase V
+        p2 = re.compile(r'^(?P<system_id>[\w\.\-]+)\s+(?P<interface>\S+)\s+'
+                        '(?P<state>\w+)\s+(?P<type>\S+)\s+(?P<priority>\d+)\s*'
+                        '(\/\d+)*\s+(?P<circuit_id>[\w\.\-]+)\s+(?P<format>[\S\s]+)$')
 
         #   Area Address(es): 49.0002
         p3 = re.compile(r'^Area +Address\(es\): +(?P<area_address>\S+)$')
@@ -800,6 +808,7 @@ class ShowClnsIsNeighborsDetail(ShowClnsIsNeighborsDetailSchema):
 
             # System Id       Interface     State  Type Priority  Circuit Id         Format
             # R7              Gi4           Up     L2   64        R2.01              Phase V
+            # CIP-DC1-FBS-02  Po1.10        Up     L1L2 64/64     CIP-DC1-FBS-02.01  Phase V
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -986,8 +995,8 @@ class ShowClnsTrafficSchema(MetaParser):
                         Optional('level-2'): int,
                     },
                     'lsp_checksum_errors_received': int,
-                    'update_process_queue_depth': str,
-                    'update_process_packets_dropped': int
+                    Optional('update_process_queue_depth'): str,
+                    Optional('update_process_packets_dropped'): int
                 }
             }
         }
@@ -1276,6 +1285,8 @@ class ShowClnsTraffic(ShowClnsTrafficSchema):
             m = p21.match(line)
             if m:
                 group = m.groupdict()
+                if "tag" not in result_dict:
+                    isis_dict = result_dict.setdefault('tag',{}).setdefault("default", {}).setdefault('IS-IS', {})
                 isis_dict.update({'last_clear': group['last_clear']})
                 continue
             #     IS-IS: Level-1 Hellos (sent/rcvd): 497/533

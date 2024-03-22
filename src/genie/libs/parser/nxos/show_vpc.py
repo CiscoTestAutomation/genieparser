@@ -69,7 +69,8 @@ class ShowVpcSchema(MetaParser):
                 'up_vlan_bitset': str,
                 Optional('vpc_plus_attrib'): str
             }
-        }
+        },
+        Optional('virtual_peerlink_mode'): str
     }
 
 
@@ -225,6 +226,10 @@ class ShowVpc(ShowVpcSchema):
         # 4,56-82,138, FP MAC:
         # 530,2587     312.0.0
         p36 = re.compile(r'^(?P<additional_vlan>[\d\-\,]+) (?P<additional_vpc_plus_attrib>[\S\-\,\s\.\:]+)$')
+        # Virtual-peerlink mode    : Disabled
+        p37 = re.compile(r'^Virtual-peerlink +mode\s*: '
+            '+(?P<peerlink_mode>[\S\s]+)$')
+
         for line in output.splitlines():
             line = line.strip()
 
@@ -538,5 +543,11 @@ class ShowVpc(ShowVpcSchema):
                     vpc_dict.update({'vpc_plus_attrib': vpc_dict['vpc_plus_attrib']})
                     up_vlan_bitset += group['additional_vlan']
                     vpc_dict.update({'up_vlan_bitset': up_vlan_bitset})                                  
+                continue
+            # Virtual-peerlink mode    : Disabled
+            match = p37.match(line)
+            if match:
+                group = match.groupdict()
+                ret_dict.update({'virtual_peerlink_mode': group['peerlink_mode']})
                 continue
         return ret_dict

@@ -1,0 +1,23 @@
+ARCADE1#show platform software fed switch active ipsec counters if-id all
+Flow Stats for if-id 0x62
+Inbound Flow Info for flow id: 44
+SA Index: 3
+Asic Instance 0: SA Stats
+Packet Format Check Error: 0
+Invalid SA: 0
+Auth Fail: 0
+Sequence Number Overflows: 0
+Anti-Replay Fail: 0
+Packet Count: 2056
+Byte Count: 177076
+-----------------------------------
+Outbound Flow Info for flow id: 43
+SA Index: 1026
+Asic Instance 0: SA Stats
+Packet Format Check Error: 0
+Invalid SA: 0
+Auth Fail: 0
+Sequence Number Overflows: 0
+Anti-Replay Fail: 0
+Packet Count: 2055
+Byte Count: 246792

@@ -1,0 +1,141 @@
+
+PI-9300-Stack-102#show issu clients
+ Client_ID = 2,  Client_Name = ISSU Proto client,  Entity_Count = 1
+ Client_ID = 3,  Client_Name = ISSU RF,  Entity_Count = 3
+ Client_ID = 4,  Client_Name = ISSU CF client,  Entity_Count = 1
+ Client_ID = 5,  Client_Name = ISSU Network RF client,  Entity_Count = 1
+ Client_ID = 7,  Client_Name = ISSU CONFIG SYNC,  Entity_Count = 1
+ Client_ID = 8,  Client_Name = ISSU ifIndex sync,  Entity_Count = 1
+ Client_ID = 9,  Client_Name = ISSU IPC client,  Entity_Count = 1
+ Client_ID = 10,  Client_Name = ISSU IPC Server client,  Entity_Count = 1
+ Client_ID = 11,  Client_Name = ISSU Red Mode Client,  Entity_Count = 1
+ Client_ID = 12,  Client_Name = ISSU EHSA services client,  Entity_Count = 1
+ Client_ID = 100,  Client_Name = ISSU rfs client,  Entity_Count = 1
+ Client_ID = 110,  Client_Name = ISSU ifs client,  Entity_Count = 1
+ Client_ID = 120,  Client_Name = ISSU License Client,  Entity_Count = 1
+ Client_ID = 200,  Client_Name = ISSU Event Manager client,  Entity_Count = 1
+ Client_ID = 1016,  Client_Name = ISSU IOSXE-RP DPIDX Client,  Entity_Count = 1
+ Client_ID = 1018,  Client_Name = ISSU IOSXE RP SPA MARMOT FLOW C,  Entity_Count = 1
+ Client_ID = 1019,  Client_Name = ISSU IOSXE RP IF FLOW ID Client,  Entity_Count = 1
+ Client_ID = 2002,  Client_Name = CEF Push ISSU client,  Entity_Count = 1
+ Client_ID = 2003,  Client_Name = ISSU XDR client,  Entity_Count = 1
+ Client_ID = 2004,  Client_Name = ISSU SNMP client,  Entity_Count = 1
+ Client_ID = 2007,  Client_Name = ISSU LSD Label Mgr HA Client,  Entity_Count = 1
+ Client_ID = 2008,  Client_Name = ISSU Tableid Client,  Entity_Count = 1
+ Client_ID = 2009,  Client_Name = ISSU MPLS VPN Client,  Entity_Count = 1
+ Client_ID = 2010,  Client_Name = ARP HA,  Entity_Count = 1
+ Client_ID = 2011,  Client_Name = ISSU LDP Client,  Entity_Count = 1
+ Client_ID = 2012,  Client_Name = ISSU HSRP Client,  Entity_Count = 1
+ Client_ID = 2016,  Client_Name = IPV6_ND HA,  Entity_Count = 1
+ Client_ID = 2017,  Client_Name = ISSU AC Client,  Entity_Count = 1
+ Client_ID = 2018,  Client_Name = ISSU ATOM Client,  Entity_Count = 1
+ Client_ID = 2019,  Client_Name = ISSU TCP client,  Entity_Count = 1
+ Client_ID = 2021,  Client_Name = XDR Int Priority ISSU client,  Entity_Count = 1
+ Client_ID = 2022,  Client_Name = XDR Proc Priority ISSU client,  Entity_Count = 1
+ Client_ID = 2023,  Client_Name = FIB HWIDB ISSU client,  Entity_Count = 1
+ Client_ID = 2024,  Client_Name = FIB IDB ISSU client,  Entity_Count = 1
+ Client_ID = 2025,  Client_Name = FIB HW subblock ISSU client,  Entity_Count = 1
+ Client_ID = 2026,  Client_Name = FIB SW subblock ISSU client,  Entity_Count = 1
+ Client_ID = 2027,  Client_Name = Adjacency ISSU client,  Entity_Count = 1
+ Client_ID = 2028,  Client_Name = FIB IPV4 ISSU client,  Entity_Count = 1
+ Client_ID = 2029,  Client_Name = FIB IPV6 ISSU client,  Entity_Count = 1
+ Client_ID = 2030,  Client_Name = MFI Pull ISSU client,  Entity_Count = 1
+ Client_ID = 2031,  Client_Name = MFI Push ISSU client,  Entity_Count = 1
+ Client_ID = 2036,  Client_Name = XDR ISSU Mplsacl client,  Entity_Count = 1
+ Client_ID = 2042,  Client_Name = CFC LISP,  Entity_Count = 1
+ Client_ID = 2051,  Client_Name = ISSU CCM Client,  Entity_Count = 1
+ Client_ID = 2053,  Client_Name = ISSU MPLS TE Client,  Entity_Count = 1
+ Client_ID = 2056,  Client_Name = MFI LTE Broker ISSU client,  Entity_Count = 1
+ Client_ID = 2058,  Client_Name = ISIS ISSU RTR client,  Entity_Count = 1
+ Client_ID = 2059,  Client_Name = ISIS ISSU UPD client,  Entity_Count = 1
+ Client_ID = 2062,  Client_Name = ISSU DHCPD,  Entity_Count = 1
+ Client_ID = 2063,  Client_Name = ISSU DHCPC,  Entity_Count = 1
+ Client_ID = 2064,  Client_Name = ISSU GLBP Client,  Entity_Count = 1
+ Client_ID = 2067,  Client_Name = ISSU PM Client,  Entity_Count = 1
+ Client_ID = 2068,  Client_Name = ISSU PAGP_SWITCH Client,  Entity_Count = 1
+ Client_ID = 2070,  Client_Name = ISSU Port Security client,  Entity_Count = 1
+ Client_ID = 2071,  Client_Name = ISSU Switch VLAN client,  Entity_Count = 1
+ Client_ID = 2073,  Client_Name = ISSU STP,  Entity_Count = 1
+ Client_ID = 2077,  Client_Name = ISSU STP MSTP,  Entity_Count = 1
+ Client_ID = 2078,  Client_Name = ISSU STP IEEE,  Entity_Count = 1
+ Client_ID = 2079,  Client_Name = ISSU STP RSTP,  Entity_Count = 1
+ Client_ID = 2081,  Client_Name = ISSU DHCP Snooping client,  Entity_Count = 1
+ Client_ID = 2083,  Client_Name = ISSU Inline Power client,  Entity_Count = 1
+ Client_ID = 2084,  Client_Name = ISSU IGMP Snooping client,  Entity_Count = 1
+ Client_ID = 2088,  Client_Name = ISSU SPA OIR TSM Client,  Entity_Count = 1
+ Client_ID = 2089,  Client_Name = MPLS LSPV ISSU client,  Entity_Count = 1
+ Client_ID = 2092,  Client_Name = ISSU VFI Client,  Entity_Count = 1
+ Client_ID = 2097,  Client_Name = Segment Switch Manager ISSU cli,  Entity_Count = 1
+ Client_ID = 2098,  Client_Name = Segment Switch Manager Segment ,  Entity_Count = 1
+ Client_ID = 2102,  Client_Name = ISSU XCONNECT Client,  Entity_Count = 1
+ Client_ID = 2104,  Client_Name = ISSU IP Multicast Client,  Entity_Count = 1
+ Client_ID = 2105,  Client_Name = ISSU DIAG Client,  Entity_Count = 2
+ Client_ID = 2111,  Client_Name = ISSU REP Client,  Entity_Count = 1
+ Client_ID = 2113,  Client_Name = MFIB PLATFORM XDR client,  Entity_Count = 1
+ Client_ID = 2114,  Client_Name = MFIB IPV4 ISSU client,  Entity_Count = 1
+ Client_ID = 2115,  Client_Name = MFIB IPV6 ISSU client,  Entity_Count = 1
+ Client_ID = 2116,  Client_Name = ISSU MRIB Client,  Entity_Count = 1
+ Client_ID = 2121,  Client_Name = ISSU VRRP Client,  Entity_Count = 1
+ Client_ID = 2125,  Client_Name = ISSU LACP Client,  Entity_Count = 1
+ Client_ID = 2128,  Client_Name = ISSU BFD client,  Entity_Count = 1
+ Client_ID = 2131,  Client_Name = ISSU Call Home Client,  Entity_Count = 1
+ Client_ID = 2132,  Client_Name = ISSU CTS HA Client,  Entity_Count = 1
+ Client_ID = 2134,  Client_Name = ISSU keystore client,  Entity_Count = 1
+ Client_ID = 2137,  Client_Name = DHCPv6 Relay ISSU,  Entity_Count = 1
+ Client_ID = 2138,  Client_Name = DHCPv6 Server ISSU,  Entity_Count = 1
+ Client_ID = 2149,  Client_Name = ISSU CFM Client,  Entity_Count = 1
+ Client_ID = 2154,  Client_Name = ISSU Sisf Client,  Entity_Count = 1
+ Client_ID = 2155,  Client_Name = Path set Broker ISSU client,  Entity_Count = 1
+ Client_ID = 2156,  Client_Name = ISSU EnergyWise client,  Entity_Count = 1
+ Client_ID = 2159,  Client_Name = Flow Def XDR,  Entity_Count = 1
+ Client_ID = 2160,  Client_Name = Flow exporter XDR ISSU client,  Entity_Count = 1
+ Client_ID = 2161,  Client_Name = Flow RPC XDR ISSU client,  Entity_Count = 1
+ Client_ID = 2162,  Client_Name = Fnf XDR,  Entity_Count = 1
+ Client_ID = 2163,  Client_Name = Sampler XDR,  Entity_Count = 1
+ Client_ID = 2164,  Client_Name = PSM Push ISSU client,  Entity_Count = 1
+ Client_ID = 2167,  Client_Name = ISSU OSPF client,  Entity_Count = 1
+ Client_ID = 2168,  Client_Name = ISSU OSPFv3 client,  Entity_Count = 1
+ Client_ID = 2178,  Client_Name = ISSU MATM Client,  Entity_Count = 1
+ Client_ID = 2179,  Client_Name = ISSU MLD Snooping client,  Entity_Count = 1
+ Client_ID = 2180,  Client_Name = ISSU L2FIB Client,  Entity_Count = 1
+ Client_ID = 2194,  Client_Name = MFI Label Block Broker ISSU cli,  Entity_Count = 1
+ Client_ID = 2195,  Client_Name = ISSU XCONNECT Client,  Entity_Count = 1
+ Client_ID = 2200,  Client_Name = ISSU EVPN Client,  Entity_Count = 1
+ Client_ID = 2202,  Client_Name = ISSU NVE Client,  Entity_Count = 1
+ Client_ID = 2204,  Client_Name = ISSU MKA client,  Entity_Count = 1
+ Client_ID = 3000,  Client_Name = ISSU COND_DEBUG Client,  Entity_Count = 1
+ Client_ID = 3001,  Client_Name = ISSU ONEP Client,  Entity_Count = 1
+ Client_ID = 3006,  Client_Name = CFC src-fltr XDR ISSU client,  Entity_Count = 1
+ Client_ID = 3008,  Client_Name = ISSU VRRP V3 Client,  Entity_Count = 1
+ Client_ID = 3012,  Client_Name = ISSU LISP client,  Entity_Count = 1
+ Client_ID = 3013,  Client_Name = Label FIB ISSU client,  Entity_Count = 1
+ Client_ID = 3014,  Client_Name = FIB UID ISSU client,  Entity_Count = 1
+ Client_ID = 7003,  Client_Name = ISSU CWAN Aps Client,  Entity_Count = 1
+ Client_ID = 7200,  Client_Name = ISSU Archive Client,  Entity_Count = 1
+ Client_ID = 7201,  Client_Name = ISSU Rollback Client,  Entity_Count = 1
+ Client_ID = 7203,  Client_Name = ISSU Shell Client,  Entity_Count = 1
+ Client_ID = 8000,  Client_Name = ISSU NGWC OIR Client,  Entity_Count = 1
+ Client_ID = 8002,  Client_Name = ISSU Platform Inline Power Clie,  Entity_Count = 1
+ Client_ID = 8006,  Client_Name = ISSU NGWC FEC Client,  Entity_Count = 1
+ Client_ID = 8008,  Client_Name = ISSU RSVP RSYNC Client,  Entity_Count = 1
+ Client_ID = 8014,  Client_Name = ISSU OFA Client,  Entity_Count = 1
+ Client_ID = 8021,  Client_Name = ISSU ACCESS_TUNNEL Client,  Entity_Count = 1
+ Client_ID = 8022,  Client_Name = ISSU mmode Client,  Entity_Count = 1
+ Client_ID = 8024,  Client_Name = ISSU NGWC SGTC Client,  Entity_Count = 1
+ Client_ID = 8027,  Client_Name = ISSU klib client,  Entity_Count = 1
+ Client_ID = 8029,  Client_Name = ISSU mDNS HA Client,  Entity_Count = 1
+
+Base Clients:
+ Client_Name = ISSU Proto client
+ Client_Name = ISSU RF
+ Client_Name = ISSU CF client
+ Client_Name = ISSU Network RF client
+ Client_Name = ISSU CONFIG SYNC
+ Client_Name = ISSU ifIndex sync
+ Client_Name = ISSU IPC client
+ Client_Name = ISSU IPC Server client
+ Client_Name = ISSU Red Mode Client
+ Client_Name = ISSU rfs client
+ Client_Name = ISSU ifs client
+
+        

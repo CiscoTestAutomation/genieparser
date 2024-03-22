@@ -1,0 +1,75 @@
+Code:
+C   -> chosen
+I   -> installed
+Red -> redistributed
+Rej -> rejected
+L   -> looped
+R   -> resolved
+S   -> stale
+Ext -> extranet
+Stg -> staged
+IA  -> On-demand inactive
+Inv -> invalid
+BR-R -> Border-Router reoriginated
+TGW-R -> Transport-Gateway reoriginated
+R-TGW-R -> Reoriginated Transport-Gateway reoriginated
+
+ADDRESS                 SOURCE      FROM               
+FAMILY   TENANT    VPN  ORIGINATOR  PEER      STATUS   
+-------------------------------------------------------
+ipv4     0         2    5.0.0.2     1.0.0.17  C,R      
+                                    1.0.0.18  C,R      
+                                    1.0.0.19  C,R      
+                                    1.0.0.20  C,I,R    
+         0         2    5.0.0.3     1.0.0.17  C,R      
+                                    1.0.0.18  C,R      
+                                    1.0.0.19  C,R      
+                                    1.0.0.20  C,I,R    
+         0         2    5.0.0.6     0.0.0.0   C,Red,R  
+         0         2    6.0.0.2     1.0.0.17  C,R      
+                                    1.0.0.18  C,R      
+                                    1.0.0.19  C,R      
+                                    1.0.0.20  C,I,R    
+         0         2    6.0.0.3     1.0.0.17  C,R      
+                                    1.0.0.18  C,R      
+                                    1.0.0.19  C,R      
+                                    1.0.0.20  C,I,R    
+         0         2    6.0.0.4     1.0.0.17  C,R      
+                                    1.0.0.18  C,R      
+                                    1.0.0.19  C,R      
+                                    1.0.0.20  C,I,R    
+         0         2    6.0.0.5     1.0.0.17  C,R      
+                                    1.0.0.18  C,R      
+                                    1.0.0.19  C,R      
+                                    1.0.0.20  C,I,R    
+         0         2    7.0.0.1     1.0.0.17  C,R      
+                                    1.0.0.18  C,R      
+                                    1.0.0.19  C,R      
+                                    1.0.0.20  C,I,R    
+         0         2    7.0.0.2     1.0.0.17  C,R      
+                                    1.0.0.18  C,R      
+                                    1.0.0.19  C,R      
+                                    1.0.0.20  C,I,R    
+         0         2    7.0.0.4     1.0.0.17  C,R      
+                                    1.0.0.18  C,R      
+                                    1.0.0.19  C,R      
+                                    1.0.0.20  C,I,R    
+         0         2    9.0.0.1     1.0.0.17  C,R      
+                                    1.0.0.18  C,R      
+                                    1.0.0.19  C,R      
+                                    1.0.0.20  C,I,R    
+         0         2    9.0.0.4     1.0.0.17  C,R      
+                                    1.0.0.18  C,R      
+                                    1.0.0.19  C,R      
+                                    1.0.0.20  C,I,R    
+         0         3    5.0.0.3     1.0.0.17  C,R      
+                                    1.0.0.18  C,R      
+                                    1.0.0.19  C,R      
+                                    1.0.0.20  C,I,R    
+         0         3    5.0.0.6     0.0.0.0   C,Red,R  
+         0         3    6.0.0.2     1.0.0.17  C,R      
+                                    1.0.0.18  C,R      
+                                    1.0.0.19  C,R      
+                                    1.0.0.20  C,I,R    
+
+

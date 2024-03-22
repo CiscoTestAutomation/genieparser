@@ -7,6 +7,8 @@
      *  show lldp neighbors
      *  show lldp neighbors detail
      *  show lldp traffic
+     *  show lldp errors
+     *  show lldp custom-information
 """
 import re
 
@@ -92,7 +94,7 @@ class ShowLldpEntrySchema(MetaParser):
                     Any(): {
                         'neighbors': {
                             Any(): {                        
-                                'chassis_id': str,
+                                Optional('chassis_id'): str,
                                 'port_id': str,
                                 'neighbor_id': str,
                                 Optional('port_description'): str,
@@ -739,3 +741,455 @@ class ShowLldpNeighbors(ShowLldpNeighborsSchema):
             continue
 
         return parsed_output
+
+
+class ShowLldpErrorsSchema(MetaParser):
+    """
+    Schema for show lldp errors
+    """
+    schema = {
+        'memory': int,
+        'encapsulation': int,
+        'input_queue': int,
+        'table': int
+    }
+
+
+class ShowLldpErrors(ShowLldpErrorsSchema):
+    """
+    Parser for show lldp errors
+    """
+    cli_command = 'show lldp errors'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        
+        ret_dict = dict()
+
+        # Total memory allocation failures: 0
+        p0 = re.compile(r'^Total\s+memory\s+allocation\s+failures:\s+(?P<memory>\d+)$')
+
+        # Total encapsulation failures: 0
+        p1 = re.compile(r'^Total\s+encapsulation\s+failures:\s+(?P<encapsulation>\d+)$')
+
+        # Total input queue overflows: 0
+        p2 = re.compile(r'^Total\s+input\s+queue\s+overflows:\s+(?P<input_queue>\d+)$')
+
+        # Total table overflows: 0
+        p3 = re.compile(r'^Total\s+table\s+overflows:\s+(?P<table>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Total memory allocation failures: 0
+            match = p0.match(line)
+            if match:
+                ret_dict['memory'] = int(match.groupdict()['memory'])
+                continue
+
+            # Total encapsulation failures: 0           
+            match = p1.match(line)
+            if match:
+                ret_dict['encapsulation'] = int(match.groupdict()['encapsulation'])
+                continue
+
+            # Total input queue overflows: 0
+            match = p2.match(line)
+            if match:
+                ret_dict['input_queue'] = int(match.groupdict()['input_queue'])
+                continue
+            
+            # Total table overflows: 0
+            match = p3.match(line)
+            if match:
+                ret_dict['table'] = int(match.groupdict()['table'])
+                continue
+
+        return ret_dict
+
+class ShowLldpCustomInformationSchema(MetaParser):
+    """Schema for show lldp custom-information"""
+    schema = {
+        Optional('management_vlan'): int,
+        Optional('network_hash'): str,
+        Optional('management_ip'): str,
+        Optional('management_ipv6'): str,
+        Optional('system_name'): {
+           Any(): { 
+               'name':str,
+              },
+           },
+    }
+
+
+class ShowLldpCustomInformation(ShowLldpCustomInformationSchema):
+    """Parser for show lldp custom-information"""
+
+    cli_command = 'show lldp custom-information'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+        # initial return dictionary
+        ret_dict = {}
+
+        # initial regexp pattern based on the output
+        # Management VLAN: 100
+        p1 = re.compile(r'Management\sVLAN: +(?P<vlan>\d+)$')
+        
+        # Custom  network hash: check
+        p2 = re.compile(r'Custom\s*network\shash: +(?P<network_hash>\w+)$')
+        
+        # Management IPv4: 10.0.0.1  20.0.0.1
+        p3 = re.compile(r'Management\sIP\S*: +(?P<ip_string>[\S*\s*]*)$')
+        
+        # Management IPv6: 10::1  20::1
+        p4 = re.compile(r'Management\sIPv6: +(?P<ipv6_string>[\S*\s*]*)$')
+        
+        # Switch-id 1 system-name: check
+        p5 = re.compile(r'Switch-id +(?P<switch_id>\d+) system-name: (?P<system_name>\S+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Management VLAN: 100
+            m = p1.match(line)
+            if m:
+                vlan = m.groupdict()['vlan']
+                ret_dict['management_vlan'] = int(vlan)
+                continue
+
+            # Custom network hash: check
+            m = p2.match(line)
+            if m:
+                network_hash = m.groupdict()['network_hash']
+                ret_dict['network_hash'] = network_hash
+                continue
+
+            # Management IPv6
+            m = p4.match(line)
+            if m: 
+                ipv6_string = m.groupdict()['ipv6_string']
+                ret_dict['management_ipv6'] = ipv6_string
+                continue
+
+            # Management IPv4
+            m = p3.match(line)
+            if m:
+                ipv4_string = m.groupdict()['ip_string']
+                ret_dict['management_ip'] = ipv4_string
+                continue
+
+            # System name
+            m = p5.match(line)
+            if m:
+                switch_id = int(m.groupdict()['switch_id'])
+                system_name = m.groupdict()['system_name']
+                sub_dict = ret_dict.setdefault('system_name', {}).setdefault(switch_id, {})
+                sub_dict.update({'name':system_name})
+
+                continue
+
+        return ret_dict
+
+# ==========================================================================================
+# Parser Schema for 'show lldp neighbors <interface> detail'
+# ==========================================================================================
+
+class ShowLldpNeighborsInterfaceDetailSchema(MetaParser):
+    """
+    Schema for
+        * 'show lldp neighbors <interface> detail'
+    """
+    schema = {
+        Optional('interface'):{
+            Any():{
+                'port_id': {
+                    Any(): {
+                        'local_intf_service_instance': {
+                            'chassis_id': str,
+                            'port_id': str,
+                            'port_description': str,
+                            'system_name': str
+                        },
+                        'system_description': {
+                            'cisco_ios_software': str,
+                            'catalyst_l3_switch_software': str,
+                            Optional('experimental_version'): str,
+                            Optional('image_label'): str,
+                            Optional('image_local_path'): str,
+                            Optional('version'): str,
+                            Optional('release_software'): str,
+                            Optional('technical_support'): str,
+                            'copyright': str,
+                            'compiled': str,
+                            'time_remaining_sec': int,
+                            'system_capabilities': str,
+                            'enabled_capabilities': str,
+                            Optional('management_addresses'): {
+                                'ip': str,
+                            },
+                            'auto_negotiation': str,
+                            'physical_media_capabilities': {
+                                int: str,
+                            },
+                            'media_attachment_unit_type': int,
+                            'vlan_id': int,
+                            'peer_source_mac': str,
+                        }
+                    }
+                }
+            }
+        },
+        'total_entries_displayed': int
+    }
+
+# ==========================================================================================
+# Parser for 'show lldp neighbors <interface> detail'
+# ==========================================================================================
+
+class ShowLldpNeighborsInterfaceDetail(ShowLldpNeighborsInterfaceDetailSchema):
+    """
+    Parser for
+        * 'show lldp neighbors <interface> detail'
+    """
+    cli_command = 'show lldp neighbors {interface} detail'
+
+    def cli(self, interface, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(interface=interface))
+
+        # initializing variables
+        ret_dict = {}
+
+        # Local Intf: Gi4/0/5
+        p1 = re.compile(r'^Local Intf: (?P<local_intf>\S+)$')
+
+        # Chassis id: 380e.4d9b.0580
+        p2 = re.compile(r'^Chassis id: (?P<chassis_id>\S+)$')
+
+        # Port id: Gi4/0/5
+        p3 = re.compile(r'^Port id: (?P<port_id>\S+)$')
+
+        # Port Description: GigabitEthernet4/0/5
+        p4 = re.compile(r'^Port Description: (?P<port_description>\S+)$')
+
+        # System Name: dut9404
+        p5 = re.compile(r'^System Name: (?P<system_name>\S+)$')
+
+        # Cisco IOS Software [Dublin], Catalyst L3 Switch Software (CAT9K_IOSXE), 
+        # Experimental Version 17.12.20230309:084324 
+        # [BLD_POLARIS_DEV_LATEST_20230309_082032:/nobackup/mcpre/s2c-build-ws 101]
+        p6 = re.compile(r'^Cisco IOS Software \[(?P<ios_software>\S+)\], Catalyst L3 Switch Software \((?P<calatyst_software>\S+)\), Experimental Version (?P<exp_version>\S+) \[(?P<image_label>\S+):(?P<local_path>[\S\s]+)\]$')
+
+        #Cisco IOS Software [Gibraltar], Catalyst L3 Switch Software (CAT9K_IOSXE), 
+        # Version 16.12.4, RELEASE SOFTWARE (fc5)
+        p7 = re.compile(r'^Cisco IOS Software \[(?P<ios_software>\S+)\], Catalyst L3 Switch Software \((?P<calatyst_software>\S+)\), Version (?P<version>\S+), RELEASE SOFTWARE \((?P<release_software>\S+)\)$')
+
+        #Technical Support: http://www.cisco.com/techsupport
+        p8 = re.compile(r'^Technical Support: (?P<technical_support>\S+)$')
+
+        # Copyright (c) 1986-2023 by Cisco Systems, Inc.
+        p9 = re.compile(r'^Copyright \(c\) (?P<copyright>[\S\s]+)$')
+
+        # Compiled Thu 09-Mar
+        p10 = re.compile(r'^Compiled (?P<compiled>[\S\s]+)$')
+
+        # Time remaining: 109 seconds
+        p11 = re.compile(r'^Time remaining: (?P<time>\d+) seconds$')
+        
+        # System Capabilities: B,R
+        p12 = re.compile(r'^System Capabilities: (?P<system_capabilities>\S+)$')
+
+        # Enabled Capabilities: B,R
+        p13 = re.compile(r'^Enabled Capabilities: (?P<enabled_capabilities>\S+)$')
+
+        # IP: 172.21.227.230
+        p14 = re.compile(r'^IP: (?P<ip>\S+)$')
+
+        # Auto Negotiation - supported, enabled
+        p15 = re.compile(r'^Auto Negotiation - (?P<auto_negotiation>[\S\s]+)$')
+
+        # 1000baseT(FD)
+        # 100base-TX(FD)
+        p16 = re.compile(r'^(?P<media_capabilities>.*base.*|.*un.*)$')
+
+        # Media Attachment Unit type: 30
+        p17 = re.compile(r'^Media Attachment Unit type: (?P<media_unit_type>\d+)$')
+
+        # Vlan ID: 1
+        p18 = re.compile(r'^Vlan ID: (?P<vlan_id>\d+)$')
+
+        # Peer Source MAC: d477.989b.79c4
+        p19 = re.compile(r'^Peer Source MAC: (?P<peer_source_mac>\S+)$')
+
+        # Total entries displayed: 8
+        p20 = re.compile(r'^Total entries displayed: (?P<total_entries>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Local Intf: Gi4/0/5
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict = ret_dict.setdefault('interface',{}).setdefault(Common.convert_intf_name(group['local_intf']),{})
+                continue
+
+            # Chassis id: 380e.4d9b.0580
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                chassis_id = group['chassis_id']
+                continue
+
+            # Port id: Gi4/0/5
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                port_dict = root_dict.setdefault('port_id',{}).setdefault(group['port_id'],{})
+                intf_dict = port_dict.setdefault('local_intf_service_instance',{})
+                intf_dict['port_id'] = group['port_id']
+                intf_dict['chassis_id'] = chassis_id
+                counter = 1
+                continue
+
+            # Port Description: GigabitEthernet4/0/5
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict['port_description'] = group['port_description']
+                continue
+
+            # System Name: dut9404
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict['system_name'] = group['system_name']
+                continue
+
+            # Cisco IOS Software [Dublin], Catalyst L3 Switch Software (CAT9K_IOSXE), 
+            # Experimental Version 17.12.20230309:084324 
+            # [BLD_POLARIS_DEV_LATEST_20230309_082032:/nobackup/mcpre/s2c-build-ws 101]
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                desc_dict = port_dict.setdefault('system_description',{})
+                desc_dict['cisco_ios_software'] = group['ios_software']
+                desc_dict['catalyst_l3_switch_software'] = group['calatyst_software']
+                desc_dict['experimental_version'] = group['exp_version']
+                desc_dict['image_label'] = group['image_label']
+                desc_dict['image_local_path'] = group['local_path']
+                continue
+
+            # Cisco IOS Software [Gibraltar], Catalyst L3 Switch Software (CAT9K_IOSXE), 
+            # Version 16.12.4, RELEASE SOFTWARE (fc5)
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                desc_dict = port_dict.setdefault('system_description',{})
+                desc_dict['cisco_ios_software'] = group['ios_software']
+                desc_dict['catalyst_l3_switch_software'] = group['calatyst_software']
+                desc_dict['version'] = group['version']
+                desc_dict['release_software'] = group['release_software']
+                continue
+
+            # Technical Support: http://www.cisco.com/techsupport
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                desc_dict['technical_support'] = group['technical_support']
+                continue
+
+            # Copyright (c) 1986-2023 by Cisco Systems, Inc.
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                desc_dict['copyright'] = group['copyright']
+                continue
+
+            # Compiled Thu 09-Mar
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                desc_dict['compiled'] = group['compiled']
+                continue
+
+            # Time remaining: 109 seconds
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                desc_dict['time_remaining_sec'] = int(group['time'])
+                continue
+
+            # System Capabilities: B,R
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                desc_dict['system_capabilities'] = group['system_capabilities']
+                continue
+
+            # Enabled Capabilities: B,R
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                desc_dict['enabled_capabilities'] = group['enabled_capabilities']
+                continue
+
+            # IP: 172.21.227.230
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                mngt_dict = desc_dict.setdefault('management_addresses',{})
+                mngt_dict['ip'] = group['ip']
+                continue
+
+            # Auto Negotiation - supported, enabled
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                desc_dict['auto_negotiation'] = group['auto_negotiation']
+                continue
+
+            # 1000baseT(FD)
+            # 100base-TX(FD)
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                media_dict = desc_dict.setdefault('physical_media_capabilities',{})
+                media_dict[counter] = group['media_capabilities']
+                counter += 1
+                continue
+
+            # Media Attachment Unit type: 30
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                desc_dict['media_attachment_unit_type'] = int(group['media_unit_type'])
+                continue
+
+            # Vlan ID: 1
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                desc_dict['vlan_id'] = int(group['vlan_id'])
+                continue
+
+            # Peer Source MAC: d477.989b.79c4
+            m = p19.match(line)
+            if m:
+                group = m.groupdict()
+                desc_dict['peer_source_mac'] = group['peer_source_mac']
+                continue
+
+            # Total entries displayed: 8
+            m = p20.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['total_entries_displayed'] = int(group['total_entries'])
+                continue
+
+        return ret_dict

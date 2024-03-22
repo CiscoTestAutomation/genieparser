@@ -1,0 +1,7 @@
+Global Stateful Prefix: is not valid
+                                  2002:1::/96 - vrf nat64_vrf
+
+IFs Using Global Prefix
+
+   Te2/2/0/19 - vrf nat64_vrf
+   Te2/2/0/35 - vrf nat64_vrf

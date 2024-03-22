@@ -1,0 +1,23 @@
+
+Community name: admin
+Community Index: admin
+Community SecurityName: admin
+storage-type: nonvolatile        active
+
+
+Community name: admin@1
+Community Index: admin@1
+Community SecurityName: admin
+storage-type: read-only  active
+
+
+Community name: admin@100
+Community Index: admin@100
+Community SecurityName: admin
+storage-type: read-only  active
+
+
+Community name: admin@200
+Community Index: admin@200
+Community SecurityName: admin
+storage-type: read-only  active

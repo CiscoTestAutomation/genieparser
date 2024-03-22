@@ -1,0 +1,5 @@
+VLAN Usage
+---- --------------------
+1006 GigabitEthernet0/0
+1007 GigabitEthernet0/1
+1008 GigabitEthernet0/2

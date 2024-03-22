@@ -26,7 +26,7 @@ class ShowCapwapClientRcbSchema(MetaParser):
             "capwap_path_mtu": str,
             "software_initiated_reload_reason": str,
             "active_window_size": str,
-            "oob_image_download": str,
+            Optional("oob_image_download"): str,
             "capwap_udp_lite": str,            
             "ip_prefer_mode": str,
             "ap_link_dtls_encryption": str,
@@ -35,19 +35,19 @@ class ShowCapwapClientRcbSchema(MetaParser):
             "linkauditing": str,
             "ap_group_name": str,
             Optional("flex_group_name"): str,
-            "capwap_disconnect_reason":
+            Optional("capwap_disconnect_reason"):
             {
-                "controller_last_sent": str,
+                Optional("controller_last_sent"): str,
             },
-            "cisco_trustsec_config":
+            Optional("cisco_trustsec_config"):
             {
-                "ap_inline_tagging_mode": str,
-                "ap_sgacl_enforcement": str,
-                "ap_override_status": str,
+                Optional("ap_inline_tagging_mode"): str,
+                Optional("ap_sgacl_enforcement"): str,
+                Optional("ap_override_status"): str,
             },
-            "total_flash_writes_since_boot": str,
-            "ble_module_admin_state": str,
-            "hyperlocation_admin_state": str         
+            Optional("total_flash_writes_since_boot"): str,
+            Optional("ble_module_admin_state"): str,
+            Optional("hyperlocation_admin_state"): str
             }
 
 # ====================

@@ -1,0 +1,41 @@
+
+            OSPF Router with ID (1.1.1.1) (Process ID 1)
+
+Area 0 database summary
+  LSA Type      Count    Delete   Maxage
+  Router        2        0        0       
+  Network       1        0        0       
+  Summary Net   44       0        0       
+  Summary ASBR  1        0        0       
+  Type-7 Ext    0        0        0       
+    Prefixes redistributed in Type-7  0
+  Opaque Link   0        0        0       
+  Opaque Area   0        0        0       
+  Subtotal      48       0        0       
+
+Area 1 database summary
+  LSA Type      Count    Delete   Maxage
+  Router        23       0        0       
+  Network       2        0        0       
+  Summary Net   23       0        0       
+  Summary ASBR  0        0        0       
+  Type-7 Ext    0        0        0       
+    Prefixes redistributed in Type-7  0
+  Opaque Link   0        0        0       
+  Opaque Area   0        0        0       
+  Subtotal      48       0        0       
+
+Process 1 database summary
+  LSA Type      Count    Delete   Maxage
+  Router        25       0        0       
+  Network       3        0        0       
+  Summary Net   67       0        0       
+  Summary ASBR  1        0        0       
+  Type-7 Ext    0        0        0       
+  Opaque Link   0        0        0       
+  Opaque Area   0        0        0       
+  Type-5 Ext    0        0        0       
+      Prefixes redistributed in Type-5  0
+  Opaque AS     0        0        0       
+  Total         96       0        0       
+  Non-self      44      

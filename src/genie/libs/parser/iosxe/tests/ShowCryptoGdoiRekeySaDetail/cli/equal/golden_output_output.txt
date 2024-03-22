@@ -1,0 +1,20 @@
+KEK SA DB STATS:
+    num_active = 1
+    num_malloc = 107
+    num_free = 105
+
+  KEK POLICY (transport type : Unicast)
+   Local addr/port : 26.26.26.1/848
+   Remote addr/port : 15.15.15.1/848
+    spi : 0x5C78568A11D464C47E9268A1D9A8787D
+    management alg     : disabled    encrypt alg       : AES       
+    crypto iv length   : 16          key size          : 32      
+    orig life(sec)     : 0         
+    sig hash algorithm : enabled     sig key length    : 294     
+    sig size           : 256
+    acknowledgement    : Cisco
+    conn_id (IKEv1)    : 1138
+    seq num            : 0           prev seq num      : 0       
+    handle             : 40000072  
+    Interface          : GigabitEthernet
+    Group Name         : GV-GROUP1           

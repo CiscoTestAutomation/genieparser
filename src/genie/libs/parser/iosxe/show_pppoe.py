@@ -89,7 +89,6 @@ class ShowPppoeStatistics(ShowPppoeStatisticsSchema):
 # Parser Schema for 'show pppoe session'
 # =============================================
 
-
 class ShowPppoeSessionSchema(MetaParser):
     """Schema for "show pppoe session" """
 
@@ -99,6 +98,7 @@ class ShowPppoeSessionSchema(MetaParser):
                 "uniq_id": Or(int, str),
                 "remote_mac": str,
                 "local_mac": str,
+                Optional("vlan"): int,
                 "port": str,
                 "vt": Or(int, str),
                 "va": str,
@@ -125,16 +125,26 @@ class ShowPppoeSession(ShowPppoeSessionSchema):
         res_dict = {}
 
         # N/A      2  f80b.cb77.4409  Gi0/0/3               Di100 Vi2        UP
+        
         # 639  17658  80b7.092d.32e6  Gi0/1/0                  4  N/A        LCP
+        
+        #    141    141  c884.a1f5.fb00  Gi0/0/0.555              1  Vi2.1      PTA  
+                     
         p1 = re.compile(
             r'^(?P<uniq_id>([A-Z/]+|\d+))+\s+(?P<pppoe_id>\d+)+\s+(?P<remote_mac>([0-9a-fA-F].?){12}\b)\s+'
-            r'(?P<port>\w+[/]+\d[/]+\d+)\s+(?P<vt>\w+)\s+(?P<va>\w+|[A-Z/]+|[A-Za-z0-9.]+)\s+(?P<state_type>\w+)')
-
-        #            4403.a743.55ed                              UP
-        p2 = re.compile(r'^(?P<local_mac>([0-9a-fA-F].?){12}\b)+\s+(?P<va_st>\w+)$')
+            r'(?P<port>\w+[/]+\d[/]+\d+|\w+[/]+\d[/]+\d+.\d+|\w+:\s+\d+)\s+(?P<vt>\w+|\s+)\s+(?P<va>\w+|[A-Z/]+|[A-Za-z0-9.]+|\s+)\s+(?P<state_type>\w+|\s+)')
+    
+        #                c884.a1f5.f700                   UP 
+        p2 = re.compile(r'^(?P<local_mac>([0-9a-fA-F].?){12}\b)+\s+(?P<va_st>(\w*))$')
 
         #            bcd2.95c3.80c8
-        p2_1 = re.compile(r'^(?P<local_mac>([0-9a-fA-F].?){12}$)')
+        p2_1 = re.compile(r'^(?P<local_mac>([0-9a-fA-F].?){12})$')
+        
+        #                                VLAN: 555                   UP 
+        p2_2 = re.compile(r'^\s+VLAN:(?P<vlan>(\d+))\s+(?P<va_st>(\w+))$')
+
+        #                c884.a1f5.f700  VLAN: 555                   UP
+        p2_3 = re.compile(r'^(?P<local_mac>([0-9a-fA-F].?){12}\b)+\s+VLAN:\s+(?P<vlan>(\d+|\s+))\s+(?P<va_st>(\w+))$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -162,7 +172,35 @@ class ShowPppoeSession(ShowPppoeSessionSchema):
                group = m1.groupdict()
                pppoe_id_dict.update({k: v for k, v in group.items()})
                continue
+            
+            #              VLAN: 555                   UP
+            m1 = p2_2.match(line)
+            if m1:
+                group = m1.groupdict()
+                
+                param = 'vlan'
+                pppoe_id_dict[param] = int(group['vlan'])
 
+                param = 'va_st'
+                pppoe_id_dict[param] = group['va_st']
+                continue
+                
+            #                c884.a1f5.f700  VLAN: 555                   UP
+            m1 = p2_3.match(line)
+            if m1:
+
+                group = m1.groupdict()
+                
+                param = 'local_mac'
+                pppoe_id_dict[param] = group['local_mac']                
+                
+                param = 'vlan'
+                pppoe_id_dict[param] = int(group['vlan'])
+
+                param = 'va_st'
+                pppoe_id_dict[param] = group['va_st']
+                continue
+            
         return res_dict
 
 # =============================================

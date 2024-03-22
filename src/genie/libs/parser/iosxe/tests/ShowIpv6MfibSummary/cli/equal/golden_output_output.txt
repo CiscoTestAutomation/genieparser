@@ -1,0 +1,7 @@
+show ipv6 mfib summary
+Default
+ 56 prefixes (56/0/0 fwd/non-fwd/deleted)
+ 23 ioitems (23/0/0 fwd/non-fwd/deleted)
+ Forwarding prefixes: [2 (S,G), 8 (*,G), 46 (*,G/m)]
+ Table id 0x0, instance 0x7FAA165B63D8
+ Database: epoch 2

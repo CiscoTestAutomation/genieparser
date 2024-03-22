@@ -1,0 +1,112 @@
+--------------------------------------------------------------
+         ACLs details (programmed in datapath)
+--------------------------------------------------------------
+
+[CG ID 13]    CG Name: acl-2    Feature: Racl
+[CG ID 13]    Prot: IPv4
+[CG ID 13]    Region grp: 0xdc09b2a8
+[CG ID 13]    Dir: Egress    SDK-handle(asic: 0, OID: 0x0000)
+
+    Seq Num:10
+        ipv4_src: value = 0x00000000       mask = 0x00000000
+        ipv4_dst: value = 0x00000000       mask = 0x00000000
+            proto    frag    tcp_flg    tcp_op    src_port    dst_port
+        V:  0x1       0x0      0x0         0x0        0x0          0x0
+        M:  0xff       0x0      0x0         0x0        0x0          0x0
+            tos      ttl       cos      v4_opt    src_obj     dst_obj
+        V:  0x0       0x0      0x0         0x0        0x0          0x0
+        M:  0x0       0x0      0x0         0x0        0x0          0x0
+    Result  deny:0x0    Counter handle: 0x0
+
+    Seq Num:20
+        ipv4_src: value = 0x0a000100       mask = 0xffffff00
+        ipv4_dst: value = 0x0b000100       mask = 0xffffff00
+            proto    frag    tcp_flg    tcp_op    src_port    dst_port
+        V:  0x0       0x0      0x0         0x0        0x0          0x0
+        M:  0x0       0x0      0x0         0x0        0x0          0x0
+            tos      ttl       cos      v4_opt    src_obj     dst_obj
+        V:  0x0       0x0      0x0         0x0        0x0          0x0
+        M:  0x0       0x0      0x0         0x0        0x0          0x0
+    Result  deny:0x1    Counter handle: 0x72c
+
+    Seq Num:30
+        ipv4_src: value = 0x00000000       mask = 0x00000000
+        ipv4_dst: value = 0x00000000       mask = 0x00000000
+            proto    frag    tcp_flg    tcp_op    src_port    dst_port
+        V:  0x0       0x0      0x0         0x0        0x0          0x0
+        M:  0x0       0x0      0x0         0x0        0x0          0x0
+            tos      ttl       cos      v4_opt    src_obj     dst_obj
+        V:  0x0       0x0      0x0         0x0        0x0          0x0
+        M:  0x0       0x0      0x0         0x0        0x0          0x0
+    Result  deny:0x0    Counter handle: 0x72c
+
+    Seq Num:4294967295
+        ipv4_src: value = 0x00000000       mask = 0x00000000
+        ipv4_dst: value = 0x00000000       mask = 0x00000000
+            proto    frag    tcp_flg    tcp_op    src_port    dst_port
+        V:  0x0       0x0      0x0         0x0        0x0          0x0
+        M:  0x0       0x0      0x0         0x0        0x0          0x0
+            tos      ttl       cos      v4_opt    src_obj     dst_obj
+        V:  0x0       0x0      0x0         0x0        0x0          0x0
+        M:  0x0       0x0      0x0         0x0        0x0          0x0
+    Result  deny:0x0    Counter handle: 0x72d
+
+[CG ID 17]    CG Name: acl-1    Feature: Racl
+[CG ID 17]    Prot: IPv4
+[CG ID 17]    Region grp: 0xdc063b88
+[CG ID 17]    Dir: Ingress    SDK-handle(asic: 0, OID: 0x0000)
+
+    Seq Num:10
+        ipv4_src: value = 0x00000000       mask = 0x00000000
+        ipv4_dst: value = 0x00000000       mask = 0x00000000
+            proto    frag    tcp_flg    tcp_op    src_port    dst_port
+        V:  0x1       0x0      0x0         0x0        0x0          0x0
+        M:  0xff       0x0      0x0         0x0        0x0          0x0
+            tos      ttl       cos      v4_opt    src_obj     dst_obj
+        V:  0x0       0x0      0x0         0x0        0x0          0x0
+        M:  0x0       0x0      0x0         0x0        0x0          0x0
+    Result  deny:0x0    Counter handle: 0x0
+
+    Seq Num:20
+        ipv4_src: value = 0x00000000       mask = 0x00000000
+        ipv4_dst: value = 0x00000000       mask = 0x00000000
+            proto    frag    tcp_flg    tcp_op    src_port    dst_port
+        V:  0x59       0x0      0x0         0x0        0x0          0x0
+        M:  0xff       0x0      0x0         0x0        0x0          0x0
+            tos      ttl       cos      v4_opt    src_obj     dst_obj
+        V:  0x0       0x0      0x0         0x0        0x0          0x0
+        M:  0x0       0x0      0x0         0x0        0x0          0x0
+    Result  deny:0x0    Counter handle: 0x0
+
+    Seq Num:30
+        ipv4_src: value = 0x0f000114       mask = 0xffffffff
+        ipv4_dst: value = 0x10000114       mask = 0xffffffff
+            proto    frag    tcp_flg    tcp_op    src_port    dst_port
+        V:  0x6       0x0      0x0         0x0        0x0          0x0
+        M:  0xff       0x0      0x0         0x0        0x0          0x0
+            tos      ttl       cos      v4_opt    src_obj     dst_obj
+        V:  0x0       0x0      0x0         0x0        0x0          0x0
+        M:  0x0       0x0      0x0         0x0        0x0          0x0
+    Result  deny:0x0    Counter handle: 0x0
+
+    Seq Num:40
+        ipv4_src: value = 0x00000000       mask = 0x00000000
+        ipv4_dst: value = 0x00000000       mask = 0x00000000
+            proto    frag    tcp_flg    tcp_op    src_port    dst_port
+        V:  0x0       0x0      0x0         0x0        0x0          0x0
+        M:  0x0       0x0      0x0         0x0        0x0          0x0
+            tos      ttl       cos      v4_opt    src_obj     dst_obj
+        V:  0x0       0x0      0x0         0x0        0x0          0x0
+        M:  0x0       0x0      0x0         0x0        0x0          0x0
+    Result  deny:0x1    Counter handle: 0x6df
+
+    Seq Num:4294967295
+        ipv4_src: value = 0x00000000       mask = 0x00000000
+        ipv4_dst: value = 0x00000000       mask = 0x00000000
+            proto    frag    tcp_flg    tcp_op    src_port    dst_port
+        V:  0x0       0x0      0x0         0x0        0x0          0x0
+        M:  0x0       0x0      0x0         0x0        0x0          0x0
+            tos      ttl       cos      v4_opt    src_obj     dst_obj
+        V:  0x0       0x0      0x0         0x0        0x0          0x0
+        M:  0x0       0x0      0x0         0x0        0x0          0x0
+    Result  deny:0x0    Counter handle: 0x6e9

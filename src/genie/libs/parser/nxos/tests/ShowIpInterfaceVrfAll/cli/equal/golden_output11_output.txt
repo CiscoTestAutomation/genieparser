@@ -1,0 +1,70 @@
+show ip interface vrf overlay-1
+IP Interface Status for VRF "overlay-1"
+eth1/16.16, Interface status: protocol-up/link-up/admin-up, iod: 113, mode: external
+  IP address: 192.168.1.22, IP subnet: 192.168.1.20/30  
+  IP broadcast address: 255.255.255.255
+  IP primary address route-preference: 0, tag: 0
+lo0, Interface status: protocol-up/link-up/admin-up, iod: 5, mode: ptep
+  IP address: 10.0.56.72, IP subnet: 10.0.56.72/32  
+  IP broadcast address: 255.255.255.255
+  IP primary address route-preference: 0, tag: 0
+lo1, Interface status: protocol-up/link-up/admin-up, iod: 6, mode: anycast-v6
+  IP address: 10.0.240.33, IP subnet: 10.0.240.33/32  
+  IP broadcast address: 255.255.255.255
+  IP primary address route-preference: 0, tag: 0
+lo2, Interface status: protocol-up/link-up/admin-up, iod: 7, mode: anycast-mac,external
+  IP address: 10.0.0.33, IP subnet: 10.0.0.33/32  
+  IP broadcast address: 255.255.255.255
+  IP primary address route-preference: 0, tag: 0
+lo3, Interface status: protocol-up/link-up/admin-up, iod: 8, mode: anycast-v4,external
+  IP address: 10.0.0.34, IP subnet: 10.0.0.34/32  
+  IP broadcast address: 255.255.255.255
+  IP primary address route-preference: 0, tag: 0
+lo4, Interface status: protocol-up/link-up/admin-up, iod: 9, mode: anycast-v6,external
+  IP address: 10.0.0.35, IP subnet: 10.0.0.35/32  
+  IP broadcast address: 255.255.255.255
+  IP primary address route-preference: 0, tag: 0
+lo5, Interface status: protocol-up/link-up/admin-up, iod: 10, mode: rl-ucast,vpod-ucast
+  IP address: 192.168.1.2, IP subnet: 192.168.1.2/32  
+  IP broadcast address: 255.255.255.255
+  IP primary address route-preference: 0, tag: 0
+lo6, Interface status: protocol-up/link-up/admin-up, iod: 11, mode: dci-ucast,etep
+  IP address: 192.168.10.1, IP subnet: 192.168.10.1/32  
+  IP broadcast address: 255.255.255.255
+  IP primary address route-preference: 0, tag: 0
+lo9, Interface status: protocol-up/link-up/admin-up, iod: 12, mode: cp-etep,mscp-etep
+  IP address: 192.168.10.3, IP subnet: 192.168.10.3/32  
+  IP broadcast address: 255.255.255.255
+  IP primary address route-preference: 0, tag: 0
+lo12, Interface status: protocol-up/link-up/admin-up, iod: 13, mode: anycast-v4
+  IP address: 10.0.240.32, IP subnet: 10.0.240.32/32  
+  IP broadcast address: 255.255.255.255
+  IP primary address route-preference: 0, tag: 0
+lo13, Interface status: protocol-up/link-up/admin-up, iod: 14, mode: proxy-v4
+  IP address: 10.0.112.66, IP subnet: 10.0.112.66/32  
+  IP broadcast address: 255.255.255.255
+  IP primary address route-preference: 0, tag: 0
+lo14, Interface status: protocol-up/link-up/admin-up, iod: 15, mode: proxy-v6
+  IP address: 10.0.112.67, IP subnet: 10.0.112.67/32  
+  IP broadcast address: 255.255.255.255
+  IP primary address route-preference: 0, tag: 0
+lo15, Interface status: protocol-up/link-up/admin-up, iod: 16, mode: anycast-mac
+  IP address: 10.0.240.34, IP subnet: 10.0.240.34/32  
+  IP broadcast address: 255.255.255.255
+  IP primary address route-preference: 0, tag: 0
+lo16, Interface status: protocol-up/link-up/admin-up, iod: 17, mode: proxy-mac
+  IP address: 10.0.112.65, IP subnet: 10.0.112.65/32  
+  IP broadcast address: 255.255.255.255
+  IP primary address route-preference: 0, tag: 0
+lo20, Interface status: protocol-up/link-up/admin-up, iod: 20, mode: dci-mcast-hrep
+  IP address: 192.168.26.1, IP subnet: 192.168.26.1/32  
+  IP broadcast address: 255.255.255.255
+  IP primary address route-preference: 0, tag: 0
+lo22, Interface status: protocol-up/link-up/admin-up, iod: 22, mode: anycast-v4,external,rt-anycast-v4
+  IP address: 192.168.27.230, IP subnet: 192.168.27.230/32  
+  IP broadcast address: 255.255.255.255
+  IP primary address route-preference: 0, tag: 0
+lo23, Interface status: protocol-up/link-up/admin-up, iod: 23, mode: anycast-v6,external,rt-anycast-v6
+  IP address: 192.168.27.231, IP subnet: 192.168.27.231/32  
+  IP broadcast address: 255.255.255.255
+  IP primary address route-preference: 0, tag: 0

@@ -1,0 +1,9 @@
+Per Port Native Vlan Tagging State
+----------------------------------
+
+Port         Operational        Native VLAN
+                Mode            Tagging State
+-------------------------------------------
+
+Tw1/0/4      trunk                 disabled
+Gi3/0/24     trunk                 disabled

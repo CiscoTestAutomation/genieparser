@@ -1,0 +1,40 @@
+show platform hardware fed active qos queue config interface Te1/0/1        
+Asic:0 Core:0 DATA Port:24 GPN:101 LinkSpeed:0x1
+AFD:Disabled FlatAFD:Disabled QoSMap:0 HW Queues: 192 - 199
+  DrainFast:Disabled PortSoftStart:2 - 2016 BufferSharing:Disabled
+   DTS  Hardmax  Softmax   PortSMin  GlblSMin  PortStEnd   QEnable
+  ----- --------  --------  --------  --------  ---------  -------
+ 0   1  6   224   7   896  17   476   0     0   3  2688      En
+ 1   1  5     0   8  1344  17   714   8   336   3  2688      En
+ 2   1  5     0   6     0   0     0   0     0   3  2688      En
+ 3   1  5     0   6     0   0     0   0     0   3  2688      En
+ 4   1  5     0   6     0   0     0   0     0   3  2688      En
+ 5   1  5     0   6     0   0     0   0     0   3  2688      En
+ 6   1  5     0   6     0   0     0   0     0   3  2688      En
+ 7   1  5     0   6     0   0     0   0     0   3  2688      En
+ Priority   Shaped/shared   weight  shaping_step  sharpedWeight
+ --------   -------------   ------  ------------   -------------
+ 0      0     Shared            50           0           0
+ 1      0     Shared            75           0           0
+ 2      0     Shared         10000           0           0
+ 3      0     Shared         10000           0           0
+ 4      0     Shared         10000           0           0
+ 5      0     Shared         10000           0           0
+ 6      0     Shared         10000           0           0
+ 7      0     Shared         10000           0           0
+ Port       Port            Port    Port          Port
+ Priority   Shaped/shared   weight  shaping_step  sharpedWeight
+ --------   -------------   ------  ------------  -------------
+        2     Sharped          1000        1023      1023
+
+   Weight0 Max_Th0 Min_Th0 Weigth1 Max_Th1 Min_Th1  Weight2 Max_Th2 Min_Th2
+   ------- ------- ------- ------- ------- -------  ------- ------- ------
+ 0       0     892       0       0     997       0       0    1120       0
+ 1       0    1071       0       0    1197       0       0    1344       0
+ 2       0       0       0       0       0       0       0       0       0
+ 3       0       0       0       0       0       0       0       0       0
+ 4       0       0       0       0       0       0       0       0       0
+ 5       0       0       0       0       0       0       0       0       0
+ 6       0       0       0       0       0       0       0       0       0
+ 7       0       0       0       0       0       0       0       0       0
+RFC-10slot#

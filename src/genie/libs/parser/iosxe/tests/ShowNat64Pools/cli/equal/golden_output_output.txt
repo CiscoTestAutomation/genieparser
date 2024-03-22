@@ -1,0 +1,13 @@
+Pools configured: 2
+
+Protocol HSL ID     Name
+   Is Single Range
+   Ranges
+   VRF Name
+
+IPv4     1          n64_pool
+   TRUE            (135.0.0.1 - 135.0.0.100)
+   135.0.0.1 - 135.0.0.100
+IPv4     2          n64_pool2
+   TRUE            (136.0.0.1 - 136.0.0.100)
+   136.0.0.1 - 136.0.0.100

@@ -1,0 +1,5 @@
+Multicast                               : Disabled
+AP Capwap Multicast                     : Unicast
+Wireless Broadcast                      : Disabled
+Wireless Multicast non-ip-mcast         : Disabled
+Wireless Multicast link-local           : Enabled

@@ -1,0 +1,29 @@
+
+RP/0/RP0/CPU0:ncs5500#show lldp neighbors gigabitEthernet 0/0/0/0 detail
+Mon May  9 11:13:56.088 UTC
+Capability codes:
+        (R) Router, (B) Bridge, (T) Telephone, (C) DOCSIS Cable Device
+        (W) WLAN Access Point, (P) Repeater, (S) Station, (O) Other
+
+------------------------------------------------
+Local Interface: GigabitEthernet0/0/0/0
+Chassis id: b0a6.51a5.60df
+Port id: GigabitEthernet0/0/0/0
+Port Description - not advertised
+System Name: ncs540
+
+System Description:
+ 7.8.1.02I, NCS-540
+
+Time remaining: 109 seconds
+Hold Time: 120 seconds
+Age: 21951 seconds
+System Capabilities: R
+Enabled Capabilities: R
+Management Addresses:
+  IPv4 address: 10.104.99.222
+
+Peer MAC Address: b0:a6:51:a5:60:00
+
+
+Total entries displayed: 1

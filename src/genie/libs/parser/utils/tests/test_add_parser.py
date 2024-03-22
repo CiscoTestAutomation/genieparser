@@ -2,12 +2,12 @@ import logging
 import unittest
 from unittest.mock import Mock
 
-from genie.libs.parser.utils import common 
-from genie.libs.parser.utils.entry_points import add_parser
+from genie.libs.parser.utils import common
+from genie.libs.parser.utils.common import deprecated_add_parser
 
 
 class TestAddParser(unittest.TestCase):
-    
+
     def setUp(self):
         try:
             del common.parser_data
@@ -24,7 +24,7 @@ class TestAddParser(unittest.TestCase):
         with self.assertRaises(AttributeError):
             getattr(common.parser_data)
 
-        add_parser(parser=mock_parser.MockParser, os_name='asa')
+        deprecated_add_parser(parser=mock_parser.MockParser, os_name='asa')
 
         self.assertIn(cli_command, common.parser_data)
 
@@ -40,7 +40,7 @@ class TestAddParser(unittest.TestCase):
         with self.assertRaises(AttributeError):
             getattr(common.parser_data)
 
-        add_parser(parser=mock_parser.MockParser, os_name='asa')
+        deprecated_add_parser(parser=mock_parser.MockParser, os_name='asa')
 
         for cmd in cli_command:
             self.assertIn(cmd, common.parser_data)

@@ -1,0 +1,34 @@
+Vlan3892 is up, line protocol is up 
+  Link Local Address FE80::72B3:17FF:FE1E:A982, Interface ID 9649 (snmp-if-index)
+  Area 0, Process ID 50, Instance ID 0, Router ID 2.200.1.2
+  Network Type BROADCAST, Cost: 1
+  Transmit Delay is 1 sec, State DR, Priority 1, BFD enabled
+  Designated Router (ID) 2.200.1.2, local address FE80::72B3:17FF:FE1E:A982
+  Backup Designated router (ID) 2.200.33.3, local address FE80::3E57:31FF:FE04:6B05
+  Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+    Hello due in 00:00:04
+  Graceful restart helper support enabled
+  Index 1/11/11, flood queue length 0
+  Next 0x0(0)/0x0(0)/0x0(0)
+  Last flood scan length is 28, maximum is 253
+  Last flood scan time is 0 msec, maximum is 2 msec
+  Neighbor Count is 1, Adjacent neighbor count is 1 
+    Adjacent with neighbor 2.200.33.3  (Backup Designated Router)
+  Suppress hello for 0 neighbor(s)
+Vlan3891 is up, line protocol is up 
+  Link Local Address FE80::72B3:17FF:FE1E:A982, Interface ID 9648 (snmp-if-index)
+  Area 0, Process ID 50, Instance ID 0, Router ID 2.200.1.2
+  Network Type BROADCAST, Cost: 1
+  Transmit Delay is 1 sec, State BDR, Priority 1, BFD enabled
+  Designated Router (ID) 2.200.33.3, local address FE80::3E57:31FF:FE04:6B05
+  Backup Designated router (ID) 2.200.1.2, local address FE80::72B3:17FF:FE1E:A982
+  Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+    Hello due in 00:00:04
+  Graceful restart helper support enabled
+  Index 1/10/10, flood queue length 0
+  Next 0x0(0)/0x0(0)/0x0(0)
+  Last flood scan length is 28, maximum is 253
+  Last flood scan time is 0 msec, maximum is 1 msec
+  Neighbor Count is 1, Adjacent neighbor count is 1 
+    Adjacent with neighbor 2.200.33.3  (Designated Router)
+  Suppress hello for 0 neighbor(s)

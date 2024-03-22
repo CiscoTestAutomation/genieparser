@@ -1,0 +1,10 @@
+Forwarding manager table for MAC entries in one BD
+'EVPN' - EVPN Encap OCE; 'OTV' - OTV Encap OCE
+'VXLAN' - VXLAN Encap OCE; 'VXCP' - VXLAN CP Encap OCE
+
+MAC               BD        Nhop Type   Nhop Name/Idx                             Flags     
+------------------------------------------------------------------------------------------
+0022.bdf8.0002    1700      efp         GigabitEthernet0/0/3.EFP1700              none      
+0022.bdf8.0003    1700      oce         EVPN(0x4a2cf760)/0xbf8                    none      
+ffff.ffff.fffe    1700      olist       0x4ee3                                    none      
+ffff.ffff.ffff    1700      olist       0xaa4                                     none      

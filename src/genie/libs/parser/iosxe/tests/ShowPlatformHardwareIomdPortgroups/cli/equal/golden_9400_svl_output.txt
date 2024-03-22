@@ -1,0 +1,38 @@
+M101#show platform hardware iomd switch 1 1/0 portgroups 
+Port  Interface                       Status    Interface  Group Max   
+Group                                           Bandwith   Bandwidth   
+
+1     TenGigabitEthernet1/1/0/1       down       10G       
+1     TenGigabitEthernet1/1/0/2       up         10G       
+1     TenGigabitEthernet1/1/0/3       up         10G       10G       
+
+2     TenGigabitEthernet1/1/0/4       up         10G       
+2     TenGigabitEthernet1/1/0/5       down       10G       
+2     TenGigabitEthernet1/1/0/6       down       10G       10G       
+
+3     TenGigabitEthernet1/1/0/7       down       10G       
+3     TenGigabitEthernet1/1/0/8       up         10G       
+3     TenGigabitEthernet1/1/0/9       admindown  10G       10G       
+
+4     TenGigabitEthernet1/1/0/10      up         10G       
+4     TenGigabitEthernet1/1/0/11      up         10G       
+4     TenGigabitEthernet1/1/0/12      up         10G       10G       
+
+5     TenGigabitEthernet1/1/0/13      up         10G       
+5     TenGigabitEthernet1/1/0/14      down       10G       
+5     TenGigabitEthernet1/1/0/15      admindown  10G       10G       
+
+6     TenGigabitEthernet1/1/0/16      admindown  10G       
+6     TenGigabitEthernet1/1/0/17      up         10G       
+6     TenGigabitEthernet1/1/0/18      up         10G       10G       
+
+7     TenGigabitEthernet1/1/0/19      down       10G       
+7     TenGigabitEthernet1/1/0/20      up         10G       
+7     TenGigabitEthernet1/1/0/21      up         10G       10G       
+
+8     TenGigabitEthernet1/1/0/22      up         10G       
+8     TenGigabitEthernet1/1/0/23      up         10G       
+8     TenGigabitEthernet1/1/0/24      up         10G       10G       
+
+
+M101#

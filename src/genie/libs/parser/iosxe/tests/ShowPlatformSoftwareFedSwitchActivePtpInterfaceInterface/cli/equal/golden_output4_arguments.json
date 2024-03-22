@@ -1,0 +1,4 @@
+{
+  "interface" : "TenGigabitEthernet1/0/33",
+  "switch_var": "active"
+}

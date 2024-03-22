@@ -1,0 +1,5 @@
+Interface Templates
+===================
+Interface: Gi1/0/24
+Method                Source              Template-Name
+------                     ------                  -------------

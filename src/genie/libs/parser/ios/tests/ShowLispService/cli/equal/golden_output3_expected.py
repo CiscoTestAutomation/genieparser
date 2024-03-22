@@ -36,8 +36,7 @@ expected_output = {
             'delegated_database_tree': 'disabled',
             'mcast_flood_access_tunnel': False,
             'pub_sub': {
-                'role': True,
-                'publishers': []
+                'role': True
                 },
             'map_resolvers': {
                 '44.44.44.44': {
@@ -47,7 +46,8 @@ expected_output = {
                 },
             'mapping_servers': {
                 '44.44.44.44': {
-                    'ms_address': '44.44.44.44'
+                    'ms_address': '44.44.44.44',
+                    'prefix_list': '100.100.100.100'
                     }
                 },
             'xtr_id': '0x50E5AAE2-0xDBB7E2DF-0x761B5EE7-0xE174F775',

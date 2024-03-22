@@ -1,0 +1,29 @@
+show consistency-checker run-id 2610
+Process: IOSD
+Flags:    F - Full Table Scan, S - Single Entry Run
+          RE -  Recursive Check, GD -  Garbage Detector
+          Hw -  Hardware Check, HS - Hardware Shadow Copy
+  Object-Type    Start-time              Entries  Exceptions  Flags
+  l2m_vlan       2023/05/10 05:52:53          72         0    F GD Hw HS 
+  l2m_group      2023/05/10 05:52:53           0         0    F GD Hw HS 
+
+Process: FMAN-RP
+  *Statistics(A/I/M/S/Oth): Actual/Inherited/Missing/Stale/Others
+
+  Object-Type    Start-time              State             A/  I/  M/  S/Oth
+  l2m_vlan       2023/05/10 05:52:53     Consistent        0/  0/  0/  0/  0
+  l2m_group      2023/05/10 05:52:53     Consistent        0/  0/  0/  0/  0
+
+Switch: 1 Process: FMAN-FP
+  *Statistics(A/I/M/S/Oth): Actual/Inherited/Missing/Stale/Others
+
+  Object-Type    Start-time              State             A/  I/  M/  S/Oth
+  l2m_vlan       2023/05/10 05:52:53     Consistent        0/  0/  0/  0/  0
+  l2m_group      2023/05/10 05:52:53     Consistent        0/  0/  0/  0/  0
+
+Switch: 1 Process: FED
+  *Statistics(A/I/M/S/HW/Oth): Actual/Inherited/Missing/Stale/Hardware/Others
+
+  Object-Type    Start-time              State              A/  I/  M/  S/ HW/Oth
+  l2m_vlan       2023/05/10 05:52:53     Consistent         0/  0/  0/  0/  0/  0
+  l2m_group      2023/05/10 05:52:53     Consistent         0/  0/  0/  0/  0/  0

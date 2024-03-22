@@ -1,0 +1,21 @@
+Reload fast supported: Yes
+Reload Fast PLATFORM Status: Not started yet
+Stack Configuration: Yes
+Eligibility Check         Status
+=================         ======
+Autoboot Enabled          Yes
+Install Mode              Yes
+Network Advantage License Yes
+Full ring stack           Yes
+Check macsec eligibility  Eligible
+Note:   All the status should be Yes or eligible to continue xFSU
+
+Spanning Tree             Ineligible:Root Switch with forwarding link:VLAN0069
+Note:   For STP status should be eligible to continue xFSU
+Suggested fixes:
+  Suggest to configure root bridge for VLAN0069 through 'spanning vlan <vlan id> root primary' on peer switch to proceed
+
+SSO Mode                  Yes
+Note:   If 'SSO mode' status is 'No', please wait until condition is met, then proceed
+        
+        

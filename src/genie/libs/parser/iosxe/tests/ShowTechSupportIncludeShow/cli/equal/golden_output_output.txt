@@ -1,0 +1,827 @@
+------------------ show clock ------------------
+------------------ show switch ------------------
+------------------ show module ------------------
+------------------ show version ------------------
+------------------ show running-config ------------------
+service timestamps debug datetime msec localtime show-timezone
+service timestamps log datetime msec localtime show-timezone
+------------------ show redundancy history ------------------
+------------------ show redundancy states ------------------
+------------------ show redundancy switchover history ------------------
+------------------ show stacks ------------------
+------------------ show interfaces ------------------
+  Last clearing of "show interface" counters never
+  Last clearing of "show interface" counters never
+  Last clearing of "show interface" counters never
+  Last clearing of "show interface" counters never
+  Last clearing of "show interface" counters never
+  Last clearing of "show interface" counters never
+  Last clearing of "show interface" counters never
+  Last clearing of "show interface" counters never
+  Last clearing of "show interface" counters never
+  Last clearing of "show interface" counters never
+  Last clearing of "show interface" counters never
+  Last clearing of "show interface" counters never
+  Last clearing of "show interface" counters never
+  Last clearing of "show interface" counters never
+  Last clearing of "show interface" counters 10:23:06
+  Last clearing of "show interface" counters never
+  Last clearing of "show interface" counters never
+  Last clearing of "show interface" counters never
+  Last clearing of "show interface" counters never
+  Last clearing of "show interface" counters never
+  Last clearing of "show interface" counters never
+  Last clearing of "show interface" counters never
+  Last clearing of "show interface" counters never
+  Last clearing of "show interface" counters never
+  Last clearing of "show interface" counters never
+  Last clearing of "show interface" counters never
+  Last clearing of "show interface" counters never
+  Last clearing of "show interface" counters never
+  Last clearing of "show interface" counters 10:23:05
+  Last clearing of "show interface" counters never
+  Last clearing of "show interface" counters never
+  Last clearing of "show interface" counters never
+  Last clearing of "show interface" counters never
+------------------ show interfaces history ------------------
+------------------ show controllers ------------------
+------------------ show user ------------------
+------------------ show data-corruption ------------------
+------------------ show file systems ------------------
+------------------ show file descriptors ------------------
+------------------ show crashinfo: all ------------------
+------------------ show flash: all ------------------
+------------------ show webui: all ------------------
+  2       1892 Aug 02 2023 02:26:18.3199998160 +00:00 showCPUUtilization.odm
+  3        958 Aug 02 2023 02:26:18.3159998160 +00:00 showAVBStreamDetails.odm
+  6        966 Aug 02 2023 02:26:18.3399998160 +00:00 showLocalPoliciesDetail.odm
+  7       1817 Aug 02 2023 02:26:18.3319998160 +00:00 showIntTransceiverProp.odm
+  8        495 Aug 02 2023 02:26:18.3239998160 +00:00 showCallHomeProfileSyslog.odm
+ 12        881 Aug 02 2023 02:26:18.3319998160 +00:00 showIntStatusNoDesc.odm
+ 13        870 Aug 02 2023 02:26:18.3719998150 +00:00 showl3mgid.odm
+ 15        630 Aug 02 2023 02:26:18.3359998160 +00:00 showInterfaceCounters.odm
+ 18       1522 Aug 02 2023 02:26:18.3439998160 +00:00 showMSRPStreamDetails.odm
+ 19        788 Aug 02 2023 02:26:18.3199998160 +00:00 showCPUAlloc.odm
+ 20        567 Aug 02 2023 02:26:18.3279998160 +00:00 showEtherchannelSummary.odm
+ 21        726 Aug 02 2023 02:26:18.3639998150 +00:00 showStackwiseVirtualDual.odm
+ 22        751 Aug 02 2023 02:26:18.3719998150 +00:00 showipbriefdet.odm
+ 25        880 Aug 02 2023 02:26:18.3479998160 +00:00 showModuleDetail.odm
+ 26       2278 Aug 02 2023 02:26:18.3719998150 +00:00 showmgmtIntf.odm
+ 28       4338 Aug 02 2023 02:26:18.3159998160 +00:00 showAAARadiusDetails.odm
+ 29        574 Aug 02 2023 02:26:18.3479998160 +00:00 showPPPOESession.odm
+ 34       1769 Aug 02 2023 02:26:18.3559998150 +00:00 showPTPPortDetails.odm
+ 36        489 Aug 02 2023 02:26:18.3239998160 +00:00 showCallHomeProfileAlert.odm
+ 37       2808 Aug 02 2023 02:26:18.3719998150 +00:00 showloopbackIntf.odm
+ 39       2141 Aug 02 2023 02:26:18.3639998150 +00:00 showStaticServiceDetails.odm
+ 40       1015 Aug 02 2023 02:26:18.3439998160 +00:00 showMemory.odm
+ 41        774 Aug 02 2023 02:26:18.3279998160 +00:00 showEigrp.odm
+ 42        437 Aug 02 2023 02:26:18.3639998150 +00:00 showSwitch.odm
+ 43       2348 Aug 02 2023 02:26:18.3199998160 +00:00 showCallHomeGeneral.odm
+ 46       1235 Aug 02 2023 02:26:18.3679998150 +00:00 showSwitchPortPRP.odm
+ 47       1833 Aug 02 2023 02:26:18.3599998150 +00:00 showServiceListDetails.odm
+ 50       1043 Aug 02 2023 02:26:18.3399998160 +00:00 showLocalPolicyMapDetail.odm
+ 52       2383 Aug 02 2023 02:26:18.3439998160 +00:00 showMdnsInterfaceDetails.odm
+ 55        863 Aug 02 2023 02:26:18.3159998160 +00:00 showAllVRF.odm
+ 60       3820 Aug 02 2023 02:26:18.3559998150 +00:00 showPorts.odm
+ 64        442 Aug 02 2023 02:26:18.3279998160 +00:00 showClock.odm
+ 65        589 Aug 02 2023 02:26:18.3679998150 +00:00 showVlanBrief.odm
+ 66       1672 Aug 02 2023 02:26:18.3439998160 +00:00 showMSRPPortDetails.odm
+ 69        936 Aug 02 2023 02:26:18.3159998160 +00:00 showAAAMethodListNames.odm
+ 70       2690 Aug 02 2023 02:26:18.3479998160 +00:00 showMethodListNames.odm
+ 71        490 Aug 02 2023 02:26:18.3679998150 +00:00 showVRFByProtocols.odm
+ 73        626 Aug 02 2023 02:26:18.3559998150 +00:00 showPolicyMapControl.odm
+ 74       1079 Aug 02 2023 02:26:18.3279998160 +00:00 showClassMap.odm
+ 75        896 Aug 02 2023 02:26:18.3199998160 +00:00 showAvcWlanLastIntData.odm
+ 78       2186 Aug 02 2023 02:26:18.3359998160 +00:00 showIssuStateDetail.odm
+ 79        499 Aug 02 2023 02:26:18.3479998160 +00:00 showNtp.odm
+ 80       1074 Aug 02 2023 02:26:18.3479998160 +00:00 showMulticast.odm
+ 82        601 Aug 02 2023 02:26:18.3719998150 +00:00 showVrfNtp.odm
+ 86        513 Aug 02 2023 02:26:18.3439998160 +00:00 showMemoryCritical.odm
+ 87        649 Aug 02 2023 02:26:18.3359998160 +00:00 showLicenseRightToUse.odm
+ 90        892 Aug 02 2023 02:26:18.3439998160 +00:00 showMdnsGlobalConfDetails.odm
+ 93        393 Aug 02 2023 02:26:18.3679998150 +00:00 showVrf.odm
+ 94        877 Aug 02 2023 02:26:18.3199998160 +00:00 showAvcWlanCumulativeData.odm
+ 96       4386 Aug 02 2023 02:26:18.3559998150 +00:00 showPdelayPortDetails.odm
+ 98        876 Aug 02 2023 02:26:18.3199998160 +00:00 showAvbDomainDetails.odm
+ 99        960 Aug 02 2023 02:26:18.3319998160 +00:00 showIntStatus.odm
+103        679 Aug 02 2023 02:26:18.3399998160 +00:00 showMSRPPortBandwidth.odm
+104        945 Aug 02 2023 02:26:18.3319998160 +00:00 showIntStatusSVL.odm
+105        787 Aug 02 2023 02:26:18.3359998160 +00:00 showInterfaces.odm
+107        681 Aug 02 2023 02:26:18.3159998160 +00:00 showAclIpv4Ipv6.odm
+108        547 Aug 02 2023 02:26:18.3479998160 +00:00 showPRPChannelSummary.odm
+112        630 Aug 02 2023 02:26:18.3359998160 +00:00 showLocalPolicies.odm
+114        568 Aug 02 2023 02:26:18.3639998150 +00:00 showStackwiseVirtualLink.odm
+116        620 Aug 02 2023 02:26:18.3399998160 +00:00 showLocalPoliciesUser.odm
+120       7578 Aug 02 2023 02:26:18.3399998160 +00:00 showMSRPInterfaceDetail.odm
+121        798 Aug 02 2023 02:26:18.3719998150 +00:00 showWlanSummary.odm
+122        446 Aug 02 2023 02:26:18.3199998160 +00:00 showCallHomeMailServer.odm
+123       1753 Aug 02 2023 02:26:18.3479998160 +00:00 showMvrpInterface.odm
+124        505 Aug 02 2023 02:26:18.3239998160 +00:00 showCallHomeVrf.odm
+129        424 Aug 02 2023 02:26:18.3319998160 +00:00 showInstallProfile.odm
+132        803 Aug 02 2023 02:26:18.3639998150 +00:00 showStormcontrol.odm
+133        490 Aug 02 2023 02:26:18.3719998150 +00:00 showVrfNames.odm
+134        866 Aug 02 2023 02:26:18.3319998160 +00:00 showInstallSummary.odm
+135        500 Aug 02 2023 02:26:18.3359998160 +00:00 showInterfaceDescription.odm
+136       1334 Aug 02 2023 02:26:18.3319998160 +00:00 showInstallPackage.odm
+137        835 Aug 02 2023 02:26:18.3759998150 +00:00 showprpNodeTable.odm
+140        596 Aug 02 2023 02:26:18.3159998160 +00:00 showAclIpvSix.odm
+141        750 Aug 02 2023 02:26:18.3759998150 +00:00 showprpVdanTable.odm
+142        509 Aug 02 2023 02:26:18.3279998160 +00:00 showDeviceClassifier.odm
+144        878 Aug 02 2023 02:26:18.3599998150 +00:00 showProcessMemoryGraph.odm
+149        657 Aug 02 2023 02:26:18.3359998160 +00:00 showInterfaceSummary.odm
+150        869 Aug 02 2023 02:26:18.3719998150 +00:00 showipv6interface.odm
+153        883 Aug 02 2023 02:26:18.3199998160 +00:00 showAvcDetailsForSSIDs.odm
+155        541 Aug 02 2023 02:26:18.3599998150 +00:00 showRaguardDetail.odm
+158        981 Aug 02 2023 02:26:18.3559998150 +00:00 showPlatform.odm
+160        628 Aug 02 2023 02:26:18.3679998150 +00:00 showVersionRunning.odm
+162        490 Aug 02 2023 02:26:18.3639998150 +00:00 showStackwiseVirtualNeighbor.odm
+164       1002 Aug 02 2023 02:26:18.3639998150 +00:00 showStackwiseVirtual.odm
+165        999 Aug 02 2023 02:26:18.3279998160 +00:00 showEapProfiles.odm
+166       1006 Aug 02 2023 02:26:18.3639998150 +00:00 showSwitchDetail.odm
+167       1058 Aug 02 2023 02:26:18.3279998160 +00:00 showEapFastProfile.odm
+168       1155 Aug 02 2023 02:26:18.3239998160 +00:00 showCallHomeProfile.odm
+173        586 Aug 02 2023 02:26:18.3319998160 +00:00 showInstallRollback.odm
+175        936 Aug 02 2023 02:26:18.3599998150 +00:00 showProcessMemory.odm
+176        439 Aug 02 2023 02:26:18.3679998150 +00:00 showSwitchDetails.odm
+179        607 Aug 02 2023 02:26:18.3399998160 +00:00 showLocalPoliciesPolicyMap.odm
+180        692 Aug 02 2023 02:26:18.3359998160 +00:00 showLicenseApCount.odm
+181       2955 Aug 02 2023 02:26:18.3759998150 +00:00 showtengigIntf.odm
+185       1056 Aug 02 2023 02:26:18.3599998150 +00:00 showProcessCPU.odm
+187       5000 Aug 02 2023 02:26:18.3559998150 +00:00 showParticularIntfDetail.odm
+188        528 Aug 02 2023 02:26:18.3519998150 +00:00 showPTPDelayPortDetails.odm
+194       1824 Aug 02 2023 02:26:18.3599998150 +00:00 showQoS.odm
+198        486 Aug 02 2023 02:26:18.3239998160 +00:00 showCallHomeProfilelist.odm
+199        387 Aug 02 2023 02:26:18.3679998150 +00:00 showTemplate.odm
+200        594 Aug 02 2023 02:26:18.3279998160 +00:00 showEtherChannel.odm
+201        788 Aug 02 2023 02:26:18.3439998160 +00:00 showMemoryDetails.odm
+------------------ show memory statistics ------------------
+------------------ show process memory sorted ------------------
+------------------ show process memory platform sorted ------------------
+------------------ show process cpu sorted ------------------
+------------------ show process cpu platform sorted ------------------
+------------------ show process cpu extended history ------------------
+------------------ show process cpu history ------------------
+------------------ show license all ------------------
+------------------ show license summary ------------------
+------------------ show switch detail ------------------
+------------------ show platform oir states ------------------
+------------------ show ipc nodes ------------------
+------------------ show ipc ports ------------------
+------------------ show ipc queue ------------------
+------------------ show ipc status ------------------
+------------------ show interfaces status ------------------
+------------------ show interfaces status err-disabled ------------------
+------------------ show interfaces switchport ------------------
+------------------ show interfaces trunk ------------------
+------------------ show vlan ------------------
+------------------ show spanning-tree ------------------
+------------------ show spanning-tree summary ------------------
+------------------ show spanning-tree instances ------------------
+------------------ show vlan virtual-port ------------------
+------------------ show etherchannel summary ------------------
+------------------ show mac address-table ------------------
+------------------ show lacp counters ------------------
+------------------ show lacp neighbor detail ------------------
+------------------ show fips status ------------------
+------------------ show processes cpu sorted ------------------
+------------------ show diagnostic result switch all ------------------
+------------------ show platform software infrastructure lsmpi driver ------------------
+------------------ show platform software infrastructure lsmpi driver 0 ------------------
+------------------ show platform software fed switch active punt cause summary ------------------
+------------------ show platform software fed switch active punt tag summary ------------------
+------------------ show platform software fed switch active punt cpuq all ------------------
+------------------ show platform software fed switch active inject cpuq all ------------------
+------------------ show platform hardware fed switch active qos queue stats internal cpu policer ------------------
+------------------ show platform software fed switch active lsmpi stat ------------------
+------------------ show platform hardware fed switch active fwd-asic resource utilization ------------------
+------------------ show platform hardware fed switch standby fwd-asic resource utilization ------------------
+------------------ show platform hardware fed switch active fwd-asic resource tcam utilization ------------------
+------------------ show platform hardware fed switch standby fwd-asic resource tcam utilization ------------------
+------------------ show software authenticity running ------------------
+------------------ show power inline ------------------
+------------------ show power inline police ------------------
+------------------ show platform software ilpower details ------------------
+------------------ show stack-power budgeting ------------------
+------------------ show stack-power detail ------------------
+------------------ show stack-power load-shedding ------------------
+------------------ show stack-power neighbors ------------------
+------------------ show platform resources ------------------
+------------------ show processes memory platform sorted ------------------
+------------------ show controllers cpu-interface ------------------
+------------------ show platform software process list switch active R0 sort memory ------------------
+------------------ show lldp neighbors ------------------
+------------------ show sdm prefer ------------------
+------------------ show logging onboard switch active uptime detail ------------------
+------------------ show controller ethernet-controller phy detail ------------------
+------------------ show cdp neighbor ------------------
+------------------ show cdp neighbor detail ------------------
+------------------ show subscriber statistics ------------------
+------------------ show ip subscriber statistics errors ------------------
+------------------ show ip subscriber statistics dangling ------------------
+------------------ show pppoe statistics ------------------
+------------------ show pppoe summary ------------------
+------------------ show ppp statistics ------------------
+------------------ show ppp subscriber statistics ------------------
+------------------ show ppp summary ------------------
+------------------ show l2tp counters component errors ------------------
+------------------ show l2tp counters session fsm event icrq ------------------
+------------------ show l2tp counters session fsm event ocrq ------------------
+------------------ show l2tp counters session fsm event manual ------------------
+------------------ show l2tp counters session fsm state current icrq ------------------
+------------------ show l2tp counters session fsm state current manual ------------------
+------------------ show l2tp counters session fsm state current ocrq ------------------
+------------------ show l2tp counters session fsm state transition icrq ------------------
+------------------ show l2tp counters session fsm state transition ocrq ------------------
+------------------ show l2tp counters session fsm state transition manual ------------------
+------------------ show vpdn statistics call fsm ------------------
+------------------ show vpdn statistics mgr fsm ------------------
+------------------ show vpdn session stats pending ------------------
+------------------ show ip nbar version ------------------
+------------------ show ip nbar control-plane ------------------
+        num_of_errs_failed_to_show_batch_info: 0
+There is no batch to show - no batch was created.
+        active db is null during show request: 0
+        invalid show params: 0
+        invalid show totals: 0
+        active db is null during show request: 0
+        invalid show params: 0
+        invalid show totals: 0
+------------------ show device-tracking database ------------------
+------------------ show device-tracking database mac ------------------
+------------------ show crypto tls-tunnel stats ------------------
+------------------ show crypto tls-tunnel sessions ------------------
+------------------ show crypto key mypubkey rsa ------------------
+------------------ show crypto call admission statistics ------------------
+------------------ show inventory ------------------
+------------------ show region ------------------
+ 0x6AC90000  0x6AC98433       33844  IText  R/O    libgreen_native_fe_ios_emul_oper_db_showcmd.so_text
+ 0x6ACA8434  0x6ACA8757         804  IData  R/W    libgreen_native_fe_ios_emul_oper_db_showcmd.so_data
+------------------ show wsma tech-support ------------------
+------------------ show wsma summary ------------------
+------------------ show wsma profiles ------------------
+------------------ show wsma services ------------------
+------------------ show wsma history ------------------
+------------------ show buffers ------------------
+------------------ show buffers usage ------------------
+------------------ show platform integrity sign nonce 1761 ------------------
+------------------ show platform sudi certificate sign nonce 5800 ------------------
+------------------ show platform ------------------
+------------------ show platform resources ------------------
+------------------ show platform software status control-processor brief ------------------
+------------------ show romvar switch all ------------------
+------------------ show platform software tech-support ------------------
+---- show version installed  ----
+---- show version running ----
+---- show platform software mount switch active R0 brief ----
+---- show platform software mount switch active R0 ----
+---- show platform software ipc queue-based forwarding-manager switch active R0 connection ----
+---- show platform software ipc stream-based forwarding-manager switch active R0 manager ----
+---- show platform software ipc stream-based host-manager switch active R0 connection ----
+---- show platform software ipc stream-based host-manager switch active R0 manager  ----
+---- show platform software ipc stream-based shell-manager switch active R0 connection  ----
+---- show platform software ipc stream-based shell-manager switch active R0 manager ----
+---- show platform software peer forwarding-manager switch active R0 ----
+---- show platform software peer shell-manager  ----
+---- show platform software peer shell-manager brief ----
+---- show platform software process environment host-manager switch active R0 ----
+---- show platform software process environment shell-manager switch active R0  ----
+---- show platform software process list switch active R0  ----
+---- show platform software process list switch active R0 summary ----
+------------------ show install summary ------------------
+------------------ show facility-alarm status ------------------
+------------------ show environment all ------------------
+------------------ show logging ------------------
+*Aug  2 03:59:10.278 IST: %FED_CCK_ERRMSG-4-INCONSISTENCY_FOUND: Switch 1 F0/0: fed: Consistency Checker(CCK) detected inconsistency for l2m_vlan. Check 'show consistency run-id 1 detail'.
+*Aug  2 05:59:10.725 IST: %FED_CCK_ERRMSG-4-INCONSISTENCY_FOUND: Switch 1 F0/0: fed: Consistency Checker(CCK) detected inconsistency for l2m_vlan. Check 'show consistency run-id 3 detail'.
+*Aug  2 07:59:08.536 IST: %FED_CCK_ERRMSG-4-INCONSISTENCY_FOUND: Switch 1 F0/0: fed: Consistency Checker(CCK) detected inconsistency for l2m_vlan. Check 'show consistency run-id 5 detail'.
+*Aug  2 09:59:09.765 IST: %FED_CCK_ERRMSG-4-INCONSISTENCY_FOUND: Switch 1 F0/0: fed: Consistency Checker(CCK) detected inconsistency for l2m_vlan. Check 'show consistency run-id 7 detail'.
+*Aug  2 11:59:09.146 IST: %FED_CCK_ERRMSG-4-INCONSISTENCY_FOUND: Switch 1 F0/0: fed: Consistency Checker(CCK) detected inconsistency for l2m_vlan. Check 'show consistency run-id 9 detail'.
+------------------ show usb-devices summary ------------------
+------------------ show hdd-devices summary ------------------
+------------------ show pnp tech-support ------------------
+------------------ show pnp time ------------------
+------------------ show pnp version ------------------
+------------------ show pnp capabilities ------------------
+PnP Feature (11): cisco:pnp:monitor-show-summary
+---------- show pnp reload info tracking -------------
+------------------ show pnp udi tracking ---------
+------------- show pnp device mode tracking ---------
+------------------ show pnp image information ---------
+------------------ show pnp hardware info ---------
+------------------ show pnp file system info ---------
+------------------ show pnp profile info ---------
+------------------ show pnp stack information ---------
+------------------ show pnp smu info ------------------
+--------------- show pnp server tracking ---------------
+-------------- show pnp config tracking ---------------
+-------------- show pnp wait time info ---------------
+-------------- show pnp lock info -------------------
+PnP Config NowLocked: Yes, By:(pid=3)[show-pnp-tech], LastLockedBy:(pid=3)[show-pnp-tech], LastUnlockedBy:[show-pnp-tech]
+PnP Exec NowLocked: Yes, By:(pid=3)[show-pnp-tech], LastLockedBy:(pid=3)[show-pnp-tech], LastUnlockedBy:[show-pnp-tech]
+-------------- show pnp ha tracking ---------------
+-------------- show pnp idb info ---------------
+-------------- show pnp bootstrap tracking ---------------
+-------------- show pnp script tracking ---------------
+------------------ show pnp discovery -----------------
+--------------- show pnp dns info ---------------
+-------------- show pnp webui tracking ---------------
+------------------ show pnp ca bundles ------------------
+------------------ show pnp profiles ------------------
+------------------ show pnp counters ------------------
+------------------ show pnp tasks ---------------------
+--------------- show pnp requests ---------------------
+---------- show pnp file backup tracking -------------
+------------------ show pnp services ------------------
+---------------- show pnp cert service info ---------------
+--------------- show pnp errors tracking ---------------
+--------------- show pnp reconfig ---------------
+------------------ show pnp topology ------------------
+-------------- show pnp interface tracking ---------------
+---------------- show pnp cmd tracking ---------------
+-------------- show pnp monitor tracking (3) ---------------
+----------- show pnp event watch tracking ------------
+----------- show pnp event action tracking ------------
+----------- show pnp event notify tracking ------------
+------------------ show pnp trace ------------------
+------------------ show pnp history ----------------
+------------------ show pnp diag ------------------
+----------- show pnp monitor logging ----------------
+---------- show pnp auto-install tech-support ---------
+------------------ show ip traffic ------------------
+------------------ show platform software mount r0 ------------------
+------------------ show platform software mount r1 ------------------
+------------------ show ip bgp summary ------------------
+------------------ show ip nat statistics ------------------
+------------------ show ip ports all ------------------
+------------------ show process memory platform accounting ------------------
+------------------ show platform hardware qfp active feature ipsec state ------------------
+------------------ show crypto ikev2 stats ------------------
+------------------ show history all ------------------
+CMD: 'show subscriber statistics' 13:46:06 IST Wed Aug 2 2023
+CMD: 'show ip subscriber statistics errors' 13:46:06 IST Wed Aug 2 2023
+CMD: 'show ip subscriber statistics dangling' 13:46:06 IST Wed Aug 2 2023
+CMD: 'show pppoe statistics' 13:46:06 IST Wed Aug 2 2023
+CMD: 'show pppoe summary' 13:46:06 IST Wed Aug 2 2023
+CMD: 'show ppp statistics' 13:46:06 IST Wed Aug 2 2023
+CMD: 'show ppp subscriber statistics' 13:46:06 IST Wed Aug 2 2023
+CMD: 'show ppp summary' 13:46:06 IST Wed Aug 2 2023
+CMD: 'show l2tp counters component errors' 13:46:06 IST Wed Aug 2 2023
+CMD: 'show l2tp counters session fsm event icrq' 13:46:06 IST Wed Aug 2 2023
+CMD: 'show l2tp counters session fsm event ocrq' 13:46:06 IST Wed Aug 2 2023
+CMD: 'show l2tp counters session fsm event manual' 13:46:06 IST Wed Aug 2 2023
+CMD: 'show l2tp counters session fsm state current icrq' 13:46:06 IST Wed Aug 2 2023
+CMD: 'show l2tp counters session fsm state current manual' 13:46:06 IST Wed Aug 2 2023
+CMD: 'show l2tp counters session fsm state current ocrq' 13:46:06 IST Wed Aug 2 2023
+CMD: 'show l2tp counters session fsm state transition icrq' 13:46:06 IST Wed Aug 2 2023
+CMD: 'show l2tp counters session fsm state transition ocrq' 13:46:06 IST Wed Aug 2 2023
+CMD: 'show l2tp counters session fsm state transition manual' 13:46:06 IST Wed Aug 2 2023
+CMD: 'show vpdn statistics call fsm' 13:46:06 IST Wed Aug 2 2023
+CMD: 'show vpdn statistics mgr fsm' 13:46:06 IST Wed Aug 2 2023
+CMD: 'show vpdn session stats pending' 13:46:06 IST Wed Aug 2 2023
+CMD: 'show ip nbar version' 13:46:06 IST Wed Aug 2 2023
+CMD: 'show ip nbar control-plane' 13:46:06 IST Wed Aug 2 2023
+CMD: 'show device-tracking database' 13:46:06 IST Wed Aug 2 2023
+CMD: 'show device-tracking database mac' 13:46:06 IST Wed Aug 2 2023
+CMD: 'show crypto tls-tunnel stats' 13:46:06 IST Wed Aug 2 2023
+CMD: 'show crypto tls-tunnel sessions' 13:46:07 IST Wed Aug 2 2023
+CMD: 'show crypto call admission statistics' 13:46:07 IST Wed Aug 2 2023
+CMD: 'show inventory' 13:46:07 IST Wed Aug 2 2023
+CMD: 'show region' 13:46:07 IST Wed Aug 2 2023
+CMD: 'show wsma tech-support' 13:46:08 IST Wed Aug 2 2023
+CMD: 'show buffers' 13:46:08 IST Wed Aug 2 2023
+CMD: 'show buffers usage' 13:46:08 IST Wed Aug 2 2023
+CMD: 'show platform integrity sign nonce 8545' 13:46:08 IST Wed Aug 2 2023
+CMD: 'show platform sudi certificate sign nonce 3102' 13:46:18 IST Wed Aug 2 2023
+CMD: 'show platform' 13:46:28 IST Wed Aug 2 2023
+CMD: 'show platform resources' 13:46:28 IST Wed Aug 2 2023
+CMD: 'show platform resources hidden slot RP0 cpu ' 13:46:28 IST Wed Aug 2 2023
+CMD: 'show platform resources hidden slot RP0 memory ' 13:46:28 IST Wed Aug 2 2023
+CMD: 'show platform resources hidden slot RP0 tmpfs ' 13:46:28 IST Wed Aug 2 2023
+CMD: 'show app-hosting resource ' 13:46:28 IST Wed Aug 2 2023
+CMD: 'show platform software status control-processor brief' 13:46:28 IST Wed Aug 2 2023
+CMD: 'show romvar switch all' 13:46:28 IST Wed Aug 2 2023
+CMD: 'show platform software tech-support' 13:46:28 IST Wed Aug 2 2023
+CMD: 'show install summary' 13:47:35 IST Wed Aug 2 2023
+CMD: 'show facility-alarm status' 13:47:35 IST Wed Aug 2 2023
+CMD: 'show environment all' 13:47:35 IST Wed Aug 2 2023
+CMD: 'show logging' 13:47:35 IST Wed Aug 2 2023
+CMD: 'show usb-devices summary' 13:47:35 IST Wed Aug 2 2023
+CMD: 'show hdd-devices summary' 13:47:35 IST Wed Aug 2 2023
+CMD: 'show pnp tech-support' 13:47:35 IST Wed Aug 2 2023
+CMD: 'show ip traffic' 13:47:35 IST Wed Aug 2 2023
+CMD: 'show platform software mount r0' 13:47:36 IST Wed Aug 2 2023
+CMD: 'show platform software mount r1' 13:47:36 IST Wed Aug 2 2023
+CMD: 'show ip bgp summary' 13:47:36 IST Wed Aug 2 2023
+CMD: 'show ip nat statistics' 13:47:36 IST Wed Aug 2 2023
+CMD: 'show ip ports all' 13:47:36 IST Wed Aug 2 2023
+CMD: 'show platform software tcpudpport' 13:47:36 IST Wed Aug 2 2023
+CMD: 'show process memory platform accounting' 13:47:36 IST Wed Aug 2 2023
+CMD: 'show platform hardware qfp active feature ipsec state' 13:47:36 IST Wed Aug 2 2023
+CMD: 'show crypto ikev2 stats' 13:47:36 IST Wed Aug 2 2023
+CMD: 'show history all' 13:47:36 IST Wed Aug 2 2023
+CMD: 'show arp summary' 13:47:49 IST Wed Aug 2 2023
+CMD: 'show adjacency summary' 13:47:49 IST Wed Aug 2 2023
+CMD: 'show ip route summary' 13:47:49 IST Wed Aug 2 2023
+CMD: 'show ipv6 route summary' 13:47:49 IST Wed Aug 2 2023
+CMD: 'show platform hardware qfp active datapath utilization' 13:47:49 IST Wed Aug 2 2023
+CMD: 'show platform hardware qfp active feature lic-bw oversubscription' 13:47:49 IST Wed Aug 2 2023
+CMD: 'show tech-support iot-protocols' 13:47:49 IST Wed Aug 2 2023
+CMD: 'show platform software audit summary' 13:47:49 IST Wed Aug 2 2023
+CMD: 'show platform software audit all' 13:47:53 IST Wed Aug 2 2023
+CMD: 'show mka sessions' 13:47:57 IST Wed Aug 2 2023
+CMD: 'show mka statistics' 13:47:57 IST Wed Aug 2 2023
+CMD: 'show mka policy' 13:47:57 IST Wed Aug 2 2023
+CMD: 'show macsec summary' 13:47:57 IST Wed Aug 2 2023
+CMD: 'show version' 13:47:58 IST Wed Aug 2 2023
+CMD: 'show tech-support | i show' 13:48:04 IST Wed Aug 2 2023
+CMD: 'show clock' 13:48:04 IST Wed Aug 2 2023
+CMD: 'show switch' 13:48:04 IST Wed Aug 2 2023
+CMD: 'show module' 13:48:04 IST Wed Aug 2 2023
+CMD: 'show version' 13:48:04 IST Wed Aug 2 2023
+CMD: 'show running-config' 13:48:04 IST Wed Aug 2 2023
+CMD: 'show redundancy history' 13:48:05 IST Wed Aug 2 2023
+CMD: 'show redundancy states' 13:48:05 IST Wed Aug 2 2023
+CMD: 'show redundancy switchover history' 13:48:05 IST Wed Aug 2 2023
+CMD: 'show stacks' 13:48:05 IST Wed Aug 2 2023
+CMD: 'show interfaces' 13:48:05 IST Wed Aug 2 2023
+CMD: 'show interfaces history' 13:48:05 IST Wed Aug 2 2023
+CMD: 'show controllers' 13:48:05 IST Wed Aug 2 2023
+CMD: 'show user' 13:48:05 IST Wed Aug 2 2023
+CMD: 'show data-corruption' 13:48:05 IST Wed Aug 2 2023
+CMD: 'show file systems' 13:48:05 IST Wed Aug 2 2023
+CMD: 'show file descriptors' 13:48:05 IST Wed Aug 2 2023
+CMD: 'show crashinfo: all' 13:48:05 IST Wed Aug 2 2023
+CMD: 'show platform software filesystem crashinfo: all' 13:48:05 IST Wed Aug 2 2023
+CMD: 'show flash: all' 13:48:06 IST Wed Aug 2 2023
+CMD: 'show platform software filesystem flash: all' 13:48:06 IST Wed Aug 2 2023
+CMD: 'show webui: all' 13:48:08 IST Wed Aug 2 2023
+CMD: 'show platform software filesystem webui: all' 13:48:08 IST Wed Aug 2 2023
+CMD: 'show memory statistics' 13:48:11 IST Wed Aug 2 2023
+CMD: 'show process memory sorted' 13:48:11 IST Wed Aug 2 2023
+CMD: 'show process memory platform sorted' 13:48:11 IST Wed Aug 2 2023
+CMD: 'show process cpu sorted' 13:48:15 IST Wed Aug 2 2023
+CMD: 'show process cpu platform sorted' 13:48:15 IST Wed Aug 2 2023
+CMD: 'show process cpu extended history' 13:48:21 IST Wed Aug 2 2023
+CMD: 'show process cpu history' 13:48:21 IST Wed Aug 2 2023
+CMD: 'show license all' 13:48:21 IST Wed Aug 2 2023
+CMD: 'show license summary' 13:48:21 IST Wed Aug 2 2023
+CMD: 'show switch detail' 13:48:21 IST Wed Aug 2 2023
+CMD: 'show platform oir states' 13:48:21 IST Wed Aug 2 2023
+CMD: 'show ipc nodes' 13:48:21 IST Wed Aug 2 2023
+CMD: 'show ipc ports' 13:48:21 IST Wed Aug 2 2023
+CMD: 'show ipc queue' 13:48:21 IST Wed Aug 2 2023
+CMD: 'show ipc status' 13:48:21 IST Wed Aug 2 2023
+CMD: 'show interfaces status' 13:48:21 IST Wed Aug 2 2023
+CMD: 'show interfaces status err-disabled' 13:48:21 IST Wed Aug 2 2023
+CMD: 'show interfaces switchport' 13:48:21 IST Wed Aug 2 2023
+CMD: 'show interfaces trunk' 13:48:22 IST Wed Aug 2 2023
+CMD: 'show vlan' 13:48:22 IST Wed Aug 2 2023
+CMD: 'show spanning-tree' 13:48:22 IST Wed Aug 2 2023
+CMD: 'show spanning-tree summary' 13:48:22 IST Wed Aug 2 2023
+CMD: 'show spanning-tree instances' 13:48:22 IST Wed Aug 2 2023
+CMD: 'show vlan virtual-port' 13:48:22 IST Wed Aug 2 2023
+CMD: 'show etherchannel summary' 13:48:22 IST Wed Aug 2 2023
+CMD: 'show mac address-table' 13:48:22 IST Wed Aug 2 2023
+CMD: 'show lacp counters' 13:48:22 IST Wed Aug 2 2023
+CMD: 'show lacp neighbor detail' 13:48:22 IST Wed Aug 2 2023
+CMD: 'show fips status' 13:48:22 IST Wed Aug 2 2023
+CMD: 'show processes cpu sorted' 13:48:22 IST Wed Aug 2 2023
+CMD: 'show diagnostic result switch all' 13:48:22 IST Wed Aug 2 2023
+CMD: 'show platform software infrastructure lsmpi driver' 13:48:22 IST Wed Aug 2 2023
+CMD: 'show platform software infrastructure lsmpi driver 0' 13:48:22 IST Wed Aug 2 2023
+CMD: 'show platform software fed switch active punt cause summary' 13:48:22 IST Wed Aug 2 2023
+CMD: 'show platform software fed switch active punt tag summary' 13:48:22 IST Wed Aug 2 2023
+CMD: 'show platform software fed switch active punt cpuq all' 13:48:22 IST Wed Aug 2 2023
+CMD: 'show platform software fed switch active inject cpuq all' 13:48:23 IST Wed Aug 2 2023
+CMD: 'show platform hardware fed switch active qos queue stats internal cpu policer' 13:48:23 IST Wed Aug 2 2023
+CMD: 'show platform software fed switch active lsmpi stat' 13:48:23 IST Wed Aug 2 2023
+CMD: 'show platform hardware fed switch active fwd-asic resource utilization' 13:48:23 IST Wed Aug 2 2023
+CMD: 'show platform hardware fed switch standby fwd-asic resource utilization' 13:48:23 IST Wed Aug 2 2023
+CMD: 'show platform hardware fed switch active fwd-asic resource tcam utilization' 13:48:23 IST Wed Aug 2 2023
+CMD: 'show platform hardware fed switch standby fwd-asic resource tcam utilization' 13:48:23 IST Wed Aug 2 2023
+CMD: 'show software authenticity running' 13:48:23 IST Wed Aug 2 2023
+CMD: 'show platform software authngwc running' 13:48:23 IST Wed Aug 2 2023
+CMD: 'show power inline' 13:48:23 IST Wed Aug 2 2023
+CMD: 'show power inline police' 13:48:23 IST Wed Aug 2 2023
+CMD: 'show platform software ilpower details' 13:48:23 IST Wed Aug 2 2023
+CMD: 'show stack-power budgeting' 13:48:23 IST Wed Aug 2 2023
+CMD: 'show stack-power detail' 13:48:23 IST Wed Aug 2 2023
+CMD: 'show stack-power load-shedding' 13:48:23 IST Wed Aug 2 2023
+CMD: 'show stack-power neighbors' 13:48:23 IST Wed Aug 2 2023
+CMD: 'show platform resources' 13:48:23 IST Wed Aug 2 2023
+CMD: 'show platform resources hidden slot RP0 cpu ' 13:48:23 IST Wed Aug 2 2023
+CMD: 'show platform resources hidden slot RP0 memory ' 13:48:23 IST Wed Aug 2 2023
+CMD: 'show platform resources hidden slot RP0 tmpfs ' 13:48:23 IST Wed Aug 2 2023
+CMD: 'show app-hosting resource ' 13:48:23 IST Wed Aug 2 2023
+CMD: 'show processes memory platform sorted' 13:48:23 IST Wed Aug 2 2023
+CMD: 'show controllers cpu-interface' 13:48:27 IST Wed Aug 2 2023
+CMD: 'show platform software fed switch 1 cpu-interface' 13:48:27 IST Wed Aug 2 2023
+CMD: 'show platform software process list switch active R0 sort memory' 13:48:28 IST Wed Aug 2 2023
+CMD: 'show lldp neighbors' 13:48:33 IST Wed Aug 2 2023
+CMD: 'show sdm prefer' 13:48:33 IST Wed Aug 2 2023
+CMD: 'show platform hard fed switch 1 sdm prefer' 13:48:33 IST Wed Aug 2 2023
+CMD: 'show logging onboard switch active uptime detail' 13:48:33 IST Wed Aug 2 2023
+CMD: 'show controller ethernet-controller phy detail' 13:48:34 IST Wed Aug 2 2023
+CMD: 'show platform hard fed switch 1 eth phy 8' 13:48:34 IST Wed Aug 2 2023
+CMD: 'show platform hard fed switch 1 eth phy 9' 13:48:34 IST Wed Aug 2 2023
+CMD: 'show platform hard fed switch 1 eth phy 10' 13:48:34 IST Wed Aug 2 2023
+CMD: 'show platform hard fed switch 1 eth phy 11' 13:48:34 IST Wed Aug 2 2023
+CMD: 'show platform hard fed switch 1 eth phy 12' 13:48:34 IST Wed Aug 2 2023
+CMD: 'show platform hard fed switch 1 eth phy 13' 13:48:35 IST Wed Aug 2 2023
+CMD: 'show platform hard fed switch 1 eth phy 14' 13:48:35 IST Wed Aug 2 2023
+CMD: 'show platform hard fed switch 1 eth phy 15' 13:48:35 IST Wed Aug 2 2023
+CMD: 'show platform hard fed switch 1 eth phy 16' 13:48:35 IST Wed Aug 2 2023
+CMD: 'show platform hard fed switch 1 eth phy 17' 13:48:36 IST Wed Aug 2 2023
+CMD: 'show platform hard fed switch 1 eth phy 18' 13:48:36 IST Wed Aug 2 2023
+CMD: 'show platform hard fed switch 1 eth phy 19' 13:48:36 IST Wed Aug 2 2023
+CMD: 'show platform hard fed switch 1 eth phy 39' 13:48:36 IST Wed Aug 2 2023
+CMD: 'show platform hard fed switch 1 eth phy 21' 13:48:36 IST Wed Aug 2 2023
+CMD: 'show platform hard fed switch 1 eth phy 22' 13:48:37 IST Wed Aug 2 2023
+CMD: 'show platform hard fed switch 1 eth phy 23' 13:48:37 IST Wed Aug 2 2023
+CMD: 'show platform hard fed switch 1 eth phy 24' 13:48:37 IST Wed Aug 2 2023
+CMD: 'show platform hard fed switch 1 eth phy 25' 13:48:37 IST Wed Aug 2 2023
+CMD: 'show platform hard fed switch 1 eth phy 26' 13:48:38 IST Wed Aug 2 2023
+CMD: 'show platform hard fed switch 1 eth phy 27' 13:48:38 IST Wed Aug 2 2023
+CMD: 'show platform hard fed switch 1 eth phy 28' 13:48:38 IST Wed Aug 2 2023
+CMD: 'show platform hard fed switch 1 eth phy 29' 13:48:38 IST Wed Aug 2 2023
+CMD: 'show platform hard fed switch 1 eth phy 30' 13:48:38 IST Wed Aug 2 2023
+CMD: 'show platform hard fed switch 1 eth phy 31' 13:48:39 IST Wed Aug 2 2023
+CMD: 'show platform hard fed switch 1 eth phy 32' 13:48:39 IST Wed Aug 2 2023
+CMD: 'show platform hard fed switch 1 eth phy 33' 13:48:39 IST Wed Aug 2 2023
+CMD: 'show platform hard fed switch 1 eth phy 34' 13:48:39 IST Wed Aug 2 2023
+CMD: 'show platform hard fed switch 1 eth phy 35' 13:48:39 IST Wed Aug 2 2023
+CMD: 'show switch | inc Ready' 13:48:39 IST Wed Aug 2 2023
+CMD: 'show cdp neighbor' 13:48:39 IST Wed Aug 2 2023
+CMD: 'show cdp neighbor detail' 13:48:39 IST Wed Aug 2 2023
+CMD: 'show subscriber statistics' 13:48:39 IST Wed Aug 2 2023
+CMD: 'show ip subscriber statistics errors' 13:48:39 IST Wed Aug 2 2023
+CMD: 'show ip subscriber statistics dangling' 13:48:39 IST Wed Aug 2 2023
+CMD: 'show pppoe statistics' 13:48:39 IST Wed Aug 2 2023
+CMD: 'show pppoe summary' 13:48:39 IST Wed Aug 2 2023
+CMD: 'show ppp statistics' 13:48:39 IST Wed Aug 2 2023
+CMD: 'show ppp subscriber statistics' 13:48:39 IST Wed Aug 2 2023
+CMD: 'show ppp summary' 13:48:39 IST Wed Aug 2 2023
+CMD: 'show l2tp counters component errors' 13:48:39 IST Wed Aug 2 2023
+CMD: 'show l2tp counters session fsm event icrq' 13:48:39 IST Wed Aug 2 2023
+CMD: 'show l2tp counters session fsm event ocrq' 13:48:39 IST Wed Aug 2 2023
+CMD: 'show l2tp counters session fsm event manual' 13:48:39 IST Wed Aug 2 2023
+CMD: 'show l2tp counters session fsm state current icrq' 13:48:39 IST Wed Aug 2 2023
+CMD: 'show l2tp counters session fsm state current manual' 13:48:39 IST Wed Aug 2 2023
+CMD: 'show l2tp counters session fsm state current ocrq' 13:48:39 IST Wed Aug 2 2023
+CMD: 'show l2tp counters session fsm state transition icrq' 13:48:39 IST Wed Aug 2 2023
+CMD: 'show l2tp counters session fsm state transition ocrq' 13:48:39 IST Wed Aug 2 2023
+CMD: 'show l2tp counters session fsm state transition manual' 13:48:39 IST Wed Aug 2 2023
+CMD: 'show vpdn statistics call fsm' 13:48:40 IST Wed Aug 2 2023
+CMD: 'show vpdn statistics mgr fsm' 13:48:40 IST Wed Aug 2 2023
+CMD: 'show vpdn session stats pending' 13:48:40 IST Wed Aug 2 2023
+CMD: 'show ip nbar version' 13:48:40 IST Wed Aug 2 2023
+CMD: 'show ip nbar control-plane' 13:48:40 IST Wed Aug 2 2023
+CMD: 'show device-tracking database' 13:48:40 IST Wed Aug 2 2023
+CMD: 'show device-tracking database mac' 13:48:40 IST Wed Aug 2 2023
+CMD: 'show crypto tls-tunnel stats' 13:48:40 IST Wed Aug 2 2023
+CMD: 'show crypto tls-tunnel sessions' 13:48:40 IST Wed Aug 2 2023
+CMD: 'show crypto call admission statistics' 13:48:40 IST Wed Aug 2 2023
+CMD: 'show inventory' 13:48:40 IST Wed Aug 2 2023
+CMD: 'show region' 13:48:40 IST Wed Aug 2 2023
+CMD: 'show wsma tech-support' 13:48:41 IST Wed Aug 2 2023
+CMD: 'show buffers' 13:48:41 IST Wed Aug 2 2023
+CMD: 'show buffers usage' 13:48:41 IST Wed Aug 2 2023
+CMD: 'show platform integrity sign nonce 4095' 13:48:41 IST Wed Aug 2 2023
+CMD: 'show platform sudi certificate sign nonce 1879' 13:48:51 IST Wed Aug 2 2023
+CMD: 'show platform' 13:49:00 IST Wed Aug 2 2023
+CMD: 'show platform resources' 13:49:00 IST Wed Aug 2 2023
+CMD: 'show platform resources hidden slot RP0 cpu ' 13:49:00 IST Wed Aug 2 2023
+CMD: 'show platform resources hidden slot RP0 memory ' 13:49:01 IST Wed Aug 2 2023
+CMD: 'show platform resources hidden slot RP0 tmpfs ' 13:49:01 IST Wed Aug 2 2023
+CMD: 'show app-hosting resource ' 13:49:01 IST Wed Aug 2 2023
+CMD: 'show platform software status control-processor brief' 13:49:01 IST Wed Aug 2 2023
+CMD: 'show romvar switch all' 13:49:01 IST Wed Aug 2 2023
+CMD: 'show platform software tech-support' 13:49:01 IST Wed Aug 2 2023
+CMD: 'show install summary' 13:50:04 IST Wed Aug 2 2023
+CMD: 'show facility-alarm status' 13:50:04 IST Wed Aug 2 2023
+CMD: 'show environment all' 13:50:04 IST Wed Aug 2 2023
+CMD: 'show logging' 13:50:04 IST Wed Aug 2 2023
+CMD: 'show usb-devices summary' 13:50:04 IST Wed Aug 2 2023
+CMD: 'show hdd-devices summary' 13:50:04 IST Wed Aug 2 2023
+CMD: 'show pnp tech-support' 13:50:04 IST Wed Aug 2 2023
+CMD: 'show ip traffic' 13:50:04 IST Wed Aug 2 2023
+CMD: 'show platform software mount r0' 13:50:04 IST Wed Aug 2 2023
+CMD: 'show platform software mount r1' 13:50:04 IST Wed Aug 2 2023
+CMD: 'show ip bgp summary' 13:50:04 IST Wed Aug 2 2023
+CMD: 'show ip nat statistics' 13:50:04 IST Wed Aug 2 2023
+CMD: 'show ip ports all' 13:50:04 IST Wed Aug 2 2023
+CMD: 'show platform software tcpudpport' 13:50:04 IST Wed Aug 2 2023
+CMD: 'show process memory platform accounting' 13:50:04 IST Wed Aug 2 2023
+CMD: 'show platform hardware qfp active feature ipsec state' 13:50:05 IST Wed Aug 2 2023
+CMD: 'show crypto ikev2 stats' 13:50:05 IST Wed Aug 2 2023
+CMD: 'show history all' 13:50:05 IST Wed Aug 2 2023
+CMD: 'show arp summary' 13:50:30 IST Wed Aug 2 2023
+CMD: 'show adjacency summary' 13:50:30 IST Wed Aug 2 2023
+CMD: 'show ip route summary' 13:50:30 IST Wed Aug 2 2023
+CMD: 'show ipv6 route summary' 13:50:30 IST Wed Aug 2 2023
+CMD: 'show platform hardware qfp active datapath utilization' 13:50:30 IST Wed Aug 2 2023
+CMD: 'show platform hardware qfp active feature lic-bw oversubscription' 13:50:30 IST Wed Aug 2 2023
+CMD: 'show tech-support iot-protocols' 13:50:30 IST Wed Aug 2 2023
+CMD: 'show platform software audit summary' 13:50:30 IST Wed Aug 2 2023
+CMD: 'show platform software audit all' 13:50:34 IST Wed Aug 2 2023
+CMD: 'show mka sessions' 13:50:38 IST Wed Aug 2 2023
+CMD: 'show mka statistics' 13:50:38 IST Wed Aug 2 2023
+CMD: 'show mka policy' 13:50:38 IST Wed Aug 2 2023
+CMD: 'show macsec summary' 13:50:38 IST Wed Aug 2 2023
+CMD: 'show version' 13:51:37 IST Wed Aug 2 2023
+CMD: 'show tech-support | i show' 13:51:43 IST Wed Aug 2 2023
+CMD: 'show clock' 13:51:43 IST Wed Aug 2 2023
+CMD: 'show switch' 13:51:43 IST Wed Aug 2 2023
+CMD: 'show module' 13:51:43 IST Wed Aug 2 2023
+CMD: 'show version' 13:51:43 IST Wed Aug 2 2023
+CMD: 'show running-config' 13:51:43 IST Wed Aug 2 2023
+CMD: 'show redundancy history' 13:51:44 IST Wed Aug 2 2023
+CMD: 'show redundancy states' 13:51:44 IST Wed Aug 2 2023
+CMD: 'show redundancy switchover history' 13:51:44 IST Wed Aug 2 2023
+CMD: 'show stacks' 13:51:44 IST Wed Aug 2 2023
+CMD: 'show interfaces' 13:51:44 IST Wed Aug 2 2023
+CMD: 'show interfaces history' 13:51:44 IST Wed Aug 2 2023
+CMD: 'show controllers' 13:51:44 IST Wed Aug 2 2023
+CMD: 'show user' 13:51:44 IST Wed Aug 2 2023
+CMD: 'show data-corruption' 13:51:44 IST Wed Aug 2 2023
+CMD: 'show file systems' 13:51:44 IST Wed Aug 2 2023
+CMD: 'show file descriptors' 13:51:44 IST Wed Aug 2 2023
+CMD: 'show crashinfo: all' 13:51:44 IST Wed Aug 2 2023
+CMD: 'show platform software filesystem crashinfo: all' 13:51:44 IST Wed Aug 2 2023
+CMD: 'show flash: all' 13:51:45 IST Wed Aug 2 2023
+CMD: 'show platform software filesystem flash: all' 13:51:45 IST Wed Aug 2 2023
+CMD: 'show webui: all' 13:51:47 IST Wed Aug 2 2023
+CMD: 'show platform software filesystem webui: all' 13:51:47 IST Wed Aug 2 2023
+CMD: 'show memory statistics' 13:51:50 IST Wed Aug 2 2023
+CMD: 'show process memory sorted' 13:51:50 IST Wed Aug 2 2023
+CMD: 'show process memory platform sorted' 13:51:50 IST Wed Aug 2 2023
+CMD: 'show process cpu sorted' 13:51:54 IST Wed Aug 2 2023
+CMD: 'show process cpu platform sorted' 13:51:54 IST Wed Aug 2 2023
+CMD: 'show process cpu extended history' 13:51:59 IST Wed Aug 2 2023
+CMD: 'show process cpu history' 13:51:59 IST Wed Aug 2 2023
+CMD: 'show license all' 13:51:59 IST Wed Aug 2 2023
+CMD: 'show license summary' 13:51:59 IST Wed Aug 2 2023
+CMD: 'show switch detail' 13:51:59 IST Wed Aug 2 2023
+CMD: 'show platform oir states' 13:51:59 IST Wed Aug 2 2023
+CMD: 'show ipc nodes' 13:51:59 IST Wed Aug 2 2023
+CMD: 'show ipc ports' 13:51:59 IST Wed Aug 2 2023
+CMD: 'show ipc queue' 13:51:59 IST Wed Aug 2 2023
+CMD: 'show ipc status' 13:51:59 IST Wed Aug 2 2023
+CMD: 'show interfaces status' 13:51:59 IST Wed Aug 2 2023
+CMD: 'show interfaces status err-disabled' 13:51:59 IST Wed Aug 2 2023
+CMD: 'show interfaces switchport' 13:51:59 IST Wed Aug 2 2023
+CMD: 'show interfaces trunk' 13:52:01 IST Wed Aug 2 2023
+CMD: 'show vlan' 13:52:01 IST Wed Aug 2 2023
+CMD: 'show spanning-tree' 13:52:01 IST Wed Aug 2 2023
+CMD: 'show spanning-tree summary' 13:52:01 IST Wed Aug 2 2023
+CMD: 'show spanning-tree instances' 13:52:01 IST Wed Aug 2 2023
+CMD: 'show vlan virtual-port' 13:52:01 IST Wed Aug 2 2023
+CMD: 'show etherchannel summary' 13:52:01 IST Wed Aug 2 2023
+CMD: 'show mac address-table' 13:52:01 IST Wed Aug 2 2023
+CMD: 'show lacp counters' 13:52:01 IST Wed Aug 2 2023
+CMD: 'show lacp neighbor detail' 13:52:01 IST Wed Aug 2 2023
+CMD: 'show fips status' 13:52:01 IST Wed Aug 2 2023
+CMD: 'show processes cpu sorted' 13:52:01 IST Wed Aug 2 2023
+CMD: 'show diagnostic result switch all' 13:52:01 IST Wed Aug 2 2023
+CMD: 'show platform software infrastructure lsmpi driver' 13:52:01 IST Wed Aug 2 2023
+CMD: 'show platform software infrastructure lsmpi driver 0' 13:52:01 IST Wed Aug 2 2023
+CMD: 'show platform software fed switch active punt cause summary' 13:52:01 IST Wed Aug 2 2023
+CMD: 'show platform software fed switch active punt tag summary' 13:52:01 IST Wed Aug 2 2023
+CMD: 'show platform software fed switch active punt cpuq all' 13:52:01 IST Wed Aug 2 2023
+CMD: 'show platform software fed switch active inject cpuq all' 13:52:01 IST Wed Aug 2 2023
+CMD: 'show platform hardware fed switch active qos queue stats internal cpu policer' 13:52:01 IST Wed Aug 2 2023
+CMD: 'show platform software fed switch active lsmpi stat' 13:52:01 IST Wed Aug 2 2023
+CMD: 'show platform hardware fed switch active fwd-asic resource utilization' 13:52:01 IST Wed Aug 2 2023
+CMD: 'show platform hardware fed switch standby fwd-asic resource utilization' 13:52:01 IST Wed Aug 2 2023
+CMD: 'show platform hardware fed switch active fwd-asic resource tcam utilization' 13:52:01 IST Wed Aug 2 2023
+CMD: 'show platform hardware fed switch standby fwd-asic resource tcam utilization' 13:52:02 IST Wed Aug 2 2023
+CMD: 'show software authenticity running' 13:52:02 IST Wed Aug 2 2023
+CMD: 'show platform software authngwc running' 13:52:02 IST Wed Aug 2 2023
+CMD: 'show power inline' 13:52:02 IST Wed Aug 2 2023
+CMD: 'show power inline police' 13:52:02 IST Wed Aug 2 2023
+CMD: 'show platform software ilpower details' 13:52:02 IST Wed Aug 2 2023
+CMD: 'show stack-power budgeting' 13:52:02 IST Wed Aug 2 2023
+CMD: 'show stack-power detail' 13:52:02 IST Wed Aug 2 2023
+CMD: 'show stack-power load-shedding' 13:52:02 IST Wed Aug 2 2023
+CMD: 'show stack-power neighbors' 13:52:02 IST Wed Aug 2 2023
+CMD: 'show platform resources' 13:52:02 IST Wed Aug 2 2023
+CMD: 'show platform resources hidden slot RP0 cpu ' 13:52:02 IST Wed Aug 2 2023
+CMD: 'show platform resources hidden slot RP0 memory ' 13:52:02 IST Wed Aug 2 2023
+CMD: 'show platform resources hidden slot RP0 tmpfs ' 13:52:02 IST Wed Aug 2 2023
+CMD: 'show app-hosting resource ' 13:52:02 IST Wed Aug 2 2023
+CMD: 'show processes memory platform sorted' 13:52:02 IST Wed Aug 2 2023
+CMD: 'show controllers cpu-interface' 13:52:06 IST Wed Aug 2 2023
+CMD: 'show platform software fed switch 1 cpu-interface' 13:52:06 IST Wed Aug 2 2023
+CMD: 'show platform software process list switch active R0 sort memory' 13:52:06 IST Wed Aug 2 2023
+CMD: 'show lldp neighbors' 13:52:11 IST Wed Aug 2 2023
+CMD: 'show sdm prefer' 13:52:11 IST Wed Aug 2 2023
+CMD: 'show platform hard fed switch 1 sdm prefer' 13:52:11 IST Wed Aug 2 2023
+CMD: 'show logging onboard switch active uptime detail' 13:52:11 IST Wed Aug 2 2023
+CMD: 'show controller ethernet-controller phy detail' 13:52:11 IST Wed Aug 2 2023
+CMD: 'show platform hard fed switch 1 eth phy 8' 13:52:11 IST Wed Aug 2 2023
+CMD: 'show platform hard fed switch 1 eth phy 9' 13:52:12 IST Wed Aug 2 2023
+CMD: 'show platform hard fed switch 1 eth phy 10' 13:52:12 IST Wed Aug 2 2023
+CMD: 'show platform hard fed switch 1 eth phy 11' 13:52:12 IST Wed Aug 2 2023
+CMD: 'show platform hard fed switch 1 eth phy 12' 13:52:12 IST Wed Aug 2 2023
+CMD: 'show platform hard fed switch 1 eth phy 13' 13:52:13 IST Wed Aug 2 2023
+CMD: 'show platform hard fed switch 1 eth phy 14' 13:52:13 IST Wed Aug 2 2023
+CMD: 'show platform hard fed switch 1 eth phy 15' 13:52:13 IST Wed Aug 2 2023
+CMD: 'show platform hard fed switch 1 eth phy 16' 13:52:13 IST Wed Aug 2 2023
+CMD: 'show platform hard fed switch 1 eth phy 17' 13:52:13 IST Wed Aug 2 2023
+CMD: 'show platform hard fed switch 1 eth phy 18' 13:52:14 IST Wed Aug 2 2023
+CMD: 'show platform hard fed switch 1 eth phy 19' 13:52:14 IST Wed Aug 2 2023
+CMD: 'show platform hard fed switch 1 eth phy 39' 13:52:14 IST Wed Aug 2 2023
+CMD: 'show platform hard fed switch 1 eth phy 21' 13:52:14 IST Wed Aug 2 2023
+CMD: 'show platform hard fed switch 1 eth phy 22' 13:52:15 IST Wed Aug 2 2023
+CMD: 'show platform hard fed switch 1 eth phy 23' 13:52:15 IST Wed Aug 2 2023
+CMD: 'show platform hard fed switch 1 eth phy 24' 13:52:15 IST Wed Aug 2 2023
+CMD: 'show platform hard fed switch 1 eth phy 25' 13:52:15 IST Wed Aug 2 2023
+CMD: 'show platform hard fed switch 1 eth phy 26' 13:52:15 IST Wed Aug 2 2023
+CMD: 'show platform hard fed switch 1 eth phy 27' 13:52:16 IST Wed Aug 2 2023
+CMD: 'show platform hard fed switch 1 eth phy 28' 13:52:16 IST Wed Aug 2 2023
+CMD: 'show platform hard fed switch 1 eth phy 29' 13:52:16 IST Wed Aug 2 2023
+CMD: 'show platform hard fed switch 1 eth phy 30' 13:52:16 IST Wed Aug 2 2023
+CMD: 'show platform hard fed switch 1 eth phy 31' 13:52:16 IST Wed Aug 2 2023
+CMD: 'show platform hard fed switch 1 eth phy 32' 13:52:17 IST Wed Aug 2 2023
+CMD: 'show platform hard fed switch 1 eth phy 33' 13:52:17 IST Wed Aug 2 2023
+CMD: 'show platform hard fed switch 1 eth phy 34' 13:52:17 IST Wed Aug 2 2023
+CMD: 'show platform hard fed switch 1 eth phy 35' 13:52:17 IST Wed Aug 2 2023
+CMD: 'show switch | inc Ready' 13:52:17 IST Wed Aug 2 2023
+CMD: 'show cdp neighbor' 13:52:17 IST Wed Aug 2 2023
+CMD: 'show cdp neighbor detail' 13:52:17 IST Wed Aug 2 2023
+CMD: 'show subscriber statistics' 13:52:17 IST Wed Aug 2 2023
+CMD: 'show ip subscriber statistics errors' 13:52:17 IST Wed Aug 2 2023
+CMD: 'show ip subscriber statistics dangling' 13:52:17 IST Wed Aug 2 2023
+CMD: 'show pppoe statistics' 13:52:17 IST Wed Aug 2 2023
+CMD: 'show pppoe summary' 13:52:17 IST Wed Aug 2 2023
+CMD: 'show ppp statistics' 13:52:17 IST Wed Aug 2 2023
+CMD: 'show ppp subscriber statistics' 13:52:17 IST Wed Aug 2 2023
+CMD: 'show ppp summary' 13:52:17 IST Wed Aug 2 2023
+CMD: 'show l2tp counters component errors' 13:52:17 IST Wed Aug 2 2023
+CMD: 'show l2tp counters session fsm event icrq' 13:52:17 IST Wed Aug 2 2023
+CMD: 'show l2tp counters session fsm event ocrq' 13:52:17 IST Wed Aug 2 2023
+CMD: 'show l2tp counters session fsm event manual' 13:52:17 IST Wed Aug 2 2023
+CMD: 'show l2tp counters session fsm state current icrq' 13:52:17 IST Wed Aug 2 2023
+CMD: 'show l2tp counters session fsm state current manual' 13:52:17 IST Wed Aug 2 2023
+CMD: 'show l2tp counters session fsm state current ocrq' 13:52:17 IST Wed Aug 2 2023
+CMD: 'show l2tp counters session fsm state transition icrq' 13:52:17 IST Wed Aug 2 2023
+CMD: 'show l2tp counters session fsm state transition ocrq' 13:52:17 IST Wed Aug 2 2023
+CMD: 'show l2tp counters session fsm state transition manual' 13:52:17 IST Wed Aug 2 2023
+CMD: 'show vpdn statistics call fsm' 13:52:17 IST Wed Aug 2 2023
+CMD: 'show vpdn statistics mgr fsm' 13:52:17 IST Wed Aug 2 2023
+CMD: 'show vpdn session stats pending' 13:52:17 IST Wed Aug 2 2023
+CMD: 'show ip nbar version' 13:52:17 IST Wed Aug 2 2023
+CMD: 'show ip nbar control-plane' 13:52:17 IST Wed Aug 2 2023
+CMD: 'show device-tracking database' 13:52:17 IST Wed Aug 2 2023
+CMD: 'show device-tracking database mac' 13:52:17 IST Wed Aug 2 2023
+CMD: 'show crypto tls-tunnel stats' 13:52:17 IST Wed Aug 2 2023
+CMD: 'show crypto tls-tunnel sessions' 13:52:17 IST Wed Aug 2 2023
+CMD: 'show crypto call admission statistics' 13:52:17 IST Wed Aug 2 2023
+CMD: 'show inventory' 13:52:17 IST Wed Aug 2 2023
+CMD: 'show region' 13:52:17 IST Wed Aug 2 2023
+CMD: 'show wsma tech-support' 13:52:18 IST Wed Aug 2 2023
+CMD: 'show buffers' 13:52:18 IST Wed Aug 2 2023
+CMD: 'show buffers usage' 13:52:18 IST Wed Aug 2 2023
+CMD: 'show platform integrity sign nonce 1761' 13:52:18 IST Wed Aug 2 2023
+CMD: 'show platform sudi certificate sign nonce 5800' 13:52:28 IST Wed Aug 2 2023
+CMD: 'show platform' 13:52:38 IST Wed Aug 2 2023
+CMD: 'show platform resources' 13:52:38 IST Wed Aug 2 2023
+CMD: 'show platform resources hidden slot RP0 cpu ' 13:52:38 IST Wed Aug 2 2023
+CMD: 'show platform resources hidden slot RP0 memory ' 13:52:38 IST Wed Aug 2 2023
+CMD: 'show platform resources hidden slot RP0 tmpfs ' 13:52:38 IST Wed Aug 2 2023
+CMD: 'show app-hosting resource ' 13:52:38 IST Wed Aug 2 2023
+CMD: 'show platform software status control-processor brief' 13:52:38 IST Wed Aug 2 2023
+CMD: 'show romvar switch all' 13:52:38 IST Wed Aug 2 2023
+CMD: 'show platform software tech-support' 13:52:38 IST Wed Aug 2 2023
+CMD: 'show install summary' 13:53:42 IST Wed Aug 2 2023
+CMD: 'show facility-alarm status' 13:53:42 IST Wed Aug 2 2023
+CMD: 'show environment all' 13:53:42 IST Wed Aug 2 2023
+CMD: 'show logging' 13:53:42 IST Wed Aug 2 2023
+CMD: 'show usb-devices summary' 13:53:42 IST Wed Aug 2 2023
+CMD: 'show hdd-devices summary' 13:53:42 IST Wed Aug 2 2023
+CMD: 'show pnp tech-support' 13:53:42 IST Wed Aug 2 2023
+CMD: 'show ip traffic' 13:53:42 IST Wed Aug 2 2023
+CMD: 'show platform software mount r0' 13:53:42 IST Wed Aug 2 2023
+CMD: 'show platform software mount r1' 13:53:42 IST Wed Aug 2 2023
+CMD: 'show ip bgp summary' 13:53:42 IST Wed Aug 2 2023
+CMD: 'show ip nat statistics' 13:53:42 IST Wed Aug 2 2023
+CMD: 'show ip ports all' 13:53:42 IST Wed Aug 2 2023
+CMD: 'show platform software tcpudpport' 13:53:42 IST Wed Aug 2 2023
+CMD: 'show process memory platform accounting' 13:53:42 IST Wed Aug 2 2023
+CMD: 'show platform hardware qfp active feature ipsec state' 13:53:42 IST Wed Aug 2 2023
+CMD: 'show crypto ikev2 stats' 13:53:42 IST Wed Aug 2 2023
+CMD: 'show history all' 13:53:42 IST Wed Aug 2 2023
+------------------ show arp summary ------------------
+------------------ show adjacency summary ------------------
+------------------ show ip route summary ------------------
+------------------ show ipv6 route summary ------------------
+------------------ show platform hardware qfp active datapath utilization ------------------
+------------------ show platform hardware qfp active feature lic-bw oversubscription ------------------
+------------------ show tech-support iot-protocols ------------------
+------------------ show platform software audit summary ------------------
+------------------ show platform software audit all ------------------
+------------------ show mka sessions ------------------
+------------------ show mka statistics ------------------
+------------------ show mka policy ------------------
+------------------ show mka keychains ------------------
+------------------ show macsec summary ------------------

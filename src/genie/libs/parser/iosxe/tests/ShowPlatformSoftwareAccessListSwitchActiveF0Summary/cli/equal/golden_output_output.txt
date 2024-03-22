@@ -1,0 +1,12 @@
+Access-list                          Index        Num Ref      Dwnld ACEs
+--------------------------------------------------------------------------
+IP-Adm-V4-Int-ACL-global             2            0            2
+IP-Adm-V6-Int-ACL-global             3            0            2
+preauth_v4                           4            0            6
+preauth_v6                           5            0            10
+implicit_deny                        6            0            1
+implicit_permit                      7            0            1
+implicit_deny_v6                     8            0            1
+implicit_permit_v6                   9            0            1
+CISCO-CWA-URL-REDIRECT-ACL           10           0            6
+v6-ogacl-1                           13           1            1

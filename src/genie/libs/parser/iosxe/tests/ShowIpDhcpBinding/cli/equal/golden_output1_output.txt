@@ -12,3 +12,7 @@ IP address      Client-ID/ 		Lease expiration 	Type       State      Interface
 100.1.0.10      0100.1094.0000.08       Feb 08 2022 11:11 AM    Automatic  Active     TenGigabitEthernet1/0/2
 100.1.0.11      0100.1094.0000.09       Feb 08 2022 11:11 AM    Automatic  Active     TenGigabitEthernet1/0/2
 100.1.0.12      0100.1094.0000.0a       Feb 08 2022 11:11 AM    Automatic  Active     TenGigabitEthernet1/0/2
+100.0.0.13      0010.9400.0004          May 13 2022 04:29 PM    Relay      Active     Port-channel40.2
+100.0.0.14      0010.9400.0005          May 13 2022 04:29 PM    Relay      Active     Port-channel1.234
+100.0.0.15      0010.9400.0006          May 13 2022 04:29 PM    Relay      Active     Port-channel63.4294967295
+100.0.0.16      0010.9400.0007          May 13 2022 04:29 PM    Relay      Active     Port-channel5.42949695

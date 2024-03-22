@@ -1,0 +1,204 @@
+sh cry gdoi ks members
+
+Number of rekeys sent for group bw6000 : 0
+Number of retransmits during the last rekey for group bw6000 : 0
+Duration of the last rekey for group bw6000 : 10000 msec
+
+Group Member ID    : 44.44.44.1  GM Version: 1.0.25
+ Group ID          : 6000
+ Group Name        : bw6000
+ Group Type        : GDOI (ISAKMP)
+ GM State          : Registered
+ Key Server ID     : 15.15.15.1
+ Rekeys sent       : 0
+ Rekeys retries    : 0
+ Rekey Acks Rcvd   : 0
+ Rekey Acks missed : 0
+
+ Sent seq num : 0     0     0     0     
+ Rcvd seq num : 0     0     0     0     
+
+
+Group Member ID    : 54.54.54.1  GM Version: 1.0.25
+ Group ID          : 6000
+ Group Name        : bw6000
+ Group Type        : GDOI (ISAKMP)
+ GM State          : Registered
+ Key Server ID     : 16.16.16.1
+ Rekeys sent       : 0
+ Rekeys retries    : 0
+ Rekey Acks Rcvd   : 0
+ Rekey Acks missed : 0
+
+ Sent seq num : 0     0     0     0     
+ Rcvd seq num : 0     0     0     0     
+
+
+Number of rekeys sent for group bw600-IPV6 : 0
+Number of retransmits during the last rekey for group bw600-IPV6 : 0
+Duration of the last rekey for group bw600-IPV6 : 10001 msec
+
+Group Member ID    : 41.41.41.1  GM Version: 1.0.25
+ Group ID          : 6600
+ Group Name        : bw600-IPV6
+ Group Type        : GDOI (ISAKMP)
+ GM State          : Registered
+ Key Server ID     : 15.15.15.1
+ Rekeys sent       : 0
+ Rekeys retries    : 0
+ Rekey Acks Rcvd   : 0
+ Rekey Acks missed : 0
+
+ Sent seq num : 0     0     0     0     
+ Rcvd seq num : 0     0     0     0     
+
+
+Group Member ID    : 51.51.51.1  GM Version: 1.0.25
+ Group ID          : 6600
+ Group Name        : bw600-IPV6
+ Group Type        : GDOI (ISAKMP)
+ GM State          : Registered
+ Key Server ID     : 16.16.16.1
+ Rekeys sent       : 0
+ Rekeys retries    : 0
+ Rekey Acks Rcvd   : 0
+ Rekey Acks missed : 0
+
+ Sent seq num : 0     0     0     0     
+ Rcvd seq num : 0     0     0     0     
+
+
+Number of rekeys sent for group bw6000_eft : 0
+Number of retransmits during the last rekey for group bw6000_eft : 0
+Duration of the last rekey for group bw6000_eft : 10001 msec
+
+Group Member ID    : 45.45.45.1  GM Version: 1.0.25
+ Group ID          : 1122
+ Group Name        : bw6000_eft
+ Group Type        : GDOI (ISAKMP)
+ GM State          : Registered
+ Key Server ID     : 15.15.15.1
+ Rekeys sent       : 0
+ Rekeys retries    : 0
+ Rekey Acks Rcvd   : 0
+ Rekey Acks missed : 0
+
+ Sent seq num : 0     0     0     0     
+ Rcvd seq num : 0     0     0     0     
+
+
+Group Member ID    : 55.55.55.1  GM Version: 1.0.25
+ Group ID          : 1122
+ Group Name        : bw6000_eft
+ Group Type        : GDOI (ISAKMP)
+ GM State          : Registered
+ Key Server ID     : 16.16.16.1
+ Rekeys sent       : 0
+ Rekeys retries    : 0
+ Rekey Acks Rcvd   : 0
+ Rekey Acks missed : 0
+
+ Sent seq num : 0     0     0     0     
+ Rcvd seq num : 0     0     0     0     
+
+
+Number of rekeys sent for group bw600-IPV6_eft : 0
+Number of retransmits during the last rekey for group bw600-IPV6_eft : 0
+Duration of the last rekey for group bw600-IPV6_eft : 10001 msec
+
+Group Member ID    : 43.43.43.1  GM Version: 1.0.25
+ Group ID          : 2233
+ Group Name        : bw600-IPV6_eft
+ Group Type        : GDOI (ISAKMP)
+ GM State          : Registered
+ Key Server ID     : 15.15.15.1
+ Rekeys sent       : 0
+ Rekeys retries    : 0
+ Rekey Acks Rcvd   : 0
+ Rekey Acks missed : 0
+
+ Sent seq num : 0     0     0     0     
+ Rcvd seq num : 0     0     0     0     
+
+
+Group Member ID    : 53.53.53.1  GM Version: 1.0.25
+ Group ID          : 2233
+ Group Name        : bw600-IPV6_eft
+ Group Type        : GDOI (ISAKMP)
+ GM State          : Registered
+ Key Server ID     : 16.16.16.1
+ Rekeys sent       : 0
+ Rekeys retries    : 0
+ Rekey Acks Rcvd   : 0
+ Rekey Acks missed : 0
+
+ Sent seq num : 0     0     0     0     
+ Rcvd seq num : 0     0     0     0     
+
+
+Number of rekeys sent for group bw-suiteB : 0
+Number of retransmits during the last rekey for group bw-suiteB : 0
+Duration of the last rekey for group bw-suiteB : 1 msec
+
+Group Member ID    : 46.46.46.1  GM Version: 1.0.25
+ Group ID          : 2001
+ Group Name        : bw-suiteB
+ Group Type        : GDOI (ISAKMP)
+ GM State          : Registered
+ Key Server ID     : 15.15.15.1
+ Rekeys sent       : 0
+ Rekeys retries    : 0
+ Rekey Acks Rcvd   : 0
+ Rekey Acks missed : 0
+
+ Sent seq num : 0     0     0     0     
+ Rcvd seq num : 0     0     0     0     
+
+
+Group Member ID    : 56.56.56.1  GM Version: 1.0.25
+ Group ID          : 2001
+ Group Name        : bw-suiteB
+ Group Type        : GDOI (ISAKMP)
+ GM State          : Registered
+ Key Server ID     : 16.16.16.1
+ Rekeys sent       : 0
+ Rekeys retries    : 0
+ Rekey Acks Rcvd   : 0
+ Rekey Acks missed : 0
+
+ Sent seq num : 0     0     0     0     
+ Rcvd seq num : 0     0     0     0     
+
+
+Number of rekeys sent for group bw-suiteB-v6 : 0
+Number of retransmits during the last rekey for group bw-suiteB-v6 : 0
+Duration of the last rekey for group bw-suiteB-v6 : 1 msec
+
+Group Member ID    : 42.42.42.1  GM Version: 1.0.25
+ Group ID          : 2002
+ Group Name        : bw-suiteB-v6
+ Group Type        : GDOI (ISAKMP)
+ GM State          : Registered
+ Key Server ID     : 15.15.15.1
+ Rekeys sent       : 0
+ Rekeys retries    : 0
+ Rekey Acks Rcvd   : 0
+ Rekey Acks missed : 0
+
+ Sent seq num : 0     0     0     0     
+ Rcvd seq num : 0     0     0     0     
+
+
+Group Member ID    : 52.52.52.1  GM Version: 1.0.25
+ Group ID          : 2002
+ Group Name        : bw-suiteB-v6
+ Group Type        : GDOI (ISAKMP)
+ GM State          : Registered
+ Key Server ID     : 16.16.16.1
+ Rekeys sent       : 0
+ Rekeys retries    : 0
+ Rekey Acks Rcvd   : 0
+ Rekey Acks missed : 0
+
+ Sent seq num : 0     0     0     0     
+ Rcvd seq num : 0     0     0     0     

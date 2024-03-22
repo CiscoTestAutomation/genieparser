@@ -30,3 +30,6 @@ ND  100.100.100.1                            dead.beef.0001(S)      Twe1/0/42  a
 L   39.39.39.1                               5c5a.c791.d69f(R)      Vl39       svi        39  (  39)      0100       11591mn    REACHABLE                   no         yes          0000.0000.0000
 S   10.10.10.10                              dead.beef.0001(S)      Twe1/0/42  access     39  (  39)      0100       59mn       STALE      N/A              no         yes          0000.0000.0000
 S   1000::1                                  000a.000b.000c(D)      Twe1/0/1   trunk      100 ( 100)      0100       30565mn    DOWN       N/A              no         yes          0000.0000.0000
+DH4 20.0.0.20                                000a.000b.000c(D)      Twe1/0/1   trunk      100 ( 100)      0100       30566mn    DOWN       100 s(200 s)     no         yes          0000.0000.0000
+
+                 

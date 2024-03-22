@@ -22,7 +22,9 @@ class ShowIpRouteDistributor(MetaParser):
                    'show ip route {protocol}']
 
     protocol_set = {'ospf', 'odr', 'isis', 'eigrp', 'static', 'mobile',
-                    'rip', 'lisp', 'nhrp', 'local', 'connected', 'bgp'}
+                    'rip', 'lisp', 'nhrp', 'local', 'connected', 'bgp', 'multicast'}
+
+    exclude = ['updated']
 
     def cli(self, vrf=None, route=None, protocol=None, output=None):
 
@@ -69,6 +71,8 @@ class ShowIpv6RouteDistributor(MetaParser):
 
     protocol_set = {'ospf', 'odr', 'isis', 'eigrp', 'static', 'mobile',
                     'rip', 'lisp', 'nhrp', 'local', 'connected', 'bgp'}
+    
+    exclude = ['updated']
 
     def cli(self, vrf=None, route=None, protocol=None, interface=None, output=None):
         
@@ -224,7 +228,8 @@ class ShowIpRoute(ShowIpRouteSchema):
         source_protocol_dict['Per-user Static route'] = ['U']
         source_protocol_dict['Destination'] = ['DCE']
         source_protocol_dict['Redirect'] = ['NDr']
-
+        source_protocol_dict['omp'] = ['m']
+        source_protocol_dict['nat_dia'] = ['n', 'Nd']
 
         result_dict = {}
 
@@ -257,6 +262,7 @@ class ShowIpRoute(ShowIpRouteSchema):
 
         # initial variables
         ret_dict = {}
+        line1 = ''
         index = 0
         active = False
 
@@ -282,20 +288,42 @@ class ShowIpRoute(ShowIpRouteSchema):
         # S   &    10.69.0.0 [1/0] via 10.34.0.1
         # S   +    10.186.1.0 [1/0] via 10.144.0.1 (red)
         # B   +    10.55.0.0 [20/0] via 10.144.0.1 (red), 00:00:09
+        # B   +    10.55.0.0 [20/0] via 10.144.0.1 (vrf-blue), 00:00:09
         # i*L1  0.0.0.0/0 [115/100] via 10.12.7.37, 3w6d, Vlan101
         # ND  ::/0 [2/0]
         # NDp 2001:103::/64 [2/0]
         if self.IP_VER == 'ipv4':
             p3 = re.compile(
-                r'^(?P<code>[A-Za-z]{0,2}[0-9]*(\*[A-Za-z]{0,2}[0-9]*)?) +(?P<code1>[A-Z][a-z]|[A-Z][\d]|[a-z]{2}|[+%&p])?\s*(?P<network>[0-9\.\:\/]+)?( '
+                r'^(?P<code>[A-Za-z]{0,2}[0-9]*(\*[A-Za-z]{0,2}[0-9]*)?) +(?P<code1>[A-Z][a-z]|[A-Z][\d]|[a-z]{2}|[A-Z]{2}|[+%&p])?\s*(?P<network>[0-9\.\:\/]+)?( '
                 r'+is +directly +connected,)? *\[?(?P<route_preference>[\d\/]+)?\]?,?(\s+tag\s(?P<tag_id>\d+))?( *('
-                r'via +)?(?P<next_hop>[\d\.]+))?,?( +\((?P<nh_vrf>[\w+]+)\))?,?( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?$')
+                r'via +)?(?P<next_hop>[\d\.]+))?,?( +\((?P<nh_vrf>[\w+\-]+)\))?,?( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?$')
+
+            # B        192.168.1.20/32 [200/0] via 2109:1::2 (red:ipv6), 00:03:46, Vlan500
+            # B        192.168.1.40/32 [200/0] via 2109:1::4 (red:ipv6), 00:03:20
+            # B        1.1.1.10 [200/0] via FC01:101:8:E007:: (default:ipv6), 1d15h
+            p7 = re.compile(r'^(?P<code>[\w]+) +(?P<network>[\d\/\.]+)\s+\[(?P<route_preference>[\d\/]+)+\]+ via +(?P<next_hop>[0-9a-fA-F\:]+) +\((?P<nh_vrf>[\w\:]+)+\)+, +(?P<date>[dh\d\:]+)+(, +(?P<interface>[\w]+))?$')
+            # B        192.168.1.20/32
+            p8 = re.compile(r'^(?P<code>[\w]+) +(?P<network>[\d\/\.][\S]+)$')
+            # [200/0] via 2109:1::2 (default:ipv6), 00:04:15, Vlan500
+            # [200/0] via 2109:1::2 (vrf-blue:ipv6), 00:04:15, Vlan500
+            p9 = re.compile(r'^\[(?P<route_preference>[\d\/]+)+\]+ via +(?P<next_hop>[\d\:]+) +\((?P<nh_vrf>[\w\-\:]+)+\)+, +(?P<date>[\d\:]+)+, +(?P<interface>[\w\d]+)$')
+
         else:
             p3 = re.compile(
-                r'^(?!via)(?P<code>[A-Za-z]{0,3}[0-9]*(\*[A-Za-z]{0,2}[0-9]*)?) +(?P<code1>[A-Z][a-z]|[A-Z][\d]|[a-z]{2}[+%&p])?\s*(?P<network>[\w\.\:\/]+)?'
+                r'^(?!via)(?P<code>[A-Za-z]{0,3}[0-9]*(\*[A-Za-z]{0,2}[0-9]*)?) +(?P<code1>[A-Z][a-z]|[A-Z][\d]\s|[a-z]{2}[+%&p])?\s*(?P<network>[\w\.\:\/]+)?'
                 r'( +is +directly +connected,)? *\[?(?P<route_preference>[\d\/]+)?\]?,?(\s+tag\s(?P<tag_id>\d+))?'
-                r'( *(via +)?(?P<next_hop>[\d\.]+))?,?( +\((?P<nh_vrf>[\w+]+)\))?,?( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?$')
-        
+                r'( *(via +)?(?P<next_hop>[\d\.]+))?,?( +\((?P<nh_vrf>[\w+\-]+)\))?,?( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?$')
+                
+            # B        192.168.1.20/32 [200/0] via 2109:1::2 (red:ipv6), 00:03:46, Vlan500
+            # B        192.168.1.40/32 [200/0] via 2109:1::4 (red:ipv6), 00:03:20, Vlan500
+            # B        192.168.1.40/32 [200/0] via 2109:1::4 (vrf-blue:ipv6), 00:03:20, Vlan500
+            p7 = re.compile(r'^(?P<code>[\w]+) +(?P<network>[\d\/\.]+)\s+\[(?P<route_preference>[\d\/]+)+\]+ via +(?P<next_hop>[\d\:]+) +\((?P<nh_vrf>[\w\-\:]+)+\)+, +(?P<date>[\d\:]+)+, +(?P<interface>[\w]+)$')
+            # B        192.168.1.20/32
+            p8 = re.compile(r'^(?P<code>[\w]+) +(?P<network>[\d\/\.][\S]+)$')
+            # [200/0] via 2109:1::2 (default:ipv6), 00:04:15, Vlan500
+            # [200/0] via 2109:1::2 (vrf-blue:ipv6), 00:04:15, Vlan500
+            p9 = re.compile(r'^\[(?P<route_preference>[\d\/]+)+\]+ via +(?P<next_hop>[\d\:]+) +\((?P<nh_vrf>[\w\-\:]+)+\)+, +(?P<date>[\d\:]+)+, +(?P<interface>[\w\d]+)$')
+
         #    [110/2] via 10.1.2.2, 06:46:59, GigabitEthernet0/0
         p4 = re.compile(r'^\[(?P<route_preference>[\d\/]+)\] +via +(?P<next_hop>[\d\.]+)?,?'
                         r'( +(?P<date>[0-9][\w\:]+),?)?( +(?P<interface>[\S]+))?$')
@@ -314,7 +342,7 @@ class ShowIpRoute(ShowIpRouteSchema):
         p6 = re.compile(r'^via( +(?P<next_hop>[\w]+[.:][\w\:\.\%]{4,}),?)?'
                         r'( +(?P<interface>[\w\.\/\-\_]+[\w\:\.\%]+),?)?,?( +receive)?'
                         r'( +directly connected)?( +indirectly connected)?$')
-
+        
         for line in out.splitlines():
             if line:
                 line = line.strip()
@@ -392,20 +420,16 @@ class ShowIpRoute(ShowIpRouteSchema):
                         route_preference = routepreference.split('/')[0]
                         metrics = routepreference.split('/')[1]
 
-                if m.groupdict()['next_hop']:
-                    next_hop = m.groupdict()['next_hop']
+                group = m.groupdict()
+                if group['next_hop']:
+                    next_hop = group.get('next_hop', None)
                     index = 1
                 else:
                     index = 0
-
-                if m.groupdict()['interface']:
-                    interface = m.groupdict()['interface']
-
-                if m.groupdict()['date']:
-                    updated = m.groupdict()['date']
-
-                if m.groupdict()['nh_vrf']:
-                    nh_vrf = m.groupdict()['nh_vrf']
+                
+                interface = group.get('interface', None)
+                updated = group.get('date', None)
+                nh_vrf = group.get('nh_vrf', None)
 
                 route_dict = result_dict.setdefault('vrf', {}).setdefault(vrf, {})\
                                         .setdefault('address_family', {}).setdefault(af, {})\
@@ -441,6 +465,207 @@ class ShowIpRoute(ShowIpRouteSchema):
                         idx_dict['vrf'] = nh_vrf
 
                 continue
+            
+            # storing the line which moves in the next line because of split in the for loop
+            m = p8.match(line) 
+            if m:
+                line1 = line
+
+            # B        192.168.1.20/32
+            # [200/0] via 2109:1::2 (default:ipv6), 00:04:15, Vlan500
+            m = p9.match(line)
+            if m:
+                # B        192.168.1.20/32
+                m = p8.match(line1)
+                if m:
+                    active = True
+                    #source_protocol_codes: 'B'
+                    if m.groupdict()['code']:
+                        # running the for loop to access all the key and value pair of dict "source_protocol_dict = {}""
+                        source_protocol_codes = m.groupdict()['code'].strip()
+                        for key,val in source_protocol_dict.items():
+                            #'If m.groupdict()['code'] = S* then below code will split the 'S' & '*' 
+                            #and store it in array and the put [0] as to store only 'S' as code '*' has no use in the output
+                            # Example = S*       0.0.0.0/0 [1/0] via 10.50.15.1  >>>> ['S', '*']
+                            source_protocol_replaced = source_protocol_codes.split('*')[0]
+                            if source_protocol_replaced in val:
+                                source_protocol = key
+
+                    if m.groupdict()['network']:
+                        #'192.168.1.20/32'
+                        network = m.groupdict()['network']
+                        if '/' not in network and self.IP_VER == 'ipv4':
+                            route = '{}/{}'.format(network,netmask)
+                        else:
+                            route = network
+
+                    #'192.168.1.20/32'
+                    if not m.groupdict()['network']:
+                        route = route
+
+                # [200/0] via 2109:1::2 (default:ipv6), 00:04:15, Vlan500
+                m = p9.match(line)
+                if m:
+                    #'route_preference': 200,
+                    if m.groupdict()['route_preference']:
+                        routepreference = m.groupdict()['route_preference']
+                        if '/' in routepreference:
+                            route_preference = routepreference.split('/')[0]
+                            metrics = routepreference.split('/')[1]
+
+                    #next_hop': 
+                    if m.groupdict()['next_hop']:
+                        next_hop = m.groupdict()['next_hop']
+                        index = 1
+                    else:
+                        index = 0
+
+                    #'route': '192.168.1.20/32'
+                    if m.groupdict()['interface']:
+                        interface = m.groupdict()['interface']
+                    
+                    #'updated': '00:03:46',
+                    if m.groupdict()['date']:
+                        updated = m.groupdict()['date']
+
+                    #'vrf': 'red:ipv6'
+                    #'vrf': 'vrf-blue:ipv6'
+                    if m.groupdict()['nh_vrf']:
+                        nh_vrf = m.groupdict()['nh_vrf']
+                    route_dict = result_dict.setdefault('vrf', {}).setdefault(vrf, {})\
+                                            .setdefault('address_family', {}).setdefault(af, {})\
+                                            .setdefault('routes', {}).setdefault(route, {})
+
+                    # 'route': '192.168.1.20/32',
+                    route_dict['route'] = route
+                    route_dict['active'] = active
+
+                    #'route_preference': 200,
+                    #'source_protocol': 'bgp',
+                    #'source_protocol_codes': 'B'
+                    if metrics:
+                        route_dict['metric'] = int(metrics)
+                    if route_preference:
+                        route_dict['route_preference'] = int(route_preference)
+                    if source_protocol_codes:
+                        route_dict['source_protocol_codes'] = source_protocol_codes
+                        route_dict['source_protocol'] = source_protocol
+                    next_hop_dict = route_dict.setdefault('next_hop', {})
+
+                    #'outgoing_interface': 'Vlan500',
+                    if not next_hop and interface:
+                        intf_dict = next_hop_dict.setdefault('outgoing_interface', {})
+                        intf_dict.setdefault(interface, {}).update({'outgoing_interface': interface})
+
+                    # 'next_hop_list': 1
+                    elif next_hop:
+                        idx_dict = next_hop_dict.setdefault('next_hop_list', {}).setdefault(index, {})
+                        idx_dict['index'] = index
+                        #next_hop': 
+                        idx_dict['next_hop'] = next_hop
+                        if updated:
+                            idx_dict['updated'] = updated
+                        if interface:
+                            idx_dict['outgoing_interface'] = interface
+                        if nh_vrf:
+                            idx_dict['vrf'] = nh_vrf
+                    continue
+            # B        192.168.1.20/32 [200/0] via 2109:1::2 (red:ipv6), 00:03:46, Vlan500
+            # B        192.168.1.40/32 [200/0] via 2109:1::4 (red:ipv6), 00:03:20, Vlan500
+            else:
+                m = p7.match(line)
+                if m:
+                    active = True
+                    #source_protocol_codes: 'B'
+                    if m.groupdict()['code']:
+                        # running the for loop to access all the key and value pair of dict "source_protocol_dict = {}""
+                        source_protocol_codes = m.groupdict()['code'].strip()
+                        for key,val in source_protocol_dict.items():
+                            '''If m.groupdict()['code'] = S* then below code will split the 'S' & '*' 
+                            and store it in array and the put [0] as to store only 'S' as code '*' has no use in the output'''
+                            # Exmaple = S*       0.0.0.0/0 [1/0] via 10.50.15.1  >>>> ['S', '*']
+                            source_protocol_replaced = source_protocol_codes.split('*')[0]
+                            if source_protocol_replaced in val:
+                                source_protocol = key
+
+                    if m.groupdict()['network']:
+                        #'192.168.1.20/32'
+                        network = m.groupdict()['network']
+                        if '/' not in network and self.IP_VER == 'ipv4':
+                            route = '{}/{}'.format(network,netmask)
+                        else:
+                            route = network
+
+                    #'192.168.1.20/32'
+                    if not m.groupdict()['network']:
+                        route = route
+
+                    #'route_preference': 200,
+                    if m.groupdict()['route_preference']:
+                        routepreference = m.groupdict()['route_preference']
+                        if '/' in routepreference:
+                            route_preference = routepreference.split('/')[0]
+                            metrics = routepreference.split('/')[1]
+
+                    #next_hop': 
+                    if m.groupdict()['next_hop']:
+                        next_hop = m.groupdict()['next_hop']
+                        index = 1
+                    else:
+                        index = 0
+
+                    #'route': '192.168.1.20/32'
+                    if m.groupdict()['interface']:
+                        interface = m.groupdict()['interface']
+
+                    #'updated': '00:03:46',
+                    if m.groupdict()['date']:
+                        updated = m.groupdict()['date']
+
+                    #'vrf': 'red:ipv6'
+                    #'vrf': 'vrf-blue:ipv6'
+                    if m.groupdict()['nh_vrf']:
+                        nh_vrf = m.groupdict()['nh_vrf']
+
+                    route_dict = result_dict.setdefault('vrf', {}).setdefault(vrf, {})\
+                                            .setdefault('address_family', {}).setdefault(af, {})\
+                                            .setdefault('routes', {}).setdefault(route, {})
+
+                    # 'route': '192.168.1.20/32',
+                    route_dict['route'] = route
+                    route_dict['active'] = active
+
+                    #'route_preference': 200,
+                    #'source_protocol': 'bgp',
+                    #'source_protocol_codes': 'B'
+                    if metrics:
+                        route_dict['metric'] = int(metrics)
+                    if route_preference:
+                        route_dict['route_preference'] = int(route_preference)
+                    if source_protocol_codes:
+                        route_dict['source_protocol_codes'] = source_protocol_codes
+                        route_dict['source_protocol'] = source_protocol
+
+                    next_hop_dict = route_dict.setdefault('next_hop', {})
+
+                    #'outgoing_interface': 'Vlan500',
+                    if not next_hop and interface:
+                        intf_dict = next_hop_dict.setdefault('outgoing_interface', {})
+                        intf_dict.setdefault(interface, {}).update({'outgoing_interface': interface})
+
+                    # 'next_hop_list': 1
+                    elif next_hop:
+                        idx_dict = next_hop_dict.setdefault('next_hop_list', {}).setdefault(index, {})
+                        idx_dict['index'] = index
+                        idx_dict['next_hop'] = next_hop
+
+                        if updated:
+                            idx_dict['updated'] = updated
+                        if interface:
+                            idx_dict['outgoing_interface'] = interface
+                        if nh_vrf:
+                            idx_dict['vrf'] = nh_vrf
+                    continue
 
             #    [110/2] via 10.1.2.2, 06:46:59, GigabitEthernet0/0
             m = p4.match(line)
@@ -589,7 +814,7 @@ class ShowIpRoute(ShowIpRouteSchema):
                             idx_dict['outgoing_interface'] = interface
                     if vrf_val:
                         idx_dict['vrf'] = vrf_val
-
+                        
                 continue
 
             # Routing entry for 10.151.0.0/24, 1 known subnets
@@ -1205,7 +1430,8 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
                         r'(?P<rib_labels>prefer-non-rib-labels))?(:?, +(?P<merge_labels>merge-labels))?)?$')
 
         # * directly connected, via GigabitEthernet1.120
-        p5_1 = re.compile(r'^\* +directly +connected, via +(?P<interface>\S+)$')
+        # directly connected via LISP0
+        p5_1 = re.compile(r'^\*? *directly +connected,? via +(?P<interface>\S+)$')
         
         # Route metric is 10880, traffic share count is 1
         p6 = re.compile(r'^Route +metric +is +(?P<metric>\d+), +'
@@ -1242,7 +1468,8 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
         p14 = re.compile(r'^Repair +Path: +(?P<path>[\d\.]+), +via +(?P<via>\w+)')
 
         # Tag 65161, type external
-        p15 = re.compile(r'^Tag (?P<tag_name>\S+), +type +(?P<tag_type>\S+)$')
+        # Tag 2, type LISP destinations-summary
+        p15 = re.compile(r'^Tag (?P<tag_name>\S+), +type +(?P<tag_type>\w+ *[\d\-\w]*)$')
 
         # AS Hops 9
         p16 = re.compile(r'^AS +Hops (?P<num_hops>\d+)$')
@@ -1284,6 +1511,7 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
                 continue
 
             # Tag 65161, type external
+            #  Tag 2, type LISP destinations-summary
             m = p15.match(line)
             if m:
                 group = m.groupdict()
@@ -1340,6 +1568,7 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
                 continue
 
             # * directly connected, via GigabitEthernet1.120
+            # directly connected via LISP0
             m = p5_1.match(line)
             if m:
                 group = m.groupdict()
@@ -1464,13 +1693,21 @@ class ShowIpv6RouteWordSchema(MetaParser):
                 'metric': str,
                 Optional('route_count'): str,
                 Optional('share_count'): str,
+                Optional('tag_name'): str,
+                Optional('tag_type'): str,           
                 Optional('type'): str,
+                Optional('redist_via'): str,
+                Optional('redist_via_tag'): str,
+                Optional('tag'): str,
                 'paths': {
                     Any(): {
+                        Optional('interface'): str,
                         Optional('fwd_ip'): str,
                         Optional('fwd_intf'): str,
                         Optional('from'): str,
-                        Optional('age'): str
+                        Optional('age'): str,
+                        Optional('metric'): str,
+                        Optional('share_count'): str
                     }
                 }
             }
@@ -2109,7 +2346,7 @@ class ShowIpCefInternalSchema(MetaParser):
                                 Optional('feature_space'): {
                                     Optional('iprm'): str,
                                     Optional('broker'): {
-                                      'distribution_priority': int,
+                                        'distribution_priority': int,
                                     },
                                     Optional('lfd'): {
                                         Any(): {
@@ -2117,8 +2354,8 @@ class ShowIpCefInternalSchema(MetaParser):
                                         }
                                     },
                                     Optional('local_label_info'): {
-                                      Optional('dflt'): str,
-                                      Optional('sr'): str,
+                                        Optional('dflt'): str,
+                                        Optional('sr'): str,
                                     },
                                     Optional('path_extension_list'): {
                                         'dflt': {
@@ -2133,7 +2370,7 @@ class ShowIpCefInternalSchema(MetaParser):
                                                                         'addr': str,
                                                                     }
                                                                 }
-                                                            },
+                                                            }
                                                         }
                                                     }
                                                 }
@@ -2149,7 +2386,7 @@ class ShowIpCefInternalSchema(MetaParser):
                                                                         'addr': str,
                                                                     }
                                                                 }
-                                                            },
+                                                            }
                                                         }
                                                     }
                                                 }
@@ -2167,7 +2404,7 @@ class ShowIpCefInternalSchema(MetaParser):
                                                                         'addr': str,
                                                                     }
                                                                 }
-                                                            },
+                                                            }
                                                         }
                                                     }
                                                 }
@@ -2183,22 +2420,25 @@ class ShowIpCefInternalSchema(MetaParser):
                                                                         'addr': str,
                                                                     }
                                                                 }
-                                                            },
+                                                            }
                                                         }
                                                     }
                                                 }
                                             }
-                                        },
-                                    },
+                                        }
+                                    }
                                 },
                                 Optional('subblocks'): {
-                                  Any(): {
-                                      'rr_source': list,
-                                      'non_eos_chain_loadinfo': str,
-                                      'per-session': bool,
-                                      'flags': str,
-                                      'locks': int,
-                                  }
+                                    Any(): {
+                                        'rr_source': list,
+                                        Optional('non_eos_chain_loadinfo'): str,
+                                        Optional('per-session'): bool,
+                                        Optional('flags'): str,
+                                        Optional('locks'): int,
+                                    },
+                                    Optional('LISP'): {
+                                        Optional('smr_enabled'): bool
+				    }
                                 },
                                 Optional('ifnums'): {
                                     Any(): {
@@ -2234,13 +2474,13 @@ class ShowIpCefInternalSchema(MetaParser):
                                                                         Optional('addr_info'): str,
                                                                     }
                                                                 }
-                                                            },
-                                                        },
-                                                    },
-                                                },
-                                            },
-                                        },
-                                    },
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
                                 },
                                 'output_chain': {
                                     Optional('label'): list,
@@ -2269,10 +2509,10 @@ class ShowIpCefInternalSchema(MetaParser):
                                                                 'addr': str,
                                                                 'addr_info': str,
                                                             }
-                                                        },
-                                                    },
+                                                        }
+                                                    }
                                                 }
-                                            },
+                                            }
                                         }
                                     },
                                     Optional('frr'): {
@@ -2296,31 +2536,31 @@ class ShowIpCefInternalSchema(MetaParser):
                                                                 'addr': str,
                                                                 'addr_info': str,
                                                             }
-                                                        },
+                                                        }
                                                     }
                                                 },
                                                 Optional('tag_adj'): {
                                                     Any(): {
                                                         'addr': str,
                                                         'addr_info': str,
-                                                    },
-                                                },
-                                            },
+                                                    }
+                                                }
+                                            }
                                         }
                                     },
                                     Optional('tag_adj'): {
                                         Any(): {
                                             'addr': str,
                                             'addr_info': str,
-                                        },
-                                    },
-                                },
-                            },
-                        },
-                    },
-                },
-            },
-        },
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
 
@@ -2459,6 +2699,9 @@ class ShowIpCefInternal(ShowIpCefInternalSchema):
         p18 = re.compile(r'^non-eos +chain +loadinfo +(?P<non_eos_chain_loadinfo>\S+),'
                          r' +(?P<per_session>per-session), +flags +(?P<flags>\S+), '
                          r'+(?P<locks>\d+) +locks$')
+
+        #  SC owned,sourced: LISP generalised SMR - [disabled, not inheriting, 0x7F0119709CF0 locks: 1]
+        p19 = re.compile(r'^.+LISP generalised SMR - \[(?P<smr_enabled>enabled|disabled)\, .+]')
 
         label_list = []
         label_list2 = []
@@ -2611,6 +2854,14 @@ class ShowIpCefInternal(ShowIpCefInternalSchema):
                     rr_dict['per-session'] = False
                 for i in ['non_eos_chain_loadinfo', 'flags', 'locks']:
                     rr_dict[i] = int(group[i]) if i == 'locks' else group[i]
+                continue
+
+            #  SC owned,sourced: LISP generalised SMR - [disabled, not inheriting, 0x7F0119709CF0 locks: 1]
+            m = p19.match(line)
+            if m:
+                group = m.groupdict()
+                smr = prefix_dict.setdefault('subblocks', {}).setdefault('LISP', {})
+                smr['smr_enabled'] = group['smr_enabled'] == 'enabled'
                 continue
 
             # path list 7F0FEC884768, 19 locks, per-destination, flags 0x4D [shble, hvsh, rif, hwcn]
@@ -2856,6 +3107,33 @@ class ShowIpCefInternal(ShowIpCefInternalSchema):
 
         return result_dict
 
+
+class ShowIpv6CefInternal(ShowIpCefInternal):
+    ''' Parser for:
+        * 'show ipv6 cef internal'
+        * 'show ipv6 cef {ip} internal'
+        * 'show ipv6 cef vrf {vrf} {ip} internal'
+    '''
+
+    cli_command = ['show ipv6 cef {ip} internal',
+                   'show ipv6 cef internal',
+                   'show ipv6 cef vrf {vrf} {ip} internal']
+
+    def cli(self, ip="", vrf="", output=None):
+
+        if output is None:
+            if ip and vrf:
+                cmd = self.cli_command[2].format(ip=ip, vrf=vrf)
+            elif ip:
+                cmd = self.cli_command[0].format(ip=ip)
+            else:
+                cmd = self.cli_command[1]
+            out = self.device.execute(cmd)
+        else:
+            out = output 
+        return super().cli(vrf=vrf, ip=ip, output=output)
+
+
 # ====================================================
 #  schema for show ipv6 route summary
 # ====================================================
@@ -2874,9 +3152,7 @@ class ShowIpv6RouteSummarySchema(MetaParser):
                     'memory_bytes': int,
                 },
                 'number_of_prefixes': {
-                    'prefix_8': int,
-                    'prefix_64': int,
-                    'prefix_128': int,
+                    Optional(Any()): int,
                 },
                 'route_source': {
                     Any(): {
@@ -2963,7 +3239,7 @@ class ShowIpv6RouteSummary(ShowIpv6RouteSummarySchema):
         # ND              0           0           0
         # ospf 200        500         96000       108000
         p4 = re.compile(
-            r'^(?P<protocol>\w+)\s(?P<instance>\d+)?\s+(?P<networks>\d+)\s+(?P<overhead>\d+)\s+(?P<memory_bytes>\d+)$')
+            r'^(?P<protocol>\w+)\s(?P<instance>\d+|\w+)?\s+(?P<networks>\d+)\s+(?P<overhead>\d+)\s+(?P<memory_bytes>\d+)$')
 
         # Default: 0  Prefix: 0  Destination: 0  Redirect: 0
         p5 = re.compile(
@@ -2991,8 +3267,7 @@ class ShowIpv6RouteSummary(ShowIpv6RouteSummarySchema):
         p10 = re.compile(r'^Static\:\s+(?P<static>\d+)\s+Per\-user\s+static\:\s+(?P<per_user_static>\d+)$')
 
         # /8: 1, /64: 8, /128: 517
-        p11 = re.compile(
-            r'^\/\d+\:\s+(?P<prefix_8>\d+),\s+/\d+\:\s+(?P<prefix_64>\d+),\s+/\d+\:\s+(?P<prefix_128>\d+)$')
+        p11 = re.compile(r'(?P<prefix>\/\d+):\s+(?P<count>\d+)\,?\s?')
 
         ret_dict = {}
 
@@ -3087,12 +3362,140 @@ class ShowIpv6RouteSummary(ShowIpv6RouteSummarySchema):
                 continue
 
             # /8: 1, /64: 8, /128: 517
-            m = p11.match(line)
+            m = p11.findall(line)
             if m:
-                group = {k: int(v) for k, v in m.groupdict().items()}
+                group = {k: int(v) for k, v in m}
                 vrf_dict.setdefault('number_of_prefixes', {})
                 vrf_dict['number_of_prefixes'].update(group)
                 continue
 
         return ret_dict
+# ====================================================
+#  parser for show ipv6 route supernets-only
+# ====================================================
+class ShowIpRouteSupernet(ShowIpRoute):
+    """ Parser for:
+        show ip route supernets-only
+        show ip route vrf <vrf> supernets-only
+    """
 
+    cli_command = ['show ip route vrf {vrf} supernets-only', 'show ip route supernets-only']
+
+    def cli(self, vrf=None, output=None):
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[0].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[1]
+            
+            out = self.device.execute(cmd)
+        else:
+            out = output
+        
+        return super().cli(vrf=vrf, output=out)
+
+# ====================================================
+#  schema for show rib client
+# ====================================================
+class ShowRibClientSchema(MetaParser):
+    """Schema for show rib client
+    """
+    schema = {
+        Any():{
+            'handle': int,
+            'walkQ': int,
+            'walkQbyOwner': int
+        }
+    }
+
+# ====================================================
+#  parser for show rib client
+# ====================================================
+class ShowRibClient(ShowRibClientSchema):
+    cli_command = ['show rib client']
+
+    def cli(self, output=None):
+        if output is None:
+            cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # Client name          Handle     WalkQ  WalkQ by Owner
+        # NAT_ROUTE              1          0      0   
+        # OMP                    2          0      0   
+        # OMP TLOC/Network       3          0      0   
+        # IP Static Route        4          0      0   
+        # IP Static Default Ne   5          0      0   
+        # App Route              6          0      0   
+        # NVE MGR rwatch         7          0      0
+
+
+        # NAT_ROUTE              1          0      0   
+        p1 = re.compile(r'^(?P<client_name>[\S ]+)\b +(?P<handle>\d+) +(?P<walkQ>\d+) +(?P<walkQbyOwner>\d+)$')
+        
+        
+        ret_dict = {}
+        m = ''
+        for line in out.splitlines():
+            line = line.strip()
+            
+            # NAT_ROUTE              1          0      0
+            m = p1.match(line)
+            if m:
+                client = m.groupdict()['client_name']
+                client_dict = ret_dict.setdefault(client,{})
+                group = m.groupdict()
+                del group['client_name']
+                group = {k : int(v) for k, v in group.items()}
+                client_dict.update(group)
+                
+        return ret_dict
+
+# ==========================================================================================
+# Parser Schema for 'show banner motd'
+# ==========================================================================================
+
+class ShowBannerMotdSchema(MetaParser):
+    """
+    Schema for
+        * 'show banner motd'
+    """
+
+    schema = {
+        'banner_motd': str
+    }
+
+# ==========================================================================================
+# Parser for 'show banner motd'
+# ==========================================================================================
+
+class ShowBannerMotd(ShowBannerMotdSchema):
+    """
+    Parser for
+        * 'show banner motd'
+    """
+    cli_command = 'show banner motd'
+
+    def cli(self, output=None):
+
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        
+        # initializing dictionary
+        ret_dict = {}
+
+        # cisco banner test msg
+        p1 = re.compile(r'^(?P<banner>[\S\s]+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # cisco banner test msg
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['banner_motd'] = group['banner']
+                continue
+
+        return ret_dict

@@ -4,6 +4,8 @@ IOSXE parsers for the following show commands:
 
     * 'show cdp neighbors'
     * 'show cdp neighbors detail'
+    * 'show cdp neighbors {interface} detail'
+    * 'show cdp'
 
 '''
 
@@ -14,24 +16,30 @@ import re
 from genie.libs.parser.utils.common import Common
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any, Optional
+from genie import parsergen
 
 
 class ShowCdpNeighborsSchema(MetaParser):
 
     ''' Schema for:
         * 'show cdp neighbors'
+        * 'show cdp neighbors {interface}'
     '''
 
     schema = {
-        'cdp':
-            {Optional('index'):
-                {Any():
-                    {Optional('device_id'): str,
-                     Optional('local_interface'): str,
-                     Optional('hold_time'): int,
-                     Optional('capability'): str,
-                     Optional('platform'): str,
-                     Optional('port_id'): str, }, }, },
+        'cdp': {
+            Optional('index'): {
+                Any(): {
+                    Optional('device_id'): str,
+                    Optional('local_interface'): str,
+                    Optional('hold_time'): int,
+                    Optional('capability'): str,
+                    Optional('platform'): str,
+                    Optional('port_id'): str
+                }
+            },
+            'total_entries': int
+        }
     }
 
 
@@ -42,12 +50,15 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
 
     exclude = ['hold_time']
 
-    cli_command = 'show cdp neighbors'
+    cli_command = ['show cdp neighbors', 'show cdp neighbors {interface}']
 
-    def cli(self, output=None):
+    def cli(self, interface='', output=None):
 
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if interface:
+                out = self.device.execute(self.cli_command[1].format(interface=interface))
+            else:
+                out = self.device.execute(self.cli_command[0])
         else:
             out = output
 
@@ -94,6 +105,8 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
                         r'(?P<hold_time>\d+) +(?P<capability>[RTBSsHIrPDCM\s]+)( +'
                         r'(?P<platform>VMware ES|\S+))?( (?P<port_id>[\.a-zA-Z0-9/\s]+))?$')
 
+        # Total cdp entries displayed : 13
+        p6 = re.compile(r'^Total cdp entries displayed :\s+(?P<total_entries>\d+)$')
         device_id_index = 0
         parsed_dict = {}
 
@@ -157,6 +170,11 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
                     device_dict['port_id'] = Common \
                         .convert_intf_name(intf=group['port_id'].strip())
                 continue
+            
+            # Total cdp entries displayed : 13
+            m = p6.match(line)
+            if m:
+                parsed_dict['cdp']['total_entries'] = int(m.groupdict()['total_entries'])
 
         return parsed_dict
 
@@ -176,7 +194,7 @@ class ShowCdpNeighborsDetailSchema(MetaParser):
                 'local_interface': str,
                 Optional('port_id'): str,
                 'hold_time': int,
-                'software_version': str,
+                Optional('software_version'): str,
                 'entry_addresses': {
                     Any(): {
                         Optional('type'): str,
@@ -199,14 +217,22 @@ class ShowCdpNeighborsDetailSchema(MetaParser):
 # Parser for 'show cdp neighbors details'
 # =======================================
 class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
-    cli_command = 'show cdp neighbors detail'
+    ''' Parser for:
+        * 'show cdp neighbors detail'
+        * 'show cdp neighbors {interface} detail'
+    '''
+    cli_command = ['show cdp neighbors detail', 'show cdp neighbors {interface} detail']
 
     exclude = ['hold_time']
 
-    def cli(self, output=None):
+    def cli(self, interface=None, output=None):
 
         if output is None:
-            output = self.device.execute(self.cli_command)
+            if interface:
+                cmd = self.cli_command[1].format(interface=interface)
+            else:
+                cmd = self.cli_command[0].format(interface=interface)
+            output = self.device.execute(cmd)
 
         # Device ID: R7(9QBDKB58F76)
         # Device ID:
@@ -424,3 +450,403 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
                 continue
 
         return parsed_dict
+
+
+class ShowCdpTrafficSchema(MetaParser):
+    """
+    Schema for:
+        * 'Show CDP Traffic'
+    """
+
+    schema = {
+        'total_output': int,
+        'total_input': int,
+        'hdr': int,
+        'checksum': int,
+        'encaps': int,
+        'memory': int,
+        'invalid': int,
+        'cdp_ver1_output': int,
+        'cdp_ver1_input': int,
+        'cdp_ver2_output': int,
+        'cdp_ver2_input': int,
+    }
+
+
+class ShowCdpTraffic(ShowCdpTrafficSchema):
+    """
+    Parser for 'show cdp traffic'
+    """
+
+    cli_command = 'show cdp traffic'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        
+        meta_dict = dict()
+
+        # Total packets output: 297183, Input: 2546
+        p0 = re.compile(r'^Total\s+packets\s+output:\s+(?P<total_output>\d+),\s+Input:\s+(?P<total_input>\d+)$')
+
+        # Hdr syntax: 0, Chksum error: 0, Encaps failed: 0
+        p1 = re.compile(r'^Hdr\s+syntax:\s+(?P<hdr>\d+),\s+Chksum\s+error:\s+(?P<checksum>\d+),\s+Encaps\s+failed:\s+(?P<encaps>\d+)$')
+
+        # No memory: 0, Invalid packet: 0,
+        p2 = re.compile(r'^No\s+memory:\s+(?P<memory>\d+),\s+Invalid\s+packet:\s+(?P<invalid>\d+),$')
+
+        # CDP version 1 advertisements output: 0, Input: 0
+        p3 = re.compile(r'^CDP\s+version\s+1\s+advertisements\s+output:\s+(?P<cdp_ver1_output>\d+),\s+Input:\s+(?P<cdp_ver1_input>\d+)$')
+
+        # CDP version 2 advertisements output: 285442, Input: 870
+        p4 = re.compile(r'^CDP\s+version\s+2\s+advertisements\s+output:\s+(?P<cdp_ver2_output>\d+),\s+Input:\s+(?P<cdp_ver2_input>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # Total packets output: 297183, Input: 2546
+            match = p0.match(line)
+            if match:
+                meta_dict.update({key: int(value) for key, value in match.groupdict().items()})
+                continue
+            
+            # Hdr syntax: 0, Chksum error: 0, Encaps failed: 0
+            match = p1.match(line)
+            if match:
+                meta_dict.update({key: int(value) for key, value in match.groupdict().items()})
+                continue
+            
+            # No memory: 0, Invalid packet: 0,
+            match = p2.match(line)
+            if match:
+                meta_dict.update({key: int(value) for key, value in match.groupdict().items()})
+                continue
+            
+            # CDP version 1 advertisements output: 0, Input: 0
+            match = p3.match(line)
+            if match:
+                meta_dict.update({key: int(value) for key, value in match.groupdict().items()})
+                continue
+            
+            # CDP version 2 advertisements output: 285442, Input: 870
+            match = p4.match(line)
+            if match:
+                meta_dict.update({key: int(value) for key, value in match.groupdict().items()})
+                continue
+        
+        return meta_dict
+
+
+class ShowCdpInterfaceSchema(MetaParser):
+    """
+    Schema for:
+        * 'Show CDP Interface'
+        * 'Show CDP Interface <Interface>'
+    """
+
+    schema = {
+        'interface': {
+            Any(): {
+                'state': str,
+                'protocol_state': str,
+                'encapsulation': str,
+                'cdp_interval': int,
+                'hold_time': int,
+            },
+        },
+        Optional('cdp_enabled_interfaces'): int,
+        Optional('interfaces_up'): int,
+        Optional('interfaces_down'): int
+    }
+
+
+class ShowCdpInterface(ShowCdpInterfaceSchema):
+    """
+    Parser for 'show cdp interface <interface>'
+    """
+
+    cli_command = 'show cdp interface'
+
+    def cli(self, interface_type=None, interface_number=None, output=None):
+        if output is None:
+            if interface_type and interface_number:
+                self.cli_command += f' {interface_type} {interface_number}'
+            output = self.device.execute(self.cli_command)
+        
+        meta_dict = dict()
+
+        # TwentyFiveGigE3/1/1 is down, line protocol is down
+        # GigabitEthernet0/0 is administratively down, line protocol is down
+        p0 = re.compile(r'^(?P<interface>[a-zA-Z\-\/\d\.]+)\s+is\s+(?P<state>[\w\s]+),\s+line\s+protocol\s+is\s+(?P<protocol_state>\w+)$')
+
+        # Encapsulation ARPA
+        p1 = re.compile(r'^Encapsulation\s+(?P<encapsulation>\w+)$')
+
+        # Sending CDP packets every 60 seconds
+        p2 = re.compile(r'^Sending\s+CDP\s+packets\s+every\s+(?P<cdp_interval>\d+)\s+seconds$')
+  
+        # Holdtime is 180 seconds
+        p3 = re.compile(r'^Holdtime\s+is\s+(?P<hold_time>\d+)\s+seconds$')
+
+        # cdp enabled interfaces : 172
+        p4 = re.compile(r'^cdp\s+enabled\s+interfaces\s+:\s+(?P<cdp_enabled_interfaces>\d+)$')
+
+        # interfaces up          : 7
+        p5 = re.compile(r'^interfaces\s+up\s+:\s+(?P<interfaces_up>\d+)$')
+        
+        # interfaces down        : 166
+        p6 = re.compile(r'^interfaces\s+down\s+:\s+(?P<interfaces_down>\d+)$')
+
+        ret_int = lambda dicty: {key: int(value) for key, value in dicty.items()}
+
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # TwentyFiveGigE3/1/1 is down, line protocol is down
+            match = p0.match(line)
+            if match:
+                tmp_dict = match.groupdict()
+                intf_dict = meta_dict.setdefault('interface', {}).setdefault(tmp_dict.pop('interface'), tmp_dict)
+                continue
+            
+            # Encapsulation ARPA
+            match = p1.match(line)
+            if match:
+                intf_dict.update(match.groupdict())
+                continue
+
+            # Sending CDP packets every 60 seconds
+            match = p2.match(line)
+            if match:
+                intf_dict.update(ret_int(match.groupdict()))
+                continue
+            
+            # Holdtime is 180 seconds
+            match = p3.match(line)
+            if match:
+                intf_dict.update(ret_int(match.groupdict()))
+                continue
+            
+            # cdp enabled interfaces : 172
+            match = p4.match(line)
+            if match:
+                meta_dict.update(ret_int(match.groupdict()))
+                continue
+            
+            # interfaces up          : 7
+            match = p5.match(line)
+            if match:
+                meta_dict.update(ret_int(match.groupdict()))
+                continue
+            
+            # interfaces down        : 166
+            match = p6.match(line)
+            if match:
+                meta_dict.update(ret_int(match.groupdict()))
+                continue
+        
+        return meta_dict
+
+
+class ShowCdpEntrySchema(MetaParser):
+    """Schema for show cdp entry [<WORD>|*]"""
+    schema = {
+        Optional('interface'): {
+            Any(): {
+                'port': {
+                    Any(): {
+                        'device_id': str,
+                        'hold_time': int,
+                        'cdp_version': int,
+                        'peer_mac': str,
+                        'vtp_mgmt_domain': str,
+                        Optional('native_vlan'): int,
+                        'duplex': str,
+                        'platform': str,
+                        'system_description': str
+                    }
+                }
+            }
+        }
+    }
+
+
+class ShowCdpEntry(ShowCdpEntrySchema):
+    """Parser for show cdp entry {* | word}"""
+
+    cli_command = ['show cdp entry {entry}', 'show cdp entry *']
+
+    def cli(self, entry='', output=None):
+        if output is None:
+            if entry:
+                cmd = self.cli_command[0].format(entry=entry)
+            else:
+                cmd = self.cli_command[1]
+            output = self.device.execute(cmd)
+
+        meta_dict = {}
+
+        # Interface: GigabitEthernet0/0,  Port ID (outgoing port): GigabitEthernet1/0/18
+        p0 = re.compile(r'^Interface:\s+(?P<intf>[\w\/\.\-]+),\s+Port\s+ID\s+\(outgoing port\):\s+(?P<port>[\w\/\.\-]+)$')
+
+        # Device ID: 9300-24UX-1
+        p1 = re.compile(r'^Device\s+ID:\s+(?P<device_id>[\S\s]+)$')
+
+        # Platform: cisco C9300-24UX,
+        p2 = re.compile(r'^Platform:\s+(?P<platform>.+),\s+Capabilities:')
+
+        # Holdtime : 171 sec
+        p3 = re.compile(r'^Holdtime\s+:\s+(?P<hold_time>\d+)\s+sec$')
+
+        # Cisco IOS Software, Catalyst L3 Switch Software (CAT3K_CAA-UNIVERSALK9-M), Version 15.2(3.1.30)E1
+        # Technical Support: http://www.cisco.com/techsupport
+        # Copyright (c) 1986-2014 by Cisco Systems, Inc.
+        # Compiled Fri 12-Dec-14 06:48 by gereddy
+        p4 = re.compile(r'^(?P<system_description>(Cisco +IOS +Software|Technical Support|Copyright|Compiled).*)$')
+
+        # Peer Source MAC: a03d.6ea4.6f04
+        p5 = re.compile(r'^Peer\s+Source\s+MAC:\s+(?P<peer_mac>[a-f0-9A-F\.]+)$')
+
+        # advertisement version: 2
+        p6 = re.compile(r'^advertisement\s+version:\s+(?P<cdp_version>\d+)$')
+
+        # VTP Management Domain: 'cisco'
+        p7 = re.compile(r'^VTP\s+Management\s+Domain:\s+\'(?P<vtp_mgmt_domain>.*)\'$')
+
+        # Native VLAN: 1
+        p8 = re.compile(r'^Native\s+VLAN:\s+(?P<native_vlan>\d+)$')
+
+        # Duplex: full
+        p9 = re.compile(r'^Duplex:\s+(?P<duplex>\w+)$')
+
+        tmp_dict = dict()
+        system_description = list()
+        ret_int = lambda dicty: {key: int(value) for key, value in dicty.items()}
+
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # Interface: GigabitEthernet0/0,  Port ID (outgoing port): GigabitEthernet1/0/18
+            match = p0.match(line)
+            if match:
+                port_dict = meta_dict.setdefault('interface', {
+                }).setdefault(match.groupdict()['intf'], {
+                }).setdefault('port', {
+                }).setdefault(match.groupdict()['port'], {})
+                port_dict.update(tmp_dict)
+                tmp_dict.clear()
+                continue
+            
+            # Device ID: 9300-24UX-1
+            match = p1.match(line)
+            if match:
+                tmp_dict.update(match.groupdict())
+                continue
+            
+            # Platform: cisco C9300-24UX,
+            match = p2.match(line)
+            if match:
+                tmp_dict.update(match.groupdict())
+                continue
+            
+            # Holdtime : 171 sec
+            match = p3.match(line)
+            if match:
+                port_dict.update(ret_int(match.groupdict()))
+                continue
+
+            # Cisco IOS Software, Catalyst L3 Switch Software (CAT3K_CAA-UNIVERSALK9-M), Version 15.2(3.1.30)E1
+            # Technical Support: http://www.cisco.com/techsupport
+            # Copyright (c) 1986-2014 by Cisco Systems, Inc.
+            # Compiled Fri 12-Dec-14 06:48 by gereddy
+            match = p4.match(line)
+            if match:
+                system_description.append(match.groupdict()['system_description'])
+                continue
+            
+            # Peer Source MAC: a03d.6ea4.6f04
+            match = p5.match(line)
+            if match:
+                port_dict.update(match.groupdict())
+                continue
+            
+            # advertisement version: 2
+            match = p6.match(line)
+            if match:
+                port_dict.update(ret_int(match.groupdict()))
+                port_dict.update({'system_description': '\n'.join(system_description)})
+                system_description.clear()
+                continue
+            
+            # VTP Management Domain: 'cisco'
+            match = p7.match(line)
+            if match:
+                port_dict.update(match.groupdict())
+                continue
+            
+            # Native VLAN: 1
+            match = p8.match(line)
+            if match:
+                port_dict.update(ret_int(match.groupdict()))
+                continue
+            
+            # Duplex: full
+            match = p9.match(line)
+            if match:
+                port_dict.update(match.groupdict())
+                continue
+        
+        return meta_dict
+
+
+class ShowCdpSchema(MetaParser):
+    '''Schema for show cdp'''
+    schema = {
+        'interval': int,
+        'holdtime': int,
+        'cdpv2': str
+    }
+
+
+class ShowCdp(ShowCdpSchema):
+    '''Parser for show cdp'''
+
+    cli_command = 'show cdp'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        
+        # Sending CDP packets every 60 seconds
+        p1 = re.compile(r'^Sending CDP packets every (?P<interval>\d+) seconds$')
+
+        # Sending a holdtime value of 180 seconds
+        p2 = re.compile(r'^Sending a holdtime value of (?P<holdtime>\d+) seconds$')
+
+        # Sending CDPv2 advertisements is  enabled
+        p3 = re.compile(r'^Sending CDPv2 advertisements is\s+(?P<cdpv2>\w+)$')
+
+        ret_dict = dict()
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Sending CDP packets every 60 seconds
+            m = p1.match(line)
+            if m:
+                ret_dict.setdefault('interval', int(m.groupdict()['interval']))
+                continue
+
+            # Sending a holdtime value of 180 seconds
+            m = p2.match(line)
+            if m:
+                ret_dict.setdefault('holdtime', int(m.groupdict()['holdtime']))
+                continue
+            
+            # Sending CDPv2 advertisements is  enabled
+            m = p3.match(line)
+            if m:
+                ret_dict.setdefault('cdpv2', m.groupdict()['cdpv2'])
+                continue
+    
+        return ret_dict

@@ -1,0 +1,34 @@
+expected_output = {
+   "power_supply":{
+      "PS0":{
+         "model_num":"C9K-PWR-650WAC-R",
+         "type":"AC",
+         "capacity":"650",
+         "status":"ok",
+         "fan_states":{
+            0:"good",
+            1:"N/A"
+         }
+      }
+   },
+   "fan_tray":{
+      "FM0":{
+         "status":"ok",
+         "fan_states":{
+            0:"good",
+            1:"good",
+            2:"good",
+            3:"good"
+         }
+      },
+      "FM1":{
+         "status":"ok",
+         "fan_states":{
+            0:"good",
+            1:"good",
+            2:"good",
+            3:"good"
+         }
+      }
+   }
+}

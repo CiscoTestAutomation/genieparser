@@ -1,0 +1,5 @@
+Te1/0/47 is up
+	EEE(efficient-ethernet):  Operational
+	Rx LPI Status          :  Low Power
+	Tx LPI Status          :  Low Power
+	Wake Error Count       :  0

@@ -1,0 +1,29 @@
+Session 0
+---------
+  Session Type         : ERSPAN Destination Session
+  Source Ports         : RX: None  TX: Tunnel1000000000
+  Destination Ports    : TwoGigabitEthernet1/0/13
+  Source VLANs         : None
+  Destination VLANs    : None
+  Source RSPAN VLAN    : 0
+  DST RSPAN VLAN       : 0
+  Encap                : Replicate
+  Ingress Forwarding   : Disabled
+  Filter VLANs         : None
+  ERSPAN Enable        : 1
+  ERSPAN Hw Programmed : 1
+  ERSPAN Mandatory Cfg : 1
+  ERSPAN Id            : 1
+  MTU                  : 9000
+  Ip Tos               : 0 (DSCP:0)
+  Ip Ttl               : 0
+  Ipv6 flow label      : 0
+  Cos                  : 0
+  Vrf Id               : 0
+  Tunnel IfId          : 207
+  Dst Ip               : 0.0.0.0
+  Org Ip               : 4.4.4.2
+  Dst Ipv6             : ::
+  Org Ipv6             : ::
+  SGT count            : 0
+  SGT Tag(s)           :

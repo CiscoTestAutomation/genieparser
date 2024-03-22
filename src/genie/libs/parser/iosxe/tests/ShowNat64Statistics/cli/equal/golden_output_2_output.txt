@@ -1,0 +1,11 @@
+Dynamic Mapping Statistics
+        access-list acl_1 pool n64_pool refcount 0
+        pool n64_pool:
+                start 135.0.0.1 end 135.0.0.100
+                total addresses 100, allocated 0 (0%)
+                address exhaustion packet count 0
+        access-list acl_2 pool n64_pool2 refcount 0
+        pool n64_pool2:
+                start 136.0.0.1 end 136.0.0.100
+                total addresses 100, allocated 0 (0%)
+                address exhaustion packet count 0

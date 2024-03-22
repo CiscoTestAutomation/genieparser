@@ -1,0 +1,4 @@
+IPV4ROUTE_ID:id:0x5b36200350f8 nobj:(NHADJ_GLEAN,0) 5.5.5.0/24 tblid:2 DA:1
+   NPD: device:0 lspa_rec:0 api_type:subnet(2)
+   Subnet Present in SDK for L3Port OID:2143
+  SPECIAL_IPNEXTHOP_ID:obj_id:0

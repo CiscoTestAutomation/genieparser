@@ -5,7 +5,7 @@ expected_output = {
             'card_type': 'Cisco Catalyst 9500X-28C8D Switch', 
             'model': 'C9500X-28C8D', 
             'serial': 'FDO25030SLN', 
-            'mac_address': 'F87A.4125.1400', 
+            'mac_address': 'F87A.4125.1400 to F87A.4125.147D', 
             'hw': '0.2', 'fw': '17.7.1r[FC3]', 
             'sw': '2021-09-30_14.02_a', 
             'status': 'ok', 

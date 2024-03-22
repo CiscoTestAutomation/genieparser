@@ -49,17 +49,17 @@ class ShowVrrpSchema(MetaParser):
                 'group': {
                     int: {
                         Optional('description'): str,
-                        'state': str,
+                        Optional('state'): str,
                         Optional('state_duration'): {
                             'minutes': int,
                             'seconds': float,
                         },
-                        'virtual_ip_address': str,
-                        'virtual_mac_address': str,
-                        'advertise_interval_secs': float,
-                        'preemption': str,
+                        Optional('virtual_ip_address'): str,
+                        Optional('virtual_mac_address'): str,
+                        Optional('advertise_interval_secs'): float,
+                        Optional('preemption'): str,
                         Optional('vrrp_delay'): float,
-                        'priority': int,
+                        Optional('priority'): int,
                         Optional('vrrs_name'): {
                             str: {
                                 Optional('track_object'): {
@@ -77,12 +77,13 @@ class ShowVrrpSchema(MetaParser):
                             }
                         },
                         Optional('auth_text'): str,
-                        'master_router_ip': str,
+                        Optional('master_router_ip'): str,
                         Optional('master_router'): str,
-                        'master_router_priority': Or(int, str),
-                        'master_advertisement_interval_secs': Or(float, str),
+                        Optional('master_router_priority'): Or(int, str),
+                        Optional('master_advertisement_interval_secs'): Or(float, str),
                         Optional('master_advertisement_expiration_secs'): float,
-                        'master_down_interval_secs': Or(float, str),
+                        Optional('master_down_interval_secs'): Or(float, str),
+                        Optional('master_down_expiration_secs'): float,
                         Optional('flags'): str,
                         Optional('address_family'): {
                             'ipv6': {
@@ -93,7 +94,7 @@ class ShowVrrpSchema(MetaParser):
                                     'seconds': float,
                                 },
                                 'virtual_ip_address': str,
-                                'virtual_secondary_addresses': list,
+                                Optional('virtual_secondary_addresses'): list,
                                 'virtual_mac_address': str,
                                 'advertise_interval_secs': float,
                                 'preemption': str,
@@ -161,10 +162,12 @@ class ShowVrrp(ShowVrrpSchema):
 
         # State is Master
         # State is INIT (No Primary virtual IP address configured)
-        p2 = re.compile(r'State is (?P<state>(Master|MASTER|Up|UP|Init|INIT)).*$')
+        # State is BACKUP
+        p2 = re.compile(r'State is (?P<state>(Master|MASTER|Up|UP|Init|INIT|BACKUP)).*$')
 
         # State duration 8 mins 40.214 secs
-        p2_1 = re.compile(r'^State\s+duration\s+(?P<minutes>\d+)\s+mins\s+(?P<seconds>[\d\.]+)\s+secs$')
+        # State duration 49.507 secs
+        p2_1 = re.compile(r'^State\s+duration\s+((?P<minutes>\d+)\s+mins\s+)?(?P<seconds>[\d\.]+)\s+secs$')
 
         # Virtual IP address is 10.2.0.10
         # Virtual IP address is FE80::1
@@ -195,7 +198,8 @@ class ShowVrrp(ShowVrrpSchema):
         p10 = re.compile(r'^min +delay +is (?P<delay>[\d,\.]+) +sec$')
 
         # Priority is 115
-        p11 = re.compile(r'^Priority +is +(?P<priority>\d+)$')
+        # Priority is 70 (Configured 90)
+        p11 = re.compile(r'^Priority +is +(?P<priority>(\d+))|(\s+\(\w+\s+\d+\))$')
 
         # Priority 100
         p12 = re.compile(r'^Priority (?P<priority>\d+)$')
@@ -212,13 +216,15 @@ class ShowVrrp(ShowVrrpSchema):
 
         # Master Router is 10.2.0.1 (local), priority is 100
         # Master Router is FE80::2A3:D1FF:FE45:BEC5 (local), priority is 150
+        # Master Router is 173.29.2.6, priority is 85
         p16 = re.compile(
-            r'^Master +Router +is (?P<mast_ip_addr>[\w,\.\:]+) \((?P<server>\S+)\), +priority +is (?P<digit>\d+)$')
+            r'^Master +Router +is (?P<mast_ip_addr>[\w\.\:]+)+(,| )( |\((?P<server>\S+)\), )priority +is (?P<digit>\d+)$')
 
         # Master Advertisement interval is 3.000 sec
         # Master Advertisement interval is 1000 msec (expires in 46 msec)
+        # Master Advertisement interval is 1000 msec (learned)
         p17 = re.compile(
-            r'^Master +Advertisement +interval +is (?P<mast_adv_interval>[\d,\.]+) +(?P<interval_unit>\w+)(\s+\(expires\s+in\s+(?P<expiration>[\d\.]+)\s+(?P<expiration_unit>\w+)\))?$')
+            r'^Master +Advertisement +interval +is (?P<mast_adv_interval>[\d,\.]+) +(?P<interval_unit>\w+)(\s+\(expires\s+in\s+(?P<expiration>[\d\.]+)\s+(?P<expiration_unit>\w+)\))?')
 
         # Master Advertisement interval is unknown
         p17_2 = re.compile(
@@ -226,8 +232,9 @@ class ShowVrrp(ShowVrrpSchema):
 
         # Master Down interval is 9.609 sec
         # Master Down interval is unknown
+        # Master Down interval is 3726 msec (expires in 3326 msec) 
         p18 = re.compile(
-            r'^Master +Down +interval +is (?P<mast_down_interval>[\w,\.]+)( +sec)?$')
+            r'^Master +Down +interval +is (?P<mast_down_interval>([\w,\.]+))(?P<interval_unit>( +sec)?$|( +msec)?)(\s+\(expires\s+in\s+(?P<expiration>[\d\.]+)\s+(?P<expiration_unit>\w+)\))?$')
 
         # Master Router is 192.168.1.233, priority is 120
         # Master Router is FE80::2A3:D1FF:FE45:BEC5, priority is 150
@@ -272,6 +279,8 @@ class ShowVrrp(ShowVrrpSchema):
                 continue
 
             # State is Master
+            # State is INIT (No layer3 interface address)
+            # State is BACKUP
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -283,7 +292,7 @@ class ShowVrrp(ShowVrrpSchema):
             if m:
                 group = m.groupdict()
                 dur_dict = vrrp_dict.setdefault('state_duration', {})
-                dur_dict.update({'minutes': int(group['minutes']), 
+                dur_dict.update({'minutes': int(group['minutes']) if group['minutes'] else 0, 
                                  'seconds': float(group['seconds'])})
                 continue
 
@@ -399,18 +408,22 @@ class ShowVrrp(ShowVrrpSchema):
                 continue
 
             # Master Router is 10.2.0.1 (local), priority is 100
+            # Master Router is FE80::2A3:D1FF:FE45:BEC5 (local), priority is 150
+            # Master Router is 173.29.2.6, priority is 85
             m = p16.match(line)
             if m:
                 group = m.groupdict()
                 vrrp_dict.update(
                     {'master_router_ip': str(group['mast_ip_addr'])})
-                vrrp_dict.update({'master_router': str(group['server'])})
+                if group['server'] is not None:
+                   vrrp_dict.update({'master_router': str(group['server'])})
                 vrrp_dict.update(
                     {'master_router_priority': int(group['digit'])})
                 continue
 
             # Master Advertisement interval is 3.000 sec
             # Master Advertisement interval is 1000 msec (expires in 46 msec)
+            # Master Advertisement interval is 1000 msec (learned)
             m = p17.match(line)
             if m:
                 group = m.groupdict()
@@ -441,15 +454,24 @@ class ShowVrrp(ShowVrrpSchema):
 
             # Master Down interval is 9.609 sec
             # Master Down interval is unknown
+            # Master Down interval is 3726 msec (expires in 3326 msec)
             m = p18.match(line)
             if m:
                 group = m.groupdict()
                 try:
-                    vrrp_dict.update({'master_down_interval_secs':
-                                      float(group['mast_down_interval'])})
+                   vrrp_dict.update({'master_down_interval_secs':
+                                   float(group['mast_down_interval'])})
                 except ValueError:
-                    vrrp_dict.update({'master_down_interval_secs':
-                                      group['mast_down_interval']})
+                   vrrp_dict.update({'master_down_interval_secs':
+                                   group['mast_down_interval']})
+                                         
+                if group['expiration_unit']:
+                   if group['expiration_unit'] == 'msec':
+                      seconds = float(group['expiration']) / 1000
+                   else:
+                      seconds = float(group['expiration'])
+                   vrrp_dict.update({'master_down_expiration_secs': 
+                                        seconds})
                 continue
 
             # Master Router is 192.168.1.233, priority is 120
@@ -490,7 +512,6 @@ class ShowVrrp(ShowVrrpSchema):
                 continue
 
         return result_dict
-
 
 # ==========================
 # Parser for:
@@ -542,8 +563,10 @@ class ShowVrrpBriefSchema(MetaParser):
             Any(): {
                 'group': {
                     Any(): {
+                        Optional('version'):str,
                         'pri': int,
                         'time': int,
+                        Optional('own'):str,
                         'pre': str,
                         'state': str,
                         'master_addr': str,
@@ -586,6 +609,11 @@ class ShowVrrpBrief(ShowVrrpBriefSchema):
             r'\s+(?P<pri>\d+)\s+(?P<time>\d+)\s+(?P<pre>\w)\s+'
             r'(?P<state>\w+)\s+(?P<master_addr>[\d\.]+)\s+'
             r'(?P<group_addr>[\d\.]+)')
+        #Interface          Grp  A-F Pri  Time Own Pre State   Master addr   Group addr
+        #Vl10                 1 IPv4 150     0  N   Y  MASTER  10.1.0.1(local) 10.1.0.3
+        p1_1 = re.compile(
+        r'^(?P<interface_name>\S+)\s+(?P<grp>\d+)\s+(?P<version>\w+)\s+(?P<pri>\d+)\s+(?P<time>\d+)\s+(?P<own>\w+)'
+        r'\s+(?P<pre>\w+)\s+(?P<state>\w+)\s+(?P<master_addr>[\w\S:.]*)\s+(?P<group_addr>[\w:.]+)$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -611,8 +639,29 @@ class ShowVrrpBrief(ShowVrrpBriefSchema):
                 interface_dict['group_addr'] =  group['group_addr']
                 continue
 
-        return parsed_dict
+            #Vl10                 1 IPv4 150     0  N   Y  MASTER  10.1.0.1(local) 10.1.0.3
+            m = p1_1.match(line)
+            if m:
+                group = m.groupdict()
+                interface_name = \
+                    Common.convert_intf_name(group['interface_name'])
+                group_id =  int(group['grp'])
+                
+                interface_dict = parsed_dict.setdefault('interface', {})\
+                    .setdefault(interface_name, {})\
+                    .setdefault('group', {})\
+                    .setdefault(group_id, {})
+                interface_dict['version'] =  group['version']
+                interface_dict['pri'] =  int(group['pri'])
+                interface_dict['time'] =  int(group['time'])
+                interface_dict['own']  = group['own']
+                interface_dict['pre'] =  group['pre']
+                interface_dict['state'] =  group['state']
+                interface_dict['master_addr'] =  group['master_addr']
+                interface_dict['group_addr'] =  group['group_addr']
+                continue
 
+        return parsed_dict
 
 # ================================
 # Parser for 'show vrrp brief all'

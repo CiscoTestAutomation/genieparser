@@ -1,0 +1,15 @@
+GigabitEthernet0/0/3.129 - Group 4 - Address-Family IPv4
+  State is BACKUP
+  State duration 2 weeks 2 days 14 hours
+  Virtual IP address is 173.29.2.200
+  Virtual MAC address is 0000.5E00.0104
+  Advertisement interval is 1000 msec
+  Preemption enabled
+  Priority is 70 (Configured 90)
+  State change reason is VRRP_PREEMPT
+  Tloc preference not configured, value 0
+    Track object 55 state DOWN decrement 20
+  Master Router is 173.29.2.6, priority is 85
+  Master Advertisement interval is 1000 msec (learned)
+  Master Down interval is 3726 msec (expires in 3326 msec)
+  FLAGS: 0/1

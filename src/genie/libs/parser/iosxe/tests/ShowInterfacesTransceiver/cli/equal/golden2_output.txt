@@ -1,0 +1,12 @@
+ITU Channel not available (Wavelength not available),
+Transceiver is internally calibrated.
+If device is externally calibrated, only calibrated values are printed.
+++ : high alarm, +  : high warning, -  : low warning, -- : low alarm.
+NA or N/A: not applicable, Tx: transmit, Rx: receive.
+mA: milliamperes, dBm: decibels (milliwatts).
+
+                                             Optical   Optical
+             Temperature  Voltage  Current   Tx Power  Rx Power  Max Power
+Port         (Celsius)    (Volts)  (mA)      (dBm)     (dBm)      (Watts)
+---------    -----------  -------  --------  --------  --------  --------
+Te1/1/1      37.3       3.30       4.2      -5.7     -40.0       0.0 W

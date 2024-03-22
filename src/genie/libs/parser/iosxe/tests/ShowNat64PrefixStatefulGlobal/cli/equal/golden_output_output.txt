@@ -1,0 +1,6 @@
+Global Stateful Prefix: is valid, 2001:1::/96
+
+IFs Using Global Prefix
+
+   Twe1/0/19
+   Twe2/0/9

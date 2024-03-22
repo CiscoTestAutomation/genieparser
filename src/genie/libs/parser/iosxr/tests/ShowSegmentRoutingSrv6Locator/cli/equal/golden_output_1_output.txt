@@ -1,0 +1,7 @@
+show segment-routing srv6 locator
+Tue Jul  4 10:24:03.066 UTC
+Name                  ID       Algo  Prefix                    Status   Flags   
+--------------------  -------  ----  ------------------------  -------  --------
+LL                    1        128   fc00:c001:1001::/48       Up       U       
+MAIN                  2        0     fc00:c000:1001::/48       Up       U       
+RP/0/RSP0/CPU0:A-AN1#

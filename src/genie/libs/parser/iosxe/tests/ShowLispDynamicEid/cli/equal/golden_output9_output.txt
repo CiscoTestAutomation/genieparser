@@ -1,0 +1,18 @@
+202-xTR1#show lisp instance-id 4100 dynamic-eid
+LISP Dynamic EID Information for router 0, IID 4100, EID-table VRF "red"
+
+Dynamic-EID name: 2001_192_168_1
+  Database-mapping EID-prefix: A1:192:168:1::/64, locator-set RLOC
+  Registering more-specific dynamic-EIDs
+  Map-Server(s): none configured, use global Map-Server
+  Site-based multicast Map-Notify group: none configured
+  Number of roaming dynamic-EIDs discovered: 2
+  Last dynamic-EID discovered: A1:192:168:1::1, 1d22h ago
+
+Dynamic-EID name: test
+  Database-mapping EID-prefix: A1:1:1:0::/48, locator-set RLOC
+  Registering more-specific dynamic-EIDs
+  Map-Server(s): 1:1:1:1::
+  Map-Server(s): 2:2:2:2::
+  Site-based multicast Map-Notify group: none configured
+  Number of roaming dynamic-EIDs discovered: 0

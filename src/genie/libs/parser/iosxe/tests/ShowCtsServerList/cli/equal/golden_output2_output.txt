@@ -1,0 +1,8 @@
+CTS Server Radius Load Balance = ENABLED
+Method = least-outstanding
+Batch size = 50
+Ignore preferred server
+Server Group Deadtime = 20 secs (default)
+Global Server Liveness Automated Test Deadtime = 20 secs
+Global Server Liveness Automated Test Idle Time = 60 mins
+Global Server Liveness Automated Test = ENABLED (default)

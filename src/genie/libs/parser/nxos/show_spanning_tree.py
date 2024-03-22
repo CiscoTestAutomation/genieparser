@@ -44,17 +44,17 @@ class ShowSpanningTreeMstSchema(MetaParser):
                             'port_priority' : int,
                             'port_id': str,
                             'port_state' : str,
-                            'bridge_assurance_inconsistent': bool,
-                            'vpc_peer_link_inconsistent' : bool,
+                            Optional('bridge_assurance_inconsistent'): bool,
+                            Optional('vpc_peer_link_inconsistent'): bool,
                             'designated_root_priority': int,
                             'designated_root_address': str,
                             'designated_root_cost': int,
                             'designated_bridge_priority': int,
                             'designated_bridge_address': str,
                             'designated_bridge_port_id': str,
-                            'designated_regional_root_cost': int,
-                            'designated_regional_root_priority': int,
-                            'designated_regional_root_address': str,
+                            Optional('designated_regional_root_cost'): int,
+                            Optional('designated_regional_root_priority'): int,
+                            Optional('designated_regional_root_address'): str,
                             Optional('broken_reason'): str,
                             Optional('designated_port_num'): str,
                             Optional('timers') :{
@@ -97,7 +97,7 @@ class ShowSpanningTreeMst(ShowSpanningTreeMstSchema):
 
         ret_dict = {}
         p1_1 = re.compile(r'^##### MST(?P<mst_id>\d+) +\s+vlans\s+mapped: '
-                          r'+\s+(?P<vlan>\w+\-\w+,\w+\-\w+)$')
+                          r'+\s+(?P<vlan>[\w+\-\w+,]{1,})$')
             
         p2_1 = re.compile(r'^Bridge +\saddress\s+(?P<b_address>\w+\.\w+.\w+)'
                           r' +\spriority +\s(?P<b_priority>\d+)\s+\(\d+\s+sysid'
@@ -112,9 +112,9 @@ class ShowSpanningTreeMst(ShowSpanningTreeMstSchema):
                           r'(?P<forward_delay>\d+),\s+max\s+age\s+(?P<max_age>\d+), '
                           r'((txholdcount|max hops))\ *\s(?P<holdcount_or_maxhops>\d+)$')
 
-        p5_1 = re.compile(r'^(?P<port_channel>\w+)\sof\s+\w+\s+is\s+(?P<port_state>\w+)\s+'
-                          r'\(Bridge Assurance\s+(?P<bridge_assurance_inconsistent>\w+), '
-                          r'VPC Peer-link\s+(?P<vpc_peer_link_inconsistent>\w+)$')
+        p5_1 = re.compile(r'^(?P<interface_name>\w+[\/\w+]{0,})\sof\s+\w+\s+is\s+(?P<port_state>\w+'
+                          r'(\s\w+)?)(\s+\(Bridge Assurance\s+(?P<bridge_assurance_inconsistent>\w+), '
+                          r'VPC Peer-link\s+(?P<vpc_peer_link_inconsistent>\w+)\)?)?$')
 
         p6_1 = re.compile(r'^Port\s+info +\sport\s+id +\s(?P<port_id>\d+\.*\d+)'
                           r' +\spriority +\s(?P<port_priority>\d+)'
@@ -191,18 +191,20 @@ class ShowSpanningTreeMst(ShowSpanningTreeMstSchema):
                 continue
 
             # Po30 of MST0 is broken (Bridge Assurance Inconsistent, VPC Peer-link Inconsistent)str
+            # Po1 of MST0 is designated forwarding
+            # Eth1/1 of MST0 is designated forwarding
             m = p5_1.match(line)
             if m:
-                intf = Common.convert_intf_name(m.groupdict()['port_channel'])
+                intf = Common.convert_intf_name(m.groupdict()['interface_name'])
                 intf_dict = instances_dict.setdefault('interfaces', {}).setdefault(intf, {})
                 intf_dict['name'] = intf
                 intf_dict['port_state'] = m.groupdict()['port_state']
-
-                bridge_consistency = True if 'inconsistent' in m.groupdict()['bridge_assurance_inconsistent'].lower() else False
-                intf_dict['bridge_assurance_inconsistent'] = bridge_consistency
-                bridge_consistency = True if 'inconsisten' in m.groupdict()['vpc_peer_link_inconsistent'].lower() else False
-                intf_dict['vpc_peer_link_inconsistent'] = bridge_consistency
-
+                if m.groupdict()['bridge_assurance_inconsistent']:
+                    bridge_consistency = True if 'inconsistent' in m.groupdict()['bridge_assurance_inconsistent'].lower() else False
+                    intf_dict['bridge_assurance_inconsistent'] = bridge_consistency
+                    bridge_consistency = True if 'inconsisten' in m.groupdict()['vpc_peer_link_inconsistent'].lower() else False
+                    intf_dict['vpc_peer_link_inconsistent'] = bridge_consistency
+                   
                 continue
 
             # Port info             port id       128.4125  priority    128  cost   500      

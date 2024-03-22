@@ -1,0 +1,60 @@
+Group Member Information : 
+
+Group Name: bw6000, ID: 6000, Group Members: 2
+Key Server ID: 15.15.15.1, GMDB state: LOCAL, Group Members: 1
+  Member ID     Version      Rekey sent     Rekey Ack missed
+  44.44.44.1   1.0.25         0               0
+
+Key Server ID: 16.16.16.1, GMDB state: REDUNDANT, Group Members: 1
+  Member ID     Version      Rekey sent     Rekey Ack missed
+  54.54.54.1   1.0.25         0               0
+
+
+Group Name: bw600-IPV6, ID: 6600, Group Members: 2
+Key Server ID: 15.15.15.1, GMDB state: LOCAL, Group Members: 1
+  Member ID     Version      Rekey sent     Rekey Ack missed
+  41.41.41.1   1.0.25         0               0
+
+Key Server ID: 16.16.16.1, GMDB state: REDUNDANT, Group Members: 1
+  Member ID     Version      Rekey sent     Rekey Ack missed
+  51.51.51.1   1.0.25         0               0
+
+
+Group Name: bw6000_eft, ID: 1122, Group Members: 2
+Key Server ID: 15.15.15.1, GMDB state: LOCAL, Group Members: 1
+  Member ID     Version      Rekey sent     Rekey Ack missed
+  45.45.45.1   1.0.25         0               0
+
+Key Server ID: 16.16.16.1, GMDB state: REDUNDANT, Group Members: 1
+  Member ID     Version      Rekey sent     Rekey Ack missed
+  55.55.55.1   1.0.25         0               0
+
+
+Group Name: bw600-IPV6_eft, ID: 2233, Group Members: 2
+Key Server ID: 15.15.15.1, GMDB state: LOCAL, Group Members: 1
+  Member ID     Version      Rekey sent     Rekey Ack missed
+  43.43.43.1   1.0.25         0               0
+
+Key Server ID: 16.16.16.1, GMDB state: REDUNDANT, Group Members: 1
+  Member ID     Version      Rekey sent     Rekey Ack missed
+  53.53.53.1   1.0.25         0               0
+
+
+Group Name: bw-suiteB, ID: 2001, Group Members: 2
+Key Server ID: 15.15.15.1, GMDB state: LOCAL, Group Members: 1
+  Member ID     Version      Rekey sent     Rekey Ack missed
+  46.46.46.1   1.0.25         0               0
+
+Key Server ID: 16.16.16.1, GMDB state: REDUNDANT, Group Members: 1
+  Member ID     Version      Rekey sent     Rekey Ack missed
+  56.56.56.1   1.0.25         0               0
+
+
+Group Name: bw-suiteB-v6, ID: 2002, Group Members: 2
+Key Server ID: 15.15.15.1, GMDB state: LOCAL, Group Members: 1
+  Member ID     Version      Rekey sent     Rekey Ack missed
+  42.42.42.1   1.0.25         0               0
+
+Key Server ID: 16.16.16.1, GMDB state: REDUNDANT, Group Members: 1
+  Member ID     Version      Rekey sent     Rekey Ack missed
+  52.52.52.1   1.0.25         0               0

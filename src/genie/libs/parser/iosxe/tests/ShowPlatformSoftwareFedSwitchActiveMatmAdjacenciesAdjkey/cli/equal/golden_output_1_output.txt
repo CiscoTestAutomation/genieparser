@@ -1,0 +1,61 @@
+ADJ_ID      IF_NUMBER  VNI        Len    Vlan   Encap  Link   Source IP         Dest IP           siHandle             riHandle             l3mriHandle      diHandle             Obj_type   
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+3849        0x420065   200199     60     99     VXLAN  V4     172.11.1.1        172.11.1.22       0x7f95815d74d8       0x7f95815a4528       0x0              0x0                  UC         
+
+Created Time       : 2023/01/24 05:25:43.658
+Last Modified Time : 2023/01/24 05:25:43.658
+Current Time       : 2023/01/24 07:52:27.709
+
+RI Details:
+----------
+Handle:0x7f95815a4528 Res-Type:ASIC_RSC_RI Res-Switch-Num:255 Asic-Num:255 Feature-ID:AL_FID_L2_WIRELESS Lkp-ftr-id:LKP_FEAT_INVALID ref_count:1
+priv_ri/priv_si Handle:0x7f9581656048 Hardware Indices/Handles: index0:0xe2  mtu_index/l3u_ri_index0:0x0  index1:0xe2  mtu_index/l3u_ri_index1:0x0 
+Features sharing this resource:58 (1), 
+Cookie length: 56
+00 00 00 00 00 00 00 00 63 00 00 00 00 00 00 00 00 00 00 00 07 00 09 0f 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+
+Detailed Resource Information (ASIC_INSTANCE# 0)
+----------------------------------------
+ASIC#:0 RI:226 Rewrite_type:AL_RRM_REWRITE_LVX_IPV4_L2_PAYLOAD_ENCAP_EPG(116) Mapped_rii:LVX_L3_ENCAP_L2_PAYLOAD_EPG(135)
+ Src IP:	 172.11.1.1
+ Dst IP:	 172.11.1.22
+ iVxlan dstMac:	 0x9f:0x00:0x00
+ iVxlan srcMac:	 0x00:0x00:0x00
+ IPv4 TTL:	 0
+ iid present:	 0
+ lisp iid:	 200199
+ lisp flags:	 0
+ dst Port:	 4789
+ update only l3if:	 0
+ is Sgt:         0
+ is TTL Prop:	 0
+ L3if LE:	 126 (0)
+ Port LE:	 318 (0)
+ Vlan LE:	 68 (0)
+
+
+Detailed Resource Information (ASIC_INSTANCE# 1)
+----------------------------------------
+ASIC#:1 RI:226 Rewrite_type:AL_RRM_REWRITE_LVX_IPV4_L2_PAYLOAD_ENCAP_EPG(116) Mapped_rii:LVX_L3_ENCAP_L2_PAYLOAD_EPG(135)
+ Src IP:	 172.11.1.1
+ Dst IP:	 172.11.1.22
+ iVxlan dstMac:	 0x9f:0x00:0x00
+ iVxlan srcMac:	 0x00:0x00:0x00
+ IPv4 TTL:	 0
+ iid present:	 0
+ lisp iid:	 200199
+ lisp flags:	 0
+ dst Port:	 4789
+ update only l3if:	 0
+ is Sgt:	 0
+ is TTL Prop:	 0
+ L3if LE:	 126 (0)
+ Port LE:	 318 (0)
+ Vlan LE:	 68 (0)
+
+
+==============================================================
+
+          
+l3mri Details:
+--------------

@@ -1,0 +1,12 @@
+===================================
+AUDIT LOG ON chassis 1 route-processor 0
+-----------------------------------
+AVC Denial count: 82
+===================================
+AUDIT LOG ON chassis 2 route-processor 0
+-----------------------------------
+AVC Denial count: 40
+===================================
+AUDIT LOG ON chassis 3 route-processor 0
+-----------------------------------
+AVC Denial count: 24

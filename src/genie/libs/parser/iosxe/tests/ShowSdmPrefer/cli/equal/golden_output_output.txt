@@ -1,0 +1,46 @@
+Showing SDM Template Info
+
+This is the Custom template.
+  Security Ingress IPv4 Access Control Entries*:       7168   (current) - 7168   (proposed)
+  Security Ingress Non-IPv4 Access Control Entries*:   5120   (current) - 5120   (proposed)
+  Security Egress IPv4 Access Control Entries*:        7168   (current) - 7168   (proposed)
+  Security Egress Non-IPv4 Access Control Entries*:    8192   (current) - 8192   (proposed)
+  QoS Ingress IPv4 Access Control Entries*:            5632   (current) - 5632   (proposed)
+  QoS Ingress Non-IPv4 Access Control Entries*:        2560   (current) - 2560   (proposed)
+  QoS Egress IPv4 Access Control Entries*:             6144   (current) - 6144   (proposed)
+  QoS Egress Non-IPv4 Access Control Entries*:         2048   (current) - 2048   (proposed)
+  Netflow Input Access Control Entries*:               512    (current) - 512    (proposed)
+  Netflow Output Access Control Entries*:              512    (current) - 512    (proposed)
+  Flow SPAN Input Access Control Entries*:             512    (current) - 512    (proposed)
+  Flow SPAN Output Access Control Entries*:            512    (current) - 512    (proposed)
+  Number of VLANs:                                     4094
+  Unicast MAC addresses*:                              98304
+  Overflow Unicast MAC addresses*:                     768
+  Overflow L2 Multicast entries*:                      2048
+  L3 Multicast entries*:                               16384
+  Overflow L3 Multicast entries*:                      768
+  Ipv4/Ipv6 shared unicast routes*:                    81920
+  Overflow shared unicast routes*:                     1536
+  Policy Based Routing ACEs / NAT ACEs*:               3072
+  Tunnels*:                                            2816
+  LISP Instance Mapping Entries*:                      2048
+  Control Plane Entries*:                              512
+  Input Netflow flows*:                                49152
+  Output Netflow flows*:                               49152
+  SGT/DGT (or) MPLS VPN entries*:                      32768
+  SGT/DGT (or) MPLS VPN Overflow entries*:             768
+  Wired clients:                                       2048
+  MACSec SPD Entries*:                                 256
+  VRF:                                                 1024
+  MPLS Labels:                                         45056
+  MPLS L3 VPN Routes VRF Mode*:                        81920
+  MPLS L3 VPN Routes Prefix Mode*:                     32768
+  MVPN MDT Tunnels:                                    1024
+  L2 VPN EOMPLS Attachment Circuit:                    1024
+  MAX VPLS Bridge Domains :                            1000
+  MAX VPLS Peers Per Bridge Domain:                    128
+  MAX VPLS/VPWS Pseudowires :                          16384
+  VLAN Filter Entries:                                 16384
+
+  Ipv4/Ipv6 Direct and Indirect unicast routes share same space
+  (*) values can be modified by sdm cli

@@ -1,0 +1,4 @@
+
+Stack Ring Speed        : 240G
+Stack Ring Configuration: Half
+Stack Ring Protocol     : StackWise

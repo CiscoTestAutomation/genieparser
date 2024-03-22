@@ -10,6 +10,7 @@ expected_output = {
             "num_of_pf_jumbo_supported_members": 2,
         },
         "enabled": True,
+        "is_deleted": False,
         "line_protocol": "up",
         "oper_status": "up",
         "type": "GEChannel",
@@ -78,5 +79,6 @@ expected_output = {
             "out_buffer_failure": 0,
             "out_buffers_swapped": 0,
         },
+        "carrier_transitions": 0,
     }
 }

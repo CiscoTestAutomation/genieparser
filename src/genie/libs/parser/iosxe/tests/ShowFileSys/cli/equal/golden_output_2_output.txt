@@ -1,0 +1,4 @@
+Filesystem: flash
+Filesystem Path: /mnt/sd3/user
+Filesystem Type: ext2
+Mounted: Read/Write

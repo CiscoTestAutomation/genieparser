@@ -1,0 +1,22 @@
+VTEP1#sh nve vni 30000 detail
+Interface  VNI        Multicast-group  VNI state  Mode  VLAN  cfg vrf
+nve1       30000      N/A              Up         L3CP  3     CLI red
+
+L3CP VNI IRB state: IPv4 up, IPv6 up
+
+L3CP VNI TRM state: IPv4 down, IPv6 down
+
+L3CP VNI local VTEP info:
+VRF name: red
+VLAN: 3
+V4TopoID: 0x3
+V6TopoID: 0x1E000003
+Local VTEP: 1.1.1.2
+SVI if handler: 0x2E
+SVI MAC: 6C8B.D36D.471F
+IPv4 TRM mdt group: N/A
+IPv6 TRM mdt group: N/A
+
+VNI Detailed statistics:
+   Pkts In   Bytes In   Pkts Out  Bytes Out
+         0          0          0          0

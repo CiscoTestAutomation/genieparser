@@ -1,0 +1,3 @@
+PI-9300-Stack-102#show exception
+!!!Patched Version!!!
+show exception not implemented

@@ -57,7 +57,6 @@ class ShowIox(ShowIoxSchema):
     cli_command = 'show iox-service'    
 
     def cli(self, output=None):
-        #print("DEBUG: cli")
         if output is None:
             out = self.device.execute(self.cli_command)
         else:

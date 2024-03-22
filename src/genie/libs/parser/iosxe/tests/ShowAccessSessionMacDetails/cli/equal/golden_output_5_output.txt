@@ -1,0 +1,25 @@
+show access-session mac 000c.2911.69b9 details
+            Interface:  GigabitEthernet2/0/24
+               IIF-ID:  0x3C9B9200
+          MAC Address:  000c.2911.69b9
+         IPv6 Address:  Unknown
+         IPv4 Address:  101.1.0.2
+            User-Name:  webauth_user1
+               Status:  Authorized
+               Domain:  DATA
+       Oper host mode:  single-host
+     Oper control dir:  both
+      Session timeout:  N/A
+    Common Session ID:  910C140B00000017F40DA338
+      Acct Session ID:  0x00000003
+               Handle:  0xf700000d
+       Current Policy:  Webauth
+
+
+Server Policies:
+              ACS ACL: xACSACLx-IP-Webauth_ACL-64cbe188
+
+
+Method status list:
+       Method           State
+      webauth           Authc Success

@@ -1,0 +1,73 @@
+Codes: T - Transport, O - Overlay, EP - End Point
+       TP - Tunnel Protection, VA - Virtual Access
+       [S] - Sent from NHRP, [R] - Received by NHRP
+       [number] - Error associated with an event
+Tunnel100
+
+ Interface State Event Stats:
+        [R]UP                         : 2[0]    [R]Down                       : 0[0]
+        [R]Deleted                    : 0[0]
+
+ Tunnel Stats:
+        [S]End Point Addition         : 252[0]  [S]End Point Deletion         : 152[0]
+
+ Tunnel Protection Stats:
+        [S]Create TP socket           : 0[0]    [S]Del TP socket              : 0[0]
+        [S]Create VA                  : 0[0]    [S]Del VA                     : 0[0]
+        [R]UP                         : 42[0]   [R]Down                       : 19[0]
+        [S]Reset Socket               : 0[0]
+
+ Tunnel QoS Stats:
+        [S]QoS APPLY                  : 0[0]    [S]QoS Remove                 : 0[0]
+
+ RIB Events Stats:
+        [S]Add Route                  : 76[0]   [S]Del Route                  : 76[0]
+        [S]Add NHO                    : 0[0]    [S]Del NHO                    : 0[0]
+        [S]Rwatch w/o route           : 0[0]    [R]Route Evicted              : 0[0]
+
+ MPLS Stats:
+        [S]Label Alloc                : 0[0]    [S]Label Release              : 0[0]
+        [S]MPLS IP Key Bind           : 0[0]    [S]MPLS VPN Key Bind          : 0[0]
+
+ BFD Stats:
+        [S]Client Create              : 0[0]    [S]Client Destroy             : 0[0]
+        [R]Session Down               : 0[0]    [R]Session Up                 : 0[0]
+
+ BGP Stats:
+        [S]Route Export               : 0[0]    [S]Route Withdrawal           : 0[0]
+        [S]Route Import               : 0[0]    [R]Imported Route Changed     : 0[0]
+
+Tunnel111
+
+ Interface State Event Stats:
+        [R]UP                         : 3[0]    [R]Down                       : 4[0]
+        [R]Deleted                    : 0[0]
+
+ Tunnel Stats:
+        [S]End Point Addition         : 8[0]    [S]End Point Deletion         : 2[0]
+
+ Tunnel Protection Stats:
+        [S]Create TP socket           : 0[0]    [S]Del TP socket              : 0[0]
+        [S]Create VA                  : 0[0]    [S]Del VA                     : 0[0]
+        [R]UP                         : 0[0]    [R]Down                       : 0[0]
+        [S]Reset Socket               : 0[0]
+
+ Tunnel QoS Stats:
+        [S]QoS APPLY                  : 0[0]    [S]QoS Remove                 : 0[0]
+
+ RIB Events Stats:
+        [S]Add Route                  : 0[0]    [S]Del Route                  : 0[0]
+        [S]Add NHO                    : 0[0]    [S]Del NHO                    : 0[0]
+        [S]Rwatch w/o route           : 0[0]    [R]Route Evicted              : 0[0]
+
+ MPLS Stats:
+        [S]Label Alloc                : 0[0]    [S]Label Release              : 0[0]
+        [S]MPLS IP Key Bind           : 0[0]    [S]MPLS VPN Key Bind          : 0[0]
+
+ BFD Stats:
+        [S]Client Create              : 0[0]    [S]Client Destroy             : 0[0]
+        [R]Session Down               : 0[0]    [R]Session Up                 : 0[0]
+
+ BGP Stats:
+        [S]Route Export               : 0[0]    [S]Route Withdrawal           : 0[0]
+        [S]Route Import               : 0[0]    [R]Imported Route Changed     : 0[0]

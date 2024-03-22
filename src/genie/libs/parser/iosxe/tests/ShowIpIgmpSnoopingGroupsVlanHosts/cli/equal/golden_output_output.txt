@@ -1,0 +1,6 @@
+227.1.1.1 host information for group IGMPv3
+Timers: Expired hosts are deleted on next IGMP General Query
+
+Host (MAC/IP)  Filter mode    Expires   Uptime    # Sources 
+-------------------------------------------------------------
+20.0.101.3     INCLUDE        stopped   00:00:50       1         

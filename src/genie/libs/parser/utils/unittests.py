@@ -13,6 +13,7 @@ import argparse
 import traceback
 import importlib
 from unittest.mock import Mock
+import importlib.util as _importlib_util
 
 # pyATS
 from pyats import aetest
@@ -59,9 +60,13 @@ def read_json_file(file_path):
 
 def read_python_file(file_path):
     """Helper function to read in a Python file, and look for expected_output."""
-    _module = importlib.machinery.SourceFileLoader("expected",
-                                                   file_path).load_module()
-    return getattr(_module, "expected_output")
+    # TODO: replace with AST implementation
+    module_name = pathlib.Path(file_path).stem
+    spec = _importlib_util.spec_from_file_location(module_name, file_path)
+    module = _importlib_util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+
+    return getattr(module, "expected_output")
 
 
 def get_operating_systems(_os):

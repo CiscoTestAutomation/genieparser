@@ -128,7 +128,7 @@ class ShowStaticTopologyDetail(ShowStaticTopologyDetailSchema):
         # Prefix/Len          Interface                Nexthop             Object         Explicit-path       Metrics          Local-Label
         # 172.16.0.89/32      TenGigE0_0_1_2           None                None          None                [0/4096/1/0/1]    No label    Path is configured at Sep 11 08:29:25.605
         # 10.00.00.0/00       Bundle-Ether2.25         10.01.02.03         None                None                [0/0/1/0/1]
-        p2 = re.compile(r'^(?P<route>[a-fA-F\d\/\.\:]+)? '
+        p2 = re.compile(r'^(?P<route>([\s]+)?|([a-fA-F\d\/\.\:]+)?) '
                         r'*(?P<interface>[a-zA-Z][\w\/\.-]+) '
                         r'+(?P<nexthop>[\w\/\.\:]+) +(?P<object>[\w]+) '
                         r'+(?P<explicit_path>[\w]+) +(?P<metrics>[\w\/\[\]]+)'

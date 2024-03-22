@@ -120,7 +120,8 @@ class ShowSystemIntegrityAllMeasurementNonce(ShowSystemIntegrityAllMeasurementNo
         p4 = re.compile(r"^Version: +(?P<version>.*\_\S+)$")
         # cat9k_iosxe.BLD_POLARIS_DEV_LATEST_20220313_143357.SSA.bin: 452997E880E6CEF
         # cat9k-wlc.BLD_POLARIS_DEV_LATEST_20220313_143357.SSA.pkg: 9456F1B1CFB3A25C9
-        p5 = re.compile("^(?P<hashes>(.*SSA.bin)|(.*SSA.pkg))\:\s(?P<value>\S+)$")
+        # cat9k_iosxe.BLD_POLARIS_DEV_LATEST_20220313_143357.0.NODEFECT.SSA.smu.bin: 9D7CC2C73A688FAF294C4BB90CAA6FDB26B9B
+        p5 = re.compile("^(?P<hashes>(.*bin)|(.*pkg))\:\s(?P<value>\S+)$")
         # PCR0: 6DEC62AF32505978BD553E7
         p6 = re.compile("^PCR0: +(?P<pcr0>([0-9A-F])+)$")
         # PCR8: 6DEC62AF32505978BD553E7

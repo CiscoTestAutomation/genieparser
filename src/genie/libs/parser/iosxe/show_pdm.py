@@ -53,7 +53,9 @@ class ShowPdmSteeringPolicy(ShowPdmSteeringPolicySchema):
         pdm_dict = {}
 
         # Steering Policy Contract2-01
-        p1 = re.compile(r"^Steering\s+Policy\s*(?P<contract>[\w]+)-[\w]+$")
+        # Steering Policy Contract2_01
+        p1 = re.compile(r"^Steering\s+Policy\s*(?P<contract>\S+)")
+        
         #     1 redirect protocol 6 src-port any dst-port eq 15000 service \
         #        service_INFRA_VN (0 match)
         p2 = re.compile(r"^(?P<s_no>[\d]+)\s*redirect protocol\s*"\

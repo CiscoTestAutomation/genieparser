@@ -1,0 +1,2 @@
+Site6-cEdge1#sh platform hardware throughput level
+The current throughput level is unthrottled

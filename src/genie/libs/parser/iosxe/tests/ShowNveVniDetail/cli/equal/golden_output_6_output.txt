@@ -1,0 +1,28 @@
+VTEP1#sh nve vni 20011 detail
+Interface  VNI        Multicast-group  VNI state  Mode  VLAN  cfg vrf
+nve1       20011      227.0.0.11       Down       L2CP  11    CLI red
+
+VNI down reason:
+MCAST IPv6 group doesn't exist
+
+L2CP VNI local VTEP info:
+VLAN: 11
+SVI if handler: 0x2F
+Local VTEP: ABCD:1::2 1.1.1.2
+Local routing: Disabled
+
+Core IRB info:
+L3VNI: 30000
+VRF name: red
+VLAN: 3
+V4TopoID: 0x3
+V6TopoID: 0x1E000003
+Local VTEP: ABCD:1::2 1.1.1.2
+SVI if handler: 0x2E
+SVI MAC: 6C8B.D36D.471F
+IPv4 TRM mdt group: N/A
+IPv6 TRM mdt group: N/A
+
+VNI Detailed statistics:
+   Pkts In   Bytes In   Pkts Out  Bytes Out
+       830     104580          5        800

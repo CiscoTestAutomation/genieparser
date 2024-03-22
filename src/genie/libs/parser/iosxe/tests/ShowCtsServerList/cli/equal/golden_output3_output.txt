@@ -1,0 +1,10 @@
+CTS Server Radius Load Balance = DISABLED
+Server Group Deadtime = 20 secs (default)
+Global Server Liveness Automated Test Deadtime = 20 secs
+Global Server Liveness Automated Test Idle Time = 60 mins
+Global Server Liveness Automated Test = ENABLED (default)
+
+Installed list: CTSServerList1-0001, 1 server(s):
+ *Server: 10.104.187.183, port 1812, A-ID 3CB545021D06087F9580164F589F76DB
+          Status = DEAD
+          auto-test = TRUE, keywrap-enable = FALSE, idle-time = 60 mins, deadtime = 20 secs

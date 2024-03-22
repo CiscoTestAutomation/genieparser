@@ -1,0 +1,106 @@
+expected_output = {
+   "switch_id":{
+      "1":{
+         "fan":{
+            "1":{
+               "switch":1,
+               "speed":14240,
+               "state":"OK",
+               "airflow_direction":"Front to Back"
+            },
+            "2":{
+               "switch":1,
+               "speed":14240,
+               "state":"OK",
+               "airflow_direction":"Front to Back"
+            },
+            "3":{
+               "switch":1,
+               "speed":14240,
+               "state":"OK",
+               "airflow_direction":"Front to Back"
+            }
+         },
+         "fan_name":{
+            "PS-1":{
+               "status":"NOT PRESENT"
+            },
+            "PS-2":{
+               "status":"OK"
+            }
+         },
+         "system_temperature":"OK",
+         "type":{
+            "Inlet":{
+               "temperature_value_Cel":37,
+               "temperature_state":"GREEN",
+               "yellow_threshold_Cel":46,
+               "red_threshold_Cel":56
+            },
+            "Outlet":{
+               "temperature_value_Cel":47,
+               "temperature_state":"GREEN",
+               "yellow_threshold_Cel":105,
+               "red_threshold_Cel":125
+            },
+            "Hotspot":{
+               "temperature_value_Cel":58,
+               "temperature_state":"GREEN",
+               "yellow_threshold_Cel":105,
+               "red_threshold_Cel":125
+            }
+         }
+      },
+      "2":{
+         "fan":{
+            "1":{
+               "switch":2,
+               "speed":14240,
+               "state":"OK",
+               "airflow_direction":"Front to Back"
+            },
+            "2":{
+               "switch":2,
+               "speed":14240,
+               "state":"OK",
+               "airflow_direction":"Front to Back"
+            },
+            "3":{
+               "switch":2,
+               "speed":14240,
+               "state":"OK",
+               "airflow_direction":"Front to Back"
+            }
+         },
+         "fan_name":{
+            "PS-1":{
+               "status":"NOT PRESENT"
+            },
+            "PS-2":{
+               "status":"OK"
+            }
+         },
+         "system_temperature":"OK",
+         "type":{
+            "Inlet":{
+               "temperature_value_Cel":35,
+               "temperature_state":"GREEN",
+               "yellow_threshold_Cel":46,
+               "red_threshold_Cel":56
+            },
+            "Outlet":{
+               "temperature_value_Cel":45,
+               "temperature_state":"GREEN",
+               "yellow_threshold_Cel":105,
+               "red_threshold_Cel":125
+            },
+            "Hotspot":{
+               "temperature_value_Cel":56,
+               "temperature_state":"GREEN",
+               "yellow_threshold_Cel":105,
+               "red_threshold_Cel":125
+            }
+         }
+      }
+   }
+}

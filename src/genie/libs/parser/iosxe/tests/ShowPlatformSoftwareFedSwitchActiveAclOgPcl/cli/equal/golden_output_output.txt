@@ -1,0 +1,4 @@
+lkup-id   proto     num-ogs     ref-cnt    bits-used    prefixes  in HW
+------------------------------------------------------------------------
+0x3d      IPv4           1           2           1           4    Y
+0x3f      IPv6           1           2           1           4    Y

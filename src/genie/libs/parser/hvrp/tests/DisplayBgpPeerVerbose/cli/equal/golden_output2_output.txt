@@ -1,0 +1,426 @@
+
+         BGP Peer is 10.10.10.10,  remote AS 65000
+         Type: EBGP link
+         Peer's description: "TEST"
+         BGP version 4, Remote router ID 3.3.3.3
+         Update-group ID: 1
+         BGP current state: Idle(Admin)
+         BGP current event: IHTimerExpired
+         BGP last state: Established
+         BGP Peer Up count: 3
+         Configured: Connect-retry Time: 32 sec
+         Configured: Min Hold Time: 0 sec
+ Received: Total 0 messages
+                  Update messages                0
+                  Open messages                  0
+                  KeepAlive messages             0
+                  Notification messages          0
+                  Refresh messages               0
+ Sent: Total 0 messages
+                  Update messages                0
+                  Open messages                  0
+                  KeepAlive messages             0
+                  Notification messages          0
+                  Refresh messages               0
+ Authentication type configured: MD5
+ Last keepalive received: 2022-09-12 15:21:44+02:00 DST
+ Last keepalive sent    : 2022-09-12 15:21:47+02:00 DST
+ Last update    received: 2022-09-12 12:28:25+02:00 DST
+ Last update    sent    : 2022-09-12 12:28:06+02:00 DST
+ No refresh received since peer has been configured
+ No refresh sent since peer has been configured
+ Minimum route advertisement interval is 30 seconds
+ Optional capabilities:
+ Route refresh capability has been enabled
+ 4-byte-as capability has been enabled
+ Send community has been configured
+ Connect-interface has been configured
+ Multi-hop ebgp has been enabled
+ Peer Preferred Value: 0
+ Memory Priority: medium
+ Routing policy configured:
+ No import update filter list
+ Export update filter list is: DENY_AS_65000
+ No import prefix list
+ No export prefix list
+ Import route policy is: FROM_RRVPN
+ Export route policy is: KEEP_MED
+ No import distribute policy
+ No export distribute policy
+ Tracking has been enabled, and the delay is 5s
+ No import route filter
+ No export route filter
+
+         BGP Peer is 11.11.11.11,  remote AS 65000
+         Type: EBGP link
+         BGP version 4, Remote router ID 1.1.1.1
+         Update-group ID: 2
+         BGP current state: Established, Up for 26d05h20m49s
+         BGP current event: KATimerExpired
+         BGP last state: OpenConfirm
+         BGP Peer Up count: 7
+         Received total routes: 40
+         Received active routes total: 24
+         Advertised total routes: 16
+         Port: Local - 49801        Remote - 179
+         Configured: Connect-retry Time: 32 sec
+         Configured: Min Hold Time: 0 sec
+         Configured: Active Hold Time: 30 sec   Keepalive Time:10 sec
+         Received  : Active Hold Time: 180 sec
+         Negotiated: Active Hold Time: 30 sec   Keepalive Time:10 sec
+         Peer optional capabilities:
+         Peer supports bgp multi-protocol extension
+         Peer supports bgp route refresh capability
+         Peer supports bgp 4-byte-as capability
+         Address family VPNv4 Unicast: advertised and received
+ Received: Total 238538 messages
+                  Update messages                713
+                  Open messages                  1
+                  KeepAlive messages             237824
+                  Notification messages          0
+                  Refresh messages               0
+ Sent: Total 272113 messages
+                  Update messages                35
+                  Open messages                  1
+                  KeepAlive messages             272077
+                  Notification messages          0
+                  Refresh messages               0
+ Authentication type configured: MD5
+ Last keepalive received: 2022-09-12 15:22:10+02:00 DST
+ Last keepalive sent    : 2022-09-12 15:22:16+02:00 DST
+ Last update    received: 2022-09-12 15:21:51+02:00 DST
+ Last update    sent    : 2022-09-07 14:11:48+02:00 DST
+ No refresh received since peer has been configured
+ No refresh sent since peer has been configured
+ Minimum route advertisement interval is 30 seconds
+ Optional capabilities:
+ Route refresh capability has been enabled
+ 4-byte-as capability has been enabled
+ Send community has been configured
+ Connect-interface has been configured
+ Multi-hop ebgp has been enabled
+ Peer Preferred Value: 0
+ Memory Priority: medium
+ Routing policy configured:
+ No import update filter list
+ Export update filter list is: DENY_AS_65000
+ No import prefix list
+ No export prefix list
+ Import route policy is: FROM_RRVPN
+ Export route policy is: KEEP_MED
+ No import distribute policy
+ No export distribute policy
+ Tracking has been enabled, and the delay is 5s
+ No import route filter
+ No export route filter
+
+         BGP Peer is 20.20.20.20,  remote AS 65000
+         Type: EBGP link
+         BGP version 4, Remote router ID 1.1.1.1
+         Update-group ID: 2
+         BGP current state: Established, Up for 26d05h21m00s
+         BGP current event: KATimerExpired
+         BGP last state: OpenConfirm
+         BGP Peer Up count: 4
+         Received total routes: 40
+         Received active routes total: 0
+         Advertised total routes: 16
+         Port: Local - 55630        Remote - 179
+         Configured: Connect-retry Time: 32 sec
+         Configured: Min Hold Time: 0 sec
+         Configured: Active Hold Time: 30 sec   Keepalive Time:10 sec
+         Received  : Active Hold Time: 180 sec
+         Negotiated: Active Hold Time: 30 sec   Keepalive Time:10 sec
+         Peer optional capabilities:
+         Peer supports bgp multi-protocol extension
+         Peer supports bgp route refresh capability
+         Peer supports bgp 4-byte-as capability
+         Address family VPNv4 Unicast: advertised and received
+ Received: Total 238537 messages
+                  Update messages                693
+                  Open messages                  1
+                  KeepAlive messages             237843
+                  Notification messages          0
+                  Refresh messages               0
+ Sent: Total 272150 messages
+                  Update messages                36
+                  Open messages                  1
+                  KeepAlive messages             272113
+                  Notification messages          0
+                  Refresh messages               0
+ Authentication type configured: MD5
+ Last keepalive received: 2022-09-12 15:22:12+02:00 DST
+ Last keepalive sent    : 2022-09-12 15:22:14+02:00 DST
+ Last update    received: 2022-09-12 08:20:47+02:00 DST
+ Last update    sent    : 2022-09-07 14:11:48+02:00 DST
+ No refresh received since peer has been configured
+ No refresh sent since peer has been configured
+ Minimum route advertisement interval is 30 seconds
+ Optional capabilities:
+ Route refresh capability has been enabled
+ 4-byte-as capability has been enabled
+ Send community has been configured
+ Connect-interface has been configured
+ Multi-hop ebgp has been enabled
+ Peer Preferred Value: 0
+ Memory Priority: medium
+ Routing policy configured:
+ No import update filter list
+ Export update filter list is: DENY_AS_65000
+ No import prefix list
+ No export prefix list
+ Import route policy is: FROM_RRVPN
+ Export route policy is: KEEP_MED
+ No import distribute policy
+ No export distribute policy
+ Tracking has been enabled, and the delay is 5s
+ No import route filter
+ No export route filter
+          IPv4-family for VPN instance:   mobile
+
+         BGP Peer is 5.5.5.5,  remote AS 64535
+         Type: EBGP link
+         BGP version 4, Remote router ID 0.0.0.0
+         Update-group ID: 4
+         BGP current state: Idle
+         BGP current event: IHTimerExpired
+         BGP last state: Idle
+         BGP Peer Up count: 0
+         Configured: Connect-retry Time: 32 sec
+         Configured: Min Hold Time: 0 sec
+ Received: Total 0 messages
+                  Update messages                0
+                  Open messages                  0
+                  KeepAlive messages             0
+                  Notification messages          0
+                  Refresh messages               0
+ Sent: Total 0 messages
+                  Update messages                0
+                  Open messages                  0
+                  KeepAlive messages             0
+                  Notification messages          0
+                  Refresh messages               0
+ Authentication type configured: None
+ No keepalive received since peer has been configured
+ No keepalive sent since peer has been configured
+ No update received since peer has been configured
+ No update sent since peer has been configured
+ No refresh received since peer has been configured
+ No refresh sent since peer has been configured
+ Minimum route advertisement interval is 30 seconds
+ Optional capabilities:
+ Route refresh capability has been enabled
+ 4-byte-as capability has been enabled
+ Default route advertise has been configured
+ Peer Preferred Value: 0
+ Memory Priority: medium
+ Routing policy configured:
+ No import update filter list
+ No export update filter list
+ No import prefix list
+ Export prefix list is: DEFAULT_TO_CPE-FTTS
+ Import route policy is: SET-WEIGHT
+ No export route policy
+ No import distribute policy
+ No export distribute policy
+ Tracking has been enabled, and the delay is 1s
+
+         BGP Peer is 30.30.30.30,  remote AS 64535
+         Type: EBGP link
+         BGP version 4, Remote router ID 1.1.1.1
+         Update-group ID: 5
+         BGP current state: Established, Up for 33d23h00m11s
+         BGP current event: RecvKeepalive
+         BGP last state: OpenConfirm
+         BGP Peer Up count: 1
+         Received total routes: 5
+         Received active routes total: 4
+         Advertised total routes: 1
+         Port: Local - 50166        Remote - 179
+         Configured: Connect-retry Time: 32 sec
+         Configured: Min Hold Time: 0 sec
+         Configured: Active Hold Time: 180 sec   Keepalive Time:60 sec
+         Received  : Active Hold Time: 180 sec
+         Negotiated: Active Hold Time: 180 sec   Keepalive Time:60 sec
+         Peer optional capabilities:
+         Peer supports bgp multi-protocol extension
+         Peer supports bgp route refresh capability
+         Peer supports bgp 4-byte-as capability
+         Address family IPv4 Unicast: advertised and received
+ Received: Total 54338 messages
+                  Update messages                982
+                  Open messages                  1
+                  KeepAlive messages             53355
+                  Notification messages          0
+                  Refresh messages               0
+ Sent: Total 56184 messages
+                  Update messages                2
+                  Open messages                  1
+                  KeepAlive messages             56181
+                  Notification messages          0
+                  Refresh messages               0
+ Authentication type configured: None
+ Last keepalive received: 2022-09-12 15:22:03+02:00 DST
+ Last keepalive sent    : 2022-09-12 15:22:00+02:00 DST
+ Last update    received: 2022-09-12 15:03:10+02:00 DST
+ Last update    sent    : 2022-08-09 16:22:08+02:00 DST
+ No refresh received since peer has been configured
+ No refresh sent since peer has been configured
+ Minimum route advertisement interval is 30 seconds
+ Optional capabilities:
+ Route refresh capability has been enabled
+ 4-byte-as capability has been enabled
+ Default route advertise has been configured
+ Peer Preferred Value: 0
+ Memory Priority: medium
+ Routing policy configured:
+ No import update filter list
+ No export update filter list
+ No import prefix list
+ Export prefix list is: DEFAULT_TO_CPE-FTTS
+ Import route policy is: SET-WEIGHT
+ No export route policy
+ No import distribute policy
+ No export distribute policy
+ Tracking has been enabled, and the delay is 1s
+
+         BGP Peer is 40.40.40.40,  remote AS 64535
+         Type: EBGP link
+         BGP version 4, Remote router ID 0.0.0.0
+         Update-group ID: 4
+         BGP current state: Active
+         BGP current event: TcpFail
+         BGP last state: Connect
+         BGP Peer Up count: 0
+         Configured: Connect-retry Time: 32 sec
+         Configured: Min Hold Time: 0 sec
+ Received: Total 0 messages
+                  Update messages                0
+                  Open messages                  0
+                  KeepAlive messages             0
+                  Notification messages          0
+                  Refresh messages               0
+ Sent: Total 0 messages
+                  Update messages                0
+                  Open messages                  0
+                  KeepAlive messages             0
+                  Notification messages          0
+                  Refresh messages               0
+ Authentication type configured: None
+ No keepalive received since peer has been configured
+ No keepalive sent since peer has been configured
+ No update received since peer has been configured
+ No update sent since peer has been configured
+ No refresh received since peer has been configured
+ No refresh sent since peer has been configured
+ Minimum route advertisement interval is 30 seconds
+ Optional capabilities:
+ Route refresh capability has been enabled
+ 4-byte-as capability has been enabled
+ Default route advertise has been configured
+ Peer Preferred Value: 0
+ Memory Priority: medium
+ Routing policy configured:
+ No import update filter list
+ No export update filter list
+ No import prefix list
+ Export prefix list is: DEFAULT_TO_CPE-FTTS
+ Import route policy is: SET-WEIGHT
+ No export route policy
+ No import distribute policy
+ No export distribute policy
+ Tracking has been enabled, and the delay is 1s
+
+         BGP Peer is 50.50.50.50,  remote AS 64535
+         Type: EBGP link
+         BGP version 4, Remote router ID 0.0.0.0
+         Update-group ID: 4
+         BGP current state: Idle
+         BGP current event: IHTimerExpired
+         BGP last state: Idle
+         BGP Peer Up count: 0
+         Configured: Connect-retry Time: 32 sec
+         Configured: Min Hold Time: 0 sec
+ Received: Total 0 messages
+                  Update messages                0
+                  Open messages                  0
+                  KeepAlive messages             0
+                  Notification messages          0
+                  Refresh messages               0
+ Sent: Total 0 messages
+                  Update messages                0
+                  Open messages                  0
+                  KeepAlive messages             0
+                  Notification messages          0
+                  Refresh messages               0
+ Authentication type configured: None
+ No keepalive received since peer has been configured
+ No keepalive sent since peer has been configured
+ No update received since peer has been configured
+ No update sent since peer has been configured
+ No refresh received since peer has been configured
+ No refresh sent since peer has been configured
+ Minimum route advertisement interval is 30 seconds
+ Optional capabilities:
+ Route refresh capability has been enabled
+ 4-byte-as capability has been enabled
+ Default route advertise has been configured
+ Peer Preferred Value: 0
+ Memory Priority: medium
+ Routing policy configured:
+ No import update filter list
+ No export update filter list
+ No import prefix list
+ Export prefix list is: DEFAULT_TO_CPE-FTTS
+ Import route policy is: SET-WEIGHT
+ No export route policy
+ No import distribute policy
+ No export distribute policy
+ Tracking has been enabled, and the delay is 1s
+
+         BGP Peer is 60.60.60.60,  remote AS 64535
+         Type: EBGP link
+         BGP version 4, Remote router ID 1.1.1.1
+         Update-group ID: 4
+         BGP current state: Idle
+         BGP current event: IHTimerExpired
+         BGP last state: Established
+         BGP Peer Up count: 1
+         Configured: Connect-retry Time: 32 sec
+         Configured: Min Hold Time: 0 sec
+ Received: Total 0 messages
+                  Update messages                0
+                  Open messages                  0
+                  KeepAlive messages             0
+                  Notification messages          0
+                  Refresh messages               0
+ Sent: Total 0 messages
+                  Update messages                0
+                  Open messages                  0
+                  KeepAlive messages             0
+                  Notification messages          0
+                  Refresh messages               0
+ Authentication type configured: None
+ Last keepalive received: 2022-09-02 11:38:55+02:00 DST
+ Last keepalive sent    : 2022-09-02 11:38:17+02:00 DST
+ Last update    received: 2022-09-01 10:38:21+02:00 DST
+ Last update    sent    : 2022-08-02 18:03:04+02:00 DST
+ No refresh received since peer has been configured
+ No refresh sent since peer has been configured
+ Minimum route advertisement interval is 30 seconds
+ Optional capabilities:
+ Route refresh capability has been enabled
+ 4-byte-as capability has been enabled
+ Default route advertise has been configured
+ Peer Preferred Value: 0
+ Memory Priority: medium
+ Routing policy configured:
+ No import update filter list
+ No export update filter list
+ No import prefix list
+ Export prefix list is: DEFAULT_TO_CPE-FTTS
+ Import route policy is: SET-WEIGHT
+ No export route policy
+ No import distribute policy
+ No export distribute policy
+ Tracking has been enabled, and the delay is 1s

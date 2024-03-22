@@ -424,3 +424,76 @@ class TracerouteMPLSIPv4(Traceroute):
         else:
             output=output
         return super().cli(output=output)
+
+# ======================================================
+# Schema for 'traceroute ipv6 address'
+# ======================================================
+class TracerouteIpv6Schema(MetaParser):
+    ''' Schema for:
+        * 'traceroute ipv6 address'
+    '''
+
+    schema = {
+        'destination': str,
+        'hop': {
+            Any() : {
+                Optional('hop_add'): str,
+                Optional('probe'): {
+                    Any() : int,
+                }
+            }
+        }
+    }
+
+# ======================================================
+# Parser for 'traceroute ipv6 address'
+# ======================================================
+class TracerouteIpv6(TracerouteIpv6Schema):
+    ''' Parser for:
+        * 'traceroute ipv6 address'
+    '''
+    cli_command = 'traceroute ipv6 {address}'
+
+    def cli(self, address, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(address=address))
+
+        # Tracing the route to 1100::1
+        p1 = re.compile(r'^Tracing the route to\s(?P<destination>[\S]+)$')
+
+        # 1 2001:db8::a:1c:e3:3           0 ms   0 ms   0 ms
+        # 2 2001:db8:0:7::5               7 ms   3 ms   0 ms
+        p2 = re.compile(r'^(?P<hop_id>\d+)\s+(?P<hop_address>\S+)\s+(?P<probe>[\S\ ]+)$')
+
+        #initialising index
+        index=1
+
+        ret_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Tracing the route to 1100::1
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['destination'] = group['destination']
+                continue
+            # 1 2001:db8::a:1c:e3:3           0 msec   0 msec   0 msec
+            # 2 2001:db8:0:7::5               7 msec   3 msec   0 msec
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                hop_dict = ret_dict.setdefault('hop',{}).setdefault(int(group['hop_id']),{})
+                hop_dict['hop_add'] = group['hop_address']
+                if (group['probe']).__contains__('msec'):
+                    probe_list = group['probe'].strip().split('msec')
+                else:
+                    probe_list = group['probe'].strip().split('ms')
+                probe_list[:] = [x.strip() for x in probe_list if x]
+                for probe in probe_list:
+                    probe_dict = hop_dict.setdefault('probe',{})
+                    probe_dict[index] = int(probe)
+                    index += 1
+                continue
+
+        return ret_dict

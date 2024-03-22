@@ -1,0 +1,12 @@
+show mac address-table interface GigabitEthernet4/0/3
+
+          Mac Address Table
+-------------------------------------------
+
+Vlan    Mac Address       Type        Ports
+----    -----------       --------    -----
+2000    000c.290e.8a72    STATIC      Gi4/0/3 
+2000    d824.bdbb.b7f9    STATIC      Gi4/0/3 
+4003    d824.bdbb.b7f9    DYNAMIC     Drop
+Total Mac Addresses for this criterion: 3
+

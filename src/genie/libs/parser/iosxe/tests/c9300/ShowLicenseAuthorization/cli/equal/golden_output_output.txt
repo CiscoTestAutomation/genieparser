@@ -1,0 +1,7 @@
+show license authorization
+Overall status:
+  Active: PID:C9300-24UX,SN:FCW2147L0C5
+      Status: NOT INSTALLED
+
+Purchased Licenses:
+  No Purchase Information Available

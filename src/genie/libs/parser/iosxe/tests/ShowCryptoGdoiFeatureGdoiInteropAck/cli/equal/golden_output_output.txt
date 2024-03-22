@@ -1,0 +1,7 @@
+Group Name: getvpn1
+    Key Server ID       Version   Feature Supported
+        1.1.1.1          1.0.27         Yes
+
+    Group Member ID     Version   Feature Supported
+        3.3.1.1          1.0.26         No
+        4.4.1.1          1.0.26         No

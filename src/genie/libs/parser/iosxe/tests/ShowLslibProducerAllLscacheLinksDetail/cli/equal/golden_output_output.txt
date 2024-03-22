@@ -1,0 +1,77 @@
+Type: Link
+  Protocol: ISIS L1
+  Identifier: 0x0
+  Local Node Descriptor:
+    AS Number: 50
+    BGP Identifier: 0.0.0.0
+    ISO Node ID: 1111.1111.1111
+  Remote Node Descriptor:
+    AS Number: 50
+    BGP Identifier: 0.0.0.0
+    ISO Node ID: 2222.2222.2222.01
+  Link Descriptor:
+  Internal flags: 0x0
+  Action: Update
+  Merged Link Attributes:
+    Metric: 28
+  Link Attributes of Group 0x1:
+    Internal flags: 0x0
+    Metric: 28
+Type: Link
+  Protocol: ISIS L1
+  Identifier: 0x0
+  Local Node Descriptor:
+    AS Number: 50
+    BGP Identifier: 0.0.0.0
+    ISO Node ID: 2222.2222.2222
+  Remote Node Descriptor:
+    AS Number: 50
+    BGP Identifier: 0.0.0.0
+    ISO Node ID: 2222.2222.2222.01
+  Link Descriptor:
+  Internal flags: 0x0
+  Action: Update
+  Merged Link Attributes:
+    Metric: 10
+  Link Attributes of Group 0x1:
+    Internal flags: 0x0
+    Metric: 10
+Type: Link
+  Protocol: ISIS L1
+  Identifier: 0x0
+  Local Node Descriptor:
+    AS Number: 50
+    BGP Identifier: 0.0.0.0
+    ISO Node ID: 2222.2222.2222.01
+  Remote Node Descriptor:
+    AS Number: 50
+    BGP Identifier: 0.0.0.0
+    ISO Node ID: 1111.1111.1111
+  Link Descriptor:
+  Internal flags: 0x0
+  Action: Update
+  Merged Link Attributes:
+    Metric: 0
+  Link Attributes of Group 0x1:
+    Internal flags: 0x0
+    Metric: 0
+Type: Link
+  Protocol: ISIS L1
+  Identifier: 0x0
+  Local Node Descriptor:
+    AS Number: 50
+    BGP Identifier: 0.0.0.0
+    ISO Node ID: 2222.2222.2222.01
+  Remote Node Descriptor:
+    AS Number: 50
+    BGP Identifier: 0.0.0.0
+    ISO Node ID: 2222.2222.2222
+  Link Descriptor:
+  Internal flags: 0x0
+  Action: Update
+  Merged Link Attributes:
+    Metric: 0
+  Link Attributes of Group 0x1:
+    Internal flags: 0x0
+    Metric: 0
+

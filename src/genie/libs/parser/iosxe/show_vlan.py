@@ -826,7 +826,8 @@ class ShowVlanSummarySchema(MetaParser):
         'vlan_summary': {
             'existing_vlans': int,
             'existing_vtp_vlans': int,
-            'existing_extend_vlans': int
+            Optional('existing_extend_vlans'): int,
+            Optional('existing_extend_vtp_vlans'): int
         }
     }
 
@@ -847,6 +848,9 @@ class ShowVlanSummary(ShowVlanSummarySchema):
 
         #Number of existing extended VLANS     : 4
         p3 = re.compile(r'Number\sof\sexisting\sextended\sVLANS\s+\:\s+(?P<existing_extend_vlans>\d+)')
+
+        # Number of existing extended VTP VLANS : 0
+        p4 = re.compile(r'Number of existing extended VTP VLANS\s+:\s+(?P<existing_extend_vtp_vlans>\d+)')
 
         for line in output.splitlines():
             line = line.strip()
@@ -872,5 +876,397 @@ class ShowVlanSummary(ShowVlanSummarySchema):
                 vlan_summary['existing_extend_vlans'] = int(group['existing_extend_vlans'])
                 continue
 
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                vlan_summary['existing_extend_vtp_vlans'] = int(group['existing_extend_vtp_vlans'])
+                continue
+
         return ret_dict
 
+  # ======================================================
+# Parser for 'show vlan private-vlan '
+# ======================================================
+
+class ShowVlanPrivateVlanSchema(MetaParser):
+    """Schema for show vlan private-vlan"""
+
+    schema = {
+        'private': {
+            Any(): {
+                Optional('ports'): str,
+                'type': str,
+                'sec': str,
+                'primary': str,
+            },
+        },
+    }
+
+class ShowVlanPrivateVlan(ShowVlanPrivateVlanSchema):
+    """Parser for show vlan private-vlan"""
+
+    cli_command = 'show vlan private-vlan'
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # 500     501       community         Twe1/0/7, Twe1/0/8, Twe1/0/33
+        # 500     501       isolated
+        p1 = re.compile(r"^(?P<primary>\d+)\s+(?P<sec>\d+)\s+(?P<type>\w+)+?(?P<ports>.*)$")
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+            # 500     501       community         Twe1/0/7, Twe1/0/8, Twe1/0/33
+            m = p1.match(line)
+            if m:
+                dict_val = m.groupdict()
+                sec_var = dict_val['sec']
+                private = ret_dict.setdefault('private', {})
+                sec_dict = ret_dict['private'].setdefault(sec_var, {})
+                if dict_val['ports']:
+                    sec_dict['ports'] = dict_val['ports'].strip()
+                sec_dict['type'] = dict_val['type']
+                sec_dict['sec'] = dict_val['sec']
+                sec_dict['primary'] = dict_val['primary']
+                continue
+
+        return ret_dict
+
+# ======================================================
+# Parser for 'show vlan private-vlan type '
+# ======================================================
+
+class ShowVlanPrivateVlanTypeSchema(MetaParser):
+    """Schema for show vlan private-vlan type"""
+
+    schema = {
+        'vlan': {
+            Any(): {
+                'type': str,
+                'vlan_id': str,
+            },
+        },
+    }
+
+class ShowVlanPrivateVlanType(ShowVlanPrivateVlanTypeSchema):
+    """Parser for show vlan private-vlan type"""
+
+    cli_command = 'show vlan private-vlan type'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # 500  primary
+        p1 = re.compile(r"^(?P<vlan_id>\d+)\s+(?P<type>\w+)$")
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+            # 500  primary
+            m = p1.match(line)
+            if m:
+                dict_val = m.groupdict()
+                vlan_id_var = dict_val['vlan_id']
+                vlan = ret_dict.setdefault('vlan', {})
+                vlan_id_dict = ret_dict['vlan'].setdefault(vlan_id_var, {})
+                vlan_id_dict['type'] = dict_val['type']
+                vlan_id_dict['vlan_id'] = dict_val['vlan_id']
+                continue
+        return ret_dict
+class ShowVlanDot1qTagNativeSchema(MetaParser):
+    """Schema for show vlan dot1q tag native"""
+    schema = {
+        'ports': {
+            Any(): {
+                'mode': str,
+                'state': str
+            }
+        }
+    }
+
+class ShowVlanDot1qTagNative(ShowVlanDot1qTagNativeSchema):
+    """Parser for show vlan dot1q tag native"""
+    cli_command = 'show vlan dot1q tag native'
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        ret_dict = {}
+
+        # *************************
+        # Port         Operational        Native VLAN
+        #                 Mode            Tagging State
+        # -------------------------------------------
+        #
+        # Tw1/0/4      trunk                 disabled
+        # Gi3/0/24     trunk                 disabled
+        p1 = re.compile(r'^(?P<port>[\w\/\-\.]+)\s+(?P<mode>trunk)\s+(?P<state>\w+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault('ports', {}).setdefault(Common.convert_intf_name(group['port']), {
+                    'mode': group['mode'],
+                    'state': group['state']
+                })
+
+        return ret_dict
+
+# ==========================================================================================
+# Parser Schema for 'show platform software fed active vt if-id'
+# ==========================================================================================
+
+class ShowPlatformSoftwareFedActiveVtIfIdSchema(MetaParser):
+    """
+    Schema for
+        * 'show platform software fed active vt if-id {if_id}'
+    """
+
+    schema = {
+        'port_data': {
+            'if_id': {
+                int: {
+                    'cvlan_id': int,
+                    'svlan_id': int,
+                    'action': int
+                }
+            }
+        }
+    }
+
+# ==========================================================================================
+# Parser for 'show platform software fed active vt if-id'
+# ==========================================================================================
+
+class ShowPlatformSoftwareFedActiveVtIfId(ShowPlatformSoftwareFedActiveVtIfIdSchema):
+    """
+    Parser for
+        * 'show platform software fed active vt if-id {if_id}'
+    """
+    cli_command = [
+                'show platform software fed switch {switch_type} vt if-id {if_id}',
+                'show platform software fed active vt if-id {if_id}'
+    ]
+    def cli(self, if_id, switch_type=None, output=None):
+        if output is None:
+            if switch_type:
+                cmd = self.cli_command[0].format(if_id=if_id, switch_type=switch_type)
+            else:
+                cmd = self.cli_command[1].format(if_id=if_id)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+        # 102           40            30                    1
+        p1 = re.compile(r'^(?P<if_id>\d+)\s*(?P<cvlan_id>\d+)\s*(?P<svlan_id>\d+)\s*(?P<action>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # 102           40            30                    1
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict = ret_dict.setdefault('port_data',{})
+                if_dict = root_dict.setdefault('if_id',{}).setdefault(int(group['if_id']),{})
+                if_dict['cvlan_id'] = int(group['cvlan_id'])
+                if_dict['svlan_id'] = int(group['svlan_id'])
+                if_dict['action'] = int(group['action'])
+                continue
+
+        return ret_dict
+
+
+# ======================================================
+# Parser for 'show vlan mapping '
+# ======================================================
+
+class ShowVlanMappingSchema(MetaParser):
+    """Schema for show VLAN Mapping"""
+
+    schema = {
+        'no_of_vlans': int,
+        'interface': {
+            Any(): {
+                'vlan': {
+                    Any(): {
+                        'trans_vlan': int,
+                        'operation': str
+                    }
+                }
+            }
+        }
+    }
+
+
+class ShowVlanMapping(ShowVlanMappingSchema):
+    """Parser for show vlan mapping"""
+
+    cli_command = 'show vlan mapping'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Total no of vlan mappings configured: 1
+        p1 = re.compile(r"^Total\s+no\s+of\s+vlan\s+mappings\s+configured:\s+(?P<no_of_vlans>\d+)$")
+        # Interface Po6:
+        p2 = re.compile(r"^Interface\s+(?P<interface>\S+):$")
+        # 20                                    30             1-to-1
+        p3 = re.compile(r"^(?P<vlan_map>\d+)\s+(?P<trans_vlan>\d+)\s+(?P<operation>\S+)$")
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+
+            # Total no of vlan mappings configured: 1
+            m = p1.match(line)
+            if m:
+                dict_val = m.groupdict()
+                ret_dict['no_of_vlans'] = int(dict_val['no_of_vlans'])
+                continue
+
+            # Interface Po6:
+            m = p2.match(line)
+            if m:
+                interface = Common.convert_intf_name(m.groupdict()['interface'])
+                intf_dict = ret_dict.setdefault('interface', {}).setdefault(interface, {})
+                continue
+
+            # 20                                    30             1-to-1
+            m = p3.match(line)
+            if m:
+                dict_val = m.groupdict()
+                vlan_dict = intf_dict.setdefault('vlan', {}).setdefault(dict_val['vlan_map'], {})
+                vlan_dict['trans_vlan'] = int(dict_val['trans_vlan'])
+                vlan_dict['operation'] = dict_val['operation']
+                continue
+
+        return ret_dict
+
+
+# ======================================================
+# Parser for 'show vlan brief '
+# ======================================================
+
+class ShowVlanBriefSchema(MetaParser):
+    """Schema for show VLAN brief"""
+
+    schema = {
+        'vlan': 
+        {
+            Any(): 
+            {
+                'vlan_name': str,
+                'vlan_status': str,
+                Optional('vlan_port'): list
+            }
+        }
+    }
+
+class ShowVlanBrief(ShowVlanBriefSchema):
+    """Parser for show vlan brief"""
+
+    cli_command = 'show vlan brief'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # 10   VLAN0010                         active
+        p1 = re.compile(r"^(?P<vlan>[0-9]+)+\s+(?P<vlan_name>[\w\-]+)+\s+(?P<vlan_status>[a-zA-Z\/\s]+)$")
+        # 666  VLAN0666                         active    Te1/1/6, Te1/1/7
+        p2 = re.compile(r"^(?P<vlan>[0-9]+)+\s+(?P<vlan_name>[\w\-]+)+\s+(?P<vlan_status>[a-zA-Z\/]+)\s+(?P<vlan_port>[a-zA-Z0-9\,\/\ ]+)$")
+
+        ret_dict = {}
+        for line in output.splitlines():
+            # 10   VLAN0010                         active 
+            m1 = p1.match(line)
+            if m1:
+                dict_val = m1.groupdict()
+                vlan = 'vlan'+dict_val['vlan']
+                vlan = ret_dict.setdefault('vlan', {}).setdefault(vlan, {})
+                vlan['vlan_name'] = dict_val['vlan_name']
+                vlan['vlan_status'] = dict_val['vlan_status'].replace(' ', '')
+                continue
+
+            # 666  VLAN0666                         active    Te1/1/6, Te1/1/7
+            m2 = p2.match(line)
+            if m2:
+                dict_val = m2.groupdict()
+                vlan = 'vlan'+dict_val['vlan']
+                vlan = ret_dict.setdefault('vlan', {}).setdefault(vlan, {})
+                vlan['vlan_name'] = dict_val['vlan_name']
+                vlan['vlan_status'] = dict_val['vlan_status'].replace(' ','')
+                vlan_port = dict_val['vlan_port']
+                if not vlan_port == ' ':
+                    my_list = list(vlan_port.split())
+                    for port in range(len(my_list)):
+                        if isinstance(my_list[port], str) and ',' in my_list[port]:
+                            my_list[port] = my_list[port].replace(',', '')
+                    dict_val['vlan_port'] = my_list
+                    vlan['vlan_port'] = dict_val['vlan_port']
+                continue   
+
+        return ret_dict
+
+# =================================================
+# Parser for 'show vlan internal usage' command
+#Author: Mehdi Cherifi
+#Twitter: https://twitter.com/LocketKeepsake
+#Github: https://github.com/cherifimehdi
+# =================================================
+
+class ShowVlanInternalUsageSchema(MetaParser):
+    """Schema for: show vlan internal usage"""
+
+    schema = {
+        'internal_vlan': {
+            Any(): {
+                        'usage': str,
+            },
+        }
+    }
+
+class ShowVlanInternalUsage(ShowVlanInternalUsageSchema):
+    """Parser for: show vlan internal usage"""
+
+    cli_command = 'show vlan internal usage'
+
+    def cli(self, output=None):
+
+        if output is None:
+
+            out = self.device.execute(self.cli_command)
+
+        else:
+
+            out = output
+
+
+    #VLAN Usage
+    #---- --------------------
+    #1006 GigabitEthernet0/0
+    #1007 GigabitEthernet0/1
+    #1008 GigabitEthernet0/2
+
+        #pattern to capture 'VLAN' and 'Usage'
+        p0 = re.compile(r'^(?P<VLAN>[0-9]+)\s+(?P<Usage>.+)$')
+        parsed_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p0.match(line)
+            if m:
+                internal_vlan_dict = parsed_dict.setdefault('internal_vlan', {})
+                usage = m.groupdict()['Usage']
+                vlan = m.groupdict()['VLAN']
+                internal_vlan_dict[vlan] = {}
+                internal_vlan_dict[vlan]['usage'] = usage
+                continue
+        return parsed_dict

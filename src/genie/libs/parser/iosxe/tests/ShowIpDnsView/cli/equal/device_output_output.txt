@@ -1,0 +1,22 @@
+DNS View default parameters:
+        DNS Resolver settings:
+        Domain lookup is enabled
+        Default domain name: pm9001_201_dhcp.intranet
+        Domain search list:
+        Domain name-servers:
+            10.10.201.132
+        DNS Server settings:
+        Forwarding of queries is enabled
+        Forwarder addresses:
+
+        DNS View default vrf 65528 parameters:
+        DNS Resolver settings:
+        Domain lookup is enabled
+        Default domain name:
+        Domain search list:
+        Domain name-servers:
+            10.10.201.144 (vrf 65528)
+            10.10.201.2 (vrf 65528)
+        DNS Server settings:
+        Forwarding of queries is enabled
+        Forwarder addresses:

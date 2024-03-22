@@ -1,0 +1,12 @@
+Mon Jul 11 00:36:02.791 IST
+ 
+Routing entry for 116.119.10.251/32
+   Known via "isis T4", distance 115, metric 10, labeled SR
+   Tag 3007, type level-2
+   Installed Aug 15 14:51:07.021 for 47w0d
+   Routing Descriptor Blocks
+     100.72.21.206, from 116.119.10.251, via Bundle-Ether104, Protected
+       Route metric is 10
+     100.72.21.209, from 116.119.10.251, via Bundle-Ether105, Backup (Local-LFA)
+       Route metric is 20
+   No advertising protos.

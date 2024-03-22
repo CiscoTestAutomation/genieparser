@@ -1,0 +1,5 @@
+LLDP errors/overflows:
+    Total memory allocation failures: 30
+    Total encapsulation failures: 0
+    Total input queue overflows: 0
+    Total table overflows: 3

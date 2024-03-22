@@ -4,6 +4,7 @@ expected_output = {
         "type": "iGbE",
         "delay": 10,
         "enabled": True,
+        "is_deleted": False,
         "txload": "1/255",
         "arp_type": "arpa",
         "encapsulations": {"encapsulation": "dot1q", "first_dot1q": "300"},
@@ -89,6 +90,7 @@ expected_output = {
         "last_input": "00:00:11",
         "reliability": "255/255",
         "enabled": True,
+        "is_deleted": False,
         "arp_type": "arpa",
         "encapsulations": {"encapsulation": "dot1q", "first_dot1q": "1"},
         "mtu": 1500,
@@ -102,6 +104,7 @@ expected_output = {
         "reliability": "255/255",
         "type": "Loopback",
         "enabled": True,
+        "is_deleted": False,
         "queues": {
             "input_queue_drops": 0,
             "output_queue_max": 0,
@@ -172,6 +175,7 @@ expected_output = {
         "tunnel_ttl": 255,
         "type": "Tunnel",
         "enabled": True,
+        "is_deleted": False,
         "queues": {
             "input_queue_drops": 0,
             "output_queue_max": 0,

@@ -1,0 +1,31 @@
+expected_output = {
+    'interface': 'TwoGigabitEthernet1/0/13',
+    'port': '13',
+    'vlan': 'VLAN0001',
+    'port_span_mode': 'designated forwarding',
+    'path_cost': 20000,
+    'port_id': '128.13.',
+    'port_priority': 128,
+    'dr_priority': 32769,
+    'dr_address': '14a2.a035.b700',
+    'dbridge_priority': 32769,
+    'dbridge_address': 'cc7f.763d.9a00',
+    'dport_id': '128.13',
+    'des_path_cost': 40000,
+    'port_mode': 'portfast',
+    'forward_trans': 1,
+    'bpdu_guard': 'enabled',
+    'link_type': 'point-to-point',
+    'bpdu_filter': 'enabled',
+    'root_guard': 'enabled',
+    'loop_guard': 'enabled',
+    'timers': {
+        'message_age': 0,
+        'forward_delay': 15,
+        'hold': 10,
+    },
+    'BPDU': {
+        'sent': 22783,
+        'received': 0,
+    }
+}

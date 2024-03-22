@@ -11,6 +11,7 @@ IOSXE parsers for the following show commands:
     * show license eventlog 2
     * show license usage
     * show license tech support
+    * show license history message
 
 '''
 
@@ -1033,8 +1034,8 @@ class ShowLicenseRumIdDetailSchema(MetaParser):
       Optional('report_id'): {
         Any():{
           'metric_name': str,
-          'feature_name': str,
-          'metric_value': str,
+          Optional('feature_name'): str,
+          Optional('metric_value'): str,
           Optional('udi'): {
             Optional('pid'): str,
             Optional('sn'): str,
@@ -1051,21 +1052,21 @@ class ShowLicenseRumIdDetailSchema(MetaParser):
         }
       }
     }
-    
+
 # ==========================================
-#  Parser for: 'show license rum id detail'   
-# ==========================================           
+#  Parser for: 'show license rum id detail'
+# ==========================================
 
 class ShowLicenseRumIdDetail(ShowLicenseRumIdDetailSchema):
     """Parser for show license rum id detail"""
-    
+
     cli_command = 'show license rum id {report} detail'
 
-    def cli(self, report = "",  output=None):
+    def cli(self, report='',  output=None):
         if output is None:
             cmd = self.cli_command.format(report=report)
             output = self.device.execute(cmd)
-            
+
         ret_dict={}
 
         #Report Id: 1631796710
@@ -1091,7 +1092,7 @@ class ShowLicenseRumIdDetail(ShowLicenseRumIdDetailSchema):
 
         #State: CLOSED,      State Change Reason: REPORTING
         p7 = re.compile(r'^State: +(?P<state>[\S ]+), +'
-                        r'State +Change +Reason: +(?P<state_change_reason>.*)$')
+                        r'.*Reason: +(?P<state_change_reason>.*)$')
 
         #Start Time: Sep 19 05:12:48 2021 UTC,      End Time: Sep 19 05:21:41 2021 UTC
         p8 = re.compile(r'^Start +Time: +(?P<start_time>[\S ]+), +'
@@ -1203,7 +1204,7 @@ class ShowLicenseRumIdDetail(ShowLicenseRumIdDetailSchema):
             continue
 
         return ret_dict
-        
+
 #-------------------------------------------
 # ======================================
 #  Schema for: 'show license all'
@@ -1216,6 +1217,11 @@ class ShowLicenseAllSchema(MetaParser):
       Optional('five_minutes'): str,
       Optional('ntp_time'): str,
       Optional('smart_licensing_status'):{
+        Optional('license_conversion'):{
+                Optional('automatic_conversion_enabled'):str,
+                Optional('last_data_push'):str,
+                Optional('last_file_export'):str,
+            },
         Optional('export_authorization_key'):{
             Optional('features_authorized'):str,
         },
@@ -1567,6 +1573,8 @@ class ShowLicenseAll(ShowLicenseAllSchema):
         #Available to Report: 8  Collecting Data: 0
         p18_2= re.compile(r'^Available +to +Report: +(?P<available_to_report>[\S ]+)  +'
                         r'Collecting +Data: +(?P<collecting_data>.*)$')
+        #License  Conversion
+        p3_1  =  re.compile(r'^Automatic +Conversion +Enabled: +(?P<automatic_conversion_enabled>.*)$')
 
         license_authorizations_dict=None
         overall_status_dict=None
@@ -1589,7 +1597,14 @@ class ShowLicenseAll(ShowLicenseAllSchema):
               group=m.groupdict()
               ret_dict.update(group)
               continue
-
+        
+          m=p3_1.match(line)
+          if m:
+            group = m.groupdict()
+            smart_licensing_status_dict=ret_dict.setdefault('smart_licensing_status',{})
+            smart_licensing_status_dict.setdefault('license_conversion',{}).setdefault('automatic_conversion_enabled',group['automatic_conversion_enabled'])
+            continue
+            
           #INSTALLED on Sep 27 12:22:33 2021 UTC|<none>
           m = p3.match(line)
           if m:
@@ -1608,7 +1623,6 @@ class ShowLicenseAll(ShowLicenseAllSchema):
             else:
               smart_licensing_status_dict.setdefault('export_authorization_key',{}).setdefault('features_authorized',group)
               continue
-
           #Status: DISABLED
           m = p4.match(line)
           if m:
@@ -2394,6 +2408,11 @@ class ShowLicenseTechSupportSchema(MetaParser):
         Optional('five_minute_load_percent'): int,
         Optional('ntp_time'): str,
         Optional('smart_licensing_status'):{
+            Optional('license_conversion'):{
+                Optional('automatic_conversion_enabled'):str,
+                Optional('last_data_push'):str,
+                Optional('last_file_export'):str,
+            },
             Optional('export_authorization_key'):{
             Optional('features_authorized'):str,
             },
@@ -2402,6 +2421,7 @@ class ShowLicenseTechSupportSchema(MetaParser):
             },
             Optional('smart_licensing_using_policy'):{
                 'status':str,
+                Optional('reporting_mode'):str,
             },
             Optional('account_information'):{
                 Optional('smart_account'):str,
@@ -2419,7 +2439,7 @@ class ShowLicenseTechSupportSchema(MetaParser):
                 Optional('url'):str,
                 Optional('proxy'):{
                     Optional('address'):str,
-                    Optional('port'):str,
+                    Optional('port'):Or(int, str),
                     Optional('username'):str,
                     Optional('password'):str,
                 },
@@ -2448,6 +2468,22 @@ class ShowLicenseTechSupportSchema(MetaParser):
                 'last_report_push':str,
                 'last_report_file_write':str,
             },
+            Optional('trust_code_installed'):Or(str, dict),
+                Optional('active'):{
+                    Optional('pid'):str,
+                    Optional('sn'):str,
+                    Optional('info'):str,
+                },
+                Optional('standby'):{
+                    Optional('pid'):str,
+                    Optional('sn'):str, 
+                    Optional('info'):str,
+                },
+                Optional('member'):{
+                    Optional('pid'):str,
+                    Optional('sn'):str,
+                    Optional('info'):str,
+                },
         },
         'license_usage':{
             'handle':{
@@ -2505,6 +2541,7 @@ class ShowLicenseTechSupportSchema(MetaParser):
             'send_utility_rum_reports':str,
             'save_unreported_rum_reports':str,
             Optional('process_utility_rum_reports'):str,
+            Optional('telemetry_reporting'):str,
             Optional('authorization_code_process'):str,
             Optional('authorization_confirmation_code_process'):str,
             'data_synchronization':str,
@@ -2538,6 +2575,8 @@ class ShowLicenseTechSupportSchema(MetaParser):
         },
         'reservation_info':{
             'license_reservation':str,
+            Optional('last_data_push'):str,
+            Optional('last_file_export'):str,
             'overall_status':{
                 Any():{
                     Optional('pid'):str,
@@ -2583,6 +2622,30 @@ class ShowLicenseTechSupportSchema(MetaParser):
             Optional('mia'):str,
             Optional('report_module_status'):str,
         },
+        Optional('telemetry_report_summary'):{
+            'device_telemetry':str,
+            'total_current_telemetry_reports':int,
+        },
+        Optional('device_telemetry_report_summary'):{
+            'data_channel':str,
+            'reports_on_disk':int,
+            Optional('trust_code_installed'):Or(str, dict),
+                Optional('active'):{
+                    Optional('pid'):str,
+                    Optional('sn'):str,
+                    Optional('info'):str,
+                },
+                Optional('standby'):{
+                    Optional('pid'):str,
+                    Optional('sn'):str, 
+                    Optional('info'):str,
+                },
+                Optional('member'):{
+                    Optional('pid'):str,
+                    Optional('sn'):str,
+                    Optional('info'):str,
+                },
+        },
         'other_info':{
             'software_id':str,
             'agent_state':str,
@@ -2621,6 +2684,7 @@ class ShowLicenseTechSupportSchema(MetaParser):
             'sapluginmgmtinterfacemutex':str,
             'sapluginmgmtipdomainname':str,
             Optional('smarttransportvrfsupport'):str,
+            Optional('smartagentcompliancestatus'):str,
             'smartagentclientwaitforserver':int,
             'smartagentcmretrysend':str,
             'smartagentclientisunified':str,
@@ -2632,6 +2696,9 @@ class ShowLicenseTechSupportSchema(MetaParser):
             'systeminitbyevent':str,
             'smarttransportserveridcheck':str,
             'smarttransportproxysupport':str,
+            Optional('smartagentslacreturnforcedallowed'):str,
+            Optional('smartagenttelemetryrumreportmax'):int,
+            Optional('smartagentrumtelemetryrumstoremin'):int,
             Optional('smartagentusagestatisticsenable'):str,
             Optional('smartagentpolicydisplayformat'):int,
             Optional('smartagentreportonupgrade'):str,
@@ -2639,6 +2706,7 @@ class ShowLicenseTechSupportSchema(MetaParser):
             'smartagentmaxrummemory':int,
             'smartagentconcurrentthreadmax':int,
             'smartagentpolicycontrollermodel':str,
+            Optional('smartagentdisablecacheswid'):str,
             'smartagentpolicymodel':str,
             'smartagentfederallicense':str,
             'smartagentmultitenant':str,
@@ -2742,6 +2810,8 @@ class ShowLicenseTechSupport(ShowLicenseTechSupportSchema):
         p1_8_1 = re.compile(r'^\s*(?P<policy_sub_header>[Unenforced|Enforced|Export]+[\/]*[\w\-\w]* +[\(]*[Perpetual|Subscription]+[\/]*[Perpetual|Subscription]*[\)]*.*Attributes)\:$')
         #Usage Reporting:
         p1_9 = re.compile(r'^(?P<usage_reporting>Usage Reporting)\:$')
+        #License  Conversion
+        p1_10 = re.compile(r'^(?P<license_conversion>License +Conversion)\:$')
         
         #License Usage
         p2 = re.compile(r'^(?P<license_usage>License +Usage)$')
@@ -2789,8 +2859,7 @@ class ShowLicenseTechSupport(ShowLicenseTechSupportSchema):
         p7 = re.compile(r'^(?P<license_certificates>License +Certificates)$')
         
         #HA Info
-        p8 = re.compile(r'^(?P<ha_info>HA +Info)$')
-        
+        p8 = re.compile(r'^(?P<ha_info>HA +Info)$')        
         #Reservation Info
         p9 = re.compile(r'^(?P<reservation_info>Reservation +Info)$')
         #Overall status:
@@ -2815,6 +2884,14 @@ class ShowLicenseTechSupport(ShowLicenseTechSupportSchema):
         #Enforced Licenses:
         p12_1 = re.compile(r'^(?P<enforced_licenses>Enforced +Licenses)\:$')
 
+        #Telemetry Report Summary
+        p13 = re.compile(r'^(?P<telemetry_report_summary>Telemetry +Report +Summary)\:$')
+        
+        #Device Telemetry Report Summary
+        p14 = re.compile(r'^(?P<device_telemetry_report_summary>Device +Telemetry +Report +Summary)\:$')      
+        #Trust Code Installed:
+        p14_1 = re.compile(r'^(?P<trust_code_installed>Trust +Code +Installed)\:$') 
+        
         #Below set of expressions are for capturing data lines (For eg. key-value pairs)
         #<none>
         p0_2 = re.compile(r'^\s*\<(?P<value>none)\>$')
@@ -2829,6 +2906,9 @@ class ShowLicenseTechSupport(ShowLicenseTechSupportSchema):
         #Standby: PID:C9300-24U,SN:FOC2129Z02H
         #Member: PID:C9300-24T,SN:FCW2125L07Y
         p0_4=re.compile(r'^\s*(?P<member_type>\S+):\s*PID:(?P<pid>\S+),SN:(?P<sn>\S+)$')
+        
+        #INSTALLED on Sep 27 12:22:33 2021 UTC
+        p0_4_1 =  re.compile(r'^INSTALLED +on +.*')
 
         #Below set of regular expressions are for special cases which could not be handled in above generic expressions
         #In variable name, the digit next to p identifies the heading under which this output line appears
@@ -2857,14 +2937,19 @@ class ShowLicenseTechSupport(ShowLicenseTechSupportSchema):
         p11_data1_2 = re.compile(r'^[\w\s]*\:*\s*P\:+(?P<p>\S+).S\:+(?P<s>\S+)\: +(?P<trustvalue>No +Trust +Data)$')
         #P:C9300-24UX,S:FCW2134L00C: P:C9300-24UX,S:FCW2134L00C, state[2], Trust Data INSTALLED
         p11_data1_3 = re.compile(r'^[\w\s]*\:*\s*P\:+(?P<p>\S+).S\:+(?P<s>\S+)\:*.*(?P<trustvalue>Trust +Data +INSTALLED)$')
-        
+        #P:C9300-48U,S:FCW2133G09T: P:C9300-48U,S:FCW2133G09T, state[1], NOT INSTALLED
+        p11_data1_4 = re.compile(r'^[\w\s]*\:*\s*P\:+(?P<p>\S+).S\:+(?P<s>\S+)\:*.*(?P<trustvalue>NOT INSTALLED)$')
+
         #C9300-24UX: Total licenses found: 198
         p12_data1 = re.compile(r'^\s*(?P<pid>\S+)\: +Total licenses found\: +(?P<total_licenses_found>\d+)$')
         #P:C9300-24UX,S:FCW2134L00C:
         p12_data2 = re.compile(r'^\s*P\:(?P<pid>\S+)\,S\:(?P<sn>\S+)\:$')
         #hseck9: regid.2021-05.com.cisco.C9K_HSEC,1.0_90fdf411-3823-45bd-bd8c-5a5d0e0e1ea2 (3)
         p12_data3 = re.compile(r'^\s*hseck9\: +(?P<hseck9_entitlement_tag>regid\.\S.*) +\((?P<hseck9_no>\d+)\)$')
-
+        
+        #Trust Code Installed: <none> 
+        p14_data1 = re.compile(r'^Trust +Code +Installed\: +(?P<trust_code_installed>\<none\>)$')
+        
         for line in output.splitlines():
             line=line.strip()            
             m = p0.match(line)
@@ -2953,10 +3038,21 @@ class ShowLicenseTechSupport(ShowLicenseTechSupportSchema):
             m = p12.match(line)
             if m:
                 group=m.groupdict()
-                current_dict=ret_dict.setdefault('platform_provided_mapping_table', {})           
+                current_dict=ret_dict.setdefault('platform_provided_mapping_table', {})                  
                 continue
-
-            #Setting the dictionary position for sub headings (2nd level and further levels down)
+            #Telemetry Report Summary (new output section in 17.11.1)
+            m = p13.match(line)
+            if m:
+                group=m.groupdict()
+                current_dict=ret_dict.setdefault('telemetry_report_summary', {})
+                continue
+        #Device telemetry  report  summary (new  output  section  in 17.11.1)
+            m = p14.match(line)
+            if m:
+                group=m.groupdict()
+                current_dict=ret_dict.setdefault('device_telemetry_report_summary', {})
+                continue
+        #Setting the dictionary position for sub headings (2nd level and further levels down)
             m = p1_1.match(line)
             if m:
                 group=m.groupdict()
@@ -3033,6 +3129,12 @@ class ShowLicenseTechSupport(ShowLicenseTechSupportSchema):
                 if ret_dict.get('communication_statistics'):
                     current_dict = ret_dict.setdefault('communication_statistics',{}).setdefault('usage_reporting', {})       
                 continue 
+                
+            m = p1_10.match(line)
+            if m:
+                group=m.groupdict()
+                current_dict = ret_dict.setdefault('smart_licensing_status',{}).setdefault('license_conversion', {})                      
+                continue     
 
             m = p2_1.match(line)
             if m:
@@ -3159,7 +3261,16 @@ class ShowLicenseTechSupport(ShowLicenseTechSupportSchema):
                 group = m.groupdict()
                 current_dict = ret_dict.setdefault('platform_provided_mapping_table',{}).setdefault('enforced_licenses',{})
                 continue
-
+                
+            m = p14_1.match(line)
+            if  m:
+                group = m.groupdict()
+                if ret_dict.get('device_telemetry_report_summary') is not None:
+                    current_dict = ret_dict.setdefault('device_telemetry_report_summary',{}).setdefault('trust_code_installed',{})
+                else:
+                    current_dict = ret_dict.setdefault('smart_licensing_status',{}).setdefault('trust_code_installed',{})
+                continue
+                
             #Handling of header section ends here
             #Code sections below are for handling data lines
             
@@ -3169,9 +3280,23 @@ class ShowLicenseTechSupport(ShowLicenseTechSupportSchema):
             #below section
             flag_term_information = False
             flag_overall_status = False
+            
             m = p0_4.match(line)
             if m:
-                group = m.groupdict()
+                group = m.groupdict() 
+                try:                    
+                    temp_dict1 = ret_dict.get('device_telemetry_report_summary')
+                    if temp_dict1.get('trust_code_installed') is  not  None:
+                        current_dict = ret_dict.setdefault('device_telemetry_report_summary',{}).setdefault('trust_code_installed', {}).setdefault(group['member_type'].lower(),{})
+                        current_dict.update({
+                            'pid': group['pid'],
+                            'sn': group['sn']})
+                        continue    
+                except KeyError:
+                    pass
+                except AttributeError:
+                    pass
+                        
                 try:
                     temp_dict = ret_dict.get('reservation_info').get('authorizations').get('c9k_hsec')
                     if temp_dict.get('term_information') is not None:
@@ -3208,29 +3333,50 @@ class ShowLicenseTechSupport(ShowLicenseTechSupportSchema):
 
                 if group['member_type'] == 'UDI':
                     current_dict.update({
-                        'pid': group['pid'],
-                        'sn': group['sn']})
+                            'pid': group['pid'],
+                            'sn': group['sn']})
                     continue
-                else:
+                elif ret_dict.get('product_information') is not None:
                     current_dict = ret_dict.setdefault('product_information',{}).setdefault('ha_udi_list', {}).setdefault(group['member_type'].lower(),{})
                     current_dict.update({
                         'pid': group['pid'],
                         'sn': group['sn']})
                     continue
+                else:
+                    current_dict = ret_dict.setdefault('smart_licensing_status',{}).setdefault('trust_code_installed', {}).setdefault(group['member_type'].lower(),{})
+                    current_dict.update({
+                        'pid': group['pid'],
+                        'sn': group['sn']})
+                    continue
+                    
+            m = p0_4_1.match(line)
+            if  m:
+                current_dict.update({'info': m.group(0)})
+                continue    
 
             #Below sections are to handle data lines
             #P:C9300-24UX,S:FCW2134L00C:
             m = p12_data2.match(line)
             if m:
-                group = m.groupdict()
+                group = m.groupdict()                
                 current_dict = ret_dict.setdefault('platform_provided_mapping_table', {}).setdefault('enforced_licenses', {}).setdefault(group['sn'].lower(), {})
                 current_dict.update({'pid': group['pid']})
                 continue
-            
             #Generalised expression for handling <key>:<value> paired lines
             #Data lines that required special handling are done below with further checks and regular expressions
             m = p0_3.match(line)
             if m:
+                m1 = p14_data1.match(line)
+                if  m1:
+                    group = m1.groupdict()
+                    
+                    if  ret_dict.get('device_telemetry_report_summary') is not None:
+                        current_dict.update({'trust_code_installed': group['trust_code_installed']})
+                        
+                    else:
+                        current_dict = ret_dict.setdefault('smart_licensing_status',{})
+                        current_dict.update({'trust_code_installed': group['trust_code_installed']})
+                        continue
             
                 m1 = p12_data3.match(line)
                 if m1:
@@ -3270,7 +3416,16 @@ class ShowLicenseTechSupport(ShowLicenseTechSupportSchema):
                     current_dict.update({'p': group['p'], 'trustvalue':group['trustvalue']})
                     current_dict = ret_dict.setdefault('other_info', {})
                     continue
-                    
+
+                m1 = p11_data1_4.match(line)
+                if m1:
+                    group = m1.groupdict()
+                    current_dict = ret_dict.setdefault('other_info', {}).setdefault('trust_data', {}).setdefault(
+                        group['s'].lower(), {})
+                    current_dict.update({'p': group['p'], 'trustvalue': group['trustvalue']})
+                    current_dict = ret_dict.setdefault('other_info', {})
+                    continue
+
                 m1= p10_data1.match(line)
                 if m1:
                     group = m1.groupdict()            
@@ -3336,9 +3491,77 @@ class ShowLicenseTechSupport(ShowLicenseTechSupportSchema):
                         current_dict.update({key: int(group['value'])}) 
                         continue
                     else:
-                        #ForkedPdb().set_trace()
                         current_dict.update({key: group['value']})
                         continue                   
 
+        return ret_dict        
+
+class ShowLicenseHistoryMessageSchema(MetaParser):
+    """Schema for show license history message"""
+    schema = {
+        'message_history': {
+            'trust_establishment': str,
+            'usage_reporting': str,
+            'result_polling': str,
+            'authorization_request': str,
+            'authorization_return': str,
+            'trust_sync': str
+        },
+        'import_message_history': {
+            'policy': str,
+            'auth': str,
+            'trust_code': str,
+            'rum_ack': str,
+            'conversion_ack': str,
+            'account_info': str
+        }
+    }
+
+
+class ShowLicenseHistoryMessage(ShowLicenseHistoryMessageSchema):
+    """Parser for show license history message"""
+    cli_command = 'show license history message'
+
+    def cli(self, output=None):
+        if output is None:
+          output = self.device.execute(self.cli_command)
+
+        # Message History (oldest to newest):
+        # Import Message History (oldest to newest):
+        p1 = re.compile(r'^[Import]*\s*Message\s+History\s+\(oldest\s+to\s+newest\):$')
+
+        # Trust Establishment:
+        p2 = re.compile(r'^(?P<key_name>(Trust\s+Establishment|Usage\s+Reporting|Result\s+Polling|'
+        r'Authorization\s+Request|Authorization\s+Return|Trust\s+Sync|Import\s+POLICY|Import\s+AUTH|'
+        r'Import\s+TRUST\s+CODE|Import\s+RUM\s+ACK|Import\s+CONVERSION\s+ACK|Import\s+ACCOUNT\s+INFO)):$')
+
+        # No past history
+        p3 = re.compile(r'^[\w\s]+$')
+
+        ret_dict = dict()
+        tmp_key = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Message History (oldest to newest):
+            # Import Message History (oldest to newest):
+            match = p1.match(line)
+            if match:
+                hist_dict = ret_dict.setdefault('import_message_history' if 'Import' in match.group() else 'message_history', {})
+                continue
+            
+            # Trust Establishment:
+            match = p2.match(line)
+            if match:
+                tmp_key = re.sub('\s+', '_', match.groupdict()['key_name'].lower())
+                tmp_key = re.sub('import_', '', tmp_key)
+                continue
+
+            # No past history
+            match = p3.match(line)
+            if match:
+                hist_dict[tmp_key] = match.group()
+                continue
+
         return ret_dict
-        

@@ -1,0 +1,18 @@
+pm9008#show platform hardware qfp active system state
+CPP HA client processes registered (5 of 5)
+  cpp_ha : Initialized
+  FMAN-FP : Initialized
+  cpp_sp : Initialized
+  cpp_cp : Initialized
+  cpp_driver0 : Initialized
+Platform State: curr=ACTIVE_SOLO next=ACTIVE_SOLO
+HA State: CPP=0 dir=BOTH Role: curr=ACTIVE_SOLO next=ACTIVE_SOLO
+Client State: ENABLE
+Image: /tmp/sw/fp/0/0/fp/mount/usr/cpp/bin/qfp-ucode-radium
+Load Cnt: 1 Time: Apr 26, 2022 19:00:47
+Active Threads: 0-3,10-11
+Stuck Threads: 4-9
+Fault Manager Flags:
+    ignore_fault:          FALSE
+    ignore_stuck_thread:   FALSE
+    crashdump_in_progress: FALSE

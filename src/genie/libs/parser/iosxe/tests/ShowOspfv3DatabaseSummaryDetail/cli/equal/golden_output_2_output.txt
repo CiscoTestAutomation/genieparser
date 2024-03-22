@@ -1,0 +1,31 @@
+show ospfv3 vrf red database database-summary detail
+
+          OSPFv3 5 address-family ipv6 vrf red (router-id 12.1.1.2)
+
+Router 12.1.1.2 LSA summary
+  LSA Type      Count    Delete   Maxage
+  Router              1        0        0       
+  Network             1        0        0       
+  Inter-area Prefix   0        0        0       
+  Inter-area Router   0        0        0       
+  Type-5 Ext          0        0        0       
+  Type-7 External     0        0        0       
+  Link                1        0        0       
+  Prefix              1        0        0       
+  TE                  0        0        0       
+  GR                  0        0        0       
+  Total               4        0        0       
+
+Router 12.1.1.1 LSA summary
+  LSA Type      Count    Delete   Maxage
+  Router              1        0        0       
+  Network             0        0        0       
+  Inter-area Prefix   0        0        0       
+  Inter-area Router   0        0        0       
+  Type-5 Ext          0        0        0       
+  Type-7 External     0        0        0       
+  Link                1        0        0       
+  Prefix              0        0        0       
+  TE                  0        0        0       
+  GR                  0        0        0       
+  Total               2        0        0

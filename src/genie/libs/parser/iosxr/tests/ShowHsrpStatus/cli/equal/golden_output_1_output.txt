@@ -1,0 +1,10 @@
+Tue Mar 29 06:03:34.485 UTC
+Process started at Never
+Checkpoint recovered Never
+Mode is Primary
+  ISSU is not in progress
+  Big Bang notification received Never
+ISSU completed Never
+
+ISSU aborted Never
+

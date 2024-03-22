@@ -1,0 +1,6 @@
+show mpls forwarding prefix ipv4 unicast 10.0.0.12/32
+Fri Dec  1 07:33:09.165 UTC
+Local  Outgoing    Prefix             Outgoing     Next Hop        Bytes       
+Label  Label       or ID              Interface                    Switched    
+------ ----------- ------------------ ------------ --------------- ------------
+24004  24004       10.0.0.12/32       BE12         10.1.2.2        919314      

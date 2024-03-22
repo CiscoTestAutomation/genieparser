@@ -1,0 +1,14 @@
+Port state    = Down Not-in-Bndl 
+Channel group = 10          Mode = Active          Gcchange = -
+Port-channel  = null        GC   =   -             Pseudo port-channel = Po10
+Port index    = 0           Load = 0x00            Protocol =   LACP
+
+Flags:  S - Device is sending Slow LACPDUs   F - Device is sending fast LACPDUs.
+        A - Device is in active mode.        P - Device is in passive mode.
+
+Local information:
+                                LACP port    Admin     Oper    Port        Port
+Port          Flags   State     Priority     Key       Key     Number      State
+Gi2/0/13      SA      down      32768        0xA       0x0     0x20E       0x4D  
+
+Age of the port in the current state: 35d:21h:59m:46s 

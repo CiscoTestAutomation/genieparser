@@ -1,0 +1,25 @@
+expected_output={
+     'tunnel_id': {
+         1184: {
+             'active_time': 19,
+             'auth_sign': 'psk',
+             'auth_verify': 'psk',
+             'ce_id': 76998,
+             'dh_grp': 16,
+             'encryption': 'aes-cbc',
+             'fvrf': 'none',
+             'hash': 'sha512',
+             'ivrf': 'none',
+             'keysize': 192,
+             'life_time': 86400,
+             'local': '101.0.10.2/500',
+             'local_spi': '39125EA1EB1B358D',
+             'prf': 'sha512',
+             'remote': '100.201.33.252/500',
+             'remote_spi': '29C6416947D54ECA',
+             'remote_subnets': [],
+             'session_id': 1790326,
+             'status': 'ready',
+         },
+     },
+ }

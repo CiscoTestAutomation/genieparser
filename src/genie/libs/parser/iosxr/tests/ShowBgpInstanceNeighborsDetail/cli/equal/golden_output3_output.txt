@@ -1,0 +1,61 @@
+show bgp neighbors 1.1.1.1
+Mon Jan 16 09:52:33.502 UTC
+
+BGP neighbor is 1.1.1.1
+ Remote AS 200, local AS 200, internal link
+ Remote router ID 0.0.0.0
+  BGP state = Active
+  NSR State: None
+  BFD enabled (session up): mininterval: 150 multiplier: 3
+  BFD discriminator: 4294901763
+  Last read 00:00:00, Last read before reset 6d03h
+  Hold time is 180, keepalive interval is 60 seconds
+  Configured hold time: 180, keepalive: 60, min acceptable hold time: 3
+  Last write 00:15:52, attempted 85, written 85
+  Second last write 6d03h, attempted 19, written 19
+  Last write before reset 6d03h, attempted 19, written 19
+  Second last write before reset 6d03h, attempted 19, written 19
+  Last write pulse rcvd  Jan 16 09:36:40.945 last full not set pulse count 58
+  Last write pulse rcvd before reset 6d03h
+  Socket not armed for io, not armed for read, not armed for write
+  Last write thread event before reset 6d03h, second last 6d03h
+  Last KA expiry before reset 6d03h, second last 6d03h
+  Last KA error before reset 00:00:00, KA not sent 00:00:00
+  Last KA start before reset 6d03h, second last 6d03h
+  Precedence: internet
+  Non-stop routing is enabled
+  Graceful restart is enabled
+  Restart time is 120 seconds
+  Stale path timeout time is 360 seconds
+  Multi-protocol capability received
+  Received 29 messages, 0 notifications, 0 in queue
+  Sent 30 messages, 0 notifications, 0 in queue
+  Minimum time between advertisement runs is 0 secs
+  Inbound message logging enabled, 3 messages buffered
+  Outbound message logging enabled, 3 messages buffered
+
+ For Address Family: IPv4 Unicast
+  BGP neighbor version 0
+  Update group: 0.4 Filter-group: 0.0  No Refresh request being processed
+  AF-dependent capabilities:
+    Graceful Restart capability advertised
+      Local restart time is 120, RIB purge time is 600 seconds
+      Maximum stalepath time is 360 seconds
+  Route refresh request: received 0, sent 0
+  0 accepted prefixes, 0 are bestpaths
+  Exact no. of prefixes denied : 0.
+  Cumulative no. of prefixes denied: 0. 
+  Prefix advertised 0, suppressed 0, withdrawn 0
+  AIGP is enabled
+  An EoR was received during read-only mode
+  Last ack version 0, Last synced ack version 0
+  Outstanding version objects: current 0, max 1, refresh 0
+  Additional-paths operation: None
+  Send Multicast Attributes
+  Advertise routes with local-label via Unicast SAFI
+
+  Connections established 1; dropped 1
+  Local host: 1.1.1.2, Local port: 44866, IF Handle: 0x000004a0
+  Foreign host: 1.1.1.1, Foreign port: 179
+  Last reset 00:15:52, due to Peer closing down the session
+  Peer reset reason: Remote closed the session (Connection timed out)

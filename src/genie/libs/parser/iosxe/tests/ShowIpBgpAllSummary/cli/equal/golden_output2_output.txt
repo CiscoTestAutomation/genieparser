@@ -1,0 +1,23 @@
+show ip bgp l2vpn evpn all summary
+BGP router identifier 15.1.10.1, local AS number 150
+BGP table version is 136277, main routing table version 136277
+23737 network entries using 9115008 bytes of memory
+23737 path entries using 5506984 bytes of memory
+4020/2844 BGP path/bestpath attribute entries using 1189920 bytes of memory
+2 BGP AS-PATH entries using 48 bytes of memory
+2880 BGP extended community entries using 163200 bytes of memory
+0 BGP route-map cache entries using 0 bytes of memory
+0 BGP filter-list cache entries using 0 bytes of memory
+BGP using 15975160 total bytes of memory
+BGP activity 24134/361 prefixes, 77817/54042 paths, scan interval 60 secs
+23837 networks peaked at 19:52:57 Jul 21 2022 UTC (00:42:02.886 ago)
+
+Neighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+10.1.10.1       4          150   20073   42973   136277    0    0 00:49:59     4458
+10.2.10.1       4          150   11306   42965   136277    0    0 00:49:59     2540
+10.3.10.1       4          150   11849   42979   136277    0    0 00:50:01     2620
+10.4.10.1       4          150   10535   42993   136277    0    0 00:50:05     2580
+10.5.10.1       4          150     736   42690   136277    0    0 00:50:07     1980
+30.1.10.1       4      304.304    6953   38119   136088    0    0 00:50:14     2540
+30.2.10.1       4      304.304    6347   38120   136088    0    0 00:50:13     2580
+30.3.10.1       4      301.301    7722   38113   136088    0    0 00:50:14     4439

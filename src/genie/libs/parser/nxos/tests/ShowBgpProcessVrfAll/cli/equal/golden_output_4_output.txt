@@ -1,0 +1,81 @@
+Information regarding configured VRFs:
+
+BGP Information for VRF 1
+VRF Id : 3
+VRF state : UP
+VNID : 91100 (valid)
+Topo Id : 1100
+Encap type : VXLAN
+VTEP IP : 1.1.1.1
+VTEP Virtual IP : 1.1.1.1
+VTEP VIP-R : 0.0.0.0
+Router-MAC : 648f.3e27.eb89
+VIP Derived MAC : 648f.3e27.e789
+VIP-R Derived MAC : 0000.0000.0000
+Router-ID : 1.1.1.1
+Configured Router-ID : 0.0.0.0
+Confed-ID : 0
+Cluster-ID : 0.0.0.0
+No. of configured peers : 0
+No. of pending config peers : 0
+No. of established peers : 0
+VRF RD : 1.1.1.1:3
+VRF Secondary RD : Not configured
+
+Information for address family IPv4 Unicast in VRF 1
+Table Id                   : 0x3
+Table state                : UP
+Peers      Active-peers    Routes     Paths      Networks   Aggregates
+0          0               97         199        3          0         
+
+Redistribution                
+    None
+
+Auto RT is configured
+EVPN Auto RT is configured
+Export RT list:
+    ASnumber:100 ASnumber:91100 
+Import RT list:
+    ASnumber:100 ASnumber:91100 
+EVPN Export RT list:
+    ASnumber:100 ASnumber:91100 
+EVPN Import RT list:
+    ASnumber:100 ASnumber:91100 
+MVPN Export RT list:
+    ASnumber:91100 
+MVPN Import RT list:
+    ASnumber:91100 
+Label mode: per-vrf
+
+
+Nexthop trigger-delay
+    critical 3000 ms
+    non-critical 10000 ms
+
+Information for address family IPv6 Unicast in VRF 1
+Table Id                   : 0x80000003
+Table state                : UP
+Peers      Active-peers    Routes     Paths      Networks   Aggregates
+0          0               0          0          0          0         
+
+Redistribution                
+    None
+
+Export RT list:
+    ASnumber:91100 
+Import RT list:
+    ASnumber:91100 
+EVPN Export RT list:
+    ASnumber:91100 
+EVPN Import RT list:
+    ASnumber:91100 
+MVPN Export RT list:
+    ASnumber:91100 
+MVPN Import RT list:
+    ASnumber:91100 
+Label mode: per-vrf
+
+
+Nexthop trigger-delay
+    critical 3000 ms
+    non-critical 10000 ms

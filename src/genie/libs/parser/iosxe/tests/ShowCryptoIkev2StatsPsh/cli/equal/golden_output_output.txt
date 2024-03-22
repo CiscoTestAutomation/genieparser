@@ -1,0 +1,6 @@
+------------------IKEV2 PSH STATS----------------------
+
+ikev2 psh requested: 99
+ikev2 psh request success: 99
+ikev2 psh return requested: 92
+ikev2 psh return success: 92

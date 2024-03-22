@@ -1,0 +1,175 @@
+
+Tag 1:
+IS-IS Level-2 Link State Database:
+LSPID                 LSP Seq Num  LSP Checksum  LSP Holdtime/Rcvd      ATT/P/OL
+R1.00-00              0x0000000D   0xB97E                1087/1199      0/0/0
+  Area Address: 50.1234
+  NLPID:        0xCC 0x8E
+  Router ID:    1.1.1.1
+  Router CAP:   1.1.1.1, D:0, S:0
+    Segment Routing: I:1 V:0, SRGB Base: 16000 Range: 8000
+    Segment Routing Local Block: SRLB Base: 15000 Range: 1000
+    Node-MSD
+      MSD: 16
+    Flex algorithm: 128 Metric-Type: IGP Alg-type: SPF Priority: 128
+    Flex algorithm: 129 Metric-Type: Min-delay Alg-type: SPF Priority: 128
+    Flex algorithm: 130 Metric-Type: IGP Alg-type: SPF Priority: 128
+    Flex algorithm: 131 Metric-Type: IGP Alg-type: SPF Priority: 128
+    Flex algorithm: 132 Metric-Type: IGP Alg-type: SPF Priority: 128
+    Flex algorithm: 133 Metric-Type: IGP Alg-type: SPF Priority: 128
+    Flex algorithm: 134 Metric-Type: IGP Alg-type: SPF Priority: 128
+    Flex algorithm: 135 Metric-Type: IGP Alg-type: SPF Priority: 128
+    Flex algorithm: 136 Metric-Type: IGP Alg-type: SPF Priority: 128
+    Flex algorithm: 137 Metric-Type: IGP Alg-type: SPF Priority: 128
+    Flex algorithm: 138 Metric-Type: IGP Alg-type: SPF Priority: 128
+    Flex algorithm: 139 Metric-Type: IGP Alg-type: SPF Priority: 128
+    Flex algorithm: 140 Metric-Type: IGP Alg-type: SPF Priority: 128
+    Flex algorithm: 141 Metric-Type: IGP Alg-type: SPF Priority: 128
+    Flex algorithm: 142 Metric-Type: IGP Alg-type: SPF Priority: 128
+    Flex algorithm: 143 Metric-Type: IGP Alg-type: SPF Priority: 128
+    Flex algorithm: 144 Metric-Type: IGP Alg-type: SPF Priority: 128
+    Flex algorithm: 145 Metric-Type: IGP Alg-type: SPF Priority: 128
+    Flex algorithm: 146 Metric-Type: IGP Alg-type: SPF Priority: 128
+    Flex algorithm: 147 Metric-Type: IGP Alg-type: SPF Priority: 128
+    Flex algorithm: 148 Metric-Type: IGP Alg-type: SPF Priority: 128
+    Flex algorithm: 149 Metric-Type: IGP Alg-type: SPF Priority: 128
+    Flex algorithm: 150 Metric-Type: IGP Alg-type: SPF Priority: 128
+    Flex algorithm: 151 Metric-Type: IGP Alg-type: SPF Priority: 128
+    Flex algorithm: 152 Metric-Type: IGP Alg-type: SPF Priority: 128
+    Flex algorithm: 153 Metric-Type: IGP Alg-type: SPF Priority: 128
+    Flex algorithm: 154 Metric-Type: IGP Alg-type: SPF Priority: 128
+    Flex algorithm: 155 Metric-Type: IGP Alg-type: SPF Priority: 128
+    Segment Routing Algorithms: SPF, Strict-SPF, Flex-algo 128
+    Segment Routing Algorithms: Flex-algo 129, Flex-algo 130, Flex-algo 131
+    Segment Routing Algorithms: Flex-algo 132, Flex-algo 133, Flex-algo 134
+    Segment Routing Algorithms: Flex-algo 135, Flex-algo 136, Flex-algo 137
+    Segment Routing Algorithms: Flex-algo 138, Flex-algo 139, Flex-algo 140
+    Segment Routing Algorithms: Flex-algo 141, Flex-algo 142, Flex-algo 143
+    Segment Routing Algorithms: Flex-algo 144, Flex-algo 145, Flex-algo 146
+    Segment Routing Algorithms: Flex-algo 147, Flex-algo 148, Flex-algo 149
+    Segment Routing Algorithms: Flex-algo 150, Flex-algo 151, Flex-algo 152
+    Segment Routing Algorithms: Flex-algo 153, Flex-algo 154, Flex-algo 155
+  Hostname: R1
+  Metric: 10         IS-Extended R2.00
+    Adjacency SID Value:18 F:0 B:0 V:1 L:1 S:0 P:0 Weight:0
+    Interface IP Address: 12.1.1.1
+    Neighbor IP Address: 12.1.1.2
+    Admin. Weight: 10
+    Physical LINK BW: 1000000 kbits/sec
+  Metric: 10         IS-Extended R3.00
+    Adjacency SID Value:19 F:0 B:0 V:1 L:1 S:0 P:0 Weight:0
+    Interface IP Address: 13.1.1.1
+    Neighbor IP Address: 13.1.1.2
+    Admin. Weight: 10
+    Physical LINK BW: 1000000 kbits/sec
+  IP Address:   1.1.1.1
+  Metric: 10         IP 12.1.1.0/24
+    Prefix-attr: X:0 R:0 N:0
+  Metric: 10         IP 13.1.1.0/24
+    Prefix-attr: X:0 R:0 N:0
+  IPv6 Address: 111::111
+  Metric: 10         IPv6 12:12::/64
+    Prefix-attr: X:0 R:0 N:0
+  Metric: 10         IPv6 13:13::/64
+    Prefix-attr: X:0 R:0 N:0
+  Metric: 10         IPv6 111::111/128
+    Prefix-attr: X:0 R:0 N:1
+R1.00-01              0x00000006   0x191C                1082/1198      0/0/0
+  Metric: 10         IP 1.1.1.1/32
+    Prefix-attr: X:0 R:0 N:1
+    Prefix-SID Index: 11, Algorithm: SPF, R:0 N:1 P:0 E:0 V:0 L:0
+    Prefix-SID Index: 12, Algorithm: Strict-SPF, R:0 N:1 P:0 E:0 V:0 L:0
+    Prefix-SID Index: 123, Algorithm: Flex-algo 128, R:0 N:1 P:0 E:0 V:0 L:0
+    Prefix-SID Index: 124, Algorithm: Flex-algo 129, R:0 N:1 P:0 E:0 V:0 L:0
+    Prefix-SID Index: 125, Algorithm: Flex-algo 130, R:0 N:1 P:0 E:0 V:0 L:0
+    Prefix-SID Index: 126, Algorithm: Flex-algo 131, R:0 N:1 P:0 E:0 V:0 L:0
+    Prefix-SID Index: 127, Algorithm: Flex-algo 132, R:0 N:1 P:0 E:0 V:0 L:0
+    Prefix-SID Index: 128, Algorithm: Flex-algo 133, R:0 N:1 P:0 E:0 V:0 L:0
+    Prefix-SID Index: 129, Algorithm: Flex-algo 134, R:0 N:1 P:0 E:0 V:0 L:0
+    Prefix-SID Index: 130, Algorithm: Flex-algo 135, R:0 N:1 P:0 E:0 V:0 L:0
+    Prefix-SID Index: 131, Algorithm: Flex-algo 136, R:0 N:1 P:0 E:0 V:0 L:0
+    Prefix-SID Index: 132, Algorithm: Flex-algo 137, R:0 N:1 P:0 E:0 V:0 L:0
+    Prefix-SID Index: 133, Algorithm: Flex-algo 138, R:0 N:1 P:0 E:0 V:0 L:0
+    Prefix-SID Index: 134, Algorithm: Flex-algo 139, R:0 N:1 P:0 E:0 V:0 L:0
+    Prefix-SID Index: 135, Algorithm: Flex-algo 140, R:0 N:1 P:0 E:0 V:0 L:0
+    Prefix-SID Index: 136, Algorithm: Flex-algo 141, R:0 N:1 P:0 E:0 V:0 L:0
+    Prefix-SID Index: 137, Algorithm: Flex-algo 142, R:0 N:1 P:0 E:0 V:0 L:0
+    Prefix-SID Index: 138, Algorithm: Flex-algo 143, R:0 N:1 P:0 E:0 V:0 L:0
+    Source Router ID: 1.1.1.1
+    Prefix-SID Index: 139, Algorithm: Flex-algo 144, R:0 N:1 P:0 E:0 V:0 L:0
+    Prefix-SID Index: 140, Algorithm: Flex-algo 145, R:0 N:1 P:0 E:0 V:0 L:0
+    Prefix-SID Index: 141, Algorithm: Flex-algo 146, R:0 N:1 P:0 E:0 V:0 L:0
+    Prefix-SID Index: 142, Algorithm: Flex-algo 147, R:0 N:1 P:0 E:0 V:0 L:0
+    Prefix-SID Index: 143, Algorithm: Flex-algo 148, R:0 N:1 P:0 E:0 V:0 L:0
+    Prefix-SID Index: 144, Algorithm: Flex-algo 149, R:0 N:1 P:0 E:0 V:0 L:0
+    Prefix-SID Index: 145, Algorithm: Flex-algo 150, R:0 N:1 P:0 E:0 V:0 L:0
+    Prefix-SID Index: 146, Algorithm: Flex-algo 151, R:0 N:1 P:0 E:0 V:0 L:0
+    Prefix-SID Index: 147, Algorithm: Flex-algo 152, R:0 N:1 P:0 E:0 V:0 L:0
+    Prefix-SID Index: 148, Algorithm: Flex-algo 153, R:0 N:1 P:0 E:0 V:0 L:0
+    Prefix-SID Index: 149, Algorithm: Flex-algo 154, R:0 N:1 P:0 E:0 V:0 L:0
+  Metric: 10         IP 1.1.1.1/32
+    Prefix-SID Index: 150, Algorithm: Flex-algo 155, R:0 N:1 P:0 E:0 V:0 L:0
+R2.00-00              0x0000000D   0xEF96                1087/1199      0/0/0
+  Area Address: 50.1234
+  NLPID:        0xCC 0x8E
+  Router ID:    2.2.2.2
+  Router CAP:   2.2.2.2, D:0, S:0
+    Segment Routing: I:1 V:0, SRGB Base: 16000 Range: 8000
+    Segment Routing Local Block: SRLB Base: 15000 Range: 1000
+    Node-MSD
+      MSD: 16
+    Flex algorithm: 130 Metric-Type: IGP Alg-type: SPF Priority: 128
+    Flex algorithm: 131 Metric-Type: IGP Alg-type: SPF Priority: 128
+    Flex algorithm: 132 Metric-Type: IGP Alg-type: SPF Priority: 128
+    Flex algorithm: 133 Metric-Type: IGP Alg-type: SPF Priority: 128
+    Flex algorithm: 134 Metric-Type: IGP Alg-type: SPF Priority: 128
+    Flex algorithm: 135 Metric-Type: IGP Alg-type: SPF Priority: 128
+    Flex algorithm: 136 Metric-Type: IGP Alg-type: SPF Priority: 128
+    Flex algorithm: 137 Metric-Type: IGP Alg-type: SPF Priority: 128
+    Flex algorithm: 138 Metric-Type: IGP Alg-type: SPF Priority: 128
+    Flex algorithm: 139 Metric-Type: IGP Alg-type: SPF Priority: 128
+    Flex algorithm: 140 Metric-Type: IGP Alg-type: SPF Priority: 128
+    Flex algorithm: 141 Metric-Type: IGP Alg-type: SPF Priority: 128
+    Flex algorithm: 142 Metric-Type: IGP Alg-type: SPF Priority: 128
+    Flex algorithm: 143 Metric-Type: IGP Alg-type: SPF Priority: 128
+    Flex algorithm: 144 Metric-Type: IGP Alg-type: SPF Priority: 128
+    Flex algorithm: 145 Metric-Type: IGP Alg-type: SPF Priority: 128
+    Flex algorithm: 146 Metric-Type: IGP Alg-type: SPF Priority: 128
+    Flex algorithm: 147 Metric-Type: IGP Alg-type: SPF Priority: 128
+    Flex algorithm: 148 Metric-Type: IGP Alg-type: SPF Priority: 128
+    Flex algorithm: 149 Metric-Type: IGP Alg-type: SPF Priority: 128
+    Flex algorithm: 150 Metric-Type: IGP Alg-type: SPF Priority: 128
+    Flex algorithm: 151 Metric-Type: IGP Alg-type: SPF Priority: 128
+    Flex algorithm: 152 Metric-Type: IGP Alg-type: SPF Priority: 128
+    Flex algorithm: 153 Metric-Type: IGP Alg-type: SPF Priority: 128
+    Flex algorithm: 154 Metric-Type: IGP Alg-type: SPF Priority: 128
+    Flex algorithm: 155 Metric-Type: IGP Alg-type: SPF Priority: 128
+    Segment Routing Algorithms: SPF, Strict-SPF, Flex-algo 128
+    Segment Routing Algorithms: Flex-algo 129, Flex-algo 130, Flex-algo 131
+    Segment Routing Algorithms: Flex-algo 132, Flex-algo 133, Flex-algo 134
+    Segment Routing Algorithms: Flex-algo 135, Flex-algo 136, Flex-algo 137
+    Segment Routing Algorithms: Flex-algo 138, Flex-algo 139, Flex-algo 140
+    Segment Routing Algorithms: Flex-algo 141, Flex-algo 142, Flex-algo 143
+    Segment Routing Algorithms: Flex-algo 144, Flex-algo 145, Flex-algo 146
+    Segment Routing Algorithms: Flex-algo 147, Flex-algo 148, Flex-algo 149
+    Segment Routing Algorithms: Flex-algo 150, Flex-algo 151, Flex-algo 152
+    Segment Routing Algorithms: Flex-algo 153, Flex-algo 154, Flex-algo 155
+  Hostname: R2
+  Metric: 10         IS-Extended R1.00
+    Adjacency SID Value:16 F:0 B:0 V:1 L:1 S:0 P:0 Weight:0
+    Interface IP Address: 12.1.1.2
+    Neighbor IP Address: 12.1.1.1
+    Admin. Weight: 10
+    Physical LINK BW: 1000000 kbits/sec
+  IP Address:   2.2.2.2
+  Metric: 10         IP 12.1.1.0/24
+    Prefix-attr: X:0 R:0 N:0
+  Metric: 10         IP 24.1.1.0/24
+    Prefix-attr: X:0 R:0 N:0
+  IPv6 Address: 222::222
+  Metric: 10         IPv6 12:12::/64
+    Prefix-attr: X:0 R:0 N:0
+  Metric: 10         IPv6 24:24::/64
+    Prefix-attr: X:0 R:0 N:0
+  Metric: 10         IPv6 222::222/128
+    Prefix-attr: X:0 R:0 N:1

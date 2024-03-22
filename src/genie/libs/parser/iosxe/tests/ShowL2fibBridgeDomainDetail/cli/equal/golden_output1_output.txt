@@ -1,0 +1,13 @@
+Bridge Domain : 500
+  Reference Count : 6
+  Replication ports count : 3
+  Unicast Address table size : 0
+  IP Multicast Prefix table size : 0
+
+  Flood List Information :
+    Olist: 61, Ports: 3
+
+  Port Information :
+    BD_PORT   Et0/0:500
+    BD_PORT   Et0/3:500
+    BD_PORT   Et1/0:500

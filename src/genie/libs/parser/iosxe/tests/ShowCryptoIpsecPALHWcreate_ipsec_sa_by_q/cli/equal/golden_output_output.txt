@@ -1,0 +1,2 @@
+GREENDAY#show crypto ipsec internal | include PALHWcreate_ipsec_sa_by_q 
+PALHWcreate_ipsec_sa_by_q |3668 |6056 |0 |0 |3668 |6056 |1 ||0 |0 |0 |0 |0 |0 |0 |0 |0 |0

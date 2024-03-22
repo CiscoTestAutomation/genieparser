@@ -45,7 +45,7 @@ import re
 
 # metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Optional
+from genie.metaparser.util.schemaengine import Schema, Any, Optional, ListOf
 
 # import parser utils
 from genie.libs.parser.utils.common import Common
@@ -70,16 +70,19 @@ class ShowInterfaceSchema(MetaParser):
             Optional("link_state"): str,
             Optional("phys_address"): str,
             Optional("port_speed"): str,
+            Optional("port_speed_unit"): str,
             Optional("mtu"): int,
             "enabled": bool,
             Optional("mac_address"): str,
             Optional("auto_negotiate"): bool,
+            Optional("fec_mode"): str,
             Optional("duplex_mode"): str,
             Optional("port_mode"): str,
             Optional("auto_mdix"): str,
             Optional("switchport_monitor"): str,
             Optional("efficient_ethernet"): str,
             Optional("last_link_flapped"): str,
+            Optional("last_clear_counters"): str,
             Optional("interface_reset"): int,
             Optional("ethertype"): str,
             Optional("beacon"): str,
@@ -221,9 +224,7 @@ class ShowInterface(ShowInterfaceSchema):
                 cmd = self.cli_command[1].format(interface=interface)
             else:
                 cmd = self.cli_command[0]
-            out = self.device.execute(cmd)
-        else:
-            out = output
+            output = self.device.execute(cmd)
 
         # Ethernet2/1.10 is down (Administratively down)
         # Vlan1 is down (Administratively down), line protocol is down, autostate enabled
@@ -240,6 +241,7 @@ class ShowInterface(ShowInterfaceSchema):
         # Ethernet1/12 is down (Transceiver validation failed)
         # Ethernet1/13 is down (SFP validation failed)
         # Ethernet1/13 is down (Channel admin down)
+        # Ethernet140/1/26 is down (linkFlapErrDisabled, port: error)
         p1 = re.compile(r'^(?P<interface>\S+)\s*is\s*'
                         r'(?P<link_state>(down|up|'
                         r'inactive|Transceiver +validation +failed|'
@@ -262,7 +264,8 @@ class ShowInterface(ShowInterfaceSchema):
                         r'(\(No\s+operational\s+members\))?'
                         r'(\(.*ACK.*\))?'
                         r'(\(inactive\))?'
-                        r'(\(Hardware\s+failure\))?$')
+                        r'(\(Hardware\s+failure\))?'
+                        r'(\(linkFlapErrDisabled, +port: +error\))?$')
 
         # admin state is up
         # admin state is up,
@@ -347,27 +350,23 @@ class ShowInterface(ShowInterfaceSchema):
         # auto-duplex, auto-speed
         # full-duplex, 1000 Mb/s, media type is 1G
         # auto-duplex, auto-speed, media type is 10G
-        p10 = re.compile(r'^(?P<duplex_mode>[a-z]+)-duplex, *(?P<port_speed>[a-z0-9\-]+)(?: '
-                         r'*[G|M]b/s)?(?:, +media +type +is (?P<media_type>\w+))?$')
+        p10 = re.compile(r'^(?P<duplex_mode>[a-z]+)-duplex, *(?P<port_speed>[a-z0-9\-]+) *'
+                         r'(?P<unit>[G|M]b/s)?(?:, +media +type +is (?P<media_type>\w+))?$')
 
         # Beacon is turned off
         p11 = re.compile(r'^Beacon *is *turned *(?P<beacon>[a-z]+)$')
 
         # Auto-Negotiation is turned off
-        p12 = re.compile(r'^Auto-Negotiation *is *turned'
-                         r' *(?P<auto_negotiate>(off))$')
-
+        # Auto-Negotiation is turned off  FEC mode is Auto
         # Auto-Negotiation is turned on
-        p12_1 = re.compile(r'^Auto-Negotiation *is *turned'
-                           r' *(?P<auto_negotiate>(on))$')
+        # Auto-Negotiation is turned on  FEC mode is Auto
+        p12 = re.compile(r'^Auto-Negotiation is turned (?P<auto_negotiate>(off|on))'
+                         r'(?: *FEC mode is (?P<fec_mode>(Auto)))?$')
 
         # Input flow-control is off, output flow-control is off
-        p13 = re.compile(r'^Input *flow-control *is *(?P<receive>(off)+),'
-                         r' *output *flow-control *is *(?P<send>(off)+)$')
-
         # Input flow-control is off, output flow-control is on
-        p13_1 = re.compile(r'^Input *flow-control *is *(?P<receive>(on)+),'
-                           r' *output *flow-control *is *(?P<send>(on)+)$')
+        p13 = re.compile(r'^Input *flow-control *is *(?P<receive>(off|on)+),'
+                         r' *output *flow-control *is *(?P<send>(off|on)+)$')
 
         # Auto-mdix is turned off
         p14 = re.compile(r'^Auto-mdix *is *turned *(?P<auto_mdix>[a-z]+)$')
@@ -393,12 +392,10 @@ class ShowInterface(ShowInterfaceSchema):
                          r' *(?P<last_link_flapped>[\S ]+)$')
 
         # Last clearing of "show interface" counters never
-        p19 = re.compile(r'^Last *clearing *of *\"show *interface\"'
-                         r' *counters *(?P<last_clear>[a-z0-9\:]+)$')
-
-        # Last clearing of "" counters 00:15:42
-        p19_1 = re.compile(r'^Last *clearing *of *\" *\"'
-                           r' *counters *(?P<last_clear>[a-z0-9\:]+)$')
+        # Last clearing of "show interface" counters 00:15:42
+        # Last clearing of "show interface" counters 69w4d
+        p19 = re.compile(r'^Last +clearing +of +\"show interface\" '
+                         r'+counters +(?P<last_clear_counters>[a-z0-9\:]+)$')
 
         # 1 interface resets
         p20 = re.compile(r'^(?P<interface_reset>[0-9]+) *interface'
@@ -513,7 +510,7 @@ class ShowInterface(ShowInterfaceSchema):
 
         rx = False
         tx = False
-        for line in out.splitlines():
+        for line in output.splitlines():
             line = line.replace('\t', '    ')
             line = line.strip()
 
@@ -786,6 +783,8 @@ class ShowInterface(ShowInterfaceSchema):
 
                 interface_dict[interface]['duplex_mode'] = duplex_mode
                 interface_dict[interface]['port_speed'] = port_speed
+                if m.groupdict()['unit']:
+                    interface_dict[interface]['port_speed_unit'] = m.groupdict()['unit']
                 continue
 
             # Beacon is turned off
@@ -799,14 +798,9 @@ class ShowInterface(ShowInterfaceSchema):
             m = p12.match(line)
             if m:
                 auto_negotiation = m.groupdict()['auto_negotiate']
-                interface_dict[interface]['auto_negotiate'] = False
-                continue
-
-            # Auto-Negotiation is turned on
-            m = p12_1.match(line)
-            if m:
-                auto_negotiation = m.groupdict()['auto_negotiate']
-                interface_dict[interface]['auto_negotiate'] = True
+                interface_dict[interface]['auto_negotiate'] = True if auto_negotiation == 'on' else False
+                if m.groupdict()['fec_mode']:
+                    interface_dict[interface]['fec_mode'] = m.groupdict()['fec_mode']
                 continue
 
             # Input flow-control is off, output flow-control is off
@@ -818,20 +812,8 @@ class ShowInterface(ShowInterfaceSchema):
                 if 'flow_control' not in interface_dict[interface]:
                     interface_dict[interface]['flow_control'] = {}
 
-                interface_dict[interface]['flow_control']['receive'] = False
-                interface_dict[interface]['flow_control']['send'] = False
-                continue
-            # Input flow-control is off, output flow-control is on
-            m = p13_1.match(line)
-            if m:
-                receive = m.groupdict()['receive']
-                send = m.groupdict()['send']
-
-                if 'flow_control' not in interface_dict[interface]:
-                    interface_dict[interface]['flow_control'] = {}
-
-                interface_dict[interface]['flow_control']['receive'] = True
-                interface_dict[interface]['flow_control']['send'] = True
+                interface_dict[interface]['flow_control']['receive'] = True if receive == 'on' else False
+                interface_dict[interface]['flow_control']['send'] = True if send  == 'on' else False
                 continue
 
             # Auto-mdix is turned off
@@ -889,13 +871,8 @@ class ShowInterface(ShowInterfaceSchema):
             # Last clearing of "show interface" counters never
             m = p19.match(line)
             if m:
-                last_clear = m.groupdict()['last_clear']
-                continue
-
-            # Last clearing of "" counters 00:15:42
-            m = p19_1.match(line)
-            if m:
-                last_clear = m.groupdict()['last_clear']
+                last_clear = m.groupdict()['last_clear_counters']
+                interface_dict[interface]['last_clear_counters'] = last_clear
                 continue
 
             # 1 interface resets
@@ -1154,6 +1131,7 @@ class ShowIpInterfaceVrfAllSchema(MetaParser):
             {'vrf': str,
              'interface_status': str,
              'iod': int,
+             Optional('mode'): ListOf(str),
              Optional('ipv4'):
                  {Any():
                       {Optional('ip'): str,
@@ -1167,7 +1145,7 @@ class ShowIpInterfaceVrfAllSchema(MetaParser):
                   Optional('unnumbered'):
                       {'interface_ref': str,
                        },
-                  'counters':
+                  Optional('counters'):
                       {'unicast_packets_sent': int,
                        'unicast_packets_received': int,
                        'unicast_packets_forwarded': int,
@@ -1212,18 +1190,18 @@ class ShowIpInterfaceVrfAllSchema(MetaParser):
                   },
              Optional('multicast_groups'): list,
              Optional('multicast_groups_address'): str,
-             'ip_mtu': int,
-             'proxy_arp': str,
-             'local_proxy_arp': str,
-             'multicast_routing': str,
-             'icmp_redirects': str,
-             'directed_broadcast': str,
+             Optional('ip_mtu'): int,
+             Optional('proxy_arp'): str,
+             Optional('local_proxy_arp'): str,
+             Optional('multicast_routing'): str,
+             Optional('icmp_redirects'): str,
+             Optional('directed_broadcast'): str,
              Optional('ip_forwarding'): str,
-             'icmp_unreachable': str,
-             'icmp_port_unreachable': str,
-             'unicast_reverse_path': str,
-             'load_sharing': str,
-             'int_stat_last_reset': str,
+             Optional('icmp_unreachable'): str,
+             Optional('icmp_port_unreachable'): str,
+             Optional('unicast_reverse_path'): str,
+             Optional('load_sharing'): str,
+             Optional('int_stat_last_reset'): str,
              Optional('wccp_redirect_outbound'): str,
              Optional('wccp_redirect_inbound'): str,
              Optional('wccp_redirect_exclude'): str
@@ -1305,9 +1283,10 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                 continue
 
             # Ethernet2/1, Interface status: protocol-up/link-up/admin-up, iod: 36,
+            # lo2, Interface status: protocol-up/link-up/admin-up, iod: 7, mode: anycast-mac,external
             p2 = re.compile(r'^\s*(?P<interface>[a-zA-Z0-9\/\-\.]+), *Interface'
                             ' *status: *(?P<interface_status>[a-z\-\/\s]+),'
-                            ' *iod: *(?P<iod>[0-9]+),$')
+                            ' *iod: *(?P<iod>[0-9]+),(?: *mode: *(?P<mode>[a-zA-Z0-9\-\,]+))?$')
             m = p2.match(line)
             if m:
                 interface = m.groupdict()['interface']
@@ -1321,6 +1300,10 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                     = interface_status
                 ip_interface_vrf_all_dict[interface]['iod'] = iod
                 ip_interface_vrf_all_dict[interface]['vrf'] = vrf
+                
+                if m.groupdict()['mode']:
+                    mode = m.groupdict()['mode']
+                    ip_interface_vrf_all_dict[interface]['mode'] = mode.split(',')
 
                 # init multicast groups list to empty for this interface
                 multicast_groups = []
@@ -2860,6 +2843,14 @@ class ShowInterfaceBriefSchema(MetaParser):
                     Optional('reason'): str,
                 },
             },
+            Optional('tunnel'): {
+                Any(): {
+                    'status': str,
+                    'ip_address': str,
+                    'encap_type': str,
+                    'mtu': int,
+                },
+            },
         }
     }
 
@@ -2944,6 +2935,15 @@ class ShowInterfaceBrief(ShowInterfaceBriefSchema):
         # nve1           up     none            9216
         p12 = re.compile(r'^(?P<interface>[a-zA-Z0-9]+) +(?P<status>[a-z]+)'
                          r' +(?P<reason>[a-zA-Z\s\-]+) +(?P<mtu>[0-9]+)$')
+
+        # Interface                Status     IP Address                                   Encap type       MTU
+        p13 = re.compile(
+            r'^Interface\s+Status\s+IP\sAddress\s+Encap\stype\s+MTU$')
+
+        # Tunnel5                  up         11.5.1.1/24                                  GRE/IP             1476
+        p14 = re.compile(r'^(?P<interface>[a-zA-Z0-9]+)'
+                         r' +(?P<status>[a-zA-Z]+) +(?P<ip_address>\S+)'
+                         r' +(?P<encap_type>\S+) +(?P<mtu>[0-9]+)$')
         for line in output.splitlines():
             line = line.strip()
 
@@ -3064,6 +3064,26 @@ class ShowInterfaceBrief(ShowInterfaceBriefSchema):
                 intf_dict['mtu'] = group['mtu']
                 continue
 
+            # Interface                Status     IP Address                                   Encap type       MTU
+            m = p13.match(line)
+            if m:
+                tunnel_dict = parsed_dict.setdefault('interface', {}). \
+                    setdefault('tunnel', {})
+                continue
+
+            # Tunnel5                  up         11.5.1.1/24                                  GRE/IP             1476
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict = tunnel_dict. \
+                    setdefault(Common.convert_intf_name(
+                        group['interface']), {})
+                intf_dict['status'] = group['status']
+                intf_dict['ip_address'] = group['ip_address']
+                intf_dict['encap_type'] = group['encap_type']
+                intf_dict['mtu'] = int(group['mtu'])
+                continue
+
         return parsed_dict
 
 
@@ -3106,7 +3126,9 @@ class ShowRunningConfigInterfaceSchema(MetaParser):
                              },
                         Optional('mtu'): int,
                         Optional('ip_address'): str,
+                        Optional('ip_address_secondary'): str,
                         Optional('vrf_member'): str,
+                        Optional('fabric_forwarding_mode'): str,
                         }
                    },
               }
@@ -3149,7 +3171,8 @@ class ShowRunningConfigInterface(ShowRunningConfigInterfaceSchema):
 
         # interface nve1
         # interface Ethernet1/1
-        p1 = re.compile(r'^interface +(?P<intf_name>\S+)$')
+        # interface vlan 200
+        p1 = re.compile(r'^interface +(?P<intf_name>.*)$')
 
         # no shutdown
         p2 = re.compile(r'^\s*no shutdown$')
@@ -3187,7 +3210,8 @@ class ShowRunningConfigInterface(ShowRunningConfigInterfaceSchema):
         p10_2 = re.compile(r'^switchport +access +vlan +(?P<access_vlan>\S+)$')
 
         # channel-group 1 mode active
-        p11 = re.compile(r'^channel-group +(?P<port_channel_int>\d+) +mode +(?P<mode>\S+)$')
+        # channel-group 147
+        p11 = re.compile(r'^channel-group +(?P<port_channel_int>\d+)( +mode +(?P<mode>\S+))?$')
 
         # speed 1000
         p12 = re.compile(r'^speed +(?P<speed>\d+)$')
@@ -3205,13 +3229,19 @@ class ShowRunningConfigInterface(ShowRunningConfigInterfaceSchema):
         p16 = re.compile(r'^mtu +(?P<mtu>\S+)$')
 
         # ip address 10.10.6.73/30
-        p17 = re.compile(r'^ip address +(?P<ip_address>[a-z0-9\.]+.*)$')
+        p17 = re.compile(r'^ip address +(?P<ip_address>[0-9\./]+)$')
 
         # vrf member TEST
         p18 = re.compile(r'^vrf member +(?P<vrf_member>\S+)$')
 
         # no switchport
         p19 = re.compile(r'^no switchport$')
+
+        # fabric forwarding mode anycast-gateway
+        p20 = re.compile(r'^\s*fabric forwarding mode +(?P<fabric_forwarding_mode>[a-z\-]+)$')
+
+        # ip address 10.2.1.1/30 secondary
+        p21 = re.compile(r'^ip address +(?P<ip_address_secondary>[0-9\./]+) secondary$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -3311,7 +3341,8 @@ class ShowRunningConfigInterface(ShowRunningConfigInterfaceSchema):
                 group = m.groupdict()
                 port_channel_dict = interface_dict.setdefault('port_channel', {})
                 port_channel_dict.update({'port_channel_int': group['port_channel_int']})
-                port_channel_dict.update({'port_channel_mode': group['mode']})
+                if 'port_channel_mode' in group:
+                    port_channel_dict.update({'port_channel_mode': group['mode']})
                 continue
 
             m = p12.match(line)
@@ -3356,6 +3387,19 @@ class ShowRunningConfigInterface(ShowRunningConfigInterfaceSchema):
             m = p19.match(line)
             if m:
                 interface_dict.update({'switchport': False})
+                continue
+
+            m = p20.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict.update({'fabric_forwarding_mode': group['fabric_forwarding_mode']})
+                continue
+
+            # ip address 10.2.1.1/30 secondary
+            m = p21.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict.update({'ip_address_secondary': group['ip_address_secondary']})
                 continue
 
         return ret_dict
@@ -3643,7 +3687,7 @@ class ShowInterfaceStatusSchema(MetaParser):
         'interfaces': {
             Any(): {
                 Optional('name'): str,
-                'status': str,
+                Optional('status'): str,
                 Optional('vlan'): str,
                 Optional('duplex_code'): str,
                 Optional('port_speed'): str,
@@ -3658,7 +3702,6 @@ class ShowInterfaceStatus(ShowInterfaceStatusSchema):
     """parser for
         * show interface status
         * show interfaces {interfaces} status
-
     """
 
     cli_command = ['show interface status', 'show interface {interface} status']
@@ -3677,7 +3720,16 @@ class ShowInterfaceStatus(ShowInterfaceStatusSchema):
         flag = False
 
         # Interface     Name                Status    Reason
-        p0 = re.compile(r'Interface\s+Name\s+Status\s+Reason')
+        header_p0 = re.compile(r'Interface\s+Name\s+Status\s+Reason')
+        
+        # Captures the below header:
+        #
+        # Port          Name               Status    Vlan      Duplex  Speed   Type
+        #
+        # This is not technically needed, since the p1 pattern does not match the header, but
+        # explicitly matching the header ensures this data never incorrectly makes it into the
+        # parsed output.
+        header_p1 = re.compile(r"Port\s+Name\s+Status\s+Vlan\s+Duplex\s+Speed\s+Type")
 
         # Port          Name               Status    Vlan      Duplex  Speed   Type
         # --------------------------------------------------------------------------------
@@ -3692,59 +3744,73 @@ class ShowInterfaceStatus(ShowInterfaceStatusSchema):
         # Eth102/1/1    xxx (Gb1) [test_s] connected 110       full    a-1000
         # Eth102/1/2    yyy (Gb1) [test_s] connected trunk     full    a-1000
         # Eth102/1/3    zzz (Eth1, test_st connected 205       full    a-1000
-        p1 = re.compile(r'(?P<interface>(\S+))\s+(?P<name>(\S+))?\s'
-                        r'+(?P<status>(\S+))?\s+(?P<vlan>(\S+))'
-                        r' +(?P<duplex_code>(\S+))\s'
-                        r'+(?P<port_speed>(\S+))(\s*(?P<type>(\S*)))?$')
-
+        # Po102         VPC PO access      connected 10        full    10G     --
+        # nve1 -- connected -- auto auto --
+        # Po101         vPC Peer-link      connected trunk     full    10G     -- 
+        # Eth1/1        --                 connected routed    full    100G    QSFP-100G-SR1.2
+        # Eth1/7        ig1ezsit-ucs01-A:e connected trunk     full    10G     10Gbase-SR 
+        p1 = re.compile(
+            r'^(?P<interface>\w\S+)\s+'
+            r'(?P<name>.+?)\s+'
+            # Statuses are hard-coded here. They serve as an anchor for the rest of the regular
+            # expression. This is needed because the name capture group can be any arbitrary string
+            # containing any number of blank spaces. This makes it very difficult to use a regular
+            # expression to dynamically match the status column, so hard-coding offers a happy
+            # middle ground.
+            r'(?P<status>connected|disabled|sfpAbsent|noOperMem|notconnec|xcvrAbsen|down)\s+'
+            r'(?P<vlan>\S+)\s+'
+            r'(?P<duplex_code>\S+)\s+'
+            r'(?P<port_speed>\S+)\s*'
+            r'(?P<type>(\S+|Fa\S+\sExt\S+))?\s*$'
+        )
+ 
         # Eth1/5 *** L2 L3-CIS-N connected trunk full a-1000 1000base-T
         # Eth1/4 *** FEX 2248TP  connected 1     full a-10G  Fabric Exte
-        p1_1 = re.compile(r'(?P<interface>(\S+))\s+'
-                          r'(?P<name>([\S\s]+))(?<! )\s+'
-                          r'(?P<status>(\S+))\s+'
-                          r'(?P<vlan>(\S+))\s+'
-                          r'(?P<duplex_code>([a-z]+))\s+'
-                          r'(?P<port_speed>(\S+))\s*'
-                          r'(?P<type>([\S\s]*))$')
-
+        
         # Tunnel7       --                  up        no-reason 
         p2 = re.compile(r'(?P<interface>(\S+))\s+(?P<name>([\S\s]+))(?<! )\s+(?P<status>(\S+))\s+(?P<reason>(\S+))')
 
         for line in out.splitlines():
             line = line.strip()
 
-            m = p0.match(line)
-            if m:
+            m1 = header_p0.match(line)
+            m2 = header_p1.match(line)
+            if m1 or m2:
                 flag = True
                 continue
-
-            m = p1.match(line) or p1_1.match(line)
-            if m and m.groupdict()['name'] != 'Name' and not flag:
+            m = p1.match(line) 
+            if m:
                 group = m.groupdict()
                 interface = Common.convert_intf_name(group['interface'])
                 intf_dict = result_dict.setdefault('interfaces', {}).setdefault(interface, {})
-
-                keys = ['name', 'status', 'vlan', 'duplex_code', 'port_speed', 'type']
-
-                for k in keys:
-                    if group[k] and group[k] != '--':
-                        intf_dict[k] = group[k]
+                if group['name'] is not None:
+                    intf_dict['name'] =group['name'].strip()
+                if group['status'] is not None:
+                    intf_dict['status'] =(group['status'])
+                if group['vlan'] is not None:
+                    intf_dict['vlan'] = (group['vlan'])  
+                if group['duplex_code'] is not None:
+                    intf_dict['duplex_code'] =(group['duplex_code'])  
+                if group['port_speed'] is not None:
+                    intf_dict['port_speed'] =(group['port_speed'])
+                if group['type'] is not None:
+                    intf_dict['type'] =(group['type'])                   
                 continue
-
             m = p2.match(line)
             if m and flag:
                 group = m.groupdict()
                 interface = Common.convert_intf_name(group['interface'])
                 intf_dict = result_dict.setdefault('interfaces', {}).setdefault(interface, {})
-
-                keys = ['name', 'status', 'reason']
-
-                for k in keys:
-                    if group[k] and group[k] != '--':
-                        intf_dict[k] = group[k]
+                if group['name'] is not None:
+                    intf_dict['name'] =(group['name'])
+                if group['status'] is not None:
+                    intf_dict['status'] =(group['status'])
+                if group['reason'] is not None:
+                    intf_dict['reason'] =(group['reason'])
                 continue
 
         return result_dict
+
 
 
 # ========================================
@@ -5100,7 +5166,9 @@ class ShowInterfaceCounters(ShowInterfaceCountersSchema):
                         r'(?P<out_ucast_pkts>OutUcastPkts)|(?P<out_bcast_pkts>OutBcastPkts))')
 
         #Eth1/46                                  21454282                           199828
-        p1 = re.compile(r'(?P<interface>\S+)\s+(?P<val1>\d+)\s+(?P<val2>\d+)')
+        # Vlan2                                     --                                --
+        p1 = re.compile(
+            r'(?P<interface>\S+)\s+(?P<val1>(?:\d+)|(?:--))\s+(?P<val2>(?:\d+)|(?:--))')
 
         for line in out.splitlines():
             line = line.rstrip()
@@ -5120,8 +5188,10 @@ class ShowInterfaceCounters(ShowInterfaceCountersSchema):
                 if interface not in intfs_dict.keys():
                     intfs_dict.setdefault(interface, {})
 
-                intfs_dict[interface][key1] = int(m.groupdict()['val1'])
-                intfs_dict[interface][key2] = int(m.groupdict()['val2'])
+                intfs_dict[interface][key1] = int(
+                    0 if m.groupdict()['val1'] == '--' else m.groupdict()['val1'])
+                intfs_dict[interface][key2] = int(
+                    0 if m.groupdict()['val2'] == '--' else m.groupdict()['val2'])
                 continue
 
         return result_dict

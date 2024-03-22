@@ -1,0 +1,82 @@
+Current Subscriber Statistics:
+Number of sessions currently up: 6001
+Number of sessions currently pending: 0
+Number of sessions currently authenticated: 6000
+Number of sessions currently unauthenticated: 1
+Highest number of sessions ever up at one time: 6001
+Mean up-time duration of sessions: 00:04:00
+Total number of sessions up so far: 6001
+Mean call rate per minute: 500, per hour: 6000
+Number of calls in last one hour: 6000
+Number of sessions failed to come up: 0
+
+Current Lite Session Statistics:
+Number of lite sessions currently up: 34000
+Number of lite sessions up so far: 40000
+Number of lite sessions converted to full session: 6000
+Number of lite sessions conversion in progress: 0
+Number of lite sessions failed to convert to dedicated sessions: 0
+Number of account logons failed to find lite sessions: 0
+Mean call rate per minute: 3333, per hour: 40000
+Number of lite session failed to come up: 0
+ PBHK zero: 0
+ Default Session not in Connected State 0
+
+Current Flow Statistics:
+Number of flows currently up: 18004
+Highest number of flows ever up at one time: 18007
+Mean up-time duration of flows: 00:02:09
+Number of flows failed to come up: 0
+Total number of flows up so far: 36004
+
+Access type based session count:
+IP-Interface sessions = 1
+
+IP/DHCP session type count:
+DHCPv4 sessions = 6000
+
+Feature Installation Count:
+                                    Direction
+Feature Name              None       Inbound    Outbound  
+Absolute Timeout          6000       0          0         
+Idle Timeout              0          0          6000      
+Accounting                0          6000       6000      
+L4 Redirect               0          2          1         
+Policing                  0          6000       6000      
+Portbundle Hostkey        0          6001       0         
+Forced Flow Routing       0          6001       0         
+
+Switch Id Cleanup Statistics:
+Number of sessions having invalid SMGR handle: 0
+Number of sessions having invalid policy handle: 0
+Number of sessions having invalid LTERM handle: 0
+Number of sessions having invalid SIP handle: 0
+
+Lterm Error Statistics:
+
+Lterm session delete errors:
+
+SHDBs in use    : 6004    
+SHDBs allocated : 301175  
+SHDBs freed     : 295171  
+
+SHDB handles associated with each client type
+
+Client Name     Count
+===========    =======
+LTerm          6001    
+AAA            6001    
+CCM            6004    
+SSS FM         6001    
+IPSUB          6000    
+IP_IF          1       
+COA            6000    
+COA cluster    0       
+ISG Classifier 6001    
+CCM Group      6004    
+PM             6001    
+PM cluster     0       
+DHCP           6000    
+DHCP SIP       6000    
+EoGRE          6000 
+

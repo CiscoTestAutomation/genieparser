@@ -1,0 +1,11 @@
+router-a# show bgp vrf all all summary
+BGP summary information for VRF 100, address family IPv4 Unicast
+BGP router identifier 1.1.1.1, local AS number 65100
+BGP table version is 159, IPv4 Unicast config peers 5, capable peers 5
+28 network entries and 44 paths using 9264 bytes of memory
+BGP attribute entries [28/9856], BGP AS path entries [13/158]
+BGP community entries [20/940], BGP clusterlist entries [0/0]
+14 received paths for inbound soft reconfiguration
+0 identical, 14 modified, 0 filtered received paths using 224 bytes
+Neighbor        V    AS    MsgRcvd    MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+2.2.2.2    4 1.57920      29146      29136      152    0    0 04:52:49 12        

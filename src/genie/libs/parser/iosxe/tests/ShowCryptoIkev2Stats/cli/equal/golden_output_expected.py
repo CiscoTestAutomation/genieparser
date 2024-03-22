@@ -1,0 +1,38 @@
+expected_output = {
+    "ikev2_statistics": {
+        "system_resource_limit": 0,
+        "max_sa": 0,
+        "max_in_nego": 40,
+        "max_out_nego": 400,
+        "total_incoming_sa": 0,
+        "total_incoming_sa_active": 0,
+        "total_incoming_sa_negotiating": 0,
+        "total_outgoing_sa": 1,
+        "total_outgoing_sa_active": 1,
+        "total_outgoing_sa_negotiating": 0,
+        "incoming_v2_requests": 13,
+        "incoming_requests_accept": 13,
+        "incoming_requests_reject": 0,
+        "outgoing_v2_requests": 14,
+        "outgoing_requests_accept": 14,
+        "outgoing_requests_reject": 0,
+        "rejected_v2_requests": 0,
+        "rejected_requests_rsrclow": 0,
+        "rejected_requests_salimit": 0,
+        "ikev2_packet_drop": 0,
+        "incoming_requests_drop_lowq": 0,
+        "incoming_cookie_challenge": {
+            "incoming_challenge_requests": 0,
+            "incoming_challenge_accept": 0,
+            "incoming_challenge_reject": 0,
+            "incoming_challenge_no_cookie": 0,
+        },
+        "deleted_sessions_cert_revoke": 0,
+        "sa_strength_enforce_reject_incoming": 0,
+        "sa_strength_enforce_reject_outgoing": 4,
+        "active_qr_sessions": 1,
+        "qr_manual": 4294967290,
+        "qr_dynamic": 7,
+    }
+}
+

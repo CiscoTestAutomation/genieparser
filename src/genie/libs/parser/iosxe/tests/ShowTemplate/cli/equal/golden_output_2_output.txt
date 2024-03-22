@@ -1,0 +1,18 @@
+Template                                         Class      Type
+--------                                         -----      ----
+AP_INTERFACE_TEMPLATE                            owner      Built-in
+Child                                            owner      User
+ BOUND: Twe1/0/1               Twe1/0/2               Twe1/0/3
+DMP_INTERFACE_TEMPLATE                           owner      Built-in
+IP_CAMERA_INTERFACE_TEMPLATE                     owner      Built-in
+IP_PHONE_INTERFACE_TEMPLATE                      owner      Built-in
+LAP_INTERFACE_TEMPLATE                           owner      Built-in
+MSP_CAMERA_INTERFACE_TEMPLATE                    owner      Built-in
+MSP_VC_INTERFACE_TEMPLATE                        owner      Built-in
+PRINTER_INTERFACE_TEMPLATE                       owner      Built-in
+Parent                                           owner      User
+ BOUND: Gi1/0/2
+ NESTED TEMPLATE:  Child
+ROUTER_INTERFACE_TEMPLATE                        owner      Built-in
+SWITCH_INTERFACE_TEMPLATE                        owner      Built-in
+TP_INTERFACE_TEMPLATE                            owner      Built-in

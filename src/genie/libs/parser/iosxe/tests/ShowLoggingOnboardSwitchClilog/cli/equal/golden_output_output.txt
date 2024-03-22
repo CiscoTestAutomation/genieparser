@@ -1,0 +1,99 @@
+sh logging onboard switch 1 clilog
+--------------------------------------------------------------------------------
+CLI LOGGING SUMMARY INFORMATION
+--------------------------------------------------------------------------------
+COUNT COMMAND
+--------------------------------------------------------------------------------
+ 1    clear obfl switch 3 environment
+ 1    clear obfl switch 3 environment
+ 1    clear obfl switch 3 environment
+ 1    clear obfl switch 3 environment
+ 1    clear obfl switch 3 environment
+ 1    clear obfl switch 3 environment
+ 1    clear obfl switch 3 environment
+ 1    clear obfl switch 3 environment
+ 1    clear obfl switch 3
+ 1    clear obfl switch 3 temperature
+ 1    clear obfl switch 3 temperature
+ 1    clear obfl switch 3 voltage
+ 1    clear obfl switch 3 voltage
+ 1    clear obfl switch 3 environment
+ 1    clear obfl switch 3 environment
+ 1    clear obfl switch 3 environment
+ 1    clear obfl switch 3 environment
+ 1    clear obfl switch 3 environment
+ 1    clear obfl switch 3 environment
+ 1    clear obfl switch 3 environment
+ 1    clear obfl switch 3 environment
+ 1    clear obfl switch 3 environment
+ 1    clear obfl switch 3
+ 1    clear obfl switch 3 temperature
+ 1    clear obfl switch 3 temperature
+ 1    clear obfl switch 3 voltage
+ 1    clear obfl switch 3 voltage
+ 1    clear obfl switch 3 environment
+ 1    clear obfl switch 3 environment
+ 1    clear obfl switch 3 environment
+ 1    clear obfl switch 3 environment
+ 1    clear obfl switch 3 environment
+ 1    clear obfl switch 3 environment
+ 1    clear obfl switch 3 environment
+ 1    clear obfl switch 3 environment
+ 1    clear obfl switch 3 environment
+ 1    clear obfl switch 3
+ 1    clear obfl switch 3 temperature
+ 1    clear obfl switch 3 temperature
+ 1    clear obfl switch 3 voltage
+ 1    clear obfl switch 3 voltage
+ 1    clear obfl switch 3 environment
+ 1    clear obfl switch 3 environment
+ 1    clear obfl switch 3 environment
+ 1    clear obfl switch 3 environment
+ 1    clear obfl switch 3 environment
+ 1    clear obfl switch 3 environment
+ 1    clear obfl switch 3 environment
+ 1    clear obfl switch 3 environment
+ 1    clear obfl switch 3 environment
+ 1    clear obfl switch 3
+ 1    clear obfl switch 3 temperature
+ 1    clear obfl switch 3 temperature
+ 1    clear obfl switch 3 voltage
+ 1    clear obfl switch 3 voltage
+ 1    clear obfl switch 3 environment
+ 1    clear obfl switch 3 environment
+ 1    clear obfl switch 3 environment
+ 1    clear obfl switch 3 environment
+ 1    clear obfl switch 3 environment
+ 1    clear obfl switch 3 environment
+ 1    clear obfl switch 3 environment
+ 1    clear obfl switch 3 environment
+ 1    clear obfl switch 3 environment
+ 1    clear obfl switch 3
+ 1    clear obfl switch 3 temperature
+ 1    clear obfl switch 3 temperature
+ 1    clear obfl switch 3 voltage
+ 1    clear obfl switch 3 voltage
+ 1    clear obfl switch 3 environment
+ 1    clear obfl switch 3 environment
+ 1    clear obfl switch 3 environment
+ 1    clear obfl switch 3 environment
+ 1    clear obfl switch 3 environment
+ 1    clear obfl switch 3 environment
+ 1    clear obfl switch 3 environment
+ 1    clear obfl switch 3 environment
+ 1    clear obfl switch 3 environment
+ 1    clear obfl switch 3
+ 1    clear obfl switch 3 temperature
+ 1    clear obfl switch 3 temperature
+ 1    clear obfl switch 3 voltage
+ 1    clear obfl switch 3 voltage
+ 1    clear obfl switch 3 environment
+ 1    clear obfl switch 3 environment
+ 1    clear obfl switch 3 environment
+ 1    clear obfl switch 3 environment
+ 1    clear obfl switch 3 environment
+ 1    clear obfl switch 3 environment
+ 1    clear obfl switch 3 environment
+ 1    clear obfl switch 3 environment
+ 1    clear obfl switch 3 environment
+--------------------------------------------------------------------------------

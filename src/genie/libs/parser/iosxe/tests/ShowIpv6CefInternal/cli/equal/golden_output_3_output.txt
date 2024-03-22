@@ -1,0 +1,21 @@
+::/0, epoch 0, flags [sc, defrt], RIB[S], refcnt 5, per-destination sharing
+  sources: RIB, IPL, DRH
+  feature space:
+    IPRM: 0x00048000
+    Broker: linked, distributed at 1st priority
+  subblocks:
+    SC owned,sourced: LISP generalised SMR - [disabled, not inheriting, 0x7F7AF5C37FD8 locks: 8]
+    1 IPL source [no flags]
+  ifnums:
+    Loopback102(55)
+  path list 7F7AF54316B8, 3 locks, per-destination, flags 0x69 [shble, rif, rcrsv, hwcn]
+    path 7F7AF54EDF08, share 1/1, type recursive, for IPv6
+      recursive via 2001:102:102:102::1[IPv6:vrf102], fib 7F7AF5B33BB8, 1 terminal fib, v6:vrf102:2001:102:102:102::/64
+      path list 7F7AF5431548, 2 locks, per-destination, flags 0x69 [shble, rif, rcrsv, hwcn]
+          path 7F7AF54EDD68, share 1/1, type recursive, for IPv6, flags [dsnt-src-via, cef-intnl]
+            recursive via 2001:102:102:102::/64<nh:2001:102:102:102::1>[IPv6:vrf102], fib 7F7AF5794770, 1 terminal fib, v6:vrf102:2001:102:102:102::/64
+            path list 7F7AF30D7D00, 3 locks, per-destination, flags 0x49 [shble, rif, hwcn]
+                path 7F7AF54EF4F8, share 1/1, type connected prefix, for IPv6
+                  connected to Loopback102, discard
+  output chain:
+    discard

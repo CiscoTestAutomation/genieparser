@@ -1,0 +1,35 @@
+
+Message History (oldest to newest):
+====================================================
+Trust Establishment:
+  No past history
+Usage Reporting:
+  No past history
+Result Polling:
+  No past history
+Authorization Request:
+  No past history
+Authorization Return:
+  No past history
+Trust Sync:
+  No past history
+
+Import Message History (oldest to newest):
+====================================================
+Import POLICY:
+  No past Import history
+
+Import AUTH:
+  No past Import history
+
+Import TRUST CODE:
+  No past Import history
+
+Import RUM ACK:
+  No past Import history
+
+Import CONVERSION ACK:
+  No past Import history
+
+Import ACCOUNT INFO:
+  No past Import history

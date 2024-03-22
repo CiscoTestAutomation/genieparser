@@ -1,0 +1,28 @@
+expected_output = {
+    "cpu_usage": {
+        "1min_percent": 0.0,
+        "5min_percent": 0.0,
+        "5sec_percent": 0.0,
+        "age": 8382013609,
+        "average": 0.0,
+        "giveups": 0,
+        "invoked": 1,
+        "pc": "56443ECCBCC5",
+        "priority": "Normal",
+        "runtime": 0,
+        "state": "Waiting for Event",
+        "u_sec": 0,
+    },
+    "memory_usage": {
+        "allocated": 0,
+        "freed": 0,
+        "getbufs": 0,
+        "holding": 49864,
+        "maximum": 0,
+        "retbufs": 0,
+        "stack": "46664/48000",
+    },
+    "pid": 3,
+    "process_name": "PKI Trustpool",
+    "tty": 0,
+}

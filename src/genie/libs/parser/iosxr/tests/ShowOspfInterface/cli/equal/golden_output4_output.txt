@@ -1,0 +1,23 @@
+show ospf 1 interface gigabitEthernet 0/0/0/0
+Mon Mar 27 21:45:43.012 UTC
+
+GigabitEthernet0/0/0/0 is up, line protocol is up 
+  Internet Address 60.111.1.1/30, Area 0
+  Label stack Primary label 1 Backup label 3 SRTE label 10
+  Process ID 1, Router ID 50.1.1.1, Network Type POINT_TO_POINT, Cost: 1
+  LDP Sync Enabled, Sync Status: Achieved
+  Transmit Delay is 1 sec, State POINT_TO_POINT, MTU 1500, MaxPktSz 1500
+  Forward reference No, Unnumbered no,  Bandwidth 1000000 
+  Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+    Hello due in 00:00:07:190
+  Index 2/2, flood queue length 0
+  Next 0(0)/0(0)
+  Last flood scan length is 1, maximum is 3
+  Last flood scan time is 0 msec, maximum is 1069 msec
+  LS Ack List: current length 0, high water mark 9
+  Neighbor Count is 1, Adjacent neighbor count is 1
+    Adjacent with neighbor 50.1.1.2
+  Suppress hello for 0 neighbor(s)
+  Message digest authentication enabled
+    Youngest key id is 1
+  Multi-area interface Count is 0

@@ -1,0 +1,5 @@
+show interface FortyGigabitEthernet1/0/19 flowcontrol
+Port          Send FlowControl  Receive FlowControl  RxPause TxPause
+              admin    oper     admin    oper
+------------  -------- -------- -------- --------    ------- -------
+Fo1/0/19      Unsupp.  Unsupp.  on       on          0       0

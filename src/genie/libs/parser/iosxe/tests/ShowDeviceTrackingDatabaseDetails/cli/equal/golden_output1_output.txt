@@ -17,6 +17,9 @@
  REACHABLE  : 2
  STALE      : 1
  DOWN       : 1
+ INCOMPLETE : 1
+ CREATING   : 1
+ TENTATIVE  : 1
    total    : 5
 
 Codes: L - Local, S - Static, ND - Neighbor Discovery, ARP - Address Resolution Protocol, DH4 - IPv4 DHCP, DH6 - IPv6 DHCP, PKT - Other Packet, API - API created
@@ -32,3 +35,5 @@ S   10.10.10.10                              dead.beef.0001(S)      Twe1/0/42  a
 ND  FE80::6AF3:3E56:FE0B:BEE9                0050.56b0.afed(S)      Twe1/0/42  access     39  (  39)      0005       5mn        VERIFY     15 s try 2       no         yes          0000.0000.0000     test1 (Device-tracking)
 ND  FE80::5786:483C:BD32:CC21                0050.56b0.babc(R)      Twe1/0/42  access     39  (  39)      0005       171s       REACHABLE  137 s try 0      no         yes          0000.0000.0000     test1 (Device-tracking)
 S   1000::1                                  000a.000b.000c(D)      Twe1/0/1   trunk      100 ( 100)      0100       38959mn    DOWN       N/A              no         yes          0000.0000.0000
+DH6 2001::1                                  000a.000b.000c(D)      Twe1/0/1   trunk      100 ( 100)      0100       38959mn    DOWN       123 s(456 s)     no         yes          0000.0000.0000
+DH4 110.0.0.3                                0001.0003.0002(R)      Gi1/0/23   access     110 ( 110)      0024       3mn        REACHABLE  12 s try 0(6722 s) no         yes          0001.0003.0002     (unspecified)              LISP-DT-GUARD-VLAN-MULTI-IP (Device-tracking)

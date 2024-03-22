@@ -1,0 +1,8 @@
+show consistency-checker run-id 2473 detail
+Process: IOSD
+
+Process: FMAN-RP
+
+Switch: 1 Process: FMAN-FP
+
+Switch: 1 Process: FED

@@ -555,6 +555,10 @@ expected_output = {
                                                     },
                                                 },
                                             },
+                                            "flow_label_flags": {
+                                                "configured": "(Tx=1,Rx=1)",
+                                                "negotiated": "(Tx=1,Rx=1)"
+                                            },
                                             "status_code": "0x0 (Up)",
                                             "create_time": "22/05/2020 03:04:51 (1y03w ago)",
                                             "last_time_status_changed": "10/06/2021 02:53:01 (3d20h ago)",
@@ -594,12 +598,21 @@ expected_output = {
                                         }
                                     }
                                 },
-                                "10.11.44.12": {
+                            },
+                            "statistics": {
+                                "drop": {"illegal_vlan": 0, "illegal_length": 0}
+                            },
+                        },
+                    },
+                    "access_pw": {
+                        "SEG180": {
+                            "neighbor": {
+                                "10.11.44.8": {
                                     "pw_id": {
-                                        "242": {
+                                        "180": {
                                             "state": "standby ( all ready )",
                                             "pw_class": "PW_DEFAULT",
-                                            "xc_id": "0xa0000229",
+                                            "xc_id": "0xa0000131",
                                             "encapsulation": "MPLS",
                                             "protocol": "LDP",
                                             "source_address": "10.11.44.91",
@@ -612,20 +625,20 @@ expected_output = {
                                                 "state": "Up",
                                                 "mpls": {
                                                     "label": {
-                                                        "local": "26468",
-                                                        "remote": "65",
+                                                        "local": "26303",
+                                                        "remote": "31",
                                                     },
                                                     "group_id": {
-                                                        "local": "0xfc",
-                                                        "remote": "0x16",
+                                                        "local": "0x8a",
+                                                        "remote": "0x8",
                                                     },
-                                                    "monitor_interface": {
+                                                    "interface": {
                                                         "local": "Access PW",
                                                         "remote": "[B2C]",
                                                     },
                                                     "mtu": {
-                                                        "local": "1600",
-                                                        "remote": "1600",
+                                                        "local": "1500",
+                                                        "remote": "1500",
                                                     },
                                                     "control_word": {
                                                         "local": "enabled",
@@ -660,7 +673,7 @@ expected_output = {
                                                     },
                                                     "mib": {
                                                         "local": "cpwVcIndex:",
-                                                        "remote": "2684355113",
+                                                        "remote": "2684354865",
                                                     },
                                                     "last_time_pw": {
                                                         "local": "went down: 10/06/2021 02:53:01 (3d20h",
@@ -672,12 +685,16 @@ expected_output = {
                                                     },
                                                 },
                                             },
+                                            "flow_label_flags": {
+                                                "configured": "(Tx=1,Rx=1)",
+                                                "negotiated": "(Tx=0,Rx=0)"
+                                            },
                                             "status_code": "0x20 (Standby)",
-                                            "create_time": "06/08/2020 03:00:38 (44w3d ago)",
+                                            "create_time": "22/05/2020 03:04:51 (1y03w ago)",
                                             "last_time_status_changed": "10/06/2021 02:53:01 (3d20h ago)",
                                             "mac_withdraw_message": {
                                                 "send": 0,
-                                                "receive": 23,
+                                                "receive": 22,
                                             },
                                             "forward_class": "0",
                                             "mac_learning": "enabled",
@@ -698,13 +715,10 @@ expected_output = {
                                             "igmp_snooping": "disabled",
                                             "igmp_snooping_profile": "none",
                                             "mld_snooping_profile": "none",
-                                            "storm_control": "bridge-domain policer",
+                                            "storm_control": "bridge-domain policer"
                                         }
                                     }
                                 },
-                            },
-                            "statistics": {
-                                "drop": {"illegal_vlan": 0, "illegal_length": 0}
                             },
                         },
                     },
@@ -942,6 +956,10 @@ expected_output = {
                                                     },
                                                 },
                                             },
+                                            "flow_label_flags": {
+                                                "configured": "(Tx=1,Rx=1)",
+                                                "negotiated": "(Tx=1,Rx=1)"
+                                            },
                                             "status_code": "0x0 (Up)",
                                             "create_time": "06/08/2020 03:00:38 (44w3d ago)",
                                             "last_time_status_changed": "10/06/2021 02:53:01 (3d20h ago)",
@@ -981,12 +999,21 @@ expected_output = {
                                         }
                                     }
                                 },
+                            },
+                            "statistics": {
+                                "drop": {"illegal_vlan": 0,"illegal_length": 0}
+                            },
+                        },
+                    },
+                    "access_pw": {
+                        "SEG242": {
+                            "neighbor": {
                                 "10.11.44.12": {
                                     "pw_id": {
-                                        "244": {
+                                        "242": {
                                             "state": "standby ( all ready )",
                                             "pw_class": "PW_DEFAULT",
-                                            "xc_id": "0xa000022d",
+                                            "xc_id": "0xa0000229",
                                             "encapsulation": "MPLS",
                                             "protocol": "LDP",
                                             "source_address": "10.11.44.91",
@@ -999,12 +1026,12 @@ expected_output = {
                                                 "state": "Up",
                                                 "mpls": {
                                                     "label": {
-                                                        "local": "26470",
-                                                        "remote": "177",
+                                                        "local": "26468",
+                                                        "remote": "65",
                                                     },
                                                     "group_id": {
-                                                        "local": "0xfd",
-                                                        "remote": "0x18",
+                                                        "local": "0xfc",
+                                                        "remote": "0x16",
                                                     },
                                                     "monitor_interface": {
                                                         "local": "Access PW",
@@ -1043,14 +1070,14 @@ expected_output = {
                                                         "remote_type": [
                                                             "control word",
                                                             "router alert label",
-                                                        ],
+                                                        ]
                                                     },
                                                     "mib": {
                                                         "local": "cpwVcIndex:",
-                                                        "remote": "2684355117",
+                                                        "remote": "2684355113",
                                                     },
                                                     "last_time_pw": {
-                                                        "local": "went down: 05/09/2020 21:19:41 (40w1d",
+                                                        "local": "went down: 10/06/2021 02:53:01 (3d20h",
                                                         "remote": "ago)",
                                                     },
                                                     "mac_limit:": {
@@ -1059,12 +1086,16 @@ expected_output = {
                                                     },
                                                 },
                                             },
+                                            "flow_label_flags": {
+                                                "configured": "(Tx=1,Rx=1)",
+                                                "negotiated": "(Tx=0,Rx=0)"
+                                            },
                                             "status_code": "0x20 (Standby)",
                                             "create_time": "06/08/2020 03:00:38 (44w3d ago)",
-                                            "last_time_status_changed": "10/06/2021 10:46:08 (3d12h ago)",
+                                            "last_time_status_changed": "10/06/2021 02:53:01 (3d20h ago)",
                                             "mac_withdraw_message": {
-                                                "send": 1,
-                                                "receive": 1,
+                                                "send": 0,
+                                                "receive": 23,
                                             },
                                             "forward_class": "0",
                                             "mac_learning": "enabled",
@@ -1089,9 +1120,6 @@ expected_output = {
                                         }
                                     }
                                 },
-                            },
-                            "statistics": {
-                                "drop": {"illegal_vlan": 0, "illegal_length": 0}
                             },
                         },
                     },
@@ -1331,6 +1359,10 @@ expected_output = {
                                                     },
                                                 },
                                             },
+                                            "flow_label_flags": {
+                                                "configured": "(Tx=1,Rx=1)",
+                                                "negotiated": "(Tx=1,Rx=1)"
+                                            },
                                             "status_code": "0x0 (Up)",
                                             "create_time": "06/08/2020 03:00:38 (44w3d ago)",
                                             "last_time_status_changed": "10/06/2021 10:37:03 (3d12h ago)",
@@ -1370,12 +1402,21 @@ expected_output = {
                                         }
                                     }
                                 },
-                                "10.11.44.81": {
+                            },
+                            "statistics": {
+                                "drop": {"illegal_vlan": 0, "illegal_length": 0}
+                            }
+                        }
+                    },
+                    "access_pw": {
+                        "SEG244": {
+                            "neighbor": {
+                                "10.11.44.12": {
                                     "pw_id": {
-                                        "9001": {
-                                            "state": "down ( local ready ) (Transport LSP Down)",
+                                        "244": {
+                                            "state": "standby ( all ready )",
                                             "pw_class": "PW_DEFAULT",
-                                            "xc_id": "0xa0000003",
+                                            "xc_id": "0xa000022d",
                                             "encapsulation": "MPLS",
                                             "protocol": "LDP",
                                             "source_address": "10.11.44.91",
@@ -1385,65 +1426,79 @@ expected_output = {
                                             "pw_backup_disable_delay": 0,
                                             "sequencing": "not set",
                                             "lsp": {
-                                                "state": "Down",
+                                                "state": "Up",
                                                 "mpls": {
                                                     "label": {
-                                                        "local": "24000",
-                                                        "remote": "unknown",
+                                                        "local": "26470",
+                                                        "remote": "177"
                                                     },
                                                     "group_id": {
-                                                        "local": "0x0",
-                                                        "remote": "0x0",
+                                                        "local": "0xfd",
+                                                        "remote": "0x18"
                                                     },
                                                     "monitor_interface": {
                                                         "local": "Access PW",
-                                                        "remote": "unknown",
+                                                        "remote": "[B2C]"
                                                     },
                                                     "mtu": {
-                                                        "local": "1500",
-                                                        "remote": "unknown",
+                                                        "local": "1600",
+                                                        "remote": "1600"
                                                     },
                                                     "control_word": {
                                                         "local": "enabled",
-                                                        "remote": "unknown",
+                                                        "remote": "enabled"
                                                     },
                                                     "pw_type": {
                                                         "local": "Ethernet",
-                                                        "remote": "unknown",
+                                                        "remote": "Ethernet"
                                                     },
                                                     "vccv_cv_type": {
                                                         "local": "0x2",
-                                                        "remote": "0x0",
+                                                        "remote": "0x12",
                                                         "local_type": [
                                                             "LSP ping verification"
                                                         ],
-                                                        "remote_type": ["none"],
+                                                        "remote_type": [
+                                                            "LSP ping verification"
+                                                        ]
                                                     },
                                                     "vccv_cc_type": {
                                                         "local": "0x7",
-                                                        "remote": "0x0",
+                                                        "remote": "0x3",
                                                         "local_type": [
                                                             "control word",
                                                             "router alert label",
-                                                            "TTL expiry",
+                                                            "TTL expiry"
                                                         ],
-                                                        "remote_type": ["none"],
+                                                        "remote_type": [
+                                                            "control word",
+                                                            "router alert label"
+                                                        ]
                                                     },
                                                     "mib": {
                                                         "local": "cpwVcIndex:",
-                                                        "remote": "2684354563",
+                                                        "remote": "2684355117"
                                                     },
                                                     "last_time_pw": {
-                                                        "local": "went down: 21/10/2020 13:18:37 (33w4d",
-                                                        "remote": "ago)",
+                                                        "local": "went down: 05/09/2020 21:19:41 (40w1d",
+                                                        "remote": "ago)"
                                                     },
-                                                },
+                                                    "mac_limit:": {
+                                                        "local": "4000, Action: none, Notification: syslog,",
+                                                        "remote": "trap"
+                                                    }
+                                                }
                                             },
-                                            "create_time": "01/10/2019 14:18:18 (1y36w ago)",
-                                            "last_time_status_changed": "21/10/2020 13:24:35 (33w4d ago)",
+                                            "flow_label_flags": {
+                                                "configured": "(Tx=1,Rx=1)",
+                                                "negotiated": "(Tx=0,Rx=0)"
+                                            },
+                                            "status_code": "0x20 (Standby)",
+                                            "create_time": "06/08/2020 03:00:38 (44w3d ago)",
+                                            "last_time_status_changed": "10/06/2021 10:46:08 (3d12h ago)",
                                             "mac_withdraw_message": {
-                                                "send": 13,
-                                                "receive": 0,
+                                                "send": 1,
+                                                "receive": 1
                                             },
                                             "forward_class": "0",
                                             "mac_learning": "enabled",
@@ -1453,9 +1508,6 @@ expected_output = {
                                             },
                                             "mac_aging_time": 300,
                                             "mac_aging_type": "inactivity",
-                                            "mac_limit": 4000,
-                                            "mac_limit_action": "none",
-                                            "mac_limit_notification": "syslog",
                                             "mac_limit_reached": "no",
                                             "mac_limit_threshold": "75%",
                                             "mac_port_down_flush": "enabled",
@@ -1471,118 +1523,6 @@ expected_output = {
                                         }
                                     }
                                 },
-                                "10.11.44.82": {
-                                    "pw_id": {
-                                        "9001": {
-                                            "state": "down ( local ready ) (Transport LSP Down)",
-                                            "pw_class": "not set, XC ID 0xa0000005",
-                                            "encapsulation": "MPLS",
-                                            "protocol": "LDP",
-                                            "source_address": "10.11.44.91",
-                                            "pw_type": "Ethernet",
-                                            "control_word": "disabled",
-                                            "interworking": "none",
-                                            "pw_backup_disable_delay": 0,
-                                            "sequencing": "not set",
-                                            "lsp": {
-                                                "state": "Down",
-                                                "pw": {
-                                                    "load_balance": {
-                                                        "local": "Hashing:",
-                                                        "remote": "src-dst-ip",
-                                                    },
-                                                    "pw_status_tlv": {
-                                                        "local": "in",
-                                                        "remote": "use",
-                                                    },
-                                                },
-                                                "mpls": {
-                                                    "label": {
-                                                        "local": "24001",
-                                                        "remote": "unknown",
-                                                    },
-                                                    "group_id": {
-                                                        "local": "0x0",
-                                                        "remote": "0x0",
-                                                    },
-                                                    "monitor_interface": {
-                                                        "local": "Access PW",
-                                                        "remote": "unknown",
-                                                    },
-                                                    "mtu": {
-                                                        "local": "1500",
-                                                        "remote": "unknown",
-                                                    },
-                                                    "control_word": {
-                                                        "local": "disabled",
-                                                        "remote": "unknown",
-                                                    },
-                                                    "pw_type": {
-                                                        "local": "Ethernet",
-                                                        "remote": "unknown",
-                                                    },
-                                                    "vccv_cv_type": {
-                                                        "local": "0x2",
-                                                        "remote": "0x0",
-                                                        "local_type": [
-                                                            "LSP ping verification"
-                                                        ],
-                                                        "remote_type": ["none"],
-                                                    },
-                                                    "vccv_cc_type": {
-                                                        "local": "0x6",
-                                                        "remote": "0x0",
-                                                        "local_type": [
-                                                            "router alert label",
-                                                            "TTL expiry",
-                                                        ],
-                                                        "remote_type": ["none"],
-                                                    },
-                                                    "mib": {
-                                                        "local": "cpwVcIndex:",
-                                                        "remote": "2684354565",
-                                                    },
-                                                    "last_time_pw": {
-                                                        "local": "went down: 10/06/2020 01:50:32 (1y00w",
-                                                        "remote": "ago)",
-                                                    },
-                                                },
-                                            },
-                                            "create_time": "01/10/2019 14:18:18 (1y36w ago)",
-                                            "last_time_status_changed": "10/06/2020 01:53:52 (1y00w ago)",
-                                            "mac_withdraw_message": {
-                                                "send": 0,
-                                                "receive": 0,
-                                            },
-                                            "forward_class": "0",
-                                            "mac_learning": "enabled",
-                                            "flooding": {
-                                                "broadcast_multicast": "enabled",
-                                                "unknown_unicast": "enabled",
-                                            },
-                                            "mac_aging_time": 300,
-                                            "mac_aging_type": "inactivity",
-                                            "mac_limit": 4000,
-                                            "mac_limit_action": "none",
-                                            "mac_limit_notification": "syslog",
-                                            "mac_limit_reached": "no",
-                                            "mac_limit_threshold": "75%",
-                                            "mac_port_down_flush": "enabled",
-                                            "mac_secure": "disabled",
-                                            "mac_secure_logging": "disabled",
-                                            "split_horizon_group": "none",
-                                            "dhcp_v4_snooping": "disabled",
-                                            "dhcp_v4_snooping_profile": "none",
-                                            "igmp_snooping": "disabled",
-                                            "igmp_snooping_profile": "none",
-                                            "mld_snooping_profile": "none",
-                                            "storm_control": "bridge-domain policer",
-                                        }
-                                    }
-                                },
-                            },
-                            "statistics": {
-                                "drop": {"illegal_vlan": 0, "illegal_length": 0}
                             },
                         },
                     },
@@ -1774,6 +1714,10 @@ expected_output = {
                                                     },
                                                 },
                                             },
+                                            "flow_label_flags": {
+                                                "configured": "(Tx=1,Rx=1)",
+                                                "negotiated": "(Tx=1,Rx=1)"
+                                            },
                                             "status_code": "0x0 (Up)",
                                             "create_time": "22/11/2019 11:48:50 (1y29w ago)",
                                             "last_time_status_changed": "10/06/2021 02:53:01 (3d20h ago)",
@@ -1816,6 +1760,235 @@ expected_output = {
                             },
                             "statistics": {
                                 "drop": {"illegal_vlan": 0, "illegal_length": 0}
+                            }
+                        }
+                    },
+                    "access_pw": {
+                        "9001": {
+                            "neighbor": {
+                                "10.11.44.81": {
+                                    "pw_id": {
+                                        "9001": {
+                                            "state": "down ( local ready ) (Transport LSP Down)",
+                                            "pw_class": "PW_DEFAULT",
+                                            "xc_id": "0xa0000003",
+                                            "encapsulation": "MPLS",
+                                            "protocol": "LDP",
+                                            "source_address": "10.11.44.91",
+                                            "pw_type": "Ethernet",
+                                            "control_word": "enabled",
+                                            "interworking": "none",
+                                            "pw_backup_disable_delay": 0,
+                                            "sequencing": "not set",
+                                            "lsp": {
+                                                "state": "Down",
+                                                "mpls": {
+                                                    "label": {
+                                                        "local": "24000",
+                                                        "remote": "unknown"
+                                                    },
+                                                    "group_id": {
+                                                        "local": "0x0",
+                                                        "remote": "0x0"
+                                                    },
+                                                    "monitor_interface": {
+                                                        "local": "Access PW",
+                                                        "remote": "unknown"
+                                                    },
+                                                    "mtu": {
+                                                        "local": "1500",
+                                                        "remote": "unknown"
+                                                    },
+                                                    "control_word": {
+                                                        "local": "enabled",
+                                                        "remote": "unknown"
+                                                    },
+                                                    "pw_type": {
+                                                        "local": "Ethernet",
+                                                        "remote": "unknown"
+                                                    },
+                                                    "vccv_cv_type": {
+                                                        "local": "0x2",
+                                                        "remote": "0x0",
+                                                        "local_type": [
+                                                            "LSP ping verification"
+                                                        ],
+                                                        "remote_type": [
+                                                            "none"
+                                                        ]
+                                                    },
+                                                    "vccv_cc_type": {
+                                                        "local": "0x7",
+                                                        "remote": "0x0",
+                                                        "local_type": [
+                                                            "control word",
+                                                            "router alert label",
+                                                            "TTL expiry"
+                                                        ],
+                                                        "remote_type": [
+                                                            "none"
+                                                        ]
+                                                    },
+                                                    "mib": {
+                                                        "local": "cpwVcIndex:",
+                                                        "remote": "2684354563"
+                                                    },
+                                                    "last_time_pw": {
+                                                        "local": "went down: 21/10/2020 13:18:37 (33w4d",
+                                                        "remote": "ago)"
+                                                    }
+                                                }
+                                            },
+                                            "flow_label_flags": {
+                                                "configured": "(Tx=1,Rx=1)",
+                                                "negotiated": "(Tx=0,Rx=0)"
+                                            },
+                                            "create_time": "01/10/2019 14:18:18 (1y36w ago)",
+                                            "last_time_status_changed": "21/10/2020 13:24:35 (33w4d ago)",
+                                            "mac_withdraw_message": {
+                                                "send": 13,
+                                                "receive": 0
+                                            },
+                                            "forward_class": "0",
+                                            "mac_learning": "enabled",
+                                            "flooding": {
+                                                "broadcast_multicast": "enabled",
+                                                "unknown_unicast": "enabled",
+                                            },
+                                            "mac_aging_time": 300,
+                                            "mac_aging_type": "inactivity",
+                                            "mac_limit": 4000,
+                                            "mac_limit_action": "none",
+                                            "mac_limit_notification": "syslog",
+                                            "mac_limit_reached": "no",
+                                            "mac_limit_threshold": "75%",
+                                            "mac_port_down_flush": "enabled",
+                                            "mac_secure": "disabled",
+                                            "mac_secure_logging": "disabled",
+                                            "split_horizon_group": "none",
+                                            "dhcp_v4_snooping": "disabled",
+                                            "dhcp_v4_snooping_profile": "none",
+                                            "igmp_snooping": "disabled",
+                                            "igmp_snooping_profile": "none",
+                                            "mld_snooping_profile": "none",
+                                            "storm_control": "bridge-domain policer"
+                                        }
+                                    }
+                                },
+                                "10.11.44.82": {
+                                    "pw_id": {
+                                        "9001": {
+                                            "state": "down ( local ready ) (Transport LSP Down)",
+                                            "pw_class": "not set",
+                                            "xc_id": "0xa0000005",
+                                            "encapsulation": "MPLS",
+                                            "protocol": "LDP",
+                                            "source_address": "10.11.44.91",
+                                            "pw_type": "Ethernet",
+                                            "control_word": "disabled",
+                                            "interworking": "none",
+                                            "pw_backup_disable_delay": 0,
+                                            "sequencing": "not set",
+                                            "lsp": {
+                                                "state": "Down",
+                                                "pw": {
+                                                    "load_balance": {
+                                                        "local": "Hashing:",
+                                                        "remote": "src-dst-ip"
+                                                    },
+                                                    "pw_status_tlv": {
+                                                        "local": "in",
+                                                        "remote": "use"
+                                                    }
+                                                },
+                                                "mpls": {
+                                                    "label": {
+                                                        "local": "24001",
+                                                        "remote": "unknown"
+                                                    },
+                                                    "group_id": {
+                                                        "local": "0x0",
+                                                        "remote": "0x0"
+                                                    },
+                                                    "monitor_interface": {
+                                                        "local": "Access PW",
+                                                        "remote": "unknown"
+                                                    },
+                                                    "mtu": {
+                                                        "local": "1500",
+                                                        "remote": "unknown"
+                                                    },
+                                                    "control_word": {
+                                                        "local": "disabled",
+                                                        "remote": "unknown"
+                                                    },
+                                                    "pw_type": {
+                                                        "local": "Ethernet",
+                                                        "remote": "unknown"
+                                                    },
+                                                    "vccv_cv_type": {
+                                                        "local": "0x2",
+                                                        "remote": "0x0",
+                                                        "local_type": [
+                                                            "LSP ping verification"
+                                                        ],
+                                                        "remote_type": [
+                                                            "none"
+                                                        ]
+                                                    },
+                                                    "vccv_cc_type": {
+                                                        "local": "0x6",
+                                                        "remote": "0x0",
+                                                        "local_type": [
+                                                            "router alert label",
+                                                            "TTL expiry"
+                                                        ],
+                                                        "remote_type": [
+                                                            "none"
+                                                        ]
+                                                    },
+                                                    "mib": {
+                                                        "local": "cpwVcIndex:",
+                                                        "remote": "2684354565"
+                                                    },
+                                                    "last_time_pw": {
+                                                        "local": "went down: 10/06/2020 01:50:32 (1y00w",
+                                                        "remote": "ago)"
+                                                    }
+                                                }
+                                            },
+                                            "create_time": "01/10/2019 14:18:18 (1y36w ago)",
+                                            "last_time_status_changed": "10/06/2020 01:53:52 (1y00w ago)",
+                                            "mac_withdraw_message": {
+                                                "send": 0,
+                                                "receive": 0
+                                            },
+                                            "forward_class": "0",
+                                            "mac_learning": "enabled",
+                                            "flooding": {
+                                                "broadcast_multicast": "enabled",
+                                                "unknown_unicast": "enabled",
+                                            },
+                                            "mac_aging_time": 300,
+                                            "mac_aging_type": "inactivity",
+                                            "mac_limit": 4000,
+                                            "mac_limit_action": "none",
+                                            "mac_limit_notification": "syslog",
+                                            "mac_limit_reached": "no",
+                                            "mac_limit_threshold": "75%",
+                                            "mac_port_down_flush": "enabled",
+                                            "mac_secure": "disabled",
+                                            "mac_secure_logging": "disabled",
+                                            "split_horizon_group": "none",
+                                            "dhcp_v4_snooping": "disabled",
+                                            "dhcp_v4_snooping_profile": "none",
+                                            "igmp_snooping": "disabled",
+                                            "igmp_snooping_profile": "none",
+                                            "mld_snooping_profile": "none",
+                                            "storm_control": "bridge-domain policer"
+                                        }
+                                    }
+                                }
                             },
                         },
                     },
@@ -1943,7 +2116,8 @@ expected_output = {
                                     "pw_id": {
                                         "104001": {
                                             "state": "up ( established )",
-                                            "pw_class": "not set, XC ID 0xa0000007",
+                                            "pw_class": "not set",
+                                            "xc_id": "0xa0000007",
                                             "encapsulation": "MPLS",
                                             "protocol": "LDP",
                                             "source_address": "10.11.44.91",

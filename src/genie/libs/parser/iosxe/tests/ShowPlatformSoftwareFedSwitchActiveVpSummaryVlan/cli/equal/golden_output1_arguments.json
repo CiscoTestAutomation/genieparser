@@ -1,0 +1,5 @@
+{
+    "vlan": "1",
+    "switch" : "active",
+    "switch_var" : "switch"
+}

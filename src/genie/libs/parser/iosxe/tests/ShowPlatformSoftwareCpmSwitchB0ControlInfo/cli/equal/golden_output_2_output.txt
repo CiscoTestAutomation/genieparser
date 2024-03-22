@@ -1,0 +1,13 @@
+CPM Control Info Table Entries
+
+System Port           Control Interface
+-----------           -----------------
+26                     FiftyGigE1/0/30
+
+
+If Id         Ec If Id           System Port     If Type
+-----         --------           -----------     -------
+32               105                26           Member
+58               105                27           Member
+105              105                28           Etherchannel
+

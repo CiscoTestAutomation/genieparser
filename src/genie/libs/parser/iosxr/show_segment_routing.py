@@ -15,6 +15,8 @@ Parser for the following show commands:
     * show pce ipv4 prefix
     * show pce ipv4 peer detail
     * show pce ipv4 peer
+    * show segment-routing srv6 locator
+    * show segment-routing srv6 locator {locator_name}
 '''
 
 # !/bin/env python
@@ -279,18 +281,21 @@ class ShowPceIPV4PeerDetailSchema(MetaParser):
                 'capabilities': {
                     'stateful': bool,
                     'segment-routing': bool,
-                    'update': bool
+                    'update': bool,
+                    Optional('instantiation'): bool
                 },
                 'pcep': {
                     'uptime': str,
                     'session_id_local': int,
                     'session_id_remote': int,
                 },
+                Optional('md5'): str,
                 'ka': {
                     'sending_intervals': int,
                     'minimum_acceptable_inteval': int,
                 },
                 'peer_timeout': int,
+                Optional('maximum_sid_depth'): int,
                 'statistics': {
                     'rx': {
                         'keepalive_messages': int,
@@ -312,6 +317,10 @@ class ShowPceIPV4PeerDetailSchema(MetaParser):
                         'update_messages': int,
                         'initiate_messages': int,
                     },
+                },
+                Optional('last_pcerror'): {
+                    'received': str,
+                    'sent': str,
                 }
             }
         }
@@ -339,7 +348,7 @@ class ShowPceIPV4PeerDetail(ShowPceIPV4PeerDetailSchema):
 
         p3 = re.compile(r'^Capabilities: (?P<stateful>\w+)\,\s+'
                         '(?P<segment_routing>[\w\-]+)\,\s+(?P<update>\w+)$')
-
+            
         p4 = re.compile(r'^PCEP has been up for: (?P<pcep_up_time>[\w+\:]+)$')
 
         p5 = re.compile(r'^PCEP session ID: local (?P<local_id>\d+)\, remote '
@@ -376,7 +385,27 @@ class ShowPceIPV4PeerDetail(ShowPceIPV4PeerDetailSchema):
 
         p16 = re.compile(r'^Initiate messages:\s+rx\s+(?P<initiate_messages_rx>'
                          '\d+)\s+tx\s+(?P<initiate_messages_tx>\d+)$')
+        
+        # Capabilities: Stateful, Segment-Routing, Update, Instantiation
+        p17 = re.compile(r'^Capabilities: (?P<stateful>\w+)\,\s+'
+                        '(?P<segment_routing>[\w\-]+)\,\s+(?P<update>\w+)'
+                        '\,\s+(?P<instantiation>\w+)')
+        
+        # MD5: Enabled
+        p18 = re.compile(r'^MD5:\s+(?P<md5>\w+)$')
 
+        # Maximum SID Depth: 10
+        p19 = re.compile(r'^Maximum SID Depth:\s+(?P<maximum_sid_depth>\d+)$')
+
+        # Last PCError:
+        p20 = re.compile(r'^Last\s+PCError:$')
+
+        # Received: None
+        p21 = re.compile(r'^Received:\s+(?P<received_pcerror>\w+)$')
+
+        # Sent: None
+        p22 = re.compile(r'^Sent:\s+(?P<sent_pcerror>\w+)$')
+            
         for line in out.splitlines():
             line = line.strip()
 
@@ -491,6 +520,45 @@ class ShowPceIPV4PeerDetail(ShowPceIPV4PeerDetailSchema):
                     int(m.groupdict()['initiate_messages_rx'])
                 tx_dict['initiate_messages'] = \
                     int(m.groupdict()['initiate_messages_tx'])
+
+            m = p17.match(line)
+            if m:
+                capabilities_dict = address_dict.setdefault('capabilities', {})
+                group = m.groupdict()
+                
+                capabilities_dict['stateful'] = 'stateful' in group['stateful'].lower()
+                capabilities_dict['segment-routing'] = 'segment-routing' in group['segment_routing'].lower()
+                capabilities_dict['update'] = 'update' in group['update'].lower()
+                capabilities_dict['instantiation'] = 'instantiation' in group['instantiation'].lower()
+            
+            m = p18.match(line)
+            if m:
+                md5_status_bool = m.groupdict()['md5']
+                address_dict['md5'] = md5_status_bool
+            
+            m = p19.match(line)
+            if m:
+                maximum_sid_depth_bool = int(m.groupdict()['maximum_sid_depth'])
+                address_dict['maximum_sid_depth'] = maximum_sid_depth_bool
+
+            m = p20.match(line)
+            if m:
+                last_pcerror_dict = address_dict.setdefault('last_pcerror', {})
+                last_pcerror_flag = True
+            
+            m = p21.match(line)
+            if m:
+                group = m.groupdict()
+                received_pcerror = group['received_pcerror']
+                if last_pcerror_flag:
+                    last_pcerror_dict['received'] = received_pcerror
+            
+            m = p22.match(line)
+            if m:
+                group = m.groupdict()
+                sent_pcerror = group['sent_pcerror']
+                if last_pcerror_flag:
+                    last_pcerror_dict['sent'] = sent_pcerror
 
         return ret_dict
 
@@ -1450,6 +1518,66 @@ class ShowSegmentRoutingSrv6LocatorSid(ShowSegmentRoutingSrv6LocatorSidSchema):
                 sid = group.pop('sid')
                 sid_dict = locator_dict.setdefault(locator, {}).setdefault('sid',{}).setdefault(sid,{})
                 sid_dict.update(group)
+                continue
+
+        return ret_dict
+
+class ShowSegmentRoutingSrv6LocatorSchema(MetaParser):
+    ''' Schema for:
+        * show segment-routing srv6 locator
+        * show segment-routing srv6 locator {locator_name}
+    '''
+    schema = {
+        'locators': {
+            Any(): {
+                'name': str,
+                'id': int,
+                'algorithm': int,
+                'prefix': str,
+                'status': str,
+                'flags': str
+            }
+        }
+    }
+
+
+class ShowSegmentRoutingSrv6Locator(ShowSegmentRoutingSrv6LocatorSchema):
+    ''' Parser for:
+        * show segment-routing srv6 locator
+        * show segment-routing srv6 locator {locator_name}
+    '''
+    cli_command = ['show segment-routing srv6 locator',
+                   'show segment-routing srv6 locator {locator_name}']
+
+    def cli(self, locator_name=None, output=None):
+        if output is None:
+            if locator_name:
+                output = self.device.execute(self.cli_command[1].format(locator_name=locator_name))
+            else:
+                output = self.device.execute(self.cli_command[0])
+
+        # LL                    1        128   fc00:c001:1001::/48       Up       U
+        # MAIN                  2        0     fc00:c000:1001::/48       Up       U
+        p1 = re.compile(r'^(?P<name>\w+)\s+(?P<id>\d+)\s+(?P<algorithm>\d+)\s+(?P<prefix>[\w:\/]+)\s+(?P<status>[Up|Dn]+)\s+(?P<flags>[U])$')
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # LL                    1        128   fc00:c001:1001::/48       Up       U
+            # MAIN                  2        0     fc00:c000:1001::/48       Up       U
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                locator_dict = ret_dict.setdefault('locators', {}). \
+                                    setdefault(group['name'], {})
+                locator_dict['name'] = group['name']
+                locator_dict['id'] = int(group['id'])
+                locator_dict['algorithm'] = int(group['algorithm'])
+                locator_dict['prefix'] = group['prefix']
+                locator_dict['status'] = group['status']
+                locator_dict['flags'] = group['flags']
                 continue
 
         return ret_dict

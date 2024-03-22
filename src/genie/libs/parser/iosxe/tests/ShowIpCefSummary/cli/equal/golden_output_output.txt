@@ -1,0 +1,6 @@
+show ip cef summary
+IPv4 CEF is enabled for distributed and running
+VRF Default
+ 98288 prefixes (98288/0 fwd/non-fwd)
+ Table id 0x0
+ Database epoch:        3 (98288 entries at this epoch)

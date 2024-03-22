@@ -3,11 +3,15 @@
 IOSXE parsers for the following show commands:
 
     * 'show controller VDSL {interface}'
+    * 'show controller ethernet-controller {interface}'
+    * 'show controller ethernet-controller'
 '''
 
 import re
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional, Use
+# import parser utils
+from genie.libs.parser.utils.common import Common
 
 
 class ShowControllerVDSLSchema(MetaParser):
@@ -18,16 +22,18 @@ class ShowControllerVDSLSchema(MetaParser):
         'daemon_status': str,
         Any(): {
             'chip_vendor': {
-                'chip_vendor_id': str,
-                'chip_vendor_specific': str,
-                'chip_vendor_country': str,
+                Optional('chip_vendor_id'): str,
+                Optional('chip_vendor_specific'): str,
+                Optional('chip_vendor_country'): str,
             },
             'modem_vendor': {
-                'modem_vendor_id': str,
-                'modem_vendor_specific': str,
-                'modem_vendor_country': str,
+                Optional('modem_vendor_id'): str,
+                Optional('modem_vendor_specific'): str,
+                Optional('modem_vendor_country'): str,
+                Optional('modem_version_near'): str,
             },
             Optional('trellis'): str,
+            Optional('serial_number_far'): str,
             Optional('sra'): str,
             Optional('sra_count'): int,
             Optional('bit_swap'): str,
@@ -61,24 +67,23 @@ class ShowControllerVDSLSchema(MetaParser):
             Optional('total_lofs'): int,
             Optional('total_lols'): int,
         },
-        'serial_number_near': str,
-        'modem_version_near': str,
-        'modem_version_far': str,
-        'modem_status': str,
-        'dsl_config_mode': str,
-        'tc_mode': str,
-        'selftest_result': str,
-        'delt_configuration': str,
-        'delt_state': str,
-        'failed_full_inits': int,
-        'short_inits': int,
-        'failed_short_inits': int,
-        'modem_fw__version': str,
-        'modem_phy_version': str,
-        'modem_phy_source': str,
-        'training_log': str,
-        'training_log_filename': str,
-        Optional('trained_mode'): str
+        Optional('serial_number_near'): str,
+        Optional('modem_version_far'): str,        
+        Optional('modem_status'): str,
+        Optional('dsl_config_mode'): str,
+        Optional('tc_mode'): str,
+        Optional('selftest_result'): str,
+        Optional('delt_configuration'): str,
+        Optional('delt_state'): str,
+        Optional('failed_full_inits'): int,
+        Optional('short_inits'): int,
+        Optional('failed_short_inits'): int,
+        Optional('modem_fw_version'): str,
+        Optional('modem_phy_version'): str,
+        Optional('modem_phy_source'): str,
+        Optional('training_log'): str,
+        Optional('training_log_filename'): str,
+        Optional('trained_mode'): str,
     }
 
 class ShowControllerVDSL(ShowControllerVDSLSchema):
@@ -88,7 +93,7 @@ class ShowControllerVDSL(ShowControllerVDSLSchema):
 
     cli_command = 'show controller VDSL {interface}'
 
-    def cli(self, interface, output=None):
+    def cli(self, interface='', output=None):
         if output is None:
             out = self.device.execute(self.cli_command.format(interface=interface))
         else:
@@ -97,52 +102,51 @@ class ShowControllerVDSL(ShowControllerVDSLSchema):
         ctrl_dict = {}
 
         # Controller VDSL 0/2/0 is UP
-        p1 = re.compile(r'^[Cc]on\w+\s(?P<ctrl>\w+\s\S+)\s+\w+\s+(?P<state>\w+)')
+        p1 = re.compile(r'^[Cc]on\w+\s(?P<ctrl>\w+\s\S+)\s+\w+\s+(?P<state>\w+)$')
 
         # Daemon Status: UP
-        p2 = re.compile(r'^(?P<param>Dae\w+\s+\w+):\s+(?P<vl>\w+)')
+        p2 = re.compile(r'^(?P<param>Dae\w+\s+\w+):\s+(?P<vl>\w+)$')
 
         # Serial Number Near: FGL223491WW C1127X-8 17.7.20210
         # Modem Version Near: 17.7.2021 0524: 03251
-        p2_1 = re.compile(r'^(?P<param>Serial\s+\w+\s+\w+):\s+(?P<vl>.+)')
+        p2_1 = re.compile(r'^(?P<param>Serial\s+Number\s+Near):\s+(?P<vl>.+)$')
 
         # Modem Version Near: 17.7.20210524: 03251
         # Modem Version Far: 0x544d
-        p2_2 = re.compile(r'^(?P<param>Modem\s+Version\s+\w+):\s+(?P<vl>.+)')
+        p2_2 = re.compile(r'^(?P<param>Modem\s+Version\s+Far):\s+(?P<vl>.+)$')
 
         # Modem Status: TC Sync(Showtime!)
-        p2_3 = re.compile(r'^(?P<param>Modem\s+\w+):\s+(?P<vl>.+)')
-
+        p2_3 = re.compile(r'^(?P<param>Modem\s+Status):\s+(?P<vl>.+)$')
+        
         # DSL Config Mode: ADSL2 +
-        p2_4 = re.compile(r'^(?P<param>DSL\s+\w+\s+\w+):\s+(?P<vl>.+)')
+        p2_4 = re.compile(r'^(?P<param>DSL\s+\w+\s+\w+):\s+(?P<vl>.+)$')
 
         # Trained Mode: G.992.5 (ADSL2 +) Annex A
-        p2_5 = re.compile(r'^(?P<param>Tr\w+\s+\w+):\s+(?P<vl>.+)')
+        p2_5 = re.compile(r'^(?P<param>Tr\w+\s+\w+):\s+(?P<vl>.+)$')
 
         # TC Mode: ATM
-        p2_6 = re.compile(r'^(?P<param>TC\s+\w+):\s+(?P<vl>.+)')
+        p2_6 = re.compile(r'^(?P<param>TC\s+\w+):\s+(?P<vl>.+)$')
 
         # Selftest Result: 0x00
-        p2_7 = re.compile(r'^(?P<param>Se\w+\s+\w+):\s+(?P<vl>.+)')
+        p2_7 = re.compile(r'^(?P<param>Se\w+\s+\w+):\s+(?P<vl>.+)$')
 
         # Short inits: 0
-        p2_8 = re.compile(r'^(?P<param>Sh\w+\s+\w+):\s+(?P<vl>.+)')
+        p2_8 = re.compile(r'^(?P<param>Sh\w+\s+\w+):\s+(?P<vl>.+)$')
 
         # DELT configuration: disabled
         # DELT state: not running
-        p2_9 = re.compile(r'^(?P<param>DELT\s+\w+):\s+(?P<vl>.+)')
+        p2_9 = re.compile(r'^(?P<param>DELT\s+\w+):\s+(?P<vl>.+)$')
 
         # Failed full inits: 0
         # Failed short inits: 0
-        p2_10 = re.compile(r'^(?P<param>Failed\s+\w+\s+\w+):\s+(?P<vl>.+)')
+        p2_10 = re.compile(r'^(?P<param>Failed\s+\w+\s+\w+):\s+(?P<vl>.+)$')
 
         # Modem FW Version: 4.14L.04
-        p2_11 = re.compile(r'^(?P<param>Modem\s+FW+\s+\w+):\s+(?P<vl>.+)')
+        p2_11 = re.compile(r'^(?P<param>Modem\s+FW+\s+\w+):\s+(?P<vl>.+)$')
 
         # Modem PHY Version: A2pv6F039x8.d26d
         # Modem PHY Source: System
-        p2_12 = re.compile(r'^(?P<param>Modem\s+PHY+\s+\w+):\s+(?P<vl>.+)')
-
+        p2_12 = re.compile(r'^(?P<param>Modem\s+PHY+\s+\w+):\s+(?P<vl>.+)$')
 
         # SRA count: 0    0
         # Total FECC: 799014    23383
@@ -153,28 +157,28 @@ class ShowControllerVDSL(ShowControllerVDSLSchema):
         # Total LPRS: 0     0
         # Total LOFS: 0     0
         # Total LOLS: 0     0
-        p3 = re.compile(r'^(?P<param>\w+\s+\w+):\s+(?P<xtr>\d+)\s+(?P<xtc>\d+)')
+        p3 = re.compile(r'^(?P<param>\w+\s+\w+):\s+(?P<xtr>\d+)\s+(?P<xtc>\d+)$')
 
         # Bit swap: enabled     enabled
-        p3_1 = re.compile(r'^(?P<param>\w+\s+\w+):\s+(?P<xtr>[enabled|disable]+)\s+(?P<xtc>\w+)')
+        p3_1 = re.compile(r'^(?P<param>\w+\s+\w+):\s+(?P<xtr>[enabled|disable]+)\s+(?P<xtc>\w+)$')
 
         # Bit swap count: 18    3
-        p3_2 = re.compile(r'^(?P<param>\w+\s+\w+\s+\w+):\s+(?P<xtr>\d+)\s+(?P<xtc>\d+)')
+        p3_2 = re.compile(r'^(?P<param>\w+\s+\w+\s+\w+):\s+(?P<xtr>\d+)\s+(?P<xtc>\d+)$')
 
         # Line Attenuation: 4.0 dB      2.2 dB
         # Signal Attenuation: 2.9 dB     0.0 dB
         # Noise Margin: 9.4 dB    5.8 dB
-        p3_3 = re.compile(r'^(?P<param>\w+\s+\w+):\s+(?P<xtr>\d+.\d\s+dB)\s+(?P<xtc>\d+.\d\s+dB)')
+        p3_3 = re.compile(r'^(?P<param>\w+\s+\w+):\s+(?P<xtr>\d+.\d\s+dB)\s+(?P<xtc>\d+.\d\s+dB)$')
 
         # Actual Power: 19.1 dBm     12.1 dBm
-        p3_4 = re.compile(r'^(?P<param>\w+\s+\w+):\s+(?P<xtr>\d+.\d\s+dBm)\s+(?P<xtc>.+)')
+        p3_4 = re.compile(r'^(?P<param>\w+\s+\w+):\s+(?P<xtr>\d+.\d\s+dBm)\s+(?P<xtc>.+)$')
 
         # Trellis: ON     ON
         # SRA: enabled    enabled
-        p3_5 = re.compile(r'^(?P<param>\w+):\s+(?P<xtr>\w+)\s+(?P<xtc>\w+)')
+        p3_5 = re.compile(r'^(?P<param>\w+):\s+(?P<xtr>\w+)\s+(?P<xtc>\w+)$')
 
         # Attainable Rate: 23708 kbits/s       1351 kbits/s
-        p3_6 = re.compile(r'^(?P<param>\w+\s+\w+):\s+(?P<xtr>\d+\s+\S+)\s+(?P<xtc>\d+\s+\S+)')
+        p3_6 = re.compile(r'^(?P<param>\w+\s+\w+):\s+(?P<xtr>\d+\s+\S+)\s+(?P<xtc>\d+\s+\S+)$')
 
         # Chip Vendor ID: 'BDCM'                   'BDCM'
         # Chip Vendor Specific: 0x0000        0x544D
@@ -183,21 +187,19 @@ class ShowControllerVDSL(ShowControllerVDSLSchema):
         # Modem Vendor Specific: 0x4602       0x544D
         # Modem Vendor Country: 0xB500        0xB500
         # Serial Number Near: FGL223491WW C1127X - 8 17.7.20210
-        p3_7 = re.compile(r'^(?P<param>\w+\s+\w+\s+\w+):\s+(?P<xtr>\S+)\s+(?P<xtc>\S+.+)')
-
+        p3_7 = re.compile(r'^(?P<param>\w+\s+\w+\s+\w+):\s+(?P<xtr>\S+)\s+(?P<xtc>\S+.+)$')
 
         # Per Band Status: D1  D2  D3  U0  U1  U2  U3
         # Line Attenuation(dB): 0.9    2.4 2.4 N / A   2.0 1.1 N / A
         # Signal  Attenuation(dB): 0.9    2.4 2.4  N / A   1.5 0.6 N / A
         # Noise Margin(dB): 19.1    18.6    18.6    N / A   5.7 5.6 N / A
-        p4 = re.compile(r'^(?P<param>\w+\s+\w+\(dB\)):\s+(?P<d1>\d+.\d+)\s+(?P<d2>\d+.\d+)\s+(?P<d3>\d+.\d+)\s+\S+\s+(?P<u1>\d+.\d+)\s+(?P<u2>\d+.\d+)\s+(?P<u3>\S+)')
-
+        p4 = re.compile(r'^(?P<param>\w+\s+\w+\(dB\)):\s+(?P<d1>\d+.\d+)\s+(?P<d2>\d+.\d+)\s+(?P<d3>\d+.\d+)\s+\S+\s+(?P<u1>\d+.\d+)\s+(?P<u2>\d+.\d+)\s+(?P<u3>\S+)$')
 
         # Training Log: Stopped
-        p5 = re.compile(r'^(?P<param>\w+\s+\w+)\s+:\s+(?P<state>\S+)')
+        p5 = re.compile(r'^(?P<param>\w+\s+\w+)\s+:\s+(?P<state>\S+)$')
 
         # Training Log Filename: flash:vdsllog.bin
-        p6 = re.compile(r'^(?P<param>\w+\s+\w+\s+\w+)\s+:\s+(?P<state>\S+)')
+        p6 = re.compile(r'^(?P<param>\w+\s+\w+\s+\w+)\s+:\s+(?P<state>\S+)$')
 
         # DS Channel1    DS Channel0    US Channel1    US Channel0
         # Previous Speed: NA   0   NA  0
@@ -206,17 +208,17 @@ class ShowControllerVDSL(ShowControllerVDSLSchema):
         # CRC Errors: NA  0   NA  3
         # Header Errors: NA  0   NA  1
         # Actual INP: NA 0.00    NA  0.00
-        p7 = re.compile(r'^(?P<param>\w+\s\w+):\s+(?P<d_ch1>[\w\d.]+)\s+(?P<d_ch0>[\d.]+)\s+(?P<u_ch1>[\w\d.]+)\s+(?P<u_ch0>[\d.]+)')
+        p7 = re.compile(r'^(?P<param>\w+\s\w+):\s+(?P<d_ch1>[\w\d.]+)\s+(?P<d_ch0>[\d.]+)\s+(?P<u_ch1>[\w\d.]+)\s+(?P<u_ch0>[\d.]+)$')
 
         # Speed (kbps): NA 23756   NA  1283
         # Interleave (ms): NA  0.08    NA  0.49
-        p7_1 = re.compile(r'^(?P<param>\w+\s\(\w+\)):\s+(?P<d_ch1>[\w\d.]+)\s+(?P<d_ch0>[\d.]+)\s+(?P<u_ch1>[\w\d.]+)\s+(?P<u_ch0>[\d.]+)')
+        p7_1 = re.compile(r'^(?P<param>\w+\s\(\w+\)):\s+(?P<d_ch1>[\w\d.]+)\s+(?P<d_ch0>[\d.]+)\s+(?P<u_ch1>[\w\d.]+)\s+(?P<u_ch0>[\d.]+)$')
 
         # SRA Previous Speed: NA   0   NA  0
-        p7_2 = re.compile(r'^(?P<param>\w+\s\w+\s+\w+):\s+(?P<d_ch1>[\w\d.]+)\s+(?P<d_ch0>[\d.]+)\s+(?P<u_ch1>[\w\d.]+)\s+(?P<u_ch0>[\d.]+)')
+        p7_2 = re.compile(r'^(?P<param>\w+\s\w+\s+\w+):\s+(?P<d_ch1>[\w\d.]+)\s+(?P<d_ch0>[\d.]+)\s+(?P<u_ch1>[\w\d.]+)\s+(?P<u_ch0>[\d.]+)$')
 
         # Reed - Solomon EC: NA  0   NA  0
-        p7_3 = re.compile(r'^(?P<param>\w+-\w+\s+\w+):\s+(?P<d_ch1>[\w\d.]+)\s+(?P<d_ch0>[\d.]+)\s+(?P<u_ch1>[\w\d.]+)\s+(?P<u_ch0>[\d.]+)')
+        p7_3 = re.compile(r'^(?P<param>\w+-\w+\s+\w+):\s+(?P<d_ch1>[\w\d.]+)\s+(?P<d_ch0>[\d.]+)\s+(?P<u_ch1>[\w\d.]+)\s+(?P<u_ch0>[\d.]+)$')
 
         for lines in out.splitlines():
             line = lines.strip()
@@ -235,15 +237,14 @@ class ShowControllerVDSL(ShowControllerVDSLSchema):
                 ctrl_dict[param] = group['vl']
 
             # Serial Number Near: FGL223491WW C1127X-8 17.7.20210
-            # Modem Version Near: 17.7.2021 0524: 03251
+            # Modem Version Near: 17.7.2021 0524: 03251\
+            
             m = p2_1.match(line)
             if m:
                 group = m.groupdict()
                 param = group['param'].lower().replace(" ", "_")
                 ctrl_dict[param] = group['vl']
 
-            # Modem Version Near: 17.7.20210524: 03251
-            # Modem Version Far: 0x544d
             m = p2_2.match(line)
             if m:
                 group = m.groupdict()
@@ -312,7 +313,7 @@ class ShowControllerVDSL(ShowControllerVDSLSchema):
             m = p2_11.match(line)
             if m:
                 group = m.groupdict()
-                param = group['param'].lower().replace(" ", "_")
+                param = re.sub(' +', ' ', group['param'].lower()).replace(" ", "_")
                 ctrl_dict[param] = group['vl']
 
             # Modem PHY Version: A2pv6F039x8.d26d
@@ -755,3 +756,328 @@ class ShowControllers(ShowControllersSchema):
                 interfaces_dict['output_pause_frames'] = output_pause_frames
 
         return config_dict
+    
+
+class ShowControllerEthernetControllerSchema(MetaParser):
+    """Schema for show controller ethernet-controller {interface}"""
+
+    schema = {
+        'interface': {
+            Any(): {
+                'last_updated': str,
+                'transmit': {
+                    Any(): int
+                },
+                'receive': {
+                    Any(): int
+                }
+            }
+        }
+
+    }
+
+
+class ShowControllerEthernetController(ShowControllerEthernetControllerSchema):
+    """Parser for show controller ethernet-controller {interface}"""
+
+    cli_command = ['show controllers ethernet-controller', 
+        'show controllers ethernet-controller {interface}']
+
+    def cli(self, interface=None, output=None):
+        if output is None:
+            if interface:
+                cmd = self.cli_command[1].format(interface=interface)
+            else:
+                cmd = self.cli_command[0]
+            output = self.device.execute(cmd)
+        
+        # Transmit                  GigabitEthernet1/0/3          Receive 
+        p1 = re.compile(r'^Transmit\s+(?P<interface>[\w\/]+)\s+Receive$')
+
+        # 32199124 Total bytes                     1608886 Total bytes              
+        # 78979 Unicast frames                        2 Unicast frames           
+        # 5054660 Unicast bytes                       136 Unicast bytes 
+        p2 = re.compile(r'^(?P<transmit_value>\d+)\s+(?P<transmit_key_string>[\w\s\>\(\)]+(frame[s]*|bytes|dropped|truncated|successful))\s+(?P<receive_value>\d+)\s+(?P<receive_key_string>[\w\s\>\(\)]+)$')
+
+        # 0 Gold frames successful   
+        # 0 1 collision frames  
+        p3 = re.compile(r'^(?P<transmit_value>\d+)\s+(?P<transmit_key_string>[\w\s\>\(\)]+)$')
+        
+        # LAST UPDATE 561 msecs AGO
+        p4 = re.compile(r'^LAST UPDATE (?P<last_updated>[\w\s]+) AGO$')
+        
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Transmit                  GigabitEthernet1/0/3          Receive 
+            m = p1.match(line)
+            if m:
+                interface = Common.convert_intf_name(m.groupdict()['interface'])
+                int_dict = ret_dict.setdefault('interface', {}).setdefault(interface, {})
+                continue
+            
+            # 32199124 Total bytes                     1608886 Total bytes              
+            # 78979 Unicast frames                        2 Unicast frames           
+            # 5054660 Unicast bytes                       136 Unicast bytes
+            m = p2.match(line)
+            if m:
+                trans_dict = int_dict.setdefault('transmit', {})
+                receive_dict = int_dict.setdefault('receive', {})
+                transmit_key_string = m.groupdict()['transmit_key_string'].strip().replace(' ', '_').lower()
+                receive_key_string = m.groupdict()['receive_key_string'].strip().replace(' ', '_').lower()
+                trans_dict.setdefault(transmit_key_string, int(m.groupdict()['transmit_value']))
+                receive_dict.setdefault(receive_key_string, int(m.groupdict()['receive_value']))
+                continue
+            
+            # 0 Gold frames successful   
+            # 0 1 collision frames 
+            m = p3.match(line)
+            if m:
+                transmit_key_string = m.groupdict()['transmit_key_string'].replace(' ', '_').lower()
+                int_dict.setdefault('transmit', {}).setdefault(transmit_key_string, int(m.groupdict()['transmit_value']))
+                continue
+        
+            # LAST UPDATE 561 msecs AGO
+            m = p4.match(line)
+            if m:
+                int_dict.setdefault('last_updated', m.groupdict()['last_updated'])
+        
+        return ret_dict
+class ShowControllersEthernetControllerSchema(MetaParser):
+    """
+        Schema for show controllers ethernet-controller {interface}
+    """
+
+    schema = {
+        'interface': {
+            Any() : {
+                'transmit': {
+                    Any() : int
+                },
+                'receive': {
+                    Any() : int
+                },
+                'last_update_msecs': int 
+            }
+        }
+    }
+
+
+class ShowControllersEthernetController(ShowControllersEthernetControllerSchema):
+    """
+        parser for show controllers ethernet-controller {interface}
+    """
+
+    cli_command = ['show controllers ethernet-controller', 'show controllers ethernet-controller {interface}']
+
+    def cli(self, interface=None, output=None):
+        if output is None:
+            if interface:
+                cmd = self.cli_command[1].format(interface=interface)
+            else:
+                cmd = self.cli_command[0]
+
+            output = self.device.execute(cmd)
+
+        # Transmit                  GigabitEthernet1/0/1          Receive   
+        p1 = re.compile(r'^Transmit\s+(?P<interface>[\w\/\d\.]+)\s+Receive$')
+
+        # 0 Total bytes                           0 Total bytes              
+        # 0 Unicast frames                        0 Unicast frames       
+        p2 = re.compile(r'^(?P<transmit_value>\d+)\s+(?P<transmit_key_name>.+)\s\s+'
+                r'(?P<receive_value>\d+)\s+(?P<receive_key_name>.+)$')
+
+        # 0 4 collision frames 
+        p3 = re.compile(r'^(?P<transmit_value>\d+)\s+(?P<transmit_key_name>.+)$')
+
+        # LAST UPDATE 65017966 msecs AGO
+        p4 = re.compile(r'^LAST UPDATE (?P<last_update_msecs>\d+) msecs AGO$')
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Transmit                  GigabitEthernet1/0/1          Receive 
+            m = p1.match(line)
+            if m:
+                int_dict = ret_dict.setdefault('interface', {}).setdefault(\
+                    Common.convert_intf_name(m.groupdict()['interface']), {})
+                transmit_dict = int_dict.setdefault('transmit', {})
+                receive_dict = int_dict.setdefault('receive', {})
+                continue
+
+            # 0 Total bytes                           0 Total bytes              
+            # 0 Unicast frames                        0 Unicast frames 
+            m = p2.match(line)
+            if m:
+                groupdict = m.groupdict()
+                transmit_key_name = groupdict['transmit_key_name'].strip().lower().\
+                    replace(' ', '_').replace('>', 'greater').replace('(', '').replace(')', '')
+                transmit_dict[transmit_key_name] = int(groupdict['transmit_value'])
+                receive_key_name = groupdict['receive_key_name'].strip().lower().\
+                    replace(' ', '_').replace('>', 'greater').replace('(', '').replace(')', '')
+                receive_dict[receive_key_name] = int(groupdict['receive_value'])
+                continue
+
+            # 0 4 collision frames 
+            m = p3.match(line)
+            if m:
+                groupdict = m.groupdict()
+                transmit_key_name = groupdict['transmit_key_name'].strip().lower().\
+                    replace(' ', '_').replace('>', 'greater').replace('(', '').replace(')', '')
+                transmit_dict[transmit_key_name] = int(groupdict['transmit_value'])
+                continue
+
+            # LAST UPDATE 65017966 msecs AGO
+            m = p4.match(line)
+            if m:
+                int_dict['last_update_msecs'] = int(m.groupdict()['last_update_msecs'])
+
+        return ret_dict
+
+
+# =============================================
+# Parser for 'show controller vdsl {interface} local'
+# =============================================
+
+class ShowControllerVDSLlocalSchema(MetaParser):
+    """Schema for show controller VDSL {interface} local"""
+
+    schema = {
+        'sfp_vendor_pid': str,
+        'sfp_vendor_sn': str,
+        'firmware_embedded_in_ios-xe': str,
+        'running_firmware_version': str,
+        'management_link': str,
+        'dsl_status': str,
+        'dumping_internal_info': str,
+        'dying_gasp': str,
+        'dumping_delt_info': str,
+        
+    }
+
+class ShowControllerVDSLlocal(ShowControllerVDSLlocalSchema):
+    """
+    Parser for show controller VDSL {interface} local
+    """
+
+    cli_command = 'show controller VDSL {interface} local'
+
+    def cli(self, interface=None, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command.format(interface=interface))
+        else:
+            out = output
+
+        
+        
+        #SFP Vendor PID:                 SFPV5311TR
+        p1 = re.compile(r'^(?P<param>\w*\s*\w*\s*PID):\s+(?P<vl>.+)')
+        
+        #SFP Vendor SN:                  MET211611AC
+        p2 = re.compile(r'^(?P<param>\w*\s*\w*\s*SN):\s+(?P<vl>.+)')
+        
+        #Firmware embedded in IOS-XE:    1_62_8463
+        p3 = re.compile(r'^(?P<param>\w*\s*\w*\s*\w*\s*IOS-XE):\s+(?P<vl>.+)')
+        
+        #Running Firmware Version:       1_62_8463
+        p4 = re.compile(r'^(?P<param>\w*\s*\w*\s*Version\s*):\s+(?P<vl>.+)')
+        
+        #Management Link:                up
+        p5 = re.compile(r'^(?P<param>\w*\s*Link\s*):\s+(?P<state>.+)')
+        
+        #DSL Status:                     showtime
+        p6 = re.compile(r'^(?P<param>DSL\s*\w*):\s+(?P<state>\w+)')
+        
+        #Dumping internal info:          idle
+        p7 = re.compile(r'^(?P<param>\w*\s*internal\s*\w*\s*):\s+(?P<state>\w+)')
+        
+        #Dying Gasp:                     disarmed
+        p8 = re.compile(r'^(?P<param>\w*\s*Gasp):\s+(?P<state>\w+)')
+        
+        #Dumping DELT info:              idle
+        p9 = re.compile(r'^(?P<param>\w*\s*DELT\s*\w*\s*):\s+(?P<state>\w+)')
+        
+        ctrl_dict = {}
+       
+        for lines in out.splitlines():
+            line = lines.strip()
+
+            #SFP Vendor PID:                 SFPV5311TR
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                param = group['param'].lower().replace(" ", "_")
+                ctrl_dict[param] = group['vl']
+                continue
+
+            #SFP Vendor SN:                  MET211611AC
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                param = group['param'].lower().replace(" ", "_")
+                ctrl_dict[param] = group['vl']
+                continue
+
+            #Firmware embedded in IOS-XE:    1_62_8463
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                param = group['param'].lower().replace(" ", "_")
+                ctrl_dict[param] = group['vl']
+                continue
+                
+            
+            # Running Firmware Version:       1_62_8463
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                param = group['param'].lower().replace(" ", "_")
+                ctrl_dict[param] = group['vl']
+                continue
+                
+
+            #Management Link:                up
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                param = group['param'].lower().replace(" ", "_")
+                ctrl_dict[param] = group['state']
+                continue
+            # DSL Status:                     showtime
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                param = group['param'].lower().replace(" ", "_")
+                ctrl_dict[param] = group['state']
+                continue
+                
+            #Dumping internal info:          idle    
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                param = group['param'].lower().replace(" ", "_")
+                ctrl_dict[param] = group['state']
+                continue
+
+            #Dying Gasp:                     disarmed
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                param = group['param'].lower().replace(" ", "_")
+                ctrl_dict[param] = group['state']
+                continue
+               
+            #Dumping DELT info:              idle
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                param = group['param'].lower().replace(" ", "_")
+                ctrl_dict[param] = group['state']
+                continue
+
+        return ctrl_dict
+

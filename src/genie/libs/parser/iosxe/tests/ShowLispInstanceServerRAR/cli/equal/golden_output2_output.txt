@@ -1,0 +1,13 @@
+=================================================
+Output for router lisp 0
+=================================================
+
+Reverse-Address-resolution data for router lisp 0 instance-id 1031
+
+Hardware Address      Host Address
+aabb.cc00.c900/48     192.168.3.2
+                      2001:192:168:3::2
+                      FE80::A8BB:CCFF:FE00:C900
+aabb.cc00.ca00/48     192.168.3.3
+                      2001:192:168:3::3
+                      FE80::A8BB:CCFF:FE00:CA00

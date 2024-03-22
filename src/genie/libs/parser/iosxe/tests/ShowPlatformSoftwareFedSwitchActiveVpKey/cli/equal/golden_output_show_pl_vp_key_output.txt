@@ -1,0 +1,15 @@
+FED PM Virtual Port Data :
+  iif_id = 54, vlan_id = 20
+  Info: 
+    stp state: disabled
+    vtp pruned: NO
+    Dest Map: TRUE
+    limited access: FALSE
+    learning cache enable: FALSE
+    delete auth behavior: FALSE
+    tag native enable: FALSE
+    block learn: FALSE
+    pvlan port: FALSE
+    pvlan mode: trunk
+    pvlan native vlan: 1
+

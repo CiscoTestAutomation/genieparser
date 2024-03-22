@@ -1,0 +1,43 @@
+show platform hardware fed switch 3 qos queue config interface tw3/0/1
+Load for five secs: 1%/0%; one minute: 0%; five minutes: 1%
+Time source is NTP, 23:30:53.338 UTC Thu Sep 22 2022
+
+Asic:1 Core:1 DATA Port:0 GPN:193 LinkSpeed:0x3
+AFD:Disabled FlatAFD:Disabled QoSMap:0 HW Queues: 0 - 7
+  DrainFast:Disabled PortSoftStart:2 - 1800  
+   DTS  Hardmax  Softmax   PortSMin  GlblSMin  PortStEnd   QEnable
+  ----- --------  --------  --------  --------  ---------  -------
+ 0   1  2   200   3   800  19   475   0     0   3  2400     Dis
+ 1   1  0     0   4  1200  19   712   8   300   3  2400     Dis
+ 2   1  0     0   0     0   0     0   0     0   3  2400     Dis
+ 3   1  0     0   0     0   0     0   0     0   3  2400     Dis
+ 4   1  0     0   0     0   0     0   0     0   3  2400     Dis
+ 5   1  0     0   0     0   0     0   0     0   3  2400     Dis
+ 6   1  0     0   0     0   0     0   0     0   3  2400     Dis
+ 7   1  0     0   0     0   0     0   0     0   3  2400     Dis
+ Priority   Shaped/shared   weight  shaping_step  sharpedWeight
+ --------   -------------   ------  ------------   -------------
+ 0      0     Shared            50           0           0
+ 1      0     Shared            75           0           0
+ 2      0     Shared         10000           0           0
+ 3      0     Shared         10000           0           0
+ 4      0     Shared         10000           0           0
+ 5      0     Shared         10000           0           0
+ 6      0     Shared         10000           0           0
+ 7      0     Shared         10000           0           0
+ Port       Port            Port    Port
+ Priority   Shaped/shared   weight  shaping_step
+ --------   -------------   ------  ------------
+        2     Shaped           250         209
+
+   Weight0 Max_Th0 Min_Th0 Weigth1 Max_Th1 Min_Th1  Weight2 Max_Th2 Min_Th2
+   ------- ------- ------- ------- ------- -------  ------- ------- ------
+ 0       0     796       0       0     890       0       0    1000       0
+ 1       0     956       0       0    1068       0       0    1200       0
+ 2       0       0       0       0       0       0       0       0       0
+ 3       0       0       0       0       0       0       0       0       0
+ 4       0       0       0       0       0       0       0       0       0
+ 5       0       0       0       0       0       0       0       0       0
+ 6       0       0       0       0       0       0       0       0       0
+ 7       0       0       0       0       0       0       0       0       0
+dnac_9300_stack#

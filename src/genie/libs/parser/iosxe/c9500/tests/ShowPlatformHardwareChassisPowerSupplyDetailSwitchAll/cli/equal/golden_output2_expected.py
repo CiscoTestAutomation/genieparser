@@ -1,0 +1,30 @@
+expected_output = {
+   "power_supply_details":{
+      "PS1":{
+         "temperature_celsius":{
+            "temperature_1":"24.7500",
+            "temperature_2":"26.2500",
+            "temperature_3":"24.5000"
+         },
+         "input_voltage_volt":"226.5000",
+         "input_current_amp":"1.9082",
+         "input_power_watt":"426.5000",
+         "output_voltage_volt":"12.0508",
+         "output_current_amp":"32.3125",
+         "output_power_watt":"389.0000"
+      },
+      "PS2":{
+         "temperature_celsius":{
+            "temperature_1":"25.0000",
+            "temperature_2":"27.2500",
+            "temperature_3":"24.5000"
+         },
+         "input_voltage_volt":"227.5000",
+         "input_current_amp":"1.9238",
+         "input_power_watt":"431.5000",
+         "output_voltage_volt":"12.0498",
+         "output_current_amp":"32.6875",
+         "output_power_watt":"394.0000"
+      }
+   }
+}

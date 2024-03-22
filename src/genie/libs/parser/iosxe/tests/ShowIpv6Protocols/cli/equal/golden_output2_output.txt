@@ -1,0 +1,22 @@
+IPv6 Routing Protocol is "omp"
+  Redistribution:
+    None
+IPv6 Routing Protocol is "connected"
+IPv6 Routing Protocol is "application"
+IPv6 Routing Protocol is "ND"
+IPv6 Routing Protocol is "isis sr"
+  Interfaces:
+    Loopback1
+    Ethernet2/0
+    Ethernet2/1
+    Ethernet3/0
+    Ethernet3/1
+    Ethernet4/0
+    Ethernet4/1
+  Redistribution:
+    None
+IPv6 Routing Protocol is "bgp 65000"
+  IGP synchronization is disabled
+  Redistribution:
+    None
+  Distance:

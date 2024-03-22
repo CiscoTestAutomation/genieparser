@@ -1,0 +1,3 @@
+Link time Rate US/DS     Mode      Status    Annex  Profile TxPkts/RxPkts
+  2696357   60014/90287  VDSL2     Showtime  AnnexB 12a     53438/3356
+

@@ -1,0 +1,224 @@
+Current configuration : 5178 bytes
+l2vpn evpn instance 102 vlan-based
+ encapsulation vxlan
+ replication-type ingress
+!
+l2vpn evpn instance 201 vlan-based
+ encapsulation vxlan
+ replication-type static
+!
+l2vpn evpn instance 202 vlan-based
+ encapsulation vxlan
+ replication-type ingress
+!
+!
+vlan configuration 102
+ member evpn-instance 102 vni 10102
+vlan configuration 201
+ member evpn-instance 201 vni 10201
+vlan configuration 202
+ member evpn-instance 202 vni 10202
+vlan configuration 901
+ member vni 50901
+vlan configuration 902
+ member vni 50902
+!
+interface nve1
+ no ip address
+ source-interface Loopback1
+ host-reachability protocol bgp
+ member vni 10102 ingress-replication
+ member vni 50901 vrf green
+ member vni 10201 mcast-group 225.0.0.101
+ member vni 10202 ingress-replication
+ member vni 50902 vrf blue
+!
+router bgp 65001
+ !
+ address-family ipv4 mvpn
+  neighbor 172.16.255.1 activate
+  neighbor 172.16.255.1 send-community extended
+  neighbor 172.16.255.1 inherit peer-policy LEAF-EVPN-PEER-POLICY
+  neighbor 172.16.255.2 activate
+  neighbor 172.16.255.2 send-community extended
+  neighbor 172.16.255.2 inherit peer-policy LEAF-EVPN-PEER-POLICY
+ exit-address-family
+ !
+ !
+ address-family ipv6 mvpn
+  neighbor 172.16.255.1 activate
+  neighbor 172.16.255.1 send-community extended
+  neighbor 172.16.255.1 inherit peer-policy LEAF-EVPN-PEER-POLICY
+  neighbor 172.16.255.2 activate
+  neighbor 172.16.255.2 send-community extended
+  neighbor 172.16.255.2 inherit peer-policy LEAF-EVPN-PEER-POLICY
+ exit-address-family
+ !
+ !
+ address-family l2vpn evpn
+  neighbor 172.16.255.1 activate
+  neighbor 172.16.255.1 send-community extended
+  neighbor 172.16.255.1 inherit peer-policy LEAF-EVPN-PEER-POLICY
+  neighbor 172.16.255.2 activate
+  neighbor 172.16.255.2 send-community extended
+  neighbor 172.16.255.2 inherit peer-policy LEAF-EVPN-PEER-POLICY
+ exit-address-family
+ !
+!
+!
+ip multicast-routing vrf green
+!
+ipv6 multicast-routing vrf green
+!
+!         
+ip multicast-routing vrf blue
+!
+ip pim vrf green rp-address 10.3.255.255
+ip pim vrf green register-source Loopback11
+ipv6 pim vrf green rp-address FC00:2:255::255
+ipv6 pim vrf green register-source Loopback1
+!
+!
+vrf definition blue
+ description blue VRF defn
+ rd 2:2
+ !
+ address-family ipv4
+  mdt auto-discovery vxlan
+  mdt default vxlan 239.1.1.1
+  mdt data vxlan 225.2.2.0 0.0.0.255
+  mdt data threshold 111
+  mdt overlay use-bgp spt-only
+  route-target export 2:2
+  route-target import 2:2
+  route-target export 2:2 stitching
+  route-target import 2:2 stitching
+ exit-address-family
+ !
+ address-family ipv6
+  route-target export 2:2
+  route-target import 2:2
+  route-target import 2:2 stitching
+ exit-address-family
+!
+!
+interface Vlan201
+ vrf forwarding blue
+ ip dhcp relay source-interface Loopback12
+ ip address 10.1.201.1 255.255.255.0
+ ip helper-address 10.1.1.4
+ ip pim sparse-mode
+ ipv6 address 2001:201::1/64
+!
+interface Vlan202
+ vrf forwarding blue
+ ip dhcp relay source-interface Loopback12
+ ip address 10.1.202.1 255.255.255.0
+ ip helper-address 10.1.1.4
+ ip pim sparse-mode
+ ipv6 address 2001:202::1/64
+!
+interface Vlan902
+ vrf forwarding blue
+ ip unnumbered Loopback1
+ ipv6 enable
+ no autostate
+!
+interface Loopback12
+ vrf forwarding blue
+ ip address 10.2.12.12 255.255.255.0
+!
+interface Loopback256
+ description RP loopback for VRF blue
+ vrf forwarding blue
+ ip address 10.2.255.255 255.255.255.255
+!
+router bgp 65001
+ !
+ address-family ipv4 vrf blue
+  advertise l2vpn evpn
+  redistribute static
+  redistribute connected
+ exit-address-family
+ !
+ address-family ipv6 vrf blue
+  redistribute connected
+  redistribute static
+  advertise l2vpn evpn
+ exit-address-family
+!
+!
+vrf definition green
+ description green VRF defn
+ rd 1:1
+ !
+ address-family ipv4
+  mdt auto-discovery vxlan
+  mdt default vxlan 239.1.1.2
+  mdt data vxlan 225.2.3.0 0.0.0.255
+  mdt data threshold 111
+  mdt overlay use-bgp
+  route-target export 1:1
+  route-target import 1:1
+  route-target export 1:1 stitching
+  route-target import 1:1 stitching
+ exit-address-family
+ !
+ address-family ipv6
+  mdt auto-discovery vxlan
+  mdt default vxlan 239.1.1.2
+  mdt overlay use-bgp
+  route-target export 1:1
+  route-target import 1:1
+  route-target export 1:1 stitching
+  route-target import 1:1 stitching
+ exit-address-family
+!
+!
+interface Vlan101
+ vrf forwarding green
+ ip dhcp relay source-interface Loopback11
+ ip address 10.1.101.1 255.255.255.0
+ ip helper-address 10.1.1.4
+ ipv6 address 2001:101::1/64
+!         
+interface Vlan102
+ vrf forwarding green
+ ip dhcp relay source-interface Loopback11
+ ip address 10.1.102.1 255.255.255.0
+ ip helper-address 10.1.1.4
+ ip pim sparse-mode
+ ipv6 address 2001:102::1/64
+!
+interface Vlan901
+ vrf forwarding green
+ ip unnumbered Loopback1
+ ipv6 enable
+ no autostate
+!
+interface Loopback2
+ description reg Loopback
+ vrf forwarding green
+ ip address 172.16.254.5 255.255.255.255
+ ip pim sparse-mode
+!
+interface Loopback11
+ vrf forwarding green
+ ip address 10.2.11.11 255.255.255.0
+!
+router bgp 65001
+ !
+ address-family ipv4 vrf green
+  advertise l2vpn evpn
+  redistribute static
+  redistribute connected
+ exit-address-family
+ !
+ address-family ipv6 vrf green
+  redistribute connected
+  redistribute static
+  advertise l2vpn evpn
+ exit-address-family
+!
+!
+end

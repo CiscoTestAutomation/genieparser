@@ -17,6 +17,10 @@ IOSXR parsers for the following show commands:
     * show ospf {process_id} database router
     * show ospf all-inclusive database router
     * show ospf interface brief
+    * show ospf {process_name} summary
+    * show ospf {process_name} vrf {vrf_name} summary
+    * show ospf {process_name}
+    * show ospfv3 {process_name}
 """
 
 # Python
@@ -25,7 +29,7 @@ from netaddr import IPAddress, IPNetwork
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional
+from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional, ListOf
 
 
 # ==================================================
@@ -5316,7 +5320,7 @@ class ShowOspfDatabaseSchema(MetaParser):
                 Any(): {
                     'instance': {
                         Any(): {
-                            "router_id": str,
+                            Optional("router_id"): str,
                             Optional('area'): {
                                 Any(): {
                                     "area_id": int,
@@ -5337,6 +5341,27 @@ class ShowOspfDatabaseSchema(MetaParser):
                                                                 Optional('opaque_id'): int
                                                             },
                                                         },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                            Optional('database'): {
+                                'lsa_types': {
+                                    Any(): {
+                                        'lsa_type': int,
+                                        'lsas': {
+                                            Any(): {
+                                                'adv_router': str,
+                                                'link_id': str,
+                                                'ospf': {
+                                                    'header': {
+                                                        'age': int,
+                                                        'seq_num': str,
+                                                        'checksum': str,
+                                                        'tag': int,
                                                     },
                                                 },
                                             },
@@ -5391,7 +5416,7 @@ class ShowOspfDatabase(ShowOspfDatabaseSchema):
             'summary': 3,
             'summary net': 3,
             'summary asb': 4,
-            'external': 5,
+            'type-5 as external': 5,
             'link (type-8)': 8,
             'intra area prefix': 9,
             'type-10 opaque link area': 10
@@ -5418,6 +5443,14 @@ class ShowOspfDatabase(ShowOspfDatabaseSchema):
         p4 = re.compile(
             "^(?P<link_id>[\w\.]+)\s+(?P<adv_router>[\w\.]+)\s+(?P<age>[\w]+)"
             "\s+(?P<seq_num>[\w]+)\s+(?P<checksum>[\w]+)\s+(?P<opaque_id>[\w]+)$")
+
+        #60.111.3.0      50.1.1.2        292         0x800000f9 0x00471a
+        p5 = re.compile(
+            "^(?P<link_id>[\w\.]+)\s+(?P<adv_router>[\w\.]+)\s+(?P<age>[\w]+)\s+"
+            "(?P<seq_num>[\w]+)\s+(?P<checksum>[\w]+)$")
+
+        # Type-5 AS External Link States
+        p6 = re.compile(r'^(?P<lsa_type>([a-zA-Z0-9\s\D]+)) +Link +States$')
 
 
         for line in output.splitlines():
@@ -5487,10 +5520,6 @@ class ShowOspfDatabase(ShowOspfDatabaseSchema):
                 group = m.groupdict()
                 link_id = group['link_id']
                 adv_router = group['adv_router']
-                age = int(group['age'])
-                seq = group['seq_num']
-                checksum = group['checksum']
-                link_count = group['link_count']
                 linkid_advrouter = link_id + " " + adv_router
 
                 # Create lsas dict
@@ -5502,10 +5531,13 @@ class ShowOspfDatabase(ShowOspfDatabaseSchema):
                 # osfpv2 dict
                 ospfv2_dict = lsas_dict.setdefault('ospf', {}). \
                     setdefault('header', {})
-                ospfv2_dict['age'] = age
-                ospfv2_dict['seq_num'] = seq
+                ospfv2_dict['age'] = int(group['age'])
+                ospfv2_dict['seq_num'] = group['seq_num']
                 ospfv2_dict['checksum'] = group['checksum']
-                ospfv2_dict['link_count'] = int(group['link_count'])
+                if lsa_type != 5:
+                    ospfv2_dict['link_count'] = int(group['link_count'])
+                else:
+                    ospfv2_dict['tag'] = int(group['link_count'])
                 continue
 
             # To process the type_10_opaque_link_states
@@ -5534,6 +5566,50 @@ class ShowOspfDatabase(ShowOspfDatabaseSchema):
                 ospfv2_dict['seq_num'] = seq
                 ospfv2_dict['checksum'] = group['checksum']
                 ospfv2_dict['opaque_id'] = int(group['opaque_id'])
+                continue
+
+            #To process the summary net states
+            # 60.111.3.0      50.1.1.2        292         0x800000f9 0x00471a
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                link_id = group['link_id']
+                adv_router = group['adv_router']
+                age = int(group['age'])
+                seq = group['seq_num']
+                checksum = group['checksum']
+                linkid_advrouter = link_id + " " + adv_router
+
+                # Create lsas dict
+                lsas_dict = lsa_type_dict.setdefault('lsas', {}). \
+                    setdefault(linkid_advrouter, {})
+                lsas_dict['adv_router'] = adv_router
+                lsas_dict['link_id'] = link_id
+
+                # osfpv2 dict
+                ospfv2_dict = lsas_dict.setdefault('ospf', {}). \
+                    setdefault('header', {})
+                ospfv2_dict['age'] = age
+                ospfv2_dict['seq_num'] = seq
+                ospfv2_dict['checksum'] = group['checksum']
+                continue
+
+            # Type-5 AS External Link States
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                lsa_type_key = group['lsa_type'].lower()
+                if lsa_type_key in lsa_type_mapping:
+                    lsa_type = lsa_type_mapping[lsa_type_key]
+                else:
+                    continue
+
+                lsa_type_dict = ospf_dict.setdefault('database', {}). \
+                    setdefault('lsa_types', {}). \
+                    setdefault(lsa_type, {})
+
+                # Set lsa_type
+                lsa_type_dict['lsa_type'] = lsa_type
                 continue
 
         return ret_dict
@@ -5573,14 +5649,21 @@ class ShowOspfNeighborSchema(MetaParser):
         'vrfs': {
             Any(): {
                 'neighbors': {
-                    Optional(Any()): {  # neighbor_id
+                    Optional(Any()): Or({ # neighbor_id
                         'priority': str,
                         'state': str,
                         'dead_time': str,
                         'address': str,
                         'interface': str,
-                        'up_time': str
-                    }
+                        Optional('up_time'): str
+                    }, ListOf({
+                        'priority': str,
+                        'state': str,
+                        'dead_time': str,
+                        'address': str,
+                        'interface': str,
+                        Optional('up_time'): str
+                    }))
                 },
                 Optional('total_neighbor_count'): int
             }
@@ -5701,11 +5784,23 @@ class ShowOspfNeighbor(ShowOspfNeighborSchema):
 
                 neighbor_dict = neighbors_dict.setdefault(neighbor_id, {})
 
-                neighbor_dict['priority'] = priority
-                neighbor_dict['state'] = state
-                neighbor_dict['dead_time'] = dead_time
-                neighbor_dict['address'] = address
-                neighbor_dict['interface'] = interface
+                if neighbor_dict:
+                    if not isinstance(neighbors_dict[neighbor_id], list):
+                        neighbors_dict[neighbor_id] = [neighbor_dict]
+
+                    neighbors_dict[neighbor_id].append({
+                        'priority': priority,
+                        'state': state,
+                        'dead_time': dead_time,
+                        'address': address,
+                        'interface': interface
+                    })
+                else:
+                    neighbor_dict['priority'] = priority
+                    neighbor_dict['state'] = state
+                    neighbor_dict['dead_time'] = dead_time
+                    neighbor_dict['address'] = address
+                    neighbor_dict['interface'] = interface
 
                 continue
 
@@ -5713,8 +5808,11 @@ class ShowOspfNeighbor(ShowOspfNeighborSchema):
             m = p3.match(line)
             if m:
                 up_time = m.groupdict()['up_time']
-                neighbor_dict['up_time'] = up_time
 
+                if not isinstance(neighbors_dict[neighbor_id], list):
+                    neighbor_dict['up_time'] = up_time
+                else:
+                    neighbors_dict[neighbor_id][-1]['up_time'] = up_time
                 continue
 
             # Total neighbor count: 2
@@ -5853,6 +5951,10 @@ class ShowOspfInterfaceSchema(MetaParser):
                                             "backup_label": str,
                                             "srte_label": str,
                                         },
+                                        Optional("ldp_status"): {
+                                            "ldp_sync": str,
+                                            "sync_status": str
+                                        },
                                         Optional("forward_reference"): str,
                                         Optional("unnumbered"): bool,
                                         Optional("bandwidth"): int,
@@ -5908,7 +6010,13 @@ class ShowOspfInterfaceSchema(MetaParser):
                                                 Optional('dr_router_id'): str,
                                                 Optional('router_id'): str,
                                             }
-                                        }
+                                        },
+                                        Optional("authentication"): {
+                                            "auth_trailer_key": {
+                                                "crypto_algorithm": str,
+                                                Optional("youngest_key_id"): int,
+                                            },
+                                        },
                                     },
                                 },
                             },
@@ -5959,6 +6067,9 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
 
         ret_dict = {}
 
+        # crypo_algorithm dict
+        crypto_dict = {"message digest": "md5", "clear text": "simple"}        
+
         # initialization of vrf dict
         if out:
             vrfs_dict = ret_dict.setdefault('vrf', {})
@@ -5970,7 +6081,7 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
         p2 = re.compile(r'^Interfaces +for +OSPF +(?P<ospf_instance>\S+), +VRF +(?P<vrf_name>\S+)$')
 
         # Loopback0 is up, line protocol is up
-        p3 = re.compile(r'^(?P<interface>\S+) +is +(?P<interface_enable>unknown|up|down), +line +protocol +is +'
+        p3 = re.compile(r'^(?P<interface>\S+) +is +(?P<interface_enable>unknown|up|down|administratively down), +line +protocol +is +'
                         r'(?P<line_protocol>up|down)$')
 
         # Internet Address 10.36.3.3/32, Area 0
@@ -6070,6 +6181,18 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
         # Loopback interface is treated as a stub Host
         p28 = re.compile(r'^Loopback +interface +is +treated +as +a +stub +Host$')
 
+        # Clear text authentication enabled
+        # Message digest authentication enabled
+        p29 = re.compile(r"^(?P<auth>([a-zA-Z\s]+)) +authentication +enabled$")
+
+        # Youngest key id is 1
+        p30 = re.compile(r"^Youngest +key +id +is +(?P<young>(\d+))$")
+
+        # LDP Sync Enabled, Sync Status: Achieved
+        # LDP Sync Enabled, Sync Status: Not Achieved
+        p31 = re.compile(r"^LDP\s+Sync\s+(?P<ldp_sync>[a-zA-Z]+),\s+Sync\s+Status:\s+(?P<sync_status>[a-zA-Z ]+)$")
+
+        
         for line in out.splitlines():
             line = line.strip()
 
@@ -6098,9 +6221,22 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
             # Loopback0 is up, line protocol is up
             m = p3.match(line)
             if m:
+                
                 interface = m.groupdict()['interface']
                 interface_enable = m.groupdict()['interface_enable']
                 line_protocol = m.groupdict()['line_protocol']
+
+                try:
+                    ospf_dict
+                except NameError:
+                    vrf_dict = vrfs_dict.setdefault('default', {})
+                    # initialize vrf dict
+                    instance_dict = vrf_dict \
+                        .setdefault('address_family', {}) \
+                        .setdefault('ipv4', {}) \
+                        .setdefault('instance', {})
+                    # just having a default key in the case where there isn't ospf_instance 
+                    ospf_dict = instance_dict.setdefault("process_id", {})
 
                 interfaces_dict = ospf_dict.setdefault('interfaces', {})
                 interface_dict = interfaces_dict.setdefault(interface, {})
@@ -6139,7 +6275,13 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
             # Process ID mpls1, Router ID 25.97.1.1, Network Type LOOPBACK, Cost: 1
             m = p5.match(line)
             if m:
+
                 process_id = m.groupdict()['process_id']
+                try:
+                    # Updating the default key "process_id" with the actual process_id value
+                    instance_dict[process_id] = instance_dict.pop("process_id")
+                except KeyError:
+                    pass
                 router_id = m.groupdict()['router_id']
                 interface_type = m.groupdict()['interface_type']
                 cost = m.groupdict()['cost']
@@ -6394,5 +6536,863 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
             # if there is no 'default' vrf in the output, remove its initial empty dict
             if 'default' in ret_dict['vrf'] and not ret_dict['vrf']['default']:
                 ret_dict['vrf'].pop('default', None)
+            
+            # Clear text authentication enabled
+            # Message digest authentication enabled
+            m = p29.match(line)
+            if m:
+                authentication = interface_dict.setdefault("authentication", {})
+                auth_trailer = authentication.setdefault("auth_trailer_key", {})
+                auth = str(m.groupdict()["auth"]).lower()
+                auth_trailer["crypto_algorithm"] = crypto_dict[auth]
+                continue
+
+            # Youngest key id is 1
+            m = p30.match(line)
+            if m:
+                auth_trailer["youngest_key_id"] = int(m.groupdict()["young"])
+                continue
+
+            # LDP Sync Enabled, Sync Status: Achieved
+            # LDP Sync Enabled, Sync Status: Not Achieved
+            m = p31.match(line)
+            if m:
+                ldp_sync = m.groupdict()['ldp_sync']
+                sync_status = m.groupdict()['sync_status']
+
+                ldp_status_dict = interface_dict.setdefault('ldp_status', {})
+                ldp_status_dict['ldp_sync'] = ldp_sync
+                ldp_status_dict['sync_status'] = sync_status
+                continue
 
         return ret_dict
+
+# ======================================================
+# parser schema for:
+#          * show ospf {process_name} summary
+#          * show ospf {process_name} vrf {vrf_name} summary
+# ======================================================
+class ShowOspfSummarySchema(MetaParser):
+    """Schema details for:
+          * show ospf {process_name} summary
+          * show ospf {process_name} vrf {vrf_name} summary
+    """
+    schema = {
+        'routing_process': {
+            Any(): {
+                'routing_process': int,
+                'vrf_name': str,
+                'ospf_interfaces': int,
+                'ospf_interfaces_up': int,
+                'ospf_virtual_interfaces_up': int,
+                'ospf_sham_link_interfaces_up': int,
+                'neighbors': int,
+                'neighbors_adjacent': int,
+                'areas': int,
+                'lsa_type': {
+                    'router': int,
+                    'network': int,
+                    'summary_net': int,
+                    'summary_asbr': int,
+                    'type_7_ext': int,
+                    'opaque_link': int,
+                    'opaque_area': int,
+                    'type_5_ext': int,
+                    'opaque_as': int
+                }
+            }
+        }
+    }
+
+# ======================================================
+# parser for:
+#          * show ospf {process_name} summary
+#          * show ospf {process_name} vrf {vrf_name} summary
+# ======================================================
+class ShowOspfSummary(ShowOspfSummarySchema):
+    """parser details for:
+         * show ospf {process_name} summary
+         * show ospf {process_name} vrf {vrf_name} summary
+    """
+
+    cli_command = ['show ospf {process_name} summary',
+                   'show ospf {process_name} vrf {vrf_name} summary']
+
+    def cli(self, process_name, vrf_name=None, output=None):
+        if output is None:
+            if vrf_name:
+                out = self.device.execute(
+                    self.cli_command[1].format(process_name=process_name, \
+                                               vrf_name=vrf_name))
+            else:
+                out = self.device.execute(
+                    self.cli_command[0].format(process_name=process_name))
+        else:
+            out = output
+
+        result_dict = {}
+
+        if vrf_name == None:
+            vrf_name = 'default'
+
+        # Routing process "ospf 1"
+        # Routing process "ospf 1000 VRF v5000"
+        p1 = re.compile(r'^Routing\s+process\s+"ospf\s+(?P<routing_process>\d+)(?:\s+VRF\s+(?P<vrf_name>\w+))?"$')
+
+        # Number of OSPF interfaces 4
+        # Number of OSPF interfaces up 4
+        p2 = re.compile(r'^Number\s+of\s+(?P<key_name>[A-Za-z -]+)\s+(?P<value_name>\d+)$')
+
+        # Summary ASBR : 0
+        # Type-7 Ext : 0
+        # Opaque Link : 0
+        p3 = re.compile(r'^(?P<key_name>[\w\- ]+)\s+:\s+(?P<value_name>\d+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Routing process "ospf 1"
+            # Routing process "ospf 1000 VRF v5000"
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                process_id_dict = result_dict.setdefault('routing_process', {}). \
+                    setdefault(group['routing_process'], {})
+                process_id_dict['routing_process'] = int(group['routing_process'])
+                process_id_dict['vrf_name'] = vrf_name
+                continue
+
+            # Number of OSPF interfaces 4
+            # Number of OSPF interfaces up 4
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                key_name = group['key_name'].lower()
+                key_name = re.sub("\s|-", "_", key_name)
+                value_name = int(group['value_name'])
+                process_id_dict[key_name] = value_name
+                continue
+
+            # Summary ASBR : 0
+            # Type-7 Ext : 0
+            # Opaque Link : 0
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                key_name = group['key_name'].lower().strip()
+                key_name = re.sub("\s|-", "_", key_name)
+                value_name = int(group['value_name'])
+                lsa_dict = process_id_dict.setdefault('lsa_type', {})
+                lsa_dict[key_name] = value_name
+
+        return result_dict
+
+# ======================================================
+# parser schema for:
+#          * show ospf {process_name}
+# ======================================================
+class ShowOspfProcessNameSchema(MetaParser):
+    """Schema details for:
+          * show ospf {process_name}
+          * show ospfv3 {process_name}
+    """
+    schema = {
+        'routing_process': {
+            Any(): {
+                'routing_process': int,
+                'protocol': str,
+                'router_id': str,
+                Optional('status'): str,
+                'role': str,
+                'nsr_status': str,
+                Optional('single_tos_route'): bool,
+                Optional('opqaue_lsa'): bool,
+                Optional('flags'):{
+                    Optional('abr'): bool,
+                    Optional('asbr'): bool
+                },
+                Optional('stub_router'): {
+                    'always': {
+                        'state': str,
+                        'always': bool
+                    }
+                },
+                'spf_schedule_delay': str,
+                'spf_minimum_hold_time': str,
+                'spf_maximum_wait_time': str,
+                'lsa_throttle_delay': str,
+                'lsa_throttle_minimum_hold_time': str,
+                'lsa_throttle_maximum_wait_time': str,
+                Optional('minimum_lsa_interval'): str,
+                Optional('minimum_lsa_arrival'): str,
+                Optional('lsa_refresh_interval'): str,
+                Optional('flood_pacing_interval'): str,
+                Optional('retransmission_pacing_interval'): str,
+                Optional('adjacency_stagger'): {
+                    'disable': bool,
+                    'initial_number': int,
+                    'maximum_number': int,
+                    'nbrs_forming': int,
+                    'nbrs_full': int,
+                },
+                Optional('microloop_avoidance'): {
+                    Optional('state'): str,
+                    Optional('type'): str,
+                    Optional('delay_time'): int,
+                    Optional('status'): str,
+                },
+                Optional('segment_routing_global_block_default'): str,
+                Optional('segment_routing_global_block_status'): str,
+                Optional('segment_routing_local_block'): str,
+                Optional('segment_routing_local_block_status'): str,
+                'maximum_configured_interfaces': int,
+                Optional('external_lsa'): int,
+                Optional('external_lsa_checksum'): str,
+                Optional('opaque_as_lsa'): int,
+                Optional('opaque_as_lsa_checksum'): str,
+                Optional('dc_bitless'): int,
+                Optional('do_not_age'): int,
+                'router_areas': {
+                    'total_router_areas': int,
+                    'normal_area': int,
+                    'stub_area': int,
+                    'nssa_area': int
+                },
+                Optional('external_flood_list_length'): int,
+                Optional('nsf_status'): str,
+                Optional('last_nsf_restart'): str,
+                'snmp_trap': str,
+                Optional('strict_spf_capability'): str,
+                'areas':{
+                    Any(): {
+                        'area_id': str,
+                        'area_type': str,
+                        Optional('inactive'): bool,
+                        Optional('active'): bool,
+                        'statistics': {
+                            'interfaces_count': int,
+                            'spf_runs_count': int,
+                            'area_scope_lsa_count': int,
+                            'area_scope_lsa_cksum_sum': str,
+                            Optional('area_scope_opaque_lsa_count'): int,
+                            Optional('area_scope_opaque_lsa_cksum_sum'): str,
+                            'dcbitless_lsa_count': int,
+                            'indication_lsa_count': int,
+                            'donotage_lsa_count': int,
+                            'flood_list_length': int
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+# ======================================================
+# parser for:
+#          * show ospf {process_name}
+# ======================================================
+class ShowOspfProcessName(ShowOspfProcessNameSchema):
+    """parser details for:
+         * show ospf {process_name}
+    """
+
+    cli_command = ['show ospf {process_name}']
+
+    def cli(self, process_name=None, output=None):
+        if output is None:
+            output = self.device.execute(
+                self.cli_command[0].format(process_name=process_name))
+
+        result_dict = {}
+
+        # Routing Process "ospf 100" with ID 1.100.1.1 in OSPF ADMIN DOWN state
+        # Routing Process "ospf 200" with ID 100.1.1.200
+        # Routing Process "ospfv3 200" with ID 1.100.1.1
+        p1 = re.compile(r'^Routing\s+Process\s+"(?P<process_name>ospf|ospfv3)\s+(?P<process_id>\d+)"\s+'
+                        r'with\s+ID\s+(?P<router_id>[\d.]+)(?: in\s+OSPF\s+(?P<status>[A-Z\s]+)\s+state)?$')
+
+        # Role: Primary Active
+        p2 = re.compile(r'^Role:\s+(?P<role>.*)$')
+
+        # NSR (Non-stop routing) is Enabled
+        # NSR (Non-stop routing) is Disabled
+        p3 = re.compile(r'^NSR\s+\(Non-stop\s+routing\)\s+is\s+(?P<nsr_status>Enabled|Disabled)$')
+
+        # Initial SPF schedule delay 50 msecs
+        # Initial LSA throttle delay 50 msecs
+        p4 = re.compile(r'^Initial\s+(?P<key_name>SPF\s+schedule|LSA\s+throttle)\s+delay\s+(?P<value>.*)$')
+
+        # Minimum hold time between two consecutive SPFs 200 msecs
+        # Maximum wait time between two consecutive SPFs 5000 msecs
+        p5 = re.compile(r'^(?P<key_name>Minimum\s+hold|Maximum\s+wait)\s+time\s+between\s+'
+                        r'two\s+consecutive\s+SPFs\s+(?P<value>.*)$')
+
+        # Minimum hold time for LSA throttle 200 msecs
+        # Maximum wait time for LSA throttle 5000 msecs
+        p6 = re.compile(r'^(?P<key_name>Minimum\s+hold|Maximum\s+wait)\s+time\s+for\s+LSA\s+throttle\s+(?P<value>.*)$')
+
+        # Minimum LSA interval 200 msecs. Minimum LSA arrival 100 msecs
+        p7 = re.compile(r'^Minimum\s+LSA\s+interval\s+(?P<min_lsa_interval>[\w ]+).\s+Minimum\s+LSA\s+arrival\s+(?P<min_lsa_arrival>[\w ]+)$')
+
+        # LSA refresh interval 1800 seconds
+        p8 = re.compile(r'^LSA\s+refresh\s+interval\s+(?P<lsa_refresh_interval>.*)$')
+
+        # Flood pacing interval 33 msecs. Retransmission pacing interval 66 msecs
+        p9 = re.compile(r'^Flood\s+pacing\s+interval\s+(?P<flood_pacing_interval>.*)\.'
+                        r'\s+Retransmission\s+pacing\s+interval\s+(?P<retransmission_pacing_interval>.*)$')
+        
+        # Maximum number of configured interfaces 1024
+        p10 = re.compile(r'^Maximum\s+number\s+of\s+configured\s+interfaces\s+(?P<maximum_configured_interfaces>\d+)$')
+
+        # Non-Stop Forwarding enabled
+        # Non-Stop Forwarding enabled, last NSF restart 4w0d ago (took 21 secs)
+        p11 = re.compile(r'^Non-Stop\s+Forwarding\s+(?P<nsf_status>enabled|disabled)(?:,\s+last\s+NSF\s+restart\s+(?P<last_nsf_restart>.*))?$')
+
+        # SNMP trap is enabled
+        # Strict-SPF capability is enabled
+        p12 = re.compile(r'^(?P<key_name>[a-zA-Z -]+)\s+is\s+(?P<value>enabled)$')
+
+        # It is an autonomous system boundary router
+        # It is an area border router
+        # It is an area border and autonomous system boundary router
+        p13 = re.compile(r'^It\s+is\s+an'
+                        r'(?:\s+(?P<abr>(area border)))?'
+                        r'(?:\s+and)?'
+                        r'(?:\s+(?P<asbr>(autonomous system boundary)))?'
+                        r'\s+router$')
+
+        # Number of areas in this router is 2. 2 normal 0 stub 0 nssa
+        p14 = re.compile(r'^Number\s+of\s+areas\s+in\s+this\s+router\s+is\s+(?P<total_router_areas>\d+)'
+                         r'.\s+(?P<normal_area>\d+)\s+normal\s+(?P<stub_area>\d+)\s+stub\s+(?P<nssa_area>\d+)\s+nssa$')
+
+        # Supports only single TOS(TOS0) routes
+        p15 = re.compile(r'^Supports\s+only\s+single\s+TOS\(TOS0\)\s+routes$')
+
+        # Supports opaque LSA
+        p16 = re.compile(r'^Supports\s+opaque\s+LSA$')
+
+        # Originating router-LSAs with maximum metric
+        p17_1 = re.compile(r'^Originating\s+router-LSAs\s+with\s+maximum'
+                        r'\s+metric$')
+
+        # Condition: always State: active
+        # Condition: always, State: active
+        # Condition: on start-up for 5 seconds, State: inactive
+        # Condition: on startup for 300 seconds, State: inactive
+        p17_2 = re.compile(r'^Condition:'
+                        r'\s+(?P<condition>(always|on\s+\S+))'
+                        r'(?:\s+for\s+(?P<seconds>(\d+))\s+seconds,)?'
+                        r'\s+State:\s+(?P<state>(\S+))$')
+
+        # Number of external LSA 1. Checksum Sum 0x003b22
+        p18 = re.compile(r'^Number\s+of\s+external\s+LSA\s+(?P<ext>(\d+))\.'
+                        r'\s+Checksum\s+Sum\s+(?P<checksum>(\S+))$')
+
+        # Number of opaque AS LSA 0. Checksum Sum 00000000
+        p19 = re.compile(r'^Number\s+of\s+opaque\s+AS\s+LSA\s+(?P<opq>(\d+))\.'
+                        r'\s+Checksum\s+Sum\s+(?P<checksum>(\S+))$')
+
+        # Number of DCbitless external and opaque AS LSA 0
+        p20 = re.compile(r'^Number\s+of\s+DCbitless\s+external\s+and\s+opaque'
+                        r'\s+AS\s+LSA\s+(?P<num>(\d+))$')
+
+        # Number of DoNotAge external and opaque AS LSA 0
+        p21 = re.compile(r'^Number\s+of\s+DoNotAge\s+external\s+and\s+opaque'
+                        r'\s+AS\s+LSA\s+(?P<num>(\d+))$')
+
+        # External flood list length 0
+        p22 = re.compile(r'^External\s+flood\s+list\s+length\s+(?P<num>(\d+))$')
+
+        # Area BACKBONE(0)
+        # Area 1
+        # Area BACKBONE(0) (Inactive)
+        p23 = re.compile(r'^Area\s+(?P<area>[\w\(\)]+)(?:\s+\((?P<key_name>\w+)\))?$')
+
+        # Number of interfaces in this area is 0
+        # Number of interfaces in this area is 3 (1 loopback)
+        p24 = re.compile(r'^Number\s+of\s+interfaces\s+in\s+this\s+area\s+is'
+                        r'\s+(?P<num_intf>(\d+))(?:'
+                        r'\s*\((?P<loopback>(\d+))\s+loopback\))?$')
+
+        # SPF algorithm executed 1 times
+        p25 = re.compile(r'^SPF\s+algorithm\s+executed\s+(?P<count>(\d+))'
+                        r'\s+times$')
+
+        # Number of LSA 0.  Checksum Sum 00000000
+        p26 = re.compile(r'^Number\s+of\s+LSA\s+(?P<lsa_count>(\d+))\.'
+                        r'\s+Checksum\s+Sum\s+(?P<checksum_sum>(\S+))$')
+
+        # Number of opaque link LSA 0.  Checksum Sum 00000000
+        p27 = re.compile(r'^Number\s+of\s+opaque\s+link\s+LSA'
+                        r'\s+(?P<opaque_count>(\d+))\.\s+Checksum\s+Sum'
+                        r'\s+(?P<checksum_sum>(\S+))$')
+
+        # Number of DCbitless LSA 0
+        p28 = re.compile(r'^Number\s+of\s+DCbitless\s+LSA\s+(?P<count>(\d+))$')
+
+        # Number of indication LSA 0
+        p29 = re.compile(r'^Number\s+of\s+indication\s+LSA\s+(?P<count>(\d+))$')
+
+        # Number of DoNotAge LSA 0
+        p30 = re.compile(r'^Number\s+of\s+DoNotAge\s+LSA\s+(?P<count>(\d+))$')
+
+        # Flood list length 0
+        p31 = re.compile(r'^Flood\s+list\s+length\s+(?P<len>(\d+))$')
+
+        # Adjacency stagger enabled; initial (per area): 2, maximum: 64
+        p32 = re.compile(r'^Adjacency +stagger +(?P<adj>(\S+)); +initial'
+                         r' +\(per +area\): +(?P<init>(\d+)),'
+                         r' +maximum: +(?P<max>(\d+))$')
+
+        # Number of neighbors forming: 0, 0 full
+        p33 = re.compile(r'^Number +of +neighbors +forming:'
+                         r' +(?P<form>(\d+)), +(?P<full>(\d+)) +full$')
+
+        # Segment Routing Global Block default (16000-23999), not allocated
+        p34 = re.compile(r'^Segment +Routing +Global +Block +default'
+                         r' +\((?P<sr_global_block>([0-9\-]+))\), +(?P<status>(.*))$')
+
+        # Segment Routing Local Block (15000-15999), allocated
+        p35 = re.compile(r'^Segment +Routing +Local +Block'
+                         r' +\((?P<sr_local_block>([0-9\-]+))\), +(?P<status>(.*))$')
+        
+        # Microloop avoidance Enabled, Type: Local (Protected), Delay Time: 5000
+        p36 = re.compile(r'^Microloop\s+avoidance\s+(?P<state>Enabled|Disabled)'
+                         r',\s+Type:\s+(?P<type>.*)'
+                         r',\s+Delay\s+Time:\s+(?P<delay_time>\d+)$')
+        
+        # Microloop avoidance is not active
+        p37 = re.compile(r'^Microloop\s+avoidance\s+is\s+(?P<status>.*)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Routing Process "ospf 100" with ID 1.100.1.1 in OSPF ADMIN DOWN state
+            # Routing Process "ospf 200" with ID 100.1.1.200
+            # Routing Process "ospfv3 200" with ID 1.100.1.1
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                process_id_dict = result_dict.setdefault('routing_process', {}). \
+                    setdefault(group['process_id'], {})
+                process_id_dict['routing_process'] = int(group['process_id'])
+                process_id_dict['protocol'] = group['process_name']
+                process_id_dict['router_id'] = group['router_id']
+                if group['status']:
+                    process_id_dict['status'] = group['status']
+                continue
+
+            # Role: Primary Active
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                process_id_dict['role'] = group['role']
+                continue
+
+            # NSR (Non-stop routing) is Enabled
+            # NSR (Non-stop routing) is Disabled
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                process_id_dict['nsr_status'] = group['nsr_status'].lower()
+                continue
+
+            # Initial SPF schedule delay 50 msecs
+            # Initial LSA throttle delay 50 msecs
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                key_name = group['key_name'].lower().replace(' ', '_')
+                process_id_dict[f'{key_name}_delay'] = group['value']
+                continue
+
+            # Minimum hold time between two consecutive SPFs 200 msecs
+            # Maximum wait time between two consecutive SPFs 5000 msecs
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                key_name = group['key_name'].lower().replace(' ', '_')
+                process_id_dict[f'spf_{key_name}_time'] = group['value']
+                continue
+
+            # Minimum hold time for LSA throttle 200 msecs
+            # Maximum wait time for LSA throttle 5000 msecs
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                key_name = group['key_name'].lower().replace(' ', '_')
+                process_id_dict[f'lsa_throttle_{key_name}_time'] = group['value']
+                continue
+
+            # Minimum LSA interval 200 msecs. Minimum LSA arrival 100 msecs
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                process_id_dict['minimum_lsa_interval'] = group['min_lsa_interval']
+                process_id_dict['minimum_lsa_arrival'] = group['min_lsa_arrival']
+                continue
+
+            # LSA refresh interval 1800 seconds
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                process_id_dict['lsa_refresh_interval'] = group['lsa_refresh_interval']
+                continue
+
+            # Flood pacing interval 33 msecs. Retransmission pacing interval 66 msecs
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                process_id_dict['flood_pacing_interval'] = group['flood_pacing_interval']
+                process_id_dict['retransmission_pacing_interval'] = group['retransmission_pacing_interval']
+                continue
+
+            # Maximum number of configured interfaces 1024
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                process_id_dict['maximum_configured_interfaces'] = int(group['maximum_configured_interfaces'])
+                continue
+
+            # Non-Stop Forwarding enabled
+            # Non-Stop Forwarding enabled, last NSF restart 4w0d ago (took 21 secs)
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                process_id_dict['nsf_status'] = group['nsf_status']
+                if group['last_nsf_restart']:
+                    process_id_dict['last_nsf_restart'] = group['last_nsf_restart']
+                continue
+
+            # SNMP trap is enabled
+            # Strict-SPF capability is enabled
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                key_name = group['key_name'].lower().strip()
+                key_name = re.sub("\s|-", "_", key_name)
+                process_id_dict[key_name] = group['value']
+                continue
+
+            # It is an autonomous system boundary router
+            # It is an area border router
+            # It is an area border and autonomous system boundary router
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                if 'flags' not in process_id_dict:
+                    process_id_dict['flags'] = {}
+                if group['abr']:
+                    process_id_dict['flags']['abr'] = True
+                if group['asbr']:
+                    process_id_dict['flags']['asbr'] = True
+                continue
+
+            # Number of areas in this router is 2. 2 normal 0 stub 0 nssa
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                area_dict = process_id_dict.setdefault('router_areas', {})
+                area_dict['total_router_areas'] = int(group['total_router_areas'])
+                area_dict['normal_area'] = int(group['normal_area'])
+                area_dict['stub_area'] = int(group['stub_area'])
+                area_dict['nssa_area'] = int(group['nssa_area'])
+                continue
+
+            # Supports only single TOS(TOS0) routes
+            m = p15.match(line)
+            if m:
+                process_id_dict['single_tos_route'] = True
+                continue
+
+            # Supports opaque LSA
+            m = p16.match(line)
+            if m:
+                process_id_dict['opqaue_lsa'] = True
+                continue
+
+            # Originating router-LSAs with maximum metric
+            m = p17_1.match(line)
+            if m:
+                if 'stub_router' not in process_id_dict:
+                    process_id_dict['stub_router'] = {}
+                    continue
+
+            # Condition: always State: active
+            # Condition: always, State: active
+            # Condition: on start-up for 5 seconds, State: inactive
+            # Condition: on startup for 300 seconds, State: inactive
+            m = p17_2.match(line)
+            if m:
+                group = m.groupdict()
+                condition = str(group['condition']).lower().replace("-", "")
+                condition = condition.replace(" ", "_")
+                if 'stub_router' not in process_id_dict:
+                    process_id_dict['stub_router'] = {}
+                if condition not in process_id_dict['stub_router']:
+                    process_id_dict['stub_router'][condition] = {}
+                process_id_dict['stub_router'][condition]['state'] = \
+                    str(group['state']).lower()
+                # Set 'condition' key
+                if condition == 'always':
+                    process_id_dict['stub_router'][condition][condition] = True
+                else:
+                    process_id_dict['stub_router'][condition][condition] = \
+                        int(group['seconds'])
+                continue
+
+            # Number of external LSA 0. Checksum Sum 0x0099f0
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                process_id_dict['external_lsa'] = int(group['ext'])
+                process_id_dict['external_lsa_checksum'] = group['checksum']
+                continue
+
+            # Number of external LSA 0. Checksum Sum 0x0099f0
+            m = p19.match(line)
+            if m:
+                group = m.groupdict()
+                process_id_dict['opaque_as_lsa'] = int(group['opq'])
+                process_id_dict['opaque_as_lsa_checksum'] = group['checksum']
+                continue
+
+            # Number of DCbitless external and opaque AS LSA 0
+            m = p20.match(line)
+            if m:
+                group = m.groupdict()
+                process_id_dict['dc_bitless'] = int(m.groupdict()['num'])
+                continue
+
+            # Number of DoNotAge external and opaque AS LSA 0
+            m = p21.match(line)
+            if m:
+                group = m.groupdict()
+                process_id_dict['do_not_age'] = int(m.groupdict()['num'])
+                continue
+
+            # External flood list length 0
+            m = p22.match(line)
+            if m:
+                group = m.groupdict()
+                process_id_dict['external_flood_list_length'] = int(group['num'])
+                continue
+
+            # Area BACKBONE(0)
+            # Area BACKBONE(0.0.0.0) (Inactive)
+            # Area 1
+            m = p23.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_area = str(group['area'])
+                n = re.match('BACKBONE\((?P<area_num>(\S+))\)', parsed_area)
+                if n:
+                    area = str(IPAddress(str(n.groupdict()['area_num'])))
+                else:
+                    area = str(IPAddress(str(group['area'])))
+
+                # Create dict
+                if 'areas' not in process_id_dict:
+                    process_id_dict['areas'] = {}
+                if area not in process_id_dict['areas']:
+                    process_id_dict['areas'][area] = {}
+                
+                # Set default values
+                process_id_dict['areas'][area]['area_id'] = area
+                process_id_dict['areas'][area]['area_type'] = 'normal'
+
+                if group['key_name']:
+                    key_name = group['key_name'].lower()
+                    process_id_dict['areas'][area][key_name] = True
+                continue
+
+            # Number of interfaces in this area is 3
+            # Number of interfaces in this area is 3 (1 loopback)
+            m = p24.match(line)
+            if m:
+                group = m.groupdict()
+                if 'areas' not in process_id_dict:
+                    process_id_dict['areas'] = {}
+                if area not in process_id_dict['areas']:
+                    process_id_dict['areas'][area] = {}
+                if 'statistics' not in process_id_dict['areas'][area]:
+                    process_id_dict['areas'][area]['statistics'] = {}
+                process_id_dict['areas'][area]['statistics']['interfaces_count'] =\
+                    int(group['num_intf'])
+                if group['loopback']:
+                    process_id_dict['areas'][area]['statistics']['loopback_count'] =\
+                        int(group['loopback'])
+                continue
+
+            # SPF algorithm executed 1 times
+            m = p25.match(line)
+            if m:
+                group = m.groupdict()
+                if 'statistics' not in process_id_dict['areas'][area]:
+                    process_id_dict['areas'][area]['statistics'] = {}
+                process_id_dict['areas'][area]['statistics']['spf_runs_count'] = \
+                    int(group['count'])
+                continue
+
+            # Number of LSA 0.  Checksum Sum 00000000
+            m = p26.match(line)
+            if m:
+                group = m.groupdict()
+                if 'statistics' not in process_id_dict['areas'][area]:
+                    process_id_dict['areas'][area]['statistics'] = {}
+                process_id_dict['areas'][area]['statistics']['area_scope_lsa_count'] =\
+                    int(group['lsa_count'])
+                process_id_dict['areas'][area]['statistics']\
+                    ['area_scope_lsa_cksum_sum'] = \
+                        str(group['checksum_sum'])
+                continue
+
+            # Number of opaque link LSA 0.  Checksum Sum 00000000
+            m = p27.match(line)
+            if m:
+                group = m.groupdict()
+                if 'statistics' not in process_id_dict['areas'][area]:
+                    process_id_dict['areas'][area]['statistics'] = {}
+                process_id_dict['areas'][area]['statistics']\
+                    ['area_scope_opaque_lsa_count'] = \
+                        int(group['opaque_count'])
+                process_id_dict['areas'][area]['statistics']\
+                    ['area_scope_opaque_lsa_cksum_sum'] = \
+                        str(group['checksum_sum'])
+                continue
+
+            # Number of DCbitless LSA 0
+            m = p28.match(line)
+            if m:
+                group = m.groupdict()
+                if 'statistics' not in process_id_dict['areas'][area]:
+                    process_id_dict['areas'][area]['statistics'] = {}
+                process_id_dict['areas'][area]['statistics']['dcbitless_lsa_count'] = \
+                    int(group['count'])
+                continue
+
+            # Number of indication LSA 0
+            m = p29.match(line)
+            if m:
+                group = m.groupdict()
+                if 'statistics' not in process_id_dict['areas'][area]:
+                    process_id_dict['areas'][area]['statistics'] = {}
+                process_id_dict['areas'][area]['statistics']['indication_lsa_count'] =\
+                    int(group['count'])
+                continue
+
+            # Number of DoNotAge LSA 0
+            m = p30.match(line)
+            if m:
+                group = m.groupdict()
+                if 'statistics' not in process_id_dict['areas'][area]:
+                    process_id_dict['areas'][area]['statistics'] = {}
+                process_id_dict['areas'][area]['statistics']['donotage_lsa_count'] = \
+                    int(group['count'])
+                continue
+
+            # Flood list length 0
+            m = p31.match(line)
+            if m:
+                group = m.groupdict()
+                if 'statistics' not in process_id_dict['areas'][area]:
+                    process_id_dict['areas'][area]['statistics'] = {}
+                process_id_dict['areas'][area]['statistics']['flood_list_length'] = \
+                    int(group['len'])
+                continue
+
+            # Adjacency stagger enabled; initial (per area): 2, maximum: 64
+            m = p32.match(line)
+            if m:
+                group = m.groupdict()
+                if 'adjacency_stagger' not in process_id_dict:
+                    process_id_dict['adjacency_stagger'] = {}
+                if 'enable' in group['adj']:
+                    process_id_dict['adjacency_stagger']['disable'] = False
+                else:
+                    process_id_dict['adjacency_stagger']['disable'] = True
+                process_id_dict['adjacency_stagger']['initial_number'] = int(
+                    group['init']
+                )
+                process_id_dict['adjacency_stagger']['maximum_number'] = int(
+                    group['max']
+                )
+                continue
+
+            # Number of neighbors forming: 0, 0 full
+            m = p33.match(line)
+            if m:
+                group = m.groupdict()
+                if 'adjacency_stagger' not in process_id_dict:
+                    process_id_dict['adjacency_stagger'] = {}
+                process_id_dict['adjacency_stagger']['nbrs_forming'] = int(
+                    group['form']
+                )
+                process_id_dict['adjacency_stagger']['nbrs_full'] = int(group['full'])
+                continue
+
+            # Segment Routing Global Block default (16000-23999), not allocated
+            m = p34.match(line)
+            if m:
+                group = m.groupdict()
+                process_id_dict['segment_routing_global_block_default'] = str(
+                    group['sr_global_block']
+                )
+                process_id_dict['segment_routing_global_block_status'] = str(
+                    group['status']
+                )
+                continue
+
+            # Segment Routing Local Block (15000-15999), allocated
+            m = p35.match(line)
+            if m:
+                group = m.groupdict()
+                process_id_dict['segment_routing_local_block'] = str(
+                    group['sr_local_block']
+                )
+                process_id_dict['segment_routing_local_block_status'] = str(
+                    group['status']
+                )
+                continue
+
+            # Microloop avoidance Enabled, Type: Local (Protected), Delay Time: 5000
+            m = p36.match(line)
+            if m:
+                group = m.groupdict()
+                if 'microloop_avoidance' not in process_id_dict:
+                    process_id_dict['microloop_avoidance'] = {}
+                process_id_dict['microloop_avoidance']['state'] = group['state']
+                process_id_dict['microloop_avoidance']['type'] = group['type']
+                process_id_dict['microloop_avoidance']['delay_time'] = int(group['delay_time'])
+                continue
+
+            # Microloop avoidance is not active
+            m = p37.match(line)
+            if m:
+                group = m.groupdict()
+                if 'microloop_avoidance' not in process_id_dict:
+                    process_id_dict['microloop_avoidance'] = {}
+                process_id_dict['microloop_avoidance']['status'] = group['status']
+                continue
+
+        return result_dict
+
+# ========================================
+# Parser for 'show ospfv3 {process_name}'
+# ========================================
+
+class ShowOspfv3ProcessName(ShowOspfProcessName):
+
+    ''' Parser for:
+        show ospfv3 {process_name}
+    '''
+
+    cli_command = ['show ospfv3 {process_name}']
+
+    def cli (self, process_name=None, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command[0].\
+                                      format(process_name=process_name))
+
+        # Call super
+        return super().cli(output=output)

@@ -7,10 +7,14 @@ expected_output = {
                         "queue_stats_for_all_priority_classes":{
                             "priority_level":{
                                 "1":{
-                                    "queueing":True
+                                    "queueing":True,
+                                    "total_drops":0,
+                                    "bytes_output":7798308
                                 },
                                 "2":{
-                                    "queueing":True
+                                    "queueing":True,
+                                    "total_drops":0,
+                                    "bytes_output":0
                                 }
                             }
                         },
@@ -35,4 +39,4 @@ expected_output = {
             }
         }
     }
-}
+} 

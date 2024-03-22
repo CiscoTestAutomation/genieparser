@@ -37,7 +37,7 @@ GigabitEthernet0/0/0/1      on   2     30     1
 	      Flags : NB P
 		BFD : Off/150 ms/3
 		 DR : 10.1.2.3
-  Propagation delay : 500
-  Override Interval : 2500
+  Propagation delay : 500    (config: 500)
+  Override Interval : 2500   (config: 2500)
 	Hello Timer : 00:00:07
     Neighbor Filter : -

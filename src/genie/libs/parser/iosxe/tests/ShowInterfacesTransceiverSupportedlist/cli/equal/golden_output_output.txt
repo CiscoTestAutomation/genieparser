@@ -1,0 +1,40 @@
+Transceiver Type           Cisco p/n min version
+                               supporting DOM
+------------------       -------------------------
+
+   GLC-FE-100FX-RGD         ALL
+   GLC-FE-100LX-RGD         ALL
+   GLC-FE-100FX             ALL
+   GLC-FE-100LX             ALL
+   GLC-FE-100EX             ALL
+   GLC-FE-100ZX             ALL
+   GLC-FE-100BX-U           ALL
+   GLC-FE-100BX-D           ALL
+   GLC-SX-MM-RGD            ALL
+   GLC-LX-SM-RGD            ALL
+   GLC-ZX-SM-RGD            ALL
+   SFP-GE-S                 ALL
+   SFP-GE-L                 ALL
+   SFP-GE-Z                 ALL
+   GLC-BX-U                 ALL
+   GLC-BX-D                 ALL
+   GLC-SX-MM                NONE
+   GLC-LH-SM                NONE
+   GLC-ZX-SM                NONE
+   GLC-EX-SMD               ALL
+   GLC-TE                   NONE
+   GLC-BX40-U-I             ALL
+   GLC-BX40-D-I             ALL
+   GLC-BX40-DA-I            ALL
+   GLC-BX80-U-I             ALL
+   GLC-BX80-D-I             ALL
+   GLC-SX-MMD               ALL
+   GLC-LH-SMD               ALL
+   GLC-ZX-SMD               ALL
+   GLC-T-RGD                NONE
+   SFP-CWDM-1470            ALL
+   SFP-CWDM-1490            ALL
+   SFP-CWDM-1530            ALL
+   SFP-CWDM-1610            ALL
+   SFP-DWDM-3033            ALL
+   SFP-DWDM-3112            ALL

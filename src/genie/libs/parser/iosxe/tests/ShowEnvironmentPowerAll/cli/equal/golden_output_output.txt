@@ -1,0 +1,5 @@
+sh environment power all
+SW  PID                 Serial#     Status           Sys Pwr  PoE Pwr  Watts
+--  ------------------  ----------  ---------------  -------  -------  -----
+1A  PWR-C1-1100WAC      DTN2129V1AG  OK              Good     Good     1100
+1B  Not Present

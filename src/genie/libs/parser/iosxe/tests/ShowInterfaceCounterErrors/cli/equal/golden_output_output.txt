@@ -1,0 +1,8 @@
+Port           Align-Err     FCS-Err    Xmit-Err     Rcv-Err  UnderSize  OutDiscards
+Fo1/1/1                0           0           0           0          0            0
+
+Port         Single-Col  Multi-Col   Late-Col  Excess-Col  Carri-Sen      Runts
+Fo1/1/1               0          0          0           0          0          0
+
+Port           OverSize
+Fo1/1/1               0

@@ -1,0 +1,17 @@
+sh nat64 timeouts
+
+NAT64 Timeout
+   Seconds     CLI Cfg Uses 'All'
+
+all flows
+   86400       FALSE   FALSE
+udp
+   300         FALSE   TRUE
+tcp
+   7200        FALSE   TRUE
+tcp-transient
+   240         FALSE   FALSE
+icmp
+   120          FALSE   TRUE
+bind
+   3600        FALSE   TRUE

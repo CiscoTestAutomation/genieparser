@@ -1,0 +1,8 @@
+c3850-lab#show running-config interface GigabitEthernet1/0/28
+Building configuration...
+
+Current configuration : 65 bytes
+!
+interface GigabitEthernet1/0/28
+ ip access-group TEST out
+end

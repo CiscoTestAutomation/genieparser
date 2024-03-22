@@ -1,0 +1,23 @@
+pm9005#show platform hardware qfp active datapath infra sw-cio
+Credits Usage:
+
+  ID      Port  Wght  Global WRKR0  WRKR1  WRKR2  WRKR3  WRKR10  WRKR11  Total
+   1      rcl0     4:   4999     0      0      0      0       0     121   5120
+   1      rcl0     8:   5056     0      0      0      0       0      64   5120
+   2       ipc     1:      0     0      0      0      0       0       0      0
+   3 vxe_punti     1:    454     0      0      0      0       0      58    512
+   4      fpe0     1:   1952     0      0      0      0       0      96   2048
+   5      fpe1     1:   1952     0      0      0      0       0      96   2048
+   6      fpe2     1:   1952     0      0      0      0       0      96   2048
+   7      fpe3     1:   1952     0      0      0      0       0      96   2048
+   8      fpe4     1:   1952     0      0      0      0       0      96   2048
+   9      fpe5     1:   1952     0      0      0      0       0      96   2048
+
+Core Utilization over preceding 95292.2911 seconds
+--------------------------------------------------
+      ID:       0       1       2       3      10      11
+    % PP:    0.10    0.73    0.65    0.11    0.00    0.00
+    % RX:    0.00    0.00    0.00    0.00    0.00    0.89
+    % TM:    0.00    0.00    0.00    0.00    0.78    0.00
+  % COFF:    0.00    0.00    0.00    0.00    0.00    0.00
+  % IDLE:   99.90   99.27   99.35   99.89   99.22   99.11

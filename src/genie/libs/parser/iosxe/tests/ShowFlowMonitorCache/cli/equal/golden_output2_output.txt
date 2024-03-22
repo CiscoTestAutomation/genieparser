@@ -1,0 +1,29 @@
+show flow monitor VXLAN_FLOW_MONITOR_V4_IN cache
+  Cache type:                               Normal (Platform cache)
+  Cache size:                                10000
+  Current entries:                               1
+
+  Flows added:                                3302
+  Flows aged:                                 3301
+    - Active timeout      (   180 secs)       2475
+    - Inactive timeout    (    60 secs)        826
+
+DATALINK VLAN INPUT:       15
+IPV4 SOURCE ADDRESS:       172.51.15.11
+IPV4 DESTINATION ADDRESS:  172.51.15.111
+TRNS SOURCE PORT:          1
+TRNS DESTINATION PORT:     100
+FLOW DIRECTION:            Input
+VXLAN VXLAN VNID:          20015
+VXLAN VXLAN VTEP INPUT:    172.11.1.2
+VXLAN VXLAN VTEP OUTPUT:   172.11.1.1
+IP PROTOCOL:               6
+ipv4 next hop address:     0.0.0.0
+ipv4 source mask:          /0
+ipv4 destination mask:     /0
+tcp flags:                 0x00
+counter bytes long:        354176
+counter packets long:      2767
+timestamp abs first:       10:32:05.886
+timestamp abs last:        10:35:15.886
+

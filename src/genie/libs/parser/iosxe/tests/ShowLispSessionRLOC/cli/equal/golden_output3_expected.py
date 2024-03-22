@@ -25,6 +25,15 @@ expected_output = {
             'users': {
                 'count': 14,
                 'type': {
+                    'Capability Exchange': {
+                        'id': {
+                            'N/A': {
+                                'in': 1,
+                                'out': 1,
+                                'state': 'waiting',
+                                },
+                            },
+                        },
                     'Pubsub subscriber': {
                         'id': {
                             'lisp 0 IID 101 AFI MAC': {

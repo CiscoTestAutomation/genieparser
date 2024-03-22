@@ -1,0 +1,20 @@
+Tue Jan 10 09:12:10.240 UTC
+Interface           Dest Addr           Local det time(int*mult)      State
+                                    Echo             Async   H/W   NPU
+------------------- --------------- ---------------- ---------------- ----------
+Gi0/0/0/6           1.1.1.1         0s(0s*0)         1200ms(300ms*4)  UP
+                                                             No    n/a
+Gi0/0/0/10          1.1.1.1         0s(0s*0)         1200ms(300ms*4)  UP
+                                                             No    n/a
+Gi0/0/0/1.10        192.168.1.2     0s               10s(2s*5)        INIT
+                                                             No    n/a
+Gi0/0/0/1.19        192.168.0.2     300ms(100ms*3)   6s(2s*3)         UP
+                                                             No    n/a
+BE4                 192.168.5.2     n/a              n/a              DOWN
+                                                             No    n/a
+BE5                 107.1.1.1       n/a              n/a              DOWN
+                                                             No    n/a
+BE10                1.1.1.1         n/a              n/a              UP
+                                                             No    n/a
+BE10.10             192.168.17.2    n/a              n/a              UP
+                                                             No    n/a

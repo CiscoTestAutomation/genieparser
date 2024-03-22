@@ -1,0 +1,19 @@
+VTEP1#sh nve vni 22222 detail
+Interface  VNI        Multicast-group  VNI state  Mode  VLAN  cfg vrf
+nve1       22222      FF04::4:120      BD Down/Re L2CP  N/A   CLI N/A
+
+VNI down reason:
+BD un-configured or down
+VLAN/BD link down
+MCAST IPv4 group doesn't exist
+BGP host-reachability un-configured
+
+L2CP VNI local VTEP info:
+VLAN: 0
+SVI if handler: 0x0
+Local VTEP: 1.1.1.2
+Local routing: Enabled
+
+VNI Detailed statistics:
+   Pkts In   Bytes In   Pkts Out  Bytes Out
+         0          0          0          0

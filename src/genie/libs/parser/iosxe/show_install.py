@@ -5,6 +5,13 @@
      *  show install rollbackId
      *  show install state
      *  show install package SMU/subpkg
+     *  show install version all
+     *  show install version summary
+     *  show install version value {value}
+     *  show exception
+     *  show install committed
+     *  show install inactive
+     *  show install uncommitted
 """
 
 # Python
@@ -661,6 +668,455 @@ class ShowInstallPackageSMU(ShowInstallPackageSMUSchema):
                 group = m.groupdict()
                 impact_info = impact.setdefault('internal_pkg_info', {})
                 impact_info.update({'card_types': group['card_types']})
+                continue
+
+        return ret_dict
+
+
+# ===================================================
+# Schema for
+#   * 'show install version all'
+#   * 'show install version summary'
+#   * 'show install version value {value}'
+# ===================================================
+class ShowInstallVersionSchema(MetaParser):
+    """Schema for show install version all"""
+    schema = {
+        'location': {
+            Any(): {
+                'version': {
+                    Any(): {
+                        'version_extension': str,
+                        'version_state': str,
+                        'filename': str,
+                        'cw_image': str,
+                        'checksum': str,
+                        'pkg_list': {
+                            Any(): {
+                                'package_type': str,
+                                'package_name': str,
+                                'package_state': str,
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+
+# ===================================================
+# Super Parser for
+#   * 'show install version all'
+#   * 'show install version summary'
+#   * 'show install version value {value}'
+# ===================================================
+class ShowInstallVersion(ShowInstallVersionSchema):
+    """Parser for show install version all"""
+
+    def cli(self, output=None):
+
+        # initial variables
+        ret_dict = {}
+        index = 0
+
+        # Location: R0
+        p1 = re.compile(r'^Location\s*:\s*(?P<location>.*)')
+
+        # Version: 17.10.01.0.160997
+        p2 = re.compile(r'Version\s*:\s*(?P<version>.*)')
+
+        # Version Extension: 1655047488
+        p3 = re.compile(r'Version Extension\s*:\s*(?P<version_extension>.*)')
+
+        # Version State: Activated & Committed
+        p4 = re.compile(r'Version State\s*:\s*(?P<version_state>.*$)')
+
+        # Filename: /flash1/user/cat9k_iosxe.BLD_POLARIS_DEV_LATEST_20220612_143809.SSA.bin
+        p5 = re.compile(r'Filename\s*:\s*(?P<filename>.*$)')
+
+        # CW_IMAGE: cat9k_iosxe.BLD_POLARIS_DEV_LATEST_20220612_143809.SSA.bin
+        p6 = re.compile(r'CW_IMAGE\s*:\s*(?P<cw_image>.*$)')
+
+        # Checksum: dab9381de08510b901a8f27675f0a711419ccdb1
+        p7 = re.compile(r'Checksum\s*:\s*(?P<checksum>.*$)')
+
+        # Package List:
+        p8 = re.compile(r'Package List\s*:\s*$')
+
+        # Package Type: IMG
+        p9 = re.compile(r'Package Type\s*:\s*(?P<package_type>.*)')
+
+        # Package Name: /flash1/user/cat9k-lni.BLD_POLARIS_DEV_LATEST_20220612_143809.SSA.pkg
+        p10 = re.compile(r'Package Name\s*:\s*(?P<package_name>.*)')
+
+        # Package State: Activated & Committed
+        p11 = re.compile(r'Package State\s*:\s*(?P<package_state>.*$)')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                location = group['location'].strip()
+                location_dict = ret_dict.setdefault('location', {}).setdefault(location, {})
+                continue
+
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                version_dict = location_dict.setdefault('version', {}).setdefault(group['version'], {})
+                continue
+
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                version_dict.update({'version_extension': group['version_extension']})
+                continue
+
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                version_dict.update({'version_state': group['version_state']})
+                continue
+
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                version_dict.update({'filename': group['filename']})
+                continue
+
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                version_dict.update({'cw_image': group['cw_image']})
+                continue
+
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                version_dict.update({'checksum': group['checksum']})
+                continue
+
+            m = p8.match(line)
+            if m:
+                index = 0
+                version_dict.setdefault('pkg_list', {})
+
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                index += 1
+                pkg_dict = version_dict['pkg_list'].setdefault(index, {})
+                pkg_dict.update({'package_type': group['package_type']})
+                continue
+
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                pkg_dict.setdefault('package_name', group['package_name'])
+                continue
+
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                pkg_dict.setdefault('package_state', group['package_state'])
+                continue
+
+        return ret_dict
+
+
+class ShowInstallVersionAll(ShowInstallVersion):
+    """Parser for show install version all"""
+
+    cli_command = 'show install version all'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        return super().cli(output=output)
+
+
+class ShowInstallVersionSummary(ShowInstallVersion):
+    """Parser for show install version summary"""
+
+    cli_command = 'show install version summary'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        return super().cli(output=output)
+
+
+class ShowInstallVersionValue(ShowInstallVersion):
+    """Parser for show install version value {value}"""
+
+    cli_command = 'show install version value {value}'
+
+    def cli(self, value=None, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(value=value))
+
+        return super().cli(output=output)
+
+# ======================================================
+# Parser for 'show install uncommitted '
+# ======================================================
+
+class ShowInstallUncommittedSchema(MetaParser):
+    """Schema for show install uncommitted"""
+
+    schema = {
+        Optional('uncommitted'): {
+            Any(): {
+                'type': str,
+                'state': str,
+                'version': str,
+            },
+        },
+        Optional('uncommitted_package'): str,
+        Optional('abort_timer'): str,
+    }
+
+class ShowInstallUncommitted(ShowInstallUncommittedSchema):
+    """Parser for show install uncommitted"""
+
+    cli_command = 'show install uncommitted'
+
+class ShowExceptionSchema(MetaParser):
+    """Schema for show exception"""
+    schema = {
+        Optional('patch_version'): str,
+        'implement' :str,
+    }
+
+
+class ShowException(ShowExceptionSchema):
+    """Parser for show exception
+    """
+
+    cli_command = 'show exception'
+
+    def cli(self, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+        # !!!Patched Version!!!
+        p0 = re.compile(r'!!!Patched Version!!!')
+        # show exception not implemented
+        p1 = re.compile(r'show exception not implemented')
+
+        for line in out.splitlines():
+            line = line.strip()
+            # !!!Patched Version!!!
+            m = p0.match(line)
+            if m:
+                ret_dict['patch_version'] = m.group(0)
+                continue
+            # show exception not implemented
+            m = p1.match(line)
+            if m:
+                ret_dict['implement'] = m.group(0)
+                continue
+        return ret_dict
+
+# ======================================================
+# Parser for 'show install inactive '
+# ======================================================
+
+class ShowInstallInactiveSchema(MetaParser):
+    """Schema for show install inactive"""
+
+    schema = {
+        Optional('inactive'): {
+            Optional('version'): {
+                Any():{
+                'type': str,
+                'state': str,
+                },
+            },
+        },
+        Optional('inactive_package'): str,
+        Optional('abort_timer'): str,
+    }
+
+
+class ShowInstallInactive(ShowInstallInactiveSchema):
+    """Parser for show install inactive"""
+
+    cli_command = 'show install inactive'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # IMG   C    17.06.03.0.3629
+        p1 = re.compile(r"^(?P<type>\w+)\s+(?P<state>\S)\s+(?P<version>\S+)$")
+        # No Inactive Packages
+        p2 = re.compile(r"^(?P<inactive_package>\S+\s+\S+\s+\w+)$")
+        # Auto abort timer: inactive
+        p3 = re.compile(r"^Auto\s+abort\s+timer:\s+(?P<abort_timer>\w+)$")
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip() 
+            # IMG   C    17.06.03.0.3629
+            m = p1.match(line)
+            if m:
+                dict_val = m.groupdict()
+                version_var = dict_val['version']
+                inactive = ret_dict.setdefault('inactive', {})
+                version_dict = ret_dict['inactive'].setdefault('version', {})
+                version = version_dict.setdefault(version_var, {})
+                version['type'] = dict_val['type']
+                version['state'] = dict_val['state']
+                continue
+
+            # Type  St   Filename/Version
+            m = p2.match(line)
+            if m:
+                dict_val = m.groupdict()
+                ret_dict['inactive_package'] = dict_val['inactive_package']
+                continue
+
+            # Auto abort timer: inactive
+            m = p3.match(line)
+            if m:
+                dict_val = m.groupdict()
+                ret_dict['abort_timer'] = dict_val['abort_timer']
+                continue
+
+        return ret_dict
+
+# ======================================================
+# Parser for 'show install committed '
+# ======================================================
+
+class ShowInstallCommittedSchema(MetaParser):
+    """Schema for show install committed"""
+
+    schema = {
+        'committed': {
+            Any(): {
+                'type': str,
+                'state': str,
+                'version': str,
+            },
+        },
+        'abort_timer': str,
+    }
+
+class ShowInstallCommitted(ShowInstallCommittedSchema):
+    """Parser for show install committed"""
+
+    cli_command = 'show install committed'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # IMG   C    17.06.03.0.3629
+        p1 = re.compile(r"^(?P<type>\w+)\s+(?P<state>\S)\s+(?P<version>\S+)$")
+       # Auto abort timer: Committed
+       # Auto abort timer: inactive
+        p2 = re.compile(r"^Auto\s+abort\s+timer:\s+(?P<abort_timer>\w+)$")
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # IMG   C    17.06.03.0.3629
+            m = p1.match(line)
+            if m:
+                dict_val = m.groupdict()
+                version_var = dict_val['version']
+                committed = ret_dict.setdefault('committed', {})
+                version_dict = ret_dict['committed'].setdefault(version_var, {})
+                version_dict['type'] = dict_val['type']
+                version_dict['state'] = dict_val['state']
+                version_dict['version'] = dict_val['version']
+                continue
+
+            # Auto abort timer: Committed
+            m = p2.match(line)
+            if m:
+                dict_val = m.groupdict()
+                ret_dict['abort_timer'] = dict_val['abort_timer']
+                continue
+
+        return ret_dict
+
+# ======================================================
+# Parser for 'show install uncommitted '
+# ======================================================
+
+class ShowInstallUncommittedSchema(MetaParser):
+    """Schema for show install uncommitted"""
+    
+    schema = {
+        Optional('uncommitted'): {
+            Optional('version'): {
+                Any():{
+                'type': str,
+                'state': str,
+                },
+            },
+        },
+        Optional('uncommitted_package'): str,
+        Optional('abort_timer'): str,
+    }
+
+class ShowInstallUncommitted(ShowInstallUncommittedSchema):
+    """Parser for show install Uncommited"""
+
+    cli_command = 'show install uncommitted'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # IMG   C    17.06.03.0.3629
+        p1 = re.compile(r"^(?P<type>\w+)\s+(?P<state>\S)\s+(?P<version>\S+)$")
+        # No Uncommitted Packages
+        p2 = re.compile(r"^(?P<uncommitted_package>\S+\s+\S+\s+\w+)$")
+        # Auto abort timer: Uncommitted
+        p3 = re.compile(r"^Auto\s+abort\s+timer:\s+(?P<abort_timer>\w+)$")
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+            # IMG   C    17.06.03.0.3629
+            m = p1.match(line)
+            if m:
+                dict_val = m.groupdict()
+                version_var = dict_val['version']
+                uncommitted = ret_dict.setdefault('uncommitted', {})
+                version_dict = ret_dict['uncommitted'].setdefault('version', {})
+                version = version_dict.setdefault(version_var, {})
+                version['type'] = dict_val['type']
+                version['state'] = dict_val['state']
+                continue
+
+            # Type  St   Filename/Version
+            m = p2.match(line)
+            if m:
+                dict_val = m.groupdict()
+                ret_dict['uncommitted_package'] = dict_val['uncommitted_package']
+                continue
+
+            # Auto abort timer: Uncommitted
+            m = p3.match(line)
+            if m:
+                dict_val = m.groupdict()
+                ret_dict['abort_timer'] = dict_val['abort_timer']
                 continue
 
         return ret_dict

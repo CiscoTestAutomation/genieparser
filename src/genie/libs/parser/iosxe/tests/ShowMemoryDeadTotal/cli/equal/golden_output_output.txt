@@ -1,0 +1,148 @@
+pm9008#show memory dead total
+Tracekey : 1#9c9099d5f17116e3da6feba7f5e733f2
+
+                Head    Total(b)     Used(b)     Free(b)   Lowest(b)  Largest(b)
+Processor  7F5B2B4FD048   3791419980   281368020   3510051960   645435404   3145727908
+reserve P  7F5B2B4FD0A0      102404          92      102312      102312      102312
+ lsmpi_io  7F5B292CD1A8     6295128     6294304         824         824         412
+Dynamic heap limit(MB) 3000      Use(MB) 0
+
+
+
+
+Dead Proc Summary for: Processor
+
+   Total      Count     Name               PC
+  1818512      96  Virtual Exec           :56306D5BA000+5ED0DFD
+  1648000     100  ch_check_profile_url   :56306D5BA000+6C2D241
+   238296       1  ch_check_profile_url   :56306D5BA000+6C19CD6
+   189952    1130  ONEP UTIL              :56306D5BA000+7E32473
+    74016       3  ch_check_profile_url   :56306D5BA000+6C2E78E
+    73984       1  qos pre-classificati   :56306D5BA000+876B102
+    70304       2  XOS_MEM_BASE           :56306D5BA000+953D209
+    65632       1  MRIB route entry       :56306D5BA000+E40220A
+    65632       1  MRIB route entry       :56306D5BA000+6D7EB39
+    65576       1  Policy Shim Op Elem    :56306D5BA000+B8A23DA
+    37536       2  EEM Shell Director     :56306D5BA000+640A001
+    32864       1  IP NDB Variable        :56306D5BA000+7342505
+    32864       1  dynamic ARP subblock   :56306D5BA000+5585F39
+    32864       1  AAA Acct DB chu        :56306D5BA000+5D844D0
+    16680       1  Watched Queue          :56306D5BA000+92455AF
+    16680       1  AAA Acct Rec ch        :56306D5BA000+5D8AF19
+    16576       2  ch_check_profile_url   :56306D5BA000+6C2D1D2
+    14448      14  ONEP Dispatch Queue    :56306D5BA000+9542402
+    12480       2  ONEP Dispatch Queue    :56306D5BA000+9542806
+     7864       1  IOSXE LIIN config      :56306D5BA000+735B8B2
+     7584       1  PnP Agent Discovery    :56306D5BA000+84FE8F8
+     7552       4  xos hashmap tuples     :56306D5BA000+95325F9
+     7464       1  AAA Acct AVLnod        :56306D5BA000+550B3D5
+     6184       2  IP routing table       :56306D5BA000+13E2170B
+     5528      26  ACL SWIDB SB           :56306D5BA000+6B0074D
+     4992      12  Onep Start Task        :56306D5BA000+13F253D7
+     4576       1  ONEP ELEMENT           :56306D5BA000+7EF8F49
+     4576       1  ONEP ELEMENT           :56306D5BA000+7EF8F65
+     4392       1  Reg Function 12        :56306D5BA000+91EDD59
+     4392       1  AAA Authen DB c        :56306D5BA000+5D5F5D3
+     4128       6  Ether OAM subblock     :56306D5BA000+A53FD48
+     4096      16  SWIDB_SB: NETBIOS In   :56306D5BA000+7A0FD35
+     3856      24  Onep Start Task        :56306D5BA000+917E544
+     3480       1  ACL Comments Chunks    :56306D5BA000+5EA9EAA
+     3168      22  Onep Start Task        :56306D5BA000+7F2C164
+     2936      12  Onep Start Task        :56306D5BA000+9251D74
+     2760      15  ONEP SESSION           :56306D5BA000+7F25321
+     2424       1  Process Array          :56306D5BA000+9252608
+     2160      15  ONEP SESSION           :56306D5BA000+7F252EA
+     2072      14  ONEP CAPABILITY        :56306D5BA000+7F2C0C6
+     2016      14  Onep Start Task        :56306D5BA000+605DC00
+     2016      14  ONEP CAPABILITY        :56306D5BA000+7F2C0F0
+     2016      14  Onep Start Task        :56306D5BA000+7F2C1F9
+     1856       8  XOS_MEM_UTILS          :56306D5BA000+9533388
+     1824       1  String-DB conte        :56306D5BA000+5EA59A5
+     1696       1  PnP Agent Discovery    :56306D5BA000+853A49B
+     1680      11  XOS_MEM_BASE           :56306D5BA000+95225CD
+     1576       1  RIB: Control Block     :56306D5BA000+8A8E8FC
+     1536       6  State Machine debug    :56306D5BA000+8D4A41B
+     1344       6  LLDP-MED local annex   :56306D5BA000+12DFFA11
+     1240       1  Virtual Exec           :56306D5BA000+5F037CC
+     1216       8  XOS_MEM_UTILS          :56306D5BA000+953323E
+     1104       6  Ether OAM Shim data    :56306D5BA000+A55DAA4
+     1056       3  XOS_MEM_INTF           :56306D5BA000+958BC5C
+      984       6  PLIM QoS SW subblock   :56306D5BA000+A84247C
+      960       6  State Machine Instan   :56306D5BA000+8D48B60
+      936       6  State Machine debug    :56306D5BA000+8D4A3A4
+      896       2  Onep Start Task        :56306D5BA000+95D60CE
+      864       2  Onep Start Task        :56306D5BA000+95D60AF
+      864       6  ONEP CAPABILITY        :56306D5BA000+7F2BA19
+      864       6  ONEP CAPABILITY        :56306D5BA000+7F2BA3D
+      864       6  Onep Start Task        :56306D5BA000+7F2BC38
+      760       5  SDB String             :56306D5BA000+917E338
+      672       1  Call Home EEM cb       :56306D5BA000+63286DD
+      576       1  PnP Agent Discovery    :56306D5BA000+8512E2D
+      552       2  XOS_MEM_BASE           :56306D5BA000+953D09B
+      536       1  vrf_rec_t              :56306D5BA000+9313403
+      520       1  PnP Agent Discovery    :56306D5BA000+854D3C6
+      448       1  AAA Interface Struct   :56306D5BA000+5D634C9
+      448       1  ch_check_profile_url   :56306D5BA000+6BE29D2
+      432       1  SWIDB_SB_DYNDNSUPD_C   :56306D5BA000+6091F04
+      432       3  XOS_MEM_INTF           :56306D5BA000+958BBAB
+      400       1  vrf_sub_rec_t          :56306D5BA000+92FB1E5
+      392       1  PnP Agent Discovery    :56306D5BA000+85B2B10
+      392       1  Parser-Mode History    :56306D5BA000+BEA0E01
+      384       1  Onep Start Task        :56306D5BA000+7EEC358
+      360       1  VPN ecomm list         :56306D5BA000+93134F0
+      352       1  AAA Authen DB chunk    :56306D5BA000+5D5F5B9
+      320       2  SDWAN SWSB             :56306D5BA000+12E16C9B
+      288       2  EEM Shell Director     :56306D5BA000+640A0A7
+      288       2  XOS_MEM_XDT            :56306D5BA000+95464A9
+      288       2  ONEP UTIL              :56306D5BA000+7E32B63
+      288       2  Onep Start Task        :56306D5BA000+95D60EE
+      288       2  XOS_MEM_UTILS          :56306D5BA000+9532540
+      288       2  Onep Start Task        :56306D5BA000+64D9C50
+      272       1  AAA Acct DB chunk      :56306D5BA000+5D844AC
+      264       1  XOS_MEM_INTF           :56306D5BA000+95733EF
+      256       1  AAA Acct Rec chunk     :56306D5BA000+5D8AEF5
+      256       1  AAA Acct AVLnode chu   :56306D5BA000+550B3B7
+      248       1  VPN ecomm list         :56306D5BA000+931349A
+      224       1  VPN ecomm list         :56306D5BA000+92FB267
+      224       1  VPN ecomm list         :56306D5BA000+92FB226
+      208       1  XOS_MEM_UTILS          :56306D5BA000+9534783
+      208       1  AAA MI SG NAME         :56306D5BA000+89E7C62
+      208       1  Parser Mode            :56306D5BA000+5EFA691
+      200       1  XOS_MEM_PLC            :56306D5BA000+95D4A5D
+      200       1  TTY timer block        :56306D5BA000+5E90C1C
+      192       1  MRIB IPv6 Init Proce   :56306D5BA000+E4021BA
+      192       1  MRIB IPv4 Init Proce   :56306D5BA000+6D7EAEA
+      192       1  ONEP POLICY            :56306D5BA000+7FE9909
+      184       1  PnP Agent Discovery    :56306D5BA000+85B2B85
+      168       1  Onep Start Task        :56306D5BA000+7E25ECE
+      168       1  PnP Agent Discovery    :56306D5BA000+944E9F4
+      168       1  call home platform v   :56306D5BA000+A70161C
+      152       1  Parser Linkage         :56306D5BA000+5ECAA3A
+      152       1  Onep Start Task        :56306D5BA000+7EEC693
+      152       1  KEYPAIRLABEL CERT KE   :56306D5BA000+975F906
+      152       1  RIB Name               :56306D5BA000+8A8EA67
+      152       1  bgp_vrf_rec_t          :56306D5BA000+E03C659
+      144       1  LIM Index              :56306D5BA000+79A0B03
+      144       1  PPP PAP PW             :56306D5BA000+5E7FA6E
+      144       1  Onep Start Task        :56306D5BA000+7E21F4C
+      144       1  Parser Mode Q1         :56306D5BA000+5EFA738
+      144       1  Parser Mode Q2         :56306D5BA000+5EFA77D
+      144       1  Onep Start Task        :56306D5BA000+7E26638
+      144       1  Onep Start Task        :56306D5BA000+7EEBE60
+      144       1  Onep Start Task        :56306D5BA000+7EEC008
+      144       1  Onep Start Task        :56306D5BA000+7EEC1B0
+      144       1  Onep Start Task        :56306D5BA000+7EEC500
+      144       1  Onep Start Task        :56306D5BA000+7EEC927
+      144       1  Onep Start Task        :56306D5BA000+7EECABE
+      144       1  Onep Start Task        :56306D5BA000+B895C36
+      144       1  XOS_MEM_INTF           :56306D5BA000+957343B
+      144       1  Onep Start Task        :56306D5BA000+7B4DB98
+
+Dead Proc Summary for: reserve Processor
+
+   Total      Count     Name               PC
+
+
+Dead Proc Summary for: lsmpi_io
+
+   Total      Count     Name               PC

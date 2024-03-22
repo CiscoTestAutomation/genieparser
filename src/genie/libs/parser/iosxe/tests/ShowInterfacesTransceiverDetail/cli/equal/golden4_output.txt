@@ -1,0 +1,44 @@
+mA: milliamperes, dBm: decibels (milliwatts), NA or N/A: not applicable.
+++ : high alarm, +  : high warning, -  : low warning, -- : low alarm.
+A2D readouts (if they differ), are reported in parentheses.
+The threshold values are calibrated.
+
+                                High Alarm  High Warn  Low Warn   Low Alarm
+             Temperature        Threshold   Threshold  Threshold  Threshold
+Port         (Celsius)          (Celsius)   (Celsius)  (Celsius)  (Celsius)
+---------    -----------------  ----------  ---------  ---------  ---------
+Te1/1/1      48.5                   75.0       70.0        0.0       -5.0
+Te1/1/2      49.3                   75.0       70.0        0.0       -5.0
+Te1/1/3      49.5                   75.0       70.0        0.0       -5.0
+
+                                High Alarm  High Warn  Low Warn   Low Alarm
+             Voltage            Threshold   Threshold  Threshold  Threshold
+Port         (Volts)            (Volts)     (Volts)    (Volts)    (Volts)
+---------    -----------------  ----------  ---------  ---------  ---------
+Te1/1/1      3.28                   3.63       3.46       3.13       2.97
+Te1/1/2      3.28                   3.63       3.46       3.13       2.97
+Te1/1/3      3.29                   3.63       3.46       3.13       2.97
+
+                                  High Alarm  High Warn  Low Warn   Low Alarm
+                 Current          Threshold   Threshold  Threshold  Threshold
+Port       Lane  (milliamperes)   (mA)        (mA)       (mA)       (mA)
+---------  ----  ---------------  ----------  ---------  ---------  ---------
+Te1/1/1    N/A    8.6                 11.8       10.8        5.0        4.0
+Te1/1/2    N/A    8.4                 11.8       10.8        5.0        4.0
+Te1/1/3    N/A    8.2                 11.8       10.8        5.0        4.0
+
+                 Optical          High Alarm  High Warn  Low Warn   Low Alarm
+                 Transmit Power   Threshold   Threshold  Threshold  Threshold
+Port       Lane  (dBm)            (dBm)       (dBm)      (dBm)      (dBm)
+---------  ----  ---------------  ----------  ---------  ---------  ---------
+Te1/1/1    N/A   -1.9                  1.7       -1.3       -7.3      -11.3
+Te1/1/2    N/A   -2.6                  1.7       -1.3       -7.3      -11.3
+Te1/1/3    N/A   -2.6                  1.7       -1.3       -7.3      -11.3
+
+                 Optical          High Alarm  High Warn  Low Warn   Low Alarm
+                 Receive Power    Threshold   Threshold  Threshold  Threshold
+Port       Lane  (dBm)            (dBm)       (dBm)      (dBm)      (dBm)
+---------  ----  ---------------  ----------  ---------  ---------  ---------
+Te1/1/1    N/A  -13.3                  2.0       -1.0       -9.9      -13.9
+Te1/1/2    N/A  -14.6                  2.0       -1.0       -9.9      -13.9
+Te1/1/3    N/A   -2.2                  2.0       -1.0       -9.9      -13.9

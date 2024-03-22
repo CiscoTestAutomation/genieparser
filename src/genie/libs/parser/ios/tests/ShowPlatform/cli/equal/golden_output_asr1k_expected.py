@@ -8,8 +8,6 @@ expected_output = {
                     "name": "ASR1000-SIP40",
                     "state": "ok",
                     "insert_time": "00:33:53",
-                    "cpld_ver": "00200800",
-                    "fw_ver": "16.2(1r)",
                     "subslot": {
                         "0": {
                             "SPA-1XCHSTM1/OC3": {
@@ -44,6 +42,8 @@ expected_output = {
                             }
                         },
                     },
+                    "cpld_ver": "00200800",
+                    "fw_ver": "16.2(1r)",
                 }
             }
         },
@@ -54,8 +54,6 @@ expected_output = {
                     "name": "ASR1000-2T+20X1GE",
                     "state": "ok",
                     "insert_time": "2d00h",
-                    "cpld_ver": "14011701",
-                    "fw_ver": "16.3(2r)",
                     "subslot": {
                         "0": {
                             "BUILT-IN-2T+20X1GE": {
@@ -66,6 +64,8 @@ expected_output = {
                             }
                         }
                     },
+                    "cpld_ver": "14011701",
+                    "fw_ver": "16.3(2r)",
                 }
             }
         },
@@ -76,8 +76,6 @@ expected_output = {
                     "name": "ASR1000-6TGE",
                     "state": "ok",
                     "insert_time": "2d00h",
-                    "cpld_ver": "14011701",
-                    "fw_ver": "16.3(2r)",
                     "subslot": {
                         "0": {
                             "BUILT-IN-6TGE": {
@@ -88,6 +86,20 @@ expected_output = {
                             }
                         }
                     },
+                    "cpld_ver": "14011701",
+                    "fw_ver": "16.3(2r)",
+                }
+            }
+        },
+        "4": {
+            "other": {
+                "": {
+                    "slot": "4",
+                    "name": "",
+                    "state": "unknown",
+                    "insert_time": "2d00h",
+                    "cpld_ver": "N/A",
+                    "fw_ver": "N/A",
                 }
             }
         },
@@ -144,18 +156,6 @@ expected_output = {
                     "name": "ASR1006-PWR-AC",
                     "state": "ps, fail",
                     "insert_time": "00:33:17",
-                }
-            }
-        },
-        "4": {
-            "other": {
-                "": {
-                    "slot": "4",
-                    "name": "",
-                    "state": "unknown",
-                    "insert_time": "2d00h",
-                    "cpld_ver": "N/A",
-                    "fw_ver": "N/A",
                 }
             }
         },

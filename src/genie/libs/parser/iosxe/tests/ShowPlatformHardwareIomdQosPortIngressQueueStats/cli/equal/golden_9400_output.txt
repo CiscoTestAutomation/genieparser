@@ -1,0 +1,19 @@
+show platform hardware iomd 6/0 qos port 1 ingress queue stats
+DATA Port:1 StartingQueue:0  Enqueue Counters
+-------------------------------------------          
+Queue Buffers Enqueue-TH0 Enqueue-TH1 Enqueue-TH2        
+----- ------- ----------- ----------- -----------
+    0       0           0           0           0
+    1       0           0           0     4201076
+
+DATA Port:1 Drop Counters
+-------------------------------                     
+Queue Drop-TH0    Drop-TH1    Drop-TH2    SBufDrop    QebDrop 
+----- ----------- ----------- ----------- ----------- -----------
+    0           0           0           0           0           0
+    1           0           0           0           0           0
+
+Note: Queuing stats are in bytes
+
+av35top_7slot#
+

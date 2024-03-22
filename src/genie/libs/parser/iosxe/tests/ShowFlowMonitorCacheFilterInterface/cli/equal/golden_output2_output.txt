@@ -1,0 +1,28 @@
+Processed 560 flows
+Matched 569 flows
+Aggregated to 569 flows
+Showing the top 2 flows
+
+IPV6 SOURCE ADDRESS:        4100:1:7:33::1 
+IPV6 DESTINATION ADDRESS:   21:28:1::2  
+INTERFACE INPUT:            Gi1/0/13
+IP VERSION:                 6
+IP PROTOCOL:                59
+IP TOS:                     0x00
+interface output:           Null
+counter packets long:       4
+timestamp abs first:        18:11:28.000
+timestamp abs last:         18:11:35.000
+counter bytes layer2 long:  2048
+
+IPV6 SOURCE ADDRESS:        150:1:2:10::1
+IPV6 DESTINATION ADDRESS:   110:1:1:10::1
+INTERFACE INPUT:            Gi1/0/13
+IP VERSION:                 6
+IP PROTOCOL:                59
+IP TOS:                     0x00
+interface output:           Null
+counter packets long:       8
+timestamp abs first:        18:11:34.000
+timestamp abs last:         18:11:36.000
+counter bytes layer2 long:  3712

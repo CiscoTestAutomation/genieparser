@@ -1,0 +1,22 @@
+Chassis Type: C9407R              
+
+Mod Ports Card Type                                   Model          Serial No.
+---+-----+--------------------------------------+--------------+--------------
+1   48   48-Port UPOE 10/100/1000 (RJ-45)            C9400-LC-48U     JAD22390034
+2   48   48-Port UPOE 10/100/1000 (RJ-45)            C9400-LC-48U     JAD22380DJQ
+3   11   Supervisor 1 Module                         C9400-SUP-1      JAE22350LWE
+4   11   Supervisor 1 Module                         C9400-SUP-1                 
+
+Mod MAC addresses                    Hw   Fw           Sw                 Status
+---+--------------------------------+----+------------+------------------+--------
+1   F80F.6F63.1330 to F80F.6F63.135F 1.1  17.10.1r      S2C                ok         
+2   706D.1573.30E0 to 706D.1573.310F 1.1  17.10.1r      S2C                ok         
+3   00B7.7188.16EC to 00B7.7188.16F6 2.0  17.10.1r      S2C                ok         
+4   unknown                          unkn unknown       unknown            other      
+
+Mod Redundancy Role     Operating Mode  Configured Mode  Redundancy Status
+---+-------------------+---------------+---------------+------------------
+3   Active              non-redundant   sso              Active           
+4   Standby             non-redundant   sso              Disabled         
+
+Chassis MAC address range: 44 addresses from 00b7.7188.16c0 to 00b7.7188.16eb 

@@ -1,0 +1,54 @@
+VANSH-SWITCH9# show spanning-tree mst detail
+
+##### MST0    vlans mapped:   1-9,11-19,21-29,31-39,41-4094 
+Bridge        address 5000.0009.0007  priority      32768 (32768 sysid 0)
+Root          this switch for the CIST
+Regional Root this switch
+Operational   hello time 2 , forward delay 15, max age 20, txholdcount 6
+Configured    hello time 2 , forward delay 15, max age 20, max hops    20
+
+
+Po1 of MST0 is designated forwarding
+Port info             port id       128.4096  priority    128  cost   20000
+Designated root       address 5000.0009.0007  priority  32768  cost   0
+Design. regional root address 5000.0009.0007  priority  32768  cost   0
+Designated bridge     address 5000.0009.0007  priority  32768  port id 128.4096
+Timers: message expires in 0 sec, forward delay 0, forward transitions 1
+Bpdus sent 412658, received 2
+
+Eth1/1 of MST0 is designated forwarding
+Port info             port id       128.1     priority    128  cost   20000
+Designated root       address 5000.0009.0007  priority  32768  cost   0
+Design. regional root address 5000.0009.0007  priority  32768  cost   0
+Designated bridge     address 5000.0009.0007  priority  32768  port id 128.1
+Timers: message expires in 0 sec, forward delay 0, forward transitions 1
+Bpdus sent 412965, received 4
+
+Eth1/3 of MST0 is designated forwarding
+Port info             port id       128.3     priority    128  cost   20000
+Designated root       address 5000.0009.0007  priority  32768  cost   0
+Design. regional root address 5000.0009.0007  priority  32768  cost   0
+Designated bridge     address 5000.0009.0007  priority  32768  port id 128.3
+Timers: message expires in 0 sec, forward delay 0, forward transitions 1
+Bpdus sent 412967, received 0
+
+
+##### MST1    vlans mapped:   10,20,30,40
+Bridge        address 5000.0009.0007  priority      32769 (32768 sysid 1)
+Root          this switch for MST1
+
+
+Po1 of MST1 is designated forwarding
+Port info             port id       128.4096  priority    128  cost   20000
+Designated root       address 5000.0009.0007  priority  32769  cost   0
+Designated bridge     address 5000.0009.0007  priority  32769  port id 128.4096
+Timers: message expires in 0 sec, forward delay 0, forward transitions 1
+Bpdus (MRecords) sent 412658, received 2
+
+Eth1/1 of MST1 is designated forwarding
+Port info             port id       128.1     priority    128  cost   20000
+Designated root       address 5000.0009.0007  priority  32769  cost   0
+Designated bridge     address 5000.0009.0007  priority  32769  port id 128.1
+Timers: message expires in 0 sec, forward delay 0, forward transitions 1
+Bpdus (MRecords) sent 412965, received 4
+

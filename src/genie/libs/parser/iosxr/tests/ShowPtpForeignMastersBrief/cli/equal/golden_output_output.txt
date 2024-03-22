@@ -1,0 +1,8 @@
+show ptp foreign-masters brief
+Wed Feb  8 13:47:51.833 UTC
+M=Multicast,X=Mixed-mode,Q=Qualified,D=QL-DNU,
+GM=Grandmaster,LA=PTSF_lossAnnounce,LS=PTSF_lossSync
+Interface         Transport Address                   Cfg-Pri  Pri1   State
+----------------------------------------------------------------------------
+Gi0/0/0/16        Ethernet  8478.ac6c.0aa2            None     128    M,Q
+Te0/0/2/1         Ethernet  8478.ac6c.0a91            None     128    M,Q,GM

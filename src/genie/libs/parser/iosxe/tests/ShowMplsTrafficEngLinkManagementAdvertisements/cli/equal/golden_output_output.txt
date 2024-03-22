@@ -1,0 +1,22 @@
+  Link ID::  2 (Port-channel60)
+    Link Subnet Type:     Broadcast
+    Link IP Address:      195.1.1.1
+    Designated Router:    195.1.1.1
+    TE metric:            1
+    IGP metric:           1
+    SRLGs:                None
+    Physical Bandwidth:   80000000 kbits/sec
+    Res. Global BW:       50000 kbits/sec
+    Res. Sub BW:          0 kbits/sec
+    Downstream::
+                                Global Pool   Sub Pool
+                                -----------   ----------
+      Reservable Bandwidth[0]:        50000            0 kbits/sec
+      Reservable Bandwidth[1]:        50000            0 kbits/sec
+      Reservable Bandwidth[2]:        50000            0 kbits/sec
+      Reservable Bandwidth[3]:        50000            0 kbits/sec
+      Reservable Bandwidth[4]:        50000            0 kbits/sec
+      Reservable Bandwidth[5]:        50000            0 kbits/sec
+      Reservable Bandwidth[6]:        50000            0 kbits/sec
+      Reservable Bandwidth[7]:        40000            0 kbits/sec
+    Attribute Flags:      0x00000000

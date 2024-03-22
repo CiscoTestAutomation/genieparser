@@ -14,7 +14,7 @@ class ShowChassisSchema(MetaParser):
     schema = {
         "chassis_mac_address": str,
         "mac_wait_time": str,
-        "redun_port_type": str,
+        Optional("redun_port_type"): str,
         "chassis_index" : {
             int : {
                 "role": str,
@@ -138,7 +138,7 @@ class ShowChassisRmiSchema(MetaParser):
     schema = {
         "chassis_mac_address": str,
         "mac_wait_time": str,
-        "redun_port_type": str,
+        Optional("redun_port_type"): str,
         "chassis_index" : {
             int : {
                 "role": str,

@@ -1,13 +1,15 @@
 """show_PPP.py
 IOSXE parsers for the following show commands:
     * 'show ppp statistics'
+    * 'show pppatm session'
+    * 'show ppp all'
 """
 # Python
 import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Optional
+from genie.metaparser.util.schemaengine import Schema, Any, Optional
 
 # import parser utils
 from genie.libs.parser.utils.common import Common
@@ -544,4 +546,139 @@ class ShowPppStatistics(ShowPppStatisticsSchema):
         return res_dict
 
 
+# =======================================================
+# Parser Schema for 'show pppatm session'
+# =======================================================
+
+class ShowPppAtmSessionSchema(MetaParser):
+    """Schema for "show pppatm session" """
+
+    schema = {
+        'session_number': int,
+        'session_state': str,
+        'total_sessions': int,
+        'uniq_id': {
+            Any(): {
+                'atm_intf': str,
+                'vpi_vci': str,
+                'encap': str,
+                'vt': str,
+                'va': str,
+                'va_st': str,
+                'state': str
+            }
+        }
+    }
+
+
+# =================================================
+# Parser for 'show pppatm session'
+# =================================================
+
+class ShowPppAtmSession(ShowPppAtmSessionSchema):
+    """ parser for "show pppatm session" """
+
+    cli_command = "show pppatm session"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        parsed_dict = {}
+
+        p1 = re.compile(r'^(?P<session_number>\d+)\ssession\s+in\s(?P<session_state>\w+\s\(\w+\))\sState$')
+
+        p2 = re.compile(r'^(?P<total_sessions>\d+)\ssession\s+total$')
+
+        p3 = re.compile(
+            r'^(?P<uniq_id>[0-9A-Z\/]+)+\s+(?P<atm_intf>[0-9A-Z\/.]+)+\s+(?P<vpi_vci>[0-9\/]+)\s+(?P<encap>\w+)'
+            r'\s+(?P<vt>\w+)\s+(?P<va>\w+)\s+(?P<va_st>\w+)\s+(?P<state>\w+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict['session_number'] = int(group['session_number'])
+                parsed_dict['session_state'] = group['session_state']
+                continue
+
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict['total_sessions'] = int(group['total_sessions'])
+                continue
+
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                uniq_id = group.pop("uniq_id")
+
+                pppatm_dict = parsed_dict.setdefault("uniq_id", {}). \
+                    setdefault(uniq_id, {})
+
+                pppatm_dict.update({k: v for k, v in group.items()})
+
+        return parsed_dict
+
+class ShowPppAllSchema(MetaParser):
+    ''' Schema for:
+            show ppp all
+    '''
+    schema = {
+            Optional('interface'): {
+                Optional(Any()): {
+                    Optional('open'): str,
+                    Optional('nego'): str,
+                    Optional('fail'): str,
+                    Optional('stage'): str,
+                    Optional('peeraddress'): str,
+                    Optional('peername'): str,
+                }
+            }
+     }
+# =============================================
+# Parser for 'show ppp all'
+# =============================================
+
+class ShowPppAll(ShowPppAllSchema):
+    """ parser for "show ppp all" """
+
+    cli_command = "show ppp all"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        parsed_dict = {}
+
+        #Vi1.2        LCP+ IPCP+ IPV6CP+    LocalT   51.0.0.1
+        #Vi1.1        LCP+ IPV6CP+          LocalT   0.0.0.0
+        #Vi2.1        LCP+ PAP+ IPCP+       LocalT   192.2.0.90      username1 
+        
+        p1 = re.compile(r'^(?P<interface>(\w+|w+\d+|\w+\d+\.\d+))\s+(?P<open>(\w+|\w+\+|\w+\-))\s+(?P<nego>(\w+|\w+\+|w+\-))\s+(?P<fail>(\w+|\w+\+|\w+\-|\s+))\s+(?P<stage>(\w+))\s+(?P<peeraddress>(\d+\.\d+\.\d+\.\d+))\s*(?P<peername>(\w*))$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            #Vi1.1        LCP+ IPCP+ IPV6CP+    LocalT   81.0.0.1
+            #Vi2          LCP+ IPCP+ CDPCP-     LocalT   18.1.1.1  
+            #Vi2.1        LCP+ PAP+ IPCP+       LocalT   192.2.0.90      username1
+            
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict.setdefault('interface', {})
+                parsed_dict['interface'].setdefault(group['interface'], {})
+                parsed_dict['interface'][group['interface']]['open'] = group['open']
+                parsed_dict['interface'][group['interface']]['nego'] = group['nego']
+                parsed_dict['interface'][group['interface']]['fail'] = group['fail']
+                parsed_dict['interface'][group['interface']]['stage'] = group['stage']
+                parsed_dict['interface'][group['interface']]['peeraddress'] = group['peeraddress']
+                if group['peername']:
+                    parsed_dict['interface'][group['interface']]['peername'] = group['peername']
+                continue
+                            
+        return parsed_dict
 

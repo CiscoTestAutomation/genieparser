@@ -1,0 +1,14 @@
+show l2fib output-list 1225
+
+ID                            : 1225
+Bridge Domain                 : 201
+Reference Count               : 1
+Flags                         : flood list
+Port Count                    : 5
+Port(s)                       : VXLAN_REP PL:1789(1) T:VXLAN_REP [IR]100201:172.11.1.21 
+                              : BD_PORT   Gi1/0/13:201
+                              : BD_PORT   Gi1/0/36:201
+                              : BD_PORT   Gi1/0/37:201
+                              : BD_PORT   Gi1/0/23:201
+
+

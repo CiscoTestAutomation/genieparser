@@ -1,37 +1,37 @@
-EXCHANGE/NOTIFY TX(REQ) TX(RES) RX(REQ) RX(RES)
+EXCHANGE/NOTIFY                   TX(REQ)    TX(RES)    RX(REQ)    RX(RES)
 
 EXCHANGES
 
-IKE_SA_INIT 8618 0 0 5206
-IKE_AUTH 5206 0 0 5206
-CREATE_CHILD_SA 7120 0 0 7119
-CREATE_CHILD_SA_IPSEC_REKEY 7112 0 0 7111
-CREATE_CHILD_SA_IKE_REKEY 8 0 0 8
-INFORMATIONAL 17527 79170 79170 17527
+IKE_SA_INIT                            84      19343      20740         83
+IKE_AUTH                               83      19340      19340         83
+CREATE_CHILD_SA                      2014      32935      33035       1959
+CREATE_CHILD_SA_IPSEC                   0      22570      22589          0
+CREATE_CHILD_SA_IPSEC_REKEY           514      10364      10364        456
+CREATE_CHILD_SA_IKE_REKEY            1500          1          1       1500
+INFORMATIONAL                       27365     188162     188824      11691
 
 ERROR NOTIFY
 
-NO_PROPOSAL_CHOSEN 0 0 0 5203
+INVALID_SPI                             0          0        288          0
+NO_PROPOSAL_CHOSEN                      0         53          0          0
+TS_UNACCEPTABLE                         0          1          0          0
 
 OTHER NOTIFY
 
-INITIAL_CONTACT 5206 0 0 0
-SET_WINDOW_SIZE 5214 0 0 11
-NAT_DETECTION_SOURCE_IP 8618 0 0 5206
-NAT_DETECTION_DESTINATION_IP 8618 0 0 5206
-HTTP_CERT_LOOKUP_SUPPORTED 0 0 0 5206
-REKEY_SA 7112 0 0 0
-DELETE_REASON 1 0 0 0
-DPD 0 79170 79170 0
-
-
-CONFIG PAYLOAD TYPE TX RX
-
-CFG_REQUEST 5206 0
-
-
-OTHER COUNTERS
-
-NAT_INSIDE 3
-NO_NAT 5203
-
+INITIAL_CONTACT                        82          0      19340          0
+SET_WINDOW_SIZE                      1583      19340      19341       1583
+NAT_DETECTION_SOURCE_IP                84      19343      19343         83
+NAT_DETECTION_DESTINATION_IP           84      19343      19343         83
+HTTP_CERT_LOOKUP_SUPPORTED             83      19343      19340         83
+REKEY_SA                              514          0      10364          0
+DPD                                  5146     177452     177453          0
+          
+          
+CONFIG PAYLOAD TYPE                    TX         RX
+          
+CFG_REQUEST                            83      19340
+          
+          
+OTHER COUNTERS                
+          
+NO_NAT                              19426

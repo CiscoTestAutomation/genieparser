@@ -1,3 +1,4 @@
 {
-    "interface": "tunnel100"
+     "ip_type": "ipv6",    
+     "interface": "tunnel100"
 }

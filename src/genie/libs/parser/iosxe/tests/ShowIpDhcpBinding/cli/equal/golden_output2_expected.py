@@ -1,5 +1,4 @@
 expected_output = {
-
         'dhcp_binding': {
             1: {
                 'ip_address': '100.1.0.13',
@@ -80,6 +79,7 @@ expected_output = {
                 'type': 'Automatic',
                 'state': 'Active',
                 'interface': 'TenGigabitEthernet1/0/2'
+            
             }
         }
     }

@@ -111,6 +111,25 @@ IOS parsers for the following show commands:
     * show l2route evpn mac topology <evi_etag> producer <producer> mac-address <mac_addr>
     * show l2route evpn mac topology <evi_etag> producer <producer> mac-address <mac_addr> esi <esi>
     * show l2route evpn mac topology <evi_etag> producer <producer> next-hop <next_hop> mac-address <mac_addr> esi <esi>
+    * show l2route evpn imet
+    * show l2route evpn imet topology <evi>
+    * show l2route evpn imet topology <evi> producer <producer>
+    * show l2route evpn imet topology <evi> producer <producer> origin-rtr <originator-addr>
+    * show l2route evpn multicast smet
+    * show l2route evpn multicast smet topology <evi>
+    * show l2route evpn multicast smet topology <evi> group <group>
+    * show l2route evpn multicast smet topology <evi> group <group> local
+    * show l2route evpn multicast smet topology <evi> group <group> local interface <interface>
+    * show l2route evpn multicast smet topology <evi> group <group> local interface <interface> service-instance <serviceInstance>
+    * show l2route evpn multicast smet topology <evi> group <group> remote
+    * show l2route evpn multicast smet topology <evi> group <group> remote originator <originator-addr>
+    * show l2route evpn multicast route
+    * show l2route evpn multicast route topology <evi>
+    * show l2route evpn multicast route topology <evi> group <group>
+    * show l2route evpn multicast route topology <evi> group <group> source <source>
+    * show l2route evpn multicast route topology <evi:etag>
+    * show l2route evpn multicast route topology <evi:etag> group <group>
+    * show l2route evpn multicast route topology <evi:etag> group <group> source <source>
 
 Copyright (c) 2021 by Cisco Systems, Inc.
 All rights reserved.
@@ -122,6 +141,8 @@ import re
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any, ListOf, Optional
 
+# Libs
+from genie.libs.parser.utils.common import Common
 
 # =============================================
 # Schema for 'show l2route evpn mac ip detail'
@@ -2218,3 +2239,519 @@ class ShowL2routeEvpnMac(ShowL2routeEvpnMacSchema):
         if not header_found:
             return({})
         return(parser_dict)
+
+class ShowL2routeEvpnImetSchema(MetaParser):
+    """ Schema for show l2route evpn imet
+                   show l2route evpn imet topology <evi>
+                   show l2route evpn imet topology <evi> producer <producer>
+                   show l2route evpn imet topology <evi> producer <producer> origin-rtr <originator-addr>
+
+    """
+
+    schema = {
+        'evi' : {
+            str : {
+                'producer' : {
+                    str : {
+                        'originator' : {
+                            str : {
+                                'evi': str,
+                                'etag': str,
+                                'producer': str,
+                                'router_ip': str,
+                                'type': str,
+                                'label': str,
+                                'tunnel_id': str,
+                                'mcast_proxy': str,
+                            },
+                        }
+                    },
+                }
+            },
+        }
+    }
+
+
+# =============================================
+# Parser for 'show l2route evpn imet'
+# =============================================
+class ShowL2routeEvpnImet(ShowL2routeEvpnImetSchema):
+    """ Parser for show l2route evpn imet
+                   show l2route evpn imet topology <evi>
+                   show l2route evpn imet topology <evi> producer <producer>
+                   show l2route evpn imet topology <evi> producer <producer> origin-rtr <originator-addr>
+
+    """
+
+    cli_command = [
+        'show l2route evpn imet',
+        'show l2route evpn imet topology {evi}',
+        'show l2route evpn imet topology {evi} producer {producer}',
+        'show l2route evpn imet topology {evi} producer {producer} origin-rtr {originator}',
+    ]
+
+    def cli(self, output=None, evi=None, producer=None, originator=None):
+        if not output:
+            if evi:
+                if producer:
+                    if originator:
+                        cli_cmd = self.cli_command[3].format(
+                            evi=evi,
+                            producer=producer,
+                            originator=originator)
+                    else:
+                        cli_cmd = self.cli_command[2].format(evi=evi,
+                                                             producer=producer)
+                else:
+                    cli_cmd = self.cli_command[1].format(evi=evi)
+            else:
+                cli_cmd = self.cli_command[0]
+
+            cli_output = self.device.execute(cli_cmd)
+        else:
+            cli_output = output
+
+        #    2          0    BGP         3.3.3.2     6    20012         3.3.3.2            IGMP
+        #    2          0  L2VPN         1.1.1.2     6    20012         1.1.1.2            IGMP
+        p1 = re.compile(r'^(?P<evi>\d+)\s+(?P<etag>\d+)\s+(?P<producer>\w+)\s+(?P<router_ip_addr>[\d\.:A-Fa-f\*]+)\s+(?P<type>\d+)\s+(?P<label>\d+)\s+(?P<tunnel_id>[\d\.:A-Fa-f\*]+)\s+(?P<mcast_proxy>[\d\w]+)$')
+
+        parser_dict = {}
+
+        for line in cli_output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                evi_dict = parser_dict.setdefault('evi',{})
+                evis = evi_dict.setdefault(group['evi'],{})
+                producer_dict = evis.setdefault('producer',{})
+                producers = producer_dict.setdefault(group['producer'],{})
+                originator_dict = producers.setdefault('originator',{})
+                originators = originator_dict.setdefault(group['router_ip_addr'],{})
+                originators.update({
+                    'evi': group['evi'],
+                    'etag': group['etag'],
+                    'producer': group['producer'],
+                    'router_ip': group['router_ip_addr'],
+                    'type': group['type'],
+                    'label': group['label'],
+                    'tunnel_id': group['tunnel_id'],
+                    'mcast_proxy': group['mcast_proxy'],
+                })
+                continue
+
+        return parser_dict
+
+# =============================================
+# Schema for 'show l2route evpn multicast smet'
+# =============================================
+class ShowL2routeEvpnMulticastSmetSchema(MetaParser):
+    """ Schema for show l2route evpn multicast smet
+                   show l2route evpn multicast smet topology <evi>
+                   show l2route evpn multicast smet topology <evi> group <group>
+                   show l2route evpn multicast smet topology <evi> group <group> local
+                   show l2route evpn multicast smet topology <evi> group <group> local interface <interface>
+                   show l2route evpn multicast smet topology <evi> group <group> local interface <interface> service-instance <serviceInstance>
+                   show l2route evpn multicast smet topology <evi> group <group> remote
+                   show l2route evpn multicast smet topology <evi> group <group> remote originator <originator-addr>
+    """
+
+    schema = {
+        'evi' : {
+            str : {
+                'etag' : {
+                    str : {
+                        'origin' : {
+                            str : {
+                                'group' : {
+                                    str : {
+                                        'evi': str,
+                                        'etag': str,
+                                        'origin': str,
+                                        'group': str,
+                                        'filter_mode': str,
+                                        'sources': str,
+                                    },
+                                }
+                            },
+                        }
+                    },
+                }
+            },
+        }
+    }
+
+
+# =============================================
+# Parser for 'show l2route evpn multicast smet'
+# =============================================
+class ShowL2routeEvpnMulticastSmet(ShowL2routeEvpnMulticastSmetSchema):
+    """ Parser for show l2route evpn multicast smet
+                   show l2route evpn multicast smet topology <evi>
+                   show l2route evpn multicast smet topology <evi> group <group>
+                   show l2route evpn multicast smet topology <evi> group <group> local
+                   show l2route evpn multicast smet topology <evi> group <group> local interface <interface>
+                   show l2route evpn multicast smet topology <evi> group <group> local interface <interface> service-instance <serviceInstance>
+                   show l2route evpn multicast smet topology <evi> group <group> remote
+                   show l2route evpn multicast smet topology <evi> group <group> remote originator <originator-addr>
+    """
+
+    cli_command = [
+        'show l2route evpn multicast smet',
+        'show l2route evpn multicast smet topology {evi}',
+        'show l2route evpn multicast smet topology {evi} group {group}',
+        'show l2route evpn multicast smet topology {evi} group {group} local interface {interface}',
+        'show l2route evpn multicast smet topology {evi} group {group} local interface {interface} service-instance {serviceInstance}',
+        'show l2route evpn multicast smet topology {evi} group {group} remote originator {originator}',
+        'show l2route evpn multicast smet topology {evi} group {group} {locality}',
+    ]
+
+    def cli(self, output=None, evi=None, etag=None, group=None, locality=None,
+            interface=None, serviceInstance=None, originator=None):
+        if not output:
+            if evi:
+                if ':' in evi:
+                    evi, etag = evi.split(':', maxsplit=1)
+                if etag:
+                    evi_etag = "{}:{}".format(evi, etag)
+                    if group:
+                        if locality == 'local' and interface:
+                            if serviceInstance:
+                                cli_cmd = self.cli_command[4].format(
+                                    evi=evi_etag, group=group,
+                                    interface=interface,
+                                    serviceInstance=serviceInstance)
+                            else:
+                                cli_cmd = self.cli_command[3].format(
+                                    evi=evi_etag, group=group,
+                                    interface=interface)
+                        elif locality == 'remote' and originator:
+                            cli_cmd = self.cli_command[5].format(
+                                evi=evi_etag, group=group,
+                                originator=originator)
+                        elif locality:
+                            cli_cmd = self.cli_command[6].format(
+                                evi=evi_etag, group=group,
+                                locality=locality)
+                        else:
+                            cli_cmd = self.cli_command[2].format(
+                                evi=evi_etag, group=group)
+                    else:
+                        cli_cmd = self.cli_command[1].format(
+                            evi=evi_etag)
+                else:
+                    if group:
+                        if locality == 'local' and interface:
+                            if serviceInstance:
+                                cli_cmd = self.cli_command[4].format(
+                                    evi=evi, group=group,
+                                    interface=interface,
+                                    serviceInstance=serviceInstance)
+                            else:
+                                cli_cmd = self.cli_command[3].format(
+                                    evi=evi, group=group,
+                                    interface=interface)
+                        elif locality == 'remote' and originator:
+                            cli_cmd = self.cli_command[5].format(
+                                evi=evi, group=group,
+                                originator=originator)
+                        elif locality:
+                            cli_cmd = self.cli_command[6].format(
+                                evi=evi, group=group,
+                                locality=locality)
+                        else:
+                            cli_cmd = self.cli_command[2].format(
+                                evi=evi, group=group)
+                    else:
+                        cli_cmd = self.cli_command[1].format(evi=evi)
+            else:
+                cli_cmd = self.cli_command[0]
+
+            cli_output = self.device.execute(cli_cmd)
+        else:
+            cli_output = output
+
+        #103   0          Et0/0:103            227.1.1.1       N/A        (*)IGMPv2
+        p1 = re.compile(r'^(?P<evi>\d+)\s+(?P<etag>\d+)\s+(?P<origin>[\d\.:\w\*\/]+)\s+(?P<group>[\d\.:A-Fa-f\*]+)\s+(?P<filter>[\w\/]+)\s+(?P<source>[\w*()]+)$')
+
+        parser_dict = {}
+
+        for line in cli_output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                evi_dict = parser_dict.setdefault('evi',{})
+                evis = evi_dict.setdefault(group['evi'],{})
+                etag_dict = evis.setdefault('etag',{})
+                etags = etag_dict.setdefault(group['etag'],{})
+                origin_dict = etags.setdefault('origin',{})
+                origins = origin_dict.setdefault(group['origin'],{})
+                group_dict = origins.setdefault('group',{})
+                groups = group_dict.setdefault(group['group'],{})
+                groups.update({
+                    'evi': group['evi'],
+                    'etag': group['etag'],
+                    'group': group['group'],
+                    'origin': group['origin'],
+                    'filter_mode': group['filter'],
+                    'sources': group['source'],
+                })
+                continue
+
+        return parser_dict
+
+# ==============================================
+# Schema for 'show l2route evpn multicast route'
+# ==============================================
+class ShowL2routeEvpnMulticastRouteschema(MetaParser):
+    """ Schema for show l2route evpn multicast route
+                   show l2route evpn multicast route topology <evi>
+                   show l2route evpn multicast route topology <evi> group <group>
+                   show l2route evpn multicast route topology <evi> group <group> source <source>
+                   show l2route evpn multicast route topology <evi:etag>
+                   show l2route evpn multicast route topology <evi:etag> group <group>
+                   show l2route evpn multicast route topology <evi:etag> group <group> source <source>
+    """
+
+    schema = {
+        'evi' : {
+            str : {
+                'etag' : {
+                    str : {
+                        'group' : {
+                            str : {
+                                'source' : {
+                                    str : {
+                                        'evi': str,
+                                        'etag': str,
+                                        'group': str,
+                                        'source': str,
+                                        'nexthops': str,
+                                    },
+                                }
+                            },
+                        }
+                    },
+                }
+            },
+        }
+    }
+
+
+
+
+# ==============================================
+# Parser for 'show l2route evpn multicast route'
+# ==============================================
+class ShowL2routeEvpnMulticastRoute(ShowL2routeEvpnMulticastRouteschema):
+    """ Parser for show l2route evpn multicast route
+                   show l2route evpn multicast route topology <evi>
+                   show l2route evpn multicast route topology <evi> group <group>
+                   show l2route evpn multicast route topology <evi> group <group> source <source>
+                   show l2route evpn multicast route topology <evi:etag>
+                   show l2route evpn multicast route topology <evi:etag> group <group>
+                   show l2route evpn multicast route topology <evi:etag> group <group> source <source>
+    """
+
+    cli_command = [
+        'show l2route evpn multicast route',
+        'show l2route evpn multicast route topology {evi}',
+        'show l2route evpn multicast route topology {evi} group {group}',
+        'show l2route evpn multicast route topology {evi} group {group} source {source}',
+        'show l2route evpn multicast route topology {evi_etag}',
+        'show l2route evpn multicast route topology {evi_etag} group {group}',
+        'show l2route evpn multicast route topology {evi_etag} group {group} source {source}'
+    ]
+
+    def cli(self, output=None, evi=None, etag=None, group=None, source=None):
+        if not output:
+            if evi:
+                if etag:
+                    evi_etag = "{}:{}".format(evi,etag)
+                    if group:
+                        if source:
+                            cli_cmd = self.cli_command[6].format(
+                                evi_etag=evi_etag, group=group,
+                                source=source)
+                        else:
+                            cli_cmd = self.cli_command[5].format(
+                                evi_etag=evi_etag, group=group)
+                    else:
+                        cli_cmd = self.cli_command[4].format(
+                            evi_etag=evi_etag)
+                else:
+                    if group:
+                        if source:
+                            cli_cmd = self.cli_command[3].format(
+                                evi=evi, group=group,
+                                source=source)
+                        else:
+                            cli_cmd = self.cli_command[2].format(
+                                evi=evi, group=group)
+                    else:
+                        cli_cmd = self.cli_command[1].format(evi=evi)
+            else:
+                cli_cmd = self.cli_command[0]
+
+            cli_output = self.device.execute(cli_cmd)
+        else:
+            cli_output = output
+
+        #100   100        224.1.1.1       *               V:101 227.1.1.1, Et0/3:100, Et0/3:200, Et0/1:100, Et0/1:200
+        #100   100        224.1.1.1       172.1.1.1       V:101 227.1.1.1, Et0/2:100, Et0/3:200, Et0/1:100, Et0/1:200
+        p1 = re.compile(r'^(?P<evi>\d+)\s+(?P<etag>\d+)\s+(?P<group>[\d\.:A-Fa-f\*]+)\s+(?P<source>[\d\.:A-Fa-f\*]+)\s+(?P<next_hops>[\w\/\s\.\(\)\&,:-]+)$')
+
+        parser_dict = {}
+
+        for line in cli_output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                evi_dict = parser_dict.setdefault('evi',{})
+                evis = evi_dict.setdefault(group['evi'],{})
+                etag_dict = evis.setdefault('etag',{})
+                etags = etag_dict.setdefault(group['etag'],{})
+                group_dict = etags.setdefault('group',{})
+                groups = group_dict.setdefault(group['group'],{})
+                source_dict = groups.setdefault('source',{})
+                sources = source_dict.setdefault(group['source'],{})
+                sources.update({
+                    'evi': group['evi'],
+                    'etag': group['etag'],
+                    'group': group['group'],
+                    'source': group['source'],
+                    'nexthops': group['next_hops'],
+                })
+                continue
+
+        return parser_dict
+
+
+# ==============================================
+# Schema for 'show l2route evpn es'
+# ==============================================
+class ShowL2routeEvpnEsschema(MetaParser):
+    """ Schema for show l2route evpn es
+                   show l2route evpn es esi <esi>
+                   show l2route evpn es origin-rtr <origin_rtr>
+                   show l2route evpn es origin-rtr <origin_rtr> esi <esi>
+                   show l2route evpn es producer <producer>
+                   show l2route evpn es producer <producer> esi <esi>
+                   show l2route evpn es producer <producer> origin-rtr <origin_rtr>
+                   show l2route evpn es producer <producer> origin-rtr <origin_rtr> esi <esi>
+
+    """
+
+    schema = {
+        'esi' : {
+            str : {
+                'orig_rtr' : {
+                    str : {
+                        'producer': str,
+                        'next_hop': str,
+                        'nfn_bitmap': str,
+                        Optional('l2vni_id'): int
+                    },
+                }
+            },
+        }
+    }
+
+
+
+# ==============================================
+# Parser for 'show l2route evpn es'
+# ==============================================
+class ShowL2routeEvpnEs(ShowL2routeEvpnEsschema):
+    """ Parser for show l2route evpn es
+                   show l2route evpn es esi <esi>
+                   show l2route evpn es origin-rtr <origin_rtr>
+                   show l2route evpn es origin-rtr <origin_rtr> esi <esi>                   
+                   show l2route evpn es producer <producer>
+                   show l2route evpn es producer <producer> esi <esi>
+                   show l2route evpn es producer <producer> origin-rtr <origin_rtr>
+                   show l2route evpn es producer <producer> origin-rtr <origin_rtr> esi <esi>
+
+    """
+
+    cli_command = [
+        'show l2route evpn es',
+        'show l2route evpn es esi {esi}',
+        'show l2route evpn es origin-rtr {origin_rtr}',
+        'show l2route evpn es origin-rtr {origin_rtr} esi {esi}',
+        'show l2route evpn es producer {producer}',
+        'show l2route evpn es producer {producer} origin-rtr {origin_rtr}',
+        'show l2route evpn es producer {producer} origin-rtr {origin_rtr} esi {esi}'                
+    ]
+
+    def cli(self, output=None, esi=None, origin_rtr=None, producer=None):
+        if not output:
+            if producer:
+                if origin_rtr:                    
+                    if esi:
+                        cli_cmd = self.cli_command[6].format(
+                                producer=producer, origin_rtr=origin_rtr,
+                                esi=esi)
+                    else:
+                        cli_cmd = self.cli_command[5].format(
+                                producer=producer, origin_rtr=origin_rtr)
+                else:
+                    cli_cmd = self.cli_command[4].format(
+                            producer=producer)
+            elif origin_rtr:
+                if esi:
+                    cli_cmd = self.cli_command[3].format(
+                            origin_rtr=origin_rtr, esi=esi)
+                else:
+                    cli_cmd = self.cli_command[2].format(
+                            origin_rtr=origin_rtr)
+            elif esi:
+                cli_cmd = self.cli_command[1].format(
+                        esi=esi)
+            else:
+                cli_cmd = self.cli_command[0]
+            cli_output = self.device.execute(cli_cmd)
+        else:
+            cli_output = output
+
+        #                     ESI   Orig Router IP  Prod    Next Hop(s)         NFN Bitmap
+        #0034.3434.3434.3434.3434   10.0.0.13       BGP     V:0 10.0.0.13          0
+        #01F4.BD9E.EBB1.8000.0600   10.0.0.14       L2VPN             Po6          0
+        
+        p1 = re.compile(r'^(?P<esi>[0-9a-fA-F\.]+)\s+(?P<orig_rtr>[0-9a-fA-F.:]+)\s+(?P<producer>\w+)\s+'
+                        r'(?P<l2vni_id>V:\d+)?\s+(?P<next_hop>([0-9a-fA-F.:]+)|([\w\/\.\-\:]+))\s+(?P<nfn_bitmap>[0-9a-fA-F]+)$')
+
+        parser_dict = {}
+        for line in cli_output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                esi_dict = parser_dict.setdefault('esi',{})
+                esis = esi_dict.setdefault(group['esi'],{})
+                orig_rtr_dict = esis.setdefault('orig_rtr',{})
+                orig_rtrs = orig_rtr_dict.setdefault(group['orig_rtr'],{})
+                orig_rtrs.update({
+                    'producer': group['producer'],
+                    'next_hop': Common.convert_intf_name(intf=group['next_hop']),
+                    'nfn_bitmap': group['nfn_bitmap']
+                })
+                if group['l2vni_id'] is not None:
+                    orig_rtrs.update({'l2vni_id': int(group['l2vni_id'].split(':')[1])})
+                continue
+
+        return parser_dict

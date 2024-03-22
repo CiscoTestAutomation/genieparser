@@ -1,0 +1,13 @@
+
+show vrf all detail
+VRF A:MGMT; RD 1:100; VPN ID not set
+Description not set
+Interfaces:
+  GigabitEthernet0/0/0/0
+Address family IPV4 Unicast
+  Import VPN route-target communities:
+    RT:1:100
+  Export VPN route-target communities:
+    RT:1:100
+  No import route policy
+  No export route policy

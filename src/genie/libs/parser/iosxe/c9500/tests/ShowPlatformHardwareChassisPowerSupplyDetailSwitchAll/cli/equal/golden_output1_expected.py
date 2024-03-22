@@ -1,0 +1,32 @@
+expected_output = {
+   "power_supply_details":{
+      "PS1":{
+         "temperature_celsius":{
+            "temperature_1":"34.4370",
+            "temperature_2":"55.9370",
+            "temperature_3":"37.9370"
+         },
+         "input_voltage_volt":"230.5000",
+         "output_voltage_volt":"12.0290",
+         "input_current_amp":"0.5620",
+         "output_current_amp":"9.5780",
+         "input_power_watt":"127.5000",
+         "output_power_watt":"115.1250",
+         "fan_speed_1_rpm":"4800.0000"
+      },
+      "PS2":{
+         "temperature_celsius":{
+            "temperature_1":"31.7500",
+            "temperature_2":"31.0620",
+            "temperature_3":"0.0000"
+         },
+         "input_voltage_volt":"0.0000",
+         "output_voltage_volt":"0.0000",
+         "input_current_amp":"0.0000",
+         "output_current_amp":"0.0000",
+         "input_power_watt":"0.0000",
+         "output_power_watt":"0.0000",
+         "fan_speed_1_rpm":"0.0000"
+      }
+   }
+}

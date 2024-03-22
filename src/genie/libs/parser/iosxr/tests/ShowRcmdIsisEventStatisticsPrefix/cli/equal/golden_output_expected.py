@@ -1,0 +1,60 @@
+expected_output = {
+    "isis1":{
+        "2.2.2.2/32":{
+            "trigger_time":"Aug 18 06:31:57.958",
+            "events_added":1,
+            "events_modified":0,
+            "events_deleted":0,
+            "events_processed_critical":0,
+            "events_processed_high":0,
+            "events_processed_medium":0,
+            "events_processed_low":1,
+            "route":"L1",
+            "cost":20,
+            "change_type":"Add",
+            "priority":"Low"
+        },
+        "3.3.3.3/32":{
+            "trigger_time":"Aug 18 06:31:57.958",
+            "events_added":2,
+            "events_modified":0,
+            "events_deleted":0,
+            "events_processed_critical":0,
+            "events_processed_high":0,
+            "events_processed_medium":0,
+            "events_processed_low":2,
+            "route":"L1",
+            "cost":30,
+            "change_type":"Add",
+            "priority":"Low"
+        },
+        "4.4.4.4/32":{
+            "trigger_time":"Aug 18 06:31:57.958",
+            "events_added":1,
+            "events_modified":2,
+            "events_deleted":0,
+            "events_processed_critical":0,
+            "events_processed_high":0,
+            "events_processed_medium":2,
+            "events_processed_low":1,
+            "route":"L1",
+            "cost":30,
+            "change_type":"Modify",
+            "priority":"Low"
+        },
+        "5.5.5.5/32":{
+            "trigger_time":"Aug 18 06:31:57.958",
+            "events_added":1,
+            "events_modified":0,
+            "events_deleted":0,
+            "events_processed_critical":0,
+            "events_processed_high":0,
+            "events_processed_medium":0,
+            "events_processed_low":1,
+            "route":"L1",
+            "cost":20,
+            "change_type":"Add",
+            "priority":"Low"
+        }
+    }
+}

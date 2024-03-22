@@ -14,6 +14,7 @@ IOSXE parsers for the following show commands:
 '''
 
 # Python
+from ast import Or
 import re
 
 # Metaparser
@@ -55,7 +56,8 @@ class ShowArpSchema(MetaParser):
                             'origin': str,
                             'age': str,
                             'type': str,
-                            'protocol': str
+                            'protocol': str,
+                            Optional('private_vlan'): int
                         },
                     }
                 }
@@ -90,8 +92,11 @@ class ShowArp(ShowArpSchema):
 
         # Internet  192.168.234.1           -   58bf.eaff.e508  ARPA   Vlan100
         # Internet  10.169.197.93          -   fa16.3eff.b7ad  ARPA
+        # Internet  192.168.111.111         0   aabb.0111.0111  802.1Q Vlan111
+        # Internet 192.168.1.203 3 0015.0100.0001 ARPA Vlan201 pv 203
         p1 = re.compile(r'^(?P<protocol>\w+) +(?P<address>[\d\.\:]+) +(?P<age>[\d\-]+) +'
-                         '(?P<mac>[\w\.]+) +(?P<type>\w+)( +(?P<interface>[\w\.\/\-]+))?$')
+                         r'(?P<mac>[\w\.]+) +(?P<type>[\w\.]+)'
+                         r'( +(?P<interface>[\w\.\/\-]+)(\s+pv\s+(?P<private_vlan>\d+))?)?$')
         # initial variables
         ret_dict = {}
 
@@ -100,6 +105,8 @@ class ShowArp(ShowArpSchema):
 
             # Internet  192.168.234.1           -   58bf.eaff.e508  ARPA   Vlan100
             # Internet  10.169.197.93          -   fa16.3eff.b7ad  ARPA
+            # Internet  192.168.111.111         0   aabb.0111.0111  802.1Q Vlan111
+            # Internet 192.168.1.203 3 0015.0100.0001 ARPA Vlan201 pv 203
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -117,6 +124,8 @@ class ShowArp(ShowArpSchema):
                         final_dict['origin'] = 'static'
                     else:
                         final_dict['origin'] = 'dynamic'
+                    if group['private_vlan']:
+                        final_dict['private_vlan'] = int(group['private_vlan'])
                 else:
                     final_dict = ret_dict.setdefault(
                         'global_static_table', {}).setdefault(address, {})
@@ -1398,7 +1407,7 @@ class ShowIpArpInspectionVlan(ShowIpArpInspectionVlanSchema):
         #Vlan ACL Logging DHCP Logging Probe Logging
         #10 Deny Deny Off        
         p5 = re.compile(r'^(?P<vlan>\d+) +'
-                r'(?P<acl_logging>[a-zA-Z]+) +'
+                r'(?P<acl_logging>[a-zA-Z-]+) +'
                 r'(?P<dhcp_logging>[a-zA-Z]+) +'
                 r'(?P<probe_logging>[a-zA-Z]+$)')
 
@@ -1441,4 +1450,301 @@ class ShowIpArpInspectionVlan(ShowIpArpInspectionVlanSchema):
                 ret_dict["dhcp_logging"] = group["dhcp_logging"]
                 ret_dict["probe_logging"] = group["probe_logging"]
         
+        return ret_dict
+
+class ShowAdjacencySummarySchema(MetaParser):
+    """Schema for show adjacency summary"""
+    schema = {
+        'adjacencies_summary':{
+            'complete_adjacencies':int,
+            'incomplete_adjacencies':int,
+            Optional('complete_adj_linktype'):str,
+            Optional('incomplete_adj_linktype'):str,
+            'database_epoch':int,
+            Optional('epoch_entries'):int,
+            'summary_events_epoch':int,
+            'summary_events_queue':int,
+            'hwm_events':int,
+            }
+        }
+
+class ShowAdjacencySummary(ShowAdjacencySummarySchema):
+    """Parser for show adjacency summary"""
+    
+    cli_command = 'show adjacency summary'
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        # 60004 complete adjacencies
+        p1 = re.compile(r'^(?P<complete_adjacencies>\d+) +complete adjacencies$')
+         
+        # 0 incomplete adjacencies
+        p2 = re.compile(r'^(?P<incomplete_adjacencies>\d+) +incomplete adjacencies$')
+         
+        # complete adjacencies of linktype IPV6 / Ip
+        p3 = re.compile(r'^\d+ complete adjacencies of linktype +(?P<complete_adj_linktype>\S+)$')
+        #incomplete adjacencies of linktype IPV6 / IP
+        p4 = re.compile(r'^\d+ incomplete adjacencies of linktype +(?P<incomplete_adj_linktype>\S+)$')
+         
+        #Database epoch:        0 (60004 entries at this epoch)
+        p5_1 = re.compile(r'^Database epoch: +(?P<database_epoch>\d+) +\((?P<epoch_entries>\d+) entries at this epoch\)$')
+        #Database epoch:        0
+        p5_2 = re.compile(r'^Database epoch: +(?P<database_epoch>\d+)$')
+        # Summary events epoch is 5
+        p6 = re.compile(r'^Summary events epoch is +(?P<summary_events_epoch>\d+)$')
+        # Summary events queue contains 0 events (high water mark 389 events)
+        p7 = re.compile(r'^Summary\s+events\s+queue\s+contains\s+(?P<summary_events_queue>\d+) events +\(high water mark (?P<hwm_events>\d+) events\)$')
+        ret_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # 60004 complete adjacencies
+            m = p1.match(line)
+            if m:
+                adjacency_dict = ret_dict.setdefault('adjacencies_summary',{})
+                adjacency_dict['complete_adjacencies'] = int(m.groupdict()['complete_adjacencies'])
+                continue
+        
+            # 0 incomplete adjacencies
+            m = p2.match(line)
+            if m:
+                adjacency_dict['incomplete_adjacencies'] = int(m.groupdict()['incomplete_adjacencies'])
+                continue
+            
+            # complete adjacencies of linktype IPV6 / IPV4
+            m = p3.match(line)
+            if m:
+                adjacency_dict['complete_adj_linktype'] = m.groupdict()['complete_adj_linktype']
+                continue
+            #incomplete adjacencies of linktype IPV6 / IPV4
+            m = p4.match(line)
+            if m:
+                adjacency_dict['incomplete_adj_linktype'] = m.groupdict()['incomplete_adj_linktype']
+                continue
+            #Database epoch:        0 (60004 entries at this epoch)
+            m = p5_1.match(line)
+            if m:
+                adjacency_dict['database_epoch'] = int(m.groupdict()['database_epoch'])
+                adjacency_dict['epoch_entries'] = int(m.groupdict()['epoch_entries'])
+                continue
+            #Database epoch:        0
+            m = p5_2.match(line)
+            if m:
+                adjacency_dict['database_epoch'] = int(m.groupdict()['database_epoch'])
+                continue
+            # Summary events epoch is 5
+            m = p6.match(line)
+            if m:
+                adjacency_dict['summary_events_epoch'] = int(m.groupdict()['summary_events_epoch'])
+                continue
+          # Summary events epoch is 5
+            m = p7.match(line)
+            if m:
+                adjacency_dict['summary_events_queue'] = int(m.groupdict()['summary_events_queue'])
+                adjacency_dict['hwm_events'] = int(m.groupdict()['hwm_events'])
+                continue
+        return ret_dict
+class ShowIpArpInspectionStatisticsVlanSchema(MetaParser):
+    """Schema for show ip arp inspection statistics vlan {num}"""
+    schema = {
+        'vlan_id': int,
+        'forwarded': int,
+        'dropped': int,
+        'dhcp_drops': int,
+        'acl_drops': int,
+        'dhcp_permits': int,
+        'acl_permits': int,
+        'probe_permits': int,
+        'source_mac_failures': int,
+        'dest_mac_failures': int,
+        'ip_validation_failures': int,
+        'invalid_protocol_data': int
+    }
+
+class ShowIpArpInspectionStatisticsVlan(ShowIpArpInspectionStatisticsVlanSchema):
+    """Parser for show ip arp inspection statistics vlan {num}"""
+    
+    cli_command = 'show ip arp inspection statistics vlan {num}'
+
+    def cli(self, num, output=None):
+
+        if output is None:
+            output = self.device.execute(self.cli_command.format(num=num))
+        
+        # Initialize the result dictionary
+        ret_dict = {}
+
+        # Regular expression for the first two sections of the output
+        p1 = re.compile(r"^\s*(?P<var_1>\d+)\s+(?P<var_2>\d+)\s+(?P<var_3>\d+)\s+(?P<var_4>\d+)\s+(?P<var_5>\d+)$")
+
+        # Regular expression for the third section of the output
+        p2 = re.compile(r"^\s*(?P<var_6>\d+)\s+(?P<var_7>\d+)\s+(?P<var_8>\d+)\s+(?P<var_9>\d+)$")
+        
+        # This variable is used to parse the first two sections in the output
+        flag = True
+
+        # Iterating the output lines
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Match the current output line with regular expression p1
+            m = p1.match(line)
+
+            # Get the statistics Vlan ID, Forwarded, Dropped, DHCP Drops, ACL Drops
+            if m and flag:
+                dict_val = m.groupdict()
+                ret_dict['vlan_id'] = int(dict_val['var_1'])
+                ret_dict['forwarded'] = int(dict_val['var_2'])
+                ret_dict['dropped'] = int(dict_val['var_3'])
+                ret_dict['dhcp_drops'] = int(dict_val['var_4'])
+                ret_dict['acl_drops'] = int(dict_val['var_5'])
+                flag = False
+                continue
+            
+            # Get the statistics DHCP Permits, ACL Permits, Probe Permits, Source MAC Failures
+            elif m and not flag:
+                dict_val = m.groupdict()
+                ret_dict['dhcp_permits'] = int(dict_val['var_2'])
+                ret_dict['acl_permits'] = int(dict_val['var_3'])
+                ret_dict['probe_permits'] = int(dict_val['var_4'])
+                ret_dict['source_mac_failures'] = int(dict_val['var_5'])
+                continue
+
+            # Match the current output line with regular expression p2
+            m = p2.match(line)
+
+            # Get the statistics Dest MAC Failures, IP Validation Failures, Invalid Protocol Data
+            if m:
+                dict_val = m.groupdict()
+                ret_dict['dest_mac_failures'] = int(dict_val['var_7'])
+                ret_dict['ip_validation_failures'] = int(dict_val['var_8'])
+                ret_dict['invalid_protocol_data'] = int(dict_val['var_9'])
+                break
+        
+        return ret_dict
+# ======================================================
+# Parser for 'show ip arp inspection interfaces '
+# ======================================================
+
+class ShowIpArpInspectionInterfacesSchema(MetaParser):
+    """Schema for show ip arp inspection interfaces"""
+    schema = {
+        'interfaces': {
+            Any(): {
+                'interface': str,
+                'state': str,
+                'rate': int,
+                'interval': int,
+            },
+        },
+    }
+class ShowIpArpInspectionInterfaces(ShowIpArpInspectionInterfacesSchema):
+
+    """Parser for show ip arp inspection interfaces"""
+
+    cli_command = 'show ip arp inspection interfaces {interface}'
+
+    def cli(self, interface=None, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(interface=interface))
+
+        #  Gi1/0/1          Untrusted               15                 1
+        p1 = re.compile(r"^\s+(?P<interface>\S+)\s+(?P<state>\w+)\s+(?P<rate>\d+)\s+(?P<interval>\d+)$")
+
+        ret_dict = {}
+        for line in output.splitlines():
+            #  Gi1/0/1          Untrusted               15                 1
+            m = p1.match(line)
+            if m:
+                dict_val = m.groupdict()
+                Interface_var = dict_val['interface']
+                if 'interfaces' not in ret_dict:
+                    Interfaces = ret_dict.setdefault('interfaces', {})
+                if Interface_var not in ret_dict['interfaces']:
+                    Interface_dict = ret_dict['interfaces'].setdefault(Interface_var, {})
+                Interface_dict['interface'] = dict_val['interface']
+                Interface_dict['state'] = dict_val['state']
+                Interface_dict['rate'] = int(dict_val['rate'])
+                Interface_dict['interval'] = int(dict_val['interval'])
+                continue
+
+        return ret_dict
+
+# ======================================================
+# Parser for 'show ip arp inspection log '
+# ====================================================== 
+class ShowIpArpInspectionLogSchema(MetaParser):
+    """Schema for show ip arp inspection log"""
+    schema = {
+        'buffer_size': int,
+        'syslog_rate': str,
+        Optional('interfaces'): {
+            Any(): {
+                'interface': str,
+                'vlan_id': int,
+                'send_mac_addr': str,
+                'sender_ip': str,
+                'no_pkts': int,
+                'reason': str,
+                'time_range': str,
+            },
+        },
+    }
+class ShowIpArpInspectionLog(ShowIpArpInspectionLogSchema):
+
+    """Parser for show ip arp inspection log"""
+
+    cli_command = 'show ip arp inspection log'
+
+    def cli(self, output=None):
+
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Total Log Buffer Size : 100
+        p1 = re.compile(r"^Total\s+Log\s+Buffer\s+Size\s+:\s+(?P<buffer_size>\d+)$")
+
+        # Syslog rate : 10 entries per 120 seconds.
+        p2 = re.compile(r"^Syslog\s+rate\s+:\s+(?P<syslog_rate>\S+\s+\S+\s+\S+\s+\S+\s+\S+)\.$")
+
+        # Gi1/0/37    10    5006.0484.c213  10.1.1.60                1  DHCP Permit   16:35:37 UTC Fri Aug 26 2022
+        p3 = re.compile(
+            r"^(?P<interface>\S+)\s+(?P<vlan_id>\d+)\s+(?P<send_mac_addr>\S+)\s+(?P<sender_ip>(\d{1,3}\.){3}\d{1,3})\s+(?P<no_pkts>\d+)\s+(?P<reason>\S+\s+\S+)\s+(?P<time_range>\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+)$")
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+
+            # Total Log Buffer Size : 100
+            m = p1.match(line)
+            if m:
+                dict_val = m.groupdict()
+                ret_dict['buffer_size'] = int(dict_val['buffer_size'])
+                continue
+
+            # Syslog rate : 10 entries per 120 seconds.
+            m = p2.match(line)
+            if m:
+                dict_val = m.groupdict()
+                ret_dict['syslog_rate'] = dict_val['syslog_rate']
+                continue
+
+            # Gi1/0/37    10    5006.0484.c213  10.1.1.60                1  DHCP Permit   16:35:37 UTC Fri Aug 26 2022
+            m = p3.match(line)
+            if m:
+                dict_val = m.groupdict()
+                Interface_var = dict_val['interface']
+                if 'interfaces' not in ret_dict:
+                    Interfaces = ret_dict.setdefault('interfaces', {})
+                if Interface_var not in ret_dict['interfaces']:
+                    Interface_dict = ret_dict['interfaces'].setdefault(Interface_var, {})
+                Interface_dict['interface'] = dict_val['interface']
+                Interface_dict['vlan_id'] = int(dict_val['vlan_id'])
+                Interface_dict['send_mac_addr'] = dict_val['send_mac_addr']
+                Interface_dict['sender_ip'] = dict_val['sender_ip']
+                Interface_dict['no_pkts'] = int(dict_val['no_pkts'])
+                Interface_dict['reason'] = dict_val['reason']
+                Interface_dict['time_range'] = dict_val['time_range']
+                continue
+
         return ret_dict

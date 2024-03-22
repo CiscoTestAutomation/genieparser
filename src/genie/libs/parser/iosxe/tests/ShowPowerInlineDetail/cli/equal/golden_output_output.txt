@@ -1,0 +1,40 @@
+ Interface: Te7/0/25
+ Inline Power Mode: auto
+ Operational status (Alt-A,B): on
+ Device Detected: yes
+ Device Type: Ieee PD
+ Connection Check: SP
+ IEEE Class (Alt-A,B): 1
+ Physical Assigned Class (Alt-A,B): 1
+ Discovery mechanism used/configured: Ieee and Cisco
+ Police: off
+
+ Power Allocated 
+ Admin Value: 90.0
+ Power drawn from the source: 4.0
+ Power available to the device: 4.0
+ Allocated Power (Alt-A,B): 4.0
+ 
+ Actual consumption
+ Measured at the port(watts) (Alt-A,B): 3.6
+ Maximum Power drawn by the device since powered on: 3.6
+ 
+ Absent Counter: 0
+ Over Current Counter: 0
+ Short Current Counter: 0
+ Invalid Signature Counter: 0
+ Power Denied Counter: 0
+
+ Power Negotiation Used: None
+ LLDP Power Negotiation       --Sent to PD--      --Rcvd from PD--
+ Power Type:                  -                    -
+ Power Source:                -                    -
+ Power Priority:              -                    -
+ Requested Power(W):          -                    -
+ Allocated Power(W):          -                    -
+
+Four-Pair PoE Supported: Yes
+Spare Pair Power Enabled: No
+Four-Pair PD Architecture: N/A
+Perpetual POE Enabled: TRUE
+Fast POE Enabled: FALSE

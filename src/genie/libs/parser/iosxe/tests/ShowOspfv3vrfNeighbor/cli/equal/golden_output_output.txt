@@ -1,0 +1,7 @@
+pm9009#show ospfv3 vrf 2 neighbor
+
+          OSPFv3 2 address-family ipv6 vrf 2 (router-id 173.19.2.2)
+
+Neighbor ID     Pri   State           Dead Time   Interface ID    Interface
+173.19.2.6        1   FULL/DROTHER    00:00:39    19              GigabitEthernet0/0/3.11
+173.19.3.8        1   FULL/BDR        00:00:36    15              GigabitEthernet0/0/3.11

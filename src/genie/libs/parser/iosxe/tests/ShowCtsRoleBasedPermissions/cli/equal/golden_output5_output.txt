@@ -1,0 +1,6 @@
+IPv6 Role-based permissions from group 100:Tech to group 6:Trusted:
+        NFS-08
+        ACCESS-01
+        Deny IP-00-ipv6
+RBACL Monitor All for Dynamic Policies : FALSE
+RBACL Monitor All for Configured Policies : FALSE

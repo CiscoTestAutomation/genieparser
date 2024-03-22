@@ -1,0 +1,14 @@
+BL1# show l2route mac-ip all detail
+Flags -(Rmac):Router MAC (Stt):Static (L):Local (R):Remote (V):vPC link
+(Dup):Duplicate (Spl):Split (Rcv):Recv(D):Del Pending (S):Stale (C):Clear
+(Ps):Peer Sync (Ro):Re-Originated
+Topology    Mac Address    Prod   Flags         Seq No     Host IP         Next-Hops
+----------- -------------- ------ ---------- --------------- ---------------
+1001        0011.01ff.0001 HMM    --            0          2001:db8:646::1   Local
+1001        0011.01ff.0002 BGP    --            0          2001:1:1::1      2001:1:4::1
+1001        fa16.3eff.f6c1 BGP    --            0          10.36.10.11      192.168.106.1
+1001        fa16.3eff.9f0a HMM    --            0          10.36.10.55      Local
+            Sent To: BGP
+            SOO: 774975538
+            L3-Info: 10001
+

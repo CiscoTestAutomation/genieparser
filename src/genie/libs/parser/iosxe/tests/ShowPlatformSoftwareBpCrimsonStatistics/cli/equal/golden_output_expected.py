@@ -1,36 +1,64 @@
-expected_output={
-	'bp_crimson_statistics': {
-		'Initialized': 'Yes', 
-		"Config database init'd": 'Yes', 
-		'Config DB restorable': 'Yes', 
-		'Config DB persist': 'Yes', 
-		'Config Lock mgr DBID': '5', 
-		"Oper database init'd": 'Yes', 
-		'Oper Lock mgr DBID': '6', 
-		'Garbage collections': '0'
-		}, 
-	'bp_svl_crimson_statistics': {
-	    'Config notify mgr ID': '2', 
-		"Config dyn tables reg'd": '3', 
-		'Config dyn reg failures': '0', 
-		"Config dyn tables dereg'd": '0', 
-		'Config dereg deferred': '0', 
-		'Config dereg failures': '0', 
-		'Config table updates': '11', 
-		'Config applied': '24', 
-		'Config skipped': '6', 
-		'Oper notify mgr DBID': '3', 
-		"Oper dyn tables reg'd": '1',
-		'Oper dyn reg failures': '0', 
-		"Oper dyn tables dereg'd": '0',
-		"Oper dereg's deferred": '0',
-		'Oper dereg failures': '0', 
-		'Oper table updates': '6', 
-		'Dyn table failures': '0', 
-		'Dyn table dereg failures': '0', 
-		'Pending notifications': '0', 
-		'Notifications highwater': '7',
-		'Notifications processed': '59', 
-		'Notification failures': '0'
-		}
-	}
+expected_output={   
+   "bp_crimson_statistics":{
+      "initialized": "Yes",
+      "config_database_init_d": "Yes",
+      "config_db_restorable": "Yes",
+      "config_db_persist": "Yes",
+      "config_lock_mgr_dbid": 5,
+      "oper_database_init_d": "Yes",
+      "oper_lock_mgr_dbid": 6,
+      "garbage_collections": 0
+   },
+   "bp_svl_crimson_statistics":{
+      "config_notify_mgr_id": 2,
+      "config_dyn_tables_reg_d": 3,
+      "config_dyn_reg_failures": 0,
+      "config_dyn_tables_dereg_d": 0,
+      "config_dereg_deferred": 0,
+      "config_dereg_failures": 0,
+      "config_table_updates": 11,
+      "config_applied": 30,
+      "config_skipped": 4,
+      "oper_notify_mgr_dbid": 3,
+      "oper_dyn_tables_reg_d": 1,
+      "oper_dyn_reg_failures": 0,
+      "oper_dyn_tables_dereg_d": 0,
+      "oper_dereg_s_deferred": 0,
+      "oper_dereg_failures": 0,
+      "oper_table_updates": 16,
+      "dyn_table_failures": 0,
+      "dyn_table_dereg_failures": 0,
+      "pending_notifications": 0,
+      "notifications_highwater": 5,
+      "notifications_processed": 111,
+      "notification_failures": 0
+   },
+   "bp_remote_db_statistics":{
+      "get_requests":{
+         "total_requests": 1619,
+         "pending_requests": 0,
+         "timed_out_requests": 0,
+         "failed_requests": 0
+      },
+      "set_requests":{
+         "total_requests": 0,
+         "pending_requests": 0,
+         "timed_out_requests": 0,
+         "failed_requests": 0
+      },
+      "in_progress_requests":{
+         "type":"NONE",
+         "db_id": 0,
+         "batch_id": 0,
+         "op_id": 0,
+         "task_pid": 0
+      },
+      "dbal_response_time":{
+         "max": 49
+      },
+      "record_free_failures":{
+         "total_failures": 0
+      }
+   }
+}
+

@@ -536,8 +536,8 @@ class ShowIpEigrpTopology(ShowEigrpTopologySuperParser, ShowEigrpTopologySchema)
     '''
 
     cli_command = [
-        'show ip eigrp topology'
-        'show ip eigrp topology {vrf}'
+        'show ip eigrp topology',
+        'show ip eigrp topology vrf {vrf}'
     ]
 
     def cli(self, vrf=None, output=None):
@@ -557,8 +557,8 @@ class ShowIpv6EigrpTopology(ShowEigrpTopologySuperParser, ShowEigrpTopologySchem
     '''
 
     cli_command = [
-        'show ipv6 eigrp topology'
-        'show ipv6 eigrp topology {vrf}'
+        'show ipv6 eigrp topology',
+        'show ipv6 eigrp topology vrf {vrf}'
     ]
 
     def cli(self, vrf=None, output=None):

@@ -25,6 +25,7 @@
         *  show mpls forwarding-table <prefix>
         *  show mpls forwarding-table interface tunnel <tunnelid>
         *  show mpls forwarding-table detail
+        *  show mpls forwarding-table summary
         *  show mpls forwarding-table vrf <vrf>
         *  show mpls forwarding-table vrf <vrf> detail
         *  show mpls interfaces
@@ -38,6 +39,9 @@
         *  show mpls traffic-eng tunnels {tunnel}
         *  show mpls traffic-eng tunnels
         *  show mpls traffic-eng tunnels brief
+        *  show mpls traffic-eng autoroute
+        *  show mpls traffic-eng topology
+        *  show mpls traffic-eng fast-reroute database detail
 """
 
 import re
@@ -1684,6 +1688,8 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
                    'show mpls forwarding-table interface tunnel {tunnelid}',
                    'show mpls forwarding-table {prefix} {mask} algo {algo}',
                    'show mpls forwarding-table | sect {filter}']
+
+    exclude = ['bytes_label_switched']
 
     def cli(self, vrf="", prefix="",tunnelid="", filter="", mask="", algo="", output=None):
         if output is None:
@@ -4388,6 +4394,705 @@ class ShowMplsLabelRange(ShowMplsLabelRangeSchema):
                 downstream_generic_label_region.update({
                     'min_label': int(group['min_label']),
                     'max_label': int(group['max_label'])})
+                continue
+
+        return ret_dict
+
+# ======================================================
+# Parser for 'show mpls traffic-eng autoroute '
+# ======================================================
+
+class ShowMplsTrafficEngAutorouteSchema(MetaParser):
+    """Schema for show mpls traffic-eng autoroute"""
+
+    schema = {
+        'status': str,
+        Optional('destination'): str,
+        Optional('protocol'): str,
+        Optional('number_of_tunnels'): str,
+        Optional('tunnel'): {
+            Optional('tunnel_number'): str,
+            Optional('load_balance_metric'): str,
+            Optional('nexthop'): str,
+            Optional('flags'): str,
+        },
+    }
+
+class ShowMplsTrafficEngAutoroute(ShowMplsTrafficEngAutorouteSchema):
+    """Parser for show mpls traffic-eng autoroute"""
+
+    cli_command = 'show mpls traffic-eng autoroute'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # MPLS TE autorouting enabled
+        p1 = re.compile(r"^MPLS\s+TE\s+autorouting\s+(?P<status>\w+)|:.+$")
+        #   destination 2.2.2.2, area ospf 1  area 0, has 1 tunnels
+        p2 = re.compile(r"^destination\s+(?P<destination>(\d{1,4}\.){3}\d{1,4}),\s+(?P<protocol>.+),\s+has\s+(?P<number_of_tunnels>\d+)\s+tunnels$")
+        #     Tunnel100   (load balancing metric 4000000, nexthop 2.2.2.2)
+        p3 = re.compile(r"^(?P<tunnel_number>\S+)\s+\(load\s+balancing\s+metric\s+(?P<load_balance_metric>\d+),\s+nexthop\s+(?P<nexthop>(\d{1,3}\.){3}\d{1,3})\)$")
+        #                 (flags: Announce)
+        p3_1 = re.compile(r"^\(flags:\s+(?P<flags>\w+)\)$")
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # MPLS TE autorouting enabled
+            m = p1.match(line)
+            if m:
+                dict_val = m.groupdict()
+                ret_dict['status'] = dict_val['status']
+                continue
+
+            #   destination 2.2.2.2, area ospf 1  area 0, has 1 tunnels
+            m = p2.match(line)
+            if m:
+                dict_val = m.groupdict()
+                ret_dict['destination'] = dict_val['destination']
+                ret_dict['protocol'] = dict_val['protocol']
+                ret_dict['number_of_tunnels'] = dict_val['number_of_tunnels']
+                continue
+
+            #     Tunnel100   (load balancing metric 4000000, nexthop 2.2.2.2)
+            m = p3.match(line)
+            if m:
+                dict_val = m.groupdict()
+                tunnel = ret_dict.setdefault('tunnel', {})
+                tunnel['tunnel_number'] = dict_val['tunnel_number']
+                tunnel['load_balance_metric'] = dict_val['load_balance_metric']
+                tunnel['nexthop'] = dict_val['nexthop']
+                continue
+
+            #                 (flags: Announce)
+            m = p3_1.match(line)
+            if m:
+                dict_val = m.groupdict()
+                tunnel = ret_dict.setdefault('tunnel', {})
+                tunnel['flags'] = dict_val['flags']
+                continue
+
+        return ret_dict
+
+# ======================================================
+# Parser for 'show mpls forwarding-table summary '
+# ======================================================
+
+class ShowMplsForwardingTableSummarySchema(MetaParser):
+    """Schema for show mpls forwarding-table summary"""
+
+    schema = {
+        'total_label': int,
+    }
+
+class ShowMplsForwardingTableSummary(ShowMplsForwardingTableSummarySchema):
+    """Parser for show mpls forwarding-table summary"""
+
+    cli_command = 'show mpls forwarding-table summary'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # 9 total labels
+        p1 = re.compile(r"^(?P<total_label>\d+)\s+total\s+labels$")
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # 9 total labels
+            m = p1.match(line)
+            if m:
+                dict_val = m.groupdict()
+                ret_dict['total_label'] = int(dict_val['total_label'])
+                continue
+
+        return ret_dict
+
+
+# ======================================================
+# Parser for 'show mpls traffic-eng link-management advertisements '
+# ======================================================
+class ShowMplsTrafficEngLinkManagementAdvertisementsSchema(MetaParser):
+    """Schema for show mpls traffic-eng link-management advertisements"""
+
+    schema = {
+        'link_id': {
+            Any(): {
+                'interface': str,
+                'link_subnet_type': str,
+                'link_ip_address': str,
+                'designated_router': str,
+                'te_metric': int,
+                'igp_metric': int,
+                'srlgs': str,
+                'physical_bandwidth': int,
+                'reserved_global_bandwidth': int,
+                'reserved_sub_bandwidth': int,
+                'attribute_flags': str,
+                'downstream': {
+                    Any(): {
+                        'global_pool': int,
+                        'sub_pool': int
+                    }
+                }
+            }
+        }
+    }
+
+class ShowMplsTrafficEngLinkManagementAdvertisements(ShowMplsTrafficEngLinkManagementAdvertisementsSchema):
+    """Parser for show mpls traffic-eng link-management advertisements"""
+
+    cli_command = 'show mpls traffic-eng link-management advertisements'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Link ID::  2 (Port-channel60)
+        p1 = re.compile(r"^Link\s+ID::\s+(?P<link_id>\d+)\s+\((?P<interface>\S+)\)$")
+        
+        # Link Subnet Type:     Broadcast
+        p2 = re.compile(r"^Link\s+Subnet\s+Type:\s+(?P<link_subnet_type>\w+)$")
+        
+        # Link IP Address:      195.1.1.1
+        p3 = re.compile(r"^Link\s+IP\s+Address:\s+(?P<link_ip_address>(\d{1,3}\.){3}\d{1,3})$")
+        
+        # Designated Router:    195.1.1.1
+        p4 = re.compile(r"^Designated\s+Router:\s+(?P<designated_router>(\d{1,3}\.){3}\d{1,3})$")
+        
+        # TE metric:            1
+        p5 = re.compile(r"^TE\s+metric:\s+(?P<te_metric>\d+)$")
+        
+        # IGP metric:           1
+        p6 = re.compile(r"^IGP\s+metric:\s+(?P<igp_metric>\d+)$")
+        
+        # SRLGs:                None
+        p7 = re.compile(r"^SRLGs:\s+(?P<srlgs>\w+)$")
+        
+        # Physical Bandwidth:   80000000 kbits/sec
+        p8 = re.compile(r"^Physical\s+Bandwidth:\s+(?P<physical_bandwidth>\d+)\s+kbits\/sec$")
+        
+        # Res. Global BW:       50000 kbits/sec
+        p9 = re.compile(r"^Res\.\s+Global\s+BW:\s+(?P<reserved_global_bandwidth>\d+)\s+kbits\/sec$")
+        
+        # Res. Sub BW:          0 kbits/sec
+        p10 = re.compile(r"^Res\.\s+Sub\s+BW:\s+(?P<reserved_sub_bandwidth>\d+)\s+kbits\/sec$")
+
+        # Attribute Flags:      0x00000000
+        p11 = re.compile(r"^Attribute Flags:\s+(?P<attribute_flags>\w+)$")
+
+        # Reservable Bandwidth[0]:        50000            0 kbits/sec
+        p12 = re.compile(r"^(?P<bandwidth_name>.+)\[(?P<count>\d+)\]:\s+(?P<global_pool>\d+)\s+(?P<sub_pool>\d+) kbits\/sec$")
+        
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Link ID::  2 (Port-channel60)
+            m = p1.match(line)
+            if m:
+                dict_val = m.groupdict()
+                link_dict = ret_dict.setdefault('link_id', {}).setdefault(dict_val['link_id'], {})
+                link_dict['interface'] = dict_val['interface']
+                continue
+
+            # Link Subnet Type:     Broadcast
+            m = p2.match(line)
+            if m:
+                link_dict['link_subnet_type'] = m.groupdict()['link_subnet_type']
+                continue
+
+            # Link IP Address:      195.1.1.1
+            m = p3.match(line)
+            if m:
+                link_dict['link_ip_address'] = m.groupdict()['link_ip_address']
+                continue
+
+            # Designated Router:    195.1.1.1
+            m = p4.match(line)
+            if m:
+                link_dict['designated_router'] = m.groupdict()['designated_router']
+                continue
+
+            # TE metric:            1
+            m = p5.match(line)
+            if m:
+                link_dict['te_metric'] = int(m.groupdict()['te_metric'])
+                continue
+
+            # IGP metric:           1
+            m = p6.match(line)
+            if m:
+                link_dict['igp_metric'] = int(m.groupdict()['igp_metric'])
+                continue
+
+            # SRLGs:                None
+            m = p7.match(line)
+            if m:
+                link_dict['srlgs'] = m.groupdict()['srlgs']
+                continue
+
+            # Physical Bandwidth:   80000000 kbits/sec
+            m = p8.match(line)
+            if m:
+                link_dict['physical_bandwidth'] = int(m.groupdict()['physical_bandwidth'])
+                continue
+
+            # Res. Global BW:       50000 kbits/sec
+            m = p9.match(line)
+            if m:
+                link_dict['reserved_global_bandwidth'] = int(m.groupdict()['reserved_global_bandwidth'])
+                continue
+
+            # Res. Sub BW:          0 kbits/sec
+            m = p10.match(line)
+            if m:
+                link_dict['reserved_sub_bandwidth'] = int(m.groupdict()['reserved_sub_bandwidth'])
+                continue
+
+            # Attribute Flags:      0x00000000
+            m = p11.match(line)
+            if m:
+                link_dict['attribute_flags'] = m.groupdict()['attribute_flags']
+                continue
+
+            # Reservable Bandwidth[0]:        50000            0 kbits/sec
+            m = p12.match(line)
+            if m:
+                dict_val = m.groupdict()
+                name = f"{dict_val['bandwidth_name'].lower().replace(' ', '_')}_{dict_val['count']}"
+                band_dict = link_dict.setdefault('downstream', {}).setdefault(name, {})
+                band_dict['global_pool'] = int(dict_val['global_pool'])
+                band_dict['sub_pool'] = int(dict_val['sub_pool'])
+                continue
+
+        return ret_dict
+
+
+class ShowMplsTrafficEngTopologySchema(MetaParser):
+    """Schema for show mpls traffic-eng topology"""
+
+    schema = {
+        'system_id': str,
+        Optional('ospf_process_id'): int,
+        Optional('area_id'): int,
+        'signalling_error_holddown': int,
+        'global_link_generation': int,
+        'igp_id': {
+            Any(): {
+                'mpls_te_id': str,
+                'node': str,
+                Optional('ospf_process_id'): int,
+                Optional('area_id'): int,
+                'link': {
+                    Any(): {
+                        'type': str,
+                        'dr': str,
+                        'nbr_node_id': int,
+                        'gen': int,
+                        'frag_id': int,
+                        'interface_address': str,
+                        'te_metric': int,
+                        'igp_metric': int,
+                        'attribute_flags': str,
+                        'srlgs': str,
+                        'physical_bw': int,
+                        'max_reservable_bw_global': int,
+                        'max_reservable_bw_sub': int,
+                        'bandwidth': {
+                            Any(): {
+                                'total_allocated_bw': int,
+                                'global_pool_reservable_bw': int,
+                                'sub_pool_reservable_bw': int
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+class ShowMplsTrafficEngTopology(ShowMplsTrafficEngTopologySchema):
+    """Parser for show mpls traffic-eng autoroute"""
+
+    cli_command = 'show mpls traffic-eng topology'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        
+            # My_System_id: 18.18.18.18 (ospf 1  area 0)
+            p1 = re.compile(r'^My_System_id: (?P<system_id>\S+) \(ospf (?P<ospf_process_id>\d+)  area (?P<area_id>\d+)\)$')
+
+            # Signalling error holddown: 30 sec Global Link Generation 30
+            p2 = re.compile(r'^Signalling error holddown: (?P<signalling_error_holddown>\d+)'
+                            r' sec Global Link Generation (?P<global_link_generation>\d+)$')
+            
+            # IGP Id: 1.1.1.1, MPLS TE Id:1.1.1.1 Router Node  (ospf 1  area 0)
+            p3 = re.compile(r'^IGP Id: (?P<igp_id>\S+), MPLS TE Id:(?P<mpls_te_id>\S+)'
+                            r' (?P<node>\S+) Node(  \(ospf (?P<ospf_process_id>\d+)  area (?P<area_id>\d+)\))?$')
+
+            # link[0]: Broadcast, DR: 172.15.145.5, nbr_node_id:2, gen:25
+            p4 = re.compile(r'^link\[(?P<link>\d+)\]: (?P<type>.+), DR: (?P<dr>\S+),'
+                            r' nbr_node_id:(?P<nbr_node_id>\d+), gen:(?P<gen>\d+)$')
+            
+            # frag_id: 110, Intf Address: 172.15.145.14
+            p5 = re.compile(r'^frag_id: (?P<frag_id>\d+), Intf Address: (?P<interface_address>\S+)$')
+            
+            # TE metric: 1, IGP metric: 1, attribute flags: 0x0
+            p6 = re.compile(r'^TE metric: (?P<te_metric>\d+), IGP metric: (?P<igp_metric>\d+),'
+                            r' attribute flags: (?P<attribute_flags>\S+)$')
+            
+            # SRLGs: None 
+            p7 = re.compile(r'^SRLGs: (?P<srlgs>\S+)$')
+
+            # physical_bw: 10000000 (kbps), max_reservable_bw_global: 7499999 (kbps)
+            p8 = re.compile(r'^physical_bw: (?P<physical_bw>\d+) \(kbps\), max_reservable_bw_global:'
+                            r' (?P<max_reservable_bw_global>\d+) \(kbps\)$')
+            
+            # max_reservable_bw_sub: 0 (kbps)
+            p9 = re.compile(r'^max_reservable_bw_sub: (?P<max_reservable_bw_sub>\d+) \(kbps\)$')
+
+            #                     Global Pool       Sub Pool
+            # Total Allocated   Reservable        Reservable
+            # BW (kbps)         BW (kbps)         BW (kbps)
+            # ---------------   -----------       ----------
+            # bw[0]:            0          7499999                0
+            # bw[1]:            0          7499999                0
+            p10 = re.compile(r'^bw\[(?P<bandwidth>\d+)\]:\s+(?P<total_allocated_bw>\d+)'
+                             r'\s+(?P<global_pool_reservable_bw>\d+)\s+(?P<sub_pool_reservable_bw>\d+)$')
+
+            ret_dict = {}
+
+            for line in output.splitlines():
+                line = line.strip()
+
+                # My_System_id: 18.18.18.18 (ospf 1  area 0)
+                m = p1.match(line)
+                if m:
+                    group_dict = m.groupdict()
+                    ret_dict['system_id'] = group_dict['system_id']
+                    if group_dict['ospf_process_id']:
+                        ret_dict['ospf_process_id'] = int(group_dict['ospf_process_id'])
+                        ret_dict['area_id'] = int(group_dict['area_id'])
+                    continue
+
+                # Signalling error holddown: 30 sec Global Link Generation 30
+                m = p2.match(line)
+                if m:
+                    ret_dict['signalling_error_holddown'] = int(m.groupdict()['signalling_error_holddown'])
+                    ret_dict['global_link_generation'] = int(m.groupdict()['global_link_generation'])
+                    continue
+                
+                # IGP Id: 1.1.1.1, MPLS TE Id:1.1.1.1 Router Node  (ospf 1  area 0)
+                m = p3.match(line)
+                if m:
+                    group_dict = m.groupdict()
+                    igp_id_dict = ret_dict.setdefault('igp_id', {}).setdefault(group_dict['igp_id'], {})
+                    igp_id_dict['mpls_te_id'] = group_dict['mpls_te_id']
+                    igp_id_dict['node'] = group_dict['node']
+                    if group_dict['ospf_process_id']:
+                        igp_id_dict['ospf_process_id'] = int(group_dict['ospf_process_id'])
+                        igp_id_dict['area_id'] = int(group_dict['area_id'])
+                    continue
+
+                # link[0]: Broadcast, DR: 172.15.145.5, nbr_node_id:2, gen:25
+                m = p4.match(line)
+                if m:
+                    group_dict = m.groupdict()
+                    link_dict = igp_id_dict.setdefault('link', {}).setdefault(group_dict['link'], {})
+                    link_dict['type'] = group_dict['type']
+                    link_dict['dr'] = group_dict['dr']
+                    link_dict['nbr_node_id'] = int(group_dict['nbr_node_id'])
+                    link_dict['gen'] = int(group_dict['gen'])
+                    continue
+
+                # frag_id: 110, Intf Address: 172.15.145.14
+                m = p5.match(line)
+                if m:
+                    link_dict['frag_id'] = int(m.groupdict()['frag_id'])
+                    link_dict['interface_address'] = m.groupdict()['interface_address']
+                    continue
+
+                # TE metric: 1, IGP metric: 1, attribute flags: 0x0
+                m = p6.match(line)
+                if m:
+                    group_dict = m.groupdict()
+                    link_dict['te_metric'] = int(group_dict['te_metric'])
+                    link_dict['igp_metric'] = int(group_dict['igp_metric'])
+                    link_dict['attribute_flags'] = group_dict['attribute_flags']
+                    continue
+
+                # SRLGs: None 
+                m = p7.match(line)
+                if m:
+                    link_dict['srlgs'] = m.groupdict()['srlgs']
+                    continue
+
+                # physical_bw: 10000000 (kbps), max_reservable_bw_global: 7499999 (kbps)
+                m = p8.match(line)
+                if m:
+                    link_dict['physical_bw'] = int(m.groupdict()['physical_bw'])
+                    link_dict['max_reservable_bw_global'] = int(m.groupdict()['max_reservable_bw_global'])
+                    continue
+
+                # max_reservable_bw_sub: 0 (kbps)
+                m = p9.match(line)
+                if m:
+                    link_dict['max_reservable_bw_sub'] = int(m.groupdict()['max_reservable_bw_sub'])
+                    continue
+
+                #                     Global Pool       Sub Pool
+                # Total Allocated   Reservable        Reservable
+                # BW (kbps)         BW (kbps)         BW (kbps)
+                # ---------------   -----------       ----------
+                # bw[0]:            0          7499999                0
+                # bw[1]:            0          7499999                0
+                m = p10.match(line)
+                if m:
+                    group_dict = m.groupdict()
+                    bandwidth_dict = link_dict.setdefault('bandwidth', {}).setdefault(group_dict['bandwidth'], {})
+                    bandwidth_dict['total_allocated_bw'] = int(group_dict['total_allocated_bw'])
+                    bandwidth_dict['global_pool_reservable_bw'] = int(group_dict['global_pool_reservable_bw'])
+                    bandwidth_dict['sub_pool_reservable_bw'] = int(group_dict['sub_pool_reservable_bw'])
+                    continue
+            
+            return ret_dict
+
+
+class ShowMplsTrafficEngFastRerouteDatabaseDetailSchema(MetaParser):
+    """Schema for show mpls traffic-eng fast-reroute database detail"""
+
+    schema = {
+        'frr_db_summary': {
+            'protected_intfs_num': int,
+            'protected_lsps_num': int,
+            'backup_tunnels_num': int,
+            'active_intfs_num': int,
+            'frr_active_tunnels_num': int,
+
+        },
+        Optional('p2p_lsps'): {
+            Any(): {
+                Any(): {
+                    'src_ip': str,
+                    'dst_ip': str,
+                    'state': str,
+                    'in_label': str,
+                    'out_intf': str,
+                    'out_label': str,
+                    'frr_tunnel': str,
+                    'frr_out_label': str,
+                },
+            },
+        },
+        Optional('p2mp_sub_lsps'): {
+            Any(): {
+                Any(): {
+                    'src_ip': str,
+                    'dst_ip': str,
+                    'state': str,
+                    'in_label': str,
+                    'out_intf': str,
+                    'out_label': str,
+                    'frr_tunnel': str,
+                    'frr_out_label': str,
+                },
+            },
+        }
+    }
+
+
+# ===============================================================
+# Parser for 'show mpls traffic-eng fast-reroute database detail'
+# ===============================================================
+class ShowMplsTrafficEngFastRerouteDatabaseDetail \
+            (ShowMplsTrafficEngFastRerouteDatabaseDetailSchema):
+    """Parser for show mpls traffic-eng fast-reroute database detail"""
+
+    cli_command = 'show mpls traffic-eng fast-reroute database detail'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # FRR Database Summary:
+        p0 = re.compile(r'^FRR\s+Database\s+Summary\s*:$')
+
+        # Protected interfaces    : 2
+        p1 = re.compile(r'Protected\s+interfaces\s*:\s*'
+                        r'(?P<protected_intfs_num>\d+)$')
+
+        # Protected LSPs/Sub-LSPs : 2
+        p2 = re.compile(r'Protected\s+LSPs\/Sub\-LSPs\s*:\s*'
+                        r'(?P<protected_lsps_num>\d+)$')
+
+        # Backup tunnels          : 3
+        p3 = re.compile(r'Backup\s+tunnels\s*:\s*'
+                        r'(?P<backup_tunnels_num>\d+)$')
+
+        # Active interfaces       : 0
+        p4 = re.compile(r'Active\s+interfaces\s*:\s*'
+                        r'(?P<active_intfs_num>\d+)$')
+
+        # FRR Active tunnels      : 0
+        p5 = re.compile(r'FRR\s+Active\s+tunnels\s*:\s*'
+                        r'(?P<frr_active_tunnels_num>\d+)$')
+
+        # P2P LSPs:
+        p6 = re.compile(r'^P2P\s+LSPs\s*:$')
+
+        # P2MP Sub-LSPs:
+        p7 = re.compile(r'^P2MP\s+Sub\-LSPs\s*:$')
+
+        # Tun ID: 14, LSP ID: 113, Source: 1.1.1.1
+        p8 = re.compile(r'Tun\s+ID\s*:\s*(?P<tun_id>\d+)\s*,\s*'
+                        r'LSP\s+ID\s*:\s*(?P<lsp_id>\d+)\s*,\s*'
+                        r'Source\s*:\s*(?P<src_ip>.+)$')
+
+        # Destination: 4.4.4.4
+        p9 = re.compile(r'Destination\s*:\s*'
+                        r'(?P<dst_ip>.+)$')
+
+        # State        : ready
+        p10 = re.compile(r'State\s*:\s*'
+                         r'(?P<state>.+)$')
+
+        # InLabel      : 30
+        p11 = re.compile(r'InLabel\s*:\s*'
+                         r'(?P<in_label>.+)$')
+
+        # OutLabel     : Twe0/0/16:19
+        p12 = re.compile(r'OutLabel\s*:\s*'
+                         r'(?P<out_intf>.+)\s*:\s*'
+                         r'(?P<out_label>.+)$')
+
+        # FRR OutLabel : Tu231:19
+        p13 = re.compile(r'FRR\s+OutLabel\s*:\s*'
+                         r'(?P<frr_tunnel>.+)\s*:\s*'
+                         r'(?P<frr_out_label>.+)$')
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # FRR Database Summary:
+            m = p0.match(line)
+            if m:
+                frr_db_summary_dict = ret_dict.setdefault('frr_db_summary', {})
+                continue
+
+            # Protected interfaces    : 2
+            m = p1.match(line)
+            if m:
+                group_dict = m.groupdict()
+                frr_db_summary_dict['protected_intfs_num'] = \
+                    int(group_dict['protected_intfs_num'])
+                continue
+
+            # Protected LSPs/Sub-LSPs : 2
+            m = p2.match(line)
+            if m:
+                group_dict = m.groupdict()
+                frr_db_summary_dict['protected_lsps_num'] = \
+                    int(group_dict['protected_lsps_num'])
+                continue
+
+            # Backup tunnels          : 3
+            m = p3.match(line)
+            if m:
+                group_dict = m.groupdict()
+                frr_db_summary_dict['backup_tunnels_num'] = \
+                    int(group_dict['backup_tunnels_num'])
+                continue
+
+            # Active interfaces       : 0
+            m = p4.match(line)
+            if m:
+                group_dict = m.groupdict()
+                frr_db_summary_dict['active_intfs_num'] = \
+                    int(group_dict['active_intfs_num'])
+                continue
+
+            # FRR Active tunnels      : 0
+            m = p5.match(line)
+            if m:
+                group_dict = m.groupdict()
+                frr_db_summary_dict['frr_active_tunnels_num'] = \
+                    int(group_dict['frr_active_tunnels_num'])
+                continue
+
+            # P2P LSPs:
+            m = p6.match(line)
+            if m:
+                lsps_dict = ret_dict.setdefault('p2p_lsps', {})
+                continue
+
+            # P2MP Sub-LSPs:
+            m = p7.match(line)
+            if m:
+                lsps_dict = ret_dict.setdefault('p2mp_sub_lsps', {})
+                continue
+
+            # Tun ID: 14, LSP ID: 113, Source: 1.1.1.1
+            m = p8.match(line)
+            if m:
+                group_dict = m.groupdict()
+                tunnel_id = Common.convert_intf_name(
+                    f"tu{group_dict['tun_id']}")
+
+                lsp_dict = lsps_dict. \
+                    setdefault(tunnel_id, {}). \
+                    setdefault(f"lsp{group_dict['lsp_id']}", {})
+
+                lsp_dict['src_ip'] = group_dict['src_ip']
+                continue
+
+            # Destination: 4.4.4.4
+            m = p9.match(line)
+            if m:
+                group_dict = m.groupdict()
+                lsp_dict['dst_ip'] = group_dict['dst_ip']
+                continue
+
+            # State        : ready
+            m = p10.match(line)
+            if m:
+                group_dict = m.groupdict()
+                lsp_dict['state'] = group_dict['state']
+                continue
+
+            # InLabel      : 30
+            m = p11.match(line)
+            if m:
+                group_dict = m.groupdict()
+                lsp_dict['in_label'] = group_dict['in_label']
+                continue
+
+            # OutLabel     : Twe0/0/16:19
+            m = p12.match(line)
+            if m:
+                group_dict = m.groupdict()
+                lsp_dict['out_intf'] = \
+                    Common.convert_intf_name(group_dict['out_intf'])
+                lsp_dict['out_label'] = group_dict['out_label']
+                continue
+
+            # FRR OutLabel : Tu231:19
+            m = p13.match(line)
+            if m:
+                group_dict = m.groupdict()
+                lsp_dict['frr_tunnel'] = Common.convert_intf_name(group_dict['frr_tunnel'])
+                lsp_dict['frr_out_label'] = group_dict['frr_out_label']
                 continue
 
         return ret_dict

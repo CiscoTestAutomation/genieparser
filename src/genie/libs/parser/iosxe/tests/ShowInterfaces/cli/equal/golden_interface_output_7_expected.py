@@ -48,6 +48,7 @@ expected_output = {
         "delay": 10,
         "duplex_mode": "full",
         "enabled": False,
+        "is_deleted": False,
         "encapsulations": {
             "encapsulation": "arpa"
         },

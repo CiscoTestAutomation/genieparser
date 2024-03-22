@@ -1,0 +1,6 @@
+show platform software fed switch 3 vp summary interface if_id 0x44      
+           if_id      vlan_id   pvlan_mode   pvlan_vlan   stp_state  vtp pruned          Untagged  
+-------------------------------------------------------------------------------------------------
+              68         1001         none         1001  forwarding          No               Yes  
+              68          200         none          200    disabled          No               Yes  
+              68          101         none         1001  forwarding          No                No  

@@ -1,0 +1,3 @@
+TRAP      GLEAN-SUBNET                      5   2  system-cpp-default                          2000    1931         0           0         0           0
+TRAP      GLEAN                             5   2  system-cpp-police-sw-forward                2000    1931         0           0         0           0
+TRAP      PBR GLEAN                         5   2  system-cpp-police-sw-forward                2000    1931         0           0         0           0

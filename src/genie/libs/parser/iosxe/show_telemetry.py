@@ -4,11 +4,19 @@ IOSXE parsers for the following commands
     * 'show telemetry ietf subscription all'
     * 'show telemetry ietf subscription all brief'
     * 'show telemetry ietf subscription all detail'
+    * 'show telemetry ietf subscription all receivers'
     * 'show telemetry ietf subscription {sub_id}'
     * 'show telemetry ietf subscription {sub_id} brief'
     * 'show telemetry ietf subscription {sub_id} detail'
     * 'show telemetry ietf subscription dynamic'
+    * 'show telemetry ietf subscription dynamic brief'
     * 'show telemetry ietf subscription dynamic detail'
+    * 'show telemetry ietf subscription configured'
+    * 'show telemetry ietf subscription configured brief'
+    * 'show telemetry ietf subscription configured detail'
+    * 'show telemetry ietf subscription permanent'
+    * 'show telemetry ietf subscription permanent brief'
+    * 'show telemetry ietf subscription permanent detail'
     * 'show telemetry ietf subscription {sub_id} receiver'
     * 'show telemetry ietf subscription receiver'
     * 'show telemetry connection {con_idx} detail'
@@ -16,6 +24,8 @@ IOSXE parsers for the following commands
     * 'show telemetry connection {con_idx} brief'
     * 'show telemetry internal sensor subscription {sub_id}'
     * 'show telemetry internal sensor stream {stream_type}'
+    * 'show telemetry internal subscription all stats'
+    * 'show telemetry internal protocol {protocol} manager {peer_ip} {port} source-vrf {vrf_id} {source_ip}'
     * 'show telemetry receiver name {name}'
     * 'show telemetry receiver all'
 
@@ -34,8 +44,21 @@ from pyats.utils.exceptions import SchemaTypeError
 
 class ShowTelemetryIETFSubscriptionSchema(MetaParser):
     '''schema for:
+        * show telemetry ietf subscription all
+        * show telemetry ietf subscription all brief
+        * show telemetry ietf subscription all detail
         * show telemetry ietf subscription {sub_id}
+        * show telemetry ietf subscription {sub_id} brief
         * show telemetry ietf subscription {sub_id} detail
+        * show telemetry ietf subscription dynamic
+        * show telemetry ietf subscription dynamic brief
+        * show telemetry ietf subscription dynamic detail
+        * show telemetry ietf subscription configured
+        * show telemetry ietf subscription configured brief
+        * show telemetry ietf subscription configured detail
+        * show telemetry ietf subscription permanent
+        * show telemetry ietf subscription permanent brief
+        * show telemetry ietf subscription permanent detail
     '''
 
     schema = {
@@ -75,11 +98,13 @@ class ShowTelemetryIETFSubscription(ShowTelemetryIETFSubscriptionSchema):
     '''parser for:
         * show telemetry ietf subscription {sub_id}
         * show telemetry connection {con_idx} subscription
+        * show telemetry ietf subscription {sub_id} brief
     '''
 
     cli_command = [
             'show telemetry ietf subscription {sub_id}',
-            'show telemetry connection {con_idx} subscription'
+            'show telemetry connection {con_idx} subscription',
+            'show telemetry ietf subscription {sub_id} brief',
             ]
 
     def cli(self, sub_id=None, con_idx=None, output=None):
@@ -132,6 +157,60 @@ class ShowTelemetryIETFSubscription(ShowTelemetryIETFSubscriptionSchema):
                 else:
                     subscription['filter'] = {'filter_type': group['filter_type']}
         return ret_dict
+
+
+class ShowTelemetryIETFSubscriptionAll(ShowTelemetryIETFSubscription):
+    '''parser for:
+        * show telemetry ietf subscription all
+        * show telemetry ietf subscription all brief
+    '''
+
+    cli_command = [
+        'show telemetry ietf subscription all',
+        'show telemetry ietf subscription all brief',
+    ]
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command[0])
+        return super().cli(output=output)
+
+
+class ShowTelemetryIETFSubscriptionConfigured(ShowTelemetryIETFSubscriptionAll):
+    '''parser for:
+        * show telemetry ietf subscription configured
+        * show telemetry ietf subscription configured brief
+    '''
+
+    cli_command = [
+        'show telemetry ietf subscription configured',
+        'show telemetry ietf subscription configured brief',
+    ]
+
+
+class ShowTelemetryIETFSubscriptionDynamic(ShowTelemetryIETFSubscriptionAll):
+    '''parser for:
+        * show telemetry ietf subscription dynamic
+        * show telemetry ietf subscription dynamic brief
+    '''
+
+    cli_command = [
+        'show telemetry ietf subscription dynamic',
+        'show telemetry ietf subscription dynamic brief',
+    ]
+
+
+class ShowTelemetryIETFSubscriptionPermanent(ShowTelemetryIETFSubscriptionAll):
+    '''parser for:
+        * show telemetry ietf subscription permanent
+        * show telemetry ietf subscription permanent brief
+    '''
+
+    cli_command = [
+        'show telemetry ietf subscription permanent',
+        'show telemetry ietf subscription permanent brief',
+    ]
+
 
 class ShowTelemetryIETFSubscriptionDetail(ShowTelemetryIETFSubscriptionSchema):
     '''parser for:
@@ -311,6 +390,102 @@ class ShowTelemetryIETFSubscriptionDetail(ShowTelemetryIETFSubscriptionSchema):
         return ret_dict
 
 
+class ShowTelemetryIETFSubscriptionAllDetail(ShowTelemetryIETFSubscriptionDetail):
+    '''parser for:
+        * show telemetry ietf subscription all detail
+    '''
+
+    cli_command = 'show telemetry ietf subscription all detail'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        return super().cli(sub_id=None, output=output)
+
+class ShowTelemetryIETFSubscriptionConfiguredDetail(ShowTelemetryIETFSubscriptionAllDetail):
+    '''parser for:
+        * show telemetry ietf subscription configured detail
+    '''
+
+    cli_command = 'show telemetry ietf subscription configured detail'
+
+
+class ShowTelemetryIETFSubscriptionDynamicDetail(ShowTelemetryIETFSubscriptionAllDetail):
+    '''parser for:
+        * show telemetry ietf subscription dynamic detail
+    '''
+
+    cli_command = 'show telemetry ietf subscription dynamic detail'
+
+
+class ShowTelemetryIETFSubscriptionPermanentDetail(ShowTelemetryIETFSubscriptionAllDetail):
+    '''parser for:
+        * show telemetry ietf subscription permanent detail
+    '''
+
+    cli_command = 'show telemetry ietf subscription permanent detail'
+
+
+class ShowTelemetryIETFSubscriptionAllReceiverSchema(MetaParser):
+    '''schema for:
+        * show telemetry ietf subscription all receivers
+    '''
+    schema = {
+        int:{
+            str: {
+                'connection': int,
+                'state': str,
+                'explanation': str
+            }
+        }
+    }
+
+
+class ShowTelemetryIETFSubscriptionAllReceivers(ShowTelemetryIETFSubscriptionAllReceiverSchema):
+    '''parser for:
+        * show telemetry ietf subscription all receivers
+    '''
+
+    cli_command = 'show telemetry ietf subscription all receivers'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        ret_dict = dict()
+        # 101              grpc-tcp                           0      Resolving      Resolution request in progress
+        p1 = re.compile(r'^(?P<id>\d+) +'
+                        r'(?P<name>\S+) +'
+                        r'(?P<connection>\S+) +'
+                        r'(?P<state>.\S+) *'
+                        r'(?P<explanation>.*)$')
+
+
+        for line in out.splitlines():
+            # 101              grpc-tcp                           0      Resolving      Resolution request in progress
+            m = p1.match(line)
+            # If whole line matches p1 regex
+            if m:
+                group = m.groupdict()
+
+                id = group.pop('id')
+                name = group.pop('name')
+
+                id_dict = ret_dict.setdefault(int(id), {})
+                name_dict = id_dict.setdefault(name, {})
+
+                name_dict.update({
+                    'connection': int(group['connection']),
+                    'state': group['state'],
+                    'explanation': group['explanation']
+                })
+
+                continue
+        return ret_dict
+
+
 class ShowTelemetryIETFSubscriptionReceiverSchema(MetaParser):
     '''schema for:
         * show telemetry ietf subscription dynamic
@@ -330,6 +505,7 @@ class ShowTelemetryIETFSubscriptionReceiverSchema(MetaParser):
             }
         }
     }
+
 
 class ShowTelemetryIETFSubscriptionReceiver(ShowTelemetryIETFSubscriptionReceiverSchema):
     '''parser for:
@@ -768,16 +944,16 @@ class ShowTelemetryInternalSubscriptionAllStatsSchema(MetaParser):
         * show telemetry internal subscription all stats
     '''
 
-    schema = { 
-            'sub_id':{ 
-                int: { 
-                    'msg_sent': int,
-                    'msg_drop': int,
-                    'record_sent': int,
-                    'connection_info': str, 
-                    },
-                } 
+    schema = {
+        'sub_id':{
+            int: {
+                'msg_sent': int,
+                'msg_drop': int,
+                'record_sent': int,
+                'connection_info': str,
             }
+        }
+    }
 
 class ShowTelemetryInternalSubscriptionAllStats(ShowTelemetryInternalSubscriptionAllStatsSchema):
     '''parser for:
@@ -789,7 +965,7 @@ class ShowTelemetryInternalSubscriptionAllStats(ShowTelemetryInternalSubscriptio
     def cli(self, output=None):
         if output is None:
             output = self.device.execute(self.cli_command)
-        
+
         #Subscription ID  Msgs Sent  Msgs Drop  Records Sent Connection Info
         #---------------- ---------- ---------- ------------ -----------------------------------------
         #2147483648       246        0          126690       admin
@@ -819,22 +995,22 @@ class ShowTelemetryInternalSensorSchema(MetaParser):
         * show telemetry internal sensor stream {stream_type}
     """
 
-    schema = { 
-            "instance": {
-                int: {
-                    Optional("sensor_type"): { 
-                        "type": str,
-                        "filter_type": str,
-                        "filter_selector": str,
-                    },
-                    Optional("data_collector"): { 
-                        Any(): {
-                            "dc_type": str,
-                            "sub_filter": str,
-                        },
-                    },
+    schema = {
+        "instance": {
+            int: {
+                Optional("sensor_type"): {
+                    "type": str,
+                    "filter_type": str,
+                    "filter_selector": str,
                 },
+                Optional("data_collector"): {
+                    Any(): {
+                        "dc_type": str,
+                        "sub_filter": str,
+                    }
+                }
             }
+        }
     }
 
 class ShowTelemetryInternalSensor(ShowTelemetryInternalSensorSchema):
@@ -844,8 +1020,8 @@ class ShowTelemetryInternalSensor(ShowTelemetryInternalSensorSchema):
     """
 
     cli_command = [
-    'show telemetry internal sensor subscription {sub_id}',
-    'show telemetry internal sensor stream {stream_type}',
+        'show telemetry internal sensor subscription {sub_id}',
+        'show telemetry internal sensor stream {stream_type}',
     ]
     def cli(self, sub_id=None, stream_type=None, output=None):
         if output is None:
@@ -859,35 +1035,35 @@ class ShowTelemetryInternalSensor(ShowTelemetryInternalSensorSchema):
                 ))
             else:
                 return {}
-        
+
         # Subscription ID: 2147483659
         p1 = re.compile(r'^Subscription +ID: *(?P<sub_id>\d*)$')
-        
+
         #  Sensor Type: yang-push periodic
         p2 = re.compile(r'^Sensor +Type: *(?P<sensor_type>.*)$')
-        
+
         #    Filter type: xpath
         p3 = re.compile(r'^Filter +type: *(?P<filter_type>\S*)$')
-        
+
         #    Filter selector: /if:interfaces-state/interface[name="GigabitEthernet0/0"]/oper-status
         p4 = re.compile(r'^Filter +selector: *(?P<filter_selector>\S*)$')
-        
+
         #    DC: confd periodic, SubFilter: /if:interfaces-state/interface[name="GigabitEthernet0/0"]/oper-status
         p5 = re.compile(r'^DC: *(?P<dc_type>.*), SubFilter: *(?P<sub_filter>\S*)$')
-        
+
         ret_dict = dict()
-        dcCtr = 0 
+        dcCtr = 0
 
         for line in output.splitlines():
             line = line.strip()
-        
+
             # Subscription ID: 2147483648
             m = p1.match(line)
             if m:
                 group = m.groupdict()
                 sensorDict = ret_dict.setdefault('instance', {}).\
                         setdefault(int(group['sub_id']), {})
-                dcCtr = 0 
+                dcCtr = 0
                 continue
 
 
@@ -898,21 +1074,21 @@ class ShowTelemetryInternalSensor(ShowTelemetryInternalSensorSchema):
                 sensorTypeDic = sensorDict.setdefault("sensor_type", {})
                 sensorTypeDic['type'] = group['sensor_type']
                 continue
-        
+
             # Filter type: xpath
             m = p3.match(line)
             if m:
                 group = m.groupdict()
                 sensorTypeDic['filter_type'] = group['filter_type']
                 continue
-        
+
             # Filter selector: /if:interfaces-state/interface[name="GigabitEthernet0/0"]/oper-status
             m = p4.match(line)
             if m:
                 group = m.groupdict()
                 sensorTypeDic['filter_selector'] = group['filter_selector']
                 continue
-        
+
             # DC: confd periodic, SubFilter: /if:interfaces-state/interface[name="GigabitEthernet0/0"]/oper-status
             m = p5.match(line)
             if m:
@@ -1140,6 +1316,328 @@ class ShowTelemetryIETFSubscriptionSummary(ShowTelemetryIETFSubscriptionSummaryS
                 states = types.setdefault(group['type'].lower(), {})
                 for state in ['total', 'valid', 'invalid']:
                     states.update({state: int(group[state])})
+                continue
+
+        return ret_dict
+
+
+class ShowTelemetryInternalProtocolManagerSchema(MetaParser):
+    '''schema for:
+        * show telemetry internal protocol {protocol} manager {peer_ip} {port} source-vrf {vrf_id} {source_ip}
+    '''
+
+    schema = {
+        "con": {
+            str: {
+                "sock_fd": int,
+                "protocol": str,
+                "state": str,
+                Optional("version"): str,
+                Optional("profile"): str,
+                "table_id": int,
+                Optional("wait_mask"): str,
+                Optional("con_retries"): int,
+                Optional("send_retries"): int,
+                Optional("pending_events"): int,
+                Optional("session_reqs"): int,
+                Optional("session_resp"): int,
+                "source_ip": str,
+                "bytes_sent": int,
+                "msgs_sent": int,
+                "msgs_recv": int,
+                Optional("bytes_queued"): int,
+                Optional("creation_time"): str,
+                Optional("last_con_time"): str,
+                Optional("last_discon_time"): str,
+                Optional("last_error"): str,
+                Optional("con_flaps"): int,
+                Optional("last_flap_reason"): str,
+                Optional("keep_alive_timeouts"): int,
+                Optional("last_transport_error"): str
+            }
+        }
+    }
+
+class ShowTelemetryInternalProtocolManager(ShowTelemetryInternalProtocolManagerSchema):
+    '''parser for:
+        * show telemetry internal protocol {protocol} manager {peer_ip} {port} source-vrf {vrf_id} {source_ip}
+    '''
+
+    cli_command = [
+        'show telemetry internal protocol {protocol} manager {peer_ip} {port} source-vrf {vrf_id} {source_ip}'
+    ]
+
+    def cli(self, protocol, peer_ip, port, vrf_id, source_ip=None, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command[0].format(protocol=protocol,
+                                                                    peer_ip=peer_ip,
+                                                                    port=port,
+                                                                    vrf_id=vrf_id,
+                                                                    source_ip=source_ip))
+
+        #Con str                : 161.44.237.28:45000:0:172.16.0.6
+        p1 = re.compile(r'^Con str *: *(?P<con_str>\S*)$')
+
+        #Sockfd                 : 138
+        p2 = re.compile(r'^Sockfd *: *(?P<sock_fd>\d*)$')
+
+        #Protocol               : native
+        p3 = re.compile(r'^Protocol *: *(?P<protocol>\S*)$')
+
+        #State                  : CNDP_STATE_CONNECTED
+        p4 = re.compile(r'^State *: *(?P<state>\w*)$')
+
+        #Version                :
+        p5 = re.compile(r'^Version *: *(?P<version>\S*)$')
+
+        #Profile                :
+        p6 = re.compile(r'^Profile *: *(?P<profile>\S*)$')
+
+        #Table id               : 0
+        p7 = re.compile(r'^Table id *: *(?P<table_id>\d*)$')
+
+        #Wait Mask              :
+        p8 = re.compile(r'^Wait Mask *: *(?P<wait_mask>\S*)$')
+
+        #Connection Retries     : 0
+        p9 = re.compile(r'^Connection Retries *: *(?P<con_retries>\d*)$')
+
+        #Send Retries           : 0
+        p10 = re.compile(r'^Send Retries *: *(?P<send_retries>\d*)$')
+
+        #Pending events         : 0
+        p11 = re.compile(r'^Pending events *: *(?P<pending_events>\d*)$')
+
+        #Session requests       : 1
+        p12 = re.compile(r'^Session requests *: *(?P<session_reqs>\d*)$')
+
+        #Session replies        : 1
+        p13 = re.compile(r'^Session replies *: *(?P<session_resp>\d*)$')
+
+        #Source ip              : 172.16.0.6
+        p14 = re.compile(r'^Source ip *: *(?P<source_ip>\S*)$')
+
+        #Bytes Sent             : 4835
+        p15 = re.compile(r'^Bytes Sent *: *(?P<bytes_sent>\d*)$')
+
+        #Msgs Sent              : 8
+        p16 = re.compile(r'^Msgs Sent *: *(?P<msgs_sent>\d*)$')
+
+        #Msgs Received          : 0
+        p17 = re.compile(r'^Msgs Received *: *(?P<msgs_recv>\d*)$')
+
+        #Bytes in queue         : 0
+        p18 = re.compile(r'^Bytes in queue *: *(?P<bytes_queued>\d*)$')
+
+        #Creation time:         : Mon Jan 15 21:49:23:54
+        p19 = re.compile(r'^Creation time: *: *(?P<creation_time>.*)$')
+
+        #Last connected time:   : Mon Jan 15 21:49:23:59
+        p20 = re.compile(r'^Last connected time: *: *(?P<last_con_time>.*)$')
+
+        #Last disconnect time:  :
+        p21 = re.compile(r'^Last disconnect time: *: *(?P<last_discon_time>.*)$')
+
+        #Last error:            :
+        p22 = re.compile(r'^Last error: *: *(?P<last_error>.*)$')
+
+        #Connection flaps:      : 0
+        p23 = re.compile(r'^Connection flaps: *: *(?P<con_flaps>\d*)$')
+
+        #Last flap Reason:      :
+        p24 = re.compile(r'^Last flap reason: *: *(?P<last_flap_reason>.*)$')
+
+        #Keep Alive Timeouts:   : 0
+        p25 = re.compile(r'^Keep Alive Timeouts: *: *(?P<keep_alive_timeouts>\d*)$')
+
+        #Last Transport Error   :
+        p26 = re.compile(r'^Last Transport Error *: *(?P<last_transport_error>.*)$')
+
+        ret_dict = dict()
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            #Con str                : 161.44.237.28:45000:0:172.16.0.6
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                con_dict = ret_dict.setdefault('con', {}).setdefault(group['con_str'], {})
+                continue
+
+            #Sockfd                 : 138
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                con_dict['sock_fd'] = int(group['sock_fd'])
+                continue
+
+            #Protocol               : native
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                con_dict['protocol'] = group['protocol']
+                continue
+
+            #State                  : CNDP_STATE_CONNECTED
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                con_dict['state'] = group['state']
+                continue
+
+            #Version                :
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                con_dict['version'] = group['version']
+                continue
+
+            #Profile                :
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                con_dict['profile'] = group['profile']
+                continue
+
+            #Table id               : 0
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                con_dict['table_id'] = int(group['table_id'])
+                continue
+
+            #Wait Mask              :
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                con_dict['wait_mask'] = group['wait_mask']
+                continue
+
+            #Connection Retries     : 0
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                con_dict['con_retries'] = int(group['con_retries'])
+                continue
+
+            #Send Retries           : 0
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                con_dict['send_retries'] = int(group['send_retries'])
+                continue
+
+            #Pending events         : 0
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                con_dict['pending_events'] = int(group['pending_events'])
+                continue
+
+            #Session requests       : 1
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                con_dict['session_reqs'] = int(group['session_reqs'])
+                continue
+
+            #Session replies        : 1
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                con_dict['session_resp'] = int(group['session_resp'])
+                continue
+
+            #Source ip              : 172.16.0.6
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                con_dict['source_ip'] = group['source_ip']
+                continue
+
+            #Bytes Sent             : 4835
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                con_dict['bytes_sent'] = int(group['bytes_sent'])
+                continue
+
+            #Msgs Sent              : 8
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                con_dict['msgs_sent'] = int(group['msgs_sent'])
+                continue
+
+            #Msgs Received          : 0
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                con_dict['msgs_recv'] = int(group['msgs_recv'])
+                continue
+
+            #Bytes in queue         : 0
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                con_dict['bytes_queued'] = int(group['bytes_queued'])
+                continue
+
+            #Creation time:         : Mon Jan 15 21:49:23:54
+            m = p19.match(line)
+            if m:
+                group = m.groupdict()
+                con_dict['creation_time'] = group['creation_time']
+                continue
+
+            #Last connected time:   : Mon Jan 15 21:49:23:59
+            m = p20.match(line)
+            if m:
+                group = m.groupdict()
+                con_dict['last_con_time'] = group['last_con_time']
+                continue
+
+            #Last disconnect time:  :
+            m = p21.match(line)
+            if m:
+                group = m.groupdict()
+                con_dict['last_discon_time'] = group['last_discon_time']
+                continue
+
+            #Last error:            :
+            m = p22.match(line)
+            if m:
+                group = m.groupdict()
+                con_dict['last_error'] = group['last_error']
+                continue
+
+            #Connection flaps:      : 0
+            m = p23.match(line)
+            if m:
+                group = m.groupdict()
+                con_dict['con_flaps'] = int(group['con_flaps'])
+                continue
+
+            #Last flap Reason:      :
+            m = p24.match(line)
+            if m:
+                group = m.groupdict()
+                con_dict['last_flap_reason'] = group['last_flap_reason']
+                continue
+
+            #Keep Alive Timeouts:   : 0
+            m = p25.match(line)
+            if m:
+                group = m.groupdict()
+                con_dict['keep_alive_timeouts'] = int(group['keep_alive_timeouts'])
+                continue
+
+            #Last Transport Error   :
+            m = p26.match(line)
+            if m:
+                group = m.groupdict()
+                con_dict['last_transport_error'] = group['last_transport_error']
                 continue
 
         return ret_dict

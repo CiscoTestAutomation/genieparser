@@ -3,7 +3,7 @@
 
 expected_output = {
     "03AA.BB00.0000.0200.0001": {
-        "interface": "Port-channel1",
+        "interface": ["Port-channel1"],
         "redundancy_mode": "all-active",
         "df_wait_time": 3,
         "split_horizon_label": 16,
@@ -22,7 +22,7 @@ expected_output = {
         ],
     },
     "03AA.AABB.BBCC.CC00.0001": {
-        "interface": "Ethernet0/2",
+        "interface": ["Ethernet0/2"],
         "redundancy_mode": "single-active",
         "df_wait_time": 3,
         "split_horizon_label": 16,

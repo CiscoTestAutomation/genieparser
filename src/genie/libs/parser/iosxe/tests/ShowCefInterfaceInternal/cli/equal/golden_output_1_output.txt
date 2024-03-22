@@ -1,0 +1,34 @@
+GigabitEthernet0/0 is up (if_number 6) ['2]
+  Corresponding hwidb fast_if_number 6
+  Corresponding hwidb firstsw->if_number 6
+  Internet address is 192.168.0.131/24
+  ICMP redirects are always sent
+  IP unicast RPF check is disabled
+  Suppressed input features: MCI Check
+  IP policy routing is disabled
+  BGP based policy accounting on input is disabled
+  BGP based policy accounting on output is disabled
+  Hardware idb is GigabitEthernet0/0
+  Fast switching type 1, interface type 27
+  IP CEF switching disabled
+  IP Null turbo vector
+  IP Null turbo vector
+  VPN Forwarding table "Mgmt-vrf"
+  IP prefix lookup IPv4 mtrie 8-8-8-8 optimized
+  Flags 0x26000, hardware flags 0x5
+  Input fast flags 0x0, Output fast flags 0x0
+  ifindex 5(5) ['2]
+  Slot 20 (20) Slot unit 0 VC -1
+  IP MTU 1500
+  VRF: Mgmt-vrf(1)
+ Status flags:
+  hwidb    status 210040 status2 200010 status3 0 status4 22
+  fibhwidb status 210040 status2 200010 status3 0 status4 22
+ Subblocks:
+  IPv4: Internet address is 192.168.0.131/24
+        Broadcast address 255.255.255.255
+        ICMP redirects are always sent
+        ICMP unreachables are always sent
+        Optimized neighbor resolution supported.
+        IP MTU 1500
+  Protocol discard for IPv6 - discarded packets: 2

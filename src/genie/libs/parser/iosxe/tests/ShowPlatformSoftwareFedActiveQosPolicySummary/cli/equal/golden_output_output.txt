@@ -1,0 +1,7 @@
+show platform software fed active qos policy summary 
+Policymap Summary: (counters)
+  CGID     Clases Targets Child CfgErr InHw  OpErr Policy Name        
+---------- ------ ------- ----- ------ ----- ----- ------------------
+15212688   22     33      0     0      33    0     system-cpp-policy  
+10366368   24     384     0     0      384   0     DNA-MARKING_IN  
+

@@ -1,0 +1,46 @@
+show bgp vrf SRV6_L3VPN_BE ipv6 unicast fd00::3/128 detail
+Wed Apr 12 06:41:39.268 UTC
+BGP routing table entry for fd00::3/128, Route Distinguisher: 100:1
+Versions:
+  Process           bRIB/RIB  SendTblVer
+  Speaker                 181          181
+    Flags: 0x00843001+0x00010000; 
+Last Modified: Apr 10 04:42:45.519 for 2d01h
+Paths: (2 available, best #1)
+  Advertised to CE peers (in unique update groups):
+    fd00:ffff:100:11::2                     
+  Path #1: Received by speaker 0
+  Flags: 0x2000000085060005+0x00, import: 0x39f
+  Advertised to CE peers (in unique update groups):
+    fd00:ffff:100:11::2                     
+  65535
+    fc00:a000:2000::3 (metric 30) from fc00:a000:1000::11 (10.0.0.3), if-handle 0x00000000
+      Received Label 0xe0030
+      Origin IGP, metric 0, localpref 100, valid, internal, best, group-best, import-candidate, imported
+      Received Path ID 0, Local Path ID 1, version 181
+      Extended community: RT:100:1 
+      Originator: 10.0.0.3, Cluster list: 10.0.0.11, 10.0.0.13
+      PSID-Type:L3, SubTLV Count:1, R:0x00,
+       SubTLV:
+        T:1(Sid information), Sid:fc00:c000:2003::, F:0x00, R2:0x00, Behavior:62, R3:0x00, SS-TLV Count:1
+         SubSubTLV:
+          T:1(Sid structure):
+           Length [Loc-blk,Loc-node,Func,Arg]:[32,16,16,0], Tpose-len:16, Tpose-offset:48
+      Source AFI: VPNv6 Unicast, Source VRF: SRV6_L3VPN_BE, Source Route Distinguisher: 100:1
+  Path #2: Received by speaker 0
+  Flags: 0x2000000084020005+0x00, import: 0x0c0
+  Not advertised to any peer
+  65535
+    fc00:a000:2000::3 (metric 30) from fc00:a000:1000::12 (10.0.0.3), if-handle 0x00000000
+      Received Label 0xe0030
+      Origin IGP, metric 0, localpref 100, valid, internal, import-candidate, imported
+      Received Path ID 0, Local Path ID 0, version 0
+      Extended community: RT:100:1 
+      Originator: 10.0.0.3, Cluster list: 10.0.0.12, 10.0.0.13
+      PSID-Type:L3, SubTLV Count:1, R:0x00,
+       SubTLV:
+        T:1(Sid information), Sid:fc00:c000:2003::, F:0x00, R2:0x00, Behavior:62, R3:0x00, SS-TLV Count:1
+         SubSubTLV:
+          T:1(Sid structure):
+           Length [Loc-blk,Loc-node,Func,Arg]:[32,16,16,0], Tpose-len:16, Tpose-offset:48
+      Source AFI: VPNv6 Unicast, Source VRF: SRV6_L3VPN_BE, Source Route Distinguisher: 100:1

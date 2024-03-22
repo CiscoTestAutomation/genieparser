@@ -1,0 +1,36 @@
+App id                 : thousandeyes_enterprise_agent
+Owner                  : iox
+State                  : RUNNING
+Application
+   Type                 : docker
+   Name                 : ThousandEyes Enterprise Agent
+   Version              : 4.3.0
+   Description          : 
+   Author               : ThousandEyes <support@thousandeyes.com>
+   Path                 : flash:thousandeyes-enterprise-agent-4.3.0.cisco.tar
+   URL Path             : 
+Activated profile name : custom
+
+Resource reservation
+  Memory               : 500 MB
+  Disk                 : 1 MB
+  CPU                  : 1850 units
+  VCPU                 : 1
+Attached devices
+  Type              Name               Alias
+---------------------------------------------
+  serial/shell     iox_console_shell   serial0
+  serial/aux       iox_console_aux     serial1
+  serial/syslog    iox_syslog          serial2
+  serial/trace     iox_trace           serial3
+
+Network interfaces
+  ---------------------------------------
+eth0:
+  MAC address         : 52:54:dd:d:38:3d
+  Network name        : mgmt-bridge-v21
+
+Application health information
+  Status               : 0
+  Last probe error     :
+  Last probe output    :

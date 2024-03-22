@@ -1,0 +1,1 @@
+ptp profile 8275.1 clock-mode boundary

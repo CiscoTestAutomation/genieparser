@@ -1,0 +1,60 @@
+show ospf 200
+Wed Apr 19 11:20:25.220 UTC
+
+ Routing Process "ospf 200" with ID 100.1.1.200
+ Role: Primary Active
+ NSR (Non-stop routing) is Enabled
+ Supports only single TOS(TOS0) routes
+ Supports opaque LSA
+ It is an autonomous system boundary router
+ Router is not originating router-LSAs with maximum metric
+ Initial SPF schedule delay 50 msecs
+ Minimum hold time between two consecutive SPFs 200 msecs
+ Maximum wait time between two consecutive SPFs 5000 msecs
+ Initial LSA throttle delay 50 msecs
+ Minimum hold time for LSA throttle 200 msecs
+ Maximum wait time for LSA throttle 5000 msecs
+ Minimum LSA interval 200 msecs. Minimum LSA arrival 100 msecs
+ LSA refresh interval 1800 seconds
+ Flood pacing interval 33 msecs. Retransmission pacing interval 66 msecs
+ Adjacency stagger enabled; initial (per area): 2, maximum: 64
+    Number of neighbors forming: 0, 0 full
+ Maximum number of configured interfaces 1024
+ Number of external LSA 1. Checksum Sum 0x00e9c8
+ Number of opaque AS LSA 0. Checksum Sum 00000000
+ Number of DCbitless external and opaque AS LSA 0
+ Number of DoNotAge external and opaque AS LSA 0
+ Number of areas in this router is 2. 2 normal 0 stub 0 nssa
+ External flood list length 0
+ Non-Stop Forwarding enabled
+ Microloop avoidance Enabled, Type: Local (Protected), Delay Time: 5000
+    Microloop avoidance is not active
+ SNMP trap is enabled
+ LSD connected, registered, bound, revision 1
+ Segment Routing Global Block default (16000-23999), not allocated
+ Segment Routing Local Block (15000-15999), allocated
+ Strict-SPF capability is enabled
+    Area BACKBONE(0) (Inactive)
+        Number of interfaces in this area is 0
+        SPF algorithm executed 1 times
+        Number of LSA 0.  Checksum Sum 00000000
+        Number of opaque link LSA 0.  Checksum Sum 00000000
+        Number of DCbitless LSA 0
+        Number of indication LSA 0
+        Number of DoNotAge LSA 0
+        Flood list length 0
+        Number of LFA enabled interfaces 0, LFA revision 0
+        Number of Per Prefix LFA enabled interfaces 0
+        Number of neighbors forming in staggered mode 0, 0 full
+    Area 200
+        Number of interfaces in this area is 1
+        SPF algorithm executed 2 times
+        Number of LSA 1.  Checksum Sum 0x0028d3
+        Number of opaque link LSA 0.  Checksum Sum 00000000
+        Number of DCbitless LSA 0
+        Number of indication LSA 0
+        Number of DoNotAge LSA 0
+        Flood list length 0
+        Number of LFA enabled interfaces 0, LFA revision 0
+        Number of Per Prefix LFA enabled interfaces 0
+        Number of neighbors forming in staggered mode 0, 0 full

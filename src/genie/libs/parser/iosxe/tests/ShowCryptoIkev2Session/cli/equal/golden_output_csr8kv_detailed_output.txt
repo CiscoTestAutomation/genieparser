@@ -22,18 +22,20 @@ Tunnel-id Local                 Remote                fvrf/ivrf            Statu
       NAT-T is not detected  
       Cisco Trust Security SGT is disabled
       Initiator of SA : Yes
-Child sa: local selector 30.10.10.0/0 - 50.10.10.255/65535
-          local selector 20.10.10.0/0 - 40.10.10.255/65535
-          remote selector 172.17.2.0/0 - 172.17.2.255/65535
-          remote selector 172.17.2.0/0 - 172.17.3.255/65535
+Child sa:
+          local selector       ->      remote selector
+          8001::/0 - 8001::FFFF:FFFF:FFFF:FFFF/65535    ->    9001::/0 - 9001::FFFF:FFFF:FFFF:FFFF/65535
+          89.89.89.0/0 - 89.89.89.255/65535    ->    99.99.99.0/0 - 99.99.99.255/65535
           ESP spi in/out: 0x232CB82D/0x30767B6E  
           AH spi in/out: 0x0/0x0  
           CPI in/out: 0x0/0x0  
           Encr: AES-CBC, keysize: 256, esp_hmac: SHA256
           ah_hmac: None, comp: IPCOMP_NONE, mode tunnel
 
-Child sa: local selector  20.10.10.0/0 - 40.10.10.255/65535
-          remote selector 50.20.20.0/0 - 60.20.20.255/65535
+Child sa:
+          local selector       ->      remote selector
+          3001::/0 - 3001::FFFF:FFFF:FFFF:FFFF/65535    ->    3101::/0 - 3101::FFFF:FFFF:FFFF:FFFF/65535
+          30.30.30.0/0 - 30.30.30.255/65535    ->    31.31.31.0/0 - 31.31.31.255/65535
           ESP spi in/out: 0x232CB82D/0x30767B6E  
           AH spi in/out: 0x0/0x0  
           CPI in/out: 0x0/0x0  
@@ -63,18 +65,19 @@ Tunnel-id Local                 Remote                fvrf/ivrf            Statu
       NAT-T is not detected  
       Cisco Trust Security SGT is disabled
       Initiator of SA : Yes
-Child sa: local selector 30.10.10::0/0 - 50.10.10::255/65535
-          local selector 20.10.10::0/0 - 40.10.10::255/65535
-          remote selector 172.17.2::0/0 - 172.17.2::255/65535
-          remote selector 172.17.2::0/0 - 172.17.3::255/65535
+Child sa:
+          local selector       ->      remote selector
+          2001::/0 - 2001::FFFF:FFFF:FFFF:FFFF/65535    ->    2101::/0 - 2101::FFFF:FFFF:FFFF:FFFF/65535
+          20.20.20.0/0 - 20.20.20.255/65535    ->    21.21.21.0/0 - 21.21.21.255/65535
           ESP spi in/out: 0x232CB82D/0x30767B6E  
           AH spi in/out: 0x0/0x0  
           CPI in/out: 0x0/0x0  
           Encr: AES-CBC, keysize: 256, esp_hmac: SHA256
           ah_hmac: None, comp: IPCOMP_NONE, mode tunnel
 
-Child sa: local selector  20.10.10::0/0 - 40.10.10::255/65535
-          remote selector 50.20.20::0/0 - 60.20.20::255/65535
+Child sa:
+          local selector       ->      remote selector
+          10.10.10.0/0 - 10.10.10.255/65535    ->    11.11.11.0/0 - 11.11.11.255/65535
           ESP spi in/out: 0x232CB82D/0x30767B6E  
           AH spi in/out: 0x0/0x0  
           CPI in/out: 0x0/0x0  

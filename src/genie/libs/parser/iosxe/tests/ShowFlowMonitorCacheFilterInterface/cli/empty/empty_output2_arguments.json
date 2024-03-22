@@ -1,0 +1,7 @@
+{
+    "name": "m6in",
+    "int_type": "ipv6",
+    "direction": "traffic-class",
+    "interface_name": "0",
+    "top": "top 2"
+}

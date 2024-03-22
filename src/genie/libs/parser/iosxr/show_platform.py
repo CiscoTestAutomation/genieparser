@@ -18,6 +18,7 @@ IOSXR parsers for the following show commands:
     * 'dir {directory} location {location}'
     * 'show processes memory detail'
     * 'show processes memory detail | include <WORD>'
+    * 'show filesystem location all'
 '''
 
 # Python
@@ -56,6 +57,9 @@ class ShowVersionSchema(MetaParser):
               Optional('config_register'): str,
               Optional('rp_config_register'): str,
               Optional('main_mem'): str,
+              Optional('built_by'): str,
+              Optional('built_on'): str,
+              Optional('built_host'): str,
              }
 
 class ShowVersion(ShowVersionSchema):
@@ -105,6 +109,15 @@ class ShowVersion(ShowVersionSchema):
 
         # ASR 9006 4 Line Card Slot Chassis with V2 AC PEM
         p7 = re.compile(r'\s*.*Chassis.*$')
+
+        # Built By     : xyz
+        p8 = re.compile(r'^Built\s+By\s*:\s+(?P<built_by>\S+)$')
+
+        # Built On     : Fri Dec 13 16:42:11 PST 2019
+        p9 = re.compile(r'^Built\s+On\s*:\s+(?P<built_on>[a-zA-Z0-9\:\/\.\-\s]+)$')
+
+        # Built Host   : iox-abc-123
+        p10 = re.compile(r'^Built\s+Host\s*:\s*(?P<built_host>\S+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -156,6 +169,21 @@ class ShowVersion(ShowVersionSchema):
             m = p7.match(line)
             if m:
                 show_version_dict['chassis_detail'] = str(line.strip())
+                continue
+
+            m = p8.match(line)
+            if m:
+                show_version_dict['built_by'] = m.groupdict()['built_by']
+                continue
+
+            m = p9.match(line)
+            if m:
+                show_version_dict['built_on'] = m.groupdict()['built_on']
+                continue
+
+            m = p10.match(line)
+            if m:
+                show_version_dict['built_host'] = m.groupdict()['built_host']
                 continue
 
         return show_version_dict
@@ -379,7 +407,7 @@ class ShowPlatform(ShowPlatformSchema):
                 config_state = str(m.groupdict()['config_state']).strip()
 
                 # Parse node for rack, slot, subslot details
-                parse_node = re.compile(r'\s*(?P<rack>[0-9]+)\/(?P<slot>[0-9A-Z]+)(?:\/(?P<last_entry>[0-9A-Z]+))?$').match(node)
+                parse_node = re.compile(r'\s*(?P<rack>[A-Z0-9]+)\/(?P<slot>[0-9A-Z]+)(?:\/(?P<last_entry>[0-9A-Z]+))?$').match(node)
                 rack = str(parse_node.groupdict()['rack'])
                 slot = rack + '/' + str(parse_node.groupdict()['slot'])
                 last_entry = str(parse_node.groupdict()['last_entry'])
@@ -1800,5 +1828,74 @@ class ShowProcessesMemoryDetail(ShowProcessesMemoryDetailSchema):
                     k: int(v) if v.isdigit() else v
                     for k, v in group.items()
                 })
+
+        return ret_dict
+
+# ==============================================
+# Parser for 'show filesystem location all'
+# ==============================================
+
+class ShowFilesystemLocationAllSchema(MetaParser):
+    """Schema for show filesystem location all"""
+
+    schema = {
+        'node': {
+            Any(): {
+                'file_systems': {
+                    Any(): {
+                    'total_size': int,
+                    'free_size': int,
+                    'type': str,
+                    'flags': str,
+                    'prefixes': str,
+                    }
+                }
+            }
+        }
+    }
+
+class ShowFilesystemLocationAll(ShowFilesystemLocationAllSchema):
+
+    cli_command = ['show filesystem location all']
+
+    def cli(self, output=None):
+
+        if output is None:
+            output = self.device.execute(self.cli_command[0])
+
+        # node:  node0_RP0_CPU0
+        p1 = re.compile(r'^node:\s+(?P<node>\S+)$')
+
+        # 3962216448   3926405120  flash-disk     rw  apphost:
+        p2 = re.compile(r'^(?P<total_size>\d+)\s*(?P<free_size>\d+)\s*(?P<type>\S*)\s*(?P<flags>\S*)\s*(?P<prefixes>[\S\s]+)$')
+
+        # initial return dictionary
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # node:  node0_RP0_CPU0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                node_dict = ret_dict.setdefault('node', {}).setdefault(group['node'], {})
+                index = 0
+                continue
+
+            # 3962216448   3926405120  flash-disk     rw  apphost:
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                index += 1
+                file_systems_dict = node_dict.setdefault('file_systems', {}).setdefault(index, {})
+                file_systems_dict.update({
+                    'total_size': int(group['total_size']),
+                    'free_size': int(group['free_size']),
+                    'type': group['type'],
+                    'flags': group['flags'],
+                    'prefixes': group['prefixes'],
+                    })
+                continue
 
         return ret_dict

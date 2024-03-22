@@ -1,0 +1,82 @@
+Cisco IOS XE Software, Version BLD_V1710_THROTTLE_LATEST_20221030_072056
+Cisco IOS Software [Dublin], IE31xx Switch Software (IE31xx-UNIVERSALK9-M), Experimental Version 17.10.20221030:080207 [BLD_V1710_THROTTLE_LATEST_20221030_072056:/nobackup/mcpre/s2c-build-ws 101]
+Copyright (c) 1986-2022 by Cisco Systems, Inc.
+Compiled Sun 30-Oct-22 01:02 by mcpre
+
+
+Cisco IOS-XE software, Copyright (c) 2005-2022 by cisco Systems, Inc.
+All rights reserved.  Certain components of Cisco IOS-XE software are
+licensed under the GNU General Public License ("GPL") Version 2.0.  The
+software code licensed under GPL Version 2.0 is free software that comes
+with ABSOLUTELY NO WARRANTY.  You can redistribute and/or modify such
+GPL code under the terms of GPL Version 2.0.  For more details, see the
+documentation or "License Notice" file accompanying the IOS-XE software,
+or the applicable URL provided on the flyer accompanying the IOS-XE
+software.
+
+
+ROM: IOS-XE ROMMON
+BOOTLDR: Version 0.0.24 [DEVELOPMENT SOFTWARE] crashkernel=64M
+IE-3105-18T2C uptime is 6 hours, 17 minutes
+Uptime for this control processor is 6 hours, 19 minutes
+System returned to ROM by Reload Command
+System restarted at 13:40:54 UTC Mon Oct 31 2022
+System image file is "flash:test_image"
+Last reload reason: Reload Command
+
+
+
+This product contains cryptographic features and is subject to United
+States and local country laws governing import, export, transfer and
+use. Delivery of Cisco cryptographic products does not imply
+third-party authority to import, export, distribute or use encryption.
+Importers, exporters, distributors and users are responsible for
+compliance with U.S. and local country laws. By using this product you
+agree to comply with applicable laws and regulations. If you are unable
+to comply with U.S. and local laws, return this product immediately.
+
+A summary of U.S. laws governing Cisco cryptographic products may be found at:
+http://www.cisco.com/wwl/export/crypto/tool/stqrg.html
+
+If you require further assistance please contact us by sending email to
+export@cisco.com.
+
+
+Technology Package License Information:
+
+------------------------------------------------------------------------------
+Technology-package                                     Technology-package
+Current                        Type                       Next reboot
+------------------------------------------------------------------------------
+network-essentials      Smart License                    None
+None                    Subscription Smart License       None
+
+
+Smart Licensing Status: Smart Licensing Using Policy
+
+cisco IE-3105-18T2C (ARM) processor (revision V00) with 634623K/6147K bytes of memory.
+Processor board ID FDO2629J8ZN
+2 Virtual Ethernet interfaces
+20 Gigabit Ethernet interfaces
+4096K bytes of non-volatile configuration memory.
+3491840K bytes of physical memory.
+524288K bytes of crashinfo at crashinfo:.
+1946624K bytes of Flash at flash:.
+15557120K bytes of SD Flash  at sdflash:.
+
+Base Ethernet MAC Address          : 3c:8b:7f:ff:dd:80
+Motherboard Assembly Number        : 73-105757-03
+Motherboard Serial Number          : FDO262304QG
+Model Revision Number              : V00
+Motherboard Revision Number        : 3
+Model Number                       : IE-3105-18T2C
+System Serial Number               : FDO2629J8ZN
+Top Assembly Part Number           : 68-103582-03
+Top Assembly Revision Number       : 05
+System FPGA version                : 0.2.14
+CIP Serial Number                  : 0x0EFFDD80
+SKU Brand Name                     : Cisco
+
+
+Configuration register is 0x102
+

@@ -1,0 +1,17 @@
+show platform software fed switch active vp summary vlan 1
+           if_id      vlan_id   pvlan_mode   pvlan_vlan   stp_state  vtp pruned          Untagged
+-------------------------------------------------------------------------------------------------
+            1355            1        trunk            1    blocking          No               Yes
+            1225            1         none            1  forwarding          No               Yes
+            1224            1         none            1  forwarding          No               Yes
+            1221            1         none            1  forwarding          No               Yes
+            1197            1         none            1    blocking          No               Yes
+            1194            1         none            1    blocking          No               Yes
+            1175            1         none            1    disabled          No               Yes
+            1174            1         none            1    disabled          No               Yes
+            1173            1         none            1    disabled          No               Yes
+            1172            1         none            1    disabled          No               Yes
+            1056            1         none            1  forwarding          No               Yes
+            1039            1         none            1  forwarding          No               Yes
+            1034            1        trunk            1    blocking          No               Yes
+            1032            1        trunk            1    blocking          No               Yes

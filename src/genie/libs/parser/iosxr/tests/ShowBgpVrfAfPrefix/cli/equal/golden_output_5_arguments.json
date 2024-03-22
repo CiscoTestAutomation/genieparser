@@ -1,0 +1,4 @@
+{
+    "address_family": "l2vpn evpn",
+    "route_rd": "2000:90:11:1::/64"
+}

@@ -1,0 +1,7 @@
+
+Transfer Name : myTransfer1
+Primary URL tftp://192.168.0.70/auto/tftp-sjpreg/logsTransfer
+    Retained files:
+    File Name          :   Time Left(in seconds)     : STATE
+    myTransfer1_stack3-frkl-1_raw_220929_082505162 :   63   : Retained
+    myTransfer1_stack3-frkl-1_raw_220929_082705164 :   183   : Retry(2 Retry attempt(s) Left)

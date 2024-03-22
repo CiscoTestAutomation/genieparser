@@ -6,6 +6,18 @@ expected_output = {
                     "PWRED-CHILD": {
                         "class_map": {
                             "CWRED": {
+                                "bandwidth_kbps": 200000,
+                                "bandwidth_percent": 20,
+                                "match": [
+                                    "dscp ef (46)", 
+                                    "dscp af11 (10)", 
+                                    "dscp 1"
+                                ],
+                                "match_evaluation": "match-any",
+                                "packets": 0,
+                                "queueing": True,
+                                "total_drops": 0,
+                                "bytes_output": 197438313055,
                                 "afd_wred_stats": {
                                     "total_drops_bytes": 0,
                                     "total_drops_packets": 0,
@@ -42,23 +54,15 @@ expected_output = {
                                         }
                                     }
                                 },
-                                "bandwidth_kbps": 200000,
-                                "bandwidth_percent": 20,
-                                "match": [
-                                    "dscp ef (46)",
-                                    "dscp af11 (10)",
-                                    "dscp 1"
-                                ],
-                                "match_evaluation": "match-any",
-                                "packets": 0,
-                                "queueing": True
                             },
                             "class-default": {
                                 "match": [
                                     "any"
                                 ],
                                 "match_evaluation": "match-any",
-                                "packets": 0
+                                "packets": 0,
+                                "total_drops": 0,
+                                "bytes_output": 3392,
                             }
                         }
                     }

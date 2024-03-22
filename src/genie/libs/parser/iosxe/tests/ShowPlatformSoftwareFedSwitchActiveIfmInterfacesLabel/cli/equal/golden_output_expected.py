@@ -1,0 +1,1 @@
+expected_output = {'interface_name': {'LISP0': {'if_id': '0x0000054c', 'state': 'Ready'}}}

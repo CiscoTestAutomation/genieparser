@@ -30,7 +30,8 @@ class ShowVrfSchema(MetaParser):
             Any(): {
                 Optional('route_distinguisher'): str,
                 Optional('protocols'): list,
-                Optional('interfaces'): list
+                Optional('interfaces'): list,
+                Optional('being_deleted'): bool
             }
         }
     }
@@ -62,8 +63,9 @@ class ShowVrf(ShowVrfSchema):
         # vpn4                             100:2                 ipv4,ipv6
         # rb-bcn-lab                       10.116.83.34:1        ipv4,ipv6   Lo9
         # test                             10.116.83.34:100      ipv4,ipv6   Lo100
-        p1 = re.compile(r'^(?P<vrf>[\w\d\-\.]+)\s+(?P<rd>\<not +set\>|[\.\d\:]+)'
-                        r'(?:\s+(?P<protocols>[(?:ipv\d)\,]+))?(?:\s+(?P<intf>[\S\s]+))?$')
+        # ce1                              <being deleted>       ipv4,ipv6   Et1/0
+        # * ce1                              2:2                   ipv4,ipv6
+        p1 = re.compile(r'^(((?P<being_deleted>\*))\s+)?(?P<vrf>[\w\d\-\.]+)\s+(?P<rd>\<not +set\>|<being deleted>|[\.\d\:]+)(?:\s+(?P<protocols>[(?:ipv\d)\,]+))?(?:\s+(?P<intf>[\S\s]+))?$')
 
         # Lo300
         # Gi2.390
@@ -81,6 +83,7 @@ class ShowVrf(ShowVrfSchema):
             # rb-bcn-lab                       10.116.83.34:1        ipv4,ipv6   Lo9
             #                                                                    Te0/0/1
             # test                             10.116.83.34:100      ipv4,ipv6   Lo100
+            # * ce1                              2:2                   ipv4,ipv6
             m = p1.match(line)
             if m:
                 groups = m.groupdict()
@@ -89,17 +92,21 @@ class ShowVrf(ShowVrfSchema):
                 vrf_dict = res_dict.setdefault('vrf', {}).setdefault(vrf, {})
 
                 rd = groups['rd']
-                if 'not set' not in rd:
-                    vrf_dict.update({'route_distinguisher': rd})
+                vrf_dict.update({'route_distinguisher': rd})
 
                 if groups['protocols']:
                     protocols = groups['protocols'].split(',')
                     vrf_dict.update({'protocols': protocols})
+                    vrf_dict['protocols'].sort()
 
                 if groups['intf']:
                     intfs = groups['intf'].split()
                     intf_list = [Common.convert_intf_name(item) for item in intfs]
                     vrf_dict.update({'interfaces': intf_list})
+                    vrf_dict['interfaces'].sort()
+
+                if groups['being_deleted']:
+                    vrf_dict.update({'being_deleted': True})
                 continue
 
             # Lo300
@@ -111,6 +118,7 @@ class ShowVrf(ShowVrfSchema):
                 groups = m.groupdict()
                 intf = Common.convert_intf_name(groups['intf'])
                 vrf_dict.get('interfaces').append(intf)
+                vrf_dict['interfaces'].sort()
 
         return res_dict
 
@@ -132,6 +140,9 @@ class ShowVrfDetailSchema(MetaParser):
             Optional('interfaces'): list,
             Optional('interface'): {Any(): {'vrf': str}},
             Optional('flags'):  str,
+            Optional('vnid'): str,
+            Optional('vni'): str,
+            Optional('core_vlan'): str,
             Optional('cli_format'): str,
             Optional('support_af'): str,
             Optional('address_family'): {
@@ -209,6 +220,9 @@ class ShowVrfDetailSuperParser(ShowVrfDetailSchema):
         # New CLI format, supports multiple address-families
         p1_1 = re.compile(r'^(?P<cli_format>(New|Old)) +CLI +format,'
                           r' +supports +(?P<support_af>[\s\S]+)$')
+        
+        #vnid: 30022 evpn-instance vni 4096 core-vlan 300
+        p1_2 = re.compile(r'^vnid:\s+(?P<vnid>\d+)(?:\s+evpn-instance vni\s+(?P<vni>\w+)(?:\s+core-vlan\s+(?P<core_vlan>\d+))?)?$')
 
         # Flags: 0x180C
         p2 = re.compile(r'^Flags: +(?P<flags>\w+)$')
@@ -277,6 +291,7 @@ class ShowVrfDetailSuperParser(ShowVrfDetailSchema):
         # Description: desc
         p12 = re.compile(r'^Description: +(?P<desc>[\S\s]+)$')
 
+
         for line in output.splitlines():
             line = line.strip()
 
@@ -316,6 +331,15 @@ class ShowVrfDetailSuperParser(ShowVrfDetailSchema):
                 groups = m.groupdict()
                 vrf_dict.update({'cli_format':groups['cli_format']})
                 vrf_dict.update({'support_af':groups['support_af']})
+                continue
+
+            #vnid: 30022 evpn-instance vni 4096 core-vlan 300
+            m = p1_2.match(line)
+            if m:
+                groups = m.groupdict()
+                vrf_dict.update({'vnid': groups['vnid']})
+                vrf_dict.update({'vni': groups['vni']})
+                vrf_dict.update({'core_vlan': groups['core_vlan']})
                 continue
 
             # Flags: 0x180C
@@ -510,6 +534,7 @@ class ShowVrfDetailSuperParser(ShowVrfDetailSchema):
                 groups = m.groupdict()
                 vrf_dict.update({'description': groups['desc']})
                 continue
+
         return result_dict
 
 
@@ -532,3 +557,183 @@ class ShowVrfDetail(ShowVrfDetailSuperParser):
 
         return super().cli(output=out)
 # vim: ft=python et sw=4
+
+
+'''
+ShowVRFIPv6.py
+'''
+
+# ====================================================
+#  schema for show vrf ipv6 {vrf}
+# ====================================================
+class ShowVRFIPv6Schema(MetaParser):
+    """Schema for show vrf ipv6 {vrf}"""
+    schema = {
+        Any(): 
+        {
+            'default_rd': str,
+            'protocols': str,
+            'interface': str,
+        }   
+    }
+
+# ====================================================
+#  parser for show vrf ipv6 {vrf}
+# ====================================================
+class ShowVRFIPv6(ShowVRFIPv6Schema):
+    """Parser for :
+        show vrf ipv6 <vrf>"""
+
+    cli_command = 'show vrf ipv6 {vrf}'
+
+    def cli(self, vrf='',output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(vrf=vrf))
+            
+        res_dict = {}
+        p1 = re.compile(r'^(?P<vrf>[\w\d]+)+\s+(?P<default_rd>[\d\:\d]+)+\s+(?P<protocols>[\w\,\w]+)\s+\s\s(?P<interface>[\w\d]+)*$')
+        for line in output.splitlines():
+            line = line.strip()
+            # vrf21                                21:1              ipv4,ipv6   Vl21'''
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                res_dict.setdefault(groups['vrf'], {})
+                vrf_dict = res_dict[groups['vrf']]
+                vrf_dict.update({
+                'default_rd' : groups['default_rd'],
+                'protocols' : groups['protocols'],
+                'interface' : groups['interface'],})
+
+        return res_dict
+    
+#=================================================
+# Schema for 'show platform software cef ipv4 vrf Default 1.1.1.1 1.1.1.1 feature-all'
+#=================================================
+class ShowPlatformSoftwareCefIpVrfSchema(MetaParser):
+    schema = {
+        'vrf_name': {
+            Any(): {
+                'process_type': {
+                    Any(): {
+                        'gateway': {
+                            Any():{
+                                Optional('mask'): str,
+                                Optional('route_vrf_name'): str,
+                                Optional('route_mask_num'): str,
+                                Optional('route_ip_address'): str,
+                                Optional('stage'): str,
+                                Optional('distance'): str,
+                                Optional('metric'): str,
+                                Optional('interface'): str,
+                                Optional('route_metric'): str,
+                                Optional('traffic_share'): str,
+                                Optional('mask_number'): str,       
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+#==================================================
+# Parser for 'show platform software cef ipv4 vrf Default 1.1.1.1 1.1.1.1 feature-all'
+#==================================================
+class ShowPlatformSoftwareCefIpVrf(ShowPlatformSoftwareCefIpVrfSchema):
+    cli_command = 'show platform software cef {protocol} vrf {option} {ip} {mask} feature-all'
+
+    def cli(self, protocol, ip, option, mask, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(protocol=protocol, option=option, ip=ip,mask=mask))
+
+        # VRF Default
+        p1 = re.compile(r'^VRF\s+(?P<vrf_name>[\w\s\-]+)$')
+
+        # ------------------ show ip route vrf Default 11.1.6.1 255.255.255.0 ------------------
+        # ------------------ show ip cef vrf vrf1000 11.1.6.1 255.255.255.0 internal ------------------
+        p2 = re.compile(r'^[-]+ show ip (?P<process_type>[\w\s]+) vrf +(?P<ip_vrf_name>[\w\s\-]+)\s+(?P<gateway>[\d\.]+)\s+(?P<mask>[\d\.]+)\s+?[internal+\s[-]+$')
+
+        # Routing Table: vrf1000
+        p3 = re.compile(r'^Routing Table: +(?P<route_vrf_name>[\w\s]+)$')
+
+        # Routing entry for 11.1.6.0/24
+        p4 = re.compile(r'^Routing entry for +(?P<route_ip_address>[\d\.]+)/(?P<route_mask_num>[\d]+)$')
+
+        # Known via "connected", distance 0, metric 0 (connected, via interface)
+        p5 = re.compile(r'^Known via "+(?P<stage>[\w]+)+",\s+distance+\s(?P<distance>[\d]+),\s+metric+\s(?P<metric>[\d]+)\s+\(connected, via interface\)')
+
+        # * directly connected, via HundredGigE1/0/3
+        p6 = re.compile(r'^[*] directly connected, via +(?P<interface>[\w\/]+)$')
+
+        # Route metric is 0, traffic share count is 1
+        p7 = re.compile(r'^Route metric is (?P<route_metric>[\d]+), traffic share count is +(?P<traffic_share>[\d]+)$')
+
+        # ------------------ show platform software ip switch active rp active cef prefix 11.1.6.1/24 detail ------------------
+        # ------------------ show platform software ip fp active cef prefix 11.1.6.1/24 detail ------------------
+        p8 = re.compile(r'^[-]+ show platform software ip( switch active){0,1} (?P<process_type>[\w]+) active cef prefix +(?P<gateway>[\d\.]+)/(?P<mask_number>[\d]+)\s+detail +[-]+$')
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # VRF Default
+            m = p1.match(line)
+            if m:
+                key_chain_dict = ret_dict.setdefault('vrf_name', {}).setdefault(m.groupdict()['vrf_name'], {})
+                continue
+
+            # ------------------ show ip route vrf Default 11.1.6.1 255.255.255.0 ------------------
+            # ------------------ show ip cef vrf vrf1000 11.1.6.1 255.255.255.0 internal ------------------
+            m = p2.match(line)
+            if m:
+                process_dict = key_chain_dict.setdefault('process_type', {}).setdefault(m.groupdict()['process_type'], {})                
+                object_dict = process_dict.setdefault('gateway', {}).setdefault(m.groupdict()['gateway'], {})
+                object_dict['mask'] = m.groupdict()['mask']
+                continue
+            
+            # Routing Table: vrf1000
+            m = p3.match(line)
+            if m:
+                object_dict['route_vrf_name'] = m.groupdict()['route_vrf_name']
+                continue
+
+            # Routing entry for 11.1.6.0/24
+            m = p4.match(line)
+            if m:
+                object_dict['route_ip_address'] = m.groupdict()['route_ip_address']
+                object_dict['route_mask_num'] = m.groupdict()['route_mask_num']
+                continue
+
+            # Known via "connected", distance 0, metric 0 (connected, via interface)
+            m = p5.match(line)
+            if m:
+                object_dict['stage'] = m.groupdict()['stage']
+                object_dict['distance'] = m.groupdict()['distance']
+                object_dict['metric'] = m.groupdict()['metric']
+                continue
+
+            # * directly connected, via HundredGigE1/0/3
+            m = p6.match(line)
+            if m:
+                object_dict['interface'] = m.groupdict()['interface']
+                continue
+
+            # Route metric is 0, traffic share count is 1
+            m = p7.match(line)
+            if m:
+                object_dict['route_metric'] = m.groupdict()['route_metric']
+                object_dict['traffic_share'] = m.groupdict()['traffic_share']
+                continue
+
+            # ------------------ show platform software ip switch active rp active cef prefix 11.1.6.1/24 detail ------------------
+            # ------------------ show platform software ip switch active fp active cef prefix 11.1.6.1/24 detail ------------------
+            m = p8.match(line)
+            if m:
+                process_dict = key_chain_dict.setdefault('process_type', {}).setdefault(m.groupdict()['process_type'], {})                
+                object_dict = process_dict.setdefault('gateway', {}).setdefault(m.groupdict()['gateway'], {})
+                object_dict['mask_number'] = m.groupdict()['mask_number']
+                continue
+
+        return ret_dict    

@@ -1,0 +1,27 @@
+
+Interface Templates
+===================
+
+Template-Name                                    Source            Bound-to-Interface
+-------------                                    ------            ------------------
+AP_INTERFACE_TEMPLATE                            Modified-Built-in No
+DMP_INTERFACE_TEMPLATE                           Built-in          No
+IP_CAMERA_INTERFACE_TEMPLATE                     Built-in          No
+IP_PHONE_INTERFACE_TEMPLATE                      Built-in          No
+LAP_INTERFACE_TEMPLATE                           Built-in          No
+MSP_CAMERA_INTERFACE_TEMPLATE                    Built-in          No
+MSP_VC_INTERFACE_TEMPLATE                        Built-in          No
+PRINTER_INTERFACE_TEMPLATE                       Built-in          No
+ROUTER_INTERFACE_TEMPLATE                        Built-in          No
+SWITCH_INTERFACE_TEMPLATE                        Built-in          No
+TP_INTERFACE_TEMPLATE                            Built-in          No
+Service Templates
+=================
+
+Template-Name                                    Source            Bound-To-Session
+-------------                                    ------            ----------------
+DEFAULT_LINKSEC_POLICY_MUST_SECURE               Built-in           No                  
+DEFAULT_LINKSEC_POLICY_SHOULD_SECURE             Built-in           No                  
+DEFAULT_CRITICAL_VOICE_TEMPLATE                  Built-in           No                  
+DEFAULT_CRITICAL_DATA_TEMPLATE                   Built-in           No                  
+webauth-global-inactive                          User               No  

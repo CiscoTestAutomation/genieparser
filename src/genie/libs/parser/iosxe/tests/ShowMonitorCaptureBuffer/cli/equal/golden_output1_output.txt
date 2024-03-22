@@ -1,0 +1,13 @@
+Starting the packet display ........ Press Ctrl + Shift + 6 to exit
+
+    1   0.000000     11.1.6.2 -> 11.1.6.3     ICMP 114 Echo (ping) reply    id=0x0007, seq=0/0, ttl=255
+    2   0.000614     11.1.6.2 -> 11.1.6.3     ICMP 114 Echo (ping) reply    id=0x0007, seq=1/256, ttl=255
+    3   0.001028     11.1.6.2 -> 11.1.6.3     ICMP 114 Echo (ping) reply    id=0x0007, seq=2/512, ttl=255
+    4   0.001446     11.1.6.2 -> 11.1.6.3     ICMP 114 Echo (ping) reply    id=0x0007, seq=3/768, ttl=255
+    5   0.001969     11.1.6.2 -> 11.1.6.3     ICMP 114 Echo (ping) reply    id=0x0007, seq=4/1024, ttl=255
+    6   0.415753     11.1.6.2 -> 11.1.6.3     ICMP 114 Echo (ping) request  id=0x0049, seq=0/0, ttl=255
+    7   0.416364     11.1.6.2 -> 11.1.6.3     ICMP 114 Echo (ping) request  id=0x0049, seq=1/256, ttl=255
+    8   0.416883     11.1.6.2 -> 11.1.6.3     ICMP 114 Echo (ping) request  id=0x0049, seq=2/512, ttl=255
+    9   0.417403     11.1.6.2 -> 11.1.6.3     ICMP 114 Echo (ping) request  id=0x0049, seq=3/768, ttl=255
+   10   0.417926     11.1.6.2 -> 11.1.6.3     ICMP 114 Echo (ping) request  id=0x0049, seq=4/1024, ttl=255
+

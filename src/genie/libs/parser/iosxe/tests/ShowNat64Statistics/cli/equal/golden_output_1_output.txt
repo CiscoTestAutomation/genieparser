@@ -1,0 +1,15 @@
+NAT64 Statistics
+
+Global Statistics
+Prefix: 64:FF9B::/64
+        Packets translated (IPv4 -> IPv6): 10
+        Packets translated (IPv6 -> IPv4): 20
+        Packets dropped: 0
+Prefix: 64:FF9B::/96
+        Packets translated (IPv4 -> IPv6): 0
+        Packets translated (IPv6 -> IPv4): 0
+        Packets dropped: 0
+Prefix: 1001::/96
+        Packets translated (IPv4 -> IPv6): 0
+        Packets translated (IPv6 -> IPv4): 14
+        Packets dropped: 0

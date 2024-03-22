@@ -1,0 +1,6 @@
+V6-Service object group v6-serv1
+ ipv6
+ tcp
+ sctp
+ pcp
+ tcp-udp

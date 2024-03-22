@@ -1,0 +1,29 @@
+ Device#show flow monitor eta-mon cache format record
+  Cache type:                               Normal (Platform cache)
+  Cache size:                                10000
+  Current entries:                               2
+
+  Flows added:                                   2
+  Flows aged:                                    0
+
+IPV4 SOURCE ADDRESS:       5.0.0.1
+IPV4 DESTINATION ADDRESS:  5.0.0.2
+IP PROTOCOL:               17
+TRNS SOURCE PORT:          1001
+TRNS DESTINATION PORT:     1002
+timestamp abs first:       22:04:52.000
+timestamp abs last:        22:05:55.000
+interface input:           Null
+interface output:          Null
+
+IPV4 SOURCE ADDRESS:       5.0.0.2
+IPV4 DESTINATION ADDRESS:  5.0.0.1
+IP PROTOCOL:               17
+TRNS SOURCE PORT:          1002
+TRNS DESTINATION PORT:     1001
+timestamp abs first:       22:04:52.000
+timestamp abs last:        22:05:55.000
+interface input:           Null
+interface output:          Null
+
+Macallan1#

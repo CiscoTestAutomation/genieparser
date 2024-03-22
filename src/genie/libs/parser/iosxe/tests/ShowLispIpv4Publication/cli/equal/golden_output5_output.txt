@@ -1,0 +1,7 @@
+206-PxTR#show lisp eid-table vrf red ipv4 publication
+Publication Information for LISP 0 EID-table vrf red (IID 4100)
+Entries total 2
+Publisher         Last        EID Prefix               Locators        Encap-IID
+                  Published                                            
+100:100:100:100:: 3d19h       192.168.1.71/32          11.11.11.11     -
+200:200:200:200:: 3d19h       192.168.1.72/32          22:22:22:22::   -

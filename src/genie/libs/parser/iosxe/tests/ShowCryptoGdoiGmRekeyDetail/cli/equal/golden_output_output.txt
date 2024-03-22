@@ -1,0 +1,23 @@
+GM1#show crypto gdoi gm rekey detail
+Group bw6000 (Unicast)
+    Number of Rekeys received (cumulative)       : 0
+    Number of Rekeys received after registration : 0
+    Number of Rekey Acks sent                    : 0
+
+Rekey (KEK) SA information :
+          dst             src             conn-id  my-cookie  his-cookie
+New     : 44.44.44.1      15.15.15.1       44334   C5AC6039   A440633E
+Current : ---             ---               ---    ---        ---
+Previous: ---             ---               ---    ---        ---
+
+
+Group bw600-IPV6 (Unicast)
+    Number of Rekeys received (cumulative)       : 0
+    Number of Rekeys received after registration : 0
+    Number of Rekey Acks sent                    : 0
+
+Rekey (KEK) SA information :
+          dst             src             conn-id  my-cookie  his-cookie
+New     : 41.41.41.1      15.15.15.1       44327   14C40DC1   88AD3ACA
+Current : ---             ---               ---    ---        ---
+Previous: ---             ---               ---    ---        ---

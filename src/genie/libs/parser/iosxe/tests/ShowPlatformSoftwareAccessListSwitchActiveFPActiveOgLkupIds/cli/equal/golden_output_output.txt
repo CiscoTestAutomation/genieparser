@@ -1,0 +1,12 @@
+Access-list                          Index        src lkup id  dst lkup id
+--------------------------------------------------------------------------
+IP-Adm-V4-Int-ACL-global             4            0x0          0x0
+IP-Adm-V6-Int-ACL-global             5            0x0          0x0
+preauth_v4                           6            0x0          0x0
+preauth_v6                           7            0x0          0x0
+implicit_deny                        8            0x0          0x0
+implicit_permit                      9            0x0          0x0
+implicit_deny_v6                     10           0x0          0x0
+implicit_permit_v6                   11           0x0          0x0
+CISCO-CWA-URL-REDIRECT-ACL           12           0x0          0x0
+v6-ogacl-1                           18           0x0          0x0

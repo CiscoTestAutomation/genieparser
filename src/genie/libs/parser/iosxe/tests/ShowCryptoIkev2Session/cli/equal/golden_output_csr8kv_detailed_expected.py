@@ -46,8 +46,9 @@ expected_output = {
                     'initiator_of_sa': 'Yes',
                     'child_sa':{
                         1:{
-                            'local_selectors': ['30.10.10.0/0 - 50.10.10.255/65535','20.10.10.0/0 - 40.10.10.255/65535'],
-                            'remote_selectors': ['172.17.2.0/0 - 172.17.2.255/65535','172.17.2.0/0 - 172.17.3.255/65535'],
+                            'local_selectors': [],
+                            'remote_selectors': [],
+                            'traffic_selectors': ['8001::/0 - 8001::FFFF:FFFF:FFFF:FFFF/65535    ->    9001::/0 - 9001::FFFF:FFFF:FFFF:FFFF/65535', '89.89.89.0/0 - 89.89.89.255/65535    ->    99.99.99.0/0 - 99.99.99.255/65535'],
                             'esp_spi_in': '0x232CB82D',
                             'esp_spi_out': '0x30767B6E',
                             'ah_spi_in': '0x0',
@@ -62,8 +63,9 @@ expected_output = {
                             'mode': 'tunnel',
                         },
                         2:{
-                            'local_selectors': ['20.10.10.0/0 - 40.10.10.255/65535'],
-                            'remote_selectors': ['50.20.20.0/0 - 60.20.20.255/65535'],
+                            'local_selectors': [],
+                            'remote_selectors': [],
+                            'traffic_selectors': ['3001::/0 - 3001::FFFF:FFFF:FFFF:FFFF/65535    ->    3101::/0 - 3101::FFFF:FFFF:FFFF:FFFF/65535', '30.30.30.0/0 - 30.30.30.255/65535    ->    31.31.31.0/0 - 31.31.31.255/65535'],
                             'esp_spi_in': '0x232CB82D',
                             'esp_spi_out': '0x30767B6E',
                             'ah_spi_in': '0x0',
@@ -126,8 +128,9 @@ expected_output = {
                     'initiator_of_sa': 'Yes',
                     'child_sa':{
                         1:{
-                            'local_selectors': ['30.10.10::0/0 - 50.10.10::255/65535','20.10.10::0/0 - 40.10.10::255/65535'],
-                            'remote_selectors': ['172.17.2::0/0 - 172.17.2::255/65535','172.17.2::0/0 - 172.17.3::255/65535'],
+                            'local_selectors': [],
+                            'remote_selectors': [],
+                            'traffic_selectors': ['2001::/0 - 2001::FFFF:FFFF:FFFF:FFFF/65535    ->    2101::/0 - 2101::FFFF:FFFF:FFFF:FFFF/65535', '20.20.20.0/0 - 20.20.20.255/65535    ->    21.21.21.0/0 - 21.21.21.255/65535'],
                             'esp_spi_in': '0x232CB82D',
                             'esp_spi_out': '0x30767B6E',
                             'ah_spi_in': '0x0',
@@ -142,8 +145,9 @@ expected_output = {
                             'mode': 'tunnel',
                         },
                         2:{
-                            'local_selectors': ['20.10.10::0/0 - 40.10.10::255/65535'],
-                            'remote_selectors': ['50.20.20::0/0 - 60.20.20::255/65535'],
+                            'local_selectors': [],
+                            'remote_selectors': [],
+                            'traffic_selectors': ['10.10.10.0/0 - 10.10.10.255/65535    ->    11.11.11.0/0 - 11.11.11.255/65535'],
                             'esp_spi_in': '0x232CB82D',
                             'esp_spi_out': '0x30767B6E',
                             'ah_spi_in': '0x0',

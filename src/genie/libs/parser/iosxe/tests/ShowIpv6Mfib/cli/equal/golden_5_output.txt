@@ -1,0 +1,7 @@
+Default
+ (*,FF13::1) Flags: C HW
+   SW Forwarding: 0/0/0/0, Other: 0/0/0
+   HW Forwarding:   12/0/130/0, Other: 0/0/0
+   GigabitEthernet1/0/14 Flags: A NS
+   Tunnel0, VXLAN v6 Decap Flags: F NS
+     Pkts: 0/0/0    Rate: 0 pps

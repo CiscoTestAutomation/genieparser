@@ -85,6 +85,7 @@ expected_output = {
                                     2: {
                                         'index': 2,
                                         'next_hop': 'fe80::5054:ff:fea5:829',
+                                        'nexthop_in_vrf': 'default',
                                         'outgoing_interface': 'GigabitEthernet0/0/0/3',
                                         'updated': '00:56:34'
                                     },

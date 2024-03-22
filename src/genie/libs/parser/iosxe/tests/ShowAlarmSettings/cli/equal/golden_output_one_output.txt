@@ -1,0 +1,52 @@
+
+show alarm settings
+
+Alarm relay mode: Positive
+Power Supply
+         Alarm                   Enabled
+         Relay
+         Notifies                Disabled
+         Syslog                  Enabled
+Temperature-Primary
+         Alarm                   Enabled
+         Thresholds              MAX: 80C                MIN:  0C
+         Relay                   MAJ
+         Notifies                Enabled
+         Syslog                  Enabled
+Temperature-Secondary
+         Alarm                   Disabled
+         Threshold
+         Relay
+         Notifies                Disabled
+         Syslog                  Disabled
+SD-Card
+         Alarm                   Disabled
+         Relay
+         Notifies                Disabled
+         Syslog                  Disabled
+Input-Alarm 1
+         Alarm                   Enabled
+         Relay
+         Notifies                Disabled
+         Syslog                  Enabled
+Input-Alarm 2
+         Alarm                   Enabled
+         Relay
+         Notifies                Disabled
+         Syslog                  Enabled
+Input-Alarm 3
+         Alarm                   Enabled
+         Relay
+         Notifies                Disabled
+         Syslog                  Enabled
+Input-Alarm 4
+         Alarm                   Enabled
+         Relay
+         Notifies                Disabled
+         Syslog                  Enabled
+PTP
+         Alarm                   Disabled
+         Relay
+         Notifies                Disabled
+         Syslog                  Disabled
+

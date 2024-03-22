@@ -1,0 +1,4 @@
+LISP decapsulation filter for EID table vrf red (IID 101), 1 entries
+Source RLOC                                 Added by
+100:22:22::22                               MS 100:44:44::44, MS 100:55:55::55
+100:33:33::33                               Config

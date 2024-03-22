@@ -1,0 +1,20 @@
+Global mDNS Gateway
+==============================================
+mDNS Gateway : Enabled
+Rate Limit PPS : 60
+AirPrint Helper : Disabled
+Mode : SDG-Agent
+Source Interface : Vl140
+Cache-Sync Periodicity Minutes : 30
+Query Response Mode : Recurring (default)
+Active Response Timer : 15 Seconds (default)
+Service Receiver Purge Timer : 120 Seconds (default) 
+Active Query Timer : Enabled
+mDNS Query Type : PTR only
+Service Record TTL : Enhanced (default)
+Remote cache : Enabled (default)
+Remote cache max limit : 1000 (default)
+Remote cache purge timer : 300 Seconds (default) 
+Service Enumeration period : Default
+Ingress-client query-suppression : Disabled
+SSO : Inactive

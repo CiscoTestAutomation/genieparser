@@ -15,6 +15,7 @@ class ShowVersionSchema(MetaParser):
         'version': str,
         Optional('platform'): str,
         Optional('pid'): str,
+        Optional('operating_mode'): str,
     }
 
 
@@ -84,6 +85,8 @@ class ShowVersion(ShowVersionSchema):
 
         # Model Number                       : C9300-24P
         iosxe_backup_pid_pattern = re.compile(r'^Model\s+Number\s+\:\s+(?P<pid>.+)$')
+        # Router operating mode: Controller-Managed
+        iosxe_sdwan_controller_mode = re.compile(r'^Router operating mode:\s+(?P<mode>\S+)\s*$')
 
         # ********************************************
         # *                  IOSXR                   *
@@ -115,8 +118,8 @@ class ShowVersion(ShowVersionSchema):
         ios_os_version_platform_pattern = re.compile(r'^(?!.*XE Software.*)(Cisco IOS Software|IOS \(\S+\))(?: \[.*\])?,?\s*(?P<alternate_platform>.+)?\s+Software \((?P<platform>[^\-]+).*\),(?: Experimental)? Version (?P<version>[\w\.\:\(\)]+),?.*$')
 
         # Cisco CISCO1941/K9 (revision 1.0) with 491520K/32768K bytes of memory.
-        ios_pid_pattern = re.compile(r'^[Cc]isco (?P<pid>\S+) \(.*\).* with \S+ bytes of(?: physical)? memory.$')
-
+        # cisco CW9164I-ROW ARMv8 Processor rev 4 (v8l) with 1780316/936396K bytes of memo
+        ios_pid_pattern = re.compile(r'^[Cc]isco (?P<pid>\S+) .*? with \S+ bytes of(?: physical)? mem.*$')
 
         # ********************************************
         # *                  JUNOS                   *
@@ -150,8 +153,14 @@ class ShowVersion(ShowVersionSchema):
         # ********************************************
 
         # 15.3.3
-        viptella_os_pattern = re.compile(r'^(?P<version>\d+(?:\.\d+)?(?:\.\d+)?)$')
+        viptella_os_pattern = re.compile(r'^(?P<version>[\d+\.]+)$')
 
+        # ********************************************
+        # *                 Wireless                 *
+        # ********************************************
+
+        # AP Running Image : 17.12.0.78
+        wireless_ap_pattern = re.compile(r'^AP Running Image\s*:\s*(?P<version>[\d+.]+)$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -240,7 +249,11 @@ class ShowVersion(ShowVersionSchema):
             if m:
                 ret_dict['pid'] = m.groupdict()['pid']
                 continue
-
+            # Controller Mode
+            m = iosxe_sdwan_controller_mode.match(line)
+            if m:
+                ret_dict['operating_mode'] = m.groupdict().get('mode')
+                continue
             # ********************************************
             # *                  IOSXR                   *
             # ********************************************
@@ -365,6 +378,18 @@ class ShowVersion(ShowVersionSchema):
             m = viptella_os_pattern.match(line)
             if m:
                 ret_dict['os'] = 'viptella'
+                ret_dict['version'] = m.groupdict()['version']
+                continue
+
+            # ********************************************
+            # *                 Wireless                 *
+            # ********************************************
+
+            # AP Running Image     : 17.14.0.21
+            m = wireless_ap_pattern.match(line)
+            if m:
+                ret_dict['os'] = 'cheetah'
+                ret_dict['platform'] = 'ap'
                 ret_dict['version'] = m.groupdict()['version']
                 continue
 

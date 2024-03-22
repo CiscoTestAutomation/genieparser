@@ -35,6 +35,7 @@ expected_output = {
             4: {
                 "device_id": "xxx010"
             }
-        }
+        },
+        'total_entries': 4
     }
 }

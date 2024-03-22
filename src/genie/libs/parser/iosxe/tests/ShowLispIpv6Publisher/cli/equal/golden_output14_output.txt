@@ -1,0 +1,19 @@
+206-PxTR#show lisp all instance-id * ipv6 publisher
+
+=================================================
+Output for router lisp 0 instance-id 4100
+=================================================
+LISP Publisher Information
+Publisher                               State                          Session          PubSub State
+23.23.23.23                             ETR Map-Server not found       Down             Off
+44.44.44.44                             Reachable                      Up               Established
+100.100.100.100                         Reachable                      Up               Established
+
+=================================================
+Output for router lisp 0 instance-id 4101
+=================================================
+LISP Publisher Information
+Publisher                               State                          Session          PubSub State
+23.23.23.23                             ETR Map-Server not found       Down             Off
+44.44.44.44                             Reachable                      Up               Established
+100.100.100.100                         Reachable                      Up               Established

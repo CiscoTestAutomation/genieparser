@@ -1,0 +1,73 @@
+Mon Apr 24 12:11:43.636 CEST
+Listing for all Route Policy objects
+
+route-policy DROP
+  drop
+end-policy
+!
+route-policy PASS
+  pass
+end-policy
+!
+route-policy show
+end-policy
+!
+route-policy RP-SID($SID)
+  set label-index $SID
+  set aigp-metric igp-cost
+end-policy
+!
+route-policy RP-PASS
+  pass
+end-policy
+!
+route-policy ADD-PATH
+  set path-selection backup 1 install multipath-protect
+end-policy
+!
+route-policy EVPN-IN-RPL
+  if as-path in EVPN-AS-SET and evpn-route-type is 5 then
+    pass
+  endif
+end-policy
+!
+route-policy RP-BACKUP-PATH
+  set path-selection backup 1 install
+end-policy
+!
+route-policy VRF:205:201
+  set community (65455:299, 65455:1001)
+end-policy
+!
+route-policy BGP-HAB-00001-RPL
+  set community (65455:1001, 64500:2, 64497:1, 65455:102) additive
+  set local-preference 16000
+  set med 400
+end-policy
+!
+route-policy RP-ALLOCATE-LABELS
+  if destination in PS-MY-LOOPBACK then
+    pass
+  endif
+end-policy
+!
+route-policy RP-AS65455-CORE-IN
+  if destination in PS-MY-LOOPBACK then
+    drop
+  elseif destination in PS-HOST-ROUTE then
+    pass
+  endif
+end-policy
+!
+route-policy ADD-BACKUP-PATH-RPL
+  set path-selection backup 1 install multipath-protect
+end-policy
+!
+route-policy RP-AS65455-CORE-OUT
+  if destination in PS-MY-LOOPBACK then
+    pass
+  endif
+end-policy
+!
+RP/0/RSP0/CPU0:pyats-test-router01#
+Issue with the parser show rpl route-policy

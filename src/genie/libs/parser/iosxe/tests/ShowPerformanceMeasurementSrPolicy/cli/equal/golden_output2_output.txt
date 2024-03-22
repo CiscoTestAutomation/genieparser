@@ -1,0 +1,161 @@
+
+show performance-measurement sr-policy
+
+SR Policy name: Ethernet0/0
+  Color                           : 1235
+  Endpoint                        : 1.1.1.7
+  Source                          : 1.1.1.3
+  Profile name                    : Not configured 
+  Policy Update Timestamp         : 05-20 06:46:52.222
+  Number of candidate-paths       : 1
+
+  Candidate-Path:
+    Preference                    : 100
+    Protocol-origin               : CLI
+    Discriminator                 : 0
+    Active:                       : No
+    Number of segment-lists       : 1
+    Number of atomic paths        : 1
+    Number of live UP atomic paths: 1
+    Number of live Unknown atomic : 1
+    Max Pkts per Burst            : 500
+    Max Pkts per Probe            : 15000
+    AP Min Run per Probe          : 3
+    Round-robin bursts            : 1
+    Round-robin probes            : 1
+    Last advertisement:
+      Advertised at: 16:05:04  28 2021 (244386 seconds ago)
+      Advertised delays (uSec): avg: 336, min: 1, max: 999, variance: 335
+    Next advertisement:
+      Check scheduled in 1 more probe (roughly every 120 seconds)
+      Aggregated delays (uSec): avg: 407, min: 1, max: 999, variance: 406
+    Last probe:
+      Packets Sent: 30, received: 30
+      Measured delays (uSec): avg: 449, min: 1, max: 999, variance: 448
+    Current probe:
+      Packets Sent: 4, received: 4
+      Measured delays (uSec): avg: 499, min: 499, max: 499, variance: 0
+SR Policy name: Ethernet0/1
+  Color                           : 1236
+  Endpoint                        : 1.1.1.7
+  Source                          : 1.1.1.3
+  Profile name                    : E01 
+  Policy Update Timestamp         : 05-20 06:46:52.222
+  Number of candidate-paths       : 1
+
+  Candidate-Path:
+    Preference                    : 100
+    Protocol-origin               : CLI
+    Discriminator                 : 0
+    Active:                       : No
+    Number of segment-lists       : 1
+    Number of atomic paths        : 1
+    Number of live UP atomic paths: 1
+    Number of live Unknown atomic : 1
+    Max Pkts per Burst            : 500
+    Max Pkts per Probe            : 5000
+    AP Min Run per Probe          : 3
+    Round-robin bursts            : 1
+    Round-robin probes            : 1
+    Last advertisement:
+      Advertised at: 16:05:04  28 2021 (244386 seconds ago)
+      Advertised delays (uSec): avg: 499, min: 1, max: 1000, variance: 498
+    Next advertisement:
+      Check scheduled in 1 more probe (roughly every 120 seconds)
+      Aggregated delays (uSec): avg: 550, min: 1, max: 1000, variance: 549
+    Last probe:
+      Packets Sent: 10, received: 10
+      Measured delays (uSec): avg: 500, min: 1, max: 1000, variance: 499
+    Current probe:
+      Packets Sent: 2, received: 2
+      Measured delays (uSec): avg: 500, min: 1, max: 1000, variance: 499
+SR Policy name: PM
+  Color                           : 1234
+  Endpoint                        : 1.1.1.7
+  Source                          : 1.1.1.3
+  Profile name                    : Not configured 
+  Policy Update Timestamp         : 05-31 11:46:47.519
+  Number of candidate-paths       : 3
+
+  Candidate-Path:
+    Preference                    : 100
+    Protocol-origin               : CLI
+    Discriminator                 : 0
+    Active:                       : No
+    Number of segment-lists       : 1
+    Number of atomic paths        : 1
+    Number of live UP atomic paths: 1
+    Number of live Unknown atomic : 1
+    Max Pkts per Burst            : 500
+    Max Pkts per Probe            : 15000
+    AP Min Run per Probe          : 3
+    Round-robin bursts            : 1
+    Round-robin probes            : 1
+    Last advertisement:
+      Advertised at: 16:05:04  28 2021 (244386 seconds ago)
+      Advertised delays (uSec): avg: 486, min: 1, max: 999, variance: 485
+    Next advertisement:
+      Check scheduled in 1 more probe (roughly every 120 seconds)
+    Number of live Unknown atomic : 1
+    Max Pkts per Burst            : 500
+    Max Pkts per Probe            : 5000
+    AP Min Run per Probe          : 3
+    Round-robin bursts            : 1
+    Round-robin probes            : 1
+    Last advertisement:
+      Advertised at: 16:05:04  28 2021 (244386 seconds ago)
+      Advertised delays (uSec): avg: 499, min: 1, max: 1000, variance: 498
+    Next advertisement:
+      Check scheduled in 1 more probe (roughly every 120 seconds)
+      Aggregated delays (uSec): avg: 550, min: 1, max: 1000, variance: 549
+    Last probe:
+      Packets Sent: 10, received: 10
+      Measured delays (uSec): avg: 500, min: 1, max: 1000, variance: 499
+    Current probe:
+      Packets Sent: 2, received: 2
+      Measured delays (uSec): avg: 500, min: 1, max: 1000, variance: 499
+SR Policy name: PM
+  Color                           : 1234
+  Endpoint                        : 1.1.1.7
+  Source                          : 1.1.1.3
+  Profile name                    : Not configured 
+  Policy Update Timestamp         : 05-31 11:46:47.519
+  Number of candidate-paths       : 3
+
+  Candidate-Path:
+    Preference                    : 100
+    Protocol-origin               : CLI
+    Discriminator                 : 0
+    Active:                       : No
+    Number of segment-lists       : 1
+    Number of atomic paths        : 1
+    Number of live UP atomic paths: 1
+    Number of live Unknown atomic : 1
+    Max Pkts per Burst            : 500
+    Max Pkts per Probe            : 15000
+    AP Min Run per Probe          : 3
+    Round-robin bursts            : 1
+    Round-robin probes            : 1
+    Last advertisement:
+      Advertised at: 16:05:04  28 2021 (244386 seconds ago)
+      Advertised delays (uSec): avg: 486, min: 1, max: 999, variance: 485
+    Next advertisement:
+      Check scheduled in 1 more probe (roughly every 120 seconds)
+    Number of segment-lists       : 1
+    Number of atomic paths        : 0
+    Number of live UP atomic paths: 0
+    Number of live Unknown atomic : 0
+    Max Pkts per Burst            : 0
+    Max Pkts per Probe            : 0
+    AP Min Run per Probe          : 3
+    Round-robin bursts            : 0
+    Round-robin probes            : 0
+    Last advertisement:
+      No advertisements have occured
+    Next advertisement:
+      Check scheduled in 1 more probe (roughly every 120 seconds)
+      No probes completed
+    Last probe:
+      None
+    Current probe:
+      None

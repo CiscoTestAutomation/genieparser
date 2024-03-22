@@ -1,0 +1,36 @@
+MRP ring 1
+
+Mode            : Client
+From            : CLI
+License         : Not Applicable
+Gateway         :
+ Status         : Disabled
+VLAN ID     : 1
+Domain Name : Cisco MRP Ring 1
+Domain ID   : FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFE
+
+Link Down Timer Interval        : 20 ms
+Link Up Timer Interval          : 20 ms
+Link Change (Up or Down) count  :  4 ms
+MRP ring 2 not configured
+MRP ring 3 not configured
+MRP ring 4 not configured
+MRP ring 5 not configured
+MRP ring 6 not configured
+MRP ring 7 not configured
+MRP ring 8 not configured
+MRP ring 9 not configured
+MRP ring 10 not configured
+MRP ring 11 not configured
+MRP ring 12 not configured
+MRP ring 13 not configured
+MRP ring 14 not configured
+MRP ring 15 not configured
+MRP ring 16 not configured
+MRP ring 17 not configured
+MRP ring 18 not configured
+MRP ring 19 not configured
+MRP ring 20 not configured
+MRP ring 21 not configured
+MRP ring 22 not configured
+

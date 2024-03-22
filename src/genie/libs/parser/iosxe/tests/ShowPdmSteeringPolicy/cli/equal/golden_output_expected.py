@@ -1,6 +1,6 @@
 expected_output = {
 	'contract': {
-		'Contract1': {
+		'Contract1-01': {
             'policy': {
 			    1: {
 			    	'dst_port': '30',
@@ -11,7 +11,7 @@ expected_output = {
 			    }
             }
 		},
-		'Contract2': {
+		'Contract2-01': {
             'policy': {
 			    1: {
 			    	'dst_port': '15000',

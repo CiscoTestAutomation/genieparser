@@ -1,0 +1,14 @@
+IPv6 Static routes Table - default
+Codes: * - installed in RIB, u/m - Unicast/Multicast only
+Codes for []: P - permanent I - Inactive permanent
+       U - Per-user Static route
+       N - ND Static route
+       M - MIP Static route
+       P - DHCP-PD Static route
+       R - RHI Static route
+       V - VxLan Static route
+       E - L2EVPN Static route
+    2001::/64 via 2005::, distance 1
+*   2005::/64 via 2001::2, distance 1
+*   4200::/64 via 4102::, distance 1
+*   4200::/64 via 4101::, distance 1

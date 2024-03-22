@@ -1,0 +1,9 @@
+top - 07:46:26 up  1:55,  2 users,  load average: 1.89, 1.11, 0.63
+Tasks: 299 total,   1 running, 298 sleeping,   0 stopped,   0 zombie
+Cpu(s):  2.8%us,  3.5%sy,  0.1%ni, 92.6%id,  0.3%wa,  0.6%hi,  0.2%si,  0.0%st
+Mem:   8134344k total,  1732452k used,  3825700k free,    86800k buffers
+Swap:        0k total,        0k used,        0k free,  2489392k cached
+
+  PID USER      PR  NI  VIRT  RES  SHR S %CPU %MEM    TIME+  COMMAND                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+28216 root      20   0  396m  52m  33m S   14  0.7   7:13.20 l2fwder                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+   52 root      25   5     0    0    0 S   10  0.0   6:47.36 ksmd   

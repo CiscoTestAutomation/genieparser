@@ -1,0 +1,12 @@
+               Secure Mac Address Table
+-------------------------------------------------------------------------------
+Vlan    Mac Address       Type                          Ports   Remaining Age
+                                                                   (mins)    
+----    -----------       ----                          -----   -------------
+1047    00da.5516.1905    SecureSticky                  Gi3/0/5      -
+1047    00da.5516.1906    SecureSticky                  Gi3/0/6      -
+1047    00da.5516.1907    SecureSticky                  Gi3/0/7      -
+1047    00da.5516.1908    SecureSticky                  Gi3/0/8      -
+-------------------------------------------------------------------------------
+Total Addresses in System (excluding one mac per port)     : 0
+Max Addresses limit in System (excluding one mac per port) : 4096

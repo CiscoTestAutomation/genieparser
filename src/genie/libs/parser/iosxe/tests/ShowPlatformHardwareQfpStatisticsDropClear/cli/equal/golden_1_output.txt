@@ -1,0 +1,9 @@
+Last clearing of QFP drops statistics : Tue Mar 21 00:00:15 2023
+
+
+-------------------------------------------------------------------------
+Global Drop Stats                         Packets                  Octets
+-------------------------------------------------------------------------
+BadUidbSubIdx                                 584                   46423
+Disabled                                      285                   22516
+Ipv6NoRoute                                     1                      56

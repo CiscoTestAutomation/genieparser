@@ -1,0 +1,364 @@
+Smart Licensing Status
+======================
+
+Smart Licensing is ENABLED
+
+License Conversion:
+  Automatic Conversion Enabled: False
+  Last Data Push: <none>
+  Last File Export: <none>
+
+Export Authorization Key:
+  Features Authorized:
+    <none>
+
+Utility:
+  Status: DISABLED
+
+Smart Licensing Using Policy:
+  Status: ENABLED
+  Reporting Mode: STANDARD
+
+Account Information:
+  Smart Account: BU Production Test As of Dec 18 11:02:51 2023 PDT
+  Virtual Account: Cat9K-FranklinDT
+
+Data Privacy:
+  Sending Hostname: yes
+    Callhome hostname privacy: DISABLED
+    Smart Licensing hostname privacy: DISABLED
+  Version privacy: DISABLED 
+Transport:
+  Type: Smart
+  URL: https://smartreceiver.cisco.com/licservice/license
+  Proxy:
+    Address: 173.36.224.109
+    Port: 80
+    Username: <empty>
+    Password: <empty>
+  Server Identity Check: True
+  VRF: <empty>
+
+Miscellaneous:
+  Custom Id: <empty> 
+Policy:
+  Policy in use: Installed On Oct 24 15:07:43 2023 PDT
+  Policy name: SLE Policy
+  Reporting ACK required: yes (Customer Policy)
+  Unenforced/Non-Export Perpetual Attributes:
+    First report requirement (days): 30 (Customer Policy)
+    Reporting frequency (days): 60 (Customer Policy)
+    Report on change (days): 60 (Customer Policy)
+  Unenforced/Non-Export Subscription Attributes:
+    First report requirement (days): 120 (Customer Policy)
+    Reporting frequency (days): 111 (Customer Policy)
+    Report on change (days): 111 (Customer Policy)
+  Enforced (Perpetual/Subscription) License Attributes:
+    First report requirement (days): 30 (Customer Policy)
+    Reporting frequency (days): 90 (Customer Policy)
+    Report on change (days): 60 (Customer Policy)
+  Export (Perpetual/Subscription) License Attributes:
+    First report requirement (days): 30 (Customer Policy)
+    Reporting frequency (days): 30 (Customer Policy)
+    Report on change (days): 30 (Customer Policy) 
+Usage Reporting:
+  Last ACK received: Dec 18 11:05:11 2023 PDT
+  Next ACK deadline: Feb 16 11:05:11 2024 PDT
+  Reporting push interval: 30  days State(4) InPolicy(60)
+  Next ACK push check: <none>
+  Next report push: Jan 17 11:00:18 2024 PDT
+  Last report push: Dec 18 11:00:18 2023 PDT
+  Last report file write: <none>
+
+Trust Code Installed:
+  Active: PID:C9407R,SN:FXS2119Q2U7
+    INSTALLED on Nov 22 11:34:47 2023 PDT
+  Standby: PID:C9407R,SN:FXS2119Q2U7
+    INSTALLED on Nov 22 11:34:47 2023 PDT 
+License Usage
+=============
+Handle: 1
+  License: network-advantage
+  Entitlement Tag: regid.2017-05.com.cisco.advantagek9-C9400,1.0_61a546cd-1037-47cb-bbe6-7cad3217a7b3
+  Description: C9400 Network Advantage
+  Count: 2
+  Version: 1.0
+  Status: IN USE(15)
+  Status time: Dec 18 10:58:10 2023 PDT
+  Request Time: Dec 18 10:58:49 2023 PDT
+  Export status: NOT RESTRICTED
+  Feature Name: network-advantage
+  Feature Description: C9400 Network Advantage
+  Enforcement type: NOT ENFORCED
+  License type: Perpetual
+  Measurements:
+    ENTITLEMENT:
+      Interval: 00:15:00
+      Current Value: 2
+      Current Report: 1698184615       Previous: 1698184613
+  Soft Enforced: True 
+Handle: 2
+  License: dna-advantage
+  Entitlement Tag: regid.2017-05.com.cisco.dna_advantage-C9400,1.0_6e77dbc1-0da3-466c-8414-97c8ee4d48ce
+  Description: C9400 DNA Advantage
+  Count: 1
+  Version: 1.0
+  Status: IN USE(15)
+  Status time: Dec 18 10:58:10 2023 PDT
+  Request Time: Dec 18 10:58:10 2023 PDT
+  Export status: NOT RESTRICTED
+  Feature Name: dna-advantage
+  Feature Description: C9400 DNA Advantage
+  Enforcement type: NOT ENFORCED
+  License type: Subscription
+  Measurements:
+    ENTITLEMENT:
+      Interval: 00:15:00
+      Current Value: 1
+      Current Report: 1698184616       Previous: 1698184614
+  Soft Enforced: True
+
+Product Information
+===================
+UDI: PID:C9407R,SN:FXS2119Q2U7
+
+HA UDI List:
+    Active:PID:C9407R,SN:FXS2119Q2U7
+    Standby:PID:C9407R,SN:FXS2119Q2U7 
+Agent Version
+=============
+Smart Agent for Licensing: 5.11.2_rel/6
+
+Upcoming Scheduled Jobs
+=======================
+Current time: Dec 19 03:05:28 2023 PDT
+Daily: Dec 19 10:58:12 2023 PDT (7 hours, 52 minutes, 44 seconds remaining)
+Init Flag Check: Expired Not Rescheduled
+Reservation configuration mismatch between nodes in HA mode: Expired Not Rescheduled
+Retrieve data processing result: Expired Not Rescheduled
+Start Utility Measurements: Dec 19 03:17:53 2023 PDT (12 minutes, 25 seconds remaining)
+Send Utility RUM reports: Dec 19 11:00:10 2023 PDT (7 hours, 54 minutes, 42 seconds remaining)
+Save unreported RUM Reports: Dec 19 04:03:03 2023 PDT (57 minutes, 35 seconds remaining)
+Process Utility RUM reports: Dec 19 11:10:10 2023 PDT (8 hours, 4 minutes, 42 seconds remaining)
+Telemetry Reporting: Expired Not Rescheduled
+Authorization Code Process: Expired Not Rescheduled
+Data Synchronization: Expired Not Rescheduled
+External Event: Dec 23 14:57:23 2023 PDT (4 days, 11 hours, 51 minutes, 55 seconds remaining)
+Operational Model: Expired Not Rescheduled 
+Communication Statistics:
+=======================
+Communication Level Allowed: DIRECT
+Overall State: <empty>
+Trust Establishment:
+  Attempts: Total=0, Success=0, Fail=0  Ongoing Failure: Overall=0 Communication=0
+  Last Response: <none>
+    Failure Reason: <none>
+  Last Success Time: <none>
+  Last Failure Time: <none>
+Trust Acknowledgement:
+  Attempts: Total=0, Success=0, Fail=0  Ongoing Failure: Overall=0 Communication=0
+  Last Response: <none>
+    Failure Reason: <none>
+  Last Success Time: <none>
+  Last Failure Time: <none>
+Usage Reporting:
+  Attempts: Total=1, Success=1, Fail=0  Ongoing Failure: Overall=0 Communication=0
+  Last Response: OK_POLL on Dec 18 11:00:12 2023 PDT
+    Failure Reason: <none>
+  Last Success Time: Dec 18 11:00:12 2023 PDT
+  Last Failure Time: <none>
+Result Polling:
+  Attempts: Total=2, Success=2, Fail=0  Ongoing Failure: Overall=0 Communication=0
+  Last Response: OK on Dec 18 11:05:11 2023 PDT
+    Failure Reason: <none>
+  Last Success Time: Dec 18 11:05:11 2023 PDT
+  Last Failure Time: <none>
+Authorization Request:
+  Attempts: Total=2, Success=2, Fail=0  Ongoing Failure: Overall=0 Communication=0
+  Last Response: NO DATA TO PROCESS
+    Failure Reason: <none>
+  Last Success Time: <none>
+  Last Failure Time: <none>
+Authorization Confirmation:
+  Attempts: Total=0, Success=0, Fail=0  Ongoing Failure: Overall=0 Communication=0
+  Last Response: <none>
+    Failure Reason: <none>
+  Last Success Time: <none>
+  Last Failure Time: <none>
+Authorization Return:
+  Attempts: Total=0, Success=0, Fail=0  Ongoing Failure: Overall=0 Communication=0
+  Last Response: <none>
+    Failure Reason: <none>
+  Last Success Time: <none>
+  Last Failure Time: <none>
+Trust Sync:
+  Attempts: Total=2, Success=2, Fail=0  Ongoing Failure: Overall=0 Communication=0
+  Last Response: OK on Dec 18 11:02:51 2023 PDT
+    Failure Reason: <none>
+  Last Success Time: Dec 18 11:02:51 2023 PDT
+  Last Failure Time: <none>
+Hello Message:
+  Attempts: Total=0, Success=0, Fail=0  Ongoing Failure: Overall=0 Communication=0
+  Last Response: <none>
+    Failure Reason: <none>
+  Last Success Time: <none>
+  Last Failure Time: <none> 
+Telemetry Reporting:
+  Attempts: Total=0, Success=0, Fail=0  Ongoing Failure: Overall=0 Communication=0
+  Last Response: <none>
+    Failure Reason: <none>
+  Last Success Time: <none>
+  Last Failure Time: <none>
+
+License Certificates
+====================
+Production Cert: True
+Not registered. No certificates installed
+
+HA Info
+==========
+RP Role: Active
+Chassis Role: Active
+Behavior Role: Active
+RMF: True
+CF: True
+CF State: Stateless
+Message Flow Allowed: False
+
+Reservation Info
+================
+License reservation: DISABLED
+Last Data Push: <none>
+Last File Export: <none> 
+
+Overall status:
+  Active: PID:C9407R,SN:FXS2119Q2U7
+    Reservation status: NOT INSTALLED
+    Request code: <none>
+    Last return code: <none>
+    Last Confirmation code: <none>
+    Reservation authorization code: <none>
+  Standby: PID:C9407R,SN:FXS2119Q2U7
+    Reservation status: NOT INSTALLED
+    Request code: <none>
+    Last return code: <none>
+    Last Confirmation code: <none>
+    Reservation authorization code: <none>
+
+Specified license reservations:
+
+Purchased Licenses:
+  No Purchase Information Available
+
+Usage Report Summary:
+=====================
+Total: 70,  Purged: 0(0)
+Total Acknowledged Received: 64,  Waiting for Ack: 0(6)
+Available to Report: 6  Collecting Data: 2
+Maximum Display: 70  In Storage: 30,  MIA: 0(0)
+Report Module Status: Ready 
+Device Telemetry Report Summary:
+================================
+Data Channel: AVAILABLE
+Reports on disk: 0
+
+Other Info
+==========
+Software ID: regid.2017-05.com.cisco.C9400,v1_ad928212-d182-407e-ac85-29e213602efa
+Agent State: authorized
+TS enable: True
+Transport: Smart
+  Default URL: https://smartreceiver.cisco.com/licservice/license
+Locale: en_US.UTF-8
+Debug flags: 0x7
+Privacy Send Hostname: True
+Privacy Send IP: True
+Build type:: Production
+sizeof(char)  : 1
+sizeof(int)   : 4
+sizeof(long)  : 4
+sizeof(char *): 8
+sizeof(time_t): 4
+sizeof(size_t): 8
+Endian: Big 
+Write Erase Occurred: False
+XOS version: 0.12.0.0
+Config Persist Received: False
+Message Version: 1.3
+connect_info.name: SSM
+connect_info.version: 1.3
+connect_info.additional:
+connect_info.prod: True
+connect_info.capabilities: DLC, AppHA, EXPORT_2, POLICY_USAGE, UTILITY, TELEMETRY, TELEMETRY_POLICY
+agent.capabilities: UTILITY, DLC, AppHA, MULTITIER, EXPORT_2, OK_TRY_AGAIN, POLICY_USAGE, TELEMETRY, TELEMETRY_POLICY
+Check Point Interface: True
+Config Management Interface: False
+License Map Interface: True
+HA Interface: True
+Trusted Store Interface: True
+Platform Data Interface: True
+Crypto Version 2 Interface: False
+SAPluginMgmtInterfaceMutex: True
+SAPluginMgmtIPDomainName: True
+SmartTransportVRFSupport: True
+SmartAgentClientWaitForServer: 2000
+SmartAgentCmReTrySend: True
+SmartAgentClientIsUnified: True
+SmartAgentCmClient: True
+SmartAgentClientName: UnifiedClient
+builtInEncryption: True
+enableOnInit: True
+routingReadyByEvent: True
+systemInitByEvent: True 
+SmartTransportServerIdCheck: True
+SmartTransportProxySupport: True
+SmartAgentSLACReturnForcedAllowed: False
+SmartAgentComplianceStatus: False
+SmartAgentTelemetryRumReportMax: 600
+SmartAgentRumTelemetryRumStoreMin: 500
+SmartAgentPolicyDisplayFormat: 0
+SmartAgentReportOnUpgrade: False
+SmartAgentIndividualRUMEncrypt: 2
+SmartAgentMaxRumMemory: 50
+SmartAgentConcurrentThreadMax: 10
+SmartAgentPolicyControllerModel: False
+SmartAgentDisableCacheSWID: False
+SmartAgentPolicyModel: True
+SmartAgentFederalLicense: True
+SmartAgentMultiTenant: False
+attr365DayEvalSyslog: True
+checkPointWriteOnly: False
+SmartAgentDelayCertValidation: False
+enableByDefault: False
+conversionAutomatic: False
+conversionAllowed: False
+storageEncryptDisable: False
+storageLoadUnencryptedDisable: False
+TSPluginDisable: False
+bypassUDICheck: False
+loggingAddTStamp: False
+loggingAddTid: True 
+HighAvailabilityOverrideEvent: UnknownPlatformEvent
+platformIndependentOverrideEvent: UnknownPlatformEvent
+platformOverrideEvent: SmartAgentSystemDataListChanged
+WaitForHaRole: False
+standbyIsHot: True
+chkPtType: 2
+delayCommInit: False
+roleByEvent: True
+maxTraceLength: 150
+traceAlwaysOn: True
+debugFlags: 0
+Event log max size: 5120 KB
+Event log current size: 62 KB
+P:C9407R,S:FXS2119Q2U7: P:C9407R,S:FXS2119Q2U7, state[2], Trust Data INSTALLED  TrustId:693
+P:C9407R,S:FXS2119Q2U7: P:C9407R,S:FXS2119Q2U7, state[2], Trust Data INSTALLED  TrustId:693
+Overall Trust: INSTALLED (2)
+Clock sync-ed with NTP: True
+
+Platform Provided Mapping Table
+===============================
+  C9407R: Total licenses found: 213
+Enforced Licenses:
+  P:C9407R,S:FXS2119Q2U7:
+    hseck9: regid.2021-05.com.cisco.C9K_HSEC,1.0_90fdf411-3823-45bd-bd8c-5a5d0e0e1ea2 (3) 

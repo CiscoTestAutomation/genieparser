@@ -1,0 +1,74 @@
+ Port-channel10 
+
+
+  Service-policy input: map1
+
+
+    Class-map: cs1 (match-all)  
+
+      0 packets
+
+      Match:  dscp cs1 (8)
+
+      police:
+
+          rate 1000000000 bps, burst 1024000 bytes
+
+        conformed 0 bytes; actions:
+
+          transmit 
+
+        exceeded 0 bytes; actions:
+
+          drop 
+
+        conformed 0000 bps, exceeded 0000 bps
+
+
+    Class-map: cs5 (match-all)  
+
+      0 packets
+
+      Match:  dscp cs5 (40)
+
+      police:
+
+          rate 100000000 bps, burst 10240 bytes
+
+        conformed 0 bytes; actions:
+
+          transmit 
+
+        exceeded 0 bytes; actions:
+
+          drop 
+
+        conformed 0000 bps, exceeded 0000 bps
+
+
+    Class-map: aclv4 (match-all)  
+
+      396221 packets
+
+      Match: access-group name aclv4
+
+      police:
+
+          rate 100000000 bps, burst 10240 bytes
+
+        conformed 196680000 bytes; actions:
+
+          transmit 
+
+        exceeded 1784425000 bytes; actions:
+
+          drop 
+
+        conformed 4898000 bps, exceeded 44416000 bps
+
+
+    Class-map: class-default (match-any)  
+
+      396231 packets
+
+      Match: any 

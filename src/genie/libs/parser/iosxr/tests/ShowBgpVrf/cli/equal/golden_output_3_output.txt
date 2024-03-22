@@ -1,0 +1,70 @@
+show bgp vrf all summary
+Thu Jan 26 17:44:47.251 UTC
+
+VRF: 2HUB
+---------
+BGP VRF 2HUB, state: Active
+BGP Route Distinguisher: 50.1.1.4:1
+VRF ID: 0x60000003
+BGP router identifier 50.1.1.4, local AS number 100
+Non-stop routing is enabled
+BGP table state: Active
+Table ID: 0xe0000012   RD version: 1882
+BGP main routing table version 1882
+BGP NSR Initial initsync version 6 (Reached)
+BGP NSR/ISSU Sync-Group versions 0/0
+
+BGP is operating in STANDALONE mode.
+
+
+Process       RcvTblVer   bRIB/RIB   LabelVer  ImportVer  SendTblVer  StandbyVer
+Speaker            1882       1882       1882       1882        1882           0
+
+Neighbor        Spk    AS MsgRcvd MsgSent   TblVer  InQ OutQ  Up/Down  St/PfxRcd
+90.33.1.2         0  7000  211371  194462     1882    0    0    19w2d          4
+
+
+VRF: 2SPK
+---------
+BGP VRF 2SPK, state: Active
+BGP Route Distinguisher: 50.1.1.4:2
+VRF ID: 0x60000004
+BGP router identifier 50.1.1.4, local AS number 100
+Non-stop routing is enabled
+BGP table state: Active
+Table ID: 0xe0000013   RD version: 1882
+BGP main routing table version 1882
+BGP NSR Initial initsync version 6 (Reached)
+BGP NSR/ISSU Sync-Group versions 0/0
+
+BGP is operating in STANDALONE mode.
+
+
+Process       RcvTblVer   bRIB/RIB   LabelVer  ImportVer  SendTblVer  StandbyVer
+Speaker            1882       1882       1882       1882        1882           0
+
+Neighbor        Spk    AS MsgRcvd MsgSent   TblVer  InQ OutQ  Up/Down  St/PfxRcd
+90.33.1.6         0  7000  211260  194475     1882    0    0    19w2d          0
+
+
+VRF: VRF_1
+----------
+BGP VRF VRF_1, state: Active
+BGP Route Distinguisher: 50.1.1.4:0
+VRF ID: 0x60000002
+BGP router identifier 50.1.1.4, local AS number 100
+Non-stop routing is enabled
+BGP table state: Active
+Table ID: 0xe0000011   RD version: 1882
+BGP main routing table version 1882
+BGP NSR Initial initsync version 6 (Reached)
+BGP NSR/ISSU Sync-Group versions 0/0
+
+BGP is operating in STANDALONE mode.
+
+
+Process       RcvTblVer   bRIB/RIB   LabelVer  ImportVer  SendTblVer  StandbyVer
+Speaker            1882       1882       1882       1882        1882           0
+
+Neighbor        Spk    AS MsgRcvd MsgSent   TblVer  InQ OutQ  Up/Down  St/PfxRcd
+90.33.1.2         0  7000  207417  191239     1882    0    0    11w3d          1

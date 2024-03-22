@@ -1,0 +1,75 @@
+pm9005#show platform hardware qfp active datapath infra sw-nic
+pmd 46813180 device fpe0
+  RX: pkts 15254  bytes 1498020 return 0 badlen 0
+    pkts/burst 1  cycl/pkt 938  ext_cycl/pkt 1390
+    Total ring read 4322810273, empty 4322795019
+  TX: pkts 2061  bytes 891639
+      pri-0: pkts 2061  bytes 891639
+             pkts/send 1
+  Total: pkts/send 1  cycl/pkt 1717
+    send 2047  sendnow 0
+    forced 2056  poll 0  thd_poll 0
+    blocked 0  retries 0  mbuf alloc err 0
+    TX Queue 0: full 0  current index 0  hiwater 0
+pmd 467dc3c0 device fpe1
+  RX: pkts 129922  bytes 14657126 return 0 badlen 0
+    pkts/burst 1  cycl/pkt 942  ext_cycl/pkt 1412
+    Total ring read 4322896990, empty 4322767070
+  TX: pkts 2068  bytes 892100
+      pri-0: pkts 2068  bytes 892100
+             pkts/send 1
+  Total: pkts/send 1  cycl/pkt 4056
+    send 2059  sendnow 0
+    forced 2061  poll 0  thd_poll 0
+    blocked 0  retries 0  mbuf alloc err 0
+    TX Queue 0: full 0  current index 0  hiwater 0
+pmd 467a66c0 device fpe2
+  RX: pkts 654131  bytes 47076400 return 0 badlen 0
+    pkts/burst 1  cycl/pkt 699  ext_cycl/pkt 1120
+    Total ring read 4323332431, empty 4322678329
+  TX: pkts 2049  bytes 890859
+      pri-0: pkts 2049  bytes 890859
+             pkts/send 1
+  Total: pkts/send 1  cycl/pkt 1349
+    send 2048  sendnow 0
+    forced 2048  poll 0  thd_poll 0
+    blocked 0  retries 0  mbuf alloc err 0
+    TX Queue 0: full 0  current index 0  hiwater 0
+pmd 467709c0 device fpe3
+  RX: pkts 52461  bytes 4165744 return 0 badlen 0
+    pkts/burst 1  cycl/pkt 1108  ext_cycl/pkt 1602
+    Total ring read 4322720423, empty 4322667962
+  TX: pkts 2045  bytes 889665
+      pri-0: pkts 2045  bytes 889665
+             pkts/send 1
+  Total: pkts/send 1  cycl/pkt 1382
+    send 2039  sendnow 0
+    forced 2039  poll 0  thd_poll 0
+    blocked 0  retries 0  mbuf alloc err 0
+    TX Queue 0: full 0  current index 0  hiwater 0
+pmd 463262c0 device fpe4
+  RX: pkts 20129  bytes 1794272 return 0 badlen 0
+    pkts/burst 1  cycl/pkt 710  ext_cycl/pkt 1190
+    Total ring read 4322660264, empty 4322640135
+  TX: pkts 2049  bytes 891141
+      pri-0: pkts 2049  bytes 891141
+             pkts/send 1
+  Total: pkts/send 1  cycl/pkt 5422
+    send 2042  sendnow 0
+    forced 2042  poll 0  thd_poll 0
+    blocked 0  retries 0  mbuf alloc err 0
+    TX Queue 0: full 0  current index 0  hiwater 0
+    TX Queue 1: full 0  current index 0  hiwater 0
+    TX Queue 2: full 0  current index 0  hiwater 0
+pmd 45ea02c0 device fpe5
+  RX: pkts 0  bytes 0 return 0 badlen 0
+    pkts/burst 0  cycl/pkt 0  ext_cycl/pkt 0
+    Total ring read 4322754249, empty 4322754249
+  TX: pkts 0  bytes 0
+  Total: pkts/send 0  cycl/pkt 0
+    send 0  sendnow 0
+    forced 0  poll 0  thd_poll 0
+    blocked 0  retries 0  mbuf alloc err 0
+    TX Queue 0: full 0  current index 0  hiwater 0
+    TX Queue 1: full 0  current index 0  hiwater 0
+    TX Queue 2: full 0  current index 0  hiwater 0

@@ -1,0 +1,18 @@
+IDPROM for transceiver TenGigabitEthernet3/0/1:
+  Description                               = SFP or SFP+ optics (type 3)
+  Transceiver Type:                         = SFP+ 10GBASE-SR (273)
+  Product Identifier (PID)                  = SFP-10G-SR
+  Vendor Revision                           = G4.1
+  Serial Number (SN)                        = AVD2043AV06
+  Vendor Name                               = CISCO-AVAGO
+  Vendor OUI (IEEE company ID)              = 00.17.6A (5994)
+  CLEI code                                 = COUIA8NCAA
+  Cisco part number                         = 10-2415-03
+  Device State                              = Enabled.
+  Date code (yy/mm/dd)                      = 16/11/03
+  Connector type                            = LC.
+  Encoding                                  = 64B/66B (6)
+  Nominal bitrate                           =  (10300 Mbits/s)
+  Minimum bit rate as % of nominal bit rate = not specified
+  Maximum bit rate as % of nominal bit rate = not specified
+ 

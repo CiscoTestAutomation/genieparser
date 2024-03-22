@@ -1,0 +1,175 @@
+SA created for group getvpn1:
+  GigabitEthernet0/0/1:
+    protocol = ip
+      local ident  = 11.22.33.33, port = 0
+      remote ident = 24.54.55.55, port = 0
+      direction: Both, replay(method/window): Counter/64
+    protocol = ip
+      local ident  = 41.23.32.37, port = 0
+      remote ident = 44.58.59.55, port = 0
+      direction: Both, replay(method/window): Counter/64
+    protocol = esp
+      local ident  = ANY, port = 0
+      remote ident = ANY, port = 0
+      direction: Both, replay(method/window): Counter/64
+    protocol = udp
+      local ident  = ANY, port = 0
+      remote ident = ANY, port = 3784
+      direction: Both, replay(method/window): Counter/64
+    protocol = udp
+      local ident  = ANY, port = 0
+      remote ident = ANY, port = 3785
+      direction: Both, replay(method/window): Counter/64
+    protocol = udp
+      local ident  = ANY, port = 3785
+      remote ident = ANY, port = 0
+      direction: Both, replay(method/window): Counter/64
+    protocol = tcp
+      local ident  = ANY, port = 0
+      remote ident = ANY, port = 179
+      direction: Both, replay(method/window): Counter/64
+    protocol = tcp
+      local ident  = ANY, port = 179
+      remote ident = ANY, port = 0
+      direction: Both, replay(method/window): Counter/64
+    protocol = tcp
+      local ident  = ANY, port = 0
+      remote ident = ANY, port = 22
+      direction: Both, replay(method/window): Counter/64
+    protocol = tcp
+      local ident  = ANY, port = 22
+      remote ident = ANY, port = 0
+      direction: Both, replay(method/window): Counter/64
+    protocol = ospf
+      local ident  = ANY, port = 0
+      remote ident = ANY, port = 0
+      direction: Both, replay(method/window): Counter/64
+    protocol = pim
+      local ident  = ANY, port = 0
+      remote ident = 224.0.0.0/24, port = 0
+      direction: Both, replay(method/window): Counter/64
+    protocol = udp
+      local ident  = ANY, port = 0
+      remote ident = ANY, port = 123
+      direction: Both, replay(method/window): Counter/64
+    protocol = udp
+      local ident  = ANY, port = 0
+      remote ident = ANY, port = 514
+      direction: Both, replay(method/window): Counter/64
+    protocol = udp
+      local ident  = ANY, port = 500
+      remote ident = ANY, port = 500
+      direction: Both, replay(method/window): Counter/64
+    protocol = udp
+      local ident  = ANY, port = 848
+      remote ident = ANY, port = 0
+      direction: Both, replay(method/window): Counter/64
+    protocol = udp
+      local ident  = ANY, port = 0
+      remote ident = ANY, port = 848
+      direction: Both, replay(method/window): Counter/64
+    protocol = ip
+      local ident  = ANY, port = 0
+      remote ident = 10.90.0.0/16, port = 0
+      direction: Both, replay(method/window): Counter/64
+    protocol = ip
+      local ident  = 10.90.0.0/16, port = 0
+      remote ident = ANY, port = 0
+      direction: Both, replay(method/window): Counter/64
+    protocol = ip
+      local ident  = 25.25.0.0/16, port = 0
+      remote ident = 15.15.0.0/16, port = 0
+      direction: Both, replay(method/window): Counter/64
+    protocol = ip
+      local ident  = 15.15.0.0/16, port = 0
+      remote ident = 25.25.0.0/16, port = 0
+      direction: Both, replay(method/window): Counter/64
+    protocol = ip
+      local ident  = 16.16.0.0/16, port = 0
+      remote ident = 26.26.0.0/16, port = 0
+      direction: Both, replay(method/window): Counter/64
+    protocol = ip
+      local ident  = 41.23.32.37, port = 0
+      remote ident = 44.58.59.55, port = 0
+      direction: Both, replay(method/window): Counter/64
+    protocol = esp
+      local ident  = ANY, port = 0
+      remote ident = ANY, port = 0
+      direction: Both, replay(method/window): Counter/64
+    protocol = udp
+      local ident  = ANY, port = 0
+      remote ident = ANY, port = 3784
+      direction: Both, replay(method/window): Counter/64
+    protocol = udp
+      local ident  = ANY, port = 0
+      remote ident = ANY, port = 3785
+      direction: Both, replay(method/window): Counter/64
+    protocol = udp
+      local ident  = ANY, port = 3785
+      remote ident = ANY, port = 0
+      direction: Both, replay(method/window): Counter/64
+    protocol = tcp
+      local ident  = ANY, port = 0
+      remote ident = ANY, port = 179
+      direction: Both, replay(method/window): Counter/64
+    protocol = tcp
+      local ident  = ANY, port = 179
+      remote ident = ANY, port = 0
+      direction: Both, replay(method/window): Counter/64
+    protocol = tcp
+      local ident  = ANY, port = 0
+      remote ident = ANY, port = 22
+      direction: Both, replay(method/window): Counter/64
+    protocol = tcp
+      local ident  = ANY, port = 22
+      remote ident = ANY, port = 0
+      direction: Both, replay(method/window): Counter/64
+    protocol = ospf
+      local ident  = ANY, port = 0
+      remote ident = ANY, port = 0
+      direction: Both, replay(method/window): Counter/64
+    protocol = pim
+      local ident  = ANY, port = 0
+      remote ident = 224.0.0.0/24, port = 0
+      direction: Both, replay(method/window): Counter/64
+    protocol = udp
+      local ident  = ANY, port = 0
+      remote ident = ANY, port = 123
+      direction: Both, replay(method/window): Counter/64
+    protocol = udp
+      local ident  = ANY, port = 0
+      remote ident = ANY, port = 514
+      direction: Both, replay(method/window): Counter/64
+    protocol = udp
+      local ident  = ANY, port = 500
+      remote ident = ANY, port = 500
+      direction: Both, replay(method/window): Counter/64
+    protocol = udp
+      local ident  = ANY, port = 848
+      remote ident = ANY, port = 0
+      direction: Both, replay(method/window): Counter/64
+    protocol = udp
+      local ident  = ANY, port = 0
+      remote ident = ANY, port = 848
+      direction: Both, replay(method/window): Counter/64
+    protocol = ip
+      local ident  = ANY, port = 0
+      remote ident = 10.90.0.0/16, port = 0
+      direction: Both, replay(method/window): Counter/64
+    protocol = ip
+      local ident  = 10.90.0.0/16, port = 0
+      remote ident = ANY, port = 0
+      direction: Both, replay(method/window): Counter/64
+    protocol = ip
+      local ident  = 25.25.0.0/16, port = 0
+      remote ident = 15.15.0.0/16, port = 0
+      direction: Both, replay(method/window): Counter/64
+    protocol = ip
+      local ident  = 15.15.0.0/16, port = 0
+      remote ident = 25.25.0.0/16, port = 0
+      direction: Both, replay(method/window): Counter/64
+    protocol = ip
+      local ident  = 16.16.0.0/16, port = 0
+      remote ident = 26.26.0.0/16, port = 0
+      direction: Both, replay(method/window): Counter/64
+

@@ -13,7 +13,12 @@ IOSXE parsers for the following show commands:
     * show ip multicast
     * show ip multicast vrf <vrf_name>
     * show ip multicast mpls vif
-
+    * show consistency-checker run-id <id>
+    * show consistency-checker run-id <id> detail
+    * show consistency-checker mcast <layer> start all'
+    * 'show consistency-checker mcast <layer> start <address> <source>',
+    * 'show consistency-checker mcast <layer> start vrf <instance_name> <address> <source>',
+    * 'show consistency-checker mcast <layer> start vlan <vlan_id> <address>
 """
 
 # Python
@@ -85,6 +90,9 @@ class ShowIpMrouteSchema(MetaParser):
                                                     {Optional('rpf_nbr'): str,
                                                      Optional('rpf_info'): str,
                                                      Optional('state'): str,
+                                                     Optional('iif_lisp_rloc'): str,
+                                                     Optional('iif_lisp_group'): str,
+                                                     Optional('lisp_vrf'): str,
                                                     },
                                                 },
                                              Optional('outgoing_interface_list'): 
@@ -100,6 +108,23 @@ class ShowIpMrouteSchema(MetaParser):
                                                      Optional('vxlan_version'): str,
                                                      Optional('vxlan_vni'): str,
                                                      Optional('vxlan_nxthop'): str,
+                                                     Optional('lisp_join_sender_list'):
+                                                        {Any():
+                                                            {'uptime': str,
+                                                             'expire': str,
+                                                            },
+                                                        },
+                                                    },
+                                                },
+                                             Optional('extranet_rx_vrf_list'):
+                                                {Any():
+                                                    {'e_src':str,
+                                                     'e_grp':str,
+                                                     'e_uptime':str,
+                                                     'e_expire':str,
+                                                     Optional('e_rp'):str,
+                                                     'e_oif_count':str,
+                                                     'e_flags':str,
                                                     },
                                                 },
                                             },
@@ -172,19 +197,24 @@ class ShowIpMroute(ShowIpMrouteSchema):
         # (10.4.1.1, 239.1.1.1), 00:00:03/00:02:57, flags: PFT
         # (*, FF07::1), 00:04:45/00:02:47, RP 2001:DB8:6::6, flags:S
         # (2001:DB8:999::99, FF07::1), 00:02:06/00:01:23, flags:SFT
+        # (50.50.50.2, 239.0.0.13), 00:00:39/00:02:20, flags:
         p2 = re.compile(r'^\((?P<source_address>[\w\:\.\*\/]+),'
                             '(\s+)?(?P<multicast_group>[\w\:\.\/]+)\),'
                             ' +(?P<uptime>[\w\:\.]+)\/'
                             '(?P<expires>[\w\:\.\-]+),'
                             '( +RP +(?P<rendezvous_point>[\w\:\.]+),)?'
-                            ' +flags: *(?P<flags>[a-zA-Z]+)$')  
+                            ' +flags: *(?P<flags>[a-zA-Z]*)$')  
                             
         # Incoming interface: Null, RPF nbr 224.0.0.0224.0.0.0
         # Incoming interface: Loopback0, RPF nbr 0.0.0.0, Registering
         # Incoming interface: Lspvif10, RPF nbr 3.3.3.3, MDT [10, 3.3.3.3]/00:02:11
+        # Incoming interface: LISP0.4100, RPF nbr 100.22.22.22, LISP: [100.22.22.22, 232.100.100.234]
+        # Incoming interface: LISP0.4100, RPF nbr 100.88.88.88, using vrf VRF1
         p3 = re.compile(r'^Incoming +interface:'
                        ' +(?P<incoming_interface>[a-zA-Z0-9\/\-\.]+),'
                        ' +RPF +nbr +(?P<rpf_nbr>[\w\:\.]+)'
+                       '(\s*,\s+LISP:\s\[(?P<iif_lisp_rloc>[\d\.]+)\,\s(?P<iif_lisp_group>[\d\.]+)\])?'
+                       '(\s*,\s+using\s+vrf\s+(?P<lisp_vrf>[a-zA-Z0-9]+)\s*)?'
                        '(, *(?P<status>.*))?$') 
                        
         # Incoming interface:Tunnel5
@@ -195,22 +225,39 @@ class ShowIpMroute(ShowIpMrouteSchema):
         # Outgoing interface list: Null
         # Outgoing interface list:
         p4 =  re.compile(r'^Outgoing +interface +list:|^Immediate +Outgoing +interface +list:'
+                         '|^Inherited +Outgoing +interface +list:'
                          '( *(?P<intf>\w+))?$')       
         # Vlan5, Forward/Dense, 00:03:25/00:00:00, H
         # Vlan5, Forward/Dense, 00:04:35/00:02:30
         # ATM0/0, VCD 14, Forward/Sparse, 00:03:57/00:02:53
         # POS4/0, Forward, 00:02:06/00:03:27
         # LISP0.4100, (172.24.0.3, 232.0.0.199), Forward/Sparse, 00:10:33/stopped
+        # LISP0.101, NH 100:44:44::44, Forward, 04:54:20/00:03:09
         # Vlan500, VXLAN v4 Encap: (50000, 225.2.2.2), Forward/Sparse, 00:00:54/00:02:05
+        # Vlan500, VXLAN v6 Encap: (50000, FF13::1), Forward/Sparse, 00:17:31/stopped, flags:
         p5 = re.compile(r'^(?P<outgoing_interface>[a-zA-Z0-9\/\.\-]+)(\,\s+)?'
                             '(VCD +(?P<vcd>\d+))?(\,\s+)?'
-                            '(NH)?(\s+)?(\(?(?P<lisp_mcast_source>[0-9\.]+)(\,\s+)?(?P<lisp_mcast_group>[0-9\.]+)?\)?)?(\,\s+)?'
-                            '(VXLAN +(?P<vxlan_version>[a-z0-9]+)(\s+)?(Encap:)?(\s+)?(\(?(?P<vxlan_vni>[0-9]+)(\,\s+)?(?P<vxlan_nxthop>[0-9\.]+)?\)?)?)?(\,\s+)?'
+                            '(NH)?(\s+)?(\(?(?P<lisp_mcast_source>[0-9\.:]+)(\,\s+)?(?P<lisp_mcast_group>[0-9\.]+)?\)?)?(\,\s+)?'
+                            '(VXLAN +(?P<vxlan_version>[a-z0-9]+)(\s+)?(Encap:)?(\s+)?(\(?(?P<vxlan_vni>[0-9]+)(\,\s+)?(?P<vxlan_nxthop>[\w\:\.]+)?\)?)?)?(\,\s+)?'
                             '(?P<state_mode>[\w\-\/-]+)(\,\s+)?'
                             '(?P<uptime>[a-zA-Z0-9\:]+)\/'
                             '(?P<expire>[\w\:]+)(\,\s+)?'
                             '(Pkts\:(?P<pkts>\w+))?(\,\s+)?'
                             '(flags\:\s+(?P<flags>\w+)?$|(,\s+flags\:)?$)')
+        # 100.11.11.11, 2d22h/00:02:36
+        p5_1 = re.compile(r'^\s*(?P<lisp_js_addr>[0-9\.]+)\,\s*'
+                            '(?P<lisp_js_uptime>[\w\:]+)\/(?P<lisp_js_expire>[\w\:]+)$')
+        # Extranet receivers in vrf internet:
+        p7 = re.compile(r'^Extranet receivers in vrf (?P<extranet_vrf>[a-zA-Z0-9]+)\:\s*$')
+        # (192.168.1.3, 232.64.64.1), 21:38:05/00:03:25, OIF count: 1, flags: sTpl
+        # (*, 239.5.1.100), 12:54:25/stopped, RP 152.1.1.1, OIF count: 0, flags: SP
+        p8 = re.compile(r'^\((?P<e_src>[\d\.\*]+)\,(\s+)?'
+                              '(?P<e_grp>[\d\.]+)\)\,(\s+)?'
+                              '(?P<e_uptime>[\w\:]+)\/'
+                              '(?P<e_expire>[\w\:]+)\,(\s+)?'
+                              '(RP\s+(?P<e_rp>[\d\.]+)\,(\s+)?)?'
+                              '(OIF count:\s(?P<e_oif_count>\d+))\,(\s+)?'
+                              '(flags: (?P<e_flags>[\w]+))(\s+)?$')
         for line in out.splitlines():
             line = line.strip()
 
@@ -251,6 +298,7 @@ class ShowIpMroute(ShowIpMrouteSchema):
                 multicast_group = m.groupdict()['multicast_group']
                 ### initiate index value to zero for each S,G pair for multiple OG interfaces
                 idx=0
+                previous_intf = ""
 
 
                 mroute_data.setdefault('multicast_group',{})
@@ -281,6 +329,8 @@ class ShowIpMroute(ShowIpMrouteSchema):
             # Incoming interface: Null, RPF nbr 224.0.0.0224.0.0.0
             # Incoming interface: Loopback0, RPF nbr 0.0.0.0, Registering
             # Incoming interface: Lspvif10, RPF nbr 3.3.3.3, MDT [10, 3.3.3.3]/00:02:11
+            # Incoming interface: LISP0.4100, RPF nbr 100.22.22.22, LISP: [100.22.22.22, 232.100.100.234]
+            # Incoming interface: LISP0.4100, RPF nbr 100.88.88.88, using vrf VRF1
             m = p3.match(line)
             if m:
                 incoming_interface = m.groupdict()['incoming_interface']
@@ -302,6 +352,11 @@ class ShowIpMroute(ShowIpMrouteSchema):
                 ing_intf_dict['rpf_nbr'] = rpf_nbr
                 if rpf_info:
                     ing_intf_dict['rpf_info'] = rpf_info.lower()
+                if m.groupdict()['iif_lisp_rloc']:
+                    sub_dict['incoming_interface_list'][incoming_interface]['iif_lisp_rloc'] = m.groupdict()['iif_lisp_rloc']
+                    sub_dict['incoming_interface_list'][incoming_interface]['iif_lisp_group'] = m.groupdict()['iif_lisp_group']
+                if m.groupdict()['lisp_vrf']:
+                    sub_dict['incoming_interface_list'][incoming_interface]['lisp_vrf'] = m.groupdict()['lisp_vrf']
                 continue
 
             # Incoming interface:Tunnel5
@@ -350,12 +405,22 @@ class ShowIpMroute(ShowIpMrouteSchema):
                     outgoing = True
                 continue
 
+            # 100.11.11.11, 2d22h/00:02:36
+            m = p5_1.match(line)
+            if m:
+                r = m.groupdict()
+                lisp_join_sender_addr = r['lisp_js_addr']
+                out_intf_dict.setdefault('lisp_join_sender_list',{}).setdefault(lisp_join_sender_addr,{})
+                out_intf_dict['lisp_join_sender_list'][lisp_join_sender_addr]['uptime'] = r['lisp_js_uptime']
+                out_intf_dict['lisp_join_sender_list'][lisp_join_sender_addr]['expire'] = r['lisp_js_expire']
+                continue
             # Vlan5, Forward/Dense, 00:03:25/00:00:00, H
             # Vlan5, Forward/Dense, 00:04:35/00:02:30
             # ATM0/0, VCD 14, Forward/Sparse, 00:03:57/00:02:53
             # POS4/0, Forward, 00:02:06/00:03:27
             # LISP0.4100, (172.24.0.3, 232.0.0.199), Forward/Sparse, 00:10:33/stopped
             # Vlan500, VXLAN v4 Encap: (50000, 225.2.2.2), Forward/Sparse, 00:00:54/00:02:05
+            # Vlan500, VXLAN v6 Encap: (50000, FF13::1), Forward/Sparse, 00:17:31/stopped, flags:
             m = p5.match(line)
             if m and outgoing:
                 ### adding below code for multiple outgoing interfaces with same different rloc's example below
@@ -366,10 +431,12 @@ class ShowIpMroute(ShowIpMrouteSchema):
 
                 egress_interface = m.groupdict()['outgoing_interface']
                 lisp_mcast_source = m.groupdict()['lisp_mcast_source']
-                if idx:
+                if egress_interface == previous_intf:
+                    idx+=1
                     outgoing_interface='{}-{}'.format(m.groupdict()['outgoing_interface'],idx )
                 else:
                     outgoing_interface=egress_interface
+                    previous_intf = egress_interface
 
                 out_intf_dict = sub_dict.setdefault('outgoing_interface_list',{}).setdefault(outgoing_interface,{})
                 sub_dict['outgoing_interface_list'][outgoing_interface]['uptime'] =  m.groupdict()['uptime']
@@ -390,8 +457,7 @@ class ShowIpMroute(ShowIpMrouteSchema):
                     if m.groupdict()['vxlan_vni']:
                         sub_dict['outgoing_interface_list'][outgoing_interface]['vxlan_vni'] = m.groupdict()['vxlan_vni']
                     if m.groupdict()['vxlan_nxthop']:
-                        sub_dict['outgoing_interface_list'][outgoing_interface]['vxlan_nxthop'] = m.groupdict()['vxlan_nxthop']
-                idx+=1    
+                        sub_dict['outgoing_interface_list'][outgoing_interface]['vxlan_nxthop'] = m.groupdict()['vxlan_nxthop']   
                 continue
                 
             # Bidir-Upstream: Lspvif52, RPF nbr: 1.1.1.1
@@ -404,6 +470,28 @@ class ShowIpMroute(ShowIpMrouteSchema):
                 sub_dict['upstream_interface'] = {}
                 sub_dict['upstream_interface'][upstream_interface]={}
                 sub_dict['upstream_interface'][upstream_interface]['rpf_nbr']=r['rpf_nbr']
+                continue
+            # Extranet receivers in vrf internet:
+            m = p7.match(line)
+            if m:
+                r = m.groupdict()
+                extranet_vrf = r['extranet_vrf']
+                sub_dict.setdefault('extranet_rx_vrf_list',{}).setdefault(extranet_vrf,{})
+                continue
+            # (192.168.1.3, 232.64.64.1), 21:38:05/00:03:25, OIF count: 1, flags: sTpl
+            # (*, 239.5.1.100), 12:54:25/stopped, RP 152.1.1.1, OIF count: 0, flags: SP
+            m = p8.match(line)
+            if m:
+                r = m.groupdict()
+                if extranet_vrf:
+                    sub_dict['extranet_rx_vrf_list'][extranet_vrf]['e_src'] = r['e_src']
+                    sub_dict['extranet_rx_vrf_list'][extranet_vrf]['e_grp'] = r['e_grp']
+                    sub_dict['extranet_rx_vrf_list'][extranet_vrf]['e_uptime'] = r['e_uptime']
+                    sub_dict['extranet_rx_vrf_list'][extranet_vrf]['e_expire'] = r['e_expire']
+                    sub_dict['extranet_rx_vrf_list'][extranet_vrf]['e_oif_count'] = r['e_oif_count']
+                    sub_dict['extranet_rx_vrf_list'][extranet_vrf]['e_flags'] = r['e_flags']
+                    if r['e_rp']:
+                        sub_dict['extranet_rx_vrf_list'][extranet_vrf]['e_rp'] = r['e_rp']
                 continue
 
         return mroute_dict
@@ -803,3 +891,332 @@ class ShowIpMrouteCount(ShowIpMrouteCountSchema):
                 continue
 
         return ret_dict
+
+#=================================================
+# Schema for 'show consistency-checker mcast {layer} start all'
+#=================================================
+
+class ShowConsistencyCheckerMcastStartAllSchema(MetaParser):
+    """Schema for 
+        * 'show consistency-checker mcast {layer} start all'
+        * 'show consistency-checker mcast {layer} start {address} {source}',
+        * 'show consistency-checker mcast {layer} start {address}',
+        * 'show consistency-checker mcast {layer} start vrf {instance_name} {address} {source}',
+        * 'show consistency-checker mcast {layer} start vlan {vlan_id} {address}'
+    """
+    schema = {
+        'run_id': int,
+        Optional('layer'): str
+    }
+
+#=================================================
+# Parser for 'show consistency-checker mcast {layer} start all'
+#=================================================
+
+class ShowConsistencyCheckerMcastStartAll(ShowConsistencyCheckerMcastStartAllSchema):
+    """Parser for 
+        * 'show consistency-checker mcast {layer} start all',
+        * 'show consistency-checker mcast {layer} start {address} {source}',
+        * 'show consistency-checker mcast {layer} start {address}',
+        * 'show consistency-checker mcast {layer} start vrf {instance_name} {address} {source}',
+        * 'show consistency-checker mcast {layer} start vlan {vlan_id} {address}'
+    """
+
+    cli_command = ['show consistency-checker mcast {layer} start all',
+    'show consistency-checker mcast {layer} start {address} {source}',
+    'show consistency-checker mcast {layer} start {address}',
+    'show consistency-checker mcast {layer} start vrf {instance_name} {address} {source}',
+    'show consistency-checker mcast {layer} start vlan {vlan_id} {address}'
+    ]
+
+    def cli(self, layer, source=None, address=None, instance_name=None, vlan_id=None, output=None):
+        if output is None:
+            if instance_name and address and source:
+                cmd = self.cli_command[3].format(layer=layer, instance_name=instance_name, address=address, source=source)
+            elif address and source is None:
+                cmd = self.cli_command[2].format(layer=layer, address=address)
+            elif vlan_id and address:
+                cmd = self.cli_command[4].format(layer=layer, vlan_id=vlan_id, address=address)
+            elif address and source:
+                cmd = self.cli_command[1].format(layer=layer, address=address, source=source)
+            else:
+                cmd = self.cli_command[0].format(layer=layer)
+            output = self.device.execute(cmd)
+
+        # L3 multicast Full scan started. Run_id: 2181
+        p1 = re.compile(r'^(?P<layer>(\w\d+)) multicast +Full +scan +started. Run_id: +(?P<run_id>(\d+))$')
+
+        # Single entry scan started with Run_id: 2255
+        p2 = re.compile(r'^Single +entry +scan +started +with +Run_id: +(?P<run_id>(\d+))$')
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # L3 multicast Full scan started. Run_id: 2181
+            m = p1.match(line)
+            if m:
+                ret_dict['layer'] = m.groupdict()['layer']
+                ret_dict['run_id'] = int(m.groupdict()['run_id'])
+                continue
+            
+            # Single entry scan started with Run_id: 2255
+            m = p2.match(line)
+            if m:
+                ret_dict['run_id'] = int(m.groupdict()['run_id'])
+                continue
+
+        return ret_dict
+
+#=================================================
+# Schema for 'show consistency-checker run-id detail'
+#=================================================
+class ShowConsistencyCheckerRunIdDetailSchema(MetaParser):
+    """Schema for 
+        * 'show consistency-checker run-id {id} detail'
+    """
+    schema = {
+        'process': {
+            Any(): {
+                'type': str,
+            }
+        },
+        'switch': {
+            Any(): {
+                'process': {
+                    Any(): {
+                        Optional('process_type'): str
+                    }
+               }
+           }
+       }
+   }
+
+#=================================================
+# Parser for 'show consistency-checker run-id detail'
+#=================================================
+class ShowConsistencyCheckerRunIdDetail(ShowConsistencyCheckerRunIdDetailSchema):
+    """  Parser for 
+        * 'show consistency-checker run-id {id} detail'
+    """
+
+    cli_command = 'show consistency-checker run-id {id} detail'
+    
+    def cli(self, id, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(id=id))
+        # Process: IOSD
+        # Process: FMAN-RP
+        p1 = re.compile(r'^Process:\s+(?P<type>[\w\s\-]+)$')
+        # Switch: 1 Process: FMAN-FP
+        # Switch: 1 Process: FED
+        p2 = re.compile(r'^Switch:\s+(?P<switch>[\d]+)+\s+Process:\s+(?P<process_type>[\w\s\-]+)$')
+        
+        ret_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+            # Process: IOSD
+            # Process: FMAN-RP
+            m = p1.match(line)
+            if m:
+                ret_dict.setdefault('process', {}).setdefault(m.groupdict()['type'], {}).setdefault('type', m.groupdict()['type'])
+                continue
+
+            # Switch: 1 Process: FMAN-FP
+            # Switch: 1 Process: FED
+            m = p2.match(line)
+            if m: 
+                key_chain_dict = ret_dict.setdefault('switch', {}).setdefault(m.groupdict()['switch'], {})
+                key_dict = key_chain_dict.setdefault('process', {}).setdefault(m.groupdict()['process_type'], {})
+                key_dict['process_type'] = m.groupdict()['process_type']
+                continue
+
+        return ret_dict
+
+#=================================================
+# Schema for 'show consistency-checker run-id'
+#=================================================
+class ShowConsistencyCheckerRunIdSchema(MetaParser):
+        schema = {
+        'process': {
+            Any(): {
+                'object_type': {
+                    Any():{
+                            'starttime':str,
+                            Optional('entries'):int ,
+                            Optional('exceptions'):int,
+                            Optional('fulltable'):str,
+                            Optional('garbagedetector'):str,
+                            Optional('hwcheck'):str,
+                            Optional('hwshadow'):str,
+                            Optional('state'):str,
+                            Optional('actual'):int,
+                            Optional('inherited'):int,
+                            Optional('missing'):int,
+                            Optional('stale'):int,
+                            Optional('others'):int,
+                            Optional('hardware'):int,
+                    },
+                },
+            },
+        },
+        Optional('switch'): {
+            Any(): {
+                'process': {
+                    Any(): {
+                        'object_type': {
+                            Any():{
+                                    'starttime':str,
+                                    'state':str,
+                                    'actual':int,
+                                    'inherited':int,
+                                    'missing':int,
+                                    'stale':int,
+                                    'others':int,
+                                    Optional('hardware'):int
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        }
+        
+#==================================================
+# Parser for 'show consistency-checker run-id'
+#==================================================
+class ShowConsistencyCheckerRunId(ShowConsistencyCheckerRunIdSchema):
+    cli_command = 'show consistency-checker run-id {id}'
+
+    def cli(self, id, output=None):
+        if output is None:
+            cmd = self.cli_command.format(id=id)
+            output = self.device.execute(cmd)
+
+        # Process: IOSD
+        # Process: FMAN-RP
+        p1 = re.compile(r'^Process:\s+(?P<type>[\w\s\-]+)$')
+
+        # Object-Type    Start-time                Entries  Exceptions  Flags
+        #  l2m_vlan      2023/04/28 03:51:03         72         0       F GD Hw HS
+        #  l2m_group     2023/04/28 03:51:03          0         0       F GD Hw HS
+        p2 = re.compile(r'^(?P<object_type>[\w\s\_]+)\s+(?P<starttime>(\d+\/){2}\d+.\d+:\d+:\d+)\s+(?P<entries>[\d]+)\s+(?P<exceptions>[\d]+)\s+\b(?P<fulltable>F)?\b\s+\b(?P<garbagedetector>GD)?\b\s+\b(?P<hwcheck>Hw)?\b\s+\b(?P<hwshadow>HS)?\b$')
+
+        # Object-Type       Start-time                State           A/  I/  M/  S/Oth 
+        #  l2m_vlan       2023/04/28 03:51:03      Consistent        0/  0/  0/  0/  0
+        #  l2m_group      2023/04/28 03:51:03       Consistent        0/  0/  0/  0/  0
+        p3 = re.compile(r'^(?P<object_type>[\w\s\-]+)\s+(?P<starttime>(\d+\/){2}\d+.\d+:\d+:\d+)\s+(?P<state>[\w]+)\s+(?P<actual>[\d]+)/\s+(?P<inherited>[\d]+)/\s+(?P<missing>[\d]+)/\s+(?P<stale>[\d]+)/\s+(?P<others>[\d]+)$')
+
+        # Switch: 1 Process: FMAN-FP
+        # Switch: 1 Process: FED
+        p4 = re.compile(r'^Switch:\s+(?P<switch>[\d]+)+\s+Process:\s+(?P<process_type>[\w\s\-]+)$')
+
+        # Object-Type    Start-time              State              A/  I/  M/  S/ HW/Oth
+        # l2m_vlan       2023/05/08 05:05:36     Consistent         0/  0/  0/  0/  0/  0
+        # l2m_group      2023/05/08 05:05:36     Consistent         0/  0/  0/  0/  0/  0
+        p5 = re.compile(r'^(?P<object_type>[\w\s\-]+)\s+(?P<starttime>(\d+\/){2}\d+.\d+:\d+:\d+)\s+(?P<state>[\w]+)\s+(?P<actual>[\d]+)/\s+(?P<inherited>[\d]+)/\s+(?P<missing>[\d]+)/\s+(?P<stale>[\d]+)/\s+(?P<hardware>[\d]+)/\s+(?P<others>[\d]+)$')
+
+        # l3m_entry      2023/11/03 12:37:18        1012         0    F Hw HS
+        p6 = re.compile(r'^(?P<object_type>[\w\s\_]+)\s+(?P<starttime>(\d+\/){2}\d+.\d+:\d+:\d+)\s+(?P<entries>[\d]+)\s+(?P<exceptions>[\d]+)\s+\b(?P<fulltable>F+)?\b\s+\b(?P<hwcheck>Hw)?\b\s+\b(?P<hwshadow>HS)?\b$')
+        
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Process: IOSD
+            # Process: FMAN-RP
+            m = p1.match(line)
+            if m:
+                process_dict = ret_dict.setdefault('process', {}).setdefault(m.groupdict()['type'], {})
+                continue
+
+            # Object-Type    Start-time                Entries  Exceptions  Flags
+            #  l2m_vlan      2023/04/28 03:51:03         72         0       F GD Hw HS
+            #  l2m_group     2023/04/28 03:51:03          0         0       F GD Hw HS
+            m=p2.match(line)
+            if m:
+                object_type=m.groupdict()['object_type'].strip()
+                object_dict= process_dict.setdefault('object_type', {}).setdefault(object_type, {})
+                object_dict['starttime']=m.groupdict()['starttime']
+                object_dict['entries']=int(m.groupdict()['entries'])
+                object_dict['exceptions']=int(m.groupdict()['exceptions'])
+                object_dict['fulltable']=m.groupdict()['fulltable']
+                object_dict['garbagedetector']=m.groupdict()['garbagedetector']
+                object_dict['hwcheck']=m.groupdict()['hwcheck']
+                object_dict['hwshadow']=m.groupdict()['hwshadow']
+                continue
+
+            # Object-Type       Start-time                State           A/  I/  M/  S/Oth 
+            #  l2m_vlan        2023/04/28 03:51:03      Consistent        0/  0/  0/  0/  0
+            #  l2m_group      2023/04/28 03:51:03       Consistent        0/  0/  0/  0/  0 
+            m=p3.match(line)
+            if m:
+                object_type=m.groupdict()['object_type'].strip()
+                object_dict= process_dict.setdefault('object_type', {}).setdefault(object_type, {})
+                object_dict['starttime']=m.groupdict()['starttime']
+                object_dict['state']=m.groupdict()['state']
+                object_dict['actual']=int(m.groupdict()['actual'])
+                object_dict['inherited']=int(m.groupdict()['inherited'])
+                object_dict['missing']=int(m.groupdict()['missing'])
+                object_dict['stale']=int(m.groupdict()['stale'])
+                object_dict['others']=int(m.groupdict()['others'])
+                continue 
+            
+            # Switch: 1 Process: FMAN-FP
+            # Switch: 1 Process: FED
+            m = p4.match(line)
+            flag = 0
+            if m:
+                consistency_checker = m.groupdict()['switch']
+                key_chain_dict = ret_dict.setdefault('switch', {}).setdefault(consistency_checker, {})
+                key_name = m.groupdict()['process_type']
+                process_dict = key_chain_dict.setdefault('process', {}).setdefault(key_name, {})
+                flag = 1
+                continue
+
+            # Object-Type    Start-time              State              A/  I/  M/  S/ HW/Oth
+            # l2m_vlan       2023/05/08 05:05:36     Consistent         0/  0/  0/  0/  0/  0
+            # l2m_group      2023/05/08 05:05:36     Consistent         0/  0/  0/  0/  0/  0
+            m = p5.match(line)
+            if m:
+                if flag == 1:
+                    object_type=m.groupdict()['object_type'].strip()
+                    object_dict1= process_dict.setdefault('object_type', {}).setdefault(object_type, {})
+                    object_dict1['starttime']=m.groupdict()['starttime']
+                    object_dict1['state']=m.groupdict()['state']
+                    object_dict1['actual']=int(m.groupdict()['actual'])
+                    object_dict1['inherited']=int(m.groupdict()['inherited'])
+                    object_dict1['missing']=int(m.groupdict()['missing'])
+                    object_dict1['stale']=int(m.groupdict()['stale'])
+                    object_dict1['others']=int(m.groupdict()['others'])
+                    object_dict1['hardware']=int(m.groupdict()['hardware'])
+                    continue
+                else:
+                    object_type=m.groupdict()['object_type'].strip()
+                    object_dict= process_dict.setdefault('object_type', {}).setdefault(object_type, {})
+                    object_dict['starttime']=m.groupdict()['starttime']
+                    object_dict['state']=m.groupdict()['state']
+                    object_dict['actual']=int(m.groupdict()['actual'])
+                    object_dict['inherited']=int(m.groupdict()['inherited'])
+                    object_dict['missing']=int(m.groupdict()['missing'])
+                    object_dict['stale']=int(m.groupdict()['stale'])
+                    object_dict['others']=int(m.groupdict()['others'])
+                    object_dict['hardware']=int(m.groupdict()['hardware'])
+                    continue
+            
+            m=p6.match(line)
+            if m:
+                object_type=m.groupdict()['object_type'].strip()
+                object_dict= process_dict.setdefault('object_type', {}).setdefault(object_type, {})
+                object_dict['starttime']=m.groupdict()['starttime']
+                object_dict['entries']=int(m.groupdict()['entries'])
+                object_dict['exceptions']=int(m.groupdict()['exceptions'])
+                object_dict['fulltable']=m.groupdict()['fulltable']
+                object_dict['hwcheck']=m.groupdict()['hwcheck']
+                object_dict['hwshadow']=m.groupdict()['hwshadow']
+                continue
+                    
+        return ret_dict
+    

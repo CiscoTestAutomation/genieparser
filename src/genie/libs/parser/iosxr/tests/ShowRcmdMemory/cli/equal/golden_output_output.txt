@@ -1,0 +1,97 @@
+Thu Jul 21 13:15:53.219 UTC
+--------------------------------------------------------------------------------
+       Struct. Name.        |Curr. Count | Alloc Fail |Alloc Count | Free Count 
+--------------------------------------------------------------------------------
+rcmd_server                 |          1 |          0 |          1 |          0
+ltrace_walker_st            |          1 |          0 |          1 |          0
+rcmd_max_racks              |          4 |          0 |          4 |          0
+rcmd_node                   |          4 |          0 |          4 |          0
+node_name                   |          3 |          0 |          3 |          0
+rcmd_proto_process          |          0 |          0 |          1 |          1
+rcmd_inst_name_info         |          0 |          0 |          1 |          1
+rcmd_inst_info              |          0 |          0 |          1 |          1
+rcmd_regen_lsp              |          0 |          0 |          0 |          0
+rcmd_interface_handle       |          0 |          0 |          0 |          0
+rcmd_interface_name         |          0 |          0 |          0 |          0
+rcmd_interface_log          |          0 |          0 |          0 |          0
+string                      |         13 |          0 |       1969 |       1956
+rcmd_spf_run_info           |          0 |          0 |          0 |          0
+rcmd_spt_data               |          0 |          0 |          0 |          0
+rcmd_type357_computation    |          0 |          0 |          0 |          0
+rcmd_event_timeline         |          0 |          0 |          0 |          0
+rcmd_lc_timelines           |          0 |          0 |          0 |          0
+rcmd_lsp_processed          |          0 |          0 |          0 |          0
+rcmd_leafnw_ipv4            |          0 |          0 |          0 |          0
+rcmd_leafnw_ipv6            |          0 |          0 |          0 |          0
+rcmd_edm_priority_summary   |          0 |          0 |          0 |          0
+rcmd_edm_priority           |          0 |          0 |          0 |          0
+rcmd_edm_ospf_spt_info      |          0 |          0 |          0 |          0
+rcmd_edm_ospf_iaext_info    |          0 |          0 |          0 |          0
+rcmd_edm_timeline           |          0 |          0 |          0 |          0
+rcmd_edm_lc_info            |          0 |          0 |          0 |          0
+rcmd_edm_lsp_info           |          0 |          0 |          0 |          0
+rcmd_edm_regen_lsp_info     |          0 |          0 |          0 |          0
+rcmd_edm_lsa_info           |          0 |          0 |          0 |          0
+rcmd_edm_network            |          0 |          0 |          0 |          0
+rcmd_edm_proto_cfg          |          0 |          0 |          2 |          2
+rcmd_edm_prio_cfg           |          0 |          0 |          4 |          4
+rcmd_edm_server_detail      |          0 |          0 |          0 |          0
+rcmd_edm_ltrace             |          0 |          0 |          0 |          0
+rcmd_edm_node_info          |          0 |          0 |         17 |         17
+rcmd_edm_memory_info        |          1 |          0 |         26 |         25
+rcmd_edm_edm_memory_info    |          0 |          0 |         25 |         25
+rcmd_edm_str_memory_info    |          0 |          0 |         25 |         25
+rcmd_edm_process_info       |          0 |          0 |          0 |          0
+rcmd_edm_instname_info      |          0 |          0 |          0 |          0
+rcmd_edm_instance_info      |          0 |          0 |          0 |          0
+rcmd_edm_interface_info     |          0 |          0 |          0 |          0
+rcmd_edm_pfx_path_info      |          0 |          0 |          0 |          0
+rcmd_edm_pfx_lfa_path_info  |          0 |          0 |          0 |          0
+rcmd_edm_pfx_timeline       |          0 |          0 |          0 |          0
+rcmd_edm_pfx_lc_timeline    |          0 |          0 |          0 |          0
+rcmd_edm_spf_frr_stat       |          0 |          0 |          0 |          0
+rcmd_xml_request            |          0 |          0 |          0 |          0
+rcmd_prefix_event_info      |          0 |          0 |          0 |          0
+rcmd_prefix_info            |          0 |          0 |          0 |          0
+rcmd_prefix_path            |          0 |          0 |          0 |          0
+rcmd_prefix_lfa_path        |          0 |          0 |          0 |          0
+rcmd_ip_timeline            |          0 |          0 |          0 |          0
+rcmd_mpls_timeline          |          0 |          0 |          0 |          0
+rcmd_lc_timeline            |          0 |          0 |          0 |          0
+rcmd_spf_frr                |          0 |          0 |          0 |          0
+rcmd_ipfrr_event            |          0 |          0 |          0 |          0
+rcmd_ipfrr_stats            |          0 |          0 |          0 |          0
+rcmd_edm_ipfrr_stats        |          0 |          0 |          0 |          0
+rcmd_ipfrr_rlfa_pq_node     |          0 |          0 |          0 |          0
+rcmd_ipfrr_path             |          0 |          0 |          0 |          0
+rcmd_edm_ipfrr_rlfa_pq_node |          0 |          0 |          0 |          0
+rcmd_edm_ipfrr_path         |          0 |          0 |          0 |          0
+rcmd_ldp_rlfa               |          0 |          0 |          0 |          0
+rcmd_ldp_rlfa_pq_node       |          0 |          0 |          0 |          0
+rcmd_ldp_rlfa_stats         |          0 |          0 |          0 |          0
+rcmd_ldp_rlfa_log           |          0 |          0 |          0 |          0
+rcmd_edm_ldp_rlfa_stats     |          0 |          0 |          0 |          0
+rcmd_edm_ldp_rlfa_pq_node   |          0 |          0 |          0 |          0
+rcmd_edm_ldp_rlfa_log       |          0 |          0 |          0 |          0
+rcmd_ldp_session_event      |          0 |          0 |          0 |          0
+
+RCMD EDM memory manager information
+--------------------------------------------------
+   Size    |   Total    |  Success   |  Failure   
+--------------------------------------------------
+        64 |         27 |         26 |          1
+       128 |          0 |          0 |          0
+       256 |         45 |         44 |          1
+       512 |          0 |          0 |          0
+      1024 |          0 |          0 |          0
+      2048 |         28 |         27 |          1
+      4096 |          0 |          0 |          0
+
+RCMD String memory manager information
+------------------------------------------------
+  Str Len  |   Total    |  Success   |  Failure   
+------------------------------------------------
+        32 |       2016 |       1944 |       72
+        64 |          0 |          0 |        0
+       260 |         12 |          6 |        6
+

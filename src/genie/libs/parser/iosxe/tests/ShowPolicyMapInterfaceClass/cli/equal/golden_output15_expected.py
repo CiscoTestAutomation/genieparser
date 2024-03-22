@@ -34,6 +34,9 @@ expected_output = {
                                 "shape_be_bps": 0,
                                 "target_shape_rate": 80000,
                                 "police": {
+                                    "cir_bps": 8000000,
+                                    "pir_bc_bytes": 4000,
+                                    "cir_be_bytes": 1000,
                                     "conformed": {
                                         "packets": 0,
                                         "bytes": 0,

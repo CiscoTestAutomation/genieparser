@@ -64,7 +64,7 @@ class ShowFipsStatusSchema(MetaParser):
 
     schema = {
         "fips_state": str,
-        "sesa_ready": bool
+        Optional("sesa_ready"): bool
     }
 
 class ShowFipsStatus(ShowFipsStatusSchema):
@@ -80,6 +80,14 @@ class ShowFipsStatus(ShowFipsStatusSchema):
         # Switch is in Fips Configured state and not SESA Ready
         # Switch is in Fips Running state and SESA Ready
         p1 = re.compile(r'^Switch +is +in +Fips +(?P<fips_state>[\S\s]+)\s+state\s+and\s+(?P<sesa_ready>\S+)')
+
+        # Switch and Stacking are running in fips mode
+        # Switch and Stacking are not running in fips mode
+        p2 = re.compile(r'^Switch and Stacking are (?P<fips_state>[\S\s]+) in fips mode')
+
+        # Switch is not running in fips mode
+        # Switch is running in fips mode
+        p3 = re.compile(r'^Switch is (?P<fips_state>[\S\s]+) in fips mode$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -100,4 +108,19 @@ class ShowFipsStatus(ShowFipsStatusSchema):
                         'sesa_ready': True
                     })
                 continue
+
+            # Switch and Stacking are running in fips mode
+            # Switch and Stacking are not running in fips mode
+            m = p2.match(line)
+            if m:
+                ret_dict['fips_state'] = m.groupdict()['fips_state']
+                continue
+            
+            # Switch is not running in fips mode
+            # Switch is running in fips mode
+            m = p3.match(line)
+            if m:
+                ret_dict['fips_state'] = m.groupdict()['fips_state']
+                continue
+
         return ret_dict

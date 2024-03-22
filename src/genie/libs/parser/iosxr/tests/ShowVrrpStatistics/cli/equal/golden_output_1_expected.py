@@ -1,0 +1,29 @@
+expected_output = {
+   "vrrp":{
+      "statistics":{
+         "invalid_packets":{
+            "invalid_checksum":0,
+            "invalid_vrid":0,
+            "too_short":0,
+            "unknown_unsupported_versions":0
+         },
+         "packets":{
+            "adverts_sent":108482,
+            "bad_ttl":0,
+            "conflicting_addresses":0,
+            "conflicting_advertise_time":0,
+            "conflicting_authentication":0,
+            "failed_authentication":0,
+            "received_with_zero_priority":0,
+            "sent_with_zero_priority":0,
+            "short_packets":0,
+            "total_received":1671706,
+            "unknown_authentication":0,
+            "unknown_type_field":0
+         },
+         "protocol":{
+            "transitions_to_master":1
+         }
+      }
+   }
+}

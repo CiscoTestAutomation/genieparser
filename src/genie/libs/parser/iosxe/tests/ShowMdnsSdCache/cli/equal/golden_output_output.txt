@@ -1,0 +1,11 @@
+
+                                                    mDNS CACHE 
+=================================================================================================================================
+[<NAME>]                                          [<TYPE>]    [<TTL>/Remaining]   [Vlan-Id/If-name] [Mac Address] [<RR Record Data>]
+
+_ssh._tcp.local                                   	PTR 	  4500/4480	            146	            0242.2d01.2e01	vlan146-macbook-ssh-session-v146-host-1._ssh._tcp.local
+_afpovertcp._tcp.local                            	PTR 	  4500/4480	            146	            0242.2d01.2e01	vlan146-macbook-afp-server-v146-host-1._afpovertcp._tcp.local
+_airplay._tcp.local                               	PTR 	  4500/4480	            146	            0242.2d01.2e01	vlan146-AppleTV-v146-host-1._airplay._tcp.local             
+_daap._tcp.local                                  	PTR 	  4500/4480	            146	            0242.2d01.2e01	vlan146-macbook-AirTunes-v146-host-1._daap._tcp.local       
+     
+
