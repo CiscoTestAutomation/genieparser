@@ -1,0 +1,6 @@
+{
+    "locator_table" : "default",
+    "instance_id": "4100",
+    "address_family": "ipv6",
+    "eid_prefix": "2001:172:168:1::2/128"
+}

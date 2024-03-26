@@ -1,0 +1,7 @@
+xtr11#sh lisp eid-table default ethernet subscription aacc.ccaa.cc00/48
+LISP EID Subscriptions for LISP 0 EID-table vrf red (IID 0), 2 entries
+aacc.ccaa.cc00/48, Uptime: 02:00:14, Last-change: 02:00:14 
+Source: remote-eid
+Map-server                              State                          
+100.44.44.44                            Subs Acked                     
+100.55.55.55                            Subs Acked

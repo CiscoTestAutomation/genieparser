@@ -8162,7 +8162,6 @@ class ShowLispSubscriptionSchema(MetaParser):
             }
         }
 
-
 class ShowLispSubscriptionSuperParser(ShowLispSubscriptionSchema):
     
     ''' 
@@ -8335,6 +8334,185 @@ class ShowLispEthernetSubscription(ShowLispSubscriptionSuperParser, ShowLispSubs
                                                 format(vlan=vlan))
 
         return super().cli(output=output)
+
+
+class ShowLispSubscriptionPrefixSchema(MetaParser):
+
+    ''' Schema for
+        show lisp instance-id {instance_id} ipv4 subscription {eid_prefix}/detail
+        show lisp {lisp_id} instance-id {instance_id} ipv4 subscription {eid_prefix}/detail
+        show lisp locator-table {locator_table} instance-id {instance_id} ipv4 subscription {eid_prefix}/detail
+        show lisp eid-table {eid_table} ipv4 subscription {eid_prefix}/detail
+        show lisp eid-table vrf {eid_table} ipv4 subscription {eid_prefix}/detail
+        show lisp instance-id {instance_id} ipv6 subscription {eid_prefix}/detail
+        show lisp {lisp_id} instance-id {instance_id} ipv6 subscription {eid_prefix}/detail
+        show lisp locator-table {locator_table} instance-id {instance_id} ipv6 subscription {eid_prefix}/detail
+        show lisp eid-table {eid_table} ipv6 subscription {eid_prefix}/detail
+        show lisp eid-table vrf {eid_table} ipv6 subscription {eid_prefix}/detail
+    '''
+
+    schema = {
+        'lisp_id': {
+            int: {
+                'instance_id': {
+                    int: {
+                        'eid_table': str,
+                        'entries': int,
+                        Optional('eid_prefix'): {
+                            str: { # EID prefix
+                                Optional('source'): str,
+                                Optional('up_time'): str,
+                                Optional('last_change'): str,
+                                Optional('map_server'): {
+                                    str: { #map server eid
+                                        'state' : str
+                                        }   
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    
+class ShowLispSubscriptionPrefixSuperParser(ShowLispSubscriptionPrefixSchema):
+    
+    ''' 
+        Schema for
+        show lisp instance-id {instance_id} ipv4 subscription
+        show lisp {lisp_id} instance-id {instance_id} ipv4 subscription
+        show lisp instance-id {instance_id} ipv6 subscription
+        show lisp {lisp_id} instance-id {instance_id} ipv6 subscription
+    '''
+    
+    def cli(self, lisp_id=None, instance_id=None, output=None):
+        parsed_dict = {}
+
+        # LISP EID Subscriptions for LISP 0 EID-table vrf red (IID 4100), 2 entries
+        p1 = re.compile(r"^LISP\s+EID\s+Subscriptions\s+for(\s+LISP\s+"
+                        r"(?P<lisp_id>\d+))?\s+EID-table\s+(vrf\s+|Vlan\s+)?(?P<eid_table>\S+)\s+"
+                        r"\(IID\s+(?P<instance_id>\d+)\),\s+(?P<entries>\d+)\s+entries$")
+        
+        # 172.168.0.0/16, Uptime: 00:01:15, Last-change: 00:01:15
+        p2 = re.compile(r"^(?P<eid_prefix>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}"
+                        r"\/\d{1,2}|[a-fA-F\d\:]+\/\d{1,3}|"
+                        r"([a-fA-F\d]{4}\.){2}[a-fA-F\d]{4}\/\d{2}),\sUptime:\s+"
+                        r"(?P<up_time>\S+),\sLast-change:\s+(?P<last_change>\S+)$")
+        
+        # Source: remote-eid
+        p3 = re.compile(r"^Source:\s+(?P<source>\S+)$")
+        
+        # Map-server                              State                          
+        # 100.44.44.44                            Subs Acked                     
+        # 100.55.55.55                            Subs Acked
+        p4 = re.compile(r"^(?P<map_server>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|([a-fA-F\d\:]+))\s+(?P<state>.+)")
+        
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # LISP EID Subscriptions for LISP 0 EID-table vrf red (IID 4100), 2 entries
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                lisp_id_dict = \
+                    parsed_dict.setdefault('lisp_id', {}) \
+                        .setdefault(int(group['lisp_id']), {})
+                instance_id_dict = \
+                    lisp_id_dict.setdefault('instance_id', {}) \
+                        .setdefault(int(group['instance_id']), {})
+                instance_id_dict.update({'eid_table': group['eid_table']})
+                instance_id_dict.update({'entries': int(group['entries'])})
+                continue
+
+            # 172.168.0.0/16, Uptime: 00:01:15, Last-change: 00:01:15
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                eid_prefix_dict = instance_id_dict.setdefault('eid_prefix',{})\
+                                                    .setdefault(str(group['eid_prefix']), {})
+                eid_prefix_dict.update({'up_time': group['up_time'].strip()})
+                eid_prefix_dict.update({'last_change': group['last_change'].strip()})
+                continue
+
+            # Source: remote-eid
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                eid_prefix_dict.update({'source': group['source'].strip()})
+                continue
+            
+            # Map-server                              State                          
+            # 100.44.44.44                            Subs Acked                     
+            # 100.55.55.55                            Subs Acked
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                map_server_dict = eid_prefix_dict.setdefault('map_server',{})\
+                                                    .setdefault(str(group['map_server']), {})
+                map_server_dict.update({'state': group['state'].strip()})
+                continue
+            
+        return parsed_dict
+
+class ShowLispAFSubscriptionPrefix(ShowLispSubscriptionPrefixSuperParser, ShowLispSubscriptionPrefixSchema):
+    ''' Show Command Ipv4 Subscription
+        show lisp instance-id {instance_id} {address_family} subscription {prefix}/detail
+        show lisp {lisp_id} instance-id {instance_id} {address_family} subscription {prefix}/detail
+        show lisp locator-table {locator_table} instance-id {instance_id} {address_family} subscription {prefix}/detail
+        show lisp eid-table {eid_table} {address_family} subscription {prefix}/detail
+        show lisp eid-table vrf {eid_table} {address_family} subscription {prefix}/detail
+    '''
+
+    cli_command = [
+        'show lisp instance-id {instance_id} {address_family} subscription {eid_prefix}',
+        'show lisp {lisp_id} instance-id {instance_id} {address_family} subscription {eid_prefix}',
+        'show lisp locator-table {locator_table} instance-id {instance_id} {address_family} subscription {eid_prefix}',
+        'show lisp eid-table {eid_table} {address_family} subscription {eid_prefix}',
+        'show lisp eid-table vrf {vrf} {address_family} subscription {eid_prefix}',
+        'show lisp instance-id {instance_id} {address_family} subscription detail',
+        'show lisp {lisp_id} instance-id {instance_id} {address_family} subscription detail',
+        'show lisp locator-table {locator_table} instance-id {instance_id} {address_family} subscription detail',
+        'show lisp eid-table {eid_table} {address_family} subscription detail',
+        'show lisp eid-table vrf {vrf} {address_family} subscription detail'
+    ]
+
+    def cli(self, output=None, lisp_id=None, instance_id=None, vrf=None, locator_table=None,
+            eid_table=None, address_family='ipv4', eid=None, eid_prefix=None):
+        if output is None:
+            if lisp_id and instance_id and eid_prefix and address_family:
+                output = self.device.execute(self.cli_command[1].\
+                                                format(lisp_id=lisp_id, instance_id=instance_id, eid_prefix=eid_prefix, address_family= address_family))
+            elif instance_id and eid_prefix and address_family:
+                output = self.device.execute(self.cli_command[0].\
+                                                format(instance_id=instance_id, eid_prefix=eid_prefix, address_family= address_family))
+            elif locator_table and instance_id and eid_prefix and address_family:
+                output = self.device.execute(self.cli_command[2].\
+                                                format(locator_table=locator_table, instance_id=instance_id, eid_prefix=eid_prefix, address_family=address_family))
+            elif eid_table and eid_prefix and address_family:
+                output = self.device.execute(self.cli_command[3].\
+                                                format(eid_table=eid_table, eid_prefix=eid_prefix, address_family=address_family))
+            elif vrf and eid_prefix and address_family:
+                output = self.device.execute(self.cli_command[4].\
+                                                format(vrf=vrf, eid_prefix=eid_prefix, address_family=address_family))
+            elif lisp_id and instance_id and address_family:
+                output = self.device.execute(self.cli_command[6].\
+                                                format(lisp_id=lisp_id, instance_id=instance_id, address_family=address_family))
+            elif instance_id and address_family:
+                output = self.device.execute(self.cli_command[5].\
+                                                format(instance_id=instance_id, address_family=address_family))
+            elif locator_table and instance_id and address_family:
+                output = self.device.execute(self.cli_command[7].\
+                                                format(locator_table=locator_table, instance_id=instance_id, address_family=address_family))
+            elif eid_table and address_family:
+                output = self.device.execute(self.cli_command[8].\
+                                                format(eid_table=eid_table, address_family=address_family))
+            else:
+                output = self.device.execute(self.cli_command[9].\
+                                                format(vrf=vrf, address_family=address_family))
+
+        return super().cli(output=output)
+
 
 # ==========================================
 # Parser for:
@@ -18977,7 +19155,6 @@ class ShowLispServerSubscriptionSchema(MetaParser):
             }
         }
 
-
 class ShowLispServerSubscriptionSuperParser(ShowLispServerSubscriptionSchema):
     
     ''' parser for
@@ -19158,6 +19335,214 @@ class ShowLispEthernetServerSubscription(ShowLispServerSubscriptionSuperParser, 
                                                 format(vlan=vlan))
 
         return super().cli(output=output)
+
+
+class ShowLispServerSubscriptionPrefixSchema(MetaParser):
+
+    ''' Schema for
+        show lisp instance-id {instance_id} ipv4 server subscription {eid_prefix}/detail
+        show lisp {lisp_id} instance-id {instance_id} ipv4 server subscription {eid_prefix}/detail
+        show lisp locator-table {locator_table} instance-id {instance_id} ipv4 server subscription {eid_prefix}/detail
+        show lisp eid-table {eid_table} ipv4 server subscription {eid_prefix}/detail
+        show lisp eid-table vrf {eid_table} ipv4 server subscription {eid_prefix}/detail
+        show lisp instance-id {instance_id} ipv6 server subscription {eid_prefix}/detail
+        show lisp {lisp_id} instance-id {instance_id} ipv6 server subscription {eid_prefix}/detail
+        show lisp locator-table {locator_table} instance-id {instance_id} ipv6 server subscription {eid_prefix}/detail
+        show lisp eid-table {eid_table} ipv6 server subscription {eid_prefix}/detail
+        show lisp eid-table vrf {eid_table} ipv6 server subscription {eid_prefix}/detail
+    '''
+
+    schema = {
+        'lisp_id': {
+            int: {
+                'instance_id': {
+                    int: {
+                        'entries': int,
+                        Optional('eid_prefix'): {
+                            str: { # EID prefix
+                                Optional('first_subscribed'): str,
+                                Optional('last_subscribed'): str,
+                                Optional('subscriber'): {
+                                    str: { #map server eid
+                                        'port' : int,
+                                        'xtr_id' : str,
+                                        'subscriber_index': int
+                                        }   
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    
+class ShowLispServerSubscriptionPrefixSuperParser(ShowLispServerSubscriptionPrefixSchema):
+    
+    ''' Parser for
+        show lisp instance-id {instance_id} ipv4 server subscription {eid_prefix}/detail
+        show lisp {lisp_id} instance-id {instance_id} ipv4 server subscription {eid_prefix}/detail
+        show lisp locator-table {locator_table} instance-id {instance_id} ipv4 server subscription {eid_prefix}/detail
+        show lisp eid-table {eid_table} ipv4 server subscription {eid_prefix}/detail
+        show lisp eid-table vrf {eid_table} ipv4 server subscription {eid_prefix}/detail
+        show lisp instance-id {instance_id} ipv6 server subscription {eid_prefix}/detail
+        show lisp {lisp_id} instance-id {instance_id} ipv6 server subscription {eid_prefix}/detail
+        show lisp locator-table {locator_table} instance-id {instance_id} ipv6 server subscription {eid_prefix}/detail
+        show lisp eid-table {eid_table} ipv6 server subscription {eid_prefix}/detail
+        show lisp eid-table vrf {eid_table} ipv6 server subscription {eid_prefix}/detail
+    '''
+    
+    def cli(self, lisp_id=None, instance_id=None, output=None):
+        parsed_dict = {}
+
+        # LISP MS EID Subscriptions for LISP 0 IID 4100, 1 entries
+        p1 = re.compile(r"^LISP\s+MS\s+EID\s+Subscriptions\s+for\s+LISP\s+"
+                        r"(?P<lisp_id>\d+)?\s+"
+                        r"IID\s+(?P<instance_id>\d+),\s+(?P<entries>\d+)\s+entries$")
+        
+        # Eid Prefix: 172.168.0.0/16
+        p2 = re.compile(r"^Eid\s+Prefix:\s+(?P<eid_prefix>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}"
+                        r"\/\d{1,2}|[a-fA-F\d\:]+\/\d{1,3}|"
+                        r"([a-fA-F\d]{4}\.){2}[a-fA-F\d]{4}\/\d{2})$")
+        
+        # First Subscribed: 00:00:55
+        p3 = re.compile(r"^First\s+Subscribed:\s+(?P<first_subscribed>\S+)$")
+        
+        # Last Subscribed: 00:00:55
+        p4 = re.compile(r"^Last\s+Subscribed:\s+(?P<last_subscribed>\S+)$")
+        
+        # Subscriber 100.11.11.11:45646
+        p5 = re.compile(r'^Subscriber\s+(?P<subscriber>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|([a-fA-F\d\:]+))(:'
+                         r'|\.)(?P<port>\d+)$')
+        
+        # xTR-ID 0xE9BF16D9-0x3D747C14-0x96C3FEB8-0x4AF6C2CB
+        p6 = re.compile(r'^xTR-ID\s+(?P<xtr_id>\S+)$')
+        
+        # Subscriber Index: 5
+        p7 = re.compile(r'^Subscriber\s+Index:\s+(?P<subscriber_index>\d+)$')
+        
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # LISP MS EID Subscriptions for LISP 0 IID 4100, 1 entries
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                lisp_id_dict = \
+                    parsed_dict.setdefault('lisp_id', {}) \
+                        .setdefault(int(group['lisp_id']), {})
+                instance_id_dict = \
+                    lisp_id_dict.setdefault('instance_id', {}) \
+                        .setdefault(int(group['instance_id']), {})
+                instance_id_dict.update({'entries': int(group['entries'])})
+                continue
+
+            # Eid Prefix: 172.168.0.0/16
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                eid_prefix_dict = instance_id_dict.setdefault('eid_prefix',{})\
+                                                    .setdefault(str(group['eid_prefix']), {})
+                continue
+
+            # First Subscribed: 00:00:55
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                eid_prefix_dict.update({'first_subscribed': group['first_subscribed'].strip()})
+                continue
+                
+            # Last Subscribed: 00:00:55
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                eid_prefix_dict.update({'last_subscribed': group['last_subscribed'].strip()})
+                continue
+            
+            
+            # Subscriber 100.11.11.11:45646
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                subscribers_dict = eid_prefix_dict.setdefault('subscriber',{})\
+                                                    .setdefault(str(group['subscriber']), {})
+                subscribers_dict.update({'port': int(group['port'].strip())})
+                continue
+                
+            # xTR-ID 0xE9BF16D9-0x3D747C14-0x96C3FEB8-0x4AF6C2CB
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                subscribers_dict.update({'xtr_id': group['xtr_id'].strip()})
+                continue
+                
+            # Subscriber Index: 5
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                subscribers_dict.update({'subscriber_index': int(group['subscriber_index'].strip())})
+                continue
+            
+        return parsed_dict
+
+class ShowLispAFServerSubscriptionPrefix(ShowLispServerSubscriptionPrefixSuperParser, ShowLispServerSubscriptionPrefixSchema):
+    ''' Show command for {address_family} server subscription prefix/detail
+        show lisp instance-id {instance_id} {address_family} server subscription {eid_prefix}/detail
+        show lisp {lisp_id} instance-id {instance_id} {address_family} server subscription {eid_prefix}/detail
+        show lisp locator-table {locator_table} instance-id {instance_id} {address_family} server subscription {eid_prefix}/detail
+        show lisp eid-table {eid_table} {address_family} server subscription {eid_prefix}/detail
+        show lisp eid-table vrf {eid_table} {address_family} server subscription {eid_prefix}/detail
+    '''
+
+    cli_command = [
+        'show lisp instance-id {instance_id} {address_family} server subscription {eid_prefix}',
+        'show lisp {lisp_id} instance-id {instance_id} {address_family} server subscription {eid_prefix}',
+        'show lisp locator-table {locator_table} instance-id {instance_id} {address_family} server subscription {eid_prefix}',
+        'show lisp eid-table {eid_table} {address_family} server subscription {eid_prefix}',
+        'show lisp eid-table vrf {vrf} {address_family} server subscription {eid_prefix}',
+        'show lisp instance-id {instance_id} {address_family} server subscription detail',
+        'show lisp {lisp_id} instance-id {instance_id} {address_family} server subscription detail',
+        'show lisp locator-table {locator_table} instance-id {instance_id} {address_family} server subscription detail',
+        'show lisp eid-table {eid_table} {address_family} server subscription detail',
+        'show lisp eid-table vrf {vrf} {address_family} server subscription detail'
+    ]
+
+    def cli(self, output=None, lisp_id=None, instance_id=None, vrf=None, locator_table=None,
+            eid_table=None, eid=None, eid_prefix=None, address_family='ipv4'):
+        if output is None:
+            if lisp_id and instance_id and eid_prefix and address_family:
+                output = self.device.execute(self.cli_command[1].\
+                                                format(lisp_id=lisp_id, instance_id=instance_id, eid_prefix=eid_prefix, address_family=address_family))
+            elif instance_id and eid_prefix and address_family:
+                output = self.device.execute(self.cli_command[0].\
+                                                format(instance_id=instance_id, eid_prefix=eid_prefix, address_family=address_family))
+            elif locator_table and instance_id and eid_prefix and address_family:
+                output = self.device.execute(self.cli_command[2].\
+                                                format(locator_table=locator_table, instance_id=instance_id, eid_prefix=eid_prefix, address_family=address_family))
+            elif eid_table and eid_prefix and address_family:
+                output = self.device.execute(self.cli_command[3].\
+                                                format(eid_table=eid_table, eid_prefix=eid_prefix, address_family=address_family))
+            elif vrf and eid_prefix and address_family:
+                output = self.device.execute(self.cli_command[4].\
+                                                format(vrf=vrf, eid_prefix=eid_prefix, address_family=address_family))
+            elif lisp_id and instance_id and address_family:
+                output = self.device.execute(self.cli_command[6].\
+                                                format(lisp_id=lisp_id, instance_id=instance_id, address_family=address_family))
+            elif instance_id and address_family:
+                output = self.device.execute(self.cli_command[5].\
+                                                format(instance_id=instance_id, address_family=address_family))
+            elif locator_table and instance_id and address_family:
+                output = self.device.execute(self.cli_command[7].\
+                                                format(locator_table=locator_table, instance_id=instance_id, address_family=address_family))
+            elif eid_table and address_family:
+                output = self.device.execute(self.cli_command[8].\
+                                                format(eid_table=eid_table, address_family=address_family))
+            else:
+                output = self.device.execute(self.cli_command[9].\
+                                                format(vrf=vrf, address_family=address_family))
+
+        return super().cli(output=output)
+
 class ShowLispPublicationConfigPropSuperSchema(MetaParser):
 
     schema = {
@@ -19200,7 +19585,6 @@ class ShowLispPublicationConfigPropSuperSchema(MetaParser):
                 }
             }
         }
-
 
 class ShowLispPublicationConfigPropSuperParser(ShowLispPublicationConfigPropSuperSchema):
 

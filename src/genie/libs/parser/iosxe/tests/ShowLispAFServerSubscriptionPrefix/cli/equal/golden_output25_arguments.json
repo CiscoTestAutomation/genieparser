@@ -1,0 +1,5 @@
+{
+    "vrf" : "red",
+    "address_family": "ethernet",
+    "eid_prefix": "aabb.cc00.d000/48"
+}

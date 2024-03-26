@@ -1,0 +1,7 @@
+xtr11#sh lisp in 4100 ipv4 subscription 172.168.0.0/16
+LISP EID Subscriptions for LISP 0 EID-table vrf red (IID 4100), 2 entries
+172.168.0.0/16, Uptime: 02:00:14, Last-change: 02:00:14 
+Source: remote-eid
+Map-server                              State                          
+100.44.44.44                            Subs Acked                     
+100.55.55.55                            Subs Acked

@@ -1,0 +1,14 @@
+xtr11#sh lisp eid-table vrf red ipv4 subscription detail    
+LISP EID Subscriptions for LISP 0 EID-table vrf red (IID 0), 2 entries
+
+2001:172:168:1::2/128, Uptime: 00:42:38, Last-change: 00:42:38 
+Source: remote-eid
+Map-server                              State                          
+100.44.44.44                            Subs Acked                     
+100.55.55.55                            Subs Acked                     
+
+2001:182:168:1::2/128, Uptime: 00:42:18, Last-change: 00:42:18 
+Source: remote-eid
+Map-server                              State                          
+100.44.44.44                            Subs Acked                     
+100.55.55.55                            Subs Acked 

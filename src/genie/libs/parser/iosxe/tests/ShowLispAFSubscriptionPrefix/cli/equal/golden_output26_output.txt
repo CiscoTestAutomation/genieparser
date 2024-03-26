@@ -1,0 +1,14 @@
+xtr11#sh lisp in 4100 ethernet subscription detail    
+LISP EID Subscriptions for LISP 0 EID-table vrf red (IID 4100), 2 entries
+
+aacc.ccaa.cc00/48, Uptime: 00:42:38, Last-change: 00:42:38 
+Source: remote-eid
+Map-server                              State                          
+100.44.44.44                            Subs Acked                     
+100.55.55.55                            Subs Acked                     
+
+aacc.ccaa.cb00/48, Uptime: 00:42:18, Last-change: 00:42:18 
+Source: remote-eid
+Map-server                              State                          
+100.44.44.44                            Subs Acked                     
+100.55.55.55                            Subs Acked 
