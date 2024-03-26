@@ -1,0 +1,15 @@
+Bridge group: NETWORK, bridge-domain: NETWORK_680_1, id: 0, state: up, ShgId: 0, MSTi: 0
+  Aging: 300 s, MAC limit: 16000, Action: none, Notification: syslog, trap
+  Filter MAC addresses: 0
+  ACs: 1 (1 up), VFIs: 1, PWs: 5 (5 up), PBBs: 0 (0 up), VNIs: 0 (0 up)
+  List of ACs:
+    Hu0/1/0/1.1, state: up, Static MAC addresses: 0
+  List of Access PWs:
+      Neighbor 192.168.201.1 pw-id 1630, state: up, Static MAC addresses: 0
+      Neighbor 192.168.201.2 pw-id 1630, state: up, Static MAC addresses: 0
+  List of VFIs:
+    VFI IBR_NETWORK_680_1 (up)
+      Neighbor 192.168.201.1 pw-id 1513, state: up, Static MAC addresses: 0
+      Neighbor 192.168.201.1 pw-id 1514, state: up, Static MAC addresses: 0
+      Neighbor 192.168.201.1 pw-id 1680, state: up, Static MAC addresses: 0
+  List of Access VFIs:
