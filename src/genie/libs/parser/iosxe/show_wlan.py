@@ -137,7 +137,7 @@ class ShowWlanAllSchema(MetaParser):
                 "media_stream_multicast_direct": str,
                 "ccx_aironet_support": str,
                 "p2p_blocking_action": str,
-                "radio_policy": str,
+                Optional("radio_policy"): str,
                 Optional("dtim_period_dot11a"): str,
                 Optional("dtim_period_dot11b"): str,
                 "local_eap_authentication": str,
@@ -393,7 +393,7 @@ class ShowWlanAll(ShowWlanAllSchema):
         p_description = re.compile(r"^Description\s+:\s+(?P<value>.*)$")
 
         # Network Name (SSID)                            : north
-        p_name_ssid = re.compile(r"^Network\s+Name\s+\(SSID\)\s+:\s+(?P<value>\S+)$")
+        p_name_ssid = re.compile(r"^Network\s+Name\s+\(SSID\)\s+:\s+(?P<value>.*)$")
 
         # Status                                         : Enabled
         p_status = re.compile(r"^Status\s+:\s+(?P<value>\S+)$")
