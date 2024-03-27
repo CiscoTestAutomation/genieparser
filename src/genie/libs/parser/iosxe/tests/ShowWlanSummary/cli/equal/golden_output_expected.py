@@ -25,6 +25,12 @@ expected_output = {
                 "ssid": "lizzard-legacy",
                 "status": "UP",
                 "security": "[WPA2][802.1x][AES]"
+            },
+            21: {
+                "profile_name": "CUSTC_Global_NF_24a65b82",
+                "ssid": "CUST Factory",
+                "status": "UP",
+                "security": "[WPA2][802.1x][AES]"
             }
         }
     }
