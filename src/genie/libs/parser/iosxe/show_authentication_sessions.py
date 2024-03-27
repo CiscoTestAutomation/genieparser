@@ -576,7 +576,7 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsDetai
     cli_command = ['show authentication sessions interface {interface} details',\
                    'show authentication sessions interface {interface} details switch {switch} r0']
                    
-    def cli(self, interface='', switch='', output=None):
+    def cli(self, interface='', switch='', timeout=60, output=None):
 
         if output is None:
             # Build command
@@ -585,7 +585,7 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsDetai
             else: 
                 cmd = self.cli_command[0].format(interface=interface)
             # Execute command
-            show_output = self.device.execute(cmd)
+            show_output = self.device.execute(cmd, timeout=timeout)
         else:
             show_output = output
 

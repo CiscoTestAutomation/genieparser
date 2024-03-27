@@ -365,7 +365,8 @@ class ShowAccessListsSummary(ShowAccessListsSummarySchema):
         
         # IPV4 ACL acl_name
         # IPV4 ACL sl_def_acl
-        p1=re.compile(r'^(?P<type>[\w\d]+) +ACL +(?P<name>[\w\-\w]+)(\s+(Statistics +(?P<status>\w+)))?$')
+        # IP access list 199
+        p1=re.compile(r'^(?P<type>[\w\d]+|IP) +(ACL|access list) +(?P<name>[\w\-_]+)(\s+(Statistics +(?P<status>\w+)))?$')
 
         # Statistics enabled
         p1_1 = re.compile(r'^Statistics\s+(?P<status>\w+)$')
@@ -378,7 +379,8 @@ class ShowAccessListsSummary(ShowAccessListsSummarySchema):
 
         # VTY         - ingress
         # Vlan2472 - egress (Router ACL)
-        p3 = re.compile(r'^((?P<interface>[\w\d\/]+)\s+-\s+(?P<traffic>ingress|egress)( +\((?P<route>[\w\s]+)\))?)?$')
+        # Ethernetxx/x.xxx - egress (Router ACL)
+        p3 = re.compile(r'^((?P<interface>[\w\d\/\.]+)\s+-\s+(?P<traffic>ingress|egress)( +\((?P<route>[\w\s]+)\))?)?$')
 
         #Active on interfaces:
         #        Vlan2472 - egress (Router ACL)

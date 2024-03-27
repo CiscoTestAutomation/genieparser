@@ -296,6 +296,7 @@ class ShowFacilityAlarmStatusSchema(MetaParser):
                         Optional('description'): str,
                         Optional('relay'): str,
                         Optional('time'): str,
+                        Optional('index'): int,
                         },
                     }
                 }
@@ -314,20 +315,51 @@ class ShowFacilityAlarmStatus(ShowFacilityAlarmStatusSchema):
         else:
             out = output
         ret_dict = {}
-        p1 = re.compile(r'Source\s+Severity\s+Description\s+Relay\s+Time')
-        p2 = re.compile(r'(?P<source>([\w\/\d\-\_]+))\s\s+(?P<severity>([A-Z]+))\s\s+(?P<description>([\w\s\d]+))\s\s+(?P<relay>([A-Z]+))\s\s+(?P<time>([\w\d\s\:]+))')
 
+        #Source                 Severity Description                         Relay    Time
+        p1 = re.compile(r'Source\s+Severity\s+Description\s+Relay\s+Time')
+
+        #GigabitEthernet1/8       MAJOR    1 Link Fault                        MAJ      Mar 02 2023 10:19:20
+        p2 = re.compile(r'(?P<source>([\w\/\d\-\_]+))\s\s+(?P<severity>([A-Z]+))\s\s+(?P<description>([\w\s\d]+))\s\s+(?P<relay>([A-Z]+))\s\s+(?P<time>([\w\d\s\:]+))')
+        
+        # Source                     Time                   Severity      Description [Index]
+        p3 = re.compile(r'^Source(\s+Time)\s+Severity\s+Description(\s+\[Index])$')
+
+        # Power Supply Bay 0         Jan 23 2024 17:18:47   CRITICAL      Power Supply/FAN Module Missing [0]
+        # TenGigabitEthernet0/0/0    Jan 21 2024 19:15:56   CRITICAL      Physical Port Link Down [1]
+        # xcvr container 0/0/3       Jan 21 2024 19:15:56   CRITICAL      Transceiver Missing - Link Down [1]
+        p4 = re.compile(r'^(?P<source>([\w\/\d\-\_ ]+))\s\s+()?(?P<time>([\w\d\s\:]+))\s\s+(?P<severity>([A-Z]+))\s\s+(?P<description>([\w\s\d\/\/\-]+))\s+(\[(?P<index>(\d+))\])$')
+        
         for line in out.splitlines():
             line = line.strip()
+
+            #Source                 Severity Description                         Relay    Time
             m = p1.match(line)
             if m:
                 root_dict = ret_dict.setdefault('alarms', {})
                 continue
+
+            #GigabitEthernet1/8       MAJOR    1 Link Fault                        MAJ      Mar 02 2023 10:19:20
             m = p2.match(line)
             if m:
                 group = m.groupdict()
                 alarm_dict = root_dict.setdefault(group['source'] , {})
                 alarm_dict.update({'severity' : group['severity'].strip() , 'description':group['description'].strip(), 'relay' : group['relay'].strip() , 'time' : group['time'].strip() })
+            
+            # Source                     Time                   Severity      Description [Index]
+            m = p3.match(line)
+            if m:
+                root_dict = ret_dict.setdefault('alarms', {})
+                continue
+
+            # Power Supply Bay 0         Jan 23 2024 17:18:47   CRITICAL      Power Supply/FAN Module Missing [0]
+            # TenGigabitEthernet0/0/0    Jan 21 2024 19:15:56   CRITICAL      Physical Port Link Down [1]
+            # xcvr container 0/0/3       Jan 21 2024 19:15:56   CRITICAL      Transceiver Missing - Link Down [1]
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                alarm_dict = root_dict.setdefault(group['source'].strip().replace(" ","_").lower() , {})
+                alarm_dict.update({'severity' : group['severity'].strip() , 'description':group['description'].strip(), 'index' : int(group['index'].strip()), 'time' : group['time'].strip() })
 
         return ret_dict
 

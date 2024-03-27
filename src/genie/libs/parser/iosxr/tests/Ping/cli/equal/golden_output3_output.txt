@@ -1,0 +1,5 @@
+Wed Mar 13 14:32:11.524 EDT
+Type escape sequence to abort.
+Sending 10, 100-byte ICMP Echos to 192.168.0.1 timeout is 2 seconds:
+!!!!!!!!!!
+Success rate is 100 percent (10/10), round-trip min/avg/max = 19/19/20 ms

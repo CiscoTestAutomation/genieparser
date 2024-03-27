@@ -1,0 +1,17 @@
+STATIC Rules:
+
+    Rule ID | Type |  Domain |   VRF | Protocol |        Local IP |  Port |       Global IP |  Port | Network |
+---------------------------------------------------------------------------------------------------------------
+        0x1 |      |  outside |     0 |      any |       102.0.0.2 |     0 |        35.0.0.2 |     0 |      32 |
+
+Number of Rules : 1
+
+
+DYNAMIC Rules:
+
+    Rule ID |    Type |   VRF |                  Acl |    Pool/Interface_IP | Overload |
+----------------------------------------------------------------------------------------
+ 0x80000001 |  Inside |     0 |                acl_1 |               pool_1 |      Yes |
+ 0x80000002 |  Inside |     0 |            nat_acl_1 |            pool_in_1 |       No |
+
+Number of Rules : 2

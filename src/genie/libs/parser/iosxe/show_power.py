@@ -996,6 +996,8 @@ class ShowPowerInlineDetailSchema(MetaParser):
                 'four_pair_pd_architecture': str,
                 Optional('perpetual_poe_enabled'): str,
                 Optional('fast_poe_enabled'): str,
+                Optional('meter_start_time'): str,
+                Optional('meter_energy_value'): str,
             },
         },
     }
@@ -1111,7 +1113,13 @@ class ShowPowerInlineDetail(ShowPowerInlineDetailSchema):
 
         # Fast POE Enabled: FALSE
         p32 = re.compile(r'^\s*Fast\s+POE\s+Enabled:\s+(?P<fast_poe_enabled>[\w]+)$')
-                
+        
+        # Meter Start Time: 2024-01-24 19:38:12 UTC (24hour counter)
+        p33 = re.compile(r'^Meter\s+Start\s+Time: (?P<meter_start_time>.*)$')
+        
+        # Metered Energy Value(WattSec): 0.0 
+        p34 = re.compile(r'^Metered\s+Energy\s+Value\S+(?P<meter_energy_value>.*)$')   
+
         for line in output.splitlines():
             line = line.strip()
             
@@ -1313,7 +1321,19 @@ class ShowPowerInlineDetail(ShowPowerInlineDetailSchema):
             if m:
                 intf_dict['fast_poe_enabled'] = m.groupdict()['fast_poe_enabled']
                 continue
-            
+
+            # Meter Start Time: 2024-01-24 19:38:12 UTC (24hour counter)
+            m = p33.match(line)
+            if m:
+                intf_dict['meter_start_time'] = m.groupdict()['meter_start_time']
+                continue
+
+            # Metered Energy Value(WattSec): 0.0 
+            m = p34.match(line)
+            if m:
+                intf_dict['meter_energy_value'] = m.groupdict()['meter_energy_value']
+                continue
+
         return ret_dict
     
 class ShowPowerInlinePoliceSchema(MetaParser):

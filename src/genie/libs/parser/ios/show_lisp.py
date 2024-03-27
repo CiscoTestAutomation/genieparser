@@ -58,7 +58,8 @@ from genie.libs.parser.iosxe.show_lisp import ShowLispSession as ShowLispSession
                                               ShowLispServiceDatabase as ShowLispServiceDatabase_iosxe,\
                                               ShowLispServiceServerSummary as ShowLispServiceServerSummary_iosxe,\
                                               ShowLispServiceServerDetailInternal as ShowLispServiceServerDetailInternal_iosxe,\
-                                              ShowLispServiceStatistics as ShowLispServiceStatistics_iosxe
+                                              ShowLispServiceStatistics as ShowLispServiceStatistics_iosxe,\
+                                              ShowLispInstanceIdService as ShowLispInstanceIdService_iosxe
 
 # ==============================
 # Parser for 'show lisp session'
@@ -161,4 +162,12 @@ class ShowLispServiceServerDetailInternal(ShowLispServiceServerDetailInternal_io
 # =========================================================================
 class ShowLispServiceStatistics(ShowLispServiceStatistics_iosxe):
     '''Parser for "show lisp all instance-id <instance_id> <service> statistics"'''
+    pass
+
+
+# ==============================================================
+# Parser for 'show lisp all instance-id <instance_id> <service>'
+# ==============================================================
+class ShowLispInstanceIdService(ShowLispInstanceIdService_iosxe):
+    '''Parser for "show lisp all instance-id <instance_id> <service>"'''
     pass

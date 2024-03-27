@@ -1,0 +1,23 @@
+show sd-routing control local-properties wan detail
+ NAT Type: E -- indicates End-point independent mapping
+           A -- indicates Address-port dependent mapping
+           N -- indicates Not learned
+           Note: Requires minimum two vbonds to learn the NAT type
+
+Interface TenGigabitEthernet0/0/4
+  Public  IPv4       : 134.45.1.1
+  Public  Port       : 65100
+  Private IPv4       : 134.45.1.1
+  Private IPv6       : ::
+  Private Port       : 65100
+  State              : up
+  Number of vManages : 1
+  Control            : yes
+  STUN               : no
+  Low Bandwidth Link : no
+  Last Connection    : 0:19:25:27
+  SPI Remaining Time : 0:00:00:00
+  NAT Type           : N
+  vManage Connection : 5
+  Region IDs         : 0
+  

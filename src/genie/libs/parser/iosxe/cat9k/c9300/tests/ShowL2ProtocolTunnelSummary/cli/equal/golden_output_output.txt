@@ -1,0 +1,45 @@
+COS for Encapsulated Packets: 5
+Drop Threshold for Encapsulated Packets: 0
+Tunnel: Rewrites the destination MAC address of L2 PDUs with Cisco proprietary multicast address
+Forward: Transport L2 PDUs to peer device
+
+Port                Status      Protocol     Action  Shutdown    Drop
+                                  Name               Threshold Threshold
+------------------- ----------- ----------- -------- --------- ---------
+Tw1/0/25            up          cdp         tunnel    40        30
+                                stp         tunnel    40        20
+                                vtp         tunnel    40        20
+                                lldp        tunnel    ----      20
+                                pagp        tunnel    ----      ----
+                                lacp        tunnel    ----      ----
+                                udld        tunnel    ----      ----
+
+Tw1/0/26            up          cdp         tunnel    40        30
+                                stp         tunnel    40        20
+                                vtp         tunnel    40        20
+                                lldp        tunnel    ----      20
+                                pagp        tunnel    ----      ----
+                                lacp        tunnel    ----      ----
+                                udld        tunnel    ----      ----
+
+Tw1/0/27            up          cdp         tunnel    ----      30
+                                stp         ----      40        20
+                                vtp         tunnel    40        20
+                                lldp        tunnel    ----      20
+                                udld        tunnel    ----      ----
+
+Tw1/0/36            up          cdp         tunnel    40        30
+                                stp         tunnel    40        20
+                                vtp         tunnel    40        20
+                                lldp        tunnel    ----      20
+                                pagp        tunnel    ----      ----
+                                lacp        tunnel    ----      ----
+                                udld        tunnel    ----      ----
+
+Fi2/0/33            up          cdp         tunnel    40        30
+                                stp         tunnel    40        20
+                                vtp         tunnel    40        20
+                                lldp        tunnel    ----      20
+                                pagp        tunnel    ----      ----
+                                lacp        tunnel    ----      ----
+                                udld        tunnel    ----      ----

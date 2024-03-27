@@ -1,0 +1,51 @@
+FnF Software Statistics
+
+
+
+Software Statistics:
+======================
+monitor_action_message_rcvd:                    0
+exporter_action_message_rcvd:                   0
+monitor_ifc_action_request_message_rcvd:        0
+clear_hw_cache_request_message_rcvd:            0
+platform_flows_request_message_rcvd:            0
+monitors_created:                               0
+monitors_removed:                               0
+exporters_created:                              0
+exporters_removed:                              0
+mon_if_bind:                                    0
+mon_if_unbind:                                  0
+flow_mon_action_event:                          0
+flow_exp_action_event:                          0
+ifc_mon_action_event:                           0
+flow_cache_clear_event:                         0
+num_get_flows_for_ios_event:                    0
+stats_clear_event:                              0
+cache_aging_event:                              0
+cache_aging_timer_event:                        0
+flows_request_new:                              0
+flows_request_continue:                         0
+flows_request_stop:                             0
+flows_request_unknown:                          0
+flows_ctx_created:                              0
+flows_ctx_removed:                              0
+flows_response_send:                            0
+flows_response_error:                           0
+pkt_type_oob:                                   0
+no_fnf_on_if:                                   0
+no_datagram_start:                              0
+slp_oob:                                        0
+sampled_pkts:                                   0
+mon_db_no_entry:                                0
+exp_db_no_entry:                                0
+main_queue_size:                                0
+fnf_queue_size:                                 0
+event_already_in_queue:                         0
+poll_event:                                     0
+poll_kick_immediate:                            0
+poll_kick_delayed:                              0
+poll_timer_last_timeout:                        0
+db_lock:                                        0
+db_unlock:                                      0
+bind_insert_error_ar:                           0
+bind_delete_error_ar:                           0

@@ -4419,10 +4419,10 @@ class ShowInterfacesStatusModule(ShowInterfacesStatusModuleSchema):
 
             # Port         Name               Status       Vlan       Duplex  Speed Type
             # Hu1/0/1                         connected    1            full    40G QSFP 40G AOC5M 
-
+            # Twe4/0/2                        connected    routed       full    10G SFP-10GBase-CX1
         p1 = re.compile(r'^(?P<interfaces>\S+)(?:\s+(?P<name>(.+)))?'
                 r'\s+(?P<status>(connected|notconnect|suspended|inactive|disabled|err-disabled|monitoring))'
-                r'\s+(?P<vlan>\d+)\s+(?P<duplex_code>[\S\-]+)\s+(?P<port_speed>[\S\-]+)(\s+(?P<type>.+))?$')
+                r'\s+(?P<vlan>\S+)\s+(?P<duplex_code>[\S\-]+)\s+(?P<port_speed>[\S\-]+)(\s+(?P<type>.+))?$')
 
         
         # %Module1 is not Present

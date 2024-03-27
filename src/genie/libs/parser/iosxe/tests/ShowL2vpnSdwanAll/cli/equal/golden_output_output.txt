@@ -1,0 +1,86 @@
+L2VPN sdwan Instance : 1001
+VPN Type : point-to-point
+  VC_ID: 1001 Bridge-domain: 1001 UP
+    Local l2vpn status: UP
+    Local Pseudoports: HundredGigE0/1/4 service instance 1001
+    Remote Site: 603
+      System IP          status       up/down    color           encap    label  DF
+      6.0.0.3            UP           2d04h      gold            ipsec    1039   N/A                 
+      6.0.0.3            UP           2d04h      blue            ipsec    1039   N/A                 
+
+------------------------------------------------------------------------------------------
+L2VPN sdwan Instance : 1002
+VPN Type : point-to-point
+  VC_ID: 1002 Bridge-domain: 1002 UP
+    Local l2vpn status: UP
+    Local Pseudoports: HundredGigE0/1/4 service instance 1002
+    Remote Site: 605
+      System IP          status       up/down    color           encap    label  DF
+      6.0.0.5            UP           2d04h      blue            ipsec    1115   N/A                 
+      6.0.0.5            UP           2d04h      gold            ipsec    1115   N/A                 
+      6.0.0.5            UP           2d04h      bronze          ipsec    1115   N/A                 
+
+------------------------------------------------------------------------------------------
+L2VPN sdwan Instance : 1003
+VPN Type : point-to-point
+  VC_ID: 1003 Bridge-domain: 1003 UP
+    Local l2vpn status: UP
+    Local Pseudoports: HundredGigE0/1/4 service instance 1003
+    Remote Site: 702
+      System IP          status       up/down    color           encap    label  DF
+      7.0.0.2            UP           2d04h      gold            ipsec    1012   N/A                 
+
+------------------------------------------------------------------------------------------
+L2VPN sdwan Instance : 1004
+VPN Type : point-to-point
+  VC_ID: 1004 Bridge-domain: 1004 UP
+    Local l2vpn status: UP
+    Local Pseudoports: HundredGigE0/1/4 service instance 1004
+------------------------------------------------------------------------------------------
+L2VPN sdwan Instance : 1101
+VPN Type : multipoint
+IP Local-learning    : Disabled
+Flooding Suppression : Disabled
+  VC_ID: 1101 Bridge-domain: 1101 UP
+    Local l2vpn status: UP
+    Local Pseudoports: HundredGigE0/1/4 service instance 1101
+    Remote Site: 603
+      System IP          status       up/down    color           encap    label  DF
+      6.0.0.3            UP           2d04h      gold            ipsec    1041   N/A                 
+      6.0.0.3            UP           2d04h      blue            ipsec    1041   N/A                 
+
+    Remote Site: 605
+      System IP          status       up/down    color           encap    label  DF
+      6.0.0.5            UP           2d04h      blue            ipsec    1123   N/A                 
+      6.0.0.5            UP           2d04h      gold            ipsec    1123   N/A                 
+      6.0.0.5            UP           2d04h      bronze          ipsec    1123   N/A                 
+
+    Remote Site: 702
+      System IP          status       up/down    color           encap    label  DF
+      7.0.0.2            UP           2d04h      gold            ipsec    1014   N/A                 
+
+------------------------------------------------------------------------------------------
+L2VPN sdwan Instance : 1102
+VPN Type : multipoint
+IP Local-learning    : Disabled
+Flooding Suppression : Disabled
+  VC_ID: 1102 Bridge-domain: 1102 UP
+    Local l2vpn status: UP
+    Local Pseudoports: HundredGigE0/1/4 service instance 1102
+------------------------------------------------------------------------------------------
+L2VPN sdwan Instance : 1103
+VPN Type : multipoint
+IP Local-learning    : Disabled
+Flooding Suppression : Disabled
+  VC_ID: 1103 Bridge-domain: 1103 UP
+    Local l2vpn status: UP
+    Local Pseudoports: HundredGigE0/1/4 service instance 1103
+------------------------------------------------------------------------------------------
+L2VPN sdwan Instance : 1104
+VPN Type : multipoint
+IP Local-learning    : Disabled
+Flooding Suppression : Disabled
+  VC_ID: 1104 Bridge-domain: 1104 UP
+    Local l2vpn status: UP
+    Local Pseudoports: HundredGigE0/1/4 service instance 1104
+------------------------------------------------------------------------------------------

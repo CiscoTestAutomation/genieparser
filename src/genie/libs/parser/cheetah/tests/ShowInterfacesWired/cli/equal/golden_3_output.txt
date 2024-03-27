@@ -1,0 +1,14 @@
+# show interfaces wired 1
+wired1    Link encap:Ethernet  HWaddr 00:EA:BD:12:8E:70 eMac Status: DOWN
+      	  inet addr: unassigned  Bcast: 9.6.64.255  Mask: 255.255.255.0
+      DOWN BROADCAST RUNNING PROMISC MULTICAST  MTU:0  Metric:0
+
+      	  half Duplex, 0 Mb/s
+
+      	  5 minute input rate n/a bits/sec, n/a packets/sec
+      	  5 minute output rate n/a bits/sec, n/a packets/sec
+      Wired1 Port Statistics:
+      ID         :               1             TYPE       :               0
+      RX PKTS    :               0/0           TX PKTS    :            7844/0
+      RX OCTETS  :               0/0           TX OCTETS  :         3121792/0
+      RX ERR     :               0/0           TX ERR     :               0/0

@@ -141,7 +141,7 @@ class ShowHardwareLedSchema(MetaParser):
         Optional('switch'): {
             Any():{
                 'system': str,
-                'beacon': str,
+                Optional('beacon'): str,
                 Optional('master'): str,
                 Optional('port_led_status'):{
                     str: str
@@ -182,7 +182,9 @@ class ShowHardwareLedSchema(MetaParser):
         Optional('dc_b'):str,
         Optional('alarm-out'):str,
         Optional('alarm-in1'):str,
-        Optional('alarm-in2'):str
+        Optional('alarm-in2'):str,
+        Optional('alarm-in3'):str,
+        Optional('alarm-in4'):str
     }     
                        
 class ShowHardwareLed(ShowHardwareLedSchema):
@@ -429,7 +431,7 @@ class ShowHardwareLed(ShowHardwareLedSchema):
                 for port in group['duplex'].split():
                     port = (port.split(':'))
                     port_duplex_dict = root_dict.setdefault('port_duplex', {})
-                    port_duplex_dict.update({port[0]: port[1]})
+                    port_duplex_dict.update({Common.convert_intf_name(port[0]): port[1]})
                 continue
 
             # SPEED: (65) Tw1/0/1:BLACK Tw1/0/2:BLACK Tw1/0/3:BLACK 
@@ -440,7 +442,7 @@ class ShowHardwareLed(ShowHardwareLedSchema):
                 for port in group['speed'].split():
                     port = (port.split(':'))
                     speed_dict = root_dict.setdefault('port_speed', {})
-                    speed_dict.update({port[0]: port[1]})
+                    speed_dict.update({Common.convert_intf_name(port[0]): port[1]})
                 continue
 
             # STACK: (65) Tw1/0/1:FLASH_GREEN Tw1/0/2:BLACK Tw1/0/3:BLACK
@@ -451,7 +453,7 @@ class ShowHardwareLed(ShowHardwareLedSchema):
                 for port in group['stack_port'].split():
                     port = (port.split(':'))
                     stack_dict = root_dict.setdefault('stack_port', {})
-                    stack_dict.update({port[0]: port[1]})
+                    stack_dict.update({Common.convert_intf_name(port[0]): port[1]})
                 continue
 
             # POE: (65) Tw1/0/1:BLACK Tw1/0/2:BLACK Tw1/0/3:BLACK Tw1/0/4:BLACK
@@ -462,7 +464,7 @@ class ShowHardwareLed(ShowHardwareLedSchema):
                 for port in group['poe'].split():
                     port = (port.split(':'))
                     poe_dict = root_dict.setdefault('poe_port', {})
-                    poe_dict.update({port[0]: port[1]})
+                    poe_dict.update({Common.convert_intf_name(port[0]): port[1]})
                 continue
 
             # STACK POWER: BLACK

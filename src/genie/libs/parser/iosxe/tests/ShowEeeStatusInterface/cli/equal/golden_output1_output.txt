@@ -1,0 +1,11 @@
+Gi1/0/27 is up
+	EEE(efficient-ethernet):  Operational
+	Rx LPI Status          :  Low Power
+	Tx LPI Status          :  Low Power
+	Wake Error Count       :  0
+
+	ASIC EEE STATUS
+	Rx LPI Status          :  Receiving LPI
+	Tx LPI Status          :  Transmitting LPI
+	Link Fault Status      :  Link Up
+	Sync Status            :  Code group synchronization with data stream lost

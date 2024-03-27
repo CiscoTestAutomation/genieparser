@@ -1,0 +1,9 @@
+LISP Prefix List information for router lisp 0
+
+Prefix List: multisite
+    Number of entries: 0
+    Users:
+    IID 101      IPv6  ITR Map Resolver    100.14.14.14
+    IID 101      IPv6  ITR Map Resolver    100.13.13.13
+    IID 101      IPv4  ITR Map Resolver    100.14.14.14
+    IID 101      IPv4  ITR Map Resolver    100.13.13.13

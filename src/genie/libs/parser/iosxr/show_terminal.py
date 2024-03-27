@@ -23,7 +23,10 @@ class ShowTerminalSchema(MetaParser):
         "type": str,
         "length": int,
         "width": int,
-        "baud_rate": int,
+        "baud_rate": {
+            "tx": int,
+            "rx": int
+        },
         "template": str,
         "capabilities": str,
         "parity": str,
@@ -89,7 +92,9 @@ class ShowTerminal(ShowTerminalSchema):
             # Baud rate (TX/RX) is 9600/9600, no parity, 1 stopbits, 8 databits
             m = p2.match(line)
             if m:
-                ret_dict.update({"baud_rate": int(m.groupdict()['baud_rate'])})
+                baud_rate = ret_dict.setdefault("baud_rate", {})
+                baud_rate.update({"tx": int(m.groupdict()['baud_rate'])})
+                baud_rate.update({"rx": int(m.groupdict()['baud_rate'])})
                 ret_dict.setdefault("parity", m.groupdict()['parity'])
                 ret_dict.setdefault("stopbits", int(m.groupdict()['stopbits']))
                 ret_dict.setdefault("databits", int(m.groupdict()['databits']))

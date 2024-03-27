@@ -120,7 +120,16 @@ expected_output = {
                                     'state': 'up',
                                     'encap_iid': '-',
                                     'rdp_len': 0,
-                                    'src_add': '100.44.44.44'
+                                    'src_add': '100.44.44.44',
+                                    'publishers': {
+                                        '100.44.44.44': {
+                                            'priority': 10,
+                                            'weight': 50,
+                                            'state': 'up',
+                                            'encap_iid': '-',
+                                            'rdp_len': 0
+                                        }
+                                    }
                                 },
                                 '100.88.88.88': {
                                     'priority': 10,
@@ -128,7 +137,16 @@ expected_output = {
                                     'state': 'up',
                                     'encap_iid': '-',
                                     'rdp_len': 1,
-                                    'src_add': '100.78.78.78'
+                                    'src_add': '100.78.78.78',
+                                    'publishers': {
+                                        '100.78.78.78': {
+                                            'priority': 10,
+                                            'weight': 50,
+                                            'state': 'up',
+                                            'encap_iid': '-',
+                                            'rdp_len': 1
+                                        }
+                                    }
                                 },
                                 '100.99.99.99': {
                                     'priority': 10,
@@ -136,7 +154,16 @@ expected_output = {
                                     'state': 'up',
                                     'encap_iid': '-',
                                     'rdp_len': 1,
-                                    'src_add': '100.78.78.78'
+                                    'src_add': '100.78.78.78',
+	                            'publishers': {
+                                        '100.78.78.78': {
+                                            'priority': 10,
+                                            'weight': 50,
+                                            'state': 'up',
+                                            'encap_iid': '-',
+                                            'rdp_len': 1
+                                        }
+                                    }
                                 }
                             }
                         }

@@ -1581,3 +1581,114 @@ class ShowSegmentRoutingSrv6Locator(ShowSegmentRoutingSrv6LocatorSchema):
                 continue
 
         return ret_dict
+
+class ShowSegmentRoutingTrafficEnggPccLspSchema(MetaParser):
+    ''' Schema for:
+        * show segment-routing traffic-eng pcc lsp
+    '''
+    schema = {
+        'pce_sr_policy_database': {
+            'symbolic_name': str,
+            'lsps': {
+                Any(): {
+                 'source': str,
+                 'destination': str,
+                 'tunnel_id': int,
+                 'lsp_id': int,
+                 'admin_state': str,
+                 'operation_state': str,
+                 'setup_type': str,
+                 'binding_sid': int
+                },
+            },
+        },
+    }
+    
+class ShowSegmentRoutingTrafficEnggPccLsp(
+    ShowSegmentRoutingTrafficEnggPccLspSchema):
+    ''' Parser for:
+        * ShowSegmentRoutingTrafficEnggPccLsp
+    '''
+
+    cli_command = 'show segment-routing traffic-eng pcc lsp'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # Symbolic Name: cfg_srte_c_30_ep_10.0.0.14_discr_100
+        p1 = re.compile(r'^Symbolic Name: (?P<symbolic_name>[A-Za-z0-9_?.?]+)$')
+        
+        # LSP[0]:
+        p2 = re.compile(r'^LSP\[(?P<lsp_number>\d+)\]:$')
+ 
+        # Source 10.0.0.2, Destination 10.0.0.14, Tunnel ID 1, LSP ID 1048
+        p3 = re.compile(r'^Source (?P<lsp_source>[\d\.]+), Destination '
+                        '(?P<lsp_destination>[\d\.]+), Tunnel ID (?P<tunnel_id>\d+), '
+                        'LSP ID (?P<lsp_id>\d+)$')
+        
+        # State: Admin up, Operation up
+        p4 = re.compile(r'State: Admin (?P<admin_state>\w+), Operation '
+                          '(?P<operation_state>\w+)$')
+        
+        # Setup type: SR
+        p5 = re.compile(r'^Setup type: (?P<setup_type>[\w\s]+)$')
+
+        # Binding SID: 26276
+        p6 = re.compile(r'^Binding SID: (?P<binding_sid>\d+)$')
+
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Symbolic Name: cfg_srte_c_30_ep_10.0.0.14_discr_100 
+            m = p1.match(line)
+            if m:
+                policy_dict = ret_dict.setdefault \
+                    ('pce_sr_policy_database', {})
+                policy_dict['symbolic_name'] = \
+                    str(m.groupdict()['symbolic_name'])
+                continue
+            
+            # LSP[0]:
+            m = p2.match(line)
+            if m:
+                lsp_numb = int(m.groupdict()['lsp_number'])
+                lsps_dict = policy_dict.setdefault('lsps', {})
+                lsp_dict = lsps_dict.setdefault(lsp_numb, {})
+                continue
+            
+            # Source 10.0.0.2, Destination 10.0.0.14, Tunnel ID 1, LSP ID 1048
+            m = p3.match(line)
+            if m:
+                lsp_dict['source'] = str(m.groupdict()['lsp_source'])
+                lsp_dict['destination'] = str(m.groupdict()['lsp_destination'])
+                lsp_dict['tunnel_id'] = int(m.groupdict()['tunnel_id'])
+                lsp_dict['lsp_id'] = int(m.groupdict()['lsp_id'])
+                continue
+            
+            # State: Admin up, Operation up
+            m = p4.match(line)
+            if m:
+                admin_state = m.groupdict()['admin_state'].lower()
+                operation_state = m.groupdict()['operation_state'].lower()
+                lsp_dict.setdefault('admin_state', admin_state)
+                lsp_dict.setdefault('operation_state', operation_state)
+                continue
+            
+            # Setup type: SR
+            m = p5.match(line)
+            if m:
+                lsp_dict['setup_type'] = m.groupdict()['setup_type'].lower()
+                continue
+            
+            # Binding SID: 26276
+            m = p6.match(line)
+            if m:
+                lsp_dict['binding_sid'] = int(m.groupdict()['binding_sid'])
+                continue
+
+        return ret_dict

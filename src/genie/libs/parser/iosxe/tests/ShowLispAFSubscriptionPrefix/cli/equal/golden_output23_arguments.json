@@ -1,0 +1,6 @@
+{
+    "locator_table": "default",
+    "instance_id": "4100",
+    "address_family": "ethernet",
+    "eid_prefix": "aacc.ccaa.cc00/48"
+}

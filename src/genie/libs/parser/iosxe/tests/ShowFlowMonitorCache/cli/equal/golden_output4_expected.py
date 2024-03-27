@@ -5,6 +5,7 @@ expected_output = {
     'entries': {
         1: {
             'counter_pkts_long': 6238,
+            'interface_input': 'Tw2/0/2',
             'intf_output': 'Null',
             'ip_protocol': 59,
             'ip_tos': '0x14',
@@ -15,6 +16,7 @@ expected_output = {
         },
         2: {
             'counter_pkts_long': 6238,
+            'interface_input': 'Tw2/0/2',            
             'intf_output': 'Null',
             'ip_protocol': 59,
             'ip_tos': '0x14',
@@ -25,6 +27,7 @@ expected_output = {
         },
         3: {
             'counter_pkts_long': 6238,
+            'interface_input': 'Tw2/0/2',
             'intf_output': 'Null',
             'ip_protocol': 59,
             'ip_tos': '0x14',

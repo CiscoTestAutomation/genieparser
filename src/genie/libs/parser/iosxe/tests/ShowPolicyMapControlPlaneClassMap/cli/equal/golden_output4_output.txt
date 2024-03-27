@@ -1,0 +1,11 @@
+show policy-map control-plane | section system-cpp-police-mcast-rpf-fail
+    Class-map: system-cpp-police-mcast-rpf-fail (match-any)
+      0 packets, 0 bytes
+      5 minute offered rate 0000 bps, drop rate 0000 bps
+      Match: none
+      police:
+          rate 2000 pps, burst 11264 packets
+        conformed 0 bytes; actions:
+          transmit
+        exceeded 0 bytes; actions:
+          drop

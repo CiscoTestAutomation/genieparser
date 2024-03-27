@@ -2291,7 +2291,8 @@ class ShowOspfv3NeighborInterface(ShowOspfv3NeighborInterfaceSchema):
 
         # Neighbor ID     Pri   State           Dead Time   Interface ID    Interface
         # 2.2.2.2           0   FULL/  -        00:00:39    11              GigabitEthernet1/0/21
-        p2 = re.compile(r'^(?P<neighbor_id>[\d.]+)\s+(?P<priority>\d)\s+(?P<state>\S+/\s*[\S-]+)\s+(?P<dead_time>[\d:]+)\s+(?P<interface_id>\d+)\s+(?P<interface_name>\S+)$')
+        # 9.9.9.9           1   DOWN/DROTHER       -        81              Vlan120
+        p2 = re.compile(r'^(?P<neighbor_id>[\d.]+)\s+(?P<priority>\d)\s+(?P<state>\S+/\s*[\S-]+)\s+(?P<dead_time>[\d:-]+)\s+(?P<interface_id>\d+)\s+(?P<interface_name>\S+)$')
 
         for line in output.splitlines():
             line = line.strip()

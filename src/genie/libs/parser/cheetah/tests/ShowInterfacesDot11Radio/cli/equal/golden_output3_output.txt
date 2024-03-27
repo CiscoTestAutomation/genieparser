@@ -1,0 +1,43 @@
+# show interfaces dot11radio 0
+Dot11Radio0 is UP, line protocol is UP
+Hardware is 802.11 2.4G Radio, channel is 9
+Radio MAC is 70:B3:17:DB:20:E0
+
+Dot11Radio0     Link encap:Ethernet  HWaddr 70:B3:17:DB:20:E0
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:859026379 errors:0 dropped:191 overruns:0 frame:0
+          TX packets:2329738 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:3622404190 (3.3 GiB)  TX bytes:79242356 (75.5 MiB)
+          Interrupt:65 Memory:f8000000-f8200000
+
+        DOT11 Statistics (Cumulative Total/Last 5 Seconds):
+RECEIVER                                TRANSMITTER
+Host Rx K Bytes:             0/0        Host Tx K Bytes:             0/0
+Unicasts Rx:                 0/0        Unicasts Tx:                 0/0
+Broadcasts Rx:               8/0        Broadcasts Tx:               0/0
+Beacons Rx:          521028626/303      Beacons Tx:           23654269/48
+Probes Rx:            62714582/36       Probes Tx:              188029/0
+Multicasts Rx:              10/0        Multicasts Tx:          181306/0
+Mgmt Packets Rx:     583487676/338      Mgmt Packets Tx:           813/0
+Ctrl Frames Rx:      182415739/19       Ctrl Frames Tx:            304/0
+RTS received:        107251217/6        RTS transmitted:           302/0
+Duplicate frames:            0/0        CTS not received:          212/0
+MIC errors:                  0/0        WEP errors:                  0/0
+FCS errors:         1307329647/362      Retries:                     0/0
+Key Index errors:            0/0        Tx Failures:                 0/0
+                                        Tx Drops:                    0/0
+
+Rate Statistics for Radio::
+
+
+Beacons missed: 0-30s 31-60s 61-90s 90s+
+                     1      0      0    0
+
+Vap TX statistics:
+vap         ssid  MGMT      Beacon     DATA [BK  BE  VI VO] Bytes(Data) QosRetries AMDPU-SubFrameRetries
+  1 JEY_OPEN_WGB 813/0 23654269/48 181306/0 0/0 0/0 0/0 0/0         0/0        0/0                   0/0
+
+Vap RX statistics:
+vap         ssid  MGMT DATA [BK  BE  VI VO] Bytes(Data)
+  1 JEY_OPEN_WGB 944/0  0/0 0/0 0/0 0/0 0/0         0/0

@@ -4838,7 +4838,7 @@ class ShowBgpNeighborsAdvertisedRoutesSuperParser(ShowBgpNeighborsAdvertisedRout
         * 'show ip bgp {address_family} vrf {vrf} neighbors {neighbor} advertised-routes'
     '''
 
-    def cli(self, neighbor, address_family='', output=None):
+    def cli(self, neighbor, address_family='', vrf='', output=None):
 
         p1 = re.compile(r'^\s*For +address +family:'
                             ' +(?P<address_family>[a-zA-Z0-9\s\-\_]+)$')
@@ -4876,7 +4876,8 @@ class ShowBgpNeighborsAdvertisedRoutesSuperParser(ShowBgpNeighborsAdvertisedRout
                             '( +\(default for vrf +(?P<default_vrf>(\S+))\))?'
                             '( +VRF Router ID (?P<vrf_router_id>(\S+)))?$')
 
-        vrf = 'default'
+        if not vrf:
+            vrf = 'default'
         # Get VRF name by executing 'show bgp all neighbors | i BGP neighbor'
         out_vrf = self.device.execute('show bgp all neighbors | i BGP neighbor')
         bgp_neighbor_re = re.compile(r'^BGP +neighbor +is +(?P<bgp_neighbor>[0-9A-Z\:\.]+)'
@@ -5323,27 +5324,30 @@ class ShowBgpNeighborsAdvertisedRoutes(ShowBgpNeighborsAdvertisedRoutesSuperPars
         * 'show bgp neighbors {neighbor} advertised-routes'
     '''
 
-    cli_command = ['show bgp {address_family} neighbors {neighbor} advertised-routes',
+    cli_command = ['show bgp {address_family} vrf {vrf} neighbors {neighbor} advertised-routes',
+                   'show bgp {address_family} neighbors {neighbor} advertised-routes',
                    'show bgp neighbors {neighbor} advertised-routes',
                    ]
 
-    def cli(self, neighbor, address_family='', output=None):
-
+    def cli(self, neighbor, address_family='', vrf='',output=None):
         if output is None:
             # Build command
-            if address_family and neighbor:
+            if address_family and vrf and neighbor:
                 cmd = self.cli_command[0].format(address_family=address_family,
+                                                 vrf=vrf,
+                                                 neighbor=neighbor)
+            elif address_family and neighbor:
+                cmd = self.cli_command[1].format(address_family=address_family,
                                                  neighbor=neighbor)
             elif neighbor:
-                cmd = self.cli_command[1].format(neighbor=neighbor)
+                cmd = self.cli_command[2].format(neighbor=neighbor)
             # Execute command
             show_output = self.device.execute(cmd)
         else:
             show_output = output
-
         # Call super
         return super().cli(output=show_output, neighbor=neighbor,
-                           address_family=address_family)
+                           address_family=address_family,vrf=vrf)
 
 
 # =============================================================================

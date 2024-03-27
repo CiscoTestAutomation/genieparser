@@ -1,0 +1,43 @@
+Service meraki connect: enable
+
+Meraki Tunnel Config
+------------------------------------
+  Fetch State:                Config fetch init
+  Fetch Fail:
+  Last Fetch(UTC):
+  Next Fetch(UTC):
+  Config Server:
+  Primary:
+  Secondary:
+  Client IPv6 Addr:           ::
+  Network Name:
+
+Meraki Tunnel State
+------------------------------------
+  Primary:                    Down
+  Secondary:                  Down
+  Primary Last Change(UTC):
+  Secondary Last Change(UTC):
+  Client Last Restart(UTC):
+
+Meraki Tunnel Interface
+------------------------------------
+  Status:                     Disable
+  Rx Packets:                 0
+  Tx Packets:                 0
+  Rx Errors:                  0
+  Tx Errors:                  0
+  Rx Drop Packets:            0
+  Tx Drop Packets:            0
+
+Meraki Device Registration
+------------------------------------
+  url:                        https://catalyst.meraki.com/nodes/register
+  Device Number:              1
+  PID:                        C9300-24U
+  Serial Number:              FJC2342S0TH
+  Cloud ID:                   N/A
+  Mac Address:                6C:71:0D:3D:EA:80
+  Status:                     Failed
+  Error:                      Product type is not supported
+  Timestamp(UTC):             2024-02-14 03:22:48

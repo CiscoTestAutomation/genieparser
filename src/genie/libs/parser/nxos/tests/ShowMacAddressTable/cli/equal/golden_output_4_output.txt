@@ -1,0 +1,13 @@
+ Note: MAC table entries displayed are getting read from software.
+ Use the 'hardware-age' keyword to get information related to 'Age' 
+
+ Legend: 
+        * - primary entry, G - Gateway MAC, (R) - Routed MAC, O - Overlay MAC
+        age - seconds since last seen,+ - primary entry using vPC Peer-Link, E - EVPN entry 
+        (T) - True, (F) - False ,  ~~~ - use 'hardware-age' keyword to retrieve age info 
+  VLAN/BD   MAC Address      Type      age     Secure NTFY Ports/SWID.SSID.LID
+---------+-----------------+--------+---------+------+----+------------------
+G     -    0000.eeef.f113    static       -       F    F  sup-eth1(R) (Po90.275)
+*     -    0000.eeef.f118    static       -       F    F  Drop (Eth17/3.280)
+G 301      0000.eeef.f12d    static       -       F    F  sup-eth1(R)
+G 440      0000.eeef.f1b8    static       -       F    F  vPC Peer-Link(R)
