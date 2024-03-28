@@ -61,7 +61,7 @@ class ShowWlanSummary(ShowWlanSummarySchema):
             r"^----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------$")
         # 17   lizzard_Global                  lizzard                         UP     [WPA2][802.1x][FT + 802.1x][AES],[FT Enabled]
         wlan_info_capture = re.compile(
-            r"^(?P<wlan_id>\d+)\s+(?P<profile_name>\S+)\s+(?P<ssid>\S+)\s+(?P<wlan_status>\S+)\s+(?P<status_security>.*$)")
+            r"^(?P<wlan_id>\d+)\s+(?P<profile_name>\S+)\s+(?P<ssid>.*?)(?:\s{2,})\s+(?P<wlan_status>\S+)\s+(?P<status_security>.*$)")
 
         for line in out.splitlines():
             line = line.strip()
