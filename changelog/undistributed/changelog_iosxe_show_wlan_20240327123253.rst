@@ -1,7 +1,7 @@
 --------------------------------------------------------------------------------
                             Fix
 --------------------------------------------------------------------------------
-* IOS-XE
+* IOSXE
     * Modified ShowWlanAllSchema:
         * Updated `radio_policy` from schema to Optional
     * Modified ShowWlanAll:
