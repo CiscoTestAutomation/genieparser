@@ -1,0 +1,130 @@
+WLAN Profile Name     : CUSTC_Global_NF_24a65b82
+================================================
+Identifier                                     : 21
+Description                                    : SSID-for-Factory-users
+Network Name (SSID)                            : CUST Factory
+Status                                         : Enabled
+Broadcast SSID                                 : Enabled
+Advertise-Apname                               : Disabled
+Universal AP Admin                             : Disabled
+Max Associated Clients per WLAN                : 0
+Max Associated Clients per AP per WLAN         : 0
+Max Associated Clients per AP Radio per WLAN   : 200
+OKC                                            : Enabled
+Number of Active Clients                       : 51
+CHD per WLAN                                   : Enabled
+WMM                                            : Allowed
+WiFi Direct Policy                             : Disabled
+Channel Scan Defer Priority:
+  Priority (default)                           : 5
+  Priority (default)                           : 6
+Scan Defer Time (msecs)                        : 100
+Media Stream Multicast-direct                  : Disabled
+CCX - AironetIe Support                        : Disabled
+Peer-to-Peer Blocking Action                   : Drop
+Configured Radio Bands
+      5ghz                                     : Enabled
+      Slot                                     : Enabled on all slots
+Operational State of Radio Bands
+      5ghz                                     : UP
+      Slot                                     : Enabled on all slots
+DTIM period for 802.11a radio                  : 1
+DTIM period for 802.11b radio                  : 1
+Local EAP Authentication                       : Disabled
+Mac Filter Authorization list name             : dnac-cts-CUST-abcde86c6
+Mac Filter Override Authorization list name    : Disabled
+Accounting list name                           :
+802.1x authentication list name                : Disabled
+802.1x authorization list name                 : Disabled
+Security
+    802.11 Authentication                      : Open System
+    Static WEP Keys                            : Disabled
+    Wi-Fi Protected Access (WPA/WPA2/WPA3)     : Enabled
+        WPA (SSN IE)                           : Disabled
+        WPA2 (RSN IE)                          : Enabled
+            MPSK                               : Disabled
+            EasyPSK                            : Disabled
+            AES Cipher                         : Disabled
+            CCMP256 Cipher                     : Disabled
+            GCMP128 Cipher                     : Disabled
+            GCMP256 Cipher                     : Enabled
+            Randomized GTK                     : Disabled
+        WPA3 (WPA3 IE)                         : Disabled
+        Auth Key Management
+            802.1x                             : Disabled
+            PSK                                : Disabled
+            CCKM                               : Disabled
+            FT dot1x                           : Disabled
+            FT PSK                             : Disabled
+            FT SAE                             : Disabled
+            Dot1x-SHA256                       : Disabled
+            PSK-SHA256                         : Disabled
+            SAE                                : Enabled
+            OWE                                : Disabled
+            SUITEB-1X                          : Disabled
+            SUITEB192-1X                       : Disabled
+    SAE PWE Method                             : Hash to Element, Hunting and Pecking(H2E-HNP)
+    Transition Disable                         : Disabled
+    CCKM TSF Tolerance (msecs)                 : 1000
+    OWE Transition Mode                        : Disabled
+    OSEN                                       : Disabled
+    FT Support                                 : Disabled
+        FT Reassociation Timeout (secs)        : 20
+        FT Over-The-DS mode                    : Disabled
+    PMF Support                                : Disabled
+        PMF Association Comeback Timeout (secs): 1
+        PMF SA Query Time (msecs)              : 200
+    Web Based Authentication                   : Disabled
+    Conditional Web Redirect                   : Disabled
+    Splash-Page Web Redirect                   : Disabled
+    Webauth On-mac-filter Failure              : Disabled
+    Webauth Authentication List Name           : Disabled
+    Webauth Authorization List Name            : Disabled
+    Webauth Parameter Map                      : Disabled
+Band Select                                    : Disabled
+Load Balancing                                 : Enabled
+Multicast Buffer                               : Enabled
+Multicast Buffers (frames)                     : 50
+IP Source Guard                                : Disabled
+Assisted-Roaming
+    Neighbor List                              : Disabled
+    Prediction List                            : Disabled
+    Dual Band Support                          : Disabled
+IEEE 802.11v parameters
+    Directed Multicast Service                 : Disabled
+    BSS Max Idle                               : Enabled
+        Protected Mode                         : Disabled
+    Traffic Filtering Service                  : Disabled
+    BSS Transition                             : Disabled
+        Disassociation Imminent                : Disabled
+            Optimised Roaming Timer (TBTTS)    : 40
+            Timer (TBTTS)                      : 200
+        Dual Neighbor List                     : Disabled
+    WNM Sleep Mode                             : Disabled
+802.11ac MU-MIMO                               : Disabled
+802.11ax parameters
+    802.11ax Operation Status                  : Enabled
+    OFDMA Downlink                             : Enabled
+    OFDMA Uplink                               : Enabled
+    MU-MIMO Downlink                           : Enabled
+    MU-MIMO Uplink                             : Enabled
+    BSS Target Wake Up Time                    : Enabled
+    BSS Target Wake Up Time Broadcast Support  : Enabled
+802.11 protocols in 2.4ghz band
+    Protocol                                   : dot11bg
+Advanced Scheduling Requests Handling          : Disabled
+mDNS Gateway Status                            : Bridge
+WIFI Alliance Agile Multiband                  : Disabled
+Device Analytics
+    Advertise Support                          : Disabled
+    Advertise Support for PC analytics         : Disabled
+    Share Data with Client                     : Disabled
+Client Scan Report (11k Beacon Radio Measurement)
+    Request on Association                     : Disabled
+    Request on Roam                            : Disabled
+WiFi to Cellular Steering                      : Disabled
+Advanced Scheduling Requests Handling          : Disabled
+6Ghz Client Steering                           : Disabled
+Locally Administered Address Configuration
+    Deny LAA clients                           : Disabled
+Latency Measurements Announcements             : Disabled
