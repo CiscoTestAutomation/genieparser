@@ -518,6 +518,7 @@ class ShowL2vpnBridgeDomain(ShowL2vpnBridgeDomainSchema):
                 bridge_domain_dict.update({'state': state}) 
                 bridge_domain_dict.update({'shg_id': shg_id}) 
                 bridge_domain_dict.update({'mst_i': mst_i}) 
+                enter_vfi = False
                 continue
             
             # Aging: 300 s, MAC limit: 4000, Action: none, Notification: syslog
@@ -613,6 +614,7 @@ class ShowL2vpnBridgeDomain(ShowL2vpnBridgeDomainSchema):
                 # clear state from earlier
                 state = ''
                 group = m.groupdict()
+                enter_vfi = True
                 vfi = group['vfi']
                 vfi_dict = bridge_domain_dict.setdefault('vfi', {}). \
                     setdefault(vfi, {})
@@ -631,7 +633,7 @@ class ShowL2vpnBridgeDomain(ShowL2vpnBridgeDomainSchema):
                 state = group['state']
                 static_mac_address = int(group['static_mac_address'])
 
-                if vfi:
+                if enter_vfi:
                     neighbor_dict = vfi_dict.setdefault('neighbor', {}). \
                         setdefault(neighbor, {}). \
                         setdefault('pw_id', {}). \
@@ -685,7 +687,7 @@ class ShowL2vpnBridgeDomain(ShowL2vpnBridgeDomainSchema):
                 evpn_state = group['state']
                 evpn_dict = bridge_domain_dict.setdefault('evpn', {}). \
                                 setdefault(evpn, {})
-                evpn_dict.update({'state': state})
+                evpn_dict.update({'state': evpn_state})
                 continue
 
         return ret_dict
