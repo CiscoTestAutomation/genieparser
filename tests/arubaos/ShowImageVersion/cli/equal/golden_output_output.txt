@@ -1,0 +1,12 @@
+----------------------------------
+Partition               : 0:0 (/mnt/disk1)
+Software Version        : ArubaOS 8.6.0.16 (Digitally Signed SHA1/SHA256 - Production Build)
+Build number            : 82590
+Label                   : 82590
+Built on                : Thu Dec 16 13:28:34 UTC 2021
+----------------------------------
+Partition               : 0:1 (/mnt/disk2) **Default boot**
+Software Version        : ArubaOS 8.10.0.0 LSR (Digitally Signed SHA1/SHA256 - Developer/Internal Build)
+Build number            : 0000
+Label                   : jenkins@yk-aos-preflight-ENG.0000
+Built on                : Wed Mar 9 09:41:5
