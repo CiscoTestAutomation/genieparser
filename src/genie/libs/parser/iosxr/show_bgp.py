@@ -9122,6 +9122,8 @@ class ShowBgpAddressFamily(ShowBgpAddressFamilySchema):
     '''Parser for:
         'show bgp'
         'show bgp {address_family}'
+        'show bgp {address_family} community {community}'
+        'show bgp {address_family} community {community} {exact_match}'
     '''
     cli_command = [
         'show bgp',
