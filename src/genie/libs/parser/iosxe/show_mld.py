@@ -6,6 +6,7 @@ IOSXE parsers for the following show commands:
     * show ipv6 mld vrf <WORD> interface 
     * show ipv6 mld groups detail
     * show ipv6 mld vrf <WORD> groups detail
+    * show ipv6 mld ssm-map
     * show ipv6 mld ssm-map <WORD>
     * show ipv6 mld vrf <WORD> ssm-map <WORD>
     * show ipv6 mld snooping querier
@@ -429,6 +430,51 @@ class ShowIpv6MldGroupsDetail(ShowIpv6MldGroupsDetailSchema):
 
         return ret_dict
 
+# ========================================================
+# Parser for 'show ipv6 mld ssm-map'
+# ========================================================
+
+class ShowIpv6MldSsmSchema(MetaParser):
+    """
+    Schema for 'show ipv6 mld ssm-map'
+    """
+    schema = {'ssm_mapping': str,
+              'dns_lookup': str
+        }
+
+class ShowIpv6MldSsm(ShowIpv6MldSsmSchema):
+    """
+    Parser for 'show ipv6 mld ssm-map'
+    """
+    cli_command = 'show ipv6 mld ssm-map'
+    def cli(self,output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # SSM Mapping : Enabled
+        p1 = re.compile(r'^SSM Mapping *: *(?P<ssm_mapping>\w+)$')
+
+        # DNS Lookup : Enabled
+        p2 = re.compile(r'^DNS Lookup *: *(?P<dns_lookup>\w+)$')
+
+        # initial variables
+        ret_dict = {}
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                ret_dict.update(m.groupdict())
+                continue
+
+            m = p2.match(line)
+            if m:
+                ret_dict.update(m.groupdict())
+                continue
+
+        return ret_dict
 
 # ========================================================
 # Parser for 'show ipv6 mld ssm-map <WROD>'

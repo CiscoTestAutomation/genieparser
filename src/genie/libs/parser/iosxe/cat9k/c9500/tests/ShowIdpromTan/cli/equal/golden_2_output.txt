@@ -1,0 +1,36 @@
+Module 1 Idprom:
+
+        Top Assy. Part Number    : 68-103002-01
+        Top Assy. Revision       : A0  
+Power Supply 0 Idprom:
+
+        Top Assy. Part Number    : 341-102294-01
+        Top Assy. Revision       : 42
+Power Supply 1 Idprom:
+
+        Top Assy. Part Number    : 341-101194-01
+        Top Assy. Revision       : A0
+Fantray 0 Idprom:
+
+        Top Assy. Part Number    : 800-107500-01
+        Top Assy. Revision       : C0
+Fantray 1 Idprom:
+
+        Top Assy. Part Number    : 800-107500-01
+        Top Assy. Revision       : C0
+Fantray 2 Idprom:
+
+        Top Assy. Part Number    : 800-107700-01
+        Top Assy. Revision       : F0
+Fantray 3 Idprom:
+
+        Top Assy. Part Number    : 800-100700-01
+        Top Assy. Revision       : D0
+Fantray 4 Idprom:
+
+        Top Assy. Part Number    : 800-107500-01
+        Top Assy. Revision       : C0
+Fantray 5 Idprom:
+
+        Top Assy. Part Number    : 800-123500-01
+        Top Assy. Revision       : 29

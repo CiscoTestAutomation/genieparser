@@ -1692,3 +1692,326 @@ class ShowSegmentRoutingTrafficEnggPccLsp(
                 continue
 
         return ret_dict
+
+# ==================================================================
+# Parser for:
+#    * 'show segment-routing traffic-eng policy color {color_code} endpoint ipv4 {endpoint_ip}'
+# ==================================================================
+class ShowSegmentRoutingTrafficEngPolicyColorEndpointSchema(MetaParser):
+    """Schema for
+    'show segment-routing traffic-eng policy color {color_code} endpoint ipv4 {endpoint_ip}'
+    """
+
+    schema = {
+        "pce_sr_policy_database": {
+            "color": int,
+            "end_point": str,
+            "name": str,
+            "status": {
+                "admin": str,
+                "operational": {
+                    "state": str,
+                    "time_for_state": str,
+                    "since": str,
+                },
+            },
+            Optional("candidate_paths"): {
+                "preference": {
+                    Any(): {
+                        Optional("name"): str,
+                        Optional("Requested_bsid"): str,
+                        "pcc_info": {
+                            "symbolic_name": str,
+                            Optional("plsp_id"): int,
+                        },
+                        "constraints": {
+                            "protection_type": str,
+                            Optional("maximum_dept"): int,
+                        },
+                        "path_type": {
+                            Optional("dynamic"): {
+                                "status": str,
+                                Optional("pce"): bool,
+                                "metric_type": str,
+                                Optional("path_accumulated_metric"): int,
+                                Optional("hops"): {
+                                    Any(): {
+                                        "sid": int,
+                                        Optional("sid_type"): str,
+                                        Optional("local_address"): str,
+                                        Optional("remote_address"): str,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+            Optional("attributes"): {
+                    Optional("binding_sid"): str,
+                    Optional("forward_class"): str,
+                    Optional("steering_labeled_services_disabled"): str,
+                    Optional("steering_bgp_disabled"): str,
+                    Optional("ipv6_caps_enable"): str,
+                    Optional("invalidation_drop_enabled"): str,
+                    Optional("max_install_standby_candidate_paths"): int,
+                },
+            },
+        }
+    
+class ShowSegmentRoutingTrafficEngPolicyColorEndpoint(ShowSegmentRoutingTrafficEngPolicyColorEndpointSchema):
+    """ Parser for 
+        'show segment-routing traffic-eng policy color {color_code} endpoint ipv4 {endpoint_ip}'
+    """
+
+    cli_command = 'show segment-routing traffic-eng policy color {color_code} endpoint ipv4 {endpoint_ip}'
+
+    def cli(self, color_code='', endpoint_ip='', output=None):
+        if output is None:
+            cmd = self.cli_command.format(color_code=color_code, endpoint_ip=endpoint_ip)
+                
+            output = self.device.execute(cmd)
+
+        # Color: 30, End-point: 10.0.0.14
+        p1 = re.compile(r'^Color: +(?P<color>\d+), +End-point: *(?P<end_point>\S+)')
+        
+        # Name: srte_c_30_ep_10.0.0.14
+        p2 = re.compile(r'^Name: +(?P<name>\S+)')
+        
+        # Admin: up  Operational: up for N/A (since Oct 25 07:51:47.805)
+        p3 = re.compile(r'^Admin: (?P<admin>\w+)\s+Operational:\s+(?P<oper>\w+)\s+for\s+(?P<time>\S+) \(since\s(?P<since>\S+\s+\S+\s\S+)')
+        
+        # Preference: 100 (configuration) (active) (reoptimizing)
+        p4 = re.compile(r'^Preference:\s+(?P<preference>\d+)')
+        
+        # Name: srte_c_30_ep_10.0.0.14    
+        p5 = re.compile(r'^Name: +(?P<per_name>\S+)')
+        
+        #  Requested BSID: dynamic
+        p6 = re.compile(r'^Requested\s+BSID:\s+(?P<bsid>\w+)')
+       
+        # Symbolic name: cfg_srte_c_30_ep_10.0.0.14_discr_100
+        p7 = re.compile(r'^Symbolic name: (?P<symbolic_name>[A-Za-z0-9_?.?]+)$')
+        
+        # PLSP-ID: 1
+        p8 = re.compile(r'^PLSP-ID:\s+(?P<plsp_id>\d+)')
+        
+        # Protection Type: protected-preferred
+        p9 = re.compile(r'^Protection\s+Type:\s(?P<protection_type>\S+)')
+        
+        # Maximum SID Depth: 12
+        p10 = re.compile(r'^Maximum\s+SID\s+Depth:\s+(?P<maximum_sid_depth>\d+)')
+        
+        # Dynamic (pce 10.0.0.11) (valid)
+        p11 = re.compile(r'^Dynamic( +(?P<pce>\(pce.*\)))? +\((?P<status>\w+)\)$')
+
+        # Metric Type: IGP, Path Accumulated Metric: 2200
+        p12 = re.compile(r'^Metric +Type: +(?P<metric_type>[\S]+)\s+Path\s+Accumulated\s+Metric:\s+(?P<path_accumulated_metric>\d+)')
+        
+        #         16063 [Prefix-SID, 10.169.196.241]
+        #         16072 [Prefix-SID, 10.189.5.253 - 10.189.6.253]
+        #         16063
+        p13 = re.compile(r'^(?P<sid>[\d]+)(?: +\[(?P<sid_type>[\S]+), +(?P<local_address>[\S]+)'
+                         '( +- +(?P<remote_address>[\S]+))?\])?$')
+        
+        #     Binding SID: 15000
+        p14 = re.compile(r'^Binding +SID: +(?P<binding_sid>[\d]+)$')
+        
+        # Forward Class: Not Configured
+        p15 = re.compile(r'^Forward\s+Class:\s+(?P<forward_class>\w+\s?\w+)$')
+        
+        # Steering labeled-services disabled: no
+        p16 = re.compile(r'^Steering\s+labeled.?services\s+disabled:\s+(?P<steering_labled_services_status>\w+)')
+        
+        #Steering BGP disabled: no
+        p17 = re.compile(r'^Steering\s+BGP\s+disabled:\s+(?P<steering_bgp_status>\w+)$')
+        
+        # IPv6 caps enable: yes
+        p18 = re.compile(r'^IPv6\s+caps\s+enable:\s+(?P<ipv6_caps_status>\w+)$')
+        
+        # Invalidation drop enabled: no
+        p19 = re.compile(r'^Invalidation\s+drop\s+enabled:\s+(?P<invalidation_drop_status>\w+)$')
+        
+        # Max Install Standby Candidate Paths: 0
+        p20 = re.compile(r'^Max\s+Install\s+Standby\s+Candidate\s+Paths:\s+(?P<max_install_standby_pats>\d+)$')
+        
+        # initial variables
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # Color: 30, End-point: 10.0.0.14
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                color = int(group['color'])
+                policy_dict = ret_dict.setdefault \
+                    ('pce_sr_policy_database', {})
+                policy_dict['color'] = color
+                policy_dict['end_point'] = group['end_point']
+                continue
+            
+            # Name: srte_c_30_ep_10.0.0.14
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                policy_dict['name'] = group['name']
+                continue
+            
+
+            # Admin: up, Operational: up for 09:38:18 (since 08-28 20:56:55.275)
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                status_dict = policy_dict.setdefault('status', {})
+                status_dict['admin'] = group['admin']
+
+                oper_dict = status_dict.setdefault('operational', {})
+                oper_dict['state'] = group['oper']
+                oper_dict['time_for_state'] = group['time']
+                oper_dict['since'] = group['since']
+                continue
+            
+            # Preference: 100 (configuration) (active) (reoptimizing)
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                pref = int(group['preference'])
+                pref_dict = policy_dict.setdefault("candidate_paths", {}).\
+                            setdefault('preference', {}).setdefault(pref, {})
+                hop_index = 0
+                continue
+            
+            # Name: srte_c_30_ep_10.0.0.14
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                pref_dict['name'] = group['per_name']
+                continue
+
+            # Requested BSID: dynamic
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                pref_dict['Requested_bsid'] = group['bsid']
+                continue  
+            
+            # Symbolic name: cfg_srte_c_30_ep_10.0.0.14_discr_100
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                pcc_dict = pref_dict.setdefault('pcc_info', {})
+                pcc_dict['symbolic_name'] = group['symbolic_name']
+                continue
+            
+            # PLSP-ID: 1
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                pcc_dict['plsp_id'] = int(group['plsp_id'])
+                continue
+            
+            # Protection Type: protected-preferred
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                constraints_dict = pref_dict.setdefault('constraints', {})
+                constraints_dict['protection_type'] = group['protection_type']
+                continue
+            
+            # Maximum SID Depth: 12 
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                constraints_dict['maximum_dept'] = int(group['maximum_sid_depth'])
+                continue
+            
+            # Dynamic (pce 10.0.0.11) (valid)
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                path_dict = pref_dict.setdefault('path_type', {}).setdefault('dynamic', {})
+                path_dict['status'] = group['status']
+           
+            # Metric Type: TE,   Path Accumulated Metric: 260    
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                path_dict['metric_type'] = group['metric_type']
+
+                if group.get('path_accumulated_metric'):
+                   metric = int(group['path_accumulated_metric'])
+                   path_dict['path_accumulated_metric'] = metric
+                continue
+            
+            # 24000 [Adjacency-SID, 10.2.12.1 - 10.2.12.2]
+            # 24008 [Adjacency-SID, 10.12.14.1 - 10.12.14.2]     
+            m = p13.match(line)
+            if m:
+                hop_index += 1
+                group = m.groupdict()
+                hop_dict = path_dict.setdefault('hops', {}).setdefault(hop_index, {})
+                
+                hop_dict.update({'sid': int(group['sid'])})
+                if group.get('sid_type'):
+                    hop_dict['sid_type'] = group['sid_type']
+                if group.get('local_address'):
+                    hop_dict['local_address'] = group['local_address']
+                if group.get('remote_address'):
+                    hop_dict['remote_address'] = group['remote_address']
+                continue
+            
+            # Attributes:
+            #   Binding SID: 15000
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                bind_dict = policy_dict.setdefault("attributes", {})
+                bind_dict['binding_sid'] = group['binding_sid']
+                
+            # Forward Class: Not Configured    
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                bind_dict['forward_class'] = group['forward_class']
+                continue
+            
+            # Steering labeled-services disabled: no
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                bind_dict['steering_labeled_services_disabled'] = group['steering_labled_services_status']
+                continue
+            
+            # Steering BGP disabled: no
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                bind_dict['steering_bgp_disabled'] = group['steering_bgp_status']
+                continue  
+            
+            # IPv6 caps enable: yes
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                bind_dict['ipv6_caps_enable'] = group['ipv6_caps_status']
+                continue
+            
+            # Invalidation drop enabled: no
+            m = p19.match(line)
+            if m:
+                group = m.groupdict()
+                bind_dict['invalidation_drop_enabled'] = group['invalidation_drop_status']
+                continue
+            
+            #  Max Install Standby Candidate Paths: 0
+            m = p20.match(line)
+            if m:
+                group = m.groupdict()
+                bind_dict['max_install_standby_candidate_paths'] = int(group['max_install_standby_pats'])
+                continue
+            
+        return ret_dict

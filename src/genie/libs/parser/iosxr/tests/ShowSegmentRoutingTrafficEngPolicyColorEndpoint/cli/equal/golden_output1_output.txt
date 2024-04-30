@@ -1,0 +1,29 @@
+SR-TE policy database
+---------------------
+
+Color: 30, End-point: 10.0.0.14
+  Name: srte_c_30_ep_10.0.0.14
+  Status:
+    Admin: up  Operational: up for 00:00:04 (since Oct  3 12:04:44.675)
+  Candidate-paths:
+    Preference: 100 (configuration) (active) (reoptimizing)
+      Name: srte_c_30_ep_10.0.0.14
+      Requested BSID: dynamic
+      PCC info:
+        Symbolic name: cfg_srte_c_30_ep_10.0.0.14_discr_100
+        PLSP-ID: 1
+      Constraints:
+        Protection Type: protected-preferred
+        Maximum SID Depth: 12 
+      Dynamic (pce 10.0.0.11) (valid)
+        Metric Type: TE,   Path Accumulated Metric: 260 
+          24000 [Adjacency-SID, 10.2.12.1 - 10.2.12.2]
+          24008 [Adjacency-SID, 10.12.14.1 - 10.12.14.2]
+  Attributes:
+    Binding SID: 26628
+    Forward Class: Not Configured
+    Steering labeled-services disabled: no
+    Steering BGP disabled: no
+    IPv6 caps enable: yes
+    Invalidation drop enabled: no
+    Max Install Standby Candidate Paths: 0

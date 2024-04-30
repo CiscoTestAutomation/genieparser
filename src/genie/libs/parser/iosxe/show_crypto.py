@@ -12958,9 +12958,10 @@ class ShowCryptoKeyMypubkeyRsaKeyName(ShowCryptoKeyMypubkeyAll):
     '''
     cli_command = 'show crypto key mypubkey rsa {key_name}'
 
-    def cli(self, key_name='', output=None):
+    def cli(self, key_name, output=None):
         if output is None:
-            output = self.device.execute(self.cli_command)
+            cmd = self.cli_command.format(key_name = key_name)
+            output = self.device.execute(cmd)
         return super().cli(output=output)
 
 
@@ -12975,9 +12976,10 @@ class ShowCryptoKeyMypubkeyEcKeyName(ShowCryptoKeyMypubkeyAll):
     '''
     cli_command = 'show crypto key mypubkey ec {key_name}'
 
-    def cli(self, key_name='', output=None):
+    def cli(self, key_name, output=None):
         if output is None:
-            output = self.device.execute(self.cli_command)
+            cmd = self.cli_command.format(key_name = key_name)
+            output = self.device.execute(cmd)
         return super().cli(output=output)
 
 

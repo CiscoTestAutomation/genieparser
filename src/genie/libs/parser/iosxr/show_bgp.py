@@ -9760,4 +9760,198 @@ class ShowBgpAddressfamilyPrefix(ShowBgpAddressfamilyPrefixSchema):
                 continue
         return ret_dict
         
+# ===========================================================
+# Parser for:
+# 'show bgp dampened-paths'
+# ===========================================================
+
+class ShowBgpDampedPathsSchema(MetaParser):
+
+    """Schema for:
+        show bgp dampened-paths
+    """
+    schema = {
+        'bgp_routes' : {
+            Any() : {
+                Optional('router_identifier'): str,
+                Optional('local_as'): Or(int, str),
+                Optional('generic_scan_interval'): int,
+                Optional('non_stop_routing'): bool,
+                Optional('table_state'): str,
+                Optional('table_id'): str,
+                Optional('rd_version'): int,
+                Optional('bgp_table_version'): int,
+                Optional('dampening_status'): str,
+                Optional('nsr_initial_initsync_version'): int,
+                Optional('nsr_issu_sync_group_versions'): str,
+                Optional('nsr_initial_init_ver_status'): int,
+                Optional('scan_interval'): int,
+                Optional('prefix'): {
+                    Any() : {
+                        Optional('status_codes'): str,
+                        Optional('network'): str,
+                        Optional('from'):str,
+                        Optional('reuse'):str,
+                        Optional('path'):str,
+                    }
+                }
+            }
+        }
+    }
+    
+    
+# ======================================================================
+# Parser for 'show bgp dampened-paths'
+# ======================================================================
+class ShowBgpDampedPaths(ShowBgpDampedPathsSchema):
+    '''Parser for:
+        * 'show bgp dampened-paths'
+    '''
+
+    cli_command = ['show bgp dampened-paths']
+
+    def cli(self, output=None):
+
+
+        if output is None:
+            output = self.device.execute(self.cli_command[0])
+            
+        ret_dict = {}
+        
+        # BGP router identifier 50.1.1.1, local AS number 100    
+        p1 = re.compile(r'^\s*BGP +router +identifier +(?P<router_identifier>(\S+)),'
+                        r' +local +AS +number +(?P<local_as>([\d\.]+))$')
+        
+        # BGP generic scan interval 60 secs
+        p2 =  re.compile(r'^\s*BGP *generic *scan *interval *'
+                            '(?P<generic_scan_interval>[0-9]+) *secs$')
+        
+        # Non-stop routing is enabled
+        p3 = re.compile(r'^\s*Non-stop *routing *is'
+                        ' *(?P<non_stop_routing>[A-Za-z]+)$')
+        
+        # BGP table state: Active
+        p4 = re.compile(r'^\s*BGP *table *state: *(?P<table_state>[a-zA-Z]+)$')
+        
+        # Table ID: 0xe0000000   RD version: 177
+        p5 = re.compile(r'^\s*Table *ID: *(?P<table_id>[a-z0-9]+)'
+                         ' *RD *version: (?P<rd_version>[0-9]+)$')
+        
+        # BGP main routing table version 177
+        p6 = re.compile(r'^\s*BGP *main *routing *table *version'
+                         ' *(?P<bgp_table_version>[0-9]+)$')
+        
+        # BGP NSR Initial initsync version 38 (Reached)
+        p7 = re.compile(r'^\s*BGP *NSR *Initial *initsync *version *'
+                            '(?P<nsr_initial_initsync_version>[0-9]+)'
+                          ' *\((?P<nsr_initial_init_ver_status>[a-zA-Z]+)\)$')
+        
+        # BGP NSR/ISSU Sync-Group versions 0/0
+        p8 = re.compile(r'^\s*BGP *NSR/ISSU *Sync-Group *versions *'
+                            '(?P<nsr_issu_sync_group_versions>[0-9\/\s]+)$')
+        
+        # BGP scan interval 60 secs
+        p9 = re.compile(r'^\s*BGP *scan *interval *(?P<scan_interval>[0-9\s]+) *secs$')
+        
+        # BGP scan interval 60 secs
+        p10 = re.compile(r'^Dampening +(?:(is +))?(?P<dampening_status>[\w\s]+)$')
+        
+        # Network            From            Reuse    Path
+        # *d 80.21.1.0/30       80.11.10.2      00:07:40 5000 ?
+        p11 = re.compile(r'^(?P<status_codes>(s|x|S|d|h|\*|\>)+)\s+(?P<network>[\w\.\/]+)\s+(?P<from>[\w\.]+)\s+(?P<reuse>\d+:\d+\d+:\d+)\s+(?P<path>\d+)')
+                        
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # BGP router identifier 50.1.1.1, local AS number 100 
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                routes = group['router_identifier']
+                route_dict = ret_dict.setdefault('bgp_routes', {}).setdefault(routes,{})
+                route_dict['router_identifier'] = routes 
+                route_dict['local_as'] = group['local_as']   
+                continue
+            
+            # BGP generic scan interval 60 secs
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                route_dict['generic_scan_interval'] = int(group['generic_scan_interval'])
+                continue
+            
+            # Non-stop routing is enabled
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                route_dict['non_stop_routing'] = True
+                continue
+            
+            # BGP table state: Active
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                route_dict['table_state'] = group['table_state']
+                continue
+            
+            # Table ID: 0xe0000000   RD version: 177
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                route_dict['table_id'] = group['table_id']
+                route_dict['rd_version'] = int(group['rd_version'])
+                continue
+            
+            # BGP main routing table version 177
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                route_dict['bgp_table_version'] = int(group['bgp_table_version'])
+                continue
+            
+            # BGP NSR Initial initsync version 38 (Reached)
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                route_dict['nsr_initial_initsync_version'] = int(group['nsr_initial_initsync_version'])
+                route_dict['nsr_initial_init_ver_status'] = int(group['nsr_initial_initsync_version'])
+                continue
+            
+            # BGP NSR/ISSU Sync-Group versions 0/0
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                route_dict['nsr_issu_sync_group_versions'] = group['nsr_issu_sync_group_versions']
+                continue
+            
+            # BGP scan interval 60 secs
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                route_dict['scan_interval'] = int(group['scan_interval'])
+                continue
+            
+            # BGP scan interval 60 secs
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                route_dict['dampening_status'] = group['dampening_status']
+                continue
+            
+            # Network            From            Reuse    Path
+             # *d 80.21.1.0/30       80.11.10.2      00:07:40 5000 ?
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                network = group['network']
+                prefix_dict = route_dict.setdefault('prefix', {}).setdefault(network, {})
+                prefix_dict['status_codes'] = group['status_codes']
+                prefix_dict['network'] = group['network']
+                prefix_dict['from'] = group['from']
+                prefix_dict['reuse'] = group['reuse']
+                prefix_dict['path'] = group['path']
+                continue
+
+        return ret_dict
+        
         

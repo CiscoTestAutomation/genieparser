@@ -1,0 +1,6 @@
+show interface Ethernet1/15 status
+
+--------------------------------------------------------------------------------
+Port          Name               Status    Vlan      Duplex  Speed   Type
+--------------------------------------------------------------------------------
+Eth1/15       --                 linkFlapE routed    auto    auto    QSFP-100G-CR4

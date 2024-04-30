@@ -1,0 +1,11 @@
+Fantray speed(RPM)
+Row  Fan1   | Fan2   | Fan3   | Fan4   | Throttle | Interrupt Source | Temp | Press
+---  ------   ------   ------   ------   --------   ----------------   -----  -----
+1    3150     3210     3150     3180     35%        0x0                26       101
+2    3150     3240     3210     3120     35%        0x0                26       101
+3    3150     3150     3150     3180     35%        0x0                26       101
+4    N/A      N/A      N/A      N/A      N/A        N/A                N/A      N/A
+Fantray global interrupt source register = 0x8700
+Fantray global version: 17050302
+Fantray beacon LED status: off
+Fantray status LED: green

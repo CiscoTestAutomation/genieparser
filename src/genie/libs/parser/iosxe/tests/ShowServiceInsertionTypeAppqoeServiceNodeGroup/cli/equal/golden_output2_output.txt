@@ -1,0 +1,294 @@
+Service Node Group name         : SNG-APPQOE1
+    Service Context             : appqoe/1
+    Member Service Node count   : 3
+
+
+Service Node (SN)                   : 140.140.0.5
+Auto discovered                     : No
+SN belongs to SNG                   : SNG-APPQOE1
+Current status of SN                : Alive
+System IP                           : 140.1.0.5
+Site ID                             : 140
+Time current status was reached               : Sat Mar  2 15:26:08 2024
+
+Cluster protocol VPATH version                : 2 (Bitmap recvd: 3)
+Cluster protocol incarnation number           : 1
+Cluster protocol last sent sequence number    : 1717961090
+Cluster protocol last received sequence number: 789566
+Cluster protocol last received ack number     : 1717961089
+
+Health Markers:
+              AO       Load State
+
+             tcp           GREEN 0%
+             ssl           GREEN 0%
+             dre           GREEN 0%
+            http  RED/NOT AVAILABLE
+        utd chnl  RED/NOT AVAILABLE
+
+Service Node (SN)                   : 140.140.0.6
+Auto discovered                     : No
+SN belongs to SNG                   : SNG-APPQOE1
+Current status of SN                : Alive
+System IP                           : 140.1.0.6
+Site ID                             : 140
+Time current status was reached               : Sat Mar  2 15:26:09 2024
+
+Cluster protocol VPATH version                : 2 (Bitmap recvd: 3)
+Cluster protocol incarnation number           : 1
+Cluster protocol last sent sequence number    : 1717961091
+Cluster protocol last received sequence number: 786167
+Cluster protocol last received ack number     : 1717961090
+
+Health Markers:
+              AO       Load State
+
+             tcp           GREEN 0%
+             ssl           GREEN 0%
+             dre           GREEN 0%
+            http  RED/NOT AVAILABLE
+        utd chnl  RED/NOT AVAILABLE
+
+Service Node (SN)                   : 140.140.0.7
+Auto discovered                     : No
+SN belongs to SNG                   : SNG-APPQOE1
+Current status of SN                : Alive
+System IP                           : 140.1.0.7
+Site ID                             : 140
+Time current status was reached               : Sat Mar  2 15:26:09 2024
+
+Cluster protocol VPATH version                : 2 (Bitmap recvd: 3)
+Cluster protocol incarnation number           : 1
+Cluster protocol last sent sequence number    : 1717961092
+Cluster protocol last received sequence number: 780014
+Cluster protocol last received ack number     : 1717961091
+
+Health Markers:
+              AO       Load State
+
+             tcp           GREEN 0%
+             ssl           GREEN 0%
+             dre           GREEN 0%
+            http  RED/NOT AVAILABLE
+        utd chnl  RED/NOT AVAILABLE
+
+Service Node Group name         : SNG-APPQOE2
+    Service Context             : appqoe/1
+    Member Service Node count   : 3
+
+
+Service Node (SN)                   : 140.140.0.2
+Auto discovered                     : No
+SN belongs to SNG                   : SNG-APPQOE2
+Current status of SN                : Dead
+System IP                           : 0.0.0.0
+Site ID                             : 0
+Error                               : Un-known site-id
+Time current status was reached               : Sat Mar  2 15:25:05 2024
+
+Cluster protocol VPATH version                : 0 (Bitmap recvd: 0)
+Cluster protocol incarnation number           : 0
+Cluster protocol last sent sequence number    : 1717961092
+Cluster protocol last received sequence number: 0
+Cluster protocol last received ack number     : 0
+
+Health Markers:
+              AO       Load State
+
+             tcp  RED/NOT AVAILABLE
+             ssl  RED/NOT AVAILABLE
+             dre  RED/NOT AVAILABLE
+            http  RED/NOT AVAILABLE
+        utd chnl  RED/NOT AVAILABLE
+
+Service Node (SN)                   : 140.140.0.3
+Auto discovered                     : No
+SN belongs to SNG                   : SNG-APPQOE2
+Current status of SN                : Alive
+System IP                           : 140.1.0.3
+Site ID                             : 140
+Time current status was reached               : Sat Mar  2 15:26:08 2024
+
+Cluster protocol VPATH version                : 2 (Bitmap recvd: 3)
+Cluster protocol incarnation number           : 1
+Cluster protocol last sent sequence number    : 1717961093
+Cluster protocol last received sequence number: 796029
+Cluster protocol last received ack number     : 1717961092
+
+Health Markers:
+              AO       Load State
+
+             tcp           GREEN 0%
+             ssl           GREEN 0%
+             dre           GREEN 0%
+            http  RED/NOT AVAILABLE
+        utd chnl  RED/NOT AVAILABLE
+
+Service Node (SN)                   : 140.140.0.4
+Auto discovered                     : No
+SN belongs to SNG                   : SNG-APPQOE2
+Current status of SN                : Alive
+System IP                           : 140.1.0.4
+Site ID                             : 140
+Time current status was reached               : Sat Mar  2 15:26:08 2024
+
+Cluster protocol VPATH version                : 2 (Bitmap recvd: 3)
+Cluster protocol incarnation number           : 1
+Cluster protocol last sent sequence number    : 1717961094
+Cluster protocol last received sequence number: 792468
+Cluster protocol last received ack number     : 1717961093
+
+Health Markers:
+              AO       Load State
+
+             tcp           GREEN 0%
+             ssl           GREEN 0%
+             dre           GREEN 0%
+            http  RED/NOT AVAILABLE
+        utd chnl  RED/NOT AVAILABLE
+
+Service Node Group name         : SNG-APPQOE3
+    Service Context             : appqoe/1
+    Member Service Node count   : 6
+
+
+Service Node (SN)                   : 140.140.0.18
+Auto discovered                     : No
+SN belongs to SNG                   : SNG-APPQOE3
+Current status of SN                : Alive
+System IP                           : 140.1.0.18
+Site ID                             : 140
+Time current status was reached               : Sun Mar  3 11:05:06 2024
+
+Cluster protocol VPATH version                : 2 (Bitmap recvd: 3)
+Cluster protocol incarnation number           : 1
+Cluster protocol last sent sequence number    : 1717961095
+Cluster protocol last received sequence number: 425912
+Cluster protocol last received ack number     : 1717961094
+
+Health Markers:
+              AO       Load State
+
+             tcp           GREEN 0%
+             ssl           GREEN 0%
+             dre           GREEN 0%
+            http  RED/NOT AVAILABLE
+        utd chnl  RED/NOT AVAILABLE
+
+Service Node (SN)                   : 140.140.0.19
+Auto discovered                     : No
+SN belongs to SNG                   : SNG-APPQOE3
+Current status of SN                : Alive
+System IP                           : 140.1.0.19
+Site ID                             : 140
+Time current status was reached               : Sun Mar  3 11:05:12 2024
+
+Cluster protocol VPATH version                : 2 (Bitmap recvd: 3)
+Cluster protocol incarnation number           : 1
+Cluster protocol last sent sequence number    : 1717961096
+Cluster protocol last received sequence number: 425885
+Cluster protocol last received ack number     : 1717961095
+
+Health Markers:
+              AO       Load State
+
+             tcp           GREEN 0%
+             ssl           GREEN 0%
+             dre           GREEN 0%
+            http  RED/NOT AVAILABLE
+        utd chnl  RED/NOT AVAILABLE
+
+Service Node (SN)                   : 140.140.0.20
+Auto discovered                     : No
+SN belongs to SNG                   : SNG-APPQOE3
+Current status of SN                : Alive
+System IP                           : 140.1.0.20
+Site ID                             : 140
+Time current status was reached               : Sun Mar  3 11:05:06 2024
+
+Cluster protocol VPATH version                : 2 (Bitmap recvd: 3)
+Cluster protocol incarnation number           : 1
+Cluster protocol last sent sequence number    : 1717961097
+Cluster protocol last received sequence number: 425913
+Cluster protocol last received ack number     : 1717961096
+
+Health Markers:
+              AO       Load State
+
+             tcp           GREEN 0%
+             ssl           GREEN 0%
+             dre           GREEN 0%
+            http  RED/NOT AVAILABLE
+        utd chnl  RED/NOT AVAILABLE
+
+Service Node (SN)                   : 140.140.0.22
+Auto discovered                     : No
+SN belongs to SNG                   : SNG-APPQOE3
+Current status of SN                : Alive
+System IP                           : 140.1.0.22
+Site ID                             : 140
+Time current status was reached               : Sun Mar  3 11:05:08 2024
+
+Cluster protocol VPATH version                : 2 (Bitmap recvd: 3)
+Cluster protocol incarnation number           : 1
+Cluster protocol last sent sequence number    : 1717961098
+Cluster protocol last received sequence number: 425905
+Cluster protocol last received ack number     : 1717961097
+
+Health Markers:
+              AO       Load State
+
+             tcp           GREEN 0%
+             ssl           GREEN 0%
+             dre           GREEN 0%
+            http  RED/NOT AVAILABLE
+        utd chnl  RED/NOT AVAILABLE
+
+Service Node (SN)                   : 140.140.0.23
+Auto discovered                     : No
+SN belongs to SNG                   : SNG-APPQOE3
+Current status of SN                : Alive
+System IP                           : 140.1.0.23
+Site ID                             : 140
+Time current status was reached               : Sun Mar  3 11:05:11 2024
+
+Cluster protocol VPATH version                : 2 (Bitmap recvd: 3)
+Cluster protocol incarnation number           : 1
+Cluster protocol last sent sequence number    : 1717961099
+Cluster protocol last received sequence number: 425889
+Cluster protocol last received ack number     : 1717961098
+
+Health Markers:
+              AO       Load State
+
+             tcp           GREEN 0%
+             ssl           GREEN 0%
+             dre           GREEN 0%
+            http  RED/NOT AVAILABLE
+        utd chnl  RED/NOT AVAILABLE
+
+Service Node (SN)                   : 140.140.0.24
+Auto discovered                     : No
+SN belongs to SNG                   : SNG-APPQOE3
+Current status of SN                : Alive
+System IP                           : 140.1.0.24
+Site ID                             : 140
+Time current status was reached               : Sun Mar  3 11:05:12 2024
+
+Cluster protocol VPATH version                : 2 (Bitmap recvd: 3)
+Cluster protocol incarnation number           : 1
+Cluster protocol last sent sequence number    : 1717961100
+Cluster protocol last received sequence number: 425885
+Cluster protocol last received ack number     : 1717961099
+
+Health Markers:
+              AO       Load State
+
+             tcp           GREEN 0%
+             ssl           GREEN 0%
+             dre           GREEN 0%
+            http  RED/NOT AVAILABLE
+        utd chnl  RED/NOT AVAILABLE
+
+
+

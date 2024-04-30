@@ -1,0 +1,28 @@
+expected_output = {
+    "bgp_routes":{
+      "50.1.1.1":{
+         "router_identifier":"50.1.1.1",
+         "local_as":"100",
+         "generic_scan_interval":60,
+         "non_stop_routing":True,
+         "table_state":"Active",
+         "table_id":"0xe0000000",
+         "rd_version":177,
+         "bgp_table_version":177,
+         "nsr_initial_initsync_version":38,
+         "nsr_initial_init_ver_status":38,
+         "nsr_issu_sync_group_versions":"0/0",
+         "dampening_status":"enabled",
+         "scan_interval":60,
+         "prefix":{
+            "80.21.1.0/30":{
+               "status_codes":"*d",
+               "network":"80.21.1.0/30",
+               "from":"80.11.10.2",
+               "reuse":"00:07:40",
+               "path":"5000"
+            }
+         }
+      }
+   }
+}

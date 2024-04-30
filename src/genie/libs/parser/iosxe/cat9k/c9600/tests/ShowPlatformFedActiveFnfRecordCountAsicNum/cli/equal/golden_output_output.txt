@@ -1,0 +1,26 @@
+Current flow count               = 0
+Total flows learned              = 0
+Hash searched flow count         = 0
+Overflow searched flow count     = 0
+Hash unsearched flow count       = 0
+Overflow unsearched flow count   = 0
+Total flow Searched              = 0
+Total search failures            = 0
+Total AVC cpu copy disable       = 0
+Total ETA cpu copy disable       = 0
+Total cpu copy disable           = 0
+Total AVC feature flows          = 0
+Total ETA feature flows          = 0
+Total ETA and AVC feature flows  = 0
+Total num_eta_flows_agedout      = 0
+Reflexive claimed flow           = 0
+Reflexive flow deleted           = 0
+Reflexive stale flow aged out    = 0
+Total flows deleted              = 0
+Total delete failures            = 0
+Total flow aged out              = 0
+Total stale flow deleted         = 0
+Total stale flow del aborted     = 0
+Total packets aged out           = 0
+Total bytes aged out             = 0
+

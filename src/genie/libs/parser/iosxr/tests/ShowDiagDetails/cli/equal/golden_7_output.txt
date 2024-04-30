@@ -1,0 +1,1131 @@
+show diag details
+Tue Apr  2 21:23:19.741 UTC
+
+0/RSP0-IDPROM - ASR9K Route Switch Processor with 880G/slot Fabric and 32GB
+ Info 
+    Controller Family        : 0010
+    Controller Type          : 0317
+    PID                      : A9K-RSP880-SE
+    Version Identifier       : V04
+    UDI Name                 :  
+    UDI Description          : ASR9K Route Switch Processor with 880G/slot Fabric and 32GB
+    Top Assy. Part Number    : 68-4999-07
+    Top Assy. Revision       : A0  
+    PCB Serial Number        : FOC2121NDL7
+    PCA Number               : 73-15253-06
+    PCA Revision             : A1
+    CLEI Code                : IPUCBKPBAD
+    Deviation Number # 1     : 527532
+    Deviation Number # 2     : 0
+    Deviation Number # 3     : 0
+    Deviation Number # 4     : 0
+    Deviation Number # 5     : 0
+    Manufacturing Test Data  : 00 00 00 00 00 00 00 00 
+    Calibration Data         : 00000000
+    Base MAC Address         : 00a7.428b.f4b0
+    MAC Addr. Block Size     : 16
+    Hardware Revision        : 1.0
+    Capabilities             : 00
+    Power Consumption        : 475 Watts (Maximum)
+    ENVMON Information       : 2 86 0 0 0 0 0 0 
+	                           0 0 0 0 0 0 0 0 
+	                           0 0 0 0 0 0 0 0 
+	                           0 0 0 0 0 0 0 0 
+    Device values            : 20 
+
+TenGigE0/0/0/0-IDPROM - 10GBASE-SR SFP+ Module for MMF
+ Info:
+    IDPROM Format Revision   : N/A
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : 10GBASE-SR SFP+ Module for MMF
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C98
+    Top Assy. Revision       : 1.0
+    PCB Serial Number        : ACW235308BH
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : N/A
+    Asset Alias              : N/A
+    ECI Number               : 
+
+TenGigE0/0/0/1-IDPROM - 10GBASE-SR SFP+ Module for MMF
+ Info:
+    IDPROM Format Revision   : N/A
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : 10GBASE-SR SFP+ Module for MMF
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C98
+    Top Assy. Revision       : 1.0
+    PCB Serial Number        : ACW235307DS
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : N/A
+    Asset Alias              : N/A
+    ECI Number               : 
+
+TenGigE0/0/0/2-IDPROM - 10GBASE-SR SFP+ Module for MMF
+ Info:
+    IDPROM Format Revision   : N/A
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : 10GBASE-SR SFP+ Module for MMF
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C98
+    Top Assy. Revision       : 1.0
+    PCB Serial Number        : ACW23510DU7
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : N/A
+    Asset Alias              : N/A
+    ECI Number               : 
+
+TenGigE0/0/0/3-IDPROM - 10GBASE-SR SFP+ Module for MMF
+ Info:
+    IDPROM Format Revision   : N/A
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : 10GBASE-SR SFP+ Module for MMF
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C98
+    Top Assy. Revision       : 1.0
+    PCB Serial Number        : ACW23510DQ3
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : N/A
+    Asset Alias              : N/A
+    ECI Number               : 
+
+TenGigE0/0/0/4-IDPROM - 10GBASE-SR SFP+ Module for MMF
+ Info:
+    IDPROM Format Revision   : N/A
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : 10GBASE-SR SFP+ Module for MMF
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C98
+    Top Assy. Revision       : 1.0
+    PCB Serial Number        : ACW23521DTP
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : N/A
+    Asset Alias              : N/A
+    ECI Number               : 
+
+TenGigE0/0/0/5-IDPROM - 10GBASE-SR SFP+ Module for MMF
+ Info:
+    IDPROM Format Revision   : N/A
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : 10GBASE-SR SFP+ Module for MMF
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C98
+    Top Assy. Revision       : 1.0
+    PCB Serial Number        : ACW23520Q4Q
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : N/A
+    Asset Alias              : N/A
+    ECI Number               : 
+
+TenGigE0/0/0/6-IDPROM - 10GBASE-SR SFP+ Module for MMF
+ Info:
+    IDPROM Format Revision   : N/A
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : 10GBASE-SR SFP+ Module for MMF
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C98
+    Top Assy. Revision       : 1.0
+    PCB Serial Number        : ACW240106WB
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : N/A
+    Asset Alias              : N/A
+    ECI Number               : 
+
+TenGigE0/0/0/7-IDPROM - 10GBASE-SR SFP+ Module for MMF
+ Info:
+    IDPROM Format Revision   : N/A
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : 10GBASE-SR SFP+ Module for MMF
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C98
+    Top Assy. Revision       : 1.0
+    PCB Serial Number        : ACW23520PVC
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : N/A
+    Asset Alias              : N/A
+    ECI Number               : 
+
+TenGigE0/0/0/8-IDPROM - 10GBASE-SR SFP+ Module for MMF
+ Info:
+    IDPROM Format Revision   : N/A
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : 10GBASE-SR SFP+ Module for MMF
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C98
+    Top Assy. Revision       : 1.0
+    PCB Serial Number        : ACW235306LQ
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : N/A
+    Asset Alias              : N/A
+    ECI Number               : 
+
+TenGigE0/0/0/9-IDPROM - 10GBASE-SR SFP+ Module for MMF
+ Info:
+    IDPROM Format Revision   : N/A
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : 10GBASE-SR SFP+ Module for MMF
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C98
+    Top Assy. Revision       : 1.0
+    PCB Serial Number        : ACW23520PS8
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : N/A
+    Asset Alias              : N/A
+    ECI Number               : 
+
+TenGigE0/0/0/10-IDPROM - 10GBASE-SR SFP+ Module for MMF
+ Info:
+    IDPROM Format Revision   : N/A
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : 10GBASE-SR SFP+ Module for MMF
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C98
+    Top Assy. Revision       : 1.0
+    PCB Serial Number        : ACW23521EEY
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : N/A
+    Asset Alias              : N/A
+    ECI Number               : 
+
+TenGigE0/0/0/11-IDPROM - 10GBASE-SR SFP+ Module for MMF
+ Info:
+    IDPROM Format Revision   : N/A
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : 10GBASE-SR SFP+ Module for MMF
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C98
+    Top Assy. Revision       : 1.0
+    PCB Serial Number        : ACW235306RZ
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : N/A
+    Asset Alias              : N/A
+    ECI Number               : 
+
+TenGigE0/0/0/12-IDPROM - 10GBASE-SR SFP+ Module for MMF
+ Info:
+    IDPROM Format Revision   : N/A
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : 10GBASE-SR SFP+ Module for MMF
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : SFBR-709SMZ-CS1
+    Top Assy. Revision       : G4.1
+    PCB Serial Number        : AVD2323964E
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : N/A
+    Asset Alias              : N/A
+    ECI Number               : 
+
+TenGigE0/0/0/13-IDPROM - 10GBASE-SR SFP+ Module for MMF
+ Info:
+    IDPROM Format Revision   : N/A
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : 10GBASE-SR SFP+ Module for MMF
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C98
+    Top Assy. Revision       : 1.0
+    PCB Serial Number        : ACW235306G4
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : N/A
+    Asset Alias              : N/A
+    ECI Number               : 
+
+TenGigE0/0/0/14-IDPROM - 10GBASE-SR SFP+ Module for MMF
+ Info:
+    IDPROM Format Revision   : N/A
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : 10GBASE-SR SFP+ Module for MMF
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : SFBR-709SMZ-CS1
+    Top Assy. Revision       : G4.1
+    PCB Serial Number        : AVD23239262
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : N/A
+    Asset Alias              : N/A
+    ECI Number               : 
+
+TenGigE0/0/0/15-IDPROM - 10GBASE-SR SFP+ Module for MMF
+ Info:
+    IDPROM Format Revision   : N/A
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : 10GBASE-SR SFP+ Module for MMF
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : SFBR-709SMZ-CS1
+    Top Assy. Revision       : G4.1
+    PCB Serial Number        : AVD2323925K
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : N/A
+    Asset Alias              : N/A
+    ECI Number               : 
+
+TenGigE0/0/0/16-IDPROM - 10GBASE-SR SFP+ Module for MMF
+ Info:
+    IDPROM Format Revision   : N/A
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : 10GBASE-SR SFP+ Module for MMF
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : SFBR-709SMZ-CS1
+    Top Assy. Revision       : G4.1
+    PCB Serial Number        : AVD2323925Y
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : N/A
+    Asset Alias              : N/A
+    ECI Number               : 
+
+TenGigE0/0/0/17-IDPROM - 10GBASE-SR SFP+ Module for MMF
+ Info:
+    IDPROM Format Revision   : N/A
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : 10GBASE-SR SFP+ Module for MMF
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : SFBR-709SMZ-CS1
+    Top Assy. Revision       : G4.1
+    PCB Serial Number        : AVD2323925N
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : N/A
+    Asset Alias              : N/A
+    ECI Number               : 
+
+TenGigE0/0/0/18-IDPROM - 10GBASE-SR SFP+ Module for MMF
+ Info:
+    IDPROM Format Revision   : N/A
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : 10GBASE-SR SFP+ Module for MMF
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C98
+    Top Assy. Revision       : 1.0
+    PCB Serial Number        : ACW230904ZP
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : N/A
+    Asset Alias              : N/A
+    ECI Number               : 
+
+TenGigE0/0/0/19-IDPROM - 10GBASE-SR SFP+ Module for MMF
+ Info:
+    IDPROM Format Revision   : N/A
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : 10GBASE-SR SFP+ Module for MMF
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C98
+    Top Assy. Revision       : 1.0
+    PCB Serial Number        : ACW23110FX4
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : N/A
+    Asset Alias              : N/A
+    ECI Number               : 
+
+TenGigE0/0/0/20-IDPROM - 10GBASE-SR SFP+ Module for MMF
+ Info:
+    IDPROM Format Revision   : N/A
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : 10GBASE-SR SFP+ Module for MMF
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C98
+    Top Assy. Revision       : 1.0
+    PCB Serial Number        : ACW2309024D
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : N/A
+    Asset Alias              : N/A
+    ECI Number               : 
+
+TenGigE0/0/0/21-IDPROM - 10GBASE-SR SFP+ Module for MMF
+ Info:
+    IDPROM Format Revision   : N/A
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : 10GBASE-SR SFP+ Module for MMF
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C98
+    Top Assy. Revision       : 1.0
+    PCB Serial Number        : ACW2252077F
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : N/A
+    Asset Alias              : N/A
+    ECI Number               : 
+
+TenGigE0/0/0/22-IDPROM - 10GBASE-SR SFP+ Module for MMF
+ Info:
+    IDPROM Format Revision   : N/A
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : 10GBASE-SR SFP+ Module for MMF
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : SFBR-709SMZ-CS1
+    Top Assy. Revision       : G4.1
+    PCB Serial Number        : AVD2323919P
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : N/A
+    Asset Alias              : N/A
+    ECI Number               : 
+
+TenGigE0/0/0/23-IDPROM - 10GBASE-SR SFP+ Module for MMF
+ Info:
+    IDPROM Format Revision   : N/A
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : 10GBASE-SR SFP+ Module for MMF
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C98
+    Top Assy. Revision       : 1.0
+    PCB Serial Number        : ACW231202F1
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : N/A
+    Asset Alias              : N/A
+    ECI Number               : 
+
+TenGigE0/0/0/24-IDPROM - 10GBASE-SR SFP+ Module for MMF
+ Info:
+    IDPROM Format Revision   : N/A
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : 10GBASE-SR SFP+ Module for MMF
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : SFBR-709SMZ-CS1
+    Top Assy. Revision       : G4.1
+    PCB Serial Number        : AVD2323926B
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : N/A
+    Asset Alias              : N/A
+    ECI Number               : 
+
+TenGigE0/0/0/25-IDPROM - 10GBASE-SR SFP+ Module for MMF
+ Info:
+    IDPROM Format Revision   : N/A
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : 10GBASE-SR SFP+ Module for MMF
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C98
+    Top Assy. Revision       : 1.0
+    PCB Serial Number        : ACW230901SB
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : N/A
+    Asset Alias              : N/A
+    ECI Number               : 
+
+TenGigE0/0/0/26-IDPROM - 10GBASE-SR SFP+ Module for MMF
+ Info:
+    IDPROM Format Revision   : N/A
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : 10GBASE-SR SFP+ Module for MMF
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C98
+    Top Assy. Revision       : 1.0
+    PCB Serial Number        : ACW230904YU
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : N/A
+    Asset Alias              : N/A
+    ECI Number               : 
+
+TenGigE0/0/0/27-IDPROM - 10GBASE-SR SFP+ Module for MMF
+ Info:
+    IDPROM Format Revision   : N/A
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : 10GBASE-SR SFP+ Module for MMF
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C98
+    Top Assy. Revision       : 1.0
+    PCB Serial Number        : ACW230904DM
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : N/A
+    Asset Alias              : N/A
+    ECI Number               : 
+
+TenGigE0/0/0/28-IDPROM - 10GBASE-SR SFP+ Module for MMF
+ Info:
+    IDPROM Format Revision   : N/A
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : 10GBASE-SR SFP+ Module for MMF
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : SFBR-709SMZ-CS1
+    Top Assy. Revision       : G4.1
+    PCB Serial Number        : AVD22229DHM
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : N/A
+    Asset Alias              : N/A
+    ECI Number               : 
+
+TenGigE0/0/0/29-IDPROM - 10GBASE-SR SFP+ Module for MMF
+ Info:
+    IDPROM Format Revision   : N/A
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : 10GBASE-SR SFP+ Module for MMF
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : SFBR-709SMZ-CS1
+    Top Assy. Revision       : G4.1
+    PCB Serial Number        : AVD2323965K
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : N/A
+    Asset Alias              : N/A
+    ECI Number               : 
+
+TenGigE0/0/0/30-IDPROM - 10GBASE-SR SFP+ Module for MMF
+ Info:
+    IDPROM Format Revision   : N/A
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : 10GBASE-SR SFP+ Module for MMF
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : SFBR-709SMZ-CS1
+    Top Assy. Revision       : G4.1
+    PCB Serial Number        : AVD23239286
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : N/A
+    Asset Alias              : N/A
+    ECI Number               : 
+
+TenGigE0/0/0/31-IDPROM - 10GBASE-SR SFP+ Module for MMF
+ Info:
+    IDPROM Format Revision   : N/A
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : 10GBASE-SR SFP+ Module for MMF
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : SFBR-709SMZ-CS1
+    Top Assy. Revision       : G4.1
+    PCB Serial Number        : AVD2323918M
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : N/A
+    Asset Alias              : N/A
+    ECI Number               : 
+
+TenGigE0/0/0/32-IDPROM - 10GBASE-SR SFP+ Module for MMF
+ Info:
+    IDPROM Format Revision   : N/A
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : 10GBASE-SR SFP+ Module for MMF
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : SFBR-709SMZ-CS1
+    Top Assy. Revision       : G4.1
+    PCB Serial Number        : AVD23239192
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : N/A
+    Asset Alias              : N/A
+    ECI Number               : 
+
+TenGigE0/0/0/33-IDPROM - 10GBASE-SR SFP+ Module for MMF
+ Info:
+    IDPROM Format Revision   : N/A
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : 10GBASE-SR SFP+ Module for MMF
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : SFBR-709SMZ-CS1
+    Top Assy. Revision       : G4.1
+    PCB Serial Number        : AVD232391AU
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : N/A
+    Asset Alias              : N/A
+    ECI Number               : 
+
+TenGigE0/0/0/34-IDPROM - 10GBASE-SR SFP+ Module for MMF
+ Info:
+    IDPROM Format Revision   : N/A
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : 10GBASE-SR SFP+ Module for MMF
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : SFBR-709SMZ-CS1
+    Top Assy. Revision       : G4.1
+    PCB Serial Number        : AVD2323963Z
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : N/A
+    Asset Alias              : N/A
+    ECI Number               : 
+
+TenGigE0/0/0/35-IDPROM - 10GBASE-SR SFP+ Module for MMF
+ Info:
+    IDPROM Format Revision   : N/A
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : 10GBASE-SR SFP+ Module for MMF
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : SFBR-709SMZ-CS1
+    Top Assy. Revision       : G4.1
+    PCB Serial Number        : AVD2323964G
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : N/A
+    Asset Alias              : N/A
+    ECI Number               : 
+
+TenGigE0/0/0/36-IDPROM - 10GBASE-SR SFP+ Module for MMF
+ Info:
+    IDPROM Format Revision   : N/A
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : 10GBASE-SR SFP+ Module for MMF
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C98
+    Top Assy. Revision       : 1.0
+    PCB Serial Number        : ACW23521E9V
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : N/A
+    Asset Alias              : N/A
+    ECI Number               : 
+
+TenGigE0/0/0/37-IDPROM - 10GBASE-SR SFP+ Module for MMF
+ Info:
+    IDPROM Format Revision   : N/A
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : 10GBASE-SR SFP+ Module for MMF
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : SFBR-709SMZ-CS1
+    Top Assy. Revision       : G4.1
+    PCB Serial Number        : AVD23239261
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : N/A
+    Asset Alias              : N/A
+    ECI Number               : 
+
+TenGigE0/0/0/38-IDPROM - 10GBASE-SR SFP+ Module for MMF
+ Info:
+    IDPROM Format Revision   : N/A
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : 10GBASE-SR SFP+ Module for MMF
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C98
+    Top Assy. Revision       : 1.0
+    PCB Serial Number        : ACW2353068Z
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : N/A
+    Asset Alias              : N/A
+    ECI Number               : 
+
+TenGigE0/0/0/39-IDPROM - 10GBASE-SR SFP+ Module for MMF
+ Info:
+    IDPROM Format Revision   : N/A
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : 10GBASE-SR SFP+ Module for MMF
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C98
+    Top Assy. Revision       : 1.0
+    PCB Serial Number        : ACW235308FJ
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : N/A
+    Asset Alias              : N/A
+    ECI Number               : 
+
+TenGigE0/0/0/40-IDPROM - 10GBASE-SR SFP+ Module for MMF
+ Info:
+    IDPROM Format Revision   : N/A
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : 10GBASE-SR SFP+ Module for MMF
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C98
+    Top Assy. Revision       : 1.0
+    PCB Serial Number        : ACW23520943
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : N/A
+    Asset Alias              : N/A
+    ECI Number               : 
+
+TenGigE0/0/0/41-IDPROM - 10GBASE-SR SFP+ Module for MMF
+ Info:
+    IDPROM Format Revision   : N/A
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : 10GBASE-SR SFP+ Module for MMF
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C98
+    Top Assy. Revision       : 1.0
+    PCB Serial Number        : ACW23520PXZ
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : N/A
+    Asset Alias              : N/A
+    ECI Number               : 
+
+TenGigE0/0/0/42-IDPROM - 10GBASE-SR SFP+ Module for MMF
+ Info:
+    IDPROM Format Revision   : N/A
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : 10GBASE-SR SFP+ Module for MMF
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C98
+    Top Assy. Revision       : 1.0
+    PCB Serial Number        : ACW23520Q5Y
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : N/A
+    Asset Alias              : N/A
+    ECI Number               : 
+
+TenGigE0/0/0/43-IDPROM - 10GBASE-SR SFP+ Module for MMF
+ Info:
+    IDPROM Format Revision   : N/A
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : 10GBASE-SR SFP+ Module for MMF
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C98
+    Top Assy. Revision       : 1.0
+    PCB Serial Number        : ACW23530879
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : N/A
+    Asset Alias              : N/A
+    ECI Number               : 
+
+TenGigE0/0/0/44-IDPROM - 10GBASE-SR SFP+ Module for MMF
+ Info:
+    IDPROM Format Revision   : N/A
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : 10GBASE-SR SFP+ Module for MMF
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C98
+    Top Assy. Revision       : 1.0
+    PCB Serial Number        : ACW23490CG0
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : N/A
+    Asset Alias              : N/A
+    ECI Number               : 
+
+TenGigE0/0/0/45-IDPROM - 10GBASE-SR SFP+ Module for MMF
+ Info:
+    IDPROM Format Revision   : N/A
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : 10GBASE-SR SFP+ Module for MMF
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C98
+    Top Assy. Revision       : 1.0
+    PCB Serial Number        : ACW23520PY2
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : N/A
+    Asset Alias              : N/A
+    ECI Number               : 
+
+TenGigE0/0/0/46-IDPROM - 10GBASE-SR SFP+ Module for MMF
+ Info:
+    IDPROM Format Revision   : N/A
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : 10GBASE-SR SFP+ Module for MMF
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C98
+    Top Assy. Revision       : 1.0
+    PCB Serial Number        : ACW23521E24
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : N/A
+    Asset Alias              : N/A
+    ECI Number               : 
+
+TenGigE0/0/0/47-IDPROM - 10GBASE-SR SFP+ Module for MMF
+ Info:
+    IDPROM Format Revision   : N/A
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : 10GBASE-SR SFP+ Module for MMF
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : SFBR-709SMZ-CS1
+    Top Assy. Revision       : G4.1
+    PCB Serial Number        : AVD232396T1
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : N/A
+    Asset Alias              : N/A
+    ECI Number               : 
+
+0/0-IDPROM - ASR 9000 48-port 10GE & 1GE dual rate Service Edge LC
+ Info 
+    Controller Family        : 003d
+    Controller Type          : 02c7
+    PID                      : A99-48X10GE-1G-SE
+    Version Identifier       : V01
+    UDI Name                 :  
+    UDI Description          : ASR 9000 48-port 10GE & 1GE dual rate Service Edge LC
+    Top Assy. Part Number    : 68-6813-01
+    Top Assy. Revision       : A2  
+    PCB Serial Number        : FOC2334N55Z
+    PCA Number               : 73-19376-01
+    PCA Revision             : A1
+    CLEI Code                : INUIAFHEAA
+    Deviation Number # 1     : 547247
+    Deviation Number # 2     : 0
+    Deviation Number # 3     : 0
+    Deviation Number # 4     : 0
+    Deviation Number # 5     : 0
+    Manufacturing Test Data  : 00 00 00 00 00 00 00 00 
+    Calibration Data         : 00000501
+    Base MAC Address         : 084f.a964.d1f8
+    MAC Addr. Block Size     : 56
+    Hardware Revision        : 1.0
+    Capabilities             : 00
+    Power Consumption        : 804 Watts (Maximum)
+    ENVMON Information       : 2 86 0 0 0 0 0 0 
+	                           0 0 0 0 0 0 0 0 
+	                           0 0 0 0 0 0 0 0 
+	                           0 0 0 0 0 0 0 0 
+    Device values            : 20 
+
+Rack 0-IDPROM - ASR-9904 2 Line Card Slot Chassis
+ Info 
+    Controller Family        : 00ef
+    Controller Type          : 02f6
+    PID                      : ASR-9904
+    Version Identifier       : V01
+    UDI Name                 : ASR-9904
+    UDI Description          : ASR-9904 2 Line Card Slot Chassis
+    Top Assy. Part Number    : 68-5770-01
+    Top Assy. Revision       : E0  
+    Chassis Serial Number    : FOX2337P1JE
+    Mainboard Serial Number  : NWG233402R8
+    PCB Serial Number        : NWG2331059V
+    PCA Number               : 73-11674-03
+    PCA Revision             : C0
+    CLEI Code                : IPM9Z00CRA
+    Deviation Number # 1     : 0
+    Deviation Number # 2     : 0
+    Deviation Number # 3     : 0
+    Deviation Number # 4     : 0
+    Deviation Number # 5     : 0
+    Manufacturing Test Data  : 00 00 00 00 00 00 00 00 
+    Base MAC Address         : 34ed.1b03.bd38
+    MAC Addr. Block Size     : 1288
+    Hardware Revision        : 1.0
+    Capabilities             : 00
+    Device values            : 20 
+
+0/PT0-PM0-IDPROM - 3kW AC Power Module
+ Info 
+    Controller Family        : 00f0
+    Controller Type          : 0388
+    PID                      : PWR-3KW-AC-V2
+    Version Identifier       : V03
+    UDI Description          : 3kW AC Power Module
+    Top Assy. Part Number    : 341-0401-04
+    Top Assy. Revision       : B0
+    PCB Serial Number        : ART230800S2
+    CLEI Code                : IPUPAMKAAA
+    Power Supply Type        : AC
+    Power Consumption        : 3000 Watts (Maximum)
+    Deviation Number # 1     : 0
+    Deviation Number # 2     : 0
+
+0/PT0-PM1-IDPROM - 3kW AC Power Module
+ Info 
+    Controller Family        : 00f0
+    Controller Type          : 0388
+    PID                      : PWR-3KW-AC-V2
+    Version Identifier       : V03
+    UDI Description          : 3kW AC Power Module
+    Top Assy. Part Number    : 341-0401-04
+    Top Assy. Revision       : B0
+    PCB Serial Number        : ART230800RB
+    CLEI Code                : IPUPAMKAAA
+    Power Supply Type        : AC
+    Power Consumption        : 3000 Watts (Maximum)
+    Deviation Number # 1     : 0
+    Deviation Number # 2     : 0
+
+0/PT0-PM2-IDPROM - 3kW AC Power Module
+ Info 
+    Controller Family        : 00f0
+    Controller Type          : 0388
+    PID                      : PWR-3KW-AC-V2
+    Version Identifier       : V03
+    UDI Description          : 3kW AC Power Module
+    Top Assy. Part Number    : 341-0401-04
+    Top Assy. Revision       : B0
+    PCB Serial Number        : DTM2309047K
+    CLEI Code                : IPUPAMKAAA
+    Power Supply Type        : AC
+    Power Consumption        : 3000 Watts (Maximum)
+    Deviation Number # 1     : 0
+    Deviation Number # 2     : 0
+
+0/PT0-PM3-IDPROM - 3kW AC Power Module
+ Info 
+    Controller Family        : 00f0
+    Controller Type          : 0388
+    PID                      : PWR-3KW-AC-V2
+    Version Identifier       : V03
+    UDI Description          : 3kW AC Power Module
+    Top Assy. Part Number    : 341-0401-04
+    Top Assy. Revision       : B0
+    PCB Serial Number        : ART23120069
+    CLEI Code                : IPUPAMKAAA
+    Power Supply Type        : AC
+    Power Consumption        : 3000 Watts (Maximum)
+    Deviation Number # 1     : 0
+    Deviation Number # 2     : 0
+
+0/PT0-IDPROM - Simulated Power Tray IDPROM
+ Info 
+    IDPROM Format Revision   : 1
+    Controller Family        : 00aa
+    Controller Type          : 0996
+    Hardware Revision        : 0.1
+    PID                      : A9K-AC-PEM-V2
+    Version Identifier       : V02
+    UDI Description          : Simulated Power Tray IDPROM
+    CLEI Code                : UNASSIGNED
+    ECI Number               : 11223344
+    Top Assy. Part Number    : 14384-3157297-49
+    Top Assy. Revision       : 01
+    PCB Serial Number        : FOT1981P81A
+    PCA Number               : 55-13101-49
+    PCA Revision             : 01
+    Deviation Number # 1     : 0
+    Deviation Number # 2     : 0
+    Deviation Number # 3     : 0
+    Deviation Number # 4     : 0
+    Deviation Number # 5     : 0
+    Deviation Number # 6     : 0
+    Deviation Number # 7     : 0
+    Manufacturing Test Data  : 00 00 00 00 00 00 00 00 
+    RMA Test History         : 00
+    RMA Number               : 0-0-0-0
+    RMA History              : 00
+    Device values            : 0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0
+    Asset ID                 : 
+    Asset Alias              : 
+
+0/FT0-IDPROM - ASR-9904 Fan Tray
+ Info 
+    Controller Family        : 0090
+    Controller Type          : 0216
+    PID                      : ASR-9904-FAN
+    Version Identifier       : V02
+    UDI Name                 :  
+    UDI Description          : ASR-9904 Fan Tray
+    Top Assy. Part Number    : 68-4852-03
+    Top Assy. Revision       : D0  
+    Chassis Serial Number    : FOC2338NN1N
+    PCB Serial Number        : FOC2338N3N7
+    PCA Number               : 73-15255-02
+    PCA Revision             : B0
+    CLEI Code                : IPUCBHWBAA
+    Deviation Number # 1     : 0
+    Deviation Number # 2     : 0
+    Deviation Number # 3     : 0
+    Deviation Number # 4     : 0
+    Deviation Number # 5     : 0
+    Manufacturing Test Data  : 00 00 00 00 00 00 00 00 
+    Hardware Revision        : 1.0
+    Capabilities             : 00
+    ENVMON Information       : 2 86 0 0 0 0 0 0 
+	                           0 0 0 0 0 0 0 0 
+	                           0 0 0 0 0 0 0 0 
+	                           0 0 0 0 0 0 0 0 
+    Device values            : 20 
+

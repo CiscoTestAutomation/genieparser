@@ -371,7 +371,7 @@ class ShowServiceInsertionTypeAppqoeServiceNodeGroup(
         p1 = re.compile(r'^(?P<key>[\s\S]+\S) +: +(?P<value>[\s\S]+)$')
 
         # Cluster protocol last received sequence number: 311442
-        p2 = re.compile(r'^(?P<key>[\s\S]+\w)+: +(?P<value>[\s\S]+)$')
+        p2 = re.compile(r'^(?P<key>[\s\S]+\w)+: +(?P<value>[\S]+)$')
 
         # tcp           GREEN 6%
         p3 = re.compile(r'^(?P<service>[\s\S]+)\s+(?P<service_color>[\s\S]+)\s+(?P<percent>[\d]+)\%$')
@@ -534,19 +534,33 @@ class ShowServiceInsertionTypeAppqoeClusterSummary(ShowServiceInsertionTypeAppqo
             output = self.device.execute(self.cli_command)
         
         # initial return dictionary
+        last_dict_ptr = {}
         ret_dict = {}
         # Service Context : appqoe/1
         p1 = re.compile(r'^Service +Context\s+: +appqoe\/(?P<context>[\s\S]+)$')
         # Enabled : TRUE
-        p1_1 = re.compile(r'^(?P<key>[\s\S]+):+(?P<key_value>[\s\S]+)$')
+        p1_1 = re.compile(r'^(?P<key>[\s\S]+)\s+:\s+(?P<key_value>[\s\S]+)$')
+        
         # Service Node Group            : SNG-APPQOE
-        p1_2 = re.compile(r'^Service +Node +Group\s+: (?P<sng_grp>[\s\S]+)$')
+        p1_2 = re.compile(r'^Service +Node +Group\s+: (?P<sng_grp>[\S]+)$')
+        
         # Service Node Group            : SNG-APPQOE ID: 1
-        p1_3 = re.compile(r'^Service +Node +Group\s+: (?P<sng_grp>[\s\S]+)\s+ID:\s+(?P<id_val>[\s\S]+)$')
+        p1_3 = re.compile(r'^Service\s+Node\s+Group\s+:\s+(?P<sng_grp>[\S]+)(\s+ID:\s+(?P<id_val>[\S]+))?$')
+
         # Service Controller IP       : 26.126.0.254   VRF : 65500
-        p2 = re.compile(r'^(?P<sc>[\s\S]+)\s+:+(?P<sc_value>[\s\S]+)\s+ +(?P<vrf>[\s\S]+)\s+: +(?P<vrf_val>[\s\S]+)$')
+        p2 = re.compile(r'^(?P<sc>[\s\S]+)\s+:+(?P<sc_value>[\s\S]+)\s+ +(?P<vrf>[\s\S]+)\s+: +(?P<vrf_val>[\S]+)$')
+        
         # | 26.126.0.1      | 26.1.0.1        | 26        | GREEN   |                        |
         p3 = re.compile(r'^\| (?P<sn_ip>(\S+))\s+\|\s+(?P<sn_system_ip>(\S+))\s+\|\s+(?P<sn_site_id>(\d+))\s+\|\s+(?P<sn_status>(\w+))\s+\|\s+(?P<sn_error>([\s\S]+))\|')
+        
+        # Service Controller System IP: 26.0.0.26
+        p4 = re.compile(r"^Service\s+Controller\s+System\s+IP:\s+(?P<systemIp>\S+)$")
+
+        # Service Controller Site ID  : 26
+        p5 = re.compile(r"^Service\s+Controller\s+Site\s+ID\s+:\s+(?P<siteId>\S+)$")
+
+        # Service Controller Group      : ACG-APPQOE
+        p6 = re.compile(r"^Service\s+Controller\s+Group\s+:\s+(?P<group>\S+)$")        
 
         for line in output.splitlines():
             line = line.strip()
@@ -558,19 +572,19 @@ class ShowServiceInsertionTypeAppqoeClusterSummary(ShowServiceInsertionTypeAppqo
                 last_dict_ptr = sc_dict
                 continue
 
-            # Service Node Group            : SNG-APPQOE ID: 1
-            m = p1_3.match(line)
-            if m:
-                groups = m.groupdict()
-                sng_dict = sc_dict.setdefault('sng', {}).setdefault(groups['id_val'], {})
-                last_dict_ptr = sng_dict
-                continue
-
             # Service Node Group            : SNG-APPQOE
             m = p1_2.match(line)
             if m:
                 groups = m.groupdict()
                 sng_dict = sc_dict.setdefault('sng', {})
+                last_dict_ptr = sng_dict
+                continue
+
+            # Service Node Group            : SNG-APPQOE ID: 1
+            m = p1_3.match(line)
+            if m:
+                groups = m.groupdict()
+                sng_dict = sc_dict.setdefault('sng', {}).setdefault(groups['id_val'], {})
                 last_dict_ptr = sng_dict
                 continue
 
@@ -595,6 +609,7 @@ class ShowServiceInsertionTypeAppqoeClusterSummary(ShowServiceInsertionTypeAppqo
                 last_dict_ptr.update({key:value})
                 continue
 
+
             # | 26.126.0.1      | 26.1.0.1        | 26        | GREEN   |                        |
             m = p3.match(line)
             if m:
@@ -611,7 +626,28 @@ class ShowServiceInsertionTypeAppqoeClusterSummary(ShowServiceInsertionTypeAppqo
                 last_dict_ptr.update({'error':sn_err})
                 continue
 
-        return ret_dict
+            # Service Controller System IP: 26.0.0.26
+            m = p4.match(line)
+            if m:
+                groups = m.groupdict()
+                last_dict_ptr.update({"service_controller_system_ip": groups["systemIp"]})
+                continue
+
+            # Service Controller Site ID  : 26
+            m = p5.match(line)
+            if m:
+                groups = m.groupdict()
+                last_dict_ptr.update({"service_controller_site_id": groups["siteId"]})
+                continue
+
+            # Service Controller Group      : ACG-APPQOE
+            m = p6.match(line)
+            if m:
+                groups = m.groupdict()
+                last_dict_ptr.update({"service_controller_group": groups["group"].replace('-', '_').replace(' ', '_').replace(':', '').lower()})
+                continue
+
+        return ret_dict 
 
 # ======================================================
 # Parser for 'show service-template '

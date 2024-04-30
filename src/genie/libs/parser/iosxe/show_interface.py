@@ -33,6 +33,7 @@
     * show interfaces capabilities
     * show interfaces {interface} capabilities
     * show interfaces {interface} vlan mapping
+    * show interfaces {interface} human-readable
 """
 
 import os
@@ -5610,5 +5611,48 @@ class ShowInterfaceHumanReadableIncludeDrops(ShowInterfaceHumanReadableIncludeDr
             if m:
                 dict_val = m.groupdict()
                 ret_dict['unknown_protocol_drops'] = int(dict_val['unknown_protocol_drops'])
+
+        return ret_dict
+
+# ========================================================================
+# Schema for 'show interface <interface> human-readable'
+# ========================================================================
+class ShowInterfaceHumanReadableSchema(MetaParser):
+    """Schema for show interface human-readable"""
+
+    schema = {
+        Any(): str
+    }
+
+# ========================================================================
+# Parser for 'show interface <interface> human-readable'
+# ========================================================================
+class ShowInterfaceHumanReadable(ShowInterfaceHumanReadableSchema):
+    """Parser for show interface human-readable"""
+
+    cli_command = 'show interface {interface} human-readable'
+
+    def cli(self, interface, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(interface=interface))
+            
+        # 5 minute input rate 0 bits/sec, 0 packets/sec
+        # 5 minute output rate 0 bits/sec, 0 packets/sec
+        p1 = re.compile(r'^\d+\s+(minute|seconds)\s+(?P<dir>(input|output))\s+rate\s+(?P<rate>[\S\s]+)\s*,[\S\s\d]+$')
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # 5 minute input rate 0 bits/sec, 0 packets/sec
+            # 5 minute output rate 0 bits/sec, 0 packets/sec
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({
+                    group['dir']: group['rate']
+                })
+                continue
 
         return ret_dict

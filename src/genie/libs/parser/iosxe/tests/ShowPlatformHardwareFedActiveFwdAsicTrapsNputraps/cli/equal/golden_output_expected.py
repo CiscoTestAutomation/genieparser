@@ -1,0 +1,19 @@
+expected_output={
+    'trap_id':{
+      '1':{
+         'npu_trap_name':'la_event_e_ETHERNET_ACL_DROP',
+         'asic':0,
+         'prev':0,
+         'current':0,
+         'delta':0
+      },
+      '2':{
+         'npu_trap_name':'la_event_e_ETHERNET_ACL_FORCE_PUNT',
+         'asic':0,
+         'prev':0,
+         'current':0,
+         'delta':0
+      }
+   }
+}
+

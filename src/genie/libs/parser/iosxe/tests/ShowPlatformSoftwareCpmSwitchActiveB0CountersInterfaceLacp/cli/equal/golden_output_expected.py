@@ -1,0 +1,52 @@
+expected_output = { 
+   "HundredGigE1/0/25":{
+      "tx":0,
+      "rx":0,
+      "tx_drop":0,
+      "rx_drop":0
+   },
+   "HundredGigE1/0/26":{
+      "tx":0,
+      "rx":0,
+      "tx_drop":0,
+      "rx_drop":0
+   },
+   "HundredGigE1/0/27":{
+      "tx":0,
+      "rx":0,
+      "tx_drop":0,
+      "rx_drop":0
+   },
+   "HundredGigE1/0/28":{
+      "tx":0,
+      "rx":0,
+      "tx_drop":0,
+      "rx_drop":0
+   },
+   "HundredGigE1/0/29":{
+      "tx":0,
+      "rx":0,
+      "tx_drop":0,
+      "rx_drop":0
+   },
+   "HundredGigE1/0/30":{
+      "tx":0,
+      "rx":0,
+      "tx_drop":0,
+      "rx_drop":0
+   },
+   "HundredGigE1/0/31":{
+      "tx":0,
+      "rx":0,
+      "tx_drop":0,
+      "rx_drop":0
+   },
+   "HundredGigE1/0/32":{
+      "tx":0,
+      "rx":0,
+      "tx_drop":0,
+      "rx_drop":0
+   }
+}
+
+    

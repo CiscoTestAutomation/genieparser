@@ -1,0 +1,6 @@
+Trap  Description                                                            Dropped Pkts          Rate
+----------------------------------------------------------------------------------------------------------
+225   EXACT_METER_PACKET_GOT_DROPPED_DUE_TO_EXACT_METER                          1659               0
+226   STATISTICAL_METER_PACKET_GOT_DROPPED_DUE_TO_STATISTICAL_METER               0                 0
+227   ETHERNET_METERS_PACKET_OUT_OF_RATE                                          0                 0
+

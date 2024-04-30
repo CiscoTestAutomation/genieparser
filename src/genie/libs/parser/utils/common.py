@@ -10,19 +10,20 @@ import logging
 import warnings
 import importlib
 import pkg_resources
+from packaging import version
 from json.decoder import JSONDecodeError
 
 from pyats.log.utils import banner
 from pyats.configuration import configuration as cfg
 
-from genie.libs import parser
+from genie.abstract.package import AbstractTree, DEFAULT_ABSTRACT_ORDER
 from genie.abstract import Lookup
-from genie.metaparser.util import merge_dict
 
 from .extension import ExtendParsers
 
+PARSER_MODULE_NAME = 'genie.libs.parser'
+ENTRY_POINT_NAME = PARSER_MODULE_NAME
 PYATS_EXT_PARSER = 'pyats.libs.external.parser'
-ENTRY_POINT_NAME = 'genie.libs.parser'
 
 log = logging.getLogger(__name__)
 
@@ -32,6 +33,7 @@ try:
 except:
     INTERNAL = False
 
+parser_data = None
 
 class ParserNotFound(Exception):
     '''raise exception if parser command is not found
@@ -43,98 +45,8 @@ class ParserNotFound(Exception):
 
     def __str__(self):
         return (
-            f"Could not find parser for {self.parser_command} under {self.token}"
+            f"Could not find parser for '{self.parser_command}' under {self.token}"
         )
-
-
-def deprecated_add_parser(parser, os_name):
-    """
-    *** DEPRECATED This is only here for backward compatibility ***
-
-    Dynamically add the parser class found in module `mod` for the given
-    network OS name `os_name`
-    Notes
-    -----
-    The parser class is presumed to have a class attribute `cli_command` which
-    is a list of command to add into the genie parser framework.
-    Parameters
-    ----------
-    parser : class
-        The parser class that implements a MetaParser
-    os_name : str
-        The NOS name for which the parser is supported, for example "nxos"
-    """
-    global parser_data
-
-    try:
-        parser_data = parser_data or {}
-    except NameError:
-        parser_data = {}
-
-    mod = sys.modules[parser.__module__]
-    module_name = mod.__name__.rsplit('.', 1)[-1]
-    package = mod.__package__
-
-    cli_commands = parser.cli_command
-    if isinstance(cli_commands, str):
-        cli_commands = [cli_commands]
-
-    for cmd in cli_commands:
-
-        if cmd not in parser_data:
-            parser_data[cmd] = {}
-            log.debug(f'Adding parser for command {cmd} os {os_name} '
-                      f'using {package}.{module_name}.{parser.__name__}')
-        else:
-            log.warning(f'Overriding parser for command {cmd} os {os_name} '
-                        f'using {package}.{module_name}.{parser.__name__}')
-
-        parser_data[cmd][os_name] = {
-            'module_name': module_name,
-            'package': package,
-            'class': parser.__name__
-        }
-
-
-def deprecated_parser_loading(parser_package):
-    """
-    *** DEPRECATED This is only here for backward compatibility ***
-
-    Enables external packages to dynamically add parsers using the setuptools
-    entry_point mechanism.  The developer is required to add the following to
-    their setup() invocation:
-
-        setup(...
-            entry_points={
-                'genie.libs.parser': [
-                    "packagename = module.function"
-                ]
-            }
-        )
-
-    where <packagename> is the name of their specific package <module> is the
-    module within their package that contains the function <function> is a
-    callable that returns a dictionary of parsers
-
-    Notes
-    -----
-    The following is an example User provided function that returns a dictionary
-    of parser to be added into the genie framework.  The key is the os_name, for
-    example 'nxos', and the value is a list of MetaParser class definitions.
-
-        def add_my_parsers():
-            return {
-                'iosxe': [
-                    iosxe.show_interface_transceiver.ShowInterfaceTransceiver
-                ], 'nxos': [
-                    nxos.show_interface_transceiver.ShowInterfaceTransceiver
-                ]
-            }
-    """
-    parser_dict = parser_package()
-    for os_name, parser_list in parser_dict.items():
-        for parser in parser_list:
-            deprecated_add_parser(parser=parser, os_name=os_name)
 
 
 def _load_parser_json():
@@ -143,85 +55,125 @@ def _load_parser_json():
     global parser_data
 
     try:
-        mod = importlib.import_module('genie.libs.parser')
+        mod = importlib.import_module(PARSER_MODULE_NAME)
+        token_order = getattr(getattr(mod, '__abstract_pkg'), 'order',
+                              DEFAULT_ABSTRACT_ORDER)
         parsers = os.path.join(mod.__path__[0], 'parsers.json')
     except Exception:
+        token_order = DEFAULT_ABSTRACT_ORDER
         parsers = ''
 
     if not os.path.isfile(parsers):
         log.warning('parsers.json does not exist, make sure you '
                     'are running with latest version of '
                     'genie.libs.parsers')
-        return {}
-
-    try:
+        parser_data = AbstractTree(order=token_order, feature='parser')
+    else:
         # Open all the parsers in json file
         with open(parsers) as f:
             try:
-                parser_data = json.load(f)
+                json_data = json.load(f)
             except JSONDecodeError:
-                log.error(
-                    banner(
-                        "parser json file could be corrupted. Please try 'make json'"
-                    ))
+                log.error(banner("parser json file could be corrupted. "
+                                 "Please try 'make json'"))
                 raise
-    except Exception:
-        log.error(f'Could not load parser json from file {parsers}',
-                    exc_info=True)
-        return {}
+        parser_data = AbstractTree.from_json(json_data,
+                                             package=PARSER_MODULE_NAME,
+                                             feature='parser')
+        if parser_data.order != token_order:
+            raise KeyError('Loaded token order from json does not match '
+                           'package token order\n{} != {}'.\
+                                format(parser_data.order, token_order))
 
-    ext_parser_packages = []
+        # check if provided external parser packages
+        PYATS_EXT_PARSER_ENV_VAR = PYATS_EXT_PARSER.upper().replace('.', '_')
+        ext_parser_packages = []
 
-    ext_parser_package_conf = cfg.get(PYATS_EXT_PARSER)
-    if ext_parser_package_conf:
-        ext_parser_packages.append(cfg.get(PYATS_EXT_PARSER))
+        ext_parser_package_conf = cfg.get(PYATS_EXT_PARSER)
+        if ext_parser_package_conf:
+            ext_parser_packages = ext_parser_packages.split(',')
+            ext_parser_packages.extend(cfg.get(PYATS_EXT_PARSER))
 
-    PYATS_EXT_PARSER_ENV_VAR = PYATS_EXT_PARSER.upper().replace('.', '_')
-    ext_parser_package_env = os.environ.get(PYATS_EXT_PARSER_ENV_VAR)
-    if ext_parser_package_env:
-        ext_parser_packages_from_env = ext_parser_package_env.split(',')
-        ext_parser_packages.extend(ext_parser_packages_from_env)
+        ext_parser_package_env = os.environ.get(PYATS_EXT_PARSER_ENV_VAR)
+        if ext_parser_package_env:
+            ext_parser_packages_from_env = ext_parser_package_env.split(',')
+            ext_parser_packages.extend(ext_parser_packages_from_env)
 
-    for ep in pkg_resources.iter_entry_points(ENTRY_POINT_NAME):
-        parser_package = ep.load()
-        if callable(parser_package):
-            log.warning(
-                f'{ep.name}: callable parser loading is deprecated. '
-                'Please create an abstracted package instead.')
-            deprecated_parser_loading(parser_package)
-        else:
-            ext_parser_packages.append(ep.module_name)
+        for ep in pkg_resources.iter_entry_points(ENTRY_POINT_NAME):
+            parser_package = ep.load()
+            if callable(parser_package):
+                log.warning(
+                    f'{ep.name}: callable parser loading is deprecated. '
+                    'Please create an abstracted package instead.')
+                _load_parser_callable(parser_package, parser_data)
+            else:
+                ext_parser_packages.append(ep.module_name)
 
-    log.debug(f'External parser packages: {ext_parser_packages}')
-    for ext_parser_package in ext_parser_packages:
-        log.debug(f'Extending {ext_parser_package}')
-        ext = ExtendParsers(ext_parser_package)
-        ext.extend()
+        # remove duplicates
+        ext_parser_packages = set(ext_parser_packages)
+        log.debug(f'External parser packages: {ext_parser_packages}')
 
-        # tokens are not used for lookup
-        ext.output.pop('tokens', [])
+        for ext_parser_package in ext_parser_packages:
+            log.debug(f'Extending {ext_parser_package}')
+            ext = ExtendParsers(ext_parser_package)
+            ext.extend()
 
-        # extend_info is only used for summary information
-        summary = ext.output.pop('extend_info', None)
+            extend_info = ext.output.pop('extend_info', None)
 
-        merge_dict(parser_data, ext.output, update=True)
-        log.debug("External parser {} count: {}\nSummary: {}\n".format(
-            ext_parser_package, len(summary),
-            json.dumps(summary, indent=2)))
+            extend_matrix = AbstractTree.from_json(ext.output,
+                                                   package=PARSER_MODULE_NAME,
+                                                   feature='parser')
+            parser_data.update(extend_matrix)
+
+            log.debug("External parser {} counts: {}\nSummary:\n{}".format(
+                ext_parser_package,
+                len(extend_info),
+                json.dumps(extend_info, indent=2)))
 
     return parser_data
+
+
+def _load_parser_callable(package, parser_data):
+    '''_load_parser_callable
+
+    *** DEPRECATED This is only here for backward compatibility ***
+
+    The genie parser entrypoint can point to a function which returns a dict of
+    new parsers. This dict should have the format
+    {<os>: [<parser_classes, ...], <os>: [more_parser_classes, ...]}
+    These parsers are then added to the abstract matrix to be available for
+    lookup.
+    '''
+    if not 'os' in parser_data.order:
+        warnings.warn('"os"')
+
+    for os, parser_list in package().items():
+        for parser in parser_list:
+            # get list of commands which are the top-level keys of the abstract
+            # matrix
+            cli_commands = parser.cli_command
+            if isinstance(cli_commands, str):
+                cli_commands = [cli_commands]
+            for cmd in cli_commands:
+                # add or get this command to the matrix, and drill down to the
+                # os token level
+                matrix_ptr = parser_data.get_create(cmd)
+                for i in range(parser_data.order.index('os')):
+                    matrix_ptr = matrix_ptr.get_create(None)
+                # add or overwrite the parser for this command and os
+                matrix_ptr = matrix_ptr.get_create(os, ptr=parser)
 
 
 def get_parser_commands(device, data=None):
     '''Remove all commands which contain { as this requires
        extra kwargs which cannot be guessed dynamically
        Remove the ones that arent related to this os'''
-
+    global parser_data
     if data is None:
-        try:
-            data = parser_data
-        except NameError:
+        if parser_data is None:
             data = _load_parser_json()
+        else:
+            data = parser_data
 
     return [
         command for command, values in data.items()
@@ -249,40 +201,42 @@ def get_parser_exclude(command, device):
         return []
 
 
-def get_parser(command, device, fuzzy=False):
+def get_parser(command, device, fuzzy=False, abstract=None):
     '''From a show command and device, return parser class and kwargs if any'''
+    global parser_data
 
-    try:
-        order_list = device.custom.get('abstraction').get('order', [])
-    except AttributeError:
-        order_list = None
+    if parser_data is None:
+        data = _load_parser_json()
+    else:
+        data = parser_data
+        
+    # get tokens from device including specific ones for genie.libs.parser
+    tokens = Lookup.tokens_from_device(device, data.order, PARSER_MODULE_NAME)
+    if abstract:
+        tokens.update(abstract)
 
-    lookup = Lookup.from_device(device, packages={'parser': parser})
-    results = _fuzzy_search_command(command, fuzzy, device.os, order_list)
+    results = _fuzzy_search_command(command, fuzzy, tokens)
     valid_results = []
 
     for result in results:
-        found_command, data, kwargs = result
+        found_command, parser_cls, kwargs = result
 
         if found_command == 'tokens':
             continue
 
-        # Check if all the tokens exists and take the farthest one
-        for token in lookup._tokens:
-            if token in data:
-                data = data[token]
-
-        try:
-            valid_results.append(
-                (found_command, _find_parser_cls(device, data), kwargs))
-        except KeyError:
-            # Case when the show command is only found under one of
-            # the child level tokens
+        # parser_cls can be None if there is no abstract data, but a matching
+        # command is still found
+        if parser_cls is None:
             continue
 
+        valid_results.append((found_command, parser_cls, kwargs))
+
     if not valid_results:
-        '''result is not valid. raise custom ParserNotFound exception'''
-        raise ParserNotFound(command, lookup._tokens)
+        # result is not valid. raise custom ParserNotFound exception
+        raise ParserNotFound(command, tokens)
+
+    log.debug('Parsers found for command "{}": {}'.format(command,
+                                                         str(valid_results)))
 
     # Try to add parser to telemetry data
     if INTERNAL:
@@ -313,30 +267,34 @@ def get_parser(command, device, fuzzy=False):
 
 def _fuzzy_search_command(search,
                           fuzzy,
-                          os=None,
-                          order_list=None,
-                          device=None):
+                          abstract=None):
     """ Find commands that match the search criteria.
 
         Args:
             search (`str`): the search query
             fuzzy (`bool`): whether or not fuzzy mode should be used
-            os (`str`): the device os that the search space is limited to
-            order_list (`list`): the device abstraction order list if any
-            device (`Device`): the device instance
+            abstract (`dict`): abstract tokens dict
 
         Returns:
             list: the result of the search
     """
+    global parser_data
 
-    try:
-        data = parser_data
-    except NameError:
+    if parser_data is None:
         data = _load_parser_json()
+    else:
+        data = parser_data
 
     # Perfect match should return
     if search in data:
-        return [(search, data[search], {})]
+        parser_cls = None
+        if abstract:
+            parser_cls = _get_parser_cls(search, abstract)
+            if parser_cls is None:
+                # No matching class for this command and dict of abstract tokens
+                # Do not return this parser
+                return []
+        return [(search, parser_cls, {})]
 
     # Preprocess if fuzzy
     if fuzzy:
@@ -351,27 +309,36 @@ def _fuzzy_search_command(search,
     best_score = -math.inf
     result = []
 
-    for command, source in data.items():
+    for command in data:
+        # ! This was a band-aid fix. Root cause has been resolved, but this will
+        # ! remain in-place for peace of mind
+        if command is None:
+            continue
         # Tokens and kwargs parameter must be non reference
         match_result = _matches_fuzzy(0, 0, tokens.copy(), command, {}, fuzzy)
 
         if match_result:
             kwargs, score = match_result
 
-            if order_list and device and \
-                    getattr(device, order_list[0]) not in source:
+            if score < best_score:
+                # If we found a worse match, ignore it
                 continue
 
-            if os and os not in source:
-                continue
+            parser_cls = None
+            if abstract:
+                parser_cls = _get_parser_cls(command, abstract)
+                if parser_cls is None:
+                    # No matching class found for this abstract token dict, not
+                    # the right parser
+                    continue
 
-            entry = (command, source, kwargs)
+            entry = (command, parser_cls, kwargs)
 
             if score > best_score:
                 # If we found a better match, discard everything and start new
                 result = [entry]
-
                 best_score = score
+
             elif score == best_score:
                 result.append(entry)
 
@@ -399,6 +366,41 @@ def _fuzzy_search_command(search,
                                                              for i in result))
 
     return result
+
+
+def _get_parser_cls(command, abstract):
+    '''_get_parser_cls
+
+    retrieves a parser class from the abstract matrix given an abstract token
+    dict and command
+
+        Args:
+            command (`str`): the unformatted command to load a class for
+            abstract (`dict`): abstract tokens dict with device values
+
+        Returns:
+            class: Class of the parser implementation for the given tokens
+            None: No matching parser for that command
+    '''
+    global parser_data
+
+    if parser_data is None:
+        data = _load_parser_json()
+    else:
+        data = parser_data
+
+    # Ensure the matching command is valid for this device
+    for matrix_ptr in data.iter_lookup(tokens=abstract, top=command):
+
+        # get the best fit class of the command for this device
+        try:
+            return matrix_ptr.load_ptr()
+            # we only need one result for this command
+        except KeyError:
+            # fallback to lower priority token values
+            continue
+    # No appropriate class found, return None
+    return None
 
 
 def _is_regular_token(token):
@@ -677,13 +679,6 @@ def _matches_fuzzy(i,
     else:
         # It doesn't match
         return None
-
-
-def _find_parser_cls(device, data):
-    lookup = Lookup.from_device(
-        device, packages={'parser': importlib.import_module(data['package'])})
-
-    return getattr(getattr(lookup.parser, data['module_name']), data['class'])
 
 
 class Common:

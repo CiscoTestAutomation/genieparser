@@ -5,7 +5,7 @@ IOSXE parsers for the following show commands:
     * 'show dhcp lease'
     * 'show ipv6 dhcp interface'
     * 'show ipv6 dhcp interface {interface}'
-
+    * 'show ip dhcp snooping statistics'
 """
 
 # Python
@@ -541,3 +541,51 @@ class ShowIpVerifySourceInterfaceCount(ShowIpDhcpSnoopingBidingInterface):
                 dict_count['count'] = count
 
         return dict_count
+
+# ==========================
+# Schema for 'show ip dhcp snooping statistics'
+# ==========================
+class ShowIpDhcpSnoopingStatisticsSchema(MetaParser):
+
+    ''' Schema for "show ip dhcp snooping statistics" '''
+
+    schema = {
+        "packets_forwarded" : int,
+        "packets_dropped" : int,
+        "packets_dropped_from_untrusted_ports": int
+        }
+
+# ==========================
+# Parser for 'show ip dhcp snooping statistics'
+# ==========================
+class ShowIpDhcpSnoopingStatistics(ShowIpDhcpSnoopingStatisticsSchema):
+
+    ''' Parser for "show ip dhcp snooping statistics" '''
+
+    cli_command = 'show ip dhcp snooping statistics'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+       
+        # Init vars
+        ret_dict = {}
+
+        # Packets Forwarded                                     = 122
+        # Packets Dropped                                     = 0
+        p1 = re.compile(r'^(?P<pattern>[\w\s]+)= +(?P<value>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Packets Forwarded                                     = 122
+            # Packets Dropped                                     = 0
+            # Packets Dropped From untrusted ports                  = 0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                scrubbed = (group['pattern'].strip()).replace(' ', '_')
+                ret_dict.update({scrubbed.lower(): int(group['value'])})
+                continue
+
+        return ret_dict

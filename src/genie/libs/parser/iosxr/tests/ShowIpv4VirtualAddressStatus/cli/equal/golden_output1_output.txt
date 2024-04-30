@@ -1,0 +1,11 @@
+RP/0/RP0/CPU0:f3a-r2-pod10#show ipv4 virtual address status 
+Thu Mar 14 21:41:47.627 UTC
+VRF Name: default
+Virtual IP: 5.2.21.22/16
+Active Interface Name: MgmtEth0/RP0/CPU0/0
+Active Interface MAC Address: 88fc.5dc4.9d90
+
+VRF Node Create Timestamp   : .7337
+ARP Add Timestamp           : Sat Jul 01 2002241054 16:32:19.1471
+RIB Add Timestamp           : .7337
+SNMAC Add Timestamp         : N/A

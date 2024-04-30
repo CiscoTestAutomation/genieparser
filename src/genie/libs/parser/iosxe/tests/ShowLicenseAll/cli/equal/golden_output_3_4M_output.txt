@@ -1,0 +1,152 @@
+Smart Licensing Status
+======================
+
+Smart Licensing is ENABLED
+
+License Conversion:
+  Automatic Conversion Enabled: False
+  Last Data Push: <none>
+  Last File Export: <none>
+
+Export Authorization Key:
+  Features Authorized:
+    <none>
+
+Utility:
+  Status: DISABLED
+
+Smart Licensing Using Policy:
+  Status: ENABLED
+  Reporting Mode: STANDARD
+
+Account Information:
+  Smart Account: BU Production Test As of Mar 15 20:10:30 2024 UTC
+  Virtual Account: Cat9K-FranklinDT
+
+Data Privacy:
+  Sending Hostname: yes
+    Callhome hostname privacy: DISABLED
+    Smart Licensing hostname privacy: DISABLED
+  Version privacy: DISABLED
+
+Transport:
+  Type: Smart
+  URL: https://smartreceiver.cisco.com/licservice/license
+  Proxy:
+    Address: 173.36.224.109
+    Port: 80
+    Username: <empty>
+    Password: <empty>
+  VRF: <empty>
+
+Miscellaneous:
+  Custom Id: <empty>
+
+Policy:
+  Policy in use: Installed On Mar 13 21:32:51 2024 UTC
+  Policy name: SLE Policy
+  Reporting ACK required: yes (Customer Policy)
+  Unenforced/Non-Export Perpetual Attributes:
+    First report requirement (days): 30 (Customer Policy)
+    Reporting frequency (days): 60 (Customer Policy)
+    Report on change (days): 60 (Customer Policy)
+  Unenforced/Non-Export Subscription Attributes:
+    First report requirement (days): 120 (Customer Policy)
+    Reporting frequency (days): 111 (Customer Policy)
+    Report on change (days): 111 (Customer Policy)
+  Enforced (Perpetual/Subscription) License Attributes:
+    First report requirement (days): 30 (Customer Policy)
+    Reporting frequency (days): 90 (Customer Policy)
+    Report on change (days): 60 (Customer Policy)
+  Export (Perpetual/Subscription) License Attributes:
+    First report requirement (days): 30 (Customer Policy)
+    Reporting frequency (days): 30 (Customer Policy)
+    Report on change (days): 30 (Customer Policy)
+
+Usage Reporting:
+  Last ACK received: Mar 15 20:10:40 2024 UTC
+  Next ACK deadline: May 14 20:10:40 2024 UTC
+  Reporting push interval: 30  days
+  Next ACK push check: Mar 15 22:32:55 2024 UTC
+  Next report push: Apr 13 22:27:41 2024 UTC
+  Last report push: Mar 14 22:27:41 2024 UTC
+  Last report file write: <none>
+
+Trust Code Installed:
+  Active: PID:C9350-24U,SN:FOC2705Y8X0
+    INSTALLED on Mar 13 21:32:51 2024 UTC
+  Standby: PID:C9350-24U,SN:FOC2705Y8XF
+    INSTALLED on Mar 13 21:32:52 2024 UTC
+  Member: PID:C9350-24U,SN:FOC2718Y66X
+    INSTALLED on Mar 13 21:32:52 2024 UTC
+  Member: PID:C9350-24U,SN:FOC2719YOHR
+    INSTALLED on Mar 13 21:32:52 2024 UTC
+
+License Usage
+=============
+
+network-advantage (C9350-24 Catalyst Network Advantage):
+  Description: C9350-24 Catalyst Network Advantage
+  Count: 4
+  Version: 1.0
+  Status: IN USE
+  Export status: NOT RESTRICTED
+  Feature Name: network-advantage
+  Feature Description: C9350-24 Catalyst Network Advantage
+  Enforcement type: NOT ENFORCED
+  License type: Perpetual
+
+dna-advantage (C9350-24 Catalyst Software Subscription Advantage):
+  Description: C9350-24 Catalyst Software Subscription Advantage
+  Count: 4
+  Version: 1.0
+  Status: IN USE
+  Export status: NOT RESTRICTED
+  Feature Name: dna-advantage
+  Feature Description: C9350-24 Catalyst Software Subscription Advantage
+  Enforcement type: NOT ENFORCED
+  License type: Subscription
+
+Product Information
+===================
+UDI: PID:C9350-24U,SN:FOC2705Y8X0
+
+HA UDI List:
+    Active:PID:C9350-24U,SN:FOC2705Y8X0
+    Standby:PID:C9350-24U,SN:FOC2705Y8XF
+    Member:PID:C9350-24U,SN:FOC2718Y66X
+    Member:PID:C9350-24U,SN:FOC2719YOHR
+
+Agent Version
+=============
+Smart Agent for Licensing: 5.11.4_rel/20
+
+License Authorizations
+======================
+Last Data Push: <none>
+Last File Export: <none>
+
+Overall status:
+  Active: PID:C9350-24U,SN:FOC2705Y8X0
+    Status: NOT INSTALLED
+  Standby: PID:C9350-24U,SN:FOC2705Y8XF
+    Status: NOT INSTALLED
+  Member: PID:C9350-24U,SN:FOC2718Y66X
+    Status: NOT INSTALLED
+  Member: PID:C9350-24U,SN:FOC2719YOHR
+    Status: NOT INSTALLED
+
+Purchased Licenses:
+  No Purchase Information Available
+
+Usage Report Summary:
+=====================
+Total: 703,  Purged: 288
+Total Acknowledged Received: 0,  Waiting for Ack: 86
+Available to Report: 312  Collecting Data: 2  
+ 
+Device Telemetry Report Summary:
+================================
+Data Channel: AVAILABLE
+Reports on disk: 0
+ 

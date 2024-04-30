@@ -7396,3 +7396,253 @@ class ShowOspfv3ProcessName(ShowOspfProcessName):
 
         # Call super
         return super().cli(output=output)
+    
+# ========================================================
+# Schema for 'show ospf neighbor {interface} detail'
+# ========================================================
+class ShowOspfNeighborInterfaceDetailSchema(MetaParser):
+    """Schema for show ospf neighbor {interface} detail"""
+
+    schema = {
+        "instance": {
+            Any(): {
+                Optional("total_neighbor_count"): int,
+                'neighbor' : str,
+                'interface_address' : str,
+                "area":{
+                    Any(): {
+                        Optional("interfaces"): {
+                            Any(): {
+                                "neighbors": {
+                                        "priority" : int,
+                                        "state" : str,
+                                        "state_changes" : int,
+                                        "dr_ip_addr": str,
+                                        "bdr_ip_addr": str,
+                                        Optional("options"): str,
+                                        Optional("lls_options"): str,
+                                        Optional("dead_timer"): str,
+                                        Optional("neighbor_uptime"): str,
+                                        Optional("total_dbd_retrans"): int,
+                                        Optional("index"): str,
+                                        Optional("nbr_retrans_qlen"): int,
+                                        Optional("total_retransmission"): int,
+                                        Optional("first"): str,
+                                        Optional("next"): str,
+                                        Optional("last_retrans_scan_length"): int,
+                                        Optional("last_retrans_max_scan_length"): int,
+                                        Optional("last_retrans_scan_time_msec" ): int,
+                                        Optional("last_retrans_max_scan_time_msec"): int,
+                                        Optional("ls_ack_list"): str,
+                                        Optional("ls_ack_list_pending"): int,
+                                        Optional("high_water_mark"): int,
+                                        "neighbor_interface_id": int,
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+# ========================================================
+# Parser for 'show ospf neighbor {interface} detail'
+# ========================================================
+class ShowOspfNeighborInterfaceDetail(ShowOspfNeighborInterfaceDetailSchema):
+    """Parser for show ospf vrf all-inclusive neighbor detail"""
+
+    cli_command = ["show ospf neighbor {interface} detail"]
+    def cli(self, interface="", output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command[0].format(interface=interface))
+            
+        ret_dict = {}
+        
+        # Neighbors for OSPF 37
+        p1 = re.compile(r"^Neighbors +for +OSPF +(?P<instance>(\S+))?$")
+        
+        # Neighbor 10.0.0.4, interface address 10.3.4.2
+        p2 = re.compile(r"^Neighbor +(?P<neighbor>(\S+)), +interface +address +(?P<address>(\S+))$")
+        
+        # In the area 37 via interface Bundle-Ether34 
+        p3 = re.compile(r"^In +the +area +(?P<area>\S+) +via +interface +(?P<interface>\S+)( +, +BFD +(?P<bfd_status>\w+), +Mode: (?P<mode>\w+))?$")
+        
+        # Neighbor priority is 1, State is FULL, 6 state changes
+        p4 = re.compile(r"^Neighbor +priority +is +(?P<priority>(\d+)),\s+State\sis\s+(?P<state>(\w+)),\s+(?P<num>(\d+))\s+state\s+changes$")
+        
+        # DR is 10.3.4.2 BDR is 10.3.4.1
+        p5 = re.compile(r"^DR +is +(?P<dr_ip_addr>(\S+))" " +BDR +is +(?P<bdr_ip_addr>(\S+))$")
+        
+        # Options is 0x52
+        p6_1 = re.compile(r"^Options +is +(?P<options>(\S+))$")
+        
+        # LLS Options is 0x1 (LR)
+        p6_2 = re.compile(r"^LLS +Options +is +(?P<lls_options>(.*))$")
+        
+        # Dead timer due in 00:00:36
+        p7 = re.compile(r"^Dead +timer +due +in +(?P<dead_timer>(\S+))$")
+        
+        # Neighbor is up for 12w5d
+        p8 = re.compile(r"^Neighbor +is +up +for +(?P<uptime>(\S+))$")
+        
+        # Number of DBD retrans during last exchange 0
+        p9 = re.compile(r"^Number +of +DBD +retrans +during +last"
+            " +exchange +(?P<dbd_retrans>(\d+))$")
+        
+        # Index 2/2, retransmission queue length 0, number of retransmission 22
+        p10 = re.compile(r"^Index +(?P<index>(\S+)) +retransmission +queue"
+            " +length +(?P<ql>(\d+)), +number +of"
+            " +retransmission +(?P<num_retrans>(\d+))$")
+        
+        #  First 0(0)/0(0) Next 0(0)/0(0)
+        p11 = re.compile(r"^First +(?P<first>(\S+)) +Next +(?P<next>(\S+))$")
+       
+        # Last retransmission scan length is 1, maximum is 4
+        p12 = re.compile(r"^Last +retransmission +scan +length +is"
+            " +(?P<num1>(\d+)), +maximum +is"
+            " +(?P<num2>(\d+))$")
+        
+        # Last retransmission scan time is 0 msec, maximum is 0 msec
+        p13 = re.compile(r"^Last +retransmission +scan +time +is"
+            " +(?P<num1>(\d+)) +msec, +maximum +is"
+            " +(?P<num2>(\d+)) +msec$")
+        
+        # LS Ack list: NSR-sync pending 0, high water mark 0
+        p14 = re.compile(r"^LS +Ack +list: +(?P<ls_ack_list>(\S+))"
+            " +pending +(?P<pending>(\d+)), +high +water"
+            " +mark +(?P<mark>(\d+))$")
+        
+        # Neighbor Interface ID: 10    
+        p15 = re.compile(r"^Neighbor\s+Interface\s+ID:\s+(?P<nbr_interface_id>\d+)")
+        
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # Neighbors for OSPF 37
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                instance = group["instance"]
+                instance_dict = ret_dict.setdefault("instance",{}).setdefault(instance,{})
+                
+                
+            # Neighbor 10.16.2.2, interface address 10.2.3.2
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                instance_dict["neighbor"] = group["neighbor"]
+                instance_dict["interface_address"] = group["address"]
+                continue
+            
+            # In the area 0 via interface GigabitEthernet0/0/0/2
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                area_dict = instance_dict.setdefault("area",{}).setdefault(group["area"],{})
+                intf_dict = area_dict.setdefault("interfaces",{}).setdefault(group["interface"],{})
+                neighbor_dict = intf_dict.setdefault("neighbors",{})
+                continue
+            
+            # Neighbor priority is 1, State is FULL, 6 state changes     
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                neighbor_dict["priority"] = int(group["priority"])
+                neighbor_dict["state"] = group["state"]
+                neighbor_dict["state_changes"] = int(group["num"])
+                continue
+            
+            # DR is 10.2.3.3 BDR is 10.2.3.2
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                neighbor_dict["dr_ip_addr"] = group["dr_ip_addr"]
+                neighbor_dict["bdr_ip_addr"] = group["bdr_ip_addr"]
+                continue
+
+            # Options is 0x42
+            m = p6_1.match(line)
+            if m:
+                group = m.groupdict()
+                neighbor_dict["options"] = group["options"]
+                continue
+
+            # LLS Options is 0x1 (LR)
+            m = p6_2.match(line)
+            if m:
+                group = m.groupdict()
+                neighbor_dict["lls_options"] = group["lls_options"]
+                continue
+
+            # Dead timer due in 00:00:38
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                neighbor_dict["dead_timer"] = group["dead_timer"]
+                continue
+
+            # Neighbor is up for 08:22:07
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                neighbor_dict["neighbor_uptime"] = group["uptime"]
+                continue
+            
+            # Number of DBD retrans during last exchange 0
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                neighbor_dict["total_dbd_retrans"] = int(group["dbd_retrans"])
+                continue
+            
+            # Index 2/2, retransmission queue length 0, number of retransmission 22
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                neighbor_dict["index"] = group["index"]
+                neighbor_dict["nbr_retrans_qlen"] = int(group["ql"])
+                neighbor_dict["total_retransmission"] = int(group["num_retrans"])
+                continue
+            
+            # First 0(0)/0(0) Next 0(0)/0(0)
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                neighbor_dict["first"] = group["first"]
+                neighbor_dict["next"] = group["next"]
+                continue
+            
+            # Last retransmission scan length is 0, maximum is 0
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                neighbor_dict["last_retrans_scan_length"] = int(group["num1"])
+                neighbor_dict["last_retrans_max_scan_length"] = int(group["num2"])
+                continue
+
+            # Last retransmission scan time is 0 msec, maximum is 0 msec
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                neighbor_dict["last_retrans_scan_time_msec"] = int(group["num1"])
+                neighbor_dict["last_retrans_max_scan_time_msec"] = int(group["num2"])
+                continue
+            
+            # LS Ack list: NSR-sync pending 0, high water mark 0
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                neighbor_dict["ls_ack_list"] = group["ls_ack_list"]
+                neighbor_dict["ls_ack_list_pending"] = int(group["pending"])
+                neighbor_dict["high_water_mark"] = int(group["mark"])
+                continue
+            
+            # Neighbor Interface ID: 10
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                neighbor_dict["neighbor_interface_id"] = int(group["nbr_interface_id"])
+                continue
+            
+        return ret_dict

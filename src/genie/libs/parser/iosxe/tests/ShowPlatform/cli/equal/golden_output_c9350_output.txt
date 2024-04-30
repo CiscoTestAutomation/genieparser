@@ -1,0 +1,13 @@
+Switch  Ports    Model                Serial No.   MAC address     Hw Ver.       Sw Ver.
+------  -----   ---------             -----------  --------------  -------       --------
+ 1       68     C9350-48U             FOC2718YA4B  f4ee.3181.bf80  P1B           17.15.01
+ 2       44     C9350-24U             FOC2718Y5Y6  f4ee.3181.ac00  P1B           17.15.01
+ 3       68     C9350-48U             FOC2718YAD7  f4ee.3181.c380  P1B           17.15.01
+Switch/Stack Mac Address : f4ee.3181.bf80 - Local Mac Address
+Mac persistency wait time: Indefinite
+                                   Current
+Switch#   Role        Priority      State
+-------------------------------------------
+*1       Active          15         Ready
+ 2       Standby         10         Ready
+ 3       Member          1          Ready

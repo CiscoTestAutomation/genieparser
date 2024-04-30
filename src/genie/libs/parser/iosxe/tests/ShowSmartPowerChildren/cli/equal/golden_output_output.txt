@@ -1,0 +1,24 @@
+Module/
+Interface   Role              Name                  Usage      Category  Lvl   Imp  Type
+---------   ----              ----                  -----      --------  ---   ---  ----
+Tw1/0/1     IP Phone 9971     SEP10BD18DD4A19       7.3   (W)  consumer  10    1    PoE
+Tw1/0/2     IP Phone 8945     SEPC4143CB008F7       2.6   (W)  consumer  10    1    PoE
+Tw1/0/5     IP Phone 9971     SEP08CC68E9DC37       8.5   (W)  consumer  10    1    PoE
+Tw1/0/13    IP Phone 9971     SEP08CC68304672       8.4   (W)  consumer  10    1    PoE
+Tw1/0/15    IP Phone 9971     SEP08CC68E9DB8A       7.6   (W)  consumer  10    1    PoE
+Tw1/0/24    IP Phone 9971     SEP34BDC8C7431D       8.2   (W)  consumer  10    1    PoE
+            C9300-48UXM       Peer1-topo1-ott-1     104.0 (W)  consumer  10    1    parent
+Te2/0/2     IP Phone 9971     SEP08CC6830C3B1       7.7   (W)  consumer  10    1    PoE
+Te2/0/3     C9115AXI-B        AP7069.5A74.79DC      7.1   (W)  consumer  10    1    PoE
+Te2/0/9     IP Phone 9951     SEPC40ACBE062FF       7.5   (W)  consumer  10    1    PoE
+Te2/0/10    IP Phone 9971     SEP28C7CED6CE44       7.7   (W)  consumer  10    1    PoE
+Te2/0/11    IP Phone 8945     SEPE0D173E0D8B5       2.8   (W)  consumer  10    1    PoE
+Te2/0/12    IP Phone 9971     SEP2834A2F772FB       8.3   (W)  consumer  10    1    PoE
+            C9300X-24HX       Peer1-topo1-ott-2     130.0 (W)  consumer  10    1    parent
+Gi3/0/3     IP Phone 9971     SEPD4A02A8955FC       8.7   (W)  consumer  10    1    PoE
+Gi3/0/21    IP Phone 9971     SEP5C5015452E47       8.3   (W)  consumer  10    1    PoE
+Gi3/0/23    IP Phone 9971     SEP6886A7C43524       8.0   (W)  consumer  10    1    PoE
+            C9300-24P         Peer1-topo1-ott-3     78.0  (W)  consumer  10    1    parent
+
+Subtotals: (Consumer: 420.6 (W), Meter: 0.0 (W), Producer: 0.0 (W))
+Total: 420.6 (W), Count: 18

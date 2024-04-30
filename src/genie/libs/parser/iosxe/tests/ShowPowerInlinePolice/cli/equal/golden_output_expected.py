@@ -1920,5 +1920,6 @@ expected_output = {
             "admin_police": "none",
             "oper_police": "n/a",
         },
-    }
+    },
+    'totals': 212.7,
 }

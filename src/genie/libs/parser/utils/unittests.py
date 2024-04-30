@@ -110,6 +110,7 @@ RESULT_ROW = "{name:<{max_len}s}{result:>24s}"
 RESULT_COLOUR = {
     'passed': FgColour.BRIGHT_GREEN,
     'failed': FgColour.BRIGHT_RED,
+    'blocked': FgColour.BRIGHT_RED,
     'errored': FgColour.BRIGHT_BLUE,
     'skipped': FgColour.BRIGHT_CYAN,
 }
@@ -603,6 +604,10 @@ class ParserTest(aetest.Testcase):
                     parsed_json_data = format_output(parsed_output)
                     golden_parsed_output_json_data = format_output(
                         golden_parsed_output)
+
+                    # Write actual output to file
+                    with open(f"{folder_root}/{user_test}_actual.json", "w") as f:
+                        f.write(parsed_json_data)
 
                     # Display device output, parsed output, and golden_output of failed tests
                     log.info(banner("The following is the actual raw output"))

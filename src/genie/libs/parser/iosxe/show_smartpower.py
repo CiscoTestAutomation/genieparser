@@ -168,3 +168,58 @@ class ShowSmartPowerDomain(ShowSmartPowerDomainSchema):
                 continue
 
         return ret_dict
+
+
+class ShowSmartpowerCategoriesSchema(MetaParser):
+    """ schema for show smart power version """
+    schema = {
+        "levels": {
+            Any(): {
+                Optional("label"): str,
+                Optional("color"): str,
+                Optional("feature_mapping"): str,
+            },
+        } 
+    }
+
+class ShowSmartpowerCategories(ShowSmartpowerCategoriesSchema):
+    """Parser for show smartpower categories"""
+
+    cli_command = 'show smartpower categories'
+
+    def cli(self, output=None):
+        if output is None:
+            #execute command to get output
+            output = self.device.execute(self.cli_command)
+
+        # initial return dictionary
+        ret_dict = {}
+        # Level   Label       Color       Feature Mapping
+        # -----   -----       -----       ---------------
+        # 10      Full        Red         FullPwr
+        # 9       High        Red         SmartLED
+        # 8       Reduced     Yellow      NA
+        # 7       Medium      Yellow      NA
+        # 6       Frugal      Green       NA
+        # 5       Low         Green       NA
+        # 4       Ready       Blue        NA
+        # 3       Standby     Blue        NA
+        # 2       Sleep       Brown       NA
+        # 1       Hibernate   Brown       NA
+        # 0       Shut        Black       PwrDown
+
+        p1 = re.compile(r'^(?P<level>\d+)+\s+(?P<label>\w+)+\s+(?P<color>\w+)\s+(?P<feature_mapping>\w+)$')
+        for line in output.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                level = group['level']
+                result_dict = ret_dict.setdefault('levels', {}).setdefault(level, {})
+                result_dict['label'] = group['label']
+                result_dict['color'] = group['color']
+                result_dict['feature_mapping'] = group['feature_mapping']
+                continue  
+
+        return ret_dict     
