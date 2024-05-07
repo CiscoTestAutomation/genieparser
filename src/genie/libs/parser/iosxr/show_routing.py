@@ -600,7 +600,8 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
         'show route ipv4 {protocol}',
         'show route vrf {vrf} ipv4 {protocol}',
         'show route ipv4 {route}',
-        'show route vrf {vrf} ipv4 {route}'
+        'show route vrf {vrf} ipv4 {route}',
+        'show route ipv4 next-hop {next_hop}',
     ]
 
     """
@@ -638,8 +639,8 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
     protocol_set = {'ospf', 'odr', 'isis', 'eigrp', 'static', 'mobile',
                     'rip', 'lisp', 'nhrp', 'local', 'connected', 'bgp'}
 
-    def cli(self, vrf=None, route=None, protocol=None, output=None):
-        
+    def cli(self, vrf=None, route=None, protocol=None, next_hop=None, output=None):
+
         # Check if argument from device.parse is protocol or route
         if protocol and protocol not in self.protocol_set:
             route = protocol
@@ -668,12 +669,16 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
                 cmd = self.cli_command[4].format(
                     route=route
                 )
+            elif next_hop:
+                cmd = self.cli_command[6].format(
+                    next_hop=next_hop
+                )
             else:
                 cmd = self.cli_command[0]
             out = self.device.execute(cmd)
         else:
             out = output
-        
+
         # VRF: VRF501
         # VRF: L:123
         p1 = re.compile(r'^\s*VRF: +(?P<vrf>\S+)$')

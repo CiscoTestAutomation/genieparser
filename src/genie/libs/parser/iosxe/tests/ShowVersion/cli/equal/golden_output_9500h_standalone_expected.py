@@ -3,6 +3,7 @@ expected_output = {
         'air_license_level': 'AIR DNA Advantage',
         'bootldr': 'System Bootstrap, Version 17.7.0.12, DEVELOPMENT '
                 'SOFTWARE',
+        'build_label': 'BLD_POLARIS_DEV_LATEST_20211001_150647',
         'chassis': 'C9500X-28C8D',
         'chassis_sn': 'FDO2446000Y',
         'compiled_by': 'mcpre',

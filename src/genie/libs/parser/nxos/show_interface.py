@@ -3749,6 +3749,7 @@ class ShowInterfaceStatus(ShowInterfaceStatusSchema):
         # Po101         vPC Peer-link      connected trunk     full    10G     -- 
         # Eth1/1        --                 connected routed    full    100G    QSFP-100G-SR1.2
         # Eth1/7        ig1ezsit-ucs01-A:e connected trunk     full    10G     10Gbase-SR 
+        # Eth1/15       --                 linkFlapE routed    auto    auto    QSFP-100G-CR4
         p1 = re.compile(
             r'^(?P<interface>\w\S+)\s+'
             r'(?P<name>.+?)\s+'
@@ -3757,7 +3758,7 @@ class ShowInterfaceStatus(ShowInterfaceStatusSchema):
             # containing any number of blank spaces. This makes it very difficult to use a regular
             # expression to dynamically match the status column, so hard-coding offers a happy
             # middle ground.
-            r'(?P<status>connected|disabled|sfpAbsent|noOperMem|notconnec|xcvrAbsen|down)\s+'
+            r'(?P<status>connected|disabled|sfpAbsent|noOperMem|notconnec|xcvrAbsen|down|linkFlapE)\s+'
             r'(?P<vlan>\S+)\s+'
             r'(?P<duplex_code>\S+)\s+'
             r'(?P<port_speed>\S+)\s*'

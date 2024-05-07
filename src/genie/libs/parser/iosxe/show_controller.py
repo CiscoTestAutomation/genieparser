@@ -1081,3 +1081,199 @@ class ShowControllerVDSLlocal(ShowControllerVDSLlocalSchema):
 
         return ctrl_dict
 
+
+class ShowControllerEthernetControllerLinkstatusSchema(MetaParser):
+    """Schema for show  platform  hardware fed  switch  active  npu  slot  1  port 23 link_status"""
+
+    schema = {
+        'interface':{
+            'interface_name': str,
+            'if_id': int,
+        },
+        'mac_link_status':{
+            'mpp_port_details': {
+                    Any():Or(int,str),
+            },
+            'autoneg_details':{
+                    Any():Or(int,str),
+            },
+            'autoneg_status': {
+                    Any():Or(int,str),
+            },
+            'mib_counters': {
+                    Any(): int,
+            },
+        },
+        'port': int,
+        'cmd': str,
+        'rc': str,
+        'rsn': str,
+        'phy_link_status':{
+            'phy_configuration':{
+                    Any():Or(int,str),
+            },
+            'phy_status':{
+                    Any():Or(int,str),
+            },
+        },
+ }
+
+
+
+class ShowControllerEthernetControllerLinkstatus(ShowControllerEthernetControllerLinkstatusSchema):
+    """
+    ShowPlatformSoftwareCpmSwitchActiveB0CountersInterfaceIsis
+    """
+
+    cli_command = 'show controllers ethernet-controller {interface} link-status'
+
+    def cli(self, interface, output=None):
+
+        if output is None:
+            output = self.device.execute(self.cli_command.format(interface=interface))
+
+        ret_dict = {}
+
+        #Gi1/0/5 (if_id: 1036)
+        p0 = re.compile(r'^(?P<name>\S+) +\(if\_id\: +(?P<if_id>\d+)\)$')
+
+        #******* MAC LINK STATUS ************
+        p1 = re.compile(r'^\*+\s*MAC +LINK +STATUS\s*\*+$')
+
+        #MPP PORT DETAILS
+        p2 =  re.compile(r'^MPP +PORT +DETAILS$')
+
+        #link_state: 1 pcs_status: 0  high_ber: 0
+        p3 = re.compile(r'^link_state\: +(?P<link_state>\d+) +pcs_status\: +(?P<pcs_status>\d+) +high_ber\: +(?P<high_ber>\d+)$')
+
+        #get_state = LINK_UP
+        p4 = re.compile(r'^get_state +\= +(?P<get_state>.*)$')
+
+        # Autoneg Details
+        p5 = re.compile(r'^Autoneg +Details$')
+
+        #Autoneg Status
+        p6 = re.compile(r'^Autoneg +Status$')
+
+        #MIB counters
+        p7 = re.compile(r'^MIB +counters$')
+
+        #Genral - Speed:         speed_gbps1
+        p8 = re.compile(r'^(?P<key>[\s*\w]+.*)\: +(?P<value>[\S\s]+.*)$')
+
+        #Port = 22 cmd = (port_diag unit 0 port 22 slot 0) rc = 0x0 rsn = success
+        p9 = re.compile(r'^Port +\= +(?P<port>\d+) +cmd +\= +\((?P<cmd>[\s*\w]+)\) +rc +\= +(?P<rc>\w+) +rsn +\= +(?P<rsn>\w+)$')
+
+        #PHY LINK STATUS
+        p10 = re.compile(r'^\*+\s*PHY +LINK +STATUS\s*\*+$')
+
+        #Phy Configuration :
+        p11 = re.compile(r'^Phy +Configuration +\:$')
+
+        #Phy Status :
+        p12 = re.compile(r'^Phy +Status +\:$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+
+            #Gi1/0/5 (if_id: 1036)
+            m = p0.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict = ret_dict.setdefault('interface', {})
+                root_dict['interface_name'] = group['name']
+                root_dict['if_id'] = int(group['if_id'])
+                continue
+
+
+            #******* MAC LINK STATUS ************
+            m = p1.match(line)
+            if m:
+                root_dict =  ret_dict.setdefault('mac_link_status', {})
+                continue
+
+            #MPP PORT DETAILS
+            m = p2.match(line)
+            if m:
+                root_dict =  ret_dict.setdefault('mac_link_status', {}).setdefault('mpp_port_details', {})
+                continue
+
+
+            ##link_state: 1 pcs_status: 0  high_ber: 0'
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict['link_state'] = int(group['link_state'])
+                root_dict['pcs_status'] = int(group['pcs_status'])
+                root_dict['high_ber'] = int(group['high_ber'])
+                continue
+
+            #get_state = LINK_UP
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict['get_state'] = group['get_state'].strip()
+                continue
+
+            #Autoneg Details
+            m = p5.match(line)
+            if m:
+                root_dict = ret_dict.setdefault('mac_link_status', {}).setdefault('autoneg_details', {})
+                continue
+
+            #Autoneg Status
+            m = p6.match(line)
+            if m:
+                root_dict = ret_dict.setdefault('mac_link_status', {}).setdefault('autoneg_status', {})
+                continue
+
+            #MIB counters
+            m = p7.match(line)
+            if m:
+                root_dict = ret_dict.setdefault('mac_link_status', {}).setdefault('mib_counters', {})
+                continue
+
+
+            #Genral - Speed:         speed_gbps1
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                key = group['key'].strip().lower().replace(":","").replace("-",'_').replace(" ",'_')
+                if group['value'].isdigit():
+                    root_dict.update({key: int(group['value'])})
+                else:
+                    root_dict.update({key: group['value']})
+                continue
+
+            #Port = 3 cmd = (port_diag unit 0 port 3 slot 0) rc = 0x0 rsn = success
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['port'] = int(group['port'])
+                ret_dict['cmd'] = group['cmd']
+                ret_dict['rc'] = group['rc']
+                ret_dict['rsn'] = group['rsn']
+                continue
+
+            #******* PHY LINK STATUS ************
+            m = p10.match(line)
+            if m:
+                root_dict = ret_dict.setdefault('phy_link_status', {})
+                continue
+
+            #Phy Configuration :
+            m = p11.match(line)
+            if m:
+                root_dict =  ret_dict.setdefault('phy_link_status', {}).setdefault('phy_configuration', {})
+                continue
+
+            #Phy Status :
+            m = p12.match(line)
+            if m:
+                root_dict = ret_dict.setdefault('phy_link_status', {}).setdefault('phy_status', {})
+                continue
+
+        return ret_dict
+
+

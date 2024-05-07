@@ -43,26 +43,38 @@ class ShowCapabilityFeatureMonitorErspanSourceDestination(ShowCapabilityFeatureM
 
         # ERSPAN Source Session:ERSPAN Source Session Supported: TRUE
         p1 = re.compile(r"^ERSPAN\s+Source\s+Session:ERSPAN\s+Source\s+Session\s+Supported:\s+(?P<source_supported>\w+)$")
+
         # No of Rx ERSPAN source session: 8
         p1_1 = re.compile(r"^No\s+of\s+Rx\s+ERSPAN\s+source\s+session:\s+(?P<source_rx_session_no>\d+)$")
+
         # No of Tx ERSPAN source session: 8
         p1_2 = re.compile(r"^No\s+of\s+Tx\s+ERSPAN\s+source\s+session:\s+(?P<source_tx_session_no>\d+)$")
+
         # ERSPAN Header Type supported: II and III
-        p1_3 = re.compile(r"^ERSPAN\s+Header\s+Type\s+supported:\s+(?P<header_type>\S+\s+\S+\s+\S+)$")
+        # ERSPAN Header Type supported: II
+        p1_3 = re.compile(r"^ERSPAN\s+Header\s+Type\s+supported:\s+(?P<header_type>.+)$")
+
         # ACL filter Supported: TRUE
         p1_4 = re.compile(r"^ACL\s+filter\s+Supported:\s+(?P<acl_filter>\w+)$")
+
         # SGT filter Supported: TRUE
         p1_5 = re.compile(r"^SGT\s+filter\s+Supported:\s+(?P<sgt_filter>\w+)$")
+
         # Fragmentation Supported: TRUE
         p1_6 = re.compile(r"^Fragmentation\s+Supported:\s+(?P<fragmentation_supported>\w+)$")
+
         # Truncation Supported: TRUE
         p1_7 = re.compile(r"^Truncation\s+Supported:\s+(?P<truncation_supported>\w+)$")
+
         # Sequence number Supported: FALSE
         p1_8 = re.compile(r"^Sequence\s+number\s+Supported:\s+(?P<sequence_no_supported>\w+)$")
+
         # QOS Supported: TRUE
         p1_9 = re.compile(r"^QOS\s+Supported:\s+(?P<qos_supported>\w+)$")
+
         # ERSPAN Destination Session:ERSPAN Destination Session Supported: TRUE
         p1_10 = re.compile(r"^ERSPAN\s+Destination\s+Session:ERSPAN\s+Destination\s+Session\s+Supported:\s+(?P<destination_supported>\w+)$")
+
         # Maximum No of ERSPAN destination session: 8
         p1_11 = re.compile(r"^Maximum\s+No\s+of\s+ERSPAN\s+destination\s+session:\s+(?P<destination_max_no>\d+)$")
 

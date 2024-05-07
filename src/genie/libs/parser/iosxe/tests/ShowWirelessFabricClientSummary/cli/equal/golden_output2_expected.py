@@ -30,6 +30,16 @@ expected_output = {
             "method": "Dot1x",
             "l2_vnid": 8189,
             "rloc_ip": "3.3.3.3"
+        },
+        "dca6.3249.4d6f": {
+            "ap_name": "AP-E6-25C0",
+            "type": "WLAN",
+            "wlan": 1,
+            "state": "Run",
+            "protocol": "11ax(5)",
+            "method": "SAE",
+            "l2_vnid": 8189,
+            "rloc_ip": "4.4.4.4"
         }
     }
 }

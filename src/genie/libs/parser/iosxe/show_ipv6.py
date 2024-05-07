@@ -701,13 +701,13 @@ class ShowIpv6Routers(ShowIpv6RoutersSchema):
     cli_command = ['show ipv6 routers',
                    'show ipv6 routers vrf {vrf}']
 
-    def cli(self, vrf='',output=None):
+    def cli(self, vrf=None, output=None):
         """ cli for:
          ' show ipv6 routers '
          ' show ipv6 routers vrf {vrf}'
         """
         if output is None:
-            if vrf != 'default':
+            if vrf and vrf != 'default':
                 cmd = self.cli_command[1].format(vrf=vrf)
             else:
                 cmd = self.cli_command[0]

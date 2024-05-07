@@ -1,0 +1,13 @@
+Level   Label       Color       Feature Mapping
+-----   -----       -----       ---------------
+10      Full        Red         FullPwr
+9       High        Red         SmartLED
+8       Reduced     Yellow      NA
+7       Medium      Yellow      NA
+6       Frugal      Green       NA
+5       Low         Green       NA
+4       Ready       Blue        NA
+3       Standby     Blue        NA
+2       Sleep       Brown       NA
+1       Hibernate   Brown       NA
+0       Shut        Black       PwrDown

@@ -2410,7 +2410,7 @@ class ShowDeviceTrackingMessages(ShowDeviceTrackingMessagesSchema):
 
         return device_tracking_messages_dict
 
-class ShowDeviceTrackingDatabaseInterface(MetaParser):
+class ShowDeviceTrackingDatabaseInterfaceCountSchema(MetaParser):
     schema = {
         'count': int
     }
@@ -2421,7 +2421,7 @@ class ShowDeviceTrackingDatabaseInterface(MetaParser):
 #   * 'show device-tracking database {interface} | count {match}'
 # ==========================================
 
-class ShowDeviceTrackingDatabaseInterfaceCount(ShowDeviceTrackingDatabaseInterface):
+class ShowDeviceTrackingDatabaseInterfaceCount(ShowDeviceTrackingDatabaseInterfaceCountSchema):
     """Parser for:
         show device-tracking database interface {interface} | count {match}
     """

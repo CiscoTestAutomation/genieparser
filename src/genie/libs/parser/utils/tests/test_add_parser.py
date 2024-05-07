@@ -1,18 +1,15 @@
 import logging
 import unittest
-from unittest.mock import Mock
+import pkg_resources
+from unittest.mock import Mock, patch
 
 from genie.libs.parser.utils import common
-from genie.libs.parser.utils.common import deprecated_add_parser
 
 
 class TestAddParser(unittest.TestCase):
 
     def setUp(self):
-        try:
-            del common.parser_data
-        except AttributeError as err:
-            logging.warning(err)
+        common.parser_data = None
 
     def test_add_parser_command_string(self):
         cli_command = 'show test_add_parser_single_command_string'
@@ -20,11 +17,14 @@ class TestAddParser(unittest.TestCase):
         mock_parser.MockParser = Mock(cli_command=cli_command)
         mock_parser.MockParser.__name__ = 'asa.MockParser'
         mock_parser.MockParser.__package__ = 'asa'
+        mock_package = Mock()
+        mock_package.load().return_value = {'asa': [mock_parser.MockParser]}
 
-        with self.assertRaises(AttributeError):
-            getattr(common.parser_data)
+        self.assertIsNone(common.parser_data)
 
-        deprecated_add_parser(parser=mock_parser.MockParser, os_name='asa')
+        with patch.object(pkg_resources, 'iter_entry_points') as mock_entrypoints:
+            mock_entrypoints.return_value = [mock_package]
+            common._load_parser_json()
 
         self.assertIn(cli_command, common.parser_data)
 
@@ -36,11 +36,14 @@ class TestAddParser(unittest.TestCase):
         mock_parser.MockParser = Mock(cli_command=cli_command)
         mock_parser.MockParser.__name__ = 'asa.MockParser'
         mock_parser.MockParser.__package__ = 'asa'
+        mock_package = Mock()
+        mock_package.load().return_value = {'asa': [mock_parser.MockParser]}
 
-        with self.assertRaises(AttributeError):
-            getattr(common.parser_data)
+        self.assertIsNone(common.parser_data)
 
-        deprecated_add_parser(parser=mock_parser.MockParser, os_name='asa')
+        with patch.object(pkg_resources, 'iter_entry_points') as mock_entrypoints:
+            mock_entrypoints.return_value = [mock_package]
+            common._load_parser_json()
 
         for cmd in cli_command:
             self.assertIn(cmd, common.parser_data)

@@ -1,0 +1,2 @@
+SSM Mapping : Enabled
+DNS Lookup : Enabled

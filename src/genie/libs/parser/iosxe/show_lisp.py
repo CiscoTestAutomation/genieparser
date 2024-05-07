@@ -7435,7 +7435,8 @@ class ShowLispPublicationPrefixSuperParser(ShowLispPublicationPrefixSchema):
         # Merge Locator Information
         # Locator        Pri/Wgt  State     Encap-IID  RDP-Len Src-Address
         # 100.88.88.88    20/90   up        -          0       100.77.77.77
-        p15 = re.compile(r"^(?P<merged_locators>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\S+)\s+"
+        # 100::88:88:88   20/90   up        -          0       100.77.77.77
+        p15 = re.compile(r"^(?P<merged_locators>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|([a-fA-F\d\:]+)\S+)\s+"
                          r"(?P<priority>\d+)\/(?P<weight>\d+)\s+(?P<state>\S+)\s+(?P<encap_iid>\S+)\s+"
                          r"(?P<rdp_len>\d+)\s+(?P<src_add>\S+)$")
 

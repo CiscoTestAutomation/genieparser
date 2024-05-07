@@ -1,0 +1,24 @@
+-------------------------
+Device ID: aybahugu_csr4.cisco.com
+Entry address(es):
+  IP address: 10.76.32.43
+Platform: cisco C8000V,  Capabilities: Router Switch IGMP
+Interface: GigabitEthernet2,  Port ID (outgoing port): GigabitEthernet2
+Holdtime : 172 sec
+
+Version :
+Cisco IOS Software [IOSXE], Virtual XE Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Experimental Version 17.15.20240206:153141 [BLD_POLARIS_DEV_LATEST_20240206_003547-dirty:/nobackup/aybahugu/workspace1/polaris 101]
+Copyright (c) 1986-2024 by Cisco Systems, Inc.
+Compiled Tue 06-Feb-24 21:03 by aybahugu
+
+advertisement version: 2
+Peer Source MAC: 000c.2914.2f68
+VTP Management Domain: ''
+Duplex: full
+Power drawn: 0.099 Watts
+Power request id: 2, Power management id: 5
+Power request levels are:23 4177758950 2589720576 3760740178 3715563648
+Power available id:      1       Power management id:      2
+Power available is:  0.055 Watts Management Power is:  0.003 Watts
+Management address(es):
+  IP address: 10.76.32.43

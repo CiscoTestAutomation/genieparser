@@ -211,7 +211,7 @@ class ShowRouteMapAll(ShowRouteMapAllSchema):
 
         #as-path prepend 10 10 10
         p21 = re.compile(r'^\s*as-path *prepend'
-                         r' *(?P<set_as_path_prepend>[0-9\s]+)$')
+                         r' *(?P<set_as_path_prepend>[0-9\s\.]+)$')
 
         #extcomm-list cisco delete
         p22 = re.compile(r'^\s*extcomm-list'

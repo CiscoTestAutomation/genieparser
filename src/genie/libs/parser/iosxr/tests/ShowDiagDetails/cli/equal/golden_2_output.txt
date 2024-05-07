@@ -1,0 +1,3180 @@
+show diag details
+Thu Mar  7 01:36:27.597 UTC
+
+HundredGigE0/0/0/1-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1B
+    Hardware Revision        : 16945
+    PID                      : QSFP-100G-AOC1M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAEYCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : TF-FC001-NC2
+    Top Assy. Revision       : 1B
+    PCB Serial Number        : INL24264645-A
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/0/0/2-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1B
+    Hardware Revision        : 16945
+    PID                      : QSFP-100G-AOC1M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAEYCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : TF-FC001-NC2
+    Top Assy. Revision       : 1B
+    PCB Serial Number        : INL24264690-B
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/0/0/3-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1B
+    Hardware Revision        : 16945
+    PID                      : QSFP-100G-AOC1M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAEYCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : TF-FC001-NC2
+    Top Assy. Revision       : 1B
+    PCB Serial Number        : INL24264597-A
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/0/0/4-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1B
+    Hardware Revision        : 16945
+    PID                      : QSFP-100G-AOC1M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAEYCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : TF-FC001-NC2
+    Top Assy. Revision       : 1B
+    PCB Serial Number        : INL24264577-A
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/0/0/5-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1B
+    Hardware Revision        : 16945
+    PID                      : QSFP-100G-AOC1M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAEYCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : TF-FC001-NC2
+    Top Assy. Revision       : 1B
+    PCB Serial Number        : INL24264637-A
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/0/0/7-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1B
+    Hardware Revision        : 16945
+    PID                      : QSFP-100G-AOC1M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAEYCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : TF-FC001-NC2
+    Top Assy. Revision       : 1B
+    PCB Serial Number        : INL24264645-B
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/0/0/8-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1B
+    Hardware Revision        : 16945
+    PID                      : QSFP-100G-AOC1M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAEYCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : TF-FC001-NC2
+    Top Assy. Revision       : 1B
+    PCB Serial Number        : INL24264690-A
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/0/0/9-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1B
+    Hardware Revision        : 16945
+    PID                      : QSFP-100G-AOC1M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAEYCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : TF-FC001-NC2
+    Top Assy. Revision       : 1B
+    PCB Serial Number        : INL24264597-B
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/0/0/10-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1B
+    Hardware Revision        : 16945
+    PID                      : QSFP-100G-AOC1M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAEYCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : TF-FC001-NC2
+    Top Assy. Revision       : 1B
+    PCB Serial Number        : INL24264577-B
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/0/0/11-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1B
+    Hardware Revision        : 16945
+    PID                      : QSFP-100G-AOC1M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAEYCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : TF-FC001-NC2
+    Top Assy. Revision       : 1B
+    PCB Serial Number        : INL24264637-B
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/0/0/12-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : A
+    Hardware Revision        : 8257
+    PID                      : QSFP-100G-AOC1M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAEYCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : QAOC-100G4F1A01C
+    Top Assy. Revision       : A
+    PCB Serial Number        : DTS2541C154-A
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/0/0/13-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : A
+    Hardware Revision        : 8257
+    PID                      : QSFP-100G-AOC1M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAEYCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : QAOC-100G4F1A01C
+    Top Assy. Revision       : A
+    PCB Serial Number        : DTS2541C155-A
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/0/0/18-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : A
+    Hardware Revision        : 8257
+    PID                      : QSFP-100G-AOC1M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAEYCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : QAOC-100G4F1A01C
+    Top Assy. Revision       : A
+    PCB Serial Number        : DTS2541C154-B
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/0/0/19-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : A
+    Hardware Revision        : 8257
+    PID                      : QSFP-100G-AOC1M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAEYCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : QAOC-100G4F1A01C
+    Top Assy. Revision       : A
+    PCB Serial Number        : DTS2541C155-B
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/0/0/29-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1B
+    Hardware Revision        : 16945
+    PID                      : QSFP-100G-AOC1M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAEYCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : TF-FC001-NC2
+    Top Assy. Revision       : 1B
+    PCB Serial Number        : INL24264648-A
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/0/0/34-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1B
+    Hardware Revision        : 16945
+    PID                      : QSFP-100G-AOC1M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAEYCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : TF-FC001-NC2
+    Top Assy. Revision       : 1B
+    PCB Serial Number        : INL24264648-B
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+0/0-IDPROM - NCS 5700 36x100GE 6x400GE Line Card
+ Info 
+Common Blocks:
+    Block Signature : 0xabab
+    Block Version   : 3
+    Block Length    : 160
+    Block Checksum  : 0x1b10
+    EEPROM Size     : 65535
+    Block Count     : 4
+    FRU Major Type  : 0x6003
+    FRU Minor Type  : 0x0
+    OEM String      : Cisco Systems, Inc.
+    Product ID      : NC57-36H6D-S
+    Serial Number   : JAE24480QCT
+    Part Number     : 73-102072-04
+    Part Revision   : 05
+    Mfg Deviation   : 000000000
+    H/W Version     : 0.300
+    Mfg Bits        : 0
+    Engineer Use    : 0
+    snmpOID         : 9.12.3.1.9.2.708.0
+    Power Consump   : 0 W
+    RMA Code        : 0-0-0-0
+    CLEI Code       : 00000000000
+    VID             : V00
+Card Specific Block:
+    Block Signature : 0x6003
+    Block Version   : 2
+    Block Length    : 103
+    Block Checksum  : 0x102c
+    Feature Bits    : 0x0
+    HW Changes Bits : 0x77ce
+    Card Index      : 27061
+    MAC Addresses   : 90-77-ee-75-70-f2
+    Number of MACs  : 18
+    Number of EOBC links : 2
+    Number of EPLD  : 2
+    EPLD A          : 0x0
+    EPLD B          : 0x0
+    Port Type-Num   : 0-0
+    SRAM size       : 0
+    Sensor #1       : 115,105
+    Sensor #2       : 125,110
+    Sensor #3       : -128,-128
+    Sensor #4       : -128,-128
+    Sensor #5       : -128,-128
+    Sensor #6       : -128,-128
+    Sensor #7       : -128,-128
+    Sensor #8       : -128,-128
+    Max Connector Power: 1800 W
+    Cooling Requirement: 75
+    Ambient Temperature: 55
+Temperature Sensor Block:
+    Number of Valid Sensors : 0
+Hardware Configuration Block:
+    Block Signature : 0x600b
+    Block Version   : 1
+    Block Length    : 100
+    Block Checksum  : 0x100
+
+
+0/0-DB-IDPROM - NCS 5700 36x100GE 6x400GE Line Card
+ Info 
+Common Blocks:
+    Block Signature : 0xabab
+    Block Version   : 3
+    Block Length    : 160
+    Block Checksum  : 0x1bf0
+    EEPROM Size     : 65535
+    Block Count     : 4
+    FRU Major Type  : 0x6003
+    FRU Minor Type  : 0x0
+    OEM String      : Cisco Systems, Inc.
+    Product ID      : NC57-36H6D-S
+    Serial Number   : JAE24480MLN
+    Part Number     : 73-102088-02
+    Part Revision   : 03
+    Mfg Deviation   : 000000000
+    H/W Version     : 0.1
+    Mfg Bits        : 0
+    Engineer Use    : 0
+    snmpOID         : 9.12.3.1.9.2.708.0
+    Power Consump   : 60 W
+    RMA Code        : 0-0-0-0
+    CLEI Code       : 00000000000
+    VID             : V00
+Card Specific Block:
+    Block Signature : 0x6003
+    Block Version   : 2
+    Block Length    : 103
+    Block Checksum  : 0xb2f
+    Feature Bits    : 0x0
+    HW Changes Bits : 0x77ce
+    Card Index      : 27061
+    MAC Addresses   : 00-00-00-00-00-00
+    Number of MACs  : 0
+    Number of EOBC links : 0
+    Number of EPLD  : 0
+    Port Type-Num   : 0-0
+    SRAM size       : 0
+    Sensor #1       : -128,-128
+    Sensor #2       : -128,-128
+    Sensor #3       : -128,-128
+    Sensor #4       : -128,-128
+    Sensor #5       : -128,-128
+    Sensor #6       : -128,-128
+    Sensor #7       : -128,-128
+    Sensor #8       : -128,-128
+    Max Connector Power: 0 W
+    Cooling Requirement: 0
+    Ambient Temperature: 0
+Temperature Sensor Block:
+    Number of Valid Sensors : 0
+Hardware Configuration Block:
+    Block Signature : 0x600b
+    Block Version   : 1
+    Block Length    : 100
+    Block Checksum  : 0x100
+
+
+0/1/1-IDPROM - NCS5500 2 CFP2_DCO with 100G MACsec I-TEMP MPA
+ Info 
+Common Blocks:
+    Block Signature : 0xabab
+    Block Version   : 3
+    Block Length    : 160
+    Block Checksum  : 0x1b18
+    EEPROM Size     : 65535
+    Block Count     : 4
+    FRU Major Type  : 0x6004
+    FRU Minor Type  : 0x508
+    OEM String      : Cisco Systems, Inc.
+    Product ID      : NC55-MPA-2TH-HX-S
+    Serial Number   : FOC231704Z0
+    Part Number     : 73-101785-01
+    Part Revision   : A0
+    Mfg Deviation   : NA
+    H/W Version     : 1.0
+    Mfg Bits        : 0
+    Engineer Use    : 0
+    snmpOID         : 9.12.3.1.9.2.687.0
+    Power Consump   : 80 W
+    RMA Code        : 0-0-0-0
+    CLEI Code       : CMUIAUKCTA
+    VID             : V01
+Card Specific Block:
+    Block Signature : 0x6003
+    Block Version   : 2
+    Block Length    : 103
+    Block Checksum  : 0xa39
+    Feature Bits    : 0x0
+    HW Changes Bits : 0x0
+    Card Index      : 40008
+    MAC Addresses   : 00-00-00-00-00-00
+    Number of MACs  : 0
+    Number of EOBC links : 2
+    Number of EPLD  : 2
+    EPLD A          : 0x0
+    EPLD B          : 0x0
+    Port Type-Num   : 0-0
+    SRAM size       : 0
+    Sensor #1       : 105,100
+    Sensor #2       : 105,100
+    Sensor #3       : -128,-128
+    Sensor #4       : -128,-128
+    Sensor #5       : -128,-128
+    Sensor #6       : -128,-128
+    Sensor #7       : -128,-128
+    Sensor #8       : -128,-128
+    Max Connector Power: 120 W
+    Cooling Requirement: 0
+    Ambient Temperature: 0
+Temperature Sensor Block:
+    Number of Valid Sensors : 0
+Hardware Configuration Block:
+    Block Signature : 0x600b
+    Block Version   : 1
+    Block Length    : 100
+    Block Checksum  : 0x5e72
+
+
+0/1/2-IDPROM - NCS5500 12 SFP with 10G OTN, WAN PHY, MacSec, DWDM MPA
+ Info 
+Common Blocks:
+    Block Signature : 0xabab
+    Block Version   : 3
+    Block Length    : 160
+    Block Checksum  : 0x1978
+    EEPROM Size     : 65535
+    Block Count     : 4
+    FRU Major Type  : 0x6004
+    FRU Minor Type  : 0x500
+    OEM String      : Cisco Systems, Inc.
+    Product ID      : NC55-MPA-12T-S
+    Serial Number   : FOC243802S0
+    Part Number     : 73-101461-04
+    Part Revision   : B0
+    Mfg Deviation   : 0
+    H/W Version     : 1.0
+    Mfg Bits        : 0
+    Engineer Use    : 0
+    snmpOID         : 9.12.3.1.9.2.667.0
+    Power Consump   : 86 W
+    RMA Code        : 0-0-0-0
+    CLEI Code       : CMUIATGCTA
+    VID             : V01
+Card Specific Block:
+    Block Signature : 0x6003
+    Block Version   : 2
+    Block Length    : 103
+    Block Checksum  : 0xa51
+    Feature Bits    : 0x0
+    HW Changes Bits : 0x1
+    Card Index      : 40000
+    MAC Addresses   : 00-00-00-00-00-00
+    Number of MACs  : 0
+    Number of EOBC links : 2
+    Number of EPLD  : 2
+    EPLD A          : 0x0
+    EPLD B          : 0x0
+    Port Type-Num   : 0-0
+    SRAM size       : 0
+    Sensor #1       : 125,110
+    Sensor #2       : -128,-128
+    Sensor #3       : -128,-128
+    Sensor #4       : -128,-128
+    Sensor #5       : -128,-128
+    Sensor #6       : -128,-128
+    Sensor #7       : -128,-128
+    Sensor #8       : -128,-128
+    Max Connector Power: 1200 W
+    Cooling Requirement: 75
+    Ambient Temperature: 55
+Temperature Sensor Block:
+    Number of Valid Sensors : 0
+Hardware Configuration Block:
+    Block Signature : 0x600b
+    Block Version   : 1
+    Block Length    : 100
+    Block Checksum  : 0x5e72
+
+
+TenGigE0/1/0/0-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1.0
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR-S
+    Version Identifier       : V01
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : CMUIAK6CAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C88
+    Top Assy. Revision       : 1.0
+    PCB Serial Number        : ACW25360U2J
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+TenGigE0/1/0/1-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1.0
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR-S
+    Version Identifier       : V01
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : CMUIAK6CAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C88
+    Top Assy. Revision       : 1.0
+    PCB Serial Number        : ACW25360U2D
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+TenGigE0/1/0/2-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1.0
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR-S
+    Version Identifier       : V01
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : CMUIAK6CAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C88
+    Top Assy. Revision       : 1.0
+    PCB Serial Number        : ACW25360U2X
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+TenGigE0/1/0/3-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1.0
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR-S
+    Version Identifier       : V01
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : CMUIAK6CAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C88
+    Top Assy. Revision       : 1.0
+    PCB Serial Number        : ACW25360W65
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+TenGigE0/1/0/8-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1.0
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR-S
+    Version Identifier       : V01
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : CMUIAK6CAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C88
+    Top Assy. Revision       : 1.0
+    PCB Serial Number        : ACW253607WT
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+TenGigE0/1/0/10-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1.0
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR-S
+    Version Identifier       : V01
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : CMUIAK6CAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C88
+    Top Assy. Revision       : 1.0
+    PCB Serial Number        : ACW25360W6M
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+TenGigE0/1/0/11-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1.0
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR-S
+    Version Identifier       : V01
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : CMUIAK6CAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C88
+    Top Assy. Revision       : 1.0
+    PCB Serial Number        : ACW25360W5N
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+FortyGigE0/1/0/12-IDPROM - Cisco QSFP+ 40G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : A
+    Hardware Revision        : 8257
+    PID                      : QSFP-H40G-AOC2M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP+ 40G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAFPCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : FCBN410QE2C02-C3
+    Top Assy. Revision       : A
+    PCB Serial Number        : FIW234802H6-B
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+FortyGigE0/1/0/13-IDPROM - Cisco QSFP+ 40G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : A
+    Hardware Revision        : 8257
+    PID                      : QSFP-H40G-AOC2M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP+ 40G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAFPCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : FCBN410QE2C02-C3
+    Top Assy. Revision       : A
+    PCB Serial Number        : FIW234802H6-A
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+0/1-IDPROM - NCS 5500 2XMPA Line Card, MACSec
+ Info 
+Common Blocks:
+    Block Signature : 0xabab
+    Block Version   : 3
+    Block Length    : 160
+    Block Checksum  : 0x190d
+    EEPROM Size     : 65535
+    Block Count     : 4
+    FRU Major Type  : 0x6003
+    FRU Minor Type  : 0x0
+    OEM String      : Cisco Systems, Inc.
+    Product ID      : NC55-MOD-A-S
+    Serial Number   : JAE233707AM
+    Part Number     : 73-101460-05
+    Part Revision   : A0
+    Mfg Deviation   : 0
+    H/W Version     : 1.0
+    Mfg Bits        : 0
+    Engineer Use    : 0
+    snmpOID         : 0.0.0.0.0.0.0.0
+    Power Consump   : 492 W
+    RMA Code        : 0-0-0-0
+    CLEI Code       : CMUIATTCTA
+    VID             : V01
+Card Specific Block:
+    Block Signature : 0x6003
+    Block Version   : 2
+    Block Length    : 103
+    Block Checksum  : 0xc63
+    Feature Bits    : 0x0
+    HW Changes Bits : 0x1
+    Card Index      : 27034
+    MAC Addresses   : 08-4f-a9-52-39-40
+    Number of MACs  : 64
+    Number of EOBC links : 2
+    Number of EPLD  : 2
+    EPLD A          : 0x0
+    EPLD B          : 0x0
+    Port Type-Num   : 2-22;7-1
+    SRAM size       : 0
+    Sensor #1       : 102,90
+    Sensor #2       : 125,110
+    Sensor #3       : -128,-128
+    Sensor #4       : -128,-128
+    Sensor #5       : -128,-128
+    Sensor #6       : -128,-128
+    Sensor #7       : -128,-128
+    Sensor #8       : -128,-128
+    Max Connector Power: 1200 W
+    Cooling Requirement: 75
+    Ambient Temperature: 55
+Temperature Sensor Block:
+    Number of Valid Sensors : 0
+Hardware Configuration Block:
+    Block Signature : 0x600b
+    Block Version   : 1
+    Block Length    : 100
+    Block Checksum  : 0x5e72
+
+
+0/1-DB-IDPROM - NCS 5500 2XMPA Line Card, MACSec
+ Info 
+Common Blocks:
+    Block Signature : 0xabab
+    Block Version   : 3
+    Block Length    : 160
+    Block Checksum  : 0x1af7
+    EEPROM Size     : 65535
+    Block Count     : 4
+    FRU Major Type  : 0x6003
+    FRU Minor Type  : 0x0
+    OEM String      : Cisco Systems, Inc.
+    Product ID      : NC55-MOD-A-S
+    Serial Number   : JAE2337077H
+    Part Number     : 73-101521-01
+    Part Revision   : A0
+    Mfg Deviation   : 000000000
+    H/W Version     : 1.0
+    Mfg Bits        : 0
+    Engineer Use    : 0
+    snmpOID         : 0.0.0.0.0.0.0.0
+    Power Consump   : 60 W
+    RMA Code        : 0-0-0-0
+    CLEI Code       : 00000000000
+    VID             : V00
+Card Specific Block:
+    Block Signature : 0x6003
+    Block Version   : 2
+    Block Length    : 103
+    Block Checksum  : 0x9d1
+    Feature Bits    : 0x0
+    HW Changes Bits : 0x1
+    Card Index      : 27034
+    MAC Addresses   : 00-00-00-00-00-00
+    Number of MACs  : 0
+    Number of EOBC links : 0
+    Number of EPLD  : 1
+    EPLD A          : 0x0
+    Port Type-Num   : 0-0
+    SRAM size       : 0
+    Sensor #1       : -128,-128
+    Sensor #2       : -128,-128
+    Sensor #3       : -128,-128
+    Sensor #4       : -128,-128
+    Sensor #5       : -128,-128
+    Sensor #6       : -128,-128
+    Sensor #7       : -128,-128
+    Sensor #8       : -128,-128
+    Max Connector Power: 0 W
+    Cooling Requirement: 0
+    Ambient Temperature: 0
+Temperature Sensor Block:
+    Number of Valid Sensors : 0
+Hardware Configuration Block:
+    Block Signature : 0x600b
+    Block Version   : 1
+    Block Length    : 100
+    Block Checksum  : 0x5e72
+
+
+HundredGigE0/2/0/1-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1B
+    Hardware Revision        : 16945
+    PID                      : QSFP-100G-AOC1M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAEYCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : TF-FC001-NC2
+    Top Assy. Revision       : 1B
+    PCB Serial Number        : INL24264591-A
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/2/0/2-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1B
+    Hardware Revision        : 16945
+    PID                      : QSFP-100G-AOC1M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAEYCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : TF-FC001-NC2
+    Top Assy. Revision       : 1B
+    PCB Serial Number        : INL24264537-A
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/2/0/3-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1B
+    Hardware Revision        : 16945
+    PID                      : QSFP-100G-AOC1M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAEYCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : TF-FC001-NC2
+    Top Assy. Revision       : 1B
+    PCB Serial Number        : INL24264650-B
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/2/0/4-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1B
+    Hardware Revision        : 16945
+    PID                      : QSFP-100G-AOC1M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAEYCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : TF-FC001-NC2
+    Top Assy. Revision       : 1B
+    PCB Serial Number        : INL24264663-A
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/2/0/5-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1B
+    Hardware Revision        : 16945
+    PID                      : QSFP-100G-AOC1M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAEYCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : TF-FC001-NC2
+    Top Assy. Revision       : 1B
+    PCB Serial Number        : INL24264715-B
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/2/0/7-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1B
+    Hardware Revision        : 16945
+    PID                      : QSFP-100G-AOC1M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAEYCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : TF-FC001-NC2
+    Top Assy. Revision       : 1B
+    PCB Serial Number        : INL24264591-B
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/2/0/8-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1B
+    Hardware Revision        : 16945
+    PID                      : QSFP-100G-AOC1M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAEYCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : TF-FC001-NC2
+    Top Assy. Revision       : 1B
+    PCB Serial Number        : INL24264537-B
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/2/0/9-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1B
+    Hardware Revision        : 16945
+    PID                      : QSFP-100G-AOC1M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAEYCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : TF-FC001-NC2
+    Top Assy. Revision       : 1B
+    PCB Serial Number        : INL24264650-A
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/2/0/10-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1B
+    Hardware Revision        : 16945
+    PID                      : QSFP-100G-AOC1M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAEYCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : TF-FC001-NC2
+    Top Assy. Revision       : 1B
+    PCB Serial Number        : INL24264663-B
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/2/0/11-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1B
+    Hardware Revision        : 16945
+    PID                      : QSFP-100G-AOC1M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAEYCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : TF-FC001-NC2
+    Top Assy. Revision       : 1B
+    PCB Serial Number        : INL24264715-A
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/2/0/12-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1B
+    Hardware Revision        : 16945
+    PID                      : QSFP-100G-AOC1M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAEYCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : TF-FC001-NC2
+    Top Assy. Revision       : 1B
+    PCB Serial Number        : INL24264649-A
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/2/0/13-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1B
+    Hardware Revision        : 16945
+    PID                      : QSFP-100G-AOC1M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAEYCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : TF-FC001-NC2
+    Top Assy. Revision       : 1B
+    PCB Serial Number        : INL24264718-A
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/2/0/18-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1B
+    Hardware Revision        : 16945
+    PID                      : QSFP-100G-AOC1M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAEYCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : TF-FC001-NC2
+    Top Assy. Revision       : 1B
+    PCB Serial Number        : INL24264649-B
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/2/0/19-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1B
+    Hardware Revision        : 16945
+    PID                      : QSFP-100G-AOC1M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAEYCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : TF-FC001-NC2
+    Top Assy. Revision       : 1B
+    PCB Serial Number        : INL24264718-B
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/2/0/29-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1B
+    Hardware Revision        : 16945
+    PID                      : QSFP-100G-AOC1M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAEYCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : TF-FC001-NC2
+    Top Assy. Revision       : 1B
+    PCB Serial Number        : INL24264613-A
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/2/0/34-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 2B
+    Hardware Revision        : 16946
+    PID                      : QSFP-100G-AOC5M
+    Version Identifier       : V04
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAE2CAC
+    ECI Number               : 0
+    Top Assy. Part Number    : TF-FC005-NC4
+    Top Assy. Revision       : 2B
+    PCB Serial Number        : INL272500EU-B
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/2/0/35-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1B
+    Hardware Revision        : 16945
+    PID                      : QSFP-100G-AOC1M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAEYCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : TF-FC001-NC2
+    Top Assy. Revision       : 1B
+    PCB Serial Number        : INL24264613-B
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+0/2-IDPROM - NCS 5500 36x100G Line Card
+ Info 
+Common Blocks:
+    Block Signature : 0xabab
+    Block Version   : 3
+    Block Length    : 160
+    Block Checksum  : 0x1c4c
+    EEPROM Size     : 65535
+    Block Count     : 3
+    FRU Major Type  : 0x6003
+    FRU Minor Type  : 0x0
+    OEM String      : Cisco Systems, Inc.
+    Product ID      : NC55-36X100G
+    Serial Number   : SAL2022R46W
+    Part Number     : 73-100888-04
+    Part Revision   : A0
+    Mfg Deviation   : 000000000
+    H/W Version     : 1.1
+    Mfg Bits        : 0
+    Engineer Use    : 0
+    snmpOID         : 9.12.3.1.9.2.535.0
+    Power Consump   : 902 W
+    RMA Code        : 0-0-0-0
+    CLEI Code       : IP9IAXPCAB
+    VID             : V02
+Card Specific Block:
+    Block Signature : 0x6003
+    Block Version   : 2
+    Block Length    : 103
+    Block Checksum  : 0xda4
+    Feature Bits    : 0x0
+    HW Changes Bits : 0x15
+    Card Index      : 27000
+    MAC Addresses   : 58-97-bd-92-90-4c
+    Number of MACs  : 162
+    Number of EOBC links : 2
+    Number of EPLD  : 2
+    EPLD A          : 0x0
+    EPLD B          : 0x0
+    Port Type-Num   : 2-36;7-6
+    SRAM size       : 0
+    Sensor #1       : 95,85
+    Sensor #2       : 125,110
+    Sensor #3       : 125,110
+    Sensor #4       : 125,110
+    Sensor #5       : 125,110
+    Sensor #6       : 125,110
+    Sensor #7       : 125,110
+    Sensor #8       : -128,-128
+    Max Connector Power: 1200 W
+    Cooling Requirement: 75
+    Ambient Temperature: 55
+Temperature Sensor Block:
+    Number of Valid Sensors : 0
+
+
+0/2-DB-IDPROM - NCS 5500 36x100G Line Card
+ Info 
+Common Blocks:
+    Block Signature : 0xabab
+    Block Version   : 3
+    Block Length    : 160
+    Block Checksum  : 0x18fb
+    EEPROM Size     : 65535
+    Block Count     : 3
+    FRU Major Type  : 0x6003
+    FRU Minor Type  : 0x0
+    OEM String      : Cisco Systems, Inc.
+    Product ID      : NC55-36X100G
+    Serial Number   : SAL2018PUYE
+    Part Number     : 73-100889-04
+    Part Revision   : A0
+    Mfg Deviation   : D524155
+    H/W Version     : 1.2
+    Mfg Bits        : 0
+    Engineer Use    : 0
+    snmpOID         : 0.0.0.0.0.0.0.0
+    Power Consump   : 60 W
+    RMA Code        : 0-0-0-0
+    CLEI Code       : 00000000000
+    VID             : V02
+Card Specific Block:
+    Block Signature : 0x6003
+    Block Version   : 2
+    Block Length    : 103
+    Block Checksum  : 0xfbc
+    Feature Bits    : 0x0
+    HW Changes Bits : 0x15
+    Card Index      : 27000
+    MAC Addresses   : ff-ff-ff-ff-ff-ff
+    Number of MACs  : 0
+    Number of EOBC links : 0
+    Number of EPLD  : 0
+    Port Type-Num   : 0-0
+    SRAM size       : 0
+    Sensor #1       : -128,-128
+    Sensor #2       : -128,-128
+    Sensor #3       : -128,-128
+    Sensor #4       : -128,-128
+    Sensor #5       : -128,-128
+    Sensor #6       : -128,-128
+    Sensor #7       : -128,-128
+    Sensor #8       : -128,-128
+    Max Connector Power: 0 W
+    Cooling Requirement: 0
+    Ambient Temperature: 0
+Temperature Sensor Block:
+    Number of Valid Sensors : 0
+
+
+GigabitEthernet0/3/0/0-IDPROM - Cisco SFP 1G 1000BASE-SX Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : A
+    Hardware Revision        : 0
+    PID                      : GLC-SX-MMD
+    Version Identifier       : V01
+    UDI Description          : Cisco SFP 1G 1000BASE-SX Pluggable Optics Module
+    CLEI Code                : WOTRB9VBAA
+    ECI Number               : 0
+    Top Assy. Part Number    : FTLF8519P3BNL-CS
+    Top Assy. Revision       : A
+    PCB Serial Number        : FNS21210G6V
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+GigabitEthernet0/3/0/1-IDPROM - Cisco SFP 1G 1000BASE-SX Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 01
+    Hardware Revision        : 0
+    PID                      : GLC-SX-MMD
+    Version Identifier       : V01
+    UDI Description          : Cisco SFP 1G 1000BASE-SX Pluggable Optics Module
+    CLEI Code                : WOTRB9VBAA
+    ECI Number               : 0
+    Top Assy. Part Number    : TRPUG1ESXECISE2G
+    Top Assy. Revision       : 01
+    PCB Serial Number        : OPM205003R5
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+GigabitEthernet0/3/0/2-IDPROM - Cisco SFP 1G 1000BASE-SX Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : A
+    Hardware Revision        : 0
+    PID                      : GLC-SX-MMD
+    Version Identifier       : V01
+    UDI Description          : Cisco SFP 1G 1000BASE-SX Pluggable Optics Module
+    CLEI Code                : WOTRB9VBAA
+    ECI Number               : 0
+    Top Assy. Part Number    : FTLF8519P3BNL-CS
+    Top Assy. Revision       : A
+    PCB Serial Number        : FNS21210G6K
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+GigabitEthernet0/3/0/3-IDPROM - Cisco SFP 1G 1000BASE-SX Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 01
+    Hardware Revision        : 0
+    PID                      : GLC-SX-MMD
+    Version Identifier       : V01
+    UDI Description          : Cisco SFP 1G 1000BASE-SX Pluggable Optics Module
+    CLEI Code                : WOTRB9VBAA
+    ECI Number               : 0
+    Top Assy. Part Number    : TRPUG1ESXECISE2G
+    Top Assy. Revision       : 01
+    PCB Serial Number        : OPM205003N5
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+TenGigE0/3/0/4-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1.0
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C98
+    Top Assy. Revision       : 1.0
+    PCB Serial Number        : ACW25211MAF
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+TenGigE0/3/0/5-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1.0
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C98
+    Top Assy. Revision       : 1.0
+    PCB Serial Number        : ACW25211MAD
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+TenGigE0/3/0/6-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1.0
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C98
+    Top Assy. Revision       : 1.0
+    PCB Serial Number        : ACW25211M9Y
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+TenGigE0/3/0/7-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1.0
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C98
+    Top Assy. Revision       : 1.0
+    PCB Serial Number        : ACW25211M9R
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+TenGigE0/3/0/8-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1.0
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C98
+    Top Assy. Revision       : 1.0
+    PCB Serial Number        : ACW25211MA5
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+TenGigE0/3/0/9-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : A
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR-S
+    Version Identifier       : V01
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : CMUIAK6CAA
+    ECI Number               : 0
+    Top Assy. Part Number    : FTLX8574D3BCL-C3
+    Top Assy. Revision       : A
+    PCB Serial Number        : FNS25221CP6
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+TenGigE0/3/0/10-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : A
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR-S
+    Version Identifier       : V01
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : CMUIAK6CAA
+    ECI Number               : 0
+    Top Assy. Part Number    : FTLX8574D3BCL-C3
+    Top Assy. Revision       : A
+    PCB Serial Number        : FNS25221CQG
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+TenGigE0/3/0/11-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1.0
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR-S
+    Version Identifier       : V01
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : CMUIAK6CAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C88
+    Top Assy. Revision       : 1.0
+    PCB Serial Number        : ACW25360W3N
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+GigabitEthernet0/3/0/12-IDPROM - Cisco SFP 1G 1000BASE-SX Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 01
+    Hardware Revision        : 0
+    PID                      : GLC-SX-MMD
+    Version Identifier       : V01
+    UDI Description          : Cisco SFP 1G 1000BASE-SX Pluggable Optics Module
+    CLEI Code                : WOTRB9VBAA
+    ECI Number               : 0
+    Top Assy. Part Number    : TRPUG1ESXECISE2G
+    Top Assy. Revision       : 01
+    PCB Serial Number        : OPM21270UQ3
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+TenGigE0/3/0/13-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : A
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR-S
+    Version Identifier       : V01
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : CMUIAK6CAA
+    ECI Number               : 0
+    Top Assy. Part Number    : FTLX8574D3BCL-C3
+    Top Assy. Revision       : A
+    PCB Serial Number        : FNS25221D6D
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+GigabitEthernet0/3/0/14-IDPROM - Cisco SFP 1G 1000BASE-SX Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 01
+    Hardware Revision        : 0
+    PID                      : GLC-SX-MMD
+    Version Identifier       : V01
+    UDI Description          : Cisco SFP 1G 1000BASE-SX Pluggable Optics Module
+    CLEI Code                : WOTRB9VBAA
+    ECI Number               : 0
+    Top Assy. Part Number    : TRPUG1ESXECISE2G
+    Top Assy. Revision       : 01
+    PCB Serial Number        : OPM21270UF8
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+TenGigE0/3/0/15-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1.0
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR-S
+    Version Identifier       : V01
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : CMUIAK6CAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C88
+    Top Assy. Revision       : 1.0
+    PCB Serial Number        : ACW25360W3F
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+GigabitEthernet0/3/0/16-IDPROM - Cisco SFP 1G 1000BASE-SX Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 01
+    Hardware Revision        : 0
+    PID                      : GLC-SX-MMD
+    Version Identifier       : V02
+    UDI Description          : Cisco SFP 1G 1000BASE-SX Pluggable Optics Module
+    CLEI Code                : WOTREK4BAA
+    ECI Number               : 0
+    Top Assy. Part Number    : SFBR-5716PZ-CS1
+    Top Assy. Revision       : 01
+    PCB Serial Number        : AGJ2350R04R
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+TenGigE0/3/0/17-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1.0
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR-S
+    Version Identifier       : V01
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : CMUIAK6CAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C88
+    Top Assy. Revision       : 1.0
+    PCB Serial Number        : ACW25360W3J
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+GigabitEthernet0/3/0/18-IDPROM - Cisco SFP 1G 1000BASE-SX Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 01
+    Hardware Revision        : 0
+    PID                      : GLC-SX-MMD
+    Version Identifier       : V02
+    UDI Description          : Cisco SFP 1G 1000BASE-SX Pluggable Optics Module
+    CLEI Code                : WOTREK4BAA
+    ECI Number               : 0
+    Top Assy. Part Number    : SFBR-5716PZ-CS1
+    Top Assy. Revision       : 01
+    PCB Serial Number        : AGJ2350R08B
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+TenGigE0/3/0/19-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1.0
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR-S
+    Version Identifier       : V01
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : CMUIAK6CAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C88
+    Top Assy. Revision       : 1.0
+    PCB Serial Number        : ACW25360W3Q
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+TenGigE0/3/0/20-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1.0
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR-S
+    Version Identifier       : V01
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : CMUIAK6CAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C88
+    Top Assy. Revision       : 1.0
+    PCB Serial Number        : ACW25360W4D
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+TenGigE0/3/0/21-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1.0
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR-S
+    Version Identifier       : V01
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : CMUIAK6CAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C88
+    Top Assy. Revision       : 1.0
+    PCB Serial Number        : ACW25360W45
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+TenGigE0/3/0/22-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1.0
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR-S
+    Version Identifier       : V01
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : CMUIAK6CAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C88
+    Top Assy. Revision       : 1.0
+    PCB Serial Number        : ACW25360W42
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+TenGigE0/3/0/23-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1.0
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR-S
+    Version Identifier       : V01
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : CMUIAK6CAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C88
+    Top Assy. Revision       : 1.0
+    PCB Serial Number        : ACW25360W3W
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+TenGigE0/3/0/24-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : A
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR-S
+    Version Identifier       : V01
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : CMUIAK6CAA
+    ECI Number               : 0
+    Top Assy. Part Number    : FTLX8574D3BCL-C3
+    Top Assy. Revision       : A
+    PCB Serial Number        : FNS252217PA
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+TenGigE0/3/0/25-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : A
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR-S
+    Version Identifier       : V01
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : CMUIAK6CAA
+    ECI Number               : 0
+    Top Assy. Part Number    : FTLX8574D3BCL-C3
+    Top Assy. Revision       : A
+    PCB Serial Number        : FNS252217RX
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+TenGigE0/3/0/26-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : G4.1
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : SFBR-709SMZ-CS1
+    Top Assy. Revision       : G4.1
+    PCB Serial Number        : AVD2111AJ0D
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+TenGigE0/3/0/27-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : A
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR-S
+    Version Identifier       : V01
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : CMUIAK6CAA
+    ECI Number               : 0
+    Top Assy. Part Number    : FTLX8574D3BCL-C3
+    Top Assy. Revision       : A
+    PCB Serial Number        : FNS25221CFW
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+TenGigE0/3/0/28-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1.0
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C98
+    Top Assy. Revision       : 1.0
+    PCB Serial Number        : ACW25190YKH
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+TenGigE0/3/0/29-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1.0
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C98
+    Top Assy. Revision       : 1.0
+    PCB Serial Number        : ACW25190Y0H
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+TenGigE0/3/0/30-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : G4.1
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : SFBR-709SMZ-CS1
+    Top Assy. Revision       : G4.1
+    PCB Serial Number        : AVD2111AJ0F
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+TenGigE0/3/0/31-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1.0
+    Hardware Revision        : 0
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C98
+    Top Assy. Revision       : 1.0
+    PCB Serial Number        : ACW25190XTE
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+TwentyFiveGigE0/3/0/32-IDPROM - Cisco SFP28 25G AOC1M Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 01
+    Hardware Revision        : 0
+    PID                      : SFP-25G-AOC1M
+    Version Identifier       : V01
+    UDI Description          : Cisco SFP28 25G AOC1M Pluggable Optics Module
+    CLEI Code                : CMPQAEJCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : SFBR-8CER01Z-CS1
+    Top Assy. Revision       : 01
+    PCB Serial Number        : FOF24300169-B
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+TwentyFiveGigE0/3/0/33-IDPROM - Cisco SFP28 25G AOC1M Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 01
+    Hardware Revision        : 0
+    PID                      : SFP-25G-AOC1M
+    Version Identifier       : V01
+    UDI Description          : Cisco SFP28 25G AOC1M Pluggable Optics Module
+    CLEI Code                : CMPQAEJCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : SFBR-8CER01Z-CS1
+    Top Assy. Revision       : 01
+    PCB Serial Number        : FOF24300169-A
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+TwentyFiveGigE0/3/0/34-IDPROM - Cisco SFP28 25G AOC1M Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1E
+    Hardware Revision        : 0
+    PID                      : SFP-25G-AOC1M
+    Version Identifier       : V02
+    UDI Description          : Cisco SFP28 25G AOC1M Pluggable Optics Module
+    CLEI Code                : CMPQAEJCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : TF-PY001-NCI
+    Top Assy. Revision       : 1E
+    PCB Serial Number        : INL2522A52G-A
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+TwentyFiveGigE0/3/0/35-IDPROM - Cisco SFP28 25G AOC1M Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1E
+    Hardware Revision        : 0
+    PID                      : SFP-25G-AOC1M
+    Version Identifier       : V02
+    UDI Description          : Cisco SFP28 25G AOC1M Pluggable Optics Module
+    CLEI Code                : CMPQAEJCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : TF-PY001-NCI
+    Top Assy. Revision       : 1E
+    PCB Serial Number        : INL2522A52G-B
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+TwentyFiveGigE0/3/0/36-IDPROM - Cisco SFP28 25G AOC1M Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 01
+    Hardware Revision        : 0
+    PID                      : SFP-25G-AOC1M
+    Version Identifier       : V01
+    UDI Description          : Cisco SFP28 25G AOC1M Pluggable Optics Module
+    CLEI Code                : CMPQAEJCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : SFBR-8CER01Z-CS1
+    Top Assy. Revision       : 01
+    PCB Serial Number        : FOF24300142-A
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+TwentyFiveGigE0/3/0/37-IDPROM - Cisco SFP28 25G AOC1M Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 01
+    Hardware Revision        : 0
+    PID                      : SFP-25G-AOC1M
+    Version Identifier       : V01
+    UDI Description          : Cisco SFP28 25G AOC1M Pluggable Optics Module
+    CLEI Code                : CMPQAEJCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : SFBR-8CER01Z-CS1
+    Top Assy. Revision       : 01
+    PCB Serial Number        : FOF24300142-B
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+TwentyFiveGigE0/3/0/38-IDPROM - Cisco SFP28 25G AOC1M Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 01
+    Hardware Revision        : 0
+    PID                      : SFP-25G-AOC1M
+    Version Identifier       : V01
+    UDI Description          : Cisco SFP28 25G AOC1M Pluggable Optics Module
+    CLEI Code                : CMPQAEJCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : SFBR-8CER01Z-CS1
+    Top Assy. Revision       : 01
+    PCB Serial Number        : FOF243001P9-A
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+TwentyFiveGigE0/3/0/39-IDPROM - Cisco SFP28 25G AOC1M Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 01
+    Hardware Revision        : 0
+    PID                      : SFP-25G-AOC1M
+    Version Identifier       : V01
+    UDI Description          : Cisco SFP28 25G AOC1M Pluggable Optics Module
+    CLEI Code                : CMPQAEJCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : SFBR-8CER01Z-CS1
+    Top Assy. Revision       : 01
+    PCB Serial Number        : FOF243001P9-B
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+TwentyFiveGigE0/3/0/40-IDPROM - Cisco SFP28 25G AOC1M Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1E
+    Hardware Revision        : 0
+    PID                      : SFP-25G-AOC1M
+    Version Identifier       : V02
+    UDI Description          : Cisco SFP28 25G AOC1M Pluggable Optics Module
+    CLEI Code                : CMPQAEJCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : TF-PY001-NCI
+    Top Assy. Revision       : 1E
+    PCB Serial Number        : INL2511A0L2-A
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+TwentyFiveGigE0/3/0/41-IDPROM - Cisco SFP28 25G AOC1M Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1E
+    Hardware Revision        : 0
+    PID                      : SFP-25G-AOC1M
+    Version Identifier       : V02
+    UDI Description          : Cisco SFP28 25G AOC1M Pluggable Optics Module
+    CLEI Code                : CMPQAEJCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : TF-PY001-NCI
+    Top Assy. Revision       : 1E
+    PCB Serial Number        : INL2511A0L2-B
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+TwentyFiveGigE0/3/0/42-IDPROM - Cisco SFP28 25G AOC1M Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1E
+    Hardware Revision        : 0
+    PID                      : SFP-25G-AOC1M
+    Version Identifier       : V02
+    UDI Description          : Cisco SFP28 25G AOC1M Pluggable Optics Module
+    CLEI Code                : CMPQAEJCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : TF-PY001-NCI
+    Top Assy. Revision       : 1E
+    PCB Serial Number        : INL2511A0L5-A
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+TwentyFiveGigE0/3/0/43-IDPROM - Cisco SFP28 25G AOC1M Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1E
+    Hardware Revision        : 0
+    PID                      : SFP-25G-AOC1M
+    Version Identifier       : V02
+    UDI Description          : Cisco SFP28 25G AOC1M Pluggable Optics Module
+    CLEI Code                : CMPQAEJCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : TF-PY001-NCI
+    Top Assy. Revision       : 1E
+    PCB Serial Number        : INL2511A0L5-B
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+TwentyFiveGigE0/3/0/44-IDPROM - Cisco SFP28 25G AOC1M Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 01
+    Hardware Revision        : 0
+    PID                      : SFP-25G-AOC1M
+    Version Identifier       : V01
+    UDI Description          : Cisco SFP28 25G AOC1M Pluggable Optics Module
+    CLEI Code                : CMPQAEJCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : SFBR-8CER01Z-CS1
+    Top Assy. Revision       : 01
+    PCB Serial Number        : FOF243001S9-B
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+TwentyFiveGigE0/3/0/45-IDPROM - Cisco SFP28 25G AOC1M Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 01
+    Hardware Revision        : 0
+    PID                      : SFP-25G-AOC1M
+    Version Identifier       : V01
+    UDI Description          : Cisco SFP28 25G AOC1M Pluggable Optics Module
+    CLEI Code                : CMPQAEJCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : SFBR-8CER01Z-CS1
+    Top Assy. Revision       : 01
+    PCB Serial Number        : FOF24300141-B
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+TwentyFiveGigE0/3/0/46-IDPROM - Cisco SFP28 25G AOC1M Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 01
+    Hardware Revision        : 0
+    PID                      : SFP-25G-AOC1M
+    Version Identifier       : V01
+    UDI Description          : Cisco SFP28 25G AOC1M Pluggable Optics Module
+    CLEI Code                : CMPQAEJCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : SFBR-8CER01Z-CS1
+    Top Assy. Revision       : 01
+    PCB Serial Number        : FOF243001S9-A
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+TwentyFiveGigE0/3/0/47-IDPROM - Cisco SFP28 25G AOC1M Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 01
+    Hardware Revision        : 0
+    PID                      : SFP-25G-AOC1M
+    Version Identifier       : V01
+    UDI Description          : Cisco SFP28 25G AOC1M Pluggable Optics Module
+    CLEI Code                : CMPQAEJCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : SFBR-8CER01Z-CS1
+    Top Assy. Revision       : 01
+    PCB Serial Number        : FOF24300141-A
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+FortyGigE0/3/0/48-IDPROM - Cisco QSFP+ 40G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : A
+    Hardware Revision        : 8257
+    PID                      : QSFP-H40G-AOC2M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP+ 40G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAFPCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : FCBN410QE2C02-C3
+    Top Assy. Revision       : A
+    PCB Serial Number        : FIW23480268-B
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/3/0/49-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : D
+    Hardware Revision        : 8260
+    PID                      : QSFP-100G-AOC10M
+    Version Identifier       : V01
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQACXCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : FCBN425QE1C10-C1
+    Top Assy. Revision       : D
+    PCB Serial Number        : FIW211001C3-B
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+FortyGigE0/3/0/51-IDPROM - Cisco QSFP+ 40G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : A
+    Hardware Revision        : 8257
+    PID                      : QSFP-H40G-AOC2M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP+ 40G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAFPCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : FCBN410QE2C02-C3
+    Top Assy. Revision       : A
+    PCB Serial Number        : FIW23480268-A
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+0/3-IDPROM - NCS 5500 32T16Q4H-A Line Card
+ Info 
+Common Blocks:
+    Block Signature : 0xabab
+    Block Version   : 3
+    Block Length    : 160
+    Block Checksum  : 0x1c2c
+    EEPROM Size     : 65535
+    Block Count     : 4
+    FRU Major Type  : 0x6003
+    FRU Minor Type  : 0x0
+    OEM String      : Cisco Systems, Inc.
+    Product ID      : NC55-32T16Q4H-A
+    Serial Number   : JAE243407PB
+    Part Number     : 73-102415-01
+    Part Revision   : 04
+    Mfg Deviation   : 000000000
+    H/W Version     : 0.12
+    Mfg Bits        : 0
+    Engineer Use    : 0
+    snmpOID         : 0.0.0.0.0.0.0.0
+    Power Consump   : 501 W
+    RMA Code        : 0-0-0-0
+    CLEI Code       : 00000000000
+    VID             : V00
+Card Specific Block:
+    Block Signature : 0x6003
+    Block Version   : 2
+    Block Length    : 103
+    Block Checksum  : 0xe66
+    Feature Bits    : 0x0
+    HW Changes Bits : 0x1b
+    Card Index      : 27060
+    MAC Addresses   : 64-3a-ea-e6-b4-44
+    Number of MACs  : 162
+    Number of EOBC links : 2
+    Number of EPLD  : 2
+    EPLD A          : 0x0
+    EPLD B          : 0x0
+    Port Type-Num   : 0-0
+    SRAM size       : 0
+    Sensor #1       : 115,105
+    Sensor #2       : 125,110
+    Sensor #3       : 125,110
+    Sensor #4       : 125,110
+    Sensor #5       : -128,-128
+    Sensor #6       : -128,-128
+    Sensor #7       : -128,-128
+    Sensor #8       : -128,-128
+    Max Connector Power: 1200 W
+    Cooling Requirement: 75
+    Ambient Temperature: 55
+Temperature Sensor Block:
+    Number of Valid Sensors : 0
+Hardware Configuration Block:
+    Block Signature : 0x600b
+    Block Version   : 1
+    Block Length    : 100
+    Block Checksum  : 0x5e72
+
+
+0/3-DB-IDPROM - NCS 5500 32T16Q4H-AT Line Card
+ Info 
+Common Blocks:
+    Block Signature : 0xabab
+    Block Version   : 3
+    Block Length    : 160
+    Block Checksum  : 0x1c7c
+    EEPROM Size     : 65535
+    Block Count     : 4
+    FRU Major Type  : 0x6003
+    FRU Minor Type  : 0x0
+    OEM String      : Cisco Systems, Inc.
+    Product ID      : NC55-32T16Q4H-AT
+    Serial Number   : JAE24340A9Z
+    Part Number     : 73-101808-04
+    Part Revision   : C0
+    Mfg Deviation   : 000000000
+    H/W Version     : 1.0
+    Mfg Bits        : 0
+    Engineer Use    : 0
+    snmpOID         : 0.0.0.0.0.0.0.0
+    Power Consump   : 60 W
+    RMA Code        : 0-0-0-0
+    CLEI Code       : CMUIAV0CAA
+    VID             : V01
+Card Specific Block:
+    Block Signature : 0x6003
+    Block Version   : 2
+    Block Length    : 103
+    Block Checksum  : 0xa01
+    Feature Bits    : 0x0
+    HW Changes Bits : 0x13
+    Card Index      : 27064
+    MAC Addresses   : 00-00-00-00-00-00
+    Number of MACs  : 0
+    Number of EOBC links : 0
+    Number of EPLD  : 1
+    EPLD A          : 0x0
+    Port Type-Num   : 0-0
+    SRAM size       : 0
+    Sensor #1       : -128,-128
+    Sensor #2       : -128,-128
+    Sensor #3       : -128,-128
+    Sensor #4       : -128,-128
+    Sensor #5       : -128,-128
+    Sensor #6       : -128,-128
+    Sensor #7       : -128,-128
+    Sensor #8       : -128,-128
+    Max Connector Power: 0 W
+    Cooling Requirement: 0
+    Ambient Temperature: 0
+Temperature Sensor Block:
+    Number of Valid Sensors : 0
+Hardware Configuration Block:
+    Block Signature : 0x600b
+    Block Version   : 1
+    Block Length    : 100
+    Block Checksum  : 0x100
+
+
+0/RP0-IDPROM - NCS 5500 Route Processor with SyncE
+ Info 
+Common Blocks:
+    Block Signature : 0xabab
+    Block Version   : 3
+    Block Length    : 160
+    Block Checksum  : 0x1bc8
+    EEPROM Size     : 65535
+    Block Count     : 3
+    FRU Major Type  : 0x6002
+    FRU Minor Type  : 0x0
+    OEM String      : Cisco Systems, Inc.
+    Product ID      : NC55-RP-E
+    Serial Number   : JAE24270LDQ
+    Part Number     : 73-101192-05
+    Part Revision   : A0
+    Mfg Deviation   : 000000000
+    H/W Version     : 1.1
+    Mfg Bits        : 0
+    Engineer Use    : 0
+    snmpOID         : 9.12.3.1.9.2.617.0
+    Power Consump   : 80 W
+    RMA Code        : 0-0-0-0
+    CLEI Code       : CMUCAK8BAA
+    VID             : V02
+RP Module Specific Block:
+    Block Signature : 0x6002
+    Block Version   : 2
+    Block Length    : 103
+    Block Checksum  : 0xc78
+    Feature Bits    : 0x0
+    HW Changes Bits : 0x75
+    Card Index      : 27024
+    MAC Addresses   : 3c-13-cc-21-45-f2
+    Number of MACs  : 18
+    Number of EPLD  : 2
+    EPLD A          : 0x0
+    EPLD B          : 0x0
+    Port Type-Num   : 0-0
+    Sensor #1       : 75,55
+    Sensor #2       : 60,42
+    Sensor #3       : 102,90
+    Sensor #4       : -128,-128
+    Sensor #5       : -128,-128
+    Sensor #6       : -128,-128
+    Sensor #7       : -128,-128
+    Sensor #8       : -128,-128
+    Max Connector Power: 996 W
+    Cooling Requirement: 75
+    Ambient Temperature: 55
+Temperature Sensor Block:
+    Number of Valid Sensors : 0
+
+
+0/RP1-IDPROM - NCS 5500 Route Processor with SyncE
+ Info 
+Common Blocks:
+    Block Signature : 0xabab
+    Block Version   : 3
+    Block Length    : 160
+    Block Checksum  : 0x1bc9
+    EEPROM Size     : 65535
+    Block Count     : 3
+    FRU Major Type  : 0x6002
+    FRU Minor Type  : 0x0
+    OEM String      : Cisco Systems, Inc.
+    Product ID      : NC55-RP-E
+    Serial Number   : JAE24291TEF
+    Part Number     : 73-101192-05
+    Part Revision   : A0
+    Mfg Deviation   : 000000000
+    H/W Version     : 1.1
+    Mfg Bits        : 0
+    Engineer Use    : 0
+    snmpOID         : 9.12.3.1.9.2.617.0
+    Power Consump   : 80 W
+    RMA Code        : 0-0-0-0
+    CLEI Code       : CMUCAK8BAA
+    VID             : V02
+RP Module Specific Block:
+    Block Signature : 0x6002
+    Block Version   : 2
+    Block Length    : 103
+    Block Checksum  : 0xc09
+    Feature Bits    : 0x0
+    HW Changes Bits : 0x75
+    Card Index      : 27024
+    MAC Addresses   : 3c-13-cc-2c-9f-1e
+    Number of MACs  : 18
+    Number of EPLD  : 2
+    EPLD A          : 0x0
+    EPLD B          : 0x0
+    Port Type-Num   : 0-0
+    Sensor #1       : 75,55
+    Sensor #2       : 60,42
+    Sensor #3       : 102,90
+    Sensor #4       : -128,-128
+    Sensor #5       : -128,-128
+    Sensor #6       : -128,-128
+    Sensor #7       : -128,-128
+    Sensor #8       : -128,-128
+    Max Connector Power: 996 W
+    Cooling Requirement: 75
+    Ambient Temperature: 55
+Temperature Sensor Block:
+    Number of Valid Sensors : 0
+
+
+0/FC0-IDPROM - NCS 5504 Fabric Card Gen 2
+ Info 
+Common Blocks:
+    Block Signature : 0xabab
+    Block Version   : 3
+    Block Length    : 160
+    Block Checksum  : 0x1beb
+    EEPROM Size     : 65535
+    Block Count     : 3
+    FRU Major Type  : 0x6003
+    FRU Minor Type  : 0x0
+    OEM String      : Cisco Systems, Inc.
+    Product ID      : NC55-5504-FC2
+    Serial Number   : JAE24180P3X
+    Part Number     : 73-102158-02
+    Part Revision   : 07
+    Mfg Deviation   : 000000000
+    H/W Version     : 0.2
+    Mfg Bits        : 0
+    Engineer Use    : 0
+    snmpOID         : 9.12.3.1.9.2.712.0
+    Power Consump   : 336 W
+    RMA Code        : 0-0-0-0
+    CLEI Code       : 00000000000
+    VID             : V00
+Card Specific Block:
+    Block Signature : 0x6003
+    Block Version   : 2
+    Block Length    : 103
+    Block Checksum  : 0xc8d
+    Feature Bits    : 0x0
+    HW Changes Bits : 0x1
+    Card Index      : 27043
+    MAC Addresses   : fc-58-9a-11-26-0a
+    Number of MACs  : 2
+    Number of EOBC links : 2
+    Number of EPLD  : 1
+    EPLD A          : 0x0
+    Port Type-Num   : 0-0
+    SRAM size       : 0
+    Sensor #1       : 115,105
+    Sensor #2       : 125,110
+    Sensor #3       : -128,-128
+    Sensor #4       : -128,-128
+    Sensor #5       : -128,-128
+    Sensor #6       : -128,-128
+    Sensor #7       : -128,-128
+    Sensor #8       : -128,-128
+    Max Connector Power: 1200 W
+    Cooling Requirement: 75
+    Ambient Temperature: 55
+Temperature Sensor Block:
+    Number of Valid Sensors : 0
+
+
+0/FC1-IDPROM - NCS 5504 Fabric Card Gen 2
+ Info 
+Common Blocks:
+    Block Signature : 0xabab
+    Block Version   : 3
+    Block Length    : 160
+    Block Checksum  : 0x1bdd
+    EEPROM Size     : 65535
+    Block Count     : 3
+    FRU Major Type  : 0x6003
+    FRU Minor Type  : 0x0
+    OEM String      : Cisco Systems, Inc.
+    Product ID      : NC55-5504-FC2
+    Serial Number   : JAE24380C9P
+    Part Number     : 73-102158-03
+    Part Revision   : 04
+    Mfg Deviation   : 000000000
+    H/W Version     : 0.3
+    Mfg Bits        : 0
+    Engineer Use    : 0
+    snmpOID         : 9.12.3.1.9.2.712.0
+    Power Consump   : 336 W
+    RMA Code        : 0-0-0-0
+    CLEI Code       : 00000000000
+    VID             : V00
+Card Specific Block:
+    Block Signature : 0x6003
+    Block Version   : 2
+    Block Length    : 103
+    Block Checksum  : 0xda5
+    Feature Bits    : 0x0
+    HW Changes Bits : 0x1
+    Card Index      : 27043
+    MAC Addresses   : c0-14-fe-41-ba-7a
+    Number of MACs  : 2
+    Number of EOBC links : 2
+    Number of EPLD  : 1
+    EPLD A          : 0x0
+    Port Type-Num   : 0-0
+    SRAM size       : 0
+    Sensor #1       : 115,105
+    Sensor #2       : 125,110
+    Sensor #3       : -128,-128
+    Sensor #4       : -128,-128
+    Sensor #5       : -128,-128
+    Sensor #6       : -128,-128
+    Sensor #7       : -128,-128
+    Sensor #8       : -128,-128
+    Max Connector Power: 1200 W
+    Cooling Requirement: 75
+    Ambient Temperature: 55
+Temperature Sensor Block:
+    Number of Valid Sensors : 0
+
+
+0/FC3-IDPROM - NCS 5504 Fabric Card Gen 2
+ Info 
+Common Blocks:
+    Block Signature : 0xabab
+    Block Version   : 3
+    Block Length    : 160
+    Block Checksum  : 0x1be0
+    EEPROM Size     : 65535
+    Block Count     : 3
+    FRU Major Type  : 0x6003
+    FRU Minor Type  : 0x0
+    OEM String      : Cisco Systems, Inc.
+    Product ID      : NC55-5504-FC2
+    Serial Number   : JAE24380CDH
+    Part Number     : 73-102158-03
+    Part Revision   : 04
+    Mfg Deviation   : 000000000
+    H/W Version     : 0.3
+    Mfg Bits        : 0
+    Engineer Use    : 0
+    snmpOID         : 9.12.3.1.9.2.712.0
+    Power Consump   : 336 W
+    RMA Code        : 0-0-0-0
+    CLEI Code       : 00000000000
+    VID             : V00
+Card Specific Block:
+    Block Signature : 0x6003
+    Block Version   : 2
+    Block Length    : 103
+    Block Checksum  : 0xe73
+    Feature Bits    : 0x0
+    HW Changes Bits : 0x1
+    Card Index      : 27043
+    MAC Addresses   : f8-6b-d9-5e-c7-b4
+    Number of MACs  : 2
+    Number of EOBC links : 2
+    Number of EPLD  : 1
+    EPLD A          : 0x0
+    Port Type-Num   : 0-0
+    SRAM size       : 0
+    Sensor #1       : 115,105
+    Sensor #2       : 125,110
+    Sensor #3       : -128,-128
+    Sensor #4       : -128,-128
+    Sensor #5       : -128,-128
+    Sensor #6       : -128,-128
+    Sensor #7       : -128,-128
+    Sensor #8       : -128,-128
+    Max Connector Power: 1200 W
+    Cooling Requirement: 75
+    Ambient Temperature: 55
+Temperature Sensor Block:
+    Number of Valid Sensors : 0
+
+
+0/FC4-IDPROM - NCS 5504 Fabric Card Gen 2
+ Info 
+Common Blocks:
+    Block Signature : 0xabab
+    Block Version   : 3
+    Block Length    : 160
+    Block Checksum  : 0x1be7
+    EEPROM Size     : 65535
+    Block Count     : 3
+    FRU Major Type  : 0x6003
+    FRU Minor Type  : 0x0
+    OEM String      : Cisco Systems, Inc.
+    Product ID      : NC55-5504-FC2
+    Serial Number   : JAE24380CBQ
+    Part Number     : 73-102158-03
+    Part Revision   : 04
+    Mfg Deviation   : 000000000
+    H/W Version     : 0.3
+    Mfg Bits        : 0
+    Engineer Use    : 0
+    snmpOID         : 9.12.3.1.9.2.712.0
+    Power Consump   : 336 W
+    RMA Code        : 0-0-0-0
+    CLEI Code       : 00000000000
+    VID             : V00
+Card Specific Block:
+    Block Signature : 0x6003
+    Block Version   : 2
+    Block Length    : 103
+    Block Checksum  : 0xe75
+    Feature Bits    : 0x0
+    HW Changes Bits : 0x1
+    Card Index      : 27043
+    MAC Addresses   : f8-6b-d9-5e-c7-b6
+    Number of MACs  : 2
+    Number of EOBC links : 2
+    Number of EPLD  : 1
+    EPLD A          : 0x0
+    Port Type-Num   : 0-0
+    SRAM size       : 0
+    Sensor #1       : 115,105
+    Sensor #2       : 125,110
+    Sensor #3       : -128,-128
+    Sensor #4       : -128,-128
+    Sensor #5       : -128,-128
+    Sensor #6       : -128,-128
+    Sensor #7       : -128,-128
+    Sensor #8       : -128,-128
+    Max Connector Power: 1200 W
+    Cooling Requirement: 75
+    Ambient Temperature: 55
+Temperature Sensor Block:
+    Number of Valid Sensors : 0
+
+
+0/FC5-IDPROM - NCS 5504 Fabric Card Gen 2
+ Info 
+Common Blocks:
+    Block Signature : 0xabab
+    Block Version   : 3
+    Block Length    : 160
+    Block Checksum  : 0x1bce
+    EEPROM Size     : 65535
+    Block Count     : 3
+    FRU Major Type  : 0x6003
+    FRU Minor Type  : 0x0
+    OEM String      : Cisco Systems, Inc.
+    Product ID      : NC55-5504-FC2
+    Serial Number   : JAE24380CD6
+    Part Number     : 73-102158-03
+    Part Revision   : 04
+    Mfg Deviation   : 000000000
+    H/W Version     : 0.3
+    Mfg Bits        : 0
+    Engineer Use    : 0
+    snmpOID         : 9.12.3.1.9.2.712.0
+    Power Consump   : 336 W
+    RMA Code        : 0-0-0-0
+    CLEI Code       : 00000000000
+    VID             : V00
+Card Specific Block:
+    Block Signature : 0x6003
+    Block Version   : 2
+    Block Length    : 103
+    Block Checksum  : 0xe7d
+    Feature Bits    : 0x0
+    HW Changes Bits : 0x1
+    Card Index      : 27043
+    MAC Addresses   : f8-6b-d9-5e-c7-be
+    Number of MACs  : 2
+    Number of EOBC links : 2
+    Number of EPLD  : 1
+    EPLD A          : 0x0
+    Port Type-Num   : 0-0
+    SRAM size       : 0
+    Sensor #1       : 115,105
+    Sensor #2       : 125,110
+    Sensor #3       : -128,-128
+    Sensor #4       : -128,-128
+    Sensor #5       : -128,-128
+    Sensor #6       : -128,-128
+    Sensor #7       : -128,-128
+    Sensor #8       : -128,-128
+    Max Connector Power: 1200 W
+    Cooling Requirement: 75
+    Ambient Temperature: 55
+Temperature Sensor Block:
+    Number of Valid Sensors : 0
+
+
+0/SC0-IDPROM - NCS 5500 System Controller
+ Info 
+Common Blocks:
+    Block Signature : 0xabab
+    Block Version   : 3
+    Block Length    : 160
+    Block Checksum  : 0x1aae
+    EEPROM Size     : 65535
+    Block Count     : 3
+    FRU Major Type  : 0x6003
+    FRU Minor Type  : 0x0
+    OEM String      : Cisco Systems, Inc.
+    Product ID      : NC55-SC
+    Serial Number   : FOC24023JV1
+    Part Number     : 73-17775-03
+    Part Revision   : B0
+    Mfg Deviation   : 000000000
+    H/W Version     : 2.0
+    Mfg Bits        : 0
+    Engineer Use    : 0
+    snmpOID         : 9.12.3.1.9.2.534.0
+    Power Consump   : 25 W
+    RMA Code        : 0-0-0-0
+    CLEI Code       : CMUCAHUBAB
+    VID             : V02
+Card Specific Block:
+    Block Signature : 0x6003
+    Block Version   : 2
+    Block Length    : 103
+    Block Checksum  : 0xc4f
+    Feature Bits    : 0x0
+    HW Changes Bits : 0x10
+    Card Index      : 21005
+    MAC Addresses   : 24-16-9d-50-ac-68
+    Number of MACs  : 2
+    Number of EOBC links : 0
+    Number of EPLD  : 1
+    EPLD A          : 0x0
+    Port Type-Num   : 0-0
+    SRAM size       : 0
+    Sensor #1       : -128,-128
+    Sensor #2       : -128,-128
+    Sensor #3       : -128,-128
+    Sensor #4       : 105,95
+    Sensor #5       : -128,-128
+    Sensor #6       : -128,-128
+    Sensor #7       : -128,-128
+    Sensor #8       : -128,-128
+    Max Connector Power: 996 W
+    Cooling Requirement: 75
+    Ambient Temperature: 55
+Temperature Sensor Block:
+    Number of Valid Sensors : 0
+
+
+0/SC1-IDPROM - NCS 5500 System Controller
+ Info 
+Common Blocks:
+    Block Signature : 0xabab
+    Block Version   : 3
+    Block Length    : 160
+    Block Checksum  : 0x1ab5
+    EEPROM Size     : 65535
+    Block Count     : 3
+    FRU Major Type  : 0x6003
+    FRU Minor Type  : 0x0
+    OEM String      : Cisco Systems, Inc.
+    Product ID      : NC55-SC
+    Serial Number   : FOC24023JU9
+    Part Number     : 73-17775-03
+    Part Revision   : B0
+    Mfg Deviation   : 000000000
+    H/W Version     : 2.0
+    Mfg Bits        : 0
+    Engineer Use    : 0
+    snmpOID         : 9.12.3.1.9.2.534.0
+    Power Consump   : 25 W
+    RMA Code        : 0-0-0-0
+    CLEI Code       : CMUCAHUBAB
+    VID             : V02
+Card Specific Block:
+    Block Signature : 0x6003
+    Block Version   : 2
+    Block Length    : 103
+    Block Checksum  : 0xd07
+    Feature Bits    : 0x0
+    HW Changes Bits : 0x10
+    Card Index      : 21005
+    MAC Addresses   : 4c-e1-76-a1-31-7e
+    Number of MACs  : 2
+    Number of EOBC links : 0
+    Number of EPLD  : 1
+    EPLD A          : 0x0
+    Port Type-Num   : 0-0
+    SRAM size       : 0
+    Sensor #1       : -128,-128
+    Sensor #2       : -128,-128
+    Sensor #3       : -128,-128
+    Sensor #4       : 105,95
+    Sensor #5       : -128,-128
+    Sensor #6       : -128,-128
+    Sensor #7       : -128,-128
+    Sensor #8       : -128,-128
+    Max Connector Power: 996 W
+    Cooling Requirement: 75
+    Ambient Temperature: 55
+Temperature Sensor Block:
+    Number of Valid Sensors : 0
+
+
+Rack 0-IDPROM - NCS5500 4 Slot Single Chassis
+ Info 
+Common Blocks:
+    Block Signature : 0xabab
+    Block Version   : 3
+    Block Length    : 160
+    Block Checksum  : 0x1640
+    EEPROM Size     : 65535
+    Block Count     : 5
+    FRU Major Type  : 0x6001
+    FRU Minor Type  : 0x2
+    OEM String      : Cisco Systems, Inc.
+    Product ID      : NCS-5504
+    Serial Number   : FOX2516P56W
+    Part Number     : 73-18927-01
+    Part Revision   : A0
+    Mfg Deviation   : 0
+    H/W Version     : 1.2
+    Mfg Bits        : 0
+    Engineer Use    : 0
+    snmpOID         : 9.12.3.1.3.1844.0.0
+    Power Consump   : 0 W
+    RMA Code        : 0-0-0-0
+    CLEI Code       : CMMZK00ARA
+    VID             : V01
+Chassis Specific Block:
+    Block Signature : 0x6001
+    Block Version   : 3
+    Block Length    : 39
+    Block Checksum  : 0x344
+    Feature Bits    : 0x0
+    HW Changes Bits : 0x0
+    Stackmib OID    : 0
+    MAC Addresses   : 7c-f8-80-0b-a8-00
+    Number of MACs  : 1024
+    OEM Enterprise  : 9
+    OEM MIB Offset  : 5
+    MAX Connector Power: 0 W
+    Cooling Coefficient: 0
+Second Serial Number Specific Block:
+    Serial Number   : FOC250550UU
+
+
+0/PM0-IDPROM - NCS 5500 3.15KW HV AC/DC Dual Input Power Supply
+ Info 
+Common Blocks:
+    Block Signature : 0xabab
+    Block Version   : 3
+    Block Length    : 160
+    Block Checksum  : 0x18fc
+    EEPROM Size     : 65535
+    Block Count     : 2
+    FRU Major Type  : 0xab01
+    FRU Minor Type  : 0x30
+    OEM String      : Cisco Systems, Inc.
+    Product ID      : NC55-PWR-3KW-2HV
+    Serial Number   : DTM233701HG
+    Part Number     : 341-0747-01
+    Part Revision   : A0
+    Mfg Deviation   : 0
+    H/W Version     : 1.0
+    Mfg Bits        : 0
+    Engineer Use    : 0
+    snmpOID         : 9.12.3.1.6.590.0.0
+    Power Consump   : 0 W
+    RMA Code        : 0-0-0-0
+    CLEI Code       : CMUPAFXCAA
+    VID             : V01
+Power Supply Specific Block:
+    Block Signature : 0xab01
+    Block Version   : 2
+    Block Length    : 36
+    Block Checksum  : 0x739
+    Feature Bits    : 0x0
+    Current 110v    : 0
+    Current 220v    : 26250
+    Stackmib OID    : 0
+    Current mode1   : 0
+    Current mode2   : 0
+    Current mode3   : 0
+    Current mode4   : 0
+    Max Float Current mode1: 0
+    Max Float Current mode2: 0
+    Max Float Current mode3: 0
+    Max Float Current mode4: 0
+
+
+0/PM1-IDPROM - NCS 5500 3.15KW HV AC/DC Dual Input Power Supply
+ Info 
+Common Blocks:
+    Block Signature : 0xabab
+    Block Version   : 3
+    Block Length    : 160
+    Block Checksum  : 0x18ec
+    EEPROM Size     : 65535
+    Block Count     : 2
+    FRU Major Type  : 0xab01
+    FRU Minor Type  : 0x30
+    OEM String      : Cisco Systems, Inc.
+    Product ID      : NC55-PWR-3KW-2HV
+    Serial Number   : DTM233701M2
+    Part Number     : 341-0747-01
+    Part Revision   : A0
+    Mfg Deviation   : 0
+    H/W Version     : 1.0
+    Mfg Bits        : 0
+    Engineer Use    : 0
+    snmpOID         : 9.12.3.1.6.590.0.0
+    Power Consump   : 0 W
+    RMA Code        : 0-0-0-0
+    CLEI Code       : CMUPAFXCAA
+    VID             : V01
+Power Supply Specific Block:
+    Block Signature : 0xab01
+    Block Version   : 2
+    Block Length    : 36
+    Block Checksum  : 0x739
+    Feature Bits    : 0x0
+    Current 110v    : 0
+    Current 220v    : 26250
+    Stackmib OID    : 0
+    Current mode1   : 0
+    Current mode2   : 0
+    Current mode3   : 0
+    Current mode4   : 0
+    Max Float Current mode1: 0
+    Max Float Current mode2: 0
+    Max Float Current mode3: 0
+    Max Float Current mode4: 0
+
+
+0/PM2-IDPROM - NCS 5500 3.15KW HV AC/DC Dual Input Power Supply
+ Info 
+Common Blocks:
+    Block Signature : 0xabab
+    Block Version   : 3
+    Block Length    : 160
+    Block Checksum  : 0x1906
+    EEPROM Size     : 65535
+    Block Count     : 2
+    FRU Major Type  : 0xab01
+    FRU Minor Type  : 0x30
+    OEM String      : Cisco Systems, Inc.
+    Product ID      : NC55-PWR-3KW-2HV
+    Serial Number   : DTM233701LM
+    Part Number     : 341-0747-01
+    Part Revision   : A0
+    Mfg Deviation   : 0
+    H/W Version     : 1.0
+    Mfg Bits        : 0
+    Engineer Use    : 0
+    snmpOID         : 9.12.3.1.6.590.0.0
+    Power Consump   : 0 W
+    RMA Code        : 0-0-0-0
+    CLEI Code       : CMUPAFXCAA
+    VID             : V01
+Power Supply Specific Block:
+    Block Signature : 0xab01
+    Block Version   : 2
+    Block Length    : 36
+    Block Checksum  : 0x739
+    Feature Bits    : 0x0
+    Current 110v    : 0
+    Current 220v    : 26250
+    Stackmib OID    : 0
+    Current mode1   : 0
+    Current mode2   : 0
+    Current mode3   : 0
+    Current mode4   : 0
+    Max Float Current mode1: 0
+    Max Float Current mode2: 0
+    Max Float Current mode3: 0
+    Max Float Current mode4: 0
+
+
+0/PM3-IDPROM - NCS 5500 3.15KW HV AC/DC Dual Input Power Supply
+ Info 
+Common Blocks:
+    Block Signature : 0xabab
+    Block Version   : 3
+    Block Length    : 160
+    Block Checksum  : 0x190a
+    EEPROM Size     : 65535
+    Block Count     : 2
+    FRU Major Type  : 0xab01
+    FRU Minor Type  : 0x30
+    OEM String      : Cisco Systems, Inc.
+    Product ID      : NC55-PWR-3KW-2HV
+    Serial Number   : DTM233701JS
+    Part Number     : 341-0747-01
+    Part Revision   : A0
+    Mfg Deviation   : 0
+    H/W Version     : 1.0
+    Mfg Bits        : 0
+    Engineer Use    : 0
+    snmpOID         : 9.12.3.1.6.590.0.0
+    Power Consump   : 0 W
+    RMA Code        : 0-0-0-0
+    CLEI Code       : CMUPAFXCAA
+    VID             : V01
+Power Supply Specific Block:
+    Block Signature : 0xab01
+    Block Version   : 2
+    Block Length    : 36
+    Block Checksum  : 0x739
+    Feature Bits    : 0x0
+    Current 110v    : 0
+    Current 220v    : 26250
+    Stackmib OID    : 0
+    Current mode1   : 0
+    Current mode2   : 0
+    Current mode3   : 0
+    Current mode4   : 0
+    Max Float Current mode1: 0
+    Max Float Current mode2: 0
+    Max Float Current mode3: 0
+    Max Float Current mode4: 0
+
+
+0/FT0-IDPROM - Fan Tray module for 4 slot chassis
+ Info 
+Common Blocks:
+    Block Signature : 0xabab
+    Block Version   : 3
+    Block Length    : 160
+    Block Checksum  : 0x1843
+    EEPROM Size     : 65535
+    Block Count     : 3
+    FRU Major Type  : 0xab04
+    FRU Minor Type  : 0x42
+    OEM String      : Cisco Systems, Inc.
+    Product ID      : NC55-5504-FAN2
+    Serial Number   : FOX2437PCLG
+    Part Number     : 800-107505-02
+    Part Revision   : 02
+    Mfg Deviation   : 0
+    H/W Version     : 0.2
+    Mfg Bits        : 0
+    Engineer Use    : 0
+    snmpOID         : 9.12.3.1.7.408.0.0
+    Power Consump   : 144 W
+    RMA Code        : 0-0-0-0
+    CLEI Code       : TBD
+    VID             : V00
+Fan Module Specific Block:
+    Feature Bits    : 0x0
+    HW Changes Bits : 0x0
+    Stackmib OID    : 0
+    Cooling Capacity    : 358
+    Ambient Temperature : 55
+Second Serial Number Specific Block:
+    Serial Number   : FOX2437PCLG
+
+
+0/FT1-IDPROM - Fan Tray module for 4 slot chassis
+ Info 
+Common Blocks:
+    Block Signature : 0xabab
+    Block Version   : 3
+    Block Length    : 160
+    Block Checksum  : 0x1854
+    EEPROM Size     : 65535
+    Block Count     : 3
+    FRU Major Type  : 0xab04
+    FRU Minor Type  : 0x42
+    OEM String      : Cisco Systems, Inc.
+    Product ID      : NC55-5504-FAN2
+    Serial Number   : FOX2437PCLX
+    Part Number     : 800-107505-02
+    Part Revision   : 02
+    Mfg Deviation   : 0
+    H/W Version     : 0.2
+    Mfg Bits        : 0
+    Engineer Use    : 0
+    snmpOID         : 9.12.3.1.7.408.0.0
+    Power Consump   : 144 W
+    RMA Code        : 0-0-0-0
+    CLEI Code       : TBD
+    VID             : V00
+Fan Module Specific Block:
+    Feature Bits    : 0x0
+    HW Changes Bits : 0x0
+    Stackmib OID    : 0
+    Cooling Capacity    : 358
+    Ambient Temperature : 55
+Second Serial Number Specific Block:
+    Serial Number   : FOX2437PCLX
+
+
+0/FT2-IDPROM - Fan Tray module for 4 slot chassis
+ Info 
+Common Blocks:
+    Block Signature : 0xabab
+    Block Version   : 3
+    Block Length    : 160
+    Block Checksum  : 0x183d
+    EEPROM Size     : 65535
+    Block Count     : 3
+    FRU Major Type  : 0xab04
+    FRU Minor Type  : 0x42
+    OEM String      : Cisco Systems, Inc.
+    Product ID      : NC55-5504-FAN2
+    Serial Number   : FOX2437PCLA
+    Part Number     : 800-107505-02
+    Part Revision   : 02
+    Mfg Deviation   : 0
+    H/W Version     : 0.2
+    Mfg Bits        : 0
+    Engineer Use    : 0
+    snmpOID         : 9.12.3.1.7.408.0.0
+    Power Consump   : 144 W
+    RMA Code        : 0-0-0-0
+    CLEI Code       : TBD
+    VID             : V00
+Fan Module Specific Block:
+    Feature Bits    : 0x0
+    HW Changes Bits : 0x0
+    Stackmib OID    : 0
+    Cooling Capacity    : 358
+    Ambient Temperature : 55
+Second Serial Number Specific Block:
+    Serial Number   : FOX2437PCLA
+

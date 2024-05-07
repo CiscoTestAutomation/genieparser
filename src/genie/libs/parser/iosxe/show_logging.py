@@ -655,8 +655,7 @@ class ShowLoggingOnboardRpActiveUptime(ShowLoggingOnboardRpActiveUptimeSchema):
                    'show logging onboard switch {switch_num} uptime',
                    'show logging onboard Rp active uptime',
                    'show logging onboard rp {rp_standby} uptime']
-
-				   
+                
     def cli(self,switch_num="",rp_active="",output=None,rp_standby=""): 
 
         if output is None: 
@@ -922,8 +921,7 @@ class ShowLoggingOnboardRpActiveTemperatureContinuous(ShowLoggingOnboardRpActive
    
     cli_command = ['show logging onboard switch {switch_num} rp active {include} continuous',
                    'show logging onboard rp active {include} continuous',
-                   'show logging onboard rp {rp_standby} {include} continuous']
-				   
+                   'show logging onboard rp {rp_standby} {include} continuous']                 
     def cli(self, include="", switch_num="", output=None, rp_standby="",): 
 
         if output is None:
@@ -936,8 +934,7 @@ class ShowLoggingOnboardRpActiveTemperatureContinuous(ShowLoggingOnboardRpActive
                 cmd = self.cli_command[1]  
 
             # Execute the command
-            output = self.device.execute(cmd)
-			
+            output = self.device.execute(cmd)          
         #TEMPERATURE CONTINUOUS INFORMATION
         p1 = re.compile('^(?P<continuous_info>[A-Z ]+) CONTINUOUS INFORMATION$')
 
@@ -1128,13 +1125,18 @@ class ShowLoggingOnboardRpActiveUptimeDetail(ShowLoggingOnboardRpActiveUptimeDet
     Parser for :
         'show logging onboard Rp active uptime detail'
     """
-    cli_command = 'show logging onboard rp active uptime detail'
-    def cli(self, output=None):
+    cli_command = ['show logging onboard rp active uptime detail',
+                   'show logging onboard switch {switch_num} rp active uptime detail']
+    def cli(self, switch_num="", output=None):
  
         if output is None:
             # Build the command
-           
-            output = self.device.execute(self.cli_command)
+            if switch_num:
+                cmd = self.cli_command[1].format(switch_num=switch_num) 
+            else:
+                cmd = self.cli_command[0]  
+          
+            output = self.device.execute(cmd)
       
         ret_dict = {}
        
@@ -1591,4 +1593,208 @@ class ShowLoggingProcessSmdReverse(ShowLoggingProcessSmdReverseSchema):
                 time_dict['message'] = group_dict['message']
                 continue
         
+        return ret_dict
+
+class ShowLoggingOnboardRpStandbyUptimeDetailSchema(MetaParser):
+ 
+    '''Schema for:
+        show logg onboard rp standby up detail
+    '''
+   
+    schema = {
+        'uptime_summary': {
+            'first_customer_power_on': str,
+            'number_of_reset': int,
+            'number_of_slot_changes': int,
+            'current_reset_reason': str,
+            'current_reset_timestamp': str,
+            'current_slot': int,
+            'chassis_type': str,
+            Any(): {
+                'years': int,
+                'weeks': int,
+                'days': int,
+                'hours': int,
+                'minutes': int,
+            },
+        },
+        'uptime_continuous': {
+            'time_stamp': {
+                Any(): {
+                'reset_reason': str,
+                'uptime_days': str,
+                'uptime_hours': str,
+                'uptime_minutes': str,
+                'uptime_weeks': str,
+                'uptime_years': str,
+                },
+            },
+        },
+    }
+   
+class ShowLoggingOnboardRpStandbyUptimeDetail(ShowLoggingOnboardRpStandbyUptimeDetailSchema):
+    """
+    Parser for :
+        'show logging onboard rp standby uptime detail'
+    """
+    cli_command = ['show logging onboard rp standby uptime detail',
+                   'show logging onboard switch {switch_num} rp standby uptime detail']
+    def cli(self, switch_num="", output=None):
+ 
+        if output is None:
+            # Build the command
+            if switch_num:
+                cmd = self.cli_command[1].format(switch_num=switch_num) 
+            else:
+                cmd = self.cli_command[0]  
+          
+            output = self.device.execute(cmd)
+      
+        ret_dict = {}
+       
+        # First customer power on : 06/22/2021 12:35:40
+        p1 = re.compile('^First customer power on :?\s?(?P<first_customer_poweron>(\d+\/){2}\d+ \d+:\d+:\d+)$')
+       
+        # Total uptime            :  0  years  12 weeks  1  days  17 hours  55 minutes
+        p2 = re.compile('^Total uptime\s+:\s+(?P<years>\d+)\s+\w+\s+(?P<weeks>\d+)\s+\w+\s+(?P<days>\d+)\s+\w+\s+(?P<hours>\d+)\s+\w+\s+(?P<minutes>\d+)\s+\w+$')
+       
+        # Total downtime          :  2177 years  8  weeks  0  days  2  hours  29 minutes
+        p3 = re.compile('^Total downtime\s+:\s+(?P<years>\d+)\s+\w+\s+(?P<weeks>\d+)\s+\w+\s+(?P<days>\d+)\s+\w+\s+(?P<hours>\d+)\s+\w+\s+(?P<minutes>\d+)\s+\w+$')
+       
+        # Number of resets        : 630
+        p4 = re.compile('^Number of resets\s+: (?P<numberof_reset>\d+)$')
+       
+        # Number of slot changes  : 1
+        p5 = re.compile('^Number of slot changes\s+: (?P<numberof_slot_changes>\d+)$')
+       
+        # Current reset reason    : Reload Command
+        p6 = re.compile('^Current reset reason\s+: (?P<current_reset_reason>[A-Z a-z]+)$')
+       
+        # Current reset timestamp : 10/06/2019 01:28:26
+        p7 = re.compile('^Current reset timestamp\s+: (?P<current_reset_timestamp>(\d+\/){2}\d+.*)$')
+       
+        # Current slot            : 1
+        p8 = re.compile('^Current slot\s+: (?P<current_slot>\d+)$')
+       
+        # Chassis type            : 80
+        p9 = re.compile('^Chassis type\s+: (?P<chassis_type>.+?)$')
+       
+        # Current uptime          :  0  years  1  weeks  1  days  0  hours  0  minutes
+        p10 = re.compile('^Current uptime\s+:\s+(?P<years>\d+)\s+\w+\s+(?P<weeks>\d+)\s+\w+\s+(?P<days>\d+)\s+\w+\s+(?P<hours>\d+)\s+\w+\s+(?P<minutes>\d+)\s+\w+$')
+ 
+        # --------------------------------------------------------------------------------
+        # Time Stamp          | Reset                       | Uptime
+        # MM/DD/YYYY HH:MM:SS | Reason                      | years weeks days hours minutes   
+        # --------------------------------------------------------------------------------
+        # 04/02/2022 21:32:31   EHSA standby down             0     0     0     0     13
+        # 04/02/2022 22:11:32   Reload Command                0     0     0     0     38
+ 
+        p11 = re.compile('^(?P<time_stamp>(\d+\/){2}\d+.\d+:\d+:\d+)\s+(?P<reset_reason>.+?)\s+?(?P<uptime_years>\d+)\s+(?P<uptime_weeks>\d+)\s+(?P<uptime_days>\d+)\s+(?P<uptime_hours>\d+)\s+(?P<uptime_minutes>\d+)$')
+       
+        for line in output.splitlines():
+            line = line.strip()
+           
+            root_dict=ret_dict.setdefault('uptime_summary',{})
+           
+            # First customer power on : 06/22/2021 12:35:40
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict['first_customer_power_on'] = group['first_customer_poweron']
+                continue
+               
+            # Total uptime            :  0  years  12 weeks  1  days  17 hours  55 minutes
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict1=root_dict.setdefault('total_uptime',{})
+                root_dict1['years'] = int(group['years'])
+                root_dict1['weeks'] = int(group['weeks'])
+                root_dict1['days'] = int(group['days'])
+                root_dict1['hours'] = int(group['hours'])
+                root_dict1['minutes'] = int(group['minutes'])
+                continue
+               
+            # Total downtime          :  2177 years  8  weeks  0  days  2  hours  29 minutes
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict1=root_dict.setdefault('total_downtime',{})
+                root_dict1['years'] = int(group['years'])
+                root_dict1['weeks'] = int(group['weeks'])
+                root_dict1['days'] = int(group['days'])
+                root_dict1['hours'] = int(group['hours'])
+                root_dict1['minutes'] = int(group['minutes'])
+                continue
+               
+            # Number of resets        : 630
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict['number_of_reset'] = int(group['numberof_reset'])
+                continue
+               
+            # Number of slot changes  : 1
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict['number_of_slot_changes'] = int(group['numberof_slot_changes'])
+                continue
+               
+            # Current reset reason    : Reload Command
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict['current_reset_reason'] = group['current_reset_reason']
+                continue
+               
+            # Current reset timestamp : 10/06/2019 01:28:26
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict['current_reset_timestamp'] = group['current_reset_timestamp']
+                continue
+                
+            # Current slot            : 1
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict['current_slot'] = int(group['current_slot'])
+                continue
+               
+            # Chassis type            : 80
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict['chassis_type'] = group['chassis_type']
+                continue
+               
+            # Current uptime          :  0  years  1  weeks  1  days  0  hours  0  minutes
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict1=root_dict.setdefault('current_uptime',{})
+                root_dict1['years'] = int(group['years'])
+                root_dict1['weeks'] = int(group['weeks'])
+                root_dict1['days'] = int(group['days'])
+                root_dict1['hours'] = int(group['hours'])
+                root_dict1['minutes'] = int(group['minutes'])
+                continue
+           
+            # --------------------------------------------------------------------------------
+            # Time Stamp          | Reset                       | Uptime
+            # MM/DD/YYYY HH:MM:SS | Reason                      | years weeks days hours minutes   
+            # --------------------------------------------------------------------------------
+            # 04/02/2022 21:32:31   EHSA standby down             0     0     0     0     13
+            # 04/02/2022 22:11:32   Reload Command                0     0     0     0     38
+                
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict=ret_dict.setdefault('uptime_continuous',{})
+                time_stamp=group.pop('time_stamp')
+                temp_dict = root_dict.setdefault('time_stamp', {}).setdefault(time_stamp, {})
+                temp_dict.update({k: v for k, v in group.items()})
+                continue
+ 
         return ret_dict

@@ -1,0 +1,8 @@
+ID                           : 0x1dab6a1f
+MAC address                  : 0020.0000.0001
+Physical interface dpidx     : 0x00000040
+Authentication state         : L3 Auth
+VLAN ID                      : 0
+Open Access                  : Yes
+Client Forward               : Yes
+Dynamic policy template      :

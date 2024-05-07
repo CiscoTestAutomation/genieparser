@@ -1,6 +1,7 @@
 expected_output = {
     "version": {
         "xe_version": "BLD_POLARIS_DEV_LATEST_20211003_004933",
+        "build_label": "BLD_POLARIS_DEV_LATEST_20211003_004933",
         "version_short": "17.8",
         "platform": "Catalyst L3 Switch",
         "version": "17.8.20211003:014100",

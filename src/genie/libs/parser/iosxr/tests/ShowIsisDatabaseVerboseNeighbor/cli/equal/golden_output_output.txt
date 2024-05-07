@@ -1,0 +1,36 @@
+IS-IS SR_Core (Level-2) Link State Database
+LSPID                 LSP Seq Num  LSP Checksum  LSP Holdtime/Rcvd  ATT/P/OL
+P4B.00-00             0x00000ef1   0xc723        651  /1200         0/0/0
+  Area Address:   49.0511.0010
+  NLPID:          0xcc
+  IP Address:     10.0.0.14
+  Hostname:       P4B
+  Router Cap:     10.0.0.14 D:0 S:0
+    Segment Routing: I:1 V:0, SRGB Base: 16000 Range: 8000
+    SR Local Block: Base: 15000 Range: 1000
+    Node Maximum SID Depth: 
+      Label Imposition: 0
+    SR Algorithm: 
+      Algorithm: 0
+      Algorithm: 1
+  Metric: 10         IS-Extended P2B.00
+    Local Interface ID: 71, Remote Interface ID: 7
+    Interface IP Address: 10.12.14.2
+    Neighbor IP Address: 10.12.14.1
+    Physical BW: 20000000 kbits/sec
+    ADJ-SID: F:0 B:0 V:1 L:1 S:0 P:0 weight:0 Adjacency-sid:24001
+  Metric: 10         IS-Extended P3B.00
+    Local Interface ID: 72, Remote Interface ID: 71
+    Interface IP Address: 10.13.14.2
+    Neighbor IP Address: 10.13.14.1
+    Physical BW: 20000000 kbits/sec
+    ADJ-SID: F:0 B:0 V:1 L:1 S:0 P:0 weight:0 Adjacency-sid:24003
+  Metric: 0          IP-Extended 10.0.0.14/32
+    Prefix-SID Index: 14, Algorithm:0, R:0 N:1 P:0 E:0 V:0 L:0
+    Prefix Attribute Flags: X:0 R:0 N:1 E:0 A:0
+  Metric: 10         IP-Extended 10.12.14.0/30
+    Prefix Attribute Flags: X:0 R:0 N:0 E:0 A:0
+  Metric: 10         IP-Extended 10.13.14.0/30
+    Prefix Attribute Flags: X:0 R:0 N:0 E:0 A:0
+
+ Total Level-2 LSP count: 1     Local Level-2 LSP count: 0

@@ -1,0 +1,13 @@
+Tag 1:
+
+SRv6-Fwd-Id: 25165861 via FE80::250:56FF:FE9A:8110 GigabitEthernet3.1 (15)
+  Uncompressed SID List, SID count: 1
+    P node: P2.00-00 SID F:1:2:: uN (PSP/USD)
+  Compressed SID List, SID count: 1
+    SID[1]: F:1:2::, MSD SL:16 End-POP:16
+
+SRv6-Fwd-Id: 25165860 via FE80::250:56FF:FE9A:E650 GigabitEthernet4.1 (17)
+  Uncompressed SID List, SID count: 1
+    P node: P2.00-00 SID F:1:2:: uN (PSP/USD)
+  Compressed SID List, SID count: 1
+    SID[1]: F:1:2::, MSD SL:16 End-POP:16

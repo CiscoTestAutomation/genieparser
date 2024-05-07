@@ -71,6 +71,7 @@
 * 'show sdwan appqoe ad-statistics'
 * 'show sdwan appqoe rm-statistics'
 * 'show l2vpn sdwan all'
+* 'show l2vpn sdwan all'
 '''
 
 # Python
@@ -436,6 +437,16 @@ class ShowSdwanAppqoeRmResourcesSchema(MetaParser):
                     'max_sessions': int,
                     'used_sessions': int,
                     'memory_per_session': int
+                    },
+                Optional('dre_resources'): {
+                    Optional('max_sessions'): int,
+                    Optional('used_sessions'): int,
+                    Optional('memory_per_session'): int
+                    },
+                Optional('http_resources'): {
+                    Optional('max_sessions'): int,
+                    Optional('used_sessions'): int,
+                    Optional('memory_per_session'): int
                     }
                 }
             }
@@ -470,6 +481,7 @@ class ShowSdwanAppqoeRmResources(ShowSdwanAppqoeRmResourcesSchema):
         # SSL Resources:
         p5 = re.compile(r'^SSL +Resources:$')
 
+        
         # Max Services Memory (KB)    : 6434914
         # Available System Memory(KB) : 12869828
         # Used Services Memory (KB)   : 0
@@ -480,7 +492,13 @@ class ShowSdwanAppqoeRmResources(ShowSdwanAppqoeRmResourcesSchema):
         # Max Sessions                : 11000
         # Used Sessions               : 0
         # Memory Per Session          : 128
-        p6 = re.compile(r'^(?P<key>[\s\S]+\S) +: +(?P<value>[\s\S]+)$')
+        p6 = re.compile(r'^(?P<key>[\s\S]+\S) +: +(?P<value>[\S]+)$')
+
+        # DRE Resources:
+        p7 = re.compile(r'^DRE +Resources:$')
+
+        # HTTP Resources:
+        p8 = re.compile(r'^HTTP +Resources:$')
 
         ret_dict = {}
 
@@ -522,6 +540,20 @@ class ShowSdwanAppqoeRmResources(ShowSdwanAppqoeRmResourcesSchema):
             if m:
                 ssl_resources_dict = registered_service_resources_dict.setdefault('ssl_resources', {})
                 last_dict_ptr = ssl_resources_dict
+                continue
+
+            # DRE Resources:
+            m = p7.match(line)
+            if m:
+                dre_resources_dict = registered_service_resources_dict.setdefault('dre_resources', {})
+                last_dict_ptr = dre_resources_dict
+                continue
+
+            # HTTP Resources:
+            m = p8.match(line)
+            if m:
+                http_resources_dict = registered_service_resources_dict.setdefault('http_resources', {})
+                last_dict_ptr = http_resources_dict
                 continue
 
             # Max Services Memory (KB)    : 6434914
@@ -2086,7 +2118,7 @@ class ShowSdwanTunnelStatistics(ShowSdwanTunnelStatisticsSchema):
         # tunnel stats ipsec 150.0.5.1 150.0.6.1 12346 12346
         # tunnel stats ipsec 150.0.5.1 150.0.7.1 12346 12346
         p1 = re.compile(
-            r'^tunnel\s+stats\s+ipsec\s+(?P<source>[\S]+)\s+(?P<destination>[\S]+)'
+            r'^tunnel\s+stats\s+(ipsec|gre)\s+(?P<source>[\S]+)\s+(?P<destination>[\S]+)'
             r'\s+(?P<src_port>[\d]+)\s+(?P<dst_port>[\d]+)$')
 
         # fec-rx-data-pkts     0
@@ -5781,7 +5813,7 @@ class ShowSdwanAppqoeDreoptStatusSchema(MetaParser):
         "health_status": str,
         "health_change_reason": str,
         "last_health_change_time": str,
-        "notification_send_time": str,
+        Optional("notification_send_time"): str,
         "dre_cache_status": str,
         "disk_cache_usage": str,
         "disk_latency": str,

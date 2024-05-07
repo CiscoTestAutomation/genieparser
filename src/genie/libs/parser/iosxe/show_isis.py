@@ -29,6 +29,8 @@ IOSXE parsers for the following show commands:
     * show isis rib redistribution
     * show isis microloop-avoidance flex-algo {flex_algo}
     * show isis srv6 locators detail
+    * show isis ipv6 fast-reroute ti-lfa fwd-ids
+    * show isis ipv6 fast-reroute ti-lfa fwd-ids {fwd_id}
 """
 
 # Python
@@ -2678,7 +2680,8 @@ class ShowIsisIpv6RibSchema(MetaParser):
                                             Optional("nodes"): {
                                                 Any(): {
                                                     "pq_node": str,
-                                                    "sid": str
+                                                    "sid": str,
+                                                    Optional("srv6_sid_behavior"): str
                                                 }
                                             },
                                             Optional("repair_source"): str,
@@ -2699,7 +2702,8 @@ class ShowIsisIpv6RibSchema(MetaParser):
                                         Optional("nodes"): {
                                             Any(): {
                                                 "pq_node": str,
-                                                "sid": str
+                                                "sid": str,
+                                                Optional("srv6_sid_behavior"): str
                                             },
                                         },
                                     },
@@ -2760,9 +2764,12 @@ class ShowIsisIpv6Rib(ShowIsisIpv6RibSchema):
                         r'/(?P<rtp_lsp_version>'
                         r'\w+)\])?(\s+(?P<filtered>-))?$')
 
+        # P node: R6 SID FCCC:CCC1:F1:: uN (PSP/USD)
         # P node: R6 SID FCCC:CCC1:AA66::
+        # Q node: r604 SID CAFE:0:603:E001:: reserved behavior: 0
         p4 = re.compile(r'(?P<node_type>(P|Q))\s+node:\s+(?P<host>\S+)\s+'
-                        r'SID\s+(?P<sid>[0-9a-fA-F:]+)$')
+                        r'SID\s+(?P<sid>[0-9a-fA-F:]+)'
+                        r'(\s+(?P<srv6_sid_behavior>[\w\W\s()/]+))?')
 
         # prefix attr: X:0 R:0 N:1
         p5 = re.compile(r'^prefix\s+attr:\s+X:(?P<x_flag>0|1)\s+R:'
@@ -2944,15 +2951,18 @@ class ShowIsisIpv6Rib(ShowIsisIpv6RibSchema):
                 continue
 
             # P node: R7 SID FCCC:CCC1:AA77::
-            
+            # Q node: r604 SID CAFE:0:603:E001:: uA (PSP/USD)
+            # Q node: r604 SID CAFE:0:603:E001:: reserved behavior: 0
             m = p4.match(line)
             if m:
                 group = m.groupdict()
                 host = group["host"]
                 node_dict = {
                     "pq_node": group["node_type"],
-                    "sid": group["sid"]
+                    "sid": group["sid"], 
                 }
+                if group['srv6_sid_behavior']:
+                    node_dict["srv6_sid_behavior"] = group["srv6_sid_behavior"]
                 if uloop_ep:
                     via_interface_dict.setdefault("nodes", {}).setdefault(host, node_dict)
                     continue
@@ -4674,5 +4684,139 @@ class ShowIsisSrv6LocatorsDetail(ShowIsisSrv6LocatorsDetailSchema):
             if m :
                 group = m.groupdict()
                 loc_name_dict['end_sids']  = group['end_sids']
+
+        return ret_dict
+
+
+class ShowIsisIpv6TilfaSchema(MetaParser):
+    schema = {
+        "tag": {
+            Any(): {
+                Optional("srv6_fwid"): {
+                    Any(): {
+                        "prefix": str,
+                        "interface": str,
+                        "metric": int,
+                        Optional("uncompressed_sid_list"): {
+                            "sid_count": int,
+                            Optional("node"): {
+                                Any(): {
+                                    "p_node": str,
+                                    "behavior": str,
+                                }
+                            }
+                        },
+                        Optional("compressed_sid_list"): {
+                            "sid_count": int,
+                            Optional("sid"): {
+                                Any(): {
+                                    "sid": str,
+                                    "msd_sl": int,
+                                    "end_pop": int
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+class ShowIsisIpv6Tilfa(ShowIsisIpv6TilfaSchema):
+    '''parser for show isis ipv6 fast-reroute ti-lfa fwd-ids
+                  show isis ipv6 fast-reroute ti-lfa fwd-ids {fwd_id}
+    '''
+    cli_command = ['show isis ipv6 fast-reroute ti-lfa fwd-ids',
+                   'show isis ipv6 fast-reroute ti-lfa fwd-ids {fwd_id}']
+
+    def cli(self, fwd_id="", output=None):
+        if output is None:
+            if fwd_id:
+                output = self.device.execute(self.cli_command[1].format(fwd_id=fwd_id))
+            else:
+                output = self.device.execute(self.cli_command[0])
+
+        # initial variables
+        ret_dict = {}
+
+        # Tag 1:
+        p1 = re.compile(r'^Tag (?P<tag>\S+):$')
+
+        # SRv6-Fwd-Id: 25165861 via FE80::21E:BDFF:FE15:FA00 Tunnel121 (16)
+        p2 = re.compile(r'^SRv6-Fwd-Id: (?P<srv6_fwid>\d+) via (?P<nh_addr>\S+) (?P<interface>\S+) \((?P<metric>\d+)\)$')
+
+        # Uncompressed SID List, SID count: 1
+        p3 = re.compile(r'^Uncompressed SID List, SID count: (?P<sid_count>\d+)$')
+
+        # P node: P5.00-00 SID F:1:5:: uN (PSP/USD)
+        p4 = re.compile(r'^P node: (?P<p_node>\S+) SID (?P<sid>\S+) (?P<behavior>[\w\W]+)$')
+
+        # Compressed SID List, SID count: 1
+        p5 = re.compile(r'^Compressed SID List, SID count: (?P<sid_count>\d+)$')
+
+        # SID[1]: F:1:5::, MSD SL:16 End-POP:16
+        p6 = re.compile(r'^SID\[(?P<sid_index>\d+)\]: (?P<sid>\S+), MSD SL:(?P<msd_sl>\d+) End-POP:(?P<end_pop>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            # Tag 1:
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                tag = group['tag']
+                tag_dict = ret_dict.setdefault('tag', {}).setdefault(tag, {}) # type: ignore
+                continue
+
+            # SRv6-Fwd-Id: 25165861 via FE80::21E:BDFF:FE15:FA00 Tunnel121 (16)
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                srv6_fwid_dict = tag_dict.setdefault('srv6_fwid', {}).setdefault(group['srv6_fwid'], {})
+                srv6_fwid_dict.update({
+                    'prefix': group['nh_addr'],
+                    'interface': group['interface'],
+                    'metric': int(group['metric'])
+                })
+                continue
+
+            # Uncompressed SID List, SID count: 1
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                uncompressed_sid_list_dict = srv6_fwid_dict.setdefault('uncompressed_sid_list', {})
+                uncompressed_sid_list_dict['sid_count'] = int(group['sid_count'])
+                continue
+
+            # P node: P5.00-00 SID F:1:5:: uN (PSP/USD)
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                node_dict = {
+                    'p_node': group['p_node'],
+                    'behavior': group['behavior']
+                }
+                uncompressed_sid_list_dict.setdefault('node', {}).setdefault(group['sid'], node_dict)
+                continue
+
+            # Compressed SID List, SID count: 1
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                compressed_sid_list_dict = srv6_fwid_dict.setdefault('compressed_sid_list', {})
+                compressed_sid_list_dict['sid_count'] = int(group['sid_count'])
+                continue
+
+            # SID[1]: F:1:5::, MSD SL:16 End-POP:16
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                sid_dict = {
+                    'sid': group['sid'],
+                    'msd_sl': int(group['msd_sl']),
+                    'end_pop': int(group['end_pop'])
+                }
+                compressed_sid_list_dict.setdefault('sid', {}).setdefault(group['sid_index'], sid_dict)
+                continue
 
         return ret_dict

@@ -1,0 +1,83 @@
+STATIC routemaps
+route-map RM-T2-POLICY-OUT, permit, sequence 15
+  Match clauses:
+    ip address prefix-lists: PL-MGMT-LOCAL 
+  Set clauses:
+    community 1441794
+  Policy routing matches: 0 packets, 0 bytes
+route-map RM-T2-POLICY-OUT, permit, sequence 25
+  Match clauses:
+    ip address prefix-lists: PL-CP-UNICAST-LOCAL 
+  Set clauses:
+    community 1441994
+  Policy routing matches: 0 packets, 0 bytes
+route-map RM-T2-POLICY-OUT, permit, sequence 35
+  Match clauses:
+    ip address prefix-lists: PL-MSMR-ANYCAST 
+  Set clauses:
+    community 1442092
+  Policy routing matches: 0 packets, 0 bytes
+route-map RM-T2-POLICY-OUT, permit, sequence 45
+  Match clauses:
+    ip address prefix-lists: PL-MSDP-ANYCAST 
+  Set clauses:
+    community 1442122
+  Policy routing matches: 0 packets, 0 bytes
+route-map RM-T2-POLICY-OUT, permit, sequence 1005
+  Match clauses:
+  Set clauses:
+  Policy routing matches: 0 packets, 0 bytes
+route-map RM-T1-POLICY-MAINT-OUT, permit, sequence 10
+  Match clauses:
+    ip address prefix-lists: PL-MGMT-LOCAL 
+  Set clauses:
+    as-path prepend 1.1 1.1
+    community 720897
+  Policy routing matches: 0 packets, 0 bytes
+route-map RM-T1-POLICY-MAINT-OUT, permit, sequence 20
+  Match clauses:
+    ip address prefix-lists: PL-CP-UNICAST-LOCAL 
+  Set clauses:
+    as-path prepend 1.1 1.1
+    community 720997
+  Policy routing matches: 0 packets, 0 bytes
+route-map RM-T1-POLICY-MAINT-OUT, permit, sequence 30
+  Match clauses:
+    ip address prefix-lists: PL-MSMR-ANYCAST 
+  Set clauses:
+    as-path prepend 1.1 1.1
+    community 721096
+  Policy routing matches: 0 packets, 0 bytes
+route-map RM-T1-POLICY-MAINT-OUT, permit, sequence 40
+  Match clauses:
+    ip address prefix-lists: PL-MSDP-ANYCAST 
+  Set clauses:
+    as-path prepend 1.1 1.1
+    community 721116
+  Policy routing matches: 0 packets, 0 bytes
+route-map RM-T1-POLICY-MAINT-OUT, permit, sequence 50
+  Match clauses:
+  Set clauses:
+    as-path prepend 10 10 10
+  Policy routing matches: 0 packets, 0 bytes
+route-map RM-T1-POLICY-MAINT-OUT, permit, sequence 1000
+  Match clauses:
+  Set clauses:
+    as-path prepend 1.1 1.1
+  Policy routing matches: 0 packets, 0 bytes
+route-map RM-T2-POLICY-IN, permit, sequence 15
+  Match clauses:
+    community (community-list filter): 2 
+  Set clauses:
+  Policy routing matches: 0 packets, 0 bytes
+route-map RM-T2-POLICY-IN, deny, sequence 25
+  Match clauses:
+    as-path (as-path filter): 2 
+  Set clauses:
+  Policy routing matches: 0 packets, 0 bytes
+route-map RM-T2-POLICY-IN, permit, sequence 1005
+  Match clauses:
+  Set clauses:
+  Policy routing matches: 0 packets, 0 bytes
+DYNAMIC routemaps
+Current active dynamic routemaps = 0

@@ -208,7 +208,15 @@ class ShowCdpNeighborsDetailSchema(MetaParser):
                 Optional('duplex_mode'): str,
                 Optional('advertisement_ver'): int,
                 Optional('native_vlan'): str,
-                Optional('vtp_management_domain'): str},
+                Optional('vtp_management_domain'): str,
+                Optional('power_drawn'): float,
+                Optional('power_request_id'): int,
+                Optional('power_mgmt_id_1'): int,
+                Optional('power_req_level'): str,
+                Optional('power_available_id'): int,
+                Optional('power_mgmt_id_2'): int,
+                Optional('available_power'): float,
+                Optional('mgmt_power'): float},
             },
         }
 
@@ -300,6 +308,21 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
                                     r'\s*\((?P<type>[\s\w\-]+)\)')
         # IP address: 172.16.1.204
         ipaddress_re = re.compile(r'^IP\s*address:\s*(?P<id_adress>\S*)')
+        
+        # Power drawn: 0.099 Watts
+        power_drawn_re = re.compile(r'^Power\s*drawn\s*:\s*(?P<power_drawn>\d+\.\d+)')
+         
+        # Power request id: 2, Power management id: 5
+        power_ids_re_1 = re.compile(r'^Power\s+request\s+id:\s*(?P<power_request_id>\d+)\s*,\s*Power\s+management\s+id:\s*(?P<power_mgmt_id_1>\d+)')
+         
+        # Power request levels are:29289 15400 0 0 0
+        power_req_level_re = re.compile(r'^Power\s+request\s+levels\s+are:\s*(?P<power_req_level>\d+(?:\s+\d+)*)')
+         
+        # Power available id:      1       Power management id:      2
+        power_ids_re_2 = re.compile(r'^Power\s+available\s+id:\s*(?P<power_available_id>\d+)\s*Power\s+management\s+id:\s*(?P<power_mgmt_id_2>\d+)')
+         
+        # Power available is:  0.055 Watts Management Power is:  0.003 Watts
+        power_avail_re = re.compile(r'^Power\s+available\s+is:\s*(?P<available_power>\d+\.\d+)\s+Watts\s*Management\s+Power\s+is:\s*(?P<mgmt_power>\d+\.\d+)\s+Watts')
 
         # 0 or 1 flags
         entry_address_flag = 0
@@ -312,6 +335,8 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
         for line in output.splitlines():
             line = line.strip()
 
+            # Device ID: R7(9QBDKB58F76)
+            # Device ID:
             result = deviceid_re.match(line)
 
             if result:
@@ -334,6 +359,13 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
 
                 continue
 
+            # Platform: N9K-9000v,  Capabilities: Router Switch CVTA phone port
+            # Platform: N9K_9000v,  Capabilities: Router Switch Two-port phone port
+            # Platform: cisco WS_C6506_E,  Capabilities: Router Switch-6506 IGMP
+            # Platform: cisco WS-C6506-E,  Capabilities: Router Switch_6506 IGMP
+            # Platform: Meraki MV21 Cloud Managed Indoor HD Dom
+            # Platform: Mitel 5320e,DN 2142      ,  Capabilities: Host Phone
+            # Platform: "CTS-CODEC-SX80",  Capabilities: Host Phone
             result = platf_cap_re.match(line)
 
             if result:
@@ -350,6 +382,14 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
 
                 continue
 
+            # Interface: GigabitEthernet0/0,  Port ID (outgoing port): mgmt0
+            # Interface: Ethernet0/1,  Port ID (outgoing port): Ethernet0/1
+            # Interface: GigabitEthernet0/0,  Port ID (outgoing port): GigabitEthernet0/0
+            # Interface: GigabitEthernet0/0/2,  Port ID (outgoing port): GigabitEthernet0/0/3
+            # Interface: GigabitEthernet3/0/29,  Port ID (outgoing port): Port 0
+            # Interface: Serial0/0/0:1,  Port ID (outgoing port): Serial1/4:1
+            # Interface: FastEthernet0/0.1,  Port ID (outgoing port): GigabitEthernet7/27
+            # Interface: GigabitEthernet0/5, Port ID (outgoing port):
             result = interface_port_re.match(line)
 
             if result:
@@ -361,6 +401,7 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
                     interface_port_dict['interface']
                 continue
 
+            # Holdtime : 126 sec
             result = hold_time_re.match(line)
 
             if result:
@@ -368,12 +409,15 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
                     int(result.group('hold_time'))
                 continue
 
+            # Management address(es):
             if mngaddress_re.match(line):
                 management_address_flag = 1
 
+            # Entry address(es):
             if entryaddress_re.match(line):
                 entry_address_flag = 1
 
+            # IP address: 172.16.1.204
             result = ipaddress_re.match(line)
 
             if result:
@@ -390,6 +434,8 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
 
                 continue
 
+            # IPv6 address: FE80::203:E3FF:FE6A:BF81  (link-local)
+            # IPv6 address: 2001:DB8:1000:8A10::C0A8:BC06  (global unicast)
             result = ipv6_adress_re.match(line)
 
             if result:
@@ -407,6 +453,7 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
 
                 continue
 
+            # advertisement version: 2
             result = advertver_re.match(line)
             if result:
                 software_version_flag = 0
@@ -414,11 +461,14 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
                     int(result.group('advertisement_ver'))
                 continue
 
+            # Regexes for Flags:
+            # Version:
             if software_version_flag_re.match(line):
                 software_version_flag = 1
                 continue
 
             if software_version_flag:
+                # Cisco IOS Software, IOSv Software (VIOS-ADVENTERPRISEK9-M), Version 15.7(3)M3, RELEASE SOFTWARE (fc2)
                 result = software_version_re.match(line)
                 if result:
                     sw_version = devices_dict.get('software_version', '')
@@ -442,12 +492,67 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
                     result.group('vtp_management_domain')
                 continue
 
+            # Duplex: full
+            # Duplex Mode: half
             result = duplex_re.match(line)
 
             if result:
                 devices_dict['duplex_mode'] = \
                     result.group('duplex_mode')
                 continue
+            
+            # Power drawn: 0.099 Watts
+            result = power_drawn_re.match(line)
+
+            if result:
+                devices_dict['power_drawn'] = \
+                    float(result.group('power_drawn'))
+                continue
+            
+            # Power request id: 2, Power management id: 5
+            result = power_ids_re_1.match(line)
+
+            if result:
+                power_ids_dict_1 = result.groupdict()
+                if power_ids_dict_1['power_request_id']:
+                    devices_dict['power_request_id'] = \
+                        int(power_ids_dict_1['power_request_id'])
+                devices_dict['power_mgmt_id_1'] = \
+                    int(power_ids_dict_1['power_mgmt_id_1'])
+                continue
+
+            # Power request levels are:29289 15400 0 0 0
+            result = power_req_level_re.match(line)
+
+            if result:
+                devices_dict['power_req_level'] = \
+                    result.group('power_req_level')
+                continue
+            
+            # Power available id:      1       Power management id:      2
+            result = power_ids_re_2.match(line)
+
+            if result:
+                power_ids_dict_2 = result.groupdict()
+                if power_ids_dict_2['power_available_id']:
+                    devices_dict['power_available_id'] = \
+                        int(power_ids_dict_2['power_available_id'])
+                devices_dict['power_mgmt_id_2'] = \
+                    int(power_ids_dict_2['power_mgmt_id_2'])
+                continue
+            
+            # Power available is:  0.055 Watts Management Power is:  0.003 Watts
+            result = power_avail_re.match(line)
+
+            if result:
+                power_avail_dict = result.groupdict()
+                if power_avail_dict['available_power']:
+                    devices_dict['available_power'] = \
+                        float(power_avail_dict['available_power'])
+                devices_dict['mgmt_power'] = \
+                    float(power_avail_dict['mgmt_power'])
+                continue
+
 
         return parsed_dict
 

@@ -1,6 +1,7 @@
 expected_output = {
     "version": {
         "bootldr": "Version 0.0.16 [DEVELOPMENT SOFTWARE] crashkernel=64M",
+        "build_label": "BLD_POLARIS_DEV_LATEST_20220708_143608",
         "chassis": "1783-CMS20DN",
         "chassis_sn": "FDO2607J4SK",
         "compiled_by": "mcpre",

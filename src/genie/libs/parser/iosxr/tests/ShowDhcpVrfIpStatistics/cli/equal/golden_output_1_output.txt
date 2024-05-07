@@ -1,0 +1,21 @@
+Tue Feb 13 14:15:16.314 UTC
+
+DHCP IPv4 Proxy/Server Statistics for VRF default:
+
+     TYPE         |    RECEIVE    |    TRANSMIT   |     DROP      |
+-------------------------------------------------------------------
+ DISCOVER         |            0  |            0  |            0  |
+ OFFER            |            0  |            0  |            0  |
+ REQUEST          |            0  |            0  |            0  |
+ DECLINE          |            0  |            0  |            0  |
+ ACK              |            0  |            0  |            0  |
+ NAK              |            0  |            0  |            0  |
+ RELEASE          |            0  |            0  |            0  |
+ INFORM           |            0  |            0  |            0  |
+ LEASEQUERY       |            0  |            0  |            0  |
+ LEASEUNASSIGNED  |            0  |            0  |            0  |
+ LEASEUNKNOWN     |            0  |            0  |            0  |
+ LEASEACTIVE      |            0  |            0  |            0  |
+ BOOTP-REQUEST    |            0  |            0  |            0  |
+ BOOTP-REPLY      |            0  |            0  |            0  |
+RP/0/RP0/CPU0:PE1A#

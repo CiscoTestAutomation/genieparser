@@ -1,0 +1,243 @@
+show platform hardware qfp active feature appqoe stats all
+ APPQOE Feature Statistics:
+ Global:
+         ip-non-tcp-pkts: 314759
+         not-enabled: 0
+         cft_handle_pkt: 0
+         sdvt_divert_req_fail: 399829
+         appqoe_sn_data_pkts_processed: 0
+         appqoe_alloc_empty_ht_entry: 16
+         appqoe_cvla_alloc_failure: 1
+         appqoe_bulk_upd_mem_bm_no_sng: 0
+         appqoe_srv_chain_transit_dre_bypass: 0
+         appqoe_srv_chain_sn_unhealthy_bypass: 0
+         appqoe_srv_chain_tcp_mid_flow_bypass: 0
+         appqoe_srv_chain_non_tcp_bypass: 0
+         appqoe_srv_chain_frag_bypass: 0
+         appqoe_lb_without_dre: 0
+         appqoe_svc_on_appqoe_vpn_drop: 0
+         appqoe_sng_not_configured: 0
+         appqoe_unknown_tlv_type: 0
+         appqoe_sn_data_pkts_dropped: 0
+         AppQoe reset appnav FO data: 499911
+         appqoe_lb_without_caching: 0
+   SDVT Global stats:
+     Remarking persistent for htx inj flows: 1
+     AppNAV registration: 64
+     Control Decaps: Could not find flow from tuple: 5982
+     within SDVT syn policer limit: 3441777
+ SNG: 1 SN Index [0 (Green)], IP: 140.140.0.5, oce_id: 2173591328, ocev6_id: 2173591392
+         del 0, serv 3, id 1, ver 2, status 1, type 3, sng 1
+         APPNAV STATS: toSN 2311028380 / 1153888628632 fromSN 2527681444 / 1044707959405
+                       NoFoDrop 294 / 70710
+   SDVT Count stats:
+     Active Connections: 465
+     decaps: 2526833671
+     encaps: 2311028384
+     Expired Connections: 848018
+     Idle timed-out persistent Connections: 2353
+     decaps: Processed control messages from SN: 845665
+     decaps: delete requests received total: 845665
+       decaps: delete - protocol decision: 845665
+   SDVT Packet stats:
+     Divert packets / bytes 2311028386 / 1015226926144
+     Reinject packets / bytes 2526833672 / 856747757207
+     Pkts dropped packets / bytes 6853 / 624396
+   SDVT Drop Cause stats:
+     Packets Dropped as SN Unhealthy: 6853
+   SDVT Errors stats:
+ SNG: 1 SN Index [1 (Green)], IP: 140.140.0.6, oce_id: 2173590944, ocev6_id: 2173591008
+         del 0, serv 3, id 2, ver 2, status 1, type 3, sng 1
+         APPNAV STATS: toSN 1532425869 / 1031152755261 fromSN 1716481004 / 933320679322
+                       NoFoDrop 432 / 121072
+   SDVT Count stats:
+     Active Connections: 536
+     decaps: 1715653948
+     encaps: 1532425870
+     Expired Connections: 826739
+     Idle timed-out persistent Connections: 1800
+     decaps: Processed control messages from SN: 824939
+     decaps: delete requests received total: 824939
+       decaps: delete - protocol decision: 824939
+   SDVT Packet stats:
+     Divert packets / bytes 1532425871 / 939207203225
+     Reinject packets / bytes 1715653948 / 805326828294
+     Pkts dropped packets / bytes 2135 / 193556
+   SDVT Drop Cause stats:
+     Packets Dropped as SN Unhealthy: 2135
+   SDVT Errors stats:
+ SNG: 1 SN Index [2 (Green)], IP: 140.140.0.7, oce_id: 2173591424, ocev6_id: 2173591488
+         del 0, serv 3, id 3, ver 2, status 1, type 3, sng 1
+         APPNAV STATS: toSN 1622980630 / 1053155876806 fromSN 1798004782 / 929759501435
+                       NoFoDrop 307 / 96440
+   SDVT Count stats:
+     Active Connections: 518
+     decaps: 1797174459
+     encaps: 1622980631
+     Expired Connections: 830178
+     Idle timed-out persistent Connections: 2641
+     decaps: Processed control messages from SN: 827537
+     decaps: delete requests received total: 827537
+       decaps: delete - protocol decision: 827537
+   SDVT Packet stats:
+     Divert packets / bytes 1622980631 / 955777039058
+     Reinject packets / bytes 1797174459 / 795754934749
+     Pkts dropped packets / bytes 3955 / 359924
+   SDVT Drop Cause stats:
+     Packets Dropped as SN Unhealthy: 3955
+   SDVT Errors stats:
+ SNG: 2 SN Index [3 (Down)], IP: 140.140.0.2, oce_id: 2173591424, ocev6_id: 2173591488
+         del 0, serv 3, id 4, ver 0, status 0, type 3, sng 2
+         APPNAV STATS: toSN 0 / 0 fromSN 0 / 0
+                       NoFoDrop 0 / 0
+   SDVT Count stats:
+   SDVT Packet stats:
+   SDVT Drop Cause stats:
+   SDVT Errors stats:
+ SNG: 2 SN Index [4 (Green)], IP: 140.140.0.3, oce_id: 2173591040, ocev6_id: 2173591104
+         del 0, serv 3, id 5, ver 2, status 1, type 3, sng 2
+         APPNAV STATS: toSN 0 / 0 fromSN 0 / 0
+                       NoFoDrop 0 / 0
+   SDVT Count stats:
+   SDVT Packet stats:
+   SDVT Drop Cause stats:
+   SDVT Errors stats:
+ SNG: 2 SN Index [5 (Green)], IP: 140.140.0.4, oce_id: 2173590656, ocev6_id: 2173590720
+         del 0, serv 3, id 6, ver 2, status 1, type 3, sng 2
+         APPNAV STATS: toSN 0 / 0 fromSN 0 / 0
+                       NoFoDrop 0 / 0
+   SDVT Count stats:
+   SDVT Packet stats:
+   SDVT Drop Cause stats:
+   SDVT Errors stats:
+ SNG: 3 SN Index [6 (Green)], IP: 140.140.0.18, oce_id: 2173589104, ocev6_id: 2173590528
+         del 0, serv 3, id 7, ver 2, status 1, type 3, sng 3
+         APPNAV STATS: toSN 81093914 / 62150892582 fromSN 75404208 / 42147444289
+                       NoFoDrop 0 / 0
+   SDVT Count stats:
+     Active Connections: 4234
+     decaps: 75379416
+     encaps: 81093927
+     Packets unclassified by ingress Policy: 1
+     Expired Connections: 27246
+     Idle timed-out persistent Connections: 2446
+     decaps: Processed control messages from SN: 24807
+     decaps: delete requests received total: 24807
+       decaps: delete - protocol decision: 24807
+   SDVT Packet stats:
+     Divert packets / bytes 81093935 / 57285264066
+     Reinject packets / bytes 75379425 / 36547522685
+   SDVT Drop Cause stats:
+   SDVT Errors stats:
+ SNG: 3 SN Index [7 (Green)], IP: 140.140.0.19, oce_id: 2173590752, ocev6_id: 2173590816
+         del 0, serv 3, id 8, ver 2, status 1, type 3, sng 3
+         APPNAV STATS: toSN 76940120 / 56971636336 fromSN 71775419 / 38608351136
+                       NoFoDrop 0 / 0
+   SDVT Count stats:
+     Active Connections: 4352
+     decaps: 71750476
+     encaps: 76940136
+     Expired Connections: 27431
+     Idle timed-out persistent Connections: 2493
+     decaps: Processed control messages from SN: 24945
+     decaps: delete requests received total: 24945
+       decaps: delete - protocol decision: 24945
+   SDVT Packet stats:
+     Divert packets / bytes 76940140 / 52355238024
+     Reinject packets / bytes 71750490 / 33276862842
+   SDVT Drop Cause stats:
+   SDVT Errors stats:
+ SNG: 3 SN Index [8 (Green)], IP: 140.140.0.20, oce_id: 2173590560, ocev6_id: 2173590624
+         del 0, serv 3, id 9, ver 2, status 1, type 3, sng 3
+         APPNAV STATS: toSN 82078389 / 63136586190 fromSN 76266746 / 42683514877
+                       NoFoDrop 0 / 0
+   SDVT Count stats:
+     Active Connections: 4287
+     decaps: 76241655
+     encaps: 82078392
+     Packets unclassified by ingress Policy: 34
+     Expired Connections: 27618
+     Idle timed-out persistent Connections: 2531
+     decaps: Processed control messages from SN: 25093
+     decaps: delete requests received total: 25093
+       decaps: delete - protocol decision: 25093
+   SDVT Packet stats:
+     Divert packets / bytes 82078404 / 58211883630
+     Reinject packets / bytes 76241662 / 37019796641
+   SDVT Drop Cause stats:
+   SDVT Errors stats:
+ SNG: 3 SN Index [9 (Green)], IP: 140.140.0.22, oce_id: 2173590848, ocev6_id: 2173590912
+         del 0, serv 3, id 10, ver 2, status 1, type 3, sng 3
+         APPNAV STATS: toSN 75634349 / 55482208206 fromSN 70649639 / 37839121675
+                       NoFoDrop 0 / 0
+   SDVT Count stats:
+     Active Connections: 4403
+     decaps: 70624930
+     encaps: 75634357
+     Packets unclassified by ingress Policy: 4
+     Expired Connections: 27263
+     Idle timed-out persistent Connections: 2557
+     decaps: Processed control messages from SN: 24710
+     decaps: delete requests received total: 24710
+       decaps: delete - protocol decision: 24710
+   SDVT Packet stats:
+     Divert packets / bytes 75634369 / 50944150922
+     Reinject packets / bytes 70624933 / 32591696781
+     Pkts dropped packets / bytes 17 / 1629
+   SDVT Drop Cause stats:
+     Packets Dropped as SN Unhealthy: 17
+   SDVT Errors stats:
+ SNG: 3 SN Index [10 (Green)], IP: 140.140.0.23, oce_id: 2173591136, ocev6_id: 2173591200
+         del 0, serv 3, id 11, ver 2, status 1, type 3, sng 3
+         APPNAV STATS: toSN 82420748 / 63291957117 fromSN 76638027 / 42838665301
+                       NoFoDrop 2 / 276
+   SDVT Count stats:
+     Active Connections: 4351
+     decaps: 76613114
+     encaps: 82420751
+     Expired Connections: 27380
+     Idle timed-out persistent Connections: 2475
+     decaps: Processed control messages from SN: 24910
+     decaps: delete requests received total: 24910
+       decaps: delete - protocol decision: 24910
+   SDVT Packet stats:
+     Divert packets / bytes 82420765 / 58346715737
+     Reinject packets / bytes 76613115 / 37147214795
+     Pkts dropped packets / bytes 3 / 156
+   SDVT Drop Cause stats:
+     Packets Dropped as SN Unhealthy: 3
+   SDVT Errors stats:
+ SNG: 3 SN Index [11 (Green)], IP: 140.140.0.24, oce_id: 2173591232, ocev6_id: 2173591296
+         del 0, serv 3, id 12, ver 2, status 1, type 3, sng 3
+         APPNAV STATS: toSN 75845968 / 55687675125 fromSN 70792831 / 37770306532
+                       NoFoDrop 2 / 276
+   SDVT Count stats:
+     Active Connections: 4338
+     decaps: 70768258
+     encaps: 75845970
+     Expired Connections: 27072
+     Idle timed-out persistent Connections: 2503
+     decaps: Processed control messages from SN: 24575
+     decaps: delete requests received total: 24575
+       decaps: delete - protocol decision: 24575
+   SDVT Packet stats:
+     Divert packets / bytes 75845971 / 51136917201
+     Reinject packets / bytes 70768263 / 32511874270
+     Pkts dropped packets / bytes 57 / 7672
+   SDVT Drop Cause stats:
+     Packets Dropped as SN Unhealthy: 57
+   SDVT Errors stats:
+ SN Index [Default]
+   SDVT Count stats:
+     decaps: 2
+     Packets unclassified by ingress Policy: 90
+     Expired Connections: 51439
+     Non-SYN divert requests: 399829
+     decaps: Processed control messages from SN: 1
+     decaps: delete requests received total: 1
+       decaps: delete - protocol decision: 1
+   SDVT Packet stats:
+     Bypass packets / bytes 58429738 / 40801587544
+   SDVT Drop Cause stats:
+   SDVT Errors stats:
+     Flows Bypassed as SN Unhealthy: 51439

@@ -1,0 +1,4 @@
+switch-1                 30.0 (W)  consumer  actual
+switch-2                 213.0(W)   consumer  actual
+switch-3                 213.0(W)   consumer  actual
+switch-4                 30.0 (W)   consumer  actual
