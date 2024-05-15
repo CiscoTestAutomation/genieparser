@@ -1,0 +1,28 @@
+IP access list 199
+        Total ACEs Configured: 5
+        Configured on interfaces:
+                VTY         - ingress
+        Active on interfaces:
+                VTY         - ingress
+IP access list 98
+        Total ACEs Configured: 9
+        Configured on interfaces:
+        Active on interfaces:
+IP access list 99
+        Total ACEs Configured: 2
+        Configured on interfaces:
+        Active on interfaces:
+IP access list COMMENT09
+        Total ACEs Configured: 1
+        Configured on interfaces:
+                Ethernetxx/x.xxx - egress (Router ACL)
+        Active on interfaces:
+                Ethernetxx/x.xxx - egress (Router ACL)
+IP access list COMMENT10
+        Total ACEs Configured: 1
+        Configured on interfaces:
+        Active on interfaces:
+IPv6 access list COMMENT11
+        Total ACEs Configured: 1
+        Configured on interfaces:
+        Active on interfaces:

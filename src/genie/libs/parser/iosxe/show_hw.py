@@ -3,6 +3,7 @@ IOSXE parsers for the following show commands:
     * show hw module subslot {subslot} transceiver {transceiver} status
     * show hw-module slot {slot} port-group mode
     * show hw-module usbflash1 security status
+    * show hw-module {filesystem} security-lock status
     * show hardware led port {port} {mode}
 '''
 
@@ -136,10 +137,11 @@ class ShowHardwareLedSchema(MetaParser):
     """
     schema = {
         Optional('current_mode'): str,
+        Optional('led_ecomode'): str,
         Optional('switch'): {
             Any():{
                 'system': str,
-                'beacon': str,
+                Optional('beacon'): str,
                 Optional('master'): str,
                 Optional('port_led_status'):{
                     str: str
@@ -180,7 +182,9 @@ class ShowHardwareLedSchema(MetaParser):
         Optional('dc_b'):str,
         Optional('alarm-out'):str,
         Optional('alarm-in1'):str,
-        Optional('alarm-in2'):str
+        Optional('alarm-in2'):str,
+        Optional('alarm-in3'):str,
+        Optional('alarm-in4'):str
     }     
                        
 class ShowHardwareLed(ShowHardwareLedSchema):
@@ -246,6 +250,9 @@ class ShowHardwareLed(ShowHardwareLedSchema):
 
         # Current Mode: STATUS
         p12 = re.compile('^Current Mode:\s+(?P<status>\w+)$')
+
+        # LED Ecomode: Enabled
+        p12_1 = re.compile('^LED Ecomode:\s+(?P<ecomode>\w+)$')
 
         # MASTER: GREEN
         p13 = re.compile('^MASTER:\s+(?P<master>\w+)$')
@@ -401,7 +408,13 @@ class ShowHardwareLed(ShowHardwareLedSchema):
                 ret_dict.update({'current_mode' : group['status']})
                 continue
 
-            
+            # LED Ecomode: Enabled
+            m = p12_1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({'led_ecomode' : group['ecomode']})
+                continue
+
             # MASTER: GREEN
             m = p13.match(line)
             if m:
@@ -418,7 +431,7 @@ class ShowHardwareLed(ShowHardwareLedSchema):
                 for port in group['duplex'].split():
                     port = (port.split(':'))
                     port_duplex_dict = root_dict.setdefault('port_duplex', {})
-                    port_duplex_dict.update({port[0]: port[1]})
+                    port_duplex_dict.update({Common.convert_intf_name(port[0]): port[1]})
                 continue
 
             # SPEED: (65) Tw1/0/1:BLACK Tw1/0/2:BLACK Tw1/0/3:BLACK 
@@ -429,7 +442,7 @@ class ShowHardwareLed(ShowHardwareLedSchema):
                 for port in group['speed'].split():
                     port = (port.split(':'))
                     speed_dict = root_dict.setdefault('port_speed', {})
-                    speed_dict.update({port[0]: port[1]})
+                    speed_dict.update({Common.convert_intf_name(port[0]): port[1]})
                 continue
 
             # STACK: (65) Tw1/0/1:FLASH_GREEN Tw1/0/2:BLACK Tw1/0/3:BLACK
@@ -440,7 +453,7 @@ class ShowHardwareLed(ShowHardwareLedSchema):
                 for port in group['stack_port'].split():
                     port = (port.split(':'))
                     stack_dict = root_dict.setdefault('stack_port', {})
-                    stack_dict.update({port[0]: port[1]})
+                    stack_dict.update({Common.convert_intf_name(port[0]): port[1]})
                 continue
 
             # POE: (65) Tw1/0/1:BLACK Tw1/0/2:BLACK Tw1/0/3:BLACK Tw1/0/4:BLACK
@@ -451,7 +464,7 @@ class ShowHardwareLed(ShowHardwareLedSchema):
                 for port in group['poe'].split():
                     port = (port.split(':'))
                     poe_dict = root_dict.setdefault('poe_port', {})
-                    poe_dict.update({port[0]: port[1]})
+                    poe_dict.update({Common.convert_intf_name(port[0]): port[1]})
                 continue
 
             # STACK POWER: BLACK
@@ -621,6 +634,65 @@ class ShowHwModuleUsbflash1Security(ShowHwModuleUsbflash1SecuritySchema):
         
         return ret_dict
 
+# ==================================================================================
+#  Schema for 'show hw-module {filesystem} security-lock status'
+# ==================================================================================
+class ShowHwModuleSecurityLockStatusSchema(MetaParser):
+    """Schema for show hw-module {filesystem} security-lock status"""
+    schema = {
+            Optional('err_msg'): str,
+            Optional('drive_support'):bool,
+            Optional('lock_enabled'):bool,
+            Optional('lock_status'):bool,
+            Optional('partitioned'):bool,
+            Optional('tam_object'):bool
+        }
+
+# ==================================================================================
+#  Parser for 'show hw-module {filesystem} security-lock status'
+# ==================================================================================
+class ShowHwModuleSecurityLockStatus(ShowHwModuleSecurityLockStatusSchema):
+    """Schema for show hw-module {filesystem} security-lock status"""
+
+    cli_command = 'show hw-module {filesystem} security-lock status'
+
+    def cli(self, filesystem, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(filesystem=filesystem))
+
+        # Initial Variables
+        ret_dict = {}
+
+        # Drive Supported: Yes, Locking Enabled: Yes, Locked: No, Partitioned: Yes, TAM Object: Yes
+        p1 = re.compile(
+                r"^Drive Supported:\s+(?P<drive_support>\w+),\s+"
+                r"Locking Enabled:\s+(?P<lock_enabled>\w+),\s+"
+                r"Locked:\s+(?P<lock_status>\w+),\s+"
+                r"Partitioned:\s+(?P<partitioned>\w+),\s+"
+                r"TAM\s+Object:\s+(?P<tam_object>\w+)$")
+
+        # Any error message with spaces like
+        # DEVICE NOT SUPPORTED
+        p2 = re.compile(r"^[a-zA-Z0-9_ ]+$")
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Drive Supported: Yes, Locking Enabled: Yes, Locked: No, Partitioned: Yes, TAM Object: Yes
+            m = p1.match(line)
+            if m:
+                for key, val in m.groupdict().items():
+                    ret_dict[key] = True if val == "Yes" else False;
+                continue
+
+            # Any error message with spaces like
+            # DEVICE NOT SUPPORTED
+            m = p2.match(line)
+            if m:
+                ret_dict['err_msg'] = line
+                continue
+
+        return ret_dict
 
 class ShowHardwareLedPortModeSchema(MetaParser):
     """

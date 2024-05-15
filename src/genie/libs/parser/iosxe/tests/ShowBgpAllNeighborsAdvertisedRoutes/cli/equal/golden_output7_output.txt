@@ -1,0 +1,14 @@
+For address family: IPv4 Unicast
+BGP table version is 87654, local router ID is 10.1.2.3
+Status codes: s suppressed, d damped, h history, * valid, > best, i - internal,
+              r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter,
+              x best-external, a additional-path, c RIB-compressed,
+              t secondary path,
+Origin codes: i - IGP, e - EGP, ? - incomplete
+RPKI validation codes: V valid, I invalid, N Not found
+
+     Network          Next Hop            Metric LocPrf Weight Path
+ *>   10.111.222.0/24 0.0.0.0                  0         32768 i
+ *>   10.111.223.3/3  0.0.0.0                  0         32768 i
+ *>   10.200.1.1/32   0.0.0.0                  0         32768 i
+ *>   15.16.17.0/20   0.0.0.0                  0         32768 i

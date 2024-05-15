@@ -3544,3 +3544,23 @@ class ShowMplsLdpInterfaceBrief(ShowMplsLdpInterfaceBriefSchema):
                 continue
 
         return result_dict
+
+# =========================================================
+# Parser for
+#   * 'show mpls forwarding prefix ipv4 unicast {prefix}'
+# =========================================================
+class ShowMplsForwardingPrefixIPV4Unicast(ShowMplsForwardingSchema, ShowMplsForwardingVrf):
+    """parser details for:
+    * show mpls forwarding prefix ipv4 unicast <prefix>
+    """
+    cli_command = ['show mpls forwarding prefix ipv4 unicast {prefix}']
+
+    def cli(self, prefix="", output=None):
+
+        if output is None:
+            output = self.device.execute(self.cli_command[0].format(prefix=prefix))
+        vrf = 'default'
+        ret_dict = super().cli(vrf=vrf, output=output).get(
+                    'vrf', {}).get('default', {})
+
+        return ret_dict

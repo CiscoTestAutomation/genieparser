@@ -701,13 +701,13 @@ class ShowIpv6Routers(ShowIpv6RoutersSchema):
     cli_command = ['show ipv6 routers',
                    'show ipv6 routers vrf {vrf}']
 
-    def cli(self, vrf='',output=None):
+    def cli(self, vrf=None, output=None):
         """ cli for:
          ' show ipv6 routers '
          ' show ipv6 routers vrf {vrf}'
         """
         if output is None:
-            if vrf != 'default':
+            if vrf and vrf != 'default':
                 cmd = self.cli_command[1].format(vrf=vrf)
             else:
                 cmd = self.cli_command[0]
@@ -1147,6 +1147,7 @@ class ShowIpv6Mfib(ShowIpv6MfibSchema):
         sub_dict = {}
         outgoing = False
         egress_data = {}
+        egress_data_update = False
         #Default
         #VRF vrf1
         p1 = re.compile(r'^(VRF\s+)?(?P<vrf>[\w]+)$')
@@ -1182,9 +1183,10 @@ class ShowIpv6Mfib(ShowIpv6MfibSchema):
         #  GigabitEthernet1/0/1 Flags: A NS
         #Tunnel0, VXLAN Decap Flags: A
         #Vlan500, VXLAN v6 Encap (50000, 239.1.1.0) Flags: A
+        #Port-channel5 Flags: RA A MA
 
-        p7 = re.compile(r'^(?P<ingress_if>[\w\.\/ ]+)'
-                         r'(\,\s+VXLAN +(?P<ingress_vxlan_version>[v0-9]+)?(\s+)?(?P<ingress_vxlan_cap>[\w]+)(\s+)?(\(?(?P<ingress_vxlan_vni>[0-9]+)(\,\s+)?(?P<ingress_vxlan_nxthop>[0-9\.]+)?\)?)?)?'
+        p7 = re.compile(r'^(?P<ingress_if>[\w\/\.\-\:]+)'
+                         r'(\,\s+VXLAN +(?P<ingress_vxlan_version>[v0-9]+)?(\s+)?(?P<ingress_vxlan_cap>[\w]+)(\s+)?(\(?(?P<ingress_vxlan_vni>[0-9]+)(\,\s+)?(?P<ingress_vxlan_nxthop>[\w:./]+)?\)?)?)?'
                          r' +Flags\: +(?P<ingress_flags>A[\s\w]+|[\s\w]+ +A[\s\w]+|A$)')
 
         #Vlan2001 Flags: F NS
@@ -1194,7 +1196,8 @@ class ShowIpv6Mfib(ShowIpv6MfibSchema):
         # Vlan200, VXLAN v4 Encap (10100, 239.1.1.1) Flags: F
         #L2LISP0.1502, L2LISP v6 Decap Flags: F NS
         #LISP0.101, 100:88:88::88 Flags: F
-        p8 = re.compile(r'^(?P<egress_if>[\w\.\/]+)'
+        #Port-channel5 Flags: RF F NS
+        p8 = re.compile(r'^(?P<egress_if>[\w\/\.\-\:]+)'
                         r'(\,\s+L2LISP\s*v6\s*Decap\s*)?'
                         r'(\,\s+\(?(?P<egress_rloc>[\w:\.]+)(\,\s+)?(?P<egress_underlay_mcast>[\w\.]+)?\)?)?'
                         r'(\,\s+VXLAN +(?P<egress_vxlan_version>[v0-9]+)?(\s+)?(?P<egress_vxlan_cap>[\w]+)(\s+)?'
@@ -1283,8 +1286,10 @@ class ShowIpv6Mfib(ShowIpv6MfibSchema):
                     ing_intf_dict['ingress_vxlan_cap']=group['ingress_vxlan_cap']
                 if group['ingress_vxlan_version']:
                     ing_intf_dict['ingress_vxlan_version']=group['ingress_vxlan_version']
-                    ing_intf_dict['ingress_vxlan_vni']=group['ingress_vxlan_vni']
+                if group['ingress_vxlan_nxthop']:
                     ing_intf_dict['ingress_vxlan_nxthop']=group['ingress_vxlan_nxthop']
+                if group['ingress_vxlan_vni']:
+                    ing_intf_dict['ingress_vxlan_vni']=group['ingress_vxlan_vni']
                 continue
 
 
@@ -1312,6 +1317,7 @@ class ShowIpv6Mfib(ShowIpv6MfibSchema):
                     outgoing_interface='{},{}'.format(group['egress_if'], group['egress_rloc'])
 
                 egress_data=sw_data.setdefault('outgoing_interfaces',{}).setdefault(outgoing_interface,{})
+                egress_data_update = True
                 egress_data['egress_flags'] = group['egress_flags']
 
                 if group['egress_underlay_mcast']:
@@ -1328,19 +1334,19 @@ class ShowIpv6Mfib(ShowIpv6MfibSchema):
                 continue
             #CEF: Adjacency with MAC: 01005E010101000A000120010800
             m=p9_1.match(line)
-            if m:
+            if m and egress_data_update:
                 group = m.groupdict()                 
                 egress_data['egress_adj_mac'] = group['egress_adj_mac']
                 continue
             #CEF: Special OCE (discard)
             m=p9_2.match(line)
-            if m:
+            if m and egress_data_update:
                 group = m.groupdict()
                 egress_data['egress_adj_mac'] = group['egress_adj_mac']
                 continue
             #Pkts: 0/0/2    Rate: 0 pps
             m=p10.match(line)
-            if m:
+            if m and egress_data_update:
                 changedict={}
                 for key in m.groupdict().keys():
                   changedict[key] = int(m.groupdict()[key])

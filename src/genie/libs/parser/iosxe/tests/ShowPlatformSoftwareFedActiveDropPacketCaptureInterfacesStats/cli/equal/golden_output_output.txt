@@ -1,0 +1,5 @@
+Interface                              If id             Dropped Pkts
+--------------------------------------------------------------------------
+HundredGigE1/0/3                       0x54B                  3
+HundredGigE2/0/28                      0x54F                  15
+

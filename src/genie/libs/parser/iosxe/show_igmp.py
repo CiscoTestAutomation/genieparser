@@ -7,6 +7,7 @@ IOSXE parsers for the following show commands:
     * show ip igmp vrf <WORD> interface 
     * show ip igmp groups detail
     * show ip igmp vrf <WORD> groups detail
+    * show ip igmp ssm-mapping
     * show ip igmp ssm-mapping <WORD>
     * show ip igmp vrf <WORD> ssm-mapping <WORD>
     * show ip igmp snooping mrouter
@@ -630,6 +631,39 @@ class ShowIpIgmpGroupsDetail(ShowIpIgmpGroupsDetailSchema):
 
         return ret_dict
 
+# ========================================================
+# Parser for 'show ip igmp ssm-mapping'
+# ========================================================
+
+class ShowIpIgmpSsmSchema(MetaParser):
+    """
+    Schema for 'show ip igmp ssm-mapping'
+    """
+    schema = {'ssm_mapping': str
+        }
+
+class ShowIpIgmpSsm(ShowIpIgmpSsmSchema):
+    """
+    Parser for 'show ip igmp ssm-mapping'
+    """
+    cli_command = 'show ip igmp ssm-mapping'
+    def cli(self,output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # initial variables
+        ret_dict = {}
+        for line in out.splitlines():
+            line = line.strip()
+            # SSM Mapping : Disabled
+            p1 = re.compile(r'^SSM +Mapping *: +(?P<ssm_mapping>\w+)$')
+            m = p1.match(line)
+            if m:
+                ret_dict['ssm_mapping'] = m.groupdict()['ssm_mapping']
+                continue
+        return ret_dict
 
 # ========================================================
 # Parser for 'show ip igmp ssm-mapping <WROD>'
@@ -1302,10 +1336,10 @@ class ShowIpIgmpSnoopingQuerierVlanDetailSchema(MetaParser):
     """Schema for show ip igmp snooping querier vlan {vlan_id} detail"""
 
     schema = {
-        'ip_address': str,
-        'igmp_version': str,
-        'port': str,
-        'max_response_time': str,
+        Optional('ip_address'): str,
+        Optional('igmp_version'): str,
+        Optional('port'): str,
+        Optional('max_response_time'): str,
         'global_igmp': {
             'admin_state': str,           
             'admin_version': int,
@@ -1338,9 +1372,10 @@ class ShowIpIgmpSnoopingQuerierVlanDetail(ShowIpIgmpSnoopingQuerierVlanDetailSch
 
     cli_command = 'show ip igmp snooping querier vlan {vlan_id} detail'
 
-    def cli(self, output=None):
-        if output is None:
-            output = self.device.execute(self.cli_command)
+    def cli(self, vlan_id='', output=None):
+        cmd = self.cli_command.format(vlan_id = vlan_id)
+        if not output:
+            output = self.device.execute(cmd)
         
         # IP address               : 1.1.1.1
         p1 = re.compile(r"^IP\s+address\s+:\s+(?P<ip_address>\S+)$")
@@ -1386,7 +1421,8 @@ class ShowIpIgmpSnoopingQuerierVlanDetail(ShowIpIgmpSnoopingQuerierVlanDetailSch
         p14 = re.compile(r"^tcn\s+query\s+interval\s+\(sec\)\s+:\s+(?P<tcn_query_interval>\d+)$")
 
         # operational state              : Querier
-        p15 = re.compile(r"^operational\s+state\s+:\s+(?P<operational_state>\w+)$")
+        # operational state              : Non-Querier
+        p15 = re.compile(r"^operational\s+state\s+:\s+(?P<operational_state>\S+)$")
 
         # operational version            : 2
         p16 = re.compile(r"^operational\s+version\s+:\s+(?P<operational_version>\d+)$")

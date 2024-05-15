@@ -3,12 +3,18 @@
 IOSXE parsers for the following show commands:
 
     * show idprom all 
-	* show idprom interface {interface}
+    * show idprom interface {interface}
 '''
 
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any, Optional
-
+from genie.metaparser.util.schemaengine import Schema, \
+                                         Any, \
+                                         Optional, \
+                                         Or, \
+                                         And, \
+                                         Default, \
+                                         Use
 import re
 
 
@@ -604,7 +610,7 @@ class ShowIdpromInterface(ShowIdpromInterfaceSchema):
             if m:
                 group=m.groupdict()
                 root_dict['nominal_bitrate_per_channel'] = group['nominal_bitrate_per_channel']
-                continue				
+                continue                
             
             # Vendor part number                        = AFBR-2CAR10Z-CS1
             m=p16.match(line)
@@ -631,7 +637,7 @@ class ShowIdpromTanSchema(MetaParser):
             Any(): {
                 'switch_num': int,
                 'part_num': str,
-                'revision_num': int,
+                'revision_num': Or(int, str),
             },
         }
     }
@@ -657,7 +663,7 @@ class ShowIdpromTan(ShowIdpromTanSchema):
         # Top Assy. Part Number           : 68-101195-01
         p2 = re.compile(r"^Top\s+Assy.\s+Part\s+Number\s+:\s+(?P<part_num>\d+-\d+-\d+)$")
         # Top Assy. Revision Number       : 31
-        p3 = re.compile(r"^Top\s+Assy.\s+Revision\s+Number\s+:\s+(?P<revision_num>\d+)$")
+        p3 = re.compile(r"^Top\s+Assy.\s+Revision\s+Number\s+:\s+(?P<revision_num>\S+)$")
 
         ret_dict = {}
 
@@ -687,7 +693,7 @@ class ShowIdpromTan(ShowIdpromTanSchema):
             if m:
                 dict_val = m.groupdict()
                 revision_part_num = dict_val['revision_num']
-                sw_dict['revision_num'] = int(revision_part_num)
+                sw_dict['revision_num'] = int(revision_part_num) if revision_part_num.isnumeric() else revision_part_num
                 continue
 
 

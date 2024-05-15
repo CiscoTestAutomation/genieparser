@@ -1,0 +1,8 @@
+Type escape sequence to abort.
+
+Tracing the route to 3::2
+
+
+  1 4::1 9 msec *  2 msec
+
+  2 1::2 1 msec 1 msec 1 msec

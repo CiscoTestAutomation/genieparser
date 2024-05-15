@@ -1,0 +1,7 @@
+Number of Clients: 1
+
+MAC Address    AP Name                                        Type ID   State             Protocol Method     Role
+-------------------------------------------------------------------------------------------------------------------------
+200d.b033.01fe Site6-FE2-9162                                 WLAN 19   Run               11ac     None       Local
+
+Number of Excluded Clients: 0

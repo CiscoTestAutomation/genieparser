@@ -1,0 +1,27 @@
+show bgp vpnv4 unicast vrf 1018 neighbors 100.103.0.5 advertised-routes
+BGP table version is 58974, local router ID is ROUTER-ID
+Status codes: s suppressed, d damped, h history, * valid, > best, i - internal, 
+              r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter, 
+              x best-external, a additional-path, c RIB-compressed, 
+              t secondary path, L long-lived-stale,
+Origin codes: i - IGP, e - EGP, ? - incomplete
+RPKI validation codes: V valid, I invalid, N Not found
+
+     Network          Next Hop            Metric LocPrf Weight Path
+Route Distinguisher: AS:RD (default for vrf VRF) VRF Router ID ROUTER-ID
+ *>   0.0.0.0          0.0.0.0                  0         32768 i
+ *>   3.3.3.0/28       NEIGHBOR                   100      0 AS1 AS2 ?
+ *>   3.3.3.12/32      NEIGHBOR                   100      0 AS1 AS2 ?
+ *>   4.78.52.234/32   NEIGHBOR                   100      0 AS1 AS3 AS4 AS5 ?
+ *>   10.0.0.0         NEIGHBOR                   100      0 AS1 i
+ *>   10.0.5.0/30      NEIGHBOR                   100      0 AS1 i
+ *>   10.0.5.4/30      NEIGHBOR                   100      0 AS1 i
+ *>   10.0.5.20/30     NEIGHBOR                   100      0 AS1 AS6 AS7 ?
+ *>   10.0.5.24/30     NEIGHBOR                   100      0 AS1 AS6 AS7 ?
+ *>   10.0.5.32/30     NEIGHBOR                   100      0 AS1 AS2 ?
+ *>   10.0.5.36/30     NEIGHBOR                   100      0 AS1 AS2 ?
+ *>   10.0.5.40/30     NEIGHBOR                   100      0 AS1 AS8 AS9 ?
+ *>   10.0.5.48/30     NEIGHBOR                   100      0 AS1 AS6 AS7 AS8 i
+ *>   10.0.5.52/30     NEIGHBOR                   100      0 AS1 AS8 AS9 ?
+ *>   10.0.5.60/30     NEIGHBOR                   100      0 AS1 AS6 AS7 AS8 i
+ *>   10.0.5.64/30     NEIGHBOR                   100      0 AS1 AS8 AS9 ?

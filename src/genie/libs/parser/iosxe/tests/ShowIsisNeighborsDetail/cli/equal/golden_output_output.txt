@@ -1,0 +1,11 @@
+Tag 1:
+System Id       Type Interface     IP Address      State Holdtime Circuit Id
+2222          L2   Fa0/0       10.1.1.2        UP    7        01           
+  Area Address(es): 49.0001
+  SNPA: cc02.1538.0000
+  State Changed: 01:05:28
+  LAN Priority: 64
+  Format: Phase V
+  Interface name: FastEthernet0/0
+  L1 Last Hello Authentication Type: Generic Cryptographic
+    Key Id: 100

@@ -1,0 +1,3 @@
+ Packets Forwarded                                     = 122
+ Packets Dropped                                       = 0
+ Packets Dropped From untrusted ports                  = 0

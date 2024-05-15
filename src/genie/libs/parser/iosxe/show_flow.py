@@ -222,6 +222,11 @@ class ShowFlowMonitorCacheSchema(MetaParser):
                 Optional('timestamp_abs_first'): str,
                 Optional('timestamp_abs_last'): str,
                 Optional('fw_fw_event'): int,
+                Optional('datalink_ethertype'): str,
+                Optional('datalink_vlan_input'): str,
+                Optional('datalink_mac_src_input'): str,
+                Optional('datalink_mac_dst_input'): str,
+                Optional('interface_input'): str,
             },
         },
         Optional('proto_entries'): {
@@ -241,16 +246,21 @@ class ShowFlowMonitorCacheSchema(MetaParser):
 class ShowFlowMonitorCache(ShowFlowMonitorCacheSchema):
     ''' Parser for
         "show flow monitor {name} cache"
+        "show flow monitor {name} cache filter ipv4 {address_direction1} address {address1} ipv4 {address_direction2} address {address2}"
     '''
 
-    cli_command = 'show flow monitor {name} cache'
+    cli_command = [
+        'show flow monitor {name} cache',
+        'show flow monitor {name} cache filter ipv4 {address_direction1} address {address1} ipv4 {address_direction2} address {address2}'
+        ]
 
-    def cli(self, name, output=None):
+    def cli(self, name, address_direction1=None,address1=None,address_direction2=None,address2=None,target='active',output=None):
         if output is None:
-            cmd = self.cli_command.format(name=name)
-            out = self.device.execute(cmd)
-        else:
-            out = output
+            if address_direction1 and address1 and address_direction2 and address2:
+                cmd = self.cli_command[1].format(name=name, address_direction1=address_direction1, address_direction2=address_direction2, address1=address1, address2=address2)
+                output = self.device.execute(cmd,target=target)
+            else:                
+                output = self.device.execute(self.cli_command[0].format(name=name))
 
         # Init vars
         ret_dict = {}
@@ -362,13 +372,28 @@ class ShowFlowMonitorCache(ShowFlowMonitorCacheSchema):
 
         #fw fw event:                 1
         p33 = re.compile(r'^fw fw event: +(?P<fw_fw_event>\S+)$')
- 
+
+        #DATALINK ETHERTYPE:                      0xFFFF
+        p34 = re.compile(r'^DATALINK ETHERTYPE:\s+(?P<datalink_ethertype>[\w\s]+)$')
+
+        # DATALINK VLAN INPUT:                     0
+        p35 = re.compile(r'^DATALINK VLAN INPUT:\s+(?P<datalink_vlan_input>[\w\s]+)$')
+        
+        # DATALINK MAC SOURCE ADDRESS INPUT:       0011.0000.0010
+        p36 = re.compile(r'^DATALINK MAC SOURCE ADDRESS INPUT:\s+(?P<datalink_mac_src_input>[\w\s\.]+)$')
+
+        # DATALINK MAC DESTINATION ADDRESS INPUT:       0011.0000.0010
+        p37 = re.compile(r'^DATALINK MAC DESTINATION ADDRESS INPUT:\s+(?P<datalink_mac_dst_input>[\w\s\.]+)$')
+
+        # INTERFACE INPUT:                         Po31
+        p38 = re.compile(r'^INTERFACE INPUT:\s+(?P<interface_input>[\w\.\/]+)$')
+
         # entry_dict intializes on p8 or p9 condition
         # but some output doesn't match these conditions.
         # this variable checks the entry_dict created
         entry_dict_created = False
 
-        for line in out.splitlines():
+        for line in output.splitlines():
             line = line.strip()
 
             # Cache type:                               Normal (Platform cache)
@@ -645,10 +670,49 @@ class ShowFlowMonitorCache(ShowFlowMonitorCacheSchema):
             if m:
                 group = m.groupdict()
                 entry_dict.update({'fw_fw_event': int(group['fw_fw_event'])})
-            
+                continue
+
+            #DATALINK ETHERTYPE:                      0xFFFF
+            m = p34.match(line)
+            if m:        
+                group = m.groupdict()
+                index += 1
+                entry_dict = ret_dict.setdefault('entries', {}).setdefault(index, {})      
+                entry_dict.update({'datalink_ethertype': group['datalink_ethertype']})
+                entry_dict_created = True
+                continue
+                            
+            # DATALINK VLAN INPUT:                     0
+            m = p35.match(line)
+            if m:
+                group = m.groupdict()
+                entry_dict = ret_dict.setdefault('entries', {}).setdefault(index, {})       
+                entry_dict.update({'datalink_vlan_input': group['datalink_vlan_input']})
+                entry_dict_created = True
+                continue
+        
+            # DATALINK MAC SOURCE ADDRESS INPUT:       0011.0000.0010
+            m = p36.match(line)
+            if m:
+                group = m.groupdict()
+                entry_dict.update({'datalink_mac_src_input': group['datalink_mac_src_input']})
+                continue
+
+            # DATALINK MAC DESTINATION ADDRESS INPUT:       0011.0000.0010
+            m = p37.match(line)
+            if m:
+                group = m.groupdict()
+                entry_dict.update({'datalink_mac_dst_input': group['datalink_mac_dst_input']})
+                continue
+
+            # INTERFACE INPUT:                         Po31
+            m = p38.match(line)
+            if m:
+                group = m.groupdict()
+                entry_dict.update({'interface_input': group['interface_input']})
+                continue
 
         return ret_dict
-
 
 class ShowFlowMonitorCacheRecord(ShowFlowMonitorCache):
     ''' Parser for
@@ -2049,7 +2113,6 @@ class ShowFlowMonitorCacheFilterInterface(ShowFlowMonitorCacheFilterInterfaceSch
                 continue
             
         return ret_dict
-
 
 # ====================================================================================================================================
 # Schema for 'show flow monitor {name} cache filter interface {direction} {interface_name} ipv4 {address_direction} address {address}'

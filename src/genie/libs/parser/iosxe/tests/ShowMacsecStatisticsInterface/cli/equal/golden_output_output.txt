@@ -1,0 +1,47 @@
+MACsec Statistics for TenGigabitEthernet0/1/0.24
+ SecY Counters
+  Ingress Untag Pkts:       0
+  Ingress No Tag Pkts:      0
+  Ingress Bad Tag Pkts:     0
+  Ingress Unknown SCI Pkts: 0
+  Ingress No SCI Pkts:      0
+  Ingress Overrun Pkts:     0
+  Ingress Validated Octets: 0
+  Ingress Decrypted Octets: 184493007008
+  Egress Untag Pkts:        0
+  Egress Too Long Pkts:     0
+  Egress Protected Octets:  0
+  Egress Encrypted Octets:  3519888
+
+ Controlled Port Counters
+  IF In Octets:             186176188032
+  IF In Packets:            134202116
+  IF In Discard:            0
+  IF In Errors:             0
+  IF Out Octets:            3623448
+  IF Out Packets:           8630
+  IF Out Errors:            0
+
+ Transmit SC Counters (SCI: 44881699B510001C)
+  Out Pkts Protected:       0
+  Out Pkts Encrypted:       8630
+
+ Receive SA Counters (SCI: A44C119DF89C001E  AN 0)
+  In Pkts Unchecked:        0
+  In Pkts Delayed:          0
+  In Pkts OK:               103416932
+  In Pkts Invalid:          0
+  In Pkts Not Valid:        0
+  In Pkts Not using SA:     0
+  In Pkts Unused SA:        0
+  In Pkts Late:             0
+
+ Receive SA Counters (SCI: 70708BBA4696005A  AN 0)
+  In Pkts Unchecked:        0
+  In Pkts Delayed:          0
+  In Pkts OK:               356016
+  In Pkts Invalid:          0
+  In Pkts Not Valid:        0
+  In Pkts Not using SA:     0
+  In Pkts Unused SA:        0
+  In Pkts Late:             0

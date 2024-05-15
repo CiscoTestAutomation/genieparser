@@ -1,0 +1,9 @@
+TTY: /dev/ttyS0 Type: "vt102"
+Length: 0 lines, Width: 511 columns
+Session Timeout: 0 minutes
+Event Manager CLI event bypass: no
+Redirection mode: ascii
+Accounting log all commands (including show commands): no
+Vlan mutex value: 1
+Vlan batch mode: yes
+P1#

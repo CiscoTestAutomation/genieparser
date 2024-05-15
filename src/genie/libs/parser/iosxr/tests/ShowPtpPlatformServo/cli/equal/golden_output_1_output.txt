@@ -1,0 +1,19 @@
+show ptp platform servo
+Thu Jan 18 14:32:24.828 UTC
+Servo status: Running
+Servo stat_index: 6
+Device status: FREERUN
+Servo Mode: Hybrid
+Servo log level: 0
+Phase Alignment Accuracy: 0 ns
+Sync timestamp updated: 0
+Sync timestamp discarded: 0
+Delay timestamp updated: 0
+Delay timestamp discarded: 0
+Previous Received Timestamp T1: 0.000000000  T2: 0.000000000  T3: 0.000000000  T4: 0.000000000  
+Last Received Timestamp T1: 0.000000000  T2: 0.000000000  T3: 0.000000000  T4: 0.000000000  
+Offset from master:  0 secs, 0 nsecs
+Mean path delay   :  0 secs, 0 nsecs
+setTime():0  stepTime():0 adjustFreq():0 
+Last setTime: 0.000000000 flag:0  Last stepTime:0 Last adjustFreq:0 
+RP/0/RP0/CPU0:PE1B#

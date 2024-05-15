@@ -1,0 +1,10 @@
+FRR Database Summary:
+  Protected interfaces    : 0
+  Protected LSPs/Sub-LSPs : 0
+  Backup tunnels          : 0
+  Active interfaces       : 0
+  FRR Active tunnels      : 0
+
+P2P LSPs:
+
+P2MP Sub-LSPs:

@@ -1,0 +1,42 @@
+expected_output = {
+    "instance":{
+      "37":{
+         "neighbor":"10.0.0.4",
+         "interface_address":"10.3.4.2",
+         "area":{
+            "37":{
+               "interfaces":{
+                  "Bundle-Ether34":{
+                     "neighbors":{
+                        "priority":1,
+                        "state":"FULL",
+                        "state_changes":6,
+                        "dr_ip_addr":"10.3.4.2",
+                        "bdr_ip_addr":"10.3.4.1",
+                        "options":"0x52",
+                        "lls_options":"0x1 (LR)",
+                        "dead_timer":"00:00:36",
+                        "neighbor_uptime":"12w5d",
+                        "total_dbd_retrans":0,
+                        "index":"2/2,",
+                        "nbr_retrans_qlen":0,
+                        "total_retransmission":22,
+                        "first":"0(0)/0(0)",
+                        "next":"0(0)/0(0)",
+                        "last_retrans_scan_length":1,
+                        "last_retrans_max_scan_length":4,
+                        "last_retrans_scan_time_msec":0,
+                        "last_retrans_max_scan_time_msec":0,
+                        "ls_ack_list":"NSR-sync",
+                        "ls_ack_list_pending":0,
+                        "high_water_mark":0,
+                        "neighbor_interface_id":10
+                     }
+                  }
+               }
+            }
+         }
+      }
+   }
+}
+    

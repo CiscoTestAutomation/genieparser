@@ -5,7 +5,7 @@ IOSXE parsers for the following show commands:
     * 'show dhcp lease'
     * 'show ipv6 dhcp interface'
     * 'show ipv6 dhcp interface {interface}'
-
+    * 'show ip dhcp snooping statistics'
 """
 
 # Python
@@ -470,6 +470,122 @@ class ShowIpv6DhcpInterface(ShowIpv6DhcpInterfaceSchema):
             if m:
                 groups = m.groupdict()
                 dhcp_intf_dict["rapid_commit"] = groups['rapid_commit']
+                continue
+
+        return ret_dict
+
+class ShowIpDhcpSnoopingBidingInterface(MetaParser):
+    schema = {
+        'count': int
+    }
+
+
+# ==========================================
+# Parser for:
+#   * 'show ip dhcp snooping binding interface {interface} | count {match}'
+# ==========================================
+
+class ShowIpDhcpSnoopingBibdingInterfaceCount(ShowIpDhcpSnoopingBidingInterface):
+    """Parser for:
+        show ip dhcp snooping binding interface {interface} | count {match}
+    """
+    cli_command = 'show ip dhcp snooping binding interface {interface} | count {match}'
+
+    def cli(self, interface='', match='', output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(interface=interface, match=match))    
+        dict_count = {}
+
+        # Number of lines which match regexp = 240
+        p1 = re.compile(r"^Number of lines which match regexp\s*=\s*(?P<count>[\d]+)$")
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Number of lines which match regexp = 240
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                count = int(groups['count'])
+                dict_count['count'] = count
+
+        return dict_count
+
+# ==========================================
+# Parser for:
+#   * 'show ip verify source interface {interface} | count {match}'
+# ==========================================
+
+class ShowIpVerifySourceInterfaceCount(ShowIpDhcpSnoopingBidingInterface):
+    """Parser for:
+        show ip verify source interface {interface} | count {match}
+    """
+    cli_command = 'show ip verify source interface {interface} | count {match}'
+
+    def cli(self, interface='', match='', output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(interface=interface, match=match))
+        dict_count = {}
+
+        # Number of lines which match regexp = 240
+        p1 = re.compile(r"^Number of lines which match regexp\s*=\s*(?P<count>[\d]+)$")
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Number of lines which match regexp = 240
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                count = int(groups['count'])
+                dict_count['count'] = count
+
+        return dict_count
+
+# ==========================
+# Schema for 'show ip dhcp snooping statistics'
+# ==========================
+class ShowIpDhcpSnoopingStatisticsSchema(MetaParser):
+
+    ''' Schema for "show ip dhcp snooping statistics" '''
+
+    schema = {
+        "packets_forwarded" : int,
+        "packets_dropped" : int,
+        "packets_dropped_from_untrusted_ports": int
+        }
+
+# ==========================
+# Parser for 'show ip dhcp snooping statistics'
+# ==========================
+class ShowIpDhcpSnoopingStatistics(ShowIpDhcpSnoopingStatisticsSchema):
+
+    ''' Parser for "show ip dhcp snooping statistics" '''
+
+    cli_command = 'show ip dhcp snooping statistics'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+       
+        # Init vars
+        ret_dict = {}
+
+        # Packets Forwarded                                     = 122
+        # Packets Dropped                                     = 0
+        p1 = re.compile(r'^(?P<pattern>[\w\s]+)= +(?P<value>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Packets Forwarded                                     = 122
+            # Packets Dropped                                     = 0
+            # Packets Dropped From untrusted ports                  = 0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                scrubbed = (group['pattern'].strip()).replace(' ', '_')
+                ret_dict.update({scrubbed.lower(): int(group['value'])})
                 continue
 
         return ret_dict

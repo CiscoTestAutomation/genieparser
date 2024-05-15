@@ -1,0 +1,130 @@
+FnF Software Statistics
+
+
+
+Software Statistics:
+======================
+ 1: fnf_ageing_timeout:         6 sec
+ 2: flow_learning_timeout:      500 millisec
+ 3: offload_timeout:            500 millisec
+ 4: Flow region entry count:
+
+ 5: num_ipc_errors:                     0
+ 6: num_flow_errors:                    0
+ 7: num_init_errors:                    0
+ 8: num_misc_errors:                    0
+ 9: num_config_errors:                  0
+10: num_too_old_fsts_errors:            0
+11: num_too_old_lsts_errors:            0
+12: num_high_fs_errors:                 0
+13: num_fs_ls_fixups:                   0
+14: num_ts_status_check_errors:         0
+15: num_ios_msgs_rcvd:                  0
+16: num_ios_msgs_sent:                  0
+17: num_fman_msgs_rcvd:                 0
+18: num_fman_msgs_sent:                 0
+19: num_fmask_created:                  0
+20: num_fmask_removed:                  0
+21: num_dynamic_entry_created:          0
+22: num_vlan_nfl_acl_being_used:        0
+23: num_vlan_nfl_acl_freed:             0
+24: num_l3_nfl_acl_being_used:          0
+25: num_l3_nfl_acl_freed:               0
+26: num_port_nfl_acl_being_used:        0
+27: num_port_nfl_acl_freed:             0
+28: num_wlan_nfl_acl_being_used:        0
+29: num_wlan_nfl_acl_freed:             0
+30: num_monitors_created:               0
+31: num_monitors_removed:               0
+32: num_monitors_attached_to_vlan:      0
+33: num_monitors_attached_to_port:      0
+34: num_monitors_attached_to_l3:        0
+35: num_samplers_created:               0
+36: num_samplers_removed:               0
+37: num_exporter_created:               0
+38: num_exporter_removed:               0
+39: num_ots_flow_mon_action_ev:         0
+40: num_ots_flow_exp_action_ev:         0
+41: num_ots_ifc_mon_action_ev:          0
+42: num_ots_flow_cache_clear_ev:        0
+43: num_ots_fnf_ageing_timer_ev:        0
+44: num_ots_fnf_ageing_out_ev:          0
+45: num_ots_fnf_ageing_sm_ev:           0
+46: num_ots_fnf_offld_tmr_ev:           0
+47: num_ots_fnf_comet_ev:               0
+48: num_ots_get_flows_ios_ev:           0
+49: num_ots_ifm_if_del_ev:              0
+50: num_ots_cache_stats_clr_ev:         0
+51: num_flows_learnt:                   0
+52: num_flow_get_dyn_ad_errors:         0
+53: num_flows_del_not_valid_errors:     0
+54: num_max_fin_rst_flows_in_ofld:      0
+
+55: num_wdavc_records_to_export:                0
+56: num_wdavc_records_not_exported:             0
+57: num_wdavc_records_no_export_mon:            0
+58: num_wdavc_records_export_failures:  0
+
+59: num_wdavc_alloc_gen_rec:    0
+60: num_wdavc_free_gen_rec:     0
+61: num_wdavc_inc_gen_rec_ref_cnt:      0
+62: num_wdavc_dec_gen_rec_ref_cnt:      0
+63: num_wdavc_alloc_gen_key:    0
+64: num_wdavc_free_gen_key:     0
+65: num_wdavc_alloc_gen_collect:        0
+66: num_wdavc_free_gen_collect: 0
+
+67: num_wdavc_alloc_rec_key:    0
+68: num_wdavc_free_rec_key:     0
+69: num_wdavc_inc_rec_key_ref_cnt:      0
+70: num_wdavc_dec_rec_key_ref_cnt:      0
+71: num_wdavc_alloc_rec_collect:        0
+72: num_wdavc_free_rec_collect: 0
+73: num_wdavc_inc_rec_collect_ref_cnt:  0
+74: num_wdavc_dec_rec_collect_ref_cnt:  0
+
+75: num_wdavc_alloc_gen_rec_failed:     0
+76: num_wdavc_alloc_gen_key_failed:     0
+77: num_wdavc_alloc_gen_collect_failed: 0
+78: num_wdavc_alloc_wdavc_key_failed:   0
+79: num_wdavc_alloc_wdavc_collect_failed:       0
+
+80: num_wdavc_cache_alloc_ext_field_dns_domain_name:            0
+81: num_wdavc_cache_free_ext_field_dns_domain_name:             0
+82: num_wdavc_cache_alloc_ext_field_failed_dns_domain_name:             0
+83: num_wdavc_cache_alloc_ext_field_http_host_name:             0
+84: num_wdavc_cache_free_ext_field_http_host_name:              0
+85: num_wdavc_cache_alloc_ext_field_failed_http_host_name:              0
+86: num_wdavc_cache_alloc_ext_field_ssl_common_name:            0
+87: num_wdavc_cache_free_ext_field_ssl_common_name:             0
+88: num_wdavc_cache_alloc_ext_field_failed_ssl_common_name:             0
+
+89: num_wdavc_var_len_field_alloc:      0
+90: num_wdavc_var_len_field_free:       0
+91: num_wdavc_var_len_field_alloc_fail: 0
+
+92: num_gen_flows_requests:             0
+93: num_gen_flows_ctxt_start:           0
+94: num_gen_flows_ctxt_end:             0
+95: num_show_flows_send_to_pi:          0
+96: num_gen_flows_request_errors:       0
+
+97: num_gen_flows_sm_new:               0
+98: num_gen_flows_sm_continue:          0
+99: num_gen_flows_sm_stop:              0
+100: num_gen_flows_sm_unknown:          0
+
+101: num_wdavc_start_pending_show:              0
+102: num_wdavc_handle_pending_show:             0
+103: num_wdavc_consumed_pending_show:           0
+104: num_wdavc_reuse_context_show:              0
+105: num_wdavc_finalize_async_show:             0
+106: num_wdavc_show_errors:                     0
+
+107: num_wdavc_update_pending_show_cache:       0
+108: num_wdavc_update_pending_show_cache_fail:  0
+109: num_wdavc_update_pending_show_records:     0
+
+110: num_fin_rst_skip_flow_pend_del:    0
+111: num_wdavc_del_pend_set_same_state_warn: 0
+112: fnf_wdavc_auto_stale_flow_del_enable: Yes

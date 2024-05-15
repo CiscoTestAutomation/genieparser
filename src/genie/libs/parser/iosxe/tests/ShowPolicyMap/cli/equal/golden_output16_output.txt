@@ -1,0 +1,3 @@
+ Policy Map map1
+    Class cs1
+      priority 9 (%)

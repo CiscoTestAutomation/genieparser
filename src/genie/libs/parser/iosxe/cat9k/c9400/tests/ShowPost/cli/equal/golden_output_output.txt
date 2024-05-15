@@ -1,0 +1,40 @@
+Stored system POST messages:
+
+Switch C9407R
+--------------
+
+POST: MBIST Tests : Begin
+POST: MBIST Tests : End, Status Passed
+
+POST: Module: 1 PHY Loopback: loopback Test: Begin
+POST: Module: 1 PHY Loopback: loopback Test: End, Status Passed
+
+POST: Module: 3 PHY Loopback: loopback Test: Begin
+POST: Module: 3 PHY Loopback: loopback Test: End, Status Passed
+
+POST: Module: 4 PHY Loopback: loopback Test: Begin
+POST: Module: 4 PHY Loopback: loopback Test: End, Status Passed
+
+POST: Module: 2 PHY Loopback: loopback Test: Begin
+POST: Module: 2 PHY Loopback: loopback Test: End, Status Passed
+
+POST: Module: 5 PHY Loopback: loopback Test: Begin
+POST: Module: 5 PHY Loopback: loopback Test: End, Status Passed
+
+POST: Module: 7 PHY Loopback: loopback Test: Begin
+POST: Module: 7 PHY Loopback: loopback Test: End, Status Passed
+
+POST: Module: 6 PHY Loopback: loopback Test: Begin
+POST: Module: 6 PHY Loopback: loopback Test: End, Status Passed
+
+POST: Module: 1 PHY Loopback: loopback Test: Begin
+POST: Module: 1 PHY Loopback: loopback Test: End, Status Passed
+
+POST: Module: 5 PHY Loopback: loopback Test: Begin
+POST: Module: 5 PHY Loopback: loopback Test: End, Status Passed
+
+POST: Module: 1 PHY Loopback: loopback Test: Begin
+POST: Module: 1 PHY Loopback: loopback Test: End, Status Failed
+
+POST: Module: 5 PHY Loopback: loopback Test: Begin
+POST: Module: 5 PHY Loopback: loopback Test: End, Status Passed

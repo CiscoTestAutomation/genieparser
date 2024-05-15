@@ -33,6 +33,7 @@
     * show interfaces capabilities
     * show interfaces {interface} capabilities
     * show interfaces {interface} vlan mapping
+    * show interfaces {interface} human-readable
 """
 
 import os
@@ -134,6 +135,7 @@ class ShowInterfacesSchema(MetaParser):
                 Optional('tunnel_receive_bandwidth'): int,
                 Optional('tunnel_protection'): str,
                 Optional('tunnel_profile'): str,
+                Optional('carrier_transitions'): int,
                 Optional('queues'): {
                     Optional('input_queue_size'): int,
                     Optional('input_queue_max'): int,
@@ -533,6 +535,9 @@ class ShowInterfaces(ShowInterfacesSchema):
         # Tunnel Protection profile
         p52 = re.compile(r'^Tunnel +protection +via +(?P<tunnel_protection>[\w]+) +\(profile \"(?P<tunnel_profile>[\w]+)\"\)')
 
+        # 3 carrier transitions
+        p53 = re.compile(r'^(?P<carrier_transitions>\d+)\s+carrier transitions$')
+
         interface_dict = {}
         unnumbered_dict = {}
         for line in out.splitlines():
@@ -805,6 +810,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                 group = m.groupdict()
                 sub_dict = interface_dict.setdefault(interface, {})
                 sub_dict['carrier_delay'] = int(group['carrier_delay'])
+                continue
 
             # Asymmetric Carrier-Delay Up Timer is 2 sec
             # Asymmetric Carrier-Delay Down Timer is 10 sec
@@ -819,6 +825,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                     sub_dict['carrier_delay_up'] = int(group['carrier_delay'])
                 else:
                     sub_dict['carrier_delay_down'] = int(group['carrier_delay'])
+                continue
 
             # ARP type: ARPA, ARP Timeout 04:00:00
             m = p13.match(line)
@@ -1253,30 +1260,35 @@ class ShowInterfaces(ShowInterfacesSchema):
             if m:
                 group = m.groupdict()
                 interface_dict[interface].update({'tunnel_protocol': group['tunnel_protocol']})
+                continue
 
             # Tunnel TTL 255
             m = p48.match(line)
             if m:
                 group = m.groupdict()
                 interface_dict[interface].update({'tunnel_ttl': int(group['tunnel_ttl'])})
+                continue
 
             # Tunnel transport MTU 1480 bytes
             m = p49.match(line)
             if m:
                 group = m.groupdict()
                 interface_dict[interface].update({'tunnel_transport_mtu': int(group['tunnel_transport_mtu'])})
+                continue
 
             # Tunnel transmit bandwidth 10000000 (kbps)
             m = p50.match(line)
             if m:
                 group = m.groupdict()
                 interface_dict[interface].update({'tunnel_transmit_bandwidth': int(group['tunnel_transmit_bandwidth'])})
+                continue
 
             # Tunnel receive bandwidth 10000000 (kbps)
             m = p51.match(line)
             if m:
                 group = m.groupdict()
                 interface_dict[interface].update({'tunnel_receive_bandwidth': int(group['tunnel_receive_bandwidth'])})
+                continue
 
             m = p52.match(line)
             if m:
@@ -1285,6 +1297,14 @@ class ShowInterfaces(ShowInterfacesSchema):
                     interface_dict[interface].update({'tunnel_protection': group['tunnel_protection']})
                 if group['tunnel_profile']:
                     interface_dict[interface].update({'tunnel_profile': group['tunnel_profile']})
+                continue
+
+            # 3 carrier transitions
+            m = p53.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict[interface]['carrier_transitions'] = int(group['carrier_transitions'])
+                continue
 
         # create strucutre for unnumbered interface
         if not unnumbered_dict:
@@ -4400,10 +4420,10 @@ class ShowInterfacesStatusModule(ShowInterfacesStatusModuleSchema):
 
             # Port         Name               Status       Vlan       Duplex  Speed Type
             # Hu1/0/1                         connected    1            full    40G QSFP 40G AOC5M 
-
+            # Twe4/0/2                        connected    routed       full    10G SFP-10GBase-CX1
         p1 = re.compile(r'^(?P<interfaces>\S+)(?:\s+(?P<name>(.+)))?'
                 r'\s+(?P<status>(connected|notconnect|suspended|inactive|disabled|err-disabled|monitoring))'
-                r'\s+(?P<vlan>\d+)\s+(?P<duplex_code>[\S\-]+)\s+(?P<port_speed>[\S\-]+)(\s+(?P<type>.+))?$')
+                r'\s+(?P<vlan>\S+)\s+(?P<duplex_code>[\S\-]+)\s+(?P<port_speed>[\S\-]+)(\s+(?P<type>.+))?$')
 
         
         # %Module1 is not Present
@@ -5591,5 +5611,48 @@ class ShowInterfaceHumanReadableIncludeDrops(ShowInterfaceHumanReadableIncludeDr
             if m:
                 dict_val = m.groupdict()
                 ret_dict['unknown_protocol_drops'] = int(dict_val['unknown_protocol_drops'])
+
+        return ret_dict
+
+# ========================================================================
+# Schema for 'show interface <interface> human-readable'
+# ========================================================================
+class ShowInterfaceHumanReadableSchema(MetaParser):
+    """Schema for show interface human-readable"""
+
+    schema = {
+        Any(): str
+    }
+
+# ========================================================================
+# Parser for 'show interface <interface> human-readable'
+# ========================================================================
+class ShowInterfaceHumanReadable(ShowInterfaceHumanReadableSchema):
+    """Parser for show interface human-readable"""
+
+    cli_command = 'show interface {interface} human-readable'
+
+    def cli(self, interface, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(interface=interface))
+            
+        # 5 minute input rate 0 bits/sec, 0 packets/sec
+        # 5 minute output rate 0 bits/sec, 0 packets/sec
+        p1 = re.compile(r'^\d+\s+(minute|seconds)\s+(?P<dir>(input|output))\s+rate\s+(?P<rate>[\S\s]+)\s*,[\S\s\d]+$')
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # 5 minute input rate 0 bits/sec, 0 packets/sec
+            # 5 minute output rate 0 bits/sec, 0 packets/sec
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({
+                    group['dir']: group['rate']
+                })
+                continue
 
         return ret_dict

@@ -80,6 +80,8 @@ IOSXE parsers for the following show commands:
     * show ip http server secure status
     * show ip dhcp snooping binding interface {interface}
     * show ip dhcp snooping binding {mac}
+    * show ip name-servers
+    * show ip name-servers vrf {vrf}
     '''
 
 # Python
@@ -1980,6 +1982,7 @@ class ShowIpMfib(ShowIpMfibSchema):
         mfib_dict = {}
         sub_dict = {}
         outgoing = False
+        egress_data_update = False
         #Default
         #VRF vrf1
         p1 = re.compile(r'^(VRF\s+)?(?P<vrf>[\w]+)$')
@@ -2016,8 +2019,9 @@ class ShowIpMfib(ShowIpMfibSchema):
         #Tunnel0, VXLAN Decap Flags: A
         #Vlan500, VXLAN v4 Encap (50000, 239.1.1.0) Flags: A
         #Vlan500, VXLAN v6 Encap (50000, FF13::1) Flags: A
+        #Port-channel5 Flags: RA A MA
 
-        p7 = re.compile(r'^(?P<ingress_if>[\w\.\/ ]+)'
+        p7 = re.compile(r'^(?P<ingress_if>[\w\/\.\-\:]+)'
                          '(\,\s+VXLAN +(?P<ingress_vxlan_version>[v0-9]+)?(\s+)?(?P<ingress_vxlan_cap>[\w]+)(\s+)?(\(?(?P<ingress_vxlan_vni>[0-9]+)(\,\s+)?(?P<ingress_vxlan_nxthop>[\w:./]+)?\)?)?)?'
                          ' +Flags\: +(?P<ingress_flags>A[\s\w]+|[\s\w]+ +A[\s\w]+|A$)')
 
@@ -2028,7 +2032,8 @@ class ShowIpMfib(ShowIpMfibSchema):
         #Vlan500, VXLAN v6 Encap (50000, FF13::1) Flags: F
         #L2LISP0.699, L2LISP Decap Flags: F NS
         #Null0, LISPv4 Decap Flags: RF F NS
-        p8 = re.compile(r'^(?P<egress_if>[\w\.\/]+)'
+        #Port-channel5 Flags: RF F NS
+        p8 = re.compile(r'^(?P<egress_if>[\w\/\.\-\:]+)'
                         '(\,\s+LISPv4\s*Decap\s*)?'
                         '(\,\s+L2LISP\s*Decap\s*)?'
                         '(\,\s+\(?(?P<egress_rloc>[\w\.]+)(\,\s+)?(?P<egress_underlay_mcast>[\w\.]+)?\)?)?'
@@ -2139,6 +2144,7 @@ class ShowIpMfib(ShowIpMfibSchema):
                 group = m.groupdict()
                 outgoing_interface=group['egress_if']
                 egress_data=sw_data.setdefault('outgoing_interfaces',{}).setdefault(outgoing_interface,{})
+                egress_data_update = True
                 if group['egress_rloc']:
                     egress_data['egress_rloc'] = group['egress_rloc']
 
@@ -2162,25 +2168,27 @@ class ShowIpMfib(ShowIpMfibSchema):
                     egress_data['egress_vxlan_cap']=group['egress_vxlan_cap']
                 if group['egress_vxlan_version']:
                     egress_data['egress_vxlan_version']=group['egress_vxlan_version']
+                if group['egress_vxlan_vni']:
                     egress_data['egress_vxlan_vni']=group['egress_vxlan_vni']
+                if group['egress_vxlan_nxthop']:
                     egress_data['egress_vxlan_nxthop']=group['egress_vxlan_nxthop']
 
                 continue
             #CEF: Adjacency with MAC: 01005E010101000A000120010800
             m=p9_1.match(line)
-            if m:
+            if m and egress_data_update:
                 group = m.groupdict()
                 egress_data['egress_adj_mac'] = group['egress_adj_mac']
                 continue
             #CEF: Special OCE (discard)
             m=p9_2.match(line)
-            if m:
+            if m and egress_data_update:
                 group = m.groupdict()
                 egress_data['egress_adj_mac'] = group['egress_adj_mac']
                 continue
             #Pkts: 0/0/2    Rate: 0 pps
             m=p10.match(line)
-            if m:
+            if m and egress_data_update:
                 changedict={}
                 for key in m.groupdict().keys():
                   changedict[key] = int(m.groupdict()[key])
@@ -5367,7 +5375,7 @@ class ShowIpNhrpNhsDetailSchema(MetaParser):
         Any(): {
             'nhs_ip': {
                 Any(): {
-                    'nbma_address': str,
+                    Optional('nbma_address'): str,
                     'priority': int,
                     'cluster': int,
                     'nhs_state': str,
@@ -5376,7 +5384,7 @@ class ShowIpNhrpNhsDetailSchema(MetaParser):
                     'reply_recv': int,
                     Optional('receive_time'): str,
                     Optional('ack'): int,
-                    'current_request_id': int,
+                    Optional('current_request_id'): int,
                     Optional('protection_socket_requested'): str
                 }
             }
@@ -5422,18 +5430,22 @@ class ShowIpNhrpNhsDetail(ShowIpNhrpNhsDetailSchema):
 
         # 100.0.0.100  RE  NBMA Address: 101.1.1.1 priority = 0 cluster = 0 \
         # req-sent 5685  req-failed 0  repl-recv 5675
+
+        #10.0.0.1 RE priority = 0 cluster = 0 req-sent 34560 req-failed 0 repl-recv 26580 (00:03:14 ago)
         p3 = re.compile(r'^(?P<nhs_ip>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+'
                         r'(?P<nhs_state>[E|R|W|D]+)\s+'
-                        r'NBMA Address:\s+(?P<nbma_address>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+'
+                        r'(NBMA Address:\s+(?P<nbma_address>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+)?'
                         r'priority\s+=\s+(?P<priority>\d+)\s+cluster\s+=\s+(?P<cluster>\d+)\s+'
                         r'req-sent\s+(?P<req_sent>\d+)\s+req-failed\s+(?P<req_failed>\d+)\s+'
                         r'repl-recv\s+(?P<reply_recv>\d+)$')
 
         # 100.0.0.100  RE  NBMA Address: 101.1.1.1 priority = 0 cluster = 0 \
         # req-sent 5685  req-failed 0  repl-recv 5675 (00:00:21 ago)
+
+        #10.0.0.1 RE priority = 0 cluster = 0 req-sent 34560 req-failed 0 repl-recv 26580 (00:03:14 ago)
         p4 = re.compile(r'^(?P<nhs_ip>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+'
                         r'(?P<nhs_state>[E|R|W|D]+)\s+'
-                        r'NBMA Address:\s+(?P<nbma_address>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+'
+                        r'(NBMA Address:\s+(?P<nbma_address>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+)?'
                         r'priority\s+=\s+(?P<priority>\d+)\s+cluster\s+=\s+(?P<cluster>\d+)\s+'
                         r'req-sent\s+(?P<req_sent>\d+)\s+req-failed\s+(?P<req_failed>\d+)\s+'
                         r'repl-recv\s+(?P<reply_recv>\d+)\s+'
@@ -5479,6 +5491,7 @@ class ShowIpNhrpNhsDetail(ShowIpNhrpNhsDetailSchema):
 
             # 100.0.0.100  RE  NBMA Address: 101.1.1.1 priority = 0 cluster = 0 \
             # req-sent 5685  req-failed 0  repl-recv 5675
+            #10.0.0.1 RE priority = 0 cluster = 0 req-sent 34560 req-failed 0 repl-recv 26580 (00:03:14 ago)
             m3 = p3.match(line)
             if m3:
                 group = m3.groupdict()
@@ -5486,17 +5499,19 @@ class ShowIpNhrpNhsDetail(ShowIpNhrpNhsDetailSchema):
                     setdefault(group['nhs_ip'], {})
                 attr_tunnel_dict.update({
                     'nhs_state': group['nhs_state'],
-                    'nbma_address': group['nbma_address'],
                     'priority': int(group['priority']),
                     'cluster': int(group['cluster']),
                     'req_sent': int(group['req_sent']),
                     'req_failed': int(group['req_failed']),
                     'reply_recv': int(group['reply_recv'])
                 })
+                if group['nbma_address']:
+                    attr_tunnel_dict.update({'nbma_address': group['nbma_address']})
                 continue
 
             # 100.0.0.100  RE  NBMA Address: 101.1.1.1 priority = 0 cluster = 0 \
             # req-sent 5685  req-failed 0  repl-recv 5675 (00:00:21 ago)
+            #10.0.0.1 RE priority = 0 cluster = 0 req-sent 34560 req-failed 0 repl-recv 26580 (00:03:14 ago)
             m4 = p4.match(line)
             if m4:
                 group = m4.groupdict()
@@ -5504,7 +5519,6 @@ class ShowIpNhrpNhsDetail(ShowIpNhrpNhsDetailSchema):
                     setdefault(group['nhs_ip'], {})
                 attr_tunnel_dict.update({
                     'nhs_state': group['nhs_state'],
-                    'nbma_address': group['nbma_address'],
                     'priority': int(group['priority']),
                     'cluster': int(group['cluster']),
                     'req_sent': int(group['req_sent']),
@@ -5512,6 +5526,8 @@ class ShowIpNhrpNhsDetail(ShowIpNhrpNhsDetailSchema):
                     'reply_recv': int(group['reply_recv']),
                     'receive_time': group['receive_time']
                 })
+                if group['nbma_address']:
+                    attr_tunnel_dict.update({'nbma_address': group['nbma_address']})
                 continue
 
             # Current Request ID: 11167
@@ -7397,4 +7413,128 @@ class ShowIpNatTranslationsTotal(ShowIpNatTranslationsTotalSchema):
                 group = m1.groupdict()
                 ret_dict['total_number_of_translations'] = int(group['number_of_translations'])
        
+        return ret_dict
+
+# ==============================
+# Schema for 'show ip name-servers', 'show ip name-servers vrf {vrf}'
+# ==============================
+class ShowIPNameServerSchema(MetaParser):
+    '''
+	Schema for:
+	show ip name-servers
+	show ip name-servers vrf {vrf}
+	'''
+    schema = {
+        'vrf': {
+             Any(): ListOf(str),
+        },
+    }
+
+
+# ==============================
+# Parser for 'show ip name-servers', 'show ip name-servers vrf {vrf}'
+# ==============================
+class ShowIPNameServer(ShowIPNameServerSchema):
+    '''
+    Parser for:
+    show ip name-servers
+    show ip name-servers vrf {vrf}
+    '''
+    cli_command = ['show ip name-servers',
+        'show ip name-servers vrf {vrf}']
+            
+    def cli(self, vrf = '', output = None):
+        if output is None:
+            if vrf:
+                out = self.device.execute(self.cli_command[1].format(vrf = vrf))
+            else:
+                out = self.device.execute(self.cli_command[0])
+        else:
+            out = output
+
+        # Init vars
+        parsed_dict = {}
+        # 255.255.255.255 matching ipv4 address
+        p1 = re.compile(r"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}")
+        # ABCD:1234::1 matching ipv6 address
+        p2 = re.compile(r"[a-fA-F\d\:]+")
+
+        if not vrf:
+            vrf = 'default'
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # match the line with ipv4 address
+            m1 = p1.match(line)      
+            # match the line with ipv6 address
+            m2 = p2.match(line)      
+            if m1 or m2  :     
+               ip_flow = parsed_dict.setdefault("vrf", {}).setdefault(
+                    (vrf), []
+               )
+               ip_flow.append(line)
+               continue
+        return parsed_dict
+
+class ShowIpSocketsSchema(MetaParser):
+    """Schema for show ip sockets"""
+
+    schema = {
+        'index':{
+            Any():{
+                Optional('proto'): int,
+                Optional('remote'): str,
+                Optional('remote_port'): int,
+                Optional('local'): str,
+                Optional('local_port'): int,
+                Optional('in'): int,
+                Optional('out'): int,
+                Optional('stat'): int,
+                Optional('tty'): int,
+                Optional('output_if'): Or(str, None)
+            }
+        }
+    }
+
+class ShowIpSockets(ShowIpSocketsSchema):
+    """
+    show ip sockets
+    """
+
+    cli_command = 'show ip sockets'
+    
+    def cli(self, output=None):
+        
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+        index = 1
+
+        #Proto        Remote      Port      Local       Port  In Out  Stat TTY OutputIF
+        #17           0.0.0.0      0       --any--      2228   0  0    211   0
+        p1 = re.compile(r'^(?P<proto>[\d]+)\s+(?P<remote>[\d.]+)\s+(?P<remote_port>\d+)\s+(?P<local>\S+)\s+(?P<local_port>\d+)\s+(?P<in>\d+)\s+(?P<out>\d+)\s+(?P<stat>\d+)\s+(?P<tty>\d+)(\s+(?P<output_if>[\S]+))?$')
+
+        
+        for line in output.splitlines(): 
+            line = line.strip()
+            
+            #Proto        Remote      Port      Local       Port  In Out  Stat TTY OutputIF
+            #17           0.0.0.0      0       --any--      2228   0  0    211   0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                index_dict = ret_dict.setdefault('index', {}).setdefault(index,{})
+                index_dict['proto'] = int(group['proto'])
+                index_dict['remote'] = group['remote']
+                index_dict['remote_port'] = int(group['remote_port'])
+                index_dict['local'] = group['local']
+                index_dict['local_port'] = int(group['local_port'])
+                index_dict['in'] = int(group['in'])
+                index_dict['out'] = int(group['out'])
+                index_dict['stat'] = int(group['stat'])
+                index_dict['tty'] = int(group['tty'])
+                index_dict['output_if'] = group['output_if']
+                index += 1
         return ret_dict

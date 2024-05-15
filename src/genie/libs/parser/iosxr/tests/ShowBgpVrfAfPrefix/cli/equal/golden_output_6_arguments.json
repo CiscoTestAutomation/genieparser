@@ -1,0 +1,4 @@
+{
+    "address_family": "ipv6 unicast",
+    "route": "fc00:a000:1000:101::2/128"
+}

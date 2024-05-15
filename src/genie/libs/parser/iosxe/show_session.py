@@ -109,6 +109,11 @@ class ShowLine(ShowLineSchema):
                 tty_dict = tty_dict.setdefault(tty, {})
                 if lineno:
                     tty_dict['line'] = int(lineno)
+                else:
+                    try:
+                        tty_dict['line'] = int (tty)
+                    except ValueError:
+                        pass
 
                 if group['busy']:
                     tty_dict['active'] = True

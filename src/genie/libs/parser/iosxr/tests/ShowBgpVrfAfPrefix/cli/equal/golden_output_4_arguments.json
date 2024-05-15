@@ -1,0 +1,5 @@
+{
+    "address_family": "vpnv4 unicast",
+    "vrf_name": "SR_L3VPN_BE",
+    "prefix": "192.85.1.0/24"
+}

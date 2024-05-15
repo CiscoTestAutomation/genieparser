@@ -1,0 +1,10 @@
+ERSPAN Source Session:ERSPAN Source Session Supported: TRUE
+No of Rx ERSPAN source session: 8
+No of Tx ERSPAN source session: 8
+ERSPAN Header Type supported: II
+ACL filter Supported: TRUE
+SGT filter Supported: FALSE
+Fragmentation Supported: TRUE
+Truncation Supported: TRUE
+Sequence number Supported: FALSE
+QOS Supported: FALSE

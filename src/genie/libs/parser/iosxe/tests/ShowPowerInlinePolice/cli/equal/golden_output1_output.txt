@@ -1,0 +1,34 @@
+Module   Available     Used     Remaining
+          (Watts)     (Watts)    (Watts)
+------   ---------   --------   ---------
+1           370.0       15.4       354.6
+Interface Admin  Oper       Admin      Oper       Cutoff Oper
+          State  State      Police     Police     Power  Power
+--------- ------ ---------- ---------- ---------- ------ -----
+Gi1/0/1   auto   off        none       n/a        n/a    n/a
+Gi1/0/2   auto   off        none       n/a        n/a    n/a
+Gi1/0/3   auto   off        none       n/a        n/a    n/a
+Gi1/0/4   auto   off        none       n/a        n/a    n/a
+Gi1/0/5   auto   off        none       n/a        n/a    n/a
+Gi1/0/6   auto   off        none       n/a        n/a    n/a
+Gi1/0/7   auto   off        none       n/a        n/a    n/a
+Gi1/0/8   auto   off        none       n/a        n/a    n/a
+Gi1/0/9   auto   off        none       n/a        n/a    n/a
+Gi1/0/10  auto   off        none       n/a        n/a    n/a
+Gi1/0/11  auto   off        none       n/a        n/a    n/a
+Gi1/0/12  auto   off        none       n/a        n/a    n/a
+Gi1/0/13  auto   off        none       n/a        n/a    n/a
+Gi1/0/14  auto   off        none       n/a        n/a    n/a
+Gi1/0/15  auto   off        none       n/a        n/a    n/a
+Gi1/0/16  auto   off        none       n/a        n/a    n/a
+Te1/0/17  auto   off        none       n/a        n/a    n/a
+Te1/0/18  auto   off        none       n/a        n/a    n/a
+Te1/0/19  auto   off        none       n/a        n/a    n/a
+Te1/0/20  auto   off        none       n/a        n/a    n/a
+Te1/0/21  auto   on         none       n/a        n/a    2.7
+Te1/0/22  auto   off        none       n/a        n/a    n/a
+Te1/0/23  auto   off        none       n/a        n/a    n/a
+Te1/0/24  auto   off        none       n/a        n/a    n/a
+--------- ------ ---------- ---------- ---------- ------ -----
+Totals:                                                  2.7
+

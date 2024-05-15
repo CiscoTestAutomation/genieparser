@@ -1,0 +1,16 @@
+System Id       Interface     State  Type Priority  Circuit Id         Format
+CIP-DC1-FBS-02  Po1.10        Up     L1L2 64/64     CIP-DC1-FBS-02.01  Phase V
+  Area Address(es): 49.0000
+  IP Address(es):  100.64.253.11*
+  Uptime: 11w6d
+  NSF capable
+  BFD enabled: (MTID:0, ipv4)
+  Interface name: Port-channel1.10
+CIP-DC1-FIS-01  Gi1/0/3       Up     L1L2 0 /0      1F                 Phase V
+  Area Address(es): 49.0000
+  IP Address(es):  100.64.245.3*
+  Uptime: 11w6d
+  NSF capable
+  BFD enabled: (MTID:0, ipv4)
+  Interface name: GigabitEthernet1/0/3
+

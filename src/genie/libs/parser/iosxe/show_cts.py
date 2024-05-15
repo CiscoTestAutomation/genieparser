@@ -2215,7 +2215,7 @@ class ShowCtsInterfaceSchema(MetaParser):
     """Schema for show cts interface'"""
 
     schema = {
-        'global_dot1x_feature': str,
+        Optional('global_dot1x_feature'): str,
         'interfaces': {
             Any(): {
                 'cts': {
@@ -2282,10 +2282,10 @@ class ShowCtsInterface(ShowCtsInterfaceSchema):
         # TenGigabitEthernet1/0/6:
         # Tunnel100: 
         # TenGigabitEthernet1/0/6.30:
-        p2 = re.compile(r'^Interface\s+(?P<interface>\S+\d+\/\d+\/\d+|Tunnel\d+|\S+\d+\/\d+\/\d+\.\d+):')
+        p2 = re.compile(r'^Interface\s+(?P<interface>\S+\d+\/\d+\/\d+|(Tunnel|Port-channel)\d+|\S+\d+\/\d+\/\d+\.\d+):')
 
         # CTS_status : enabled,mode: MANUAL
-        p3 = re.compile(r'^CTS\s+is\s+(?P<cts_status>\S+),\s+mode:\s+(?P<mode>\S+)')
+        p3 = re.compile(r'^CTS\s+is\s+(?P<cts_status>\S+)(\.|,\s+mode:\s+(?P<mode>\S+))')
 
         # IFC state: OPEN
         p4 = re.compile(r'^IFC state:\s+(?P<ifc_state>\S+)')
@@ -2381,7 +2381,8 @@ class ShowCtsInterface(ShowCtsInterfaceSchema):
                 mode = group['mode']
                 cts_dict = intf_dict.setdefault('cts', {})
                 cts_dict['cts_status'] = cts_status
-                cts_dict['mode'] = mode
+                if mode:
+                    cts_dict['mode'] = mode
 
             # IFC state: OPEN
             m = p4.match(line)
@@ -3517,7 +3518,6 @@ class ShowCtsPolicyServerStatistics(ShowCtsPolicyServerStatisticsSchema):
                 continue
 
             map_dict = result_dict.setdefault('cts_policy_server_stats', {})
-            print(line)
             m0 = p0.match(line)
             if m0:
                 

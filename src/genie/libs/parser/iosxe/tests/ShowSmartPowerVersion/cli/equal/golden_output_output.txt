@@ -1,0 +1,5 @@
+SmartPower is Enabled
+IOS Version:  17.15.20240121:114115101
+SmartPower Specification:  3.5.1
+SmartPower Version:  1.0
+Powernet SDK Version:  4.0.1

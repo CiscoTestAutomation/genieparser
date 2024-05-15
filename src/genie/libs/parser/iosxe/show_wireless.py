@@ -1228,11 +1228,11 @@ class ShowWirelessFabricClientSummary(ShowWirelessFabricClientSummarySchema):
         p_clients = re.compile(r"^Number\s+of\s+Fabric\s+Clients\s+:\s+(?P<clients>\S+)$")
 
         # 58bf.eaff.89a2 a2-11-cap43                   17   Run                11ac     Dot1x
-        p_client_info = re.compile(r"^(?P<mac>\S{4}\.\S{4}\.\S{4})\s+(?P<name>\S+)\s+(?P<wlan>\S+)\s+(?P<state>.*)\s+(?P<protocol>\S+)\s+(?P<method>(Dot1x|MAB))$")
+        p_client_info = re.compile(r"^(?P<mac>\S{4}\.\S{4}\.\S{4})\s+(?P<name>\S+)\s+(?P<wlan>\S+)\s+(?P<state>.*)\s+(?P<protocol>\S+)\s+(?P<method>(Dot1x|MAB|None|SAE))$")
 
         # MAC Address    AP Name                  Type ID   State              Protocol Method     L2 VNID    RLOC IP
         # dca6.3249.1877 AP-E6-25C0               WLAN 18   Run                11n(2.4) Dot1x      8189       10.240.240.3
-        p_client_info_n = re.compile(r"(?P<mac>\S{4}\.\S{4}\.\S{4})\s+(?P<name>\S+)\s+(?P<wtype>\w+)\s+(?P<wlan>\d+)\s+(?P<state>(\w+\s*\w+))\s+(?P<protocol>\S+)\s+(?P<method>(Dot1x|MAB))\s+(?P<l2_vnid>\d+)\s+(?P<rloc_ip>((\d{1,3}\.){3}\d{1,3}))")
+        p_client_info_n = re.compile(r"^(?P<mac>\S{4}\.\S{4}\.\S{4})\s+(?P<name>\S+)\s+(?P<wtype>\w+)\s+(?P<wlan>\d+)\s+(?P<state>(\w+\s*\w+))\s+(?P<protocol>\S+)\s+(?P<method>(Dot1x|MAB|None|SAE))\s+(?P<l2_vnid>\d+)\s+(?P<rloc_ip>((\d{1,3}\.){3}\d{1,3}))$")
 
         for line in output.splitlines():
             line = line.strip()
@@ -1574,8 +1574,10 @@ class ShowWirelessClientSummary(ShowWirelessClientSummarySchema):
         delimiter_capture = re.compile(
             r"^-------------------------------------------------------------------------------------------------------------------------$")
         # 58bf.eaff.0cf1 b80-72-cap16                                 WLAN 17   Run               11ac     Dot1x      Local
+        # 200d.b033.01fe Site6-FE2-9162                               WLAN 19   Run              11ac      None        Local
+        # 0e4d.72bc.3014 Site6-FE2-9162                               WLAN 19   Run               11ax(5)  SAE        Local
         wireless_client_info_capture = re.compile(
-            r"^(?P<mac_address>\S+)\s+(?P<ap_name>\S+)\s+(?P<type>\S+)\s+(?P<id>\d+)\s+(?P<state>.*)\s+(?P<protocol>\S+)\s+(?P<method>(Dot1x|MAB))\s+(?P<role>\S+)$")
+            r"^(?P<mac_address>\S+)\s+(?P<ap_name>\S+)\s+(?P<type>\S+)\s+(?P<id>\d+)\s+(?P<state>.*)\s+(?P<protocol>\S+)\s+(?P<method>(Dot1x|MAB|SAE|None))\s+(?P<role>\S+)$")
         # Number of Excluded Clients: 2
         wireless_excluded_client_count_capture = re.compile(
             r"^Number\s+of\s+Excluded\s+Clients:\s+(?P<wireless_excluded_client_count>\d+)$")

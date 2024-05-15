@@ -1,0 +1,36 @@
+DUT#show sd-routing control local-properties summary
+personality                       vedge
+sp-organization-name              vmng-scale-ind
+organization-name                 vmng-scale-ind-swe
+root-ca-chain-status              Installed
+root-ca-crl-status                Not-Installed
+
+certificate-status                Installed
+certificate-validity              Valid
+certificate-not-valid-before      Jan 24 16:11:08 2020 GMT
+certificate-not-valid-after       Aug  9 20:58:26 2099 GMT
+
+enterprise-cert-status            Not Applicable
+enterprise-cert-validity          Not Applicable
+enterprise-cert-not-valid-before  Not Applicable
+enterprise-cert-not-valid-after   Not Applicable
+
+dns-name                          vbond1
+site-id                           39
+protocol                          dtls
+tls-port                          0
+system-ip                         209.157.156.154
+chassis-num/unique-id             C8300-1N1S-4T2X-FDO2321A09H
+serial-num                        01FDCDE9
+subject-serial-num                FDO2321A09H
+enterprise-serial-num             Not Applicable
+token                             Invalid
+keygen-interval                   0:02:00:00
+retry-interval                    0:00:00:19
+no-activity-exp-interval          0:00:00:20
+dns-cache-ttl                     0:00:02:00
+port-hopped                       FALSE
+time-since-last-port-hop          0:00:00:00
+embargo-check                     success
+number-vbond-peers                1
+number-active-wan-interfaces      1

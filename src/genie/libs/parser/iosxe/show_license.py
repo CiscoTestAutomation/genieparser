@@ -164,6 +164,10 @@ class ShowLicenseUdiSchema(MetaParser):
             Optional('member'):{
                 Optional('pid'):str,
                 Optional('sn'):str,
+            },
+            Any():{ # basically for the rest of the members
+                Optional('pid'):str,
+                Optional('sn'):str,
             }
         }
     }
@@ -252,8 +256,15 @@ class ShowLicenseUdi(ShowLicenseUdiSchema):
           m = p6.match(line)
           if m:
             group = m.groupdict()
-            member_dict = ret_dict.setdefault('ha_udi_list', {})\
+            if not ret_dict.setdefault('ha_udi_list', {}).get('member'):
+              member_dict = ret_dict.setdefault('ha_udi_list', {})\
                                    .setdefault('member', {})
+              member_count = 1  # first member
+            else:
+              member_count += 1
+              member_dict = ret_dict.setdefault('ha_udi_list', {})\
+                                  .setdefault(f'member{member_count}', {})
+            
             member_dict.update(group)
             continue
 
@@ -1217,6 +1228,11 @@ class ShowLicenseAllSchema(MetaParser):
       Optional('five_minutes'): str,
       Optional('ntp_time'): str,
       Optional('smart_licensing_status'):{
+        Optional('license_conversion'):{
+                Optional('automatic_conversion_enabled'):str,
+                Optional('last_data_push'):str,
+                Optional('last_file_export'):str,
+            },
         Optional('export_authorization_key'):{
             Optional('features_authorized'):str,
         },
@@ -1286,12 +1302,17 @@ class ShowLicenseAllSchema(MetaParser):
             Optional('sn'):str,
             Optional('info'):str,
           },
-         Optional('standby'):{
+          Optional('standby'):{
             Optional('pid'):str,
             Optional('sn'):str,
             Optional('info'):str,
           },
-         Optional('member'):{
+          Optional(Or('member')):{
+            Optional('pid'):str,
+            Optional('sn'):str,
+            Optional('info'):str,
+          },
+          Any():{ # for the rest of the members i.e member2, member3 etc
             Optional('pid'):str,
             Optional('sn'):str,
             Optional('info'):str,
@@ -1331,6 +1352,10 @@ class ShowLicenseAllSchema(MetaParser):
             Optional('pid'):str,
             Optional('sn'):str,
           },
+          Any():{ # for the rest of the members i.e member2, member3 etc
+            Optional('pid'):str,
+            Optional('sn'):str,
+          },
         },
       },
       'agent_version':{
@@ -1359,6 +1384,13 @@ class ShowLicenseAllSchema(MetaParser):
             Optional('last_return_code'):str,
             Optional('last_confirmation_code'):str,
           },
+          Any():{ # for the rest of the members i.e member2, member3 etc
+            Optional('pid'):str,
+            Optional('sn'):str,
+            Optional('status'):str,
+            Optional('last_return_code'):str,
+            Optional('last_confirmation_code'):str,
+          },
         },
         Optional('authorizations'):{
           Optional('description'):str,
@@ -1380,6 +1412,13 @@ class ShowLicenseAllSchema(MetaParser):
               Optional('term_count'):str,
             },
             Optional('member'):{
+              Optional('pid'):str,
+              Optional('sn'):str,
+              Optional('authorization_type'):str,
+              Optional('license_type'):str,
+              Optional('term_count'):str,
+            },
+            Any():{ # for the rest of the members i.e member2, member3 etc
               Optional('pid'):str,
               Optional('sn'):str,
               Optional('authorization_type'):str,
@@ -1568,6 +1607,8 @@ class ShowLicenseAll(ShowLicenseAllSchema):
         #Available to Report: 8  Collecting Data: 0
         p18_2= re.compile(r'^Available +to +Report: +(?P<available_to_report>[\S ]+)  +'
                         r'Collecting +Data: +(?P<collecting_data>.*)$')
+        #License  Conversion
+        p3_1  =  re.compile(r'^Automatic +Conversion +Enabled: +(?P<automatic_conversion_enabled>.*)$')
 
         license_authorizations_dict=None
         overall_status_dict=None
@@ -1590,7 +1631,14 @@ class ShowLicenseAll(ShowLicenseAllSchema):
               group=m.groupdict()
               ret_dict.update(group)
               continue
-
+        
+          m=p3_1.match(line)
+          if m:
+            group = m.groupdict()
+            smart_licensing_status_dict=ret_dict.setdefault('smart_licensing_status',{})
+            smart_licensing_status_dict.setdefault('license_conversion',{}).setdefault('automatic_conversion_enabled',group['automatic_conversion_enabled'])
+            continue
+            
           #INSTALLED on Sep 27 12:22:33 2021 UTC|<none>
           m = p3.match(line)
           if m:
@@ -1603,13 +1651,17 @@ class ShowLicenseAll(ShowLicenseAllSchema):
               elif not trust_code_installed_dict['standby'].get('info'):
                 trust_code_installed_dict['standby'].setdefault('info',group)
                 continue
-              else:
+              elif not trust_code_installed_dict['member'].get('info'):
                 trust_code_installed_dict['member'].setdefault('info',group)
+                continue
+              elif member_count > 1:
+                trust_code_installed_dict[f'member{member_count}'].setdefault('info',group)
+                continue
+              else:
                 continue
             else:
               smart_licensing_status_dict.setdefault('export_authorization_key',{}).setdefault('features_authorized',group)
               continue
-
           #Status: DISABLED
           m = p4.match(line)
           if m:
@@ -1834,16 +1886,19 @@ class ShowLicenseAll(ShowLicenseAllSchema):
                 active_dict = trust_code_installed_dict.setdefault('active', {})
                 active_dict['pid'] = group['pid']
                 active_dict['sn'] = group['sn']
+                member_section = 'trust_code_installed'
                 continue
             if not overall_status_dict:
               active_dict = overall_status_dict.setdefault('active', {})
               active_dict['pid'] = group['pid']
               active_dict['sn'] = group['sn']
+              member_section = 'overall_status'
               continue
             if not term_information_dict:
                 active_dict = term_information_dict.setdefault('active', {})
                 active_dict['pid'] = group['pid']
                 active_dict['sn'] = group['sn']
+                member_section = 'term_information'
                 continue
           #Standby: PID:C9300-24U,SN:FHH2043P09E
           m = p11_2.match(line)
@@ -1869,22 +1924,33 @@ class ShowLicenseAll(ShowLicenseAllSchema):
           m = p11_3.match(line)
           if m:
             group = m.groupdict()
-            if ret_dict['smart_licensing_status'].get('trust_code_installed'):
-              if not trust_code_installed_dict.get('member'):
-                member_dict = trust_code_installed_dict.setdefault('member', {})
-                member_dict['pid'] = group['pid']
-                member_dict['sn'] = group['sn']
-                continue
-            if not overall_status_dict.get('member'):
+            # identify which section this Member belongs to, and reset member_count to 1
+            if member_section == 'trust_code_installed' and not trust_code_installed_dict.get('member'):
+              member_dict = trust_code_installed_dict.setdefault('member', {})
+              member_count = 1
+            elif member_section == 'overall_status' and not overall_status_dict.get('member'):
               member_dict = overall_status_dict.setdefault('member', {})
-              member_dict['pid'] = group['pid']
-              member_dict['sn'] = group['sn']
-              continue
-            if not term_information_dict.get('member'):
-                member_dict = term_information_dict.setdefault('member', {})
-                member_dict['pid'] = group['pid']
-                member_dict['sn'] = group['sn']
-                continue
+              member_count = 1
+            elif member_section == 'term_information' and not term_information_dict.get('member'):
+              member_dict = term_information_dict.setdefault('member', {})
+              member_count = 1
+            else:
+              member_count += 1
+            
+            # create a new member_dict for each member (except 1st member, which is already created above)
+            if member_count > 1:
+              if member_section == 'trust_code_installed':
+                member_dict = trust_code_installed_dict.setdefault(f'member{member_count}', {})
+              elif member_section == 'overall_status':
+                member_dict = overall_status_dict.setdefault(f'member{member_count}', {})
+              elif member_section == 'term_information':
+                member_dict = term_information_dict.setdefault(f'member{member_count}', {})
+              else:
+                pass
+
+            # update sn and pid
+            member_dict.update(group)
+            continue
 
           #(C9300-24 Network Advantage):
           m = p12.match(line)
@@ -1932,8 +1998,11 @@ class ShowLicenseAll(ShowLicenseAllSchema):
                     overall_status_dict['standby'].setdefault('status',group['status'])
                     continue
                   if not overall_status_dict['member'].get('status'):
-                   overall_status_dict['member'].setdefault('status',group['status'])
-                   continue
+                    overall_status_dict['member'].setdefault('status',group['status'])
+                    continue
+                  elif member_count > 1:
+                    overall_status_dict[f'member{member_count}'].setdefault('status',group['status'])
+                    continue
               else:
                 license_name_dict.setdefault('status',group['status'])
                 continue
@@ -1975,11 +2044,14 @@ class ShowLicenseAll(ShowLicenseAllSchema):
                     authorizations_dict['term_information']['active'].setdefault('license_type',group['license_type'])
                     continue
                   elif not authorizations_dict['term_information']['standby'].get('license_type'):
-                      authorizations_dict['term_information']['standby'].setdefault('license_type',group['license_type'])
-                      continue
-                  else:
-                      authorizations_dict['term_information']['member'].setdefault('license_type',group['license_type'])
-                      continue
+                    authorizations_dict['term_information']['standby'].setdefault('license_type',group['license_type'])
+                    continue
+                  elif not authorizations_dict['term_information']['member'].get('license_type'):
+                    authorizations_dict['term_information']['member'].setdefault('license_type',group['license_type'])
+                    continue
+                  elif member_count > 1:
+                    authorizations_dict['term_information'][f'member{member_count}'].setdefault('license_type',group['license_type'])
+                    continue
             else:
                 license_name_dict.setdefault('license_type',group['license_type'])
                 continue
@@ -2015,12 +2087,17 @@ class ShowLicenseAll(ShowLicenseAllSchema):
           m = p13_3.match(line)
           if m:
             group = m.groupdict()
-            member_dict = product_information_dict.setdefault('ha_udi_list', {})\
-                                   .setdefault('member', {})
-            member_dict['pid'] = group['pid']
-            member_dict['sn'] = group['sn']
-            continue
+            if not product_information_dict.setdefault('ha_udi_list', {}).get('member'):
+              member_count = 1
+              member_dict = product_information_dict.setdefault('ha_udi_list', {})\
+                                  .setdefault('member', {})
+            else:
+              member_count += 1
+              member_dict = product_information_dict['ha_udi_list'].setdefault(f'member{member_count}', {})      
 
+            member_dict.update(group)
+            continue
+          
           #Smart Agent for Licensing: 5.3.10_rel/25
           m = p14.match(line)
           if m:
@@ -2051,9 +2128,15 @@ class ShowLicenseAll(ShowLicenseAllSchema):
               elif not overall_status_dict['standby'].get('last_return_code'):
                 overall_status_dict['standby'].setdefault('last_return_code',group['last_return_code'])
                 continue
-              else:
+              elif not overall_status_dict['member'].get('last_return_code'):
                 overall_status_dict['member'].setdefault('last_return_code',group['last_return_code'])
                 continue
+              elif member_count > 1:
+                overall_status_dict[f'member{member_count}'].setdefault('last_return_code',group['last_return_code'])
+                continue
+              else:
+                continue
+
           #Last confirmation code: <none>
           m = p15_3.match(line)
           if m:
@@ -2065,8 +2148,12 @@ class ShowLicenseAll(ShowLicenseAllSchema):
               elif not overall_status_dict['standby'].get('last_confirmation_code'):
                 overall_status_dict['standby'].setdefault('last_confirmation_code',group['last_confirmation_code'])
                 continue
-              else:
+              elif not overall_status_dict['member'].get('last_confirmation_code'):
                 overall_status_dict['member'].setdefault('last_confirmation_code',group['last_confirmation_code'])
+                continue
+              elif member_count > 1:
+                overall_status_dict[f'member{member_count}'].setdefault('last_confirmation_code',group['last_confirmation_code'])
+              else:
                 continue
 
           #Authorizations:
@@ -2098,9 +2185,15 @@ class ShowLicenseAll(ShowLicenseAllSchema):
               elif not term_information_dict['standby'].get('authorization_type'):
                   term_information_dict['standby'].update(group)
                   continue
+              elif not term_information_dict['member'].get('authorization_type'):
+                  term_information_dict['member'].update(group)
+                  continue
+              elif member_count > 1:
+                  term_information_dict[f'member{member_count}'].update(group)
+                  continue
               else:
-                term_information_dict['member'].update(group)
-                continue
+                  continue
+
           #Term Count: 1
           m = p16_5.match(line)
           if m:
@@ -2112,8 +2205,13 @@ class ShowLicenseAll(ShowLicenseAllSchema):
               elif not authorizations_dict['term_information']['standby'].get('term_count'):
                   authorizations_dict['term_information']['standby'].update(group)
                   continue
-              else:
+              elif not authorizations_dict['term_information']['member'].get('term_count'):
                   authorizations_dict['term_information']['member'].update(group)
+                  continue
+              elif member_count > 1:
+                  authorizations_dict['term_information'][f'member{member_count}'].update(group)
+                  continue
+              else:
                   continue
 
           #Purchased Licenses:
@@ -2395,6 +2493,11 @@ class ShowLicenseTechSupportSchema(MetaParser):
         Optional('five_minute_load_percent'): int,
         Optional('ntp_time'): str,
         Optional('smart_licensing_status'):{
+            Optional('license_conversion'):{
+                Optional('automatic_conversion_enabled'):str,
+                Optional('last_data_push'):str,
+                Optional('last_file_export'):str,
+            },
             Optional('export_authorization_key'):{
             Optional('features_authorized'):str,
             },
@@ -2403,6 +2506,7 @@ class ShowLicenseTechSupportSchema(MetaParser):
             },
             Optional('smart_licensing_using_policy'):{
                 'status':str,
+                Optional('reporting_mode'):str,
             },
             Optional('account_information'):{
                 Optional('smart_account'):str,
@@ -2449,6 +2553,27 @@ class ShowLicenseTechSupportSchema(MetaParser):
                 'last_report_push':str,
                 'last_report_file_write':str,
             },
+            Optional('trust_code_installed'):Or(str, dict),
+                Optional('active'):{
+                    Optional('pid'):str,
+                    Optional('sn'):str,
+                    Optional('info'):str,
+                },
+                Optional('standby'):{
+                    Optional('pid'):str,
+                    Optional('sn'):str, 
+                    Optional('info'):str,
+                },
+                Optional('member'):{
+                    Optional('pid'):str,
+                    Optional('sn'):str,
+                    Optional('info'):str,
+                },
+                Any():{ # for multiple members i.e. member2, member3 etc.
+                    Optional('pid'):str,
+                    Optional('sn'):str,
+                    Optional('info'):str,
+                },
         },
         'license_usage':{
             'handle':{
@@ -2540,6 +2665,8 @@ class ShowLicenseTechSupportSchema(MetaParser):
         },
         'reservation_info':{
             'license_reservation':str,
+            Optional('last_data_push'):str,
+            Optional('last_file_export'):str,
             'overall_status':{
                 Any():{
                     Optional('pid'):str,
@@ -2592,6 +2719,27 @@ class ShowLicenseTechSupportSchema(MetaParser):
         Optional('device_telemetry_report_summary'):{
             'data_channel':str,
             'reports_on_disk':int,
+            Optional('trust_code_installed'):Or(str, dict),
+                Optional('active'):{
+                    Optional('pid'):str,
+                    Optional('sn'):str,
+                    Optional('info'):str,
+                },
+                Optional('standby'):{
+                    Optional('pid'):str,
+                    Optional('sn'):str, 
+                    Optional('info'):str,
+                },
+                Optional('member'):{
+                    Optional('pid'):str,
+                    Optional('sn'):str,
+                    Optional('info'):str,
+                },
+                Any():{ # for multiple members i.e. member2, member3 etc.
+                    Optional('pid'):str,
+                    Optional('sn'):str,
+                    Optional('info'):str,
+                },
         },
         'other_info':{
             'software_id':str,
@@ -2643,6 +2791,8 @@ class ShowLicenseTechSupportSchema(MetaParser):
             'systeminitbyevent':str,
             'smarttransportserveridcheck':str,
             'smarttransportproxysupport':str,
+            Optional('smartagentmaxsinglereportsize'):int,
+            Optional('smartagentslacreturnforcedallowed'):str,
             Optional('smartagenttelemetryrumreportmax'):int,
             Optional('smartagentrumtelemetryrumstoremin'):int,
             Optional('smartagentusagestatisticsenable'):str,
@@ -2652,6 +2802,7 @@ class ShowLicenseTechSupportSchema(MetaParser):
             'smartagentmaxrummemory':int,
             'smartagentconcurrentthreadmax':int,
             'smartagentpolicycontrollermodel':str,
+            Optional('smartagentdisablecacheswid'):str,
             'smartagentpolicymodel':str,
             'smartagentfederallicense':str,
             'smartagentmultitenant':str,
@@ -2755,6 +2906,8 @@ class ShowLicenseTechSupport(ShowLicenseTechSupportSchema):
         p1_8_1 = re.compile(r'^\s*(?P<policy_sub_header>[Unenforced|Enforced|Export]+[\/]*[\w\-\w]* +[\(]*[Perpetual|Subscription]+[\/]*[Perpetual|Subscription]*[\)]*.*Attributes)\:$')
         #Usage Reporting:
         p1_9 = re.compile(r'^(?P<usage_reporting>Usage Reporting)\:$')
+        #License  Conversion
+        p1_10 = re.compile(r'^(?P<license_conversion>License +Conversion)\:$')
         
         #License Usage
         p2 = re.compile(r'^(?P<license_usage>License +Usage)$')
@@ -2831,8 +2984,10 @@ class ShowLicenseTechSupport(ShowLicenseTechSupportSchema):
         p13 = re.compile(r'^(?P<telemetry_report_summary>Telemetry +Report +Summary)\:$')
         
         #Device Telemetry Report Summary
-        p14 = re.compile(r'^(?P<device_telemetry_report_summary>Device +Telemetry +Report +Summary)\:$')
-
+        p14 = re.compile(r'^(?P<device_telemetry_report_summary>Device +Telemetry +Report +Summary)\:$')      
+        #Trust Code Installed:
+        p14_1 = re.compile(r'^(?P<trust_code_installed>Trust +Code +Installed)\:$') 
+        
         #Below set of expressions are for capturing data lines (For eg. key-value pairs)
         #<none>
         p0_2 = re.compile(r'^\s*\<(?P<value>none)\>$')
@@ -2847,6 +3002,9 @@ class ShowLicenseTechSupport(ShowLicenseTechSupportSchema):
         #Standby: PID:C9300-24U,SN:FOC2129Z02H
         #Member: PID:C9300-24T,SN:FCW2125L07Y
         p0_4=re.compile(r'^\s*(?P<member_type>\S+):\s*PID:(?P<pid>\S+),SN:(?P<sn>\S+)$')
+        
+        #INSTALLED on Sep 27 12:22:33 2021 UTC
+        p0_4_1 =  re.compile(r'^INSTALLED +on +.*')
 
         #Below set of regular expressions are for special cases which could not be handled in above generic expressions
         #In variable name, the digit next to p identifies the heading under which this output line appears
@@ -2884,7 +3042,11 @@ class ShowLicenseTechSupport(ShowLicenseTechSupportSchema):
         p12_data2 = re.compile(r'^\s*P\:(?P<pid>\S+)\,S\:(?P<sn>\S+)\:$')
         #hseck9: regid.2021-05.com.cisco.C9K_HSEC,1.0_90fdf411-3823-45bd-bd8c-5a5d0e0e1ea2 (3)
         p12_data3 = re.compile(r'^\s*hseck9\: +(?P<hseck9_entitlement_tag>regid\.\S.*) +\((?P<hseck9_no>\d+)\)$')
-
+        
+        #Trust Code Installed: <none> 
+        #Trust Code Installed: Feb 27 09:06:59 2024 IST
+        p14_data1 = re.compile(r'^Trust +Code +Installed\: +(?P<trust_code_installed>.*)$')
+        
         for line in output.splitlines():
             line=line.strip()            
             m = p0.match(line)
@@ -2973,24 +3135,21 @@ class ShowLicenseTechSupport(ShowLicenseTechSupportSchema):
             m = p12.match(line)
             if m:
                 group=m.groupdict()
-                current_dict=ret_dict.setdefault('platform_provided_mapping_table', {})           
+                current_dict=ret_dict.setdefault('platform_provided_mapping_table', {})                  
                 continue
-
             #Telemetry Report Summary (new output section in 17.11.1)
             m = p13.match(line)
             if m:
                 group=m.groupdict()
                 current_dict=ret_dict.setdefault('telemetry_report_summary', {})
                 continue
-            
-	    #Device telemetry  report  summary (new  output  section  in 17.11.1)
+        #Device telemetry  report  summary (new  output  section  in 17.11.1)
             m = p14.match(line)
             if m:
                 group=m.groupdict()
                 current_dict=ret_dict.setdefault('device_telemetry_report_summary', {})
-                continue    
-
-            #Setting the dictionary position for sub headings (2nd level and further levels down)
+                continue
+        #Setting the dictionary position for sub headings (2nd level and further levels down)
             m = p1_1.match(line)
             if m:
                 group=m.groupdict()
@@ -3067,6 +3226,12 @@ class ShowLicenseTechSupport(ShowLicenseTechSupportSchema):
                 if ret_dict.get('communication_statistics'):
                     current_dict = ret_dict.setdefault('communication_statistics',{}).setdefault('usage_reporting', {})       
                 continue 
+                
+            m = p1_10.match(line)
+            if m:
+                group=m.groupdict()
+                current_dict = ret_dict.setdefault('smart_licensing_status',{}).setdefault('license_conversion', {})                      
+                continue     
 
             m = p2_1.match(line)
             if m:
@@ -3193,7 +3358,16 @@ class ShowLicenseTechSupport(ShowLicenseTechSupportSchema):
                 group = m.groupdict()
                 current_dict = ret_dict.setdefault('platform_provided_mapping_table',{}).setdefault('enforced_licenses',{})
                 continue
-
+                
+            m = p14_1.match(line)
+            if  m:
+                group = m.groupdict()
+                if ret_dict.get('device_telemetry_report_summary') is not None:
+                    current_dict = ret_dict.setdefault('device_telemetry_report_summary',{}).setdefault('trust_code_installed',{})
+                else:
+                    current_dict = ret_dict.setdefault('smart_licensing_status',{}).setdefault('trust_code_installed',{})
+                continue
+                
             #Handling of header section ends here
             #Code sections below are for handling data lines
             
@@ -3203,9 +3377,24 @@ class ShowLicenseTechSupport(ShowLicenseTechSupportSchema):
             #below section
             flag_term_information = False
             flag_overall_status = False
+            
             m = p0_4.match(line)
             if m:
                 group = m.groupdict()
+                # find the right section/current_dict first
+                try:                    
+                    temp_dict1 = ret_dict.get('device_telemetry_report_summary')
+                    if temp_dict1.get('trust_code_installed') is  not  None:
+                        current_dict = ret_dict.setdefault('device_telemetry_report_summary',{}).setdefault('trust_code_installed', {}).setdefault(group['member_type'].lower(),{})
+                        current_dict.update({
+                            'pid': group['pid'],
+                            'sn': group['sn']})
+                        continue    
+                except KeyError:
+                    pass
+                except AttributeError:
+                    pass
+                        
                 try:
                     temp_dict = ret_dict.get('reservation_info').get('authorizations').get('c9k_hsec')
                     if temp_dict.get('term_information') is not None:
@@ -3226,45 +3415,68 @@ class ShowLicenseTechSupport(ShowLicenseTechSupportSchema):
                         pass
                     except AttributeError:
                         pass
-                
+                    
+                # handle multiple members for stackable platforms
+                # reset the member count if the member type is active
+                if group['member_type'].lower() == 'active':
+                       member_count = 0
+                elif group['member_type'].lower() == 'member':
+                       member_count += 1
+                else:
+                    member_count = 0
+                    
                 if flag_term_information:
                     current_dict = ret_dict.setdefault('reservation_info',{}).setdefault('authorizations', {}).setdefault('c9k_hsec' ,{}).setdefault('term_information' ,{}).setdefault(group['member_type'].lower(),{})
-                    current_dict.update({
-                            'pid': group['pid'],
-                            'sn': group['sn']})
-                    continue    
-                if flag_overall_status:
+                elif flag_overall_status:
                     current_dict = ret_dict.setdefault('reservation_info',{}).setdefault('overall_status', {}).setdefault(group['member_type'].lower(),{})
-                    current_dict.update({
+                    if member_count > 1:
+                       current_dict = ret_dict.setdefault('reservation_info',{}).setdefault('overall_status', {}).setdefault(f'member{member_count}'.lower(),{})
+                elif group['member_type'] == 'UDI':
+                    # should be under product_information already
+                    pass
+                elif ret_dict.get('product_information') is not None:
+                    current_dict = ret_dict.setdefault('product_information',{}).setdefault('ha_udi_list', {}).setdefault(group['member_type'].lower(),{})
+                    if member_count > 1:
+                       current_dict = ret_dict.setdefault('product_information',{}).setdefault('ha_udi_list', {}).setdefault(f'member{member_count}'.lower(),{})
+                else:
+                    current_dict = ret_dict.setdefault('smart_licensing_status',{}).setdefault('trust_code_installed', {}).setdefault(group['member_type'].lower(),{})
+                    if member_count > 1:
+                       current_dict = ret_dict.setdefault('smart_licensing_status',{}).setdefault('trust_code_installed', {}).setdefault(f'member{member_count}'.lower(),{})
+
+                # update the dictionary current_dict with the pid and sn
+                current_dict.update({
                             'pid': group['pid'],
                             'sn': group['sn']})
-                    continue   
-
-                if group['member_type'] == 'UDI':
-                    current_dict.update({
-                        'pid': group['pid'],
-                        'sn': group['sn']})
-                    continue
-                else:
-                    current_dict = ret_dict.setdefault('product_information',{}).setdefault('ha_udi_list', {}).setdefault(group['member_type'].lower(),{})
-                    current_dict.update({
-                        'pid': group['pid'],
-                        'sn': group['sn']})
-                    continue
+                continue
+                    
+            m = p0_4_1.match(line)
+            if  m:
+                current_dict.update({'info': m.group(0)})
+                continue    
 
             #Below sections are to handle data lines
             #P:C9300-24UX,S:FCW2134L00C:
             m = p12_data2.match(line)
             if m:
-                group = m.groupdict()
+                group = m.groupdict()                
                 current_dict = ret_dict.setdefault('platform_provided_mapping_table', {}).setdefault('enforced_licenses', {}).setdefault(group['sn'].lower(), {})
                 current_dict.update({'pid': group['pid']})
                 continue
-            
             #Generalised expression for handling <key>:<value> paired lines
             #Data lines that required special handling are done below with further checks and regular expressions
             m = p0_3.match(line)
             if m:
+                m1 = p14_data1.match(line)
+                if  m1:
+                    group = m1.groupdict()
+                    
+                    if  ret_dict.get('device_telemetry_report_summary') is not None:
+                        current_dict.update({'trust_code_installed': group['trust_code_installed'].strip()})
+                        
+                    else:
+                        current_dict = ret_dict.setdefault('smart_licensing_status',{})
+                        current_dict.update({'trust_code_installed': group['trust_code_installed'].strip()})
+                        continue
             
                 m1 = p12_data3.match(line)
                 if m1:
@@ -3382,8 +3594,7 @@ class ShowLicenseTechSupport(ShowLicenseTechSupportSchema):
                         current_dict.update({key: group['value']})
                         continue                   
 
-        return ret_dict
-        
+        return ret_dict        
 
 class ShowLicenseHistoryMessageSchema(MetaParser):
     """Schema for show license history message"""

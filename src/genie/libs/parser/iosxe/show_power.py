@@ -49,6 +49,7 @@ class ShowStackPowerSchema(MetaParser):
                 Optional('power_stack_detail'):{  
                     'stack_mode': str,
                     'stack_topology': str,
+                    Optional('stack_ecomode'): str,
                     'switch': {
                         Any(): {
                             'power_budget': int,
@@ -60,6 +61,8 @@ class ShowStackPowerSchema(MetaParser):
                             'port_2_status': str,
                             'neighbor_on_port_1': str,
                             'neighbor_on_port_2': str,
+                            Optional('ecomode'): str,
+                            Optional('capacity'): str,
                         },
                     },
                 },    
@@ -488,14 +491,14 @@ class ShowStackPowerDetail(ShowStackPowerSchema):
          
         # Powerstack-1                     SP-PS   Stndaln  1100    0       243     857       1    1  
         p1 = re.compile(r'^(?P<name>[\w\-]+) *'
-                        r'(?P<mode>[\w\-]+) +'
-                        r'(?P<topology>[\w\-]+) +'
-                        r'(?P<total_power>\d+) +'
-                        r'(?P<reserved_power>\d+) +'
-                        r'(?P<allocated_power>\d+) +'
-                        r'(?P<available_power>\d+) +'
-                        r'(?P<switch_num>\d+) +'
-                        r'(?P<power_supply_num>\d+)$')
+                r'(?P<mode>[\w\-]+) +'
+                r'(?P<topology>[\w\-]+) +'
+                r'(?P<total_power>\d+) +'
+                r'(?P<reserved_power>\d+) +'
+                r'(?P<allocated_power>\d+) +'
+                r'(?P<available_power>\d+) +'
+                r'(?P<switch_num>\d+) +'
+                r'(?P<power_supply_num>\d+)$')
 
         #Power stack name: Powerstack-1
         p2 = re.compile(r"^Power+\s+stack+\s+name:+\s+(?P<name>[\w\-]+)$")
@@ -505,13 +508,13 @@ class ShowStackPowerDetail(ShowStackPowerSchema):
 
         # Stack topology: Standalone
         p4 = re.compile(r"^Stack+\s+topology:+\s+(?P<stack_topology>[\w\-]+)$")
-        
+
         # Switch 1 
         p5 = re.compile(r"^Switch+\s+\d")
-        
+
         # Power budget: 1100
         p6= re.compile(r"^Power+\s+budget:+\s+(?P<power_budget>\d+)$")
-        
+
         # Power allocated: 243
         p7 = re.compile(r"^Power+\s+allocated:+\s+(?P<power_allocated>\d+)$")
                 
@@ -520,22 +523,26 @@ class ShowStackPowerDetail(ShowStackPowerSchema):
                 
         # High port priority value: 13
         p9 = re.compile(r"^High+\s+port+\s+priority+\s+value:+\s+(?P<high_port_priority_value>\d+)$")
-        
+
         # Switch priority value: 4
         p10 = re.compile(r"^Switch+\s+priority+\s+value:+\s+(?P<switch_priority_value>\d+)$")    
-        
+
         # Port 1 status: Not connected
         p11 = re.compile(r"^Port+\s+1+\s+status:+\s+(?P<port_1_status>.*)$")
-        
+
         #Port 2 status: Not connected
         p12 = re.compile(r"^Port+\s+2+\s+status:+\s+(?P<port_2_status>.*)$")
-        
+
         # Neighbor on port 1: 0000.0000.0000
         p13 = re.compile(r"^Neighbor+\s+on+\s+port+\s+1:+\s+(?P<neighbor_on_port_1>.*)$")
-        
+
         # Neighbor on port 2: 0000.0000.0000
         p14 = re.compile(r"^Neighbor+\s+on+\s+port+\s+2:+\s+(?P<neighbor_on_port_2>.*)$")
 
+        # Stack Ecomode: Disable
+        p15 = re.compile(r"^Stack Ecomode:+\s+(?P<stack_ecomode>\w+)$")
+        #Ecomode: FEP B auto offlined, capacity: 350 
+        p16 = re.compile(r"^Ecomode:\s+(?P<ecomode>.*),\s+capacity:\s+(?P<capacity>\w+)$")
 
         for line in out.splitlines():
             line = line.strip()    
@@ -573,7 +580,7 @@ class ShowStackPowerDetail(ShowStackPowerSchema):
                 stack_dict_3['stack_topology'] = match.group('stack_topology')
                 continue
             
-             # Switch 1 
+            # Switch 1 
             if p5.match(line):
                 match = p5.match(line)
                 switch = match.group()
@@ -636,6 +643,19 @@ class ShowStackPowerDetail(ShowStackPowerSchema):
             if p14.match(line):
                 match = p14.match(line)
                 stack_dict_5['neighbor_on_port_2'] = match.group('neighbor_on_port_2')
+                continue
+            
+            # Stack Ecomode: Disable            
+            if p15.match(line):
+                match = p15.match(line)
+                stack_dict_3['stack_ecomode'] = match.group('stack_ecomode')
+                continue
+            
+            # Ecomode: FEP B auto offlined, capacity: 350 
+            if p16.match(line):
+                match = p16.match(line)
+                stack_dict_5['ecomode'] = match.group('ecomode')
+                stack_dict_5['capacity'] = match.group('capacity')
                 continue
         
         return ret_dict
@@ -725,7 +745,7 @@ class ShowPowerSchema(MetaParser):
     """
     
     schema = {
-        'switch': {
+        Optional('switch'): {
             Any(): {
                 'power_supply': {
                     Any(): {
@@ -745,7 +765,48 @@ class ShowPowerSchema(MetaParser):
                     },
                 }
             },
-        }
+        },
+        Optional('power_supply'): {
+            Any(): {
+                'model_no' : str,
+                'type' : str,
+                'capacity' : str,
+                'status' : str,
+                'fan_state_0' : str,
+                'fan_state_1' : str,
+            },
+        },
+        Optional('configuration_mode'): str,
+        Optional('operating_state'): str,
+        Optional('active'): int,
+        Optional('available'): int,
+        Optional('module'): {
+            Any(): {
+                'model' : str,
+                'shutdown_priority' : int,
+                'power_state' : str,
+                'budget' : int,
+                'instantaneous' : int,
+                'peak' : int,            
+                'outreset' : int,
+                'inreset' : int,            
+            },
+        },        
+        Optional('power_summary'): {
+            Any(): {
+                'allocatted' : int,
+                'consumption' : int,
+                'maximum_available' : int,           
+            },
+        },
+        Optional('meter_start_time'): str,             
+        Optional('module_number'): {
+            Any(): {
+                'model_num' : str,
+                'metered_energy' : int,
+                'meter_update_time' : str,          
+            },
+        },       
     }
 
 # ===============================================================================
@@ -771,11 +832,12 @@ class ShowPower(ShowPowerSchema):
 
         result_dict = {}
 
-        #Switch:1
+        # Switch:1
         p1 = re.compile(r'^Switch:(?P<switch>\S+)$')
 
-        #PS1     C9K-PWR-1500WAC-R     ac    n.a.      bad-input  n.a.  n.a. 
-        #PS2     C9K-PWR-1500WAC-R     ac    1500 W    active     good  n.a.
+        # PS1     C9K-PWR-1500WAC-R     ac    n.a.      bad-input  n.a.  n.a. 
+        # PS2     C9K-PWR-1500WAC-R     ac    1500 W    active     good  n.a.
+        # 1B  PWR-C5-1KWAC        DCI22031004  OK              Good     Good     1000
         p2 = re.compile(r'^(?P<power_supply>\S+) +'
                         r'(?P<model_no>\S+) +'
                         r'(?P<type>\S+) +'
@@ -783,58 +845,182 @@ class ShowPower(ShowPowerSchema):
                         r'(?P<status>\S+) +'
                         r'(?P<fan_state_0>\S+) +'
                         r'(?P<fan_state_1>\S+)$')
-
-        #FT1     active      good  good
+                        
+        # FT1     active      good  good
         p3 = re.compile(r'^(?P<fan_tray>\S+) +'
                         r'(?P<status>\S+) +'
                         r'(?P<fan_state_0>\S+) +'
                         r'(?P<fan_state_1>\S+)$')
+        
+        # PS Configuration Mode  : Non Redundant
+        # PS Operating state     : Standalone
+        # PS Current Configuration Mode : Combined
+        # PS Current Operating State    : Combined
+        p4 = re.compile(r'^PS\s+(Current )?(?P<mode>[\w\s]+)\s+:\s+(?P<value>[\w\s]+)')
 
+        # Power supplies currently active    : 1
+        # Power supplies currently available : 1
+        p5 = re.compile(r'^Power supplies currently\s+(?P<power_supply>[\w\s]+)\s+:\s+(?P<value>[\d\s]+)')
+
+        # 1    C9200-24P             0         accepted  230     26             28    230     0
+        p6 = re.compile(r'^(?P<module>\d+)\s*'
+                        r'(?P<model>[\w\-]+)\s+'
+                        r'(?P<shutdown_priority>\d)\s+'
+                        r'(?P<power_state>\w+)\s+'
+                        r'(?P<budget>\d+)\s+'
+                        r'(?P<instantaneous>\d+)\s+'
+                        r'(?P<peak>\d+)\s+'
+                        r'(?P<outreset>\d+)\s+'
+                        r'(?P<inreset>\d+)$')
+
+        # System Power   230        20           230
+        # POE Power      30         5            740
+        p7 = re.compile(r'^(?P<power_summary>System Power|POE Power|Total)\s+'
+                       r'(?P<allocatted>\d+)\s+'
+                        r'(?P<consumption>\d+)\s+'
+                        r'(?P<maximum_available>\d+)$')
+
+        # Meter start time 2024-02-29 06:16:34 UTC
+        p8 = re.compile(r'Meter start time\s+(?P<meter_start_time>\d+\-\d+\-\d+ \d+:\d+:\d+) \w+$')
+
+        # 1    C9200-24P             4779                 2024-01-11 16:55:21 UTC
+        p9 = re.compile(r'^(?P<module>\d+)\s+'
+                        r'(?P<model_num>\S+)\s+'
+                        r'(?P<metered_energy>\d+)\s+'
+                        r'(?P<meter_update_time>\d+\-\d+\-\d+ \d+:\d+:\d+) \w+$')
+        flag = 0         
         for line in output.splitlines():
             line = line.strip()
 
-            #Switch:1
+            # Switch:1
             m = p1.match(line)
             if m:
+                flag = 1
                 group = m.groupdict()
                 switch = group['switch']
                 switch_dict = result_dict.setdefault('switch',{})
                 switch_id_dict = switch_dict.setdefault(switch,{})
                 continue
 
-            #PS1     C9K-PWR-1500WAC-R     ac    n.a.      bad-input  n.a.  n.a. 
-            #PS2     C9K-PWR-1500WAC-R     ac    1500 W    active     good  n.a.
+            # PS1     C9K-PWR-1500WAC-R     ac    n.a.      bad-input  n.a.  n.a. 
+            # PS2     C9K-PWR-1500WAC-R     ac    1500 W    active     good  n.a.
             m = p2.match(line)
             if m:
-                group = m.groupdict()
-                power_supply = group['power_supply']
-                power_supply_dict = switch_id_dict.setdefault('power_supply',{})
-                power_supply_unit_dict = power_supply_dict.setdefault(power_supply,{})
-                power_supply_unit_dict.update({
-                    'model_no' : group['model_no'],
-                    'type' : group['type'],
-                    'capacity' : group['capacity'],
-                    'status' : group['status'],
-                    'fan_state_0' : group['fan_state_0'],
-                    'fan_state_1' : group['fan_state_1'],
-                })
-                continue
-
-            #FT1     active      good  good
+                if flag == 1:
+                    group = m.groupdict()
+                    power_supply = group['power_supply']
+                    power_supply_dict = switch_id_dict.setdefault('power_supply',{})
+                    power_supply_unit_dict = power_supply_dict.setdefault(power_supply,{})
+                    power_supply_unit_dict.update({
+                        'model_no' : group['model_no'],
+                        'type' : group['type'],
+                        'capacity' : group['capacity'],
+                        'status' : group['status'],
+                        'fan_state_0' : group['fan_state_0'],
+                        'fan_state_1' : group['fan_state_1'],
+                    })
+                    continue
+                else:
+                    group = m.groupdict()
+                    power_supply = group['power_supply']
+                    power_supply_dict = result_dict.setdefault('power_supply',{})
+                    power_supply_unit_dict = power_supply_dict.setdefault(power_supply,{})
+                    power_supply_unit_dict.update({
+                        'model_no' : group['model_no'],
+                        'type' : group['type'],
+                        'capacity' : group['capacity'],
+                        'status' : group['status'],
+                        'fan_state_0' : group['fan_state_0'],
+                        'fan_state_1' : group['fan_state_1'],
+                    })
+                    continue                    
+            
+            # FT1     active      good  good
             m = p3.match(line)
             if m:
-                group = m.groupdict()
-                fan_tray = group['fan_tray']
-                if fan_tray == "Tray":
-                    # don't store in the key 'Tray' as it is just the header of the table
+                if flag ==1:
+                    group = m.groupdict()
+                    fan_tray = group['fan_tray']
+                    if fan_tray == "Tray":
+                        # don't store in the key 'Tray' as it is just the header of the table
+                        continue
+                    fan_tray_dict = switch_id_dict.setdefault('fan_tray',{})
+                    fan_tray_unit_dict = fan_tray_dict.setdefault(fan_tray,{})
+                    fan_tray_unit_dict.update({
+                        'status' : group['status'],
+                        'fan_state_0' : group['fan_state_0'],
+                        'fan_state_1' : group['fan_state_1'],
+                    })
                     continue
-                fan_tray_dict = switch_id_dict.setdefault('fan_tray',{})
-                fan_tray_unit_dict = fan_tray_dict.setdefault(fan_tray,{})
-                fan_tray_unit_dict.update({
-                    'status' : group['status'],
-                    'fan_state_0' : group['fan_state_0'],
-                    'fan_state_1' : group['fan_state_1'],
+                    
+            # PS Configuration Mode  : Non Redundant
+            # PS Operating state     : Standalone
+            # PS Current Configuration Mode : Combined
+            # PS Current Operating State    : Combined
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                scrubbed = (group['mode'].strip()).replace(' ', '_')
+                result_dict.update({scrubbed.lower(): group['value']})
+                continue
+            
+            # Power supplies currently active    : 1
+            # Power supplies currently available : 1  
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                scrubbed = (group['power_supply'].strip()).replace(' ', '_')
+                result_dict.update({scrubbed.lower(): int(group['value'])})
+                continue
+            
+            # 1    C9200-24P             0         accepted  230     26             28    230     0
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                module_dict = result_dict.setdefault('module', {}).setdefault(int(group['module']), {})
+                module_dict.update({
+                    'model' : group['model'],
+                    'shutdown_priority' : int(group['shutdown_priority']),
+                    'power_state' : group['power_state'],
+                    'budget' : int(group['budget']),
+                    'instantaneous' : int(group['instantaneous']),
+                    'peak' : int(group['peak']),
+                    'outreset' : int(group['outreset']),
+                    'inreset' : int(group['inreset']),                    
                 })
+                continue
+                
+            # System Power   230        20           230
+            # POE Power      30         5            740
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                power_summary = result_dict.setdefault('power_summary', {}).setdefault(group['power_summary'], {})
+                power_summary.update({
+                    'allocatted' : int(group['allocatted']),
+                    'consumption' : int(group['consumption']),
+                    'maximum_available' : int(group['maximum_available']),                   
+                })
+                continue
+            
+            # Meter start time 2024-02-29 06:16:34 UTC
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                result_dict.update({'meter_start_time': group['meter_start_time']})
+                continue
+
+            # 1    C9200-24P             4779                 2024-01-11 16:55:21 UTC
+            # 1    C9200-24P             4779                 2024-01-11 16:55:21 UTC
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                metered_energy = result_dict.setdefault('module_number', {}).setdefault(int(group['module']), {})
+                metered_energy.update({
+                    'model_num' : group['model_num'],
+                    'metered_energy' : int(group['metered_energy']),
+                    'meter_update_time' : group['meter_update_time'],                    
+                })                
                 continue
         return result_dict
 
@@ -996,6 +1182,8 @@ class ShowPowerInlineDetailSchema(MetaParser):
                 'four_pair_pd_architecture': str,
                 Optional('perpetual_poe_enabled'): str,
                 Optional('fast_poe_enabled'): str,
+                Optional('meter_start_time'): str,
+                Optional('meter_energy_value'): str,
             },
         },
     }
@@ -1111,7 +1299,13 @@ class ShowPowerInlineDetail(ShowPowerInlineDetailSchema):
 
         # Fast POE Enabled: FALSE
         p32 = re.compile(r'^\s*Fast\s+POE\s+Enabled:\s+(?P<fast_poe_enabled>[\w]+)$')
-                
+        
+        # Meter Start Time: 2024-01-24 19:38:12 UTC (24hour counter)
+        p33 = re.compile(r'^Meter\s+Start\s+Time: (?P<meter_start_time>.*)$')
+        
+        # Metered Energy Value(WattSec): 0.0 
+        p34 = re.compile(r'^Metered\s+Energy\s+Value\S+(?P<meter_energy_value>.*)$')   
+
         for line in output.splitlines():
             line = line.strip()
             
@@ -1313,7 +1507,19 @@ class ShowPowerInlineDetail(ShowPowerInlineDetailSchema):
             if m:
                 intf_dict['fast_poe_enabled'] = m.groupdict()['fast_poe_enabled']
                 continue
-            
+
+            # Meter Start Time: 2024-01-24 19:38:12 UTC (24hour counter)
+            m = p33.match(line)
+            if m:
+                intf_dict['meter_start_time'] = m.groupdict()['meter_start_time']
+                continue
+
+            # Metered Energy Value(WattSec): 0.0 
+            m = p34.match(line)
+            if m:
+                intf_dict['meter_energy_value'] = m.groupdict()['meter_energy_value']
+                continue
+
         return ret_dict
     
 class ShowPowerInlinePoliceSchema(MetaParser):
@@ -1329,19 +1535,23 @@ class ShowPowerInlinePoliceSchema(MetaParser):
                 'oper_power': str,
             },
         },
+        Optional('totals'): float,
     }
 
 
 class ShowPowerInlinePolice(ShowPowerInlinePoliceSchema):
     """Parser for show power inline police
-                  show power inline police <interface>"""
+                  show power inline police <interface>
+                  show power inline police module <moduleNum>"""
 
-    cli_command = ['show power inline police', 'show power inline police {interface}']
+    cli_command = ['show power inline police', 'show power inline police {interface}', 'show power inline police module {moduleNum}']
 
-    def cli(self, interface='', output=None):
+    def cli(self, interface='', moduleNum='', output=None):
         if output is None:
             if interface:
                 cmd = self.cli_command[1].format(interface=interface)
+            elif moduleNum:
+                cmd = self.cli_command[2].format(moduleNum=moduleNum)
             else:
                 cmd = self.cli_command[0]
 
@@ -1354,7 +1564,10 @@ class ShowPowerInlinePolice(ShowPowerInlinePoliceSchema):
         # Te7/0/28  auto   on         log        overdrawn  15.4   16.0 
         # Te7/0/29  auto   on         none       n/a        n/a    n/a  
         p1 = re.compile(r'^(?P<intf>[\w\d\/]+)\s+(?P<admin_state>[\w]+)\s+(?P<oper_state>[\,\w]+)\s+(?P<admin_police>[\w]+)\s+(?P<oper_police>[\w\/]+)\s+(?P<cutoff_power>[\w\d\.\/]+)\s+(?P<oper_power>[\w\d\.\/]+)\s*$')
-
+        
+        # Totals:                               4.1
+        p2 = re.compile(r'^(?P<total>(\w+)):\s+(?P<value>\d+\.\d+)')
+        
         for line in output.splitlines():
             line = line.strip()
   
@@ -1368,6 +1581,14 @@ class ShowPowerInlinePolice(ShowPowerInlinePoliceSchema):
                     continue
                 intf_dict = ret_dict.setdefault('interface', {}).setdefault(intf, {})
                 intf_dict.update(group)
+                continue
+
+            # Totals:                               4.1
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                scrubbed = (group['total'])
+                ret_dict.update({scrubbed.lower(): float(group['value'])})
                 continue
 
         return ret_dict
@@ -1436,5 +1657,75 @@ class ShowPowerInlineModule(ShowPowerInlineModuleSchema):
                 dict_val = m.groupdict()
                 interface_var = Common.convert_intf_name(dict_val.pop('interface'))
                 ret_dict.setdefault('interfaces', {}).setdefault(interface_var, dict_val)
+                continue
+        return ret_dict
+
+# ===============================================================================
+# Schema for :
+#      * 'show power inline meter'
+#      * 'show power inline meter module {module}'
+# ===============================================================================
+    
+class ShowPowerInlineMeterSchema(MetaParser):
+    """
+    Schema for 
+        show power inline meter 
+        show power inline meter module {module} 
+    """
+    schema = {
+        'interface': {
+            Any(): {
+                'meter_update_time': str, 
+                'metered_value': int,
+                Any(): int,
+            }
+        }
+    }
+
+class ShowPowerInlineMeter(ShowPowerInlineMeterSchema):
+    """Parser for show power inline meter 
+                  show power inline meter module <module> """
+
+    cli_command = ['show power inline meter','show power inline meter module {module}']
+
+    def cli(self, module='', output=None):
+        if output is None:
+            if module:
+                cmd = self.cli_command[1].format(module=module)
+            else:
+                cmd = self.cli_command[0]
+
+            # get output from device
+            output = self.device.execute(cmd)
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # Interface    Meter Update              Hourly Metered    Metered Energy in WattSec (5min Buckets)
+        #              Time                      Value (WattSec)                                  
+        # ----------   -----------------------   ---------------   -----------------------------------------------------------------------
+
+        # Gi1/0/1      2024-03-06 10:56:57 UTC                 0   0-0-0-0-0-0-0-0-0-0-0-0
+        p1 = re.compile(r'^(?P<intf>[\w\/]+)\s+'
+                         r'(?P<meter_update_time>\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2}\s+\w+)\s+'
+                         r'(?P<metered_value>\d+)\s+'
+                         r'(?P<bucket>(?:\d+-){11}\d+)$')
+        
+        # Interface    Meter Update              Hourly Metered    Metered Energy in WattSec (5min Buckets)
+        #              Time                      Value (WattSec)                                  
+        # ----------   -----------------------   ---------------   -----------------------------------------------------------------------
+
+        # Gi1/0/1      2024-03-06 10:56:57 UTC                 0   0-0-0-0-0-0-0-0-0-0-0-0
+        for line in output.splitlines():
+            line = line.strip()
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                intf = Common.convert_intf_name(group.pop('intf'))
+                intf_dict = ret_dict.setdefault('interface', {}).setdefault(intf, {})
+                intf_dict['meter_update_time'] = group['meter_update_time']
+                intf_dict['metered_value'] = int(group['metered_value'])
+                values = group['bucket'].split('-')
+                intf_dict.update({'bucket{}'.format(i): int(value) for i, value in enumerate(values)})
                 continue
         return ret_dict

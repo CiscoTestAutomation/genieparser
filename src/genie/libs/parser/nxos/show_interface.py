@@ -45,7 +45,7 @@ import re
 
 # metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Optional
+from genie.metaparser.util.schemaengine import Schema, Any, Optional, ListOf
 
 # import parser utils
 from genie.libs.parser.utils.common import Common
@@ -1131,6 +1131,7 @@ class ShowIpInterfaceVrfAllSchema(MetaParser):
             {'vrf': str,
              'interface_status': str,
              'iod': int,
+             Optional('mode'): ListOf(str),
              Optional('ipv4'):
                  {Any():
                       {Optional('ip'): str,
@@ -1144,7 +1145,7 @@ class ShowIpInterfaceVrfAllSchema(MetaParser):
                   Optional('unnumbered'):
                       {'interface_ref': str,
                        },
-                  'counters':
+                  Optional('counters'):
                       {'unicast_packets_sent': int,
                        'unicast_packets_received': int,
                        'unicast_packets_forwarded': int,
@@ -1189,18 +1190,18 @@ class ShowIpInterfaceVrfAllSchema(MetaParser):
                   },
              Optional('multicast_groups'): list,
              Optional('multicast_groups_address'): str,
-             'ip_mtu': int,
-             'proxy_arp': str,
-             'local_proxy_arp': str,
-             'multicast_routing': str,
-             'icmp_redirects': str,
-             'directed_broadcast': str,
+             Optional('ip_mtu'): int,
+             Optional('proxy_arp'): str,
+             Optional('local_proxy_arp'): str,
+             Optional('multicast_routing'): str,
+             Optional('icmp_redirects'): str,
+             Optional('directed_broadcast'): str,
              Optional('ip_forwarding'): str,
-             'icmp_unreachable': str,
-             'icmp_port_unreachable': str,
-             'unicast_reverse_path': str,
-             'load_sharing': str,
-             'int_stat_last_reset': str,
+             Optional('icmp_unreachable'): str,
+             Optional('icmp_port_unreachable'): str,
+             Optional('unicast_reverse_path'): str,
+             Optional('load_sharing'): str,
+             Optional('int_stat_last_reset'): str,
              Optional('wccp_redirect_outbound'): str,
              Optional('wccp_redirect_inbound'): str,
              Optional('wccp_redirect_exclude'): str
@@ -1282,9 +1283,10 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                 continue
 
             # Ethernet2/1, Interface status: protocol-up/link-up/admin-up, iod: 36,
+            # lo2, Interface status: protocol-up/link-up/admin-up, iod: 7, mode: anycast-mac,external
             p2 = re.compile(r'^\s*(?P<interface>[a-zA-Z0-9\/\-\.]+), *Interface'
                             ' *status: *(?P<interface_status>[a-z\-\/\s]+),'
-                            ' *iod: *(?P<iod>[0-9]+),$')
+                            ' *iod: *(?P<iod>[0-9]+),(?: *mode: *(?P<mode>[a-zA-Z0-9\-\,]+))?$')
             m = p2.match(line)
             if m:
                 interface = m.groupdict()['interface']
@@ -1298,6 +1300,10 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                     = interface_status
                 ip_interface_vrf_all_dict[interface]['iod'] = iod
                 ip_interface_vrf_all_dict[interface]['vrf'] = vrf
+                
+                if m.groupdict()['mode']:
+                    mode = m.groupdict()['mode']
+                    ip_interface_vrf_all_dict[interface]['mode'] = mode.split(',')
 
                 # init multicast groups list to empty for this interface
                 multicast_groups = []
@@ -3120,7 +3126,9 @@ class ShowRunningConfigInterfaceSchema(MetaParser):
                              },
                         Optional('mtu'): int,
                         Optional('ip_address'): str,
+                        Optional('ip_address_secondary'): str,
                         Optional('vrf_member'): str,
+                        Optional('fabric_forwarding_mode'): str,
                         }
                    },
               }
@@ -3163,7 +3171,8 @@ class ShowRunningConfigInterface(ShowRunningConfigInterfaceSchema):
 
         # interface nve1
         # interface Ethernet1/1
-        p1 = re.compile(r'^interface +(?P<intf_name>\S+)$')
+        # interface vlan 200
+        p1 = re.compile(r'^interface +(?P<intf_name>.*)$')
 
         # no shutdown
         p2 = re.compile(r'^\s*no shutdown$')
@@ -3220,13 +3229,19 @@ class ShowRunningConfigInterface(ShowRunningConfigInterfaceSchema):
         p16 = re.compile(r'^mtu +(?P<mtu>\S+)$')
 
         # ip address 10.10.6.73/30
-        p17 = re.compile(r'^ip address +(?P<ip_address>[a-z0-9\.]+.*)$')
+        p17 = re.compile(r'^ip address +(?P<ip_address>[0-9\./]+)$')
 
         # vrf member TEST
         p18 = re.compile(r'^vrf member +(?P<vrf_member>\S+)$')
 
         # no switchport
         p19 = re.compile(r'^no switchport$')
+
+        # fabric forwarding mode anycast-gateway
+        p20 = re.compile(r'^\s*fabric forwarding mode +(?P<fabric_forwarding_mode>[a-z\-]+)$')
+
+        # ip address 10.2.1.1/30 secondary
+        p21 = re.compile(r'^ip address +(?P<ip_address_secondary>[0-9\./]+) secondary$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -3372,6 +3387,19 @@ class ShowRunningConfigInterface(ShowRunningConfigInterfaceSchema):
             m = p19.match(line)
             if m:
                 interface_dict.update({'switchport': False})
+                continue
+
+            m = p20.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict.update({'fabric_forwarding_mode': group['fabric_forwarding_mode']})
+                continue
+
+            # ip address 10.2.1.1/30 secondary
+            m = p21.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict.update({'ip_address_secondary': group['ip_address_secondary']})
                 continue
 
         return ret_dict
@@ -3674,7 +3702,6 @@ class ShowInterfaceStatus(ShowInterfaceStatusSchema):
     """parser for
         * show interface status
         * show interfaces {interfaces} status
-
     """
 
     cli_command = ['show interface status', 'show interface {interface} status']
@@ -3693,7 +3720,16 @@ class ShowInterfaceStatus(ShowInterfaceStatusSchema):
         flag = False
 
         # Interface     Name                Status    Reason
-        p0 = re.compile(r'Interface\s+Name\s+Status\s+Reason')
+        header_p0 = re.compile(r'Interface\s+Name\s+Status\s+Reason')
+        
+        # Captures the below header:
+        #
+        # Port          Name               Status    Vlan      Duplex  Speed   Type
+        #
+        # This is not technically needed, since the p1 pattern does not match the header, but
+        # explicitly matching the header ensures this data never incorrectly makes it into the
+        # parsed output.
+        header_p1 = re.compile(r"Port\s+Name\s+Status\s+Vlan\s+Duplex\s+Speed\s+Type")
 
         # Port          Name               Status    Vlan      Duplex  Speed   Type
         # --------------------------------------------------------------------------------
@@ -3713,9 +3749,21 @@ class ShowInterfaceStatus(ShowInterfaceStatusSchema):
         # Po101         vPC Peer-link      connected trunk     full    10G     -- 
         # Eth1/1        --                 connected routed    full    100G    QSFP-100G-SR1.2
         # Eth1/7        ig1ezsit-ucs01-A:e connected trunk     full    10G     10Gbase-SR 
-        p1 = re.compile(r'^(?P<interface>[\w\/]+)\s+(?P<name>(\w+\s\w+\s\d|[\w\-\, \*\.\/\:]+|[\w\s\(\)\[\]_,]+))\s+'
-                        r'(?P<status>(connected|disabled|sfpAbsent|noOperMem))\s+(?P<vlan>[\w\-]+)\s+(?P<duplex_code>(\w+))\s+'
-                        r'(?P<port_speed>[\w\-]+)\s*(?P<type>[\w\-\.\s]+)?$')
+        # Eth1/15       --                 linkFlapE routed    auto    auto    QSFP-100G-CR4
+        p1 = re.compile(
+            r'^(?P<interface>\w\S+)\s+'
+            r'(?P<name>.+?)\s+'
+            # Statuses are hard-coded here. They serve as an anchor for the rest of the regular
+            # expression. This is needed because the name capture group can be any arbitrary string
+            # containing any number of blank spaces. This makes it very difficult to use a regular
+            # expression to dynamically match the status column, so hard-coding offers a happy
+            # middle ground.
+            r'(?P<status>connected|disabled|sfpAbsent|noOperMem|notconnec|xcvrAbsen|down|linkFlapE)\s+'
+            r'(?P<vlan>\S+)\s+'
+            r'(?P<duplex_code>\S+)\s+'
+            r'(?P<port_speed>\S+)\s*'
+            r'(?P<type>(\S+|Fa\S+\sExt\S+))?\s*$'
+        )
  
         # Eth1/5 *** L2 L3-CIS-N connected trunk full a-1000 1000base-T
         # Eth1/4 *** FEX 2248TP  connected 1     full a-10G  Fabric Exte
@@ -3726,12 +3774,13 @@ class ShowInterfaceStatus(ShowInterfaceStatusSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            m = p0.match(line)
-            if m:
+            m1 = header_p0.match(line)
+            m2 = header_p1.match(line)
+            if m1 or m2:
                 flag = True
                 continue
             m = p1.match(line) 
-            if m :
+            if m:
                 group = m.groupdict()
                 interface = Common.convert_intf_name(group['interface'])
                 intf_dict = result_dict.setdefault('interfaces', {}).setdefault(interface, {})

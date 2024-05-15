@@ -196,6 +196,9 @@ class ShowDiagnosticResultModuleTestDetailSchema(MetaParser):
                     Any():{
                         'test_id' : int,
                         'result' : str,
+                        Optional('port_status'):{
+                            int: str
+                            },
                         'error_code':str,
                         'total_run_count':int,
                         'testing_type':str,
@@ -225,6 +228,8 @@ class ShowDiagnosticResultModuleTestDetail(ShowDiagnosticResultModuleTestDetailS
                 output = self.device.execute(self.cli_command.format(mod_num=mod_num,include=include))
                
         # initial variables
+        list1 = []
+        list2 = []
         ret_dict = {}
 
         #Error code ------------------> 1 (DIAG_FAILURE)
@@ -255,12 +260,37 @@ class ShowDiagnosticResultModuleTestDetail(ShowDiagnosticResultModuleTestDetailS
         p9 = re.compile('^Cons\w+ fail\w+ \w+[ ->]+ (?P<consecutive_failure_count>\d+)$')
         
         #2) TestFantray ---------------------> .
-        p10 = re.compile('^(?P<test_id>\d+)\) \w+ -+> (?P<result>.*)$')
+        #3) DiagPhyLoopbackTest:
+        p10 = re.compile('^(?P<test_id>\d+)\)\s+(?P<test_name>\w+):?\s*-*>*\s*(?P<result>.*)$')
+
+        #Port 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24
+        p11 = re.compile(r'^Port +(?P<ports>[\d\s]+)')
+        
+        #U . . . . U . . . . . . . . . . . . . . . . . .
+        p12 = re.compile(r'(?P<port_state>[UF.\s]+)')
 
         for line in output.splitlines():
             line = line.strip()
             
-            root_dict1 = ret_dict.setdefault('diag_tests',{}).setdefault('module',{}).setdefault(int(mod_num),{}).setdefault(include,{})
+            
+            #2) TestFantray ---------------------> .
+            #3) DiagPhyLoopbackTest:
+            m = p10.match(line)
+            if m:
+                group=m.groupdict()
+                if group['result'] == ".":
+                    result = "Passed"
+                elif group['result'] == "F":
+                    result = "Failed"
+
+                else:
+                    result = "Untested"
+                test_id = int(group['test_id'])
+                test_name = group['test_name']
+                root_dict1 = ret_dict.setdefault('diag_tests',{}).setdefault('module',{}).setdefault(int(mod_num),{}).setdefault(test_name,{})
+                root_dict1.setdefault('test_id', test_id)
+                root_dict1.setdefault('result',result)
+                continue
             
             #Error code ------------------> 1 (DIAG_FAILURE)
             m = p1.match(line)
@@ -316,20 +346,30 @@ class ShowDiagnosticResultModuleTestDetail(ShowDiagnosticResultModuleTestDetailS
                root_dict1.setdefault('consecutive_failure_count',int(m.group('consecutive_failure_count')))
                continue
               
-            #2) TestFantray ---------------------> .
-            m = p10.match(line)
+            
+            
+            #Port 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24
+            m = p11.match(line)
             if m:
-                group=m.groupdict()
-                if group['result']==".":
-                    result = "Passed"
-                elif group['result']=="F":
-                    result = "Failed"
-                else:
-                    result = "Untested"
-                root_dict1.setdefault('test_id',int(group['test_id']))
-                root_dict1.setdefault('result',result)
+                group = m.groupdict()
+                l1 = group['ports'].split()
+
+                list1.extend(l1)
+                list1 = list(map(int, list1))
                 continue
-               
+
+            #U . . . . U . . . . . . . . . . . . . . . . . .
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                port_dict = root_dict1.setdefault('port_status',{})
+                l2 = group['port_state'].split()
+
+                list2.extend(l2)
+                result_dict = dict(zip(list1,list2))
+                root_dict1.update({'port_status':result_dict})
+                continue
+            
         return ret_dict
 
 

@@ -1,0 +1,5 @@
+{
+    "eid_table": "default",
+    "address_family": "ipv6",
+    "eid_prefix": "2001:172:168:1::2/128"
+}

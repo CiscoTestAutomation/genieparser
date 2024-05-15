@@ -1,0 +1,340 @@
+Smart Licensing Status
+======================
+
+Smart Licensing is ENABLED
+
+License Conversion:
+  Automatic Conversion Enabled: False
+  Last Data Push: <none>
+  Last File Export: <none>
+
+Export Authorization Key:
+  Features Authorized:
+    <none>
+
+Utility:
+  Status: DISABLED
+
+Smart Licensing Using Policy:
+  Status: ENABLED
+
+Account Information:
+  Smart Account: <none>
+  Virtual Account: <none> 
+Data Privacy:
+  Sending Hostname: yes
+    Callhome hostname privacy: DISABLED
+    Smart Licensing hostname privacy: DISABLED
+  Version privacy: DISABLED
+
+Transport:
+  Type: cslu
+  Cslu address: <empty>
+  Proxy:
+    Address: <empty>
+    Port: <empty>
+    Username: <empty>
+    Password: <empty>
+  Server Identity Check: True
+  VRF: <empty>
+
+Miscellaneous:
+  Custom Id: <empty>
+Policy:
+  Policy in use: Merged from multiple sources.
+  Reporting ACK required: yes (CISCO default)
+  Unenforced/Non-Export Perpetual Attributes:
+    First report requirement (days): 365 (CISCO default)
+    Reporting frequency (days): 0 (CISCO default)
+    Report on change (days): 90 (CISCO default)
+  Unenforced/Non-Export Subscription Attributes:
+    First report requirement (days): 90 (CISCO default)
+    Reporting frequency (days): 90 (CISCO default)
+    Report on change (days): 90 (CISCO default)
+  Enforced (Perpetual/Subscription) License Attributes:
+    First report requirement (days): 0 (CISCO default)
+    Reporting frequency (days): 0 (CISCO default)
+    Report on change (days): 0 (CISCO default)
+  Export (Perpetual/Subscription) License Attributes:
+    First report requirement (days): 0 (CISCO default)
+    Reporting frequency (days): 0 (CISCO default)
+    Report on change (days): 0 (CISCO default) 
+Usage Reporting:
+  Last ACK received: <none>
+  Next ACK deadline: Mar 07 00:33:56 2024 PST
+  Reporting push interval: 30  days State(2) InPolicy(90)
+  Next ACK push check: <none>
+  Next report push: Dec 10 20:55:17 2023 PST
+  Last report push: <none>
+  Last report file write: <none>
+
+Trust Code Installed: <none>
+License Usage
+=============
+Handle: 1
+  License: network-advantage
+  Entitlement Tag: regid.2018-06.com.cisco.C9300L_48P_NW_Advantage,1.0_6422d51b-5580-4c05-9269-e4f4c23728b9
+  Description: C9300L 48P Network Advantage
+  Count: 1
+  Version: 1.0
+  Status: IN USE(15)
+  Status time: Dec 10 20:53:17 2023 PST
+  Request Time: Dec 10 20:53:17 2023 PST
+  Export status: NOT RESTRICTED
+  Feature Name: network-advantage
+  Feature Description: C9300L 48P Network Advantage
+  Enforcement type: NOT ENFORCED
+  License type: Perpetual
+  Measurements:
+    ENTITLEMENT:
+      Interval: 00:15:00
+      Current Value: 1
+      Current Report: 1696346452       Previous: 0
+  Soft Enforced: True 
+Handle: 2
+  License: dna-advantage
+  Entitlement Tag: regid.2018-06.com.cisco.C9300L_48P_DNA_Advantage,1.0_ecb0e901-a493-434c-b502-5b96f690eab3
+  Description: C9300L 48P DNA Advantage
+  Count: 1
+  Version: 1.0
+  Status: IN USE(15)
+  Status time: Dec 10 20:53:17 2023 PST
+  Request Time: Dec 10 20:53:17 2023 PST
+  Export status: NOT RESTRICTED
+  Feature Name: dna-advantage
+  Feature Description: C9300L 48P DNA Advantage
+  Enforcement type: NOT ENFORCED
+  License type: Subscription
+  Measurements:
+    ENTITLEMENT:
+      Interval: 00:15:00
+      Current Value: 1
+      Current Report: 1696346453       Previous: 0
+  Soft Enforced: True 
+Product Information
+===================
+UDI: PID:C9300L-48PF-4X,SN:FOC2732Y0JF
+
+Agent Version
+=============
+Smart Agent for Licensing: 5.10.3_rel/9
+
+Upcoming Scheduled Jobs
+=======================
+Current time: Dec 19 01:41:45 2023 PST
+Daily: Dec 19 20:53:21 2023 PST (19 hours, 11 minutes, 36 seconds remaining)
+Init Flag Check: Expired Not Rescheduled
+Reservation configuration mismatch between nodes in HA mode: Expired Not Rescheduled
+Start Utility Measurements: Dec 19 01:54:26 2023 PST (12 minutes, 41 seconds remaining)
+Send Utility RUM reports: Dec 19 20:58:21 2023 PST (19 hours, 16 minutes, 36 seconds remaining)
+Save unreported RUM Reports: Dec 19 02:39:36 2023 PST (57 minutes, 51 seconds remaining)
+Process Utility RUM reports: Dec 19 20:54:14 2023 PST (19 hours, 12 minutes, 29 seconds remaining)
+Data Synchronization: Dec 19 02:00:13 2023 PST (18 minutes, 28 seconds remaining)
+External Event: Jan 07 00:33:56 2024 PST (18 days, 22 hours, 52 minutes, 11 seconds remaining)
+Operational Model: Expired Not Rescheduled 
+Communication Statistics:
+=======================
+Communication Level Allowed: INDIRECT
+Overall State: <empty>
+Trust Establishment:
+  Attempts: Total=0, Success=0, Fail=0  Ongoing Failure: Overall=0 Communication=0
+  Last Response: <none>
+    Failure Reason: <none>
+  Last Success Time: <none>
+  Last Failure Time: <none>
+Trust Acknowledgement:
+  Attempts: Total=0, Success=0, Fail=0  Ongoing Failure: Overall=0 Communication=0
+  Last Response: <none>
+    Failure Reason: <none>
+  Last Success Time: <none>
+  Last Failure Time: <none>
+Usage Reporting:
+  Attempts: Total=0, Success=0, Fail=0  Ongoing Failure: Overall=0 Communication=0
+  Last Response: <none>
+    Failure Reason: <none>
+  Last Success Time: <none>
+  Last Failure Time: <none>
+Result Polling:
+  Attempts: Total=0, Success=0, Fail=0  Ongoing Failure: Overall=0 Communication=0
+  Last Response: <none>
+    Failure Reason: <none>
+  Last Success Time: <none>
+  Last Failure Time: <none> 
+Authorization Request:
+  Attempts: Total=0, Success=0, Fail=0  Ongoing Failure: Overall=0 Communication=0
+  Last Response: <none>
+    Failure Reason: <none>
+  Last Success Time: <none>
+  Last Failure Time: <none>
+Authorization Confirmation:
+  Attempts: Total=0, Success=0, Fail=0  Ongoing Failure: Overall=0 Communication=0
+  Last Response: <none>
+    Failure Reason: <none>
+  Last Success Time: <none>
+  Last Failure Time: <none>
+Authorization Return:
+  Attempts: Total=0, Success=0, Fail=0  Ongoing Failure: Overall=0 Communication=0
+  Last Response: <none>
+    Failure Reason: <none>
+  Last Success Time: <none>
+  Last Failure Time: <none>
+Trust Sync:
+  Attempts: Total=0, Success=0, Fail=0  Ongoing Failure: Overall=0 Communication=0
+  Last Response: <none>
+    Failure Reason: <none>
+  Last Success Time: <none>
+  Last Failure Time: <none> 
+Hello Message:
+  Attempts: Total=205, Success=0, Fail=205  Ongoing Failure: Overall=205 Communication=205
+  Last Response: NO REPLY on Dec 19 01:00:13 2023 PST
+    Failure Reason: <none>
+  Last Success Time: <none>
+  Last Failure Time: Dec 19 01:00:13 2023 PST
+Telemetry Reporting:
+  Attempts: Total=0, Success=0, Fail=0  Ongoing Failure: Overall=0 Communication=0
+  Last Response: <none>
+    Failure Reason: <none>
+  Last Success Time: <none>
+  Last Failure Time: <none>
+
+License Certificates
+====================
+Production Cert: True
+Not registered. No certificates installed 
+HA Info
+==========
+RP Role: Active
+Chassis Role: Active
+Behavior Role: Active
+RMF: True
+CF: True
+CF State: Stateless
+Message Flow Allowed: True
+
+Reservation Info
+================
+License reservation: DISABLED
+Last Data Push: <none>
+Last File Export: <none>
+
+Overall status:
+  Active: PID:C9300L-48PF-4X,SN:FOC2732Y0JF
+    Reservation status: NOT INSTALLED
+    Request code: <none>
+    Last return code: <none>
+    Last Confirmation code: <none>
+    Reservation authorization code: <none>
+
+Specified license reservations:
+
+Purchased Licenses:
+  No Purchase Information Available 
+Usage Report Summary:
+=====================
+Total: 0,  Purged: 0(0)
+Total Acknowledged Received: 0,  Waiting for Ack: 0(205)
+Available to Report: 205  Collecting Data: 2
+Maximum Display: 205  In Storage: 0,  MIA: 0(0)
+Report Module Status: Ready
+
+Device Telemetry Report Summary:
+================================
+Data Channel: AVAILABLE
+Reports on disk: 0 
+Other Info
+==========
+Software ID: regid.2018-06.com.cisco.C9300L,1.0_03ebc7a2-6465-4dce-b28e-1f37001db25b
+Agent State: authorized
+TS enable: True
+Transport: cslu
+Locale: en_US.UTF-8
+Debug flags: 0x7
+Privacy Send Hostname: True
+Privacy Send IP: True
+Build type:: Production
+sizeof(char)  : 1
+sizeof(int)   : 4
+sizeof(long)  : 4
+sizeof(char *): 8
+sizeof(time_t): 4
+sizeof(size_t): 8
+Endian: Big
+Write Erase Occurred: False
+XOS version: 0.12.0.0
+Config Persist Received: False
+Message Version: 1.3
+connect_info.name: <empty>
+connect_info.version: <empty>
+connect_info.additional: <empty>
+connect_info.prod: False
+connect_info.capabilities: <empty>
+agent.capabilities: UTILITY, DLC, AppHA, MULTITIER, EXPORT_2, OK_TRY_AGAIN, POLICY_USAGE, TELEMETRY, TELEMETRY_POLICY
+Check Point Interface: True
+Config Management Interface: False
+License Map Interface: True 
+HA Interface: True
+Trusted Store Interface: True
+Platform Data Interface: True
+Crypto Version 2 Interface: False
+SAPluginMgmtInterfaceMutex: True
+SAPluginMgmtIPDomainName: True
+SmartTransportVRFSupport: True
+SmartAgentClientWaitForServer: 2000
+SmartAgentCmReTrySend: True
+SmartAgentClientIsUnified: True
+SmartAgentCmClient: True
+SmartAgentClientName: UnifiedClient
+builtInEncryption: True
+enableOnInit: True
+routingReadyByEvent: True
+systemInitByEvent: True
+SmartTransportServerIdCheck: True
+SmartTransportProxySupport: True
+SmartAgentComplianceStatus: False
+SmartAgentTelemetryRumReportMax: 600
+SmartAgentRumTelemetryRumStoreMin: 500
+SmartAgentPolicyDisplayFormat: 0
+SmartAgentReportOnUpgrade: False
+SmartAgentIndividualRUMEncrypt: 2
+SmartAgentMaxRumMemory: 50
+SmartAgentConcurrentThreadMax: 10
+SmartAgentPolicyControllerModel: False
+SmartAgentDisableCacheSWID: False 
+SmartAgentPolicyModel: True
+SmartAgentFederalLicense: True
+SmartAgentMultiTenant: False
+attr365DayEvalSyslog: True
+checkPointWriteOnly: False
+SmartAgentDelayCertValidation: False
+enableByDefault: False
+conversionAutomatic: False
+conversionAllowed: False
+storageEncryptDisable: False
+storageLoadUnencryptedDisable: False
+TSPluginDisable: False
+bypassUDICheck: False
+loggingAddTStamp: False
+loggingAddTid: True
+HighAvailabilityOverrideEvent: UnknownPlatformEvent
+platformIndependentOverrideEvent: UnknownPlatformEvent
+platformOverrideEvent: SmartAgentSystemDataListChanged
+WaitForHaRole: False
+standbyIsHot: True
+chkPtType: 2
+delayCommInit: False
+roleByEvent: True
+maxTraceLength: 150
+traceAlwaysOn: True
+debugFlags: 0
+Event log max size: 5120 KB
+Event log current size: 4282 KB 
+Local Device: No Trust Data
+Overall Trust: No ID
+Clock sync-ed with NTP: False
+
+Platform Provided Mapping Table
+===============================
+  C9300L-48PF-4X: Total licenses found: 213
+Enforced Licenses:
+  P:C9300L-48PF-4X,S:FOC2732Y0JF:
+    No PD enforced licenses 

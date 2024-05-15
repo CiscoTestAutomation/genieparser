@@ -1,0 +1,16 @@
+LISP IPv4 Mapping Cache for LISP 0 EID-table vrf red (IID 4100), 1 entries
+
+50.1.0.0/16, uptime: 00:04:05, expires: never, via pub-sub, complete, remote-to-site
+  Sources: pub-sub
+  State: complete, last modified: 00:01:16, map-source: local
+  Exempt, Packets out: 21(12096 bytes), counters are not accurate (~ 00:00:40 ago)
+  Configured as EID address space
+  Locator          Uptime    State  Pri/Wgt     Encap-IID
+  100.165.165.165  00:04:01  up      10/50        -
+    Last up-down state change:         00:04:01, state change count: 1
+    Last route reachability change:    02:48:03, state change count: 3
+    Last priority / weight change:     never/never
+    RLOC-probing loc-status algorithm:
+      Last RLOC-probe sent:            00:00:00 (rtt 1ms)
+      Next RLOC-probe in:              00:00:00
+    Affinity-id: 211

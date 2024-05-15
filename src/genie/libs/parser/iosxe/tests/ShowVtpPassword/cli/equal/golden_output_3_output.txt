@@ -1,0 +1,1 @@
+VTP Password is configured.

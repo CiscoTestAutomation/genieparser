@@ -1,0 +1,9 @@
+Thu Feb  8 06:48:39.636 UTC
+
+Interface:          Bundle-Ether15.1001
+VRF:                default
+Mode:               Server
+Profile Name:       CATL
+Lease Limit:        None
+Srg Role:           NONE
+Mac Throttle:       Disabled

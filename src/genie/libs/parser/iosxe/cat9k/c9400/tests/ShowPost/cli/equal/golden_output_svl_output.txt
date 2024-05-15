@@ -1,0 +1,43 @@
+Stored system POST messages:
+
+Switch 1
+---------
+
+POST: MBIST Tests : Begin
+POST: MBIST Tests : End, Status Passed
+
+POST: Module: 2 PHY Loopback: loopback Test: Begin
+POST: Module: 2 PHY Loopback: loopback Test: End, Status Passed
+
+POST: Module: 2 PHY Loopback: loopback Test: Begin
+POST: Module: 2 PHY Loopback: loopback Test: End, Status Passed
+
+POST: Module: 1 PHY Loopback: loopback Test: Begin
+POST: Module: 1 PHY Loopback: loopback Test: End, Status Passed
+
+POST: Module: 4 PHY Loopback: loopback Test: Begin
+POST: Module: 4 PHY Loopback: loopback Test: End, Status Passed
+
+POST: Module: 1 PHY Loopback: loopback Test: Begin
+POST: Module: 1 PHY Loopback: loopback Test: End, Status Passed
+
+Switch 2  
+---------
+
+POST: MBIST Tests : Begin
+POST: MBIST Tests : End, Status Passed
+
+POST: Module: 4 PHY Loopback: loopback Test: Begin
+POST: Module: 4 PHY Loopback: loopback Test: End, Status Failed
+
+POST: Module: 2 PHY Loopback: loopback Test: Begin
+POST: Module: 2 PHY Loopback: loopback Test: End, Status Passed
+
+POST: Module: 4 PHY Loopback: loopback Test: Begin
+POST: Module: 4 PHY Loopback: loopback Test: End, Status Passed
+
+POST: Module: 2 PHY Loopback: loopback Test: Begin
+POST: Module: 2 PHY Loopback: loopback Test: End, Status Failed
+
+POST: Module: 1 PHY Loopback: loopback Test: Begin
+POST: Module: 1 PHY Loopback: loopback Test: End, Status Passed

@@ -1,0 +1,137 @@
+show flow monitor monitor_vlan31 cache
+  Cache type:                               Normal (Platform cache)
+  Cache size:                                10000
+  Current entries:                              10
+
+  Flows added:                                  10
+  Flows aged:                                    0
+
+DATALINK ETHERTYPE:                      0xFFFF
+DATALINK VLAN INPUT:                     0
+DATALINK MAC SOURCE ADDRESS INPUT:       0011.0000.0011
+DATALINK MAC DESTINATION ADDRESS INPUT:  0012.0000.0021
+IPV4 SOURCE ADDRESS:                     0.0.0.0
+IPV4 DESTINATION ADDRESS:                0.0.0.0
+INTERFACE INPUT:                         Po31
+IP PROTOCOL:                             0
+counter bytes long:                      145920
+counter packets long:                    2432
+timestamp abs first:                     08:34:51.542
+timestamp abs last:                      08:35:39.476
+
+DATALINK ETHERTYPE:                      0xFFFF
+DATALINK VLAN INPUT:                     0
+DATALINK MAC SOURCE ADDRESS INPUT:       0011.0000.0012
+DATALINK MAC DESTINATION ADDRESS INPUT:  0012.0000.0022
+IPV4 SOURCE ADDRESS:                     0.0.0.0
+IPV4 DESTINATION ADDRESS:                0.0.0.0
+INTERFACE INPUT:                         Po31
+IP PROTOCOL:                             0
+counter bytes long:                      142200
+counter packets long:                    2370
+timestamp abs first:                     08:34:51.542
+timestamp abs last:                      08:35:39.477
+
+DATALINK ETHERTYPE:                      0xFFFF
+DATALINK VLAN INPUT:                     0
+DATALINK MAC SOURCE ADDRESS INPUT:       0011.0000.0013
+DATALINK MAC DESTINATION ADDRESS INPUT:  0012.0000.0023
+IPV4 SOURCE ADDRESS:                     0.0.0.0
+IPV4 DESTINATION ADDRESS:                0.0.0.0
+INTERFACE INPUT:                         Po31
+IP PROTOCOL:                             0
+counter bytes long:                      142500
+counter packets long:                    2375
+timestamp abs first:                     08:34:51.542
+timestamp abs last:                      08:35:39.467
+
+DATALINK ETHERTYPE:                      0xFFFF
+DATALINK VLAN INPUT:                     0
+DATALINK MAC SOURCE ADDRESS INPUT:       0011.0000.0014
+DATALINK MAC DESTINATION ADDRESS INPUT:  0012.0000.0024
+IPV4 SOURCE ADDRESS:                     0.0.0.0
+IPV4 DESTINATION ADDRESS:                0.0.0.0
+INTERFACE INPUT:                         Po31
+IP PROTOCOL:                             0
+counter bytes long:                      143700
+counter packets long:                    2395
+timestamp abs first:                     08:34:51.542
+timestamp abs last:                      08:35:39.479
+
+DATALINK ETHERTYPE:                      0xFFFF
+DATALINK VLAN INPUT:                     0
+DATALINK MAC SOURCE ADDRESS INPUT:       0011.0000.0015
+DATALINK MAC DESTINATION ADDRESS INPUT:  0012.0000.0025
+IPV4 SOURCE ADDRESS:                     0.0.0.0
+IPV4 DESTINATION ADDRESS:                0.0.0.0
+INTERFACE INPUT:                         Po31
+IP PROTOCOL:                             0
+counter bytes long:                      140160
+counter packets long:                    2336
+timestamp abs first:                     08:34:51.542
+timestamp abs last:                      08:35:39.479
+
+DATALINK ETHERTYPE:                      0xFFFF
+DATALINK VLAN INPUT:                     0
+DATALINK MAC SOURCE ADDRESS INPUT:       0011.0000.0017
+DATALINK MAC DESTINATION ADDRESS INPUT:  0012.0000.0027
+IPV4 SOURCE ADDRESS:                     0.0.0.0
+IPV4 DESTINATION ADDRESS:                0.0.0.0
+INTERFACE INPUT:                         Po31
+IP PROTOCOL:                             0
+counter bytes long:                      143040
+counter packets long:                    2384
+timestamp abs first:                     08:34:51.542
+timestamp abs last:                      08:35:39.481
+
+DATALINK ETHERTYPE:                      0xFFFF
+DATALINK VLAN INPUT:                     0
+DATALINK MAC SOURCE ADDRESS INPUT:       0011.0000.0018
+DATALINK MAC DESTINATION ADDRESS INPUT:  0012.0000.0028
+IPV4 SOURCE ADDRESS:                     0.0.0.0
+IPV4 DESTINATION ADDRESS:                0.0.0.0
+INTERFACE INPUT:                         Po31
+IP PROTOCOL:                             0
+counter bytes long:                      141720
+counter packets long:                    2362
+timestamp abs first:                     08:34:51.542
+timestamp abs last:                      08:35:39.444
+
+DATALINK ETHERTYPE:                      0xFFFF
+DATALINK VLAN INPUT:                     0
+DATALINK MAC SOURCE ADDRESS INPUT:       0011.0000.0019
+DATALINK MAC DESTINATION ADDRESS INPUT:  0012.0000.0029
+IPV4 SOURCE ADDRESS:                     0.0.0.0
+IPV4 DESTINATION ADDRESS:                0.0.0.0
+INTERFACE INPUT:                         Po31
+IP PROTOCOL:                             0
+counter bytes long:                      143280
+counter packets long:                    2388
+timestamp abs first:                     08:34:51.544
+timestamp abs last:                      08:35:39.463
+
+DATALINK ETHERTYPE:                      0xFFFF
+DATALINK VLAN INPUT:                     0
+DATALINK MAC SOURCE ADDRESS INPUT:       0011.0000.0010
+DATALINK MAC DESTINATION ADDRESS INPUT:  0012.0000.0020
+IPV4 SOURCE ADDRESS:                     0.0.0.0
+IPV4 DESTINATION ADDRESS:                0.0.0.0
+INTERFACE INPUT:                         Po31
+IP PROTOCOL:                             0
+counter bytes long:                      145260
+counter packets long:                    2421
+timestamp abs first:                     08:34:51.545
+timestamp abs last:                      08:35:39.476
+
+DATALINK ETHERTYPE:                      0xFFFF
+DATALINK VLAN INPUT:                     0
+DATALINK MAC SOURCE ADDRESS INPUT:       0011.0000.0016
+DATALINK MAC DESTINATION ADDRESS INPUT:  0012.0000.0026
+IPV4 SOURCE ADDRESS:                     0.0.0.0
+IPV4 DESTINATION ADDRESS:                0.0.0.0
+INTERFACE INPUT:                         Po31
+IP PROTOCOL:                             0
+counter bytes long:                      143940
+counter packets long:                    2399
+timestamp abs first:                     08:34:51.571
+timestamp abs last:                      08:35:39.480

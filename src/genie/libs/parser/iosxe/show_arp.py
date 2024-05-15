@@ -1407,7 +1407,7 @@ class ShowIpArpInspectionVlan(ShowIpArpInspectionVlanSchema):
         #Vlan ACL Logging DHCP Logging Probe Logging
         #10 Deny Deny Off        
         p5 = re.compile(r'^(?P<vlan>\d+) +'
-                r'(?P<acl_logging>[a-zA-Z]+) +'
+                r'(?P<acl_logging>[a-zA-Z-]+) +'
                 r'(?P<dhcp_logging>[a-zA-Z]+) +'
                 r'(?P<probe_logging>[a-zA-Z]+$)')
 

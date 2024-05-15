@@ -1,0 +1,9 @@
+IS-IS IPv6 process "", local RIB
+* FCCC:CCC1:AA33::/48
+    via FE80::A8BB:CCFF:FE00:6500/Ethernet0/0, type L2  metric 20 tag 0
+    prefix attr: X:1 R:1 N:1
+     repair path: via FE80::A8BB:CCFF:FE00:6902/Ethernet2/0 metric: 110 (LC,DS,NP,SR)
+      TI-LFA node-protecting
+        SRv6-Fwd-Id 25165856
+        Q node: R7 SID FCCC:CCC1:AA66:E000::
+      repair source: R3, metric to pfx: 130

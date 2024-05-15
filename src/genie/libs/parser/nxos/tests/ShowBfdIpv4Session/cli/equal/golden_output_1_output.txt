@@ -1,0 +1,10 @@
+
+OurAddr         NeighAddr       LD/RD                 RH/RS           Holdown(mult)     State       Int                   Vrf                              Type     BSID        
+   
+10.10.12.1      10.10.12.2      1090519053/1090519042 Up              6000(3)           Up          Eth1/35               default                          SH       N/A         
+   
+10.10.10.1      10.10.10.2      1090519055/1090519046 Up              6000(3)           Up          Eth1/33               default                          SH       N/A         
+   
+10.10.11.1      10.10.11.2      1090519057/1090519044 Up              6000(3)           Up          Eth1/34               default                          SH       N/A         
+   
+P1# 

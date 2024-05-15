@@ -1,0 +1,50 @@
+-----------------------------------------------------------------
+                     SDWAN Service-chain stats                   
+-----------------------------------------------------------------
+Summary: SC1, VRF: 101, Label: 1014, Status: Up 
+
+    Service: FW Sent: 3151958519 Rcvd: 3126458239
+	HA Pair 1: IPv4
+	    Active Sent: 482171293  Rcvd: 478822507 
+	    Backup Sent: 0          Rcvd: 0         
+
+	HA Pair 1: IPv6
+	    Active Sent: 2669787226 Rcvd: 2647635732
+	    Backup Sent: 0          Rcvd: 0         
+
+    Service: IDS Sent: 3126458239 Rcvd: 3112732446
+	HA Pair 1: IPv4
+	    Active Sent: 478822507  Rcvd: 477120521 
+	    Backup Sent: 0          Rcvd: 0         
+
+	HA Pair 1: IPv6
+	    Active Sent: 2647635732 Rcvd: 2635611925
+	    Backup Sent: 0          Rcvd: 0         
+
+    Service: IDP Sent: 3112732446 Rcvd: 3112465840
+	HA Pair 1: IPv4
+	    Active Sent: 477120521  Rcvd: 477093880 
+	    Backup Sent: 0          Rcvd: 0         
+
+	HA Pair 1: IPv6
+	    Active Sent: 2635611925 Rcvd: 2635371960
+	    Backup Sent: 0          Rcvd: 0         
+
+    Service: NETSVC1 Sent: 3112465840 Rcvd: 3112208949
+	HA Pair 1: IPv4
+	    Active Sent: 477093880  Rcvd: 477064465 
+	    Backup Sent: 0          Rcvd: 0         
+
+	HA Pair 1: IPv6
+	    Active Sent: 2635371960 Rcvd: 2635144484
+	    Backup Sent: 0          Rcvd: 0         
+Summary: SC2, VRF: 1105, Label: 1015, Status: Up 
+
+    Service: FW Sent: 2223835339 Rcvd: 2223834038
+	HA Pair 1: Tunnel IPv4
+	    Active Sent: 1122691294 Rcvd: 1122690650
+	    Backup Sent: 0          Rcvd: 0         
+
+	HA Pair 1: Tunnel IPv6
+	    Active Sent: 1101144045 Rcvd: 1101143388
+	    Backup Sent: 0          Rcvd: 0

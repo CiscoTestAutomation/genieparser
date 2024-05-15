@@ -1430,7 +1430,8 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
                         r'(?P<rib_labels>prefer-non-rib-labels))?(:?, +(?P<merge_labels>merge-labels))?)?$')
 
         # * directly connected, via GigabitEthernet1.120
-        p5_1 = re.compile(r'^\* +directly +connected, via +(?P<interface>\S+)$')
+        # directly connected via LISP0
+        p5_1 = re.compile(r'^\*? *directly +connected,? via +(?P<interface>\S+)$')
         
         # Route metric is 10880, traffic share count is 1
         p6 = re.compile(r'^Route +metric +is +(?P<metric>\d+), +'
@@ -1467,7 +1468,8 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
         p14 = re.compile(r'^Repair +Path: +(?P<path>[\d\.]+), +via +(?P<via>\w+)')
 
         # Tag 65161, type external
-        p15 = re.compile(r'^Tag (?P<tag_name>\S+), +type +(?P<tag_type>\w+ *[\d]*)$')
+        # Tag 2, type LISP destinations-summary
+        p15 = re.compile(r'^Tag (?P<tag_name>\S+), +type +(?P<tag_type>\w+ *[\d\-\w]*)$')
 
         # AS Hops 9
         p16 = re.compile(r'^AS +Hops (?P<num_hops>\d+)$')
@@ -1509,6 +1511,7 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
                 continue
 
             # Tag 65161, type external
+            #  Tag 2, type LISP destinations-summary
             m = p15.match(line)
             if m:
                 group = m.groupdict()
@@ -1565,6 +1568,7 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
                 continue
 
             # * directly connected, via GigabitEthernet1.120
+            # directly connected via LISP0
             m = p5_1.match(line)
             if m:
                 group = m.groupdict()
@@ -1697,6 +1701,7 @@ class ShowIpv6RouteWordSchema(MetaParser):
                 Optional('tag'): str,
                 'paths': {
                     Any(): {
+                        Optional('interface'): str,
                         Optional('fwd_ip'): str,
                         Optional('fwd_intf'): str,
                         Optional('from'): str,
@@ -3476,21 +3481,27 @@ class ShowBannerMotd(ShowBannerMotdSchema):
 
         if output is None:
             output = self.device.execute(self.cli_command)
-        
+
         # initializing dictionary
         ret_dict = {}
 
-        # cisco banner test msg
-        p1 = re.compile(r'^(?P<banner>[\S\s]+)$')
+        strng = ''
+        #new banner msg
+        # '''
+        # ============================================================
+        # This system is for Cisco.com authorized use only. It is
+        # monitored to detect improper use and other illicit activity.
+        # There is no expectation of privacy while using this system.
+        # ============================================================
+        # '''
+        p1 = re.compile(r'[^a-zA-Z0-9.\s]')
 
         for line in output.splitlines():
             line = line.strip()
-
-            # cisco banner test msg
-            m = p1.match(line)
-            if m:
-                group = m.groupdict()
-                ret_dict['banner_motd'] = group['banner']
-                continue
+            
+            m = re.sub(p1,'', line)
+            if m != ' ':
+                strng = strng+m+' '
+                ret_dict['banner_motd'] = strng.strip()
 
         return ret_dict

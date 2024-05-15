@@ -1,0 +1,82 @@
+Publication Information for LISP 0 EID-table vrf red (IID 4100)
+ * Indicates the selected rlocs used by consumers
+
+  EID-prefix: 50.1.1.0/24
+    First published:      00:02:01
+    Last published:       00:01:21
+    State:                complete
+    Exported to:          none
+
+    Publisher 100::78:78:78.4342
+      last published 00:01:21, TTL never, Expires: never
+      publisher epoch 0, entry epoch 0
+      entry-state complete
+      routing table tag 101
+      xTR-ID 0xC92A2B80-0x5BFE0CAB-0xE2AF70CF-0xD5C02C33
+      site-ID unspecified
+      Domain-ID 2
+      Multihoming-ID 2
+      Locator           Pri/Wgt  State     Encap-IID  RDP
+      100::88:88:88      10/50   up        -          [1]
+      100::99:99:99      10/50   up        -          [1]
+      100::110:110:110   10/50   up        -          [2]
+      100::120:120:120   10/50   up        -          [3]
+      100::133:133:133   10/50   up        -          [3]
+      100::165:165:165   10/50   up        -          [2]
+
+    Publisher 100::77:77:77.4342
+      last published 00:01:21, TTL never, Expires: never
+      publisher epoch 0, entry epoch 0
+      entry-state complete
+      routing table tag 101
+      xTR-ID 0xC92A2B80-0x5BFE0CAB-0xE2AF70CF-0xD5C02C33
+      site-ID unspecified
+      Domain-ID 2
+      Multihoming-ID 2
+      Locator           Pri/Wgt  State     Encap-IID  RDP
+      100::88:88:88      10/50   up        -          [1]
+      100::99:99:99      10/50   up        -          [1]
+      100::110:110:110   10/50   up        -          [2]
+      100::120:120:120   10/50   up        -          [3]
+      100::133:133:133   10/50   up        -          [3]
+      100::165:165:165   10/50   up        -          [2]
+
+    Publisher 100::55:55:55.4342
+      last published 00:02:01, TTL never, Expires: never
+      publisher epoch 0, entry epoch 0
+      entry-state complete
+      routing table tag 101
+      xTR-ID 0x0D18DA52-0x6406CC7D-0x31A9E48A-0xAA20626E
+      site-ID unspecified
+      Domain-ID 1
+      Multihoming-ID 1
+      Locator           Pri/Wgt  State     Encap-IID  RDP
+      100::88:88:88      10/50   up        -          [-]
+      100::99:99:99      10/50   up        -          [-]
+      100::154:154:154   10/50   up        -          [-]
+
+    Publisher 100::44:44:44.4342
+      last published 00:02:01, TTL never, Expires: never
+      publisher epoch 0, entry epoch 0
+      entry-state complete
+      routing table tag 101
+      xTR-ID 0x0D18DA52-0x6406CC7D-0x31A9E48A-0xAA20626E
+      site-ID unspecified
+      Domain-ID 1
+      Multihoming-ID 1
+      Locator           Pri/Wgt  State     Encap-IID  RDP
+      100::88:88:88      10/50   up        -          [-]
+      100::99:99:99      10/50   up        -          [-]
+      100::154:154:154   10/50   up        -          [-]
+
+  Merge Locator Information
+      Locator            Pri/Wgt  State     Encap-IID  RDP-Len Src-Address
+      100::88:88:88       10/50   up        -          0       100::55:55:55
+      100::88:88:88       10/50   up        -          1       100::78:78:78
+      100::99:99:99       10/50   up        -          0       100::55:55:55
+      100::99:99:99       10/50   up        -          1       100::78:78:78
+      100::110:110:110    10/50   up        -          1       100::78:78:78
+      100::120:120:120    10/50   up        -          1       100::78:78:78
+      100::133:133:133    10/50   up        -          1       100::78:78:78
+      100::154:154:154    10/50   up        -          0       100::55:55:55
+      100::165:165:165    10/50   up        -          1       100::78:78:78

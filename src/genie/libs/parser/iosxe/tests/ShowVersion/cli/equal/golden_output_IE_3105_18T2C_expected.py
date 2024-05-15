@@ -1,7 +1,8 @@
 expected_output = {
    "version":{
       "xe_version":"BLD_V1710_THROTTLE_LATEST_20221030_072056",
-      "version_short":"17.10",
+       "build_label": "BLD_V1710_THROTTLE_LATEST_20221030_072056",
+       "version_short":"17.10",
       "platform":"IE31xx Switch",
       "version":"17.10.20221030:080207",
       "image_id":"IE31xx-UNIVERSALK9-M",

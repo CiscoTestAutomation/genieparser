@@ -1,0 +1,6 @@
+Channel-group listing:
+----------------------
+
+Group: 1
+----------
+Protocol:  LACP

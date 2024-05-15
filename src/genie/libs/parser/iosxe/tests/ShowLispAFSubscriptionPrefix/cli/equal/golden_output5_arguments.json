@@ -1,0 +1,5 @@
+{
+    "vrf": "red",
+    "address_family": "ipv4",
+    "eid_prefix": "172.168.0.0/16"
+}

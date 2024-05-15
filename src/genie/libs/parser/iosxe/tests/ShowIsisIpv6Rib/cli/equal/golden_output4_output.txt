@@ -1,0 +1,1 @@
+IS-IS IPv6 process 1, local RIB

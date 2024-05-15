@@ -940,6 +940,7 @@ class ShowModule(ShowModuleSchema):
         table_header = None
         header_type = None
         lem_hit = False
+        parse_status = False
         rp_list = []
         map_dic = {}
         
@@ -955,8 +956,9 @@ class ShowModule(ShowModuleSchema):
         # 1 18 1/10/25/40G IPS, 4/8/16/32G FC/Sup-4 DS-C9220I-K9-SUP active *
         # 8    36   36x400G QSFP56-DD Ethernet Module                N9K-X9836DM-A         ok  
         # 27   0    Supervisor Module                                N9K-C9800-SUP-A       active *
+        # 1    36   28x100/40G + 8x400G QSFP-DD Ethernet Module      N9K-C93600CD-GX
         p3 = re.compile(r'^(?P<number>[0-9]+)\s+(?P<ports>[0-9]+)\s+(?P<module_type>.+?)\s+'
-                        r'((?P<model>[A-Z0-9\-\+]+)\s+)?(?P<status>[a-z\- ]+)(\s\*)?$')
+                        r'((?P<model>[A-Z0-9v\-\+]+))?((\s+(?P<status>[a-z\- ]+)(\s\*)?)?)$')
 
         # 1 9.4(0)SK(0.135) 1.0 20:01:00:08:31:14:b7:60 to 20:10:00:08:31:14:b7:60
         # 7    10.3(2)IOV9(0.190)       1.0    LC7
@@ -970,6 +972,9 @@ class ShowModule(ShowModuleSchema):
 
         # 7    Pass
         p6 = re.compile(r'^\s*(?P<number>[0-9]+) +(?P<online_diag_status>[a-zA-Z]+)$')
+
+        #  active *
+        p7 = re.compile(r'^\s*(?P<status>\S+)')
 
         for line in out.splitlines():
             line = line.rstrip()
@@ -1002,6 +1007,7 @@ class ShowModule(ShowModuleSchema):
             # 1 18 1/10/25/40G IPS, 4/8/16/32G FC/Sup-4 DS-C9220I-K9-SUP active *
             # 8    36   36x400G QSFP56-DD Ethernet Module                N9K-X9836DM-A         ok  
             # 27   0    Supervisor Module                                N9K-C9800-SUP-A       active *
+            # 1    36   28x100/40G + 8x400G QSFP-DD Ethernet Module      N9K-C93600CD-GX
             m = p3.match(line)
             if m:
                 header_number = m.groupdict()['number']
@@ -1027,7 +1033,10 @@ class ShowModule(ShowModuleSchema):
                         module_dict['slot']['rp'][header_number][rp_name]['ports'] = m.groupdict()['ports'].strip()
                         if m.groupdict()['model']:
                             module_dict['slot']['rp'][header_number][rp_name]['model'] = m.groupdict()['model'].strip()
-                        module_dict['slot']['rp'][header_number][rp_name]['status'] = m.groupdict()['status'].strip()
+                        if m.groupdict()['status']:
+                            module_dict['slot']['rp'][header_number][rp_name]['status'] = m.groupdict()['status'].strip()
+                        else:
+                            parse_status = True
                     else:
                         if header_type not in module_dict['slot']:
                             module_dict['slot'][header_type] = {}
@@ -1038,7 +1047,10 @@ class ShowModule(ShowModuleSchema):
                         module_dict['slot']['lc'][header_number][lc_name]['ports'] = m.groupdict()['ports'].strip()
                         if m.groupdict()['model']:
                             module_dict['slot']['lc'][header_number][lc_name]['model'] = m.groupdict()['model'].strip()
-                        module_dict['slot']['lc'][header_number][lc_name]['status'] = m.groupdict()['status'].strip()
+                        if m.groupdict()['status']:
+                            module_dict['slot']['lc'][header_number][lc_name]['status'] = m.groupdict()['status'].strip()
+                        else:
+                            parse_status = True
                 elif table_header == 'xbar':
                     if header_number not in module_dict['xbar']:
                         module_dict['xbar'][header_number] = {'slot': header_number}
@@ -1141,6 +1153,15 @@ class ShowModule(ShowModuleSchema):
                     module_dict['lem'][header_number]['online_diag_status'] = m.groupdict()[
                         'online_diag_status'].strip()
                 continue
+
+            #  active *
+            m = p7.match(line)
+            if m and parse_status is True:
+                if header_number in rp_list:
+                    module_dict['slot']['rp'][header_number][rp_name]['status'] = m.groupdict()['status'].strip()
+                else:
+                    module_dict['slot']['lc'][header_number][lc_name]['status'] = m.groupdict()['status'].strip()
+                parse_status = False
 
         # The case of n9k virtual device where no module was showing "supervisor" in the module type
         if 'slot' in module_dict:

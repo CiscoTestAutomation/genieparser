@@ -1,0 +1,6 @@
+
+L2TP Session Information Total tunnels 2 sessions 2
+
+LocID      RemID      TunID      Pkts-In    Pkts-Out   Bytes-In   Bytes-Out
+507155526  4194000749 609164     182805     183322     181342560  182588712 
+3606667104 3753675524 800171     182898     183391     181434816  182657436

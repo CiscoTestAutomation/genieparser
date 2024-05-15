@@ -1,0 +1,10 @@
+msmr11#sh lisp in 0 ipv4 server subscription aabb.cc00.d000/48
+LISP MS EID Subscriptions for LISP 0 IID 0, 1 entries
+
+Eid Prefix: aabb.cc00.d000/48
+  First Subscribed: 00:00:55
+  Last Subscribed: 00:00:55
+
+ Subscriber 100.11.11.11:45646
+   xTR-ID 0xE9BF16D9-0x3D747C14-0x96C3FEB8-0x4AF6C2CB
+   Subscriber Index: 5

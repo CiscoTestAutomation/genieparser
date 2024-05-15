@@ -600,7 +600,8 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
         'show route ipv4 {protocol}',
         'show route vrf {vrf} ipv4 {protocol}',
         'show route ipv4 {route}',
-        'show route vrf {vrf} ipv4 {route}'
+        'show route vrf {vrf} ipv4 {route}',
+        'show route ipv4 next-hop {next_hop}',
     ]
 
     """
@@ -638,8 +639,8 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
     protocol_set = {'ospf', 'odr', 'isis', 'eigrp', 'static', 'mobile',
                     'rip', 'lisp', 'nhrp', 'local', 'connected', 'bgp'}
 
-    def cli(self, vrf=None, route=None, protocol=None, output=None):
-        
+    def cli(self, vrf=None, route=None, protocol=None, next_hop=None, output=None):
+
         # Check if argument from device.parse is protocol or route
         if protocol and protocol not in self.protocol_set:
             route = protocol
@@ -668,12 +669,16 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
                 cmd = self.cli_command[4].format(
                     route=route
                 )
+            elif next_hop:
+                cmd = self.cli_command[6].format(
+                    next_hop=next_hop
+                )
             else:
                 cmd = self.cli_command[0]
             out = self.device.execute(cmd)
         else:
             out = output
-        
+
         # VRF: VRF501
         # VRF: L:123
         p1 = re.compile(r'^\s*VRF: +(?P<vrf>\S+)$')
@@ -1795,6 +1800,97 @@ class ShowRouteAllSummary(ShowRouteAllSummarySchema):
                     inst_dict.update({k:int(v) for k, v in group.items() if v is not None})
                 else:
                     group = {k: int(v) for k, v in group.items() if v is not None}
+                    protocol_dict.update(group)
+                continue
+
+        return ret_dict
+
+# ====================================================
+#  schema for show route summary
+# ====================================================
+class ShowRouteSummarySchema(MetaParser):
+    """Schema for :
+       show route summary"""
+
+    schema = {
+        'total_route_source': {
+            'routes': int,
+            'backup': int,
+            'deleted': int,
+            'memory_bytes': int,
+        },
+        'route_source': {
+            Any(): {
+                Any(): {
+                    'routes': int,
+                    'backup': int,
+                    'deleted': int,
+                    'memory_bytes': int,
+                },
+                Optional('routes'): int,
+                Optional('backup'): int,
+                Optional('deleted'): int,
+                Optional('memory_bytes'): int,
+            }
+        },
+    }
+
+
+# ====================================================
+#  parser for show route summary
+# ====================================================
+class ShowRouteSummary(ShowRouteSummarySchema):
+    """Parser for :
+       show route summary"""
+
+    cli_command = ['show route summary']
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command[0])
+        
+        # Route Source                     Routes     Backup     Deleted     Memory(bytes)
+        # connected                        3          2          0           1080         
+        # local                            5          0          0           1080         
+        # dagr                             0          0          0           0            
+        # te-client                        0          0          0           0            
+        # bgp 100                          6          0          0           1296         
+        # static                           0          0          0           0            
+        # application fib_mgr              0          0          0           0            
+        # Total                            14         2          0           3456 
+        
+        p1 = re.compile(
+            r'^(?P<protocol>[a-zA-Z0-9(\-|\_)]+) +(?P<instance>[a-zA-Z0-9\.(\-|\_)]+)* * +('
+            r'?P<routes>\d+) +(?P<backup>\d+) +(?P<deleted>\d+) +(?P<memory_bytes>\d+)')
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # Route Source                     Routes     Backup     Deleted     Memory(bytes)
+            # connected                        3          2          0           1080         
+            # local                            5          0          0           1080         
+            # dagr                             0          0          0           0            
+            # te-client                        0          0          0           0            
+            # bgp 100                          6          0          0           1296         
+            # static                           0          0          0           0            
+            # application fib_mgr              0          0          0           0            
+            # Total                            14         2          0           3456 
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                vrf_rs_dict = ret_dict.setdefault('route_source', {})
+                protocol = group.pop('protocol')
+                instance = group.pop('instance')
+                if protocol == 'Total':
+                    protocol_dict = ret_dict.setdefault('total_route_source', {})
+                else:
+                    protocol_dict = vrf_rs_dict.setdefault(protocol, {})
+                group = {k: int(v) for k, v in group.items() if v is not None}
+                if instance is not None:
+                    protocol_dict.setdefault(instance, {}).update(group)
+                else:                   
                     protocol_dict.update(group)
                 continue
 

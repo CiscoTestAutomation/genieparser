@@ -13,6 +13,10 @@ expected_output = {
             "local_interface": "GigabitEthernet3/0/29",
             "hold_time": 145,
             "software_version": "1",
+            "power_drawn":0.0,
+            "power_request_id":31314,
+            "power_mgmt_id_1":0,
+            "power_req_level":"15400 0 0 0 0",
             "advertisement_ver": 2,
         },
         2: {

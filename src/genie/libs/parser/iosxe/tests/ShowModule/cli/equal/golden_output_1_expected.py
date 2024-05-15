@@ -5,7 +5,7 @@ expected_output = {
             'card_type': '48-Port 10GE / 25GE',
             'model': 'C9600-LC-48YL',
             'serial': 'CAT2431L0MD',
-            'mac_address': 'E41F.7B6D.F280',
+            'mac_address': 'E41F.7B6D.F280 to E41F.7B6D.F2FF',
             'hw': '1.1',
             'fw': '17.8.1r',
             'sw': 'S2C', 'status':
@@ -16,7 +16,7 @@ expected_output = {
             'card_type': 'Supervisor 1 Module',
             'model': 'C9600-SUP-1',
             'serial': 'FDO24261BQN',
-            'mac_address': '9077.EE4D.9700',
+            'mac_address': '9077.EE4D.9700 to 9077.EE4D.977F',
             'hw': '1.1', 'fw': '17.8.1r',
             'sw': 'S2C', 'status': 'ok',
             'redundancy_role': 'active',

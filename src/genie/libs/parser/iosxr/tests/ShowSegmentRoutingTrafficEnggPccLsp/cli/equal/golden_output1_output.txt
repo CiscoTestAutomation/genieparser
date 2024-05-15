@@ -1,0 +1,11 @@
+show segment-routing traffic-eng pcc lsp
+Wed Sep 27 13:23:31.579 UTC
+
+PCC's SR policy database:
+-------------------------
+Symbolic Name: cfg_srte_c_30_ep_10.0.0.14_discr_100
+ LSP[0]:
+  Source 10.0.0.2, Destination 10.0.0.14, Tunnel ID 1, LSP ID 1048
+  State: Admin up, Operation up
+  Setup type: SR
+  Binding SID: 26276

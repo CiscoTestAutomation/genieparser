@@ -1,0 +1,6 @@
+          OSPFv3 10 address-family ipv6 (router-id 8.8.8.8)
+
+
+Neighbor ID     Pri   State           Dead Time   Interface ID    Interface
+
+9.9.9.9           1   DOWN/DROTHER       -        81              Vlan120

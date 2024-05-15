@@ -463,6 +463,7 @@ class TracerouteIpv6(TracerouteIpv6Schema):
 
         # 1 2001:db8::a:1c:e3:3           0 ms   0 ms   0 ms
         # 2 2001:db8:0:7::5               7 ms   3 ms   0 ms
+        # 1 4::1 9 msec *  2 msec
         p2 = re.compile(r'^(?P<hop_id>\d+)\s+(?P<hop_address>\S+)\s+(?P<probe>[\S\ ]+)$')
 
         #initialising index
@@ -480,16 +481,18 @@ class TracerouteIpv6(TracerouteIpv6Schema):
                 continue
             # 1 2001:db8::a:1c:e3:3           0 msec   0 msec   0 msec
             # 2 2001:db8:0:7::5               7 msec   3 msec   0 msec
+            # 1 4::1 9 msec *  2 msec
             m = p2.match(line)
             if m:
                 group = m.groupdict()
                 hop_dict = ret_dict.setdefault('hop',{}).setdefault(int(group['hop_id']),{})
                 hop_dict['hop_add'] = group['hop_address']
                 if (group['probe']).__contains__('msec'):
-                    probe_list = group['probe'].strip().split('msec')
+                    probe_list = group['probe'].strip()
                 else:
-                    probe_list = group['probe'].strip().split('ms')
-                probe_list[:] = [x.strip() for x in probe_list if x]
+                    probe_list = group['probe'].strip()
+                probe_list = re.split('msec|\*|ms', probe_list)
+                probe_list[:] = [x.strip() for x in probe_list if x and not x.isspace()]
                 for probe in probe_list:
                     probe_dict = hop_dict.setdefault('probe',{})
                     probe_dict[index] = int(probe)

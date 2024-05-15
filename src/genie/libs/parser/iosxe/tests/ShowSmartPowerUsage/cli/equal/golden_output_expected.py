@@ -1,0 +1,24 @@
+expected_output = {
+    "switches":{
+        1:{
+            "usage":30.0,
+            "category":"consumer",
+            "caliber":"actual"
+        },
+        2:{
+            "usage":213.0,
+            "category":"consumer",
+            "caliber":"actual"
+        },
+        3:{
+            "usage":213.0,
+            "category":"consumer",
+            "caliber":"actual"
+        },
+        4:{
+            "usage":30.0,
+            "category":"consumer",
+            "caliber":"actual"
+        }
+    }
+}

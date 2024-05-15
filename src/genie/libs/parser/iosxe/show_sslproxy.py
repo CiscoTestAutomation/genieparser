@@ -135,6 +135,13 @@ class ShowSslProxyStatisticsSchema(MetaParser):
                 "max_conc_proxied_connections": int,
                 "max_conc_non_proxied_connections": int,
                 "max_conc_clear_connections": int,
+                Optional("tunneled_proxied_connections"): int,
+                Optional("tunneled_non_proxied_connections"): int,
+                Optional("active_tunneled_proxied_flows"): int,
+                Optional("active_tunneled_non_proxied_flows"): int,
+                Optional("max_conc_tunneled_proxied_flows"): int,
+                Optional("max_conc_tunneled_non_proxied_flows"): int,
+                Optional("ssl_encrypted_marked_non_ssl_flows"): int,
                 "total_closed_connections": int
             },
             "non_proxied_connection_reasons":{
@@ -303,7 +310,8 @@ class ShowSslProxyStatisticsSchema(MetaParser):
                 "flow_selected_ssl_tls_version":{
                     Optional("tls_1.0_flows"): int,
                     Optional("tls_1.1_flows"): int,
-                    Optional("tls_1.2_flows"): int
+                    Optional("tls_1.2_flows"): int,
+                    Optional("tls_1.3_flows"): int
                 },
                 "client_hello_extensions":{
                     Optional("pushdown"): int,
@@ -757,6 +765,13 @@ class ShowSslProxyStatistics(ShowSslProxyStatisticsSchema):
             # Max Conc Proxied Connections       : 0
             # Max Conc Non-proxied Connections   : 0
             # Max Conc Clear Connections         : 0
+            # Tunneled Proxied Connections       : 0
+            # Tunneled Non-proxied Connections   : 0
+            # Active Tunneled Proxied Flows      : 0
+            # Active Tunneled Non-proxied Flows  : 0
+            # Max Conc Tunneled Proxied Flows    : 0
+            # Max Conc Tunneled Non-proxied Flows: 0
+            # SSL Encrypted marked Non SSL Flows : 0
             # Total Closed Connections           : 0
             m27 = p27.match(line)
             if m27:

@@ -1,0 +1,5 @@
+show sd-routing control local-properties wan ipv4
+                               PUBLIC           PUBLIC  PRIVATE          PRIVATE
+INTERFACE                      IPv4             PORT    IPv4             PORT     STATE   
+----------------------------------------------------------------------------------------
+TenGigabitEthernet0/0/4        134.45.1.1       65100   134.45.1.1       65100    up      

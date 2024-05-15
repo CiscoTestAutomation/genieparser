@@ -1,0 +1,110 @@
+Macsec detail info for Port:10
+**********************************************
+Port:10, Subport:0, Tx SC index:0
+**********************************************
+Prev AN: 1, Cur AN: 2
+sci:6c4ef6b782850565
+SA idx: -2130706432, vport idx: 0, rule idx: -1 secy idx: 1, sc idx: 1, mtt_label: 1 rule_info[0]: 0 rule_info[1]: 0
+key_len: 32
+hashkey_len: 16
+bypass: 0
+nextPn: 1
+conf_offset: 0
+encrypt: 1
+vlan: 1
+end_station: 0
+scb: 0
+cipher: GCM_AES_256
+Macsec hash data: Port: 10, Subport: 0, sa_index: -2130706432
+Delay protection: 0
+Install Rx Count 367
+Install Tx Count 367
+Delete Rx Count 364
+         
+Install Rx Fail Count 2
+Install Tx Fail Count 0
+Delete Rx Fail Count 0
+Rx SA Same AN Count 2
+ 
+**********************************************
+Port:10, Subport:0, Rx SC index:0
+**********************************************
+Prev AN: 1, Cur AN: 2
+sci:908855f932010001
+SA idx: -2130706429, vport idx: 0, rule idx: -1 secy_idx: 1, sc_idx: 1, mtt_label: 1 rule_info[0]: 0 rule_info[1]: 0
+key_len: 32
+hashkey_len: 16
+bypass: 0
+nextPn: 0
+conf_offset: 0
+replay_protect: 1
+replay_window_size: 0
+decrypt_frames: 1
+validate_frames: 1
+cipher: GCM_AES_256
+         
+ Warmboot Info
+ 
+DeviceID 0
+ 
+DeviceID 1
+ 
+DeviceID 2
+ 
+DeviceID 3
+ 
+DeviceID 4
+ 
+DeviceID 5
+ 
+DeviceID 6
+ 
+DeviceID 7
+ 
+DeviceID 8
+ 
+DeviceID 9
+ 
+DeviceID 10
+ 
+DeviceID 11
+ 
+DeviceID 12
+ 
+DeviceID 13
+ 
+DeviceID 14
+ 
+DeviceID 15
+ 
+DeviceID 16
+ 
+DeviceID 17
+ 
+DeviceID 18
+ 
+DeviceID 19
+ 
+DeviceID 20
+ 
+DeviceID 21
+          
+DeviceID 22
+ 
+DeviceID 23
+ 
+DeviceID 24
+ 
+DeviceID 25
+ 
+DeviceID 26
+ 
+DeviceID 27
+ 
+DeviceID 28
+ 
+DeviceID 29
+ 
+DeviceID 30
+ 
+DeviceID 31

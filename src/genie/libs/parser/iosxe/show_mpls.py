@@ -41,6 +41,7 @@
         *  show mpls traffic-eng tunnels brief
         *  show mpls traffic-eng autoroute
         *  show mpls traffic-eng topology
+        *  show mpls traffic-eng fast-reroute database detail
 """
 
 import re
@@ -1687,6 +1688,8 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
                    'show mpls forwarding-table interface tunnel {tunnelid}',
                    'show mpls forwarding-table {prefix} {mask} algo {algo}',
                    'show mpls forwarding-table | sect {filter}']
+
+    exclude = ['bytes_label_switched']
 
     def cli(self, vrf="", prefix="",tunnelid="", filter="", mask="", algo="", output=None):
         if output is None:
@@ -4863,3 +4866,233 @@ class ShowMplsTrafficEngTopology(ShowMplsTrafficEngTopologySchema):
                     continue
             
             return ret_dict
+
+
+class ShowMplsTrafficEngFastRerouteDatabaseDetailSchema(MetaParser):
+    """Schema for show mpls traffic-eng fast-reroute database detail"""
+
+    schema = {
+        'frr_db_summary': {
+            'protected_intfs_num': int,
+            'protected_lsps_num': int,
+            'backup_tunnels_num': int,
+            'active_intfs_num': int,
+            'frr_active_tunnels_num': int,
+
+        },
+        Optional('p2p_lsps'): {
+            Any(): {
+                Any(): {
+                    'src_ip': str,
+                    'dst_ip': str,
+                    'state': str,
+                    'in_label': str,
+                    'out_intf': str,
+                    'out_label': str,
+                    'frr_tunnel': str,
+                    'frr_out_label': str,
+                },
+            },
+        },
+        Optional('p2mp_sub_lsps'): {
+            Any(): {
+                Any(): {
+                    'src_ip': str,
+                    'dst_ip': str,
+                    'state': str,
+                    'in_label': str,
+                    'out_intf': str,
+                    'out_label': str,
+                    'frr_tunnel': str,
+                    'frr_out_label': str,
+                },
+            },
+        }
+    }
+
+
+# ===============================================================
+# Parser for 'show mpls traffic-eng fast-reroute database detail'
+# ===============================================================
+class ShowMplsTrafficEngFastRerouteDatabaseDetail \
+            (ShowMplsTrafficEngFastRerouteDatabaseDetailSchema):
+    """Parser for show mpls traffic-eng fast-reroute database detail"""
+
+    cli_command = 'show mpls traffic-eng fast-reroute database detail'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # FRR Database Summary:
+        p0 = re.compile(r'^FRR\s+Database\s+Summary\s*:$')
+
+        # Protected interfaces    : 2
+        p1 = re.compile(r'Protected\s+interfaces\s*:\s*'
+                        r'(?P<protected_intfs_num>\d+)$')
+
+        # Protected LSPs/Sub-LSPs : 2
+        p2 = re.compile(r'Protected\s+LSPs\/Sub\-LSPs\s*:\s*'
+                        r'(?P<protected_lsps_num>\d+)$')
+
+        # Backup tunnels          : 3
+        p3 = re.compile(r'Backup\s+tunnels\s*:\s*'
+                        r'(?P<backup_tunnels_num>\d+)$')
+
+        # Active interfaces       : 0
+        p4 = re.compile(r'Active\s+interfaces\s*:\s*'
+                        r'(?P<active_intfs_num>\d+)$')
+
+        # FRR Active tunnels      : 0
+        p5 = re.compile(r'FRR\s+Active\s+tunnels\s*:\s*'
+                        r'(?P<frr_active_tunnels_num>\d+)$')
+
+        # P2P LSPs:
+        p6 = re.compile(r'^P2P\s+LSPs\s*:$')
+
+        # P2MP Sub-LSPs:
+        p7 = re.compile(r'^P2MP\s+Sub\-LSPs\s*:$')
+
+        # Tun ID: 14, LSP ID: 113, Source: 1.1.1.1
+        p8 = re.compile(r'Tun\s+ID\s*:\s*(?P<tun_id>\d+)\s*,\s*'
+                        r'LSP\s+ID\s*:\s*(?P<lsp_id>\d+)\s*,\s*'
+                        r'Source\s*:\s*(?P<src_ip>.+)$')
+
+        # Destination: 4.4.4.4
+        p9 = re.compile(r'Destination\s*:\s*'
+                        r'(?P<dst_ip>.+)$')
+
+        # State        : ready
+        p10 = re.compile(r'State\s*:\s*'
+                         r'(?P<state>.+)$')
+
+        # InLabel      : 30
+        p11 = re.compile(r'InLabel\s*:\s*'
+                         r'(?P<in_label>.+)$')
+
+        # OutLabel     : Twe0/0/16:19
+        p12 = re.compile(r'OutLabel\s*:\s*'
+                         r'(?P<out_intf>.+)\s*:\s*'
+                         r'(?P<out_label>.+)$')
+
+        # FRR OutLabel : Tu231:19
+        p13 = re.compile(r'FRR\s+OutLabel\s*:\s*'
+                         r'(?P<frr_tunnel>.+)\s*:\s*'
+                         r'(?P<frr_out_label>.+)$')
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # FRR Database Summary:
+            m = p0.match(line)
+            if m:
+                frr_db_summary_dict = ret_dict.setdefault('frr_db_summary', {})
+                continue
+
+            # Protected interfaces    : 2
+            m = p1.match(line)
+            if m:
+                group_dict = m.groupdict()
+                frr_db_summary_dict['protected_intfs_num'] = \
+                    int(group_dict['protected_intfs_num'])
+                continue
+
+            # Protected LSPs/Sub-LSPs : 2
+            m = p2.match(line)
+            if m:
+                group_dict = m.groupdict()
+                frr_db_summary_dict['protected_lsps_num'] = \
+                    int(group_dict['protected_lsps_num'])
+                continue
+
+            # Backup tunnels          : 3
+            m = p3.match(line)
+            if m:
+                group_dict = m.groupdict()
+                frr_db_summary_dict['backup_tunnels_num'] = \
+                    int(group_dict['backup_tunnels_num'])
+                continue
+
+            # Active interfaces       : 0
+            m = p4.match(line)
+            if m:
+                group_dict = m.groupdict()
+                frr_db_summary_dict['active_intfs_num'] = \
+                    int(group_dict['active_intfs_num'])
+                continue
+
+            # FRR Active tunnels      : 0
+            m = p5.match(line)
+            if m:
+                group_dict = m.groupdict()
+                frr_db_summary_dict['frr_active_tunnels_num'] = \
+                    int(group_dict['frr_active_tunnels_num'])
+                continue
+
+            # P2P LSPs:
+            m = p6.match(line)
+            if m:
+                lsps_dict = ret_dict.setdefault('p2p_lsps', {})
+                continue
+
+            # P2MP Sub-LSPs:
+            m = p7.match(line)
+            if m:
+                lsps_dict = ret_dict.setdefault('p2mp_sub_lsps', {})
+                continue
+
+            # Tun ID: 14, LSP ID: 113, Source: 1.1.1.1
+            m = p8.match(line)
+            if m:
+                group_dict = m.groupdict()
+                tunnel_id = Common.convert_intf_name(
+                    f"tu{group_dict['tun_id']}")
+
+                lsp_dict = lsps_dict. \
+                    setdefault(tunnel_id, {}). \
+                    setdefault(f"lsp{group_dict['lsp_id']}", {})
+
+                lsp_dict['src_ip'] = group_dict['src_ip']
+                continue
+
+            # Destination: 4.4.4.4
+            m = p9.match(line)
+            if m:
+                group_dict = m.groupdict()
+                lsp_dict['dst_ip'] = group_dict['dst_ip']
+                continue
+
+            # State        : ready
+            m = p10.match(line)
+            if m:
+                group_dict = m.groupdict()
+                lsp_dict['state'] = group_dict['state']
+                continue
+
+            # InLabel      : 30
+            m = p11.match(line)
+            if m:
+                group_dict = m.groupdict()
+                lsp_dict['in_label'] = group_dict['in_label']
+                continue
+
+            # OutLabel     : Twe0/0/16:19
+            m = p12.match(line)
+            if m:
+                group_dict = m.groupdict()
+                lsp_dict['out_intf'] = \
+                    Common.convert_intf_name(group_dict['out_intf'])
+                lsp_dict['out_label'] = group_dict['out_label']
+                continue
+
+            # FRR OutLabel : Tu231:19
+            m = p13.match(line)
+            if m:
+                group_dict = m.groupdict()
+                lsp_dict['frr_tunnel'] = Common.convert_intf_name(group_dict['frr_tunnel'])
+                lsp_dict['frr_out_label'] = group_dict['frr_out_label']
+                continue
+
+        return ret_dict

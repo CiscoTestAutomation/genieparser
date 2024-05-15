@@ -70,6 +70,8 @@
 * 'show sdwan appqoe dreopt statistics'
 * 'show sdwan appqoe ad-statistics'
 * 'show sdwan appqoe rm-statistics'
+* 'show l2vpn sdwan all'
+* 'show l2vpn sdwan all'
 '''
 
 # Python
@@ -435,6 +437,16 @@ class ShowSdwanAppqoeRmResourcesSchema(MetaParser):
                     'max_sessions': int,
                     'used_sessions': int,
                     'memory_per_session': int
+                    },
+                Optional('dre_resources'): {
+                    Optional('max_sessions'): int,
+                    Optional('used_sessions'): int,
+                    Optional('memory_per_session'): int
+                    },
+                Optional('http_resources'): {
+                    Optional('max_sessions'): int,
+                    Optional('used_sessions'): int,
+                    Optional('memory_per_session'): int
                     }
                 }
             }
@@ -469,6 +481,7 @@ class ShowSdwanAppqoeRmResources(ShowSdwanAppqoeRmResourcesSchema):
         # SSL Resources:
         p5 = re.compile(r'^SSL +Resources:$')
 
+        
         # Max Services Memory (KB)    : 6434914
         # Available System Memory(KB) : 12869828
         # Used Services Memory (KB)   : 0
@@ -479,7 +492,13 @@ class ShowSdwanAppqoeRmResources(ShowSdwanAppqoeRmResourcesSchema):
         # Max Sessions                : 11000
         # Used Sessions               : 0
         # Memory Per Session          : 128
-        p6 = re.compile(r'^(?P<key>[\s\S]+\S) +: +(?P<value>[\s\S]+)$')
+        p6 = re.compile(r'^(?P<key>[\s\S]+\S) +: +(?P<value>[\S]+)$')
+
+        # DRE Resources:
+        p7 = re.compile(r'^DRE +Resources:$')
+
+        # HTTP Resources:
+        p8 = re.compile(r'^HTTP +Resources:$')
 
         ret_dict = {}
 
@@ -521,6 +540,20 @@ class ShowSdwanAppqoeRmResources(ShowSdwanAppqoeRmResourcesSchema):
             if m:
                 ssl_resources_dict = registered_service_resources_dict.setdefault('ssl_resources', {})
                 last_dict_ptr = ssl_resources_dict
+                continue
+
+            # DRE Resources:
+            m = p7.match(line)
+            if m:
+                dre_resources_dict = registered_service_resources_dict.setdefault('dre_resources', {})
+                last_dict_ptr = dre_resources_dict
+                continue
+
+            # HTTP Resources:
+            m = p8.match(line)
+            if m:
+                http_resources_dict = registered_service_resources_dict.setdefault('http_resources', {})
+                last_dict_ptr = http_resources_dict
                 continue
 
             # Max Services Memory (KB)    : 6434914
@@ -2085,7 +2118,7 @@ class ShowSdwanTunnelStatistics(ShowSdwanTunnelStatisticsSchema):
         # tunnel stats ipsec 150.0.5.1 150.0.6.1 12346 12346
         # tunnel stats ipsec 150.0.5.1 150.0.7.1 12346 12346
         p1 = re.compile(
-            r'^tunnel\s+stats\s+ipsec\s+(?P<source>[\S]+)\s+(?P<destination>[\S]+)'
+            r'^tunnel\s+stats\s+(ipsec|gre)\s+(?P<source>[\S]+)\s+(?P<destination>[\S]+)'
             r'\s+(?P<src_port>[\d]+)\s+(?P<dst_port>[\d]+)$')
 
         # fec-rx-data-pkts     0
@@ -5780,7 +5813,7 @@ class ShowSdwanAppqoeDreoptStatusSchema(MetaParser):
         "health_status": str,
         "health_change_reason": str,
         "last_health_change_time": str,
-        "notification_send_time": str,
+        Optional("notification_send_time"): str,
         "dre_cache_status": str,
         "disk_cache_usage": str,
         "disk_latency": str,
@@ -7914,3 +7947,173 @@ class ShowSdwanAppqoeRmStatistics(ShowSdwanAppqoeRmStatisticsSchema):
                 continue
 
         return parsed_dict
+
+# =======================================================================
+# Parser Schema for 'Show L2vpn Sdwan All'
+# =======================================================================
+
+class ShowL2vpnSdwanAllSchema(MetaParser):
+    schema = {
+        "l2vpn_sdwan_instance": {
+            Any(): { #l2vpn sdwan instance
+                "vpn_type": str,
+                Optional("ip_local_learning")    : str,
+                Optional("flooding_suppression") : str,
+                "vc_id": int,
+                "bridge_domain": int,
+                "bridge_status": str,
+                "local_l2vpn_status": str,
+                "local_pseduoports": str,
+                Optional("remote_sites"): {
+                    Any() : { #remote site id
+                        "remote_site" : str,
+                        "l2_routes" : {
+                            Any(): { #index
+                                "system_ip": str,
+                                "status": str,
+                                "up_down_time": str,
+                                "color": str,
+                                "encap": str,
+                                "label": int,
+                                "df": str
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+# =======================================================================
+# Parser for 'Show L2vpn Sdwan All'
+# =======================================================================
+
+class ShowL2vpnSdwanAll(ShowL2vpnSdwanAllSchema):
+
+    """
+    Parser for the output of "show l2vpn sdwan all"
+    """
+
+    cli_command = "show l2vpn sdwan all"
+
+    def cli(self, output=None):
+
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+
+        # L2VPN sdwan Instance : 1001
+        p1 = re.compile(r'^L2VPN\s+sdwan\s+Instance\s+:\s+(?P<l2vpn_sdwan_instance>\d+)$')
+
+        # VPN Type : point-to-point
+        p2 = re.compile(r'^VPN\s+Type\s+:\s+(?P<vpn_type>\S+)$')
+
+        #IP Local-learning    : Disabled
+        p2_1 = re.compile(r'^IP\s+Local-learning\s+:\s+(?P<ip_local_learning>\S+)$')
+
+        #Flooding Suppression : Disabled
+        p2_2 = re.compile(r'^Flooding\s+Suppression\s+:\s+(?P<flooding_suppression>\S+)$')
+
+        #   VC_ID: 1001 Bridge-domain: 1001 UP
+        p3 = re.compile(r'^VC_ID:\s+(?P<vc_id>\d+)\s+Bridge-domain:\s+(?P<bridge_domain>\d+)\s+(?P<bridge_status>\S+)$')
+        
+        #    Local l2vpn status: UP
+        p4 = re.compile(r'^Local\s+l2vpn\s+status:\s+(?P<local_l2vpn_status>\S+)$')
+        
+        #     Local Pseudoports: HundredGigE0/1/4 service instance 1001
+        p5 = re.compile(r'^Local\s+Pseudoports:\s+(?P<local_pseduoports>.*)$')
+        
+        #    Remote Site: 603
+        p6 = re.compile(r'^Remote\s+Site:\s+(?P<remote_site>\d+)$')
+
+        #      6.0.0.3            UP           00:26:35   private1        ipsec    1036   N/A 
+        p7 = re.compile(r'^(?P<system_ip>\d+.\d+.\d+.\d+)\s+(?P<status>\S+)\s+(?P<up_down_time>\S+)\s+(?P<color>\S+)\s+(?P<encap>\S+)\s+(?P<label>\d+)\s+(?P<df>\S+)')
+
+    
+        ret_dict = {}
+        route_index = 1
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # L2VPN sdwan Instance : 1001
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict() 
+                l2vpn_sdwan_instance = int(groups['l2vpn_sdwan_instance'])
+                l2vpn_sdwan_instance_dict = ret_dict.setdefault('l2vpn_sdwan_instance', {}).setdefault(l2vpn_sdwan_instance, {})
+                continue
+
+            # VPN Type : point-to-point
+            m = p2.match(line)
+            if m:
+                groups = m.groupdict()
+                l2vpn_sdwan_instance_dict['vpn_type'] = groups['vpn_type']
+                continue
+
+            #IP Local-learning    : Disabled
+            m = p2_1.match(line)
+            if m:
+                groups = m.groupdict()
+                l2vpn_sdwan_instance_dict['ip_local_learning'] = groups['ip_local_learning']
+                continue
+
+            #Flooding Suppression : Disabled
+            m = p2_2.match(line)
+            if m:
+                groups = m.groupdict()
+                l2vpn_sdwan_instance_dict['flooding_suppression'] = groups['flooding_suppression']
+                continue
+
+            #   VC_ID: 1001 Bridge-domain: 1001 UP
+            m = p3.match(line)
+            if m:
+                groups = m.groupdict()
+                l2vpn_sdwan_instance_dict['vc_id'] = int(groups['vc_id'])
+                l2vpn_sdwan_instance_dict['bridge_domain'] = int(groups['bridge_domain'])
+                l2vpn_sdwan_instance_dict['bridge_status'] = groups['bridge_status']
+                continue
+
+            #    Local l2vpn status: UP
+            m = p4.match(line)
+            if m:
+                groups = m.groupdict()
+                l2vpn_sdwan_instance_dict['local_l2vpn_status'] = groups['local_l2vpn_status']
+                continue
+
+            #     Local Pseudoports: HundredGigE0/1/4 service instance 1001
+            m = p5.match(line)
+            if m:
+                groups = m.groupdict()
+                l2vpn_sdwan_instance_dict['local_pseduoports'] = groups['local_pseduoports']
+                continue
+
+            #    Remote Site: 603
+            m = p6.match(line)
+            if m:
+                groups = m.groupdict()
+                remote_site = groups['remote_site']
+                remote_site_dict = l2vpn_sdwan_instance_dict.setdefault('remote_sites', {}).setdefault(remote_site,{})
+                remote_site_dict['remote_site'] = remote_site
+                route_index = 1
+                continue
+
+            #      6.0.0.3            UP           00:26:35   private1        ipsec    1036   N/A 
+            m = p7.match(line)
+            if m:
+                groups = m.groupdict()
+                l2_route_dict = remote_site_dict.setdefault('l2_routes', {}).setdefault(route_index, {})
+                l2_route_dict['system_ip'] = groups['system_ip']
+                l2_route_dict['status'] = groups['status']
+                l2_route_dict['up_down_time'] = groups['up_down_time']
+                l2_route_dict['color'] = groups['color']
+                l2_route_dict['encap'] = groups['encap']
+                l2_route_dict['label'] = int(groups['label'])
+                l2_route_dict['df'] = groups['df']
+                route_index += 1
+                continue
+
+        return ret_dict
+    
+    
