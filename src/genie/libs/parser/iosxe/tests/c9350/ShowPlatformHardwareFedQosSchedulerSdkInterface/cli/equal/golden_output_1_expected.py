@@ -1,4 +1,4 @@
-expected_output =  {
+expected_output = {
     'interface': {
         'TenGigabitEthernet1/0/25': {
             'cstse_scheduler': {
@@ -404,6 +404,16 @@ expected_output =  {
                                 'type': 'PARENT',
                                 'weight': 0,
                             },
+                            'PIR': {
+                                'burst': 'DEFLT',
+                                'hse_oid': 764,
+                                'hse_type': 'CSTSE',
+                                'hw_id': 48,
+                                'link_point': 15,
+                                'rate': 2000000000,
+                                'type': 'PARENT',
+                                'weight': 255,
+                            },
                         },
                         'child': {
                             'hse_oid': {
@@ -427,6 +437,16 @@ expected_output =  {
                                 'rate': 0,
                                 'type': 'PARENT',
                                 'weight': 0,
+                            },
+                            'PIR': {
+                                'burst': 'DEFLT',
+                                'hse_oid': 764,
+                                'hse_type': 'CSTSE',
+                                'hw_id': 49,
+                                'link_point': 14,
+                                'rate': 2000000000,
+                                'type': 'PARENT',
+                                'weight': 255,
                             },
                         },
                         'child': {
@@ -452,6 +472,16 @@ expected_output =  {
                                 'type': 'PARENT',
                                 'weight': 0,
                             },
+                            'PIR': {
+                                'burst': 'DEFLT',
+                                'hse_oid': 764,
+                                'hse_type': 'CSTSE',
+                                'hw_id': 50,
+                                'link_point': 13,
+                                'rate': 2000000000,
+                                'type': 'PARENT',
+                                'weight': 255,
+                            },
                         },
                         'child': {
                             'hse_oid': {
@@ -475,6 +505,16 @@ expected_output =  {
                                 'rate': 0,
                                 'type': 'PARENT',
                                 'weight': 0,
+                            },
+                            'PIR': {
+                                'burst': 'DEFLT',
+                                'hse_oid': 764,
+                                'hse_type': 'CSTSE',
+                                'hw_id': 51,
+                                'link_point': 12,
+                                'rate': 2000000000,
+                                'type': 'PARENT',
+                                'weight': 255,
                             },
                         },
                         'child': {
@@ -500,6 +540,16 @@ expected_output =  {
                                 'type': 'PARENT',
                                 'weight': 0,
                             },
+                            'PIR': {
+                                'burst': 'DEFLT',
+                                'hse_oid': 764,
+                                'hse_type': 'CSTSE',
+                                'hw_id': 52,
+                                'link_point': 11,
+                                'rate': 2000000000,
+                                'type': 'PARENT',
+                                'weight': 255,
+                            },
                         },
                         'child': {
                             'hse_oid': {
@@ -523,6 +573,16 @@ expected_output =  {
                                 'rate': 0,
                                 'type': 'PARENT',
                                 'weight': 0,
+                            },
+                            'PIR': {
+                                'burst': 'DEFLT',
+                                'hse_oid': 764,
+                                'hse_type': 'CSTSE',
+                                'hw_id': 53,
+                                'link_point': 10,
+                                'rate': 2000000000,
+                                'type': 'PARENT',
+                                'weight': 255,
                             },
                         },
                         'child': {
@@ -548,6 +608,16 @@ expected_output =  {
                                 'type': 'PARENT',
                                 'weight': 0,
                             },
+                            'PIR': {
+                                'burst': 'DEFLT',
+                                'hse_oid': 764,
+                                'hse_type': 'CSTSE',
+                                'hw_id': 54,
+                                'link_point': 9,
+                                'rate': 2000000000,
+                                'type': 'PARENT',
+                                'weight': 255,
+                            },
                         },
                         'child': {
                             'hse_oid': {
@@ -569,6 +639,16 @@ expected_output =  {
                                 'hw_id': 55,
                                 'link_point': 0,
                                 'rate': 2000000000,
+                                'type': 'PARENT',
+                                'weight': 0,
+                            },
+                            'PIR': {
+                                'burst': 'DEFLT',
+                                'hse_oid': 763,
+                                'hse_type': 'CSTSE',
+                                'hw_id': 55,
+                                'link_point': 8,
+                                'rate': 0,
                                 'type': 'PARENT',
                                 'weight': 0,
                             },

@@ -1,0 +1,26 @@
+Showing SDM Template Info
+
+This is the Access template.
+Feature-Name                                        Reserved-Scale
+Unicast MAC addresses                               65536
+  Resource-Programmed: EM
+FIB Host Route                                      65536
+  Resource-Programmed: EM
+OG/SGACL Hosts/Cells                                2048
+  Resource-Programmed: EM
+L3 Multicast entries                                8192 (**)
+L2 Multicast entries                                8192 (**)
+Number of VLANs                                     4094 (**)
+Overflow Unicast MAC addresses                      512 (**)
+Ipv4/Ipv6 shared unicast routes                     98304 (**)
+Overflow shared unicast routes                      196608 (**)
+STP Instances                                       1024 (**)
+Tunnels                                             1024 (**)
+VRF                                                 256 (**)
+Max L3 adjacency                                    65536 (**)
+Max L3 Interface                                    8192 (**)
+Max MPLS TE TUNNEL                                  4096 (**)
+MAX NAT ENTRIES                                     63488
+  Resource-Programmed: EM
+
+(**) - SDM library is referred to only obtain scale

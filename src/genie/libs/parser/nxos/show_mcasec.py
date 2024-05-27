@@ -7,6 +7,11 @@ NXOS parsers for the following show commands:
     * show macsec mka session interface {interface} 
     * show macsec mka session details    
     * show macsec mka statistics
+    * show macsec mka statistics interface {interface}
+    * show macsec policy
+    * show macsec policy {policy}
+    * show macsec secy statistics 
+    * show macsec secy statistics interface {intf}
 '''
 
 # python
@@ -17,7 +22,7 @@ from genie.metaparser.util.schemaengine import Schema, Any, Optional
 
 # import parser utils
 from genie.libs.parser.utils.common import Common
-
+    
 # =========================================
 # Schema for 'show macsec mka summary'
 # =========================================
@@ -1288,4 +1293,1261 @@ class ShowMacSecMkaStats(ShowMacSecMkaStatsSchema):
                 group = m.groupdict()
                 interface_mkpdu_fail_stats['mkpdu_rx_drp_pkt_dstmac_mismatch'] = int(group['mkpdu_rx_drp_pkt_dstmac_mismatch'])
         return macSecMkaStatsDict
+
+# ====================================================
+# Schema for 'show macsec mka statistics interface <>'
+# ====================================================
+class ShowMacSecMkaStatsIntfSchema(MetaParser):
+    """Schema for 
+        show macsec mka statistics interface {interface}
+    """
+
+    schema = {
+        Any(): {
+            "per_ca_mka_stats": {
+                "ca_statistics": {
+                    "pairwise_cak_rekeys": int,
+                },
+                "sa_statistics": {
+                    "saks_generated": int,
+                    "saks_rekeyed": int,
+                    "saks_received": int,
+                    "sak_response_received": int,
+                },
+                "mkpdu_statistics": {
+                    "mkpdu_valid_rx": int,
+                    "mkpdu_rx_distributed_sak": int,
+                    "mkpdus_tx": int,
+                    "mkpdu_tx_distributed_sak": int,
+               },
+            },
+            "mka_stats": {
+                "ca_statistics": {
+                    "pairwise_cak_rekeys": int,
+                 },
+                "sa_statistics": {
+                    "saks_generated": int,
+                    "saks_rekeyed": int,
+                    "saks_received": int,
+                    "sak_response_received": int,
+                },
+                "mkpdu_statistics": {
+                    "mkpdus_tx": int,
+                    "mkpdu_rx_distributed_sak": int,
+                    "mkpdu_tx_distributed_sak": int,
+                    "mkpdu_valid_rx": int,
+                },
+               "mka_idb_stat": {
+                    "mkpdu_tx_success": int,
+                    "mkpdu_tx_fail": int,
+                    "mkpdu_tx_build_fail": int,
+                    "mkpdu_no_tx_on_intf_down": int,
+                    "mkpdu_no_rx_on_intf_down": int,
+                    "mkpdu_rx_ca_not_found": int,
+                    "mkpdu_rx_error": int,
+                    "mkpdu_rx_success": int,
+                },
+                "mkpdu_failures": {
+                    "mkpdu_rx_validation": int,
+                    "mkpdu_rx_bad_peer_mn": int,
+                    "mkpdu_rx_no_recent_peerlist_mn": int,
+                    "mkpdu_rxdrop_sakuse_kn_mismatch": int,
+                    "mkpdu_rxdrop_sakuse_rx_notset": int,
+                    "mkpdu_rxdrop_sakuse_key_mi_mismatch": int,
+                    "mkpdu_rxdrop_sakuse_an_not_inuse": int,
+                    "mkpdu_rxdrop_sakuse_ks_rxtx_notset": int,
+                    "mkpdu_rx_drp_pkt_eth_mismatch": int,
+                    "mkpdu_rx_drp_pkt_dest_mac_mismatch": int,
+                },
+                "sak_failures": {
+                    "sak_gen": int,
+                    "hash_key_gen": int,
+                    "sack_ecrypt_wrap": int,
+                    "sack_decrypt_unwrap": int,
+                },
+                "ca_failures": {
+                    "ick_derivation": int,
+                    "kek_derivation": int,
+                    "invalid_peer_macsec_capab": int,
+                },
+                "macsec_failures": {
+                    "rx_sa_install": int,
+                    "tx_sa_install": int,
+                },
+            },
+        },
+        Optional('macsec_shutdown'): bool
+    }
+
+# ====================================================
+# Parser for 'show macsec mka statistics interface <>'
+# ====================================================
+
+class ShowMacSecMkaStatsIntf(ShowMacSecMkaStatsIntfSchema):
+    """Parser for 
+        show  macsec mka statistics interface {interface}
+    """
+    cli_command = ['show macsec mka statistics interface {interface}']
+
+    def cli(self, interface='', output=None):
+        
+        if output is None:
+            cmd = self.cli_command[0].format(interface=interface)
+            output = self.device.execute(cmd)
+    
+        # switch# show macsec mka statistics interface Eth1/1/1
+        # -----------------------------------
+        # Macsec is shutdown
+        # -----------------------------------
+        # switch#
+        p0 = re.compile(r'^Macsec is shutdown')
+
+        # Per-CA MKA Statistics for Session on interface (Ethernet1/1/1) with CKN 10100000
+        p1  = re.compile(r'^Per-CA MKA Statistics for Session on interface \((?P<intf>[Ethernet0-9/]+).*$')
+
+        #MKA Statistics for Session on interface (Ethernet1/25)
+        p2 = re.compile(r'^MKA Statistics for Session on interface \([Ethernet0-9/]+\)$')
+        #########
+        # CA Statistics
+        p3 = re.compile(r'^CA +Statistics$')
+
+        # Pairwise CAK Rekeys........ 0
+        p4 = re.compile(r'^Pairwise +CAK +Rekeys\S+\s+(?P<pairwise_cak_rekeys>\S+)$')
+
+        #########
+        # SA Statistics
+        p5 = re.compile(r'^SA +Statistics$')
+
+        #   SAKs Generated............. 85
+        p6 = re.compile(r'^SAKs +Generated\S+\s+(?P<saks_generated>\S+)$')
+
+        #   SAKs Rekeyed............... 0
+        p7 = re.compile(r'^SAKs +Rekeyed\S+\s+(?P<saks_rekeyed>\S+)$')
+
+        #   SAKs Received.............. 0
+        p8 = re.compile(r'^SAKs +Received\S+\s+(?P<saks_received>\S+)$')
+
+        #  SAK Responses Received..... 51
+        p9 = re.compile(r'^SAK +Responses +Received\S+\s+(?P<sak_response_received>\S+)$')
+
+        #########
+        # MKPDU Statistics
+        p10 = re.compile(r'^MKPDU +Statistics$')
+
+        #   MKPDUs Validated & Rx...... 8748688
+        p11 = re.compile(r'^MKPDUs +Validated +& +Rx\S+\s+(?P<mkpdu_valid_rx>\S+)$')
+
+        #   MKPDUs Transmitted......... 8749133
+        p12 = re.compile(r'^MKPDUs +Transmitted\S+\s+(?P<mkpdus_tx>\S+)$')
+
+        #      "Distributed SAK"..... 111
+        p13 = re.compile(r'^\"Distributed +SAK\"\S+\s+(?P<mkpdu_distributed_sak>\S+)$')
+
+
+        #########
+        # MKA IDB Statistics
+        p15 = re.compile(r'^MKA +IDB +Statistics$')
+
+        #MKPDUs Tx Success.......... 171562
+        p16 = re.compile(r'^MKPDUs +Tx +Success\S+\s+(?P<mkpdu_tx_success>\S+)$')
+
+        # MKPDUs Tx Fail............. 0
+        p17 = re.compile(r'^MKPDUs +Tx +Fail\S+\s+(?P<mkpdu_tx_fail>\S+)$')
+
+        #MKPDUS Tx Pkt build fail... 0
+        p18 = re.compile(r'^MKPDUS +Tx +Pkt +build +fail\S+\s+(?P<mkpdu_tx_build_fail>\S+)$')
+
+        #MKPDUS No Tx on intf down.. 0
+        p19 = re.compile(r'^MKPDUS +No +Tx +on +intf +down\S+\s+(?P<mkpdu_no_tx_on_intf_down>\S+)$')
+
+        #MKPDUS No Rx on intf down.. 0
+        p20 = re.compile(r'^MKPDUS +No +Rx +on +intf +down\S+\s+(?P<mkpdu_no_rx_on_intf_down>\S+)$')
+
+        #MKPDUs Rx CA Not found..... 1
+        p21 = re.compile(r'^MKPDUs +Rx +CA +Not +found\S+\s+(?P<mkpdu_rx_ca_not_found>\S+)$')
+
+        #MKPDUs Rx Error............ 0
+        p22 = re.compile(r'^MKPDUs +Rx +Error\S+\s+(?P<mkpdu_rx_error>\S+)$')
+
+        #MKPDUs Rx Success.......... 171556
+        p23 = re.compile(r'^MKPDUs +Rx +Success\S+\s+(?P<mkpdu_rx_success>\S+)$')
+
+        ##########
+        # MKPDU Failures
+        p24 = re.compile(r'^MKPDU +Failures$')
+
+        #MKPDU Rx Validation.............. 202
+        p25 = re.compile(r'^MKPDU +Rx +Validation\s+\S+\s+(?P<mkpdu_rx_validation>\S+)$')
+
+        #MKPDU Rx Bad Peer MN............. 0
+        p26 = re.compile(r'^MKPDU +Rx +Bad +Peer +MN\S+\s+(?P<mkpdu_rx_bad_peer_mn>\S+)$')
+
+        #MKPDU Rx Non-recent Peerlist MN.. 0
+        p27 = re.compile(r'^MKPDU +Rx +Non-recent +Peerlist +MN\S+\s+(?P<mkpdu_rx_no_recent_peerlist_mn>\S+)$')
+
+        #MKPDU Rx Drop SAKUSE, KN mismatch...... 0
+        p28 = re.compile(r'^MKPDU +Rx +Drop +SAKUSE, +KN +mismatch\S+\s+(?P<mkpdu_rxdrop_sakuse_kn_mismatch>\S+)$')
+
+        #MKPDU Rx Drop SAKUSE, Rx Not Set....... 0
+        p29 = re.compile(r'^MKPDU +Rx +Drop +SAKUSE, +Rx +Not +Set\S+\s+(?P<mkpdu_rxdrop_sakuse_rx_notset>\S+)$')
+
+        #MKPDU Rx Drop SAKUSE, Key MI mismatch.. 0
+        p30 = re.compile(
+            r'^MKPDU +Rx +Drop +SAKUSE, +Key +MI +mismatch\S+\s+(?P<mkpdu_rxdrop_sakuse_key_mi_mismatch>\S+)$')
+
+        #MKPDU Rx Drop SAKUSE, AN Not in Use.... 0
+        p31 = re.compile(r'^MKPDU +Rx +Drop +SAKUSE, +AN +Not +in +Use\S+\s+(?P<mkpdu_rxdrop_sakuse_an_not_inuse>\S+)$')
+
+        #MKPDU Rx Drop SAKUSE, KS Rx/Tx Not Set. 0
+        p32 = re.compile(
+        r'^MKPDU +Rx +Drop +SAKUSE, +KS +Rx/Tx +Not +Set\S+\s+(?P<mkpdu_rxdrop_sakuse_ks_rxtx_notset>\S+)$')
+
+        #MKPDU Rx Drop Packet, Ethertype Mismatch. 0
+        p33 = re.compile(r'^MKPDU +Rx +Drop +Packet, +Ethertype +Mismatch\S+\s+(?P<mkpdu_rx_drp_pkt_eth_mismatch>\S+)$')
+
+        #MKPDU Rx Drop Packet, DestMAC Mismatch... 0
+        p34 = re.compile(r'^MKPDU +Rx +Drop +Packet, +DestMAC +Mismatch\S+\s+(?P<mkpdu_rx_drp_pkt_dest_mac_mismatch>\S+)$')
+
+
+        ################
+        # SAK Failures
+        p36 = re.compile(r'^SAK +Failures$')
+
+        # SAK Generation................... 0
+        p37 = re.compile(r'^SAK +Generation\S+\s+(?P<sak_gen>\S+)$')
+
+        # Hash Key Generation.............. 0
+        p38 = re.compile(r'^Hash +Key +Generation\S+\s+(?P<hash_key_gen>\S+)$')
+
+        # SAK Encryption/Wrap.............. 0
+        p39 = re.compile(r'^SAK +Encryption/Wrap\S+\s+(?P<sack_ecrypt_wrap>\S+)$')
+
+        # SAK Decryption/Unwrap............ 0
+        p40 = re.compile(r'^SAK +Decryption/Unwrap\S+\s+(?P<sack_decrypt_unwrap>\S+)$')
+
+
+        ################
+        # CA Failures
+        p41 = re.compile(r'^CA +Failures$')
+
+        #   ICK Derivation................... 0
+        p42 = re.compile(r'^ICK +Derivation\S+\s+(?P<ick_derivation>\S+)$')
+
+        #   KEK Derivation................... 0
+        p43 = re.compile(r'^KEK +Derivation\S+\s+(?P<kek_derivation>\S+)$')
+
+        #   Invalid Peer MACsec Capability... 0
+        p44 = re.compile(r'^Invalid +Peer +MACsec +Capability\S+\s+(?P<invalid_peer_macsec_capab>\S+)$')
+
+        ###############
+        # MACsec Failures
+        p45 = re.compile(r'^MACsec +Failures$')
+
+        #    Rx SA Installation............... 0
+        p46 = re.compile(r'^Rx +SA +Installation\S+\s+(?P<rx_sa_install>\S+)$')
+
+        # Tx SA Installation............... 0
+        p47 = re.compile(r'^Tx +SA +Installation\S+\s+(?P<tx_sa_install>\S+)$')
+
+        macsec_mka_stats_dict = {}
+        distributed_rx = False  # Flag to control "Distributed SAK" data is for rx/tx direction
+        
+        for line in output.splitlines():
+            line = line.strip()
+            # -----------------------------------
+            # Macsec is shutdown
+            # -----------------------------------
+            m = p0.match(line)
+            if m:
+                macsec_mka_stats_dict['macsec_shutdown'] = True
+                return macsec_mka_stats_dict
+            
+            # Per-CA MKA Statistics for Session on interface (Ethernet1/1/1) with CKN 10100000  
+            m = p1.match(line)
+            if m:
+                intf_dict = macsec_mka_stats_dict.setdefault(m.group('intf'), {}) 
+                target_dict = intf_dict.setdefault('per_ca_mka_stats', {})
+                
+                continue 
+            
+            #MKA Statistics for Session on interface (Ethernet1/25)
+            m = p2.match(line)
+            if m:
+                target_dict = intf_dict.setdefault('mka_stats', {})
+                
+                continue 
+            
+            # CA Statistics
+            m = p3.match(line)
+            if m:
+                target_ca_dict = target_dict.setdefault('ca_statistics', {})
+                continue
+            
+            # Pairwise CAK Rekeys........ 0
+            m = p4.match(line) 
+            if m:
+                target_ca_dict.update({'pairwise_cak_rekeys' : int(m.group('pairwise_cak_rekeys'))})
+                continue 
+            
+            # SA Statistics
+            m = p5.match(line)
+            if m:
+                target_sa_dict = target_dict.setdefault('sa_statistics', {})
+                continue 
+            
+            #   SAKs Generated............. 85
+            m = p6.match(line)
+            if m:
+                target_sa_dict.update({'saks_generated': int(m.group('saks_generated'))} )
+                continue 
+            
+            #   SAKs Rekeyed............... 0
+            m = p7.match(line)
+            if m:
+                target_sa_dict.update({'saks_rekeyed': int(m.group('saks_rekeyed'))} )
+                continue 
+            
+            #   SAKs Received.............. 0
+            m = p8.match(line)
+            if m:
+                target_sa_dict.update({'saks_received': int(m.group('saks_received'))} )
+                continue 
+            
+            #  SAK Responses Received..... 51
+            m = p9.match(line)
+            if m:
+                target_sa_dict.update({'sak_response_received': int(m.group('sak_response_received'))} )
+                continue 
+            
+            # MKPDU Statistics
+            m = p10.match(line)
+            if m:
+                target_mkpdu_dict = target_dict.setdefault('mkpdu_statistics', {})
+                continue 
+            
+            #   MKPDUs Validated & Rx...... 8748688
+            m = p11.match(line)
+            if m:
+                distributed_rx = True
+                target_mkpdu_dict.update({'mkpdu_valid_rx': int(m.group('mkpdu_valid_rx'))} )
+                continue 
+            
+            #   MKPDUs Transmitted......... 8749133
+            m = p12.match(line)
+            if m:
+                distributed_rx = False
+                target_mkpdu_dict.update({'mkpdus_tx': int(m.group('mkpdus_tx'))} )
+                continue 
+            
+            #      "Distributed SAK"..... 111
+            m = p13.match(line)
+            if m:
+                if distributed_rx:
+                    target_mkpdu_dict.update({'mkpdu_rx_distributed_sak' : int(m.group('mkpdu_distributed_sak'))})
+                else: 
+                    target_mkpdu_dict.update({'mkpdu_tx_distributed_sak' : int(m.group('mkpdu_distributed_sak'))})
+                continue 
+            
+            # MKA IDB Statistics
+            m = p15.match(line)
+            if m:
+                mka_idb_stats = target_dict.setdefault('mka_idb_stat', {})
+                continue 
+            
+            #MKPDUs Tx Success.......... 171562
+            m = p16.match(line) 
+            if m:
+                mka_idb_stats['mkpdu_tx_success'] = int(m.group('mkpdu_tx_success'))
+                continue 
+            
+            # MKPDUs Tx Fail............. 0
+            m = p17.match(line) 
+            if m:
+                mka_idb_stats['mkpdu_tx_fail'] = int(m.group('mkpdu_tx_fail') )
+                continue 
+            
+            #MKPDUS Tx Pkt build fail... 0
+            m = p18.match(line) 
+            if m:
+                mka_idb_stats['mkpdu_tx_build_fail'] =int(m.group('mkpdu_tx_build_fail'))
+                continue 
+            
+            #MKPDUS No Tx on intf down.. 0
+            m = p19.match(line) 
+            if m:
+                mka_idb_stats['mkpdu_no_tx_on_intf_down'] = int(m.group('mkpdu_no_tx_on_intf_down'))
+                continue 
+            
+            #MKPDUS No Rx on intf down.. 0
+            m = p20.match(line) 
+            if m:
+                mka_idb_stats['mkpdu_no_rx_on_intf_down'] = int(m.group('mkpdu_no_rx_on_intf_down'))
+                continue 
+            
+            #MKPDUs Rx CA Not found..... 1
+            m = p21.match(line) 
+            if m:
+                mka_idb_stats['mkpdu_rx_ca_not_found'] = int(m.group('mkpdu_rx_ca_not_found'))
+                continue 
+            
+            #MKPDUs Rx Error............ 0
+            m = p22.match(line) 
+            if m:
+                mka_idb_stats['mkpdu_rx_error'] =int(m.group('mkpdu_rx_error'))
+                continue 
+            
+            #MKPDUs Rx Success.......... 171556
+            m = p23.match(line) 
+            if m:
+                mka_idb_stats['mkpdu_rx_success'] = int(m.group('mkpdu_rx_success'))
+                continue 
+            
+            # MKPDU Failures
+            m = p24.match(line)
+            if m:
+                mka_stats_mkpdu_failures = target_dict.setdefault('mkpdu_failures', {}) 
+                continue 
+            
+            #MKPDU Rx Validation.............. 202
+            m = p25.match(line) 
+            if m:
+                mka_stats_mkpdu_failures['mkpdu_rx_validation'] = int(m.group('mkpdu_rx_validation'))
+                continue  
+            
+            #MKPDU Rx Bad Peer MN............. 0
+            m = p26.match(line) 
+            if m:
+                mka_stats_mkpdu_failures['mkpdu_rx_bad_peer_mn'] = int(m.group('mkpdu_rx_bad_peer_mn'))
+                continue 
+            
+            #MKPDU Rx Non-recent Peerlist MN.. 0
+            m = p27.match(line) 
+            if m:
+                mka_stats_mkpdu_failures['mkpdu_rx_no_recent_peerlist_mn'] = int(m.group('mkpdu_rx_no_recent_peerlist_mn'))
+                continue 
+            
+            #MKPDU Rx Drop SAKUSE, KN mismatch...... 0
+            m = p28.match(line) 
+            if m:
+                mka_stats_mkpdu_failures['mkpdu_rxdrop_sakuse_kn_mismatch'] = int(m.group('mkpdu_rxdrop_sakuse_kn_mismatch')) 
+                continue 
+            
+            #MKPDU Rx Drop SAKUSE, Rx Not Set....... 0
+            m = p29.match(line) 
+            if m:
+                mka_stats_mkpdu_failures['mkpdu_rxdrop_sakuse_rx_notset'] = int(m.group('mkpdu_rxdrop_sakuse_rx_notset'))
+                continue 
+            
+            #MKPDU Rx Drop SAKUSE, Key MI mismatch.. 0
+            m = p30.match(line) 
+            if m:
+                mka_stats_mkpdu_failures['mkpdu_rxdrop_sakuse_key_mi_mismatch'] = int(m.group('mkpdu_rxdrop_sakuse_key_mi_mismatch'))
+                continue 
+            
+            #MKPDU Rx Drop SAKUSE, AN Not in Use.... 0
+            m = p31.match(line) 
+            if m:
+                mka_stats_mkpdu_failures['mkpdu_rxdrop_sakuse_an_not_inuse'] = int(m.group('mkpdu_rxdrop_sakuse_an_not_inuse'))
+                continue 
+            
+            #MKPDU Rx Drop SAKUSE, KS Rx/Tx Not Set. 0
+            m = p32.match(line) 
+            if m:
+                mka_stats_mkpdu_failures['mkpdu_rxdrop_sakuse_ks_rxtx_notset'] = int(m.group('mkpdu_rxdrop_sakuse_ks_rxtx_notset'))
+                continue 
+            
+            #MKPDU Rx Drop Packet, Ethertype Mismatch. 0
+            m = p33.match(line) 
+            if m:
+                mka_stats_mkpdu_failures['mkpdu_rx_drp_pkt_eth_mismatch'] = int(m.group('mkpdu_rx_drp_pkt_eth_mismatch'))
+                continue 
+            
+            #MKPDU Rx Drop Packet, DestMAC Mismatch... 0
+            m = p34.match(line) 
+            if m:
+                mka_stats_mkpdu_failures['mkpdu_rx_drp_pkt_dest_mac_mismatch'] = int(m.group('mkpdu_rx_drp_pkt_dest_mac_mismatch'))
+                continue 
+            
+            # SAK Failures
+            m = p36.match(line)
+            if m:
+                mka_stats_sak_failures = target_dict.setdefault('sak_failures', {}) 
+                continue 
+            
+            # SAK Generation................... 0
+            m = p37.match(line) 
+            if m:
+                mka_stats_sak_failures['sak_gen'] = int(m.group('sak_gen'))
+                continue 
+            
+            # Hash Key Generation.............. 0
+            m = p38.match(line) 
+            if m:
+                mka_stats_sak_failures['hash_key_gen'] = int(m.group('hash_key_gen'))
+                continue 
+            
+            # SAK Encryption/Wrap.............. 0
+            m = p39.match(line) 
+            if m:
+                mka_stats_sak_failures['sack_ecrypt_wrap'] = int(m.group('sack_ecrypt_wrap'))
+                continue 
+            
+            # SAK Decryption/Unwrap............ 0
+            m = p40.match(line) 
+            if m:
+                mka_stats_sak_failures['sack_decrypt_unwrap'] = int(m.group('sack_decrypt_unwrap'))
+                continue 
+            
+            # CA Failures
+            m = p41.match(line)
+            if m:
+                mka_stats_ca_failures = target_dict.setdefault('ca_failures', {}) 
+                continue 
+            
+            #   ICK Derivation................... 0
+            m = p42.match(line)
+            if m:
+                mka_stats_ca_failures['ick_derivation'] = int(m.group('ick_derivation'))
+                continue 
+            
+            #   KEK Derivation................... 0
+            m = p43.match(line)
+            if m:
+                mka_stats_ca_failures['kek_derivation'] = int(m.group('kek_derivation'))
+                continue 
+            
+            #   Invalid Peer MACsec Capability... 0
+            m = p44.match(line)
+            if m:
+                mka_stats_ca_failures['invalid_peer_macsec_capab'] = int(m.group('invalid_peer_macsec_capab'))
+                continue 
+            
+            # MACsec Failures
+            m = p45.match(line)
+            if m:
+                mka_stats_macsec_failures = target_dict.setdefault('macsec_failures', {}) 
+                continue 
+            
+            #    Rx SA Installation............... 0
+            m = p46.match(line) 
+            if m:
+                mka_stats_macsec_failures['rx_sa_install'] = int(m.group('rx_sa_install'))
+                continue 
+            
+            # Tx SA Installation............... 0
+            m = p47.match(line) 
+            if m:
+                mka_stats_macsec_failures['tx_sa_install'] = int(m.group('tx_sa_install'))
+                continue 
+        return macsec_mka_stats_dict
+
+# ===========================
+# Schema for 'ShowMacsecPolicy'
+# ===========================
+class ShowMacSecPolicySchema(MetaParser):
+    """Schema for
+        show macsec policy
+        show macsec policy {policy}
+    """
+    schema = {
+        'macsec_policy':{
+            Any(): {
+                "cipher_suite": str,
+                "priority": int,
+                "window": int,
+                "offset": int,
+                "security": str,
+                "sak_rekey_time": str,
+                Optional("icv_indicator"): str,
+                Optional("include_sci"): str,
+                Optional("enforce_peer_cipher_suite"): str, 
+                Optional('ppk_crypto_policy_name'): str
+                }
+            }
+        }
+
+# ===========================
+# Parser for 'ShowMacsecPolicy'
+# ===========================
+
+class ShowMacSecPolicy(ShowMacSecPolicySchema):
+    """
+    parser :
+        show macsec policy
+        show macsec policy {policy}
+    """
+    cli_command = ["show macsec policy", "show macsec policy {policy_name}"]
+    def cli(self, policy_name = None, output=None):
+        if output is None: 
+            if policy_name:
+                cmd = self.cli_command[1].format(policy_name=policy_name)
+            else:
+                cmd = self.cli_command[0]
+            output = self.device.execute(cmd)
+        
+        # MACSec Policy                    Cipher           Pri  Window       Offset   Security       SAK Rekey time ICV Indicator Include-SCI
+        # -------------------------------- ---------------- ---- ------------ -------- -------------- -------------- ------------- -------------
+        # MP1                              Enforce-Peer     32   100000       30       must-secure    70             TRUE           FALSE
+        # Test-MP1                         Enforce-Peer     16   148809600    0        should-secure  pn-rollover    FALSE          TRUE
+        p1 = re.compile(r'^(?P<policy_name>\S+)\s+(?P<cipher_suite>\S+)\s+(?P<priority>\d+)\s+(?P<window>\d+)\s+(?P<offset>\d+)\s+(?P<security>\S+)\s+(?P<sak_rekey_time>\S+)\s+(?P<icv_indicator>\S+)\s*(?P<include_sci>\S+)?$')
+        
+        # MACSec Policy                    PPK Crypto-Policy-Name
+        # -------------------------------- --------------------------------
+        #     OR 
+        # MACSec Policy                    Cipher-Suite Enforce-Peer
+        # -------------------------------- -----------------------------------------------------
+        p2 = re.compile(r'^(?P<policy_header>\S+ \S+)\s+(?P<ppk_or_cipher_header>PPK Crypto-QKD-Profile Name|Cipher-Suite Enforce-Peer)$')
+        
+        # system-default-macsec-policy     test-ppk 
+        # p1                               test-ppk-p1
+        #           OR 
+        # MP1                              GCM-AES-128
+        # Test-MP1                         GCM-AES-256 GCM-AES-XPN-256 GCM-AES-XPN-128 GCM-AES-128
+        p3 = re.compile(r'^(?P<policy_name>\S+)\s+(?P<ppk_or_cipher_policy>[A-Za-z0-9_\- ]+)$')
+        
+        #Flag to check header is PPK Crypto-Policy or Cipher-Suite Enforce-Peer
+        cipher_ppk_header = None 
+        macsec_policy_dict = {} 
+        
+        for line in output.splitlines():
+            line = line.strip()
+            if '-----' in line: 
+                continue 
+            
+            # MP1                              Enforce-Peer     32   100000       30       must-secure    70             TRUE           FALSE
+            m = p1.match(line)
+            if m:
+                policy_dict = macsec_policy_dict.setdefault("macsec_policy", {})
+                group = m.groupdict()
+                ret_dict = policy_dict.setdefault(group["policy_name"],{})
+                ret_dict.update({
+                    "cipher_suite": group["cipher_suite"],
+                    "priority": int(group["priority"]),
+                    "window": int(group["window"]),
+                    "offset": int(group["offset"]),
+                    "security": group["security"],
+                    "sak_rekey_time": group["sak_rekey_time"],
+                    "icv_indicator": group["icv_indicator"]
+                })
+                #optional incluce_sci
+                if 'include_sci' in group:
+                    ret_dict["include_sci"] = group["include_sci"]
+                continue
+            
+            # MACSec Policy                    PPK Crypto-Policy-Name
+            # MACSec Policy                    Cipher-Suite Enforce-Peer
+            m = p2.match(line) 
+            if m:
+                cipher_ppk_header = m.group('ppk_or_cipher_header')
+                continue
+            
+            # MP1                              GCM-AES-128
+            # Test-MP1                         GCM-AES-256 GCM-AES-XPN-256 GCM-AES-XPN-128 GCM-AES-128
+            m = p3.match(line) 
+        
+            if cipher_ppk_header:
+                m = p3.match(line)
+                if m:
+                    policy = m.group('policy_name')
+                    key = 'enforce_peer_cipher_suite' if 'Cipher-Suite Enforce-Peer' in cipher_ppk_header else  'ppk_crypto_policy_name'
+                    macsec_policy_dict["macsec_policy"].setdefault(policy, {})
+                    macsec_policy_dict["macsec_policy"][policy][key] = m.group('ppk_or_cipher_policy')
+        return macsec_policy_dict
+    
+
+
+# ===========================
+# Schema for 'show macsec secy statistics'
+# ===========================
+class ShowMacSecSecyStatisticsSchema(MetaParser):
+    """Schema for 
+        * show macsec secy statistics 
+        * show macsec secy statistics interface {intf}
+    
+    """
+
+    schema = {
+        Any(): {
+            "interface_rx_statistics": {
+                "unicast_uncontrolled_pkts": str,
+                "multicast_uncontrolled_pkts": str,
+                "broadcast_uncontrolled_pkts": str,
+                "uncontrolled_pkts_rx_drop": str,
+                "uncontrolled_pkts_rx_error": str,
+                "unicast_controlled_pkts": str,
+                "multicast_controlled_pkts": str,
+                "broadcast_controlled_pkts": str,
+                "controlled_pkts": str,
+                "controlled_pkts_rx_drop": str,
+                "controlled_pkts_rx_error": str,
+                "in_octets_uncontrolled": str,
+                "in_octets_controlled": str,
+                "input_rate_for_uncontrolled_pkts_pps": str,
+                "input_rate_for_uncontrolled_pkts_bps": str,
+                "input_rate_for_controlled_pkts_pps": str,
+                "input_rate_for_controlled_pkts_bps": str,
+            },
+            "interface_tx_statistics": {
+                "unicast_uncontrolled_pkts": str,
+                "multicast_uncontrolled_pkts": str,
+                "broadcast_uncontrolled_pkts": str,
+                "uncontrolled_pkts_rx_drop": str,
+                "uncontrolled_pkts_rx_error": str,
+                "unicast_controlled_pkts": str,
+                "multicast_controlled_pkts": str,
+                "broadcast_controlled_pkts": str,
+                "controlled_pkts": str,
+                "controlled_pkts_rx_drop": str,
+                "controlled_pkts_rx_error": str,
+                "out_octets_uncontrolled": str,
+                "out_octets_controlled": str,
+                "out_octets_common": str,
+                "output_rate_uncontrolled_pkts_pps": str,
+                "output_rate_uncontrolled_pkts_bps": str,
+                "output_rate_controlled_pkts_pps": str,
+                "output_rate_controlled_pkts_bps": str,
+            },
+            "secy_rx_statistics": {
+                "transform_error_pkts": str,
+                "control_pkts": str,
+                "untagged_pkts": str,
+                "no_tag_pkts": str,
+                "bad_tag_pkts": str,
+                "no_sci_pkts": str,
+                "unknown_sci_pkts": str,
+                "tagged_control_pkts": str,
+            },
+            "secy_tx_statistics": {
+                "transform_error_pkts": str,
+                "control_pkts": str,
+                "untagged_pkts": str,
+            },
+            Optional("sak_rx_statistics"): {
+               "an_value" : int,
+                "unchecked_pkts": str,
+                "delayed_pkts": str,
+                "late_pkts": str,
+                "ok_pkts": str,
+                "invalid_pkts": str,
+                "not_valid_pkts": str,
+                "not_using_sa_pkts": str,
+                "unused_sa_pkts": str,
+                "decrypted_in_octets": str,
+                "validated_in_octets": str,
+            },
+            Optional("sak_tx_statistics"): {
+                "an_value" : int,
+                "encrypted_protected_pkts": str,
+                "too_long_pkts": str,
+                "sa_not_in_use_pkts": str,
+               "encrypted_protected_out_octets": str,
+            },
+        },
+        Optional('macsec_shutdown'): bool
+    }
+# ======================================== #
+# Parser for 'show macsec secy statistics' #
+# ======================================== #
+
+class ShowMacSecSecyStatistics(ShowMacSecSecyStatisticsSchema):
+    """
+        parser for
+        * show macsec secy statistics 
+        * show macsec secy statistics interface {intf}
+    """
+    cli_command = ["show macsec secy statistics", "show macsec secy statistics interface {interface}"]
+    def cli(self, interface = None, output=None):
+        if output is None: 
+            if interface:
+                cmd = self.cli_command[1].format(interface=interface)
+            else :
+                cmd = self.cli_command[0]
+            output = self.device.execute(cmd)
+        
+        # -----------------------------------
+        # Macsec is shutdown
+        # -----------------------------------
+        p0 = re.compile(r'^Macsec is shutdown$')
+        #pattern to match first line of output
+        #Interface Ethernet1/1 MACSEC SecY Statistics:
+        p1 = re.compile(r'^Interface\s+(?P<interface>\S+)\s+MACSEC\s+SecY\s+Statistics:$')
+        #Interface Rx Statistics:
+        p2 = re.compile(r'^(?P<interface_rx_statistics>Interface Rx Statistics):$')
+        #Unicast Uncontrolled Pkts: 478920
+        p3 = re.compile(r'^Unicast Uncontrolled Pkts:\s*(?P<unicast_uncontrolled_pkts>[0-9NA/]+).*$')
+        #Multicast Uncontrolled Pkts: 187186
+        p4 = re.compile(r'^Multicast Uncontrolled Pkts:\s*(?P<multicast_uncontrolled_pkts>[0-9NA/]+).*$')
+        #Broadcast Uncontrolled Pkts: 0
+        p5 = re.compile(r'^Broadcast Uncontrolled Pkts:\s*(?P<broadcast_uncontrolled_pkts>[0-9NA/]+).*$')
+        #Uncontrolled Pkts - Rx Drop: 0
+        p6 = re.compile(r'^Uncontrolled Pkts - Rx Drop:\s*(?P<uncontrolled_pkts_rx_drop>[0-9NA/]+).*$')
+        #Uncontrolled Pkts - Rx Error: 0
+        p7 = re.compile(r'^Uncontrolled Pkts - Rx Error:\s*(?P<uncontrolled_pkts_rx_error>[0-9NA/]+).*$')
+        #Unicast Controlled Pkts: 0
+        p8 = re.compile(r'^Unicast Controlled Pkts:\s*(?P<unicast_controlled_pkts>[0-9NA/]+).*$')
+        #Multicast Controlled Pkts: 0
+        p9 = re.compile(r'^Multicast Controlled Pkts:\s*(?P<multicast_controlled_pkts>[0-9NA/]+).*$')
+        #Broadcast Controlled Pkts: 0
+        p10= re.compile(r'^Broadcast Controlled Pkts:\s*(?P<broadcast_controlled_pkts>[0-9NA/]+).*$')
+        #Controlled Pkts: 575441
+        p11= re.compile(r'^Controlled Pkts:\s*(?P<controlled_pkts>[0-9NA/]+).*$')
+        #Controlled Pkts - Rx Drop: 0
+        p12= re.compile(r'^Controlled Pkts - Rx Drop:\s*(?P<controlled_pkts_rx_drop>[0-9NA/]+).*$')
+        #Controlled Pkts - Rx Error: 0
+        p13= re.compile(r'^Controlled Pkts - Rx Error:\s*(?P<controlled_pkts_rx_error>[0-9NA/]+).*$')
+        #In-Octets Uncontrolled: 285411693 bytes
+        p14= re.compile(r'^In-Octets Uncontrolled:\s*(?P<in_octets_uncontrolled>[0-9NA/]+).*$') 
+        #In-Octets Controlled: 238532354 bytes
+        p15= re.compile(r'^In-Octets Controlled:\s*(?P<in_octets_controlled>[0-9NA/]+).*$') 
+        #Input rate for Uncontrolled Pkts: 1 pps
+        p16= re.compile(r'^Input rate for Uncontrolled Pkts:\s*(?P<input_rate_for_uncontrolled_pkts_pps>[0-9NA/]+) pps$') # add pps
+        #Input rate for Uncontrolled Pkts: 1516 bps
+        p17= re.compile(r'^Input rate for Uncontrolled Pkts:\s*(?P<input_rate_for_uncontrolled_pkts_bps>[0-9NA/]+) bps$') # add bps
+        #Input rate for Controlled Pkts: 0 pps
+        p18= re.compile(r'^Input rate for Controlled Pkts:\s*(?P<input_rate_for_controlled_pkts_pps>[0-9NA/]+) pps$') #add pps
+        #Input rate for Controlled Pkts: 648 bps
+        p19= re.compile(r'^Input rate for Controlled Pkts:\s*(?P<input_rate_for_controlled_pkts_bps>[0-9NA/]+) bps$') #add bps
+
+        #Input rate for Uncontrolled Pkts: N/A (N9K-X9736C-FX not supported)
+        p16_1= re.compile(r'^Input rate for Uncontrolled Pkts:\s*(?P<input_rate_for_uncontrolled_pkts_pps>[0-9NA/]+) .*not supported\)$') # add pps
+        #Input rate for Controlled Pkts: N/A (N9K-X9736C-FX not supported)
+        p18_1= re.compile(r'^Input rate for Controlled Pkts:\s*(?P<input_rate_for_controlled_pkts_pps>[0-9NA/]+) .*not supported\)$') # add pps
+
+        #Out-Octets Uncontrolled: 0 bytes
+        p20= re.compile(r'^Out-Octets Uncontrolled:\s*(?P<out_octets_uncontrolled>[0-9NA/]+).*$')
+        #Out-Octets Controlled: 234992070 bytes
+        p21= re.compile(r'^Out-Octets Controlled:\s*(?P<out_octets_controlled>[0-9NA/]+).*$') 
+        #Out-Octets Common: 278229965 bytes
+        p22= re.compile(r'^Out-Octets Common:\s*(?P<out_octets_common>[0-9NA/]+).*$')
+        #Output rate for Uncontrolled Pkts: 0 pps
+        p23= re.compile(r'^Output rate for Uncontrolled Pkts:\s*(?P<output_rate_uncontrolled_pkts_pps>[0-9NA/]+) pps$')
+        #Output rate for Uncontrolled Pkts: 0 bps
+        p24= re.compile(r'^Output rate for Uncontrolled Pkts:\s*(?P<output_rate_uncontrolled_pkts_bps>[0-9NA/]+) bps$')
+        #Output rate for Controlled Pkts: 0 pps
+        p25= re.compile(r'^Output rate for Controlled Pkts:\s*(?P<output_rate_controlled_pkts_pps>[0-9NA/]+) pps$') #add pps
+        #Output rate for Controlled Pkts: 459 bps
+        p26= re.compile(r'^Output rate for Controlled Pkts:\s*(?P<output_rate_controlled_pkts_bps>[0-9NA/]+) bps$') #add bps 
+        ##Output rate for Uncontrolled Pkts: N/A (N9K-X9736C-FX not supported)
+        p23_1= re.compile(r'^Output rate for Uncontrolled Pkts:\s*(?P<output_rate_uncontrolled_pkts_pps>[0-9NA/]+) .*not supported\)$') #add pps
+        #Output rate for Controlled Pkts: 0 N/A (N9K-X9736C-FX not supported)
+        p25_1= re.compile(r'^Output rate for Controlled Pkts:\s*(?P<output_rate_controlled_pkts_pps>[0-9NA/]+) .*not supported\)$') # add bps
+        #Interface Tx Statistics:
+        p27= re.compile(r'^(?P<interface_tx_statistics>Interface Tx Statistics):$')
+        #SECY Rx Statistics:
+        p28= re.compile(r'^(?P<secy_rx_statistics>SECY Rx Statistics):$')
+        #Transform Error Pkts: 0
+        p29= re.compile(r'^Transform Error Pkts:\s*(?P<transform_error_pkts>[0-9NA/]+).*$')
+        #Control Pkts: 0
+        p30= re.compile(r'^Control Pkts:\s*(?P<control_pkts>[0-9NA/]+).*$')
+        #Untagged Pkts: 0
+        p31= re.compile(r'^Untagged Pkts:\s*(?P<untagged_pkts>[0-9NA/]+).*$')
+        #No Tag Pkts: 0
+        p32= re.compile(r'^No Tag Pkts:\s*(?P<no_tag_pkts>[0-9NA/]+).*$')
+        #Bad Tag Pkts: 0
+        p33= re.compile(r'^Bad Tag Pkts:\s*(?P<bad_tag_pkts>[0-9NA/]+).*$')
+        #No SCI Pkts: 0
+        p34= re.compile(r'^No SCI Pkts:\s*(?P<no_sci_pkts>[0-9NA/]+).*$')
+        #Unknown SCI Pkts: 0
+        p35= re.compile(r'^Unknown SCI Pkts:\s*(?P<unknown_sci_pkts>[0-9NA/]+).*$')
+        #Tagged Control Pkts: 0
+        p36= re.compile(r'^Tagged Control Pkts:\s*(?P<tagged_control_pkts>[0-9NA/]+).*$')
+        #SECY Tx Statistics:
+        p37= re.compile(r'^(?P<secy_tx_statistics>SECY Tx Statistics):$')
+        #SAK Rx Statistics for AN [0]:
+        p38= re.compile(r'^SAK Rx Statistics for AN \[(?P<an_value>\d+)\]:$')
+        #Unchecked Pkts: 0
+        p39= re.compile(r'^Unchecked Pkts:\s*(?P<unchecked_pkts>[0-9NA/]+).*$')
+        #Delayed Pkts: 0
+        p40= re.compile(r'^Delayed Pkts:\s*(?P<delayed_pkts>[0-9NA/]+).*$')
+        #Late Pkts: 0
+        p41= re.compile(r'^Late Pkts:\s*(?P<late_pkts>[0-9NA/]+).*$')
+        #OK Pkts: 575441
+        p42= re.compile(r'^OK Pkts:\s*(?P<ok_pkts>[0-9NA/]+).*$')
+        #Invalid Pkts: 0
+        p43= re.compile(r'^Invalid Pkts:\s*(?P<invalid_pkts>[0-9NA/]+).*$')
+        #Not Valid Pkts: 0
+        p44= re.compile(r'^Not Valid Pkts:\s*(?P<not_valid_pkts>[0-9NA/]+).*$')
+        # Not-Using-SA Pkts: 0
+        p45= re.compile(r'^Not-Using-SA Pkts:\s*(?P<not_using_sa_pkts>[0-9NA/]+).*$')
+        #Unused-SA Pkts: 0
+        p46= re.compile(r'^Unused-SA Pkts:\s*(?P<unused_sa_pkts>[0-9NA/]+).*$')
+        #Decrypted In-Octets: 238532354 bytes
+        p47= re.compile(r'^Decrypted In-Octets:\s*(?P<decrypted_in_octets>[0-9NA/]+).*$')
+        #Validated In-Octets: 0 bytes
+        p48= re.compile(r'^Validated In-Octets:\s*(?P<validated_in_octets>[0-9NA/]+).*$')
+        #SAK Tx Statistics for AN [0]:
+        p49= re.compile(r'^SAK Tx Statistics for AN \[(?P<an_value>\d+)\]:$')
+        #Encrypted Protected Pkts: 499517
+        p50= re.compile(r'^Encrypted Protected Pkts:\s*(?P<encrypted_protected_pkts>[0-9NA/]+).*$')
+        #Too Long Pkts: 0
+        p51= re.compile(r'^Too Long Pkts:\s*(?P<too_long_pkts>[0-9NA/]+).*$')
+        #SA-not-in-use Pkts: 0
+        p52= re.compile(r'^SA-not-in-use Pkts:\s*(?P<sa_not_in_use_pkts>[0-9NA/]+).*$')
+        #Encrypted Protected Out-Octets: 234992070 bytes
+        p53= re.compile(r'^Encrypted Protected Out-Octets:\s*(?P<encrypted_protected_out_octets>[0-9NA/]+).*$')
+
+        secy_statistics_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # Macsec is shutdown
+            m0 = p0.match(line)
+            if m0:
+                secy_statistics_dict['macsec_shutdown'] = True 
+                return secy_statistics_dict
+            
+            #Interface Ethernet1/1 MACSEC SecY Statistics:
+            m = p1.match(line)
+            if m:
+                interface = m.group("interface")
+                intf_dict = secy_statistics_dict.setdefault(interface, {})
+                continue 
+            
+            #Interface Rx Statistics:
+            m = p2.match(line)
+            if m:
+                out_dict = intf_dict.setdefault("interface_rx_statistics",{})
+                continue 
+                
+            #Interface Tx Statistics:
+            m = p27.match(line)
+            if m:
+                out_dict = intf_dict.setdefault("interface_tx_statistics",{})
+                continue 
+            
+            #Unicast Uncontrolled Pkts: 478920
+            m = p3.match(line) 
+            if m: 
+                out_dict.update(m.groupdict())
+                continue
+            
+            #Multicast Uncontrolled Pkts: 187186
+            m = p4.match(line) 
+            if m: 
+                out_dict.update(m.groupdict())
+                continue 
+            
+            #Broadcast Uncontrolled Pkts: 0
+            m = p5.match(line) 
+            if m: 
+                out_dict.update(m.groupdict())
+                continue 
+            
+            #Uncontrolled Pkts - Rx Drop: 0
+            m = p6.match(line) 
+            if m: 
+                out_dict.update(m.groupdict())
+                continue 
+            
+            #Uncontrolled Pkts - Rx Error: 0
+            m = p7.match(line) 
+            if m: 
+                out_dict.update(m.groupdict())
+                continue 
+            
+            #Unicast Controlled Pkts: 0
+            m = p8.match(line) 
+            if m: 
+                out_dict.update(m.groupdict())
+                continue 
+            
+            #Multicast Controlled Pkts: 0
+            m = p9.match(line) 
+            if m: 
+                out_dict.update(m.groupdict())
+                continue 
+            
+            #Broadcast Controlled Pkts: 0
+            m = p10.match(line) 
+            if m: 
+                out_dict.update(m.groupdict())
+                continue 
+            
+            #Controlled Pkts: 575441
+            m = p11.match(line) 
+            if m: 
+                out_dict.update(m.groupdict())
+                continue 
+            
+            #Controlled Pkts - Rx Drop: 0
+            m = p12.match(line) 
+            if m: 
+                out_dict.update(m.groupdict())
+                continue 
+            
+            #Controlled Pkts - Rx Error: 0
+            m = p13.match(line) 
+            if m: 
+                out_dict.update(m.groupdict())
+                continue 
+            
+            #In-Octets Uncontrolled: 285411693 bytes
+            m = p14.match(line) 
+            if m: 
+                out_dict.update(m.groupdict())
+                continue 
+            
+            #In-Octets Controlled: 238532354 bytes
+            m = p15.match(line) 
+            if m: 
+                out_dict.update(m.groupdict())
+                continue 
+            
+            #Input rate for Uncontrolled Pkts: 1 pps
+            m = p16.match(line) 
+            if m: 
+                out_dict.update(m.groupdict())
+                continue 
+            
+            #Input rate for Uncontrolled Pkts: 1516 bps
+            m = p17.match(line) 
+            if m: 
+                out_dict.update(m.groupdict())
+                continue 
+            
+            #Input rate for Controlled Pkts: 0 pps
+            m = p18.match(line) 
+            if m: 
+                out_dict.update(m.groupdict())
+                continue 
+            
+            #Input rate for Controlled Pkts: 648 bps
+            m = p19.match(line) 
+            if m: 
+                out_dict.update(m.groupdict())
+                continue 
+            
+            m = p16_1.match(line)
+            if m:
+                #Intput rate for Uncontrolled Pkts: N/A (N9K-X9736C-FX not supported)
+                #bits per second(bps) also will be NA, adding both key values into the output dict
+                out_dict['input_rate_for_uncontrolled_pkts_pps'] = m.group('input_rate_for_uncontrolled_pkts_pps')
+                out_dict['input_rate_for_uncontrolled_pkts_bps'] = m.group('input_rate_for_uncontrolled_pkts_pps')
+                continue 
+            
+            m = p18_1.match(line) 
+            if m:
+                #Intput rate for Controlled Pkts: N/A (N9K-X9736C-FX not supported)
+                #bits per second(bps) also will be NA, adding both key values into the output dict
+                out_dict['input_rate_for_controlled_pkts_pps'] = m.group('input_rate_for_controlled_pkts_pps')
+                out_dict['input_rate_for_controlled_pkts_bps'] = m.group('input_rate_for_controlled_pkts_pps')
+                continue  
+            
+            #Out-Octets Uncontrolled: 0 bytes
+            m = p20.match(line) 
+            if m: 
+                out_dict.update(m.groupdict())
+                continue 
+            
+            #Out-Octets Controlled: 234992070 bytes
+            m = p21.match(line) 
+            if m: 
+                out_dict.update(m.groupdict())
+                continue 
+            
+            #Out-Octets Common: 278229965 bytes
+            m = p22.match(line) 
+            if m: 
+                out_dict.update(m.groupdict())
+                continue 
+            
+            #Output rate for Uncontrolled Pkts: 0 pps
+            m = p23.match(line) 
+            if m: 
+                out_dict.update(m.groupdict())
+                continue 
+            
+            #Output rate for Uncontrolled Pkts: 0 bps
+            m = p24.match(line) 
+            if m: 
+                out_dict.update(m.groupdict())
+                continue 
+            
+            #Output rate for Controlled Pkts: 0 pps
+            m = p25.match(line) 
+            if m: 
+                out_dict.update(m.groupdict())
+                continue 
+            
+            #Output rate for Controlled Pkts: 459 bps
+            m = p26.match(line) 
+            if m: 
+                out_dict.update(m.groupdict())
+                continue 
+            
+            m = p23_1.match(line)
+            if m:
+                #Output rate for Uncontrolled Pkts: N/A (N9K-X9736C-FX not supported)
+                #bits per second(bps) also will be NA, adding both key values into the output dict
+                out_dict['output_rate_uncontrolled_pkts_pps'] = m.group('output_rate_uncontrolled_pkts_pps')
+                out_dict['output_rate_uncontrolled_pkts_bps'] = m.group('output_rate_uncontrolled_pkts_pps')
+                continue 
+            
+            m = p25_1.match(line) 
+            if m:
+                #Output rate for Controlled Pkts: N/A (N9K-X9736C-FX not supported)
+                #bits per second(bps) also will be NA, adding both key values into the output dict
+                out_dict['output_rate_controlled_pkts_pps'] = m.group('output_rate_controlled_pkts_pps')
+                out_dict['output_rate_controlled_pkts_bps'] = m.group('output_rate_controlled_pkts_pps')
+                continue  
+            
+            #SECY Rx Statistics:
+            m = p28.match(line)
+            if m:
+                out_dict = intf_dict.setdefault('secy_rx_statistics',{})
+                continue 
+            
+            #SECY Tx Statistics:
+            m = p37.match(line)
+            if m:
+                out_dict = intf_dict.setdefault('secy_tx_statistics',{})
+                continue
+            
+            #Transform Error Pkts: 0
+            m = p29.match(line) 
+            if m: 
+                out_dict.update(m.groupdict())
+                continue 
+            
+            #Control Pkts: 0
+            m = p30.match(line) 
+            if m: 
+                out_dict.update(m.groupdict())
+                continue 
+            
+            #Untagged Pkts: 0
+            m = p31.match(line) 
+            if m: 
+                out_dict.update(m.groupdict())
+                continue 
+            
+            #No Tag Pkts: 0
+            m = p32.match(line) 
+            if m: 
+                out_dict.update(m.groupdict())
+                continue 
+            
+            #Bad Tag Pkts: 0
+            m = p33.match(line) 
+            if m: 
+                out_dict.update(m.groupdict())
+                continue 
+            
+            #No SCI Pkts: 0
+            m = p34.match(line) 
+            if m: 
+                out_dict.update(m.groupdict())
+                continue 
+            
+            #Unknown SCI Pkts: 0
+            m = p35.match(line) 
+            if m: 
+                out_dict.update(m.groupdict())
+                continue 
+            
+            #Tagged Control Pkts: 0
+            m = p36.match(line) 
+            if m: 
+                out_dict.update(m.groupdict())
+                continue 
+            
+            #SAK Rx Statistics for AN [0]:
+            m = p38.match(line)
+            if m:
+                out_dict = intf_dict.setdefault('sak_rx_statistics',{})
+                out_dict['an_value'] = int(m.group('an_value'))
+                continue
+            
+            #Unchecked Pkts: 0
+            m = p39.match(line)
+            if m:
+                out_dict.update(m.groupdict())
+                continue 
+            
+            #Delayed Pkts: 0
+            m = p40.match(line) 
+            if m: 
+                out_dict.update(m.groupdict())
+                continue 
+            
+            #Late Pkts: 0
+            m = p41.match(line) 
+            if m: 
+                out_dict.update(m.groupdict())
+                continue 
+            
+            #OK Pkts: 575441
+            m = p42.match(line) 
+            if m: 
+                out_dict.update(m.groupdict())
+                continue 
+            
+            #Invalid Pkts: 0
+            m = p43.match(line) 
+            if m: 
+                out_dict.update(m.groupdict())
+                continue 
+            
+            #Not Valid Pkts: 0
+            m = p44.match(line) 
+            if m: 
+                out_dict.update(m.groupdict())
+                continue 
+            
+            # Not-Using-SA Pkts: 0
+            m = p45.match(line) 
+            if m: 
+                out_dict.update(m.groupdict())
+                continue 
+            
+            #Unused-SA Pkts: 0
+            m = p46.match(line) 
+            if m: 
+                out_dict.update(m.groupdict())
+                continue 
+            
+            #Decrypted In-Octets: 238532354 bytes
+            m = p47.match(line) 
+            if m: 
+                out_dict.update(m.groupdict())
+                continue 
+            
+            #Validated In-Octets: 0 bytes
+            m = p48.match(line) 
+            if m: 
+                out_dict.update(m.groupdict())
+                continue 
+            
+            #SAK Tx Statistics for AN [0]:      
+            m = p49.match(line)
+            if m:
+                out_dict = intf_dict.setdefault('sak_tx_statistics',{})
+                out_dict['an_value'] = int(m.group('an_value'))
+                continue
+            
+            #Encrypted Protected Pkts: 499517
+            m = p50.match(line) 
+            if m: 
+                out_dict.update(m.groupdict())
+                continue 
+            
+            #Too Long Pkts: 0
+            m = p51.match(line) 
+            if m: 
+                out_dict.update(m.groupdict())
+                continue 
+            
+            #SA-not-in-use Pkts: 0
+            m = p52.match(line) 
+            if m: 
+                out_dict.update(m.groupdict())
+                continue 
+            
+            #Encrypted Protected Out-Octets: 234992070 bytes
+            m = p53.match(line) 
+            if m: 
+                out_dict.update(m.groupdict())
+                continue 
+
+        return secy_statistics_dict
 

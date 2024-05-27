@@ -253,6 +253,8 @@ class ShowL2vpnXconnectDetailSchema(MetaParser):
                                             Optional('control_word'): str,
                                             Optional('interworking'): str,
                                             Optional('backup_disable_delay'): int,
+                                            Optional('ignore_mtu_mismatch'): str,
+                                            Optional('transmit_mtu_zero'): str,
                                             Optional('status_tlv'): str,
                                             Optional('sequencing'): str,
                                             Optional('mpls'): {
@@ -265,6 +267,7 @@ class ShowL2vpnXconnectDetailSchema(MetaParser):
                                             },
                                             Optional('create_time'): str,
                                             Optional('last_time_status_changed'): str,
+                                            Optional('last_time_pw_went_down'): str,
                                             Optional('statistics'): {
                                                 'packet_totals': {
                                                     Optional('receive'): int,
@@ -316,6 +319,7 @@ class ShowL2vpnXconnectDetailSchema(MetaParser):
                                             },
                                             Optional('create_time'): str,
                                             Optional('last_time_status_changed'): str,
+                                            Optional('last_time_pw_went_down'): str,
                                             Optional('statistics'): {
                                                 'packet_totals': {
                                                     Optional('receive'): int,
@@ -348,6 +352,8 @@ class ShowL2vpnXconnectDetailSchema(MetaParser):
                                             Optional('control_word'): str,
                                             Optional('interworking'): str,
                                             Optional('backup_disable_delay'): int,
+                                            Optional('ignore_mtu_mismatch'): str,
+                                            Optional('transmit_mtu_zero'): str,
                                             Optional('status_tlv'): str,
                                             Optional('sequencing'): str,
                                             'mpls': {
@@ -360,6 +366,7 @@ class ShowL2vpnXconnectDetailSchema(MetaParser):
                                             },
                                             Optional('create_time'): str,
                                             Optional('last_time_status_changed'): str,
+                                            Optional('last_time_pw_went_down'): str,
                                             Optional('statistics'): {
                                                 'packet_totals': {
                                                     Optional('receive'): int,
@@ -581,6 +588,9 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
 
         # Reachability: Up
         p47 = re.compile(r'^Reachability:\s+(?P<reachability>\S+)$')
+
+        #Last time PW went down: 13/03/2024 07:31:51 (7w1d ago)
+        p48 = re.compile(r'^Last +time +PW +went +down: +(?P<last_time_pw_went_down>[\S ]+)$')
 
         for line in out.splitlines():
             original_line = line
@@ -885,6 +895,14 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
                 group = m.groupdict()
                 last_time_status_changed = group['last_time_status_changed']
                 current_dict.update({'last_time_status_changed': last_time_status_changed})
+                continue
+
+            # Last time PW went down: 13/03/2024 07:31:51 (7w1d ago)
+            m = p48.match(line)
+            if m:
+                group = m.groupdict()
+                last_time_pw_went_down = group['last_time_pw_went_down']
+                current_dict.update({'last_time_pw_went_down': last_time_pw_went_down})
                 continue
             
             # Backup PW:

@@ -1,0 +1,36 @@
+|-------------------------------------------------|
+|    SW port debug states                         |
+|-------------------------------------------------|
+| Slot/Port          |       1/23
+| Speed              |       speed_gbps1
+| Active             |       Yes
+| XCVR Presence      |       Present
+| Admin              |       Enabled
+| Disabled           |       No
+| Link State         |       Up
+| Init Done          |       Yes
+| XCVR Type          |       31498
+| Breakout           |       Disabled
+| Delete Mask        |       0
+| LED State          |       Green Medium Blink
+| Breakout Progress  |       0
+| Breakout Mode      |       1
+| Maximum Subports   |       0
+| Port Group Cfg     |       2
+| Port Group mode    |       0
+| Flow Control Mode  |       TX OFF; RX ON
+|-------------------------------------------------|
+|-------------------------------------------------|
+|    LED port debug states                        |
+|-------------------------------------------------|
+| Slot/Port                 |      1/23
+| Suspended                 |       No
+| Stp blocked               |       Yes
+| Txrx_error                |       No
+| Txrx_active               |       No
+|-------------------------------------------------|
+LC present 0
+
+Outstanding ports to be deleted 60
+
+Total failed deleted ports 0 

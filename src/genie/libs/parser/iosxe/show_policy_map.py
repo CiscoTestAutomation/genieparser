@@ -615,7 +615,7 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
         # GigabitEthernet0/1/5
         # Something else
         p1 = re.compile(r'^(?P<top_level>(Control Plane|Giga.*|FiveGiga.*|[Pp]seudo.*|Fast.*|[Ss]erial.*|'
-                        r'Ten.*|[Ee]thernet.*|[Tt]unnel.*|[Hh]undred.*|Port-channel\d+))$')
+                        r'Ten.*|[Ee]thernet.*|[Tt]unnel.*|[Hh]undred.*|Port-channel\d+|[Tt]wentyFiveGigE.+|.+GigabitEthernet.+|FiftyGigE.+))$')
 
         # GigabitEthernet0/1/5 : Service Group 1
         p1_0 = re.compile(r'^(?P<top_level>(Giga.*)): +Service Group +(?P<service_group>(\d+))$')

@@ -1,0 +1,15 @@
+Capability Codes: R - Router, T - Trans Bridge, B - Source Route Bridge
+                  S - Switch, H - Host, I - IGMP, r - Repeater, P - Phone, 
+                  D - Remote, C - CVTA, M - Two-port Mac Relay 
+
+Device ID        Local Intrfce     Holdtme    Capability  Platform  Port ID
+R1.cisco.com
+                 Gig 0/2/0         169              R I   ASR1002   Gig 0/0/0
+R2.cisco.com
+                 Gig 0/2/2         167             R B S  CISCO2951 Gig 0/0
+R3.cisco.com
+                 Multilink3        165              R I   ASR1002   Multilink1
+R4.cisco.com
+                 Ser 0/1/0:0       160             R S I  ISR4451-X Ser 0/1/0:0
+
+Total cdp entries displayed : 4
