@@ -2073,7 +2073,7 @@ class ShowMkaPolicySchema(MetaParser):
     """
 
     schema = {
-        'send_secure_announcements': str,
+        Optional('send_secure_announcements'): str,
         'policy': {
             Any(): {
                 'key_server_priority': int,
@@ -2127,11 +2127,16 @@ class ShowMkaPolicy(ShowMkaPolicySchema):
                 policy_dict["include_icv_indicator"] = group["include_icv_indicator"]
                 policy_dict["cipher"] = group["cipher"]
                 if group["interfaces"]:
-                    int_list = policy_dict.setdefault("interfaces", group["interfaces"].split())
+                    int_list = policy_dict.setdefault("interfaces", [])
+                    for intf in group["interfaces"].split():
+                        int_list.append(Common.convert_intf_name(intf=intf.strip()))
                 continue
             m3 = p3.match(line)
             if m3:
                 group = m3.groupdict()
-                int_list.extend(group["interfaces"].split())
+                if 'interfaces' not in policy_dict:
+                    int_list = policy_dict.setdefault("interfaces", [])
+                for intf in group["interfaces"].split():
+                    int_list.append(Common.convert_intf_name(intf=intf.strip()))
                 continue
         return ret_dict

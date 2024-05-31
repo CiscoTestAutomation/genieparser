@@ -1,0 +1,113 @@
+show macsec secy statistics
+
+Interface Ethernet1/97/1 MACSEC SecY Statistics:
+--------------------------------------------
+Interface Rx Statistics:
+   Unicast Uncontrolled Pkts: 0
+   Multicast Uncontrolled Pkts: 0
+   Broadcast Uncontrolled Pkts: 0
+   Uncontrolled Pkts - Rx Drop: 0
+   Uncontrolled Pkts - Rx Error: 0
+   Unicast Controlled Pkts: 0
+   Multicast Controlled Pkts: 0
+   Broadcast Controlled Pkts: 0
+   Controlled Pkts: 0
+   Controlled Pkts - Rx Drop: 0
+   Controlled Pkts - Rx Error: 0
+   In-Octets Uncontrolled: 0 bytes
+   In-Octets Controlled: 0 bytes
+   Input rate for Uncontrolled Pkts: 0 pps
+   Input rate for Uncontrolled Pkts: 0 bps
+   Input rate for Controlled Pkts: 0 pps
+   Input rate for Controlled Pkts: 0 bps
+
+Interface Tx Statistics:
+   Unicast Uncontrolled Pkts: 0
+   Multicast Uncontrolled Pkts: 0
+   Broadcast Uncontrolled Pkts: 0
+   Uncontrolled Pkts - Rx Drop: 0
+   Uncontrolled Pkts - Rx Error: 0
+   Unicast Controlled Pkts: 0
+   Multicast Controlled Pkts: 0
+   Broadcast Controlled Pkts: 0
+   Controlled Pkts: 0
+   Controlled Pkts - Rx Drop: 0
+   Controlled Pkts - Rx Error: 0
+   Out-Octets Uncontrolled: 0 bytes
+   Out-Octets Controlled: 0 bytes
+   Out-Octets Common: 0 bytes
+   Output rate for Uncontrolled Pkts: 0 pps
+   Output rate for Uncontrolled Pkts: 0 bps
+   Output rate for Controlled Pkts: 0 pps
+   Output rate for Controlled Pkts: 0 bps
+
+SECY Rx Statistics:
+   Transform Error Pkts: 0
+   Control Pkts: 0
+   Untagged Pkts: 0
+   No Tag Pkts: 0
+   Bad Tag Pkts: 0
+   No SCI Pkts: 0
+   Unknown SCI Pkts: 0
+   Tagged Control Pkts: 0
+
+SECY Tx Statistics:
+   Transform Error Pkts: 0
+   Control Pkts: 0
+   Untagged Pkts: 0
+
+Interface Ethernet1/97/2 MACSEC SecY Statistics:
+--------------------------------------------
+Interface Rx Statistics:
+   Unicast Uncontrolled Pkts: 0
+   Multicast Uncontrolled Pkts: 0
+   Broadcast Uncontrolled Pkts: 0
+   Uncontrolled Pkts - Rx Drop: 0
+   Uncontrolled Pkts - Rx Error: 0
+   Unicast Controlled Pkts: 0
+   Multicast Controlled Pkts: 0
+   Broadcast Controlled Pkts: 0
+   Controlled Pkts: 0
+   Controlled Pkts - Rx Drop: 0
+   Controlled Pkts - Rx Error: 0
+   In-Octets Uncontrolled: 0 bytes
+   In-Octets Controlled: 0 bytes
+   Input rate for Uncontrolled Pkts: 0 pps
+   Input rate for Uncontrolled Pkts: 0 bps
+   Input rate for Controlled Pkts: 0 pps
+   Input rate for Controlled Pkts: 0 bps
+
+Interface Tx Statistics:
+   Unicast Uncontrolled Pkts: 0
+   Multicast Uncontrolled Pkts: 0
+   Broadcast Uncontrolled Pkts: 0
+   Uncontrolled Pkts - Rx Drop: 0
+   Uncontrolled Pkts - Rx Error: 0
+   Unicast Controlled Pkts: 0
+   Multicast Controlled Pkts: 0
+   Broadcast Controlled Pkts: 0
+   Controlled Pkts: 0
+   Controlled Pkts - Rx Drop: 0
+   Controlled Pkts - Rx Error: 0
+   Out-Octets Uncontrolled: 0 bytes
+   Out-Octets Controlled: 0 bytes
+   Out-Octets Common: 0 bytes
+   Output rate for Uncontrolled Pkts: 0 pps
+   Output rate for Uncontrolled Pkts: 0 bps
+   Output rate for Controlled Pkts: 0 pps
+   Output rate for Controlled Pkts: 0 bps
+
+SECY Rx Statistics:
+   Transform Error Pkts: 0
+   Control Pkts: 0
+   Untagged Pkts: 0
+   No Tag Pkts: 0
+   Bad Tag Pkts: 0
+   No SCI Pkts: 0
+   Unknown SCI Pkts: 0
+   Tagged Control Pkts: 0
+
+SECY Tx Statistics:
+   Transform Error Pkts: 0
+   Control Pkts: 0
+   Untagged Pkts: 0

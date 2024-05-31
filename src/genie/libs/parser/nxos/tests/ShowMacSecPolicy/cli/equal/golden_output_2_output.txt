@@ -1,0 +1,8 @@
+show macsec policy MP1
+MACSec Policy                    Cipher           Pri  Window       Offset   Security       SAK Rekey time ICV Indicator Include-SCI
+-------------------------------- ---------------- ---- ------------ -------- -------------- -------------- ------------- -------------
+MP1                              GCM-AES-128     32   100000       30       must-secure    70             TRUE           FALSE
+
+MACSec Policy                    Cipher-Suite Enforce-Peer
+-------------------------------- ----------------------------------------------------------------
+

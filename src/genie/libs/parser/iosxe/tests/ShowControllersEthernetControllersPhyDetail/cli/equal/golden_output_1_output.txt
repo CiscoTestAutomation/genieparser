@@ -1,0 +1,16 @@
+Gi1/0/1 (if_id: 1032)
+----------------------------------------------------
+
+ 0000 : 1940                  Control Register :  0001 1001 0100 0000
+ 0001 : 7949                    Control STATUS :  0111 1001 0100 1001
+ 0002 : 002b                   Phy(M:6F5) ID 1 :  0000 0000 0010 1011
+ 0003 : 0ad9                   Phy(M:6F5) ID 2 :  0000 1010 1101 1001
+ 0004 : 01e1    Auto-Negotiation Advertisement :  0000 0001 1110 0001
+ 0005 : 0000     Auto-Negotiation Link Partner :  0000 0000 0000 0000
+ 0006 : 0004    Auto-Negotiation Expansion Reg :  0000 0000 0000 0100
+ 0007 : 2001       Next Page Transmit Register :  0010 0000 0000 0001
+ 0008 : 0000  Link Partner Next page Register  :  0000 0000 0000 0000
+ 0010 : 7874              PHY Specific Control :  0111 1000 0111 0100
+ 0011 : 8050               PHY Specific Status :  1000 0000 0101 0000
+ 0012 : 0000     PHY Specific Interrupt Enable :  0000 0000 0000 0000
+ 0013 : 0040     PHY Specific Interrupt Status :  0000 0000 0100 0000 

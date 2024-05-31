@@ -569,6 +569,16 @@ class ParserTest(aetest.Testcase):
 
                 golden_parsed_output = read_python_file(
                     f"{folder_root}/{user_test}_expected.py")
+                
+                # Verify that the parsed output can be serialized to JSON. If not, raise an error
+                try:
+                    json.dumps(golden_parsed_output)
+                except TypeError as e:
+                    raise AssertionError(
+                        f"Parsed output for {local_class} cannot be serialized to JSON. "
+                        f"Exception:\n\n{str(e)}\n\n"
+                    )
+                
                 arguments = {}
                 if os.path.exists(f"{folder_root}/{user_test}_arguments.json"):
                     arguments = read_json_file(

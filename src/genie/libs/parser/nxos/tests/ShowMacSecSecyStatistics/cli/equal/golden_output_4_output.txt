@@ -1,0 +1,108 @@
+Interface Ethernet4/19 MACSEC SecY Statistics:
+--------------------------------------------
+Interface Rx Statistics:
+   Unicast Uncontrolled Pkts: 0
+   Multicast Uncontrolled Pkts: 0
+   Broadcast Uncontrolled Pkts: 0
+   Uncontrolled Pkts - Rx Drop: 0
+   Uncontrolled Pkts - Rx Error: 0
+   Unicast Controlled Pkts: N/A (N9K-X9736C-FX not supported)
+   Multicast Controlled Pkts: N/A (N9K-X9736C-FX not supported)
+   Broadcast Controlled Pkts: N/A (N9K-X9736C-FX not supported)
+   Controlled Pkts: 0
+   Controlled Pkts - Rx Drop: N/A (N9K-X9736C-FX not supported)
+   Controlled Pkts - Rx Error: N/A (N9K-X9736C-FX not supported)
+   In-Octets Uncontrolled: 0 bytes
+   In-Octets Controlled: 0 bytes
+   Input rate for Uncontrolled Pkts: 0 pps
+   Input rate for Uncontrolled Pkts: 1083 bps
+   Input rate for Controlled Pkts: 0 pps
+   Input rate for Controlled Pkts: 358 bps
+
+Interface Tx Statistics:
+   Unicast Uncontrolled Pkts: N/A (N9K-X9736C-FX not supported)
+   Multicast Uncontrolled Pkts: N/A (N9K-X9736C-FX not supported)
+   Broadcast Uncontrolled Pkts: N/A (N9K-X9736C-FX not supported)
+   Uncontrolled Pkts - Rx Drop: N/A (N9K-X9736C-FX not supported)
+   Uncontrolled Pkts - Rx Error: N/A (N9K-X9736C-FX not supported)
+   Unicast Controlled Pkts: N/A (N9K-X9736C-FX not supported)
+   Multicast Controlled Pkts: N/A (N9K-X9736C-FX not supported)
+   Broadcast Controlled Pkts: N/A (N9K-X9736C-FX not supported)
+   Controlled Pkts: 11
+   Controlled Pkts - Rx Drop: N/A (N9K-X9736C-FX not supported)
+   Controlled Pkts - Rx Error: N/A (N9K-X9736C-FX not supported)
+   Out-Octets Uncontrolled: N/A (N9K-X9736C-FX not supported)
+   Out-Octets Controlled: 2651 bytes
+   Out-Octets Common: 0 bytes
+   Output rate for Uncontrolled Pkts: 0 pps
+   Output rate for Uncontrolled Pkts: 0 bps
+   Output rate for Controlled Pkts: 0 pps
+   Output rate for Controlled Pkts: 192 bps
+
+SECY Rx Statistics:
+   Transform Error Pkts: N/A (N9K-X9736C-FX not supported)
+   Control Pkts: 0
+   Untagged Pkts: N/A (N9K-X9736C-FX not supported)
+   No Tag Pkts: 0
+   Bad Tag Pkts: 0
+   No SCI Pkts: 0
+   Unknown SCI Pkts: 0
+   Tagged Control Pkts: N/A (N9K-X9736C-FX not supported)
+
+SECY Tx Statistics:
+   Transform Error Pkts: N/A (N9K-X9736C-FX not supported)
+   Control Pkts: 0
+   Untagged Pkts: N/A (N9K-X9736C-FX not supported)
+
+SAK Rx Statistics for AN [0]:
+   Unchecked Pkts: 0
+   Delayed Pkts: 0
+   Late Pkts: 0
+   OK Pkts: 0
+   Invalid Pkts: 0
+   Not Valid Pkts: 0
+   Not-Using-SA Pkts: 0
+   Unused-SA Pkts: 0
+   Decrypted In-Octets: 0 bytes
+   Validated In-Octets: 0 bytes
+
+SAK Tx Statistics for AN [0]:
+   Encrypted Protected Pkts: 11
+   Too Long Pkts: N/A (N9K-X9736C-FX not supported)
+   SA-not-in-use Pkts: N/A (N9K-X9736C-FX not supported)
+   Encrypted Protected Out-Octets: 2651 bytes
+
+Reg04-TH-EOR2# show macsec secy statistics interface Eth4/19 | begin "SECY Rx Statistics"
+show macsec secy statistics interface Eth4/19 | begin "SECY Rx Statistics"
+SECY Rx Statistics:
+   Transform Error Pkts: N/A (N9K-X9736C-FX not supported)
+   Control Pkts: 0
+   Untagged Pkts: N/A (N9K-X9736C-FX not supported)
+   No Tag Pkts: 0
+   Bad Tag Pkts: 0
+   No SCI Pkts: 0
+   Unknown SCI Pkts: 0
+   Tagged Control Pkts: N/A (N9K-X9736C-FX not supported)
+
+SECY Tx Statistics:
+   Transform Error Pkts: N/A (N9K-X9736C-FX not supported)
+   Control Pkts: 0
+   Untagged Pkts: N/A (N9K-X9736C-FX not supported)
+
+SAK Rx Statistics for AN [0]:
+   Unchecked Pkts: 0
+   Delayed Pkts: 0
+   Late Pkts: 0
+   OK Pkts: 0
+   Invalid Pkts: 0
+   Not Valid Pkts: 0
+   Not-Using-SA Pkts: 0
+   Unused-SA Pkts: 0
+   Decrypted In-Octets: 0 bytes
+   Validated In-Octets: 0 bytes
+
+SAK Tx Statistics for AN [0]:
+   Encrypted Protected Pkts: 11
+   Too Long Pkts: N/A (N9K-X9736C-FX not supported)
+   SA-not-in-use Pkts: N/A (N9K-X9736C-FX not supported)
+   Encrypted Protected Out-Octets: 2651 bytes

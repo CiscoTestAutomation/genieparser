@@ -266,7 +266,7 @@ expected_output = {
                         "router_id": "1.1.1.1",
                         "s_flag": False,
                         "segment_routing": {
-                            "algorithms": {
+                            "algorithms": [
                                 128,
                                 129,
                                 130,
@@ -295,7 +295,7 @@ expected_output = {
                                 153,
                                 154,
                                 155,
-                            },
+                            ],
                             "i_flag": True,
                             "spf": True,
                             "srgb_base": 16000,
@@ -904,7 +904,7 @@ expected_output = {
                         "router_id": "2.2.2.2",
                         "s_flag": False,
                         "segment_routing": {
-                            "algorithms": {
+                            "algorithms": [
                                 128,
                                 129,
                                 130,
@@ -933,7 +933,7 @@ expected_output = {
                                 153,
                                 154,
                                 155,
-                            },
+                            ],
                             "i_flag": True,
                             "spf": True,
                             "srgb_base": 16000,

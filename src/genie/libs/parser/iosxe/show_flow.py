@@ -62,7 +62,7 @@ class ShowFlowMonitor(ShowFlowMonitorSchema):
 
     cli_command = 'show flow monitor {name} cache format table'
 
-    def cli(self, name, output=None):
+    def cli(self, name="", output=None):
         if output is None:
             cmd = self.cli_command.format(name=name)
             out = self.device.execute(cmd)

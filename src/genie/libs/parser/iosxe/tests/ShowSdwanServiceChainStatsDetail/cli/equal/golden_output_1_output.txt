@@ -1,0 +1,58 @@
+Service Chain: SC2
+   vrf: 201
+   label: 1015
+   state: up
+   track obj: 20
+   description:
+
+   service: FW
+      tx: 570100617 rx: 578128069
+      ha_pair 1: ipv4
+         active
+            tx: 117406980 rx: 118944824
+            tx tracker: sent: 6978 dropped: 15 rtt: 1
+            rx tracker: sent: 0 dropped: 0 rtt: 0
+         backup
+            tx: 0 rx: 0
+            tx tracker: sent: 0 dropped: 0 rtt: 0
+            rx tracker: sent: 0 dropped: 0 rtt: 0
+      ha_pair 2: ipv6
+         active
+            tx: 452693637 rx: 459183245
+            tx tracker: sent: 6980 dropped: 14 rtt: 1
+            rx tracker: sent: 0 dropped: 0 rtt: 0
+         backup
+            tx: 0 rx: 0
+            tx tracker: sent: 0 dropped: 0 rtt: 0
+            rx tracker: sent: 0 dropped: 0 rtt: 0
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Service Chain: SC3
+   vrf: 301
+   label: 1016
+   state: up
+   description:
+
+   service: NETSVC2
+      tx: 0 rx: 0
+      ha_pair 1: ipv4
+         active
+            tx: 0 rx: 0
+            tx tracker: sent: 7250 dropped: 5 rtt: 1
+            rx tracker: sent: 0 dropped: 0 rtt: 0
+         backup
+            tx: 0 rx: 0
+            tx tracker: sent: 0 dropped: 0 rtt: 0
+            rx tracker: sent: 0 dropped: 0 rtt: 0
+      ha_pair 2: ipv6
+         active
+            tx: 0 rx: 0
+            tx tracker: sent: 7248 dropped: 6 rtt: 1
+            rx tracker: sent: 0 dropped: 0 rtt: 0
+         backup
+            tx: 0 rx: 0
+            tx tracker: sent: 0 dropped: 0 rtt: 0
+            rx tracker: sent: 0 dropped: 0 rtt: 0
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

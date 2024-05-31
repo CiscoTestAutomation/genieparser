@@ -1,0 +1,45 @@
+Cisco Nexus Operating System (NX-OS) Software
+TAC support: http://www.cisco.com/tac
+Copyright (C) 2002-2022, Cisco and/or its affiliates.
+All rights reserved.
+The copyrights to certain works contained in this software are
+owned by other third parties and used and distributed under their own
+licenses, such as open source.  This software is provided "as is," and unless
+otherwise stated, there is no warranty, express or implied, including but not
+limited to warranties of merchantability and fitness for a particular purpose.
+Certain components of this software are licensed under
+the GNU General Public License (GPL) version 2.0 or 
+GNU General Public License (GPL) version 3.0  or the GNU
+Lesser General Public License (LGPL) Version 2.1 or 
+Lesser General Public License (LGPL) Version 2.0. 
+A copy of each such license is available at
+http://www.opensource.org/licenses/gpl-2.0.php and
+http://opensource.org/licenses/gpl-3.0.html and
+http://www.opensource.org/licenses/lgpl-2.1.php and
+http://www.gnu.org/licenses/old-licenses/library.txt.
+
+Software
+  BIOS: version 01.10
+  NXOS: version 10.2(3) [Feature Release]
+  Host NXOS: version 10.2(3)
+  BIOS compile time:  05/13/2022
+  NXOS image file is: bootflash:///nxos64-cs.10.2.3.F.bin
+  NXOS compile time:  4/24/2022 3:00:00 [04/24/2022 14:54:51]
+  NXOS boot mode: LXC
+
+Hardware
+  cisco Nexus9000 C9332D-GX2B Chassis 
+  Intel(R) Xeon(R) CPU D-1633N @ 2.50GHz with 32812668 kB of memory.
+  Processor Board ID FDO26380WD1
+  Device name: Spine-12
+  bootflash:  115805708 kB
+
+Kernel uptime is 49 day(s), 10 hour(s), 45 minute(s), 34 second(s)
+
+Last reset at 916744 usecs after Mon Feb 19 13:45:02 2024
+  Reason: Module PowerCycled
+  System version: 
+  Service: HW check by card-client
+
+plugin
+  Core Plugin, Ethernet Plugin

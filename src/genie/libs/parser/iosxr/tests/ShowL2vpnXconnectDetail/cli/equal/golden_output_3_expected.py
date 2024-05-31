@@ -91,6 +91,7 @@ expected_output = {
                                         },
                                         'create_time': '08/12/2020 01:02:44 (2w0d ago)',
                                         'last_time_status_changed': '12/12/2020 14:05:44 (1w3d ago)',
+                                        'last_time_pw_went_down': '12/12/2020 14:00:30 (1w3d ago)',
                                         'statistics': {
                                             'packet_totals': {
                                                 'receive': 3707556,
@@ -194,6 +195,7 @@ expected_output = {
                                         },
                                         'create_time': '08/12/2020 01:02:44 (2w0d ago)',
                                         'last_time_status_changed': '11/12/2020 12:45:30 (1w4d ago)',
+                                        'last_time_pw_went_down': '11/12/2020 12:44:41 (1w4d ago)',
                                         'statistics': {
                                             'packet_totals': {
                                                 'receive': 225798,

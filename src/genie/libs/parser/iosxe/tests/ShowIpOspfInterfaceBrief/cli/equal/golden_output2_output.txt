@@ -1,0 +1,11 @@
+
+R1#show ip ospf interface brief 
+Interface    PID   Area            IP Address/Mask    Cost  State Nbrs F/C
+Lo0          1     0               1.1.1.1/32         1     LOOP  0/0
+Gi3          1     0               192.168.14.1/24    1     BDR   1/1
+Gi2          1     0               192.168.13.1/24    1     BDR   1/1
+Gi1          1     0               192.168.12.1/24    1     BDR   1/1
+Lo1          2     0               1.1.1.1/32         1     LOOP  0/0
+Gi3.10       2     0               10.0.14.1/24       1     BDR   1/1
+Gi2.10       2     0               10.0.13.1/24       1     BDR   1/1
+Gi1.10       2     0               10.0.12.1/24       1     BDR   1/1

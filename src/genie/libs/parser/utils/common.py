@@ -760,6 +760,7 @@ class Common:
                     'AT': 'ATM',
                     'Et': 'Ethernet',
                     'BD': 'BDI',
+                    'Ser': 'Serial',
                     'Se': 'Serial',
                     'Fo': 'FortyGigabitEthernet',
                     'For': 'FortyGigabitEthernet',

@@ -40,7 +40,7 @@ expected_output = {
                         "router_cap": "1.1.1.1",
                         "s_flag": False,
                         "segment_routing": {
-                            "algorithms": {128},
+                            "algorithms": [128],
                             "i_flag": True,
                             "spf": True,
                             "srgb_base": 16000,

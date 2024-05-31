@@ -1,0 +1,22 @@
+expected_output = {
+    'SDM': {
+        'feature_name': 'Reserved-Scale',
+        'fib_host_route': 65536,
+        'ipv4_v6_shared_unicast_routes': 98304,
+        'l2_muticast_entries': 8192,
+        'l3_muticast_entries': 8192,
+        'max_l3_adjacency': 65536,
+        'max_l3_interface': 8192,
+        'max_mpls_te_tunnel': 4096,
+        'max_nat_entries': 63488,
+        'og_sgacl_hosts': 2048,
+        'overflow_mac_addresses_count': 512,
+        'overflow_shared_unicast_routes': 196608,
+        'stp_instances': 1024,
+        'template_type': 'Access',
+        'tunnels_count': 1024,
+        'unicast_mac_addresses_count': 65536,
+        'vlan_count': 4094,
+        'vrf_count': 256,
+    },
+}

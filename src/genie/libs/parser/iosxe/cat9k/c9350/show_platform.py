@@ -3,6 +3,10 @@
 IOSXE c9350 parsers for the following show commands:
    * show platform hardware fed {mode} qos scheduler sdk interface {interface}
    * show platform hardware fed {switch} {mode} qos scheduler sdk interface {interface}
+   * show platform hardware fed active qos queue stats interface {interface}
+   * show platform hardware fed switch {switch_num} qos queue stats interface {interface}
+   * show platform hardware fed active qos queue stats interface {interface} clear
+   * show platform hardware fed switch {switch_num} qos queue stats interface {interface} clear
 '''
 
 # Python
@@ -115,7 +119,7 @@ class ShowPlatformHardwareFedQosSchedulerSdkInterfaceSchema(MetaParser):
                     }
                 },
                 'cstse_scheduler': {
-                    'oid': {
+                    Optional('oid'): {
                         Any(): {
                             'mode': str,
                             'cep_ir': {
@@ -231,11 +235,11 @@ class ShowPlatformHardwareFedQosSchedulerSdkInterface(ShowPlatformHardwareFedQos
         # | 755    | C-R   | 11000000512   | 11000000512   | PIR    | C(1   ) E(1   ) | 755    |
         p2_1 = re.compile(r'^(?P<oid>\d+)\s+\|\s+(?P<ct_r>[\w\-]+)\s+\|\s+(?P<cir>\d+)\s+\|\s+(?P<eir_pir>\d+)\s+\|\s+(?P<is_eir>\w+)\s+\|\s+(?P<wfq_weights>.+)\s+\|\s+(?P<hw_id>\d+)$')
 
-        # System Port - Scheduler Configuration 
+        # System Port - Scheduler Configuration
         p3_0 = re.compile(r'^System Port - Scheduler Configuration$')
 
         # | 759    | P-CIR | 11000000512   | 12    | 11000000512   | 12       | 1       | 7       | OQPG-7  |      |      |
-        p3_1 = re.compile(r'^(?P<oid>\d+)\s+\|\s+(?P<c_pb>[\w\-]+)\s+\|\s+(?P<cir>\d+)\s+\|\s+(?P<burst>\d+)\s+\|\s+(?P<tx_cir>\d+)\s+\|\s+(?P<tx_burst>\d+)\s+\|\s+(?P<eir_wfq>\d+)\s+\|\s+(?P<act_wfq>\d+)\s+\|\s+(?P<pg_type>[\w\-]+)(\s+\|\s+(?P<child_type>\w+)\s+\|\s+(?P<child_oid>\d+))?$')
+        p3_1 = re.compile(r'^(?P<oid>\d+)\s+\|\s+(?P<c_pb>[\w\-\/]+)\s+\|\s+(?P<cir>\d+)\s+\|\s+(?P<burst>\d+)\s+\|\s+(?P<tx_cir>\d+)\s+\|\s+(?P<tx_burst>\d+)\s+\|\s+(?P<eir_wfq>\d+)\s+\|\s+(?P<act_wfq>\d+)\s+\|\s+(?P<pg_type>[\w\-]+)(\s+\|\s+(?P<child_type>\w+)\s+\|\s+(?P<child_oid>\d+))?$')
 
         # |        |       |     |       |     |          |         |         |         | OQHSE      | 760       |
         p3_2 = re.compile(r'^(?P<child_type>\w+)\s+\|\s+(?P<child_oid>\d+)$')
@@ -261,11 +265,14 @@ class ShowPlatformHardwareFedQosSchedulerSdkInterface(ShowPlatformHardwareFedQos
         # CSTSE - Scheduler Configuration
         p5_0 = re.compile(r'^CSTSE - Scheduler Configuration$')
 
-        # SVCSE - Scheduler Configuration 
+        # SVCSE - Scheduler Configuration
         p6_0 = re.compile(r'^SVCSE - Scheduler Configuration$')
 
         # | 772    | CIR      | 2000000000    | DEFLT | 0      | 55     | PARENT       | 0          | CSTSE     | 763     |        |
-        p6_1 = re.compile(r'^(?P<oid>\d+)?\s*\|\s*(?P<cep_ir>\w+)\s*\|\s*(?P<rate>\d+)\s*\|\s*(?P<burst>\w+)\s*\|\s*(?P<weight>\d+)\s*\|\s*(?P<hw_id>\d+)\s*\|\s*(?P<type>\w+)\s*\|\s*(?P<link_point>\d+)\s*\|\s*(?P<hse_type>\w+)\s*\|\s*(?P<hse_oid>\d+)(\s*\|\s+(?P<voq_id>\d+)\s*\|\s*(?P<in_device>\d+)\|\s*(?P<in_slice>\d+))?$')
+        # |        | PIR      | 2000000000    | DEFLT | 255    | 67     | PARENT       | 12         | CSTSE     | 1360    |        |
+        p6_1 = re.compile(r'^(?P<oid>\d+)?\s*\|*\s*(?P<cep_ir>(CIR|EIR|PIR))\s*\|\s*(?P<rate>\d+)\s*\|\s*(?P<burst>\w+)\s*\|'
+                          r'\s*(?P<weight>\d+)\s*\|\s*(?P<hw_id>\d+)\s*\|\s*(?P<type>\w+)\s*\|\s*(?P<link_point>\d+)\s*\|'
+                          r'\s*(?P<hse_type>\w+)\s*\|\s*(?P<hse_oid>\d+)(\s*\|\s+(?P<voq_id>\d+)\s*\|\s*(?P<in_device>\d+)\|\s*(?P<in_slice>\d+))?$')
 
         # |    |   |   |       |    |    | CHILD   |    | VSC       | 327     | 327    | 0    | 0   |
         p6_2 = re.compile(r'^CHILD\s*\|\s+\|\s*(?P<hse_type>\w+)\s*\|\s*(?P<hse_oid>\d+)\s*\|\s*(?P<voq_id>\d+)\s*\|\s*(?P<in_device>\d+)\s+\|\s*(?P<in_slice>\d+)$')
@@ -449,7 +456,8 @@ class ShowPlatformHardwareFedQosSchedulerSdkInterface(ShowPlatformHardwareFedQos
             m = p6_1.match(line)
             if m:
                 group_dict = m.groupdict()
-                oqhse_sch_dict = svcse_scheduler_dict.setdefault('oid', {}).setdefault(group_dict['oid'], {})
+                if group_dict['oid']:
+                    oqhse_sch_dict = svcse_scheduler_dict.setdefault('oid', {}).setdefault(group_dict['oid'], {})
                 cep_ir_dict = oqhse_sch_dict.setdefault('cep_ir', {}).setdefault(group_dict['cep_ir'], {})
                 cep_ir_dict['rate'] = int(group_dict['rate'])
                 cep_ir_dict['burst'] = group_dict['burst']
@@ -474,3 +482,135 @@ class ShowPlatformHardwareFedQosSchedulerSdkInterface(ShowPlatformHardwareFedQos
                 continue
 
         return ret_dict
+
+
+class ShowPlatformHardwareFedSwitchQosQueueStatsInterfaceSchema(MetaParser):
+    """Schema for show platform hardware fed {switch} {switch_var} qos queue stats interface {interface}"""
+
+    schema = {
+        'interface': {
+            Any(): {
+                'voq_id': {
+                    Any(): {
+                        'packets': {
+                            'enqueued': int,
+                            'dropped': int,
+                            'total': int
+                        },
+                        'bytes': {
+                            'enqueued': int,
+                            'dropped': int,
+                            'total': int
+                        },
+                        'slice': {
+                            Any(): {
+                                'sms_bytes': int,
+                                'hbm_blocks': int,
+                                'hbm_bytes': int
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+class ShowPlatformHardwareFedSwitchQosQueueStatsInterface(ShowPlatformHardwareFedSwitchQosQueueStatsInterfaceSchema):
+    """Parser for show platform hardware fed {switch} {switch_var} qos queue stats interface {interface}"""
+
+    cli_command = ['show platform hardware fed active qos queue stats interface {interface}',
+        'show platform hardware fed switch {switch_num} qos queue stats interface {interface}']
+
+    def cli(self, interface, switch_num=None, output=None):
+        if output is None:
+            if switch_num:
+                cmd = self.cli_command[1].format(switch_num=switch_num, interface=interface)
+            else:
+                cmd = self.cli_command[0].format(interface=interface)
+
+            output = self.device.execute(cmd)
+
+        # VOQ Stats For : HundredGigE1/0/5 [ 0x544 ]
+        # VOQ Stats For : HundredGigE2/0/2.1 [ 0x550 ]
+        p1 = re.compile(r'^VOQ Stats For : (?P<interface>[\w\/\.]+)\s+.*$')
+
+        # 0      | Enqueued |                        1194566957 |                       78841419162 |
+        # | Dropped  |                                 0 |                                 0 |
+        # | Total    |                        1194566957 |                       78841419162 |
+        # |----------|-----------------------------------------------------------------------|
+        p2 = re.compile(r'^(?P<voq_id>\d+)?\s*\|\s+(?P<header>\w+)\s+\|\s+(?P<packets>\d+)\s+\|\s+(?P<bytes>\d+)\s+\|$')
+
+        # |   Slice  |         0 |         1 |         2 |         3 |         4 |         5 |
+        p3 = re.compile(r'^\|\s+Slice\s+\|\s+(?P<slice0>\d+)\s\|\s+(?P<slice1>\d+)\s\|\s+(?P<slice2>\d+)\s\|'
+                    r'\s+(?P<slice3>\d+)\s\|\s+(?P<slice4>\d+)\s\|\s+(?P<slice5>\d+)\s\|$')
+
+        # |SMS Bytes |         0 |         0 |         0 |         0 |         0 |         0 |
+        p4 = re.compile(r'^\|\s*(?P<slice_type>SMS Bytes|HBM Blocks|HBM Bytes)\s*\|\s+(?P<slice0>\d+)\s\|\s+(?P<slice1>\d+)\s\|'
+            r'\s+(?P<slice2>\d+)\s\|\s+(?P<slice3>\d+)\s\|\s+(?P<slice4>\d+)\s\|\s+(?P<slice5>\d+)\s\|$')
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # VOQ Stats For : HundredGigE1/0/5 [ 0x544 ]
+            m = p1.match(line)
+            if m:
+                int_dict = ret_dict.setdefault('interface', {}).setdefault(Common.convert_intf_name(m.groupdict()['interface']), {})
+                continue
+
+            # 0      | Enqueued |                        1194566957 |                       78841419162 |
+            # | Dropped  |                                 0 |                                 0 |
+            # | Total    |                        1194566957 |                       78841419162 |
+            # |----------|-----------------------------------------------------------------------|
+            m = p2.match(line)
+            if m:
+                res_dict = m.groupdict()
+                if res_dict['voq_id']:
+                    voq_dict = int_dict.setdefault('voq_id', {}).setdefault(res_dict['voq_id'], {})
+
+                pkts_dict = voq_dict.setdefault('packets', {})
+                bytes_dict = voq_dict.setdefault('bytes', {})
+                pkts_dict.setdefault(res_dict['header'].lower(), int(res_dict['packets']))
+                bytes_dict.setdefault(res_dict['header'].lower(), int(res_dict['bytes']))
+                continue
+
+            # |   Slice  |         0 |         1 |         2 |         3 |         4 |         5 |
+            m = p3.match(line)
+            if m:
+                slice_dict = voq_dict.setdefault('slice', {})
+                group = m.groupdict()
+                slice_dict0 = slice_dict.setdefault(group['slice0'], {})
+                slice_dict1 = slice_dict.setdefault(group['slice1'], {})
+                slice_dict2 = slice_dict.setdefault(group['slice2'], {})
+                slice_dict3 = slice_dict.setdefault(group['slice3'], {})
+                slice_dict4 = slice_dict.setdefault(group['slice4'], {})
+                slice_dict5 = slice_dict.setdefault(group['slice5'], {})
+                continue
+
+            # |SMS Bytes |         0 |         0 |         0 |         0 |         0 |         0 |
+            m = p4.match(line)
+            if m:
+                grp_output = m.groupdict()
+                slice_type = grp_output['slice_type'].replace(' ', '_').lower()
+                slice_dict0.setdefault(slice_type, int(grp_output['slice0']))
+                slice_dict1.setdefault(slice_type, int(grp_output['slice1']))
+                slice_dict2.setdefault(slice_type, int(grp_output['slice2']))
+                slice_dict3.setdefault(slice_type, int(grp_output['slice3']))
+                slice_dict4.setdefault(slice_type, int(grp_output['slice4']))
+                slice_dict5.setdefault(slice_type, int(grp_output['slice5']))
+                continue
+
+        return ret_dict
+
+
+class ShowPlatformHardwareFedSwitchQosQueueStatsInterfaceClear(ShowPlatformHardwareFedSwitchQosQueueStatsInterface):
+    """Parser for show platform hardware fed switch {switch} qos queue stats interface {interface} clear"""
+
+    cli_command = ['show platform hardware fed active qos queue stats interface {interface} clear',
+            'show platform hardware fed switch {switch_num} qos queue stats interface {interface} clear']
+
+    def cli(self, interface, switch_num=None, output=None):
+
+        return super().cli(interface=interface, switch_num=switch_num, output=output)
