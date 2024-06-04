@@ -1,0 +1,42 @@
+RP/0/RSP0/CPU0:router# show bgp ivp6 all community 1234:1234 exact-match
+Address Family: VPNv6 Unicast
+-----------------------------
+
+BGP router identifier 192.168.1.1, local AS number 1234
+BGP generic scan interval 60 secs
+Non-stop routing is enabled
+BGP table state: Active
+Table ID: 0x0
+BGP main routing table version 5530
+BGP NSR Initial initsync version 7 (Reached)
+BGP NSR/ISSU Sync-Group versions 5530/0
+BGP scan interval 60 secs
+
+Status codes: s suppressed, d damped, h history, * valid, > best              i - internal, r RIB-failure, S stale, N Nexthop-discard
+Origin codes: i - IGP, e - EGP, ? - incomplete   Network            Next Hop            Metric LocPrf Weight Path
+Route Distinguisher: 1234:1234
+Route Distinguisher Version: 53
+*>i2001:0db8:85a3::/64                      192.0.2.1                 0    100      0 i
+* i                   192.0.2.1                 0    100      0 i
+*>i2001:0db8:85a3:0:0:0:0:1403::/48 192.0.2.1                 0    100      0 i
+* i                   192.0.2.1                 0    100      0 i
+Route Distinguisher: 1234:2505005
+Route Distinguisher Version: 54
+*>i2001:0db8:85a3:0:0:0:0:6::10/127                      192.0.2.2                 0    100      0 i
+* i                   192.0.2.2                 0    100      0 i
+*>i2001:0db8:85a3:0:0:0:0:6:195:113:123:80/125                      192.0.2.2        4294967295    100      0 65031 i
+* i                   192.0.2.2        4294967295    100      0 65031 i
+*>i2001:0db8:85a3:0:0:0:0:6:10:205::/112                      192.0.2.2        4294967295    100      0 65031 i
+* i                   192.0.2.2        4294967295    100      0 65031 i
+*>i2001:0db8:85a3:0:0:0:0:6:192:168:201::/112                      192.0.2.2        4294967295    100      0 65031 i
+* i                   192.0.2.2        4294967295    100      0 65031 i
+*>i2001:0db8:85a3:0:0:0:0:6:195:113:123:96:0/112                      192.0.2.2        4294967295    100      0 65031 i
+* i                   192.0.2.2        4294967295    100      0 65031 i
+*>i2001:0db8:85a3:0:0:0:0:6:195:113:123:128:0/112                      192.0.2.2        4294967295    100      0 65031 i
+* i                   192.0.2.2        4294967295    100      0 65031 i
+Route Distinguisher: 1234:2505118
+Route Distinguisher Version: 49
+*>i2001:0db8:85a3:0:0:0:0:18::/56   203.0.113.7          100    100      0 i
+* i                   203.0.113.7          100    100      0 i
+*>i2001:0db8:85a3:0:0:0:0:1e08::/48 203.0.113.7          100    100      0 i
+* i                   203.0.113.7          100    100      0 i
