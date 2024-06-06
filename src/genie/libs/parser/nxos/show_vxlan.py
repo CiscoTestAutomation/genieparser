@@ -1501,6 +1501,7 @@ class ShowL2routeMacIpAllDetailSchema(MetaParser):
                             Optional('sent_to'): str,
                             Optional('soo'): int,
                             Optional('l3_info'): int,
+                            Optional('label'): int,
                         }
                     }
                 }
@@ -1549,8 +1550,9 @@ class ShowL2routeMacIpAllDetail(ShowL2routeMacIpAllDetailSchema):
         # 201         0011.01ff.0001 10.1.1.2       BGP    --            0         2001:db8:646:a2bb:0:abcd:5678:1
         # 202         0011.01ff.0001 5:1:1:1::2     BGP    --            0         2001:db8:646:a2bb:0:abcd:5678:1
         p5 = re.compile(r'^\s*(?P<topo_id>[\d]+) +(?P<mac_addr>[\w\.]+) +(?P<host_ip>[\w\/\.\:]+)'
-                        ' +(?P<mac_ip_prod_type>[\w\,]+)'
-                        ' +(?P<mac_ip_flags>[\w\,\-]+) +(?P<seq_num>[\d]+) +(?P<next_hop1>[\w\/\.\:]+)$')
+                        r' +(?P<mac_ip_prod_type>[\w\,]+)'
+                        r' +(?P<mac_ip_flags>[\w\,\-]+) +(?P<seq_num>[\d]+) +(?P<next_hop1>[\w\/\.\:]+)'
+                        r'( +\(Label: (?P<label>\d+)\))?\s*$')
 
         for line in out.splitlines():
             if line:
@@ -1607,6 +1609,8 @@ class ShowL2routeMacIpAllDetail(ShowL2routeMacIpAllDetailSchema):
                 topo_dict.update({'mac_addr': mac_addr})
                 topo_dict.update({'host_ip': group.pop('host_ip')})
                 topo_dict.update({'next_hop1': group.pop('next_hop1').lower()})
+                if group.get('label'):
+                    topo_dict.update({'label': int(group['label'])})
                 continue
 
         return result_dict
