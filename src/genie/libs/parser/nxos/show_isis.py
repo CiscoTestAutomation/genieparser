@@ -1060,7 +1060,7 @@ class ShowIsisAdjacencySchema(MetaParser):
             Any(): {
                 'vrf': {
                     Any(): {
-                        'interfaces': {
+                        Optional('interfaces'): {
                             Any(): {
                                 'adjacencies': {
                                     Any(): {
