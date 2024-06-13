@@ -1,0 +1,73 @@
+!
+ip dhcp excluded-address 10.1.10.2 10.1.1.20
+ip dhcp excluded-address vrf lala 12.1.1.10
+ip dhcp excluded-address vrf lala 12.1.1.12 12.1.1.114
+ip dhcp excluded-address vrf lala 10.2.2.0 10.2.2.244
+!
+ip dhcp pool hatseflats-1
+ network 172.16.2.0 255.255.255.0
+!
+ip dhcp pool hatseflats-2
+ network 172.16.3.0 255.255.255.0
+!
+ip dhcp pool TEST-1
+ vrf lala
+ network 12.1.1.0 255.255.255.0
+ network 13.1.0.0 255.255.254.0 secondary
+ domain-name nelis.nl
+ dns-server 10.1.1.99 10.1.1.100
+ option 150 ip 10.1.1.100
+ netbios-name-server 10.1.1.101 10.1.1.102
+ netbios-node-type h-node
+ option 43 ip 12.1.1.1
+!
+ip dhcp pool BFR-test-voice
+ network 172.19.0.0 255.255.0.0
+ domain-name test-voice.local
+ default-router 172.19.0.254
+ option 43 hex 010a.5369.656d.656e.7300.0000.0204.0000.0258.0317.7364.6c70.3a2f.2f31.3732.2e31.372e.302e.323a.3138.3434.33ff
+ dns-server 10.31.1.1 10.31.107.253
+!
+ip dhcp pool test-company-(CGR)
+ network 10.1.10.0 255.255.255.0
+ default-router 10.1.10.1
+ dns-server 213.162.171.133 213.162.171.134
+ option 150 ip 139.156.73.67
+!
+ip dhcp pool cxbeh
+ network 10.111.10.0 255.255.255.0
+ bootfile testfile
+ next-server 10.12.1.10
+ dns-server 10.100.1.5
+ domain-name woonzorg.local
+ netbios-node-type h
+-node
+ option 66 ascii "10.12.1.10"
+ default-router 10.111.10.1
+!
+ip dhcp pool DHCP_TEST1
+ network 10.222.0.0 255.255.0.0
+ domain-name corp.csu.lan
+ dns-server 10.80.2.4 10.80.2.5
+ default-router 10.222.254.254
+ option 43 hex 3a02.14ff
+ option 201 ascii '10.80.3.33' '40003'
+ option 202 ip 10.80.3.33
+ lease 8
+!
+ip dhcp pool Mitel
+ network 172.16.100.0 255.255.255.0
+ default-router 172.16.100.200
+ option 43 ascii id:ipphone.mitel.com;call_srv=143.0.0.1;vlan=40;l2p=6;dscp=46;sw_tftp=143.0.0.1
+!
+ip dhcp pool SUVM1202
+ network 130.1.41.0 255.255.255.0
+ default-router 130.1.41.253
+ option 186 ip 172.24.1.2
+ option 190 hex 01bb
+ option 161 ascii "172.24.1.2"
+ option
+ 162 ascii "/"
+ option 184 ascii "wdmserverrapport"
+ option 185 ascii "DellWyse"
+!
