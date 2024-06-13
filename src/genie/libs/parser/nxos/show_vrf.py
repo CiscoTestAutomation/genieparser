@@ -292,7 +292,7 @@ class ShowRunningConfigVrf(ShowRunningConfigVrfSchema):
         #     route-target both auto
         #     route-target both auto mvpn
         #     route-target both auto evpn
-        p5 = re.compile(r'^\s*route-target +(?P<rt_type>\w+) +(?P<rt>\w+)( +(?P<rt_evpn_mvpn>\w+))?$')
+        p5 = re.compile(r'^\s*route-target +(?P<rt_type>\w+) +(?P<rt>\w+:\w+)( +(?P<rt_evpn_mvpn>\w+))?$')
 
         # find all list of vrfs
         if vrf:
@@ -341,7 +341,10 @@ class ShowRunningConfigVrf(ShowRunningConfigVrfSchema):
                     rt = m.groupdict()['rt']
                     rt_type = m.groupdict()['rt_type']
                     route_target_dict = af_dict.setdefault('route_target', {}).setdefault(rt, {})
-                    route_target_dict.update({'rt_type': m.groupdict()['rt_type']})
+                    if 'rt_type' in route_target_dict:
+                        route_target_dict.update({'rt_type': 'both'})
+                    else:
+                        route_target_dict.update({'rt_type': rt_type})
 
                     if m.groupdict()['rt_evpn_mvpn']:
                         if 'evpn' in m.groupdict()['rt_evpn_mvpn']:
