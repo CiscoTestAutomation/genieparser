@@ -5547,11 +5547,11 @@ class ShowBgpNeighborsReceivedRoutesSuperParser(ShowBgpNeighborsReceivedRoutesSc
         p3_2 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)'
                             '(?P<path_type>(i|e|c|l|a|r|I))?(\s)?'
                             '(?P<prefix>(([0-9]+[\.][0-9]+[\.][0-9]+'
-                            '[\.][0-9]+[\/][0-9]+)|([a-zA-Z0-9]+[\:]'
+                            '[\.][0-9]+(?:[\/][0-9]+)?)|([a-zA-Z0-9]+[\:]'
                             '[a-zA-Z0-9]+[\:][a-zA-Z0-9]+[\:]'
                             '[a-zA-Z0-9]+[\:][\:][\/][0-9]+)|'
                             '([a-zA-Z0-9]+[\:][a-zA-Z0-9]+[\:]'
-                            '[a-zA-Z0-9]+[\:][\:][\/][0-9]+)))'
+                            '[a-zA-Z0-9]+[\:][\:](?:[\/][0-9]+)?)))'
                             ' +(?P<next_hop>[a-zA-Z0-9\.\:]+)'
                             ' +(?P<numbers>[a-zA-Z0-9\s\(\)\{\}]+)'
                             ' +(?P<origin_codes>(i|e|\?|\&|\|))$')
