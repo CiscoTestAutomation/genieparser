@@ -3604,6 +3604,9 @@ class ShowBgpVrfAllAllSummary(ShowBgpVrfAllAllSummarySchema):
                             ' +(?P<outq>[0-9]+) +(?P<up_down>[a-zA-Z0-9\:]+)'
                             ' +(?P<state_pfxrcd>(?P<state>[a-zA-Z\s\(\)]+)?(?P<prx_rcd>\d+)?([\w\(\)\s]+)?)$')
         # Neighbor        V             AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+        #                 4 123456
+        p8_2_1 = re.compile(r'^\s*(?P<v>[0-9]+) +(?P<as>[0-9]+)$')
+        # Neighbor        V             AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
         # 10.10.10.10     4 4211111111
         p8_3 = re.compile(r'^\s*(?P<neighbor>[a-zA-Z0-9\.\:]+) +(?P<v>[0-9]+) +(?P<as>[0-9]+)$')
         # Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
@@ -3853,6 +3856,23 @@ class ShowBgpVrfAllAllSummary(ShowBgpVrfAllAllSummarySchema):
                     nbr_af_dict['path']['total_entries'] = num_path_entries
                     nbr_af_dict['path']['memory_usage'] = memory_usage
                     continue
+
+            # Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+            #                 4 4211111111
+            m = p8_2_1.match(line)
+            if m and data_on_nextline:
+
+                # Add address family to this neighbor
+                if 'address_family' not in nbr_dict:
+                    nbr_dict['address_family'] = {}
+                if address_family not in nbr_dict['address_family']:
+                    nbr_dict['address_family'][address_family] = {}
+                nbr_af_dict = nbr_dict['address_family'][address_family]
+
+                # Add keys for this address_family
+                nbr_af_dict['neighbor_table_version'] = int(m.groupdict()['v'])
+                nbr_af_dict['as'] = int(m.groupdict()['as'])
+                continue
 
             # Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
             # 10.10.10.10     4 4211111111

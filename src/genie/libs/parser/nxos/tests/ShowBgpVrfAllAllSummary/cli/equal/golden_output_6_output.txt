@@ -1,0 +1,24 @@
+show bgp vrf default ipv6 uni summary
+BGP summary information for VRF default, address family IPv6 Unicast
+BGP router identifier 172.22.251.3, local AS number 65101
+BGP table version is 47, IPv6 Unicast config peers 6, capable peers 1
+9 network entries and 21 paths using 3744 bytes of memory
+BGP attribute entries [4/688], BGP AS path entries [0/0]
+BGP community entries [0/0], BGP clusterlist entries [0/0]
+9 received paths for inbound soft reconfiguration
+9 identical, 0 modified, 0 filtered received paths using 0 bytes
+
+Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+2001:db8:c006:0:3e57:31ff:feb8:5dc4
+                4 65011       0       0        0    0    0 05:49:52 Shut (Admin)
+2001:db8:c006:ee::25
+                4 65120       0       0        0    0    0 05:49:52 Idle
+2001:db8:c006:ff:1::8
+                4 65152       0       0        0    0    0 05:49:52 Idle
+2001:db8:c006:ff:1::9
+                4 65152       0       0        0    0    0 05:49:52 Idle
+2001:db8:c006:ff:251::1
+                4 406942
+                              0       0        0    0    0 05:49:52 Idle
+2001:db8:c006:ff:251::4
+                4 65101    2104    2101       47    0    0 05:49:31 9
