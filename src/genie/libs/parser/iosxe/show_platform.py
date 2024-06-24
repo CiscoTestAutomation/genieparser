@@ -15784,6 +15784,27 @@ class ShowPlatformSoftwareCpmSwitchB0CountersPuntInjectSchema(MetaParser):
                 'drop_punt' : int,
             },
         },
+        Optional('timestamp_now'): str,
+        Optional('ctrl_rx_timestamp'): {
+            'timestamp': dict,
+            Optional('ctrl_rx_max_time_gap_sec'): str,
+            Optional('ctrl_rx_max_timestamp'):str,
+        },    
+        Optional('ctrl_tx_timestamp'): {
+            'timestamp': dict,
+            Optional('ctrl_tx_max_time_gap_sec'): str,
+            Optional('ctrl_tx_max_timestamp'):str, 
+        },    
+        Optional('ipc_rx_timestamp'): {
+            'timestamp': dict,
+            Optional('ipc_rx_max_time_gap_sec'): str,
+            Optional('ipc_rx_max_timestamp'):str, 
+        },    
+        Optional('ipc_tx_timestamp'): {
+            'timestamp': dict,
+            Optional('ipc_tx_max_time_gap_sec'): str,
+            Optional('ipc_tx_max_timestamp'):str,
+       },
     }
 
 class ShowPlatformSoftwareCpmSwitchB0CountersPuntInject(ShowPlatformSoftwareCpmSwitchB0CountersPuntInjectSchema):
@@ -15797,20 +15818,171 @@ class ShowPlatformSoftwareCpmSwitchB0CountersPuntInject(ShowPlatformSoftwareCpmS
 
         # initial variables
         ret_dict = {}
-
+        temp_dict  = {}
+        
+        # SVL CTRL           12673           12641                0                15 
         p1 = re.compile('^(?P<traffic_type>\w+\s+\w+)\s+(?P<packets_inject>\d+)\s+(?P<packets_punt>\d+)\s+(?P<drop_inject>\d+)\s+(?P<drop_punt>\d+)$')
+        
+        # Timestamp Now: May 07 11:58:31.969
+        p2 = re.compile(r'^Timestamp +Now\: +(?P<timestamp_now>.*)$')
+        
+        # CTRL RX Timestamp: May 07 11:58:21.515 [1]
+        p3 = re.compile(r'^CTRL +RX +Timestamp\: +(?P<time>.*) +\[(?P<count>\d+)\]$')
+        
+        # CTRL RX Maximum Time Gap:                4 sec,          941197usec
+        p4 = re.compile(r'^CTRL +RX +Maximum +Time +Gap\: +(?P<ctrl_rx_max_time_gap_sec>.*)$')  
+        
+        # CTRL RX Maximum Gap Timestamp: May 07 06:13:36.003
+        p5 = re.compile(r'^CTRL +RX +Maximum +Gap +Timestamp\: +(?P<ctrl_rx_max_timestamp>.*)$')
+        
+        # CTRL TX Timestamp: May 07 11:58:20.859 [3]
+        p6 = re.compile(r'^CTRL +TX +Timestamp\: +(?P<time>.*) +\[(?P<count>\d+)\]$')
+        
+        # CTRL TX Maximum Time Gap:                4 sec,          991449usec
+        p7 = re.compile(r'^CTRL +TX +Maximum +Time +Gap\: +(?P<ctrl_tx_max_time_gap_sec>.*)$') 
+        
+        # CTRL TX Maximum Gap Timestamp: May 07 05:25:53.959
+        p8 = re.compile(r'^CTRL +TX +Maximum +Gap +Timestamp\: +(?P<ctrl_tx_max_timestamp>.*)$')
+        
+        # IPC RX Timestamp: May 07 11:58:31.882 [2]
+        p9 = re.compile(r'^IPC +RX +Timestamp\: +(?P<time>.*) +\[(?P<count>\d+)\]$')
+        
+        # IPC RX Maximum Time Gap:                4 sec,          350695usec
+        p10 = re.compile(r'^IPC +RX +Maximum +Time +Gap\: +(?P<ipc_rx_max_time_gap_sec>.*)$') 
+        
+        # IPC RX Maximum Gap Timestamp: May 07 05:29:06.825
+        p11 = re.compile(r'^IPC +RX +Maximum +Gap +Timestamp\: +(?P<ipc_rx_max_timestamp>.*)$')
+        
+        # IPC TX Timestamp: May 07 11:58:31.869 [2]
+        p12 = re.compile(r'^IPC +TX +Timestamp\: +(?P<time>.*) +\[(?P<count>\d+)\]$')
+        
+        # IPC TX Maximum Time Gap:                1 sec,          953783usec
+        p13 = re.compile(r'^IPC +TX +Maximum +Time +Gap\: +(?P<ipc_tx_max_time_gap_sec>.*)$') 
+        
+        # IPC TX Maximum Gap Timestamp: May 07 05:21:16.021
+        p14 = re.compile(r'^IPC +TX +Maximum +Gap +Timestamp\: +(?P<ipc_tx_max_timestamp>.*)$')
+        
 
         for line in output.splitlines():
             line=line.strip()
-            m=p1.match(line)
+            
+            # SVL CTRL           12673           12641                0                15 
+            m = p1.match(line)
             if m:
-                group=m.groupdict()
+                group = m.groupdict()
                 root_dict = ret_dict.setdefault('traffic_type',{}).setdefault(group['traffic_type'].strip(),{})
                 root_dict['packets_inject']= int(group['packets_inject'])
                 root_dict['packets_punt'] = int(group['packets_punt'])
                 root_dict['drop_inject'] = int(group['drop_inject'])
                 root_dict['drop_punt'] = int(group['drop_punt'])
                 continue
+            
+            # Timestamp Now: May 07 11:58:31.969
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()                
+                ret_dict['timestamp_now'] = group['timestamp_now']
+                continue
+            
+            # CTRL RX Timestamp: May 07 11:58:21.515 [1]
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()                
+                count = int(group['count'])
+                temp_dict.update({count : group['time']})                
+                continue                
+            
+            # CTRL RX Maximum Time Gap:                4 sec,          941197usec
+            m = p4.match(line)
+            if m:
+                root_dict = ret_dict.setdefault('ctrl_rx_timestamp', {})
+                root_dict['timestamp'] = temp_dict
+                temp_dict = {}
+                group = m.groupdict()
+                root_dict['ctrl_rx_max_time_gap_sec'] = group['ctrl_rx_max_time_gap_sec']
+                continue                
+            
+            # CTRL RX Maximum Gap Timestamp: May 07 06:13:36.003
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()                
+                root_dict['ctrl_rx_max_timestamp'] = group['ctrl_rx_max_timestamp']                
+                continue   
+                
+            # CTRL TX Timestamp: May 07 11:58:20.859 [3]
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()                
+                count = int(group['count'])                  
+                temp_dict.update({count: group['time']})                
+                continue
+                
+            # CTRL TX Maximum Time Gap:                4 sec,          991449usec    
+            m = p7.match(line)
+            if m:
+                root_dict = ret_dict.setdefault('ctrl_tx_timestamp', {})
+                root_dict['timestamp'] = temp_dict
+                temp_dict = {}
+                group = m.groupdict()
+                root_dict['ctrl_tx_max_time_gap_sec'] = group['ctrl_tx_max_time_gap_sec']
+                continue                
+            
+            # CTRL TX Maximum Gap Timestamp: May 07 05:25:53.959
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()                
+                root_dict['ctrl_tx_max_timestamp'] = group['ctrl_tx_max_timestamp']                
+                continue                
+            
+            # IPC RX Timestamp: May 07 11:58:31.882 [2]
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()                
+                count = int(group['count'])                
+                temp_dict.update({count: group['time']})                 
+                continue
+                
+            # IPC RX Maximum Time Gap:                4 sec,          350695usec    
+            m = p10.match(line)
+            if m:
+                root_dict = ret_dict.setdefault('ipc_rx_timestamp', {})
+                root_dict['timestamp'] = temp_dict
+                temp_dict = {}
+                group = m.groupdict()
+                root_dict['ipc_rx_max_time_gap_sec'] = group['ipc_rx_max_time_gap_sec']
+                continue                
+            
+            # IPC RX Maximum Gap Timestamp: May 07 05:29:06.825
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()                
+                root_dict['ipc_rx_max_timestamp'] = group['ipc_rx_max_timestamp']                
+                continue   
+                
+            # IPC TX Timestamp: May 07 11:58:31.869 [2]
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()                
+                count = int(group['count'])                
+                temp_dict.update({count: group['time']})               
+                continue
+                
+            # IPC TX Maximum Time Gap:                1 sec,          953783usec    
+            m = p13.match(line)
+            if m:
+                root_dict = ret_dict.setdefault('ipc_tx_timestamp', {})
+                root_dict['timestamp'] = temp_dict
+                temp_dict = {}
+                group = m.groupdict()
+                root_dict['ipc_tx_max_time_gap_sec'] = group['ipc_tx_max_time_gap_sec']
+                continue                
+            
+            # IPC TX Maximum Gap Timestamp: May 07 05:21:16.021
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()                
+                root_dict['ipc_tx_max_timestamp'] = group['ipc_tx_max_timestamp']                
+                continue  
 
         return ret_dict
 
@@ -28464,12 +28636,15 @@ class ShowPlatformSoftwareFedSwitchMatmStats(ShowPlatformSoftwareFedSwitchMatmSt
     """Parser for 'show platform software fed switch {mode} matm stats'"""
 
     cli_command = ['show platform software fed active matm stats',
-        'show platform software fed switch {mode} matm stats']
+        'show platform software fed switch {mode} matm stats',
+        'show platform software fed {act_mode} matm stats']
 
-    def cli(self, mode=None, output=None):
+    def cli(self, mode=None, act_mode=None, output=None):
         if output is None:
             if mode:
                 cmd = self.cli_command[1].format(mode=mode)
+            elif act_mode:
+                cmd = self.cli_command[2].format(act_mode=act_mode)
             else:
                 cmd = self.cli_command[0]
             output = self.device.execute(cmd)
@@ -35032,11 +35207,18 @@ class ShowPlatformSoftwareFedSwitchActiveLearningStatsSchema(MetaParser):
 class ShowPlatformSoftwareFedSwitchActiveLearningStats(ShowPlatformSoftwareFedSwitchActiveLearningStatsSchema):
     """Parser for show platform software fed switch active learning stats"""
 
-    cli_command = 'show platform software fed switch active learning stats'
+    cli_command = ['show platform software fed switch active learning stats',
+                'show platform software fed {rp} learning stats']
 
-    def cli(self, output=None):
+    def cli(self, rp=None, output=None):
         if output is None:
-            output = self.device.execute(self.cli_command)
+            if rp:
+                cmd = self.cli_command[1].format(rp=rp)
+            else:
+                cmd = self.cli_command[0]
+
+            # Execute the command
+            output = self.device.execute(cmd)
 
         # Learning cache parameter error: 0
         p1 = re.compile(r"^Learning\s+cache\s+parameter\s+error:\s+(?P<learning_cache>\d+)$")
@@ -39201,6 +39383,436 @@ class ShowPlatformHardwareFedSwitchActiveNpuSlotPortInfo(ShowPlatformHardwareFed
                     root_dict[key] = int(value)
                 else:
                     root_dict[key] = value
-
+ 
         return ret_dict
+        
+        
+class ShowPlatformHardwareFedSwitchActiveNpuSlotPortLinkstatusSchema(MetaParser):
+    """Schema for show  platform  hardware fed  switch  active  npu  slot  1  port 23 link_status"""
+
+    schema = {
+        'mpp_port_details': {            
+            Any():Or(int,str),
+        }, 
+        'autoneg_details':{
+            Any():Or(int,str),
+        },
+        'autoneg_status': {
+            Any():Or(int,str),
+        },
+        'mib_counters': {
+            Any(): int,
+        },
+        'port': int,
+        'cmd': str,
+        'rc': str,
+        'rsn': str,       
+                
+   }        
+    
+
+class ShowPlatformHardwareFedSwitchActiveNpuSlotPortLinkstatus(ShowPlatformHardwareFedSwitchActiveNpuSlotPortLinkstatusSchema):
+    """
+    ShowPlatformHardwareFedSwitchActiveNpuSlotPortLinkstatus
+    """
+    
+    cli_command = 'show platform hardware fed switch {mode} npu slot 1 port {port_num} link_status'        
+
+    def cli(self, mode, port_num, output=None): 
+
+        if output is None:
+            output = self.device.execute(self.cli_command.format(mode=mode,port_num=port_num))         
+
+        ret_dict = {}
+        
+        #MPP PORT DETAILS
+        p0 =  re.compile(r'^MPP +PORT +DETAILS$')
+        
+        #link_state: 1 pcs_status: 0  high_ber: 0
+        p1 = re.compile(r'^link_state\: +(?P<link_state>\d+) +pcs_status\: +(?P<pcs_status>\d+) +high_ber\: +(?P<high_ber>\d+)$')
+        
+        #get_state = LINK_UP 
+        p2 = re.compile(r'^get_state +\= +(?P<get_state>.*)$')
+        
+        # Autoneg Details
+        p3 = re.compile(r'^Autoneg +Details$')
+        
+        #Autoneg Status
+        p4 = re.compile(r'^Autoneg +Status$')
+        
+        #MIB counters
+        p5 = re.compile(r'^MIB +counters$')
+        
+        #Genral - Speed:         speed_gbps1
+        p6 = re.compile(r'^(?P<key>[\s*\w]+.*)\: +(?P<value>[\S\s]+.*)$')
+        
+        #Port = 22 cmd = (port_diag unit 0 port 22 slot 0) rc = 0x0 rsn = success
+        p7 = re.compile(r'^Port +\= +(?P<port>\d+) +cmd +\= +\((?P<cmd>[\s*\w]+)\) +rc +\= +(?P<rc>\w+) +rsn +\= +(?P<rsn>\w+)$')
+        
+        for line in output.splitlines():
+            line = line.strip()            
+
+            #MPP PORT DETAILS 
+            m = p0.match(line)
+            if m: 
+                root_dict =  ret_dict.setdefault('mpp_port_details', {})
+                continue
+                
+                
+            #'114      329      0     0'    
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict['link_state'] = int(group['link_state'])
+                root_dict['pcs_status'] = int(group['pcs_status'])
+                root_dict['high_ber'] = int(group['high_ber'])                
+                continue 
+            
+            #get_state = LINK_UP
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict['get_state'] = group['get_state'].strip()                          
+                continue 
+
+            #Autoneg Details
+            m = p3.match(line)
+            if m:
+                root_dict = ret_dict.setdefault('autoneg_details', {})
+                continue
+            
+            #Autoneg Status
+            m = p4.match(line)
+            if m:
+                root_dict = ret_dict.setdefault('autoneg_status', {})
+                continue
+            
+            #MIB counters
+            m = p5.match(line)  
+            if m:
+                root_dict = ret_dict.setdefault('mib_counters', {})
+                continue
+                
+                
+            #Genral - Speed:         speed_gbps1
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                key = group['key'].strip().lower().replace(":","").replace("-",'_').replace(" ",'_')
+                if group['value'].isdigit():
+                    root_dict.update({key: int(group['value'])})
+                else:
+                    root_dict.update({key: group['value']})
+                continue  
+            
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['port'] = int(group['port'])
+                ret_dict['cmd'] = group['cmd']
+                ret_dict['rc'] = group['rc']
+                ret_dict['rsn'] = group['rsn']
+                continue
+                
+        return ret_dict 
+        
+        
+class ShowPlatformHardwareFedSwitchActiveNpuSlotPortLinkstatusSchema(MetaParser):
+    """Schema for show  platform  hardware fed  switch  active  npu  slot  1  port 23 link_status"""
+
+    schema = {
+        'mpp_port_details': {            
+            Any():Or(int,str),
+        }, 
+        'autoneg_details':{
+            Any():Or(int,str),
+        },
+        'autoneg_status': {
+            Any():Or(int,str),
+        },
+        'mib_counters': {
+            Any(): int,
+        },
+        'port': int,
+        'cmd': str,
+        'rc': str,
+        'rsn': str,       
+                
+   }        
+    
+
+class ShowPlatformHardwareFedSwitchActiveNpuSlotPortLinkstatus(ShowPlatformHardwareFedSwitchActiveNpuSlotPortLinkstatusSchema):
+    """
+    ShowPlatformHardwareFedSwitchActiveNpuSlotPortLinkstatus
+    """
+    
+    cli_command = 'show platform hardware fed switch {mode} npu slot 1 port {port_num} link_status'        
+
+    def cli(self, mode, port_num, output=None): 
+
+        if output is None:
+            output = self.device.execute(self.cli_command.format(mode=mode,port_num=port_num))         
+
+        ret_dict = {}
+        
+        #MPP PORT DETAILS
+        p0 =  re.compile(r'^MPP +PORT +DETAILS$')
+        
+        #link_state: 1 pcs_status: 0  high_ber: 0
+        p1 = re.compile(r'^link_state\: +(?P<link_state>\d+) +pcs_status\: +(?P<pcs_status>\d+) +high_ber\: +(?P<high_ber>\d+)$')
+        
+        #get_state = LINK_UP 
+        p2 = re.compile(r'^get_state +\= +(?P<get_state>.*)$')
+        
+        # Autoneg Details
+        p3 = re.compile(r'^Autoneg +Details$')
+        
+        #Autoneg Status
+        p4 = re.compile(r'^Autoneg +Status$')
+        
+        #MIB counters
+        p5 = re.compile(r'^MIB +counters$')
+        
+        #Genral - Speed:         speed_gbps1
+        p6 = re.compile(r'^(?P<key>[\s*\w]+.*)\: +(?P<value>[\S\s]+.*)$')
+        
+        #Port = 22 cmd = (port_diag unit 0 port 22 slot 0) rc = 0x0 rsn = success
+        p7 = re.compile(r'^Port +\= +(?P<port>\d+) +cmd +\= +\((?P<cmd>[\s*\w]+)\) +rc +\= +(?P<rc>\w+) +rsn +\= +(?P<rsn>\w+)$')
+        
+        for line in output.splitlines():
+            line = line.strip()            
+
+            #MPP PORT DETAILS 
+            m = p0.match(line)
+            if m: 
+                root_dict =  ret_dict.setdefault('mpp_port_details', {})
+                continue
+                
+                
+             #'114      329      0     0'    
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict['link_state'] = int(group['link_state'])
+                root_dict['pcs_status'] = int(group['pcs_status'])
+                root_dict['high_ber'] = int(group['high_ber'])                
+                continue 
+            
+            #get_state = LINK_UP
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict['get_state'] = group['get_state'].strip()                          
+                continue 
+
+            #Autoneg Details
+            m = p3.match(line)
+            if m:
+                root_dict = ret_dict.setdefault('autoneg_details', {})
+                continue
+            
+            #Autoneg Status
+            m = p4.match(line)
+            if m:
+                root_dict = ret_dict.setdefault('autoneg_status', {})
+                continue
+            
+            #MIB counters
+            m = p5.match(line)  
+            if m:
+                root_dict = ret_dict.setdefault('mib_counters', {})
+                continue
+                
+                
+            #Genral - Speed:         speed_gbps1
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                key = group['key'].strip().lower().replace(":","").replace("-",'_').replace(" ",'_')
+                if group['value'].isdigit():
+                    root_dict.update({key: int(group['value'])})
+                else:
+                    root_dict.update({key: group['value']})
+                continue  
+            
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['port'] = int(group['port'])
+                ret_dict['cmd'] = group['cmd']
+                ret_dict['rc'] = group['rc']
+                ret_dict['rsn'] = group['rsn']
+                continue
+                
+        return ret_dict     
+        
+        
+class ShowPlatformSoftwareCpmCountersInterfaceIsisSchema(MetaParser):
+    """Schema for show platform software cpm switch active B0 counters interface isis"""
+
+    schema = {
+        'traffic_detail':{
+            Any(): {            
+                'tx': int,
+                'rx': int,
+                'tx_drop': int,
+                'rx_drop': int,
+            },
+        },
+        'timestamp_now': str,
+        'interface': {
+            Any(): {
+            'isis_rx_timestamp': {
+                'timestamp': dict,
+                Optional('rx_max_time_gap'): str,
+                Optional('rx_max_timestamp'): str,
+                },
+            'isis_tx_timestamp': {
+                'timestamp': dict,
+                Optional('tx_max_time_gap'): str,
+                Optional('tx_max_timestamp'): str,
+                },               
+            },        
+        },          
+   }        
+    
+
+class ShowPlatformSoftwareCpmCountersInterfaceIsis(
+    ShowPlatformSoftwareCpmCountersInterfaceIsisSchema):
+    """
+    ShowPlatformSoftwareCpmSwitchActiveB0CountersInterfaceIsis
+    """
+    
+    cli_command = 'show platform software cpm switch {mode} B0 counters interface isis'        
+
+    def cli(self, mode, output=None):
+
+        if output is None:
+            output = self.device.execute(self.cli_command.format(mode=mode))            
+
+        ret_dict = {}
+        temp_dict = {}
+        
+        #FiftyGigE1/0/25 [4]
+        p0 =  re.compile(r'^(?P<interface>\S+)\s+\[\d+\]$')
+        
+        #'114      329      0     0'
+        p1  =  re.compile(r'^(?P<tx>\d+) +(?P<rx>\d+) +(?P<tx_drop>\d+) +(?P<rx_drop>\d+)$')
+        
+        #Timestamp Now: Mar 07 11:00:43.313 
+        p2 = re.compile(r'^Timestamp +Now\: +(?P<timestamp_now>.*)$')
+        
+        #ISIS RX Timestamp: Mar 11 10:42:45.594 [3]
+        p3  =  re.compile(r'^ISIS +RX +Timestamp\: +(?P<time>.*) +\[(?P<count>\d+)\]$')
+        
+        #ISIS RX Maximum Time Gap:                5 sec,             512 usec
+        p4 = re.compile(r'^ISIS +RX +Maximum +Time +Gap\: +(?P<rx_max_time_gap>.*)$')        
+               
+        #ISIS RX Maximum Gap Timestamp: Mar 11 08:36:12.697
+        p5 = re.compile(r'^ISIS +RX +Maximum +Gap +Timestamp\: +(?P<rx_max_timestamp>.*)$')
+        
+        #ISIS TX Timestamp: Mar 11 10:42:50.983 [1]
+        p6  =  re.compile(r'^ISIS +TX +Timestamp\: +(?P<time>.*) +\[(?P<count>\d+)\]$')
+        
+        #ISIS TX Maximum Time Gap:                9 sec,          492792 usec 
+        p7 = re.compile(r'^ISIS +TX +Maximum +Time +Gap\: +(?P<tx_max_time_gap>.*)$')
+        
+        #ISIS TX Maximum Gap Timestamp: Mar 11 07:31:20.299
+        p8 = re.compile(r'^ISIS +TX +Maximum +Gap +Timestamp\: +(?P<tx_max_timestamp>.*)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            
+
+            #FiftyGigE1/0/25 [4]
+            m = p0.match(line)
+            if m:                
+                group = m.groupdict() 
+                interface_name =  Common.convert_intf_name(group['interface'])                
+                if  ret_dict.get('timestamp_now'):
+                    int_dict =  ret_dict.setdefault('interface', {}).setdefault(interface_name, {})                    
+                else:    
+                    int_dict =  ret_dict.setdefault('traffic_detail', {}).setdefault(interface_name, {})
+                    
+             #'114      329      0     0'    
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                int_dict['tx'] = int(group['tx'])
+                int_dict['rx'] = int(group['rx'])
+                int_dict['tx_drop'] = int(group['tx_drop'])
+                int_dict['rx_drop'] = int(group['rx_drop'])
+                continue
+                
+            
+            #Timestamp Now: Mar 07 11:00:43.313             
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()                
+                ret_dict['timestamp_now'] = group['timestamp_now']
+                continue
+                
+            
+            #ISIS RX Timestamp: Mar 11 10:42:45.594 [3]
+            count  = 0    
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()                
+                count = int(group['count'])
+                temp_dict.update({count : group['time']})                
+                continue
+                
+                
+            #ISIS RX Maximum Time Gap:                5 sec,             512 usec
+            m = p4.match(line)
+            if m:
+                int_dict = int_dict.setdefault('isis_rx_timestamp', {})
+                int_dict['timestamp'] = temp_dict
+                temp_dict  = {}
+                group = m.groupdict()
+                int_dict['rx_max_time_gap'] = group['rx_max_time_gap']
+                continue
+                
+            
+            #ISIS RX Maximum Gap Timestamp: Mar 11 08:36:12.697
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()                
+                int_dict['rx_max_timestamp'] = group['rx_max_timestamp']                
+                continue                
+            
+            
+            #ISIS TX Timestamp: Mar 11 10:42:50.983 [1]
+            count  = 0    
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                count = int(group['count'])  
+                temp_dict.update({count : group['time']})                
+                continue
+                
+                
+            #ISIS TX Maximum Time Gap:                9 sec,          492792 usec     
+            m = p7.match(line)
+            if m:
+                int_dict = ret_dict.setdefault('interface', {}).setdefault(interface_name, {}).setdefault('isis_tx_timestamp', {})
+                int_dict['timestamp'] = temp_dict
+                temp_dict =  {}
+                group = m.groupdict()
+                int_dict['tx_max_time_gap'] = group['tx_max_time_gap']
+                continue
+                
+                
+            #ISIS TX Maximum Gap Timestamp: Mar 11 07:31:20.299
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                int_dict['tx_max_timestamp'] = group['tx_max_timestamp']
+                continue                
+    
+        return ret_dict
+        
+
+
+
 

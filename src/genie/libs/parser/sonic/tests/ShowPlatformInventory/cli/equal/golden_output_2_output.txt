@@ -1,0 +1,25 @@
+cisco@sonic:~$ show platform inventory
+    Name                Product ID      Version         Serial Number   Description
+
+Chassis
+    CHASSIS             8201-32FH-O     0.33            FOC2217DTWE     Cisco 8201-32FH Open Network
+
+Route Processors
+    RP0                 8201-32FH-O     0.33            FOC2219XVCJ     Cisco 8201-32FH Open Network
+
+Power Supplies
+    psutray                                                             
+        PSU0 -- not present
+        PSU1 -- not present
+
+Cooling Devices
+    fantray0 -- not present
+    fantray1 -- not present
+    fantray2 -- not present
+    fantray3 -- not present
+    fantray4 -- not present
+    fantray5 -- not present
+
+FPDs
+    RP0/info.0                          0.1.1-0            \_SB_.PCI0.SE0_.BR2A.BR3A.IOFP.INFO
+    RP0/info.1                          0.24.0-0           \_SB_.PCI0.SE0_.BR2A.BR3B.VLTN.INFO

@@ -360,7 +360,21 @@ class ShowLispPlatformSchema(MetaParser):
                     'remote_eid_idle': int,
                     'mapping_cache_full': str,
                 }
-            }           
+            },
+            Optional('software_only'): {
+                'ipv4': {
+                    'local_eid': int,
+                    'remote_eid': int,
+                },
+                'ipv6': {
+                    'local_eid': int,
+                    'remote_eid': int,
+                },
+                'mac': {
+                    'local_eid': int,
+                    'remote_eid': int,
+                }
+            } 
         }
     }
 
@@ -421,6 +435,9 @@ class ShowLispPlatform(ShowLispPlatformSchema):
         # L2 limit:                         65536
         # p10 = re.compile(r'^(?P<type>(L2 limit)):(?:\s*)(?P<l2_limit>(\d*))$')
         p9 = re.compile(r'^(?P<type>(L3 limit|L2 limit)):(?:\s*)(?P<l_limit>(\d*))$')
+        
+        # Software-only counters:
+        p9_1 = re.compile(r'^(?P<type>(Software-only))\scounters:')
 
         #     Total Current utilization:      0%
         p10 = re.compile(r'^Total Current utilization:(?:\s*)+(?P<total_current_utilization>(\d*%))$')
@@ -534,6 +551,14 @@ class ShowLispPlatform(ShowLispPlatformSchema):
                         limit_type: int(groups['l_limit']),
                     })
                     continue
+                  
+                # Software-only counters:
+                m = p9_1.match(line)
+                if m:
+                    groups = m.groupdict()
+                    limit_type = groups['type'].lower().replace('-', '_')
+                    limit_dict = parsed_dict.setdefault('platform_reported_limits', {}).setdefault(limit_type, {})
+                    continue
 
                 # Total Current utilization:      0%
                 m = p10.match(line)
@@ -552,10 +577,7 @@ class ShowLispPlatform(ShowLispPlatformSchema):
                 m = p11.match(line)
                 if m:
                     ip_type = m.groupdict()['type'].lower().replace(' counter', '').replace(' ', '_')
-                    ipv4_dict = parsed_dict.\
-                                setdefault('platform_reported_limits', {}).\
-                                setdefault('l3_limit', {}).\
-                                setdefault('ipv4', {})
+                    ipv4_dict = limit_dict.setdefault('ipv4', {})
                     ipv4_dict[ip_type] = int(m.groupdict()['ipv4'].lower())
                     continue
 
@@ -573,10 +595,7 @@ class ShowLispPlatform(ShowLispPlatformSchema):
                 m = p13.match(line)
                 if m:
                     ip_type = m.groupdict()['type'].lower().replace(' counter', '').replace(' ', '_')
-                    ipv6_dict = parsed_dict.\
-                                setdefault('platform_reported_limits', {}).\
-                                setdefault('l3_limit', {}).\
-                                setdefault('ipv6', {})
+                    ipv6_dict = limit_dict.setdefault('ipv6', {})
                     ipv6_dict[ip_type] = int(m.groupdict()['ipv6'].lower())
                     continue
 
@@ -594,10 +613,7 @@ class ShowLispPlatform(ShowLispPlatformSchema):
                 m = p15.match(line)
                 if m:
                     mac_type = m.groupdict()['type'].lower().replace(' counter', '').replace(' ', '_')
-                    mac_dict = parsed_dict.\
-                                setdefault('platform_reported_limits', {}).\
-                                setdefault('l2_limit', {}).\
-                                setdefault('mac', {})
+                    mac_dict = limit_dict.setdefault('mac', {})
                     mac_dict[mac_type] = int(m.groupdict()['mac'].lower())
                     continue
 
@@ -2508,7 +2524,7 @@ class ShowLispDatabaseSuperParserSchema(MetaParser):
                                     Optional('locator_set'): str,
                                     Optional('no_route_to_prefix'): bool,
                                     Optional('proxy'): bool,
-                                    Optional('sgt'): int,
+                                    Optional('sgt'): str,
                                     Optional('domain_id'): str,
                                     Optional('service_insertion'): str,
                                     Optional('service_insertion_id'): int,
@@ -2750,7 +2766,7 @@ class ShowLispServiceDatabase(ShowLispDatabaseSuperParser):
             else:
                 output = self.device.execute(self.cli_command[0].\
                                             format(instance_id=instance_id,
-                                                   service=service))
+                                                   service=service),timeout=300)
         return super().cli(output=output)
 
 
@@ -2766,11 +2782,11 @@ class ShowLispEidTableServiceDatabase(ShowLispDatabaseSuperParser):
             if eid_table and service:
                 output = self.device.execute(self.cli_command[1].\
                                             format(eid_table = eid_table,
-                                                   service=service))
+                                                   service=service),timeout=300)
             else:
                 output = self.device.execute(self.cli_command[0].\
                                             format(vrf = vrf,
-                                                   service=service))
+                                                   service=service),timeout=300)
         return super().cli(output=output)
 
 
@@ -10927,7 +10943,7 @@ class ShowLispEthernetMapCache(ShowLispEthernetMapCacheSchema):
             if lisp_id and instance_id:
                 output = self.device.execute(self.cli_command[1].format(lisp_id=lisp_id,instance_id=instance_id))
             elif instance_id:
-                output = self.device.execute(self.cli_command[2].format(instance_id=instance_id))
+                output = self.device.execute(self.cli_command[2].format(instance_id=instance_id),timeout=300)
             elif vrf:
                 output = self.device.execute(self.cli_command[0].format(vrf=vrf,instance_id=instance_id))
             #else:
@@ -18482,7 +18498,7 @@ class ShowLispInstanceIdIpv4MapCache(ShowLispMapCacheSuperParser):
             elif instance_id:
                 output = self.device.execute(self.cli_command[0].format(instance_id=instance_id))
             elif vrf:
-                output = self.device.execute(self.cli_command[3].format(vrf=vrf))
+                output = self.device.execute(self.cli_command[3].format(vrf=vrf),timeout=300)
             elif eid_table:
                 output = self.device.execute(self.cli_command[4].format(eid_table=eid_table))
             else:
@@ -18515,7 +18531,7 @@ class ShowLispInstanceIdIpv6MapCache(ShowLispMapCacheSuperParser):
             elif instance_id:
                 output = self.device.execute(self.cli_command[0].format(instance_id=instance_id))
             elif vrf:
-                output = self.device.execute(self.cli_command[3].format(vrf=vrf))
+                output = self.device.execute(self.cli_command[3].format(vrf=vrf),timeout=300)
             elif eid_table:
                 output = self.device.execute(self.cli_command[4].format(eid_table=eid_table))
             else:
@@ -19363,11 +19379,13 @@ class ShowLispServerSubscriptionPrefixSchema(MetaParser):
                             str: { # EID prefix
                                 Optional('first_subscribed'): str,
                                 Optional('last_subscribed'): str,
+                                Optional('registration'): str,
                                 Optional('subscriber'): {
                                     str: { #map server eid
-                                        'port' : int,
-                                        'xtr_id' : str,
-                                        'subscriber_index': int
+                                        Optional('locator'): str,
+                                        Optional('port') : int,
+                                        Optional('xtr_id') : str,
+                                        Optional('subscriber_index'): int
                                         }   
                                     }
                                 }
@@ -19411,6 +19429,11 @@ class ShowLispServerSubscriptionPrefixSuperParser(ShowLispServerSubscriptionPref
         
         # Last Subscribed: 00:00:55
         p4 = re.compile(r"^Last\s+Subscribed:\s+(?P<last_subscribed>\S+)$")
+        
+        # Registration: 172.168.0.0/16
+        p4_1 = re.compile(r"^Registration:\s+(?P<registration>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}"
+                        r"\/\d{1,2}|[a-fA-F\d\:]+\/\d{1,3}|Unattached|"
+                        r"([a-fA-F\d]{4}\.){2}[a-fA-F\d]{4}\/\d{2})$")
         
         # Subscriber 100.11.11.11:45646
         p5 = re.compile(r'^Subscriber\s+(?P<subscriber>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|([a-fA-F\d\:]+))(:'
@@ -19459,6 +19482,13 @@ class ShowLispServerSubscriptionPrefixSuperParser(ShowLispServerSubscriptionPref
                 group = m.groupdict()
                 eid_prefix_dict.update({'last_subscribed': group['last_subscribed'].strip()})
                 continue
+              
+            # Registration: 172.168.0.0/16
+            m = p4_1.match(line)
+            if m:
+                group = m.groupdict()
+                eid_prefix_dict.update({'registration': group['registration'].strip()})
+                continue
             
             
             # Subscriber 100.11.11.11:45646
@@ -19467,6 +19497,7 @@ class ShowLispServerSubscriptionPrefixSuperParser(ShowLispServerSubscriptionPref
                 group = m.groupdict()
                 subscribers_dict = eid_prefix_dict.setdefault('subscriber',{})\
                                                     .setdefault(str(group['subscriber']), {})
+                subscribers_dict.update({'locator': group['subscriber'].strip()})
                 subscribers_dict.update({'port': int(group['port'].strip())})
                 continue
                 

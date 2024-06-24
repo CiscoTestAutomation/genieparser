@@ -1,0 +1,58 @@
+expected_output =  {
+    'meraki_device_registration': {
+        'devices': {
+            '1': {
+                'mac_address': '6C:71:0D:3D:EA:80',
+                'meraki_id': 'Q5TC-J9PK-HK4R',
+                'pid': 'C9300-24U',
+                'serial_number': 'FJC2342S0TH',
+                'status': 'Registered',
+                'timestamp(utc)': '2015-01-04 06:59:22',
+            },
+            '2': {
+                'mac_address': '5C:E1:76:50:C9:80',
+                'meraki_id': 'Q5TB-4ZR3-DCKP',
+                'pid': 'C9300-24T',
+                'serial_number': 'FJC2401U0E5',
+                'status': 'Registered',
+                'timestamp(utc)': '2015-01-04 06:59:22',
+            },
+            '3': {
+                'mac_address': '00:29:C2:9A:8E:00',
+                'meraki_id': 'Q5TD-GJZW-GLBA',
+                'pid': 'C9300-24UX',
+                'serial_number': 'FCW2248D19Q',
+                'status': 'Registered',
+                'timestamp(utc)': '2015-01-04 06:59:20',
+            },
+        },
+        'url': 'https://catalyst.meraki.com/nodes/register',
+    },
+    'meraki_tunnel_config': {
+        'client_ipv6_addr': 'FD0A:9B09:1F7:1:229:C2FF:FE9A:8E00',
+        'config_server': 'cs556-2037.meraki.com',
+        'fetch_fail': 'no failure',
+        'fetch_state': 'Config fetch succeeded',
+        'last_fetch(utc)': '2015-01-04 10:46:06',
+        'next_fetch(utc)': '2015-01-04 11:53:13',
+        'primary': 'usw.nt.meraki.com',
+        'secondary': 'use.nt.meraki.com',
+    },
+    'meraki_tunnel_interface': {
+        'rx_drop_packets': 0,
+        'rx_errors': 0,
+        'rx_packets': 20658,
+        'status': 'Enable',
+        'tx_drop_packets': 0,
+        'tx_errors': 0,
+        'tx_packets': 18532,
+    },
+    'meraki_tunnel_state': {
+        'client_last_restart(utc)': '2015-01-04 06:59:32',
+        'primary': 'Up',
+        'primary_last_change(utc)': '2015-01-04 06:59:43',
+        'secondary': 'Up',
+        'secondary_last_change(utc)': '2015-01-04 06:59:43',
+    },
+    'service_meraki_connect': 'enable',
+}

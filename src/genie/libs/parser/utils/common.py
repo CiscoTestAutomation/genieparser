@@ -91,8 +91,8 @@ def _load_parser_json():
 
         ext_parser_package_conf = cfg.get(PYATS_EXT_PARSER)
         if ext_parser_package_conf:
-            ext_parser_packages = ext_parser_packages.split(',')
-            ext_parser_packages.extend(cfg.get(PYATS_EXT_PARSER))
+            ext_parser_packages_from_conf = ext_parser_package_conf.split(',')
+            ext_parser_packages.extend(ext_parser_packages_from_conf)
 
         ext_parser_package_env = os.environ.get(PYATS_EXT_PARSER_ENV_VAR)
         if ext_parser_package_env:
@@ -187,7 +187,7 @@ def format_output(parser_data, tab=2):
     s = ['{\n']
     if parser_data is None:
         return parser_data
-    for k, v in sorted(parser_data.items()):
+    for k, v in sorted(parser_data.items(), key=str):
         v = format_output(v, tab + 2) if isinstance(v, dict) else repr(v)
         s.append('%s%r: %s,\n' % ('  ' * tab, k, v))
     s.append('%s}' % ('  ' * (tab - 2)))

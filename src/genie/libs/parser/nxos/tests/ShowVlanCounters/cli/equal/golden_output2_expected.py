@@ -1,0 +1,10 @@
+expected_output =  {'vlan': {'1001': {'l2_egr_ucast_b': 43264,
+          'l2_egr_ucast_p': 338,
+          'l2_ing_bcast_b': 130992,
+          'l2_ing_bcast_p': 1025,
+          'l2_ing_mcast_b': 130176,
+          'l2_ing_mcast_p': 1020,
+          'l2_ing_ucast_b': 86528,
+          'l2_ing_ucast_p': 676,
+          'l3_ucast_rcv_b': 0,
+          'l3_ucast_rcv_p': 0}}}

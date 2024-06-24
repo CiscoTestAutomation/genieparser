@@ -1,0 +1,844 @@
+Binding Table has 835 entries, 796 dynamic (limit 200000)
+Codes: L - Local, S - Static, ND - Neighbor Discovery, ARP - Address Resolution Protocol, DH4 - IPv4 DHCP, DH6 - IPv6 DHCP, PKT - Other Packet, API - API created
+Preflevel flags (prlvl):
+0001:MAC and LLA match     0002:Orig trunk            0004:Orig access
+0008:Orig trusted trunk    0010:Orig trusted access   0020:DHCP assigned
+0040:Cga authenticated     0080:Cert authenticated    0100:Statically assigned
+
+
+    Network Layer Address                    Link Layer Address     Interface  vlan       prlvl      age        state      Time left
+L   211.1.2.1                                0000.0c9f.fc7d         Vl1039     1039       0100       45267mn    DOWN
+L   211.1.1.1                                0000.0c9f.ffcf         Vl1038     1038       0100       45267mn    DOWN
+L   206.1.165.1                              0000.0c9f.fbfc         Vl1028     1028       0100       68394mn    REACHABLE
+L   196.2.1.1                                0000.0c9f.f6f3         Vl1051     1051       0100       25169mn    DOWN
+L   89.1.0.1                                 0000.0c9f.fbb0         Vl1033     1033       0100       68394mn    REACHABLE
+L   45.5.5.1                                 0000.0c9f.f21f         Vl1027     1027       0100       68394mn    REACHABLE
+L   27.2.1.1                                 0000.0c9f.ffbf         Vl1043     1043       0100       28997mn    DOWN
+L   27.1.1.1                                 0000.0c9f.fcb8         Vl1035     1035       0100       68394mn    REACHABLE
+L   27.1.1.1                                 0000.0c9f.fcb8         Vl1042     1042       0100       28997mn    DOWN
+L   12.10.1.1                                0000.0c9f.f7d6         Vl2046     2046       0100       68394mn    REACHABLE
+L   12.10.1.1                                0000.0c9f.f7d6         Vl1041     1041       0100       29281mn    DOWN
+L   12.9.1.1                                 0000.0c9f.f9da         Vl1037     1037       0100       68394mn    REACHABLE
+L   12.9.1.1                                 0000.0c9f.f9da         Vl1040     1040       0100       29281mn    DOWN
+DH4 11.10.1.254                              0000.cd40.2270         Te1/0/24   1031       0024       2s         REACHABLE  245 s(58 s)
+DH4 11.10.1.253                              0000.cd40.2276         Te1/0/24   1031       0024       3s         REACHABLE  246 s(57 s)
+DH4 11.10.1.252                              0000.cd44.6273         Te1/0/24   1031       0024       3s         REACHABLE  248 s(57 s)
+DH4 11.10.1.251                              0000.04c8.a841         Te1/0/24   1031       0024       6s         REACHABLE  247 s(54 s)
+DH4 11.10.1.250                              0000.cd44.627f         Te1/0/24   1031       0024       4s         REACHABLE  242 s(56 s)
+DH4 11.10.1.197                              0000.cd44.6293         Te1/0/24   1031       0024       12s        REACHABLE  235 s(13 s)
+DH4 11.10.1.196                              0000.cd44.62f1         Te1/0/24   1031       0024       5s         REACHABLE  236 s(19 s)
+DH4 11.10.1.195                              0000.cd40.22c8         Te1/0/24   1031       0024       23s        REACHABLE  217 s(36 s)
+DH4 11.10.1.194                              0000.cd40.227e         Te1/0/24   1031       0024       8s         REACHABLE  241 s(16 s)
+DH4 11.10.1.193                              0000.04c8.a879         Te1/0/24   1031       0024       5s         REACHABLE  242 s(19 s)
+DH4 11.10.1.192                              0000.cd44.62d7         Te1/0/24   1031       0024       4s         REACHABLE  241 s(21 s)
+DH4 11.10.1.191                              0000.cd44.629f         Te1/0/24   1031       0024       5s         REACHABLE  243 s(20 s)
+DH4 11.10.1.190                              0000.cd44.6271         Te1/0/24   1031       0024       11s        REACHABLE  240 s(13 s)
+DH4 11.10.1.189                              0000.cd44.62b1         Te1/0/24   1031       0024       8s         REACHABLE  236 s(16 s)
+DH4 11.10.1.188                              0000.04c8.a873         Te1/0/24   1031       0024       7s         REACHABLE  241 s(18 s)
+DH4 11.10.1.187                              0000.cd44.629d         Te1/0/24   1031       0024       9s         REACHABLE  240 s(16 s)
+DH4 11.10.1.186                              0000.04c8.a861         Te1/0/24   1031       0024       10s        REACHABLE  238 s(15 s)
+DH4 11.10.1.185                              0000.cd44.6269         Te1/0/24   1031       0024       6s         REACHABLE  235 s(19 s)
+DH4 11.10.1.184                              0000.cd44.6245         Te1/0/24   1031       0024       12s        REACHABLE  231 s(12 s)
+DH4 11.10.1.183                              0000.cd44.62ab         Te1/0/24   1031       0024       8s         REACHABLE  242 s(16 s)
+DH4 11.10.1.182                              0000.cd40.226a         Te1/0/24   1031       0024       9s         REACHABLE  232 s(16 s)
+DH4 11.10.1.181                              0000.cd40.22c4         Te1/0/24   1031       0024       8s         REACHABLE  237 s(17 s)
+DH4 11.10.1.180                              0000.cd40.226c         Te1/0/24   1031       0024       7s         REACHABLE  242 s(18 s)
+DH4 11.10.1.179                              0000.cd44.626d         Te1/0/24   1031       0024       10s        REACHABLE  239 s(15 s)
+DH4 11.10.1.178                              0000.cd40.2268         Te1/0/24   1031       0024       7s         REACHABLE  242 s(18 s)
+DH4 11.10.1.177                              0000.cd40.2284         Te1/0/24   1031       0024       4s         REACHABLE  239 s(20 s)
+DH4 11.10.1.176                              0000.cd44.628b         Te1/0/24   1031       0024       35s        REACHABLE  215 s(25 s)
+DH4 11.10.1.175                              0000.cd44.626f         Te1/0/24   1031       0024       8s         REACHABLE  238 s(16 s)
+DH4 11.10.1.174                              0000.04c8.a827         Te1/0/24   1031       0024       10s        REACHABLE  232 s(15 s)
+DH4 11.10.1.173                              0000.cd40.22b8         Te1/0/24   1031       0024       14s        REACHABLE  235 s(11 s)
+DH4 11.10.1.172                              0000.cd40.22c0         Te1/0/24   1031       0024       10s        REACHABLE  236 s(15 s)
+DH4 11.10.1.171                              0000.cd44.6233         Te1/0/24   1031       0024       9s         REACHABLE  232 s(16 s)
+DH4 11.10.1.170                              0000.04c8.a86d         Te1/0/24   1031       0024       11s        REACHABLE  239 s(14 s)
+DH4 11.10.1.169                              0000.cd40.22a0         Te1/0/24   1031       0024       35s        REACHABLE  214 s(25 s)
+DH4 11.10.1.168                              0000.04c8.a82d         Te1/0/24   1031       0024       12s        REACHABLE  231 s(12 s)
+DH4 11.10.1.167                              0000.cd44.628f         Te1/0/24   1031       0024       7s         REACHABLE  245 s(18 s)
+DH4 11.10.1.166                              0000.cd44.62af         Te1/0/24   1031       0024       2s         REACHABLE  247 s(57 s)
+DH4 11.10.1.165                              0000.cd44.628d         Te1/0/24   1031       0024       9s         REACHABLE  235 s(16 s)
+DH4 11.10.1.164                              0000.cd40.22be         Te1/0/24   1031       0024       14s        REACHABLE  232 s(11 s)
+DH4 11.10.1.163                              0000.cd40.2292         Te1/0/24   1031       0024       2s         REACHABLE  251 s(58 s)
+DH4 11.10.1.162                              0000.04c8.a843         Te1/0/24   1031       0024       2s         REACHABLE  241 s(57 s)
+DH4 11.10.1.161                              0000.cd44.6257         Te1/0/24   1031       0024       6s         REACHABLE  240 s(54 s)
+DH4 11.10.1.160                              0000.04c8.a86b         Te1/0/24   1031       0024       2s         REACHABLE  246 s(57 s)
+DH4 11.10.1.159                              0000.04c8.a82f         Te1/0/24   1031       0024       2s         REACHABLE  240 s(57 s)
+DH4 11.10.1.158                              0000.04c8.a851         Te1/0/24   1031       0024       7s         REACHABLE  244 s(52 s)
+DH4 11.10.1.157                              0000.cd44.622b         Te1/0/24   1031       0024       3s         REACHABLE  241 s(56 s)
+DH4 11.10.1.156                              0000.04c8.a86f         Te1/0/24   1031       0024       4s         REACHABLE  243 s(55 s)
+DH4 11.10.1.155                              0000.cd40.228e         Te1/0/24   1031       0024       4s         REACHABLE  237 s(55 s)
+DH4 11.10.1.154                              0000.cd44.62cd         Te1/0/24   1031       0024       4s         REACHABLE  237 s(21 s)
+DH4 11.10.1.153                              0000.cd40.22ae         Te1/0/24   1031       0024       3s         REACHABLE  242 s(56 s)
+DH4 11.10.1.152                              0000.cd44.627b         Te1/0/24   1031       0024       2s         REACHABLE  240 s(57 s)
+DH4 11.10.1.151                              0000.cd40.22aa         Te1/0/24   1031       0024       0s         REACHABLE  241 s(59 s)
+DH4 11.10.1.150                              0000.cd44.62e5         Te1/0/24   1031       0024       12s        REACHABLE  232 s(12 s)
+DH4 11.10.1.149                              0000.cd40.227a         Te1/0/24   1031       0024       8s         REACHABLE  236 s(52 s)
+DH4 11.10.1.148                              0000.cd44.6237         Te1/0/24   1031       0024       4s         REACHABLE  241 s(55 s)
+DH4 11.10.1.147                              0000.cd44.62a9         Te1/0/24   1031       0024       1s         REACHABLE  244 s(58 s)
+DH4 11.10.1.146                              0000.cd44.62cb         Te1/0/24   1031       0024       8s         REACHABLE  236 s(17 s)
+DH4 11.10.1.145                              0000.04c8.a877         Te1/0/24   1031       0024       1s         REACHABLE  242 s(59 s)
+DH4 11.10.1.144                              0000.04c8.a84d         Te1/0/24   1031       0024       9s         REACHABLE  241 s(51 s)
+DH4 11.10.1.143                              0000.cd44.624d         Te1/0/24   1031       0024       5s         REACHABLE  240 s(19 s)
+DH4 11.10.1.142                              0000.cd44.6289         Te1/0/24   1031       0024       3s         REACHABLE  246 s(22 s)
+DH4 11.10.1.141                              0000.cd44.627d         Te1/0/24   1031       0024       2s         REACHABLE  238 s(57 s)
+DH4 11.10.1.140                              0000.cd44.62d9         Te1/0/24   1031       0024       12s        REACHABLE  233 s(48 s)
+DH4 11.10.1.139                              0000.04c8.a84b         Te1/0/24   1031       0024       11s        REACHABLE  230 s(49 s)
+DH4 11.10.1.138                              0000.cd44.626b         Te1/0/24   1031       0024       1s         REACHABLE  251 s(58 s)
+DH4 11.10.1.137                              0000.cd44.62ad         Te1/0/24   1031       0024       12s        REACHABLE  237 s(48 s)
+DH4 11.10.1.136                              0000.cd44.62e1         Te1/0/24   1031       0024       3s         REACHABLE  249 s(56 s)
+DH4 11.10.1.135                              0000.cd44.62ed         Te1/0/24   1031       0024       2s         REACHABLE  241 s(58 s)
+DH4 11.10.1.134                              0000.cd40.229e         Te1/0/24   1031       0024       9s         REACHABLE  234 s(51 s)
+DH4 11.10.1.133                              0000.cd44.62bd         Te1/0/24   1031       0024       2s         REACHABLE  245 s(57 s)
+DH4 11.10.1.132                              0000.cd44.623f         Te1/0/24   1031       0024       8s         REACHABLE  234 s(16 s)
+DH4 11.10.1.131                              0000.cd44.6275         Te1/0/24   1031       0024       14s        REACHABLE  233 s(46 s)
+DH4 11.10.1.130                              0000.cd44.6261         Te1/0/24   1031       0024       15s        REACHABLE  231 s(44 s)
+DH4 11.10.1.129                              0000.cd40.227c         Te1/0/24   1031       0024       8s         REACHABLE  237 s(51 s)
+DH4 11.10.1.128                              0000.cd40.22ac         Te1/0/24   1031       0024       16s        REACHABLE  233 s(43 s)
+DH4 11.10.1.127                              0000.cd40.2296         Te1/0/24   1031       0024       10s        REACHABLE  240 s(49 s)
+DH4 11.10.1.126                              0000.cd44.6241         Te1/0/24   1031       0024       12s        REACHABLE  236 s(12 s)
+DH4 11.10.1.125                              0000.cd40.22b6         Te1/0/24   1031       0024       8s         REACHABLE  231 s(51 s)
+DH4 11.10.1.124                              0000.cd40.22ba         Te1/0/24   1031       0024       14s        REACHABLE  234 s(46 s)
+DH4 11.10.1.123                              0000.cd40.22bc         Te1/0/24   1031       0024       10s        REACHABLE  236 s(50 s)
+DH4 11.10.1.122                              0000.04c8.a871         Te1/0/24   1031       0024       12s        REACHABLE  229 s(12 s)
+DH4 11.10.1.121                              0000.04c8.a883         Te1/0/24   1031       0024       14s        REACHABLE  235 s(46 s)
+DH4 11.10.1.120                              0000.04c8.a82b         Te1/0/24   1031       0024       9s         REACHABLE  235 s(15 s)
+DH4 11.10.1.119                              0000.cd44.62cf         Te1/0/24   1031       0024       10s        REACHABLE  239 s(50 s)
+DH4 11.10.1.118                              0000.cd44.6263         Te1/0/24   1031       0024       10s        REACHABLE  230 s(49 s)
+DH4 11.10.1.117                              0000.cd44.62a3         Te1/0/24   1031       0024       14s        REACHABLE  233 s(46 s)
+DH4 11.10.1.116                              0000.04c8.a87f         Te1/0/24   1031       0024       16s        REACHABLE  229 s(43 s)
+DH4 11.10.1.115                              0000.cd40.22a4         Te1/0/24   1031       0024       15s        REACHABLE  225 s(45 s)
+DH4 11.10.1.114                              0000.cd44.62db         Te1/0/24   1031       0024       6s         REACHABLE  234 s(53 s)
+DH4 11.10.1.113                              0000.cd40.2280         Te1/0/24   1031       0024       14s        REACHABLE  230 s(46 s)
+DH4 11.10.1.112                              0000.cd44.62dd         Te1/0/24   1031       0024       10s        REACHABLE  240 s(50 s)
+DH4 11.10.1.111                              0000.cd44.62bb         Te1/0/24   1031       0024       16s        REACHABLE  227 s(44 s)
+DH4 11.10.1.110                              0000.04c8.a83f         Te1/0/24   1031       0024       15s        REACHABLE  226 s(45 s)
+DH4 11.10.1.109                              0000.cd44.624b         Te1/0/24   1031       0024       13s        REACHABLE  234 s(46 s)
+DH4 11.10.1.108                              0000.cd44.6239         Te1/0/24   1031       0024       15s        REACHABLE  230 s(45 s)
+DH4 11.10.1.107                              0000.cd44.6281         Te1/0/24   1031       0024       10s        REACHABLE  230 s(49 s)
+DH4 11.10.1.106                              0000.04c8.a863         Te1/0/24   1031       0024       9s         REACHABLE  235 s(51 s)
+DH4 11.10.1.105                              0000.cd44.6259         Te1/0/24   1031       0024       5s         REACHABLE  236 s(54 s)
+DH4 11.10.1.104                              0000.04c8.a885         Te1/0/24   1031       0024       2s         REACHABLE  238 s(57 s)
+DH4 11.10.1.103                              0000.cd44.6243         Te1/0/24   1031       0024       11s        REACHABLE  229 s(13 s)
+DH4 11.10.1.102                              0000.cd44.6299         Te1/0/24   1031       0024       20s        REACHABLE  227 s(39 s)
+DH4 11.10.1.101                              0000.cd40.22c6         Te1/0/24   1031       0024       2s         REACHABLE  239 s(57 s)
+DH4 11.10.1.100                              0000.cd44.622f         Te1/0/24   1031       0024       17s        REACHABLE  225 s(42 s)
+DH4 11.10.1.99                               0000.cd40.22b2         Te1/0/24   1031       0024       12s        REACHABLE  240 s(12 s)
+DH4 11.10.1.98                               0000.cd40.228c         Te1/0/24   1031       0024       16s        REACHABLE  227 s(43 s)
+DH4 11.10.1.97                               0000.cd44.62a7         Te1/0/24   1031       0024       19s        REACHABLE  227 s(40 s)
+DH4 11.10.1.96                               0000.cd44.625f         Te1/0/24   1031       0024       14s        REACHABLE  228 s(45 s)
+DH4 11.10.1.95                               0000.cd44.6253         Te1/0/24   1031       0024       20s        REACHABLE  227 s(39 s)
+DH4 11.10.1.94                               0000.04c8.a845         Te1/0/24   1031       0024       2s         REACHABLE  241 s(57 s)
+DH4 11.10.1.93                               0000.04c8.a85d         Te1/0/24   1031       0024       20s        REACHABLE  230 s(39 s)
+DH4 11.10.1.92                               0000.cd44.62a1         Te1/0/24   1031       0024       3s         REACHABLE  239 s(56 s)
+DH4 11.10.1.91                               0000.cd40.228a         Te1/0/24   1031       0024       18s        REACHABLE  227 s(41 s)
+DH4 11.10.1.90                               0000.cd44.62c9         Te1/0/24   1031       0024       2s         REACHABLE  238 s(57 s)
+DH4 11.10.1.89                               0000.cd44.6235         Te1/0/24   1031       0024       19s        REACHABLE  226 s(40 s)
+DH4 11.10.1.88                               0000.cd40.22a2         Te1/0/24   1031       0024       20s        REACHABLE  231 s(39 s)
+DH4 11.10.1.87                               0000.cd44.62c3         Te1/0/24   1031       0024       14s        REACHABLE  225 s(45 s)
+DH4 11.10.1.86                               0000.cd44.62c7         Te1/0/24   1031       0024       18s        REACHABLE  233 s(41 s)
+DH4 11.10.1.85                               0000.cd44.625b         Te1/0/24   1031       0024       18s        REACHABLE  231 s(41 s)
+DH4 11.10.1.84                               0000.cd40.22a6         Te1/0/24   1031       0024       19s        REACHABLE  231 s(40 s)
+DH4 11.10.1.83                               0000.cd44.624f         Te1/0/24   1031       0024       7s         REACHABLE  234 s(52 s)
+DH4 11.10.1.82                               0000.cd44.62e3         Te1/0/24   1031       0024       9s         REACHABLE  236 s(50 s)
+DH4 11.10.1.81                               0000.cd40.229a         Te1/0/24   1031       0024       17s        REACHABLE  225 s(42 s)
+DH4 11.10.1.80                               0000.04c8.a831         Te1/0/24   1031       0024       16s        REACHABLE  234 s(43 s)
+DH4 11.10.1.79                               0000.cd44.6279         Te1/0/24   1031       0024       12s        REACHABLE  230 s(47 s)
+DH4 11.10.1.78                               0000.04c8.a87d         Te1/0/24   1031       0024       19s        REACHABLE  231 s(40 s)
+DH4 11.10.1.77                               0000.04c8.a837         Te1/0/24   1031       0024       18s        REACHABLE  226 s(41 s)
+DH4 11.10.1.76                               0000.cd44.6283         Te1/0/24   1031       0024       18s        REACHABLE  222 s(41 s)
+DH4 11.10.1.75                               0000.cd40.226e         Te1/0/24   1031       0024       21s        REACHABLE  229 s(38 s)
+DH4 11.10.1.74                               0000.cd44.625d         Te1/0/24   1031       0024       1s         REACHABLE  248 s(59 s)
+DH4 11.10.1.73                               0000.04c8.a849         Te1/0/24   1031       0024       8s         REACHABLE  243 s(17 s)
+DH4 11.10.1.72                               0000.cd40.2294         Te1/0/24   1031       0024       8s         REACHABLE  242 s(52 s)
+DH4 11.10.1.71                               0000.04c8.a829         Te1/0/24   1031       0024       11s        REACHABLE  229 s(48 s)
+DH4 11.10.1.70                               0000.cd44.6247         Te1/0/24   1031       0024       3s         REACHABLE  246 s(57 s)
+DH4 11.10.1.69                               0000.04c8.a87b         Te1/0/24   1031       0024       3s         REACHABLE  242 s(57 s)
+DH4 11.10.1.68                               0000.cd44.623b         Te1/0/24   1031       0024       25s        REACHABLE  227 s(35 s)
+DH4 11.10.1.67                               0000.cd44.62c1         Te1/0/24   1031       0024       24s        REACHABLE  218 s(36 s)
+DH4 11.10.1.66                               0000.cd44.6287         Te1/0/24   1031       0024       9s         REACHABLE  232 s(51 s)
+DH4 11.10.1.65                               0000.cd40.2274         Te1/0/24   1031       0024       24s        REACHABLE  223 s(36 s)
+DH4 11.10.1.64                               0000.cd40.22c2         Te1/0/24   1031       0024       2s         REACHABLE  250 s(58 s)
+DH4 11.10.1.63                               0000.cd44.6265         Te1/0/24   1031       0024       28s        REACHABLE  223 s(32 s)
+DH4 11.10.1.62                               0000.04c8.a83d         Te1/0/24   1031       0024       24s        REACHABLE  218 s(36 s)
+DH4 11.10.1.61                               0000.cd44.623d         Te1/0/24   1031       0024       24s        REACHABLE  221 s(35 s)
+DH4 11.10.1.60                               0000.cd44.62e7         Te1/0/24   1031       0024       30s        REACHABLE  214 s(30 s)
+DH4 11.10.1.59                               0000.cd44.62ef         Te1/0/24   1031       0024       20s        REACHABLE  228 s(40 s)
+DH4 11.10.1.58                               0000.cd44.6295         Te1/0/24   1031       0024       7s         REACHABLE  240 s(53 s)
+DH4 11.10.1.57                               0000.cd40.2286         Te1/0/24   1031       0024       10s        REACHABLE  239 s(49 s)
+DH4 11.10.1.56                               0000.04c8.a865         Te1/0/24   1031       0024       31s        REACHABLE  220 s(29 s)
+DH4 11.10.1.55                               0000.cd40.2278         Te1/0/24   1031       0024       21s        REACHABLE  220 s(39 s)
+DH4 11.10.1.54                               0000.cd44.62b5         Te1/0/24   1031       0024       25s        REACHABLE  218 s(35 s)
+DH4 11.10.1.53                               0000.cd44.62d5         Te1/0/24   1031       0024       23s        REACHABLE  220 s(37 s)
+DH4 11.10.1.52                               0000.cd40.2282         Te1/0/24   1031       0024       6s         REACHABLE  241 s(54 s)
+DH4 11.10.1.51                               0000.cd40.2298         Te1/0/24   1031       0024       25s        REACHABLE  221 s(35 s)
+DH4 11.10.1.50                               0000.cd44.629b         Te1/0/24   1031       0024       28s        REACHABLE  214 s(32 s)
+DH4 11.10.1.49                               0000.cd44.6255         Te1/0/24   1031       0024       14s        REACHABLE  237 s(46 s)
+DH4 11.10.1.48                               0000.cd40.22b4         Te1/0/24   1031       0024       23s        REACHABLE  219 s(37 s)
+DH4 11.10.1.47                               0000.cd44.6285         Te1/0/24   1031       0024       30s        REACHABLE  212 s(30 s)
+DH4 11.10.1.46                               0000.04c8.a85f         Te1/0/24   1031       0024       31s        REACHABLE  221 s(29 s)
+DH4 11.10.1.45                               0000.cd44.6267         Te1/0/24   1031       0024       29s        REACHABLE  220 s(31 s)
+DH4 11.10.1.44                               0000.cd44.62eb         Te1/0/24   1031       0024       23s        REACHABLE  220 s(37 s)
+DH4 11.10.1.43                               0000.04c8.a84f         Te1/0/24   1031       0024       35s        REACHABLE  214 s(25 s)
+DH4 11.10.1.42                               0000.04c8.a85b         Te1/0/24   1031       0024       14s        REACHABLE  227 s(45 s)
+DH4 11.10.1.41                               0000.cd44.622d         Te1/0/24   1031       0024       32s        REACHABLE  211 s(27 s)
+DH4 11.10.1.40                               0000.04c8.a887         Te1/0/24   1031       0024       29s        REACHABLE  217 s(31 s)
+DH4 11.10.1.39                               0000.cd44.62b9         Te1/0/24   1031       0024       32s        REACHABLE  217 s(27 s)
+DH4 11.10.1.38                               0000.cd40.2266         Te1/0/24   1031       0024       29s        REACHABLE  211 s(30 s)
+DH4 11.10.1.37                               0000.04c8.a869         Te1/0/24   1031       0024       34s        REACHABLE  214 s(26 s)
+DH4 11.10.1.36                               0000.cd44.62a5         Te1/0/24   1031       0024       21s        REACHABLE  230 s(38 s)
+DH4 11.10.1.35                               0000.04c8.a83b         Te1/0/24   1031       0024       34s        REACHABLE  210 s(26 s)
+DH4 11.10.1.34                               0000.cd40.229c         Te1/0/24   1031       0024       18s        REACHABLE  232 s(42 s)
+DH4 11.10.1.33                               0000.04c8.a847         Te1/0/24   1031       0024       9s         REACHABLE  240 s(50 s)
+DH4 11.10.1.32                               0000.cd44.62c5         Te1/0/24   1031       0024       23s        REACHABLE  228 s(37 s)
+DH4 11.10.1.31                               0000.04c8.a857         Te1/0/24   1031       0024       34s        REACHABLE  216 s(25 s)
+DH4 11.10.1.30                               0000.04c8.a867         Te1/0/24   1031       0024       24s        REACHABLE  219 s(36 s)
+DH4 11.10.1.29                               0000.cd44.62bf         Te1/0/24   1031       0024       9s         REACHABLE  236 s(16 s)
+DH4 11.10.1.28                               0000.cd40.22b0         Te1/0/24   1031       0024       1s         REACHABLE  251 s(59 s)
+DH4 11.10.1.27                               0000.cd40.2288         Te1/0/24   1031       0024       29s        REACHABLE  211 s(30 s)
+DH4 11.10.1.26                               0000.cd44.6291         Te1/0/24   1031       0024       5s         REACHABLE  237 s(54 s)
+DH4 11.10.1.25                               0000.cd44.6251         Te1/0/24   1031       0024       3s         REACHABLE  243 s(56 s)
+DH4 11.10.1.24                               0000.cd44.62e9         Te1/0/24   1031       0024       4s         REACHABLE  239 s(55 s)
+DH4 11.10.1.23                               0000.cd40.22a8         Te1/0/24   1031       0024       4s         REACHABLE  243 s(55 s)
+DH4 11.10.1.22                               0000.cd44.6231         Te1/0/24   1031       0024       13s        REACHABLE  237 s(11 s)
+DH4 11.10.1.21                               0000.04c8.a853         Te1/0/24   1031       0024       4s         REACHABLE  248 s(55 s)
+DH4 11.10.1.20                               0000.cd44.6249         Te1/0/24   1031       0024       11s        REACHABLE  234 s(49 s)
+DH4 11.10.1.19                               0000.04c8.a875         Te1/0/24   1031       0024       24s        REACHABLE  216 s(35 s)
+DH4 11.10.1.18                               0000.04c8.a839         Te1/0/24   1031       0024       4s         REACHABLE  240 s(55 s)
+DH4 11.10.1.17                               0000.04c8.a835         Te1/0/24   1031       0024       11s        REACHABLE  238 s(49 s)
+DH4 11.10.1.16                               0000.cd44.62b3         Te1/0/24   1031       0024       10s        REACHABLE  241 s(50 s)
+DH4 11.10.1.15                               0000.04c8.a855         Te1/0/24   1031       0024       9s         REACHABLE  232 s(51 s)
+DH4 11.10.1.14                               0000.cd44.62b7         Te1/0/24   1031       0024       12s        REACHABLE  236 s(47 s)
+DH4 11.10.1.13                               0000.cd44.62d3         Te1/0/24   1031       0024       10s        REACHABLE  230 s(15 s)
+DH4 11.10.1.12                               0000.cd44.6277         Te1/0/24   1031       0024       23s        REACHABLE  227 s(36 s)
+DH4 11.10.1.11                               0000.cd44.62d1         Te1/0/24   1031       0024       15s        REACHABLE  228 s(44 s)
+DH4 11.10.1.10                               0000.cd44.6297         Te1/0/24   1031       0024       19s        REACHABLE  222 s(40 s)
+DH4 11.10.1.9                                0000.04c8.a859         Te1/0/24   1031       0024       23s        REACHABLE  225 s(36 s)
+DH4 11.10.1.8                                0000.cd40.2290         Te1/0/24   1031       0024       7s         REACHABLE  244 s(52 s)
+DH4 11.10.1.7                                0000.cd44.62df         Te1/0/24   1031       0024       27s        REACHABLE  223 s(33 s)
+DH4 11.10.1.6                                0000.04c8.a881         Te1/0/24   1031       0024       12s        REACHABLE  233 s(47 s)
+DH4 11.10.1.5                                0000.cd40.2272         Te1/0/24   1031       0024       9s         REACHABLE  242 s(51 s)
+DH4 11.10.1.4                                0000.04c8.a833         Te1/0/24   1031       0024       30s        REACHABLE  214 s(29 s)
+L   11.10.1.1                                0000.0c9f.f23b         Vl1031     1031       0100       20344mn    REACHABLE
+L   11.10.1.1                                0000.0c9f.f23b         Vl1050     1050       0100       26506mn    DOWN
+L   11.10.1.1                                0000.0c9f.f23b         Vl1049     1049       0100       26533mn    DOWN
+L   11.10.1.1                                0000.0c9f.f23b         Vl1048     1048       0100       26631mn    DOWN
+L   11.9.1.1                                 0000.0c9f.fb04         Vl1029     1029       0100       68394mn    REACHABLE
+L   11.9.1.1                                 0000.0c9f.fb04         Vl1044     1044       0100       27459mn    DOWN
+ND  FE80::200:CDFF:FE44:62F1                 0000.cd44.62f1         Te1/0/24   1031       0005       13s        REACHABLE  237 s
+ND  FE80::200:CDFF:FE44:62EF                 0000.cd44.62ef         Te1/0/24   1031       0005       72s        REACHABLE  174 s
+ND  FE80::200:CDFF:FE44:62ED                 0000.cd44.62ed         Te1/0/24   1031       0005       16s        REACHABLE  228 s
+ND  FE80::200:CDFF:FE44:62EB                 0000.cd44.62eb         Te1/0/24   1031       0005       24s        REACHABLE  228 s
+ND  FE80::200:CDFF:FE44:62E9                 0000.cd44.62e9         Te1/0/24   1031       0005       70s        REACHABLE  176 s
+ND  FE80::200:CDFF:FE44:62E7                 0000.cd44.62e7         Te1/0/24   1031       0005       77s        REACHABLE  174 s
+ND  FE80::200:CDFF:FE44:62E5                 0000.cd44.62e5         Te1/0/24   1031       0005       17s        REACHABLE  228 s
+ND  FE80::200:CDFF:FE44:62E3                 0000.cd44.62e3         Te1/0/24   1031       0005       2s         REACHABLE  240 s
+ND  FE80::200:CDFF:FE44:62E1                 0000.cd44.62e1         Te1/0/24   1031       0005       9s         REACHABLE  233 s
+ND  FE80::200:CDFF:FE44:62DF                 0000.cd44.62df         Te1/0/24   1031       0005       74s        REACHABLE  177 s
+ND  FE80::200:CDFF:FE44:62DD                 0000.cd44.62dd         Te1/0/24   1031       0005       72s        REACHABLE  177 s
+ND  FE80::200:CDFF:FE44:62DB                 0000.cd44.62db         Te1/0/24   1031       0005       64s        REACHABLE  186 s
+ND  FE80::200:CDFF:FE44:62D9                 0000.cd44.62d9         Te1/0/24   1031       0005       74s        REACHABLE  171 s
+ND  FE80::200:CDFF:FE44:62D7                 0000.cd44.62d7         Te1/0/24   1031       0005       58s        REACHABLE  188 s
+ND  FE80::200:CDFF:FE44:62D5                 0000.cd44.62d5         Te1/0/24   1031       0005       70s        REACHABLE  175 s
+ND  FE80::200:CDFF:FE44:62D3                 0000.cd44.62d3         Te1/0/24   1031       0005       40s        REACHABLE  206 s
+ND  FE80::200:CDFF:FE44:62D1                 0000.cd44.62d1         Te1/0/24   1031       0005       54s        REACHABLE  188 s
+ND  FE80::200:CDFF:FE44:62CF                 0000.cd44.62cf         Te1/0/24   1031       0005       67s        REACHABLE  182 s
+ND  FE80::200:CDFF:FE44:62CD                 0000.cd44.62cd         Te1/0/24   1031       0005       76s        REACHABLE  172 s
+ND  FE80::200:CDFF:FE44:62CB                 0000.cd44.62cb         Te1/0/24   1031       0005       24s        REACHABLE  227 s
+ND  FE80::200:CDFF:FE44:62C9                 0000.cd44.62c9         Te1/0/24   1031       0005       76s        REACHABLE  173 s
+ND  FE80::200:CDFF:FE44:62C7                 0000.cd44.62c7         Te1/0/24   1031       0005       39s        REACHABLE  204 s
+ND  FE80::200:CDFF:FE44:62C5                 0000.cd44.62c5         Te1/0/24   1031       0005       67s        REACHABLE  178 s
+ND  FE80::200:CDFF:FE44:62C3                 0000.cd44.62c3         Te1/0/24   1031       0005       8s         REACHABLE  245 s
+ND  FE80::200:CDFF:FE44:62C1                 0000.cd44.62c1         Te1/0/24   1031       0005       62s        REACHABLE  181 s
+ND  FE80::200:CDFF:FE44:62BF                 0000.cd44.62bf         Te1/0/24   1031       0005       5s         REACHABLE  244 s
+ND  FE80::200:CDFF:FE44:62BD                 0000.cd44.62bd         Te1/0/24   1031       0005       46s        REACHABLE  207 s
+ND  FE80::200:CDFF:FE44:62BB                 0000.cd44.62bb         Te1/0/24   1031       0005       6s         REACHABLE  238 s
+ND  FE80::200:CDFF:FE44:62B9                 0000.cd44.62b9         Te1/0/24   1031       0005       79s        REACHABLE  168 s
+ND  FE80::200:CDFF:FE44:62B7                 0000.cd44.62b7         Te1/0/24   1031       0005       80s        REACHABLE  163 s
+ND  FE80::200:CDFF:FE44:62B5                 0000.cd44.62b5         Te1/0/24   1031       0005       1s         REACHABLE  250 s
+ND  FE80::200:CDFF:FE44:62B3                 0000.cd44.62b3         Te1/0/24   1031       0005       78s        REACHABLE  171 s
+ND  FE80::200:CDFF:FE44:62B1                 0000.cd44.62b1         Te1/0/24   1031       0005       78s        REACHABLE  175 s
+ND  FE80::200:CDFF:FE44:62AF                 0000.cd44.62af         Te1/0/24   1031       0005       80s        REACHABLE  169 s
+ND  FE80::200:CDFF:FE44:62AD                 0000.cd44.62ad         Te1/0/24   1031       0005       51s        REACHABLE  190 s
+ND  FE80::200:CDFF:FE44:62AB                 0000.cd44.62ab         Te1/0/24   1031       0005       69s        REACHABLE  177 s
+ND  FE80::200:CDFF:FE44:62A9                 0000.cd44.62a9         Te1/0/24   1031       0005       40s        REACHABLE  201 s
+ND  FE80::200:CDFF:FE44:62A7                 0000.cd44.62a7         Te1/0/24   1031       0005       72s        REACHABLE  180 s
+ND  FE80::200:CDFF:FE44:62A5                 0000.cd44.62a5         Te1/0/24   1031       0005       76s        REACHABLE  172 s
+ND  FE80::200:CDFF:FE44:62A3                 0000.cd44.62a3         Te1/0/24   1031       0005       83s        REACHABLE  157 s
+ND  FE80::200:CDFF:FE44:62A1                 0000.cd44.62a1         Te1/0/24   1031       0005       82s        REACHABLE  167 s
+ND  FE80::200:CDFF:FE44:629F                 0000.cd44.629f         Te1/0/24   1031       0005       83s        REACHABLE  168 s
+ND  FE80::200:CDFF:FE44:629D                 0000.cd44.629d         Te1/0/24   1031       0005       84s        REACHABLE  158 s
+ND  FE80::200:CDFF:FE44:629B                 0000.cd44.629b         Te1/0/24   1031       0005       47s        REACHABLE  202 s
+ND  FE80::200:CDFF:FE44:6299                 0000.cd44.6299         Te1/0/24   1031       0005       81s        REACHABLE  170 s
+ND  FE80::200:CDFF:FE44:6297                 0000.cd44.6297         Te1/0/24   1031       0005       81s        REACHABLE  163 s
+ND  FE80::200:CDFF:FE44:6295                 0000.cd44.6295         Te1/0/24   1031       0005       58s        REACHABLE  189 s
+ND  FE80::200:CDFF:FE44:6293                 0000.cd44.6293         Te1/0/24   1031       0005       80s        REACHABLE  171 s
+ND  FE80::200:CDFF:FE44:6291                 0000.cd44.6291         Te1/0/24   1031       0005       81s        REACHABLE  169 s
+ND  FE80::200:CDFF:FE44:628F                 0000.cd44.628f         Te1/0/24   1031       0005       83s        REACHABLE  164 s
+ND  FE80::200:CDFF:FE44:628D                 0000.cd44.628d         Te1/0/24   1031       0005       87s        REACHABLE  164 s
+ND  FE80::200:CDFF:FE44:628B                 0000.cd44.628b         Te1/0/24   1031       0005       23s        REACHABLE  222 s
+ND  FE80::200:CDFF:FE44:6289                 0000.cd44.6289         Te1/0/24   1031       0005       85s        REACHABLE  163 s
+ND  FE80::200:CDFF:FE44:6287                 0000.cd44.6287         Te1/0/24   1031       0005       22s        REACHABLE  225 s
+ND  FE80::200:CDFF:FE44:6285                 0000.cd44.6285         Te1/0/24   1031       0005       31s        REACHABLE  214 s
+ND  FE80::200:CDFF:FE44:6283                 0000.cd44.6283         Te1/0/24   1031       0005       77s        REACHABLE  167 s
+ND  FE80::200:CDFF:FE44:6281                 0000.cd44.6281         Te1/0/24   1031       0005       84s        REACHABLE  159 s
+ND  FE80::200:CDFF:FE44:627F                 0000.cd44.627f         Te1/0/24   1031       0005       68s        REACHABLE  181 s
+ND  FE80::200:CDFF:FE44:627D                 0000.cd44.627d         Te1/0/24   1031       0005       81s        REACHABLE  159 s
+ND  FE80::200:CDFF:FE44:627B                 0000.cd44.627b         Te1/0/24   1031       0005       87s        REACHABLE  154 s
+ND  FE80::200:CDFF:FE44:6279                 0000.cd44.6279         Te1/0/24   1031       0005       76s        REACHABLE  172 s
+ND  FE80::200:CDFF:FE44:6277                 0000.cd44.6277         Te1/0/24   1031       0005       77s        REACHABLE  171 s
+ND  FE80::200:CDFF:FE44:6275                 0000.cd44.6275         Te1/0/24   1031       0005       85s        REACHABLE  164 s
+ND  FE80::200:CDFF:FE44:6273                 0000.cd44.6273         Te1/0/24   1031       0005       23s        REACHABLE  224 s
+ND  FE80::200:CDFF:FE44:6271                 0000.cd44.6271         Te1/0/24   1031       0005       80s        REACHABLE  167 s
+ND  FE80::200:CDFF:FE44:626F                 0000.cd44.626f         Te1/0/24   1031       0005       77s        REACHABLE  169 s
+ND  FE80::200:CDFF:FE44:626D                 0000.cd44.626d         Te1/0/24   1031       0005       53s        REACHABLE  195 s
+ND  FE80::200:CDFF:FE44:626B                 0000.cd44.626b         Te1/0/24   1031       0005       32s        REACHABLE  209 s
+ND  FE80::200:CDFF:FE44:6269                 0000.cd44.6269         Te1/0/24   1031       0005       84s        REACHABLE  164 s
+ND  FE80::200:CDFF:FE44:6267                 0000.cd44.6267         Te1/0/24   1031       0005       83s        REACHABLE  156 s
+ND  FE80::200:CDFF:FE44:6265                 0000.cd44.6265         Te1/0/24   1031       0005       71s        REACHABLE  173 s
+ND  FE80::200:CDFF:FE44:6263                 0000.cd44.6263         Te1/0/24   1031       0005       15s        REACHABLE  233 s
+ND  FE80::200:CDFF:FE44:6261                 0000.cd44.6261         Te1/0/24   1031       0005       80s        REACHABLE  172 s
+ND  FE80::200:CDFF:FE44:625F                 0000.cd44.625f         Te1/0/24   1031       0005       42s        REACHABLE  209 s
+ND  FE80::200:CDFF:FE44:625D                 0000.cd44.625d         Te1/0/24   1031       0005       89s        REACHABLE  160 s
+ND  FE80::200:CDFF:FE44:625B                 0000.cd44.625b         Te1/0/24   1031       0005       83s        REACHABLE  157 s
+ND  FE80::200:CDFF:FE44:6259                 0000.cd44.6259         Te1/0/24   1031       0005       68s        REACHABLE  177 s
+ND  FE80::200:CDFF:FE44:6257                 0000.cd44.6257         Te1/0/24   1031       0005       74s        REACHABLE  172 s
+ND  FE80::200:CDFF:FE44:6255                 0000.cd44.6255         Te1/0/24   1031       0005       90s        REACHABLE  150 s
+ND  FE80::200:CDFF:FE44:6253                 0000.cd44.6253         Te1/0/24   1031       0005       90s        REACHABLE  153 s
+ND  FE80::200:CDFF:FE44:6251                 0000.cd44.6251         Te1/0/24   1031       0005       86s        REACHABLE  154 s
+ND  FE80::200:CDFF:FE44:624F                 0000.cd44.624f         Te1/0/24   1031       0005       84s        REACHABLE  158 s
+ND  FE80::200:CDFF:FE44:624D                 0000.cd44.624d         Te1/0/24   1031       0005       41s        REACHABLE  201 s
+ND  FE80::200:CDFF:FE44:624B                 0000.cd44.624b         Te1/0/24   1031       0005       77s        REACHABLE  165 s
+ND  FE80::200:CDFF:FE44:6249                 0000.cd44.6249         Te1/0/24   1031       0005       86s        REACHABLE  159 s
+ND  FE80::200:CDFF:FE44:6247                 0000.cd44.6247         Te1/0/24   1031       0005       69s        REACHABLE  175 s
+ND  FE80::200:CDFF:FE44:6245                 0000.cd44.6245         Te1/0/24   1031       0005       89s        REACHABLE  152 s
+ND  FE80::200:CDFF:FE44:6243                 0000.cd44.6243         Te1/0/24   1031       0005       85s        REACHABLE  162 s
+ND  FE80::200:CDFF:FE44:6241                 0000.cd44.6241         Te1/0/24   1031       0005       5s         REACHABLE  246 s
+ND  FE80::200:CDFF:FE44:623F                 0000.cd44.623f         Te1/0/24   1031       0005       34s        REACHABLE  207 s
+ND  FE80::200:CDFF:FE44:623D                 0000.cd44.623d         Te1/0/24   1031       0005       26s        REACHABLE  222 s
+ND  FE80::200:CDFF:FE44:623B                 0000.cd44.623b         Te1/0/24   1031       0005       64s        REACHABLE  185 s
+ND  FE80::200:CDFF:FE44:6239                 0000.cd44.6239         Te1/0/24   1031       0005       4s         REACHABLE  240 s
+ND  FE80::200:CDFF:FE44:6237                 0000.cd44.6237         Te1/0/24   1031       0005       82s        REACHABLE  167 s
+ND  FE80::200:CDFF:FE44:6235                 0000.cd44.6235         Te1/0/24   1031       0005       37s        REACHABLE  214 s
+ND  FE80::200:CDFF:FE44:6233                 0000.cd44.6233         Te1/0/24   1031       0005       57s        REACHABLE  190 s
+ND  FE80::200:CDFF:FE44:6231                 0000.cd44.6231         Te1/0/24   1031       0005       88s        REACHABLE  153 s
+ND  FE80::200:CDFF:FE44:622F                 0000.cd44.622f         Te1/0/24   1031       0005       92s        REACHABLE  153 s
+ND  FE80::200:CDFF:FE44:622D                 0000.cd44.622d         Te1/0/24   1031       0005       74s        REACHABLE  178 s
+ND  FE80::200:CDFF:FE44:622B                 0000.cd44.622b         Te1/0/24   1031       0005       85s        REACHABLE  157 s
+ND  FE80::200:CDFF:FE40:22C8                 0000.cd40.22c8         Te1/0/24   1031       0005       21s        REACHABLE  226 s
+ND  FE80::200:CDFF:FE40:22C6                 0000.cd40.22c6         Te1/0/24   1031       0005       32s        REACHABLE  216 s
+ND  FE80::200:CDFF:FE40:22C4                 0000.cd40.22c4         Te1/0/24   1031       0005       87s        REACHABLE  155 s
+ND  FE80::200:CDFF:FE40:22C2                 0000.cd40.22c2         Te1/0/24   1031       0005       88s        REACHABLE  161 s
+ND  FE80::200:CDFF:FE40:22C0                 0000.cd40.22c0         Te1/0/24   1031       0005       86s        REACHABLE  165 s
+ND  FE80::200:CDFF:FE40:22BE                 0000.cd40.22be         Te1/0/24   1031       0005       92s        REACHABLE  152 s
+ND  FE80::200:CDFF:FE40:22BC                 0000.cd40.22bc         Te1/0/24   1031       0005       93s        REACHABLE  149 s
+ND  FE80::200:CDFF:FE40:22BA                 0000.cd40.22ba         Te1/0/24   1031       0005       87s        REACHABLE  162 s
+ND  FE80::200:CDFF:FE40:22B8                 0000.cd40.22b8         Te1/0/24   1031       0005       53s        REACHABLE  196 s
+ND  FE80::200:CDFF:FE40:22B6                 0000.cd40.22b6         Te1/0/24   1031       0005       90s        REACHABLE  149 s
+ND  FE80::200:CDFF:FE40:22B4                 0000.cd40.22b4         Te1/0/24   1031       0005       55s        REACHABLE  193 s
+ND  FE80::200:CDFF:FE40:22B2                 0000.cd40.22b2         Te1/0/24   1031       0005       54s        REACHABLE  193 s
+ND  FE80::200:CDFF:FE40:22B0                 0000.cd40.22b0         Te1/0/24   1031       0005       86s        REACHABLE  162 s
+ND  FE80::200:CDFF:FE40:22AE                 0000.cd40.22ae         Te1/0/24   1031       0005       89s        REACHABLE  152 s
+ND  FE80::200:CDFF:FE40:22AC                 0000.cd40.22ac         Te1/0/24   1031       0005       92s        REACHABLE  147 s
+ND  FE80::200:CDFF:FE40:22AA                 0000.cd40.22aa         Te1/0/24   1031       0005       86s        REACHABLE  161 s
+ND  FE80::200:CDFF:FE40:22A8                 0000.cd40.22a8         Te1/0/24   1031       0005       86s        REACHABLE  157 s
+ND  FE80::200:CDFF:FE40:22A6                 0000.cd40.22a6         Te1/0/24   1031       0005       95s        REACHABLE  150 s
+ND  FE80::200:CDFF:FE40:22A4                 0000.cd40.22a4         Te1/0/24   1031       0005       89s        REACHABLE  153 s
+ND  FE80::200:CDFF:FE40:22A2                 0000.cd40.22a2         Te1/0/24   1031       0005       80s        REACHABLE  165 s
+ND  FE80::200:CDFF:FE40:22A0                 0000.cd40.22a0         Te1/0/24   1031       0005       32s        REACHABLE  213 s
+ND  FE80::200:CDFF:FE40:229E                 0000.cd40.229e         Te1/0/24   1031       0005       91s        REACHABLE  160 s
+ND  FE80::200:CDFF:FE40:229C                 0000.cd40.229c         Te1/0/24   1031       0005       94s        REACHABLE  146 s
+ND  FE80::200:CDFF:FE40:229A                 0000.cd40.229a         Te1/0/24   1031       0005       90s        REACHABLE  159 s
+ND  FE80::200:CDFF:FE40:2298                 0000.cd40.2298         Te1/0/24   1031       0005       50s        REACHABLE  196 s
+ND  FE80::200:CDFF:FE40:2296                 0000.cd40.2296         Te1/0/24   1031       0005       95s        REACHABLE  155 s
+ND  FE80::200:CDFF:FE40:2294                 0000.cd40.2294         Te1/0/24   1031       0005       54s        REACHABLE  196 s
+ND  FE80::200:CDFF:FE40:2292                 0000.cd40.2292         Te1/0/24   1031       0005       94s        REACHABLE  156 s
+ND  FE80::200:CDFF:FE40:2290                 0000.cd40.2290         Te1/0/24   1031       0005       98s        REACHABLE  148 s
+ND  FE80::200:CDFF:FE40:228E                 0000.cd40.228e         Te1/0/24   1031       0005       93s        REACHABLE  151 s
+ND  FE80::200:CDFF:FE40:228C                 0000.cd40.228c         Te1/0/24   1031       0005       62s        REACHABLE  188 s
+ND  FE80::200:CDFF:FE40:228A                 0000.cd40.228a         Te1/0/24   1031       0005       97s        REACHABLE  145 s
+ND  FE80::200:CDFF:FE40:2288                 0000.cd40.2288         Te1/0/24   1031       0005       92s        REACHABLE  157 s
+ND  FE80::200:CDFF:FE40:2286                 0000.cd40.2286         Te1/0/24   1031       0005       23s        REACHABLE  221 s
+ND  FE80::200:CDFF:FE40:2284                 0000.cd40.2284         Te1/0/24   1031       0005       98s        REACHABLE  152 s
+ND  FE80::200:CDFF:FE40:2282                 0000.cd40.2282         Te1/0/24   1031       0005       91s        REACHABLE  149 s
+ND  FE80::200:CDFF:FE40:2280                 0000.cd40.2280         Te1/0/24   1031       0005       99s        REACHABLE  153 s
+ND  FE80::200:CDFF:FE40:227E                 0000.cd40.227e         Te1/0/24   1031       0005       91s        REACHABLE  153 s
+ND  FE80::200:CDFF:FE40:227C                 0000.cd40.227c         Te1/0/24   1031       0005       98s        REACHABLE  150 s
+ND  FE80::200:CDFF:FE40:227A                 0000.cd40.227a         Te1/0/24   1031       0005       92s        REACHABLE  157 s
+ND  FE80::200:CDFF:FE40:2278                 0000.cd40.2278         Te1/0/24   1031       0005       91s        REACHABLE  150 s
+ND  FE80::200:CDFF:FE40:2276                 0000.cd40.2276         Te1/0/24   1031       0005       76s        REACHABLE  176 s
+ND  FE80::200:CDFF:FE40:2274                 0000.cd40.2274         Te1/0/24   1031       0005       74s        REACHABLE  177 s
+ND  FE80::200:CDFF:FE40:2272                 0000.cd40.2272         Te1/0/24   1031       0005       87s        REACHABLE  165 s
+ND  FE80::200:CDFF:FE40:2270                 0000.cd40.2270         Te1/0/24   1031       0005       38s        REACHABLE  207 s
+ND  FE80::200:CDFF:FE40:226E                 0000.cd40.226e         Te1/0/24   1031       0005       93s        REACHABLE  156 s
+ND  FE80::200:CDFF:FE40:226C                 0000.cd40.226c         Te1/0/24   1031       0005       92s        REACHABLE  156 s
+ND  FE80::200:CDFF:FE40:226A                 0000.cd40.226a         Te1/0/24   1031       0005       98s        REACHABLE  152 s
+ND  FE80::200:CDFF:FE40:2268                 0000.cd40.2268         Te1/0/24   1031       0005       59s        REACHABLE  181 s
+ND  FE80::200:CDFF:FE40:2266                 0000.cd40.2266         Te1/0/24   1031       0005       96s        REACHABLE  146 s
+L   FE80::200:CFF:FE9F:FCB8                  0000.0c9f.fcb8         Vl1035     1035       0100       68395mn    DOWN
+L   FE80::200:CFF:FE9F:FB04                  0000.0c9f.fb04         Vl1029     1029       0100       68395mn    DOWN
+L   FE80::200:CFF:FE9F:F9DA                  0000.0c9f.f9da         Vl1037     1037       0100       68395mn    DOWN
+L   FE80::200:CFF:FE9F:F7D6                  0000.0c9f.f7d6         Vl2046     2046       0100       68395mn    DOWN
+L   FE80::200:CFF:FE9F:F23B                  0000.0c9f.f23b         Vl1031     1031       0100       20345mn    REACHABLE
+ND  FE80::200:4FF:FEC8:A887                  0000.04c8.a887         Te1/0/24   1031       0005       93s        REACHABLE  156 s
+ND  FE80::200:4FF:FEC8:A885                  0000.04c8.a885         Te1/0/24   1031       0005       103s       REACHABLE  145 s
+ND  FE80::200:4FF:FEC8:A883                  0000.04c8.a883         Te1/0/24   1031       0005       16s        REACHABLE  235 s
+ND  FE80::200:4FF:FEC8:A881                  0000.04c8.a881         Te1/0/24   1031       0005       3s         REACHABLE  241 s
+ND  FE80::200:4FF:FEC8:A87F                  0000.04c8.a87f         Te1/0/24   1031       0005       52s        REACHABLE  190 s
+ND  FE80::200:4FF:FEC8:A87D                  0000.04c8.a87d         Te1/0/24   1031       0005       102s       REACHABLE  140 s
+ND  FE80::200:4FF:FEC8:A87B                  0000.04c8.a87b         Te1/0/24   1031       0005       32s        REACHABLE  211 s
+ND  FE80::200:4FF:FEC8:A879                  0000.04c8.a879         Te1/0/24   1031       0005       100s       REACHABLE  147 s
+ND  FE80::200:4FF:FEC8:A877                  0000.04c8.a877         Te1/0/24   1031       0005       14s        REACHABLE  234 s
+ND  FE80::200:4FF:FEC8:A875                  0000.04c8.a875         Te1/0/24   1031       0005       97s        REACHABLE  147 s
+ND  FE80::200:4FF:FEC8:A873                  0000.04c8.a873         Te1/0/24   1031       0005       95s        REACHABLE  154 s
+ND  FE80::200:4FF:FEC8:A871                  0000.04c8.a871         Te1/0/24   1031       0005       78s        REACHABLE  164 s
+ND  FE80::200:4FF:FEC8:A86F                  0000.04c8.a86f         Te1/0/24   1031       0005       73s        REACHABLE  175 s
+ND  FE80::200:4FF:FEC8:A86D                  0000.04c8.a86d         Te1/0/24   1031       0005       63s        REACHABLE  183 s
+ND  FE80::200:4FF:FEC8:A86B                  0000.04c8.a86b         Te1/0/24   1031       0005       27s        REACHABLE  218 s
+ND  FE80::200:4FF:FEC8:A869                  0000.04c8.a869         Te1/0/24   1031       0005       103s       REACHABLE  140 s
+ND  FE80::200:4FF:FEC8:A867                  0000.04c8.a867         Te1/0/24   1031       0005       101s       REACHABLE  151 s
+ND  FE80::200:4FF:FEC8:A865                  0000.04c8.a865         Te1/0/24   1031       0005       50s        REACHABLE  197 s
+ND  FE80::200:4FF:FEC8:A863                  0000.04c8.a863         Te1/0/24   1031       0005       12s        REACHABLE  229 s
+ND  FE80::200:4FF:FEC8:A861                  0000.04c8.a861         Te1/0/24   1031       0005       94s        REACHABLE  157 s
+ND  FE80::200:4FF:FEC8:A85F                  0000.04c8.a85f         Te1/0/24   1031       0005       101s       REACHABLE  147 s
+ND  FE80::200:4FF:FEC8:A85D                  0000.04c8.a85d         Te1/0/24   1031       0005       93s        REACHABLE  153 s
+ND  FE80::200:4FF:FEC8:A85B                  0000.04c8.a85b         Te1/0/24   1031       0005       75s        REACHABLE  165 s
+ND  FE80::200:4FF:FEC8:A859                  0000.04c8.a859         Te1/0/24   1031       0005       90s        REACHABLE  156 s
+ND  FE80::200:4FF:FEC8:A857                  0000.04c8.a857         Te1/0/24   1031       0005       103s       REACHABLE  144 s
+ND  FE80::200:4FF:FEC8:A855                  0000.04c8.a855         Te1/0/24   1031       0005       87s        REACHABLE  156 s
+ND  FE80::200:4FF:FEC8:A853                  0000.04c8.a853         Te1/0/24   1031       0005       11s        REACHABLE  237 s
+ND  FE80::200:4FF:FEC8:A851                  0000.04c8.a851         Te1/0/24   1031       0005       101s       REACHABLE  151 s
+ND  FE80::200:4FF:FEC8:A84F                  0000.04c8.a84f         Te1/0/24   1031       0005       5s         REACHABLE  247 s
+ND  FE80::200:4FF:FEC8:A84D                  0000.04c8.a84d         Te1/0/24   1031       0005       72s        REACHABLE  168 s
+ND  FE80::200:4FF:FEC8:A84B                  0000.04c8.a84b         Te1/0/24   1031       0005       107s       REACHABLE  139 s
+ND  FE80::200:4FF:FEC8:A849                  0000.04c8.a849         Te1/0/24   1031       0005       45s        REACHABLE  195 s
+ND  FE80::200:4FF:FEC8:A847                  0000.04c8.a847         Te1/0/24   1031       0005       41s        REACHABLE  205 s
+ND  FE80::200:4FF:FEC8:A845                  0000.04c8.a845         Te1/0/24   1031       0005       64s        REACHABLE  186 s
+ND  FE80::200:4FF:FEC8:A843                  0000.04c8.a843         Te1/0/24   1031       0005       57s        REACHABLE  187 s
+ND  FE80::200:4FF:FEC8:A841                  0000.04c8.a841         Te1/0/24   1031       0005       94s        REACHABLE  156 s
+ND  FE80::200:4FF:FEC8:A83F                  0000.04c8.a83f         Te1/0/24   1031       0005       53s        REACHABLE  189 s
+ND  FE80::200:4FF:FEC8:A83D                  0000.04c8.a83d         Te1/0/24   1031       0005       94s        REACHABLE  150 s
+ND  FE80::200:4FF:FEC8:A83B                  0000.04c8.a83b         Te1/0/24   1031       0005       100s       REACHABLE  141 s
+ND  FE80::200:4FF:FEC8:A839                  0000.04c8.a839         Te1/0/24   1031       0005       99s        REACHABLE  141 s
+ND  FE80::200:4FF:FEC8:A837                  0000.04c8.a837         Te1/0/24   1031       0005       104s       REACHABLE  142 s
+ND  FE80::200:4FF:FEC8:A835                  0000.04c8.a835         Te1/0/24   1031       0005       106s       REACHABLE  141 s
+ND  FE80::200:4FF:FEC8:A833                  0000.04c8.a833         Te1/0/24   1031       0005       104s       REACHABLE  144 s
+ND  FE80::200:4FF:FEC8:A831                  0000.04c8.a831         Te1/0/24   1031       0005       106s       REACHABLE  139 s
+ND  FE80::200:4FF:FEC8:A82F                  0000.04c8.a82f         Te1/0/24   1031       0005       76s        REACHABLE  175 s
+ND  FE80::200:4FF:FEC8:A82D                  0000.04c8.a82d         Te1/0/24   1031       0005       107s       REACHABLE  135 s
+ND  FE80::200:4FF:FEC8:A82B                  0000.04c8.a82b         Te1/0/24   1031       0005       92s        REACHABLE  151 s
+ND  FE80::200:4FF:FEC8:A829                  0000.04c8.a829         Te1/0/24   1031       0005       105s       REACHABLE  138 s
+ND  FE80::200:4FF:FEC8:A827                  0000.04c8.a827         Te1/0/24   1031       0005       20s        REACHABLE  226 s
+L   2102:211:1:2::1                          0000.0c9f.fc7d         Vl1039     1039       0100       45267mn    DOWN
+L   2102:211:1:1::1                          0000.0c9f.ffcf         Vl1038     1038       0100       45267mn    DOWN
+L   2102:1:1:510D::1                         0000.0c9f.ffbf         Vl1043     1043       0100       28998mn    DOWN
+L   2102:1:1:510C::1                         0000.0c9f.fcb8         Vl1035     1035       0100       68395mn    DOWN
+L   2102:1:1:510C::1                         0000.0c9f.fcb8         Vl1042     1042       0100       28998mn    DOWN
+L   2102:1:1:420A::1                         0000.0c9f.f7d6         Vl2046     2046       0100       68395mn    DOWN
+L   2102:1:1:420A::1                         0000.0c9f.f7d6         Vl1041     1041       0100       29282mn    DOWN
+L   2102:1:1:4209::1                         0000.0c9f.f9da         Vl1037     1037       0100       68395mn    DOWN
+L   2102:1:1:4209::1                         0000.0c9f.f9da         Vl1040     1040       0100       29282mn    DOWN
+DH6 2102:1:1:410A:FDD1:48DB:2EAD:F32D        0000.04c8.a843         Te1/0/24   1031       0024       176s       REACHABLE  65 s try 0(144801 s)
+DH6 2102:1:1:410A:FDB7:E474:267C:18B9        0000.cd40.22a4         Te1/0/24   1031       0024       3mn        REACHABLE  38 s try 0(144798 s)
+DH6 2102:1:1:410A:FDB5:A112:34C3:61EB        0000.04c8.a861         Te1/0/24   1031       0024       3mn        REACHABLE  64 s try 0(144798 s)
+DH6 2102:1:1:410A:FD9F:C9A0:D457:7A38        0000.cd40.226c         Te1/0/24   1031       0024       122s       REACHABLE  125 s try 0(144789 s)
+DH6 2102:1:1:410A:FD3F:2475:50FD:50          0000.cd40.22ac         Te1/0/24   1031       0024       162s       REACHABLE  85 s try 0(144789 s)
+DH6 2102:1:1:410A:F9F7:962E:306:795          0000.cd44.6233         Te1/0/24   1031       0024       168s       REACHABLE  83 s try 0(144797 s)
+DH6 2102:1:1:410A:F8DF:FA83:CCC0:4E85        0000.cd40.22ae         Te1/0/24   1031       0024       169s       REACHABLE  74 s try 0(144797 s)
+DH6 2102:1:1:410A:F87E:2224:A8F7:3A69        0000.cd44.624d         Te1/0/24   1031       0024       123s       REACHABLE  126 s try 0(144790 s)
+DH6 2102:1:1:410A:F5C0:D5D5:25C:47D9         0000.cd44.6253         Te1/0/24   1031       0024       164s       REACHABLE  75 s try 0(144798 s)
+DH6 2102:1:1:410A:F4D1:F048:5DCD:65D3        0000.cd44.6261         Te1/0/24   1031       0024       3mn        REACHABLE  41 s try 0(144798 s)
+DH6 2102:1:1:410A:F480:23BD:313E:B014        0000.cd44.62a9         Te1/0/24   1031       0024       144s       REACHABLE  99 s try 0(144798 s)
+DH6 2102:1:1:410A:F41A:58EF:2F0D:4639        0000.cd44.62e7         Te1/0/24   1031       0024       157s       REACHABLE  93 s try 0(144790 s)
+DH6 2102:1:1:410A:F0C6:AB7E:88A:1487         0000.cd44.626b         Te1/0/24   1031       0024       67s        REACHABLE  178 s try 0(144797 s)
+DH6 2102:1:1:410A:ED04:A29E:47C5:F0EE        0000.cd40.2272         Te1/0/24   1031       0024       109s       REACHABLE  132 s try 0(144798 s)
+DH6 2102:1:1:410A:E949:C0F:9621:43BD         0000.cd44.628b         Te1/0/24   1031       0024       144s       REACHABLE  100 s try 0(144789 s)
+DH6 2102:1:1:410A:E88C:2582:B2CC:D6D9        0000.04c8.a867         Te1/0/24   1031       0024       175s       REACHABLE  69 s try 0(144798 s)
+DH6 2102:1:1:410A:E886:3AE4:A459:804C        0000.04c8.a879         Te1/0/24   1031       0024       3mn        REACHABLE  55 s try 0(144790 s)
+DH6 2102:1:1:410A:E5D3:CE74:A06:70CB         0000.04c8.a85f         Te1/0/24   1031       0024       143s       REACHABLE  98 s try 0(144796 s)
+DH6 2102:1:1:410A:E5A5:2281:8DB9:886F        0000.cd40.2266         Te1/0/24   1031       0024       3mn        REACHABLE  52 s try 0(144798 s)
+DH6 2102:1:1:410A:E549:D7BD:839:CB8A         0000.04c8.a84f         Te1/0/24   1031       0024       150s       REACHABLE  89 s try 0(144789 s)
+DH6 2102:1:1:410A:E14E:AE89:AD8:8BBE         0000.cd44.6241         Te1/0/24   1031       0024       160s       REACHABLE  87 s try 0(144798 s)
+DH6 2102:1:1:410A:E127:4BBA:78C7:1A80        0000.cd44.62cf         Te1/0/24   1031       0024       106s       REACHABLE  140 s try 0(144790 s)
+DH6 2102:1:1:410A:E103:AB78:6979:8C95        0000.cd44.6267         Te1/0/24   1031       0024       167s       REACHABLE  73 s try 0(144798 s)
+DH6 2102:1:1:410A:E08C:560B:AF19:CFF8        0000.cd44.6289         Te1/0/24   1031       0024       142s       REACHABLE  103 s try 0(144798 s)
+DH6 2102:1:1:410A:E031:98CB:9AF:E509         0000.cd44.627d         Te1/0/24   1031       0024       111s       REACHABLE  138 s try 0(144790 s)
+DH6 2102:1:1:410A:DCE7:7D1D:12CE:D0C6        0000.cd40.22b6         Te1/0/24   1031       0024       3mn        REACHABLE  39 s try 0(144790 s)
+DH6 2102:1:1:410A:DC95:F7D7:D7D1:2380        0000.cd44.622d         Te1/0/24   1031       0024       101s       REACHABLE  142 s try 0(144799 s)
+DH6 2102:1:1:410A:D944:3EAA:12E2:D75E        0000.cd44.62c1         Te1/0/24   1031       0024       145s       REACHABLE  103 s try 0(144790 s)
+DH6 2102:1:1:410A:D8A0:6F01:3AD8:F3E5        0000.04c8.a859         Te1/0/24   1031       0024       156s       REACHABLE  88 s try 0(144797 s)
+DH6 2102:1:1:410A:D5C3:1ECA:8852:5AD8        0000.cd40.22b2         Te1/0/24   1031       0024       3mn        REACHABLE  11 s try 0(144794 s)
+DH6 2102:1:1:410A:D45B:450E:3E16:E501        0000.cd44.6239         Te1/0/24   1031       0024       149s       REACHABLE  101 s try 0(144785 s)
+DH6 2102:1:1:410A:D1F6:3050:50B8:ACBC        0000.cd40.22c2         Te1/0/24   1031       0024       168s       REACHABLE  78 s try 0(144785 s)
+DH6 2102:1:1:410A:D0B6:3CAB:CF90:5473        0000.04c8.a87d         Te1/0/24   1031       0024       152s       REACHABLE  93 s try 0(144795 s)
+DH6 2102:1:1:410A:D090:1D3F:1E92:1753        0000.04c8.a829         Te1/0/24   1031       0024       3mn        REACHABLE  36 s try 0(144795 s)
+DH6 2102:1:1:410A:CD8B:3B7C:CA40:1AA7        0000.04c8.a87b         Te1/0/24   1031       0024       3mn        REACHABLE  66 s try 0(144794 s)
+DH6 2102:1:1:410A:CCCB:26D7:C4BF:A51C        0000.04c8.a835         Te1/0/24   1031       0024       125s       REACHABLE  123 s try 0(144795 s)
+DH6 2102:1:1:410A:CC71:CDC0:B6E5:EB6         0000.cd44.62a1         Te1/0/24   1031       0024       3mn        REACHABLE  35 s try 0(144794 s)
+DH6 2102:1:1:410A:CC6D:4C05:FC25:738A        0000.cd40.229c         Te1/0/24   1031       0024       3mn        REACHABLE  47 s try 0(144794 s)
+DH6 2102:1:1:410A:CC17:7AD5:53B8:4E39        0000.cd44.6265         Te1/0/24   1031       0024       107s       REACHABLE  144 s try 0(144795 s)
+DH6 2102:1:1:410A:C974:2CF2:4702:7384        0000.cd44.626d         Te1/0/24   1031       0024       161s       REACHABLE  84 s try 0(144785 s)
+DH6 2102:1:1:410A:C96E:D0F6:3108:B8F0        0000.cd44.62ad         Te1/0/24   1031       0024       96s        REACHABLE  145 s try 0(144795 s)
+DH6 2102:1:1:410A:C952:D8D9:4A0D:3FC7        0000.cd40.229a         Te1/0/24   1031       0024       3mn        REACHABLE  17 s try 0(144794 s)
+DH6 2102:1:1:410A:C8F9:71EE:D31F:98C3        0000.cd44.6255         Te1/0/24   1031       0024       135s       REACHABLE  105 s try 0(144785 s)
+DH6 2102:1:1:410A:C888:59E:36CD:9CF7         0000.cd40.228c         Te1/0/24   1031       0024       3mn        REACHABLE  60 s try 0(144794 s)
+DH6 2102:1:1:410A:C81C:D7C9:8283:647E        0000.cd40.22bc         Te1/0/24   1031       0024       171s       REACHABLE  75 s try 0(144794 s)
+DH6 2102:1:1:410A:C5B5:7132:9601:C063        0000.cd44.624f         Te1/0/24   1031       0024       120s       REACHABLE  121 s try 0(144793 s)
+DH6 2102:1:1:410A:C563:E9C5:438:2EA7         0000.04c8.a841         Te1/0/24   1031       0024       113s       REACHABLE  129 s try 0(144793 s)
+DH6 2102:1:1:410A:C4A5:29FC:D869:2742        0000.04c8.a875         Te1/0/24   1031       0024       3mn        REACHABLE  51 s try 0(144794 s)
+DH6 2102:1:1:410A:C192:CDD5:933C:A9CA        0000.04c8.a847         Te1/0/24   1031       0024       60s        REACHABLE  185 s try 0(144792 s)
+DH6 2102:1:1:410A:C14A:6BF4:EBB0:A0CC        0000.cd44.6273         Te1/0/24   1031       0024       131s       REACHABLE  111 s try 0(144794 s)
+DH6 2102:1:1:410A:C112:8FCA:8925:9825        0000.cd44.628d         Te1/0/24   1031       0024       155s       REACHABLE  87 s try 0(144785 s)
+DH6 2102:1:1:410A:C0DA:9D05:76B:2BC2         0000.04c8.a887         Te1/0/24   1031       0024       161s       REACHABLE  86 s try 0(144795 s)
+DH6 2102:1:1:410A:C086:E437:949F:5078        0000.cd40.2296         Te1/0/24   1031       0024       127s       REACHABLE  124 s try 0(144793 s)
+DH6 2102:1:1:410A:BDB7:D7FE:EDAE:15F1        0000.cd40.2298         Te1/0/24   1031       0024       82s        REACHABLE  167 s try 0(144791 s)
+DH6 2102:1:1:410A:BDA0:1A66:91AD:A41F        0000.cd40.2278         Te1/0/24   1031       0024       100s       REACHABLE  149 s try 0(144792 s)
+DH6 2102:1:1:410A:BDA0:11F9:1F06:8F28        0000.cd44.627f         Te1/0/24   1031       0024       109s       REACHABLE  137 s try 0(144793 s)
+DH6 2102:1:1:410A:BD8D:F9ED:7E18:E8AD        0000.cd40.2268         Te1/0/24   1031       0024       87s        REACHABLE  156 s try 0(144795 s)
+DH6 2102:1:1:410A:BC73:4551:2922:C4D0        0000.cd44.62eb         Te1/0/24   1031       0024       179s       REACHABLE  66 s try 0(144789 s)
+DH6 2102:1:1:410A:BC22:428D:C6F6:D6F2        0000.cd44.622b         Te1/0/24   1031       0024       151s       REACHABLE  91 s try 0(144790 s)
+DH6 2102:1:1:410A:B8DB:2A61:1C82:3527        0000.cd44.6287         Te1/0/24   1031       0024       121s       REACHABLE  120 s try 0(144790 s)
+DH6 2102:1:1:410A:B885:CB05:491B:A865        0000.cd40.229e         Te1/0/24   1031       0024       139s       REACHABLE  112 s try 0(144790 s)
+DH6 2102:1:1:410A:B57B:3323:D4D2:65          0000.04c8.a86f         Te1/0/24   1031       0024       144s       REACHABLE  96 s try 0(144790 s)
+DH6 2102:1:1:410A:B4E5:6DE6:9A34:5074        0000.04c8.a833         Te1/0/24   1031       0024       143s       REACHABLE  107 s try 0(144790 s)
+DH6 2102:1:1:410A:B4D6:72BF:C3EB:F5A0        0000.cd40.2270         Te1/0/24   1031       0024       156s       REACHABLE  94 s try 0(144790 s)
+DH6 2102:1:1:410A:B4B1:2764:A3E8:95F6        0000.cd44.62cb         Te1/0/24   1031       0024       72s        REACHABLE  179 s try 0(144781 s)
+DH6 2102:1:1:410A:B499:12DF:A9D0:60A6        0000.04c8.a85d         Te1/0/24   1031       0024       120s       REACHABLE  125 s try 0(144789 s)
+DH6 2102:1:1:410A:B479:5C8B:8555:7344        0000.04c8.a82d         Te1/0/24   1031       0024       3mn        REACHABLE  58 s try 0(144790 s)
+DH6 2102:1:1:410A:B16B:C4D0:BA59:EA11        0000.cd44.62bb         Te1/0/24   1031       0024       136s       REACHABLE  116 s try 0(144789 s)
+DH6 2102:1:1:410A:B133:B793:2926:493B        0000.04c8.a881         Te1/0/24   1031       0024       157s       REACHABLE  90 s try 0(144790 s)
+DH6 2102:1:1:410A:B11A:84A6:8882:3CAF        0000.cd44.62d5         Te1/0/24   1031       0024       118s       REACHABLE  131 s try 0(144788 s)
+DH6 2102:1:1:410A:B0B7:4BBE:177B:4303        0000.04c8.a869         Te1/0/24   1031       0024       175s       REACHABLE  75 s try 0(144790 s)
+DH6 2102:1:1:410A:B073:8311:A042:EE1D        0000.04c8.a851         Te1/0/24   1031       0024       140s       REACHABLE  102 s try 0(144790 s)
+DH6 2102:1:1:410A:A98B:717F:8254:82F         0000.04c8.a873         Te1/0/24   1031       0024       166s       REACHABLE  77 s try 0(144789 s)
+DH6 2102:1:1:410A:A814:D9CC:4D29:3475        0000.cd44.6285         Te1/0/24   1031       0024       151s       REACHABLE  89 s try 0(144781 s)
+DH6 2102:1:1:410A:A51F:ACAD:758E:D629        0000.cd44.625f         Te1/0/24   1031       0024       174s       REACHABLE  72 s try 0(144788 s)
+DH6 2102:1:1:410A:A492:E15C:2AB9:2D2         0000.cd40.2288         Te1/0/24   1031       0024       160s       REACHABLE  86 s try 0(144789 s)
+DH6 2102:1:1:410A:A15C:B8C5:5AC5:6FC3        0000.cd44.62dd         Te1/0/24   1031       0024       164s       REACHABLE  83 s try 0(144789 s)
+DH6 2102:1:1:410A:A148:A8F0:703E:7322        0000.cd44.6263         Te1/0/24   1031       0024       167s       REACHABLE  78 s try 0(144789 s)
+DH6 2102:1:1:410A:A04B:5853:57A0:498         0000.cd40.226e         Te1/0/24   1031       0024       177s       REACHABLE  67 s try 0(144788 s)
+DH6 2102:1:1:410A:9C92:80D0:D396:4474        0000.cd44.6281         Te1/0/24   1031       0024       3mn        REACHABLE  16 s try 0(144790 s)
+DH6 2102:1:1:410A:98CE:9F83:B8C8:1AB8        0000.04c8.a853         Te1/0/24   1031       0024       33s        REACHABLE  213 s try 0(144789 s)
+DH6 2102:1:1:410A:98C7:5629:3798:E21A        0000.cd40.22a6         Te1/0/24   1031       0024       154s       REACHABLE  88 s try 0(144781 s)
+DH6 2102:1:1:410A:9837:3838:8D22:255C        0000.04c8.a845         Te1/0/24   1031       0024       129s       REACHABLE  112 s try 0(144790 s)
+DH6 2102:1:1:410A:9590:926:4E00:AD3B         0000.cd40.2294         Te1/0/24   1031       0024       13s        REACHABLE  228 s try 0(144791 s)
+DH6 2102:1:1:410A:955F:7633:1FC1:F857        0000.04c8.a84b         Te1/0/24   1031       0024       146s       REACHABLE  103 s try 0(144790 s)
+DH6 2102:1:1:410A:9502:745B:A91F:7AA1        0000.cd44.625b         Te1/0/24   1031       0024       3mn        REACHABLE  59 s try 0(144776 s)
+DH6 2102:1:1:410A:94FE:9D3F:FA2F:22F3        0000.cd44.626f         Te1/0/24   1031       0024       142s       REACHABLE  108 s try 0(144777 s)
+DH6 2102:1:1:410A:91CE:3794:21C0:8ABE        0000.cd40.2284         Te1/0/24   1031       0024       155s       REACHABLE  93 s try 0(144786 s)
+DH6 2102:1:1:410A:918F:6BFD:FA9B:B7E3        0000.cd40.22a8         Te1/0/24   1031       0024       3mn        REACHABLE  40 s try 0(144784 s)
+DH6 2102:1:1:410A:917E:8F52:76A7:FC38        0000.cd44.6279         Te1/0/24   1031       0024       3mn        REACHABLE  25 s try 0(144785 s)
+DH6 2102:1:1:410A:9177:EEA8:BE91:61D9        0000.04c8.a83f         Te1/0/24   1031       0024       157s       REACHABLE  94 s try 0(144786 s)
+DH6 2102:1:1:410A:9166:2ADF:1EEC:B416        0000.04c8.a865         Te1/0/24   1031       0024       165s       REACHABLE  77 s try 0(144786 s)
+DH6 2102:1:1:410A:914A:4817:555D:F788        0000.cd40.22c6         Te1/0/24   1031       0024       3mn        REACHABLE  60 s try 0(144785 s)
+DH6 2102:1:1:410A:9136:6DCC:5210:E5D1        0000.04c8.a83d         Te1/0/24   1031       0024       121s       REACHABLE  121 s try 0(144777 s)
+DH6 2102:1:1:410A:8DA4:D3E1:B42A:93DF        0000.cd40.22a0         Te1/0/24   1031       0024       3mn        REACHABLE  15 s try 0(144777 s)
+DH6 2102:1:1:410A:8DA2:1AB9:11D9:9E85        0000.cd44.62c5         Te1/0/24   1031       0024       119s       REACHABLE  125 s try 0(144784 s)
+DH6 2102:1:1:410A:8D3B:2F15:A362:69D5        0000.cd44.628f         Te1/0/24   1031       0024       3mn        REACHABLE  23 s try 0(144784 s)
+DH6 2102:1:1:410A:89EF:B304:5A9E:A0C         0000.cd44.62d3         Te1/0/24   1031       0024       3mn        REACHABLE  43 s try 0(144784 s)
+DH6 2102:1:1:410A:88CD:AC0E:BE90:11B5        0000.cd44.623b         Te1/0/24   1031       0024       108s       REACHABLE  134 s try 0(144785 s)
+DH6 2102:1:1:410A:8852:E932:FAB:4AFC         0000.cd44.6293         Te1/0/24   1031       0024       3mn        REACHABLE  26 s try 0(144776 s)
+DH6 2102:1:1:410A:8845:28D8:C2F2:C81         0000.04c8.a83b         Te1/0/24   1031       0024       144s       REACHABLE  98 s try 0(144786 s)
+DH6 2102:1:1:410A:85BE:7EB5:1F3:30F2         0000.cd44.6299         Te1/0/24   1031       0024       3mn        REACHABLE  47 s try 0(144787 s)
+DH6 2102:1:1:410A:8570:3FD3:E8B4:E42B        0000.cd44.62f1         Te1/0/24   1031       0024       141s       REACHABLE  99 s try 0(144785 s)
+DH6 2102:1:1:410A:852C:B7B9:BE9F:AFDE        0000.cd44.62c3         Te1/0/24   1031       0024       161s       REACHABLE  90 s try 0(144786 s)
+DH6 2102:1:1:410A:8491:EE8D:9BAC:7D17        0000.cd40.2274         Te1/0/24   1031       0024       177s       REACHABLE  74 s try 0(144784 s)
+DH6 2102:1:1:410A:8489:CE3F:AFA6:26ED        0000.cd44.6237         Te1/0/24   1031       0024       165s       REACHABLE  84 s try 0(144778 s)
+DH6 2102:1:1:410A:8486:7A4C:2BF3:6FFD        0000.cd44.62af         Te1/0/24   1031       0024       144s       REACHABLE  108 s try 0(144787 s)
+DH6 2102:1:1:410A:845C:FD0E:98DF:C15C        0000.04c8.a86b         Te1/0/24   1031       0024       169s       REACHABLE  71 s try 0(144786 s)
+DH6 2102:1:1:410A:81F7:AA04:57ED:CF36        0000.cd44.62b3         Te1/0/24   1031       0024       172s       REACHABLE  76 s try 0(144785 s)
+DH6 2102:1:1:410A:81BF:8FB4:79FE:CB03        0000.04c8.a827         Te1/0/24   1031       0024       3mn        REACHABLE  46 s try 0(144786 s)
+DH6 2102:1:1:410A:8199:8AD3:E213:82EE        0000.cd40.22c4         Te1/0/24   1031       0024       3mn        REACHABLE  60 s try 0(144777 s)
+DH6 2102:1:1:410A:8145:4B06:6404:6228        0000.cd44.62b5         Te1/0/24   1031       0024       3mn        REACHABLE  67 s try 0(144785 s)
+DH6 2102:1:1:410A:8023:8C64:F802:2EC0        0000.cd44.6259         Te1/0/24   1031       0024       3mn        REACHABLE  64 s try 0(144785 s)
+DH6 2102:1:1:410A:7DE9:77E7:3E5A:CD9A        0000.04c8.a857         Te1/0/24   1031       0024       3mn        REACHABLE  52 s try 0(144773 s)
+DH6 2102:1:1:410A:798D:3E11:60BD:8EF8        0000.04c8.a883         Te1/0/24   1031       0024       141s       REACHABLE  107 s try 0(144781 s)
+DH6 2102:1:1:410A:792C:8518:2FD4:4400        0000.cd44.62b7         Te1/0/24   1031       0024       3mn        REACHABLE  59 s try 0(144782 s)
+DH6 2102:1:1:410A:78C9:BB4C:728:34B8         0000.04c8.a84d         Te1/0/24   1031       0024       100s       REACHABLE  149 s try 0(144779 s)
+DH6 2102:1:1:410A:7830:C374:2B51:DAF2        0000.cd40.22c0         Te1/0/24   1031       0024       155s       REACHABLE  85 s try 0(144772 s)
+DH6 2102:1:1:410A:7828:608C:5C2F:9397        0000.cd44.62e1         Te1/0/24   1031       0024       152s       REACHABLE  98 s try 0(144779 s)
+DH6 2102:1:1:410A:74B3:36AF:8681:77B4        0000.cd40.228a         Te1/0/24   1031       0024       3mn        REACHABLE  17 s try 0(144781 s)
+DH6 2102:1:1:410A:746B:9C9:11DB:987A         0000.cd44.62d7         Te1/0/24   1031       0024       114s       REACHABLE  136 s try 0(144782 s)
+DH6 2102:1:1:410A:7134:2C15:B564:123E        0000.04c8.a855         Te1/0/24   1031       0024       169s       REACHABLE  80 s try 0(144781 s)
+DH6 2102:1:1:410A:7052:C700:5672:7816        0000.cd44.62bd         Te1/0/24   1031       0024       173s       REACHABLE  70 s try 0(144780 s)
+DH6 2102:1:1:410A:701F:6FAB:C6D9:CEBD        0000.04c8.a831         Te1/0/24   1031       0024       154s       REACHABLE  90 s try 0(144773 s)
+DH6 2102:1:1:410A:6DEA:E742:28AA:6FC1        0000.cd44.62e3         Te1/0/24   1031       0024       3mn        REACHABLE  30 s try 0(144779 s)
+DH6 2102:1:1:410A:6C6A:8983:8490:8DCB        0000.04c8.a877         Te1/0/24   1031       0024       3mn        REACHABLE  39 s try 0(144781 s)
+DH6 2102:1:1:410A:6C16:8417:73B9:9470        0000.cd44.6269         Te1/0/24   1031       0024       3mn        REACHABLE  1792 ms try 0(144781 s)
+DH6 2102:1:1:410A:69F4:FCF4:6E3B:56A         0000.cd44.6257         Te1/0/24   1031       0024       3mn        REACHABLE  36 s try 0(144781 s)
+DH6 2102:1:1:410A:69F4:97F5:B914:6B73        0000.cd44.6291         Te1/0/24   1031       0024       3mn        REACHABLE  35 s try 0(144781 s)
+DH6 2102:1:1:410A:69DC:AB36:DA00:C614        0000.cd44.624b         Te1/0/24   1031       0024       125s       REACHABLE  116 s try 0(144782 s)
+DH6 2102:1:1:410A:699C:12B8:878F:DFE7        0000.cd44.6235         Te1/0/24   1031       0024       131s       REACHABLE  118 s try 0(144780 s)
+DH6 2102:1:1:410A:6957:F292:5A72:1417        0000.cd44.6247         Te1/0/24   1031       0024       117s       REACHABLE  125 s try 0(144780 s)
+DH6 2102:1:1:410A:68F7:7376:CBE5:B6BC        0000.cd40.2280         Te1/0/24   1031       0024       5s         REACHABLE  246 s try 0(144781 s)
+DH6 2102:1:1:410A:65FA:8B60:904B:1A54        0000.cd44.62d1         Te1/0/24   1031       0024       110s       REACHABLE  142 s try 0(144780 s)
+DH6 2102:1:1:410A:6511:99D1:48F4:6B0E        0000.cd44.62e5         Te1/0/24   1031       0024       78s        REACHABLE  162 s try 0(144780 s)
+DH6 2102:1:1:410A:6410:974D:3801:4A13        0000.cd44.622f         Te1/0/24   1031       0024       3mn        REACHABLE  39 s try 0(144781 s)
+DH6 2102:1:1:410A:61D2:5CD4:B001:ABE7        0000.cd40.2286         Te1/0/24   1031       0024       155s       REACHABLE  87 s try 0(144781 s)
+DH6 2102:1:1:410A:609F:C6CA:C535:FDF1        0000.cd44.6245         Te1/0/24   1031       0024       3mn        REACHABLE  18 s try 0(144782 s)
+DH6 2102:1:1:410A:6039:595D:2933:DEC8        0000.cd44.623d         Te1/0/24   1031       0024       163s       REACHABLE  85 s try 0(144773 s)
+DH6 2102:1:1:410A:6033:EC95:6EC1:4FF0        0000.cd44.629d         Te1/0/24   1031       0024       3mn        REACHABLE  24 s try 0(144782 s)
+DH6 2102:1:1:410A:5DF9:C0E5:D45E:8F54        0000.cd40.22be         Te1/0/24   1031       0024       3mn        REACHABLE  64 s try 0(144782 s)
+DH6 2102:1:1:410A:5D8C:9D0F:C425:9B9         0000.04c8.a82f         Te1/0/24   1031       0024       156s       REACHABLE  88 s try 0(144775 s)
+DH6 2102:1:1:410A:5907:F425:7FC1:B74B        0000.04c8.a885         Te1/0/24   1031       0024       176s       REACHABLE  75 s try 0(144768 s)
+DH6 2102:1:1:410A:58B0:4928:2524:CA05        0000.cd44.62cd         Te1/0/24   1031       0024       3mn        REACHABLE  52 s try 0(144775 s)
+DH6 2102:1:1:410A:5866:F1CD:2589:BF02        0000.cd40.2282         Te1/0/24   1031       0024       3mn        REACHABLE  64 s try 0(144776 s)
+DH6 2102:1:1:410A:55D1:CB1E:6B2A:606D        0000.04c8.a82b         Te1/0/24   1031       0024       3mn        REACHABLE  18 s try 0(144779 s)
+DH6 2102:1:1:410A:54AF:F988:E23A:F01         0000.04c8.a85b         Te1/0/24   1031       0024       3mn        REACHABLE  42 s try 0(144777 s)
+DH6 2102:1:1:410A:5154:490F:C0C9:ED95        0000.cd44.62df         Te1/0/24   1031       0024       3mn        REACHABLE  42 s try 0(144776 s)
+DH6 2102:1:1:410A:4C9D:5211:EC73:2DCD        0000.cd44.62d9         Te1/0/24   1031       0024       142s       REACHABLE  99 s try 0(144778 s)
+DH6 2102:1:1:410A:49DF:AF3A:2A69:CE8C        0000.04c8.a86d         Te1/0/24   1031       0024       103s       REACHABLE  148 s try 0(144778 s)
+DH6 2102:1:1:410A:44CF:FE67:3644:9BD5        0000.cd44.6277         Te1/0/24   1031       0024       134s       REACHABLE  107 s try 0(144777 s)
+DH6 2102:1:1:410A:411C:96EA:FBB3:91A5        0000.04c8.a87f         Te1/0/24   1031       0024       3mn        REACHABLE  62 s try 0(144769 s)
+DH6 2102:1:1:410A:39C5:A3EC:E92D:C111        0000.cd44.6295         Te1/0/24   1031       0024       116s       REACHABLE  132 s try 0(144776 s)
+DH6 2102:1:1:410A:35E7:C0A3:B434:CA6D        0000.cd44.62db         Te1/0/24   1031       0024       168s       REACHABLE  73 s try 0(144768 s)
+DH6 2102:1:1:410A:3495:C81B:A707:4FA5        0000.cd44.6297         Te1/0/24   1031       0024       3mn        REACHABLE  42 s try 0(144778 s)
+DH6 2102:1:1:410A:31F7:FB99:28EE:176C        0000.cd40.227c         Te1/0/24   1031       0024       3mn        REACHABLE  46 s try 0(144775 s)
+DH6 2102:1:1:410A:317A:2039:15DF:354C        0000.cd44.6231         Te1/0/24   1031       0024       163s       REACHABLE  80 s try 0(144775 s)
+DH6 2102:1:1:410A:30E1:A151:7077:80EC        0000.cd44.62ab         Te1/0/24   1031       0024       101s       REACHABLE  143 s try 0(144776 s)
+DH6 2102:1:1:410A:30DA:25D8:D75:ABC9         0000.cd44.6251         Te1/0/24   1031       0024       0s         REACHABLE  243 s try 0(144768 s)
+DH6 2102:1:1:410A:2D34:137F:A460:7AB0        0000.cd44.62a7         Te1/0/24   1031       0024       133s       REACHABLE  110 s try 0(144776 s)
+DH6 2102:1:1:410A:2D2A:C5D2:9177:D082        0000.cd40.2290         Te1/0/24   1031       0024       166s       REACHABLE  81 s try 0(144775 s)
+DH6 2102:1:1:410A:2C63:8171:CB51:9860        0000.cd44.62e9         Te1/0/24   1031       0024       3mn        REACHABLE  32 s try 0(144769 s)
+DH6 2102:1:1:410A:2920:716:4C4:8080          0000.cd40.226a         Te1/0/24   1031       0024       4mn        REACHABLE  1280 ms try 0(144768 s)
+DH6 2102:1:1:410A:2853:2183:1D84:3EF4        0000.04c8.a837         Te1/0/24   1031       0024       160s       REACHABLE  85 s try 0(144769 s)
+DH6 2102:1:1:410A:2813:B68D:583A:5D8         0000.cd44.62c7         Te1/0/24   1031       0024       100s       REACHABLE  141 s try 0(144777 s)
+DH6 2102:1:1:410A:2424:A39:694A:3D5D         0000.cd44.62bf         Te1/0/24   1031       0024       61s        REACHABLE  189 s try 0(144778 s)
+DH6 2102:1:1:410A:203E:1B00:D015:170F        0000.cd44.6243         Te1/0/24   1031       0024       3mn        REACHABLE  58 s try 0(144778 s)
+DH6 2102:1:1:410A:1D83:7843:FD13:1857        0000.cd44.6283         Te1/0/24   1031       0024       143s       REACHABLE  106 s try 0(144777 s)
+DH6 2102:1:1:410A:1D4A:55D1:40D5:3E84        0000.04c8.a849         Te1/0/24   1031       0024       3mn        REACHABLE  64 s try 0(144774 s)
+DH6 2102:1:1:410A:1D47:92FE:E21A:B6E6        0000.cd40.22c8         Te1/0/24   1031       0024       21s        REACHABLE  224 s try 0(144769 s)
+DH6 2102:1:1:410A:1C25:9BD6:2271:1189        0000.cd40.2292         Te1/0/24   1031       0024       3mn        REACHABLE  36 s try 0(144770 s)
+DH6 2102:1:1:410A:1C22:C208:3443:3258        0000.04c8.a863         Te1/0/24   1031       0024       173s       REACHABLE  69 s try 0(144773 s)
+DH6 2102:1:1:410A:1C09:BD5B:2BFA:9F6B        0000.cd44.62ed         Te1/0/24   1031       0024       86s        REACHABLE  160 s try 0(144773 s)
+DH6 2102:1:1:410A:19E8:F372:5D15:322D        0000.cd44.62a3         Te1/0/24   1031       0024       3mn        REACHABLE  45 s try 0(144773 s)
+DH6 2102:1:1:410A:191E:6167:CE66:8822        0000.cd40.22b4         Te1/0/24   1031       0024       108s       REACHABLE  138 s try 0(144773 s)
+DH6 2102:1:1:410A:18CB:6C8B:D2E0:3AD         0000.cd44.629b         Te1/0/24   1031       0024       174s       REACHABLE  69 s try 0(144773 s)
+DH6 2102:1:1:410A:1891:E9D9:ADD6:DEF4        0000.cd44.62a5         Te1/0/24   1031       0024       3mn        REACHABLE  54 s try 0(144773 s)
+DH6 2102:1:1:410A:182C:C674:33C6:D29A        0000.cd44.62b9         Te1/0/24   1031       0024       3mn        REACHABLE  58 s try 0(144774 s)
+DH6 2102:1:1:410A:15C1:D96B:C4F0:3CC6        0000.04c8.a871         Te1/0/24   1031       0024       146s       REACHABLE  97 s try 0(144771 s)
+DH6 2102:1:1:410A:157D:365E:7DB5:C1B0        0000.cd44.629f         Te1/0/24   1031       0024       4mn        REACHABLE  8 s try 0(144764 s)
+DH6 2102:1:1:410A:145C:9044:C313:C556        0000.cd44.625d         Te1/0/24   1031       0024       158s       REACHABLE  94 s try 0(144771 s)
+DH6 2102:1:1:410A:115A:1EE3:3E7C:D487        0000.cd44.6249         Te1/0/24   1031       0024       3mn        REACHABLE  43 s try 0(144772 s)
+DH6 2102:1:1:410A:111D:D324:D5D6:8666        0000.cd44.6271         Te1/0/24   1031       0024       3mn        REACHABLE  49 s try 0(144772 s)
+DH6 2102:1:1:410A:10A4:90D9:EF63:3FCC        0000.cd40.227e         Te1/0/24   1031       0024       3mn        REACHABLE  39 s try 0(144771 s)
+DH6 2102:1:1:410A:1095:C962:3225:DC8F        0000.cd40.22aa         Te1/0/24   1031       0024       162s       REACHABLE  89 s try 0(144771 s)
+DH6 2102:1:1:410A:1086:22C0:88B8:7D47        0000.04c8.a839         Te1/0/24   1031       0024       20s        REACHABLE  227 s try 0(144771 s)
+DH6 2102:1:1:410A:103D:A112:19D5:F899        0000.cd44.627b         Te1/0/24   1031       0024       170s       REACHABLE  73 s try 0(144765 s)
+DH6 2102:1:1:410A:DBD:5D2F:843A:D108         0000.cd44.6275         Te1/0/24   1031       0024       3mn        REACHABLE  56 s try 0(144773 s)
+DH6 2102:1:1:410A:D66:183F:718B:CF4C         0000.cd40.22b0         Te1/0/24   1031       0024       3mn        REACHABLE  56 s try 0(144772 s)
+DH6 2102:1:1:410A:CF8:127F:2506:9B43         0000.cd44.62b1         Te1/0/24   1031       0024       3mn        REACHABLE  47 s try 0(144764 s)
+DH6 2102:1:1:410A:C80:73C7:568:A1D4          0000.cd40.2276         Te1/0/24   1031       0024       124s       REACHABLE  120 s try 0(144773 s)
+DH6 2102:1:1:410A:98B:1C8:4988:E5AA          0000.cd40.22a2         Te1/0/24   1031       0024       133s       REACHABLE  107 s try 0(144773 s)
+DH6 2102:1:1:410A:89E:63DC:EAB6:84C0         0000.cd44.623f         Te1/0/24   1031       0024       3mn        REACHABLE  24 s try 0(144771 s)
+DH6 2102:1:1:410A:857:65C5:2A28:4D37         0000.cd44.62c9         Te1/0/24   1031       0024       3mn        REACHABLE  60 s try 0(144774 s)
+DH6 2102:1:1:410A:831:CB1C:E3AA:F381         0000.cd40.227a         Te1/0/24   1031       0024       169s       REACHABLE  71 s try 0(144770 s)
+DH6 2102:1:1:410A:561:9E71:3CD7:EE59         0000.cd40.22ba         Te1/0/24   1031       0024       3mn        REACHABLE  41 s try 0(144764 s)
+ND  2102:1:1:410A:200:CDFF:FE44:62F1         0000.cd44.62f1         Te1/0/24   1031       0005       83s        REACHABLE  165 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:62EF         0000.cd44.62ef         Te1/0/24   1031       0005       50s        REACHABLE  200 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:62ED         0000.cd44.62ed         Te1/0/24   1031       0005       74s        REACHABLE  170 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:62EB         0000.cd44.62eb         Te1/0/24   1031       0005       98s        REACHABLE  150 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:62E9         0000.cd44.62e9         Te1/0/24   1031       0005       3mn        REACHABLE  19 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:62E7         0000.cd44.62e7         Te1/0/24   1031       0005       43s        REACHABLE  203 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:62E5         0000.cd44.62e5         Te1/0/24   1031       0005       147s       REACHABLE  98 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:62E3         0000.cd44.62e3         Te1/0/24   1031       0005       76s        REACHABLE  175 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:62E1         0000.cd44.62e1         Te1/0/24   1031       0005       83s        REACHABLE  157 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:62DF         0000.cd44.62df         Te1/0/24   1031       0005       39s        REACHABLE  209 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:62DD         0000.cd44.62dd         Te1/0/24   1031       0005       141s       REACHABLE  110 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:62DB         0000.cd44.62db         Te1/0/24   1031       0005       134s       REACHABLE  117 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:62D9         0000.cd44.62d9         Te1/0/24   1031       0005       3mn        REACHABLE  12 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:62D7         0000.cd44.62d7         Te1/0/24   1031       0005       111s       REACHABLE  136 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:62D5         0000.cd44.62d5         Te1/0/24   1031       0005       3mn        REACHABLE  58 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:62D3         0000.cd44.62d3         Te1/0/24   1031       0005       110s       REACHABLE  137 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:62D1         0000.cd44.62d1         Te1/0/24   1031       0005       98s        REACHABLE  148 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:62CF         0000.cd44.62cf         Te1/0/24   1031       0005       4mn        REACHABLE  512 ms try 0
+ND  2102:1:1:410A:200:CDFF:FE44:62CD         0000.cd44.62cd         Te1/0/24   1031       0005       167s       REACHABLE  82 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:62CB         0000.cd44.62cb         Te1/0/24   1031       0005       175s       REACHABLE  75 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:62C9         0000.cd44.62c9         Te1/0/24   1031       0005       169s       REACHABLE  76 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:62C7         0000.cd44.62c7         Te1/0/24   1031       0005       163s       REACHABLE  81 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:62C5         0000.cd44.62c5         Te1/0/24   1031       0005       46s        REACHABLE  197 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:62C3         0000.cd44.62c3         Te1/0/24   1031       0005       77s        REACHABLE  173 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:62C1         0000.cd44.62c1         Te1/0/24   1031       0005       131s       REACHABLE  117 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:62BF         0000.cd44.62bf         Te1/0/24   1031       0005       160s       REACHABLE  85 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:62BD         0000.cd44.62bd         Te1/0/24   1031       0005       115s       REACHABLE  131 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:62BB         0000.cd44.62bb         Te1/0/24   1031       0005       75s        REACHABLE  177 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:62B9         0000.cd44.62b9         Te1/0/24   1031       0005       17s        REACHABLE  234 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:62B7         0000.cd44.62b7         Te1/0/24   1031       0005       52s        REACHABLE  191 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:62B5         0000.cd44.62b5         Te1/0/24   1031       0005       70s        REACHABLE  179 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:62B3         0000.cd44.62b3         Te1/0/24   1031       0005       3mn        REACHABLE  29 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:62B1         0000.cd44.62b1         Te1/0/24   1031       0005       178s       REACHABLE  63 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:62AF         0000.cd44.62af         Te1/0/24   1031       0005       151s       REACHABLE  92 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:62AD         0000.cd44.62ad         Te1/0/24   1031       0005       3mn        REACHABLE  45 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:62AB         0000.cd44.62ab         Te1/0/24   1031       0005       143s       REACHABLE  107 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:62A9         0000.cd44.62a9         Te1/0/24   1031       0005       115s       REACHABLE  133 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:62A7         0000.cd44.62a7         Te1/0/24   1031       0005       40s        REACHABLE  208 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:62A5         0000.cd44.62a5         Te1/0/24   1031       0005       3mn        REACHABLE  66 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:62A3         0000.cd44.62a3         Te1/0/24   1031       0005       48s        REACHABLE  192 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:62A1         0000.cd44.62a1         Te1/0/24   1031       0005       3mn        REACHABLE  51 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:629F         0000.cd44.629f         Te1/0/24   1031       0005       3mn        REACHABLE  60 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:629D         0000.cd44.629d         Te1/0/24   1031       0005       154s       REACHABLE  91 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:629B         0000.cd44.629b         Te1/0/24   1031       0005       117s       REACHABLE  126 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:6299         0000.cd44.6299         Te1/0/24   1031       0005       3mn        REACHABLE  45 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:6297         0000.cd44.6297         Te1/0/24   1031       0005       38s        REACHABLE  203 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:6295         0000.cd44.6295         Te1/0/24   1031       0005       8s         REACHABLE  239 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:6293         0000.cd44.6293         Te1/0/24   1031       0005       17s        REACHABLE  233 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:6291         0000.cd44.6291         Te1/0/24   1031       0005       169s       REACHABLE  73 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:628F         0000.cd44.628f         Te1/0/24   1031       0005       25s        REACHABLE  225 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:628D         0000.cd44.628d         Te1/0/24   1031       0005       152s       REACHABLE  92 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:628B         0000.cd44.628b         Te1/0/24   1031       0005       93s        REACHABLE  153 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:6289         0000.cd44.6289         Te1/0/24   1031       0005       3mn        REACHABLE  33 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:6287         0000.cd44.6287         Te1/0/24   1031       0005       92s        REACHABLE  160 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:6285         0000.cd44.6285         Te1/0/24   1031       0005       101s       REACHABLE  148 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:6283         0000.cd44.6283         Te1/0/24   1031       0005       4mn        REACHABLE  9 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:6281         0000.cd44.6281         Te1/0/24   1031       0005       50s        REACHABLE  196 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:627F         0000.cd44.627f         Te1/0/24   1031       0005       40s        REACHABLE  213 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:627D         0000.cd44.627d         Te1/0/24   1031       0005       175s       REACHABLE  71 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:627B         0000.cd44.627b         Te1/0/24   1031       0005       3mn        REACHABLE  60 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:6279         0000.cd44.6279         Te1/0/24   1031       0005       151s       REACHABLE  95 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:6277         0000.cd44.6277         Te1/0/24   1031       0005       46s        REACHABLE  206 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:6275         0000.cd44.6275         Te1/0/24   1031       0005       176s       REACHABLE  68 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:6273         0000.cd44.6273         Te1/0/24   1031       0005       97s        REACHABLE  152 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:6271         0000.cd44.6271         Te1/0/24   1031       0005       171s       REACHABLE  72 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:626F         0000.cd44.626f         Te1/0/24   1031       0005       35s        REACHABLE  215 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:626D         0000.cd44.626d         Te1/0/24   1031       0005       127s       REACHABLE  116 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:626B         0000.cd44.626b         Te1/0/24   1031       0005       2s         REACHABLE  240 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:6269         0000.cd44.6269         Te1/0/24   1031       0005       154s       REACHABLE  98 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:6267         0000.cd44.6267         Te1/0/24   1031       0005       44s        REACHABLE  207 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:6265         0000.cd44.6265         Te1/0/24   1031       0005       13s        REACHABLE  231 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:6263         0000.cd44.6263         Te1/0/24   1031       0005       85s        REACHABLE  155 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:6261         0000.cd44.6261         Te1/0/24   1031       0005       150s       REACHABLE  94 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:625F         0000.cd44.625f         Te1/0/24   1031       0005       112s       REACHABLE  132 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:625D         0000.cd44.625d         Te1/0/24   1031       0005       140s       REACHABLE  110 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:625B         0000.cd44.625b         Te1/0/24   1031       0005       3mn        REACHABLE  7 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:6259         0000.cd44.6259         Te1/0/24   1031       0005       138s       REACHABLE  112 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:6257         0000.cd44.6257         Te1/0/24   1031       0005       144s       REACHABLE  105 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:6255         0000.cd44.6255         Te1/0/24   1031       0005       3mn        REACHABLE  23 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:6253         0000.cd44.6253         Te1/0/24   1031       0005       9s         REACHABLE  236 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:6251         0000.cd44.6251         Te1/0/24   1031       0005       4mn        REACHABLE  512 ms try 0
+ND  2102:1:1:410A:200:CDFF:FE44:624F         0000.cd44.624f         Te1/0/24   1031       0005       119s       REACHABLE  124 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:624D         0000.cd44.624d         Te1/0/24   1031       0005       111s       REACHABLE  137 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:624B         0000.cd44.624b         Te1/0/24   1031       0005       3mn        REACHABLE  7 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:6249         0000.cd44.6249         Te1/0/24   1031       0005       3mn        REACHABLE  11 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:6247         0000.cd44.6247         Te1/0/24   1031       0005       9s         REACHABLE  240 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:6245         0000.cd44.6245         Te1/0/24   1031       0005       53s        REACHABLE  195 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:6243         0000.cd44.6243         Te1/0/24   1031       0005       22s        REACHABLE  225 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:6241         0000.cd44.6241         Te1/0/24   1031       0005       75s        REACHABLE  169 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:623F         0000.cd44.623f         Te1/0/24   1031       0005       108s       REACHABLE  142 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:623D         0000.cd44.623d         Te1/0/24   1031       0005       100s       REACHABLE  142 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:623B         0000.cd44.623b         Te1/0/24   1031       0005       3mn        REACHABLE  34 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:6239         0000.cd44.6239         Te1/0/24   1031       0005       78s        REACHABLE  164 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:6237         0000.cd44.6237         Te1/0/24   1031       0005       172s       REACHABLE  72 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:6235         0000.cd44.6235         Te1/0/24   1031       0005       111s       REACHABLE  134 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:6233         0000.cd44.6233         Te1/0/24   1031       0005       131s       REACHABLE  118 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:6231         0000.cd44.6231         Te1/0/24   1031       0005       9s         REACHABLE  232 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:622F         0000.cd44.622f         Te1/0/24   1031       0005       4mn        REACHABLE  11 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:622D         0000.cd44.622d         Te1/0/24   1031       0005       57s        REACHABLE  186 s try 0
+ND  2102:1:1:410A:200:CDFF:FE44:622B         0000.cd44.622b         Te1/0/24   1031       0005       3mn        REACHABLE  43 s try 0
+ND  2102:1:1:410A:200:CDFF:FE40:22C8         0000.cd40.22c8         Te1/0/24   1031       0005       91s        REACHABLE  150 s try 0
+ND  2102:1:1:410A:200:CDFF:FE40:22C6         0000.cd40.22c6         Te1/0/24   1031       0005       103s       REACHABLE  142 s try 0
+ND  2102:1:1:410A:200:CDFF:FE40:22C4         0000.cd40.22c4         Te1/0/24   1031       0005       4mn        REACHABLE  7 s try 0
+ND  2102:1:1:410A:200:CDFF:FE40:22C2         0000.cd40.22c2         Te1/0/24   1031       0005       173s       REACHABLE  69 s try 0
+ND  2102:1:1:410A:200:CDFF:FE40:22C0         0000.cd40.22c0         Te1/0/24   1031       0005       165s       REACHABLE  80 s try 0
+ND  2102:1:1:410A:200:CDFF:FE40:22BE         0000.cd40.22be         Te1/0/24   1031       0005       4s         REACHABLE  242 s try 0
+ND  2102:1:1:410A:200:CDFF:FE40:22BC         0000.cd40.22bc         Te1/0/24   1031       0005       174s       REACHABLE  69 s try 0
+ND  2102:1:1:410A:200:CDFF:FE40:22BA         0000.cd40.22ba         Te1/0/24   1031       0005       38s        REACHABLE  207 s try 0
+ND  2102:1:1:410A:200:CDFF:FE40:22B8         0000.cd40.22b8         Te1/0/24   1031       0005       124s       REACHABLE  123 s try 0
+ND  2102:1:1:410A:200:CDFF:FE40:22B6         0000.cd40.22b6         Te1/0/24   1031       0005       3mn        REACHABLE  36 s try 0
+ND  2102:1:1:410A:200:CDFF:FE40:22B4         0000.cd40.22b4         Te1/0/24   1031       0005       60s        REACHABLE  191 s try 0
+ND  2102:1:1:410A:200:CDFF:FE40:22B2         0000.cd40.22b2         Te1/0/24   1031       0005       124s       REACHABLE  121 s try 0
+ND  2102:1:1:410A:200:CDFF:FE40:22B0         0000.cd40.22b0         Te1/0/24   1031       0005       49s        REACHABLE  195 s try 0
+ND  2102:1:1:410A:200:CDFF:FE40:22AE         0000.cd40.22ae         Te1/0/24   1031       0005       23s        REACHABLE  227 s try 0
+ND  2102:1:1:410A:200:CDFF:FE40:22AC         0000.cd40.22ac         Te1/0/24   1031       0005       3mn        REACHABLE  31 s try 0
+ND  2102:1:1:410A:200:CDFF:FE40:22AA         0000.cd40.22aa         Te1/0/24   1031       0005       42s        REACHABLE  207 s try 0
+ND  2102:1:1:410A:200:CDFF:FE40:22A8         0000.cd40.22a8         Te1/0/24   1031       0005       17s        REACHABLE  226 s try 0
+ND  2102:1:1:410A:200:CDFF:FE40:22A6         0000.cd40.22a6         Te1/0/24   1031       0005       39s        REACHABLE  208 s try 0
+ND  2102:1:1:410A:200:CDFF:FE40:22A4         0000.cd40.22a4         Te1/0/24   1031       0005       58s        REACHABLE  182 s try 0
+ND  2102:1:1:410A:200:CDFF:FE40:22A2         0000.cd40.22a2         Te1/0/24   1031       0005       55s        REACHABLE  194 s try 0
+ND  2102:1:1:410A:200:CDFF:FE40:22A0         0000.cd40.22a0         Te1/0/24   1031       0005       107s       REACHABLE  144 s try 0
+ND  2102:1:1:410A:200:CDFF:FE40:229E         0000.cd40.229e         Te1/0/24   1031       0005       50s        REACHABLE  192 s try 0
+ND  2102:1:1:410A:200:CDFF:FE40:229C         0000.cd40.229c         Te1/0/24   1031       0005       53s        REACHABLE  198 s try 0
+ND  2102:1:1:410A:200:CDFF:FE40:229A         0000.cd40.229a         Te1/0/24   1031       0005       3mn        REACHABLE  14 s try 0
+ND  2102:1:1:410A:200:CDFF:FE40:2298         0000.cd40.2298         Te1/0/24   1031       0005       22s        REACHABLE  230 s try 0
+ND  2102:1:1:410A:200:CDFF:FE40:2296         0000.cd40.2296         Te1/0/24   1031       0005       32s        REACHABLE  219 s try 0
+ND  2102:1:1:410A:200:CDFF:FE40:2294         0000.cd40.2294         Te1/0/24   1031       0005       123s       REACHABLE  123 s try 0
+ND  2102:1:1:410A:200:CDFF:FE40:2292         0000.cd40.2292         Te1/0/24   1031       0005       25s        REACHABLE  218 s try 0
+ND  2102:1:1:410A:200:CDFF:FE40:2290         0000.cd40.2290         Te1/0/24   1031       0005       3mn        REACHABLE  54 s try 0
+ND  2102:1:1:410A:200:CDFF:FE40:228E         0000.cd40.228e         Te1/0/24   1031       0005       171s       REACHABLE  69 s try 0
+ND  2102:1:1:410A:200:CDFF:FE40:228C         0000.cd40.228c         Te1/0/24   1031       0005       131s       REACHABLE  120 s try 0
+ND  2102:1:1:410A:200:CDFF:FE40:228A         0000.cd40.228a         Te1/0/24   1031       0005       47s        REACHABLE  195 s try 0
+ND  2102:1:1:410A:200:CDFF:FE40:2288         0000.cd40.2288         Te1/0/24   1031       0005       3mn        REACHABLE  42 s try 0
+ND  2102:1:1:410A:200:CDFF:FE40:2286         0000.cd40.2286         Te1/0/24   1031       0005       92s        REACHABLE  157 s try 0
+ND  2102:1:1:410A:200:CDFF:FE40:2284         0000.cd40.2284         Te1/0/24   1031       0005       157s       REACHABLE  83 s try 0
+ND  2102:1:1:410A:200:CDFF:FE40:2282         0000.cd40.2282         Te1/0/24   1031       0005       21s        REACHABLE  222 s try 0
+ND  2102:1:1:410A:200:CDFF:FE40:2280         0000.cd40.2280         Te1/0/24   1031       0005       3mn        REACHABLE  29 s try 0
+ND  2102:1:1:410A:200:CDFF:FE40:227E         0000.cd40.227e         Te1/0/24   1031       0005       3mn        REACHABLE  21 s try 0
+ND  2102:1:1:410A:200:CDFF:FE40:227C         0000.cd40.227c         Te1/0/24   1031       0005       41s        REACHABLE  206 s try 0
+ND  2102:1:1:410A:200:CDFF:FE40:227A         0000.cd40.227a         Te1/0/24   1031       0005       3s         REACHABLE  247 s try 0
+ND  2102:1:1:410A:200:CDFF:FE40:2278         0000.cd40.2278         Te1/0/24   1031       0005       170s       REACHABLE  75 s try 0
+ND  2102:1:1:410A:200:CDFF:FE40:2276         0000.cd40.2276         Te1/0/24   1031       0005       22s        REACHABLE  228 s try 0
+ND  2102:1:1:410A:200:CDFF:FE40:2274         0000.cd40.2274         Te1/0/24   1031       0005       143s       REACHABLE  102 s try 0
+ND  2102:1:1:410A:200:CDFF:FE40:2272         0000.cd40.2272         Te1/0/24   1031       0005       3mn        REACHABLE  37 s try 0
+ND  2102:1:1:410A:200:CDFF:FE40:2270         0000.cd40.2270         Te1/0/24   1031       0005       107s       REACHABLE  143 s try 0
+ND  2102:1:1:410A:200:CDFF:FE40:226E         0000.cd40.226e         Te1/0/24   1031       0005       171s       REACHABLE  77 s try 0
+ND  2102:1:1:410A:200:CDFF:FE40:226C         0000.cd40.226c         Te1/0/24   1031       0005       3mn        REACHABLE  46 s try 0
+ND  2102:1:1:410A:200:CDFF:FE40:226A         0000.cd40.226a         Te1/0/24   1031       0005       3mn        REACHABLE  69 s try 0
+ND  2102:1:1:410A:200:CDFF:FE40:2268         0000.cd40.2268         Te1/0/24   1031       0005       170s       REACHABLE  76 s try 0
+ND  2102:1:1:410A:200:CDFF:FE40:2266         0000.cd40.2266         Te1/0/24   1031       0005       3mn        REACHABLE  13 s try 0
+ND  2102:1:1:410A:200:4FF:FEC8:A887          0000.04c8.a887         Te1/0/24   1031       0005       3mn        REACHABLE  50 s try 0
+ND  2102:1:1:410A:200:4FF:FEC8:A885          0000.04c8.a885         Te1/0/24   1031       0005       3mn        REACHABLE  43 s try 0
+ND  2102:1:1:410A:200:4FF:FEC8:A883          0000.04c8.a883         Te1/0/24   1031       0005       86s        REACHABLE  162 s try 0
+ND  2102:1:1:410A:200:4FF:FEC8:A881          0000.04c8.a881         Te1/0/24   1031       0005       68s        REACHABLE  176 s try 0
+ND  2102:1:1:410A:200:4FF:FEC8:A87F          0000.04c8.a87f         Te1/0/24   1031       0005       122s       REACHABLE  127 s try 0
+ND  2102:1:1:410A:200:4FF:FEC8:A87D          0000.04c8.a87d         Te1/0/24   1031       0005       3mn        REACHABLE  46 s try 0
+ND  2102:1:1:410A:200:4FF:FEC8:A87B          0000.04c8.a87b         Te1/0/24   1031       0005       102s       REACHABLE  142 s try 0
+ND  2102:1:1:410A:200:4FF:FEC8:A879          0000.04c8.a879         Te1/0/24   1031       0005       3mn        REACHABLE  16 s try 0
+ND  2102:1:1:410A:200:4FF:FEC8:A877          0000.04c8.a877         Te1/0/24   1031       0005       84s        REACHABLE  161 s try 0
+ND  2102:1:1:410A:200:4FF:FEC8:A875          0000.04c8.a875         Te1/0/24   1031       0005       3mn        REACHABLE  59 s try 0
+ND  2102:1:1:410A:200:4FF:FEC8:A873          0000.04c8.a873         Te1/0/24   1031       0005       3mn        REACHABLE  42 s try 0
+ND  2102:1:1:410A:200:4FF:FEC8:A871          0000.04c8.a871         Te1/0/24   1031       0005       143s       REACHABLE  107 s try 0
+ND  2102:1:1:410A:200:4FF:FEC8:A86F          0000.04c8.a86f         Te1/0/24   1031       0005       143s       REACHABLE  109 s try 0
+ND  2102:1:1:410A:200:4FF:FEC8:A86D          0000.04c8.a86d         Te1/0/24   1031       0005       107s       REACHABLE  140 s try 0
+ND  2102:1:1:410A:200:4FF:FEC8:A86B          0000.04c8.a86b         Te1/0/24   1031       0005       97s        REACHABLE  145 s try 0
+ND  2102:1:1:410A:200:4FF:FEC8:A869          0000.04c8.a869         Te1/0/24   1031       0005       173s       REACHABLE  70 s try 0
+ND  2102:1:1:410A:200:4FF:FEC8:A867          0000.04c8.a867         Te1/0/24   1031       0005       3mn        REACHABLE  24 s try 0
+ND  2102:1:1:410A:200:4FF:FEC8:A865          0000.04c8.a865         Te1/0/24   1031       0005       120s       REACHABLE  128 s try 0
+ND  2102:1:1:410A:200:4FF:FEC8:A863          0000.04c8.a863         Te1/0/24   1031       0005       82s        REACHABLE  163 s try 0
+ND  2102:1:1:410A:200:4FF:FEC8:A861          0000.04c8.a861         Te1/0/24   1031       0005       31s        REACHABLE  214 s try 0
+ND  2102:1:1:410A:200:4FF:FEC8:A85F          0000.04c8.a85f         Te1/0/24   1031       0005       166s       REACHABLE  80 s try 0
+ND  2102:1:1:410A:200:4FF:FEC8:A85D          0000.04c8.a85d         Te1/0/24   1031       0005       3mn        REACHABLE  4 s try 0
+ND  2102:1:1:410A:200:4FF:FEC8:A85B          0000.04c8.a85b         Te1/0/24   1031       0005       146s       REACHABLE  107 s try 0
+ND  2102:1:1:410A:200:4FF:FEC8:A859          0000.04c8.a859         Te1/0/24   1031       0005       160s       REACHABLE  81 s try 0
+ND  2102:1:1:410A:200:4FF:FEC8:A857          0000.04c8.a857         Te1/0/24   1031       0005       58s        REACHABLE  185 s try 0
+ND  2102:1:1:410A:200:4FF:FEC8:A855          0000.04c8.a855         Te1/0/24   1031       0005       157s       REACHABLE  90 s try 0
+ND  2102:1:1:410A:200:4FF:FEC8:A853          0000.04c8.a853         Te1/0/24   1031       0005       109s       REACHABLE  142 s try 0
+ND  2102:1:1:410A:200:4FF:FEC8:A851          0000.04c8.a851         Te1/0/24   1031       0005       154s       REACHABLE  94 s try 0
+ND  2102:1:1:410A:200:4FF:FEC8:A84F          0000.04c8.a84f         Te1/0/24   1031       0005       79s        REACHABLE  173 s try 0
+ND  2102:1:1:410A:200:4FF:FEC8:A84D          0000.04c8.a84d         Te1/0/24   1031       0005       147s       REACHABLE  105 s try 0
+ND  2102:1:1:410A:200:4FF:FEC8:A84B          0000.04c8.a84b         Te1/0/24   1031       0005       3mn        REACHABLE  34 s try 0
+ND  2102:1:1:410A:200:4FF:FEC8:A849          0000.04c8.a849         Te1/0/24   1031       0005       116s       REACHABLE  135 s try 0
+ND  2102:1:1:410A:200:4FF:FEC8:A847          0000.04c8.a847         Te1/0/24   1031       0005       74s        REACHABLE  166 s try 0
+ND  2102:1:1:410A:200:4FF:FEC8:A845          0000.04c8.a845         Te1/0/24   1031       0005       134s       REACHABLE  106 s try 0
+ND  2102:1:1:410A:200:4FF:FEC8:A843          0000.04c8.a843         Te1/0/24   1031       0005       127s       REACHABLE  117 s try 0
+ND  2102:1:1:410A:200:4FF:FEC8:A841          0000.04c8.a841         Te1/0/24   1031       0005       59s        REACHABLE  184 s try 0
+ND  2102:1:1:410A:200:4FF:FEC8:A83F          0000.04c8.a83f         Te1/0/24   1031       0005       123s       REACHABLE  123 s try 0
+ND  2102:1:1:410A:200:4FF:FEC8:A83D          0000.04c8.a83d         Te1/0/24   1031       0005       9s         REACHABLE  243 s try 0
+ND  2102:1:1:410A:200:4FF:FEC8:A83B          0000.04c8.a83b         Te1/0/24   1031       0005       175s       REACHABLE  73 s try 0
+ND  2102:1:1:410A:200:4FF:FEC8:A839          0000.04c8.a839         Te1/0/24   1031       0005       3mn        REACHABLE  52 s try 0
+ND  2102:1:1:410A:200:4FF:FEC8:A837          0000.04c8.a837         Te1/0/24   1031       0005       3mn        REACHABLE  22 s try 0
+ND  2102:1:1:410A:200:4FF:FEC8:A835          0000.04c8.a835         Te1/0/24   1031       0005       149s       REACHABLE  101 s try 0
+ND  2102:1:1:410A:200:4FF:FEC8:A833          0000.04c8.a833         Te1/0/24   1031       0005       172s       REACHABLE  77 s try 0
+ND  2102:1:1:410A:200:4FF:FEC8:A831          0000.04c8.a831         Te1/0/24   1031       0005       3mn        REACHABLE  43 s try 0
+ND  2102:1:1:410A:200:4FF:FEC8:A82F          0000.04c8.a82f         Te1/0/24   1031       0005       146s       REACHABLE  101 s try 0
+ND  2102:1:1:410A:200:4FF:FEC8:A82D          0000.04c8.a82d         Te1/0/24   1031       0005       50s        REACHABLE  196 s try 0
+ND  2102:1:1:410A:200:4FF:FEC8:A82B          0000.04c8.a82b         Te1/0/24   1031       0005       162s       REACHABLE  84 s try 0
+ND  2102:1:1:410A:200:4FF:FEC8:A829          0000.04c8.a829         Te1/0/24   1031       0005       4mn        REACHABLE  5 s try 0
+ND  2102:1:1:410A:200:4FF:FEC8:A827          0000.04c8.a827         Te1/0/24   1031       0005       90s        REACHABLE  161 s try 0
+DH6 2102:1:1:410A:1FF:DBDE:629D:2B0C         0000.cd44.62ef         Te1/0/24   1031       0024       4mn        REACHABLE  2560 ms try 0(144735 s)
+DH6 2102:1:1:410A:1A8:5B35:C836:FB63         0000.cd40.22b8         Te1/0/24   1031       0024       22s        REACHABLE  221 s try 0(144734 s)
+DH6 2102:1:1:410A:4A:DA52:F98C:8AF7          0000.cd40.228e         Te1/0/24   1031       0024       3mn        REACHABLE  38 s try 0(144742 s)
+L   2102:1:1:410A::1                         0000.0c9f.f23b         Vl1031     1031       0100       20346mn    REACHABLE
+L   2102:1:1:410A::1                         0000.0c9f.f23b         Vl1050     1050       0100       26508mn    DOWN
+L   2102:1:1:410A::1                         0000.0c9f.f23b         Vl1049     1049       0100       26535mn    DOWN
+L   2102:1:1:410A::1                         0000.0c9f.f23b         Vl1048     1048       0100       26633mn    DOWN
+L   2102:1:1:4109::1                         0000.0c9f.fb04         Vl1029     1029       0100       68396mn    DOWN
+L   2102:1:1:4109::1                         0000.0c9f.fb04         Vl1044     1044       0100       27461mn    DOWN

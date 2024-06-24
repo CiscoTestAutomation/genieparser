@@ -49,7 +49,7 @@ class ShowDeviceTrackingDatabase(ShowDeviceTrackingDatabaseSchema):
             if vlan_id:
                 output = self.device.execute(self.cli_command[1].format(vlan_id=vlan_id))
             else:
-                output = self.device.execute(self.cli_command[0])
+                output = self.device.execute(self.cli_command[0],timeout=300)
 
         device_tracking_database_dict = {}
 

@@ -1,0 +1,15 @@
+Tag 64512:
+IS-IS TID 0 paths to level-1 routers
+System Id            Metric     Next-Hop             Interface   SNPA
+R1                   --
+
+IS-IS TID 0 paths to level-2 routers
+System Id            Metric     Next-Hop             Interface   SNPA
+R2                   20         R3                   Te0/0/0.10  ccb6.c8f6.e904 
+                                R6                   Te0/0/0.20  04bd.97d1.2e24 
+R3                   10         R3                   Te0/0/0.10  ccb6.c8f6.e904 
+R4                   20         R6                   Te0/0/0.20  04bd.97d1.2e24 
+R5                   30         R3                   Te0/0/0.10  ccb6.c8f6.e904 
+                                R6                   Te0/0/0.20  04bd.97d1.2e24 
+R1                   --
+R6                   10         R6                   Te0/0/0.20  04bd.97d1.2e24

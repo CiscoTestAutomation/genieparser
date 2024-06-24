@@ -2604,14 +2604,12 @@ class ShowIsisTopology(ShowIsisTopologySchema):
         p4 = re.compile(r"^(?P<system_id>\S+)\s+(?P<metric>--+)$")
 
         # R2-asr1k-33          10         R2-asr1k-33          Gi0/0/2     c47d.4f12.e020
-        p5 = re.compile(
-            r"^(?P<system_id>\S+)\s+(?P<metric>\d+)\s+(?P<next_hop>\S+)\s+(?P<interface>\w+[/\d]+)\s+(?P<snpa>[\w\d]{4}.[\w\d]{4}.[\w\d]{4})$"
-        )
+        # R2                   20         R3                   Te0/0/0.10  ccb6.c8f6.e904
+        p5 = re.compile(r'^(?P<system_id>\S+)\s+(?P<metric>\d+)\s+(?P<next_hop>\S+)\s+(?P<interface>\S+)\s+(?P<snpa>[\w\d.]+)$')
 
         #                                 R2-asr1k-33          Gi0/0/3     c47d.4f12.e021
-        p6 = re.compile(
-            r"^(?P<next_hop>\S+)\s+(?P<interface>\w+[/\d]+)\s+(?P<snpa>[\w\d]{4}.[\w\d]{4}.[\w\d]{4})$"
-        )
+        #                                 R6                   Te0/0/0.20  04bd.97d1.2e24
+        p6 = re.compile(r'^(?P<next_hop>\S+)\s+(?P<interface>[\w/-]+(?:\.\d+)?\d*)\s+(?P<snpa>[\w\d]{4}\.\w{4}\.\w{4})$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -2658,7 +2656,7 @@ class ShowIsisTopology(ShowIsisTopologySchema):
                 group = m.groupdict()
                 system_id = group["system_id"]
                 metric = group["metric"]
-                intrf = group["interface"]
+                intrf = Common.convert_intf_name(intf=group["interface"].strip())
                 next_hop = group["next_hop"]
                 snpa = group["snpa"]
 
@@ -2676,7 +2674,7 @@ class ShowIsisTopology(ShowIsisTopologySchema):
             m = p6.match(line)
             if m:
                 group = m.groupdict()
-                intrf = group["interface"]
+                intrf = Common.convert_intf_name(intf=group["interface"].strip())
                 next_hop = group["next_hop"]
                 snpa = group["snpa"]
                 if (
@@ -3525,7 +3523,7 @@ class ShowIsisRibSchema(MetaParser):
                                                             },
                                                             Optional("srgb_start"): str,
                                                             Optional("srgb_range"): str,
-                                                            "algo": {
+                                                            Optional("algo"): {
                                                                 Any(): {
                                                                     Optional("flags"): {
                                                                         "r_flag": bool,
@@ -3879,6 +3877,7 @@ class ShowIsisRib(ShowIsisRibSchema):
             # [115/L2/50] via 199.1.1.2(Tunnel4001), from 6.6.6.6, tag 0, LSP[105/209/18349]
             m = p3.match(line)
             if m:
+                in_repair_path = False
                 group = m.groupdict()
                 route_type = group["route_type"]
                 interface = group["interface"]
@@ -3957,10 +3956,16 @@ class ShowIsisRib(ShowIsisRibSchema):
                 source_ip_dict["srgb_start"] = int(group["srgb"])
                 source_ip_dict["srgb_range"] = int(group["range"])
 
-                source_ip_dict.setdefault("algo", {}).setdefault(0, {})
+                if in_repair_path:
+                    repair_path_dict.setdefault("algo", {}).setdefault(0, {})
+                else:
+                    source_ip_dict.setdefault("algo", {}).setdefault(0, {})
 
                 if group["pre_sid_ind"] != "None":
-                    source_ip_dict["algo"][0]["sid_index"] = int(group["pre_sid_ind"])
+                    if in_repair_path:
+                        repair_path_dict["algo"][0]["sid_index"] = int(group["pre_sid_ind"])
+                    else:
+                        source_ip_dict["algo"][0]["sid_index"] = int(group["pre_sid_ind"])
 
                 if (
                     group["r_flag"]
@@ -3979,7 +3984,6 @@ class ShowIsisRib(ShowIsisRibSchema):
                         "l_flag": (group["l_flag"] == "1"),
                     }
                     if in_repair_path:
-                        repair_path_dict.setdefault("algo", {}).setdefault(0, {})
                         repair_path_dict["algo"][0]["flags"] = flags
                     else:
                         source_ip_dict["algo"][0]["flags"] = flags
@@ -4473,11 +4477,54 @@ class ShowIsisNodeLevelSchema(MetaParser):
                             Any(): {
                                 Optional("ip_interface_address"): str,
                                 Optional("lsp_id"): int,
-                                "lsp_index": {
+                                Optional("ip_router_id"): str,
+                                Optional("ip_router_lsp_id"): int,
+                                Optional("ip_pq_address"): str,
+                                Optional("ip_pq_address"): str,
+                                Optional("ip_pq_address"): str,
+                                "lsp_index" : {
                                     Any(): {
                                         "sr_capable": str,
                                         "strict_spf_capable": str,
                                     },
+                                },
+                                Optional("ip_prefix"): {
+                                    "sid": int,
+                                    "r_flag": int,
+                                    "n_flag": int,
+                                    "p_flag": int,
+                                    "e_flag": int,
+                                    "v_flag": int,
+                                    "l_flag": int
+                                },
+                                Optional("ip_strict_spf"): {
+                                    "sid": int,
+                                    "r_flag": int,
+                                    "n_flag": int,
+                                    "p_flag": int,
+                                    "e_flag": int,
+                                    "v_flag": int,
+                                    "l_flag": int
+                                },
+                                Optional("srgb"): {
+                                    "start": int,
+                                    "range": int,
+                                    "lsp_id": int
+                                },
+                                Optional("srlb"): {
+                                    "start": int,
+                                    "range": int,
+                                    "lsp_id": int
+                                },
+                                Optional("flex_algo"): {
+                                    Any(): {
+                                        "metric_type": str,
+                                        "alg_type": str,
+                                        "priority": int,
+                                        Optional("affinity"): {
+                                            Any(): list
+                                        },
+                                    }
                                 },
                             },
                         },
@@ -4510,14 +4557,44 @@ class ShowIsisNodeLevel(ShowIsisNodeLevelSchema):
         p3 = re.compile(r"^LSP index:\s+(?P<lsp_index>\d+)$")
 
         # SR capable: No, Strict-SPF capable: No
-        p4 = re.compile(
-            "^SR capable: (?P<sr_capable>\w+), Strict-SPF capable: (?P<strict_spf_capable>\w+)$"
-        )
+        # SR capable: Yes, Strict-SPF capable: Yes (LSP #0)
+        p4 = re.compile(r'^SR capable: (?P<sr_capable>\w+), Strict-SPF capable: (?P<strict_spf_capable>\w+).*$')
 
         # IP interface address: 1.1.1.1 (LSP #0)
-        p5 = re.compile(
-            r"^IP interface address: (?P<ip_interface_address>[\d\.]+)\s+\(LSP\s+\#(?P<lsp_id>\d+)\)$"
-        )
+        p5 = re.compile(r'^IP interface address: (?P<ip_interface_address>[\d\.]+)\s+\(LSP\s+\#(?P<lsp_id>\d+)\)$')
+
+        # IP router ID: 192.0.2.53 (LSP #0)
+        p6 = re.compile(r'^IP\s+router\s+ID:\s+(?P<ip_router_id>[\d\.]+)\s+\(LSP\s+\#(?P<ip_router_lsp_id>\d+)\)$')
+
+        # IP PQ address: 192.0.2.53
+        p7 = re.compile(r'^IP\s+PQ\s+address:\s+(?P<ip_pq_address>[\d\.]+).*$')
+
+        # IP prefix SID: 990, R:0 N:1 P:0 E:0 V:0 L:0
+        p8 = re.compile(r'^IP\s+prefix\s+SID:\s+(?P<sid>[\d\.]+),\s+R:(?P<r_flag>0|1)\s+N:(?P<n_flag>0|1)\s+'
+                        r'P:(?P<p_flag>0|1)\s+E:(?P<e_flag>0|1)\s+V:(?P<v_flag>0|1)\s+L:(?P<l_flag>0|1)$')
+
+        # IP strict-SPF SID: 991, R:0 N:1 P:0 E:0 V:0 L:0
+        p9 = re.compile(r'^IP\s+strict-SPF\s+SID:\s+(?P<sid>[\d\.]+),\s+R:(?P<r_flag>0|1)\s+N:(?P<n_flag>0|1)\s+'
+                        r'P:(?P<p_flag>0|1)\s+E:(?P<e_flag>0|1)\s+V:(?P<v_flag>0|1)\s+L:(?P<l_flag>0|1)$')
+
+        # SRGB start[0]: 16000, SRGB range[0]: 8000 (LSP #0)
+        p10 = re.compile(r'^SRGB\s+start\[0\]\:\s+(?P<start>\d+),\s+SRGB\s+range\[0\]:\s+(?P<range>\d+)\s+'
+                         r'\(LSP\s+\#(?P<lsp_id>\d+)\)$')
+
+        # SRLB start[0]: 15000, SRLB range[0]: 1000 (LSP #0)
+        p11 = re.compile(r'^SRLB\s+start\[0\]\:\s+(?P<start>\d+),\s+SRLB\s+range\[0\]:\s+(?P<range>\d+)\s+'
+                         r'\(LSP\s+\#(?P<lsp_id>\d+)\)$')
+
+        # Flex algorithm:129 Metric-Type:IGP Alg-type:SPF Priority:128
+        p12 = re.compile(r'^Flex\s+algorithm:(?P<flex_algo>\d+)\s+Metric-Type:(?P<metric>\w+)\s+Alg-type:(?P<alg_type>\w+)\s+'
+                         r'Priority:(?P<priority>\d+)$')
+
+        # Affinity Include-any:
+        p13 = re.compile(r'^Affinity\s+(?P<affinity_type>\S+):$')
+
+        # 0x00000004
+        # 0x0000000A
+        p14 = re.compile(r'^(?P<hex_val>0x[a-fA-F0-9]{8})$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -4526,35 +4603,26 @@ class ShowIsisNodeLevel(ShowIsisNodeLevelSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                root_dict = ret_dict.setdefault(
-                    "tag",
-                    {},
-                ).setdefault((group["tag"]), {})
+                root_dict = ret_dict.setdefault("tag", {}).setdefault(group["tag"], {})
                 continue
 
             # ISIS level-1 node information for Switch.00
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                level_dict = root_dict.setdefault("level", {}).setdefault(
-                    (group["level"]), {}
-                )
-                level_dict = level_dict.setdefault("host", {}).setdefault(
-                    (group["host"]), {}
-                )
-
+                level_dict = root_dict.setdefault('level', {}).setdefault(group['level'], {})
+                level_dict = level_dict.setdefault('host', {}).setdefault(group['host'], {})
                 continue
 
             # LSP index: 1
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                lsp_index_dict = level_dict.setdefault("lsp_index", {}).setdefault(
-                    int(group["lsp_index"]), {}
-                )
+                lsp_index_dict = level_dict.setdefault("lsp_index", {}).setdefault(int(group["lsp_index"]), {})
                 continue
 
             # SR capable: No, Strict-SPF capable: No
+            # SR capable: Yes, Strict-SPF capable: Yes (LSP #0)
             m = p4.match(line)
             if m:
                 group = m.groupdict()
@@ -4568,6 +4636,99 @@ class ShowIsisNodeLevel(ShowIsisNodeLevelSchema):
                 group = m.groupdict()
                 level_dict["ip_interface_address"] = group["ip_interface_address"]
                 level_dict["lsp_id"] = int(group["lsp_id"])
+                continue
+
+            # IP router ID: 192.0.2.53 (LSP #0)
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                level_dict['ip_router_id'] = group['ip_router_id']
+                level_dict['ip_router_lsp_id'] = int(group['ip_router_lsp_id'])
+                continue
+
+            # IP PQ address: 192.0.2.53
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                level_dict['ip_pq_address'] = group['ip_pq_address']
+                continue
+
+            # IP prefix SID: 990, R:0 N:1 P:0 E:0 V:0 L:0
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                ip_prefix_dict = {
+                    "sid": int(group["sid"]),
+                    "r_flag": int(group["r_flag"]),
+                    "n_flag": int(group["n_flag"]),
+                    "p_flag": int(group["p_flag"]),
+                    "e_flag": int(group["e_flag"]),
+                    "v_flag": int(group["v_flag"]),
+                    "l_flag": int(group["l_flag"])
+                }
+                level_dict["ip_prefix"] = ip_prefix_dict
+                continue
+
+            # IP strict-SPF SID: 991, R:0 N:1 P:0 E:0 V:0 L:0
+            m = p9.match(line)
+            if m:
+                ip_strict_spf_dict = {
+                    "sid": int(group["sid"]),
+                    "r_flag": int(group["r_flag"]),
+                    "n_flag": int(group["n_flag"]),
+                    "p_flag": int(group["p_flag"]),
+                    "e_flag": int(group["e_flag"]),
+                    "v_flag": int(group["v_flag"]),
+                    "l_flag": int(group["l_flag"])
+                }
+                level_dict["ip_strict_spf"] = ip_strict_spf_dict
+                continue
+
+            # SRGB start[0]: 16000, SRGB range[0]: 8000 (LSP #0)
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                level_dict["srgb"] = {
+                    'start': int(group['start']),
+                    'range': int(group['range']),
+                    'lsp_id': int(group['lsp_id'])
+                }
+                continue
+
+            # SRLB start[0]: 15000, SRLB range[0]: 1000 (LSP #0)
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                level_dict["srlb"] = {
+                    'start': int(group['start']),
+                    'range': int(group['range']),
+                    'lsp_id': int(group['lsp_id'])
+                }
+                continue
+
+            # Flex algorithm:129 Metric-Type:IGP Alg-type:SPF Priority:128
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                flex_algo_dict = level_dict.setdefault('flex_algo', {}).setdefault(group['flex_algo'], {})
+                flex_algo_dict['metric_type'] = group['metric']
+                flex_algo_dict['alg_type'] = group['alg_type']
+                flex_algo_dict['priority'] = int(group['priority'])
+                continue
+
+            # Affinity Include-any:
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                affinity_list = flex_algo_dict.setdefault('affinity', {}).setdefault(group['affinity_type'], [])
+                continue
+
+            # 0x00000004
+            # 0x0000000A
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                affinity_list.append(group['hex_val'])
                 continue
 
         return ret_dict

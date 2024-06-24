@@ -1,0 +1,4 @@
+{
+    "address_family": "ipv4 unicast",
+    "route": "101.0.0.2/32"
+}

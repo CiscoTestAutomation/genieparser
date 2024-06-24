@@ -227,6 +227,7 @@ class ShowFlowMonitorCacheSchema(MetaParser):
                 Optional('datalink_mac_src_input'): str,
                 Optional('datalink_mac_dst_input'): str,
                 Optional('interface_input'): str,
+                Optional('datalink_mac_dst_output'): str,
             },
         },
         Optional('proto_entries'): {
@@ -265,6 +266,22 @@ class ShowFlowMonitorCache(ShowFlowMonitorCacheSchema):
         # Init vars
         ret_dict = {}
         index = 0
+        match = {}
+
+        # entry_dict intializes on p8 or p9 condition
+        # but some output doesn't match these conditions.
+        # this variable checks the entry_dict created
+        entry_dict_created = False
+
+        def check_match(val):
+            nonlocal entry_dict_created, index
+            if entry_dict_created:
+                if match.get(val):
+                    index += 1
+            else:
+                index += 1
+                entry_dict_created = True
+                match.update({val: 1})
 
         # Cache type:                               Normal (Platform cache)
         p1 = re.compile(r'^Cache +type: +(?P<cache_type>[\S\s]+)$')
@@ -388,10 +405,8 @@ class ShowFlowMonitorCache(ShowFlowMonitorCacheSchema):
         # INTERFACE INPUT:                         Po31
         p38 = re.compile(r'^INTERFACE INPUT:\s+(?P<interface_input>[\w\.\/]+)$')
 
-        # entry_dict intializes on p8 or p9 condition
-        # but some output doesn't match these conditions.
-        # this variable checks the entry_dict created
-        entry_dict_created = False
+        # DATALINK MAC DESTINATION ADDRESS OUTPUT:  1000.0E2A.4F57
+        p39 = re.compile(r'^DATALINK MAC DESTINATION ADDRESS OUTPUT:\s+(?P<datalink_mac_dst_output>[\w\s\.]+)$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -495,14 +510,9 @@ class ShowFlowMonitorCache(ShowFlowMonitorCacheSchema):
             m = p10.match(line)
             if m:
                 group = m.groupdict()
-
-                if not entry_dict_created:
-                    index += 1
-                    entry_dict = ret_dict.setdefault('entries', {}).setdefault(
-                        index, {})
-
+                check_match("ipv4")
+                entry_dict = ret_dict.setdefault('entries', {}).setdefault(index, {})
                 entry_dict.update({'ipv4_src_addr': group['src']})
-
                 continue
 
             # IPV4 DESTINATION ADDRESS:  192.168.189.253
@@ -537,12 +547,8 @@ class ShowFlowMonitorCache(ShowFlowMonitorCacheSchema):
             m = p15.match(line)
             if m:
                 group = m.groupdict()
-
-                if not entry_dict_created:
-                    index += 1
-                    entry_dict = ret_dict.setdefault('entries', {}).setdefault(
-                        index, {})
-
+                check_match("ipv6")
+                entry_dict = ret_dict.setdefault('entries', {}).setdefault(index, {})
                 entry_dict.update({'ipv6_src_addr': group['ipv6_src_addr']})
                 continue
 
@@ -676,10 +682,9 @@ class ShowFlowMonitorCache(ShowFlowMonitorCacheSchema):
             m = p34.match(line)
             if m:        
                 group = m.groupdict()
-                index += 1
+                check_match("datalink_eth")
                 entry_dict = ret_dict.setdefault('entries', {}).setdefault(index, {})      
                 entry_dict.update({'datalink_ethertype': group['datalink_ethertype']})
-                entry_dict_created = True
                 continue
                             
             # DATALINK VLAN INPUT:                     0
@@ -695,6 +700,8 @@ class ShowFlowMonitorCache(ShowFlowMonitorCacheSchema):
             m = p36.match(line)
             if m:
                 group = m.groupdict()
+                check_match("datalink_mac_source")
+                entry_dict = ret_dict.setdefault('entries', {}).setdefault(index, {})
                 entry_dict.update({'datalink_mac_src_input': group['datalink_mac_src_input']})
                 continue
 
@@ -710,6 +717,14 @@ class ShowFlowMonitorCache(ShowFlowMonitorCacheSchema):
             if m:
                 group = m.groupdict()
                 entry_dict.update({'interface_input': group['interface_input']})
+                continue
+
+            # DATALINK MAC DESTINATION ADDRESS OUTPUT:    1000.0E2A.4F57
+            m = p39.match(line)
+            if m:
+                group = m.groupdict()
+                entry_dict = ret_dict.setdefault('entries', {}).setdefault(index, {})
+                entry_dict.update({'datalink_mac_dst_output': group['datalink_mac_dst_output']})
                 continue
 
         return ret_dict

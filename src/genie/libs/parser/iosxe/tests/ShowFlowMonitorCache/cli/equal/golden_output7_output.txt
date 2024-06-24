@@ -1,0 +1,36 @@
+Cache type:                               Normal (Platform cache)
+  Cache size:                                10000
+  Current entries:                               2
+
+  Flows added:                                   2
+  Flows aged:                                    0
+
+DATALINK MAC SOURCE ADDRESS INPUT:        F4DB.E673.5602
+DATALINK MAC DESTINATION ADDRESS OUTPUT:  1000.0E2A.4F57
+IPV4 SOURCE ADDRESS:                      15.15.15.3
+IPV4 DESTINATION ADDRESS:                 6.6.6.3
+TRNS SOURCE PORT:                         0
+TRNS DESTINATION PORT:                    0
+INTERFACE OUTPUT:                         Fo1/0/17
+IP VERSION:                               4
+IP TOS:                                   0x00
+IP PROTOCOL:                              4
+tcp flags:                                0x00
+counter bytes long:                       1269086
+counter packets long:                     2569
+fw fw event:                              1
+
+DATALINK MAC SOURCE ADDRESS INPUT:        F4DB.E673.5602
+DATALINK MAC DESTINATION ADDRESS OUTPUT:  1000.0E2A.4F56
+IPV4 SOURCE ADDRESS:                      15.15.15.2
+IPV4 DESTINATION ADDRESS:                 6.6.6.2
+TRNS SOURCE PORT:                         0
+TRNS DESTINATION PORT:                    0
+INTERFACE OUTPUT:                         Fo1/0/17
+IP VERSION:                               4
+IP TOS:                                   0x00
+IP PROTOCOL:                              4
+tcp flags:                                0x00
+counter bytes long:                       1270074
+counter packets long:                     2571
+fw fw event:                              1

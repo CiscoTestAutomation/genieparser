@@ -239,7 +239,8 @@ class ShowDiagnosticResultModuleTestDetail(ShowDiagnosticResultModuleTestDetailS
         p2 = re.compile('^Total run count [-> ]+(?P<total_run_count>\d+)$')
         
         #Last test testing type ------> Health Monitoring
-        p3 = re.compile('^Last test testing type[-> ]+(?P<testing_type>[A-Z a-z]+)$')
+        #Last test testing type ------> n/a
+        p3 = re.compile('^Last test testing type[-> ]+(?P<testing_type>[A-Z a-z]+|n/a)$')
         
         #Last test execution time ----> Oct 15 2019 13:02:21 
         p4 = re.compile('^Last \w+ execution \w+[ ->]+(?P<test_execution_time>(\w+ \d+ \d+ \d+:\d+:\d+)|n/a)$')
@@ -305,6 +306,7 @@ class ShowDiagnosticResultModuleTestDetail(ShowDiagnosticResultModuleTestDetailS
                continue
                
             #Last test testing type ------> Health Monitoring
+            #Last test testing type ------> n/a
             m = p3.match(line)
             if m:
                root_dict1.setdefault('testing_type',m.group('testing_type'))
@@ -345,9 +347,7 @@ class ShowDiagnosticResultModuleTestDetail(ShowDiagnosticResultModuleTestDetailS
             if m:
                root_dict1.setdefault('consecutive_failure_count',int(m.group('consecutive_failure_count')))
                continue
-              
-            
-            
+                          
             #Port 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24
             m = p11.match(line)
             if m:

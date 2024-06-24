@@ -44,8 +44,8 @@ class ShowFex(ShowFexSchema):
         # 1     FEX-1_Device1             Online   N2K-C2348UPQ-10GE   FOC1234567A
         # 2     FEX-2_Device2             Online   N2K-C2348UPQ-10GE   FOC1234567B
         # 3     FEX-3_Device3             Online   N2K-C2348UPQ-10GE   FOC1234567C
-        
-        p1 = re.compile(r'(?P<number>(\d+)) +(?P<description>(\S+)) +(?P<state>(\S+)) +(?P<model>(\S+)) +(?P<serial>(\S+))$')
+        # 101               FEX0101        Image Download   N2K-C2248TP-E-1GE   FOX2511PD8M
+        p1 = re.compile(r'(?P<number>(\d+)) +(?P<description>(\S+)) +(?P<state>(?:\S|\s(?!\s))*) +(?P<model>(\S+)) +(?P<serial>(\S+))$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -53,6 +53,7 @@ class ShowFex(ShowFexSchema):
             # 1     FEX-1_Device1             Online   N2K-C2348UPQ-10GE   FOC1234567A
             # 2     FEX-2_Device2             Online   N2K-C2348UPQ-10GE   FOC1234567B
             # 3     FEX-3_Device3             Online   N2K-C2348UPQ-10GE   FOC1234567C
+            # 101               FEX0101        Image Download   N2K-C2248TP-E-1GE   FOX2511PD8M
             m = p1.match(line)
             if m:
                 group = m.groupdict()

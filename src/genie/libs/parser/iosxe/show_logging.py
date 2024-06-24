@@ -258,7 +258,8 @@ class ShowLogging(ShowLoggingSchema):
 
         # Logging to 192.168.1.3  (tcp port 1514, audit disabled,
         # Logging to 55.55.55.70  (Mgmt-vrf) (udp port 514, audit disabled,
-        p11 = re.compile(r'^Logging +to (?P<logging_to>[\d\.]+) +'
+        # Logging to 2001:DB8::1  (MGMT) (udp port 514, audit disabled,
+        p11 = re.compile(r'^Logging +to (?P<logging_to>[\w\.\:]+) +'
                          r'(\((?P<vrf>(\S+))\) +)?'
                          r'\((?P<protocol>\S+) '
                          r'+port +(?P<port>\d+), +audit +(?P<audit>\S+),$')

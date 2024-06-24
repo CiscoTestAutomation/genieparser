@@ -1,0 +1,5 @@
+LISP Subscriber Information
+Entries total 1
+Subscriber                Type      
+66.66.66.66:54087         IID
+77.77.77.77:54123         IID  
