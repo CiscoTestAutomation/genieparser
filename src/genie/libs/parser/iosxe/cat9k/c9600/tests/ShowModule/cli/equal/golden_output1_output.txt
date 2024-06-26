@@ -1,0 +1,27 @@
+show module
+Chassis Type: C9606R
+
+Mod Ports Card Type                                   Model          Serial No.
+---+-----+--------------------------------------+--------------+--------------
+1   48   48-Port 10GE / 25GE / 50GE                  C9600-LC-48YL    CAT2242L0VD
+2   24   24-Port 40GE / 100GE                        C9600-LC-24C     CAT2240L5FP
+3   0    Supervisor 2 Module                         C9600X-SUP-2     FDO25320HY3
+4   0    Supervisor 2 Module                         C9600X-SUP-2     FDO25320HY4
+5   24   24-Port 40GE / 100GE                        C9600-LC-24C     FDO24300SBE
+6   24   24-Port 40GE / 100GE                        C9600-LC-24C     CAT2333L45H
+
+Mod MAC addresses                    Hw   Fw           Sw                 Status
+---+--------------------------------+----+------------+------------------+--------
+1   70B3.1759.A700 to 70B3.1759.A77F 0.8  17.10.1r      17.14.01prd15      ok
+2   70B3.1759.A900 to 70B3.1759.A97F 0.8  17.10.1r      17.14.01prd15      ok
+3   A478.06EC.4B80 to A478.06EC.4BFF 2.0  17.10.1r      17.14.01prd15      ok
+4   A478.06EC.5A00 to A478.06EC.5A7F 2.0  17.10.1r      17.14.01prd15      ok
+5   643A.EA2E.7300 to 643A.EA2E.737F 2.2  17.10.1r      17.14.01prd15      ok
+6   10B3.D652.AC80 to 10B3.D652.ACFF 1.0  17.10.1r      17.14.01prd15      ok
+
+Mod Redundancy Role     Operating Redundancy Mode Configured Redundancy Mode
+---+-------------------+-------------------------+---------------------------
+3   Standby             sso                       sso
+4   Active              sso                       sso
+
+Chassis MAC address range: 64 addresses from 2c4f.5205.2600 to 2c4f.5205.263f

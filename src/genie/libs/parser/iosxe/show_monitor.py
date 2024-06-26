@@ -937,3 +937,173 @@ class ShowMonitorCaptureBufferDetailed(ShowMonitorCaptureBufferDetailedSchema):
                 continue
 
         return ret_dict
+    
+# =========================================
+# Schema for 'show monitor capture {capture_name} capture-statistics'
+# =========================================
+class ShowMonitorCaptureStatisticsSchema(MetaParser):
+
+    ''' Schema for     
+                    "show monitor capture <capture_name> capture-statistics" '''
+
+    schema = {
+        'capture_statistics_collected_at_software':
+                {
+                'capture_duration': int,
+                'packets_received': int,
+                'packets_dropped': int,
+                'packets_oversized': int,
+                'packets_errored' : int,
+                'packets_sent' : int,
+                'bytes_received' : int,
+                'bytes_dropped' : int,
+                'bytes_oversized' : int,
+                'bytes_errored' : int,
+                'bytes_sent' : int
+                    
+                },
+            }
+
+# =========================================
+# Parser for 'show monitor capture {capture_name} capture-statistics'
+# =========================================
+class ShowMonitorCaptureStatistics(ShowMonitorCaptureStatisticsSchema):
+    ''' Parser for
+        "show monitor capture <capture_name> capture-statistics" '''
+
+    cli_command = ['show monitor capture {capture_name} capture-statistics']
+
+    def cli(self, capture_name=None, output=None):
+        if output is None:
+            # Execute command on device
+            out = self.device.execute(self.cli_command[0].format(capture_name=capture_name))
+        else:
+            out = output
+
+        # Init vars
+        ret_dict = {}
+
+        # Capture_statistics_collected_at_software
+        p1 = re.compile(r'^capture\s+statistics\s+collected\s+at\s+software:$')
+
+        # capture duration
+        p2 = re.compile(r'^capture +duration +- +(?P<capture_duration>(\d+)) +seconds$')
+
+        # Packets received
+        p3 = re.compile(r'^packets +received +- +(?P<packets_received>(\d+))$')
+
+        # Packets dropped
+        p4 = re.compile(r'^packets +dropped +- +(?P<packets_dropped>(\d+))$')
+
+        # Packets oversized
+        p5 = re.compile(r'^packets +oversized +- +(?P<packets_oversized>(\d+))$')
+
+        # Packets errored
+        p6 = re.compile(r'^packets +errored +- +(?P<packets_errored>(\d+))$')
+
+        # Packets sent
+        p7 = re.compile(r'^packets +sent +- +(?P<packets_sent>(\d+))$')
+
+        # Bytes received
+        p8 = re.compile(r'^bytes +received +- +(?P<bytes_received>(\d+))$')
+
+        # Bytes dropped
+        p9 = re.compile(r'^bytes +dropped +- +(?P<bytes_dropped>(\d+))$')
+
+        #Bytes oversized
+        p10 = re.compile(r'^bytes +oversized +- +(?P<bytes_oversized>(\d+))$')
+
+        #Bytes errored
+        p11 = re.compile(r'^bytes +errored +- +(?P<bytes_errored>(\d+))$')
+
+        #Bytes sent
+        p12 = re.compile(r'^bytes +sent +- +(?P<bytes_sent>(\d+))$')
+        
+
+        for line in out.splitlines():
+            line = line.strip()
+            
+            # Capture_statistics_collected_at_software
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                cap_dict = ret_dict.setdefault('capture_statistics_collected_at_software', {})      
+
+            # Capture_duration
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                cap_dict.setdefault('capture_duration', int(group['capture_duration']))
+                continue
+
+            # Packets_received
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                cap_dict.setdefault('packets_received', int(group['packets_received']))
+                continue
+
+            # Packets_dropped
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                cap_dict.setdefault('packets_dropped', int(group['packets_dropped']))
+                continue
+
+            # Packets_oversized
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                cap_dict.setdefault('packets_oversized', int(group['packets_oversized']))
+                continue
+
+            # Packets_errored
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                cap_dict.setdefault('packets_errored', int(group['packets_errored']))
+                continue
+            
+            # Packets_sent
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                cap_dict.setdefault('packets_sent', int(group['packets_sent']))
+                continue
+
+            # Bytes_received
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                cap_dict.setdefault('bytes_received', int(group['bytes_received']))
+                continue
+
+            # Bytes_dropped
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                cap_dict.setdefault('bytes_dropped', int(group['bytes_dropped']))
+                continue
+
+            # Bytes_oversized
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                cap_dict.setdefault('bytes_oversized', int(group['bytes_oversized']))
+                continue
+
+            # Bytes_errored
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                cap_dict.setdefault('bytes_errored', int(group['bytes_errored']))
+                continue
+
+            # Bytes_sent
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                cap_dict.setdefault('bytes_sent', int(group['bytes_sent']))
+                continue
+
+        return ret_dict

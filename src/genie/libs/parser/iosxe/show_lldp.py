@@ -652,7 +652,7 @@ class ShowLldpNeighborsSchema(MetaParser):
     """
     schema = {
         'total_entries': int,
-        'interfaces': {
+        Optional('interfaces'): {
             Any(): {
                 'port_id': {
                     Any(): {

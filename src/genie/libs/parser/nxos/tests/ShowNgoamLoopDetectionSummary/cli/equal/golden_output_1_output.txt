@@ -1,0 +1,13 @@
+Loop detection:enabled
+Periodic probe interval: 60
+Port recovery interval: 300
+Number of vlans: 0
+Number of ports: 0
+Number of loops: 0
+Number of ports blocked: 0
+Number of vlans disabled: 0
+Number of ports disabled: 0
+Total number of probes sent: 133200
+Total number of probes received: 0
+Next probe window start: Tue Jun 11 22:55:31 2024 (58 seconds)
+Next recovery window start: Tue Jun 11 22:56:24 2024 (111 seconds)

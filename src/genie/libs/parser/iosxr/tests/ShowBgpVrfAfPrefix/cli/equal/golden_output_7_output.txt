@@ -1,0 +1,19 @@
+
+BGP routing table entry for 101.0.0.2/32
+Versions:
+  Process           bRIB/RIB  SendTblVer
+  Speaker                   5            5
+    SRv6-VPN SID: fc00:c000:1002:e008::/64
+    Flags: 0x00000001+0x21000000; 
+Last Modified: Mar 13 02:47:55.379 for 6w6d
+Paths: (1 available, best #1)
+  Advertised IPv4 Unicast paths to update-groups (with more than one peer):
+    0.3 
+  Path #1: Received by speaker 0
+  Flags: 0x20000000010401a3+0x00, import: 0x020
+  Advertised IPv4 Unicast paths to update-groups (with more than one peer):
+    0.3 
+  Local
+    0.0.0.0 from 0.0.0.0 (10.0.0.2), if-handle 0x2000802c
+      Origin IGP, metric 0, localpref 100, weight 32768, valid, local, best, group-best
+      Received Path ID 0, Local Path ID 1, version 5

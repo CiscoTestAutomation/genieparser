@@ -338,8 +338,8 @@ class ShowInterfaces(ShowInterfacesSchema):
                          r'*(?P<media_type>[\w\/\-\. ]+)?)(?: +media +type)?)?$')
 
         # input flow-control is off, output flow-control is unsupported
-        p12 = re.compile(r'^(input|output) +flow-control +is +(?P<receive>\w+), +'
-                          '(output|input) +flow-control +is +(?P<send>\w+)$')
+        p12 = re.compile(r'^(?P<first>input|output) +flow-control +is +(?P<receive>\w+), +'
+                          '(?P<second>output|input) +flow-control +is +(?P<send>\w+)$')
 
         # ARP type: ARPA, ARP Timeout 04:00:00
         p13 = re.compile(r'^ARP +type: +(?P<arp_type>\w+), +'
@@ -788,8 +788,9 @@ class ShowInterfaces(ShowInterfacesSchema):
             # input flow-control is off, output flow-control is unsupported
             m = p12.match(line)
             if m:
-                receive = m.groupdict()['receive'].lower()
-                send = m.groupdict()['send'].lower()
+                groups = m.groupdict()
+                receive = groups['receive'].lower() if groups['first'] == 'input' else groups['send'].lower()
+                send = groups['send'].lower() if groups['second'] == 'output' else groups['receive'].lower()
                 if 'flow_control' not in interface_dict[interface]:
                     interface_dict[interface]['flow_control'] = {}
                 if 'on' in receive:

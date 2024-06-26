@@ -1,0 +1,46 @@
+
+=================================================
+Output for router lisp 0 instance-id 4100
+=================================================
+LISP Subscriber Information
+Entries total 1
+Subscriber                Type      
+66.66.66.66:54087         IID  
+77.77.77.77:54123         IID     
+
+=================================================
+Output for router lisp 0 instance-id 4101
+=================================================
+LISP Subscriber Information
+Entries total 1
+Subscriber                Type      
+66.66.66.66:54087         IID      
+77.77.77.77:54123         IID 
+
+=================================================
+Output for router lisp 0 instance-id 4100
+=================================================
+% EID table not enabled for MAC.
+
+=================================================
+Output for router lisp 0 instance-id 4101
+=================================================
+% EID table not enabled for MAC.
+
+=================================================
+Output for router lisp 10 instance-id 4100
+=================================================
+LISP Subscriber Information
+Entries total 1
+Subscriber                Type      
+66.66.66.66:54087         IID     
+77.77.77.77:54123         IID  
+
+=================================================
+Output for router lisp 10 instance-id 4101
+=================================================
+LISP Subscriber Information
+Entries total 1
+Subscriber                Type      
+66.66.66.66:54087         IID  
+77.77.77.77:54123         IID

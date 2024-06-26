@@ -8,8 +8,8 @@ expected_output = {
             "include_icv_indicator": "TRUE",
             "cipher": "GCM-AES-256",
             "interfaces": [
-                "TenGigabitEthernet0/0/0",
-                "TenGigabitEthernet0/0/1"
+                "Te0/0/0",
+                "Te0/0/1"
             ]
         }
     }

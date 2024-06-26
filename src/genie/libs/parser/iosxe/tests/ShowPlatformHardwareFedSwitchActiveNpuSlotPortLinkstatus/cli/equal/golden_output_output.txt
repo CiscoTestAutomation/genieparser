@@ -1,0 +1,73 @@
+******* LINK STATUS ************
+
+        MPP PORT DETAILS
+
+        link_state: 1 pcs_status: 0  high_ber: 0
+        get_state = LINK_UP
+
+
+        Autoneg Details
+
+                                                            Speed:         speed_gbps1
+                                                             Mode:  AN37_SGMII_ENABLED
+                                                      Full_duplex:                   1
+                                                          SW_Mode:                   1
+                                                      Serdes_Base:                   0
+                                                      MPP_Port_ID:                   7
+
+        Autoneg Status
+
+                                                            Speed:         speed_gbps1
+                                                        Completed:                   0
+                                                      Link_status:                   1
+                                                         Rx_state:                   2
+                                                         Tx_state:                   0
+                                                          SW_Mode:                   0
+                                                           Cached:                   1
+                                                      Serdes_Base:                   0
+                                                      MPP_Port_ID:                   0
+
+        MIB counters
+
+                                         TX legal frames counter :               20515
+                                          TX legal bytes counter :             1312960
+                                   TX legal frames with 64 bytes :               20515
+                               TX legal frames with 65-127 bytes :                   0
+                              TX legal frames with 128-255 bytes :                   0
+                              TX legal frames with 256-511 bytes :                   0
+                             TX legal frames with 512-1023 bytes :                   0
+                            TX legal frames with 1024-1518 bytes :                   0
+                            TX legal frames with 1519-2500 bytes :                   0
+                            TX legal frames with 2501-9000 bytes :                   0
+                                        TX frames with CRC error :                   0
+            TX internal error: packets missing the end-of-packet :                   0
+                            TX internal error: under run packets :                   0
+                                   TX legal flow control packets :                   0
+                              TX out-of-band packets transmitted :                   0
+           TX internal error: out-of-band packets with CRC error :                   0
+                                              TX LPI Active Count:                   0
+                                          TX LPI Transition Count:                   0
+                                                 RX legal frames :            88375440
+                                                  RX legal bytes :         69839241842
+                                   RX legal frames with 64 bytes :              158368
+                               RX legal frames with 65-127 bytes :             3823676
+                              RX legal frames with 128-255 bytes :             7765446
+                              RX legal frames with 256-511 bytes :             7765446
+                             RX legal frames with 511-1023 bytes :            31059003
+                            RX legal frames with 1024-1518 bytes :            30040881
+                            RX legal frames with 1519-2500 bytes :                   0
+                            RX legal frames with 2501-9000 bytes :                   0
+                            RX received frames with inverted CRC :                   0
+                             RX packets received with CRC errors :                   0
+                  RX packet received larger from max packet size :                   0
+                 RX packet received smaller from min packet size :                   0
+                                      RX packets with code error :                   0
+                                   RX legal flow control packets :                   0
+                                 RX out-of-band packets received :                   0
+                           RX packets received with inverted CRC :                   0
+                           RX out-of-band packets with CRC error :                   0
+                          RX out-of-band packets with code error :                   0
+                                              RX LPI Active Count:                   0
+                                          RX LPI Transition Count:                   0
+
+Port = 22 cmd = (port_diag unit 0 port 22 slot 0) rc = 0x0 rsn = success

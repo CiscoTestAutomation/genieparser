@@ -67,7 +67,8 @@ class ShowRomvarSchema(MetaParser):
             Optional("real_mgmte_dev"): str,
             Optional("sr_mgmt_vrf"): str,
             Optional("boot_param"): str,
-            Optional("boot_param_bkp"): str
+            Optional("boot_param_bkp"): str,
+            Optional("switch_ignore_startup_config"): int,
         }
     }
 
@@ -172,6 +173,8 @@ class ShowRomvar(ShowRomvarSchema):
         # BOOT_PARAM_BKP=console=ttyS0,9600 root=/dev/ram0
         #
         # BOOT_PARAM=console=ttyS0,9600 root=/dev/ram0
+        #
+        # SWITCH_IGNORE_STARTUP_CFG=0
 
 
         # ROMMON variables:
@@ -338,6 +341,9 @@ class ShowRomvar(ShowRomvarSchema):
 
         # BOOT_PARAM_BKP=console=ttyS0,9600 root=/dev/ram0
         p_boot_param_bkp = re.compile(r"^BOOT_PARAM_BKP\s*=(?P<boot_param_bkp>.*)$")
+
+        # SWITCH_IGNORE_STARTUP_CFG=0
+        p_switch_ignore_startup_config = re.compile(r"^SWITCH_IGNORE_STARTUP_CFG\s*=(?P<switch_ignore_startup_config>.*)$")
 
         romvar_dict = {}
 
@@ -627,6 +633,12 @@ class ShowRomvar(ShowRomvarSchema):
             if p_boot_param_bkp.match(line):
                match =  p_boot_param_bkp.match(line)
                romvar_dict["rommon_variables"]["boot_param_bkp"] = match.group("boot_param_bkp")
+               continue
+
+            # SWITCH_IGNORE_STARTUP_CFG=0
+            if p_switch_ignore_startup_config.match(line):
+               match =  p_switch_ignore_startup_config.match(line)
+               romvar_dict["rommon_variables"]["switch_ignore_startup_config"] = int(match.group("switch_ignore_startup_config"))
                continue
 
         return romvar_dict

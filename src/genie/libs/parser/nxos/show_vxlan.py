@@ -1907,7 +1907,8 @@ class ShowRunningConfigNvOverlay(ShowRunningConfigNvOverlaySchema):
         p17 = re.compile(r'^ingress-replication +protocol +bgp$')
         #   multisite mcast-group 226.1.1.1
         p18 = re.compile(r'^multisite mcast-group +(?P<multisite_mcast_group>[\d\.]+)$')
-
+        #   peer-ip 25.25.25.25
+        p19 = re.compile(r'^\s*peer-ip (?P<peer_ip>\S+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -2008,6 +2009,14 @@ class ShowRunningConfigNvOverlay(ShowRunningConfigNvOverlaySchema):
                 for vni in nve_vni_list:
                     vni_dict = nve_dict.setdefault('vni', {}).setdefault(vni, {})
                     vni_dict.update({'mcast_group': mcast})
+                continue
+
+            m = p19.match(line)
+            if m:
+                peer_ip = m.groupdict().pop('peer_ip')
+                for vni in nve_vni_list:
+                    vni_dict = nve_dict.setdefault('vni', {}).setdefault(vni, {})
+                    vni_dict.update({'peer_ip': peer_ip})
                 continue
 
             m = p12.match(line)

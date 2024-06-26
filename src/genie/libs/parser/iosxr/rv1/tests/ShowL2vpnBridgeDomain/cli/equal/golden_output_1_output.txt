@@ -1,0 +1,15 @@
+Bridge group: VPLS, bridge-domain: TEST, id: 0, state: up, ShgId: 0, MSTi: 0
+  Aging: 300 s, MAC limit: 64000, Action: none, Notification: syslog
+  Filter MAC addresses: 0
+  ACs: 1 (1 up), VFIs: 1, PWs: 6 (4 up), PBBs: 0 (0 up), VNIs: 0 (0 up)
+  List of ACs:
+    BE3, state: up, Static MAC addresses: 0
+  List of Access PWs:
+      Neighbor 172.16.154.59 pw-id 5966, state: down, Static MAC addresses: 0
+      Neighbor 172.16.154.60 pw-id 6066, state: down, Static MAC addresses: 0
+  List of VFIs:
+    VFI TEST (up)
+      Neighbor 172.16.152.13 pw-id 20161:10090, state: up, Static MAC addresses: 0
+      Neighbor 172.16.152.67 pw-id 20161:10090, state: up, Static MAC addresses: 0
+      Neighbor 172.16.154.190 pw-id 20161:10090, state: up, Static MAC addresses: 0
+      Neighbor 172.16.154.191 pw-id 20161:10090, state: up, Static MAC addresses: 0

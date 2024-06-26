@@ -1,0 +1,51 @@
+DLEP Clients for all interfaces:
+
+
+
+DLEP Clients for Interface TenGigabitEthernet0/0/1
+DLEP Local IP=19.19.19.151:55113 Sock=0
+
+
+DLEP Local Radio IP=19.19.19.121:9121 TCP Socket fd=1
+ Peer ID=1, Virtual template=1
+ Description: radio_9
+ Peer Timers (all values in milliseconds):
+  Heartbeat=5000, Dead Interval=10000, Terminate ACK=20000
+ Client UP time 56583  milliseconds
+ Neighbor Timer (all values in seconds):
+ Neighbor Down ACK=10
+
+ Supported Metrics:
+  Link RLQ RX Metric : 100
+  Link RLQ TX Metric : 100
+  Link Resources Metric : 100
+  Link MTU Metric : 100
+  Link Latency Metric : 250 microseconds
+  Link CDR RX Metric : 100000000 bps
+  Link CDR TX Metric : 100000000 bps
+  Link MDR RX Metric : 100000000 bps
+  Link MDR TX Metric : 100000000 bps
+
+DLEP Clients for Interface TenGigabitEthernet0/0/2.200
+DLEP Local IP=18.18.18.111:21115 Sock=2
+
+
+DLEP Local Radio IP=18.18.18.112:8111 TCP Socket fd=3
+ Peer ID=2, Virtual template=2
+ Description: radio_7_8nw
+ Peer Timers (all values in milliseconds):
+  Heartbeat=5000, Dead Interval=10000, Terminate ACK=20000
+ Client UP time 56083  milliseconds
+ Neighbor Timer (all values in seconds):
+ Neighbor Down ACK=10
+
+ Supported Metrics:
+  Link RLQ RX Metric : 100
+  Link RLQ TX Metric : 100
+  Link Resources Metric : 100
+  Link MTU Metric : 100
+  Link Latency Metric : 250 microseconds
+  Link CDR RX Metric : 100000000 bps
+  Link CDR TX Metric : 100000000 bps
+  Link MDR RX Metric : 100000000 bps
+  Link MDR TX Metric : 100000000 bps

@@ -346,3 +346,219 @@ class ShowPtpForeignMastersBrief(ShowPtpForeignMastersBriefSchema):
                 continue
 
         return ret_dict
+
+class ShowPtpForeignMastersInterfaceSchema(MetaParser):
+    ''' Schema for:
+            * 'show ptp foreign-masters {interface}'
+    '''
+
+    schema = {
+        'interface' : {
+            Any () : {
+                'interface' : str,
+                'port_number' : str,
+                'address_family' : {
+                    Any() : {
+                        'address_family' : str,
+                        'ip_address': str,
+                        'priority' : str,
+                        'clock_class': str,
+                        'delay_asymmetry': str,
+                        'announce_messages': {
+                            Any () : {
+                                'rate_limit': str,
+                                'duration': str,
+                                
+                            },
+                        },
+                        'qualified_period':str,
+                        'clock_id': str,
+                        'received_clk_properties' : {
+                            'domain' : str,
+                            'priority1' : str,
+                            'priority2' : str,
+                            'class' : str,
+                            'accuracy' : str,
+                            'offset_scaled_log_variance' : str,
+                            'steps_removed' : str,
+                            'time_source' : str,
+                            'time_scale' : str,
+                            'frequency' : str,
+                            'time' : str,
+                            'current_utc_offset' : str,
+                        }
+                    },
+                },
+            },
+        },
+    }
+    
+# ================================
+# Parser for 'show ptp foreign-masters {interface}'
+# ================================
+class ShowPtpForeignMastersInterface(ShowPtpForeignMastersInterfaceSchema):
+
+    cli_command = 'show ptp foreign-masters {interface}'
+
+    def cli(self, interface= '', output=None):
+
+        if output is None:
+            output = self.device.execute(self.cli_command.format(interface=interface))
+        
+        # Interface GigabitEthernet0/0/0/2 (PTP port number 2)    
+        p1 = re.compile(r'^Interface\s+(?P<interface>\S+)\s\(?PTP\s+port\s+number\s+(?P<port_number>\d+)\)$')
+        
+        # IPv4, Address 192.168.254.1, Unicast
+        p2 = re.compile(r'^(?P<address_family>\S+),\s+Address\s+(?P<ip_address>[\d.]+),\s+Unicast$')
+        
+        # Configured priority: None (128)
+        p3 = re.compile(r'^Configured\s+priority:\s+(?P<priority>\S+\s+\S+)$')
+        
+        # Configured clock class: None
+        p4 = re.compile(r'^Configured\s+clock\s+class:\s+(?P<clock_class>\w+)$')
+        
+        # Configured delay asymmetry: None
+        p5 = re.compile(r'^Configured\s+delay\s+asymmetry:\s+(?P<delay_asymmetry>\w+)$')
+        
+        # Announce granted:   8 per-second,      300 seconds
+        # Sync granted:       64 per-second,     300 seconds
+        # Delay-resp granted: 64 per-second,     300 seconds
+        p6 = re.compile(r'^(?P<announce_message>\w+-?\w+\s+\w+):\s+(?P<rate_limit>\d+\s+\w+-?\w+),\s+(?P<duration>\d+\s+\w+)$')
+        
+        # Qualified for 8 hours, 26 minutes, 9 seconds
+        p7 = re.compile(r'^Qualified\s+for\s(?P<qualified_period>\d+\s+\w+,\s+\d+\s+\w+,\s+\d+\s+\w+)$')
+       
+        # Clock ID: b0aefffe04cc9b
+        p8 = re.compile(r'Clock\s+ID:\s+(?P<clock_id>\S+)')
+        
+        # Domain: 44, Priority1: 128, Priority2: 128, Class: 6
+        p9 = re.compile(r'Domain:\s+(?P<domain>\d+),\s+Priority1:\s+(?P<priority1>\d+),\s+Priority2:\s+(?P<priority2>\d+),\s+Class:\s+(?P<class>\d+)')
+        
+        #  Accuracy: 0x21, Offset scaled log variance: 0x4e5d
+        p10 = re.compile(r'Accuracy:\s+(?P<accuracy>\w+),\s+Offset\s+scaled\s+log\s+variance:\s+(?P<offset_scaled_log_variance>\S+)')
+        
+        # Steps-removed: 1, Time source: GPS, Timescale: PTP
+        p11 = re.compile(r'Steps-removed:\s+(?P<steps_removed>\d+),\s+Time\s+source:\s+(?P<time_source>\w+),\s+Timescale:\s+(?P<time_scale>\w+)')
+        
+        # Frequency-traceable, Time-traceable
+        p12 = re.compile(r'(?P<frequency>\w+-\w+),\s+(?P<time>\w+-\w+)')
+        
+        # Current UTC offset: 37 seconds (valid)
+        p13 = re.compile(r'Current\s+UTC\s+offset:\s+(?P<current_utc_offset>\d+\s+\w+\s+\(valid)')
+        
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+            
+            #  # Interface GigabitEthernet0/0/0/2 (PTP port number 2)
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                interface = group['interface']
+                interface_dict = ret_dict.setdefault('interface',{}).setdefault(interface, {})
+                interface_dict['interface'] = interface
+                interface_dict['port_number'] = group ['port_number']
+                continue
+            
+            # IPv4, Address 192.168.254.1, Unicast
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                address_family = group['address_family']
+                address_dict = interface_dict.setdefault('address_family', {}).setdefault(address_family, {})
+                address_dict['address_family'] = address_family
+                address_dict['ip_address'] = group['ip_address']
+                continue
+            
+            # Configured priority: None (128)
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                address_dict['priority'] = group['priority']
+                continue
+            
+            # Configured clock class: None
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                address_dict['clock_class'] = group['clock_class']
+                continue
+            
+            # Configured delay asymmetry: None
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                address_dict['delay_asymmetry'] = group['delay_asymmetry']
+                continue
+            
+            # Announce granted:   8 per-second,      300 seconds
+            # Sync granted:       64 per-second,     300 seconds
+            # Delay-resp granted: 64 per-second,     300 seconds
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                announce_meessage = group['announce_message']
+                announce_dict = address_dict.setdefault('announce_messages', {}).setdefault(announce_meessage,{})
+                announce_dict['rate_limit'] = group['rate_limit']
+                announce_dict['duration'] = group['duration']
+                continue
+            
+            # Qualified for 8 hours, 26 minutes, 9 seconds
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                address_dict['qualified_period'] = group['qualified_period']
+                continue
+            
+            # Clock ID: b0aefffe04cc9b
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                address_dict['clock_id'] = group['clock_id']
+                continue
+            
+            # Domain: 44, Priority1: 128, Priority2: 128, Class: 6
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                clock_dict = address_dict.setdefault('received_clk_properties', {})
+                clock_dict['domain'] = group['domain']
+                clock_dict['priority1'] = group['priority1']
+                clock_dict['priority2'] = group['priority2']
+                clock_dict['class'] = group['class']
+                continue
+            
+            #  Accuracy: 0x21, Offset scaled log variance: 0x4e5d
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                clock_dict['accuracy'] = group['accuracy']
+                clock_dict['offset_scaled_log_variance'] = group['offset_scaled_log_variance'] 
+                continue        
+            
+            # Steps-removed: 1, Time source: GPS, Timescale: PTP
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                clock_dict['steps_removed'] = group['steps_removed']
+                clock_dict['time_source'] = group['time_source']
+                clock_dict['time_scale'] = group['time_scale']
+                continue
+            
+            # Frequency-traceable, Time-traceable
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                clock_dict['frequency'] = group['frequency']
+                clock_dict['time'] = group['time']
+                continue
+            
+            # Current UTC offset: 37 seconds (valid)
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                clock_dict['current_utc_offset'] = group['current_utc_offset']
+                continue
+            
+        return ret_dict

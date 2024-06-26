@@ -3,6 +3,8 @@
 IOSXR parsers for the following show commands:
 
     * traceroute {traceroute} numeric timeout {timeout} probe {probe} ttl {min} {max} source {source}
+    * traceroute
+    * traceroute vrf {vrf_name} {address}
 
 '''
 
@@ -11,12 +13,13 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional
+from genie.metaparser.util.schemaengine import Any, Optional
 
 
 # ================
 # Schema for:
 #   * 'traceroute'
+#   * 'traceroute vrf {vrf_name} {address}'
 # ================
 class TracerouteSchema(MetaParser):
 
@@ -65,20 +68,27 @@ class TracerouteSchema(MetaParser):
 # ================
 # Schema for:
 #   * 'traceroute'
+#   * 'traceroute vrf {vrf_name} {address}'
 # ================
 class Traceroute(TracerouteSchema):
 
     ''' Parser for:
         * 'traceroute'
+        * 'traceroute vrf {vrf_name} {address}'
     '''
 
-    def cli(self, output):
+    cli_command  = ["traceroute", "traceroute vrf {vrf_name} {address}"]
+
+    def cli(self, vrf_name=None, address=None, output=None):
+        if output is None:
+            if vrf_name and address:
+                output = self.device.execute(self.cli_command[1].format(vrf_name=vrf_name, address=address))
+            else:
+                output = self.device.execute(self.cli_command[0])
 
         # Init vars
         ret_dict = {}
         vrf, tr_dict = None, None
-        # Set output
-        out = output
         # init index for paths
         index = 1
         # Type escape sequence to abort.
@@ -136,7 +146,7 @@ class Traceroute(TracerouteSchema):
         # 1  *
         p6 = re.compile(r'^((?P<hop>(\d+)) +)?(?P<address>\*)$')
 
-        for line in out.splitlines():
+        for line in output.splitlines():
             line = line.strip()
             
             # traceroute 10.151.22.22

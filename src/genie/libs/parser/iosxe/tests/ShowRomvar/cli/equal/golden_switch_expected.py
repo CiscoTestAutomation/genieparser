@@ -22,5 +22,6 @@ expected_output = {
         "switch_number": 1,
         "system_serial_num": "FCW2236D0M2",
         "version_id": "V02",
+        "switch_ignore_startup_config": 0
     }
 }

@@ -1,0 +1,7 @@
+Flags:  > - Up                D - Down              S - Assigned for selection
+        d - SSM Disabled      x - Peer timed out    i - Init state
+        s - Output squelched
+Fl   Interface                QLrcv QLuse Pri QLsnd Output driven by
+==== ======================== ===== ===== === ===== ========================
+>S   TenGigE0/0/0/1/0         PRC   PRC   100 PRC   Internal0 [0/RP0/CPU0]  
+>S   TenGigE0/0/0/1/1         PRC   PRC   100 PRC   Internal0 [0/RP0/CPU0]  

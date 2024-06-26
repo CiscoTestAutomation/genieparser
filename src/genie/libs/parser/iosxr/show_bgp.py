@@ -7984,6 +7984,7 @@ class ShowBgpVrfAfPrefixSchema(MetaParser):
                     Any(): {
                         'prefix': str,
                         Optional('rd'): str,
+                        Optional('srv6_vpn_sid') : str,
                         'last_modified': str,
                         Optional('local_label'): str,
                         'paths': {
@@ -8108,6 +8109,9 @@ class ShowBgpVrfAfPrefix(ShowBgpVrfAfPrefixSchema):
         # BGP routing table entry for fc00:a000:1000:101::2/128
         p1 = re.compile(r'^BGP\s+routing\s+table\s+entry\s+for\s+(?P<prefix>(?P<ip>[a-z0-9.:\/\[\]]+)\/(?P<mask>\d+))'
                         r'(?:,\s+Route\s+Distinguisher:\s+(?P<rd>[\d.:]+))?$')
+        
+        # SRv6-VPN SID: fc00:c000:1002:e008::/64
+        p1_1 = re.compile(r'^SRv6-VPN\s+SID:\s+(?P<vpn_sid>\S+)')
 
         # Last Modified: Mar 27 02:45:20.105 for 1d15h
         p2 = re.compile(r'^Last +Modified: (?P<last_modified>.*)$')
@@ -8232,6 +8236,13 @@ class ShowBgpVrfAfPrefix(ShowBgpVrfAfPrefixSchema):
                 vrf_dict['prefix'] = group['prefix']
                 if group['rd']:
                     vrf_dict['rd'] = group['rd']
+                continue
+            
+            # SRv6-VPN SID: fc00:c000:1002:e008::/64
+            m = p1_1.match(line)
+            if m:
+                group = m.groupdict()
+                vrf_dict['srv6_vpn_sid'] = group['vpn_sid']
                 continue
 
             # Last Modified: Mar 27 02:45:20.105 for 1d15h

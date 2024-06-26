@@ -1,0 +1,44 @@
+Traffic Type                 PACKETS                            DROP
+                  INJECT       |    PUNT           INJECT        |     PUNT
+                  ------            ----           ------              ----
+SVL CTRL             975             975                0                 8
+
+SVL IPC           224678          233028                0                 8
+
+SVL DAD                0               0                0                 0
+
+SVL SESA          224639          233004                1               378
+
+
+Timestamp Now: May 27 08:09:31.013
+CTRL RX Timestamp: May 27 08:09:22.463 [0]
+CTRL RX Timestamp: May 27 08:09:23.417 [1]
+CTRL RX Timestamp: May 27 08:09:26.888 [2]
+CTRL RX Timestamp: May 27 08:09:27.400 [3]
+CTRL RX Timestamp: May 27 08:09:28.128 [4]
+CTRL RX Maximum Time Gap:                4 sec,          736047usec
+CTRL RX Maximum Gap Timestamp: May 27 08:00:12.022
+
+CTRL TX Timestamp: May 27 08:09:20.151 [0]
+CTRL TX Timestamp: May 27 08:09:24.573 [1]
+CTRL TX Timestamp: May 27 08:09:24.627 [2]
+CTRL TX Timestamp: May 27 08:09:28.860 [3]
+CTRL TX Timestamp: May 27 08:09:29.426 [4]
+CTRL TX Maximum Time Gap:                9 sec,          557744usec
+CTRL TX Maximum Gap Timestamp: May 27 07:43:41.426
+
+IPC RX Timestamp: May 27 08:09:30.768 [3]
+IPC RX Timestamp: May 27 08:09:30.868 [4]
+IPC RX Timestamp: May 27 08:09:30.928 [0]
+IPC RX Timestamp: May 27 08:09:30.984 [1]
+IPC RX Timestamp: May 27 08:09:30.984 [2]
+IPC RX Maximum Time Gap:                0 sec,          288461usec
+IPC RX Maximum Gap Timestamp: May 27 07:56:48.392
+
+IPC TX Timestamp: May 27 08:09:30.768 [3]
+IPC TX Timestamp: May 27 08:09:30.868 [4]
+IPC TX Timestamp: May 27 08:09:30.928 [0]
+IPC TX Timestamp: May 27 08:09:30.984 [1]
+IPC TX Timestamp: May 27 08:09:30.984 [2]
+IPC TX Maximum Time Gap:                1 sec,           48565usec
+IPC TX Maximum Gap Timestamp: May 27 07:43:53.511 

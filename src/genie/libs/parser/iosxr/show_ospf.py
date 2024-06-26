@@ -6093,7 +6093,7 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
 
         # Process ID 1, Router ID 10.36.3.3, Network Type LOOPBACK, Cost: 1
         p5 = re.compile(r'^Process +ID +(?P<process_id>\w+), +Router +ID +(?P<router_id>(\d+.){3}\d+), +'
-                        r'Network +Type +(?P<interface_type>\w+), +Cost: +(?P<cost>\d+)$')
+                        r'Network +Type +(?P<interface_type>\w+)(, +Cost: +(?P<cost>\d+))?$')
 
         # Transmit Delay is 1 sec, State BDR, Priority 1, MTU 1500, MaxPktSz 1500
         # Transmit Delay is 1 sec, State POINT_TO_POINT, MTU 1500, MaxPktSz 1500
@@ -6290,7 +6290,8 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
                 interface_dict['router_id'] = router_id
                 interface_dict['interface_type'] = interface_type
                 interface_dict['process_id'] = process_id
-                interface_dict['cost'] = int(cost)
+                if cost is not None:
+                    interface_dict['cost'] = int(cost)
                 continue
 
             # Transmit Delay is 1 sec, State POINT_TO_POINT, MTU 1500, MaxPktSz 1500
@@ -7645,4 +7646,277 @@ class ShowOspfNeighborInterfaceDetail(ShowOspfNeighborInterfaceDetailSchema):
                 neighbor_dict["neighbor_interface_id"] = int(group["nbr_interface_id"])
                 continue
             
+        return ret_dict
+        
+# ========================================================
+# Schema for 'show ospf {process_name} vrf {vrf_name} interface {interface}'
+# ========================================================
+class ShowOspfProcessIdVrfNameSchema(MetaParser):
+    """Schema for show ospf {process_name} vrf {vrf_name} interface {interface}"""
+    
+    schema = {
+        'interface' : {
+            Any() : {
+                'interface_status' :str,
+                'line_protocol_status': str,
+                "ip_address": str,
+                "area": str,
+                Optional("sid"): str,
+                Optional("strict_spf_sid"): str,
+                Optional("label_stack"):{
+                    "primary_label": str,
+                    "backup_label": str,
+                    "srte_label": str,
+                },
+                'process_id' : int,
+                'vrf_name': str,
+                'router_id':str,
+                'network_type':str,
+                'cost': str,
+                'transmit_delay':str,
+                'state': str,
+                'mtu' : str,
+                'max_pkt_sz' : str,
+                Optional("forward_reference"): str,
+                Optional("unnumbered"): bool,
+                Optional("bandwidth"): int,
+                Optional("hello_interval"): int,
+                Optional("dead_interval"): int,
+                Optional("wait_interval"): int,
+                Optional("retransmit_interval"): int,
+                Optional("hello_timer") : str,
+                Optional("index"): str,
+                Optional("flood_queue_length"): int,
+                Optional("next"): str,
+                Optional("last_flood_scan_length"): int,
+                Optional("max_flood_scan_length"): int,
+                Optional("last_flood_scan_time_msec"): int,
+                Optional("max_flood_scan_time_msec"): int,
+                Optional("ls_ack_list"): str,
+                Optional("ls_ack_list_length"): int,
+                Optional("high_water_mark"): int,
+                Optional('neighbor_count') : int,
+                Optional('adjacnt_neighbor_count'): int,
+                Optional("neighbors"): {
+                    'neighbor_router_id' : str,
+                    
+                }
+            }
+        }
+    }
+    
+# ========================================
+# Parser for 'show ospf {process_name} vrf {vrf_name} interface {interface}'
+# ========================================
+
+class ShowOspfProcessIdVrfName(ShowOspfProcessIdVrfNameSchema):
+
+    ''' Parser for:
+        show ospf {process_name} vrf {vrf_name} interface {interface}
+    '''
+
+    cli_command = 'show ospf {process_name} vrf {vrf_name} interface {interface}'
+
+    def cli (self, process_name=None, vrf_name=None, interface=None, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(process_name=process_name,\
+                                                                    vrf_name=vrf_name, interface=interface))
+            
+        
+        # GigabitEthernet0/0/0/3.200 is up, line protocol is up
+        p1=re.compile(r'^(?P<interface>\S+)\s+is\s+(?P<status>\w+),\s+line\s+protocol\s+is\s+(?P<protocol_status>\w+)')
+        
+        #Internet Address 90.11.1.1/30, Area 0, SID 0, Strict-SPF SID 0
+        p2 = re.compile(r'^Internet +Address +(?P<ip_address>(\d+.){3}\d+/\d+), +Area +(?P<area>\w+), +SID +'
+                          r'(?P<sid>\d+), +Strict-SPF +SID +(?P<strict_spf_sid>\d+)$')
+        
+        # Label stack Primary label 0 Backup label 0 SRTE label 0
+        p3 = re.compile(r'^Label stack +Primary +label +(?P<primary_label>\d+) +Backup +label +'
+                         r'(?P<backup_label>\d+) +SRTE +label +(?P<srte_label>\d+)$')
+                          
+        # Process ID 1, Router ID 10.36.3.3, Network Type LOOPBACK, Cost: 1
+        p4 = re.compile(r'Process\s+ID\s+(?P<process_id>\d+),\s+VRF\s+(?P<vrf_name>\w+),\s+Router\s+ID\s+(?P<router_id>[\d.]+),\s+Network\s+Type\s+(?P<network_type>\w+),\s+Cost:\s+(?P<cost>\d+)')
+        
+        # Transmit Delay is 1 sec, State POINT_TO_POINT, MTU 1500, MaxPktSz 1500
+        p5 = re.compile(r'Transmit\s+Delay\s+is\s+(?P<transmit_delay>\d+\s+\w+),\s+State\s+(?P<state>\w+),\s+MTU\s+(?P<mtu>\d+),\s+MaxPktSz\s+(?P<paket_size>\d+)$')
+        
+        
+        # Forward reference No, Unnumbered no,  Bandwidth 1000000
+        p6 = re.compile(r'^Forward +reference +(?P<forward_reference>\w+), +Unnumbered +'
+                         r'(?P<unnumbered_bool>\w+), +Bandwidth +(?P<bandwidth>\S+)$')
+                         
+        # Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+        p7 = re.compile(r'^Timer +intervals +configured, +Hello +(?P<hello>(\d+)), +Dead +(?P<dead>(\d+)), +Wait +'
+                        r'(?P<wait>(\d+)), +Retransmit +(?P<retransmit>(\d+))$')
+        
+        # Hello Due in 00:00:04:764 
+        p8 = re.compile(r"^Hello +due +in +(?P<hello_timer>(\S+))$")
+        
+        
+        # Index 1/1, flood queue length 0
+        p9 = re.compile(r'^Index +(?P<index>(\S+)), +flood +queue +length +(?P<length>(\d+))$')
+
+        # Next 0(0)/0(0)
+        p10 = re.compile(r'^Next +(?P<next>(\S+))$')
+
+        # Last flood scan length is 1, maximum is 3
+        p11 = re.compile(r'^Last +flood +scan +length +is +(?P<num>(\d+)), +maximum +is +(?P<max>(\d+))$')
+
+        # Last flood scan time is 0 msec, maximum is 0 msec
+        p12 = re.compile(
+            r'^Last +flood +scan +time +is +(?P<time1>(\d+)) +msec, +maximum +is +(?P<time2>(\d+)) +msec$')
+
+        # LS Ack List: current length 0, high water mark 5
+        p13 = re.compile(
+            r'^LS +Ack +List: +(?P<ls_ack_list>(\S+)) +length +(?P<num>(\d+)), +high +water +mark +(?P<num2>(\d+))$')
+
+        # Neighbor Count is 1, Adjacent neighbor count is 1
+        p14 = re.compile(r'^Neighbor\s+Count\s+is\s+(?P<neighbor_count>\d+),\s+Adjacent\s+neighbor\s+count\s+is(?P<adj_neighbor_count>\s+\d+)')
+        
+        # Adjacent with neighbor 90.11.1.2
+        p15 = re.compile(r'^Adjacent +with +neighbor +(?P<neighbors_router_id>(\S+))')
+        
+        ret_dict = {}
+        
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # GigabitEthernet0/0/0/3.200 is up, line protocol is up 
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                interface = group['interface']
+                interface_dict = ret_dict.setdefault('interface', {}).setdefault(interface, {})
+                interface_dict['interface_status'] = group['status']
+                interface_dict['line_protocol_status'] = group['protocol_status']
+                continue
+            
+            # Internet Address 90.11.1.1/30, Area 0, SID 0, Strict-SPF SID 0
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()   
+                interface_dict['ip_address'] = group['ip_address']
+                interface_dict['area'] = group['area']
+                interface_dict['sid'] = group['sid']
+                interface_dict['strict_spf_sid'] = group['strict_spf_sid']
+                continue
+            
+            # Label stack Primary label 0 Backup label 0 SRTE label 0
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                primary_lable = group['primary_label']
+                backup_label = group['backup_label']
+                srte_label = group['srte_label']
+                label_stack_dict = interface_dict.setdefault('label_stack', {})
+                label_stack_dict['primary_label'] = primary_lable
+                label_stack_dict['backup_label'] = backup_label
+                label_stack_dict['srte_label'] = srte_label
+                
+            # Process ID 1, VRF VRF_1, Router ID 90.11.1.1, Network Type POINT_TO_POINT, Cost: 1   
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                process_id = int(group['process_id'])
+                interface_dict['process_id'] = process_id
+                interface_dict['vrf_name'] = group['vrf_name']
+                interface_dict['router_id'] = group['router_id']
+                interface_dict['network_type'] = group['network_type']
+                interface_dict['cost'] = group['cost']
+                continue
+            
+            # Transmit Delay is 1 sec, State POINT_TO_POINT, MTU 1500, MaxPktSz 1500
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict['transmit_delay'] = group['transmit_delay']
+                interface_dict['state'] = group['state']
+                interface_dict['mtu'] = group['mtu']
+                interface_dict['max_pkt_sz'] = group['paket_size']
+                continue
+            
+            # Forward reference No, Unnumbered no,  Bandwidth 1000000
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict['forward_reference'] = group['forward_reference']
+                interface_dict['unnumbered'] =   False if group['unnumbered_bool'] == 'no' else True
+                interface_dict['bandwidth'] = int(group['bandwidth'])
+                continue
+            
+            # Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict['hello_interval'] = int(group['hello'])
+                interface_dict['dead_interval'] = int(group['dead'])
+                interface_dict['wait_interval'] = int(group['wait'])
+                interface_dict['retransmit_interval'] = int(group['retransmit'])
+                continue
+            
+            # Hello due in 00:00:04:764 
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict['hello_timer'] = group['hello_timer']
+                continue
+            
+            #  Index 1/1, flood queue length 0   
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict['index'] = group['index']
+                interface_dict['flood_queue_length'] = int(group['length'])
+                continue
+            # Next 0(0)/0(0)
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict['next'] = group['next']
+                continue
+            
+            # Last flood scan length is 1, maximum is 1
+            m = p11.match(line)
+            if m:
+                group = m.groupdict() 
+                interface_dict['last_flood_scan_length'] = int(group['num'])
+                interface_dict['max_flood_scan_length'] = int(group['max'])
+                continue
+            
+            # Last flood scan time is 0 msec, maximum is 0 msec
+            m = p12.match(line)
+            if m:
+                group = m.groupdict() 
+                interface_dict['last_flood_scan_time_msec'] = int(group['time1'])
+                interface_dict['max_flood_scan_time_msec'] = int(group['time2'])
+                continue
+            
+            # LS Ack List: current length 0, high water mark 1
+            m = p13.match(line)
+            if m:
+                group = m.groupdict() 
+                interface_dict['ls_ack_list'] = group['ls_ack_list']
+                interface_dict['ls_ack_list_length'] = int(group['num'])
+                interface_dict['high_water_mark'] = int(group['num2'])
+                continue
+            
+            # Neighbor Count is 1, Adjacent neighbor count is 1
+            m = p14.match(line)
+            if m:
+                group = m.groupdict() 
+                interface_dict['neighbor_count'] = int(group['neighbor_count'])
+                interface_dict['adjacnt_neighbor_count'] = int(group['adj_neighbor_count'])
+                continue
+            
+            # Adjacent with neighbor 90.11.1.2
+            m = p15.match(line)
+            if m:
+                group = m.groupdict() 
+                neigbour_dict = interface_dict.setdefault('neighbors', {})
+                neigbour_dict['neighbor_router_id'] = group['neighbors_router_id']
+                continue
+                
+            
+            
+                
         return ret_dict
