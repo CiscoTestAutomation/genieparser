@@ -406,7 +406,7 @@ class ShowPlatform(ShowPlatformSchema):
                             '\s+(?P<name>[a-zA-Z0-9\-\.]+)'
                             '(?:\((?P<redundancy_state>[a-zA-Z]+)\))?'
                             '(?: +(?P<plim>[a-zA-Z0-9(\/|\-| )]+))?'
-                            '\s+(?P<state>(UNPOWERED|DISABLED|IOS XR RUN|OK|OPERATIONAL|POWERED_ON))'
+                            '\s+(?P<state>(SW_INACTIVE|IN-RESET|UNPOWERED|DISABLED|IOS XR RUN|OK|OPERATIONAL|POWERED_ON))'
                             '\s+(?P<config_state>[a-zA-Z\,]+)$')
 
         # Init vars

@@ -1,0 +1,9 @@
+Tue Jul  2 15:22:55.819 EST
+Node            Type                      State            Config State
+-----------------------------------------------------------------------------
+0/RSP0/CPU0     A9K-RSP440-SE(Active)     IOS XR RUN       PWR,NSHUT,MON
+0/RSP1/CPU0     A9K-RSP440-SE(Standby)    IOS XR RUN       PWR,NSHUT,MON
+0/0/CPU0        A9K-24x10GE-TR            IOS XR RUN       PWR,NSHUT,MON
+0/1/CPU0        A9K-2T20GE-L              IN-RESET         PWR,NSHUT,MON
+0/2/CPU0        A9K-24x10GE-TR            IOS XR RUN       PWR,NSHUT,MON
+0/3/CPU0        A9K-2x100GE-TR            IOS XR RUN       PWR,NSHUT,MON
