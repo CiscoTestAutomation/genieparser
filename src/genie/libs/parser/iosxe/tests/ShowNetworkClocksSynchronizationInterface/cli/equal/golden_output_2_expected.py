@@ -1,0 +1,41 @@
+expected_output = {
+    'GigabitEthernet0/0/2': {
+        'description': 'None',
+        'signal_type': 'NA',
+        'mode': 'Synchronous (Ql-enabled)',
+        'esmc_tx': 'ENABLED',
+        'esmc_rx': 'ENABLED',
+        'ql_receive': 'QL-DNU',
+        'ql_receive_configured': '-',
+        'ql_receive_overrided': '-',
+        'ql_transmit': 'QL-SEC',
+        'ql_transmit_configured': '-',
+        'hold_off_time': 300,
+        'hold_off_configured': 'FALSE',
+        'wait_to_restore': 300,
+        'wtr_configured': 'FALSE',
+        'lock_out': 'FALSE',
+        'signal_fail': 'FALSE',
+        'alarms': 'FALSE',
+        'reason_for_alarm_flag': 0,
+        'slot_disabled': 'FALSE',
+        'hold_off_timer': 'STOPPED',
+        'wait_to_restore_timer': 'STOPPED',
+        'switchover_timer': 'STOPPED',
+        'esmc_tx_timer': 'RUNNING',
+        'esmc_rx_timer': 'RUNNING',
+        'tsm_delay_timer': 'STOPPED'
+    },
+    't0': {
+        'selected_source': 'FALSE',
+        'priority': 1,
+        'force_switch': 'FALSE',
+        'manual_switch': 'FALSE',
+        'manual_switch_in_progress': 'FALSE',
+        'not_use': 'FALSE',
+        'been_selected': 'FALSE',
+        'snmp_input_source_index': 11,
+        'snmp_parent_source_index': 0,
+        'intf_sig_nv': '0'
+    }
+}

@@ -1,0 +1,5 @@
+                   Interface   pvlan_mode   stp_state  vtp pruned          Untagged          Ingress           Egress
+---------------------------------------------------------------------------------------------------------------------
+     TwoGigabitEthernet1/0/5         none    disabled          No               Yes         blocking         blocking
+
+HW flood list: :

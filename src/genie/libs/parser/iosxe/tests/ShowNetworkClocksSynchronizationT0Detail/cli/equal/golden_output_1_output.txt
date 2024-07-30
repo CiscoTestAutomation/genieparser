@@ -1,0 +1,113 @@
+Symbols:     En - Enable, Dis - Disable, Adis - Admin Disable
+             NA - Not Applicable
+             *  - Synchronization source selected
+             #  - Synchronization source force selected
+             &  - Synchronization source manually switched
+
+Automatic selection process : Enable
+Equipment Clock : 2048 (EEC-Option1)
+Clock State : Frequency Locked
+Clock Mode : QL-Enable
+ESMC : Enabled
+SSM Option : 1
+T0 : GigabitEthernet0/0/2
+Hold-off (global) : 300 ms
+Wait-to-restore (global) : 10 sec
+Tsm Delay : 180 ms
+Revertive : Yes
+Force Switch: FALSE
+Manual Switch: FALSE
+Number of synchronization sources: 4
+Squelch Threshold: QL-SEC
+sm(netsync NETCLK_QL_ENABLE), running yes, state 1A
+Last transition recorded: (set_lo)-> 1C (clear_lo)-> 1C (force_sw)-> 1C (clear_sw)
+
+
+
+Nominated Interfaces for T0
+
+ Interface            SigType     Mode/QL      Prio  QL_IN  ESMC Tx  ESMC Rx
+ Internal             NA          NA/Dis       251   QL-SEC    NA        NA
+*Gi0/0/2              NA          Sync/En      1     QL-SEC    -         -
+ Gi0/0/6              NA          Sync/En      2     QL-SEC    -         -
+ Te0/0/10             NA          Sync/En      3     QL-SEC    -         -
+ Tw0/0/18             NA          Sync/En      4     QL-SEC    -         -
+
+
+T0 selection process inputs:
+============================================
+
+Internal
+-----------------------------
+Description: None
+Signal Type: NA
+
+Mode: NA (Ql-enabled)
+SSM Tx: DISABLED
+SSM Rx: DISABLED
+QL Receive: QL-SEC
+QL Receive Configured: -
+QL Receive Overrided: -
+QL Transmit: -
+QL Transmit Configured: -
+
+
+GigabitEthernet0/0/2
+-----------------------------
+Description: None
+Signal Type: NA
+
+Mode: Synchronous (Ql-enabled)
+ESMC Tx: ENABLED
+ESMC Rx: ENABLED
+QL Receive: QL-SEC
+QL Receive Configured: -
+QL Receive Overrided: -
+QL Transmit: QL-DNU
+QL Transmit Configured: -
+
+
+GigabitEthernet0/0/6
+-----------------------------
+Description: None
+Signal Type: NA
+
+Mode: Synchronous (Ql-enabled)
+ESMC Tx: ENABLED
+ESMC Rx: ENABLED
+QL Receive: QL-SEC
+QL Receive Configured: -
+QL Receive Overrided: -
+QL Transmit: QL-SEC
+QL Transmit Configured: -
+
+
+TenGigabitEthernet0/0/10
+-----------------------------
+Description: None
+Signal Type: NA
+
+Mode: Synchronous (Ql-enabled)
+ESMC Tx: ENABLED
+ESMC Rx: ENABLED
+QL Receive: QL-SEC
+QL Receive Configured: -
+QL Receive Overrided: -
+QL Transmit: QL-SEC
+QL Transmit Configured: -
+
+
+TwentyFiveGigE0/0/18
+-----------------------------
+Description: None
+Signal Type: NA
+
+Mode: Synchronous (Ql-enabled)
+ESMC Tx: ENABLED
+ESMC Rx: ENABLED
+QL Receive: QL-SEC
+QL Receive Configured: -
+QL Receive Overrided: -
+QL Transmit: QL-SEC
+QL Transmit Configured: -
+

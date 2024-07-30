@@ -1,0 +1,134 @@
+Export completed for capture point cflow_capture
+show monitor capture file flash:/CSCwj19356.pcap packet-number 4 detailed
+Starting the packet display ........ Press Ctrl + Shift + 6 to exit
+
+Frame 4: 382 bytes on wire (3056 bits), 382 bytes captured (3056 bits) on interface /tmp/epc_ws/wif_to_ts_pipe, id 0
+    Interface id: 0 (/tmp/epc_ws/wif_to_ts_pipe)
+        Interface name: /tmp/epc_ws/wif_to_ts_pipe
+    Encapsulation type: Ethernet (1)
+    Arrival Time: Jul  3, 2024 13:31:52.579227000 IST
+    [Time shift for this packet: 0.000000000 seconds]
+    Epoch Time: 1719993712.579227000 seconds
+    [Time delta from previous captured frame: 5.364290000 seconds]
+    [Time delta from previous displayed frame: 0.000000000 seconds]
+    [Time since reference or first frame: 5.367039000 seconds]
+    Frame Number: 4
+    Frame Length: 382 bytes (3056 bits)
+    Capture Length: 382 bytes (3056 bits)
+    [Frame is marked: False]
+    [Frame is ignored: False]
+    [Protocols in frame: eth:ethertype:lldp]
+Ethernet II, Src: 0c:d0:f8:87:ee:46 (0c:d0:f8:87:ee:46), Dst: 01:80:c2:00:00:0e (01:80:c2:00:00:0e)
+    Destination: 01:80:c2:00:00:0e (01:80:c2:00:00:0e)
+        Address: 01:80:c2:00:00:0e (01:80:c2:00:00:0e)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...1 .... .... .... .... = IG bit: Group address (multicast/broadcast)
+    Source: 0c:d0:f8:87:ee:46 (0c:d0:f8:87:ee:46)
+        Address: 0c:d0:f8:87:ee:46 (0c:d0:f8:87:ee:46)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Type: 802.1 Link Layer Discovery Protocol (LLDP) (0x88cc)
+    Trailer: 1f0000
+Link Layer Discovery Protocol
+    Chassis Subtype = MAC address, Id: 0c:d0:f8:87:ee:00
+        0000 001. .... .... = TLV Type: Chassis Id (1)
+        .... ...0 0000 0111 = TLV Length: 7
+        Chassis Id Subtype: MAC address (4)
+        Chassis Id: 0c:d0:f8:87:ee:00 (0c:d0:f8:87:ee:00)
+    Port Subtype = Interface name, Id: Fo1/1/1
+        0000 010. .... .... = TLV Type: Port Id (2)
+        .... ...0 0000 1000 = TLV Length: 8
+        Port Id Subtype: Interface name (5)
+        Port Id: Fo1/1/1
+    Time To Live = 120 sec
+        0000 011. .... .... = TLV Type: Time to Live (3)
+        .... ...0 0000 0010 = TLV Length: 2
+        Seconds: 120
+    System Name = cat9300_stack.migdal.co.il
+        0000 101. .... .... = TLV Type: System Name (5)
+        .... ...0 0001 1010 = TLV Length: 26
+        System Name: cat9300_stack.migdal.co.il
+     [truncated]System Description = Cisco IOS Software [IOSXE], Catalyst L3 Switch Software (CAT9K_IOSXE), Experimental Version 17.16.20240627:011236 [BLD_POLARIS_DEV_LATEST_20240627_003631:/nobackup/mcpre/s2c-build-ws 101]\nCopyright (c) 19
+        0000 110. .... .... = TLV Type: System Description (6)
+        .... ...0 1111 1111 = TLV Length: 255
+        System Description [truncated]: Cisco IOS Software [IOSXE], Catalyst L3 Switch Software (CAT9K_IOSXE), Experimental Version 17.16.20240627:011236 [BLD_POLARIS_DEV_LATEST_20240627_003631:/nobackup/mcpre/s2c-build-ws 101]\nCopyright (c) 198
+    Port Description = FortyGigabitEthernet1/1/1
+        0000 100. .... .... = TLV Type: Port Description (4)
+        .... ...0 0001 1001 = TLV Length: 25
+        Port Description: FortyGigabitEthernet1/1/1
+    Capabilities
+        0000 111. .... .... = TLV Type: System Capabilities (7)
+        .... ...0 0000 0100 = TLV Length: 4
+        Capabilities: 0x0014
+            .... .... .... ...0 = Other: Not capable
+            .... .... .... ..0. = Repeater: Not capable
+            .... .... .... .1.. = Bridge: Capable
+            .... .... .... 0... = WLAN access point: Not capable
+            .... .... ...1 .... = Router: Capable
+            .... .... ..0. .... = Telephone: Not capable
+            .... .... .0.. .... = DOCSIS cable device: Not capable
+            .... .... 0... .... = Station only: Not capable
+        Enabled Capabilities: 0x0014
+            .... .... .... ...0 = Other: Not capable
+            .... .... .... ..0. = Repeater: Not capable
+            .... .... .... .1.. = Bridge: Capable
+            .... .... .... 0... = WLAN access point: Not capable
+            .... .... ...1 .... = Router: Capable
+            .... .... ..0. .... = Telephone: Not capable
+            .... .... .0.. .... = DOCSIS cable device: Not capable
+            .... .... 0... .... = Station only: Not capable
+    Management Address
+        0001 000. .... .... = TLV Type: Management Address (8)
+        .... ...0 0000 1100 = TLV Length: 12
+        Address String Length: 5
+        Address Subtype: IPv4 (1)
+        Management Address: 132.132.132.1
+        Interface Subtype: System port number (3)
+        Interface Number: 61
+        OID String Length: 0
+    Unknown - MAC/PHY Configuration/Status
+        1111 111. .... .... = TLV Type: Organization Specific (127)
+        .... ...0 0000 1001 = TLV Length: 9
+        Organization Unique Code: 00:12:0f
+        IEEE 802.3 Subtype: MAC/PHY Configuration/Status (0x01)
+        Auto-Negotiation Support/Status: 0x02
+            .... ...0 = Auto-Negotiation: Not supported
+            .... ..1. = Auto-Negotiation: Enabled
+        PMD Auto-Negotiation Advertised Capability: 0x8000
+            .... .... .... ...0 = 1000BASE-T (full duplex mode): Not capable
+            .... .... .... ..0. = 1000BASE-T (half duplex mode): Not capable
+            .... .... .... .0.. = 1000BASE-X (-LX, -SX, -CX full duplex mode): Not capable
+            .... .... .... 0... = 1000BASE-X (-LX, -SX, -CX half duplex mode): Not capable
+            .... .... ...0 .... = Asymmetric and Symmetric PAUSE (for full-duplex links): Not capable
+            .... .... ..0. .... = Symmetric PAUSE (for full-duplex links): Not capable
+            .... .... .0.. .... = Asymmetric PAUSE (for full-duplex links): Not capable
+            .... .... 0... .... = PAUSE (for full-duplex links): Not capable
+            .... ...0 .... .... = 100BASE-T2 (full duplex mode): Not capable
+            .... ..0. .... .... = 100BASE-T2 (half duplex mode): Not capable
+            .... .0.. .... .... = 100BASE-TX (full duplex mode): Not capable
+            .... 0... .... .... = 100BASE-TX (half duplex mode): Not capable
+            ...0 .... .... .... = 100BASE-T4: Not capable
+            ..0. .... .... .... = 10BASE-T (full duplex mode): Not capable
+            .0.. .... .... .... = 10BASE-T (half duplex mode): Not capable
+            1... .... .... .... = Other or unknown: Capable
+        Same in inverse (wrong) bitorder
+            1... .... .... .... = 1000BASE-T (full duplex mode): Capable
+            .0.. .... .... .... = 1000BASE-T (half duplex mode): Not capable
+            ..0. .... .... .... = 1000BASE-X (-LX, -SX, -CX full duplex mode): Not capable
+            ...0 .... .... .... = 1000BASE-X (-LX, -SX, -CX half duplex mode): Not capable
+            .... 0... .... .... = Asymmetric and Symmetric PAUSE (for full-duplex links): Not capable
+            .... .0.. .... .... = Symmetric PAUSE (for full-duplex links): Not capable
+            .... ..0. .... .... = Asymmetric PAUSE (for full-duplex links): Not capable
+            .... ...0 .... .... = PAUSE (for full-duplex links): Not capable
+            .... .... 0... .... = 100BASE-T2 (full duplex mode): Not capable
+            .... .... .0.. .... = 100BASE-T2 (half duplex mode): Not capable
+            .... .... ..0. .... = 100BASE-TX (full duplex mode): Not capable
+            .... .... ...0 .... = 100BASE-TX (half duplex mode): Not capable
+            .... .... .... 0... = 100BASE-T4: Not capable
+            .... .... .... .0.. = 10BASE-T (full duplex mode): Not capable
+            .... .... .... ..0. = 10BASE-T (half duplex mode): Not capable
+            .... .... .... ...0 = Other or unknown: Not capable
+        Operational MAU Type: 10GigBaseX - X PCS/PMA, unknown PMD. (0x001f)
+    End of LLDPDU
+        0000 000. .... .... = TLV Type: End of LLDPDU (0)
+        .... ...0 0000 0000 = TLV Length: 0

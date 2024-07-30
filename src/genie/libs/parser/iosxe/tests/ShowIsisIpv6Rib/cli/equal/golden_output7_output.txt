@@ -1,0 +1,20 @@
+
+IS-IS IPv6 process 1, local RIB
+ 
+Repair path attributes:
+    DS - Downstream, LC - Linecard-Disjoint, NP - Node-Protecting
+    PP - Primary-Path, SR - SRLG-Disjoint
+ 
+ 
+Flex-algo 132
+ 
+* FCCC:F132:C1::/48
+  Algorithm: 132
+    via FE80::A8BB:CCFF:FE01:4721/Ethernet1/2, type L1  metric 10 tag 0
+    source router id: 333::333
+     (installed)
+     repair path: via FE80::A8BB:CCFF:FE01:AF10/Ethernet0/0 metric: 30 (LC,DS,SR)
+      TI-LFA link-protecting
+        SRv6-Fwd-Id 25165871
+        P node: iolR5 SID FCCC:F132:E1:: uN (PSP/USD)
+      repair source: iolR3, metric to pfx: 40

@@ -3091,6 +3091,7 @@ class ShowMplsTrafficEngTunnelTunnelidSchema(MetaParser):
                 Optional('node_hop_count'): int,
                 Optional('inlabel'): list,
                 Optional('outlabel'): list,
+                Optional('frr_outlabel'):list,
                 Optional('next_hop'): list,
                 Optional('rsvp_signalling_info'): {
                     'src': str,
@@ -3168,8 +3169,9 @@ class ShowMplsTrafficEngTunnelTunnelid(ShowMplsTrafficEngTunnelTunnelidSchema):
 
         ##Regex
         ###Name: R3_t100                             (Tunnel100) Destination: 2.2.2.2
+        #Name: Entrega PEDR                        (Tunnel12831) Destination: 10.166.0.1
         p1 = re.compile(
-            r'^\S+:\s+\S+\s+\((?P<Tunnel>\S+)\)\s+\S+\s+(?P<destination>\S+)')
+            r'\S+:\s+.*\((?P<Tunnel>\S+)\)\s+\S+\s+(?P<destination>\S+)??$')
 
         ###Eg:Status:,Config Parameters:,Active Path Option Parameters:
         p2 = re.compile(r'^(?P<key>[a-zA-Z\- ]+)\:$')
@@ -3179,9 +3181,10 @@ class ShowMplsTrafficEngTunnelTunnelid(ShowMplsTrafficEngTunnelTunnelidSchema):
         )
 
         ###path option 1, type explicit R3_R4_R5_R2 (Basis for Setup, path weight 3)
+        #path option 5, type explicit Path-BA-SM-PE-Pe (Basis for Setup, path weight 21)
         p3 = re.compile(
             r"^[a-zA-Z ]+(?P<path_option>[0-9 ]+)\,\s+(?P<lockdown>\([A-Z]+\))?"
-            "\s*\S+\s(?P<type>[a-zA-Z_0-9 ]+)\s*(?:\(.*\,[a-z ]+(?P<path_weight>\S+)\))?$"
+            "\s*\S+\s(?P<type>[a-zA-Z_0-9 -]+)\s*(?:\(.*\,[a-z ]+(?P<path_weight>\S+)\))?$"
         )
         p3_1 = re.compile(r"^Path-option attribute:\s(?P<path_attribute>\S+)$")
 

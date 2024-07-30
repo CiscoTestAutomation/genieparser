@@ -365,6 +365,10 @@ class SuperFileBasedTesting(aetest.Testcase):
                     folder_root_empty = pathlib.Path(
                         f"{base_folder}/tests/{name}/cli/empty")
 
+                    # Skip over super parsers
+                    if "super" in name.lower():
+                        continue
+
                     # This is used in conjunction with the arguments that are run at command line, to skip over all tests you are
                     # not concerned with. Basically, it allows a user to not have to wait for 100s of tests to run, to run their
                     # one test.

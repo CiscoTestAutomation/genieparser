@@ -1,0 +1,111 @@
+
+Tag 1:
+
+ISIS level-1 node information for R1.00
+ SRv6 locator cache:
+ (MT-2) FCCC:CCC1:A1::/48, Algorithm: 0
+    LSP 0, Index 1, Seq 0xD
+    Metric: 0, Algoritm: 0
+    End SID: FCCC:CCC1:A1:: uN (PSP/USD)
+
+ISIS level-1 node information for R2.00
+ SRv6 locator cache:
+ (MT-2) FCCC:CCC1:99::/48, Algorithm: 0
+    LSP 1, Index 13, Seq 0xB
+    Metric: 0, Algoritm: 0
+    End SID: FCCC:CCC1:99:: uN (PSP/USD)
+ (MT-2) FCCC:CCC1:B1::/48, Algorithm: 0
+    LSP 0, Index 4, Seq 0xB
+    Metric: 0, Algoritm: 0
+    End SID: FCCC:CCC1:B1:: uN (PSP/USD)
+
+ISIS level-1 node information for R3.00
+ SRv6 locator cache:
+ (MT-2) FCCC:CCC1:C1::/48, Algorithm: 0
+    LSP 0, Index 9, Seq 0x8
+    Metric: 0, Algoritm: 0
+    End SID: FCCC:CCC1:C1:: uN (PSP/USD)
+
+ISIS level-1 node information for R4.00
+ SRv6 locator cache:
+ (MT-2) FCCC:CCC1:D1::/48, Algorithm: 0
+    LSP 0, Index 3, Seq 0xA
+    Metric: 0, Algoritm: 0
+    End SID: FCCC:CCC1:D1:: uN (PSP/USD)
+
+ISIS level-1 node information for R5.00
+ SRv6 locator cache:
+ (MT-2) FCCC:CCC1:E1::/48, Algorithm: 0
+    LSP 0, Index 5, Seq 0x8
+    Metric: 0, Algoritm: 0
+    End SID: FCCC:CCC1:E1:: uN (PSP/USD)
+
+ISIS level-1 node information for R6.00
+ SRv6 locator cache:
+ (MT-2) FCCC:CCC1:101::/48, Algorithm: 0
+    LSP 0, Index 10, Seq 0x8
+    Metric: 0, Algoritm: 0
+    End SID: FCCC:CCC1:101:: uN (PSP/USD)
+
+ISIS level-1 node information for R8.00
+ SRv6 locator cache:
+ (MT-2) FCCC:CCC1:102::/48, Algorithm: 0
+    LSP 0, Index 2, Seq 0x9
+    Metric: 0, Algoritm: 0
+    End SID: FCCC:CCC1:102:: uN (PSP/USD)
+
+ISIS level-1 node information for R9.00
+ SRv6 locator cache:
+ (MT-2) FCCC:CCC1:103::/48, Algorithm: 0
+    LSP 0, Index 7, Seq 0x9
+    Metric: 0, Algoritm: 0
+    End SID: FCCC:CCC1:103:: uN (PSP/USD)
+
+ISIS level-1 node information for R10.00
+ SRv6 locator cache:
+ (MT-2) FCCC:CCC1:104::/48, Algorithm: 0
+    LSP 0, Index 8, Seq 0x9
+    Metric: 0, Algoritm: 0
+    End SID: FCCC:CCC1:104:: uN (PSP/USD)
+
+ISIS level-1 node information for R11.00
+ SRv6 locator cache:
+ (MT-2) FCCC:CCC1:105::/48, Algorithm: 0
+    LSP 0, Index 12, Seq 0x8
+    Metric: 0, Algoritm: 0
+    End SID: FCCC:CCC1:105:: uN (PSP/USD)
+
+ISIS level-1 node information for R12.00
+ SRv6 locator cache:
+ (MT-2) FCCC:CCC1:106::/48, Algorithm: 0
+    LSP 0, Index 11, Seq 0x8
+    Metric: 0, Algoritm: 0
+    End SID: FCCC:CCC1:106:: uN (PSP/USD)
+
+ISIS level-1 node information for R13.00
+ SRv6 locator cache:
+ (MT-2) FCCC:CCC1:107::/48, Algorithm: 0
+    LSP 0, Index 6, Seq 0xA
+    Metric: 0, Algoritm: 0
+    End SID: FCCC:CCC1:107:: uN (PSP/USD)
+
+Tag 1:
+
+ISIS level-2 node information for R1.00
+ SRv6 locator cache:
+ (MT-2) FCCC:CCC1:A1::/48, Algorithm: 0
+    LSP 0, Index 15, Seq 0x4
+    Metric: 0, Algoritm: 0
+    End SID: FCCC:CCC1:A1:: uN (PSP/USD)
+
+ISIS level-2 node information for R2.00
+ SRv6 locator cache:
+ (MT-2) FCCC:CCC1:99::/48, Algorithm: 0
+    LSP 0, Index 18, Seq 0x5
+    Metric: 0, Algoritm: 0
+    End SID: FCCC:CCC1:99:: uN (PSP/USD)
+ (MT-2) FCCC:CCC1:B1::/48, Algorithm: 0
+    LSP 0, Index 18, Seq 0x5
+    Metric: 0, Algoritm: 0
+    End SID: FCCC:CCC1:B1:: uN (PSP/USD)
+

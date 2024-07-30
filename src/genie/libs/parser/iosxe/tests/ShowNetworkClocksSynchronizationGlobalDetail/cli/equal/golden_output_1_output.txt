@@ -1,0 +1,17 @@
+Automatic selection process : Enable
+Equipment Clock : 2048 (EEC-Option1)
+Clock State : Frequency Locked
+Clock Mode : QL-Enable
+ESMC : Enabled
+SSM Option : 1
+T0 : GigabitEthernet0/0/2
+Hold-off (global) : 300 ms
+Wait-to-restore (global) : 10 sec
+Tsm Delay : 180 ms
+Revertive : Yes
+Force Switch: FALSE
+Manual Switch: FALSE
+Number of synchronization sources: 4
+Squelch Threshold: QL-SEC
+sm(netsync NETCLK_QL_ENABLE), running yes, state 1A
+Last transition recorded: (set_lo)-> 1C (clear_lo)-> 1C

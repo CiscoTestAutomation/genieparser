@@ -1,0 +1,80 @@
+expected_output = {
+    'automatic_selection_process': 'Enable',
+    'equipment_clock': '2048 (EEC-Option1)',
+    'clock_state': 'Frequency Locked',
+    'clock_mode': 'QL-Enable',
+    'esmc_state': 'Enabled',
+    'ssm_option': '1',
+    't0': 'GigabitEthernet0/0/2',
+    'global_hold_off_time': 300,
+    'global_wait_to_restore': 10,
+    'tsm_delay': 180,
+    'revertive': 'Yes',
+    'force_switch': 'FALSE',
+    'manual_switch': 'FALSE',
+    'num_of_sync_sources': 4,
+    'squelch_threshold': 'QL-SEC',
+    'last_transition_recorded': '(set_lo)-> 1C (clear_lo)-> 1C (force_sw)-> 1C (clear_sw)',
+    'local_interfaces': {
+        'Internal': {
+            'description': 'None',
+            'signal_type': 'NA',
+            'mode': 'NA (Ql-enabled)',
+            'ssm_tx': 'DISABLED',
+            'ssm_rx': 'DISABLED',
+            'ql_receive': 'QL-SEC',
+            'ql_receive_configured': '-',
+            'ql_receive_overrided': '-',
+            'ql_transmit': '-',
+            'ql_transmit_configured': '-'
+        },
+        'GigabitEthernet0/0/2': {
+            'description': 'None',
+            'signal_type': 'NA',
+            'mode': 'Synchronous (Ql-enabled)',
+            'esmc_tx': 'ENABLED',
+            'esmc_rx': 'ENABLED',
+            'ql_receive': 'QL-SEC',
+            'ql_receive_configured': '-',
+            'ql_receive_overrided': '-',
+            'ql_transmit': 'QL-DNU',
+            'ql_transmit_configured': '-'
+        },
+        'GigabitEthernet0/0/6': {
+            'description': 'None',
+            'signal_type': 'NA',
+            'mode': 'Synchronous (Ql-enabled)',
+            'esmc_tx': 'ENABLED',
+            'esmc_rx': 'ENABLED',
+            'ql_receive': 'QL-SEC',
+            'ql_receive_configured': '-',
+            'ql_receive_overrided': '-',
+            'ql_transmit': 'QL-SEC',
+            'ql_transmit_configured': '-'
+        },
+        'TenGigabitEthernet0/0/10': {
+            'description': 'None',
+            'signal_type': 'NA',
+            'mode': 'Synchronous (Ql-enabled)',
+            'esmc_tx': 'ENABLED',
+            'esmc_rx': 'ENABLED',
+            'ql_receive': 'QL-SEC',
+            'ql_receive_configured': '-',
+            'ql_receive_overrided': '-',
+            'ql_transmit': 'QL-SEC',
+            'ql_transmit_configured': '-'
+        },
+        'TwentyFiveGigE0/0/18': {
+            'description': 'None',
+            'signal_type': 'NA',
+            'mode': 'Synchronous (Ql-enabled)',
+            'esmc_tx': 'ENABLED',
+            'esmc_rx': 'ENABLED',
+            'ql_receive': 'QL-SEC',
+            'ql_receive_configured': '-',
+            'ql_receive_overrided': '-',
+            'ql_transmit': 'QL-SEC',
+            'ql_transmit_configured': '-'
+        }
+    }
+}

@@ -1,0 +1,3 @@
+Number of IPv4 Adjacency entries: 1
+Adjacency ID        Adjacency IPAddress                     Dest MacAddr        Nexthop Type        Interface         
+0xb                 10.1.1.2                                8024.8f24.4902      NORMAL              Port-channel241

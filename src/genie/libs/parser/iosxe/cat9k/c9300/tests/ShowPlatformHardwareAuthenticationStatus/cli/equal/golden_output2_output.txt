@@ -1,0 +1,30 @@
+Load for five secs: 0%/0%; one minute: 2%; five minutes: 1%
+Time source is NTP, 01:22:50.060 UTC Sat Jun 15 2024
+Switch 1: 
+    Mainboard Authentication:     Passed
+    FRU Authentication:           Not Available
+    Stack Cable A Authentication: Passed
+    Stack Cable B Authentication: Passed
+    RoT Asic-0 Authentication:    Failed
+
+Switch 2: 
+    Mainboard Authentication:     Passed
+    FRU Authentication:           Passed
+    Stack Cable A Authentication: Failed
+    Stack Cable B Authentication: Passed
+    RoT Asic-0 Authentication:    Failed
+
+Switch 3: 
+    Mainboard Authentication:     Passed
+    FRU Authentication:           Passed
+    Stack Cable A Authentication: Passed
+    Stack Cable B Authentication: Passed
+    RoT Asic-0 Authentication:    Failed
+
+Switch 4: 
+    Mainboard Authentication:     Passed
+    FRU Authentication:           Passed
+    Stack Cable A Authentication: Passed
+    Stack Cable B Authentication: Passed
+    RoT Asic-0 Authentication:    Failed
+

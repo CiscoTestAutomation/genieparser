@@ -331,11 +331,12 @@ class ShowInterfaces(ShowInterfacesSchema):
         # Full Duplex, 10000Mbps, link type is force-up, media type is SFP-LR
         # Full-duplex, 100Gb/s, link type is force-up, media type is QSFP 100G SR4
         # Full-duplex, 10Gb/s, media type is 100/1000/2.5G/5G/10GBaseTX
+        # Full-duplex, 10Gb/s, link type is auto, media type is CVR QSFP SFP10G(SFP-10GBase-SR)
         p11 = re.compile(r'^(?P<duplex_mode>\w+)[\-\s]+[d|D]uplex\, '
                          r'+(?P<port_speed>[\w\s\/]+|[a|A]uto-[S|s]peed|Auto '
                          r'(S|s)peed)(?:(?:\, +link +type +is '
                          r'+(?P<link_type>\S+))?(?:\, *(media +type +is| )'
-                         r'*(?P<media_type>[\w\/\-\. ]+)?)(?: +media +type)?)?$')
+                         r'*(?P<media_type>[\w\/\-\.() ]+)?)(?: +media +type)?)?$')
 
         # input flow-control is off, output flow-control is unsupported
         p12 = re.compile(r'^(?P<first>input|output) +flow-control +is +(?P<receive>\w+), +'
@@ -762,6 +763,7 @@ class ShowInterfaces(ShowInterfacesSchema):
             # auto-duplex, 10 Gb/s, media type is 10G
             # Full Duplex, 10000Mbps, link type is force-up, media type is SFP-LR
             # Full-duplex, 100Gb/s, link type is force-up, media type is QSFP 100G SR4
+            # Full-duplex, 10Gb/s, link type is auto, media type is CVR QSFP SFP10G(SFP-10GBase-SR)
             m = p11.match(line)
             if m:
                 duplex_mode = m.groupdict()['duplex_mode'].lower()

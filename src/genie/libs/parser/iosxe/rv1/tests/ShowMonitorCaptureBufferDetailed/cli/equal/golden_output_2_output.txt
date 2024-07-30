@@ -1,0 +1,887 @@
+Export completed for capture point cflow_capture
+show monitor capture file flash:/CSCwj19356.pcap packet-number 1 detailed
+Starting the packet display ........ Press Ctrl + Shift + 6 to exit
+
+Frame 1: 1490 bytes on wire (11920 bits), 1490 bytes captured (11920 bits) on interface /tmp/epc_ws/wif_to_ts_pipe, id 0
+    Interface id: 0 (/tmp/epc_ws/wif_to_ts_pipe)
+        Interface name: /tmp/epc_ws/wif_to_ts_pipe
+    Encapsulation type: Ethernet (1)
+    Arrival Time: Jul  4, 2024 23:33:59.661634000 IST
+    [Time shift for this packet: 0.000000000 seconds]
+    Epoch Time: 1720116239.661634000 seconds
+    [Time delta from previous captured frame: 0.000000000 seconds]
+    [Time delta from previous displayed frame: 0.000000000 seconds]
+    [Time since reference or first frame: 0.000000000 seconds]
+    Frame Number: 1
+    Frame Length: 1490 bytes (11920 bits)
+    Capture Length: 1490 bytes (11920 bits)
+    [Frame is marked: False]
+    [Frame is ignored: False]
+    [Protocols in frame: eth:ethertype:ip:udp:cflow]
+Ethernet II, Src: 0c:d0:f8:87:ee:46 (0c:d0:f8:87:ee:46), Dst: 00:27:90:bf:c9:46 (00:27:90:bf:c9:46)
+    Destination: 00:27:90:bf:c9:46 (00:27:90:bf:c9:46)
+        Address: 00:27:90:bf:c9:46 (00:27:90:bf:c9:46)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Source: 0c:d0:f8:87:ee:46 (0c:d0:f8:87:ee:46)
+        Address: 0c:d0:f8:87:ee:46 (0c:d0:f8:87:ee:46)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Type: IPv4 (0x0800)
+Internet Protocol Version 4, Src: 132.132.132.1, Dst: 132.132.132.2
+    0100 .... = Version: 4
+    .... 0101 = Header Length: 20 bytes (5)
+    Differentiated Services Field: 0x00 (DSCP: CS0, ECN: Not-ECT)
+        0000 00.. = Differentiated Services Codepoint: Default (0)
+        .... ..00 = Explicit Congestion Notification: Not ECN-Capable Transport (0)
+    Total Length: 1476
+    Identification: 0x100f (4111)
+    Flags: 0x00
+        0... .... = Reserved bit: Not set
+        .0.. .... = Don't fragment: Not set
+        ..0. .... = More fragments: Not set
+    Fragment Offset: 0
+    Time to Live: 254
+    Protocol: UDP (17)
+    Header Checksum: 0x960d [validation disabled]
+    [Header checksum status: Unverified]
+    Source Address: 132.132.132.1
+    Destination Address: 132.132.132.2
+User Datagram Protocol, Src Port: 54574, Dst Port: 2055
+    Source Port: 54574
+    Destination Port: 2055
+    Length: 1456
+    Checksum: 0xfa25 [unverified]
+    [Checksum Status: Unverified]
+    [Stream index: 0]
+    [Timestamps]
+        [Time since first frame: 0.000000000 seconds]
+        [Time since previous frame: 0.000000000 seconds]
+    UDP payload (1448 bytes)
+Cisco NetFlow/IPFIX
+    Version: 9
+    Count: 47
+    SysUptime: 220138.000000000 seconds
+    Timestamp: Jul  4, 2024 23:33:59.000000000 IST
+        CurrentSecs: 1720116239
+    FlowSequence: 15
+    SourceId: 16777217
+    FlowSet 1 [id=0] (Data Template): 257
+        FlowSet Id: Data Template (V9) (0)
+        FlowSet Length: 44
+        Template (Id = 257, Count = 9)
+            Template Id: 257
+            Field Count: 9
+            Field (1/9): IP_SRC_ADDR
+                Type: IP_SRC_ADDR (8)
+                Length: 4
+            Field (2/9): IP_DST_ADDR
+                Type: IP_DST_ADDR (12)
+                Length: 4
+            Field (3/9): L4_DST_PORT
+                Type: L4_DST_PORT (11)
+                Length: 2
+            Field (4/9): TCP_FLAGS
+                Type: TCP_FLAGS (6)
+                Length: 1
+            Field (5/9): BYTES
+                Type: BYTES (1)
+                Length: 8
+            Field (6/9): PKTS
+                Type: PKTS (2)
+                Length: 8
+            Field (7/9): IP_PROTOCOL_VERSION
+                Type: IP_PROTOCOL_VERSION (60)
+                Length: 1
+            Field (8/9): IP_TOS
+                Type: IP_TOS (5)
+                Length: 1
+            Field (9/9): PROTOCOL
+                Type: PROTOCOL (4)
+                Length: 1
+    FlowSet 2 [id=257] (46 flows)
+        FlowSet Id: (Data) (257)
+        FlowSet Length: 1384
+        [Template Frame: 1]
+        Flow 1
+            SrcAddr: 6.6.6.133
+            DstAddr: 15.15.15.133
+            DstPort: 60
+            TCP Flags: 0x00
+                00.. .... = Reserved: 0x0
+                ..0. .... = URG: Not used
+                ...0 .... = ACK: Not used
+                .... 0... = PSH: Not used
+                .... .0.. = RST: Not used
+                .... ..0. = SYN: Not used
+                .... ...0 = FIN: Not used
+            Octets: 1482
+            Packets: 3
+            IPVersion: 4
+            IP ToS: 0x00
+            Protocol: TCP (6)
+        Flow 2
+            SrcAddr: 6.6.6.101
+            DstAddr: 15.15.15.101
+            DstPort: 60
+            TCP Flags: 0x00
+                00.. .... = Reserved: 0x0
+                ..0. .... = URG: Not used
+                ...0 .... = ACK: Not used
+                .... 0... = PSH: Not used
+                .... .0.. = RST: Not used
+                .... ..0. = SYN: Not used
+                .... ...0 = FIN: Not used
+            Octets: 988
+            Packets: 2
+            IPVersion: 4
+            IP ToS: 0x00
+            Protocol: TCP (6)
+        Flow 3
+            SrcAddr: 6.6.6.189
+            DstAddr: 15.15.15.189
+            DstPort: 60
+            TCP Flags: 0x00
+                00.. .... = Reserved: 0x0
+                ..0. .... = URG: Not used
+                ...0 .... = ACK: Not used
+                .... 0... = PSH: Not used
+                .... .0.. = RST: Not used
+                .... ..0. = SYN: Not used
+                .... ...0 = FIN: Not used
+            Octets: 988
+            Packets: 2
+            IPVersion: 4
+            IP ToS: 0x00
+            Protocol: TCP (6)
+        Flow 4
+            SrcAddr: 6.6.6.20
+            DstAddr: 15.15.15.20
+            DstPort: 60
+            TCP Flags: 0x00
+                00.. .... = Reserved: 0x0
+                ..0. .... = URG: Not used
+                ...0 .... = ACK: Not used
+                .... 0... = PSH: Not used
+                .... .0.. = RST: Not used
+                .... ..0. = SYN: Not used
+                .... ...0 = FIN: Not used
+            Octets: 1976
+            Packets: 4
+            IPVersion: 4
+            IP ToS: 0x00
+            Protocol: TCP (6)
+        Flow 5
+            SrcAddr: 6.6.6.59
+            DstAddr: 15.15.15.59
+            DstPort: 60
+            TCP Flags: 0x00
+                00.. .... = Reserved: 0x0
+                ..0. .... = URG: Not used
+                ...0 .... = ACK: Not used
+                .... 0... = PSH: Not used
+                .... .0.. = RST: Not used
+                .... ..0. = SYN: Not used
+                .... ...0 = FIN: Not used
+            Octets: 988
+            Packets: 2
+            IPVersion: 4
+            IP ToS: 0x00
+            Protocol: TCP (6)
+        Flow 6
+            SrcAddr: 6.6.6.227
+            DstAddr: 15.15.15.227
+            DstPort: 60
+            TCP Flags: 0x00
+                00.. .... = Reserved: 0x0
+                ..0. .... = URG: Not used
+                ...0 .... = ACK: Not used
+                .... 0... = PSH: Not used
+                .... .0.. = RST: Not used
+                .... ..0. = SYN: Not used
+                .... ...0 = FIN: Not used
+            Octets: 494
+            Packets: 1
+            IPVersion: 4
+            IP ToS: 0x00
+            Protocol: TCP (6)
+        Flow 7
+            SrcAddr: 6.6.6.216
+            DstAddr: 15.15.15.216
+            DstPort: 60
+            TCP Flags: 0x00
+                00.. .... = Reserved: 0x0
+                ..0. .... = URG: Not used
+                ...0 .... = ACK: Not used
+                .... 0... = PSH: Not used
+                .... .0.. = RST: Not used
+                .... ..0. = SYN: Not used
+                .... ...0 = FIN: Not used
+            Octets: 988
+            Packets: 2
+            IPVersion: 4
+            IP ToS: 0x00
+            Protocol: TCP (6)
+        Flow 8
+            SrcAddr: 6.6.6.207
+            DstAddr: 15.15.15.207
+            DstPort: 60
+            TCP Flags: 0x00
+                00.. .... = Reserved: 0x0
+                ..0. .... = URG: Not used
+                ...0 .... = ACK: Not used
+                .... 0... = PSH: Not used
+                .... .0.. = RST: Not used
+                .... ..0. = SYN: Not used
+                .... ...0 = FIN: Not used
+            Octets: 988
+            Packets: 2
+            IPVersion: 4
+            IP ToS: 0x00
+            Protocol: TCP (6)
+        Flow 9
+            SrcAddr: 6.6.6.224
+            DstAddr: 15.15.15.224
+            DstPort: 60
+            TCP Flags: 0x00
+                00.. .... = Reserved: 0x0
+                ..0. .... = URG: Not used
+                ...0 .... = ACK: Not used
+                .... 0... = PSH: Not used
+                .... .0.. = RST: Not used
+                .... ..0. = SYN: Not used
+                .... ...0 = FIN: Not used
+            Octets: 2964
+            Packets: 6
+            IPVersion: 4
+            IP ToS: 0x00
+            Protocol: TCP (6)
+        Flow 10
+            SrcAddr: 6.6.6.145
+            DstAddr: 15.15.15.145
+            DstPort: 60
+            TCP Flags: 0x00
+                00.. .... = Reserved: 0x0
+                ..0. .... = URG: Not used
+                ...0 .... = ACK: Not used
+                .... 0... = PSH: Not used
+                .... .0.. = RST: Not used
+                .... ..0. = SYN: Not used
+                .... ...0 = FIN: Not used
+            Octets: 988
+            Packets: 2
+            IPVersion: 4
+            IP ToS: 0x00
+            Protocol: TCP (6)
+        Flow 11
+            SrcAddr: 6.6.6.169
+            DstAddr: 15.15.15.169
+            DstPort: 60
+            TCP Flags: 0x00
+                00.. .... = Reserved: 0x0
+                ..0. .... = URG: Not used
+                ...0 .... = ACK: Not used
+                .... 0... = PSH: Not used
+                .... .0.. = RST: Not used
+                .... ..0. = SYN: Not used
+                .... ...0 = FIN: Not used
+            Octets: 2470
+            Packets: 5
+            IPVersion: 4
+            IP ToS: 0x00
+            Protocol: TCP (6)
+        Flow 12
+            SrcAddr: 6.6.6.113
+            DstAddr: 15.15.15.113
+            DstPort: 60
+            TCP Flags: 0x00
+                00.. .... = Reserved: 0x0
+                ..0. .... = URG: Not used
+                ...0 .... = ACK: Not used
+                .... 0... = PSH: Not used
+                .... .0.. = RST: Not used
+                .... ..0. = SYN: Not used
+                .... ...0 = FIN: Not used
+            Octets: 494
+            Packets: 1
+            IPVersion: 4
+            IP ToS: 0x00
+            Protocol: TCP (6)
+        Flow 13
+            SrcAddr: 6.6.6.41
+            DstAddr: 15.15.15.41
+            DstPort: 60
+            TCP Flags: 0x00
+                00.. .... = Reserved: 0x0
+                ..0. .... = URG: Not used
+                ...0 .... = ACK: Not used
+                .... 0... = PSH: Not used
+                .... .0.. = RST: Not used
+                .... ..0. = SYN: Not used
+                .... ...0 = FIN: Not used
+            Octets: 988
+            Packets: 2
+            IPVersion: 4
+            IP ToS: 0x00
+            Protocol: TCP (6)
+        Flow 14
+            SrcAddr: 6.6.6.17
+            DstAddr: 15.15.15.17
+            DstPort: 60
+            TCP Flags: 0x00
+                00.. .... = Reserved: 0x0
+                ..0. .... = URG: Not used
+                ...0 .... = ACK: Not used
+                .... 0... = PSH: Not used
+                .... .0.. = RST: Not used
+                .... ..0. = SYN: Not used
+                .... ...0 = FIN: Not used
+            Octets: 988
+            Packets: 2
+            IPVersion: 4
+            IP ToS: 0x00
+            Protocol: TCP (6)
+        Flow 15
+            SrcAddr: 6.6.6.222
+            DstAddr: 15.15.15.222
+            DstPort: 60
+            TCP Flags: 0x00
+                00.. .... = Reserved: 0x0
+                ..0. .... = URG: Not used
+                ...0 .... = ACK: Not used
+                .... 0... = PSH: Not used
+                .... .0.. = RST: Not used
+                .... ..0. = SYN: Not used
+                .... ...0 = FIN: Not used
+            Octets: 494
+            Packets: 1
+            IPVersion: 4
+            IP ToS: 0x00
+            Protocol: TCP (6)
+        Flow 16
+            SrcAddr: 6.6.6.96
+            DstAddr: 15.15.15.96
+            DstPort: 60
+            TCP Flags: 0x00
+                00.. .... = Reserved: 0x0
+                ..0. .... = URG: Not used
+                ...0 .... = ACK: Not used
+                .... 0... = PSH: Not used
+                .... .0.. = RST: Not used
+                .... ..0. = SYN: Not used
+                .... ...0 = FIN: Not used
+            Octets: 988
+            Packets: 2
+            IPVersion: 4
+            IP ToS: 0x00
+            Protocol: TCP (6)
+        Flow 17
+            SrcAddr: 6.6.6.184
+            DstAddr: 15.15.15.184
+            DstPort: 60
+            TCP Flags: 0x00
+                00.. .... = Reserved: 0x0
+                ..0. .... = URG: Not used
+                ...0 .... = ACK: Not used
+                .... 0... = PSH: Not used
+                .... .0.. = RST: Not used
+                .... ..0. = SYN: Not used
+                .... ...0 = FIN: Not used
+            Octets: 1482
+            Packets: 3
+            IPVersion: 4
+            IP ToS: 0x00
+            Protocol: TCP (6)
+        Flow 18
+            SrcAddr: 6.6.6.187
+            DstAddr: 15.15.15.187
+            DstPort: 60
+            TCP Flags: 0x00
+                00.. .... = Reserved: 0x0
+                ..0. .... = URG: Not used
+                ...0 .... = ACK: Not used
+                .... 0... = PSH: Not used
+                .... .0.. = RST: Not used
+                .... ..0. = SYN: Not used
+                .... ...0 = FIN: Not used
+            Octets: 988
+            Packets: 2
+            IPVersion: 4
+            IP ToS: 0x00
+            Protocol: TCP (6)
+        Flow 19
+            SrcAddr: 6.6.6.131
+            DstAddr: 15.15.15.131
+            DstPort: 60
+            TCP Flags: 0x00
+                00.. .... = Reserved: 0x0
+                ..0. .... = URG: Not used
+                ...0 .... = ACK: Not used
+                .... 0... = PSH: Not used
+                .... .0.. = RST: Not used
+                .... ..0. = SYN: Not used
+                .... ...0 = FIN: Not used
+            Octets: 988
+            Packets: 2
+            IPVersion: 4
+            IP ToS: 0x00
+            Protocol: TCP (6)
+        Flow 20
+            SrcAddr: 6.6.6.148
+            DstAddr: 15.15.15.148
+            DstPort: 60
+            TCP Flags: 0x00
+                00.. .... = Reserved: 0x0
+                ..0. .... = URG: Not used
+                ...0 .... = ACK: Not used
+                .... 0... = PSH: Not used
+                .... .0.. = RST: Not used
+                .... ..0. = SYN: Not used
+                .... ...0 = FIN: Not used
+            Octets: 1976
+            Packets: 4
+            IPVersion: 4
+            IP ToS: 0x00
+            Protocol: TCP (6)
+        Flow 21
+            SrcAddr: 6.6.6.229
+            DstAddr: 15.15.15.229
+            DstPort: 60
+            TCP Flags: 0x00
+                00.. .... = Reserved: 0x0
+                ..0. .... = URG: Not used
+                ...0 .... = ACK: Not used
+                .... 0... = PSH: Not used
+                .... .0.. = RST: Not used
+                .... ..0. = SYN: Not used
+                .... ...0 = FIN: Not used
+            Octets: 988
+            Packets: 2
+            IPVersion: 4
+            IP ToS: 0x00
+            Protocol: TCP (6)
+        Flow 22
+            SrcAddr: 6.6.6.242
+            DstAddr: 15.15.15.242
+            DstPort: 60
+            TCP Flags: 0x00
+                00.. .... = Reserved: 0x0
+                ..0. .... = URG: Not used
+                ...0 .... = ACK: Not used
+                .... 0... = PSH: Not used
+                .... .0.. = RST: Not used
+                .... ..0. = SYN: Not used
+                .... ...0 = FIN: Not used
+            Octets: 2470
+            Packets: 5
+            IPVersion: 4
+            IP ToS: 0x00
+            Protocol: TCP (6)
+        Flow 23
+            SrcAddr: 6.6.6.5
+            DstAddr: 15.15.15.5
+            DstPort: 60
+            TCP Flags: 0x00
+                00.. .... = Reserved: 0x0
+                ..0. .... = URG: Not used
+                ...0 .... = ACK: Not used
+                .... 0... = PSH: Not used
+                .... .0.. = RST: Not used
+                .... ..0. = SYN: Not used
+                .... ...0 = FIN: Not used
+            Octets: 494
+            Packets: 1
+            IPVersion: 4
+            IP ToS: 0x00
+            Protocol: TCP (6)
+        Flow 24
+            SrcAddr: 6.6.6.181
+            DstAddr: 15.15.15.181
+            DstPort: 60
+            TCP Flags: 0x00
+                00.. .... = Reserved: 0x0
+                ..0. .... = URG: Not used
+                ...0 .... = ACK: Not used
+                .... 0... = PSH: Not used
+                .... .0.. = RST: Not used
+                .... ..0. = SYN: Not used
+                .... ...0 = FIN: Not used
+            Octets: 988
+            Packets: 2
+            IPVersion: 4
+            IP ToS: 0x00
+            Protocol: TCP (6)
+        Flow 25
+            SrcAddr: 6.6.6.122
+            DstAddr: 15.15.15.122
+            DstPort: 60
+            TCP Flags: 0x00
+                00.. .... = Reserved: 0x0
+                ..0. .... = URG: Not used
+                ...0 .... = ACK: Not used
+                .... 0... = PSH: Not used
+                .... .0.. = RST: Not used
+                .... ..0. = SYN: Not used
+                .... ...0 = FIN: Not used
+            Octets: 494
+            Packets: 1
+            IPVersion: 4
+            IP ToS: 0x00
+            Protocol: TCP (6)
+        Flow 26
+            SrcAddr: 6.6.6.141
+            DstAddr: 15.15.15.141
+            DstPort: 60
+            TCP Flags: 0x00
+                00.. .... = Reserved: 0x0
+                ..0. .... = URG: Not used
+                ...0 .... = ACK: Not used
+                .... 0... = PSH: Not used
+                .... .0.. = RST: Not used
+                .... ..0. = SYN: Not used
+                .... ...0 = FIN: Not used
+            Octets: 988
+            Packets: 2
+            IPVersion: 4
+            IP ToS: 0x00
+            Protocol: TCP (6)
+        Flow 27
+            SrcAddr: 6.6.6.154
+            DstAddr: 15.15.15.154
+            DstPort: 60
+            TCP Flags: 0x00
+                00.. .... = Reserved: 0x0
+                ..0. .... = URG: Not used
+                ...0 .... = ACK: Not used
+                .... 0... = PSH: Not used
+                .... .0.. = RST: Not used
+                .... ..0. = SYN: Not used
+                .... ...0 = FIN: Not used
+            Octets: 1482
+            Packets: 3
+            IPVersion: 4
+            IP ToS: 0x00
+            Protocol: TCP (6)
+        Flow 28
+            SrcAddr: 6.6.6.85
+            DstAddr: 15.15.15.85
+            DstPort: 60
+            TCP Flags: 0x00
+                00.. .... = Reserved: 0x0
+                ..0. .... = URG: Not used
+                ...0 .... = ACK: Not used
+                .... 0... = PSH: Not used
+                .... .0.. = RST: Not used
+                .... ..0. = SYN: Not used
+                .... ...0 = FIN: Not used
+            Octets: 988
+            Packets: 2
+            IPVersion: 4
+            IP ToS: 0x00
+            Protocol: TCP (6)
+        Flow 29
+            SrcAddr: 6.6.6.51
+            DstAddr: 15.15.15.51
+            DstPort: 60
+            TCP Flags: 0x00
+                00.. .... = Reserved: 0x0
+                ..0. .... = URG: Not used
+                ...0 .... = ACK: Not used
+                .... 0... = PSH: Not used
+                .... .0.. = RST: Not used
+                .... ..0. = SYN: Not used
+                .... ...0 = FIN: Not used
+            Octets: 494
+            Packets: 1
+            IPVersion: 4
+            IP ToS: 0x00
+            Protocol: TCP (6)
+        Flow 30
+            SrcAddr: 6.6.6.211
+            DstAddr: 15.15.15.211
+            DstPort: 60
+            TCP Flags: 0x00
+                00.. .... = Reserved: 0x0
+                ..0. .... = URG: Not used
+                ...0 .... = ACK: Not used
+                .... 0... = PSH: Not used
+                .... .0.. = RST: Not used
+                .... ..0. = SYN: Not used
+                .... ...0 = FIN: Not used
+            Octets: 988
+            Packets: 2
+            IPVersion: 4
+            IP ToS: 0x00
+            Protocol: TCP (6)
+        Flow 31
+            SrcAddr: 6.6.6.196
+            DstAddr: 15.15.15.196
+            DstPort: 60
+            TCP Flags: 0x00
+                00.. .... = Reserved: 0x0
+                ..0. .... = URG: Not used
+                ...0 .... = ACK: Not used
+                .... 0... = PSH: Not used
+                .... .0.. = RST: Not used
+                .... ..0. = SYN: Not used
+                .... ...0 = FIN: Not used
+            Octets: 988
+            Packets: 2
+            IPVersion: 4
+            IP ToS: 0x00
+            Protocol: TCP (6)
+        Flow 32
+            SrcAddr: 6.6.6.39
+            DstAddr: 15.15.15.39
+            DstPort: 60
+            TCP Flags: 0x00
+                00.. .... = Reserved: 0x0
+                ..0. .... = URG: Not used
+                ...0 .... = ACK: Not used
+                .... 0... = PSH: Not used
+                .... .0.. = RST: Not used
+                .... ..0. = SYN: Not used
+                .... ...0 = FIN: Not used
+            Octets: 988
+            Packets: 2
+            IPVersion: 4
+            IP ToS: 0x00
+            Protocol: TCP (6)
+        Flow 33
+            SrcAddr: 6.6.6.48
+            DstAddr: 15.15.15.48
+            DstPort: 60
+            TCP Flags: 0x00
+                00.. .... = Reserved: 0x0
+                ..0. .... = URG: Not used
+                ...0 .... = ACK: Not used
+                .... 0... = PSH: Not used
+                .... .0.. = RST: Not used
+                .... ..0. = SYN: Not used
+                .... ...0 = FIN: Not used
+            Octets: 494
+            Packets: 1
+            IPVersion: 4
+            IP ToS: 0x00
+            Protocol: TCP (6)
+        Flow 34
+            SrcAddr: 6.6.6.232
+            DstAddr: 15.15.15.232
+            DstPort: 60
+            TCP Flags: 0x00
+                00.. .... = Reserved: 0x0
+                ..0. .... = URG: Not used
+                ...0 .... = ACK: Not used
+                .... 0... = PSH: Not used
+                .... .0.. = RST: Not used
+                .... ..0. = SYN: Not used
+                .... ...0 = FIN: Not used
+            Octets: 494
+            Packets: 1
+            IPVersion: 4
+            IP ToS: 0x00
+            Protocol: TCP (6)
+        Flow 35
+            SrcAddr: 6.6.6.8
+            DstAddr: 15.15.15.8
+            DstPort: 60
+            TCP Flags: 0x00
+                00.. .... = Reserved: 0x0
+                ..0. .... = URG: Not used
+                ...0 .... = ACK: Not used
+                .... 0... = PSH: Not used
+                .... .0.. = RST: Not used
+                .... ..0. = SYN: Not used
+                .... ...0 = FIN: Not used
+            Octets: 1482
+            Packets: 3
+            IPVersion: 4
+            IP ToS: 0x00
+            Protocol: TCP (6)
+        Flow 36
+            SrcAddr: 6.6.6.110
+            DstAddr: 15.15.15.110
+            DstPort: 60
+            TCP Flags: 0x00
+                00.. .... = Reserved: 0x0
+                ..0. .... = URG: Not used
+                ...0 .... = ACK: Not used
+                .... 0... = PSH: Not used
+                .... .0.. = RST: Not used
+                .... ..0. = SYN: Not used
+                .... ...0 = FIN: Not used
+            Octets: 1482
+            Packets: 3
+            IPVersion: 4
+            IP ToS: 0x00
+            Protocol: TCP (6)
+        Flow 37
+            SrcAddr: 6.6.6.161
+            DstAddr: 15.15.15.161
+            DstPort: 60
+            TCP Flags: 0x00
+                00.. .... = Reserved: 0x0
+                ..0. .... = URG: Not used
+                ...0 .... = ACK: Not used
+                .... 0... = PSH: Not used
+                .... .0.. = RST: Not used
+                .... ..0. = SYN: Not used
+                .... ...0 = FIN: Not used
+            Octets: 988
+            Packets: 2
+            IPVersion: 4
+            IP ToS: 0x00
+            Protocol: TCP (6)
+        Flow 38
+            SrcAddr: 6.6.6.65
+            DstAddr: 15.15.15.65
+            DstPort: 60
+            TCP Flags: 0x00
+                00.. .... = Reserved: 0x0
+                ..0. .... = URG: Not used
+                ...0 .... = ACK: Not used
+                .... 0... = PSH: Not used
+                .... .0.. = RST: Not used
+                .... ..0. = SYN: Not used
+                .... ...0 = FIN: Not used
+            Octets: 1482
+            Packets: 3
+            IPVersion: 4
+            IP ToS: 0x00
+            Protocol: TCP (6)
+        Flow 39
+            SrcAddr: 6.6.6.193
+            DstAddr: 15.15.15.193
+            DstPort: 60
+            TCP Flags: 0x00
+                00.. .... = Reserved: 0x0
+                ..0. .... = URG: Not used
+                ...0 .... = ACK: Not used
+                .... 0... = PSH: Not used
+                .... .0.. = RST: Not used
+                .... ..0. = SYN: Not used
+                .... ...0 = FIN: Not used
+            Octets: 988
+            Packets: 2
+            IPVersion: 4
+            IP ToS: 0x00
+            Protocol: TCP (6)
+        Flow 40
+            SrcAddr: 6.6.6.80
+            DstAddr: 15.15.15.80
+            DstPort: 60
+            TCP Flags: 0x00
+                00.. .... = Reserved: 0x0
+                ..0. .... = URG: Not used
+                ...0 .... = ACK: Not used
+                .... 0... = PSH: Not used
+                .... .0.. = RST: Not used
+                .... ..0. = SYN: Not used
+                .... ...0 = FIN: Not used
+            Octets: 988
+            Packets: 2
+            IPVersion: 4
+            IP ToS: 0x00
+            Protocol: TCP (6)
+        Flow 41
+            SrcAddr: 6.6.6.71
+            DstAddr: 15.15.15.71
+            DstPort: 60
+            TCP Flags: 0x00
+                00.. .... = Reserved: 0x0
+                ..0. .... = URG: Not used
+                ...0 .... = ACK: Not used
+                .... 0... = PSH: Not used
+                .... .0.. = RST: Not used
+                .... ..0. = SYN: Not used
+                .... ...0 = FIN: Not used
+            Octets: 988
+            Packets: 2
+            IPVersion: 4
+            IP ToS: 0x00
+            Protocol: TCP (6)
+        Flow 42
+            SrcAddr: 6.6.6.176
+            DstAddr: 15.15.15.176
+            DstPort: 60
+            TCP Flags: 0x00
+                00.. .... = Reserved: 0x0
+                ..0. .... = URG: Not used
+                ...0 .... = ACK: Not used
+                .... 0... = PSH: Not used
+                .... .0.. = RST: Not used
+                .... ..0. = SYN: Not used
+                .... ...0 = FIN: Not used
+            Octets: 988
+            Packets: 2
+            IPVersion: 4
+            IP ToS: 0x00
+            Protocol: TCP (6)
+        Flow 43
+            SrcAddr: 6.6.6.167
+            DstAddr: 15.15.15.167
+            DstPort: 60
+            TCP Flags: 0x00
+                00.. .... = Reserved: 0x0
+                ..0. .... = URG: Not used
+                ...0 .... = ACK: Not used
+                .... 0... = PSH: Not used
+                .... .0.. = RST: Not used
+                .... ..0. = SYN: Not used
+                .... ...0 = FIN: Not used
+            Octets: 494
+            Packets: 1
+            IPVersion: 4
+            IP ToS: 0x00
+            Protocol: TCP (6)
+        Flow 44
+            SrcAddr: 6.6.6.104
+            DstAddr: 15.15.15.104
+            DstPort: 60
+            TCP Flags: 0x00
+                00.. .... = Reserved: 0x0
+                ..0. .... = URG: Not used
+                ...0 .... = ACK: Not used
+                .... 0... = PSH: Not used
+                .... .0.. = RST: Not used
+                .... ..0. = SYN: Not used
+                .... ...0 = FIN: Not used
+            Octets: 2964
+            Packets: 6
+            IPVersion: 4
+            IP ToS: 0x00
+            Protocol: TCP (6)
+        Flow 45
+            SrcAddr: 6.6.6.127
+            DstAddr: 15.15.15.127
+            DstPort: 60
+            TCP Flags: 0x00
+                00.. .... = Reserved: 0x0
+                ..0. .... = URG: Not used
+                ...0 .... = ACK: Not used
+                .... 0... = PSH: Not used
+                .... .0.. = RST: Not used
+                .... ..0. = SYN: Not used
+                .... ...0 = FIN: Not used
+            Octets: 1482
+            Packets: 3
+            IPVersion: 4
+            IP ToS: 0x00
+            Protocol: TCP (6)
+        Flow 46
+            SrcAddr: 6.6.6.83
+            DstAddr: 15.15.15.83
+            DstPort: 60
+            TCP Flags: 0x00
+                00.. .... = Reserved: 0x0
+                ..0. .... = URG: Not used
+                ...0 .... = ACK: Not used
+                .... 0... = PSH: Not used
+                .... .0.. = RST: Not used
+                .... ..0. = SYN: Not used
+                .... ...0 = FIN: Not used
+            Octets: 988
+            Packets: 2
+            IPVersion: 4
+            IP ToS: 0x00
+            Protocol: TCP (6)

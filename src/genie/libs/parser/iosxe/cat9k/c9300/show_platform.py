@@ -168,7 +168,10 @@ class ShowEnvironmentAllSchema(MetaParser):
 
 class ShowEnvironmentAll(ShowEnvironmentAllSchema):
     """Parser for show environment all"""
-    PS_MAPPING = {'A': '1', 'B': '2'}
+    # Althoguht currently only A-C are used, just in case, make it A-H
+    # create a mapping dict for A-H to 1-8
+    # PS_MAPPING = {'A': '1', 'B': '2', 'C': '3' .... 'H': '8'}
+    PS_MAPPING = {chr(i): str(i-64) for i in range(65, 73)}
 
     cli_command = 'show environment all'
 
@@ -380,6 +383,8 @@ class ShowPlatformHardwareAuthenticationStatusSchema(MetaParser):
                    'stack_cable_b_authentication': str,
                     Optional('stack_adapter_a_authentication'):str,
                     Optional('stack_adapter_b_authentication'):str,
+                    Optional('rot_asic_0_authentication'): str,
+                    Optional('rot_asic_1_authentication'): str,
              },
     },
     }
@@ -415,6 +420,9 @@ class ShowPlatformHardwareAuthenticationStatus(ShowPlatformHardwareAuthenticatio
         p6 = re.compile(r'^Stack Adapter A (Authentication:|Authenticatio)\s+(?P<stack_adapter_a_authentication>[\s\w]+)$')
         # Stack Adapter B Authentication Passed
         p7 = re.compile(r'^Stack Adapter B (Authentication:|Authenticatio)\s+(?P<stack_adapter_b_authentication>[\s\w]+)$')
+        # Rot Asic 0 Authentication Passed
+        # Rot Asic 1 Authentication Passed
+        p8 = re.compile(r'^RoT Asic-(?P<asic_no>\d) Authentication:\s+(?P<rot_asic_authentication>[\s\w]+)$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -468,6 +476,17 @@ class ShowPlatformHardwareAuthenticationStatus(ShowPlatformHardwareAuthenticatio
             if m:
                 group = m.groupdict()
                 switch_id_dict['stack_adapter_b_authentication'] = group['stack_adapter_b_authentication']
+                continue
+
+            # RoT Asic-0 Authentication:    Failed
+            # RoT Asic-1 Authentication:    Passed
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                # key i.e. rot_asic_0_authentication or rot_asic_1_authentication
+                asic_no = group['asic_no']
+                rot_dict_key = f'rot_asic_{asic_no}_authentication'
+                switch_id_dict[rot_dict_key] = group['rot_asic_authentication']
                 continue
         
         return result_dict

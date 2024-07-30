@@ -1,0 +1,12 @@
+devtmpfs                      0       4096    0% /dev
+tmpfs                     15860   15584228    1% /dev/shm
+tmpfs                      9864    6230172    1% /run
+tmpfs                         0       4096    0% /sys/fs/cgroup
+tmpfs                   1319732   14280356    9% /tmp
+tmpfs                       316   15599772    1% /var
+tmpfs                        36       5084    1% /var/log/audit
+tmpfs                      9864    6230172    1% /run/netns
+tmpfs                    147996   25782148    1% /tmp/rp/tdldb
+tmpfs                    240664   25689480    1% /tmp/fp/tdldb
+tmpfs                      9148   25920996    1% /tmp/cc/tdldb
+tmpfs                      5880   25924264    1% /tmp/bp/tdldb

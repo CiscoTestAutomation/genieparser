@@ -936,7 +936,7 @@ class ShowLldpNeighborsInterfaceDetailSchema(MetaParser):
                             'physical_media_capabilities': {
                                 int: str,
                             },
-                            'media_attachment_unit_type': int,
+                            Optional('media_attachment_unit_type'): int,
                             'vlan_id': int,
                             'peer_source_mac': str,
                         }

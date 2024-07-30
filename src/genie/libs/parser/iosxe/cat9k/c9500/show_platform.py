@@ -2243,3 +2243,556 @@ class ShowPlatformTcamUtilization(ShowPlatformTcamUtilizationSchema):
                 continue
 
         return ret_dict
+
+
+# ======================================================================================================#
+#  Schema for 'show platform software fed switch active punt packet-capture display-filter <key> brief' #
+# ======================================================================================================#
+class ShowPlatformSoftwareFedSwitchActivePuntPacketCaptureDisplayFilterKeyBriefSchema(MetaParser):
+
+    schema = {
+        'total_captured_so_far': int,
+        'punt_packet_number': {
+            'timestamp': str,
+            Any(): {
+                'interface': {
+                    'phy': {
+                        'val': str,
+                        'if_id': str
+                    },
+                    'pal': {
+                        'val': str,
+                        'if_id': str
+                    }
+                },
+                'misc_info': {
+                    'cause': str,
+                    'cause_number': int
+                },
+                Optional('ce_hdr'): {
+                    'src_mac': str,
+                    'dest_mac': str,
+                    'ethertype': str
+                },
+                'ether_hdr': {
+                    'src_mac': str,
+                    'dest_mac': str,
+                    'vlan': int,
+                    'ethertype': str
+                },
+                'arp_hdr': {
+                    'opcode': {
+                        'val': str,
+                        Optional('opcode_number'): int
+                    },
+                    'src_mac': str,
+                    'dest_mac': str,
+                    'src_ip': str,
+                    'dest_ip': str
+                }
+            }
+        }
+    }
+
+# =====================================================================================================#
+#  Parser for 'show platform software fed switch active punt packet-capture display-filter <key> brief #
+# =====================================================================================================#
+class ShowPlatformSoftwareFedSwitchActivePuntPacketCaptureDisplayFilterKeyBrief(ShowPlatformSoftwareFedSwitchActivePuntPacketCaptureDisplayFilterKeyBriefSchema):
+
+    cli_command = [
+        "show platform software fed {switch} {switch_num} punt packet-capture display-filter {key} brief",
+        "show platform software fed {switch_num} punt packet-capture display-filter {key} brief"
+        ]
+
+    def cli(self, switch_num, key, output=None ,switch=""):
+        if output is None:
+            if switch :
+                out = self.device.execute(self.cli_command[0].format(switch = switch,switch_num = switch_num, key = key))
+            else :
+                out = self.device.execute(self.cli_command[1].format(key = key , switch_num = switch_num))
+        else:
+            out = output
+
+        res_dict = {}
+
+
+        # Total captured so far :  4096 packet(s)
+        
+        p0 = re.compile(r"Total captured so far :\s+(?P<total_captured_so_far>\d+)\s+packet")
+        
+        # Punt Packet Number: 3659
+        
+        p1 = re.compile(r".+Punt Packet Number\s*:\s*(?P<punt_packet_number>[\d]+)\s*\,\s*Timestamp\s*\:\s*(?P<timestamp>[\d\/\s\:\.]+).+")
+        
+        # interface : phy: Port11lVlan101 [if-id: 0x50000000b0065], pal: Vlan101 [if-id: 0x000005ce]
+        
+        p2 = re.compile(r"interface\s*:\s*phy\s*:\s*(?P<phy_val>[\w]+)\s+\[[\w\-\:]+\s*(?P<phy_if_id>[\w]+)\]\s*\,\s*pal\s*\:\s*(?P<pal_val>[\w]+)\s*\[[\w\-\:]+\s*(?P<pal_if_id>[\w]+)\]")
+        
+        # misc info : cause: 7 [ARP request or response], sub-cause: 1, linktype: IP [1]
+        
+        p3 = re.compile(r"misc info\s*\:\s*cause\s*\:\s*(?P<cause_number>[\d]+)\s*\[(?P<cause>[\w\s]+)\]\s*\,")
+        
+        # CE hdr : dest mac: 4e41.5000.0010, src mac: 4e41.5000.0111, ethertype: 0x7102
+        
+        p4 = re.compile(r"CE\s*hdr\s*\:\s*dest mac\s*\:\s*(?P<dest_mac>[\w\.]+)\s*\,\s*src mac\s*\:\s*(?P<src_mac>[\w\.]+)\s*\,\s*ethertype\s*\:\s*(?P<ethertype>[\w]+)")
+        
+        # ether hdr : dest mac: ffff.ffff.ffff, src mac: 00a7.428a.7fbf
+        
+        p5 = re.compile(r"ether\s*hdr\s*\:\s*dest mac\s*\:\s*(?P<dest_mac>[\w\.]+)\s*\,\s*src mac\s*\:\s*(?P<src_mac>[\w\.]+)")
+        
+        # ether hdr : vlan: 101, ethertype: 0x8100
+        
+        p6 = re.compile(r"ether\s*hdr\s*\:\s*vlan\s*\:\s*(?P<vlan>[\d]+)\s*\,\s*ethertype\s*\:\s*(?P<ethertype>[\w]+)")
+        
+        # arp hdr : opcode: 2 (ARP Reply), src mac: 00a7.428a.7fbf dest mac: ffff.ffff.ffff
+        
+        p7 = re.compile(r"arp\s*hdr\s*\:\s*opcode\s*\:\s*(?P<opcode>[\w\s\(\)]+)\s*\,\s*src mac\s*\:\s*(?P<src_mac>[\w\.]+)\s*dest mac\s*\:\s*(?P<dest_mac>[\w\.]+)")
+        
+        # arp   hdr : src ip: 14.0.1.2, dest ip: 14.0.1.2
+        
+        p8 = re.compile(r"arp\s*hdr\s*\:\s*src ip\s*\:\s*(?P<src_ip>[\d\.]+)\s*\,\s*dest ip\s*\:\s*(?P<dest_ip>[\d\.]+)")
+
+        for line in out.splitlines():
+            line = line.strip()
+            
+            # Total captured so far :  4096 packet(s)
+
+            m = p0.match(line)
+            
+            if m:
+                group = m.groupdict()
+                res_dict.setdefault('total_captured_so_far' , int(group['total_captured_so_far']))
+                continue
+                
+            # Punt Packet Number: 3659
+            
+            m = p1.match(line)
+            
+            if m:
+                group = m.groupdict()
+                punt_packet = res_dict.setdefault('punt_packet_number', {})
+                punt_packet.setdefault('timestamp',group['timestamp'])
+                punt_packet_details = punt_packet.setdefault(group['punt_packet_number'], {})
+                continue
+
+            # interface : phy: Port11lVlan101 [if-id: 0x50000000b0065], pal: Vlan101 [if-id: 0x000005ce]
+            
+            m = p2.match(line)
+            
+            if m:
+                group = m.groupdict()
+                phy = punt_packet_details.setdefault('interface', {}).setdefault('phy',{})
+                pal = punt_packet_details.setdefault('interface', {}).setdefault('pal',{})
+                phy['val'] = group['phy_val']
+                phy['if_id'] = group['phy_if_id']
+                pal['val'] = group['phy_val']
+                pal['if_id'] = group['pal_if_id']
+                continue
+
+            # misc info : cause: 7 [ARP request or response], sub-cause: 1, linktype: IP [1]
+            
+            m = p3.match(line)
+            
+            if m:
+                group = m.groupdict()
+                misc = punt_packet_details.setdefault('misc_info', {})
+                misc['cause'] = group['cause']
+                misc['cause_number'] = int(group['cause_number'])
+                continue
+
+            # CE hdr : dest mac: 4e41.5000.0010, src mac: 4e41.5000.0111, ethertype: 0x7102
+            
+            m = p4.match(line)
+            
+            if m:
+                group = m.groupdict()
+                ce_hdr = punt_packet_details.setdefault('ce_hdr', {})
+                ce_hdr['src_mac'] = group['src_mac']
+                ce_hdr['dest_mac'] = group['dest_mac']
+                ce_hdr['ethertype'] = group['ethertype']
+                continue
+
+            # ether hdr : dest mac: ffff.ffff.ffff, src mac: 00a7.428a.7fbf
+            
+            m = p5.match(line)
+            
+            if m:
+                group = m.groupdict()
+                ether_hdr = punt_packet_details.setdefault('ether_hdr', {})
+                ether_hdr['src_mac'] = group['src_mac']
+                ether_hdr['dest_mac'] = group['dest_mac']
+                continue
+
+            # ether hdr : vlan: 101, ethertype: 0x8100
+            
+            m = p6.match(line)
+            
+            if m:
+                group = m.groupdict()
+                ether_hdr = punt_packet_details.setdefault('ether_hdr', {})
+                ether_hdr['vlan'] = int(group['vlan'])
+                ether_hdr['ethertype'] = group['ethertype']
+                continue
+
+            # arp hdr : opcode: 2 (ARP Reply), src mac: 00a7.428a.7fbf dest mac: ffff.ffff.ffff
+            
+            m = p7.match(line)
+            
+            if m:
+                group = m.groupdict()
+                arp_hdr = punt_packet_details.setdefault('arp_hdr', {})
+                opcode = arp_hdr.setdefault('opcode', {})
+                opcode['val'] = group['opcode']
+                match = re.match(r'^(\d+)', group['opcode'])
+                if match:
+                    opcode['opcode_number'] = int(match.group(1))
+                arp_hdr['src_mac'] = group['src_mac']
+                arp_hdr['dest_mac'] = group['dest_mac']
+                continue
+
+            # arp   hdr : src ip: 14.0.1.2, dest ip: 14.0.1.2
+            
+            m = p8.match(line)
+            
+            if m:
+                group = m.groupdict()
+                arp_hdr['src_ip'] = group['src_ip']
+                arp_hdr['dest_ip'] = group['dest_ip']
+                continue
+
+        return res_dict
+        
+# =========================================
+# Schema for 'show platform software fed switch active punt packet-capture status'
+# =========================================
+class ShowPlatformSoftwareFedSwitchActivePuntPacketcaptureStatusSchema(MetaParser):
+
+    """
+    Schema for
+        'show platform software fed {switch} {switch_num} punt packet-capture status',
+        'show platform software fed {switch_num} punt packet-capture status'
+    """
+
+    schema = {
+        'punt_packet_capturing': str,
+        'buffer_wrapping': str,
+        'total_captured_so_far': int,
+        'capture_capacity': int,
+        'max_meta_header_size_bytes': int,
+        'max_packet_data_size_bytes': int
+    }
+# =========================================
+# Parser for 'show platform software fed switch active punt packet-capture status'
+# =========================================
+class ShowPlatformSoftwareFedSwitchActivePuntPacketcaptureStatus(ShowPlatformSoftwareFedSwitchActivePuntPacketcaptureStatusSchema):
+    """
+
+    Parser for 
+        'show platform software fed {switch} {switch_num} punt packet-capture status',
+        'show platform software fed {switch_num} punt packet-capture status'
+    """
+
+    cli_command = ['show platform software fed {switch} {switch_num} punt packet-capture status',
+                   'show platform software fed {switch_num} punt packet-capture status']
+
+    def cli(self, switch_num, switch='', output=None):
+        if output is None:
+            if switch:
+                output = self.device.execute(self.cli_command[0].format(switch=switch, switch_num=switch_num))
+            else:
+                output = self.device.execute(self.cli_command[1].format(switch_num=switch_num))
+
+        # Init vars
+        ret_dict = {}
+
+        # punt packet capturing: disabled. buffer wrapping: disabled
+        p1 = re.compile(r'^punt\s+packet\s+capturing:\s+(?P<punt_packet_capturing>\w+)\.\s+buffer\s+wrapping:\s+(?P<buffer_wrapping>\w+)$')
+
+        # Total captured so far :    13 packet(s)
+        p2 = re.compile(r'^total\s+captured\s+so\s+far\s+:\s+(?P<total_captured_so_far>(\d+)\s)+packet\(s\)$')
+
+        # Capture capacity      :  4096 packet(s)
+        p3 = re.compile(r'^capture\s+capacity\s+:\s+(?P<capture_capacity>(\d+)\s)+packet\(s\)$')
+
+        # Max. Meta header size :    88 byte(s)
+        p4 = re.compile(r'^max.\s+meta\s+header\s+size\s+:\s+(?P<max_meta_header_size_bytes>(\d+))\s+byte\(s\)$')
+
+        # Max. Packet data size :   128 byte(s)
+        p5 = re.compile(r'^max.\s+packet\s+data\s+size\s+:\s+(?P<max_packet_data_size_bytes>(\d+))\s+byte\(s\)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # punt packet capturing: disabled. buffer wrapping: disabled
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['punt_packet_capturing'] = group['punt_packet_capturing']
+                ret_dict['buffer_wrapping'] = group['buffer_wrapping']     
+                continue
+            
+            # Total captured so far :    13 packet(s)
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault('total_captured_so_far', int(group['total_captured_so_far']))
+                continue
+
+            # Capture capacity      :  4096 packet(s)
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault('capture_capacity', int(group['capture_capacity']))
+                continue
+
+            # Max. Meta header size :    88 byte(s)
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault('max_meta_header_size_bytes', int(group['max_meta_header_size_bytes']))
+                continue
+
+            # Max. Packet data size :   128 byte(s)
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault('max_packet_data_size_bytes', int(group['max_packet_data_size_bytes']))
+                continue
+
+        return ret_dict
+    
+
+# ======================================================================================================#
+#  Schema for 'show platform software fed switch active punt packet-capture display-filter icmp brief' #
+# ======================================================================================================#
+class ShowPlatformSoftwareFedSwitchActivePuntPacketCaptureDisplayFilterIcmpBriefSchema(MetaParser):
+    
+    """
+    Schema for
+        'show platform software fed {switch} {switch_num} punt packet-capture display-filter icmp brief'
+        'show platform software fed {switch_num} punt packet-capture display-filter icmp brief'
+    """
+
+    schema = {
+        'punt_packet_number': {
+            'timestamp': str,
+            Any(): {
+                'interface': {
+                    'phy': {
+                        'val': str,
+                        'if_id': str
+                    },
+                    'pal': {
+                        'val': str,
+                        'if_id': str
+                    }
+                },
+                'misc_info': {
+                    'cause': str,
+                    'cause_number': str,
+                    'link_type': str
+                },
+                Optional('ce_hdr'): {
+                    'src_mac': str,
+                    'dest_mac': str,
+                    'ethertype': str
+                },
+                'meta_hdr':{
+                    'nxt_hdr': str,
+                    'fwd_hdr': str,
+                    'ssp': str,
+                    'dsp': str,
+                    'slp': str,
+                    'dlp':str
+                },
+                'ether_hdr': {
+                    'src_mac': str,
+                    'dest_mac': str,
+                    'vlan': int,
+                    'ether_type': str
+                },
+                'ipv4_hdr': {
+                    'src_ip': str,
+                    'dest_ip': str,
+                    'packet_len': int,
+                    'ttl': int,
+                    'protocol': str
+                },
+                'icmp_hdr': {
+                    'icmp_type': int,
+                    'code': int
+                }
+            }
+        }
+    }
+
+# =====================================================================================================#
+#  Parser for 'show platform software fed switch active punt packet-capture display-filter icmp brief #
+# =====================================================================================================#
+class ShowPlatformSoftwareFedSwitchActivePuntPacketCaptureDisplayFilterIcmpBrief(ShowPlatformSoftwareFedSwitchActivePuntPacketCaptureDisplayFilterIcmpBriefSchema):
+    """
+
+    Parser for 
+        'show platform software fed {switch} {switch_num} punt packet-capture display-filter icmp brief'
+        'show platform software fed {switch_num} punt packet-capture display-filter icmp brief'
+    """
+    cli_command = [
+        "show platform software fed {switch} {switch_num} punt packet-capture display-filter icmp brief",
+        "show platform software fed {switch_num} punt packet-capture display-filter icmp brief"
+        ]
+
+    def cli(self, switch_num, output=None ,switch=""):
+        if output is None:
+            if switch :
+                out = self.device.execute(self.cli_command[0].format(switch = switch,switch_num = switch_num))
+            else :
+                out = self.device.execute(self.cli_command[1].format(switch_num = switch_num))
+        else:
+            out = output
+
+        res_dict = {}
+
+        # ------ Punt Packet Number: 41, Timestamp: 2024/06/25 16:07:00.656 ------
+        p1 = re.compile(r'^------\s+Punt\s+Packet\sNumber:\s+(?P<punt_packet_number>(\d+,))\s+Timestamp:\s+(?P<timestamp>(\d+\/\d+\/\d+\s+\d+:\d+:\d+.\d+\s+------))$')
+        
+        # interface : phy: Vlan100 [if-id: 0x00000624], pal: Vlan100 [if-id: 0x00000624]
+        p2 = re.compile(r'^interface\s*:\s*phy\s*:\s*(?P<phy_val>[\w+]+)\s+\[[\w\-\:]+\s*(?P<phy_if_id>[\w+]+)\]\s*\,\s*pal\s*\:\s*(?P<pal_val>[\w+]+)\s*\[[\w\-\:]+\s*(?P<pal_if_id>(\w+\]))$')
+        
+        # misc info : cause: 55 [For-us control], sub-cause: 0 [CPP_PUNT_SUBCAUSE_TRANSPORT_NONE], linktype: IP [1]
+        p3 = re.compile(r'^misc\s*info\s*\:\s*cause\s*\:\s*(?P<cause_number>(\d+)+)\s*\[(?P<cause>[\w+\-\s+\]]+)+,\s*sub-cause\s*:\s*(?P<sub_cause_num>(\d+)\s+\[(?P<sub_cause>(\w+\]))),\s+linktype\s*:\s*(?P<link_type>(\w+\s*\[(\d)\]))$')
+        
+        # CE    hdr : dest mac: 4e41.5000.0111, src mac: 4e41.5000.0111, ethertype: 0x7106
+        p4 = re.compile(r'^CE\s*hdr\s*\:\s*dest mac\s*\:\s*(?P<dest_mac>[\w\.]+)\s*\,\s*src mac\s*\:\s*(?P<src_mac>[\w\.]+)\s*\,\s*ethertype\s*\:\s*(?P<ethertype>[\w]+)$')
+        
+        # meta  hdr : Nxt. Hdr: 0x1, Fwd. Hdr: 0x2, SSP: 0x119
+        p5 = re.compile(r'^meta\s*hdr\s*:\s+Nxt.\s*Hdr:\s*(?P<nxt_hdr>(\w*)),\s*Fwd.\s*Hdr:\s*(?P<fwd_hdr>(\w*)),\s*SSP:\s*(?P<ssp>(\w*))$')
+        
+        # meta  hdr : DSP: 0xffff, SLP: 0x122, DLP: 0xef
+        p6 = re.compile(r'^meta\s*hdr\s*:\s+DSP:\s*(?P<dsp>(\w*)),\s*SLP:\s*(?P<slp>(\w*)),\s*DLP:\s*(?P<dlp>(\w*))$')
+        
+        # ether hdr : dest mac: 3c57.3104.7045, src mac: a0b4.39cd.70ff
+        p7 = re.compile(r'^ether\s*hdr\s*\:\s*dest mac\s*\:\s*(?P<dest_mac>[\w\.]+)\s*\,\s*src mac\s*\:\s*(?P<src_mac>[\w\.]+)$')
+        
+        # ether hdr : vlan: 100, ethertype: 0x8100
+        p8 = re.compile(r'^ether\s*hdr\s*\:\s*vlan\s*\:\s*(?P<vlan>[\d]+)\s*\,\s*ethertype\s*\:\s*(?P<ether_type>[\w]+)$')
+       
+        # ipv4  hdr : dest ip: 100.10.1.1, src ip: 1.0.0.3
+        p9 = re.compile(r'^ipv4\s*hdr\s*:\s*dest\s*ip:\s*(?P<dest_ip>(\d*\.\d*\.\d*\.\d*)),\s*src\s*ip:\s*(?P<src_ip>(\d*\.\d*\.\d*\.\d*))$')
+       
+        # ipv4  hdr : packet len: 100, ttl: 254, protocol: 1 (ICMP)
+        p10 = re.compile(r'^ipv4\s*hdr\s*:\s*packet\s*len:\s*(?P<packet_len>(\d*)),\s*ttl:\s*(?P<ttl>(\d*)),\s*protocol:\s*(?P<protocol>(\d*\s*\(\w*\)))$')
+        
+        # icmp  hdr : icmp type: 8, code: 0
+        p11 = re.compile(r'^icmp\s*hdr\s*:\s*icmp\s*type:\s*(?P<icmp_type>(\d*)),\s*code:\s*(?P<code>(\d*))$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            
+            # Punt Packet Number: 41, Timestamp: 2024/06/25 16:07:00.656
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                punt_packet = res_dict.setdefault('punt_packet_number', {})
+                punt_packet.setdefault('timestamp',group['timestamp'])
+                punt_packet_details = punt_packet.setdefault(group['punt_packet_number'], {})
+                continue
+            
+            # interface : phy: Vlan100 [if-id: 0x00000624], pal: Vlan100 [if-id: 0x00000624]
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                phy = punt_packet_details.setdefault('interface', {}).setdefault('phy',{})
+                pal = punt_packet_details.setdefault('interface', {}).setdefault('pal',{})
+                phy['val'] = group['phy_val']
+                phy['if_id'] = group['phy_if_id']
+                pal['val'] = group['phy_val']
+                pal['if_id'] = group['pal_if_id']
+                continue
+
+            # misc info : cause: 55 [For-us control], sub-cause: 0 [CPP_PUNT_SUBCAUSE_TRANSPORT_NONE], linktype: IP [1]
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                misc_info = punt_packet_details.setdefault('misc_info', {})
+                misc_info['cause'] = group['cause']
+                misc_info['cause_number'] = group['cause_number']
+                misc_info['link_type'] = group['link_type']
+                continue
+
+            # CE    hdr : dest mac: 4e41.5000.0111, src mac: 4e41.5000.0111, ethertype: 0x7106
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                ce_hdr = punt_packet_details.setdefault('ce_hdr', {})
+                ce_hdr['src_mac'] = group['src_mac']
+                ce_hdr['dest_mac'] = group['dest_mac']
+                ce_hdr['ethertype'] = group['ethertype']
+                continue
+
+            # meta  hdr : Nxt. Hdr: 0x1, Fwd. Hdr: 0x2, SSP: 0x119
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                meta_hdr = punt_packet_details.setdefault('meta_hdr', {})
+                meta_hdr['nxt_hdr'] = group['nxt_hdr']
+                meta_hdr['fwd_hdr'] = group['fwd_hdr']
+                meta_hdr['ssp'] = group['ssp']
+                continue
+
+            # meta  hdr : DSP: 0xffff, SLP: 0x122, DLP: 0xef
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                meta_hdr = punt_packet_details.setdefault('meta_hdr', {})
+                meta_hdr['dsp'] = group['dsp']
+                meta_hdr['slp'] = group['slp']
+                meta_hdr['dlp'] = group['dlp']
+                continue
+
+            # ether hdr : dest mac: 3c57.3104.7045, src mac: a0b4.39cd.70ff
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                ether_hdr = punt_packet_details.setdefault('ether_hdr', {})
+                ether_hdr['src_mac'] = group['src_mac']
+                ether_hdr['dest_mac'] = group['dest_mac']
+                continue
+
+            # ether hdr : vlan: 100, ethertype: 0x8100
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                ether_hdr = punt_packet_details.setdefault('ether_hdr', {})
+                ether_hdr['vlan'] = int(group['vlan'])
+                ether_hdr['ether_type'] = group['ether_type']
+                continue
+
+            # ipv4  hdr : dest ip: 100.10.1.1, src ip: 1.0.0.3
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                ipv4_hdr = punt_packet_details.setdefault('ipv4_hdr', {})
+                ipv4_hdr['src_ip'] = group['src_ip']
+                ipv4_hdr['dest_ip'] = group['dest_ip']
+                continue
+
+            # ipv4  hdr : packet len: 100, ttl: 254, protocol: 1 (ICMP)
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                ipv4_hdr = punt_packet_details.setdefault('ipv4_hdr', {})
+                ipv4_hdr['packet_len'] = int(group['packet_len'])
+                ipv4_hdr['ttl'] = int(group['ttl'])
+                ipv4_hdr['protocol'] = group['protocol']
+                continue
+
+            # icmp  hdr : icmp type: 8, code: 0
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                icmp_hdr = punt_packet_details.setdefault('icmp_hdr', {})
+                icmp_hdr['icmp_type'] = int(group['icmp_type'])
+                icmp_hdr['code'] = int(group['code'])
+                continue
+
+        return res_dict

@@ -64,71 +64,71 @@ def _load_parser_json():
         parsers = ''
 
     if not os.path.isfile(parsers):
-        log.warning('parsers.json does not exist, make sure you '
-                    'are running with latest version of '
-                    'genie.libs.parsers')
-        parser_data = AbstractTree(order=token_order, feature='parser')
-    else:
-        # Open all the parsers in json file
-        with open(parsers) as f:
-            try:
-                json_data = json.load(f)
-            except JSONDecodeError:
-                log.error(banner("parser json file could be corrupted. "
-                                 "Please try 'make json'"))
-                raise
-        parser_data = AbstractTree.from_json(json_data,
-                                             package=PARSER_MODULE_NAME,
-                                             feature='parser')
-        if parser_data.order != token_order:
-            raise KeyError('Loaded token order from json does not match '
-                           'package token order\n{} != {}'.\
-                                format(parser_data.order, token_order))
+        raise Exception('parsers.json does not exist, make sure you '
+                        'are running with latest version of '
+                        'genie.libs.parsers. Do make json to generate '
+                        'json files to use the parsers.')
 
-        # check if provided external parser packages
-        PYATS_EXT_PARSER_ENV_VAR = PYATS_EXT_PARSER.upper().replace('.', '_')
-        ext_parser_packages = []
+    # Open all the parsers in json file
+    with open(parsers) as f:
+        try:
+            json_data = json.load(f)
+        except JSONDecodeError:
+            log.error(banner("parser json file could be corrupted. "
+                                "Please try 'make json'"))
+            raise
+    parser_data = AbstractTree.from_json(json_data,
+                                            package=PARSER_MODULE_NAME,
+                                            feature='parser')
+    if parser_data.order != token_order:
+        raise KeyError('Loaded token order from json does not match '
+                        'package token order\n{} != {}'.\
+                            format(parser_data.order, token_order))
 
-        ext_parser_package_conf = cfg.get(PYATS_EXT_PARSER)
-        if ext_parser_package_conf:
-            ext_parser_packages_from_conf = ext_parser_package_conf.split(',')
-            ext_parser_packages.extend(ext_parser_packages_from_conf)
+    # check if provided external parser packages
+    PYATS_EXT_PARSER_ENV_VAR = PYATS_EXT_PARSER.upper().replace('.', '_')
+    ext_parser_packages = []
 
-        ext_parser_package_env = os.environ.get(PYATS_EXT_PARSER_ENV_VAR)
-        if ext_parser_package_env:
-            ext_parser_packages_from_env = ext_parser_package_env.split(',')
-            ext_parser_packages.extend(ext_parser_packages_from_env)
+    ext_parser_package_conf = cfg.get(PYATS_EXT_PARSER)
+    if ext_parser_package_conf:
+        ext_parser_packages_from_conf = ext_parser_package_conf.split(',')
+        ext_parser_packages.extend(ext_parser_packages_from_conf)
 
-        for ep in pkg_resources.iter_entry_points(ENTRY_POINT_NAME):
-            parser_package = ep.load()
-            if callable(parser_package):
-                log.warning(
-                    f'{ep.name}: callable parser loading is deprecated. '
-                    'Please create an abstracted package instead.')
-                _load_parser_callable(parser_package, parser_data)
-            else:
-                ext_parser_packages.append(ep.module_name)
+    ext_parser_package_env = os.environ.get(PYATS_EXT_PARSER_ENV_VAR)
+    if ext_parser_package_env:
+        ext_parser_packages_from_env = ext_parser_package_env.split(',')
+        ext_parser_packages.extend(ext_parser_packages_from_env)
 
-        # remove duplicates
-        ext_parser_packages = set(ext_parser_packages)
-        log.debug(f'External parser packages: {ext_parser_packages}')
+    for ep in pkg_resources.iter_entry_points(ENTRY_POINT_NAME):
+        parser_package = ep.load()
+        if callable(parser_package):
+            log.warning(
+                f'{ep.name}: callable parser loading is deprecated. '
+                'Please create an abstracted package instead.')
+            _load_parser_callable(parser_package, parser_data)
+        else:
+            ext_parser_packages.append(ep.module_name)
 
-        for ext_parser_package in ext_parser_packages:
-            log.debug(f'Extending {ext_parser_package}')
-            ext = ExtendParsers(ext_parser_package)
-            ext.extend()
+    # remove duplicates
+    ext_parser_packages = set(ext_parser_packages)
+    log.debug(f'External parser packages: {ext_parser_packages}')
 
-            extend_info = ext.output.pop('extend_info', None)
+    for ext_parser_package in ext_parser_packages:
+        log.debug(f'Extending {ext_parser_package}')
+        ext = ExtendParsers(ext_parser_package)
+        ext.extend()
 
-            extend_matrix = AbstractTree.from_json(ext.output,
-                                                   package=PARSER_MODULE_NAME,
-                                                   feature='parser')
-            parser_data.update(extend_matrix)
+        extend_info = ext.output.pop('extend_info', None)
 
-            log.debug("External parser {} counts: {}\nSummary:\n{}".format(
-                ext_parser_package,
-                len(extend_info),
-                json.dumps(extend_info, indent=2)))
+        extend_matrix = AbstractTree.from_json(ext.output,
+                                                package=PARSER_MODULE_NAME,
+                                                feature='parser')
+        parser_data.update(extend_matrix)
+
+        log.debug("External parser {} counts: {}\nSummary:\n{}".format(
+            ext_parser_package,
+            len(extend_info),
+            json.dumps(extend_info, indent=2)))
 
     return parser_data
 

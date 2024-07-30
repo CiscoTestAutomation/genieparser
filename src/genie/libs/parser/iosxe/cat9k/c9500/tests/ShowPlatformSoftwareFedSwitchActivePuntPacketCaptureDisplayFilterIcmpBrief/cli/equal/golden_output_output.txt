@@ -1,0 +1,23 @@
+------ Punt Packet Number: 41, Timestamp: 2024/06/25 16:07:00.656 ------
+interface : phy: Vlan100 [if-id: 0x00000624], pal: Vlan100 [if-id: 0x00000624]
+misc info : cause: 55 [For-us control], sub-cause: 0 [CPP_PUNT_SUBCAUSE_TRANSPORT_NONE], linktype: IP [1]
+CE    hdr : dest mac: 4e41.5000.0111, src mac: 4e41.5000.0111, ethertype: 0x7106
+meta  hdr : Nxt. Hdr: 0x1, Fwd. Hdr: 0x2, SSP: 0x119
+meta  hdr : DSP: 0xffff, SLP: 0x122, DLP: 0xef
+ether hdr : dest mac: 3c57.3104.7045, src mac: a0b4.39cd.70ff
+ether hdr : vlan: 100, ethertype: 0x8100
+ipv4  hdr : dest ip: 100.10.1.1, src ip: 1.0.0.3
+ipv4  hdr : packet len: 100, ttl: 254, protocol: 1 (ICMP)
+icmp  hdr : icmp type: 8, code: 0
+
+------ Punt Packet Number: 51, Timestamp: 2024/06/25 16:07:00.656 ------
+interface : phy: Vlan100 [if-id: 0x00000624], pal: Vlan100 [if-id: 0x00000624]
+misc info : cause: 55 [For-us control], sub-cause: 0 [CPP_PUNT_SUBCAUSE_TRANSPORT_NONE], linktype: IP [1]
+CE    hdr : dest mac: 4e41.5000.0111, src mac: 4e41.5000.0111, ethertype: 0x7106
+meta  hdr : Nxt. Hdr: 0x1, Fwd. Hdr: 0x2, SSP: 0x119
+meta  hdr : DSP: 0xffff, SLP: 0x122, DLP: 0xef
+ether hdr : dest mac: 3c57.3104.7045, src mac: a0b4.39cd.70ff
+ether hdr : vlan: 200, ethertype: 0x8100
+ipv4  hdr : dest ip: 10.10.1.1, src ip: 1.1.1.3
+ipv4  hdr : packet len: 100, ttl: 254, protocol: 1 (ICMP)
+icmp  hdr : icmp type: 9, code: 0

@@ -1,0 +1,5 @@
+punt packet capturing: disabled. buffer wrapping: disabled
+total captured so far :  4096 packet(s)
+capture capacity      :  4096 packet(s)
+max. meta header size :    88 byte(s)
+max. packet data size :   128 byte(s)

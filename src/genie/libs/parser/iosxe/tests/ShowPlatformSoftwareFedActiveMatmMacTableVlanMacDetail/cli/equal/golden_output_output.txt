@@ -1,0 +1,30 @@
+VLAN  MAC             Type Seq#    EC_Bi Flags  machandle  siHandle  riHandle  diHandle  *a_time  *e_time   ports  Con   
+----------------------------------------------------------------------------------------------------------------------------------------
+300   0030.8200.21e7  0x1  166464  2     8      0x0        0x0       0x0       0x0       300      191227           No
+
+======platform software details ======
+ASIC [0]:
+	L2 Service Port OID.........[9333]
+	L2 Service Port GID.........[4266]
+
+======platform hardware details ======
+ASIC [0]:
+	Age Value...................[60]
+	Age Remaining...............[0]
+	L2 Service Port OID.........[933]
+	L2 Service Port GID.........[466]
+	 -------- L2 Service port OID Info --------
+	L2 Service Port Object
+        Port Type: AC Port
+	STP Type: Forwarding
+	VLAN(BD) OID................[1270]
+	VLAN(BD) GID................[300]
+	Ethernet Port OID...........[11059]
+	SPA Port OID................[11058]
+	SPA Port GID................[310]
+
+====== NPL Hardware Information ======
+MAC address: 0030.8200.21e7
+Relay ID: 300
+Tag Type: L2 DLP, Destination ID 4266
+Interface Details: Port-channel111

@@ -53,10 +53,16 @@ class ShowWatchdogMemoryState(ShowWatchdogMemoryStateSchema):
         p1 = re.compile(r'^-+\s(?P<location>\S+)\s-+$')
 
         #     Physical Memory     : 4608.0   MB
-        p2 = re.compile(r'^(?P<type>.+\b)\s+:\s+(?P<amount>\d+(\.\d+)?)\s+(?P<unit>\w+\b)$')
+        #     Free Memory         : 1778.906 MB
+        #   or
+        #     Physical Memory: 32768     MB
+        #     Free Memory:     25621.476 MB
+        p2 = re.compile(r'^(?P<type>.+\b)\s*:\s+(?P<amount>\d+(\.\d+)?)\s+(?P<unit>\w+\b)$')
 
         #     Memory State        :   Normal
-        p3 = re.compile(r'^(Memory\s+State)\s+:\s+(?P<state>.+)$')
+        #  or
+        #     Memory State:         Normal
+        p3 = re.compile(r'^(Memory\s+State)\s*:\s+(?P<state>.+)$')
 
         ret_dict = {}
         current_node_dict = {}
@@ -83,6 +89,15 @@ class ShowWatchdogMemoryState(ShowWatchdogMemoryStateSchema):
 
                 if memory_unit == 'GB':
                     memory_amount = unit_convert((str(memory_amount)+'G'), 'M')
+
+                # show watchdog memory-state without location doesn't have node information
+                # in some IOSXR releases
+                if not current_node:
+                    if location:
+                        current_node = 'node{}'.format(location).replace('/', '_')
+                    else:
+                        current_node = 'unknown'
+                    current_node_dict = ret_dict.setdefault('node', {}).setdefault(current_node, {})
 
                 current_node_dict.update({memory_type: memory_amount})
                 continue

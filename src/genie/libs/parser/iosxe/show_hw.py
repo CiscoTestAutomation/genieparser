@@ -699,8 +699,8 @@ class ShowHardwareLedPortModeSchema(MetaParser):
     Schema for show hardware led port {port} {mode}
     """
     schema = {
-        'current_mode': str,
-        'status': str 
+        Optional('current_mode'): str,
+        'status': str
     }
 
 class ShowHardwareLedPortMode(ShowHardwareLedPortModeSchema):
@@ -733,6 +733,72 @@ class ShowHardwareLedPortMode(ShowHardwareLedPortModeSchema):
             m = p2.match(line)
             if m:
                 ret_dict['status'] = m.groupdict()['status']
+                continue
+  
+        return ret_dict
+
+
+class HardwareModuleBeaconFanTrayStatusSchema(MetaParser):
+    """
+    Schema for hw-module beacon fan-tray status
+    """
+    schema = {
+        'fantray_beacon_led': str
+    }
+
+class HardwareModuleBeaconFanTrayStatus(HardwareModuleBeaconFanTrayStatusSchema):
+    """Parser for hw-module beacon fan-tray status"""
+
+    cli_command = "hw-module beacon fan-tray status"
+    
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Fantray Beacon LED: OFF
+        p1 = re.compile(r'^Fantray Beacon LED: (?P<fantray_beacon_led>\w+)$')
+
+        ret_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # Fantray Beacon LED: OFF
+            m = p1.match(line)
+            if m:
+                ret_dict['fantray_beacon_led'] = m.groupdict()['fantray_beacon_led']
+                continue
+  
+        return ret_dict
+
+
+class HardwareModuleBeaconSlotStatusSchema(MetaParser):
+    """
+    Schema for hw-module beacon slot {slot_num} status
+    """
+    schema = {
+        'slot_status': str
+    }
+
+class HardwareModuleBeaconSlotStatus(HardwareModuleBeaconSlotStatusSchema):
+    """Parser for hw-module beacon slot {slot_num} status"""
+
+    cli_command = "hw-module beacon slot {slot_num} status"
+    
+    def cli(self, slot_num, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(slot_num=slot_num))
+
+        # BLACK
+        p1 = re.compile(r'^(?P<slot_status>\w+)$')
+
+        ret_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # BLACK
+            m = p1.match(line)
+            if m:
+                ret_dict['slot_status'] = m.groupdict()['slot_status']
                 continue
   
         return ret_dict

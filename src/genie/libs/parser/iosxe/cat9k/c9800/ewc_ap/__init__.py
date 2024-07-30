@@ -1,2 +1,2 @@
 from genie import abstract
-abstract.declare_token(pid='ewc_ap')
+abstract.declare_token(submodel='ewc_ap')

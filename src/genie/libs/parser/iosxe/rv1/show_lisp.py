@@ -296,10 +296,16 @@ class ShowLispInstanceIdService(ShowLispInstanceIdServiceSchema):
         p25 = re.compile(r'^Publication-Subscription:\s+(?P<role>enabled|disabled)$')
 
         # Publisher(s):                           *** NOT FOUND ***
+        # Publisher(s):                           2001:4:4:4::4
         p26 = re.compile(r'^Publisher\(s\):\s+(?P<publishers>[\d.:]+)(?: +.*)?$')
 
+        #                                         2001:13:13:13::13
+        #                                         199.199.199.199 *** ETR Map-Server not found ***
+        p26_1 = re.compile(r'^(?P<publisher>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'
+                           r'|([a-fA-F\d\:]+))( \*\*\* ETR Map-Server not found \*\*\*)?$')
+
         # Subscriber(s):                           *** NOT FOUND ***
-        p27 = re.compile(r'^Subscriber\(s\):\s+(?P<subscribers>.*)')
+        p27 = re.compile(r'^Subscriber\(s\):\s+(?P<subscribers>.*)$')
 
         # Site Registration Limit:                  0
         p28 = re.compile(r'Site Registration Limit:\s+(?P<site_registration_limit>\d+)$')
@@ -452,6 +458,7 @@ class ShowLispInstanceIdService(ShowLispInstanceIdServiceSchema):
         p64 = re.compile(r'^Ethernet Fast Detection:\s+(?P<eth_fast_detect>enabled|disabled)$')
 
         count = 0
+        publishers_parsing_finished = False
         for line in out.splitlines():
             line = line.strip()
 
@@ -692,6 +699,7 @@ class ShowLispInstanceIdService(ShowLispInstanceIdServiceSchema):
                 continue
 
             # Publisher(s):                           *** NOT FOUND ***
+            # Publisher(s):                           2001:4:4:4::4
             m = p26.match(line)
             if m:
                 group = m.groupdict()
@@ -699,6 +707,18 @@ class ShowLispInstanceIdService(ShowLispInstanceIdServiceSchema):
                 publishers_list = pub_sub_dict.setdefault('publishers',[])
                 for publish in publishers:
                     publishers_list.append(publish)
+                continue
+
+            #                                         2001:13:13:13::13
+            #                                         199.199.199.199 *** ETR Map-Server not found ***
+            m = p26_1.match(line)
+            if m:
+                if not publishers_parsing_finished:
+                    group = m.groupdict()
+                    publisher = group['publisher']
+                    publishers_list = pub_sub_dict.setdefault('publishers',[])
+                    publishers_list.append(publisher)
+                    continue
 
             # Subscriber(s):                           *** NOT FOUND ***
             m = p27.match(line)
@@ -708,10 +728,12 @@ class ShowLispInstanceIdService(ShowLispInstanceIdServiceSchema):
                 subscribers_list = pub_sub_dict.setdefault('subscribers',[])
                 for subscribers in subscribers_list:
                     subscribers.append(subscribers)
+                continue
 
             # Site Registration Limit:                  0
             m = p28.match(line)
             if m:
+                publishers_parsing_finished = True
                 group = m.groupdict()
                 site_registration_limit = int(group['site_registration_limit'])
                 instance_dict.update({'site_registration_limit':site_registration_limit})

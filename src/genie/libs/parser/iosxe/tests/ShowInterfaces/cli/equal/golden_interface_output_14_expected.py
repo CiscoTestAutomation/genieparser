@@ -1,0 +1,96 @@
+expected_output = {
+    "HundredGigE1/0/9": {
+        "port_channel": {
+            "port_channel_member": False
+        },
+        "is_deleted": False,
+        "enabled": True,
+        "line_protocol": "up",
+        "oper_status": "up",
+        "connected": True,
+        "err_disabled": False,
+        "suspended": False,
+        "type": "Hundred Gigabit Ethernet",
+        "mac_address": "6c03.b5fd.c629",
+        "phys_address": "6c03.b5fd.c629",
+        "description": "TTP1",
+        "delay": 10,
+        "mtu": 9216,
+        "bandwidth": 10000000,
+        "reliability": "255/255",
+        "txload": "1/255",
+        "rxload": "1/255",
+        "encapsulations": {
+            "encapsulation": "arpa"
+        },
+        "keepalive": 10,
+        "duplex_mode": "full",
+        "port_speed": "10gb/s",
+        "link_type": "auto",
+        "auto_negotiate": True,
+        "media_type": "CVR QSFP SFP10G(SFP-10GBase-SR)",
+        "flow_control": {
+            "receive": True,
+            "send": False
+        },
+        "arp_type": "arpa",
+        "arp_timeout": "04:00:00",
+        "last_input": "00:00:07",
+        "last_output": "00:00:00",
+        "output_hang": "never",
+        "queues": {
+            "input_queue_size": 0,
+            "input_queue_max": 2000,
+            "input_queue_drops": 0,
+            "input_queue_flushes": 0,
+            "total_output_drop": 0,
+            "queue_strategy": "fifo",
+            "output_queue_size": 0,
+            "output_queue_max": 40
+        },
+        "counters": {
+            "rate": {
+                "load_interval": 300,
+                "in_rate": 0,
+                "in_rate_pkts": 0,
+                "out_rate": 0,
+                "out_rate_pkts": 0
+            },
+            "last_clear": "5d21h",
+            "in_pkts": 12331,
+            "in_octets": 4631618,
+            "in_no_buffer": 0,
+            "in_multicast_pkts": 12330,
+            "in_broadcast_pkts": 12331,
+            "in_runts": 0,
+            "in_giants": 0,
+            "in_throttles": 0,
+            "in_errors": 0,
+            "in_crc_errors": 0,
+            "in_frame": 0,
+            "in_overrun": 0,
+            "in_ignored": 0,
+            "in_watchdog": 0,
+            "in_mac_pause_frames": 0,
+            "in_with_dribble": 0,
+            "out_pkts": 567643,
+            "out_octets": 41033988,
+            "out_underruns": 0,
+            "out_broadcast_pkts": 0,
+            "out_multicast_pkts": 516883,
+            "out_errors": 0,
+            "out_interface_resets": 2,
+            "out_collision": 0,
+            "out_unknown_protocl_drops": 0,
+            "out_babble": 0,
+            "out_late_collision": 0,
+            "out_deferred": 0,
+            "out_lost_carrier": 0,
+            "out_no_carrier": 0,
+            "out_mac_pause_frames": 0,
+            "out_buffer_failure": 0,
+            "out_buffers_swapped": 0
+        }
+    }
+}
+
