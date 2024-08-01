@@ -1,0 +1,4 @@
+Memory information:
+    Physical Memory: 32768     MB
+    Free Memory:     25623.558 MB
+    Memory State:         Normal

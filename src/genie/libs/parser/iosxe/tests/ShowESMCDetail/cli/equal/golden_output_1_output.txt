@@ -1,0 +1,175 @@
+Interface: GigabitEthernet0/0/2
+  Administrative configurations:
+    Mode: Synchronous
+    ESMC TX: Enable
+    ESMC RX: Enable
+    QL TX: -
+    QL RX: -
+  Operational status:
+    Port status: UP
+    QL Receive: QL-SEC
+    QL Transmit: QL-DNU
+    QL rx overrided: -
+    ESMC Information rate: 1 packet/second
+    ESMC Expiry: 5 second
+    ESMC Tx Timer: Running
+    ESMC Rx Timer: Running
+    ESMC Tx interval count: 1
+    ESMC INFO pkts in: 588702
+    ESMC INFO pkts out: 588855
+    ESMC EVENT pkts in: 0
+    ESMC EVENT pkts out: 14
+
+Interface: GigabitEthernet0/0/6
+  Administrative configurations:
+    Mode: Synchronous
+    ESMC TX: Enable
+    ESMC RX: Enable
+    QL TX: -
+    QL RX: -
+  Operational status:
+    Port status: UP
+    QL Receive: QL-SEC
+    QL Transmit: QL-SEC
+    QL rx overrided: -
+    ESMC Information rate: 1 packet/second
+    ESMC Expiry: 5 second
+    ESMC Tx Timer: Running
+    ESMC Rx Timer: Running
+    ESMC Tx interval count: 1
+    ESMC INFO pkts in: 429540
+    ESMC INFO pkts out: 429700
+    ESMC EVENT pkts in: 0
+    ESMC EVENT pkts out: 5
+
+Interface: TenGigabitEthernet0/0/8
+  Administrative configurations:
+    Mode: Synchronous
+    ESMC TX: Enable
+    ESMC RX: Enable
+    QL TX: -
+    QL RX: -
+  Operational status:
+    Port status: DOWN
+    QL Receive: QL-SEC
+    QL Transmit: QL-SEC
+    QL rx overrided: QL-FAILED
+    ESMC Information rate: 1 packet/second
+    ESMC Expiry: 5 second
+    ESMC Tx Timer: Running
+    ESMC Rx Timer: Stopped
+    ESMC Tx interval count: 0
+    ESMC INFO pkts in: 97
+    ESMC INFO pkts out: 108
+    ESMC EVENT pkts in: 0
+    ESMC EVENT pkts out: 0
+
+Interface: TenGigabitEthernet0/0/10
+  Administrative configurations:
+    Mode: Synchronous
+    ESMC TX: Enable
+    ESMC RX: Enable
+    QL TX: -
+    QL RX: -
+  Operational status:
+    Port status: UP
+    QL Receive: QL-SEC
+    QL Transmit: QL-SEC
+    QL rx overrided: -
+    ESMC Information rate: 1 packet/second
+    ESMC Expiry: 5 second
+    ESMC Tx Timer: Running
+    ESMC Rx Timer: Running
+    ESMC Tx interval count: 1
+    ESMC INFO pkts in: 417007
+    ESMC INFO pkts out: 417020
+    ESMC EVENT pkts in: 0
+    ESMC EVENT pkts out: 2
+
+Interface: TenGigabitEthernet0/0/14
+  Administrative configurations:
+    Mode: Synchronous
+    ESMC TX: Enable
+    ESMC RX: Enable
+    QL TX: -
+    QL RX: -
+  Operational status:
+    Port status: UP
+    QL Receive: QL-SEC
+    QL Transmit: QL-SEC
+    QL rx overrided: -
+    ESMC Information rate: 1 packet/second
+    ESMC Expiry: 5 second
+    ESMC Tx Timer: Running
+    ESMC Rx Timer: Running
+    ESMC Tx interval count: 1
+    ESMC INFO pkts in: 420949
+    ESMC INFO pkts out: 420950
+    ESMC EVENT pkts in: 0
+    ESMC EVENT pkts out: 0
+
+Interface: TwentyFiveGigE0/0/16
+  Administrative configurations:
+    Mode: Synchronous
+    ESMC TX: Enable
+    ESMC RX: Enable
+    QL TX: -
+    QL RX: -
+  Operational status:
+    Port status: UP
+    QL Receive: QL-SEC
+    QL Transmit: QL-SEC
+    QL rx overrided: -
+    ESMC Information rate: 1 packet/second
+    ESMC Expiry: 5 second
+    ESMC Tx Timer: Running
+    ESMC Rx Timer: Running
+    ESMC Tx interval count: 1
+    ESMC INFO pkts in: 421443
+    ESMC INFO pkts out: 421456
+    ESMC EVENT pkts in: 0
+    ESMC EVENT pkts out: 0
+
+Interface: TwentyFiveGigE0/0/17
+  Administrative configurations:
+    Mode: Synchronous
+    ESMC TX: Enable
+    ESMC RX: Enable
+    QL TX: -
+    QL RX: -
+  Operational status:
+    Port status: UP
+    QL Receive: QL-SEC
+    QL Transmit: QL-SEC
+    QL rx overrided: -
+    ESMC Information rate: 1 packet/second
+    ESMC Expiry: 5 second
+    ESMC Tx Timer: Running
+    ESMC Rx Timer: Running
+    ESMC Tx interval count: 1
+    ESMC INFO pkts in: 416643
+    ESMC INFO pkts out: 416643
+    ESMC EVENT pkts in: 0
+    ESMC EVENT pkts out: 0
+
+Interface: TwentyFiveGigE0/0/18
+  Administrative configurations:
+    Mode: Synchronous
+    ESMC TX: Enable
+    ESMC RX: Enable
+    QL TX: -
+    QL RX: -
+  Operational status:
+    Port status: UP
+    QL Receive: QL-SEC
+    QL Transmit: QL-SEC
+    QL rx overrided: -
+    ESMC Information rate: 1 packet/second
+    ESMC Expiry: 5 second
+    ESMC Tx Timer: Running
+    ESMC Rx Timer: Running
+    ESMC Tx interval count: 1
+    ESMC INFO pkts in: 411278
+    ESMC INFO pkts out: 411406
+    ESMC EVENT pkts in: 0
+    ESMC EVENT pkts out: 2

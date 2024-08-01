@@ -1555,3 +1555,49 @@ class ShowIpIgmpSnoopingQuerierVlanDetail(ShowIpIgmpSnoopingQuerierVlanDetailSch
                 continue
 
         return ret_dict
+
+# ========================================================
+# Parser for show ip igmp snooping groups vlan {vlan} {group}
+# ========================================================
+
+class ShowIpIgmpSnoopingGroupsVlanGroupSchema(MetaParser):
+    """
+    Schema for show ip igmp snooping groups vlan {vlan} {group}
+    """
+
+    schema = {
+        'igmp_groups': {
+            Any(): {
+                'vlan': str,
+                'type': str,
+                'version': str,
+                'port_list': str
+            }
+        }
+    }
+
+class ShowIpIgmpSnoopingGroupsVlanGroup(ShowIpIgmpSnoopingGroupsVlanGroupSchema):
+    """ Parser for show ip igmp snooping groups vlan {vlan} {group}"""
+
+    cli_command = ['show ip igmp snooping groups vlan {vlan} {group}']
+
+    def cli(self, vlan=None, group=None, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command[0].format(vlan=vlan, group=group))
+
+        # initial variables
+        ret_dict = {}
+        
+        # Vlan      Group                    Type        Version     Port List
+        # -----------------------------------------------------------------------
+        # 11        225.0.0.1                igmp        v3          Po92
+        p1=re.compile(r'^(?P<vlan>[\w\.\/\-]+) +(?P<group>[\w\.\:]+) +(?P<type>[\w\.\:]+) +(?P<version>[\w\.\:]+) +(?P<port_list>[\w\.\:\/]+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            # 11        225.0.0.1                igmp        v3          Po92
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault('igmp_groups', {}).setdefault(group.pop('group'), group)
+        return ret_dict

@@ -1,0 +1,123 @@
+Export completed for capture point cflow_capture
+show monitor capture file flash:/CSCwj19356.pcap packet-number 7291 detailed
+Starting the packet display ........ Press Ctrl + Shift + 6 to exit
+
+Frame 7291: 142 bytes on wire (1136 bits), 142 bytes captured (1136 bits) on interface /tmp/epc_ws/wif_to_ts_pipe, id 0
+    Interface id: 0 (/tmp/epc_ws/wif_to_ts_pipe)
+        Interface name: /tmp/epc_ws/wif_to_ts_pipe
+    Encapsulation type: Ethernet (1)
+    Arrival Time: Jul  9, 2024 06:14:47.195934000 IST
+    [Time shift for this packet: 0.000000000 seconds]
+    Epoch Time: 1720485887.195934000 seconds
+    [Time delta from previous captured frame: 0.000602000 seconds]
+    [Time delta from previous displayed frame: 0.000000000 seconds]
+    [Time since reference or first frame: 75.186930000 seconds]
+    Frame Number: 7291
+    Frame Length: 142 bytes (1136 bits)
+    Capture Length: 142 bytes (1136 bits)
+    [Frame is marked: False]
+    [Frame is ignored: False]
+    [Protocols in frame: eth:ethertype:ip:udp:cflow]
+Ethernet II, Src: 0c:d0:f8:87:ee:46 (0c:d0:f8:87:ee:46), Dst: 00:27:90:bf:c9:46 (00:27:90:bf:c9:46)
+    Destination: 00:27:90:bf:c9:46 (00:27:90:bf:c9:46)
+        Address: 00:27:90:bf:c9:46 (00:27:90:bf:c9:46)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Source: 0c:d0:f8:87:ee:46 (0c:d0:f8:87:ee:46)
+        Address: 0c:d0:f8:87:ee:46 (0c:d0:f8:87:ee:46)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Type: IPv4 (0x0800)
+Internet Protocol Version 4, Src: 132.132.132.1, Dst: 132.132.132.2
+    0100 .... = Version: 4
+    .... 0101 = Header Length: 20 bytes (5)
+    Differentiated Services Field: 0x00 (DSCP: CS0, ECN: Not-ECT)
+        0000 00.. = Differentiated Services Codepoint: Default (0)
+        .... ..00 = Explicit Congestion Notification: Not ECN-Capable Transport (0)
+    Total Length: 128
+    Identification: 0x1018 (4120)
+    Flags: 0x00
+        0... .... = Reserved bit: Not set
+        .0.. .... = Don't fragment: Not set
+        ..0. .... = More fragments: Not set
+    Fragment Offset: 0
+    Time to Live: 254
+    Protocol: UDP (17)
+    Header Checksum: 0x9b48 [validation disabled]
+    [Header checksum status: Unverified]
+    Source Address: 132.132.132.1
+    Destination Address: 132.132.132.2
+User Datagram Protocol, Src Port: 54960, Dst Port: 2055
+    Source Port: 54960
+    Destination Port: 2055
+    Length: 108
+    Checksum: 0xbc78 [unverified]
+    [Checksum Status: Unverified]
+    [Stream index: 0]
+    [Timestamps]
+        [Time since first frame: 0.000000000 seconds]
+        [Time since previous frame: 0.000000000 seconds]
+    UDP payload (100 bytes)
+Cisco NetFlow/IPFIX
+    Version: 9
+    Count: 2
+    SysUptime: 589785.000000000 seconds
+    Timestamp: Jul  9, 2024 06:14:46.000000000 IST
+        CurrentSecs: 1720485886
+    FlowSequence: 24
+    SourceId: 16777217
+    FlowSet 1 [id=0] (Data Template): 257
+        FlowSet Id: Data Template (V9) (0)
+        FlowSet Length: 44
+        Template (Id = 257, Count = 9)
+            Template Id: 257
+            Field Count: 9
+            Field (1/9): IP_SRC_ADDR
+                Type: IP_SRC_ADDR (8)
+                Length: 4
+            Field (2/9): IP_DST_ADDR
+                Type: IP_DST_ADDR (12)
+                Length: 4
+            Field (3/9): L4_DST_PORT
+                Type: L4_DST_PORT (11)
+                Length: 2
+            Field (4/9): TCP_FLAGS
+                Type: TCP_FLAGS (6)
+                Length: 1
+            Field (5/9): BYTES
+                Type: BYTES (1)
+                Length: 8
+            Field (6/9): PKTS
+                Type: PKTS (2)
+                Length: 8
+            Field (7/9): IP_PROTOCOL_VERSION
+                Type: IP_PROTOCOL_VERSION (60)
+                Length: 1
+            Field (8/9): IP_TOS
+                Type: IP_TOS (5)
+                Length: 1
+            Field (9/9): PROTOCOL
+                Type: PROTOCOL (4)
+                Length: 1
+    FlowSet 2 [id=257] (1 flows)
+        FlowSet Id: (Data) (257)
+        FlowSet Length: 36
+        [Template Frame: 7291]
+        Flow 1
+            SrcAddr: 6.6.6.8
+            DstAddr: 15.15.15.8
+            DstPort: 60
+            TCP Flags: 0x00
+                00.. .... = Reserved: 0x0
+                ..0. .... = URG: Not used
+                ...0 .... = ACK: Not used
+                .... 0... = PSH: Not used
+                .... .0.. = RST: Not used
+                .... ..0. = SYN: Not used
+                .... ...0 = FIN: Not used
+            Octets: 2470
+            Packets: 5
+            IPVersion: 4
+            IP ToS: 0x00
+            Protocol: TCP (6)
+        Padding: 0000

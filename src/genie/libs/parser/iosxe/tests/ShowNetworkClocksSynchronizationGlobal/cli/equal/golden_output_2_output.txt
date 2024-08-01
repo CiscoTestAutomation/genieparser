@@ -1,0 +1,10 @@
+Automatic selection process : Enable
+Equipment Clock : 2048 (EEC-Option1)
+Clock Mode : QL-Enable
+ESMC : Enabled
+SSM Option : 1
+T0 : Internal
+Hold-off (global) : 300 ms
+Wait-to-restore (global) : 300 sec
+Tsm Delay : 180 ms
+Revertive : No

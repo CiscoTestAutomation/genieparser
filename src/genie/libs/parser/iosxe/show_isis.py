@@ -25,6 +25,7 @@ IOSXE parsers for the following show commands:
     * show isis rib flex-algo {flex_id} {source_ip} {subnet_mask}
     * show isis ipv6 rib
     * show isis ipv6 rib {prefix}
+    * show isis ipv6 rib flex-algo {flex_id} {prefix}  
     * show isis rib redistribution
     * show isis microloop-avoidance flex-algo {flex_algo}
     * show isis srv6 locators detail
@@ -3061,6 +3062,8 @@ class ShowIsisIpv6RibSchema(MetaParser):
                                 "r_flag": bool,
                                 "n_flag": bool
                             },
+                            Optional("pfx_algo"): int,
+                            Optional("src_rtr_id"): str,
                             Optional("source_router_id"): str,
                             Optional("via"): {
                               Any(): {
@@ -3132,9 +3135,10 @@ class ShowIsisIpv6RibSchema(MetaParser):
 class ShowIsisIpv6Rib(ShowIsisIpv6RibSchema):
     """parser for show isis ipv6 rib
     show isis ipv6 rib {prefix}
+    show isis ipv6 rib flex-algo {flex_id} {prefix} 
     """
 
-    cli_command = ["show isis ipv6 rib", "show isis ipv6 rib {prefix}"]
+    cli_command = ["show isis ipv6 rib", "show isis ipv6 rib {prefix}","show isis ipv6 rib flex-algo {flex_id} {prefix}"]
     flex_algo_enabled = False
     ret_dict = {}
     uloop_ep = False
@@ -3143,8 +3147,10 @@ class ShowIsisIpv6Rib(ShowIsisIpv6RibSchema):
 
     def cli(self, flex_id="", prefix="", output=None):
         if output is None:
-            if prefix:
+            if prefix and not flex_id:
                 output = self.device.execute(self.cli_command[1].format(prefix=prefix))
+            elif prefix and flex_id:
+                output = self.device.execute(self.cli_command[2].format(flex_id=flex_id,prefix=prefix)) 
             else:
                 output = self.device.execute(self.cli_command[0])
 
@@ -3232,6 +3238,15 @@ class ShowIsisIpv6Rib(ShowIsisIpv6RibSchema):
             r"metric\s*to\s*pfx:\s*(?P<metric_to_prefix>\d+)$"
         )
 
+        #Flex-algo 128
+        p12 = re.compile(r"Flex-algo\s+(?P<flex_algo>\d+)")         
+
+        #Algorithm: 128
+        p13 = re.compile(r"Algorithm:\s+(?P<algorithm>\d+)")
+     
+        #source router id: 222::222
+        p14 = re.compile(r"source router id:\s+(?P<src_rtr_id>[0-9a-fA-F:]+)?$")
+ 
         for line in output.splitlines():
             line = line.strip()
             # IS-IS IPv6 process 1, local RIB
@@ -3244,6 +3259,17 @@ class ShowIsisIpv6Rib(ShowIsisIpv6RibSchema):
                 tag_dict["rib_root"] = group["rib_root"]
                 continue
 
+            #Flex-algo 128
+            m = p12.match(line)
+            if m:
+                flex_algo_enabled = True
+                group = m.groupdict()
+                flex_id = int(group["flex_algo"])
+                flex_algo_dict = tag_dict.setdefault("flex_algo", {}).setdefault(
+                    flex_id, {}
+                )
+                continue
+
             # FCCC:CCC1:B1::/48
             # 666::666/128  prefix attr X:0 R:0 N:1  source router id: 666::666
             m = p2.match(line)
@@ -3253,24 +3279,39 @@ class ShowIsisIpv6Rib(ShowIsisIpv6RibSchema):
                     flex_algo_dict = tag_dict.setdefault("flex_algo", {}).setdefault(
                         "None", {}
                     )
-                    ipv6 = group["ipv6_prefix"]
+                ipv6 = group["ipv6_prefix"]
 
-                    prefix_attr = {
-                        "x_flag": (group["x_flag"] == "1"),
-                        "r_flag": (group["r_flag"] == "1"),
-                        "n_flag": (group["n_flag"] == "1"),
-                    }
-                    prefix_dict = flex_algo_dict.setdefault("prefix", {}).setdefault(
-                        ipv6, {}
-                    )
-                    prefix_dict.setdefault("prefix_attr", prefix_attr)
+                prefix_attr = {
+                    "x_flag": (group["x_flag"] == "1"),
+                    "r_flag": (group["r_flag"] == "1"),
+                    "n_flag": (group["n_flag"] == "1"),
+                }
+                prefix_dict = flex_algo_dict.setdefault("prefix", {}).setdefault(
+                    ipv6, {}
+                )
+                prefix_dict.setdefault("prefix_attr", prefix_attr)
 
-                    if group["star"]:
-                        prefix_dict.update({"local_router": True})
-                    if group["src_router_id"]:
-                        prefix_dict["source_router_id"] = group["src_router_id"]
+                if group["star"]:
+                    prefix_dict.update({"local_router": True})
+                if group["src_router_id"]:
+                    prefix_dict["source_router_id"] = group["src_router_id"]
                 continue
 
+            #Algorithm: 128
+            m = p13.match(line)
+            if m:
+                 group = m.groupdict()
+                 prefix_dict["pfx_algo"] = int(group["algorithm"])
+                 continue
+
+            #source router id: 222::222
+            if flex_algo_enabled: 
+                m = p14.match(line)
+                if m:
+                    group = m.groupdict()
+                    prefix_dict["src_rtr_id"] = group["src_rtr_id"]
+                    continue
+  
             # via FE80::A8BB:CCFF:FE00:9C10/Ethernet0/1, type L1  metric 20 tag 0
             # via ULOOP_EP SRv6-Fwd-Id 25165858, type L2  metric 110 tag 0
             # via ::/Null0, type Sum metric 30 tag 0

@@ -1,0 +1,51 @@
+Name: Entrega PEDR                        (Tunnel12831) Destination: 10.166.0.1
+  Status:
+    Admin: up         Oper: up     Path: valid       Signalling: connected
+    path option 5, type explicit Path-BA-SM-PE-Pe (Basis for Setup, path weight 21)
+    path option 10, type dynamic
+  Config Parameters:
+    Bandwidth: 0        kbps (Global)  Priority: 1  1   Affinity: 0x0/0xFFFF
+    Metric Type: TE (default)
+    Path-selection Tiebreaker:
+      Global: not set   Tunnel Specific: not set   Effective: min-fill (default)
+    Hop Limit: disabled [ignore: Explicit Path Option with all Strict Hops]
+    Cost Limit: disabled
+    Path-invalidation timeout: 10000 msec (default), Action: Tear
+    AutoRoute: enabled  LockDown: disabled Loadshare: 0 [0] bw-based
+    auto-bw: disabled
+    Fast Reroute: enabled, Node Protection: No, Bandwidth Protection: No
+    Fault-OAM: disabled, Wrap-Protection: disabled, Wrap-Capable: No
+  Active Path Option Parameters:
+    State: explicit path option 5 is active
+    BandwidthOverride: disabled  LockDown: disabled  Verbatim: disabled
+  Node Hop Count: 3
+
+  InLabel  :  -
+  OutLabel : TenGigabitEthernet0/5/8, 10282
+  Next Hop : 10.166.17.121
+  FRR OutLabel : Tunnel52829, 10282 
+  RSVP Signalling Info:
+       Src 10.166.0.11, Dst 10.166.0.1, Tun_Id 12831, Tun_Instance 54
+    RSVP Path Info:
+      My Address: 10.166.17.122   
+      Explicit Route: 10.166.17.121 10.166.16.37 10.166.16.46 10.166.0.1 
+      Record   Route:   NONE
+      Tspec: ave rate=0 kbits, burst=1000 bytes, peak rate=0 kbits
+    RSVP Resv Info:
+      Record   Route:  10.166.0.8(10282) 10.166.0.200(16424)
+                       10.166.16.37(16424) 10.166.0.1(0)
+      Fspec: ave rate=0 kbits, burst=0 bytes, peak rate=0 kbits
+  Shortest Unconstrained Path Info:
+    Path Weight: 21 (TE)
+    Explicit Route: 10.166.17.30 10.166.16.85 10.166.16.46 10.166.0.1 
+
+  History:
+    Tunnel:
+      Time since created: 49 days, 17 hours, 2 minutes
+      Time since path change: 20 days, 17 minutes
+      Number of LSP IDs (Tun_Instances) used: 54
+    Current LSP: [ID: 54]
+      Uptime: 20 days, 17 minutes
+      Selection: reoptimization
+    Prior LSP: [ID: 53]
+      ID: path option unknown

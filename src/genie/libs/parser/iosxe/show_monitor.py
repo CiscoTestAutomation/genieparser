@@ -1107,3 +1107,698 @@ class ShowMonitorCaptureStatistics(ShowMonitorCaptureStatisticsSchema):
                 continue
 
         return ret_dict
+
+class ShowMonitorEventTraceDmvpnAllSchema(MetaParser):
+    schema = {
+        Any(): {
+            Optional(Any()): {
+                'event': str,
+                Optional('tunnel'): str,
+                Optional('target'): str,
+                Optional('nbma_src'): str,
+                Optional('vpn_src'): str,
+                Optional('nbma_dest'): str,
+                Optional('vpn_dest'): str,
+                Optional('vrf'): str,
+                Optional('vrf_id'): str,
+                Optional('reqid'): str,
+                Optional('ivl'): str,
+                Optional('label'): str,
+                Optional('reason'): str,
+                Optional('err_code'): str,
+                Optional('old'): str,
+                Optional('new'): str
+            },
+        }
+    }
+
+class ShowMonitorEventTraceDmvpnAll(ShowMonitorEventTraceDmvpnAllSchema):
+    """
+    Parser for
+        * 'show monitor event-trace dmvpn all'
+    """
+
+    cli_command = ['show monitor event-trace dmvpn all']
+
+    # Defines a function to run the cli_command
+    def cli(self, output=None):
+        if output is None:
+            # get output from device
+            output = self.device.execute(self.cli_command[0])
+
+        # initial return dictionary
+        ret_dict = {}
+
+        '''*Jun 22 06:39:28.358: NHRP-CACHE-ADD tunnel: Tu1 target: 
+            192.168.10. nbma_src: 1.1.1.1 vpn_src: 192.168.10.1 nbma_dest: 
+            3.3.3.1 vpn_dest: 192.168.10.3 vrf: global(0x0) label: none'''
+        p0 = re.compile(r"\*(?P<time_stamp>[A-z0-9\s\d:.]+) "
+            r"(?P<event>NHRP-CACHE-ADD) tunnel: (?P<tunnel>[A-z0-9]+) "
+            r"target: (?P<target>[0-9.]+) nbma_src: (?P<nbma_src>[0-9.]+) "
+            r"vpn_src: (?P<vpn_src>[0-9.]+) nbma_dest: (?P<nbma_dest>[0-9.]+) "
+            r"vpn_dest: (?P<vpn_dest>[0-9.]+) vrf: (?P<vrf>[a-z0()]+) "
+            r"label: (?P<label>[a-z]+)")
+
+        '''*Jun 22 06:39:28.361: NHRP-NHC-UP tunnel: Tu1 NHC up nbma_src: 
+            1.1.1.1 vpn_src: 192.168.10.1 nbma_dest: 3.3.3.1 vpn_dest: 
+            192.168.10.3 vrf: global(0x0)'''        
+        p1 = re.compile(r"\*(?P<time_stamp>[A-z0-9\s\d:.]+) "
+            r"(?P<event>NHRP-NHC-UP) tunnel: (?P<tunnel>[A-z0-9]+) NHC up "
+            r"nbma_src: (?P<nbma_src>[0-9.]+) vpn_src: (?P<vpn_src>[0-9.]+) "
+            r"nbma_dest: (?P<nbma_dest>[0-9.]+) vpn_dest: "
+            r"(?P<vpn_dest>[0-9.]+) vrf: (?P<vrf>[a-z0()]+)")
+
+        '''*Jun 22 06:39:28.362: NHRP-TUNNEL-ENDPOINT-ADD tunnel: Tu1 Added 
+            tunnel endpoints nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3'''        
+        p2 = re.compile(r"\*(?P<time_stamp>[A-z0-9\s\d:.]+) "
+            r"(?P<event>NHRP-TUNNEL-ENDPOINT-ADD) tunnel: "
+            r"(?P<tunnel>[A-z0-9]+) Added tunnel endpoints nbma_dest: "
+            r"(?P<nbma_dest>[0-9.]+) vpn_dest: (?P<vpn_dest>[0-9.]+)")
+
+        '''*Jun 22 06:39:28.930: NHRP-NHS-UP tunnel: Tu1 NHS up nbma_src: 
+            2.2.2.1 vpn_src: 192.168.10.2 nbma_dest: 1.1.1.1 vpn_dest: 
+            192.168.10.1 vrf: global(0x0)'''        
+        p3 = re.compile(r"\*(?P<time_stamp>[A-z0-9\s\d:.]+) "
+            r"(?P<event>NHRP-NHS-UP) tunnel: (?P<tunnel>[A-z0-9]+) NHS up "
+            r"nbma_src: (?P<nbma_src>[0-9.]+) vpn_src: (?P<vpn_src>[0-9.]+) "
+            r"nbma_dest: (?P<nbma_dest>[0-9.]+) vpn_dest: "
+            r"(?P<vpn_dest>[0-9.]+) vrf: (?P<vrf>[a-z0()]+)")
+
+        '''*Jun 22 06:51:10.254: NHRP-RECV-RES-REQ tunnel: Tu1 host with
+            nbma_src: 1.1.1.1 vpn_src: 192.168.10.3 received resolution 
+            request from nbma_dest: 2.2.2.1 vpn_dest: 192.168.10.2 vrf: 
+            global(0x0) label: none'''        
+        p4 = re.compile(r"\*(?P<time_stamp>[A-z0-9\s\d:.]+) "
+            r"(?P<event>NHRP-RECV-RES-REQ) tunnel: (?P<tunnel>[A-z0-9]+) host "
+            r"with nbma_src: (?P<nbma_src>[0-9.]+) vpn_src: "
+            r"(?P<vpn_src>[0-9.]+) received resolution request from nbma_dest: "
+            r"(?P<nbma_dest>[0-9.]+) vpn_dest: (?P<vpn_dest>[0-9.]+) vrf: "
+            r"(?P<vrf>[a-z0()]+) label: (?P<label>[a-z]+)")
+
+        '''*Jun 23 12:56:43.560: NHRP-SEND-RES-REQ tunnel: Tu1 host with 
+            nbma_src: 2.2.2.1 vpn_src: 192.168.10.2 send resolution request 
+            to nbma_dest: 1.1.1.1 vpn_dest: 192.168.10.3 vrf: global(0x0) 
+            label: none'''        
+        p5 = re.compile(r"\*(?P<time_stamp>[A-z0-9\s\d:.]+) "
+            r"(?P<event>NHRP-SEND-RES-REQ) tunnel: (?P<tunnel>[A-z0-9]+) host "
+            r"with nbma_src: (?P<nbma_src>[0-9.]+) vpn_src: "
+            r"(?P<vpn_src>[0-9.]+) send resolution request to nbma_dest: "
+            r"(?P<nbma_dest>[0-9.]+) vpn_dest: (?P<vpn_dest>[0-9.]+) vrf: "
+            r"(?P<vrf>[a-z0()]+) label: (?P<label>[a-z]+)")
+
+        '''*Jun 23 12:56:43.568: NHRP-RECV-RES-REPLY tunnel: Tu1 host with 
+            nbma_src: 2.2.2.1 vpn_src: 192.168.10.2 received resolution reply 
+            from nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3 vrf: global(0x0) 
+            label: none'''        
+        p6 = re.compile(r"\*(?P<time_stamp>[A-z0-9\s\d:.]+) "
+            r"(?P<event>NHRP-RECV-RES-REPLY) tunnel: (?P<tunnel>[A-z0-9]+) "
+            r"host with nbma_src: (?P<nbma_src>[0-9.]+) vpn_src: "
+            r"(?P<vpn_src>[0-9.]+) received resolution reply from nbma_dest: "
+            r"(?P<nbma_dest>[0-9.]+) vpn_dest: (?P<vpn_dest>[0-9.]+) vrf: "
+            r"(?P<vrf>[a-z0()]+) label: (?P<label>[a-z]+)")
+
+        '''*Jun 23 12:56:43.712: NHRP-SEND-RES-REPLY tunnel: Tu1 host with 
+            nbma_src: 3.3.3.1 vpn_src: 192.168.10.3 send resolution reply to 
+            nbma_dest: 2.2.2.1 vpn_dest: 192.168.10.2 vrf: global(0x0) 
+            label: illegal'''        
+        p8 = re.compile(r"\*(?P<time_stamp>[A-z0-9\s\d:.]+) "
+            r"(?P<event>NHRP-SEND-RES-REPLY) tunnel: (?P<tunnel>[A-z0-9]+) "
+            r"host with nbma_src: (?P<nbma_src>[0-9.]+) vpn_src: "
+            r"(?P<vpn_src>[0-9.]+) send resolution reply to nbma_dest: "
+            r"(?P<nbma_dest>[0-9.]+) vpn_dest: (?P<vpn_dest>[0-9.]+) vrf: "
+            r"(?P<vrf>[a-z0()]+) label: (?P<label>[a-z]+)")
+
+        '''*Jun 22 07:02:43.481: NHRP-RECV-PURGE-REQ tunnel: Tu1 host 
+            with nbma_src: 1.1.1.1 vpn_src: 192.168.10.1 receive purge 
+            request from nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3 vrf: 
+            global(0x0) label: explicit-null'''        
+        p9 = re.compile(r"\*(?P<time_stamp>[A-z0-9\s\d:.]+) "
+            r"(?P<event>NHRP-RECV-PURGE-REQ) tunnel: (?P<tunnel>[A-z0-9]+) "
+            r"host with nbma_src: (?P<nbma_src>[0-9.]+) vpn_src: "
+            r"(?P<vpn_src>[0-9.]+) receive purge request from nbma_dest: "
+            r"(?P<nbma_dest>[0-9.]+) vpn_dest: (?P<vpn_dest>[0-9.]+) vrf: "
+            r"(?P<vrf>[a-z0()]+) label: (?P<label>[a-z-]+)")
+
+        '''*Jun 22 07:06:10.841: NHRP-SEND-PURGE-REQ tunnel: Tu1 host with 
+            nbma_src: 3.3.3.1 vpn_src: 0.0.0.0 send purge request to nbma_dest: 
+            UNKNOWN vpn_dest: 192.168.10.1 vrf: global(0x0) label: none'''        
+        p10 = re.compile(r"\*(?P<time_stamp>[A-z0-9\s\d:.]+) "
+            r"(?P<event>NHRP-SEND-PURGE-REQ) tunnel: (?P<tunnel>[A-z0-9]+) "
+            r"host with nbma_src: (?P<nbma_src>[0-9.]+) vpn_src: "
+            r"(?P<vpn_src>[0-9.]+) send purge request to nbma_dest: "
+            r"(?P<nbma_dest>[A-Z0-9.]+) vpn_dest: (?P<vpn_dest>[0-9.]+) "
+            r"vrf: (?P<vrf>[a-z0()]+) label: (?P<label>[a-z]+)")
+
+        '''NHRP-NHC-DOWN tunnel: Tu1 NHC down nbma_src: 1.1.1.1 vpn_src: 
+            192.168.10.1 nbma_dest: 2.2.2.1 vpn_dest: 192.168.10.2 vrf: 
+            global(0x0) reason: EXT - Tunnel Interface AdminDown'''        
+        p11 = re.compile(r"\*(?P<time_stamp>[A-z0-9\s\d:.]+) "
+            r"(?P<event>NHRP-NHC-DOWN) tunnel: (?P<tunnel>[A-z0-9]+) NHC down "
+            r"nbma_src: (?P<nbma_src>[0-9.]+) vpn_src: (?P<vpn_src>[0-9.]+) "
+            r"nbma_dest: (?P<nbma_dest>[0-9.]+) vpn_dest: "
+            r"(?P<vpn_dest>[0-9.]+) vrf: (?P<vrf>[a-z0()]+) reason: "
+            r"(?P<reason>[A-z\s-]+)")
+
+        '''*Jun 22 08:56:36.794: NHRP-TUNNEL-ENDPOINT-DELETE tunnel: 
+            Tu1 Deleting tunnel endpoints nbma_dest: 3.3.3.1 vpn_dest: 
+            192.168.10.3'''        
+        p12 = re.compile(r"\*(?P<time_stamp>[A-z0-9\s\d:.]+) "
+            r"(?P<event>NHRP-TUNNEL-ENDPOINT-DELETE) tunnel: "
+            r"(?P<tunnel>[A-z0-9]+) Deleting tunnel endpoints nbma_dest: "
+            r"(?P<nbma_dest>[0-9.]+) vpn_dest: (?P<vpn_dest>[0-9.]+)")
+
+        '''*Jun 22 08:59:28.070: NHRP-NHS-DOWN tunnel: Tu1 NHS down 
+            nbma_src: 2.2.2.1 vpn_src: 192.168.10.2 nbma_dest: 1.1.1.1 
+            vpn_dest: 192.168.10.1 vrf: global(0x0) reason: NHRP - 
+            Registration Failure'''        
+        p13 = re.compile(r"\*(?P<time_stamp>[A-z0-9\s\d:.]+) "
+            r"(?P<event>NHRP-NHS-DOWN) tunnel: (?P<tunnel>[A-z0-9]+) NHS "
+            r"down nbma_src: (?P<nbma_src>[0-9.]+) vpn_src: "
+            r"(?P<vpn_src>[0-9.]+) nbma_dest: (?P<nbma_dest>[0-9.]+) "
+            r"vpn_dest: (?P<vpn_dest>[0-9.]+) vrf: (?P<vrf>[a-z0()]+) "
+            r"reason: (?P<reason>[A-z\s-]+)")
+
+        '''*Jun 22 08:59:28.071: NHRP-NHS-RECOVERY-NHS-STATE  NHS vpn_dest: 
+            192.168.10.1 Tunnel1 vrf 0 cluster 0 priority 0 transitioned to 
+            'expecting replies' from 'responding expecting replies'''        
+        p14 = re.compile(r"\*(?P<time_stamp>[A-z0-9\s\d:.]+) "
+            r"(?P<event>NHRP-NHS-RECOVERY-NHS-STATE)  NHS vpn_dest: "
+            r"(?P<vpn_dest>[0-9.]+) Tunnel1 vrf (?P<vrf>[0-9]+) cluster "
+            r"(?P<cluster>[0-9]+) priority (?P<priority>[0-9]+) transitioned "
+            r"to 'expecting replies' from 'responding expecting replies'")
+
+        '''*Jun 22 08:59:56.133: NHRP-CTRL-PLANE-RETRANS tunnel: Tu1 
+            retransmitting registration request for vpn_dest: 192.168.10.1 
+            reqid 2819 retrans ivl 2 sec vrf: NONE label: explicit-null'''        
+        p15 = re.compile(r"\*(?P<time_stamp>[A-z0-9\s\d:.]+) "
+            r"(?P<event>NHRP-CTRL-PLANE-RETRANS) tunnel: "
+            r"(?P<tunnel>[A-z0-9]+) retransmitting registration request for "
+            r"vpn_dest: (?P<vpn_dest>[0-9.]+) reqid (?P<reqid>[0-9]+) retrans "
+            r"ivl (?P<ivl>[0-9]+) sec vrf: (?P<vrf>[A-Za-z0()]+) label: "
+            r"(?P<label>[a-z-]+)")
+
+        '''*Jun 23 13:51:22.428: NHRP-NHP-DOWN tunnel: Tu1 NHP down 
+            nbma_src: 2.2.2.1 vpn_src: 192.168.10.2 nbma_dest: 3.3.3.1 
+            vpn_dest: 192.168.10.3 vrf: global(0x0) reason: No Reason'''        
+        p18 = re.compile(r"\*(?P<time_stamp>[A-z0-9\s\d:.]+) "
+            r"(?P<event>NHRP-NHP-DOWN) tunnel: (?P<tunnel>[A-z0-9]+) NHP down "
+            r"nbma_src: (?P<nbma_src>[0-9.]+) vpn_src: (?P<vpn_src>[0-9.]+) "
+            r"nbma_dest: (?P<nbma_dest>[0-9.]+) vpn_dest: "
+            r"(?P<vpn_dest>[0-9.]+) vrf: (?P<vrf>[a-z0()]+) reason: "
+            r"(?P<reason>[A-z\s]+)")
+
+        '''*Jun 24 09:09:36.455: NHRP-CACHE-DELETE tunnel: Tu1 nbma_src: 
+            1.1.1.1 vpn_src: 192.168.10.1 nbma_dest: 2.2.2.1 vpn_dest: 
+            192.168.10. vrf: global(0x0) label: none reason: 
+            EXT - Tunnel Interface AdminDown'''        
+        p20 = re.compile(r"\*(?P<time_stamp>[A-z0-9\s\d:.]+) "
+            r"(?P<event>NHRP-CACHE-DELETE) tunnel: (?P<tunnel>[A-z0-9]+) "
+            r"nbma_src: (?P<nbma_src>[0-9.]+) vpn_src: (?P<vpn_src>[0-9.]+) "
+            r"nbma_dest: (?P<nbma_dest>[0-9.]+) vpn_dest: "
+            r"(?P<vpn_dest>[0-9.]+) vrf: (?P<vrf>[a-z0()]+) label: "
+            r"(?P<label>[a-z-]+) reason: (?P<reason>[A-z\s-]+)")
+
+        '''*Jun 26 18:38:52.148: NHRP-CACHE-UPDATE tunnel: Tu1 target: 
+            192.168.10. nbma_src: 2.2.2.1 vpn_src: 192.168.10.2 nbma_dest: 
+            1.1.1.1 vpn_dest: 192.168.10.3 vrf: global(0x0) label: none'''        
+        p21 = re.compile(r"\*(?P<time_stamp>[A-z0-9\s\d:.]+) "
+            r"(?P<event>NHRP-CACHE-UPDATE) tunnel: (?P<tunnel>[A-z0-9]+) "
+            r"target: (?P<target>[0-9.]+) nbma_src: (?P<nbma_src>[0-9.]+) "
+            r"vpn_src: (?P<vpn_src>[0-9.]+) nbma_dest: (?P<nbma_dest>[0-9.]+) "
+            r"vpn_dest: (?P<vpn_dest>[0-9.]+) vrf: (?P<vrf>[a-z0()]+) label: "
+            r"(?P<label>[a-z-]+)")
+
+        '''*Jun 27 17:48:34.466: NHRP-CACHE-NBMA-NHOP-CHANGE tunnel: Tu1 
+            cache address change nbma old: 1.1.1.1 -> new: 3.3.3.1'''        
+        p22 = re.compile(r"\*(?P<time_stamp>[A-z0-9\s\d:.]+) "
+            r"(?P<event>NHRP-CACHE-NBMA-NHOP-CHANGE) tunnel: "
+            r"(?P<tunnel>[A-z0-9]+) cache address change nbma old: "
+            r"(?P<old>[0-9.]+) -> new: (?P<new>[0-9.]+)")
+
+        '''Jul  2 16:35:19.386: NHRP-RECV-PURGE-REPLY tunnel: Tu1 host with
+            nbma_src: 2.2.2.1 vpn_src: 192.168.10.2 receive purge reply from 
+            nbma_dest: 2.2.2.1 vpn_dest: 192.168.10.3 vrf: global(0x0) 
+            label: none'''        
+        p23 = re.compile(r"\*(?P<time_stamp>[A-z0-9\s\d:.]+) "
+            r"(?P<event>NHRP-RECV-PURGE-REPLY) tunnel: (?P<tunnel>[A-z0-9]+) "
+            r"host with nbma_src: (?P<nbma_src>[0-9.]+) vpn_src: "
+            r"(?P<vpn_src>[0-9.]+) receive purge reply from nbma_dest: "
+            r"(?P<nbma_dest>[0-9.]+) vpn_dest: (?P<vpn_dest>[0-9.]+) vrf: "
+            r"(?P<vrf>[a-z0()]+) label: (?P<label>[a-z]+)")
+
+        '''*Jul  2 16:30:55.263: NHRP-SEND-PURGE-REPLY tunnel: Tu1  host 
+            with nbma_src: 3.3.3.1 vpn_src: 192.168.10.3 send purge reply 
+            to nbma_dest: 2.2.2.1 vpn_dest: 192.168.10.2 vrf: global(0x0) 
+            label: illegal'''        
+        p24 = re.compile(r"\*(?P<time_stamp>[A-z0-9\s\d:.]+) "
+            r"(?P<event>NHRP-SEND-PURGE-REPLY) tunnel: (?P<tunnel>[A-z0-9]+)  "
+            r"host with nbma_src: (?P<nbma_src>[0-9.]+) vpn_src: "
+            r"(?P<vpn_src>[0-9.]+) send purge reply to nbma_dest: "
+            r"(?P<nbma_dest>[0-9.]+) vpn_dest: (?P<vpn_dest>[0-9.]+) vrf: "
+            r"(?P<vrf>[a-z0()]+) label: (?P<label>[a-z]+)")
+
+        for line in output.splitlines():
+            line = line.strip()
+            
+            '''*Jun 22 06:39:28.358: NHRP-CACHE-ADD tunnel: Tu1 target: 
+            192.168.10. nbma_src: 1.1.1.1 vpn_src: 192.168.10.1 nbma_dest: 
+            3.3.3.1 vpn_dest: 192.168.10.3 vrf: global(0x0) label: none'''
+            if m:= p0.match(line):
+                groups = m.groupdict()
+                dest = groups['nbma_dest'].replace(".","_")
+                nhrp_cache_add = ret_dict.setdefault("nhrp_cache_add", {})
+                nhrp_cache_add.update({
+                    dest : {
+                        'event': groups['event'],
+                        'tunnel': groups['tunnel'],
+                        'target': groups['target'],
+                        'nbma_src': groups['nbma_src'],
+                        'vpn_src': groups['vpn_src'],
+                        'nbma_dest': groups['nbma_dest'],
+                        'vpn_dest': groups['vpn_dest'],
+                        'vrf': groups['vrf'],
+                        'label': groups['label']
+                    }
+                })
+                continue
+
+            '''*Jun 22 06:39:28.361: NHRP-NHC-UP tunnel: Tu1 NHC up nbma_src: 
+            1.1.1.1 vpn_src: 192.168.10.1 nbma_dest: 3.3.3.1 vpn_dest: 
+            192.168.10.3 vrf: global(0x0)'''
+            if m:= p1.match(line):
+                groups = m.groupdict()
+                dest = groups['nbma_dest'].replace(".","_")
+                nhrp_nhc_up = ret_dict.setdefault("nhrp_nhc_up", {})
+                nhrp_nhc_up.update({
+                    dest : {
+                        "event": groups['event'],
+                        "tunnel": groups['tunnel'],
+                        'nbma_src': groups['nbma_src'],
+                        'vpn_src': groups['vpn_src'],
+                        'nbma_dest': groups['nbma_dest'],
+                        'vpn_dest': groups['vpn_dest'],
+                        'vrf': groups['vrf']
+                    }
+                })
+                continue
+
+            '''*Jun 22 06:39:28.362: NHRP-TUNNEL-ENDPOINT-ADD tunnel: Tu1 Added 
+            tunnel endpoints nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3'''
+            if m:= p2.match(line):
+                groups = m.groupdict()
+                dest = groups['nbma_dest'].replace(".","_")
+                nhrp_tunnel_endpoint_add = ret_dict.setdefault(
+                    "nhrp_tunnel_endpoint_add", {})
+                nhrp_tunnel_endpoint_add.update({
+                    dest : {
+                        "event": groups['event'],
+                        "tunnel": groups['tunnel'],
+                        'nbma_dest': groups['nbma_dest'],
+                        'vpn_dest': groups['vpn_dest']
+                    }
+                })
+                continue
+
+            '''*Jun 22 06:39:28.930: NHRP-NHS-UP tunnel: Tu1 NHS up nbma_src: 
+            2.2.2.1 vpn_src: 192.168.10.2 nbma_dest: 1.1.1.1 vpn_dest: 
+            192.168.10.1 vrf: global(0x0)'''
+            if m:= p3.match(line):
+                groups = m.groupdict()
+                dest = groups['nbma_dest'].replace(".","_")
+                nhrp_nhs_up = ret_dict.setdefault("nhrp_nhs_up", {})
+                nhrp_nhs_up.update({
+                    dest : {
+                        "event": groups['event'],
+                        "tunnel": groups['tunnel'],
+                        'nbma_src': groups['nbma_src'],
+                        'vpn_src': groups['vpn_src'],
+                        'nbma_dest': groups['nbma_dest'],
+                        'vpn_dest': groups['vpn_dest'],
+                        'vrf': groups['vrf']
+                    }
+                })
+                continue
+
+            '''*Jun 22 06:51:10.254: NHRP-RECV-RES-REQ tunnel: Tu1 host with
+              nbma_src: 1.1.1.1 vpn_src: 192.168.10.3 received resolution 
+              request from nbma_dest: 2.2.2.1 vpn_dest: 192.168.10.2 vrf: 
+              global(0x0) label: none'''
+            if m:= p4.match(line):
+                groups = m.groupdict()
+                dest = groups['nbma_dest'].replace(".","_")
+                nhrp_recv_res_req = ret_dict.setdefault(
+                    "nhrp_recv_res_req", {})
+                nhrp_recv_res_req.update({
+                    dest : {
+                        "event": groups['event'],
+                        "tunnel": groups['tunnel'],
+                        "nbma_src": groups['nbma_src'],
+                        "vpn_src": groups['vpn_src'],
+                        "nbma_dest": groups['nbma_dest'],
+                        "vpn_dest": groups['vpn_dest'],
+                        "vrf": groups['vrf'],
+                        "label": groups['label']
+                    }
+                })
+                continue
+
+            '''*Jun 23 12:56:43.560: NHRP-SEND-RES-REQ tunnel: Tu1 host with 
+            nbma_src: 2.2.2.1 vpn_src: 192.168.10.2 send resolution request 
+            to nbma_dest: 1.1.1.1 vpn_dest: 192.168.10.3 vrf: global(0x0) 
+            label: none'''
+            if m:= p5.match(line):
+                groups = m.groupdict()
+                dest = groups['nbma_dest'].replace(".","_")
+                nhrp_send_res_req = ret_dict.setdefault(
+                    "nhrp_send_res_req", {})
+                nhrp_send_res_req.update({
+                    dest : {
+                        "event": groups['event'],
+                        "tunnel": groups['tunnel'],
+                        "nbma_src": groups['nbma_src'],
+                        "vpn_src": groups['vpn_src'],
+                        "nbma_dest": groups['nbma_dest'],
+                        "vpn_dest": groups['vpn_dest'],
+                        "vrf": groups['vrf'],
+                        "label": groups['label']
+                    }
+                })
+                continue
+
+            '''*Jun 23 12:56:43.568: NHRP-RECV-RES-REPLY tunnel: Tu1 host with 
+            nbma_src: 2.2.2.1 vpn_src: 192.168.10.2 received resolution reply 
+            from nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3 vrf: global(0x0) 
+            label: none'''
+            if m:= p6.match(line):
+                groups = m.groupdict()
+                dest = groups['nbma_dest'].replace(".","_")
+                nhrp_recv_res_reply = ret_dict.setdefault(
+                    "nhrp_recv_res_reply", {})
+                nhrp_recv_res_reply.update({
+                    dest : {
+                        "event": groups['event'],
+                        "tunnel": groups['tunnel'],
+                        "nbma_src": groups['nbma_src'],
+                        "vpn_src": groups['vpn_src'],
+                        "nbma_dest": groups['nbma_dest'],
+                        "vpn_dest": groups['vpn_dest'],
+                        "vrf": groups['vrf'],
+                        "label": groups['label']
+                    }
+                })
+                continue
+
+            '''*Jun 23 12:56:43.712: NHRP-SEND-RES-REPLY tunnel: Tu1 host with 
+            nbma_src: 3.3.3.1 vpn_src: 192.168.10.3 send resolution reply to 
+            nbma_dest: 2.2.2.1 vpn_dest: 192.168.10.2 vrf: global(0x0) 
+            label: illegal'''
+            if m:= p8.match(line):
+                groups = m.groupdict()
+                dest = groups['nbma_dest'].replace(".","_")
+                nhrp_send_res_reply = ret_dict.setdefault(
+                    "nhrp_send_res_reply", {})
+                nhrp_send_res_reply.update({
+                    dest : {
+                        "event": groups['event'],
+                        "tunnel": groups['tunnel'],
+                        "nbma_src": groups['nbma_src'],
+                        "vpn_src": groups['vpn_src'],
+                        "nbma_dest": groups['nbma_dest'],
+                        "vpn_dest": groups['vpn_dest'],
+                        "vrf": groups['vrf'],
+                        "label": groups['label']
+                    }
+                })
+                continue
+
+            '''*Jun 22 07:02:43.481: NHRP-RECV-PURGE-REQ tunnel: Tu1 host 
+            with nbma_src: 1.1.1.1 vpn_src: 192.168.10.1 receive purge 
+            request from nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3 vrf: 
+            global(0x0) label: explicit-null'''
+            if m:= p9.match(line):
+                groups = m.groupdict()
+                dest = groups['nbma_dest'].replace(".","_")
+                nhrp_recv_purge_req = ret_dict.setdefault(
+                    "nhrp_recv_purge_req", {})
+                nhrp_recv_purge_req.update({
+                    dest : {
+                        "event": groups['event'],
+                        "tunnel": groups['tunnel'],
+                        "nbma_src": groups['nbma_src'],
+                        "vpn_src": groups['vpn_src'],
+                        "nbma_dest": groups['nbma_dest'],
+                        "vpn_dest": groups['vpn_dest'],
+                        "vrf": groups['vrf'],
+                        "label": groups['label']
+                    }
+                })
+                continue
+
+            '''*Jun 22 07:06:10.841: NHRP-SEND-PURGE-REQ tunnel: Tu1 host with 
+            nbma_src: 3.3.3.1 vpn_src: 0.0.0.0 send purge request to nbma_dest: 
+            UNKNOWN vpn_dest: 192.168.10.1 vrf: global(0x0) label: none'''
+            if m:= p10.match(line):
+                groups = m.groupdict()
+                dest = groups['nbma_dest'].replace(".","_")
+                nhrp_send_purge_req = ret_dict.setdefault("nhrp_send_purge_req", {})
+                nhrp_send_purge_req.update({
+                    dest : {
+                        "event": groups['event'],
+                        "tunnel": groups['tunnel'],
+                        "nbma_src": groups['nbma_src'],
+                        "vpn_src": groups['vpn_src'],
+                        "nbma_dest": groups['nbma_dest'],
+                        "vpn_dest": groups['vpn_dest'],
+                        "vrf": groups['vrf'],
+                        "label": groups['label']
+                    }
+                })
+                continue
+
+            '''NHRP-NHC-DOWN tunnel: Tu1 NHC down nbma_src: 1.1.1.1 vpn_src: 
+            192.168.10.1 nbma_dest: 2.2.2.1 vpn_dest: 192.168.10.2 vrf: 
+            global(0x0) reason: EXT - Tunnel Interface AdminDown'''
+            if m:= p11.match(line):
+                groups = m.groupdict()
+                dest = groups['nbma_dest'].replace(".","_")
+                nhrp_nhc_down = ret_dict.setdefault(
+                    "nhrp_nhc_down", {})
+                nhrp_nhc_down.update({
+                    dest : {
+                        "event": groups['event'],
+                        "tunnel": groups['tunnel'],
+                        "nbma_src": groups['nbma_src'],
+                        "vpn_src": groups['vpn_src'],
+                        "nbma_dest": groups['nbma_dest'],
+                        "vpn_dest": groups['vpn_dest'],
+                        "vrf": groups['vrf'],
+                        "reason": groups['reason']
+                    }
+                })
+                continue
+
+            '''*Jun 22 08:56:36.794: NHRP-TUNNEL-ENDPOINT-DELETE tunnel: 
+            Tu1 Deleting tunnel endpoints nbma_dest: 3.3.3.1 vpn_dest: 
+            192.168.10.3'''
+            if m:= p12.match(line):
+                groups = m.groupdict()
+                dest = groups['nbma_dest'].replace(".","_")
+                nhrp_tunnel_endpoint_delete = ret_dict.setdefault(
+                    "nhrp_tunnel_endpoint_delete", {})
+                nhrp_tunnel_endpoint_delete.update({
+                    dest : {
+                        "event": groups['event'],
+                        "tunnel": groups['tunnel'],
+                        "nbma_dest": groups['nbma_dest'],
+                        "vpn_dest": groups['vpn_dest']
+                    }
+                })
+                continue
+
+            '''*Jun 22 08:59:28.070: NHRP-NHS-DOWN tunnel: Tu1 NHS down 
+            nbma_src: 2.2.2.1 vpn_src: 192.168.10.2 nbma_dest: 1.1.1.1 
+            vpn_dest: 192.168.10.1 vrf: global(0x0) reason: NHRP - 
+            Registration Failure'''
+            if m:= p13.match(line):
+                groups = m.groupdict()
+                dest = groups['nbma_dest'].replace(".","_")
+                nhrp_nhs_down = ret_dict.setdefault(
+                    "nhrp_nhs_down", {})
+                nhrp_nhs_down.update({
+                    dest : {
+                        "event": groups['event'],
+                        "tunnel": groups['tunnel'],
+                        "nbma_src": groups['nbma_src'],
+                        "vpn_src": groups['vpn_src'],
+                        "nbma_dest": groups['nbma_dest'],
+                        "vpn_dest": groups['vpn_dest'],
+                        "vrf": groups['vrf']
+                    }
+                })
+                continue
+
+            '''*Jun 22 08:59:28.071: NHRP-NHS-RECOVERY-NHS-STATE  NHS vpn_dest: 
+            192.168.10.1 Tunnel1 vrf 0 cluster 0 priority 0 transitioned to 
+            'expecting replies' from 'responding expecting replies'''
+            if m:= p14.match(line):
+                groups = m.groupdict()
+                dest = groups['vpn_dest'].replace(".","_")
+                nhrp_nhs_recovery_nhs_state = ret_dict.setdefault(
+                    "nhrp_nhs_recovery_nhs_state", {})
+                nhrp_nhs_recovery_nhs_state.update({
+                    dest : {
+                        "event": groups['event'],
+                        "vpn_dest": groups['vpn_dest']
+                    }
+                })
+                continue
+
+            '''*Jun 22 08:59:56.133: NHRP-CTRL-PLANE-RETRANS tunnel: Tu1 
+            retransmitting registration request for vpn_dest: 192.168.10.1 
+            reqid 2819 retrans ivl 2 sec vrf: NONE label: explicit-null'''
+            if m:= p15.match(line):
+                groups = m.groupdict()
+                dest = groups['vpn_dest'].replace(".","_")
+                nhrp_ctrl_plane_retrance = ret_dict.setdefault(
+                    "nhrp_ctrl_plane_retrance", {})
+                nhrp_ctrl_plane_retrance.update({
+                    dest : {
+                        "event": groups['event'],
+                        "tunnel": groups['tunnel'],
+                        "vpn_dest": groups['vpn_dest'],
+                        "vrf": groups['vrf']
+                    }
+                })
+                continue
+
+            '''*Jun 23 13:51:22.428: NHRP-NHP-DOWN tunnel: Tu1 NHP down 
+            nbma_src: 2.2.2.1 vpn_src: 192.168.10.2 nbma_dest: 3.3.3.1 
+            vpn_dest: 192.168.10.3 vrf: global(0x0) reason: No Reason'''
+            if m:= p18.match(line):
+                groups = m.groupdict()
+                dest = groups['nbma_dest'].replace(".","_")
+                nhrp_nhp_down = ret_dict.setdefault("nhrp_nhp_down", {})
+                nhrp_nhp_down.update({
+                    dest : {
+                        "event": groups['event'],
+                        "tunnel": groups['tunnel'],
+                        "nbma_src": groups['nbma_src'],
+                        "vpn_src": groups['vpn_src'],
+                        "nbma_dest": groups['nbma_dest'],
+                        "vpn_dest": groups['vpn_dest'],
+                        "vrf": groups['vrf'],
+                        "reason": groups['reason']
+                    }
+                })
+                continue
+
+            '''*Jun 24 09:09:36.455: NHRP-CACHE-DELETE tunnel: Tu1 nbma_src: 
+            1.1.1.1 vpn_src: 192.168.10.1 nbma_dest: 2.2.2.1 vpn_dest: 
+            192.168.10. vrf: global(0x0) label: none reason: 
+            EXT - Tunnel Interface AdminDown'''
+            if m:= p20.match(line):
+                groups = m.groupdict()
+                dest = groups['nbma_dest'].replace(".","_")
+                nhrp_cache_delete = ret_dict.setdefault(
+                    "nhrp_cache_delete", {})
+                nhrp_cache_delete.update({
+                    dest : {
+                        "event": groups['event'],
+                        "tunnel": groups['tunnel'],
+                        "nbma_src": groups['nbma_src'],
+                        "vpn_src": groups['vpn_src'],
+                        "nbma_dest": groups['nbma_dest'],
+                        "vpn_dest": groups['vpn_dest'],
+                        "vrf": groups['vrf'],
+                        "label": groups['label'],
+                        "reason": groups['reason']
+                    }
+                })
+                continue
+
+            '''*Jun 26 18:38:52.148: NHRP-CACHE-UPDATE tunnel: Tu1 target: 
+            192.168.10. nbma_src: 2.2.2.1 vpn_src: 192.168.10.2 nbma_dest: 
+            1.1.1.1 vpn_dest: 192.168.10.3 vrf: global(0x0) label: none'''
+            if m:= p21.match(line):
+                groups = m.groupdict()
+                dest = groups['nbma_dest'].replace(".","_")
+                nhrp_cache_update = ret_dict.setdefault(
+                    "nhrp_cache_update", {})
+                nhrp_cache_update.update({
+                    dest : {
+                        "event": groups['event'],
+                        "tunnel": groups['tunnel'],
+                        "target": groups['target'],
+                        "nbma_src": groups['nbma_src'],
+                        "vpn_src": groups['vpn_src'],
+                        "nbma_dest": groups['nbma_dest'],
+                        "vpn_dest": groups['vpn_dest'],
+                        "vrf": groups['vrf'],
+                        "label": groups['label']
+                    }
+                })
+                continue
+
+            '''*Jun 27 17:48:34.466: NHRP-CACHE-NBMA-NHOP-CHANGE tunnel: Tu1 
+            cache address change nbma old: 1.1.1.1 -> new: 3.3.3.1'''
+            if m:= p22.match(line):
+                groups = m.groupdict()
+                dest = groups['old'].replace(".","_")
+                nhrp_cache_nbma_nhop_change = ret_dict.setdefault(
+                    "nhrp_cache_nbma_nhop_change", {})
+                nhrp_cache_nbma_nhop_change.update({
+                    dest : {
+                        "event": groups['event'],
+                        "tunnel": groups['tunnel'],
+                        "old": groups['old'],
+                        "new": groups['new']
+                    }
+                })
+                continue
+
+            '''Jul  2 16:35:19.386: NHRP-RECV-PURGE-REPLY tunnel: Tu1 host with
+              nbma_src: 2.2.2.1 vpn_src: 192.168.10.2 receive purge reply from 
+              nbma_dest: 2.2.2.1 vpn_dest: 192.168.10.3 vrf: global(0x0) 
+              label: none'''
+            if m:= p23.match(line):
+                groups = m.groupdict()
+                dest = groups['nbma_dest'].replace(".","_")
+                nhrp_recv_purge_reply = ret_dict.setdefault(
+                    "nhrp_recv_purge_reply", {})
+                nhrp_recv_purge_reply.update({
+                    dest : {
+                        "event": groups['event'],
+                        "tunnel": groups['tunnel'],
+                        "nbma_src": groups['nbma_src'],
+                        "vpn_src": groups['vpn_src'],
+                        "nbma_dest": groups['nbma_dest'],
+                        "vpn_dest": groups['vpn_dest'],
+                        "vrf": groups['vrf'],
+                        "label": groups['label']
+                    }
+                })
+                continue
+
+            '''*Jul  2 16:30:55.263: NHRP-SEND-PURGE-REPLY tunnel: Tu1  host 
+            with nbma_src: 3.3.3.1 vpn_src: 192.168.10.3 send purge reply 
+            to nbma_dest: 2.2.2.1 vpn_dest: 192.168.10.2 vrf: global(0x0) 
+            label: illegal'''
+            if m:= p24.match(line):
+                groups = m.groupdict()
+                dest = groups['nbma_dest'].replace(".","_")
+                nhrp_send_purge_reply = ret_dict.setdefault(
+                    "nhrp_send_purge_reply", {})
+                nhrp_send_purge_reply.update({
+                    dest : {
+                        "event": groups['event'],
+                        "tunnel": groups['tunnel'],
+                        "nbma_src": groups['nbma_src'],
+                        "vpn_src": groups['vpn_src'],
+                        "nbma_dest": groups['nbma_dest'],
+                        "vpn_dest": groups['vpn_dest'],
+                        "vrf": groups['vrf'],
+                        "label": groups['label']
+                    }
+                })
+                continue
+        return ret_dict

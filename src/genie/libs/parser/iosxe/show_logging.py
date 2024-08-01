@@ -832,9 +832,11 @@ class ShowLoggingOnboardRpActiveStatus(ShowLoggingOnboardRpActiveStatusSchema):
         if output is None:
             # Build the command
             if rp_standby:
-                output = self.device.execute(self.cli_command[1].format(rp_standby=rp_standby))
+                cmd = self.cli_command[1].format(rp_standby=rp_standby)
             else:
-                output = self.device.execute(self.cli_command[0])
+                cmd = self.cli_command[0]
+            
+            output = self.device.execute(cmd)  
             
         ret_dict ={}
         #Application Clilog:
@@ -932,7 +934,7 @@ class ShowLoggingOnboardRpActiveTemperatureContinuous(ShowLoggingOnboardRpActive
             elif rp_standby:           
                 cmd = self.cli_command[2].format(rp_standby=rp_standby,include=include)   
             else:
-                cmd = self.cli_command[1]  
+                cmd = self.cli_command[1].format(include=include) 
 
             # Execute the command
             output = self.device.execute(cmd)          
@@ -940,7 +942,7 @@ class ShowLoggingOnboardRpActiveTemperatureContinuous(ShowLoggingOnboardRpActive
         p1 = re.compile('^(?P<continuous_info>[A-Z ]+) CONTINUOUS INFORMATION$')
 
         #No continuous data
-        p2 = re.compile('^(?P<no_date>No continuous data)$')
+        p2 = re.compile('^(?P<no_date>No continuous data|Application is not yet initialized.*)$')
 
         #Temp: CPU board           23
         p3 = re.compile('^(\w+\: )?(?P<sensor_name>\w+.*?)\s+(?P<sensor_count>\d+)$')
@@ -1011,7 +1013,8 @@ class ShowLoggingOnboardRpActiveTemperatureContinuous(ShowLoggingOnboardRpActive
         
         
 class ShowLoggingOnboardRpActiveTemperatureDetailSchema(MetaParser):
-    """Schema for show logging onboard rp [active|syandby] [temperature|voltage] detail 
+    """Schema for show logging onboard rp [active|standby] [temperature|voltage] detail 
+                  show logging onboard rp [active|standby] [temperature|voltage]
                 """
 
     schema = {
@@ -1032,12 +1035,17 @@ class ShowLoggingOnboardRpActiveTemperatureDetail(ShowLoggingOnboardRpActiveTemp
     """Schema for show logging onboard rp [active|standby] [temperature|voltage] detail 
                 """
 
-    cli_command = 'show logging onboard rp {rp} {feature} detail'
-
-    def cli(self, rp , feature , output=None):
+    cli_command = ['show logging onboard rp {rp} {feature} {detail}',
+                   'show logging onboard rp {rp} {feature}']
+                   
+    def cli(self, rp , feature ,detail = "", output=None):
         if output is None:
-            output = self.device.execute(self.cli_command.format(rp=rp,feature=feature))
-
+            if detail:
+                cmd = self.cli_command[0].format(rp=rp,feature=feature,detail=detail)
+            else:
+                cmd = self.cli_command[1].format(rp=rp,feature=feature)
+        
+            output = self.device.execute(cmd)
         ret_dict = {}
 
         #Number of sensors          : 15
@@ -1082,7 +1090,6 @@ class ShowLoggingOnboardRpActiveTemperatureDetail(ShowLoggingOnboardRpActiveTemp
                 continue
 
         return ret_dict
-
 
 class ShowLoggingOnboardRpActiveUptimeDetailSchema(MetaParser):
  

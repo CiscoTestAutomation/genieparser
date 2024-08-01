@@ -1,0 +1,13 @@
+IPV4ROUTE_ID:id:0x5a4d1cf0f4d8 nobj:(IPNEXTHOP_ID,0x40) 2.2.2.3/32 tblid:0 DA:1
+    State:(0) success
+   NPD: device:0 lspa_rec:0 api_type:host(1)
+   State:(0) success
+   Mac address of Host:00a7.429b.db7f
+   Host L3Port OID:0x6e6
+  ADJ:objid:0x40 (IPv4: 2.2.2.3)  nh_type:NHADJ_NORMAL iif_id:0x553 ether_type:0x8 #child:2
+      srcmac:40b5.c1ff.d902 dstmac:00a7.429b.db7f
+      State:(0) success
+     NPD: fec_oid:0x6ea was_nor_nh:1 cr_def:0 stale:0 l3port_valid:1
+     NPD: device:0 nh_gid/oid:8/0x466 old_gid/oid:0/0x0 parent_oid:0x6e6
+     State:(0) success
+     SDK: cla_nhtype:0

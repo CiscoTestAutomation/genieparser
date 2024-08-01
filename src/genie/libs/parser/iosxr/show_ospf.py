@@ -1445,7 +1445,19 @@ class ShowOspfVrfAllInclusiveSchema(MetaParser):
                                         Optional("metric"): int,
                                     },
                                 },
-                                Optional("database_control"): {"max_lsa": int},
+                                Optional("database_control"): {
+                                    "max_lsa": int,
+                                    Optional("current_lsa"): int,
+                                    Optional("threshold"): int,
+                                    Optional("ignore_time"): int,
+                                    Optional("reset_time"): int,
+                                    Optional("allowed_ignore_count"): int,
+                                    Optional("current_ignore_count"): int,
+                                },
+                                Optional("suppress_neighbor"): {
+                                    Optional("max_external_prefix"): int,
+                                    Optional("warning_threshold"): int,
+                                },
                                 Optional("stub_router"): {
                                     Optional("always"): {
                                         Optional("always"): bool,
@@ -1628,6 +1640,8 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
         ret_dict = {}
         af = "ipv4"  # this is ospf - always ipv4
         condition = "always"
+        block_name = ""
+
         p1 = re.compile(
             r"(?:^VRF +(?P<vrf>(\S+)) +in +)?Routing +Process"
             ' +"(?:ospf)? +(?P<instance>([a-zA-Z0-9\s]+))"'
@@ -1829,6 +1843,24 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
         # Post Convergence Path   0
         p53 = re.compile(r"^Post +Convergence +Path +(?P<post_convergence_path>\S+)$")
 
+        # Current number of non self-generated LSA 4
+        p54 = re.compile(r"^Current number of non self-generated LSA (?P<current_lsa>\d+)$")
+
+        # Ignore-time 5 minutes, reset-time 10 minutes
+        p55 = re.compile(r"^Ignore-time (?P<ignore_time>\d+) minutes, "
+                         r"reset-time (?P<reset_time>\d+) minutes$")
+
+        # Ignore-count allowed 5, current ignore-count 0
+        p56 = re.compile(r"^Ignore-count allowed (?P<allowed_ignore_count>\d+), "
+                         r"current ignore-count (?P<current_ignore_count>\d+)$")
+
+        # Maximum number of external prefixes per router 50000 (suppress-neighbor)
+        p57 = re.compile(r"^Maximum number of external prefixes per router "
+                         r"(?P<max_external_prefix>\d+) \(suppress-neighbor\)$")
+
+        # Warning threshold 75%
+        p58 = re.compile(r"^Warning threshold (?P<warning_threshold>\d+)\%$")
+
         for line in out.splitlines():
             line = line.strip()
 
@@ -1904,7 +1936,8 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
             if m:
                 if "redistribution" not in sub_dict:
                     sub_dict["redistribution"] = {}
-                    continue
+                block_name = "redistribution"
+                continue
 
             # connected
             # connected with metric mapped to 10
@@ -1961,11 +1994,14 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
             # Threshold for warning message 70%
             m = p4_4.match(line)
             if m:
-                if "max_prefix" not in sub_dict["redistribution"]:
-                    sub_dict["redistribution"]["max_prefix"] = {}
-                sub_dict["redistribution"]["max_prefix"]["prefix_thld"] = int(
-                    m.groupdict()["thld"]
-                )
+                if block_name == "redistribution":
+                    if "max_prefix" not in sub_dict["redistribution"]:
+                        sub_dict["redistribution"]["max_prefix"] = {}
+                    sub_dict["redistribution"]["max_prefix"]["prefix_thld"] = int(
+                        m.groupdict()["thld"]
+                    )
+                elif block_name == "database_control":
+                    sub_dict["database_control"]["threshold"] = int(m.groupdict()["thld"])
                 continue
 
             # It is an area border router
@@ -2514,6 +2550,7 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
             if m:
                 if "database_control" not in sub_dict:
                     sub_dict["database_control"] = {}
+                block_name = "database_control"
                 sub_dict["database_control"]["max_lsa"] = int(m.groupdict()["max_lsa"])
                 continue
 
@@ -2646,6 +2683,54 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                 sub_dict.setdefault("ipfrr_per_prefix_tiebreakers", {})[
                     "post_convergence_path"
                 ] = group["post_convergence_path"]
+                continue
+
+            # Current number of non self-generated LSA 4
+            m = p54.match(line)
+            if m:
+                group = m.groupdict()
+                sub_dict["database_control"].update({
+                    "current_lsa": int(group["current_lsa"])
+                })
+                continue
+
+            # Ignore-time 5 minutes, reset-time 10 minutes
+            m = p55.match(line)
+            if m:
+                group = m.groupdict()
+                sub_dict["database_control"].update({
+                    "ignore_time": int(group["ignore_time"]),
+                    "reset_time": int(group["reset_time"])
+                })
+                continue
+
+            # Ignore-count allowed 5, current ignore-count 0
+            m = p56.match(line)
+            if m:
+                group = m.groupdict()
+                sub_dict["database_control"].update({
+                    "allowed_ignore_count": int(group["allowed_ignore_count"]),
+                    "current_ignore_count": int(group["current_ignore_count"])
+                })
+                continue
+
+            # Maximum number of external prefixes per router 50000 (suppress-neighbor)
+            m = p57.match(line)
+            if m:
+                group = m.groupdict()
+                suppress_neighbor_dict = sub_dict.setdefault("suppress_neighbor", {})
+                suppress_neighbor_dict.update({
+                    "max_external_prefix": int(group["max_external_prefix"])
+                })
+                continue
+
+            # Warning threshold 75%
+            m = p58.match(line)
+            if m:
+                group = m.groupdict()
+                suppress_neighbor_dict.update({
+                    "warning_threshold": int(group["warning_threshold"]),
+                })
                 continue
 
         return ret_dict
@@ -7920,3 +8005,4 @@ class ShowOspfProcessIdVrfName(ShowOspfProcessIdVrfNameSchema):
             
                 
         return ret_dict
+

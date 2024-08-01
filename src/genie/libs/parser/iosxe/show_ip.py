@@ -1737,7 +1737,7 @@ class ShowIpDhcpSnoopingBindingSchema(MetaParser):
 
     schema = {
         'total_bindings': int,
-        'interfaces': {
+        Optional('interfaces'): {
             Any(): {
                 'vlan': {
                     Any(): {

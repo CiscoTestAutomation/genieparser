@@ -608,7 +608,8 @@ class ShowLicenseStatus(ShowLicenseStatusSchema):
         #Active: PID:C9300-24UX,SN:FCW2303D16Y
         p11_2=re.compile(r'^Active: +(?P<active>)+PID:+(?P<pid>.*),+SN:+(?P<sn>.*)$')
         #INSTALLED on Sep 27 12:22:33 2021 UTC
-        p11_3=re.compile(r'^INSTALLED +on +.*|^<none>.*')
+        # <none> removed as it also appears in other contexts, like 'Features Authorized'
+        p11_3=re.compile(r'^INSTALLED +on +.*')
         #Standby:
         p11_4=re.compile(r'^Standby: +(?P<standby>)')
         # Standby: PID:C9300-24U,SN:FHH2043P09E
@@ -992,7 +993,7 @@ class ShowLicenseStatus(ShowLicenseStatusSchema):
               active['active']=group
               result_dict['trust_code_installed']=active
               continue
-          #INSTALLED on Sep 27 12:22:33 2021 UTC | <none>
+          #INSTALLED on Sep 27 12:22:33 2021 UTC
           m = p11_3.match(line)
           if m:
             group = m.group(0)
@@ -1227,7 +1228,7 @@ class ShowLicenseAllSchema(MetaParser):
       Optional('one_minute'): str,
       Optional('five_minutes'): str,
       Optional('ntp_time'): str,
-      Optional('smart_licensing_status'):{
+      Optional('smart_licensing_status'): {
         Optional('license_conversion'):{
                 Optional('automatic_conversion_enabled'):str,
                 Optional('last_data_push'):str,
@@ -1259,10 +1260,10 @@ class ShowLicenseAllSchema(MetaParser):
            Optional('proxy'):str,
            Optional('vrf'):str,
         },
-        'miscellaneous':{
+        Optional('miscellaneous'):{
            'custom_id':str,
         },
-        'policy':{
+        Optional('policy'):{
            'policy_in_use':str,
            Optional('policy_name'):str,
            'reporting_ack_required':str,
@@ -1287,7 +1288,7 @@ class ShowLicenseAllSchema(MetaParser):
               'report_on_change_days':str,
             },
         },
-        'usage_reporting':{
+        Optional('usage_reporting'):{
            'last_ack_received':str,
            'next_ack_deadline':str,
            'reporting_push_interval':str,
@@ -1662,6 +1663,7 @@ class ShowLicenseAll(ShowLicenseAllSchema):
             else:
               smart_licensing_status_dict.setdefault('export_authorization_key',{}).setdefault('features_authorized',group)
               continue
+
           #Status: DISABLED
           m = p4.match(line)
           if m:
@@ -1676,12 +1678,14 @@ class ShowLicenseAll(ShowLicenseAllSchema):
           m = p5.match(line)
           if m:
             group = m.groupdict()
+            smart_licensing_status_dict=ret_dict.setdefault('smart_licensing_status',{})
             smart_licensing_status_dict.setdefault('account_information',{}).setdefault('smart_account',group['smart_account'])
             continue
           #Virtual Account: SLE_Test
           m = p5_1.match(line)
           if m:
             group = m.groupdict()
+            smart_licensing_status_dict=ret_dict.setdefault('smart_licensing_status',{})
             smart_licensing_status_dict.setdefault('account_information',{}).setdefault('virtual_account',group['virtual_account'])
             continue
 

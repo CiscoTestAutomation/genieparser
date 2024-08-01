@@ -1,0 +1,120 @@
+Interface: GigabitEthernet0/0/2
+  Administrative configurations:
+    Mode: Synchronous
+    ESMC TX: Enable
+    ESMC RX: Enable
+    QL TX: -
+    QL RX: -
+  Operational status:
+    Port status: UP
+    QL Receive: QL-SEC
+    QL Transmit: QL-DNU
+    QL rx overrided: -
+    ESMC Information rate: 1 packet/second
+    ESMC Expiry: 5 second
+
+Interface: GigabitEthernet0/0/6
+  Administrative configurations:
+    Mode: Synchronous
+    ESMC TX: Enable
+    ESMC RX: Enable
+    QL TX: -
+    QL RX: -
+  Operational status:
+    Port status: UP
+    QL Receive: QL-SEC
+    QL Transmit: QL-SEC
+    QL rx overrided: -
+    ESMC Information rate: 1 packet/second
+    ESMC Expiry: 5 second
+
+Interface: TenGigabitEthernet0/0/8
+  Administrative configurations:
+    Mode: Synchronous
+    ESMC TX: Enable
+    ESMC RX: Enable
+    QL TX: -
+    QL RX: -
+  Operational status:
+    Port status: DOWN
+    QL Receive: QL-DNU
+    QL Transmit: -
+    QL rx overrided: -
+    ESMC Information rate: 1 packet/second
+    ESMC Expiry: 5 second
+
+Interface: TenGigabitEthernet0/0/10
+  Administrative configurations:
+    Mode: Synchronous
+    ESMC TX: Enable
+    ESMC RX: Enable
+    QL TX: -
+    QL RX: -
+  Operational status:
+    Port status: UP
+    QL Receive: QL-SEC
+    QL Transmit: QL-SEC
+    QL rx overrided: -
+    ESMC Information rate: 1 packet/second
+    ESMC Expiry: 5 second
+
+Interface: TenGigabitEthernet0/0/14
+  Administrative configurations:
+    Mode: Synchronous
+    ESMC TX: Enable
+    ESMC RX: Enable
+    QL TX: -
+    QL RX: -
+  Operational status:
+    Port status: UP
+    QL Receive: QL-SEC
+    QL Transmit: QL-SEC
+    QL rx overrided: -
+    ESMC Information rate: 1 packet/second
+    ESMC Expiry: 5 second
+
+Interface: TwentyFiveGigE0/0/16
+  Administrative configurations:
+    Mode: Synchronous
+    ESMC TX: Enable
+    ESMC RX: Enable
+    QL TX: -
+    QL RX: -
+  Operational status:
+    Port status: UP
+    QL Receive: QL-SEC
+    QL Transmit: QL-SEC
+    QL rx overrided: -
+    ESMC Information rate: 1 packet/second
+    ESMC Expiry: 5 second
+
+Interface: TwentyFiveGigE0/0/17
+  Administrative configurations:
+    Mode: Synchronous
+    ESMC TX: Enable
+    ESMC RX: Enable
+    QL TX: -
+    QL RX: -
+  Operational status:
+    Port status: UP
+    QL Receive: QL-SEC
+    QL Transmit: QL-SEC
+    QL rx overrided: -
+    ESMC Information rate: 1 packet/second
+    ESMC Expiry: 5 second
+
+Interface: TwentyFiveGigE0/0/18
+  Administrative configurations:
+    Mode: Synchronous
+    ESMC TX: Enable
+    ESMC RX: Enable
+    QL TX: -
+    QL RX: -
+  Operational status:
+    Port status: UP
+    QL Receive: QL-SEC
+    QL Transmit: QL-SEC
+    QL rx overrided: -
+    ESMC Information rate: 1 packet/second
+    ESMC Expiry: 5 second
+

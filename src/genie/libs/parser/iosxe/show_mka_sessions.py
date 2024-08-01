@@ -1668,7 +1668,7 @@ class ShowMkaStatisticsSchema(MetaParser):
                                 'macsec-failures': {'rx-sa-installation': int,
                                         'rx-sc-creation': int,
                                         'tx-sa-installation': int,
-                                        'tx-sc-creation': 0},
+                                        'tx-sc-creation': int},
                                 Optional('mkpdu-failures'): {'mkpdu-rx-bad-peer-mn': int,
                                         'mkpdu-rx-icv-verification': int,
                                         Optional('mkpdu-rx-fallback-icv-ver'): int,
