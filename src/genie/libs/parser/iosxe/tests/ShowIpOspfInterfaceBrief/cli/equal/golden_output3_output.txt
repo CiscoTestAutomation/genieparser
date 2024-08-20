@@ -1,0 +1,8 @@
+R4#show ip ospf interface brief
+Interface    PID   Area            IP Address/Mask    Cost  State Nbrs F/C
+Lo0          1     0.0.0.0         100.255.255.4/32   1     LOOP  0/0
+Gi4          1     0.0.0.0         100.2.4.4/24       1     P2P   1/1
+Gi3          1     0.0.0.0         100.3.4.4/24       1     P2P   0/0
+Gi5          1     2               100.1.4.4/24       1     P2P   0/0
+Gi7          200   0               100.4.12.4/24      1     P2P   1/1
+Gi6          200   0               100.4.11.4/24      1     P2P   0/0
