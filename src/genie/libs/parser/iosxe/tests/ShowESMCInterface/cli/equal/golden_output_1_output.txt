@@ -1,0 +1,17 @@
+Interface: GigabitEthernet0/0/2
+  Administrative configurations:
+    Mode: Synchronous
+    ESMC TX: Enable
+    ESMC RX: Enable
+    QL TX: -
+    QL RX: -
+  Operational status:
+    Port status: UP
+    QL Receive: QL-SEC
+    QL Transmit: QL-DNU
+    QL rx overrided: -
+    ESMC Information rate: 1 packet/second
+    ESMC Expiry: 5 second
+
+
+

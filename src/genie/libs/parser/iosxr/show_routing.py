@@ -1372,6 +1372,7 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
         p21 = re.compile(R'^SRv6\s+Headend:\s+(?P<srv6_headend>(.*)),\s+SID-list\s+{(?P<sid_list>[\w:]+)}$')
 
         ret_dict = {}
+        outgoing_interface_dict = {}
         address_family = 'ipv6'
         index = 0
         if not vrf:

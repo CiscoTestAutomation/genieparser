@@ -168,6 +168,11 @@ develop:
 	@echo "Done."
 	@echo ""
 
+	@echo "--------------------------------------------------------------------"
+	@echo "Development environment have been setup."
+	@echo -e "\e[1;33mWarning: Do make json to generate json files to acccess the genie features!!!\e[0m"
+	@echo "--------------------------------------------------------------------"
+
 undevelop:
 	@echo ""
 	@echo "--------------------------------------------------------------------"

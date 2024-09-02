@@ -1,0 +1,167 @@
+show environment all
+Load for five secs: 1%/0%; one minute: 1%; five minutes: 1%
+Time source is NTP, 01:21:21.121 UTC Sat Jun 15 2024
+
+Sensor List: Environmental Monitoring 
+ Sensor          Location        State               Reading       Range(min-max)       
+ PS1 Vout        1               GOOD               55998 mV          na
+ PS1 Vin         1               GOOD              200000 mV        90 - 264
+ PS1 CURin       1               GOOD                 549 mA          na
+ PS1 Curout      1               GOOD                1541 mA          na
+ PS1 POWin       1               GOOD              104375 mW          na
+ PS1 POWout      1               GOOD               86250 mW          na
+ PS1 FAN         1               GOOD                6192 rpm         na
+ PS2 Vout        1               NOT PRESENT            0 mV          na
+ PS2 Vin         1               NOT PRESENT            0 mV        90 - 264
+ PS2 CURin       1               NOT PRESENT            0 mA          na
+ PS2 CURout      1               NOT PRESENT            0 mA          na
+ PS2 POWin       1               NOT PRESENT            0 mW          na
+ PS2 POWout      1               NOT PRESENT            0 mW          na
+ PS2 FAN         1               NOT PRESENT            0 rpm         na
+ PS3 Vout        1               NOT PRESENT            0 mV          na
+ PS3 Vin         1               NOT PRESENT            0 mV        90 - 264
+ PS3 CURin       1               NOT PRESENT            0 mA          na
+ PS3 CURout      1               NOT PRESENT            0 mA          na
+ PS3 POWin       1               NOT PRESENT            0 mW          na
+ PS3 POWout      1               NOT PRESENT            0 mW          na
+ PS3 FAN         1               NOT PRESENT            0 rpm         na
+ SYSTEM INLET    1               GREEN                 29 Celsius   0 - 56
+ SYSTEM OUTLET   1               GREEN                 31 Celsius   0 - 125
+ SYSTEM HOTSPOT  1               GREEN                 53 Celsius   0 - 125
+
+Switch	 FAN	 Speed	 State	 Airflow direction
+---------------------------------------------------
+  1  	  1	0	  NOT PRESENT or FAULTY	 Front to Back
+  1  	  2	0	  NOT PRESENT or FAULTY	 Front to Back
+  1  	  3	0	  NOT PRESENT or FAULTY	 Front to Back
+
+SW  PID                 Serial#     Status           Sys Pwr  PoE Pwr  Watts
+--  ------------------  ----------  ---------------  -------  -------  -----
+1A  PWR-C2-1600WAC-I    DCA2713701M  OK              Good     Good     1600
+1B  Not Present
+1C  Not Present
+
+---------------------------------------------------
+
+Sensor List: Environmental Monitoring 
+ Sensor          Location        State               Reading       Range(min-max)       
+ PS1 Vout        2               GOOD               56006 mV          na
+ PS1 Vin         2               GOOD              201000 mV        90 - 264
+ PS1 CURin       2               GOOD                 283 mA          na
+ PS1 Curout      2               GOOD                 756 mA          na
+ PS1 POWin       2               GOOD               53625 mW          na
+ PS1 POWout      2               GOOD               42250 mW          na
+ PS1 FAN         2               GOOD                6448 rpm         na
+ PS2 Vout        2               GOOD               55998 mV          na
+ PS2 Vin         2               GOOD              200500 mV        90 - 264
+ PS2 CURin       2               GOOD                 322 mA          na
+ PS2 CURout      2               GOOD                 840 mA          na
+ PS2 POWin       2               GOOD               58125 mW          na
+ PS2 POWout      2               GOOD               46375 mW          na
+ PS2 FAN         2               GOOD                5832 rpm         na
+ PS3 Vout        2               GOOD               55979 mV          na
+ PS3 Vin         2               GOOD              201250 mV        90 - 264
+ PS3 CURin       2               GOOD                 182 mA          na
+ PS3 CURout      2               GOOD                 197 mA          na
+ PS3 POWin       2               GOOD               24250 mW          na
+ PS3 POWout      2               GOOD               11000 mW          na
+ PS3 FAN         2               GOOD                5864 rpm         na
+ SYSTEM INLET    2               GREEN                 29 Celsius   0 - 56
+ SYSTEM OUTLET   2               GREEN                 39 Celsius   0 - 125
+ SYSTEM HOTSPOT  2               GREEN                 57 Celsius   0 - 125
+
+Switch	 FAN	 Speed	 State	 Airflow direction
+---------------------------------------------------
+  2  	  1	0	  NOT PRESENT or FAULTY	 Front to Back
+  2  	  2	0	  NOT PRESENT or FAULTY	 Front to Back
+  2  	  3	0	  NOT PRESENT or FAULTY	 Front to Back
+
+SW  PID                 Serial#     Status           Sys Pwr  PoE Pwr  Watts
+--  ------------------  ----------  ---------------  -------  -------  -----
+2A  PWR-C2-1600WAC-I    DCA2713706M  OK              Good     Good     1600
+2B  PWR-C2-1600WAC-I    DCA2713701T  OK              Good     Good     1600
+2C  PWR-C2-1600WAC-I    DCA2713705U  OK              Good     Good     1600
+
+---------------------------------------------------
+
+Sensor List: Environmental Monitoring 
+ Sensor          Location        State               Reading       Range(min-max)       
+ PS1 Vout        3               GOOD            -  22258 mV          na
+ PS1 Vin         3               GOOD              200000 mV        90 - 264
+ PS1 CURin       3               GOOD                 688 mA          na
+ PS1 Curout      3               GOOD                1938 mA          na
+ PS1 POWin       3               GOOD              126500 mW          na
+ PS1 POWout      3               GOOD              111000 mW          na
+ PS1 FAN         3               GOOD            -    876 rpm         na
+ PS2 Vout        3               NOT PRESENT            0 mV          na
+ PS2 Vin         3               NOT PRESENT            0 mV        90 - 264
+ PS2 CURin       3               NOT PRESENT            0 mA          na
+ PS2 CURout      3               NOT PRESENT            0 mA          na
+ PS2 POWin       3               NOT PRESENT            0 mW          na
+ PS2 POWout      3               NOT PRESENT            0 mW          na
+ PS2 FAN         3               NOT PRESENT            0 rpm         na
+ PS3 Vout        3               NOT PRESENT            0 mV          na
+ PS3 Vin         3               NOT PRESENT            0 mV        90 - 264
+ PS3 CURin       3               NOT PRESENT            0 mA          na
+ PS3 CURout      3               NOT PRESENT            0 mA          na
+ PS3 POWin       3               NOT PRESENT            0 mW          na
+ PS3 POWout      3               NOT PRESENT            0 mW          na
+ PS3 FAN         3               NOT PRESENT            0 rpm         na
+ SYSTEM INLET    3               GREEN                 31 Celsius   0 - 56
+ SYSTEM OUTLET   3               GREEN                 39 Celsius   0 - 125
+ SYSTEM HOTSPOT  3               GREEN                 63 Celsius   0 - 125
+
+Switch	 FAN	 Speed	 State	 Airflow direction
+---------------------------------------------------
+  3  	  1	0	  NOT PRESENT or FAULTY	 Front to Back
+  3  	  2	0	  NOT PRESENT or FAULTY	 Front to Back
+  3  	  3	0	  NOT PRESENT or FAULTY	 Front to Back
+
+SW  PID                 Serial#     Status           Sys Pwr  PoE Pwr  Watts
+--  ------------------  ----------  ---------------  -------  -------  -----
+3A  PWR-C2-850WAC-I     MEG27160038  OK              Good     Good     850 
+3B  Not Present
+3C  Not Present
+
+---------------------------------------------------
+
+Sensor List: Environmental Monitoring 
+ Sensor          Location        State               Reading       Range(min-max)       
+ PS1 Vout        4               GOOD               56002 mV          na
+ PS1 Vin         4               GOOD              200250 mV        90 - 264
+ PS1 CURin       4               GOOD                 604 mA          na
+ PS1 Curout      4               GOOD                1781 mA          na
+ PS1 POWin       4               GOOD              116500 mW          na
+ PS1 POWout      4               GOOD               99000 mW          na
+ PS1 FAN         4               GOOD                5848 rpm         na
+ PS2 Vout        4               NOT PRESENT            0 mV          na
+ PS2 Vin         4               NOT PRESENT            0 mV        90 - 264
+ PS2 CURin       4               NOT PRESENT            0 mA          na
+ PS2 CURout      4               NOT PRESENT            0 mA          na
+ PS2 POWin       4               NOT PRESENT            0 mW          na
+ PS2 POWout      4               NOT PRESENT            0 mW          na
+ PS2 FAN         4               NOT PRESENT            0 rpm         na
+ PS3 Vout        4               NOT PRESENT            0 mV          na
+ PS3 Vin         4               NOT PRESENT            0 mV        90 - 264
+ PS3 CURin       4               NOT PRESENT            0 mA          na
+ PS3 CURout      4               NOT PRESENT            0 mA          na
+ PS3 POWin       4               NOT PRESENT            0 mW          na
+ PS3 POWout      4               NOT PRESENT            0 mW          na
+ PS3 FAN         4               NOT PRESENT            0 rpm         na
+ SYSTEM INLET    4               GREEN                 30 Celsius   0 - 56
+ SYSTEM OUTLET   4               GREEN                 37 Celsius   0 - 125
+ SYSTEM HOTSPOT  4               GREEN                 61 Celsius   0 - 125
+
+Switch	 FAN	 Speed	 State	 Airflow direction
+---------------------------------------------------
+  4  	  1	0	  NOT PRESENT or FAULTY	 Front to Back
+  4  	  2	0	  NOT PRESENT or FAULTY	 Front to Back
+  4  	  3	0	  NOT PRESENT or FAULTY	 Front to Back
+
+SW  PID                 Serial#     Status           Sys Pwr  PoE Pwr  Watts
+--  ------------------  ----------  ---------------  -------  -------  -----
+4A  PWR-C2-1600WAC-I    DCA2713701G  OK              Good     Good     1600
+4B  Not Present
+4C  Not Present
+
+---------------------------------------------------

@@ -1,0 +1,5 @@
+Type escape sequence to abort.
+ Tracing the route to 127.0.0.1
+ VRF info: (vrf in name/id, vrf out name/id)
+   1 127.0.0.2 4 msec 8 msec 0 msec
+   2 127.0.0.3 8 msec *  0 msec

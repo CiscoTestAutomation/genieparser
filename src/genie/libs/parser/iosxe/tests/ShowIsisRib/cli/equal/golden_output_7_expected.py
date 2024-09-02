@@ -78,6 +78,7 @@ expected_output = {
                                                         "lfa_type": "TI-LFA link-protecting",
                                                         "algo": {
                                                             0: {
+                                                                "sid_index": 3,
                                                                 "flags": {
                                                                     "r_flag": False,
                                                                     "n_flag": True,
@@ -123,3 +124,4 @@ expected_output = {
         }
     }
 }
+

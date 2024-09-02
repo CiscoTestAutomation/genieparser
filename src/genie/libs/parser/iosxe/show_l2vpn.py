@@ -2955,8 +2955,10 @@ class ShowL2vpnEvpnMacIpDetail(ShowL2vpnEvpnMacIpDetailSchema):
         # Next Hop(s):               L:17 Ethernet1/0 service instance 12
         #                            L:17 3.3.3.1
         #                            L:17 5.5.5.1
-        p7 = re.compile(r'^Next Hop\(s\):\s+(?P<next_hop>[\w\/\s\.:-]+)$')
-        p8 = re.compile(r'^(?P<next_hop>[\w\/\s\.:-]+)$')
+        #                            V:20011 2.2.2.2 (proxy)
+        #                            V:20011 Ethernet0/1 service instance 11 (proxy)
+        p7 = re.compile(r'^Next Hop\(s\):\s+(?P<next_hop>[\w\/\s\.\(\):-]+)$')
+        p8 = re.compile(r'^(?P<next_hop>[\w\/\s\.\(\):-]+)$')
 
         # Local Address:             4.4.4.1
         p9 = re.compile(r'^Local Address:\s+(?P<local_addr>[a-zA-Z0-9\.:]+)$')
@@ -4561,6 +4563,7 @@ class ShowL2vpnEvpnEviDetailSchema(MetaParser):
             Optional('ip_local_learn'): bool,
             Optional('adv_def_gateway'): bool,
             Optional('adv_mcast'): bool,
+            Optional('adv_mcast_scope'): str,
             Optional('bridge_domain'): {
                 Any(): {
                     'etag': int,
@@ -4668,7 +4671,10 @@ class ShowL2vpnEvpnEviDetail(ShowL2vpnEvpnEviDetailSchema):
         p11 = re.compile(r'^Re-originate RT5:\s+(?P<enable>\w+)')
 
         # Adv. Multicast:    Enabled (global)
-        p12 = re.compile(r'^Adv. Multicast:\s+(?P<enable>\w+)')
+        # Adv. Multicast:    Enabled (global) (sync-only)
+        # Adv. Multicast:    Enabled (sync-only)
+        p12 = re.compile(r'Adv\. Multicast:\s+(?P<enable>\w+)+'
+                         r'(?:\s+\(\w+\))?(?:\s+\((?P<scope>sync-only)\))?')
 
         # Vlan:              100
         # Bridge Domain:     1
@@ -4859,12 +4865,16 @@ class ShowL2vpnEvpnEviDetail(ShowL2vpnEvpnEviDetailSchema):
                 continue
 
             # Adv. Multicast:    Enabled (global)
+            # Adv. Multicast:    Enabled (global) (sync-only)
+            # Adv. Multicast:    Enabled (sync-only)            
             m = p12.match(line)
             if m:
                 if m.groupdict()['enable'].lower() == 'enabled':
                     evi_dict['adv_mcast'] = True
                 else:
                     evi_dict['adv_mcast'] = False
+                if m.group('scope'):
+                    evi_dict['adv_mcast_scope'] = m.group('scope')
                 continue
 
             # Vlan:              100

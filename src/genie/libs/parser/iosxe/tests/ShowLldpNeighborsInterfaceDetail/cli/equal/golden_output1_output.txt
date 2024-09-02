@@ -1,0 +1,27 @@
+------------------------------------------------
+Local Intf: Tw1/0/29
+Local Intf service instance: -
+Chassis id: f87b.2053.7500
+Port id: Te1/0/5
+Port Description: TenGigabitEthernet1/0/5
+System Name: 9300-dut2
+
+System Description:
+Cisco IOS Software [IOSXE], Catalyst L3 Switch Software (CAT9K_IOSXE), Experimental Version 17.14.20231005:012724 [BLD_POLARIS_DEV_LATEST_20231005_003253:/nobackup/mcpre/s2c-build-ws 101]
+Copyright (c) 1986-2023 by Cisco Systems, Inc.
+Compiled Wed 04-Oct-
+
+Time remaining: 108 seconds
+System Capabilities: B,R
+Enabled Capabilities: B
+Management Addresses - not advertised
+Auto Negotiation - supported, enabled
+Physical media capabilities:
+    1000baseT(FD)
+    100base-TX(FD)
+    100base-TX(HD)
+Vlan ID: 1
+Peer Source MAC: f87b.2053.7505
+
+
+Total entries displayed: 1

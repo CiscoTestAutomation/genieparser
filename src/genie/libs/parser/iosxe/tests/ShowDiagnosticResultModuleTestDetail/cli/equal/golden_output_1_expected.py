@@ -1,0 +1,71 @@
+expected_output={
+  'diag_tests': {
+    'module': {
+      1: {
+        'TestGoldPktLoopback': {
+          'test_id': 1,
+          'result': 'Untested',
+          'port_status': {
+            1: 'U',
+            2: 'U',
+            3: 'U',
+            4: 'U',
+            5: 'U',
+            6: 'U',
+            7: 'U',
+            8: 'U',
+            9: 'U',
+            10: 'U',
+            11: 'U',
+            12: 'U',
+            13: 'U',
+            14: 'U',
+            15: 'U',
+            16: 'U',
+            17: 'U',
+            18: 'U',
+            19: 'U',
+            20: 'U',
+            21: 'U',
+            22: 'U',
+            23: 'U',
+            24: 'U',
+            25: 'U',
+            26: 'U',
+            27: 'U',
+            28: 'U',
+            29: 'U',
+            30: 'U',
+            31: 'U',
+            32: 'U',
+            33: 'U',
+            34: 'U',
+            35: 'U',
+            36: 'U',
+            37: 'U',
+            38: 'U',
+            39: 'U',
+            40: 'U',
+            41: 'U',
+            42: 'U',
+            43: 'U',
+            44: 'U',
+            45: 'U',
+            46: 'U',
+            47: 'U',
+            48: 'U'
+          },
+          'error_code': '3 (DIAG_SKIPPED)',
+          'total_run_count': 0,
+          'testing_type': 'n/a',
+          'test_execution_time': 'n/a',
+          'first_test_failure': 'n/a',
+          'last_test_failure': 'n/a',
+          'last_test_pass': 'n/a',
+          'total_failure_count': 0,
+          'consecutive_failure_count': 0
+        }
+      }
+    }
+  }
+}

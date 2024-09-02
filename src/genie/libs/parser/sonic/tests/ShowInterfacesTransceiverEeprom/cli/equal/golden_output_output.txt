@@ -1,0 +1,485 @@
+Ethernet0: SFP EEPROM detected
+        Application Advertisement: 400G CR8 - Host Assign (0x1) - Copper cable - Media Assign (Unknown)
+        Connector: No separable connector
+        Encoding: N/A
+        Extended Identifier: Power Class 1 (1.5W Max)
+        Extended RateSelect Compliance: N/A
+        Identifier: QSFP-DD Double Density 8X Pluggable Transceiver
+        Length Cable Assembly(m): 2.0
+        Nominal Bit Rate(100Mbs): 0
+        Specification compliance: passive_copper_media_interface
+        Vendor Date Code(YYYY-MM-DD Lot): 2020-05-06 00
+        Vendor Name: CISCO-LEONI
+        Vendor OUI: a8-b0-ae
+        Vendor PN: L45593-K218-C20
+        Vendor Rev: 00
+        Vendor SN: LCC2419G92W-B
+Ethernet8: SFP EEPROM detected
+        Application Advertisement: 400G CR8 - Host Assign (0x1) - Copper cable - Media Assign (Unknown)
+        Connector: No separable connector
+        Encoding: N/A
+        Extended Identifier: Power Class 1 (1.5W Max)
+        Extended RateSelect Compliance: N/A
+        Identifier: QSFP-DD Double Density 8X Pluggable Transceiver
+        Length Cable Assembly(m): 2.0
+        Nominal Bit Rate(100Mbs): 0
+        Specification compliance: passive_copper_media_interface
+        Vendor Date Code(YYYY-MM-DD Lot): 2020-07-17 00
+        Vendor Name: CISCO-LEONI
+        Vendor OUI: a8-b0-ae
+        Vendor PN: L45593-K218-C20
+        Vendor Rev: 00
+        Vendor SN: LCC2429H3GD-A
+Ethernet16: SFP EEPROM detected
+        Application Advertisement: 400G CR8 - Host Assign (0x1) - Copper cable - Media Assign (Unknown)
+        Connector: No separable connector
+        Encoding: N/A
+        Extended Identifier: Power Class 1 (1.5W Max)
+        Extended RateSelect Compliance: N/A
+        Identifier: QSFP-DD Double Density 8X Pluggable Transceiver
+        Length Cable Assembly(m): 2.0
+        Nominal Bit Rate(100Mbs): 0
+        Specification compliance: passive_copper_media_interface
+        Vendor Date Code(YYYY-MM-DD Lot): 2020-07-17 00
+        Vendor Name: CISCO-LEONI
+        Vendor OUI: a8-b0-ae
+        Vendor PN: L45593-K218-C20
+        Vendor Rev: 00
+        Vendor SN: LCC2429H38D-A
+Ethernet24: SFP EEPROM detected
+        Application Advertisement: 400G CR8 - Host Assign (0x1) - Copper cable - Media Assign (Unknown)
+        Connector: No separable connector
+        Encoding: N/A
+        Extended Identifier: Power Class 1 (1.5W Max)
+        Extended RateSelect Compliance: N/A
+        Identifier: QSFP-DD Double Density 8X Pluggable Transceiver
+        Length Cable Assembly(m): 2.0
+        Nominal Bit Rate(100Mbs): 0
+        Specification compliance: passive_copper_media_interface
+        Vendor Date Code(YYYY-MM-DD Lot): 2020-05-06 00
+        Vendor Name: CISCO-LEONI
+        Vendor OUI: a8-b0-ae
+        Vendor PN: L45593-K218-C20
+        Vendor Rev: 00
+        Vendor SN: LCC2419G93C-B
+Ethernet32: SFP EEPROM detected
+        Application Advertisement: 400G CR8 - Host Assign (0x1) - Copper cable - Media Assign (Unknown)
+        Connector: No separable connector
+        Encoding: N/A
+        Extended Identifier: Power Class 1 (1.5W Max)
+        Extended RateSelect Compliance: N/A
+        Identifier: QSFP-DD Double Density 8X Pluggable Transceiver
+        Length Cable Assembly(m): 2.0
+        Nominal Bit Rate(100Mbs): 0
+        Specification compliance: passive_copper_media_interface
+        Vendor Date Code(YYYY-MM-DD Lot): 2020-05-06 00
+        Vendor Name: CISCO-LEONI
+        Vendor OUI: a8-b0-ae
+        Vendor PN: L45593-K218-C20
+        Vendor Rev: 00
+        Vendor SN: LCC2419G934-B
+Ethernet40: SFP EEPROM detected
+        Application Advertisement: 400G CR8 - Host Assign (0x1) - Copper cable - Media Assign (Unknown)
+        Connector: No separable connector
+        Encoding: N/A
+        Extended Identifier: Power Class 1 (1.5W Max)
+        Extended RateSelect Compliance: N/A
+        Identifier: QSFP-DD Double Density 8X Pluggable Transceiver
+        Length Cable Assembly(m): 2.0
+        Nominal Bit Rate(100Mbs): 0
+        Specification compliance: passive_copper_media_interface
+        Vendor Date Code(YYYY-MM-DD Lot): 2019-10-22 00
+        Vendor Name: CISCO-LEONI
+        Vendor OUI: a8-b0-ae
+        Vendor PN: L45593-K218-C20
+        Vendor Rev: 00
+        Vendor SN: LCC2343G0VK-B
+Ethernet48: SFP EEPROM detected
+        Application Advertisement: 400G CR8 - Host Assign (0x1) - Copper cable - Media Assign (Unknown)
+        Connector: No separable connector
+        Encoding: N/A
+        Extended Identifier: Power Class 1 (1.5W Max)
+        Extended RateSelect Compliance: N/A
+        Identifier: QSFP-DD Double Density 8X Pluggable Transceiver
+        Length Cable Assembly(m): 2.0
+        Nominal Bit Rate(100Mbs): 0
+        Specification compliance: passive_copper_media_interface
+        Vendor Date Code(YYYY-MM-DD Lot): 2020-05-06 00
+        Vendor Name: CISCO-LEONI
+        Vendor OUI: a8-b0-ae
+        Vendor PN: L45593-K218-C20
+        Vendor Rev: 00
+        Vendor SN: LCC2419G903-B
+Ethernet56: SFP EEPROM detected
+        Application Advertisement: 400G CR8 - Host Assign (0x1) - Copper cable - Media Assign (Unknown)
+        Connector: No separable connector
+        Encoding: N/A
+        Extended Identifier: Power Class 1 (1.5W Max)
+        Extended RateSelect Compliance: N/A
+        Identifier: QSFP-DD Double Density 8X Pluggable Transceiver
+        Length Cable Assembly(m): 2.0
+        Nominal Bit Rate(100Mbs): 0
+        Specification compliance: passive_copper_media_interface
+        Vendor Date Code(YYYY-MM-DD Lot): 2020-07-17 00
+        Vendor Name: CISCO-LEONI
+        Vendor OUI: a8-b0-ae
+        Vendor PN: L45593-K218-C20
+        Vendor Rev: 00
+        Vendor SN: LCC2429H380-A
+Ethernet64: SFP EEPROM detected
+        Application Advertisement: 400G CR8 - Host Assign (0x1) - Copper cable - Media Assign (Unknown)
+        Connector: No separable connector
+        Encoding: N/A
+        Extended Identifier: Power Class 1 (1.5W Max)
+        Extended RateSelect Compliance: N/A
+        Identifier: QSFP-DD Double Density 8X Pluggable Transceiver
+        Length Cable Assembly(m): 2.0
+        Nominal Bit Rate(100Mbs): 0
+        Specification compliance: passive_copper_media_interface
+        Vendor Date Code(YYYY-MM-DD Lot): 2020-07-17 00
+        Vendor Name: CISCO-LEONI
+        Vendor OUI: a8-b0-ae
+        Vendor PN: L45593-K218-C20
+        Vendor Rev: 00
+        Vendor SN: LCC2429H38W-B
+Ethernet72: SFP EEPROM detected
+        Application Advertisement: 400G CR8 - Host Assign (0x1) - Copper cable - Media Assign (Unknown)
+        Connector: No separable connector
+        Encoding: N/A
+        Extended Identifier: Power Class 1 (1.5W Max)
+        Extended RateSelect Compliance: N/A
+        Identifier: QSFP-DD Double Density 8X Pluggable Transceiver
+        Length Cable Assembly(m): 2.0
+        Nominal Bit Rate(100Mbs): 0
+        Specification compliance: passive_copper_media_interface
+        Vendor Date Code(YYYY-MM-DD Lot): 2020-05-06 00
+        Vendor Name: CISCO-LEONI
+        Vendor OUI: a8-b0-ae
+        Vendor PN: L45593-K218-C20
+        Vendor Rev: 00
+        Vendor SN: LCC2419G8XW-B
+Ethernet80: SFP EEPROM detected
+        Application Advertisement: 400G CR8 - Host Assign (0x1) - Copper cable - Media Assign (Unknown)
+        Connector: No separable connector
+        Encoding: N/A
+        Extended Identifier: Power Class 1 (1.5W Max)
+        Extended RateSelect Compliance: N/A
+        Identifier: QSFP-DD Double Density 8X Pluggable Transceiver
+        Length Cable Assembly(m): 2.0
+        Nominal Bit Rate(100Mbs): 0
+        Specification compliance: passive_copper_media_interface
+        Vendor Date Code(YYYY-MM-DD Lot): 2020-07-17 00
+        Vendor Name: CISCO-LEONI
+        Vendor OUI: a8-b0-ae
+        Vendor PN: L45593-K218-C20
+        Vendor Rev: 00
+        Vendor SN: LCC2429H38X-A
+Ethernet88: SFP EEPROM detected
+        Application Advertisement: 400G CR8 - Host Assign (0x1) - Copper cable - Media Assign (Unknown)
+        Connector: No separable connector
+        Encoding: N/A
+        Extended Identifier: Power Class 1 (1.5W Max)
+        Extended RateSelect Compliance: N/A
+        Identifier: QSFP-DD Double Density 8X Pluggable Transceiver
+        Length Cable Assembly(m): 2.0
+        Nominal Bit Rate(100Mbs): 0
+        Specification compliance: passive_copper_media_interface
+        Vendor Date Code(YYYY-MM-DD Lot): 2020-07-17 00
+        Vendor Name: CISCO-LEONI
+        Vendor OUI: a8-b0-ae
+        Vendor PN: L45593-K218-C20
+        Vendor Rev: 00
+        Vendor SN: LCC2429H3GL-A
+Ethernet96: SFP EEPROM detected
+        Application Advertisement: 400G CR8 - Host Assign (0x1) - Copper cable - Media Assign (Unknown)
+        Connector: No separable connector
+        Encoding: N/A
+        Extended Identifier: Power Class 1 (1.5W Max)
+        Extended RateSelect Compliance: N/A
+        Identifier: QSFP-DD Double Density 8X Pluggable Transceiver
+        Length Cable Assembly(m): 2.0
+        Nominal Bit Rate(100Mbs): 0
+        Specification compliance: passive_copper_media_interface
+        Vendor Date Code(YYYY-MM-DD Lot): 2020-05-06 00
+        Vendor Name: CISCO-LEONI
+        Vendor OUI: a8-b0-ae
+        Vendor PN: L45593-K218-C20
+        Vendor Rev: 00
+        Vendor SN: LCC2419G91V-B
+Ethernet104: SFP EEPROM detected
+        Application Advertisement: 400G CR8 - Host Assign (0x1) - Copper cable - Media Assign (Unknown)
+        Connector: No separable connector
+        Encoding: N/A
+        Extended Identifier: Power Class 1 (1.5W Max)
+        Extended RateSelect Compliance: N/A
+        Identifier: QSFP-DD Double Density 8X Pluggable Transceiver
+        Length Cable Assembly(m): 2.0
+        Nominal Bit Rate(100Mbs): 0
+        Specification compliance: passive_copper_media_interface
+        Vendor Date Code(YYYY-MM-DD Lot): 2020-05-06 00
+        Vendor Name: CISCO-LEONI
+        Vendor OUI: a8-b0-ae
+        Vendor PN: L45593-K218-C20
+        Vendor Rev: 00
+        Vendor SN: LCC2419G8XL-B
+Ethernet112: SFP EEPROM detected
+        Application Advertisement: 400G CR8 - Host Assign (0x1) - Copper cable - Media Assign (Unknown)
+        Connector: No separable connector
+        Encoding: N/A
+        Extended Identifier: Power Class 1 (1.5W Max)
+        Extended RateSelect Compliance: N/A
+        Identifier: QSFP-DD Double Density 8X Pluggable Transceiver
+        Length Cable Assembly(m): 2.0
+        Nominal Bit Rate(100Mbs): 0
+        Specification compliance: passive_copper_media_interface
+        Vendor Date Code(YYYY-MM-DD Lot): 2020-07-17 00
+        Vendor Name: CISCO-LEONI
+        Vendor OUI: a8-b0-ae
+        Vendor PN: L45593-K218-C20
+        Vendor Rev: 00
+        Vendor SN: LCC2429H38P-A
+Ethernet120: SFP EEPROM detected
+        Application Advertisement: 400G CR8 - Host Assign (0x1) - Copper cable - Media Assign (Unknown)
+        Connector: No separable connector
+        Encoding: N/A
+        Extended Identifier: Power Class 1 (1.5W Max)
+        Extended RateSelect Compliance: N/A
+        Identifier: QSFP-DD Double Density 8X Pluggable Transceiver
+        Length Cable Assembly(m): 2.0
+        Nominal Bit Rate(100Mbs): 0
+        Specification compliance: passive_copper_media_interface
+        Vendor Date Code(YYYY-MM-DD Lot): 2020-05-06 00
+        Vendor Name: CISCO-LEONI
+        Vendor OUI: a8-b0-ae
+        Vendor PN: L45593-K218-C20
+        Vendor Rev: 00
+        Vendor SN: LCC2419G8XJ-B
+Ethernet128: SFP EEPROM detected
+        Application Advertisement: 400G CR8 - Host Assign (0x1) - Copper cable - Media Assign (Unknown)
+        Connector: No separable connector
+        Encoding: N/A
+        Extended Identifier: Power Class 1 (1.5W Max)
+        Extended RateSelect Compliance: N/A
+        Identifier: QSFP-DD Double Density 8X Pluggable Transceiver
+        Length Cable Assembly(m): 2.0
+        Nominal Bit Rate(100Mbs): 0
+        Specification compliance: passive_copper_media_interface
+        Vendor Date Code(YYYY-MM-DD Lot): 2020-05-06 00
+        Vendor Name: CISCO-LEONI
+        Vendor OUI: a8-b0-ae
+        Vendor PN: L45593-K218-C20
+        Vendor Rev: 00
+        Vendor SN: LCC2419G930-B
+Ethernet136: SFP EEPROM detected
+        Application Advertisement: 400G CR8 - Host Assign (0x1) - Copper cable - Media Assign (Unknown)
+        Connector: No separable connector
+        Encoding: N/A
+        Extended Identifier: Power Class 1 (1.5W Max)
+        Extended RateSelect Compliance: N/A
+        Identifier: QSFP-DD Double Density 8X Pluggable Transceiver
+        Length Cable Assembly(m): 2.0
+        Nominal Bit Rate(100Mbs): 0
+        Specification compliance: passive_copper_media_interface
+        Vendor Date Code(YYYY-MM-DD Lot): 2020-07-17 00
+        Vendor Name: CISCO-LEONI
+        Vendor OUI: a8-b0-ae
+        Vendor PN: L45593-K218-C20
+        Vendor Rev: 00
+        Vendor SN: LCC2429H39C-B
+Ethernet144: SFP EEPROM detected
+        Application Advertisement: 400G CR8 - Host Assign (0x1) - Copper cable - Media Assign (Unknown)
+        Connector: No separable connector
+        Encoding: N/A
+        Extended Identifier: Power Class 1 (1.5W Max)
+        Extended RateSelect Compliance: N/A
+        Identifier: QSFP-DD Double Density 8X Pluggable Transceiver
+        Length Cable Assembly(m): 2.0
+        Nominal Bit Rate(100Mbs): 0
+        Specification compliance: passive_copper_media_interface
+        Vendor Date Code(YYYY-MM-DD Lot): 2020-07-17 00
+        Vendor Name: CISCO-LEONI
+        Vendor OUI: a8-b0-ae
+        Vendor PN: L45593-K218-C20
+        Vendor Rev: 00
+        Vendor SN: LCC2429H38G-A
+Ethernet152: SFP EEPROM detected
+        Application Advertisement: 400G CR8 - Host Assign (0x1) - Copper cable - Media Assign (Unknown)
+        Connector: No separable connector
+        Encoding: N/A
+        Extended Identifier: Power Class 1 (1.5W Max)
+        Extended RateSelect Compliance: N/A
+        Identifier: QSFP-DD Double Density 8X Pluggable Transceiver
+        Length Cable Assembly(m): 2.0
+        Nominal Bit Rate(100Mbs): 0
+        Specification compliance: passive_copper_media_interface
+        Vendor Date Code(YYYY-MM-DD Lot): 2020-05-06 00
+        Vendor Name: CISCO-LEONI
+        Vendor OUI: a8-b0-ae
+        Vendor PN: L45593-K218-C20
+        Vendor Rev: 00
+        Vendor SN: LCC2419G90X-A
+Ethernet160: SFP EEPROM detected
+        Application Advertisement: 400G CR8 - Host Assign (0x1) - Copper cable - Media Assign (Unknown)
+        Connector: No separable connector
+        Encoding: N/A
+        Extended Identifier: Power Class 1 (1.5W Max)
+        Extended RateSelect Compliance: N/A
+        Identifier: QSFP-DD Double Density 8X Pluggable Transceiver
+        Length Cable Assembly(m): 2.0
+        Nominal Bit Rate(100Mbs): 0
+        Specification compliance: passive_copper_media_interface
+        Vendor Date Code(YYYY-MM-DD Lot): 2019-10-17 00
+        Vendor Name: CISCO-LEONI
+        Vendor OUI: a8-b0-ae
+        Vendor PN: L45593-K218-C20
+        Vendor Rev: 00
+        Vendor SN: LCC2342GF3U-B
+Ethernet168: SFP EEPROM detected
+        Application Advertisement: 400G CR8 - Host Assign (0x1) - Copper cable - Media Assign (Unknown)
+        Connector: No separable connector
+        Encoding: N/A
+        Extended Identifier: Power Class 1 (1.5W Max)
+        Extended RateSelect Compliance: N/A
+        Identifier: QSFP-DD Double Density 8X Pluggable Transceiver
+        Length Cable Assembly(m): 2.0
+        Nominal Bit Rate(100Mbs): 0
+        Specification compliance: passive_copper_media_interface
+        Vendor Date Code(YYYY-MM-DD Lot): 2020-05-06 00
+        Vendor Name: CISCO-LEONI
+        Vendor OUI: a8-b0-ae
+        Vendor PN: L45593-K218-C20
+        Vendor Rev: 00
+        Vendor SN: LCC2419G92L-A
+Ethernet176: SFP EEPROM detected
+        Application Advertisement: 400G CR8 - Host Assign (0x1) - Copper cable - Media Assign (Unknown)
+        Connector: No separable connector
+        Encoding: N/A
+        Extended Identifier: Power Class 1 (1.5W Max)
+        Extended RateSelect Compliance: N/A
+        Identifier: QSFP-DD Double Density 8X Pluggable Transceiver
+        Length Cable Assembly(m): 2.0
+        Nominal Bit Rate(100Mbs): 0
+        Specification compliance: passive_copper_media_interface
+        Vendor Date Code(YYYY-MM-DD Lot): 2020-05-06 00
+        Vendor Name: CISCO-LEONI
+        Vendor OUI: a8-b0-ae
+        Vendor PN: L45593-K218-C20
+        Vendor Rev: 00
+        Vendor SN: LCC2419G8XN-A
+Ethernet184: SFP EEPROM detected
+        Application Advertisement: 400G CR8 - Host Assign (0x1) - Copper cable - Media Assign (Unknown)
+        Connector: No separable connector
+        Encoding: N/A
+        Extended Identifier: Power Class 1 (1.5W Max)
+        Extended RateSelect Compliance: N/A
+        Identifier: QSFP-DD Double Density 8X Pluggable Transceiver
+        Length Cable Assembly(m): 2.0
+        Nominal Bit Rate(100Mbs): 0
+        Specification compliance: passive_copper_media_interface
+        Vendor Date Code(YYYY-MM-DD Lot): 2020-05-06 00
+        Vendor Name: CISCO-LEONI
+        Vendor OUI: a8-b0-ae
+        Vendor PN: L45593-K218-C20
+        Vendor Rev: 00
+        Vendor SN: LCC2419G91Q-A
+Ethernet192: SFP EEPROM detected
+        Application Advertisement: 400G CR8 - Host Assign (0x1) - Copper cable - Media Assign (Unknown)
+        Connector: No separable connector
+        Encoding: N/A
+        Extended Identifier: Power Class 1 (1.5W Max)
+        Extended RateSelect Compliance: N/A
+        Identifier: QSFP-DD Double Density 8X Pluggable Transceiver
+        Length Cable Assembly(m): 2.0
+        Nominal Bit Rate(100Mbs): 0
+        Specification compliance: passive_copper_media_interface
+        Vendor Date Code(YYYY-MM-DD Lot): 2020-05-06 00
+        Vendor Name: CISCO-LEONI
+        Vendor OUI: a8-b0-ae
+        Vendor PN: L45593-K218-C20
+        Vendor Rev: 00
+        Vendor SN: LCC2419G91X-B
+Ethernet200: SFP EEPROM detected
+        Application Advertisement: 400G CR8 - Host Assign (0x1) - Copper cable - Media Assign (Unknown)
+        Connector: No separable connector
+        Encoding: N/A
+        Extended Identifier: Power Class 1 (1.5W Max)
+        Extended RateSelect Compliance: N/A
+        Identifier: QSFP-DD Double Density 8X Pluggable Transceiver
+        Length Cable Assembly(m): 2.0
+        Nominal Bit Rate(100Mbs): 0
+        Specification compliance: passive_copper_media_interface
+        Vendor Date Code(YYYY-MM-DD Lot): 2020-05-06 00
+        Vendor Name: CISCO-LEONI
+        Vendor OUI: a8-b0-ae
+        Vendor PN: L45593-K218-C20
+        Vendor Rev: 00
+        Vendor SN: LCC2419G8XR-A
+Ethernet208: SFP EEPROM detected
+        Application Advertisement: 400G CR8 - Host Assign (0x1) - Copper cable - Media Assign (Unknown)
+        Connector: No separable connector
+        Encoding: N/A
+        Extended Identifier: Power Class 1 (1.5W Max)
+        Extended RateSelect Compliance: N/A
+        Identifier: QSFP-DD Double Density 8X Pluggable Transceiver
+        Length Cable Assembly(m): 2.0
+        Nominal Bit Rate(100Mbs): 0
+        Specification compliance: passive_copper_media_interface
+        Vendor Date Code(YYYY-MM-DD Lot): 2020-05-06 00
+        Vendor Name: CISCO-LEONI
+        Vendor OUI: a8-b0-ae
+        Vendor PN: L45593-K218-C20
+        Vendor Rev: 00
+        Vendor SN: LCC2419G906-B
+Ethernet216: SFP EEPROM detected
+        Application Advertisement: N/A
+        Connector: No separable connector
+        Encoding: 64B/66B
+        Extended Identifier: Power Class 3 Module (2.5W max.), CLEI code present in Page 02h, CDR present in TX, CDR present in RX
+        Extended RateSelect Compliance: Unknown
+        Identifier: QSFP28 or later
+        Length Cable Assembly(m): 3.0
+        Nominal Bit Rate(100Mbs): 255
+        Specification compliance:
+                10/40G Ethernet Compliance Code: Extended
+                Extended Specification Compliance: 100G AOC (Active Optical Cable) or 25GAUI C2M AOC
+                Fibre Channel Link Length: Unknown
+                Fibre Channel Speed: Unknown
+                Fibre Channel Transmission Media: Unknown
+                Fibre Channel Transmitter Technology: Unknown
+                Gigabit Ethernet Compliant Codes: Unknown
+                SAS/SATA Compliance Codes: Unknown
+                SONET Compliance Codes: Unknown
+        Vendor Date Code(YYYY-MM-DD Lot): 2022-03-17 01
+        Vendor Name: CISCO-DELTA
+        Vendor OUI: 20-f8-5e
+        Vendor PN: QAOC-100G4F1A03C
+        Vendor Rev: A
+        Vendor SN: DPZ2612A441-B
+Ethernet224: SFP EEPROM detected
+        Application Advertisement: N/A
+        Connector: No separable connector
+        Encoding: 64B/66B
+        Extended Identifier: Power Class 3 Module (2.5W max.), CLEI code present in Page 02h, CDR present in TX, CDR present in RX
+        Extended RateSelect Compliance: Unknown
+        Identifier: QSFP28 or later
+        Length Cable Assembly(m): 3.0
+        Nominal Bit Rate(100Mbs): 255
+        Specification compliance:
+                10/40G Ethernet Compliance Code: Extended
+                Extended Specification Compliance: 100G AOC (Active Optical Cable) or 25GAUI C2M AOC
+                Fibre Channel Link Length: Unknown
+                Fibre Channel Speed: Unknown
+                Fibre Channel Transmission Media: Unknown
+                Fibre Channel Transmitter Technology: Unknown
+                Gigabit Ethernet Compliant Codes: Unknown
+                SAS/SATA Compliance Codes: Unknown
+                SONET Compliance Codes: Unknown
+        Vendor Date Code(YYYY-MM-DD Lot): 2022-03-17 01
+        Vendor Name: CISCO-DELTA
+        Vendor OUI: 20-f8-5e
+        Vendor PN: QAOC-100G4F1A03C
+        Vendor Rev: A
+        Vendor SN: DPZ2612A436-A
+Ethernet232: SFP EEPROM Not detected
+Ethernet240: SFP EEPROM Not detected
+Ethernet248: SFP EEPROM Not detected

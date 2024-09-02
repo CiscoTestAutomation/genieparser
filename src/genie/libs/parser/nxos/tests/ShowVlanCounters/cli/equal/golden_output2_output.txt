@@ -1,0 +1,11 @@
+Vlan Id                             :1001 
+Unicast Octets In                  :86528 
+Unicast Packets In                 :676 
+Multicast Octets In                :130176 
+Multicast Packets In               :1020 
+Broadcast Octets In                :130992 
+Broadcast Packets In               :1025 
+Unicast Octets Out                 :43264 
+Unicast Packets Out                :338 
+L3 Unicast Octets In                :0 
+L3 Unicast Packets In               :0

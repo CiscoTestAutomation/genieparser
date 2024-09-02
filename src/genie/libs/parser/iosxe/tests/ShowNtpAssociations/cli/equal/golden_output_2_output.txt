@@ -1,0 +1,4 @@
+  address         ref clock       st   when   poll reach  delay  offset   disp
+*~2001:DB8::EEE8  2001:DB8::EEE8   2    337    512   377  1.957  -2.107  1.078
++~2001:DB8::EEE7  2001:DB8::EEE7   2    358    512   377  1.955  -2.214  1.059
+ * sys.peer, # selected, + candidate, - outlyer, x falseticker, ~ configured

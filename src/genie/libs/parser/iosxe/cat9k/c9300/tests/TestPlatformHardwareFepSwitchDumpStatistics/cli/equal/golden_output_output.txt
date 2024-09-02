@@ -1,0 +1,13 @@
+Input voltage:   208.250V
+Input current:   0.508A
+Input power:     96.0W
+Output voltage:  55.914V
+Output current:  1.477A
+Output power:    82.500W
+Inlet temp:      34.125 degrees
+Outlet temp:     43.625 degrees
+Hot-spot temp:   55.625 degrees
+Fan speed:       3216 RPM
+Status word:     0x0
+Status fans:     0x0
+VOUT_MODE:       0x19

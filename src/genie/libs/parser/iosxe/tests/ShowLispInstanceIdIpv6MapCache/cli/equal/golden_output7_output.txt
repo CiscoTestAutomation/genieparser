@@ -1,0 +1,19 @@
+LISP IPv6 Mapping Cache for LISP 0 EID-table vrf VN1 (IID 4099), 7 entries
+
+::/0, uptime: 22:44:21, expires: 00:12:29, via map-reply, unknown-eid-forward
+ action: send-map-request + Encapsulating to proxy ETR
+  PETR       Uptime    State      Pri/Wgt     Encap-IID  Metric
+  3.3.3.188  22:44:20  up          10/10        -         0
+2102:1:1:4109::/64, uptime: 6w6d, expires: never, via dynamic-EID, send-map-request
+  Negative cache entry, action: send-map-request
+2102:1:1:410A::/64, uptime: 6w6d, expires: never, via dynamic-EID, send-map-request
+  Negative cache entry, action: send-map-request
+2102:1:1:4209::/64, uptime: 6w6d, expires: never, via dynamic-EID, send-map-request
+  Negative cache entry, action: send-map-request
+2102:1:1:420A::/64, uptime: 6w6d, expires: never, via dynamic-EID, send-map-request
+  Negative cache entry, action: send-map-request
+2102:1:1:510C::/64, uptime: 6w6d, expires: never, via dynamic-EID, send-map-request
+  Negative cache entry, action: send-map-request
+2102:1:1:6501::1/128, uptime: 4d11h, expires: 12:50:04, via map-reply, complete
+  Locator    Uptime    State  Pri/Wgt     Encap-IID
+  3.3.3.188  4d11h     up      10/10        -

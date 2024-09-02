@@ -838,7 +838,7 @@ class ShowLoggingOnboardRpClilog(ShowLoggingOnboardSwitchClilogSchema):
         if output is None:
         
             if rp:
-                output = self.device.execute(self.cli_command)
+                output = self.device.execute(self.cli_command.format(rp=rp))
                 
         ret_dict = {}
 

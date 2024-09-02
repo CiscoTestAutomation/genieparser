@@ -1,0 +1,10 @@
+Routing entry for fc00:a000:1000::2/128
+  Known via "isis SRv6_Region", distance 115, metric 10, type level-2
+  Installed Jun 11 10:43:11.718 for 1d18h
+  Routing Descriptor Blocks
+    fe80::b602:16ff:fe07:a0e2, from fc00:a000:1000::2, via Bundle-Ether12, Protected
+      Route metric is 10
+    fe80::eaf:31ff:fec5:60dc, from fc00:a000:1000::2, via Bundle-Ether111, Backup (TI-LFA)
+      Repair Node(s): fc00:a000:1000::12
+      Route metric is 30
+  No advertising protos. 

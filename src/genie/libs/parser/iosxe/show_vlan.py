@@ -622,9 +622,9 @@ class ShowVlanId(ShowVlanIdSchema):
 
         vlan_dict = {}
         p1 = re.compile(r'(?P<vlan_id>\d+) +(?P<vlan_name>\S+|\S+.*\S+) +'
-                        r'(?P<status>active|suspended|act/lshut|sus/lshut)'
-                        r'(?:\s+(?P<ports>([A-Za-z\-]+[\/\d\-\:\.]+\d+)(.*)))?')
-        p2 = re.compile(r'(?P<ports>([A-Za-z\-]+[\/\d\-\:\.]+\d+)(.*))')
+                                r'(?P<status>active|suspended|act/lshut|sus/lshut)'
+                                r'(?:\s+(?P<ports>([A-Za-z\-]+[\/\d\-\:\.]+\d+)(.*)|([A-za-z0-9]+\:\d+(.*))))?')
+        p2 = re.compile(r'(?P<ports>([A-Za-z\-]+[\/\d\-\:\.]+\d+)(.*)|([A-za-z0-9]+\:\d+(.*)))')
         p3 = re.compile(r'\d+ +'
                     '(?P<type>\w+) +'
                     '(?P<said>\d+) +'

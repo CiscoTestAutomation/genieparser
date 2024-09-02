@@ -1,0 +1,33 @@
+expected_output = {
+    'automatic_selection_process': 'Enable',
+    'clock_mode': 'QL-Enable',
+    'equipment_clock': '2048 (EEC-Option1)',
+    'esmc_state': 'Enabled',
+    'global_hold_off_time': 300,
+    'global_wait_to_restore': 300,
+    'nominated_interfaces': {
+        'GigabitEthernet0/0/2': {
+            'esmc_rx': '-',
+            'esmc_tx': '-',
+            'is_source': False,
+            'mode': 'Sync/En',
+            'priority': 1,
+            'ql_in': 'QL-DNU',
+            'signal_type': 'NA',
+        },
+        'Internal': {
+            'esmc_rx': 'NA',
+            'esmc_tx': 'NA',
+            'is_source': True,
+            'mode': 'NA/Dis',
+            'priority': 251,
+            'ql_in': 'QL-SEC',
+            'signal_type': 'NA',
+            'source_type': 'Synchronization source selected',
+        },
+    },
+    'revertive': 'No',
+    'ssm_option': '1',
+    't0': 'Internal',
+    'tsm_delay': 180,
+}

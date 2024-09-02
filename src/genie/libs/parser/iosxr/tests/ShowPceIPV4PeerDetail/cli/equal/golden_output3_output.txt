@@ -1,0 +1,20 @@
+PCE's peer database: 
+--------------------
+Peer address: 192.168.0.3
+  State: Idle
+  Capabilities: Stateless
+  PCEP session ID: local 0, remote 0
+  Minimum acceptable KA interval: 20 seconds
+  Maximum SID Depth: 0
+  Statistics:
+    Keepalive messages: rx 0 tx 0
+    Request messages:   rx     0 tx     0
+    Reply messages:     rx     0 tx     0
+    Error messages:     rx     0 tx     0
+    Open messages:      rx     0 tx     0
+    Report messages:    rx     0 tx     0
+    Update messages:    rx     0 tx     0
+    Initiate messages:  rx     0 tx     0
+  Last PCError:
+    Received: None
+    Sent: None

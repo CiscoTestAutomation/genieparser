@@ -1,0 +1,8 @@
+R5-Router#show isis hostname
+Level  System ID      Dynamic Hostname  (64512)
+ 2     1930.0000.2001 R1_Router
+ 2     1920.0000.2003 R2-Router
+ 2     1920.0000.2002 R3_Router
+ 2     1920.0000.2051 R4-Router
+     * 1920.0000.2053 R5-Router
+ 2     1920.0000.2052 R6_Router

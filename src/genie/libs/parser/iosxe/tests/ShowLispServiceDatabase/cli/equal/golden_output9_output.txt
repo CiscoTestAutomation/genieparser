@@ -1,0 +1,1209 @@
+LISP ETR MAC Mapping Database for LISP 0 EID-table Vlan 1031 (IID 8198), LSBs: 0x1
+Entries total 201, no-route 0, inactive 0, do-not-register 2
+
+0000.04c8.a827/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:43:53
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.04c8.a829/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:43:53
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.04c8.a82b/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:43:53
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.04c8.a82d/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:43:53
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.04c8.a82f/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:43:53
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.04c8.a831/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:43:53
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.04c8.a833/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:43:53
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.04c8.a835/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:43:53
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.04c8.a837/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:43:53
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.04c8.a839/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:43:53
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.04c8.a83b/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:43:53
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.04c8.a83d/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:43:53
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.04c8.a83f/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:43:53
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.04c8.a841/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:43:53
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.04c8.a843/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:43:53
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.04c8.a845/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:43:53
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.04c8.a847/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:43:53
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.04c8.a849/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:43:53
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.04c8.a84b/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:43:53
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.04c8.a84d/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:43:53
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.04c8.a84f/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:43:53
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.04c8.a851/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:43:53
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.04c8.a853/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:43:53
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.04c8.a855/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:43:53
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.04c8.a857/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:43:53
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.04c8.a859/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:43:53
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.04c8.a85b/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:43:57
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.04c8.a85d/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:43:57
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.04c8.a85f/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:43:57
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.04c8.a861/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:43:57
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.04c8.a863/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:43:57
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.04c8.a865/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:43:57
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.04c8.a867/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:43:57
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.04c8.a869/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:43:57
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.04c8.a86b/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:43:57
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.04c8.a86d/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:43:57
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.04c8.a86f/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:43:57
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.04c8.a871/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:43:57
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.04c8.a873/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:43:57
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.04c8.a875/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:02
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.04c8.a877/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:02
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.04c8.a879/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:02
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.04c8.a87b/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:02
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.04c8.a87d/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:02
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.04c8.a87f/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:02
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.04c8.a881/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:02
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.04c8.a883/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:02
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.04c8.a885/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:02
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.04c8.a887/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:02
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.0c9f.f23b/48, dynamic-eid Auto-L2-group-8198, do not register, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 2w1d, Last-change: 21:44:02
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd40.2266/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:02
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd40.2268/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:02
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd40.226a/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:02
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd40.226c/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:06
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd40.226e/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:06
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd40.2270/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:06
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd40.2272/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:06
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd40.2274/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:06
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd40.2276/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:06
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd40.2278/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:06
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd40.227a/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:06
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd40.227c/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:06
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd40.227e/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:06
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd40.2280/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:06
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd40.2282/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:06
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd40.2284/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:06
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd40.2286/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:10
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd40.2288/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:10
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd40.228a/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:10
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd40.228c/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:10
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd40.228e/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:10
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd40.2290/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:10
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd40.2292/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:10
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd40.2294/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:10
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd40.2296/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:10
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd40.2298/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:10
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd40.229a/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:10
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd40.229c/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:10
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd40.229e/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:10
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd40.22a0/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:14
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd40.22a2/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:14
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd40.22a4/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:14
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd40.22a6/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:14
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd40.22a8/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:14
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd40.22aa/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:14
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd40.22ac/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:14
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd40.22ae/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:14
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd40.22b0/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:14
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd40.22b2/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:14
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd40.22b4/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:14
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd40.22b6/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:14
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd40.22b8/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:14
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd40.22ba/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:14
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd40.22bc/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:19
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd40.22be/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:19
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd40.22c0/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:19
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd40.22c2/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:19
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd40.22c4/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:19
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd40.22c6/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:19
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd40.22c8/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:19
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.622b/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:19
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.622d/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:19
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.622f/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:19
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.6231/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:19
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.6233/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:19
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.6235/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:19
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.6237/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:23
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.6239/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:23
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.623b/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:23
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.623d/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:23
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.623f/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:23
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.6241/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:23
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.6243/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:23
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.6245/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:23
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.6247/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:23
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.6249/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:23
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.624b/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:23
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.624d/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:23
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.624f/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:23
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.6251/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:27
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.6253/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:27
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.6255/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:27
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.6257/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:27
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.6259/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:27
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.625b/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:27
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.625d/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:27
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.625f/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:27
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.6261/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:27
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.6263/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:27
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.6265/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:27
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.6267/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:27
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.6269/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:27
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.626b/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:31
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.626d/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:31
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.626f/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:31
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.6271/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:31
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.6273/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:31
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.6275/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:31
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.6277/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:31
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.6279/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:31
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.627b/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:31
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.627d/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:31
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.627f/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:31
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.6281/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:31
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.6283/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:31
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.6285/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:31
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.6287/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:36
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.6289/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:36
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.628b/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:36
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.628d/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:36
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.628f/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:36
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.6291/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:36
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.6293/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:36
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.6295/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:36
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.6297/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:36
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.6299/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:36
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.629b/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:36
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.629d/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:36
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.629f/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:36
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.62a1/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:40
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.62a3/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:40
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.62a5/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:40
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.62a7/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:40
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.62a9/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:40
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.62ab/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:40
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.62ad/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:40
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.62af/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:40
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.62b1/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:40
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.62b3/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:40
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.62b5/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:40
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.62b7/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:40
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.62b9/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:40
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.62bb/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:44
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.62bd/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:44
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.62bf/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:44
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.62c1/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:44
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.62c3/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:44
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.62c5/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:44
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.62c7/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:44
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.62c9/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:44
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.62cb/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:44
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.62cd/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:44
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.62cf/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:44
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.62d1/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:44
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.62d3/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:44
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.62d5/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:44
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.62d7/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:48
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.62d9/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:48
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.62db/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:48
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.62dd/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:48
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.62df/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:48
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.62e1/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:48
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.62e3/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:48
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.62e5/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:48
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.62e7/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:48
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.62e9/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:48
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.62eb/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:48
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.62ed/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:48
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.62ef/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:48
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+0000.cd44.62f1/48, dynamic-eid Auto-L2-group-8198, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 6d08h, Last-change: 21:44:53
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable
+34ed.1b40.ddce/48, dynamic-eid Auto-L2-group-8198, do not register, inherited from default locator-set rloc_8e4b859f-eee6-4ae7-8a13-af61342f3795
+  Uptime: 2w1d, Last-change: 21:44:53
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator   Pri/Wgt  Source     State
+  3.3.3.7    10/10   cfg-intf   site-self, reachable

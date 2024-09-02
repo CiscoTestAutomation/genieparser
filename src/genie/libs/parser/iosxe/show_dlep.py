@@ -288,8 +288,8 @@ class ShowDlepClientsSchema(MetaParser):
                         'dead_interval': int,
                         'terminate_ack': int,
                     },
-                    'neighbour_timers_in_seconds': {
-                        'activity_timeout': int,
+                    Optional('neighbour_timers_in_seconds'): {
+                        Optional('activity_timeout'): int,
                         'neighbor_down_ack': int,
                     },
                     'supported_metrics': {
@@ -316,8 +316,8 @@ class ShowDlepClientsSchema(MetaParser):
                         'dead_interval': int,
                         'terminate_ack': int,
                     },
-                    'neighbour_timers_in_seconds': {
-                        'activity_timeout': int,
+                    Optional('neighbour_timers_in_seconds'): {
+                        Optional('activity_timeout'): int,
                         'neighbor_down_ack': int,
                     },
                     'supported_metrics': {
@@ -381,7 +381,8 @@ class ShowDlepClients(ShowDlepClientsSchema):
         p7 = re.compile(r'^Heartbeat=(?P<heartbeat>\d+),\s+Dead\s+Interval=(?P<dead_interval>\d+),\s+Terminate\s+ACK=(?P<terminate_ack>\d+)$')
 
         #   Activity timeout=0, Neighbor Down ACK=10
-        p9 = re.compile(r'^Activity\s+timeout=(?P<activity_timeout>\d+),\s+Neighbor\s+Down\s+ACK=(?P<neighbor_down_ack>\d+)$')
+        #    Neighbor Down ACK=10
+        p9 = re.compile(r'^(?:Activity\s+timeout=(?P<activity_timeout>\d+),\s+)?Neighbor\s+Down\s+ACK=(?P<neighbor_down_ack>\d+)$')
 
         #   Link Resources Metric : 100
         p11 = re.compile(r'^Link\s+Resources\s+Metric\s+:\s+(?P<resources>\d+)$')
@@ -472,11 +473,13 @@ class ShowDlepClients(ShowDlepClientsSchema):
                     int(m.groupdict()['terminate_ack'])
 
             #   Activity timeout=0, Neighbor Down ACK=10
+            #    Neighbor Down ACK=10
             m = p9.match(line)
             if m:
                 client_dict.setdefault('neighbour_timers_in_seconds', {})
-                client_dict['neighbour_timers_in_seconds']['activity_timeout'] = \
-                    int(m.groupdict()['activity_timeout'])
+                if m.groupdict()['activity_timeout'] is not None:
+                    client_dict['neighbour_timers_in_seconds']['activity_timeout'] = \
+                        int(m.groupdict()['activity_timeout'])
                 client_dict['neighbour_timers_in_seconds']['neighbor_down_ack'] = \
                     int(m.groupdict()['neighbor_down_ack'])
 

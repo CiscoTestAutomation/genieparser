@@ -22,6 +22,7 @@ IOSXE parsers for the following show commands:
     * show ip dhcp snooping database detail
     * show ip dhcp snooping binding
     * show ip mfib
+    * show ip mfib status
     * show ip mfib {group}
     * show ip mfib {group} {source}
     * show ip mfib verbose
@@ -1736,7 +1737,7 @@ class ShowIpDhcpSnoopingBindingSchema(MetaParser):
 
     schema = {
         'total_bindings': int,
-        'interfaces': {
+        Optional('interfaces'): {
             Any(): {
                 'vlan': {
                     Any(): {
@@ -1822,6 +1823,118 @@ class ShowIpDhcpSnoopingBinding(ShowIpDhcpSnoopingBindingSchema):
 
         return ret_dict
 
+# ========================================================
+# Parser for 'show ip mfib status'
+# ========================================================
+
+class ShowIpMfibStatusSchema(MetaParser):
+    """
+    Schema for 'show ip mfib status'
+
+    """
+    schema = {
+        'configuration_status' : str,
+        'operational_status' : str,
+        'initialization_state' : str,
+        'total_signalling_packets_queued' : int,
+        'Process_status' : {
+            'status' : str,
+            'pid' : int
+        },
+        'table' : {
+            'active' : int,
+            'mrib' : int,
+            'io' : int
+        },
+    }
+
+class ShowIpMfibStatus(ShowIpMfibStatusSchema):
+
+    '''
+    Parser for 'show ip mfib status'
+
+    '''
+
+    cli_command = 'show ip mfib status'
+    def cli(self,output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        
+        # Configuration Status: enabled
+        p1 = re.compile(r'^Configuration Status: +(?P<configuration_status>\w+)$')
+
+        # Operational Status: running
+        p2 = re.compile(r'^Operational Status: +(?P<operational_status>\w+)$')
+
+        # Initialization State: Running
+        p3 = re.compile(r'^Initialization State: +(?P<initialization_state>\w+)$')
+
+        # Total signalling packets queued: 0
+        p4 = re.compile(r'^Total signalling packets queued: +(?P<total_signalling_packets_queued>\d+)$')
+
+        # Process Status: may enable - 3 - pid 737
+        p5 = re.compile(r'^Process Status: may +(?P<status>\w+) - \d+ - pid +(?P<pid>\d+)')
+
+        # Tables 1/1/0 (active/mrib/io)
+        p6 = re.compile(r'^Tables (?P<active>\d)+(\/)+(?P<mrib>\d)(\/)+(?P<io>\d) +(\()+active+(\/)+mrib+(\/)+io+(\))$')
+        
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Configuration Status: enabled
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['configuration_status'] = group['configuration_status']
+                continue
+
+            # Operational Status: running
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['operational_status'] = group['operational_status']
+                continue
+
+            # Initialization State: Running
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['initialization_state'] = group['initialization_state']
+                continue
+
+            # Total signalling packets queued: 0
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['total_signalling_packets_queued'] = int(group['total_signalling_packets_queued'])
+                continue
+
+            # Process Status: may enable - 3 - pid 737
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                process_dict = ret_dict.setdefault('Process_status',{})
+                process_dict.update({
+                    'status': group['status'],
+                    'pid': int(group['pid'])
+                })
+                continue
+
+            # Tables 1/1/0 (active/mrib/io)
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                table_dict = ret_dict.setdefault('table',{})
+                table_dict.update({
+                    'active' : int(group['active']),
+                    'mrib' : int(group['mrib']),
+                    'io' : int(group['io'])
+                    })
+                continue
+
+        return ret_dict
 # =====================================
 # Schema for  show ip mfib
 # Schema for  show ip mfib {group}

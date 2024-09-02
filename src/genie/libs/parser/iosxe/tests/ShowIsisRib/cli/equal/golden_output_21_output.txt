@@ -1,0 +1,454 @@
+IPv4 local RIB for IS-IS process 64512
+
+IPV4 unicast topology base (TID 0, TOPOID 0x0) =================
+Repair path attributes:
+    DS - Downstream, LC - Linecard-Disjoint, NP - Node-Protecting
+    PP - Primary-Path, SR - SRLG-Disjoint
+
+
+10.1.2.0/30  prefix attr X:0 R:0 N:0
+  [115/L2/110] via 10.2.5.21(TenGigabitEthernet0/0/0), from 192.0.2.1, tag 0 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+              (installed)
+     repair path: 10.1.5.21(TenGigabitEthernet0/0/1) metric:120 (SR)
+       local LFA
+       repair source: R1
+  [115/L2/120] via 10.2.5.21(TenGigabitEthernet0/0/0), from 192.0.2.2, tag 0 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+  [115/L2/120] via 10.1.5.21(TenGigabitEthernet0/0/1), from 192.0.2.2, tag 0 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+
+10.1.2.4/30  prefix attr X:0 R:0 N:0
+  [115/L2/20] via 10.2.5.21(TenGigabitEthernet0/0/0), from 192.0.2.1, tag 0 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+              (installed)
+     repair path: 10.1.5.21(TenGigabitEthernet0/0/1) metric:30 (SR)
+       local LFA
+       repair source: R1
+  [115/L2/30] via 10.2.5.21(TenGigabitEthernet0/0/0), from 192.0.2.2, tag 0 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+  [115/L2/30] via 10.1.5.21(TenGigabitEthernet0/0/1), from 192.0.2.2, tag 0 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+
+10.1.2.8/30  prefix attr X:0 R:0 N:0
+  [115/L2/110] via 10.2.5.21(TenGigabitEthernet0/0/0), from 192.0.2.1, tag 0 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+              (installed)
+     repair path: 10.1.5.21(TenGigabitEthernet0/0/1) metric:120 (SR)
+       local LFA
+       repair source: R1
+  [115/L2/120] via 10.2.5.21(TenGigabitEthernet0/0/0), from 192.0.2.2, tag 0 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+  [115/L2/120] via 10.1.5.21(TenGigabitEthernet0/0/1), from 192.0.2.2, tag 0 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+
+10.1.2.12/30  prefix attr X:0 R:0 N:0
+  [115/L2/20] via 10.2.5.21(TenGigabitEthernet0/0/0), from 192.0.2.1, tag 0 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+              (installed)
+     repair path: 10.1.5.21(TenGigabitEthernet0/0/1) metric:30 (SR)
+       local LFA
+       repair source: R1
+  [115/L2/30] via 10.2.5.21(TenGigabitEthernet0/0/0), from 192.0.2.2, tag 0 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+  [115/L2/30] via 10.1.5.21(TenGigabitEthernet0/0/1), from 192.0.2.2, tag 0 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+
+10.1.3.0/30  prefix attr X:0 R:0 N:0
+  [115/L2/110] via 10.2.5.21(TenGigabitEthernet0/0/0), from 192.0.2.1, tag 0 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+              (installed)
+     repair path: 10.1.5.21(TenGigabitEthernet0/0/1) metric:110 (PP,DS,NP,SR)
+       local LFA
+       repair source: R3
+  [115/L2/110] via 10.1.5.21(TenGigabitEthernet0/0/1), from 192.0.2.3, tag 0 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+              (installed)
+     repair path: 10.2.5.21(TenGigabitEthernet0/0/0) metric:110 (PP,DS,NP,SR)
+       local LFA
+       repair source: R2
+
+10.1.3.4/30  prefix attr X:0 R:0 N:0
+  [115/L2/20] via 10.2.5.21(TenGigabitEthernet0/0/0), from 192.0.2.1, tag 0 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+              (installed)
+     repair path: 10.1.5.21(TenGigabitEthernet0/0/1) metric:20 (PP,DS,NP,SR)
+       local LFA
+       repair source: R3
+  [115/L2/20] via 10.1.5.21(TenGigabitEthernet0/0/1), from 192.0.2.3, tag 0 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+              (installed)
+     repair path: 10.2.5.21(TenGigabitEthernet0/0/0) metric:20 (PP,DS,NP,SR)
+       local LFA
+       repair source: R2
+
+10.1.3.8/30  prefix attr X:0 R:0 N:0
+  [115/L2/110] via 10.2.5.21(TenGigabitEthernet0/0/0), from 192.0.2.1, tag 0 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+              (installed)
+     repair path: 10.1.5.21(TenGigabitEthernet0/0/1) metric:110 (PP,DS,NP,SR)
+       local LFA
+       repair source: R3
+  [115/L2/110] via 10.1.5.21(TenGigabitEthernet0/0/1), from 192.0.2.3, tag 0 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+              (installed)
+     repair path: 10.2.5.21(TenGigabitEthernet0/0/0) metric:110 (PP,DS,NP,SR)
+       local LFA
+       repair source: R2
+
+10.1.3.12/30  prefix attr X:0 R:0 N:0
+  [115/L2/20] via 10.2.5.21(TenGigabitEthernet0/0/0), from 192.0.2.1, tag 0 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+              (installed)
+     repair path: 10.1.5.21(TenGigabitEthernet0/0/1) metric:20 (PP,DS,NP,SR)
+       local LFA
+       repair source: R3
+  [115/L2/20] via 10.1.5.21(TenGigabitEthernet0/0/1), from 192.0.2.3, tag 0 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+              (installed)
+     repair path: 10.2.5.21(TenGigabitEthernet0/0/0) metric:20 (PP,DS,NP,SR)
+       local LFA
+       repair source: R2
+
+10.1.4.0/30  prefix attr X:0 R:0 N:0
+  [115/L2/110] via 10.1.5.21(TenGigabitEthernet0/0/1), from 192.0.2.3, tag 0 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+              (installed)
+     repair path: 10.2.5.21(TenGigabitEthernet0/0/0) metric:120 (SR)
+       local LFA
+       repair source: R1
+  [115/L2/120] via 10.2.5.21(TenGigabitEthernet0/0/0), from 192.0.2.2, tag 0 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+  [115/L2/120] via 10.1.5.21(TenGigabitEthernet0/0/1), from 192.0.2.2, tag 0 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+
+10.1.4.4/30  prefix attr X:0 R:0 N:0
+  [115/L2/20] via 10.1.5.21(TenGigabitEthernet0/0/1), from 192.0.2.3, tag 0 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+              (installed)
+     repair path: 10.2.5.21(TenGigabitEthernet0/0/0) metric:30 (SR)
+       local LFA
+       repair source: R1
+  [115/L2/30] via 10.2.5.21(TenGigabitEthernet0/0/0), from 192.0.2.2, tag 0 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+  [115/L2/30] via 10.1.5.21(TenGigabitEthernet0/0/1), from 192.0.2.2, tag 0 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+
+10.1.4.8/30  prefix attr X:0 R:0 N:0
+  [115/L2/110] via 10.1.5.21(TenGigabitEthernet0/0/1), from 192.0.2.3, tag 0 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+              (installed)
+     repair path: 10.2.5.21(TenGigabitEthernet0/0/0) metric:120 (SR)
+       local LFA
+       repair source: R1
+  [115/L2/120] via 10.2.5.21(TenGigabitEthernet0/0/0), from 192.0.2.2, tag 0 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+  [115/L2/120] via 10.1.5.21(TenGigabitEthernet0/0/1), from 192.0.2.2, tag 0 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+
+10.1.4.12/30  prefix attr X:0 R:0 N:0
+  [115/L2/20] via 10.1.5.21(TenGigabitEthernet0/0/1), from 192.0.2.3, tag 0 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+              (installed)
+     repair path: 10.2.5.21(TenGigabitEthernet0/0/0) metric:30 (SR)
+       local LFA
+       repair source: R1
+  [115/L2/30] via 10.2.5.21(TenGigabitEthernet0/0/0), from 192.0.2.2, tag 0 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+  [115/L2/30] via 10.1.5.21(TenGigabitEthernet0/0/1), from 192.0.2.2, tag 0 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+
+10.1.5.0/30  prefix attr X:0 R:0 N:0
+  [115/L2/120] via 10.2.5.21(TenGigabitEthernet0/0/0), from 192.0.2.2, tag 0 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+              (installed)
+     repair path: 10.1.5.21(TenGigabitEthernet0/0/1) metric:120 (PP,DS,NP,SR)
+       local LFA
+       repair source: R1
+  [115/L2/120] via 10.1.5.21(TenGigabitEthernet0/0/1), from 192.0.2.2, tag 0 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+              (installed)
+     repair path: 10.2.5.21(TenGigabitEthernet0/0/0) metric:120 (PP,DS,NP,SR)
+       local LFA
+       repair source: R1
+  [115/L2/130] via 10.2.5.21(TenGigabitEthernet0/0/0), from 192.0.2.52, tag 0 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+  [115/L2/130] via 10.1.5.21(TenGigabitEthernet0/0/1), from 192.0.2.52, tag 0 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+
+10.1.5.4/30  prefix attr X:0 R:0 N:0
+  [115/L2/30] via 10.2.5.21(TenGigabitEthernet0/0/0), from 192.0.2.2, tag 0 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+              (installed)
+     repair path: 10.1.5.21(TenGigabitEthernet0/0/1) metric:30 (PP,DS,NP,SR)
+       local LFA
+       repair source: R1
+  [115/L2/30] via 10.1.5.21(TenGigabitEthernet0/0/1), from 192.0.2.2, tag 0 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+              (installed)
+     repair path: 10.2.5.21(TenGigabitEthernet0/0/0) metric:30 (PP,DS,NP,SR)
+       local LFA
+       repair source: R1
+  [115/L2/40] via 10.2.5.21(TenGigabitEthernet0/0/0), from 192.0.2.52, tag 0 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+  [115/L2/40] via 10.1.5.21(TenGigabitEthernet0/0/1), from 192.0.2.52, tag 0 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+
+10.1.5.8/30  prefix attr X:0 R:0 N:0
+  [115/L2/110] via 10.2.5.21(TenGigabitEthernet0/0/0), from 192.0.2.1, tag 0 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+              (installed)
+     repair path: 10.1.5.21(TenGigabitEthernet0/0/1) metric:120 (SR)
+       local LFA
+       repair source: R2
+  [115/L2/120] via 10.2.5.21(TenGigabitEthernet0/0/0), from 192.0.2.51, tag 0 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+
+10.1.5.12/30  prefix attr X:0 R:0 N:0
+  [115/L2/20] via 10.2.5.21(TenGigabitEthernet0/0/0), from 192.0.2.1, tag 0 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+              (installed)
+     repair path: 10.1.5.21(TenGigabitEthernet0/0/1) metric:30 (SR)
+       local LFA
+       repair source: R2
+  [115/L2/30] via 10.2.5.21(TenGigabitEthernet0/0/0), from 192.0.2.51, tag 0 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+
+10.1.5.16/30  prefix attr X:0 R:0 N:0
+  [115/L2/110] via 10.1.5.21(TenGigabitEthernet0/0/1), from 192.0.2.3, tag 0 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+
+10.1.5.20/30  prefix attr X:0 R:0 N:0
+  [115/L2/20] via 10.1.5.21(TenGigabitEthernet0/0/1), from 192.0.2.3, tag 0 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+
+10.2.5.0/30  prefix attr X:0 R:0 N:0
+  [115/L2/110] via 10.2.5.21(TenGigabitEthernet0/0/0), from 192.0.2.1, tag 0 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+              (installed)
+     repair path: 10.1.5.21(TenGigabitEthernet0/0/1) metric:120 (SR)
+       local LFA
+       repair source: R2
+  [115/L2/130] via 10.2.5.21(TenGigabitEthernet0/0/0), from 192.0.2.52, tag 0 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+  [115/L2/130] via 10.1.5.21(TenGigabitEthernet0/0/1), from 192.0.2.52, tag 0 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+
+10.2.5.4/30  prefix attr X:0 R:0 N:0
+  [115/L2/20] via 10.2.5.21(TenGigabitEthernet0/0/0), from 192.0.2.1, tag 0 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+              (installed)
+     repair path: 10.1.5.21(TenGigabitEthernet0/0/1) metric:30 (SR)
+       local LFA
+       repair source: R2
+  [115/L2/40] via 10.2.5.21(TenGigabitEthernet0/0/0), from 192.0.2.52, tag 0 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+  [115/L2/40] via 10.1.5.21(TenGigabitEthernet0/0/1), from 192.0.2.52, tag 0 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+
+10.2.5.8/30  prefix attr X:0 R:0 N:0
+  [115/L2/120] via 10.2.5.21(TenGigabitEthernet0/0/0), from 192.0.2.2, tag 0 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+              (installed)
+     repair path: 10.1.5.21(TenGigabitEthernet0/0/1) metric:120 (PP,DS,NP,SR)
+       local LFA
+       repair source: R1
+  [115/L2/120] via 10.2.5.21(TenGigabitEthernet0/0/0), from 192.0.2.51, tag 0 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+  [115/L2/120] via 10.1.5.21(TenGigabitEthernet0/0/1), from 192.0.2.2, tag 0 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+              (installed)
+     repair path: 10.2.5.21(TenGigabitEthernet0/0/0) metric:120 (PP,DS,NP,SR)
+       local LFA
+       repair source: R4
+
+10.2.5.12/30  prefix attr X:0 R:0 N:0
+  [115/L2/30] via 10.2.5.21(TenGigabitEthernet0/0/0), from 192.0.2.2, tag 0 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+              (installed)
+     repair path: 10.1.5.21(TenGigabitEthernet0/0/1) metric:30 (PP,DS,NP,SR)
+       local LFA
+       repair source: R1
+  [115/L2/30] via 10.2.5.21(TenGigabitEthernet0/0/0), from 192.0.2.51, tag 0 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+  [115/L2/30] via 10.1.5.21(TenGigabitEthernet0/0/1), from 192.0.2.2, tag 0 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+              (installed)
+     repair path: 10.2.5.21(TenGigabitEthernet0/0/0) metric:30 (PP,DS,NP,SR)
+       local LFA
+       repair source: R4
+
+10.2.5.16/30  prefix attr X:0 R:0 N:0
+  [115/L2/110] via 10.2.5.21(TenGigabitEthernet0/0/0), from 192.0.2.1, tag 0 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+
+10.2.5.20/30  prefix attr X:0 R:0 N:0
+  [115/L2/20] via 10.2.5.21(TenGigabitEthernet0/0/0), from 192.0.2.1, tag 0 
+     prefix attr: X:0 R:0 N:0
+       SRGB: 16000, range: 8000 prefix-SID index: None
+
+192.0.2.1/32  prefix attr X:0 R:0 N:1  source router id: 192.0.2.1  prefix SID index 10 - Bound
+  strict-SPF SID index 11 - Bound
+  [115/L2/10] via 10.2.5.21(TenGigabitEthernet0/0/0), from 192.0.2.1, tag 0 
+     prefix attr: X:0 R:0 N:1
+     source router id: 192.0.2.1
+       SRGB: 16000, range: 8000 prefix-SID index: 10, R:0 N:1 P:0 E:0 V:0 L:0
+       strict-SPF SID index: 11, R:0 N:1 P:0 E:0 V:0 L:0
+     label: implicit-null
+     strict-SPF label: implicit-null
+              (installed)
+     repair path: 10.1.5.21(TenGigabitEthernet0/0/1) metric:20 (SR)
+       local LFA
+       label: 16010
+       strict-SPF label: 16011, via TenGigabitEthernet0/0/1
+       repair source: R2
+
+192.0.2.2/32  prefix attr X:0 R:0 N:1  source router id: 192.0.2.2  prefix SID index 20 - Bound
+  strict-SPF SID index 21 - Bound
+  [115/L2/20] via 10.2.5.21(TenGigabitEthernet0/0/0), from 192.0.2.2, tag 0 
+     prefix attr: X:0 R:0 N:1
+     source router id: 192.0.2.2
+       SRGB: 16000, range: 8000 prefix-SID index: 20, R:0 N:1 P:0 E:0 V:0 L:0
+       strict-SPF SID index: 21, R:0 N:1 P:0 E:0 V:0 L:0
+     label: 16020
+     strict-SPF label: 16021
+              (installed)
+     repair path: 10.1.5.21(TenGigabitEthernet0/0/1) metric:20 (PP,DS,NP,SR)
+       local LFA
+       label: 16020
+       strict-SPF label: 16021, via TenGigabitEthernet0/0/1
+       repair source: R1
+  [115/L2/20] via 10.1.5.21(TenGigabitEthernet0/0/1), from 192.0.2.2, tag 0 
+     prefix attr: X:0 R:0 N:1
+     source router id: 192.0.2.2
+       SRGB: 16000, range: 8000 prefix-SID index: 20, R:0 N:1 P:0 E:0 V:0 L:0
+       strict-SPF SID index: 21, R:0 N:1 P:0 E:0 V:0 L:0
+     label: 16020
+     strict-SPF label: 16021
+              (installed)
+     repair path: 10.2.5.21(TenGigabitEthernet0/0/0) metric:20 (PP,DS,NP,SR)
+       local LFA
+       label: 16020
+       strict-SPF label: 16021, via TenGigabitEthernet0/0/0
+       repair source: R1
+
+192.0.2.3/32  prefix attr X:0 R:0 N:1  source router id: 192.0.2.3  prefix SID index 30 - Bound
+  strict-SPF SID index 31 - Bound
+  [115/L2/10] via 10.1.5.21(TenGigabitEthernet0/0/1), from 192.0.2.3, tag 0 
+     prefix attr: X:0 R:0 N:1
+     source router id: 192.0.2.3
+       SRGB: 16000, range: 8000 prefix-SID index: 30, R:0 N:1 P:0 E:0 V:0 L:0
+       strict-SPF SID index: 31, R:0 N:1 P:0 E:0 V:0 L:0
+     label: implicit-null
+     strict-SPF label: implicit-null
+              (installed)
+     repair path: 10.2.5.21(TenGigabitEthernet0/0/0) metric:20 (SR)
+       local LFA
+       label: 16030
+       strict-SPF label: 16031, via TenGigabitEthernet0/0/0
+       repair source: R3
+
+192.0.2.51/32  prefix attr X:0 R:0 N:1  source router id: 192.0.2.51  prefix SID index 880 - Bound
+  strict-SPF SID index 881 - Bound
+  [115/L2/30] via 10.2.5.21(TenGigabitEthernet0/0/0), from 192.0.2.51, tag 0 
+     prefix attr: X:0 R:0 N:1
+     source router id: 192.0.2.51
+       SRGB: 16000, range: 8000 prefix-SID index: 880, R:0 N:1 P:0 E:0 V:0 L:0
+       strict-SPF SID index: 881, R:0 N:1 P:0 E:0 V:0 L:0
+     label: 16880
+     strict-SPF label: 16881
+              (installed)
+     repair path: 10.1.5.21(TenGigabitEthernet0/0/1) metric:40 (SR)
+       local LFA
+       label: 16880
+       strict-SPF label: 16881, via TenGigabitEthernet0/0/1
+       repair source: R4
+
+192.0.2.52/32  prefix attr X:0 R:0 N:1  source router id: 192.0.2.52  prefix SID index 770 - Bound
+  strict-SPF SID index 771 - Bound
+  [115/L2/30] via 10.2.5.21(TenGigabitEthernet0/0/0), from 192.0.2.52, tag 0 
+     prefix attr: X:0 R:0 N:1
+     source router id: 192.0.2.52
+       SRGB: 16000, range: 8000 prefix-SID index: 770, R:0 N:1 P:0 E:0 V:0 L:0
+       strict-SPF SID index: 771, R:0 N:1 P:0 E:0 V:0 L:0
+     label: 16770
+     strict-SPF label: 16771
+              (installed)
+     repair path: 10.1.5.21(TenGigabitEthernet0/0/1) metric:30 (PP,DS,NP,SR)
+       local LFA
+       label: 16770
+       strict-SPF label: 16771, via TenGigabitEthernet0/0/1
+       repair source: R5
+  [115/L2/30] via 10.1.5.21(TenGigabitEthernet0/0/1), from 192.0.2.52, tag 0 
+     prefix attr: X:0 R:0 N:1
+     source router id: 192.0.2.52
+       SRGB: 16000, range: 8000 prefix-SID index: 770, R:0 N:1 P:0 E:0 V:0 L:0
+       strict-SPF SID index: 771, R:0 N:1 P:0 E:0 V:0 L:0
+     label: 16770
+     strict-SPF label: 16771
+              (installed)
+     repair path: 10.2.5.21(TenGigabitEthernet0/0/0) metric:30 (PP,DS,NP,SR)
+       local LFA
+       label: 16770
+       strict-SPF label: 16771, via TenGigabitEthernet0/0/0
+       repair source: R5
+

@@ -1,0 +1,138 @@
+Fri May 3 00:37:43.532 UTC
+
+Group dopa, XC dopa_479, state is up; Interworking none
+AC: TenGigE0/0/0/4.479, state is up
+Type VLAN; Num Ranges: 1
+Rewrite Tags: []
+VLAN ranges: [479, 479]
+MTU 1500; XC ID 0x23; interworking none
+Statistics:
+packets: received 64003097, sent 86457638
+bytes: received 30130317833, sent 60438650194
+drops: illegal VLAN 0, illegal length 0
+PW: neighbor 118.174.224.162, PW ID 2047920479, state is up ( established )
+PW class EO_CON, XC ID 0xc000000d
+Encapsulation MPLS, protocol LDP
+Source address 10.244.244.52
+PW type Ethernet, control word enabled, interworking none
+PW backup disable delay 0 sec
+Sequencing not set
+Ignore MTU mismatch: Disabled
+Transmit MTU zero: Disabled
+LSP : Up
+Load Balance Hashing: src-dst-ip
+
+PW Status TLV in use
+  MPLS         Local                          Remote                        
+  ------------ ------------------------------ -----------------------------
+  Label        24040                          27425                         
+  Group ID     0xe8                           0xe1                          
+  Interface    TenGigE0/0/0/4.479             Access PW                     
+  MTU          1500                           1500                          
+  Control word enabled                        enabled                       
+  PW type      Ethernet                       Ethernet                      
+  VCCV CV type 0x2                            0x2                           
+               (LSP ping verification)        (LSP ping verification)       
+  VCCV CC type 0x7                            0x7                           
+               (control word)                 (control word)                
+               (router alert label)           (router alert label)          
+               (TTL expiry)                   (TTL expiry)                  
+  ------------ ------------------------------ -----------------------------
+Incoming Status (PW Status TLV):
+  Status code: 0x0 (Up) in Notification message
+Outgoing Status (PW Status TLV):
+  Status code: 0x0 (Up) in Notification message
+MIB cpwVcIndex: 3221225485
+Create time: 20/05/2023 21:31:34 (49w5d ago)
+Last time status changed: 13/03/2024 07:32:03 (7w1d ago)
+Last time PW went down: 13/03/2024 07:31:51 (7w1d ago)
+MAC withdraw messages: sent 0, received 0
+Statistics:
+  packets: received 86457638, sent 64003097
+  bytes: received 60438650194, sent 30130317833
+Backup PW:
+PW: neighbor 118.174.224.24, PW ID 2047920479, state is standby ( all ready )
+Backup for neighbor 118.174.224.162 PW ID 2047920479 ( inactive )
+PW class EO_CON_Backup, XC ID 0xc000000a
+Encapsulation MPLS, protocol LDP
+Source address 10.244.244.52
+PW type Ethernet, control word enabled, interworking none
+Sequencing not set
+Ignore MTU mismatch: Disabled
+Transmit MTU zero: Disabled
+LSP : Up
+Load Balance Hashing: src-dst-ip
+
+PW Status TLV in use
+  MPLS         Local                          Remote                        
+  ------------ ------------------------------ -----------------------------
+  Label        26612                          26577                         
+  Group ID     0xe8                           0xc                           
+  Interface    TenGigE0/0/0/4.479             Access PW                     
+  MTU          1500                           1500                          
+  Control word enabled                        enabled                       
+  PW type      Ethernet                       Ethernet                      
+  VCCV CV type 0x2                            0x2                           
+               (LSP ping verification)        (LSP ping verification)       
+  VCCV CC type 0x7                            0x7                           
+               (control word)                 (control word)                
+               (router alert label)           (router alert label)          
+               (TTL expiry)                   (TTL expiry)                  
+  ------------ ------------------------------ -----------------------------
+Incoming Status (PW Status TLV):
+  Status code: 0x0 (Up) in Notification message
+Outgoing Status (PW Status TLV):
+  Status code: 0x20 (Standby) in Notification message
+MIB cpwVcIndex: 3221225482
+Create time: 10/04/2024 08:25:03 (3w1d ago)
+Last time status changed: 10/04/2024 08:25:03 (3w1d ago)
+MAC withdraw messages: sent 0, received 0
+Group polis, XC polis_434, state is up; Interworking none
+AC: TenGigE0/0/0/4.434, state is up
+Type VLAN; Num Ranges: 1
+Rewrite Tags: []
+VLAN ranges: [434, 434]
+MTU 1500; XC ID 0x21; interworking none
+Statistics:
+packets: received 106049084, sent 88219312
+bytes: received 10704088231, sent 24897725734
+drops: illegal VLAN 0, illegal length 0
+PW: neighbor 118.174.224.162, PW ID 104340434, state is up ( established )
+PW class EO_CON, XC ID 0xc000000e
+Encapsulation MPLS, protocol LDP
+Source address 10.244.244.52
+PW type Ethernet, control word enabled, interworking none
+PW backup disable delay 0 sec
+Sequencing not set
+Ignore MTU mismatch: Disabled
+Transmit MTU zero: Disabled
+LSP : Up
+Load Balance Hashing: src-dst-ip
+
+PW Status TLV in use
+  MPLS         Local                          Remote                        
+  ------------ ------------------------------ -----------------------------
+  Label        24038                          27442                         
+  Group ID     0xe8                           0xd7                          
+  Interface    TenGigE0/0/0/4.434             Access PW                     
+  MTU          1500                           1500                          
+  Control word enabled                        enabled                       
+  PW type      Ethernet                       Ethernet                      
+  VCCV CV type 0x2                            0x2                           
+               (LSP ping verification)        (LSP ping verification)       
+  VCCV CC type 0x7                            0x7                           
+               (control word)                 (control word)                
+               (router alert label)           (router alert label)          
+               (TTL expiry)                   (TTL expiry)                  
+  ------------ ------------------------------ -----------------------------
+Incoming Status (PW Status TLV):
+  Status code: 0x0 (Up) in Notification message
+Outgoing Status (PW Status TLV):
+  Status code: 0x0 (Up) in Notification message
+MIB cpwVcIndex: 3221225486
+Create time: 20/05/2023 21:31:34 (49w5d ago)
+Last time status changed: 13/03/2024 07:32:03 (7w1d ago)
+Last time PW went down: 13/03/2024 07:31:51 (7w1d ago)
+Statistics:
+  packets: received 88219312, sent 106049084
+  bytes: received 24897725734, sent 10704088231

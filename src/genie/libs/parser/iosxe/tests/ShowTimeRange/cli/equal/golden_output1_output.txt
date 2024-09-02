@@ -1,0 +1,2 @@
+time-range entry: timerange (active)
+   periodic daily 19:33 to 19:36

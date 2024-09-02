@@ -1,0 +1,5 @@
+{
+    "address_family": "ipv6 all",
+    "community": "1234:1234",
+    "exact_match": "exact_match"
+}

@@ -1,0 +1,8 @@
+Type escape sequence to abort.
+Tracing the route to 2000:90:33:1::2
+
+1 2000:90:11:1::1 2 msec 2 msec 1 msec
+2 ::ffff:10.0.0.12 [MPLS: Labels 16004/26061 Exp 0] 2 msec 2 msec 2 msec
+3 ::ffff:10.0.0.14 [MPLS: Labels 16004/26061 Exp 0] 3 msec 2 msec 2 msec
+4 2000:90:33:1::1 2 msec 1 msec 1 msec
+5 2000:90:33:1::2 4 msec 3 msec 3 msec

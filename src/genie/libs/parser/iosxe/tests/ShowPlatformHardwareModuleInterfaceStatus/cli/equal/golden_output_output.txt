@@ -1,0 +1,38 @@
+GE1: 
+MAC Status: hw_port 1, speed 1000, duplex full, link Down, link_en Disable , tx_pause Disable, rx_pause Enable
+fec_mode no-fec
+L3_NETWORK 
+link Down(config Disable), speed unknown(config auto), duplex unknown(config auto), config autoneg, mtu 1526
+rx_pause Off(config Off), tx_pause Off(config Off) 
+In-Band Auto-Negotiation: Enable
+Vlan cfg: tunnel mode, native vlan 2356 (cfg 2356) 
+protected port cfg: disable 
+qos cfg: trust mode, default priority 1 
+mac learning: disable learning, learn Disabled, cmd: FRWRD NaToCpu:FALSE
+storm-ctrl: bcast(off), mcast(off), ucast(off), uucast(off) 
+mac_filtering: Enable, mac: 6879.09ac.5b81
+
+PVE :enable, target port: 24, isTrunk:false
+nested vlan :enable, vlan: 2356 
+
+tail-drop profile 0, sche_profile 2
+default priority 1, UP override True
+None Trust mode
+Exp Enable
+cos_bit_vec: 0x00, exp_bit_vec: 0xc0, dscp_bit_vec: 0x0000000000000000
+common qos profile [24 - 104]
+LP Qos Profile: 106, Cos: 1, TC: 1.
+HP Qos Profile: 107, Cos: 5, TC: 5.
+SP Tx Queue: 7.
+TX_PAUSE: disabled XOFF_THRES: 1024(plim threshold 99%, Buff-size: 1024),   XON_THRES: 128
+LP Queue cos:1 tc:1, config weight: 20, sche Weight: 255
+HP Queue cos:5 tc:5, config bw: 100, sche Weight: 255
+Port Tx buff: 0
+Queue 0, tx buff 0
+Queue 1, tx buff 0
+Queue 2, tx buff 0
+Queue 3, tx buff 0
+Queue 4, tx buff 0
+Queue 5, tx buff 0
+Queue 6, tx buff 0
+Queue 7, tx buff 0

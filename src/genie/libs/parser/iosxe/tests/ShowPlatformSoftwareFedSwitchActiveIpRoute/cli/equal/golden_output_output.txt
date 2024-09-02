@@ -1,0 +1,8 @@
+Number of npi_ipv4route entries = 6
+Object ID           IPv4 Address        Mask Length         Parent Type         Parent ObjectID
+0x564ecc0889e8      127.0.0.0           8                   DROP                0x0
+0x564ecc088908      0.0.0.0             8                   DROP                0x0
+0x564ecc088828      240.0.0.0           4                   DROP                0x0
+0x564ecc088668      255.255.255.255     32                  RECV                0x0
+0x564ecc088588      0.0.0.0             32                  RECV                0x0
+0x564ecc0883b8      0.0.0.0             0                   DROP                0x0

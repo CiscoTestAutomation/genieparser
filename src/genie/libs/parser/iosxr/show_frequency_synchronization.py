@@ -289,3 +289,64 @@ class ShowFrequencySynchronizationInterfaces(ShowFrequencySynchronizationInterfa
                 continue
 
         return ret_dict
+
+
+class ShowFrequencySynchronizationInterfacesBriefSchema(MetaParser):
+    ''' Schema for:
+            * 'show frequency synchronization interfaces brief'
+    '''
+    schema = {
+        'interface': {
+            Any () : {
+               'flag' : str,
+               'interface': str, 
+               'qlrcv': str,
+               'qluse': str,
+               'priority': str,
+               'qlsnd': str,
+               'output_driven_by': str,
+            }
+        }
+    }
+    
+class ShowFrequencySynchronizationInterfacesBrief(ShowFrequencySynchronizationInterfacesBriefSchema):
+
+    cli_command = ['show frequency synchronization interfaces brief']
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command[0])
+
+        ret_dict = {}
+        
+        #Fl   Interface                QLrcv QLuse Pri QLsnd Output driven by
+        #==== ======================== ===== ===== === ===== ========================
+        #>S   TenGigE0/0/0/1/0         PRC   PRC   100 PRC   Internal0 [0/RP0/CPU0]  
+        #>S   TenGigE0/0/0/1/1         PRC   PRC   100 PRC   Internal0 [0/RP0/CPU0]  
+        p1 = re.compile(r'^(?P<flag>\S+)\s+(?P<interface>\S+)\s+(?P<qlrcv>\S+)\s+(?P<qluse>\S+)\s+(?P<priority>\S+)\s+(?P<qlsnd>\S+)\s+(?P<output_driven_by>.+\s+(\[.+?\]))')
+ 
+        for line in output.splitlines():
+            line = line.strip()
+            
+            #Fl   Interface                QLrcv QLuse Pri QLsnd Output driven by
+            #==== ======================== ===== ===== === ===== ========================
+            #>S   TenGigE0/0/0/1/0         PRC   PRC   100 PRC   Internal0 [0/RP0/CPU0]  
+            #>S   TenGigE0/0/0/1/1         PRC   PRC   100 PRC   Internal0 [0/RP0/CPU0]  
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                interface = group['interface']
+                interface_dict = ret_dict.setdefault('interface',{}).setdefault(interface, {})
+                interface_dict.update({
+                    'flag': group['flag'],
+                    'interface': group['interface'],
+                    'qlrcv': group['qlrcv'],
+                    'qluse': group['qluse'],
+                    'priority': group['priority'],
+                    'qlsnd': group['qlsnd'],
+                    'output_driven_by': group['output_driven_by']
+                })
+                continue
+            
+        return ret_dict
+    

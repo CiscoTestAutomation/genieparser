@@ -1,0 +1,27 @@
+              Pool CATL_POOL Allocations
+---------------------------------------------------
+
+VRF: default
+Pool Id: 0
+Pool Scope: VRF Specific Pool
+Prefix Length: 32
+
+Used:             0
+Excl:             0
+Free:           253
+Total:          253
+
+Utilization:    0%
+
+
+Range List: 
+----------- 
+ 
+ 
+Range Start        :  192.168.1.2 
+Range End          :  192.168.1.254 
+Default Router     :  0.0.0.0 
+Used Addresses     :  0 
+Excluded Addresses :  0 
+Free Addresses     :  253 
+Blocked            :  No

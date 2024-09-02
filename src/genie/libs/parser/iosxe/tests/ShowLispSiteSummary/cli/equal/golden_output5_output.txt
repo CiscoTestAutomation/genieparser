@@ -1,0 +1,16 @@
+                     ----------- IPv4 ----------- ----------- IPv6 ----------- ----------- MAC ----------- 
+Site name            Configured Registered Incons Configured Registered Incons Configured Registered Incons
+site_uci                     10         19      0          0          0      0          6         16      0
+
+Site-registration limit for router lisp 0:              0
+Site-registration count for router lisp 0:             35
+Number of address-resolution entries:                  18
+Number of configured sites:                             1
+Number of registered sites:                             1
+Sites with inconsistent registrations:                  0
+IPv4
+  Number of configured EID prefixes:                   10
+  Number of registered EID prefixes:                   19
+MAC
+  Number of configured EID prefixes:                    6
+  Number of registered EID prefixes:                   16

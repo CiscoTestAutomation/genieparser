@@ -278,23 +278,23 @@ class ShowPceIPV4PeerDetailSchema(MetaParser):
         'pce_peer_database': {
             Any(): {
                 'state': str,
-                'capabilities': {
+                Optional('capabilities'): {
                     'stateful': bool,
                     'segment-routing': bool,
                     'update': bool,
                     Optional('instantiation'): bool
                 },
-                'pcep': {
-                    'uptime': str,
-                    'session_id_local': int,
-                    'session_id_remote': int,
+                Optional('pcep'): {
+                    Optional('uptime'): str,
+                    Optional('session_id_local'): int,
+                    Optional('session_id_remote'): int,
                 },
                 Optional('md5'): str,
-                'ka': {
-                    'sending_intervals': int,
-                    'minimum_acceptable_inteval': int,
+                Optional('ka'): {
+                    Optional('sending_intervals'): int,
+                    Optional('minimum_acceptable_inteval'): int,
                 },
-                'peer_timeout': int,
+                Optional('peer_timeout'): int,
                 Optional('maximum_sid_depth'): int,
                 'statistics': {
                     'rx': {
@@ -341,6 +341,8 @@ class ShowPceIPV4PeerDetail(ShowPceIPV4PeerDetailSchema):
             out = output
 
         ret_dict = {}
+        pcep_dict = {}
+        ka_dict = {}
 
         p1 = re.compile(r'^Peer address: (?P<address>[\d\.]+)$')
 

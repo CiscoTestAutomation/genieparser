@@ -64,9 +64,8 @@ class ShowSystemIntegrityAllMeasurementNonce(ShowSystemIntegrityAllMeasurementNo
         # initial return dictionary
         ret_dict = {}
         # LOCATION FRU=fru-rp SLOT=0 BAY=0 CHASSIS=1 NODE=0
-        p1 = re.compile(
-            r"^LOCATION FRU=+(?P<fru>\S+) +SLOT=+(?P<slot>\d+) +BAY=+(?P<bay>\d+) +CHASSIS=+(?P<chassis>\d+) +NODE=+(?P<node>\d+)$"
-        )
+        # LOCATION FRU=fru-rp SLOT=0 BAY=0 CHASSIS=-1 NODE=0
+        p1 = re.compile(r"^LOCATION FRU=(?P<fru>\S+)\s+SLOT=(?P<slot>\d+)\s+BAY=(?P<bay>\d+)\s+CHASSIS=(?P<chassis>\S+)\s+NODE=(?P<node>\d+)$")
         # Platform: C9500-32QC
         p2 = re.compile(r"^Platform: +(?P<platform>\S+)$")
         # MA1004R06.1604052017: 6243F41868F21144E7D5CE30683
@@ -291,9 +290,8 @@ class ShowSystemIntegrityAllComplianceNonce(ShowSystemIntegrityAllComplianceNonc
             output = self.device.execute(self.cli_command.format(nonce=nonce))
 
         # LOCATION FRU=fru-rp SLOT=0 BAY=0 CHASSIS=1 NODE=0
-        p1 = re.compile(
-            r"^LOCATION FRU=+(?P<fru>\S+) +SLOT=+(?P<slot>\d+) +BAY=+(?P<bay>\d+) +CHASSIS=+(?P<chassis>\d+) +NODE=+(?P<node>\d+)"
-        )
+        # LOCATION FRU=fru-rp SLOT=0 BAY=0 CHASSIS=-1 NODE=0
+        p1 = re.compile(r"^LOCATION FRU=(?P<fru>\S+)\s+SLOT=(?P<slot>\d+)\s+BAY=(?P<bay>\d+)\s+CHASSIS=(?P<chassis>\S+)\s+NODE=(?P<node>\d+)$")
         # secure_boot: true
         p2 = re.compile(r"^secure_boot: +(?P<secure_boot>\S+)$")
         # tam_service: hardware
@@ -454,9 +452,8 @@ class ShowSystemIntegrityAllTrustChainNonce(ShowSystemIntegrityTrustChainNonceSc
         ret_dict = {}
 
         # LOCATION FRU=fru-rp SLOT=0 BAY=0 CHASSIS=3 NODE=0
-        p1 = re.compile(
-            r"^LOCATION FRU=+(?P<fru>\S+) +SLOT=+(?P<slot>\d+) +BAY=+(?P<bay>\d+) +CHASSIS=+(?P<chassis>\d+) +NODE=+(?P<node>\d+)$"
-        )
+        # LOCATION FRU=fru-rp SLOT=0 BAY=0 CHASSIS=-1 NODE=0
+        p1 = re.compile(r"^LOCATION FRU=(?P<fru>\S+)\s+SLOT=(?P<slot>\d+)\s+BAY=(?P<bay>\d+)\s+CHASSIS=(?P<chassis>\S+)\s+NODE=(?P<node>\d+)$")
         # Version: 1
         p2 = re.compile(r"^Version: +(?P<version>\d)$")
         #   Value: 9DA0FB31FA0BF959BDE14FEE6E20D6CD837E8108E4D37E9088C67E8CD1E7A7C015C1

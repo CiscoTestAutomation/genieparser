@@ -1,0 +1,37 @@
+show l2vpn evpn evi 11 detail
+EVPN instance:       11 (VLAN Based)
+  RD:                109.0.0.2:11 (auto)
+  Import-RTs:        1:11
+  Export-RTs:        1:11
+  Per-EVI Label:     none
+  State:             Established
+  Replication Type:  Ingress
+  Encapsulation:     vxlan
+  IP Local Learn:    Enabled (global)
+  Adv. Def. Gateway: Disabled (global)
+  Re-originate RT5:  Disabled
+  Adv. Multicast:    Enabled (global) (sync-only)
+  AR Flood Suppress: Enabled (global)
+  Vlan:              11
+    Protected:       False
+    Ethernet-Tag:    0
+    State:           Established
+    Flood Suppress:  Attached
+    Core If:
+    Access If:       Vlan11
+    NVE If:          nve1
+    RMAC:            0000.0000.0000
+    Core Vlan:       0
+    L2 VNI:          10011
+    L3 VNI:          0
+    VTEP IP:         109.0.0.2
+    VRF:
+    IPv4 IRB:        Enabled (Asymmetric)
+    IPv6 IRB:        Enabled (Asymmetric)
+    Pseudoports:
+      Port-channel10 service instance 11 (DF state: forwarding)
+        Routes: 3 MAC, 7 MAC/IP
+        ESI: 03AA.AA00.0000.0100.0001
+    Peers:
+      109.0.0.1
+        Routes: 2 MAC, 7 MAC/IP, 1 IMET, 1 EAD

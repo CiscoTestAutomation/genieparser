@@ -1,0 +1,41 @@
+                       TX                       RX                  TX-DROP                  RX-DROP
+Port-channel241 [0]
+                      239                      235                        0                        0
+
+Port-channel242 [1]
+                      230                      226                        0                        0
+
+
+Timestamp Now: May 27 07:53:47.049
+
+Port-channel241 [0]
+ISIS RX Timestamp: May 27 07:53:32.063 [0]
+ISIS RX Timestamp: May 27 07:53:36.283 [1]
+ISIS RX Timestamp: May 27 07:53:37.730 [2]
+ISIS RX Timestamp: May 27 07:53:40.979 [3]
+ISIS RX Timestamp: May 27 07:53:44.775 [4]
+ISIS RX Maximum Time Gap:               12 sec,          670028 usec
+ISIS RX Maximum Gap Timestamp: May 27 07:45:27.021
+ISIS TX Timestamp: May 27 07:53:27.283 [4]
+ISIS TX Timestamp: May 27 07:53:31.768 [0]
+ISIS TX Timestamp: May 27 07:53:36.657 [1]
+ISIS TX Timestamp: May 27 07:53:40.513 [2]
+ISIS TX Timestamp: May 27 07:53:44.878 [3]
+ISIS TX Maximum Time Gap:               13 sec,          350086 usec
+ISIS TX Maximum Gap Timestamp: May 27 07:45:27.650
+
+Port-channel242 [1]
+ISIS RX Timestamp: May 27 07:53:26.749 [1]
+ISIS RX Timestamp: May 27 07:53:29.262 [2]
+ISIS RX Timestamp: May 27 07:53:34.103 [3]
+ISIS RX Timestamp: May 27 07:53:38.757 [4]
+ISIS RX Timestamp: May 27 07:53:42.736 [0]
+ISIS RX Maximum Time Gap:               13 sec,          357775 usec
+ISIS RX Maximum Gap Timestamp: May 27 07:45:27.711
+ISIS TX Timestamp: May 27 07:53:28.419 [0]
+ISIS TX Timestamp: May 27 07:53:32.248 [1]
+ISIS TX Timestamp: May 27 07:53:37.146 [2]
+ISIS TX Timestamp: May 27 07:53:41.339 [3]
+ISIS TX Timestamp: May 27 07:53:46.285 [4]
+ISIS TX Maximum Time Gap:               11 sec,          469904 usec
+ISIS TX Maximum Gap Timestamp: May 27 07:45:25.772 

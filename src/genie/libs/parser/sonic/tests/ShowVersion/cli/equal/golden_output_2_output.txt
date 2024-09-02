@@ -1,0 +1,56 @@
+SONiC Software Version: SONiC.azure_cisco_tortuga_202305.10234-dirty-20240326.030556
+SONiC OS Version: 11
+Distribution: Debian 11.9
+Kernel: 5.10.0-23-2-amd64
+Build commit: 1de235e21
+Build date: Tue Mar 26 16:28:28 UTC 2024
+Built by: sonicci@sonic-ci-8-lnx
+
+Platform: x86_64-8201_32fh_o-r0
+HwSKU: 32x400Gb
+ASIC: cisco-8000
+ASIC Count: 1
+Serial Number: FOC2217DTWE
+Model Number: 8201-32FH-O
+Hardware Revision: 0.33
+Uptime: 01:49:51 up 14 min,  1 user,  load average: 0.70, 0.77, 0.65
+Date: Thu 11 Apr 2024 01:49:51
+
+Docker images:
+REPOSITORY                    TAG                                                      IMAGE ID       SIZE
+docker-macsec                 latest                                                   3c2e2c46b71e   340MB
+docker-dhcp-relay             latest                                                   f046b7f9f074   328MB
+docker-ipxeserver-cisco       azure_cisco_tortuga_202305.10234-dirty-20240326.030556   3836bcb9b105   352MB
+docker-ipxeserver-cisco       latest                                                   3836bcb9b105   352MB
+docker-gbsyncd-cisco          azure_cisco_tortuga_202305.10234-dirty-20240326.030556   dbbd67503ff1   386MB
+docker-gbsyncd-cisco          latest                                                   dbbd67503ff1   386MB
+docker-sonic-telemetry        azure_cisco_tortuga_202305.10234-dirty-20240326.030556   064b9e65938a   407MB
+docker-sonic-telemetry        latest                                                   064b9e65938a   407MB
+docker-teamd                  azure_cisco_tortuga_202305.10234-dirty-20240326.030556   53894608053c   338MB
+docker-teamd                  latest                                                   53894608053c   338MB
+docker-snmp                   azure_cisco_tortuga_202305.10234-dirty-20240326.030556   fa3b3f6e4927   359MB
+docker-snmp                   latest                                                   fa3b3f6e4927   359MB
+docker-sflow                  azure_cisco_tortuga_202305.10234-dirty-20240326.030556   cc6ae051b3ac   339MB
+docker-sflow                  latest                                                   cc6ae051b3ac   339MB
+docker-router-advertiser      azure_cisco_tortuga_202305.10234-dirty-20240326.030556   16eb1f8ae69e   320MB
+docker-router-advertiser      latest                                                   16eb1f8ae69e   320MB
+docker-platform-monitor       azure_cisco_tortuga_202305.10234-dirty-20240326.030556   3d023ee72ae5   443MB
+docker-platform-monitor       latest                                                   3d023ee72ae5   443MB
+docker-orchagent              azure_cisco_tortuga_202305.10234-dirty-20240326.030556   ea05932e43f1   350MB
+docker-orchagent              latest                                                   ea05932e43f1   350MB
+docker-nat                    azure_cisco_tortuga_202305.10234-dirty-20240326.030556   a312f9e4d61c   341MB
+docker-nat                    latest                                                   a312f9e4d61c   341MB
+docker-mux                    azure_cisco_tortuga_202305.10234-dirty-20240326.030556   b55fa900109a   369MB
+docker-mux                    latest                                                   b55fa900109a   369MB
+docker-lldp                   azure_cisco_tortuga_202305.10234-dirty-20240326.030556   df121af7944b   363MB
+docker-lldp                   latest                                                   df121af7944b   363MB
+docker-fpm-frr                azure_cisco_tortuga_202305.10234-dirty-20240326.030556   bc94c76013d0   369MB
+docker-fpm-frr                latest                                                   bc94c76013d0   369MB
+docker-eventd                 azure_cisco_tortuga_202305.10234-dirty-20240326.030556   fbb9448b560c   320MB
+docker-eventd                 latest                                                   fbb9448b560c   320MB
+docker-database               azure_cisco_tortuga_202305.10234-dirty-20240326.030556   dae82b2caf18   320MB
+docker-database               latest                                                   dae82b2caf18   320MB
+docker-syncd-cisco            azure_cisco_tortuga_202305.10234-dirty-20240326.030556   a7a08d4edaed   812MB
+docker-syncd-cisco            latest                                                   a7a08d4edaed   812MB
+docker-sonic-mgmt-framework   azure_cisco_tortuga_202305.10234-dirty-20240326.030556   fcfd8f420389   415MB
+docker-sonic-mgmt-framework   latest                                                   fcfd8f420389   415MB

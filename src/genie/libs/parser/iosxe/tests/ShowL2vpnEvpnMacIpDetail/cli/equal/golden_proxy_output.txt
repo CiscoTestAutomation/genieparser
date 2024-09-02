@@ -1,0 +1,25 @@
+IP Address:                192.168.11.55
+EVPN Instance:             11
+Vlan:                      11
+MAC Address:               aaaa.bbbb.0055
+Ethernet Segment:          03AA.AABB.BBCC.CC00.0001
+Ethernet Tag ID:           0
+Next Hop(s):               V:20011 Ethernet0/1 service instance 11
+                           V:20011 2.2.2.2 (proxy)
+Local Address:             1.1.1.1
+Sequence Number:           0
+IP Duplication Detection:  Timer not running
+Label2 included:           No
+
+IP Address:                192.168.11.56
+EVPN Instance:             11
+Vlan:                      11
+MAC Address:               aaaa.bbbb.0055
+Ethernet Segment:          03AA.AABB.BBCC.CC00.0001
+Ethernet Tag ID:           0
+Next Hop(s):               V:20011 Ethernet0/1 service instance 11 (proxy)
+                           V:20011 1.1.1.1
+Local Address:             2.2.2.2
+Sequence Number:           0
+IP Duplication Detection:  Timer not running
+Label2 included:           No

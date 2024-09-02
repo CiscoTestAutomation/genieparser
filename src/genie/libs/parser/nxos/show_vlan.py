@@ -7,6 +7,8 @@ NXOS parsers for the following show commands:
     * show vlan filter
     * show vlan access-map
     * show vxlan
+    * show vlan counters
+    * show vlan id <id> counters
 """
 import re
 
@@ -544,3 +546,171 @@ class ShowVxlan(ShowVxlanSchema):
                 continue
 
         return ret_dict
+
+# ====================================================================
+# Schema for 'show vlan id <> counters' and 'show vlan counters'
+# ====================================================================
+class ShowVlanCountersSchema(MetaParser):
+    """Schema for show vlan"""
+    schema = {'vlan':
+                    {Any():{
+                        Optional('l2_ing_ucast_b'): int,
+                        Optional('l2_ing_ucast_p'): int,
+                        Optional('l2_ing_mcast_b'): int,
+                        Optional('l2_ing_mcast_p'): int,
+                        Optional('l2_ing_bcast_b'): int,
+                        Optional('l2_ing_bcast_p'): int,
+                        Optional('l2_egr_ucast_b'): int,
+                        Optional('l2_egr_ucast_p'): int,
+                        Optional('l3_ucast_rcv_b'): int,
+                        Optional('l3_ucast_rcv_p'): int,
+                        },}
+            }
+
+
+# ====================================================================
+# Parser for 'show vlan id <> counters' and 'show vlan counters'
+# ====================================================================
+class ShowVlanCounters(ShowVlanCountersSchema):
+
+    """Parser for 'show vlan id <> counters' and 'show vlan counters'"""
+
+    cli_command = ['show vlan counters', 'show vlan id {vlan_id} counters']
+
+    def cli(self, vlan_id="", output=None):
+        if output is None:
+            if vlan_id:
+                cmd = self.cli_command[1].format(vlan_id=vlan_id)
+            else:
+                cmd = self.cli_command[0]
+            output = self.device.execute(cmd)
+    
+        # Vlan Id                             :11 
+        p1 = re.compile(r'^Vlan Id\s+\:(?P<vlan_id>\d+)$')
+
+        # Unicast Octets In                  :328740 
+        p2 = re.compile(r'^Unicast Octets In\s+\:(?P<l2_ing_ucast_b>\d+)$')
+
+        # Unicast Packets In                 :2451 
+        p3 = re.compile(r'^Unicast Packets In\s+\:(?P<l2_ing_ucast_p>\d+)$')
+
+        # Multicast Octets In                :1801482 
+        p4 = re.compile(r'^Multicast Octets In\s+\:(?P<l2_ing_mcast_b>\d+)$')
+
+        # Multicast Packets In               :14585 
+        p5 = re.compile(r'^Multicast Packets In\s+\:(?P<l2_ing_mcast_p>\d+)$')
+
+        # Broadcast Octets In                :130134 
+        p6 = re.compile(r'^Broadcast Octets In\s+\:(?P<l2_ing_bcast_b>\d+)$')
+
+        # Broadcast Packets In               :1015 
+        p7 = re.compile(r'^Broadcast Packets In\s+\:(?P<l2_ing_bcast_p>\d+)$')
+
+        # Unicast Octets Out                 :181924 
+        p8 = re.compile(r'^Unicast Octets Out\s+\:(?P<l2_egr_ucast_b>\d+)$')
+
+        # Unicast Packets Out                :1304 
+        p9 = re.compile(r'^Unicast Packets Out\s+\:(?P<l2_egr_ucast_p>\d+)$')
+
+        # L3 Unicast Octets In                :0 
+        p10 = re.compile(r'^L3 Unicast Octets In\s+\:(?P<l3_ucast_rcv_b>\d+)$')
+
+        # L3 Unicast Packets In               :0 
+        p11 = re.compile(r'^L3 Unicast Packets In\s+\:(?P<l3_ucast_rcv_p>\d+)$')
+
+        vlan_counters_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Vlan Id                             :11 
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                if 'vlan' not in vlan_counters_dict:
+                    vlan_counters_dict['vlan'] = {}
+                vlan_id = group['vlan_id']
+                vlan_dict = vlan_counters_dict['vlan'].setdefault(vlan_id, {})
+                continue
+
+            # Unicast Octets In                  :328740 
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                l2_ing_ucast_b = group['l2_ing_ucast_b']
+                vlan_dict['l2_ing_ucast_b'] = int(l2_ing_ucast_b)
+                continue
+
+            # Unicast Packets In                 :2451 
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                l2_ing_ucast_p = group['l2_ing_ucast_p']
+                vlan_dict['l2_ing_ucast_p'] = int(l2_ing_ucast_p)
+                continue
+
+            # Multicast Octets In                :1801482 
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                l2_ing_mcast_b = group['l2_ing_mcast_b']
+                vlan_dict['l2_ing_mcast_b'] = int(l2_ing_mcast_b)
+                continue
+
+            # Multicast Packets In               :14585 
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                l2_ing_mcast_p = group['l2_ing_mcast_p']
+                vlan_dict['l2_ing_mcast_p'] = int(l2_ing_mcast_p)
+                continue
+
+            # Broadcast Octets In                :130134 
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                l2_ing_bcast_b = group['l2_ing_bcast_b']
+                vlan_dict['l2_ing_bcast_b'] = int(l2_ing_bcast_b)
+                continue
+
+            # Broadcast Packets In               :1015 
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                l2_ing_bcast_p = group['l2_ing_bcast_p']
+                vlan_dict['l2_ing_bcast_p'] = int(l2_ing_bcast_p)
+                continue
+
+            # Unicast Octets Out                 :181924 
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                l2_egr_ucast_b = group['l2_egr_ucast_b']
+                vlan_dict['l2_egr_ucast_b'] = int(l2_egr_ucast_b)
+                continue
+
+            # Unicast Packets Out                :1304 
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                l2_egr_ucast_p = group['l2_egr_ucast_p']
+                vlan_dict['l2_egr_ucast_p'] = int(l2_egr_ucast_p)
+                continue
+
+            # L3 Unicast Octets In                :0 
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                l3_ucast_rcv_b = group['l3_ucast_rcv_b']
+                vlan_dict['l3_ucast_rcv_b'] = int(l3_ucast_rcv_b)
+                continue
+
+            # L3 Unicast Packets In               :0 
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                l3_ucast_rcv_p = group['l3_ucast_rcv_p']
+                vlan_dict['l3_ucast_rcv_p'] = int(l3_ucast_rcv_p)
+                continue
+
+        return vlan_counters_dict

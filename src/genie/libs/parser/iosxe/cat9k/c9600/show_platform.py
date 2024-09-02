@@ -1251,8 +1251,8 @@ class ShowPlatformHardwareFedSwitchQosDscpcosCounters(ShowPlatformHardwareFedSwi
 
 # =========================================================
 #  Schema for
-#  * 'show platform software fed switch active acl usage'
-#  * 'show platform software fed switch active acl usage | include {acl_name}'
+#  * 'show platform software fed switch {switch_num} acl usage'
+#  * 'show platform software fed switch {switch_num} acl usage | include {acl_name}'
 # =========================================================
 class ShowPlatformSoftwareFedSwitchActivEAclUsageSchema(MetaParser):
     """Schema for 'show platform software fed switch standby acl usage
@@ -1279,25 +1279,25 @@ class ShowPlatformSoftwareFedSwitchActivEAclUsageSchema(MetaParser):
 
 # =========================================================
 #  Parser for
-#  * 'show platform software fed switch active acl usage'
-#  * 'show platform software fed switch active acl usage | include {acl_name}'
+#  * 'show platform software fed switch {switch_num} acl usage'
+#  * 'show platform software fed switch {switch_num} acl usage | include {acl_name}'
 # =========================================================
 class ShowPlatformSoftwareFedSwitchActivEAclUsage(ShowPlatformSoftwareFedSwitchActivEAclUsageSchema):
     """
     Parser for :
-        * show platform software fed switch active acl usage
-        * show platform software fed switch active acl usage | include {acl_name}
+        * show platform software fed switch {switch_num} acl usage
+        * show platform software fed switch {switch_num} acl usage | include {acl_name}
     """
 
-    cli_command = ['show platform software fed switch active acl usage',
-                   'show platform software fed switch active acl usage | include {acl_name}']
+    cli_command = ['show platform software fed switch {switch_num} acl usage',
+                   'show platform software fed switch {switch_num} acl usage | include {acl_name}']
 
-    def cli(self, acl_name="", output=None):
+    def cli(self, switch_num='active', acl_name="", output=None):
         if output is None:
             if acl_name:
-                cmd = self.cli_command[1].format(acl_name=acl_name)
+                cmd = self.cli_command[1].format(switch_num=switch_num, acl_name=acl_name)
             else:
-                cmd = self.cli_command[0]
+                cmd = self.cli_command[0].format(switch_num=switch_num)
             output = self.device.execute(cmd)
 
         # #####  ACE Software VMR max:196608 used:253

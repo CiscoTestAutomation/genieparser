@@ -1,0 +1,42 @@
+expected_output = {
+    "vrf":{
+      "default":{
+         "address_family":{
+            "ipv4_unicast":{
+               "prefix":"101.0.0.2/32",
+               "srv6_vpn_sid":"fc00:c000:1002:e008::/64",
+               "last_modified":"Mar 13 02:47:55.379 for 6w6d",
+               "paths":{
+                  "total_available_paths":1,
+                  "best_path":1,
+                  "path":{
+                     "1":{
+                        "as_path":{
+                           "Local":{
+                              "bgp_peer_neighbor_ip":{
+                                 "0.0.0.0":{
+                                    "bgp_peer_neighbor_ip":"0.0.0.0",
+                                    "origin_neighbors_ip":"0.0.0.0",
+                                    "origin_router_id":"10.0.0.2",
+                                    "if_handle":"0x2000802c",
+                                    "origin_metric":0,
+                                    "localpref":100,
+                                    "weight":32768,
+                                    "origin_codes":"i",
+                                    "group_best":"group-best",
+                                    "status_codes":"*>",
+                                    "received_path_id":0,
+                                    "local_path_id":1,
+                                    "version":5
+                                 }
+                              }
+                           }
+                        }
+                     }
+                  }
+               }
+            }
+         }
+      }
+   }
+}

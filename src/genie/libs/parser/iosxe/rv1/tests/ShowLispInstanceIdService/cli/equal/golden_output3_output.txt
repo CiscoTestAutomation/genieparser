@@ -1,0 +1,88 @@
+pxtr13#sh lisp in 101 ipv6
+  Instance ID:                              101
+  Router-lisp ID:                           0
+  Locator table:                            default
+  EID table:                                vrf red
+  Ingress Tunnel Router (ITR):              disabled
+  Egress Tunnel Router (ETR):               enabled
+  Proxy-ITR Router (PITR):                  enabled RLOCs: 3130:3130:3130:3130:3130:3130:3130:3130
+  Proxy-ETR Router (PETR):                  enabled
+  NAT-traversal Router (NAT-RTR):           disabled
+  Mobility First-Hop Router:                disabled
+  Map Server (MS):                          enabled
+  Map Resolver (MR):                        enabled
+  Mr-use-petr:                              enabled
+  Mr-use-petr locator set name:             default-etr-locator-set-ipv6
+  First-Packet pETR:                        disabled
+  Multiple IP per MAC support:              disabled
+  Delegated Database Tree (DDT):            disabled
+  Multicast Flood Access-Tunnel:            disabled
+  Publication-Subscription:                 enabled
+  Publication-Subscription-EID:             disabled
+    Publisher(s):                           *** NOT FOUND ***
+  Preserve-Priority                         disabled
+  Affinity-ID:                              
+    Default-etr:                            UNSPEC
+    DC / Other:                             UNSPEC
+  Site Registration Limit:                  0
+  SGT:                                      enabled
+  Map-Request source:                       derived from EID destination
+  ITR Map-Resolver(s):                      3120:3120:3120:3120:3120:3120:3120:3120 prefix-list site1list
+                                            3130:3130:3130:3130:3130:3130:3130:3130 prefix-list site1list
+                                            3140:3140:3140:3140:3140:3140:3140:3140 prefix-list site1list
+                                            3800:3800:3800:3800:3800:3800:3800:3800
+  ETR Map-Server(s) (last map-reg sent):    3120:3120:3120:3120:3120:3120:3120:3120 domain-id 1 (never)
+                                            3130:3130:3130:3130:3130:3130:3130:3130 domain-id 1 (never)
+                                            3140:3140:3140:3140:3140:3140:3140:3140 domain-id 1 (never)
+                                            3800:3800:3800:3800:3800:3800:3800:3800 domain-id 10 (00:00:16, TCP)
+  xTR-ID:                                   0xAC0C5E93-0xEAF1FAEA-0x3E90EEAF-0xAFEA950E
+  site-ID:                                  unspecified
+  ITR local RLOC (last resort):             3130:3130:3130:3130:3130:3130:3130:3130
+  ITR Solicit Map Request (SMR):            accept and process
+    Max SMRs per map-cache entry:           8 more specifics
+    Multiple SMR suppression time:          2 secs
+  ETR accept mapping data:                  disabled, verify disabled
+  ETR map-cache TTL:                        1d00h
+  Locator Status Algorithms:
+    RLOC-probe algorithm:                   disabled
+    RLOC-probe on route change:             N/A (periodic probing disabled)
+    RLOC-probe on member change:            disabled
+    LSB reports:                            process
+    IPv4 RLOC minimum mask length:          /0
+    IPv6 RLOC minimum mask length:          /1
+  Map-cache:                                
+    Static mappings configured:             0
+    Map-cache size/limit:                   0/4294967295
+    Imported route count/limit:             0/5000
+    Map-cache activity check period:        60 secs
+    Map-cache signal suppress:              disabled
+    Conservative-allocation:                disabled
+    Map-cache FIB updates:                  established
+    Persistent map-cache:                   disabled
+    Map-cache activity-tracking:            enabled
+  Global Top Source locator configuration:
+     Loopback0 (3130:3130:3130:3130:3130:3130:3130:3130)
+  Database:                                 
+    Total database mapping size:            1
+    static database size/limit:             1/4294967295
+    dynamic database size/limit:            0/4294967295
+    route-import database size/limit:       0/5000
+    import-site-reg database size/limit:    0/4294967295
+    dummy database size/limit:              0/4294967295
+    import-publication database size/limit: 0/4294967295
+    import-publication-cfg-prop database siz0
+    silent-host database size/limit:        0/4294967295
+    proxy database size:                    1
+    Inactive (deconfig/away) size:          0
+  Publication entries exported to:          
+    Map-cache:                              0
+    RIB:                                    0
+    Database:                               0 (Preserve-priority: disabled)
+    Prefix-list:                            0
+  Site-registration entries exported to:   
+    Map-cache:                              0
+    RIB:                                    0
+  Publication (Type - Config Propagation) en
+    Database:                               0
+    CTS:                                    0
+  Encapsulation type:                       vxlan

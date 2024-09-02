@@ -1,0 +1,52 @@
+Thu Jun 20 07:43:12.518 UTC
+
+ Routing Process "ospf 1" with ID 3.3.3.3
+ Role: Primary Active
+ NSR (Non-stop routing) is Enabled
+ Supports only single TOS(TOS0) routes
+ Supports opaque LSA
+ Maximum number of non self-generated LSA allowed 500000
+    Current number of non self-generated LSA 4
+    Threshold for warning message 75%
+    Ignore-time 5 minutes, reset-time 10 minutes
+    Ignore-count allowed 5, current ignore-count 0
+ Maximum number of external prefixes per router 50000 (suppress-neighbor)
+  Warning threshold 75%
+ Maximum Exchange time 10 Hold time 5 Max Recovery count 300
+ Router is not originating router-LSAs with maximum metric
+ Initial SPF schedule delay 50 msecs
+ Minimum hold time between two consecutive SPFs 200 msecs
+ Maximum wait time between two consecutive SPFs 5000 msecs
+ Initial LSA throttle delay 50 msecs
+ Minimum hold time for LSA throttle 200 msecs
+ Maximum wait time for LSA throttle 5000 msecs
+ Minimum LSA interval 200 msecs. Minimum LSA arrival 100 msecs
+ LSA refresh interval 1800 seconds
+ Flood pacing interval 33 msecs. Retransmission pacing interval 66 msecs
+ Adjacency stagger enabled; initial (per area): 2, maximum: 64
+    Number of neighbors forming: 0, 1 full
+ Maximum number of configured interfaces 1024
+ Number of external LSA 0. Checksum Sum 00000000
+ Number of opaque AS LSA 0. Checksum Sum 00000000
+ Number of DCbitless external and opaque AS LSA 0
+ Number of DoNotAge external and opaque AS LSA 0
+ Number of areas in this router is 1. 1 normal 0 stub 0 nssa
+ External flood list length 0
+ SNMP trap is enabled
+ LSD not connected, revision 0
+ Segment Routing Global Block default (16000-23999), not allocated
+ Segment Routing Local Block, unknown
+ Segment Routing prefix-sid-map, Advertise local: Disabled, Receive remote: Disabled
+ Strict-SPF capability is enabled
+    Area BACKBONE(0)
+        Number of interfaces in this area is 2
+        SPF algorithm executed 24 times
+        Number of LSA 5.  Checksum Sum 0x028706
+        Number of opaque link LSA 0.  Checksum Sum 00000000
+        Number of DCbitless LSA 0
+        Number of indication LSA 0
+        Number of DoNotAge LSA 0
+        Flood list length 0
+        Number of LFA enabled interfaces 0, LFA revision 0
+        Number of Per Prefix LFA enabled interfaces 0
+        Number of neighbors forming in staggered mode 0, 1 full

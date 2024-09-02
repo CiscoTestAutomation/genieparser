@@ -4,6 +4,7 @@ IOSXE parsers for the following show commands:
 
     * traceroute {traceroute} numeric timeout {timeout} probe {probe} ttl {min} {max} source {source}
     * traceroute mpls traffic-eng tunnel {tunnelid}
+    * tracerout {ip_address}
 
 '''
 
@@ -24,6 +25,7 @@ class TracerouteSchema(MetaParser):
     ''' Schema for:
         * 'traceroute'
         * 'traceroute mpls traffic-eng tunnel {tunnelid}'
+        * 'traceroute {ip_address}'
     '''
 
     schema = {
@@ -423,6 +425,18 @@ class TracerouteMPLSIPv4(Traceroute):
             output=self.device.execute(self.cli_command.format(address=address, mask=mask))
         else:
             output=output
+        return super().cli(output=output)
+
+class TracerouteIpAddress(Traceroute):
+
+    ''' Parser for:
+        * 'traceroute {ip_address}'
+    '''
+    cli_command = 'traceroute {ip_address}'
+
+    def cli(self, ip_address, output=None):
+        if not output:
+            output = self.device.execute(self.cli_command.format(ip_address=ip_address))
         return super().cli(output=output)
 
 # ======================================================

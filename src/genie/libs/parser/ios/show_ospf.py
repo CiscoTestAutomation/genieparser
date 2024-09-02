@@ -25,11 +25,6 @@ from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional
 
 from genie.libs.parser.iosxe.show_ospf import  ShowIpOspfInterface as ShowIpOspfInterface_iosxe,\
-                                               ShowIpOspfDatabaseRouter as ShowIpOspfDatabaseRouter_iosxe,\
-                                               ShowIpOspfDatabaseExternal as ShowIpOspfDatabaseExternal_iosxe,\
-                                               ShowIpOspfDatabaseNetwork as ShowIpOspfDatabaseNetwork_iosxe,\
-                                               ShowIpOspfDatabaseSummary as ShowIpOspfDatabaseSummary_iosxe,\
-                                               ShowIpOspfDatabaseOpaqueArea as ShowIpOspfDatabaseOpaqueArea_iosxe,\
                                                ShowIpOspf as ShowIpOspf_iosxe,\
                                                ShowIpOspfMplsLdpInterface as ShowIpOspfMplsLdpInterface_iosxe,\
                                                ShowIpOspfMplsTrafficEngLink as ShowIpOspfMplsTrafficEngLink_iosxe,\
@@ -37,6 +32,12 @@ from genie.libs.parser.iosxe.show_ospf import  ShowIpOspfInterface as ShowIpOspf
                                                ShowIpOspfVirtualLinks as ShowIpOspfVirtualLinks_iosxe,\
                                                ShowIpOspfShamLinks as ShowIpOspfShamLinks_iosxe
 
+from genie.libs.parser.iosxe.show_ospf_database import \
+                                               ShowIpOspfDatabaseRouter as ShowIpOspfDatabaseRouter_iosxe,\
+                                               ShowIpOspfDatabaseExternal as ShowIpOspfDatabaseExternal_iosxe,\
+                                               ShowIpOspfDatabaseNetwork as ShowIpOspfDatabaseNetwork_iosxe,\
+                                               ShowIpOspfDatabaseSummary as ShowIpOspfDatabaseSummary_iosxe,\
+                                               ShowIpOspfDatabaseOpaqueArea as ShowIpOspfDatabaseOpaqueArea_iosxe
 
 class ShowIpOspf(ShowIpOspf_iosxe):
 

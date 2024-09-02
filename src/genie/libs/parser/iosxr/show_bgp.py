@@ -7990,6 +7990,7 @@ class ShowBgpVrfAfPrefixSchema(MetaParser):
                     Any(): {
                         'prefix': str,
                         Optional('rd'): str,
+                        Optional('srv6_vpn_sid') : str,
                         'last_modified': str,
                         Optional('local_label'): str,
                         'paths': {
@@ -8114,6 +8115,9 @@ class ShowBgpVrfAfPrefix(ShowBgpVrfAfPrefixSchema):
         # BGP routing table entry for fc00:a000:1000:101::2/128
         p1 = re.compile(r'^BGP\s+routing\s+table\s+entry\s+for\s+(?P<prefix>(?P<ip>[a-z0-9.:\/\[\]]+)\/(?P<mask>\d+))'
                         r'(?:,\s+Route\s+Distinguisher:\s+(?P<rd>[\d.:]+))?$')
+        
+        # SRv6-VPN SID: fc00:c000:1002:e008::/64
+        p1_1 = re.compile(r'^SRv6-VPN\s+SID:\s+(?P<vpn_sid>\S+)')
 
         # Last Modified: Mar 27 02:45:20.105 for 1d15h
         p2 = re.compile(r'^Last +Modified: (?P<last_modified>.*)$')
@@ -8238,6 +8242,13 @@ class ShowBgpVrfAfPrefix(ShowBgpVrfAfPrefixSchema):
                 vrf_dict['prefix'] = group['prefix']
                 if group['rd']:
                     vrf_dict['rd'] = group['rd']
+                continue
+            
+            # SRv6-VPN SID: fc00:c000:1002:e008::/64
+            m = p1_1.match(line)
+            if m:
+                group = m.groupdict()
+                vrf_dict['srv6_vpn_sid'] = group['vpn_sid']
                 continue
 
             # Last Modified: Mar 27 02:45:20.105 for 1d15h
@@ -8702,9 +8713,16 @@ class ShowBgpVrf(ShowBgpVrfSchema):
         # *>i10.169.1.0/24      10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
         # *>i192.168.111.0/24       10.189.99.98                                                    0       0 i
         # *> 10.7.7.7/32        10.10.10.107             0             0 65107.65107 ?
+        # OR
+        # s>i2001:718::2:99/128 195.113.156.4            0    100      0 i
+        # s i                   195.113.156.4            0    100      0 i
+        # s>i2001:718::2:101/128
+        #                       10.2.8.1                 0    100      0 i
+        # s i                   10.2.8.1                 0    100      0 i
+        # s>i2001:718::2:116/128
         p13 = re.compile(r'^(?P<status_codes>(i|s|x|S|d|h|\*|\>|\s)+)'
-                         r' *(?P<prefix>(?P<ip>[0-9\.\:\[\]]+)\/(?P<mask>\d+))?'
-                         r' +(?P<next_hop>\S+) +(?P<number>[\d\.\s\{\}]+)'
+                         r' *(?P<prefix>(?P<ip>[0-9a-f\.\:\[\]]+)\/(?P<mask>\d+))?[\n\r]*'
+                         r' +(?P<next_hop>\S+)[\n\r]* +(?P<number>[\d\.\s\{\}]+)'
                          r'(?: *(?P<origin_codes>(i|e|\?)))?$')
 
         # Processed 40 prefixes, 50 paths
@@ -9128,16 +9146,23 @@ class ShowBgpAddressFamily(ShowBgpAddressFamilySchema):
     '''Parser for:
         'show bgp'
         'show bgp {address_family}'
+        'show bgp {address_family} community {community}'
+        'show bgp {address_family} community {community} {exact_match}'
     '''
+    cli_command = [
+        'show bgp',
+        'show bgp {address_family}',
+        'show bgp {address_family} community {community}',
+        'show bgp {address_family} community {community} {exact_match}',]
 
-    cli_command = ['show bgp',
-                   'show bgp {address_family}']
-
-    def cli(self, address_family=None, output=None):
-
+    def cli(self, address_family=None, community=None, exact_match=None, output=None):
         # Execute command
         if output is None:
-            if address_family:
+            if address_family and community and exact_match:
+                command = self.cli_command[3].format(address_family=address_family, community=community, exact_match=exact_match)
+            elif address_family and community:
+                command = self.cli_command[2].format(address_family=address_family, community=community)
+            elif address_family:
                 command = self.cli_command[1].format(address_family=address_family)
             else:
                 command = self.cli_command[0]
@@ -9199,9 +9224,16 @@ class ShowBgpAddressFamily(ShowBgpAddressFamilySchema):
         # *>i10.169.1.0/24      10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
         # *>i192.168.111.0/24       10.189.99.98                                                    0       0 i
         # *> 10.7.7.7/32        10.10.10.107             0             0 65107.65107 ?
+        # OR
+        # s>i2001:718::2:99/128 195.113.156.4            0    100      0 i
+        # s i                   195.113.156.4            0    100      0 i
+        # s>i2001:718::2:101/128
+        #                       10.2.8.1                 0    100      0 i
+        # s i                   10.2.8.1                 0    100      0 i
+        # s>i2001:718::2:116/128
         p11 = re.compile(r'^(?P<status_codes>(i|s|x|S|d|h|\*|\>|\s)+)'
-                         r' *(?P<prefix>(?P<ip>[0-9\.\:\[\]]+)\/(?P<mask>\d+))?'
-                         r' +(?P<next_hop>\S+) +(?P<number>[\d\.\s\{\}]+)'
+                         r' *(?P<prefix>(?P<ip>[0-9a-f\.\:\[\]]+)\/(?P<mask>\d+))?[\n\r]*'
+                         r' +(?P<next_hop>\S+)[\n\r]* +(?P<number>[\d\.\s\{\}]+)'
                          r'(?: *(?P<origin_codes>(i|e|\?)))?$')
 
         # Processed 40 prefixes, 50 paths

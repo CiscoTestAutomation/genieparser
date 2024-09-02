@@ -1,0 +1,119 @@
+IS-IS 64512 statistics:
+    Fast PSNP cache (hits/tries): 91099/146551
+    Fast CSNP cache (hits/tries): 5/30
+    Fast CSNP cache updates: 50
+    LSP checksum errors received: 0
+    LSP Dropped: 0
+    SNP Dropped: 0
+    UPD Max Queue size: 8
+    UPD Queue size: 0
+    Average transmit times and rates:
+      Hello:          0 us          2/s
+      CSNP:           0 us          0/s
+      PSNP:           0 us          0/s
+      LSP:            0 us          0/s
+    Average process times and rates:
+      Hello:          0 us          2/s
+      CSNP:           0 us          0/s
+      PSNP:           0 us          0/s
+      LSP:            0 us          0/s
+    Level-2:
+      LSPs sourced (new/refresh): 50/16892
+      IPv4 Unicast
+        Total SPF calculations     : 7526
+        Full SPF calculations      : 7508
+        ISPF calculations          : 0
+        Next Hop Calculations      : 11
+        Partial Route Calculations : 7
+        Periodic SPF calculations  : 7382
+  Interface Loopback0:
+  Interface TenGigE0/0/0/0.10:
+    PTP Hellos (sent/rcvd)    : 760149/760205
+    LSP Retransmissions       : 0
+    LSP Peak Rate (out/in)    : 2/3
+    Level-2 LSPs (sent/rcvd)  : 49222/53198
+    Level-2 CSNPs (sent/rcvd) : 1/1
+    Level-2 PSNPs (sent/rcvd) : 52991/49049
+    Level-2 LSP Flooding Duplicates     : 7
+    Level-2 LSPs Arrival Time Throttled : 0
+  Interface TenGigE0/0/0/0.20:
+    PTP Hellos (sent/rcvd)    : 760305/760270
+    LSP Retransmissions       : 1
+    LSP Peak Rate (out/in)    : 1/8
+    Level-2 LSPs (sent/rcvd)  : 4/12
+    Level-2 CSNPs (sent/rcvd) : 1/1
+    Level-2 PSNPs (sent/rcvd) : 4/3
+    Level-2 LSP Flooding Duplicates     : 22912
+    Level-2 LSPs Arrival Time Throttled : 0
+  Interface TenGigE0/0/0/1.10:
+    PTP Hellos (sent/rcvd)    : 760320/760317
+    LSP Retransmissions       : 0
+    LSP Peak Rate (out/in)    : 0/0
+    Level-2 LSPs (sent/rcvd)  : 0/0
+    Level-2 CSNPs (sent/rcvd) : 1/1
+    Level-2 PSNPs (sent/rcvd) : 0/0
+    Level-2 LSP Flooding Duplicates     : 22919
+    Level-2 LSPs Arrival Time Throttled : 0
+  Interface TenGigE0/0/0/1.20:
+    PTP Hellos (sent/rcvd)    : 760370/760306
+    LSP Retransmissions       : 0
+    LSP Peak Rate (out/in)    : 7/0
+    Level-2 LSPs (sent/rcvd)  : 8/0
+    Level-2 CSNPs (sent/rcvd) : 1/1
+    Level-2 PSNPs (sent/rcvd) : 0/1
+    Level-2 LSP Flooding Duplicates     : 22918
+    Level-2 LSPs Arrival Time Throttled : 0
+  Interface TenGigE0/0/0/2.10:
+    PTP Hellos (sent/rcvd)    : 760223/760096
+    LSP Retransmissions       : 4
+    LSP Peak Rate (out/in)    : 6/2
+    Level-2 LSPs (sent/rcvd)  : 42506/52552
+    Level-2 CSNPs (sent/rcvd) : 4/4
+    Level-2 PSNPs (sent/rcvd) : 52362/42363
+    Level-2 LSP Flooding Duplicates     : 63
+    Level-2 LSPs Arrival Time Throttled : 0
+  Interface TenGigE0/0/0/2.20:
+    PTP Hellos (sent/rcvd)    : 760363/760234
+    LSP Retransmissions       : 2
+    LSP Peak Rate (out/in)    : 6/0
+    Level-2 LSPs (sent/rcvd)  : 13/7
+    Level-2 CSNPs (sent/rcvd) : 4/4
+    Level-2 PSNPs (sent/rcvd) : 6/1
+    Level-2 LSP Flooding Duplicates     : 29708
+    Level-2 LSPs Arrival Time Throttled : 0
+  Interface TenGigE0/0/0/3.10:
+    PTP Hellos (sent/rcvd)    : 760286/760231
+    LSP Retransmissions       : 0
+    LSP Peak Rate (out/in)    : 5/1
+    Level-2 LSPs (sent/rcvd)  : 14/9
+    Level-2 CSNPs (sent/rcvd) : 4/4
+    Level-2 PSNPs (sent/rcvd) : 5/2
+    Level-2 LSP Flooding Duplicates     : 29701
+    Level-2 LSPs Arrival Time Throttled : 0
+  Interface TenGigE0/0/0/3.20:
+    PTP Hellos (sent/rcvd)    : 760121/760359
+    LSP Retransmissions       : 9
+    LSP Peak Rate (out/in)    : 1/0
+    Level-2 LSPs (sent/rcvd)  : 22/6
+    Level-2 CSNPs (sent/rcvd) : 4/4
+    Level-2 PSNPs (sent/rcvd) : 5/1
+    Level-2 LSP Flooding Duplicates     : 29696
+    Level-2 LSPs Arrival Time Throttled : 0
+  Interface TenGigE0/0/0/4.10:
+    PTP Hellos (sent/rcvd)    : 414984/406274
+    LSP Retransmissions       : 2
+    LSP Peak Rate (out/in)    : 9/3
+    Level-2 LSPs (sent/rcvd)  : 37830/10
+    Level-2 CSNPs (sent/rcvd) : 5/5
+    Level-2 PSNPs (sent/rcvd) : 0/37798
+    Level-2 LSP Flooding Duplicates     : 3636
+    Level-2 LSPs Arrival Time Throttled : 0
+  Interface TenGigE0/0/0/4.20:
+    PTP Hellos (sent/rcvd)    : 414927/406182
+    LSP Retransmissions       : 0
+    LSP Peak Rate (out/in)    : 8/4
+    Level-2 LSPs (sent/rcvd)  : 11/40757
+    Level-2 CSNPs (sent/rcvd) : 5/5
+    Level-2 PSNPs (sent/rcvd) : 40495/3
+    Level-2 LSP Flooding Duplicates     : 710
+    Level-2 LSPs Arrival Time Throttled : 0

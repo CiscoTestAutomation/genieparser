@@ -1668,8 +1668,8 @@ class ShowMkaStatisticsSchema(MetaParser):
                                 'macsec-failures': {'rx-sa-installation': int,
                                         'rx-sc-creation': int,
                                         'tx-sa-installation': int,
-                                        'tx-sc-creation': 0},
-                                'mkpdu-failures': {'mkpdu-rx-bad-peer-mn': int,
+                                        'tx-sc-creation': int},
+                                Optional('mkpdu-failures'): {'mkpdu-rx-bad-peer-mn': int,
                                         'mkpdu-rx-icv-verification': int,
                                         Optional('mkpdu-rx-fallback-icv-ver'): int,
                                         'mkpdu-rx-nonrecent-peerlist-mn': int,
@@ -1858,77 +1858,112 @@ class ShowMkaStatistics(ShowMkaStatisticsSchema):
             if m0:
                 group = m0.groupdict()
                 mka_session_totals = ret_dict.setdefault('mka-session-totals', {})
+                continue
+
             m1 = p1.match(line)
             if m1:
                 group = m1.groupdict()
                 mka_session_totals['secured'] = int(group['secured'])
+                continue
+
             m2 = p2.match(line)
             if m2:
                 group = m2.groupdict()
                 mka_session_totals['fallback-secured'] = int(group['fallback_secured'])
+                continue
+
             m3 = p3.match(line)
             if m3:
                 group = m3.groupdict()
                 mka_session_totals['reauthentication-attempts'] = int(group['reauthentication_attempts'])
+                continue
+
             m4 = p4.match(line)
             if m4:
                 group = m4.groupdict()
                 mka_session_totals['deleted-secured'] = int(group['deleted_secured'])
+                continue
+
             m5 = p5.match(line)
             if m5:
                 group = m5.groupdict()
                 mka_session_totals['keepalive-timeouts'] = int(group['keepalive_timeouts'])
+                continue
 
             m6 = p6.match(line)
             if m6:
                 group = m6.groupdict()
                 ca_statistics = ret_dict.setdefault('ca-statistics', {})
+                continue
+
             m7 = p7.match(line)
             if m7:
                 group = m7.groupdict()
                 ca_statistics['pairwise-caks-derived'] = int(group['pairwise_caks_derived'])
+                continue
+
             m8 = p8.match(line)
             if m8:
                 group = m8.groupdict()
                 ca_statistics['pairwaise-cak-rekeys'] = int(group['pairwaise_cak_rekeys'])
+                continue
+
             m9 = p9.match(line)
             if m9:
                 group = m9.groupdict()
                 ca_statistics['group-caks-generated'] = int(group['group_caks_generated'])
+                continue
+
             m10 = p10.match(line)
             if m10:
                 group = m10.groupdict()
                 ca_statistics['group-caks-received'] = int(group['group_caks_received'])
+                continue
+
             m11 = p11.match(line)
             if m11:
                 group = m11.groupdict()
                 sa_statistics = ret_dict.setdefault('sa-statistics', {})
+                continue
+
             m12 = p12.match(line)
             if m12:
                 group = m12.groupdict()
                 sa_statistics['saks-generated'] = int(group['saks_generated'])
+                continue
+
             m13 = p13.match(line)
             if m13:
                 group = m13.groupdict()
                 sa_statistics['saks-rekeyed'] = int(group['saks_rekeyed'])
+                continue
+
             m14 = p14.match(line)
             if m14:
                 group = m14.groupdict()
                 sa_statistics['saks-received'] = int(group['saks_received'])
+                continue
+
             m15 = p15.match(line)
             if m15:
                 group = m15.groupdict()
                 sa_statistics['sak-responses-received'] = int(group['sak_responses_received'])
+                continue
+
             m16 = p16.match(line)
             if m16:
                 group = m16.groupdict()
                 mkpdu_statistics = ret_dict.setdefault('mkpdu-statistics', {})
+                continue
+
             m17 = p17.match(line)
             if m17:
                 group = m17.groupdict()
                 mkpdu_received = mkpdu_statistics.setdefault('mkpdu-received', {})
                 mkpdu = 'received'
                 mkpdu_statistics['mkpdus-validated-received'] = int(group['mkpdus_validated'])
+                continue
+
             m18 = p18.match(line)
             if m18:
                 group = m18.groupdict()
@@ -1936,6 +1971,8 @@ class ShowMkaStatistics(ShowMkaStatisticsSchema):
                     mkpdu_received['distributed-sak'] = int(group['distributed_sak'])
                 elif mkpdu == 'transmitted':
                     mkpdu_transmitted['distributed-sak'] = int(group['distributed_sak'])
+                continue
+
             m19 = p19.match(line)
             if m19:
                 group = m19.groupdict()
@@ -1943,12 +1980,15 @@ class ShowMkaStatistics(ShowMkaStatisticsSchema):
                     mkpdu_received['distributed-cak'] = int(group['distributed_cak'])
                 elif mkpdu == 'transmitted':
                     mkpdu_transmitted['distributed-cak'] = int(group['distributed_cak'])
+                continue
+
             m20 = p20.match(line)
             if m20:
                 group = m20.groupdict()
                 mkpdu_transmitted = mkpdu_statistics.setdefault('mkpdu-transmitted', {})
                 mkpdu = 'transmitted'
                 mkpdu_statistics['mkpdus-transmitted'] = int(group['mkpdus_transmitted'])
+                continue
 
             m21 = p21.match(line)
             if m21:
@@ -1956,114 +1996,162 @@ class ShowMkaStatistics(ShowMkaStatisticsSchema):
                 mka_error = ret_dict.setdefault('mka-error-counters', {})
                 sess_fail = mka_error.setdefault('session-failures', {})
                 sess_fail['bringup-failures'] = int(group['bringup_failures'])
+                continue
+
             m22 = p22.match(line)
             if m22:
                 group = m22.groupdict()
                 sess_fail['reauthentication-failures'] = int(group['reauthentication_failures'])
+                continue
+
             m23 = p23.match(line)
             if m23:
                 group = m23.groupdict()
                 sess_fail['duplicate-auth-mgr-handle'] = int(group['duplicate_auth_mgr_handle'])
+                continue
 
             m24 = p24.match(line)
             if m24:
                 group = m24.groupdict()
                 sak_fail = mka_error.setdefault('sak-failures', {})
                 sak_fail['sak-generation'] = int(group['sak_generation'])
+                continue
+
             m25 = p25.match(line)
             if m25:
                 group = m25.groupdict()
                 sak_fail['hash-key-generation'] = int(group['hash_key_generation'])
+                continue
+
             m26 = p26.match(line)
             if m26:
                 group = m26.groupdict()
                 sak_fail['sak-encryption-wrap'] = int(group['sak_encryption_wrap'])
+                continue
+
             m27 = p27.match(line)
             if m27:
                 group = m27.groupdict()
                 sak_fail['sak-decryption-unwrap'] = int(group['sak_decryption_unwrap'])
+                continue
+
             m28 = p28.match(line)
             if m28:
                 group = m28.groupdict()
                 sak_fail['sak-cipher-mismatch'] = int(group['sak_cipher_mismatch'])
+                continue
 
             m29 = p29.match(line)
             if m29:
                 group = m29.groupdict()
                 ca_fail = mka_error.setdefault('ca-failures', {})
                 ca_fail['group-sak-generation'] = int(group['group_cak_generation'])
+                continue
+
             m30 = p30.match(line)
             if m30:
                 group = m30.groupdict()
                 ca_fail['group-cak-encryption-wrap'] = int(group['group_cak_encryption_wrap'])
+                continue
+
             m31 = p31.match(line)
             if m31:
                 group = m31.groupdict()
                 ca_fail['group-cak-decryption-unwrap'] = int(group['group_cak_decryption_unwrap'])
+                continue
+
             m32 = p32.match(line)
             if m32:
                 group = m32.groupdict()
                 ca_fail['pairwise-cak-derivation'] = int(group['pairwise_cak_derivation'])
+                continue
+
             m33 = p33.match(line)
             if m33:
                 group = m33.groupdict()
                 ca_fail['ckn-derivation'] = int(group['ckn_derivation'])
+                continue
+
             m34 = p34.match(line)
             if m34:
                 group = m34.groupdict()
                 ca_fail['ick-derivation'] = int(group['ick_derivation'])
+                continue
+
             m35 = p35.match(line)
             if m35:
                 group = m35.groupdict()
                 ca_fail['kek-derivation'] = int(group['kek_derivation'])
+                continue
+
             m36 = p36.match(line)
             if m36:
                 group = m36.groupdict()
                 ca_fail['invalid-peer-macsec-capability'] = int(group['invalid_peer_macsec_capability'])
+                continue
 
             m37 = p37.match(line)
             if m37:
                 group = m37.groupdict()
                 macsec_fail = mka_error.setdefault('macsec-failures', {})
                 macsec_fail['rx-sc-creation'] = int(group['rx_sc_creation'])
+                continue
+
             m38 = p38.match(line)
             if m38:
                 group = m38.groupdict()
                 macsec_fail['tx-sc-creation'] = int(group['tx_sc_creation'])
+                continue
+
             m39 = p39.match(line)
             if m39:
                 group = m39.groupdict()
                 macsec_fail['rx-sa-installation'] = int(group['rx_sa_installation'])
+                continue
+
             m40 = p40.match(line)
             if m40:
                 group = m40.groupdict()
                 macsec_fail['tx-sa-installation'] = int(group['tx_sa_installation'])
+                continue
 
             m41 = p41.match(line)
             if m41:
                 group = m41.groupdict()
                 mkpdu_fail = mka_error.setdefault('mkpdu-failures', {})
                 mkpdu_fail['mkpdu_tx'] = int(group['mkpdu_tx'])
+                continue
+
             m42 = p42.match(line)
             if m42:
                 group = m42.groupdict()
                 mkpdu_fail['mkpdu-rx-icv-verification'] = int(group['mkpdu_rx_icv_verification'])
+                continue
+
             m43 = p43.match(line)
             if m43:
                 group = m43.groupdict()
                 mkpdu_fail['mkpdu-rx-fallback-icv-ver'] = int(group['mkpdu_rx_icv_fallback_ver'])
+                continue
+
             m44 = p44.match(line)
             if m44:
                 group = m44.groupdict()
                 mkpdu_fail['mkpdu-rx-validation'] = int(group['mkpdu_rx_validation'])
+                continue
+
             m45 = p45.match(line)
             if m45:
                 group = m45.groupdict()
                 mkpdu_fail['mkpdu-rx-bad-peer-mn'] = int(group['mkpdu_rx_bad_peer_mn'])
+                continue
+
             m46 = p46.match(line)
             if m46:
                 group = m46.groupdict()
                 mkpdu_fail['mkpdu-rx-nonrecent-peerlist-mn'] = int(group['mkpdu_rx_nonrecent_peerlist_mn'])
+                continue
+
         return ret_dict
 # ==============================================
 # Parser for 'show mka policy'
@@ -2073,7 +2161,7 @@ class ShowMkaPolicySchema(MetaParser):
     """
 
     schema = {
-        'send_secure_announcements': str,
+        Optional('send_secure_announcements'): str,
         'policy': {
             Any(): {
                 'key_server_priority': int,
@@ -2129,6 +2217,7 @@ class ShowMkaPolicy(ShowMkaPolicySchema):
                 if group["interfaces"]:
                     int_list = policy_dict.setdefault("interfaces", group["interfaces"].split())
                 continue
+
             m3 = p3.match(line)
             if m3:
                 group = m3.groupdict()

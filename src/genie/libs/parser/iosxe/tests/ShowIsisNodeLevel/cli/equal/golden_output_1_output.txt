@@ -1,0 +1,31 @@
+Tag 64512:
+
+ISIS level-1 node information for R1.00
+  IP router ID: 192.0.2.53 (LSP #0)
+  IP interface address: 192.0.2.53 (LSP #0)
+  IP PQ address: 192.0.2.53
+  IP prefix SID: 990, R:0 N:1 P:0 E:0 V:0 L:0
+  IP strict-SPF SID: 991, R:0 N:1 P:0 E:0 V:0 L:0
+  LSP index: 1
+  SRGB start[0]: 16000, SRGB range[0]: 8000 (LSP #0)
+  SRLB start[0]: 15000, SRLB range[0]: 1000 (LSP #0)
+  SR capable: Yes, Strict-SPF capable: Yes (LSP #0)
+  SR Flex Algorithm 129,130,139,140,149,150
+  Flex algorithm:129 Metric-Type:IGP Alg-type:SPF Priority:128
+    Affinity Include-any:
+       0x00000004 
+  Flex algorithm:130 Metric-Type:IGP Alg-type:SPF Priority:128
+    Affinity Include-any:
+       0x00000002 
+  Flex algorithm:139 Metric-Type:IGP Alg-type:SPF Priority:128
+    Affinity Include-all:
+       0x0000000C 
+  Flex algorithm:140 Metric-Type:IGP Alg-type:SPF Priority:128
+    Affinity Include-all:
+       0x0000000A 
+  Flex algorithm:149 Metric-Type:IGP Alg-type:SPF Priority:128
+    Affinity Include-all:
+       0x00000014 
+  Flex algorithm:150 Metric-Type:IGP Alg-type:SPF Priority:128
+    Affinity Include-all:
+       0x00000012

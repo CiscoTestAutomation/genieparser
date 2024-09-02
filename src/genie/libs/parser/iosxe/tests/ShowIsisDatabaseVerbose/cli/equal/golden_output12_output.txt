@@ -1,0 +1,353 @@
+Tag 1:
+IS-IS Level-1 Link State Database:
+LSPID                 LSP Seq Num  LSP Checksum  LSP Holdtime/Rcvd      ATT/P/OL
+R1.00-00            * 0x00000006   0x3071                1188/*         0/0/0
+  Area Address: 50.1234
+  NLPID:        0xCC 0x8E
+  Topology:     IPv4 (0x0)
+                IPv6 (0x2)
+  Router ID:    1.1.1.1
+  Router CAP:   1.1.1.1, D:0, S:0
+    SRv6 Oflag:0
+  Hostname: R1
+  Metric: 10         IS-Extended R2.00
+    Interface IP Address: 12.1.1.1
+    Neighbor IP Address: 12.1.1.2
+    Admin. Weight: 16777214
+    Physical LINK BW: 10000 kbits/sec
+    Uni Link Loss 0.499998% (Anomalous)
+  Metric: 10         IS (MT-IPv6) R2.00
+    Interface IPV6 Address: 12:12::1
+    Neighbor IPV6 Address: 12:12::2
+    Admin. Weight: 16777214
+    Physical LINK BW: 10000 kbits/sec
+    End.X SID: FCCC:CCC1:A1:E000:: uA (PSP/USD) B:0 S:0 P:0 Algorithm:0 Weight:0
+      SID Structure:
+        Block Length: 32, Node-ID Length: 16, Func-Length: 16, Args-Length: 0
+  Metric: 10         IS-Extended R3.00
+    Interface IP Address: 13.1.1.1
+    Neighbor IP Address: 13.1.1.2
+    Admin. Weight: 100000
+    Physical LINK BW: 10000 kbits/sec
+    Uni Link Loss 0.499998% (Anomalous)
+  Metric: 10         IS (MT-IPv6) R3.00
+    Interface IPV6 Address: 13:13::1
+    Neighbor IPV6 Address: 13:13::2
+    Admin. Weight: 100000
+    Physical LINK BW: 10000 kbits/sec
+    End.X SID: FCCC:CCC1:A1:E001:: uA (PSP/USD) B:0 S:0 P:0 Algorithm:0 Weight:0
+      SID Structure:
+        Block Length: 32, Node-ID Length: 16, Func-Length: 16, Args-Length: 0
+  IP Address:   1.1.1.1
+  Metric: 10         IP 1.1.1.1/32
+    Prefix-attr: X:0 R:0 N:1
+    Source Router ID: 1.1.1.1
+  Metric: 10         IP 12.1.1.0/24
+    Prefix-attr: X:0 R:0 N:0
+  Metric: 10         IP 13.1.1.0/24
+    Prefix-attr: X:0 R:0 N:0
+  IPv6 Address: 111::111
+  IPv6 Router ID: 111::111
+  Metric: 10         IPv6 (MT-IPv6) 12:12::/64
+    Prefix-attr: X:0 R:0 N:0
+  Metric: 10         IPv6 (MT-IPv6) 13:13::/64
+    Prefix-attr: X:0 R:0 N:0
+  Metric: 10         IPv6 (MT-IPv6) 111::111/128
+    Prefix-attr: X:0 R:0 N:1
+    Source Router ID: 111::111
+  Metric: 0          IPv6 (MT-IPv6) FCCC:CCC1:A1::/48
+    Prefix-attr: X:0 R:0 N:0
+  SRv6 Locator: (MT-IPv6) FCCC:CCC1:A1::/48 Metric:0 Algorithm:0
+    End SID: FCCC:CCC1:A1:: uN (PSP/USD)
+      SID Structure:
+        Block Length: 32, Node-ID Length: 16, Func-Length: 0, Args-Length: 0
+R2.00-00              0x00000006   0xC1E9                1186/1200      0/0/0
+  Area Address: 50.1234
+  NLPID:        0xCC 0x8E
+  Topology:     IPv4 (0x0)
+                IPv6 (0x2)
+  Router ID:    2.2.2.2
+  Router CAP:   2.2.2.2, D:0, S:0
+    SRv6 Oflag:0
+  Hostname: R2
+  Metric: 10         IS-Extended R4.00
+    Interface IP Address: 24.1.1.1
+    Neighbor IP Address: 24.1.1.2
+    Admin. Weight: 100000
+    Physical LINK BW: 10000 kbits/sec
+  Metric: 10         IS (MT-IPv6) R4.00
+    Interface IPV6 Address: 24:24::1
+    Neighbor IPV6 Address: 24:24::2
+    Admin. Weight: 100000
+    Physical LINK BW: 10000 kbits/sec
+    End.X SID: FCCC:CCC1:B1:E000:: uA (PSP/USD) B:0 S:0 P:0 Algorithm:0 Weight:0
+      SID Structure:
+        Block Length: 32, Node-ID Length: 16, Func-Length: 16, Args-Length: 0
+  Metric: 10         IS-Extended R1.00
+    Interface IP Address: 12.1.1.2
+    Neighbor IP Address: 12.1.1.1
+    Admin. Weight: 16777214
+    Physical LINK BW: 10000 kbits/sec
+  Metric: 10         IS (MT-IPv6) R1.00
+    Interface IPV6 Address: 12:12::2
+    Neighbor IPV6 Address: 12:12::1
+    Admin. Weight: 16777214
+    Physical LINK BW: 10000 kbits/sec
+    End.X SID: FCCC:CCC1:B1:E001:: uA (PSP/USD) B:0 S:0 P:0 Algorithm:0 Weight:0
+      SID Structure:
+        Block Length: 32, Node-ID Length: 16, Func-Length: 16, Args-Length: 0
+  IP Address:   2.2.2.2
+  Metric: 10         IP 2.2.2.2/32
+    Prefix-attr: X:0 R:0 N:1
+    Source Router ID: 2.2.2.2
+  Metric: 10         IP 12.1.1.0/24
+    Prefix-attr: X:0 R:0 N:0
+  Metric: 10         IP 24.1.1.0/24
+    Prefix-attr: X:0 R:0 N:0
+  IPv6 Address: 222::222
+  IPv6 Router ID: 222::222
+  Metric: 10         IPv6 (MT-IPv6) 12:12::/64
+    Prefix-attr: X:0 R:0 N:0
+  Metric: 10         IPv6 (MT-IPv6) 24:24::/64
+    Prefix-attr: X:0 R:0 N:0
+  Metric: 10         IPv6 (MT-IPv6) 222::222/128
+    Prefix-attr: X:0 R:0 N:1
+    Source Router ID: 222::222
+  Metric: 0          IPv6 (MT-IPv6) FCCC:CCC1:B1::/48
+    Prefix-attr: X:0 R:0 N:0
+  SRv6 Locator: (MT-IPv6) FCCC:CCC1:B1::/48 Metric:0 Algorithm:0
+    End SID: FCCC:CCC1:B1:: uN (PSP/USD)
+      SID Structure:
+        Block Length: 32, Node-ID Length: 16, Func-Length: 0, Args-Length: 0
+R3.00-00              0x00000005   0x777B                1187/1200      0/0/0
+  Area Address: 50.1234
+  NLPID:        0xCC 0x8E
+  Topology:     IPv4 (0x0)
+                IPv6 (0x2)
+  Router ID:    3.3.3.3
+  Router CAP:   3.3.3.3, D:0, S:0
+    SRv6 Oflag:0
+  Hostname: R3
+  Metric: 10         IS-Extended R5.00
+    Interface IP Address: 35.1.1.1
+    Neighbor IP Address: 35.1.1.2
+    Admin. Weight: 100000
+    Physical LINK BW: 10000 kbits/sec
+  Metric: 10         IS (MT-IPv6) R5.00
+    Interface IPV6 Address: 35:35::1
+    Neighbor IPV6 Address: 35:35::2
+    Admin. Weight: 100000
+    Physical LINK BW: 10000 kbits/sec
+    End.X SID: FCCC:CCC1:C1:E000:: uA (PSP/USD) B:0 S:0 P:0 Algorithm:0 Weight:0
+      SID Structure:
+        Block Length: 32, Node-ID Length: 16, Func-Length: 16, Args-Length: 0
+  Metric: 10         IS-Extended R1.00
+    Interface IP Address: 13.1.1.2
+    Neighbor IP Address: 13.1.1.1
+    Admin. Weight: 16777214
+    Physical LINK BW: 10000 kbits/sec
+  Metric: 10         IS (MT-IPv6) R1.00
+    Interface IPV6 Address: 13:13::2
+    Neighbor IPV6 Address: 13:13::1
+    Admin. Weight: 16777214
+    Physical LINK BW: 10000 kbits/sec
+    End.X SID: FCCC:CCC1:C1:E001:: uA (PSP/USD) B:0 S:0 P:0 Algorithm:0 Weight:0
+      SID Structure:
+        Block Length: 32, Node-ID Length: 16, Func-Length: 16, Args-Length: 0
+  IP Address:   3.3.3.3
+  Metric: 10         IP 3.3.3.3/32
+    Prefix-attr: X:0 R:0 N:1
+    Source Router ID: 3.3.3.3
+  Metric: 10         IP 13.1.1.0/24
+    Prefix-attr: X:0 R:0 N:0
+  Metric: 10         IP 35.1.1.0/24
+    Prefix-attr: X:0 R:0 N:0
+  IPv6 Address: 333::333
+  IPv6 Router ID: 333::333
+  Metric: 10         IPv6 (MT-IPv6) 13:13::/64
+    Prefix-attr: X:0 R:0 N:0
+  Metric: 10         IPv6 (MT-IPv6) 35:35::/64
+    Prefix-attr: X:0 R:0 N:0
+  Metric: 10         IPv6 (MT-IPv6) 333::333/128
+    Prefix-attr: X:0 R:0 N:1
+    Source Router ID: 333::333
+  Metric: 0          IPv6 (MT-IPv6) FCCC:CCC1:C1::/48
+    Prefix-attr: X:0 R:0 N:0
+  SRv6 Locator: (MT-IPv6) FCCC:CCC1:C1::/48 Metric:0 Algorithm:0
+    End SID: FCCC:CCC1:C1:: uN (PSP/USD)
+      SID Structure:
+        Block Length: 32, Node-ID Length: 16, Func-Length: 0, Args-Length: 0
+R4.00-00              0x00000006   0x6136                1188/1199      0/0/0
+  Area Address: 50.1234
+  NLPID:        0xCC 0x8E
+  Topology:     IPv4 (0x0)
+                IPv6 (0x2)
+  Router ID:    4.4.4.4
+  Router CAP:   4.4.4.4, D:0, S:0
+    SRv6 Oflag:0
+  Hostname: R4
+  Metric: 10         IS-Extended R2.00
+    Interface IP Address: 24.1.1.2
+    Neighbor IP Address: 24.1.1.1
+    Admin. Weight: 16777214
+    Physical LINK BW: 10000 kbits/sec
+  Metric: 10         IS (MT-IPv6) R2.00
+    Interface IPV6 Address: 24:24::2
+    Neighbor IPV6 Address: 24:24::1
+    Admin. Weight: 16777214
+    Physical LINK BW: 10000 kbits/sec
+    End.X SID: FCCC:CCC1:D1:E001:: uA (PSP/USD) B:0 S:0 P:0 Algorithm:0 Weight:0
+      SID Structure:
+        Block Length: 32, Node-ID Length: 16, Func-Length: 16, Args-Length: 0
+  Metric: 10         IS-Extended R6.00
+    Interface IP Address: 46.1.1.1
+    Neighbor IP Address: 46.1.1.2
+    Admin. Weight: 100000
+    Physical LINK BW: 10000 kbits/sec
+  Metric: 10         IS (MT-IPv6) R6.00
+    Interface IPV6 Address: 46:46::1
+    Neighbor IPV6 Address: 46:46::2
+    Admin. Weight: 100000
+    Physical LINK BW: 10000 kbits/sec
+    End.X SID: FCCC:CCC1:D1:E000:: uA (PSP/USD) B:0 S:0 P:0 Algorithm:0 Weight:0
+      SID Structure:
+        Block Length: 32, Node-ID Length: 16, Func-Length: 16, Args-Length: 0
+  IP Address:   4.4.4.4
+  Metric: 10         IP 4.4.4.4/32
+    Prefix-attr: X:0 R:0 N:1
+    Source Router ID: 4.4.4.4
+  Metric: 10         IP 24.1.1.0/24
+    Prefix-attr: X:0 R:0 N:0
+  Metric: 10         IP 46.1.1.0/24
+    Prefix-attr: X:0 R:0 N:0
+  IPv6 Address: 444::444
+  IPv6 Router ID: 444::444
+  Metric: 10         IPv6 (MT-IPv6) 24:24::/64
+    Prefix-attr: X:0 R:0 N:0
+  Metric: 10         IPv6 (MT-IPv6) 46:46::/64
+    Prefix-attr: X:0 R:0 N:0
+  Metric: 10         IPv6 (MT-IPv6) 444::444/128
+    Prefix-attr: X:0 R:0 N:1
+    Source Router ID: 444::444
+  Metric: 0          IPv6 (MT-IPv6) FCCC:CCC1:D1::/48
+    Prefix-attr: X:0 R:0 N:0
+  SRv6 Locator: (MT-IPv6) FCCC:CCC1:D1::/48 Metric:0 Algorithm:0
+    End SID: FCCC:CCC1:D1:: uN (PSP/USD)
+      SID Structure:
+        Block Length: 32, Node-ID Length: 16, Func-Length: 0, Args-Length: 0
+R5.00-00              0x00000005   0x1554                1188/1199      0/0/0
+  Area Address: 50.1234
+  NLPID:        0xCC 0x8E
+  Topology:     IPv4 (0x0)
+                IPv6 (0x2)
+  Router ID:    5.5.5.5
+  Router CAP:   5.5.5.5, D:0, S:0
+    SRv6 Oflag:0
+  Hostname: R5
+  Metric: 10         IS-Extended R3.00
+    Interface IP Address: 35.1.1.2
+    Neighbor IP Address: 35.1.1.1
+    Admin. Weight: 100000
+    Physical LINK BW: 10000 kbits/sec
+  Metric: 10         IS (MT-IPv6) R3.00
+    Interface IPV6 Address: 35:35::2
+    Neighbor IPV6 Address: 35:35::1
+    Admin. Weight: 100000
+    Physical LINK BW: 10000 kbits/sec
+    End.X SID: FCCC:CCC1:E1:E000:: uA (PSP/USD) B:0 S:0 P:0 Algorithm:0 Weight:0
+      SID Structure:
+        Block Length: 32, Node-ID Length: 16, Func-Length: 16, Args-Length: 0
+  Metric: 10         IS-Extended R6.00
+    Interface IP Address: 56.1.1.1
+    Neighbor IP Address: 56.1.1.2
+    Admin. Weight: 16777214
+    Physical LINK BW: 10000 kbits/sec
+  Metric: 10         IS (MT-IPv6) R6.00
+    Interface IPV6 Address: 56:56::1
+    Neighbor IPV6 Address: 56:56::2
+    Admin. Weight: 16777214
+    Physical LINK BW: 10000 kbits/sec
+    End.X SID: FCCC:CCC1:E1:E001:: uA (PSP/USD) B:0 S:0 P:0 Algorithm:0 Weight:0
+      SID Structure:
+        Block Length: 32, Node-ID Length: 16, Func-Length: 16, Args-Length: 0
+  IP Address:   5.5.5.5
+  Metric: 10         IP 5.5.5.5/32
+    Prefix-attr: X:0 R:0 N:1
+    Source Router ID: 5.5.5.5
+  Metric: 10         IP 35.1.1.0/24
+    Prefix-attr: X:0 R:0 N:0
+  Metric: 10         IP 56.1.1.0/24
+    Prefix-attr: X:0 R:0 N:0
+  IPv6 Address: 555::555
+  IPv6 Router ID: 555::555
+  Metric: 10         IPv6 (MT-IPv6) 35:35::/64
+    Prefix-attr: X:0 R:0 N:0
+  Metric: 10         IPv6 (MT-IPv6) 56:56::/64
+    Prefix-attr: X:0 R:0 N:0
+  Metric: 10         IPv6 (MT-IPv6) 555::555/128
+    Prefix-attr: X:0 R:0 N:1
+    Source Router ID: 555::555
+  Metric: 0          IPv6 (MT-IPv6) FCCC:CCC1:E1::/48
+    Prefix-attr: X:0 R:0 N:0
+  SRv6 Locator: (MT-IPv6) FCCC:CCC1:E1::/48 Metric:0 Algorithm:0
+    End SID: FCCC:CCC1:E1:: uN (PSP/USD)
+      SID Structure:
+        Block Length: 32, Node-ID Length: 16, Func-Length: 0, Args-Length: 0
+R6.00-00              0x00000005   0xC01A                1188/1199      0/0/0
+  Area Address: 50.1234
+  NLPID:        0xCC 0x8E
+  Topology:     IPv4 (0x0)
+                IPv6 (0x2)
+  Router ID:    6.6.6.6
+  Router CAP:   6.6.6.6, D:0, S:0
+    SRv6 Oflag:0
+  Hostname: R6
+  Metric: 10         IS-Extended R4.00
+    Interface IP Address: 46.1.1.2
+    Neighbor IP Address: 46.1.1.1
+    Admin. Weight: 16777214
+    Physical LINK BW: 10000 kbits/sec
+  Metric: 10         IS (MT-IPv6) R4.00
+    Interface IPV6 Address: 46:46::2
+    Neighbor IPV6 Address: 46:46::1
+    Admin. Weight: 16777214
+    Physical LINK BW: 10000 kbits/sec
+    End.X SID: FCCC:CCC1:F1:E000:: uA (PSP/USD) B:0 S:0 P:0 Algorithm:0 Weight:0
+      SID Structure:
+        Block Length: 32, Node-ID Length: 16, Func-Length: 16, Args-Length: 0
+  Metric: 10         IS-Extended R5.00
+    Interface IP Address: 56.1.1.2
+    Neighbor IP Address: 56.1.1.1
+    Admin. Weight: 100000
+    Physical LINK BW: 10000 kbits/sec
+  Metric: 10         IS (MT-IPv6) R5.00
+    Interface IPV6 Address: 56:56::2
+    Neighbor IPV6 Address: 56:56::1
+    Admin. Weight: 100000
+    Physical LINK BW: 10000 kbits/sec
+    End.X SID: FCCC:CCC1:F1:E001:: uA (PSP/USD) B:0 S:0 P:0 Algorithm:0 Weight:0
+      SID Structure:
+        Block Length: 32, Node-ID Length: 16, Func-Length: 16, Args-Length: 0
+  IP Address:   6.6.6.6
+  Metric: 10         IP 6.6.6.6/32
+    Prefix-attr: X:0 R:0 N:1
+    Source Router ID: 6.6.6.6
+  Metric: 10         IP 46.1.1.0/24
+    Prefix-attr: X:0 R:0 N:0
+  Metric: 10         IP 56.1.1.0/24
+    Prefix-attr: X:0 R:0 N:0
+  IPv6 Address: 666::666
+  IPv6 Router ID: 666::666
+  Metric: 10         IPv6 (MT-IPv6) 46:46::/64
+    Prefix-attr: X:0 R:0 N:0
+  Metric: 10         IPv6 (MT-IPv6) 56:56::/64
+    Prefix-attr: X:0 R:0 N:0
+  Metric: 10         IPv6 (MT-IPv6) 666::666/128
+    Prefix-attr: X:0 R:0 N:1
+    Source Router ID: 666::666
+  Metric: 0          IPv6 (MT-IPv6) FCCC:CCC1:F1::/48
+    Prefix-attr: X:0 R:0 N:0
+  SRv6 Locator: (MT-IPv6) FCCC:CCC1:F1::/48 Metric:0 Algorithm:0
+    End SID: FCCC:CCC1:F1:: uN (PSP/USD)
+      SID Structure:
+        Block Length: 32, Node-ID Length: 16, Func-Length: 0, Args-Length: 0

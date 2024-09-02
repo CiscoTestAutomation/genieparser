@@ -29,6 +29,7 @@ class ShowVrfSchema(MetaParser):
         'vrf': {
             Any(): {
                 Optional('route_distinguisher'): str,
+                Optional('route_distinguisher_auto'): bool,
                 Optional('protocols'): list,
                 Optional('interfaces'): list,
                 Optional('being_deleted'): bool
@@ -37,6 +38,9 @@ class ShowVrfSchema(MetaParser):
     }
 
 
+# =============================================
+# Parser for 'show vrf {vrf}'
+# =============================================
 class ShowVrf(ShowVrfSchema):
     ''' Parser for:
             show vrf
@@ -65,7 +69,7 @@ class ShowVrf(ShowVrfSchema):
         # test                             10.116.83.34:100      ipv4,ipv6   Lo100
         # ce1                              <being deleted>       ipv4,ipv6   Et1/0
         # * ce1                              2:2                   ipv4,ipv6
-        p1 = re.compile(r'^(((?P<being_deleted>\*))\s+)?(?P<vrf>[\w\d\-\.]+)\s+(?P<rd>\<not +set\>|<being deleted>|[\.\d\:]+)(?:\s+(?P<protocols>[(?:ipv\d)\,]+))?(?:\s+(?P<intf>[\S\s]+))?$')
+        p1 = re.compile(r'^(((?P<being_deleted>\*))\s+)?(?P<vrf>[\w\d\-\.]+)\s+(?P<rd>\<not +set\>|<being deleted>|[\.\d\:]+)(?P<rd_auto>\(auto\)+)?(?:\s+(?P<protocols>[(?:ipv\d)\,]+))?(?:\s+(?P<intf>[\S\s]+))?$')
 
         # Lo300
         # Gi2.390
@@ -83,6 +87,8 @@ class ShowVrf(ShowVrfSchema):
             # rb-bcn-lab                       10.116.83.34:1        ipv4,ipv6   Lo9
             #                                                                    Te0/0/1
             # test                             10.116.83.34:100      ipv4,ipv6   Lo100
+            # blue                             1.1.1.1:1(auto)       ipv4,ipv6
+            # test                             10.116.83.34:100      ipv4,ipv6   Lo100
             # * ce1                              2:2                   ipv4,ipv6
             m = p1.match(line)
             if m:
@@ -93,6 +99,9 @@ class ShowVrf(ShowVrfSchema):
 
                 rd = groups['rd']
                 vrf_dict.update({'route_distinguisher': rd})
+
+                if groups['rd_auto']:
+                    vrf_dict.update({'route_distinguisher_auto': True})
 
                 if groups['protocols']:
                     protocols = groups['protocols'].split(',')

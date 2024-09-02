@@ -1,0 +1,12 @@
+MACSec Policy                    Cipher           Pri  Window       Offset   Security       SAK Rekey time ICV Indicator Include-SCI
+-------------------------------- ---------------- ---- ------------ -------- -------------- -------------- ------------- -------------
+MP1                              Enforce-Peer     32   100000       30       must-secure    70             TRUE           FALSE
+Test-MP1                         Enforce-Peer     16   148809600    0        should-secure  pn-rollover    FALSE          TRUE
+Test-MP2                         Enforce-Peer     16   148809600    0        should-secure  pn-rollover    FALSE          TRUE
+system-default-macsec-policy     GCM-AES-XPN-256  16   148809600    0        should-secure  pn-rollover    FALSE          TRUE
+
+MACSec Policy                    Cipher-Suite Enforce-Peer
+-------------------------------- -----------------------------------------------------
+MP1                              GCM-AES-128
+Test-MP1                         GCM-AES-256 GCM-AES-XPN-256 GCM-AES-XPN-128 GCM-AES-128
+Test-MP2                         GCM-AES-256

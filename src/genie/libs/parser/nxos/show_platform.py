@@ -141,7 +141,8 @@ class ShowVersion(ShowVersionSchema):
                     version_dict['platform']['software']['kickstart_version'] = kickstart_version
                 continue
 
-            p5 = re.compile(r'^\s*system: +version +(?P<system_version>[\w\.\(\)\[\]\s]+)$')
+            # System version: 9.3(6)
+            p5 = re.compile(r'^\s*system: +version +(?P<system_version>[\w.\(\)]+)$')
             m = p5.match(line)
             if m:
                 system_version = str(m.groupdict()['system_version'])
@@ -150,7 +151,10 @@ class ShowVersion(ShowVersionSchema):
                     version_dict['platform']['software']['system_version'] = system_version
                 continue
 
-            p6 = re.compile(r'^\s*NXOS: +version +(?P<system_version>[A-Za-z0-9\.\(\)\[\]\s]+)$')
+            # NXOS: version 9.3(6uu)I9(1uu) [build 9.3(6)]
+            # Host NXOS: version 10.4(3) [build 10.4(2)IMG9(0.27)]
+            # NXOS: version 10.2(3) [Feature Release]
+            p6 = re.compile(r'^\s*(Host )?NXOS: +version +(?P<system_version>[\w.\(\)]+)')
             m = p6.match(line)
             if m:
                 system_version = str(m.groupdict()['system_version'])

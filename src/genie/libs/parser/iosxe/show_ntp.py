@@ -85,11 +85,13 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
         # *~127.127.1.1     .LOCL.           0      6     16   377  0.000   0.000  1.204
         #  ~10.4.1.1        .INIT.          16      -   1024     0  0.000   0.000 15937.
         # +~10.16.2.2       127.127.1.1      8    137     64     1 15.917 556.786 7938.0
+        # *172.16.229.65    .GNSS.           1 -   59   64  377    1.436   73.819  10.905
+        # *~2001:DB8:EEE8  2001:DB8::EEE8   2    337    512   377  1.957  -2.107  1.078
         p1 = re.compile(r'^(?P<mode_code>[x\*\#\+\- ])?(?P<configured>[\~])? *(?P<remote>[\w\.\:]+) +'
-                         '(?P<refid>[\w\.]+) +(?P<stratum>\d+) +'
-                         '(?P<receive_time>[\d\-]+) +(?P<poll>\d+) +'
-                         '(?P<reach>\d+) +(?P<delay>[\d\.]+) +'
-                         '(?P<offset>[\d\.\-]+) +(?P<disp>[\d\.\-]+)$')
+                        r'(?P<refid>[\w\.\:]+) +(?P<stratum>\d+) +'
+                        r'(?P<receive_time>[\d\-]+) +(?P<poll>\d+) +'
+                        r'(?P<reach>\d+) +(?P<delay>[\d\.]+) +'
+                        r'(?P<offset>[\d\.\-]+) +(?P<disp>[\d\.\-]+)$')
 
 
         for line in out.splitlines():
@@ -97,7 +99,11 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
             if not line:
                 continue
 
+            # *~127.127.1.1     .LOCL.           0      6     16   377  0.000   0.000  1.204
+            #  ~10.4.1.1        .INIT.          16      -   1024     0  0.000   0.000 15937.
+            # +~10.16.2.2       127.127.1.1      8    137     64     1 15.917 556.786 7938.0
             # *172.16.229.65    .GNSS.           1 -   59   64  377    1.436   73.819  10.905
+            # *~2001:DB8:EEE8  2001:DB8::EEE8   2    337    512   377  1.957  -2.107  1.078
             m = p1.match(line)
             if m:
                 groups = m.groupdict()

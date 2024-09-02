@@ -26,7 +26,7 @@ class ShowIpRouteDistributor(MetaParser):
 
     exclude = ['updated']
 
-    def cli(self, vrf=None, route=None, protocol=None, output=None):
+    def cli(self, vrf=None, route=None, protocol=None, output=None, timeout=60):
 
         if output is None:
             if vrf and protocol:
@@ -41,7 +41,7 @@ class ShowIpRouteDistributor(MetaParser):
                 cmd = self.cli_command[4].format(route=route)
             else:
                 cmd = self.cli_command[3]
-            out = self.device.execute(cmd)
+            out = self.device.execute(cmd, timeout=timeout)
         else:
             out = output
 

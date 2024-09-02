@@ -311,7 +311,7 @@ class ShowCefInterfacePolicyStatistics(ShowCefInterfacePolicyStatisticsSchema):
             if match_obj:
                 dict_val = match_obj.groupdict()
                 int_name = dict_val['intf']
-                ret_dict.setdefault('Interfaces', {})\
+                ret_dict.setdefault('interfaces', {})\
                     .setdefault(int_name, {})
                 data_dict  = ret_dict['interfaces'][int_name]
                 data_dict['status'] = dict_val['status']
