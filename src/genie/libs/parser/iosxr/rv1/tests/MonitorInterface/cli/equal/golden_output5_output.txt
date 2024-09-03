@@ -1,0 +1,31 @@
+monitor interface MgmtEth0/RP0/CPU0/0
+Sun Aug 29 12:01:14.498 UTC
+R2_xr                Monitor Time: 00:00:00          SysUptime: 199:26:38
+
+
+MgmtEth0/RP0/CPU0/0 is up, line protocol is up
+Encapsulation ARPA
+
+Traffic Stats:(2 second rates)                                     Delta
+  Input  Packets:                  96599736                            0
+  Input  pps:                           134
+  Input  Bytes:                 16038728047                            0
+  Input  Kbps (rate):                    NA                         (NA)
+  Output Packets:                    236494                            0
+  Output pps:                             0
+  Output Bytes:                    23366620                            0
+  Output Kbps (rate):                    NA                         (NA)
+
+Errors Stats:
+  Input  Total:                           0                            0
+  Input  CRC:                             0                            0
+  Input  Frame:
+                          0                            0
+  Input  Overrun:                         0                            0
+  Output Total:                           0                            0
+  Output Underrun:                        0                            0
+
+Quit='q', Freeze='f', Thaw='t', Clear='c', Interface='i',
+Next='n', Prev='p'
+
+Brief='b', Detail='d', Protocol(IPv4/IPv6)='r'

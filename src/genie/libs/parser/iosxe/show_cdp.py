@@ -771,7 +771,7 @@ class ShowCdpEntrySchema(MetaParser):
                         'device_id': str,
                         'hold_time': int,
                         'cdp_version': int,
-                        'peer_mac': str,
+                        Optional('peer_mac'): str,
                         'vtp_mgmt_domain': str,
                         Optional('native_vlan'): int,
                         'duplex': str,

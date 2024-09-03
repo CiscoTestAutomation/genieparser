@@ -1,0 +1,1 @@
+PACL                    IPV4            Ingress         racl_permit_ingress     2

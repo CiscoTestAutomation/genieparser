@@ -1,0 +1,4 @@
+show lisp locator-table default instance-id 1023 ethernet subscription
+LISP EID Subscriptions for LISP 0 EID-table N/A (IID 1023), 1 entries
+Prefix                                  Source                         Created     Last Update
+192.168.1.3/32                          remote-eid          00:13:06    00:01:41   

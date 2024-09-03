@@ -1,0 +1,17 @@
+FED ARP SNOOPING PORT Data : 
+
+  if_id = 1180 
+
+  if_name = GigabitEthernet3/0/10 
+
+  ARP SNOOP enable: FALSE 
+
+  Punject Port Profile: FALSE 
+
+  EtherChannel member: FALSE 
+
+  EtherChannel: FALSE 
+
+  EtherChannel if_id = 0 
+
+  ref_cnt = 0

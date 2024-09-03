@@ -240,7 +240,7 @@ expected_output = {
         'tunnel': 'Tu1',
         'nbma_dest': '1.1.1.1',
         'nbma_src': '3.3.3.1',
-        'reason': 'EXT ',
+        'reason': 'EXT - Admin action ',
         'vpn_dest': '192.168.10.1',
         'vpn_src': '192.168.10.3',
         'vrf': 'global(0x0)'
@@ -253,7 +253,7 @@ expected_output = {
          "nbma_dest":"3.3.3.1",
          "vpn_dest":"192.168.10.3",
          "vrf":"global(0x0)",
-         "reason":"No Reason"
+         "reason": "NHRP - Hold time expiry"
       },
       "2_2_2_1":{
          "event":"NHRP-NHP-DOWN",
@@ -319,7 +319,7 @@ expected_output = {
          "event":"NHRP-TUNNEL-ENDPOINT-ADD",
          "tunnel":"Tu1",
          "nbma_dest":"1.1.1.1",
-         "vpn_dest":"192.168.10.3"
+         "vpn_dest": "192.168.10.1"
       }
    },
    'nhrp_cache_nbma_nhop_change': {
@@ -364,5 +364,13 @@ expected_output = {
          'vpn_src': '192.168.10.3',
          'vrf': 'global(0x0)',
         }
+   },
+   "nhrp_ctrl_plane_retrance": {
+       "192_168_10_1": {
+           "event": "NHRP-CTRL-PLANE-RETRANS",
+           "tunnel": "Tu1",
+           "vpn_dest": "192.168.10.1",
+           "vrf": "global(0x0)"
+       }
    }
 }

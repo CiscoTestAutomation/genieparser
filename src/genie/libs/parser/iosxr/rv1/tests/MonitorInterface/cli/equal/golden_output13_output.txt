@@ -1,0 +1,14 @@
+RP/0/RSP0/CPU0:R1#monitor interface TenGigE0/0/1/0 FortyGigE0/0/0/0
+Mon Aug 12 06:07:28.287 UTC
+
+R1                   Monitor Time: 00:00:14          SysUptime: 88:43:16
+
+Protocol:General
+Interface             In(bps)      Out(bps)     InBytes/Delta  OutBytes/Delta   InDrops/Delta   OutDrops/Delta
+Te0/0/1/0                 0/  0%        0/  0%    81.1G/305       68.9G/0             0/0             0/0     
+Fo0/0/0/0                 0/  0%        0/  0%    81.2G/0          7.5G/0             0/0             0/0     
+
+Quit='q',     Clear='c',    Freeze='f', Thaw='t',
+Next set='n', Prev set='p', Bytes='y',  Packets='k'
+(General='g', IPv4 Uni='4u', IPv4 Multi='4m', IPv6 Uni='6u', IPv6 Multi='6m')
+RP/0/RSP0/CPU0:R1#  

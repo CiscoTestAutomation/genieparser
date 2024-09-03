@@ -2539,6 +2539,7 @@ class ShowBgpAllNeighborsSchema(MetaParser):
                         Optional('description'): str,
                         'shutdown': bool,
                         Optional('bgp_version'): int,
+                        Optional('peer_group'): str,
                         Optional('router_id'): str,
                         Optional('session_state'): str,
                         Optional('no_prepend'): bool,
@@ -3184,6 +3185,9 @@ class ShowBgpNeighborSuperParser(MetaParser):
 
         # No active TCP connection
         p72 = re.compile(r'^No +active +TCP +connection$')
+
+        # Member of peer-group T2-ASN1.1 for session parameters
+        p73 = re.compile(r'^Member +of +peer-group +(?P<peer_group>(.*)) +for +session +parameters$')
 
         for line in output.splitlines():
 
@@ -4016,6 +4020,12 @@ class ShowBgpNeighborSuperParser(MetaParser):
             m = p72.match(line)
             if m:
                 session_transport_dict['tcp_connection'] = False
+                continue
+
+            # Member of peer-group T2-ASN1.1 for session parameters
+            m = p73.match(line)
+            if m:
+                nbr_dict['peer_group'] = m.groupdict()['peer_group']
                 continue
 
         return ret_dict

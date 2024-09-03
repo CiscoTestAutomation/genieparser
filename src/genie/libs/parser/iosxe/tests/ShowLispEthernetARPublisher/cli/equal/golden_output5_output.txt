@@ -1,0 +1,6 @@
+206-PxTR#show lisp 0 instance-id 101 ethernet publisher
+LISP Publisher Information
+Publisher                               State                          Session          PubSub State
+23.23.23.23                             ETR Map-Server not found       Down             Off
+44.44.44.44                             Reachable                      Up               Established
+100.100.100.100                         Reachable                      Up               Established

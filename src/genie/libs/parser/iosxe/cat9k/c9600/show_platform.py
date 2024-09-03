@@ -10,8 +10,8 @@ IOSXE c9500 parsers for the following show commands:
    * show platform hardware fed switch active fwd-asic resource tcam table pbr record 0 format 0 | begin {nat_region}
    * show platform software fed active fnf record-count asic {asic_num}
    * show platform software fed {switch} active fnf record-count asic {asic_num}
-   * show platform software fed switch standby acl usage | include {acl_name}
-   * show platform software fed switch standby acl usage
+   * show platform software fed switch {switch_num} acl usage | include {acl_name}
+   * show platform software fed switch {switch_num} acl usage
    * show platform hardware fed switch standby fwd-asic resource tcam utilization
    * show platform software bp crimson statistics
 '''
@@ -695,99 +695,6 @@ class ShowPlatformFedSwitchActiveIfmMapping(ShowPlatformFedSwitchActiveIfmMappin
                 continue
         return ret_dict
 
-# =========================================================
-#  Schema for
-#  * 'show platform software fed switch standby acl usage'
-#  * 'show platform software fed switch standby acl usage | include {acl_name}'
-# =========================================================
-class ShowPlatformSoftwareFedSwitchStandbyAclUsageSchema(MetaParser):
-    """Schema for 'show platform software fed switch standby acl usage
-    """
-    schema = {
-        Optional('acl_usage'): {
-            Optional('ace_software'): {
-                 Optional('vmr_max'): int,
-                 Optional('used'): int,
-             },
-            'acl_name': {
-                Any(): {
-                    'direction': {
-                        Any(): {
-                            'feature_type': str,
-                            'acl_type': str,
-                            'entries_used': int,
-                        },
-                    },
-                },
-            },
-        }
-    }
-
-# =========================================================
-#  Parser for
-#  * 'show platform software fed switch standby acl usage'
-#  * 'show platform software fed switch standby acl usage | include {acl_name}'
-# =========================================================
-class ShowPlatformSoftwareFedSwitchStandbyAclUsage(ShowPlatformSoftwareFedSwitchStandbyAclUsageSchema):
-    """
-    Parser for :
-        * show platform software fed switch standby acl usage
-        * show platform software fed switch standby acl usage | include {acl_name}
-    """
-
-    cli_command = ['show platform software fed switch standby acl usage',
-                   'show platform software fed switch standby acl usage | include {acl_name}']
-
-    def cli(self, acl_name="", output=None):
-        if output is None:
-            if acl_name:
-                cmd = self.cli_command[1].format(acl_name=acl_name)
-            else:
-                cmd = self.cli_command[0]
-            output = self.device.execute(cmd)
-
-        # #####  ACE Software VMR max:196608 used:253
-        p1 = re.compile(r'^\#\#\#\#\#\s+ACE\sSoftware\sVMR\smax\:(?P<vmr_max>\d+)\sused\:(?P<used>\d+)$')
-
-        #   RACL        IPV4     Ingress   PBR-DMVPN    92
-        p2 = re.compile(r'^(?P<feature_type>\S+)\s+(?P<acl_type>\S+)\s+(?P<direction>\S+)\s+(?P<name>\S+)\s+(?P<entries_used>\d+)$')
-
-        # initial return dictionary
-        ret_dict ={}
-
-        for line in output.splitlines():
-            line = line.strip()
-
-            acl_usage = ret_dict.setdefault('acl_usage', {})
-
-            # #####  ACE Software VMR max:196608 used:253
-            m = p1.match(line)
-            if m:
-                group = m.groupdict()
-                acl_usage = ret_dict.setdefault('acl_usage', {})
-                ace_software = acl_usage.setdefault('ace_software', {})
-
-                vmr_max = group['vmr_max']
-                ace_software['vmr_max'] = int(vmr_max)
-
-                used = group['used']
-                ace_software['used'] = int(used)
-                continue
-
-            #   RACL        IPV4     Ingress   PBR-DMVPN    92
-            m = p2.match(line)
-            if m:
-                group = m.groupdict()
-                acl_name = acl_usage.setdefault('acl_name', {}).setdefault(
-                    Common.convert_intf_name(group['name']), {})
-                direction = acl_name.setdefault('direction', {}).setdefault(
-                    Common.convert_intf_name(group['direction']), {})
-
-                direction['feature_type'] = group['feature_type']
-                direction['acl_type'] = group['acl_type']
-                direction['entries_used'] = int(group['entries_used'])
-                continue
-        return ret_dict
 
 # =========================================================
 #  Schema for
@@ -1254,8 +1161,8 @@ class ShowPlatformHardwareFedSwitchQosDscpcosCounters(ShowPlatformHardwareFedSwi
 #  * 'show platform software fed switch {switch_num} acl usage'
 #  * 'show platform software fed switch {switch_num} acl usage | include {acl_name}'
 # =========================================================
-class ShowPlatformSoftwareFedSwitchActivEAclUsageSchema(MetaParser):
-    """Schema for 'show platform software fed switch standby acl usage
+class ShowPlatformSoftwareFedSwitchActiveAclUsageSchema(MetaParser):
+    """Schema for 'show platform software fed switch {switch_num} acl usage
     """
     schema = {
         Optional('acl_usage'): {
@@ -1282,7 +1189,7 @@ class ShowPlatformSoftwareFedSwitchActivEAclUsageSchema(MetaParser):
 #  * 'show platform software fed switch {switch_num} acl usage'
 #  * 'show platform software fed switch {switch_num} acl usage | include {acl_name}'
 # =========================================================
-class ShowPlatformSoftwareFedSwitchActivEAclUsage(ShowPlatformSoftwareFedSwitchActivEAclUsageSchema):
+class ShowPlatformSoftwareFedSwitchActiveAclUsage(ShowPlatformSoftwareFedSwitchActiveAclUsageSchema):
     """
     Parser for :
         * show platform software fed switch {switch_num} acl usage

@@ -25,6 +25,7 @@
     * 'show platform hardware fed active fwd-asic traps tm-traps asic 0'
     * 'show platform hardware fed active fwd-asic drops asic 0 slice 0'
     * 'show platform hardware fed switch active fwd-asic drops asic 0 slice 0'
+    * 'show platform hardware fed switch {switch} fwd-asic drops asic {asic}'
 """
 # Python
 import re
@@ -4197,5 +4198,300 @@ class ShowPlatformHardwareRegisterReadAsic(ShowPlatformHardwareRegisterReadAsicS
                 current_ret_dict[parsed["key"]] = parsed["hex"]
 
         return ret_dict
+        
+        
+class ShowPlatformHardwareFedPortPrbscmdSchema(MetaParser):
+    """Schema for show platform hardware fed switch {mode} npu slot 1 port {port_num} prbs_cmd {num}"""
 
+    schema = {        
+        'port': int,
+        Optional('slot'): int,
+        'cmd': str,
+        'rc': str,
+        Optional('rsn'): str, 
+        Optional('reason'): str,                
+   }        
+    
+
+class ShowPlatformHardwareFedPortPrbscmd(ShowPlatformHardwareFedPortPrbscmdSchema):
+    """
+    show platform hardware fed {switch} {mode} npu slot 1 port {port_num} prbs_cmd {num}
+    """
+    
+    cli_command = ['show platform hardware fed {switch} {mode} npu slot 1 port {port_num} prbs_cmd {num}',
+                   'show platform hardware fed {mode} npu slot 1 port {port_num} prbs_cmd {num}']
+
+    def cli(self, mode, port_num, num, switch=None, output=None): 
+
+        if output is None:
+            if switch:                
+                output = self.device.execute(self.cli_command[0].format(switch=switch, mode=mode,port_num=port_num,num=num))
+            else:
+                output = self.device.execute(self.cli_command[1].format(mode=mode,port_num=port_num,num=num))
+                
+
+        ret_dict = {}  
+        
+        # Port = 40 Slot = 1 cmd = () rc = 0x16 reason = (null)
+        p0 = re.compile(r'^Port +\= +(?P<port>\d+) +Slot +\= +(?P<slot>\d+) +cmd +\= +(?P<cmd>\([\s*\w]*\)) +rc +\= +(?P<rc>\w+) +reason(?P<reason>.*)$')
+        
+        # Port = 39 cmd = (prbs_stop unit 0 port 39 slot 1 serdes_level 1 polynomial 31) rc = 0x0 rsn = success
+        p1  =  re.compile(r'^Port +\= +(?P<port>\d+) +cmd +\= +(?P<cmd>\([\s*\w]*\)) +rc +\= +(?P<rc>\w+) +rsn +\= +(?P<rsn>.*)$')
+        
+        
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # Port = 40 Slot = 1 cmd = () rc = 0x16 reason = (null)
+            m = p0.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['port'] = int(group['port'])
+                ret_dict['slot'] = int(group['slot'])                
+                ret_dict['cmd'] = group['cmd']
+                ret_dict['rc'] = group['rc']                
+                ret_dict['reason'] = group['reason']
+                continue
+            
+            # Port = 39 cmd = (prbs_stop unit 0 port 39 slot 1 serdes_level 1 polynomial 31) rc = 0x0 rsn = success
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['port'] = int(group['port'])                
+                ret_dict['cmd'] = group['cmd']
+                ret_dict['rc'] = group['rc']
+                ret_dict['rsn'] = group['rsn']
+                continue   
+                
+        return ret_dict      
+
+class ShowPlatformHardwareFedPrbsPolynomialSchema(MetaParser):
+    """Schema for show platform hardware fed switch {mode} npu slot 1 port {port_num} prbs_polynomial {num}"""
+
+    schema = {        
+        'port': int,
+        Optional('slot'): int,
+        'cmd': str,
+        'rc': str,
+        Optional('rsn'): str, 
+        Optional('reason'): str,                
+   }        
+    
+
+class ShowPlatformHardwareFedPrbsPolynomial(ShowPlatformHardwareFedPrbsPolynomialSchema):
+    """
+    show platform hardware fed switch {mode} npu slot 1 port {port_num} prbs_polynomial {num}
+    """
+    
+    cli_command = ['show platform hardware fed {switch} {mode} npu slot 1 port {port_num} prbs_polynomial {num}',
+                   'show platform hardware fed {mode} npu slot 1 port {port_num} prbs_polynomial {num}']
+
+    def cli(self, mode, port_num, num, switch=None, output=None): 
+
+        if output is None:
+            if  switch:                
+                output = self.device.execute(self.cli_command[0].format(switch=switch, mode=mode,port_num=port_num,num=num))  
+            else:
+                output = self.device.execute(self.cli_command[1].format(mode=mode,port_num=port_num,num=num))                
+
+        ret_dict = {}
+        
+        # Port = 40 Slot = 1 cmd = () rc = 0x16 reason = (null)
+        p0 = re.compile(r'^Port +\= +(?P<port>\d+) +Slot +\= +(?P<slot>\d+) +cmd +\= +(?P<cmd>\([\s\w]*\)) +rc +\= +(?P<rc>\w+) +reason(?P<reason>.*)$')
+        
+        # Port = 39 cmd = (prbs_stop unit 0 port 39 slot 1 serdes_level 1 polynomial 31) rc = 0x0 rsn = success
+        p1  =  re.compile(r'^Port +\= +(?P<port>\d+) +cmd +\= +(?P<cmd>\([\s\w]*\)) +rc +\= +(?P<rc>\w+) +rsn +\= +(?P<rsn>.*)$')
+        
+        
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # Port = 40 Slot = 1 cmd = () rc = 0x16 reason = (null)
+            m = p0.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['port'] = int(group['port'])
+                ret_dict['slot'] = int(group['slot'])                
+                ret_dict['cmd'] = group['cmd']
+                ret_dict['rc'] = group['rc']                
+                ret_dict['reason'] = group['reason']
+                continue
+             
+            # Port = 39 cmd = (prbs_stop unit 0 port 39 slot 1 serdes_level 1 polynomial 31) rc = 0x0 rsn = success
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['port'] = int(group['port'])                
+                ret_dict['cmd'] = group['cmd']
+                ret_dict['rc'] = group['rc']
+                ret_dict['rsn'] = group['rsn']
+                continue   
+                
+        return ret_dict 
+
+class ShowPlatformHardwareFedloopbackSchema(MetaParser):
+    """Schema for show platform hardware fed switch {mode} npu slot 1 port {port_num} loopback {num}"""
+
+    schema = {
+        Optional('npu_pdsf_procagent_config_loopback'): str,
+        Optional('npu_pdsf_port_config_loopback'): str,
+        'port': int,
+        Optional('slot'): int,
+        'cmd': str,
+        'rc': str,
+        Optional('rsn'): str, 
+        Optional('reason'): str,                
+   }        
+    
+
+class ShowPlatformHardwareFedloopback(ShowPlatformHardwareFedloopbackSchema):
+    """
+    show platform hardware fed switch {mode} npu slot 1 port {port_num} loopback {num}
+    """
+    
+    cli_command = ['show platform hardware fed {switch} {mode} npu slot 1 port {port_num} loopback {num}',
+                   'show platform hardware fed {mode} npu slot 1 port {port_num} loopback {num}']
+
+    def cli(self, mode, port_num, num, switch=None, output=None): 
+
+        if output is None:
+            if switch:                
+                output = self.device.execute(self.cli_command[0].format(switch=switch, mode=mode,port_num=port_num,num=num)) 
+            else:
+                output = self.device.execute(self.cli_command[1].format(mode=mode,port_num=port_num,num=num))
+                
+        ret_dict = {}
+        
+        #npu_pdsf_procagent_config_loopback : asic inst 0 port 39 mode 1 command 20
+        p1 =  re.compile(r'^npu_pdsf_procagent_config_loopback\s*\:\s*(?P<npu_pdsf_procagent_config_loopback>.*)$')
+        
+        #npu_pdsf_l1_port_config_loopback [asic 0 port 39 mode 1]: returned 0 ()
+        p2  = re.compile(r'^\w+\s*\[[\s*\w]+\]\:(?P<npu_pdsf_port_config_loopback>.*)$')
+        
+        # Port = 40 Slot = 1 cmd = () rc = 0x16 reason = (null)
+        p3 = re.compile(r'^Port +\= +(?P<port>\d+) +Slot +\= +(?P<slot>\d+) +cmd +\= +(?P<cmd>\([\s*\S]*\)) +rc +\= +(?P<rc>\w+) +reason(?P<reason>.*)$')
+        
+        # Port = 39 cmd = (prbs_stop unit 0 port 39 slot 1 serdes_level 1 polynomial 31) rc = 0x0 rsn = success
+        p4  =  re.compile(r'^Port +\= +(?P<port>\d+) +cmd +\= +(?P<cmd>\([\s*\S]*\)) +rc +\= +(?P<rc>\w+) +rsn +\= +(?P<rsn>.*)$')
+        
+        
+        for line in output.splitlines():
+            line = line.strip()
+            
+            #npu_pdsf_procagent_config_loopback : asic inst 0 port 39 mode 1 command 20
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['npu_pdsf_procagent_config_loopback'] = group['npu_pdsf_procagent_config_loopback']
+                continue
+            
+            #npu_pdsf_l1_port_config_loopback [asic 0 port 39 mode 1]: returned 0 ()
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['npu_pdsf_port_config_loopback'] = group['npu_pdsf_port_config_loopback']
+                continue
+            
+            # Port = 40 Slot = 1 cmd = () rc = 0x16 reason = (null)
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['port'] = int(group['port'])
+                ret_dict['slot'] = int(group['slot'])                
+                ret_dict['cmd'] = group['cmd']
+                ret_dict['rc'] = group['rc']                
+                ret_dict['reason'] = group['reason']
+                continue
+            
+            # Port = 39 cmd = (prbs_stop unit 0 port 39 slot 1 serdes_level 1 polynomial 31) rc = 0x0 rsn = success
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['port'] = int(group['port'])                
+                ret_dict['cmd'] = group['cmd']
+                ret_dict['rc'] = group['rc']
+                ret_dict['rsn'] = group['rsn']
+                continue   
+                
+        return ret_dict
+                
+
+
+
+# ======================================================================
+# Parser for 'show platform hardware fed switch active fwd-asic drops asic 0 '
+# ======================================================================
+
+
+class ShowPlatformHardwareFedSwitchActiveFwdasicdropsasicSchema(MetaParser):
+    """Schema for
+    * show platform hardware fed switch {switch} fwd-asic drops asic {asic}
+    """
+
+    schema = {
+        "counter_index": {
+            int: {
+                "id": int,
+                "counter_name": str,
+                "slice_number": int,
+                "ifg_number": int,
+                "prev_value": int,
+                "current_value": int,
+                "delta": int
+            }
+        }
+    }
+
+
+class ShowPlatformHardwareFedSwitchActiveFwdasicdropsasic(
+    ShowPlatformHardwareFedSwitchActiveFwdasicdropsasicSchema
+):
+    """Parser for
+    * show platform hardware fed switch {switch} fwd-asic drops asic {asic}
+    """
+
+    cli_command = "show platform hardware fed switch {switch} fwd-asic drops asic {asic}"
+
+    def cli(self, switch, asic, output=None):
+        if output is None:
+            if switch:
+                output = self.device.execute(
+                self.cli_command.format(switch=switch, asic=asic)
+            )
+
+        #Note: Slice and IFG showing -1 are global counters
+        #======================================================================================================================================================#
+        #|  #     |                      Counters Name                        |slice_number|   ifg_number  |  prev_value   |  current_value  |     delta      #|
+        #======================================================================================================================================================
+        #|  1    |Fwd drop counter (DSP==1): pkts                             |          -1|             -1|              0|                0|               0|
+        #|  2    |Fwd drop counter (DSP==1): bytes                            |          -1|             -1|              0|                0|               0|
+        #|  3    |RX_METER Slice0 drop_pkts                                   |           0|             -1|              0|                0|               0|
+        #|  4    |FLLB Slice0 drop_pkts                                       |      
+
+        p1 = re.compile(
+            r"^\|+\s+(?P<id>\d+)+\s+\|+(?P<counter_name>[\w\s\_\-\=\(\)\']+)\s+\|+\s*(?P<slice_number>\d+)+\s*\|+\s*(?P<ifg_number>[\d\-]+)+\s*\|+\s+(?P<prev_value>\d+)+\s*\|+\s+(?P<current_value>\d+)+\s*\|+\s+(?P<delta>\d+)+\|$"
+        )
+
+        ret_dict = {}
+        counter_index = 1
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                id_dict = ret_dict.setdefault("counter_index", {}).setdefault(
+                    counter_index, {}
+                )
+                id_dict["id"] = int(group["id"].strip())
+                id_dict["counter_name"] = group["counter_name"].strip()
+                id_dict["slice_number"] = int(group["slice_number"])
+                id_dict["ifg_number"] = int(group["ifg_number"])
+                id_dict["prev_value"] = int(group["prev_value"])
+                id_dict["current_value"] = int(group["current_value"])
+                id_dict["delta"] = int(group["delta"])
+                counter_index += 1
+
+        return ret_dict
 

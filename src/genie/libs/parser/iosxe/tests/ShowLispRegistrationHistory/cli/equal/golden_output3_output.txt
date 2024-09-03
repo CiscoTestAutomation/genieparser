@@ -1,0 +1,16 @@
+show lisp instance-id 1 ipv4 server registration-history
+Map-Server registration history
+Roam = Did host move to a new location?
+WLC = Did registration come from a Wireless Controller?
+Prefix qualifier: + = Register Event, - = Deregister Event, * = AR register event
+
+Timestamp (EDT)      Instance Proto Roam WLC Source
+                                             EID prefix / Locator
+Jul 30 20:11:05.927         1 TCP   No   No  7.255.0.1
+                                           + 25.0.29.26/32
+Jul 30 20:11:05.927         1 TCP   No   No  7.255.0.1
+                                           + 25.0.29.23/32
+Jul 30 20:11:05.927         1 TCP   No   No  7.255.0.1
+                                           + 25.0.29.22/32
+Jul 30 20:11:05.927         1 TCP   No   No  7.255.0.1
+                                           + 25.0.29.21/32

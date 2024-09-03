@@ -1166,13 +1166,15 @@ class ShowMonitorEventTraceDmvpnAll(ShowMonitorEventTraceDmvpnAllSchema):
             r"(?P<event>NHRP-NHC-UP) tunnel: (?P<tunnel>[A-z0-9]+) NHC up "
             r"nbma_src: (?P<nbma_src>[0-9.]+) vpn_src: (?P<vpn_src>[0-9.]+) "
             r"nbma_dest: (?P<nbma_dest>[0-9.]+) vpn_dest: "
-            r"(?P<vpn_dest>[0-9.]+) vrf: (?P<vrf>[a-z0()]+)")
+            r"(?P<vpn_dest>[0-9.]+) vrf: (?P<vrf>[A-Za-z0()]+)")
 
         '''*Jun 22 06:39:28.362: NHRP-TUNNEL-ENDPOINT-ADD tunnel: Tu1 Added 
-            tunnel endpoints nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3'''        
+            tunnel endpoints nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3'''
+        '''*Jul 27 07: 30: 25.534: NHRP-TUNNEL-ENDPOINT-ADD tunnel: Tu1 add/update 
+            tunnel endpoints nbma_dest: 1.1.1.1 vpn_dest: 192.168.10.1'''
         p2 = re.compile(r"\*(?P<time_stamp>[A-z0-9\s\d:.]+) "
             r"(?P<event>NHRP-TUNNEL-ENDPOINT-ADD) tunnel: "
-            r"(?P<tunnel>[A-z0-9]+) Added tunnel endpoints nbma_dest: "
+            r"(?P<tunnel>[A-z0-9]+) ([A-za-z/]+) tunnel endpoints nbma_dest: "
             r"(?P<nbma_dest>[0-9.]+) vpn_dest: (?P<vpn_dest>[0-9.]+)")
 
         '''*Jun 22 06:39:28.930: NHRP-NHS-UP tunnel: Tu1 NHS up nbma_src: 
@@ -1182,7 +1184,7 @@ class ShowMonitorEventTraceDmvpnAll(ShowMonitorEventTraceDmvpnAllSchema):
             r"(?P<event>NHRP-NHS-UP) tunnel: (?P<tunnel>[A-z0-9]+) NHS up "
             r"nbma_src: (?P<nbma_src>[0-9.]+) vpn_src: (?P<vpn_src>[0-9.]+) "
             r"nbma_dest: (?P<nbma_dest>[0-9.]+) vpn_dest: "
-            r"(?P<vpn_dest>[0-9.]+) vrf: (?P<vrf>[a-z0()]+)")
+            r"(?P<vpn_dest>[0-9.]+) vrf: (?P<vrf>[A-Za-z0()]+)")
 
         '''*Jun 22 06:51:10.254: NHRP-RECV-RES-REQ tunnel: Tu1 host with
             nbma_src: 1.1.1.1 vpn_src: 192.168.10.3 received resolution 
@@ -1193,7 +1195,7 @@ class ShowMonitorEventTraceDmvpnAll(ShowMonitorEventTraceDmvpnAllSchema):
             r"with nbma_src: (?P<nbma_src>[0-9.]+) vpn_src: "
             r"(?P<vpn_src>[0-9.]+) received resolution request from nbma_dest: "
             r"(?P<nbma_dest>[0-9.]+) vpn_dest: (?P<vpn_dest>[0-9.]+) vrf: "
-            r"(?P<vrf>[a-z0()]+) label: (?P<label>[a-z]+)")
+            r"(?P<vrf>[A-Za-z0()]+) label: (?P<label>[a-z]+)")
 
         '''*Jun 23 12:56:43.560: NHRP-SEND-RES-REQ tunnel: Tu1 host with 
             nbma_src: 2.2.2.1 vpn_src: 192.168.10.2 send resolution request 
@@ -1204,7 +1206,7 @@ class ShowMonitorEventTraceDmvpnAll(ShowMonitorEventTraceDmvpnAllSchema):
             r"with nbma_src: (?P<nbma_src>[0-9.]+) vpn_src: "
             r"(?P<vpn_src>[0-9.]+) send resolution request to nbma_dest: "
             r"(?P<nbma_dest>[0-9.]+) vpn_dest: (?P<vpn_dest>[0-9.]+) vrf: "
-            r"(?P<vrf>[a-z0()]+) label: (?P<label>[a-z]+)")
+            r"(?P<vrf>[A-Za-z0()]+) label: (?P<label>[a-z]+)")
 
         '''*Jun 23 12:56:43.568: NHRP-RECV-RES-REPLY tunnel: Tu1 host with 
             nbma_src: 2.2.2.1 vpn_src: 192.168.10.2 received resolution reply 
@@ -1215,7 +1217,7 @@ class ShowMonitorEventTraceDmvpnAll(ShowMonitorEventTraceDmvpnAllSchema):
             r"host with nbma_src: (?P<nbma_src>[0-9.]+) vpn_src: "
             r"(?P<vpn_src>[0-9.]+) received resolution reply from nbma_dest: "
             r"(?P<nbma_dest>[0-9.]+) vpn_dest: (?P<vpn_dest>[0-9.]+) vrf: "
-            r"(?P<vrf>[a-z0()]+) label: (?P<label>[a-z]+)")
+            r"(?P<vrf>[A-Za-z0()]+) label: (?P<label>[a-z]+)")
 
         '''*Jun 23 12:56:43.712: NHRP-SEND-RES-REPLY tunnel: Tu1 host with 
             nbma_src: 3.3.3.1 vpn_src: 192.168.10.3 send resolution reply to 
@@ -1226,7 +1228,7 @@ class ShowMonitorEventTraceDmvpnAll(ShowMonitorEventTraceDmvpnAllSchema):
             r"host with nbma_src: (?P<nbma_src>[0-9.]+) vpn_src: "
             r"(?P<vpn_src>[0-9.]+) send resolution reply to nbma_dest: "
             r"(?P<nbma_dest>[0-9.]+) vpn_dest: (?P<vpn_dest>[0-9.]+) vrf: "
-            r"(?P<vrf>[a-z0()]+) label: (?P<label>[a-z]+)")
+            r"(?P<vrf>[A-Za-z0()]+) label: (?P<label>[a-z]+)")
 
         '''*Jun 22 07:02:43.481: NHRP-RECV-PURGE-REQ tunnel: Tu1 host 
             with nbma_src: 1.1.1.1 vpn_src: 192.168.10.1 receive purge 
@@ -1237,7 +1239,7 @@ class ShowMonitorEventTraceDmvpnAll(ShowMonitorEventTraceDmvpnAllSchema):
             r"host with nbma_src: (?P<nbma_src>[0-9.]+) vpn_src: "
             r"(?P<vpn_src>[0-9.]+) receive purge request from nbma_dest: "
             r"(?P<nbma_dest>[0-9.]+) vpn_dest: (?P<vpn_dest>[0-9.]+) vrf: "
-            r"(?P<vrf>[a-z0()]+) label: (?P<label>[a-z-]+)")
+            r"(?P<vrf>[A-Za-z0()]+) label: (?P<label>[a-z-]+)")
 
         '''*Jun 22 07:06:10.841: NHRP-SEND-PURGE-REQ tunnel: Tu1 host with 
             nbma_src: 3.3.3.1 vpn_src: 0.0.0.0 send purge request to nbma_dest: 
@@ -1247,7 +1249,7 @@ class ShowMonitorEventTraceDmvpnAll(ShowMonitorEventTraceDmvpnAllSchema):
             r"host with nbma_src: (?P<nbma_src>[0-9.]+) vpn_src: "
             r"(?P<vpn_src>[0-9.]+) send purge request to nbma_dest: "
             r"(?P<nbma_dest>[A-Z0-9.]+) vpn_dest: (?P<vpn_dest>[0-9.]+) "
-            r"vrf: (?P<vrf>[a-z0()]+) label: (?P<label>[a-z]+)")
+            r"vrf: (?P<vrf>[A-Za-z0()]+) label: (?P<label>[a-z]+)")
 
         '''NHRP-NHC-DOWN tunnel: Tu1 NHC down nbma_src: 1.1.1.1 vpn_src: 
             192.168.10.1 nbma_dest: 2.2.2.1 vpn_dest: 192.168.10.2 vrf: 
@@ -1256,7 +1258,7 @@ class ShowMonitorEventTraceDmvpnAll(ShowMonitorEventTraceDmvpnAllSchema):
             r"(?P<event>NHRP-NHC-DOWN) tunnel: (?P<tunnel>[A-z0-9]+) NHC down "
             r"nbma_src: (?P<nbma_src>[0-9.]+) vpn_src: (?P<vpn_src>[0-9.]+) "
             r"nbma_dest: (?P<nbma_dest>[0-9.]+) vpn_dest: "
-            r"(?P<vpn_dest>[0-9.]+) vrf: (?P<vrf>[a-z0()]+) reason: "
+            r"(?P<vpn_dest>[0-9.]+) vrf: (?P<vrf>[A-Za-z0()]+) reason: "
             r"(?P<reason>[A-z\s-]+)")
 
         '''*Jun 22 08:56:36.794: NHRP-TUNNEL-ENDPOINT-DELETE tunnel: 
@@ -1270,42 +1272,51 @@ class ShowMonitorEventTraceDmvpnAll(ShowMonitorEventTraceDmvpnAllSchema):
         '''*Jun 22 08:59:28.070: NHRP-NHS-DOWN tunnel: Tu1 NHS down 
             nbma_src: 2.2.2.1 vpn_src: 192.168.10.2 nbma_dest: 1.1.1.1 
             vpn_dest: 192.168.10.1 vrf: global(0x0) reason: NHRP - 
-            Registration Failure'''        
+            Registration Failure'''
         p13 = re.compile(r"\*(?P<time_stamp>[A-z0-9\s\d:.]+) "
             r"(?P<event>NHRP-NHS-DOWN) tunnel: (?P<tunnel>[A-z0-9]+) NHS "
             r"down nbma_src: (?P<nbma_src>[0-9.]+) vpn_src: "
             r"(?P<vpn_src>[0-9.]+) nbma_dest: (?P<nbma_dest>[0-9.]+) "
-            r"vpn_dest: (?P<vpn_dest>[0-9.]+) vrf: (?P<vrf>[a-z0()]+) "
+            r"vpn_dest: (?P<vpn_dest>[0-9.]+) vrf: (?P<vrf>[A-Za-z0()]+) "
             r"reason: (?P<reason>[A-z\s-]+)")
 
         '''*Jun 22 08:59:28.071: NHRP-NHS-RECOVERY-NHS-STATE  NHS vpn_dest: 
             192.168.10.1 Tunnel1 vrf 0 cluster 0 priority 0 transitioned to 
-            'expecting replies' from 'responding expecting replies'''        
+            'expecting replies' from 'responding expecting replies'''
+        '''*Jul 27 07: 30: 34.496: NHRP-NHS-RECOVERY-NHS-STATE  NHS vpn_dest: 192.168.10.1 
+            Tunnel1 vrf: global(0x0) cluster 0 priority 0 transitioned to 'responding 
+            expecting replies' from 'expecting replies'''
         p14 = re.compile(r"\*(?P<time_stamp>[A-z0-9\s\d:.]+) "
             r"(?P<event>NHRP-NHS-RECOVERY-NHS-STATE)  NHS vpn_dest: "
-            r"(?P<vpn_dest>[0-9.]+) Tunnel1 vrf (?P<vrf>[0-9]+) cluster "
+            r"(?P<vpn_dest>[0-9.]+) ([A-z0-9]+) ([a-z:]+) (?P<vrf>[A-Za-z0()]+) cluster "
             r"(?P<cluster>[0-9]+) priority (?P<priority>[0-9]+) transitioned "
-            r"to 'expecting replies' from 'responding expecting replies'")
+            r"to ([a-z' ]+)")
 
         '''*Jun 22 08:59:56.133: NHRP-CTRL-PLANE-RETRANS tunnel: Tu1 
             retransmitting registration request for vpn_dest: 192.168.10.1 
-            reqid 2819 retrans ivl 2 sec vrf: NONE label: explicit-null'''        
+            reqid 2819 retrans ivl 2 sec vrf: NONE label: explicit-null'''
+        '''*Aug 14 05: 06: 47.622: NHRP-CTRL-PLANE-RETRANS tunnel: Tu1 
+           retransmitting Registration Request for vpn_dest: 192.168.10.1 reqid 
+           4 retrans 2 sec vrf: global (0x0) label: explicit-null'''
         p15 = re.compile(r"\*(?P<time_stamp>[A-z0-9\s\d:.]+) "
             r"(?P<event>NHRP-CTRL-PLANE-RETRANS) tunnel: "
-            r"(?P<tunnel>[A-z0-9]+) retransmitting registration request for "
-            r"vpn_dest: (?P<vpn_dest>[0-9.]+) reqid (?P<reqid>[0-9]+) retrans "
-            r"ivl (?P<ivl>[0-9]+) sec vrf: (?P<vrf>[A-Za-z0()]+) label: "
+            r"(?P<tunnel>[A-z0-9]+) retransmitting ([A-za-z]+) ([A-za-z]+) for "
+            r"vpn_dest: (?P<vpn_dest>[0-9.]+) reqid (?P<reqid>[0-9]+) ([a-z ]+) "
+            r"(?P<ivl>[0-9]+) sec vrf: (?P<vrf>[A-Za-z0()]+) label: "
             r"(?P<label>[a-z-]+)")
 
         '''*Jun 23 13:51:22.428: NHRP-NHP-DOWN tunnel: Tu1 NHP down 
             nbma_src: 2.2.2.1 vpn_src: 192.168.10.2 nbma_dest: 3.3.3.1 
-            vpn_dest: 192.168.10.3 vrf: global(0x0) reason: No Reason'''        
+            vpn_dest: 192.168.10.3 vrf: global(0x0) reason: No Reason'''
+        '''*Aug 15 13: 59: 48.248: NHRP-NHP-DOWN tunnel: Tu1 NHP down nbma_src: 
+            2.2.2.1 vpn_src: 192.168.10.2 nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3 
+            vrf: global (0x0) reason: NHRP - Hold time expiry'''
         p18 = re.compile(r"\*(?P<time_stamp>[A-z0-9\s\d:.]+) "
             r"(?P<event>NHRP-NHP-DOWN) tunnel: (?P<tunnel>[A-z0-9]+) NHP down "
             r"nbma_src: (?P<nbma_src>[0-9.]+) vpn_src: (?P<vpn_src>[0-9.]+) "
             r"nbma_dest: (?P<nbma_dest>[0-9.]+) vpn_dest: "
-            r"(?P<vpn_dest>[0-9.]+) vrf: (?P<vrf>[a-z0()]+) reason: "
-            r"(?P<reason>[A-z\s]+)")
+            r"(?P<vpn_dest>[0-9.]+) vrf: (?P<vrf>[A-Za-z0()]+) reason: "
+            r"(?P<reason>[A-z\s-]+)")
 
         '''*Jun 24 09:09:36.455: NHRP-CACHE-DELETE tunnel: Tu1 nbma_src: 
             1.1.1.1 vpn_src: 192.168.10.1 nbma_dest: 2.2.2.1 vpn_dest: 
@@ -1315,7 +1326,7 @@ class ShowMonitorEventTraceDmvpnAll(ShowMonitorEventTraceDmvpnAllSchema):
             r"(?P<event>NHRP-CACHE-DELETE) tunnel: (?P<tunnel>[A-z0-9]+) "
             r"nbma_src: (?P<nbma_src>[0-9.]+) vpn_src: (?P<vpn_src>[0-9.]+) "
             r"nbma_dest: (?P<nbma_dest>[0-9.]+) vpn_dest: "
-            r"(?P<vpn_dest>[0-9.]+) vrf: (?P<vrf>[a-z0()]+) label: "
+            r"(?P<vpn_dest>[0-9.]+) vrf: (?P<vrf>[A-Za-z0()]+) label: "
             r"(?P<label>[a-z-]+) reason: (?P<reason>[A-z\s-]+)")
 
         '''*Jun 26 18:38:52.148: NHRP-CACHE-UPDATE tunnel: Tu1 target: 
@@ -1325,7 +1336,7 @@ class ShowMonitorEventTraceDmvpnAll(ShowMonitorEventTraceDmvpnAllSchema):
             r"(?P<event>NHRP-CACHE-UPDATE) tunnel: (?P<tunnel>[A-z0-9]+) "
             r"target: (?P<target>[0-9.]+) nbma_src: (?P<nbma_src>[0-9.]+) "
             r"vpn_src: (?P<vpn_src>[0-9.]+) nbma_dest: (?P<nbma_dest>[0-9.]+) "
-            r"vpn_dest: (?P<vpn_dest>[0-9.]+) vrf: (?P<vrf>[a-z0()]+) label: "
+            r"vpn_dest: (?P<vpn_dest>[0-9.]+) vrf: (?P<vrf>[A-Za-z0()]+) label: "
             r"(?P<label>[a-z-]+)")
 
         '''*Jun 27 17:48:34.466: NHRP-CACHE-NBMA-NHOP-CHANGE tunnel: Tu1 
@@ -1344,7 +1355,7 @@ class ShowMonitorEventTraceDmvpnAll(ShowMonitorEventTraceDmvpnAllSchema):
             r"host with nbma_src: (?P<nbma_src>[0-9.]+) vpn_src: "
             r"(?P<vpn_src>[0-9.]+) receive purge reply from nbma_dest: "
             r"(?P<nbma_dest>[0-9.]+) vpn_dest: (?P<vpn_dest>[0-9.]+) vrf: "
-            r"(?P<vrf>[a-z0()]+) label: (?P<label>[a-z]+)")
+            r"(?P<vrf>[A-Za-z0()]+) label: (?P<label>[a-z]+)")
 
         '''*Jul  2 16:30:55.263: NHRP-SEND-PURGE-REPLY tunnel: Tu1  host 
             with nbma_src: 3.3.3.1 vpn_src: 192.168.10.3 send purge reply 
@@ -1355,7 +1366,7 @@ class ShowMonitorEventTraceDmvpnAll(ShowMonitorEventTraceDmvpnAllSchema):
             r"host with nbma_src: (?P<nbma_src>[0-9.]+) vpn_src: "
             r"(?P<vpn_src>[0-9.]+) send purge reply to nbma_dest: "
             r"(?P<nbma_dest>[0-9.]+) vpn_dest: (?P<vpn_dest>[0-9.]+) vrf: "
-            r"(?P<vrf>[a-z0()]+) label: (?P<label>[a-z]+)")
+            r"(?P<vrf>[A-Za-z0()]+) label: (?P<label>[a-z]+)")
 
         for line in output.splitlines():
             line = line.strip()
@@ -1404,6 +1415,8 @@ class ShowMonitorEventTraceDmvpnAll(ShowMonitorEventTraceDmvpnAllSchema):
 
             '''*Jun 22 06:39:28.362: NHRP-TUNNEL-ENDPOINT-ADD tunnel: Tu1 Added 
             tunnel endpoints nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3'''
+            '''*Jul 27 07: 30: 25.534: NHRP-TUNNEL-ENDPOINT-ADD tunnel: Tu1 add/update 
+                tunnel endpoints nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3'''
             if m:= p2.match(line):
                 groups = m.groupdict()
                 dest = groups['nbma_dest'].replace(".","_")
@@ -1640,6 +1653,9 @@ class ShowMonitorEventTraceDmvpnAll(ShowMonitorEventTraceDmvpnAllSchema):
             '''*Jun 22 08:59:28.071: NHRP-NHS-RECOVERY-NHS-STATE  NHS vpn_dest: 
             192.168.10.1 Tunnel1 vrf 0 cluster 0 priority 0 transitioned to 
             'expecting replies' from 'responding expecting replies'''
+            '''*Jul 27 07: 30: 34.496: NHRP-NHS-RECOVERY-NHS-STATE  NHS vpn_dest: 192.168.10.1 
+            Tunnel1 vrf: global (0x0) cluster 0 priority 0 transitioned to 'responding 
+            expecting replies' from 'expecting replies'''
             if m:= p14.match(line):
                 groups = m.groupdict()
                 dest = groups['vpn_dest'].replace(".","_")
@@ -1656,6 +1672,9 @@ class ShowMonitorEventTraceDmvpnAll(ShowMonitorEventTraceDmvpnAllSchema):
             '''*Jun 22 08:59:56.133: NHRP-CTRL-PLANE-RETRANS tunnel: Tu1 
             retransmitting registration request for vpn_dest: 192.168.10.1 
             reqid 2819 retrans ivl 2 sec vrf: NONE label: explicit-null'''
+            '''*Aug 14 05: 06: 47.622: NHRP-CTRL-PLANE-RETRANS tunnel: Tu1 
+           retransmitting Registration Request for vpn_dest: 192.168.10.1 reqid 
+           4 retrans 2 sec vrf: global (0x0) label: explicit-null'''
             if m:= p15.match(line):
                 groups = m.groupdict()
                 dest = groups['vpn_dest'].replace(".","_")

@@ -2252,7 +2252,14 @@ class ShowCtsInterfaceSchema(MetaParser):
                     'authz_fail': int,
                     'port_auth_fail': int
                 },
-                'l3_ipm': str
+                'l3_ipm': str,
+                Optional('vlan_sgt_map'): {
+                    Any(): {
+                        'index': int,
+                        'vlan': int,
+                        'sgt': int,
+                    },
+                }
             },
         }
     }
@@ -2355,6 +2362,8 @@ class ShowCtsInterface(ShowCtsInterfaceSchema):
 
         # L3_IPM:   disabled.
         p26 = re.compile(r'^L3 IPM:\s+(?P<l3_ipm>\S+).')
+
+        p27 = re.compile(r'Index\s+:\s+(?P<index>\d+)\s+Vlan\s+:\s+(?P<vlan>\d+)\s+SGT\s+:\s+(?P<sgt>\d+)')
 
         for line in output.splitlines():
             line = line.strip()
@@ -2538,6 +2547,20 @@ class ShowCtsInterface(ShowCtsInterfaceSchema):
                 group = m.groupdict()
                 l3_ipm = group['l3_ipm']
                 intf_dict['l3_ipm'] = l3_ipm
+
+            # Vlan sgt-map 
+            # Index : 0   Vlan : 200 SGT : 65200
+            # Index : 1   Vlan : 100 SGT : 65
+            m = p27.match(line)
+            if m:
+                group = m.groupdict()
+                index = int(group['index'])
+                intf_dict.setdefault('vlan_sgt_map', {})
+                intf_dict['vlan_sgt_map'][index] = {
+                    'index': index,
+                    'vlan': int(group['vlan']),
+                    'sgt': int(group['sgt']),
+                }
 
         return ret_dict
 

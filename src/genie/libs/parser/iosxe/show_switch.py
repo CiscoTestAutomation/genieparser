@@ -136,3 +136,50 @@ class ShowSwitchStackPorts(ShowSwitchStackPortsSchema):
                 continue
 
         return ret_dict
+
+class ShowSwitchStackBandwidthSchema(MetaParser):
+    """Schema for show switch stack-bandwidth"""
+
+    schema = {
+        'switch': {
+            Any(): {
+                'role': str,
+                'stack_bw': str,
+                'current_state': str,
+            },
+        },
+    }
+
+
+class ShowSwitchStackBandwidth(ShowSwitchStackBandwidthSchema):
+    """Parser for show switch stack-bandwidth"""
+
+    cli_command = 'show switch stack-bandwidth'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # *1       Active    160G        Ready
+        #  2       Standby    N/A        Removed
+        p1 = re.compile(
+            r"\*?(?P<sw_no>\d+)\s+(?P<role>\w+)\s+(?P<stack_bw>[\w\/]+)\s+(?P<current_state>\w+)$")
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+            # *1       Active    160G        Ready
+            #  2       Standby    N/A        Removed
+            m = p1.match(line)
+            if m:
+                dict_val = m.groupdict()
+                sw_no_var = int(dict_val['sw_no'])
+                ret_dict.setdefault('switch', {})
+                sw_no_dict = ret_dict['switch'].setdefault(sw_no_var, {})
+                sw_no_dict['role'] = dict_val['role']
+                sw_no_dict['stack_bw'] = dict_val['stack_bw']
+                sw_no_dict['current_state'] = dict_val['current_state']
+                continue
+            
+        return ret_dict

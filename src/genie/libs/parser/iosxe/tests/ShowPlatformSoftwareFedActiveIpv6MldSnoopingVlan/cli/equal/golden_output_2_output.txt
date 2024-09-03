@@ -1,0 +1,16 @@
+Vlan: 13
+------------
+	MCID           : 2113
+	GID            : 8198
+	Snoop State     : ON
+	STP TCN State   : OFF
+	Flood Mode      : OFF
+	Pim state       : ON
+	Evpn Proxy      : OFF
+	Remote port count: 0
+	Group dependency Count  : 4000
+	Mrouter ports   :
+		port:Port-channel95 (ec_member:HundredGigE2/0/3) (group_oif:0) (mrouter_flag:1)
+		(hw_flag:1) (remote_set:0)
+	Flood ports     :
+		Port-channel95

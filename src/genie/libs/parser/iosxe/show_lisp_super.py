@@ -1054,7 +1054,7 @@ class ShowLispPublisherSuperParser(ShowLispPublisherSchema):
         # 101.101.101.101             No ETR MS                  Down    ?     Established
         p2 = re.compile(r'^(?P<publisher_ip>[\da-fA-F\.:]+)\s+(?P<state>ETR Map-Server '
                         r'not found|ETR Map-Server|Unreachable|Reachable|No ETR MS)\s+'
-                        r'(?P<session>\w+)\s+((?P<type>L|T|S|\?)\s+)?(?P<pubsub_state>\w+)$')
+                        r'(?P<session>\w+)\s+((?P<type>L|T|S|\?)\s+)?(?P<pubsub_state>.+)$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -2034,7 +2034,7 @@ class ShowLispIpMapCachePrefixSuperParser(ShowLispIpMapCachePrefixSchema):
 
         # 101.101.101.101  02:26:35  up           1/100       -             1/2           -
         # 45.45.45.45  00:00:04  up, self    10/50   111                 3/3      0
-        p9 = re.compile(r"^(?P<locators>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|[a-fA-F\d\:]+)\s+"
+        p9 = re.compile(r"^(?P<locators>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|[a-fA-F\d\:]+|[a-fA-F\d\.]+)\s+"
                         r"(?P<uptime>\S+)\s+(?P<state>\S+)(,\s+self)?\s+"
                         r"(?P<priority>\d+)\/(?P<weight>\d+)\s+(?P<encap_iid>\S+)|\s+"
                         r"(?P<domain_id>\d+)\/(?P<multihome_id>\d+)\s+(?P<metric>\S+)$")

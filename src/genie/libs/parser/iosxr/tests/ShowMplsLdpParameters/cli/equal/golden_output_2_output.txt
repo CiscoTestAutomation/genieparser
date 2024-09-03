@@ -1,0 +1,35 @@
+RP/0/RP0/CPU0:xr9kv-1#show mpls ldp parameters 
+Fri Aug 16 08:37:06.055 UTC
+
+LDP Parameters:
+  Role: Active
+  Protocol Version: 1
+  Router ID: 2.2.2.2
+  Null Label:
+    IPv4: Implicit
+  Session:
+    Hold time: 180 sec
+    Keepalive interval: 60 sec
+    Backoff: Initial:15 sec, Maximum:120 sec
+    Global MD5 password: Enabled
+  Discovery:
+    Link Hellos:     Holdtime:15 sec, Interval:5 sec
+    Targeted Hellos: Holdtime:90 sec, Interval:10 sec
+    Quick-start: Enabled (by default)
+    Transport address:
+      IPv4: 2.2.2.2
+  Graceful Restart:
+    Enabled
+    Reconnect Timeout:120 sec, Forwarding State Holdtime:180 sec
+  NSR: Enabled, Not Sync-ed
+  Timeouts:
+    Housekeeping periodic timer: 10 sec
+    Local binding: 300 sec
+    Forwarding state in LSD: 360 sec
+  Delay in AF Binding Withdrawl from peer: 180 sec
+  Max:
+    4300 interfaces (4000 attached, 300 TE tunnel), 2000 peers
+  OOR state
+    Memory: Normal
+  IGP sync delay: 
+    Interface up: 20 sec

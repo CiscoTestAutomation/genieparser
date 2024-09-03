@@ -11,6 +11,7 @@ import warnings
 import importlib
 import pkg_resources
 from packaging import version
+from inspect import getfullargspec
 from json.decoder import JSONDecodeError
 
 from pyats.log.utils import banner
@@ -201,7 +202,7 @@ def get_parser_exclude(command, device):
         return []
 
 
-def get_parser(command, device, fuzzy=False, abstract=None):
+def get_parser(command, device, fuzzy=False, abstract=None, **kwargs):
     '''From a show command and device, return parser class and kwargs if any'''
     global parser_data
 
@@ -209,7 +210,7 @@ def get_parser(command, device, fuzzy=False, abstract=None):
         data = _load_parser_json()
     else:
         data = parser_data
-        
+
     # get tokens from device including specific ones for genie.libs.parser
     tokens = Lookup.tokens_from_device(device, data.order, PARSER_MODULE_NAME)
     if abstract:
@@ -254,10 +255,15 @@ def get_parser(command, device, fuzzy=False, abstract=None):
         # valid_results is a list of found parsers for a given show command
         #  - first element in this list is the closest parser match found
         #  - each element has the format (show command, class, kwargs)
+        # valid_results[0][0] is the matched command string from the parser cli_command
         # valid_results[0][1] is the class of the best match
         # valid_results[0][2] is a dict of parser kwargs
         parser_class = valid_results[0][1]
         parser_kwargs = valid_results[0][2]
+        spec = getfullargspec(parser_class.cli)
+        if 'command' in spec.args:
+            cmd = valid_results[0][0]
+            parser_kwargs['command'] = cmd.format(**parser_kwargs)
         log.debug(f'Parser class: {parser_class} arguments: {parser_kwargs}')
         return parser_class, parser_kwargs
 

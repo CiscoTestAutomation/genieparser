@@ -1,0 +1,7 @@
+xtr11#sh lisp locator-table default in 4100 ipv4 subscription 192.168.1.3/32
+LISP EID Subscriptions for LISP 0 EID-table N/A (IID 4100), 1 entries
+192.168.1.3/32, Uptime: 02:00:14, Last-change: 02:00:14 
+Source: remote-eid
+Map-server                              State                          
+100.44.44.44                            Subs Acked                     
+100.55.55.55                            Subs Acked

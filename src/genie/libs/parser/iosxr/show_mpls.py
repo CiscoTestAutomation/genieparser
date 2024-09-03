@@ -2121,6 +2121,9 @@ class ShowMplsLdpParametersSchema(MetaParser):
             "oor-state": {
                 "oor-memory": str
             },
+            Optional("igp-sync-delay"): {
+                "interface-up-time-sec": int
+            },
         },
     }
 
@@ -2214,7 +2217,8 @@ class ShowMplsLdpParameters(ShowMplsLdpParametersSchema):
             r' +Forwarding +State +Holdtime:(?P<forwarding_state_holdtime_seconds>\d+) +sec$')
 
         # NSR: Enabled, Sync-ed
-        p21 = re.compile(r'^NSR: +(?P<nsr_value>\w+)(, +(?P<synced_value>Sync-ed))?$')
+        # NSR: Enabled, Not Sync-ed
+        p21 = re.compile(r'^NSR: +(?P<nsr_value>\w+)(, +(?P<synced_value>Sync-ed|Not Sync-ed))?$')
 
         # Timeouts:
         p22 = re.compile(r'^Timeouts:$')
@@ -2250,6 +2254,12 @@ class ShowMplsLdpParameters(ShowMplsLdpParametersSchema):
         # Memory: Normal
         p30 = re.compile(
             r'^Memory: +(?P<oor_memory_value>(Normal|Major|Critical))$')
+
+        # IGP sync delay:
+        p31 = re.compile(r'^IGP +sync +delay:$')
+
+        # Interface up: 20 sec
+        p32 = re.compile(r'^Interface +up: +(?P<interface_up_time>\d+) +sec$')
 
         # Looping through each line
         for line in out.splitlines():
@@ -2487,6 +2497,19 @@ class ShowMplsLdpParameters(ShowMplsLdpParametersSchema):
             if m:
                 group = m.groupdict()
                 oor_state_dict['oor-memory'] = group['oor_memory_value']
+                continue
+
+            # IGP sync delay:
+            m = p31.match(line)
+            if m:
+                interface_up_time_dict = parameters_dict.setdefault('igp-sync-delay', {})
+                continue
+
+            # Interface up: 20 sec
+            m = p32.match(line)
+            if m:
+                group = m.groupdict()
+                interface_up_time_dict['interface-up-time-sec'] = int(group['interface_up_time'])
                 continue
 
         return ret_dict

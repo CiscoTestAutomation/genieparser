@@ -78,6 +78,14 @@ class ShowVersionSchema(MetaParser):
                     },
                     Optional('license_level'): str,
                     Optional('next_reload_license_level'): str,
+                    Optional('defect_id'): {
+                        Any(): {
+                            Optional('type'): str,
+                            Optional('sum_version'): str,
+                            Optional('state'): str,
+                            Optional('file_name'): str,
+                        }
+                    },
                     'smart_licensing_status': str,
                     Optional('number_of_intfs'): {
                         Any(): str,
@@ -162,6 +170,11 @@ class ShowVersion(ShowVersionSchema):
 
         # AIR License Level: AIR DNA Advantage
         p11 = re.compile(r'^AIR +License +Level: +(?P<license_level>.+)$')
+
+        # SMU   CSCvz54210   17.03.03. C  cat9k_iosxe.17.03.03.CSCvz54210.SPA.smu.bin  
+        # SMU   CSCwc80043   17.03.03. C  cat9k_iosxe.17.03.03.CSCwc80043.SPA.smu.bin  
+        # SMU   CSCwh29778   17.03.03. C  cat9k_iosxe.17.03.03.CSCwh29778.SPA.smu.bin
+        p12_1 = re.compile(r'^(?P<type1>\w+) +(?P<defect_id>\S+) +(?P<sum_version>[\w.]+) +(?P<state>C|U) +(?P<file_name>\S+)$')
 
         # Next reload AIR license Level: AIR DNA Advantage
         p12 = re.compile(r'^Next +reload +AIR +license +Level: +(?P<next_reload_license_level>.+)$')
@@ -345,6 +358,20 @@ class ShowVersion(ShowVersionSchema):
             if m:
                 version_dict['next_reload_license_level'] = m.groupdict()['next_reload_license_level']
                 continue
+
+            # SMU   CSCvz54210   17.03.03. C  cat9k_iosxe.17.03.03.CSCvz54210.SPA.smu.bin  
+            # SMU   CSCwc80043   17.03.03. C  cat9k_iosxe.17.03.03.CSCwc80043.SPA.smu.bin  
+            # SMU   CSCwh29778   17.03.03. C  cat9k_iosxe.17.03.03.CSCwh29778.SPA.smu.bin
+            m = p12_1.match(line)
+            if m:
+                group = m.groupdict()
+                defect_dict = version_dict.setdefault('defect_id', {}).setdefault(group['defect_id'], {})
+                defect_dict.update({
+                    'type': group['type1'],
+                    'sum_version': group['sum_version'],
+                    'state': group['state'],
+                    'file_name': group['file_name'],
+                })
 
             # Smart Licensing Status: UNREGISTERED/EVAL EXPIRED
             m = p13.match(line)
@@ -2560,7 +2587,6 @@ class ShowPlatformSoftwareFedSwitchActivePuntPacketcaptureStatus(ShowPlatformSof
                 continue
 
         return ret_dict
-    
 
 # ======================================================================================================#
 #  Schema for 'show platform software fed switch active punt packet-capture display-filter icmp brief' #
@@ -2795,4 +2821,294 @@ class ShowPlatformSoftwareFedSwitchActivePuntPacketCaptureDisplayFilterIcmpBrief
                 icmp_hdr['code'] = int(group['code'])
                 continue
 
+        return res_dict
+
+# =========================================
+# Schema for 'show platform software fed switch {switch_num} acl usage | include {acl_name}'
+# =========================================
+
+class ShowPlatformSoftwareFedSwitchAclUsageIncludeAclSchema(MetaParser):
+    """Schema for show platform software fed switch {switch_num} acl usage | include {acl_name}"""
+
+    schema = {
+        'feature_type': str,
+        'acl_type': str,
+        'dir': str,
+        'name': str,
+        'entries_used': int,
+    }
+
+# =====================================================
+# Parser for 'show platform software fed switch {switch_num} acl usage | include {acl_name}'
+# =====================================================
+class ShowPlatformSoftwareFedSwitchAclUsageIncludeAcl(ShowPlatformSoftwareFedSwitchAclUsageIncludeAclSchema):
+    """
+    Parser for
+        * 'show platform software fed switch {switch_num} acl usage'
+        * 'show platform software fed switch {switch_num} acl usage | include {acl_name}'
+    """
+
+    cli_command = ['show plaform software fed switch {switch_num} acl usage', 'show plaform software fed switch {switch_num} acl usage | include {acl_name}']
+
+    def cli(self, switch_num, output=None, acl_name = ''):
+        if output is None:
+            if acl_name:
+                cmd = self.cli_command[1].format(switch_num = switch_num, acl_name = acl_name)
+            else:
+                cmd = self.cli_command[0].format(switch_num = switch_num)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+
+        # PACL          IPV4          Egress          racl_permit_egress          2
+        p1 = re.compile(
+            r"^(?P<feature_type>\w+)\s+(?P<acl_type>IPV[46])\s+(?P<dir>\w+)\s+(?P<name>\w+)\s+(?P<entries_used>\d+)$"
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # PACL          IPV4          Egress          racl_permit_egress          2
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['feature_type'] = group['feature_type']  
+                ret_dict['acl_type'] = group['acl_type']
+                ret_dict['dir'] = group['dir']
+                ret_dict['name'] = group['name']
+                ret_dict['entries_used'] = int(group['entries_used'])
+                continue
+
+        return ret_dict
+    
+
+# ======================================================================================================#
+#  Schema for 'show platform software fed switch active punt packet-capture display-filter icmpv6 brief' #
+# ======================================================================================================#    
+class ShowPlatformSoftwareFedSwitchActivePuntPacketCapturedisplayFiltericmpv6BriefSchema(MetaParser):
+    """
+    Schema for
+        'show platform software fed {switch} {switch_num} punt packet-capture display-filter icmpv6 brief'
+        'show platform software fed {switch_num} punt packet-capture display-filter icmpv6 brief'
+    """
+
+    schema = {
+        'punt_packet_number': {
+            Any(): {
+                'timestamp': str,
+                'interface': {
+                    'phy': {
+                        'val': str,
+                        'if_id': str
+                    },
+                    'pal': {
+                        'val': str,
+                        'if_id': str
+                    }
+                },
+                'misc_info': {
+                    'cause_number': int,
+                    'cause_desc': str,
+                    'subcause_number': int,
+                    'subcause_desc': str,
+                    'link_type': str
+                },
+                Optional('ce_hdr'): {
+                    'src_mac': str,
+                    'dest_mac': str,
+                    'ethertype': str
+                },
+                'meta_hdr':{
+                    'nxt_hdr': str,
+                    'fwd_hdr': int,
+                    'ssp': str,
+                    'dsp': str,
+                    'slp': str,
+                    'dlp': str
+                },
+                'ether_hdr': {
+                    'src_mac': str,
+                    'dest_mac': str,
+                    'vlan': int,
+                    'ether_type': str
+                },
+                'ipv6_hdr': {
+                    'dest_ip': str,
+                    'src_ip': str,
+                    'payload_len': int,
+                    'hop_count': int,
+                    'next_hdr': int
+        
+                }
+            }
+        }
+    }
+
+
+# =====================================================================================================#
+#  Parser for 'show platform software fed switch active punt packet-capture display-filter icmpv6 brief #
+# =====================================================================================================#
+class ShowPlatformSoftwareFedSwitchActivePuntPacketCapturedisplayFiltericmpv6Brief(ShowPlatformSoftwareFedSwitchActivePuntPacketCapturedisplayFiltericmpv6BriefSchema):
+    """
+
+    Parser for 
+        'show platform software fed {switch} {switch_num} punt packet-capture display-filter icmpv6 brief'
+        'show platform software fed {switch_num} punt packet-capture display-filter icmpv6 brief'
+    """
+
+    cli_command = ["show platform software fed {switch} {switch_num} punt packet-capture display-filter icmpv6 brief",
+                   "show platform software fed {switch_num} punt packet-capture display-filter icmpv6 brief"]
+
+    def cli(self, switch_num, switch , output=None):
+        if output is None:
+            if switch:
+                cmd = self.cli_command[0].format(switch = switch,switch_num = switch_num)
+            else:
+                cmd = self.cli_command[1].format(switch_num = switch_num)
+
+            output = self.device.execute(cmd)
+
+        res_dict = {}
+
+        #------ Punt Packet Number: 6, Timestamp: 2024/06/25 16:17:59.842 ------
+        p0 = re.compile(r".+\s*Punt Packet Number\s*:\s*(?P<punt_packet_number>[\d]+)\s*\,\s*Timestamp\s*\:\s*(?P<timestamp>[\d\/\s\:\.]+).+")
+
+        #interface : phy: Port-channel10 [if-id: 0x0000058a], pal: Port-channel10 [if-id: 0x0000058a]
+        p1 = re.compile(r"interface\s*:\s*phy\s*:\s*(?P<phy_val>[\w\-]+)\s*\[if-id:\s*(?P<phy_if_id>[\w]+)\]\s*,\s*pal\s*:\s*(?P<pal_val>[\w\-]+)\s*\[if-id:\s*(?P<pal_if_id>[\w]+)\]")
+
+        #misc info : cause: 58 [Layer2 bridge domain data packet], sub-cause: 11 [NONE], linktype: IPV6 [4]
+        p2 = re.compile(r"misc info : cause:\s*(?P<cause>\d+)\s*\[(?P<cause_description>[^\]]+)\],\s*sub-cause:\s*(?P<sub_cause>\d+)\s*\[(?P<sub_cause_description>[^\]]+)\],\s*linktype:\s*(?P<link_type>[A-Z0-9\s]+)\s*\[\d+\]")
+
+        #CE    hdr : dest mac: f4bd.9eff.fff0, src mac: f4bd.9eff.fff1, ethertype: 0x7106
+        p3 = re.compile(r"CE\s+hdr\s*:\s*dest mac:\s*(?P<dest_mac>[0-9a-fA-F\.]+),\s*src mac:\s*(?P<src_mac>[0-9a-fA-F\.]+),\s*ethertype:\s*(?P<ethertype>0x[0-9a-fA-F]+)")
+
+        #meta  hdr : Nxt. Hdr: 0x1, Fwd. Hdr: 0, SSP: 0x55f
+        p4=re.compile(r"meta\s+hdr\s*:\s*Nxt\. Hdr:\s*(?P<nxt_hdr>0x[0-9a-fA-F]+),\s*Fwd\. Hdr:\s*(?P<fwd_hdr>\d+),\s*SSP:\s*(?P<ssp>0x[0-9a-fA-F]+)")
+
+        #meta  hdr : DSP: 0xffff, SLP: 0x800fb, DLP: 0xef
+        p5=re.compile(r"meta\s+hdr\s*:\s*D?SP:\s*(?P<dsp>0x[0-9a-fA-F]+),\s*SLP:\s*(?P<slp>0x[0-9a-fA-F]+),\s*D?LP:\s*(?P<dlp>0x[0-9a-fA-F]+)")
+
+        #ether hdr : dest mac: 3333.0000.0016, src mac: a0b4.39cd.70ff
+        p6 = re.compile(r"ether\s+hdr\s*:\s*dest mac:\s*(?P<dest_mac>[0-9a-fA-F\.]+),\s*src mac:\s*(?P<src_mac>[0-9a-fA-F\.]+)")
+
+        #ether hdr : vlan: 100, ethertype: 0x8100
+        p7 = re.compile(r"ether\s+hdr\s*:\s*vlan:\s*(?P<vlan>\d+),\s*ethertype:\s*(?P<ether_type>0x[0-9a-fA-F]+)")
+
+        #ipv6  hdr : dest ip: ff02::16
+        p8 = re.compile(r"ipv6\s+hdr\s*:\s*dest ip:\s*(?P<dest_ip>[a-fA-F0-9:]+)")
+
+        #ipv6  hdr : src ip : fe80::a2b4:39ff:fecd:70ff
+        p9 = re.compile(r"ipv6\s+hdr\s*:\s*src ip\s*:\s*(?P<src_ip>[a-fA-F0-9:]+)")
+
+        #ipv6  hdr : payload len: 36, hop count: 1, next hdr: 0
+        p10 = re.compile(r"ipv6\s+hdr\s*:\s*payload len:\s*(?P<payload_len>\d+),\s*hop count:\s*(?P<hop_count>\d+),\s*next hdr:\s*(?P<next_hdr>\d+)")
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Punt Packet Number: 6, Timestamp: 2024/06/25 16:17:59.842
+            m = p0.match(line)
+            if m:
+                group = m.groupdict()
+                punt_packet = res_dict.setdefault('punt_packet_number', {})
+                punt_packet_details=punt_packet.setdefault(group['punt_packet_number'], {})
+                punt_packet_details.setdefault('timestamp',group['timestamp'].strip())
+                continue
+                   
+            # interface : phy: Port-channel10 [if-id: 0x0000058a], pal: Port-channel10 [if-id: 0x0000058a]
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                phy = punt_packet_details.setdefault('interface', {}).setdefault('phy',{})
+                pal = punt_packet_details.setdefault('interface', {}).setdefault('pal',{})
+                phy['val'] = group['phy_val']
+                phy['if_id'] = group['phy_if_id']
+                pal['val'] = group['phy_val']
+                pal['if_id'] = group['pal_if_id']
+                continue
+            
+            # misc info : cause: 58 [Layer2 bridge domain data packet], sub-cause: 11 [NONE], linktype: IPV6 [4]
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                misc = punt_packet_details.setdefault('misc_info', {})
+                misc.setdefault('cause_number' , int(group['cause']))
+                misc.setdefault('cause_desc', group['cause_description'])
+                misc.setdefault('subcause_number' , int(group['sub_cause']))
+                misc.setdefault('subcause_desc', group['sub_cause_description'])
+                misc['link_type'] = group['link_type']
+                continue
+
+            # CE    hdr : dest mac: f4bd.9eff.fff0, src mac: f4bd.9eff.fff1, ethertype: 0x7106
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                ce_hdr = punt_packet_details.setdefault('ce_hdr', {})
+                ce_hdr['src_mac'] = group['src_mac']
+                ce_hdr['dest_mac'] = group['dest_mac']
+                ce_hdr['ethertype'] = group['ethertype']
+                continue
+
+            # meta  hdr : Nxt. Hdr: 0x1, Fwd. Hdr: 0, SSP: 0x55f
+            m=p4.match(line)
+            if m:
+                group = m.groupdict()
+                meta_hdr = punt_packet_details.setdefault('meta_hdr', {})
+                meta_hdr['nxt_hdr'] = group['nxt_hdr']
+                meta_hdr['fwd_hdr'] = int(group['fwd_hdr'])
+                meta_hdr['ssp'] = group['ssp']
+                continue
+
+            # meta  hdr : DSP: 0xffff, SLP: 0x800fb, DLP: 0xef
+            m=p5.match(line)
+            if m:
+                group = m.groupdict()
+                meta_hdr = punt_packet_details.setdefault('meta_hdr', {})
+                meta_hdr['dsp'] = group['dsp']
+                meta_hdr['dlp'] = group['dlp']
+                meta_hdr['slp'] = group['slp']
+                continue
+
+            # ether hdr : dest mac: 3333.0000.0016, src mac: a0b4.39cd.70ff
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                ether_hdr = punt_packet_details.setdefault('ether_hdr', {})
+                ether_hdr['src_mac'] = group['src_mac']
+                ether_hdr['dest_mac'] = group['dest_mac']
+                continue
+
+            # ether hdr : vlan: 100, ethertype: 0x8100
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                ether_hdr = punt_packet_details.setdefault('ether_hdr', {})
+                ether_hdr['vlan'] = int(group['vlan'])
+                ether_hdr['ether_type'] = group['ether_type']
+                continue
+
+            # ipv6  hdr : dest ip: ff02::16
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                ipv6_hdr = punt_packet_details.setdefault('ipv6_hdr', {})
+                ipv6_hdr['dest_ip'] = group['dest_ip']
+                continue
+
+            # ipv6  hdr : src ip : fe80::a2b4:39ff:fecd:70ff
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                ipv6_hdr['src_ip'] = group['src_ip']
+                continue
+
+            # ipv6  hdr : payload len: 36, hop count: 1, next hdr: 0
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                ipv6_hdr['payload_len'] = int(group['payload_len'])
+                ipv6_hdr['hop_count'] = int(group['hop_count'])
+                ipv6_hdr['next_hdr']  =int(group['next_hdr'])
+                continue
+   
         return res_dict

@@ -1,0 +1,43 @@
+expected_output = {
+    'monitor_time': {
+        '00:00:14': {
+            'hostname': 'R1',
+            'interface': {
+                'FortyGigE0/0/0/0': {
+                    'input_bps': 0,
+                    'input_bps_percent': 0.0,
+                    'input_bytes': 81.2,
+                    'input_bytes_unit': 'G',
+                    'input_delta': 0,
+                    'input_drops': 0,
+                    'input_drops_delta': 0,
+                    'output_bps': 0,
+                    'output_bps_percent': 0.0,
+                    'output_bytes': 7.5,
+                    'output_bytes_unit': 'G',
+                    'output_delta': 0,
+                    'output_drops': 0,
+                    'output_drops_delta': 0,
+                },
+                'TenGigE0/0/1/0': {
+                    'input_bps': 0,
+                    'input_bps_percent': 0.0,
+                    'input_bytes': 81.1,
+                    'input_bytes_unit': 'G',
+                    'input_delta': 305,
+                    'input_drops': 0,
+                    'input_drops_delta': 0,
+                    'output_bps': 0,
+                    'output_bps_percent': 0.0,
+                    'output_bytes': 68.9,
+                    'output_bytes_unit': 'G',
+                    'output_delta': 0,
+                    'output_drops': 0,
+                    'output_drops_delta': 0,
+                },
+            },
+            'protocol': 'General',
+            'sys_up_time': '88:43:16',
+        },
+    },
+}

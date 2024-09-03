@@ -1,0 +1,50 @@
+-------------------------
+Device ID: epcot-1
+Entry address(es):
+Platform: cisco C9610R,  Capabilities: Router Switch IGMP
+Interface: TenGigabitEthernet1/0/1,  Port ID (outgoing port): FiftyGigE2/0/10
+Holdtime : 158 sec
+
+Version :
+Cisco IOS Software [IOSXE], Catalyst L3 Switch Software (CAT9K_IOSXE), Experimental Version 17.16.20240730:011742 [BLD_POLARIS_DEV_LATEST_20240730_003410:/nobackup/mcpre/s2c-build-ws 101]
+Copyright (c) 1986-2024 by Cisco Systems, Inc.
+Compiled Mon 29-Jul-24 18:18 by mcpre
+
+advertisement version: 2
+VTP Management Domain: 'cisco'
+Native VLAN: 1
+Duplex: full
+
+-------------------------
+Device ID: epcot-1
+Entry address(es):
+Platform: cisco C9610R,  Capabilities: Router Switch IGMP
+Interface: TenGigabitEthernet1/0/2,  Port ID (outgoing port): FiftyGigE2/0/26
+Holdtime : 160 sec
+
+Version :
+Cisco IOS Software [IOSXE], Catalyst L3 Switch Software (CAT9K_IOSXE), Experimental Version 17.16.20240730:011742 [BLD_POLARIS_DEV_LATEST_20240730_003410:/nobackup/mcpre/s2c-build-ws 101]
+Copyright (c) 1986-2024 by Cisco Systems, Inc.
+Compiled Mon 29-Jul-24 18:18 by mcpre
+
+advertisement version: 2
+VTP Management Domain: 'cisco'
+Native VLAN: 1
+Duplex: full
+
+-------------------------
+Device ID: epcot-1
+Entry address(es):
+Platform: cisco C9610R,  Capabilities: Router Switch IGMP
+Interface: TenGigabitEthernet1/0/3,  Port ID (outgoing port): FiftyGigE2/0/2
+Holdtime : 162 sec
+
+Version :
+Cisco IOS Software [IOSXE], Catalyst L3 Switch Software (CAT9K_IOSXE), Experimental Version 17.16.20240730:011742 [BLD_POLARIS_DEV_LATEST_20240730_003410:/nobackup/mcpre/s2c-build-ws 101]
+Copyright (c) 1986-2024 by Cisco Systems, Inc.
+Compiled Mon 29-Jul-24 18:18 by mcpre
+
+advertisement version: 2
+VTP Management Domain: 'cisco'
+Native VLAN: 1
+Duplex: full

@@ -1,0 +1,11 @@
+monitor interface MgmtEth0/RP0/CPU0/0 GigabitEthernet0/0/0/1
+Mon Aug 30 18:47:35.981 UTC
+R2_xr                Monitor Time: 00:00:00          SysUptime: 230:13:00
+
+Protocol:General
+Interface             In(bps)      Out(bps)     InBytes/Delta  OutBytes/Delta
+Mg0/RP0/CPU0/0       179000/ --%        0/ --%    18.5G/0         24.4M/0
+Gi0/0/0/1            (statistics not available)
+
+Quit='q',     Clear='c',    Freeze='f', Thaw='t',
+Next set='n', Prev set='p', Bytes='y',  Packets='k'

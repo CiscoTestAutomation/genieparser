@@ -1,0 +1,17 @@
+  (ipv6, vlan: 13)
+      Snoop State             : ON
+      STP TCN State           : OFF
+      Flood Mode              : OFF
+      IOS Flood Mode          : OFF
+      Pim state               : ON
+      Evpn Proxy              : OFF
+      Secondary Vlan          : NO
+      Vlan Urid               : 0x5000000000000006
+      Fset Urid ( hash )      : 0x2000000000000006 ( 7839ab25 )
+      Dependant users count   : 0
+      Mrouter ports           : 1
+          Port-channel95 (Port:HundredGigE1/0/7)
+      Flood ports             :
+          Port-channel95
+      Gid                     : 8197
+      Mcid Asic[0]            : 2129
