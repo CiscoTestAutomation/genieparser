@@ -1,0 +1,75 @@
+SWITCH: 1
+
+Switch	 FAN	 Speed	 State	 Airflow direction
+---------------------------------------------------
+  1  	  1	0	  NOT PRESENT or FAULTY	 Front to Back
+  1  	  2	0	  NOT PRESENT or FAULTY	 Front to Back
+  1  	  3	0	  NOT PRESENT or FAULTY	 Front to Back
+FAN PS-1 is OK, Airflow is Front to Back
+FAN PS-2 is OK, Airflow is Front to Back
+FAN PS-3 is NOT PRESENT, Airflow is Invalid
+Switch 1: SYSTEM TEMPERATURE is OK
+Inlet Temperature Value: 46 Degree Celsius
+Temperature State: YELLOW
+Yellow Threshold : 46 Degree Celsius
+Red Threshold    : 56 Degree Celsius
+
+Outlet Temperature Value: 48 Degree Celsius
+Temperature State: GREEN
+Yellow Threshold : 105 Degree Celsius
+Red Threshold    : 125 Degree Celsius
+
+Hotspot Temperature Value: 69 Degree Celsius
+Temperature State: GREEN
+Yellow Threshold : 105 Degree Celsius
+Red Threshold    : 125 Degree Celsius
+SWITCH: 2
+
+Switch	 FAN	 Speed	 State	 Airflow direction
+---------------------------------------------------
+  2  	  1	11499 	  OK	 Front to Back
+  2  	  2	11499 	  OK	 Front to Back
+  2  	  3	11499 	  OK	 Front to Back
+FAN PS-1 is OK, Airflow is Front to Back
+FAN PS-2 is OK, Airflow is Front to Back
+FAN PS-3 is OK, Airflow is Front to Back
+Switch 2: SYSTEM TEMPERATURE is OK
+Inlet Temperature Value: 35 Degree Celsius
+Temperature State: GREEN
+Yellow Threshold : 46 Degree Celsius
+Red Threshold    : 56 Degree Celsius
+
+Outlet Temperature Value: 55 Degree Celsius
+Temperature State: GREEN
+Yellow Threshold : 105 Degree Celsius
+Red Threshold    : 125 Degree Celsius
+
+Hotspot Temperature Value: 60 Degree Celsius
+Temperature State: GREEN
+Yellow Threshold : 105 Degree Celsius
+Red Threshold    : 125 Degree Celsius
+SWITCH: 3
+
+Switch	 FAN	 Speed	 State	 Airflow direction
+---------------------------------------------------
+  3  	  1	11499 	  OK	 Front to Back
+  3  	  2	11499 	  OK	 Front to Back
+  3  	  3	11499 	  OK	 Front to Back
+FAN PS-1 is OK, Airflow is Front to Back
+FAN PS-2 is OK, Airflow is Front to Back
+FAN PS-3 is OK, Airflow is Front to Back
+Switch 3: SYSTEM TEMPERATURE is OK
+Inlet Temperature Value: 35 Degree Celsius
+Temperature State: GREEN
+Yellow Threshold : 46 Degree Celsius
+Red Threshold    : 56 Degree Celsius
+
+Outlet Temperature Value: 55 Degree Celsius
+Temperature State: GREEN
+Yellow Threshold : 105 Degree Celsius
+Red Threshold    : 125 Degree Celsius
+
+Hotspot Temperature Value: 62 Degree Celsius
+Temperature State: GREEN
+Yellow Threshold : 105 Degree Celsius
+Red Threshold    : 125 Degree Celsius

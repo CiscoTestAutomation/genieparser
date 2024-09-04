@@ -1524,6 +1524,32 @@ expected_output = {
                             "source_protocol": "bgp",
                             "source_protocol_status": "internal",
                         },
+                        "222.1.1.0/24": {
+                            "route": "222.1.1.0/24",
+                            "active": True,
+                            "ubest": 1,
+                            "mbest": 0,
+                            "metric": 0,
+                            "route_preference": 20,
+                            "process_id": "1000",
+                            "tag": 1,
+                            "next_hop": {
+                                "next_hop_list": {
+                                    1: {
+                                        "index": 1,
+                                        "next_hop": "11.11.23.1",
+                                        "source_protocol": "bgp",
+                                        "source_protocol_status": "external",
+                                        "best_ucast_nexthop": True,
+                                        "updated": "00:02:29",
+                                        "metric": 0,
+                                        "route_preference": 20,
+                                    }
+                                }
+                            },
+                            "source_protocol": "bgp",
+                            "source_protocol_status": "external",
+                        },
                     }
                 }
             }

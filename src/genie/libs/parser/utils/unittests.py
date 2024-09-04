@@ -13,6 +13,7 @@ import argparse
 import traceback
 import importlib
 from unittest.mock import Mock
+from inspect import getfullargspec
 import importlib.util as _importlib_util
 
 # pyATS
@@ -402,6 +403,25 @@ class SuperFileBasedTesting(aetest.Testcase):
                             glo_values.missingCount += 1
                             continue
 
+                        # If empty folder is missing, then throw warning and skip further execution for that parser
+                        if not folder_root_empty.exists():
+                            if _show_missing_unittests or _class:
+                                if tokens:
+                                    log.warning(
+                                        f"Empty unittests for {operating_system} -> {' -> '.join(tokens)} -> {name} don\'t exist"
+                                    )
+                                    glo_values.missingParsers.append(
+                                        f" {operating_system} -> {' -> '.join(tokens)} -> {name}"
+                                    )
+                                else:
+                                    log.warning(
+                                        f'Empty unittests for {operating_system} -> {name} don\'t exist'
+                                    )
+                                    glo_values.missingParsers.append(
+                                        f" {operating_system} -> {name}")
+                            glo_values.missingCount += 1
+                            continue
+
                         # skips over classes that do not contain the local variable cli_command
                         # this works to ignore outdated classes that use tcl
                         if not hasattr(local_class, 'cli_command') and not hasattr(local_class, 'parser_command'):
@@ -412,20 +432,14 @@ class SuperFileBasedTesting(aetest.Testcase):
                             continue
 
                         self.parsers_list.append({
-                            "local_class":
-                            local_class,
-                            "operating_system":
-                            operating_system,
-                            "folder_root_equal":
-                            folder_root_equal,
-                            "display_only_failed":
-                            _display_only_failed,
-                            "tokens":
-                            tokens,
-                            "number":
-                            _number,
-                            "show_missing_unittests":
-                            _show_missing_unittests,
+                            "local_class": local_class,
+                            "operating_system": operating_system,
+                            "folder_root_equal": folder_root_equal,
+                            "folder_root_empty": folder_root_empty,
+                            "display_only_failed": _display_only_failed,
+                            "tokens": tokens,
+                            "number": _number,
+                            "show_missing_unittests": _show_missing_unittests,
                         })
 
         aetest.loop.mark(ParserTest,
@@ -477,6 +491,7 @@ class ParserTest(aetest.Testcase):
         local_class = data['local_class']
         operating_system = data['operating_system']
         folder_root_equal = data['folder_root_equal']
+        folder_root_empty = data['folder_root_empty']
         _display_only_failed = data['display_only_failed']
         tokens = data['tokens']
         _number = data['number']
@@ -492,7 +507,7 @@ class ParserTest(aetest.Testcase):
                         continue_=True,
                 ) as golden_steps:
                     self.test_golden(golden_steps, local_class,
-                                     operating_system, folder_root_equal, 
+                                     operating_system, folder_root_equal,
                                      _display_only_failed, tokens, _number)
 
                 with class_step.start(
@@ -500,7 +515,7 @@ class ParserTest(aetest.Testcase):
                         continue_=True,
                 ) as empty_steps:
                     self.test_empty(empty_steps, local_class, operating_system,
-                                    tokens)
+                                    folder_root_empty, tokens)
             else:
                 class_step.skipped(
                     f"Parser class {name} is in EXCLUDE_CLASSES.")
@@ -516,6 +531,7 @@ class ParserTest(aetest.Testcase):
                     number=None):
         """Test step that finds any output named with _output.txt, and compares to similar named .py file."""
         folder_root = folder_root_equal
+        # Below lines of code are not valid anymore due to the new abstraction logic introduced in 24.4
         # if tokens:
         #     folder_root = pathlib.Path(
         #         f"{operating_system}/{'/'.join(tokens)}/{local_class.__name__}/cli/equal")
@@ -567,7 +583,7 @@ class ParserTest(aetest.Testcase):
 
                 golden_parsed_output = read_python_file(
                     f"{folder_root}/{user_test}_expected.py")
-                
+
                 # Verify that the parsed output can be serialized to JSON. If not, raise an error
                 try:
                     json.dumps(golden_parsed_output)
@@ -576,7 +592,7 @@ class ParserTest(aetest.Testcase):
                         f"Parsed output for {local_class} cannot be serialized to JSON. "
                         f"Exception:\n\n{str(e)}\n\n"
                     )
-                
+
                 arguments = {}
                 if os.path.exists(f"{folder_root}/{user_test}_arguments.json"):
                     arguments = read_json_file(
@@ -584,6 +600,9 @@ class ParserTest(aetest.Testcase):
 
                 device = Mock(**golden_output)
                 obj = local_class(device=device)
+                spec = getfullargspec(obj.cli)
+                if 'command' in spec.args:
+                    arguments['command'] = ''
                 try:
                     parsed_output = obj.parse(**arguments)
                 except Exception as e:
@@ -679,15 +698,19 @@ class ParserTest(aetest.Testcase):
                    steps,
                    local_class,
                    operating_system,
+                   folder_root_empty,
                    tokens=None,
                    display_only_failed=None):
         """Test step that looks for empty output."""
-        if tokens:
-            folder_root = pathlib.Path(
-                f"{operating_system}/{'/'.join(tokens)}/{local_class.__name__}/cli/empty")
-        else:
-            folder_root = pathlib.Path(
-                f"{operating_system}/{local_class.__name__}/cli/empty")
+        folder_root = folder_root_empty
+        # Below lines of code are not valid anymore due to the new abstraction logic introduced in 24.4
+        # if tokens:
+        #     folder_root = pathlib.Path(
+        #         f"{operating_system}/{'/'.join(tokens)}/{local_class.__name__}/cli/empty")
+        # else:
+        #     folder_root = pathlib.Path(
+        #         f"{operating_system}/{local_class.__name__}/cli/empty")
+
         output_glob = glob.glob(f"{folder_root}/*_output.txt")
 
         all_txt_glob = sorted(glob.glob(f"{folder_root}/*.txt"))

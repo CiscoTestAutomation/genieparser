@@ -1,0 +1,22 @@
+ESI: 0322.22aa.aa00.0000.002a
+   Parent interface: port-channel42
+  ES State: Up 
+  Port-channel state: Up
+  NVE Interface: nve1 
+   NVE State: Up 
+   Host Learning Mode: control-plane
+  Active Vlans: 2052,2062 
+   DF Vlans: 2052,2062 
+   Active VNIs: 2002052,2002062 
+  DF BDs:  
+   DF VNIs:  
+   Number of ES members: 2 
+  My ordinal: 0 
+  DF timer start time: 00:00:00 
+  Config State: config-applied 
+  DF List: 10.200.200.105 10.200.200.106  
+  ES route added to L2RIB: True
+  EAD/ES routes added to L2RIB: True
+  ESI type: Ether-segment 
+  ESI DF election mode: Modulo 
+----------------------------------------

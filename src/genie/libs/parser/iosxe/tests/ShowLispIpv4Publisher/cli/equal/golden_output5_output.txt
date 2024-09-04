@@ -3,4 +3,3 @@ LISP Publisher Information
 Publisher                               State                          Session          Type             PubSub State
 23.23.23.23                             ETR Map-Server not found       Down             L                Off
 44.44.44.44                             Reachable                      Up               L                Established
-100.100.100.100                         Reachable                      Up               T                Established                            Established

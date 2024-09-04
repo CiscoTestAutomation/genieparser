@@ -2595,10 +2595,8 @@ class ShowPlatform(ShowPlatformSchema):
                     platform_dict['slot'] = {}
                 if slot not in platform_dict['slot']:
                     platform_dict['slot'][slot] = {}
-
-                if ('WS-C' in model or 'C9500' in model or 'C9300' in model or 'C9200' in model or
-                   'IE-32' in model or 'IE-33' in model or 'IE-34' in model or 'IE-93' in model or
-                   'IE-31' in model or '1783' in model or 'C9350' in model):
+                
+                if any(sub in model for sub in ('WS-C', 'C9500', 'C9300', 'C9200', 'C9350', 'IE-', 'ESS-', '1783')):
                     lc_type = 'rp'
                 else:
                     lc_type = 'other'
@@ -3428,7 +3426,7 @@ class ShowEnvironmentSchema(MetaParser):
 # ===================================================
 class ShowEnvironmentSuperParser(ShowEnvironmentSchema):
     """Parser for show environment all"""
-    PS_MAPPING = {'A': '1', 'B': '2'}
+    PS_MAPPING = {'A': '1', 'B': '2', 'C': '3'}
 
     def cli(self, output):
 
@@ -3947,11 +3945,11 @@ class ShowModuleSchema(MetaParser):
                 'card_type':str,
                 'model':str,
                 Optional('serial'):str,
-                'mac_address':str,
-                'hw':str,
-                'fw':str,
-                'sw':str,
-                'status':str,
+                Optional('mac_address'): str,
+                Optional('hw'): str,
+                Optional('fw'): str,
+                Optional('sw'): str,
+                Optional('status'): str,
                 Optional('redundancy_role'):str,
                 Optional('operating_redundancy_mode'):str,
                 Optional('configured_redundancy_mode'):str,
@@ -8289,7 +8287,8 @@ class ShowSwitchStackRingSpeed(ShowSwitchStackRingSpeedSchema):
             output = self.device.execute(self.cli_command)
 
         # Stack Ring Speed        : 240G
-        p1 = re.compile(r'^Stack\s+Ring\s+Speed\s+:\s+(?P<speed>\w+)$')
+        # Stack Ring Speed        : N/A
+        p1 = re.compile(r'^Stack\s+Ring\s+Speed\s+:\s+(?P<speed>\S+)$')
 
         # Stack Ring Configuration: Half
         p2 = re.compile(r'^Stack\s+Ring\s+Configuration:\s+(?P<configuration>\w+)$')
@@ -8611,7 +8610,8 @@ class ShowXfsuEligibilitySchema(MetaParser):
 
     schema = {
         'reload_fast_supported': str,
-        'reload_fast_platform_stauts': str,
+        Optional('reload_fast_platform_stauts'): str,
+        Optional('xfsu_platform_stauts'): str,
         'stack_configuration': str,
         'eligibility_check': {
             Any(): {
@@ -8639,51 +8639,61 @@ class ShowXfsuEligibility(ShowXfsuEligibilitySchema):
         if output is None:
             output = self.device.execute(self.cli_command)
 
-        #Reload fast supported: Yes
+        # Reload fast supported: Yes
         p1 = re.compile(r'^Reload fast supported: (?P<reload_fast_supported>\w+)$')
-        #Reload Fast PLATFORM Status: Not started yet
+        
+        # Reload Fast PLATFORM Status: Not started yet
         p2 = re.compile(r'^Reload Fast PLATFORM Status: (?P<platform_status>[\w\s]+)$')
-        #Stack Configuration: Yes
+        
+        # Stack Configuration: Yes
         p3 = re.compile(r'^Stack Configuration: (?P<stack_configuration>\w+)$')
-        #Eligibility Check         Status
-        #=================         ======
-        #Autoboot Enabled          Yes
-        #Install Mode              Yes
-        #Network Advantage License Yes
-        #Full ring stack           Yes
-        #Check macsec eligibility  Eligible
+        
+        # Eligibility Check         Status
+        # =================         ======
+        # Autoboot Enabled          Yes
+        # Install Mode              Yes
+        # Network Advantage License Yes
+        # Full ring stack           Yes
+        # Check macsec eligibility  Eligible
         p4 = re.compile(r'^(?P<eligibility_check>[\w+ ]+) +(?P<status>Yes|No|Eligible|Ineligible)$')
-        #Spanning Tree             Ineligible:Root Switch with forwarding link:VLAN0069
+        
+        # Spanning Tree             Ineligible:Root Switch with forwarding link:VLAN0069
         p5 = re.compile(r'^Spanning Tree\s+(?P<spanning_tree>\w+):(?P<status>[\w ]+):(?P<forwarding_link>\S+)$')
+        
+        # xFSU PLATFORM Status: Not started yet
+        p6 = re.compile(r'^xFSU PLATFORM Status: (?P<xfsu_platform_stauts>[\w\s]+)$')
+
         ret_dict = {}
         for line in output.splitlines():
             line = line.strip()
-            #Reload fast supported: Yes
+            # Reload fast supported: Yes
             m = p1.match(line)
             if m:
                 group = m.groupdict()
                 ret_dict['reload_fast_supported'] = group['reload_fast_supported']
                 continue
 
-            #Reload Fast PLATFORM Status: Not started yet
+            # Reload Fast PLATFORM Status: Not started yet
             m = p2.match(line)
             if m:
                 group = m.groupdict()
                 ret_dict['reload_fast_platform_stauts'] = group['platform_status']
                 continue
-            #Stack Configuration: Yes
+            
+            # Stack Configuration: Yes
             m = p3.match(line)
             if m:
                 group = m.groupdict()
                 ret_dict['stack_configuration'] = group['stack_configuration']
                 continue
-            #Eligibility Check         Status
-            #=================         ======
-            #Autoboot Enabled          Yes
-            #Install Mode              Yes
-            #Network Advantage License Yes
-            #Full ring stack           Yes
-            #Check macsec eligibility  Eligible
+            
+            # Eligibility Check         Status
+            # =================         ======
+            # Autoboot Enabled          Yes
+            # Install Mode              Yes
+            # Network Advantage License Yes
+            # Full ring stack           Yes
+            # Check macsec eligibility  Eligible
             m = p4.match(line)
             if m:
                 group = m.groupdict()
@@ -8693,7 +8703,8 @@ class ShowXfsuEligibility(ShowXfsuEligibilitySchema):
                         check_dict = root_dict.setdefault(group['eligibility_check'].lower().strip().replace(" ","_"),{})
                         check_dict['status'] = group['status']
                 continue
-            #Spanning Tree             Ineligible:Root Switch with forwarding link:VLAN0069
+            
+            # Spanning Tree             Ineligible:Root Switch with forwarding link:VLAN0069
             m = p5.match(line)
             if m:
                 group = m.groupdict()
@@ -8702,6 +8713,13 @@ class ShowXfsuEligibility(ShowXfsuEligibilitySchema):
                 spanning_dict['status'] = group['spanning_tree']
                 spanning_dict[group['status'].lower().strip().replace(" ","_")] = group['forwarding_link']
                 continue
+
+            # xFSU PLATFORM Status: Not started yet
+            m = p6.match(line)
+            if m:
+                ret_dict['xfsu_platform_stauts'] = m.groupdict()['xfsu_platform_stauts']
+                continue
+
         return ret_dict
 
 
@@ -9341,6 +9359,57 @@ class TestPlatformSoftwareDatabase(TestPlatformSoftwareDatabaseSchema):
         # Populate the parsed output
         if table_record:
             ret_dict["table_record_index"] = table_record
+
+        return ret_dict
+
+class ShowPlatformSoftwareFedSwitchAclUsageIncludeAclSchema(MetaParser):
+    """Schema for show platform software fed switch {switch_num} acl usage | include {acl_name}"""
+
+    schema = {
+        'feature_type': str,
+        'acl_type': str,
+        'dir': str,
+        'name': str,
+        'entries_used': int,
+    }
+
+class ShowPlatformSoftwareFedSwitchAclUsageIncludeAcl(ShowPlatformSoftwareFedSwitchAclUsageIncludeAclSchema):
+    """
+    Parser for
+        * 'show platform software fed switch {switch_num} acl usage'
+        * 'show platform software fed switch {switch_num} acl usage | include {acl_name}'
+    """
+
+    cli_command = ['show plaform software fed switch {switch_num} acl usage', 'show plaform software fed switch {switch_num} acl usage | include {acl_name}']
+
+    def cli(self, switch_num, output=None, acl_name = ''):
+        if output is None:
+            if acl_name:
+                cmd = self.cli_command[1].format(switch_num = switch_num, acl_name = acl_name)
+            else:
+                cmd = self.cli_command[0].format(switch_num = switch_num)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+
+        # PACL          IPV4          Egress          racl_permit_egress          2
+        p1 = re.compile(
+            r"^(?P<feature_type>\w+)\s+(?P<acl_type>IPV[46])\s+(?P<dir>\w+)\s+(?P<name>\w+)\s+(?P<entries_used>\d+)$"
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # PACL          IPV4          Egress          racl_permit_egress          2
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['feature_type'] = group['feature_type']  
+                ret_dict['acl_type'] = group['acl_type']
+                ret_dict['dir'] = group['dir']
+                ret_dict['name'] = group['name']
+                ret_dict['entries_used'] = int(group['entries_used'])
+                continue
 
         return ret_dict
 

@@ -1,0 +1,3 @@
+Switch  Ports    Model                Serial No.   MAC address     Hw Ver.       Sw Ver. 
+------  -----   ---------             -----------  --------------  -------       --------
+ 1       26     ESS-2120              FJZ213301LZ  40ce.24b7.3510  01            17.16.01

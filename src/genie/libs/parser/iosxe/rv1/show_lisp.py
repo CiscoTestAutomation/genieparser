@@ -1375,3 +1375,35 @@ class ShowLispEthernetSubscriber(ShowLispSubscriberSuperParser):
                 output = self.device.execute(self.cli_command[3].format(vlan=vlan))
 
         return super().cli(output=output, lisp_id=lisp_id, instance_id=instance_id)
+
+
+class ShowLispEthernetARSubscriber(ShowLispSubscriberSuperParser):
+    """ Parser for:
+        * show lisp {lisp_id} instance-id {instance_id} ethernet subscriber address-resolution
+        * show lisp locator-table {locator_table} instance-id {instance_id} ethernet subscriber address-resolution
+        * show lisp instance-id {instance_id} ethernet subscriber address-resolution
+        * show lisp eid-table vlan {vlan} ethernet subscriber address-resolution
+    """
+
+    cli_command = [
+        'show lisp {lisp_id} instance-id {instance_id} ethernet subscriber address-resolution',
+        'show lisp locator-table {locator_table} instance-id {instance_id} ethernet subscriber address-resolution',
+        'show lisp instance-id {instance_id} ethernet subscriber address-resolution',
+        'show lisp eid-table vlan {vlan} ethernet subscriber address-resolution',
+    ]
+
+    def cli(self, output=None, lisp_id=None, instance_id=None, locator_table=None, vlan=None):
+
+        if output is None:
+            if lisp_id and instance_id:
+                output = self.device.execute(self.cli_command[0].\
+                                             format(lisp_id=lisp_id, instance_id=instance_id))
+            elif locator_table and instance_id:
+                output = self.device.execute(self.cli_command[1].\
+                                             format(locator_table=locator_table, instance_id=instance_id))
+            elif instance_id:
+                output = self.device.execute(self.cli_command[2].format(instance_id=instance_id))
+            else:
+                output = self.device.execute(self.cli_command[3].format(vlan=vlan))
+
+        return super().cli(output=output, lisp_id=lisp_id, instance_id=instance_id)

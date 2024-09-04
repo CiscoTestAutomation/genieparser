@@ -1488,7 +1488,6 @@ class ShowSegmentRoutingSrv6LocatorSid(ShowSegmentRoutingSrv6LocatorSidSchema):
                 output = self.device.execute(self.cli_command[0])
 
         ret_dict = {}
-        locator_dict = ret_dict.setdefault('locator',{})
 
         # SID    Behavior    Context    Owner    State    RW
         p = re.compile(r'SID\s+Behavior\s+Context\s+Owner\s+State\s+RW')
@@ -1518,6 +1517,7 @@ class ShowSegmentRoutingSrv6LocatorSid(ShowSegmentRoutingSrv6LocatorSidSchema):
             if m:
                 group = m.groupdict()
                 sid = group.pop('sid')
+                locator_dict = ret_dict.setdefault('locator', {})
                 sid_dict = locator_dict.setdefault(locator, {}).setdefault('sid',{}).setdefault(sid,{})
                 sid_dict.update(group)
                 continue

@@ -322,8 +322,6 @@ class ShowLogging(ShowLoggingSchema):
                 logging_entry = ret_dict.setdefault("logging", {})
                 filter_modules_entry = ret_dict.setdefault(
                     "syslog_logging", {})
-                log_buffer_bytes_entry = ret_dict.setdefault(
-                    "log_buffer_bytes", {})
 
                 outer_tls_profile_dict = {}
                 inner_key = group['enable_disable']

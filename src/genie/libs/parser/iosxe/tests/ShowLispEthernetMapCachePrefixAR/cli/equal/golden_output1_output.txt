@@ -1,0 +1,13 @@
+LISP IPv4 Mapping Cache for LISP 0 EID-table N/A (IID 1023), 1 entries
+
+192.168.1.3/32, uptime: 00:00:44, expires: 00:00:27, via transient-publication, complete
+  Sources: transient-publication
+  State: complete, last modified: 00:00:44, map-source: 100.44.44.44
+  Active, Packets out: 0(0 bytes)
+  Locator         Uptime    State       Pri/Wgt     Encap-IID
+  aabb.cc00.d000  00:00:44  disallowed    1/100       -
+    Last up-down state change:         00:00:44, state change count: 1
+    Last route reachability change:    never, state change count: 0
+    Last priority / weight change:     never/never
+    RLOC-probing loc-status algorithm:
+      Last RLOC-probe sent:            never

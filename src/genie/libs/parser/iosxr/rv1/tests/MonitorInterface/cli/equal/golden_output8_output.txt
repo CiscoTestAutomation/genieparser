@@ -1,0 +1,31 @@
+f3a-r1-pod3          Monitor Time: 00:00:02          SysUptime: 22:48:09
+
+
+FourHundredGigE0/0/0/2 is up, line protocol is up
+Encapsulation ARPA
+
+Traffic Stats:(2 second rates)                                     Delta
+  Input  Packets:                      2733                            0
+  Input  pps:                             0
+  Input  Bytes:                      303339                            0
+  Input  Kbps (rate):                     0                       (  0%)
+  Input  Total Drops:                     0                            0
+  Output Packets:                      2733                            0
+  Output pps:                             0
+  Output Bytes:                      303347                            0
+  Output Kbps (rate):                     0                       (  0%)
+  Output Total Drops:                     0                            0
+
+Errors Stats:
+  Input  Total:                           0                            0
+  Input  CRC:                             0                            0
+  Input  Frame:                           0                            0
+  Input  Overrun:                         0                            0
+  Output Total:                           0                            0
+  Output Underrun:                        0                            0
+
+Quit='q', Freeze='f', Thaw='t', Clear='c', Interface='i',
+Next='n', Prev='p'
+
+Brief='b', Detail='d', Protocol(IPv4/IPv6)='r'
+

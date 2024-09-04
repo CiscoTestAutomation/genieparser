@@ -1,0 +1,4 @@
+{
+    "switch_num" : "active",
+    "acl_name" : "racl_permit_ingress"
+}

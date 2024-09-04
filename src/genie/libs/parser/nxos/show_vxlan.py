@@ -2733,3 +2733,66 @@ class ShowL2routeEvpnMacIpEvi(ShowL2routeMacIpAllDetail):
         else:
             show_output = output
         return super().cli(output=show_output)
+
+# ===========================================================================================
+#   Schema for 'show nve ethernet-segment summary' and 'show nve ethernet-segment summary esi <esi_id>' 
+# ============================================================================================
+class ShowNveEthernetSegmentSummarySchema(MetaParser):
+    """Schema for:
+          show nve ethernet-segment summary 
+          show nve ethernet-segment summary esi <esi_id>"""
+
+    schema ={
+                'ethernet_segment': {
+                    'esi': {
+                        Any(): {
+                            'esi': str,
+                            'parent_if_name': str,
+                            'es_state': str,
+                        },
+                    },
+                },
+            }
+    
+# ===========================================================================================
+#   Parser for 'show nve ethernet-segment summary' and 'show nve ethernet-segment summary esi <esi_id>'
+# ===========================================================================================
+class ShowNveEthernetSegmentSummary(ShowNveEthernetSegmentSummarySchema):
+    """Parser for:
+          show nve ethernet-segment summary 
+          show nve ethernet-segment summary esi <esi_id>"""
+
+    cli_command = ['show nve ethernet-segment summary', 'show nve ethernet-segment summary esi {esi_id}']
+
+    def cli(self, esi_id="", output=None):
+        # excute command to get output
+        if output is None:
+            if esi_id:
+                cmd = self.cli_command[1].format(esi_id=esi_id)
+            else:
+                cmd = self.cli_command[0]
+            output = self.device.execute(cmd)
+
+        result_dict = {}
+
+        # ESI                              Parent interface   ES State  
+        # ------------------------------   ------------------ ----------
+        # 0300.0a00.0b00.0c00.0066         port-channel102    Up         
+        # 0300.0a00.0b00.0c00.0067         port-channel103    Up         
+
+        p1 = re.compile(r'^(?P<esi_id>([0-9a-f]{4}.){4}[0-9a-f]{4})\s+(?P<parent>\S+)\s+(?P<esi_state>\S+)\s*$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            #0300.0a00.0b00.0c00.0066         port-channel102    Up
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                esi = group.pop('esi_id')
+                esi_dict = result_dict.setdefault('ethernet_segment', {}).setdefault('esi', {}).setdefault(esi, {})   
+                esi_dict.update({'esi': esi,
+                                 'parent_if_name': group.pop('parent'),
+                                 'es_state': group.pop('esi_state')})
+                continue
+        return result_dict
+

@@ -2534,6 +2534,8 @@ class ShowLicenseTechSupportSchema(MetaParser):
                 },
                 Optional('server_identity_check'):str,
                 Optional('vrf'):str,
+                Optional('trust_point'):str,
+                Optional('ip_mode'):str
             },
             'miscellaneous':{
                 'custom_id':str,
@@ -2795,6 +2797,10 @@ class ShowLicenseTechSupportSchema(MetaParser):
             'systeminitbyevent':str,
             'smarttransportserveridcheck':str,
             'smarttransportproxysupport':str,
+            Optional('trustpointenrollmentonboot'):str,
+            Optional('smartagentpurgeallreports'):str,
+            Optional('smartagentslpenhanced'):str,
+            Optional('smartagentmaxermnotifylistsize'):int,
             Optional('smartagentmaxsinglereportsize'):int,
             Optional('smartagentslacreturnforcedallowed'):str,
             Optional('smartagenttelemetryrumreportmax'):int,
@@ -3586,7 +3592,7 @@ class ShowLicenseTechSupport(ShowLicenseTechSupportSchema):
                         current_dict.update({key: int(group['value'])})              
                         continue
                     key = group['key'].replace(' ', '_').replace('.', '_').replace('-', "").replace(':', "").replace('(', "").replace(')', "").lower()
-                    if key == 'server_identity_check' or key == 'vrf':
+                    if key in ('server_identity_check', 'vrf', 'trust_point', 'ip_mode'):
                         current_dict = ret_dict.setdefault('smart_licensing_status',{}).setdefault('transport',{})   
                     if key == 'soft_enforced':
                         current_dict = handle_dict

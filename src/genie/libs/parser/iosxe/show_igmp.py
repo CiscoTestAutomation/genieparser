@@ -1292,40 +1292,6 @@ class ShowIpIgmpSnoopingMrouterVlan(ShowIpIgmpSnoopingMrouterVlanSchema):
                 ret_dict[vlan_id]['port'] = port
         return vlan_dict
 
-class ShowPlatformSoftwareIgmpSnoopingGroupsCountSchema(MetaParser):
-    schema = {
-             'ip_igmp_snooping_entries': int
-             }
-
-class ShowPlatformSoftwareIgmpSnoopingGroupsCount(ShowPlatformSoftwareIgmpSnoopingGroupsCountSchema):
-
-    cli_command = [
-                  'show platform software fed {switch} active ip igmp snooping groups count',
-                  'show platform software fed active ip igmp snooping groups count'
-                  ]
-
-    def cli(self, output=None, switch=''):
-        if output is None:
-            if switch:
-                cmd = self.cli_command[0].format(switch=switch)
-            else:
-                cmd = self.cli_command[1]
-            output = self.device.execute(cmd)
-        dict_count = {}
-        # Total number of entries:8000
-        p1 = re.compile(r'^Total\s+number\s+of\s+entries\:(?P<ip_igmp_snooping_entries>\d+)$')
-
-        for line in output.splitlines():
-            line = line.strip()
-
-            # Number of lines which match regexp = 240
-            m = p1.match(line)
-            if m:
-                groups = m.groupdict()
-                count = int(groups['ip_igmp_snooping_entries'])
-                dict_count['ip_igmp_snooping_entries'] = count
-
-        return (dict_count)
 
 
 # ===============================================================

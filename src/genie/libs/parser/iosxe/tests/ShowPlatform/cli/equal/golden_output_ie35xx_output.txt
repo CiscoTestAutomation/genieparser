@@ -1,0 +1,3 @@
+Switch  Ports    Model                Serial No.   MAC address     Hw Ver.       Sw Ver. 
+------  -----   ---------             -----------  --------------  -------       --------
+ 1       28     IE-3500-8P3S          FCW2752Y0CF  70da.48b9.6f80  V00           17.16.01

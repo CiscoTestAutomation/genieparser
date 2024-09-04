@@ -159,7 +159,7 @@ class ShowInterfacesSchema(MetaParser):
                     Optional('active_members'): int,
                     Optional('num_of_pf_jumbo_supported_members'): int,
                 },
-                Optional('bandwidth'): int,
+                Optional('bandwidth'): Or(int, str),
                 Optional('counters'):
                     {Optional('rate'):
                        {Optional('load_interval'): int,
@@ -189,6 +189,7 @@ class ShowInterfacesSchema(MetaParser):
                     Optional('in_no_buffer'): int,
                     Optional('in_throttles'): int,
                     Optional('in_mac_pause_frames'): int,
+                    Optional('in_drops'): int,
                     Optional('out_pkts'): int,
                     Optional('out_octets'): int,
                     Optional('out_multicast_pkts'): int,
@@ -207,6 +208,7 @@ class ShowInterfacesSchema(MetaParser):
                     Optional('out_mac_pause_frames'): int,
                     Optional('out_buffer_failure'): int,
                     Optional('out_buffers_swapped'): int,
+                    Optional('out_drops'): int,
                     Optional('last_clear'): str,
                     },
                 Optional('encapsulations'):
@@ -225,6 +227,8 @@ class ShowInterfacesSchema(MetaParser):
                         'interface_ref': str,
                 },
             },
+            Optional('peer_ip'): str,
+            Optional('vc_id'): int
         },
     }
 
@@ -233,7 +237,7 @@ class ShowInterfaces(ShowInterfacesSchema):
     """parser for show interfaces
                   show interfaces <interface>"""
 
-    cli_command = ['show interfaces','show interfaces {interface}']
+    cli_command = ['show interfaces', 'show interfaces {interface}']
     exclude = ['in_octets', 'in_pkts', 'out_octets', 'out_pkts',
                'in_rate', 'in_rate_pkts', 'out_rate', 'out_rate_pkts',
                'input_queue_size', 'in_broadcast_pkts', 'in_multicast_pkts',
@@ -269,6 +273,9 @@ class ShowInterfaces(ShowInterfacesSchema):
                           r' +line +protocol +is +(?P<line_protocol>\w+)'
                           r'( *, *(?P<attribute>[\w\s]+))?$')
 
+        # pseudowire1 is up
+        p1_2 = re.compile(r'^(?P<interface>pseudowire\d+) +is +(?P<enabled>\w+)$')
+
         # Hardware is Gigabit Ethernet, address is 0057.d2ff.428c (bia 0057.d2ff.428c)
         # Hardware is Loopback
         p2 = re.compile(r'^Hardware +is +(?P<type>[a-zA-Z0-9\-\/\s\+]+)'
@@ -300,6 +307,9 @@ class ShowInterfaces(ShowInterfacesSchema):
                         r'(, +RxBW +[0-9]+ +Kbit(\/sec)?)?, +'
                         r'DLY +(?P<delay>[0-9]+) +usec,$')
 
+        # MTU 9198 bytes, BW not configured
+        p6_1 = re.compile(r'^MTU +(?P<mtu>\d+) +bytes, +BW +(?P<bandwidth>[\w\s]+)$')
+
         # reliability 255/255, txload 1/255, rxload 1/255
         p7 = re.compile(r'^reliability +(?P<reliability>[\d\/]+),'
                         r' +txload +(?P<txload>[\d\/]+), +rxload'
@@ -313,12 +323,11 @@ class ShowInterfaces(ShowInterfacesSchema):
         # Encapsulation 802.1Q Virtual LAN, Vlan ID  105.
         # Encapsulation(s): AAL5
         p8 = re.compile(r'^Encapsulation(\(s\):)? +(?P<encapsulation>[\w\s\.]+)'
-                r'(, +(?P<rest>.*))?$')
+                        r'(, +(?P<rest>.*))?$')
 
         # Keepalive set (10 sec)
         p10 = re.compile(r'^Keepalive +set +\((?P<keepalive>[0-9]+)'
-                        r' +sec\)$')
-
+                         r' +sec\)$')
 
         # Auto-duplex, 1000Mb/s, media type is 10/100/1000BaseTX
         # Full-duplex, 1000Mb/s, link type is auto, media type is
@@ -340,43 +349,43 @@ class ShowInterfaces(ShowInterfacesSchema):
 
         # input flow-control is off, output flow-control is unsupported
         p12 = re.compile(r'^(?P<first>input|output) +flow-control +is +(?P<receive>\w+), +'
-                          '(?P<second>output|input) +flow-control +is +(?P<send>\w+)$')
+                         r'(?P<second>output|input) +flow-control +is +(?P<send>\w+)$')
 
         # ARP type: ARPA, ARP Timeout 04:00:00
         p13 = re.compile(r'^ARP +type: +(?P<arp_type>\w+), +'
-                          'ARP +Timeout +(?P<arp_timeout>[\w\:\.]+)$')
+                         r'ARP +Timeout +(?P<arp_timeout>[\w\:\.]+)$')
 
         # Last input never, output 00:01:05, output hang never
         p14 = re.compile(r'^Last +input +(?P<last_input>[\w\.\:]+), +'
-                          'output +(?P<last_output>[\w\.\:]+), '
-                          'output +hang +(?P<output_hang>[\w\.\:]+)$')
+                         r'output +(?P<last_output>[\w\.\:]+), '
+                         r'output +hang +(?P<output_hang>[\w\.\:]+)$')
 
         # Members in this channel: Gi1/0/2
         # Members in this channel: Fo1/0/2 Fo1/0/4
         p15 = re.compile(r'^Members +in +this +channel: +'
-                          '(?P<port_channel_member_intfs>[\w\/\.\s\,]+)$')
+                         r'(?P<port_channel_member_intfs>[\w\/\.\s\,]+)$')
 
         # No. of active members in this channel: 12
         p15_1 = re.compile(r'^No\. +of +active +members +in +this +'
-                            'channel: +(?P<active_members>\d+)$')
+                           r'channel: +(?P<active_members>\d+)$')
 
         # Member 2 : GigabitEthernet0/0/10 , Full-duplex, 900Mb/s
         p15_2 = re.compile(r'^Member +\d+ +: +(?P<interface>\S+) +,'
-                            ' +\S+, +\S+$')
+                           r' +\S+, +\S+$')
 
         # No. of PF_JUMBO supported members in this channel : 0
         p15_3 = re.compile(r'^No\. +of +PF_JUMBO +supported +members +'
-                            'in +this +channel +: +(?P<number>\d+)$')
+                           r'in +this +channel +: +(?P<number>\d+)$')
 
         # Last clearing of "show interface" counters 1d02h
         p16 = re.compile(r'^Last +clearing +of +\"show +interface\" +counters +'
-                          '(?P<last_clear>[\w\:\.]+)$')
+                         r'(?P<last_clear>[\w\:\.]+)$')
 
         # Input queue: 0/375/0/0 (size/max/drops/flushes); Total output drops: 0
         p17 = re.compile(r'^Input +queue: +(?P<size>\d+)\/(?P<max>\d+)\/'
-                          '(?P<drops>\d+)\/(?P<flushes>\d+) +'
-                          '\(size\/max\/drops\/flushes\); +'
-                          'Total +output +drops: +(?P<output_drop>\d+)$')
+                         r'(?P<drops>\d+)\/(?P<flushes>\d+) +'
+                         r'\(size\/max\/drops\/flushes\); +'
+                         r'Total +output +drops: +(?P<output_drop>\d+)$')
 
         # Queueing strategy: fifo
         # Queueing strategy: Class-based queueing
@@ -385,72 +394,72 @@ class ShowInterfaces(ShowInterfacesSchema):
         # Output queue: 0/0 (size/max)
         # Output queue: 0/1000/64/0 (size/max total/threshold/drops)
         p19 = re.compile(r'^Output +queue: +(?P<size>\d+)\/(?P<max>\d+)'
-                          '(?:\/(?P<threshold>\d+)\/(?P<drops>\d+))? '
-                          '+\(size\/max(?: +total\/threshold\/drops\))?.*$')
+                         r'(?:\/(?P<threshold>\d+)\/(?P<drops>\d+))? '
+                         r'+\(size\/max(?: +total\/threshold\/drops\))?.*$')
 
         # 5 minute input rate 0 bits/sec, 0 packets/sec
         p20 = re.compile(r'^(?P<load_interval>[0-9\#]+)'
-                          ' *(?P<unit>(minute|second|minutes|seconds)) *input *rate'
-                          ' *(?P<in_rate>[0-9]+) *bits/sec,'
-                          ' *(?P<in_rate_pkts>[0-9]+) *packets/sec$')
+                         r' *(?P<unit>(minute|second|minutes|seconds)) *input *rate'
+                         r' *(?P<in_rate>[0-9]+) *bits/sec,'
+                         r' *(?P<in_rate_pkts>[0-9]+) *packets/sec$')
 
         # 5 minute output rate 0 bits/sec, 0 packets/sec
         p21 = re.compile(r'^(?P<load_interval>[0-9\#]+)'
-                          ' *(minute|second|minutes|seconds) *output *rate'
-                          ' *(?P<out_rate>[0-9]+) *bits/sec,'
-                          ' *(?P<out_rate_pkts>[0-9]+) *packets/sec$')
+                         r' *(minute|second|minutes|seconds) *output *rate'
+                         r' *(?P<out_rate>[0-9]+) *bits/sec,'
+                         r' *(?P<out_rate_pkts>[0-9]+) *packets/sec$')
 
         # 0 packets input, 0 bytes, 0 no buffer
         # 13350 packets input, 2513375 bytes
         p22 = re.compile(r'^(?P<in_pkts>[0-9]+) +packets +input, +(?P<in_octets>[0-9]+) '
-                          '+bytes(?:, +(?P<in_no_buffer>[0-9]+) +no +buffer)?$')
+                         r'+bytes(?:, +(?P<in_no_buffer>[0-9]+) +no +buffer)?$')
 
         # Received 4173 broadcasts (0 IP multicasts)
         # Received 535996 broadcasts (535961 multicasts)
         p23 = re.compile(r'^Received +(?P<in_broadcast_pkts>\d+) +broadcasts +'
-                          '\((?P<in_multicast_pkts>\d+) *(IP)? *multicasts\)$')
+                         r'\((?P<in_multicast_pkts>\d+) *(IP)? *multicasts\)$')
 
         # 0 runts, 0 giants, 0 throttles
         p24 = re.compile(r'^(?P<in_runts>[0-9]+) *runts,'
-                          ' *(?P<in_giants>[0-9]+) *giants,'
-                          ' *(?P<in_throttles>[0-9]+) *throttles$')
+                         r' *(?P<in_giants>[0-9]+) *giants,'
+                         r' *(?P<in_throttles>[0-9]+) *throttles$')
 
         # 0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored
         # 0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort
         p25 = re.compile(r'^(?P<in_errors>[0-9]+) +input +errors, +'
-                          '(?P<in_crc_errors>[0-9]+) +CRC, +'
-                          '(?P<in_frame>[0-9]+) +frame, +'
-                          '(?P<in_overrun>[0-9]+) +overrun, +'
-                          '(?P<in_ignored>[0-9]+) +ignored'
-                          '(, *(?P<in_abort>[0-9]+) +abort)?$')
+                         r'(?P<in_crc_errors>[0-9]+) +CRC, +'
+                         r'(?P<in_frame>[0-9]+) +frame, +'
+                         r'(?P<in_overrun>[0-9]+) +overrun, +'
+                         r'(?P<in_ignored>[0-9]+) +ignored'
+                         r'(, *(?P<in_abort>[0-9]+) +abort)?$')
 
         # 0 watchdog, 535961 multicast, 0 pause input
         p26 = re.compile(r'^(?P<in_watchdog>[0-9]+) +watchdog, +'
-                          '(?P<in_multicast_pkts>[0-9]+) +multicast, +'
-                          '(?P<in_pause_input>[0-9]+) +pause +input$')
+                         r'(?P<in_multicast_pkts>[0-9]+) +multicast, +'
+                         r'(?P<in_pause_input>[0-9]+) +pause +input$')
 
         # 0 input packets with dribble condition detected
         p27 = re.compile(r'^(?P<in_with_dribble>[0-9]+) +input +packets +with +'
-                          'dribble +condition +detected$')
+                         r'dribble +condition +detected$')
 
         # 23376 packets output, 3642296 bytes, 0 underruns
         # 13781 packets output, 2169851 bytes
         p28 = re.compile(r'^(?P<out_pkts>[0-9]+) +packets +output, +(?P<out_octets>[0-9]+) '
-                          r'+bytes(?:\, +(?P<out_underruns>[0-9]+) +underruns)?$')
+                         r'+bytes(?:\, +(?P<out_underruns>[0-9]+) +underruns)?$')
 
         # Output 0 broadcasts (55 multicasts)
         p29 = re.compile(r'^Output +(?P<out_broadcast_pkts>\d+) +broadcasts +'
-                          r'\((?P<out_multicast_pkts>\d+) *(IP)? *multicasts\)$')
+                         r'\((?P<out_multicast_pkts>\d+) *(IP)? *multicasts\)$')
 
         # 0 output errors, 0 collisions, 2 interface resets
         # 0 output errors, 0 interface resets
         p30 = re.compile(r'^(?P<out_errors>[0-9]+) +output +errors,'
-                          r'( *(?P<out_collision>[0-9]+) +collisions,)? +'
-                          r'(?P<out_interface_resets>[0-9]+) +interface +resets$')
+                         r'( *(?P<out_collision>[0-9]+) +collisions,)? +'
+                         r'(?P<out_interface_resets>[0-9]+) +interface +resets$')
 
         # 0 unknown protocol drops
         p31 = re.compile(r'^(?P<out_unknown_protocl_drops>[0-9]+) +'
-                          'unknown +protocol +drops$')
+                         r'unknown +protocol +drops$')
 
         # 0 babbles, 0 late collision, 0 deferred
         p32 = re.compile(r'^(?P<out_babble>[0-9]+) +babbles, +'
@@ -460,29 +469,29 @@ class ShowInterfaces(ShowInterfacesSchema):
         # 0 lost carrier, 0 no carrier, 0 pause output
         # 0 lost carrier, 0 no carrier
         p33 = re.compile(r'^(?P<out_lost_carrier>\d+) +lost +carrier, +'
-                r'(?P<out_no_carrier>\d+) +no +carrier(, +(?P<out_pause_output>\d+) +'
-                r'pause +output)?$')
+                         r'(?P<out_no_carrier>\d+) +no +carrier(, +(?P<out_pause_output>\d+) +'
+                         r'pause +output)?$')
 
         # 0 output buffer failures, 0 output buffers swapped out
         p34 = re.compile(r'^(?P<out_buffer_failure>[0-9]+) +output +buffer +failures, +'
-                          '(?P<out_buffers_swapped>[0-9]+) +output +buffers +swapped +out$')
+                         r'(?P<out_buffers_swapped>[0-9]+) +output +buffers +swapped +out$')
 
         # Interface is unnumbered. Using address of Loopback0 (10.4.1.1)
         # Interface is unnumbered. Using address of GigabitEthernet0/2.1 (192.168.154.1)
         p35 = re.compile(r'^Interface +is +unnumbered. +Using +address +of +'
-                          '(?P<unnumbered_intf>[\w\/\.]+) +'
-                          '\((?P<unnumbered_ip>[\w\.\:]+)\)$')
+                         r'(?P<unnumbered_intf>[\w\/\.]+) +'
+                         r'\((?P<unnumbered_ip>[\w\.\:]+)\)$')
 
         # 8 maximum active VCs, 1024 VCs per VP, 1 current VCCs
         p36 = re.compile(r'^(?P<maximum_active_vcs>\d+) +maximum +active +VCs, +'
-                r'(?P<vcs_per_vp>\d+) +VCs +per +VP, +(?P<current_vccs>\d+) +current +VCCs$')
+                         r'(?P<vcs_per_vp>\d+) +VCs +per +VP, +(?P<current_vccs>\d+) +current +VCCs$')
 
         # VC Auto Creation Disabled.
         p37 = re.compile(r'^VC +Auto +Creation +(?P<vc_auto_creation>\S+)\.$')
 
         # VC idle disconnect time: 300 seconds
         p38 = re.compile(r'^VC +idle +disconnect +time: +(?P<vc_idle_disconnect_time>\d+) +'
-                r'seconds$')
+                         r'seconds$')
 
         # AAL5 CRC errors : 0
         p39 = re.compile(r'^(?P<key>\S+ +CRC +errors) +: +(?P<val>\d+)$')
@@ -502,11 +511,11 @@ class ShowInterfaces(ShowInterfacesSchema):
 
         # Vaccess status 0x44, loopback not set
         p44 = re.compile(r'^Vaccess\s+status\s+(?P<status>\S+),\s+'
-                r'loopback\s+(?P<loopback>[\S\s]+)$')
+                         r'loopback\s+(?P<loopback>[\S\s]+)$')
 
         # DTR is pulsed for 5 seconds on reset
         p45 = re.compile(r'^DTR +is +pulsed +for +(?P<dtr_pulsed>\d+) +'
-                r'seconds +on +reset$')
+                         r'seconds +on +reset$')
 
         # Tunnel source 1.1.10.11
         # Tunnel source 1.1.1.1 (Loopback1)
@@ -515,8 +524,8 @@ class ShowInterfaces(ShowInterfacesSchema):
         # Tunnel source UNKNOWN, destination 1.2.3.4
         #
         p46 = re.compile(r'^Tunnel +source +(?P<tunnel_source_ip>([a-fA-F\d\:UNKNOWN|0-9\.]+)?),?\s?'
-                        r'(?P<tunnel_source_interface>\([\w\d.\/]+\))?,?\s?'
-                        r'(destination +)?(?P<tunnel_destination_ip>([a-fA-F\d\:0-9\.]+)?)')
+                         r'(?P<tunnel_source_interface>\([\w\d.\/]+\))?,?\s?'
+                         r'(destination +)?(?P<tunnel_destination_ip>([a-fA-F\d\:0-9\.]+)?)')
 
         # Tunnel protocol/transport AURP
         p47 = re.compile(r'^Tunnel +protocol/transport +(?P<tunnel_protocol>[\w\/]+)')
@@ -539,8 +548,28 @@ class ShowInterfaces(ShowInterfacesSchema):
         # 3 carrier transitions
         p53 = re.compile(r'^(?P<carrier_transitions>\d+)\s+carrier transitions$')
 
+        # Carrier delay is 10 sec
+        p54 = re.compile(r'^Carrier +delay +is +(?P<carrier_delay>\d+).*$')
+
+        # Asymmetric Carrier-Delay Up Timer is 2 sec
+        # Asymmetric Carrier-Delay Down Timer is 10 sec
+        p55 = re.compile(r'^Asymmetric +Carrier-Delay +(?P<type>Down|Up)'
+                            r' +Timer +is +(?P<carrier_delay>\d+).*$')
+
+        # Peer IP 192.0.2.3, VC ID 1
+        p56 = re.compile(r'^Peer IP (?P<peer_ip>[\d\.]+), VC ID (?P<vc_id>\d+)$')
+
+        # RX
+        # TX
+        p57 = re.compile(r'^(?P<rx_tx>RX|TX)$')
+
+        # 0 packets 0 bytes 0 drops
+        p58 = re.compile(r'^(?P<pkts>\d+) packets (?P<octets>\d+) bytes (?P<drops>\d+) drops$')
+
         interface_dict = {}
         unnumbered_dict = {}
+        section_name = None
+
         for line in out.splitlines():
             line = line.strip()
 
@@ -553,14 +582,15 @@ class ShowInterfaces(ShowInterfacesSchema):
 
             m = p1.match(line)
             m1 = p1_1.match(line)
-            m = m if m else m1
+            m2 = p1_2.match(line)
+            m = m if m else m1 if m1 else m2
             if m:
                 interface = m.groupdict()['interface']
                 interface = Common.convert_intf_name(interface)
                 enabled = m.groupdict()['enabled']
-                line_protocol = m.groupdict()['line_protocol']
-                line_attribute = m.groupdict()['attribute']
-                if m.groupdict()['autostate']:
+                line_protocol = m.groupdict().get('line_protocol')
+                line_attribute = m.groupdict().get('attribute')
+                if m.groupdict().get('autostate'):
                     autostate = m.groupdict()['autostate'].lower()
                 else:
                     autostate = None
@@ -663,19 +693,25 @@ class ShowInterfaces(ShowInterfacesSchema):
 
             # MTU 1500 bytes, BW 768 Kbit/sec, DLY 3330 usec,
             # MTU 1500 bytes, BW 10000 Kbit, DLY 1000 usec,
+            # MTU 9198 bytes, BW not configured
             m = p6.match(line)
+            m1 = p6_1.match(line)
+            m = m if m else m1
             if m:
                 mtu = m.groupdict()['mtu']
                 sub_mtu = m.groupdict().get('sub_mtu', None)
                 bandwidth = m.groupdict()['bandwidth']
-                if m.groupdict()['delay']:
+                if m.groupdict().get('delay'):
                     interface_dict[interface]['delay'] = int(m.groupdict()['delay'])
                 if mtu:
                     interface_dict[interface]['mtu'] = int(mtu)
                 if sub_mtu:
                     interface_dict[interface]['sub_mtu'] = int(sub_mtu)
                 if bandwidth:
-                    interface_dict[interface]['bandwidth'] = int(bandwidth)
+                    try:
+                        interface_dict[interface]['bandwidth'] = int(bandwidth)
+                    except ValueError:
+                        interface_dict[interface]['bandwidth'] = bandwidth
                 continue
 
             # reliability 255/255, txload 1/255, rxload 1/255
@@ -807,8 +843,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                 continue
 
             # Carrier delay is 10 sec
-            p_cd = re.compile(r'^Carrier +delay +is +(?P<carrier_delay>\d+).*$')
-            m = p_cd.match(line)
+            m = p54.match(line)
             if m:
                 group = m.groupdict()
                 sub_dict = interface_dict.setdefault(interface, {})
@@ -817,9 +852,7 @@ class ShowInterfaces(ShowInterfacesSchema):
 
             # Asymmetric Carrier-Delay Up Timer is 2 sec
             # Asymmetric Carrier-Delay Down Timer is 10 sec
-            p_cd_2 = re.compile(r'^Asymmetric +Carrier-Delay +(?P<type>Down|Up)'
-                                 ' +Timer +is +(?P<carrier_delay>\d+).*$')
-            m = p_cd_2.match(line)
+            m = p55.match(line)
             if m:
                 group = m.groupdict()
                 tp = group['type'].lower()
@@ -1309,9 +1342,37 @@ class ShowInterfaces(ShowInterfacesSchema):
                 interface_dict[interface]['carrier_transitions'] = int(group['carrier_transitions'])
                 continue
 
+            # Peer IP 192.0.2.3, VC ID 1
+            m = p56.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict[interface]['peer_ip'] = group['peer_ip']
+                interface_dict[interface]['vc_id'] = int(group['vc_id'])
+                continue
+
+            # RX
+            # TX
+            m = p57.match(line)
+            if m:
+                group = m.groupdict()
+                section_name = group['rx_tx'].lower()
+                continue
+
+            # 0 packets 0 bytes 0 drops
+            # re.compile(r'^(?P<pkts>\d+) packets (?P<octets>\d+) bytes (?P<drops>\d+) drops$')
+            m = p58.match(line)
+            if m:
+                group = m.groupdict()
+                coutners_dict = interface_dict[interface].setdefault('counters', {})
+                direction = 'in' if section_name == 'rx' else 'out'
+                coutners_dict[f'{direction}_pkts'] = int(group['pkts'])
+                coutners_dict[f'{direction}_octets'] = int(group['octets'])
+                coutners_dict[f'{direction}_drops'] = int(group['drops'])
+                continue
+
         # create strucutre for unnumbered interface
         if not unnumbered_dict:
-            return(interface_dict)
+            return (interface_dict)
 
         for intf in unnumbered_dict:
             unnumbered_intf = unnumbered_dict[intf]['unnumbered_intf']
@@ -1331,7 +1392,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                             interface_dict[intf]['ipv4']['unnumbered']\
                                 ['interface_ref'] = unnumbered_intf
 
-        return(interface_dict)
+        return (interface_dict)
 
 
 # parser using parsergen

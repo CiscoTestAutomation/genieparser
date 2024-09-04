@@ -1180,8 +1180,8 @@ class ShowEtherChannelDetailSchema(MetaParser):
                 'state': str,
                 'protocol': str,
                 'port_security': str,
-                'fast_switchover': str,
-                'dampening': str,
+                Optional('fast_switchover'): str,
+                Optional('dampening'): str,
                 Optional('last_port_bundled'): {
                     'time': str,
                     'port': str

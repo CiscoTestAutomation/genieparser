@@ -321,7 +321,7 @@ class ShowAccessListsSummarySchema(MetaParser):
               Optional('Fragments'): str,
           }
         },
-        'attachment_points': {
+        Optional('attachment_points'): {
             Any(): { # 'Ethernet1/1'
                 'interface_id': str, #'Ethernet1/1'
                 Optional('ingress'): {

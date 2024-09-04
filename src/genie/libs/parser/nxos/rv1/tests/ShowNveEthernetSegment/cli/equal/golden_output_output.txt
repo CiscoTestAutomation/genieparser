@@ -1,0 +1,206 @@
+ESI: 0322.22aa.aa00.0000.0029
+   Parent interface: port-channel41
+  ES State: Up 
+  Port-channel state: Up
+  NVE Interface: nve1 
+   NVE State: Up 
+   Host Learning Mode: control-plane
+  Active Vlans: 1011-1012,2051,2059-2061 
+   DF Vlans: 1012,2060 
+   Active VNIs: 2001011-2001012,2002051,2002059-2002061 
+  DF BDs:  
+   DF VNIs:  
+   Number of ES members: 2 
+  My ordinal: 0 
+  DF timer start time: 00:00:00 
+  Config State: config-applied 
+  DF List: 10.200.200.105 10.200.200.106  
+  ES route added to L2RIB: True
+  EAD/ES routes added to L2RIB: True
+  ESI type: Ether-segment 
+  ESI DF election mode: Modulo 
+----------------------------------------
+
+ESI: 0322.22aa.aa00.0000.002a
+   Parent interface: port-channel42
+  ES State: Up 
+  Port-channel state: Up
+  NVE Interface: nve1 
+   NVE State: Up 
+   Host Learning Mode: control-plane
+  Active Vlans: 2052,2062 
+   DF Vlans: 2052,2062 
+   Active VNIs: 2002052,2002062 
+  DF BDs:  
+   DF VNIs:  
+   Number of ES members: 2 
+  My ordinal: 0 
+  DF timer start time: 00:00:00 
+  Config State: config-applied 
+  DF List: 10.200.200.105 10.200.200.106  
+  ES route added to L2RIB: True
+  EAD/ES routes added to L2RIB: True
+  ESI type: Ether-segment 
+  ESI DF election mode: Modulo 
+----------------------------------------
+
+ESI: 0322.22aa.aa00.0000.002b
+   Parent interface: port-channel43
+  ES State: Up 
+  Port-channel state: Up
+  NVE Interface: nve1 
+   NVE State: Up 
+   Host Learning Mode: control-plane
+  Active Vlans: 2053,2063 
+   DF Vlans:  
+   Active VNIs: 2002053,2002063 
+  DF BDs:  
+   DF VNIs:  
+   Number of ES members: 2 
+  My ordinal: 0 
+  DF timer start time: 00:00:00 
+  Config State: config-applied 
+  DF List: 10.200.200.105 10.200.200.106  
+  ES route added to L2RIB: True
+  EAD/ES routes added to L2RIB: True
+  ESI type: Ether-segment 
+  ESI DF election mode: Modulo 
+----------------------------------------
+
+ESI: 0322.22aa.aa00.0000.002c
+   Parent interface: port-channel44
+  ES State: Up 
+  Port-channel state: Up
+  NVE Interface: nve1 
+   NVE State: Up 
+   Host Learning Mode: control-plane
+  Active Vlans: 2054,2064 
+   DF Vlans: 2054,2064 
+   Active VNIs: 2002054,2002064 
+  DF BDs:  
+   DF VNIs:  
+   Number of ES members: 2 
+  My ordinal: 0 
+  DF timer start time: 00:00:00 
+  Config State: config-applied 
+  DF List: 10.200.200.105 10.200.200.106  
+  ES route added to L2RIB: True
+  EAD/ES routes added to L2RIB: True
+  ESI type: Ether-segment 
+  ESI DF election mode: Modulo 
+----------------------------------------
+
+ESI: 0322.22aa.aa00.0000.002d
+   Parent interface: port-channel45
+  ES State: Up 
+  Port-channel state: Up
+  NVE Interface: nve1 
+   NVE State: Up 
+   Host Learning Mode: control-plane
+  Active Vlans: 2055,2065 
+   DF Vlans:  
+   Active VNIs: 2002055,2002065 
+  DF BDs:  
+   DF VNIs:  
+   Number of ES members: 2 
+  My ordinal: 0 
+  DF timer start time: 00:00:00 
+  Config State: config-applied 
+  DF List: 10.200.200.105 10.200.200.106  
+  ES route added to L2RIB: True
+  EAD/ES routes added to L2RIB: True
+  ESI type: Ether-segment 
+  ESI DF election mode: Modulo 
+----------------------------------------
+
+ESI: 0322.22aa.aa00.0000.002e
+   Parent interface: port-channel46
+  ES State: Up 
+  Port-channel state: Up
+  NVE Interface: nve1 
+   NVE State: Up 
+   Host Learning Mode: control-plane
+  Active Vlans: 2056,2066 
+   DF Vlans: 2056,2066 
+   Active VNIs: 2002056,2002066 
+  DF BDs:  
+   DF VNIs:  
+   Number of ES members: 2 
+  My ordinal: 0 
+  DF timer start time: 00:00:00 
+  Config State: config-applied 
+  DF List: 10.200.200.105 10.200.200.106  
+  ES route added to L2RIB: True
+  EAD/ES routes added to L2RIB: True
+  ESI type: Ether-segment 
+  ESI DF election mode: Modulo 
+----------------------------------------
+
+ESI: 0322.22aa.aa00.0000.002f
+   Parent interface: port-channel47
+  ES State: Up 
+  Port-channel state: Up
+  NVE Interface: nve1 
+   NVE State: Up 
+   Host Learning Mode: control-plane
+  Active Vlans: 2057,2067 
+   DF Vlans:  
+   Active VNIs: 2002057,2002067 
+  DF BDs:  
+   DF VNIs:  
+   Number of ES members: 2 
+  My ordinal: 0 
+  DF timer start time: 00:00:00 
+  Config State: config-applied 
+  DF List: 10.200.200.105 10.200.200.106  
+  ES route added to L2RIB: True
+  EAD/ES routes added to L2RIB: True
+  ESI type: Ether-segment 
+  ESI DF election mode: Modulo 
+----------------------------------------
+
+ESI: 0322.22aa.aa00.0000.0030
+   Parent interface: port-channel48
+  ES State: Up 
+  Port-channel state: Up
+  NVE Interface: nve1 
+   NVE State: Up 
+   Host Learning Mode: control-plane
+  Active Vlans: 2058,2068 
+   DF Vlans: 2058,2068 
+   Active VNIs: 2002058,2002068 
+  DF BDs:  
+   DF VNIs:  
+   Number of ES members: 2 
+  My ordinal: 0 
+  DF timer start time: 00:00:00 
+  Config State: config-applied 
+  DF List: 10.200.200.105 10.200.200.106  
+  ES route added to L2RIB: True
+  EAD/ES routes added to L2RIB: True
+  ESI type: Ether-segment 
+  ESI DF election mode: Modulo 
+----------------------------------------
+
+ESI: 0322.22aa.aa00.0000.0031
+   Parent interface: port-channel49
+  ES State: Up 
+  Port-channel state: Up
+  NVE Interface: nve1 
+   NVE State: Up 
+   Host Learning Mode: control-plane
+  Active Vlans: 2081-2088 
+   DF Vlans: 2082,2084,2086,2088 
+   Active VNIs: 2002081-2002088 
+  DF BDs:  
+   DF VNIs:  
+   Number of ES members: 2 
+  My ordinal: 0 
+  DF timer start time: 00:00:00 
+  Config State: config-applied 
+  DF List: 10.200.200.105 10.200.200.106  
+  ES route added to L2RIB: True
+  EAD/ES routes added to L2RIB: True
+  ESI type: Ether-segment 
+  ESI DF election mode: Modulo 
+----------------------------------------

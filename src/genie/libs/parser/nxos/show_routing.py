@@ -717,13 +717,14 @@ class ShowIpRoute(ShowIpRouteSchema):
         # 192.168.1.0/24, ubest/mbest: 1/0, attached, direct, pervasive
         # 192.168.1.1/32, ubest/mbest: 1/0, attached, pervasive
         # 100.1.1.1/32, ubest/mbest: 2/0, all-best (0x63636363)
+        # 222.1.1.0/24, ubest/mbest: 1/0, all-best
 
         p2 = re.compile(r'^(?P<route>[\w\/\.\:]+), +(ubest/mbest: +'
                         r'(?P<ubest_mbest>[\d\/]+)( +time)?)?((?P<ubest>\d+) '
                         r'+ucast +next-hops, +(?P<mbest>\d+) +mcast +next-hops)?'
                         r'(, +(?P<attached>[\w]+))?( +(?P<attached2>[\w]+))?'
                         r'(\,)?( +(?P<direct>direct))?(\,)?( +(?P<pervasive>pervasive))?'
-                        r'(, +(all-best +\((?P<all_best>[0-9x]+)\))?)?$')
+                        r'(, +(all-best *\(?(?P<all_best>[0-9x]*)\)?)?)?$')
 
         # *via 10.2.3.2, Eth1/4, [1/0], 01:01:30, static
         # *via 10.1.3.1, Eth1/2, [110/41], 01:01:18, ospf-1, intra

@@ -1,2 +1,0 @@
-    Total Group Count       : 9789
-    Total Stub Group Count  : 9787

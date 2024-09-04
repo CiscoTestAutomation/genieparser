@@ -17,7 +17,7 @@ expected_output = {
                         "100.100.100.100": {
                             "state": "Reachable",
                             "session": "Up",
-                            "pubsub_state": "Established"
+                            "pubsub_state": "Unsubscribe IID Sent"
                         },
                     }
                 }
