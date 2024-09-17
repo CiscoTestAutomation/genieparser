@@ -2403,9 +2403,10 @@ class ShowMplsL2TransportDetail(ShowMplsL2TransportSchema):
 
         # Local interface: VFI PE1-VPLS-A up
         # Local interface: Fa2/1/1.2 up, line protocol up, Eth VLAN 2 up
+        # Local interface: Gi0/0/22 up, line protocol up, Ethernet:1 up
         p1 = re.compile(r'^Local +interface: +(?P<interface>[\w\d\/\.\s\-]+)'
                          ' +(?P<state>\w+)(, line +protocol +(?P<line_protocol_status>\w+),'
-                         ' Eth +VLAN +(?P<number>\d+) +(?P<status>\w+))?$')
+                         ' (?:Eth +VLAN +|Ethernet:)(?P<number>\d+) +(?P<status>\w+))?$')
 
         # Local interface: Se0/1/0:0 up, line protocol up, HDLC up
         p1_1 = re.compile(r'^Local +interface: +(?P<interface>[\w\W]+) +(?P<state>\w+), +line +protocol +(?P<line_protocol_status>\w+), +(?P<protocol>\w+) +(?P<status>\w+)$')
