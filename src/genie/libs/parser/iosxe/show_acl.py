@@ -924,7 +924,9 @@ class ShowObjectGroupNameSchema(MetaParser):
         'object_group': {
             Any(): {
                 Optional('host_address'): ListOf(str),
-                Optional('services'): ListOf(str)
+                Optional('services'): ListOf(str),
+                Optional('network_address'): ListOf(str),
+                Optional('range'): ListOf(str)
             }     
         }        
     }
@@ -941,7 +943,7 @@ class ShowObjectGroupName(ShowObjectGroupNameSchema):
         else:
             out = output
        
-        ret_dict = {}       
+        ret_dict = {}     
         
         # V6-Network object group v6-net1
         # V6-Service object group v6-serv1
@@ -954,7 +956,14 @@ class ShowObjectGroupName(ShowObjectGroupNameSchema):
         p2 = re.compile(r'^(?P<services>\S+)$')
 
         # host 2040:1::3
-        p3 = re.compile(r'^host\s+(?P<address>[\w\:]+)$')
+        # host 10.10.10.10
+        p3 = re.compile(r'^host\s+(?P<address>[\w\:\.]+)$')
+
+        # 10.10.10.10 255.255.255.0
+        p4 = re.compile(r'^(?P<network>\d{1,3}(?:\.\d{1,3}){3}\s+\d{1,3}(?:\.\d{1,3}){3})$')
+
+        # range 10.10.10.10 10.10.10.11
+        p5 = re.compile(r'^range\s+(?P<range>\d{1,3}(?:\.\d{1,3}){3}\s+\d{1,3}(?:\.\d{1,3}){3})$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -979,6 +988,7 @@ class ShowObjectGroupName(ShowObjectGroupNameSchema):
                 continue
 
             # host 2040:1::3
+            # host 10.10.10.10
             m = p3.match(line)
             if m:
                 group = m.groupdict()
@@ -986,4 +996,19 @@ class ShowObjectGroupName(ShowObjectGroupNameSchema):
                 host_dict.append(group['address'])          
                 continue
 
+            # 10.10.10.10 255.255.255.0
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                host_dict = group_dict.setdefault('network_address', [])
+                host_dict.append(group['network'])          
+                continue
+            
+            # range 10.10.10.10 10.10.10.11
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                host_dict = group_dict.setdefault('range', [])
+                host_dict.append(group['range'])          
+                continue
         return ret_dict
