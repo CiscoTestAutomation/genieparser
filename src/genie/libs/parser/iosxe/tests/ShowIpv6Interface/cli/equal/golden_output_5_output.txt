@@ -1,0 +1,7 @@
+GigabitEthernet0/0/0 is administratively down, line protocol is down
+  IPv6 is tentative, link-local address is FE80::72EA:1AFF:FEB5:49B0 [TEN]
+  No Virtual link-local address(es):
+  Stateless address autoconfig enabled
+  No global unicast address is configured
+  Joined group address(es):
+  Hosts use stateless autoconfig for addresses.

@@ -1,0 +1,10 @@
+Sec_RAITT#show plat soft fed sw ac access-security sec-mac-lrn-table interface if-id 0x456
+Access Security Secure-Mac Table Summary
+
+
+Secure MAC Client Port Vlan and MAC entries:
+
+     Interface    VLAN       MAC              Logical-ID Position   Asic# Auth-Act           Restore-Auth-Act   Flag         Drop   Policy   Policy-OID Packets    
+---- ------------ ---------- ---------------- ---------- ---------- ----- ------------------ ------------------ ------------ ------ -------- ---------- ---------- 
+   1 Gi1/0/10     50         0000.0022.2222   0          12288      0     FWD_ALL_LRN_DATA   None               NONE         No     NONE     551        0         
+

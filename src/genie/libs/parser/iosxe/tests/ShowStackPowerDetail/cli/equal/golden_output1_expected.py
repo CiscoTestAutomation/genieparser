@@ -12,7 +12,8 @@ expected_output = {
                 "power_stack_detail":{
                     "stack_mode":"Power sharing",
                     "stack_topology":"Standalone",
-                    "stack_ecomode":"Enable",
+                    "Stack_total_input_power": 4400,
+                    "power_supply_auto_off":"Enable",
                     "switch":{
                         3:{
                             "power_budget":955,
@@ -24,7 +25,7 @@ expected_output = {
                             "port_2_status":"Shut",
                             "neighbor_on_port_1":"0000.0000.0000",
                             "neighbor_on_port_2":"0000.0000.0000",
-                            "ecomode":"FEP B auto offlined",
+                            "auto_off":"FEP B auto offlined",
                             "capacity":"350"
                         }
                     }
@@ -42,7 +43,8 @@ expected_output = {
                 "power_stack_detail":{
                     "stack_mode":"Power sharing",
                     "stack_topology":"Standalone",
-                    "stack_ecomode":"Enable",
+                    "Stack_total_input_power": 4400,
+                    "power_supply_auto_off":"Enable",
                     "switch":{
                         1:{
                             "power_budget":1100,
@@ -54,7 +56,7 @@ expected_output = {
                             "port_2_status":"Shut",
                             "neighbor_on_port_1":"0000.0000.0000",
                             "neighbor_on_port_2":"0000.0000.0000",
-                            "ecomode":"FEP B auto offlined",
+                            "auto_off":"FEP B auto offlined",
                             "capacity":"1100"
                         }
                     }
@@ -72,7 +74,8 @@ expected_output = {
                 "power_stack_detail":{
                     "stack_mode":"Power sharing",
                     "stack_topology":"Standalone",
-                    "stack_ecomode":"Enable",
+                    "Stack_total_input_power": 4400,
+                    "power_supply_auto_off":"Enable",
                     "switch":{
                         2:{
                             "power_budget":1100,
@@ -84,7 +87,7 @@ expected_output = {
                             "port_2_status":"Shut",
                             "neighbor_on_port_1":"0000.0000.0000",
                             "neighbor_on_port_2":"0000.0000.0000",
-                            "ecomode":"FEP B auto offlined",
+                            "auto_off":"FEP B auto offlined",
                             "capacity":"1100"
                         }
                     }

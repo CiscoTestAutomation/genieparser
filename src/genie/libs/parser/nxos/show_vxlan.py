@@ -5,6 +5,7 @@ NXOS parser for the following show commands:
     * show nve interface <nve> detail
     * show nve ethernet-segment
     * show nve vni
+    * show nve vni <vni>
     * show nve vni summary
     * show nve multisite dci-links
     * show nve multisite fabric-links
@@ -24,7 +25,7 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Optional
+from genie.metaparser.util.schemaengine import Any, Optional
 
 from genie.libs.parser.utils.common import Common
 
@@ -245,14 +246,16 @@ class ShowNveVniSummary(ShowNveVniSummarySchema):
 
         return result_dict
 
+
 # ====================================================
 #  schema for show nve vni
 # ====================================================
 class ShowNveVniSchema(MetaParser):
     """Schema for:
-        show nve vni"""
+        show nve vni
+        show nve vni <vni>"""
 
-    schema ={
+    schema = {
         Any(): {
             'vni': {
                 Any(): {
@@ -267,19 +270,24 @@ class ShowNveVniSchema(MetaParser):
         }
     }
 
+
 # ====================================================
 #  Parser for show nve vni
 # ====================================================
 class ShowNveVni(ShowNveVniSchema):
     """parser for:
-        show nve vni"""
+        show nve vni
+        show nve vni <vni>"""
 
-    cli_command = 'show nve vni'
+    cli_command = ['show nve vni', 'show nve vni {vni}']
 
-    def cli(self, output=None):
+    def cli(self, vni=None, output=None):
         # excute command to get output
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if vni:
+                out = self.device.execute(self.cli_command[1].format(vni=vni))
+            else:
+                out = self.device.execute(self.cli_command[0])
         else:
             out = output
 
@@ -292,6 +300,7 @@ class ShowNveVni(ShowNveVniSchema):
         p1 = re.compile(r'^(?P<nve_name>[\w\/]+) +(?P<vni>[\d]+) +(?P<mcast>[\w\.\/]+) +'
                         r'(?P<vni_state>[\w]+) +(?P<mode>[\w]+) +(?P<type>\w+ +\[[\w\-]+\])'
                         r'(?: +(?P<flags>[\w\-\s]+))?$')
+
         for line in out.splitlines():
             line = line.strip()
 
@@ -300,7 +309,7 @@ class ShowNveVni(ShowNveVniSchema):
                 group = m.groupdict()
                 nve_name = group.pop('nve_name')
                 vni = int(group.pop('vni'))
-                nve_dict = result_dict.setdefault(nve_name,{}).setdefault('vni',{}).setdefault(vni,{})
+                nve_dict = result_dict.setdefault(nve_name, {}).setdefault('vni', {}).setdefault(vni, {})
                 nve_dict.update({'vni': vni})
                 nve_dict.update({'mcast': group.pop('mcast').lower()})
                 nve_dict.update({'vni_state': group.pop('vni_state').lower()})

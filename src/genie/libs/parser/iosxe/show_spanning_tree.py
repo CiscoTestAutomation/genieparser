@@ -1500,8 +1500,10 @@ class ShowSpanningTreeSummaryTotalsSchema(MetaParser):
         'root_bridge': str,
         'extended_system_id': bool,
         'portfast': bool,
-        'portfast_bpdu_guard': bool,
-        'portfast_bpdu_filter': bool,
+        Optional('portfast_bpdu_guard'): bool,
+        Optional('portfast_bpdu_filter'): bool,
+        Optional('portfast_edge_bpdu_guard'): bool,
+        Optional('portfast_edge_bpdu_filter'): bool,
         'loopguard': bool,
         'etherchannel_misconfig_guard': bool,
         'uplinkfast': bool,
@@ -1543,8 +1545,11 @@ class ShowSpanningTreeSummaryTotals(ShowSpanningTreeSummaryTotalsSchema):
         # EtherChannel misconfig guard            is enabled
         # UplinkFast                              is disabled
         # BackboneFast                            is disabled
+        # Portfast Edge BPDU Guard Default        is disabled
+        # Portfast Edge BPDU Filter Default       is disabled
         p3 = re.compile(r'^(?P<key>Extended system ID|Portfast|PortFast BPDU Guard|Portfast BPDU Filter|'
-            r'Loopguard|EtherChannel misconfig guard|UplinkFast|BackboneFast)(\sDefault)?\s+is (?P<state>\w+)$')
+            r'Portfast Edge BPDU Guard|Portfast Edge BPDU Filter|Loopguard|EtherChannel misconfig guard|'
+            r'UplinkFast|BackboneFast)(\sDefault)?\s+is (?P<state>\w+)$')
 
         # Name                   Blocking Listening Learning Forwarding STP Active
         p4 = re.compile(r'^Name\s+Blocking Listening Learning Forwarding STP Active$')
@@ -1577,6 +1582,8 @@ class ShowSpanningTreeSummaryTotals(ShowSpanningTreeSummaryTotalsSchema):
             # EtherChannel misconfig guard            is enabled
             # UplinkFast                              is disabled
             # BackboneFast                            is disabled
+            # Portfast Edge BPDU Guard Default        is disabled
+            # Portfast Edge BPDU Filter Default       is disabled
             m = p3.match(line)
             if m:
                 ret_dict[m.groupdict()['key'].strip().lower().replace(' ', '_')] = m.groupdict()['state'] == 'enabled'

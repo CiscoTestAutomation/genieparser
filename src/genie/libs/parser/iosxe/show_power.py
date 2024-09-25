@@ -49,7 +49,9 @@ class ShowStackPowerSchema(MetaParser):
                 Optional('power_stack_detail'):{  
                     'stack_mode': str,
                     'stack_topology': str,
-                    Optional('stack_ecomode'): str,
+                    Optional('Stack_total_input_power'): int,
+                    Optional('stack_auto_off'): str,
+                    Optional('power_supply_auto_off'): str,
                     'switch': {
                         Any(): {
                             'power_budget': int,
@@ -61,7 +63,7 @@ class ShowStackPowerSchema(MetaParser):
                             'port_2_status': str,
                             'neighbor_on_port_1': str,
                             'neighbor_on_port_2': str,
-                            Optional('ecomode'): str,
+                            Optional('auto_off'): str,
                             Optional('capacity'): str,
                         },
                     },
@@ -86,6 +88,7 @@ class ShowStackPowerSchema(MetaParser):
             'total_consumed_power_poe': Or(int, float),
         },
     }
+
 
 
 class ShowStackPower(ShowStackPowerSchema):
@@ -500,7 +503,7 @@ class ShowStackPowerDetail(ShowStackPowerSchema):
                 r'(?P<switch_num>\d+) +'
                 r'(?P<power_supply_num>\d+)$')
 
-        #Power stack name: Powerstack-1
+        # Power stack name: Powerstack-1
         p2 = re.compile(r"^Power+\s+stack+\s+name:+\s+(?P<name>[\w\-]+)$")
 
         # Stack mode: Power sharing 
@@ -539,10 +542,13 @@ class ShowStackPowerDetail(ShowStackPowerSchema):
         # Neighbor on port 2: 0000.0000.0000
         p14 = re.compile(r"^Neighbor+\s+on+\s+port+\s+2:+\s+(?P<neighbor_on_port_2>.*)$")
 
-        # Stack Ecomode: Disable
-        p15 = re.compile(r"^Stack Ecomode:+\s+(?P<stack_ecomode>\w+)$")
-        #Ecomode: FEP B auto offlined, capacity: 350 
-        p16 = re.compile(r"^Ecomode:\s+(?P<ecomode>.*),\s+capacity:\s+(?P<capacity>\w+)$")
+        # Stack Auto-off: Disable
+        p15 = re.compile(r"^Power+\s+Supply+\s+auto-off:+\s+(?P<power_supply_auto_off>\w+)$")
+
+        # Auto-off: FEP B auto offlined, capacity: 350 
+        p16 = re.compile(r"^Auto+\s+off:+\s+(?P<auto_off>.*),+\s+capacity:+\s+(?P<capacity>\w+)$")
+        
+        p17 = re.compile(r"^Stack+\s+total+\s+input+\s+power:+\s+(?P<Stack_total_input_power>\d+)$")
 
         for line in out.splitlines():
             line = line.strip()    
@@ -645,20 +651,26 @@ class ShowStackPowerDetail(ShowStackPowerSchema):
                 stack_dict_5['neighbor_on_port_2'] = match.group('neighbor_on_port_2')
                 continue
             
-            # Stack Ecomode: Disable            
+            # Power Supply auto-off: Disable            
             if p15.match(line):
                 match = p15.match(line)
-                stack_dict_3['stack_ecomode'] = match.group('stack_ecomode')
+                stack_dict_3['power_supply_auto_off'] = match.group('power_supply_auto_off')
                 continue
             
-            # Ecomode: FEP B auto offlined, capacity: 350 
+            # Auto off: FEP B auto offlined, capacity: 350 
             if p16.match(line):
                 match = p16.match(line)
-                stack_dict_5['ecomode'] = match.group('ecomode')
+                stack_dict_5['auto_off'] = match.group('auto_off')
                 stack_dict_5['capacity'] = match.group('capacity')
+                continue
+            
+            if p17.match(line):
+                match = p17.match(line)
+                stack_dict_3['Stack_total_input_power'] = int(match.group('Stack_total_input_power'))
                 continue
         
         return ret_dict
+
 
 class ShowPowerInlineConsumptionSchema(MetaParser):
     """

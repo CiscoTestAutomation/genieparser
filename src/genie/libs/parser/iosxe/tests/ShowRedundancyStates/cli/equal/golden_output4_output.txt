@@ -1,0 +1,16 @@
+show redundancy states
+       my state = 13 -ACTIVE
+     peer state = 8  -STANDBY HOT
+           Mode = Duplex
+           Unit = Secondary
+        Unit ID = 6
+
+Redundancy Mode (Operational) = sso
+Redundancy Mode (Configured)  = sso
+Redundancy State              = sso
+     Maintenance Mode = Disabled
+    Manual Swact = enabled
+ Communications = Up
+
+   client count = 120
+ client_notification_TMR = 30000 milliseconds

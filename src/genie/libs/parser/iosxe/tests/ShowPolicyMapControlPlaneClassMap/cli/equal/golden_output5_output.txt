@@ -1,0 +1,21 @@
+Class-map: system-cpp-police-forus (match-any)
+      0 packets, 0 bytes
+      5 minute offered rate 0000 bps, drop rate 0000 bps
+      Match: none
+      police:
+          rate 1000 pps, burst 244 packets
+        conformed 2371810 bytes; actions:
+          transmit
+        exceeded 9136400 bytes; actions:
+          drop
+    Class-map: system-cpp-police-forus-addr-resolution (match-any)
+      0 packets, 0 bytes
+      5 minute offered rate 0000 bps, drop rate 0000 bps
+      Match: none
+      police:
+          rate 3000 pps, burst 732 packets
+        conformed 256 bytes; actions:
+          transmit
+        exceeded 0 bytes; actions:
+          drop
+

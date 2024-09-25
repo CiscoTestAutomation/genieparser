@@ -137,7 +137,7 @@ class ShowHardwareLedSchema(MetaParser):
     """
     schema = {
         Optional('current_mode'): str,
-        Optional('led_ecomode'): str,
+        Optional('led_auto_off'): str,
         Optional('switch'): {
             Any():{
                 'system': str,
@@ -251,8 +251,8 @@ class ShowHardwareLed(ShowHardwareLedSchema):
         # Current Mode: STATUS
         p12 = re.compile('^Current Mode:\s+(?P<status>\w+)$')
 
-        # LED Ecomode: Enabled
-        p12_1 = re.compile('^LED Ecomode:\s+(?P<ecomode>\w+)$')
+        # LED Auto off: Disabled
+        p12_1 = re.compile('^LED Auto off:\s+(?P<auto_off>\w+)$') 
 
         # MASTER: GREEN
         p13 = re.compile('^MASTER:\s+(?P<master>\w+)$')
@@ -408,11 +408,11 @@ class ShowHardwareLed(ShowHardwareLedSchema):
                 ret_dict.update({'current_mode' : group['status']})
                 continue
 
-            # LED Ecomode: Enabled
+            # LED Auto off: Disabled
             m = p12_1.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict.update({'led_ecomode' : group['ecomode']})
+                ret_dict.update({'led_auto_off' : group['auto_off']})
                 continue
 
             # MASTER: GREEN
@@ -488,6 +488,7 @@ class ShowHardwareLed(ShowHardwareLedSchema):
                 root_dict.update({'usb_console': group['usb_console']})
                 continue
         return ret_dict
+
 
 
 class ShowHardwareLedPortSchema(MetaParser):

@@ -1,0 +1,29 @@
+Local Automatic Channel Assignment
+  Channel Assignment Mode                    : AUTO
+  Channel Update Interval                    : 600 seconds
+  Anchor time (Hour of the day)              : 0
+  Channel Update Contribution
+    Noise                                    : Enable
+    Interference                             : Enable
+    Load                                     : Disable
+    Device Aware                             : Disable
+  CleanAir Event-driven RRM option           : Disabled
+  Zero Wait DFS                              : Disabled
+  Channel Assignment Leader                  : ewlc_2 (9.2.45.15)
+
+  DCA Sensitivity Level                      : MEDIUM : 15 dB
+  DCA 802.11n/ac Channel Width               : best
+  DBS Max Channel Width                      : 40 MHz
+  DCA Minimum Energy Limit                   : -95 dBm
+  DCA Aggressive on startup                  : Enabled
+  Channel Energy Levels
+    Minimum                                  : -86 dBm
+    Average                                  : -80 dBm
+    Maximum                                  : -74 dBm
+  Channel Dwell Times
+    Minimum                                  : 1 hour 38 minutes 0 second 
+    Average                                  : 8 days 12 hours 26 minutes 20 seconds 
+    Maximum                                  : 19 days 23 hours 19 minutes 57 seconds 
+  802.11a 5 GHz Auto-RF Channel List
+    Allowed Channel List                     : 36,40,44,48,52,56,60,64,100,104,108,112,116,120,124,128,132,136,140,144,149,153,157,161
+    Unused Channel List                      : 165,169,173

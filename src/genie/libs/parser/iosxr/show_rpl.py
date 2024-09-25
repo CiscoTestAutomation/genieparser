@@ -514,9 +514,10 @@ class ShowRplRoutePolicy(ShowRplRoutePolicySchema):
 
                     if 'as-path in' in m.groupdict()[cond]:
                         v = re.match('as-path in (?P<match_as_path_list>[0-9a-zA-Z-]+)', m.groupdict()[cond])
-                        match_as_path_list = v.groupdict()['match_as_path_list']
-                        rpl_route_policy_dict[name]['statements'][statements]['conditions'] \
-                            ['match_as_path_list'] = match_as_path_list
+                        if v:
+                            match_as_path_list = v.groupdict()['match_as_path_list']
+                            rpl_route_policy_dict[name]['statements'][statements]['conditions'] \
+                                ['match_as_path_list'] = match_as_path_list
 
                     if 'as-path length' in m.groupdict()[cond]:
                         v = re.match('as-path length (?P<match_as_path_length_oper>[\w\W]+)', m.groupdict()[cond])

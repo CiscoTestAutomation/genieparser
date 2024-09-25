@@ -41,7 +41,8 @@ class ShowMerakiSchema(MetaParser):
 
 
 class ShowMeraki(ShowMerakiSchema):
-    '''Parser for:
+    '''
+    Parser for:
         * 'show meraki'
         * 'show meraki switch {switch}'
     '''
@@ -65,10 +66,10 @@ class ShowMeraki(ShowMerakiSchema):
         # 1   C9300-24UX         FCW2248D19Q    Q5TD-GJZW-GLBA  0029.c29a.8e00    Registered   C9K-C [Monitoring]
         p1 = re.compile(r'^(?P<switch_num>\d+)\s+(?P<pid>[\w-]+)\s+(?P<serial_number>[\w]+)\s+(?P<meraki_sn>[\w\/-]+)\s+(?P<mac_addr>[\w\.:]+)\s+(?P<conversion_status>[\w\s\/-]+)\s+(?P<current_mode>[\w\-]+(\s\[[\w\s]+\])?)$')
         
-        # 1   MS390-24U          Q3EC-CTH2-U    N/A             N/A               N/A          C9K-C
-        # 1   MS390-24U          Q3EC-CTH2-U    N/A             N/A               N/A          C9K-C [Monitoring]
-        p2 = re.compile(r'^(?P<switch_num>\d+)\s+(?P<pid>[\w-]+)\s+(?P<serial_number>[\w\/-]+)\s+(?P<meraki_sn>\w\/\w)\s+(?P<mac_addr>\w\/\w)\s+(?P<conversion_status>\w\/\w)\s+(?P<current_mode>[\w\-]+(\s\[[\w\s]+\])?)$')
-
+        # 1   MS390-24UX         Q3ED-6UWS-6TLX     N/A  N/A   N/A   C9K-C
+        # 1   MS390-24UX         Q3ED-6UWS-6TLX     N/A  N/A   N/A   C9K-C[Monitoring]
+        p2 = re.compile(r'^(?P<switch_num>\d+)\s+(?P<pid>[\w-]+)\s+(?P<serial_number>[\w\/-]+)\s+(?P<meraki_sn>[\w\/-]+)\s+(?P<mac_addr>[\w\/.:]+)\s+(?P<conversion_status>[\w\/-]+)\s+(?P<current_mode>[\w\-]+(\s\[[\w\s]+\])?)\s*$')
+        
         parsed_dict = {}
 
         for line in out.splitlines():

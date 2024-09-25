@@ -1,0 +1,43 @@
+Statistics for L3 injected packets:
+ 3524142 total inject pak, 0 failed
+ 0 sent, 0 prerouted
+ 0 non-CEF capable, 0 non-unicast
+ 135 IP, 12147 IPv6
+ 0 MPLS, 0 Non-IP Tunnel
+ 0 UDLR tunnel, 0 P2MP replicated mcast
+ 0 Non-IP Fastswitched over Tunnel, 3524007 legacy pak path
+ 0 Other packet
+ 0 IP fragmented
+ 135 normal, 0 nexthop
+ 0 adjacency, 0 feature
+ 0 undefined
+ 0 pak find no adj, 0 no adj-id
+ 1023352 sb alloc, 135 sb local
+ 0 p2mcast failed count 0 p2mcast enqueue fail
+ 0 unicast dhc
+ 0 mobile ip
+ 0 IPv6 NA
+ 0 IPv6 NS
+ 0 Transport failed cases
+ 0 Grow packet buffer
+ 0 Cant-l3-inject-pkts
+ per feature packet inject statistics
+ 0 Feature multicast
+ 0 Feature Edge Switching Service
+ 0 Feature Session Border Controller
+ 0 Feature interrupt level
+ 0 Feature use outbound interface
+ 0 Feature interrupt level with OCE
+ 0 Feature ICMPv6 error message
+ 0 Feature Session Border Controller media packet injection
+ 0 Feature Tunnel Ethernet over GRE
+ 0 Feature Secure Socket Layer Virtual Private Network
+ 0 Feature EPC Wireshark injecting packets
+ 0 Feature multicast overlay replication
+
+Statistics for L2 injected packets:
+ 28324 total L2 inject pak, 0 failed
+ 28324 total BD  inject pak, 0 failed
+ 0 total BD-local  inject pak, 0 failed
+ 0 total EFP inject pak, 0 failed
+ 0 total VLAN inject pak, 0 failed

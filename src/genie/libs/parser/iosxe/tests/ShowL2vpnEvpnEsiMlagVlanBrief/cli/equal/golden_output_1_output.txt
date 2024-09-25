@@ -1,0 +1,7 @@
+VLAN  VNI      Local MAC Remote MAC State
+----- -------- --------- ---------- --------------------
+1400  21400    2         0          Established
+1401  21401    2         0          Established
+1402  21402    2         0          Established
+1403  21403    2         0          Established
+1404  21404    2         0          Established

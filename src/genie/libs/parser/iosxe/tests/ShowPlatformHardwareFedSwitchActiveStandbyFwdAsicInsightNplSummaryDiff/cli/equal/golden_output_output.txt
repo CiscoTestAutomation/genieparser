@@ -1,0 +1,4 @@
+show platform hardware fed switch active fwd-asic insight npl_summary_diff("f1","f2")
+Comparing summary f1 and f2 ...
+table_name                               length_subtables_f1            length_subtables_f2            nb_subtables_f1                nb_subtables_f2    
+ipv4_vrf_dip_em_table                    (12,)                          (13,)                          1                              1   

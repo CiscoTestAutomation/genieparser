@@ -1,5 +1,5 @@
 Current Mode: STATUS
-LED Ecomode: Enabled
+LED Auto off: Enabled
 
 SWITCH: 1
 SYSTEM: GREEN

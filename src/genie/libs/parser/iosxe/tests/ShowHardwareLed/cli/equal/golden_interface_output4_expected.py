@@ -1,6 +1,6 @@
 expected_output = {
     'current_mode': 'STATUS',
-    'led_ecomode': 'Enabled',
+    'led_auto_off': 'Enabled',
     'number_of_ports_in_status': '40',
     'status': {
         'FortyGigabitEthernet1/1/1': 'BLACK',

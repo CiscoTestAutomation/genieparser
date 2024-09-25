@@ -1,0 +1,12 @@
+GigabitEthernet0/0/0 is administratively down, line protocol is down 
+  Hardware is ISR4221-2x1GE, address is 70ea.1ab5.49b0 (bia 70ea.1ab5.49b0)
+  MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
+GigabitEthernet0/0/1 is administratively down, line protocol is down 
+  Hardware is ISR4221-2x1GE, address is 70ea.1ab5.49b1 (bia 70ea.1ab5.49b1)
+  MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
+GigabitEthernet0/1/0 is administratively down, line protocol is down 
+  Hardware is NIM-1GE-CU-SFP, address is 70ea.1ab5.49b8 (bia 70ea.1ab5.49b8)
+  MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
+GigabitEthernet0/2/0 is administratively down, line protocol is down 
+  Hardware is NIM-1GE-CU-SFP, address is 70ea.1ab5.49c0 (bia 70ea.1ab5.49c0)
+  MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 

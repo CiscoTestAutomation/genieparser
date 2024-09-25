@@ -2446,3 +2446,167 @@ class ShowDeviceTrackingDatabaseInterfaceCount(ShowDeviceTrackingDatabaseInterfa
                 dict_count['count'] = count
 
         return dict_count
+
+
+class ShowDeviceTrackingCapturePolicySchema(MetaParser):
+    """Schema for show device tracking capture policy """
+
+    schema = {
+        Optional("hw_policy_db"): {
+            Any(): {
+                "targets": int,
+                "targets_list": {
+                    Any(): {
+                        "type": int,
+                        "handle": str
+                    }
+                }
+            }
+        },
+        "target_db": {
+            Any(): {
+                "hw_policy_signature": str,
+                "policies": int,
+                "rules": int,
+                "sig": str,
+                "sw_policy": {
+                    "policy": str,
+                    "feature": str
+                },
+                "mask_id": {
+                    Any(): {
+                        "rule": str,
+                        "protocol": str,
+                        "mask": str,
+                        "action": str,
+                        "match1": int,
+                        "match2": int,
+                        "feat": str
+                    }
+                }
+            }
+        }
+    }
+
+class ShowDeviceTrackingCapturePolicy(ShowDeviceTrackingCapturePolicySchema):
+    """ show device-tracking capture-policy """
+    """ show device-tracking capture-policy interface {interface_name} """
+    """ show device-tracking capture-policy vlan {vlan_id} """
+
+    cli_command = [
+        'show device-tracking capture-policy',
+        'show device-tracking capture-policy interface {interface_name}',
+        'show device-tracking capture-policy vlan {vlan_id}'
+    ]
+
+    def cli(self, interface_name=None, vlan_id=None, output=None):
+        if output is None:
+            if interface_name:
+                cmd = self.cli_command[1].format(interface_name=interface_name)
+            elif vlan_id:
+                cmd = self.cli_command[2].format(vlan_id=vlan_id)
+            else:
+                cmd = self.cli_command[0]
+            
+            output = self.device.execute(cmd) 
+            
+        parsed_dict = {}
+
+        # HW Policy 0000039C #targets:2 
+        p1 = re.compile(r'^HW Policy (?P<policy_id>\w+) #targets:(?P<targets>\d+)$')
+        
+        # Target Gi1/0/4 type 0 handle 40B  
+        p2 = re.compile(r'^Target (?P<target>[\S\s]+?)\s+type (?P<type>\d+) handle (?P<handle>\S+)$')
+        
+        # HW Target Gi1/0/4 HW policy signature 0000039C policies#:2 rules#:6 sig 0000039C 
+        p3 = re.compile(r'^HW Target (?P<target>[\S\s]+?)\s+HW policy signature (?P<signature>\S+) policies#:(?P<policies>\d+) \S{1,7}\W{0,1}(?P<rules>\d+) sig (?P<sig>\S+)$')
+
+        # SW policy dhcp_client feature DHCP Guard  
+        p4 = re.compile(r'^SW policy (?P<policy>\S+) feature (?P<feature>.+)$')
+        
+        # Rule DHCP SERVER SOURCE Protocol UDP mask 00000200 action PUNT match1 0 match2 546 #feat:1 feature DHCP Guard 
+        p5 = re.compile(r'^Rule (?P<rule>[\S\s]+?) Protocol (?P<protocol>\S+) mask (?P<mask>\S+) action (?P<action>\S+) match1 (?P<match1>\d+) match2 (?P<match2>\d+)\W{0,1}#feat:(?P<feat>\d+)$')
+
+        policy_id = None
+        current_target = None
+        current_policy = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # HW Policy 0000039C #targets:2
+            match = p1.match(line)
+            if match:
+                policy_id = match.group('policy_id')
+                targets = int(match.group('targets'))
+                parsed_dict.setdefault('hw_policy_db', {})[policy_id] = {
+                    'targets': targets,
+                    'targets_list': {}
+                }
+                continue
+                
+            # Target Gi1/0/4 type 0 handle 40B
+            match = p2.match(line)
+            if match:
+                target = match.group('target')
+                type_ = int(match.group('type'))
+                handle = match.group('handle')
+                if policy_id:
+                    parsed_dict['hw_policy_db'][policy_id]['targets_list'][target] = {
+                        'type': type_,
+                        'handle': handle
+                    }
+                continue
+
+            # HW Target Gi1/0/4 HW policy signature 0000039C policies#:2 rules#:6 sig 0000039C
+            match = p3.match(line)
+            if match:
+                current_target = match.group('target')
+                signature = match.group('signature')
+                policies = int(match.group('policies'))
+                rules = int(match.group('rules'))
+                sig = match.group('sig')
+                parsed_dict.setdefault('target_db', {})[current_target] = {
+                    'hw_policy_signature': signature,
+                    'policies': policies,
+                    'rules': rules,
+                    'sig': sig,
+                    'sw_policy': {}
+                }
+                continue
+
+            # SW policy dhcp_client feature DHCP Guard 
+            match = p4.match(line)
+            if match:
+                if current_target:
+                    policy = match.group('policy')
+                    feature = match.group('feature')
+                    parsed_dict['target_db'][current_target]['sw_policy'] = {
+                        'policy': policy,
+                        'feature': feature
+                    }
+                continue
+
+            # Rule DHCP SERVER SOURCE Protocol UDP mask 00000200 action PUNT match1 0 match2 546 #feat:1 feature DHCP Guard 
+            match = p5.match(line)
+            if match:
+                if current_target:
+                    rule = match.group('rule')
+                    protocol = match.group('protocol')
+                    mask = match.group('mask')
+                    action = match.group('action')
+                    match1 = int(match.group('match1'))
+                    match2 = int(match.group('match2'))
+                    feat = match.group('feat')
+                    parsed_dict['target_db'][current_target].setdefault("mask_id", {})[mask] = {
+                        'rule': rule,
+                        'protocol': protocol,
+                        'mask': mask,
+                        'action': action,
+                        'match1': match1,
+                        'match2': match2,
+                        'feat': feat
+                    }
+                continue
+
+        return parsed_dict

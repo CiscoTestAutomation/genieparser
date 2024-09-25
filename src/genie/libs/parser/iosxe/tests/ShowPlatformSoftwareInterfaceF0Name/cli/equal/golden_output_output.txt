@@ -1,0 +1,18 @@
+Name: HundredGigE2/0/22, ID: 1275, QFP ID: 1275, Schedules: 4096
+Type: PORT, State: enabled, SNMP ID: 98, MTU: 1500
+TX channel ID: 0, RX channel ID: 0, AOM state: created
+Flow control ID: 49175
+bandwidth: 100000000, encap: ARPA
+IP Address: 10.10.10.96
+IPV6 Address: ::
+Flags: ipv4
+ICMP Flags: unreachables, redirects, no-info-reply, no-mask-reply
+ICMP6 Flags: unreachables, redirects
+SMI enabled on protocol(s): UNKNOWN
+Authenticated-user:
+FRR linkdown ID: 65535
+vNet Name: , vNet Tag: 0, vNet Extra Information: 0
+Dirty: unknown
+AOM dependency sanity check: PASS
+AOM Obj ID: 2071
+QOS trust type: Trust DSCP

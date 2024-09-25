@@ -167,7 +167,7 @@ class ShowPlatformHardwareFedQosSchedulerSdkInterfaceSchema(MetaParser):
                         Any(): {
                             'cep_ir': {
                                 Any(): {
-                                    'rate': int,
+                                    'rate': Or(int, str),
                                     'burst': str,
                                     'weight': int,
                                     'hw_id': int,
@@ -272,7 +272,8 @@ class ShowPlatformHardwareFedQosSchedulerSdkInterface(ShowPlatformHardwareFedQos
 
         # | 772    | CIR      | 2000000000    | DEFLT | 0      | 55     | PARENT       | 0          | CSTSE     | 763     |        |
         # |        | PIR      | 2000000000    | DEFLT | 255    | 67     | PARENT       | 12         | CSTSE     | 1360    |        |
-        p6_1 = re.compile(r'^(?P<oid>\d+)?\s*\|*\s*(?P<cep_ir>(CIR|EIR|PIR))\s*\|\s*(?P<rate>\d+)\s*\|\s*(?P<burst>\w+)\s*\|'
+        # | 1026   | CIR      | UNLIMITED     | DEFLT | 255    | 8555   | PARENT       | 0          | OQHSE     | 2653    |        |
+        p6_1 = re.compile(r'^(?P<oid>\d+)?\s*\|*\s*(?P<cep_ir>(CIR|EIR|PIR))\s*\|\s*(?P<rate>\w+)\s*\|\s*(?P<burst>\w+)\s*\|'
                           r'\s*(?P<weight>\d+)\s*\|\s*(?P<hw_id>\d+)\s*\|\s*(?P<type>\w+)\s*\|\s*(?P<link_point>\d+)\s*\|'
                           r'\s*(?P<hse_type>\w+)\s*\|\s*(?P<hse_oid>\d+)(\s*\|\s+(?P<voq_id>\d+)\s*\|\s*(?P<in_device>\d+)\|\s*(?P<in_slice>\d+))?$')
 
@@ -461,7 +462,10 @@ class ShowPlatformHardwareFedQosSchedulerSdkInterface(ShowPlatformHardwareFedQos
                 if group_dict['oid']:
                     oqhse_sch_dict = svcse_scheduler_dict.setdefault('oid', {}).setdefault(group_dict['oid'], {})
                 cep_ir_dict = oqhse_sch_dict.setdefault('cep_ir', {}).setdefault(group_dict['cep_ir'], {})
-                cep_ir_dict['rate'] = int(group_dict['rate'])
+                try:
+                    cep_ir_dict['rate'] = int(group_dict['rate'])
+                except ValueError:
+                    cep_ir_dict['rate'] = group_dict['rate']
                 cep_ir_dict['burst'] = group_dict['burst']
                 cep_ir_dict['type'] = group_dict['type']
                 cep_ir_dict['weight'] = int(group_dict['weight'])
@@ -811,17 +815,26 @@ class ShowPlatformSoftwareFedActiveAclInfoDbDetail(ShowPlatformSoftwareFedActive
     '''Parser for:
         * 'show platform software fed switch active acl info db detail'
     '''
-    cli_command = 'show platform software fed switch active acl info db detail'
+    cli_command = ['show platform software fed switch active acl info db detail', 
+                   'show platform software fed {switch} {mode} acl info db detail', 
+                   'show platform software fed {mode} acl info db detail']
 
-    def cli(self, output=None):
+    def cli(self, switch=None, mode=None, output=None):
         if not output:
-            output = self.device.execute(self.cli_command)
+            if switch and mode:
+                cmd = self.cli_command[1].format(switch=switch, mode=mode)
+            elif mode:
+                cmd = self.cli_command[2].format(mode=mode)
+            else:
+                cmd = self.cli_command[0]
+            output = self.device.execute(cmd)
 
         proto_flag = False
         tos_flag = False
 
         # [CG ID: 8]    CG Name: racl_ingress
-        p1 = re.compile(r'^\[CG ID:\s+(?P<cg_id>\d+)\]\s+CG\s+Name:\s+(?P<cg_name>[\w\-]+)$')
+        # [Racl, CG ID: 8]    CG Name: racl_permitv6_egress
+        p1 = re.compile(r'^\[.*CG ID:\s+(?P<cg_id>\d+)\]\s+CG\s+Name:\s+(?P<cg_name>[\w\-]+)$')
 
         # [Feature: Racl    Prot: IPv4
         p2 = re.compile(r'^Feature:\s+(?P<feature>\w+)\s+Prot:\s+(?P<prot>\w+)$')

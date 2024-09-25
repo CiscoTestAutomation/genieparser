@@ -1,0 +1,361 @@
+REP Segment 50
+BOIS168ZW2001, Te0/2 (Primary Edge No-Neighbor)
+  Open Port, all vlans forwarding
+  Bridge MAC: 1c6a.7a71.cb00
+  Port Number: 013
+  Port Priority: 010
+  Neighbor Number: 1 / [-60]
+BOIS168ZW2001, Te0/1 (Intermediate)
+  Open Port, all vlans forwarding
+  Bridge MAC: 1c6a.7a71.cb00
+  Port Number: 012
+  Port Priority: 000
+  Neighbor Number: 2 / [-59]
+BOIU1616ZG001, Te0/0/27 (Intermediate)
+  Open Port, all vlans forwarding
+  Bridge MAC: 00a6.caca.7bbf
+  Port Number: 022
+  Port Priority: 000
+  Neighbor Number: 3 / [-58]
+BOIU1616ZG001, Te0/0/26 (Intermediate)
+  Open Port, all vlans forwarding
+  Bridge MAC: 00a6.caca.7bbf
+  Port Number: 021
+  Port Priority: 000
+  Neighbor Number: 4 / [-57]
+BOISI1228ZG001, Te0/0/5 (Intermediate)
+  Open Port, all vlans forwarding
+  Bridge MAC: 643a.ea3e.473f
+  Port Number: 00C
+  Port Priority: 000
+  Neighbor Number: 5 / [-56]
+BOISI1228ZG001, Te0/0/4 (Intermediate)
+  Open Port, all vlans forwarding
+  Bridge MAC: 643a.ea3e.473f
+  Port Number: 00B
+  Port Priority: 000
+  Neighbor Number: 6 / [-55]
+MRDN163VZG002, Te0/0/27 (Intermediate)
+  Open Port, all vlans forwarding
+  Bridge MAC: 0896.adac.d93f
+  Port Number: 022
+  Port Priority: 000
+  Neighbor Number: 7 / [-54]
+MRDN163VZG002, Te0/0/26 (Intermediate)
+  Open Port, all vlans forwarding
+  Bridge MAC: 0896.adac.d93f
+  Port Number: 021
+  Port Priority: 000
+  Neighbor Number: 8 / [-53]
+MRDNI1028ZG001, Te0/0/5 (Intermediate)
+  Open Port, all vlans forwarding
+  Bridge MAC: cc7f.764b.08bf
+  Port Number: 00C
+  Port Priority: 000
+  Neighbor Number: 9 / [-52]
+MRDNI1028ZG001, Te0/0/4 (Intermediate)
+  Open Port, all vlans forwarding
+  Bridge MAC: cc7f.764b.08bf
+  Port Number: 00B
+  Port Priority: 000
+  Neighbor Number: 10 / [-51]
+MRDN1628ZG001, Te0/0/5 (Intermediate)
+  Open Port, all vlans forwarding
+  Bridge MAC: ccb6.c899.d2bf
+  Port Number: 00C
+  Port Priority: 000
+  Neighbor Number: 11 / [-50]
+MRDN1628ZG001, Te0/0/4 (Intermediate)
+  Open Port, all vlans forwarding
+  Bridge MAC: ccb6.c899.d2bf
+  Port Number: 00B
+  Port Priority: 000
+  Neighbor Number: 12 / [-49]
+MRDNI1101ZG001, Te0/0/5 (Intermediate)
+  Open Port, all vlans forwarding
+  Bridge MAC: 4464.3c45.05bf
+  Port Number: 00C
+  Port Priority: 000
+  Neighbor Number: 13 / [-48]
+MRDNI1101ZG001, Te0/0/4 (Intermediate)
+  Open Port, all vlans forwarding
+  Bridge MAC: 4464.3c45.05bf
+  Port Number: 00B
+  Port Priority: 000
+  Neighbor Number: 14 / [-47]
+MRDN161MW2002, Te0/2 (Intermediate)
+  Open Port, all vlans forwarding
+  Bridge MAC: 70e4.229b.6d00
+  Port Number: 013
+  Port Priority: 000
+  Neighbor Number: 15 / [-46]
+MRDN161MW2002, Te0/1 (Intermediate)
+  Open Port, all vlans forwarding
+  Bridge MAC: 70e4.229b.6d00
+  Port Number: 012
+  Port Priority: 000
+  Neighbor Number: 16 / [-45]
+MRDNI1096ZG001, Te0/0/5 (Intermediate)
+  Open Port, all vlans forwarding
+  Bridge MAC: b08b.cf30.403f
+  Port Number: 00B
+  Port Priority: 000
+  Neighbor Number: 17 / [-44]
+MRDNI1096ZG001, Te0/0/4 (Intermediate)
+  Open Port, all vlans forwarding
+  Bridge MAC: b08b.cf30.403f
+  Port Number: 00A
+  Port Priority: 000
+  Neighbor Number: 18 / [-43]
+KUNAI1002NG001, Te0/0/7 (Intermediate)
+  Open Port, all vlans forwarding
+  Bridge MAC: f4db.e6fa.103f
+  Port Number: 00D
+  Port Priority: 000
+  Neighbor Number: 19 / [-42]
+KUNAI1002NG001, Te0/0/6 (Intermediate)
+  Open Port, all vlans forwarding
+  Bridge MAC: f4db.e6fa.103f
+  Port Number: 00C
+  Port Priority: 000
+  Neighbor Number: 20 / [-41]
+KUNAI1006ZG001, Te0/0/5 (Intermediate)
+  Open Port, all vlans forwarding
+  Bridge MAC: 7061.7b9b.ba3f
+  Port Number: 00C
+  Port Priority: 000
+  Neighbor Number: 21 / [-40]
+KUNAI1006ZG001, Te0/0/4 (Intermediate)
+  Open Port, all vlans forwarding
+  Bridge MAC: 7061.7b9b.ba3f
+  Port Number: 00B
+  Port Priority: 000
+  Neighbor Number: 22 / [-39]
+KUNAI1005ZG001, Te0/0/5 (Intermediate)
+  Open Port, all vlans forwarding
+  Bridge MAC: bc4a.56fa.f0bf
+  Port Number: 00C
+  Port Priority: 000
+  Neighbor Number: 23 / [-38]
+KUNAI1005ZG001, Te0/0/4 (Intermediate)
+  Open Port, all vlans forwarding
+  Bridge MAC: bc4a.56fa.f0bf
+  Port Number: 00B
+  Port Priority: 000
+  Neighbor Number: 24 / [-37]
+KUNAI1016ZG001, Te0/0/5 (Intermediate)
+  Open Port, all vlans forwarding
+  Bridge MAC: 4c42.1ea1.33bf
+  Port Number: 00C
+  Port Priority: 000
+  Neighbor Number: 25 / [-36]
+KUNAI1016ZG001, Te0/0/4 (Intermediate)
+  Open Port, all vlans forwarding
+  Bridge MAC: 4c42.1ea1.33bf
+  Port Number: 00B
+  Port Priority: 000
+  Neighbor Number: 26 / [-35]
+KUNAI1017ZG001, Te0/0/5 (Intermediate)
+  Open Port, all vlans forwarding
+  Bridge MAC: 4cec.0fbe.c2bf
+  Port Number: 00C
+  Port Priority: 000
+  Neighbor Number: 27 / [-34]
+KUNAI1017ZG001, Te0/0/4 (Intermediate)
+  Open Port, all vlans forwarding
+  Bridge MAC: 4cec.0fbe.c2bf
+  Port Number: 00B
+  Port Priority: 000
+  Neighbor Number: 28 / [-33]
+MRDN162ZZG001, Te0/0/5 (Intermediate)
+  Open Port, all vlans forwarding
+  Bridge MAC: c4b2.39cd.023f
+  Port Number: 00C
+  Port Priority: 000
+  Neighbor Number: 29 / [-32]
+MRDN162ZZG001, Te0/0/4 (Intermediate)
+  Open Port, all vlans forwarding
+  Bridge MAC: c4b2.39cd.023f
+  Port Number: 00B
+  Port Priority: 000
+  Neighbor Number: 30 / [-31]
+MRDNI1011ZG001, Te0/0/5 (Intermediate)
+  Open Port, all vlans forwarding
+  Bridge MAC: 7488.bbdb.ac3f
+  Port Number: 00B
+  Port Priority: 000
+  Neighbor Number: 31 / [-30]
+MRDNI1011ZG001, Te0/0/4 (Intermediate)
+  Open Port, all vlans forwarding
+  Bridge MAC: 7488.bbdb.ac3f
+  Port Number: 00A
+  Port Priority: 000
+  Neighbor Number: 32 / [-29]
+MRDN163ZZG001, Te0/0/27 (Intermediate)
+  Open Port, all vlans forwarding
+  Bridge MAC: 3890.a502.373f
+  Port Number: 022
+  Port Priority: 000
+  Neighbor Number: 33 / [-28]
+MRDN163ZZG001, Te0/0/26 (Intermediate)
+  Open Port, all vlans forwarding
+  Bridge MAC: 3890.a502.373f
+  Port Number: 021
+  Port Priority: 000
+  Neighbor Number: 34 / [-27]
+NMPBIDBAZG001, Te0/0/27 (Intermediate)
+  Open Port, all vlans forwarding
+  Bridge MAC: f80b.cb8f.7bbf
+  Port Number: 022
+  Port Priority: 000
+  Neighbor Number: 35 / [-26]
+NMPBIDBAZG001, Te0/0/26 (Intermediate)
+  Alternate Port, some vlans blocked
+  Bridge MAC: f80b.cb8f.7bbf
+  Port Number: 021
+  Port Priority: 040
+  Neighbor Number: 36 / [-25]
+NMPA162PZG001, Te0/0/27 (Intermediate)
+  Open Port, all vlans forwarding
+  Bridge MAC: a03d.6fe9.77bf
+  Port Number: 022
+  Port Priority: 000
+  Neighbor Number: 37 / [-24]
+NMPA162PZG001, Te0/0/26 (Intermediate)
+  Open Port, all vlans forwarding
+  Bridge MAC: a03d.6fe9.77bf
+  Port Number: 021
+  Port Priority: 000
+  Neighbor Number: 38 / [-23]
+NMPAI1020ZG001, Te0/0/5 (Intermediate)
+  Open Port, all vlans forwarding
+  Bridge MAC: cc7f.762e.0abf
+  Port Number: 00C
+  Port Priority: 000
+  Neighbor Number: 39 / [-22]
+NMPAI1020ZG001, Te0/0/4 (Intermediate)
+  Open Port, all vlans forwarding
+  Bridge MAC: cc7f.762e.0abf
+  Port Number: 00B
+  Port Priority: 000
+  Neighbor Number: 40 / [-21]
+NMPAI1068ZG001, Te0/0/5 (Intermediate)
+  Open Port, all vlans forwarding
+  Bridge MAC: 5856.9fd2.783f
+  Port Number: 00C
+  Port Priority: 000
+  Neighbor Number: 41 / [-20]
+NMPAI1068ZG001, Te0/0/4 (Intermediate)
+  Open Port, all vlans forwarding
+  Bridge MAC: 5856.9fd2.783f
+  Port Number: 00B
+  Port Priority: 000
+  Neighbor Number: 42 / [-19]
+NMPA160AW2001, Te0/2 (Intermediate)
+  Open Port, all vlans forwarding
+  Bridge MAC: 24e9.b3e6.ab00
+  Port Number: 01A
+  Port Priority: 000
+  Neighbor Number: 43 / [-18]
+NMPA160AW2001, Te0/1 (Intermediate)
+  Open Port, all vlans forwarding
+  Bridge MAC: 24e9.b3e6.ab00
+  Port Number: 019
+  Port Priority: 000
+  Neighbor Number: 44 / [-17]
+NMPAIDHHZG001, Te0/0/5 (Intermediate)
+  Open Port, all vlans forwarding
+  Bridge MAC: 549f.c689.063f
+  Port Number: 00C
+  Port Priority: 000
+  Neighbor Number: 45 / [-16]
+NMPAIDHHZG001, Te0/0/4 (Intermediate)
+  Open Port, all vlans forwarding
+  Bridge MAC: 549f.c689.063f
+  Port Number: 00B
+  Port Priority: 000
+  Neighbor Number: 46 / [-15]
+NMPA1636W2001, Te0/2 (Intermediate)
+  Open Port, all vlans forwarding
+  Bridge MAC: 24e9.b3e6.fc00
+  Port Number: 01A
+  Port Priority: 000
+  Neighbor Number: 47 / [-14]
+NMPA1636W2001, Te0/1 (Intermediate)
+  Open Port, all vlans forwarding
+  Bridge MAC: 24e9.b3e6.fc00
+  Port Number: 019
+  Port Priority: 000
+  Neighbor Number: 48 / [-13]
+MRDN163CW2001, Te0/2 (Intermediate)
+  Open Port, all vlans forwarding
+  Bridge MAC: a46c.2a8d.6f00
+  Port Number: 013
+  Port Priority: 000
+  Neighbor Number: 49 / [-12]
+MRDN163CW2001, Te0/1 (Intermediate)
+  Open Port, all vlans forwarding
+  Bridge MAC: a46c.2a8d.6f00
+  Port Number: 012
+  Port Priority: 000
+  Neighbor Number: 50 / [-11]
+MRDN163QZG001, Te0/0/27 (Intermediate)
+  Open Port, all vlans forwarding
+  Bridge MAC: 2cd0.2dba.263f
+  Port Number: 022
+  Port Priority: 000
+  Neighbor Number: 51 / [-10]
+MRDN163QZG001, Te0/0/26 (Intermediate)
+  Open Port, all vlans forwarding
+  Bridge MAC: 2cd0.2dba.263f
+  Port Number: 021
+  Port Priority: 000
+  Neighbor Number: 52 / [-9]
+MRDN163KW2001, Te0/2 (Intermediate)
+  Open Port, all vlans forwarding
+  Bridge MAC: 74a2.e603.e400
+  Port Number: 013
+  Port Priority: 000
+  Neighbor Number: 53 / [-8]
+MRDN163KW2001, Te0/1 (Intermediate)
+  Open Port, all vlans forwarding
+  Bridge MAC: 74a2.e603.e400
+  Port Number: 012
+  Port Priority: 000
+  Neighbor Number: 54 / [-7]
+GRCYIDAYZG001, Te0/0/5 (Intermediate)
+  Open Port, all vlans forwarding
+  Bridge MAC: 84eb.ef59.743f
+  Port Number: 00C
+  Port Priority: 000
+  Neighbor Number: 55 / [-6]
+GRCYIDAYZG001, Te0/0/4 (Intermediate)
+  Open Port, all vlans forwarding
+  Bridge MAC: 84eb.ef59.743f
+  Port Number: 00B
+  Port Priority: 000
+  Neighbor Number: 56 / [-5]
+BOIU161PZG001, Te0/0/27 (Intermediate)
+  Open Port, all vlans forwarding
+  Bridge MAC: f80b.cb8c.edbf
+  Port Number: 022
+  Port Priority: 000
+  Neighbor Number: 57 / [-4]
+BOIU161PZG001, Te0/0/26 (Intermediate)
+  Open Port, all vlans forwarding
+  Bridge MAC: f80b.cb8c.edbf
+  Port Number: 021
+  Port Priority: 000
+  Neighbor Number: 58 / [-3]
+BOIS1646W2001, Te0/2 (Intermediate)
+  Open Port, all vlans forwarding
+  Bridge MAC: a89d.214f.4f00
+  Port Number: 013
+  Port Priority: 000
+  Neighbor Number: 59 / [-2]
+BOIS1646W2001, Te0/1 (Secondary Edge No-Neighbor)
+  Open Port, all vlans forwarding
+  Bridge MAC: a89d.214f.4f00
+  Port Number: 012
+  Port Priority: 010
+  Neighbor Number: 60 / [-1]
