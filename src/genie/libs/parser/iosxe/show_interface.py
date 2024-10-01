@@ -237,7 +237,7 @@ class ShowInterfaces(ShowInterfacesSchema):
     """parser for show interfaces
                   show interfaces <interface>"""
 
-    cli_command = ['show interfaces', 'show interfaces {interface}']
+    cli_command = ['show interfaces', 'show interfaces {interface}', 'show interfaces | include {include}']
     exclude = ['in_octets', 'in_pkts', 'out_octets', 'out_pkts',
                'in_rate', 'in_rate_pkts', 'out_rate', 'out_rate_pkts',
                'input_queue_size', 'in_broadcast_pkts', 'in_multicast_pkts',
@@ -248,10 +248,12 @@ class ShowInterfaces(ShowInterfacesSchema):
                'out_lost_carrier', '(Tunnel.*)', 'input_queue_flushes',
                'reliability', 'out_broadcast_pkts']
 
-    def cli(self, interface="", output=None):
+    def cli(self, interface="", include="", output=None):
         if output is None:
             if interface:
                 cmd = self.cli_command[1].format(interface=interface)
+            elif include:
+                cmd = self.cli_command[2].format(include=include)
             else:
                 cmd = self.cli_command[0]
             out = self.device.execute(cmd)
@@ -2261,13 +2263,15 @@ class ShowIpInterface(ShowIpInterfaceSchema):
     """Parser for show ip interface
                   show ip interface <interface>"""
 
-    cli_command = ['show ip interface','show ip interface {interface}']
+    cli_command = ['show ip interface','show ip interface {interface}', 'show ip interface | include {include}', ]
     exclude = ['unnumbered', 'address_determined_by', '(Tunnel.*)', 'joins', 'leaves']
 
-    def cli(self,interface="",output=None):
+    def cli(self, interface="", include=None, output=None):
         if output is None:
             if interface:
                 cmd = self.cli_command[1].format(interface=interface)
+            elif include:
+                cmd = self.cli_command[2].format(include=include)
             else:
                 cmd = self.cli_command[0]
             out = self.device.execute(cmd)
@@ -2946,14 +2950,16 @@ class ShowIpv6InterfaceSchema(MetaParser):
 
 class ShowIpv6Interface(ShowIpv6InterfaceSchema):
     """Parser for show ipv6 interface"""
-    cli_command = ['show ipv6 interface {interface}','show ipv6 interface']
+    cli_command = ['show ipv6 interface', 'show ipv6 interface {interface}', 'show ipv6 interface | include {include}']
 
-    def cli(self, interface='',output=None):
+    def cli(self, interface='', include=None, output=None):
         if output is None:
-            if not interface:
-                cmd = self.cli_command[1]
+            if interface:
+                cmd = self.cli_command[1].format(interface=interface)
+            elif include:
+                cmd = self.cli_command[2].format(include=include)
             else:
-                cmd = self.cli_command[0].format(interface=interface)
+                cmd = self.cli_command[0]
             out = self.device.execute(cmd)
         else:
             out = output
@@ -4151,9 +4157,10 @@ class ShowInterfacesTransceiver(ShowInterfacesTransceiverSchema):
             out = output
 
         # Gi1/1      40.6       5.09       0.4     -25.2      N/A
+        # Gi1/1      40.6       5.09       0.4     -25.2      -31.00    Max
         p = re.compile(r'^(?P<port>([\d\/A-Za-z]+)) +(?P<temp>([\d\.-]+)) '
-                       r'+(?P<voltage>([\d\.-]+)) +(?P<current>([\d\.-]+)) '
-                       r'+(?P<opticaltx>(\S+)) +(?P<opticalrx>(\S+))(\s+(?P<max_power>\S+)\s+W)?$')
+                        r'+(?P<voltage>([\d\.-]+)) +(?P<current>([\d\.-]+)) '
+                        r'+(?P<opticaltx>(\S+)) +(?P<opticalrx>(\S+))(\s+(?P<max_power>.*))?$')
 
         result_dict = {}
         for line in out.splitlines():

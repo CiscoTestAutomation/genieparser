@@ -4040,8 +4040,7 @@ class ShowLispRegistrationHistory(ShowLispRegistrationHistorySchema):
                    'show lisp {lisp_id} instance-id {instance_id} {address_family} server registration-history',
                    'show lisp {lisp_id} instance-id {instance_id} {address_family} server {address_resolution} {eid} registration-history',
                    'show lisp {lisp_id} instance-id {instance_id} {address_family} server {address_resolution} registration-history',
-                   'show lisp instance-id {instance_id} ipv4 server registration-history',
-                   'show lisp instance-id {instance_id} ipv6 server registration-history',
+                   'show lisp instance-id {instance_id} {address_family} server registration-history',
                    'show lisp server registration-history']
 
     def cli(self, output=None, lisp_id=None, instance_id=None, address_family=None, eid=None, address_resolution=None):

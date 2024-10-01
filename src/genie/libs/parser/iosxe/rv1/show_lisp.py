@@ -190,6 +190,7 @@ class ShowLispInstanceIdService(ShowLispInstanceIdServiceSchema):
             out = output
 
         ret_dict = {}
+        database_count = 0
 
         state_dict = {
             'disabled': False,
@@ -1076,10 +1077,11 @@ class ShowLispInstanceIdService(ShowLispInstanceIdServiceSchema):
 
             # Database:                               0
             m = p60.match(line)
-            if m:
+            if m and database_count == 0:
                 group = m.groupdict()
                 database = int(group['database'])
                 publication_dict.update({'database':database})
+                database_count = 1
                 continue
 
             # Prefix-list:                            0

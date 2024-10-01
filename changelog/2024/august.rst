@@ -198,5 +198,3 @@
         * Introduced ShowLispEthernetARPublisher parsers.
     * Added ShowLispEthernetMapCachePrefixAR
         * Introduce ShowLispEthernetMapCachePrefixAR parser.
-
-

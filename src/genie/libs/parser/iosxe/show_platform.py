@@ -35,6 +35,7 @@ IOSXE parsers for the following show commands:
     * 'show diagnostics status'
     * 'test platform software database get-n all ios_oper/platform_component'
     * 'test platform software database get-n all ios_oper/transceiver'
+    * 'show rep topology detail'
     '''
 
 # Python
@@ -1802,7 +1803,7 @@ class ShowRedundancyStatesSchema(MetaParser):
         Optional('communications_reason'): str,
         'client_count': int,
         'client_notification_tmr_msec': int,
-        'rf_debug_mask': str,
+        Optional('rf_debug_mask'): str,
     }
 
 
@@ -5123,7 +5124,7 @@ class ShowProcessesMemorySortedSchema(MetaParser):
             'used': int,
             'free': int,
         },
-        'reserve_p_pool': {
+        Optional('reserve_p_pool'): {
             'total': int,
             'used': int,
             'free': int,
@@ -9413,3 +9414,132 @@ class ShowPlatformSoftwareFedSwitchAclUsageIncludeAcl(ShowPlatformSoftwareFedSwi
 
         return ret_dict
 
+
+# ====================================================
+#  Schema for :
+#  * 'show rep topology detail'
+# ====================================================
+
+class ShowRepTopologyDetailSchema(MetaParser):
+    """Schema for show rep topology detail"""
+    schema = {
+        'rep_segment_no' : int,
+        'rep_segment': {
+            Any() : {
+                'interfaces': {
+                    Any() : {
+                        'edge' : str,
+                        'role' : str,
+                        'vlan_status' : str,
+                        'bridge_mac' : str,
+                        'port_number': str,
+                        'port_priority': str,
+                        'neighbor_number': str
+                    }
+                }
+            }
+        }
+    }
+
+# ====================================================
+#  Parser for :
+#  * 'show rep topology detail'
+# ====================================================
+
+class ShowRepTopologyDetail(ShowRepTopologyDetailSchema):
+
+    """Parser for show rep topology detail"""
+
+    cli_command = 'show rep topology detail'
+
+    def cli(self, output=None):
+
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+
+        # REP Segment 50
+        p1 = re.compile(r'^REP Segment (?P<rep_segment_no>\d+)$')
+
+        # BOIS168ZW2001, Te0/2 (Primary Edge No-Neighbor)
+        # BOIS168ZW2001, Te0/1 (Intermediate)
+        p2 = re.compile(r'^(?P<bridge>[\w\d]+), (?P<interface>[a-z|A-Z]+\d+\/\d+(\/\d+)?) \((?P<edge>.+)\)$')
+
+        # Open Port, all vlans forwarding
+        # Alternate Port, some vlans blocked
+        p3 = re.compile(r'^(?P<role>(Open|Alternate)) Port, (?P<vlan_status>.+)$')
+
+        # Bridge MAC: f80b.cb8f.7bbf
+        p4 = re.compile(r'^Bridge MAC: (?P<bridge_mac>[\w\d\.]+)$')
+
+        # Port Number: 022
+        p5 = re.compile(r'^Port Number: (?P<port_number>[\w\d]+)$')
+
+        # Port Priority: 000
+        p6 = re.compile(r'^Port Priority: (?P<port_priority>\d+)$')
+
+        # Neighbor Number: 35 / [-26]
+        p7 = re.compile(r'^Neighbor Number: (?P<neighbor_number>.+)$')
+
+        for line in output.splitlines():
+
+            line = line.strip()
+
+            # REP Segment 50
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['rep_segment_no'] = int(group['rep_segment_no'])
+                continue
+
+            # BOIS168ZW2001, Te0/2 (Primary Edge No-Neighbor)
+            # BOIS168ZW2001, Te0/1 (Intermediate)
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                intf = Common.convert_intf_name(group['interface'])
+
+                bridge_dict = ret_dict.setdefault('rep_segment', {}).setdefault(group['bridge'], {})
+                intf_dict = bridge_dict.setdefault('interfaces', {}).setdefault(intf, {})
+                intf_dict['edge'] = group['edge']
+                continue
+
+            # Open Port, all vlans forwarding
+            # Alternate Port, some vlans blocked
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict['role'] = group['role']
+                intf_dict['vlan_status'] = group['vlan_status']
+                continue
+
+            # Bridge MAC: f80b.cb8f.7bbf
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict['bridge_mac'] = group['bridge_mac']
+                continue
+
+            # Port Number: 022
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict['port_number'] = group['port_number']
+                continue
+
+            # Port Priority: 000
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict['port_priority'] = group['port_priority']
+                continue
+
+            # Neighbor Number: 35 / [-26]
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict['neighbor_number'] = group['neighbor_number']
+                continue
+
+        return ret_dict

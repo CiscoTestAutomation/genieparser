@@ -1,0 +1,4 @@
+GigabitEthernet0/0/0 is administratively down, line protocol is down
+GigabitEthernet0/0/1 is administratively down, line protocol is down
+GigabitEthernet0/1/0 is administratively down, line protocol is down
+GigabitEthernet0/2/0 is administratively down, line protocol is down

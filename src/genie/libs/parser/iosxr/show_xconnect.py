@@ -1230,7 +1230,7 @@ class ShowL2vpnXconnect(ShowL2vpnXconnectSchema):
 
         # BL-PE-BG   G1-1-1-23-311
         p1_2 = re.compile(r'^(?P<group>\S+) +(?P<name>\S+)$')
-        
+
         # LU = Local Up, RU = Remote Up, CO = Connected
         p1_3 = re.compile(r'^LU = Local Up, RU = Remote Up, CO = Connected$')
 
@@ -1242,52 +1242,53 @@ class ShowL2vpnXconnect(ShowL2vpnXconnectSchema):
                         r'+(?P<segment_2>[\S ]+) '
                         r'+(?P<status_seg2>(UP|DN|AD|UR|SB|SR|\(PP\)|LU|RU|CO))$')
 
-        #                        UP   Gi0/2/0/1.2            UP       10.154.26.26     100    UP  
+        #                        UP   Gi0/2/0/1.2            UP       10.154.26.26     100    UP
+        #                       UR   Te0/1/0/11.100         UR       EVPN 100,100,None      DN(PP)
         p3 = re.compile(r'^(?P<status_group>(UP|DN|AD|UR|SB|SR|\(PP\)|LU|RU|CO)) '
                         r'+(?P<segment_1>.*?) ' 
                         r'+(?P<status_seg1>(UP|DN|AD|UR|SB|SR|\(PP\)|LU|RU|CO)) '
                         r'+(?P<segment_2>[\S ]+) '
-                        r'+(?P<status_seg2>(UP|DN|AD|UR|SB|SR|\(PP\)|LU|RU|CO))$')
+                        r'+(?P<status_seg2>(UP|DN|AD|UR|SB|SR|\(PP\)|LU|RU|CO)(\(PP\))?)$')
 
-        #                        UP   Gi0/2/0/1.2            UP       10.154.26.26     100  
+        #                        UP   Gi0/2/0/1.2            UP       10.154.26.26     100
         p3_1 = re.compile(r'^(?P<status_group>(UP|DN|AD|UR|SB|SR|\(PP\)|LU|RU|CO)) '
-                        r'+(?P<segment_1>.*?) ' 
-                        r'+(?P<status_seg1>(UP|DN|AD|UR|SB|SR|\(PP\)|LU|RU|CO)) '
-                        r'+(?P<segment_2>[\S ]+)$')
-        
+                          r'+(?P<segment_1>\S*) ' 
+                          r'+(?P<status_seg1>(UP|DN|AD|UR|SB|SR|\(PP\)|LU|RU|CO)) '
+                          r'+(?P<segment_2>[\S ]+)$')
+
         # T-0-5-0-0  UR   Te0/5/0/0              UR       10.154.219.75    4293089094
         p3_2 = re.compile(r'^(?P<name>\S+) +(?P<status_group>(UP|DN|AD|UR|SB|SR|\(PP\)|LU|RU|CO)) +'
-                r'(?P<segment_1>.*?) +(?P<status_seg1>(UP|DN|AD|UR|SB|SR|\(PP\)|LU|RU|CO)) +'
-                r'(?P<segment_2>[\S ]+)$')
-        
+                          r'(?P<segment_1>.*?) +(?P<status_seg1>(UP|DN|AD|UR|SB|SR|\(PP\)|LU|RU|CO)) +'
+                          r'(?P<segment_2>[\S ]+)$')
+
         # CRS-CRS    T-0-5-0-8  UP   Te0/5/0/8              UP       10.19.196.51   9651100
         p3_3 = re.compile(r'^(?P<group>\S+) +(?P<name>\S+) +'
-                r'(?P<status_group>(UP|DN|AD|UR|SB|SR|\(PP\)|LU|RU|CO)) +(?P<segment_1>.*?) +'
-                r'(?P<status_seg1>(UP|DN|AD|UR|SB|SR|\(PP\)|LU|RU|CO)) +(?P<segment_2>[\S ]+)$')
+                          r'(?P<status_group>(UP|DN|AD|UR|SB|SR|\(PP\)|LU|RU|CO)) +(?P<segment_1>.*?) +'
+                          r'(?P<status_seg1>(UP|DN|AD|UR|SB|SR|\(PP\)|LU|RU|CO)) +(?P<segment_2>[\S ]+)$')
 
         # vpws       vpws       UR   Te0/2/1/0              UR       EVPN 302,302,0.0.0.0   DN
         p3_4 = re.compile(r'^(?P<group>\S+) +(?P<name>\S+) +'
-                r'(?P<status_group>(UP|DN|AD|UR|SB|SR|\(PP\)|LU|RU|CO)) +(?P<segment_1>.*?) +'
-                r'(?P<status_seg1>(UP|DN|AD|UR|SB|SR|\(PP\)|LU|RU|CO)) +(?P<segment_2>[\S ]+)'
-                r' +(?P<status_segment2>(UP|DN|AD|UR|SB|SR|\(PP\)|LU|RU|CO))$')
+                          r'(?P<status_group>(UP|DN|AD|UR|SB|SR|\(PP\)|LU|RU|CO)) +(?P<segment_1>.*?) +'
+                          r'(?P<status_seg1>(UP|DN|AD|UR|SB|SR|\(PP\)|LU|RU|CO)) +(?P<segment_2>[\S ]+)'
+                          r' +(?P<status_segment2>(UP|DN|AD|UR|SB|SR|\(PP\)|LU|RU|CO))$')
 
-        #                                                             UP  
+        #                                                             UP
         p4 = re.compile(r'^(?P<status_segment2>(UP|DN|AD|UR|SB|SR|\(PP\)|LU|RU|CO))$')
 
         # UP       10.19.196.10   1152   DN
         p5 = re.compile(r'^(?P<status_seg1>(UP|DN|AD|UR|SB|SR|\(PP\)|LU|RU|CO))'
-                r' +(?P<segment_2>[\S ]+) +(?P<status_seg2>(UP|DN|AD|UR|SB|SR|\(PP\)|LU|RU|CO))$')
+                        r' +(?P<segment_2>[\S ]+) +(?P<status_seg2>(UP|DN|AD|UR|SB|SR|\(PP\)|LU|RU|CO))$')
 
         # UR   10.154.219.75    2015030201
-        p6 = re.compile(r'^(?P<status_group>(UP|DN|AD|UR|SB|SR|\(PP\)|LU|RU|CO)) +(?P<segment_1>[\S ]+)$')
+        p6 = re.compile(r'^(?P<status_group>(UP|DN|AD|UR|SB|SR|\(PP\)|LU|RU|CO)) +(?P<segment_1>[\s\d\.]+)$')
 
         # T-0-4-0-2  UR   10.154.219.98    4293089094
         p7 = re.compile(r'^(?P<name>\S+) +(?P<status_group>(UP|DN|AD|UR|SB|SR|\(PP\)|LU|RU|CO)) +'
-                r'(?P<segment_1>[\S ]+)$')
+                        r'(?P<segment_1>[\S ]+)$')
 
         for line in out.splitlines():
             line = line.strip()
-            
+
             if '--------' in line:
                 continue
 
@@ -1311,11 +1312,11 @@ class ShowL2vpnXconnect(ShowL2vpnXconnectSchema):
                         .setdefault(str(group['group']), {})
                     flag_group = True
                 continue
-            
+
             m = p1_1.match(line)
             if m:
                 continue
-            
+
             # BL-PE-BG   G1-1-1-23-311
             m = p1_2.match(line)
             if m:
@@ -1325,7 +1326,7 @@ class ShowL2vpnXconnect(ShowL2vpnXconnectSchema):
                 name_dict = group_dict.setdefault('name', {}) \
                         .setdefault(group['name'], {})
                 continue
-            
+
             m = p1_3.match(line)
             if m:
                 continue
@@ -1336,7 +1337,7 @@ class ShowL2vpnXconnect(ShowL2vpnXconnectSchema):
                 name_dict = group_dict.setdefault('name', {}) \
                     .setdefault(str(group['name']), {})
                 flag_group = True
-            
+
             m3 = p3.match(line)
             if m3:
                 group = m3.groupdict()
@@ -1360,7 +1361,7 @@ class ShowL2vpnXconnect(ShowL2vpnXconnectSchema):
                 segment1_dict['status'] = str(group['status_seg1'])
                 segment2_dict = segment1_dict.setdefault('segment2', {}) \
                     .setdefault(str(group['segment_2'].strip()), {})
-            
+
             # T-0-5-0-0  UR   Te0/5/0/0              UR       10.154.219.75    4293089094
             m = p3_2.match(line)
             if m:
@@ -1417,7 +1418,7 @@ class ShowL2vpnXconnect(ShowL2vpnXconnectSchema):
                     .setdefault(str(group['segment_2'].strip()), {})
                 segment2_dict['status'] = str(group['status_seg2'])
                 continue
-            
+
             # UR   10.154.219.75    2015030201
             m = p6.match(line)
             if m:
@@ -1426,7 +1427,7 @@ class ShowL2vpnXconnect(ShowL2vpnXconnectSchema):
                 segment1_dict = name_dict.setdefault('segment1',{}) \
                     .setdefault(Common.convert_intf_name(group['segment_1'].strip()), {})
                 continue
-            
+
             # T-0-4-0-2  UR   10.154.219.98    4293089094
             m = p7.match(line)
             if m:
@@ -1437,6 +1438,7 @@ class ShowL2vpnXconnect(ShowL2vpnXconnectSchema):
                 segment1_dict = name_dict.setdefault('segment1',{}) \
                     .setdefault(Common.convert_intf_name(group['segment_1'].strip()), {})
                 continue
+
         return ret_dict
 
 """Schema for 'show l2vpn xconnect summary'"""

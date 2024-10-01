@@ -185,7 +185,7 @@ class ShowInterfaceSchema(MetaParser):
 class ShowInterface(ShowInterfaceSchema):
     """Parser for show interface, show interface <interface>"""
 
-    cli_command = ['show interface', 'show interface {interface}']
+    cli_command = ['show interface', 'show interface {interface}', 'show interface {interface} | include {include}', 'show interface | include {include}']
     exclude = [
         'in_unicast_pkts',
         'out_unicast_pkts',
@@ -218,9 +218,13 @@ class ShowInterface(ShowInterfaceSchema):
         'in_crc_errors',
         'reliability']
 
-    def cli(self, interface="", output=None):
+    def cli(self, interface='', include='', output=None):
         if output is None:
-            if interface:
+            if interface and include:
+                cmd = self.cli_command[2].format(interface=interface, include=include)
+            elif include:
+                cmd = self.cli_command[3].format(include=include)
+            elif interface:
                 cmd = self.cli_command[1].format(interface=interface)
             else:
                 cmd = self.cli_command[0]
@@ -1949,11 +1953,11 @@ class ShowVrfAllInterface(ShowVrfAllInterfaceSchema):
             # Ethernet2/5               default                              1  --
             # Ethernet2/6               default                              1  --
             # port-channel1101          default                              1  --
-
+            # Vlan3960                  KVTC_TEST_SU_KLAIDA                 31  --
             p1 = re.compile(r'^\s*(?P<interface>[a-zA-Z0-9\.\/\-]+)'
-                            ' *(?P<vrf>[a-zA-Z0-9]+)'
-                            ' *(?P<vrf_id>[0-9]+)'
-                            ' *(?P<site_of_origin>[a-zA-Z\-]+)$')
+                            r' *(?P<vrf>[a-zA-Z0-9_]+)'
+                            r' *(?P<vrf_id>[0-9]+)'
+                            r' *(?P<site_of_origin>[a-zA-Z\-]+)$')
 
             m = p1.match(line)
             if m:

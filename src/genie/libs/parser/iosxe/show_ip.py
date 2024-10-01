@@ -6583,7 +6583,10 @@ class ShowIpVerifySource(ShowIpVerifySourceSchema):
 
         # Gi1/0/3      ip trk       active       40.1.1.24                           10
         # Gi1/0/13   ip-mac       active       10.1.1.101       00:0A:00:0B:00:01  10
-        p1 = re.compile(r"^(?P<interface_name>\S+)\s+(?P<filter_type>ip\s?\S+)\s+(?P<filter_mode>\S+)\s+(?P<ip_address>\S+)\s+(?P<mac_address>\S+)?\s+(?P<vlan>[\d,]*)$")
+        # Gi1/0/2    ip          active       192.168.100.2                       100
+        # Gi2/0/3    ip           active       192.168.100.3                       100
+        
+        p1 = re.compile(r"^(?P<interface_name>\S+)\s+(?P<filter_type>ip(\s?\S+)?)\s+(?P<filter_mode>\S+)\s+(?P<ip_address>\S+)\s+(?P<mac_address>\S+)?\s+(?P<vlan>[\d,]*)$")
 
         ret_dict = {}
         for line in output.splitlines():

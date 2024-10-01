@@ -1,0 +1,5 @@
+  Vlan Current Count/Max Reached    : 3/3
+  Group Current Count/Max Reached   : 0/0
+  Port Current Count/Max Reached    : 2001/2057
+  Last used Vlan Urid               : 0x4000000000000006
+  Last Used Group Urid              : 0x600000000000575c

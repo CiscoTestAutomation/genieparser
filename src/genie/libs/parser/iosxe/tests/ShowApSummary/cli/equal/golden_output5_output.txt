@@ -1,0 +1,12 @@
+Number of APs: 5
+
+CC = Country Code
+RD = Regulatory Domain
+
+AP Name                          Slots AP Model             Ethernet MAC   Radio MAC      CC   RD   IP Address                                State        Location
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+AP002A.1087.CA0A                 2     AIR-AP2802E-D-K9     002a.1087.ca0a 00a2.eefd.9f20 IN   -D   2001:9:3:13:c822:82c8:32da:484d           Registered   default location
+AP687D.B402.BB44                 2     C9120AXE-D           687d.b402.bb44 687d.b475.dba0 IN   -D   9.3.13.220                                Registered   default location
+AP687D.B402.EF8C                 2     C9120AXE-D           687d.b402.ef8c 687d.b477.7de0 IN   -D   9.3.13.199                                Registered   default location
+AP7061.7B5F.1136                 2     AIR-AP3802E-D-K9     7061.7b5f.1136 9077.ee00.c7c0 IN   -D   2001:9:3:13:cc12:f0c6:3777:b777           Registered   default location
+APA4B2.3987.937C                 2     C9120AXE-D           a4b2.3987.937c a4b2.3983.7580 IN   -D   9.3.13.200                                Registered   default location

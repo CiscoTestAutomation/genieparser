@@ -25,7 +25,12 @@
     * 'show platform hardware fed active fwd-asic traps tm-traps asic 0'
     * 'show platform hardware fed active fwd-asic drops asic 0 slice 0'
     * 'show platform hardware fed switch active fwd-asic drops asic 0 slice 0'
+    * 'show platform hardware fed switch {type} fwd-asic insight npl_summary_diff{files_compare}'
     * 'show platform hardware fed switch {switch} fwd-asic drops asic {asic}'
+    * 'show platform hardware fed switch {sw_number} qos queue config interface {interface} queue {queue_id} | include {match}'
+    * 'show platform hardware fed switch {sw_number} qos scheduler interface {interface} | include {match}'
+    * 'show platform software fed switch {sw_number} qos interface {interface} ingress npd detailed | include {match}'
+
 """
 # Python
 import re
@@ -37,7 +42,7 @@ from xml.dom import minidom
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional, Use, And
+from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional, Use, And, ListOf
 from genie.libs.parser.utils.common import Common
 from genie.parsergen import oper_fill_tabular
 
@@ -4416,6 +4421,59 @@ class ShowPlatformHardwareFedloopback(ShowPlatformHardwareFedloopbackSchema):
         return ret_dict
                 
 
+class ShowPlatformHardwareFedSwitchActiveStandbyFwdAsicInsightNplSummaryDiffSchema(MetaParser):
+    """
+    Schema for show platform hardware fed switch {type} fwd-asic insight npl_summary_diff{files_compare}
+    show platform hardware fed switch {type} fwd-asic insight npl_summary_diff{files_compare}
+    """
+    schema = {
+            'table_name':{
+                  Any(): {
+                    'length_subtables_f1': int,
+                    'length_subtables_f2': int,
+                    'nb_subtables_f1': int,
+                    'nb_subtables_f2': int
+              }
+            }
+        }
+
+class ShowPlatformHardwareFedSwitchActiveStandbyFwdAsicInsightNplSummaryDiff(ShowPlatformHardwareFedSwitchActiveStandbyFwdAsicInsightNplSummaryDiffSchema):
+    """ Parser for show platform hardware fed switch {type} fwd-asic insight npl_summary_diff{files_compare}     """
+
+    cli_command = 'show platform hardware fed switch {type} fwd-asic insight npl_summary_diff{files_compare}'
+
+    def cli(self, type,files_compare, output=None): 
+
+        if output is None:
+            output = self.device.execute(self.cli_command.format(type=type,files_compare=files_compare))
+               
+        ret_dict = {}
+        
+        # table_name                               length_subtables_f1            length_subtables_f2            nb_subtables_f1                nb_subtables_f2
+        # mac_forwarding_table                     (3,)                           (4,)                           1                              1                              nb_subtables_f2
+        p1 = re.compile(r"^(?P<table_name>\S+)\s+.(?P<length_subtables_f1>\d+)\S+\s+.(?P<length_subtables_f2>\d+)\S+\s+.(?P<nb_subtables_f1>\d+)\s+(?P<nb_subtables_f2>\d+)$")
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # table_name                               length_subtables_f1            length_subtables_f2            nb_subtables_f1                nb_subtables_f2
+            # mac_forwarding_table                     (3,)                           (4,)                           1                              1                              nb_subtables_f2
+            m = p1.match(line)
+            if m:
+                group=m.groupdict()
+                result_dict=ret_dict.setdefault('table_name', {}).setdefault(group['table_name'], {})
+                result_dict.update({
+                    'length_subtables_f1': int(group['length_subtables_f1']),
+                    'length_subtables_f2': int(group['length_subtables_f2']),
+                    'nb_subtables_f1': int(group['nb_subtables_f1']),
+                    'nb_subtables_f2': int(group['nb_subtables_f2'])
+                })
+                continue
+        
+        return ret_dict    
+
+
+
 
 
 # ======================================================================
@@ -4495,3 +4553,142 @@ class ShowPlatformHardwareFedSwitchActiveFwdasicdropsasic(
 
         return ret_dict
 
+# ======================================================
+# Schema for 'show platform hardware fed switch {sw_number} qos queue config interface {interface} queue {queue_id} | include {match}'
+# ======================================================
+
+class ShowPlatformHardwareFedSwitchQosQueueConfigInterfaceQueueIncludeSchema(MetaParser):
+    schema = {
+        'q_limit_blocks':  int,
+    }
+
+# ======================================================
+# Parser for 'show platform hardware fed switch {sw_number} qos queue config interface {interface} queue {queue_id} | include {match}'
+# ======================================================
+
+class ShowPlatformHardwareFedSwitchQosQueueConfigInterfaceQueueInclude(ShowPlatformHardwareFedSwitchQosQueueConfigInterfaceQueueIncludeSchema):
+    """Parser for show platform hardware fed switch {sw_number} qos queue config interface {interface} queue {queue_id} | include {match}"""
+    cli_command = ['show platform hardware fed switch {sw_number} qos queue config interface {interface} queue {queue_id} | include {match}']
+    
+
+    def cli(self,interface,queue_id,match, sw_number,output=None):
+        if output is None:
+            cmd = self.cli_command[0].format(sw_number=sw_number,interface=interface,queue_id=queue_id,match=match)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # Initialize the dictionary for the parsed output.
+        result_dict = {}
+
+        # Q-Limit(Blocks    )    : 100000
+        p1 = re.compile(r'^Q-Limit\(Blocks\s+\)\s+:\s+(?P<q_limit_blocks>\d+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Q-Limit(Blocks    )    : 100000
+            m = p1.match(line)
+            if m:
+                result_dict['q_limit_blocks'] = int(m.groupdict()['q_limit_blocks'])
+                continue
+        return result_dict
+ 
+# ======================================================
+# Schema for 'show platform hardware fed switch {sw_number} qos scheduler interface {interface} | include {match}'
+# ======================================================
+class ShowPlatformHardwareFedSwitchQosSchedulerInterfaceIncludeSchema(MetaParser):
+    schema = {
+        'voq_offset': ListOf(int),
+    }
+
+# ======================================================
+# Parser for 'show platform hardware fed switch {sw_number} qos scheduler interface {interface} | include {match} '
+# ======================================================
+
+class ShowPlatformHardwareFedSwitchQosSchedulerInterfaceInclude(ShowPlatformHardwareFedSwitchQosSchedulerInterfaceIncludeSchema):
+    """Parser for show platform hardware fed switch {sw_number} qos scheduler interface {interface} | include {match}"""
+    cli_command = ['show platform hardware fed switch {sw_number} qos scheduler interface {interface} | include {match}']
+
+    def cli(self, sw_number,interface,match,output=None):
+        if output is None:
+            cmd = self.cli_command[0].format(sw_number=sw_number,interface=interface,match=match)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # Initialize the dictionary for the parsed output.
+        result_dict = {}
+
+        # |                       : VOQ Offset :   0 |   0 |   0 |   0 |   0 |   5 |   6 |   7 
+        p1 = re.compile(r'^\|\s+:\s+VOQ\s+Offset\s+:\s+(?P<voq_offset>\d+\s+\|\s+\d+\s+\|\s+\d+\s+\|\s+\d+\s+\|\s+\d+\s+\|\s+\d+\s+\|\s+\d+\s+\|\s+\d+)')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # |                       : VOQ Offset :   0 |   0 |   0 |   0 |   0 |   5 |   6 |   7 
+            m = p1.match(line)
+            if m:
+                voq_offset = m.groupdict()['voq_offset'].split('|')
+                result_dict['voq_offset'] = [int(i.strip()) for i in voq_offset]
+                continue
+        return result_dict
+
+# ======================================================
+# Schema for 'show platform software fed switch {sw_number} qos interface {interface} ingress npd detailed | include {match}'
+# ======================================================
+class ShowPlatformHardwareFedSwitchQosInterfaceIngressNdpDetailedIncludeSchema(MetaParser):
+    schema = {
+        'interface': str,
+        'location': str,
+        'direction': str,
+        'cgid': str,
+        'no_of_classes': int
+    }
+
+# ======================================================
+# Parser for 'show platform software fed switch {sw_number} qos interface {interface} ingress npd detailed | include {match}'
+# ======================================================
+
+class ShowPlatformHardwareFedSwitchQosInterfaceIngressNdpDetailedInclude(ShowPlatformHardwareFedSwitchQosInterfaceIngressNdpDetailedIncludeSchema):
+    """Parser for show platform software fed switch {sw_number} qos interface {interface} ingress npd detailed | include {match}"""
+    cli_command = ['show platform software fed switch {sw_number} qos interface {interface} ingress npd detailed | include {match}']
+
+    def cli(self, sw_number,interface,match, output=None):
+        if output is None:
+            cmd = self.cli_command[0].format(sw_number=sw_number,interface=interface,match=match)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # Initialize the dictionary for the parsed output.
+        ret_dict = {}
+
+        # [GigabitEthernet1/0/2, pm-dc1-tc6, Ingress]: CGID = 0x634E00  
+        p1 = re.compile(r'^\[(?P<interface>\S+),\s+(?P<location>\S+),\s+(?P<direction>\S+)]:\s+CGID\s+=\s+(?P<cgid>\S+)$')
+        
+        #  No of classes: 1
+        p2 = re.compile(r'^\s*No of classes:\s+(?P<no_of_classes>\d+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            
+            # [GigabitEthernet1/0/2, pm-dc1-tc6, Ingress]: CGID = 0x634E00  
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['interface'] = group['interface']
+                ret_dict['location'] = group['location']
+                ret_dict['direction'] = group['direction']
+                ret_dict['cgid'] = group['cgid']
+                continue
+
+            #  No of classes: 1
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['no_of_classes'] = int(group['no_of_classes'])
+                continue
+
+        return ret_dict
+        

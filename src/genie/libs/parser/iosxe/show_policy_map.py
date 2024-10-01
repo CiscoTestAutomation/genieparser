@@ -1976,6 +1976,8 @@ class ShowPolicyMapControlPlaneClassMapSchema(MetaParser):
                     Optional('police_bps'): int,
                     Optional('police_limit'): int,
                     Optional('extended_limit'): int,
+                    Optional('rate_pps'): int,
+                    Optional('burst_pkt'): int,
                     Optional('conformed'): {
                         Optional('packets'): int,
                         Optional('bytes'): int,
@@ -2100,6 +2102,9 @@ class ShowPolicyMapControlPlaneClassMap(ShowPolicyMapControlPlaneClassMapSchema)
 
         # Marker statistics: Disabled
         p11_2 = re.compile(r'^Marker +statistics: +(?P<marker_statistics>(\w+))$')
+        
+        #rate 2000 pps, burst 11264 packets
+        p13 = re.compile(r'^rate +(?P<rate_pps>(\d+)) pps, +burst +(?P<burst_pkt>(\d+)) packets$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -2282,7 +2287,13 @@ class ShowPolicyMapControlPlaneClassMap(ShowPolicyMapControlPlaneClassMapSchema)
                     value = m.groupdict()['value']
                 target_dict.update({action: value})
                 continue
-
+            # rate 2000 pps, burst 11264 packets
+            m = p13.match(line)
+            if m:
+                police_dict = class_dict.setdefault('police', {})
+                police_dict['rate_pps'] = int(m.groupdict()['rate_pps'])
+                police_dict['burst_pkt'] = int(m.groupdict()['burst_pkt'])
+                continue
         return ret_dict
 
 

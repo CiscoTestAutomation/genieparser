@@ -3,7 +3,6 @@
 IOSXE parsers for the following show commands:
     * show monitor
     * show monitor session {session}
-    * show monitor session all
     * show monitor capture
 
 '''
@@ -11,15 +10,10 @@ IOSXE parsers for the following show commands:
 
 # Python
 import re
-import xmltodict
-from netaddr import IPAddress, IPNetwork
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional, And, Default, Use
-
-# import parser utils
-from genie.libs.parser.utils.common import Common
+from genie.metaparser.util.schemaengine import Any, Optional
 
 
 # =========================================
@@ -68,16 +62,13 @@ class ShowMonitor(ShowMonitorSchema):
     ''' Parser for
       "show monitor"
       "show monitor session {session}"
-      "show monitor session all"
     '''
 
-    cli_command = ['show monitor', 'show monitor session {session}', 'show monitor session all']
+    cli_command = ['show monitor', 'show monitor session {session}']
 
-    def cli(self, session="", all="", output=None):
+    def cli(self, session="", output=None):
         if output is None:
-            if all:
-                cmd = self.cli_command[2]
-            elif session:
+            if session:
                 cmd = self.cli_command[1].format(session=session)
             else:
                 cmd = self.cli_command[0]

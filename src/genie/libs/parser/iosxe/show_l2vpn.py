@@ -177,8 +177,12 @@ IOSXE parsers for the following show commands:
     * show l2vpn evpn vpws vc id <vc_id> detail
     * show l2vpn evpn vpws vc preferred-path
     * show l2vpn evpn default-gateway
+    * show l2vpn evpn esi-mlag summary
+    * show l2vpn evpn esi-mlag mac ip
+    * show l2vpn evpn esi-mlag mac ip vlan <vlan_id>
+    * show l2vpn evpn esi-mlag vlan brief
 
-Copyright (c) 2021 by Cisco Systems, Inc.
+Copyright (c) 2024 by Cisco Systems, Inc.
 All rights reserved.
 '''
 
@@ -193,7 +197,8 @@ from genie.metaparser.util.schemaengine import Schema, \
                                          Or, \
                                          And, \
                                          Default, \
-                                         Use
+                                         Use, \
+                                         ListOf
 from genie.parsergen import oper_fill_tabular
 # import parser utils
 from genie.libs.parser.utils.common import Common
@@ -5968,3 +5973,288 @@ class ShowL2vpnAtomVc(ShowL2vpnAtomVcSchema):
                 continue
 
         return ret_dict
+
+ # ===================================================
+ # Parser for 'show l2vpn evpn esi-mlag summary'
+ # ===================================================
+class ShowL2vpnEvpnEsiMlagSummarySchema(MetaParser):
+     """Schema for show l2vpn evpn esi-mlag summary
+     """
+ 
+     schema = {
+         'esi_mlag': {
+             Any(): {
+                 Optional('bgp_router_id'): str,
+                 Optional('asn'): int,
+                 Optional('up_down_time'): str,
+                 Optional('state'): str,
+                 Optional('src_interface'): str,
+                 'pc_count': int,
+                 'vlan_count': int,
+                 'mac_count': int,
+                 Optional('interfaces'): {
+                     Any(): {
+                         'esi_id': str,
+                         'state': str,
+                     },
+                 },
+             },
+         },
+     }
+ 
+ 
+class ShowL2vpnEvpnEsiMlagSummary(ShowL2vpnEvpnEsiMlagSummarySchema):
+     """Parser for show l2vpn evpn esi-mlag summary
+     """
+ 
+     cli_command = 'show l2vpn evpn esi-mlag summary'
+ 
+     def cli(self, output=None):
+         if output is None:
+             out = self.device.execute(self.cli_command)
+         else:
+             out = output
+ 
+         # initial return dictionary
+         ret_dict = {}
+ 
+         # BGP is not configured or not up
+         p1_0 = re.compile(r'^BGP is not configured or not up$')
+ 
+         # Local BGP RouterID : 10.0.1.14, ASN : 65034
+         p1 = re.compile(r'^Local\s+BGP\s+RouterID\s+:\s+'
+                        r'(?P<bgp_router_id>[\d\.]+)\,\s+ASN\s+:\s+'
+                        r'(?P<asn>\d+)$')
+ 
+         # Neighbor IP : 10.0.1.13, Up/Down : 00:22:25, State/PfxRcd : 2560, Source Interface : Loopback1
+         p2 = re.compile(r'^Neighbor\s+IP\s+:\s+(?P<nbr_ip>[\d\.]+)\,'
+                        r'\s+Up\/Down\s+:\s+(?P<up_down_time>[\:\S]+)\,'
+                        r'\s+State\/PfxRcd\s+:\s+(?P<state>\S+)\,'
+                        r'\s+Source\sInterface\s:\s+(?P<src_interface>\S+)$')
+ 
+         #Total Port-Channel Count       : 3
+         p3 = re.compile(r'^Total\s+Port\-Channel\s+Count\s+:\s+'
+                        r'(?P<pc_count>\d+)$')
+ 
+         #Total VLAN Count               : 300
+         p4 = re.compile(r'^Total\s+VLAN\s+Count\s+:\s+'
+                        r'(?P<vlan_count>\d+)$')
+ 
+         #Total MAC Count                : 1048
+         p5 = re.compile(r'^Total\s+MAC\s+Count\s+:\s+(?P<mac_count>\d+)$')
+ 
+         # Interface       ESI                      State
+         # --------------- ------------------------ ------
+         # Po6             0150.F722.D491.0000.0600 Ready
+         # Po5             0170.1F53.9AB0.8000.0500 Ready
+         p6_0 = re.compile(r'^Interface\s+ESI\s+State$')
+         p6 = re.compile(r'^(?P<interface>[\w\d]+)\s+(?P<esi_id>[\S.]+)'
+                        r'\s+(?P<state>[\w\s]+)$')
+ 
+         for line in out.splitlines():
+             line = line.strip()
+ 
+             # BGP is not configured or not up
+             m = p1_0.match(line)
+             if m:
+                 group = m.groupdict()
+                 nbr_ip = ""
+                 ret_dict.setdefault('esi_mlag', {}).\
+                                 setdefault("", {})
+                 continue
+ 
+             # Local BGP RouterID : 10.0.1.14, ASN : 65034
+             m = p1.match(line)
+             if m:
+                 group = m.groupdict()
+                 bgp_router_id = group['bgp_router_id']
+                 asn = int(group['asn'])
+                 continue
+ 
+             # Neighbor IP : 10.0.1.13, Up/Down : 00:22:25, State/PfxRcd : 2560, Source Interface : Loopback1
+             m = p2.match(line)
+             if m:
+                 group = m.groupdict()
+                 nbr_ip = group['nbr_ip']
+                 ret_dict.setdefault('esi_mlag', {}).\
+                                 setdefault(nbr_ip, {})
+                 ret_dict['esi_mlag'][nbr_ip]['up_down_time'] = group['up_down_time']     
+                 ret_dict['esi_mlag'][nbr_ip]['state'] = group['state']
+                 ret_dict['esi_mlag'][nbr_ip]['src_interface'] = group['src_interface']  
+                 ret_dict['esi_mlag'][nbr_ip]['bgp_router_id'] = bgp_router_id
+                 ret_dict['esi_mlag'][nbr_ip]['asn'] = asn     
+                 continue
+ 
+             #Total Port-Channel Count       : 3
+             m = p3.match(line)
+             if m:
+                 group = m.groupdict()
+                 ret_dict['esi_mlag'][nbr_ip]['pc_count'] = \
+                                                 int(group['pc_count'])
+                 continue
+ 
+             #Total VLAN Count               : 300
+             m = p4.match(line)
+             if m:
+                 group = m.groupdict()
+                 ret_dict['esi_mlag'][nbr_ip]['vlan_count'] = \
+                                             int(group['vlan_count'])
+                 continue
+ 
+             #Total MAC Count                : 1048
+             m = p5.match(line)
+             if m:
+                 group = m.groupdict()
+                 ret_dict['esi_mlag'][nbr_ip]['mac_count'] = \
+                                             int(group['mac_count'])
+                 continue
+             
+             # Interface       ESI                      State
+             # --------------- ------------------------ ------
+             # Po6             0150.F722.D491.0000.0600 Ready
+             # Po5             0170.1F53.9AB0.8000.0500 Ready
+             m = p6_0.match(line)
+             if m:
+                 continue
+                 
+             m = p6.match(line)
+             if m:
+                 group = m.groupdict()
+                 interface = group['interface']
+                 esi_id = group['esi_id']
+                 state = group['state']
+                 ret_dict['esi_mlag'][nbr_ip].setdefault("interfaces", {}).setdefault(interface, {})
+               
+                 ret_dict['esi_mlag'][nbr_ip]['interfaces'][interface]["esi_id"] = esi_id
+                 ret_dict['esi_mlag'][nbr_ip]['interfaces'][interface]["state"] = state
+                 continue
+ 
+         return ret_dict
+ 
+ # ===================================================
+ # Parser for 'show l2vpn evpn esi-mlag mac ip'
+ # ===================================================
+class ShowL2vpnEvpnEsiMlagMacIpSchema(MetaParser):
+     """Schema for show l2vpn evpn esi-mlag mac ip
+                   show l2vpn evpn esi-mlag mac ip vlan <vlan_id>
+     """
+ 
+     schema = {
+         "esi_mlag_entries": ListOf({
+             'vlan': int,
+             'mac': str,
+             'ip': str,
+             'local_intf': str,
+             'neighbor_ip': str,
+             })
+         }
+class ShowL2vpnEvpnEsiMlagMacIp(ShowL2vpnEvpnEsiMlagMacIpSchema):
+     """Parser for show l2vpn evpn esi-mlag mac ip
+                   show l2vpn evpn esi-mlag mac ip vlan <vlan_id>
+     """
+ 
+     cli_command = ['show l2vpn evpn esi-mlag mac ip', 'show l2vpn evpn esi-mlag mac ip vlan {vlan_id}']
+ 
+     def cli(self, vlan_id=None, output=None):
+         cli = self.cli_command
+         if output is None:
+             if vlan_id:
+                cli = self.cli_command[1].format(vlan_id=vlan_id) 
+             else:
+                cli = self.cli_command[0] 
+             out = self.device.execute(cli)
+         else:
+             out = output
+ 
+         # initial return dictionary
+         ret_dict = {}
+         entry_list = []
+     
+         # 1100  0014.0100.0001 2001::250:0:0:2 Po3:1100        10.0.1.12
+         # 1100  0012.0100.0001 101.0.0.1                       10.0.1.12
+         p1 = re.compile(r'^(?P<vlan>\d+)\s+(?P<mac>[\S.]+)\s+'
+                        r'(?P<ip>[\w.:]+)\s+(?P<local_intf>[\S:\s]+)'
+                        r'\s+(?P<neighbor_ip>[\S.]+)$')
+ 
+         for line in out.splitlines():
+             line = line.strip()
+ 
+             # 1100  0014.0100.0001 2001::250:0:0:2 Po3:1100        10.0.1.12
+             # 1100  0012.0100.0001 101.0.0.1                       10.0.1.12
+             m = p1.match(line)
+             if m:
+                 group = m.groupdict()
+                 ret_dict["esi_mlag_entries"] = entry_list
+                 entry_list = ret_dict.setdefault("esi_mlag_entries", {})
+                 entry_list.append({
+                     'vlan' : int(group['vlan']),
+                     'mac' : group['mac'],
+                     'ip' : group['ip'],
+                     'local_intf' : group['local_intf'].strip(),
+                     'neighbor_ip' : group['neighbor_ip'],
+                 })
+                 ret_dict["esi_mlag_entries"] = entry_list
+                 continue
+ 
+         return ret_dict
+ 
+ # ===================================================
+ # Parser for 'show l2vpn evpn esi-mlag mac ip'
+ # ===================================================
+class ShowL2vpnEvpnEsiMlagVlanBriefSchema(MetaParser):
+     """Schema for show l2vpn evpn esi-mlag vlan brief
+     """
+ 
+     schema = {
+         "esi_mlag_vlan": ListOf({
+             'vlan': int,
+             'vni': int,
+             'local_mac_cnt': int,
+             'remote_mac_cnt': int,
+             'state': str,
+             })
+         }
+class ShowL2vpnEvpnEsiMlagVlanBrief(ShowL2vpnEvpnEsiMlagVlanBriefSchema):
+     """Parser for show l2vpn evpn esi-mlag vlan brief
+     """
+ 
+     cli_command = ['show l2vpn evpn esi-mlag vlan brief']
+ 
+     def cli(self, output=None):
+         if output is None:
+             out = self.device.execute(self.cli_command)
+         else:
+             out = output
+ 
+         # initial return dictionary
+         ret_dict = {}
+         entry_list = []
+ 
+         # 1400  21400    2         0          Established
+         # 1401  21401    2         0          Established
+         # 1100  21100    0         0          No BGP, Incomplete
+         p1 = re.compile(r'^(?P<vlan>\d+)\s+(?P<vni>\d+)\s+'
+                        r'(?P<local_mac_cnt>\d+)\s+(?P<remote_mac_cnt>\d+)'
+                        r'\s+(?P<state>[\S,\s]+)$')
+ 
+         for line in out.splitlines():
+             line = line.strip()
+ 
+         # 1401  21401    2         0          Established
+         # 1100  21100    0         0          No BGP, Incomplete
+             m = p1.match(line)
+             if m:
+                 group = m.groupdict()
+                 ret_dict["esi_mlag_vlan"] = entry_list
+                 entry_list = ret_dict.setdefault("esi_mlag_vlan", {})
+                 entry_list.append({
+                     'vlan' : int(group['vlan']),
+                     'vni' : int(group['vni']),
+                     'local_mac_cnt' : int(group['local_mac_cnt']),
+                     'remote_mac_cnt' : int(group['remote_mac_cnt']),
+                     'state' : group['state']
+                 })
+                 ret_dict["esi_mlag_vlan"] = entry_list
+                 continue
+ 
+         return ret_dict

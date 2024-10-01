@@ -1942,7 +1942,7 @@ class ShowLispIpMapCachePrefixSchema(MetaParser):
                         Optional('packets_out_bytes'): int,
                         Optional('action'): str,
                         Optional('counters_not_accurate'): bool,
-                        'locators': {
+                        Optional('locators'): {
                             Any(): {
                                 'uptime': str,
                                 'state': str,

@@ -1,0 +1,3 @@
+[GigabitEthernet1/0/2, pm-dc1-tc6, Ingress]: CGID = 0x634E00  
+
+  No of classes: 1

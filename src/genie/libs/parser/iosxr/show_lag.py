@@ -1,10 +1,10 @@
 """show_lag.py
    supported commands:
      *  show lacp system-id
-     *  show bundle 
+     *  show bundle
      *  show bundle <interface>
      *  show bundle reasons
-     *  show bundle <interface> reasons 
+     *  show bundle <interface> reasons
      *  show lacp
      *  show lacp <interface>
 """
@@ -13,7 +13,7 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Optional
+from genie.metaparser.util.schemaengine import Any, Optional, Or
 
 # import parser utils
 from genie.libs.parser.utils.common import Common
@@ -85,7 +85,7 @@ class ShowBundleSchema(MetaParser):
                 'min_active_link': int,
                 'min_active_bw_kbps': int,
                 'max_active_link': int,
-                'wait_while_timer_ms': int,
+                'wait_while_timer_ms': Or(int, str),
                 Optional('load_balance'): {
                     Optional('load_balance'): str,
                     Optional('link_order_signaling'): str,
@@ -146,7 +146,7 @@ class ShowBundleSchema(MetaParser):
 class ShowBundle(ShowBundleSchema):
     """Parser for show bundle"""
 
-    cli_command = ['show bundle {interface}','show bundle']
+    cli_command = ['show bundle {interface}', 'show bundle']
 
     def cli(self, interface='', output=None):
         if output is None:
@@ -171,7 +171,7 @@ class ShowBundle(ShowBundleSchema):
 
         # Local links <active/standby/configured>:  2 / 0 / 2
         p3 = re.compile(r'^Local +links.*: *(?P<active>[\d]+)'
-                         ' *\/ *(?P<standby>[\d]+) *\/ *(?P<configured>[\d]+)$')
+                        r' *\/ *(?P<standby>[\d]+) *\/ *(?P<configured>[\d]+)$')
 
         # Local bandwidth <effective/available>:  2000000 (2000000) kbps
         # Local bandwidth <effective/available>:  100000 / 100000 kbps
@@ -185,7 +185,7 @@ class ShowBundle(ShowBundleSchema):
 
         # Minimum active links / bandwidth:  1 / 1 kbps
         p7 = re.compile(r'^Minimum +active +links.*: *(?P<min_active_link>[\d]+)'
-                         ' *\/ *(?P<min_active_bw_kbps>[\d]+).*$')
+                        r' *\/ *(?P<min_active_bw_kbps>[\d]+).*$')
 
         # Maximum active links:  8
         # Maximum active links:  32 (from partner)
@@ -193,7 +193,8 @@ class ShowBundle(ShowBundleSchema):
 
         # Wait while timer:  2000 ms
         # Wait-while timer:  2000 ms
-        p9 = re.compile(r'^Wait( +|-)while +timer: *(?P<wait_while_timer_ms>[\d]+).*$')
+        # Wait while timer:                          Off
+        p9 = re.compile(r'^Wait( +|-)while +timer: *(?P<wait_while_timer_ms>(\d|\w)+).*$')
 
         # Load balancing:
         # Load-balancing:  Default
@@ -234,7 +235,7 @@ class ShowBundle(ShowBundleSchema):
 
         # Foreign links <active/configured>:  1 / 1
         p12_3 = re.compile(r'^Foreign +links.*: *(?P<foreign_links_active>[\d]+)'
-                            ' *\/ *(?P<foreign_links_configured>[\d]+)$')
+                           r' *\/ *(?P<foreign_links_configured>[\d]+)$')
 
         # Switchover type:  Revertive
         p12_4 = re.compile(r'^Switchover +type: *(?P<switchover_type>[\w\s\-]+)$')
@@ -273,7 +274,7 @@ class ShowBundle(ShowBundleSchema):
         # Port                  Device           State        Port ID         B/W, kbps
         # Gi0/0/0/0             Local            Active       0x000a, 0x0001     1000000
         p14 = re.compile(r'^(?P<interface>[\S]+) +(?P<device>[\S]+) +(?P<state>[\w]+)'
-                          ' +(?P<port_id>[\w]+, *[\w]+) +(?P<bw_kbps>[\d]+)$')
+                         r' +(?P<port_id>[\w]+, *[\w]+) +(?P<bw_kbps>[\d]+)$')
 
         # Link is Active
         # Link is Standby due to maximum-active links configuration
@@ -361,10 +362,14 @@ class ShowBundle(ShowBundleSchema):
                 continue
 
             # Wait while timer:  2000 ms
+            # Wait while timer:                          Off
             m = p9.match(line)
             if m:
                 group = m.groupdict()
-                bundle_dict.update({'wait_while_timer_ms': int(group['wait_while_timer_ms'])})
+                try:
+                    bundle_dict.update({'wait_while_timer_ms': int(group['wait_while_timer_ms'])})
+                except ValueError:
+                    bundle_dict.update({'wait_while_timer_ms': group['wait_while_timer_ms']})
                 continue
 
             # Load balancing:

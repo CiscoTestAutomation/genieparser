@@ -1362,10 +1362,10 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
        show ip route <Hostname or A.B.C.D>
        show ip route vrf <vrf> <Hostname or A.B.C.D>"""
     parser_command = ['show ip route vrf {vrf}',
-                'show ip route vrf {vrf} {route}',
-                'show ip route', 
-                'show ip route {route}',
-                'show ip route interface {interface}']
+                      'show ip route vrf {vrf} {route}',
+                      'show ip route',
+                      'show ip route {route}',
+                      'show ip route interface {interface}']
     IP_VER = 'ip'
 
     def cli(self, route=None, vrf=None, interface=None, output=None):
@@ -1388,10 +1388,6 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
         if not vrf:
             vrf = 'default'
 
-        # Routing Table: Mgmt-intf
-        # Routing Table: test_vrf1
-        p0 = re.compile(r'^Routing +Table: +(?P<routing_table>\S+)$')
-
         # initial regexp pattern
         # Routing entry for 10.151.0.0/24, 1 known subnets
         # Routing entry for 0.0.0.0/0, supernet
@@ -1402,7 +1398,8 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
         # Known via "connected", distance 0, metric 0 (connected)
         # Known via "eigrp 1", distance 130, metric 10880, type internal
         # Known via "bgp 65161", distance 20, metric 0, candidate default path
-        p2 = re.compile(r'^Known +via +\"(?P<known_via>[\w\s]+)\", '
+        # Known via "bgp 100.1", distance 20, metric 0, candidate default path
+        p2 = re.compile(r'^Known +via +\"(?P<known_via>[\w\s\.]+)\", '
                         r'+distance +(?P<distance>\d+), +metric '
                         r'+(?P<metric>\d+),? *(?:\S+ (?P<type>[\w\- '
                         r']+))?,? *.*$')
@@ -1432,7 +1429,7 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
         # * directly connected, via GigabitEthernet1.120
         # directly connected via LISP0
         p5_1 = re.compile(r'^\*? *directly +connected,? via +(?P<interface>\S+)$')
-        
+
         # Route metric is 10880, traffic share count is 1
         p6 = re.compile(r'^Route +metric +is +(?P<metric>\d+), +'
                         r'traffic +share +count +is +(?P<share_count>\d+)$')
@@ -1445,11 +1442,11 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
         # FE80::EEBD:1DFF:FE09:56C2
         p8 = re.compile(r'^(?P<fwd_ip>[\w\:]+)(, +(?P<fwd_intf>[\w\.\/\-]+)'
                         r'( indirectly connected)?)?$')
-        
+
         # receive via Loopback4
         p8_1 = re.compile(r'^receive +via +(?P<fwd_intf>[\w\.\/\-]+)$')
 
-        # Last updated 2w4d ago       
+        # Last updated 2w4d ago
         p9 = re.compile(r'^Last +updated +(?P<age>[\w\:\.]+) +ago$')
 
         # From FE80::EEBD:1DFF:FE09:56C2
@@ -1495,7 +1492,7 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
                 group = m.groupdict()
                 entry = group.pop('entry')
                 entry_dict = ret_dict.setdefault('entry', {}).setdefault(entry, {})
-                entry_dict.update({k:v for k,v in group.items() if v})
+                entry_dict.update({k: v for k, v in group.items() if v})
                 continue
 
             # Known via "static", distance 1, metric 0, candidate default path
@@ -1504,10 +1501,11 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
             # Known via "connected", distance 0, metric 0 (connected)
             # Known via "eigrp 1", distance 130, metric 10880, type internal
             # Known via "bgp 65161", distance 20, metric 0, candidate default path
+            # Known via "bgp 100.1", distance 20, metric 0, candidate default path
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                entry_dict.update({k:v for k,v in group.items() if v})
+                entry_dict.update({k: v for k, v in group.items() if v})
                 continue
 
             # Tag 65161, type external
@@ -1516,8 +1514,8 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
             if m:
                 group = m.groupdict()
                 tag_dict = ret_dict.setdefault('entry', {}).setdefault(entry, {})
-                tag_dict.update({'tag_name' : group['tag_name']})
-                tag_dict.update({'tag_type' : group['tag_type']})
+                tag_dict.update({'tag_name': group['tag_name']})
+                tag_dict.update({'tag_type': group['tag_type']})
 
                 continue
 
@@ -1526,7 +1524,7 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                entry_dict.update({k:v for k,v in group.items() if v})
+                entry_dict.update({k: v for k, v in group.items() if v})
                 continue
             # Last update from 192.168.151.2 on Vlan101, 2w3d ago
             # Last update from 192.168.246.2 on Vlan103, 00:00:12 ago
@@ -1540,7 +1538,7 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
             if m:
                 group = m.groupdict()
                 update_dict = entry_dict.setdefault('update', {})
-                update_dict.update({k:v for k,v in group.items() if v})
+                update_dict.update({k: v for k, v in group.items() if v})
                 continue
 
             # * 192.168.151.2, from 192.168.151.2, 2w3d ago, via Vlan101
@@ -1582,16 +1580,14 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
             m = p16.match(line)
             if m:
                 hops_dict = entry_dict.setdefault('paths', {}).setdefault(index, {})
-                hops_dict.update({'as_hops' : m.groupdict()['num_hops']})
-
+                hops_dict.update({'as_hops': m.groupdict()['num_hops']})
                 continue
-            
+
             # Route tag 65161
             m = p17.match(line)
             if m:
                 route_dict = entry_dict.setdefault('paths', {}).setdefault(index, {})
-                route_dict.update({'route_tag' : m.groupdict()['route_tag']})
-
+                route_dict.update({'route_tag': m.groupdict()['route_tag']})
                 continue
 
             # Route metric is 10880, traffic share count is 1
@@ -1599,14 +1595,14 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
             if m:
                 group = m.groupdict()
                 path_dict = entry_dict.setdefault('paths', {}).setdefault(index, {})
-                path_dict.update({k:v for k,v in group.items() if v})
+                path_dict.update({k: v for k, v in group.items() if v})
                 continue
 
             # Route count is 1/1, share count 0
             m = p7.match(line)
             if m:
                 group = m.groupdict()
-                entry_dict.update({k:v for k,v in group.items() if v})
+                entry_dict.update({k: v for k, v in group.items() if v})
                 continue
 
             # FE80::EEBD:1DFF:FE09:56C2, Vlan202
@@ -1616,7 +1612,7 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
                 group = m.groupdict()
                 index += 1
                 path_dict = entry_dict.setdefault('paths', {}).setdefault(index, {})
-                path_dict.update({k:v for k,v in group.items() if v})
+                path_dict.update({k: v for k, v in group.items() if v})
                 continue
 
             # receive via Loopback4
@@ -1625,7 +1621,7 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
                 group = m.groupdict()
                 index += 1
                 path_dict = entry_dict.setdefault('paths', {}).setdefault(index, {})
-                path_dict.update({k:v for k,v in group.items() if v})
+                path_dict.update({k: v for k, v in group.items() if v})
                 continue
 
             # From FE80::EEBD:1DFF:FE09:56C2
@@ -1671,7 +1667,7 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
             # Advertised by eigrp 10 route-map GENIE_STATIC_INTO_EIGRP
             m18 = p18.match(line)
             if m18:
-                entry_dict.update({'advertised_by' : m18.groupdict()['advertised_by']})
+                entry_dict.update({'advertised_by': m18.groupdict()['advertised_by']})
                 continue
 
         ret_dict.update({'total_prefixes': index}) if ret_dict else None

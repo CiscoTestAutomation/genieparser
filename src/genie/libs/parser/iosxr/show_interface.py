@@ -2143,7 +2143,7 @@ class ShowEthernetTags(ShowEthernetTagsSchema):
                              ' +(?P<rewrite_num_of_tags_push>\d+)$')
             m = p1.match(line)
             if m:
-                interface = Common.convert_intf_name(m.groupdict()['interface'])
+                interface = Common.convert_intf_name(m.groupdict()['interface'], os="iosxr")
                 status = m.groupdict()['status']
                 outer_vlan = m.groupdict()['outer_vlan']
                 mtu = m.groupdict()['mtu']

@@ -1,0 +1,5 @@
+{
+    "sw_number": 1,
+    "interface": "GigabitEthernet1/0/3",
+    "match": "VOQ Offset"
+}

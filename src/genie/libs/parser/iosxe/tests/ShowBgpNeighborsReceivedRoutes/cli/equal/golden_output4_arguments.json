@@ -1,0 +1,4 @@
+{
+    "neighbor": "10.82.15.252",
+    "address_family": "vpnv4"
+}

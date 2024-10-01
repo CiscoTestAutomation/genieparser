@@ -18,6 +18,8 @@ IOSXE c9500 parsers for the following show commands:
    * show platform software fed {switch} active ip route vrf {vrf_name}
    * show platform hardware fed {switch} {mode} fwd-asic resource tcam utilization
    * show platform hardware fed active fwd-asic resource tcam utilization
+   * show platform software fed {mode} ip mfib vrf {vrf_name} {group} detail
+   * show platform software fed {switch} {mode} ip mfib vrf {vrf_name} {group} detail
 '''
 
 # Python
@@ -52,6 +54,7 @@ class ShowVersionSchema(MetaParser):
                     'image_id': str,
                     'rom': str,
                     'bootldr_version': str,
+                    'bootldr': str,
                     'hostname': str,
                     'uptime': str,
                     'uptime_this_cp': str,
@@ -314,6 +317,7 @@ class ShowVersion(ShowVersionSchema):
             m = p5.match(line)
             if m:
                 version_dict['bootldr_version'] = m.groupdict()['bootldr_version']
+                version_dict['bootldr'] = m.groupdict()['bootldr_version']
                 continue
 
             # SF2 uptime is 1 day, 18 hours, 48 minutes
@@ -2648,9 +2652,10 @@ class ShowPlatformSoftwareFedSwitchActivePuntPacketCaptureDisplayFilterIcmpBrief
                     'icmp_type': int,
                     'code': int
                 }
-            }
-        }
-    }
+			}
+		}
+	}
+
 
 # =====================================================================================================#
 #  Parser for 'show platform software fed switch active punt packet-capture display-filter icmp brief #
@@ -3112,3 +3117,314 @@ class ShowPlatformSoftwareFedSwitchActivePuntPacketCapturedisplayFiltericmpv6Bri
                 continue
    
         return res_dict
+
+
+# =========================================
+# Parser for 'show platform software fed active ip mfib vrf vrf_mcast group detail'
+# =========================================
+
+class ShowPlatformSoftwareFedIpMfibVrfGroupDetailSchema(MetaParser):
+    """Schema for show platform software fed active ip mfib vrf {vrf_name} {group} detail"""
+
+    schema = {
+    'mvrf_table': {
+        Any(): {
+            'mcast_table': {
+                'cpu_credit': int,
+                'fset_aux_urid': str,
+                'fset_urid': str,
+                'gid': int,
+                'group_ip': str,
+                'hardware_info_asic': {
+                    'cookie_urid': str,
+                    'enable_rpf_check': int,
+                    'ip_mcid_oid': int,
+                    'punt_and_forward': int,
+                    'punt_on_rpf_fail': int,
+                    'rpf_port_oid': int,
+                    'rpfid': int,
+                    'use_rpfid': int
+                },
+                'hw_flag': str,
+                'mcid_oid_asic': int,
+                'mlist_handle': str,
+                'mlist_urid': str,
+                'npi_mroute_ent': str,
+                'oif_details': {
+                    Any(): {
+                        'adj_id': str,
+                        'flags': str,
+                        'hw_flag': str,
+                        'interface': str,
+                        'intf_type': str,
+                        'msg_type': str,
+                        'parent_if': str
+                    }
+                },
+                'rpf_adjancency_id': str,
+                'source_ip': str,
+                'svi_fwd_ifs': int,
+                'total_packets': int
+                }
+            },
+        }
+    }
+
+
+class ShowPlatformSoftwareFedIpMfibVrfGroupDetail(ShowPlatformSoftwareFedIpMfibVrfGroupDetailSchema):
+    """Parser for show platform software fed active ip mfib vrf vrf_mcast 225.0.0.1 detail"""
+
+    cli_command = [
+        "show platform software fed {mode} ip mfib vrf {vrf_name} {group} detail",
+        "show platform software fed {switch} {mode} ip mfib vrf {vrf_name} {group} detail",
+    ]
+
+    def cli(self, mode='', vrf_name='', group='', switch=None, output=None):
+        if output is None:
+            if switch:
+                cmd = self.cli_command[1].format(mode=mode, vrf_name=vrf_name, group=group, switch=switch)
+            else:
+                cmd = self.cli_command[0].format(mode=mode, vrf_name=vrf_name, group=group)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+        index = 1
+        index1 = 1
+    
+        # Mvrf: 2  ( 14.14.14.2, 225.0.0.1 ) Attrs:
+        p1 = re.compile(r'.* +\( +(?P<source_ip>[\w\:\.\*\/]+)+\, +(?P<group_ip>[\w\:\.\/]+)')
+    
+        # Hw Flag                 : InHw
+        p2 = re.compile(r'Hw Flag +\: +(?P<hw_flag>\w+)')
+    
+        # Mlist_hndl (Id)         : 0x118831561f8 ( 0x1fd2 )
+        p3 = re.compile(r'Mlist_hndl +\(Id\) +\: +(?P<mlist_handle>\S+)')
+    
+        # Mlist Urid              : 0x1000000000001f91
+        p4 = re.compile(r'Mlist Urid +\: +(?P<mlist_urid>\S+)')
+    
+        # Fset Urid (Hash)        : 0x3000000000000059 ( cad91c96 )
+        p5 = re.compile(r'Fset Urid +\(Hash\) +\: +(?P<fset_urid>\S+)')
+    
+        # Fset Aux Urid           : 0x0
+        p6 = re.compile(r'Fset Aux Urid +\: +(?P<fset_aux_urid>\S+)')
+    
+        # RPF Adjacency ID        : 0xf80054f1
+        p7 = re.compile(r'RPF Adjacency ID +\: +(?P<rpf_adjancency_id>\S+)')
+    
+        # CPU Credit              : 0
+        p8 = re.compile(r'CPU Credit +\: +(?P<cpu_credit>\d+)')
+    
+        # Total Packets           : 17918 ( 19 pps approx.)
+        p9 = re.compile(r'Total Packets +\: +(?P<total_packets>\d+)')
+    
+        # npi_mroute_ent          : 0x118831bdc90
+        p10 = re.compile(r'npi_mroute_ent +\: +(?P<npi_mroute_ent>\S+)')
+    
+        # svi_fwd_ifs             : 0
+        p11 = re.compile(r'svi_fwd_ifs +\: +(?P<svi_fwd_ifs>\d+)')
+    
+        # OIF Details:
+        #  AdjID          Interface          ParentIf        HwFlag      Flags      IntfType       MsgType
+        #  0xf80054a1     Hu1/0/9            --------         ---        F NS       --------       NORMAL
+        #  0xf80054f1     Hu1/0/23           --------         ---        A          --------       NORMAL
+        p12 = re.compile(
+            r'(?P<adj_id>\d\S+) +(?P<interface>[\w\:\.\/]+) +(?P<parent_if>\S+) +(?P<hw_flag>\S+) +(?P<flags>\D+) +(?P<intf_type>\S+) +(?P<msg_type>\w+)')
+    
+        # GID                   : 8276
+        p13 = re.compile(r'GID +\: +(?P<gid>\d+)')
+    
+        # MCID OID Asic[0]      : 2282
+        p14 = re.compile(r'MCID OID Asic\[0\] +\: +(?P<mcid_oid_asic>\d+)')
+    
+        # IP MCID OID         :2282 (cookie: urid:0x30::59)
+        p15 = re.compile(r'IP MCID OID +\:+(?P<ip_mcid_oid>\d+) +\(cookie\: +urid\:(?P<cookie_urid>\S+)\)')
+    
+        # RPF PORT OID        :2130
+        p16 = re.compile(r'RPF PORT OID  +\:+(?P<rpf_port_oid>\d+)')
+    
+        # punt_on_rpf_fail    :1
+        p17 = re.compile(r'punt_on_rpf_fail  +\:+(?P<punt_on_rpf_fail>\d+)')
+    
+        # punt_and_forward    :0
+        p18 = re.compile(r'punt_and_forward  +\:+(?P<punt_and_forward>\d+)')
+    
+        # use_rpfid           :0
+        p19 = re.compile(r'use_rpfid  +\:+(?P<use_rpfid>\d+)')
+    
+        # rpfid               :0
+        p20 = re.compile(r'rpfid  +\:+(?P<rpfid>\d+)')
+    
+        # enable_rpf_check    :1
+        p21 = re.compile(r'enable_rpf_check  +\:+(?P<enable_rpf_check>\d+)')
+    
+        ret_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+    
+            # Mvrf: 2  ( 14.14.14.2, 225.0.0.1 ) Attrs:
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                vrf_dict = ret_dict.setdefault('mvrf_table', {}).setdefault(index, {})
+                mvrf_dict = vrf_dict.setdefault('mcast_table', {})
+                mvrf_dict['source_ip'] = group['source_ip']
+                mvrf_dict['group_ip'] = group['group_ip']
+                index += 1
+                index1 = 1
+                continue
+    
+            # Hw Flag                 : InHw
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                mvrf_dict['hw_flag'] = group['hw_flag']
+                continue
+    
+            # Mlist_hndl (Id)         : 0x118831561f8 ( 0x1fd2 )
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                mvrf_dict['mlist_handle'] = group['mlist_handle']
+                continue
+    
+            # Mlist Urid              : 0x1000000000001f91
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                mvrf_dict['mlist_urid'] = group['mlist_urid']
+                continue
+    
+            # Fset Urid (Hash)        : 0x3000000000000059 ( cad91c96 )
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                mvrf_dict['fset_urid'] = group['fset_urid']
+                continue
+    
+            # Fset Aux Urid           : 0x0
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                mvrf_dict['fset_aux_urid'] = group['fset_aux_urid']
+                continue
+    
+            # RPF Adjacency ID        : 0xf80054f1
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                mvrf_dict['rpf_adjancency_id'] = group['rpf_adjancency_id']
+                continue
+    
+            # CPU Credit              : 0
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                mvrf_dict['cpu_credit'] = int(group['cpu_credit'])
+                continue
+    
+            # Total Packets           : 17918 ( 19 pps approx.)
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                mvrf_dict['total_packets'] = int(group['total_packets'])
+                continue
+    
+            # npi_mroute_ent          : 0x118831bdc90
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                mvrf_dict['npi_mroute_ent'] = group['npi_mroute_ent']
+                continue
+    
+            # svi_fwd_ifs             : 0
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                mvrf_dict['svi_fwd_ifs'] = int(group['svi_fwd_ifs'])
+                continue
+    
+            # OIF Details:
+            #  AdjID          Interface          ParentIf        HwFlag      Flags      IntfType       MsgType
+            #  0xf80054a1     Hu1/0/9            --------         ---        F NS       --------       NORMAL
+            #  0xf80054f1     Hu1/0/23           --------         ---        A          --------       NORMAL
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                global_dict = mvrf_dict.setdefault('oif_details', {}).setdefault(index1, {})
+                global_dict['adj_id'] = group['adj_id']
+                global_dict['interface'] = group['interface']
+                global_dict['parent_if'] = group['parent_if']
+                global_dict['hw_flag'] = group['hw_flag']
+                global_dict['flags'] = group['flags'].strip()
+                global_dict['intf_type'] = group['intf_type']
+                global_dict['msg_type'] = group['msg_type']
+                index1 += 1
+                continue
+    
+            # GID                   : 8276
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                mvrf_dict['gid'] = int(group['gid'])
+                continue
+    
+            # MCID OID Asic[0]      : 2282
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                mvrf_dict['mcid_oid_asic'] = int(group['mcid_oid_asic'])
+                continue
+    
+            # IP MCID OID         :2282 (cookie: urid:0x30::59)
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                local_dict = mvrf_dict.setdefault('hardware_info_asic', {})
+                local_dict['ip_mcid_oid'] = int(group['ip_mcid_oid'])
+                local_dict['cookie_urid'] = group['cookie_urid']
+                continue
+    
+            # RPF PORT OID        :2130
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                local_dict['rpf_port_oid'] = int(group['rpf_port_oid'])
+                continue
+    
+            # punt_on_rpf_fail    :1
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                local_dict['punt_on_rpf_fail'] = int(group['punt_on_rpf_fail'])
+                continue
+    
+            # punt_and_forward    :0
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                local_dict['punt_and_forward'] = int(group['punt_and_forward'])
+                continue
+    
+            # use_rpfid           :0
+            m = p19.match(line)
+            if m:
+                group = m.groupdict()
+                local_dict['use_rpfid'] = int(group['use_rpfid'])
+                continue
+    
+            # rpfid               :0
+            m = p20.match(line)
+            if m:
+                group = m.groupdict()
+                local_dict['rpfid'] = int(group['rpfid'])
+                continue
+    
+            # enable_rpf_check    :1
+            m = p21.match(line)
+            if m:
+                group = m.groupdict()
+                local_dict['enable_rpf_check'] = int(group['enable_rpf_check'])
+                continue
+    
+        return ret_dict

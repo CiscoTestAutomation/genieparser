@@ -30,6 +30,7 @@
     * 'show platform software memory database fed {switch} {switch_var} callsite'
     * 'show platform software memory database fed {switch_var} callsite'
     * 'show platform soft infra bipc | inc buffer'
+    * 'show platform software infractructure inject'
 """
 
 # Python
@@ -8407,3 +8408,460 @@ class ShowPlatformFedSwitchActiveWiredClientR0IdIifid(
                 continue
 
         return ret_dict
+        
+class ShowPlatformSoftwareInterfaceF0NameSchema(MetaParser):
+    """
+    Schema for show platform software interface f0 name {intf}
+    """
+
+    schema = {
+            "name": str,
+            "id": int,
+            "qfp_id": int,
+            Optional("schedules"): int,
+            Optional("type"): str,
+            Optional("state"): str,
+            Optional("snmp_id"): int,
+            Optional("mtu"): int,
+            "tx_channel_id": int,
+            "rx_channel_id": int,
+            "aom_state": str,
+            "flow_control_id": int,
+            "bandwidth": int,
+            "encap": str,
+            "ip_address": str,
+            "ipv6_address": str,
+            Optional("icmp_flags"): list,
+            Optional("icmp6_flags"): list,
+            Optional("smi_protocols"): list,
+            "auth_user": str,
+            "frr_linkdown_id": int,
+            "vnet_name": str,
+            "vnet_tag": int,
+            "vnet_extra_info": int,
+            "dirty_status": str,
+            "aom_sanity_check": str,
+            "aom_obj_id": int,
+            "qos_trust_type": str,
+            Optional("flags"): str
+          }
+
+class ShowPlatformSoftwareInterfaceF0Name(ShowPlatformSoftwareInterfaceF0NameSchema):
+    """Parser for show platform software interface f0 name {intf}"""
+
+    cli_command = "show platform software interface f0 name {intf}"
+
+    def cli(self, intf=None, output=None):
+        if output is None:
+            # excute command to get output
+            output = self.device.execute(self.cli_command.format(intf=intf))
+
+        # initial variables
+        ret_dict = {}
+        # Name: HundredGigE2/0/22, ID: 1275, QFP ID: 1275, Schedules: 4096
+        p0 = re.compile(r"^Name: +(?P<name>\S+),\s+ID: +(?P<id>\d+),\s+QFP ID: +(?P<qfp_id>\d+),\s+Schedules: +(?P<schedules>\d+)$")
+        
+        # Type: PORT, State: enabled, SNMP ID: 98, MTU: 1500
+        p1 = re.compile(r"^Type: +(?P<type>\w+),\s+State: +(?P<state>\w+),\s+SNMP ID: +(?P<snmp_id>\d+),\s+MTU: +(?P<mtu>\d+)$")
+        
+        # TX channel ID: 0, RX channel ID: 0, AOM state: created
+        p2 = re.compile(r"^TX channel ID: +(?P<tx_channel_id>\d+),\s+RX channel ID: +(?P<rx_channel_id>\d+),\s+AOM state: +(?P<aom_state>\w+)$")
+        
+        # Flow control ID: 49175
+        p3 = re.compile(r"^Flow control ID: +(?P<flow_control_id>\d+)$")
+        
+        # bandwidth: 100000000, encap: ARPA
+        p4 = re.compile(r"^bandwidth: +(?P<bandwidth>\d+),\s+encap: +(?P<encap>\w+)$")
+        
+        # IP Address: 10.10.10.96
+        p5 = re.compile(r"^IP Address: +(?P<ip_address>(\d{1,3}\.){3}\d{1,3})$")
+        
+        # IPV6 Address: ::
+        p6 = re.compile(r"^IPV6 Address: +(?P<ipv6_address>[\da-fA-F:]+)$")
+        
+        # Flags: ipv4
+        p7 = re.compile(r"^Flags: +(?P<flags>[\w\s]+)$")
+        
+        # ICMP Flags: unreachables, redirects, no-info-reply, no-mask-reply
+        p8 = re.compile(r"^ICMP Flags: +(?P<icmp_flags>[\w\s,-]+)$")
+        
+        # ICMP6 Flags: unreachables, redirects
+        p9 = re.compile(r"^ICMP6 Flags: +(?P<icmp6_flags>[\w\s,-]+)$")
+        
+        # SMI enabled on protocol(s): UNKNOWN
+        p10 = re.compile(r"^SMI enabled on protocol\(s\): +(?P<smi_protocols>[\w\s,-]+)$")
+        
+        # Authenticated-user:
+        p11 = re.compile(r"^Authenticated-user: *(?P<auth_user>.*)$")
+        
+        # FRR linkdown ID: 65535
+        p12 = re.compile(r"^FRR linkdown ID: +(?P<frr_linkdown_id>\d+)$")
+        
+        # vNet Name: , vNet Tag: 0, vNet Extra Information: 0
+        p13 = re.compile(r"^vNet Name: *(?P<vnet_name>.*),\s+vNet Tag: +(?P<vnet_tag>\d+),\s+vNet Extra Information: +(?P<vnet_extra_info>\d+)$")
+        
+        # Dirty: unknown
+        p14 = re.compile(r"^Dirty: +(?P<dirty_status>\w+)$")
+        
+        # AOM dependency sanity check: PASS
+        p15 = re.compile(r"^AOM dependency sanity check: +(?P<aom_sanity_check>\w+)$")
+        
+        # AOM Obj ID: 2071
+        p16 = re.compile(r"^AOM Obj ID: +(?P<aom_obj_id>\d+)$")
+        
+        # QOS trust type: Trust DSCP
+        p17 = re.compile(r"^QOS trust type: +(?P<qos_trust_type>[\w\s]+)$")
+        
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Name: HundredGigE2/0/22, ID: 1275, QFP ID: 1275, Schedules: 4096
+            m = p0.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict["name"] = group["name"]
+                ret_dict["id"] = int(group["id"])
+                ret_dict["qfp_id"] = int(group["qfp_id"])
+                ret_dict["schedules"] = int(group["schedules"])
+                continue
+            
+            # Type: PORT, State: enabled, SNMP ID: 98, MTU: 1500    
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict["type"] = group["type"]
+                ret_dict["state"] = group["state"]
+                ret_dict["snmp_id"] = int(group["snmp_id"])
+                ret_dict["mtu"] = int(group["mtu"])
+                continue
+                
+            # TX channel ID: 0, RX channel ID: 0, AOM state: created
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict["tx_channel_id"] = int(group["tx_channel_id"])
+                ret_dict["rx_channel_id"] = int(group["rx_channel_id"])
+                ret_dict["aom_state"] = group["aom_state"]
+                continue
+            
+            # Flow control ID: 49175
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict["flow_control_id"] = int(group["flow_control_id"])
+                continue
+            
+            # bandwidth: 100000000, encap: ARPA
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict["bandwidth"] = int(group["bandwidth"])
+                ret_dict["encap"] = group["encap"]
+                continue
+            
+            # IP Address: 10.10.10.96
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict["ip_address"] = group["ip_address"]
+                continue
+            
+            # IPV6 Address: ::
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict["ipv6_address"] = group["ipv6_address"]
+                continue
+            
+            # Flags: ipv4
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict["flags"] = group["flags"]
+                continue
+            
+            # ICMP Flags: unreachables, redirects, no-info-reply, no-mask-reply
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict["icmp_flags"] = group["icmp_flags"].split(", ")
+                continue
+            
+            # ICMP6 Flags: unreachables, redirects
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict["icmp6_flags"] = group["icmp6_flags"].split(", ")
+                continue
+            
+            # SMI enabled on protocol(s): UNKNOWN
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict["smi_protocols"] = group["smi_protocols"].split(", ")
+                continue
+            
+            # Authenticated-user:
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict["auth_user"] = group["auth_user"]
+                continue
+            
+            # FRR linkdown ID: 65535
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict["frr_linkdown_id"] = int(group["frr_linkdown_id"])
+                continue
+            
+            # vNet Name: , vNet Tag: 0, vNet Extra Information: 0
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict["vnet_name"] = group["vnet_name"]
+                ret_dict["vnet_tag"] = int(group["vnet_tag"])
+                ret_dict["vnet_extra_info"] = int(group["vnet_extra_info"])
+                continue
+            
+            # Dirty: unknown
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict["dirty_status"] = group["dirty_status"]
+                continue
+            
+            # AOM dependency sanity check: PASS
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict["aom_sanity_check"] = group["aom_sanity_check"]
+                continue
+            
+            # AOM Obj ID: 2071
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict["aom_obj_id"] = int(group["aom_obj_id"])
+                continue
+            # QOS trust type: Trust DSCP
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict["qos_trust_type"] = group["qos_trust_type"]
+                continue
+
+        return ret_dict
+
+class ShowPlatformSoftwareObjectManagerF0ObjectIdentifierSchema(MetaParser):
+    """Schema for show platform software object-manager f0 object {object} {object_identifier}"""
+
+    schema = {
+        "object_identifier": {
+            Any(): {
+                Optional("object_identifier"): int,
+                Optional("status"): str,
+                Optional("description"): str,
+            }
+        },
+    }
+
+class ShowPlatformSoftwareObjectManagerF0ObjectIdentifier(
+    ShowPlatformSoftwareObjectManagerF0ObjectIdentifierSchema
+):
+    """Parser for show platform software object-manager f0 object {object} {object_identifier}"""
+    
+    cli_command = "show platform software object-manager f0 object {object} {object_identifier}"
+    
+    def cli(self, object=None, object_identifier=None, output=None):
+        if output is None:
+            if object and object_identifier:
+                # excute command to get output
+                output = self.device.execute(self.cli_command.format(object=object,object_identifier=object_identifier))
+
+        # Init vars
+        ret_dict = {}
+        
+        # Object identifier: 2072
+        p0 = re.compile(r"^Object identifier\:\s+(?P<object_identifier>\d+)$")
+        
+        # Description: Tx Channel HundredGigE2/0/22, handle 1275, hw handle 1275, flag 0x0, dirty hw: NONE dirty aom NONE
+        p1 = re.compile(r"^Description\:\s+(?P<description>.+)$")
+
+        # Status: Done
+        p2 = re.compile(r"Status\:\s+(?P<status>\w+)$")
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Object identifier: 2072
+            m = p0.match(line)
+            if m:
+                group = m.groupdict()
+                object_identifier = group.pop("object_identifier")
+                identifier_dict = ret_dict.setdefault("object_identifier", {})
+                obj_identifier_dict = identifier_dict.setdefault(int(object_identifier), {})
+                obj_identifier_dict.update(
+                    {
+                        "object_identifier": int(object_identifier),
+                    }
+                )
+                continue
+
+            # Description: Tx Channel HundredGigE2/0/22, handle 1275, hw handle 1275, flag 0x0, dirty hw: NONE dirty aom NONE
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                obj_identifier_dict.update({"description": group["description"]})
+                continue
+
+            # Status: Done
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                obj_identifier_dict.update({"status": group["status"]})
+                continue
+                
+        return ret_dict
+
+class ShowPlatformSoftwareInfrastructureInjectSchema(MetaParser):
+    schema = {
+        'l3_injected_packets': {
+            Optional('total_inject'): int,
+            Optional('failed_inject'): int,
+            Optional('sent'): int,
+            Optional('prerouted'): int,
+            Optional('non_cef_capable'): int,
+            Optional('non_unicast'): int,
+            Optional('ip'): int,
+            Optional('ipv6'): int,
+            Optional('mpls'): int,
+            Optional('non_ip_tunnel'): int,
+            Optional('udlr_tunnel'): int,
+            Optional('p2mp_replicated_mcast'): int,
+            Optional('non_ip_fastswitched_over_tunnel'): int,
+            Optional('legacy_pak_path'): int,
+            Optional('other_packet'): int,
+            Optional('ip_fragmented'): int,
+            Optional('normal'): int,
+            Optional('nexthop'): int,
+            Optional('adjacency'): int,
+            Optional('feature'): int,
+            Optional('undefined'): int,
+            Optional('pak_find_no_adj'): int,
+            Optional('no_adj_id'): int,
+            Optional('sb_alloc'): int,
+            Optional('sb_local'): int,
+            Optional('p2mcast_failed_count_0_p2mcast_enqueue_fail'): int,
+            Optional('unicast_dhc'): int,
+            Optional('mobile_ip'): int,
+            Optional('ipv6_na'): int,
+            Optional('ipv6_ns'): int,
+            Optional('transport_failed_cases'): int,
+            Optional('grow_packet_buffer'): int,
+            Optional('cant_l3_inject_pkts'): int,
+        },
+        'per_feature_packet_inject_statistics': {
+            Optional('feature_multicast'): int,
+            Optional('feature_edge_switching_service'): int,
+            Optional('feature_session_border_controller'): int,
+            Optional('feature_interrupt_level'): int,
+            Optional('feature_use_outbound_interface'): int,
+            Optional('feature_interrupt_level_with_oce'): int,
+            Optional('feature_icmpv6_error_message'): int,
+            Optional('feature_session_border_controller_media_packet_injection'): int,
+            Optional('feature_tunnel_ethernet_over_gre'): int,
+            Optional('feature_secure_socket_layer_virtual_private_network'): int,
+            Optional('feature_epc_wireshark_injecting_packets'): int,
+            Optional('feature_multicast_overlay_replication'): int,
+        },
+        'l2_injected_packets': {
+            Optional('total_l2_inject'): int,
+            Optional('total_bd__inject'): int,
+            Optional('total_bd_local__inject'): int,
+            Optional('total_efp_inject'): int,
+            Optional('total_vlan_inject'): int,
+            Optional('failed_l2_inject'): int,
+            Optional('failed_bd_local__inject'): int,
+            Optional('failed_bd__inject'): int,
+            Optional('failed_vlan_inject'): int,
+            Optional('failed_efp_inject'): int,
+        }
+    }
+
+class ShowPlatformSoftwareInfrastructureInject(ShowPlatformSoftwareInfrastructureInjectSchema):
+    cli_command = 'show platform software infrastructure inject'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        
+        # Initialize the result dictionary as empty
+        parsed_dict = {}
+
+        # 3524142 total inject pak, 0 failed 
+        p1 = re.compile(r'^(?P<total>\d+) total (?P<type>[\w\s\-]+) pak, (?P<failed>\d+) failed$')
+
+        #  0 Feature multicast overlay replication
+        p2 = re.compile(r'^(?P<value>\d+) (?P<key>[\w\s\-]+)$')
+
+        #  0 MPLS, 0 Non-IP Tunnel 
+        p3 = re.compile(r'^(?P<value1>\d+) (?P<key1>[\w\s\-]+), (?P<value2>\d+) (?P<key2>[\w\s\-]+)$')
+
+        # Statistics for L2 injected packets:
+        p4 = re.compile(r'^(?P<key>[\w\s\-]+):$')
+
+        # Track sections
+        current_section = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Statistics for L2 injected packets:
+            if 'Statistics for L3 injected packets' in line:
+                current_section = 'l3_injected_packets'
+                parsed_dict[current_section] = {}
+                continue
+            elif 'per feature packet inject statistics' in line:
+                current_section = 'per_feature_packet_inject_statistics'
+                parsed_dict[current_section] = {}
+                continue
+            elif 'Statistics for L2 injected packets' in line:
+                current_section = 'l2_injected_packets'
+                parsed_dict[current_section] = {}
+                continue
+
+            if current_section is None:
+                continue
+
+            # 28324 total L2 inject pak, 0 failed
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                key = group['type'].strip().lower().replace(' ', '_').replace('-', '_')
+                parsed_dict[current_section][f'total_{key}'] = int(group['total'])
+                parsed_dict[current_section][f'failed_{key}'] = int(group['failed'])
+                continue
+
+            # 0 Feature multicast overlay replication
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                key = group['key'].strip().lower().replace(' ', '_').replace('-', '_')
+                value = int(group['value'])
+                parsed_dict[current_section][key] = value
+                continue
+
+            #  1023352 sb alloc, 135 sb local 
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                key1 = group['key1'].strip().lower().replace(' ', '_').replace('-', '_')
+                key2 = group['key2'].strip().lower().replace(' ', '_').replace('-', '_')
+                value1 = int(group['value1'])
+                value2 = int(group['value2'])
+                parsed_dict[current_section][key1] = value1
+                parsed_dict[current_section][key2] = value2
+                continue
+        
+        return parsed_dict

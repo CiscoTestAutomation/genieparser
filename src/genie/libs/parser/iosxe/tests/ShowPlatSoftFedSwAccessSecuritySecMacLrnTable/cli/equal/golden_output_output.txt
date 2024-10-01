@@ -1,0 +1,10 @@
+Sec_RAITT#show plat soft fed sw 3 access-security sec-mac-lrn-table mac 0000.0033.3333
+Access Security Secure-Mac Table Summary
+
+
+Secure MAC Client Port Vlan and MAC entries:
+
+     Interface    VLAN       MAC              Logical-ID Position   Asic# Auth-Act           Restore-Auth-Act   Flag         Drop   Policy   Policy-OID Packets    
+---- ------------ ---------- ---------------- ---------- ---------- ----- ------------------ ------------------ ------------ ------ -------- ---------- ---------- 
+   1 Gi3/0/10     50         0000.0033.3333   0          12288      0     FWD_ALL_LRN_DATA   None               NONE         No     NONE     551        0         
+

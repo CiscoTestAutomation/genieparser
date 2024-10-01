@@ -16,6 +16,11 @@
     * 'show platform software fed {state} ipv6 mfib summary'
     * 'show platform software fed {switch_var} {state} ipv6 mld snooping summary'
     * 'show platform software fed {state} ipv6 mld snooping summary'
+    * 'show platform software fed {switch_var} {state} ip mfib vrf {vrf_name} count'
+    * 'show platform software fed {state} ip mfib vrf {vrf_name} count'
+    * 'show platform software fed {switch_var} {state} ip igmp snooping summary'
+    * 'show platform software fed {state} ip igmp snooping summary'
+    * 'show ipv6 mld snooping address vlan {vlan} {group} summary'
     * 'show platform software fed {switch} {state} ip mfib count'
     * 'show platform software fed {state} ip mfib count'
     * 'show platform software fed {switch} {state} ip mfib summary'
@@ -1291,7 +1296,6 @@ class ShowPlatformSoftwareFedActiveIpv6MldSnoopingVlanDetail(
     
         return platform_dict
 
-
 # ===================================================================
 # Parser for show platform software fed switch active ipv6 mfib count'
 # ===================================================================
@@ -1563,7 +1567,6 @@ class ShowPlatformSoftwareFedIpv6MldSnoopingSummary(ShowPlatformSoftwareFedIpv6M
     
         return ret_dict
 
-
 # ===================================================================
 # Parser for show platform software fed switch active ip mfib count'
 # ===================================================================
@@ -1574,7 +1577,6 @@ class ShowPlatformSoftwareFedIpMfibCountSchema(MetaParser):
             'number_of_entries': int
         }
     }
-
 
 class ShowPlatformSoftwareFedIpMfibCount(ShowPlatformSoftwareFedIpMfibCountSchema):
     """Parser for show platform software fed switch active ip mfib count"""
@@ -1800,6 +1802,203 @@ class ShowPlatformSoftwareIgmpSnoopingGroupsCount(ShowPlatformSoftwareIgmpSnoopi
             if m:
                 group = m.groupdict()
                 ret_dict['total_stub_group_count'] = int(group['total_stub_group_count'])
+                continue
+
+        return ret_dict
+
+# ================================================================================
+# Parser for show platform software fed switch active ip mfib vrf {vrf_name} count'
+# ================================================================================
+class ShowPlatformSoftwareFedIpMfibVrfCountSchema(MetaParser):
+    """Schema for show platform software fed switch active ipv6 mfib count"""
+    schema = {
+        'mfib_count': {
+            'number_of_entries': int
+            }
+        }
+
+class ShowPlatformSoftwareFedIpMfibVrfCount(ShowPlatformSoftwareFedIpMfibVrfCountSchema):
+    """Parser for show platform software fed switch active ip mfib vrf {vrf_name} count"""
+
+    cli_command = ['show platform software fed {switch_var} {state} ip mfib vrf {vrf_name} count',
+        'show platform software fed {state} ip mfib vrf {vrf_name} count']
+
+    def cli(self, state='', vrf_name='',switch_var=None, output=None):
+        if output is None:
+            if switch_var:
+                cmd = self.cli_command[0].format(state=state, vrf_name=vrf_name, switch_var=switch_var)
+            else:
+                cmd = self.cli_command[1].format(state=state, vrf_name=vrf_name)
+            output = self.device.execute(cmd)
+        ret_dict = {}
+
+        # Number of entries = 32001
+        p0 = re.compile(r'(Number of entries +\= +(?P<number_of_entries>\d+))')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Number of entries = 32001
+            m = p0.match(line)
+            if m:
+                group = m.groupdict()
+                id_dict = ret_dict.setdefault('mfib_count', {})
+                id_dict['number_of_entries'] = int(group['number_of_entries'])
+                continue
+
+        return ret_dict
+
+# ===================================================================
+# Parser for show platform software fed switch active ip igmp snooping summary'
+# ===================================================================
+class ShowPlatformSoftwareFedIpIgmpSnoopingSummarySchema(MetaParser):
+    """Schema for show platform software fed switch active ip igmp snooping summary"""
+    schema = {
+        'igmp_snooping_summary': {
+            'group_current_count': int,
+            'group_max_count': int,
+            'last_used_group_urid': str,
+            'last_used_vlan_urid': str,
+            'port_current_count': int,
+            'port_max_count': int,
+            'vlan_current_count': int,
+            'vlan_max_count': int
+        }
+    }
+
+class ShowPlatformSoftwareFedIpIgmpSnoopingSummary(ShowPlatformSoftwareFedIpIgmpSnoopingSummarySchema):
+    """Parser for show platform software fed switch active ip igmp snooping summary"""
+
+    cli_command = ['show platform software fed {switch_var} {state} ip igmp snooping summary',
+        'show platform software fed {state} ip igmp snooping summary']
+
+    def cli(self, state='', switch_var=None, output=None):
+        if output is None:
+            if switch_var:
+                cmd = self.cli_command[0].format(state=state, switch_var=switch_var)
+            else:
+                cmd = self.cli_command[1].format(state=state)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+
+        # Vlan Current Count/Max Reached    : 3/3 
+        p0 = re.compile(r'(Vlan Current Count/Max Reached +\: +(?P<vlan_current_count>\d+)\/+(?P<vlan_max_count>\d+))')
+
+        # Group Current Count/Max Reached   : 0/0
+        p1 = re.compile(r'(Group Current Count/Max Reached +\: +(?P<group_current_count>\d+)\/+(?P<group_max_count>\d+))')
+
+        # Port Current Count/Max Reached    : 2001/2057
+        p2 = re.compile(r'(Port Current Count/Max Reached +\: +(?P<port_current_count>\d+)\/+(?P<port_max_count>\d+))')  
+
+        # Last used Vlan Urid               : 0x4000000000000006
+        p3 = re.compile(r'(Last used Vlan Urid +\: +(?P<last_used_vlan_urid>\S+))') 
+
+        # Last Used Group Urid              : 0x600000000000575c
+        p4 = re.compile(r'(Last Used Group Urid  +\: +(?P<last_used_group_urid>\S+))') 
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Vlan Current Count/Max Reached    : 3/3             : 2
+            m = p0.match(line)
+            if m:
+                group = m.groupdict()
+                id_dict = ret_dict.setdefault('igmp_snooping_summary', {})
+                id_dict['vlan_current_count'] = int(group['vlan_current_count'])
+                id_dict['vlan_max_count'] = int(group['vlan_max_count'])
+                continue
+
+            # Group Current Count/Max Reached   : 0/0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                id_dict['group_current_count'] = int(group['group_current_count'])
+                id_dict['group_max_count'] = int(group['group_max_count'])
+                continue
+
+            # Port Current Count/Max Reached    : 2001/2057
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                id_dict['port_current_count'] = int(group['port_current_count'])
+                id_dict['port_max_count'] = int(group['port_max_count'])
+                continue
+
+            # Last used Vlan Urid               : 0x4000000000000006    
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                id_dict['last_used_vlan_urid'] = group['last_used_vlan_urid']
+                continue
+
+            # Last Used Group Urid              : 0x600000000000575c                    : 0 
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                id_dict['last_used_group_urid'] = group['last_used_group_urid']
+                continue
+
+        return ret_dict
+
+# ===================================================================
+# Parser for show ipv6 mld snooping address vlan {vlan} {group} summary
+# ===================================================================
+class ShowPlatformSoftwareFedMldSnoopingIpv6GroupsCountSchema(MetaParser):
+    """Schema for show ipv6 mld snooping address vlan {vlan} {group} summary """
+    schema = {
+    'mld_snooping_summary': 
+        {
+            Optional('group_address'): str,
+            Optional('interface'): str, 
+            Optional('host_type'): str,
+            Optional('member_ports'): str
+        }
+    }
+
+class ShowPlatformSoftwareFedMldSnoopingIpv6GroupsCount(ShowPlatformSoftwareFedMldSnoopingIpv6GroupsCountSchema):
+    """Parser for show Platform Software fed ipv6 mld snooping groups count"""
+
+    cli_command = ['show ipv6 mld snooping address vlan {vlan} {group} summary']
+
+    def cli(self, vlan='', group='', output=None):
+        if output is None:
+            cmd = self.cli_command[0].format(vlan=vlan,group=group)
+            output = self.device.execute(cmd)
+        ret_dict = {}
+
+        # Group Address (Vlan 11)        : FF13::1
+        p0 = re.compile(r'(Group\s+Address\s+\(+(?P<interface>.*)\) +\: +(?P<group_address>[\w\:\.\/]+))')
+        # Host type                      : v1
+        p1 = re.compile(r'(Host\s+type\s+\:\s+(?P<host_type>\S+))')
+
+        # Member Ports                   : Po92
+        p2 = re.compile(r'(Member\s+Ports  +\: +(?P<member_ports>\S+))') 
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Group Address (Vlan 11)        : FF13::1
+            m = p0.match(line)
+            if m:
+                group = m.groupdict()
+                mld_dict = ret_dict.setdefault('mld_snooping_summary', {})
+                mld_dict['group_address'] = group['group_address']
+                mld_dict['interface'] = group['interface']
+                continue
+
+            # Host type                      : v1  
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                mld_dict['host_type'] = group['host_type']
+                continue
+
+            # Member Ports                   : Po92
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                mld_dict['member_ports'] = group['member_ports']
                 continue
 
         return ret_dict

@@ -6,6 +6,8 @@ expected_output =  {
             'match_evaluation': 'match-any',
             'packets': 0,
             'police': {
+                'rate_pps': 2000,
+                'burst_pkt': 11264,
                 'conformed': {
                     'actions': {
                         'transmit': True,

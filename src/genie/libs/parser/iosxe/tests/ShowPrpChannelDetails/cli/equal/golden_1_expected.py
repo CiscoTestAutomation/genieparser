@@ -1,0 +1,21 @@
+expected_output = {
+   "prp_channel":{
+      "PR1":{
+         "layer_type":"L2",
+         "ports":"2",
+         "maxports":"2",
+         "port_state":"Inuse",
+         "protocol":"Enabled",
+         "Gi1/1":{
+            "slot_port":"1/1",
+            "port_state":"Inuse",
+            "protocol":"Enabled"
+         },
+         "Gi1/2":{
+            "slot_port":"1/2",
+            "port_state":"Inuse",
+            "protocol":"Enabled"
+         }
+      }
+   }
+}

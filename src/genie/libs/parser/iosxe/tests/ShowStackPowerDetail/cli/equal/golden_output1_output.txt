@@ -8,7 +8,8 @@ Power Stack                      Stack   Stack    Total   Rsvd    Alloc   Sw_Ava
 Power stack name: Powerstack-Ring-1
     Stack mode: Power sharing
     Stack topology: Standalone
-    Stack Ecomode: Enable
+    Stack total input power: 4400
+    Power Supply auto-off: Enable
     Switch 3:
         Power budget: 955
         Power allocated: 235
@@ -19,12 +20,13 @@ Power stack name: Powerstack-Ring-1
         Port 2 status: Shut
         Neighbor on port 1: 0000.0000.0000
         Neighbor on port 2: 0000.0000.0000
-        Ecomode: FEP B auto offlined, capacity: 350 
+        Auto off: FEP B auto offlined, capacity: 350 
 
 Power stack name: Powerstack-Ring-1-1
     Stack mode: Power sharing
     Stack topology: Standalone
-    Stack Ecomode: Enable
+    Stack total input power: 4400
+    Power Supply auto-off: Enable
     Switch 1:
         Power budget: 1100
         Power allocated: 575
@@ -35,12 +37,13 @@ Power stack name: Powerstack-Ring-1-1
         Port 2 status: Shut
         Neighbor on port 1: 0000.0000.0000
         Neighbor on port 2: 0000.0000.0000
-        Ecomode: FEP B auto offlined, capacity: 1100 
+        Auto off: FEP B auto offlined, capacity: 1100 
 
 Power stack name: Powerstack-Ring-1-2
     Stack mode: Power sharing
     Stack topology: Standalone
-    Stack Ecomode: Enable
+    Stack total input power: 4400
+    Power Supply auto-off: Enable
     Switch 2:
         Power budget: 1100
         Power allocated: 365
@@ -51,4 +54,4 @@ Power stack name: Powerstack-Ring-1-2
         Port 2 status: Shut
         Neighbor on port 1: 0000.0000.0000
         Neighbor on port 2: 0000.0000.0000
-        Ecomode: FEP B auto offlined, capacity: 1100 
+        Auto off: FEP B auto offlined, capacity: 1100 

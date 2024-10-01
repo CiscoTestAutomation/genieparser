@@ -1,0 +1,32 @@
+Thu Sep  5 15:14:55.283 GMT+4
+Legend: ST = State, UP = Up, DN = Down, AD = Admin Down, UR = Unresolved,
+        SB = Standby, SR = Standby Ready, (PP) = Partially Programmed,
+        LU = Local Up, RU = Remote Up, CO = Connected, (SI) = Seamless Inactive
+
+XConnect                   Segment 1                       Segment 2                
+Group      Name       ST   Description            ST       Description            ST    
+------------------------   -----------------------------   -----------------------------
+paltel_type5
+           paltel_type5
+                      DN   Te0/1/0/11.57          UP       10.100.0.6      1111   DN    
+----------------------------------------------------------------------------------------
+aa_evpn_he_104
+           aa_evpn_he_104
+                      DN   PE104                  UP       EVPN 104,104,None      DN    
+----------------------------------------------------------------------------------------
+pa_evpn_he_106
+           pa_evpn_he_106
+                      DN   PE106                  UP       EVPN 106,106,None      DN    
+----------------------------------------------------------------------------------------
+sa_evpn_he_105
+           sa_evpn_he_105
+                      DN   PE105                  UP       EVPN 105,105,None      DN    
+----------------------------------------------------------------------------------------
+evpn_vpws_sa_100
+           evpn_vpws_sa_100
+                      UR   Te0/1/0/11.100         UR       EVPN 100,100,None      DN(PP)
+----------------------------------------------------------------------------------------
+p2p_vpws_seam_mig
+           p2p_vpws_seam_mig
+                      UR   Te0/1/0/11.1979        UR       10.100.0.1      1979   DN    
+----------------------------------------------------------------------------------------
