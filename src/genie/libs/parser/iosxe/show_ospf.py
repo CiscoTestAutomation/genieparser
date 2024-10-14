@@ -1405,7 +1405,7 @@ class ShowIpOspfInterfaceBrief(ShowIpOspfInterfaceBriefSchema):
         # Init vars
         ret_dict = {}
         
-        p1 = re.compile(r'^(?P<interface>\S+) +(?P<instance>\S+) +(?P<area>\d+) +'
+        p1 = re.compile(r'^(?P<interface>\S+) +(?P<instance>\S+) +(?P<area>\S+) +'
             '(?P<address>\S+) +(?P<cost>\d+) +(?P<state>\S+) +(?P<nbrs_full>\d+)'
             '\/(?P<nbrs_count>\d+)$$')
 
