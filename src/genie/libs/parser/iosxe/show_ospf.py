@@ -5224,7 +5224,7 @@ class ShowIpOspfMplsTrafficEngLink(ShowIpOspfMplsTrafficEngLinkSchema):
                             ' +(?P<fragment>(\d+))\. +Link +instance +is'
                             ' +(?P<link_instance>(\d+))$')
 
-        p6 = re.compile(r'^Link +connected +to +(?P<type>([a-zA-Z\s]+))$')
+        p6 = re.compile(r'^Link +connected +to +(?P<type>([a-zA-Z-\s]+))$')
 
         p7 = re.compile(r'^Link +ID *: +(?P<link_id>(\S+))$')
 
