@@ -8408,7 +8408,7 @@ class ShowPlatformFedSwitchActiveWiredClientR0IdIifid(
                 continue
 
         return ret_dict
-        
+
 class ShowPlatformSoftwareInterfaceF0NameSchema(MetaParser):
     """
     Schema for show platform software interface f0 name {intf}
@@ -8460,58 +8460,58 @@ class ShowPlatformSoftwareInterfaceF0Name(ShowPlatformSoftwareInterfaceF0NameSch
         ret_dict = {}
         # Name: HundredGigE2/0/22, ID: 1275, QFP ID: 1275, Schedules: 4096
         p0 = re.compile(r"^Name: +(?P<name>\S+),\s+ID: +(?P<id>\d+),\s+QFP ID: +(?P<qfp_id>\d+),\s+Schedules: +(?P<schedules>\d+)$")
-        
+
         # Type: PORT, State: enabled, SNMP ID: 98, MTU: 1500
         p1 = re.compile(r"^Type: +(?P<type>\w+),\s+State: +(?P<state>\w+),\s+SNMP ID: +(?P<snmp_id>\d+),\s+MTU: +(?P<mtu>\d+)$")
-        
+
         # TX channel ID: 0, RX channel ID: 0, AOM state: created
         p2 = re.compile(r"^TX channel ID: +(?P<tx_channel_id>\d+),\s+RX channel ID: +(?P<rx_channel_id>\d+),\s+AOM state: +(?P<aom_state>\w+)$")
-        
+
         # Flow control ID: 49175
         p3 = re.compile(r"^Flow control ID: +(?P<flow_control_id>\d+)$")
-        
+
         # bandwidth: 100000000, encap: ARPA
         p4 = re.compile(r"^bandwidth: +(?P<bandwidth>\d+),\s+encap: +(?P<encap>\w+)$")
-        
+
         # IP Address: 10.10.10.96
         p5 = re.compile(r"^IP Address: +(?P<ip_address>(\d{1,3}\.){3}\d{1,3})$")
-        
+
         # IPV6 Address: ::
         p6 = re.compile(r"^IPV6 Address: +(?P<ipv6_address>[\da-fA-F:]+)$")
-        
+
         # Flags: ipv4
         p7 = re.compile(r"^Flags: +(?P<flags>[\w\s]+)$")
-        
+
         # ICMP Flags: unreachables, redirects, no-info-reply, no-mask-reply
         p8 = re.compile(r"^ICMP Flags: +(?P<icmp_flags>[\w\s,-]+)$")
-        
+
         # ICMP6 Flags: unreachables, redirects
         p9 = re.compile(r"^ICMP6 Flags: +(?P<icmp6_flags>[\w\s,-]+)$")
-        
+
         # SMI enabled on protocol(s): UNKNOWN
         p10 = re.compile(r"^SMI enabled on protocol\(s\): +(?P<smi_protocols>[\w\s,-]+)$")
-        
+
         # Authenticated-user:
         p11 = re.compile(r"^Authenticated-user: *(?P<auth_user>.*)$")
-        
+
         # FRR linkdown ID: 65535
         p12 = re.compile(r"^FRR linkdown ID: +(?P<frr_linkdown_id>\d+)$")
-        
+
         # vNet Name: , vNet Tag: 0, vNet Extra Information: 0
         p13 = re.compile(r"^vNet Name: *(?P<vnet_name>.*),\s+vNet Tag: +(?P<vnet_tag>\d+),\s+vNet Extra Information: +(?P<vnet_extra_info>\d+)$")
-        
+
         # Dirty: unknown
         p14 = re.compile(r"^Dirty: +(?P<dirty_status>\w+)$")
-        
+
         # AOM dependency sanity check: PASS
         p15 = re.compile(r"^AOM dependency sanity check: +(?P<aom_sanity_check>\w+)$")
-        
+
         # AOM Obj ID: 2071
         p16 = re.compile(r"^AOM Obj ID: +(?P<aom_obj_id>\d+)$")
-        
+
         # QOS trust type: Trust DSCP
         p17 = re.compile(r"^QOS trust type: +(?P<qos_trust_type>[\w\s]+)$")
-        
+
         for line in output.splitlines():
             line = line.strip()
 
@@ -8524,8 +8524,8 @@ class ShowPlatformSoftwareInterfaceF0Name(ShowPlatformSoftwareInterfaceF0NameSch
                 ret_dict["qfp_id"] = int(group["qfp_id"])
                 ret_dict["schedules"] = int(group["schedules"])
                 continue
-            
-            # Type: PORT, State: enabled, SNMP ID: 98, MTU: 1500    
+
+            # Type: PORT, State: enabled, SNMP ID: 98, MTU: 1500
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -8534,7 +8534,7 @@ class ShowPlatformSoftwareInterfaceF0Name(ShowPlatformSoftwareInterfaceF0NameSch
                 ret_dict["snmp_id"] = int(group["snmp_id"])
                 ret_dict["mtu"] = int(group["mtu"])
                 continue
-                
+
             # TX channel ID: 0, RX channel ID: 0, AOM state: created
             m = p2.match(line)
             if m:
@@ -8543,14 +8543,14 @@ class ShowPlatformSoftwareInterfaceF0Name(ShowPlatformSoftwareInterfaceF0NameSch
                 ret_dict["rx_channel_id"] = int(group["rx_channel_id"])
                 ret_dict["aom_state"] = group["aom_state"]
                 continue
-            
+
             # Flow control ID: 49175
             m = p3.match(line)
             if m:
                 group = m.groupdict()
                 ret_dict["flow_control_id"] = int(group["flow_control_id"])
                 continue
-            
+
             # bandwidth: 100000000, encap: ARPA
             m = p4.match(line)
             if m:
@@ -8558,63 +8558,63 @@ class ShowPlatformSoftwareInterfaceF0Name(ShowPlatformSoftwareInterfaceF0NameSch
                 ret_dict["bandwidth"] = int(group["bandwidth"])
                 ret_dict["encap"] = group["encap"]
                 continue
-            
+
             # IP Address: 10.10.10.96
             m = p5.match(line)
             if m:
                 group = m.groupdict()
                 ret_dict["ip_address"] = group["ip_address"]
                 continue
-            
+
             # IPV6 Address: ::
             m = p6.match(line)
             if m:
                 group = m.groupdict()
                 ret_dict["ipv6_address"] = group["ipv6_address"]
                 continue
-            
+
             # Flags: ipv4
             m = p7.match(line)
             if m:
                 group = m.groupdict()
                 ret_dict["flags"] = group["flags"]
                 continue
-            
+
             # ICMP Flags: unreachables, redirects, no-info-reply, no-mask-reply
             m = p8.match(line)
             if m:
                 group = m.groupdict()
                 ret_dict["icmp_flags"] = group["icmp_flags"].split(", ")
                 continue
-            
+
             # ICMP6 Flags: unreachables, redirects
             m = p9.match(line)
             if m:
                 group = m.groupdict()
                 ret_dict["icmp6_flags"] = group["icmp6_flags"].split(", ")
                 continue
-            
+
             # SMI enabled on protocol(s): UNKNOWN
             m = p10.match(line)
             if m:
                 group = m.groupdict()
                 ret_dict["smi_protocols"] = group["smi_protocols"].split(", ")
                 continue
-            
+
             # Authenticated-user:
             m = p11.match(line)
             if m:
                 group = m.groupdict()
                 ret_dict["auth_user"] = group["auth_user"]
                 continue
-            
+
             # FRR linkdown ID: 65535
             m = p12.match(line)
             if m:
                 group = m.groupdict()
                 ret_dict["frr_linkdown_id"] = int(group["frr_linkdown_id"])
                 continue
-            
+
             # vNet Name: , vNet Tag: 0, vNet Extra Information: 0
             m = p13.match(line)
             if m:
@@ -8623,21 +8623,21 @@ class ShowPlatformSoftwareInterfaceF0Name(ShowPlatformSoftwareInterfaceF0NameSch
                 ret_dict["vnet_tag"] = int(group["vnet_tag"])
                 ret_dict["vnet_extra_info"] = int(group["vnet_extra_info"])
                 continue
-            
+
             # Dirty: unknown
             m = p14.match(line)
             if m:
                 group = m.groupdict()
                 ret_dict["dirty_status"] = group["dirty_status"]
                 continue
-            
+
             # AOM dependency sanity check: PASS
             m = p15.match(line)
             if m:
                 group = m.groupdict()
                 ret_dict["aom_sanity_check"] = group["aom_sanity_check"]
                 continue
-            
+
             # AOM Obj ID: 2071
             m = p16.match(line)
             if m:
@@ -8670,9 +8670,9 @@ class ShowPlatformSoftwareObjectManagerF0ObjectIdentifier(
     ShowPlatformSoftwareObjectManagerF0ObjectIdentifierSchema
 ):
     """Parser for show platform software object-manager f0 object {object} {object_identifier}"""
-    
+
     cli_command = "show platform software object-manager f0 object {object} {object_identifier}"
-    
+
     def cli(self, object=None, object_identifier=None, output=None):
         if output is None:
             if object and object_identifier:
@@ -8681,10 +8681,10 @@ class ShowPlatformSoftwareObjectManagerF0ObjectIdentifier(
 
         # Init vars
         ret_dict = {}
-        
+
         # Object identifier: 2072
         p0 = re.compile(r"^Object identifier\:\s+(?P<object_identifier>\d+)$")
-        
+
         # Description: Tx Channel HundredGigE2/0/22, handle 1275, hw handle 1275, flag 0x0, dirty hw: NONE dirty aom NONE
         p1 = re.compile(r"^Description\:\s+(?P<description>.+)$")
 
@@ -8721,8 +8721,384 @@ class ShowPlatformSoftwareObjectManagerF0ObjectIdentifier(
                 group = m.groupdict()
                 obj_identifier_dict.update({"status": group["status"]})
                 continue
-                
+
         return ret_dict
+
+
+class ShowPlatsoftwaremcuversionSchema(MetaParser):
+    """show platform software mcu  switch  1 R0 version  0"""
+
+    schema = {
+        'switch_number': int,
+        'software_version': str,
+        'system_type': int,
+        'device_id': int,
+        'device_revision': int,
+        'hardware_version': int,
+        'bootloader_version': int,
+        }
+
+class ShowPlatsoftwaremcuversion(ShowPlatsoftwaremcuversionSchema):
+    """
+    show platform software mcu  switch  1 R0 version  0
+    """
+
+    cli_command = 'show platform software mcu switch {switch_num} {route_processor} version 0'
+
+
+    def cli(self, switch_num, route_processor, output=None):
+
+        if output is None:
+
+                output = self.device.execute(self.cli_command.format(switch_num=switch_num,route_processor=route_processor))
+
+        ret_dict = {}
+
+        # Switch 1 MCU
+        p1 = re.compile(r'^Switch +(?P<switch_number>\d+) +MCU\:$')
+
+        # Software Version   0.0
+        p2 =  re.compile(r'^Software +Version +(?P<software_version>.*)$')
+
+        # System Type        0
+        p3 = re.compile(r'^System +Type +(?P<system_type>.*)$')
+
+        # Device Id          0
+        p4 = re.compile(r'^Device +Id +(?P<device_id>.*)$')
+
+        # Device Revision    0
+        p5 = re.compile(r'^Device +Revision +(?P<device_revision>.*)$')
+
+        # Hardware Version   0
+        p6 = re.compile(r'^Hardware +Version +(?P<hardware_version>.*)$')
+
+        # Bootloader Version 0
+        p7 = re.compile(r'^Bootloader +Version +(?P<bootloader_version>.*)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Switch 1 MCU
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['switch_number'] = int(group['switch_number'])
+                continue
+
+            # Software Version   0.0
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['software_version'] = group['software_version']
+                continue
+
+            # System Type        0
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['system_type'] = int(group['system_type'])
+                continue
+
+            # Device Id          0
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['device_id'] = int(group['device_id'])
+                continue
+
+            # Device Revision    0
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['device_revision'] = int(group['device_revision'])
+                continue
+
+            # Hardware Version   0
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['hardware_version'] = int(group['hardware_version'])
+                continue
+
+            # Bootloader Version 0
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['bootloader_version'] = int(group['bootloader_version'])
+                continue
+
+        return ret_dict
+
+
+class ShowPlatsoftwaremcusubordinateSchema(MetaParser):
+    """show platform software mcu  switch  1 R0 version  0"""
+
+    schema = {
+        'showing_sub_info': int,
+        'state': str,
+        'last_reset_reason': str,
+        'uart_fe_error': int,
+        'uart_pe_error': int,
+        'uart_dor_error': int,
+        'rx_buf_overflow': int,
+        'rx_buf_underflow': int,
+        'tx_buf_full': int,
+        'rx_bad_endbyte': int,
+        'ple_invalid_app': int,
+        'ple_disabled_app': int,
+        'ple_invalid_data': int,
+        'ple_invalid_flags': int,
+        'ple_app_error': int,
+        'ple_lost_ctxt': int,
+        'ple_invalid_reg': int,
+        'ple_invalid_reg_len': int,
+        'ple_invalid_msg_len': int,
+        'sle_poe_no_port': int,
+        'sle_invalid_reg_len': int,
+        'sle_msg_underrun': int,
+        }
+
+class ShowPlatsoftwaremcusubordinate(
+    ShowPlatsoftwaremcusubordinateSchema):
+    """
+    show platform software mcu  switch  1 R0 version  0
+    """
+
+    cli_command = 'show platform software mcu switch {switch_num} {route_processor} subordinate 0'
+
+    def cli(self, switch_num, route_processor, output=None):
+
+        if output is None:
+
+                output = self.device.execute(self.cli_command.format(switch_num=switch_num,route_processor=route_processor))
+
+        ret_dict = {}
+
+        # showing sub info:    1
+        p1 = re.compile(r'^showing +sub +info\: +(?P<showing_sub_info>.*)$')
+
+        # State                OK
+        p2 =  re.compile(r'^State +(?P<state>.*)$')
+
+        # Last Reset Reason    UNKNOWN REASON
+        p3 = re.compile(r'^Last +Reset +Reason +(?P<last_reset_reason>.*)$')
+
+        # UART FE Error        0
+        p4 = re.compile(r'^UART +FE +Error +(?P<uart_fe_error>\d+)$')
+
+        # UART PE Error        0
+        p5 = re.compile(r'^UART +PE +Error +(?P<uart_pe_error>\d+)$')
+
+        # UART DOR Error       0
+        p6 = re.compile(r'^UART +DOR +Error +(?P<uart_dor_error>\d+)$')
+
+        # Rx Buf Overflow      0
+        p7 = re.compile(r'^Rx +Buf +Overflow +(?P<rx_buf_overflow>\d+)$')
+
+        # Rx Buf Underflow      0
+        p8 = re.compile(r'^Rx +Buf +Underflow +(?P<rx_buf_underflow>\d+)$')
+
+        # Tx Buf Full          0
+        p9 = re.compile(r'^Tx +Buf +Full +(?P<tx_buf_full>\d+)$')
+
+        # Rx Bad Endbyte       0
+        p10 = re.compile(r'^Rx +Bad +Endbyte +(?P<rx_bad_endbyte>\d+)$')
+
+        # PLE Invalid App      0
+        p11 = re.compile(r'^PLE +Invalid +App +(?P<ple_invalid_app>\d+)$')
+
+        # PLE Disabled App     0
+        p12 = re.compile(r'^PLE +Disabled +App +(?P<ple_disabled_app>\d+)$')
+
+        # PLE Invalid Data     0
+        p13 = re.compile(r'^PLE +Invalid +Data +(?P<ple_invalid_data>\d+)$')
+
+        # PLE Invalid Flags    0
+        p14 = re.compile(r'^PLE +Invalid +Flags +(?P<ple_invalid_flags>\d+)$')
+
+        # PLE App Error        0
+        p15 = re.compile(r'^PLE +App +Error +(?P<ple_app_error>\d+)$')
+
+        # PLE Lost Ctxt        0
+        p16 = re.compile(r'^PLE +Lost +Ctxt +(?P<ple_lost_ctxt>\d+)$')
+
+        # PLE Invalid Reg      0
+        p17 = re.compile(r'^PLE +Invalid +Reg +(?P<ple_invalid_reg>\d+)$')
+
+        # PLE Invalid Reg Len  0
+        p18 = re.compile(r'^PLE +Invalid +Reg +Len +(?P<ple_invalid_reg_len>\d+)$')
+
+        # PLE Invalid Msg Len  0
+        p19 = re.compile(r'^PLE +Invalid +Msg +Len +(?P<ple_invalid_msg_len>\d+)$')
+
+        # SLE Poe No Port      0
+        p20 = re.compile(r'^SLE +Poe +No +Port +(?P<sle_poe_no_port>\d+)$')
+
+        # SLE Invalid Reg Len  0
+        p21 = re.compile(r'^SLE +Invalid +Reg +Len +(?P<sle_invalid_reg_len>\d+)$')
+
+        # SLE Msg Underrun     0
+        p22 = re.compile(r'^SLE +Msg +Underrun +(?P<sle_msg_underrun>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # showing sub info:    1
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['showing_sub_info'] = int(group['showing_sub_info'])
+                continue
+
+            # State                OK
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['state'] = group['state']
+                continue
+
+            # Last Reset Reason    UNKNOWN REASON
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['last_reset_reason'] = group['last_reset_reason']
+                continue
+
+            # UART FE Error        0
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['uart_fe_error'] = int(group['uart_fe_error'])
+                continue
+
+            # UART PE Error        0
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['uart_pe_error'] = int(group['uart_pe_error'])
+                continue
+
+            # UART DOR Error       0
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['uart_dor_error'] = int(group['uart_dor_error'])
+                continue
+
+            # Rx Buf Overflow      0
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['rx_buf_overflow'] = int(group['rx_buf_overflow'])
+                continue
+
+            # Rx Buf Underflow      0
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['rx_buf_underflow'] = int(group['rx_buf_underflow'])
+                continue
+
+            # Tx Buf Full          0
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['tx_buf_full'] = int(group['tx_buf_full'])
+                continue
+
+            # Rx Bad Endbyte       0
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['rx_bad_endbyte'] = int(group['rx_bad_endbyte'])
+                continue
+
+            # PLE Invalid App      0
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['ple_invalid_app'] = int(group['ple_invalid_app'])
+                continue
+
+            # PLE Disabled App     0
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['ple_disabled_app'] = int(group['ple_disabled_app'])
+                continue
+
+            # PLE Invalid Data     0
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['ple_invalid_data'] = int(group['ple_invalid_data'])
+                continue
+
+            # PLE Invalid Flags    0
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['ple_invalid_flags'] = int(group['ple_invalid_flags'])
+                continue
+
+            # PLE App Error        0
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['ple_app_error'] = int(group['ple_app_error'])
+                continue
+
+            # PLE Lost Ctxt        0
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['ple_lost_ctxt'] = int(group['ple_lost_ctxt'])
+                continue
+
+            # PLE Invalid Reg      0
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['ple_invalid_reg'] = int(group['ple_invalid_reg'])
+                continue
+
+            # PLE Invalid Reg Len  0
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['ple_invalid_reg_len'] = int(group['ple_invalid_reg_len'])
+                continue
+
+            # PLE Invalid Msg Len  0
+            m = p19.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['ple_invalid_msg_len'] = int(group['ple_invalid_msg_len'])
+                continue
+
+            # SLE Poe No Port      0
+            m = p20.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['sle_poe_no_port'] = int(group['sle_poe_no_port'])
+                continue
+
+            # SLE Invalid Reg Len  0
+            m = p21.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['sle_invalid_reg_len'] = int(group['sle_invalid_reg_len'])
+                continue
+
+            # SLE Msg Underrun     0
+            m = p22.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['sle_msg_underrun'] = int(group['sle_msg_underrun'])
+                continue
+
+        return ret_dict
+
 
 class ShowPlatformSoftwareInfrastructureInjectSchema(MetaParser):
     schema = {
@@ -8795,17 +9171,17 @@ class ShowPlatformSoftwareInfrastructureInject(ShowPlatformSoftwareInfrastructur
     def cli(self, output=None):
         if output is None:
             output = self.device.execute(self.cli_command)
-        
+
         # Initialize the result dictionary as empty
         parsed_dict = {}
 
-        # 3524142 total inject pak, 0 failed 
+        # 3524142 total inject pak, 0 failed
         p1 = re.compile(r'^(?P<total>\d+) total (?P<type>[\w\s\-]+) pak, (?P<failed>\d+) failed$')
 
         #  0 Feature multicast overlay replication
         p2 = re.compile(r'^(?P<value>\d+) (?P<key>[\w\s\-]+)$')
 
-        #  0 MPLS, 0 Non-IP Tunnel 
+        #  0 MPLS, 0 Non-IP Tunnel
         p3 = re.compile(r'^(?P<value1>\d+) (?P<key1>[\w\s\-]+), (?P<value2>\d+) (?P<key2>[\w\s\-]+)$')
 
         # Statistics for L2 injected packets:
@@ -8852,7 +9228,7 @@ class ShowPlatformSoftwareInfrastructureInject(ShowPlatformSoftwareInfrastructur
                 parsed_dict[current_section][key] = value
                 continue
 
-            #  1023352 sb alloc, 135 sb local 
+            #  1023352 sb alloc, 135 sb local
             m = p3.match(line)
             if m:
                 group = m.groupdict()
@@ -8863,5 +9239,637 @@ class ShowPlatformSoftwareInfrastructureInject(ShowPlatformSoftwareInfrastructur
                 parsed_dict[current_section][key1] = value1
                 parsed_dict[current_section][key2] = value2
                 continue
-        
+
         return parsed_dict
+
+
+
+class ShowPlatsoftwaremcumanagerSchema(MetaParser):
+    """show platform software mcu  switch  1 R0 version  0"""
+
+    schema = {
+        'showing_manager_info': int,
+        'tx_cmd_cnt_sys_app_1': int,
+        'rx_cmd_cnt_sys_app_1': int,
+        'tx_cmd_ignore_sys_app_1': int,
+        'tx_cmd_q_full_sys_app_1': int,
+        Optional('tx_cmd_cnt_sys_app_2'): int,
+        Optional('rx_cmd_cnt_sys_app_2'): int,
+        Optional('tx_cmd_ignore_sys_app_2'): int,
+        Optional('tx_cmd_q_full_sys_app_2'): int,
+        Optional('tx_cmd_cnt_sys_app_3'): int,
+        Optional('rx_cmd_cnt_sys_app_3'): int,
+        Optional('tx_cmd_ignore_sys_app_3'): int,
+        Optional('tx_cmd_q_full_sys_app_3'): int,
+        'tx_cmd_cnt_therm_app': int,
+        'rx_cmd_cnt_therm_app': int,
+        'tx_cmd_ignore_therm_app': int,
+        'tx_cmd_q_full_therm_app': int,
+        'tx_cmd_cnt_gpio_app':int,
+        'rx_cmd_cnt_gpio_app':int,
+        'tx_cmd_ignore_gpio_app':int,
+        'tx_cmd_q_full_gpio_app':int,
+        'tx_cmd_cnt_poe_app': int,
+        'rx_cmd_cnt_poe_app': int,
+        'tx_cmd_ignore_poe_app': int,
+        'tx_cmd_q_full_poe_app': int,
+        'tx_cmd_cnt_image_app': int,
+        'rx_cmd_cnt_image_app': int,
+        'tx_cmd_ignore_image_app': int,
+        'tx_cmd_q_full_image_app': int,
+        'tx_cmd_cnt_stackpower_app': int,
+        'rx_cmd_cnt_stackpower_app': int,
+        'tx_cmd_ignore_stackpower_app': int,
+        'tx_cmd_q_full_stackpower_app': int,
+        'tx_cmd_cnt_frufep_app': int,
+        'rx_cmd_cnt_frufep_app': int,
+        'tx_cmd_ignore_frufep_app': int,
+        'tx_cmd_q_full_frufep_app': int,
+        'tx_cmd_cnt_poe_ext_app': int,
+        'rx_cmd_cnt_poe_ext_app': int,
+        'tx_cmd_ignore_poe_ext_app': int,
+        'tx_cmd_q_full_poe_ext_app': int,
+        'tx_cmd_cnt_j2a_app': int,
+        'rx_cmd_cnt_j2a_app': int,
+        'tx_cmd_ignore_j2a_app': int,
+        'tx_cmd_q_full_j2a_app': int,
+        'tx_cmd_cnt_dsmg_app': int,
+        'rx_cmd_cnt_dsmg_app': int,
+        'tx_cmd_ignore_dsmg_app': int,
+        'tx_cmd_q_full_dsmg_app': int,
+        Optional('tx_cmd_cnt_sys_app_4'): int,
+        Optional('rx_cmd_cnt_sys_app_4'): int,
+        Optional('tx_cmd_ignore_sys_app_4'): int,
+        Optional('tx_cmd_q_full_sys_app_4'): int,
+        'tx_reg_cnt': int,
+        'rx_reg_cnt': int,
+        'tx_reg_ignore': int,
+        'tx_reg_q_full': int,
+        'rx_invalid_frame': int,
+        'rx_invalid_app': int,
+        'rx_invalid_seq': int ,
+        'rx_invalid_checksum': int,
+        'nack_cnt': int,
+        'send_break_count': int,
+        'early_send_break_count': int,
+        'retransmission_cnt': int,
+        }
+
+class ShowPlatsoftwaremcumanager(ShowPlatsoftwaremcumanagerSchema):
+    """
+    show platform software mcu switch 1 R0 manager 0
+    """
+
+    cli_command = 'show platform software mcu switch {switch_num} R0 manager 0'
+
+    def cli(self, switch_num, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(switch_num=switch_num))
+
+        ret_dict = {}
+
+        #showing manager info: 1
+        p1 = re.compile(r'^showing +manager +info\: +(?P<showing_manager_info>.*)$')
+
+        #Tx cmd cnt   SYS App              0
+        p2 =  re.compile(r'^Tx +cmd +cnt +SYS +App +(?P<tx_cmd_cnt_sys_app>.*)$')
+
+        #Rx cmd cnt   SYS App              0
+        p3 = re.compile(r'^Rx +cmd +cnt +SYS +App +(?P<rx_cmd_cnt_sys_app>.*)$')
+
+        #Tx cmd ignore   SYS App           0
+        p4 = re.compile(r'^Tx +cmd +ignore +SYS +App +(?P<tx_cmd_ignore_sys_app>.*)$')
+
+        #Tx cmd Q full   SYS App           0
+        p5 = re.compile(r'^Tx +cmd +Q +full +SYS +App +(?P<tx_cmd_q_full_sys_app>.*)$')
+
+        #Tx cmd cnt   POE App              0
+        p6 = re.compile(r'^Tx +cmd +cnt +POE +App +(?P<tx_cmd_cnt_poe_app>.*)$')
+
+        #Rx cmd cnt   POE App              0
+        p7 = re.compile(r'^Rx +cmd +cnt +POE +App +(?P<rx_cmd_cnt_poe_app>.*)$')
+
+        #Tx cmd ignore   POE App           0
+        p8 = re.compile(r'^Tx +cmd +ignore +POE +App+(?P<tx_cmd_ignore_poe_app>.*)$')
+
+        #Tx cmd Q full   POE App           0
+        p9 = re.compile(r'^Tx +cmd +Q +full +POE +App +(?P<tx_cmd_q_full_poe_app>.*)$')
+
+        #Tx cmd cnt FRUFEP App              0
+        p10 = re.compile(r'^Tx +cmd +cnt +FRUFEP +App +(?P<tx_cmd_cnt_frufep_app>.*)$')
+
+        #Rx cmd cnt FRUFEP App              0
+        p11 = re.compile(r'^Rx +cmd +cnt +FRUFEP +App +(?P<rx_cmd_cnt_frufep_app>.*)$')
+
+        #Tx cmd ignore FRUFEP App           0
+        p12 = re.compile(r'^Tx +cmd +ignore +FRUFEP +App +(?P<tx_cmd_ignore_frufep_app>.*)$')
+
+        #Tx cmd Q full FRUFEP App           0
+        p13 = re.compile(r'^Tx +cmd +Q +full +FRUFEP +App +(?P<tx_cmd_q_full_frufep_app>.*)$')
+
+        #Tx cmd cnt IMAGE App              0
+        p14 = re.compile(r'^Tx +cmd +cnt +IMAGE +App +(?P<tx_cmd_cnt_image_app>.*)$')
+
+        #Rx cmd cnt IMAGE App              0
+        p15 = re.compile(r'^Rx +cmd +cnt +IMAGE +App +(?P<rx_cmd_cnt_image_app>.*)$')
+
+        #Tx cmd ignore IMAGE App           0
+        p16 = re.compile(r'^Tx +cmd +ignore +IMAGE +App +(?P<tx_cmd_ignore_image_app>.*)$')
+
+        #Tx cmd Q full IMAGE App           0
+        p17 = re.compile(r'^Tx +cmd +Q +full +IMAGE +App +(?P<tx_cmd_q_full_image_app>.*)$')
+
+        #Tx cmd cnt STACKPOWER App              0
+        p18 = re.compile(r'^Tx +cmd +cnt +STACKPOWER +App +(?P<tx_cmd_cnt_stackpower_app>.*)$')
+
+        #Rx cmd cnt STACKPOWER App              0
+        p19 = re.compile(r'^Rx +cmd +cnt +STACKPOWER +App +(?P<rx_cmd_cnt_stackpower_app>.*)$')
+
+        #Tx cmd ignore STACKPOWER App           0
+        p20 = re.compile(r'^Tx +cmd +ignore +STACKPOWER +App +(?P<tx_cmd_ignore_stackpower_app>.*)$')
+
+        #Tx cmd Q full STACKPOWER App           0
+        p21 = re.compile(r'^Tx +cmd +Q +full +STACKPOWER +App +(?P<tx_cmd_q_full_stackpower_app>.*)$')
+
+        #Tx cmd cnt   J2A App              0
+        p22 = re.compile(r'^Tx +cmd +cnt +J2A +App +(?P<tx_cmd_cnt_j2a_app>.*)$')
+
+        #Rx cmd cnt   J2A App              0
+        p23 = re.compile(r'^Rx +cmd +cnt +J2A +App +(?P<rx_cmd_cnt_j2a_app>.*)$')
+
+        #Tx cmd ignore   J2A App           0
+        p24 = re.compile(r'^Tx +cmd +ignore +J2A +App +(?P<tx_cmd_ignore_j2a_app>.*)$')
+
+        #Tx cmd Q full   J2A App           0
+        p25 = re.compile(r'^Tx +cmd +Q +full +J2A +App +(?P<tx_cmd_q_full_j2a_app>.*)$')
+
+        #Tx cmd cnt THERM App              0
+        p26 = re.compile(r'^Tx +cmd +cnt +THERM +App +(?P<tx_cmd_cnt_therm_app>.*)$')
+
+        #Rx cmd cnt THERM App              0
+        p27 = re.compile(r'^Rx +cmd +cnt +THERM +App +(?P<rx_cmd_cnt_therm_app>.*)$')
+
+        #Tx cmd ignore THERM App           0
+        p28 = re.compile(r'^Tx +cmd +ignore +THERM +App +(?P<tx_cmd_ignore_therm_app>.*)$')
+
+        #Tx cmd Q full THERM App           0
+        p29 = re.compile(r'^Tx +cmd +Q +full +THERM +App +(?P<tx_cmd_q_full_therm_app>.*)$')
+
+        #Tx reg cnt                        2
+        p30 = re.compile(r'^Tx +reg +cnt +(?P<tx_reg_cnt>.*)$')
+
+        #Rx reg cnt                        0
+        p31 = re.compile(r'^Rx +reg +cnt +(?P<rx_reg_cnt>.*)$')
+
+        #Tx reg ignore                     2
+        p32 = re.compile(r'^Tx +reg +ignore +(?P<tx_reg_ignore>\d+)$')
+
+        #Tx reg Q full                     0
+        p33 = re.compile(r'^Tx +reg +Q full +(?P<tx_reg_q_full>\d+)$')
+
+        #Rx invalid frame                  2
+        p34 = re.compile(r'^Rx +invalid +frame +(?P<rx_invalid_frame>\d+)$')
+
+        #Rx invalid App                    0
+        p35 = re.compile(r'^Rx +invalid +App +(?P<rx_invalid_app>\d+)$')
+
+        #Rx invalid Seq                    0
+        p36 = re.compile(r'^Rx +invalid +Seq +(?P<rx_invalid_seq>\d+)$')
+
+        #Rx invalid checksum               0
+        p37 = re.compile(r'^Rx +invalid +checksum +(?P<rx_invalid_checksum>\d+)$')
+
+        #Nack cnt                          0
+        p38 = re.compile(r'^Nack +cnt +(?P<nack_cnt>\d+)$')
+
+        #Send Break count                  0
+        p39 = re.compile(r'^Send +Break +count +(?P<send_break_count>\d+)$')
+
+        #Early Send Break count            0
+        p40 = re.compile(r'^Early +Send +Break +count +(?P<early_send_break_count>\d+)$')
+
+        #Retransmission cnt                0
+        p41 = re.compile(r'^Retransmission +cnt +(?P<retransmission_cnt>\d+)$')
+
+        #Tx cmd cnt  GPIO App              0
+        p42 = re.compile(r'^Tx +cmd +cnt +GPIO +App +(?P<tx_cmd_cnt_gpio_app>.*)$')
+
+        #Rx cmd cnt  GPIO App              0
+        p43 = re.compile(r'^Rx +cmd +cnt +GPIO +App +(?P<rx_cmd_cnt_gpio_app>.*)$')
+
+        #Tx cmd ignore  GPIO App           0
+        p44 = re.compile(r'^Tx +cmd +ignore +GPIO +App +(?P<tx_cmd_ignore_gpio_app>.*)$')
+
+        #Tx cmd Q full  GPIO App           0
+        p45 = re.compile(r'^Tx +cmd +Q +full +GPIO +App +(?P<tx_cmd_q_full_gpio_app>.*)$')
+
+        #Tx cmd cnt POE_EXT App              0
+        p46 = re.compile(r'^Tx +cmd +cnt +POE_EXT +App +(?P<tx_cmd_cnt_poe_ext_app>.*)$')
+
+        #Rx cmd cnt POE_EXT App              0
+        p47 = re.compile(r'^Rx +cmd +cnt +POE_EXT +App +(?P<rx_cmd_cnt_poe_ext_app>.*)$')
+
+        #Tx cmd ignore POE_EXT App           0
+        p48 = re.compile(r'^Tx +cmd +ignore +POE_EXT +App +(?P<tx_cmd_ignore_poe_ext_app>.*)$')
+
+        #Tx cmd Q full POE_EXT App           0
+        p49 = re.compile(r'^Tx +cmd +Q +full +POE_EXT +App +(?P<tx_cmd_q_full_poe_ext_app>.*)$')
+
+        #Tx cmd cnt DMSG App              0
+        p50 = re.compile(r'^Tx +cmd +cnt +DMSG +App +(?P<tx_cmd_cnt_dsmg_app>.*)$')
+
+        #Rx cmd cnt DMSG App              0
+        p51 = re.compile(r'^Rx +cmd +cnt +DMSG +App +(?P<rx_cmd_cnt_dsmg_app>.*)$')
+
+        #Tx cmd ignore DMSG App           0
+        p52 = re.compile(r'^Tx +cmd +ignore +DMSG +App +(?P<tx_cmd_ignore_dsmg_app>.*)$')
+
+        #Tx cmd Q full DMSG App           0
+        p53 = re.compile(r'^Tx +cmd +Q +full +DMSG +App +(?P<tx_cmd_q_full_dsmg_app>.*)$')
+
+        i = j = k = l = 0
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # showing manager info: 1
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['showing_manager_info'] = int(group['showing_manager_info'])
+                continue
+
+            # Tx cmd cnt   SYS App              0
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                i = i + 1
+                temp_val = 'tx_cmd_cnt_sys_app_'+str(i)
+                ret_dict[temp_val] = int(group['tx_cmd_cnt_sys_app'])
+                continue
+
+            # Rx cmd cnt   SYS App              0
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                j = j + 1
+                temp_val = 'rx_cmd_cnt_sys_app_'+str(j)
+                ret_dict[temp_val] = int(group['rx_cmd_cnt_sys_app'])
+                continue
+
+            # Tx cmd ignore   SYS App           0
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                k = k + 1
+                temp_val = 'tx_cmd_ignore_sys_app_'+str(k)
+                ret_dict[temp_val] = int(group['tx_cmd_ignore_sys_app'])
+                continue
+
+            # Tx cmd Q full   SYS App           0
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                l = l + 1
+                temp_val = 'tx_cmd_q_full_sys_app_'+str(l)
+                ret_dict[temp_val] = int(group['tx_cmd_q_full_sys_app'])
+                continue
+
+            # Tx cmd cnt   POE App              0
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['tx_cmd_cnt_poe_app'] = int(group['tx_cmd_cnt_poe_app'])
+                continue
+
+            # Rx cmd cnt   POE App              0
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['rx_cmd_cnt_poe_app'] = int(group['rx_cmd_cnt_poe_app'])
+                continue
+
+            # Tx cmd ignore   POE App           0
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['tx_cmd_ignore_poe_app'] = int(group['tx_cmd_ignore_poe_app'])
+                continue
+
+            # Tx cmd Q full   POE App           0
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['tx_cmd_q_full_poe_app'] = int(group['tx_cmd_q_full_poe_app'])
+                continue
+
+            # Tx cmd cnt FRUFEP App              0
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['tx_cmd_cnt_frufep_app'] = int(group['tx_cmd_cnt_frufep_app'])
+                continue
+
+            # Rx cmd cnt FRUFEP App              0
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['rx_cmd_cnt_frufep_app'] = int(group['rx_cmd_cnt_frufep_app'])
+                continue
+
+            # Tx cmd ignore FRUFEP App           0
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['tx_cmd_ignore_frufep_app'] = int(group['tx_cmd_ignore_frufep_app'])
+                continue
+
+            # Tx cmd Q full FRUFEP App           0
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['tx_cmd_q_full_frufep_app'] = int(group['tx_cmd_q_full_frufep_app'])
+                continue
+
+            # Tx cmd cnt IMAGE App              0
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['tx_cmd_cnt_image_app'] = int(group['tx_cmd_cnt_image_app'])
+                continue
+
+            # Rx cmd cnt IMAGE App              0
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['rx_cmd_cnt_image_app'] = int(group['rx_cmd_cnt_image_app'])
+                continue
+
+            # Tx cmd ignore IMAGE App           0
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['tx_cmd_ignore_image_app'] = int(group['tx_cmd_ignore_image_app'])
+                continue
+
+            # Tx cmd Q full IMAGE App           0
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['tx_cmd_q_full_image_app'] = int(group['tx_cmd_q_full_image_app'])
+                continue
+
+            # Tx cmd cnt STACKPOWER App              0
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['tx_cmd_cnt_stackpower_app'] = int(group['tx_cmd_cnt_stackpower_app'])
+                continue
+
+            # Rx cmd cnt STACKPOWER App              0
+            m = p19.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['rx_cmd_cnt_stackpower_app'] = int(group['rx_cmd_cnt_stackpower_app'])
+                continue
+
+            # Tx cmd ignore STACKPOWER App           0
+            m = p20.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['tx_cmd_ignore_stackpower_app'] = int(group['tx_cmd_ignore_stackpower_app'])
+                continue
+
+            # Tx cmd Q full STACKPOWER App           0
+            m = p21.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['tx_cmd_q_full_stackpower_app'] = int(group['tx_cmd_q_full_stackpower_app'])
+                continue
+
+            # Tx cmd cnt   J2A App              0
+            m = p22.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['tx_cmd_cnt_j2a_app'] = int(group['tx_cmd_cnt_j2a_app'])
+                continue
+
+            # Rx cmd cnt   J2A App              0
+            m = p23.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['rx_cmd_cnt_j2a_app'] = int(group['rx_cmd_cnt_j2a_app'])
+                continue
+
+            # Tx cmd ignore   J2A App           0
+            m = p24.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['tx_cmd_ignore_j2a_app'] = int(group['tx_cmd_ignore_j2a_app'])
+                continue
+
+            # Tx cmd Q full   J2A App           0
+            m = p25.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['tx_cmd_q_full_j2a_app'] = int(group['tx_cmd_q_full_j2a_app'])
+                continue
+
+            # Tx cmd cnt THERM App              0
+            m = p26.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['tx_cmd_cnt_therm_app'] = int(group['tx_cmd_cnt_therm_app'])
+                continue
+
+            # Rx cmd cnt THERM App              0
+            m = p27.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['rx_cmd_cnt_therm_app'] = int(group['rx_cmd_cnt_therm_app'])
+                continue
+
+            # Tx cmd ignore THERM App           0
+            m = p28.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['tx_cmd_ignore_therm_app'] = int(group['tx_cmd_ignore_therm_app'])
+                continue
+
+            # Tx cmd Q full THERM App           0
+            m = p29.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['tx_cmd_q_full_therm_app'] = int(group['tx_cmd_q_full_therm_app'])
+                continue
+
+            # Tx reg cnt                        2
+            m = p30.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['tx_reg_cnt'] = int(group['tx_reg_cnt'])
+                continue
+
+            # Rx reg cnt                        0
+            m = p31.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['rx_reg_cnt'] = int(group['rx_reg_cnt'])
+                continue
+
+            # Tx reg ignore                     2
+            m = p32.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['tx_reg_ignore'] = int(group['tx_reg_ignore'])
+                continue
+
+            # Tx reg Q full                     0
+            m = p33.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['tx_reg_q_full'] = int(group['tx_reg_q_full'])
+                continue
+
+            # Rx invalid frame                  2
+            m = p34.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['rx_invalid_frame'] = int(group['rx_invalid_frame'])
+                continue
+
+            # Rx invalid App                    0
+            m = p35.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['rx_invalid_app'] = int(group['rx_invalid_app'])
+                continue
+
+            # Rx invalid Seq                    0
+            m = p36.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['rx_invalid_seq'] = int(group['rx_invalid_seq'])
+                continue
+
+            # Rx invalid checksum               0
+            m = p37.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['rx_invalid_checksum'] = int(group['rx_invalid_checksum'])
+                continue
+
+            # Nack cnt                          0
+            m = p38.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['nack_cnt'] = int(group['nack_cnt'])
+                continue
+
+            # Send Break count                  0
+            m = p39.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['send_break_count'] = int(group['send_break_count'])
+                continue
+
+            # Early Send Break count            0
+            m = p40.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['early_send_break_count'] = int(group['early_send_break_count'])
+                continue
+
+            # Retransmission cnt                0
+            m = p41.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['retransmission_cnt'] = int(group['retransmission_cnt'])
+                continue
+
+            # Tx cmd cnt  GPIO App              0
+            m = p42.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['tx_cmd_cnt_gpio_app'] = int(group['tx_cmd_cnt_gpio_app'])
+                continue
+
+            # Rx cmd cnt  GPIO App              0
+            m = p43.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['rx_cmd_cnt_gpio_app'] = int(group['rx_cmd_cnt_gpio_app'])
+                continue
+
+            # Tx cmd ignore  GPIO App           0
+            m = p44.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['tx_cmd_ignore_gpio_app'] = int(group['tx_cmd_ignore_gpio_app'])
+                continue
+
+            # Tx cmd Q full  GPIO App           0
+            m = p45.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['tx_cmd_q_full_gpio_app'] = int(group['tx_cmd_q_full_gpio_app'])
+                continue
+
+            # Tx cmd cnt POE_EXT App              0
+            m = p46.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['tx_cmd_cnt_poe_ext_app'] = int(group['tx_cmd_cnt_poe_ext_app'])
+                continue
+
+            # Rx cmd cnt POE_EXT App              0
+            m = p47.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['rx_cmd_cnt_poe_ext_app'] = int(group['rx_cmd_cnt_poe_ext_app'])
+                continue
+
+            # Tx cmd ignore POE_EXT App           0
+            m = p48.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['tx_cmd_ignore_poe_ext_app'] = int(group['tx_cmd_ignore_poe_ext_app'])
+                continue
+
+            # Tx cmd Q full POE_EXT App           0
+            m = p49.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['tx_cmd_q_full_poe_ext_app'] = int(group['tx_cmd_q_full_poe_ext_app'])
+                continue
+
+            # Tx cmd cnt DMSG App              0
+            m = p50.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['tx_cmd_cnt_dsmg_app'] = int(group['tx_cmd_cnt_dsmg_app'])
+                continue
+
+            # Rx cmd cnt DMSG App              0
+            m = p51.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['rx_cmd_cnt_dsmg_app'] = int(group['rx_cmd_cnt_dsmg_app'])
+                continue
+
+            # Tx cmd ignore DMSG App           0
+            m = p52.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['tx_cmd_ignore_dsmg_app'] = int(group['tx_cmd_ignore_dsmg_app'])
+                continue
+
+            # Tx cmd Q full DMSG App           0
+            m = p53.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['tx_cmd_q_full_dsmg_app'] = int(group['tx_cmd_q_full_dsmg_app'])
+                continue
+
+        return ret_dict
+

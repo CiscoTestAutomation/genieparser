@@ -134,20 +134,17 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
                                   'offset': float(groups['offset']),
                                   'jitter': float(groups['disp'])})
 
-                # ops clock_state structure
-                if groups['mode_code']:
-                    if '*' in groups['mode_code']:
-                        clock_dict = ret_dict.setdefault('clock_state', {}).setdefault('system_status', {})
-                        clock_dict['clock_state'] = mode
-                        clock_dict['clock_stratum'] = int(groups['stratum'])
-                        clock_dict['associations_address'] = peer
-                        clock_dict['root_delay'] = float(groups['delay'])
-                        clock_dict['clock_offset'] = float(groups['offset'])
-                        clock_dict['clock_refid'] = groups['refid']
-                        clock_dict['associations_local_mode'] = local_mode
-                    else:
-                        clock_dict = ret_dict.setdefault('clock_state', {}).setdefault('system_status', {})
-                        clock_dict['clock_state'] = 'unsynchronized'
+
+                # Update clock_state if the peer is synchronized
+                if groups['mode_code'] and '*' in groups['mode_code']:
+                    clock_dict = ret_dict.setdefault('clock_state', {}).setdefault('system_status', {})
+                    clock_dict['clock_state'] = mode
+                    clock_dict['clock_stratum'] = int(groups['stratum'])
+                    clock_dict['associations_address'] = peer
+                    clock_dict['root_delay'] = float(groups['delay'])
+                    clock_dict['clock_offset'] = float(groups['offset'])
+                    clock_dict['clock_refid'] = groups['refid']
+                    clock_dict['associations_local_mode'] = local_mode
     
         # check if has synchronized peers, if no create unsynchronized entry
         if ret_dict and not ret_dict.get('clock_state'):

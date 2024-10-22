@@ -1,0 +1,53 @@
+showing manager info: 1
+Tx cmd cnt   SYS App              128910
+Rx cmd cnt   SYS App              128910
+Tx cmd ignore   SYS App           0
+Tx cmd Q full   SYS App           0
+Tx cmd cnt THERM App              0
+Rx cmd cnt THERM App              0
+Tx cmd ignore THERM App           0
+Tx cmd Q full THERM App           0
+Tx cmd cnt  GPIO App              0
+Rx cmd cnt  GPIO App              0
+Tx cmd ignore  GPIO App           0
+Tx cmd Q full  GPIO App           0
+Tx cmd cnt   POE App              108518
+Rx cmd cnt   POE App              108518
+Tx cmd ignore   POE App           0
+Tx cmd Q full   POE App           0
+Tx cmd cnt IMAGE App              0
+Rx cmd cnt IMAGE App              0
+Tx cmd ignore IMAGE App           0
+Tx cmd Q full IMAGE App           0
+Tx cmd cnt STACKPOWER App              6505
+Rx cmd cnt STACKPOWER App              6503
+Tx cmd ignore STACKPOWER App           0
+Tx cmd Q full STACKPOWER App           0
+Tx cmd cnt FRUFEP App              0
+Rx cmd cnt FRUFEP App              0
+Tx cmd ignore FRUFEP App           0
+Tx cmd Q full FRUFEP App           0
+Tx cmd cnt POE_EXT App              936628
+Rx cmd cnt POE_EXT App              936628
+Tx cmd ignore POE_EXT App           0
+Tx cmd Q full POE_EXT App           0
+Tx cmd cnt   J2A App              0
+Rx cmd cnt   J2A App              0
+Tx cmd ignore   J2A App           0
+Tx cmd Q full   J2A App           0
+Tx cmd cnt  DMSG App              0
+Rx cmd cnt  DMSG App              0
+Tx cmd ignore  DMSG App           0
+Tx cmd Q full  DMSG App           0
+Tx reg cnt                        15
+Rx reg cnt                        15
+Tx reg ignore                     0
+Tx reg Q full                     0
+Rx invalid frame                  0
+Rx invalid App                    0
+Rx invalid Seq                    0
+Rx invalid checksum               0
+Nack cnt                          0
+Send Break count                  0
+Early Send Break count            0
+Retransmission cnt                0 

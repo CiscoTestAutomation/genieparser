@@ -1,0 +1,10 @@
+show lisp instance-id 11 ipv4 map-cache
+LISP IPv4 Mapping Cache for LISP 0 EID-table vrf prov1 (IID 11), 2 entries
+
+21.1.1.0/24, uptime: 01:26:23, expires: never, via pub-sub, complete, local-to-site
+  Locator   Uptime    State     Pri/Wgt     Encap-IID
+  1.3.1.1   01:26:23  up, self    1/50        21
+  1.3.2.1   01:26:18  up          1/50        21
+21.2.1.0/24, uptime: 01:26:08, expires: never, via pub-sub, complete, remote-to-site
+  Locator   Uptime    State  Pri/Wgt     Encap-IID
+  2.5.1.1   01:26:08  up       1/50        -

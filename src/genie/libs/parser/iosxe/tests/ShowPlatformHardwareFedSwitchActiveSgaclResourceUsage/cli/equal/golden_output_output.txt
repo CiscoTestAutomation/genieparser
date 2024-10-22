@@ -1,0 +1,5 @@
+show platform hardware fed switch active sgacl resource usage  
+
+------------------------ SG-ACL Usage for Device ID 0 ------------------------ 
+
+Policy Entries : Used = 5, Max = 508 

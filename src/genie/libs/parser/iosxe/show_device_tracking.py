@@ -5,6 +5,7 @@ from genie.metaparser.util.schemaengine import Any, Optional, Or
 
 from genie.libs.parser.utils.common import Common
 
+
 # ==================================
 # Schema for:
 #  * 'show device-tracking database'
@@ -42,14 +43,18 @@ class ShowDeviceTrackingDatabaseSchema(MetaParser):
 class ShowDeviceTrackingDatabase(ShowDeviceTrackingDatabaseSchema):
     """Parser for show device-tracking database"""
 
-    cli_command = ['show device-tracking database','show device-tracking database vlan {vlan_id}']
+    cli_command = ['show device-tracking database',
+                   'show device-tracking database vlan {vlan_id}',
+                   'show device-tracking database address {address}']
 
-    def cli(self, vlan_id=None, output=None):
+    def cli(self, vlan_id=None, address=None, output=None):
         if output is None:
             if vlan_id:
                 output = self.device.execute(self.cli_command[1].format(vlan_id=vlan_id))
+            elif address:
+                output = self.device.execute(self.cli_command[2].format(address=address))
             else:
-                output = self.device.execute(self.cli_command[0],timeout=300)
+                output = self.device.execute(self.cli_command[0], timeout=300)
 
         device_tracking_database_dict = {}
 
@@ -76,27 +81,36 @@ class ShowDeviceTrackingDatabase(ShowDeviceTrackingDatabaseSchema):
         # Binding Table has 10 entries, 0 dynamic (limit 200000)
         binding_table_capture = re.compile(
             r"^Binding\s+Table\s+has\s+(?P<binding_table_count>\d+)\s+entries,\s+(?P<dynamic_entry_count>\d+)\s+dynamic\s+\(limit\s+(?P<binding_table_limit>\d+)\)$")
-         # vlanDB has 17 entries for vlan 101, 16 dynamic
+
+        # vlanDB has 17 entries for vlan 101, 16 dynamic
         vlan_db_capture = re.compile(
             r"^vlanDB\s+has\s+(?P<vlan_db_count>\d+)\s+entries\s+for\s+vlan\s+(?P<vlandb_id>\d+)+,\s+(?P<vlan_dynamic_entry_count>\d+)\s+dynamic$")
+
         # Codes: L - Local, S - Static, ND - Neighbor Discovery, ARP - Address Resolution Protocol, DH4 - IPv4 DHCP, DH6 - IPv6 DHCP, PKT - Other Packet, API - API created
         codes_capture = re.compile(
             r"^Codes:\s+L\s+-\s+Local,\s+S\s+-\s+Static,\s+ND\s+-\s+Neighbor\s+Discovery,\s+ARP\s+-\s+Address\s+Resolution\s+Protocol,\s+DH4\s+-\s+IPv4\s+DHCP,\s+DH6\s+-\s+IPv6\s+DHCP,\s+PKT\s+-\s+Other\s+Packet,\s+API\s+-\s+API\s+created$")
+
         # Preflevel flags (prlvl):
         pref_level_flag_codes_capture = re.compile(r"^Preflevel\s+flags\s+\(prlvl\):$")
+
         # 0001:MAC and LLA match     0002:Orig trunk            0004:Orig access
         pref_level_flags_2_capture = re.compile(
             r"^0001:MAC\s+and\s+LLA\s+match\s+0002:Orig\s+trunk\s+0004:Orig\s+access$")
+
         # 0008:Orig trusted trunk    0010:Orig trusted access   0020:DHCP assigned
         _capture = re.compile(r"^0008:Orig\s+trusted\s+trunk\s+0010:Orig\s+trusted\s+access\s+0020:DHCP\s+assigned$")
+
         # 0040:Cga authenticated     0080:Cert authenticated    0100:Statically assigned
-        _capture = re.compile(r"^0040:Cga\s+authenticated\s+0080:Cert\s+authenticated\s+0100:Statically\s+assigned$")
+        _capture1 = re.compile(r"^0040:Cga\s+authenticated\s+0080:Cert\s+authenticated\s+0100:Statically\s+assigned$")
+
         #     Network Layer Address                   Link Layer Address Interface  vlan  prlvl age    state     Time left
         device_info_header_capture = re.compile(
             r"^Network\s+Layer\s+Address\s+Link\s+Layer\s+Address\s+Interface\s+vlan\s+prlvl\s+age\s+state\s+Time\s+left$")
+
         # L   10.22.66.10                            7081.05ff.eb40     Vl230      230   0100  10194mn REACHABLE
         device_info_capture = re.compile(
             r"^(?P<dev_code>\S+)\s+(?P<network_layer_address>\S+)\s+(?P<link_layer_address>\S+)\s+(?P<interface>\S+)\s+(?P<vlan_id>\d+)\s+(?P<pref_level_code>\d+)\s+(?P<age>\S+)\s+(?P<state>\S+)$")
+
         # DH4 10.160.43.197                           94d4.69ff.e606  Te8/0/37       1023  0025  116s  REACHABLE  191 s try 0(557967 s)
         device_info_capture_database = re.compile(
             r"^(?P<dev_code>\S+)\s+"
@@ -157,8 +171,8 @@ class ShowDeviceTrackingDatabase(ShowDeviceTrackingDatabaseSchema):
                 continue
 
             # 0040:Cga authenticated     0080:Cert authenticated    0100:Statically assigned
-            elif _capture.match(line):
-                _capture_match = _capture.match(line)
+            elif _capture1.match(line):
+                _capture_match = _capture1.match(line)
                 groups = _capture_match.groupdict()
                 continue
 

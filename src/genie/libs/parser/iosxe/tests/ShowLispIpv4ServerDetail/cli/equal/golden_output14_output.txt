@@ -1,0 +1,50 @@
+LISP Site Registration Information
+
+Site name: multisite
+Allowed configured locators: any
+Requested EID-prefix:
+
+  EID-prefix: 21.2.1.0/24 instance-id 21
+    First registered:     03:05:56
+    Last registered:      02:16:17
+    Routing table tag:    0
+    Origin:               Configuration, accepting more specifics
+    Merge active:         Yes
+    Proxy reply:          Yes
+    Skip Publication:     No
+    Force Withdraw:       No
+    TTL:                  1d00h
+    State:                complete
+    Extranet IID:         Unspecified
+    Publish-mode:         publish-extranet instance-id 11
+    Registration errors:
+      Authentication failures:   0
+      Allowed locators mismatch: 0
+    ETR 1.3.1.1:49766
+      last registered 02:16:17, proxy-reply, map-notify
+      TTL 1d00h, merge, hash-function sha1
+      state complete, no security-capability
+      nonce 0x61A433D9-0x167DDB75
+      xTR-ID 0x100DEB22-0x5216D4C1-0x29462F8C-0x7DB47015
+      site-ID unspecified
+      Domain-ID 2
+      Multihoming-ID 11
+      sourced by reliable transport
+      Locator   Local  State      Pri/Wgt  Scope       RDP
+      1.3.1.1   yes    up           1/50   IPv4 none   [2]
+    ETR 1.3.2.1:55901
+      last registered 02:16:17, proxy-reply, map-notify
+      TTL 1d00h, merge, hash-function sha1
+      state complete, no security-capability
+      nonce 0x341D913F-0x878CD944
+      xTR-ID 0x22D1E891-0x1F24D6FC-0x36171867-0xC1A7E20A
+      site-ID unspecified
+      Domain-ID 2
+      Multihoming-ID 11
+      sourced by reliable transport
+      Locator   Local  State      Pri/Wgt  Scope       RDP
+      1.3.2.1   yes    up           1/50   IPv4 none   [2]
+    Merged locators
+      Locator   Local  State      Pri/Wgt  Scope        Registering ETRRDP
+      1.3.1.1   yes    up           1/50   IPv4 none    1.3.1.1:49766  [2]
+      1.3.2.1   yes    up           1/50   IPv4 none    1.3.2.1:55901  [2]

@@ -1,0 +1,33 @@
+LISP Site Registration Information
+
+Site name: site_uci
+Description: map-server configured from Catalyst Center
+Allowed configured locators: any
+Requested EID-prefix:
+
+  EID-prefix: 1880.90d8.5976/48 instance-id 8192 
+    First registered:     1d12h
+    Last registered:      1d12h
+    Routing table tag:    0
+    Origin:               Dynamic, more specific of any-mac
+    Merge active:         No
+    Proxy reply:          Yes
+    Skip Publication:     No
+    Force Withdraw:       No
+    TTL:                  1d00h
+    State:                complete
+    Extranet IID:         Unspecified
+    Registration errors:  
+      Authentication failures:   0
+      Allowed locators mismatch: 0
+    ETR 172.19.1.68:51370, last registered 1d12h, proxy-reply, map-notify
+                           TTL 1d00h, no merge, hash-function sha1
+                           state complete, no security-capability
+                           nonce 0xC70B988B-0x51A970EA
+                           xTR-ID 0xC2C3D55E-0x6EDFC3D0-0x984A6AF8-0xD2CBB963
+                           site-ID unspecified
+                           Domain-ID 2391152098
+                           Multihoming-ID unspecified
+                           sourced by reliable transport
+      Locator      Local  State      Pri/Wgt  Scope
+      172.19.1.68  yes    up          10/10   IPv4 none

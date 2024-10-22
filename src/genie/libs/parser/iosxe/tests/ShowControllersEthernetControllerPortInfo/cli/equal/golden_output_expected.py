@@ -1,0 +1,23 @@
+expected_output = {
+   "interface":"TenGigabitEthernet1/0/13",
+   "if_id":1043,
+   "port_context_information":{
+      "lpn":13,
+      "asic_num":1,
+      "asic_port":804555840,
+      "is_init":1,
+      "context_name":"Te1/0/13",
+      "is_disabled":0,
+      "is_bc_inserted":0,
+      "is_bc_forced":0,
+      "is_qsa_module":0,
+      "admin_link_state":1,
+      "default_speed":10000000,
+      "duplex":2,
+      "speed":10000000,
+      "max_speed":10000000,
+      "flowcontrol":2,
+      "fec_mode":0,
+      "poll_link_status":1
+   }
+}

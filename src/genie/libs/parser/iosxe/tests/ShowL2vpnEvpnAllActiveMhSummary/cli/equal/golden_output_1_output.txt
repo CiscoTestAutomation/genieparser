@@ -1,0 +1,13 @@
+Local BGP RouterID : 10.0.1.14, ASN : 65034
+Neighbor IP : 10.0.1.13, Up/Down : 00:22:25, State/PfxRcd : 2560, Source Interface : Loopback1
+
+
+Total Port-Channel Count       : 3
+Total VLAN Count               : 300
+Total MAC Count                : 1048
+
+
+Interface       ESI                      State
+--------------- ------------------------ ------------
+Po6             0150.F722.D491.0000.0600 Ready
+Po5             0170.1F53.9AB0.8000.0500 Ready

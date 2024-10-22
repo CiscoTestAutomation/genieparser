@@ -39,7 +39,7 @@ expected_output = {
     },
     "clock_state": {
         "system_status": {
-            "clock_state": "unsynchronized",
+            "clock_state": "synchronized",
             "clock_stratum": 2,
             "associations_address": "2001:DB8::EEE8",
             "root_delay": 1.957,

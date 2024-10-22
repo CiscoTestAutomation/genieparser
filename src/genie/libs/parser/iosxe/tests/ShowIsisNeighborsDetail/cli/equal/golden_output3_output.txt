@@ -1,0 +1,53 @@
+Tag 1:
+System Id       Type Interface     IP Address      State Holdtime Circuit Id
+iolR3           L1   Et1/2         13.1.1.2        UP    24       07
+  Area Address(es): 50.1234
+  SNPA: aabb.cc03.ea21
+  IPv6 Address(es): FE80::A8BB:CCFF:FE03:EA21
+  IPv6 Global Address: 13:13::2
+  State Changed: 03:19:05
+  Format: Phase V
+  Remote TID: 0, 2
+  Local TID:  0, 2
+  Interface name: Ethernet1/2
+  Neighbor Circuit Id: 7
+  Remote PSNP Interval: 50
+  Remote BFD Support:TLV (MTID:2, IPV6)
+  BFD enabled: (MTID:2, ipv6)
+  L(1) Adjacency SID Value:20 f:0 b:0 v:1 l:1 s:0 p:0 weight:0
+  SRv6 End.X SID FCCC:CCC1:A1:E000::/64 b:0 s:0 p:0 weight:0 algo:0
+  Adj sync: Full
+iolR2           L1   Et0/1         12.1.1.2        UP    29       02
+  Area Address(es): 50.1234
+  SNPA: aabb.cc02.8410
+  IPv6 Address(es): FE80::A8BB:CCFF:FE02:8410
+  IPv6 Global Address: 12:12::2
+  State Changed: 03:19:05
+  Format: Phase V
+  Remote TID: 0, 2
+  Local TID:  0, 2
+  Interface name: Ethernet0/1
+  Neighbor Circuit Id: 2
+  Remote PSNP Interval: 50
+  Remote BFD Support:TLV (MTID:2, IPV6)
+  BFD enabled: (MTID:2, ipv6)
+  L(1) Adjacency SID Value:17 f:0 b:0 v:1 l:1 s:0 p:0 weight:0
+  SRv6 End.X SID FCCC:CCC1:A1:E002::/64 b:0 s:0 p:0 weight:0 algo:0
+  Adj sync: Full
+iolR8           L1   Et0/0         18.1.1.2        UP    22       02
+  Area Address(es): 50.1234
+  SNPA: aabb.cc03.8c10
+  IPv6 Address(es): FE80::A8BB:CCFF:FE03:8C10
+  IPv6 Global Address: 18:18::2
+  State Changed: 03:19:05
+  Format: Phase V
+  Remote TID: 0, 2
+  Local TID:  0, 2
+  Interface name: Ethernet0/0
+  Neighbor Circuit Id: 2
+  Remote PSNP Interval: 50
+  Remote BFD Support:TLV (MTID:2, IPV6)
+  BFD enabled: (MTID:2, ipv6)
+  L(1) Adjacency SID Value:18 f:0 b:0 v:1 l:1 s:0 p:0 weight:0
+  SRv6 End.X SID FCCC:CCC1:A1:E004::/64 b:0 s:0 p:0 weight:0 algo:0
+  Adj sync: Full

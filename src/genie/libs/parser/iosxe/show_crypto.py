@@ -1064,7 +1064,8 @@ class ShowCryptoSessionSuperParser(ShowCryptoSessionSchema):
 
         #Peer: 11.0.1.2 port 500
         #Peer: 11.0.1.2 port 500 fvrf: (none) ivrf: (none)
-        p8=re.compile(r'^Peer\:\s+(?P<peer>[\d\.\:]+)\s+port\s+(?P<port>\d+)(\s+fvrf\:\s+\(*(?P<fvrf>none|[^(]\S+)\)*\s+ivrf\:\s+\(*(?P<ivrf>none|[^(]\S+)\)*)?')
+        #Peer: 2001:DB8:ACAD:1::2 port 500
+        p8=re.compile(r'^Peer\:\s+(?P<peer>[0-9A-Fa-f\.\:]+)\s+port\s+(?P<port>\d+)(\s+fvrf\:\s+\(*(?P<fvrf>none|[^(]\S+)\)*\s+ivrf\:\s+\(*(?P<ivrf>none|[^(]\S+)\)*)?')
         
         # Phase1_id: 11.0.1.2
         p9=re.compile(r'^\s*Phase1\_id\:\s+(?P<phase_id>\S+)$')
@@ -1076,7 +1077,8 @@ class ShowCryptoSessionSuperParser(ShowCryptoSessionSchema):
         p11=re.compile(r'^\s*Session\s+ID\:\s+(?P<session_id>\d+)$')
 
         #IKEv1 SA: local 11.0.1.1/500 remote 11.0.1.2/500 Active
-        p12=re.compile(r'^\s*(?P<version>IKE(v\d)*)*\s+SA\:\s+local\s+(?P<local>[\d\.\:]+)\/(?P<local_port>\d+)')
+        #IKEv2 SA: local 2001:DB8:ACAD:1::1/500
+        p12=re.compile(r'^\s*(?P<version>IKE(v\d)*)*\s+SA\:\s+local\s+(?P<local>[0-9A-Fa-f\.\:]+)\/(?P<local_port>\d+)')
 
         #  Capabilities:(none) connid:1025 lifetime:03:04:13
         p13=re.compile(r'^\s*Capabilities\:\(*(?P<capabilities>\w+)+\)*\s+connid\:(?P<conn_id>\d+)\s+lifetime\:(?P<lifetime>[\d\:]+)$')
@@ -1094,7 +1096,8 @@ class ShowCryptoSessionSuperParser(ShowCryptoSessionSchema):
         p17=re.compile(r'^\s*Outbound\:\s+\#pkts\s+enc\'ed\s+(?P<outbound_pkts_enc>\d+)\s+drop\s+(?P<outbound_drop>\d+)\s+life\s+\(KB\/Sec\)\s+(?P<outbound_life_kb>[\w\s]+)\/(?P<outbound_life_secs>[\d a-z\/\,]+)$')
 
         #remote 2001:101:0:1::2/500 Active
-        p18=re.compile(r'.*remote\s+(?P<remote>[\d\.\:]+)\/(?P<remote_port>\d+)\s+(?P<conn_status>\w+)')
+        #remote 2001:DB8:ACAD:1::2/500 Active
+        p18=re.compile(r'.*remote\s+(?P<remote>[0-9A-Fa-f\.\:]+)\/(?P<remote_port>\d+)\s+(?P<conn_status>\w+)')
         
         ret_dict = {}
         check_flag = 1
@@ -5814,7 +5817,8 @@ class ShowCryptoIpsecProfile(ShowCryptoIpsecProfileSchema):
         ret_dict = {}
 
         # IPSEC profile nil_ips
-        p1 = re.compile(r'^IPSEC profile\s*(?P<profile_name>\w+)$')
+        # IPSEC profile DCCRT1012-IPSEC-PROFILE
+        p1 = re.compile(r'^IPSEC profile\s*(?P<profile_name>[\w\-]+)$')
 
         # IKEv2 Profile: nil_ike_prof
         p2 = re.compile(r'^IKEv2 Profile\s*:\s*(?P<ikev2_profile_name>\w+)$')
@@ -5835,7 +5839,8 @@ class ShowCryptoIpsecProfile(ShowCryptoIpsecProfileSchema):
         p7 = re.compile(r'^Transform sets={$')
 
         # nil_tfs:  { esp-aes esp-sha-hmac  } ,
-        p8 = re.compile(r'^(?P<transforset>\w+)\s*:\s*{\s*(?P<transform_set_name>[\w-]+)\s+(?P<transform_set_method>[\w-]+)\s*}\s*,$')
+        # RSITE-ipsec-proposal-set:  { esp-gcm 256  } ,
+        p8 = re.compile(r'^(?P<transforset>[\w\-]+)\s*:\s*{\s*(?P<transform_set_name>[\w-]+)\s+(?P<transform_set_method>[\w-]+)\s*}\s*,$')
 
         ret_dict = {}
         for line in output.splitlines():

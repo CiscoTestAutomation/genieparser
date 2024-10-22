@@ -237,7 +237,7 @@ json:
 	@echo "--------------------------------------------------------------------"
 	@echo "Generating Parser json file"
 	@echo ""
-	@$(PYTHON) -c "from genie.json.make_json import make_genieparser; make_genieparser()"
+	@$(PYTHON) -W ignore::SyntaxWarning -c "from genie.json.make_json import make_genieparser; make_genieparser()"
 	@echo ""
 	@echo "Done."
 	@echo ""

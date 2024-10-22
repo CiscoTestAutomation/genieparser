@@ -101,6 +101,8 @@ class ShowIsisNeighborsDetailSchema(MetaParser):
                                                 "s_flag": bool,
                                                 "p_flag": bool,
                                                 "weight": int,
+                                                Optional("algo") : int,
+
                                             }
                                         },
                                         Optional("adj_sync"): {
@@ -262,6 +264,14 @@ class ShowIsisNeighborsSuperParser(ShowIsisNeighborsDetailSchema):
         p25 = re.compile(
             r"Link mtu:\s+(?P<link_mtu>\d+)\s+"
             r"Smaller\s+than\s+lsp:\s+(?P<lsp_mtu>\d+$)"
+        )
+
+        #SRv6 End.X SID FCCC:CCC1:A1:E004::/64 b:0 s:0 p:0 weight:0 algo:0
+        p26 = re.compile(
+            r"^SRv6\s+End\.X\s+SID\s+"
+            r"(?P<srv6_endx_sid>([0-9a-fA-F:/]+))\s+"
+            r"b:\s*(?P<b_flag>0|1)\s+s:\s*(?P<s_flag>0|1)\s+"
+            r"p:\s*(?P<p_flag>0|1)\s+weight:\s*(?P<weight>0|1)\s+algo:\s*(?P<algo>\d+)$"
         )
 
         ret_dict, tag_null, prev_sys_id = {}, True, None
@@ -563,6 +573,22 @@ class ShowIsisNeighborsSuperParser(ShowIsisNeighborsDetailSchema):
                 interfaces_dict["link_mtu"] = int(group["link_mtu"])
                 interfaces_dict["lsp_mtu"] = int(group["lsp_mtu"])
                 continue
+
+            # SRv6 End.X SID FCCC:CCC1:A1:E001::/64 b:0 s:0 p:0 weight:0 algo:0
+            m = p26.match(line)
+            if m:
+                group = m.groupdict()
+                v6_sid_flags = {
+                    "b_flag": (group["b_flag"] == "1"),
+                    "s_flag": (group["s_flag"] == "1"),
+                    "p_flag": (group["p_flag"] == "1"),
+                    "weight": int(group["weight"]),
+                    "algo": int(group["algo"]),
+                }
+                sid_dict.setdefault(group["srv6_endx_sid"], v6_sid_flags)
+                interfaces_dict["srv6_endx_sid"] = sid_dict
+                continue
+
 
         return ret_dict
 

@@ -1,0 +1,10 @@
+IP URpf Data
+
+
+uRPF Intfc / CFG Attach Information------
+ Associated intfc name Vlan2 
+ Associated intfc id 223
+Flags:: 0x0
+Allow-Default:: 0 
+AF:: IPv4
+ACL name: 

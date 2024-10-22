@@ -1,0 +1,26 @@
+show platform software fed switch active security-fed sisf statistics 
+FED SISF STATISTICS :
+ 
+Punject Punt Entries
+Name                              OID       Packets Hits  
+--------------------------------------------------------
+DHCPV6 SERVER TO ANY on PORT      558       0             
+DHCPV6 ANY TO SERVER on PORT      559       0             
+DHCPV6 ANY TO CLIENT on PORT      560       0             
+ICMPV6 TYPE NS on PORT            561       0             
+ICMPV6 TYPE NA on PORT            562       0             
+ICMPV6 TYPE RS on PORT            563       0             
+ICMPV6 TYPE RA on PORT            564       0             
+ICMPV6 TYPE REDIR on PORT         565       0             
+ICMPV6 TYPE DAR on PORT           566       0             
+ICMPV6 TYPE DAC on PORT           567       0             
+DHCPV6 SERVER TO ANY on VLAN      570       0             
+DHCPV6 ANY TO SERVER on VLAN      571       0             
+DHCPV6 ANY TO CLIENT on VLAN      572       0             
+ICMPV6 TYPE NS on VLAN            573       0             
+ICMPV6 TYPE NA on VLAN            574       0             
+ICMPV6 TYPE RS on VLAN            575       0             
+ICMPV6 TYPE RA on VLAN            576       0             
+ICMPV6 TYPE REDIR on VLAN         577       0             
+ICMPV6 TYPE DAR on VLAN           578       0             
+ICMPV6 TYPE DAC on VLAN           579       0     

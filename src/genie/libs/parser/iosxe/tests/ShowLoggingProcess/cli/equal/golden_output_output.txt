@@ -1,0 +1,3 @@
+Logging display requested on 2024/09/12 03:28:28 (PDT) for Hostname: [hendrix], Model: [C9350-48HX], Version: [17.16.01], SN: [FOC27361DWU], MD_SN: [FOC2743Y44V]
+
+Displaying logs from the last 19 days, 22 hours, 6 minutes, 57 seconds 

@@ -1,0 +1,12 @@
+Crypto session current status
+
+Interface: Tunnel1
+Profile: CLIV6-IKEV2-PROFILE
+Session status: UP-ACTIVE     
+Peer: 2001:DB8:ACAD:1::2 port 500 
+      System IP: 13.13.13.11  Interface: Tu1 
+  Session ID: 15  
+  IKEv2 SA: local 2001:DB8:ACAD:1::1/500
+          remote 2001:DB8:ACAD:1::2/500 Active 
+  IPSEC FLOW: permit ipv6 ::/0 ::/0 
+        Active SAs: 2, origin: crypto map

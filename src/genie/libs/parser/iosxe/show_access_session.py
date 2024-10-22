@@ -343,6 +343,7 @@ class ShowAccessSessionMacDetailsSchema(MetaParser):
         * show access-session mac {mac} details
         * show access-session mac {mac} details switch {mode} {rp_slot}
         * show access-session interface {interface} details switch {mode} {rp_slot}
+        * show access-session mac {mac} details {rp_slot}
     """
     schema = {
         'mac': {
@@ -392,10 +393,12 @@ class ShowAccessSessionMacDetails(ShowAccessSessionMacDetailsSchema):
         * show access-session mac {mac} details
         * show access-session mac {mac} details switch {mode} {rp_slot}
         * show access-session interface {interface} details switch {mode} {rp_slot}
+        * show access-session mac {mac} details {rp_slot}
     """
     cli_command = ['show access-session mac {mac} details', 
                 'show access-session mac {mac} details switch {mode} {rp_slot}',
-                'show access-session interface {interface} details switch {mode} {rp_slot}']
+                'show access-session interface {interface} details switch {mode} {rp_slot}',
+                'show access-session mac {mac} details {rp_slot}']
     
     def cli(self, mac, mode=None, rp_slot=None, interface=None, output=None):
         if output is None:
@@ -403,6 +406,8 @@ class ShowAccessSessionMacDetails(ShowAccessSessionMacDetailsSchema):
                 cli = self.cli_command[2].format(mac=mac, interface=interface, mode=mode, rp_slot=rp_slot)
             elif mode and rp_slot:
                 cli = self.cli_command[1].format(mac=mac, mode=mode, rp_slot=rp_slot)
+            elif rp_slot:
+                cli = self.cli_command[3].format(mac=mac, rp_slot=rp_slot)
             else:
                 cli = self.cli_command[0].format(mac=mac)
             
@@ -602,3 +607,5 @@ class ShowAccessSessionMacDetails(ShowAccessSessionMacDetailsSchema):
                 continue
         
         return ret_dict
+
+

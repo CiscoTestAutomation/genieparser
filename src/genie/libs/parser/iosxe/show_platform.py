@@ -2596,7 +2596,7 @@ class ShowPlatform(ShowPlatformSchema):
                     platform_dict['slot'] = {}
                 if slot not in platform_dict['slot']:
                     platform_dict['slot'][slot] = {}
-                
+
                 if any(sub in model for sub in ('WS-C', 'C9500', 'C9300', 'C9200', 'C9350', 'IE-', 'ESS-', '1783')):
                     lc_type = 'rp'
                 else:
@@ -6850,25 +6850,24 @@ class ShowCallAdmissionStatisticsDetailed(ShowCallAdmissionStatistics):
 #  Schema for :
 #  * 'show rep topology segment {no}'
 # ====================================================
-
 class ShowRepTopologySegmentSchema(MetaParser):
     """Schema for show rep topology segment {no}"""
     schema = {
-        'interfaces' : {
-            Any() : {
-                'port' : str,
-                'bridge' : str,
-                'edge' : str,
-                'role' : str
-            },
+        'interfaces': {
+            Any(): {
+                'port': str,
+                'bridge': str,
+                Optional('edge'): str,
+                'role': str
+            }
         }
     }
+
 
 # ====================================================
 #  Parser for :
 #  * 'show rep topology segment {no}'
 # ====================================================
-
 class ShowRepTopologySegment(ShowRepTopologySegmentSchema):
 
     """Parser for show rep topology segment {no}"""
@@ -6884,7 +6883,8 @@ class ShowRepTopologySegment(ShowRepTopologySegmentSchema):
 
         # fr1                              Tw2/0/3    Pri* Alt
         # fr1                              Gi1/0/3    Sec* Open
-        p1 = re.compile(r'(?P<bridge>\S+)\s+(?P<interface>[a-z|A-Z]+\d+\/\d+\/\d+)\s+(?P<edge>\S+)\s+(?P<role>\S+)')
+        # IE34001                          Gi1/2           Open
+        p1 = re.compile(r'^(?P<bridge>\S+)\s+(?P<interface>[a-z|A-Z]+\d+\/\d+(\/\d+)?)\s+((?P<edge>\S+)\s+)?(?P<role>\S+)$')
 
         for line in output.splitlines():
 
@@ -6892,6 +6892,7 @@ class ShowRepTopologySegment(ShowRepTopologySegmentSchema):
 
             # fr1                              Tw2/0/3    Pri* Alt
             # fr1                              Gi1/0/3    Sec* Open
+            # IE34001                          Gi1/2           Open
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -6900,7 +6901,7 @@ class ShowRepTopologySegment(ShowRepTopologySegmentSchema):
                 intf_dict = ret_dict.setdefault('interfaces', {}).setdefault(intf, {})
 
                 intf_dict['port'] = intf
-                intf_dict.update({k: v for k, v in group.items()})
+                intf_dict.update({k: v for k, v in group.items() if v})
 
                 continue
 
@@ -8642,13 +8643,13 @@ class ShowXfsuEligibility(ShowXfsuEligibilitySchema):
 
         # Reload fast supported: Yes
         p1 = re.compile(r'^Reload fast supported: (?P<reload_fast_supported>\w+)$')
-        
+
         # Reload Fast PLATFORM Status: Not started yet
         p2 = re.compile(r'^Reload Fast PLATFORM Status: (?P<platform_status>[\w\s]+)$')
-        
+
         # Stack Configuration: Yes
         p3 = re.compile(r'^Stack Configuration: (?P<stack_configuration>\w+)$')
-        
+
         # Eligibility Check         Status
         # =================         ======
         # Autoboot Enabled          Yes
@@ -8657,10 +8658,10 @@ class ShowXfsuEligibility(ShowXfsuEligibilitySchema):
         # Full ring stack           Yes
         # Check macsec eligibility  Eligible
         p4 = re.compile(r'^(?P<eligibility_check>[\w+ ]+) +(?P<status>Yes|No|Eligible|Ineligible)$')
-        
+
         # Spanning Tree             Ineligible:Root Switch with forwarding link:VLAN0069
         p5 = re.compile(r'^Spanning Tree\s+(?P<spanning_tree>\w+):(?P<status>[\w ]+):(?P<forwarding_link>\S+)$')
-        
+
         # xFSU PLATFORM Status: Not started yet
         p6 = re.compile(r'^xFSU PLATFORM Status: (?P<xfsu_platform_stauts>[\w\s]+)$')
 
@@ -8680,14 +8681,14 @@ class ShowXfsuEligibility(ShowXfsuEligibilitySchema):
                 group = m.groupdict()
                 ret_dict['reload_fast_platform_stauts'] = group['platform_status']
                 continue
-            
+
             # Stack Configuration: Yes
             m = p3.match(line)
             if m:
                 group = m.groupdict()
                 ret_dict['stack_configuration'] = group['stack_configuration']
                 continue
-            
+
             # Eligibility Check         Status
             # =================         ======
             # Autoboot Enabled          Yes
@@ -8704,7 +8705,7 @@ class ShowXfsuEligibility(ShowXfsuEligibilitySchema):
                         check_dict = root_dict.setdefault(group['eligibility_check'].lower().strip().replace(" ","_"),{})
                         check_dict['status'] = group['status']
                 continue
-            
+
             # Spanning Tree             Ineligible:Root Switch with forwarding link:VLAN0069
             m = p5.match(line)
             if m:
@@ -9405,7 +9406,7 @@ class ShowPlatformSoftwareFedSwitchAclUsageIncludeAcl(ShowPlatformSoftwareFedSwi
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict['feature_type'] = group['feature_type']  
+                ret_dict['feature_type'] = group['feature_type']
                 ret_dict['acl_type'] = group['acl_type']
                 ret_dict['dir'] = group['dir']
                 ret_dict['name'] = group['name']
@@ -9540,6 +9541,117 @@ class ShowRepTopologyDetail(ShowRepTopologyDetailSchema):
             if m:
                 group = m.groupdict()
                 intf_dict['neighbor_number'] = group['neighbor_number']
+                continue
+
+        return ret_dict
+
+class ShowPlatformfrontendcontrollerSchema(MetaParser):
+    """show platform frontend-controller version 0 <switch_num>"""
+
+
+# ====================================================
+#  Schema for :
+#  * 'show rep topology detail'
+# ====================================================
+
+class ShowRepTopologyDetailSchema(MetaParser):
+    """Schema for show rep topology detail"""
+    schema = {
+        'switch_number': int,
+        'software_version': str,
+        'system_type': int,
+        'device_id': int,
+        'device_revision': int,
+        'hardware_version': int,
+        'bootloader_version': int,
+        }
+
+
+class ShowPlatformfrontendcontroller(ShowPlatformfrontendcontrollerSchema):
+    """
+    show platform frontend-controller version 0 <switch_num>
+    """
+
+    cli_command = 'show platform frontend-controller version 0 {switch_num}'
+
+
+    def cli(self, switch_num, output=None):
+
+        if output is None:
+                output = self.device.execute(self.cli_command.format(switch_num=switch_num))
+        ret_dict = {}
+
+        #Switch 1 MCU
+        p1 = re.compile(r'^Switch +(?P<switch_number>\d+) +MCU\:$')
+
+        #Software Version   0.0
+        p2 =  re.compile(r'^Software +Version +(?P<software_version>.*)$')
+
+        #System Type        0
+        p3 = re.compile(r'^System +Type +(?P<system_type>.*)$')
+
+        #Device Id          0
+        p4 = re.compile(r'^Device +Id +(?P<device_id>.*)$')
+
+        #Device Revision    0
+        p5 = re.compile(r'^Device +Revision +(?P<device_revision>.*)$')
+
+        #Hardware Version   0
+        p6 = re.compile(r'^Hardware +Version +(?P<hardware_version>.*)$')
+
+        #Bootloader Version 0
+        p7 = re.compile(r'^Bootloader +Version +(?P<bootloader_version>.*)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            #Switch 1 MCU
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['switch_number'] = int(group['switch_number'])
+                continue
+
+            #Software Version   0.0
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['software_version'] = group['software_version']
+                continue
+
+            #System Type        0
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['system_type'] = int(group['system_type'])
+                continue
+
+            #Device Id          0
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['device_id'] = int(group['device_id'])
+                continue
+
+            #Device Revision    0
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['device_revision'] = int(group['device_revision'])
+                continue
+
+            #Hardware Version   0
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['hardware_version'] = int(group['hardware_version'])
+                continue
+
+            #Bootloader Version 0
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['bootloader_version'] = int(group['bootloader_version'])
                 continue
 
         return ret_dict

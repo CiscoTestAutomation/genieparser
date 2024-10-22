@@ -1,0 +1,28 @@
+IPSEC profile DCCRT1012-IPSEC-PROFILE
+        IKEv2 Profile: DCCRT1012-IKEv2-PROFILE
+        Security association lifetime: 102400000 kilobytes/27000 seconds
+        Responder-Only (Y/N): Y
+        PFS (Y/N): N
+        Mixed-mode : Disabled
+        Transform sets={ 
+                RSITE-ipsec-proposal-set:  { esp-gcm 256  } , 
+        }
+
+IPSEC profile FRCRT1012-IPSEC-PROFILE
+        IKEv2 Profile: FRCRT1012-IKEv2-PROFILE
+        Security association lifetime: 102400000 kilobytes/27000 seconds
+        Responder-Only (Y/N): Y
+        PFS (Y/N): N
+        Mixed-mode : Disabled
+        Transform sets={ 
+                RSITE-ipsec-proposal-set:  { esp-gcm 256  } , 
+        }
+
+IPSEC profile default
+        Security association lifetime: 4608000 kilobytes/3600 seconds
+        Responder-Only (Y/N): N
+        PFS (Y/N): N
+        Mixed-mode : Disabled
+        Transform sets={ 
+                default:  { esp-aes esp-sha-hmac  } , 
+        }

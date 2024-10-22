@@ -1,0 +1,5 @@
+IP uRPF Data
+  Vlan2: [0x4c1]
+    uRPF Mode: STRICT
+    Allow Default: Yes
+    Allow Self Ping: Yes

@@ -1,0 +1,22 @@
+showing sub info:    1
+State                UNREACHABLE
+Last Reset Reason    UNKNOWN REASON
+UART FE Error        0
+UART PE Error        0
+UART DOR Error       0
+Rx Buf Overflow      0
+Rx Buf Underflow     0
+Tx Buf Full          0
+Rx Bad Endbyte       0
+PLE Invalid App      0
+PLE Disabled App     0
+PLE Invalid Data     0
+PLE Invalid Flags    0
+PLE App Error        0
+PLE Lost Ctxt        0
+PLE Invalid Reg      0
+PLE Invalid Reg Len  0
+PLE Invalid Msg Len  0
+SLE Poe No Port      0
+SLE Invalid Reg Len  0
+SLE Msg Underrun     0

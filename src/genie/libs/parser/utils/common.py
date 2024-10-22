@@ -296,11 +296,8 @@ def _fuzzy_search_command(search,
         parser_cls = None
         if abstract:
             parser_cls = _get_parser_cls(search, abstract)
-            if parser_cls is None:
-                # No matching class for this command and dict of abstract tokens
-                # Do not return this parser
-                return []
-        return [(search, parser_cls, {})]
+        if parser_cls is not None:
+            return [(search, parser_cls, {})]
 
     # Preprocess if fuzzy
     if fuzzy:

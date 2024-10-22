@@ -46,6 +46,7 @@ class ShowInstallSummarySchema(MetaParser):
         },
     }
 
+
 class ShowInstallSummary(ShowInstallSummarySchema):
     """Parser for show install summary"""
 
@@ -59,47 +60,51 @@ class ShowInstallSummary(ShowInstallSummarySchema):
         # initial return dictionary
         ret_dict = {}
         index = 0
-        # initial regexp pattern
-        # [ R0 ] Installed Package(s) Information:
+
+        # initial regexp patterns
+        # [ Switch 1 2 ] Installed Package(s) Information:
         p1 = re.compile(r'^\[ +(?P<location>[\S ]+)\] +Installed Package'
                         r'\(s\) +Information:$')
+        
         # SMU   U    bootflash:utah.bm.smu.may15.bin
         # IMG   C    10.69.1.0.66982
+        # IMG   C    17.16.01.0.202920
         p2 = re.compile(r'^(?P<type>\S+) + (?P<state>\w) +(?P<filename_version>\S+)$')
         
         # Auto abort timer: active on install_activate, time before rollback - 01:49:42
+        # Auto abort timer: active , time before rollback - 00:52:16
         p3 = re.compile(r'^Auto +abort +timer: +(?P<auto_abort_timer>[\S ]+), +'
                         r'time +before +rollback +\- +(?P<time_before_rollback>\S+)$')
 
-        # Auto abort timer: active on install_activate
+        # Auto abort timer: active
         p4 = re.compile(r'^Auto +abort +timer: +(?P<auto_abort_timer>[\S ]+)$')
 
         for line in output.splitlines():
             line = line.strip()
-            
-            # [ R0 ] Installed Package(s) Information:
+
+            # [ Switch 1 2 ] Installed Package(s) Information:
             m = p1.match(line)
             if m:
                 group = m.groupdict()
                 location = group['location'].strip()
-                location_dict = ret_dict.setdefault('location', {}). \
-                    setdefault(location, {})
+                location_dict = ret_dict.setdefault('location', {}).setdefault(location, {})
                 continue
-
+                
             # SMU   U    bootflash:utah.bm.smu.may15.bin
             # IMG   C    10.69.1.0.66982
+            # IMG   C    17.16.01.0.202920
             m = p2.match(line)
             if m:
                 group = m.groupdict()
                 index += 1
-                install_dict = location_dict.setdefault('pkg_state', {}). \
-                    setdefault(index, {})
+                install_dict = location_dict.setdefault('pkg_state', {}).setdefault(index, {})
                 install_dict.update({'type': group['type']})
                 install_dict.update({'state': group['state']})
                 install_dict.update({'filename_version': group['filename_version']})
                 continue
             
-            # Auto abort timer: active on install_activate, time before rollback - 01:49:42
+            # Auto abort timer: active on install_activate, time before rollback -  01:49:42
+            # Auto abort timer: active , time before rollback - 00:52:16
             m = p3.match(line)
             if m:
                 group = m.groupdict()
@@ -108,8 +113,9 @@ class ShowInstallSummary(ShowInstallSummarySchema):
                 if time_before_rollback:
                     location_dict.update({'time_before_rollback': time_before_rollback})
                 continue
-            
+
             # Auto abort timer: active on install_activate
+            # Auto abort timer: active
             m = p4.match(line)
             if m:
                 group = m.groupdict()

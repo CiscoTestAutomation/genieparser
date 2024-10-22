@@ -122,7 +122,7 @@ class ShowLispExtranet(ShowLispExtranetSchema):
         # Provider    Dynamic     103        88.88.88.0/24
         # Provider    Config      103        88.88.88.0/24
         # Provider    Config      103        2001:200:200:200::/64
-        p3 = re.compile(r'^(?P<type>Provider|Subscriber)\s+(?P<source>Dynamic|Config)'
+        p3 = re.compile(r'^(?P<type>Provider|Subscriber)\s+(?P<source>Dynamic|Config|Config-Propagation)'
                         r'\s+(?P<iid>\d+)\s+(?P<eid>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|'
                         r'[a-fA-F\d\:]+)\/(?P<mask>\d{1,2})$')
 
@@ -1734,6 +1734,7 @@ class ShowLispDatabaseEidSchema(MetaParser):
                         Optional('srvc_ins_id'): int,
                         Optional('extranet_iid'): int,
                         Optional('sgt'): int,
+                        Optional('publish_mode'): str,
                         Optional('locators'): {
                             str: { # locator address
                                 Optional('priority'): int,
@@ -1826,6 +1827,10 @@ class ShowLispDatabaseEid(ShowLispDatabaseEidSchema):
 
         # SGT: 10
         p10 = re.compile(r"^SGT:\s(?P<sgt>\d+)$")
+
+        # Publish-mode: no-extranet
+        # Publish-mode: publish-extranet instance-id <id>
+        p10_1 = re.compile(r'^Publish-mode:\s+(?P<publish_mode>.+\S)')
 
         #  Locator       Pri/Wgt  Source     State
         #  100.31.31.31    1/1    cfg-addr   site-self, unreachable
@@ -1936,6 +1941,13 @@ class ShowLispDatabaseEid(ShowLispDatabaseEidSchema):
             if m:
                 groups = m.groupdict()
                 instance_id_dict['sgt'] = int(groups['sgt'])
+                continue
+
+            # Publish-mode: no-extranet
+            m = p10_1.match(line)
+            if m:
+                groups = m.groupdict()
+                instance_id_dict['publish_mode'] = groups['publish_mode']
                 continue
 
             #  Locator       Pri/Wgt  Source     State
@@ -4214,11 +4226,11 @@ class ShowLisp(ShowLispSchema):
 
         # Silent Host Detection
         p19 = re.compile(r'^(?P<shd>Silent\s+Host\s+Detection)$')
-        
+
         # RTT Refresh
         p20 = re.compile(r'^(?P<rtt>RTT\s+Refresh)$')
-        
-        # RLOC Domain Path 
+
+        # RLOC Domain Path
         p21 = re.compile(r'^(?P<rdp>RLOC\s+Domain\s+Path)$')
 
         # Publish-Subscribe EID
@@ -4369,7 +4381,7 @@ class ShowLisp(ShowLispSchema):
                 rar = groups['rar']
                 capability_list.append(rar)
                 continue
-            
+
             # Extended Subscription
             m = p18.match(line)
             if m:
@@ -7950,7 +7962,7 @@ class ShowLispDecapsulationFilterParser(ShowLispDecapsulationFilterSchema):
                 continue
 
             # Source RLOC      Added by
-            # 100:33:33::33    MS 100:44:44::44, MS 100:55:55::55  
+            # 100:33:33::33    MS 100:44:44::44, MS 100:55:55::55
             m = p2.match(line)
             if m:
                 groups = m.groupdict()
@@ -8001,7 +8013,7 @@ class ShowLispVrfSchema(MetaParser):
         }
     }
 }
-    
+
 class ShowLispVrf(ShowLispVrfSchema):
 
     ''' Parser for "show lisp vrf {vrf}"'''
@@ -8011,27 +8023,27 @@ class ShowLispVrf(ShowLispVrfSchema):
 
     def cli(self, vrf, output=None):
         if output is None:
-            cmd = self.cli_command[0].format(vrf=vrf)            
+            cmd = self.cli_command[0].format(vrf=vrf)
             output = self.device.execute(cmd)
         # Init vars
         ret_dict = {}
-    
+
         # vrf VN_1 ID 0x2 UP users  EID
         p1 = re.compile(r'vrf\s+(?P<vrf>\S+)+\s+ID\s+(?P<vrf_id>\S+)\s+UP\s+users+\s+EID$')
-        
+
         # Topology IPv4 UP, topoid 0x2, locks 2, RIB registered
         p2 = re.compile(r'Topology\s+IPv4\s+(?P<status>\w+),\s+topoid\s+(?P<v4_topoid>\S+),\s+locks\s+(?P<lock_no>(\d+)),\s+RIB\s+(?P<rib>\S+)$')
-    
+
         # User EID, top ID 0, IID 4105, lock count 4, RIB watch count 0
         p3 = re.compile(
             r'User\s+EID,\s+top\s+ID (?P<top_id>(\d+)),\s+IID (?P<iid>(\d+)),\s+lock\s+count (?P<lock_count>(\d+)),\s+RIB\s+watch\s+count (?P<watch_count>(\d+))$')
-    
+
         # Topology IPv6 DOWN, topoid 0x503316482, locks 0, RIB no
         p4 = re.compile(r'Topology\s+IPv6\s+(?P<status>\w+),\s+topoid\s+(?P<v6_topoid>\S+),\s+locks\s+(?P<lock_no>(\d+)),\s+RIB\s+(?P<rib>\S+)$')
-    
+
         for line in output.splitlines():
             line = line.strip()
-    
+
             # Sessions for VRF default, total: 7, established: 4
             m = p1.match(line)
             if m:
@@ -8042,7 +8054,7 @@ class ShowLispVrf(ShowLispVrfSchema):
                     setdefault(vrf, {})
                 vrf_dict['vrf_id'] = group['vrf_id']
                 continue
-            
+
             # Topology IPv4 UP, topoid 0x2, locks 2, RIB registered
             m = p2.match(line)
             if m:
@@ -8057,7 +8069,7 @@ class ShowLispVrf(ShowLispVrfSchema):
                 topo_dict['lock_no'] = int(group['lock_no'])
                 topo_dict['rib'] = group['rib']
                 continue
-    
+
             # User EID, top ID 0, IID 4105, lock count 4, RIB watch count 0
             m = p3.match(line)
             if m:
@@ -8072,7 +8084,7 @@ class ShowLispVrf(ShowLispVrfSchema):
                 topo_dict['lock_count'] = int(group['lock_count'])
                 topo_dict['watch_count'] = int(group['watch_count'])
                 continue
-    
+
             # Topology IPv6 DOWN, topoid 0x503316482, locks 0, RIB no
             m = p4.match(line)
             if m:
@@ -8087,5 +8099,5 @@ class ShowLispVrf(ShowLispVrfSchema):
                 topo_dict['lock_no'] = int(group['lock_no'])
                 topo_dict['rib'] = group['rib']
                 continue
-    
+
         return ret_dict

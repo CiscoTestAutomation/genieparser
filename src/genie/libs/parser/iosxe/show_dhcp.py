@@ -6,6 +6,7 @@ IOSXE parsers for the following show commands:
     * 'show ipv6 dhcp interface'
     * 'show ipv6 dhcp interface {interface}'
     * 'show ip dhcp snooping statistics'
+    * 'show ip dhcp snooping track server'
 """
 
 # Python
@@ -586,6 +587,75 @@ class ShowIpDhcpSnoopingStatistics(ShowIpDhcpSnoopingStatisticsSchema):
                 group = m.groupdict()
                 scrubbed = (group['pattern'].strip()).replace(' ', '_')
                 ret_dict.update({scrubbed.lower(): int(group['value'])})
+                continue
+
+        return ret_dict
+
+# ==========================
+# Schema for 'show ip dhcp snooping track server'
+# ==========================
+class ShowIpDhcpSnoopingTrackServerSchema(MetaParser):
+
+    ''' Schema for "show ip dhcp snooping track server" '''
+
+    schema = {
+        'vlan' : {
+            Any():{
+                'mac': {
+                    Any():
+                        {
+                            'ip_address' : str,
+                            'mac_address': str,
+                            'client_subnet': str,
+                            'subnet_mask': str,
+                            'relay_agent_address': str,
+                            'last_updated': str
+                        }
+                }
+            }
+        }
+    }
+
+# ==========================
+# Parser for 'show ip dhcp snooping statistics'
+# ==========================
+class ShowIpDhcpSnoopingTrackServer(ShowIpDhcpSnoopingTrackServerSchema):
+
+    ''' Parser for "show ip dhcp snooping track server" '''
+
+    cli_command = 'show ip dhcp snooping track server'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+       
+        # Init vars
+        ret_dict = {}
+
+        # 10   20.1.2.1        68ca.e423.b846 20.1.2.0        255.255.255.0   0.0.0.0           Jul 17 2024 14:53:41 
+        p1 = re.compile(r'^(?P<vlan>\d+) +(?P<ip>\S+) +(?P<mac>\S+) +(?P<client>\S+) +(?P<mask>\S+) +(?P<relay>\S+) +(?P<time>[\S+\s+]+)$')
+
+        for line in output.splitlines():
+
+            line = line.strip()
+            # 10   20.1.2.1        68ca.e423.b846 20.1.2.0        255.255.255.0   0.0.0.0           Jul 17 2024 14:53:41 
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                vlan = group['vlan']
+                mac = group['mac']
+                # Build Dict
+                vlan_dict = ret_dict.setdefault('vlan', {}).setdefault(vlan, {})
+                mac_dict = vlan_dict.setdefault('mac', {}).setdefault(mac, {})
+                # Set values
+                mac_dict.update({
+                    'ip_address': group['ip'],
+                    'mac_address': group['mac'],
+                    'client_subnet': group['client'],
+                    'subnet_mask': group['mask'],
+                    'relay_agent_address': group['relay'],
+                    'last_updated': group['time']
+                })
                 continue
 
         return ret_dict
