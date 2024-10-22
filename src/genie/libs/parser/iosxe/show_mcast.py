@@ -663,9 +663,11 @@ class ShowIpMulticastSchema(MetaParser):
                 'fallback_group_mode': str,
                 'multicast_bound_with_filter_autorp': int,
                 Optional('mo_frr'): bool,
+                Optional('algorithm'): str
             },
         },
     }
+
 
 class ShowIpMulticast(ShowIpMulticastSchema):
     """Parser for:
@@ -687,12 +689,31 @@ class ShowIpMulticast(ShowIpMulticastSchema):
 
         ret_dict = {}
 
+        # Multicast Routing: enabled
+        p1 = re.compile(r'^Multicast +Routing: +(?P<status>\w+)$')
+
+        # Multicast Multipath: enabled
+        # Multicast Multipath: enabled (algorithm: basic)
+        # Multicast Multipath: enabled (algorithm: next-hop-based)
+        p2 = re.compile(r'^Multicast +Multipath: +(?P<status>\w+)( \(algorithm\: (?P<algo>[\w\-]+)\))?$')
+
+        # Multicast Route limit: No limit
+        p3 = re.compile(r'^Multicast +Route +limit: +(?P<status>[\w\s]+)$')
+
+        # Multicast Fallback group mode: Sparse
+        p4 = re.compile(r'^Multicast +Fallback +group +mode: +(?P<mode>[\w\s]+)$')
+
+        # Number of multicast boundaries configured with filter-autorp option: 0
+        p5 = re.compile(r'^Number +of +multicast +boundaries +configured +'
+                        r'with +filter\-autorp +option: +(?P<num>\d+)$')
+
+        # MoFRR: Disabled
+        p6 = re.compile(r'^MoFRR: +(?P<status>\w+)$')
+
         for line in out.splitlines():
             line = line.strip()
 
             # Multicast Routing: enabled
-            p1 = re.compile(r'^Multicast +Routing: +(?P<status>\w+)$')
-                              
             m = p1.match(line)
             if m:
                 status = m.groupdict()['status'].lower()
@@ -700,28 +721,22 @@ class ShowIpMulticast(ShowIpMulticastSchema):
                     ret_dict['vrf'] = {}
                 if vrf not in ret_dict['vrf']:
                     ret_dict['vrf'][vrf] = {}
-
-                if 'enabled' in status:
-                    ret_dict['vrf'][vrf]['enable'] = True
-                else:
-                    ret_dict['vrf'][vrf]['enable'] = False
+                ret_dict['vrf'][vrf]['enable'] = 'enabled' in status
                 continue
 
             # Multicast Multipath: enabled
-            p2 = re.compile(r'^Multicast +Multipath: +(?P<status>\w+)$')
-                              
+            # Multicast Multipath: enabled (algorithm: basic)
+            # Multicast Multipath: enabled (algorithm: next-hop-based)
             m = p2.match(line)
             if m:
-                status = m.groupdict()['status'].lower()
-                if 'enabled' in status:
-                    ret_dict['vrf'][vrf]['multipath'] = True
-                else:
-                    ret_dict['vrf'][vrf]['multipath'] = False
+                group = m.groupdict()
+                status = group['status'].lower()
+                ret_dict['vrf'][vrf]['multipath'] = 'enabled' in status
+                if group.get('algo'):
+                    ret_dict['vrf'][vrf]['algorithm'] = group.get('algo')
                 continue
 
             # Multicast Route limit: No limit
-            p3 = re.compile(r'^Multicast +Route +limit: +(?P<status>[\w\s]+)$')
-                              
             m = p3.match(line)
             if m:
                 status = m.groupdict()['status'].lower()
@@ -729,8 +744,6 @@ class ShowIpMulticast(ShowIpMulticastSchema):
                 continue
 
             # Multicast Fallback group mode: Sparse
-            p4 = re.compile(r'^Multicast +Fallback +group +mode: +(?P<mode>[\w\s]+)$')
-                              
             m = p4.match(line)
             if m:
                 mode = m.groupdict()['mode'].lower()
@@ -738,9 +751,6 @@ class ShowIpMulticast(ShowIpMulticastSchema):
                 continue
 
             # Number of multicast boundaries configured with filter-autorp option: 0
-            p5 = re.compile(r'^Number +of +multicast +boundaries +configured +'
-                             'with +filter\-autorp +option: +(?P<num>\d+)$')
-                              
             m = p5.match(line)
             if m:
                 num = m.groupdict()['num']
@@ -748,18 +758,14 @@ class ShowIpMulticast(ShowIpMulticastSchema):
                 continue
 
             # MoFRR: Disabled
-            p2 = re.compile(r'^MoFRR: +(?P<status>\w+)$')
-                              
-            m = p2.match(line)
+            m = p6.match(line)
             if m:
                 status = m.groupdict()['status'].lower()
-                if 'enabled' in status:
-                    ret_dict['vrf'][vrf]['mo_frr'] = True
-                else:
-                    ret_dict['vrf'][vrf]['mo_frr'] = False
+                ret_dict['vrf'][vrf]['mo_frr'] = 'enabled' in status
                 continue
 
         return ret_dict
+
 
 class ShowIpMulticastMplsvifSchema(MetaParser):
     """Schema for:

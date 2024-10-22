@@ -1,0 +1,35 @@
+Publication Information for LISP 0 EID-table vrf sub1 (IID 21)
+ * Indicates the selected rlocs used by consumers
+
+  EID-prefix: 21.1.2.0/24
+    First published:      01:47:21
+    Last published:       01:47:21
+    State:                complete
+    Exported to:          map-cache
+
+    Publisher 4.2.1.1:4342
+      last published 01:47:21, TTL never, Expires: never
+      publisher epoch 1, entry epoch 1
+      entry-state complete
+      xTR-ID 0x100DEB22-0x5216D4C1-0x29462F8C-0x7DB47015
+      site-ID unspecified
+      Domain-ID 1
+      Multihoming-ID 11
+      Publish-mode no-extranet
+      Locator   Pri/Wgt  State     Encap-IID  RDP
+      1.3.1.1     1/50   up        -          [1]
+      1.3.2.1     1/50   up        -          [1]
+
+    Publisher 1.2.1.1:4342
+      last published 01:47:21, TTL never, Expires: never
+      publisher epoch 1, entry epoch 1
+      entry-state send-map-request
+      xTR-ID unspecified
+      site-ID unspecified
+      Domain-ID invalid
+      Multihoming-ID unspecified
+
+  Merge Locator Information
+      Locator    Pri/Wgt  State     Encap-IID  RDP-Len Src-Address
+      1.3.1.1      1/50   up        -          1       4.2.1.1
+      1.3.2.1      1/50   up        -          1       4.2.1.1

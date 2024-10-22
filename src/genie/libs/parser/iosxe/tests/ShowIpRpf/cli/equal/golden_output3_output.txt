@@ -1,0 +1,8 @@
+RPF information for ? (1.1.1.1)
+  RPF interface: LISP0.4099
+  RPF neighbor: ? (172.19.1.64)
+  RPF route/mask: 0.0.0.0/5
+  RPF type: unicast ()
+  Doing distance-preferred lookups across tables
+  Multicast Multipath enabled.
+  RPF topology: ipv4 multicast base

@@ -8,6 +8,7 @@ IOSXE parsers for the following show commands:
     * 'show running-config aaa'
     * 'show running-config nve'
     * 'show running-config | section bgp'
+    * 'show running-config all | section class {class_map}'
 '''
 
 # Python
@@ -4773,3 +4774,75 @@ class ShowRunSectionMacAddress(ShowRunSectionMacAddressSchema):
                 ret_dict['port'] = dict_val['port']
 
         return ret_dict
+        
+# ==========================================================================
+# Schema for :
+#   * 'show running-config all | section class {class_map}'
+# ===========================================================================
+class ShowRunningConfigAllClassMapSchema(MetaParser):
+
+    ''' Schema for :
+        * 'show running-config all | section class {class_map}'
+    '''
+
+    schema = {
+        'class': {
+            Any(): {
+                Optional('police'): {
+                    Optional('rate_pps'): int,
+                    Optional('rate'): int,
+                    },
+                },
+            },    
+        }                   
+
+# =====================================================================
+# Parser for:
+#   * 'show running-config all | section class {class_map}'
+# =====================================================================
+class ShowRunningConfigAllClassMap(ShowRunningConfigAllClassMapSchema):
+    ''' Parser for
+        * 'show running-config all | section class {class_map}'
+    '''
+
+    cli_command = 'show running-config all | section class {class_map}'
+
+    def cli(self, class_map='', output=None):
+
+        if output is None:
+            output = self.device.execute(self.cli_command.format(class_map=class_map))
+
+        ret_dict={}
+        police_dict={}
+        class_map_dict={}
+
+        # class system-cpp-default-v4
+        p1 = re.compile(r'^class +(?P<class_map>([\w\-\_]+))$')
+
+        # police rate 2000 pps
+        # police rate 10000000000
+        p2 = re.compile(r'^police +rate +(?P<rate>\d+)\s*((?P<rate_mode>pps))?$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # class system-cpp-default-v4
+            m = p1.match(line)
+            if m:
+                class_map = m.groupdict()['class_map']
+                class_map_dict = ret_dict.setdefault('class', {}).setdefault(class_map, {})
+                continue
+
+            # police rate 2000 pps
+            # police rate 10000000000
+            m = p2.match(line)
+            if m:
+                #police_line = 1
+                police_dict = class_map_dict.setdefault('police', {})
+                if m.groupdict()['rate_mode']:
+                    police_dict['rate_pps'] = int(m.groupdict()['rate'])
+                else:
+                    police_dict['rate'] = int(m.groupdict()['rate'])
+                continue
+        return ret_dict
+        

@@ -281,7 +281,13 @@ class ShowPlatformFedActiveTcamUtilizationSchema(MetaParser):
             'free0': int,
             'ingress_wide_direction': str,
             'inw_used0': int,
-            'inw_free0': int
+            'inw_free0': int,
+            Optional('resource'): {
+                Any(): {
+                    'used': int,
+                    'free': int
+                }
+            }
         },
         'Slice1': {
             'egress_wide_direction': str,
@@ -289,7 +295,13 @@ class ShowPlatformFedActiveTcamUtilizationSchema(MetaParser):
             'free1': int,
             'ingress_wide_direction': str,
             'inw_used1': int,
-            'inw_free1': int
+            'inw_free1': int,
+            Optional('resource'): {
+                Any(): {
+                    'used': int,
+                    'free': int
+                }
+            }
         },
         'Slice2': {
             'egress_wide_direction': str,
@@ -297,7 +309,13 @@ class ShowPlatformFedActiveTcamUtilizationSchema(MetaParser):
             'free2': int,
             'ingress_wide_direction': str,
             'inw_used2': int,
-            'inw_free2': int
+            'inw_free2': int,
+            Optional('resource'): {
+                Any(): {
+                    'used': int,
+                    'free': int
+                }
+            }
         },
         'Slice3': {
             'egress_wide_direction': str,
@@ -305,7 +323,13 @@ class ShowPlatformFedActiveTcamUtilizationSchema(MetaParser):
             'free3': int,
             'ingress_wide_direction': str,
             'inw_used3': int,
-            'inw_free3': int
+            'inw_free3': int,
+            Optional('resource'): {
+                Any(): {
+                    'used': int,
+                    'free': int
+                }
+            }
         },
         'Slice4': {
             'egress_wide_direction': str,
@@ -313,7 +337,13 @@ class ShowPlatformFedActiveTcamUtilizationSchema(MetaParser):
             'free4': int,
             'ingress_wide_direction': str,
             'inw_used4': int,
-            'inw_free4': int
+            'inw_free4': int,
+            Optional('resource'): {
+                Any(): {
+                    'used': int,
+                    'free': int
+                }
+            }
         },
         'Slice5': {
             'egress_wide_direction': str,
@@ -321,7 +351,13 @@ class ShowPlatformFedActiveTcamUtilizationSchema(MetaParser):
             'free5': int,
             'ingress_wide_direction': str,
             'inw_used5': int,
-            'inw_free5': int
+            'inw_free5': int,
+            Optional('resource'): {
+                Any(): {
+                    'used': int,
+                    'free': int
+                }
+            }
         },
     }
 
@@ -350,8 +386,14 @@ class ShowPlatformFedActiveTcamUtilization(ShowPlatformFedActiveTcamUtilizationS
 
         # Egress Wide TCAM entries
         p2 = re.compile(r'^Egress +(?P<egress_wide_direction>([a-zA-Z]+)) +TCAM +entries\s+(?P<used0>(\d+))\s+(?P<free0>(\d+))\s+(?P<used1>(\d+))\s+(?P<free1>(\d+))\s+(?P<used2>(\d+))\s+(?P<free2>(\d+))\s+(?P<used3>(\d+))\s+(?P<free3>(\d+))\s+(?P<used4>(\d+))\s+(?P<free4>(\d+))\s+(?P<used5>(\d+))\s+(?P<free5>(\d+)).*$')
+        
         # Ingress Wide TCAM entries
         p3 = re.compile(r'^Ingress +(?P<ingress_wide_direction>([a-zA-Z]+)) +TCAM +entries\s+(?P<inw_used0>(\d+))\s+(?P<inw_free0>(\d+))\s+(?P<inw_used1>(\d+))\s+(?P<inw_free1>(\d+))\s+(?P<inw_used2>(\d+))\s+(?P<inw_free2>(\d+))\s+(?P<inw_used3>(\d+))\s+(?P<inw_free3>(\d+))\s+(?P<inw_used4>(\d+))\s+(?P<inw_free4>(\d+))\s+(?P<inw_used5>(\d+))\s+(?P<inw_free5>(\d+)).*$')
+
+        # Ingress Narrow_Pool_0 TCAM entries       39 112712     39 112712      0     0      0     0      0     0      0     0
+        p4 = re.compile(r'(?P<resource>.+)\s+(?P<slice0_used>\d+)\s+(?P<slice0_free>\d+)\s+(?P<slice1_used>\d+)\s+'
+                        r'(?P<slice1_free>\d+)\s+(?P<slice2_used>\d+)\s+(?P<slice2_free>\d+)\s+(?P<slice3_used>\d+)\s+'
+                        r'(?P<slice3_free>\d+)\s+(?P<slice4_used>\d+)\s+(?P<slice4_free>\d+)\s+(?P<slice5_used>\d+)\s+(?P<slice5_free>\d+)$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -377,8 +419,9 @@ class ShowPlatformFedActiveTcamUtilization(ShowPlatformFedActiveTcamUtilizationS
                 if slice_id5 not in slice_dict:
                     slice_dict[slice_id5] = {}
                 continue
+            
+            # Egress Wide TCAM entries
             m = p2.match(line)
-
             if m:
                 group = m.groupdict()
                 direction = group["egress_wide_direction"]
@@ -395,7 +438,9 @@ class ShowPlatformFedActiveTcamUtilization(ShowPlatformFedActiveTcamUtilizationS
                     free = 'free' + str(x)
                     slice_dict[slice_id][used] = int(group[used])
                     slice_dict[slice_id][free] = int(group[free])
-
+                continue
+            
+            # Ingress Wide TCAM entries
             m = p3.match(line)
             if m:
                 group = m.groupdict()
@@ -413,6 +458,23 @@ class ShowPlatformFedActiveTcamUtilization(ShowPlatformFedActiveTcamUtilizationS
                     inw_free = 'inw_free' + str(x)
                     slice_dict[slice_id][inw_used] = int(group[inw_used])
                     slice_dict[slice_id][inw_free] = int(group[inw_free])
+                continue
+            
+            # Ingress Narrow_Pool_0 TCAM entries       39 112712     39 112712      0     0      0     0      0     0      0     0
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                resource_name = group['resource'].strip().lower().replace(' ', '_')
+                for x in range(6):
+                    slice_id = 'Slice' + str(x).strip()
+                    used = f'slice{x}_used'
+                    free = f'slice{x}_free'
+                    if 'resource' not in slice_dict[slice_id]:
+                        slice_dict[slice_id]['resource'] = {}
+                    slice_dict[slice_id]['resource'][resource_name] = {}
+                    slice_dict[slice_id]['resource'][resource_name]['used'] = int(group[used])
+                    slice_dict[slice_id]['resource'][resource_name]['free'] = int(group[free])
+                continue
 
         return slice_dict
 
