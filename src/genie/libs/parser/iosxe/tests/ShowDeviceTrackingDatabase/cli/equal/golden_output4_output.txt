@@ -1,0 +1,9 @@
+Codes: L - Local, S - Static, ND - Neighbor Discovery, ARP - Address Resolution Protocol, DH4 - IPv4 DHCP, DH6 - IPv6 DHCP, PKT - Other Packet, API - API created
+Preflevel flags (prlvl):
+0001:MAC and LLA match     0002:Orig trunk            0004:Orig access           
+0008:Orig trusted trunk    0010:Orig trusted access   0020:DHCP assigned         
+0040:Cga authenticated     0080:Cert authenticated    0100:Statically assigned   
+
+
+    Network Layer Address                    Link Layer Address     Interface  vlan       prlvl      age        state      Time left       
+ARP 172.19.10.12                             d4e8.801f.4876         Te1/0/4    1021       0005       3mn        REACHABLE  13 s try 0 

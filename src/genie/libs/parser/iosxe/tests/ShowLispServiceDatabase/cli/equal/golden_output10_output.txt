@@ -1,0 +1,27 @@
+LISP ETR IPv4 Mapping Database for LISP 0 EID-table vrf sub1 (IID 21), LSBs: 0x3
+Entries total 3, no-route 0, inactive 0, do-not-register 0
+
+21.1.1.0/24, locator-set set1, auto-discover-rlocs, proxy
+  Uptime: 00:50:59, Last-change: 00:50:07
+  Domain-ID: local
+  Service-Insertion: N/A
+  Publish-mode: publish-extranet instance-id 11
+  Locator   Pri/Wgt  Source     State
+  1.3.1.1     1/50   auto-disc  site-other, report-reachable
+  1.3.2.1     1/50   cfg-intf   site-self, reachable
+21.1.2.0/24, locator-set set1, auto-discover-rlocs, proxy
+  Uptime: 00:50:59, Last-change: 00:50:07
+  Domain-ID: local
+  Service-Insertion: N/A
+  Publish-mode: no-extranet
+  Locator   Pri/Wgt  Source     State
+  1.3.1.1     1/50   auto-disc  site-other, report-reachable
+  1.3.2.1     1/50   cfg-intf   site-self, reachable
+21.2.1.0/24, import from publication, inherited from default locator-set set1, auto-discover-rlocs, proxy
+  Uptime: 00:00:19, Last-change: 00:00:19
+  Domain-ID: 2
+  Service-Insertion: N/A
+  Publish-mode: publish-extranet instance-id 11
+  Locator   Pri/Wgt  Source     State
+  1.3.1.1     1/50   auto-disc  site-other, report-reachable
+  1.3.2.1     1/50   cfg-intf   site-self, reachable

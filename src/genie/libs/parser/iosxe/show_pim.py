@@ -1734,17 +1734,17 @@ class ShowPimNeighbor(ShowPimNeighborSchema):
     cli_command = ['show {af} pim vrf {vrf} neighbor', 'show {af} pim neighbor']
     exclude = ['expiration', 'up_time']
 
-    def cli(self, af='ip',vrf='', output=None):
+    def cli(self, af='ip', vrf='', output=None):
         if output is None:
             if vrf:
-                cmd = self.cli_command[0].format(af=af,vrf=vrf)
+                cmd = self.cli_command[0].format(af=af, vrf=vrf)
             else:
                 cmd = self.cli_command[1].format(af=af)
             out = self.device.execute(cmd)
         else:
             out = output
 
-        af= 'ipv4' if af == 'ip' else af
+        af = 'ipv4' if af == 'ip' else af
         vrf = 'default' if not vrf else vrf
 
         # Init dictionary
@@ -1765,32 +1765,25 @@ class ShowPimNeighbor(ShowPimNeighborSchema):
             # Neighbor          Interface                Uptime/Expires    Ver   DR
             # Address                                                            Prio/Mode
             # 192.168.154.1      Port-channel2.100       1d09h/00:01:39    v2    1 / S P G
+            # 172.19.1.64       LISP0.4099               4d23h/00:01:11    v2    0 /
             p1 = re.compile(r'^(?P<nei_address>[\d\.]+) +'
-                             '(?P<intf>[\w\.\/\-]+) +'
-                             '(?P<uptime>[\w\.\:]+)/(?P<expires>[\w\.\:]+) +'
-                             '(?P<ver>\w+) +'
-                             '(?P<dr_prio>\d+) */ *(?P<mode>[\w\s]+)$')
+                            r'(?P<intf>[\w\.\/\-]+) +'
+                            r'(?P<uptime>[\w\.\:]+)\/(?P<expires>[\w\.\:]+) +'
+                            r'(?P<ver>\w+) +'
+                            r'(?P<dr_prio>\d+) *\/ *(?P<mode>[\w\s]+)?$')
             m1 = p1.match(line)
-
 
             # Neighbor Address           Interface          Uptime    Expires  Mode DR pri
             # FE80::21A:30FF:FE47:6EC1   Port-channel2.100  1d09h     00:01:17 B G     1
             p2 = re.compile(r'^(?P<nei_address>[\w\:]+) +'
-                             '(?P<intf>[\w\.\/\-]+) +'
-                             '(?P<uptime>[\w\.\:]+) +'
-                             '(?P<expires>[\w\.\:]+) +'
-                             '(?P<mode>[\w\s]+) +'
-                             '(?P<dr_prio>\d+)$')
+                            r'(?P<intf>[\w\.\/\-]+) +'
+                            r'(?P<uptime>[\w\.\:]+) +'
+                            r'(?P<expires>[\w\.\:]+) +'
+                            r'(?P<mode>[\w\s]+) +'
+                            r'(?P<dr_prio>\d+)$')
             m2 = p2.match(line)
 
-            if m1:
-                m= m1
-            elif m2:
-                m = m2
-            else:
-                m = None
-
-            if m:
+            if m := m1 or m2:
                 intf = Common.convert_intf_name(m.groupdict()['intf'])
                 nei = m.groupdict()['nei_address']
 

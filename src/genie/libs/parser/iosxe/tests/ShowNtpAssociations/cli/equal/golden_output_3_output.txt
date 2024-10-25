@@ -1,0 +1,5 @@
+  address         ref clock       st   when   poll reach  delay  offset   disp
+*~192.0.2.1       192.0.2.2        2    676   1024   377  0.117  -3.705  1.090
++~192.0.2.10      .GNSS.           1    811   1024   377  0.319  -3.649  1.053
+ ~192.0.2.20      127.0.0.1       16    375   1024     0  0.000   0.000 15937.
+ * sys.peer, # selected, + candidate, - outlyer, x falseticker, ~ configured

@@ -1,0 +1,9 @@
+LISP Extranet policy table
+Home Instance ID: 11
+Prov/Sub    Source             InstID     EID prefix
+Provider    Default ETR Reg V4 11
+Subscriber  Config-Propagation 21         21.1.1.0/24
+Subscriber  Config-Propagation 21         21.1.2.0/24
+Subscriber  Config-Propagation 21         21.2.1.0/24
+Subscriber  Config-Propagation 22         22.1.1.0/24
+Total entries: 5

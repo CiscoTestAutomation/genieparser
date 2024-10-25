@@ -1550,5 +1550,244 @@ class ShowControllerEthernetControllerLinkstatus(ShowControllerEthernetControlle
                 continue
 
         return ret_dict
+        
+        
+class ShowControllersEthernetControllerPortInfoSchema(MetaParser):
+    """
+    Schema for 'show controllers ethernet-controller tenGigabitEthernet {interface} port-info'
+    """
+    schema = {
+        'interface': str,
+        'if_id': int,
+        'port_context_information': {
+            'lpn': int,
+            'asic_num': int,
+            'asic_port': int,
+            'is_init': int,
+            'context_name': str,
+            'is_disabled': int,
+            'is_bc_inserted': int,
+            'is_bc_forced': int,
+            'is_qsa_module': int,
+            'admin_link_state': int,
+            'default_speed': int,
+            'duplex': int,
+            'speed': int,
+            'max_speed': int,
+            'flowcontrol': int,
+            'fec_mode': int,
+            'poll_link_status': int,
+        }
+    }
+
+
+class ShowControllersEthernetControllerPortInfo(ShowControllersEthernetControllerPortInfoSchema):
+    """Parser for 'show controllers ethernet-controller {interface} port-info'"""
+    
+    cli_command = 'show controllers ethernet-controller {interface} port-info'
+    
+    def cli(self, interface, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(interface=interface))
+        else:
+            output = output
+        
+        ret_dict = {}
+        
+        # Te1/0/13 (if_id: 1043)
+        p1 = re.compile(r'^(?P<interface>\S+) +\(if_id\: +(?P<if_id>\d+)\)$')
+        
+        # Port Context Information
+        p2  = re.compile(r'^Port +Context +Information$')
+        
+        # Lpn ........................ [13]
+        p3 = re.compile(r'^Lpn\s+\.+\s+\[(?P<lpn>\d+)\]$')
+        
+        # AsicNum .................... [1]
+        p4 = re.compile(r'^AsicNum\s+\.+\s+\[(?P<asic_num>\d+)\]$')
+        
+        # AsicPort ................... [-604733568]
+        p5 = re.compile(r'AsicPort\s+\.+\s+\[(?P<asic_port>\-*\d+)\]$')
+        
+        # IsInit ..................... [1]
+        p6 = re.compile(r'^IsInit\s+\.+\s+\[(?P<is_init>\d+)\]$')
+        
+        # ContextName ................ [Te1/0/13]
+        p7 = re.compile(r'^ContextName\s+\.+\s+\[(?P<context_name>\S+)\]$')
+        
+        # IsDisabled ................. [0]
+        p8 = re.compile(r'^IsDisabled\s+\.+\s+\[(?P<is_disabled>\d+)\]$')
+        
+        # IsBc Inserted .............. [0]
+        p9 = re.compile(r'^IsBc Inserted\s+\.+\s+\[(?P<is_bc_inserted>\d+)\]$')
+        
+        # IsBc Forced ................ [0]
+        p10 = re.compile(r'^IsBc Forced\s+\.+\s+\[(?P<is_bc_forced>\d+)\]$')
+        
+        # IsQsa Module ............... [0]
+        p11 = re.compile(r'^IsQsa Module\s+\.+\s+\[(?P<is_qsa_module>\d+)\]$')
+        
+        # Admin link state ........... [1]
+        p12 = re.compile(r'^Admin link state\s+\.+\s+\[(?P<admin_link_state>\d+)\]$')
+        
+        # default_speed .............. [10000000]
+        p13 = re.compile(r'^default_speed\s+\.+\s+\[(?P<default_speed>\d+)\]$')
+        
+        # duplex ..................... [2]
+        p14 = re.compile(r'^duplex\s+\.+\s+\[(?P<duplex>\d+)\]$')
+        
+        # speed ...................... [1000000]
+        p15 = re.compile(r'^speed\s+\.+\s+\[(?P<speed>\d+)\]$')
+        
+        # max speed .................. [10000000]
+        p16 = re.compile(r'^max speed\s+\.+\s+\[(?P<max_speed>\d+)\]$')
+        
+        # Flowcontrol ................ [2]
+        p17 = re.compile(r'^Flowcontrol\s+\.+\s+\[(?P<flowcontrol>\d+)\]$')
+        
+        # fec mode ................... [0]
+        p18 = re.compile(r'^fec mode\s+\.+\s+\[(?P<fec_mode>\d+)\]$')
+        
+        # Poll link status ........... [1]
+        p19 = re.compile(r'^Poll link status\s+\.+\s+\[(?P<poll_link_status>\d+)\]$')
+        
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # Te1/0/13 (if_id: 1043)
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                interface_name =  Common.convert_intf_name(group['interface'])
+                ret_dict['interface'] = interface_name
+                ret_dict['if_id'] = int(group['if_id'])                
+                continue
+            
+            #Port Context Information
+            m = p2.match(line)
+            if m:
+                curr_dict = ret_dict.setdefault('port_context_information', {})
+                continue 
+            
+            #Lpn ........................ [13]
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict['lpn'] = int(group['lpn'])
+                continue
+            
+            # AsicNum .................... [1]
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict['asic_num'] = int(group['asic_num'])
+                continue
+            
+            # AsicPort ................... [-604733568]
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict['asic_port'] = int(group['asic_port'])
+                continue
+            
+            # IsInit ..................... [1]
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict['is_init'] = int(group['is_init'])
+                continue
+                
+            # ContextName ................ [Te1/0/13]    
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict['context_name'] = group['context_name']
+                continue
+                
+            # IsDisabled ................. [0]    
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict['is_disabled'] = int(group['is_disabled'])
+                continue
+                
+            # IsBc Inserted .............. [0]    
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict['is_bc_inserted'] = int(group['is_bc_inserted'])
+                continue            
+            
+            # IsBc Forced ................ [0]
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict['is_bc_forced'] = int(group['is_bc_forced'])
+                continue
+            
+            # IsQsa Module ............... [0]
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict['is_qsa_module'] = int(group['is_qsa_module'])
+                continue
+            
+            # Admin link state ........... [1]
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict['admin_link_state'] = int(group['admin_link_state'])
+                continue
+            
+            # default_speed .............. [10000000]
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict['default_speed'] = int(group['default_speed'])
+                continue
+            
+            # duplex ..................... [2]  
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict['duplex'] = int(group['duplex'])
+                continue
+            
+            # speed ...................... [1000000] 
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict['speed'] = int(group['speed'])
+                continue
+            
+            # max speed .................. [10000000]  
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict['max_speed'] = int(group['max_speed'])
+                continue
+            
+            # Flowcontrol ................ [2]
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict['flowcontrol'] = int(group['flowcontrol'])
+                continue
+            
+            # fec mode ................... [0] 
+            m = p18.match(line)            
+            if m:
+                group = m.groupdict()
+                curr_dict['fec_mode'] = int(group['fec_mode'])
+                continue
+            
+            # Poll link status ........... [1] 
+            m = p19.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict['poll_link_status'] = int(group['poll_link_status'])
+                continue
+        
+        return ret_dict
 
 
