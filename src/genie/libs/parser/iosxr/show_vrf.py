@@ -61,6 +61,7 @@ class ShowVrfAllDetail(ShowVrfAllDetailSchema):
         vrf_dict = {}
         af_dict = {}
         rt_type = None
+        in_interfaces_section = False  # Initialize here
 
         for line in out.splitlines():
             line = line.replace('\t', '    ')
@@ -107,23 +108,24 @@ class ShowVrfAllDetail(ShowVrfAllDetailSchema):
             m = p4.match(line)
             if m:
                 vrf_dict[vrf]['interfaces'] = []
+                in_interfaces_section = True
                 continue
-            #   GigabitEthernet0/0/0/0.390
-            #   Bundle-Ether15.514
-            #   MgmtEth0/RP0/CPU0/0
-            #   HundredGigE0/0/1/0.3801
-            p4_1 = re.compile(r'^(?P<intf>([Gg]i.*|[Bb]un.*|[Tt]en.*|[Pp]o.*|'
-                  r'[Vv]lan.*|[Ll]o.*|[Mm]gmtEth.*|[Hh]undredGigE.*|'
-                  r'[Ee]ightHundredGigE.*|[Ff]iftyGigE.*|[Ff]ortyGigE.*|'
-                  r'[Ff]ourHundredGigE.*|[Tt]wentyFiveGigE.*|'
-                  r'[Tt]woHundredGigE.*))$')
 
-            m = p4_1.match(line)
-            if m:
-                intf = m.groupdict()['intf']
-                vrf_dict[vrf].setdefault('interfaces', [])
-                vrf_dict[vrf]['interfaces'].append(intf)
-                continue
+            if in_interfaces_section:
+                # Match interface lines - flexible pattern that handles various interface types
+                #   GigabitEthernet0/0/0/0.390
+                #   Bundle-Ether15.514
+                #   MgmtEth0/RP0/CPU0/0
+                #   HundredGigE0/0/1/0.3801
+                p4_1 = re.compile(r'^(?P<intf>[A-Za-z][-A-Za-z0-9/.:]+)$')
+                m = p4_1.match(line)
+                if m:
+                    intf = m.groupdict()['intf']
+                    vrf_dict[vrf]['interfaces'].append(intf)
+                    continue
+                else:
+                    # Exit the Interfaces section when a non-interface line is encountered
+                    in_interfaces_section = False
 
             # Address family IPV4 Unicast
             p5 = re.compile(r'^Address +family +(?P<af>[\w\s]+)$')
