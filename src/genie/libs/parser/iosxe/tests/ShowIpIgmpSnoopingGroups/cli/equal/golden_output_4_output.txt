@@ -1,0 +1,6 @@
+Flags: I -- IGMP snooping, S -- Static, E -- EVPN sync
+
+Vlan      Group                    Type        Version     Port List
+-----------------------------------------------------------------------
+12        225.0.0.1                S                       Po92
+12        224.0.1.40               I           v2          Po92

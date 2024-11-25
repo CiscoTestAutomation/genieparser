@@ -1,0 +1,27 @@
+GigabitEthernet1/0/1
+
+  Service-policy input: parent_set_dscp_child_policer
+
+    Class-map: class-default (match-any)
+      18068758 packets
+      Match: any
+      QoS Set
+        dscp cs6
+
+      Service-policy : child_ace_policer
+
+        Class-map: cm-acl100 (match-all)
+          18068758 packets
+          Match: access-group 100
+          police:
+              rate 50 %
+              rate 500000000 bps, burst 15625000 bytes
+            conformed 1987633400 bytes; actions:
+              transmit
+            exceeded 1626118200 bytes; actions:
+              drop
+            conformed 50875000 bps, exceeded 41622000 bps
+
+        Class-map: class-default (match-any)
+          0 packets
+          Match: any

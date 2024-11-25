@@ -11249,7 +11249,7 @@ class ShowPlatformSoftwareFedActiveIpUrpf(ShowPlatformSoftwareFedActiveIpUrpfSch
                 continue
 
         return ret_dict
-
+    
 class ShowPlatformSoftwareFedSwitchActiveifmMappingsgidSchema(MetaParser):
     """Schema for show platform software fed switch active ifm mappings gid gid_num"""
 
@@ -11295,4 +11295,106 @@ class ShowPlatformSoftwareFedSwitchActiveifmMappingsgid(ShowPlatformSoftwareFedS
                 root_dict['if_type']=group['if_type']
                 continue
 
+        return ret_dict
+
+class ShowPlatformSoftwareFedSwitchActiveCpuInterfacesSchema(MetaParser):
+    """Schema for show platform software fed switch active cpu-interfaces """
+
+    schema = {
+        "queue": {
+            Any(): {
+                "retrieved": int,
+                "dropped": int,
+                "invalid": int,
+                "hol_block": int,
+            }
+        }
+    }
+
+class ShowPlatformSoftwareFedSwitchActiveCpuInterfaces(ShowPlatformSoftwareFedSwitchActiveCpuInterfacesSchema):
+    """parser for cli 'show platform software fed switch active cpu-interfaces'"""
+
+    cli_command = "show platform software fed switch active cpu-interfaces"
+
+    def cli(self, output=None):
+        if output is None:
+            cmd = self.cli_command
+            output = self.device.execute(cmd)
+
+        #initial return dictionary
+        ret_dict = {}
+
+        # Matching patterns
+        #   queue                 retrieved   dropped     invalid    hol-block
+        # -------------------------------------------------------------------------
+        #  Routing Protocol           15579       0           0           0
+        #  L2 Protocol                361037      0           0           0
+        #  sw forwarding              113         0           0           0
+
+        p1 = re.compile(r"^(?P<queue>[A-Za-z0-9\- ]+?)\s+(?P<retrieved>\d+)\s+(?P<dropped>\d+)\s+(?P<invalid>\d+)\s+(?P<hol_block>\d+)$")
+
+        for line in output.splitlines():
+            line.strip()
+
+            # Routing Protocol           15579       0           0           0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                queue_name = group['queue'].strip()
+                queue_dict = (
+                    ret_dict.setdefault("queue", {}).setdefault(group['queue'], {})
+                )
+                queue_dict.update(
+                    {
+                        "retrieved" : int(group["retrieved"]),
+                        "dropped" : int(group["dropped"]),
+                        "invalid" : int(group["invalid"]),
+                        "hol_block" : int(group["hol_block"])
+                    }
+                )
+        return ret_dict
+ 
+class ShowPlatformSoftwareFedSwitchActiveIfmMappingsL3if_leSchema(MetaParser):
+    """
+        Schema for 'show platform software fed switch active ifm mappings l3if-le'
+    """
+    schema = {
+        'interface': {
+            Any(): {
+                "l3if_le": str,
+                "if_id": str,
+                "type": str,
+            }
+        }
+    }
+
+class ShowPlatformSoftwareFedSwitchActiveIfmMappingsL3if_le(ShowPlatformSoftwareFedSwitchActiveIfmMappingsL3if_leSchema):
+    cli_command = "show platform software fed switch active ifm mappings l3if-le"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+        
+        # Regex pattern to match the output lines
+        # 0x000077ba149b9748 Vlan1   0x000000fa   SVI_L3_LE
+        p1 = re.compile(r"^(?P<l3if_le>0x[0-9a-fA-F]+)\s+(?P<interface>\S+)\s+(?P<if_id>0x[0-9a-fA-F]+)\s+(?P<type>\S+)$")
+
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # 0x000077ba149b9748 Vlan1 0x000000fa SVI_L3_LE
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict = ret_dict.setdefault('interface', {}).setdefault(group['interface'], {})
+                interface_dict.update(
+                    {
+                        "l3if_le": group["l3if_le"],
+                        "if_id": group["if_id"],
+                        "type": group["type"],
+                    }
+                )
+                continue
         return ret_dict

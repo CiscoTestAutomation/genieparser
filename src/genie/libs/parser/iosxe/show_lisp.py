@@ -76,8 +76,8 @@ class ShowLispExtranetSchema(MetaParser):
     schema = {
         'lisp_id': {
             int: {
-                'home_instance': int,
-                'total': int,
+                Optional('home_instance'): int,
+                Optional('total'): int,
                 Optional('eid_prefix'): {
                     str:{
                         'type': str,

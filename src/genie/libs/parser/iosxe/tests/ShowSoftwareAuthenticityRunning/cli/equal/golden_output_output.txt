@@ -1,0 +1,141 @@
+show software authenticity running
+PACKAGE cat9k-lni.BLD_V1715_STRATOCASTER_TWIG_LATEST_20241014_190558.SSA.pkg
+------------------------------------------------------------------------------
+Image type                    : Special
+    Signer Information
+        Common Name           : CiscoSystems
+        Organization Unit     : IOS-XE
+        Organization Name     : CiscoSystems
+    Certificate Serial Number : 670D89BF
+    Hash Algorithm            : SHA512
+    Signature Algorithm       : 2048-bit RSA
+    Key Version               : A
+
+    Verifier Information
+        Verifier Name         : rp_base
+        Verifier Version      : BLD_V1715_STRATOCASTER_TWIG_LATEST_20241014_190558
+
+PACKAGE cat9k-guestshell.BLD_V1715_STRATOCASTER_TWIG_LATEST_20241014_190558.SSA.pkg
+-------------------------------------------------------------------------------------
+Image type                    : Special
+    Signer Information
+        Common Name           : CiscoSystems
+        Organization Unit     : IOS-XE
+        Organization Name     : CiscoSystems
+    Certificate Serial Number : 670D89BF
+    Hash Algorithm            : SHA512
+    Signature Algorithm       : 2048-bit RSA
+    Key Version               : A
+
+    Verifier Information
+        Verifier Name         : rp_base
+        Verifier Version      : BLD_V1715_STRATOCASTER_TWIG_LATEST_20241014_190558
+
+PACKAGE cat9k-webui.BLD_V1715_STRATOCASTER_TWIG_LATEST_20241014_190558.SSA.pkg
+--------------------------------------------------------------------------------
+Image type                    : Special
+    Signer Information
+        Common Name           : CiscoSystems
+        Organization Unit     : IOS-XE
+        Organization Name     : CiscoSystems
+    Certificate Serial Number : 670D89D4
+    Hash Algorithm            : SHA512
+    Signature Algorithm       : 2048-bit RSA
+    Key Version               : A
+
+    Verifier Information
+        Verifier Name         : rp_base
+        Verifier Version      : BLD_V1715_STRATOCASTER_TWIG_LATEST_20241014_190558
+
+PACKAGE cat9k-cc_srdriver.BLD_V1715_STRATOCASTER_TWIG_LATEST_20241014_190558.SSA.pkg
+--------------------------------------------------------------------------------------
+Image type                    : Special
+    Signer Information
+        Common Name           : CiscoSystems
+        Organization Unit     : IOS-XE
+        Organization Name     : CiscoSystems
+    Certificate Serial Number : 670D89C8
+    Hash Algorithm            : SHA512
+    Signature Algorithm       : 2048-bit RSA
+    Key Version               : A
+
+    Verifier Information
+        Verifier Name         : rp_base
+        Verifier Version      : BLD_V1715_STRATOCASTER_TWIG_LATEST_20241014_190558
+
+PACKAGE cat9k-srdriver.BLD_V1715_STRATOCASTER_TWIG_LATEST_20241014_190558.SSA.pkg
+-----------------------------------------------------------------------------------
+Image type                    : Special
+    Signer Information
+        Common Name           : CiscoSystems
+        Organization Unit     : IOS-XE
+        Organization Name     : CiscoSystems
+    Certificate Serial Number : 670D89D2
+    Hash Algorithm            : SHA512
+    Signature Algorithm       : 2048-bit RSA
+    Key Version               : A
+
+    Verifier Information
+        Verifier Name         : rp_base
+        Verifier Version      : BLD_V1715_STRATOCASTER_TWIG_LATEST_20241014_190558
+
+PACKAGE cat9k-rpbase.BLD_V1715_STRATOCASTER_TWIG_LATEST_20241014_190558.SSA.pkg
+---------------------------------------------------------------------------------
+Image type                    : Special
+    Signer Information
+        Common Name           : CiscoSystems
+        Organization Unit     : IOS-XE
+        Organization Name     : CiscoSystems
+    Certificate Serial Number : 670D8A96
+    Hash Algorithm            : SHA512
+    Signature Algorithm       : 2048-bit RSA
+    Key Version               : A
+
+    Verifier Information
+        Verifier Name         : rp_base
+        Verifier Version      : BLD_V1715_STRATOCASTER_TWIG_LATEST_20241014_190558
+
+SYSTEM IMAGE
+------------
+Image type                    : Special
+    Signer Information
+        Common Name           : CiscoSystems
+        Organization Unit     : IOS-XE
+        Organization Name     : CiscoSystems
+    Certificate Serial Number : 670D89BB
+    Hash Algorithm            : SHA512
+    Signature Algorithm       : 2048-bit RSA
+    Key Version               : A
+
+    Verifier Information
+        Verifier Name         : ROMMON
+        Verifier Version      : System Bootstrap, Version 17.15.0.7r[Doyle_x4]
+
+ROMMON
+------
+Image type                    : Special
+    Signer Information
+        Common Name           : CiscoSystems
+        Organization Unit     : IOS-XE
+        Organization Name     : CiscoSystems
+    Certificate Serial Number : 670D89BB
+    Hash Algorithm            : SHA512
+    Signature Algorithm       : 2048-bit RSA
+    Key Version               : A
+
+    Verifier Information
+        Verifier Name         : Microloader
+        Verifier Version      : MA1007R07.0612032020
+
+Microloader
+-----------
+Image type                    : Release
+    Signer Information
+        Common Name           : CiscoSystems
+        Organization Name     : CiscoSystems
+    Certificate Serial Number : 32b5567847576ae5eeedd4e4b2fd055a
+    Hash Algorithm            : HMAC-SHA256
+    Verifier Information
+        Verifier Name         : Hardware Anchor
+        Verifier Version      : F01332R22.03efa3c602022-11-15
+

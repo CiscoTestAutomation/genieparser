@@ -202,7 +202,7 @@ def get_parser_exclude(command, device):
         return []
 
 
-def get_parser(command, device, fuzzy=False, abstract=None, **kwargs):
+def get_parser(command, device, fuzzy=False, revision=None, abstract=None, **kwargs):
     '''From a show command and device, return parser class and kwargs if any'''
     global parser_data
 
@@ -215,6 +215,12 @@ def get_parser(command, device, fuzzy=False, abstract=None, **kwargs):
     tokens = Lookup.tokens_from_device(device, data.order, PARSER_MODULE_NAME)
     if abstract:
         tokens.update(abstract)
+
+    revision = revision or tokens.get('revision')
+    if revision and not isinstance(revision, list):
+        revision = [revision]
+    if revision:
+        tokens['revision'] = revision
 
     results = _fuzzy_search_command(command, fuzzy, tokens)
     valid_results = []
@@ -304,7 +310,7 @@ def _fuzzy_search_command(search,
         search = search.lstrip('^').rstrip('$').replace(r'\ ', ' ').replace(
             r'\-', '-').replace('\\"', '"').replace('\\,', ',').replace(
                 '\\\'', '\'').replace('\\*', '*').replace('\\:', ':').replace(
-                    '\\^', '^').replace('\\/', '/')
+                    '\\^', '^').replace('\\/', '/').replace('\\(', '(').replace('\\)', ')')
 
     # Fix search to remove extra spaces
     search = ' '.join(filter(None, search.split()))
@@ -431,6 +437,8 @@ def _is_regular_token(token):
         candidate = candidate.replace(',', '')
         candidate = candidate.replace(r'\.', '')
         candidate = candidate.replace(r'\|', '')
+        candidate = candidate.replace('(', '')
+        candidate = candidate.replace(')', '')
 
         token_is_regular = candidate.isalnum() or candidate == ''
 

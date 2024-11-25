@@ -1,0 +1,2 @@
+Phy Reg Value(Hex): 8801
+             (Dec): 34817

@@ -1,0 +1,6 @@
+show platform hardware fed switch active npu slot 1 port 80 port-recreate
+----------- Triggering port recreate------------
+
+ Deleting port 1/80
+
+ creating port 1/80 

@@ -1,0 +1,10 @@
+{
+	"mode"		 : "active",
+	"local_port" : 9,
+	"phy"		 : 1,
+	"mode_1"	 : 1,
+	"device_num" : 2,
+	"page_number": 2,
+	"register"	 : 2,
+	"byte"		 : 2
+}

@@ -1,0 +1,34 @@
+queue                      retrieved   dropped     invalid     hol-block
+-------------------------------------------------------------------------
+Routing Protocol           15579       0           0           0
+L2 Protocol                361037      0           0           0
+sw forwarding              113         0           0           0
+broadcast                  73          0           0           0
+icmp gen                   0           0           0           0
+icmp redirect              0           0           0           0
+logging                    0           0           0           0
+rpf-fail                   0           0           0           0
+DOT1X authentication       0           0           0           0
+Forus Traffic              1035        0           0           0
+Forus Resolution           623         0           0           0
+Inter FED                  0           0           0           0
+L2 LVX control             0           0           0           0
+EWLC control               0           0           0           0
+EWLC data                  0           0           0           0
+L2 LVX data                0           0           0           0
+Openflow                   0           0           0           0
+Topology control           1089715     0           0           0
+Proto snooping             0           0           0           0
+DHCP snooping              0           0           0           0
+Transit Traffic            0           0           0           0
+Multi End station          0           0           0           0
+Webauth                    0           0           0           0
+High rate app              0           0           0           0
+Exception                  0           0           0           0
+System Critical            4282550     0           0           0
+NFL sampled data           0           0           0           0
+Low latency                0           0           0           0
+EGR exception              0           0           0           0
+Stackwise Virtual OOB      306092188   0           0           0
+Multicast data             0           0           0           0
+Gold packet                32          0           0           0

@@ -1,0 +1,147 @@
+Midplane Idprom:
+
+        Controller Type          : 3192
+        Hardware Revision        : 1.0
+        Top Assy. Part Number    : 68-5288-01
+        Top Assy. Revision       : D0
+        Deviation Number         : 0
+        PCB Serial Number        : FXS2230000R
+        Chassis Serial Number    : FXS2231Q0R5
+        RMA Test History         : 00
+        RMA Number               : 0-0-0-0
+        RMA History              : 00
+        CLEI Code                : INM3500BRA
+        ECI Number               : 471644
+        Product Identifier (PID) : C9407R
+        Version Identifier (VID) : V01
+        Chassis MAC Address      : 00ea.bd88.0440
+Supervisor 1 Idprom:
+
+        Controller Type          : 3194
+        Hardware Revision        : 1.0
+        Top Assy. Part Number    : 68-6264-03
+        Top Assy. Revision       : B0
+        Deviation Number         : 0
+        PCB Serial Number        : JAE21390DQ2
+        RMA Test History         : 00
+        RMA Number               : 0-0-0-0
+        RMA History              : 00
+        CLEI Code                : INCPAA5CAA
+        ECI Number               : 199265
+        Product Identifier (PID) : C9400-SUP-1
+        Version Identifier (VID) : V01
+        Manufacturing Test Data  : 00 00 00 00 00 00 00 00
+        Base MAC Address         : 70 7D B9 CF AF 40
+        Field Diagnostics Data   : 00 00 00 00 00 00 00 00
+        Environment Monitor Data : 06 00 00 00 12 01 90 00
+                                   57
+        Max Power Requirement    : 400 Watts
+        Typical Power Requirement: 288 Watts
+        Environment Monitor Data : 00 06 00 FA
+Supervisor 2 Idprom:
+
+        Controller Type          : 3194
+        Hardware Revision        : 1.0
+        Top Assy. Part Number    : 68-6264-03
+        Top Assy. Revision       : B0
+        Deviation Number         : 0
+        PCB Serial Number        : JAE213801FZ
+        RMA Test History         : 00
+        RMA Number               : 0-0-0-0
+        RMA History              : 00
+        CLEI Code                : INCPAA5CAA
+        ECI Number               : 199265
+        Product Identifier (PID) : C9400-SUP-1
+        Version Identifier (VID) : V01
+        Manufacturing Test Data  : 00 00 00 00 00 00 00 00
+        Base MAC Address         : 40 CE 24 99 A3 E8
+        Field Diagnostics Data   : 00 00 00 00 00 00 00 00
+        Environment Monitor Data : 06 00 00 00 12 01 90 00
+                                   57
+        Max Power Requirement    : 400 Watts
+        Typical Power Requirement: 288 Watts
+        Environment Monitor Data : 00 06 00 FA
+Module 1 Idprom:
+
+        Controller Type          : 3201
+        Hardware Revision        : 1.0
+        Top Assy. Part Number    : 68-5158-05
+        Top Assy. Revision       : A0
+        Deviation Number         : 0
+        PCB Serial Number        : JAE223201GX
+        RMA Test History         : 00
+        RMA Number               : 0-0-0-0
+        RMA History              : 00
+        CLEI Code                : INUIABTEAA
+        ECI Number               : 199200
+        Product Identifier (PID) : C9400-LC-24XS
+        Version Identifier (VID) : V01
+        Manufacturing Test Data  : 00 00 00 00 00 00 00 00
+        Base MAC Address         : 00 B7 71 31 7D 30
+        Field Diagnostics Data   : 00 00 00 00 00 00 00 00
+        Environment Monitor Data : 06 00 00 00 09 10 C8 00
+                                   19
+        Max Power Requirement    : 200 Watts
+        Typical Power Requirement: 145 Watts
+        Environment Monitor Data : 00 06 00 FA
+Module 2 Idprom:
+
+        Controller Type          : 3195
+        Hardware Revision        : 1.1
+        Top Assy. Part Number    : 68-5593-08
+        Top Assy. Revision       : A0
+        Deviation Number         : 0
+        PCB Serial Number        : JAD22380DJT
+        RMA Test History         : 00
+        RMA Number               : 0-0-0-0
+        RMA History              : 00
+        CLEI Code                : INUIABUEAB
+        ECI Number               : 199957
+        Product Identifier (PID) : C9400-LC-48U
+        Version Identifier (VID) : V02
+        Manufacturing Test Data  : 00 00 00 00 00 00 00 00
+        Base MAC Address         : 70 6D 15 73 2A 20er Requirement: 62 Watts
+        Environment Monitor Data : 00 06 00 FA
+Fan Tray Idprom:
+
+        Controller Type          : 3196
+        Hardware Revision        : 1.0
+        Top Assy. Part Number    : 800-103451-01
+        Top Assy. Revision       : C1
+        Deviation Number         : 0
+        PCB Serial Number        : FXS222902YW
+        Chassis Serial Number    : FXS2231Q0DL
+        RMA Test History         : 00
+        RMA Number               : 0-0-0-0
+        RMA History              : 00
+        CLEI Code                : INCPAA4CAA
+        ECI Number               : 199257
+        Product Identifier (PID) : C9407-FAN
+        Version Identifier (VID) : V01
+        Manufacturing Test Data  : 00 00 00 00 00 00 00 00
+        Field Diagnostics Data   : 00 00 00 00 00 00 00 00
+        Environment Monitor Data : 03 00 00 00 1A E2 1C 00
+                                   E5
+        Environment Monitor Data : 00 06 00 FA
+Power Supply 1 Idprom:
+
+        Controller Type          : 3193
+        Hardware Revision        : 1.1
+        Top Assy. Part Number    : 341-0566-01
+        Top Assy. Revision       : A0
+        Deviation Number         : 0
+        PCB Serial Number        : DTM223500ZY
+        RMA Test History         : 00
+        RMA Number               : 0-0-0-0
+        RMA History              : 00
+        CLEI Code                : IPUPAP9AAB
+        ECI Number               : 826355769
+        Product Identifier (PID) : C9400-PWR-3200AC
+        Version Identifier (VID) : V01
+        Power Supply Type        : AC
+        Manufacturing Test Data  : 00 00 00 00 00 00 00 00
+        Field Diagnostics Data   : 00 00 00 00 00 00 00 00
+        Environment Monitor Data : 02 00 62 2C 80 00 F0
+        Max Power Output at 220V : 3200 Watts
+        Max Power Output at 110V : 1570 Watts
+        Environment Monitor Data : 00 06 00 FA

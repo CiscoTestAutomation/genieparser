@@ -1,0 +1,113 @@
+MIDPLANE EEPROM data:
+
+	Product Identifier (PID) : C9610R
+	Version Identifier (VID) : V00 
+	PCB Serial Number        : FOC28101LZB
+	Top Assy. Revision       : 18  
+	Hardware Revision        : 0.2
+	CLEI Code                : 
+Power/Fan Module P1 EEPROM data is not initialized
+
+Power/Fan Module P2 EEPROM data is not initialized
+
+Power/Fan Module P3 EEPROM data is not initialized
+
+Power/Fan Module P4 EEPROM data is not initialized
+
+Power/Fan Module P5 EEPROM data:
+
+	Product Identifier (PID) : C9600-PWR-2KWAC     
+	Version Identifier (VID) : V01 
+	PCB Serial Number        : POG2745D664
+	Top Assy. Revision       : C0  
+	Hardware Revision        : 1.0
+	CLEI Code                : COUPAHHBAA
+Power/Fan Module P6 EEPROM data:
+
+	Product Identifier (PID) : C9600-PWR-2KWAC     
+	Version Identifier (VID) : V01 
+	PCB Serial Number        : QCS28024XWN
+	Top Assy. Revision       : C0  
+	Hardware Revision        : 1.0
+	CLEI Code                : COUPAHHBAA
+Power/Fan Module P7 EEPROM data:
+
+	Product Identifier (PID) : C9600-PWR-3KWAC
+	Version Identifier (VID) : V01
+	PCB Serial Number        : DTM2701019T
+	Top Assy. Revision       : A0
+	Hardware Revision        : 1.0
+	CLEI Code                : COUPAHKBAA
+Power/Fan Module P8 EEPROM data:
+
+	Product Identifier (PID) : C9600-PWR-3KWAC
+	Version Identifier (VID) : V01
+	PCB Serial Number        : DTM2701018K
+	Top Assy. Revision       : A0
+	Hardware Revision        : 1.0
+	CLEI Code                : COUPAHKBAA
+Power/Fan Module P9 EEPROM data:
+
+	Product Identifier (PID) : C9610-FAN
+	Version Identifier (VID) : V00 
+	PCB Serial Number        : FOC28101M63
+	Top Assy. Revision       : 05  
+	Hardware Revision        : 0.2
+	CLEI Code                : 
+Power/Fan Module P10 EEPROM data:
+
+	Product Identifier (PID) : C9610-FAN
+	Version Identifier (VID) : V00 
+	PCB Serial Number        : FOC28101M5C
+	Top Assy. Revision       : 05  
+	Hardware Revision        : 0.2
+	CLEI Code                : 
+Power/Fan Module P11 EEPROM data:
+
+	Product Identifier (PID) : C9610-FAN
+	Version Identifier (VID) : V00 
+	PCB Serial Number        : FOC28101M5F
+	Top Assy. Revision       : 05  
+	Hardware Revision        : 0.2
+	CLEI Code                : 
+Power/Fan Module P12 EEPROM data:
+
+	Product Identifier (PID) : C9610-FAN
+	Version Identifier (VID) : V00 
+	PCB Serial Number        : FOC28101M59
+	Top Assy. Revision       : 05  
+	Hardware Revision        : 0.2
+	CLEI Code                : 
+Slot R0 EEPROM data:
+
+	Product Identifier (PID) : C9610-SUP-3
+	Version Identifier (VID) : V00
+	PCB Serial Number        : FDO2814120H
+	Top Assy. Revision       : 10  
+	Hardware Revision        : 0.4
+	CLEI Code                : 
+
+Slot R1 EEPROM data:
+
+	Product Identifier (PID) : C9610-SUP-3
+	Version Identifier (VID) : V00
+	PCB Serial Number        : FDO2814121V
+	Top Assy. Revision       : 10  
+	Hardware Revision        : 0.4
+	CLEI Code                : 
+SPA EEPROM data for subslot 1/0:
+
+	Product Identifier (PID) : C9600-LC-40YL4CD
+	Version Identifier (VID) : V01
+	PCB Serial Number        : FDO2809067Q
+	Top Assy. Revision       : D1
+	Hardware Revision        : 1.0
+	CLEI Code                : CMUIAXWCAA
+SPA EEPROM data for subslot 9/0:
+
+	Product Identifier (PID) : C9600-LC-40YL4CD
+	Version Identifier (VID) : V01
+	PCB Serial Number        : FDO28090682
+	Top Assy. Revision       : D1
+	Hardware Revision        : 1.0
+	CLEI Code                : CMUIAXWCAA

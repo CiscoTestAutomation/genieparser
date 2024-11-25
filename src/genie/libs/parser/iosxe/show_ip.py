@@ -473,9 +473,9 @@ class ShowIpNbarVersionSchema(MetaParser):
             Any(): {
                 'version': {
                     Any(): {
-                        'file': str,
+                        Optional('file'): str,
                         'publisher': str,
-                        'creation_time': str,
+                        Optional('creation_time'): str,
                         'nbar_engine_version': str,
                         'state': str,
                     },

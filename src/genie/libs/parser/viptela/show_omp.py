@@ -165,10 +165,12 @@ class ShowOmpPeersSchema(MetaParser):
  schema = {
     'peer': {
         Any(): {
+            Optional('tenant'): str,
             'type': str,
             'domain_id': int,
             'overlay_id': int,
             'site_id': int,
+            Optional('region_id'): str,
             'state': str,
             'uptime': str,
             'route': {
@@ -199,7 +201,13 @@ class ShowOmpPeers(ShowOmpPeersSchema):
 
         # 10.4.1.5          vsmart  1         1         4294945506up       27:03:26:37      4012/0/4012
         # 10.1.1.1         vedge   1         1         10001985  up       1:23:10:51       884/0/236
-        p1 = re.compile(r'^(?P<ip_add>\d\S+)\s+(?P<type>\S+)\s+(?P<domain_id>\S+)\s+(?P<overlay_id>\S+)\s+(?P<site_id>\d+)\s*(?P<state>\S+)\s+(?P<uptime>\S+)\s+(?P<route>\S+)$')
+        #
+        #
+        # TENANT                             DOMAIN    OVERLAY   SITE      REGION                                
+        # ID        PEER             TYPE    ID        ID        ID        ID        STATE    UPTIME           R/I/S  
+        # -----------------------------------------------------------------------------------------------------------------
+        # 0         10.8.1.82        vsmart  1         1         1001      None      up       90:18:43:59      61/37/24
+        p1 = re.compile(r'^((?P<tenant>\d+)\s+)?(?P<ip_add>\d\S+)\s+(?P<type>\S+)\s+(?P<domain_id>\S+)\s+(?P<overlay_id>\S+)\s+(?P<site_id>\d+)(\s+)?((?P<region_id>\w+)\s+)?(?P<state>\S+)\s+(?P<uptime>\S+)\s+(?P<route>\S+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -208,10 +216,14 @@ class ShowOmpPeers(ShowOmpPeersSchema):
             if m:
                 groups = m.groupdict()
                 peer_info = peer_dict.setdefault('peer', {}).setdefault(groups['ip_add'], {})
+                if groups['tenant']:
+                    peer_info.update({'tenant': groups['tenant']})
                 peer_info.update({'type': groups['type']})
                 peer_info.update({'domain_id': int(groups['domain_id'])})
                 peer_info.update({'overlay_id': int(groups['overlay_id'])})
                 peer_info.update({'site_id': int(groups['site_id'])})
+                if groups['region_id']:
+                    peer_info.update({'region_id': groups['region_id']})
                 peer_info.update({'state': groups['state']})
                 peer_info.update({'uptime': groups['uptime']})
                 

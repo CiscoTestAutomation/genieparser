@@ -1,0 +1,14 @@
+PIM RP Status Information for VRF "default"
+BSR disabled
+Auto-RP disabled
+BSR RP Candidate policy: None
+BSR RP policy: None
+Auto-RP Announce policy: None
+Auto-RP Discovery policy: None
+
+RP: 22.22.22.22, (0),
+uptime: 00:29:22 priority: 255,
+RP-source: (local), Null-Register Packing disabled
+
+group ranges:
+225.0.0.0/8

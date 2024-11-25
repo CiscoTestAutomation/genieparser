@@ -6,6 +6,8 @@
     * 'show platform software fed switch {switch} punt cpuq brief'
     * 'show platform software fed active punt cpuq brief'
     * 'show platform software fed active punt ios-cause brief'
+    * 'show platform software fed {switch} {port_num} punt entries | include {match}'
+    * 'show platform software fed {port_num} punt entries | include {match}'
 """
 # Python
 import re
@@ -615,3 +617,95 @@ class ShowPlatformSoftwareFedSwitchActivePuntBrief(
                 continue
 
         return ret_dict
+        
+
+# ==========================================================================
+# Schema for :
+#   * 'show platform software fed {switch} {port_num} punt entries | include {match}'
+# ===========================================================================
+        
+class ShowPlatformSoftwareFedPuntEntriesIncludeSchema(MetaParser):
+    """Schema for show platform software fed {switch} {port_num} punt entries | include {match}"""
+    schema = {
+        'index': {
+            Any(): {
+                Optional('name') : str,
+                Optional('source'): str,
+                Optional('priority'): int,
+                Optional('tc'): int,
+                Optional('policy'): str,
+                Optional('cir_sw'): int,
+                Optional('cir_hw'): int,
+                Optional('packets_a'): int,
+                Optional('bytes_a'): int,
+                Optional('packets_d'): int,
+                Optional('bytes_d'): int
+            }
+        }
+    }
+
+# =====================================================================
+# Parser for:
+#   * 'show platform software fed {switch} {port_num} punt entries | include {match}'
+# =====================================================================
+class ShowPlatformSoftwareFedPuntEntriesInclude(ShowPlatformSoftwareFedPuntEntriesIncludeSchema):
+    """Parser for show platform software fed {switch} {port_num} punt entries | include {match}"""
+
+    cli_command = [
+        'show platform software fed {switch} {port_num} punt entries | include {match}',
+        'show platform software fed {port_num} punt entries | include {match}',
+    ]
+    
+
+    def cli(self, port_num, match, switch=None, output=None):
+        if output is None:
+            if switch:
+                cmd = self.cli_command[0].format(port_num=port_num, match=match, switch=switch)
+            else:
+                cmd = self.cli_command[1].format(port_num=port_num, match=match)
+            output = self.device.execute(cmd)   
+
+        ret_dict = {}
+        index = 1
+        
+        #Source    Name                            Pri  TC  Policy                                    CIR-SW  CIR-HW   Pkts(A)    Bytes(A)   Pkts(D)    Bytes(D)   
+        #LPTSv4    WCCP IPv4                        16   0  system-cpp-default-v4                      60000   59127         0           0         0           0  
+        p1 = re.compile(
+            r'^(?P<source>\w+(?:\s+\S+)?)  +'
+            r'(?P<name>[\w\s\(\)]+)\s+'
+            r'(?P<priority>\d+) +'
+            r'(?P<tc>\d+) +'
+            r'(?P<policy>\S+) +'
+            r'(?P<cir_sw>\d+) +'
+            r'(?P<cir_hw>\d+) +'
+            r'(?P<packets_a>\d+) +'
+            r'(?P<bytes_a>\d+) +'
+            r'(?P<packets_d>\d+) +'
+            r'(?P<bytes_d>\d+)$')
+        
+        for line in output.splitlines():
+            line = line.strip()
+            #Source    Name                            Pri  TC  Policy                                    CIR-SW  CIR-HW   Pkts(A)    Bytes(A)   Pkts(D)    Bytes(D)   
+            #LPTSv4    WCCP IPv4                        16   0  system-cpp-default-v4                      60000   59127         0           0         0           0  
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                index_dict = ret_dict.setdefault('index', {})
+                index_dict.update({int(index): {
+                                    'source': str(group['source']),
+                                    'name': str(group['name']),
+                                    'priority' : int(group['priority']),
+                                    'tc' : int(group['tc']),
+                                    'policy' : str(group['policy']),
+                                    'cir_sw' : int(group['cir_sw']),
+                                    'cir_hw' : int(group['cir_hw']),
+                                    'packets_a' : int(group['packets_a']),
+                                    'bytes_a' : int(group['bytes_a']),
+                                    'packets_d' : int(group['packets_d']),
+                                    'bytes_d' : int(group['bytes_d'])
+                                    },
+                                })
+                
+                index += 1
+                continue
+        return ret_dict   

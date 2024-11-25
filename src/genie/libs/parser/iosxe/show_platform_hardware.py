@@ -7051,5 +7051,131 @@ class ShowPlatformHardwareIomdMacsecPortSubport(
                 continue
 
         return ret_dict
+        
+class ShowPlatformHardwareFedXcvrRegistersSchema(MetaParser):
+    """Schema for show platform hardware fed switch {mode} npu slot 1 port {port_num} eye_scan"""
+
+    schema = {
+        'phy_reg_value_hex': str,
+        'phy_reg_value_dec': int,
+        
+   }
+        
+class ShowPlatformHardwareFedXcvrRegisters(ShowPlatformHardwareFedXcvrRegistersSchema):
+    """
+    show platform hardware fed {switch} {mode} xcvr {local_port} {phy} {mode_1} {device_num} {page_number} {register} {bytes}
+    """
+    
+    cli_command = 'show platform hardware fed switch {mode} xcvr {local_port} {phy} {mode_1} {device_num} {page_number} {register} {byte}' 
+
+    def cli(self, mode, local_port, phy, mode_1, device_num, page_number, register, byte, output=None): 
+
+        if output is None:         
+            output = self.device.execute(self.cli_command.format(mode=mode, local_port=local_port, phy=phy, mode_1=mode_1, device_num=device_num, page_number=page_number, register=register, byte=byte))  
+            
+                
+        ret_dict = {}
+        
+        # Phy Reg Value(Hex): FFFF
+        p1 =  re.compile(r'^Phy +Reg +Value\(Hex\)\:\s*(?P<phy_reg_value_hex>.*)$')
+        
+        #"eye_capture": {
+        p2 = re.compile (r'^\(Dec\)\:\s*(?P<phy_reg_value_dec>.*)$')
+        
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # Phy Reg Value(Hex): FFFF
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['phy_reg_value_hex'] = group['phy_reg_value_hex']
+                continue 
+                
+            #"eye_capture": {
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['phy_reg_value_dec'] = int(group['phy_reg_value_dec'])               
+                continue
+                
+        return ret_dict      
+        
+class ShowPlatformHardwareFedSwitchActiveNpuSlotPortRecreateSchema(MetaParser):
+    """Schema for show platform hardware fed switch {mode} npu slot 1 port {port_num} port-recreate"""
+
+    schema = {        
+        'port': str,
+        'operations': {
+            Any(): str,
+        },    
+   }        
+    
+class ShowPlatformHardwareFedSwitchActiveNpuSlotPortRecreate(
+    ShowPlatformHardwareFedSwitchActiveNpuSlotPortRecreateSchema):
+    """
+    show platform hardware fed switch {mode} npu slot 1 port {port_num} port-recreate
+    """
+    
+    cli_command = ['show platform hardware fed {switch} {mode} npu slot 1 port {port_num} port-recreate',        
+                    'show platform hardware fed {mode} npu slot 1 port {port_num} port-recreate']
+
+                    
+    def cli(self, mode, port_num, switch=None, output=None): 
+
+        if output is None:
+            if  switch:
+                output = self.device.execute(self.cli_command[0].format(switch=switch, mode=mode,port_num=port_num))  
+            else:
+                output = self.device.execute(self.cli_command[1].format(mode=mode,port_num=port_num))
+
+        ret_dict = {}
+        
+        #Deleting port 1/40
+        p1 =  re.compile(r'^Deleting +port +(?P<port>.*)$')
+                
+        # creating port 1/40
+        p2 = re.compile(r'^creating +port +(?P<port>.*)$')
+        
+        # Recreate successfull 1/40
+        p3 = re.compile(r'^Recreate +successfull +(?P<port>.*)$')
+        
+        # , Enabling the port
+        p4 = re.compile(r'^\, +Enabling +the +port$')
+        
+        for line in output.splitlines():
+            line = line.strip()
+            
+            #Deleting port 1/40
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['port'] = group['port']
+                curr_dict = ret_dict.setdefault('operations', {})
+                curr_dict.update({'delete' : group['port']})
+                continue  
+                
+            # creating port 1/40
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict.update({'create' : group['port']})
+                continue   
+            
+            # Recreate successfull 1/40
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict.update({'recreate' : group['port']})
+                continue 
+
+            # , Enabling the port
+            m = p4.match(line)
+            if m:
+                curr_dict.update({'enable' : 'successful'})
+                continue                
+                
+        return ret_dict  
+        
 
 

@@ -925,7 +925,7 @@ class ShowIpIgmpGroups(ShowIpIgmpGroupsSchema):
         source_flag = False
 
         for line in out.splitlines():
-            line = line.strip()
+            line = line.rstrip()
 
             # IGMP Connected Group Membership for VRF "default" - 4 total entries
             p1 = re.compile(r'^IGMP +Connected +Group +Membership +for +VRF +\"(?P<vrf>\S+)\"'
@@ -943,27 +943,29 @@ class ShowIpIgmpGroups(ShowIpIgmpGroupsSchema):
                 continue
 
             # 239.7.7.7
-            p2 = re.compile(r'^(?P<group>[\w\.\:]+)$')
+            p2 = re.compile(r'^(?P<whitespace>\s*)?(?P<group>[\w\.\:]+)$')
             m = p2.match(line)
             if m:
                 group = m.groupdict()['group']
+                no_of_group_whitespace = m.groupdict()['whitespace'].count(' ')
                 source_flag = True
                 continue
 
             # 239.5.5.5          S    Ethernet2/1         00:21:00  never     10.1.2.1
             # 234.1.1.2          L   loopback11             00:00:20  never     10.100.5.5
-            p3 = re.compile(r'^(?P<group>[\w\.\:]+) +(?P<type>[SDLTH\*]+) +(?P<intf>[\w\.\/\-]+)'
+            p3 = re.compile(r'^(?P<whitespace>\s*)?(?P<group>[\w\.\:]+) +(?P<type>[SDLTH\*]+) +(?P<intf>[\w\.\/\-]+)'
                              ' +(?P<uptime>[\w\.\:]+) +(?P<expires>[\w\.\:]+)'
                              ' +(?P<last_reporter>[\w\.\:]+)$')
             m = p3.match(line)
             if m:
+                no_of_whitespace = m.groupdict()['whitespace'].count(' ')
                 intf = m.groupdict()['intf'].capitalize()
                 if 'interface' not in ret_dict['vrfs'][vrf]:
                     ret_dict['vrfs'][vrf]['interface'] = {}
                 if intf not in ret_dict['vrfs'][vrf]['interface']:
                     ret_dict['vrfs'][vrf]['interface'][intf] = {}
 
-                if source_flag:
+                if source_flag and no_of_whitespace > no_of_group_whitespace:
                     source = m.groupdict()['group']
                 else:
                     group = m.groupdict()['group']
@@ -973,7 +975,7 @@ class ShowIpIgmpGroups(ShowIpIgmpGroupsSchema):
                 if group not in ret_dict['vrfs'][vrf]['interface'][intf]['group']:
                     ret_dict['vrfs'][vrf]['interface'][intf]['group'][group] = {}
 
-                if source_flag:
+                if source_flag and no_of_whitespace > no_of_group_whitespace:
                     if 'source' not in ret_dict['vrfs'][vrf]['interface'][intf]['group'][group]:
                         ret_dict['vrfs'][vrf]['interface'][intf]['group'][group]['source'] = {}
                     if source not in ret_dict['vrfs'][vrf]['interface'][intf]['group'][group]['source']:
@@ -996,9 +998,6 @@ class ShowIpIgmpGroups(ShowIpIgmpGroupsSchema):
                         m.groupdict()['uptime']
                     ret_dict['vrfs'][vrf]['interface'][intf]['group'][group]['last_reporter'] = \
                         m.groupdict()['last_reporter']
-
-                source_flag = False
-
                 continue
 
         return ret_dict

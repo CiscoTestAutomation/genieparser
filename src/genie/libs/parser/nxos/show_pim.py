@@ -1097,8 +1097,9 @@ class ShowPimRp(ShowPimRpSchema):
 
             # RP-source: (local), 
             # RP-source: (local), group-map: BIDIR_SPARSE1, 
+            # RP-source: (local), Null-Register Packing disabled
             p8_3 = re.compile(r'^\s*RP\-source:( +(?P<rp_source>\S+))? +\(+(?P<info_source_type>\w+)+\),'
-                               ' *(group-map: +(?P<route_map>[\w\-]+),)?$')
+                              r' *(group-map: +(?P<route_map>[\w\-]+),|Null-Register Packing disabled)?$')
             m = p8_3.match(line)
             if m:
                 code = None
