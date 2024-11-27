@@ -117,6 +117,10 @@ class TestFuzzyRegexSearchCommand(unittest.TestCase):
                         'show {one} blue abc {arg} bgp {a} {b}', {}, True)[0],
                             {'one': 'red', 'arg': 'arg', 'a': 'w', 'b': 'w'})
 
+        self.assertEqual(common._matches_fuzzy(0, 0, 'show version get_args(abc)'.split(),
+                                               'show version get_args({args})', {}, True)[0],
+                                               {'args': 'abc'})
+
     def test_matching_negative(self):
         self.assertIsNone(common._matches_fuzzy(0, 0, 'sh ver blue'.split(),
                                         'show version {arg} {b}', {}, False))

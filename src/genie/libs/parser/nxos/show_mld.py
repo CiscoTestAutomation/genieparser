@@ -569,22 +569,20 @@ class ShowIpv6MldGroups(ShowIpv6MldGroupsSchema):
         # ff38::1
         p2 = re.compile(r'^(?P<group>[\w\.\:]+)$')
 
-        # fffe::1            D   Ethernet1/2.10         00:13:56  00:03:31  fe80::200:7cff:fe06:af79
-        p3 = re.compile(r'^(?P<group>\w+\:\:\w+) +(?P<type>\w+) +(?P<intf>[\w\.\/\-]+)'
-            r' +(?P<uptime>[\w\.\:]+) +(?P<expires>[\w\.\:]+) +(?P<last_reporter>[\w\.\:]+)$')
-
         #   2001:20:1:1::254 D    Ethernet1/2.10         00:13:56  00:03:31  fe80::200:7cff:fe06:af79
-        p4 = re.compile(r'^(?P<source>[\w\.\:]+) +(?P<type>\w+) +(?P<intf>[\w\.\/\-]+)'
+        # ff04:230:11:1::1   D   Vlan2                  23:20:22  00:02:36  fe80::10:23:4:30
+        #   10:11:1::10      D    Vlan20                 23:20:22  00:03:50  fe80::10:22:1:20
+        p4 = re.compile(r'^(?P<whitespace>\s*)?(?P<source>[\w\.\:]+) +(?P<type>\w+) +(?P<intf>[\w\.\/\-]+)'
             r' +(?P<uptime>[\w\.\:]+) +(?P<expires>[\w\.\:]+) +(?P<last_reporter>[\w\.\:]+)$')
 
         # (2001:db8:0:abcd::2, ff30::2)
         p5 = re.compile(r'^\((?P<source>[\w\.\:\*]+), *(?P<group>[\w\.\:]+)\)$')
 
-        # Type: Static, Interface: Ethernet2/1
-        p6 = re.compile(r'^Type: +(?P<type>\w+), Interface: +(?P<intf>[\w\.\/\-]+)$')
+        #   Type: Static, Interface: Ethernet2/1
+        p6 = re.compile(r'^\s+Type: +(?P<type>\w+), Interface: +(?P<intf>[\w\.\/\-]+)$')
 
-        # Uptime/Expires: 00:26:28/never, Last Reporter: 2001:db8:8404:907f::1
-        p7 = re.compile(r'^Uptime\/Expires *: +(?P<uptime>[\w\.\:]+)/(?P<expires>[\w\.\:]+), +'
+        #   Uptime/Expires: 00:26:28/never, Last Reporter: 2001:db8:8404:907f::1
+        p7 = re.compile(r'^\s+Uptime\/Expires *: +(?P<uptime>[\w\.\:]+)/(?P<expires>[\w\.\:]+), +'
             r'Last +Reporter *: +(?P<last_reporter>[\w\.\:]+)$')
 
         # initial variables
@@ -594,7 +592,7 @@ class ShowIpv6MldGroups(ShowIpv6MldGroupsSchema):
         sub_dict = {}
 
         for line in out.splitlines():
-            line = line.strip()
+            line = line.rstrip()
 
             # show ipv6 mld groups
             m = p0.match(line)
@@ -618,30 +616,24 @@ class ShowIpv6MldGroups(ShowIpv6MldGroupsSchema):
                 group = m.groupdict()['group']
                 continue
 
-            # fffe::1            D   Ethernet1/2.10         00:13:56  00:03:31  fe80::200:7cff:fe06:af79
-            m = p3.match(line)
-            if m:
-                group = m.groupdict()['group']
-                intf = Common.convert_intf_name(m.groupdict()['intf'])
-
-                sub_dict = ret_dict.setdefault('vrfs', {}).setdefault(vrf, {}).setdefault(
-                    'interface', {}).setdefault(intf, {}).setdefault('group', {}).setdefault(group, {})
-
-                sub_dict['type'] = m.groupdict()['type'].lower()
-                sub_dict['expire'] = m.groupdict()['expires']
-                sub_dict['up_time'] = m.groupdict()['uptime']
-                sub_dict['last_reporter'] = m.groupdict()['last_reporter']
-                continue
-
             #   2001:20:1:1::254 D    Ethernet1/2.10         00:13:56  00:03:31  fe80::200:7cff:fe06:af79
+            # ff04:230:11:1::1   D   Vlan2                  23:20:22  00:02:36  fe80::10:23:4:30
+            #   10:11:1::10      D    Vlan20                 23:20:22  00:03:50  fe80::10:22:1:20
             m = p4.match(line)
             if m:
+                no_of_whitespace = m.groupdict()['whitespace'].count(' ')
                 intf = Common.convert_intf_name(m.groupdict()['intf'])
-                source = m.groupdict()['source']
+                if no_of_whitespace:
+                    source = m.groupdict()['source']
 
-                sub_dict = ret_dict.setdefault('vrfs', {}).setdefault(vrf, {}).setdefault(
-                    'interface', {}).setdefault(intf, {}).setdefault('group', {}).setdefault(
-                    group, {}).setdefault('source', {}).setdefault(source, {})
+                    sub_dict = ret_dict.setdefault('vrfs', {}).setdefault(vrf, {}).setdefault(
+                        'interface', {}).setdefault(intf, {}).setdefault('group', {}).setdefault(
+                        group, {}).setdefault('source', {}).setdefault(source, {})
+                else:
+                    group = m.groupdict()['source']
+
+                    sub_dict = ret_dict.setdefault('vrfs', {}).setdefault(vrf, {}).setdefault(
+                        'interface', {}).setdefault(intf, {}).setdefault('group', {}).setdefault(group, {})
 
                 sub_dict['type'] = m.groupdict()['type'].lower()
                 sub_dict['expire'] = m.groupdict()['expires']
@@ -656,7 +648,7 @@ class ShowIpv6MldGroups(ShowIpv6MldGroupsSchema):
                 source = m.groupdict()['source']
                 continue
 
-            # Type: Static, Interface: Ethernet2/1
+            #   Type: Static, Interface: Ethernet2/1
             m = p6.match(line)
             if m:
                 intf = Common.convert_intf_name(m.groupdict()['intf'])
@@ -664,7 +656,6 @@ class ShowIpv6MldGroups(ShowIpv6MldGroupsSchema):
                     ret_dict['vrfs'][vrf]['interface'] = {}
                 if intf not in ret_dict['vrfs'][vrf]['interface']:
                     ret_dict['vrfs'][vrf]['interface'][intf] = {}
-
 
                 if 'group' not in ret_dict['vrfs'][vrf]['interface'][intf]:
                     ret_dict['vrfs'][vrf]['interface'][intf]['group'] = {}
@@ -684,7 +675,7 @@ class ShowIpv6MldGroups(ShowIpv6MldGroupsSchema):
                 sub_dict['type'] = m.groupdict()['type'].lower()
                 continue
 
-            # Uptime/Expires: 00:26:28/never, Last Reporter: 2001:db8:8404:907f::1
+            #   Uptime/Expires: 00:26:28/never, Last Reporter: 2001:db8:8404:907f::1
             m = p7.match(line)
             if m:
                 sub_dict['expire'] = m.groupdict()['expires']

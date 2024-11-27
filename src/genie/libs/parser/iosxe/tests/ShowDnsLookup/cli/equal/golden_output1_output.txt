@@ -1,0 +1,22 @@
+Job Id: 3
+ Status: JOB_COMPLETED
+ Request Info:
+  VRF Name: default
+  Host Name: yahoo.com
+  DNS Server: 72.163.128.140
+ Request-time: *Sep 19 20:19:08.462 Completion-time: *Sep 19 20:19:08.474
+ Error Code: No Error
+ DNS Response: 
+  Id: 0
+  Flags: qr-response opcode-query rd ra rcode-noerr 
+  Qdcount: 1 Ancount: 6 Nscount: 0 Arcount: 1 
+  Class: IN Type: IPv6 RTT: 12ms
+  Payload Size: 206
+  IP: 2001:4998:44:3507::8000                   TTL: 0
+  IP: 2001:4998:24:120D::1:1                    TTL: 0
+  IP: 2001:4998:124:1507::F000                  TTL: 0
+  IP: 2001:4998:124:1507::F001                  TTL: 0
+  IP: 2001:4998:24:120D::1:0                    TTL: 0
+  IP: 2001:4998:44:3507::8001                   TTL: 0
+
+  Total number of Jobs:1

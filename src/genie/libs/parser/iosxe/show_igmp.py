@@ -903,10 +903,10 @@ class ShowIpIgmpSnoopingGroupsSchema(MetaParser):
     schema = {
         'igmp_groups': {
             Any(): {
-                'vlan_id': str,
-                'type': str,
-                'version': str,
-                'port': str
+                Optional('vlan_id'): str,
+                Optional('type'): str,
+                Optional('version'): str,
+                Optional('port'): str
             },
         }
     }
@@ -934,10 +934,20 @@ class ShowIpIgmpSnoopingGroups(ShowIpIgmpSnoopingGroupsSchema):
             # 10        225.1.1.1                igmp        v2          Tw1/0/4, Tw1/0/25
             p1 = re.compile(r'^(?P<vlan_id>\d+) +(?P<group_ip>[\d\.]+) +(?P<type>\w+) +(?P<version>\w+) +(?P<port>[\S,\s]+)$')
 
+			# 12        225.0.0.1                S                       Po92
+            p1_0 = re.compile(r'^(?P<vlan_id>\d+) +(?P<group_ip>[\d\.]+) +(?P<type>\w+) +(?P<port>[\S,\s]+)$')
+
             m = p1.match(line)
             if m:
                 group = m.groupdict()
                 igmp_dict.setdefault('igmp_groups', {}).setdefault(group.pop('group_ip'), group)
+                continue
+
+            m = p1_0.match(line)
+            if m:
+                group = m.groupdict()
+                igmp_dict.setdefault('igmp_groups', {}).setdefault(group.pop('group_ip'), group)
+                continue
 
         return igmp_dict
 

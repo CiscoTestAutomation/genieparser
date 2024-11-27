@@ -1,7 +1,5 @@
 '''show_idprom.py
-
 IOSXE parsers for the following show commands:
-
     * show idprom all 
 '''
 import re
@@ -16,108 +14,108 @@ class ShowIdpromSchema(MetaParser):
     schema = {
         'idprom': {
             'midplane': {
-                'controller_type': int,
-                'hardware_revision': str,
-                'top_assy_part_number': str,
-                'top_assy_revision': str,
-                'deviation_number': str,
-                'pcb_serial_number': str,
-                'chassis_serial_number': str,
-                'rma_test_history': str,
-                'rma_number': str,
-                'rma_history': str,
-                'clei_code': str,
-                'eci_number': str,
-                'pid': str,
-                'vid': str,
-                'chassis_mac_address': str
+                Optional('controller_type'): int,
+                Optional('hardware_revision'): str,
+                Optional('top_assy_part_number'): str,
+                Optional('top_assy_revision'): str,
+                Optional('deviation_number'): str,
+                Optional('pcb_serial_number'): str,
+                Optional('chassis_serial_number'): str,
+                Optional('rma_test_history'): str,
+                Optional('rma_number'): str,
+                Optional('rma_history'): str,
+                Optional('clei_code'): str,
+                Optional('eci_number'): str,
+                Optional('pid'): str,
+                Optional('vid'): str,
+                Optional('chassis_mac_address'): str
             },
             'supervisor': {
                 Any(): {
-                    'controller_type': int,
-                    'hardware_revision': str,
-                    'top_assy_part_number': str,
-                    'top_assy_revision': str,
-                    'deviation_number': str,
-                    'pcb_serial_number': str,
-                    'rma_test_history': str,
-                    'rma_number': str,
-                    'rma_history': str,
-                    'clei_code': str,
-                    'eci_number': str,
-                    'pid': str,
-                    'vid': str,
-                    'manufacturing_test_data': str,
-                    'base_mac_address': str,
-                    'field_diagnostics_data': str,
-                    'environment_monitor_data': str,
-                    'max_power_requirement_watts': int,
-                    'typical_power_requirement_watts': int
+                    Optional('controller_type'): int,
+                    Optional('hardware_revision'): str,
+                    Optional('top_assy_part_number'): str,
+                    Optional('top_assy_revision'): str,
+                    Optional('deviation_number'): str,
+                    Optional('pcb_serial_number'): str,
+                    Optional('rma_test_history'): str,
+                    Optional('rma_number'): str,
+                    Optional('rma_history'): str,
+                    Optional('clei_code'): str,
+                    Optional('eci_number'): str,
+                    Optional('pid'): str,
+                    Optional('vid'): str,
+                    Optional('manufacturing_test_data'): str,
+                    Optional('base_mac_address'): str,
+                    Optional('field_diagnostics_data'): str,
+                    Optional('environment_monitor_data'): str,
+                    Optional('max_power_requirement_watts'): int,
+                    Optional('typical_power_requirement_watts'): int
                 }
             },
             'module': {
                 Any(): {
-                    'controller_type': int,
-                    'hardware_revision': str,
-                    'top_assy_part_number': str,
-                    'top_assy_revision': str,
-                    'deviation_number': str,
-                    'pcb_serial_number': str,
-                    'rma_test_history': str,
-                    'rma_number': str,
-                    'rma_history': str,
-                    'clei_code': str,
-                    'eci_number': str,
-                    'pid': str,
-                    'vid': str,
-                    'manufacturing_test_data': str,
-                    'base_mac_address': str,
-                    'field_diagnostics_data': str,
-                    'environment_monitor_data': str,
-                    'max_power_requirement_watts': int,
-                    'typical_power_requirement_watts': int
+                    Optional('controller_type'): int,
+                    Optional('hardware_revision'): str,
+                    Optional('top_assy_part_number'): str,
+                    Optional('top_assy_revision'): str,
+                    Optional('deviation_number'): str,
+                    Optional('pcb_serial_number'): str,
+                    Optional('rma_test_history'): str,
+                    Optional('rma_number'): str,
+                    Optional('rma_history'): str,
+                    Optional('clei_code'): str,
+                    Optional('eci_number'): str,
+                    Optional('pid'): str,
+                    Optional('vid'): str,
+                    Optional('manufacturing_test_data'): str,
+                    Optional('base_mac_address'): str,
+                    Optional('field_diagnostics_data'): str,
+                    Optional('environment_monitor_data'): str,
+                    Optional('max_power_requirement_watts'): int,
+                    Optional('typical_power_requirement_watts'): int
                 }
             },
             'fantray': {
-                'controller_type': int,
-                'hardware_revision': str,
-                'top_assy_part_number': str,
-                'top_assy_revision': str,
-                'deviation_number': str,
-                'pcb_serial_number': str,
-                'chassis_serial_number': str,
-                'rma_test_history': str,
-                'rma_number': str,
-                'rma_history': str,
-                'clei_code': str,
-                'eci_number': str,
-                'pid': str,
-                'vid': str,
-                'manufacturing_test_data': str,
-                'field_diagnostics_data': str,
-                'environment_monitor_data': str
+                Optional('controller_type'): int,
+                Optional('hardware_revision'): str,
+                Optional('top_assy_part_number'): str,
+                Optional('top_assy_revision'): str,
+                Optional('deviation_number'): str,
+                Optional('pcb_serial_number'): str,
+                Optional('chassis_serial_number'): str,
+                Optional('rma_test_history'): str,
+                Optional('rma_number'): str,
+                Optional('rma_history'): str,
+                Optional('clei_code'): str,
+                Optional('eci_number'): str,
+                Optional('pid'): str,
+                Optional('vid'): str,
+                Optional('manufacturing_test_data'): str,
+                Optional('field_diagnostics_data'): str,
+                Optional('environment_monitor_data'): str
             },
             'power_supply': {
                 Any(): {
-                    'controller_type': int,
-                    'hardware_revision': str,
-                    'top_assy_part_number': str,
-                    'top_assy_revision': str,
-                    'deviation_number': str,
-                    'pcb_serial_number': str,
-                    'rma_test_history': str,
-                    'rma_number': str,
-                    'rma_history': str,
-                    'clei_code': str,
-                    'eci_number': str,
-                    'pid': str,
-                    'vid': str,
-                    'power_supply_type': str,
-                    'manufacturing_test_data': str,
-                    'field_diagnostics_data': str,
-                    'environment_monitor_data': str,
-                    'max_power_output_at_220v': int,
-                    'max_power_output_at_110v': int
+                    Optional('controller_type'): int,
+                    Optional('hardware_revision'): str,
+                    Optional('top_assy_part_number'): str,
+                    Optional('top_assy_revision'): str,
+                    Optional('deviation_number'): str,
+                    Optional('pcb_serial_number'): str,
+                    Optional('rma_test_history'): str,
+                    Optional('rma_number'): str,
+                    Optional('rma_history'): str,
+                    Optional('clei_code'): str,
+                    Optional('eci_number'): str,
+                    Optional('pid'): str,
+                    Optional('vid'): str,
+                    Optional('power_supply_type'): str,
+                    Optional('manufacturing_test_data'): str,
+                    Optional('field_diagnostics_data'): str,
+                    Optional('environment_monitor_data'): str,
+                    Optional('max_power_output_at_220v'): int,
+                    Optional('max_power_output_at_110v'): int
                 }
             }
         }
@@ -180,10 +178,11 @@ class ShowIdprom(ShowIdpromSchema):
         
         #CLEI Code                : INM5T00ARA
         p16 = re.compile(r'^CLEI +Code *: +(?P<clei_code>\S[\S ]*)$')
+
         
         #ECI Number               : 472475
         p17 = re.compile(r'^ECI +Number *: +(?P<eci_number>\S[\S ]*)$')
-        
+    
         #Product Identifier (PID) : C9404R  
         p18= re.compile(r'^Product +Identifier +\(PID\) *: +(?P<pid>\S[\S ]*)$')
         
@@ -341,7 +340,7 @@ class ShowIdprom(ShowIdpromSchema):
                 group = m.groupdict()
                 idprom_dict.update({'eci_number' : group['eci_number']})
                 continue
-            
+
             # Product Identifier (PID) : C9404R
             m = p18.match(line)
             if m:

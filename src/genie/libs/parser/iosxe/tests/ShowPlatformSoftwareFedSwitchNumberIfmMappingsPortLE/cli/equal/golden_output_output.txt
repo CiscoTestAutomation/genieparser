@@ -1,0 +1,8 @@
+Mappings Table
+
+
+Port_LE                   Interface                         IF_ID               Type
+----------------------------------------------------------------------------------------------------
+0x000061c7543a9de8        TwentyFiveGigE1/1/0/10            0x00000012          PORT_LE
+0x000061c7543c0fc8        TwentyFiveGigE1/1/0/9             0x00000011          PORT_LE
+0x000077ba14569e18        TwentyFiveGigE1/1/0/1             0x00000009          PORT_LE

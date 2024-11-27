@@ -1,0 +1,6 @@
+show platform software wired-client r0
+        ID  MAC Address     Fwd    Open Access
+-----------------------------------------------
+0x15be62c3  00a3.d1f3.d9eb  Yes    No
+0x19cad00a  0011.0100.0005  Yes    No
+

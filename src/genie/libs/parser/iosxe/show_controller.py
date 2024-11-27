@@ -1551,7 +1551,8 @@ class ShowControllerEthernetControllerLinkstatus(ShowControllerEthernetControlle
 
         return ret_dict
         
-        
+
+       
 class ShowControllersEthernetControllerPortInfoSchema(MetaParser):
     """
     Schema for 'show controllers ethernet-controller tenGigabitEthernet {interface} port-info'
@@ -1789,5 +1790,933 @@ class ShowControllersEthernetControllerPortInfo(ShowControllersEthernetControlle
                 continue
         
         return ret_dict
+        
+class ShowControllerEthernetControllerInterfaceMacSchema(MetaParser):
+    """Schema for show  platform  hardware fed  switch  active  npu  slot  1  port 23 link_status"""
+    
+    schema = {
+        'npu_pdsf_procagent_get_eye_common':str,
+        'mpp_port_detai1': {
+            Any(): {
+                'mac_state_histogram': {
+                    Any(): Or(int,str),
+                },
+                'mac_port_config': {
+                   Any(): Or(int,str),
+                },                    
+                'mac_port_status': {
+                    Any(): Or(int,str),
+                },
+                'mib_counters': {
+                    Any(): Or(int,str),
+                },     
+                Optional('state_transition_history'): {
+                    Any():{
+                       'state': str,
+                       'timestamp': str,
+                    },    
+                },    
+            },
+        },
+        'multiport_detail': {
+            Any(): {
+                'device_info': {
+                    Any(): str,
+                },
+                'mac_state_histogram':{
+                    Any(): Or(int,str),
+                    'serdes_0': {
+                        Any(): Or(int,str),
+                    },
+                },
+                'mac_port_config': {
+                    Any(): Or(int,str),
+                    'serdes_info': {
+                        Any(): Or(int,str),
+                    },
+                },
+                'mac_port_status': {
+                    'am_lock': {
+                        Any(): str,
+                    },    
+                    Any(): Or(int,str),
+                    'mac_pcs_lane_mapping': {
+                        Any(): Or(int,str),
+                    },
+                },                    
+                'mac_port_soft_state': {
+                    Any(): Or(int,str),
+                },
+                'mib_counters': {
+                    Any(): Or(int,str),
+                    Optional('tx_mac_tc_fc_frames_ok'): {
+                        Any(): Or(int,str),
+                    },
+                    Optional('tx_xoff_state_duration'): {
+                        Any(): Or(int,str),
+                    },
+                    Optional('rx_mac_tc_fc_frames_ok'): {
+                        Any(): Or(int,str),
+                    },
+                    Optional('rx_xoff_state_duration'): {
+                        Any(): Or(int,str),
+                    },                 
+                },
+                'test_mode': {
+                    Any(): Or(int,str),
+                },
+                'state_transition_history': {
+                    Any():{
+                       'state': str,
+                       'timestamp': str,
+                    },    
+                },
+                'serdes_parameters': {
+                    'index_0': {
+                        Any(): Or(int,str),
+                    },
+                },
+                'serdes_config':{
+                    'serdes_settings': {
+                        'rx_settings': {
+                            Any(): Or(int,str),
+                            'targ_shadow':{
+                                Any(): Or(int,str),
+                            }    
+                        },
+                        'tx_settings': {
+                            Any(): Or(int,str),
+                            'tx_fir': {
+                                Any(): Or(int,str),
+                            },    
+                        },
+                        'flow_chart_settings': {
+                            Any(): Or(int,str),
+                        },
+                    },    
+                },
+                'serdes_status':{
+                    'firmware_version': {
+                        Any(): str,
+                    },
+                    'rx_status': {
+                        Any(): Or(int,str),
+                        'firs': {
+                            Any(): Or(int,str),
+                        }    
+                    },
+                    'fw_rx_status': {
+                        Any(): Or(int,str),
+                    },
+                    'fir_shadow': {
+                        Any(): Or(int,str),
+                    },    
+                },    
+                'eye_capture':{
+                    'veye_data': {
+                        Any(): Or(int,str),
+                        'veye_values': {
+                            Any(): Or(int,str),
+                        },   
+                    },
+                },
+                'reg_dump':{
+                    'quad_reg':{
+                        Any(): Or(int,str),
+                    },
+                    'p_reg':{
+                        Any(): Or(int,str),
+                    },
+                    's_reg':{
+                        Any(): Or(int,str),
+                    },
+                    'rxdtop':{
+                        Any(): Or(int,str),
+                    },
+                    'txdtop':{
+                        Any(): Or(int,str),
+                    },
+                    'autoneg':{
+                        Any(): Or(int,str),
+                    },
+                    'linktraining':{
+                        Any(): Or(int,str),
+                    },
+                    'rx_sts':{
+                        Any():Or(int,str),
+                    },
+                    'an_debug_1':{
+                        Any(): Or(int,str),
+                    },
+                    'an_debug_2':{
+                        Any(): Or(int,str),
+                    },
+                    'lt_debug_1':{
+                        Any(): Or(int,str),
+                    },
+                    'lt_debug_2':{
+                        Any(): Or(int,str),
+                    },
+                },    
+            },
+        },
+        'mac_port_link_down': {
+            Any():{
+                Any(): Or(int,str),
+                'rx_deskew_fifo_overflow_count': {
+                    Any(): Or(int,str),
+                },
+                'rx_pma_sig_ok_loss_interrupt_register_count': {
+                    Any(): Or(int,str),
+                },  
+            },        
+        },
+        'mac_port_link_error': { 
+            Any(): {
+                Any(): Or(int,str),  
+            },
+        },
+        'mac_port_link_debounce': {
+            Any(): {
+                Any(): Or(int,str), 
+            },    
+        }, 
+        'port': int,
+        Optional('slot'): int,
+        'cmd': str,
+        'rc': str,
+        Optional('rsn'): str, 
+        Optional('reason'): str,               
+    }
+         
+    
 
+class ShowControllerEthernetControllerInterfaceMac(ShowControllerEthernetControllerInterfaceMacSchema):
+    """
+    ShowControllerEthernetControllerInterfaceMac
+    """
+    
+    cli_command = 'show controllers ethernet-controller {interface} mac'        
+
+    def cli(self, interface, output=None): 
+
+        if output is None:
+            output = self.device.execute(self.cli_command.format(interface=interface))         
+
+        ret_dict = {} 
+        
+        #npu_pdsf_procagent_get_eye_common : asic inst 0 port 14 link 32 command 8
+        p1 = re.compile(r'^npu_pdsf_procagent_get_eye_common\s*\: +(?P<npu_pdsf_procagent_get_eye_common>[\S\s]+.*)$')
+        
+        
+        #"mpp_port_0_0_36:7": {
+        p2  =  re.compile(r'^\"(?P<key>mpp_port_\d+_\d+_\d+\:\d+)\"\:\s*\{$')        
+       
+        #"mac_state_histogram": {
+        p2_1  =  re.compile(r'^\"mac_state_histogram\"\:\s*\{$')        
+       
+        #"mac_port_status": { 
+        p2_2 = re.compile(r'^\"mac_port_status\"\:\s*\{$')
+        
+        #"mib_counters": {
+        p2_3 = re.compile(r'^\"mib_counters\"\:\s*\{$')
+        
+        #"tx_mac_tc_fc_frames_ok": [ 
+        p2_3_1 = re.compile(r'^\"tx_mac_tc_fc_frames_ok\"\:\s*\[$')
+        
+        #"tx_xoff_state_duration": [
+        p2_3_2 = re.compile(r'^\"tx_xoff_state_duration\"\:\s*\[$')
+        
+        #"rx_mac_tc_fc_frames_ok": [
+        p2_3_3 = re.compile(r'^\"rx_mac_tc_fc_frames_ok\"\:\s*\[$')
+        
+        #"rx_xoff_state_duration": [
+        p2_3_4 = re.compile(r'^\"rx_xoff_state_duration\"\:\s*\[$')
+        
+        #"multiport_phy_0_0_36": { 
+        p3 = re.compile(r'^\"(?P<key>multiport_phy_\d+_\d+_\d+)\"\: +\{$')
+        
+        #"device_info": {
+        p3_1 = re.compile(r'^\"device_info\"\:\s*\{$')
+        
+        # "serdes_0": { 
+        p3_1_1 = re.compile(r'^\"serdes_\d+\"\:\s*\{$')        
+        
+        #"mac_port_config": {
+        p3_2 =  re.compile(r'^\"mac_port_config\"\:\s*\{$')
+        
+        #"serdes_info_36": { 
+        p3_2_1 = re.compile(r'^\"serdes_info_\d+\"\:\s*\{$')        
+       
+        #am_lock": [ 
+        p3_3_1 = re.compile(r'^\"am_lock\"\:\s*\[$')        
+       
+        #"mac_pcs_lane_mapping": [ 
+        p3_3_2 =  re.compile(r'^\"mac_pcs_lane_mapping\"\:\s*\[$') 
+        
+        #"mac_port_soft_state": {
+        p3_4  = re.compile(r'^\"mac_port_soft_state\"\:\s*\{$')
+        
+        #"test_mode": {
+        p3_5 = re.compile(r'^\"test_mode\"\:\s*\{$')        
+        
+        #"state_transition_history": [ 
+        p3_6 = re.compile(r'^\"state_transition_history\"\:\s*\[$')
+        
+        #"serdes_parameters": {
+        p3_7 = re.compile(r'^\"serdes_parameters\"\:\s*\{$')
+        
+        #"index_0": {
+        p3_7_1 = re.compile(r'^\"index_0\"\:\s*\{$')
+        
+        #"serdes_config": {
+        p3_8 = re.compile(r'^\"serdes_config\"\:\s*\{$')
+        
+        #"serdes_settings": [ 
+        p3_8_1 = re.compile(r'^\"serdes_settings\"\:\s*\[$')
+        
+        #"rx_settings": { 
+        p3_8_1_1 = re.compile(r'^\"rx_settings\"\:\s*\{$')
+        
+        #"targ_shadow": [ 
+        p3_8_1_1_1 =  re.compile(r'^\"targ_shadow\"\:\s*\[$')
+        
+        #"tx_settings": {
+        p3_8_1_2  =  re.compile(r'^\"tx_settings\"\:\s*\{$')
+        
+        #"tx_fir": [
+        p3_8_1_2_1 = re.compile(r'^\"tx_fir\"\:\s*\[$')
+        
+        #"flow_chart_settings": { 
+        p3_8_1_3 =  re.compile(r'^\"flow_chart_settings\"\:\s*\{$')
+        
+        #"serdes_status": {
+        p3_9 = re.compile(r'^\"serdes_status\"\:\s*\{$')
+        
+        #"Firmware_Version": { 
+        p3_9_1 =  re.compile(r'^\"Firmware_Version\"\:\s*\{$')
+        
+        #"rx_status": [
+        p3_9_2 = re.compile(r'^\"rx_status\"\:\s*\[$')
+        
+        #"firs": [
+        p3_9_2_1 = re.compile(r'^\"firs\":\s*\[$')
+        
+        #"fw_rx_status": [
+        p3_9_3 = re.compile(r'^\"fw_rx_status\"\:\s*\[$')
+        
+        # "fir_shadow": [ 
+        p3_9_4 =  re.compile(r'^\"fir_shadow\"\:\s*\[$')
+        
+        #"eye_capture": {
+        p3_10 = re.compile (r'^\"eye_capture\"\:\s*\{$')
+        
+        #"veye_data": [
+        p3_10_1 = re.compile(r'^\"veye_data\"\:\s*\[$')
+        
+        #"veye_values": [
+        p3_10_1_1 = re.compile(r'^\"veye_values\"\:\s*\[$')
+        
+        #"reg_dump": {
+        p3_11 = re.compile(r'^\"reg_dump\"\:\s*\{$')
+        
+        #"Quad_Reg": [
+        p3_11_1 = re.compile(r'^\"Quad_Reg\"\:\s*\[$')        
+
+        #"P_Reg": [ 
+        p3_11_2 = re.compile(r'^\"P_Reg\"\:\s*\[$')
+        
+        #"S_reg": [
+        p3_11_3 = re.compile(r'^\"S_reg\"\:\s*\[$')
+        
+        #"RXDTOP": [
+        p3_11_4 = re.compile(r'^\"RXDTOP\"\:\s*\[$')
+        
+        #"TXDTOP": [
+        p3_11_5 = re.compile(r'^\"TXDTOP\"\:\s*\[$')
+        
+        #"AutoNeg": [
+        p3_11_6 = re.compile(r'^\"AutoNeg\"\:\s*\[$')
+        
+        #"LinkTraining": [
+        p3_11_7 = re.compile(r'^\"LinkTraining\"\:\s*\[$')
+        
+        #"RX_STS": [
+        p3_11_8 = re.compile(r'^\"RX_STS\"\:\s*\[$')
+        
+        #"an_debug_1": [
+        p3_11_9 = re.compile(r'^\"an_debug_1\"\:\s*\[$')
+        
+        #""an_debug_2": [
+        p3_11_10 = re.compile(r'^\"an_debug_2\"\:\s*\[$')
+        
+        #"lt_debug_1": [
+        p3_11_11 = re.compile(r'^\"lt_debug_1\"\:\s*\[$')
+        
+        #"lt_debug_2": [
+        p3_11_12 = re.compile(r'^\"lt_debug_2\"\:\s*\[$')
+        
+        #"mac_port_0_0_36.link_down_histogram": {
+        p4= re.compile(r'^\"(?P<key>mac_port_\d+_\d+_\d+\.link_down_histogram)\"\:\s*\{$')        
+        
+        #"rx_deskew_fifo_overflow_count": [
+        p4_1 = re.compile(r'^\"rx_deskew_fifo_overflow_count\"\:\s*\[$')
+        
+        #"rx_pma_sig_ok_loss_interrupt_register_count": [ 
+        p4_2 = re.compile(r'^\"rx_pma_sig_ok_loss_interrupt_register_count\"\:\s*\[$')
+        
+        #"mac_port_0_0_36.link_error_histogram": {
+        p5 =  re.compile(r'^\"(?P<key>mac_port_\d+_\d+_\d+\.link_error_histogram)\"\:\s*\{$')
+        
+        #"mac_port_0_0_36.link_debounce_state": {
+        p6 = re.compile(r'^\"(?P<key>mac_port_\d+_\d+_\d+.link_debounce_state)\"\:\s*\{$')
+        
+        # Port = 40 Slot = 1 cmd = () rc = 0x16 reason = (null)
+        p7 = re.compile(r'^Port +\= +(?P<port>\d+) +Slot +\= +(?P<slot>\d+) +cmd +\= +(?P<cmd>\([\s*\S]*\)) +rc +\= +(?P<rc>\w+) +reason(?P<reason>.*)$')
+        
+        # Port = 39 cmd = (prbs_stop unit 0 port 39 slot 1 serdes_level 1 polynomial 31) rc = 0x0 rsn = success
+        p7_1 = re.compile(r'^Port +\= +(?P<port>\d+) +cmd +\= +(?P<cmd>\([\s*\S]*\)) +rc +\= +(?P<rc>\w+) +rsn +\= +(?P<rsn>.*)$')
+               
+        
+        # "PRE_INIT": 0,
+        p8 = re.compile(r'^\"(?P<key>\w+)\"\:\s*(?P<value>.*)$')        
+        
+        #false 
+        p8_1 = re.compile(r'^(?P<value>\w+)$')
+        
+        #0
+        p8_2 =  re.compile(r'^(?P<value>[-]?\d+)$')
+        
+        #64,
+        p8_3 = re.compile(r'^(?P<value>[-]?\d+)\,$')
+        
+        #], 
+        p8_4 =  re.compile(r'^\]\,$')
+        
+         #], 
+        p8_5 =  re.compile(r'^\]$')
+        
+        cnt = index_flag = stat_cnt = 0
+        
+        for line in output.splitlines():
+            line = line.strip() 
+            
+            #npu_pdsf_procagent_get_eye_common : asic inst 0 port 14 link 32 command 8
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['npu_pdsf_procagent_get_eye_common'] =  group['npu_pdsf_procagent_get_eye_common']
+                continue
+                
+            #"mpp_port_0_0_36:7": {    
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                port  =  group['key']
+                curr_dict = ret_dict.setdefault('mpp_port_detai1', {}).setdefault(group['key'], {})
+                continue
+                
+            #"mac_state_histogram": {
+            m = p2_1.match(line)
+            if m:
+                group = m.groupdict()
+                if  ret_dict.get('multiport_detail'):
+                    curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('mac_state_histogram', {})
+                else:    
+                    curr_dict =  ret_dict.setdefault('mpp_port_detai1', {}).setdefault(port, {}).setdefault('mac_state_histogram', {})                
+                continue
+                
+            #"mac_port_status": { 
+            m = p2_2.match(line)
+            if m:
+                group = m.groupdict()
+                if  ret_dict.get('multiport_detail'):
+                    curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('mac_port_status', {})
+                else:    
+                    curr_dict =  ret_dict.setdefault('mpp_port_detai1', {}).setdefault(port, {}).setdefault('mac_port_status', {})                
+                continue
+            
+            #"mib_counters": {
+            m = p2_3.match(line)
+            if m:
+                group = m.groupdict()
+                if  ret_dict.get('multiport_detail'):
+                    curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('mib_counters', {})
+                else:    
+                    curr_dict = ret_dict.setdefault('mpp_port_detai1', {}).setdefault(port, {}).setdefault('mib_counters', {})                
+                continue
+            
+            #"tx_mac_tc_fc_frames_ok": [     
+            m = p2_3_1.match(line)
+            if m:
+                index_flag  =  1
+                group = m.groupdict()
+                handle_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('mib_counters', {})
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('mib_counters', {}).setdefault('tx_mac_tc_fc_frames_ok', {})
+                continue   
+
+            #"tx_xoff_state_duration": [
+            m = p2_3_2.match(line)
+            if m:
+                index_flag  =  1
+                group = m.groupdict()
+                handle_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('mib_counters', {})
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('mib_counters', {}).setdefault('tx_xoff_state_duration', {})
+                continue 
+                
+            #"rx_mac_tc_fc_frames_ok": [
+            m = p2_3_3.match(line)
+            if m:
+                index_flag  =  1
+                group = m.groupdict()
+                handle_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('mib_counters', {})
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('mib_counters', {}).setdefault('rx_mac_tc_fc_frames_ok', {})
+                continue     
+                
+            #"rx_xoff_state_duration": [    
+            m = p2_3_4.match(line)
+            if m:
+                index_flag  =  1
+                group = m.groupdict()
+                handle_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('mib_counters', {})
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('mib_counters', {}).setdefault('rx_xoff_state_duration', {})
+                continue
+            
+            #"multiport_phy_0_0_36": { 
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                port  =  group['key']
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {})
+                continue
+                
+            #"device_info": {
+            m = p3_1.match(line)
+            if  m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('device_info', {})
+                continue
+                
+            # "serdes_0": { 
+            m = p3_1_1.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict = curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('mac_state_histogram', {}).setdefault('serdes_0', {})
+                continue
+                
+            #"mac_port_config": {
+            m = p3_2.match(line)
+            if m:
+                group = m.groupdict()
+                if  ret_dict.get('multiport_detail'):                    
+                    curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('mac_port_config', {})
+                else:
+                    curr_dict = ret_dict.setdefault('mpp_port_detai1', {}).setdefault(port, {}).setdefault('mac_port_config', {})
+                continue
+                
+            #"serdes_info_36": {
+            m = p3_2_1.match(line)
+            if  m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('mac_port_config', {}).setdefault('serdes_info', {})
+                continue
+                
+            #am_lock": [
+            m = p3_3_1.match(line)
+            if m:
+                index_flag  =  1
+                group = m.groupdict()
+                handle_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('mac_port_status', {})
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('mac_port_status', {}).setdefault('am_lock', {})
+                continue
+                
+            #"mac_pcs_lane_mapping": [
+            m = p3_3_2.match(line)
+            if m:
+                index_flag = 1
+                group = m.groupdict()
+                handle_dict  = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('mac_port_status', {})
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('mac_port_status', {}).setdefault('mac_pcs_lane_mapping', {})
+                continue
+                
+            #"mac_port_soft_state": {
+            m = p3_4.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('mac_port_soft_state', {})
+                continue
+                
+            #"test_mode": {
+            m = p3_5.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('test_mode', {})
+                continue
+                
+            #"state_transition_history": [
+            m = p3_6.match(line)
+            if m:
+                group = m.groupdict()   
+                index_flag = 1
+                if  ret_dict.get('multiport_detail'):                    
+                    curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('state_transition_history', {})
+                else:
+                    curr_dict = ret_dict.setdefault('mpp_port_detai1', {}).setdefault(port, {}).setdefault('state_transition_history', {})
+                handle_dict  =  curr_dict 
+                continue
+                
+            #"serdes_parameters": {
+            m = p3_7.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_parameters', {})
+                continue
+                
+            #"index_0": {
+            m = p3_7_1.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_parameters', {}).setdefault('index_0', {})
+                continue
+            
+            #"serdes_config": {
+            m = p3_8.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_config', {})
+                continue
+                
+            #"serdes_settings": [
+            m = p3_8_1.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_config', {}).setdefault('serdes_settings', {})                
+                continue
+                
+            #"rx_settings": { 
+            m = p3_8_1_1.match(line)
+            if  m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_config', {}).setdefault('serdes_settings', {}).setdefault('rx_settings', {})                
+                continue
+                
+            #"targ_shadow": [
+            m = p3_8_1_1_1.match(line)    
+            if  m:
+                group = m.groupdict()
+                index_flag = 1
+                handle_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_config', {}).setdefault('serdes_settings', {}).setdefault('rx_settings', {})
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_config', {}).setdefault('serdes_settings', {}).setdefault('rx_settings', {}).setdefault('targ_shadow', {})
+                continue    
+                
+            #"tx_settings": {
+            m = p3_8_1_2.match(line)
+            if  m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_config', {}).setdefault('serdes_settings', {}).setdefault('tx_settings', {})                
+                continue
+                
+            #"tx_fir": [
+            m = p3_8_1_2_1.match(line)
+            if  m:
+                group = m.groupdict()
+                index_flag = 1
+                handle_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_config', {}).setdefault('serdes_settings', {}).setdefault('tx_settings', {})
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_config', {}).setdefault('serdes_settings', {}).setdefault('tx_settings', {}).setdefault('tx_fir', {})                
+                continue
+                
+            #"flow_chart_settings": {
+            m = p3_8_1_3.match(line)
+            if  m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_config', {}).setdefault('serdes_settings', {}).setdefault('flow_chart_settings', {}) 
+                continue
+                
+            #"serdes_status": {
+            m = p3_9.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_status', {})
+                continue
+            
+            #"Firmware_Version": { 
+            m = p3_9_1.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_status', {}).setdefault('firmware_version', {})                
+                continue
+                
+            #"rx_status": [
+            m = p3_9_2.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_status', {}).setdefault('rx_status', {})                
+                continue
+                
+            #"firs": [
+            m = p3_9_2_1.match(line)
+            if m:
+                group = m.groupdict()
+                index_flag = 1
+                handle_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_status', {}).setdefault('rx_status', {})
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_status', {}).setdefault('rx_status', {}).setdefault('firs',{})                
+                continue
+               
+            #"fw_rx_status": [
+            m = p3_9_3.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_status', {}).setdefault('fw_rx_status', {})                
+                continue   
+            
+            # "fir_shadow": [ 
+            m = p3_9_4.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_status', {}).setdefault('fir_shadow', {})                
+                continue  
+            
+            #"eye_capture": {
+            m = p3_10.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('eye_capture', {})                
+                continue  
+            
+            #"veye_data": [
+            m = p3_10_1.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('eye_capture', {}).setdefault('veye_data',{})                
+                continue  
+            
+            #"veye_values": [
+            m = p3_10_1_1.match(line)
+            if m:
+                group = m.groupdict()
+                index_flag = 1
+                handle_dict  = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('eye_capture', {}).setdefault('veye_data',{})
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('eye_capture', {}).setdefault('veye_data',{}).setdefault('veye_values', {})                
+                continue  
+                
+            #"reg_dump": {
+            m = p3_11.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('reg_dump', {})                
+                continue  
+             
+            #"Quad_Reg": [
+            m = p3_11_1.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('reg_dump', {}).setdefault('quad_reg',{})                
+                continue
+            
+            #"P_Reg": [ 
+            m = p3_11_2.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('reg_dump', {}).setdefault('p_reg',{})                
+                continue
+            
+            #"S_reg": [
+            m = p3_11_3.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('reg_dump', {}).setdefault('s_reg',{})                
+                continue 
+
+            #"RXDTOP": [
+            m = p3_11_4.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('reg_dump', {}).setdefault('rxdtop',{})                
+                continue
+            
+            #"TXDTOP": [
+            m = p3_11_5.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('reg_dump', {}).setdefault('txdtop',{})                
+                continue
+            
+            #"AutoNeg": [
+            m = p3_11_6.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('reg_dump', {}).setdefault('autoneg',{})                
+                continue
+                
+            #"LinkTraining": [
+            m = p3_11_7.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('reg_dump', {}).setdefault('linktraining',{})                
+                continue
+
+            #"RX_STS": [
+            m = p3_11_8.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('reg_dump', {}).setdefault('rx_sts',{})                
+                continue
+                
+            #"an_debug_1": [
+            m = p3_11_9.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('reg_dump', {}).setdefault('an_debug_1',{})                
+                continue
+                
+            #""an_debug_2": [
+            m = p3_11_10.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('reg_dump', {}).setdefault('an_debug_2',{})                
+                continue
+                
+            #"lt_debug_1": [
+            m = p3_11_11.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('reg_dump', {}).setdefault('lt_debug_1',{})                
+                continue
+                
+            #"lt_debug_2": [
+            m = p3_11_12.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('reg_dump', {}).setdefault('lt_debug_2',{})                
+                continue
+                
+            #"mac_port_0_0_36.link_down_histogram": {   
+            m = p4.match(line)
+            if  m:
+                group = m.groupdict()
+                port = group['key']
+                curr_dict = ret_dict.setdefault('mac_port_link_down', {}).setdefault(group['key'], {})                
+                continue 
+                
+            #"rx_deskew_fifo_overflow_count": [
+            m = p4_1.match(line)
+            if  m:
+                group = m.groupdict()
+                index_flag = 1
+                handle_dict = ret_dict.setdefault('mac_port_link_down', {}).setdefault(port, {})
+                curr_dict = ret_dict.setdefault('mac_port_link_down', {}).setdefault(port, {}).setdefault('rx_deskew_fifo_overflow_count',{})               
+                continue 
+                
+            #"rx_pma_sig_ok_loss_interrupt_register_count": [ 
+            m = p4_2.match(line)
+            if  m:
+                group = m.groupdict()
+                index_flag = 1
+                handle_dict = ret_dict.setdefault('mac_port_link_down', {}).setdefault(port, {})
+                curr_dict = ret_dict.setdefault('mac_port_link_down', {}).setdefault(port, {}).setdefault('rx_pma_sig_ok_loss_interrupt_register_count',{})               
+                continue 
+            
+            #"mac_port_0_0_36.link_error_histogram": {
+            m = p5.match(line)
+            if  m:
+                group = m.groupdict()
+                port = group['key']
+                curr_dict = ret_dict.setdefault('mac_port_link_error', {}).setdefault(group['key'], {})                
+                continue  
+                
+            #"mac_port_0_0_36.link_debounce_state": {
+            m = p6.match(line)
+            if  m:
+                group = m.groupdict()
+                port = group['key']
+                curr_dict = ret_dict.setdefault('mac_port_link_debounce', {}).setdefault(group['key'], {})                
+                continue
+
+            # Port = 40 Slot = 1 cmd = () rc = 0x16 reason = (null)
+            m = p7.match(line)
+            if  m:
+                group = m.groupdict()
+                ret_dict['port'] = int(group['port'])
+                ret_dict['slot'] = int(group['slot'])                
+                ret_dict['cmd'] = group['cmd']
+                ret_dict['rc'] = group['rc']
+                ret_dict['reason'] = group['reason']
+                continue
+            
+            # Port = 39 cmd = (prbs_stop unit 0 port 39 slot 1 serdes_level 1 polynomial 31) rc = 0x0 rsn = success
+            m = p7_1.match(line)
+            if  m:
+                group = m.groupdict()
+                ret_dict['port'] = int(group['port'])                
+                ret_dict['cmd'] = group['cmd']
+                ret_dict['rc'] = group['rc']
+                ret_dict['rsn'] = group['rsn']
+                continue
+            
+            # "PRE_INIT": 0,
+            m = p8.match(line)            
+            if m:
+                group = m.groupdict()
+                if  group['value'] == '{' or  group['value'] == '[':
+                    continue
+                elif group['key'] == 'new_state':
+                    stat_cnt = stat_cnt + 1
+                    curr_dict = curr_dict.setdefault(stat_cnt,{})                    
+                    curr_dict.update({'state': group['value']})
+                    continue
+                elif group['key'] == 'timestamp':
+                    curr_dict.update({'timestamp': group['value']})
+                    curr_dict = handle_dict
+                    continue
+                else:
+                    group['key'] = group['key'].lower()
+                    group['value'] = group['value'].strip(',').strip('"')
+                    try:
+                        group['value'] = int(group['value'])
+                    except:
+                        #If it is a word, do not convert it to int.
+                        pass     
+                    curr_dict.update({group['key']: group['value']})
+                    continue
+                    
+            #false 
+            m = p8_1.match(line)            
+            if  m:
+                group = m.groupdict()
+                cnt  = cnt + 1
+                key = cnt
+                curr_dict.update({key: group['value']})
+                continue
+            
+            #64,   
+            m = p8_3.match(line)
+            if m:
+                group = m.groupdict()
+                cnt  = cnt + 1
+                key  = cnt 
+                curr_dict.update({key: group['value']})
+                continue
+                
+            #], 
+            m = p8_4.match(line)                             
+            if  m:                
+                if  index_flag == 1:
+                    curr_dict  = handle_dict
+                    index_flag = 0   
+                    cnt = 0
+                continue
+                
+            #], 
+            m = p8_5.match(line)                             
+            if  m:                
+                if  index_flag == 1:
+                    curr_dict  = handle_dict
+                    index_flag = 0   
+                    cnt = 0
+                    stat_cnt  =0
+                continue    
+          
+        return ret_dict               
+                  
+        
 

@@ -1,0 +1,23 @@
+Core 2: CPU utilization for five seconds:  3%, one minute: 14%, five minutes:  4%
+
+Core 5: CPU utilization for five seconds:  3%, one minute:  2%, five minutes:  1%
+
+Core 9: CPU utilization for five seconds:  2%, one minute: 11%, five minutes: 14%
+
+Core 10: CPU utilization for five seconds:  3%, one minute:  1%, five minutes:  1%
+
+Core 11: CPU utilization for five seconds:  1%, one minute: 12%, five minutes:  4%
+
+Core 14: CPU utilization for five seconds: 99%, one minute: 28%, five minutes:  7%
+
+Core 15: CPU utilization for five seconds:  2%, one minute:  1%, five minutes:  4%
+
+   Pid    PPid    5Sec    1Min    5Min  Status        Size  Name                  
+
+--------------------------------------------------------------------------------
+
+  6686    6680      7%      6%      6%  S            49360  btman                 
+
+ 23297   23289      2%      3%      3%  S           149208  mcpcc-lc-ms           
+
+ 21214   21207      1%      1%      1%  S            65440  ezman 

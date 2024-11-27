@@ -1,0 +1,44 @@
+Traffic Type                 PACKETS                            DROP
+                  INJECT       |    PUNT           INJECT        |     PUNT
+                  ------            ----           ------              ----
+SVL CTRL               0               0                0               298
+
+SVL IPC                0               0                0               297
+
+SVL DAD                0               0                0                 0
+
+SVL SESA               0               0                0                 0
+
+
+Timestamp Now: Oct 14 14:24:44.161
+CTRL RX Timestamp: Jan 01 00:00:00.000 [0]
+CTRL RX Timestamp: Jan 01 00:00:00.000 [1]
+CTRL RX Timestamp: Jan 01 00:00:00.000 [2]
+CTRL RX Timestamp: Jan 01 00:00:00.000 [3]
+CTRL RX Timestamp: Jan 01 00:00:00.000 [4]
+CTRL RX Maximum Time Gap:                0 sec,               0usec
+CTRL RX Maximum Gap Timestamp: Jan 01 00:00:00.000
+
+CTRL TX Timestamp: Jan 01 00:00:00.000 [0]
+CTRL TX Timestamp: Jan 01 00:00:00.000 [1]
+CTRL TX Timestamp: Jan 01 00:00:00.000 [2]
+CTRL TX Timestamp: Jan 01 00:00:00.000 [3]
+CTRL TX Timestamp: Jan 01 00:00:00.000 [4]
+CTRL TX Maximum Time Gap:                0 sec,               0usec
+CTRL TX Maximum Gap Timestamp: Jan 01 00:00:00.000
+
+IPC RX Timestamp: Jan 01 00:00:00.000 [0]
+IPC RX Timestamp: Jan 01 00:00:00.000 [1]
+IPC RX Timestamp: Jan 01 00:00:00.000 [2]
+IPC RX Timestamp: Jan 01 00:00:00.000 [3]
+IPC RX Timestamp: Jan 01 00:00:00.000 [4]
+IPC RX Maximum Time Gap:                0 sec,               0usec
+IPC RX Maximum Gap Timestamp: Jan 01 00:00:00.000
+
+IPC TX Timestamp: Jan 01 00:00:00.000 [0]
+IPC TX Timestamp: Jan 01 00:00:00.000 [1]
+IPC TX Timestamp: Jan 01 00:00:00.000 [2]
+IPC TX Timestamp: Jan 01 00:00:00.000 [3]
+IPC TX Timestamp: Jan 01 00:00:00.000 [4]
+IPC TX Maximum Time Gap:                0 sec,               0usec
+IPC TX Maximum Gap Timestamp: Jan 01 00:00:00.000 

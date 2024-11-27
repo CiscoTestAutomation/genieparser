@@ -599,7 +599,7 @@ class ShowBundleReasons(ShowBundle):
             out = output
 
         return super().cli(interface=interface, output=out)
-        
+
 
 class ShowLacpSchema(MetaParser):
     """Schema for show lacp"""
@@ -610,11 +610,12 @@ class ShowLacpSchema(MetaParser):
                 'name': str,
                 'bundle_id': int,
                 'lacp_mode': str,
+                Optional('iccp_group'): int,
                 'port': {
                     Any(): {
                         'interface': str,
                         'bundle_id': int,
-                        'rate': int,
+                        Optional('rate'): int,
                         'state': str,
                         'port_id': str,
                         'key': str,
@@ -624,7 +625,7 @@ class ShowLacpSchema(MetaParser):
                         'collecting': bool,
                         'distributing': bool,
                         'partner': {
-                            'rate': int,
+                            Optional('rate'): int,
                             'state': str,
                             'port_id': str,
                             'key': str,
@@ -648,7 +649,7 @@ class ShowLacpSchema(MetaParser):
 
 
 class ShowLacp(ShowLacpSchema):
-    """parser for 
+    """parser for
     show lacp
     show lacp <inteface>
     """
@@ -668,19 +669,21 @@ class ShowLacp(ShowLacpSchema):
         result_dict = {}
 
         # Bundle-Ether1
-        p1 = re.compile(r'^Bundle-Ether(?P<bundle_id>[\d]+)$')
+        # Bundle-Ether13 (ICCP Group 13)
+        p1 = re.compile(r'^(?P<name>Bundle-Ether(?P<bundle_id>[\d]+))( \(ICCP Group (?P<iccp_group>\d+)\))?$')
 
         #   Port          (rate)  State    Port ID       Key    System ID
         #   Gi0/0/0/0        30s  ascdA--- 0x000a,0x0001 0x0001 0x0064,00-1b-0c-ff-6a-36
         #    Partner         30s  as--A--- 0x8000,0x0004 0x0002 0x8000,00-0c-86-ff-c6-81
-        p2 = re.compile(r'^(?P<interface>[\S]+) +(?P<rate>[\d]+)s +(?P<state>[\w-]+)'
-                         ' +(?P<port_id>[\w, ]+) +(?P<key>[\w]+)'
-                         ' +(?P<system_id>[\w\-, ]+)$')
+        #   Te0/1/0/8             a---AF-- 0x8003,0x9001 0x000d 0x0001,40-55-39-63-6c-e5
+        p2 = re.compile(r'^(?P<interface>[\S]+)( +(?P<rate>[\d]+)s)? +(?P<state>[\w-]+)'
+                        r' +(?P<port_id>[\w,]+) +(?P<key>[\w]+)'
+                        r' +(?P<system_id>[\w\-,]+)$')
 
         #   Port                  Receive    Period Selection  Mux       A Churn P Churn
-        #   Gi0/0/0/0             Current    Slow   Selected   Distrib   None    None   
+        #   Gi0/0/0/0             Current    Slow   Selected   Distrib   None    None
         p3 = re.compile(r'^(?P<interface>[\S]+) +(?P<receive>[\w]+) +(?P<period>[\w]+) +(?P<selection>[\w]+)'
-                         ' +(?P<mux>[\w]+) +(?P<a_churn>[\w]+) +(?P<p_churn>[\w]+)$')
+                        r' +(?P<mux>[\w]+) +(?P<a_churn>[\w]+) +(?P<p_churn>[\w]+)$')
 
         for line in out.splitlines():
             if line:
@@ -688,19 +691,22 @@ class ShowLacp(ShowLacpSchema):
             else:
                 continue
 
-            # Bundle-Ether1 
+            # Bundle-Ether1
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                name = m.group()
+                name = group['name']
                 bundle_dict = result_dict.setdefault('interfaces', {}).setdefault(name, {})
                 bundle_dict.update({'name': name})
                 bundle_dict.update({'bundle_id': int(group['bundle_id'])})
+                if group['iccp_group']:
+                    bundle_dict.update({'iccp_group': int(group['iccp_group'])})
                 continue
 
             #   Port          (rate)  State    Port ID       Key    System ID
             #   Gi0/0/0/0        30s  ascdA--- 0x000a,0x0001 0x0001 0x0064,00-1b-0c-ff-6a-36
             #    Partner         30s  as--A--- 0x8000,0x0004 0x0002 0x8000,00-0c-86-ff-c6-81
+            #   Te0/1/0/8             a---AF-- 0x8003,0x9001 0x000d 0x0001,40-55-39-63-6c-e5
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -713,7 +719,8 @@ class ShowLacp(ShowLacpSchema):
                     bundle_dict.update({'lacp_mode': 'active' if "A" in state else 'passive'})
                 else:
                     sub_dict = bundle_dict.setdefault('port', {}).setdefault(interface, {}).setdefault('partner', {})
-                sub_dict.update({'rate': int(group['rate'])})
+                if group['rate']:
+                    sub_dict.update({'rate': int(group['rate'])})
                 sub_dict.update({'state': state})
                 sub_dict.update({'port_id': group['port_id']})
                 sub_dict.update({'key': group['key']})
@@ -741,4 +748,3 @@ class ShowLacp(ShowLacpSchema):
                 continue
 
         return result_dict
-

@@ -4399,7 +4399,6 @@ class ShowProcessesCpuPlatform(ShowProcessesCpuPlatformSchema):
                 ret_dict['pid'][pid]['size'] = int(group['size'])
                 ret_dict['pid'][pid]['name'] = group['name']
                 continue
-
         return ret_dict
 
 
@@ -9545,8 +9544,6 @@ class ShowRepTopologyDetail(ShowRepTopologyDetailSchema):
 
         return ret_dict
 
-class ShowPlatformfrontendcontrollerSchema(MetaParser):
-    """show platform frontend-controller version 0 <switch_num>"""
 
 
 # ====================================================
@@ -9566,6 +9563,19 @@ class ShowRepTopologyDetailSchema(MetaParser):
         'bootloader_version': int,
         }
 
+
+class ShowPlatformfrontendcontrollerSchema(MetaParser):
+    """show platform frontend-controller version 0 <switch_num>"""
+
+    schema = {
+        'switch_number': int,
+        'software_version': str,
+        'system_type': int,
+        'device_id': int,
+        'device_revision': int,
+        'hardware_version': int,
+        'bootloader_version': int,
+        }
 
 class ShowPlatformfrontendcontroller(ShowPlatformfrontendcontrollerSchema):
     """

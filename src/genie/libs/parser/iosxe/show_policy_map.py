@@ -318,6 +318,8 @@ class ShowPolicyMapTypeSchema(MetaParser):
                                                         Optional('police_bps'): int,
                                                         Optional('police_limit'): int,
                                                         Optional('extended_limit'): int,
+                                                        Optional('rate_bps'): int,
+                                                        Optional('burst_bytes'): int,
                                                         Optional('bandwidth_remaining_ratio'): int,
                                                         Optional('conformed'): {
                                                             Optional('packets'): int,

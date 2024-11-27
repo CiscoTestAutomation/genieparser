@@ -2071,11 +2071,16 @@ class ShowPlatformSoftwareCpmSwitchB0CountersDrop(
 ):
     """Parser for show platform software cpm switch {mode} B0 counters drop"""
 
-    cli_command = "show platform software cpm switch {mode} B0 counters drop"
+    cli_command = ["show platform software cpm switch {mode} BP {mode2} counters drop",
+                   "show platform software cpm switch {mode} B0 counters drop"]
 
-    def cli(self, mode, output=None):
+    def cli(self, mode,  mode2=None, output=None):
+
         if output is None:
-            output = self.device.execute(self.cli_command.format(mode=mode))
+            if  mode2:
+                output = self.device.execute(self.cli_command[0].format(mode=mode, mode2=mode2))
+            else:
+                output = self.device.execute(self.cli_command[1].format(mode=mode))
 
         # initial variables
         ret_dict = {}
@@ -2138,11 +2143,16 @@ class ShowPlatformSoftwareCpmSwitchB0CountersPuntInject(
 ):
     """Parser for show platform software cpm switch {mode} B0 counters punt-inject"""
 
-    cli_command = "show platform software cpm switch {mode} B0 counters punt-inject"
+    cli_command = ['show platform software cpm switch {mode} BP {mode2} counters punt-inject',
+                  'show platform software cpm switch {mode} B0 counters punt-inject']
 
-    def cli(self, mode, output=None):
+    def cli(self, mode, mode2=None, output=None):
+
         if output is None:
-            output = self.device.execute(self.cli_command.format(mode=mode))
+            if  mode2:
+                output = self.device.execute(self.cli_command[0].format(mode=mode, mode2=mode2))
+            else:
+                output = self.device.execute(self.cli_command[1].format(mode=mode))
 
         # initial variables
         ret_dict = {}
@@ -7713,7 +7723,7 @@ class ShowDiagnosticStatus(ShowDiagnosticStatusSchema):
 
 
 class ShowPlatformSoftwareCpmSwitchActiveB0CountersInterfaceLacpSchema(MetaParser):
-    """Schema for show platform software cpm switch active B0 counters interface isis"""
+    """Schema for show platform software cpm switch active B0 counters interface lacp"""
 
     schema = {
         Any(): {
@@ -7732,11 +7742,16 @@ class ShowPlatformSoftwareCpmSwitchActiveB0CountersInterfaceLacp(
     ShowPlatformSoftwareCpmSwitchActiveB0CountersInterfaceLacp
     """
 
-    cli_command = "show platform software cpm switch {mode} B0 counters interface lacp"
+    cli_command = ['show platform software cpm switch {mode} BP {mode2} counters interface lacp',
+                   'show platform software cpm switch {mode} B0 counters interface lacp']
 
-    def cli(self, mode, output=None):
+    def cli(self, mode, mode2=None, output=None):
+
         if output is None:
-            output = self.device.execute(self.cli_command.format(mode=mode))
+            if mode2:
+                output = self.device.execute(self.cli_command[0].format(mode=mode,mode2=mode2))
+            else:
+                output = self.device.execute(self.cli_command[1].format(mode=mode))
 
         ret_dict = {}
 
@@ -7809,11 +7824,16 @@ class ShowPlatformSoftwareCpmCountersInterfaceIsis(
     ShowPlatformSoftwareCpmSwitchActiveB0CountersInterfaceIsis
     """
 
-    cli_command = "show platform software cpm switch {mode} B0 counters interface isis"
+    cli_command = ['show platform software cpm switch {mode} BP {mode2} counters interface isis',
+                   'show platform software cpm switch {mode} B0 counters interface isis']
 
-    def cli(self, mode, output=None):
+    def cli(self, mode,  mode2=None, output=None):
+
         if output is None:
-            output = self.device.execute(self.cli_command.format(mode=mode))
+            if  mode2:
+                output = self.device.execute(self.cli_command[0].format(mode=mode, mode2=mode2))
+            else:
+                output = self.device.execute(self.cli_command[1].format(mode=mode))
 
         ret_dict = {}
         temp_dict = {}
@@ -9872,4 +9892,55 @@ class ShowPlatsoftwaremcumanager(ShowPlatsoftwaremcumanagerSchema):
                 continue
 
         return ret_dict
+
+
+class ShowPlatformSoftwareWiredClientIDSchema(MetaParser):
+    """Schema for show platform software wired-client {client_id}"""
+    schema = {
+        'wired_client': {
+            Any(): {
+                'id': str,
+                'mac': str,
+                'fwd': str,
+                'open_access': str
+            }
+        }
+    }
+
+class ShowPlatformSoftwareWiredClientID(ShowPlatformSoftwareWiredClientIDSchema):
+    """Parser for show platform software wired-client {client_id}"""
+
+    cli_command = "show platform software wired-client {client_id}"
+
+    def cli(self, client_id, output=None):
+        if output is None:
+            cmd = self.cli_command.format(client_id=client_id)
+            output = self.device.execute(cmd)
+
+        # Final dict to return
+        parsed_output = {}
+
+        # Regular expression pattern
+        # ID  MAC Address     Fwd    Open Access
+        # 0x15be62c3  00a3.d1f3.d9eb  Yes    No
+        p1 = re.compile(r'^(?P<id>0x[a-fA-F0-9]+)\s+(?P<mac_address>[0-9a-fA-F\.]+)\s+(?P<fwd>\w+)\s+(?P<open_access>\w+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # ID  MAC Address     Fwd    Open Access
+            # 0x15be62c3  00a3.d1f3.d9eb  Yes    No
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                client_id = group['id']
+                clients = parsed_output.setdefault('wired_client', {})
+                clients[client_id] = {
+                    'id': client_id,
+                    'mac': group['mac_address'],
+                    'fwd': group['fwd'],
+                    'open_access': group['open_access']
+                }
+
+        return parsed_output
 

@@ -1,0 +1,69 @@
+Wed Sep 11 17:21:51.913 GMT+4
+State: a - Port is marked as Aggregable.
+       s - Port is Synchronized with peer.
+       c - Port is marked as Collecting.
+       d - Port is marked as Distributing.
+       A - Device is in Active mode.
+       F - Device requests PDUs from the peer at fast rate.
+       D - Port is using default values for partner information.
+       E - Information about partner has expired.
+
+Bundle-Ether13 (ICCP Group 13)
+
+  Port          (rate)  State    Port ID       Key    System ID
+  --------------------  -------- ------------- ------ ------------------------
+Local
+  Te0/1/0/6        30s  ascdAF-- 0x8002,0xa001 0x000d 0x0001,40-55-39-63-6c-e5
+   Partner          1s  ascdA--- 0x8000,0x0003 0x000d 0x8000,19-23-19-23-19-23
+mLACP Peer 10.100.0.13 (ICCP Group 13)
+  Te0/1/0/8             a---AF-- 0x8003,0x9001 0x000d 0x0001,40-55-39-63-6c-e5
+   Partner              as--A--- 0x8000,0x0002 0x000d 0x8000,19-23-19-23-19-23
+
+  Port                  Receive    Period Selection  Mux       A Churn P Churn
+  --------------------  ---------- ------ ---------- --------- ------- -------
+Local
+  Te0/1/0/6             Current    Slow   Selected   Distrib   None    None   
+mLACP Peer 10.100.0.13 (ICCP Group 13)
+  Te0/1/0/8             Current    Slow   Standby    Waiting   Churn   None   
+
+Bundle-Ether15
+
+  Port          (rate)  State    Port ID       Key    System ID
+  --------------------  -------- ------------- ------ ------------------------
+Local
+  Te0/1/0/10       30s  ascdA--- 0x8000,0x0004 0x000f 0x8000,10-f3-11-02-f8-3e
+   Partner         30s  ascdA--- 0x8000,0x0002 0x000f 0x8000,a8-0c-0d-3a-ae-55
+
+  Port                  Receive    Period Selection  Mux       A Churn P Churn
+  --------------------  ---------- ------ ---------- --------- ------- -------
+Local
+  Te0/1/0/10            Current    Slow   Selected   Distrib   None    None   
+
+Bundle-Ether20
+
+  Port          (rate)  State    Port ID       Key    System ID
+  --------------------  -------- ------------- ------ ------------------------
+Local
+  Te0/1/0/0        30s  ascdA--- 0x8000,0x0003 0x0014 0x8000,10-f3-11-02-f8-3e
+   Partner         30s  ascdA--- 0x8000,0x0001 0x0014 0x8000,00-c1-64-61-f9-61
+
+  Port                  Receive    Period Selection  Mux       A Churn P Churn
+  --------------------  ---------- ------ ---------- --------- ------- -------
+Local
+  Te0/1/0/0             Current    Slow   Selected   Distrib   None    None   
+
+Bundle-Ether1905
+
+  Port          (rate)  State    Port ID       Key    System ID
+  --------------------  -------- ------------- ------ ------------------------
+Local
+  Te0/1/0/18        1s  a---A-D- 0x8000,0x0002 0x0771 0x8000,10-f3-11-02-f8-3e
+   Partner         30s  -----FD- 0x0000,0x0000 0x0000 0x0000,00-00-00-00-00-00
+  Te0/1/0/19        1s  a---A-D- 0x8000,0x0001 0x0771 0x8000,10-f3-11-02-f8-3e
+   Partner         30s  -----FD- 0x0000,0x0000 0x0000 0x0000,00-00-00-00-00-00
+
+  Port                  Receive    Period Selection  Mux       A Churn P Churn
+  --------------------  ---------- ------ ---------- --------- ------- -------
+Local
+  Te0/1/0/18            Disabled   None   Unselect   Detached  Monitor Monitor
+  Te0/1/0/19            Disabled   None   Unselect   Detached  Monitor Monitor

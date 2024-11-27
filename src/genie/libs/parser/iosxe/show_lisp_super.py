@@ -3717,10 +3717,11 @@ class ShowLispDatabaseConfigPropSuperParser(ShowLispDatabaseConfigPropSuperSchem
                         r'do-not-register\s+(?P<do_not_register>\d+)$')
 
         # 51.51.0.0/16, import from publication cfg prop, inherited from default locator-set RLOC, auto-discover-rlocs, proxy
+        # 51.51.0.0/16, import from publication cfg prop, inherited from default locator-set DEFAULT-ETR-RLOC, auto-discover-rlocs, proxy
         p3 = re.compile(r'^(?P<eid>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|([a-fA-F\d\:]+))'
                         r'\/(?P<mask>\d{1,3})(,\s+import\s+from\s+(?P<import_from>\S+'
                         r'|publication cfg prop))?(,\s+inherited\s+from\s+'
-                        r'(?P<inherited_from>default locator-set RLOC|\S+))?'
+                        r'(?P<inherited_from>default locator-set (RLOC|DEFAULT-ETR-RLOC)|\S+))?'
                         r'(,\s+(?P<auto_disc_rloc>auto-discover-rlocs))?(,\s+(?P<proxy>proxy))?$')
 
         # Uptime: 01:30:26, Last-change: 01:30:26

@@ -1,0 +1,44 @@
+Job Id: 4
+ Status: JOB_COMPLETED
+ Request Info:
+  VRF Name: default
+  Host Name: yahoo.com
+  DNS Server: 72.163.128.140
+ Request-time: *Sep 19 20:20:33.776 Completion-time: *Sep 19 20:20:33.785
+ Error Code: No Error
+ DNS Response: 
+  Id: 0
+  Flags: qr-response opcode-query rd ra rcode-noerr 
+  Qdcount: 1 Ancount: 6 Nscount: 0 Arcount: 1 
+  Class: IN Type: IPv4 RTT: 9ms
+  Payload Size: 134
+  IP: 74.6.143.26                               TTL: 0
+  IP: 74.6.143.25                               TTL: 0
+  IP: 98.137.11.164                             TTL: 0
+  IP: 98.137.11.163                             TTL: 0
+  IP: 74.6.231.20                               TTL: 0
+  IP: 74.6.231.21                               TTL: 0
+  
+
+Job Id: 5
+ Status: JOB_COMPLETED
+ Request Info:
+  VRF Name: Mgmt-intf
+  Host Name: yahoo.com
+  DNS Server: 72.163.128.140
+ Request-time: *Sep 19 20:21:51.972 Completion-time: *Sep 19 20:21:51.982
+ Error Code: No Error
+ DNS Response: 
+  Id: 0
+  Flags: qr-response opcode-query rd ra rcode-noerr 
+  Qdcount: 1 Ancount: 6 Nscount: 0 Arcount: 1 
+  Class: IN Type: IPv4 RTT: 11ms
+  Payload Size: 134
+  IP: 74.6.143.25                               TTL: 0
+  IP: 74.6.231.21                               TTL: 0
+  IP: 98.137.11.163                             TTL: 0
+  IP: 74.6.143.26                               TTL: 0
+  IP: 74.6.231.20                               TTL: 0
+  IP: 98.137.11.164                             TTL: 0
+
+  Total number of Jobs:2

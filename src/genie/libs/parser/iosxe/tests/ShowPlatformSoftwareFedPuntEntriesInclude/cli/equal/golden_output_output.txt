@@ -1,0 +1,5 @@
+Source    Name                            Pri  TC  Policy                                    CIR-SW  CIR-HW   Pkts(A)    Bytes(A)   Pkts(D)    Bytes(D)   
+
+LPTSv4    WCCP IPv4                        16   0  system-cpp-default-v4                      60000   59127         0           0         0           0   
+
+LPTSv4    RSVP IPV4                        34   0  system-cpp-default-v4                      60000   59127         0           0         0           0   

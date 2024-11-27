@@ -83,7 +83,9 @@ class ShowIpRoutes(ShowIpRoutesSchema):
         # VPN    PREFIX              PROTOCOL         SUB TYPE  IF NAME     ADDR             VPN      TLOC IP          COLOR            ENCAP  STATUS
         # ---------------------------------------------------------------------------------------------------------------------------------------------
         # 0      0.0.0.0/0           static           -         ge2/3       19.75.2.192      -        -                -                -      F,S
-        p1 = re.compile(r'(?P<vrf>\d+)\s+(?P<prefix>[\d\.\/]+)\s+(?P<protocol>\S+)\s+(?P<protocol_sub_type>\S+)\s+(?P<nh_if_name>\S+)\s+(?P<nh_addr>[\d\.\/]+|-)\s+(?P<nh_vpn>\S+)\s+(?P<tloc_ip>[\d\.\/]+|-)\s+(?P<color>\S+)\s+(?P<encap>\S+)\s+(?P<status>\S+)')
+        #
+        # 65528  192.168.0.0/24      connected        -         loopback65528-                -        -                -                -      F,S  
+        p1 = re.compile(r'(?P<vrf>\d+)\s+(?P<prefix>[\d\.\/]+)\s+(?P<protocol>\S+)\s+(?P<protocol_sub_type>\S+)\s+(?P<nh_if_name>[^\s-]+(?:-[^\s-]+)*|-)(\s+)?(?P<nh_addr>[\d\.\/]+|-)\s+(?P<nh_vpn>\S+)\s+(?P<tloc_ip>[\d\.\/]+|-)\s+(?P<color>\S+)\s+(?P<encap>\S+)\s+(?P<status>\S+)')
 
         index = 1
 
