@@ -567,12 +567,12 @@ class ShowModule(ShowModuleSchema):
 
         # initial regexp pattern
         p1 = re.compile(r'^(?P<switch>\d+) *'
-                        '(?P<port>\w+) +'
-                        '(?P<model>[\w\-]+) +'
-                        '(?P<serial_number>\w+) +'
-                        '(?P<mac_address>[\w\.]+) +'
-                        '(?P<hw_ver>\w+) +'
-                        '(?P<sw_ver>[\w\.]+)$')
+                        r'(?P<port>\w+) +'
+                        r'(?P<model>[\w\-]+) +'
+                        r'(?P<serial_number>\w+) +'
+                        r'(?P<mac_address>[\w\.]+) +'
+                        r'(?P<hw_ver>\w+) +'
+                        r'(?P<sw_ver>[\w\.]+)$')
 
         # Chassis Type: C9500X-28C8D
 
@@ -701,38 +701,38 @@ class ShowHardwareLed(ShowHardwareLedSchema):
         ret_dict = {}
 
         # SWITCH: C9404R
-        p1 = re.compile('^SWITCH:\s+(?P<switch>\S+)$')
+        p1 = re.compile(r'^SWITCH:\s+(?P<switch>\S+)$')
 
         # SYSTEM: GREEN
-        p2 = re.compile('^SYSTEM:\s+(?P<system>\w+)$')
+        p2 = re.compile(r'^SYSTEM:\s+(?P<system>\w+)$')
 
         # Line Card : 1
         # SUPERVISOR: ACTIVE
-        p3 = re.compile('^(Line Card :|SUPERVISOR:)\s+(?P<line_card_supervisor>\w+)$')
+        p3 = re.compile(r'^(Line Card :|SUPERVISOR:)\s+(?P<line_card_supervisor>\w+)$')
 
         # PORT STATUS: (48)
-        p4 = re.compile('^PORT STATUS:\s+\((?P<port_nums_in_status>\d+)\)+\s+(?P<led_ports>((\S+:[\w-]+\s*))+)$')
+        p4 = re.compile(r'^PORT STATUS:\s+\((?P<port_nums_in_status>\d+)\)+\s+(?P<led_ports>((\S+:[\w-]+\s*))+)$')
 
         # BEACON:     OFF
-        p5 = re.compile('^BEACON:\s+(?P<beacon>\w+)$')
+        p5 = re.compile(r'^BEACON:\s+(?P<beacon>\w+)$')
 
         # STATUS: GREEN
-        p6 = re.compile('^STATUS:\s+(?P<status>\w+)$')
+        p6 = re.compile(r'^STATUS:\s+(?P<status>\w+)$')
 
         # GROUP LED: UPLINK-G1:GREEN UPLINK-G2:BLACK UPLINK-G3:BLACK UPLINK-G4:BLACK
-        p7 = re.compile('^GROUP LED:\s+(?P<group_led>((\S+:\w+\s*))+)$')
+        p7 = re.compile(r'^GROUP LED:\s+(?P<group_led>((\S+:\w+\s*))+)$')
 
         # RJ45 CONSOLE: GREEN
-        p8 = re.compile('^RJ45 CONSOLE:\s+(?P<rj45_console>\w+)$')
+        p8 = re.compile(r'^RJ45 CONSOLE:\s+(?P<rj45_console>\w+)$')
 
         # FANTRAY STATUS: GREEN
-        p9 = re.compile('^FANTRAY STATUS:\s+(?P<fantray_status>\w+)$')
+        p9 = re.compile(r'^FANTRAY STATUS:\s+(?P<fantray_status>\w+)$')
 
         # FANTRAY BEACON: BLACK
-        p10 = re.compile('^FANTRAY BEACON:\s+(?P<fantray_beacon>\w+)$')
+        p10 = re.compile(r'^FANTRAY BEACON:\s+(?P<fantray_beacon>\w+)$')
 
         # POWER-SUPPLY 1 BEACON: OFF
-        p11 = re.compile('^POWER-SUPPLY\s+(?P<power_supply_num>\d+)\s+BEACON:\s+(?P<power_supply_status>\w+)$')
+        p11 = re.compile(r'^POWER-SUPPLY\s+(?P<power_supply_num>\d+)\s+BEACON:\s+(?P<power_supply_status>\w+)$')
 
 
         for line in output.splitlines():

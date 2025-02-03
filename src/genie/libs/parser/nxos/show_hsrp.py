@@ -298,76 +298,76 @@ class ShowHsrpAll(ShowHsrpAllSchema):
  
         # Ethernet1/3 - Group 1 (HSRP-V1) (IPv4)
         p1 = re.compile(r'(?P<intf>(\S+)) +\- +Group +(?P<gnum>[0-9]+)'
-                        ' +\(HSRP-V(?P<version>[0-9]+)\)'
-                        ' +\((?P<af>(\S+))\)$')
+                        r' +\(HSRP-V(?P<version>[0-9]+)\)'
+                        r' +\((?P<af>(\S+))\)$')
 
         # Local state is Active, priority 100 (Cfged 100)
         # Local state is Active, priority 110 (Cfged 110), may preempt
         # Local state is Disabled(Virtual IP not cfged), priority 1 (Cfged 1)
         p2 = re.compile(r'Local +state +is +(?P<state>(\S+))'
-                        '(?:\((?P<reason>.*)\))?'
-                        ', +priority +(?P<priority>(\d+))'
-                        ' +\(Cfged +(?P<cfged>(\d+))\)'
-                        '(?:, +(?P<preempt>(\S+)) +preempt)?$')
+                        r'(?:\((?P<reason>.*)\))?'
+                        r', +priority +(?P<priority>(\d+))'
+                        r' +\(Cfged +(?P<cfged>(\d+))\)'
+                        r'(?:, +(?P<preempt>(\S+)) +preempt)?$')
 
         # Forwarding threshold(for vPC), lower: 0 upper: 100
         p3 = re.compile(r'Forwarding +threshold\(for +vPC\),'
-                        ' +lower: +(?P<lower>(\d+))'
-                        ' +upper: +(?P<upper>(\d+))$')
+                        r' +lower: +(?P<lower>(\d+))'
+                        r' +upper: +(?P<upper>(\d+))$')
 
         # Preemption Delay (Seconds) Reload:10 Minimum:5 Sync:5
         p4 = re.compile(r'Preemption +Delay +\(Seconds\)'
-                        '(?: +Reload: +(?P<reload>(\d+)))?'
-                        '(?: +Minimum: +(?P<min>(\d+)))?'
-                        '(?: +Sync: +(?P<sync>(\d+)))?$')
+                        r'(?: +Reload: +(?P<reload>(\d+)))?'
+                        r'(?: +Minimum: +(?P<min>(\d+)))?'
+                        r'(?: +Sync: +(?P<sync>(\d+)))?$')
 
         # Hellotime 3 sec, holdtime 10 sec
         # Hellotime 999 msec (cfged 9 sec), holdtime 2999 msec (cfged 27 sec)
         p5 = re.compile(r'Hellotime +(?P<hello>(\d+)) +(?P<hello_unit>(\S+))'
-                '(?: \(cfged (?P<cfged_hello>(\d+)) +(?P<cfhe_unit>(\S+)\)))?'
-                ', +holdtime +(?P<hold>(\d+)) +(?P<hold_unit>(\S+))'
-                '(?: +\(cfged (?P<cfged_hold>(\d+)) (?P<cfhd_unit>(\S+))\))?$')
+                r'(?: \(cfged (?P<cfged_hello>(\d+)) +(?P<cfhe_unit>(\S+)\)))?'
+                r', +holdtime +(?P<hold>(\d+)) +(?P<hold_unit>(\S+))'
+                r'(?: +\(cfged (?P<cfged_hold>(\d+)) (?P<cfhd_unit>(\S+))\))?$')
 
         # Next hello sent in 2.726000 sec(s)
 
         # Virtual IP address is 172.16.12.254 (Cfged)
         p7 = re.compile(r'Virtual +IP +address +is +(?P<ip>(\S+))'
-                         ' +\((?P<reason>(\S+))\)$')
+                         r' +\((?P<reason>(\S+))\)$')
 
         # Secondary Virtual IP address is 10.1.1.253
         p8 = re.compile(r'[sS]econdary +[vV]irtual +IP +address +is'
-                         ' +(?P<ip>(\S+))')
+                         r' +(?P<ip>(\S+))')
 
         # Active router is local
         # Active router is 192.168.1.1, priority 110 expires in 2.662000 sec(s)
         p9 = re.compile(r'Active +router +is +(?P<active>(\S+))(?: *,'
-                         ' +priority +(?P<priority>(\d+)) expires +in'
-                         ' +(?P<expires>(\S+)) +sec\(s\))?$')
+                         r' +priority +(?P<priority>(\d+)) expires +in'
+                         r' +(?P<expires>(\S+)) +sec\(s\))?$')
 
         # Standby router is 172.16.12.2 , priority 100 expires in 9.456000 sec(s)
         p10 = re.compile(r'Standby +router +is +(?P<standby>(\S+))(?: *,'
-                          ' +priority +(?P<priority>(\d+)) +expires +in'
-                          ' +(?P<expires>(\S+)) +sec\(s\))?$')
+                          r' +priority +(?P<priority>(\d+)) +expires +in'
+                          r' +(?P<expires>(\S+)) +sec\(s\))?$')
 
         # Authentication text "cisco"
         # Authentication MD5, key-string "cisco123"
         p11 = re.compile(r'Authentication +(?:(MD5, key-string)|(text))?'
-                          ' +\"(?P<auth>(\S+))\"$')
+                          r' +\"(?P<auth>(\S+))\"$')
 
         # Virtual mac address is 0000.0cff.b308 (Default MAC)
         p12 = re.compile(r'Virtual +mac +address +is +(?P<mac>(\S+))'
-                          ' +\((?P<status>\S+) MAC( - (?P<use_bia>(\S+))'
-                          ' +enabled)?\)$')
+                          r' +\((?P<status>\S+) MAC( - (?P<use_bia>(\S+))'
+                          r' +enabled)?\)$')
 
         # 2 state changes, last state change 03:13:06
         p13 = re.compile(r'(?P<state_changes>(\d+)) +state +changes,'
-                          ' +last +state +change +(?P<last>(\S+))$')
+                          r' +last +state +change +(?P<last>(\S+))$')
 
 
         # Track object 1 state UP decrement 22
         p14 = re.compile(r'[tT]rack +object +(?P<tracked_object>\d+)'
-                          ' +state +(?P<tracked_status>(\S+)) +decrement'
-                          ' +(?P<decrement>(\d+))')
+                          r' +state +(?P<tracked_status>(\S+)) +decrement'
+                          r' +(?P<decrement>(\d+))')
 
         # IP redundancy name is hsrp-Eth1/3-1 (default)
         p15 = re.compile(r'IP +redundancy +name +is +(?P<name>(\S+)) +\(default\)$')
@@ -695,7 +695,7 @@ class ShowHsrpDelay(ShowHsrpDelaySchema):
 
             # GigabitEthernet1   99      888
             p1 = re.compile(r'\s*(?P<interface>\S+) +(?P<minimum_delay>\d+) +'
-                '(?P<reload_delay>\d+)')
+                r'(?P<reload_delay>\d+)')
             m = p1.match(line)
             if m:
                 interface = m.groupdict()['interface']

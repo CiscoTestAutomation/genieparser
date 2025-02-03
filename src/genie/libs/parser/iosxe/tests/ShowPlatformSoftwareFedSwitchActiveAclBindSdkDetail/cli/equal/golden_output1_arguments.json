@@ -1,0 +1,6 @@
+{
+    "switch_var" : "active",
+    "acl" : "info",
+    "feature_name": "cgacl",
+    "cg_id" : "1552"
+}

@@ -1,0 +1,26 @@
+show ip nbar protocol-discovery protocol
+
+ Vlan150
+
+ Last clearing of "show ip nbar protocol-discovery" counters 00:00:31
+
+
+                                  Input                    Output
+                                  -----                    ------
+ Protocol                         Packet Count             Packet Count
+                                  Byte Count               Byte Count
+                                  5min Bit Rate (bps)      5min Bit Rate (bps)
+                                  5min Max Bit Rate (bps)  5min Max Bit Rate (bps)
+ -------------------------------- ------------------------ ------------------------
+ ipv6-icmp                        1011                     1005
+                                  115034                   114458
+                                  6000                     6000
+                                  6000                     6000
+ ping                             999                      999
+                                  113886                   113886
+                                  3000                     3000
+                                  6000                     6000
+ Total                            2010                     2004
+                                  228920                   228344
+                                  9000                     9000
+                                  12000                    12000

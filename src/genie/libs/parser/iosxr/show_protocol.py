@@ -7,7 +7,7 @@ IOSXR parsers for the following show commands:
 # Python
 import re
 import xmltodict
-from netaddr import IPAddress
+from netaddr import IPAddress, INET_ATON
 
 # Metaparser
 from genie.metaparser import MetaParser
@@ -209,8 +209,8 @@ class ShowProtocolsAfiAllAll(ShowProtocolsAfiAllAllSchema):
 
             # Distance: IntraArea 112 InterArea 113 External/NSSA 114
             p3_2 = re.compile(r'^Distance: +IntraArea +(?P<intra>\d+)'
-                               ' +InterArea +(?P<inter>\d+) +External\/NSSA'
-                               ' +(?P<external>\d+)$')
+                               r' +InterArea +(?P<inter>\d+) +External\/NSSA'
+                               r' +(?P<external>\d+)$')
             m = p3_2.match(line)
             if m:
                 sub_dict = ospf_dict.setdefault('preference', {}) \
@@ -240,7 +240,7 @@ class ShowProtocolsAfiAllAll(ShowProtocolsAfiAllAllSchema):
             #   static
             #   static with metric 10
             p14 = re.compile(r'^(?P<type>(connected|static))(?: +with +metric'
-                               ' +(?P<metric>\d+))?$')
+                               r' +(?P<metric>\d+))?$')
             m = p14.match(line)
             if m:
                 the_type = str(m.groupdict()['type'])
@@ -255,7 +255,7 @@ class ShowProtocolsAfiAllAll(ShowProtocolsAfiAllAllSchema):
             #   isis 10 with metric 3333
             #   ospf 99
             p15 = re.compile(r'^(?!Area)(?P<prot>\w+) +(?P<pid>\d+)(?: +with'
-                               ' +metric +(?P<metric>\d+))?$')
+                               r' +metric +(?P<metric>\d+))?$')
             m = p15.match(line)
             if m:
                 group = m.groupdict()
@@ -273,7 +273,7 @@ class ShowProtocolsAfiAllAll(ShowProtocolsAfiAllAllSchema):
             p5 = re.compile(r'^Area +(?P<area>\S+)$')
             m = p5.match(line)
             if m:
-                area = str(IPAddress(m.groupdict()['area']))
+                area = str(IPAddress(m.groupdict()['area'], flags=INET_ATON))
                 area_interfaces = []
                 area_dict = ospf_dict.setdefault('areas', {}).setdefault(area, {})
                 area_dict['interfaces'] = area_interfaces
@@ -330,7 +330,7 @@ class ShowProtocolsAfiAllAll(ShowProtocolsAfiAllAllSchema):
 
             # Current BGP NSR state - Active Ready
             p10 = re.compile(r'^Current +BGP +NSR +state +\-'
-                              ' +(?P<state>([\w\s]+))$')
+                              r' +(?P<state>([\w\s]+))$')
             m = p10.match(line)
             if m:
                 nsr_dict = bgp_dict.setdefault('nsr', {})
@@ -349,7 +349,7 @@ class ShowProtocolsAfiAllAll(ShowProtocolsAfiAllAllSchema):
 
             # Distance: external 20 internal 200 local 200
             p12 = re.compile(r'^Distance: +external +(?P<external>\d+) +internal'
-                              ' +(?P<internal>\d+) +local +(?P<local>\d+)$')
+                              r' +(?P<internal>\d+) +local +(?P<local>\d+)$')
             m = p12.match(line)
             if m:
                 group = m.groupdict()
@@ -383,7 +383,7 @@ class ShowProtocolsAfiAllAll(ShowProtocolsAfiAllAllSchema):
             # 172.25.12.17    1w0d                        None       Yes
             # 2001:db8:7000:13::1   1w0d                 None       Yes
             p13 = re.compile(r'^(?P<nbr>[\d\:\.]+) +(?P<last_update>[\w\:]+)'
-                              ' +(?P<nsr_state>\S+) +(?P<gr_enable>No|Yes)$')
+                              r' +(?P<nsr_state>\S+) +(?P<gr_enable>No|Yes)$')
             m = p13.match(line)
             if m:
                 group = m.groupdict()
@@ -567,7 +567,7 @@ class ShowProtocols(ShowProtocolsSchema):
 
         # Routing Protocol OSPF mpls1
         p1 = re.compile(r'^Routing +Protocol +(?P<protocol>(OSPF(v3)?))'
-                        ' +(?P<pid>\S+)$')
+                        r' +(?P<pid>\S+)$')
 
         # Router Id: 10.94.1.1
         p2 = re.compile(r'^Router +Id: +(?P<router_id>\S+)$')
@@ -577,13 +577,13 @@ class ShowProtocols(ShowProtocolsSchema):
 
         # Distance: IntraArea 112 InterArea 113 External/NSSA 114
         p4 = re.compile(r'^Distance: +IntraArea +(?P<intra>\d+)'
-                        ' +InterArea +(?P<inter>\d+) +External\/NSSA'
-                        ' +(?P<external>\d+)$')
+                        r' +InterArea +(?P<inter>\d+) +External\/NSSA'
+                        r' +(?P<external>\d+)$')
 
         # Non-Stop Forwarding: Enabled
         # Non-Stop Forwarding: Disabled
         p5 = re.compile(r'^Non-Stop +Forwarding:'
-                        ' +(?P<nsf>(Disabled|Enabled))$')
+                        r' +(?P<nsf>(Disabled|Enabled))$')
 
         # Redistribution:
         #   connected
@@ -591,13 +591,13 @@ class ShowProtocols(ShowProtocolsSchema):
         #   static
         #   static with metric 100
         p6 = re.compile(r'^(?P<type>(connected|static))(?: +with +metric'
-                        ' +(?P<metric>\d+))?$')
+                        r' +(?P<metric>\d+))?$')
 
         # Redistribution:
         #   bgp 100 with metric 111
         #   isis 10 with metric 3333
         p7 = re.compile(r'^(?!Area)(?P<prot>\w+) +(?P<pid>\d+)(?: +with'
-                        ' +metric +(?P<metric>\d+))?$')
+                        r' +metric +(?P<metric>\d+))?$')
 
         # Area 0
         p8 = re.compile(r'^Area +(?P<area>\S+)$')
@@ -609,21 +609,21 @@ class ShowProtocols(ShowProtocolsSchema):
         #   GigabitEthernet0/0/0/0
         #   GigabitEthernet0/0/0/1
         p10 = re.compile(r'^(?P<interface>(Loopback|(Ten)?GigabitEthernet)'
-                        '[\d\/]+)$')
+                        r'[\d\/]+)$')
 
         # Routing Protocol "BGP 40"
         p11 = re.compile(r'^Routing +Protocol +\"BGP +(?P<bgp_pid>\d+)\"$')
 
         # Non-stop routing is enabled
         p12 = re.compile(r'^Non-stop +routing +is +'
-                         '(?P<nsr>(enabled|disabled))$')
+                         r'(?P<nsr>(enabled|disabled))$')
 
         # Graceful restart is enabled
         p13 = re.compile(r'^Graceful restart is not +enabled$')
 
         # Current BGP NSR state - TCP Initial Sync
         p14 = re.compile(r'^Current +BGP +NSR +state +\-'
-                         ' +(?P<state>([\w\s]+))$')
+                         r' +(?P<state>([\w\s]+))$')
 
         # Address Family IPv4 Unicast:
         # Address Family VPNv6 Unicast:
@@ -631,7 +631,7 @@ class ShowProtocols(ShowProtocolsSchema):
 
         # Distance: external 20 internal 200 local 200
         p16 = re.compile(r'^Distance: +external +(?P<external>\d+) +internal'
-                         ' +(?P<internal>\d+) +local +(?P<local>\d+)$')
+                         r' +(?P<internal>\d+) +local +(?P<local>\d+)$')
 
         # Sourced Networks:
         p17 = re.compile(r'^Sourced +Networks:$')
@@ -645,7 +645,7 @@ class ShowProtocols(ShowProtocolsSchema):
         # Neighbor      State/Last update received  NSR-State  GR-Enabled
         # 10.64.4.4       08:05:59                    None       No
         p19 = re.compile(r'^(?P<nbr>[\d\:\.]+) +(?P<last_update>[\w\:]+)'
-                         '( +(?P<nsr_state>\S+) +(?P<gr_enable>No|Yes))?$')
+                         r'( +(?P<nsr_state>\S+) +(?P<gr_enable>No|Yes))?$')
 
         for line in out.splitlines():
             line = line.strip()

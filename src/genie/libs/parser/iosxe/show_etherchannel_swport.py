@@ -105,7 +105,7 @@ class ShowEtherChannelSwportSummary(ShowEtherChannelSwportSummarySchema):
         # ------+-------------+-----------+-----------------------------------------------
         # 1      Po1(SU)         PAgP      Gi0/1(P)    Gi0/2(P)
         p3 = re.compile(r'^\s*(?P<bundle_id>[\d\s]+)(?P<name>[\w\-]+)\((?P<flags>[\w]+)\)?'
-                        '( +(?P<protocol>[\w\-]+))?( +((?P<ports>[\w\-\s\/\(\)]+)))?$')
+                        r'( +(?P<protocol>[\w\-]+))?( +((?P<ports>[\w\-\s\/\(\)]+)))?$')
         # Group  Port-channel  Protocol    Ports
         # ------+-------------+-----------+-----------------------------------------------
         # 10     Po10(SU)        PAgP        Gi1/0/15(P)     Gi1/0/16(P)     

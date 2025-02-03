@@ -1,0 +1,44 @@
+show lisp instance-id 11 ipv6 publication detail
+Publication Information for LISP 0 EID-table vrf prov1 (IID 11)
+ * Indicates the selected rlocs used by consumers
+
+  EID-prefix: ::/0
+    First published:      00:05:08
+    Last published:       00:04:52
+    State:                unknown-eid-forward
+    Exported to:          none
+
+    Publisher 4:2:1::1.4342
+      last published 00:04:52, TTL never, Expires: never
+      publisher epoch 0, entry epoch 0
+      entry-state unknown-eid-forward
+      xTR-ID 0xE5C0A419-0x2B4D3BDF-0xEE3A0DCA-0x441F597F
+      site-ID unspecified
+      Domain-ID 1
+      Multihoming-ID 11
+      Locator   Pri/Wgt  State     Encap-IID   Domain-ID/MH-ID   Metric
+      1:3:1::1     1/50   up        -                   1/11      -
+      1:3:2::1     1/50   up        -                   1/11      -
+      2:5:1::1     1/100  up        -                   2/22      0
+
+    Publisher 1:2:1::1.4342
+      last published 00:05:08, TTL never, Expires: never
+      publisher epoch 0, entry epoch 0
+      entry-state unknown-eid-forward
+      xTR-ID 0xE5C0A419-0x2B4D3BDF-0xEE3A0DCA-0x441F597F
+      site-ID unspecified
+      Domain-ID 1
+      Multihoming-ID 11
+      Locator   Pri/Wgt  State     Encap-IID   Domain-ID/MH-ID   Metric
+      1:3:1::1     1/50   up        -                   1/11      -
+      1:3:2::1     1/50   up        -                   1/11      0
+
+  Merge Locator Information
+      Locator    Pri/Wgt  State     Encap-IID  RDP-Len Src-Address
+      1:3:1::1      1/50   up        -          0       1:2:1::1
+      1:3:1::1      1/50   up        -          1       4:2:1::1
+      1:3:2::1      1/50   up        -          0       1:2:1::1
+      1:3:2::1      1/50   up        -          1       4:2:1::1
+      2:5:1::1      1/100  up        -          1       4:2:1::1
+
+  

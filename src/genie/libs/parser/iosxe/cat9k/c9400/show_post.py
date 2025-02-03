@@ -47,16 +47,16 @@ class ShowPost(ShowPostSchema):
         ret_dict={}
 
         # Switch 1
-        p1 = re.compile('^Switch\s+(?P<switch_num>\S+)$')
+        p1 = re.compile(r'^Switch\s+(?P<switch_num>\S+)$')
 
         # POST: PHY Loopback: loopback Test : End, Status Passed
         # POST: Thermal, Temperature Tests : End, Status Passed
         # POST: CRYPTO Tests : End, Status Passed
         # POST: MBIST Tests : End, Status Passed
-        p2 = re.compile('^POST.*:(?P<test>.+Tests*)\s+:\s+End, Status (?P<status>Passed|Failed)$')
+        p2 = re.compile(r'^POST.*:(?P<test>.+Tests*)\s+:\s+End, Status (?P<status>Passed|Failed)$')
 
         #POST: Module: 3 PHY Loopback: loopback Test: End, Status Passed
-        p3 = re.compile('^POST: Module:\s+(?P<module>\d+)\s+(?P<test>.+Tests*)\s*:\s+End, Status (?P<status>Passed|Failed)$')
+        p3 = re.compile(r'^POST: Module:\s+(?P<module>\d+)\s+(?P<test>.+Tests*)\s*:\s+End, Status (?P<status>Passed|Failed)$')
         
         for line in output.splitlines():
             line = line.strip()

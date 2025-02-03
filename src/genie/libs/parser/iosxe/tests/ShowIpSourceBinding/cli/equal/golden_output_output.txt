@@ -1,0 +1,9 @@
+S1-UUT#show ip source binding 
+MacAddress          IpAddress        Lease(sec)  Type           VLAN  Interface
+------------------  ---------------  ----------  -------------  ----  --------------------
+00:12:01:00:00:01   30.0.0.2         297         dhcp-snooping   30    GigabitEthernet1/0/20
+00:14:01:00:00:01   50.0.0.2         297         dhcp-snooping   50    GigabitEthernet3/0/10
+00:13:01:00:00:01   40.0.0.2         297         dhcp-snooping   40    GigabitEthernet2/0/10
+00:11:01:00:00:01   20.0.0.2         297         dhcp-snooping   20    GigabitEthernet1/0/10
+Total number of bindings: 4
+

@@ -116,31 +116,31 @@ class ShowBootSystem(ShowBootSystemSchema):
         p1 = re.compile(r'(^BOOT variable ((\=\s+(?P<boot>\S+))|(does not exist))$)')
         
         # MANUAL_BOOT variable = no
-        p2 = re.compile('^MANUAL_BOOT variable\s+\=\s+(?P<manual>yes|no)$')
+        p2 = re.compile(r'^MANUAL_BOOT variable\s+\=\s+(?P<manual>yes|no)$')
 
         # Manual Boot = no
-        p2_1 = re.compile('^Manual\sBoot\s+\=\s+(?P<manual>yes|no)$')
+        p2_1 = re.compile(r'^Manual\sBoot\s+\=\s+(?P<manual>yes|no)$')
 
         # BAUD variable = 9600
-        p3 = re.compile('^BAUD variable\s+\=\s+(?P<baud>\d+)$')
+        p3 = re.compile(r'^BAUD variable\s+\=\s+(?P<baud>\d+)$')
 
         # IPXE_TIMEOUT variable = 0
-        p4 = re.compile('^IPXE_TIMEOUT variable\s+\=\s+(?P<ipxe>\d+)$')
+        p4 = re.compile(r'^IPXE_TIMEOUT variable\s+\=\s+(?P<ipxe>\d+)$')
 
         # iPXE Timeout = 0
-        p4_1 = re.compile('^iPXE\sTimeout\s+\=\s+(?P<ipxe>\d+)$')
+        p4_1 = re.compile(r'^iPXE\sTimeout\s+\=\s+(?P<ipxe>\d+)$')
 
         # BOOTMODE variable = yes
-        p5 = re.compile('^BOOTMODE variable\s+\=\s+(?P<boot_mode>yes|no)$')
+        p5 = re.compile(r'^BOOTMODE variable\s+\=\s+(?P<boot_mode>yes|no)$')
 
         # Boot Mode = DEVICE
-        p5_1 = re.compile('^Boot\sMode\s+\=\s+(?P<boot_mode>\S+)$')
+        p5_1 = re.compile(r'^Boot\sMode\s+\=\s+(?P<boot_mode>\S+)$')
 
         # Enable Break = yes
-        p6 = re.compile('^Enable Break\s+\=\s+(?P<enable>yes|no)$')
+        p6 = re.compile(r'^Enable Break\s+\=\s+(?P<enable>yes|no)$')
 
         # Config file         = flash:/config.text
-        p7 = re.compile('^Config file\s+\=\s+(?P<config>\S+)$')
+        p7 = re.compile(r'^Config file\s+\=\s+(?P<config>\S+)$')
         
         for line in output.splitlines():
             line=line.strip()

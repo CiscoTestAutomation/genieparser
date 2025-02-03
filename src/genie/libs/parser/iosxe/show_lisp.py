@@ -2113,7 +2113,7 @@ class ShowLispEthernetMapCachePrefix(ShowLispEthernetMapCachePrefixSchema):
             out = self.device.expect(
                 [r'Instance ID:\s+\S+'],
                 timeout=2).match_output
-            p0 = re.compile('^Instance ID:\s+(?P<instance_id>\d+)$')
+            p0 = re.compile(r'^Instance ID:\s+(?P<instance_id>\d+)$')
             group = p0.match(out)
             instance_id = int(group['instance_id'])
         else:

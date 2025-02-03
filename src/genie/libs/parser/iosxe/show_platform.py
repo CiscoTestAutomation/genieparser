@@ -219,7 +219,7 @@ class ShowVersionSchema(MetaParser):
             Optional('label'): str,
             Optional('build_label'): str,
             'image_id': str,
-            'rom': str,
+            Optional('rom'): Or(str, None),
             'image_type': str,
             Optional('installation_mode'): str,
             Optional('bootldr'): str,
@@ -418,7 +418,7 @@ class ShowVersion(ShowVersionSchema):
 
         # rom
         # ROM: IOS-XE ROMMONBOOTLDR: System Bootstrap, Version 17.6.1r[FC2], DEVELOPMENT SOFTWARE
-        p6 = re.compile(r'^ROM\: +(?P<rom>.+?)(?:BOOTLDR\: +(?P<bootldr>.+))?$')
+        p6 = re.compile(r'^ROM\:( +(?P<rom>.+?)(?:BOOTLDR\: +(?P<bootldr>.+))?$)?')
 
         # ROM: Bootstrap program is IOSv
         p7 = re.compile(r'^Bootstrap +program +is +(?P<os>.+)$')
@@ -680,7 +680,7 @@ class ShowVersion(ShowVersionSchema):
         p62 = re.compile(r'^Installation\s+mode\s+is\s+(?P<installation_mode>.+)$')
 
         #System FPGA version                : 0.2.11
-        p63 = re.compile('^System FPGA version\s+:\s+(?P<system_fpga_version>(\d+\.?)+)')
+        p63 = re.compile(r'^System FPGA version\s+:\s+(?P<system_fpga_version>(\d+\.?)+)')
 
         for line in out.splitlines():
             line = line.strip()
@@ -777,10 +777,11 @@ class ShowVersion(ShowVersionSchema):
                     version_dict['version']['bootldr'] = bootldr
 
                 # ROM: Bootstrap program is IOSv
-                m = p7.match(rom)
-                if m:
-                    if 'os' not in version_dict['version']:
-                        version_dict['version']['os'] = \
+                if rom != None:
+                    m = p7.match(rom)
+                    if m:
+                        if 'os' not in version_dict['version']:
+                            version_dict['version']['os'] = \
                             m.groupdict()['os']
                 continue
 
@@ -1838,11 +1839,11 @@ class ShowRedundancyStates(ShowRedundancyStatesSchema):
 
         # Redundancy Mode (Operational) = sso
         p6 = re.compile(r'^Redundancy +Mode +\(Operational\) += +'
-                        '(?P<redundancy_mode_operational>[\s\S]+)$')
+                        r'(?P<redundancy_mode_operational>[\s\S]+)$')
 
         # Redundancy Mode (Configured)  = sso
         p7 = re.compile(r'^Redundancy +Mode +\(Configured\) += +'
-                        '(?P<redundancy_mode_configured>[\s\S]+)$')
+                        r'(?P<redundancy_mode_configured>[\s\S]+)$')
 
         # Redundancy State              = sso
         p8 = re.compile(r'^Redundancy +State += +(?P<redundancy_state>[\s\S]+)$')
@@ -1853,19 +1854,19 @@ class ShowRedundancyStates(ShowRedundancyStatesSchema):
         # Manual Swact = enabled
         # Manual Swact = disabled (system is simplex (no peer unit))
         p10 = re.compile(r'^Manual +Swact += +(?P<manual_swact>[\w]+)'
-                         '( +\((?P<manual_swact_reason>.*)\))?$')
+                         r'( +\((?P<manual_swact_reason>.*)\))?$')
 
         # Communications = Up
         # Communications = Down      Reason: Simplex mode
         p11 = re.compile(r'^Communications += +(?P<communications>[\w]+)'
-                         '( +Reason: +(?P<communications_reason>[\s\S]+))?$')
+                         r'( +Reason: +(?P<communications_reason>[\s\S]+))?$')
 
         # client count = 76
         p12 = re.compile(r'^client +count += +(?P<client_count>[\d]+)$')
 
         # client_notification_TMR = 30000 milliseconds
         p13 = re.compile(r'^client_notification_TMR += +'
-                         '(?P<client_notification_tmr_msec>[\d]+) +milliseconds$')
+                         r'(?P<client_notification_tmr_msec>[\d]+) +milliseconds$')
 
         # RF debug mask = 0x0
         p14 = re.compile(r'^RF +debug +mask += +(?P<rf_debug_mask>[\w]+)$')
@@ -2908,7 +2909,7 @@ class ShowBoot(ShowBootSchema):
 
         # Standby Configuration register is 0x2002
         p4 = re.compile(r'^Standby +Configuration +register'
-                        ' +is +(?P<var>\w+)$')
+                        r' +is +(?P<var>\w+)$')
 
         # Manual Boot = yes
         p5 = re.compile(r'^Manual +Boot += +(?P<var>\w+)$')
@@ -3202,11 +3203,11 @@ class ShowSwitchDetail(ShowSwitchDetailSchema):
 
         # Switch/Stack Mac Address : 0057.d2ff.e71b - Local Mac Address
         p1 = re.compile(r'^[Ss]witch\/[Ss]tack +[Mm]ac +[Aa]ddress +\: +'
-                        '(?P<switch_mac_address>[\w\.]+) *(?P<local>[\w\s\-]+)?$')
+                        r'(?P<switch_mac_address>[\w\.]+) *(?P<local>[\w\s\-]+)?$')
 
         # Mac persistency wait time: Indefinite
         p2 = re.compile(r'^[Mm]ac +persistency +wait +time\: +'
-                        '(?P<mac_persistency_wait_time>[\w\.\:]+)$')
+                        r'(?P<mac_persistency_wait_time>[\w\.\:]+)$')
 
         #                                              H/W   Current
         # Switch#   Role    Mac Address     Priority Version  State
@@ -3217,10 +3218,10 @@ class ShowSwitchDetail(ShowSwitchDetailSchema):
         p3_0 = re.compile(r'^Switch#\s+Role\s+Mac\sAddress\s+Priority\s+Version\s+State$')
 
         p3_1 = re.compile(r'^\*?(?P<switch>\d+) +(?P<role>\w+) +'
-                           '(?P<mac_address>[\w\.]+) +'
-                           '(?P<priority>\d+) +'
-                           '(?P<hw_ver>\w+)? +'
-                           '(?P<state>[\w\s-]+)$')
+                           r'(?P<mac_address>[\w\.]+) +'
+                           r'(?P<priority>\d+) +'
+                           r'(?P<hw_ver>\w+)? +'
+                           r'(?P<state>[\w\s-]+)$')
 
         #          Stack Port Status             Neighbors
         # Switch#  Port 1     Port 2           Port 1   Port 2
@@ -3229,9 +3230,9 @@ class ShowSwitchDetail(ShowSwitchDetailSchema):
         p4_0 = re.compile(r'^Switch#\s+Port\s1\s+Port\s2\s+Port\s1\s+Port\s2$')
 
         p4_1 = re.compile(r'^(?P<switch>\d+) +(?P<status1>\w+) +'
-                           '(?P<status2>\w+) +'
-                           '(?P<nbr_num_1>\w+) +'
-                           '(?P<nbr_num_2>\w+)$')
+                           r'(?P<status2>\w+) +'
+                           r'(?P<nbr_num_1>\w+) +'
+                           r'(?P<nbr_num_2>\w+)$')
 
         active_table = 0
 
@@ -4004,12 +4005,12 @@ class ShowModule(ShowModuleSchema):
 
         # initial regexp pattern
         p1 = re.compile(r'^(?P<switch>\d+) *'
-                        '(?P<port>\w+) +'
-                        '(?P<model>[\w\-]+) +'
-                        '(?P<serial_number>\w+) +'
-                        '(?P<mac_address>[\w\.]+) +'
-                        '(?P<hw_ver>\w+) +'
-                        '(?P<sw_ver>[\w\.]+)$')
+                        r'(?P<port>\w+) +'
+                        r'(?P<model>[\w\-]+) +'
+                        r'(?P<serial_number>\w+) +'
+                        r'(?P<mac_address>[\w\.]+) +'
+                        r'(?P<hw_ver>\w+) +'
+                        r'(?P<sw_ver>[\w\.]+)$')
 
         # Chassis Type: C9500X-28C8D
 
@@ -4344,20 +4345,20 @@ class ShowProcessesCpuPlatform(ShowProcessesCpuPlatformSchema):
 
         # CPU utilization for five seconds: 43%, one minute: 44%, five minutes: 44%
         p1 = re.compile(r'^CPU +utilization +for +five +seconds: +(?P<cpu_util_five_secs>[\d\%]+),'
-                        ' +one +minute: +(?P<cpu_util_one_min>[\d\%]+),'
-                        ' +five +minutes: +(?P<cpu_util_five_min>[\d\%]+)$')
+                        r' +one +minute: +(?P<cpu_util_one_min>[\d\%]+),'
+                        r' +five +minutes: +(?P<cpu_util_five_min>[\d\%]+)$')
 
         # Core 0: CPU utilization for five seconds:  6%, one minute: 11%, five minutes: 11%
         p2 = re.compile(r'^(?P<core>[\w\s]+): +CPU +utilization +for'
-                        ' +five +seconds: +(?P<core_cpu_util_five_secs>\d+\%+),'
-                        ' +one +minute: +(?P<core_cpu_util_one_min>[\d+\%]+),'
-                        ' +five +minutes: +(?P<core_cpu_util_five_min>[\d+\%]+)$')
+                        r' +five +seconds: +(?P<core_cpu_util_five_secs>\d+\%+),'
+                        r' +one +minute: +(?P<core_cpu_util_one_min>[\d+\%]+),'
+                        r' +five +minutes: +(?P<core_cpu_util_five_min>[\d+\%]+)$')
 
         # 21188   21176    599%    600%    599%  R           478632  ucode_pkt_PPE0
         p3 = re.compile(r'^(?P<pid>\d+) +(?P<ppid>\d+)'
-                        ' +(?P<five_sec>[\d\%]+) +(?P<one_min>[\d\%]+)'
-                        ' +(?P<five_min>[\d\%]+) +(?P<status>[\w]+)'
-                        ' +(?P<size>\d+) +(?P<name>.*)$')
+                        r' +(?P<five_sec>[\d\%]+) +(?P<one_min>[\d\%]+)'
+                        r' +(?P<five_min>[\d\%]+) +(?P<status>[\w]+)'
+                        r' +(?P<size>\d+) +(?P<name>.*)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -4618,21 +4619,21 @@ class ShowVersionRp(ShowVersionRpSchema):
         # Package: rpbase, version: 03.16.04a.S.155-3.S4a-ext, status: active
         # Package: Provisioning File, version: n/a, status: active
         p1 = re.compile(r'^Package: +(?P<package_name>[\w\d\s]+),'
-                        ' +version: +(?P<version>[\w\d\.\-\/]+),'
-                        ' +status: +(?P<status>[\w\/]+)$')
+                        r' +version: +(?P<version>[\w\d\.\-\/]+),'
+                        r' +status: +(?P<status>[\w\/]+)$')
 
         #   File: consolidated:asr1000rp2-rpbase.03.16.04a.S.155-3.S4a-ext.pkg, on: RP0
         p2 = re.compile(r'^File: +consolidated:(?P<file>[\w\d\-\.]+),'
-                        ' +on: +(?P<rp_slot>[\w\d\/]+)$')
+                        r' +on: +(?P<rp_slot>[\w\d\/]+)$')
 
         # Built: 2016-10-04_12.28, by: mcpre
         # Built: n/a, by: n/a
         p3 = re.compile(r'^Built: +(?P<built_time>[\w\d\:\.\_\/\-]+),'
-                        ' +by: +(?P<built_by>[\w\d\/]+)$')
+                        r' +by: +(?P<built_by>[\w\d\/]+)$')
 
         #   File SHA1 checksum: 79e234871520fd480dc1128058160b4e2acee9f7
         p4 = re.compile(r'^File +SHA1 +checksum:'
-                        ' +(?P<file_sha1_checksum>[\w\d]+)$')
+                        r' +(?P<file_sha1_checksum>[\w\d]+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -4751,16 +4752,16 @@ class ShowPlatformPower(ShowPlatformPowerSchema):
         #  0/0      SPA-8X1GE-V2        inserted              14
         #  0/1      SPA-1X10GE-L-V2     inserted              17.40
         p4 = re.compile(r'^\s*(?P<slot>[\w\/]+) +(?P<type>[\w-]+) '
-                        '+(?P<state>\w+(?:\, \w+)?) +(?P<allocation>[\d.]+)$')
+                        r'+(?P<state>\w+(?:\, \w+)?) +(?P<allocation>[\d.]+)$')
 
         # Slot      Type                State                 Capacity (W) Load (W)
         # P0        ASR1000X-AC-1100W   ok                    1100         132
         p5 = re.compile(r'^\s*(?P<slot>[\w\/]+) +(?P<type>[\w\-]+) '
-                        '+(?P<state>\w+(?:\, \w+)?) +(?P<capacity>[\d.]+) +(?P<load>[\d.]+)')
+                        r'+(?P<state>\w+(?:\, \w+)?) +(?P<capacity>[\d.]+) +(?P<load>[\d.]+)')
 
         # Total load: 696 W, total capacity: 4400 W. Load / Capacity is 15%
         p6 = re.compile(r'^\s*Total +load\: +(?P<total_load>\d+) +W\, +total +capacity\: +(?P<total_capacity>\d+) +W\.'
-                        ' +Load +\/ +Capacity +is +(?P<load_capacity_percent>\d+)\%$')
+                        r' +Load +\/ +Capacity +is +(?P<load_capacity_percent>\d+)\%$')
 
         # Power capacity:       4400 W
         p7 = re.compile(r'^\s*Power +capacity\: +(?P<power_capacity>\d+) +W$')
@@ -5874,22 +5875,22 @@ class ShowPlatformSudiCertificateNonce(ShowPlatformSudiCertificateNonceSchema):
         ret_dict = {}
 
         # -----BEGIN CERTIFICATE-----
-        p1=re.compile('^\-+BEGIN CERTIFICATE\-+$')
+        p1=re.compile(r'^\-+BEGIN CERTIFICATE\-+$')
 
         # -----END CERTIFICATE-----
-        p2=re.compile('^\-+END CERTIFICATE\-+$')
+        p2=re.compile(r'^\-+END CERTIFICATE\-+$')
 
         # Signature version: 1
-        p3=re.compile('^Signature version:\s+(?P<signature>\d+)$')
+        p3=re.compile(r'^Signature version:\s+(?P<signature>\d+)$')
 
         # Signature:
-        p4=re.compile('^Signature:$')
+        p4=re.compile(r'^Signature:$')
 
         # A59DA741EA66C2AFC006E1766B3B11493A79E67408388C40160C2729F88281E9
-        p5=re.compile('^(?P<signatur>[A-Z\d]+)$')
+        p5=re.compile(r'^(?P<signatur>[A-Z\d]+)$')
 
         # o4IBBDCCAQAwDgYDVR0PAQH/BAQDAgXgMAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgw
-        p6 =re.compile('([a-zA-Z0-9/+=]+)')
+        p6 =re.compile(r'([a-zA-Z0-9/+=]+)')
 
         for line in output.splitlines():
             line=line.strip()
@@ -6015,7 +6016,7 @@ class ShowEnvironmentStatus(ShowEnvironmentStatusSchema):
                         r'(?P<fan_state1>\S+)$')
 
         # FM6     active      good  good
-        p3= re.compile('^(?P<fan_tray>\w+\d+)\s+(?P<status>\w+)\s+(?P<fan_state0>\w+)\s+(?P<fan_state1>\w+)$')
+        p3= re.compile(r'^(?P<fan_tray>\w+\d+)\s+(?P<status>\w+)\s+(?P<fan_state0>\w+)\s+(?P<fan_state1>\w+)$')
 
         # FM0     ok          good  good  good  good
         p4= re.compile(r'^(?P<fan_tray>\w+\d+) +'
@@ -6114,7 +6115,7 @@ class ShowPlatformSudiPki(ShowPlatformSudiPkiSchema):
 
         ret_dict = {}
 
-        p1=re.compile('((Cisco.+|\'Cisco.+:)\s+(?P<Valid>(((Enabled\s\(.*\))|Enabled)|((Disabled\s\(.*\))|Disabled)|Valid|Not Supported|Invalid|Init Failure)))')
+        p1=re.compile(r'((Cisco.+|\'Cisco.+:)\s+(?P<Valid>(((Enabled\s\(.*\))|Enabled)|((Disabled\s\(.*\))|Disabled)|Valid|Not Supported|Invalid|Init Failure)))')
 
         for line in output.splitlines():
             line1=[]
@@ -6276,7 +6277,7 @@ class ShowPlatformNatTranslationsStatistics(ShowPlatformNatTranslationsStatistic
         ret_dict = {}
 
         # NAT Type                : Static
-        p0 = re.compile(r'^NAT Type +: +(?P<nat_type>-+|Static|Dynamic)$')
+        p0 = re.compile(r'^NAT Type +: +(?P<nat_type>-+|Static|Dynamic|Mixed)$')
 
         # Netflow Type            : NA
         p1 = re.compile(r'^Netflow Type +: +(?P<netflow_type>\S+)$')
@@ -7212,8 +7213,8 @@ class ShowPlatformPacketTracePacket(ShowPlatformPacketTracePacketSchema):
     cli_command = ['show platform packet-trace packet all',
                    'show platform packet-trace packet {packet_id}']
 
-    FIRST_CAP_REGEX = re.compile('(.)([A-Z][a-z]+)')
-    ALL_CAP_REGEX = re.compile('([a-z0-9])([A-Z])')
+    FIRST_CAP_REGEX = re.compile(r'(.)([A-Z][a-z]+)')
+    ALL_CAP_REGEX = re.compile(r'([a-z0-9])([A-Z])')
     SLUGIFY_P = re.compile(r'[^a-z0-9]+')
 
     def _field_name_normalize(self, name):
@@ -9663,5 +9664,237 @@ class ShowPlatformfrontendcontroller(ShowPlatformfrontendcontrollerSchema):
                 group = m.groupdict()
                 ret_dict['bootloader_version'] = int(group['bootloader_version'])
                 continue
+
+        return ret_dict
+
+# ==================================================
+# Schema for 'show platform nat translations standby'
+# ==================================================
+class ShowPlatformNatTranslationsStandbySchema(MetaParser):
+    """Schema for show platform nat translations standby"""
+
+    schema = {
+        'index':{
+            Any():{
+                'protocol': str,
+                'inside_global': str,
+                'inside_local': str,
+                'outside_local': str,
+                'outside_global': str
+            }
+        }
+    }
+
+# =================================================
+#  Parser for show platform nat translations standby
+# =================================================
+class ShowPlatformNatTranslationsStandby(ShowPlatformNatTranslationsStandbySchema):
+    """
+    show platform nat translations standby
+    """
+
+    cli_command = 'show platform nat translations standby'
+
+    def cli(self, output=None):
+
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # initial variables
+        ret_dict = {}
+        index_dict = {}
+        index = 1
+
+        # Pro Inside global Inside local Outside local Outside global
+        # TCP 135.0.0.2:0   192.0.0.2:0  193.0.0.2:0   193.0.0.2:0
+        p1 = re.compile(r'^(?P<protocol>-+|UDP|TCP) +'
+                        r'(?P<inside_global>[\d.]+:+\d+) +'
+                        r'(?P<inside_local>[\d.]+:+\d+) +'
+                        r'(?P<outside_local>[\d.]+:+\d+) +'
+                        r'(?P<outside_global>[\d.]+:+\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Pro Inside global Inside local Outside local Outside global
+            # TCP 135.0.0.2:0   192.0.0.2:0  193.0.0.2:0   193.0.0.2:0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                index_dict = ret_dict.setdefault('index', {}).setdefault(index,{})
+                index_dict['protocol'] = group['protocol']
+                index_dict['inside_global'] = group['inside_global']
+                index_dict['inside_local'] = group['inside_local']
+                index_dict['outside_local'] = group['outside_local']
+                index_dict['outside_global'] = group['outside_global']
+                index += 1
+
+        return ret_dict
+
+# =============================================================
+# Schema for 'show platform nat translations standby statistics'
+# =============================================================
+class ShowPlatformNatTranslationsStandbyStatisticsSchema(MetaParser):
+    """Schema for show platform nat translations standby statistics"""
+
+    schema = {
+                  'nat_type': str,
+                  'netflow_type': str,
+                  'flow_record': str,
+                  'dynamic_nat_entries': str,
+                  'static_nat_entries': str,
+                  'total_nat_entries': str,
+                  'total_hw_resource_tcam': str
+             }
+
+# ============================================================
+#  Parser for show platform nat translations standby statistics
+# ============================================================
+class ShowPlatformNatTranslationsStandbyStatistics(ShowPlatformNatTranslationsStandbyStatisticsSchema):
+    """
+    show platform nat translations standby statistics
+    """
+
+    cli_command = 'show platform nat translations standby statistics'
+
+    def cli(self, output=None):
+
+        if output is None:
+
+           output = self.device.execute(self.cli_command)
+
+        # initial variables
+        ret_dict = {}
+
+        # NAT Type                : Static
+        p0 = re.compile(r'^NAT Type +: +(?P<nat_type>-+|Static|Dynamic|Mixed)$')
+
+        # Netflow Type            : NA
+        p1 = re.compile(r'^Netflow Type +: +(?P<netflow_type>\S+)$')
+
+        # Flow Record             : Disabled
+        p2 = re.compile(r'^Flow Record  +: +(?P<flow_record>-+|Disabled|Enabled)$')
+
+        # Dynamic NAT entries     : 0 entries
+        p3 = re.compile(r'^Dynamic NAT entries  +: +(?P<dynamic_nat_entries>\d+ entries)$')
+
+        # Static NAT entries      : 0 entries
+        p4 = re.compile(r'^Static NAT entries +: +(?P<static_nat_entries>\d+ entries)$')
+
+        # Total NAT entries       : 0 entries
+        p5 = re.compile(r'^Total NAT entries +: +(?P<total_nat_entries>\d+ entries)$')
+
+        # Total HW Resource (TCAM): 26 of 27648 /0 .09% utilization
+        p6 = re.compile(r'^Total HW Resource \(TCAM\)+: +(?P<total_hw_resource_tcam>\d+ of \d+ /\d+ \.\d+% utilization)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # NAT Type                : Static
+            m = p0.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict["nat_type"] = group["nat_type"]
+
+            # Netflow Type            : NA
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict["netflow_type"] = group["netflow_type"]
+
+            # Flow Record             : Disabled
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict["flow_record"] = group["flow_record"]
+
+            # Dynamic NAT entries     : 0 entries
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict["dynamic_nat_entries"] = group["dynamic_nat_entries"]
+
+            # Static NAT entries      : 0 entries
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict["static_nat_entries"] = group["static_nat_entries"]
+
+            # Total NAT entries       : 0 entries
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict["total_nat_entries"] = group["total_nat_entries"]
+
+            # Total HW Resource (TCAM): 26 of 27648 /0 .09% utilization
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict["total_hw_resource_tcam"] = group["total_hw_resource_tcam"]
+
+        return ret_dict
+        
+class ShowPlatformSoftwareCpmSwitchActiveB0PacketsControlIpcSchema(MetaParser):
+    """Schema for 'show platform software cpm switch active b0 packets ipc tx'"""
+    schema = {
+        'packets': {
+            Any(): {
+                'data': str ,
+                'timestamp': str  
+            }
+        }
+    }
+
+class ShowPlatformSoftwareCpmSwitchActiveB0PacketsControlIpc(ShowPlatformSoftwareCpmSwitchActiveB0PacketsControlIpcSchema):
+    """Parser for 'show platform software cpm switch active b0 packets ipc tx'"""
+
+    cli_command = 'show platform software cpm switch {mode} b0 packets {controlmode} {transmitmode}'
+
+    def cli(self, mode=None, controlmode=None, transmitmode=None, output=None):
+        if output is None:
+            cmd = self.cli_command.format(mode=mode, controlmode=controlmode, transmitmode=transmitmode)
+            output = self.device.execute(cmd)
+        
+        # Initialize the parsed dictionary
+        ret_dict = {}
+
+        # Packet :: 1
+        p1 = re.compile(r'^Packet :: (\d+)$')  
+        
+        #Jun 16 13:13:17.742
+        p2 = re.compile(r'^[A-Za-z]+\s+\d+\s+\d+:\d+:\d+\.\d+$')
+
+        current_packet = None  
+        packet_data = ""  # A string to accumulate data for the current packet
+
+        # Iterate over each line in the output
+        for line in output.splitlines():
+            line = line.strip()
+
+            # "Packet :: 1"
+            m = p1.match(line)
+            if m:
+                if current_packet is not None:  # Save the accumulated data before moving to the next packet
+                    ret_dict['packets'][current_packet]['data'] = packet_data.strip()
+
+                current_packet = int(m.group(1))  # Set the current packet number
+                ret_dict.setdefault('packets', {})[current_packet] = {'data': [], 'timestamp': None}
+                packet_data = ""  
+                continue
+
+            # Jun 16 13:13:17.742
+            m = p2.match(line)
+            if m:
+                if current_packet is not None:
+                    ret_dict['packets'][current_packet]['timestamp'] = line
+                continue
+
+            # Accumulate packet data (hex strings)
+            if line:
+                packet_data += " " + line
+
+        # Save the data for the last packet
+        if current_packet is not None:
+            ret_dict['packets'][current_packet]['data'] = packet_data.strip()
 
         return ret_dict

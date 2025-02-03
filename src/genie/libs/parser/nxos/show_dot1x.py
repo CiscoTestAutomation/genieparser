@@ -55,16 +55,16 @@ class ShowDot1xAllStatistics(ShowDot1xAllStatisticsSchema):
         ret_dict = {}
 
         p1 = re.compile(r'((^[Dd]ot1x)\s+)?' +
-                        '(([Aa]uthenticator)\s+)?' +
-                        '(([Pp])ort\s+)?(([Ss]tatistics)\s+)?' +
-                        '((for)\s+)?(?P<interface>(\w*)\d+(\/)(\d+))$\s*')
+                        r'(([Aa]uthenticator)\s+)?' +
+                        r'(([Pp])ort\s+)?(([Ss]tatistics)\s+)?' +
+                        r'((for)\s+)?(?P<interface>(\w*)\d+(\/)(\d+))$\s*')
 
 
 
         p2 = re.compile(r'(\w+) *\= *(\d+)+ *')
 
         p3 = re.compile(r'^([Rr]x[Vv]ersion) \= *(?P<rxversion>\d+)' +
-                        '   ([Ll]ast[Rr]x[Ss]rc[Mm][Aa][Cc]) = (?P<lastrxsrcmac>\w+:\w+:\w+:\w+:\w+:\w+)$')
+                        r'   ([Ll]ast[Rr]x[Ss]rc[Mm][Aa][Cc]) = (?P<lastrxsrcmac>\w+:\w+:\w+:\w+:\w+:\w+)$')
 
 
 
@@ -141,7 +141,7 @@ class ShowDot1xAllSummary(ShowDot1xAllSummarySchema):
         ret_dict = {}
 
         p1 = re.compile(r'^(?P<intf>((\w+\d+)(\/\d+)*)) + +(?P<pae>\w+) + +' +
-                        '(?P<client>(\w+\:\w+\:\w+\:\w+\:\w+\:\w+)|\w+) + +(?P<status>\w+)$')
+                        r'(?P<client>(\w+\:\w+\:\w+\:\w+\:\w+\:\w+)|\w+) + +(?P<status>\w+)$')
 
         for line in out.splitlines():
             line = line.strip()

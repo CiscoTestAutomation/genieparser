@@ -1,0 +1,23 @@
+show cef vrf default ipv4 10.0.88.65/32 detail
+Thu Jan  9 12:44:46.416 CET
+10.0.88.65/32, version 2403689, internal 0x1000001 0x0 (ptr 0x63f4ccd0) [1], 0x0 (0x5a3d0424), 0xa20 (0x5a76b9f4)
+ Updated Dec 23 10:08:20.329 
+ remote adjacency to TenGigE0/1/0/30.4
+ Prefix Len 32, traffic index 0, precedence n/a, priority 3
+  gateway array (0x5e166338) reference count 114, flags 0x8068, source lsd (5), 1 backups
+                [115 type 4 flags 0x108401 (0x5a7a24cc) ext 0x0 (0x0)]
+  LW-LDI[type=1, refc=1, ptr=0x5a3d0424, sh-ldi=0x5a7a24cc]
+  gateway array update type-time 1 Jul 31 08:57:27.801
+ LDI Update time Jul 31 08:57:27.802
+ LW-LDI-TS Aug  5 15:15:08.465
+   via 10.10.32.141/32, TenGigE0/1/0/30.4, 8 dependencies, weight 0, class 0 [flags 0x0]
+    path-idx 0 NHID 0x0 [0x5ad9dd40 0x0]
+    next hop 10.10.32.141/32
+    remote adjacency
+     local label 24163      labels imposed {None}
+
+    Load distribution: 0 (refcount 115)
+
+    Hash  OK  Interface                 Address
+    0     Y   TenGigE0/1/0/30.4         remote         
+RP/0/RSP0/CPU0:BRU-SPCORE-PE8# 

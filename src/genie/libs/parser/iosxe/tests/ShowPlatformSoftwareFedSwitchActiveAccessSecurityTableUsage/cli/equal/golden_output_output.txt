@@ -1,0 +1,11 @@
+Access Security Client Classification Table Usage details:
+
+Feature           Mask                Asic#            Maximum          In-Use           Total-Allocated  Total-Freed
+-------------------------------------------------------------------------------------------------------------------------
+MAC-Client        Port-VLAN-MAC       0                4096             0                0                0
+MAC-Client        Port-MAC            0                4096             500              2208             1708
+MAC-Client        MAC                 0                4096             0                0                0
+Secure-MAC        Port-VLAN-MAC       0                4096             500              2050             1550
+Secure-MAC        Port-MAC            0                4096             0                0                0
+Default-Client    Port-VLAN           0                4096             0                0                0
+Default-Client    Port                0                4096             1                1                0

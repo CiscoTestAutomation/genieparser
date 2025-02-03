@@ -100,10 +100,10 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
         # x10.2.2.2         172.16.229.65     2 -   84  128  271    1.470  -46.760  52.506
         # *gnlab4.int-gw.k 192.168.137.1    3 -    5   64  177    0.192   -0.022   0.091
         p1 = re.compile(r'^(?P<mode_code>[xo\*\-\+\=]+)? *(?P<remote>[\w\.\:\-]+) +'
-                         '(?P<refid>[\S]+) +(?P<stratum>\d+) +(?P<type>[blmu\-]+) +'
-                         '(?P<receive_time>[\d\-]+) +(?P<poll>\d+) +'
-                         '(?P<reach>\d+) +(?P<delay>[\d\.]+) +'
-                         '(?P<offset>[\d\.\-]+) +(?P<jitter>[\d\.\-]+)$')
+                         r'(?P<refid>[\S]+) +(?P<stratum>\d+) +(?P<type>[blmu\-]+) +'
+                         r'(?P<receive_time>[\d\-]+) +(?P<poll>\d+) +'
+                         r'(?P<reach>\d+) +(?P<delay>[\d\.]+) +'
+                         r'(?P<offset>[\d\.\-]+) +(?P<jitter>[\d\.\-]+)$')
 
 
         for line in out.splitlines():
@@ -230,7 +230,7 @@ class ShowNtpStatus(ShowNtpStatusSchema):
         # status=0644 leap_none, sync_ntp, 4 events, event_peer/strat_chg,
         # assID=0 status=0544 leap_none, sync_local_proto, 4 events, event_peer/strat_chg,
         p1 = re.compile(r'^(assID\=(?P<ass_id>\d+) *)?status\=(?P<status>\d+) *(?P<leap_status>\w+), +'
-                         '(?P<synch_source>\w+), +(?P<number_of_events>\d+) +events, +(?P<recent_event>\S+),$')
+                         r'(?P<synch_source>\w+), +(?P<number_of_events>\d+) +events, +(?P<recent_event>\S+),$')
 
         # reftime=df981acf.bfa97435  Thu, Nov 15 2018 11:18:23.748, poll=6,
         p2 = re.compile(r'^reftime\=(?P<reftime>[\w\s\,\.\:]+), +poll\=(?P<poll>\d+),$')
@@ -350,7 +350,7 @@ class ShowConfigurationSystemNtpSet(ShowConfigurationSystemNtpSetSchema):
         # set system ntp server 10.145.32.44 routing-instance mgmt_junos
 
         p1 = re.compile(r'^set +system +ntp +(?P<type>\w+) +(?P<address>[\w\.\:]+)'
-                         '( *routing-instance +(?P<vrf>\S+))?$')
+                         r'( *routing-instance +(?P<vrf>\S+))?$')
 
         for line in out.splitlines():
             line = line.strip()

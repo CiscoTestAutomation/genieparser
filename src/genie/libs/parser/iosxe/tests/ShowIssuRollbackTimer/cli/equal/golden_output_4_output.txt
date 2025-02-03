@@ -1,0 +1,3 @@
+show issu rollback-timer
+--- Starting local lock acquisition on chassis 2/R0 ---
+Finished local lock acquisition on chassis 2/R0

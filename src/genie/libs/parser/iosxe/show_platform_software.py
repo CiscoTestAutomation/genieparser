@@ -89,14 +89,14 @@ class ShowPlatformSoftwareSlotActiveMonitorMem(
         # initial regexp pattern
         p1 = re.compile(
             r"^KiB +Mem *: +(?P<total>\d+) *total, +"
-            "(?P<free>\d+) *free, +(?P<used>\d+) *used, +"
-            "(?P<buff_cache>\d+) *buff\/cache$"
+            r"(?P<free>\d+) *free, +(?P<used>\d+) *used, +"
+            r"(?P<buff_cache>\d+) *buff\/cache$"
         )
 
         p2 = re.compile(
             r"^KiB +Swap *: +(?P<total>\d+) *total, +"
-            "(?P<free>\d+) *free, +(?P<used>\d+) *used. +"
-            "(?P<available_memory>\d+) *avail +Mem$"
+            r"(?P<free>\d+) *free, +(?P<used>\d+) *used. +"
+            r"(?P<available_memory>\d+) *avail +Mem$"
         )
 
         for line in out.splitlines():
@@ -188,14 +188,14 @@ class ShowPlatformSoftwareStatusControl(ShowPlatformSoftwareStatusControlSchema)
         # initial regexp pattern
         p1 = re.compile(
             r"^(?P<slot>\S+) +(?P<status>\w+) +"
-            "(?P<min1>[\d\.]+) +(?P<min5>[\d\.]+) +(?P<min15>[\d\.]+)$"
+            r"(?P<min1>[\d\.]+) +(?P<min5>[\d\.]+) +(?P<min15>[\d\.]+)$"
         )
 
         p2 = re.compile(
             r"^(?P<slot>\S+) +(?P<status>\w+) +"
-            "(?P<total>\d+) +(?P<used>\d+) +\((?P<used_percentage>[\d\s]+)\%\) +"
-            "(?P<free>\d+) +\((?P<free_percentage>[\d\s]+)\%\) +"
-            "(?P<committed>\d+) +\((?P<committed_percentage>[\d\s]+)\%\)$"
+            r"(?P<total>\d+) +(?P<used>\d+) +\((?P<used_percentage>[\d\s]+)\%\) +"
+            r"(?P<free>\d+) +\((?P<free_percentage>[\d\s]+)\%\) +"
+            r"(?P<committed>\d+) +\((?P<committed_percentage>[\d\s]+)\%\)$"
         )
 
         p3 = re.compile(
@@ -1246,11 +1246,11 @@ class ShowPlatformSoftwareIomdMacsecInterfaceBrief(
         # 3/11  |   0    |     3/0    | f87a41252702008b | 50331759/ 2/ 1  |     GCM_AES_128 |
         p3 = re.compile(
             r"(?P<if>\d+\/\d+) +\|"
-            " +(?P<sc_idx>\d+) +\|"
-            " +(?P<pre_cur_an>\d+\/\d+) +\|"
-            " +(?P<sci>\S+) +\|"
-            " +(?P<idx>\d+\/ \d+\/ \d+) +\|"
-            " +(?P<cipher>\S+) +\|"
+            r" +(?P<sc_idx>\d+) +\|"
+            r" +(?P<pre_cur_an>\d+\/\d+) +\|"
+            r" +(?P<sci>\S+) +\|"
+            r" +(?P<idx>\d+\/ \d+\/ \d+) +\|"
+            r" +(?P<cipher>\S+) +\|"
         )
 
         sess_tx = 0
@@ -1396,13 +1396,13 @@ class ShowPlatformSoftwareIomdMacsecInterfaceDetail(
         p2 = re.compile(r"Port\:\d+\, Subport\:(.*)\, Rx SC index")
 
         # Prev AN: 3, Cur AN: 0
-        p3 = re.compile(r"Prev AN\: (?P<prev_an>\d+)\, +" "Cur AN\: (?P<cur_an>\d+)")
+        p3 = re.compile(r"Prev AN\: (?P<prev_an>\d+)\, Cur AN\: (?P<cur_an>\d+)")
 
         # SA index: 50331759, vport index: 2, rule index: 1
         p4 = re.compile(
             r"SA index\: (?P<sa_index>\d+)\, +"
-            "vport index\: (?P<vport_index>\d+)\, +"
-            "rule index\: (?P<rule_index>\d+)"
+            r"vport index\: (?P<vport_index>\d+)\, +"
+            r"rule index\: (?P<rule_index>\d+)"
         )
 
         # key_len: 16
@@ -1884,7 +1884,7 @@ class ShowPlatformSoftwareInterfaceSwitchF0Brief(
         # initial variables
         ret_dict = {}
         # HundredGigE2/0/35/4                1285              1285
-        p1 = re.compile("^(?P<name>\S+)\s+(?P<id>\d+)\s+(?P<qfp_id>\d+)$")
+        p1 = re.compile(r"^(?P<name>\S+)\s+(?P<id>\d+)\s+(?P<qfp_id>\d+)$")
 
         for line in output.splitlines():
             line = line.strip()
@@ -2086,7 +2086,7 @@ class ShowPlatformSoftwareCpmSwitchB0CountersDrop(
         ret_dict = {}
 
         # RX unexpected packet count                    311
-        p1 = re.compile("^(?P<drop_counters>[\w ]+)\s+(?P<drop_count>\d+)$")
+        p1 = re.compile(r"^(?P<drop_counters>[\w ]+)\s+(?P<drop_count>\d+)$")
 
         for line in output.splitlines():
             line = line.strip()
@@ -2160,7 +2160,7 @@ class ShowPlatformSoftwareCpmSwitchB0CountersPuntInject(
 
         # SVL CTRL           12673           12641                0                15
         p1 = re.compile(
-            "^(?P<traffic_type>\w+\s+\w+)\s+(?P<packets_inject>\d+)\s+(?P<packets_punt>\d+)\s+(?P<drop_inject>\d+)\s+(?P<drop_punt>\d+)$"
+            r"^(?P<traffic_type>\w+\s+\w+)\s+(?P<packets_inject>\d+)\s+(?P<packets_punt>\d+)\s+(?P<drop_inject>\d+)\s+(?P<drop_punt>\d+)$"
         )
 
         # Timestamp Now: May 07 11:58:31.969
@@ -2376,10 +2376,10 @@ class ShowPlatformSoftwareCpmSwitchB0IpcBrief(
         ret_dict = {}
 
         # cpm-cm     connected
-        p1 = re.compile("^cpm-cm\s+(?P<cpm_cm>\w+)$")
+        p1 = re.compile(r"^cpm-cm\s+(?P<cpm_cm>\w+)$")
 
         # cpm-fed    connected
-        p2 = re.compile("^cpm-fed\s+(?P<cpm_fed>\w+)$")
+        p2 = re.compile(r"^cpm-fed\s+(?P<cpm_fed>\w+)$")
 
         for line in output.splitlines():
             line = line.strip()
@@ -2442,46 +2442,46 @@ class ShowPlatformSoftwareCpmSwitchB0IpcDetail(
         ret_dict = {}
 
         # Service: cpm-cm
-        p1 = re.compile("^Service:\s+(?P<service>\S+)$")
+        p1 = re.compile(r"^Service:\s+(?P<service>\S+)$")
 
         # Peer Location: -1
-        p2 = re.compile("^Peer Location:\s+(?P<peer_location>\S+)$")
+        p2 = re.compile(r"^Peer Location:\s+(?P<peer_location>\S+)$")
 
         # Peer State: 2
-        p3 = re.compile("^Peer State:\s+(?P<peer_state>\d+)$")
+        p3 = re.compile(r"^Peer State:\s+(?P<peer_state>\d+)$")
 
         # Connection Drops: 0
-        p4 = re.compile("^Connection Drops:\s+(?P<connection_drops>\d+)$")
+        p4 = re.compile(r"^Connection Drops:\s+(?P<connection_drops>\d+)$")
 
         # Flow Control: 0
-        p5 = re.compile("^Flow Control:\s+(?P<flow_control>\d+)$")
+        p5 = re.compile(r"^Flow Control:\s+(?P<flow_control>\d+)$")
 
         # Transition Count: 0
-        p6 = re.compile("^Transition Count:\s+(?P<transition_count>\d+)$")
+        p6 = re.compile(r"^Transition Count:\s+(?P<transition_count>\d+)$")
 
         # Received Msgs: 1
-        p7 = re.compile("^Received Msgs:\s+(?P<received_msgs>\d+)$")
+        p7 = re.compile(r"^Received Msgs:\s+(?P<received_msgs>\d+)$")
 
         # TDL hdl failure: 0
-        p8 = re.compile("^TDL hdl failure:\s+(?P<tdl_hdl_failure>\d+)$")
+        p8 = re.compile(r"^TDL hdl failure:\s+(?P<tdl_hdl_failure>\d+)$")
 
         # Dispatch failures: 1
-        p9 = re.compile("^Dispatch failures:\s+(?P<dispatch_failures>\d+)$")
+        p9 = re.compile(r"^Dispatch failures:\s+(?P<dispatch_failures>\d+)$")
 
         # Rx Other Drops: 0
-        p10 = re.compile("^Rx Other Drops:\s+(?P<rx_other_drops>\d+)$")
+        p10 = re.compile(r"^Rx Other Drops:\s+(?P<rx_other_drops>\d+)$")
 
         # Sent msgs: 1
-        p11 = re.compile("^Sent msgs:\s+(?P<sent_msgs>\d+)$")
+        p11 = re.compile(r"^Sent msgs:\s+(?P<sent_msgs>\d+)$")
 
         # Tx No Mem failures: 0
-        p12 = re.compile("^Tx No Mem failures:\s+(?P<tx_no_mem_failures>\d+)$")
+        p12 = re.compile(r"^Tx No Mem failures:\s+(?P<tx_no_mem_failures>\d+)$")
 
         # Tx Other Drops: 0
-        p13 = re.compile("^Tx Other Drops:\s+(?P<tx_other_drops>\d+)$")
+        p13 = re.compile(r"^Tx Other Drops:\s+(?P<tx_other_drops>\d+)$")
 
         # Tx No Space failures: 0
-        p14 = re.compile("^Tx No Space failures:\s+(?P<tx_no_space_failures>\d+)$")
+        p14 = re.compile(r"^Tx No Space failures:\s+(?P<tx_no_space_failures>\d+)$")
 
         for line in output.splitlines():
             line = line.strip()
@@ -2622,17 +2622,17 @@ class ShowPlatformSoftwareCpmSwitchB0ControlInfo(
         ret_dict = {}
 
         # System port: 98
-        p1 = re.compile("^System port: (?P<system_port>\d+)$")
+        p1 = re.compile(r"^System port: (?P<system_port>\d+)$")
 
         # SVL Control Interface: HundredGigE1/0/2
-        p2 = re.compile("^SVL Control Interface: (?P<svl_control_interface>\S+)$")
+        p2 = re.compile(r"^SVL Control Interface: (?P<svl_control_interface>\S+)$")
 
         # 27                  FiftyGigE1/0/56
-        p1_2 = re.compile("^(?P<system_port>\s*\d+)\s+(?P<svl_control_interface>\S+)$")
+        p1_2 = re.compile(r"^(?P<system_port>\s*\d+)\s+(?P<svl_control_interface>\S+)$")
 
         # 0x2c       0x2c     28       etherchannel
         p3 = re.compile(
-            "^(?P<if_id>\S+)\s+(?P<ec_if_id>\S+)\s+(?P<system_port>\d+)\s+(?P<if_type>\S+)$"
+            r"^(?P<if_id>\S+)\s+(?P<ec_if_id>\S+)\s+(?P<system_port>\d+)\s+(?P<if_type>\S+)$"
         )
 
         for line in output.splitlines():
@@ -2700,13 +2700,13 @@ class ShowPlatformSoftwareCpmSwitchB0Resource(
         ret_dict = {}
 
         # oobnd1          UP
-        p1 = re.compile("^oobnd1\s+(?P<oobnd1>UP|DOWN)$")
+        p1 = re.compile(r"^oobnd1\s+(?P<oobnd1>UP|DOWN)$")
 
         # leaba0_3        UP
-        p2 = re.compile("^leaba0_3\s+(?P<leaba0_3>UP|DOWN)$")
+        p2 = re.compile(r"^leaba0_3\s+(?P<leaba0_3>UP|DOWN)$")
 
         # leaba0_5        UP
-        p3 = re.compile("^leaba0_5\s+(?P<leaba0_5>UP|DOWN)$")
+        p3 = re.compile(r"^leaba0_5\s+(?P<leaba0_5>UP|DOWN)$")
 
         for line in output.splitlines():
             line = line.strip()
@@ -4465,12 +4465,12 @@ class ShowPlatformSoftwareTdlContentBpConfig(
         # Node    Domain    Mode          Router-ID
         # 1       2         Aggregation
         p1 = re.compile(
-            "^(?P<node>\d+)\s+(?P<domain>\d+)\s+(?P<mode>\w+)(\s+(?P<router_id>\w+))?$"
+            r"^(?P<node>\d+)\s+(?P<domain>\d+)\s+(?P<mode>\w+)(\s+(?P<router_id>\w+))?$"
         )
 
         # Node    Priority
         # 1       1
-        p2 = re.compile("^(?P<node>\d+)\s+(?P<priority>\d+)$")
+        p2 = re.compile(r"^(?P<node>\d+)\s+(?P<priority>\d+)$")
 
         for line in output.splitlines():
             line = line.strip()
@@ -4616,35 +4616,35 @@ class ShowPlatformSoftwareBpCrimsonStatistics(
         ret_dict = {}
 
         # BP Crimson Statistics
-        p1 = re.compile("^(?P<bp_crimson_statistics>BP Crimson Statistics)$")
+        p1 = re.compile(r"^(?P<bp_crimson_statistics>BP Crimson Statistics)$")
 
         # Regexp  for  all the  lines  which fals in the below  pattern
         # Initialized            : Yes
-        p2 = re.compile("^(?P<description>[\w'\s]+)\:\s+(?P<value>\w+)$")
+        p2 = re.compile(r"^(?P<description>[\w'\s]+)\:\s+(?P<value>\w+)$")
 
         # BP SVL Crimson Statistics
-        p3 = re.compile("^(?P<bp_svl_crimson_statistics>BP SVL Crimson Statistics)$")
+        p3 = re.compile(r"^(?P<bp_svl_crimson_statistics>BP SVL Crimson Statistics)$")
 
         # BP Remote DB Statistics
-        p4 = re.compile("^(?P<bp_remote_db_statistics>BP Remote DB Statistics)$")
+        p4 = re.compile(r"^(?P<bp_remote_db_statistics>BP Remote DB Statistics)$")
 
         # GET Requests:
-        p5 = re.compile("^(?P<get_requests>GET Requests\:)$")
+        p5 = re.compile(r"^(?P<get_requests>GET Requests\:)$")
 
         # SET Requests:
-        p6 = re.compile("^(?P<set_requests>SET Requests\:)$")
+        p6 = re.compile(r"^(?P<set_requests>SET Requests\:)$")
 
         # In Progress Requests:
-        p7 = re.compile("^(?P<in_progress_requests>In Progress Requests\:)$")
+        p7 = re.compile(r"^(?P<in_progress_requests>In Progress Requests\:)$")
 
         # DBAL Response Time:
-        p8 = re.compile("^(?P<dbal_response_time>DBAL Response Time\:)$")
+        p8 = re.compile(r"^(?P<dbal_response_time>DBAL Response Time\:)$")
 
         # Record Free Failures:
-        p9 = re.compile("^(?P<record_free_failures>Record Free Failures\:)$")
+        p9 = re.compile(r"^(?P<record_free_failures>Record Free Failures\:)$")
 
         #  MAX (ms)         : 49
-        p10 = re.compile("^\s*MAX +\(ms\) +\:\s*(?P<max>\d+)$")
+        p10 = re.compile(r"^\s*MAX +\(ms\) +\:\s*(?P<max>\d+)$")
 
         for line in output.splitlines():
             line = line.strip()
@@ -4773,37 +4773,37 @@ class ShowPlatformSoftwareNodeClusterManagerSwitchB0Local(
 
         # initial variables
         ret_dict = {}
-        # p1 = re.compile('^(?P<node_description>[\w\s]+)\: (?P<status>.*)$')
+        # p1 = re.compile(r'^(?P<node_description>[\w\s]+)\: (?P<status>.*)$')
         # Local Node Number: 1
-        p1 = re.compile("^Local +Node +Number\: +(?P<local_node_number>\d+)$")
+        p1 = re.compile(r"^Local +Node +Number\: +(?P<local_node_number>\d+)$")
 
         # Node status is: NODE_STATUS_UP
-        p2 = re.compile("^Node +status +is\: +(?P<node_status_is>.*)$")
+        p2 = re.compile(r"^Node +status +is\: +(?P<node_status_is>.*)$")
 
         # Tunnel status is: NODE_TUNNEL_UP
-        p3 = re.compile("^Tunnel +status +is\: +(?P<tunnel_status_is>.*)$")
+        p3 = re.compile(r"^Tunnel +status +is\: +(?P<tunnel_status_is>.*)$")
 
         # Node role is: CLUSTER_NODE_ROLE_LEADER
-        p4 = re.compile("^Node +role +is\: +(?P<node_role_is>.*)$")
+        p4 = re.compile(r"^Node +role +is\: +(?P<node_role_is>.*)$")
 
         # MAC address is : 64 181 193 255 238 0
-        p5 = re.compile("^MAC +address +is +\: +(?P<mac_address_is>.*)$")
+        p5 = re.compile(r"^MAC +address +is +\: +(?P<mac_address_is>.*)$")
 
         # Slot number is : 0
-        p6 = re.compile("^Slot +number +is +\: +(?P<slot_number_is>\d+)$")
+        p6 = re.compile(r"^Slot +number +is +\: +(?P<slot_number_is>\d+)$")
 
         # priority set to: 1
-        p7 = re.compile("^priority +set +to\: +(?P<priority_set_to>\d+)$")
+        p7 = re.compile(r"^priority +set +to\: +(?P<priority_set_to>\d+)$")
 
         # Leader node num is: 1
-        p8 = re.compile("^Leader +node +num is\: +(?P<leader_node_num_is>\d+)$")
+        p8 = re.compile(r"^Leader +node +num is\: +(?P<leader_node_num_is>\d+)$")
 
         # Follower node is: 2
-        p9 = re.compile("^Follower +node +is\: +(?P<follower_node_is>\d+)$")
+        p9 = re.compile(r"^Follower +node +is\: +(?P<follower_node_is>\d+)$")
 
         # Total node present in cluster: 2
         p10 = re.compile(
-            "^Total +node +present +in +cluster\: +(?P<total_node_present_in_cluster>\d+)$"
+            r"^Total +node +present +in +cluster\: +(?P<total_node_present_in_cluster>\d+)$"
         )
 
         for line in output.splitlines():
@@ -4969,35 +4969,35 @@ class ShowPlatformSoftwareBpCrimsonStatistics(
         ret_dict = {}
 
         # BP Crimson Statistics
-        p1 = re.compile("^(?P<bp_crimson_statistics>BP Crimson Statistics)$")
+        p1 = re.compile(r"^(?P<bp_crimson_statistics>BP Crimson Statistics)$")
 
         # Regexp  for  all the  lines  which fals in the below  pattern
         # Initialized            : Yes
-        p2 = re.compile("^(?P<description>[\w'\s]+)\:\s+(?P<value>\w+)$")
+        p2 = re.compile(r"^(?P<description>[\w'\s]+)\:\s+(?P<value>\w+)$")
 
         # BP SVL Crimson Statistics
-        p3 = re.compile("^(?P<bp_svl_crimson_statistics>BP SVL Crimson Statistics)$")
+        p3 = re.compile(r"^(?P<bp_svl_crimson_statistics>BP SVL Crimson Statistics)$")
 
         # BP Remote DB Statistics
-        p4 = re.compile("^(?P<bp_remote_db_statistics>BP Remote DB Statistics)$")
+        p4 = re.compile(r"^(?P<bp_remote_db_statistics>BP Remote DB Statistics)$")
 
         # GET Requests:
-        p5 = re.compile("^(?P<get_requests>GET Requests\:)$")
+        p5 = re.compile(r"^(?P<get_requests>GET Requests\:)$")
 
         # SET Requests:
-        p6 = re.compile("^(?P<set_requests>SET Requests\:)$")
+        p6 = re.compile(r"^(?P<set_requests>SET Requests\:)$")
 
         # In Progress Requests:
-        p7 = re.compile("^(?P<in_progress_requests>In Progress Requests\:)$")
+        p7 = re.compile(r"^(?P<in_progress_requests>In Progress Requests\:)$")
 
         # DBAL Response Time:
-        p8 = re.compile("^(?P<dbal_response_time>DBAL Response Time\:)$")
+        p8 = re.compile(r"^(?P<dbal_response_time>DBAL Response Time\:)$")
 
         # Record Free Failures:
-        p9 = re.compile("^(?P<record_free_failures>Record Free Failures\:)$")
+        p9 = re.compile(r"^(?P<record_free_failures>Record Free Failures\:)$")
 
         #  MAX (ms)         : 49
-        p10 = re.compile("^\s*MAX +\(ms\) +\:\s*(?P<max>\d+)$")
+        p10 = re.compile(r"^\s*MAX +\(ms\) +\:\s*(?P<max>\d+)$")
 
         for line in output.splitlines():
             line = line.strip()
@@ -5126,37 +5126,37 @@ class ShowPlatformSoftwareNodeClusterManagerSwitchB0Local(
 
         # initial variables
         ret_dict = {}
-        # p1 = re.compile('^(?P<node_description>[\w\s]+)\: (?P<status>.*)$')
+        # p1 = re.compile(r'^(?P<node_description>[\w\s]+)\: (?P<status>.*)$')
         # Local Node Number: 1
-        p1 = re.compile("^Local +Node +Number\: +(?P<local_node_number>\d+)$")
+        p1 = re.compile(r"^Local +Node +Number\: +(?P<local_node_number>\d+)$")
 
         # Node status is: NODE_STATUS_UP
-        p2 = re.compile("^Node +status +is\: +(?P<node_status_is>.*)$")
+        p2 = re.compile(r"^Node +status +is\: +(?P<node_status_is>.*)$")
 
         # Tunnel status is: NODE_TUNNEL_UP
-        p3 = re.compile("^Tunnel +status +is\: +(?P<tunnel_status_is>.*)$")
+        p3 = re.compile(r"^Tunnel +status +is\: +(?P<tunnel_status_is>.*)$")
 
         # Node role is: CLUSTER_NODE_ROLE_LEADER
-        p4 = re.compile("^Node +role +is\: +(?P<node_role_is>.*)$")
+        p4 = re.compile(r"^Node +role +is\: +(?P<node_role_is>.*)$")
 
         # MAC address is : 64 181 193 255 238 0
-        p5 = re.compile("^MAC +address +is +\: +(?P<mac_address_is>.*)$")
+        p5 = re.compile(r"^MAC +address +is +\: +(?P<mac_address_is>.*)$")
 
         # Slot number is : 0
-        p6 = re.compile("^Slot +number +is +\: +(?P<slot_number_is>\d+)$")
+        p6 = re.compile(r"^Slot +number +is +\: +(?P<slot_number_is>\d+)$")
 
         # priority set to: 1
-        p7 = re.compile("^priority +set +to\: +(?P<priority_set_to>\d+)$")
+        p7 = re.compile(r"^priority +set +to\: +(?P<priority_set_to>\d+)$")
 
         # Leader node num is: 1
-        p8 = re.compile("^Leader +node +num is\: +(?P<leader_node_num_is>\d+)$")
+        p8 = re.compile(r"^Leader +node +num is\: +(?P<leader_node_num_is>\d+)$")
 
         # Follower node is: 2
-        p9 = re.compile("^Follower +node +is\: +(?P<follower_node_is>\d+)$")
+        p9 = re.compile(r"^Follower +node +is\: +(?P<follower_node_is>\d+)$")
 
         # Total node present in cluster: 2
         p10 = re.compile(
-            "^Total +node +present +in +cluster\: +(?P<total_node_present_in_cluster>\d+)$"
+            r"^Total +node +present +in +cluster\: +(?P<total_node_present_in_cluster>\d+)$"
         )
 
         for line in output.splitlines():
@@ -9943,4 +9943,189 @@ class ShowPlatformSoftwareWiredClientID(ShowPlatformSoftwareWiredClientIDSchema)
                 }
 
         return parsed_output
+        
+        
+class ShowPlatsoftwaremcusnapshotSchema(MetaParser):
+    """show platform software mcu  switch  1 R0 version  0"""
+
+    schema = {
+        'fast_poe_power_budget': int,
+        'load_shed_info': {
+            'top': int,
+            'wrap_around': int,
+            'invalid_load_shed_info': str,
+        },
+        'mcu_snapshot_data': {
+            'manufacturing_config': {
+                Any(): Or(int,str),
+            },
+            'user_config': {
+                Any(): Or(int,str)
+            },
+            'red_earth_data': {
+                Any(): Or(int,str),
+            },
+            'i2c_data': {
+                Any(): int,
+            },
+            'load_shed_registers': {
+                Any() : Or(int,str),
+            },
+        },    
+        'register_value': {
+            Any() : Or(int,str),
+            },    
+        } 
+        
+class ShowPlatsoftwaremcusnapshot(ShowPlatsoftwaremcusnapshotSchema):
+    """
+    show platform software mcu switch {switch_num} {route-processor} snapshot_detail display
+    """
+    
+    cli_command = 'show platform software MCU switch {switch_num} {routeprocessor} snapshot_detail display' 
+                    
+
+    def cli(self, switch_num, routeprocessor, output=None): 
+
+        if output is None:            
+           
+            output = self.device.execute(self.cli_command.format(switch_num=switch_num, routeprocessor=routeprocessor))  
+                
+        ret_dict = {}
+                
+        # Fast PoE power budget: 0
+        p1 = re.compile(r'^Fast +PoE +power +budget\: +(?P<fast_poe_power_budget>\d+)$')
+        
+        # Load Shed info:
+        p2 =  re.compile(r'^Load +Shed +info\:$')        
+                
+        # TOP: 1, wrap around : 0 
+        p3 = re.compile(r'^TOP\: +(?P<top>\d+)\, +wrap +around +\: +(?P<wrap_around>\d+)$')  
+
+        # Got invalid load shed info
+        # 0x00
+        p4 = re.compile(r'^(?P<invalid_load_shed_info>(0x\w+){1})$')
+         
+        # Manufacturing Config
+        p5 = re.compile(r'^Manufacturing +Config$')
+        
+        # User Config                           
+        p6 = re.compile(r'^User +Config$') 
+        
+        # Red Earth data
+        p7 = re.compile(r'^Red +Earth +data$')
+
+        # I2C data         
+        p8 = re.compile(r'^I2C +data$')  
+        
+        # Load Shed Registers      
+        p9 = re.compile(r'^Load +Shed +Registers$')  
+        
+        # acmy_cfg0                   : 0xc0          
+        # Lo POE load shed priority   : 0
+        # Power stack mode            : STK_PWR_POWER_SHARING_MODE_STRICT 
+        # mac address                 : aa:bb:cc:dd:ee:ff 
+        p10 = re.compile(r'^(?P<key>[\w\s]+):\s+(?P<value>0x[\w\d]+|\d{1,3}|\w[\w:\-]+)') 
+        
+        # 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
+        p11 = re.compile(r'^(?P<registers>(?:0x[0-9A-Fa-f]{2}\s*){3,})$')    
+        
+        count  = regflag = 0    
+        
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # Fast PoE power budget: 0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['fast_poe_power_budget'] = int(group['fast_poe_power_budget'])               
+                continue  
+            
+            # Load Shed info:
+            m = p2.match(line)
+            if m:                
+                curr_dict  = ret_dict.setdefault('load_shed_info',{}) 
+                continue 
+                
+            # TOP: 1, wrap around : 0     
+            m = p3.match(line)
+            if m:                
+                group = m.groupdict()
+                curr_dict['top'] = int(group['top'])
+                curr_dict['wrap_around'] = int(group['wrap_around'])
+                continue 
+            
+            # Got invalid load shed info
+            # 0x00 
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict['invalid_load_shed_info'] = group['invalid_load_shed_info']         
+                continue     
+            
+            # Manufacturing Config
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict =  ret_dict.setdefault('mcu_snapshot_data', {}).setdefault('manufacturing_config', {})
+                continue
+                
+            # User Config          
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('mcu_snapshot_data', {}).setdefault('user_config', {})               
+                continue
+                
+            # Red Earth data
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('mcu_snapshot_data', {}).setdefault('red_earth_data', {})              
+                continue
+                
+            # I2C data    
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('mcu_snapshot_data', {}).setdefault('i2c_data', {})                
+                continue 
+                
+            # Load Shed Registers  
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('mcu_snapshot_data', {}).setdefault('load_shed_registers', {})                
+                continue
+                    
+            # acmy_cfg0                   : 0xc0          
+            # Lo POE load shed priority   : 0
+            # Power stack mode            : STK_PWR_POWER_SHARING_MODE_STRICT 
+            # mac address                 : aa:bb:cc:dd:ee:ff 
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()                
+                key = m.group('key').strip().replace(' ', '_').lower()
+                value = m.group('value')
+                try:
+                    value = int(value)
+                except ValueError:
+                    pass
+                curr_dict[key] = value    
+                continue
+                
+            # 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00    
+            m = p11.match(line)
+            if m: 
+                #ForkedPdb().set_trace()
+                group = m.groupdict()
+                count = count  + 1
+                if regflag == 0:
+                    curr_dict = ret_dict.setdefault('register_value', {})
+                curr_dict[count] = group['registers']  
+                regflag = 1
+                continue                
+           
+        return ret_dict                        
 

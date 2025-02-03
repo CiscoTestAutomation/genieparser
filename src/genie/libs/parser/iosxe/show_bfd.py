@@ -174,25 +174,25 @@ class ShowBfdNeighborsDetails(ShowBfdNeighborsDetailsSchema):
 		# 172.16.10.1	172.16.10.2		1/2		1		532 (3 )		Up 		Gig0/0/0
 		# 2001:DB8:B947:0:251:57EF:FF8D:E8CC      2001:DB8:B947:0:251:57EF:FF8D:E8CB          1/17         Up        Up        Gi2
 		p1 = re.compile(r'^(?P<our_address>[\w\.\:]+)\s+(?P<our_neighbor>[\w\.\:]+' \
-			')\s+(?P<ld_rd>\d+\/\d+)\s+(?P<rh_rs>\S+)\s+(?P<holdown_timer>\d+)' \
-			'\s+\((?P<holdown_timer_multiplier>\d+)\s+\)\s+(?P<state>\w+)' \
-			'\s+(?P<interface>[\w\W]+)$')
+			r')\s+(?P<ld_rd>\d+\/\d+)\s+(?P<rh_rs>\S+)\s+(?P<holdown_timer>\d+)' \
+			r'\s+\((?P<holdown_timer_multiplier>\d+)\s+\)\s+(?P<state>\w+)' \
+			r'\s+(?P<interface>[\w\W]+)$')
 
 		# 172.16.1.1	172.16.1.3
 		# # 2001:DB8:B947:0:251:57EF:FF8D:E8CC 
 		p2 = re.compile(r'^(?P<our_address>[\w\.\:]+) +(?P<our_neighbor>'\
-			'[\w\.\:]+)$')
+			r'[\w\.\:]+)$')
 
 		# 		5/2		1(RH)	150 (3)		Up 		Gig0/0/1
 		p3 = re.compile(r'^(?P<ld_rd>\d+\/\d+)\s+(?P<rh_rs>\S+)\s+' \
-			'(?P<holdown_timer>\d+)\s+\((?P<holdown_timer_multiplier>\d+)\s+\)' \
-			'\s+(?P<state>\w+)\s+(?P<interface>[\w\W]+)')
+			r'(?P<holdown_timer>\d+)\s+\((?P<holdown_timer_multiplier>\d+)\s+\)' \
+			r'\s+(?P<state>\w+)\s+(?P<interface>[\w\W]+)')
 
 		# 10.169.197.93 					4097/4097		Up 		Up 	Gi0/0/0
 		# 2001:DB8:B947:0:251:57EF:FF8D:E8CC                1/17         Up        Up        Gi2
 		p4 = re.compile(r'^(?P<our_neighbor>[\w\.\:]+)\s+(?P<ld_rd>\d+'\
-			'\/\d+)\s+(?P<rh_rs>\S+)\s+(?P<state>\w+)\s+(?P<interface>'\
-			'[\w\W]+)$')
+			r'\/\d+)\s+(?P<rh_rs>\S+)\s+(?P<state>\w+)\s+(?P<interface>'\
+			r'[\w\W]+)$')
 
 		# 5/2
 		p4_1 = re.compile(r'^(?P<ld>\d+)\/(?P<rd>\d+)$')
@@ -207,7 +207,7 @@ class ShowBfdNeighborsDetails(ShowBfdNeighborsDetailsSchema):
 		
 		# Session state is UP and not using echo function.
 		p7 = re.compile(r'^\s*Session +state +is +(?P<state>\S+) +and +not '\
-			'+using +echo +function\.$')
+			r'+using +echo +function\.$')
 
 		# Session Host: Software
 		p8 = re.compile(r'^\s*Session\s+Host:\s+(?P<session_host>\S+)$')
@@ -217,32 +217,32 @@ class ShowBfdNeighborsDetails(ShowBfdNeighborsDetailsSchema):
 
 		# Local Diag: 0, Demand mode: 0, Poll bit: 0
 		p11 = re.compile(r'^\s*Local +Diag: +(?P<local_diag>\d+), +Demand +'\
-			'mode: +(?P<demand_mode>\d+), +Poll +bit: +(?P<poll_bit>\d+)$')
+			r'mode: +(?P<demand_mode>\d+), +Poll +bit: +(?P<poll_bit>\d+)$')
 
 		# MinTxInt: 50000, MinRxInt: 50000, Multiplier: 3 Received MinRxInt: 50000, Received Multiplier: 3 Holddown (hits): 150(0), Hello (hits): 50(2223) Rx Count: 2212, Rx Count: 2212, Rx Interval (ms) 
 		# min/max/avg: 8/68/49 last: 0 ms ago Tx Count: 2222, Tx Interval (ms) min/max/avg: 40/60/49 last: 20 ms ago Elapsed time watermarks: 0 0 (last: 0) Registered protocols: CEF Stub
 		p12 = re.compile(r'^\s*MinTxInt:\s+(?P<min_tx_interface>\d+),\s+'\
-			'MinRxInt:\s+(?P<min_rx_interface>\d+),\s+Multiplier:\s+'\
-			'(?P<multiplier>\d+)\s*Received\s+MinRxInt:\s+'\
-			'(?P<received_min_rx_interface>\d+),\s+Received\s+Multiplier:\s'\
-			'+(?P<received_multiplier>\d+)\s+Hold(d)?own\s+\(hits\):\s+'\
-			'(?P<holddown>\d+)\((?P<holddown_hits>\d+)\),\s+Hello\s+\(hits\)'\
-			':\s+(?P<hello>\d+)\((?P<hello_hits>\d+)\)\s+Rx +Count:\s+'\
-			'(?P<rx_count>\d+),\s+Rx\s+Interval\s+\(ms\)\s+min\/max\/avg:\s+'\
-			'(?P<rx_min_interval_in_ms>\d+)\/(?P<rx_max_interval_in_ms>\d+)'\
-			'\/(?P<rx_avg_interval_in_ms>\d+) +last:\s+'\
-			'(?P<rx_last_interval_in_ms>\d+) +ms +ago\s*Tx\s+Count: +'\
-			'(?P<tx_count>\d+),\s+Tx\s+Interval\s+\(ms\)\s+min\/max\/avg:'\
-			'\s+(?P<tx_min_interval_in_ms>\d+)\/(?P<tx_max_interval_in_ms>'\
-			'\d+)\/(?P<tx_avg_interval_in_ms>\d+)\s+last:\s+'\
-			'(?P<tx_last_interval_in_ms>\d+)\s+ms\s+ago\s*Elapsed\s+time\s+'\
-			'watermarks:\s+(?P<elapsed_time_watermarks>\d+\s+\d+) +\('\
-			'last:\s+(?P<elapsed_time_watermarks_last>\d+)\)\s*'\
-			'Registered\s+protocols:\s+(?P<registered_protocols>[\w\W]+)$')
+			r'MinRxInt:\s+(?P<min_rx_interface>\d+),\s+Multiplier:\s+'\
+			r'(?P<multiplier>\d+)\s*Received\s+MinRxInt:\s+'\
+			r'(?P<received_min_rx_interface>\d+),\s+Received\s+Multiplier:\s'\
+			r'+(?P<received_multiplier>\d+)\s+Hold(d)?own\s+\(hits\):\s+'\
+			r'(?P<holddown>\d+)\((?P<holddown_hits>\d+)\),\s+Hello\s+\(hits\)'\
+			r':\s+(?P<hello>\d+)\((?P<hello_hits>\d+)\)\s+Rx +Count:\s+'\
+			r'(?P<rx_count>\d+),\s+Rx\s+Interval\s+\(ms\)\s+min\/max\/avg:\s+'\
+			r'(?P<rx_min_interval_in_ms>\d+)\/(?P<rx_max_interval_in_ms>\d+)'\
+			r'\/(?P<rx_avg_interval_in_ms>\d+) +last:\s+'\
+			r'(?P<rx_last_interval_in_ms>\d+) +ms +ago\s*Tx\s+Count: +'\
+			r'(?P<tx_count>\d+),\s+Tx\s+Interval\s+\(ms\)\s+min\/max\/avg:'\
+			r'\s+(?P<tx_min_interval_in_ms>\d+)\/(?P<tx_max_interval_in_ms>'\
+			r'\d+)\/(?P<tx_avg_interval_in_ms>\d+)\s+last:\s+'\
+			r'(?P<tx_last_interval_in_ms>\d+)\s+ms\s+ago\s*Elapsed\s+time\s+'\
+			r'watermarks:\s+(?P<elapsed_time_watermarks>\d+\s+\d+) +\('\
+			r'last:\s+(?P<elapsed_time_watermarks_last>\d+)\)\s*'\
+			r'Registered\s+protocols:\s+(?P<registered_protocols>[\w\W]+)$')
 		
 		# MinTxInt: 100000, MinRxInt: 100000, Multiplier: 6
 		p13 = re.compile(r'^\s*MinTxInt: +(?P<min_tx_interface>\d+), +MinRxInt' \
-			': +(?P<min_rx_interface>\d+), +Multiplier: +(?P<multiplier>\d+)$')
+			r': +(?P<min_rx_interface>\d+), +Multiplier: +(?P<multiplier>\d+)$')
 
 		# Received MinRxInt: 100000, Received Multiplier: 6
 		p14 = re.compile(r'^\s*Received +MinRxInt:\s+'\
@@ -271,8 +271,8 @@ class ShowBfdNeighborsDetails(ShowBfdNeighborsDetailsSchema):
 
 		# Tx Count: 1940, Tx Interval (ms) min/max/avg: 1/1003/879 last: 742 ms ago
 		p18 = re.compile(r'^\s*Tx +Count: +(?P<count>\d+), +Tx +Interval +' \
-			'\(ms\) +min\/max\/avg: +(?P<min_int_ms>\d+)\/(?P<max_int_ms>\d+)'\
-			'\/(?P<avg_int_ms>\d+) +last: +(?P<last_ms_ago>\d+) +ms +ago$')
+			r'\(ms\) +min\/max\/avg: +(?P<min_int_ms>\d+)\/(?P<max_int_ms>\d+)'\
+			r'\/(?P<avg_int_ms>\d+) +last: +(?P<last_ms_ago>\d+) +ms +ago$')
 
 		# Echo Tx Count: 20777, Echo Tx Interval (ms) min/max/avg: 1506/2003/1751 last: 722 ms ago
 		p18_1 = re.compile(r'^Echo Tx Count: +(?P<count>\d+), '
@@ -285,19 +285,19 @@ class ShowBfdNeighborsDetails(ShowBfdNeighborsDetailsSchema):
 		
 		# Elapsed time watermarks: 0 0 (last: 0)
 		p20 = re.compile(r'^\s*Elapsed +time +watermarks: +' \
-			'(?P<elapsed_time_watermarks>\d+ +\d+) +\(last: +' \
-			'(?P<elapsed_time_watermarks_last>\d+)\)$')
+			r'(?P<elapsed_time_watermarks>\d+ +\d+) +\(last: +' \
+			r'(?P<elapsed_time_watermarks_last>\d+)\)$')
 
 		# Registered protocols: OSPF CEF
 		p21 = re.compile(r'^\s*Registered +protocols: +' \
-			'(?P<registered_protocols>[\w\W]+)$')
+			r'(?P<registered_protocols>[\w\W]+)$')
 
 		# Uptime: 00:28:03
 		p22 = re.compile(r'^\s*Uptime: +(?P<up_time>\S+)$')
 		
 		# Last packet: Version: 1		- Diagnostic: 0
 		p23 = re.compile(r'^\s*Last\s+packet:\s+Version:\s+(?P<version>\d+)'\
-			'\s+\-\s+Diagnostic:\s+(?P<diagnostic>\d+)$')
+			r'\s+\-\s+Diagnostic:\s+(?P<diagnostic>\d+)$')
 
 		# Last packet: Version: 0
 		p24 = re.compile(r'\s*Last\s+packet:\sVersion:\s+(?P<version>\d+)$')
@@ -307,66 +307,66 @@ class ShowBfdNeighborsDetails(ShowBfdNeighborsDetailsSchema):
 		
 		# State bit: Up				- Demand bit: 0
 		p26 = re.compile(r'^\s*State +bit: +(?P<state_bit>\S+)\s+\-\s+' \
-			'Demand +bit:\s+(?P<demand_bit>\d+)$')
+			r'Demand +bit:\s+(?P<demand_bit>\d+)$')
 
 		p27 = re.compile(r'^\s*I +Hear +You +bit: +(?P<i_hear_you_bit>\S+)'\
-			'\s+\-\s+Demand +bit:\s+(?P<demand_bit>\d+)$')
+			r'\s+\-\s+Demand +bit:\s+(?P<demand_bit>\d+)$')
 		# Poll bit: 0 				- Final bit: 0
 		p28 = re.compile(r'^\s*Poll\s+bit:\s+(?P<poll_bit>\d+)\s+\-\s+'\
-			'Final\s+bit:\s+(?P<final_bit>\d+)$')
+			r'Final\s+bit:\s+(?P<final_bit>\d+)$')
 		
 		# C bit: 0
 		p29 = re.compile(r'^\s*C +bit: +(?P<c_bit>\d+)$')
 
 		# Multiplier: 6			- Length: 24
 		p30 = re.compile(r'^\s*Multiplier: +(?P<multiplier>\d+)\s+\-\s+' \
-			'Length:\s+(?P<length>\d+)$')
+			r'Length:\s+(?P<length>\d+)$')
 		
 		# My Discr.: 4097		- Your Discr.: 4097
 		p31 = re.compile(r'^\s*My +Discr\.: +(?P<my_discr>\d+)\s+\-\s+' \
-			'Your +Discr\.:\s+(?P<your_discr>\d+)')
+			r'Your +Discr\.:\s+(?P<your_discr>\d+)')
 		
 		# Min tx interval: 1000000	- Min rx interval: 1000000
 		p32 = re.compile(r'^\s*Min +tx +interval: +(?P<min_tx_interval>\d+)'\
-			'\s+\-\s+Min +rx +interval:\s+(?P<min_rx_interval>\d+)$')
+			r'\s+\-\s+Min +rx +interval:\s+(?P<min_rx_interval>\d+)$')
 
 		# Min Echo interval: 3000000
 		p33 = re.compile(r'^\s*Min\s+Echo\s+interval:\s+' \
-			'(?P<min_echo_interval>\d+)$')
+			r'(?P<min_echo_interval>\d+)$')
 		
 		# Cleanup timer hits: 0
 		p34 = re.compile(r'^\s*Cleanup +timer +hits: +'\
-			'(?P<cleanup_timer_hits>\d+)$')
+			r'(?P<cleanup_timer_hits>\d+)$')
 
 		# SSO Cleanup Timer called: 0
 		p35 = re.compile(r'^\s*SSO +Cleanup +Timer +called: +'\
-			'(?P<sso_cleanup_timer_called>\d+)$')
+			r'(?P<sso_cleanup_timer_called>\d+)$')
 
 		# SSO Cleanup Action Taken: 0
 		p36 = re.compile(r'^\s*SSO +Cleanup +Action +Taken: +'\
-			'(?P<sso_cleanup_action_taken>\d+)$')
+			r'(?P<sso_cleanup_action_taken>\d+)$')
 
 		# Pseudo pre-emptive process count: 239103 min/max/avg: 8/16/8 last: 0 ms ago
 		p37 = re.compile(r'^\s*Pseudo +pre-emptive +process +count: +'\
-			'(?P<count>\d+) +min\/max\/avg: +(?P<min>\d+)\/(?P<max>\d+)'\
-			'\/(?P<avg>\d+) +last: +(?P<last_ms_ago>\d+) +ms +ago$')
+			r'(?P<count>\d+) +min\/max\/avg: +(?P<min>\d+)\/(?P<max>\d+)'\
+			r'\/(?P<avg>\d+) +last: +(?P<last_ms_ago>\d+) +ms +ago$')
 
 		# IPC Tx Failure Count: 0
 		p38 = re.compile(r'^\s*IPC +Tx +Failure +Count: +'\
-			'(?P<ipc_tx_failure_count>\d+)$')
+			r'(?P<ipc_tx_failure_count>\d+)$')
 
 		# IPC Rx Failure Count: 0
 		p39 = re.compile(r'^\s*IPC +Rx +Failure +Count: +'\
-			'(?P<ipc_rx_failure_count>\d+)$')
+			r'(?P<ipc_rx_failure_count>\d+)$')
 
 		# Total Adjs Found: 1
 		p40 = re.compile(r'^\s*Total +Adjs +Found: +'\
-			'(?P<total_adjs_found>\d+)$')
+			r'(?P<total_adjs_found>\d+)$')
 
 		# Holddown - negotiated: 510000         adjusted: 0
 		p41 = re.compile(r'^\s*Hol(d)?down +\- +negotiated: +'\
-			'(?P<holddown_negotiated>\d+) +adjusted: +'\
-			'(?P<holddown_adjusted>\d+)$')
+			r'(?P<holddown_negotiated>\d+) +adjusted: +'\
+			r'(?P<holddown_adjusted>\d+)$')
 		
 		# IPv4 Sessions
 		# IPv6 Sessions

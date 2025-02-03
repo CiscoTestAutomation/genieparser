@@ -1,4 +1,27 @@
-expected_output = {
+expected_output =  {
+    'Port-channel10.2001': {
+        'service_policy': {
+            'input': {
+                'policy_name': {
+                    'p1': {
+                        'class_map': {
+                            'class-default': {
+                                'match': ['any'],
+                                'match_evaluation': 'match-any',
+                                'packets': 4800000,
+                                'qos_set': {
+                                    'traffic-class': {
+                                        'dscp table dscp2tc': {
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    },
     'TwentyFiveGigE1/1/2': {
         'service_policy': {
             'input': {

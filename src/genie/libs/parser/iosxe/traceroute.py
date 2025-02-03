@@ -187,7 +187,7 @@ class Traceroute(TracerouteSchema):
                                    setdefault(traceroute, {})
                 tr_dict['timeout_seconds'] = int(group['timeout'])
                 if '/' in traceroute:
-                    new_out = re.search('(?P<ip>[\d\.]+)\/+(?P<mask>\d+)', traceroute)
+                    new_out = re.search(r'(?P<ip>[\d\.]+)\/+(?P<mask>\d+)', traceroute)
                     address = new_out.groupdict()['ip']
                     mask = new_out.groupdict()['mask']
                     tr_dict['address'] = address
@@ -505,7 +505,7 @@ class TracerouteIpv6(TracerouteIpv6Schema):
                     probe_list = group['probe'].strip()
                 else:
                     probe_list = group['probe'].strip()
-                probe_list = re.split('msec|\*|ms', probe_list)
+                probe_list = re.split(r'msec|\*|ms', probe_list)
                 probe_list[:] = [x.strip() for x in probe_list if x and not x.isspace()]
                 for probe in probe_list:
                     probe_dict = hop_dict.setdefault('probe',{})

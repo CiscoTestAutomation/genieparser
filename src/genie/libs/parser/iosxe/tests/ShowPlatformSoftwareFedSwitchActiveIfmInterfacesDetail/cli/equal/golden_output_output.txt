@@ -1,0 +1,10 @@
+type_n_state      intializing  init_failed  init_done    ready    pending_delete  delete
+
+ETHER             0            0            0            258      0               0
+ETHERCHANNEL      0            0            0            2        0               0
+SVI               0            0            0            1        0               0
+VLAN              0            0            0            3        0               0
+CAPWAP            0            0            0            0        0               0
+RADIO             0            0            0            0        0               0
+SSID              0            0            0            0        0               0
+WIRED_CLIENT      0            0            0            0        0               0

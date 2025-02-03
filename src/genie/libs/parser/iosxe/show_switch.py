@@ -52,14 +52,14 @@ class ShowSwitchStackPortsSummary(ShowSwitchStackPortsSummarySchema):
         # index = 0
 
         p1 = re.compile(r"^(?P<stackport_id>\S+)"
-                        " +(?P<port_status>\w+)"
-                        " +(?P<neighbor>[\d+])"
-                        " +(?P<cable_length>\w+)"
-                        " +(?P<link_ok>\w+)"
-                        " +(?P<link_active>\w+)"
-                        " +(?P<sync_ok>\w+)"
-                        " +(?P<link_changes_count>\d+)"
-                        " +(?P<in_loopback>\w+)")
+                        r" +(?P<port_status>\w+)"
+                        r" +(?P<neighbor>[\d+])"
+                        r" +(?P<cable_length>\w+)"
+                        r" +(?P<link_ok>\w+)"
+                        r" +(?P<link_active>\w+)"
+                        r" +(?P<sync_ok>\w+)"
+                        r" +(?P<link_changes_count>\d+)"
+                        r" +(?P<in_loopback>\w+)")
 
         for line in output.splitlines():
             line = line.strip()

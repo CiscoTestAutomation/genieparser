@@ -49,8 +49,8 @@ class ShowMemoryStatistics(ShowMemoryStatisticsSchema):
 
         # initial regexp pattern
         p1 = re.compile(r'^(?P<name>\S+( \w)?) +(?P<head>\w+) +(?P<total>\d+) +'
-                         '(?P<used>\d+) +(?P<free>\d+) +'
-                         '(?P<lowest>\d+) +(?P<largest>\d+)$')
+                         r'(?P<used>\d+) +(?P<free>\d+) +'
+                         r'(?P<lowest>\d+) +(?P<largest>\d+)$')
 
         p2 = re.compile(r'^Tracekey *: +(?P<tracekey>\S+)$')
 

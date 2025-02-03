@@ -93,32 +93,32 @@ class ShowSpanningTreeMst(ShowSpanningTreeMstSchema):
 		p2 = re.compile(r'^VLANS +Mapped: +(?P<vlan>\S+)$')
 		# CIST Root  Priority	32768
 		p3 = re.compile(r'^CIST\s+Root\s+Priority\s+'
-			'(?P<cist_root_priority>\d+)')
+			r'(?P<cist_root_priority>\d+)')
 		# Address	 0021.1bff.0e05
 		p4 = re.compile(r'^Address\s+(?P<address>[\w\.]+)$')
 		# Ext Cost    2000
 		p5 = re.compile(r'^Ext\s+Cost\s+(?P<cist_root_cost>\d+)$')
 		# Root ID    Priority    32768
 		p6 = re.compile(r'^Root\s+ID\s+Priority\s+(?P<designated_root_priority>'
-			'\d+)')
+			r'\d+)')
 		# Int Cost    0
 		p7 = re.compile(r'^Int\s+Cost\s+(?P<root_cost>\d+)$')
 		# Max Age 20 sec, Forward Delay 15 sec
 		p8 = re.compile(r'^Max\s+Age\s+(?P<max_age>\d+)\s+sec,'
-			'\s+Forward\s+Delay\s+(?P<forward_delay>\d+)\s+sec$')
+			r'\s+Forward\s+Delay\s+(?P<forward_delay>\d+)\s+sec$')
 		# Max Hops 20, Transmit Hold count	6
 		p9 = re.compile(r'^Max\s+Hops\s+(?P<bridge_max_hops>\d+),'
-			'\s+Transmit\s+Hold\s+count\s+(?P<bridge_transmit_hold_count>\d+)$')
+			r'\s+Transmit\s+Hold\s+count\s+(?P<bridge_transmit_hold_count>\d+)$')
 		# Bridge ID Priority 32768 (priority 32768 sys-id-ext 0)
 		p10 = re.compile(r'^Bridge\s+ID\s+Priority\s+(?P<bridge_priority>\d+)'
-			'(\s+\(priority\s+\d+\s+sys\-id\-ext\s+(?P<sys_id_ext>\d+)\))?')
+			r'(\s+\(priority\s+\d+\s+sys\-id\-ext\s+(?P<sys_id_ext>\d+)\))?')
 		# Te0/0/0/16   128.1   2000      ROOT FWD   32768 0021.1bff.0e05 128.1  
 		p11 = re.compile(r'^(?P<name>\S+)\s+(?P<port_priority>\d+)\.'
-			'(?P<port_num>\d+)\s+(?P<cost>\d+)\s+(?P<role>\w+)\s+'
-			'(?P<port_state>\w+)\s+((?P<designated_cost>\d+)\s+)?'
-			'(?P<designated_bridge_priority>\d+)\s+(?P<designated_bridge_address>'
-			'[\w\.]+)\s+(?P<designated_port_priority>\d+)\.'
-			'(?P<designated_port_num>\d+)$')
+			r'(?P<port_num>\d+)\s+(?P<cost>\d+)\s+(?P<role>\w+)\s+'
+			r'(?P<port_state>\w+)\s+((?P<designated_cost>\d+)\s+)?'
+			r'(?P<designated_bridge_priority>\d+)\s+(?P<designated_bridge_address>'
+			r'[\w\.]+)\s+(?P<designated_port_priority>\d+)\.'
+			r'(?P<designated_port_num>\d+)$')
 		# This bridge is the root
 		p12 = re.compile(r'This +bridge +is +(?P<this_bridge_is>[\w ]+)$')
 		
@@ -307,8 +307,8 @@ class ShowSpanningTreeMstag(ShowSpanningTreeMstagSchema):
 		# Pre-empt delay is disabled
 		# Preempt delay is disabled.
 		p2 = re.compile(r'^Pre(\-)?empt +delay +is +(?P<preempt_delay>\w+)\.?'
-			'( +)?(?P<preempt_delay_state>Sending +(startup|standard) '
-			'+BPDU( +until \S+)?)?')
+			r'( +)?(?P<preempt_delay_state>Sending +(startup|standard) '
+			r'+BPDU( +until \S+)?)?')
 		# Name:            risc
 		p3 = re.compile(r'^Name:\s+(?P<name>\S+)$')
 		# Revision: 1
@@ -569,24 +569,24 @@ class ShowSpanningTreePvrst(ShowSpanningTreePvrstSchema):
 		p1 = re.compile(r'^VLAN +(?P<vlan_id>\d+):$')
 		# Root ID    Priority    32768
 		p2 = re.compile(r'^Root\s+ID\s+Priority\s+'
-			'(?P<designated_root_priority>\d+)')
+			r'(?P<designated_root_priority>\d+)')
 		# Address     0021.1bff.d973
 		p3 = re.compile(r'^Address\s+(?P<address>[\w\.]+)$')
 		# Max Age 20 sec, Forward Delay 15 sec
 		p4 = re.compile(r'^Max\s+Age\s+(?P<max_age>\d+)\s+sec,'
-			'\s+Forward\s+Delay\s+(?P<forward_delay>\d+)\s+sec$')
+			r'\s+Forward\s+Delay\s+(?P<forward_delay>\d+)\s+sec$')
 		# Bridge ID  Priority    32768 (priority 32768 sys-id-ext 0)
 		p5 = re.compile(r'^Bridge\s+ID\s+Priority\s+(?P<bridge_priority>\d+)'
-			'(\s+\(priority\s+\d+\s+sys\-id\-ext\s+(?P<sys_id_ext>\d+)\))?')
+			r'(\s+\(priority\s+\d+\s+sys\-id\-ext\s+(?P<sys_id_ext>\d+)\))?')
 		# Transmit Hold count   6
 		p6 = re.compile(r'^Transmit\s+Hold\s+count\s+(?P<bridge_transmit_hold_count>\d+)')
 		# Gi0/7/0/0	128.1   20000	 DSGN FWD   32768 8cb6.4fff.6588 128.1
 		p7 = re.compile(r'^(?P<name>\S+)\s+(?P<port_priority>\d+)\.'
-			'(?P<port_num>\d+)\s+(?P<cost>\d+)\s+(?P<role>\w+)\s+(?P<port_state>'
-			'\w+)\s+(?P<designated_bridge_priority>\d+)\s+'
-			'(?P<designated_bridge_address>[\w\.]+)\s+'
-			'(?P<designated_port_priority>\d+)\.'
-			'(?P<designated_port_num>\d+)$')
+			r'(?P<port_num>\d+)\s+(?P<cost>\d+)\s+(?P<role>\w+)\s+(?P<port_state>'
+			r'\w+)\s+(?P<designated_bridge_priority>\d+)\s+'
+			r'(?P<designated_bridge_address>[\w\.]+)\s+'
+			r'(?P<designated_port_priority>\d+)\.'
+			r'(?P<designated_port_num>\d+)$')
 
 		for line in out.splitlines():
 			line = line.strip()
@@ -730,12 +730,12 @@ class ShowSpanningTreePvrsTag(ShowSpanningTreePvrsTagSchema):
 		# Pre-empt delay is enabled. Sending standard BPDU
 		# Pre-empt delay is disabled
 		p2 = re.compile(r'^Pre\-empt +delay +is +(?P<preempt_delay>\w+)'
-			'\.?( +)?(?P<preempt_delay_state>Sending +'
-			'(startup|standard) +BPDU( +until \S+)?)?')
+			r'\.?( +)?(?P<preempt_delay_state>Sending +'
+			r'(startup|standard) +BPDU( +until \S+)?)?')
 		# Sub-interface:	GigabitEthernet0/0/0/1.5 (Up)
 		# Sub-interface:	Bundle-Ether1000.2100 (Up)
 		p3 = re.compile(r'^Sub\-interface:\s+(?P<sub_interface>\S+)\s+'
-			'\((?P<sub_interface_state>\w+)\)$')
+			r'\((?P<sub_interface_state>\w+)\)$')
 		# Max Age:			20
 		p4 = re.compile(r'^Max\s+Age:\s+(?P<max_age>\d+)$')
 		# Root Priority:    0
@@ -941,11 +941,11 @@ class ShowSpanningTreePvsTag(ShowSpanningTreePvsTagSchema):
 		# Pre-empt delay is enabled. Sending standard BPDU
 		# Pre-empt delay is disabled
 		p2 = re.compile(r'^Pre\-empt +delay +is +(?P<preempt_delay>\w+)'
-			'\.?( +Sending +(startup|standard) +BPDU( +until \S+)?)?')
+			r'\.?( +Sending +(startup|standard) +BPDU( +until \S+)?)?')
 		# Sub-interface:	GigabitEthernet0/0/0/1.5 (Up)
 		# Sub-interface:	Bundle-Ether1000.2100 (Up)
 		p3 = re.compile(r'^Sub\-interface:\s+(?P<sub_interface>\S+)'
-			'\s+\((?P<sub_interface_state>\w+)\)$')
+			r'\s+\((?P<sub_interface_state>\w+)\)$')
 		# Max Age:			20
 		p4 = re.compile(r'^Max\s+Age:\s+(?P<max_age>\d+)$')
 		# Root Priority:    0

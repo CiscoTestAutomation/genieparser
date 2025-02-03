@@ -10,7 +10,7 @@ Parser for the following commands:
 import re
 
 import genie.metaparser.util.exceptions
-from netaddr import IPAddress, IPNetwork
+from netaddr import IPAddress, INET_ATON
 
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any, Optional
@@ -74,14 +74,14 @@ class ShowOspfv3Neighbor(ShowOspfv3NeighborSchema):
         # Neighbors for OSPFv3 1, VRF default
         # Neighbors for OSPFv3 1, VRF VRF1
         p1 = re.compile(r'^Neighbors +for +OSPFv3 +(?P<process>\w+)'
-                        '(, +VRF (?P<vrf>[\w-]+))?$')
+                        r'(, +VRF (?P<vrf>[\w-]+))?$')
 
         # Neighbor ID     Pri   State           Dead Time   Interface ID    Interface
         # 10.145.95.95     1     FULL/  -        00:00:37    5               GigabitEthernet0/0/0/1
         # 10.220.100.100 1     FULL/  -        00:00:38    6               GigabitEthernet0/0/0/0
         p2 = re.compile(r'^(?P<neighbor_id>\S+) +(?P<priority>\d+)'
-                        ' +(?P<state>\S+\s*\S+) +(?P<dead_time>\S+)'
-                        ' +(?P<address>\S+) +(?P<interface>\S+)$')
+                        r' +(?P<state>\S+\s*\S+) +(?P<dead_time>\S+)'
+                        r' +(?P<address>\S+) +(?P<interface>\S+)$')
 
         # Neighbor is up for 2d18h
         # Neighbor is up for 2d19h
@@ -89,7 +89,7 @@ class ShowOspfv3Neighbor(ShowOspfv3NeighborSchema):
 
         # Total neighbor count: 2
         p4 = re.compile(r'^Total +neighbor +count:'
-                        ' +(?P<total_neighbor_count>\d+)$')
+                        r' +(?P<total_neighbor_count>\d+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -250,7 +250,7 @@ class ShowOspfv3Database(ShowOspfv3DatabaseSchema):
         # Link (Type-8) Link States (Area 0)
         # Intra Area Prefix Link States (Area 0)
         p2 = re.compile(r'^(?P<lsa_type>([a-zA-Z0-9\s\D]+)) +Link +States +\(Area'
-                        ' +(?P<area>(\S+))\)$')
+                        r' +(?P<area>(\S+))\)$')
 
         # 10.94.1.1       2019        0x8000007d 0            2           E
         # 10.145.95.95     607         0x80000097 0            2           E
@@ -306,7 +306,7 @@ class ShowOspfv3Database(ShowOspfv3DatabaseSchema):
                 if group['area']:
                     try:
                         int(group['area'])
-                        area = str(IPAddress(str(group['area'])))
+                        area = str(IPAddress(str(group['area']), flags=INET_ATON))
                     except Exception:
                         area = str(group['area'])
                 else:
@@ -488,7 +488,7 @@ class ShowOspfv3VrfAllInclusiveNeighborDetail(ShowOspfv3VrfAllInclusiveNeighborD
         # In the area 0 via interface GigabitEthernet0/0/0/0.1
         # In the area 0 via interface GigabitEthernet0/0/0/1.500     BFD enabled, Mode: Default
         p3 = re.compile(r"^In the area +(?P<area>([0-9]+)) via interface +(?P<interface>(\S+))"
-                        "( +BFD (?P<enable>\w+), Mode: (?P<mode>\w+))*")
+                        r"( +BFD (?P<enable>\w+), Mode: (?P<mode>\w+))*")
 
         # Neighbor: interface-id 14, link-local address fe80::20c:29ff:fe6b:1a0
         p4 = re.compile(r"^Neighbor: interface-id +(?P<interface_id>([0-9]+)), "
@@ -750,45 +750,45 @@ class ShowOspfv3Interface(ShowOspfv3InterfaceSchema):
         # Loopback0 is up, line protocol is up
         p1 = re.compile(
             r"^(?P<interface>(\S+)) +is( +administratively)?"
-            " +(?P<enable>(unknown|up|down)), +line +protocol +is"
-            " +(?P<line_protocol>(up|down))$")
+            r" +(?P<enable>(unknown|up|down)), +line +protocol +is"
+            r" +(?P<line_protocol>(up|down))$")
 
         # Link Local address fe80:100:10::1, Interface ID 7
         p2 = re.compile(
             r"^Link +Local +address +(?P<link_local_address>(\S+)),"
-            " +Interface ID +(?P<interface_id>(\S+))$")
+            r" +Interface ID +(?P<interface_id>(\S+))$")
 
         # Area 0, Process ID mpls1, Instance ID 0, Router ID 10.94.1.1
         p3 = re.compile(
             r"^Area +(?P<area>(\S+))"
-            ", +Process +ID +(?P<pid>(\S+))"
-            ", +Instance +ID +(?P<instance>(\S+))"
-            ", +Router +ID +(?P<router_id>(\S+))$")
+            r", +Process +ID +(?P<pid>(\S+))"
+            r", +Instance +ID +(?P<instance>(\S+))"
+            r", +Router +ID +(?P<router_id>(\S+))$")
 
         # Network Type POINT_TO_POINT, Cost: 1
         p4 = re.compile(
             r"^Network +Type +(?P<network_type>(\S+))"
-            ", +Cost: +(?P<cost>(\S+))$")
+            r", +Cost: +(?P<cost>(\S+))$")
 
         # BFD enabled, interval 150 msec, multiplier 3, mode Default
         p5 = re.compile(
             r"^BFD +(?P<bfd_status>(\S+))"
-            "(?:, +interval +(?P<interval>(\d+)) +msec)?"
-            "(?:, +multiplier +(?P<multi>(\d+)))?"
-            "(?:, +mode +(?P<mode>(\S+)))?$")
+            r"(?:, +interval +(?P<interval>(\d+)) +msec)?"
+            r"(?:, +multiplier +(?P<multi>(\d+)))?"
+            r"(?:, +mode +(?P<mode>(\S+)))?$")
 
         # Transmit Delay is 1 sec, State POINT_TO_POINT,
         p6 = re.compile(
             r"^Transmit +Delay is +(?P<delay>(\d+)) +sec"
-            ", +State +(?P<state>(\w)+),$")
+            r", +State +(?P<state>(\w)+),$")
 
         # Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
         p7 = re.compile(
             r"^Timer +intervals +configured"
-            ", +Hello +(?P<hello>(\d+))"
-            ", +Dead +(?P<dead>(\d+))"
-            ", +Wait +(?P<wait>(\d+))"
-            ", +Retransmit +(?P<retransmit>(\d+))$")
+            r", +Hello +(?P<hello>(\d+))"
+            r", +Dead +(?P<dead>(\d+))"
+            r", +Wait +(?P<wait>(\d+))"
+            r", +Retransmit +(?P<retransmit>(\d+))$")
 
         # Hello due in 00:00:08
         p8 = re.compile(r"^Hello +due +in +(?P<hello_timer>(\S+))$")
@@ -801,18 +801,18 @@ class ShowOspfv3Interface(ShowOspfv3InterfaceSchema):
 
         # Last flood scan length is 1, maximum is 4
         p11 = re.compile(r"^Last +flood +scan +length +is +(?P<last_flood_scan_length>(\d+))"
-                         ", +maximum +is +(?P<max_flood_scan_length>(\d+))$")
+                         r", +maximum +is +(?P<max_flood_scan_length>(\d+))$")
 
         # Last flood scan time is 0 msec, maximum is 0 msec
         p12 = re.compile(
             r"^Last +flood +scan +time +is +(?P<last_flood_scan_time_msec>(\d+))"
-            " +msec, +maximum +is +(?P<max_flood_scan_time_msec>(\d+)) +msec$")
+            r" +msec, +maximum +is +(?P<max_flood_scan_time_msec>(\d+)) +msec$")
 
         # Neighbor Count is 1, Adjacent neighbor count is 1
         p13 = re.compile(
             r"^Neighbor +Count +is +(?P<nbr_count>(\d+))"
-            ", +Adjacent +neighbor +count +is"
-            " +(?P<adj_nbr_count>(\d+))$")
+            r", +Adjacent +neighbor +count +is"
+            r" +(?P<adj_nbr_count>(\d+))$")
 
         # Adjacent with neighbor 10.220.100.100
         p14 = re.compile(
@@ -1111,7 +1111,7 @@ class ShowOspfv3VrfAllInclusiveDatabaseRouter(ShowOspfv3VrfAllInclusiveDatabaseR
         
         # Router Link States (Area 0)
         p2 = re.compile(r'^(?P<lsa_type>([a-zA-Z0-9\s\D]+)) +Link +States +\(Area'
-                        ' +(?P<area>(\S+))\)$')
+                        r' +(?P<area>(\S+))\)$')
 
         # Routing Bit Set on this LSA
         p3 = re.compile(r"^Routing +Bit +Set +on +this +LSA$")
@@ -1126,7 +1126,7 @@ class ShowOspfv3VrfAllInclusiveDatabaseRouter(ShowOspfv3VrfAllInclusiveDatabaseR
         p6 = re.compile(r"^LS +Type: +(?P<lsa_type>(.*))$")
         
         # Link State ID: 0
-        p7 = re.compile(r"^Link +State +ID: +(?P<lsa_id>(\d+))" "(?: +\(.*\))?$")
+        p7 = re.compile(r"^Link +State +ID: +(?P<lsa_id>(\d+))(?: +\(.*\))?$")
 
         # Advertising Router: 25.97.1.1
         p8 = re.compile(r"^Advertising +Router: +(?P<adv_router>(\S+))$")
@@ -1201,7 +1201,7 @@ class ShowOspfv3VrfAllInclusiveDatabaseRouter(ShowOspfv3VrfAllInclusiveDatabaseR
                 if m.groupdict()["area"]:
                     try:
                         int(m.groupdict()["area"])
-                        area = str(IPAddress(str(m.groupdict()["area"])))
+                        area = str(IPAddress(str(m.groupdict()["area"]), flags=INET_ATON))
                     except Exception:
                         area = str(m.groupdict()["area"])
                 else:
@@ -1492,7 +1492,7 @@ class ShowOspfv3VrfAllInclusiveDatabasePrefix(ShowOspfv3VrfAllInclusiveDatabaseP
 
         # Intra Area Prefix Link States (Area 0)
         p2 = re.compile(r'^(?P<lsa_type>([a-zA-Z0-9\s\D]+)) +Link +States +\(Area'
-                        ' +(?P<area>(\S+))\)$')
+                        r' +(?P<area>(\S+))\)$')
 
         # Routing Bit Set on this LSA
         p3 = re.compile(r'^Routing +Bit +Set +on +this +LSA$')
@@ -1503,7 +1503,7 @@ class ShowOspfv3VrfAllInclusiveDatabasePrefix(ShowOspfv3VrfAllInclusiveDatabaseP
         p5 = re.compile(r'^LS +Type: +(?P<lsa_type>(.*))$')
 
         # Link State ID: 0
-        p6 = re.compile(r'^Link +State +ID: +(?P<lsa_id>(\d+))' '(?: +\(.*\))?$')
+        p6 = re.compile(r'^Link +State +ID: +(?P<lsa_id>(\d+))(?: +\(.*\))?$')
 
         # Advertising Router: 25.97.1.1
         p7 = re.compile(r'^Advertising +Router: +(?P<adv_router>(\S+))$')
@@ -1521,7 +1521,7 @@ class ShowOspfv3VrfAllInclusiveDatabasePrefix(ShowOspfv3VrfAllInclusiveDatabaseP
         p11 = re.compile(r'^Referenced +LSA +Type: +(?P<ref_lsa_type>(.*))$')
 
         # Referenced Link State ID: 0
-        p12 = re.compile(r'^Referenced +Link +State +ID: +(?P<ref_lsa_id>(\d+))' '(?: +\(.*\))?$')
+        p12 = re.compile(r'^Referenced +Link +State +ID: +(?P<ref_lsa_id>(\d+))(?: +\(.*\))?$')
 
         # Referenced Advertising Router: 25.97.1.1
         p13 = re.compile(r'^Referenced +Advertising +Router: +(?P<ref_adv_router>(\S+))$')
@@ -1535,9 +1535,9 @@ class ShowOspfv3VrfAllInclusiveDatabasePrefix(ShowOspfv3VrfAllInclusiveDatabaseP
         # Prefix Length: 128, Options: None, Metric: 65535, Priority: Medium
         p16 = re.compile(
             r'^Prefix +Length: +(?P<prefix_length>(\d+))\s*,'
-            ' +Options: +(?P<options>(\S+))\s*,'
-            ' +Metric: +(?P<metric>(\d+))\s*,'
-            ' +Priority: +(?P<priority>(\S+))$'
+            r' +Options: +(?P<options>(\S+))\s*,'
+            r' +Metric: +(?P<metric>(\d+))\s*,'
+            r' +Priority: +(?P<priority>(\S+))$'
         )
 
         # OSPFv3 Router with ID (25.97.1.1) (Process ID mpls1 VRF default)
@@ -1574,7 +1574,7 @@ class ShowOspfv3VrfAllInclusiveDatabasePrefix(ShowOspfv3VrfAllInclusiveDatabaseP
                 if m.groupdict()["area"]:
                     try:
                         int(m.groupdict()["area"])
-                        area = str(IPAddress(str(m.groupdict()["area"])))
+                        area = str(IPAddress(str(m.groupdict()["area"]), flags=INET_ATON))
                     except Exception:
                         area = str(m.groupdict()["area"])
                 else:
@@ -1767,7 +1767,7 @@ class ShowOspfv3DatabaseprefixAdvRouter(ShowOspfv3DatabaseprefixAdvRouterSchema)
         
         #Router Link States (Area 0)
         p2 = re.compile(r'^(?P<lsa_type>([a-zA-Z0-9\s\D]+)) +Link +States +\(Area'
-                        ' +(?P<area>(\S+))\)$')
+                        r' +(?P<area>(\S+))\)$')
         
         #Advertising Router: 10.0.0.3
         p3 = re.compile(r'^Advertising Router: +(?P<advertising_router>(\S+))$')
@@ -1809,7 +1809,7 @@ class ShowOspfv3DatabaseprefixAdvRouter(ShowOspfv3DatabaseprefixAdvRouterSchema)
                 if group['area']:
                     try:
                         int(group['area'])
-                        area = str(IPAddress(group['area']))
+                        area = str(IPAddress(group['area'], flags=INET_ATON))
                     except Exception:
                         area = group['area']
                 else:

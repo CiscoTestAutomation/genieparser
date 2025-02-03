@@ -1186,7 +1186,8 @@ class ShowControllerEthernetControllerLinkstatusSchema(MetaParser):
         'port': int,
         'cmd': str,
         'rc': str,
-        'rsn': str,
+        Optional('slot'): int,
+        Optional('rsn'): str,         
         'phy_link_status':{
             'phy_configuration':{
                     Any():Or(int,str),
@@ -1240,318 +1241,126 @@ class ShowControllerEthernetControllerLinkstatus(ShowControllerEthernetControlle
         #Genral - Speed:         speed_gbps1
         p8 = re.compile(r'^(?P<key>[\s*\w]+.*)\: +(?P<value>[\S\s]+.*)$')
 
-        #Port = 22 cmd = (port_diag unit 0 port 22 slot 0) rc = 0x0 rsn = success
-        p9 = re.compile(r'^Port +\= +(?P<port>\d+) +cmd +\= +\((?P<cmd>[\s*\w]+)\) +rc +\= +(?P<rc>\w+) +rsn +\= +(?P<rsn>\w+)$')
-
-        #PHY LINK STATUS
-        p10 = re.compile(r'^\*+\s*PHY +LINK +STATUS\s*\*+$')
-
-        #Phy Configuration :
-        p11 = re.compile(r'^Phy +Configuration +\:$')
-
-        #Phy Status :
-        p12 = re.compile(r'^Phy +Status +\:$')
-
-        for line in output.splitlines():
-            line = line.strip()
-
-
-            #Gi1/0/5 (if_id: 1036)
-            m = p0.match(line)
-            if m:
-                group = m.groupdict()
-                root_dict = ret_dict.setdefault('interface', {})
-                root_dict['interface_name'] = group['name']
-                root_dict['if_id'] = int(group['if_id'])
-                continue
-
-
-            #******* MAC LINK STATUS ************
-            m = p1.match(line)
-            if m:
-                root_dict =  ret_dict.setdefault('mac_link_status', {})
-                continue
-
-            #MPP PORT DETAILS
-            m = p2.match(line)
-            if m:
-                root_dict =  ret_dict.setdefault('mac_link_status', {}).setdefault('mpp_port_details', {})
-                continue
-
-
-            ##link_state: 1 pcs_status: 0  high_ber: 0'
-            m = p3.match(line)
-            if m:
-                group = m.groupdict()
-                root_dict['link_state'] = int(group['link_state'])
-                root_dict['pcs_status'] = int(group['pcs_status'])
-                root_dict['high_ber'] = int(group['high_ber'])
-                continue
-
-            #get_state = LINK_UP
-            m = p4.match(line)
-            if m:
-                group = m.groupdict()
-                root_dict['get_state'] = group['get_state'].strip()
-                continue
-
-            #Autoneg Details
-            m = p5.match(line)
-            if m:
-                root_dict = ret_dict.setdefault('mac_link_status', {}).setdefault('autoneg_details', {})
-                continue
-
-            #Autoneg Status
-            m = p6.match(line)
-            if m:
-                root_dict = ret_dict.setdefault('mac_link_status', {}).setdefault('autoneg_status', {})
-                continue
-
-            #MIB counters
-            m = p7.match(line)
-            if m:
-                root_dict = ret_dict.setdefault('mac_link_status', {}).setdefault('mib_counters', {})
-                continue
-
-
-            #Genral - Speed:         speed_gbps1
-            m = p8.match(line)
-            if m:
-                group = m.groupdict()
-                key = group['key'].strip().lower().replace(":","").replace("-",'_').replace(" ",'_')
-                if group['value'].isdigit():
-                    root_dict.update({key: int(group['value'])})
-                else:
-                    root_dict.update({key: group['value']})
-                continue
-
-            #Port = 3 cmd = (port_diag unit 0 port 3 slot 0) rc = 0x0 rsn = success
-            m = p9.match(line)
-            if m:
-                group = m.groupdict()
-                ret_dict['port'] = int(group['port'])
-                ret_dict['cmd'] = group['cmd']
-                ret_dict['rc'] = group['rc']
-                ret_dict['rsn'] = group['rsn']
-                continue
-
-            #******* PHY LINK STATUS ************
-            m = p10.match(line)
-            if m:
-                root_dict = ret_dict.setdefault('phy_link_status', {})
-                continue
-
-            #Phy Configuration :
-            m = p11.match(line)
-            if m:
-                root_dict =  ret_dict.setdefault('phy_link_status', {}).setdefault('phy_configuration', {})
-                continue
-
-            #Phy Status :
-            m = p12.match(line)
-            if m:
-                root_dict = ret_dict.setdefault('phy_link_status', {}).setdefault('phy_status', {})
-                continue
-
-        return ret_dict
-
-
-
-class ShowControllerEthernetControllerLinkstatusSchema(MetaParser):
-    """Schema for show  platform  hardware fed  switch  active  npu  slot  1  port 23 link_status"""
-
-    schema = {
-        'interface':{
-            'interface_name': str,
-            'if_id': int,
-        },
-        'mac_link_status':{
-            'mpp_port_details': {
-                    Any():Or(int,str),
-            },
-            'autoneg_details':{
-                    Any():Or(int,str),
-            },
-            'autoneg_status': {
-                    Any():Or(int,str),
-            },
-            'mib_counters': {
-                    Any(): int,
-            },
-        },
-        'port': int,
-        'cmd': str,
-        'rc': str,
-        'rsn': str,
-        'phy_link_status':{
-            'phy_configuration':{
-                    Any():Or(int,str),
-            },
-            'phy_status':{
-                    Any():Or(int,str),
-            },
-        },
- }
-
-
-
-class ShowControllerEthernetControllerLinkstatus(ShowControllerEthernetControllerLinkstatusSchema):
-    """
-    ShowPlatformSoftwareCpmSwitchActiveB0CountersInterfaceIsis
-    """
-
-    cli_command = 'show controllers ethernet-controller {interface} link-status'
-
-    def cli(self, interface, output=None):
-
-        if output is None:
-            output = self.device.execute(self.cli_command.format(interface=interface))
-
-        ret_dict = {}
-
-        #Gi1/0/5 (if_id: 1036)
-        p0 = re.compile(r'^(?P<name>\S+) +\(if\_id\: +(?P<if_id>\d+)\)$')
-
-        #******* MAC LINK STATUS ************
-        p1 = re.compile(r'^\*+\s*MAC +LINK +STATUS\s*\*+$')
-
-        #MPP PORT DETAILS
-        p2 =  re.compile(r'^MPP +PORT +DETAILS$')
-
-        #link_state: 1 pcs_status: 0  high_ber: 0
-        p3 = re.compile(r'^link_state\: +(?P<link_state>\d+) +pcs_status\: +(?P<pcs_status>\d+) +high_ber\: +(?P<high_ber>\d+)$')
-
-        #get_state = LINK_UP
-        p4 = re.compile(r'^get_state +\= +(?P<get_state>.*)$')
-
-        # Autoneg Details
-        p5 = re.compile(r'^Autoneg +Details$')
-
-        #Autoneg Status
-        p6 = re.compile(r'^Autoneg +Status$')
-
-        #MIB counters
-        p7 = re.compile(r'^MIB +counters$')
-
-        #Genral - Speed:         speed_gbps1
-        p8 = re.compile(r'^(?P<key>[\s*\w]+.*)\: +(?P<value>[\S\s]+.*)$')
-
-        #Port = 22 cmd = (port_diag unit 0 port 22 slot 0) rc = 0x0 rsn = success
-        p9 = re.compile(r'^Port +\= +(?P<port>\d+) +cmd +\= +\((?P<cmd>[\s*\w]+)\) +rc +\= +(?P<rc>\w+) +rsn +\= +(?P<rsn>\w+)$')
-
-        #PHY LINK STATUS
-        p10 = re.compile(r'^\*+\s*PHY +LINK +STATUS\s*\*+$')
-
-        #Phy Configuration :
-        p11 = re.compile(r'^Phy +Configuration +\:$')
-
-        #Phy Status :
-        p12 = re.compile(r'^Phy +Status +\:$')
-
-        for line in output.splitlines():
-            line = line.strip()
-
-
-            #Gi1/0/5 (if_id: 1036)
-            m = p0.match(line)
-            if m:
-                group = m.groupdict()
-                root_dict = ret_dict.setdefault('interface', {})
-                root_dict['interface_name'] = group['name']
-                root_dict['if_id'] = int(group['if_id'])
-                continue
-
-
-            #******* MAC LINK STATUS ************
-            m = p1.match(line)
-            if m:
-                root_dict =  ret_dict.setdefault('mac_link_status', {})
-                continue
-
-            #MPP PORT DETAILS
-            m = p2.match(line)
-            if m:
-                root_dict =  ret_dict.setdefault('mac_link_status', {}).setdefault('mpp_port_details', {})
-                continue
-
-
-            ##link_state: 1 pcs_status: 0  high_ber: 0'
-            m = p3.match(line)
-            if m:
-                group = m.groupdict()
-                root_dict['link_state'] = int(group['link_state'])
-                root_dict['pcs_status'] = int(group['pcs_status'])
-                root_dict['high_ber'] = int(group['high_ber'])
-                continue
-
-            #get_state = LINK_UP
-            m = p4.match(line)
-            if m:
-                group = m.groupdict()
-                root_dict['get_state'] = group['get_state'].strip()
-                continue
-
-            #Autoneg Details
-            m = p5.match(line)
-            if m:
-                root_dict = ret_dict.setdefault('mac_link_status', {}).setdefault('autoneg_details', {})
-                continue
-
-            #Autoneg Status
-            m = p6.match(line)
-            if m:
-                root_dict = ret_dict.setdefault('mac_link_status', {}).setdefault('autoneg_status', {})
-                continue
-
-            #MIB counters
-            m = p7.match(line)
-            if m:
-                root_dict = ret_dict.setdefault('mac_link_status', {}).setdefault('mib_counters', {})
-                continue
-
-
-            #Genral - Speed:         speed_gbps1
-            m = p8.match(line)
-            if m:
-                group = m.groupdict()
-                key = group['key'].strip().lower().replace(":","").replace("-",'_').replace(" ",'_')
-                if group['value'].isdigit():
-                    root_dict.update({key: int(group['value'])})
-                else:
-                    root_dict.update({key: group['value']})
-                continue
-
-            #Port = 3 cmd = (port_diag unit 0 port 3 slot 0) rc = 0x0 rsn = success
-            m = p9.match(line)
-            if m:
-                group = m.groupdict()
-                ret_dict['port'] = int(group['port'])
-                ret_dict['cmd'] = group['cmd']
-                ret_dict['rc'] = group['rc']
-                ret_dict['rsn'] = group['rsn']
-                continue
-
-            #******* PHY LINK STATUS ************
-            m = p10.match(line)
-            if m:
-                root_dict = ret_dict.setdefault('phy_link_status', {})
-                continue
-
-            #Phy Configuration :
-            m = p11.match(line)
-            if m:
-                root_dict =  ret_dict.setdefault('phy_link_status', {}).setdefault('phy_configuration', {})
-                continue
-
-            #Phy Status :
-            m = p12.match(line)
-            if m:
-                root_dict = ret_dict.setdefault('phy_link_status', {}).setdefault('phy_status', {})
-                continue
-
-        return ret_dict
         
+        
+        # Port = 22 cmd = (port_diag unit 0 port 22 slot 0) rc = 0x0 rsn = success
+        # Port = 3 Slot = 1 cmd = (port_diag unit 0 port 2 slot 0) rc = 0x0 reason = success
+        p9 = re.compile(r'^Port +\= +(?P<port>\d+) +(Slot +\= +(?P<slot>\d+) +)?cmd +\= +\((?P<cmd>[\s*\w]+)\) +rc +\= +(?P<rc>\w+) +(rsn|reason) +\= +(?P<rsn>\w+)$')
 
+        #PHY LINK STATUS
+        p10 = re.compile(r'^\*+\s*PHY +LINK +STATUS\s*\*+$')
+
+        #Phy Configuration :
+        p11 = re.compile(r'^Phy +Configuration +\:$')
+
+        #Phy Status :
+        p12 = re.compile(r'^Phy +Status +\:$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+
+            #Gi1/0/5 (if_id: 1036)
+            m = p0.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict = ret_dict.setdefault('interface', {})
+                root_dict['interface_name'] = group['name']
+                root_dict['if_id'] = int(group['if_id'])
+                continue
+
+
+            #******* MAC LINK STATUS ************
+            m = p1.match(line)
+            if m:
+                root_dict =  ret_dict.setdefault('mac_link_status', {})
+                continue
+
+            #MPP PORT DETAILS
+            m = p2.match(line)
+            if m:
+                root_dict =  ret_dict.setdefault('mac_link_status', {}).setdefault('mpp_port_details', {})
+                continue
+
+
+            ##link_state: 1 pcs_status: 0  high_ber: 0'
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict['link_state'] = int(group['link_state'])
+                root_dict['pcs_status'] = int(group['pcs_status'])
+                root_dict['high_ber'] = int(group['high_ber'])
+                continue
+
+            #get_state = LINK_UP
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict['get_state'] = group['get_state'].strip()
+                continue
+
+            #Autoneg Details
+            m = p5.match(line)
+            if m:
+                root_dict = ret_dict.setdefault('mac_link_status', {}).setdefault('autoneg_details', {})
+                continue
+
+            #Autoneg Status
+            m = p6.match(line)
+            if m:
+                root_dict = ret_dict.setdefault('mac_link_status', {}).setdefault('autoneg_status', {})
+                continue
+
+            #MIB counters
+            m = p7.match(line)
+            if m:
+                root_dict = ret_dict.setdefault('mac_link_status', {}).setdefault('mib_counters', {})
+                continue
+
+
+            #Genral - Speed:         speed_gbps1
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                key = group['key'].strip().lower().replace(":","").replace("-",'_').replace(" ",'_')
+                if group['value'].isdigit():
+                    root_dict.update({key: int(group['value'])})
+                else:
+                    root_dict.update({key: group['value']})
+                continue
+
+            # Port = 3 cmd = (port_diag unit 0 port 3 slot 0) rc = 0x0 rsn = success
+            # Port = 3 cmd = (port_diag unit 0 port 3 slot 0) rc = 0x0 reason = success
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['port'] = int(group['port'])
+                if (slot := group.get("slot")):
+                    ret_dict['slot'] = int(slot)
+                ret_dict['cmd'] = group['cmd']
+                ret_dict['rc'] = group['rc']
+                ret_dict['rsn'] = group['rsn']
+                continue 
+
+            #******* PHY LINK STATUS ************
+            m = p10.match(line)
+            if m:
+                root_dict = ret_dict.setdefault('phy_link_status', {})
+                continue
+
+            #Phy Configuration :
+            m = p11.match(line)
+            if m:
+                root_dict =  ret_dict.setdefault('phy_link_status', {}).setdefault('phy_configuration', {})
+                continue
+
+            #Phy Status :
+            m = p12.match(line)
+            if m:
+                root_dict = ret_dict.setdefault('phy_link_status', {}).setdefault('phy_status', {})
+                continue
+
+        return ret_dict
        
 class ShowControllersEthernetControllerPortInfoSchema(MetaParser):
     """
@@ -2718,5 +2527,439 @@ class ShowControllerEthernetControllerInterfaceMac(ShowControllerEthernetControl
           
         return ret_dict               
                   
+class ShowControllersEthernetControllerPreemptionHandshakeSchema(MetaParser):
+    """
+    Schema for 'show controllers ethernet-controller {interface} preemption handshake'
+    """
+    schema = {
+        'interface': str,
+        'handshake_frame_counters': {
+            'verify_rx': int,
+            'verify_tx': int,
+            'respond_rx': int,
+            'respond_tx': int,
+        }
+    }
+
+class ShowControllersEthernetControllerPreemptionHandshake(ShowControllersEthernetControllerPreemptionHandshakeSchema):
+    """Parser for 'show controllers ethernet-controller {interface} preemption handshake
+    show controllers ethernet-controller gi1/4 preemption handshake
+
+    Gi1/4
+    ----------------------------------------------------------------
+    Handshake frame counters
+        Verify Rx........................ [13]
+        Verify Tx........................ [1]
+        Respond Rx....................... [1]
+        Respond Tx....................... [1]
+
+    """
+    
+    cli_command = 'show controllers ethernet-controller {interface} preemption handshake'
+    
+    def cli(self, interface='', output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(interface=interface))
         
+        ret_dict = {}
+        
+        ## Gig1/4 (Interface name)
+        p1 = re.compile(r'(?P<interface>^[A-Za-z]+\d+/\d+)$')
+
+        # Handshake frame counters
+        p2  = re.compile(r'^Handshake +frame +counters$')
+                
+        # Verify Rx ........................ [13]
+        p3 = re.compile(r'^Verify\s+Rx\.+\s+\[(?P<verify_rx>\d+)\]$')
+                
+        # Verify Tx .................... [1]
+        p4 = re.compile(r'^Verify\s+Tx\.+\s+\[(?P<verify_tx>\d+)\]$')
+                
+        # Respond Rx ................... [1]
+        p5 = re.compile(r'^Respond\s+Rx\.+\s+\[(?P<respond_rx>\d+)\]$')
+                
+        # Respond Tx..................... [1]
+        p6 = re.compile(r'^Respond\s+Tx\.+\s+\[(?P<respond_tx>\d+)\]$')
+                
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # Gig1/4
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                interface_name =  Common.convert_intf_name(group['interface'])
+                ret_dict['interface'] = interface_name     
+                continue
+                    
+            #Handshake frame counters
+            m = p2.match(line)
+            if m:
+                curr_dict = ret_dict.setdefault('handshake_frame_counters', {})
+                continue 
+                    
+            #Verify Rx ........................ [13]
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict['verify_rx'] = int(group['verify_rx'])
+                continue
+                    
+            # Verify Tx ........................ [13]
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict['verify_tx'] = int(group['verify_tx'])
+                continue
+                    
+            # Respond Rx ................... [1]
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict['respond_rx'] = int(group['respond_rx'])
+                continue
+                    
+            # Respond Tx ................... [1]
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict['respond_tx'] = int(group['respond_tx'])
+                continue     
+        return ret_dict                
+        
+
+class ShowControllersEthernetControllerPreemptionDropsSchema(MetaParser):
+    """
+    Schema for 'show controllers ethernet-controller {interface} preemption drops'
+    """
+    schema = {
+        'interface': str,
+        'preemption_frame_drops': {
+            'express_tx_drops': int,
+            'express_rx_drops': int,
+            'preemptable_tx_drops': int,
+            'preemptable_rx_drops': int,
+            'fragment_drops': int,
+        }
+    }             
+
+class ShowControllersEthernetControllerPreemptionDrops(ShowControllersEthernetControllerPreemptionDropsSchema):
+    """Parser for 'show controllers ethernet-controller {interface} preemption drops
+    show controllers ethernet-controller gi1/4 preemption drops    
+    Gi1/4
+    ---------------------------------------------------------------------
+    Port Preemption Frame Drops
+        Express Tx Drops....................... [13]
+        Express Rx Drops....................... [1]
+        Preemptable Tx Drops................... [1]
+        Preemptable Rx Drops................... [1]
+        Fragment Drops......................... [1]
+    """
+    
+    cli_command = 'show controllers ethernet-controller {interface} preemption drops'
+    
+    def cli(self, interface='', output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(interface=interface))
+        
+        ret_dict = {}
+        
+        # Gi1/4 (Interface name)
+        p1 = re.compile(r'(?P<interface>^[A-Za-z]+\d+/\d+)$')
+
+        # Port Preemption Frame Drops
+        p2  = re.compile(r'^Port\s+Preemption\s+Frame\s+Drops$')
+                        
+        # Express Tx Drops ........................ [13]
+        p3 = re.compile(r'^Express\s+Tx\s+Drops\.+\s+\[(?P<express_tx_drops>\d+)\]$')
+                        
+        # Express Rx Drops .................... [1]
+        p4 = re.compile(r'^Express\s+Rx\s+Drops\.+\s+\[(?P<express_rx_drops>\d+)\]$')
+                        
+        # Preemptable Tx Drops ................... [1]
+        p5 = re.compile(r'^Preemptable\s+Tx\s+Drops\.+\s+\[(?P<preemptable_tx_drops>\d+)\]$')
+                        
+        # Preemptable Rx Drops..................... [1]
+        p6 = re.compile(r'^Preemptable\s+Rx\s+Drops\.+\s+\[(?P<preemptable_rx_drops>\d+)\]$')
+
+        # Fragment Drops..................... [1]
+        p7 = re.compile(r'^Fragment\s+Drops\.+\s+\[(?P<fragment_drops>\d+)\]$')
+            
+        for line in output.splitlines():
+            line = line.strip()
+                        
+            # Gig1/4
+            m = p1.match(line)
+            
+            if m:
+                group = m.groupdict()
+                interface_name =  Common.convert_intf_name(group['interface'])
+                ret_dict['interface'] = interface_name     
+                continue
+                            
+            # Port Preemption Frame Drops
+            m = p2.match(line)
+            if m:
+                curr_dict = ret_dict.setdefault('preemption_frame_drops', {})
+                continue 
+                            
+            # Express Tx Drops ........................ [13]
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict['express_tx_drops'] = int(group['express_tx_drops'])
+                continue
+                            
+            # Express Rx Drops .................... [1]
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict['express_rx_drops'] = int(group['express_rx_drops'])
+                continue
+                            
+            # Preemptable Tx Drops ................... [1]
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict['preemptable_tx_drops'] = int(group['preemptable_tx_drops'])
+                continue
+                            
+            # Preemptable Rx Drops................... [1]
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict['preemptable_rx_drops'] = int(group['preemptable_rx_drops'])
+                continue     
+                    
+            # Fragment Drops..................... [1]
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict['fragment_drops'] = int(group['fragment_drops'])
+                continue     
+        
+        return ret_dict
+    
+class ShowControllersEthernetControllerPreemptionStatsSchema(MetaParser):
+    """
+    Schema for 'show controllers ethernet-controller {interface} preemption stats'
+    """
+    schema = {
+        'interface': str,
+        'express_counters': {
+            'rx_counters': {
+                'total_frames_recvd': int,
+                '64_byte_frames': int,
+                '65_127_byte_frames': int,
+                '128_255_byte_frames': int,
+                '256_511_byte_frames': int,
+                '512_1023_byte_frames': int,
+                '1024_1518_byte_frames': int,
+                '1519_2047_byte_frames': int,
+                '2048_4095_byte_frames': int,
+                '4096_8191_byte_frames': int,
+                '8192_16383_byte_frames': int,
+                '16384_32767_byte_frames': int,
+                '32768_mtu_byte_frames': int,  
+                'init_fragment_frame_count': str,
+                'contd_fragment_frame_count': str,
+            },
+            'tx_counters': {
+                'total_frames_transmitted': int,
+                '64_byte_frames': int,
+                '65_127_byte_frames': int,
+                '128_255_byte_frames': int,
+                '256_511_byte_frames': int,
+                '512_1023_byte_frames': int,
+                '1024_1518_byte_frames': int,
+                '1519_2047_byte_frames': int,
+                '2048_4095_byte_frames': int,
+                '4096_8191_byte_frames': int,
+                '8192_16383_byte_frames': int,
+                '16384_32767_byte_frames': int,
+                '32768_mtu_byte_frames': int,  
+                'init_fragment_frame_count': str,
+                'contd_fragment_frame_count': str,
+            }
+        },
+        'preemptable_counters': {
+            'rx_counters': {
+                'total_frames_recvd': int,
+                '64_byte_frames': int,
+                '65_127_byte_frames': int,
+                '128_255_byte_frames': int,
+                '256_511_byte_frames': int,
+                '512_1023_byte_frames': int,
+                '1024_1518_byte_frames': int,
+                '1519_2047_byte_frames': int,
+                '2048_4095_byte_frames': int,
+                '4096_8191_byte_frames': int,
+                '8192_16383_byte_frames': int,
+                '16384_32767_byte_frames': int,
+                '32768_mtu_byte_frames': int, 
+                'init_fragment_frame_count': int,
+                'contd_fragment_frame_count': int,
+            },
+            'tx_counters': {
+                'total_frames_transmitted': int,
+                '64_byte_frames': int,
+                '65_127_byte_frames': int,
+                '128_255_byte_frames': int,
+                '256_511_byte_frames': int,
+                '512_1023_byte_frames': int,
+                '1024_1518_byte_frames': int,
+                '1519_2047_byte_frames': int,
+                '2048_4095_byte_frames': int,
+                '4096_8191_byte_frames': int,
+                '8192_16383_byte_frames': int,
+                '16384_32767_byte_frames': int,
+                '32768_mtu_byte_frames': int,  
+                'init_fragment_frame_count': int,
+                'contd_fragment_frame_count': int,
+            }
+        }
+    }
+
+
+class ShowControllersEthernetControllerPreemptionStats(ShowControllersEthernetControllerPreemptionStatsSchema):
+    """Parser for 'show controllers ethernet-controller {interface} preemption stats
+    show controllers ethernet-controller gi1/4 preemption 
+        Gi1/4
+    -----------------------------------------------------------------------------
+                                        Express counters     Preemptable counters
+    -----------------------------------------------------------------------------
+    Total frames received               0                    0                   
+    64 byte frames                      0                    0                   
+    65 to 127 byte frames               0                    0                   
+    128 to 255 byte frames              0                    0                   
+    256 to 511 byte frames              0                    0                   
+    512 to 1023 byte frames             0                    0                   
+    1024 to 1518 byte frames            0                    0                   
+    1519 to 2047 byte frames            0                    0                   
+    2048 to 4095 byte frames            0                    0                   
+    4096 to 8191 byte frames            0                    0                   
+    8192 to 16383 byte frames           0                    0                   
+    16384 to 32767 byte frames          0                    0                   
+    32768 to Mtu byte frames            0                    0                   
+
+    Total frames transmitted            0                    0                   
+    64 byte frames                      0                    0                   
+    65 to 127 byte frames               0                    0                   
+    128 to 255 byte frames              0                    0                   
+    256 to 511 byte frames              0                    0                   
+    512 to 1023 byte frames             0                    0                   
+    1024 to 1518 byte frames            0                    0                   
+    1519 to 2047 byte frames            0                    0                   
+    2048 to 4095 byte frames            0                    0                   
+    4096 to 8191 byte frames            0                    0                   
+    8192 to 16383 byte frames           0                    0                   
+    16384 to 32767 byte frames          0                    0                   
+    32768 to Mtu byte frames            0                    0                   
+    Init fragment frame count           N/A                  0                   
+    Contd fragment frame count          N/A                  0                   
+    -----------------------------------------------------------------------------
+    """
+
+    cli_command = 'show controllers ethernet-controller {interface} preemption stats'
+    
+    def cli(self, interface='', output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(interface=interface))
+
+        config_dict = {}
+        
+        # Gi1/4 (Interface name)
+        p1 = re.compile(r'(?P<interface>^[A-Za-z]+\d+/\d+)$')
+
+        # Total frames received               0                    0
+        p2 = re.compile(r"Total\s+frames\s+received\s+(?P<express_total_frames_recvd>\d+)\s+(?P<preemptable_total_frames_recvd>\d+)")
+
+        # Total frames transmitted            0                    0
+        p3 = re.compile("Total\s+frames\s+transmitted\s+(?P<express_total_frames_transmitted>\d+)\s+(?P<preemptable_total_frames_transmitted>\d+)")
+        
+        # 64 byte frames                      0                    0
+        p4  = re.compile(r"64\s+byte\s+frames\s+(?P<express_64b_counters>\d+)\s+(?P<preempt_64b_counters>\d+)") 
+
+        # 65 to 127 byte frames               0                    0 [Matches all the output in the same format]
+        p5 = re.compile(r"^(?P<first_byte>\d+) +to +(?P<last_byte>\d+) +byte +frames +(?P<express_counter>\d+) +(?P<preempt_counter>\d+)$" )
+
+        # 32768 to Mtu byte frames            0                    0
+        p6 = re.compile(r"32768\s+to\s+Mtu+\s+byte+\s+frames\s+(?P<express_mtub_counters>\d+)\s+(?P<preempt_mtub_counters>\d+)")
+
+        # Init fragment frame count           N/A                  0
+        p7 = re.compile(r"Init\s+fragment\s+frame\s+count\s+(?P<express_init_frame_count>N\/A|\w+)\s+(?P<preempt_init_frame_count>\d+)")
+
+        # Contd fragment frame count          N/A                  0
+        p8 = re.compile(r"Contd\s+fragment\s+frame+\s+count+\s+(?P<express_contd_frame_count>N\/A|\w+)\s+(?P<preempt_contd_frame_count>\d+)")
+
+        for line in output.splitlines():
+            # Strip leading and trailing spaces
+            line = line.strip()
+                       
+            # Gi1/4 (Interface name)
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                interface_name =  Common.convert_intf_name(group['interface'])
+                config_dict['interface'] = interface_name
+                continue
+            
+            # Total frames received               0                    0
+            m = p2.match(line)
+            if m:
+                express_counters = config_dict.setdefault('express_counters', {}).setdefault('rx_counters', {})
+                preemtable_counters = config_dict.setdefault('preemptable_counters', {}).setdefault('rx_counters', {})
+                express_counters['total_frames_recvd'] = int(m.group('express_total_frames_recvd'))
+                preemtable_counters['total_frames_recvd'] = int(m.group('preemptable_total_frames_recvd'))
+
+            # Total frames transmitted            0                    0
+            m = p3.match(line)
+            if m:
+                express_counters = config_dict.setdefault('express_counters', {}).setdefault('tx_counters', {})
+                preemtable_counters = config_dict.setdefault('preemptable_counters', {}).setdefault('tx_counters', {})
+                express_counters['total_frames_transmitted'] = int(m.group('express_total_frames_transmitted'))
+                preemtable_counters['total_frames_transmitted'] = int(m.group('preemptable_total_frames_transmitted'))
+
+            # 64 byte frames                      0                    0
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                express_counters['64_byte_frames'] = int(group['express_64b_counters'])
+                preemtable_counters['64_byte_frames'] = int(group['preempt_64b_counters'])
+                continue
+        
+            # 65 to 127 byte frames               0                    0 [Matches all the output in the same format]
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                counter_name = f"{group['first_byte']}_{group['last_byte']}_byte_frames"
+                express_counters[counter_name] = int(group['express_counter'])
+                preemtable_counters[counter_name] = int(group['preempt_counter'])
+                continue
+
+            # 32768 to Mtu byte frames            0                    0
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                express_counters['32768_mtu_byte_frames'] = int(group['express_mtub_counters'])
+                preemtable_counters['32768_mtu_byte_frames'] = int(group['preempt_mtub_counters'])
+                continue
+
+            # Init fragment frame count           N/A                  0
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                express_counters['init_fragment_frame_count'] = group['express_init_frame_count']
+                preemtable_counters['init_fragment_frame_count'] = int(group['preempt_init_frame_count'])
+                continue
+
+            # Contd fragment frame count          N/A                  0
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                express_counters['contd_fragment_frame_count'] = group['express_contd_frame_count']
+                preemtable_counters['contd_fragment_frame_count'] = int(group['preempt_contd_frame_count'])
+                continue
+
+        return config_dict
 

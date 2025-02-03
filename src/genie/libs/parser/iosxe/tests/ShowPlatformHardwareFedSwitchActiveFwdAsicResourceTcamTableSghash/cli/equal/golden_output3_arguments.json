@@ -1,0 +1,4 @@
+{
+    "switch_var" : "active",
+    "max_asic" : "max_asic=1,sgt=4,dgt=6,protocol_in=ipv6"
+}

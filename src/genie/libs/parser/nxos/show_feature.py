@@ -47,7 +47,7 @@ class ShowFeature(ShowFeatureSchema):
             line = line.strip()
             # 1) bash-shell             1          disabled
             p1 = re.compile(r'^(?P<name>[\w\-]+) +(?P<inst>\d+) '
-                             '+(?P<state>\w+)\(?(?P<run>not-running)?\)?$')
+                             r'+(?P<state>\w+)\(?(?P<run>not-running)?\)?$')
             m = p1.match(line)
             if m:
                 if 'feature' not in f_dict:

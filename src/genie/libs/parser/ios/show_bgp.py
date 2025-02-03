@@ -78,7 +78,7 @@ class ShowBgpAllSummary(ShowBgpAllSummary_iosxe):
 class ShowBgpAllClusterIds(ShowBgpAllClusterIds_iosxe):
     """
        Parser for show bgp all cluster-ids
-       Executing 'show vrf detail | inc \(VRF' to collect vrf names.
+       Note: this parser executes 'show vrf detail | inc \\(VRF' to collect vrf names.
     """
     pass
 

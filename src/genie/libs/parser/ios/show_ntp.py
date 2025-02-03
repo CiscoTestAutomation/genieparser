@@ -97,18 +97,18 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
         #  ~10.4.1.1        .INIT.          16      -   1024     0  0.000   0.000 15937.
         # +~10.16.2.2       127.127.1.1      8    137     64     1 15.917 556.786 7938.0
         p1 = re.compile(r'^(?P<mode_code>[x\*\#\+\- ])?(?P<configured>[\~])? *(?P<remote>[\w\.\:]+) +'
-                        '(?P<refid>[\w\.]+) +(?P<stratum>\d+) +'
-                        '(?P<receive_time>[\d\-]+) +(?P<poll>\d+) +'
-                        '(?P<reach>\d+) +(?P<delay>[\d\.]+) +'
-                        '(?P<offset>[\d\.\-]+) +(?P<disp>[\d\.\-]+)$')
+                        r'(?P<refid>[\w\.]+) +(?P<stratum>\d+) +'
+                        r'(?P<receive_time>[\d\-]+) +(?P<poll>\d+) +'
+                        r'(?P<reach>\d+) +(?P<delay>[\d\.]+) +'
+                        r'(?P<offset>[\d\.\-]+) +(?P<disp>[\d\.\-]+)$')
 
         # * sys.peer, # selected, + candidate, - outlyer, x falseticker, ~ configured
         p2 = re.compile(r'^\* sys.peer, +\# selected, +\+ candidate, +- outlyer, '
-            '+x falseticker, +~ configured$')
+            r'+x falseticker, +~ configured$')
 
         # * master (synced), # master (unsynced), + selected, - candidate, ~ configured
         p3 = re.compile(r'^\* master +\(synced\), +\# master \(unsynced\), +\+ '
-            'selected, +\- candidate, +~ configured$')
+            r'selected, +\- candidate, +~ configured$')
 
         for line in out.splitlines():
             line = line.strip()

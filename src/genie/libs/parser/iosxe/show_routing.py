@@ -235,28 +235,28 @@ class ShowIpRoute(ShowIpRouteSchema):
 
         # initial regexp pattern
         p100 = re.compile(r'^Routing +entry +for +'
-                        '(?P<entry>(?P<ip>[\w\:\.]+)\/(?P<mask>\d+))'
-                        '(, +(?P<net>[\w\s]+))?$')
+                        r'(?P<entry>(?P<ip>[\w\:\.]+)\/(?P<mask>\d+))'
+                        r'(, +(?P<net>[\w\s]+))?$')
         p200 = re.compile(r'^Known +via +\"(?P<known_via>[\w\s]+)\", +'
-                        'distance +(?P<distance>\d+), +'
-                        'metric +(?P<metric>\d+)'
-                        '(, +type +(?P<type>[\w\-\s]+)(?P<connected>, connected)?)?$')
+                        r'distance +(?P<distance>\d+), +'
+                        r'metric +(?P<metric>\d+)'
+                        r'(, +type +(?P<type>[\w\-\s]+)(?P<connected>, connected)?)?$')
         p300 = re.compile(r'^Redistributing +via +(?P<redist_via>\w+) *'
-                        '(?P<redist_via_tag>\d+)?$')
+                        r'(?P<redist_via_tag>\d+)?$')
         p400 = re.compile(r'^Last +update +from +(?P<from>[\w\.]+) +'
-                        'on +(?P<interface>[\w\.\/\-]+), +'
-                        '(?P<age>[\w\.\:]+) +ago$')
+                        r'on +(?P<interface>[\w\.\/\-]+), +'
+                        r'(?P<age>[\w\.\:]+) +ago$')
         p500 = re.compile(r'^\*? *(?P<nexthop>[\w\.]+)(, +'
-                        'from +(?P<from>[\w\.]+), +'
-                        '(?P<age>[\w\.\:]+) +ago, +'
-                        'via +(?P<interface>[\w\.\/\-]+))?$')
+                        r'from +(?P<from>[\w\.]+), +'
+                        r'(?P<age>[\w\.\:]+) +ago, +'
+                        r'via +(?P<interface>[\w\.\/\-]+))?$')
         p600 = re.compile(r'^Route +metric +is +(?P<metric>\d+), +'
-                        'traffic +share +count +is +(?P<share_count>\d+)$')
+                        r'traffic +share +count +is +(?P<share_count>\d+)$')
 
         p600 = re.compile(r'^Route +metric +is +(?P<metric>\d+), +'
-                          'traffic +share +count +is +(?P<share_count>\d+)$')
+                          r'traffic +share +count +is +(?P<share_count>\d+)$')
         p700 = re.compile(r'^Total +delay +is +(?P<total_delay>\d+) +microseconds, '
-                          '+minimum +bandwidth +is +(?P<minimum_bandwidth>\d+) +Kbit$')
+                          r'+minimum +bandwidth +is +(?P<minimum_bandwidth>\d+) +Kbit$')
         p800 = re.compile(r'^Reliability +(?P<reliability>[\d\/]+), +minimum +MTU +(?P<minimum_mtu>\d+) +bytes$')
         p900 = re.compile(r'^Loading +(?P<loading>[\d\/]+), Hops +(?P<hops>\d+)$')
 
@@ -1030,18 +1030,18 @@ class ShowIpv6RouteUpdated(ShowIpv6RouteUpdatedSchema):
 
         # LC  2001:1:1:1::1/128 [0/0]
         p2 = re.compile(r'^\s*(?P<code>[\w]+) +(?P<route>[\w\/\:]+)?'
-                        ' +\[(?P<route_preference>[\d\/]+)\]$')
+                        r' +\[(?P<route_preference>[\d\/]+)\]$')
 
         #   via Loopback0, receive
         #   via 2001:10:1:2::2, GigabitEthernet0/0
         #   via GigabitEthernet0/2, directly connected
         #   via 192.168.51.1%default, indirectly connected
         p3 = re.compile(r'^\s*via( +(?P<next_hop>[0-9][\w\:\.\%]+),?)?'
-                        '( +(?P<interface>[\w\.\/\-\_]+[\w\:\.\%]+))?,?( +receive)?( +directly connected)?( +indirectly connected)?$')
+                        r'( +(?P<interface>[\w\.\/\-\_]+[\w\:\.\%]+))?,?( +receive)?( +directly connected)?( +indirectly connected)?$')
 
         #   via FE80::211:1FF:FE00:1, GigabitEthernet0/0/2.100
         p4 = re.compile(r'^\s*via +(?P<next_hop>[\w\:\.\%]+),'
-                        ' +(?P<interface>[\S]+)$')
+                        r' +(?P<interface>[\S]+)$')
 
         #      Last updated 14:15:23 06 December 2017
         p5 = re.compile(r'^\s*Last +updated +(?P<last_updated>[\S\s]+)$')

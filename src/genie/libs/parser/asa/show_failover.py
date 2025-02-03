@@ -141,8 +141,8 @@ class ShowFailover(ShowFailoverSchema):
         # Failover LAN Interface: folink GigabitEthernet0/1 (up)
         p3 = re.compile(
             r'^Failover +LAN +Interface:\s(?P<name>[A-Za-z0-9\-\_]+)\s+'
-            '(?P<interface>(Lo\S*|Fa\S*|Gi\S*|Ten\S*|\S*(SL|VL)\S*|Se\S*|VoIP\S*|Configured))'
-            '( +\((?P<status>[A-Za-z0-0_\-\s]+)\))?$'
+            r'(?P<interface>(Lo\S*|Fa\S*|Gi\S*|Ten\S*|\S*(SL|VL)\S*|Se\S*|VoIP\S*|Configured))'
+            r'( +\((?P<status>[A-Za-z0-0_\-\s]+)\))?$'
         )
 
         # Reconnect timeout 0:00:00
@@ -152,14 +152,14 @@ class ShowFailover(ShowFailoverSchema):
         # Unit Poll frequency 300 milliseconds, holdtime 999 milliseconds
         p5 = re.compile(
             r'^Unit +Poll +frequency\s+(?P<poll>\d+)\s+(?P<poll_unit>seconds|milliseconds),'
-            ' +holdtime\s+(?P<holdtime>\d+)\s+(?P<holdtime_unit>seconds|milliseconds)$'
+            r' +holdtime\s+(?P<holdtime>\d+)\s+(?P<holdtime_unit>seconds|milliseconds)$'
         )
 
         # Interface Poll frequency 800 milliseconds, holdtime 5 seconds
         # Interface Poll frequency 5 seconds, holdtime 25 seconds
         p6 = re.compile(
             r'^Interface +Poll +frequency\s+(?P<poll>\d+)\s+(?P<poll_unit>seconds|milliseconds),'
-            ' +holdtime\s+(?P<holdtime>\d+)\s+(?P<holdtime_unit>seconds|milliseconds)$'
+            r' +holdtime\s+(?P<holdtime>\d+)\s+(?P<holdtime_unit>seconds|milliseconds)$'
         )
 
         # Interface Policy 1
@@ -173,13 +173,13 @@ class ShowFailover(ShowFailoverSchema):
         # Version: Ours 9.14(1), Mate 9.14(1)
         p9 = re.compile(
             r'^Version: +Ours\s+(?P<ours>[A-Za-z0-9\.\(\)]+),'
-            ' +Mate\s+(?P<mate>[A-Za-z0-9\.\(\)]+)$'
+            r' +Mate\s+(?P<mate>[A-Za-z0-9\.\(\)]+)$'
         )
 
         # Serial Number: Ours 9AW2PSRETDT, Mate 9ASGGBEE416
         p10 = re.compile(
             r'^Serial +Number: +Ours\s+(?P<ours>[A-Za-z0-9]+),'
-            ' +Mate\s+(?P<mate>[A-Za-z0-9]+)$'
+            r' +Mate\s+(?P<mate>[A-Za-z0-9]+)$'
         )
 
         # Last Failover at: 20:37:30 UTC Apr 11 2021
@@ -200,8 +200,8 @@ class ShowFailover(ShowFailoverSchema):
         # Interface outside (0.0.0.0/fe80::ecd:e9ff:fe5c:5301): Normal (Not-Monitored)
         p14 = re.compile(
             r'^Interface\s+(?P<interface>\w+)\s+\((?P<ipv4>[0-9\.]+)'
-            '(\/(?P<ipv6>[A-Za-z0-9:]+))?\):\s+(?P<state>\w+)\s+'
-            '\((?P<monitored_state>[A-Za-z0-9\-_]+)\)$'
+            r'(\/(?P<ipv6>[A-Za-z0-9:]+))?\):\s+(?P<state>\w+)\s+'
+            r'\((?P<monitored_state>[A-Za-z0-9\-_]+)\)$'
         )
 
         # slot 0: ASAv hw/sw rev (/9.14(1)) status (Up Sys)
@@ -209,7 +209,7 @@ class ShowFailover(ShowFailoverSchema):
         # slot 0: ASA5515 hw/sw rev (1.0/9.2(2)4) status (Up Sys)
         p15 = re.compile(
             r'^slot\s+(?P<slot>\d+):\s+(?P<model>[A-Za-z0-9\-_]+) +hw\/sw +rev\s+'
-            '\((?P<version>\S+)\) +status\s+\((?P<status>[A-Za-z0-9_\-\s\/]+)\)$'
+            r'\((?P<version>\S+)\) +status\s+\((?P<status>[A-Za-z0-9_\-\s\/]+)\)$'
         )
 
         #         Recv Q:         0       0       0
@@ -223,8 +223,8 @@ class ShowFailover(ShowFailoverSchema):
         p17_1 = re.compile(r'^Stateful +Failover +Logical +Update +Statistics$')
         p17_2 = re.compile(
             r'^Link\s+:\s+(?P<name>[A-Za-z0-9]+)\s+'
-            '(?P<interface>(Lo\S*|Fa\S*|Gi\S*|Ten\S*|\S*(SL|VL)\S*|Se\S*|VoIP\S*|Configured))'
-            '( +\((?P<status>[A-Za-z0-0_\-\s]+)\))?$'
+            r'(?P<interface>(Lo\S*|Fa\S*|Gi\S*|Ten\S*|\S*(SL|VL)\S*|Se\S*|VoIP\S*|Configured))'
+            r'( +\((?P<status>[A-Za-z0-0_\-\s]+)\))?$'
         )
 
         parsed_dict = {}

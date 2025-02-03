@@ -1,0 +1,5 @@
+{
+    "switch_var" : "active",
+    "acl" : "info",
+    "feature_name": "cgacl"
+}

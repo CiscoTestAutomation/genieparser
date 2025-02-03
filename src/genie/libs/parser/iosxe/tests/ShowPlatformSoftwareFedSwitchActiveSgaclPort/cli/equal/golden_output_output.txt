@@ -1,0 +1,12 @@
+Port                     Enforcement         Port-SGT      Trust       Propagate       Interface state
+--------------------------------------------------------------------------------------------------------
+HundredGigE0/26            Enabled                0          No            No              Pending
+HundredGigE0/27            Enabled                0          No            No              Pending
+HundredGigE0/28            Enabled                0          No            No              Pending
+HundredGigE0/30            Enabled                0          No            No              Pending
+HundredGigE0/31            Enabled                0          No            No              Pending
+HundredGigE0/32            Enabled                0          No            No              Pending
+GigabitEthernet1/0/1       Disabled               0          No            No              Success
+GigabitEthernet1/0/2       Enabled                0          No            No              Success
+GigabitEthernet1/0/3       Enabled                0          No            No              Success
+GigabitEthernet1/0/4       Enabled                0          No            No              Success

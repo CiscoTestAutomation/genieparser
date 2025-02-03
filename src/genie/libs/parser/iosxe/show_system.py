@@ -54,8 +54,8 @@ class ShowClock(ShowClockSchema):
         # *05:26:38.035 EST Wed JAN 4 2019
         p1 = re.compile(
             r"^\*?(?P<time>[\d\:\.]+) +(?P<timezone>\w+)"
-            " +(?P<day_of_week>\w+) +(?P<month>\w+) +"
-            "(?P<day>\d+) +(?P<year>\d+)$"
+            r" +(?P<day_of_week>\w+) +(?P<month>\w+) +"
+            r"(?P<day>\d+) +(?P<year>\d+)$"
         )
 
         for line in out.splitlines():
@@ -115,17 +115,18 @@ class ShowSystemIntegrityAllMeasurementNonce(ShowSystemIntegrityAllMeasurementNo
         p2 = re.compile(r"^Platform: +(?P<platform>\S+)$")
         # MA1004R06.1604052017: 6243F41868F21144E7D5CE30683
         # 17.8.1r[FC1]: 48E0DD991BCD6274B842A42C0F9DEDCD8809E6187928F0
-        p3 = re.compile("^(?P<boot_hash>[\(\)\[\]\.\:A-Z0-9a-z]+)\s(?P<value>[0-9A-F]+)$")
+        # 112312_UEFI_SOC1_v12.1.33: F5A5FD42D16A20302798EF6ED309979B43003D2320D9F0E8EA9831A92759FB4BFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+        p3 = re.compile(r"^(?P<boot_hash>[\(\)\[\]\.\_\:A-Z0-9a-z]+)\s(?P<value>[0-9A-F]+)$")
         # Version: BLD_POLARIS_DEV_LATEST_20220313_143357
         p4 = re.compile(r"^Version: +(?P<version>.*\_\S+)$")
         # cat9k_iosxe.BLD_POLARIS_DEV_LATEST_20220313_143357.SSA.bin: 452997E880E6CEF
         # cat9k-wlc.BLD_POLARIS_DEV_LATEST_20220313_143357.SSA.pkg: 9456F1B1CFB3A25C9
         # cat9k_iosxe.BLD_POLARIS_DEV_LATEST_20220313_143357.0.NODEFECT.SSA.smu.bin: 9D7CC2C73A688FAF294C4BB90CAA6FDB26B9B
-        p5 = re.compile("^(?P<hashes>(.*bin)|(.*pkg))\:\s(?P<value>\S+)$")
+        p5 = re.compile(r"^(?P<hashes>(.*bin)|(.*pkg))\:\s(?P<value>\S+)$")
         # PCR0: 6DEC62AF32505978BD553E7
-        p6 = re.compile("^PCR0: +(?P<pcr0>([0-9A-F])+)$")
+        p6 = re.compile(r"^PCR0: +(?P<pcr0>([0-9A-F])+)$")
         # PCR8: 6DEC62AF32505978BD553E7
-        p7 = re.compile("^PCR8: +(?P<pcr8>([0-9A-F])+)$")
+        p7 = re.compile(r"^PCR8: +(?P<pcr8>([0-9A-F])+)$")
         # Version: 1
         p8 = re.compile(r"^Version: +(?P<version>\d)$")
         # 922D10C26D9DFF33278B4EBD9935A968DD5641C51EF496251
@@ -500,15 +501,15 @@ class ShowSystemIntegrityAllTrustChainNonce(ShowSystemIntegrityAllTrustChainNonc
         # Version: 1
         p2 = re.compile(r"^Version: +(?P<version>\d)$")
         #   Value: 9DA0FB31FA0BF959BDE14FEE6E20D6CD837E8108E4D37E9088C67E8CD1E7A7C015C1
-        p3 = re.compile("^(?P<value>[A-F0-9]+)$")
+        p3 = re.compile(r"^(?P<value>[A-F0-9]+)$")
         # Certificate Name: CMCA CERTIFICATE
         p4 = re.compile(r"^Certificate Name: +(?P<certificate_name>\S+\s\S+)$")
         # -----BEGIN CERTIFICATE-----
-        p5 = re.compile("^\-+BEGIN CERTIFICATE\-+$")
+        p5 = re.compile(r"^\-+BEGIN CERTIFICATE\-+$")
         # -----END CERTIFICATE-----
-        p6 = re.compile("^\-+END CERTIFICATE\-+$")
+        p6 = re.compile(r"^\-+END CERTIFICATE\-+$")
         # MIIDfTCCAmWgAwIBAgIEAfLTJTANBgkqhkiG9w0BAQsFADAnMQ4wDAYDVQQKEwVDaXNjbzEVMBMG
-        p7 = re.compile("^([a-zA-Z0-9/+=]+)$")
+        p7 = re.compile(r"^([a-zA-Z0-9/+=]+)$")
 
         certificate_name = ""
         certificate = ""

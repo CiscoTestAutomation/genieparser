@@ -79,7 +79,7 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
 
         # Switch 1 FAN 1 direction is Front to Back
         p1_1 = re.compile(r'^Switch +(?P<switch>\d+) +FAN +(?P<fan>\d+) '
-                           '+direction +is +(?P<direction>[\w\s]+)$')
+                           r'+direction +is +(?P<direction>[\w\s]+)$')
 
         p2 = re.compile(r'^FAN +PS\-(?P<ps>\d+) +is +(?P<state>[\w\s]+)$')
 
@@ -92,12 +92,12 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
         p6 = re.compile(r'^(?P<color>\w+) +Threshold *: +(?P<temperature>\d+) +Degree +Celsius$')
 
         p7 = re.compile(r'^(?P<sw>\d+)(?P<ps>\w+) *'
-                         '((?P<pid>[\w\-]+) +'
-                         '(?P<serial_number>\w+) +)?'
-                         '(?P<status>(\w+|Not Present)) *'
-                         '((?P<system_power>\w+) +'
-                         '(?P<poe_power>[\w\/]+) +'
-                         '(?P<watts>\w+))?$')
+                         r'((?P<pid>[\w\-]+) +'
+                         r'(?P<serial_number>\w+) +)?'
+                         r'(?P<status>(\w+|Not Present)) *'
+                         r'((?P<system_power>\w+) +'
+                         r'(?P<poe_power>[\w\/]+) +'
+                         r'(?P<watts>\w+))?$')
 
         for line in out.splitlines():
             line = line.strip()

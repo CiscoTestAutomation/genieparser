@@ -848,11 +848,11 @@ class ShowInventory(ShowInventorySchema):
 
         # NAME: "HundredGigE1/0/48", DESCR: "QSFP 100GE SR"
         p1 = re.compile(r'^NAME: +\"(?P<name>.*)\",'
-                         ' +DESCR: +\"(?P<descr>.*)\"$')
+                         r' +DESCR: +\"(?P<descr>.*)\"$')
 
         # PID: QSFP-100G-SR4-S     , VID: V03  , SN: AVF2243S10A
         p2 = re.compile(r'^PID: +(?P<pid>\S+)? *, +VID:(?: +(?P<vid>(\S+)))? *,'
-                         ' +SN:(?: +(?P<sn>(\S+)))?$')
+                         r' +SN:(?: +(?P<sn>(\S+)))?$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -975,31 +975,31 @@ class ShowModule(ShowModuleSchema):
         # 1    2  Catalyst 6000 supervisor 2 (Active)    WS-X6K-S2U-MSFC2   SAD0628035C
         # 2    0  Supervisor-Other                       unknown            unknown        
         r1 = re.compile(r'(?P<mod>\d)\s+(?P<ports>\d+)\s+(?P<card_type>.+'
-                         '(S|s)upervisor.+)\s+(?P<model>\S+)\s+'
-                         '(?P<serial_number>\S+)')
+                         r'(S|s)upervisor.+)\s+(?P<model>\S+)\s+'
+                         r'(?P<serial_number>\S+)')
 
         # 6    1  1 port 10-Gigabit Ethernet Module      WS-X6502-10GE      SAD062003CM
         # 3   16  Pure SFM-mode 16 port 1000mb GBIC      WS-X6816-GBIC      SAL061218K3
         r2 = re.compile(r'(?P<mod>\d)\s+(?P<ports>\d+)\s+(?P<card_type>.+\d+\s+'
-                         'port.+)\s{2,}(?P<model>\S+)\s+(?P<serial_number>\S+)')
+                         r'port.+)\s{2,}(?P<model>\S+)\s+(?P<serial_number>\S+)')
 
         # 5    0  Switching Fabric Module-136 (Active)   WS-X6500-SFM2      SAD061701YC
-        r3 = re.compile('(?P<mod>\d)\s+(?P<ports>\d+)\s+(?P<card_type>.+)\s{2,}'
-                        '(?P<model>\S+)\s+(?P<serial_number>\S+)')
+        r3 = re.compile(r'(?P<mod>\d)\s+(?P<ports>\d+)\s+(?P<card_type>.+)\s{2,}'
+                        r'(?P<model>\S+)\s+(?P<serial_number>\S+)')
 
         # 1  0001.64ff.1958 to 0001.64ff.1959   3.9   6.1(3)       7.5(0.6)HUB9 Ok 
         # 3  0005.74ff.1b9d to 0005.74ff.1bac   1.3   12.1(5r)E1   12.1(13)E3,  Ok
         # 1  0001.64ff.1958 to 0001.64ff.1959   3.9   6.1(3)       7.5(0.6)HUB9 Ok    
         r4 = re.compile(r'(?P<mod>\d+)\s+(?P<mac_from>\S+)\s+to\s+(?P<mac_to>\S+)'
-                         '\s+(?P<hw>\S+)\s+(?P<fw>\S+)\s+(?P<sw>[\d\.\(\)\w]+)\,'
-                         '*\s+(?P<status>(Ok|Unknown))')
+                         r'\s+(?P<hw>\S+)\s+(?P<fw>\S+)\s+(?P<sw>[\d\.\(\)\w]+)\,'
+                         r'*\s+(?P<status>(Ok|Unknown))')
 
         # 1 Policy Feature Card 2       WS-F6K-PFC2     SAD062802AV      3.2    Ok     
         # 1 Cat6k MSFC 2 daughterboard  WS-F6K-MSFC2    SAD062803TX      2.5    Ok   
         # 6 Distributed Forwarding Card WS-F6K-DFC      SAL06261R0A      2.3    Ok     
         # 6 10GBASE-LR Serial 1310nm lo WS-G6488        SAD062201BN      1.1    Ok
         r5 = re.compile(r'(?P<mod>\d+)\s+(?P<sub_mod>.+)\s+(?P<model>\S+)\s+'
-                         '(?P<serial>\S+)\s+(?P<hw>\S+)\s+(?P<status>(Ok|Unknown))')
+                         r'(?P<serial>\S+)\s+(?P<hw>\S+)\s+(?P<status>(Ok|Unknown))')
 
         # 1  Pass
         r6 = re.compile(r'(?P<mod>\d+) +(?P<online_diag_status>\S+)$')

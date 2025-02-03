@@ -166,16 +166,16 @@ class ShowSegmentRoutingMplsConnectedPrefixSidMap(ShowSegmentRoutingMplsConnecte
         # Prefix/masklen   SID Type Range Flags SRGB
         # 10.4.1.1/32         1 Indx     1         Y
         p3 = re.compile(r'(?P<prefix>(\S+))\/(?P<masklen>(\d+)) +(?P<sid>(\d+))'
-                         ' +(?P<type>(\S+)) +(?P<range>(\d+))'
-                         '(?: +(?P<flags>(\S+)))? +(?P<srgb>(Y|N))$')
+                         r' +(?P<type>(\S+)) +(?P<range>(\d+))'
+                         r'(?: +(?P<flags>(\S+)))? +(?P<srgb>(Y|N))$')
 
         # Prefix/masklen   SID Type Range Flags SRGB Source
         # 10.4.1.1/32         1 Indx     1         Y  OSPF Area 8 10.4.1.1
         # 10.16.2.2/32         2 Indx     1         Y  OSPF Area 8 10.16.2.2
         p4 = re.compile(r'(?P<prefix>(\S+))\/(?P<masklen>(\d+)) +(?P<sid>(\d+))'
-                         ' +(?P<type>(\S+)) +(?P<range>(\d+))'
-                         '(?: +(?P<flags>(\S+)))? +(?P<srgb>(Y|N))'
-                         ' +(?P<source>(.*))$')
+                         r' +(?P<type>(\S+)) +(?P<range>(\d+))'
+                         r'(?: +(?P<flags>(\S+)))? +(?P<srgb>(Y|N))'
+                         r' +(?P<source>(.*))$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -290,7 +290,7 @@ class ShowSegmentRoutingMplsGb(ShowSegmentRoutingMplsGbSchema):
         # LABEL-MIN  LABEL_MAX  STATE           DEFAULT  
         # 16000      23999      ENABLED         Yes  
         p1 = re.compile(r'^(?P<label_min>(\d+)) +(?P<label_max>(\d+))'
-                         ' +(?P<state>(\S+)) +(?P<default>(\S+))$')
+                         r' +(?P<state>(\S+)) +(?P<default>(\S+))$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -336,7 +336,7 @@ class ShowSegmentRoutingMplsLB(ShowSegmentRoutingMplsLBSchema):
             out = output
         # 15000      15999      ENABLED         Yes
         p1 = re.compile(r'^(?P<label_min>\d+) +(?P<label_max>\d+) +'
-                        '(?P<state>\S+) +(?P<default>\S+)$')
+                        r'(?P<state>\S+) +(?P<default>\S+)$')
         
         # initial variables
         ret_dict = {}
@@ -427,7 +427,7 @@ class ShowSegmentRoutingMplsLbLock(ShowSegmentRoutingMplsLbLockSchema):
             out = output
         # SR LB (15000, 15999) Lock Users :
         p1 = re.compile(r'^SR +LB +\((?P<label_min>\d+)\, +'
-            '(?P<label_max>\d+)\) +Lock +Users +:')
+            r'(?P<label_max>\d+)\) +Lock +Users +:')
 
         # initial variables
         ret_dict = {}
@@ -579,18 +579,18 @@ class ShowSegmentRoutingTrafficEngTopology(ShowSegmentRoutingTrafficEngTopologyS
 
         #   OSPF router ID: 10.19.198.239 area ID: 8 domain ID: 0 ASN: 65109
         p3 = re.compile(r'^OSPF router ID: +(?P<ospf_router_id>\S+) +area ID: '
-                         '+(?P<area_id>\d+) +domain ID: +(?P<domain_id>\d+) '
-                         '+ASN: +(?P<asn>\d+)$')
+                         r'+(?P<area_id>\d+) +domain ID: +(?P<domain_id>\d+) '
+                         r'+ASN: +(?P<asn>\d+)$')
 
         #   Prefix SID:
         #     Prefix 10.19.198.239, label 16073 (regular), domain ID 0, flags: N , E
         p4 = re.compile(r'^Prefix +(?P<prefix>\S+), +label +(?P<label>\d+) '
-                         '+\((?P<label_type>\S+)\), +domain +ID +(?P<domain_id>\d+), '
-                         '+flags: +(?P<flags>[\S\s]+)$')
+                         r'+\((?P<label_type>\S+)\), +domain +ID +(?P<domain_id>\d+), '
+                         r'+flags: +(?P<flags>[\S\s]+)$')
 
         #   Link[0]: local address 10.19.198.26, remote address 10.19.198.25
         p5 = re.compile(r'^Link\[(?P<link>\d+)\]: +local +address +(?P<local_address>\S+), '
-                         '+remote +address +(?P<remote_address>\S+)$')
+                         r'+remote +address +(?P<remote_address>\S+)$')
 
         #     Local node:
         p6 = re.compile(r'^Local +node:$')
@@ -863,7 +863,7 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
         # Status:
         # Admin: up, Operational: up for 09:38:18 (since 08-28 20:56:55.275)
         p2 = re.compile(r'^Admin: +(?P<admin>\S+), +Operational: +(?P<oper>\S+)'
-                        ' +for +(?P<time>\S+) +\(since (?P<since>\S+\s+\S+)\)$')
+                        r' +for +(?P<time>\S+) +\(since (?P<since>\S+\s+\S+)\)$')
 
         # Candidate-paths:
         # Preference 400:
@@ -875,16 +875,16 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
 
         #         Weight: 0, Metric Type: TE
         p5 = re.compile(r'^Weight: +(?P<weight>[\d]+), +Metric +Type: '
-                         '+(?P<metric_type>[\S]+)$')
+                         r'+(?P<metric_type>[\S]+)$')
 
         #         Metric Type: IGP, Path Accumulated Metric: 2200
         p6 = re.compile(r'^Metric +Type: +(?P<metric_type>[\S]+)(, Path +Accumulated '
-                '+Metric: +(?P<path_accumulated_metric>[\d]+))?$')
+                r'+Metric: +(?P<path_accumulated_metric>[\d]+))?$')
         #         16063 [Prefix-SID, 10.169.196.241]
         #         16072 [Prefix-SID, 10.189.5.253 - 10.189.6.253]
         #         16063
         p7 = re.compile(r'^(?P<sid>[\d]+)(?: +\[(?P<sid_type>[\S]+), +(?P<local_address>[\S]+)'
-                         '( +- +(?P<remote_address>[\S]+))?\])?$')
+                         r'( +- +(?P<remote_address>[\S]+))?\])?$')
 
         #     Explicit: segment-list test1 (inactive)
         p8 = re.compile(r'^Explicit: +(?P<category>\S+) +(?P<name>\S+) +\((?P<status>\w+)\)$')
@@ -911,8 +911,8 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
         #   Timestamp                   Client                  Event type              Context: Value
         #   08-29 14:51:29.074          FH Resolution           REOPT triggered         Status: REOPTIMIZED
         p14 = re.compile(r'^(?P<timestamp>[\d\-]+ [\d:.]+)\s+(?P<client>(?:[\S]+ )+)'
-                          '\s+(?P<event_type>(?:[\S]+ )+)\s+(?P<context>\S+(\s*\S+))'
-                          ':\s+(?P<value>\S+(\s*\S+)*)\s*(CP:\s+(?P<cp>\d+))?$')
+                          r'\s+(?P<event_type>(?:[\S]+ )+)\s+(?P<context>\S+(\s*\S+))'
+                          r':\s+(?P<value>\S+(\s*\S+)*)\s*(CP:\s+(?P<cp>\d+))?$')
 
         # Affinity:
         p15 = re.compile(r'^Affinity:$')
@@ -1358,16 +1358,16 @@ class ShowSegmentRoutingMplsMappingServer(ShowSegmentRoutingMplsMappingServerSch
         # Prefix/masklen   SID Type Range Flags SRGB
         # 10.4.1.1/32         1 Indx     1         Y
         p3 = re.compile(r'(?P<prefix>(\S+))\/(?P<masklen>(\d+)) +(?P<sid>(\d+))'
-                         ' +(?P<type>(\S+)) +(?P<range>(\d+))'
-                         '(?: +(?P<flags>(\S+)))? +(?P<srgb>(Y|N))$')
+                         r' +(?P<type>(\S+)) +(?P<range>(\d+))'
+                         r'(?: +(?P<flags>(\S+)))? +(?P<srgb>(Y|N))$')
 
         # Prefix/masklen   SID Type Range Flags SRGB Source
         # 10.4.1.1/32         1 Indx     1         Y  OSPF Area 8 10.4.1.1
         # 10.16.2.2/32         2 Indx     1         Y  OSPF Area 8 10.16.2.2
         p4 = re.compile(r'(?P<prefix>(\S+))\/(?P<masklen>(\d+)) +(?P<sid>(\d+))'
-                         ' +(?P<type>(\S+)) +(?P<range>(\d+))'
-                         '(?: +(?P<flags>(\S+)))? +(?P<srgb>(Y|N))'
-                         ' +(?P<source>(.*))$')
+                         r' +(?P<type>(\S+)) +(?P<range>(\d+))'
+                         r'(?: +(?P<flags>(\S+)))? +(?P<srgb>(Y|N))'
+                         r' +(?P<source>(.*))$')
 
         for line in out.splitlines():
             line = line.strip()

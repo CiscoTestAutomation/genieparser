@@ -129,7 +129,7 @@ class ShowMacAddressTable(ShowMacAddressTableSchema):
             if m:
                 group = m.groupdict()
                 mac = group['mac']
-                vlan = int(group['vlan']) if re.search('\d+', group['vlan']) \
+                vlan = int(group['vlan']) if re.search(r'\d+', group['vlan']) \
                                           else group['vlan'].lower()
                 intfs = group['intfs'].strip()
                 vlan_dict = ret_dict.setdefault('mac_table', {}) \
@@ -192,7 +192,7 @@ class ShowMacAddressTable(ShowMacAddressTableSchema):
             if m:
                 group = m.groupdict()
                 mac = group['mac']
-                vlan = int(group['vlan']) if re.search('\d+', group['vlan']) \
+                vlan = int(group['vlan']) if re.search(r'\d+', group['vlan']) \
                                           else group['vlan'].lower()
                 intfs = group['intfs'].strip()
                 vlan_dict = ret_dict.setdefault('mac_table', {}) \
@@ -234,7 +234,7 @@ class ShowMacAddressTable(ShowMacAddressTableSchema):
             if m:
                 group = m.groupdict()
                 mac = group['mac']
-                vlan = int(group['vlan']) if re.search('\d+', group['vlan']) \
+                vlan = int(group['vlan']) if re.search(r'\d+', group['vlan']) \
                                           else group['vlan'].lower()
                 intfs = group['intfs'].strip()
                 vlan_dict = ret_dict.setdefault('mac_table', {}) \
@@ -314,7 +314,7 @@ class ShowMacAddressTableAgingTime(ShowMacAddressTableAgingTimeSchema):
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                vlan = int(group['vlan']) if re.search('\d+', group['vlan']) \
+                vlan = int(group['vlan']) if re.search(r'\d+', group['vlan']) \
                 else group['vlan'].lower()
 
                 vlan_dict = ret_dict.setdefault('vlans', {}) \

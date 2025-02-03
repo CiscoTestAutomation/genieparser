@@ -42,8 +42,8 @@ class ShowCloudexpressApplication(ShowCloudexpressApplicationSchema):
         #1    salesforce               gateway  172.16.255.14  -          103      1     lte    lte
         #1    google_apps              gateway  172.16.255.14  -          47       0     lte    lte
         p1 = re.compile(r'^(?P<vpn>\S+)\s\s+(?P<application>\S+)\s\s+(?P<exit_type>\S+)\s\s+(?P<gw_sys_ip>\S+)'
-                        '\s\s+(?P<interface>\S+)\s\s+(?P<latency>\S+)\s\s+(?P<loss>\S+)\s\s+(?P<local_color>\S+)'
-                        '\s\s+(?P<remote_color>\S+)')
+                        r'\s\s+(?P<interface>\S+)\s\s+(?P<latency>\S+)\s\s+(?P<loss>\S+)\s\s+(?P<local_color>\S+)'
+                        r'\s\s+(?P<remote_color>\S+)')
 
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any, Or, Optional
@@ -89,8 +89,8 @@ class ShowCloudexpressApplication(ShowCloudexpressApplicationSchema):
         #1    salesforce               gateway  172.16.255.14  -          103      1     lte    lte
         #1    google_apps              gateway  172.16.255.14  -          47       0     lte    lte
         p1 = re.compile(r'^(?P<vpn>\S+)\s\s+(?P<application>\S+)\s\s+(?P<exit_type>\S+)\s\s+(?P<gw_sys_ip>\S+)'
-                        '\s\s+(?P<interface>\S+)\s\s+(?P<latency>\S+)\s\s+(?P<loss>\S+)\s\s+(?P<local_color>\S+)'
-                        '\s\s+(?P<remote_color>\S+)')
+                        r'\s\s+(?P<interface>\S+)\s\s+(?P<latency>\S+)\s\s+(?P<loss>\S+)\s\s+(?P<local_color>\S+)'
+                        r'\s\s+(?P<remote_color>\S+)')
 
         for line in out.splitlines():
             line = line.strip()

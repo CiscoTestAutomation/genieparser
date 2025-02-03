@@ -72,9 +72,9 @@ class ShowSsh(ShowSshSchema):
         # 1       ecdh-sha2-nistp256     ssh-rsa              aes128-ctr  aes128-ctr  hmac-sha2-256 hmac-sha2-256
         # 1       ecdh-sha2-nistp521     ecdsa-sha2-nistp256  aes128-ctr  aes128-ctr  hmac-sha2-512 hmac-sha2-512
         p1 = re.compile(r'^(?P<id>(\d+))\s+(?P<key_exchange>(\S+))'
-                         '\s+(?P<pubkey>(\S+))\s+(?P<incipher>(\S+))'
-                         '\s+(?P<outcipher>(\S+))\s+(?P<inmac>(\S+))'
-                         '\s+(?P<outmac>(\S+))$')
+                         r'\s+(?P<pubkey>(\S+))\s+(?P<incipher>(\S+))'
+                         r'\s+(?P<outcipher>(\S+))\s+(?P<inmac>(\S+))'
+                         r'\s+(?P<outmac>(\S+))$')
 
         # Incoming Session
         p2 = re.compile(r'^Incoming Session')

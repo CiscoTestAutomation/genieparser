@@ -1050,7 +1050,7 @@ class ShowLispPublisherSuperParser(ShowLispPublisherSchema):
             out = self.device.expect(
                 [r'Instance ID:\s+\S+'],
                 timeout=2).match_output
-            p0 = re.compile('^Instance ID:\s+(?P<instance_id>\d+)$')
+            p0 = re.compile(r'^Instance ID:\s+(?P<instance_id>\d+)$')
             group = p0.match(out)
             instance_id = int(group['instance_id'])
         else:
@@ -1064,7 +1064,7 @@ class ShowLispPublisherSuperParser(ShowLispPublisherSchema):
         # Output for router lisp 0 instance-id 193
         # Output for router lisp 2 instance-id 101
         p1 = re.compile(r'^Output +for +router +lisp +(?P<lisp_id>(\S+))'
-                        '(?: +instance-id +(?P<instance_id>(\d+)))?$')
+                        r'(?: +instance-id +(?P<instance_id>(\d+)))?$')
 
         # 23.23.23.23                 ETR Map-Server not found   Down    T     Off
         # 23.23.23.23                 Unreachable                Down    L     Off
@@ -1648,7 +1648,7 @@ class ShowLispSubscriberSuperParser(ShowLispSubscriberSchema):
             out = self.device.expect(
                 [r'Instance ID:\s+\S+'],
                 timeout=2).match_output
-            p0 = re.compile('^Instance ID:\s+(?P<instance_id>\d+)$')
+            p0 = re.compile(r'^Instance ID:\s+(?P<instance_id>\d+)$')
             group = p0.match(out)
             instance_id = int(group['instance_id'])
         else:
@@ -1660,7 +1660,7 @@ class ShowLispSubscriberSuperParser(ShowLispSubscriberSchema):
         # Output for router lisp 0 instance-id 193
         # Output for router lisp 2 instance-id 101
         p1 = re.compile(r'^Output\s+for\s+router\s+lisp\s+(?P<lisp_id>(\d+))'
-                        '(?: +instance-id +(?P<instance_id>(\d+)))?$')
+                        r'(?: +instance-id +(?P<instance_id>(\d+)))?$')
 
         # Entries total 1
         p2 = re.compile(r'^Entries\s+total\s+(?P<entries>\d+)$')
@@ -4010,7 +4010,7 @@ class ShowLispIpv4v6PublisherRloc(ShowLispIpv4PublisherRlocSchema):
             out = self.device.expect(
                 [r'Instance ID:\s+\S+'],
                 timeout=2).match_output
-            p0 = re.compile('^Instance ID:\s+(?P<instance_id>\d+)$')
+            p0 = re.compile(r'^Instance ID:\s+(?P<instance_id>\d+)$')
             group = p0.match(out)
             instance_id = int(group['instance_id'])
         else:

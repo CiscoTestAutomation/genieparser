@@ -1,0 +1,3 @@
+Pro Inside global Inside local Outside local Outside global
+TCP 135.0.0.2:0   192.0.0.2:0  193.0.0.2:0   193.0.0.2:0
+UDP 135.0.0.2:0   192.0.0.2:0  193.0.0.2:0   193.0.0.2:0

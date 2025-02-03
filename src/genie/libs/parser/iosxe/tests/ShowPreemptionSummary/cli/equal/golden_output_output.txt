@@ -1,0 +1,23 @@
+------------------------------------------------------------------------------------------
+Interface       Preemption Supported      Premption Configured      Preemption Operational
+------------------------------------------------------------------------------------------
+Gi1/1           yes                       no                        no                       
+Gi1/2           yes                       no                        no                       
+Gi1/3           yes                       no                        no                       
+Gi1/4           yes                       no                        no                       
+Gi1/5           yes                       no                        no                       
+Gi1/6           yes                       no                        no                       
+Gi1/7           yes                       no                        no                       
+Gi1/8           yes                       no                        no                       
+Gi1/9           yes                       no                        no                       
+Gi1/10          yes                       no                        no                       
+Gi1/11          yes                       no                        no                       
+Ap1/1           no                        --                        --                       
+Gi2/1           yes                       no                        no                       
+Gi2/2           yes                       no                        no                       
+Gi2/3           yes                       no                        no                       
+Gi2/4           yes                       no                        no                       
+Gi2/5           yes                       no                        no                       
+Gi2/6           yes                       no                        no                       
+Gi2/7           yes                       no                        no                       
+Gi2/8           yes                       no                        no                       

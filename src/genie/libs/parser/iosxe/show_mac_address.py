@@ -63,9 +63,9 @@ class ShowMacAddressTableDynamic(ShowMacAddressTableDynamicSchema):
         # initial return dictionary
         vlan_dict = {}
         p1 = re.compile(r'(?P<vlan_id>\d+) +'
-                    '(?P<mac>([a-zA-Z0-9]+\.){2}[a-zA-Z0-9]+) +'
-                    '(?P<type>\w+) +'
-                    '(?P<port>\S+)')
+                    r'(?P<mac>([a-zA-Z0-9]+\.){2}[a-zA-Z0-9]+) +'
+                    r'(?P<type>\w+) +'
+                    r'(?P<port>\S+)')
 
         port_count = 1
         for line in out.splitlines():

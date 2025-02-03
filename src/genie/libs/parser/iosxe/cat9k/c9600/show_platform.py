@@ -97,15 +97,15 @@ class ShowPlatformSoftwareObjectmanager(ShowPlatformSoftwareObjectmanagerSchema)
 
         #Object update: Pending-issue: 0, Pending-acknowledgement: 0
         p2 = re.compile(r'^Object +update:\s+Pending-issue:\s+(?P<pending_issue>\d+), +'
-                         'Pending-acknowledgement:\s+(?P<pending_ack>\d+)$')
+                         r'Pending-acknowledgement:\s+(?P<pending_ack>\d+)$')
 
         #Batch begin:   Pending-issue: 0, Pending-acknowledgement: 0
         p3 = re.compile(r'Batch +begin:\s+Pending-issue:\s+(?P<pending_issue>\d+), +'
-                         'Pending-acknowledgement:\s+(?P<pending_ack>\d+)$')
+                         r'Pending-acknowledgement:\s+(?P<pending_ack>\d+)$')
 
         #Batch end:     Pending-issue: 0, Pending-acknowledgement: 0
         p4 = re.compile(r'Batch +end:\s+Pending-issue:\s+(?P<pending_issue>\d+), +'
-                         'Pending-acknowledgement:\s+(?P<pending_ack>\d+)$')
+                         r'Pending-acknowledgement:\s+(?P<pending_ack>\d+)$')
 
         #Command:       Pending-acknowledgement: 0
         p5 = re.compile(r'Command:\s+Pending-acknowledgement:\s+(?P<pending_ack>\d+)')
@@ -368,12 +368,18 @@ class ShowPlatformFedActiveTcamUtilization(ShowPlatformFedActiveTcamUtilizationS
     """ Parser for show platform hardware fed active fwd-asic resource tcam utilization"""
 
     cli_command = ['show platform hardware fed switch {mode} fwd-asic resource tcam utilization',
-                   'show platform hardware fed active fwd-asic resource tcam utilization']
+                   'show platform hardware fed active fwd-asic resource tcam utilization',
+                   'show platform hardware fed switch {mode} fwd-asic resource tcam utilization {asic}',
+                   'show platform hardware fed active fwd-asic resource tcam utilization {asic}']
 
-    def cli(self, output=None, mode=None):
+    def cli(self, output=None, mode=None, asic=None):
         if output is None:
-            if mode:
+            if mode and asic:
+                cmd = self.cli_command[2].format(mode=mode, asic=asic)
+            elif mode:
                 cmd = self.cli_command[0].format(mode=mode)
+            elif asic:
+                cmd = self.cli_command[3].format(asic=asic)
             else:
                 cmd = self.cli_command[1]
             output = self.device.execute(cmd)
@@ -929,7 +935,7 @@ class ShowPlatformSoftwareBpCrimsonStatistics(ShowPlatformSoftwareBpCrimsonStati
         p9 = re.compile(r'MAX .ms.\s+\:\s+(?P<MAX>\d+)')
 
         # Record Free Failures
-        p10 = re.compile('^(?P<record_free_failures>Record Free Failures\:)$')
+        p10 = re.compile(r'^(?P<record_free_failures>Record Free Failures\:)$')
 
         for line in output.splitlines():
             line=line.strip()

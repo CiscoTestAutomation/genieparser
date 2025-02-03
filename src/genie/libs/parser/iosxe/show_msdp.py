@@ -104,39 +104,39 @@ class ShowIpMsdpPeer(ShowIpMsdpPeerSchema):
         # MSDP Peer 10.1.100.4 (?), AS 1
         # MSDP Peer 10.4.1.2 (?), AS ?
         r1 = re.compile(r'^MSDP\sPeer\s+(?P<peer>\S+)\s*\(\?\)\,\s*'
-                        'AS\s*(?P<peer_as>(\d+|\?))')
+                        r'AS\s*(?P<peer_as>(\d+|\?))')
 
         # State: Up, Resets: 0, Connection source: Loopback0 (10.1.100.2)
         r2 = re.compile(r'State:\s*(?P<session_state>(Up|Down))\,\s*Resets:'
-                        '\s*(?P<resets>\d+)\,\s*Connection\s+source:\s*'
-                        '(?P<connect_source>\S+)\s+\('
-                        '(?P<connect_source_address>\S+)\)')
+                        r'\s*(?P<resets>\d+)\,\s*Connection\s+source:\s*'
+                        r'(?P<connect_source>\S+)\s+\('
+                        r'(?P<connect_source_address>\S+)\)')
 
         # Uptime(Downtime): 00:41:18, Messages sent/received: 42/50
         r3 = re.compile(r'^Uptime\(Downtime\):\s*(?P<elapsed_time>\S+),'
-                        '\s*Messages\s+sent\/received:\s*'
-                        '(?P<data_message_sent>\d+)\/'
-                        '(?P<data_message_received>\d+)$')
+                        r'\s*Messages\s+sent\/received:\s*'
+                        r'(?P<data_message_sent>\d+)\/'
+                        r'(?P<data_message_received>\d+)$')
 
         # Output messages discarded: 0
         r4 = re.compile(r'^Output\s+messages\s+discarded:\s+'
-                        '(?P<output_msg_discarded>\d+)$')
+                        r'(?P<output_msg_discarded>\d+)$')
 
         # Connection and counters cleared 00:43:22 ago
         r5 = re.compile(r'^Connection\s+and\s+counters\s+cleared\s+'
-                        '(?P<conn_count_cleared>\S+)\s+ago$')
+                        r'(?P<conn_count_cleared>\S+)\s+ago$')
 
         # Input (S,G) filter: none, route-map: none
         # Input RP filter: none, route-map: none
         r6 = re.compile(r'^Input\s+(?P<filter_in>[a-zA-Z\,\(\)]+)\s+'
-                        'filter:\s*(?P<filter>\S+)\,\s+route-map:\s*'
-                        '(?P<route_map>\S+)$')
+                        r'filter:\s*(?P<filter>\S+)\,\s+route-map:\s*'
+                        r'(?P<route_map>\S+)$')
 
         # Output (S,G) filter: none, route-map: none
         # Output RP filter: none, route-map: none
         r7 = re.compile(r'^Output\s+(?P<filter_out>[a-zA-Z\,\(\)]+)\s+filter:'
-                        '\s*(?P<filter>\S+)\,\s+route-map:\s*'
-                        '(?P<route_map>\S+)$')
+                        r'\s*(?P<filter>\S+)\,\s+route-map:\s*'
+                        r'(?P<route_map>\S+)$')
 
         # Input filter: none
         r8 = re.compile(r'^Input\s+filter:\s*(?P<input_filter>\S+)')
@@ -146,29 +146,29 @@ class ShowIpMsdpPeer(ShowIpMsdpPeerSchema):
 
         # SAs learned from this peer: 0
         r10 = re.compile(r'^SAs\s+learned\s+from\s+this\s+peer:'
-                         '\s*(?P<sa_learned_from>\d+)')
+                         r'\s*(?P<sa_learned_from>\d+)')
 
         # Number of connection transitions to Established state: 1
         r11 = re.compile(r'^Number\s+of\s+connection\s+transitions\s+to'
-                         '\s+Established\s+state:\s*'
-                         '(?P<established_transitions>\d+)')
+                         r'\s+Established\s+state:\s*'
+                         r'(?P<established_transitions>\d+)')
 
         # Input queue size: 0, Output queue size: 0
         r12 = re.compile(r'^Input\s+queue\s+size:\s*(?P<size_in>\d+),'
-                         '\s+Output\s+queue\s+size:\s*(?P<size_out>\d+)$')
+                         r'\s+Output\s+queue\s+size:\s*(?P<size_out>\d+)$')
 
         # MD5 signature protection on MSDP TCP connection: not enabled
         r13 = re.compile(r'^MD5\s+signature\s+protection\s+on\s+MSDP\s+TCP'
-                         '\s+connection:\s*(?P<signature_protection>'
-                         '(?: not)?\s*enabled)$')
+                         r'\s+connection:\s*(?P<signature_protection>'
+                         r'(?: not)?\s*enabled)$')
 
         # RPF Failure count: 27
         r14 = re.compile(r'^RPF\s+Failure\s+count:\s*(?P<rpf_failure>\d+)')
 
         # SA Messages in/out: 27/0
         r15 = re.compile(r'^SA\s+Messages\s+in/out:\s*'
-                         '(?P<sa_message_in>\d+)\/'
-                         '(?P<sa_message_out>\d+)$')
+                         r'(?P<sa_message_in>\d+)\/'
+                         r'(?P<sa_message_out>\d+)$')
 
         # SA Requests in: 0
         r16 = re.compile(r'^SA\s+Requests\s+in:\s*(?P<sa_requests_in>\d+)$')
@@ -178,7 +178,7 @@ class ShowIpMsdpPeer(ShowIpMsdpPeerSchema):
 
         # Data Packets in/out: 6/0
         r18 = re.compile(r'Data\s+Packets\s+in/out:\s*(?P<data_packets_in>\d+)'
-                         '\/(?P<data_packets_out>\d+)')
+                         r'\/(?P<data_packets_out>\d+)')
 
         parsed_dict = {}
 
@@ -438,24 +438,24 @@ class ShowIpMsdpSaCache(ShowIpMsdpSaCacheSchema):
 
         # MSDP Source-Active Cache - 1 entries
         r1 = re.compile(r'MSDP\s+Source\-Active\s+Cache\s*\-\s*'
-                        '(?P<num_of_sa_cache>\d+)\s+entries')
+                        r'(?P<num_of_sa_cache>\d+)\s+entries')
 
         # (10.3.3.18, 225.1.1.1), RP 10.3.100.8, BGP/AS 3, 00:00:10/00:05:49, Peer 10.1.100.4
         # (10.1.4.15, 225.1.1.1), RP 10.1.100.1, AS ?,00:19:29/00:05:14, Peer 10.1.100.1
         r2 = re.compile(r'\((?P<source_addr>\S+),\s*(?P<group>\S+)\),\s*RP\s*'
-                        '(?P<rp_address>\S+),\s*(?:BGP\/)'
-                        '?AS\s*(?P<peer_as>\S+)'
-                        ',\s*(?P<up_time>\S+)\/(?P<expire>\S+)\,\s*Peer\s+'
-                        '(?P<peer>\S+)')
+                        r'(?P<rp_address>\S+),\s*(?:BGP\/)'
+                        r'?AS\s*(?P<peer_as>\S+)'
+                        r',\s*(?P<up_time>\S+)\/(?P<expire>\S+)\,\s*Peer\s+'
+                        r'(?P<peer>\S+)')
 
         # Learned from peer 10.1.100.4, RPF peer 10.1.100.4,
         r3 = re.compile(r'Learned\s+from\s+peer\s(?P<peer_learned_from>\S+),'
-                        '\s+RPF\s+peer\s+(?P<rpf_peer>\S+),')
+                        r'\s+RPF\s+peer\s+(?P<rpf_peer>\S+),')
 
         # SAs received: 1, Encapsulated data received: 1
         r4 = re.compile(r'SAs\s+received:\s+(?P<sa_received>\d+),'
-                        '\s+Encapsulated\s+data\s+'
-                        'received:\s+(?P<encapsulated_data_received>\d+)')
+                        r'\s+Encapsulated\s+data\s+'
+                        r'received:\s+(?P<encapsulated_data_received>\d+)')
 
         parsed_dict = {}
 

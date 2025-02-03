@@ -479,18 +479,18 @@ class ShowControlConnectionHistory(ShowControlConnectionHistorySchema):
         if m:
             # cEdge starting 17.04 onward
             p1 = re.compile(r'(?P<peer_type>v[a-zA-Z]+)\s+(?P<peer_protocol>[a-zA-Z]+)\s+(?P<peer_system_ip>-|\d+.\d+.\d+.\d+)'
-                           '\s+(?P<site_id>\d+)\s+(?P<domain_id>\d+)\s+(?P<peer_private_ip>\d+.\d+.\d+.\d+)'
-                           '\s+(?P<peer_private_port>\d+)\s+(?P<peer_public_ip>\d+.\d+.\d+.\d+)\s+(?P<peer_public_port>\d+)'
-                           '\s+(?P<local_color>[a-zA-Z0-9_-]+)\s+(?P<state>\w+)\s+(?P<local_error>\w+)'
-                           '\s+(?P<remote_error>\w+)\s+(?P<repeat_count>\d+)\s+(?P<peer_organization>(.*?)[ ]{0,0})\s+(?P<downtime>\w+\S+)')
+                           r'\s+(?P<site_id>\d+)\s+(?P<domain_id>\d+)\s+(?P<peer_private_ip>\d+.\d+.\d+.\d+)'
+                           r'\s+(?P<peer_private_port>\d+)\s+(?P<peer_public_ip>\d+.\d+.\d+.\d+)\s+(?P<peer_public_port>\d+)'
+                           r'\s+(?P<local_color>[a-zA-Z0-9_-]+)\s+(?P<state>\w+)\s+(?P<local_error>\w+)'
+                           r'\s+(?P<remote_error>\w+)\s+(?P<repeat_count>\d+)\s+(?P<peer_organization>(.*?)[ ]{0,0})\s+(?P<downtime>\w+\S+)')
             keys.insert(8, "peer_organization")
         else:
             # vEdge & cEdge prior to 17.04
             p1 = re.compile(r'(?P<peer_type>v[a-zA-Z]+)\s+(?P<peer_protocol>[a-zA-Z]+)\s+(?P<peer_system_ip>-|\d+.\d+.\d+.\d+)'
-                           '\s+(?P<site_id>\d+)\s+(?P<domain_id>\d+)\s+(?P<peer_private_ip>\d+.\d+.\d+.\d+)'
-                           '\s+(?P<peer_private_port>\d+)\s+(?P<peer_public_ip>\d+.\d+.\d+.\d+)\s+(?P<peer_public_port>\d+)'
-                           '\s+(?P<local_color>[a-zA-Z0-9_-]+)\s+(?P<state>\w+)\s+(?P<local_error>\w+)'
-                           '\s+(?P<remote_error>\w+)\s+(?P<repeat_count>\d+)\s+(?P<downtime>\w+\S+)')
+                           r'\s+(?P<site_id>\d+)\s+(?P<domain_id>\d+)\s+(?P<peer_private_ip>\d+.\d+.\d+.\d+)'
+                           r'\s+(?P<peer_private_port>\d+)\s+(?P<peer_public_ip>\d+.\d+.\d+.\d+)\s+(?P<peer_public_port>\d+)'
+                           r'\s+(?P<local_color>[a-zA-Z0-9_-]+)\s+(?P<state>\w+)\s+(?P<local_error>\w+)'
+                           r'\s+(?P<remote_error>\w+)\s+(?P<repeat_count>\d+)\s+(?P<downtime>\w+\S+)')
 
         for line in output.splitlines():
             line = line.strip()

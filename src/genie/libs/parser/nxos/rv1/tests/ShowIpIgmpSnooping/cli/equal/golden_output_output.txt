@@ -1,0 +1,34 @@
+sh ip igmp snooping vlan 461
+Global IGMP Snooping Information:
+IGMP Snooping enabled
+Optimised Multicast Flood (OMF) enabled
+IGMPv1/v2 Report Suppression enabled
+IGMPv3 Report Suppression disabled
+Link Local Groups Suppression enabled
+
+IGMP Snooping information for vlan 461
+IGMP snooping enabled
+IGMP source IP proxy enabled
+Lookup mode: IP
+Optimised Multicast Flood (OMF) enabled
+IGMP querier present, address: 1.2.3.100, version: 3
+Querier interval: 125 secs
+Querier last member query interval: 1 secs
+Querier robustness: 2
+Switch-querier enabled, address 1.2.3.100, currently running
+IGMPv3 Explicit tracking enabled
+IGMPv2 Fast leave disabled
+IGMPv1/v2 Report suppression enabled
+IGMPv3 Report suppression disabled
+Link Local Groups suppression enabled
+Router port detection using PIM Hellos, IGMP Queries
+Number of router-ports: 2
+Number of groups: 1
+VLAN vPC function enabled
+Active ports:
+
+Po40        Po10    Eth1/1  Eth1/6
+
+Report Flooding: Disabled
+Interfaces for Report Flooding: n/a
+Use Group Address for Proxy Leaves: no

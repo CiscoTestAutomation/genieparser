@@ -1,0 +1,120 @@
+show bfd neighbor detail
+
+OurAddr         NeighAddr       LD/RD                 RH/RS           Holdown(mult)     State       Int               Vrf                       Type
+22.1.1.1        22.1.1.2        1090519065/1090519065 Up              123(3)            Up          Eth7/6.5          default                   SH
+
+Session state is Up and not using echo function
+
+Session type: Singlehop
+Local Diag: 0, Demand mode: 0, Poll bit: 0, Authentication: None
+MinTxInt: 50000 us, MinRxInt: 50000 us, Multiplier: 3
+Received MinRxInt: 50000 us, Received Multiplier: 3
+Holdown (hits): 150 ms (0), Hello (hits): 50 ms (731824)
+Rx Count: 747391, Rx Interval (ms) min/max/avg: 0/2064/47 last: 26 ms ago
+Tx Count: 731824, Tx Interval (ms) min/max/avg: 48/48/48 last: 34 ms ago
+Registered protocols:  ospf
+Uptime: 0 days 9 hrs 52 mins 25 secs
+Last packet: Version: 1                - Diagnostic: 0
+             State bit: Up             - Demand bit: 0
+             Poll bit: 0               - Final bit: 0
+             Multiplier: 3             - Length: 24
+             My Discr.: 1090519065     - Your Discr.: 1090519065
+             Min tx interval: 50000    - Min rx interval: 50000
+             Min Echo interval: 50000  - Authentication bit: 0
+             C bit : 1
+Hosting LC: 7, Down reason: None, Reason not-hosted: None, Offloaded: No
+
+
+OurAddr         NeighAddr       LD/RD                 RH/RS           Holdown(mult)     State       Int               Vrf                       Type
+21.1.1.1        21.1.1.2        1090519066/1090519066 Up              123(3)            Up          Eth7/1            default                   SH
+
+Session state is Up and not using echo function
+
+Session type: Singlehop
+Local Diag: 0, Demand mode: 0, Poll bit: 0, Authentication: None
+MinTxInt: 50000 us, MinRxInt: 50000 us, Multiplier: 3
+Received MinRxInt: 50000 us, Received Multiplier: 3
+Holdown (hits): 150 ms (0), Hello (hits): 50 ms (731824)
+Rx Count: 747391, Rx Interval (ms) min/max/avg: 0/1299/47 last: 26 ms ago
+Tx Count: 731824, Tx Interval (ms) min/max/avg: 48/48/48 last: 34 ms ago
+Registered protocols:  ospf
+Uptime: 0 days 9 hrs 52 mins 25 secs
+Last packet: Version: 1                - Diagnostic: 0
+             State bit: Up             - Demand bit: 0
+             Poll bit: 0               - Final bit: 0
+             Multiplier: 3             - Length: 24
+             My Discr.: 1090519066     - Your Discr.: 1090519066
+             Min tx interval: 50000    - Min rx interval: 50000
+             Min Echo interval: 50000  - Authentication bit: 0
+             C bit : 1
+Hosting LC: 7, Down reason: None, Reason not-hosted: None, Offloaded: No
+
+
+OurAddr         NeighAddr       LD/RD                 RH/RS           Holdown(mult)     State       Int               Vrf                       Type
+23.1.1.1        23.1.1.2        1090519067/1090519067 Up              123(3)            Up          Po5               default                   SH
+
+Session state is Up and not using echo function
+
+Session type: Singlehop
+Local Diag: 0, Demand mode: 0, Poll bit: 0, Authentication: None
+MinTxInt: 50000 us, MinRxInt: 50000 us, Multiplier: 3
+Received MinRxInt: 50000 us, Received Multiplier: 3
+Holdown (hits): 150 ms (0), Hello (hits): 50 ms (731699)
+Rx Count: 747263, Rx Interval (ms) min/max/avg: 0/2059/47 last: 26 ms ago
+Tx Count: 731699, Tx Interval (ms) min/max/avg: 48/48/48 last: 34 ms ago
+Registered protocols:  ospf
+Uptime: 0 days 9 hrs 52 mins 19 secs
+Last packet: Version: 1                - Diagnostic: 0
+             State bit: Up             - Demand bit: 0
+             Poll bit: 0               - Final bit: 0
+             Multiplier: 3             - Length: 24
+             My Discr.: 1090519067     - Your Discr.: 1090519067
+             Min tx interval: 50000    - Min rx interval: 50000
+             Min Echo interval: 50000  - Authentication bit: 0
+             C bit : 1
+Hosting LC: 7, Down reason: None, Reason not-hosted: None, Offloaded: No
+
+
+OurAddr         NeighAddr       LD/RD                 RH/RS           Holdown(mult)     State       Int               Vrf                       Type
+26.1.1.1        26.1.1.2        1090519068/1090519068 Up              123(3)            Up          Po6.5             default                   SH
+
+Session state is Up and not using echo function
+
+Session type: Singlehop
+Local Diag: 0731432, Tx Interval (ms) min/max/avg: 48/48/48 last: 34 ms ago
+Registered protocols:  ospf
+Uptime: 0 days 9 hrs 52 mins 5 secs
+Last packet: Version: 1                - Diagnostic: 0
+             State bit: Up             - Demand bit: 0
+             Poll bit: 0               - Final bit: 0
+             Multiplier: 3             - Length: 24
+             My Discr.: 1090519068     - Your Discr.: 1090519068
+             Min tx interval: 50000    - Min rx interval: 50000
+             Min Echo interval: 50000  - Authentication bit: 0
+             C bit : 1
+Hosting LC: 7, Down reason: None, Reason not-hosted: None, Offloaded: No
+
+
+OurAddr         NeighAddr       LD/RD                 RH/RS           Holdown(mult)     State       Int               Vrf                       Type
+27.1.1.1        27.1.1.2        1090519069/1090519069 Up              123(3)            Up          Vlan5             default                   SH
+
+Session state is Up and not using echo function
+
+Session type: Singlehop
+Local Diag: 0, Demand mode: 0, Poll bit: 0, Authentication: None
+MinTxInt: 50000 us, MinRxInt: 50000 us, Multiplier: 3
+Received MinRxInt: 50000 us, Received Multiplier: 3
+Holdown (hits): 150 ms (0), Hello (hits): 50 ms (730909)
+Rx Count: 746456, Rx Interval (ms) min/max/avg: 0/1959/47 last: 26 ms ago
+Tx Count: 730909, Tx Interval (ms) min/max/avg: 48/48/48 last: 34 ms ago
+Registered protocols:  ospf
+Uptime: 0 days 9 hrs 51 mins 39 secs
+Last packet: Version: 1                - Diagnostic: 0
+             State bit: Up             - Demand bit: 0
+             Poll bit: 0               - Final bit: 0
+             Multiplier: 3             - Length: 24
+             My Discr.: 1090519069     - Your Discr.: 1090519069
+             Min tx interval: 50000    - Min rx interval: 50000
+             Min Echo interval: 50000  - Authentication bit: 0
+             C bit : 1
+Hosting LC: 7, Down reason: None, Reason not-hosted: None, Offloaded: No

@@ -1,0 +1,23 @@
+S1-UUT#show platform hardware fed switch active fwd-asic insight ipv4_sgt_mapping(devid=0,vrf_in='2') 
+
+----------- ASIC 0 IP - SGT mapping ----------- 
+
+EM - Exact Match 
+
+LPM - Longest Prefix Match 
+
+Total IPv4-SGT EM entries = 4 
+
+Total IPv4-SGT LPM entries = 3 
+
+SNo.   IPv4-ADDRESS   MASKLEN VRFID SGT   VALID 
+
+------------------------------------------------ 
+
+3      70.0.0.1       32      2     70    1     
+
+----------------------------------------------- 
+
+0      0.0.0.0        0       2     0     0     
+
+------------------------------------------------ 

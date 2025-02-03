@@ -1,0 +1,16 @@
+show platform software fed switch active ipv6 route
+Number of npi_ipv6route entries = 13
+Object ID           IPv6 Address                            Mask Length         Parent Type         Parent ObjectID     SGT
+0x5bb0d60f6268      100:60:2::1                             128                 RECV                0x0                 0
+0x5bb0d60f4958      100:77:2::1                             128                 RECV                0x0                 0
+0x5bb0d60ee738      100:60:2::                              64                  GLEAN               0x0                 0
+0x5bb0d60e7518      100:77:2::                              64                  GLEAN               0x0                 0
+0x5bb0d60de778      100:50:2::1                             128                 RECV                0x0                 0
+0x5bb0d60d8498      100:25::2                               128                 RECV                0x0                 0
+0x5bb0d6029608      1:1::10                                 128                 RECV                0x0                 0
+0x5bb0d6029518      1:1::                                   64                  DROP                0x0                 0
+0x5bb0d6019978      100:25::                                64                  GLEAN               0x0                 0
+0x5bb0d6004768      fe80::                                  10                  RECV                0x0                 0
+0x5bb0d6004678      ::                                      127                 DROP                0x0                 0
+0x5bb0d6002f58      ::                                      0                   DROP                0x0                 0
+0x5bb0d5dbc4c8      100:50:2::                              64                  GLEAN               0x0                 0   

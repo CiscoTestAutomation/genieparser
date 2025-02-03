@@ -41,11 +41,11 @@ class ShowMrpPorts(ShowMrpPortsSchema):
         result_dict = {}
 
         #Ring ID : 1
-        p1 = re.compile("^Ring ID\s+\:\s+(?P<ring_id>\d+)$")
+        p1 = re.compile(r"^Ring ID\s+\:\s+(?P<ring_id>\d+)$")
         #Gi1/0/1                 Forwarding
         #Gi1/0/2                 Blocked
         #n/a                     n/a
-        p2 = re.compile("^(?P<portname>\S+)\s+(?P<port_status>(Forwarding|Blocked|n\/a|Not Connected))$")
+        p2 = re.compile(r"^(?P<portname>\S+)\s+(?P<port_status>(Forwarding|Blocked|n\/a|Not Connected))$")
 
         for line in output.splitlines():
 
@@ -136,69 +136,69 @@ class ShowMrpRing(ShowMrpRingSchema):
                 output = self.device.execute(self.cli_command[1].format(ring_id = ring_id))
 
         #MRP ring 4
-        p1 = re.compile("^MRP\s+ring\s+(?P<ring_id>\d+)$")
+        p1 = re.compile(r"^MRP\s+ring\s+(?P<ring_id>\d+)$")
         #MRP ring 18 not configured
-        p2 = re.compile("^MRP ring\s+(?P<ring_id>\d+)\s+not configured$")
+        p2 = re.compile(r"^MRP ring\s+(?P<ring_id>\d+)\s+not configured$")
         #Profile         : 200 ms
-        p3 = re.compile("^Profile\s+\:\s+(?P<profile>\d+)\s+ms$")
+        p3 = re.compile(r"^Profile\s+\:\s+(?P<profile>\d+)\s+ms$")
         #Mode            : Auto-Manager
-        p4 = re.compile("^Mode\s+\:\s+(?P<mode>(Auto\-Manager|Manager|Client))$")
+        p4 = re.compile(r"^Mode\s+\:\s+(?P<mode>(Auto\-Manager|Manager|Client))$")
         #Priority        : 40960
-        p5 = re.compile("^Priority\s+\:\s+(?P<priority>\d+)$")
+        p5 = re.compile(r"^Priority\s+\:\s+(?P<priority>\d+)$")
         #Operational Mode: Client
-        p6 = re.compile("^Operational Mode(\s+)?\:\s+(?P<operation_mode>(Manager|Client))$")
+        p6 = re.compile(r"^Operational Mode(\s+)?\:\s+(?P<operation_mode>(Manager|Client))$")
         #From            : CLI
-        p7 = re.compile("^From\s+:\s+(?P<from>CLI)$")
+        p7 = re.compile(r"^From\s+:\s+(?P<from>CLI)$")
         #License         : Not Applicable
-        p8 = re.compile("^License\s+:\s+(?P<license>Not\sApplicable)$")
+        p8 = re.compile(r"^License\s+:\s+(?P<license>Not\sApplicable)$")
         #Gateway         :
-        p9 = re.compile("^Gateway\s+\:$")
+        p9 = re.compile(r"^Gateway\s+\:$")
         # Status         : Disabled
-        p9_1 = re.compile("^\s+Status\s+\:\s+(?P<status>(Disabled|Enabled))$")
+        p9_1 = re.compile(r"^\s+Status\s+\:\s+(?P<status>(Disabled|Enabled))$")
         #Best Manager    :
-        p10 = re.compile("^Best Manager\s+\:$")
+        p10 = re.compile(r"^Best Manager\s+\:$")
         # MAC Address    : 04:A7:41:4D:20:07
-        p10_1 = re.compile("^\s+MAC Address\s+\:\s+(?P<mac_address>(?:[0-9A-Fa-f]{2}[:-]){5}(?:[0-9A-Fa-f]{2}))$")
+        p10_1 = re.compile(r"^\s+MAC Address\s+\:\s+(?P<mac_address>(?:[0-9A-Fa-f]{2}[:-]){5}(?:[0-9A-Fa-f]{2}))$")
         # Priority       : 40960
-        p10_2 = re.compile("^\s+Priority\s+\:\s+(?P<priority>\d+)$")
+        p10_2 = re.compile(r"^\s+Priority\s+\:\s+(?P<priority>\d+)$")
         #Network Topology: Ring
-        p11 = re.compile("^Network Topology(\s+)?\:\s+(?P<network_topology>Ring)$")
+        p11 = re.compile(r"^Network Topology(\s+)?\:\s+(?P<network_topology>Ring)$")
         #Network Status  : CLOSED
-        p12 = re.compile("^Network Status\s+\:\s+(?P<network_status>(CLOSED|OPEN|UNKNOWN))$")
+        p12 = re.compile(r"^Network Status\s+\:\s+(?P<network_status>(CLOSED|OPEN|UNKNOWN))$")
         #Port1:                                     Port2:
-        p13 = re.compile("^Port1:\s+Port2\:$")
+        p13 = re.compile(r"^Port1:\s+Port2\:$")
         # MAC Address    :6C:03:09:A0:07:87          MAC Address    :6C:03:09:A0:07:88
-        p13_1 = re.compile("^\s+MAC Address\s+\:(?P<mac_address1>(?:[0-9A-Fa-f]{2}[:-]){5}(?:[0-9A-Fa-f]{2}))\s+MAC Address\s+:(?P<mac_address2>(?:[0-9A-Fa-f]{2}[:-]){5}(?:[0-9A-Fa-f]{2}))")
+        p13_1 = re.compile(r"^\s+MAC Address\s+\:(?P<mac_address1>(?:[0-9A-Fa-f]{2}[:-]){5}(?:[0-9A-Fa-f]{2}))\s+MAC Address\s+:(?P<mac_address2>(?:[0-9A-Fa-f]{2}[:-]){5}(?:[0-9A-Fa-f]{2}))")
         # Interface      :Gi1/0/7                    Interface      :Gi1/0/8
-        p13_2 = re.compile("^\s+Interface\s+\:(?P<interface1>\S+)\s+Interface\s+\:(?P<interface2>\S+)$")
+        p13_2 = re.compile(r"^\s+Interface\s+\:(?P<interface1>\S+)\s+Interface\s+\:(?P<interface2>\S+)$")
         # Status         :Forwarding                 Status         :Forwarding
-        p13_3 = re.compile("^\s+Status\s+\:(?P<status1>(Forwarding|Blocked|Not Connected))\s+Status\s+\:(?P<status2>(Forwarding|Blocked|Not Connected))$")
+        p13_3 = re.compile(r"^\s+Status\s+\:(?P<status1>(Forwarding|Blocked|Not Connected))\s+Status\s+\:(?P<status2>(Forwarding|Blocked|Not Connected))$")
         #VLAN ID     : 141
-        p14 = re.compile("^VLAN ID\s+\:\s+(?P<vlan_id>\d+)$")
+        p14 = re.compile(r"^VLAN ID\s+\:\s+(?P<vlan_id>\d+)$")
         #Domain Name : RING4
-        p15 = re.compile("^Domain Name\s+\:\s+(?P<domain_name>[\w\s]+)$")
+        p15 = re.compile(r"^Domain Name\s+\:\s+(?P<domain_name>[\w\s]+)$")
         #Domain ID   : FFFFFFFF-FFFF-FFFF-FFFF-AAAAAAAAAAAE
-        p16 = re.compile("^Domain ID\s+\:\s+(?P<domain_id>[\w\-]*)$")
+        p16 = re.compile(r"^Domain ID\s+\:\s+(?P<domain_id>[\w\-]*)$")
         #Topology Change Request Interval        : 10ms
-        p17 = re.compile("^Topology Change Request Interval\s+:\s+(?P<topology_change_request_interval>\d+)ms$")
+        p17 = re.compile(r"^Topology Change Request Interval\s+:\s+(?P<topology_change_request_interval>\d+)ms$")
         #Topology Change Repeat Count            : 3
-        p18 = re.compile("^Topology Change Repeat Count\s+:\s+(?P<topology_change_repeat_count>\d+)$")
+        p18 = re.compile(r"^Topology Change Repeat Count\s+:\s+(?P<topology_change_repeat_count>\d+)$")
         #Short Test Frame Interval               : 10ms
-        p19 = re.compile("^Short Test Frame Interval\s+\s:\s+(?P<short_test_frame_interval>\d+)ms$")
+        p19 = re.compile(r"^Short Test Frame Interval\s+\s:\s+(?P<short_test_frame_interval>\d+)ms$")
         #Default Test Frame Interval             : 20ms
-        p20 = re.compile("^Default Test Frame Interval\s+\s:\s+(?P<default_test_frame_interval>\d+)ms$")
+        p20 = re.compile(r"^Default Test Frame Interval\s+\s:\s+(?P<default_test_frame_interval>\d+)ms$")
         #Operational Test Frame Interval         : 20ms
-        p21 = re.compile("^Operational Test Frame Interval\s+\s:\s+(?P<operational_test_frame_interval>\d+)ms$")
+        p21 = re.compile(r"^Operational Test Frame Interval\s+\s:\s+(?P<operational_test_frame_interval>\d+)ms$")
         #Test Monitoring Interval Count          : 3
-        p22 = re.compile("^Test Monitoring Interval Count\s+:\s+(?P<test_monitoring_interval_count>\d+)$")
+        p22 = re.compile(r"^Test Monitoring Interval Count\s+:\s+(?P<test_monitoring_interval_count>\d+)$")
         #Test Monitoring Extended Interval Count : N/A
-        p23 = re.compile("^Test Monitoring Extended Interval Count\s+:\s+(?P<test_monitoring_extended_interval_count>((N\/A)|(\d+)))$")
+        p23 = re.compile(r"^Test Monitoring Extended Interval Count\s+:\s+(?P<test_monitoring_extended_interval_count>((N\/A)|(\d+)))$")
         #Link Down Timer Interval        : 20 ms
-        p24 = re.compile("^Link Down Timer Interval\s+:\s+(?P<link_down_timer_interval>\d+)\s+ms$")
+        p24 = re.compile(r"^Link Down Timer Interval\s+:\s+(?P<link_down_timer_interval>\d+)\s+ms$")
         #Link Up Timer Interval          : 20 ms
-        p25 = re.compile("^Link Up Timer Interval\s+:\s+(?P<link_up_timer_interval>\d+)\s+ms$")
+        p25 = re.compile(r"^Link Up Timer Interval\s+:\s+(?P<link_up_timer_interval>\d+)\s+ms$")
         #Link Change (Up or Down) count  :  4 ms
-        p26 = re.compile("^Link Change \(Up or Down\) count\s+:\s+(?P<link_change_up_or_down_count>\d+)\s+ms$")
+        p26 = re.compile(r"^Link Change \(Up or Down\) count\s+:\s+(?P<link_change_up_or_down_count>\d+)\s+ms$")
 
         result_dict = {}
 

@@ -399,10 +399,10 @@ class ShowInterfacesDot11radio(ShowInterfacesDot11radioSchema):
         p1_4 = re.compile(r'^(?P<attributes>[\w\s]+)?\s+MTU:(?P<mtu>\d+)\s+Metric:(?P<metric>\d+)$')
 
         # RX packets:26749820 errors:0 dropped:0 overruns:0 frame:0
-        p1_5 = re.compile('^RX packets:(?P<packets>\d+) errors:(?P<error>\d+) dropped:(?P<drop>\d+) overruns:(?P<overrun>\d+) frame:(?P<frame>\d+)$')
+        p1_5 = re.compile(r'^RX packets:(?P<packets>\d+) errors:(?P<error>\d+) dropped:(?P<drop>\d+) overruns:(?P<overrun>\d+) frame:(?P<frame>\d+)$')
 
         # TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
-        p1_6 = re.compile('^TX packets:(?P<packets>\d+) errors:(?P<error>\d+) dropped:(?P<drop>\d+) overruns:(?P<overrun>\d+) carrier:(?P<carrier>\d+)$')
+        p1_6 = re.compile(r'^TX packets:(?P<packets>\d+) errors:(?P<error>\d+) dropped:(?P<drop>\d+) overruns:(?P<overrun>\d+) carrier:(?P<carrier>\d+)$')
 
         # collisions:0 txqueuelen:1000
         p1_7 = re.compile(r'^collisions:(?P<collisions>\d+) txqueuelen:(?P<txqueuelen>\d+)$')

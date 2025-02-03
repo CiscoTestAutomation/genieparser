@@ -48,14 +48,14 @@ class ShowSwitchStackPortSummary(ShowSwitchStackPortSummarySchema):
         # 1/1        OK           2/2         50cm           Yes       Yes           Yes       1                   No
         
         p1 = re.compile(r"^(?P<stackport_id>\S+)"
-                        " +(?P<port_status>\w+)"
-                        " +(?P<neighbor>\S+)"
-                        " +(?P<cable_length>\w+)"
-                        " +(?P<link_ok>\w+)"
-                        " +(?P<link_active>\w+)"
-                        " +(?P<sync_ok>\w+)"
-                        " +(?P<link_changes_count>\d+)"
-                        " +(?P<in_loopback>\w+)$")
+                        r" +(?P<port_status>\w+)"
+                        r" +(?P<neighbor>\S+)"
+                        r" +(?P<cable_length>\w+)"
+                        r" +(?P<link_ok>\w+)"
+                        r" +(?P<link_active>\w+)"
+                        r" +(?P<sync_ok>\w+)"
+                        r" +(?P<link_changes_count>\d+)"
+                        r" +(?P<in_loopback>\w+)$")
         
         for line in output.splitlines():
            line = line.strip()

@@ -318,7 +318,7 @@ class ShowDot1xAllStatistics(ShowDot1xAllStatisticsSchema):
         # initial regexp pattern
         p1 = re.compile(r'^Dot1x +(Supplicant|Authenticator) +Port +Statistics +for +(?P<intf>[\w\-\/]+)$')
         p2 = re.compile(r'^RxVersion +\= *(?P<rxversion>\d+) +'
-                         'LastRxSrcMAC +\= *(?P<lastrxsrcmac>\w+\.\w+\.\w+)$')
+                         r'LastRxSrcMAC +\= *(?P<lastrxsrcmac>\w+\.\w+\.\w+)$')
         p3 = re.compile(r'(\w+) +\= *(\d+)')
 
         for line in out.splitlines():
@@ -394,7 +394,7 @@ class ShowDot1xAllSummary(ShowDot1xAllSummarySchema):
 
         # initial regexp pattern
         p1 = re.compile(r'^(?P<intf>[\w\-\/]+) +(?P<pae>\w+) +'
-                         '(?P<client>\w+\.\w+\.\w+) +(?P<status>\w+)$')
+                         r'(?P<client>\w+\.\w+\.\w+) +(?P<status>\w+)$')
         p2 = re.compile(r'^((?P<pae>\w+) +)?(?P<client>\w+\.\w+\.\w+) +(?P<status>\w+)$')
 
         for line in out.splitlines():

@@ -5221,7 +5221,7 @@ class ShowWirelessManagementTrustPoint(ShowWirelessManagementTrustPointSchema):
         ret_dict = {}
 
         # Trustpoint Name : ewlc-tp1  
-        p1 = re.compile('^Trustpoint +Name +:( +(?P<trustpoint_name>.*))?$')
+        p1 = re.compile(r'^Trustpoint +Name +:( +(?P<trustpoint_name>.*))?$')
         
         # Certificate Info : Available
         p2 = re.compile(r'^Certificate +Info +: +(?P<certificate_info>.*)$')

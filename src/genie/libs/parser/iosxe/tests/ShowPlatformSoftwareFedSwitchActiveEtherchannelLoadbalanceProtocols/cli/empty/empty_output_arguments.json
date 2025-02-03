@@ -1,0 +1,10 @@
+{
+    "switch": 1,
+    "portchannelnum": 10,
+    "sourceipv6": "e80::2e36:f8ff:fe4b:e227",
+    "destinationipv6": "e80::2e36:f8ff:fe4b:e227",
+    "ipv6_fl": 23,
+    "next_header": 24,
+    "sour_port": 44,
+    "dest_port": 45
+}

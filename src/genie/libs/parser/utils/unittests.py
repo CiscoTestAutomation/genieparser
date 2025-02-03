@@ -293,7 +293,7 @@ class ParserGenerator(object):
     def __iter__(self):
         """Sets the uid of each parser step to its class name. Adds token if it exists"""
         for d in self.data:
-            if not re.match(f'{d["operating_system"]}_\S+',
+            if not re.match(fr'{d["operating_system"]}_\S+',
                             d['local_class'].__module__):
                 continue
             if d['tokens']:
@@ -859,7 +859,7 @@ def _parse_args(operating_system=None,
     _token = args.token
     _display_only_failed = args.display_only_failed
     _number = args.number
-    _external_folder = args.external_folder
+    _external_folder = kwargs.get('external_folder') or args.external_folder
     _show_missing_unittests = args.show_missing_unittests
 
     return {

@@ -88,40 +88,40 @@ class Ifconfig(IfconfigSchema):
 
         #  inet 192.168.100.51  netmask 255.255.255.0  broadcast 192.168.100.255
         p2 = re.compile(r'^inet +(?P<ip>\S+) +netmask +(?P<netmask>\S+) '
-                         '+broadcast +(?P<broadcast>\S+)$')
+                         r'+broadcast +(?P<broadcast>\S+)$')
 
         #  inet6 fe80::39:1a5c:726d:b23e  prefixlen 64  scopeid 0x20<link>
         p3 = re.compile(r'^inet6 +(?P<ip>\S+) +prefixlen +(?P<prefixlen>\d+) '
-                         '+scopeid +(?P<scopeid>\S+)$')
+                         r'+scopeid +(?P<scopeid>\S+)$')
 
         #  ether 48:2a:e3:ff:58:55  txqueuelen 1000  (Ethernet)
         #  ether 00:50:b6:ff:4b:83  (Ethernet)
         #  loop  txqueuelen 1000  (Local Loopback)
         #  loop  (Local Loopback)
         p4 = re.compile(r'^(?P<type>\S+)( +(?P<mac>\S+))?( +txqueuelen +(?P<txqueuelen>\d+))? '
-                         '+\((?P<description>.*)\)$')
+                         r'+\((?P<description>.*)\)$')
 
         #  RX packets 66766  bytes 4274334 (4.0 MiB)
         p5 = re.compile(r'^RX +packets +(?P<rx_pkts>\d+) +bytes +(?P<rx_bytes>\d+) '
-                         '+\((?P<rx_value>.*)\)$')
+                         r'+\((?P<rx_value>.*)\)$')
 
         #  RX errors 0  dropped 0  overruns 0  frame 0
         p6 = re.compile(r'^RX +errors +(?P<rx_errors>\d+) +dropped +(?P<rx_dropped>\d+) '
-                         '+overruns +(?P<rx_overruns>\d+) +frame +(?P<rx_frame>\d+)$')
+                         r'+overruns +(?P<rx_overruns>\d+) +frame +(?P<rx_frame>\d+)$')
 
         #  TX packets 365916  bytes 67689136 (64.5 MiB)
         p7 = re.compile(r'^TX +packets +(?P<tx_pkts>\d+) +bytes +(?P<tx_bytes>\d+) '
-                         '+\((?P<tx_value>.*)\)$')
+                         r'+\((?P<tx_value>.*)\)$')
 
         #  TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
         p8 = re.compile(r'^TX +errors +(?P<tx_errors>\d+) +dropped +(?P<tx_dropped>\d+) '
-                         '+overruns +(?P<tx_overruns>\d+) +carrier +(?P<tx_carrier>\d+) '
-                         '+collisions +(?P<tx_collisions>\d+)$')
+                         r'+overruns +(?P<tx_overruns>\d+) +carrier +(?P<tx_carrier>\d+) '
+                         r'+collisions +(?P<tx_collisions>\d+)$')
 
         #  device interrupt 16  memory 0xe9200000-e9220000
         #  device memory 0xdea00000-deafffff
         p9 = re.compile(r'^device( +interrupt +(?P<device_interrupt>\d+))? '
-                         '+memory +(?P<device_memory>\S+)$')
+                         r'+memory +(?P<device_memory>\S+)$')
         
         # eth0      Link encap:Ethernet  HWaddr 00:50:56:FF:01:14
         # lo        Link encap:Local Loopback

@@ -83,6 +83,7 @@ IOSXE parsers for the following show commands:
     * show ip dhcp snooping binding {mac}
     * show ip name-servers
     * show ip name-servers vrf {vrf}
+    * show ip dhcp pool
     '''
 
 # Python
@@ -234,8 +235,8 @@ class ShowIpVrf(ShowIpVrfSchema):
         #                                                          Lo300
         #                                                          Gi2.390
         p1 = re.compile(r'^(?P<vrf>[\S]+)\s+'
-            '(?P<rd>([\d\:]+|(<not set>)))\s+'
-            '(?P<interfaces>[\w\/\.\-]+)$')
+            r'(?P<rd>([\d\:]+|(<not set>)))\s+'
+            r'(?P<interfaces>[\w\/\.\-]+)$')
         p2 = re.compile(r'(?P<interfaces>[\w\/\.\-]+)$')
 
         for line in out.splitlines():
@@ -368,7 +369,7 @@ class ShowIpSlaSummary(ShowIpSlaSummarySchema):
                 id_dict['rtt_stats'] = group['rtt_stats']
 
                 # Strip chars and convert 'rtt_stats' to an integer if possible
-                rtt_stats_msecs = re.sub('[^0-9]', '', group['rtt_stats'])
+                rtt_stats_msecs = re.sub(r'[^0-9]', '', group['rtt_stats'])
                 if rtt_stats_msecs != '':
                     id_dict['rtt_stats_msecs'] = int(rtt_stats_msecs)
 
@@ -506,31 +507,31 @@ class ShowIpNbarVersion(ShowIpNbarVersionSchema):
         version_dict = {}
 
         # NBAR software version: 34
-        p1 = re.compile('^NBAR software version:\s+(?P<nbar_software_version>.+)$')
+        p1 = re.compile(r'^NBAR software version:\s+(?P<nbar_software_version>.+)$')
 
         # NBAR minimum backward compatible version: 41
-        p2 = re.compile('^NBAR minimum backward compatible version:\s+(?P<nbar_minimum_backward_compatible_version>.+)$')
+        p2 = re.compile(r'^NBAR minimum backward compatible version:\s+(?P<nbar_minimum_backward_compatible_version>.+)$')
 
         # Name: Advanced Protocol Pack
-        p3 = re.compile('^Name:\s+(?P<name>.+)$')
+        p3 = re.compile(r'^Name:\s+(?P<name>.+)$')
 
         # Version: 41.0
-        p4 = re.compile('^Version:\s+(?P<version>.+)$')
+        p4 = re.compile(r'^Version:\s+(?P<version>.+)$')
 
         # Publisher: Cisco Systems Inc.
-        p5 = re.compile('^Publisher:\s+(?P<publisher>.+)$')
+        p5 = re.compile(r'^Publisher:\s+(?P<publisher>.+)$')
 
         # NBAR Engine Version: 31
-        p6 = re.compile('^NBAR Engine Version:\s+(?P<nbar_engine_version>.+)$')
+        p6 = re.compile(r'^NBAR Engine Version:\s+(?P<nbar_engine_version>.+)$')
 
         # Creation time:  Mon Feb 11 09:42:11 UTC 2019
-        p7 = re.compile('^Creation time:\s+(?P<creation_time>.+)$')
+        p7 = re.compile(r'^Creation time:\s+(?P<creation_time>.+)$')
 
         # File: bootflash:sdavc/pp-adv-all-166.2-31-41.0.0.pack
-        p8 = re.compile('^File:\s+(?P<file>.+)$')
+        p8 = re.compile(r'^File:\s+(?P<file>.+)$')
 
         # State: Active
-        p9 = re.compile('^State:\s+(?P<state>.+)$')
+        p9 = re.compile(r'^State:\s+(?P<state>.+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -1824,6 +1825,175 @@ class ShowIpDhcpSnoopingBinding(ShowIpDhcpSnoopingBindingSchema):
         return ret_dict
 
 # ========================================================
+# Parser for 'show ip dhcp pool'
+# ========================================================
+
+class ShowIpDhcpPoolSchema(MetaParser):
+    """Schema for 'show ip dhcp pool'"""
+
+    schema = {
+        'pools': {
+            Any(): {
+                'utilization_mark': {
+                    'high': int,
+                    'low': int,
+                },
+                'subnet_size': {
+                    'first': int,
+                    'next': int,
+                },
+                'total_addresses': int,
+                'leased_addresses': int,
+                'excluded_addresses': int,
+                Optional('pending_event'): str,
+                'subnets': {
+                    Any(): {
+                        'ip_range': str,
+                        'leased': int,
+                        'excluded': int,
+                        'total': int,
+                    }
+                },
+            }
+        }
+    }
+
+class ShowIpDhcpPool(ShowIpDhcpPoolSchema):
+    """Parser for 'show ip dhcp pool'"""
+
+    cli_command = 'show ip dhcp pool'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        if not output.strip():
+            return {}
+
+        # Regular expressions
+        # Pattern to capture the name of a pool
+        pool_pattern = re.compile(r'^Pool\s+(?P<pool_name>\S+)\s*:')
+
+        # Matches the name of a pool in the configuration, e.g., "Pool pool1:"
+        pool_pattern = re.compile(r'^Pool\s+(?P<pool_name>\S+)\s*:')
+
+        # Matches the utilization mark line, capturing high and low marks,  
+        # e.g : "Utilization mark (high/low) : 100 / 0"
+        utilization_pattern = re.compile(r'^Utilization mark.*?:\s+(?P<high>\d+)\s*/\s*(?P<low>\d+)$')
+
+        # Matches the subnet size line, capturing the first and next subnet sizes, 
+        # e.g : "Subnet size (first/next): 0 / 0"
+        subnet_size_pattern = re.compile(r'^Subnet size.*?:\s+(?P<first>\d+)\s*/\s*(?P<next>\d+)$')
+
+        # Matches the total addresses line, capturing the total count,
+        # e.g : "Total addresses : 254"
+        total_addresses_pattern = re.compile(r'^Total addresses\s*:\s+(?P<total_addresses>\d+)$')
+
+        # Matches the leased addresses line, capturing the leased count, 
+        # e.g : "Leased addresses : 0"
+        leased_addresses_pattern = re.compile(r'^Leased addresses\s*:\s+(?P<leased_addresses>\d+)$')
+
+        # Matches the excluded addresses line, capturing the excluded count,  
+        # e.g : "Excluded addresses : 0"
+        excluded_addresses_pattern = re.compile(r'^Excluded addresses\s*:\s+(?P<excluded_addresses>\d+)$')
+
+        # Matches the pending event line, capturing the event description,  
+        # e.g : "Pending event : none"
+        pending_event_pattern = re.compile(r'^Pending event\s*:\s+(?P<pending_event>.+)$')
+
+        # Matches a subnet entry, capturing details like index, IP range, and address stats, 
+        # e.g : 192.168.1.1 - 192.168.1.254   0 / 0 / 254"
+        subnet_entry_pattern = re.compile(
+            r'^(?P<current_index>\S+)\s+(?P<start_ip>\S+)\s+-\s+(?P<end_ip>\S+)\s+'
+            r'(?P<leased>\d+)\s*/\s*(?P<excluded>\d+)\s*/\s*(?P<total>\d+)$'
+        )
+
+        result = {}
+        current_pool = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Match pool name
+            # Example: "Pool MyPoolName:"
+            match = pool_pattern.match(line)
+            if match:
+                current_pool = match.group('pool_name')
+                current_pool_dict = result.setdefault('pools', {}).setdefault(current_pool, {
+                    'utilization_mark': {},
+                    'subnet_size': {},
+                    'subnets': {}
+                })
+                continue
+
+            # Match utilization mark
+             # Example: "Utilization mark (high/low) : 100 / 0"
+            match = utilization_pattern.match(line)
+            if match and current_pool:
+                current_pool_dict['utilization_mark'] = {
+                    'high': int(match.group('high')),
+                    'low': int(match.group('low')),
+                }
+                continue
+
+            # Match subnet size
+            # Example: "Subnet size (first/next): 0 / 0"
+            match = subnet_size_pattern.match(line)
+            if match and current_pool:
+                current_pool_dict['subnet_size'] = {
+                    'first': int(match.group('first')),
+                    'next': int(match.group('next')),
+                }
+                continue
+
+            # Match total addresses
+            # Example: "Total addresses : 254"
+            match = total_addresses_pattern.match(line)
+            if match and current_pool:
+                current_pool_dict['total_addresses'] = int(match.group('total_addresses'))
+                continue
+
+            # Match leased addresses
+            # Example: "Leased addresses : 0"
+            match = leased_addresses_pattern.match(line)
+            if match and current_pool:
+                current_pool_dict['leased_addresses'] = int(match.group('leased_addresses'))
+                continue
+
+            # Match excluded addresses
+            # Example: "Excluded addresses : 0"
+            match = excluded_addresses_pattern.match(line)
+            if match and current_pool:
+                current_pool_dict['excluded_addresses'] = int(match.group('excluded_addresses'))
+                continue
+
+            # Match pending event
+            # Example: "Pending event : none"
+            match = pending_event_pattern.match(line)
+            if match and current_pool:
+                current_pool_dict['pending_event'] = match.group('pending_event').strip()
+                continue
+
+            # Match subnet entry
+            # Example: "1 192.168.1.1 - 192.168.1.254 0 / 0 / 254"
+            match = subnet_entry_pattern.match(line)
+            if match and current_pool:
+                subnet_index = match.group('current_index')
+                ip_range = f"{match.group('start_ip')} - {match.group('end_ip')}"
+                current_pool_dict['subnets'][subnet_index] = {
+                    'ip_range': ip_range,
+                    'leased': int(match.group('leased')),
+                    'excluded': int(match.group('excluded')),
+                    'total': int(match.group('total')),
+                }
+
+        return result
+
+
+
+
+
+# ========================================================
 # Parser for 'show ip mfib status'
 # ========================================================
 
@@ -2105,11 +2275,11 @@ class ShowIpMfib(ShowIpMfibSchema):
         #  (*,FF05:1:1::1) Flags: C HW
         # (2001:70:1:1::10,FF05:1:1::1) Flags: HW
         p3 = re.compile(r'^\((?P<source_address>[\w\:\.\*\/]+)\,'
-                     '(?P<multicast_group>[\w\:\.\/]+)\)'
-                     '\s+Flags\:(?P<mfib_flags>[\s\w\s]+$|$)')
+                     r'(?P<multicast_group>[\w\:\.\/]+)\)'
+                     r'\s+Flags\:(?P<mfib_flags>[\s\w\s]+$|$)')
         #0x1AF0  OIF-IC count: 0, OIF-A count: 1
         p4 = re.compile(r'\w+ +OIF-IC count: +(?P<oif_ic_count>[\w]+)'
-                   '\, +OIF-A count: +(?P<oif_a_count>[\w]+)$')
+                   r'\, +OIF-A count: +(?P<oif_a_count>[\w]+)$')
         # SW Forwarding: 0/0/0/0, Other: 0/0/0
         p5 = re.compile(r'SW Forwarding\:\s+(?P<sw_packet_count>[\w]+)\/'
                      r'(?P<sw_packets_per_second>[\w]+)\/'
@@ -2135,8 +2305,8 @@ class ShowIpMfib(ShowIpMfibSchema):
         #Port-channel5 Flags: RA A MA
 
         p7 = re.compile(r'^(?P<ingress_if>[\w\/\.\-\:]+)'
-                         '(\,\s+VXLAN +(?P<ingress_vxlan_version>[v0-9]+)?(\s+)?(?P<ingress_vxlan_cap>[\w]+)(\s+)?(\(?(?P<ingress_vxlan_vni>[0-9]+)(\,\s+)?(?P<ingress_vxlan_nxthop>[\w:./]+)?\)?)?)?'
-                         ' +Flags\: +(?P<ingress_flags>A[\s\w]+|[\s\w]+ +A[\s\w]+|A$)')
+                         r'(\,\s+VXLAN +(?P<ingress_vxlan_version>[v0-9]+)?(\s+)?(?P<ingress_vxlan_cap>[\w]+)(\s+)?(\(?(?P<ingress_vxlan_vni>[0-9]+)(\,\s+)?(?P<ingress_vxlan_nxthop>[\w:./]+)?\)?)?)?'
+                         r' +Flags\: +(?P<ingress_flags>A[\s\w]+|[\s\w]+ +A[\s\w]+|A$)')
 
         #Vlan2001 Flags: F NS
         #LISP0.1, (100.11.11.11, 235.1.3.167) Flags:
@@ -2147,11 +2317,11 @@ class ShowIpMfib(ShowIpMfibSchema):
         #Null0, LISPv4 Decap Flags: RF F NS
         #Port-channel5 Flags: RF F NS
         p8 = re.compile(r'^(?P<egress_if>[\w\/\.\-\:]+)'
-                        '(\,\s+LISPv4\s*Decap\s*)?'
-                        '(\,\s+L2LISP\s*Decap\s*)?'
-                        '(\,\s+\(?(?P<egress_rloc>[\w\.]+)(\,\s+)?(?P<egress_underlay_mcast>[\w\.]+)?\)?)?'
-                        '(\,\s+VXLAN +(?P<egress_vxlan_version>[v0-9]+)?(\s+)?(?P<egress_vxlan_cap>[\w]+)(\s+)?(\(?(?P<egress_vxlan_vni>[0-9]+)(\,\s+)?(?P<egress_vxlan_nxthop>[\w:./]+)?\)?)?)?'
-						'\s+Flags\:\s?(?P<egress_flags>F[\s\w]+|[\s\w]+\s+F[\s\w]+|F$|[\s\w]+\s+F$|$)')
+                        r'(\,\s+LISPv4\s*Decap\s*)?'
+                        r'(\,\s+L2LISP\s*Decap\s*)?'
+                        r'(\,\s+\(?(?P<egress_rloc>[\w\.]+)(\,\s+)?(?P<egress_underlay_mcast>[\w\.]+)?\)?)?'
+                        r'(\,\s+VXLAN +(?P<egress_vxlan_version>[v0-9]+)?(\s+)?(?P<egress_vxlan_cap>[\w]+)(\s+)?(\(?(?P<egress_vxlan_vni>[0-9]+)(\,\s+)?(?P<egress_vxlan_nxthop>[\w:./]+)?\)?)?)?'
+						r'\s+Flags\:\s?(?P<egress_flags>F[\s\w]+|[\s\w]+\s+F[\s\w]+|F$|[\s\w]+\s+F$|$)')
 
         #CEF: Adjacency with MAC: 01005E010101000A000120010800
         p9_1 = re.compile(r'^CEF\: +(?P<egress_adj_mac>[\w \:\(\)\.]+)$')
@@ -2159,9 +2329,9 @@ class ShowIpMfib(ShowIpMfibSchema):
         p9_2 = re.compile(r'^CEF\: +(?P<egress_adj_mac>[\w \(\.\)]+)$')
         #Pkts: 0/0/2    Rate: 0 pps
         p10 = re.compile(r'^Pkts\:\s+(?P<egress_hw_pkt_count>[\w]+)\/'
-                         '(?P<egress_fs_pkt_count>[\w]+)\/'
-                         '(?P<egress_ps_pkt_count>[\w]+)'
-                         '\s+Rate\:\s+(?P<egress_pkt_rate>[\w]+)\s+pps$')
+                         r'(?P<egress_fs_pkt_count>[\w]+)\/'
+                         r'(?P<egress_ps_pkt_count>[\w]+)'
+                         r'\s+Rate\:\s+(?P<egress_pkt_rate>[\w]+)\s+pps$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -2393,25 +2563,25 @@ class ShowIpMrib(ShowIpMribSchema):
         #(2001:192:168:7::11,FF05:1:1::1) RPF nbr: 2001:150:1:1::1 Flags: L C
 
         p1 = re.compile(r'^\((?P<source_address>[\w\:\.\*\/]+)\,'
-                     '(?P<multicast_group>[\w\:\.\/]+)\)'
-                     ' +RPF nbr: (?P<RPF_nbr>[\w\:\.\/]+)'
-                     '\s+Flags\:(?P<mrib_flags>[\w\s]+|$)')
+                     r'(?P<multicast_group>[\w\:\.\/]+)\)'
+                     r' +RPF nbr: (?P<RPF_nbr>[\w\:\.\/]+)'
+                     r'\s+Flags\:(?P<mrib_flags>[\w\s]+|$)')
 
         # GigabitEthernet2/0/6 Flags: A NS
         # Tunnel1 Flags: A NS
         # Vlan500 Flags: A      VXLAN Encap/Decap       Next-hop: (0.0.0.0, 1.4.0.0)
         p2 = re.compile(r'^(?P<ingress_if>[\w\.\/\, ]+)'
-                         '\s+Flags\: +(?P<ingress_flags>A[\sA-UW-Z0-9]+|[\s\w]+ +A[\sA-UW-Z0-9]+|A$)')
+                         r'\s+Flags\: +(?P<ingress_flags>A[\sA-UW-Z0-9]+|[\s\w]+ +A[\sA-UW-Z0-9]+|A$)')
 
         #  LISP0.1 Flags: F NS  Next-hop: 100.154.154.154
         #  LISP0.1 Flags: F NS   Next-hop: (100.11.11.11, 235.1.3.167)
         #  Vlan500 Flags: F      VXLAN Encap/Decap       Next-hop: (239.1.1.0, 1.4.0.0)
         p3 = re.compile(r'^(?P<egress_if>[\w\.\/\,]+)'
-                        '\s+Flags\:\s+(?P<egress_flags>F[\s\w]+)+((\s+)?VXLAN Encap\/Decap(\s+)?)?Next-hop\:\s+(?P<egress_next_hop>([\w\:\.\*\/]+)|(\([\w\:\.\*\/]+\, +[\w\:\.\*\/]+\)))$')
+                        r'\s+Flags\:\s+(?P<egress_flags>F[\s\w]+)+((\s+)?VXLAN Encap\/Decap(\s+)?)?Next-hop\:\s+(?P<egress_next_hop>([\w\:\.\*\/]+)|(\([\w\:\.\*\/]+\, +[\w\:\.\*\/]+\)))$')
 
         #  Vlan2006 Flags: F LI NS
         p4=re.compile(r'^(?P<egress_if>[\w\.\/\, ]+)'
-                        '\s+Flags\: +(?P<egress_flags>F[\s\w]+)')
+                        r'\s+Flags\: +(?P<egress_flags>F[\s\w]+)')
 
 
 
@@ -3605,8 +3775,8 @@ class ShowIpNhrpTraffic(ShowIpNhrpTrafficSchema):
 
         # Tunnel100: Max-send limit:10000Pkts/10Sec, Usage:0%
         p1 = re.compile(r'^(?P<interface>[\w\/\.\-]+):\s+'
-                        'Max-send limit:\s*(?P<max_send_limit>\d+[\w\/]+),\s+'
-                        'Usage:(?P<usage>\d+%)$')
+                        r'Max-send limit:\s*(?P<max_send_limit>\d+[\w\/]+),\s+'
+                        r'Usage:(?P<usage>\d+%)$')
 
         # Sent: Total 4527
         p2 = re.compile(r'^Sent:\s+Total\s+(?P<total>\d+)$')
@@ -3616,18 +3786,18 @@ class ShowIpNhrpTraffic(ShowIpNhrpTrafficSchema):
 
         # 73 Resolution Request  69 Resolution Reply  4344 Registration Request
         p4 = re.compile(r'^(?P<resolution_request>\d+)\s+Resolution\s+Request\s+'
-                        '(?P<resolution_reply>\d+)\s+Resolution\s+Reply\s+'
-                        '(?P<registration_request>\d+)\s+Registration\s+Request$')
+                        r'(?P<resolution_reply>\d+)\s+Resolution\s+Reply\s+'
+                        r'(?P<registration_request>\d+)\s+Registration\s+Request$')
 
         # 0 Registration Reply  41 Purge Request  0 Purge Reply
         p5 = re.compile(r'^(?P<registration_reply>\d+)\s+Registration\s+Reply\s+'
-                        '(?P<purge_request>\d+)\s+Purge\s+Request\s+'
-                        '(?P<purge_reply>\d+)\s+Purge\s+Reply$')
+                        r'(?P<purge_request>\d+)\s+Purge\s+Request\s+'
+                        r'(?P<purge_reply>\d+)\s+Purge\s+Reply$')
 
         # 0 Error Indication  41 Traffic Indication  0 Redirect Suppress
         p6 = re.compile(r'^(?P<error_indication>\d+)\s+Error\s+Indication\s+'
-                        '(?P<traffic_indication>\d+)\s+Traffic\s+Indication\s+'
-                        '(?P<redirect_supress>\d+)\s+Redirect\s+Suppress$')
+                        r'(?P<traffic_indication>\d+)\s+Traffic\s+Indication\s+'
+                        r'(?P<redirect_supress>\d+)\s+Redirect\s+Suppress$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -3768,16 +3938,16 @@ class ShowIpNhrpTrafficDetail(ShowIpNhrpTrafficDetailSchema):
         ret_dict = {}
 
         # Global statistics:
-        p1 = re.compile('^Global statistics:$')
+        p1 = re.compile(r'^Global statistics:$')
 
         # Packet Queue size: 0[0](1)
         p2 = re.compile(r'^Packet\s+Queue\s+size:\s+(?P<packet>\d+)'
-                        '\[(?P<queue>\d+)\]\((?P<size>\d+)\)$')
+                        r'\[(?P<queue>\d+)\]\((?P<size>\d+)\)$')
 
         # Tunnel100: Max-send limit:10000Pkts/10Sec, Usage:0%
         p3 = re.compile(r'^(?P<interface>[\w\/\.\-]+):\s+'
-                        'Max-send limit:\s*(?P<max_send_limit>\d+[\w\/]+),\s+'
-                        'Usage:(?P<usage>\d+%)$')
+                        r'Max-send limit:\s*(?P<max_send_limit>\d+[\w\/]+),\s+'
+                        r'Usage:(?P<usage>\d+%)$')
 
         # Sent: Total 4527
         p4 = re.compile(r'^Sent:\s+Total\s+(?P<total>\d+)$')
@@ -3790,18 +3960,18 @@ class ShowIpNhrpTrafficDetail(ShowIpNhrpTrafficDetailSchema):
 
         # 73 Resolution Request  69 Resolution Reply  4344 Registration Request
         p7 = re.compile(r'^(?P<resolution_request>\d+)\s+Resolution\s+Request\s+'
-                        '(?P<resolution_reply>\d+)\s+Resolution\s+Reply\s+'
-                        '(?P<registration_request>\d+)\s+Registration\s+Request$')
+                        r'(?P<resolution_reply>\d+)\s+Resolution\s+Reply\s+'
+                        r'(?P<registration_request>\d+)\s+Registration\s+Request$')
 
         # 0 Registration Reply  41 Purge Request  0 Purge Reply
         p8 = re.compile(r'^(?P<registration_reply>\d+)\s+Registration\s+Reply\s+'
-                        '(?P<purge_request>\d+)\s+Purge\s+Request\s+'
-                        '(?P<purge_reply>\d+)\s+Purge\s+Reply$')
+                        r'(?P<purge_request>\d+)\s+Purge\s+Request\s+'
+                        r'(?P<purge_reply>\d+)\s+Purge\s+Reply$')
 
         # 0 Error Indication  41 Traffic Indication  0 Redirect Suppress
         p9 = re.compile(r'^(?P<error_indication>\d+)\s+Error\s+Indication\s+'
-                        '(?P<traffic_indication>\d+)\s+Traffic\s+Indication\s+'
-                        '(?P<redirect_supress>\d+)\s+Redirect\s+Suppress$')
+                        r'(?P<traffic_indication>\d+)\s+Traffic\s+Indication\s+'
+                        r'(?P<redirect_supress>\d+)\s+Redirect\s+Suppress$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -4035,117 +4205,117 @@ class ShowIpNhrpStats(ShowIpNhrpStatsSchema):
         p1 = re.compile(r'^(?P<interface>[\w\/\.\-\:]+)$')
 
         # Interface State Event Stats:
-        p2 = re.compile('^Interface State Event Stats:$')
+        p2 = re.compile(r'^Interface State Event Stats:$')
 
         # Tunnel Stats:
-        p3 = re.compile('^Tunnel Stats:$')
+        p3 = re.compile(r'^Tunnel Stats:$')
 
         # Tunnel Protection Stats:
-        p4 = re.compile('^Tunnel Protection Stats:$')
+        p4 = re.compile(r'^Tunnel Protection Stats:$')
 
         # Tunnel QoS Stats:
-        p5 = re.compile('^Tunnel QoS Stats:$')
+        p5 = re.compile(r'^Tunnel QoS Stats:$')
 
         # RIB Events Stats:
-        p6 = re.compile('^RIB Events Stats:$')
+        p6 = re.compile(r'^RIB Events Stats:$')
 
         # MPLS Stats:
-        p7 = re.compile('^MPLS Stats:$')
+        p7 = re.compile(r'^MPLS Stats:$')
 
         # BFD Stats:
-        p8 = re.compile('^BFD Stats:$')
+        p8 = re.compile(r'^BFD Stats:$')
 
         # BGP Stats:
-        p9 = re.compile('^BGP Stats:$')
+        p9 = re.compile(r'^BGP Stats:$')
 
         # [R]UP                         : 2[0]    [R]Down                       : 0[0]
         p10 = re.compile(r'^\[R\]UP +: +(?P<r_up>\d+)\[(?P<r_up_error>\d+)\]\s+'
-                         '\[R\]Down +: +(?P<r_down>\d+)\[(?P<r_down_error>\d+)\]$')
+                         r'\[R\]Down +: +(?P<r_down>\d+)\[(?P<r_down_error>\d+)\]$')
 
         # [R]Deleted                    : 0[0]
         p11 = re.compile(r'^\[R\]Deleted +: +(?P<r_deleted>\d+)\[(?P<r_deleted_error>\d+)\]$')
 
         # [S]End Point Addition         : 200[0]  [S]End Point Deletion         : 120[0]
         p12 = re.compile(r'^\[S\]End +Point +Addition +: +(?P<s_endpoint_addition>\d+)'
-                          '\[(?P<s_endpoint_addition_error>\d+)\]\s+'
-                          '\[S\]End +Point +Deletion +: +(?P<s_endpoint_deletion>\d+)'
-                          '\[(?P<s_endpoint_deletion_error>\d+)\]$')
+                          r'\[(?P<s_endpoint_addition_error>\d+)\]\s+'
+                          r'\[S\]End +Point +Deletion +: +(?P<s_endpoint_deletion>\d+)'
+                          r'\[(?P<s_endpoint_deletion_error>\d+)\]$')
 
         # [S]Create TP socket           : 0[0]    [S]Del TP socket              : 0[0]
         p13 = re.compile(r'^\[S\]Create +TP +socket +: +(?P<s_create_tp_socket>\d+)'
-                         '\[(?P<s_create_tp_socket_error>\d+)\]\s+'
-                         '\[S\]Del +TP +socket +: +(?P<s_del_tp_socket>\d+)'
-                         '\[(?P<s_del_tp_socket_error>\d+)\]$')
+                         r'\[(?P<s_create_tp_socket_error>\d+)\]\s+'
+                         r'\[S\]Del +TP +socket +: +(?P<s_del_tp_socket>\d+)'
+                         r'\[(?P<s_del_tp_socket_error>\d+)\]$')
 
         # [S]Create VA                  : 0[0]    [S]Del VA                     : 0[0]
         p14 = re.compile(r'^\[S\]Create +VA +: +(?P<s_create_va>\d+)'
-                         '\[(?P<s_create_va_error>\d+)\]\s+'
-                         '\[S\]Del +VA +: +(?P<s_del_va>\d+)'
-                         '\[(?P<s_del_va_error>\d+)\]$')
+                         r'\[(?P<s_create_va_error>\d+)\]\s+'
+                         r'\[S\]Del +VA +: +(?P<s_del_va>\d+)'
+                         r'\[(?P<s_del_va_error>\d+)\]$')
 
         # [S]Reset Socket               : 0[0]
         p15 = re.compile(r'^\[S\]Reset +Socket +: +(?P<s_reset_socket>\d+)'
-                         '\[(?P<s_reset_socket_error>\d+)\]$')
+                         r'\[(?P<s_reset_socket_error>\d+)\]$')
 
         # [S]QoS APPLY                  : 0[0]    [S]QoS Remove                 : 0[0]
         p16 = re.compile(r'^\[S\]QoS +APPLY +: +(?P<s_qos_apply>\d+)'
-                         '\[(?P<s_qos_apply_error>\d+)\]\s+'
-                         '\[S\]QoS +Remove +: +(?P<s_qos_remove>\d+)'
-                         '\[(?P<s_qos_remove_error>\d+)\]$')
+                         r'\[(?P<s_qos_apply_error>\d+)\]\s+'
+                         r'\[S\]QoS +Remove +: +(?P<s_qos_remove>\d+)'
+                         r'\[(?P<s_qos_remove_error>\d+)\]$')
 
         # [S]Add Route                  : 60[0]   [S]Del Route                  : 60[0]
         p17 = re.compile(r'^\[S\]Add +Route +: +(?P<s_add_route>\d+)'
-                         '\[(?P<s_add_route_error>\d+)\]\s+'
-                         '\[S\]Del +Route +: +(?P<s_del_route>\d+)'
-                         '\[(?P<s_del_route_error>\d+)\]$')
+                         r'\[(?P<s_add_route_error>\d+)\]\s+'
+                         r'\[S\]Del +Route +: +(?P<s_del_route>\d+)'
+                         r'\[(?P<s_del_route_error>\d+)\]$')
 
         # [S]Add NHO                    : 0[0]    [S]Del NHO                    : 0[0]
         p18 = re.compile(r'^\[S\]Add +NHO +: +(?P<s_add_nho>\d+)'
-                         '\[(?P<s_add_nho_error>\d+)\]\s+'
-                         '\[S\]Del +NHO +: +(?P<s_del_nho>\d+)'
-                         '\[(?P<s_del_nho_error>\d+)\]$')
+                         r'\[(?P<s_add_nho_error>\d+)\]\s+'
+                         r'\[S\]Del +NHO +: +(?P<s_del_nho>\d+)'
+                         r'\[(?P<s_del_nho_error>\d+)\]$')
 
         # [S]Rwatch w/o route           : 0[0]    [R]Route Evicted              : 0[0]
         p19 = re.compile(r'^\[S\]Rwatch +w\/o +route +: +(?P<s_rwatch_wo_route>\d+)'
-                         '\[(?P<s_rwatch_wo_route_error>\d+)\]\s+'
-                         '\[R\]Route +Evicted +: +(?P<r_route_evicted>\d+)'
-                         '\[(?P<r_route_evicted_error>\d+)\]$')
+                         r'\[(?P<s_rwatch_wo_route_error>\d+)\]\s+'
+                         r'\[R\]Route +Evicted +: +(?P<r_route_evicted>\d+)'
+                         r'\[(?P<r_route_evicted_error>\d+)\]$')
 
         # [S]Label Alloc                : 0[0]    [S]Label Release              : 0[0]
         p20 = re.compile(r'^\[S\]Label +Alloc +: +(?P<s_label_alloc>\d+)'
-                         '\[(?P<s_label_alloc_error>\d+)\]\s+'
-                         '\[S\]Label +Release +: +(?P<s_label_release>\d+)'
-                         '\[(?P<s_label_release_error>\d+)\]$')
+                         r'\[(?P<s_label_alloc_error>\d+)\]\s+'
+                         r'\[S\]Label +Release +: +(?P<s_label_release>\d+)'
+                         r'\[(?P<s_label_release_error>\d+)\]$')
 
         # [S]MPLS IP Key Bind           : 0[0]    [S]MPLS VPN Key Bind          : 0[0]
         p21 = re.compile(r'^\[S\]MPLS +IP +Key +Bind +: +(?P<s_mpls_ip_key_bind>\d+)'
-                         '\[(?P<s_mpls_ip_key_bind_error>\d+)\]\s+'
-                         '\[S\]MPLS +VPN +Key +Bind +: +(?P<s_mpls_vpn_key_bind>\d+)'
-                         '\[(?P<s_mpls_vpn_key_bind_error>\d+)\]$')
+                         r'\[(?P<s_mpls_ip_key_bind_error>\d+)\]\s+'
+                         r'\[S\]MPLS +VPN +Key +Bind +: +(?P<s_mpls_vpn_key_bind>\d+)'
+                         r'\[(?P<s_mpls_vpn_key_bind_error>\d+)\]$')
 
         # [S]Client Create              : 0[0]    [S]Client Destroy             : 0[0]
         p22 = re.compile(r'^\[S\]Client +Create +: +(?P<s_client_create>\d+)'
-                         '\[(?P<s_client_create_error>\d+)\]\s+'
-                         '\[S\]Client +Destroy +: +(?P<s_client_destroy>\d+)'
-                         '\[(?P<s_client_destroy_error>\d+)\]$')
+                         r'\[(?P<s_client_create_error>\d+)\]\s+'
+                         r'\[S\]Client +Destroy +: +(?P<s_client_destroy>\d+)'
+                         r'\[(?P<s_client_destroy_error>\d+)\]$')
 
         # [R]Session Down               : 0[0]    [R]Session Up                 : 0[0]
         p23 = re.compile(r'^\[R\]Session +Down +: +(?P<r_session_down>\d+)'
-                         '\[(?P<r_session_down_error>\d+)\]\s+'
-                         '\[R\]Session +Up +: +(?P<r_session_up>\d+)'
-                         '\[(?P<r_session_up_error>\d+)\]$')
+                         r'\[(?P<r_session_down_error>\d+)\]\s+'
+                         r'\[R\]Session +Up +: +(?P<r_session_up>\d+)'
+                         r'\[(?P<r_session_up_error>\d+)\]$')
 
         # [S]Route Export               : 0[0]    [S]Route Withdrawal           : 0[0]
         p24 = re.compile(r'^\[S\]Route +Export +: +(?P<s_route_export>\d+)'
-                         '\[(?P<s_route_export_error>\d+)\]\s+'
-                         '\[S\]Route +Withdrawal +: +(?P<s_route_withdrawal>\d+)'
-                         '\[(?P<s_route_withdrawal_error>\d+)\]$')
+                         r'\[(?P<s_route_export_error>\d+)\]\s+'
+                         r'\[S\]Route +Withdrawal +: +(?P<s_route_withdrawal>\d+)'
+                         r'\[(?P<s_route_withdrawal_error>\d+)\]$')
 
         # [S]Route Import               : 0[0]    [R]Imported Route Changed     : 0[0]
         p25 = re.compile(r'^\[S\]Route +Import +: +(?P<s_route_import>\d+)'
-                         '\[(?P<s_route_import_error>\d+)\]\s+'
-                         '\[R\]Imported +Route +Changed +: +(?P<r_imported_route_changed>\d+)'
-                         '\[(?P<r_imported_route_changed_error>\d+)\]$')
+                         r'\[(?P<s_route_import_error>\d+)\]\s+'
+                         r'\[R\]Imported +Route +Changed +: +(?P<r_imported_route_changed>\d+)'
+                         r'\[(?P<r_imported_route_changed_error>\d+)\]$')
 
         for line in output.splitlines():
             interface_dict = ret_dict.setdefault('interface', {})
@@ -4540,34 +4710,34 @@ class ShowIpNhrpStatsDetail(ShowIpNhrpStatsDetailSchema):
         p1 = re.compile(r'^(?P<interface>[\w\/\.\-\:]+)$')
 
         # Interface State Event Stats:
-        p2 = re.compile('^Interface State Event Stats:$')
+        p2 = re.compile(r'^Interface State Event Stats:$')
 
         # Tunnel Stats:
-        p3 = re.compile('^Tunnel Stats:$')
+        p3 = re.compile(r'^Tunnel Stats:$')
 
         # Tunnel Protection Stats:
-        p4 = re.compile('^Tunnel Protection Stats:$')
+        p4 = re.compile(r'^Tunnel Protection Stats:$')
 
         # Tunnel QoS Stats:
-        p5 = re.compile('^Tunnel QoS Stats:$')
+        p5 = re.compile(r'^Tunnel QoS Stats:$')
 
         # RIB Events Stats:
-        p6 = re.compile('^RIB Events Stats:$')
+        p6 = re.compile(r'^RIB Events Stats:$')
 
         # MPLS Stats:
-        p7 = re.compile('^MPLS Stats:$')
+        p7 = re.compile(r'^MPLS Stats:$')
 
         # BFD Stats:
-        p8 = re.compile('^BFD Stats:$')
+        p8 = re.compile(r'^BFD Stats:$')
 
         # CEF Stats:
-        p9 = re.compile('^CEF Stats:$')
+        p9 = re.compile(r'^CEF Stats:$')
 
         # BGP Stats:
-        p10 = re.compile('^BGP Stats:$')
+        p10 = re.compile(r'^BGP Stats:$')
 
         # Platform Stats:
-        p11 = re.compile('^Platform Stats:$')
+        p11 = re.compile(r'^Platform Stats:$')
 
         # [R]UP                         : 2[0]    [R]Down                       : 0[0]
         p12 = re.compile(r'^\[R\]UP +: +(?P<r_up>\d+)\[(?P<r_up_error>\d+)\]\s+'
@@ -4575,227 +4745,227 @@ class ShowIpNhrpStatsDetail(ShowIpNhrpStatsDetailSchema):
 
         # [R]Admin Down                 : 0[0]    [R]Deleted                    : 0[0]
         p13 = re.compile(r'^\[R\]Admin +Down +: +(?P<r_admin_down>\d+)'
-                         '\[(?P<r_admin_down_error>\d+)\]\s+'
-                         '\[R\]Deleted +: +(?P<r_deleted>\d+)'
-                         '\[(?P<r_deleted_error>\d+)\]$')
+                         r'\[(?P<r_admin_down_error>\d+)\]\s+'
+                         r'\[R\]Deleted +: +(?P<r_deleted>\d+)'
+                         r'\[(?P<r_deleted_error>\d+)\]$')
 
         # [R]Addr Changed               : 0[0]    [R]VRF Changed                : 0[0]
         p14 = re.compile(r'^\[R\]Addr +Changed +: +(?P<r_addr_changed>\d+)'
-                         '\[(?P<r_addr_changed_error>\d+)\]\s+'
-                         '\[R\]VRF +Changed +: +(?P<r_vrf_changed>\d+)'
-                         '\[(?P<r_vrf_changed_error>\d+)\]$')
+                         r'\[(?P<r_addr_changed_error>\d+)\]\s+'
+                         r'\[R\]VRF +Changed +: +(?P<r_vrf_changed>\d+)'
+                         r'\[(?P<r_vrf_changed_error>\d+)\]$')
 
         # [R]Packets received           : 2996[0]
         p15 = re.compile(r'^\[R\]Packets +received +: +(?P<r_packets_received>\d+)'
-                         '\[(?P<r_packets_received_error>\d+)\]$')
+                         r'\[(?P<r_packets_received_error>\d+)\]$')
 
         # [S]End Point Addition         : 200[0]  [S]End Point Deletion         : 120[0]
         p16 = re.compile(r'^\[S\]End +Point +Addition +: +(?P<s_endpoint_addition>\d+)'
-                         '\[(?P<s_endpoint_addition_error>\d+)\]\s+'
-                         '\[S\]End +Point +Deletion +: +(?P<s_endpoint_deletion>\d+)'
-                         '\[(?P<s_endpoint_deletion_error>\d+)\]$')
+                         r'\[(?P<s_endpoint_addition_error>\d+)\]\s+'
+                         r'\[S\]End +Point +Deletion +: +(?P<s_endpoint_deletion>\d+)'
+                         r'\[(?P<s_endpoint_deletion_error>\d+)\]$')
 
         # [R]O EP SB Created            : 0[0]    [R]T EP SB Created
         p17 = re.compile(r'^\[R\]O +EP +SB +Created +: +(?P<r_o_ep_sb_created>\d+)'
-                         '\[(?P<r_o_ep_sb_created_error>\d+)\]\s+'
-                         '\[R\]T +EP +SB +Created +: +(?P<r_t_ep_sb_created>\d+)'
-                         '\[(?P<r_t_ep_sb_created_error>\d+)\]$')
+                         r'\[(?P<r_o_ep_sb_created_error>\d+)\]\s+'
+                         r'\[R\]T +EP +SB +Created +: +(?P<r_t_ep_sb_created>\d+)'
+                         r'\[(?P<r_t_ep_sb_created_error>\d+)\]$')
 
         # [R]T/O EP Deleted             : 0[0]    [S]Pre-Delete
         p18 = re.compile(r'^\[R\]T\/O +EP +Deleted +: +(?P<r_to_ep_deleted>\d+)'
-                         '\[(?P<r_to_ep_deleted_error>\d+)\]\s+'
-                         '\[S\]Pre-Delete +: +(?P<s_pre_delete>\d+)'
-                         '\[(?P<s_pre_delete_error>\d+)\]$')
+                         r'\[(?P<r_to_ep_deleted_error>\d+)\]\s+'
+                         r'\[S\]Pre-Delete +: +(?P<s_pre_delete>\d+)'
+                         r'\[(?P<s_pre_delete_error>\d+)\]$')
 
         # [R]SRC Change                 : 1[0]    [R]Mode Change
         p19 = re.compile(r'^\[R\]SRC +Change +: +(?P<r_src_change>\d+)'
-                         '\[(?P<r_src_change_error>\d+)\]\s+'
-                         '\[R\]Mode +Change +: +(?P<r_mode_change>\d+)'
-                         '\[(?P<r_mode_change_error>\d+)\]$')
+                         r'\[(?P<r_src_change_error>\d+)\]\s+'
+                         r'\[R\]Mode +Change +: +(?P<r_mode_change>\d+)'
+                         r'\[(?P<r_mode_change_error>\d+)\]$')
 
         # [R]Leave Mode                 : 2[0]    [R]Decap Intercept
         p20 = re.compile(r'^\[R\]Leave +Mode  +: +(?P<r_leave_mode>\d+)'
-                         '\[(?P<r_leave_mode_error>\d+)\]\s+'
-                         '\[R\]Decap +Intercept +: +(?P<r_decap_intercept>\d+)'
-                         '\[(?P<r_decap_intercept_error>\d+)\]$')
+                         r'\[(?P<r_leave_mode_error>\d+)\]\s+'
+                         r'\[R\]Decap +Intercept +: +(?P<r_decap_intercept>\d+)'
+                         r'\[(?P<r_decap_intercept_error>\d+)\]$')
 
         # [R]Delayed Event Unlink EP
         p21 = re.compile(r'^\[R\]Delayed +Event +Unlink +EP +: +(?P<r_delayed_event_unlink_ep>\d+)'
-                         '\[(?P<r_delayed_event_unlink_ep_error>\d+)\]$')
+                         r'\[(?P<r_delayed_event_unlink_ep_error>\d+)\]$')
 
         # [S]Create TP socket           : 0[0]    [S]Del TP socket              : 0[0]
         p22 = re.compile(r'^\[S\]Create +TP +socket +: +(?P<s_create_tp_socket>\d+)'
-                         '\[(?P<s_create_tp_socket_error>\d+)\]\s+'
-                         '\[S\]Del +TP +socket +: +(?P<s_del_tp_socket>\d+)'
-                         '\[(?P<s_del_tp_socket_error>\d+)\]$')
+                         r'\[(?P<s_create_tp_socket_error>\d+)\]\s+'
+                         r'\[S\]Del +TP +socket +: +(?P<s_del_tp_socket>\d+)'
+                         r'\[(?P<s_del_tp_socket_error>\d+)\]$')
 
         # [S]Create VA                  : 0[0]    [S]Del VA                     : 0[0]
         p23 = re.compile(r'^\[S\]Create +VA +: +(?P<s_create_va>\d+)'
-                         '\[(?P<s_create_va_error>\d+)\]\s+'
-                         '\[S\]Del +VA +: +(?P<s_del_va>\d+)'
-                         '\[(?P<s_del_va_error>\d+)\]$')
+                         r'\[(?P<s_create_va_error>\d+)\]\s+'
+                         r'\[S\]Del +VA +: +(?P<s_del_va>\d+)'
+                         r'\[(?P<s_del_va_error>\d+)\]$')
 
         # [S]Reset Socket               : 0[0]    [R]Process Delayed Event
         p24 = re.compile(r'^\[S\]Reset +Socket +: +(?P<s_reset_socket>\d+)'
-                         '\[(?P<s_reset_socket_error>\d+)\]\s+'
-                         '\[R\]Process +Delayed +Event +: +(?P<r_process_delayed_event>\d+)'
-                         '\[(?P<r_process_delayed_event_error>\d+)\]$')
+                         r'\[(?P<s_reset_socket_error>\d+)\]\s+'
+                         r'\[R\]Process +Delayed +Event +: +(?P<r_process_delayed_event>\d+)'
+                         r'\[(?P<r_process_delayed_event_error>\d+)\]$')
 
         # [R]Update Delayed Event       : 0[0]
         p25 = re.compile(r'^\[R\]Update +Delayed +Event +: +(?P<r_update_delayed_event>\d+)'
-                         '\[(?P<r_update_delayed_event_error>\d+)\]$')
+                         r'\[(?P<r_update_delayed_event_error>\d+)\]$')
 
         # [S]QoS APPLY                  : 0[0]    [S]QoS Remove                 : 0[0]
         p26 = re.compile(r'^\[S\]QoS +APPLY +: +(?P<s_qos_apply>\d+)'
-                         '\[(?P<s_qos_apply_error>\d+)\]\s+'
-                         '\[S\]QoS +Remove +: +(?P<s_qos_remove>\d+)'
-                         '\[(?P<s_qos_remove_error>\d+)\]$')
+                         r'\[(?P<s_qos_apply_error>\d+)\]\s+'
+                         r'\[S\]QoS +Remove +: +(?P<s_qos_remove>\d+)'
+                         r'\[(?P<s_qos_remove_error>\d+)\]$')
 
         # [R]QoS Policy Removed         : 0[0]    [R]CLI-Policy Map Deleted     : 0[0]
         p27 = re.compile(r'^\[R\]QoS +Policy +Removed +: +(?P<r_qos_polocy_removed>\d+)'
-                         '\[(?P<r_qos_polocy_removed_error>\d+)\]\s+'
-                         '\[R\]CLI-Policy +Map +Deleted +: +(?P<r_cli_policy_map_deleted>\d+)'
-                         '\[(?P<r_cli_policy_map_deleted_error>\d+)\]$')
+                         r'\[(?P<r_qos_polocy_removed_error>\d+)\]\s+'
+                         r'\[R\]CLI-Policy +Map +Deleted +: +(?P<r_cli_policy_map_deleted>\d+)'
+                         r'\[(?P<r_cli_policy_map_deleted_error>\d+)\]$')
 
         # [R]CLI-Policy Map Rename
         p28 = re.compile(r'^\[R\]CLI-Policy +Map +Rename +: +(?P<r_cli_policy_map_rename>\d+)'
-                         '\[(?P<r_cli_policy_map_rename_error>\d+)\]$')
+                         r'\[(?P<r_cli_policy_map_rename_error>\d+)\]$')
 
         # [S]Add Route                  : 60[0]   [S]Del Route                  : 60[0]
         p29 = re.compile(r'^\[S\]Add +Route +: +(?P<s_add_route>\d+)'
-                         '\[(?P<s_add_route_error>\d+)\]\s+'
-                         '\[S\]Del +Route +: +(?P<s_del_route>\d+)'
-                         '\[(?P<s_del_route_error>\d+)\]$')
+                         r'\[(?P<s_add_route_error>\d+)\]\s+'
+                         r'\[S\]Del +Route +: +(?P<s_del_route>\d+)'
+                         r'\[(?P<s_del_route_error>\d+)\]$')
 
         # [S]Add NHO                    : 0[0]    [S]Del NHO                    : 0[0]
         p30 = re.compile(r'^\[S\]Add +NHO +: +(?P<s_add_nho>\d+)'
-                         '\[(?P<s_add_nho_error>\d+)\]\s+'
-                         '\[S\]Del +NHO +: +(?P<s_del_nho>\d+)'
-                         '\[(?P<s_del_nho_error>\d+)\]$')
+                         r'\[(?P<s_add_nho_error>\d+)\]\s+'
+                         r'\[S\]Del +NHO +: +(?P<s_del_nho>\d+)'
+                         r'\[(?P<s_del_nho_error>\d+)\]$')
 
         # [S]Rwatch w/o route           : 0[0]    [S]Init IPDB                  : 0[0]
         p31 = re.compile(r'^\[S\]Rwatch +w\/o +route +: +(?P<s_rwatch_wo_route>\d+)'
-                         '\[(?P<s_rwatch_wo_route_error>\d+)\]\s+'
-                         '\[S\]Init +IPDB +: +(?P<s_init_ipdb>\d+)'
-                         '\[(?P<s_init_ipdb_error>\d+)\]$')
+                         r'\[(?P<s_rwatch_wo_route_error>\d+)\]\s+'
+                         r'\[S\]Init +IPDB +: +(?P<s_init_ipdb>\d+)'
+                         r'\[(?P<s_init_ipdb_error>\d+)\]$')
 
         # [S]Add iPDB                   : 0[0]    [S]Del iPDB                   : 0[0]
         p32 = re.compile(r'^\[S\]Add +iPDB +: +(?P<s_add_ipdb>\d+)'
-                         '\[(?P<s_add_ipdb_error>\d+)\]\s+'
-                         '\[S\]Del +iPDB +: +(?P<s_del_ipdb>\d+)'
-                         '\[(?P<s_del_ipdb_error>\d+)\]$')
+                         r'\[(?P<s_add_ipdb_error>\d+)\]\s+'
+                         r'\[S\]Del +iPDB +: +(?P<s_del_ipdb>\d+)'
+                         r'\[(?P<s_del_ipdb_error>\d+)\]$')
 
         # [S]remove iPDB                : 0[0]    [S]RTrevise                   : 0[0]
         p33 = re.compile(r'^\[S\]remove +iPDB +: +(?P<s_remove_ipdb>\d+)'
-                         '\[(?P<s_remove_ipdb_error>\d+)\]\s+'
-                         '\[S\]RTrevise +: +(?P<s_rt_revise>\d+)'
-                         '\[(?P<s_rt_revise_error>\d+)\]$')
+                         r'\[(?P<s_remove_ipdb_error>\d+)\]\s+'
+                         r'\[S\]RTrevise +: +(?P<s_rt_revise>\d+)'
+                         r'\[(?P<s_rt_revise_error>\d+)\]$')
 
         # [R]Redist Callback            : 0[0]    [R]Route Add Callback         : 0[0]
         p34 = re.compile(r'^\[R\]Redist +Callback +: +(?P<r_redist_callback>\d+)'
-                         '\[(?P<r_redist_callback_error>\d+)\]\s+'
-                         '\[R\]Route +Add +Callback +: +(?P<r_route_add_callback>\d+)'
-                         '\[(?P<r_route_add_callback_error>\d+)\]$')
+                         r'\[(?P<r_redist_callback_error>\d+)\]\s+'
+                         r'\[R\]Route +Add +Callback +: +(?P<r_route_add_callback>\d+)'
+                         r'\[(?P<r_route_add_callback_error>\d+)\]$')
 
         # [R]Route Evicted              : 0[0]    [S]Route Query                : 0[0]
         p35 = re.compile(r'^\[R\]Route +Evicted +: +(?P<r_route_evicted>\d+)'
-                         '\[(?P<r_route_evicted_error>\d+)\]\s+'
-                         '\[S\]Route +Query +: +(?P<s_route_query>\d+)'
-                         '\[(?P<s_route_query_error>\d+)\]$')
+                         r'\[(?P<r_route_evicted_error>\d+)\]\s+'
+                         r'\[S\]Route +Query +: +(?P<s_route_query>\d+)'
+                         r'\[(?P<s_route_query_error>\d+)\]$')
 
         # [S]Label Alloc                : 0[0]    [S]Label Release              : 0[0]
         p36 = re.compile(r'^\[S\]Label +Alloc +: +(?P<s_label_alloc>\d+)'
-                         '\[(?P<s_label_alloc_error>\d+)\]\s+'
-                         '\[S\]Label +Release +: +(?P<s_label_release>\d+)'
-                         '\[(?P<s_label_release_error>\d+)\]$')
+                         r'\[(?P<s_label_alloc_error>\d+)\]\s+'
+                         r'\[S\]Label +Release +: +(?P<s_label_release>\d+)'
+                         r'\[(?P<s_label_release_error>\d+)\]$')
 
         # [S]MPLS IP Key Bind           : 0[0]    [S]MPLS VPN Key Bind          : 0[0]
         p37 = re.compile(r'^\[S\]MPLS +IP +Key +Bind +: +(?P<s_mpls_ip_key_bind>\d+)'
-                         '\[(?P<s_mpls_ip_key_bind_error>\d+)\]\s+'
-                         '\[S\]MPLS +VPN +Key +Bind +: +(?P<s_mpls_vpn_key_bind>\d+)'
-                         '\[(?P<s_mpls_vpn_key_bind_error>\d+)\]$')
+                         r'\[(?P<s_mpls_ip_key_bind_error>\d+)\]\s+'
+                         r'\[S\]MPLS +VPN +Key +Bind +: +(?P<s_mpls_vpn_key_bind>\d+)'
+                         r'\[(?P<s_mpls_vpn_key_bind_error>\d+)\]$')
 
         # [S]Inject Packet              : 0[0]    [R]NHRP MPLS MGMT CH CB       : 0[0]
         p38 = re.compile(r'^\[S\]Inject +Packet +: +(?P<s_inject_packet>\d+)'
-                         '\[(?P<s_inject_packet_error>\d+)\]\s+'
-                         '\[R\]NHRP +MPLS +MGMT +CH +CB +: +(?P<r_nhrp_mpls_mgmt_ch_cb>\d+)'
-                         '\[(?P<r_nhrp_mpls_mgmt_ch_cb_error>\d+)\]$')
+                         r'\[(?P<s_inject_packet_error>\d+)\]\s+'
+                         r'\[R\]NHRP +MPLS +MGMT +CH +CB +: +(?P<r_nhrp_mpls_mgmt_ch_cb>\d+)'
+                         r'\[(?P<r_nhrp_mpls_mgmt_ch_cb_error>\d+)\]$')
 
         # [R]Redirect                   : 0[0]    [S]Label-OI Bind              : 0[0]
         p39 = re.compile(r'^\[R\]Redirect +: +(?P<r_redirect>\d+)'
-                         '\[(?P<r_redirect_error>\d+)\]\s+'
-                         '\[S\]Label-OI Bind +: +(?P<s_label_oi_bind>\d+)'
-                         '\[(?P<s_label_oi_bind_error>\d+)\]$')
+                         r'\[(?P<r_redirect_error>\d+)\]\s+'
+                         r'\[S\]Label-OI Bind +: +(?P<s_label_oi_bind>\d+)'
+                         r'\[(?P<s_label_oi_bind_error>\d+)\]$')
 
         # [S]Register MPLS              : 0[0]    [S]Unregister MPLS            : 0[0]
         p40 = re.compile(r'^\[S\]Register +MPLS +: +(?P<s_register_mpls>\d+)'
-                         '\[(?P<s_register_mpls_error>\d+)\]\s+'
-                         '\[S\]Unregister +MPLS +: +(?P<s_unregister_mpls>\d+)'
-                         '\[(?P<s_unregister_mpls_error>\d+)\]$')
+                         r'\[(?P<s_register_mpls_error>\d+)\]\s+'
+                         r'\[S\]Unregister +MPLS +: +(?P<s_unregister_mpls>\d+)'
+                         r'\[(?P<s_unregister_mpls_error>\d+)\]$')
 
         # [S]Client Create              : 0[0]    [S]Client Destroy             : 0[0]
         p41 = re.compile(r'^\[S\]Client +Create +: +(?P<s_client_create>\d+)'
-                         '\[(?P<s_client_create_error>\d+)\]\s+'
-                         '\[S\]Client +Destroy +: +(?P<s_client_destroy>\d+)'
-                         '\[(?P<s_client_destroy_error>\d+)\]$')
+                         r'\[(?P<s_client_create_error>\d+)\]\s+'
+                         r'\[S\]Client +Destroy +: +(?P<s_client_destroy>\d+)'
+                         r'\[(?P<s_client_destroy_error>\d+)\]$')
 
         # [S]Session Create             : 0[0]    [S]Session Destroy            : 0[0]
         p42 = re.compile(r'^\[S\]Session +Create +: +(?P<s_session_create>\d+)'
-                         '\[(?P<s_session_create_error>\d+)\]\s+'
-                         '\[S\]Session +Destroy +: +(?P<s_session_destroy>\d+)'
-                         '\[(?P<s_session_destroy_error>\d+)\]$')
+                         r'\[(?P<s_session_create_error>\d+)\]\s+'
+                         r'\[S\]Session +Destroy +: +(?P<s_session_destroy>\d+)'
+                         r'\[(?P<s_session_destroy_error>\d+)\]$')
 
         # [R]Callback                   : 0[0]    [R]Session Down               : 0[0]
         p43 = re.compile(r'^\[R\]Callback +: +(?P<r_callback>\d+)'
-                         '\[(?P<r_callback_error>\d+)\]\s+'
-                         '\[R\]Session +Down +: +(?P<r_session_down>\d+)'
-                         '\[(?P<r_session_down_error>\d+)\]$')
+                         r'\[(?P<r_callback_error>\d+)\]\s+'
+                         r'\[R\]Session +Down +: +(?P<r_session_down>\d+)'
+                         r'\[(?P<r_session_down_error>\d+)\]$')
 
         # [R]Session Up                 : 0[0]    [R]Session Default            : 0[0]
         p44 = re.compile(r'^\[R\]Session +Up +: +(?P<r_session_up>\d+)'
-                         '\[(?P<r_session_up_error>\d+)\]\s+'
-                         '\[R\]Session +Default +: +(?P<r_session_default>\d+)'
-                         '\[(?P<r_session_default_error>\d+)\]$')
+                         r'\[(?P<r_session_up_error>\d+)\]\s+'
+                         r'\[R\]Session +Default +: +(?P<r_session_default>\d+)'
+                         r'\[(?P<r_session_default_error>\d+)\]$')
 
         # [S]Adjacency Used             : 0[0]    [S]Adjacency Mark Stale       : 180[0]
         p45 = re.compile(r'^\[S\]Adjacency +Used +: +(?P<s_adjacency_used>\d+)'
-                         '\[(?P<s_adjacency_used_error>\d+)\]\s+'
-                         '\[S\]Adjacency +Mark +Stale +: +(?P<s_adjacency_mark_stale>\d+)'
-                         '\[(?P<s_adjacency_mark_stale_error>\d+)\]$')
+                         r'\[(?P<s_adjacency_used_error>\d+)\]\s+'
+                         r'\[S\]Adjacency +Mark +Stale +: +(?P<s_adjacency_mark_stale>\d+)'
+                         r'\[(?P<s_adjacency_mark_stale_error>\d+)\]$')
 
         # [S]Route Export               : 0[0]    [S]Route Withdrawal           : 0[0]
         p46 = re.compile(r'^\[S\]Route +Export +: +(?P<s_route_export>\d+)'
-                         '\[(?P<s_route_export_error>\d+)\]\s+'
-                         '\[S\]Route +Withdrawal +: +(?P<s_route_withdrawal>\d+)'
-                         '\[(?P<s_route_withdrawal_error>\d+)\]$')
+                         r'\[(?P<s_route_export_error>\d+)\]\s+'
+                         r'\[S\]Route +Withdrawal +: +(?P<s_route_withdrawal>\d+)'
+                         r'\[(?P<s_route_withdrawal_error>\d+)\]$')
 
         # [S]Route Import               : 0[0]    [R]Imported Route Changed     : 0[0]
         p47 = re.compile(r'^\[S\]Route +Import +: +(?P<s_route_import>\d+)'
-                         '\[(?P<s_route_import_error>\d+)\]\s+'
-                         '\[R\]Imported +Route +Changed +: +(?P<r_imported_route_changed>\d+)'
-                         '\[(?P<r_imported_route_changed_error>\d+)\]$')
+                         r'\[(?P<s_route_import_error>\d+)\]\s+'
+                         r'\[R\]Imported +Route +Changed +: +(?P<r_imported_route_changed>\d+)'
+                         r'\[(?P<r_imported_route_changed_error>\d+)\]$')
 
         # [S]Route marked               : 0[0]    [S]Route unmarked             : 0[0]
         p48 = re.compile(r'^\[S\]Route +marked +: +(?P<s_route_marked>\d+)'
-                         '\[(?P<s_route_marked_error>\d+)\]\s+'
-                         '\[S\]Route +unmarked +: +(?P<s_route_unmarked>\d+)'
-                         '\[(?P<s_route_unmarked_error>\d+)\]$')
+                         r'\[(?P<s_route_marked_error>\d+)\]\s+'
+                         r'\[S\]Route +unmarked +: +(?P<s_route_unmarked>\d+)'
+                         r'\[(?P<s_route_unmarked_error>\d+)\]$')
 
         # [R]Route change notification  : 0[0]    [R]Exported Route Deleted     : 0[0]
         p49 = re.compile(r'^\[R\]Route +change +notification +: +(?P<r_route_change_notification>\d+)'
-                         '\[(?P<r_route_change_notification_error>\d+)\]\s+'
-                         '\[R\]Exported +Route +Deleted +: +(?P<r_exported_route_deleted>\d+)'
-                         '\[(?P<r_exported_route_deleted_error>\d+)\]$')
+                         r'\[(?P<r_route_change_notification_error>\d+)\]\s+'
+                         r'\[R\]Exported +Route +Deleted +: +(?P<r_exported_route_deleted>\d+)'
+                         r'\[(?P<r_exported_route_deleted_error>\d+)\]$')
 
         # [R]Withdraw All Routes        : 0[0]
         p50 = re.compile(r'^\[R\]Withdraw +All +Routes +: +(?P<r_withdrawal_all_route>\d+)'
-                         '\[(?P<r_withdrawal_all_route_error>\d+)\]$')
+                         r'\[(?P<r_withdrawal_all_route_error>\d+)\]$')
 
         # [R]State Change               : 0[0]    [R]Redirect Request           : 0[0]
         p51 = re.compile(r'^\[R\]State +Change +: +(?P<r_state_change>\d+)'
-                         '\[(?P<r_state_change_error>\d+)\]\s+'
-                         '\[R\]Redirect +Request +: +(?P<r_redirect_request>\d+)'
-                         '\[(?P<r_redirect_request_error>\d+)\]$')
+                         r'\[(?P<r_state_change_error>\d+)\]\s+'
+                         r'\[R\]Redirect +Request +: +(?P<r_redirect_request>\d+)'
+                         r'\[(?P<r_redirect_request_error>\d+)\]$')
 
         # [S]Enable                     : 0[0]    [S]Disable                    : 0[0]
         p52 = re.compile(r'^\[S\]Enable +: +(?P<s_enable>\d+)\[(?P<s_enable_error>\d+)\]\s+'
@@ -5207,18 +5377,18 @@ class ShowIpNhrp(ShowIpNhrpSchema):
         # Matching patterns
         # 22.1.1.0/24 via 100.0.0.1
         p1 = re.compile(r'^(?P<target_network>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\/\d{1,2}) +'
-                        'via +(?P<next_hop>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})$')
+                        r'via +(?P<next_hop>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})$')
 
         # Matching patterns
         # Tunnel100 created 00:00:13, expire 00:02:46
         p2 = re.compile(r'^(?P<tunnel>\S+) +'
-                        'created +(?P<created>(\d+\w)+|never|[0-9\:]+), +'
-                        '[expire ]*(?P<expire>(\d+\w)+|[0-9\:]+|never expire)$')
+                        r'created +(?P<created>(\d+\w)+|never|[0-9\:]+), +'
+                        r'[expire ]*(?P<expire>(\d+\w)+|[0-9\:]+|never expire)$')
 
         # Matching patterns
         # Type: dynamic, Flags: router rib
         p3 = re.compile(r'^Type: +(?P<type>\S+), +'
-                        'Flags: *(?P<flags>(.*))$')
+                        r'Flags: *(?P<flags>(.*))$')
 
         # Matching patterns
         # NBMA address: 101.1.1.1
@@ -5314,16 +5484,16 @@ class ShowIpNhrpDetail(ShowIpNhrpDetailSchema):
 
         # 22.1.1.0/24 via 100.0.0.1
         p1 = re.compile(r'^(?P<target_network>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\/\d{1,2}) +'
-                        'via +(?P<next_hop>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})$')
+                        r'via +(?P<next_hop>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})$')
 
         # Tunnel100 created 00:00:13, expire 00:02:46
         p2 = re.compile(r'^(?P<tunnel>\S+) +'
-                        'created +(?P<created>(\d+\w)+|never|[0-9\:]+), +'
-                        '[expire ]*(?P<expire>(\d+\w)+|[0-9\:]+|never expire)$')
+                        r'created +(?P<created>(\d+\w)+|never|[0-9\:]+), +'
+                        r'[expire ]*(?P<expire>(\d+\w)+|[0-9\:]+|never expire)$')
 
         # Type: dynamic, Flags: router rib
         p3 = re.compile(r'^Type: +(?P<type>\S+), +'
-                        'Flags: *(?P<flags>(.*))$')
+                        r'Flags: *(?P<flags>(.*))$')
 
         # NBMA address: 101.1.1.1
         p4 = re.compile(r'^NBMA address: +(?P<nbma_address>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})$')
@@ -5333,7 +5503,7 @@ class ShowIpNhrpDetail(ShowIpNhrpDetailSchema):
 
         # Requester: 100.0.0.1 Request ID: 9
         p6 = re.compile(r'^Requester: +(?P<requester>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}) +'
-                        'Request +ID: +(?P<request_id>\d+)$')
+                        r'Request +ID: +(?P<request_id>\d+)$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -5539,7 +5709,7 @@ class ShowIpNhrpNhsDetail(ShowIpNhrpNhsDetailSchema):
         p1 = re.compile(r'^(?P<interface>[\w\/\.\-]+):$')
 
         # Pending Registration Requests:
-        p2 = re.compile('^Pending Registration Requests:$')
+        p2 = re.compile(r'^Pending Registration Requests:$')
 
         # 100.0.0.100  RE  NBMA Address: 101.1.1.1 priority = 0 cluster = 0 \
         # req-sent 5685  req-failed 0  repl-recv 5675
@@ -7653,4 +7823,293 @@ class ShowIpSockets(ShowIpSocketsSchema):
                 index_dict['tty'] = int(group['tty'])
                 index_dict['output_if'] = group['output_if']
                 index += 1
+        return ret_dict
+
+
+class ShowIpDhcpSnoopingSchema(MetaParser):
+    """Schema for show ip dhcp snooping"""
+    schema = {
+        'dhcp_snooping_status': str,  # Enabled or Disabled
+        'dhcp_gleaning_status': str,  # Enabled or Disabled
+        'dhcp_configured_vlans': str,  # VLANs
+        'dhcp_operational_vlans': str,  # Operational VLANs
+        'proxy_bridge_configured': str,  # VLANs
+        'proxy_bridge_operational': str,  # Operational VLANs
+        'option_82': {
+            'option_82_status': str,  # Option 82 status (enabled or disabled)
+            'circuit_id_default_format': str,  # Circuit ID format
+            'remote_id': str,  # Remote ID (MAC address)
+            'untrusted_port_status': str,  # Option 82 on untrusted port status
+            'verification': {
+                'hwaddr_field_status': str,  # hwaddr verification status
+                'giaddr_field_status': str  # giaddr verification status
+            },
+        },
+        Optional('trustrate_configured_interfaces'): {
+            Any(): {
+                'interface': str,  # Interface name
+                'trusted': str,  # Trusted status (yes/no)
+                'allow_option': str,  # Allow option status (yes/no)
+                'rate_limit': str  # Rate limit status (unlimited or rate in pps)
+            }
+        },
+        Optional('custom_circuit_ids'): dict  # Custom Circuit IDs (can be any format or specific structure)
+    }
+
+class ShowIpDhcpSnooping(ShowIpDhcpSnoopingSchema):
+    """Parser for show ip dhcp snooping"""
+    cli_command = 'show ip dhcp snooping'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the dictionary for parsed output.
+        ret_dict = {}
+
+        # Switch DHCP snooping is enabled 
+        p1 = re.compile(r'^Switch DHCP snooping is (?P<dhcp_snooping_status>\S+)')
+
+        # Switch DHCP gleaning is disabled 
+        p2 = re.compile(r'^Switch DHCP gleaning is (?P<dhcp_gleaning_status>\S+)')
+
+        # DHCP snooping is configured on following VLANs: 
+        p3 = re.compile(r'^DHCP snooping is configured on following VLANs:$')
+
+        # 20,30,40,50,60 
+        p3_1 = re.compile(r'^(?P<vlans>[\d,]+|none)$')
+
+        # DHCP snooping is operational on following VLANs: 
+        p4 = re.compile(r'^DHCP snooping is operational on following VLANs:$')
+
+        #  Proxy bridge is configured on following VLANs: 
+        p5 = re.compile(r'^Proxy bridge is configured on following VLANs:$')
+
+        # Proxy bridge is operational on following VLANs:
+        p6 = re.compile(r'^Proxy bridge is operational on following VLANs:$')
+
+        # Insertion of option 82 is disabled 
+        p7 = re.compile(r'^Insertion of option 82 is (?P<option_82_status>\S+)')
+
+        # circuit-id default format: vlan-mod-port
+        p8 = re.compile(r'^circuit-id default format: (?P<circuit_id_default_format>\S+)')
+
+        # remote-id: f4ee.3181.ab80 (MAC) 
+        p9 = re.compile(r'^remote-id: (?P<remote_id>\S+)')
+
+        # Option 82 on untrusted port is not allowed 
+        p10 = re.compile(r'^Option 82 on untrusted port is (?P<untrusted_port_status>\S+\s\S+)')
+
+        # Verification of hwaddr field is enabled 
+        p11 = re.compile(r'^Verification of hwaddr field is (?P<hwaddr_field_status>\S+)')
+
+        # Verification of giaddr field is enabled 
+        p12 = re.compile(r'^Verification of giaddr field is (?P<giaddr_field_status>\S+)')
+
+        # GigabitEthernet1/0/13            yes        yes             unlimited
+        p13 = re.compile(r'^(?P<interface>Gigabit\S+)\s+(?P<trusted>\S+)\s+(?P<allow_option>\S+)\s+(?P<rate_limit>\S+)')
+
+        #Custom circuit-ids:
+        p14=re.compile(r'Custom circuit-ids:')
+
+        # State variables
+        current_section = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Switch DHCP snooping is enabled 
+            m = p1.match(line)
+            if m:
+                ret_dict['dhcp_snooping_status'] = m.group('dhcp_snooping_status')
+                continue
+
+            # Switch DHCP gleaning is disabled 
+            m = p2.match(line)
+            if m:
+                ret_dict['dhcp_gleaning_status'] = m.group('dhcp_gleaning_status')
+                continue
+
+            # DHCP snooping is configured on following VLANs: 
+            m = p3.match(line)
+            if m:
+                current_section = 'dhcp_configured_vlans'
+                continue
+
+            # DHCP snooping is operational on following VLANs: 
+            m = p4.match(line)
+            if m:
+                current_section = 'dhcp_operational_vlans'
+                continue
+
+            # Proxy bridge is configured on following VLANs: 
+            m = p5.match(line)
+            if m:
+                current_section = 'proxy_bridge_configured'
+                continue
+
+            # Proxy bridge is operational on following VLANs:
+            m = p6.match(line)
+            if m:
+                current_section = 'proxy_bridge_operational'
+                continue
+
+            # Insertion of option 82 is disabled 
+            m = p7.match(line)
+            if m:
+                ret_dict.setdefault('option_82', {})['option_82_status'] = m.group('option_82_status')
+                continue
+
+            # circuit-id default format: vlan-mod-port
+            m = p8.match(line)
+            if m:
+                ret_dict['option_82']['circuit_id_default_format'] = m.group('circuit_id_default_format')
+                continue
+
+            # remote-id: f4ee.3181.ab80 (MAC) 
+            m = p9.match(line)
+            if m:
+                ret_dict['option_82']['remote_id'] = m.group('remote_id')
+                continue
+
+            # Option 82 on untrusted port is not allowed 
+            m = p10.match(line)
+            if m:
+                ret_dict['option_82']['untrusted_port_status'] = m.group('untrusted_port_status')
+                continue
+
+            # Verification of hwaddr field is enabled 
+            m = p11.match(line)
+            if m:
+                ret_dict.setdefault('option_82', {}).setdefault('verification', {})['hwaddr_field_status'] = m.group('hwaddr_field_status')
+                continue
+
+            # Verification of giaddr field is enabled 
+            m = p12.match(line)
+            if m:
+                ret_dict['option_82']['verification']['giaddr_field_status'] = m.group('giaddr_field_status')
+                continue
+
+            # GigabitEthernet1/0/13            yes        yes             unlimited
+            m = p13.match(line)
+            if m:
+                interface = m.group('interface')
+                ret_dict.setdefault('trustrate_configured_interfaces', {}).setdefault(interface, {})
+                ret_dict['trustrate_configured_interfaces'][interface] = {
+                    'interface': m.group('interface'),
+                    'trusted': m.group('trusted'),
+                    'allow_option': m.group('allow_option'),
+                    'rate_limit': m.group('rate_limit')
+                }
+                continue
+
+            # Custom circuit-ids:
+            m = p14.match(line)
+            if m:
+                ret_dict.setdefault('custom_circuit_ids', {})
+                continue
+
+            # Handle VLANs for the current section
+            if current_section:
+                m = p3_1.match(line)
+                if m:
+                    ret_dict[current_section] = m.group('vlans')
+                    current_section = None
+                    continue
+
+        return ret_dict
+
+
+class ShowIpSourceBindingSchema(MetaParser):
+    """Schema for 
+    * 'show ip source binding'
+    *   'show ip source binding dhcp-snooping',
+    *   'show ip source binding static',
+    *   'show ip source binding vlan {vlan_id}',
+    *   'show ip source binding interface {interface_name}',
+    *   'show ip source binding vlan {vlan_id} interface {interface_name}',
+    *   'show ip source binding {ip_address}',
+    *   'show ip source binding {mac_address}'
+    
+    """
+    schema = {
+        'bindings': {
+            Any(): {
+                'mac_address': str,
+                'ip_address': str,
+                'lease': int,
+                'type': str,
+                'vlan': int,
+            }
+        },
+        'total_bindings': int
+    }
+
+class ShowIpSourceBinding(ShowIpSourceBindingSchema):
+    """Parser for 
+    *   'show ip source binding'
+    *   'show ip source binding dhcp-snooping',
+    *   'show ip source binding static',
+    *   'show ip source binding vlan {vlan_id}',
+    *   'show ip source binding interface {interface_name}',
+    *   'show ip source binding vlan {vlan_id} interface {interface_name}',
+    *   'show ip source binding {ip_address}',
+    *   'show ip source binding {mac_address}'"""
+
+    cli_command = [
+        'show ip source binding',
+        'show ip source binding dhcp-snooping',
+        'show ip source binding static',
+        'show ip source binding vlan {vlan_id}',
+        'show ip source binding interface {interface_name}',
+        'show ip source binding vlan {vlan_id} interface {interface_name}',
+        'show ip source binding {ip_address}',
+        'show ip source binding {mac_address}'
+    ]
+
+    def cli(self, vlan_id=None, interface_name=None, ip_address=None, mac_address=None, output=None):
+        if output is None:
+            if vlan_id and interface_name:
+                output = self.device.execute(self.cli_command[5].format(vlan_id=vlan_id, interface_name=interface_name))
+            elif vlan_id:
+                output = self.device.execute(self.cli_command[3].format(vlan_id=vlan_id))
+            elif interface_name:
+                output = self.device.execute(self.cli_command[4].format(interface_name=interface_name))
+            elif ip_address:
+                output = self.device.execute(self.cli_command[6].format(ip_address=ip_address))
+            elif mac_address:
+                output = self.device.execute(self.cli_command[7].format(mac_address=mac_address))
+            else:
+                output = self.device.execute(self.cli_command[0])
+
+        # Initialize the parsed dictionary
+        ret_dict = {}
+
+        # 00:12:01:00:00:01   30.0.0.2         297         dhcp-snooping   30    GigabitEthernet1/0/20
+        p1 = re.compile(r'^(?P<mac_address>[\w:]+)\s+(?P<ip_address>[\d\.]+)\s+(?P<lease>\d+)\s+(?P<type>[\w-]+)\s+(?P<vlan>\d+)\s+(?P<interface>\S+)$')
+
+        # Total number of bindings: 1
+        p2 = re.compile(r'^Total number of bindings: (?P<total_bindings>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # 00:14:01:00:00:01   50.0.0.2         166         dhcp-snooping   50    GigabitEthernet3/0/10
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                result_dict=ret_dict.setdefault('bindings',{}).setdefault(group['interface'], {})
+                result_dict['mac_address']= group['mac_address']
+                result_dict['ip_address']= group['ip_address']
+                result_dict['lease']= int(group['lease'])
+                result_dict['type']= group['type']
+                result_dict['vlan']= int(group['vlan'])
+                continue
+
+            #Total number of bindings: 1
+            m = p2.match(line)
+            if m:
+                ret_dict['total_bindings'] = int(m.group('total_bindings'))
+                continue
+
         return ret_dict

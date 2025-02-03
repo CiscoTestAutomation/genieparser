@@ -7,7 +7,7 @@ IOSXE parsers for the following show commands:
 # Python
 import re
 import xmltodict
-from netaddr import IPAddress
+from netaddr import IPAddress, INET_ATON
 
 # Metaparser
 from genie.metaparser import MetaParser
@@ -371,34 +371,34 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
         # 10.16.2.2            110      07:33:00
         # 10.64.4.4            110      00:19:15
         p8 = re.compile(r"^(?P<gateway>([0-9\.]+)) +(?P<distance>(\d+))"
-                         " +(?P<last_update>([a-zA-Z0-9\:\.]+))$")
+                         r" +(?P<last_update>([a-zA-Z0-9\:\.]+))$")
 
         # Distance: (default is 110)
         p9 = re.compile(r"^Distance: +\(default +is +(?P<num>(\d+))\)$")
 
         # Distance: intra-area 112 inter-area 113 external 114
         p10 = re.compile(r"^Distance: +intra-area +(?P<intra>(\d+)) +inter-area"
-                          " +(?P<inter>(\d+)) +external +(?P<external>(\d+))$")
+                          r" +(?P<inter>(\d+)) +external +(?P<external>(\d+))$")
 
         # Sending updates every 0 seconds
         p11 = re.compile(r"^Sending +updates +every +(?P<update>(\d+)) +seconds$")
 
         # Invalid after 0 seconds, hold down 0, flushed after 0
         p12 = re.compile(r"^Invalid +after +(?P<invalid>(\d+)) +seconds, +hold"
-                          " +down +(?P<holddown>(\d+)), +flushed +after"
-                          " +(?P<flushed>(\d+))$")
+                          r" +down +(?P<holddown>(\d+)), +flushed +after"
+                          r" +(?P<flushed>(\d+))$")
 
         # IGP synchronization is disabled
         p13 = re.compile(r"^IGP +synchronization +is +(?P<igp>(enabled|disabled))$")
 
         # Automatic route summarization is disabled
         p14 = re.compile(r"^Automatic +route +summarization +is"
-                          " +(?P<route>(enabled|disabled))$")
+                          r" +(?P<route>(enabled|disabled))$")
 
         # Distance: external 20 internal 200 local 200
         # Distance:external 20 internal 200 local 200
         p15 = re.compile(r"^Distance: *external +(?P<external>(\d+)) +internal"
-                          " +(?P<internal>(\d+)) +local +(?P<local>(\d+))$")
+                          r" +(?P<internal>(\d+)) +local +(?P<local>(\d+))$")
 
 
         # Redistributing: isis banana
@@ -432,10 +432,10 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
         # GigabitEthernet3.100 filtered by 130 (per-user), default is not set
         p104_1 = re.compile(
             r'^\s*(?P<interface>\S+) +filtered +by +(?P<filter>\d+)( +\((?P<per_user>\S+)\))?,'
-            ' +default +is +(?P<default>[\w\s]+)$')
+            r' +default +is +(?P<default>[\w\s]+)$')
         # Incoming routes will have 10 added to metric if on list 21
         p105 = re.compile(r'^\s*Incoming +routes +will +have +(?P<added>\S+) +added +to +metric'
-                          ' +if +on +list +(?P<list>\S+)$')
+                          r' +if +on +list +(?P<list>\S+)$')
 
         # Sending updates every 10 seconds, next due in 8 seconds
         p106 = re.compile(
@@ -444,7 +444,7 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
         # Invalid after 21 seconds, hold down 22, flushed after 23
         p107 = re.compile(
             r'^\s*Invalid +after +(?P<invalid_interval>\d+) +seconds, +hold +down +(?P<holddown_interval>\d+)'
-            ', +flushed +after +(?P<flush_interval>\d+)$')
+            r', +flushed +after +(?P<flush_interval>\d+)$')
 
         # Default redistribution metric is 3
         p108 = re.compile(r'^\s*Default +redistribution +metric +is +(?P<default_redistribution_metric>\d+)$')
@@ -464,18 +464,18 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
 
         # Default version control: send version 2, receive version 2
         p112 = re.compile(r'^\s*Default +version +control: +send +version +(?P<send_version>\d+)'
-                          ', receive version +(?P<receive_version>\d+)$')
+                          r', receive version +(?P<receive_version>\d+)$')
 
         # Default version control: send version 1, receive any version
         p112_1 = re.compile(r'^\s*Default +version +control: +send +version +(?P<send_version>\d+)'
-                          ', receive +(?P<receive_version>\w+) version$')
+                          r', receive +(?P<receive_version>\w+) version$')
 
         #   Interface                           Send  Recv  Triggered RIP  Key-chain
         #   GigabitEthernet3.100                2     2          No        1
         #   GigabitEthernet3.100                1 2   2          No        none
         p113 = re.compile(r'^\s*(?P<interface>[\S]+) +(?P<send>\d( \d)?)'
-                          ' +(?P<receive>\d( \d)?)?'
-                          ' +(?P<triggered_rip>\S+) +(?P<key_chain>\S+)$')
+                          r' +(?P<receive>\d( \d)?)?'
+                          r' +(?P<triggered_rip>\S+) +(?P<key_chain>\S+)$')
 
         # Automatic network summarization is not in effect
         # Automatic network summarization is in effect
@@ -543,8 +543,8 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
                         line = line.strip()
                         # router ospf 1
                         # router ospf 2 vrf VRF1
-                        p = re.search('router +ospf +(?P<instance>(\S+))'
-                                      '(?: +vrf +(?P<vrf>(\S+)))?', line)
+                        p = re.search(r'router +ospf +(?P<instance>(\S+))'
+                                      r'(?: +vrf +(?P<vrf>(\S+)))?', line)
                         if p:
                             p_instance = str(p.groupdict()['instance'])
                             if p_instance == instance:
@@ -882,7 +882,7 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
                 # Routing on Interfaces Configured Explicitly (Area 0):
                 m = p6_2.match(line)
                 if m:
-                    area = str(IPAddress(str(m.groupdict()['area'])))
+                    area = str(IPAddress(str(m.groupdict()['area']), flags=INET_ATON))
                     ospf_area_dict = ospf_dict.setdefault('areas', {}). \
                         setdefault(area, {})
                     # Routing for Networks:
@@ -1617,7 +1617,7 @@ class ShowIpv6Protocols(ShowIpv6ProtocolsSchema):
         # EIGRP-IPv6 Protocol for AS(20)
         p5 = re.compile(
             r'^EIGRP\-(?P<address_family>IPv4|IPv6)\s+(VR\((?P<name>\w+)\)\s+Address\-Family\s+)?'
-            'Protocol\s+for\s+AS\(\s*(?P<as_num>[\S]+)\)\s*(?:VRF\((?P<vrf>\S+)\))?$'
+            r'Protocol\s+for\s+AS\(\s*(?P<as_num>[\S]+)\)\s*(?:VRF\((?P<vrf>\S+)\))?$'
         )
 
         # Routing for Networks:
@@ -1648,7 +1648,7 @@ class ShowIpv6Protocols(ShowIpv6ProtocolsSchema):
         # Ethernet2/0
         p7 = re.compile(
             r'^(?P<interface>(Lo\S*|Gi\S*|Ten\S*|\S*(SL|VL)\S*|Se\S*|VoIP\S*|Vlan\S*|Po\S*|Et\S*))'
-            '( +\((?P<passive>passive)\))?$'
+            r'( +\((?P<passive>passive)\))?$'
         )
 
         # Gateway         Distance      Last Update
@@ -1656,12 +1656,12 @@ class ShowIpv6Protocols(ShowIpv6ProtocolsSchema):
         # 10.16.2.2            110      07:33:00
         # 10.64.4.4            110      00:19:15
         p8 = re.compile(r"^(?P<gateway>([0-9\.]+)) +(?P<distance>(\d+))"
-                         " +(?P<last_update>([a-zA-Z0-9\:\.]+))$")
+                         r" +(?P<last_update>([a-zA-Z0-9\:\.]+))$")
         # Metric weight K1=1, K2=0, K3=1, K4=0, K5=0 K6=0
         # Metric weight K1=1, K2=0, K3=1, K4=0, K5=0
         p9 = re.compile(
             r'^Metric +weight +K1=(?P<k1>\d+), +K2=(?P<k2>\d+), +K3=(?P<k3>\d+), +K4=(?P<k4>\d+),'
-            ' +K5=(?P<k5>\d+)( +K6=(?P<k6>\d+))?$'
+            r' +K5=(?P<k5>\d+)( +K6=(?P<k6>\d+))?$'
         )
 
         # Router ID 10.4.1.1
@@ -1690,7 +1690,7 @@ class ShowIpv6Protocols(ShowIpv6ProtocolsSchema):
 
         # Automatic route summarization is disabled
         p13 = re.compile(r"^Automatic +route +summarization +is"
-                          " +(?P<route>(enabled|disabled))$")
+                          r" +(?P<route>(enabled|disabled))$")
 
         # Distance: external 20 internal 200 local 200
         # Distance:external 20 internal 200 local 200
@@ -1763,8 +1763,8 @@ class ShowIpv6Protocols(ShowIpv6ProtocolsSchema):
                         line = line.strip()
                         # router ospf 1
                         # router ospf 2 vrf VRF1
-                        p = re.search('router +ospf +(?P<instance>(\S+))'
-                                      '(?: +vrf +(?P<vrf>(\S+)))?', line)
+                        p = re.search(r'router +ospf +(?P<instance>(\S+))'
+                                      r'(?: +vrf +(?P<vrf>(\S+)))?', line)
                         if p:
                             p_instance = str(p.groupdict()['instance'])
                             if p_instance == instance:
@@ -2244,7 +2244,7 @@ class ShowIpv6Protocols(ShowIpv6ProtocolsSchema):
                 if neighbors_flag:
                     group = m.groupdict()
                     try:
-                        neighbor = IPAddress(group['neighbor'])
+                        neighbor = IPAddress(group['neighbor'], flags=INET_ATON)
                     except:
                         continue
                     neighbor = group['neighbor']

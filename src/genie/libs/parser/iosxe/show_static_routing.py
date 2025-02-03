@@ -97,9 +97,9 @@ class ShowIpStaticRoute(ShowIpStaticRouteSchema):
             # M  10.36.3.3/32 [1/0] via GigabitEthernet0/2 [A]
             # M             [1/0] via GigabitEthernet0/3 [A]
             p2 = re.compile(r'^\s*(?P<code>[A-Z]+) +(?P<route>[\w\/\.]+)?'
-                            ' +\[(?P<if_preference>[\d]+)\/(?P<if_preference2>[\d]+)\]'
-                            ' +via +(?P<interface>[a-zA-Z][\w\/\.]+)?(?P<nexthop>[\d\s\.]+)?'
-                            ' +\[(?P<code_in_bracket>[\w])]$')
+                            r' +\[(?P<if_preference>[\d]+)\/(?P<if_preference2>[\d]+)\]'
+                            r' +via +(?P<interface>[a-zA-Z][\w\/\.]+)?(?P<nexthop>[\d\s\.]+)?'
+                            r' +\[(?P<code_in_bracket>[\w])]$')
             m = p2.match(line)
             if m:
                 code = m.groupdict()['code']
@@ -300,10 +300,10 @@ class ShowIpv6StaticDetail(ShowIpv6StaticDetailSchema):
             # 2001:2:2:2::2/128 via 2001:10:1:2::2, GigabitEthernet0/0, distance 11, tag 100
             # *   2001:3:3:3::3/128 via GigabitEthernet0/3, distance 1
             p2 = re.compile(r'^\s*((?P<star>[*]+)  +)?(?P<route>[\w\/\:]+)?'
-                            ' +via +((?P<nexthop>[0-9a-fA-F\:]+), )?'
-                            '((?P<interface>[a-zA-Z][\w\.\/]+), )?'
-                            '(distance (?P<distance>[\d]+))?'
-                            '(, +tag +(?P<tag>[\d]+))?$')
+                            r' +via +((?P<nexthop>[0-9a-fA-F\:]+), )?'
+                            r'((?P<interface>[a-zA-Z][\w\.\/]+), )?'
+                            r'(distance (?P<distance>[\d]+))?'
+                            r'(, +tag +(?P<tag>[\d]+))?$')
             m = p2.match(line)
             if m:
                 next_hop = ""
@@ -394,7 +394,7 @@ class ShowIpv6StaticDetail(ShowIpv6StaticDetailSchema):
 
             # Resolves to 1 paths (max depth 1)
             p3 = re.compile(r'^\s*Resolves +to +(?P<no_paths>[\d]+)? +paths'
-                            ' +\(max +depth +(?P<max_depth>[\d]+)\)$')
+                            r' +\(max +depth +(?P<max_depth>[\d]+)\)$')
             m = p3.match(line)
             if m:
                 resolved_interface = True

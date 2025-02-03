@@ -76,24 +76,24 @@ class ShowForwardingIpv4(ShowForwardingIpv4Schema):
         #IPv4 routes for table default/base
         #IPv4 routes for table VRF_Flow1_1/base
         p2 = re.compile(r'^(?P<ip_version>\w+)'
-                         ' +routes +for +table +(?P<route_table>(\w+\/+\w+)|(0x[0-5a-fA-F]+))')
+                         r' +routes +for +table +(?P<route_table>(\w+\/+\w+)|(0x[0-5a-fA-F]+))')
         
         #0.0.0.0/32           Drop                                      Null0
         #*10.36.3.2/32          10.2.1.2                                  Ethernet1/1
         #10.36.3.2/32          10.2.1.2                                  Ethernet1/1       vni: 501003
         #10.4.1.1/32           10.2.1.2                                  Ethernet1/1           PUSH 16001
         p3 = re.compile(r'^(?P<is_best_next_hop>\*)?'
-                          '(?P<prefix>[0-9\.]+\/[0-9]+)?'
-                          ' +(?P<next_hop>[0-9A-Za-z.]+)'  
-                          ' +(?P<interface>[\w\-\/\.]+)'                     
-                          '\s*(?P<label>[\w\:\ \w]+)?'
+                          r'(?P<prefix>[0-9\.]+\/[0-9]+)?'
+                          r' +(?P<next_hop>[0-9A-Za-z.]+)'  
+                          r' +(?P<interface>[\w\-\/\.]+)'                     
+                          r'\s*(?P<label>[\w\:\ \w]+)?'
                           )
         
         #10.2.1.2                                  Ethernet1/1
         #10.2.1.2                                  Ethernet1/1       vn: 501003
         p3_1 = re.compile(r'^(?P<next_hop>[0-9A-Za-z.]+)'  
-                          ' +(?P<interface>[\w\-\/\.]+)'                     
-                          '\s*(?P<label>[\w\:\ \w]+)?'
+                          r' +(?P<interface>[\w\-\/\.]+)'                     
+                          r'\s*(?P<label>[\w\:\ \w]+)?'
                           )
          
         #1.1.1.2/32           fe80::a111:2222:3333:e13                  Ethernet1/1

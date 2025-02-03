@@ -104,8 +104,8 @@ class ShowEthernetCfmMeps(ShowEthernetCfmMepsSchema):
         # V     10 0001.02ff.0706 Up      00:01:35            2      0     0     2
         # >    20 0001.02ff.0705 Up      00:00:03            4      1     0     0
         p3 = re.compile(r'^(?P<st>(>|R|L|C|X|\*|I|V|T|M|U)) +(?P<id>\d+) +(?P<mac_address>\S+) +'
-            '(?P<port>\w+) +(?P<up_down_time>\S+) +(?P<ccm_rcvd>\d+) +(?P<seq_err>\d+) +'
-            '(?P<rdi>\d+) +(?P<error>\d+)$')
+            r'(?P<port>\w+) +(?P<up_down_time>\S+) +(?P<ccm_rcvd>\d+) +(?P<seq_err>\d+) +'
+            r'(?P<rdi>\d+) +(?P<error>\d+)$')
 
 
         for line in out.splitlines():
@@ -288,7 +288,7 @@ class ShowEthernetTags(ShowEthernetTagsSchema):
             m = p2.match(line)
             if m:
                 sub_interface = m.groupdict()['sub_interface']
-                stage = re.search('[A-Za-z0-9\/]+',sub_interface)
+                stage = re.search(r'[A-Za-z0-9\/]+',sub_interface)
                 interface = stage.group()
                 if 'interface' not in intf_dict:
                     intf_dict['interface'] = {}

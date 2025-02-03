@@ -111,7 +111,7 @@ class ShowPlatformSoftIProcess(ShowPlatformSoftIProcessSchema):
 
         # PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
         p1 = re.compile(
-            '^(?P<pid>\S+)\s+(?P<user>\S+)\s+(?P<pr>\S+)\s+(?P<ni>\S+)\s+(?P<virt>\S+)\s+(?P<res>\S+)\s+(?P<shr>\S+)\s+(?P<s>\S+)\s+(?P<cpu>\S+)\s+(?P<mem>\S+)\s+(?P<time>\S+)\s+(?P<cmd>\S+)')
+            r'^(?P<pid>\S+)\s+(?P<user>\S+)\s+(?P<pr>\S+)\s+(?P<ni>\S+)\s+(?P<virt>\S+)\s+(?P<res>\S+)\s+(?P<shr>\S+)\s+(?P<s>\S+)\s+(?P<cpu>\S+)\s+(?P<mem>\S+)\s+(?P<time>\S+)\s+(?P<cmd>\S+)')
 
         for line in output.splitlines():
             line = line.strip()

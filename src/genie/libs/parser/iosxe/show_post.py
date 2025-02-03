@@ -48,10 +48,10 @@ class ShowPost(ShowPostSchema):
         ret_dict={}
 
         # Switch 1
-        p1 = re.compile('^Switch\s+(?P<switch_num>\S+)$')
+        p1 = re.compile(r'^Switch\s+(?P<switch_num>\S+)$')
 
         # Wed Feb 23 23:06:58 2022 POST: Module: 1 Mac Loopback: loopback Test: End, Status Passed
-        p2 = re.compile('^[\w: ]+POST:\s+Module:[\w ]+: (?P<test>\w+\sTest):\s+End,\s+Status\s+(?P<status>Passed|Failed)$')
+        p2 = re.compile(r'^[\w: ]+POST:\s+Module:[\w ]+: (?P<test>\w+\sTest):\s+End,\s+Status\s+(?P<status>Passed|Failed)$')
 
         for line in output.splitlines():
             line = line.strip()

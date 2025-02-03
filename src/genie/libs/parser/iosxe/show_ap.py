@@ -478,7 +478,7 @@ class ShowApDot115GhzChannel(ShowApDot115GhzChannelSchema):
             r"^CleanAir\s+Event-driven\s+RRM\s+option\s+:\s+(?P<clean_air>(Enabled|Disabled))$")
         #   Channel Assignment Leader                  : sj-00a-ewlc1 (10.7.5.133)
         #   Channel Assignment Leader                  : vidya-ewlc-5 (9.4.62.51) (2001:9:4:62::51) 
-        chan_assn_leader_capture = re.compile('^Channel\s+Assignment\s+Leader\s+:\s+(?P<wlc_leader_name>\S+)\s+((?P<wlc_leader_ip>\(\d+\.\d+\.\d+\.\d+\))|(?P<wlc_leader_ipv4>\(\d+\.\d+\.\d+\.\d+\))\s+(?P<wlc_leader_ipv6>\(\d+\:\d+\:\d+\:\d+\::\d+\)))$')
+        chan_assn_leader_capture = re.compile(r'^Channel\s+Assignment\s+Leader\s+:\s+(?P<wlc_leader_name>\S+)\s+((?P<wlc_leader_ip>\(\d+\.\d+\.\d+\.\d+\))|(?P<wlc_leader_ipv4>\(\d+\.\d+\.\d+\.\d+\))\s+(?P<wlc_leader_ipv6>\(\d+\:\d+\:\d+\:\d+\::\d+\)))$')
         #   Last Run                                   : 15995 seconds ago
         last_run_capture = re.compile(r"^Last\s+Run\s+:\s+(?P<last_run_seconds>\d+)\s+seconds\s+ago$")
         #   DCA Sensitivity Level                      : MEDIUM : 15 dB
@@ -881,9 +881,9 @@ class ShowApDot115GhzSummary(ShowApDot115GhzSummarySchema):
         # ab22-cap10                   5c50.15ff.8fe4 1       Enabled        Up            20     *6/8 (9 dBm)    (132)*
         # BHS-A-204 				   00a7.42ff.d4d0 1 	  Enabled 		 Up 		   20 	   3/7 (12 dBm)   (124)   Local
         p1 = re.compile(r"^(?P<ap_name>\S+)\s+(?P<mac_address>\S+)\s+"
-                                       "(?P<slot>\d+)\s+(?P<admin_state>(Enabled|Disabled))\s+(?P<oper_state>\S+)\s+"
-                                       "(?P<width>\d+)\s+(?P<tx_pwr>(\*\d\/\d.*dBm\))|(\d\/\d.*dBm\)))\s+"
-                                       "(?P<channel>\S+)\s*(?P<mode>\S+|^.{0}$)?$")
+                                       r"(?P<slot>\d+)\s+(?P<admin_state>(Enabled|Disabled))\s+(?P<oper_state>\S+)\s+"
+                                       r"(?P<width>\d+)\s+(?P<tx_pwr>(\*\d\/\d.*dBm\))|(\d\/\d.*dBm\)))\s+"
+                                       r"(?P<channel>\S+)\s*(?P<mode>\S+|^.{0}$)?$")
 
         for line in out.splitlines():
             line = line.strip()
@@ -3086,8 +3086,8 @@ class ShowApImage(ShowApImageSchema):
 
         ap_image_info_capture = re.compile(
             r"^(?P<ap_name>\S+)\s+(?P<primary_image>\d+\.\d+\.\d+\.\d+)\s+(?P<backup_image>\d+\.\d+\.\d+\.\d+)\s+"
-            "(?P<predownload_status>\S+)\s+(?P<predownload_version>\d+\.\d+\.\d+\.\d+)\s+(?P<next_retry_time>\S+)\s+"
-            "(?P<retry_count>\d+)\s+(?P<method>.*)")
+            r"(?P<predownload_status>\S+)\s+(?P<predownload_version>\d+\.\d+\.\d+\.\d+)\s+(?P<next_retry_time>\S+)\s+"
+            r"(?P<retry_count>\d+)\s+(?P<method>.*)")
 
         remove_lines = ('AP Name', '----')
 

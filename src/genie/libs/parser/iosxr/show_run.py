@@ -274,7 +274,7 @@ class ShowRunRouterIsis(ShowRunRouterIsisSchema):
                 m = a5.match(line)
                 if m:
                     spf_interval = m.groupdict()['spf_interval']
-                    pattern = re.compile('(\S+-wait)\s([0-9]+)')
+                    pattern = re.compile(r'(\S+-wait)\s([0-9]+)')
                     matches = pattern.findall(spf_interval)
                     spf_interval_pairs = {key.replace('-', '_'):val for key,val in matches}
                     router_isis_dict['isis'][isis_name]['address_family'][address_family]['spf_interval'] = spf_interval_pairs
@@ -325,7 +325,7 @@ class ShowRunRouterIsis(ShowRunRouterIsisSchema):
             m = p3.match(line)
             if m:
                 lsp_gen_interval = m.groupdict()['lsp_gen_interval']
-                pattern = re.compile('(\S+-wait)\s([0-9]+)')
+                pattern = re.compile(r'(\S+-wait)\s([0-9]+)')
                 matches = pattern.findall(lsp_gen_interval)
                 lsp_gen_pairs = {key.replace('-', '_'):val for key,val in matches}
                 router_isis_dict['isis'][isis_name]['lsp_gen_interval'] = lsp_gen_pairs

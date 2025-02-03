@@ -133,8 +133,8 @@ class ShowLacpCounters(ShowLacpCountersSchema):
         # 0
         p2 = re.compile(
             r'^(?P<interface>[\w\/]+) +(?P<lacp_out_pkts>[\d]+) +(?P<lacp_in_pkts>[\d]+)'
-            ' +(?P<marker_in_pkts>[\d]+) +(?P<marker_out_pkts>[\d]+) +( +('
-            '?P<lacp_pkts_errors>[\d]+))?$')
+            r' +(?P<marker_in_pkts>[\d]+) +(?P<marker_out_pkts>[\d]+) +( +('
+            r'?P<lacp_pkts_errors>[\d]+))?$')
 
         for line in out.splitlines():
             if line:

@@ -28,10 +28,7 @@ class ShowInventorySchema(MetaParser):
         }
 
 class ShowInventory(ShowInventorySchema):
-    """
-    Parser for :
-        * show inventory
-    """
+    """Parser for show inventory"""
 
     cli_command = 'show inventory'
 

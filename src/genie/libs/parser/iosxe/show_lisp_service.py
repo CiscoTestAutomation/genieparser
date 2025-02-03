@@ -808,23 +808,23 @@ class ShowLispServiceMapCache(ShowLispServiceMapCacheSchema):
         # Output for router lisp 0
         # Output for router lisp 0 instance-id 193
         p1 = re.compile(r'Output +for +router +lisp +(?P<router_id>(\S+))'
-                         '(?: +instance-id +(?P<instance_id>(\d+)))?$')
+                         r'(?: +instance-id +(?P<instance_id>(\d+)))?$')
 
         # LISP IPv4 Mapping Cache for EID-table default (IID 101), 2 entries
         # LISP IPv6 Mapping Cache for EID-table vrf red (IID 101), 2 entries
         # LISP MAC Mapping Cache for EID-table Vlan 101 (IID 1), 4 entries
         # LISP IPv4 Mapping Cache for LISP 0 EID-table default (IID 4097), 2 entries
         p2 = re.compile(r'LISP +(?P<type>(IPv4|IPv6|MAC)) +Mapping +Cache +for'
-                         ' ((LISP\s*[\d. ]+)|\s*)+EID\-table +(default|(vrf|Vlan)'
-                         ' +(?P<vrf>(\S+))) +\(IID +(?P<iid>(\d+))\), +(?P<entries>(\d+))'
-                         ' +entries$')
+                         r' ((LISP\s*[\d. ]+)|\s*)+EID\-table +(default|(vrf|Vlan)'
+                         r' +(?P<vrf>(\S+))) +\(IID +(?P<iid>(\d+))\), +(?P<entries>(\d+))'
+                         r' +entries$')
 
         # 0.0.0.0/0, uptime: 15:23:50, expires: never, via static-send-map-request
         # ::/0, uptime: 00:11:28, expires: never, via static-send-map-request
         # b827.ebff.4720/48, uptime: 22:49:42, expires: 01:10:17, via WLC Map-Notify, complete
         # 192.168.9.0/24, uptime: 00:04:02, expires: 23:55:57, via map-reply, complete
         p3 = re.compile(r'(?P<map_id>(\S+)), +uptime: +(?P<uptime>(\S+)),'
-                         ' +expires: +(?P<expires>(\S+)), +via +(?P<via>(.*))$')
+                         r' +expires: +(?P<expires>(\S+)), +via +(?P<via>(.*))$')
 
         #   Negative cache entry, action: send-map-request
         p4 = re.compile(r'Negative +cache +entry, +action: +(?P<action>(.*))$')
@@ -833,9 +833,9 @@ class ShowLispServiceMapCache(ShowLispServiceMapCacheSchema):
         #   10.1.8.8 00:04:02  up          50/50        -
         # State can be: 'up', 'down', 'route-rejec', 'up, self' and etc
         p5 = re.compile(r'(?P<locator>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|([a-fA-F\d\:]+)) +(?P<uptime>(\S+))'
-                         ' +(?P<state>(\S+|up, self))'
-                         ' +(?P<priority>(\d+))\/(?P<weight>(\d+))'
-                         '(?: +(?P<encap_iid>(\S+)))?$')
+                         r' +(?P<state>(\S+|up, self))'
+                         r' +(?P<priority>(\d+))\/(?P<weight>(\d+))'
+                         r'(?: +(?P<encap_iid>(\S+)))?$')
 
         # Encapsulating to proxy ETR
         # Encapsulating to proxy ETR Encap-IID 3
@@ -1033,16 +1033,16 @@ class ShowLispServiceRlocMembers(ShowLispServiceRlocMembersSchema):
         # Output for router lisp 0 instance-id 193
         # Output for router lisp 2 instance-id 101
         p1 = re.compile(r'Output +for +router +lisp +(?P<router_id>(\S+))'
-                         '(?: +instance-id +(?P<instance_id>(\d+)))?$')
+                         r'(?: +instance-id +(?P<instance_id>(\d+)))?$')
 
         # LISP RLOC Membership for router lisp 0 IID 101
         p2 = re.compile(r'LISP +RLOC +Membership +for +router +lisp'
-                         ' +(?P<router_id>(\S+)) +IID +(?P<instance_id>(\d+))$')
+                         r' +(?P<router_id>(\S+)) +IID +(?P<instance_id>(\d+))$')
 
         # Entries: 2 valid / 2 total, Distribution disabled
         p3 = re.compile(r'Entries: +(?P<valid>(\d+)) +valid +\/'
-                         ' +(?P<total>(\d+)) +total, +Distribution'
-                         ' +(?P<distribution>(enabled|disabled))$')
+                         r' +(?P<total>(\d+)) +total, +Distribution'
+                         r' +(?P<distribution>(enabled|disabled))$')
 
         # RLOC                    Origin                       Valid
         # 10.16.2.2               Registration                 Yes
@@ -1161,11 +1161,11 @@ class ShowLispServiceSmr(ShowLispServiceSmrSchema):
         # Output for router lisp 0 instance-id 193
         # Output for router lisp 2 instance-id 101
         p1 = re.compile(r'Output +for +router +lisp +(?P<router_id>(\S+))'
-                         '(?: +instance-id +(?P<instance_id>(\d+)))?$')
+                         r'(?: +instance-id +(?P<instance_id>(\d+)))?$')
 
         # LISP SMR Table for router lisp 0 (red) IID 101
         p2 = re.compile(r'LISP +SMR +Table +for +router +lisp +(\d+)'
-                         ' +\((?P<vrf>(\S+))\) +IID +(?P<instance_id>(\S+))$')
+                         r' +\((?P<vrf>(\S+))\) +IID +(?P<instance_id>(\S+))$')
 
         # Entries: 1
         p3 = re.compile(r'Entries: +(?P<entries>(\d+))$')
@@ -1623,14 +1623,14 @@ class ShowLispServiceServerSummary(ShowLispServiceServerSummarySchema):
         # Output for router lisp 0 instance-id 193
         # Output for router lisp 2 instance-id 101
         p1 = re.compile(r'Output +for +router +lisp +(?P<router_id>(\S+))'
-                         '(?: +instance-id +(?P<instance_id>(\d+)))?$')
+                         r'(?: +instance-id +(?P<instance_id>(\d+)))?$')
 
         #                      -----------  IPv4 -----------
         #  Site name            Configured Registered Incons
         # xtr1_1                        1          1      0
         # xtr2                          1          1      0
         p2 = re.compile(r'(?P<site_name>(\S+)) +(?P<cfgd>(\d+))'
-                         ' +(?P<registered>(\d+)) +(?P<incons>(\d+))$')
+                         r' +(?P<registered>(\d+)) +(?P<incons>(\d+))$')
 
         # Number of configured sites:                     2
         p3 = re.compile(r'Number +of +configured +sites: +(?P<val>(\d+))$')
@@ -1640,23 +1640,23 @@ class ShowLispServiceServerSummary(ShowLispServiceServerSummarySchema):
 
         # Number of configured EID prefixes:            2
         p5 = re.compile(r'Number +of +configured +EID +prefixes:'
-                         ' +(?P<val>(\d+))$')
+                         r' +(?P<val>(\d+))$')
 
         # Number of registered EID prefixes:            2
         p6 = re.compile(r'Number +of +registered +EID +prefixes:'
-                         ' +(?P<val>(\d+))$')
+                         r' +(?P<val>(\d+))$')
 
         # Site-registration limit for router lisp 2:            0
         p7 = re.compile(r'Site-registration +limit +for +router +lisp'
-                         ' +(?P<router_id>(\d+)): +(?P<val>(\d+))$')
+                         r' +(?P<router_id>(\d+)): +(?P<val>(\d+))$')
 
         # Site-registration count for router lisp 2:            0
         p8 = re.compile(r'Site-registration +count +for +router +lisp'
-                         ' +(?P<router_id>(\d+)): +(?P<val>(\d+))$')
+                         r' +(?P<router_id>(\d+)): +(?P<val>(\d+))$')
 
         # Sites with inconsistent registrations:          0
         p9 = re.compile(r'Sites +with +inconsistent +registrations:'
-                         ' +(?P<val>(\d+))$')
+                         r' +(?P<val>(\d+))$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -1893,7 +1893,7 @@ class ShowLispServiceServerDetailInternal(ShowLispServiceServerDetailInternalSch
         # Output for router lisp 0 instance-id 193
         # Output for router lisp 2 instance-id 101
         p1 = re.compile(r'Output +for +router +lisp +(?P<router_id>(\S+))'
-                         '(?: +instance-id +(?P<instance_id>(\d+)))?$')
+                         r'(?: +instance-id +(?P<instance_id>(\d+)))?$')
 
         # Site name: prov1
         # Site name: provider
@@ -1904,7 +1904,7 @@ class ShowLispServiceServerDetailInternal(ShowLispServiceServerDetailInternalSch
 
         # EID-prefix: 192.168.0.1/32 instance-id 101
         p4 = re.compile(r'EID-prefix: +(?P<eid>(\S+)) +instance-id'
-                         ' +(?P<iid>(\d+))$')
+                         r' +(?P<iid>(\d+))$')
 
         # First registered:     01:12:41
         p5 = re.compile(r'First +registered: +(?P<first>(\S+))$')
@@ -1917,11 +1917,11 @@ class ShowLispServiceServerDetailInternal(ShowLispServiceServerDetailInternalSch
 
         # Origin:               Dynamic, more specific of 192.168.0.0/24
         p8_1 = re.compile(r'Origin: +(?P<origin>(\S+))(?:, +more +specific +of'
-                         ' +(\S+))?$')
+                         r' +(\S+))?$')
 
         # Origin:               Configuration, accepting more specifics
         p8_2 = re.compile(r'Origin: +(?P<origin>(\S+))(?:,'
-                         ' +(?P<more_specific>(accepting more specifics)))?$')
+                         r' +(?P<more_specific>(accepting more specifics)))?$')
 
         # Merge active:         No
         p9 = re.compile(r'Merge +active: +(?P<merge>(Yes|No))$')
@@ -1944,18 +1944,18 @@ class ShowLispServiceServerDetailInternal(ShowLispServiceServerDetailInternalSch
 
         # ETR 10.16.2.2, last registered 01:12:41, proxy-reply, map-notify
         p15 = re.compile(r'ETR +(?P<etr>(\S+)), +last +registered'
-                          ' +(?P<last_registered>(\S+)),'
-                          '(?: +(?P<proxy_reply>(proxy-reply)),)?'
-                          '(?: +(?P<map_notify>(map-notify)))?$')
+                          r' +(?P<last_registered>(\S+)),'
+                          r'(?: +(?P<proxy_reply>(proxy-reply)),)?'
+                          r'(?: +(?P<map_notify>(map-notify)))?$')
 
         # TTL 1d00h, no merge, hash-function sha1, nonce 0x70D18EF4-0x3A605D67
         p16 = re.compile(r'TTL +(?P<ttl>(\S+)),(?: +(?P<merge>(no merge)),)?'
-                          ' +hash-function +(?P<hash>(\S+)) +nonce'
-                          ' +(?P<nonce>(\S+))$')
+                          r' +hash-function +(?P<hash>(\S+)) +nonce'
+                          r' +(?P<nonce>(\S+))$')
 
         # state complete, no security-capability
         p17 = re.compile(r'state +(?P<state>(\S+))'
-                          '(?:, +(?P<security>(no security-capability)))?$')
+                          r'(?:, +(?P<security>(no security-capability)))?$')
 
         # xTR-ID 0x21EDD25F-0x7598784C-0x769C8E4E-0xC04926EC
         p18 = re.compile(r'xTR-ID +(?P<xtr_id>(.*))$')
@@ -1969,8 +1969,8 @@ class ShowLispServiceServerDetailInternal(ShowLispServiceServerDetailInternalSch
         # Locator  Local  State      Pri/Wgt  Scope
         # 10.16.2.2 yes    up          50/50   IPv4 none
         p21 = re.compile(r'(?P<locator>(\S+)) +(?P<local>(\S+))'
-                          ' +(?P<state>(\S+)) +(?P<priority>(\d+))\/'
-                          '(?P<weight>(\d+)) +(?P<scope>(.*))$')
+                          r' +(?P<state>(\S+)) +(?P<priority>(\d+))\/'
+                          r'(?P<weight>(\d+)) +(?P<scope>(.*))$')
 
         # ETR 10.16.2.2
         p22 = re.compile(r'ETR +(?P<etr>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})$')
@@ -1980,8 +1980,8 @@ class ShowLispServiceServerDetailInternal(ShowLispServiceServerDetailInternalSch
 
         # last registered 01:12:41, proxy-reply, map-notify
         p24 = re.compile(r'last +registered +(?P<last_registered>(\S+)),'
-                          '(?: +(?P<proxy_reply>(proxy-reply)),)'
-                          '?(?: +(?P<map_notify>(map-notify)))?$')
+                          r'(?: +(?P<proxy_reply>(proxy-reply)),)'
+                          r'?(?: +(?P<map_notify>(map-notify)))?$')
 
         # SGT: 10
         p25 = re.compile(r'SGT:\s+(?P<sgt>\d+)$')
@@ -2136,7 +2136,7 @@ class ShowLispServiceServerDetailInternal(ShowLispServiceServerDetailInternalSch
             if m:
                 group = m.groupdict()
                 ttl = group['ttl']
-                n = re.match('(?P<day>(\d+))d(?P<hours>(\d+))h', ttl)
+                n = re.match(r'(?P<day>(\d+))d(?P<hours>(\d+))h', ttl)
                 days = n.groupdict()['day'] ; hours = n.groupdict()['hours']
                 time_to_live = (int(days) * 86400) + (int(hours) * 3600)
                 if group['merge'] == 'no merge':

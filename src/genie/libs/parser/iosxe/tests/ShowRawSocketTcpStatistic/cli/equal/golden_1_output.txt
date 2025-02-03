@@ -1,0 +1,6 @@
+-------------------------------------------- TCP-Serial Statistics -----------------------------------------
+Interface  idx             vrf_name             sessions      tcp_in_bytes         tcp_out_bytes   tcp_to_tty_frames    tty_to_tcp_frames
+  Se0/2/0   26             utility                   1                 208                  912                   9                   11
+  Se0/2/1   27              vrf_10                   1                 160                  912                   7                   11
+  Se0/2/2   28               100                     1                 190                 1530                   8                   17
+  Se0/2/3   29                                       1                 139                 1739                   6                   16

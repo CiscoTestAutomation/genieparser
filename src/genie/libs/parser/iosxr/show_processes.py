@@ -110,7 +110,7 @@ class ShowProcesses(ShowProcessesSchema):
 
         # Started on config: cfg/gl/isis/instance/test/ord_A/running
         r12 = re.compile(r'Started\s+on\s+config\s*:\s*'
-                          '(?P<started_on_config>\S+)')
+                          r'(?P<started_on_config>\S+)')
 
         # Process group: v4-routing
         r13 = re.compile(r'Process\s+group\s*:\s*(?P<process_group>\S+)')
@@ -135,8 +135,8 @@ class ShowProcesses(ShowProcessesSchema):
 
         # Process cpu time: 2.690 user, 0.640 kernel, 3.330 total
         r20 = re.compile(r'Process\s+cpu\s+time\s*:\s*(?P<cpu_time_user>\S+)'
-                          '\s+user,\s+(?P<cpu_time_kernel>\S+)\s+kernel,\s+'
-                          '(?P<cpu_time_total>\S+)\s+total')
+                          r'\s+user,\s+(?P<cpu_time_kernel>\S+)\s+kernel,\s+'
+                          r'(?P<cpu_time_total>\S+)\s+total')
 
         #Registered item(s): cfg/gl/isis/instance/.*/ord_A/
         r21 = re.compile(r'Registered\s+item\(s\)\s*:\s*(?P<registered_item>.+)')
@@ -149,8 +149,8 @@ class ShowProcesses(ShowProcessesSchema):
         # 1011   22494    0K  20   Sleeping     telemetry_evtli  0
         # 1011   22487    0K  20   Sleeping     lspv_lib ISIS    0
         r22 = re.compile(r'(?P<jid>\d+)\s+(?P<tid>\d+)\s+(?P<stack>\S+)\s+'
-                          '(?P<pri>\d+)\s+(?P<state>\S+)\s+\s'
-                          '(?P<name>[\sa-zA-Z\_\-\.]+)\s+(?P<rt_pri>\d+)')
+                          r'(?P<pri>\d+)\s+(?P<state>\S+)\s+\s'
+                          r'(?P<name>[\sa-zA-Z\_\-\.]+)\s+(?P<rt_pri>\d+)')
 
         for line in output.splitlines():
             line = line.strip()

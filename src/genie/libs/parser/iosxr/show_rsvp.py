@@ -13,8 +13,7 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from pyats.utils.exceptions import SchemaError
-from genie.metaparser.util.schemaengine import Any, Optional, Use, Schema, ListOf
+from genie.metaparser.util.schemaengine import Any, Optional
 from genie.libs.parser.utils.common import Common
 
 
@@ -283,11 +282,11 @@ class ShowRSVPGracefulRestartNeighborsDetail(ShowRSVPGracefulRestartNeighborsSch
         p7 = re.compile(r'^Recovery +timer:\s+(?P<recovery_time>.+)$')
 
         # Hello interval: 5000 milliseconds  Maximum allowed missed Hello messages: 3
-        p8 = re.compile('^Hello +interval:\s+(?P<hello_interval>\d+)\s+(?P<hello_interval_unit>\w+)'
-                        '\s+Maximum +allowed +missed +Hello +messages:\s?(?P<max_allowed_msg>\d+)$')
+        p8 = re.compile(r'^Hello +interval:\s+(?P<hello_interval>\d+)\s+(?P<hello_interval_unit>\w+)'
+                        r'\s+Maximum +allowed +missed +Hello +messages:\s?(?P<max_allowed_msg>\d+)$')
 
         # Pending states: 0
-        p9 = re.compile('^Pending +states:\s+(?P<pending_states>\d+)$')
+        p9 = re.compile(r'^Pending +states:\s+(?P<pending_states>\d+)$')
 
         for line in out.splitlines():
             line = line.strip()

@@ -108,14 +108,14 @@ class ShowMplsLdpParameters(ShowMplsLdpParametersSchema):
         p3 = re.compile(r'^Protocol version: +(?P<version>\d+)$')
         # Session hold time: 180 sec; keep alive interval: 60 sec
         p4 = re.compile(r'^Session +hold +time: +(?P<session_holdtime>\d+) +sec;'
-                        ' +keep +alive +interval: +(?P<keepalive_interval>\d+) +sec$')
+                        r' +keep +alive +interval: +(?P<keepalive_interval>\d+) +sec$')
 
         # Discovery hello: holdtime: 15 sec; interval: 5 sec
         p5 = re.compile(r'^Discovery +hello: +holdtime: +(?P<holdtime>\d+) +sec; +interval: +(?P<interval>\d+) +sec$')
 
         # Discovery targeted hello: holdtime: 90 sec; interval: 10 sec
         p6 = re.compile(r'^Discovery +targeted +hello: +holdtime: +(?P<targeted_holdtime>\d+) +sec; +interval:'
-                        ' +(?P<targeted_interval>\d+) +sec$')
+                        r' +(?P<targeted_interval>\d+) +sec$')
 
         # Downstream on Demand max hop count: 255
         p7 = re.compile(r'^Downstream +on +Demand +max +hop +count: +(?P<maxhop_count>\d+)$')
@@ -628,7 +628,7 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
         #     State: Oper; Msgs sent/rcvd: 824/825; Downstream; Last TIB rev sent 4103
         #     State: Oper; Msgs sent/rcvd: 5855/6371; Downstream on demand
         p3 = re.compile(r'^State: *(?P<state>\w+); +Msgs +sent\/rcvd: *(?P<msg_sent>\d+)\/(?P<msg_rcvd>\d+);'
-                                ' +(?P<downstream>[\w\s]+)(; +Last +TIB +rev +sent +(?P<last_tib_rev_sent>\d+))?$')
+                                r' +(?P<downstream>[\w\s]+)(; +Last +TIB +rev +sent +(?P<last_tib_rev_sent>\d+))?$')
 
         #  Up time: 04:26:14
         #  Up time: 3d21h; UID: 4; Peer Id 0
@@ -650,7 +650,7 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
 
         # Peer holdtime: 180000 ms; KA interval: 60000 ms; Peer state: estab
         p8 = re.compile(r'^Peer +holdtime: *(?P<peer_holdtime>\d+) +ms; +KA +interval: *(?P<ka_interval>\d+) +ms;'
-                         ' +Peer +state: +(?P<peer_state>\S+)$')
+                         r' +Peer +state: +(?P<peer_state>\S+)$')
 
         # Password: not required, none, in use
         p9 = re.compile(r'^Password: +(?P<password>[\S\s]+)$')
@@ -955,7 +955,7 @@ class ShowMplsLdpBindings(ShowMplsLdpBindingsSchema):
         # 10.16.16.16/32, rev 775
         # lib entry: 10.0.0.0/8, rev 300(no route)
         p1 = re.compile(r'^([\w]+ +entry: +)?(?P<lib_entry>[\d\.\/]+), +rev +(?P<rev>\d+),'
-            '?( +chkpt: +(?P<checkpoint>\S+))?(, +elc)?(?P<no_route>\(no route\))?$')
+            r'?( +chkpt: +(?P<checkpoint>\S+))?(, +elc)?(?P<no_route>\(no route\))?$')
 
         #  local binding:  label: 2536
         #  local binding:  label: 2027 (owner LDP)
@@ -968,7 +968,7 @@ class ShowMplsLdpBindings(ShowMplsLdpBindingsSchema):
         #  remote binding: lsr: 10.169.197.252:0, label: 508
         #  remote binding: lsr: 10.169.197.253:0, label: 308016 checkpointed
         p4 = re.compile(r'^remote +binding: +lsr: +(?P<lsr>[\d\.]+):(?P<label_space_id>[\d]+),'
-                        ' +label: +(?P<remote_label>\S+)( +(?P<checkpointed>\w+))?(, +elc)?$')
+                        r' +label: +(?P<remote_label>\S+)( +(?P<checkpointed>\w+))?(, +elc)?$')
 
 
         for line in out.splitlines():
@@ -1265,18 +1265,18 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
 
         #         Hello interval: 5000 ms; Transport IP addr: 10.169.197.254
         p5 = re.compile(r'^Hello +interval: +(?P<hello_interval_ms>\d+) +ms;'
-                        ' +Transport +IP +addr: (?P<transport_ip_address>[\d\.]+)$')
+                        r' +Transport +IP +addr: (?P<transport_ip_address>[\d\.]+)$')
 
         #         LDP Id: 10.169.197.252:0
         p6 = re.compile(r'^(?P<ldp_tdp>\w+) +Id:(?P<space>\s{1,2})?(?P<ldp_tdp_id>[\d\.\:]+)$')
 
         #           Src IP addr: 10.169.197.93; Transport IP addr: 10.169.197.252
         p7 = re.compile(r'^Src +IP +addr: +(?P<source_ip_address>[\d\.]+);'
-                        ' +Transport +IP +addr: +(?P<transport_ip_address>[\d\.]+)$')
+                        r' +Transport +IP +addr: +(?P<transport_ip_address>[\d\.]+)$')
 
         #           Hold time: 15 sec; Proposed local/peer: 15/15 sec
         p8 = re.compile(r'^Hold +time: +(?P<holdtime_sec>\d+) +sec; +Proposed +local\/peer:'
-                        ' +(?P<proposed_local>\d+)\/(?P<proposed_peer>\d+) +sec$')
+                        r' +(?P<proposed_local>\d+)\/(?P<proposed_peer>\d+) +sec$')
 
         #           Reachable via 10.169.197.252/32
         p9 = re.compile(r'^Reachable +via +(?P<reachable_via>[\d\.\/]+)$')
@@ -1292,8 +1292,8 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
         #  10.131.191.252 -> 10.131.159.251 (ldp): active, xmit
         #  10.131.191.252 -> 10.131.159.252 (ldp): active/passive, xmit/recv
         p12 = re.compile(r'^(?P<source>[\d\.]+) +\-> +(?P<destination>[\d\.]+)'
-                          ' +\((?P<session>(ldp|tdp)+)\): +(?P<status>(active|passive|active\/passive)+),'
-                          ' +(?P<xmit>xmit)?\/?(?P<recv>recv)?$')
+                          r' +\((?P<session>(ldp|tdp)+)\): +(?P<status>(active|passive|active\/passive)+),'
+                          r' +(?P<xmit>xmit)?\/?(?P<recv>recv)?$')
 
         # Targeted Hellos:
         p13 = re.compile(r'^Targeted +Hellos:$')
@@ -1507,7 +1507,7 @@ class ShowMplsLdpIgpSync(ShowMplsLdpIgpSyncSchema):
         #     LDP configured;  SYNC enabled.
         #     LDP not configured; LDP-IGP Synchronization enabled.
         p2 = re.compile(r'^LDP +(?P<configured>[\w\s]+); +(LDP\-IGP +Synchronization '
-                         '+(?P<state>[\w\s]+))?(SYNC +(?P<sync_enabled>[\w\s]+))?.$')
+                         r'+(?P<state>[\w\s]+))?(SYNC +(?P<sync_enabled>[\w\s]+))?.$')
 
         #     Sync status: sync achieved; peer reachable.
         #     Sync status: sync not achieved; peer reachable.
@@ -1764,7 +1764,7 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
         #         MAC/Encaps=18/18, MRU=1530, Label Stack{}, via Ls0
         #         MAC/Encaps=14/26, MRU=1492, Label Stack{16052 16062 16063}, via Gi0/1/7
         p3 = re.compile(r'^MAC\/Encaps=(?P<mac>\d+)\/(?P<encaps>\d+), +MRU=(?P<mru>[\d]+), '
-                         '+Label +Stack{(?P<label_stack>.*)}(, via +(?P<via>\S+))?$')
+                         r'+Label +Stack{(?P<label_stack>.*)}(, via +(?P<via>\S+))?$')
 
         #         00002440156384B261CB1480810000330800
         #         AABBCC032800AABBCC0325018847 00010000
@@ -2140,7 +2140,7 @@ class ShowMplsInterface(ShowMplsInterfaceSchema):
         # Interface              IP            Tunnel   Operational
         # GigabitEthernet6/0     Yes (ldp)     No       Yes
         p1 = re.compile(r'^(?P<interface>(?!Interface)[\S]+) +(?P<ip>((Y|y)es|(N|n)o)+)( +\((?P<session>\w+)\))? +(?P<tunnel>\w+)'
-                        '( +(?P<bgp>\w+) +(?P<static>\w+))? +(?P<operational>\w+)$')
+                        r'( +(?P<bgp>\w+) +(?P<static>\w+))? +(?P<operational>\w+)$')
         # Interface GigabitEthernet0/0/0:
         p2 = re.compile(r'^Interface +(?P<interface>\S+):$')
         #     Type Unknown
@@ -2404,15 +2404,15 @@ class ShowMplsL2TransportDetail(ShowMplsL2TransportSchema):
         # Local interface: VFI PE1-VPLS-A up
         # Local interface: Fa2/1/1.2 up, line protocol up, Eth VLAN 2 up
         p1 = re.compile(r'^Local +interface: +(?P<interface>[\w\d\/\.\s\-]+)'
-                         ' +(?P<state>\w+)(, line +protocol +(?P<line_protocol_status>\w+),'
-                         ' Eth +VLAN +(?P<number>\d+) +(?P<status>\w+))?$')
+                         r' +(?P<state>\w+)(, line +protocol +(?P<line_protocol_status>\w+),'
+                         r' Eth +VLAN +(?P<number>\d+) +(?P<status>\w+))?$')
 
         # Local interface: Se0/1/0:0 up, line protocol up, HDLC up
         p1_1 = re.compile(r'^Local +interface: +(?P<interface>[\w\W]+) +(?P<state>\w+), +line +protocol +(?P<line_protocol_status>\w+), +(?P<protocol>\w+) +(?P<status>\w+)$')
 
         #   Destination address: 10.2.2.2, VC ID: 1002, VC status: recovering
         p2 = re.compile(r'^Destination +address: +(?P<address>[\d\.]+),'
-                         ' +VC +ID: +(?P<vc_id>\d+), +VC +status: +(?P<vc_status>\w+)$')
+                         r' +VC +ID: +(?P<vc_id>\d+), +VC +status: +(?P<vc_status>\w+)$')
 
         #   Preferred path: not configured
         p3 = re.compile(r'^Preferred +path: +(?P<preferred_path>[a-zA-Z0-9 ]+)(?:\,\s+(?P<state>\S+)$)?$')
@@ -2422,7 +2422,7 @@ class ShowMplsL2TransportDetail(ShowMplsL2TransportSchema):
 
         #   Tunnel label: imp-null, next hop point2point
         p5 = re.compile(r'^Tunnel +label: +(?P<tunnel_label>\S+),'
-                         ' +next +hop +(?P<next_hop>[\S\s]+)$')
+                         r' +next +hop +(?P<next_hop>[\S\s]+)$')
 
         #   Next hop: point2point
         p5_1 = re.compile(r'^Next +hop: +(?P<next_hop>[\S\s]+)$')
@@ -2430,63 +2430,63 @@ class ShowMplsL2TransportDetail(ShowMplsL2TransportSchema):
         #   Output interface: Se2/0/2, imposed label stack {16}
         #   Output interface: Et0/1, imposed label stack {24 21}
         p6 = re.compile(r'^Output +interface: +(?P<output_interface>\S+),'
-                         ' +imposed +label +stack +(?P<imposed_label_stack>[^}]+})')
+                         r' +imposed +label +stack +(?P<imposed_label_stack>[^}]+})')
 
         #   Create time: 1d00h, last status change time: 00:00:03
         p7 = re.compile(r'^Create +time: +(?P<create_time>\S+),'
-                         ' +last +status +change +time: +(?P<last_status_change_time>\S+)$')
+                         r' +last +status +change +time: +(?P<last_status_change_time>\S+)$')
 
         #   Signaling protocol: LDP, peer 10.2.2.2:0 down
         #   Signaling protocol: LDP, peer unknown
         p8 = re.compile(r'^Signaling +protocol: +(?P<signaling_protocol>\S+)(,'
-                         ' +peer +(?P<peer_id>\S+)( +(?P<peer_state>\w+))?)?$')
+                         r' +peer +(?P<peer_id>\S+)( +(?P<peer_state>\w+))?)?$')
 
         #   MPLS VC labels: local 21, remote 16
         #   MPLS VC labels: local 21, remote unassigned
         p9 = re.compile(r'^MPLS +VC +labels: +local +(?P<mpls_local>\w+),'
-                         ' +remote +(?P<mpls_remote>\w+)$')
+                         r' +remote +(?P<mpls_remote>\w+)$')
 
         #   Group ID: local 0, remote 0
         #   Group ID: local 0, remote unknown
         p10 = re.compile(r'^Group +ID: +local +(?P<group_id_local>[\w\W]+),'
-                          ' +remote +(?P<group_id_remote>[\w\W]+)$')
+                          r' +remote +(?P<group_id_remote>[\w\W]+)$')
 
         #   MTU: local 1500, remote 1500
         p11 = re.compile(r'^MTU: +local +(?P<mtu_local>\w+),'
-                          ' +remote +(?P<mtu_remote>\w+)$')
+                          r' +remote +(?P<mtu_remote>\w+)$')
 
         #   Remote interface description: "xconnect to PE2"
         p12 = re.compile(r'^Remote +interface +description:'
-                          ' \"+(?P<remote_interface_description>[\S\s]+)\"$')
+                          r' \"+(?P<remote_interface_description>[\S\s]+)\"$')
 
         # Targeted Hello: 10.1.1.4(LDP Id) -> 10.1.1.1, LDP is UP
         # Targeted Hello: 10.1.1.1(LDP Id) -> 10.1.1.1
         p12_1 = re.compile(r'^Targeted +Hello: +(?P<targeted_hello_ip>\S+)\([A-Z]+ +Id\)'
-                            ' +\-\> +(?P<id>[\d\.]+)(,'
-                            ' +[A-Z]+ +is +(?P<status>\S+))?$')
+                            r' +\-\> +(?P<id>[\d\.]+)(,'
+                            r' +[A-Z]+ +is +(?P<status>\S+))?$')
 
         # MAC Withdraw: sent 5, received 3
         p12_2 = re.compile(r'^MAC Withdraw: +sent +(?P<sent>\d+),'
-                            ' +received +(?P<received>\d+)$')
+                            r' +received +(?P<received>\d+)$')
 
         #   Sequencing: receive disabled, send disabled
         p13 = re.compile(r'^Sequencing: +receive +(?P<receive>\S+),'
-                          ' +send +(?P<send>\S+)$')
+                          r' +send +(?P<send>\S+)$')
 
         #   VC statistics:
         p14 = re.compile(r'^VC +statistics:$')
 
         #   packet totals: receive 20040, send 28879
         p15 = re.compile(r'^(transit +)?packet +totals: +receive'
-                          ' +(?P<pkts_receive>\d+), +send +(?P<pkts_send>\d+)$')
+                          r' +(?P<pkts_receive>\d+), +send +(?P<pkts_send>\d+)$')
 
         #   byte totals:   receive 25073016, send 25992388
         p16 = re.compile(r'^(transit +)?byte +totals: +receive'
-                          ' +(?P<byte_receive>\d+), +send +(?P<byte_send>\d+)$')
+                          r' +(?P<byte_receive>\d+), +send +(?P<byte_send>\d+)$')
 
         #   transit packet drops:  receive 0, seq error 0, send 0
         p17 = re.compile(r'^(transit +)?packet +drops: +receive'
-                          ' +(?P<pkts_drop_receive>\d+), +send +(?P<pkts_drop_send>\d+)$')
+                          r' +(?P<pkts_drop_receive>\d+), +send +(?P<pkts_drop_send>\d+)$')
 
         #   packet drops:  receive 0, send 0
         p17_1 = re.compile(r'^(transit +)?packet +drops: +receive +(?P<pkts_drop_receive>\d+), +seq +error +(?P<seq_error>\d+), +send +(?P<pkts_drop_send>\d+)')
@@ -2494,8 +2494,8 @@ class ShowMplsL2TransportDetail(ShowMplsL2TransportSchema):
 
         #  Se5/0          FR DLCI 55         10.0.0.1        55         UP
         p18 = re.compile(r'^\s*(?P<local_intf>[\w\W]{0,13}) +(?P<local_circuit>' \
-            '[\w\W]{0,26}) +(?P<dest_address>[\d\.]+) +(?P<vc_id>\d+) +' \
-            '(?P<vc_status>\S+)')
+            r'[\w\W]{0,26}) +(?P<dest_address>[\d\.]+) +(?P<vc_id>\d+) +' \
+            r'(?P<vc_status>\S+)')
 
         # Last label FSM state change time: 00:00:19
         p19 = re.compile(r'^\s*Last +label +FSM +state +change +time: +(?P<last_label_fsm_state_change_time>\d+:\d+:\d+)$')
@@ -2859,15 +2859,15 @@ class ShowMplsL2TransportDetail_VC_Statistics(ShowMplsL2TransportDetail_VC_Stati
 
         #   packet totals: receive 20040, send 28879
         p2 = re.compile(r'^(transit +)?packet +totals: +receive'
-                          ' +(?P<pkts_receive>\d+), +send +(?P<pkts_send>\d+)$')
+                          r' +(?P<pkts_receive>\d+), +send +(?P<pkts_send>\d+)$')
 
         #   byte totals:   receive 25073016, send 25992388
         p3 = re.compile(r'^(transit +)?byte +totals: +receive'
-                          ' +(?P<byte_receive>\d+), +send +(?P<byte_send>\d+)$')
+                          r' +(?P<byte_receive>\d+), +send +(?P<byte_send>\d+)$')
 
         #   transit packet drops:  receive 0, seq error 0, send 0
         p4 = re.compile(r'^(transit +)?packet +drops: +receive'
-                          ' +(?P<pkts_drop_receive>\d+), +send +(?P<pkts_drop_send>\d+)$')
+                          r' +(?P<pkts_drop_receive>\d+), +send +(?P<pkts_drop_send>\d+)$')
 
         #   packet drops:  receive 0, send 0
         p4_1 = re.compile(r'^(transit +)?packet +drops: +receive +(?P<pkts_drop_receive>\d+), +seq +error +(?P<seq_error>\d+), +send +(?P<pkts_drop_send>\d+)')
@@ -2951,7 +2951,7 @@ class ShowMplsL2TransportDetail_Destination_address(ShowMplsL2TransportDetail_De
 
         #   Destination address: 10.2.2.2, VC ID: 1002, VC status: recovering
         p1 = re.compile(r'^Destination +address: +(?P<address>[\d\.]+),'
-                         ' +VC +ID: +(?P<vc_id>\d+), +VC +status: +(?P<vc_status>\w+)$')
+                         r' +VC +ID: +(?P<vc_id>\d+), +VC +status: +(?P<vc_status>\w+)$')
 
         #   Preferred path: not configured
         p2 = re.compile(r'^Preferred +path: +(?P<preferred_path>[a-zA-Z0-9 ]+)(?:\,\s+(?P<state>\S+)$)?$')
@@ -2961,14 +2961,14 @@ class ShowMplsL2TransportDetail_Destination_address(ShowMplsL2TransportDetail_De
 
         #   Tunnel label: imp-null, next hop point2point
         p4 = re.compile(r'^Tunnel +label: +(?P<tunnel_label>\S+),'
-                         ' +next +hop +(?P<next_hop>[\S\s]+)$')
+                         r' +next +hop +(?P<next_hop>[\S\s]+)$')
 
         #   Next hop: point2point
         p4_1 = re.compile(r'^Next +hop: +(?P<next_hop>[\S\s]+)$')
 
         #   Output interface: Se2/0/2, imposed label stack {16}
         p5 = re.compile(r'^Output +interface: +(?P<output_interface>\S+),'
-                         ' +imposed +label +stack +(?P<imposed_label_stack>\{[0-9 ]+\})$')
+                         r' +imposed +label +stack +(?P<imposed_label_stack>\{[0-9 ]+\})$')
 
         final_dict={}
         for line in out.splitlines():
@@ -3016,7 +3016,7 @@ class ShowMplsL2TransportDetail_Destination_address(ShowMplsL2TransportDetail_De
                 group = m.groupdict()
                 new_final_dict['output_interface'] = Common.convert_intf_name(
                     group['output_interface'])
-                new_final_dict['imposed_label_stack'] = re.findall('\d+',group['imposed_label_stack'])
+                new_final_dict['imposed_label_stack'] = re.findall(r'\d+',group['imposed_label_stack'])
                 continue
 
         return final_dict
@@ -3184,7 +3184,7 @@ class ShowMplsTrafficEngTunnelTunnelid(ShowMplsTrafficEngTunnelTunnelidSchema):
         #path option 5, type explicit Path-BA-SM-PE-Pe (Basis for Setup, path weight 21)
         p3 = re.compile(
             r"^[a-zA-Z ]+(?P<path_option>[0-9 ]+)\,\s+(?P<lockdown>\([A-Z]+\))?"
-            "\s*\S+\s(?P<type>[a-zA-Z_0-9 -]+)\s*(?:\(.*\,[a-z ]+(?P<path_weight>\S+)\))?$"
+            r"\s*\S+\s(?P<type>[a-zA-Z_0-9 -]+)\s*(?:\(.*\,[a-z ]+(?P<path_weight>\S+)\))?$"
         )
         p3_1 = re.compile(r"^Path-option attribute:\s(?P<path_attribute>\S+)$")
 
@@ -3200,7 +3200,7 @@ class ShowMplsTrafficEngTunnelTunnelid(ShowMplsTrafficEngTunnelTunnelidSchema):
         ###Bandwidth: 500      kbps (Global)  Priority: 7  7   Affinity: 0x0/0xFFFF
         p7 = re.compile(
             r'^Bandwidth:\s+(?P<bandwidth>.*)\s+[a-zA-Z ]+\:\s+(?P<priority>[0-9 ]+)'
-            '\s+[a-zA-Z ]+\:\s+(?P<affinity>\S+)$')
+            r'\s+[a-zA-Z ]+\:\s+(?P<affinity>\S+)$')
 
         ### InLabel  :  -
         ###OutLabel : Port-channel30, 63
@@ -3210,7 +3210,7 @@ class ShowMplsTrafficEngTunnelTunnelid(ShowMplsTrafficEngTunnelTunnelidSchema):
         ###AutoRoute: enabled  LockDown: disabled Loadshare: 500 [4000000] bw-based
         p9 = re.compile(
             r"^AutoRoute\:\s+(?P<autoroute>\S+)\s+\S+\:\s+(?P<lockdown>\S+)"
-            "\s+\S+\:\s+(?P<loadshare>\d+)\s+\[(?P<max_load_share>\d+)\]\s+(?P<load_share_type>\S+)$"
+            r"\s+\S+\:\s+(?P<loadshare>\d+)\s+\[(?P<max_load_share>\d+)\]\s+(?P<load_share_type>\S+)$"
         )
 
         ###Record   Route:
@@ -3224,7 +3224,7 @@ class ShowMplsTrafficEngTunnelTunnelid(ShowMplsTrafficEngTunnelTunnelidSchema):
         ###auto-bw: disabled
         p11 = re.compile(
             r'Hop|Cost|auto-bw:'
-            '|State:|Path Weight:|BandwidthOverride:|Fault-OAM:|AutoRoute destination:'
+            r'|State:|Path Weight:|BandwidthOverride:|Fault-OAM:|AutoRoute destination:'
         )
 
         ###Explicit Route: 193.1.1.2 196.1.1.2 196.1.1.1 198.1.1.1
@@ -3238,8 +3238,8 @@ class ShowMplsTrafficEngTunnelTunnelid(ShowMplsTrafficEngTunnelTunnelidSchema):
         ##Path-invalidation timeout: 10000 msec (default), Action: Tear
         p14 = re.compile(
             r"^Path-invalidation.+\:\s+(?P<path_invalidation_timeout>\d+)\s+"
-            "(?P<path_invalidation_timeout_unit>\w+)\s+\((?P<path_invalidation_timeout_type>\S+)\)\,"
-            "\s+\S+\s+(?P<action>\w+)$")
+            r"(?P<path_invalidation_timeout_unit>\w+)\s+\((?P<path_invalidation_timeout_type>\S+)\)\,"
+            r"\s+\S+\s+(?P<action>\w+)$")
 
         ###Number of LSP IDs (Tun_Instances) used:
         p15 = re.compile(r"Number of LSP IDs \(Tun_Instances\) used:\s+\d+")
@@ -3474,7 +3474,7 @@ class ShowMplsTrafficEngTunnelTunnelid(ShowMplsTrafficEngTunnelTunnelidSchema):
             ###Make my address as part of rsvp_path_info
             ###My Address: 192.1.1.1
             ###Explicit Route: 192.1.1.2 2.2.2.2
-            if re.match("^Explicit Route:|My", line):
+            if re.match(r"^Explicit Route:|My", line):
                 if "Explicit Route:" in line:
                     explicit_route = []
                     explicit_route.extend(line.split(":")[1].split())
@@ -3505,7 +3505,7 @@ class ShowMplsTrafficEngTunnelTunnelid(ShowMplsTrafficEngTunnelTunnelidSchema):
             m11 = p11.match(line)
             if m11:
                 line = re.sub(r'\:\s{2,}', ": ", line.strip())
-                re9 = re.split("\s{2,}|,", line.strip())
+                re9 = re.split(r"\s{2,}|,", line.strip())
                 for i in re9:
                     ib = i.split(":")[1].strip().replace(
                         "[ignore", "").replace("(te)", "").strip()
@@ -3758,13 +3758,13 @@ class ShowMplsTrafficEngTunnel(ShowMplsTrafficEngTunnelSchema):
         ###Mentions the keys to be considered
         p2_1 = re.compile(
             r'Status:|Config Parameters:|Active Path Option Parameters:'
-            '|RSVP Signalling Info:|History:|Shortest Unconstrained Path Info:'
+            r'|RSVP Signalling Info:|History:|Shortest Unconstrained Path Info:'
         )
 
         ###path option 1, type explicit R3_R4_R5_R2 (Basis for Setup, path weight 3)
         p3 = re.compile(
             r"^[a-zA-Z ]+(?P<path_option>[0-9 ]+)\,\s+(?P<lockdown>\([A-Z]+\))?"
-            "\s*\S+\s(?P<type>[a-zA-Z_0-9 ]+)\s*(?:\(.*\,[a-z ]+(?P<path_weight>\S+)\))?"
+            r"\s*\S+\s(?P<type>[a-zA-Z_0-9 ]+)\s*(?:\(.*\,[a-z ]+(?P<path_weight>\S+)\))?"
         )
         p3_1 = re.compile(r"^Path-option attribute:\s(?P<path_attribute>\S+)$")
 
@@ -3777,7 +3777,7 @@ class ShowMplsTrafficEngTunnel(ShowMplsTrafficEngTunnelSchema):
         ###Bandwidth: 500      kbps (Global)  Priority: 7  7   Affinity: 0x0/0xFFFF
         p6 = re.compile(
             r'^Bandwidth:\s+(?P<bandwidth>.*)\s+[a-zA-Z ]+\:\s+(?P<priority>[0-9 ]+)'
-            '\s+[a-zA-Z ]+\:\s+(?P<affinity>\S+)$')
+            r'\s+[a-zA-Z ]+\:\s+(?P<affinity>\S+)$')
 
         ### InLabel  :  -
         ###OutLabel : Port-channel30, 63
@@ -3787,7 +3787,7 @@ class ShowMplsTrafficEngTunnel(ShowMplsTrafficEngTunnelSchema):
         ###AutoRoute: enabled  LockDown: disabled Loadshare: 500 [4000000] bw-based
         p8 = re.compile(
             r"^AutoRoute\:\s+(?P<autoroute>\S+)\s+\S+\:\s+(?P<lockdown>\S+)"
-            "\s+\S+\:\s+(?P<loadshare>\d+)\s+\[(?P<max_load_share>\d+)\]\s+(?P<load_share_type>\S+)$"
+            r"\s+\S+\:\s+(?P<loadshare>\d+)\s+\[(?P<max_load_share>\d+)\]\s+(?P<load_share_type>\S+)$"
         )
 
         ###Record   Route:
@@ -3801,7 +3801,7 @@ class ShowMplsTrafficEngTunnel(ShowMplsTrafficEngTunnelSchema):
         ###auto-bw: disabled
         p10 = re.compile(
             r'Hop|Cost|'
-            'auto-bw:|State:|Path Weight:|BandwidthOverride:|Fault-OAM:|AutoRoute destination:'
+            r'auto-bw:|State:|Path Weight:|BandwidthOverride:|Fault-OAM:|AutoRoute destination:'
         )
 
         ###Explicit Route: 193.1.1.2 196.1.1.2 196.1.1.1 198.1.1.1
@@ -3818,13 +3818,13 @@ class ShowMplsTrafficEngTunnel(ShowMplsTrafficEngTunnelSchema):
         ##Path-invalidation timeout: 10000 msec (default), Action: Tear
         p14 = re.compile(
             r"^Path-invalidation.+\:\s+(?P<path_invalidation_timeout>\d+)\s+"
-            "(?P<path_invalidation_timeout_unit>\w+)\s+\((?P<path_invalidation_timeout_type>\S+)\)"
-            "\,\s+\S+\s+(?P<action>\w+)$")
+            r"(?P<path_invalidation_timeout_unit>\w+)\s+\((?P<path_invalidation_timeout_type>\S+)\)"
+            r"\,\s+\S+\s+(?P<action>\w+)$")
 
         ####LSP Tunnel PE1_t100 is signalled, connection is up
         p15 = re.compile(
             r"^LSP\sTunnel\s+[a-zA-Z0-9]+\_\w"
-            "(?P<tunnel_id>[0-9]+)\s+is\s+(?P<signalled>\S+)\,\s+connection\s+is\s+(?P<state>\S+)$"
+            r"(?P<tunnel_id>[0-9]+)\s+is\s+(?P<signalled>\S+)\,\s+connection\s+is\s+(?P<state>\S+)$"
         )
 
         ###Number of LSP IDs (Tun_Instances) used:
@@ -4097,7 +4097,7 @@ class ShowMplsTrafficEngTunnel(ShowMplsTrafficEngTunnelSchema):
             ###Make my address as part of rsvp_path_info
             ###My Address: 192.1.1.1
             ###Explicit Route: 192.1.1.2 2.2.2.2
-            if re.match("^Explicit Route:|My", line):
+            if re.match(r"^Explicit Route:|My", line):
                 if "Explicit Route:" in line:
                     explicit_route = []
                     explicit_route.extend(line.split(":")[1].split())
@@ -4129,7 +4129,7 @@ class ShowMplsTrafficEngTunnel(ShowMplsTrafficEngTunnelSchema):
             m10 = p10.match(line)
             if m10:
                 line = re.sub(r'\:\s{2,}', ": ", line.strip())
-                re9 = re.split("\s{2,}|,", line.strip())
+                re9 = re.split(r"\s{2,}|,", line.strip())
                 for i in re9:
                     ib = i.split(":")[1].strip().replace("[ignore", "").strip()
                     res['tunnel_type'][base_key]['tunnel_name'][key][key1][i.split(":")[0].strip()\
@@ -4322,7 +4322,7 @@ class ShowMplsTrafficEngTunnelBrief(ShowMplsTrafficEngTunnelBriefSchema):
                 #Value that have , or ( fetch the first digit from that line else consider the value as it is.
                 #Eg:Periodic reoptimization: every 180 seconds, next in 127 seconds
                 if ("," in r1['value1']) or ("(" in r1['value1']):
-                    res2 = re.findall('(\d+)', r1['value1'])[0]
+                    res2 = re.findall(r'(\d+)', r1['value1'])[0]
                 else:
                     #LSP Tunnels Process:            running
                     res2 = r1['value1']

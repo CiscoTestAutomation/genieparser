@@ -86,8 +86,8 @@ class ShowIpMrouteVrfAll(ShowIpMrouteVrfAllSchema):
 
             # IP Multicast Routing Table for VRF "default" 
             p1 = re.compile(r'^\s*(?P<address_family>[\w\W]+) [mM]ulticast'
-                             ' +[rR]outing +[tT]able +for +VRF '
-                            '+(?P<vrf>\S+)$')
+                             r' +[rR]outing +[tT]able +for +VRF '
+                            r'+(?P<vrf>\S+)$')
             m = p1.match(line)
             if m:
                 vrf = m.groupdict()['vrf']
@@ -149,8 +149,8 @@ class ShowIpMrouteVrfAll(ShowIpMrouteVrfAllSchema):
             # Incoming interface: Null, RPF nbr: 0.0.0.0 
             # Incoming interface: Ethernet1/9, RPF nbr: 10.234.1.2, internal.
             p3 = re.compile(r'^\s*Incoming +interface:'
-                             ' +(?P<incoming_interface>[a-zA-Z0-9\/\-\.]+),'
-                             ' +RPF +nbr: +(?P<rpf_nbr>[0-9\.]+)(, *(?P<internal>internal)\.?)?$')
+                             r' +(?P<incoming_interface>[a-zA-Z0-9\/\-\.]+),'
+                             r' +RPF +nbr: +(?P<rpf_nbr>[0-9\.]+)(, *(?P<internal>internal)\.?)?$')
             m = p3.match(line)
             if m:
                 incoming_interface = m.groupdict()['incoming_interface']
@@ -174,7 +174,7 @@ class ShowIpMrouteVrfAll(ShowIpMrouteVrfAllSchema):
 
             # Outgoing interface list: (count: 0) 
             p4 =  re.compile(r'^\s*Outgoing +interface +list: +\(count:'
-                              ' +(?P<oil_count>[0-9]+)\)$')
+                              r' +(?P<oil_count>[0-9]+)\)$')
             m = p4.match(line)
             if m:
                 oil_count = int(m.groupdict()['oil_count'])
@@ -297,7 +297,7 @@ class ShowIpv6MrouteVrfAll(ShowIpv6MrouteVrfAllSchema):
         # Outgoing interface list: (count: 0)
         # Outgoing interface list: (count: 2) (Fabric OIF)
         p4 =  re.compile(r'^\s*Outgoing +interface +list: +\(count:'
-                             ' +(?P<oil_count>[0-9]+)\) *(?P<fabric_oif>\(Fabric +OIF\))?$')
+                             r' +(?P<oil_count>[0-9]+)\) *(?P<fabric_oif>\(Fabric +OIF\))?$')
         # loopback2, uptime: 3d11h, igmp
         # port-channel80, uptime: 3d23h, pim6
         p5 = re.compile(r'^\s*(?:(?P<outgoing_interface>[a-zA-Z0-9\/\.\-]+),'
@@ -487,7 +487,7 @@ class ShowIpStaticRouteMulticast(ShowIpStaticRouteMulticastSchema):
             line = line.rstrip()
             #Mstatic-route for VRF "default"(1) 
             p1 = re.compile(r'^\s*(Static-route|Mstatic-route) +for +VRF'
-                             ' +(?P<vrf>[a-zA-Z0-9\"]+) *\((?P<vrf_id>[0-9]+)\)$')
+                             r' +(?P<vrf>[a-zA-Z0-9\"]+) *\((?P<vrf_id>[0-9]+)\)$')
                               
             m = p1.match(line)
             if m:
@@ -519,8 +519,8 @@ class ShowIpStaticRouteMulticast(ShowIpStaticRouteMulticastSchema):
 
             #10.49.0.0/8, configured nh: 0.0.0.0/32 Null0 
             p3 =  re.compile(r'^\s*(?P<mroute>[0-9\.\/]+), +configured +nh:'
-                              ' +(?P<neighbor_address>[a-zA-Z0-9\.\/]+)'
-                              ' +(?P<interface_name>[a-zA-Z0-9\.]+)$')
+                              r' +(?P<neighbor_address>[a-zA-Z0-9\.\/]+)'
+                              r' +(?P<interface_name>[a-zA-Z0-9\.]+)$')
             m = p3.match(line)
             if m:
                 mroute = m.groupdict()['mroute']
@@ -559,7 +559,7 @@ class ShowIpStaticRouteMulticast(ShowIpStaticRouteMulticastSchema):
 
             # 10.2.2.2/32, configured nh: 0.0.0.0/32%sanity1 Vlan2
             p3_1 = re.compile(r'^\s*(?P<mroute>[0-9\.\/]+), +configured +nh:'
-                               ' +(?P<neighbor_address>[a-zA-Z0-9\.\/\%\s]+)$')
+                               r' +(?P<neighbor_address>[a-zA-Z0-9\.\/\%\s]+)$')
             m = p3_1.match(line)
             if m:
                 mroute = m.groupdict()['mroute']
@@ -654,7 +654,7 @@ class ShowIpv6StaticRouteMulticast(ShowIpv6StaticRouteMulticastSchema):
 
             # IPv6 Configured Static Routes for VRF "default"(1) 
             p1 = re.compile(r'^\s*(?P<address_family>[\w\W]+) +Configured +Static +Routes +for +VRF'
-                             ' +(?P<vrf>[a-zA-Z0-9\"]+) *\((?P<vrf_id>[0-9]+)\)$')
+                             r' +(?P<vrf>[a-zA-Z0-9\"]+) *\((?P<vrf_id>[0-9]+)\)$')
             m = p1.match(line)
             if m:
                 vrf = m.groupdict()['vrf']
@@ -676,8 +676,8 @@ class ShowIpv6StaticRouteMulticast(ShowIpv6StaticRouteMulticastSchema):
 
             # 2001:db8:51a5::/16 -> Null0, preference: 1
             p2 = re.compile(r'^\s*(?P<mroute>[a-zA-Z0-9\:\/]+) +->'
-                             ' +(?P<mroute_int>[\w\W]+), preference:'
-                             ' +(?P<preference>[0-9]+)$')
+                             r' +(?P<mroute_int>[\w\W]+), preference:'
+                             r' +(?P<preference>[0-9]+)$')
             m = p2.match(line)
             if m:
                 mroute = m.groupdict()['mroute']
@@ -703,7 +703,7 @@ class ShowIpv6StaticRouteMulticast(ShowIpv6StaticRouteMulticastSchema):
 
             # real-next-hop: 0::, interface: Null0 
             p4 =  re.compile(r'^\s*real-next-hop: +(?P<neighbor_address>[a-zA-Z0-9\:]+),'
-                              ' +interface: +(?P<interface_name>[\w\W]+)$')
+                              r' +interface: +(?P<interface_name>[\w\W]+)$')
             m = p4.match(line)
             if m:
                 neighbor_address = m.groupdict()['neighbor_address']
@@ -793,7 +793,7 @@ class ShowForwardingDistributionMulticastRouteSchema(MetaParser):
                             "address_family": {
                                 Any(): {
                                     "num_groups": int,
-                                    "gaddr": {
+                                    Optional("gaddr"): {
                                         Any(): {
                                             "grp_len": int,
                                             "saddr": {
@@ -877,7 +877,7 @@ class ShowForwardingDistributionMulticastRoute(ShowForwardingDistributionMultica
         #  (*, 224.0.0.0/4), RPF Interface: NULL, flags: D
         #  (*, 231.100.1.1/32), RPF Interface: Ethernet1/2, flags: GLd
         p3 = re.compile(r'^\s*\((?P<saddr>[\w\/\.\*]+), +(?P<gaddr>[\w\/\.]+)\), +RPF +Interface:'
-               ' +(?P<rpf_ifname>[\w\/\-]+), flags:( +(?P<flags>[\w]+))?$')
+               r' +(?P<rpf_ifname>[\w\/\-]+), flags:( +(?P<flags>[\w]+))?$')
 
         #   Received Packets: 0 Bytes: 0
         p4 = re.compile(r'^\s*Received +Packets: +(?P<rcv_packets>[\d]+) +Bytes: +(?P<rcv_bytes>[\d]+)$')
@@ -893,7 +893,7 @@ class ShowForwardingDistributionMulticastRoute(ShowForwardingDistributionMultica
 
         #    nve1
         #    Vlan100 (Vxlan Encap)
-        p8 = re.compile(r'^(?P<space>\s{6})(?P<oif>[\w\-\/]+)( +\((?P<encap>[\w]+) +Encap\))?$')
+        p8 = re.compile(r'^(?P<space>\s{6})(?P<oif>[\w\-\/]+)( +\((?P<encap>[\w]+)( +Encap)?\))?$')
 
         #     ( Mem L2 Ports: nve1 )
         #     ( Mem L2 Ports: port-channel1 nve1 )
@@ -1059,8 +1059,8 @@ class ShowIpMrouteSummary(ShowIpMrouteSummarySchema):
         mroute_dict = {}
         #IP Multicast Routing Table for VRF "vxlan-1001" 
         p1 = re.compile(r'^\s*(?P<address_family>[\w\W]+) [mM]ulticast'
-                         ' +[rR]outing +[tT]able +for +VRF '
-                         '+(?P<vrf>\S+)$')
+                         r' +[rR]outing +[tT]able +for +VRF '
+                         r'+(?P<vrf>\S+)$')
         # Total number of (*,G) routes: 34
         p2 = re.compile(r'^\s*Total +number +of +\(\*,G\) +routes:'
                          r' +(?P<count>[0-9]+)$')
@@ -1196,8 +1196,8 @@ class ShowIpv6MrouteSummary(ShowIpv6MrouteSummarySchema):
         mroute_dict = {}
         #IP Multicast Routing Table for VRF "vxlan-1001" 
         p1 = re.compile(r'^\s*(?P<address_family>[\w\W]+) [mM]ulticast'
-                         ' +[rR]outing +[tT]able +for +VRF '
-                         '+(?P<vrf>\S+)$')
+                         r' +[rR]outing +[tT]able +for +VRF '
+                         r'+(?P<vrf>\S+)$')
         # Total number of (*,G) routes: 34
         p2 = re.compile(r'^\s*Total +number +of +\(\*,G\) +routes:'
                          r' +(?P<count>[0-9]+)$')

@@ -1,3 +1,13 @@
+ Port-channel10.2001
+
+  Service-policy input: p1
+
+    Class-map: class-default (match-any)
+      4800000 packets
+      Match: any
+      QoS Set
+         traffic-class dscp table dscp2tc
+         discard-class dscp table dscp2discard
  TwentyFiveGigE1/1/2
 
   Service-policy input: map1

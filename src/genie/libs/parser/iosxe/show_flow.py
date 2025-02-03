@@ -7,6 +7,7 @@ IOSXE parsers for the following show commands:
     * show flow monitor {flow_monitor_name} statistics
     * show flow monitor
     * show flow monitor sdwan_flow_monitor cache filter interface input <> ipv4 source address <>
+    * 'show flow monitor {name} cache filter {ip_version} source address {src_addr} {ip_version} destination address {dst_addr} format table'
 '''
 
 # Python
@@ -93,9 +94,9 @@ class ShowFlowMonitor(ShowFlowMonitorSchema):
 
         # 10.4.1.10         10.4.10.1                    0              0  0xC0         89                   100                     1
         p7 = re.compile(r'^(?P<ipv4_src_addr>\S+) +(?P<ipv4_dst_addr>\S+) +'
-                        '(?P<trns_src_port>\d+) +(?P<trns_dst_port>\d+) +'
-                        '(?P<ip_tos>\S+) +(?P<ip_port>\d+) +(?P<bytes_long>\d+) +'
-                        '(?P<pkts_long>\d+)$')
+                        r'(?P<trns_src_port>\d+) +(?P<trns_dst_port>\d+) +'
+                        r'(?P<ip_tos>\S+) +(?P<ip_port>\d+) +(?P<bytes_long>\d+) +'
+                        r'(?P<pkts_long>\d+)$')
         for line in out.splitlines():
 
             line = line.strip()
@@ -2519,4 +2520,203 @@ class ShowFlowMonitorCacheFilterInterfaceIPv4(ShowFlowMonitorCacheFilterInterfac
                 group = m.groupdict()
                 flow_dict['application_name'] = group['application_name']
 
+        return ret_dict
+
+
+class ShowSamplerSchema(MetaParser):
+    """schema for 'show sampler {sampler name }'"""
+    schema = {
+        "export_id":{
+            Any():{
+                "description": str,
+                "type": str,
+                "rate":str,
+                "samples": int,
+                "requests": int,
+                "users": str,
+            }
+        }
+    }
+
+class ShowSampler(ShowSamplerSchema):
+    """parser for the command ' show sampler {sampler name}'"""
+
+    cli_command = 'show sampler {name}'
+
+    def cli(self, name='', output=None):
+        if output is None:
+            cmd = self.cli_command.format(name=name)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+
+        # Export_ID     Description	Type		rate		samples		requests   users
+        # 2	         Userdefined	Random		1outof1000	0		0	flowmonitorm4(ip,Vl100,Input)0outof0
+        p1 = re.compile(r"^(?P<export_id>\d+)\s+(?P<description>.+?)\s+(?P<type>\S+)\s+(?P<rate>.+?)\s+(?P<samples>\d+)\s+(?P<requests>\d+)\s+(?P<users>.+?)$")
+
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # Export_ID     Description	Type		rate		samples		requests   users
+            # 2	        Userdefined	    Random		1outof1000	0		0	flowmonitorm4(ip,Vl100,Input)0outof0
+            
+            m = p1.match(line)
+
+            if m:
+                group = m.groupdict()
+                export_id_dict = (
+                    ret_dict.setdefault("export_id",{}).setdefault(group["export_id"], {})
+                )
+                export_id_dict.update(
+                    {
+                        "description": group["description"],
+                        "type": group["type"],
+                        "rate":group["rate"],
+                        "samples": int(group["samples"]),
+                        "requests": int(group["requests"]),
+                        "users": group["users"],
+                    }
+                )
+            continue
+            
+        return ret_dict
+
+
+class ShowFlowMonitorS1InputCacheFilterSchema(MetaParser):
+    ''' Schema for 
+        * show flow monitor {name} cache filter {ip_version} source address {src_addr} {ip_version} destination address {dst_addr} format table
+    '''
+    schema = {
+        'cache_type': str,
+        'cache_size': int,
+        'current_entries': int,
+        'flows_added': int,
+        'flows_aged': {
+            'total': int,
+            Optional('active_timeout_secs'): int,
+            Optional('active_timeout'): int,
+            Optional('inactive_timeout_secs'): int,
+            Optional('inactive_timeout'): int,
+
+        },
+        'entries':{
+            Any(): {
+                'src_addr': str,
+                'dst_addr': str,
+                'interface': str,
+                'flow_cts_src_group_tag': int,
+                'flow_cts_dst_group_tag': int,
+                'ip_version': int,
+                'ip_prot': int,
+                'ip_ttl': int,
+                'pkts_long': int,
+            }
+        }
+    }
+
+class ShowFlowMonitorS1InputCacheFilter(ShowFlowMonitorS1InputCacheFilterSchema):
+    ''' Parser for 
+        * show flow monitor {name} cache filter {ip_version} source address {src_addr} {ip_version} destination address {dst_addr} format table
+    '''
+    
+    cli_command = 'show flow monitor {name} cache filter {ip_version} source address {src_addr} {ip_version_2} destination address {dst_addr} format table'
+
+    def cli(self, name, ip_version, src_addr, dst_addr, ip_version_2=None, output=None):
+        if output is None:
+            cmd = self.cli_command.format(name=name, ip_version=ip_version, src_addr=src_addr, dst_addr=dst_addr, ip_version_2=ip_version_2)
+            output = self.device.execute(cmd)
+
+        # Cache type: Normal (Platform cache)
+        p1 = re.compile(r'^Cache +type:\s+(?P<cache_type>[\S\s]+)$')
+
+        # Cache size: 10000
+        p2 = re.compile(r'^Cache +size:\s+(?P<cache_size>\d+)$')
+
+        # Current entries: 6
+        p3 = re.compile(r'^Current +entries:\s+(?P<current_entries>\d+)$')
+
+        # Flows added: 78
+        p4 = re.compile(r'^Flows +added:\s+(?P<flows_added>\d+)$')
+
+        # Flows aged: 72
+        p5 = re.compile(r'^Flows +aged:\s+(?P<flows_aged>\d+)$')
+
+        # Active timeout (60 secs) 36
+        p6 = re.compile(r"^Active timeout +\((?P<active_timeout_secs>\d+) secs\) +(?P<active_timeout>\d+)$")
+
+        # Inactive timeout (60 secs) 36
+        p7 = re.compile(r"^Inactive timeout +\((?P<inactive_timeout_secs>\d+) secs\) +(?P<inactive_timeout>\d+)$")
+
+        # 100:1::123	   200:1::123	  Tw1/0/25	          100	                      0	              6	          59	   63	    13746
+        # 100.1.1.123      200.1.1.123     Tw1/0/25           100                         0               4           61       64       13978
+        p8 = re.compile(r'^(?P<src_addr>(\d+\.\d+\.\d+\.\d+|[a-fA-F0-9:]+))\s+(?P<dst_addr>(\d+\.\d+\.\d+\.\d+|[a-fA-F0-9:]+))\s+(?P<interface>\S+)\s+(?P<flow_cts_src_group_tag>\d+)\s+(?P<flow_cts_dst_group_tag>\d+)\s+(?P<ip_version>\d+)\s+(?P<ip_prot>\d+)\s+(?P<ip_ttl>\d+)\s+(?P<pkts_long>\d+)$')
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Cache type: Normal (Platform cache)
+            m = p1.match(line)
+            if m:
+                ret_dict['cache_type'] = m.groupdict()['cache_type']
+                continue
+
+            # Cache size
+            m = p2.match(line)
+            if m:
+                ret_dict['cache_size'] = int(m.groupdict()['cache_size'])
+                continue
+
+            # Current entries
+            m = p3.match(line)
+            if m:
+                ret_dict['current_entries'] = int(m.groupdict()['current_entries'])
+                continue
+
+            # Flows added
+            m = p4.match(line)
+            if m:
+                ret_dict['flows_added'] = int(m.groupdict()['flows_added'])
+                continue
+
+            # Flows aged
+            m = p5.match(line)
+            if m:
+                ret_dict.setdefault('flows_aged', {})['total'] = int(m.groupdict()['flows_aged'])
+                continue
+
+            # Active timeout 
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['flows_aged'].update({k: int(v) for k, v in group.items()})
+                continue
+
+            # Inactive timeout
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['flows_aged'].update({k: int(v) for k, v in group.items()})
+                continue
+            
+            # 100:1::123	   200:1::123	  Tw1/0/25	          100	                      0	              6	          59	   63	    13746
+            # 100.1.1.123      200.1.1.123      Tw1/0/25           100                       0                4           61       64       13978
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                index = len(ret_dict.get('entries', {})) + 1
+                entry_dict = ret_dict.setdefault('entries', {}).setdefault(index, {})
+                entry_dict.update({
+                    'src_addr': group['src_addr'],
+                    'dst_addr': group['dst_addr'],
+                    'interface':  (group['interface']),
+                    'flow_cts_src_group_tag': int(group['flow_cts_src_group_tag']),
+                    'flow_cts_dst_group_tag': int(group['flow_cts_dst_group_tag']),
+                    'ip_version': int(group['ip_version']),
+                    'ip_prot': int(group['ip_prot']),
+                    'ip_ttl': int(group['ip_ttl']),
+                    'pkts_long': int(group['pkts_long']),
+                })
+        
         return ret_dict
