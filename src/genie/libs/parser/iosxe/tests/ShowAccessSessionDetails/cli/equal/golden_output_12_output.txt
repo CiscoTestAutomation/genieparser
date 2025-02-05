@@ -1,0 +1,12 @@
+Interface                MAC Address    Method  Domain  Status Fg  Session ID
+--------------------------------------------------------------------------------------------
+Gi2/0/3                  001a.a136.c68a dot1x   VOICE   N/A         2300130B0000002ABD0A2AF1
+Gi2/0/3                  0055.6677.8855 dot1x   DATA    N/A         2300130B0000002CBD0A520E
+
+
+Runnable methods list:
+  Handle  Priority  Name
+      13         5  dot1xSup
+       1         5  dot1x
+       2        10  webauth
+      14        15  mab

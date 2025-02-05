@@ -189,4 +189,62 @@ class ShowPlatformSoftwareFedSwitchNumberIfmMappingsPortLE(ShowPlatformSoftwareF
                 sub_dict["type"] = group["type"]
                 continue
         return ret_dict
+    
+class ShowPlatformSoftwareFedSwitchActiveIfmInterfacesDetailSchema(MetaParser):
+    """Schema for 'show platform software fed switch active ifm interfaces detail'"""
+    
+    schema = {
+        "type_n_state": {
+            Any(): {  
+                "intializing": int, 
+                "init_failed": int, 
+                "init_done": int, 
+                "ready": int,
+                "pending_delete": int, 
+                "delete": int
+            }
+        }
+    }
 
+class ShowPlatformSoftwareFedSwitchActiveIfmInterfacesDetail(ShowPlatformSoftwareFedSwitchActiveIfmInterfacesDetailSchema):
+    """Parser for cli 'show platform software fed switch active ifm interfaces detail'"""
+    
+    cli_command =  "show platform software fed switch active ifm interfaces detail"
+    
+    def cli(self, output=None):
+        if output is None:
+           output = self.device.execute(self.cli_command)
+
+        # Matching patterns
+        # Type_n_State      Intializing  Init_Failed  Init_Done    Ready    Pending_Delete  Delete
+        # -----------------------------------------------------------------------------------------
+        # ETHER                0            0            0          258         0             0
+        p1 = re.compile(
+            r"^(?P<type_n_state>[A-Za-z0-9 \-]+)\s+(?P<intializing>\d+)\s+(?P<init_failed>\d+)\s+(?P<init_done>\d+)\s+(?P<ready>\d+)\s+(?P<pending_delete>\d+)\s+(?P<delete>\d+)$"
+        )
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # ETHER             0            0            0            258      0               0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                type_n_state_dict =(
+                       ret_dict.setdefault("type_n_state",{})
+                       .setdefault(group['type_n_state'].strip(),{})
+                )
+                type_n_state_dict.update(
+                    {
+                        "intializing": int(group["intializing"]),
+                        "init_failed": int(group["init_failed"]),
+                        "init_done": int(group["init_done"]),
+                        "ready": int(group["ready"]),
+                        "pending_delete": int(group["pending_delete"]),
+                        "delete": int(group["delete"]),
+                    }
+                )
+                continue
+        return ret_dict

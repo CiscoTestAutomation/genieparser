@@ -443,10 +443,10 @@ class ShowPlatformSoftwareFedPuntEntries(ShowPlatformSoftwareFedPuntEntriesSchem
                 "Policy",
                 "CIR-SW",
                 "CIR-HW",
-                "Pkts\(A\)",
-                "Bytes\(A\)",
-                "Pkts\(D\)",
-                "Bytes\(D\)",
+                r"Pkts\(A\)",
+                r"Bytes\(A\)",
+                r"Pkts\(D\)",
+                r"Bytes\(D\)",
             ],
             label_fields=[
                 "source",
@@ -617,6 +617,48 @@ class ShowPlatformSoftwareFedSwitchActivePuntBrief(
                 continue
 
         return ret_dict
+
+# ======================================================================================================#
+#  Schema for 'show platform software fed switch active punt packet-capture brief | count {key}'        #
+# ======================================================================================================#
+class ShowPlatformSoftwareFedSwitchActivePuntPacketCaptureBriefCountSchema(MetaParser):
+
+    schema = {
+        'total_captured': int
+    }
+
+# =====================================================================================================#
+#  Parser for 'show platform software fed switch active punt packet-capture brief | count {key}        #
+# =====================================================================================================#
+class ShowPlatformSoftwareFedSwitchActivePuntPacketCaptureBriefCount(ShowPlatformSoftwareFedSwitchActivePuntPacketCaptureBriefCountSchema):
+
+    cli_command = [
+        "show platform software fed {switch} {switch_num} punt packet-capture brief | count {key}",
+        "show platform software fed {switch_num} punt packet-capture brief | count {key}"
+        ]
+
+    def cli(self, switch_num, key, output=None ,switch=""):
+        if output is None:
+            if switch:
+                output = self.device.execute(self.cli_command[0].format(switch=switch, switch_num=switch_num, key=key))
+            else:
+                output = self.device.execute(self.cli_command[1].format(key=key, switch_num=switch_num))
+        res_dict = {}
+
+        # Number of lines which match regexp = 778
+        p0 = re.compile(r"Number of lines which match regexp\s+=\s+(?P<total_captured>\d+)")
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Number of lines which match regexp = 778
+            m = p0.match(line)
+            if m:
+                group = m.groupdict()
+                res_dict.setdefault('total_captured' , int(group['total_captured']))
+                continue
+        
+        return res_dict
         
 
 # ==========================================================================

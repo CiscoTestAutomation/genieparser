@@ -117,10 +117,10 @@ class ShowHardwareLed(ShowHardwareLedSchema):
         p9 = re.compile(r'^ACTIVE:\s+(?P<active>\w+)$')
 
         # FANTRAY STATUS: GREEN
-        p10 = re.compile('^FANTRAY STATUS:\s+(?P<fantray_status>\w+)$')
+        p10 = re.compile(r'^FANTRAY STATUS:\s+(?P<fantray_status>\w+)$')
 
         # FANTRAY BEACON: OFF
-        p11 = re.compile('^FANTRAY BEACON:\s+(?P<fantray_beacon>\w+)$')
+        p11 = re.compile(r'^FANTRAY BEACON:\s+(?P<fantray_beacon>\w+)$')
 
         ret_dict = {}
         root_dict = {}

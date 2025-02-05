@@ -192,18 +192,18 @@ class ShowIpMroute(ShowIpMrouteSchema):
         # IP Multicast Routing Table
         # Multicast Routing Table
         p1 = re.compile(r'^(?P<address_family>[\w\W]+)? *[mM]ulticast'
-                        ' +[rR]outing +[tT]able$')
+                        r' +[rR]outing +[tT]able$')
         # (*, 239.1.1.1), 00:00:03/stopped, RP 10.4.1.1, flags: SPF
         # (10.4.1.1, 239.1.1.1), 00:00:03/00:02:57, flags: PFT
         # (*, FF07::1), 00:04:45/00:02:47, RP 2001:DB8:6::6, flags:S
         # (2001:DB8:999::99, FF07::1), 00:02:06/00:01:23, flags:SFT
         # (50.50.50.2, 239.0.0.13), 00:00:39/00:02:20, flags:
         p2 = re.compile(r'^\((?P<source_address>[\w\:\.\*\/]+),'
-                            '(\s+)?(?P<multicast_group>[\w\:\.\/]+)\),'
-                            ' +(?P<uptime>[\w\:\.]+)\/'
-                            '(?P<expires>[\w\:\.\-]+),'
-                            '( +RP +(?P<rendezvous_point>[\w\:\.]+),)?'
-                            ' +flags: *(?P<flags>[a-zA-Z]*)$')  
+                            r'(\s+)?(?P<multicast_group>[\w\:\.\/]+)\),'
+                            r' +(?P<uptime>[\w\:\.]+)\/'
+                            r'(?P<expires>[\w\:\.\-]+),'
+                            r'( +RP +(?P<rendezvous_point>[\w\:\.]+),)?'
+                            r' +flags: *(?P<flags>[a-zA-Z]*)$')  
                             
         # Incoming interface: Null, RPF nbr 224.0.0.0224.0.0.0
         # Incoming interface: Loopback0, RPF nbr 0.0.0.0, Registering
@@ -211,22 +211,22 @@ class ShowIpMroute(ShowIpMrouteSchema):
         # Incoming interface: LISP0.4100, RPF nbr 100.22.22.22, LISP: [100.22.22.22, 232.100.100.234]
         # Incoming interface: LISP0.4100, RPF nbr 100.88.88.88, using vrf VRF1
         p3 = re.compile(r'^Incoming +interface:'
-                       ' +(?P<incoming_interface>[a-zA-Z0-9\/\-\.]+),'
-                       ' +RPF +nbr +(?P<rpf_nbr>[\w\:\.]+)'
-                       '(\s*,\s+LISP:\s\[(?P<iif_lisp_rloc>[\d\.]+)\,\s(?P<iif_lisp_group>[\d\.]+)\])?'
-                       '(\s*,\s+using\s+vrf\s+(?P<lisp_vrf>[a-zA-Z0-9]+)\s*)?'
-                       '(, *(?P<status>.*))?$') 
+                       r' +(?P<incoming_interface>[a-zA-Z0-9\/\-\.]+),'
+                       r' +RPF +nbr +(?P<rpf_nbr>[\w\:\.]+)'
+                       r'(\s*,\s+LISP:\s\[(?P<iif_lisp_rloc>[\d\.]+)\,\s(?P<iif_lisp_group>[\d\.]+)\])?'
+                       r'(\s*,\s+using\s+vrf\s+(?P<lisp_vrf>[a-zA-Z0-9]+)\s*)?'
+                       r'(, *(?P<status>.*))?$') 
                        
         # Incoming interface:Tunnel5
         p3_1 = re.compile(r'^Incoming +interface:'
-                         ' *(?P<incoming_interface>[a-zA-Z0-9\/\-\.]+)$')  
+                         r' *(?P<incoming_interface>[a-zA-Z0-9\/\-\.]+)$')  
         # RPF nbr:2001:db8:90:24::6
         p3_2 = re.compile(r'^RPF +nbr: *(?P<rpf_nbr>[\w\:\.]+)$')
         # Outgoing interface list: Null
         # Outgoing interface list:
         p4 =  re.compile(r'^Outgoing +interface +list:|^Immediate +Outgoing +interface +list:'
-                         '|^Inherited +Outgoing +interface +list:'
-                         '( *(?P<intf>\w+))?$')       
+                         r'|^Inherited +Outgoing +interface +list:'
+                         r'( *(?P<intf>\w+))?$')       
         # Vlan5, Forward/Dense, 00:03:25/00:00:00, H
         # Vlan5, Forward/Dense, 00:04:35/00:02:30
         # ATM0/0, VCD 14, Forward/Sparse, 00:03:57/00:02:53
@@ -236,28 +236,28 @@ class ShowIpMroute(ShowIpMrouteSchema):
         # Vlan500, VXLAN v4 Encap: (50000, 225.2.2.2), Forward/Sparse, 00:00:54/00:02:05
         # Vlan500, VXLAN v6 Encap: (50000, FF13::1), Forward/Sparse, 00:17:31/stopped, flags:
         p5 = re.compile(r'^(?P<outgoing_interface>[a-zA-Z0-9\/\.\-]+)(\,\s+)?'
-                            '(VCD +(?P<vcd>\d+))?(\,\s+)?'
-                            '(NH)?(\s+)?(\(?(?P<lisp_mcast_source>[0-9\.:]+)(\,\s+)?(?P<lisp_mcast_group>[0-9\.]+)?\)?)?(\,\s+)?'
-                            '(VXLAN +(?P<vxlan_version>[a-z0-9]+)(\s+)?(Encap:)?(\s+)?(\(?(?P<vxlan_vni>[0-9]+)(\,\s+)?(?P<vxlan_nxthop>[\w\:\.]+)?\)?)?)?(\,\s+)?'
-                            '(?P<state_mode>[\w\-\/-]+)(\,\s+)?'
-                            '(?P<uptime>[a-zA-Z0-9\:]+)\/'
-                            '(?P<expire>[\w\:]+)(\,\s+)?'
-                            '(Pkts\:(?P<pkts>\w+))?(\,\s+)?'
-                            '(flags\:\s+(?P<flags>\w+)?$|(,\s+flags\:)?$)')
+                            r'(VCD +(?P<vcd>\d+))?(\,\s+)?'
+                            r'(NH)?(\s+)?(\(?(?P<lisp_mcast_source>[0-9\.:]+)(\,\s+)?(?P<lisp_mcast_group>[0-9\.]+)?\)?)?(\,\s+)?'
+                            r'(VXLAN +(?P<vxlan_version>[a-z0-9]+)(\s+)?(Encap:)?(\s+)?(\(?(?P<vxlan_vni>[0-9]+)(\,\s+)?(?P<vxlan_nxthop>[\w\:\.]+)?\)?)?)?(\,\s+)?'
+                            r'(?P<state_mode>[\w\-\/-]+)(\,\s+)?'
+                            r'(?P<uptime>[a-zA-Z0-9\:]+)\/'
+                            r'(?P<expire>[\w\:]+)(\,\s+)?'
+                            r'(Pkts\:(?P<pkts>\w+))?(\,\s+)?'
+                            r'(flags\:\s+(?P<flags>\w+)?$|(,\s+flags\:)?$)')
         # 100.11.11.11, 2d22h/00:02:36
         p5_1 = re.compile(r'^\s*(?P<lisp_js_addr>[0-9\.]+)\,\s*'
-                            '(?P<lisp_js_uptime>[\w\:]+)\/(?P<lisp_js_expire>[\w\:]+)$')
+                            r'(?P<lisp_js_uptime>[\w\:]+)\/(?P<lisp_js_expire>[\w\:]+)$')
         # Extranet receivers in vrf internet:
         p7 = re.compile(r'^Extranet receivers in vrf (?P<extranet_vrf>[a-zA-Z0-9]+)\:\s*$')
         # (192.168.1.3, 232.64.64.1), 21:38:05/00:03:25, OIF count: 1, flags: sTpl
         # (*, 239.5.1.100), 12:54:25/stopped, RP 152.1.1.1, OIF count: 0, flags: SP
         p8 = re.compile(r'^\((?P<e_src>[\d\.\*]+)\,(\s+)?'
-                              '(?P<e_grp>[\d\.]+)\)\,(\s+)?'
-                              '(?P<e_uptime>[\w\:]+)\/'
-                              '(?P<e_expire>[\w\:]+)\,(\s+)?'
-                              '(RP\s+(?P<e_rp>[\d\.]+)\,(\s+)?)?'
-                              '(OIF count:\s(?P<e_oif_count>\d+))\,(\s+)?'
-                              '(flags: (?P<e_flags>[\w]+))(\s+)?$')
+                              r'(?P<e_grp>[\d\.]+)\)\,(\s+)?'
+                              r'(?P<e_uptime>[\w\:]+)\/'
+                              r'(?P<e_expire>[\w\:]+)\,(\s+)?'
+                              r'(RP\s+(?P<e_rp>[\d\.]+)\,(\s+)?)?'
+                              r'(OIF count:\s(?P<e_oif_count>\d+))\,(\s+)?'
+                              r'(flags: (?P<e_flags>[\w]+))(\s+)?$')
         for line in out.splitlines():
             line = line.strip()
 
@@ -462,7 +462,7 @@ class ShowIpMroute(ShowIpMrouteSchema):
                 
             # Bidir-Upstream: Lspvif52, RPF nbr: 1.1.1.1
             p6 = re.compile(r'^Bidir-Upstream: +(?P<upstream_interface>[a-zA-Z0-9\/\-\.]+), '
-                            '+RPF +nbr\:? +(?P<rpf_nbr>[\w\:\.]+)(, *(?P<status>\w+))?$')
+                            r'+RPF +nbr\:? +(?P<rpf_nbr>[\w\:\.]+)(, *(?P<status>\w+))?$')
             m = p6.match(line)
             if m:
                 r=m.groupdict()
@@ -602,8 +602,8 @@ class ShowIpMrouteStatic(ShowIpMrouteStaticSchema):
             line = line.strip()
             # Mroute: 172.16.0.0/16, RPF neighbor: 172.30.10.13, distance: 1
             p1 = re.compile(r'^Mroute: +(?P<mroute>[\w\:\.\/]+),'
-                             ' RPF +neighbor: +(?P<rpf_nbr>[\w\.\:]+),'
-                             ' distance: +(?P<distance>\d+)$')
+                             r' RPF +neighbor: +(?P<rpf_nbr>[\w\.\:]+),'
+                             r' distance: +(?P<distance>\d+)$')
                               
             m = p1.match(line)
             if m:
@@ -802,8 +802,8 @@ class ShowIpMulticastMplsvif(ShowIpMulticastMplsvifSchema):
 
         ## Lspvif9     0.0.0.0              MDT               N/A       11   (vrf vrf3001) 0x1
         p1=re.compile(r"(?P<interface>[a-zA-Z0-9]+)\s+(?P<next_hop>\d+\.\d+\.\d+\.\d+)\s+"
-                    "(?P<application>\S+)\s+(?P<ref_count>\S+)\s+(?P<table>\S+)\s+[a-zA-Z\(]*\s*"
-                    "(?P<vrf>[a-z0-9]+)\)*\s+(?P<flags>\S+)")
+                    r"(?P<application>\S+)\s+(?P<ref_count>\S+)\s+(?P<table>\S+)\s+[a-zA-Z\(]*\s*"
+                    r"(?P<vrf>[a-z0-9]+)\)*\s+(?P<flags>\S+)")
 
         for line in out.splitlines():
             line=line.strip()

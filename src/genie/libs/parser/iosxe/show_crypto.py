@@ -126,8 +126,8 @@ class ShowCryptoPkiCertificates(ShowCryptoPkiCertificatesSchema):
 
         # Serial Number: PID:WS-C3850-24P SN:FCW1947C0GF
         p9 = re.compile(r'^Serial +Number: *'
-                          'PID: *(?P<pid>[\w\-]+) +'
-                          'SN: *(?P<serial_number>[\w\-]+)$')
+                          r'PID: *(?P<pid>[\w\-]+) +'
+                          r'SN: *(?P<serial_number>[\w\-]+)$')
 
         # CRL Distribution Points: 
         #     http://www.cisco.com/security/pki/crl/cmca2.crl
@@ -1362,7 +1362,7 @@ class ShowCryptoIpsecSaCount(ShowCryptoIpsecSaCountSchema):
             output = self.device.execute(self.cli_command)
         return_dict = {}
         # IPsec SA total: 8, active: 8, rekeying: 0, unused: 0, invalid: 0
-        r1 = "^IPsec SA total: +(?P<ipsec_sa_total>[\d]+), +active: +(?P<active>[\d]+), +rekeying: +(?P<rekeying>[\d]+), +unused: +(?P<unused>[\d]+), +invalid: +(?P<invalid>[\d]+)$"
+        r1 = r"^IPsec SA total: +(?P<ipsec_sa_total>[\d]+), +active: +(?P<active>[\d]+), +rekeying: +(?P<rekeying>[\d]+), +unused: +(?P<unused>[\d]+), +invalid: +(?P<invalid>[\d]+)$"
         p1 = re.compile(r1)
         for line in output.splitlines():
             # IPsec SA total: 8, active: 8, rekeying: 0, unused: 0, invalid: 0
@@ -1440,99 +1440,99 @@ class ShowCryptoIkev2SaDetail(ShowCryptoIkev2SaDetailSchema):
         if output is None:
             output = self.device.execute(self.cli_command)
         # 973       92.1.121.1/500        22.1.1.2/500          none/121             READY
-        r1 = "^(?P<tunnel_id>[\d]+) +(?P<local>[0-9\.\S]+) +(?P<remote>[0-9\.\S]+) +(?P<fvrf>[\w]+)\/(?P<ivrf>[\d\w]+) +(?P<status>[\w]+)$"
+        r1 = r"^(?P<tunnel_id>[\d]+) +(?P<local>[0-9\.\S]+) +(?P<remote>[0-9\.\S]+) +(?P<fvrf>[\w]+)\/(?P<ivrf>[\d\w]+) +(?P<status>[\w]+)$"
         p1 = re.compile(r1)
 
         # Encr: AES-CBC, keysize: 256, PRF: SHA256, Hash: SHA256, DH Grp:19, Auth sign: PSK, Auth verify: PSK, QR
-        r2 = "^Encr: +(?P<encryption>[\d\w\-]+), keysize: +(?P<keysize>[\d]+), PRF: +(?P<prf>[\w]+), +Hash: +(?P<hash>[\w]+), +DH Grp:+(?P<dh_grp>[\w\d]+), +Auth sign: +(?P<auth_sign>[\w]+), +Auth verify: +(?P<auth_verify>[\w]+)(,\s+(?P<qr>[\w]+))?$"
+        r2 = r"^Encr: +(?P<encryption>[\d\w\-]+), keysize: +(?P<keysize>[\d]+), PRF: +(?P<prf>[\w]+), +Hash: +(?P<hash>[\w]+), +DH Grp:+(?P<dh_grp>[\w\d]+), +Auth sign: +(?P<auth_sign>[\w]+), +Auth verify: +(?P<auth_verify>[\w]+)(,\s+(?P<qr>[\w]+))?$"
         p2 = re.compile(r2)
 
         # Life/Active Time: 86400/12689 sec
-        r3 = "^Life+\S+Active Time: +(?P<life_time>[\d]+)\/(?P<active_time>[\d]+) +sec$"
+        r3 = r"^Life+\S+Active Time: +(?P<life_time>[\d]+)\/(?P<active_time>[\d]+) +sec$"
         p3 = re.compile(r3)
 
         # CE id: 76468, Session-id: 17155
-        r4 = "^CE id:+ (?P<ce_id>[\d]+), +Session-id: +(?P<session_id>[\d]+)$"
+        r4 = r"^CE id:+ (?P<ce_id>[\d]+), +Session-id: +(?P<session_id>[\d]+)$"
         p4 = re.compile(r4)
 
         # Status Description: Negotiation done
-        r5 = "^Status Description:+ (?P<status_description>[\w\d\s]+)$"
+        r5 = r"^Status Description:+ (?P<status_description>[\w\d\s]+)$"
         p5 = re.compile(r5)
 
         # Local spi: 000D3669857A0F82       Remote spi: E0419B1DB02DE6AE
-        r6 = "^Local spi: +(?P<local_spi>[\w\d]+) +Remote spi: +(?P<remote_spi>[\w\d]+)$"
+        r6 = r"^Local spi: +(?P<local_spi>[\w\d]+) +Remote spi: +(?P<remote_spi>[\w\d]+)$"
         p6 = re.compile(r6)
 
         # Local id: user2621@cisco.com
-        r7 = "^Local id: +(?P<local_id>[\w\d\S]+)$"
+        r7 = r"^Local id: +(?P<local_id>[\w\d\S]+)$"
         p7 = re.compile(r7)
 
         # Remote id: hostname.remoteid.example.com
-        r8 = "^Remote id: +(?P<remote_id>[\w\d\S]+)$"
+        r8 = r"^Remote id: +(?P<remote_id>[\w\d\S]+)$"
         p8 = re.compile(r8)
 
         # Local req msg id:  214            Remote req msg id:  6
-        r9 = "^Local req msg id: +(?P<local_reg_msg_id>[\d]+) +Remote req msg id: +(?P<remote_req_msg_id>[\d]+)$"
+        r9 = r"^Local req msg id: +(?P<local_reg_msg_id>[\d]+) +Remote req msg id: +(?P<remote_req_msg_id>[\d]+)$"
         p9 = re.compile(r9)
 
         # Local next msg id: 214            Remote next msg id: 6
-        r10 = "^Local next msg id: +(?P<local_next_msg_id>[\d]+) +Remote next msg id: +(?P<remote_next_msg_id>[\d]+)$"
+        r10 = r"^Local next msg id: +(?P<local_next_msg_id>[\d]+) +Remote next msg id: +(?P<remote_next_msg_id>[\d]+)$"
         p10 = re.compile(r10)
 
         # Local req queued:  214            Remote req queued:  6
-        r11 = "^Local req queued: +(?P<local_req_queued>[\d]+) +Remote req queued: +(?P<remote_req_queued>[\d]+)$"
+        r11 = r"^Local req queued: +(?P<local_req_queued>[\d]+) +Remote req queued: +(?P<remote_req_queued>[\d]+)$"
         p11 = re.compile(r11)
 
         # Local window:      5              Remote window:      5
-        r12 = "^Local window: +(?P<local_window>[\d]+) +Remote window: +(?P<remote_window>[\d]+)$"
+        r12 = r"^Local window: +(?P<local_window>[\d]+) +Remote window: +(?P<remote_window>[\d]+)$"
         p12 = re.compile(r12)
 
         # DPD configured for 60 seconds, retry 3
-        r13 = "^DPD configured for +(?P<dpd_configured_time>[\d]+) +seconds, retry +(?P<retry>[\d]+)$"
+        r13 = r"^DPD configured for +(?P<dpd_configured_time>[\d]+) +seconds, retry +(?P<retry>[\d]+)$"
         p13 = re.compile(r13)
 
         # Fragmentation not  configured.
-        r14 = "^Fragmentation +(?P<fragmentation>[\d\s\S]+)$"
+        r14 = r"^Fragmentation +(?P<fragmentation>[\d\s\S]+)$"
         p14 = re.compile(r14)
 
         # Dynamic Route Update: enabled
-        r15 = "^Dynamic Route Update: +(?P<dynamic_route_update>[\d\s\S]+)$"
+        r15 = r"^Dynamic Route Update: +(?P<dynamic_route_update>[\d\s\S]+)$"
         p15 = re.compile(r15)
 
         # Extended Authentication not configured.
-        r16 = "^Extended Authentication +(?P<extended_authentication>[\d\s\S]+)$"
+        r16 = r"^Extended Authentication +(?P<extended_authentication>[\d\s\S]+)$"
         p16 = re.compile(r16)
 
         # NAT-T is not detected
-        r17 = "^NAT-T is +(?P<nat_t>[\d\s\S]+)$"
+        r17 = r"^NAT-T is +(?P<nat_t>[\d\s\S]+)$"
         p17 = re.compile(r17)
 
         # Cisco Trust Security SGT is disabled
-        r18 = "^Cisco Trust Security SGT is +(?P<cisco_trust_security_sgt>[\d\s\S]+)$"
+        r18 = r"^Cisco Trust Security SGT is +(?P<cisco_trust_security_sgt>[\d\s\S]+)$"
         p18 = re.compile(r18)
 
         # Initiator of SA : Yes
-        r19 = "^Initiator of SA :+(?P<initiator_of_sa>[\d\s\S]+)$"
+        r19 = r"^Initiator of SA :+(?P<initiator_of_sa>[\d\s\S]+)$"
         p19 = re.compile(r19)
 
         # Pushed IP address: 8.1.9.4
-        r20 = "^Pushed IP address: +(?P<pushed_ip>[0-9\.]+)$"
+        r20 = r"^Pushed IP address: +(?P<pushed_ip>[0-9\.]+)$"
         p20 = re.compile(r20)
 
         # 10.0.0.0 255.0.0.0
-        r21 = "^(?P<remote_subnets>[0-9\.\s]+)$"
+        r21 = r"^(?P<remote_subnets>[0-9\.\s]+)$"
         p21 = re.compile(r21)
 
         # Quantum Resistance Enabled
-        r22 = "^Quantum Resistance +(?P<quantum_resistance>[\d\s\S]+)$"
+        r22 = r"^Quantum Resistance +(?P<quantum_resistance>[\d\s\S]+)$"
         p22 = re.compile(r22)
 
         # Quantum-Safe Encryption using PPK is enabled
-        r23 = "^Quantum-Safe Encryption using PPK is +(?P<quantum_resistance>[\d\s\S]+)$"
+        r23 = r"^Quantum-Safe Encryption using PPK is +(?P<quantum_resistance>[\d\s\S]+)$"
         p23 = re.compile(r23)
 
         # Quantum-safe Encryption using Manual PPK
-        r24 = "^Quantum-safe Encryption using +(?P<quantum_encry_type>\w+) +PPK$"
+        r24 = r"^Quantum-safe Encryption using +(?P<quantum_encry_type>\w+) +PPK$"
         p24 = re.compile(r24)
         
 
@@ -7208,7 +7208,7 @@ class ShowCryptoIkev2Stats(ShowCryptoIkev2StatsSchema):
 
         # SA Strength Enforcement Rejects - incoming:        0 outgoing:        4
         p13 = re.compile(r'^SA Strength Enforcement Rejects -\s+incoming:\s+(?P<sa_strength_enforce_reject_incoming>\d+)\s+'
-                         'outgoing:\s+(?P<sa_strength_enforce_reject_outgoing>\d+)$')
+                         r'outgoing:\s+(?P<sa_strength_enforce_reject_outgoing>\d+)$')
 
         # initial return dictionary
 
@@ -7436,7 +7436,7 @@ class ShowCryptoCallAdmissionStatistics(ShowCryptoCallAdmissionStatisticsSchema)
 
         # SA Strength Enforcement Rejects:  incoming:        0 outgoing:        0
         p13 = re.compile(r'^SA Strength Enforcement Rejects:\s+incoming:\s+(?P<sa_strength_enforce_reject_incoming>\d+)\s+'
-                         'outgoing:\s+(?P<sa_strength_enforce_reject_outgoing>\d+)$')
+                         r'outgoing:\s+(?P<sa_strength_enforce_reject_outgoing>\d+)$')
 
         # initial return dictionary
 

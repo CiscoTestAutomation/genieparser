@@ -122,8 +122,8 @@ class ShowFrequencySynchronizationInterfaces(ShowFrequencySynchronizationInterfa
 
         # Effective QL: Opt-I/PRC, Priority: 15, Time-of-day Priority 101
         # Effective QL: Failed, Priority: 15, Time-of-day Priority 101
-        p10 = re.compile(r'^Effective\s+QL:\s+(?P<effective_ql>.*),\s+Priority:\s+(?P<priority>\d+),'\
-                         '\s+Time-of-day\s+Priority\s+(?P<time_of_day_priority>\d+)$')
+        p10 = re.compile(r'^Effective\s+QL:\s+(?P<effective_ql>.*),\s+Priority:\s+(?P<priority>\d+),'
+                         r'\s+Time-of-day\s+Priority\s+(?P<time_of_day_priority>\d+)$')
 
         # Restore in 00:04:33
         p11 = re.compile(r'^Restore\s+in\s+(?P<restore>[\d:]+)$')

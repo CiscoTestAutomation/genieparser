@@ -123,12 +123,12 @@ class ShowAclAfiAll(ShowAclAfiAllSchema):
         # 30 deny ipv4 any any
         # 10 permit ipv4 10.1.21.0 0.0.0.255 10.196.6.0 0.0.0.255
         p2 = re.compile(r'^(?P<seq>\d+) +(?P<actions_forwarding>permit|deny) +'
-            '(?P<protocol>tcp|ipv4|ipv6) +(?P<src>(([\d\.]+ +[\d\.]+)|any|'
-            '(host +[\d\.:]+))|([\d\.]+ +[\d\.]+))( ?(?P<src_operator>eq) +'
-            '(?P<src_port>\w+))? +(?P<dst>(host +[\d\.:]+)|any|([\d\.]+ +'
-            '[\d\.]+))(?P<log> +log)?( +(?P<des_operator>eq) +(?P<des_port>\w+))'
-            '?(?P<established_log> +established +log)?( +precedence +'
-            '(?P<precedence>network) +ttl +(?P<ttl_operator>eq) +(?P<ttl>\d+))?')
+            r'(?P<protocol>tcp|ipv4|ipv6) +(?P<src>(([\d\.]+ +[\d\.]+)|any|'
+            r'(host +[\d\.:]+))|([\d\.]+ +[\d\.]+))( ?(?P<src_operator>eq) +'
+            r'(?P<src_port>\w+))? +(?P<dst>(host +[\d\.:]+)|any|([\d\.]+ +'
+            r'[\d\.]+))(?P<log> +log)?( +(?P<des_operator>eq) +(?P<des_port>\w+))'
+            r'?(?P<established_log> +established +log)?( +precedence +'
+            r'(?P<precedence>network) +ttl +(?P<ttl_operator>eq) +(?P<ttl>\d+))?')
 
         # initial variables
         ret_dict = {}
@@ -235,10 +235,10 @@ class ShowAclEthernetServices(ShowAclAfiAllSchema):
         # 30 deny host 0000.0000.0000 host 0000.0000.0000 vlan 10
         # 40 permit host aaaa.aaff.5555 host bbbb.bbff.7777 80f3
         p2 = re.compile(r'^(?P<seq>\d+) +(?P<actions_forwarding>permit|deny)? +'
-            '(?P<source_mac_address>(any|(host +[\d\.\w]+))|([\d\.]+ +[\d\.]+))'
-            ' +(?P<destination_mac_address>(host +[\d\.\w]+)|any)( +'
-            '(?P<ether_type_dynamic>\w+) +(?P<ether_type_value>\d+))?'
-            '( +(?P<ether_type>[\w\s]+))?$')
+            r'(?P<source_mac_address>(any|(host +[\d\.\w]+))|([\d\.]+ +[\d\.]+))'
+            r' +(?P<destination_mac_address>(host +[\d\.\w]+)|any)( +'
+            r'(?P<ether_type_dynamic>\w+) +(?P<ether_type_value>\d+))?'
+            r'( +(?P<ether_type>[\w\s]+))?$')
 
         # initial variables
         ret_dict = {}

@@ -136,7 +136,7 @@ class ShowIpMsdpPeerVrf(ShowIpMsdpPeerVrfSchema):
 
         # AS 100, local address: 10.36.3.3 (loopback0)
         p2 = re.compile(r'^\s*AS +(?P<peer_as>[\d]+), +local address: +(?P<connect_source_address>[\d\.]+)'
-                        ' +\((?P<connect_source>[\w\-\/\.]+)\)$')
+                        r' +\((?P<connect_source>[\w\-\/\.]+)\)$')
         #   Description: R1
         p3 = re.compile(r'^\s*Description: +(?P<description>[\S\s]+)$')
 
@@ -144,7 +144,7 @@ class ShowIpMsdpPeerVrf(ShowIpMsdpPeerVrfSchema):
         #   Connection status: Admin-shutdown
         #   Connection status: Inactive, Connecting in: 0.217135
         p4 = re.compile(r'^\s*Connection status: +(?P<session_state>[\w\-]+)(, +(Connecting|Listening) +in:'
-                        ' +(?P<conecting_time>[\w\:\.]+))?$')
+                        r' +(?P<conecting_time>[\w\:\.]+))?$')
         #     Uptime(Downtime): 01:27:25
         p5 = re.compile(r'^\s*Uptime\(Downtime\): +(?P<elapsed_time>[\w\:\.]+)$')
 
@@ -183,12 +183,12 @@ class ShowIpMsdpPeerVrf(ShowIpMsdpPeerVrfSchema):
 
         #     SAs: 0/0, SA-Requests: 0/0, SA-Responses: 0/0
         p17 = re.compile(r'^\s*SAs: +(?P<in_sas>[\d]+)/+(?P<out_sas>[\d]+), +SA-Requests:'
-                         ' +(?P<in_sa_request>[\d]+)/+(?P<out_sa_request>[\d]+)'
-                         ', SA-Responses: +(?P<in_sa_response>[\d]+)/+(?P<out_sa_response>[\d]+)$')
+                         r' +(?P<in_sa_request>[\d]+)/+(?P<out_sa_request>[\d]+)'
+                         r', SA-Responses: +(?P<in_sa_response>[\d]+)/+(?P<out_sa_response>[\d]+)$')
 
         #     In/Out Ctrl Msgs: 0/0, In/Out Data Msgs: 0/0
         p18 = re.compile(r'^\s*In/Out +Ctrl +Msgs: +(?P<in_ctrl_msg>[\d]+)/+(?P<out_ctrl_msg>[\d]+), In/Out Data Msgs:'
-                         ' +(?P<in_data_messages>[\d]+)/+(?P<out_data_messages>[\d]+)$')
+                         r' +(?P<in_data_messages>[\d]+)/+(?P<out_data_messages>[\d]+)$')
 
         #     Remote/Local Port 26743/639
         p19 = re.compile(r'^\s*Remote/Local Port +(?P<remote_port>[\d]+)/+(?P<local_port>[\d]+)$')
@@ -196,7 +196,7 @@ class ShowIpMsdpPeerVrf(ShowIpMsdpPeerVrfSchema):
         #     Keepalives: 92/119, Notifications: 0/6
         p20 = re.compile(
             r'^\s*Keepalives: +(?P<in_keepalive>[\d]+)/+(?P<out_keepalive>[\d]+), Notifications:'
-            ' +(?P<in_notification>[\d]+)/+(?P<out_notification>[\d]+)$')
+            r' +(?P<in_notification>[\d]+)/+(?P<out_notification>[\d]+)$')
 
         #     RPF check failures: 0
         p21 = re.compile(r'^\s*RPF check failures: +(?P<rpf_check_failures>[\d]+)$')
@@ -592,12 +592,12 @@ class ShowIpMsdpPolicyStatisticsSaPolicyInOut(ShowIpMsdpPolicyStatisticsSaPolicy
         # ip prefix-list pfxlista seq 5 permit 224.0.0.0/4             M: 0
         # ip prefix-list pfxlista seq 10 permit 224.0.0.0/4 le 32      M: 0
         p1_1 = re.compile(r'^(?P<match>ip +prefix\-list +(?P<sa_filter>\S+) +seq +(?P<seq>\d+) '
-                           '+permit +(?P<permit>\S+)(?P<operator>[\w\s]+)?)'
-                           '( +(C: +(?P<comparisions>\d+)))?( +(M: +(?P<matches>\d+)))?$')
+                           r'+permit +(?P<permit>\S+)(?P<operator>[\w\s]+)?)'
+                           r'( +(C: +(?P<comparisions>\d+)))?( +(M: +(?P<matches>\d+)))?$')
 
         # match ip address mcast-all-groups                          C: 0      M: 0
         p2 = re.compile(r'^(?P<match2>match +ip +address +(?P<match_ip>\S+))'
-                         '( +(C: +(?P<comparisions>\d+)))?( +(M: +(?P<matches>\d+)))?$')
+                         r'( +(C: +(?P<comparisions>\d+)))?( +(M: +(?P<matches>\d+)))?$')
 
         # Total accept count for policy: 0
         p3 = re.compile(r'^Total +accept +count +for +policy: +(?P<total_accept_count>\d+)$')
@@ -765,7 +765,7 @@ class ShowIpMsdpSummary(ShowIpMsdpSummarySchema):
 
         # Local ASN: 0, originator-id: 10.16.2.2
         p2 = re.compile(r'^Local +ASN: +(?P<local_as>\d+), +'
-                         'originator\-id: +(?P<originator_id>[\d\.]+)$')
+                         r'originator\-id: +(?P<originator_id>[\d\.]+)$')
 
         # Number of configured peers:  1
         p3 = re.compile(r'^Number +of +configured +peers: +(?P<num_of_configured_peers>\d+)$')
@@ -778,8 +778,8 @@ class ShowIpMsdpSummary(ShowIpMsdpSummarySchema):
         # Address         ASN         State           Downtime  Received  Received
         # 10.144.6.6         0           Established     05:46:19  00:00:51  1
         p6 = re.compile(r'^(?P<address>[\d\.]+) +(?P<peer_as>\d+) +(?P<session_state>[\w\/\-]+) +'
-                         '(?P<elapsed_time>[\w\.\:]+) +(?P<last_message_received>[\w\.\:]+) +'
-                         '(?P<num_of_sg_received>\d+)$')
+                         r'(?P<elapsed_time>[\w\.\:]+) +(?P<last_message_received>[\w\.\:]+) +'
+                         r'(?P<num_of_sg_received>\d+)$')
 
         for line in out.splitlines():
             if line:
@@ -904,11 +904,11 @@ class ShowRunningConfigMsdp(ShowRunningConfigMsdpSchema):
 
         # ip msdp keepalive 10.144.6.6 20 30
         p1 = re.compile(r'^ip +msdp +keepalive +(?P<peer>[\d\.]+) +'
-                         '(?P<keepalive_interval>\d+) +(?P<holdtime_interval>\d+)$')
+                         r'(?P<keepalive_interval>\d+) +(?P<holdtime_interval>\d+)$')
 
         # ip msdp description 10.144.6.6 some description
         p2 = re.compile(r'^ip +msdp +description +(?P<peer>[\d\.]+) +'
-                         '(?P<description>.*)$')
+                         r'(?P<description>.*)$')
 
         # ip msdp reconnect-interval 20
         p3 = re.compile(r'^ip +msdp +reconnect\-interval +(?P<connect_retry_interval>\d+)$')
@@ -919,7 +919,7 @@ class ShowRunningConfigMsdp(ShowRunningConfigMsdpSchema):
         # ip msdp peer 10.36.3.3 connect-source loopback0 remote-as 234
         # ip msdp peer 10.144.6.6 connect-source loopback11
         p5 = re.compile(r'^ip +msdp +peer +(?P<peer>[\d\.]+) +connect\-source +'
-                         '(?P<connected_source>[\w\-\/\.]+)( +remote\-as +(?P<peer_as>\d+))?$')
+                         r'(?P<connected_source>[\w\-\/\.]+)( +remote\-as +(?P<peer_as>\d+))?$')
 
         for line in out.splitlines():
             if line and not line.startswith(' '):

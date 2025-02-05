@@ -112,8 +112,8 @@ class ShowIpv6Neighbors(ShowIpv6NeighborsSchema):
         # IPv6 Address                              Age Link-layer Addr State Interface
         # 2001:db8:8548:1::2                                 0 fa16.3eff.09c8  REACH Gi2
         p1 = re.compile(r'^(?P<ip>([\w\:]+))\s+(?P<age>\S+)\s+'
-                        '(?P<link_layer_address>\S+)\s+(?P<neighbor_state>\S+)'
-                        '\s+(?P<interface>\S+)$')
+                        r'(?P<link_layer_address>\S+)\s+(?P<neighbor_state>\S+)'
+                        r'\s+(?P<interface>\S+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -169,8 +169,8 @@ class ShowIpv6NeighborsDetail(ShowIpv6NeighborsSchema):
         # IPv6 Address                              TRLV Age Link-layer Addr State Interface
         # FE80::F816:3EFF:FEFF:F3DC                   0    0 fa16.3eff.f3dc  REACH Gi2.90
         p1 = re.compile(r'^(?P<ip>([\w\:]+))\s+(?P<trlv>\S)\s+(?P<age>\S+)\s+'
-                         '(?P<link_layer_address>\S+)\s+(?P<neighbor_state>\S+)\s+'
-                         '(?P<interface>\S+)$')
+                         r'(?P<link_layer_address>\S+)\s+(?P<neighbor_state>\S+)\s+'
+                         r'(?P<interface>\S+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -895,23 +895,23 @@ class ShowIpv6Mrib(ShowIpv6MribSchema):
         #(2001:192:168:7::11,FF05:1:1::1) RPF nbr: 2001:150:1:1::1 Flags: L C
 
         p1 = re.compile(r'^\((?P<source_address>[\w\:\.\*\/]+)\,'
-                     '(?P<multicast_group>[\w\:\.\/]+)\)'
-                     ' +RPF nbr: (?P<RPF_nbr>[\w\:\.\/]+)'
-                     '\s+Flags\:(?P<mrib_flags>[\w\s]+|$)')
+                     r'(?P<multicast_group>[\w\:\.\/]+)\)'
+                     r' +RPF nbr: (?P<RPF_nbr>[\w\:\.\/]+)'
+                     r'\s+Flags\:(?P<mrib_flags>[\w\s]+|$)')
 
         # GigabitEthernet2/0/6 Flags: A NS 
         # Tunnel1 Flags: A NS  		 
         p2 = re.compile(r'^(?P<ingress_if>[\w\.\/\, ]+)'
-                         '\s+Flags\: +(?P<ingress_flags>A[\s\w]+|[\s\w]+ +A[\s\w]+|A$)') 
+                         r'\s+Flags\: +(?P<ingress_flags>A[\s\w]+|[\s\w]+ +A[\s\w]+|A$)') 
 						 
         #  LISP0.1 Flags: F NS  Next-hop: 100.154.154.154
         #  LISP0.1 Flags: F NS   Next-hop: (100.11.11.11, 235.1.3.167)
         p3 = re.compile(r'^(?P<egress_if>[\w\.\/\,]+)'
-                        '\s+Flags\:\s+(?P<egress_flags>F[\s\w]+)+Next-hop\:\s+(?P<egress_next_hop>([\w\:\.\*\/]+)|(\([\w\:\.\*\/]+\, +[\w\:\.\*\/]+\)))')
+                        r'\s+Flags\:\s+(?P<egress_flags>F[\s\w]+)+Next-hop\:\s+(?P<egress_next_hop>([\w\:\.\*\/]+)|(\([\w\:\.\*\/]+\, +[\w\:\.\*\/]+\)))')
 
         #  Vlan2006 Flags: F LI NS
         p4=re.compile(r'^(?P<egress_if>[\w\.\/\, ]+)'
-                        '\s+Flags\: +(?P<egress_flags>F[\s\w]+)')            
+                        r'\s+Flags\: +(?P<egress_flags>F[\s\w]+)')            
 
         for line in output.splitlines():
             line=(line.strip()).replace('\t',' ')
@@ -1271,11 +1271,11 @@ class ShowIpv6Mfib(ShowIpv6MfibSchema):
         #  (*,FF05:1:1::1) Flags: C HW
         # (2001:70:1:1::10,FF05:1:1::1) Flags: HW
         p3 = re.compile(r'^\((?P<source_address>[\w\:\.\*\/]+)\,'
-                     '(?P<multicast_group>[\w\:\.\/]+)\)'
-                     '\s+Flags\:\s*(?P<mfib_flags>[\w\s]*)$')
+                     r'(?P<multicast_group>[\w\:\.\/]+)\)'
+                     r'\s+Flags\:\s*(?P<mfib_flags>[\w\s]*)$')
         #0x1AF0  OIF-IC count: 0, OIF-A count: 1
         p4 = re.compile(r'\w+ +OIF-IC count: +(?P<oif_ic_count>[\w]+)'
-                   '\, +OIF-A count: +(?P<oif_a_count>[\w]+)$')
+                   r'\, +OIF-A count: +(?P<oif_a_count>[\w]+)$')
         # SW Forwarding: 0/0/0/0, Other: 0/0/0
         p5 = re.compile(r'SW Forwarding\:\s+(?P<sw_packet_count>[\w]+)\/'
                      r'(?P<sw_packets_per_second>[\w]+)\/'
@@ -1325,9 +1325,9 @@ class ShowIpv6Mfib(ShowIpv6MfibSchema):
         p9_2 = re.compile(r'^CEF\: +(?P<egress_adj_mac>[\w \(\.\)]+)$')
         #Pkts: 0/0/2    Rate: 0 pps
         p10 = re.compile(r'^Pkts\:\s+(?P<egress_hw_pkt_count>[\w]+)\/'
-                         '(?P<egress_fs_pkt_count>[\w]+)\/'
-                         '(?P<egress_ps_pkt_count>[\w]+)'
-                         '\s+Rate\:\s+(?P<egress_pkt_rate>[\w]+)\s+pps$')
+                         r'(?P<egress_fs_pkt_count>[\w]+)\/'
+                         r'(?P<egress_ps_pkt_count>[\w]+)'
+                         r'\s+Rate\:\s+(?P<egress_pkt_rate>[\w]+)\s+pps$')
 
         for line in out.splitlines():
             line = line.strip()

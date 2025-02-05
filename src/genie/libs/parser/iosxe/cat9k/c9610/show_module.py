@@ -80,12 +80,12 @@ class ShowModule(ShowModuleSchema):
 
         #initial regex pattern
         p1=re.compile(r'^(?P<switch>\d+) *'
-                        '(?P<port>\w+) +'
-                        '(?P<model>[\w\-]+) +'
-                        '(?P<serial_number>\w+) +'
-                        '(?P<mac_address>[\w\.]+) +'
-                        '(?P<hw_ver>\w+) +'
-                        '(?P<sw_ver>[\w\.]+)$')
+                        r'(?P<port>\w+) +'
+                        r'(?P<model>[\w\-]+) +'
+                        r'(?P<serial_number>\w+) +'
+                        r'(?P<mac_address>[\w\.]+) +'
+                        r'(?P<hw_ver>\w+) +'
+                        r'(?P<sw_ver>[\w\.]+)$')
 
         #Mod Ports Card Type                                   Model          Serial No.
         #---+-----+--------------------------------------+--------------+--------------

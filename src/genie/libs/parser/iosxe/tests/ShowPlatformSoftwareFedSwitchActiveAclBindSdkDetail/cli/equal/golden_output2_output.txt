@@ -1,0 +1,36 @@
+Sec_RAITT#show plat soft fed switch active acl info sdk feature cgacl dir in detail asic 0
+--------------------------------------------------------------
+         ACLs info details (programmed in datapath)
+--------------------------------------------------------------
+
+Class Group Name: implicit_deny:xACSACLx-IP-PERMIT_ALL_IPV4_TRAFFIC-57f6b0d3:
+   Direction: Ingress
+      Feature         : Cgacl
+      Protocol        : IPv4
+      CG ID           : 1552
+      Pol Hdl         : 0x240735c8
+--------------------------------------------------------------
+ ACL (OID: 0xE34, No of ACEs: 2)
+--------------------------------------------------------------
+
+    IPV4 ACE Key/Mask
+        ipv4_src: value = 0.0.0.0       mask = 0.0.0.0
+        ipv4_dst: value = 0.0.0.0       mask = 0.0.0.0
+            proto     tos      tcp_flg     ttl       ipv4_flags    src_port     dst_port
+        V:  0x0       0x0      0x0         0x0       0x0           0x0          0x0
+        M:  0x0       0x0      0x0         0x0       0x0           0x0          0x0
+
+    Result Action
+        Punt : N    Drop : N    Mirror : N    Counter: 0xe35 (0)
+--------------------------------------------------------------
+
+    IPV4 ACE Key/Mask
+        ipv4_src: value = 0.0.0.0       mask = 0.0.0.0
+        ipv4_dst: value = 0.0.0.0       mask = 0.0.0.0
+            proto     tos      tcp_flg     ttl       ipv4_flags    src_port     dst_port
+        V:  0x0       0x0      0x0         0x0       0x0           0x0          0x0
+        M:  0x0       0x0      0x0         0x0       0x0           0x0          0x0
+
+    Result Action
+        Punt : N    Drop : Y    Mirror : N    Counter: 0xe39 (0)
+--------------------------------------------------------------

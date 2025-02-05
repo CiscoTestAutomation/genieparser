@@ -114,7 +114,7 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
 
             # Global IGMP State Limit : 1 active out of 20 max
             p1 = re.compile(r'^Global +IGMP +State +Limit *: +'
-                             '(?P<active>\d+) +active +out +of +(?P<global_max_groups>\d+) +max$')
+                             r'(?P<active>\d+) +active +out +of +(?P<global_max_groups>\d+) +max$')
             m = p1.match(line)
             if m:
                 max_groups = int(m.groupdict()['global_max_groups'])
@@ -130,7 +130,7 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
 
             # GigabitEthernet1 is up, line protocol is up
             p2 = re.compile(r'^(?P<intf>[\w\-\.\/]+) +is +(?P<intf_status>[\w\s]+), +'
-                             'line +protocol +is +(?P<oper_status>\w+)$')
+                             r'line +protocol +is +(?P<oper_status>\w+)$')
             m = p2.match(line)
             if m:
                 intf = m.groupdict()['intf']
@@ -198,7 +198,7 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
 
             # IGMP configured query interval is 133 seconds
             p8 = re.compile(r'^IGMP +configured +query +interval +is +'
-                             '(?P<query_interval>\d+) +seconds$')
+                             r'(?P<query_interval>\d+) +seconds$')
             m = p8.match(line)
             if m:                
                 ret_dict['vrf'][vrf]['interface'][intf]['configured_query_interval'] = \
@@ -207,7 +207,7 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
 
             # IGMP querier timeout is 266 seconds
             p9 = re.compile(r'^IGMP +querier +timeout +is +'
-                             '(?P<timeout>\d+) +seconds$')
+                             r'(?P<timeout>\d+) +seconds$')
             m = p9.match(line)
             if m:                
                 ret_dict['vrf'][vrf]['interface'][intf]['querier_timeout'] = \
@@ -216,7 +216,7 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
 
             # IGMP configured querier timeout is 266 seconds
             p10 = re.compile(r'^IGMP +configured +querier +timeout +is +'
-                             '(?P<timeout>\d+) +seconds$')
+                             r'(?P<timeout>\d+) +seconds$')
             m = p10.match(line)
             if m:                
                 ret_dict['vrf'][vrf]['interface'][intf]['configured_querier_timeout'] = \
@@ -225,7 +225,7 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
 
             # IGMP max query response time is 10 seconds
             p11 = re.compile(r'^IGMP +max +query +response +time +is +'
-                             '(?P<time>\d+) +seconds$')
+                             r'(?P<time>\d+) +seconds$')
             m = p11.match(line)
             if m:                
                 ret_dict['vrf'][vrf]['interface'][intf]['query_max_response_time'] = \
@@ -242,7 +242,7 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
 
             # Last member query response interval is 100 ms
             p13 = re.compile(r'^Last +member +query +response +interval +is '
-                              '+(?P<time>\d+) +ms$')
+                              r'+(?P<time>\d+) +ms$')
             m = p13.match(line)
             if m:                
                 ret_dict['vrf'][vrf]['interface'][intf]['last_member_query_interval'] = \
@@ -271,7 +271,7 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
 
             # Interface IGMP State Limit : 1 active out of 10 max
             p16 = re.compile(r'^Interface +IGMP +State +Limit *: +'
-                              '(?P<active>\d+) +active +out +of +(?P<max>\d+) +max$')
+                              r'(?P<active>\d+) +active +out +of +(?P<max>\d+) +max$')
             m = p16.match(line)
             if m:                
                 ret_dict['vrf'][vrf]['interface'][intf]['max_groups'] = int(m.groupdict()['max'])
@@ -299,7 +299,7 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
 
             # Multicast designated router (DR) is 10.1.2.1 (this system)
             p19 = re.compile(r'^Multicast +designated +router +\(DR\) +'
-                              'is +(?P<ip>[\w\.\:]+)(?P<dummy> *\([\w\s]+\))?$')
+                              r'is +(?P<ip>[\w\.\:]+)(?P<dummy> *\([\w\s]+\))?$')
             m = p19.match(line)
             if m:
                 if 'multicast' not in ret_dict['vrf'][vrf]['interface'][intf]:
@@ -313,7 +313,7 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
 
             # IGMP querying router is 10.1.2.1 (this system)
             p20 = re.compile(r'^IGMP +querying +router +is +(?P<querier>[\w\.\:]+)'
-                              '(?P<dummy> *\([\w\s]+\))?$')
+                              r'(?P<dummy> *\([\w\s]+\))?$')
             m = p20.match(line)
             if m:
                 ret_dict['vrf'][vrf]['interface'][intf]['querier'] = \
@@ -525,7 +525,7 @@ class ShowIpIgmpGroupsDetail(ShowIpIgmpGroupsDetailSchema):
             # Group mode:        INCLUDE
             # Group mode:        EXCLUDE (Expires: 00:06:06)
             p5 = re.compile(r'^Group +mode: +(?P<group_mode>\w+)'
-                             '( *\(Expires: +(?P<expire>[\w\.\:]+)\))?$')
+                             r'( *\(Expires: +(?P<expire>[\w\.\:]+)\))?$')
             m = p5.match(line)
             if m:
                 group_mode = m.groupdict()['group_mode']
@@ -546,11 +546,11 @@ class ShowIpIgmpGroupsDetail(ShowIpIgmpGroupsDetailSchema):
             # Source Address   Uptime    v3 Exp   CSR Exp   Fwd  Flags
             # 10.4.1.1         00:05:06  stopped   stopped   Yes  L
             p7 = re.compile(r'^(?P<source>[\w\.\:]+) +'
-                             '(?P<up_time>[\w\.\:]+) +'
-                             '(?P<v3_exp>\w+) +'
-                             '(?P<csr_exp>\w+) +'
-                             '(?P<forward>\w+) +'
-                             '(?P<source_flags>\w+)$')
+                             r'(?P<up_time>[\w\.\:]+) +'
+                             r'(?P<v3_exp>\w+) +'
+                             r'(?P<csr_exp>\w+) +'
+                             r'(?P<forward>\w+) +'
+                             r'(?P<source_flags>\w+)$')
             m = p7.match(line)
             if m:
                 source = m.groupdict()['source']
@@ -1066,7 +1066,7 @@ class ShowIpIgmpSnoopingGroupsVlanHosts(
             out = output
 
         parsed_dict = oper_fill_tabular(
-            header_fields=["Host \(MAC\/IP\)", "Filter mode",
+            header_fields=[r"Host \(MAC\/IP\)", "Filter mode",
                            "Expires", "Uptime", "# Sources"],
             label_fields=['host_addr', 'filter', 'expire', 'uptime', 'sources'],
             index=[0], device_output=out, device_os='iosxe'
@@ -1110,7 +1110,7 @@ class ShowIpIgmpVrfGroups(ShowIpIgmpVrfGroupsSchema):
         igmp_dict = {}
         
         # 228.1.1.1        Vlan111                  00:03:07  00:02:59  151.1.1.2
-        p1=re.compile("^(?P<groupip>[\d\.]+)\s+(?P<interface>\S+)\s+(?P<uptime>\S+)\s+(?P<expires>\S+)\s+(?P<last_reporter>\S+).*$")
+        p1=re.compile(r"^(?P<groupip>[\d\.]+)\s+(?P<interface>\S+)\s+(?P<uptime>\S+)\s+(?P<expires>\S+)\s+(?P<last_reporter>\S+).*$")
 
         for line in output.splitlines():
             line = line.strip()

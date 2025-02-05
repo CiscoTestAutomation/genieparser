@@ -1,0 +1,14 @@
+show platform hardware fed switch active fwd-asic insight ip_source_guard_def
++---------+---------------------+----------------------+---------------------+-----------------------+
+| Acl oid | Acl key profile oid | Acl match key fields | Acl cmd profile oid | Acl commands          |
++---------+---------------------+----------------------+---------------------+-----------------------+
+| 1373    | 1117                | SA                   | 1372                | IPSG_VIOLATION_DROP   |
+|         |                     | VLAN_OUTER           |                     | FORCE_TRAP_WITH_EVENT |
+|         |                     | VRF_GID              |                     | COUNTER               |
+|         |                     | IPV4_SIP             |                     |                       |
+|         |                     | PROTOCOL             |                     |                       |
+|         |                     | SPORT                |                     |                       |
+|         |                     | DPORT                |                     |                       |
+|         |                     | SOURCE_SYSTEM_PORT   |                     |                       |
+|         |                     |                      |                     |                       |
++---------+---------------------+----------------------+---------------------+-----------------------+ 

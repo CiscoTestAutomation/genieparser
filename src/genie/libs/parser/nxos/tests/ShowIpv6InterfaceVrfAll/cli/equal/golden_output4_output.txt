@@ -1,0 +1,40 @@
+Vlan902, Interface status: protocol-up/link-up/admin-up, iod: 923
+  IPv6 address: 
+    7:11:66:1::1/64 [VALID] 
+  IPv6 subnet:  7:11:66:1::/64
+  IPv6 link-local address: fe80::200:12ff:fe34:5678 (default) [VALID] 
+  IPv6 virtual addresses configured: none
+  IPv6 multicast routing: disabled
+  IPv6 report link local: disabled
+  IPv6 Forwarding feature: disabled
+  IPv6 multicast groups locally joined:   
+      ff02::2  ff02::1  ff02::1:ff00:1  ff02::1:ff34:5678   
+      ff02::1:ff00:0  
+  IPv6 multicast (S,G) entries joined: none
+  IPv6 MTU: 1500 (using link MTU)
+  IPv6 unicast reverse path forwarding: none
+  IPv6 load sharing: none 
+  IPv6 interface statistics last reset: never
+  IPv6 interface RP-traffic statistics: (forwarded/originated/consumed)
+    Unicast packets:      0/0/0
+    Unicast bytes:        0/0/0
+    Multicast packets:    0/3399/99323
+    Multicast bytes:      0/414438/8043228
+Vlan2401, Interface status: protocol-up/link-up/admin-up, iod: 1175
+  IPv6 address: none
+  IPv6 link-local address: 0:: (default) [NONE] [Non RFC compliant]
+  IPv6 virtual addresses configured: none
+  IPv6 multicast routing: disabled
+  IPv6 report link local: disabled
+  IPv6 Forwarding feature: enabled
+  IPv6 multicast groups locally joined: none
+  IPv6 multicast (S,G) entries joined: none
+  IPv6 MTU: 1500 (using link MTU)
+  IPv6 unicast reverse path forwarding: none
+  IPv6 load sharing: none 
+  IPv6 interface statistics last reset: never
+  IPv6 interface RP-traffic statistics: (forwarded/originated/consumed)
+    Unicast packets:      0/0/0
+    Unicast bytes:        0/0/0
+    Multicast packets:    0/0/0
+    Multicast bytes:      0/0/0

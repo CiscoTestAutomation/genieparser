@@ -40,7 +40,7 @@ XW<date>XWed Jul 12 15:23:42.143 EDT
 BGP instance 0: 'default'
 =========================
 
-Address Family: XXX<[a-zA-Z0-9\s]+><address_family>XXXIPv4 Unicast
+Address Family: XXX<[a-zA-Z0-9]\\s]+><address_family>XXXIPv4 Unicast
 ----------------------------
 
 BGP routing table entry for XA<ip_address>X10.3.4.0/34

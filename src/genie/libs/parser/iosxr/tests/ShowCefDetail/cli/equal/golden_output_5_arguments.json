@@ -1,0 +1,5 @@
+{
+    "vrf_name": "default",
+    "ip_type": "ipv4",
+    "prefix": "10.0.88.65/32"
+}

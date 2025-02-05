@@ -61,7 +61,7 @@ class ShowKeyChain(ShowKeyChainSchema):
         # accept lifetime (10:10:10 UTC Jan 1 2002) - (06:01:00 UTC Jan 1 2010)
         p3 = re.compile(
             r'^accept\s+lifetime\s+\((?P<start>[A-Za-z0-9:\s\+\-_]+)\)\s+\-\s+'
-            '\((?P<end>[A-Za-z0-9:\s\+\-_]+)\)'
+            r'\((?P<end>[A-Za-z0-9:\s\+\-_]+)\)'
             r'(\s+\[(?P<is_valid>[A-Za-z0-9\s\-_]+)\])?$'
         )
 
@@ -70,7 +70,7 @@ class ShowKeyChain(ShowKeyChainSchema):
         # send lifetime (always valid) - (always valid) [valid now]
         p4 = re.compile(
             r'^send\s+lifetime\s+\((?P<start>[A-Za-z0-9:\s\+\-_]+)\)\s+\-\s+'
-            '\((?P<end>[A-Za-z0-9:\s\+\-_]+)\)'
+            r'\((?P<end>[A-Za-z0-9:\s\+\-_]+)\)'
             r'(\s+\[(?P<is_valid>[A-Za-z0-9\s\-_]+)\])?$'
         )
 

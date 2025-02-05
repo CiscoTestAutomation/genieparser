@@ -1307,70 +1307,70 @@ class ShowCallHome(ShowCallHomeSchema):
         p5 = re.compile(r'^contact person\'s email address: (?P<email>[\S\s]+)$')
 
         # contact person's phone number: Not yet set up
-        p6 = re.compile('^contact person\'s phone number: (?P<phone>[\w\s\@\.]+)$')
+        p6 = re.compile(r'^contact person\'s phone number: (?P<phone>[\w\s\@\.]+)$')
 
         #  street address: test
-        p7 = re.compile('^street address: (?P<street>[\w\s]+)$')
+        p7 = re.compile(r'^street address: (?P<street>[\w\s]+)$')
 
         # customer ID: Not yet set up
-        p8 = re.compile('^customer ID: (?P<customer_id>[\w\s]+)$')
+        p8 = re.compile(r'^customer ID: (?P<customer_id>[\w\s]+)$')
 
         # contract ID: Not yet set up
-        p9 = re.compile('^contract ID: (?P<contract_id>[\w\s]+)$')
+        p9 = re.compile(r'^contract ID: (?P<contract_id>[\w\s]+)$')
 
         # site ID: test
-        p10 = re.compile('^site ID: (?P<site_id>[\w\s]+)$')
+        p10 = re.compile(r'^site ID: (?P<site_id>[\w\s]+)$')
 
         # source ip address: Not yet set up
-        p11 = re.compile('^source ip address: (?P<ip_add>[\w\s]+)$')
+        p11 = re.compile(r'^source ip address: (?P<ip_add>[\w\s]+)$')
 
         # source interface: Not yet set up
-        p12 = re.compile('^source interface: (?P<interface>[\w\s]+)$')
+        p12 = re.compile(r'^source interface: (?P<interface>[\w\s]+)$')
 
         # Mail-server[1]: Address: test_add Priority: 1  Secure: none
         p13 = re.compile(r'^(?P<mail_server_id>\S+): (Address: (?P<address>[\w\S]+)) (Priority: (?P<priority>\S+)) (Secure: (?P<secure>[\w\S]+))*')
 
         # http proxy: Not yet set up
-        p14 = re.compile('^http proxy: (?P<proxy>[\w\s]+)$')
+        p14 = re.compile(r'^http proxy: (?P<proxy>[\w\s]+)$')
 
         # server identity check: enabled
-        p15 = re.compile('^server identity check: (?P<identity_check>[\w\s]+)$')
+        p15 = re.compile(r'^server identity check: (?P<identity_check>[\w\s]+)$')
 
         # http resolve-hostname: default
-        p16 = re.compile('^http resolve-hostname: (?P<hostname>[\w\s]+)$')
+        p16 = re.compile(r'^http resolve-hostname: (?P<hostname>[\w\s]+)$')
 
         # Diagnostic signature: enabled
-        p17 = re.compile('^Diagnostic signature: (?P<signature>[\w\s]+)$')
+        p17 = re.compile(r'^Diagnostic signature: (?P<signature>[\w\s]+)$')
 
         # Profile: Test (status: ACTIVE)
-        p18 = re.compile('^Profile: (?P<profile>[\w\S]+) \(status: (?P<status>[\w\s]+)\)$')
+        p18 = re.compile(r'^Profile: (?P<profile>[\w\S]+) \(status: (?P<status>[\w\s]+)\)$')
 
         # Smart licensing messages: enabled
-        p19 = re.compile('^Smart licensing messages: (?P<smart_licensing>[\w\s]+)$')
+        p19 = re.compile(r'^Smart licensing messages: (?P<smart_licensing>[\w\s]+)$')
 
         # aaa-authorization: disable
-        p20 = re.compile('^aaa-authorization: (?P<aaa_auth>[\w\s]+)$')
+        p20 = re.compile(r'^aaa-authorization: (?P<aaa_auth>[\w\s]+)$')
 
         # aaa-authorization username: test
-        p21 = re.compile('^aaa-authorization username: (?P<username>[\S\s]+)$')
+        p21 = re.compile(r'^aaa-authorization username: (?P<username>[\S\s]+)$')
 
         # data-privacy: normal
-        p22 = re.compile('^data-privacy: (?P<privacy>[\w\s]+)$')
+        p22 = re.compile(r'^data-privacy: (?P<privacy>[\w\s]+)$')
 
         # syslog throttling: enable
-        p23 = re.compile('^syslog throttling: (?P<throttling>[\w\s]+)$')
+        p23 = re.compile(r'^syslog throttling: (?P<throttling>[\w\s]+)$')
 
         # Rate-limit: 1 message(s) per minute
-        p24 = re.compile('^Rate-limit: (?P<rate_limit>\d+) message\(s\) per minute$')
+        p24 = re.compile(r'^Rate-limit: (?P<rate_limit>\d+) message\(s\) per minute$')
 
         # Snapshot command: Not yet set up
-        p25 = re.compile('^Snapshot command: (?P<cmd>[\w\s]+)$')
+        p25 = re.compile(r'^Snapshot command: (?P<cmd>[\w\s]+)$')
 
         # configuration            Enable  configuration info
-        p26 = re.compile('^(?P<keyword>\w+) *(?P<state>\w+) *(?P<description>[\w\ ]+)$')
+        p26 = re.compile(r'^(?P<keyword>\w+) *(?P<state>\w+) *(?P<description>[\w\ ]+)$')
 
         # Profile Name: Test
-        p27 = re.compile('^Profile Name: (?P<name>[\S]+)$')
+        p27 = re.compile(r'^Profile Name: (?P<name>[\S]+)$')
 
         # Inititalizing a variable : name
         name = ""

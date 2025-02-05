@@ -15,7 +15,7 @@ IOSXE parsers for the following show commands:
 # Python
 import re
 import xmltodict
-from netaddr import IPAddress, IPNetwork
+from netaddr import IPAddress, IPNetwork, INET_ATON
 
 # Metaparser
 from genie.metaparser import MetaParser
@@ -122,22 +122,22 @@ class ShowIpOspfDatabase(ShowIpOspfDatabaseSchema):
         # OSPF Router with ID (172.16.1.214) (Process ID 65109)
         # OSPF Router with ID (10.36.3.3) (Process ID 1, VRF VRF1)
         p1 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>(\S+))\)'
-                         ' +\(Process +ID +(?P<instance>(\d+))'
-                         '(?:, +VRF +(?P<vrf>(\S+)))?\)$')
+                         r' +\(Process +ID +(?P<instance>(\d+))'
+                         r'(?:, +VRF +(?P<vrf>(\S+)))?\)$')
 
         # Router Link States (Area 0)
         # Net Link States (Area 0)
         # Summary Net Link States (Area 8)
         # Summary ASB Link States (Area 8)
         p2 = re.compile(r'^(?P<lsa_type>([a-zA-Z\s]+)) +Link +States +\(Area'
-                         ' +(?P<area>(\S+))\)$')
+                         r' +(?P<area>(\S+))\)$')
 
         # Link ID         ADV Router      Age         Seq#       Checksum Link count
         # 10.13.202.64    10.120.202.64   2794        0x80000043 0x002254 3
         # 10.1.1.2        10.169.197.253  70          0x8000003F 0x0015EF
         p3 = re.compile(r'^(?P<link_id>(\S+)) +(?P<adv_router>(\S+))'
-                         ' +(?P<age>(\d+)) +(?P<seq>(\S+)) +(?P<checksum>(\S+))'
-                         '(?: *(?P<link_count>(\d+)))?$')
+                         r' +(?P<age>(\d+)) +(?P<seq>(\S+)) +(?P<checksum>(\S+))'
+                         r'(?: *(?P<link_count>(\d+)))?$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -181,7 +181,7 @@ class ShowIpOspfDatabase(ShowIpOspfDatabaseSchema):
                 if group['area']:
                     try:
                         int(group['area'])
-                        area = str(IPAddress(str(group['area'])))
+                        area = str(IPAddress(str(group['area']), flags=INET_ATON))
                     except Exception:
                         area = str(group['area'])
                 else:
@@ -274,11 +274,11 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
             }
 
         p1 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>(\S+))\)'
-                            ' +\(Process +ID +(?P<instance>(\d+))'
-                            '(?:, +VRF +(?P<vrf>(\S+)))?\)$')
+                            r' +\(Process +ID +(?P<instance>(\d+))'
+                            r'(?:, +VRF +(?P<vrf>(\S+)))?\)$')
        
         p2 = re.compile(r'^(?P<lsa_type_name>(.*)) +Link +States'
-                            '(?: +\(Area +(?P<area>(\S+))\))?$')
+                            r'(?: +\(Area +(?P<area>(\S+))\))?$')
        
         p3_1 = re.compile(r'^Routing +Bit +Set +on +this +LSA$')
        
@@ -287,12 +287,12 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
         p3_2_1 = re.compile(r'^LS +age: +\w+\((?P<age>(\d+))\)$')
        
         p4 = re.compile(r'^Options:(?: +(?P<option>([a-zA-Z0-9]+)))?'
-                        '(?: *\((?P<option_desc>(.*))\))?$')
+                        r'(?: *\((?P<option_desc>(.*))\))?$')
        
         p5_1 = re.compile(r'^LS +Type: +(?P<lsa_type>(.*))$')
        
         p5_2 = re.compile(r'^Link +State +ID: +(?P<lsa_id>(\S+))'
-                            '(?: +\(.*\))?$')
+                            r'(?: +\(.*\))?$')
        
         p6 = re.compile(r'^Advertising +Router: +(?P<adv_router>(\S+))$')
        
@@ -309,7 +309,7 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
         p11_2 = re.compile(r'^Metric +Type: +1 +\(.*\)$')
        
         p12 = re.compile(r'^TOS:? +(?P<tos>(\d+))(?:(\s+|\t+)Metric(?:s)?:'
-                            ' +(?P<metric>(\d+)))?$')
+                            r' +(?P<metric>(\d+)))?$')
        
         p13 = re.compile(r'^Metric: +(?P<metric>(\d+))$')
        
@@ -326,19 +326,19 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
         p18_1 = re.compile(r'^Link\s+connected +to\s*: +(?P<type>(.*))$')
        
         p19_1 = re.compile(r'^\(Link +ID\) +Network\/(s|S)ubnet +(n|N)umber:'
-                            ' +(?P<link_id>(\S+))$')
+                            r' +(?P<link_id>(\S+))$')
        
         p19_2 = re.compile(r'^\(Link +ID\) +(D|d)esignated +(R|r)outer'
-                            ' +(a|A)ddress: +(?P<link_id>(\S+))$')
+                            r' +(a|A)ddress: +(?P<link_id>(\S+))$')
        
         p19_3 = re.compile(r'^\(Link +ID\) +(N|n)eighboring +(R|r)outer'
-                            ' +(I|d)D: +(?P<link_id>(\S+))$')
+                            r' +(I|d)D: +(?P<link_id>(\S+))$')
        
         p20_1 = re.compile(r'^\(Link +Data\) +Network +Mask:'
-                            ' +(?P<link_data>(\S+))$')
+                            r' +(?P<link_data>(\S+))$')
        
         p20_2 = re.compile(r'^\(Link +Data\) +Router +Interface +address:'
-                            ' +(?P<link_data>(\S+))$')
+                            r' +(?P<link_data>(\S+))$')
        
         # MTID 32 Metrics: 1
         # MTID   : 0
@@ -367,10 +367,10 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
         p30 = re.compile(r'^Admin +Metric *: +(?P<te_metric>(\d+))$')
        
         p31 = re.compile(r'^Maximum +(B|b)andwidth *:'
-                            ' +(?P<max_band>(\d+))$')
+                            r' +(?P<max_band>(\d+))$')
        
         p32 = re.compile(r'^Maximum +(R|r)eservable +(B|b)andwidth'
-                            '(?: +global)? *: +(?P<max_res_band>(\d+))$')
+                            r'(?: +global)? *: +(?P<max_res_band>(\d+))$')
        
         p33 = re.compile(r'^Affinity +Bit *: +(?P<admin_group>(\S+))$')
        
@@ -379,15 +379,15 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
         p33_2 = re.compile(r'^Number +of +Priority *: +(?P<num>(\d+))$')
        
         p34 = re.compile(r'^Priority +(?P<num1>(\d+)) *:'
-                            ' +(?P<band1>(\d+))(?: +Priority +(?P<num2>(\d+))'
-                            ' *: +(?P<band2>(\d+)))?$')
+                            r' +(?P<band1>(\d+))(?: +Priority +(?P<num2>(\d+))'
+                            r' *: +(?P<band2>(\d+)))?$')
        
         p35 = re.compile(r'^Unknown +Sub-TLV *: +Type += +(?P<type>(\d+)),'
-                            ' +Length += +(?P<length>(\d+))'
-                            ' +Value += +(?P<value>(.*))$')
+                            r' +Length += +(?P<length>(\d+))'
+                            r' +Value += +(?P<value>(.*))$')
        
         p36 = re.compile(r'^Extended +Administrative +Group *: +Length *:'
-                            ' +(?P<eag_length>(\d+))$')
+                            r' +(?P<eag_length>(\d+))$')
        
         p37 = re.compile(r'^EAG\[(?P<group_num>(\d+))\]: +(?P<val>(\d+))$')
 
@@ -520,7 +520,7 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
                 if m.groupdict()['area']:
                     try:
                         int(m.groupdict()['area'])
-                        area = str(IPAddress(str(m.groupdict()['area'])))
+                        area = str(IPAddress(str(m.groupdict()['area']), flags=INET_ATON))
                     except Exception:
                         area = str(m.groupdict()['area'])
                 else:
@@ -2266,7 +2266,7 @@ class ShowIpOspfDatabaseSummaryDetail(ShowIpOspfDatabaseSummaryDetailSchema):
                         r'(?:, +VRF +(?P<vrf>(\S+)))?\)$')
 
         # Router 22.22.22.22 LSA summary
-        p1 = re.compile('^Router +(?P<router_ip>(\S+)) +LSA +summary$')
+        p1 = re.compile(r'^Router +(?P<router_ip>(\S+)) +LSA +summary$')
 
         #LSA Type      Count    Delete   Maxage
         #Router        2        0        0

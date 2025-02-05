@@ -1,0 +1,127 @@
+S1-UUT#show platform software fed switch 1 security-fed sisf vlan all 
+
+FED SISF VLAN Data : 
+
+  Vlan = 30 
+
+  Interface ID (if-id) = 4325392 
+
+  Target VLAN: TRUE 
+
+  SISF enable: TRUE 
+
+    Internal error = None 
+
+    Low-level error = None 
+
+  Number of OIDs programmed = 1 on ASIC 0x1 
+
+  No ACL diagnostic = 0 
+
+  Invalid ACL diagnostic = 0 
+
+  Redundant active diagnostic = 0 
+
+  Redundant deactivate diagnostic = 0 
+
+
+
+  ===== ASIC Specific Section ===== 
+
+
+
+  Information about ACL with OID(569) on ASIC(0) 
+
+    Position Protocol Src Port Dst Port Action  Counter OID 
+
+    ------------------------------------------------------- 
+
+    0        UDP      547      0        PUNT    570  
+
+    1        UDP      0        547      PUNT    571  
+
+    2        UDP      0        546      PUNT    572  
+
+
+
+    Position Protocol Message Type                     Code      Action  Counter OID 
+
+    -------------------------------------------------------------------------------- 
+
+    3        ICMPv6   Neighbor Solicitation            0         PUNT    573  
+
+    4        ICMPv6   Neighbor Advertisement           0         PUNT    574  
+
+    5        ICMPv6   Router Solicitation              0         PUNT    575  
+
+    6        ICMPv6   Router Advertisement             0         PUNT    576  
+
+    7        ICMPv6   Redirect Message                 0         PUNT    577  
+
+    8        ICMPv6   Duplicate Address Request        0         PUNT    578  
+
+    9        ICMPv6   Duplicate Address Confirmation   0         PUNT    579  
+
+
+
+FED SISF VLAN Data : 
+
+  Vlan = 40 
+
+  Interface ID (if-id) = 4325393 
+
+  Target VLAN: TRUE 
+
+  SISF enable: TRUE 
+
+    Internal error = None 
+
+    Low-level error = None 
+
+  Number of OIDs programmed = 1 on ASIC 0x1 
+
+  No ACL diagnostic = 0 
+
+  Invalid ACL diagnostic = 0 
+
+  Redundant active diagnostic = 0 
+
+  Redundant deactivate diagnostic = 0 
+
+
+
+  ===== ASIC Specific Section ===== 
+
+
+
+  Information about ACL with OID(569) on ASIC(0) 
+
+    Position Protocol Src Port Dst Port Action  Counter OID 
+
+    ------------------------------------------------------- 
+
+    0        UDP      547      0        PUNT    570  
+
+    1        UDP      0        547      PUNT    571  
+
+    2        UDP      0        546      PUNT    572  
+
+
+
+    Position Protocol Message Type                     Code      Action  Counter OID 
+
+    -------------------------------------------------------------------------------- 
+
+    3        ICMPv6   Neighbor Solicitation            0         PUNT    573  
+
+    4        ICMPv6   Neighbor Advertisement           0         PUNT    574  
+
+    5        ICMPv6   Router Solicitation              0         PUNT    575  
+
+    6        ICMPv6   Router Advertisement             0         PUNT    576  
+
+    7        ICMPv6   Redirect Message                 0         PUNT    577  
+
+    8        ICMPv6   Duplicate Address Request        0         PUNT    578  
+
+    9        ICMPv6   Duplicate Address Confirmation   0         PUNT    579  

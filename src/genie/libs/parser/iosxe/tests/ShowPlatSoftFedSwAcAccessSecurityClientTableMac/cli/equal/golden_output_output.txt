@@ -1,0 +1,5 @@
+
+     Interface    MAC              Logical-ID Position   Asic# Auth-Act           Restore-Auth-Act   Flag         Drop   Ovrd-VLAN  Policy   Policy-OID Packets
+---- ------------ ---------------- ---------- ---------- ----- ------------------ ------------------ ------------ ------ ---------- -------- ---------- ----------
+   1 Gi2/0/10     0000.0022.2222   2          4098       0     DROP_ALL_NO_LRN    None               NONE         No     0          NONE     5705       4443489806
+ 

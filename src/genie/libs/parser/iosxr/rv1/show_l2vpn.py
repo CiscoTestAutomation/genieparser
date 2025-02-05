@@ -114,8 +114,8 @@ class ShowL2vpnBridgeDomain(ShowL2vpnBridgeDomainSchema):
         # Bridge group: ev-Multicast, bridge-domain: ev-Multicast-TV, id: 1, state: up, ShgId: 0, MSTi: 0
         # Bridge group: a_b, bridge-domain: CD, id: 2, state: admin down (Shutdown), ShgId: 0, MSTi: 0
         p1 = re.compile(r'^Bridge +group: +(?P<bridge_group>\S+), +bridge\-domain: +'
-            '(?P<bridge_domain>\S+), +id: +(?P<id>\d+), +state: +(?P<state>[\w\s\(\)]+), +'
-            'ShgId: +(?P<shg_id>\d+), +MSTi: +(?P<mst_i>\d+)$')
+            r'(?P<bridge_domain>\S+), +id: +(?P<id>\d+), +state: +(?P<state>[\w\s\(\)]+), +'
+            r'ShgId: +(?P<shg_id>\d+), +MSTi: +(?P<mst_i>\d+)$')
 
         # Aging: 300 s, MAC limit: 4000, Action: none, Notification: syslog
         # Aging: 300 s, MAC limit: 100, Action: limit, no-flood, Notification: syslog, trap
@@ -128,17 +128,17 @@ class ShowL2vpnBridgeDomain(ShowL2vpnBridgeDomainSchema):
 
         # ACs: 1 (1 up), VFIs: 1, PWs: 1 (1 up)
         p4 = re.compile(r'^ACs: +(?P<ac>\d+) +\((?P<ac_up>\d+) +up\), +VFIs: +(?P<vfi>\d+), +'
-            'PWs: +(?P<pw>\d+) +\((?P<pw_up>\d+) +\w+\)(, +PBBs: +(?P<pbb>\d+)'
-            ' +\((?P<pbb_up>\d+) +up\))?(, +VNIs: +(?P<vni>\d+) +\((?P<vni_up>\d+) +up\))?$')
+            r'PWs: +(?P<pw>\d+) +\((?P<pw_up>\d+) +\w+\)(, +PBBs: +(?P<pbb>\d+)'
+            r' +\((?P<pbb_up>\d+) +up\))?(, +VNIs: +(?P<vni>\d+) +\((?P<vni_up>\d+) +up\))?$')
 
         # Gi0/1/0/0, state: up, Static MAC addresses: 2, MSTi: 0 (unprotected)
         p5 = re.compile(r'^(?P<interface>\S+), +state: +(?P<state>\w+), +Static +'
-            'MAC +addresses: +(?P<static_mac_address>\d+)(, +MSTi: +(?P<mst_i>\d+)'
-            '( +\((?P<mst_i_state>\w+)\))?)?$')
+            r'MAC +addresses: +(?P<static_mac_address>\d+)(, +MSTi: +(?P<mst_i>\d+)'
+            r'( +\((?P<mst_i_state>\w+)\))?)?$')
         
         # BV100, state: up, BVI MAC addresses: 1
         p5_1 = re.compile(r'^(?P<interface>\S+), +state: +(?P<state>\w+), +BVI +'
-            'MAC +addresses: +(?P<bvi_mac_address>\S+)$')
+            r'MAC +addresses: +(?P<bvi_mac_address>\S+)$')
 
         # VFI 1
         # VFI vfi60 (up)
@@ -148,11 +148,11 @@ class ShowL2vpnBridgeDomain(ShowL2vpnBridgeDomainSchema):
         # Neighbor 10.1.1.1 pw-id 1, state: up, Static MAC addresses: 0
         # Neighbor 172.16.152.13 pw-id 20161:10090, state: up, Static MAC addresses: 0
         p7 = re.compile(r'Neighbor +(?P<neighbor>\S+) +pw-id +(?P<pw_id>[\d\:]+), +state: +'
-            '(?P<state>\w+), +Static +MAC +addresses: +(?P<static_mac_address>\d+)$')
+            r'(?P<state>\w+), +Static +MAC +addresses: +(?P<static_mac_address>\d+)$')
 
         # g1/bd1                           0     up         1/1            1/1 
         p8 = re.compile(r'^(?P<bridge_group>\S+)\/(?P<bridge_domain_name>\S+) +(?P<id>\d+) +'
-            '(?P<state>\w+) +(?P<ac>\d+)\/(?P<ac_up>\d+) +(?P<pw>\d+)\/(?P<pw_up>\d+)$')
+            r'(?P<state>\w+) +(?P<ac>\d+)\/(?P<ac_up>\d+) +(?P<pw>\d+)\/(?P<pw_up>\d+)$')
         
         # EVPN, state: up
         p9 = re.compile(r'^(?P<evpn>\S+), +state: +(?P<state>\w+)$')

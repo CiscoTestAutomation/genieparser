@@ -3209,16 +3209,16 @@ class ShowCtsServerList(ShowCtsServerListSchema):
         p4 = re.compile(r'^Ignore\s+preferred\s+server$')
         # Server Group Deadtime = 20 secs (default)
         p5 = re.compile(r'^Server\s+Group\s+Deadtime\s+=\s+(?P<server_group_dead_time>\d+)\s+'
-        '(?P<server_group_dead_time_unit>\S+)')
+        r'(?P<server_group_dead_time_unit>\S+)')
         # Global Server Liveness Automated Test Deadtime = 20 secs
         p6 = re.compile(r'^Global\s+Server\s+Liveness\s+Automated\s+Test\s+Deadtime\s+=\s+'
-        '(?P<dead_time>\d+)\s+(?P<dead_time_unit>\S+)$')
+        r'(?P<dead_time>\d+)\s+(?P<dead_time_unit>\S+)$')
         # Global Server Liveness Automated Test Idle Time = 60 mins
         p7 = re.compile(r'^Global\s+Server\s+Liveness\s+Automated\s+Test\s+Idle\s+Time\s+=\s+'
-        '(?P<idle_time>\d+)\s+(?P<idle_time_unit>\S+)$')
+        r'(?P<idle_time>\d+)\s+(?P<idle_time_unit>\S+)$')
         # Global Server Liveness Automated Test = ENABLED (default)
         p8 = re.compile(r'^Global\s+Server\s+Liveness\s+Automated\s+Test\s+=\s+'
-        '(?P<status>.*)$')
+        r'(?P<status>.*)$')
         # Preferred list, 1 server(s):
         p9 = re.compile(r'^Preferred\s+list.*$')
         # Installed list: SL1-1E6E6AE57D4E2A9B320D1844C68BA291, 3 server(s):
@@ -3230,8 +3230,8 @@ class ShowCtsServerList(ShowCtsServerListSchema):
         # auto-test = TRUE, keywrap-enable = FALSE, idle-time = 120 mins, deadtime = 20 secs
         # auto-test = TRUE, idle-time = 120 mins, deadtime = 20 secs
         p13 = re.compile(r'^auto-test\s+=\s+(?P<auto_test_status>\S+),\s+(keywrap-enable\s+=\s+'
-        '(?P<keywrap_enable>\S+),\s+)?idle-time\s+=\s+(?P<idle_time>\d+)\s+(?P<idle_time_unit>\S+),'
-        '\s+deadtime\s+=\s+(?P<dead_time>\d+)\s+(?P<dead_time_unit>\S+)$')
+        r'(?P<keywrap_enable>\S+),\s+)?idle-time\s+=\s+(?P<idle_time>\d+)\s+(?P<idle_time_unit>\S+),'
+        r'\s+deadtime\s+=\s+(?P<dead_time>\d+)\s+(?P<dead_time_unit>\S+)$')
         # HTTP Server-list:
         p14 = re.compile(r'^HTTP\s+Server\-list:$')
         # Server Name  : cts-auto-cls1-ise1.cisco.com
@@ -3509,31 +3509,31 @@ class ShowCtsPolicyServerStatistics(ShowCtsPolicyServerStatisticsSchema):
         # Number of Response recv fail  : 3
         p5 = re.compile(r'^number +of +response +recv +fail +: +(?P<num_of_res_recv_fail>\d+)$')
         #     HTTP 200 OK                 : 5
-        p6 = re.compile('^http +200 +ok +: +(?P<http_200_ok>\d+)$')
+        p6 = re.compile(r'^http +200 +ok +: +(?P<http_200_ok>\d+)$')
         #     HTTP 400 BadReq             : 0
-        p7 = re.compile('^http +400 +badreq +: +(?P<http_400_badreq>\d+)$')
+        p7 = re.compile(r'^http +400 +badreq +: +(?P<http_400_badreq>\d+)$')
         #     HTTP 401 UnAuthorized Req   : 1
-        p8 = re.compile('^http +401 +unauthorized +req +: +(?P<http_401_unauthorized_req>\d+)$')
+        p8 = re.compile(r'^http +401 +unauthorized +req +: +(?P<http_401_unauthorized_req>\d+)$')
         #     HTTP 403 Req Forbidden      : 0
-        p9 = re.compile('^http +403 +req +forbidden +: +(?P<http_403_req_forbidden>\d+)$')
+        p9 = re.compile(r'^http +403 +req +forbidden +: +(?P<http_403_req_forbidden>\d+)$')
         #     HTTP 404 NotFound           : 0
-        p10 = re.compile('^http +404 +notfound +: +(?P<http_404_notfound>\d+)$')
+        p10 = re.compile(r'^http +404 +notfound +: +(?P<http_404_notfound>\d+)$')
         #     HTTP 408 ReqTimeout         : 0
-        p11 = re.compile('^http +408 +reqtimeout +: +(?P<http_408_reqtimeout>\d+)$')
+        p11 = re.compile(r'^http +408 +reqtimeout +: +(?P<http_408_reqtimeout>\d+)$')
         #     HTTP 415 UnSupported Media  : 0
-        p12 = re.compile('^http +415 +unsupported +media +: +(?P<http_415_unsupported_media>\d+)$')
+        p12 = re.compile(r'^http +415 +unsupported +media +: +(?P<http_415_unsupported_media>\d+)$')
         #     HTTP 500 ServerErr          : 0
-        p13 = re.compile('^http +500 +servererr +: +(?P<http_500_servererr>\d+)$')
+        p13 = re.compile(r'^http +500 +servererr +: +(?P<http_500_servererr>\d+)$')
         #     HTTP 501 Req NoSupport      : 0
-        p14 = re.compile('^http +501 +req +nosupport +: +(?P<http_501_req_nosupport>\d+)$')
+        p14 = re.compile(r'^http +501 +req +nosupport +: +(?P<http_501_req_nosupport>\d+)$')
         #     HTTP 503 Service Unavailable: 0
-        p15 = re.compile('^http +503 +service +unavailable *: +(?P<http_503_service_unavailable>\d+)$')
+        p15 = re.compile(r'^http +503 +service +unavailable *: +(?P<http_503_service_unavailable>\d+)$')
         #     HTTP 429 Too Many Requests  : 0
-        p16 = re.compile('^http +429 +too +many +requests +: +(?P<http_429_too_many_requests>\d+)$')
+        p16 = re.compile(r'^http +429 +too +many +requests +: +(?P<http_429_too_many_requests>\d+)$')
         #     TCP or TLS handshake error  : 2
-        p17 = re.compile('^tcp +or +tls +handshake +error +: +(?P<tcp_or_tls_handshake_err>\d+)$')
+        p17 = re.compile(r'^tcp +or +tls +handshake +error +: +(?P<tcp_or_tls_handshake_err>\d+)$')
         #     HTTP Other Error            : 0
-        p18 = re.compile('^http +other +error +: +(?P<http_other_err>\d+)$')
+        p18 = re.compile(r'^http +other +error +: +(?P<http_other_err>\d+)$')
        
         for line in output.splitlines():
             line = line.strip()
@@ -3710,13 +3710,13 @@ class ShowCtsPolicyServerDetails(ShowCtsPolicyServerDetailsSchema):
         # Port-num         : 9063
         p5 = re.compile(r'^port-num +: +(?P<port_num>\d+)$')
         #     Retransmit count : 3
-        p6 = re.compile('^retransmit +count +: +(?P<retransmit_count>\d+)$')
+        p6 = re.compile(r'^retransmit +count +: +(?P<retransmit_count>\d+)$')
         #     Timeout          : 15
-        p7 = re.compile('^timeout +: +(?P<timeout>\d+)$')
+        p7 = re.compile(r'^timeout +: +(?P<timeout>\d+)$')
         #    App Content type : JSON
-        p8 = re.compile('^app +content +type +: +(?P<app_content_type>\S+)$')
+        p8 = re.compile(r'^app +content +type +: +(?P<app_content_type>\S+)$')
         #    Trustpoint chain : NOT CONFIGURED
-        p9 = re.compile('^trustpoint +chain +: +(?P<trustpoint_chain>.*)$')
+        p9 = re.compile(r'^trustpoint +chain +: +(?P<trustpoint_chain>.*)$')
         # IPv6 Address     : 1100::101 (Reachable)
         p10 = re.compile(r'^ipv6\s+address\s+:\s+(?P<ipv6_address>[\w:]+)(:?\s*\((?P<ipv6_status>\w+)\))?$')
         

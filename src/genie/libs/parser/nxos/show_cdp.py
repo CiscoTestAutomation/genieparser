@@ -60,20 +60,20 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
         # R5.cisco.com Gig 0/0 125 R B Gig 0/0
         # kanntp01-01         Eth1/3         168    H         FAS8020       e0c
         p1 = re.compile(r'^(?P<device_id>\S+) +'
-                        '(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
-                        '(?P<hold_time>\d+) +(?P<capability>[RTBSHIVDrs\s]+)'
-                        '(?: +(?P<platform>[\w\-]+) )? +'
-                        '(?P<port_id>(vmnic|Eth|Te|Gig|Fas|Lo|Po|Tu|mgmt|cont|e)[a-zA-Z0-9\/\-]+)$')
+                        r'(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
+                        r'(?P<hold_time>\d+) +(?P<capability>[RTBSHIVDrs\s]+)'
+                        r'(?: +(?P<platform>[\w\-]+) )? +'
+                        r'(?P<port_id>(vmnic|Eth|Te|Gig|Fas|Lo|Po|Tu|mgmt|cont|e)[a-zA-Z0-9\/\-]+)$')
 
         # device6 Gig 0 157 R S I C887VA-W- WGi 0
         # switchB                Ethernet2/3     177     R S I    WS-C2960-24TC Ethernet1/4
         # Switch mgmt0 163 S I WS-C2960-24TC Fas0/21
         # swordfish-6k-2 Eth3/2 149 R S I WS-C6506-E Gig1/38
         p2 = re.compile(r'^(?P<device_id>\S+) +'
-                        '(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
-                        '(?P<hold_time>\d+) +(?P<capability>[RTBSHIVDrs\s]+) +'
-                        '(?P<platform>[\S\s]+) +'
-                        '(?P<port_id>(vmnic|Eth|Te|Gig|Fas|Lo|Po|Tu|mgmt|cont)[a-zA-Z0-9\/\-]+)$')
+                        r'(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
+                        r'(?P<hold_time>\d+) +(?P<capability>[RTBSHIVDrs\s]+) +'
+                        r'(?P<platform>[\S\s]+) +'
+                        r'(?P<port_id>(vmnic|Eth|Te|Gig|Fas|Lo|Po|Tu|mgmt|cont)[a-zA-Z0-9\/\-]+)$')
 
         # p3 and p4: If Device Id is not on same line as everything else
         # vsm-p(2094532764140613037)
@@ -82,33 +82,33 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
 
         #   mgmt0 141 R B T S Nexus1000V control0
         p4 = re.compile(r'^(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
-                        '(?P<hold_time>\d+) +(?P<capability>[RTBSHIVDrs\s]+) +'
-                        '(?P<platform>[\S\s]+) +'
-                        '(?P<port_id>(vmnic|Eth|Te|Gig|Fas|Lo|Po|Tu|mgmt|cont)[a-zA-Z0-9\/\-]+)$')
+                        r'(?P<hold_time>\d+) +(?P<capability>[RTBSHIVDrs\s]+) +'
+                        r'(?P<platform>[\S\s]+) +'
+                        r'(?P<port_id>(vmnic|Eth|Te|Gig|Fas|Lo|Po|Tu|mgmt|cont)[a-zA-Z0-9\/\-]+)$')
 
         # p3 and p5: If Port Id is not on same line
         # 1111-2222-3333      Eth1/3         130    S         HPE 2200AF-48
         # Eth1/5         120    S         VMware ESX    vmnic1
         # Eth1/26           163    R S I s       N5K-C5596UP   Eth1/25
         p5 = re.compile(r'^(?P<device_id>\S+) +'
-                        '(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
-                        '(?P<hold_time>\d+) +(?P<capability>[RTBSHIVDrs\s]+) +'
-                        '(?P<platform>[\S\s]+)$')        
+                        r'(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
+                        r'(?P<hold_time>\d+) +(?P<capability>[RTBSHIVDrs\s]+) +'
+                        r'(?P<platform>[\S\s]+)$')        
 
         # p6: For Linux neighbor all in one line
         # shkothap-lnx        Eth1/1/1       119    R S H     Linux         enp2s0
         p6 = re.compile(r'^(?P<device_id>\S+) +'
-                        '(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
-                        '(?P<hold_time>\d+) +(?P<capability>[RTBSHIVDrs\s]+) +'
-                        '(?P<platform>[Ll]inux[\S\s]*) +'        
-                        '(?P<port_id>[a-z0-9]+)$')
+                        r'(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
+                        r'(?P<hold_time>\d+) +(?P<capability>[RTBSHIVDrs\s]+) +'
+                        r'(?P<platform>[Ll]inux[\S\s]*) +'        
+                        r'(?P<port_id>[a-z0-9]+)$')
 
         # p7: For Linux neighbor split in two lines
         #                    Eth1/1/2       119    R S H     Linux         enp2s1
         p7 = re.compile(r'^(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
-                        '(?P<hold_time>\d+) +(?P<capability>[RTBSHIVDrs\s]+) +'
-                        '(?P<platform>[Ll]inux[\S\s]*) +'        
-                        '(?P<port_id>[a-z0-9]+)$')
+                        r'(?P<hold_time>\d+) +(?P<capability>[RTBSHIVDrs\s]+) +'
+                        r'(?P<platform>[Ll]inux[\S\s]*) +'        
+                        r'(?P<port_id>[a-z0-9]+)$')
 
         device_id_index = 0
 
@@ -254,7 +254,7 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
 
         #System Name:swor96
         system_name_re = re.compile(r''
-            'System\s*Name\s*:\s*(?P<system_name>\S+)')
+            r'System\s*Name\s*:\s*(?P<system_name>\S+)')
 
         # Platform: N9K-9000v,  Capabilities: Router Switch CVTA phone port
         # Platform: ISR4451-X/K9, Capabilities: Router Switch IGMP Filtering
@@ -263,32 +263,32 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
         # Interface: GigabitEthernet0/0,  Port ID (outgoing port): mgmt0
         # Interface: Ethernet1/1, Port ID (outgoing port): Ethernet1/2
         interface_port_re = re.compile(r'Interface:\s*'
-                                        '(?P<interface>[\w\s\-\/\/]+)\s*\,'
-                                        '*\s*Port\s*ID\s*[\(\w\)\s]+:\s*'
-                                        '(?P<port_id>\S+)')
+                                        r'(?P<interface>[\w\s\-\/\/]+)\s*\,'
+                                        r'*\s*Port\s*ID\s*[\(\w\)\s]+:\s*'
+                                        r'(?P<port_id>\S+)')
 
         # Native VLAN: 42
         native_vlan_re = re.compile(r'Native\s*VLAN\s*:\s*'
-                                    '(?P<native_vlan>\d+)')
+                                    r'(?P<native_vlan>\d+)')
 
         # VTP Management Domain: 'Accounting Group'
         vtp_management_domain_re = re.compile(r''
-            'VTP\s*Management\s*Domain\s*:\s*\W*'
-            '(?P<vtp_management_domain>([a-zA-Z\s]+))\W*')
+            r'VTP\s*Management\s*Domain\s*:\s*\W*'
+            r'(?P<vtp_management_domain>([a-zA-Z\s]+))\W*')
 
         # Holdtime : 126 sec
         hold_time_re = re.compile(r'Holdtime\s*:\s*\s*(?P<hold_time>\d+)')
 
         # advertisement version: 2
         advertver_re = re.compile(r'Advertisement\s*Version:\s*'
-                                    '(?P<advertisement_ver>\d+)')
+                                    r'(?P<advertisement_ver>\d+)')
 
         # Cisco IOS Software, IOSv Software (VIOS-ADVENTERPRISEK9-M), Version 15.7(3)M3, RELEASE SOFTWARE (fc2)
         software_version_re = re.compile(r'(?P<software_version>[\s\S]+)')
 
         # Physical Location: snmplocation
         physical_location_re = re.compile(r''
-            'Physical\s*Location\s*:\s*(?P<physical_location>\S*)')
+            r'Physical\s*Location\s*:\s*(?P<physical_location>\S*)')
 
         # Duplex: full
         # Duplex Mode: half
@@ -301,15 +301,15 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
         mngaddress_re = re.compile(r'Mgmt\s*address\s*\([\w]+\)\s*\:\s*')
         # Interface address(es):
         interface_address_re = re.compile(r''
-                    'Interface\s*address\s*\(\w+\)\s*\:\s*')        
+                    r'Interface\s*address\s*\(\w+\)\s*\:\s*')        
 
         # IPv6 address: FE80::203:E3FF:FE6A:BF81  (link-local)
         # IPv6 address: 2001:DB8:1000:8A10::C0A8:BC06  (global unicast)
-        ipv6_address_re = re.compile('IPv6\s*Address\s*:\s*(?P<ip_address>\S+)'
-                                    '\s*\((?P<type>[\s\w\-]+)\)')
+        ipv6_address_re = re.compile(r'IPv6\s*Address\s*:\s*(?P<ip_address>\S+)'
+                                    r'\s*\((?P<type>[\s\w\-]+)\)')
         # IPv4 address: 172.16.1.204
         ipv4_address_re = re.compile(r'\S*IPv4\s*'
-                            'Address:\s*(?P<ip_address>\S*)')
+                            r'Address:\s*(?P<ip_address>\S*)')
 
         # 0 or 1 flags
         interface_address_flag = 0

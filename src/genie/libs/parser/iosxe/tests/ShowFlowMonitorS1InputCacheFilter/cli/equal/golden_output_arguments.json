@@ -1,0 +1,6 @@
+{
+    "name": "M1_output",
+    "ip_version": "ipv4",
+    "src_addr":  "ipv4",
+    "dst_addr": "ipv4"
+}

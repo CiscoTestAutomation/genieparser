@@ -66,19 +66,19 @@ class ShowInterfaceSummary(ShowInterfaceSummarySchema):
         # Interface GigabitEthernet0/5 "", is administratively down, line protocol is up
         # Interface "nlp_int_tap", is up, line protocol is up
         p1 = re.compile(r'^Interface +((?P<interface>\S+) +)?"(?P<name>\S*)", +is +'
-            '(?P<link_status>[\w\s]+), +line +protocol +is +(?P<line_protocol>\w+)$')
+            r'(?P<link_status>[\w\s]+), +line +protocol +is +(?P<line_protocol>\w+)$')
 
         # MAC address aa11.bbff.ee55, MTU 1500
         p2 = re.compile(r'^MAC address +(?P<mac_address>[\w\.]+), +MTU +(?P<mtu>\d+)$')
 
         # IP address 10.10.10.1, subnet mask 255.255.255.0
         p3 = re.compile(r'^IP +address +(?P<ip>[a-z0-9\.]+)'
-            '(\/(?P<prefix_length>[0-9]+))?, +subnet +mask '
-            '+(?P<subnet>[\w\.]+)$')
+            r'(\/(?P<prefix_length>[0-9]+))?, +subnet +mask '
+            r'+(?P<subnet>[\w\.]+)$')
 
         # Available but not configured via nameif
         p4 = re.compile(r'^(?P<interface_state>Available) +but +'
-            '(?P<config_status>not +configured) +via +(?P<config_issue>\S*)$')
+            r'(?P<config_status>not +configured) +via +(?P<config_issue>\S*)$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -328,27 +328,27 @@ class ShowInterfaceDetail(ShowInterfaceDetailSchema):
 
         # Interface Vlan300 "admin-out", is up, line protocol is up
         p1 = re.compile(r'^Interface +(?P<interface>\S+) +"(?P<name>\S*)", +is +'
-            '(?P<link_status>[\w\s]+), +line +protocol +is +(?P<line_protocol>\w+)$')
+            r'(?P<link_status>[\w\s]+), +line +protocol +is +(?P<line_protocol>\w+)$')
 
         # MAC address aa11.bbff.ee55, MTU 1500
         p2 = re.compile(r'^MAC address +(?P<mac_address>[\w\.]+), +MTU +(?P<mtu>\d+)$')
 
         # IP address 10.10.10.1, subnet mask 255.255.255.0
         p3 = re.compile(r'^IP +address +(?P<ip>[a-z0-9\.]+)'
-                        '(\/(?P<prefix_length>[0-9]+))?, +subnet +mask '
-                        '+(?P<subnet>[\w\.]+)$')
+                        r'(\/(?P<prefix_length>[0-9]+))?, +subnet +mask '
+                        r'+(?P<subnet>[\w\.]+)$')
 
         # Available but not configured via nameif
         p4 = re.compile(r'^(?P<interface_state>Available) +but +'
-            '(?P<config_status>not +configured) +via +(?P<config_issue>\S*)$')
+            r'(?P<config_status>not +configured) +via +(?P<config_issue>\S*)$')
 
         # 889007666 packets input, 785740327549 bytes
         p5 = re.compile(r'^(?P<packets_input>\d+) +packets +input, '
-            '+(?P<bytes_input>[\d]+) +bytes$')
+            r'+(?P<bytes_input>[\d]+) +bytes$')
 
         # 621453837 packets output, 428046938178 bytes
         p6 = re.compile(r'^(?P<packets_output>\d+) +packets +output, '
-            '+(?P<bytes_output>[\d]+) +bytes$')
+            r'+(?P<bytes_output>[\d]+) +bytes$')
 
         # 2988535 packets dropped
         p7 = re.compile(r'^(?P<packets_dropped>\d+) +packets +dropped$')
@@ -359,7 +359,7 @@ class ShowInterfaceDetail(ShowInterfaceDetailSchema):
         # Interface config status is active
         # Interface config status is not active
         p9 = re.compile(r'^Interface +config +status +is '
-            '+(?P<interface_config_status>[\S\s]+)$')
+            r'+(?P<interface_config_status>[\S\s]+)$')
 
         # Interface state is active
         # Interface state is not active
@@ -368,12 +368,12 @@ class ShowInterfaceDetail(ShowInterfaceDetailSchema):
         # Interface vlan config status is active
         # Interface vlan config status is not active
         p11 = re.compile(r'^Interface +vlan +config +status +is '
-            '+(?P<interface_vlan_config_status>[\S\s]+)$')
+            r'+(?P<interface_vlan_config_status>[\S\s]+)$')
 
         # Interface vlan state is UP
         # Interface vlan state is DOWN (down in system space)
         p12 = re.compile(r'^Interface +vlan +state +is +'
-            '(?P<interface_vlan_state>\w+)+([\S\s]+)?$')
+            r'(?P<interface_vlan_state>\w+)+([\S\s]+)?$')
 
         for line in out.splitlines():
             line = line.strip()

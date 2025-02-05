@@ -1,0 +1,53 @@
+# show ip igmp snooping
+
+Global IGMP Snooping Information:
+  IGMP Snooping enabled
+  Optimised Multicast Flood (OMF) enabled
+  IGMPv1/v2 Report Suppression enabled
+  IGMPv3 Report Suppression disabled
+  Link Local Groups Suppression enabled
+
+IGMP Snooping information for vlan 1
+  IGMP snooping enabled
+  Lookup mode: IP
+  Optimised Multicast Flood (OMF) enabled
+  IGMP querier none
+  Switch-querier disabled
+  IGMPv3 Explicit tracking enabled
+  IGMPv2 Fast leave disabled
+  IGMPv1/v2 Report suppression enabled
+  IGMPv3 Report suppression disabled
+  Link Local Groups suppression enabled
+  Router port detection using PIM Hellos, IGMP Queries
+  Number of router-ports: 1
+  Number of groups: 0
+  VLAN vPC function enabled
+  Active ports:
+    Po700       Po858   
+  Report Flooding: Disabled
+  Interfaces for Report Flooding: n/a 
+  Use Group Address for Proxy Leaves: no
+
+IGMP Snooping information for vlan 2141
+  IGMP snooping enabled
+  Lookup mode: IP
+  Optimised Multicast Flood (OMF) enabled
+  IGMP querier present, address: XXX.XXX.XXX.XXX, version: 3
+  Querier interval: 125 secs
+  Querier last member query interval: 1 secs
+  Querier robustness: 2
+  Switch-querier enabled, address XXX.XXX.XXX.XXX, currently running
+  IGMPv3 Explicit tracking enabled
+  IGMPv2 Fast leave disabled
+  IGMPv1/v2 Report suppression enabled
+  IGMPv3 Report suppression disabled
+  Link Local Groups suppression enabled
+  Router port detection using PIM Hellos, IGMP Queries
+  Number of router-ports: 1
+  Number of groups: 0
+  VLAN vPC function enabled
+  Active ports:
+    Po700       Po702   Po858   
+  Report Flooding: Disabled
+  Interfaces for Report Flooding: n/a 
+  Use Group Address for Proxy Leaves: no

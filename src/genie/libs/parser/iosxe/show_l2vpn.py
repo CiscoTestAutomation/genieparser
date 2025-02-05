@@ -185,6 +185,7 @@ IOSXE parsers for the following show commands:
     * show l2vpn evpn all-active-mh mac ip
     * show l2vpn evpn all-active-mh mac ip vlan <vlan_id>
     * show l2vpn evpn all-active-mh vlan brief
+    * show l2vpn evpn multihoming vlan
 
 Copyright (c) 2024 by Cisco Systems, Inc.
 All rights reserved.
@@ -306,7 +307,7 @@ class ShowBridgeDomain(ShowBridgeDomainSchema):
         #    0   0000.A0FF.00F2 forward dynamic   3438 GigabitEthernet0/0/3.EFP3051
         #    -   000C.29FF.4971 forward static_r  0    OCE_PTR:0xe8e5dda0
         p7 = re.compile(r'^(?P<aed>[\d-]+) +(?P<mac_address>[\w\d\.]+) +(?P<policy>\w+) +(?P<tag>\w+)'
-                         ' +(?P<age>\d+) +(?P<pseudoport>[\w\d\-\.\/:]+)$')
+                         r' +(?P<age>\d+) +(?P<pseudoport>[\w\d\-\.\/:]+)$')
 
         # Number of lines which match regexp = 32000
         p8 = re.compile(r'^Number +of +lines +which +match +regexp += +(?P<lines_match_regexp>\d+)$')
@@ -532,7 +533,7 @@ class ShowEthernetServiceInstanceDetail(ShowEthernetServiceInstanceDetailSchema)
 
         # 1   Static GigabitEthernet0/0/3       Up
         p16 = re.compile(r'^(?P<service_id>\d+) +(?P<service_instance_type>\w+) +'
-            '(?P<associated_interface>\S+) +(?P<state>\w+)( +(?P<vlans>\S+))?$')
+            r'(?P<associated_interface>\S+) +(?P<state>\w+)( +(?P<vlans>\S+))?$')
 
         # Microblock type: Storm-Control
         p17 = re.compile(r'^Microblock +type: +(?P<micro_block_type>[\S ]+)$')
@@ -829,8 +830,8 @@ class ShowEthernetServiceInstanceStats(ShowEthernetServiceInstanceStatsSchema):
         # default:0            default:0            default:0
         # cos 0:0              cos 0:0              cos 0:0
         p4 = re.compile(r'^(?P<broadcast_key>(default)|(\w+ +\d+)):(?P<broadcast_value>\d+) +'
-                '(?P<multicast_key>(default)|(\w+ +\d+)):(?P<multicast_value>\d+) +'
-                '(?P<unknown_unicast_key>(default)|(\w+ +\d+)):(?P<unknown_unicast_value>\d+)$')
+                r'(?P<multicast_key>(default)|(\w+ +\d+)):(?P<multicast_value>\d+) +'
+                r'(?P<unknown_unicast_key>(default)|(\w+ +\d+)):(?P<unknown_unicast_value>\d+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -927,8 +928,8 @@ class ShowEthernetServiceInstanceSummary(ShowEthernetServiceInstanceSummarySchem
         # other         201      201        0        0        0        0        0        0
         # all           201      201        0        0        0        0        0        0
         p3 = re.compile(r'^(?P<service>[\w\s\d]+) +(?P<total>\d+) +(?P<up>\d+)'
-                         ' +(?P<admin_do>\d+) +(?P<down>\d+) +(?P<error_di>\d+)'
-                         ' +(?P<unknown>\d+) +(?P<deleted>\d+) +(?P<bd_adm_do>\d+)$')
+                         r' +(?P<admin_do>\d+) +(?P<down>\d+) +(?P<error_di>\d+)'
+                         r' +(?P<unknown>\d+) +(?P<deleted>\d+) +(?P<bd_adm_do>\d+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -1029,17 +1030,17 @@ class ShowL2vpnVfi(ShowL2vpnVfiSchema):
         # VFI name: VPLS-2051, state: up, type: multipoint, signaling: BGP
         # VFI name: serviceCore1, State: UP, Signaling Protocol: LDP
         p1 = re.compile(r'^VFI +name: +(?P<vfi>[\w\d\-]+), +[S|s]tate:'
-                         ' +(?P<state>\w+)(, type: +(?P<type>\w+))?,'
-                         ' +[S|s]ignaling( Protocol)?: +(?P<signaling>\w+)$')
+                         r' +(?P<state>\w+)(, type: +(?P<type>\w+))?,'
+                         r' +[S|s]ignaling( Protocol)?: +(?P<signaling>\w+)$')
 
         #   VPN ID: 2051, VE-ID: 2, VE-SIZE: 10
         #   VPN ID: 2000
         p2 = re.compile(r'^VPN +ID: +(?P<vpn_id>\d+)(, +VE-ID: +(?P<ve_id>\d+),'
-                         ' VE-SIZE: +(?P<ve_range>\d+))?$')
+                         r' VE-SIZE: +(?P<ve_range>\d+))?$')
 
         #   VPN ID: 100, VPLS-ID: 9:10, Bridge-domain vlan: 100
         p2_1 = re.compile(r'^VPN +ID: +(?P<vpn_id>\d+), +VPLS-ID: +(?P<vpls_id>\S+),'
-                         ' Bridge-domain +vlan: +(?P<bridge_domain_vlan>\d+)$')
+                         r' Bridge-domain +vlan: +(?P<bridge_domain_vlan>\d+)$')
 
         #   RD: 65109:2051, RT: 65109:2051, 65109:2051,
         #   RD: 9:10, RT: 10.10.10.10:150
@@ -1047,7 +1048,7 @@ class ShowL2vpnVfi(ShowL2vpnVfiSchema):
 
         #   Bridge-Domain 2051 attachment circuits:
         p4 = re.compile(r'^Bridge-Domain +(?P<bd_id>\d+)'
-                         ' +attachment +circuits:( +(?P<attachment_circuits>[\S\s]+))?$')
+                         r' +attachment +circuits:( +(?P<attachment_circuits>[\S\s]+))?$')
 
         #   Pseudo-port interface: pseudowire100001
         p5 = re.compile(r'^Pseudo-port +[I|i]nterface: +(?P<pseudo_port_interface>\S+)$')
@@ -1055,14 +1056,14 @@ class ShowL2vpnVfi(ShowL2vpnVfiSchema):
         #   Interface          Peer Address    VE-ID  Local Label  Remote Label    S
         #   pseudowire100202   10.120.202.64    1      16           327810          Y
         p6 = re.compile(r'^(?P<pw_intf>\S+) +(?P<pw_peer_id>[\d\.]+)'
-                         ' +(?P<ve_id>\d+) +(?P<local_label>\d+) +(?P<remote_label>\d+) +(?P<split_horizon>\w+)$')
+                         r' +(?P<ve_id>\d+) +(?P<local_label>\d+) +(?P<remote_label>\d+) +(?P<split_horizon>\w+)$')
 
         # Interface          Peer Address     VC ID        S
         # pseudowire3        10.64.4.4        14           Y
         # pseudowire2        10.36.3.3        13           Y
         # pseudowire1        10.16.2.2        12           Y
         p6_1 = re.compile(r'^(?P<pw_intf>\S+) +(?P<pw_peer_id>[\d\.]+)'
-                         ' +(?P<vc_id>\d+) +(?P<split_horizon>\w+)$')
+                         r' +(?P<vc_id>\d+) +(?P<split_horizon>\w+)$')
 
         # Interface    Peer Address    VC ID      Discovered Router ID   Next Hop
         # Pw2000       10.0.0.1        10         10.0.0.1               10.0.0.1
@@ -1070,7 +1071,7 @@ class ShowL2vpnVfi(ShowL2vpnVfiSchema):
         # Pw2002       10.0.0.3        10         10.1.1.3               10.0.0.3
         # Pw5          10.0.0.4        10         -                      10.0.0.4
         p6_2 = re.compile(r'^(?P<pw_intf>\S+) +(?P<pw_peer_id>[\d\.]+)'
-                         ' +(?P<vc_id>\d+) +(?P<discovered_router_id>[\d\.\-]+) +(?P<next_hop>\S+)$')
+                         r' +(?P<vc_id>\d+) +(?P<discovered_router_id>[\d\.\-]+) +(?P<next_hop>\S+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -1377,9 +1378,9 @@ class ShowL2vpnVfiNameDetail(ShowL2vpnVfiNameDetailSchema):
 
         #VFI name: vpls, state: up, type: multipoint, signaling: LDP
         p1 = re.compile(r'VFI name: +(?P<vfi_name>\w+)\, +'
-                    'state: +(?P<state>\w+)\, +'
-                    'type: +(?P<type>\w+)\, +'
-                    'signaling: +(?P<signaling>\w+)')
+                    r'state: +(?P<state>\w+)\, +'
+                    r'type: +(?P<type>\w+)\, +'
+                    r'signaling: +(?P<signaling>\w+)')
 
         #VPN ID: 1000
         p2 = re.compile(r'VPN ID: +(?P<vpn_id>\d+)')
@@ -1392,9 +1393,9 @@ class ShowL2vpnVfiNameDetail(ShowL2vpnVfiNameDetailSchema):
 
         #pseudowire22       192.168.255.3    1000         Y
         p5 = re.compile(r'(?P<interface>\S+) +'
-                    '(?P<addr>([0-9]+\.){3}[0-9]+) +'
-                    '(?P<vc_id>\d+) +'
-                    '(?P<s>\w)')
+                    r'(?P<addr>([0-9]+\.){3}[0-9]+) +'
+                    r'(?P<vc_id>\d+) +'
+                    r'(?P<s>\w)')
 
         for line in out.splitlines():
             line = line.strip()
@@ -1476,9 +1477,9 @@ class ShowVfiName(ShowVfiNameSchema):
 
         #VFI name: vpls, state: up, type: multipoint, signaling: LDP
         p1 = re.compile(r'VFI name: +(?P<vfi_name>\w+)\, +'
-                    'state: +(?P<state>\w+)\, +'
-                    'type: +(?P<type>\w+)\, +'
-                    'signaling: +(?P<signaling>\w+)')
+                    r'state: +(?P<state>\w+)\, +'
+                    r'type: +(?P<type>\w+)\, +'
+                    r'signaling: +(?P<signaling>\w+)')
 
         #VPN ID: 1000
         p2 = re.compile(r'VPN ID: +(?P<vpn_id>\d+)')
@@ -1488,8 +1489,8 @@ class ShowVfiName(ShowVfiNameSchema):
 
         #192.168.255.3    1000         Y
         p4 = re.compile(r'(?P<addr>([0-9]+\.){3}[0-9]+) +'
-                    '(?P<vc_id>\d+) +'
-                    '(?P<s>\w)')
+                    r'(?P<vc_id>\d+) +'
+                    r'(?P<s>\w)')
 
         peer_count=1
         for line in out.splitlines():
@@ -1801,6 +1802,59 @@ class ShowL2vpnEvpnEthernetSegment(ShowL2vpnEvpnEthernetSegmentSchema):
                     'redundancy_mode': group['redundancy_mode'],
                     'df_wait_time': int(group['df_time']),
                     'split_horizon_label': int(group['sh_label'])
+                })
+                continue
+
+        return parser_dict
+
+# ============================================
+# Schema for 'show l2vpn evpn multihoming vlan'
+# ============================================
+class ShowL2vpnEvpnMultihomingVlanSchema(MetaParser):
+    """ Schema for show l2vpn evpn multihoming vlan
+    """
+
+    schema = {
+        'vlan': {
+            Any(): {
+                'esi': str,
+                'switchport': str,
+            }
+        }
+    }
+
+# ==================================================
+# Parser for 'show l2vpn evpn multihoming vlan'
+# ==================================================
+class ShowL2vpnEvpnMultihomingVlan(ShowL2vpnEvpnMultihomingVlanSchema):
+    """ Parser for: show l2vpn evpn multihoming vlan """
+
+    cli_command = 'show l2vpn evpn multihoming vlan'
+
+    def cli(self, output=None):
+
+        parsed_dict = {}
+
+        if output is None:
+            # Execute command
+            output = self.device.execute(self.cli_command)
+
+        #200   00AA.AAAA.AAAA.AAAA.AAAA FastEthernet0/0/1
+        p1 = re.compile(r'^(?P<vlan>(\d+)) +(?P<esi>\S+) +(?P<switchport>\S+)$')
+        parser_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # 200   0300.1200.1200.1200.0001 FastEthernet0/0/1
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                vlan = parser_dict.setdefault('vlan', {})
+                vlan_val = vlan.setdefault(group['vlan'], {})
+                vlan_val.update({
+                    'esi': group['esi'],
+                    'switchport': Common.convert_intf_name(group['switchport']),
                 })
                 continue
 
@@ -4056,7 +4110,7 @@ class ShowL2vpnAtomPreferredPath(ShowL2vpnAtomPreferredPathSchema):
         # Tunnel65536                                          20.20.20.20     2
 
         p1 = re.compile(r'^(?P<interface>\S+) +(?:(?P<total_bandwidth>\d+)\/(?P<avail_bandwidth>\d+)'
-                         '\/(?P<reserved_bandwidth>\d+))? +(?P<peer_id>[\d.]+) +(?P<vc_id>\d+)$')
+                         r'\/(?P<reserved_bandwidth>\d+))? +(?P<peer_id>[\d.]+) +(?P<vc_id>\d+)$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -5153,7 +5207,7 @@ class ShowL2vpnEvpnMcastLocal(ShowL2vpnEvpnMcastLocalSchema):
 
         parsed_dict = oper_fill_tabular(
             header_fields=["EVI", "VLAN", "Interface",
-                           "Version", "Filter", "\(Source, Group\)"],
+                           "Version", "Filter", r"\(Source, Group\)"],
             label_fields=['evi', 'vlan', 'interface', 'version',
                           'filter_mode', 'src_grp'],
             index=[0, 1, 2, 5],
@@ -5207,7 +5261,7 @@ class ShowL2vpnEvpnMcastRemote(ShowL2vpnEvpnMcastRemoteSchema):
 
         parsed_dict = oper_fill_tabular(
             header_fields=["EVI", "VLAN", "Originator",
-                           "Version", "Filter", "\(Source, Group\)"],
+                           "Version", "Filter", r"\(Source, Group\)"],
             label_fields=['evi', 'vlan', 'originator', 'version',
                           'filter_mode', 'src_grp'],
             index=[0, 1, 2, 5],

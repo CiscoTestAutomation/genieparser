@@ -105,7 +105,7 @@ class ShowOspfInterfaceBrief(ShowOspfInterfaceBriefSchema):
         # ge-0/0/2.0    BDR    0.0.0.1    10.16.2.2    10.64.4.4     5
         p1 = re.compile(
             r'^(?P<interface>\S+) +(?P<state>\S+) '
-            '+(?P<area>\S+) +(?P<dr_id>\S+) +(?P<bdr_id>\S+) +(?P<nbrs_count>\d+)$'
+            r'+(?P<area>\S+) +(?P<dr_id>\S+) +(?P<bdr_id>\S+) +(?P<nbrs_count>\d+)$'
         )
 
         for line in out.splitlines():

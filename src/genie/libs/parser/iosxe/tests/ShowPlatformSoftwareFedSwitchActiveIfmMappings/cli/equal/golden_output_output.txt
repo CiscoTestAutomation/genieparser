@@ -1,0 +1,12 @@
+GID         Interface                         IF_ID               Type
+-------------------------------------------------------------------------------------------
+1           Vlan1                             0x00000420          SVI
+5           Vlan5                             0x00000426          SVI
+10          Vlan10                            0x00000427          SVI
+15          Vlan15                            0x00000428          SVI
+500         Vlan500                           0x00000429          SVI
+4150        GigabitEthernet1/0/11             0x0000042a          ETHER
+4151        GigabitEthernet1/0/12             0x0000042b          ETHER
+4152        GigabitEthernet1/0/13             0x0000042c          ETHER
+4153        GigabitEthernet1/0/14             0x0000042d          ETHER
+4149        GigabitEthernet1/0/10             0x0000042e          ETHER   

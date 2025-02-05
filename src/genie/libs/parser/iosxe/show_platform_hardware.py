@@ -142,16 +142,16 @@ class ShowPlatformHardware(ShowPlatformHardwareSchema):
         # Interface: internal0/0/recycle:0 QFP: 0.0 if_h: 1 Num Queues/Schedules: 0
         p1 = re.compile(
             r"^Interface: +(?P<intf_name>[\w\d\/\.\-\:]+)"
-            " +QFP: +(?P<qfp>[\d\.]+)"
-            " +if_h: +(?P<if_h>\d+)"
-            " +Num Queues/Schedules: +(?P<num_queues>\d+)$"
+            r" +QFP: +(?P<qfp>[\d\.]+)"
+            r" +if_h: +(?P<if_h>\d+)"
+            r" +Num Queues/Schedules: +(?P<num_queues>\d+)$"
         )
 
         #     Index 0 (Queue ID:0xa6, Name: GigabitEthernet1/0/7)
         p2 = re.compile(
             r"^Index +(?P<index>\d+)"
-            " +\(Queue +ID:(?P<queue_id>[\w\d]+),"
-            " +Name: +(?P<interf_name>[\w\d\/\.\-\:]+)\)$"
+            r" +\(Queue +ID:(?P<queue_id>[\w\d]+),"
+            r" +Name: +(?P<interf_name>[\w\d\/\.\-\:]+)\)$"
         )
 
         #       Software Control Info:
@@ -162,37 +162,37 @@ class ShowPlatformHardware(ShowPlatformHardwareSchema):
         #  (cache) queue id: 0x00000070, wred: 0xe73cfde0, qlimit (pkts ): 418
         p3_2 = re.compile(
             r"^\(cache\) +queue +id: +(?P<cache_queue_id>[\w\d]+),"
-            " +wred: +(?P<wred>[\w\d]+),"
-            " +qlimit +\((?P<type>bytes|pkts +)\): +(?P<qlimit>\d+)$"
+            r" +wred: +(?P<wred>[\w\d]+),"
+            r" +qlimit +\((?P<type>bytes|pkts +)\): +(?P<qlimit>\d+)$"
         )
 
         #       parent_sid: 0x284, debug_name: GigabitEthernet1/0/7
         p4 = re.compile(
             r"^parent_sid: +(?P<parent_sid>[\w\d]+),"
-            " debug_name: +(?P<debug_name>[\w\d\/\.\-\:]+)$"
+            r" debug_name: +(?P<debug_name>[\w\d\/\.\-\:]+)$"
         )
 
         #       sw_flags: 0x08000011, sw_state: 0x00000c01, port_uidb: 245728
         p5 = re.compile(
             r"^sw_flags: +(?P<sw_flags>[\w\d]+),"
-            " +sw_state: +(?P<sw_state>[\w\d]+),"
-            " +port_uidb: +(?P<port_uidb>\d+)$"
+            r" +sw_state: +(?P<sw_state>[\w\d]+),"
+            r" +port_uidb: +(?P<port_uidb>\d+)$"
         )
 
         #       orig_min  : 0                   ,      min: 105000000
-        p6 = re.compile(r"^orig_min +: +(?P<orig_min>\d+) +," " +min: +(?P<min>\d+)$")
+        p6 = re.compile(r"^orig_min +: +(?P<orig_min>\d+) +, +min: +(?P<min>\d+)$")
 
         #       min_qos   : 0                   , min_dflt: 0
         p7 = re.compile(
-            r"^min_qos +: +(?P<min_qos>\d+) +," " +min_dflt: +(?P<min_dflt>\d+)$"
+            r"^min_qos +: +(?P<min_qos>\d+) +, +min_dflt: +(?P<min_dflt>\d+)$"
         )
 
         #       orig_max  : 0                   ,      max: 0
-        p8 = re.compile(r"^orig_max +: +(?P<orig_max>\d+) +," " +max: +(?P<max>\d+)$")
+        p8 = re.compile(r"^orig_max +: +(?P<orig_max>\d+) +, +max: +(?P<max>\d+)$")
 
         #       max_qos   : 0                   , max_dflt: 0
         p9 = re.compile(
-            r"^max_qos +: +(?P<max_qos>\d+) +," " +max_dflt: +(?P<max_dflt>\d+)$"
+            r"^max_qos +: +(?P<max_qos>\d+) +, +max_dflt: +(?P<max_dflt>\d+)$"
         )
 
         #       share     : 1
@@ -200,7 +200,7 @@ class ShowPlatformHardware(ShowPlatformHardwareSchema):
 
         #       plevel    : 0, priority: 65535
         p11 = re.compile(
-            r"^plevel +: +(?P<plevel>\d+)," " +priority: +(?P<priority>\d+)$"
+            r"^plevel +: +(?P<plevel>\d+), +priority: +(?P<priority>\d+)$"
         )
 
         #       defer_obj_refcnt: 0
@@ -216,13 +216,13 @@ class ShowPlatformHardware(ShowPlatformHardwareSchema):
         #       tail drops  (bytes): 0                   ,          (packets): 0
         p13_2 = re.compile(
             r"^tail +drops +\(bytes\): +(?P<tail_drops_bytes>\d+) +,"
-            " +\(packets\): +(?P<tail_drops_packets>\d+)$"
+            r" +\(packets\): +(?P<tail_drops_packets>\d+)$"
         )
 
         #       total enqs  (bytes): 0                   ,          (packets): 0
         p14 = re.compile(
             r"^total +enqs +\(bytes\): +(?P<total_enqs_bytes>\d+) +,"
-            " +\(packets\): +(?P<total_enqs_packets>\d+)$"
+            r" +\(packets\): +(?P<total_enqs_packets>\d+)$"
         )
 
         #       queue_depth (bytes): 0
@@ -235,7 +235,7 @@ class ShowPlatformHardware(ShowPlatformHardwareSchema):
         #                   (bytes): 0                   ,          (packets): 0
         p16 = re.compile(
             r"^\(bytes\): +(?P<lic_throughput_oversub_drops_bytes>\d+) +,"
-            " +\(packets\): +(?P<lic_throughput_oversub_drops_packets>\d+)$"
+            r" +\(packets\): +(?P<lic_throughput_oversub_drops_packets>\d+)$"
         )
 
         for line in out.splitlines():
@@ -571,8 +571,8 @@ class ShowPlatformHardwarePlim(ShowPlatformHardwarePlimSchema):
         # 0/3, SPA-1XTENGE-XFP-V2, Online
         p9 = re.compile(
             r"^(?P<slot>\d+)/(?P<subslot>\d+),"
-            " +(?P<name>[\w\d\-]+),"
-            " +(?P<status>\w+)$"
+            r" +(?P<name>[\w\d\-]+),"
+            r" +(?P<status>\w+)$"
         )
 
         #   RX IPC Pkts 0           Bytes 0
@@ -965,7 +965,7 @@ class ShowPlatformHardwareQfpBqsOpmMapping(ShowPlatformHardwareQfpBqsMappingSche
         # * - indicates the drain mode bit is set for this channel
         p1 = re.compile(
             r"^(?P<number>\d+)(?P<drained>\*)? +(?P<name>[\w\-\s]+)"
-            " +(?P<interface>[\w\d]+) +(?P<logical_channel>\d+)$"
+            r" +(?P<interface>[\w\d]+) +(?P<logical_channel>\d+)$"
         )
 
         # 32       Unmapped
@@ -1029,8 +1029,8 @@ class ShowPlatformHardwareQfpBqsIpmMapping(ShowPlatformHardwareQfpBqsMappingSche
         # 21     CC4 Low             SPI0          16        1
         p1 = re.compile(
             r"^(?P<number>\d+) +(?P<name>[\w\-\s]+)"
-            " +(?P<interface>[\w\d]+) +(?P<port>\d+)"
-            " +(?P<cfifo>\d+)$"
+            r" +(?P<interface>[\w\d]+) +(?P<port>\d+)"
+            r" +(?P<cfifo>\d+)$"
         )
 
         # 32       Unmapped
@@ -2040,7 +2040,7 @@ class ShowPlatformHardwareQfpBqsOpmMapping(ShowPlatformHardwareQfpBqsMappingSche
         # * - indicates the drain mode bit is set for this channel
         p1 = re.compile(
             r"^(?P<number>\d+)(?P<drained>\*)? +(?P<name>[\w\-\s]+)"
-            " +(?P<interface>[\w\d]+) +(?P<logical_channel>\d+)$"
+            r" +(?P<interface>[\w\d]+) +(?P<logical_channel>\d+)$"
         )
 
         # 32       Unmapped
@@ -2104,8 +2104,8 @@ class ShowPlatformHardwareQfpBqsIpmMapping(ShowPlatformHardwareQfpBqsMappingSche
         # 21     CC4 Low             SPI0          16        1
         p1 = re.compile(
             r"^(?P<number>\d+) +(?P<name>[\w\-\s]+)"
-            " +(?P<interface>[\w\d]+) +(?P<port>\d+)"
-            " +(?P<cfifo>\d+)$"
+            r" +(?P<interface>[\w\d]+) +(?P<port>\d+)"
+            r" +(?P<cfifo>\d+)$"
         )
 
         # 32       Unmapped
@@ -3731,7 +3731,7 @@ class ShowPlatformHardwareAuthenticationStatus(
         # Fan Tray 1 Authentication:  pass
         # Chassis Authentication: pass
         p0 = re.compile(
-            "(Line\s+Card |SUP|Line\s+Card:|Fan\s+Tray|Chassis|SSD.+|SUP\s+|Fan\s+Tray )\d*\s*Authentication:\s+(?P<Slot>(pass|Not Available|fail))$"
+            r"(Line\s+Card |SUP|Line\s+Card:|Fan\s+Tray|Chassis|SSD.+|SUP\s+|Fan\s+Tray )\d*\s*Authentication:\s+(?P<Slot>(pass|Not Available|fail))$"
         )
 
         # Switch 1:
@@ -3877,11 +3877,11 @@ class ShowPlatformHardwareChassisFantrayDetailSwitch(
         ret_dict = {}
 
         # FT1:
-        p1 = re.compile("^(?P<fan_tray>.+)\:$")
+        p1 = re.compile(r"^(?P<fan_tray>.+)\:$")
 
         # Inlet:8330 RPM, Outlet:10015 RPM, PWM:30%
         p2 = re.compile(
-            "^Inlet:(?P<inlet_rpm>\d+) +RPM\, +Outlet:(?P<outlet_rpm>\d+) +RPM\, PWM:(?P<pwm>\d+%)$"
+            r"^Inlet:(?P<inlet_rpm>\d+) +RPM\, +Outlet:(?P<outlet_rpm>\d+) +RPM\, PWM:(?P<pwm>\d+%)$"
         )
 
         for line in output.splitlines():
@@ -3948,37 +3948,37 @@ class ShowPlatformHardwareChassisPowerSupplyDetailSwitchAll(
         ret_dict = {}
 
         # PS1:
-        p1 = re.compile("^(?P<power_supply>.+)\:$")
+        p1 = re.compile(r"^(?P<power_supply>.+)\:$")
 
         # Input Voltage   :       121.1250 V
-        p2 = re.compile("^Input\s+Voltage\s+:\s+(?P<input_voltage_volt>\d+\.\d+) V$")
+        p2 = re.compile(r"^Input\s+Voltage\s+:\s+(?P<input_voltage_volt>\d+\.\d+) V$")
 
         # Output Voltage  :       12.0547 V
-        p3 = re.compile("^Output\s+Voltage\s+:\s+(?P<output_voltage_volt>\d+\.\d+) V$")
+        p3 = re.compile(r"^Output\s+Voltage\s+:\s+(?P<output_voltage_volt>\d+\.\d+) V$")
 
         # Input Power     :       507.5000 W
-        p4 = re.compile("^Input\s+Power\s+:\s+(?P<input_power_watt>\d+\.\d+) W$")
+        p4 = re.compile(r"^Input\s+Power\s+:\s+(?P<input_power_watt>\d+\.\d+) W$")
 
         # Output Power    :       0.0000 W
-        p5 = re.compile("^Output\s+Power\s+:\s+(?P<output_power_watt>\d+\.\d+) W$")
+        p5 = re.compile(r"^Output\s+Power\s+:\s+(?P<output_power_watt>\d+\.\d+) W$")
 
         # Input Current   :       0.0000 A
-        p6 = re.compile("^Input\s+Current\s+:\s+(?P<input_current_amp>\d+\.\d+) A$")
+        p6 = re.compile(r"^Input\s+Current\s+:\s+(?P<input_current_amp>\d+\.\d+) A$")
 
         # Output Current  :       0.0000 A
-        p7 = re.compile("^Output\s+Current\s+:\s+(?P<output_current_amp>\d+\.\d+) A$")
+        p7 = re.compile(r"^Output\s+Current\s+:\s+(?P<output_current_amp>\d+\.\d+) A$")
 
         # Temperature1    :       0.0000 C
-        p8 = re.compile("^Temperature1\s+:\s+(?P<temperature1_celsius>\d+\.\d+) C$")
+        p8 = re.compile(r"^Temperature1\s+:\s+(?P<temperature1_celsius>\d+\.\d+) C$")
 
         # Temperature2    :       0.0000 C
-        p9 = re.compile("^Temperature2\s+:\s+(?P<temperature2_celsius>\d+\.\d+) C$")
+        p9 = re.compile(r"^Temperature2\s+:\s+(?P<temperature2_celsius>\d+\.\d+) C$")
 
         # Temperature3    :       0.0000 C
-        p10 = re.compile("^Temperature3\s+:\s+(?P<temperature3_celsius>\d+\.\d+) C$")
+        p10 = re.compile(r"^Temperature3\s+:\s+(?P<temperature3_celsius>\d+\.\d+) C$")
 
         # Fan Speed 1     :       0.0000 RPM
-        p11 = re.compile("^Fan\s+Speed\s+1\s+:\s+(?P<fan_speed_1_rpm>\d+\.\d+) RPM$")
+        p11 = re.compile(r"^Fan\s+Speed\s+1\s+:\s+(?P<fan_speed_1_rpm>\d+\.\d+) RPM$")
 
         for line in output.splitlines():
             line = line.strip()
@@ -4149,12 +4149,12 @@ class ShowPlatformHardwareVoltageMarginSwitch(
         ret_dict = {}
 
         # max chnl 36
-        p1 = re.compile("^max chnl\s+(?P<max_channels>\d+)$")
+        p1 = re.compile(r"^max chnl\s+(?P<max_channels>\d+)$")
 
         # Channel  Rail Name         Voltage(mv)   Nominal Voltage  Min Margin  % Change  Max Margin  Monitor
         # 0        PVCCKRHV              1315.71        1300.00       -3.00        1.21        3.00       0
         p2 = re.compile(
-            "^(?P<channels>\S+)\s+(?P<rail_name>\S+)\s+(?P<voltage_in_mv>[\d+\.]+)\s+(?P<nominal_voltage>[\d+\.]+)\s+(?P<min_margin>\S+)\s+(?P<percentage_change>\S+)\s+(?P<max_margin>\S+)\s+(?P<monitor>\d+)$"
+            r"^(?P<channels>\S+)\s+(?P<rail_name>\S+)\s+(?P<voltage_in_mv>[\d+\.]+)\s+(?P<nominal_voltage>[\d+\.]+)\s+(?P<min_margin>\S+)\s+(?P<percentage_change>\S+)\s+(?P<max_margin>\S+)\s+(?P<monitor>\d+)$"
         )
 
         for line in output.splitlines():
@@ -7052,55 +7052,193 @@ class ShowPlatformHardwareIomdMacsecPortSubport(
 
         return ret_dict
         
+class ShowPlatformHardwareFedeyescanSchema(MetaParser):
+    """Schema for show platform hardware fed switch {mode} npu slot 1 port {port_num} eye_scan"""
+
+    schema = {
+        Optional('npu_pdsf_procagent_get_eye_common'): str,
+        'eye_capture':{
+            'veye_data': {
+                Any(): Or(int,str),
+                   'veye_values': {
+                        Any(): Or(int,str),
+                },   
+            },
+        },
+        'port': int,
+        Optional('slot'): int,
+        'cmd': str,
+        'rc': str,
+        Optional('rsn'): str, 
+        Optional('reason'): str,                
+   } 
+
+class ShowPlatformHardwareFedeyescan(ShowPlatformHardwareFedeyescanSchema):
+    """
+    show platform hardware fed switch {mode} npu slot 1 port {port_num} eye_scan
+    """
+
+    cli_command = ['show platform hardware fed {switch} {mode} npu slot 1 port {port_num} eye_scan', 
+                    'show platform hardware fed {mode} npu slot 1 port {port_num} eye_scan']
+
+    def cli(self, mode, port_num, switch=None, output=None): 
+
+        if output is None:
+            if switch:
+                output = self.device.execute(self.cli_command[0].format(switch=switch, mode=mode,port_num=port_num)) 
+            else:
+                output = self.device.execute(self.cli_command[1].format(mode=mode,port_num=port_num))
+
+        ret_dict = {}
+
+        #npu_pdsf_procagent_config_loopback : asic inst 0 port 39 mode 1 command 20
+        p1 =  re.compile(r'^npu_pdsf_procagent_get_eye_common\s*\:\s*(?P<npu_pdsf_procagent_get_eye_common>.*)$')
+
+        #"eye_capture": {
+        p2 = re.compile (r'^\"eye_capture\"\:\s*\{$')
+
+        #"veye_data": [
+        p3 = re.compile(r'^\"veye_data\"\:\s*\[$')
+
+        #"veye_values": [
+        p4 = re.compile(r'^\"veye_values\"\:\s*\[$')	
+
+        # "serdes_id": 18,
+        p5 = re.compile(r'^\"(?P<key>\w+)\"\:\s*(?P<value>.*)$')        
+
+        #64,
+        p5_1 = re.compile(r'^(?P<value>[-]?\d+)\,$')  
+
+        # Port = 40 Slot = 1 cmd = () rc = 0x16 reason = (null)
+        p6 = re.compile(r'^Port +\= +(?P<port>\d+) +Slot +\= +(?P<slot>\d+) +cmd +\= +(?P<cmd>\([\s*\S]*\)) +rc +\= +(?P<rc>\w+) +reason +\=(?P<reason>.*)$')
+
+        # Port = 39 cmd = (prbs_stop unit 0 port 39 slot 1 serdes_level 1 polynomial 31) rc = 0x0 rsn = success
+        p7  =  re.compile(r'^Port +\= +(?P<port>\d+) +cmd +\= +(?P<cmd>\([\s*\S]*\)) +rc +\= +(?P<rc>\w+) +rsn +\= +(?P<rsn>.*)$')
+        cnt = 0
+        for line in output.splitlines():
+            line = line.strip()
+
+            #npu_pdsf_procagent_config_loopback : asic inst 0 port 39 mode 1 command 20
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['npu_pdsf_procagent_get_eye_common'] = group['npu_pdsf_procagent_get_eye_common']
+                continue  
+
+            #"eye_capture": {
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('eye_capture', {})                
+                continue
+
+            #"veye_data": [
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('eye_capture', {}).setdefault('veye_data',{})                
+                continue      
+
+            #"veye_values": [   
+            m = p4.match(line)
+            if m:
+                curr_dict = ret_dict.setdefault('eye_capture', {}).setdefault('veye_data',{}).setdefault('veye_values', {})                
+                continue      
+
+            # "serdes_id": 18,
+            m = p5.match(line)            
+            if m:
+                group = m.groupdict()
+                if  group['value'] == '{' or  group['value'] == '[':
+                    continue                
+                else:
+                    group['key'] = group['key'].lower()
+                    group['value'] = group['value'].strip(',')
+                    if group['value'].isdigit():
+                        group['value'] = int(group['value'])
+                    curr_dict.update({group['key']: group['value']})
+                    continue
+
+            #64,
+            m = p5_1.match(line)
+            if m:
+                group = m.groupdict()
+                cnt  = cnt + 1
+                key  = cnt 
+                curr_dict.update({key: group['value']})
+                continue
+
+            # Port = 40 Slot = 1 cmd = () rc = 0x16 reason = (null)
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['port'] = int(group['port'])
+                ret_dict['slot'] = int(group['slot'])                
+                ret_dict['cmd'] = group['cmd']
+                ret_dict['rc'] = group['rc']
+                ret_dict['reason'] = group['reason']
+                continue
+
+            # Port = 39 cmd = (prbs_stop unit 0 port 39 slot 1 serdes_level 1 polynomial 31) rc = 0x0 rsn = success
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['port'] = int(group['port'])
+                ret_dict['cmd'] = group['cmd']
+                ret_dict['rc'] = group['rc']
+                ret_dict['rsn'] = group['rsn']
+                continue   
+
+        return ret_dict 
+        
 class ShowPlatformHardwareFedXcvrRegistersSchema(MetaParser):
     """Schema for show platform hardware fed switch {mode} npu slot 1 port {port_num} eye_scan"""
 
     schema = {
         'phy_reg_value_hex': str,
         'phy_reg_value_dec': int,
-        
+
    }
-        
+
 class ShowPlatformHardwareFedXcvrRegisters(ShowPlatformHardwareFedXcvrRegistersSchema):
     """
     show platform hardware fed {switch} {mode} xcvr {local_port} {phy} {mode_1} {device_num} {page_number} {register} {bytes}
     """
-    
     cli_command = 'show platform hardware fed switch {mode} xcvr {local_port} {phy} {mode_1} {device_num} {page_number} {register} {byte}' 
 
     def cli(self, mode, local_port, phy, mode_1, device_num, page_number, register, byte, output=None): 
 
         if output is None:         
             output = self.device.execute(self.cli_command.format(mode=mode, local_port=local_port, phy=phy, mode_1=mode_1, device_num=device_num, page_number=page_number, register=register, byte=byte))  
-            
-                
+
+
         ret_dict = {}
-        
+
         # Phy Reg Value(Hex): FFFF
         p1 =  re.compile(r'^Phy +Reg +Value\(Hex\)\:\s*(?P<phy_reg_value_hex>.*)$')
-        
+
         #"eye_capture": {
         p2 = re.compile (r'^\(Dec\)\:\s*(?P<phy_reg_value_dec>.*)$')
-        
+
         for line in output.splitlines():
             line = line.strip()
-            
+
             # Phy Reg Value(Hex): FFFF
             m = p1.match(line)
             if m:
                 group = m.groupdict()
                 ret_dict['phy_reg_value_hex'] = group['phy_reg_value_hex']
                 continue 
-                
+
             #"eye_capture": {
             m = p2.match(line)
             if m:
                 group = m.groupdict()
                 ret_dict['phy_reg_value_dec'] = int(group['phy_reg_value_dec'])               
                 continue
-                
+
         return ret_dict      
-        
+
 class ShowPlatformHardwareFedSwitchActiveNpuSlotPortRecreateSchema(MetaParser):
     """Schema for show platform hardware fed switch {mode} npu slot 1 port {port_num} port-recreate"""
 
@@ -7110,17 +7248,17 @@ class ShowPlatformHardwareFedSwitchActiveNpuSlotPortRecreateSchema(MetaParser):
             Any(): str,
         },    
    }        
-    
+
 class ShowPlatformHardwareFedSwitchActiveNpuSlotPortRecreate(
     ShowPlatformHardwareFedSwitchActiveNpuSlotPortRecreateSchema):
     """
     show platform hardware fed switch {mode} npu slot 1 port {port_num} port-recreate
     """
-    
+
     cli_command = ['show platform hardware fed {switch} {mode} npu slot 1 port {port_num} port-recreate',        
                     'show platform hardware fed {mode} npu slot 1 port {port_num} port-recreate']
 
-                    
+
     def cli(self, mode, port_num, switch=None, output=None): 
 
         if output is None:
@@ -7130,22 +7268,22 @@ class ShowPlatformHardwareFedSwitchActiveNpuSlotPortRecreate(
                 output = self.device.execute(self.cli_command[1].format(mode=mode,port_num=port_num))
 
         ret_dict = {}
-        
+
         #Deleting port 1/40
         p1 =  re.compile(r'^Deleting +port +(?P<port>.*)$')
-                
+
         # creating port 1/40
         p2 = re.compile(r'^creating +port +(?P<port>.*)$')
-        
+
         # Recreate successfull 1/40
         p3 = re.compile(r'^Recreate +successfull +(?P<port>.*)$')
-        
+
         # , Enabling the port
         p4 = re.compile(r'^\, +Enabling +the +port$')
-        
+
         for line in output.splitlines():
             line = line.strip()
-            
+
             #Deleting port 1/40
             m = p1.match(line)
             if m:
@@ -7154,14 +7292,14 @@ class ShowPlatformHardwareFedSwitchActiveNpuSlotPortRecreate(
                 curr_dict = ret_dict.setdefault('operations', {})
                 curr_dict.update({'delete' : group['port']})
                 continue  
-                
+
             # creating port 1/40
             m = p2.match(line)
             if m:
                 group = m.groupdict()
                 curr_dict.update({'create' : group['port']})
                 continue   
-            
+
             # Recreate successfull 1/40
             m = p3.match(line)
             if m:
@@ -7174,8 +7312,5 @@ class ShowPlatformHardwareFedSwitchActiveNpuSlotPortRecreate(
             if m:
                 curr_dict.update({'enable' : 'successful'})
                 continue                
-                
+
         return ret_dict  
-        
-
-

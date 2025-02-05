@@ -71,12 +71,12 @@ class ShowProcesses(ShowProcessesSchema):
             # 10      S         0            1     -     O  ksoftirqd/1
             # -     NR         -            0     -     X  wwn
             p1 = re.compile(r'^((?P<pid>\d+)|\-)'
-                             ' +(?P<state>\w+)'
-                             ' +((?P<pc>\w+)|\-)'
-                             ' +(?P<start_cnt>\d+)'
-                             ' +((?P<tty>\d+)|\-)'
-                             ' +(?P<type>\w+)'
-                             ' +(?P<process>[\w\/\:\-\.]+)$')
+                             r' +(?P<state>\w+)'
+                             r' +((?P<pc>\w+)|\-)'
+                             r' +(?P<start_cnt>\d+)'
+                             r' +((?P<tty>\d+)|\-)'
+                             r' +(?P<type>\w+)'
+                             r' +(?P<process>[\w\/\:\-\.]+)$')
             m = p1.match(line)
             if m:
                 process = m.groupdict()['process']

@@ -683,34 +683,34 @@ class ShowLoggingOnboardRpActiveUptime(ShowLoggingOnboardRpActiveUptimeSchema):
         ret_dict ={}
 
         #First customer power on : 06/22/2021 12:35:40
-        p1= re.compile('^First customer power on :?\s?(?P<first_customer_poweron>(\d+\/){2}\d+ \d+:\d+:\d+)$')
+        p1= re.compile(r'^First customer power on :?\s?(?P<first_customer_poweron>(\d+\/){2}\d+ \d+:\d+:\d+)$')
 
         #Total uptime            :  0  years  12 weeks  1  days  17 hours  55 minutes
-        p2=re.compile('^Total uptime\s+:\s+(?P<years>\d+)\s+\w+\s+(?P<weeks>\d+)\s+\w+\s+(?P<days>\d+)\s+\w+\s+(?P<hours>\d+)\s+\w+\s+(?P<minutes>\d+)\s+\w+$')
+        p2=re.compile(r'^Total uptime\s+:\s+(?P<years>\d+)\s+\w+\s+(?P<weeks>\d+)\s+\w+\s+(?P<days>\d+)\s+\w+\s+(?P<hours>\d+)\s+\w+\s+(?P<minutes>\d+)\s+\w+$')
 
         #Total downtime          :  2177 years  8  weeks  0  days  2  hours  29 minutes
-        p3=re.compile('^Total downtime\s+:\s+(?P<years>\d+)\s+\w+\s+(?P<weeks>\d+)\s+\w+\s+(?P<days>\d+)\s+\w+\s+(?P<hours>\d+)\s+\w+\s+(?P<minutes>\d+)\s+\w+$')
+        p3=re.compile(r'^Total downtime\s+:\s+(?P<years>\d+)\s+\w+\s+(?P<weeks>\d+)\s+\w+\s+(?P<days>\d+)\s+\w+\s+(?P<hours>\d+)\s+\w+\s+(?P<minutes>\d+)\s+\w+$')
 
         #Number of resets        : 630
-        p4=re.compile('^Number of resets\s+: (?P<numberof_reset>\d+)$')
+        p4=re.compile(r'^Number of resets\s+: (?P<numberof_reset>\d+)$')
 
         #Number of slot changes  : 1
-        p5=re.compile('^Number of slot changes\s+: (?P<numberof_slot_changes>\d+)$')
+        p5=re.compile(r'^Number of slot changes\s+: (?P<numberof_slot_changes>\d+)$')
 
         #Current reset reason    : Reload Command
-        p6=re.compile('^Current reset reason\s+: (?P<current_reset_reason>[A-Z a-z\S]+)$')
+        p6=re.compile(r'^Current reset reason\s+: (?P<current_reset_reason>[A-Z a-z\S]+)$')
 
         #Current reset timestamp : 10/06/2019 01:28:26
-        p7=re.compile('^Current reset timestamp\s+: (?P<current_reset_timestamp>(\d+\/){2}\d+.*)$')
+        p7=re.compile(r'^Current reset timestamp\s+: (?P<current_reset_timestamp>(\d+\/){2}\d+.*)$')
 
         #Current slot            : 1
-        p8=re.compile('^Current slot\s+: (?P<current_slot>\d+)$')
+        p8=re.compile(r'^Current slot\s+: (?P<current_slot>\d+)$')
 
         #Chassis type            : 80
-        p9=re.compile('^Chassis type\s+: (?P<chassis_type>\w+)$')
+        p9=re.compile(r'^Chassis type\s+: (?P<chassis_type>\w+)$')
 
         #Current uptime          :  0  years  1  weeks  1  days  0  hours  0  minutes
-        p10=re.compile('^Current uptime\s+:\s+(?P<years>\d+)\s+\w+\s+(?P<weeks>\d+)\s+\w+\s+(?P<days>\d+)\s+\w+\s+(?P<hours>\d+)\s+\w+\s+(?P<minutes>\d+)\s+\w+$')
+        p10=re.compile(r'^Current uptime\s+:\s+(?P<years>\d+)\s+\w+\s+(?P<weeks>\d+)\s+\w+\s+(?P<days>\d+)\s+\w+\s+(?P<hours>\d+)\s+\w+\s+(?P<minutes>\d+)\s+\w+$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -844,13 +844,13 @@ class ShowLoggingOnboardRpActiveStatus(ShowLoggingOnboardRpActiveStatusSchema):
 
         ret_dict ={}
         #Application Clilog:
-        p1=re.compile('^Application (?P<application>\S+):$')
+        p1=re.compile(r'^Application (?P<application>\S+):$')
 
         #Cli enable status: enabled
-        p2=re.compile('^Cli (?P<enable_status>enable status): (?P<status>\S+)$')
+        p2=re.compile(r'^Cli (?P<enable_status>enable status): (?P<status>\S+)$')
 
         # Path: /obfl0/
-        p3=re.compile('^Path\: (?P<path>\S+)$')
+        p3=re.compile(r'^Path\: (?P<path>\S+)$')
 
         for line in output.splitlines():
             line=line.strip()
@@ -943,19 +943,19 @@ class ShowLoggingOnboardRpActiveTemperatureContinuous(ShowLoggingOnboardRpActive
             # Execute the command
             output = self.device.execute(cmd)
         #TEMPERATURE CONTINUOUS INFORMATION
-        p1 = re.compile('^(?P<continuous_info>[A-Z ]+) CONTINUOUS INFORMATION$')
+        p1 = re.compile(r'^(?P<continuous_info>[A-Z ]+) CONTINUOUS INFORMATION$')
 
         #No continuous data
-        p2 = re.compile('^(?P<no_date>No continuous data|Application is not yet initialized.*)$')
+        p2 = re.compile(r'^(?P<no_date>No continuous data|Application is not yet initialized.*)$')
 
         #Temp: CPU board           23
-        p3 = re.compile('^(\w+\: )?(?P<sensor_name>\w+.*?)\s+(?P<sensor_count>\d+)$')
+        p3 = re.compile(r'^(\w+\: )?(?P<sensor_name>\w+.*?)\s+(?P<sensor_count>\d+)$')
 
         #10/13/2019 21:58:42  40  38  33
-        p4 = re.compile('^(?P<time>\d+\/\d+\/\d+ \d+:\d+:\d+)\s+(?P<sensor_value>[\d\s]+).*$')
+        p4 = re.compile(r'^(?P<time>\d+\/\d+\/\d+ \d+:\d+:\d+)\s+(?P<sensor_value>[\d\s]+).*$')
 
         #10/29/2019 07:38:01 %IOSXE-2-DIAGNOSTICS_PASSED : Diagnostics Thermal passed
-        p5 = re.compile('^(?P<time>\d+\/\d+\/\d+ \d+:\d+:\d+)\s+%(?P<info>\S+\s+\: [\w\s\/?]+)$')
+        p5 = re.compile(r'^(?P<time>\d+\/\d+\/\d+ \d+:\d+:\d+)\s+%(?P<info>\S+\s+\: [\w\s\/?]+)$')
 
         sensor_list=[]
         ret_dict = {}
@@ -1153,34 +1153,34 @@ class ShowLoggingOnboardRpActiveUptimeDetail(ShowLoggingOnboardRpActiveUptimeDet
         ret_dict = {}
 
         # First customer power on : 06/22/2021 12:35:40
-        p1 = re.compile('^First customer power on :?\s?(?P<first_customer_poweron>(\d+\/){2}\d+ \d+:\d+:\d+)$')
+        p1 = re.compile(r'^First customer power on :?\s?(?P<first_customer_poweron>(\d+\/){2}\d+ \d+:\d+:\d+)$')
 
         # Total uptime            :  0  years  12 weeks  1  days  17 hours  55 minutes
-        p2 = re.compile('^Total uptime\s+:\s+(?P<years>\d+)\s+\w+\s+(?P<weeks>\d+)\s+\w+\s+(?P<days>\d+)\s+\w+\s+(?P<hours>\d+)\s+\w+\s+(?P<minutes>\d+)\s+\w+$')
+        p2 = re.compile(r'^Total uptime\s+:\s+(?P<years>\d+)\s+\w+\s+(?P<weeks>\d+)\s+\w+\s+(?P<days>\d+)\s+\w+\s+(?P<hours>\d+)\s+\w+\s+(?P<minutes>\d+)\s+\w+$')
 
         # Total downtime          :  2177 years  8  weeks  0  days  2  hours  29 minutes
-        p3 = re.compile('^Total downtime\s+:\s+(?P<years>\d+)\s+\w+\s+(?P<weeks>\d+)\s+\w+\s+(?P<days>\d+)\s+\w+\s+(?P<hours>\d+)\s+\w+\s+(?P<minutes>\d+)\s+\w+$')
+        p3 = re.compile(r'^Total downtime\s+:\s+(?P<years>\d+)\s+\w+\s+(?P<weeks>\d+)\s+\w+\s+(?P<days>\d+)\s+\w+\s+(?P<hours>\d+)\s+\w+\s+(?P<minutes>\d+)\s+\w+$')
 
         # Number of resets        : 630
-        p4 = re.compile('^Number of resets\s+: (?P<numberof_reset>\d+)$')
+        p4 = re.compile(r'^Number of resets\s+: (?P<numberof_reset>\d+)$')
 
         # Number of slot changes  : 1
-        p5 = re.compile('^Number of slot changes\s+: (?P<numberof_slot_changes>\d+)$')
+        p5 = re.compile(r'^Number of slot changes\s+: (?P<numberof_slot_changes>\d+)$')
 
         # Current reset reason    : Reload Command
-        p6 = re.compile('^Current reset reason\s+: (?P<current_reset_reason>[A-Z a-z]+)$')
+        p6 = re.compile(r'^Current reset reason\s+: (?P<current_reset_reason>[A-Z a-z]+)$')
 
         # Current reset timestamp : 10/06/2019 01:28:26
-        p7 = re.compile('^Current reset timestamp\s+: (?P<current_reset_timestamp>(\d+\/){2}\d+.*)$')
+        p7 = re.compile(r'^Current reset timestamp\s+: (?P<current_reset_timestamp>(\d+\/){2}\d+.*)$')
 
         # Current slot            : 1
-        p8 = re.compile('^Current slot\s+: (?P<current_slot>\d+)$')
+        p8 = re.compile(r'^Current slot\s+: (?P<current_slot>\d+)$')
 
         # Chassis type            : 80
-        p9 = re.compile('^Chassis type\s+: (?P<chassis_type>.+?)$')
+        p9 = re.compile(r'^Chassis type\s+: (?P<chassis_type>.+?)$')
 
         # Current uptime          :  0  years  1  weeks  1  days  0  hours  0  minutes
-        p10 = re.compile('^Current uptime\s+:\s+(?P<years>\d+)\s+\w+\s+(?P<weeks>\d+)\s+\w+\s+(?P<days>\d+)\s+\w+\s+(?P<hours>\d+)\s+\w+\s+(?P<minutes>\d+)\s+\w+$')
+        p10 = re.compile(r'^Current uptime\s+:\s+(?P<years>\d+)\s+\w+\s+(?P<weeks>\d+)\s+\w+\s+(?P<days>\d+)\s+\w+\s+(?P<hours>\d+)\s+\w+\s+(?P<minutes>\d+)\s+\w+$')
 
         # --------------------------------------------------------------------------------
         # Time Stamp          | Reset                       | Uptime
@@ -1189,7 +1189,7 @@ class ShowLoggingOnboardRpActiveUptimeDetail(ShowLoggingOnboardRpActiveUptimeDet
         # 04/02/2022 21:32:31   EHSA standby down             0     0     0     0     13
         # 04/02/2022 22:11:32   Reload Command                0     0     0     0     38
 
-        p11 = re.compile('^(?P<time_stamp>(\d+\/){2}\d+.\d+:\d+:\d+)\s+(?P<reset_reason>.+?)\s+?(?P<uptime_years>\d+)\s+(?P<uptime_weeks>\d+)\s+(?P<uptime_days>\d+)\s+(?P<uptime_hours>\d+)\s+(?P<uptime_minutes>\d+)$')
+        p11 = re.compile(r'^(?P<time_stamp>(\d+\/){2}\d+.\d+:\d+:\d+)\s+(?P<reset_reason>.+?)\s+?(?P<uptime_years>\d+)\s+(?P<uptime_weeks>\d+)\s+(?P<uptime_days>\d+)\s+(?P<uptime_hours>\d+)\s+(?P<uptime_minutes>\d+)$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -1665,34 +1665,34 @@ class ShowLoggingOnboardRpStandbyUptimeDetail(ShowLoggingOnboardRpStandbyUptimeD
         ret_dict = {}
 
         # First customer power on : 06/22/2021 12:35:40
-        p1 = re.compile('^First customer power on :?\s?(?P<first_customer_poweron>(\d+\/){2}\d+ \d+:\d+:\d+)$')
+        p1 = re.compile(r'^First customer power on :?\s?(?P<first_customer_poweron>(\d+\/){2}\d+ \d+:\d+:\d+)$')
 
         # Total uptime            :  0  years  12 weeks  1  days  17 hours  55 minutes
-        p2 = re.compile('^Total uptime\s+:\s+(?P<years>\d+)\s+\w+\s+(?P<weeks>\d+)\s+\w+\s+(?P<days>\d+)\s+\w+\s+(?P<hours>\d+)\s+\w+\s+(?P<minutes>\d+)\s+\w+$')
+        p2 = re.compile(r'^Total uptime\s+:\s+(?P<years>\d+)\s+\w+\s+(?P<weeks>\d+)\s+\w+\s+(?P<days>\d+)\s+\w+\s+(?P<hours>\d+)\s+\w+\s+(?P<minutes>\d+)\s+\w+$')
 
         # Total downtime          :  2177 years  8  weeks  0  days  2  hours  29 minutes
-        p3 = re.compile('^Total downtime\s+:\s+(?P<years>\d+)\s+\w+\s+(?P<weeks>\d+)\s+\w+\s+(?P<days>\d+)\s+\w+\s+(?P<hours>\d+)\s+\w+\s+(?P<minutes>\d+)\s+\w+$')
+        p3 = re.compile(r'^Total downtime\s+:\s+(?P<years>\d+)\s+\w+\s+(?P<weeks>\d+)\s+\w+\s+(?P<days>\d+)\s+\w+\s+(?P<hours>\d+)\s+\w+\s+(?P<minutes>\d+)\s+\w+$')
 
         # Number of resets        : 630
-        p4 = re.compile('^Number of resets\s+: (?P<numberof_reset>\d+)$')
+        p4 = re.compile(r'^Number of resets\s+: (?P<numberof_reset>\d+)$')
 
         # Number of slot changes  : 1
-        p5 = re.compile('^Number of slot changes\s+: (?P<numberof_slot_changes>\d+)$')
+        p5 = re.compile(r'^Number of slot changes\s+: (?P<numberof_slot_changes>\d+)$')
 
         # Current reset reason    : Reload Command
-        p6 = re.compile('^Current reset reason\s+: (?P<current_reset_reason>[A-Z a-z]+)$')
+        p6 = re.compile(r'^Current reset reason\s+: (?P<current_reset_reason>[A-Z a-z]+)$')
 
         # Current reset timestamp : 10/06/2019 01:28:26
-        p7 = re.compile('^Current reset timestamp\s+: (?P<current_reset_timestamp>(\d+\/){2}\d+.*)$')
+        p7 = re.compile(r'^Current reset timestamp\s+: (?P<current_reset_timestamp>(\d+\/){2}\d+.*)$')
 
         # Current slot            : 1
-        p8 = re.compile('^Current slot\s+: (?P<current_slot>\d+)$')
+        p8 = re.compile(r'^Current slot\s+: (?P<current_slot>\d+)$')
 
         # Chassis type            : 80
-        p9 = re.compile('^Chassis type\s+: (?P<chassis_type>.+?)$')
+        p9 = re.compile(r'^Chassis type\s+: (?P<chassis_type>.+?)$')
 
         # Current uptime          :  0  years  1  weeks  1  days  0  hours  0  minutes
-        p10 = re.compile('^Current uptime\s+:\s+(?P<years>\d+)\s+\w+\s+(?P<weeks>\d+)\s+\w+\s+(?P<days>\d+)\s+\w+\s+(?P<hours>\d+)\s+\w+\s+(?P<minutes>\d+)\s+\w+$')
+        p10 = re.compile(r'^Current uptime\s+:\s+(?P<years>\d+)\s+\w+\s+(?P<weeks>\d+)\s+\w+\s+(?P<days>\d+)\s+\w+\s+(?P<hours>\d+)\s+\w+\s+(?P<minutes>\d+)\s+\w+$')
 
         # --------------------------------------------------------------------------------
         # Time Stamp          | Reset                       | Uptime
@@ -1701,7 +1701,7 @@ class ShowLoggingOnboardRpStandbyUptimeDetail(ShowLoggingOnboardRpStandbyUptimeD
         # 04/02/2022 21:32:31   EHSA standby down             0     0     0     0     13
         # 04/02/2022 22:11:32   Reload Command                0     0     0     0     38
 
-        p11 = re.compile('^(?P<time_stamp>(\d+\/){2}\d+.\d+:\d+:\d+)\s+(?P<reset_reason>.+?)\s+?(?P<uptime_years>\d+)\s+(?P<uptime_weeks>\d+)\s+(?P<uptime_days>\d+)\s+(?P<uptime_hours>\d+)\s+(?P<uptime_minutes>\d+)$')
+        p11 = re.compile(r'^(?P<time_stamp>(\d+\/){2}\d+.\d+:\d+:\d+)\s+(?P<reset_reason>.+?)\s+?(?P<uptime_years>\d+)\s+(?P<uptime_weeks>\d+)\s+(?P<uptime_days>\d+)\s+(?P<uptime_hours>\d+)\s+(?P<uptime_minutes>\d+)$')
 
         for line in output.splitlines():
             line = line.strip()

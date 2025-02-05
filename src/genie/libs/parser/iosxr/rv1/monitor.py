@@ -523,7 +523,7 @@ class MonitorInterface(MonitorInterfaceSchema):
             m = p9.match(line)
             if m:
                 group = m.groupdict()
-                input_kbps_delta = re.sub('[\s%]+', "", group['input_kbps_delta'])
+                input_kbps_delta = re.sub(r'[\s%]+', "", group['input_kbps_delta'])
 
                 if group['input_kbps_rate'] == 'NA':
                     input_kbps_rate = 0
@@ -566,7 +566,7 @@ class MonitorInterface(MonitorInterfaceSchema):
             m = p13.match(line)
             if m:
                 group = m.groupdict()
-                output_kbps_delta = re.sub('[\s%]+', "", group['output_kbps_delta'])
+                output_kbps_delta = re.sub(r'[\s%]+', "", group['output_kbps_delta'])
 
                 if group['output_kbps_rate'] == 'NA':
                     output_kbps_rate = 0

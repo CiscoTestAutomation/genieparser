@@ -923,9 +923,9 @@ class ShowIpBgpTemplatePeerSession(ShowIpBgpTemplatePeerSessionSchema):
             out = output
 
         p1 = re.compile(r'^\s*Template:+(?P<template_id>[0-9\s\S\w]+),'
-                        ' +index:(?P<index>[0-9]+)$')
+                        r' +index:(?P<index>[0-9]+)$')
         p2 = re.compile(r'^\s*Local +policies:+(?P<local_policies>0x[0-9A-F]+),'
-                        ' +Inherited +polices:+(?P<inherited_polices>0x[0-9A-F]+)$')
+                        r' +Inherited +polices:+(?P<inherited_polices>0x[0-9A-F]+)$')
         p3 = re.compile(r'^\s*Locally +configured +session +commands:$')
         p4 = re.compile(r'^\s*remote-as +(?P<remote_as>[0-9]+)$')
         p5 = re.compile(r'^\s*password +(?P<password_text>[\w\s]+)$')
@@ -936,7 +936,7 @@ class ShowIpBgpTemplatePeerSession(ShowIpBgpTemplatePeerSessionSchema):
         p10 = re.compile(r'^\s*description +(?P<desc>[\d\S\s\w]+)$')
         p11 = re.compile(r'^\s*dont-capability-negotiate +four-octets-as$')
         p12 = re.compile(r'^\s*timers +(?P<keepalive_interval>[\d]+)'
-                            ' +(?P<holdtime>[\d]+)$')
+                            r' +(?P<holdtime>[\d]+)$')
         p13 = re.compile(r'^\s*local-as +(?P<local_as_as_no>[\d]+)$')
         p14 = re.compile(r'^\s*disable-connected-check$')
         p15 = re.compile(r'^\s*fall-over +bfd$')
@@ -1502,22 +1502,22 @@ class ShowIpBgpAllDampeningParameters(ShowIpBgpAllDampeningParametersSchema):
             out = output
 
         p1 = re.compile(r'^\s*For +address +family:'
-                        ' +(?P<address_family>[a-zA-Z0-9\-\s]+)$')
+                        r' +(?P<address_family>[a-zA-Z0-9\-\s]+)$')
 
         p2 = re.compile(r'^\s*dampening'
-                        ' +(?P<dampening_val>[\d\s\S]+)$')
+                        r' +(?P<dampening_val>[\d\s\S]+)$')
 
         p3 = re.compile(r'^\s*Half-life +time\s*:'
-                        ' +(?P<half_life_time>[\d]+)'
-                        ' mins +Decay +Time +: +(?P<decay_time>[\d]+) +secs$')
+                        r' +(?P<half_life_time>[\d]+)'
+                        r' mins +Decay +Time +: +(?P<decay_time>[\d]+) +secs$')
 
         p4 = re.compile(r'^\s*Max +suppress +penalty:'
-                        '\s+(?P<max_suppress_penalty>[0-9]+)'
-                        '\s+Max +suppress +time:\s+(?P<max_suppress_time>[\d]+) +mins$')
+                        r'\s+(?P<max_suppress_penalty>[0-9]+)'
+                        r'\s+Max +suppress +time:\s+(?P<max_suppress_time>[\d]+) +mins$')
 
         p5 = re.compile(r'^\s*Suppress +penalty +:'
-                        ' +(?P<suppress_penalty>[\d]+)'
-                        ' +Reuse +penalty +: +(?P<reuse_penalty>[\d]+)$')
+                        r' +(?P<suppress_penalty>[\d]+)'
+                        r' +Reuse +penalty +: +(?P<reuse_penalty>[\d]+)$')
 
         p6 = re.compile(r'^\s*% +dampening +not +enabled +for +base$')
 

@@ -124,7 +124,7 @@ class ShowTrafficCollecterIpv4CountersPrefixDetail(ShowTrafficCollecterIpv4Count
 
         # Prefix: 10.4.1.10/32  Label: 16010 State: Active
         p1 = re.compile(r'Prefix: +(?P<prefix>[\d\.\/]+) +'
-        'Label: +(?P<label>\d+) +State: (?P<state>\S+)')
+        r'Label: +(?P<label>\d+) +State: (?P<state>\S+)')
 
         #Base:
         #TM Counters:
@@ -132,16 +132,16 @@ class ShowTrafficCollecterIpv4CountersPrefixDetail(ShowTrafficCollecterIpv4Count
 
         # Average over the last 5 collection intervals:
         p3 = re.compile(r'Average +over +the +last +(?P<interval>\d+) +collection '
-        '+intervals:')
+        r'+intervals:')
             
         # Packet rate: 9496937 pps, Byte rate: 9363979882 Bps
         p4 = re.compile (r'Packet +rate: +(?P<packet_rate>\d+) +pps, Byte '
-        '+rate: +(?P<byte_rate>\d+) +Bps')
+        r'+rate: +(?P<byte_rate>\d+) +Bps')
         
         # History of counters:
         #     23:01 - 23:02: Packets 9379529, Bytes: 9248215594 
         p5 = re.compile(r'(?P<time_slot>[\d\:\-\s]+): +Packets +(?P<packets>\d+), '
-        '+Bytes: +(?P<bytes>\d+)')
+        r'+Bytes: +(?P<bytes>\d+)')
 
         for line in out.splitlines():
             line = line.strip()

@@ -27,6 +27,7 @@
     * 'show platform software fed {state} ip mfib summary'
     * 'show platform software fed {switch} {state} ip igmp snooping groups count'
     * 'show platform software fed {state} ip igmp snooping groups count'
+    * 'show platform software fed switch {mode} ipv6 route'
 """
 # Python
 import re
@@ -89,9 +90,9 @@ class ShowPlatformSoftwareFedIpv6MldSnoopingGroupsVlan(
         # Member ports :
         p1 = re.compile(r"(^Member+ +ports+   :+(?P<mem_port>.*))")
         # TenGigabitEthernet1/0/1
-        p1_1 = re.compile("([A-Za-z]*\d[-().]*){10,}")
+        p1_1 = re.compile(r"([A-Za-z]*\d[-().]*){10,}")
         # nve1.VNI60020(0x200000063)
-        p1_2 = re.compile("^[A-Za-z]+[\d\/]+$")
+        p1_2 = re.compile(r"^[A-Za-z]+[\d\/]+$")
 
         # CCK_epoch : 1
         p2 = re.compile(r"(^CCK_epoch+ +:+ +(?P<cck_ep>\d.*)$)")
@@ -249,85 +250,85 @@ class ShowPlatformSoftwareFedActiveIpv6MldSnoopingVlan(
         p0_2 = re.compile(r"^Vlan:\s+(?P<vlan>\d+)$")
     
         # MLDSN Enabled : On
-        p1 = re.compile("MLDSN+  +Enabled  +: +(?P<mldsn_en>\w+)")
+        p1 = re.compile(r"MLDSN+  +Enabled  +: +(?P<mldsn_en>\w+)")
     
         # PIMSN Enabled : Off
-        p2 = re.compile("PIMSN+ +Enabled+   +:+ +(?P<pimsn_en>\w+)")
+        p2 = re.compile(r"PIMSN+ +Enabled+   +:+ +(?P<pimsn_en>\w+)")
     
         # Flood Mode : Off
-        p3 = re.compile("Flood+ +Mode+      +:+(?P<flood_md>.*)")
+        p3 = re.compile(r"Flood+ +Mode+      +:+(?P<flood_md>.*)")
     
         # Flood Mode              : OFF
-        p3_1 = re.compile('^Flood\s+Mode\s+:\s+(?P<flood_md>[\s\w\s]+)$')
+        p3_1 = re.compile(r'^Flood\s+Mode\s+:\s+(?P<flood_md>[\s\w\s]+)$')
     
         # Oper State : Up
-        p4 = re.compile("Oper+ +State+    +:+ +(?P<op_state>\w+)")
+        p4 = re.compile(r"Oper+ +State+    +:+ +(?P<op_state>\w+)")
     
         # STP TCN Flood : Off
-        p5 = re.compile("STP+ +TCN+ +Flood+   +:+ +(?P<stp_tcn_flood>\w+)")
+        p5 = re.compile(r"STP+ +TCN+ +Flood+   +:+ +(?P<stp_tcn_flood>\w+)")
     
         # STP TCN State           : OFF
-        p5_1 = re.compile('^STP\s+TCN\s+(Flood|State)\s+:\s+(?P<stp_tcn_flood>[\s\w\s]+)$')
+        p5_1 = re.compile(r'^STP\s+TCN\s+(Flood|State)\s+:\s+(?P<stp_tcn_flood>[\s\w\s]+)$')
     
         # Routing Enabled : On
-        p6 = re.compile("Routing+ +Enabled+ +:+ +(?P<route_en>\w+)")
+        p6 = re.compile(r"Routing+ +Enabled+ +:+ +(?P<route_en>\w+)")
     
         # PIM Enabled : On
-        p7 = re.compile("PIM+ +Enabled+ +:+ +(?P<pim_en>\w+)")
+        p7 = re.compile(r"PIM+ +Enabled+ +:+ +(?P<pim_en>\w+)")
     
         # Pim state               : ON
-        p7_1 = re.compile('^Pim\s+state\s+:\s+(?P<pim_en>[\s\w\s]+)$')
+        p7_1 = re.compile(r'^Pim\s+state\s+:\s+(?P<pim_en>[\s\w\s]+)$')
     
         # PVLAN : No
-        p8 = re.compile("PVLAN+ +:+ +(?P<pvlan>\w+)")
+        p8 = re.compile(r"PVLAN+ +:+ +(?P<pvlan>\w+)")
     
         # In Retry : 0x0
-        p9 = re.compile("In+ +Retry+ +:+ +(?P<in_retry>\w+)")
+        p9 = re.compile(r"In+ +Retry+ +:+ +(?P<in_retry>\w+)")
     
         # CCK Epoch : 0x17
-        p10 = re.compile("CCK+ +Epoch+ +:+ +(?P<cck_ep>\w+)")
+        p10 = re.compile(r"CCK+ +Epoch+ +:+ +(?P<cck_ep>\w+)")
     
         # IOSD Flood Mode : Off
-        p11 = re.compile("IOSD+ +Flood+ +Mode+ :+ +(?P<iosd_md>\w+)")
+        p11 = re.compile(r"IOSD+ +Flood+ +Mode+ :+ +(?P<iosd_md>\w+)")
     
         # IOS Flood Mode          : OFF
-        p11_1 = re.compile('^IOS\s+Flood\s+Mode\s+:\s+(?P<iosd_md>[\s\w\s]+)$')
+        p11_1 = re.compile(r'^IOS\s+Flood\s+Mode\s+:\s+(?P<iosd_md>[\s\w\s]+)$')
     
         # EVPN Proxy Enabled : On
-        p12 = re.compile("EVPN+ +Proxy+ +Enabled+ :+ +(?P<evpn_en>\w+)")
+        p12 = re.compile(r"EVPN+ +Proxy+ +Enabled+ :+ +(?P<evpn_en>\w+)")
     
         # Evpn Proxy              : OFF
-        p12_1 = re.compile('^Evpn\s+Proxy\s+:\s+(?P<evpn_en>[\s\w\s]+)$')
+        p12_1 = re.compile(r'^Evpn\s+Proxy\s+:\s+(?P<evpn_en>[\s\w\s]+)$')
     
         # L3mcast Adj :
-        p13 = re.compile("L3mcast+ +Adj+      :+(?P<l3m_adj>.*)")
+        p13 = re.compile(r"L3mcast+ +Adj+      :+(?P<l3m_adj>.*)")
     
         # Mrouter PortQ :
-        p14 = re.compile("^Mrouter\s+PortQ\s+:\s*")
+        p14 = re.compile(r"^Mrouter\s+PortQ\s+:\s*")
         # TenGigabitEthernet7/0/13
-        p14_1 = re.compile("([A-Za-z]*\d[-().]*){10,}")
+        p14_1 = re.compile(r"([A-Za-z]*\d[-().]*){10,}")
     
         # Flood PortQ :
-        p15 = re.compile("^Flood PortQ\s+:\s*")
+        p15 = re.compile(r"^Flood PortQ\s+:\s*")
         # TenGigabitEthernet7/0/13
         # FiveGigabitEthernet1/0/2
         # GigabitEthernet2/0/31
-        p15_1 = re.compile("^[A-Za-z]+[\d\/]+$")
+        p15_1 = re.compile(r"^[A-Za-z]+[\d\/]+$")
     
         # REP RI handle : 0x0
-        p16 = re.compile("REP+ +RI+ +handle+   :+(?P<rep_han>.*)")
+        p16 = re.compile(r"REP+ +RI+ +handle+   :+(?P<rep_han>.*)")
     
         # Snoop State             : ON
-        p17 = re.compile('^Snoop\s+State\s+:\s+(?P<snoop_state>[\w\s]+)$')
+        p17 = re.compile(r'^Snoop\s+State\s+:\s+(?P<snoop_state>[\w\s]+)$')
     
         # Secondary Vlan          : NO
-        p18 = re.compile('^Secondary\s+Vlan\s+:\s+(?P<secondary_vlan>[\s\w\s]+)$')
+        p18 = re.compile(r'^Secondary\s+Vlan\s+:\s+(?P<secondary_vlan>[\s\w\s]+)$')
     
         # Vlan Urid               : 0x5000000000000008
-        p19 = re.compile('^Vlan\s+Urid\s+:\s+(?P<vlan_urid>[\s\w\s]+)$')
+        p19 = re.compile(r'^Vlan\s+Urid\s+:\s+(?P<vlan_urid>[\s\w\s]+)$')
     
         # Dependant users count   : 0
-        p20 = re.compile('^Dependant\s+users\s+count\s+:\s+(?P<d_users_count>[\s\w\s]+)$')
+        p20 = re.compile(r'^Dependant\s+users\s+count\s+:\s+(?P<d_users_count>[\s\w\s]+)$')
     
         mroute_port_flag = 0
         mroute_list = []
@@ -788,7 +789,9 @@ class ShowPlatformSoftwareFedSwitchActiveIpRouteDetail(
 
 class ShowPlatformSoftwareFedSwitchActiveIpRouteSchema(MetaParser):
     """
-    Schema for show platform software fed switch active ip route
+    Schema for 
+    show platform software fed switch active ip route
+    show platform software fed switch active ip route vrf {vrf_name}
     """
 
     schema = {
@@ -799,6 +802,7 @@ class ShowPlatformSoftwareFedSwitchActiveIpRouteSchema(MetaParser):
                 "mask_len": int,
                 "parent_type": str,
                 "parent_object_id": str,
+                Optional("sgt"): int,
             },
         },
         "number_of_npi_ipv4route_entries": int,
@@ -809,14 +813,20 @@ class ShowPlatformSoftwareFedSwitchActiveIpRoute(
     ShowPlatformSoftwareFedSwitchActiveIpRouteSchema
 ):
     """
+    parser for
     show platform software fed switch active ip route
+    show platform software fed switch active ip route vrf {vrf_name}
     """
 
-    cli_command = ["show platform software fed {switch} {mode} ip route"]
+    cli_command = ["show platform software fed {switch} {mode} ip route","show platform software fed {switch} {mode} ip route vrf {vrf_name}"]
 
-    def cli(self, switch, mode, output=None):
+    def cli(self, switch='', mode='', vrf_name='', output=None):
         if output is None:
-            cmd = self.cli_command[0].format(switch=switch, mode=mode)
+            if vrf_name:
+                cmd = self.cli_command[1].format(switch=switch, mode=mode, vrf_name=vrf_name)
+            else:
+                cmd = self.cli_command[0].format(switch=switch, mode=mode)
+
             output = self.device.execute(cmd)
 
         ret_dict = {}
@@ -827,6 +837,12 @@ class ShowPlatformSoftwareFedSwitchActiveIpRoute(
         # 0x564ecc0889e8      127.0.0.0           8                   DROP                0x0
         p0 = re.compile(
             r"^(?P<object_id>\w+)\s+(?P<ipv4_addr>\S+)\s+(?P<mask_len>\S+)\s+(?P<parent_type>\S+)\s+(?P<parent_object_id>\S+)$"
+        )
+
+        #Object ID           IPv4 Address        Mask Length         Parent Type         Parent ObjectID     SGT                 
+        #0x5bb0d60dd878      100.60.2.200        32                  IPNEXTHOP_ID        0x5f                0 
+        p0_1 = re.compile(
+            r"^(?P<object_id>\w+)\s+(?P<ipv4_addr>\S+)\s+(?P<mask_len>\d+)\s+(?P<parent_type>\S+)\s+(?P<parent_object_id>\S+)\s+(?P<sgt>\d+)$"
         )
 
         # Number of npi_ipv4route entries = 6
@@ -850,6 +866,25 @@ class ShowPlatformSoftwareFedSwitchActiveIpRoute(
                         "mask_len": int(group["mask_len"]),
                         "parent_type": group["parent_type"],
                         "parent_object_id": group["parent_object_id"],
+                    }
+                )
+                index += 1
+                continue
+
+            #Object ID           IPv4 Address        Mask Length         Parent Type         Parent ObjectID     SGT                 
+            #0x5bb0d60dd878      100.60.2.200        32                  IPNEXTHOP_ID        0x5f                0 
+            m = p0_1.match(line)
+            if m:
+                group = m.groupdict()
+                index_dict = ret_dict.setdefault("index", {}).setdefault(index, {})
+                index_dict.update(
+                    {
+                        "object_id": group["object_id"],
+                        "ipv4_addr": group["ipv4_addr"],
+                        "mask_len": int(group["mask_len"]),
+                        "parent_type": group["parent_type"],
+                        "parent_object_id": group["parent_object_id"],
+                        "sgt": int(group["sgt"]),
                     }
                 )
                 index += 1
@@ -1026,85 +1061,85 @@ class ShowPlatformSoftwareFedActiveIpv6MldSnoopingVlanDetail(
         p0_2 = re.compile(r"^Vlan:\s+(?P<vlan>\d+)$")
     
         # MLDSN Enabled : On
-        p1 = re.compile("^MLDSN+\s+Enabled+\s+:\s+(?P<mldsn_en>\w+)$")
+        p1 = re.compile(r"^MLDSN+\s+Enabled+\s+:\s+(?P<mldsn_en>\w+)$")
     
         # PIMSN Enabled : Off
-        p2 = re.compile("^PIMSN+\s+Enabled+\s+:+\s+(?P<pimsn_en>\w+)$")
+        p2 = re.compile(r"^PIMSN+\s+Enabled+\s+:+\s+(?P<pimsn_en>\w+)$")
     
         # Flood Mode : Off
-        p3 = re.compile("^Flood+\s+Mode+\s+:+(?P<flood_md>.*)$")
+        p3 = re.compile(r"^Flood+\s+Mode+\s+:+(?P<flood_md>.*)$")
     
         # Flood Mode              : OFF
-        p3_1 = re.compile('^Flood\s+Mode\s+:\s+(?P<flood_md>[\s\w\s]+)$')
+        p3_1 = re.compile(r'^Flood\s+Mode\s+:\s+(?P<flood_md>[\s\w\s]+)$')
     
         # Oper State : Up
-        p4 = re.compile("^Oper+\s+State+\s+:+\s+(?P<op_state>\w+)$")
+        p4 = re.compile(r"^Oper+\s+State+\s+:+\s+(?P<op_state>\w+)$")
     
         # STP TCN Flood : Off
-        p5 = re.compile("^STP+\s+TCN+\s+Flood+\s+:+\s+(?P<stp_tcn_flood>\w+)$")
+        p5 = re.compile(r"^STP+\s+TCN+\s+Flood+\s+:+\s+(?P<stp_tcn_flood>\w+)$")
     
         # STP TCN State           : OFF
-        p5_1 = re.compile('^STP\s+TCN\s+(Flood|State)\s+:\s+(?P<stp_tcn_flood>[\s\w\s]+)$')
+        p5_1 = re.compile(r'^STP\s+TCN\s+(Flood|State)\s+:\s+(?P<stp_tcn_flood>[\s\w\s]+)$')
     
         # Routing Enabled : On
-        p6 = re.compile("^Routing+\s+Enabled+\s+:+\s+(?P<route_en>\w+)$")
+        p6 = re.compile(r"^Routing+\s+Enabled+\s+:+\s+(?P<route_en>\w+)$")
     
         # PIM Enabled : On
-        p7 = re.compile("PIM+\s+Enabled+\s+:+\s+(?P<pim_en>\w+)$")
+        p7 = re.compile(r"PIM+\s+Enabled+\s+:+\s+(?P<pim_en>\w+)$")
     
         # Pim state               : ON
-        p7_1 = re.compile('^Pim\s+state\s+:\s+(?P<pim_en>[\s\w\s]+)$')
+        p7_1 = re.compile(r'^Pim\s+state\s+:\s+(?P<pim_en>[\s\w\s]+)$')
     
         # PVLAN : No
-        p8 = re.compile("^PVLAN+\s+:+\s+(?P<pvlan>\w+)$")
+        p8 = re.compile(r"^PVLAN+\s+:+\s+(?P<pvlan>\w+)$")
     
         # In Retry : 0x0
-        p9 = re.compile("^In+\s+Retry+\s+:+\s+(?P<in_retry>\w+)$")
+        p9 = re.compile(r"^In+\s+Retry+\s+:+\s+(?P<in_retry>\w+)$")
     
         # CCK Epoch : 0x17
-        p10 = re.compile("^CCK+\s+Epoch+\s+:+\s+(?P<cck_ep>\w+)$")
+        p10 = re.compile(r"^CCK+\s+Epoch+\s+:+\s+(?P<cck_ep>\w+)$")
     
         # IOSD Flood Mode : Off
-        p11 = re.compile("^IOSD+\s+Flood+\s+Mode+\s+:+\s+(?P<iosd_md>\w+)$")
+        p11 = re.compile(r"^IOSD+\s+Flood+\s+Mode+\s+:+\s+(?P<iosd_md>\w+)$")
     
         # IOS Flood Mode          : OFF
-        p11_1 = re.compile('^IOS\s+Flood\s+Mode\s+:\s+(?P<iosd_md>[\s\w\s]+)$')
+        p11_1 = re.compile(r'^IOS\s+Flood\s+Mode\s+:\s+(?P<iosd_md>[\s\w\s]+)$')
     
         # EVPN Proxy Enabled : On
-        p12 = re.compile("^EVPN+\s+Proxy+\s+Enabled+\s:+\s+(?P<evpn_en>\w+)$")
+        p12 = re.compile(r"^EVPN+\s+Proxy+\s+Enabled+\s:+\s+(?P<evpn_en>\w+)$")
     
         # Evpn Proxy              : OFF
-        p12_1 = re.compile('^Evpn\s+Proxy\s+:\s+(?P<evpn_en>[\s\w\s]+)$')
+        p12_1 = re.compile(r'^Evpn\s+Proxy\s+:\s+(?P<evpn_en>[\s\w\s]+)$')
     
         # L3mcast Adj :
-        p13 = re.compile("^L3mcast+\s+Adj+\s+:+(?P<l3m_adj>.*)$")
+        p13 = re.compile(r"^L3mcast+\s+Adj+\s+:+(?P<l3m_adj>.*)$")
     
         # Mrouter PortQ :
-        p14 = re.compile("^Mrouter\s+PortQ\s+:\s*")
+        p14 = re.compile(r"^Mrouter\s+PortQ\s+:\s*")
         # TenGigabitEthernet7/0/13
-        p14_1 = re.compile("^([A-Za-z]*\d[-().]*){10,}$")
+        p14_1 = re.compile(r"^([A-Za-z]*\d[-().]*){10,}$")
     
         # Flood PortQ :
-        p15 = re.compile("^Flood PortQ\s+:\s*$")
+        p15 = re.compile(r"^Flood PortQ\s+:\s*$")
         # TenGigabitEthernet7/0/13
         # FiveGigabitEthernet1/0/2
         # GigabitEthernet2/0/31
-        p15_1 = re.compile("^[A-Za-z]+[\d\/]+$")
+        p15_1 = re.compile(r"^[A-Za-z]+[\d\/]+$")
     
         # REP RI handle : 0x0
-        p16 = re.compile("^REP+\s+RI+\s+handle+\s+:+(?P<rep_han>.*)$")
+        p16 = re.compile(r"^REP+\s+RI+\s+handle+\s+:+(?P<rep_han>.*)$")
     
         # Snoop State             : ON
-        p17 = re.compile('^Snoop\s+State\s+:\s+(?P<snoop_state>[\w\s]+)$')
+        p17 = re.compile(r'^Snoop\s+State\s+:\s+(?P<snoop_state>[\w\s]+)$')
     
         # Secondary Vlan          : NO
-        p18 = re.compile('^Secondary\s+Vlan\s+:\s+(?P<secondary_vlan>[\s\w\s]+)$')
+        p18 = re.compile(r'^Secondary\s+Vlan\s+:\s+(?P<secondary_vlan>[\s\w\s]+)$')
     
         # Vlan Urid               : 0x5000000000000008
-        p19 = re.compile('^Vlan\s+Urid\s+:\s+(?P<vlan_urid>[\s\w\s]+)$')
+        p19 = re.compile(r'^Vlan\s+Urid\s+:\s+(?P<vlan_urid>[\s\w\s]+)$')
     
         # Dependant users count   : 0
-        p20 = re.compile('^Dependant\s+users\s+count\s+:\s+(?P<d_users_count>[\s\w\s]+)$')
+        p20 = re.compile(r'^Dependant\s+users\s+count\s+:\s+(?P<d_users_count>[\s\w\s]+)$')
     
         port_list = None
         mroute_list = []
@@ -1999,6 +2034,96 @@ class ShowPlatformSoftwareFedMldSnoopingIpv6GroupsCount(ShowPlatformSoftwareFedM
             if m:
                 group = m.groupdict()
                 mld_dict['member_ports'] = group['member_ports']
+                continue
+
+        return ret_dict
+
+class ShowPlatformSoftwareFedSwitchActiveIpv6RouteSchema(MetaParser):
+    """
+    Schema for show platform software fed switch active ipv6 route
+    """
+
+    schema = {
+        "index": {
+            Any(): {
+                "object_id": str,
+                "ipv6_addr": str,
+                "mask_len": int,
+                "parent_type": str,
+                "parent_object_id": str,
+                Optional("sgt"): int,
+            },
+        },
+        "number_of_npi_ipv6route_entries": int,
+    }
+
+
+class ShowPlatformSoftwareFedSwitchActiveIpv6Route(
+    ShowPlatformSoftwareFedSwitchActiveIpv6RouteSchema
+):
+    """
+    show platform software fed switch active ipv6 route
+    show platform software fed switch active ipv6 route vrf {vrf_name}
+    """
+
+    cli_command = [
+        "show platform software fed switch {mode} ipv6 route",
+        "show platform software fed switch {mode} ipv6 route vrf {vrf_name}"
+    ]
+
+    def cli(self, mode='', vrf_name='', output=None):
+        if output is None:
+            if mode and vrf_name:
+                cmd = self.cli_command[1].format(mode=mode, vrf_name=vrf_name)
+            else:
+                cmd = self.cli_command[0].format(mode=mode)
+
+            output = self.device.execute(cmd)
+        ret_dict = {}
+        index = 1
+        index_dict = {}
+
+        # Object ID           IPv6 Address                            Mask Length         Parent Type         Parent ObjectID     SGT                 
+        # 0x5c292bc04268      fe80::                                  10                  RECV                0x0                 0                   
+
+        p0 = re.compile(
+            r"^(?P<object_id>\w+)\s+(?P<ipv6_addr>\S+)\s+(?P<mask_len>\d+)\s+(?P<parent_type>\S+)\s+(?P<parent_object_id>\S+)\s+(?P<sgt>\d+)$"
+        )
+
+        # Number of npi_ipv6route entries = 6
+        p1 = re.compile(
+            r"^Number of npi_ipv6route entries = +(?P<number_of_npi_ipv6route_entries>\d+)$"
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+
+        # Object ID           IPv6 Address                            Mask Length         Parent Type         Parent ObjectID     SGT                 
+        # 0x5c292bc04268      fe80::                                  10                  RECV                0x0                 0                   
+            m = p0.match(line)
+            if m:
+                group = m.groupdict()
+                index_dict = ret_dict.setdefault("index", {}).setdefault(index, {})
+                index_dict.update(
+                    {
+                        "object_id": group["object_id"],
+                        "ipv6_addr": group["ipv6_addr"],
+                        "mask_len": int(group["mask_len"]),
+                        "parent_type": group["parent_type"],
+                        "parent_object_id": group["parent_object_id"],
+                        "sgt": int(group["sgt"]),
+                    }
+                )
+                index += 1
+                continue
+
+            # Number of npi_ipv6route entries = 6
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict["number_of_npi_ipv6route_entries"] = int(
+                    group["number_of_npi_ipv6route_entries"]
+                )
                 continue
 
         return ret_dict

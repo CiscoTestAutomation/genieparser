@@ -500,7 +500,7 @@ class ShowAccessLists(ShowAccessListsSchema):
                 if ' matches' in left:
                     seq_dict.setdefault('statistics', {})\
                         .setdefault('matched_packets',
-                            int(re.search('\((\d+) +matches\)', left).groups()[0]))
+                            int(re.search(r'\((\d+) +matches\)', left).groups()[0]))
 
                 # l3 dict
                 if protocol is ('ipv4' or 'ipv6'):
@@ -521,17 +521,17 @@ class ShowAccessLists(ShowAccessListsSchema):
                     l3_dict.setdefault('destination_network', {}).setdefault(
                             dst, {}).setdefault('destination_network', dst)
 
-                l3_dict.setdefault('dscp', re.search('dscp +(\w+)', left).groups()[0])\
+                l3_dict.setdefault('dscp', re.search(r'dscp +(\w+)', left).groups()[0])\
                     if 'dscp' in left else None
 
                 if 'ttl' in left:
-                    ttl_group = re.search('ttl +(\w+) +(\d+)', left)
+                    ttl_group = re.search(r'ttl +(\w+) +(\d+)', left)
                     if ttl_group:
                         l3_dict['ttl_operator'] = ttl_group.groups()[0]
                         l3_dict['ttl'] = int(ttl_group.groups()[1])
 
                 if 'precedence' in left:
-                    prec = re.search('precedence +(\w+)', left).groups()[0]
+                    prec = re.search(r'precedence +(\w+)', left).groups()[0]
                     if prec.isdigit():
                         l3_dict['precedence_code'] = int(prec)
                         try:
@@ -545,7 +545,7 @@ class ShowAccessLists(ShowAccessListsSchema):
                 l4_dict = seq_dict.setdefault('matches', {}).setdefault('l4', {})\
                     .setdefault(protocol, {})
                 if 'options' in left:
-                    options_name = re.search('options +(\w+)', left).groups()[0]
+                    options_name = re.search(r'options +(\w+)', left).groups()[0]
                     if not options_name.isdigit():
                         try:
                             l4_dict['options'] = self.OPT_MAP[options_name]
@@ -669,27 +669,27 @@ class ShowAccessLists(ShowAccessListsSchema):
 
                 if 'cos' in left:
                     l2_dict.setdefault('cos',
-                            int(re.search('cos +(\d+)', left).groups()[0]))
+                            int(re.search(r'cos +(\d+)', left).groups()[0]))
                     # remove the cos from left
-                    left = re.sub('cos +\d+', '', left)
+                    left = re.sub(r'cos +\d+', '', left)
 
                 if 'vlan' in left:
                     l2_dict.setdefault('vlan',
-                            int(re.search('vlan +(\d+)', left).groups()[0]))
+                            int(re.search(r'vlan +(\d+)', left).groups()[0]))
                     # remove the vlan from left
-                    left = re.sub('vlan +\d+', '', left)
+                    left = re.sub(r'vlan +\d+', '', left)
 
                 if 'protocol-family' in left:
                     l2_dict.setdefault('protocol_family',
-                            re.search('protocol\-family +(\w+)', left).groups()[0])
+                            re.search(r'protocol\-family +(\w+)', left).groups()[0])
                     # remove the protocol-family from left
-                    left = re.sub('protocol\-family +\w+', '', left)
+                    left = re.sub(r'protocol\-family +\w+', '', left)
 
                 if 'lsap' in left:
                     l2_dict.setdefault('lsap',
-                            re.search('lsap +(\w+ +\w+)', left).groups()[0])
+                            re.search(r'lsap +(\w+ +\w+)', left).groups()[0])
                     # remove the lsap from left
-                    left = re.sub('lsap +\w+ +\w+', '', left)
+                    left = re.sub(r'lsap +\w+ +\w+', '', left)
                 left = left.strip()
                 if left:
                     l2_dict['ether_type'] = left
@@ -809,7 +809,7 @@ class ShowIpAccessListDumpReflexive(ShowIpAccessListDumpReflexiveSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                if re.search('(permit)', line):
+                if re.search(r'(permit)', line):
                     source = group['src']
                     if 'host' in source:
                         source1=source.split()
@@ -819,22 +819,22 @@ class ShowIpAccessListDumpReflexive(ShowIpAccessListDumpReflexiveSchema):
                         cli_dict = ret_dict.setdefault('source', {}).setdefault(source, {})
                         cli_dict['protocol'] = group['protocol']
 
-                    if re.search('(time left)', line):
+                    if re.search(r'(time left)', line):
                         cli_dict['timeleft'] = int(group['timeleft'])
                         continue
 
-                    if re.search('(match|matches)', line):
+                    if re.search(r'(match|matches)', line):
                         cli_dict['matchcount'] = int(group['matchcount'])
                         continue
             # Name : R11  Interface Num : 181 (Vlan3110)  Direction : IN  sport/dport : 3096/4096 Type : REFLECT  Threshold Count : 0  Active : Y
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                if re.search('(Name)', group['name']):
+                if re.search(r'(Name)', group['name']):
                     name = group['value1']
-                if re.search('(Type)', group['acl_type']):
+                if re.search(r'(Type)', group['acl_type']):
                     acl_type = group['value5']
-                if re.search('(Direction)', group['direction']):
+                if re.search(r'(Direction)', group['direction']):
                     direction = group['value3']
                 if group['name'] and group['acl_type'] and group['direction']:
                     dir_dict = cli_dict.setdefault('name', {}). \
@@ -853,11 +853,11 @@ class ShowIpAccessListDumpReflexive(ShowIpAccessListDumpReflexiveSchema):
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                if re.search('(Reflex +Error +Count)', group['pattern8']):
+                if re.search(r'(Reflex +Error +Count)', group['pattern8']):
                     cli_dict['reflex_error'] = int(group['value8'])
                     continue
 
-                elif re.search('(Evaluate +Error +Count)', group['pattern8']):
+                elif re.search(r'(Evaluate +Error +Count)', group['pattern8']):
                     cli_dict['evaluate_error'] = int(group['value8'])
                     continue
 

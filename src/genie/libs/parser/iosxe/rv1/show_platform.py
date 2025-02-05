@@ -27,7 +27,7 @@ class ShowProcessesCpuPlatformSortedSchema(MetaParser):
                 },
             }
         },
-        'sort': {
+        Optional('sort'): {
             Any(): {
                 'ppid': int,
                 'five_sec_cpu': float,
@@ -62,20 +62,20 @@ class ShowProcessesCpuPlatformSorted(ShowProcessesCpuPlatformSortedSchema):
 
         # CPU utilization for five seconds: 43%, one minute: 44%, five minutes: 44%
         p1 = re.compile(r'^CPU +utilization +for +five +seconds: +(?P<five_sec_cpu_total>[\d\%]+),'
-                        ' +one +minute: +(?P<one_min_cpu>[\d\%]+),'
-                        ' +five +minutes: +(?P<five_min_cpu>[\d\%]+)$')
+                        r' +one +minute: +(?P<one_min_cpu>[\d\%]+),'
+                        r' +five +minutes: +(?P<five_min_cpu>[\d\%]+)$')
 
         # Core 0: CPU utilization for five seconds:  6%, one minute: 11%, five minutes: 11%
         p2 = re.compile(r'^(?P<core>[\w\s]+): +CPU +utilization +for'
-                        ' +five +seconds: +(?P<core_cpu_util_five_secs>\d+\%+),'
-                        ' +one +minute: +(?P<core_cpu_util_one_min>[\d+\%]+),'
-                        ' +five +minutes: +(?P<core_cpu_util_five_min>[\d+\%]+)$')
+                        r' +five +seconds: +(?P<core_cpu_util_five_secs>\d+\%+),'
+                        r' +one +minute: +(?P<core_cpu_util_one_min>[\d+\%]+),'
+                        r' +five +minutes: +(?P<core_cpu_util_five_min>[\d+\%]+)$')
 
         # 21188   21176    599%    600%    599%  R           478632  ucode_pkt_PPE0
         p3 = re.compile(r'^(?P<pid>\d+) +(?P<ppid>\d+)'
-                        ' +(?P<five_sec_cpu>[\d\%]+) +(?P<one_min_cpu>[\d\%]+)'
-                        ' +(?P<five_min_cpu>[\d\%]+) +(?P<status>[\w]+)'
-                        ' +(?P<size>\d+) +(?P<process>.*)$')
+                        r' +(?P<five_sec_cpu>[\d\%]+) +(?P<one_min_cpu>[\d\%]+)'
+                        r' +(?P<five_min_cpu>[\d\%]+) +(?P<status>[\w]+)'
+                        r' +(?P<size>\d+) +(?P<process>.*)$')
 
         for line in output.splitlines():
             line = line.strip()

@@ -81,8 +81,8 @@ class ShowEigrpNeighborsSuperParser(ShowEigrpNeighborsSchema):
         # IPv6-EIGRP VR(test) Neighbors for AS(100) VRF default
         # IPv6-EIGRP VR(test) Neighbors for AS(100) VRF VRF1
         r1 = re.compile(r'^(?P<address_family>IPv4|IPv6)\-EIGRP\s+'
-                        '(?:VR\(?(?P<name>\S+)\))?\s*Neighbors\s*for\s*'
-                        'AS\(\s*(?P<as_num>\d+)\)\s*VRF\s*(?P<vrf>\S+)$')
+                        r'(?:VR\(?(?P<name>\S+)\))?\s*Neighbors\s*for\s*'
+                        r'AS\(\s*(?P<as_num>\d+)\)\s*VRF\s*(?P<vrf>\S+)$')
 
         # H   Address                 Interface       Hold Uptime   SRTT   RTO  Q  Seq
         #                                             (sec)         (ms)       Cnt Num
@@ -91,22 +91,22 @@ class ShowEigrpNeighborsSuperParser(ShowEigrpNeighborsSchema):
         # 1   10.23.90.3              Gi0/0/0/1.390     12 01:40:17    4   200  0  15
         # 0   10.12.90.1              Gi0/0/0/0.390     12 02:52:31  816  4896  0  8
         r2 = re.compile(r'^(?P<peer_handle>\d+) +'
-                        '(?P<nbr_address>\S+) +'
-                        '(?P<eigrp_interface>[A-Za-z]+\s*[\d\/\.]+) +'
-                        '(?P<hold>\d+) +(?P<uptime>\S+) +'
-                        '(?P<srtt>\d+) +'
-                        '(?P<rto>\d+) +'
-                        '(?P<q_cnt>\d+) +'
-                        '(?P<last_seq_number>\d+)$')
+                        r'(?P<nbr_address>\S+) +'
+                        r'(?P<eigrp_interface>[A-Za-z]+\s*[\d\/\.]+) +'
+                        r'(?P<hold>\d+) +(?P<uptime>\S+) +'
+                        r'(?P<srtt>\d+) +'
+                        r'(?P<rto>\d+) +'
+                        r'(?P<q_cnt>\d+) +'
+                        r'(?P<last_seq_number>\d+)$')
 
         # H   Address                 Interface       Hold Uptime   SRTT   RTO  Q  Seq
         #                                             (sec)         (ms)       Cnt Num
         # 1   Link Local Address:     Gi0/0/0/1.90      12 01:36:14   11   200  0  28
         r3 = re.compile(r'^(?P<peer_handle>\d+) +Link\s+Local\s+Address: +'
-                        '(?P<eigrp_interface>[A-Za-z]+\s*[\d\/\.]+) +'
-                        '(?P<hold>\d+) +(?P<uptime>\S+) +(?P<srtt>\d+) +'
-                        '(?P<rto>\d+) +(?P<q_cnt>\d+) +'
-                        '(?P<last_seq_number>\d+)$')
+                        r'(?P<eigrp_interface>[A-Za-z]+\s*[\d\/\.]+) +'
+                        r'(?P<hold>\d+) +(?P<uptime>\S+) +(?P<srtt>\d+) +'
+                        r'(?P<rto>\d+) +(?P<q_cnt>\d+) +'
+                        r'(?P<last_seq_number>\d+)$')
 
         # fe80::5c00:ff:fe02:7
         # fe80::5c00:ff:fe02:7
@@ -345,28 +345,28 @@ class ShowEigrpNeighborsDetailSuperParser(ShowEigrpNeighborsDetailSchema):
         # IPv6-EIGRP VR(test) Neighbors for AS(100) VRF default
         # IPv6-EIGRP VR(test) Neighbors for AS(100) VRF VRF1
         r1 = re.compile(r'^(?P<address_family>IPv4|IPv6)\-EIGRP\s+'
-                        '(?:VR\(?(?P<name>\S+)\))?\s*Neighbors\s*for\s*'
-                        'AS\(\s*(?P<as_num>\d+)\)\s*VRF\s*(?P<vrf>\S+)$')
+                        r'(?:VR\(?(?P<name>\S+)\))?\s*Neighbors\s*for\s*'
+                        r'AS\(\s*(?P<as_num>\d+)\)\s*VRF\s*(?P<vrf>\S+)$')
 
         # 1   10.23.90.3              Gi0/0/0/1.90      11 01:43:15   13   200  0  23
         # 1   10.23.90.3              Gi0/0/0/1.390     14 01:41:47    4   200  0  15
         # 0   10.12.90.1              Gi0/0/0/0.390     13 02:54:01  816  4896  0  8
         r2 = re.compile(r'^(?P<peer_handle>\d+) +'
-                        '(?P<nbr_address>\S+) +'
-                        '(?P<eigrp_interface>[A-Za-z]+\s*[\d\/\.]+) +'
-                        '(?P<hold>\d+) +(?P<uptime>\S+) +'
-                        '(?P<srtt>\d+) +'
-                        '(?P<rto>\d+) +'
-                        '(?P<q_cnt>\d+) +'
-                        '(?P<last_seq_number>\d+)$')
+                        r'(?P<nbr_address>\S+) +'
+                        r'(?P<eigrp_interface>[A-Za-z]+\s*[\d\/\.]+) +'
+                        r'(?P<hold>\d+) +(?P<uptime>\S+) +'
+                        r'(?P<srtt>\d+) +'
+                        r'(?P<rto>\d+) +'
+                        r'(?P<q_cnt>\d+) +'
+                        r'(?P<last_seq_number>\d+)$')
 
         # 1   Link Local Address:     Gi0/0/0/1.390     11 01:42:44    9   200  0  14
         # 0   Link Local Address:     Gi0/0/0/0.390     12 02:31:47    4   200  0  9
         r3 = re.compile(r'^(?P<peer_handle>\d+) +Link\s+Local\s+Address: +'
-                        '(?P<eigrp_interface>[A-Za-z]+\s*[\d\/\.]+) +'
-                        '(?P<hold>\d+) +(?P<uptime>\S+) +(?P<srtt>\d+) +'
-                        '(?P<rto>\d+) +(?P<q_cnt>\d+) +'
-                        '(?P<last_seq_number>\d+)$')
+                        r'(?P<eigrp_interface>[A-Za-z]+\s*[\d\/\.]+) +'
+                        r'(?P<hold>\d+) +(?P<uptime>\S+) +(?P<srtt>\d+) +'
+                        r'(?P<rto>\d+) +(?P<q_cnt>\d+) +'
+                        r'(?P<last_seq_number>\d+)$')
 
         # fe80::5c00:ff:fe02:7
         # fe80::5c00:ff:fe02:7
@@ -375,11 +375,11 @@ class ShowEigrpNeighborsDetailSuperParser(ShowEigrpNeighborsDetailSchema):
         # Version 23.0/2.0, Retrans: 1, Retries: 0, Prefixes: 6
         # Version 8.0/1.2, Retrans: 1, Retries: 0, Prefixes: 5
         r5 = re.compile(r'Version\s*'
-                        '(?P<os_majorver>\d+)\.(?P<os_minorver>\d+)\/'
-                        '(?P<tlv_majorrev>\d+)\.(?P<tlv_minorrev>\d+), +'
-                        'Retrans\s*:\s*(?P<retransmit_count>\d+)\, +'
-                        'Retries\s*:\s*(?P<retry_count>\d+)\,* *'
-                        '(?:Prefixes\s*:\s*(?P<prefixes>\d+))?')
+                        r'(?P<os_majorver>\d+)\.(?P<os_minorver>\d+)\/'
+                        r'(?P<tlv_majorrev>\d+)\.(?P<tlv_minorrev>\d+), +'
+                        r'Retrans\s*:\s*(?P<retransmit_count>\d+)\, +'
+                        r'Retries\s*:\s*(?P<retry_count>\d+)\,* *'
+                        r'(?:Prefixes\s*:\s*(?P<prefixes>\d+))?')
 
         # BFD disabled
         r6 = re.compile(r'^BFD\s+(?P<bfd>\w+)$')

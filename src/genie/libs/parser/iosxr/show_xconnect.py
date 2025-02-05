@@ -102,11 +102,11 @@ class ShowL2VpnXconnectBrief(ShowL2VpnXconnectBriefSchema):
         #   EFP                                3          0          0
         #   Total                              3          0          2
         p4 = re.compile(r'^(?P<item>([a-zA-Z\-\/\s]+)) +(?P<up>(\d+))'
-                         ' +(?P<down>(\d+)) +(?P<unr>(\d+))$')
+                         r' +(?P<down>(\d+)) +(?P<unr>(\d+))$')
 
         # Total: 0 UP, 0 DOWN, 0 UNRESOLVED
         p5 = re.compile(r'^Total: +(?P<up>(\d+)) +UP, +(?P<down>(\d+)) +DOWN,'
-                         ' +(?P<unr>(\d+)) +UNRESOLVED$')
+                         r' +(?P<unr>(\d+)) +UNRESOLVED$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -406,11 +406,11 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
         label_found = False
         # Group siva_xc, XC siva_p2p, state is down; Interworking none
         p1 = re.compile(r'^Group +(?P<group>\S+), +XC +(?P<xc>\S+), +'
-            'state +is +(?P<state>\S+); +Interworking +(?P<interworking>\S+)')
+            r'state +is +(?P<state>\S+); +Interworking +(?P<interworking>\S+)')
 
         # Monitor-Session: pw-span-test, state is configured
         p2 = re.compile(r'^Monitor\-Session: +(?P<monitor_session>\S+)'
-            ', +state +is +(?P<state>\S+)$')
+            r', +state +is +(?P<state>\S+)$')
 
         # AC: GigabitEthernet0/4/0/1, state is up
         # AC: GigabitEthernet0/4/0/1, state is down (Admin)
@@ -422,7 +422,7 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
         # MTU 1500; XC ID 0x5000001; interworking none; MSTi 0
         # MTU 1500; XC ID 0x2000013; interworking none
         p5 = re.compile(r'^MTU +(?P<mtu>\d+); +XC +ID +(?P<xc_id>\S+); +'
-            'interworking +(?P<interworking>\S+)(; +MSTi +(?P<msti>\d+))?$')
+            r'interworking +(?P<interworking>\S+)(; +MSTi +(?P<msti>\d+))?$')
 
         # packet totals: send 98
         p6 = re.compile(r'^packet +totals: +send +(?P<send>\d+)$')
@@ -444,26 +444,26 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
 
         # drops: illegal VLAN 0, illegal length 0
         p7_3 = re.compile(r'^drops: +illegal +VLAN +(?P<illegal_vlan>\d+), +illegal +'
-            'length +(?P<illegal_length>\d+)$')
+            r'length +(?P<illegal_length>\d+)$')
 
         # PW: neighbor 10.1.1.1, PW ID 1, state is down ( local ready )
         p8 = re.compile(r'^PW: +neighbor +(?P<neighbor>\S+), +PW +ID +'
-            '(?P<id>\d+), state +is +(?P<state>[\S ]+)$')
+            r'(?P<id>\d+), state +is +(?P<state>[\S ]+)$')
         
         # EVPN: neighbor 10.154.219.82, PW ID: evi 10200, ac-id 30200, state is up ( established )
         p8_1 = re.compile(r'^EVPN: +neighbor +(?P<neighbor>\S+), +PW +ID: +'
-            '(?P<pw_id>[\S ]+), +ac-id +(?P<ac_id>\d+), +state +is +(?P<state>[\S ]+)$')
+            r'(?P<pw_id>[\S ]+), +ac-id +(?P<ac_id>\d+), +state +is +(?P<state>[\S ]+)$')
         
         # PW class not set, XC ID 0x5000001
         p9 = re.compile(r'^PW +class +(?P<pw_class>[\S ]+), +XC +ID +(?P<xc_id>\S+)$')
 
         # Encapsulation MPLS, protocol LDP
         p10 = re.compile(r'^Encapsulation +(?P<encapsulation>\S+)(, +Auto-discovered +'
-            '\((?P<auto_discovered>\S+)\))?, +protocol +(?P<protocol>\S+)$')
+            r'\((?P<auto_discovered>\S+)\))?, +protocol +(?P<protocol>\S+)$')
 
         # PW type Ethernet, control word enabled, interworking none
         p11 = re.compile(r'^PW +type +(?P<type>\S+), +control +word +(?P<control_word>\S+)'
-            ', +interworking +(?P<interworking>\S+)$')
+            r', +interworking +(?P<interworking>\S+)$')
 
         # PW backup disable delay 0 sec
         p12 = re.compile(r'^PW +backup +disable +delay +(?P<backup_disable_delay>\d+) +sec$')
@@ -510,7 +510,7 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
 
         # Local CE ID: 1, Remote CE ID: 2, Discovery State: Advertised
         p23 = re.compile(r'^Local +CE +ID: +(?P<local_ce_id>\d+), +Remote +CE +ID: +'
-            '(?P<remote_ce_id>\d+), Discovery +State: +(?P<state>\S+)$')
+            r'(?P<remote_ce_id>\d+), Discovery +State: +(?P<state>\S+)$')
 
         # Type VLAN; Num Ranges: 1
         p24 = re.compile(r'^Type +(?P<type>\S+); +Num +Ranges: +(?P<num_ranges>\d+)$')
@@ -532,7 +532,7 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
 
         # Auto Discovery: BGP, state is Advertised (Service Connected)
         p30 = re.compile(r'^Auto +Discovery: +(?P<auto_discovery>\S+), +state +is +'
-            '(?P<state>\S+) +\((?P<event_name>[\S ]+)\)$')
+            r'(?P<state>\S+) +\((?P<event_name>[\S ]+)\)$')
 
         # Route Distinguisher: (auto) 10.36.3.3:32770
         p31 = re.compile(r'^Route +Distinguisher: +(?P<route_distinguisher>[\S ]+)$')
@@ -557,8 +557,8 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
 
         # Wed Oct  2 14:36:55.184 EDT
         p38 = re.compile(r'^[Wed|Thu|Fri|Sat|Sun|Mon|Tue]+ +'
-                        '[Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec]+ +'
-                        '\d{1,2} +\d{1,2}:\d{1,2}:\d{1,2}[\.]\d{1,3} +[A-Z]{3}')
+                        r'[Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec]+ +'
+                        r'\d{1,2} +\d{1,2}:\d{1,2}:\d{1,2}[\.]\d{1,3} +[A-Z]{3}')
 
         # Rewrite Tags: [] 
         p39 = re.compile(r'^Rewrite +Tags: +\[(?P<rewrite_tags>[\S ]+)?\]$')
@@ -575,7 +575,7 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
         # Encap type Ethernet, control word enabled
         # Encap type Ethernet
         p43 = re.compile(r'^Encap +type +(?P<encap_type>\S+)(?:, +control +'
-                            'word +(?P<control_word>\S+))?$')
+                            r'word +(?P<control_word>\S+))?$')
 
         # LSP : Up
         p44 = re.compile(r'^LSP +: +(?P<lsp>\S+)$')
@@ -1515,15 +1515,15 @@ class ShowL2vpnXconnectSummary(ShowL2vpnXconnectSummarySchema):
 
         # Up: 0  Down: 0  Unresolved: 0 Partially-programmed: 0
         p3 = re.compile(r'^Up: (?P<up>\d+) +Down: +(?P<down>\d+) +Unresolved: +'
-            '(?P<unresolved>\d+) +Partially-programmed: +(?P<partially_programmed>\d+)$')
+            r'(?P<unresolved>\d+) +Partially-programmed: +(?P<partially_programmed>\d+)$')
 
         # AC-PW: 0  AC-AC: 0  PW-PW: 0 Monitor-Session-PW: 0
         p4 = re.compile(r'^AC-PW: +(?P<ac_pw>\d+) +AC-AC: +(?P<ac_ac>\d+) +PW-PW: +'
-            '(?P<pw_pw>\d+) +Monitor-Session-PW: +(?P<monitor_session_pw>\d+)$')
+            r'(?P<pw_pw>\d+) +Monitor-Session-PW: +(?P<monitor_session_pw>\d+)$')
 
         # Number of Admin Down segments: 0
         p5 = re.compile(r'^Number +of +Admin +Down +segments: +'
-            '(?P<number_of_admin_down_segments>\d+)$')
+            r'(?P<number_of_admin_down_segments>\d+)$')
 
         # Number of MP2MP xconnects: 0
         p6 = re.compile(r'^Number +of +MP2MP +xconnects: +(?P<number_of_mp2mp_xconnects>\d+)$')
@@ -1533,7 +1533,7 @@ class ShowL2vpnXconnectSummary(ShowL2vpnXconnectSummarySchema):
 
         # Advertised: 0 Non-Advertised: 0
         p8 = re.compile(r'^Advertised: +(?P<advertised>\d+) +Non-Advertised: +'
-            '(?P<non_advertised>\d+)$')
+            r'(?P<non_advertised>\d+)$')
 
         # Number of CE Connections: 0
         p9 = re.compile(r'^Number +of +CE +Connections: +(?P<number_of_ce_connections>\d+)$')

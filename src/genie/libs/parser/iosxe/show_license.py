@@ -3006,7 +3006,10 @@ class ShowLicenseTechSupport(ShowLicenseTechSupportSchema):
         p0_5 = re.compile(r'^\s*(?P<value>No +Purchase +Information +Available)$')
 
         #Generalised expression for all lines in <Key>: <Value> format
-        p0_3=re.compile(r'^(?P<key>[\s*\w]+.*)\: +(?P<value>[\S\s]+.*)$')
+        # Need to stop matching at the fist colon(:) as value can have colon(:)
+        #  i.e 'Failure Reason: Server error occurred: LS_LICENGINE_FAIL_TO_CONNECT'
+        # Need to match double or more consecutive colons(::) in value
+        p0_3=re.compile(r'^(?P<key>[^:]+)\:+ *(?P<value>[\S\s]+.*)$')
 
         #Active: PID:C9300-24UX,SN:FCW2134L00C
         #Standby: PID:C9300-24U,SN:FOC2129Z02H
@@ -3596,6 +3599,11 @@ class ShowLicenseTechSupport(ShowLicenseTechSupportSchema):
                         current_dict = ret_dict.setdefault('smart_licensing_status',{}).setdefault('transport',{})   
                     if key == 'soft_enforced':
                         current_dict = handle_dict
+
+                    # To handle special case (not real cli output) in unittest
+                    # No time source, *17:05:54.449 UTC Mon Jul 29 2024
+                    if re.match("no_time_source", key):
+                       continue
                         
                     if group['value'].isdigit():
                         current_dict.update({key: int(group['value'])}) 
@@ -3664,7 +3672,7 @@ class ShowLicenseHistoryMessage(ShowLicenseHistoryMessageSchema):
             # Trust Establishment:
             match = p2.match(line)
             if match:
-                tmp_key = re.sub('\s+', '_', match.groupdict()['key_name'].lower())
+                tmp_key = re.sub(r'\s+', '_', match.groupdict()['key_name'].lower())
                 tmp_key = re.sub('import_', '', tmp_key)
                 continue
 

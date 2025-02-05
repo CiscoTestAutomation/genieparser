@@ -1,0 +1,6 @@
+Device:phone
+Default Macro:CISCO_PHONE_AUTO_SMARTPORT
+Current Macro:CISCO_PHONE_AUTO_SMARTPORT
+Configurable Parameters:ACCESS_VLAN VOICE_VLAN
+Defaults Parameters:ACCESS_VLAN=1 VOICE_VLAN=2
+Current Parameters:ACCESS_VLAN=1 VOICE_VLAN=2

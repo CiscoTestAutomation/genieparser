@@ -138,27 +138,27 @@ class ShowIpv6Ospfv3NeighborsDetail(ShowIpv6Ospfv3NeighborsDetailSchema):
         af = 'ipv4'
         # Neighbor 1.1.1.1, interface address fe80::2de:fbff:fed4:89c7
         p1 = re.compile(r'^Neighbor +(?P<neighbor_router_id>(\S+)),'
-                        ' +interface +address +(?P<address>(\S+))$')
+                        r' +interface +address +(?P<address>(\S+))$')
         # Process ID ospfv3_l3uls VRF default, in area 0.0.0.0 via interface Ethernet1/33
         p2 = re.compile(r'^Process +ID +(?P<instance>(\S+)) +VRF'
-                        ' +(?P<vrf>(\S+)), +in +area +(?P<area>(\S+))'
-                        ' +via +interface +(?P<interface>(\S+))$')
+                        r' +(?P<vrf>(\S+)), +in +area +(?P<area>(\S+))'
+                        r' +via +interface +(?P<interface>(\S+))$')
         # State is FULL, 5 state changes, last change 04:06:04
         p3 = re.compile(r'^State +is +(?P<state>(\S+)),'
-                        ' +(?P<changes>(\d+)) +state +changes,'
-                        ' +last +change +(?P<last>(\S+))$')
+                        r' +(?P<changes>(\d+)) +state +changes,'
+                        r' +last +change +(?P<last>(\S+))$')
         # Neighbor priority is 1, Neighbor interface ID 37
         p4 = re.compile(
             r'^Neighbor +priority +is +(?P<priority>(\S+)),\s+Neighbor\s+interface\s+ID\s+(?P<nbr_intf_id>(\S+))$')
         # DR is 2.2.2.2 BDR is 1.1.1.1
         p5 = re.compile(r'^DR +is +(?P<dr_ip>(\S+)) +BDR +is'
-                        ' +(?P<bdr_ip>(\S+))$')
+                        r' +(?P<bdr_ip>(\S+))$')
         # Hello options 0x13, dbd options 0x13
         p6 = re.compile(r'^Hello +options +(?P<hello_options>(\S+)),'
-                        ' +dbd +options +(?P<dbd_options>(\S+))$')
+                        r' +dbd +options +(?P<dbd_options>(\S+))$')
         # Last non-hello packet received 00:03:17
         p7 = re.compile(r'^Last +non-hello +packet +received'
-                        ' +(?P<non_hello>(\S+))$')
+                        r' +(?P<non_hello>(\S+))$')
         # Dead timer due in 00:00:33
         p8 = re.compile(r'^Dead +timer +due +in +(?P<dead_timer>(\S+))$')
 

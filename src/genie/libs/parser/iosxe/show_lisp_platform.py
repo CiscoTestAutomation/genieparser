@@ -117,21 +117,21 @@ class ShowLispPlatform(ShowLispPlatformSchema):
         # IPv6 RLOC, local:                 OK
         # MAC RLOC, local:                  Unsupported
         p2 = re.compile(r'(?P<type>(IPv4|IPv6|MAC)) RLOC,'
-                            ' +local: +(?P<local>(\S+))$')
+                            r' +local: +(?P<local>(\S+))$')
 
         # IPv4 RLOC, remote:                OK
         # IPv6 RLOC, remote:                OK
         # MAC RLOC, remote:                 Unsupported
         p3 = re.compile(r'(?P<type>(IPv4|IPv6|MAC)) RLOC,'
-                            ' +remote: +(?P<remote>(\S+))$')
+                            r' +remote: +(?P<remote>(\S+))$')
 
         # Latest supported config style:     Service and instance
         p4 = re.compile(r'Latest +supported +config +style:'
-                            ' +(?P<supported>([a-zA-Z\s]+))$')
+                            r' +(?P<supported>([a-zA-Z\s]+))$')
 
         # Current config style:              Service and instance
         p5 = re.compile(r'Current +config +style:'
-                            ' +(?P<current>([a-zA-Z\s]+))$')
+                            r' +(?P<current>([a-zA-Z\s]+))$')
 
         # Support for signal+forward:
         p6 = re.compile(r'^Support for signal\Sforward:$')

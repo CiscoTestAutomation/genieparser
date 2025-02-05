@@ -53,7 +53,7 @@ class ShowContext(ShowContextSchema):
         # *admin            default              Vlan1000,Vlan1001,   Routed       disk0:/pod-context/admin.cfg
         p1 = re.compile(
             r'^(?P<context_name>\S+)\s+(?P<class>\S+)\s+(?P<interface>\S+)\s+'
-            '(?P<mode>(?!Contexts:)\S+)\s+(?P<url>\S+)$')
+            r'(?P<mode>(?!Contexts:)\S+)\s+(?P<url>\S+)$')
 
         # Vlan1030,Vlan1031,
         # Vlan1082,Vlan1083...
@@ -174,8 +174,8 @@ class ShowContextDetail(ShowContextDetailSchema):
         #  Vlan993, Vlan994, Vlan995, Vlan996, Vlan997, Vlan998, Vlan999
         p5 = re.compile(
             r'^(?P<interfaces>(\S+,)?\s*(\S+,)?\s*(\S+,)?\s*(\S+,)?\s*(\S+,)?\s*(\S+,)'
-            '?\s*(\S+,)?\s*(\S+,)?\s*(\S+,)?\s*(\S+,)?\s*(\S+,)?\s*(\S+,)?\s*(\S+)'
-            '?\s*)$')
+            r'?\s*(\S+,)?\s*(\S+,)?\s*(\S+,)?\s*(\S+,)?\s*(\S+,)?\s*(\S+,)?\s*(\S+)'
+            r'?\s*)$')
         
         # Class: default, Flags: 0x00000111, ID: 1
         p6 = re.compile(

@@ -1,0 +1,4 @@
+Interface                MAC Address    Method  Domain  Status Fg  Session ID
+--------------------------------------------------------------------------------------------
+Gi2/0/3                  001a.a136.c68a dot1x   VOICE   Auth        2300130B0000002ABD0A2AF1
+

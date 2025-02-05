@@ -428,15 +428,15 @@ def _is_regular_token(token):
         # Remove escaped characters
         candidate = token.replace('/', '')
         candidate = candidate.replace('"', '')
-        candidate = candidate.replace(r'\^', '')
+        candidate = candidate.replace('\\^', '')
         candidate = candidate.replace('\'', '')
         candidate = candidate.replace('-', '')
         candidate = candidate.replace('^', '')
         candidate = candidate.replace('_', '')
         candidate = candidate.replace(':', '')
         candidate = candidate.replace(',', '')
-        candidate = candidate.replace(r'\.', '')
-        candidate = candidate.replace(r'\|', '')
+        candidate = candidate.replace('\\.', '')
+        candidate = candidate.replace('\\|', '')
         candidate = candidate.replace('(', '')
         candidate = candidate.replace(')', '')
 
@@ -473,7 +473,7 @@ def _matches_fuzzy(i,
 
     # Initialize by counting how many arguments this command needs
     if required_arguments is None:
-        required_arguments = len(re.findall('{.*?}', command))
+        required_arguments = len(re.findall(r'{.*?}', command))
 
     while i < len(tokens):
         # If command token index is greater than its length, stop
@@ -502,7 +502,7 @@ def _matches_fuzzy(i,
                 # /dna/intent/api/v1/interface/{interface}
                 if not command_token.startswith('{'):
                     # Find before and after string
-                    groups = re.match('(.*){.*?}(.*)', command_token).groups()
+                    groups = re.match(r'(.*){.*?}(.*)', command_token).groups()
                     is_found = False
 
                     if len(groups) == 2:
@@ -516,9 +516,9 @@ def _matches_fuzzy(i,
 
                             # Find the argument using the escaped start and end
                             kwargs[re.search(
-                                '{(.*)}',
+                                r'{(.*)}',
                                 command_token).groups()[0]] = re.match(
-                                    '{}(.*){}'.format(start, end),
+                                    r'{}(.*){}'.format(start, end),
                                     token).groups()[0]
 
                             is_found = True
@@ -527,7 +527,7 @@ def _matches_fuzzy(i,
                     if not is_found:
                         return None
                 else:
-                    argument_key = re.search('{(.*)}',
+                    argument_key = re.search(r'{(.*)}',
                                              command_token).groups()[0]
                     i += 1
                     j += 1
@@ -1092,3 +1092,109 @@ class Common:
             final_hours = "0{}".format(final_hours)
 
         return "{}:{}:{}".format(final_hours, final_minutes, final_seconds)
+    
+
+def check_for_duplicate(data):
+    """
+    Checks for duplicate entries within a nested data structure and logs warnings for each duplicate found.
+
+    This function iterates over the nodes of AbstractTree. For each command, it constructs
+    a dictionary representation of its sub-trees and checks for duplicates within these sub-trees.
+    If duplicates are found, a warning is logged with the command name, and the command is added to
+    a list of duplicates.
+
+    Parameters:
+    data (AbstractTree): The AbstractTree to be checked for duplicates
+
+    Returns:
+    list: A list of command names that have duplicates.
+    """
+    duplicates = []
+    for cmd, cmd_value in data.nodes.items():
+        data_dict = {}
+        if isinstance(cmd_value.nodes, dict) and len(cmd_value.nodes.keys()) >= 2:
+            for node, sub_tree in cmd_value.nodes.items():
+                sub_tree_dict = data_dict.setdefault(node, {})
+                _check_tree(sub_tree, sub_tree_dict)
+            if _find_duplicate(data_dict):
+                log.warning(f'{cmd} is a duplicate')
+                duplicates.append(cmd)
+    return duplicates
+         
+def _check_tree(tree, sub_tree_dict):
+    """
+    Recursively constructs a dictionary representation of a tree structure.
+
+    This function traverses a tree starting from the given `tree` object. For each node in the tree,
+    it updates `sub_tree_dict` to include the node and its sub-nodes, effectively building a nested
+    dictionary representation of the tree.
+
+    Parameters:
+    tree (object): An object with a `nodes` attribute that is a dictionary. Each key-value pair represents
+                   a node and its associated value, which may contain further nodes.
+    sub_tree_dict (dict): A dictionary used to store the nested structure of the tree.
+
+    Returns:
+    None
+    """
+    for node, node_value in tree.nodes.items():
+        node_dict = sub_tree_dict.setdefault(node, {})
+        if node_value.nodes != {}:
+            for key, value in node_value.nodes.items():
+                node_output = node_dict.setdefault(key, {})
+                _check_tree(value, node_output)
+                    
+                
+def _find_duplicate(tree_dict):
+    """
+    Determines if there are duplicate structures within a tree dictionary.
+
+    This function checks for duplicates by comparing branches of a tree stored in `tree_dict`.
+    It assumes that one of the branches (stored in `base`) is used as a reference and compares it
+    against other branches in the tree dictionary. If a duplicate structure is found, the function
+    returns True.
+
+    Parameters:
+    tree_dict (dict): A dictionary representing a tree structure with nodes as keys and sub-trees as values.
+                      It is assumed to have a 'base' branch initially stored under the None key.
+
+    Returns:
+    bool: True if a duplicate structure is found, False otherwise.
+    """
+    base = tree_dict.pop(None)  # Assumes there is a base structure under the None key
+    nodes = set(tree_dict.keys())
+    for key in base.keys():
+        for node in nodes:
+            if key in tree_dict[node].keys():
+                if _check_branch(base[key], tree_dict[node][key]):
+                    return True
+    return False
+               
+
+def _check_branch(base, other):
+    """
+    Compares two branches of a tree structure to determine if they are identical.
+
+    This recursive function checks if two branches (`base` and `other`) of a tree are identical by
+    comparing their keys and corresponding sub-branches. If both branches are empty, they are considered
+    identical.
+
+    Parameters:
+    base (dict): A dictionary representing a branch of a tree.
+    other (dict): Another dictionary representing a branch of a tree to compare with `base`.
+
+    Returns:
+    bool: True if both branches are identical, False otherwise.
+    """
+    if base == {} and other == {}:
+        return True
+
+    for key in base.keys():
+        if key in other:
+            # Check if the sub-branches are identical
+            if not _check_branch(base[key], other[key]):
+                return False
+        else:
+            return False
+
+    return True

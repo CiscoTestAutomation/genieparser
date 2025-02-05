@@ -57,13 +57,13 @@ class ShowStackwiseVirtualDualActiveDetection(ShowStackwiseVirtualDualActiveDete
         dad_dict = {}
 
         # In dual-active recovery mode: No
-        p1 = re.compile(".*In\s+dual\-active\s+recovery\s+mode:\s+(?P<in_dad_recovery>\S+)")
+        p1 = re.compile(r".*In\s+dual\-active\s+recovery\s+mode:\s+(?P<in_dad_recovery>\S+)")
         # Recovery mode triggered by: fast-hello
-        p2 = re.compile(".*Recovery\s+mode\s+triggered\s+by\:\s+(?P<recovery_mode_triggered_by>\S+)")
+        p2 = re.compile(r".*Recovery\s+mode\s+triggered\s+by\:\s+(?P<recovery_mode_triggered_by>\S+)")
         # Triggered Time: 06:07:37.000 UTC Tue Jan 25 2022
-        p3 = re.compile(".*Triggered\s+Time\:\s+(?P<triggered_Time>.*)")
+        p3 = re.compile(r".*Triggered\s+Time\:\s+(?P<triggered_Time>.*)")
         # Recovery Reload: Enabled
-        p4 = re.compile(".*Recovery\s+Reload:\s+(?P<recovery_reload>\S+)")
+        p4 = re.compile(r".*Recovery\s+Reload:\s+(?P<recovery_reload>\S+)")
         # 1       FortyGigabitEthernet1/0/3       up
         p5 = re.compile(r"^(?P<switch_id>\d+)\s+(?P<dad_port>\S+)\s+(?P<status>(up|down))", re.MULTILINE)
         #         FortyGigabitEthernet1/0/4       up
@@ -165,25 +165,25 @@ class ShowStackwiseVirtualDualActiveDetectionPagp(ShowStackwiseVirtualDualActive
             out = output
 
         # Pagp dual-active detection enabled: Yes
-        p1 = re.compile("^Pagp\s+dual\-active\s+detection\s+enabled\:\s+(?P<pagp_dad_enabled>\S+)$")
+        p1 = re.compile(r"^Pagp\s+dual\-active\s+detection\s+enabled\:\s+(?P<pagp_dad_enabled>\S+)$")
         # In dual-active recovery mode: No
-        p2 = re.compile("^In\s+dual\-active\s+recovery\s+mode:\s+(?P<in_dad_recovery>\S+)$")
+        p2 = re.compile(r"^In\s+dual\-active\s+recovery\s+mode:\s+(?P<in_dad_recovery>\S+)$")
         # Triggered by: e-pagp
-        p3 = re.compile("^Triggered\s+by\:\s+(?P<recovery_mode_triggered_by>\S+)$")
+        p3 = re.compile(r"^Triggered\s+by\:\s+(?P<recovery_mode_triggered_by>\S+)$")
         # Triggered on group 1, Interface: Hu1/0/11
-        p4 = re.compile("^Triggered\s+on\s+group\s+(?P<channel_group>\d+)\,\s+Interface\:\s+(?P<interface>\S+)")
+        p4 = re.compile(r"^Triggered\s+on\s+group\s+(?P<channel_group>\d+)\,\s+Interface\:\s+(?P<interface>\S+)")
         # Triggered Time: 06:07:37.000 UTC Tue Jan 25 2022
-        p5 = re.compile("^Triggered\s+Time\:\s+(?P<triggered_Time>.*)$")
+        p5 = re.compile(r"^Triggered\s+Time\:\s+(?P<triggered_Time>.*)$")
         # Received id: f87a.4137.a600
-        p6 = re.compile("^Received\s+id\:\s+(?P<received_id>.*)$")
+        p6 = re.compile(r"^Received\s+id\:\s+(?P<received_id>.*)$")
         # Expected id: f87a.4137.9e00
-        p7 = re.compile("^Expected\s+id\:\s+(?P<expected_id>.*)$")
+        p7 = re.compile(r"^Expected\s+id\:\s+(?P<expected_id>.*)$")
         # Recovery Reload: Enabled
-        p8 = re.compile("^Recovery\s+Reload:\s+(?P<recovery_reload>\S+)$")
+        p8 = re.compile(r"^Recovery\s+Reload:\s+(?P<recovery_reload>\S+)$")
         # Channel group 1
-        p9 = re.compile("^Channel\s+group\s+(?P<channel_group>\d+)$")
+        p9 = re.compile(r"^Channel\s+group\s+(?P<channel_group>\d+)$")
 		# Hu1/0/11    Yes             Nyquist-Peer-1       Fo1/1/1       1.1
-        p10 = re.compile("^(?P<port>\S+)\s+(?P<status>\S+)\s+(?P<partner_name>\S+)\s+(?P<partner_port>\S+)\s+(?P<partner_version>\S+)$")
+        p10 = re.compile(r"^(?P<port>\S+)\s+(?P<status>\S+)\s+(?P<partner_name>\S+)\s+(?P<partner_port>\S+)\s+(?P<partner_version>\S+)$")
 
         channel_group = ''
         pagp_dad_obj = {}
@@ -280,7 +280,7 @@ class ShowStackwiseVirtualBandwidth(ShowStackwiseVirtualBandwidthSchema):
         ret_dict = {}
 
         # 1        200G
-        p1 = re.compile('^(?P<switch>\d+)\s+(?P<bandwidth>\w+)$')
+        p1 = re.compile(r'^(?P<switch>\d+)\s+(?P<bandwidth>\w+)$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -338,21 +338,21 @@ class ShowStackwiseVirtual(ShowStackwiseVirtualSchema):
         #                                 TenGigabitEthernet2/0/48
 
         # Stackwise Virtual : Enabled
-        enabled_capture = "(?P<enabled>Enabled|Disabled)"
-        p_enabled = re.compile("Stackwise\s+Virtual\s+:\s+{enabled_capture}".format(enabled_capture=enabled_capture))
+        enabled_capture = r"(?P<enabled>Enabled|Disabled)"
+        p_enabled = re.compile(r"Stackwise\s+Virtual\s+:\s+{enabled_capture}".format(enabled_capture=enabled_capture))
 
         # Domain Number : 100
-        domain_capture = "(?P<domain>\d+)"
-        p_domain = re.compile("Domain\s+Number\s+:\s+{domain_capture}".format(domain_capture=domain_capture))
+        domain_capture = r"(?P<domain>\d+)"
+        p_domain = re.compile(r"Domain\s+Number\s+:\s+{domain_capture}".format(domain_capture=domain_capture))
 
         # 1       1                       TenGigabitEthernet1/0/47"
-        switch_capture = "(?P<switch>\d+)"
-        vlink_capture = "(?P<vlink>\d+)"
-        p6 = "(?P<port>\S+)"
-        p10 = re.compile("{switch_capture}\s+{vlink_capture}\s+{p6}".format(switch_capture=switch_capture, vlink_capture=vlink_capture, p6=p6))
+        switch_capture = r"(?P<switch>\d+)"
+        vlink_capture = r"(?P<vlink>\d+)"
+        p6 = r"(?P<port>\S+)"
+        p10 = re.compile(r"{switch_capture}\s+{vlink_capture}\s+{p6}".format(switch_capture=switch_capture, vlink_capture=vlink_capture, p6=p6))
 
         #                                 TenGigabitEthernet1/0/47"
-        p_st_int = re.compile("\s{10,}(?P<port>\S+)\s*$")
+        p_st_int = re.compile(r"\s{10,}(?P<port>\S+)\s*$")
 
         stackwise_obj = {}
         for line in output.splitlines():
@@ -488,7 +488,7 @@ class ShowStackwiseVirtualLink(ShowStackwiseVirtualLinkSchema):
         p2 = re.compile(r'^(?P<ports>\S+) +(?P<link_status>\S+) +(?P<protocol_status>\S+)$')
 
         for line in out.splitlines():
-            line = re.sub('\t', '   ', line)
+            line = re.sub(r'\t', '   ', line)
             line = line.strip()
             #                       1       1       HundredGigE1/0/1                U               P
             #                                       HundredGigE1/0/6                U               P
@@ -556,7 +556,7 @@ class ShowStackwiseVirtualNeighbors(ShowStackwiseVirtualNeighborsSchema):
         p3 = re.compile(r'^(?P<local_port>[\w/]+)$')
 
         for line in out.splitlines():
-            line = re.sub('\t', '   ', line)
+            line = re.sub(r'\t', '   ', line)
             line = line.strip()
             # 1               1          HundredGigE1/1/0/19     HundredGigE2/1/0/23                
             m =  p1.match(line)

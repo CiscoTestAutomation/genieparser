@@ -76,10 +76,10 @@ class ShowControllersFiaDiagshellL2showLocation(ShowControllersFiaDiagshellL2sho
         # mac=fc:00:00:ff:01:9c vlan=2544 GPORT=0x8000048 Trunk=0 encap_id=0x2007
         # mac=fc:00:00:ff:01:0c vlan=2524 GPORT=0xc000000 Trunk=0 Static encap_id=0x3001'
         p2 = re.compile(r'^mac\=(?P<mac>[A-Fa-f0-9:]+) +vlan=(?P<vlan>\d+)'
-                         ' +GPORT\=(?P<gport>\d+|0x[A-Fa-f0-9]+)'
-                         '(?: +Trunk\=(?P<trunk>\d+))?'
-                         '(?: +(?P<b_static>(Static)))?'
-                         ' +encap_id\=(?P<encap_id>\d+|0x[A-Fa-f0-9\']+)$')
+                         r' +GPORT\=(?P<gport>\d+|0x[A-Fa-f0-9]+)'
+                         r'(?: +Trunk\=(?P<trunk>\d+))?'
+                         r'(?: +(?P<b_static>(Static)))?'
+                         r' +encap_id\=(?P<encap_id>\d+|0x[A-Fa-f0-9\']+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -516,9 +516,9 @@ class ShowControllersOptics(ShowControllersOpticsSchema):
         # DWDM carrier Info: C BAND, MSA ITU Channel=97, Frequency=191.30THz,
         # DWDM Carrier Info: Unavailable, MSA ITU Channel= Unavailable, Frequency= Unavailable , Wavelength= Unavailable
         p6 = re.compile(r'^DWDM +[Cc]arrier +Info: +(?P<dwdm_carrier_info>[\w\s]+), '
-                         '+MSA +ITU +Channel *= *(?P<msa_itu_channel>[\w]+), '
-                         '+Frequency *= *(?P<frequency>[\w\.]+) *,'
-                         '( +Wavelength *= *(?P<wavelength>[\S\s]+))?$')
+                         r'+MSA +ITU +Channel *= *(?P<msa_itu_channel>[\w]+), '
+                         r'+Frequency *= *(?P<frequency>[\w\.]+) *,'
+                         r'( +Wavelength *= *(?P<wavelength>[\S\s]+))?$')
 
         # Wavelength=1567.133nm
         p7 = re.compile(r'^Wavelength *= *(?P<wavelength>[\S\s]+)$')

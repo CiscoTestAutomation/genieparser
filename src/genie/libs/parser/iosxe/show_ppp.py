@@ -656,8 +656,9 @@ class ShowPppAll(ShowPppAllSchema):
         #Vi1.2        LCP+ IPCP+ IPV6CP+    LocalT   51.0.0.1
         #Vi1.1        LCP+ IPV6CP+          LocalT   0.0.0.0
         #Vi2.1        LCP+ PAP+ IPCP+       LocalT   192.2.0.90      username1 
+        #Vi2          LCP+ IPCP+ CDPCP-     LocalT   172.16.0.12     Charon-037-4P
         
-        p1 = re.compile(r'^(?P<interface>(\w+|w+\d+|\w+\d+\.\d+))\s+(?P<open>(\w+|\w+\+|\w+\-))\s+(?P<nego>(\w+|\w+\+|w+\-))\s+(?P<fail>(\w+|\w+\+|\w+\-|\s+))\s+(?P<stage>(\w+))\s+(?P<peeraddress>(\d+\.\d+\.\d+\.\d+))\s*(?P<peername>(\w*))$')
+        p1 = re.compile(r'^(?P<interface>(\w+|w+\d+|\w+\d+\.\d+))\s+(?P<open>(\w+|\w+\+|\w+\-))\s+(?P<nego>(\w+|\w+\+|w+\-))\s+(?P<fail>(\w+|\w+\+|\w+\-|\s+))\s+(?P<stage>(\w+))\s+(?P<peeraddress>(\d+\.\d+\.\d+\.\d+))\s*(?P<peername>(\S*))$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -665,6 +666,7 @@ class ShowPppAll(ShowPppAllSchema):
             #Vi1.1        LCP+ IPCP+ IPV6CP+    LocalT   81.0.0.1
             #Vi2          LCP+ IPCP+ CDPCP-     LocalT   18.1.1.1  
             #Vi2.1        LCP+ PAP+ IPCP+       LocalT   192.2.0.90      username1
+            #Vi2          LCP+ IPCP+ CDPCP-     LocalT   172.16.0.12     Charon-037-4P
             
             m = p1.match(line)
             if m:

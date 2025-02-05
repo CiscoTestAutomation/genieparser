@@ -1139,31 +1139,31 @@ class ShowTelemetryReceiverName(ShowTelemetryReceiverNameSchema):
             ))
 
         #Name: test0
-        p1 = re.compile("^Name:\s*(?P<name>\S*)$")
+        p1 = re.compile(r"^Name:\s*(?P<name>\S*)$")
 
         #Profile:
-        p2 = re.compile("^Profile:\s*(?P<profile>\S*)$")
+        p2 = re.compile(r"^Profile:\s*(?P<profile>\S*)$")
 
         #State: Valid
-        p3 = re.compile("^State:\s*(?P<state>\S*)$")
+        p3 = re.compile(r"^State:\s*(?P<state>\S*)$")
 
         #State Description:
-        p4 = re.compile("^State Description:\s*(?P<state_description>\S*)$")
+        p4 = re.compile(r"^State Description:\s*(?P<state_description>\S*)$")
 
         #Last State Change: 10/26/21 17:55:47
-        p5 = re.compile("^Last State Change:\s*(?P<last_change>\S* *\S*)$")
+        p5 = re.compile(r"^Last State Change:\s*(?P<last_change>\S* *\S*)$")
 
         #Type: protocol
-        p6 = re.compile("^Type:\s*(?P<type>\S*)$")
+        p6 = re.compile(r"^Type:\s*(?P<type>\S*)$")
 
         #Protocol: native
-        p7 = re.compile("^Protocol:\s*(?P<protocol>\S*)$")
+        p7 = re.compile(r"^Protocol:\s*(?P<protocol>\S*)$")
 
         #Host: 161.44.223.172
-        p8 = re.compile("^Host:\s*(?P<host>\S*)$")
+        p8 = re.compile(r"^Host:\s*(?P<host>\S*)$")
 
         #Port: 123
-        p9 = re.compile("^Port:\s*(?P<port>\S*)$")
+        p9 = re.compile(r"^Port:\s*(?P<port>\S*)$")
 
         ret_dict = dict()
 
@@ -1379,7 +1379,7 @@ class ShowTelemetryInternalProtocolManager(ShowTelemetryInternalProtocolManagerS
         p1 = re.compile(r'^Con str *: *(?P<con_str>\S*)$')
 
         #Sockfd                 : 138
-        p2 = re.compile(r'^Sockfd *: *(?P<sock_fd>\d*)$')
+        p2 = re.compile(r'^Sockfd *: *(?P<sock_fd>-?\d*)$')
 
         #Protocol               : native
         p3 = re.compile(r'^Protocol *: *(?P<protocol>\S*)$')

@@ -1,0 +1,8 @@
+show bfd neighbor
+
+OurAddr         NeighAddr       LD/RD                 RH/RS           Holdown(mult)     State       Int               Vrf                       Type
+21.1.1.1        21.1.1.2        1090519041/1090519041 Up              1271181547(3)     Up          Eth1/17/1         default                   SH
+*22.1.1.1        22.1.1.2        1090519042/1090519042 Up              1271183236(3)     Up          Eth1/17/2.5       default                   SH
+*23.1.1.1        23.1.1.2        1090519043/1090519043 Up              1271184925(3)     Up          Po5               default                   SH
+*26.1.1.1        26.1.1.2        1090519044/1090519044 Up              1271192007(3)     Up          Po6.5             default                   SH
+*27.1.1.1        27.1.1.2        1090519045/1090519045 Up              1271212648(3)     Up          Vlan5             default                   SH

@@ -185,7 +185,7 @@ class ShowIpArpSummary(ShowIpArpSummarySchema):
 
         # 40 IP ARP entries, with 0 of them incomplete
         p1 = re.compile(r'^(?P<total_entries>\w+) +IP +ARP +entries, +with '
-            '+(?P<incomp_entries>\w+) +of +them +incomplete$')
+            r'+(?P<incomp_entries>\w+) +of +them +incomplete$')
 
         # initial variables
         ret_dict = {}
@@ -409,165 +409,165 @@ class ShowIpTraffic(ShowIpTrafficSchema):
 
         # Rcvd: 2020 requests, 764 replies, 0 reverse, 0 other
         p2 = re.compile(r'^Rcvd: +(?P<arp_in_requests>\d+) +requests,'
-            ' +(?P<arp_in_replies>\d+) +replies, +(?P<arp_in_reverse>\d+)'
-            ' +reverse, +(?P<arp_in_other>\d+) +other$')
+            r' +(?P<arp_in_replies>\d+) +replies, +(?P<arp_in_reverse>\d+)'
+            r' +reverse, +(?P<arp_in_other>\d+) +other$')
 
         # Sent: 29 requests, 126 replies (2 proxy), 0 reverse
         p3 = re.compile(r'^Sent: +(?P<arp_out_requests>\d+) +requests,'
-            ' +(?P<arp_out_replies>\d+) +replies +\((?P<arp_out_proxy>[\w]+)'
-            ' +proxy\), +(?P<arp_out_reverse>\d+) +reverse$')
+            r' +(?P<arp_out_replies>\d+) +replies +\((?P<arp_out_proxy>[\w]+)'
+            r' +proxy\), +(?P<arp_out_reverse>\d+) +reverse$')
 
         # Drop due to input queue full: 0
         p4 = re.compile(r'^Drop +due +to +input +queue +full:'
-            ' +(?P<arp_drops>\w+)$')
+            r' +(?P<arp_drops>\w+)$')
 
         # IP statistics:
         p5 = re.compile(r'^IP +statistics:')
 
         # Rcvd:  17780 total, 110596 local destination
         p6 = re.compile(r'^Rcvd: +(?P<ip_rcvd_total>\d+) +total,'
-            ' +(?P<ip_rcvd_local_destination>\d+)'
-            ' +local +destination$')
+            r' +(?P<ip_rcvd_local_destination>\d+)'
+            r' +local +destination$')
 
         # 0 format errors, 0 checksum errors, 0 bad hop count
         p7 = re.compile(r'^(?P<ip_rcvd_format_errors>\d+) +format +errors,'
-            ' +(?P<ip_rcvd_checksum_errors>\d+)'
-            ' +checksum +errors, +(?P<ip_rcvd_bad_hop>\d+) +bad +hop +count$')
+            r' +(?P<ip_rcvd_checksum_errors>\d+)'
+            r' +checksum +errors, +(?P<ip_rcvd_bad_hop>\d+) +bad +hop +count$')
 
         # 0 unknown protocol, 5 not a gateway
         p8 = re.compile(r'^(?P<ip_rcvd_unknwn_protocol>\d+) +unknown +protocol,'
-            ' +(?P<ip_rcvd_not_gateway>\d+)'
-            ' +not +a +gateway$')
+            r' +(?P<ip_rcvd_not_gateway>\d+)'
+            r' +not +a +gateway$')
 
         # 0 security failures, 0 bad options, 12717 with options
         p9 = re.compile(r'^(?P<ip_rcvd_sec_failures>\d+) +security +failures,'
-            ' +(?P<ip_rcvd_bad_optns>\d+)'
-            ' +bad options, +(?P<ip_rcvd_with_optns>\d+) +with +options$')
+            r' +(?P<ip_rcvd_bad_optns>\d+)'
+            r' +bad options, +(?P<ip_rcvd_with_optns>\d+) +with +options$')
 
         # Opts:  0 end, 0 nop, 0 basic security, 0 loose source route
         p10 = re.compile(r'^Opts: +(?P<ip_opts_end>\d+) +end,'
-            ' +(?P<ip_opts_nop>\d+)'
-            ' +nop, +(?P<ip_opts_basic_security>\d+) +basic +security, '
-            '+(?P<ip_opts_loose_src_route>\d+) +loose +source +route$')
+            r' +(?P<ip_opts_nop>\d+)'
+            r' +nop, +(?P<ip_opts_basic_security>\d+) +basic +security, '
+            r'+(?P<ip_opts_loose_src_route>\d+) +loose +source +route$')
 
         # 0 timestamp, 0 extended security, 0 record route
         p11 = re.compile(r'^(?P<ip_opts_timestamp>\d+) +timestamp,'
-            ' +(?P<ip_opts_extended_security>\d+)'
-            ' +extended +security, +(?P<ip_opts_record_route>\d+)'
-            ' +record +route$')
+            r' +(?P<ip_opts_extended_security>\d+)'
+            r' +extended +security, +(?P<ip_opts_record_route>\d+)'
+            r' +record +route$')
 
         # 0 stream ID, 0 strict source route, 12717 alert, 0 cipso, 0 ump
         p12 = re.compile(r'^(?P<ip_opts_strm_id>\d+) +stream +ID,'
-            ' +(?P<ip_opts_strct_src_route>\d+)'
-            ' +strict +source +route, +(?P<ip_opts_alert>\d+) +alert, '
-            '+(?P<ip_opts_cipso>\d+) +cipso, +(?P<ip_opts_ump>\d+) +ump$')
+            r' +(?P<ip_opts_strct_src_route>\d+)'
+            r' +strict +source +route, +(?P<ip_opts_alert>\d+) +alert, '
+            r'+(?P<ip_opts_cipso>\d+) +cipso, +(?P<ip_opts_ump>\d+) +ump$')
 
         # 0 other, 0 ignored
         p13 = re.compile(r'^(?P<ip_opts_other>\d+) +other'
-            '(, +(?P<ip_opts_ignored>\d+) +ignored)?$')
+            r'(, +(?P<ip_opts_ignored>\d+) +ignored)?$')
 
         # Frags: 0 reassembled, 0 timeouts, 0 couldn't reassemble
         p14 = re.compile(r'^Frags: +(?P<ip_frags_reassembled>\d+) +reassembled,'
-            ' +(?P<ip_frags_timeouts>\d+)'
-            ' +timeouts, +(?P<ip_frags_no_reassembled>\d+)'
-            ' +couldn\'t +reassemble$')
+            r' +(?P<ip_frags_timeouts>\d+)'
+            r' +timeouts, +(?P<ip_frags_no_reassembled>\d+)'
+            r' +couldn\'t +reassemble$')
 
         # 1 fragmented, 5 fragments, 0 couldn't fragment
         # 0 fragmented, 0 couldn't fragment
         p15 = re.compile(r'^(?P<ip_frags_fragmented>\d+) +fragmented,'
-            '( +(?P<ip_frags_fragments>\d+) +fragments,)?'
-            ' +(?P<ip_frags_no_fragmented>\d+)'
-            ' +couldn\'t +fragment$')
+            r'( +(?P<ip_frags_fragments>\d+) +fragments,)?'
+            r' +(?P<ip_frags_no_fragmented>\d+)'
+            r' +couldn\'t +fragment$')
 
         # 0 invalid hole
         p16 = re.compile(r'^(?P<ip_frags_invalid_hole>\d+) +invalid hole$')
 
         # Bcast: 33324 received, 5 sent
         p17 = re.compile(r'^Bcast: +(?P<ip_bcast_received>\d+) +received,'
-            ' +(?P<ip_bcast_sent>\d+) +sent$')
+            r' +(?P<ip_bcast_sent>\d+) +sent$')
 
         # Mcast: 144833 received, 66274 sent
         p18 = re.compile(r'^Mcast: +(?P<ip_mcast_received>\d+) +received,'
-            ' +(?P<ip_mcast_sent>\d+) +sent$')
+            r' +(?P<ip_mcast_sent>\d+) +sent$')
 
         # Sent:  85543 generated, 1654728 forwarded
         p19 = re.compile(r'^Sent: +(?P<ip_sent_generated>\d+) +generated,'
-            ' +(?P<ip_sent_forwarded>\d+) +forwarded$')
+            r' +(?P<ip_sent_forwarded>\d+) +forwarded$')
 
         # Drop:  8 encapsulation failed, 0 unresolved, 20 no adjacency
         p20 = re.compile(r'^Drop: +(?P<ip_drop_encap_failed>\d+) +encapsulation'
-            ' +failed, +(?P<ip_drop_unresolved>\d+)'
-            ' +unresolved, +(?P<ip_drop_no_adj>\d+) +no +adjacency$')
+            r' +failed, +(?P<ip_drop_unresolved>\d+)'
+            r' +unresolved, +(?P<ip_drop_no_adj>\d+) +no +adjacency$')
 
         # 19 no route, 0 unicast RPF, 0 forced drop, 0 unsupported-addr
         # 0 no route, 0 unicast RPF, 0 forced drop
         p21 = re.compile(r'^(?P<ip_drop_no_route>\d+) +no +route,'
-            ' +(?P<ip_drop_unicast_rpf>\d+)'
-            ' +unicast +RPF, +(?P<ip_drop_forced_drop>\d+) +forced +drop'
-            '(, +(?P<ip_drop_unsupp_address>\d+) +unsupported-addr)?$')
+            r' +(?P<ip_drop_unicast_rpf>\d+)'
+            r' +unicast +RPF, +(?P<ip_drop_forced_drop>\d+) +forced +drop'
+            r'(, +(?P<ip_drop_unsupp_address>\d+) +unsupported-addr)?$')
 
         # 0 options denied, 0 source IP address zero
         p22 = re.compile(r'^(?P<ip_drop_opts_denied>\d+) +options +denied(,'
-            ' +(?P<ip_drop_src_ip>\d+) +source +IP +address +zero)?$')
+            r' +(?P<ip_drop_src_ip>\d+) +source +IP +address +zero)?$')
 
         # ICMP statistics:
         p23 = re.compile(r'^ICMP +statistics:')
 
         # Rcvd: 0 format errors, 0 checksum errors, 0 redirects, 0 unreachable
         p24 = re.compile(r'^Rcvd: +(?P<icmp_received_format_errors>\d+) +format '
-            '+errors, +(?P<icmp_received_checksum_errors>\d+) +checksum +errors, '
-            '+(?P<icmp_received_redirects>\d+) +redirects, '
-            '+(?P<icmp_received_unreachable>\d+) +unreachable$')
+            r'+errors, +(?P<icmp_received_checksum_errors>\d+) +checksum +errors, '
+            r'+(?P<icmp_received_redirects>\d+) +redirects, '
+            r'+(?P<icmp_received_unreachable>\d+) +unreachable$')
 
         # 284 echo, 9 echo reply, 0 mask requests, 0 mask replies, 0 quench
         # 43838 echo, 713 echo reply, 0 mask requests, 0 mask replies, 0 quench
         p25 = re.compile(r'^(?P<icmp_received_echo>\d+) +echo,'
-            ' +(?P<icmp_received_echo_reply>\d+)'
-            ' +echo +reply, +(?P<icmp_received_mask_requests>\d+) +mask'
-            ' +requests, +(?P<icmp_received_mask_replies>\d+) +mask +replies, '
-            '+(?P<icmp_received_quench>\d+) +quench$')
+            r' +(?P<icmp_received_echo_reply>\d+)'
+            r' +echo +reply, +(?P<icmp_received_mask_requests>\d+) +mask'
+            r' +requests, +(?P<icmp_received_mask_replies>\d+) +mask +replies, '
+            r'+(?P<icmp_received_quench>\d+) +quench$')
 
         # 0 parameter, 0 timestamp, 0 timestamp replies, 0 info request, 0 other
         # 0 parameter, 0 timestamp, 0 info request, 0 other
         p26 = re.compile(r'^(?P<icmp_received_parameter>\d+) +parameter,'
-            ' +(?P<icmp_received_timestamp>\d+)'
-            ' +timestamp(, +(?P<icmp_received_timestamp_replies>\d+) +timestamp'
-            ' +replies)?, +(?P<icmp_received_info_request>\d+) +info +request,'
-            ' +(?P<icmp_received_other>\d+) +other$')
+            r' +(?P<icmp_received_timestamp>\d+)'
+            r' +timestamp(, +(?P<icmp_received_timestamp_replies>\d+) +timestamp'
+            r' +replies)?, +(?P<icmp_received_info_request>\d+) +info +request,'
+            r' +(?P<icmp_received_other>\d+) +other$')
 
         # 0 irdp solicitations, 0 irdp advertisements
         p27 = re.compile(r'^(?P<icmp_received_irdp_solicitations>\d+) '
-            '+irdp +solicitations, +(?P<icmp_received_irdp_advertisements>\d+)'
-            ' +irdp +advertisements$')
+            r'+irdp +solicitations, +(?P<icmp_received_irdp_advertisements>\d+)'
+            r' +irdp +advertisements$')
 
         # 0 time exceeded, 0 info replies
         p28 = re.compile(r'^(?P<icmp_received_time_exceeded>\d+) '
-            '+time +exceeded, +(?P<icmp_received_info_replies>\d+)'
-            ' +info +replies$')
+            r'+time +exceeded, +(?P<icmp_received_info_replies>\d+)'
+            r' +info +replies$')
 
         # Sent: 0 redirects, 14 unreachable, 9 echo, 134 echo reply
         p29 = re.compile(r'^Sent: +(?P<icmp_sent_redirects>\d+) +redirects, '
-            '+(?P<icmp_sent_unreachable>\d+) +unreachable,'
-            ' +(?P<icmp_sent_echo>\d+) +echo, +(?P<icmp_sent_echo_reply>\d+) '
-            '+echo +reply$')
+            r'+(?P<icmp_sent_unreachable>\d+) +unreachable,'
+            r' +(?P<icmp_sent_echo>\d+) +echo, +(?P<icmp_sent_echo_reply>\d+) '
+            r'+echo +reply$')
 
         # 0 mask requests, 0 mask replies, 0 quench, 0 timestamp, 0 timestamp replies
         # 0 mask requests, 0 mask replies, 0 quench, 0 timestamp
         p30 = re.compile(r'^(?P<icmp_sent_mask_requests>\d+) +mask +requests, '
-            '+(?P<icmp_sent_mask_replies>\d+)'
-            ' +mask +replies, +(?P<icmp_sent_quench>\d+) +quench, '
-            '+(?P<icmp_sent_timestamp>\d+) +timestamp'
-            '(, +(?P<icmp_sent_timestamp_replies>\d+) +timestamp +replies)?$')
+            r'+(?P<icmp_sent_mask_replies>\d+)'
+            r' +mask +replies, +(?P<icmp_sent_quench>\d+) +quench, '
+            r'+(?P<icmp_sent_timestamp>\d+) +timestamp'
+            r'(, +(?P<icmp_sent_timestamp_replies>\d+) +timestamp +replies)?$')
 
         # 0 info reply, 0 time exceeded, 0 parameter problem
         p31 = re.compile(r'^(?P<icmp_sent_info_reply>\d+) +info +reply, '
-            '+(?P<icmp_sent_time_exceeded>\d+) +time +exceeded, '
-            '+(?P<icmp_sent_parameter_problem>\d+) +parameter +problem$')
+            r'+(?P<icmp_sent_time_exceeded>\d+) +time +exceeded, '
+            r'+(?P<icmp_sent_parameter_problem>\d+) +parameter +problem$')
 
         # 0 irdp solicitations, 0 irdp advertisements
         p32 = re.compile(r'^(?P<icmp_sent_irdp_solicitations>\d+) +irdp '
-            '+solicitations, +(?P<icmp_sent_irdp_advertisements>\d+)'
-            ' +irdp +advertisements$')
+            r'+solicitations, +(?P<icmp_sent_irdp_advertisements>\d+)'
+            r' +irdp +advertisements$')
 
         # UDP statistics:
         p33 = re.compile(r'^UDP +statistics:')
@@ -575,74 +575,74 @@ class ShowIpTraffic(ShowIpTrafficSchema):
         # Rcvd: 62515 total, 0 checksum errors, 15906 no port 0 finput
         # Rcvd: 682217 total, 0 checksum errors, 289579 no port
         p34 = re.compile(r'^Rcvd: +(?P<udp_received_total>\d+) +total,'
-            ' +(?P<udp_received_udp_checksum_errors>\d+) +checksum +errors,'
-            ' +(?P<udp_received_no_port>\d+) +no port( +(?P<udp_received_finput>\d+) '
-            '+finput)?$')
+            r' +(?P<udp_received_udp_checksum_errors>\d+) +checksum +errors,'
+            r' +(?P<udp_received_no_port>\d+) +no port( +(?P<udp_received_finput>\d+) '
+            r'+finput)?$')
 
         # Sent: 41486 total, 0 forwarded broadcasts
         p35 = re.compile(r'^Sent: +(?P<udp_sent_total>\d+) +total, '
-            '+(?P<udp_sent_fwd_broadcasts>\d+) +forwarded +broadcasts$')
+            r'+(?P<udp_sent_fwd_broadcasts>\d+) +forwarded +broadcasts$')
 
         # OSPF statistics:
         p36 = re.compile(r'^OSPF +statistics:')
 
         # Last clearing of OSPF traffic counters never
         p37 = re.compile(r'^Last +clearing +of +OSPF +traffic +counters '
-            '+(?P<ospf_traffic_cntrs_clear>\w+)$')
+            r'+(?P<ospf_traffic_cntrs_clear>\w+)$')
 
         # Rcvd: 16222 total, 0 checksum errors
         p38 = re.compile(r'^Rcvd: +(?P<ospf_received_total>\d+) +total, '
-            '+(?P<ospf_received_checksum_errors>\d+) +checksum errors$')
+            r'+(?P<ospf_received_checksum_errors>\d+) +checksum errors$')
 
         # 15153 hello, 20 database desc, 2 link state req
         p39 = re.compile(r'^(?P<ospf_received_hello>\d+) +hello, '
-            '+(?P<ospf_received_database_desc>\d+)'
-            ' +database +desc, +(?P<ospf_received_link_state_req>\d+) '
-            '+link +state +req$')
+            r'+(?P<ospf_received_database_desc>\d+)'
+            r' +database +desc, +(?P<ospf_received_link_state_req>\d+) '
+            r'+link +state +req$')
 
         # 359 link state updates, 688 link state acks
         p40 = re.compile(r'^(?P<ospf_received_lnk_st_updates>\d+) +link '
-            '+state +updates, +(?P<ospf_received_lnk_st_acks>\d+) +link '
-            '+state +acks$')
+            r'+state +updates, +(?P<ospf_received_lnk_st_acks>\d+) +link '
+            r'+state +acks$')
 
         # Sent: 9456 total
         p41 = re.compile(r'^Sent: +(?P<sent_total>\d+) +total$')
 
         # 8887 hello, 30 database desc, 8 link state req
         p42 = re.compile(r'^(?P<ospf_sent_hello>\d+) +hello, '
-            '+(?P<ospf_sent_database_desc>\d+)'
-            ' +database +desc, +(?P<ospf_sent_lnk_st_acks>\d+) +link +state '
-            '+req$')
+            r'+(?P<ospf_sent_database_desc>\d+)'
+            r' +database +desc, +(?P<ospf_sent_lnk_st_acks>\d+) +link +state '
+            r'+req$')
 
         # 299 link state updates, 239 link state acks
         p43 = re.compile(r'^(?P<ospf_sent_lnk_st_updates>\d+) +link '
-            '+state +updates, +(?P<ospf_sent_lnk_st_acks>\d+) +link '
-            '+state +acks$')
+            r'+state +updates, +(?P<ospf_sent_lnk_st_acks>\d+) +link '
+            r'+state +acks$')
 
         # PIMv2 statistics: Sent/Received
         p44 = re.compile(r'^PIMv2 +statistics: +Sent/Received')
 
         # Total: 7458/8859, 0 checksum errors, 0 format errors
         p45 = re.compile(r'^Total: +(?P<pimv2_total>[\d\/]+), '
-            '+(?P<pimv2_checksum_errors>\d+) +checksum +errors, '
-            '+(?P<pimv2_format_errors>\d+) +format +errors$')
+            r'+(?P<pimv2_checksum_errors>\d+) +checksum +errors, '
+            r'+(?P<pimv2_format_errors>\d+) +format +errors$')
 
         # Registers: 1/1 (0 non-rp, 0 non-sm-group), Register Stops: 1/1,  Hellos: 5011/5008
         p46 = re.compile(r'^Registers: +(?P<pimv2_registers>[\d\/]+) +'
-            '\((?P<pimv2_non_rp>\d+) +non-rp, +(?P<pimv2_non_sm_group>\d+) '
-            '+non-sm-group\), +Register +Stops:'
-            ' +(?P<pimv2_registers_stops>[\d\/]+),'
-            ' +Hellos: +(?P<pimv2_hellos>[\d\/]+)$')
+            r'\((?P<pimv2_non_rp>\d+) +non-rp, +(?P<pimv2_non_sm_group>\d+) '
+            r'+non-sm-group\), +Register +Stops:'
+            r' +(?P<pimv2_registers_stops>[\d\/]+),'
+            r' +Hellos: +(?P<pimv2_hellos>[\d\/]+)$')
 
         # Join/Prunes: 5/712, Asserts: 0/697, grafts: 0/2
         p47 = re.compile(r'^Join/Prunes: +(?P<pimv2_join_prunes>[\d\/]+), '
-            '+Asserts: +(?P<pimv2_asserts>[\d\/]+), +grafts: '
-            '+(?P<pimv2_grafts>[\d\/]+)$')
+            r'+Asserts: +(?P<pimv2_asserts>[\d\/]+), +grafts: '
+            r'+(?P<pimv2_grafts>[\d\/]+)$')
 
         # Bootstraps: 2088/2438, Candidate_RP_Advertisements: 350/0
         p48 = re.compile(r'^Bootstraps: +(?P<pimv2_bootstraps>[\d\/]+), '
-            '+Candidate_RP_Advertisements:'
-            ' +(?P<pimv2_candidate_rp_advs>[\d\/]+)$')
+            r'+Candidate_RP_Advertisements:'
+            r' +(?P<pimv2_candidate_rp_advs>[\d\/]+)$')
 
         # Queue drops: 0
         p49 = re.compile(r'^Queue drops: +(?P<pimv2_queue_drops>[\d]+)$')
@@ -655,17 +655,17 @@ class ShowIpTraffic(ShowIpTrafficSchema):
 
         # Total: 2832/4946, Format errors: 0/0, Checksum errors: 0/0
         p52 = re.compile(r'^Total: +(?P<igmp_total>[\d\/]+),'
-            ' +Format +errors: +(?P<igmp_format_errors>[\d\/]+),'
-            ' +Checksum +errors: +(?P<igmp_checksum_errors>[\d\/]+)$')
+            r' +Format +errors: +(?P<igmp_format_errors>[\d\/]+),'
+            r' +Checksum +errors: +(?P<igmp_checksum_errors>[\d\/]+)$')
 
         # Host Queries: 2475/1414, Host Reports: 357/3525, Host Leaves: 0/5
         p53 = re.compile(r'^Host +Queries: +(?P<igmp_host_queries>[\d\/]+),'
-            ' +Host +Reports: +(?P<igmp_host_reports>[\d\/]+),'
-            ' +Host +Leaves: +(?P<igmp_host_leaves>[\d\/]+)$')
+            r' +Host +Reports: +(?P<igmp_host_reports>[\d\/]+),'
+            r' +Host +Leaves: +(?P<igmp_host_leaves>[\d\/]+)$')
 
         # DVMRP: 0/0, PIM: 0/0
         p54 = re.compile(r'^DVMRP: +(?P<igmp_dvmrp>[\d\/]+), '
-            '+PIM: +(?P<igmp_pim>[\d\/]+)$')
+            r'+PIM: +(?P<igmp_pim>[\d\/]+)$')
 
         # Queue drops: 0
         p55 = re.compile(r'^Queue drops: +(?P<igmp_queue_drops>[\d]+)$')
@@ -675,8 +675,8 @@ class ShowIpTraffic(ShowIpTrafficSchema):
 
         # Rcvd: 15396 total, 0 checksum errors, 0 no port
         p57 = re.compile(r'^Rcvd: +(?P<tcp_received_total>\d+) +total,'
-            ' +(?P<tcp_received_checksum_errors>\d+) +checksum +errors,'
-            ' +(?P<tcp_received_no_port>\d+) +no +port$')
+            r' +(?P<tcp_received_checksum_errors>\d+) +checksum +errors,'
+            r' +(?P<tcp_received_no_port>\d+) +no +port$')
 
         # Sent: 19552 total
         p58 = re.compile(r'^Sent: +(?P<tcp_sent_total>\d+) +total$')
@@ -698,25 +698,25 @@ class ShowIpTraffic(ShowIpTrafficSchema):
 
         # Rcvd: 2185 total, 6 opens, 0 notifications, 12 updates
         p63 = re.compile(r'^Rcvd: +(?P<bgp_received_total>\d+) +total,'
-            ' +(?P<bgp_received_opens>\d+) +opens,'
-            ' +(?P<bgp_received_notifications>\d+) +notifications,'
-            ' +(?P<bgp_received_updates>\d+) +updates$')
+            r' +(?P<bgp_received_opens>\d+) +opens,'
+            r' +(?P<bgp_received_notifications>\d+) +notifications,'
+            r' +(?P<bgp_received_updates>\d+) +updates$')
 
         # 2167 keepalives, 0 route-refresh, 0 unrecognized
         p64 = re.compile(r'^(?P<bgp_received_keepalives>\d+) +keepalives, '
-            '+(?P<bgp_received_route_refresh>\d+)'
-            ' +route-refresh, +(?P<bgp_received_unrecognized>\d+)'
-            ' +unrecognized$')
+            r'+(?P<bgp_received_route_refresh>\d+)'
+            r' +route-refresh, +(?P<bgp_received_unrecognized>\d+)'
+            r' +unrecognized$')
 
         # Sent: 2304 total, 6 opens, 2 notifications, 0 updates
         p65 = re.compile(r'^Sent: +(?P<bgp_sent_total>\d+) +total,'
-            ' +(?P<bgp_sent_opens>\d+) +opens,'
-            ' +(?P<bgp_sent_notifications>\d+) +notifications,'
-            ' +(?P<bgp_sent_updates>\d+) +updates$')
+            r' +(?P<bgp_sent_opens>\d+) +opens,'
+            r' +(?P<bgp_sent_notifications>\d+) +notifications,'
+            r' +(?P<bgp_sent_updates>\d+) +updates$')
 
         # 2296 keepalives, 0 route-refresh
         p66 = re.compile(r'^(?P<bgp_sent_keepalives>\d+) +keepalives, '
-            '+(?P<bgp_sent_route_refresh>\d+) +route-refresh$')
+            r'+(?P<bgp_sent_route_refresh>\d+) +route-refresh$')
 
         # initial variables
         ret_dict = {}
@@ -1233,7 +1233,7 @@ class ShowArpApplication(ShowArpApplicationSchema):
         
         # Number of clients registered: 16
         p1 = re.compile(r'^\s*Number +of +clients +registered: +' \
-                '(?P<num_of_clients>\d+)$')
+                r'(?P<num_of_clients>\d+)$')
 
         # ASR1000-RP SPA Ether215 10024
         p2 = re.compile(r'^(?P<application_name>[\w\W]{0,20})(?P<id>\d+)\s+(?P<num_of_subblocks>\d+)$')
@@ -1298,23 +1298,23 @@ class ShowArpSummary(ShowArpSummarySchema):
 
         # Total number of entries in the ARP table: 1233
         p1 = re.compile(r'^Total +number +of +entries +in +the +ARP +table: +' \
-                '(?P<arp_table_entries>\d+)\.$')
+                r'(?P<arp_table_entries>\d+)\.$')
         
         # Total number of Dynamic ARP entries: 1123
         p2 = re.compile(r'^Total +number +of +(?P<entry_name>[\S\s]+): +' \
-                '(?P<num_of_entries>\d+)\.$')
+                r'(?P<num_of_entries>\d+)\.$')
 
         # GigabitEthernet0/0/4  4
         p3 = re.compile(r'^(?P<interface_name>[\w\/\.]+) +(?P<entry_count>\d+)')
 
         # Learn ARP Entry Threshold is 409600 and Permit Threshold is 486400.
         p4 = re.compile(r'^Learn +ARP +Entry +Threshold +is +' \
-            '(?P<arp_entry_threshold>\d+) +and +Permit +Threshold +is +' \
-            '(?P<permit_threshold>\d+).?$')
+            r'(?P<arp_entry_threshold>\d+) +and +Permit +Threshold +is +' \
+            r'(?P<permit_threshold>\d+).?$')
 
         # Maximum limit of Learn ARP entry : 512000.
         p5 = re.compile(r'^(?P<maximum_entries_name>[\w\W]+) +: +' \
-            '(?P<maximum_entries>\d+).$')
+            r'(?P<maximum_entries>\d+).$')
 
         for line in out.splitlines():
             line = line.strip()

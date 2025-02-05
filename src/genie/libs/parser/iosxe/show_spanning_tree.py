@@ -847,10 +847,10 @@ class ShowErrdisableRecovery(ShowErrdisableRecoverySchema):
         # initial regexp pattern
         p1 = re.compile(r'^Timer +interval: +(?P<interval>\d+) +seconds$')
         p2 = re.compile(r'^(?P<name>[\w\-\s\(\)\"\:"]+) +'
-                         '(?P<status>(Disabled|Enabled)+)$')
+                         r'(?P<status>(Disabled|Enabled)+)$')
         p3 = re.compile(r'^(?P<interface>[\w\-\/\.]+) +'
-                         '(?P<errdisable_reason>\w+) +'
-                         '(?P<time_left>\d+)$')
+                         r'(?P<errdisable_reason>\w+) +'
+                         r'(?P<time_left>\d+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -981,21 +981,21 @@ class ShowSpanningTree(ShowSpanningTreeSchema):
         p2 = re.compile(r'^Spanning +tree +enabled p+rotocol +(?P<mode>\w+)$')
         p3 = re.compile(r'^Root +ID +Priority +(?P<priority>\d+)$')
         p4 = re.compile(r'^Bridge +ID +Priority +(?P<priority>\d+)'
-                         '( *\(priority +(?P<configured_bridge_priority>\d+) +'
-                         'sys\-id\-ext +(?P<sys_id_ext>\d+)\))?$')
+                         r'( *\(priority +(?P<configured_bridge_priority>\d+) +'
+                         r'sys\-id\-ext +(?P<sys_id_ext>\d+)\))?$')
         p5 = re.compile(r'^Address +(?P<address>[\w\.]+)$')
         p6 = re.compile(r'^Cost +(?P<cost>\d+)$')
         p7 = re.compile(r'^Port +(?P<port>\d+) +\((?P<interface>[\w\-\/\.]+)\)$')
         p8 = re.compile(r'Hello +Time +(?P<hello_time>\d+) +sec +'
-                         'Max +Age +(?P<max_age>\d+) +sec +'
-                         'Forward +Delay +(?P<forward_delay>\d+) +sec$')
+                         r'Max +Age +(?P<max_age>\d+) +sec +'
+                         r'Forward +Delay +(?P<forward_delay>\d+) +sec$')
         p9 = re.compile(r'^Aging +Time +(?P<aging_time>\d+) +sec$')
         p10 = re.compile(r'^(?P<interface>[\w\-\/\.]+) +'
-                          '(?P<role>[\w\*]+) +(?P<port_state>[A-Z\*]+) *'
-                          '(?P<cost>\d+) +(?P<port_priority>\d+)\.'
-                          '(?P<port_num>\d+) +(?P<type>[\w\s]+)'
-                          '( +(Bound\((?P<bound>\w+)\)|Peer\((?P<peer>\w+)\)))?'
-                          '( +\*\S+)?$')
+                          r'(?P<role>[\w\*]+) +(?P<port_state>[A-Z\*]+) *'
+                          r'(?P<cost>\d+) +(?P<port_priority>\d+)\.'
+                          r'(?P<port_num>\d+) +(?P<type>[\w\s]+)'
+                          r'( +(Bound\((?P<bound>\w+)\)|Peer\((?P<peer>\w+)\)))?'
+                          r'( +\*\S+)?$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -1147,7 +1147,7 @@ class ShowSpanningTreeMstConfiguration(ShowSpanningTreeMstConfigurationSchema):
         # initial regexp pattern
         p1 = re.compile(r'^Name +\[(?P<name>.*)\]$')
         p2 = re.compile(r'^Revision +(?P<revision>\d+) +'
-                         'Instances +configured +(?P<instances_configured>\d+)$')
+                         r'Instances +configured +(?P<instances_configured>\d+)$')
         p3 = re.compile(r'^(?P<inst>\d+) +(?P<vlan_mapped>[\d\,\s\-]+)$')
 
         for line in out.splitlines():

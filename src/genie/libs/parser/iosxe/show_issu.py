@@ -87,7 +87,7 @@ class ShowIssuStateDetail(ShowIssuStateDetailSchema):
 
         # Finished local lock acquisition on R0
         p0 = re.compile(r'^Finished +local +lock +acquisition'
-                         ' +on +(switch *)?(?P<slot>(\S+))$')
+                         r' +on +(switch *)?(?P<slot>(\S+))$')
 
         # No ISSU operation is in progress
         p1 = re.compile(r'^No +ISSU +operation +is +in +progress$')
@@ -97,15 +97,15 @@ class ShowIssuStateDetail(ShowIssuStateDetailSchema):
         
         # Loadversion time: 20180430 19:13:51 on vty 0
         p3 = re.compile(r'^Loadversion +time: +(?P<date>(\S+))'
-                         ' +(?P<time>(\S+))(?: +on +(?P<context>.*))?$')
+                         r' +(?P<time>(\S+))(?: +on +(?P<context>.*))?$')
 
         # Last operation: loadversion
         p4 = re.compile(r'^Last +operation:'
-            ' (?P<last>(loadversion|runversion|acceptversion|commitversion))$')
+            r' (?P<last>(loadversion|runversion|acceptversion|commitversion))$')
 
         # Rollback: automatic, remaining time before rollback: 00:35:58
         p5_1 = re.compile(r'^Rollback: +(?P<state>(automatic)), +remaining +time'
-                           ' +before +rollback: +(?P<time>(\S+))$')
+                           r' +before +rollback: +(?P<time>(\S+))$')
 
         # Rollback: inactive, timer canceled by acceptversion
         p5_2 = re.compile(r'^Rollback: +(?P<state>(inactive)), +(?P<reason>.*)$')
@@ -118,11 +118,11 @@ class ShowIssuStateDetail(ShowIssuStateDetailSchema):
 
         # Operating mode: sso, terminal state not reached
         p8 = re.compile(r'^Operating +mode: +(?P<mode>(\S+)), +terminal +state'
-                         ' +(?P<terminal_state>(reached|not reached))$')
+                         r' +(?P<terminal_state>(reached|not reached))$')
 
         # Notes: runversion executed, active RP is being provisioned
         p9 = re.compile(r'^Notes: +runversion +executed, +active +RP +is +being'
-                         ' +provisioned$')
+                         r' +provisioned$')
 
         # Slot = 1
         p10 = re.compile(r'Slot\s*=\s*(?P<slot>\d+)')
@@ -454,9 +454,10 @@ class ShowIssuRollbackTimerSchema(MetaParser):
     """Schema for show issu rollback-timer"""
 
     schema = {
-        'rollback_timer_state': str,
+        Optional('rollback_timer_state'): str,
         Optional('rollback_timer_reason'): str,
         Optional('rollback_timer_time'): str,
+        Optional('slot'): str,
         }
 
 # ======================================
@@ -480,6 +481,8 @@ class ShowIssuRollbackTimer(ShowIssuRollbackTimerSchema):
         ret_dict = {}
 
         # Compile regexp patterns
+        # Finished local lock acquisition on R0
+        p0 = re.compile(r'^Finished +local +lock +acquisition +on +(\w+ *)?(?P<slot>(\S+))$')
 
         # Rollback: inactive, no ISSU operation is in progress
         # Rollback: inactive, timer canceled by acceptversion
@@ -494,6 +497,12 @@ class ShowIssuRollbackTimer(ShowIssuRollbackTimerSchema):
         # Parse all lines
         for line in out.splitlines():
             line = line.strip()
+
+            m = p0.match(line)
+            if m:
+                slot = m.groupdict()['slot']
+                ret_dict['slot'] = slot
+                continue
 
             # Rollback: inactive, no ISSU operation is in progress
             # Rollback: inactive, timer canceled by acceptversion

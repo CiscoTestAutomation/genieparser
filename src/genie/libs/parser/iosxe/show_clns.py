@@ -773,8 +773,8 @@ class ShowClnsIsNeighborsDetail(ShowClnsIsNeighborsDetailSchema):
         # R3_nx           Gi3.115       Up     L1L2 64/64     R1_xe.02           Phase V
         # CIP-DC1-FBS-02  Po1.10        Up     L1L2 64/64     CIP-DC1-FBS-02.01  Phase V
         p2 = re.compile(r'^(?P<system_id>[\w\.\-]+)\s+(?P<interface>\S+)\s+'
-                        '(?P<state>\w+)\s+(?P<type>\S+)\s+(?P<priority>\d+)\s*'
-                        '(\/\d+)*\s+(?P<circuit_id>[\w\.\-]+)\s+(?P<format>[\S\s]+)$')
+                        r'(?P<state>\w+)\s+(?P<type>\S+)\s+(?P<priority>\d+)\s*'
+                        r'(\/\d+)*\s+(?P<circuit_id>[\w\.\-]+)\s+(?P<format>[\S\s]+)$')
 
         #   Area Address(es): 49.0002
         p3 = re.compile(r'^Area +Address\(es\): +(?P<area_address>\S+)$')
@@ -1028,7 +1028,7 @@ class ShowClnsTraffic(ShowClnsTrafficSchema):
         p5 = re.compile(r'CLNS +Discards:$')
         #   Hdr Syntax: 0, Checksum: 0, Lifetime: 0, Output cngstn: 0
         p6 = re.compile(r'^Hdr +Syntax: +(?P<hdr_syntax>\d+), +Checksum: +(?P<checksum>\d+),'
-                        ' +Lifetime: +(?P<lifetime>\d+), +Output +cngstn: +(?P<output_cngstn>\d+)$')
+                        r' +Lifetime: +(?P<lifetime>\d+), +Output +cngstn: +(?P<output_cngstn>\d+)$')
         #   No Route: 0, Discard Route: 0, Dst Unreachable 0, Encaps. Failed: 0
         p7 = re.compile(r'^No +Route: +(?P<no_route>\d+), +Discard +Route: +(?P<discard_route>\d+),'
                         r' +Dst +Unreachable +(?P<dst_unreachable>\d+), +Encaps. +Failed: +(?P<encaps_failed>\d+)$')
@@ -1056,7 +1056,7 @@ class ShowClnsTraffic(ShowClnsTrafficSchema):
         p16 = re.compile(r'^Tunneling +dropped +\(rcvd\) +IP\/IPV6:  +(?P<tunneling_dropped>\d+)$')
         # ISO-IGRP: Querys (sent/rcvd): 0/0 Updates (sent/rcvd): 0/0
         p17 = re.compile(r'^ISO-IGRP: +Querys +\(sent\/rcvd\): (?P<query_sent>\d+)/(?P<query_rcvd>\d+)'
-                         ' +Updates +\(sent\/rcvd\): +(?P<update_sent>\d+)/(?P<update_rcvd>\d+)$')
+                         r' +Updates +\(sent\/rcvd\): +(?P<update_sent>\d+)/(?P<update_rcvd>\d+)$')
         # ISO-IGRP: Router Hellos: (sent/rcvd): 0/0
         p18 = re.compile(r'^ISO-IGRP: +Router +Hellos: +\(sent\/rcvd\): +(?P<hello_sent>\d+)\/+(?P<hello_rcvd>\d+)$')
         # ISO-IGRP Syntax Errors: 0

@@ -53,8 +53,9 @@ class ShowL2tpTunnel(ShowL2tpTunnelSchema):
 
         # LocTunID   RemTunID   Remote Name   State  Remote Address  Sessn L2TP Class/
         # 11367      26859      LAC           est    99.1.1.1        16    airtel
-        p2=re.compile(r'^(?P<loc_tunnel_id>\d+)\s+(?P<rem_tunnel_id>\d+)\s+(?P<remote_name>\w+)\s+(?P<state>\w+)\s+(?P<remote_address>\d+\.\d+\.\d+\.\d+)\s+\d+\s+(?P<l2tp_class>\w+)$')
-
+        # 2311074340 2784131943 fsw-TSN-2     est    150.0.0.1       1      l2tp_default_class
+        p2 = re.compile(r'^(?P<loc_tunnel_id>\d+)\s+(?P<rem_tunnel_id>\d+)\s+(?P<remote_name>\S+)\s+(?P<state>\S+)\s+(?P<remote_address>\d+\.\d+\.\d+\.\d+)\s+(?P<sessions>\d+)\s+(?P<l2tp_class>\S+)(?:\s*|$)')
+        
         #%%No active L2TP tunnels
         p3=re.compile(r'^%%(?P<no_active_tunnels>(No\s+active\s+L2TP\s+tunnels))$')
 

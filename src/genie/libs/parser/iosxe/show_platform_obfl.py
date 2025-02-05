@@ -107,13 +107,13 @@ class ShowLoggingOnboardSwitchActiveStatus(ShowLoggingOnboardSwitchActiveStatusS
             
         ret_dict ={}
         #Application Clilog:
-        p1 = re.compile('^Application (?P<application>\S+):$')
+        p1 = re.compile(r'^Application (?P<application>\S+):$')
         
         #Cli enable status: enabled
-        p2 = re.compile('^Cli (?P<enable_status>enable status): (?P<status>\S+)$')
+        p2 = re.compile(r'^Cli (?P<enable_status>enable status): (?P<status>\S+)$')
         
         # Path: /obfl0/
-        p3 = re.compile('^Path\: (?P<path>\S+)$')
+        p3 = re.compile(r'^Path\: (?P<path>\S+)$')
         
         for line in output.splitlines():
             line=line.strip()
@@ -201,38 +201,45 @@ class ShowLoggingOnboardSwitchActiveUptimeDetail(ShowLoggingOnboardSwitchActiveU
         ret_dict ={}
         
         #First customer power on : 06/22/2021 12:35:40
-        p1 = re.compile('^First customer power on :?\s?(?P<first_customer_poweron>(\d+\/){2}\d+ \d+:\d+:\d+)$')
+        p1 = re.compile(r'^First customer power on :?\s?(?P<first_customer_poweron>(\d+\/){2}\d+ \d+:\d+:\d+)$')
         
         #Total uptime            :  0  years  12 weeks  1  days  17 hours  55 minutes
-        p2 = re.compile('^Total uptime\s+:\s+(?P<years>\d+)\s+\w+\s+(?P<weeks>\d+)\s+\w+\s+(?P<days>\d+)\s+\w+\s+(?P<hours>\d+)\s+\w+\s+(?P<minutes>\d+)\s+\w+$')
+        p2 = re.compile(r'^Total uptime\s+:\s+(?P<years>\d+)\s+\w+\s+(?P<weeks>\d+)\s+\w+\s+(?P<days>\d+)\s+\w+\s+(?P<hours>\d+)\s+\w+\s+(?P<minutes>\d+)\s+\w+$')
         
         #Total downtime          :  2177 years  8  weeks  0  days  2  hours  29 minutes
-        p3 = re.compile('^Total downtime\s+:\s+(?P<years>\d+)\s+\w+\s+(?P<weeks>\d+)\s+\w+\s+(?P<days>\d+)\s+\w+\s+(?P<hours>\d+)\s+\w+\s+(?P<minutes>\d+)\s+\w+$')
+        p3 = re.compile(r'^Total downtime\s+:\s+(?P<years>\d+)\s+\w+\s+(?P<weeks>\d+)\s+\w+\s+(?P<days>\d+)\s+\w+\s+(?P<hours>\d+)\s+\w+\s+(?P<minutes>\d+)\s+\w+$')
         
         #Number of resets        : 630
-        p4 = re.compile('^Number of resets\s+: (?P<numberof_reset>\d+)$')
+        p4 = re.compile(r'^Number of resets\s+: (?P<numberof_reset>\d+)$')
         
         #Number of slot changes  : 1
-        p5 = re.compile('^Number of slot changes\s+: (?P<numberof_slot_changes>\d+)$')
+        p5 = re.compile(r'^Number of slot changes\s+: (?P<numberof_slot_changes>\d+)$')
         
         #Current reset reason    : Reload Command
-        p6 = re.compile('^Current reset reason\s+: (?P<current_reset_reason>[A-Z a-z\S]+)$')
+        p6 = re.compile(r'^Current reset reason\s+: (?P<current_reset_reason>[A-Z a-z\S]+)$')
         
         #Current reset timestamp : 10/06/2019 01:28:26
-        p7 = re.compile('^Current reset timestamp\s+: (?P<current_reset_timestamp>(\d+\/){2}\d+.*)$')
+        p7 = re.compile(r'^Current reset timestamp\s+: (?P<current_reset_timestamp>(\d+\/){2}\d+.*)$')
         
         #Current slot            : 1
-        p8 = re.compile('^Current slot\s+: (?P<current_slot>\d+)$')
+        p8 = re.compile(r'^Current slot\s+: (?P<current_slot>\d+)$')
         
         #Chassis type            : 80
-        p9 = re.compile('^Chassis type\s+: (?P<chassis_type>\w+)$')
+        p9 = re.compile(r'^Chassis type\s+: (?P<chassis_type>\w+)$')
         
         #Current uptime          :  0  years  1  weeks  1  days  0  hours  0  minutes
-        p10 = re.compile('^Current uptime\s+:\s+(?P<years>\d+)\s+\w+\s+(?P<weeks>\d+)\s+\w+\s+(?P<days>\d+)\s+\w+\s+(?P<hours>\d+)\s+\w+\s+(?P<minutes>\d+)\s+\w+$')
+        p10 = re.compile(r'^Current uptime\s+:\s+(?P<years>\d+)\s+\w+\s+(?P<weeks>\d+)\s+\w+\s+(?P<days>\d+)\s+\w+\s+(?P<hours>\d+)\s+\w+\s+(?P<minutes>\d+)\s+\w+$')
         
         #05/16/2015 16:31:49   Reload Command                0     0     0     0     0
-        p11 = re.compile('^(?P<date>\d+/+\d+/+\d+)+\s+(?P<time>\d+:+\d+:+\d+)+\s+(?P<reason>\S+\s+\D+)+\s+(?P<years>\d)+\s+(?P<weeks>\d)+\s+(?P<days>\d)+\s+(?P<hours>\d)+\s+(?P<minutes>\d+)$')
-       
+        p11 = re.compile(r'^(?P<date>\d+/+\d+/+\d+)+\s+(?P<time>\d+:+\d+:+\d+)+\s+(?P<reason>\S+\s+\D+)+\s+(?P<years>\d)+\s+(?P<weeks>\d)+\s+(?P<days>\d)+\s+(?P<hours>\d)+\s+(?P<minutes>\d+)$')
+
+        # 10/31/2024 12:12:56   Admin reload CLI
+        # 11/03/2024 11:25:31   redundancy force-switchover
+        p12 = re.compile(r'^(?P<date>\d+\/\d+\/\d+)\s+(?P<time>\d+\:+\d+\:+\d+)\s+(?P<reason>.+)$')
+
+        # 0     0     0     3     0
+        p13 = re.compile(r'^(?P<years>\d+)\s+(?P<weeks>\d+)\s+(?P<days>\d+)\s+(?P<hours>\d+)\s+(?P<minutes>\d+)$')
+        
         for line in output.splitlines():
             line = line.strip()
             
@@ -323,8 +330,9 @@ class ShowLoggingOnboardSwitchActiveUptimeDetail(ShowLoggingOnboardSwitchActiveU
                 root_dict1['hours'] = int(group['hours'])
                 root_dict1['minutes'] = int(group['minutes'])
                 continue
-
-            m=p11.match(line)
+            
+            # 05/16/2015 16:31:49   Reload Command                0     0     0     0     0
+            m = p11.match(line)
             if m:
                 group=m.groupdict()
                 time = group['time']
@@ -337,7 +345,29 @@ class ShowLoggingOnboardSwitchActiveUptimeDetail(ShowLoggingOnboardSwitchActiveU
                 sub_dict1['hours'] = int(group['hours'])
                 sub_dict1['minutes'] = int(group['minutes'])
                 continue
-        
+            
+            # 10/31/2024 12:12:56   Admin reload CLI
+            # 11/03/2024 11:25:31   redundancy force-switchover
+            m = p12.match(line)
+            if m:
+                group=m.groupdict()
+                time = group['time']
+                sub_dict1 = sub_dict.setdefault('time',{}).setdefault(time,{})
+                sub_dict1['date'] = group['date']
+                sub_dict1['reason'] = (group['reason']).strip()
+                continue
+
+            # 0     0     0     3     0
+            m = p13.match(line)
+            if m:
+                group=m.groupdict()
+                sub_dict1['years'] = int(group['years'])
+                sub_dict1['weeks'] = int(group['weeks'])
+                sub_dict1['days'] = int(group['days'])
+                sub_dict1['hours'] = int(group['hours'])
+                sub_dict1['minutes'] = int(group['minutes'])
+                continue
+
         return ret_dict
 
 class ShowLoggingOnboardSwitchContinuousSchema(MetaParser):
@@ -389,16 +419,16 @@ class ShowLoggingOnboardSwitchContinuous(ShowLoggingOnboardSwitchContinuousSchem
             output = self.device.execute(self.cli_command.format(switch_num=switch_num,include=include))
 			
         #VOLTAGE CONTINUOUS INFORMATION
-        p1 = re.compile('^(?P<continuous_info>[A-Z ]+) CONTINUOUS INFORMATION$')
+        p1 = re.compile(r'^(?P<continuous_info>[A-Z ]+) CONTINUOUS INFORMATION$')
 
         #PS1 Vout 0
-        p2 = re.compile('^(\w+\: )?(?P<sensor_name>\w+.*?)\s+(?P<sensor_count>\d+)$')
+        p2 = re.compile(r'^(\w+\: )?(?P<sensor_name>\w+.*?)\s+(?P<sensor_count>\d+)$')
 
         #05/25/2015 04:09:00  56  210  10  28  177  157   0   0   0   0   0   0   0   0   0   0   0   0   0   0
-        p3 = re.compile('^(?P<time>\d+\/\d+\/\d+ \d+:\d+:\d+)\s+(?P<sensor_value>[\d\s]+).*$')
+        p3 = re.compile(r'^(?P<time>\d+\/\d+\/\d+ \d+:\d+:\d+)\s+(?P<sensor_value>[\d\s]+).*$')
         
         #05/16/2015 15:57:21 %NYQ-2-PLATFORM_PSFAN_NOT_PRESENT : OBFL PS-FAN NOT PRESENT : FEP fan PS-2
-        p4 = re.compile('^(?P<time>\d+\/\d+\/\d+ \d+:\d+:\d+)\s+%(?P<info>\S+\s+\:+.*)$')
+        p4 = re.compile(r'^(?P<time>\d+\/\d+\/\d+ \d+:\d+:\d+)\s+%(?P<info>\S+\s+\:+.*)$')
 
         sensor_list=[]
         ret_dict = {}
@@ -641,7 +671,7 @@ class ShowLoggingOnboardSwitchMessageDetail(ShowLoggingOnboardSwitchMessageDetai
         #05/16/2015 21:39:57 %NYQ-2-PLATFORM_PSFAN_NOT_PRESENT :  >254 LAST  OBFL PS-FAN NOT PRESENT : FEP fan PS-2
         #05/16/2015 21:39:57 %NYQ-2-PLATFORM_PSFAN_PRESENT :  >254 LAST  OBFL PS-FAN PRESENT : FEP fan PS-1
 
-        p1 = re.compile('^(?P<time>\d+\/\d+\/\d+ \d+:\d+:\d+)\s+%(?P<info>\S+\s+\:+.*)$')		
+        p1 = re.compile(r'^(?P<time>\d+\/\d+\/\d+ \d+:\d+:\d+)\s+%(?P<info>\S+\s+\:+.*)$')		
 	
         for line in output.splitlines():
             line = line.strip()

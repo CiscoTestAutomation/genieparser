@@ -70,10 +70,10 @@ class ShowL2routeEvpnImetAllDetail(ShowL2routeEvpnImetAllDetailSchema):
 
 
         p1 = re.compile(r'^(?P<topo_id>[\d]+) + (?P<vni>[\d]+)'
-                         ' + (?P<prod_type>[\w]+) * (?P<ip_addr>[\w\:]+)'
-                         ' + (?P<eth_tag_id>[\d]+) + + (?P<pmsi_flags>[\d]+)'
-                         ' + (?P<flags>[\w-]) + (?P<type>[\d]+) + (?P<vni_label>[\d]+)'
-                         ' + (?P<tunnel_id>[\w\:]+) + (?P<client_nfn>[\d]+)$')
+                         r' + (?P<prod_type>[\w]+) * (?P<ip_addr>[\w\:]+)'
+                         r' + (?P<eth_tag_id>[\d]+) + + (?P<pmsi_flags>[\d]+)'
+                         r' + (?P<flags>[\w-]) + (?P<type>[\d]+) + (?P<vni_label>[\d]+)'
+                         r' + (?P<tunnel_id>[\w\:]+) + (?P<client_nfn>[\d]+)$')
 
         result_dict = {}
 
@@ -156,7 +156,7 @@ class ShowNvePeers(ShowNvePeersSchema):
         # nve1      172.31.201.40   Down  CP        0.000000 n/a
 
         p1 = re.compile(r'^\s*(?P<nve_name>[\w\/]+) +(?P<peer_ip>[\w\.\:]+) +(?P<peer_state>[\w]+)'
-                        ' +(?P<learn_type>[\w]+) +(?P<uptime>[\w\:\.]+) +(?P<router_mac>[\w\.\/]+)$')
+                        r' +(?P<learn_type>[\w]+) +(?P<uptime>[\w\:\.]+) +(?P<router_mac>[\w\.\/]+)$')
 
         for line in out.splitlines():
             if line:
@@ -457,12 +457,12 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
         result_dict = {}
         # Interface: nve1, State: Up, encapsulation: VXLAN
         p1 = re.compile(r'^\s*Interface: +(?P<nve_name>[\w\/]+), +State: +(?P<state>[\w]+),'
-                        ' +encapsulation: +(?P<encapsulation>[\w]+)$')
+                        r' +encapsulation: +(?P<encapsulation>[\w]+)$')
         p2 = re.compile(r'^\s*VPC Capability: +(?P<vpc_capability>[\w\s\-\[\]]+)$')
         p3 = re.compile(r'^\s*Local Router MAC: +(?P<local_router_mac>[\w\.]+)$')
         p4 = re.compile(r'^\s*Host Learning Mode: +(?P<host_learning_mode>[\w\-]+)$')
         p5 = re.compile(r'^\s*Source-Interface: +(?P<source_if>[\w\/]+)'
-                        ' +\(primary: +(?P<primary_ip>[\w\.]+), +secondary: +(?P<secondary_ip>[\w\.]+)\)$')
+                        r' +\(primary: +(?P<primary_ip>[\w\.]+), +secondary: +(?P<secondary_ip>[\w\.]+)\)$')
 
         # Source-Interface: loopback1 (primary: 2001:db8:646:a2bb:0:abcd:1234:4)
         # Anycast-Interface: loopback2 (secondary: 2001:db8:646:a2bb:0:abcd:5678:5)
@@ -471,7 +471,7 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
 
         # Source - Interface: loopback1(primary: 100: 100:100::6, secondary: 0.0.0.0)
         p5_3 = re.compile(r'^\s*Source-Interface: +(?P<source_if>[\w\/]+)'                      
-                        ' +\(primary: +(?P<primary_ip>[\w\.\:]+), +secondary: +(?P<secondary_ip>[\w\.]+)\)$')
+                        r' +\(primary: +(?P<primary_ip>[\w\.\:]+), +secondary: +(?P<secondary_ip>[\w\.]+)\)$')
 
         p6 = re.compile(r'^\s*Source +Interface +State: +(?P<source_state>[\w]+)$')
         p7 = re.compile(r'^\s*IR +Capability +Mode: +(?P<mode>[\w]+)$')
@@ -492,7 +492,7 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
         p20_1 = re.compile(r'^\s*Nve +MultiSite +Src +node +last +notif +sent: +(?P<notif_sent>[\w\-]+)$')
         p21 = re.compile(
             r'^\s*Multisite +bgw\-if: +(?P<multisite_bgw_if>[\w\/\-]+) +\(ip: +(?P<multisite_bgw_if_ip>[\w\.]+),'
-            ' +admin: +(?P<multisite_bgw_if_admin_state>[\w]+), +oper: +(?P<multisite_bgw_if_oper_state>[\w]+)\)$')
+            r' +admin: +(?P<multisite_bgw_if_admin_state>[\w]+), +oper: +(?P<multisite_bgw_if_oper_state>[\w]+)\)$')
         p22 = re.compile(r'^\s*Multisite +bgw\-if +oper +down +reason: +(?P<reason>[\w\.\s]+)$')
         # Multi-Site delay-restore time: 180 seconds
         p23 = re.compile(r'^\s*Multi(-S|s)ite +delay\-restore +time: +(?P<multisite_convergence_time>\d+) +seconds$')
@@ -1148,7 +1148,7 @@ class ShowL2routeEvpnEternetSegmentAll(ShowL2routeEvpnEternetSegmentAllSchema):
         # 0300.00ff.0001.2c00.0309 192.168.111.55         VXLAN nve1         64
 
         p1 = re.compile(r'^\s*(?P<ethernet_segment>(?!ESI)[\w\.]+) +(?P<originating_rtr>[\d\.]+)'
-                        ' +(?P<prod_name>[\w]+) +(?P<int_ifhdl>[\w\/]+) +(?P<client_nfn>[\w\.]+)$')
+                        r' +(?P<prod_name>[\w]+) +(?P<int_ifhdl>[\w\/]+) +(?P<client_nfn>[\w\.]+)$')
         for line in out.splitlines():
             if line:
                 line = line.rstrip()
@@ -1384,8 +1384,8 @@ class ShowL2routeMacAllDetail(ShowL2routeMacAllDetailSchema):
 
         #  11          0000.1111.0108 BGP    Spl           0          3.2.2.1 (Label: 10011)
         p1 = re.compile(r'^\s*(?P<topo_id>[\d]+) +(?P<mac_addr>[\w\.]+) +(?P<prod_type>[\w\,]+)'
-                        ' +(?P<flags>[\w\,\-]+) +(?P<seq_num>[\d]+) +(?P<next_hop1>[\w\/\.]+)\s*'
-                        '(?:\(Label: (?P<label>\d+)\).*)?$')
+                        r' +(?P<flags>[\w\,\-]+) +(?P<seq_num>[\d]+) +(?P<next_hop1>[\w\/\.]+)\s*'
+                        r'(?:\(Label: (?P<label>\d+)\).*)?$')
         #  3.2.2.2 (Label: 10011)
         p2 = re.compile(r'^\s*(?P<next_hop2>[\d\/\.]+)')
         #  Route Resolution Type: ESI
@@ -1545,8 +1545,8 @@ class ShowL2routeMacIpAllDetail(ShowL2routeMacIpAllDetailSchema):
         # 101         0011.00ff.0034 BGP  10.36.3.2                      10.70.0.2
         # 202         0011.01ff.0002 BGP    --            0         2001:db8:646::5678:1 6:1:1::2
         p1 = re.compile(r'^\s*(?P<topo_id>[\d]+) +(?P<mac_addr>[\w\.]+) +(?P<mac_ip_prod_type>[\w\,]+)'
-                        '( +(?P<mac_ip_flags>[\w\,\-]+))?( +(?P<seq_num>[\d]+))? +(?P<host_ip>[\w\/\.\:]+)'
-                        ' +(?P<next_hop1>[\w\/\.\:]+)$')
+                        r'( +(?P<mac_ip_flags>[\w\,\-]+))?( +(?P<seq_num>[\d]+))? +(?P<host_ip>[\w\/\.\:]+)'
+                        r' +(?P<next_hop1>[\w\/\.\:]+)$')
 
         p2 = re.compile(r'^\s*Sent +To: +(?P<sent_to>[\w]+)$')
         p3 = re.compile(r'^\s*SOO: +(?P<soo>[\d]+)$')
@@ -1558,8 +1558,8 @@ class ShowL2routeMacIpAllDetail(ShowL2routeMacIpAllDetailSchema):
         # 201         0011.01ff.0001 10.1.1.2       BGP    --            0         2001:db8:646:a2bb:0:abcd:5678:1
         # 202         0011.01ff.0001 5:1:1:1::2     BGP    --            0         2001:db8:646:a2bb:0:abcd:5678:1
         p5 = re.compile(r'^\s*(?P<topo_id>[\d]+) +(?P<mac_addr>[\w\.]+) +(?P<host_ip>[\w\/\.\:]+)'
-                        ' +(?P<mac_ip_prod_type>[\w\,]+)'
-                        ' +(?P<mac_ip_flags>[\w\,\-]+) +(?P<seq_num>[\d]+) +(?P<next_hop1>[\w\/\.\:]+)$')
+                        r' +(?P<mac_ip_prod_type>[\w\,]+)'
+                        r' +(?P<mac_ip_flags>[\w\,\-]+) +(?P<seq_num>[\d]+) +(?P<next_hop1>[\w\/\.\:]+)$')
 
         for line in out.splitlines():
             if line:
@@ -2394,12 +2394,12 @@ class ShowFabricMulticastIpSaAdRoute(ShowFabricMulticastIpSaAdRouteSchema):
         # VRF "vpc-keepalive" MVPN SA AD Route Database VNI: 0
 
         p1 = re.compile(r'^\s*VRF +\"(?P<vrf_name>\S+)\" +MVPN +SA +AD +Route +Database'
-                        ' +VNI: +(?P<vnid>[\d]+)$')
+                        r' +VNI: +(?P<vnid>[\d]+)$')
 
         # Src Active AD route: (1.1.11.3/32, 226.0.0.1/32) uptime: 00:12:32
         # SA-AD Route: (1.1.11.3/32, 226.0.0.1/32) uptime: 00:12:32
         p2 = re.compile(r'((^\s*SA\-AD +Route:)|(^\s*Src +Active +AD +route:)) +\((?P<saddr>[\w\/\.]+), +(?P<gaddr>[\w\/\.]+)\)'
-                        ' +uptime: +(?P<uptime>[\w\.\:]+)$')
+                        r' +uptime: +(?P<uptime>[\w\.\:]+)$')
 
         #  Interested Fabric Nodes:
         p3 = re.compile(r'^\s*Interested Fabric Nodes:$')
@@ -2526,13 +2526,13 @@ class ShowFabricMulticastIpMroute(ShowFabricMulticastIpMrouteSchema):
         # VRF "trm-vxlan-3001" Fabric mroute Database VNI: 203001
 
         p1 = re.compile(r'^\s*VRF +\"(?P<vrf_name>\S+)\" +Fabric +mroute +Database'\
-                        ' +VNI: +(?P<vnid>[\d]+)$')
+                        r' +VNI: +(?P<vnid>[\d]+)$')
 
 
         # Fabric Mroute: (179.1.12.11 / 32, 225.1.1.1 / 32) ptr: 0x56207780cbcc flags:0 uptime:00:01:01
 
         p2 = re.compile(r'^\s*Fabric +Mroute: +\((?P<saddr>[\w\/\.\*]+), +(?P<gaddr>[\w\/\.]+)\) +ptr: +0[xX][0-9a-'\
-                        'fA-F]+ flags: +[0-9]+ +uptime: +(?P<uptime>[\w\.\:]+)$')
+                        r'fA-F]+ flags: +[0-9]+ +uptime: +(?P<uptime>[\w\.\:]+)$')
 
         # RD-RT ext comm Route-Import:  0b 64 64 64 06 0b b9 00 01 5a 5a 5a 06 80 0b e8 03 00 00
         p3 = re.compile(r'^\s*RD-RT ext comm Route-Import: +(?P<vri>[\w\s]+)$')
@@ -2542,7 +2542,7 @@ class ShowFabricMulticastIpMroute(ShowFabricMulticastIpMrouteSchema):
         #   This node, uptime: 00:30:25    RPF Neighbor: 102.1.1.1
         #   100.100.100.1 (core), uptime: 00:30:25    RPF Neighbor: 102.1.1.1
         p5 = re.compile(r'^\s*(?P<interested_fabric_nodes>[\w\s\.]+) *(\((?P<loc>[\w]+)\))? *, +uptime: +'\
-                         '(?P<interest_uptime>[\w\.\:]+) +RPF +Neighbor: +(?P<rpfneighbor>[\w\/\.]+)$')
+                         r'(?P<interest_uptime>[\w\.\:]+) +RPF +Neighbor: +(?P<rpfneighbor>[\w\/\.]+)$')
 
         for line in out.splitlines():
             if not line:

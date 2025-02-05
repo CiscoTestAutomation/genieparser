@@ -45,7 +45,7 @@ TRUSTED_HOST  = pyats-pypi.cisco.com
 
 # Development pkg requirements
 RELATED_PKGS = genie.libs.parser
-DEPENDENCIES = xmltodict requests "netaddr<1.0.0"
+DEPENDENCIES = xmltodict requests netaddr
 
 ifeq ($(MAKECMDGOALS), devnet)
 	BUILD_CMD += --devnet
@@ -237,7 +237,7 @@ json:
 	@echo "--------------------------------------------------------------------"
 	@echo "Generating Parser json file"
 	@echo ""
-	@$(PYTHON) -W ignore::SyntaxWarning -c "from genie.json.make_json import make_genieparser; make_genieparser()"
+	@$(PYTHON) -c "from genie.json.make_json import make_genieparser; make_genieparser()"
 	@echo ""
 	@echo "Done."
 	@echo ""

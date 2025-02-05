@@ -152,8 +152,8 @@ class ShowVtpStatus(ShowVtpStatusSchema):
         # VTP Version                     : 2
         # VTP Version : running VTP1 (VTP2 capable)
         p2 = re.compile(r'^VTP +[Vv]ersion(?: +running)? *: '
-                         '(running VTP)?(?P<version>\d+)'
-                         '( +\(VTP+(?P<capable>\d+) capable\))?$')
+                         r'(running VTP)?(?P<version>\d+)'
+                         r'( +\(VTP+(?P<capable>\d+) capable\))?$')
 
         # VTP Domain Name                 : 
         p3 = re.compile(r'^VTP +Domain +Name +: +(?P<val>\S+)$')
@@ -170,12 +170,12 @@ class ShowVtpStatus(ShowVtpStatusSchema):
 
         # Configuration last modified by 192.168.234.1 at 12-5-17 09:35:46
         p7 = re.compile(r'^Configuration +last +modified +by +'
-                         '(?P<val>[\w\.\:]+) +at +(?P<val1>[\w\.\:\-\s]+)$')
+                         r'(?P<val>[\w\.\:]+) +at +(?P<val1>[\w\.\:\-\s]+)$')
 
         # Local updater ID is 192.168.234.1 on interface Vl100 (lowest numbered VLAN interface found)
         p8 = re.compile(r'^Local +updater +ID +is +(?P<id>[\w\.\:]+) +on +'
-                         'interface +(?P<intf>[\w\.\/\-]+) *'
-                         '(\((?P<reason>[\S\s]+)\))?$')
+                         r'interface +(?P<intf>[\w\.\/\-]+) *'
+                         r'(\((?P<reason>[\S\s]+)\))?$')
 
         # Feature VLAN:
         p17 = re.compile(r'^Feature +VLAN:$')

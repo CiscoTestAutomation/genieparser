@@ -1,0 +1,3 @@
+Interface/ID OPEN+ Nego* Fail-     Stage    Peer Address    Peer Name
+------------ --------------------- -------- --------------- --------------------
+Vi2          LCP+ IPCP+ CDPCP-     LocalT   172.16.0.12     Charon-037-4P

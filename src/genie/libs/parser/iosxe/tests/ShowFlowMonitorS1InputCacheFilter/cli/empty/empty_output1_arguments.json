@@ -1,0 +1,6 @@
+{
+    "name": "S1_input",
+    "ip_version": "ipv6",
+    "src_addr":  "ipv6",
+    "dst_addr": "ipv6"
+}

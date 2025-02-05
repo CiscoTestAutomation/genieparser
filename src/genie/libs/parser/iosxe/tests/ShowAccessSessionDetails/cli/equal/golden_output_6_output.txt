@@ -1,0 +1,14 @@
+Interface:  GigabitEthernet2/0/3
+               IIF-ID:  0x1D8DDC60
+          MAC Address:  001a.a136.c68a
+         IPv6 Address:  Unknown
+         IPv4 Address:  192.168.194.1
+            User-Name:  CP-7961G-GE-SEP001AA136C68A
+          Device-type:  Cisco-IP-Phone-7961
+          Device-name:  Cisco IP Phone 7961
+               Domain:  VOICE
+    Common Session ID:  2300130B0000002ABD0A2AF1
+      Acct Session ID:  0x0000003c
+               Handle:  0xdb000020
+              AAA UID:  0x0000002a
+              VLAN ID:  194

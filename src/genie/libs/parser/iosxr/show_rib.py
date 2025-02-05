@@ -60,9 +60,9 @@ class ShowRibTables(ShowRibTablesSchema):
         # Prefix Limit Notified Forward Referenced Table Deleted   Table Reached Convergence
         #         N                      N                N                 Y
         p1 = re.compile(r'^(?P<vrf>\S+)\/(?P<table>\w+) +(?P<safi>\w+)'
-                        ' +(?P<table_id>\S+) +(?P<prfx_lmt>\d+) +(?P<prfx_cnt>\d+)'
-                        ' +(?P<tbl_ver>\d+) +(?P<pfx_notif>\w) +(?P<forw_refe>\w)'
-                        ' +(?P<tbl_del>\w) +(?P<tbl_conv>\w)')
+                        r' +(?P<table_id>\S+) +(?P<prfx_lmt>\d+) +(?P<prfx_cnt>\d+)'
+                        r' +(?P<tbl_ver>\d+) +(?P<pfx_notif>\w) +(?P<forw_refe>\w)'
+                        r' +(?P<tbl_del>\w) +(?P<tbl_conv>\w)')
         
         for line in out.splitlines():
 

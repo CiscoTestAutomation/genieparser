@@ -967,17 +967,17 @@ class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
         sub_dict = {}
 
         p1 = re.compile(r'^(?P<interface>[\w\.\-\/]+) +\- +'
-                            'Process +ID +(?P<instance>\S+) +'
-                            'VRF +(?P<vrf>\S+), +'
-                            'area +(?P<area>[\w\.]+)$')
+                            r'Process +ID +(?P<instance>\S+) +'
+                            r'VRF +(?P<vrf>\S+), +'
+                            r'area +(?P<area>[\w\.]+)$')
         p2 = re.compile(r'^LDP +Autoconfig +not +enabled$')
         p2_1 = re.compile(r'^LDP +Autoconfig +is +enabled$')
         p3_1 = re.compile(r'^LDP +Sync +is +enabled,'
-                            ' +(?P<req>(is|not)) +required'
-                            '(?: +and +(?P<ach>(is|not)) +achieved)?$')
+                            r' +(?P<req>(is|not)) +required'
+                            r'(?: +and +(?P<ach>(is|not)) +achieved)?$')
         p3_2 = re.compile(r'^LDP +Sync +not +enabled, +not +required$')
         p4 = re.compile(r'^State +(?P<state>\w+), +'
-                            'Network +type +(?P<type>\w+)$')
+                            r'Network +type +(?P<type>\w+)$')
         for line in out.splitlines():
             line = line.strip()
 
@@ -993,7 +993,7 @@ class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
 
                 # Determine if 'interface' or 'sham_link' or 'virtual_link'
                 if re.search('SL', interface):
-                    pattern = '(?P<link>\w+)-(?P<area_id>[\w\.\:]+)-(?P<local>[\w\.\:]+)-(?P<remote>[\w\.\:]+)'
+                    pattern = r'(?P<link>\w+)-(?P<area_id>[\w\.\:]+)-(?P<local>[\w\.\:]+)-(?P<remote>[\w\.\:]+)'
                     n = re.match(pattern, interface)
                     link = str(n.groupdict()['link'])
                     area_id = str(n.groupdict()['area_id'])
@@ -1003,7 +1003,7 @@ class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
                     intf_type = 'sham_links'
                     intf_name = local + ' ' + remote
                 elif re.search('VL', interface):
-                    pattern = '(?P<link>\w+)-(?P<area_id>[\w\.\:]+)-(?P<router_id>[\w\.\:]+)'
+                    pattern = r'(?P<link>\w+)-(?P<area_id>[\w\.\:]+)-(?P<router_id>[\w\.\:]+)'
                     n = re.match(pattern, interface)
                     link = str(n.groupdict()['link'])
                     area_id = str(n.groupdict()['area_id'])
@@ -1161,48 +1161,48 @@ class ShowIpOspfLinksParser(MetaParser):
         ret_dict = {}
         sub_dict = {}
         p1 = re.compile(r'^Virtual +link +(?P<link>\w+) +to +router +'
-                            '(?P<router_id>[\w\.\:]+) +is +(?P<state>\w+)$')
+                            r'(?P<router_id>[\w\.\:]+) +is +(?P<state>\w+)$')
         p1_1 = re.compile(r'^(?P<link>\w+)-(?P<area>[\w\.\:]+)-'
-                            '(?P<local>[\w\.\:]+)-'
-                            '(?P<remote>[\w\.\:]+) +'
-                            'line +protocol +is +(?P<state>\w+)$')
+                            r'(?P<local>[\w\.\:]+)-'
+                            r'(?P<remote>[\w\.\:]+) +'
+                            r'line +protocol +is +(?P<state>\w+)$')
         p2 = re.compile(r'^Transit +area +(?P<transit_area_id>[\w\.\:]+), +'
-                            'via +interface +(?P<intf>[\w\.\/\-]+), +'
-                            'remote +addr +(?P<remote_addr>[\w\.\:]+)$')
+                            r'via +interface +(?P<intf>[\w\.\/\-]+), +'
+                            r'remote +addr +(?P<remote_addr>[\w\.\:]+)$')
         p3 = re.compile(r'^Unnumbered +interface +using +IP +address +of +'
-                            '(?P<intf>[\w\.\/\-]+) +\((?P<ip>[\w\.\:]+)\)$')
+                            r'(?P<intf>[\w\.\/\-]+) +\((?P<ip>[\w\.\:]+)\)$')
         p4 = re.compile(r'^Process +ID +(?P<inst>\d+) +'
-                            'VRF +(?P<vrf>\S+), +area +(?P<area>[\w\.\:]+)$')
+                            r'VRF +(?P<vrf>\S+), +area +(?P<area>[\w\.\:]+)$')
         p5 = re.compile(r'^State +(?P<state>\w+), +Network +type'
-                            ' +(?P<interface_type>\w+), +cost +(?P<cost>\d+)$')
+                            r' +(?P<interface_type>\w+), +cost +(?P<cost>\d+)$')
         p6 = re.compile(r'^Index +(?P<index>\d+), +'
-                            'Transmit +delay +(?P<delay>\d+) +sec$')
+                            r'Transmit +delay +(?P<delay>\d+) +sec$')
         p7 = re.compile(r'^(?P<nbr_count>\d+) +Neighbors, +'
-                            'flooding +to +(?P<flood>\d+), '
-                            'adjacent +with +(?P<adjacent>\d+)$')
+                            r'flooding +to +(?P<flood>\d+), '
+                            r'adjacent +with +(?P<adjacent>\d+)$')
         p8 = re.compile(r'^Timer +intervals: +Hello +(?P<hello>\d+), +'
-                            'Dead +(?P<dead>\d+), +Wait +(?P<wait>\d+), +'
-                            'Retransmit +(?P<retransmit>\d+)$')
+                            r'Dead +(?P<dead>\d+), +Wait +(?P<wait>\d+), +'
+                            r'Retransmit +(?P<retransmit>\d+)$')
         p9 = re.compile(r'^Hello +timer +due +in +(?P<hello_timer>[\w\.\:]+)$')
         p10 = re.compile(r'^(?P<auth_type>[\w\-]+) +authentication(, +'
-                            'using +(?P<key_type>(key +id|keychain)) +'
-                            '(?P<key>\w+)( *\((?P<status>\w+)\))?)?$')
+                            r'using +(?P<key_type>(key +id|keychain)) +'
+                            r'(?P<key>\w+)( *\((?P<status>\w+)\))?)?$')
         p11 = re.compile(r'^Number +of +opaque +link +LSAs: +(?P<count>\d+),'
-                            ' +checksum +sum +(?P<checksum>\d+)$')
+                            r' +checksum +sum +(?P<checksum>\d+)$')
         p12 = re.compile(r'^Adjacency +Information *:?$')
         p13 = re.compile(r'^Destination +IP +address: +(?P<dest>[\w\.\:]+)$')
         p14 = re.compile(r'^Neighbor +(?P<nei>[\w\.\:]+), +'
-                            'interface +address +(?P<intf_ip>[\w\.\:]+)$')
+                            r'interface +address +(?P<intf_ip>[\w\.\:]+)$')
         p15 = re.compile(r'^Process +ID +(?P<inst>\d+) +VRF +(?P<vrf>\S+), +'
-                            'in +area +(?P<area>[\w\.\:]+) +via +interface +'
-                            '(?P<link>\w+)-(?P<backbone>[\w\.\:]+)-'
-                            '(?P<local>[\w\.\:]+)$')
+                            r'in +area +(?P<area>[\w\.\:]+) +via +interface +'
+                            r'(?P<link>\w+)-(?P<backbone>[\w\.\:]+)-'
+                            r'(?P<local>[\w\.\:]+)$')
         p16 = re.compile(r'^-(?P<remote>[\w\.\:]+)$')
         p17 = re.compile(r'^State +is +(?P<status>\w+), +'
-                            '(?P<change>\d+) +state +changes, +'
-                            'last +change +(?P<last_change>[\w\.\:]+)$')
+                            r'(?P<change>\d+) +state +changes, +'
+                            r'last +change +(?P<last_change>[\w\.\:]+)$')
         p18 = re.compile(r'^Hello +options +(?P<hello>\w+), +'
-                            'dbd +options +(?P<dbd>\w+)$')
+                            r'dbd +options +(?P<dbd>\w+)$')
         p19 = re.compile(r'^Last +non\-hello +packet +received +(?P<last>[\w\.\:]+)$')
         p20 = re.compile(r'^Dead +timer +due +in +(?P<dead_timer>[\w\.\:]+)$')
 
@@ -1959,61 +1959,61 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
         # Ethernet2/2 is up, line protocol is up
         # port-channel2.100 is up, line protocol is up
         p1 = re.compile(r'^(?P<intf>(\S+)) +is +(?P<enable>(up|down)),'
-                         ' +line +protocol +is'
-                         ' +(?P<line_protocol>(up|down))$')
+                         r' +line +protocol +is'
+                         r' +(?P<line_protocol>(up|down))$')
 
         # IP address 10.2.3.2/24
         p2_1 = re.compile(r'^IP +address +(?P<ip_address>(\S+))$')
 
         # IP address 192.168.246.1/24, Process ID 2 VRF default, area 0.0.0.1
         p2_2 = re.compile(r'^IP +address +(?P<ip_address>(\S+)), +Process'
-                               ' +ID +(?P<pid>(\S+)) +VRF +(?P<vrf>(\S+)),'
-                               ' +area +(?P<area>(\S+))$')
+                               r' +ID +(?P<pid>(\S+)) +VRF +(?P<vrf>(\S+)),'
+                               r' +area +(?P<area>(\S+))$')
 
         # Process ID 1 VRF default, area 0.0.0.0
         # Process ID UNDERLAY VRF default, area 0.0.0.0
         p2_3 = re.compile(r'^Process +ID +(?P<pid>(\S+)) +VRF'
-                         ' +(?P<vrf>(\S+)), +area +(?P<area>(\S+))$')
+                         r' +(?P<vrf>(\S+)), +area +(?P<area>(\S+))$')
 
         # Unnumbered interface using IP address of loopback1 (10.151.22.22)
         p3 = re.compile(r'^Unnumbered +interface +using +IP +address +of'
-                           ' +(?P<interface>(\S+))'
-                           ' +\((?P<ip_address>(\S+))\)$')
+                           r' +(?P<interface>(\S+))'
+                           r' +\((?P<ip_address>(\S+))\)$')
 
         # Enabled by interface configuration
         p4 = re.compile(r'^Enabled +by +interface +configuration$')
 
         # State BDR, Network type BROADCAST, cost 1
         p5 = re.compile(r'^State +(?P<state>(\S+)), +Network +type '
-                         '(?P<intf_type>(\S+)), +cost +(?P<cost>(\d+))$')
+                         r'(?P<intf_type>(\S+)), +cost +(?P<cost>(\d+))$')
 
         # Index 3, Transmit delay 1 sec, Router Priority 1
         p6_1 = re.compile(r'^Index +(?P<index>(\d+))(?:, +Transmit +delay'
-                           ' +(?P<transmit_delay>(\d+)) +sec)?(?:, +Router'
-                           ' +Priority +(?P<priority>(\d+)))?$')
+                           r' +(?P<transmit_delay>(\d+)) +sec)?(?:, +Router'
+                           r' +Priority +(?P<priority>(\d+)))?$')
 
         # Index 2, Passive interface
         p6_2 = re.compile(r'^Index +(?P<index>(\d+)), +Passive +interface$')
 
         # Designated Router ID: 10.36.3.3, address: 10.2.3.3
         p7_1 = re.compile(r'^(D|d)esignated +(R|r)outer +(ID|Id):'
-                           ' (?P<router_id>(\S+)), +address:'
-                           ' +(?P<ip_addr>(\S+))$')
+                           r' (?P<router_id>(\S+)), +address:'
+                           r' +(?P<ip_addr>(\S+))$')
 
         # Backup Designated Router ID: 10.16.2.2, address: 10.2.3.2
         p7_2 = re.compile(r'^(B|b)ackup +(D|d)esignated +(R|r)outer'
-                           ' +(ID|Id): +(?P<router_id>(\S+)), +address:'
-                           ' +(?P<ip_addr>(\S+))$')
+                           r' +(ID|Id): +(?P<router_id>(\S+)), +address:'
+                           r' +(?P<ip_addr>(\S+))$')
 
         # 1 Neighbors, flooding to 1, adjacent with 1
         p8 = re.compile(r'^(?P<num_neighbors>(\d+)) +Neighbors, +flooding'
-                         ' +to +(?P<flooding>(\d+)), +adjacent +with'
-                         ' +(?P<adjacent>(\d+))$')
+                         r' +to +(?P<flooding>(\d+)), +adjacent +with'
+                         r' +(?P<adjacent>(\d+))$')
 
         # Timer intervals: Hello 10, Dead 40, Wait 40, Retransmit 5
         p9 = re.compile(r'^Timer +intervals: +Hello +(?P<hello>(\d+)),'
-                         ' +Dead +(?P<dead>(\d+)), +Wait +(?P<wait>(\d+)),'
-                         ' +Retransmit +(?P<retransmit>(\d+))$')
+                         r' +Dead +(?P<dead>(\d+)), +Wait +(?P<wait>(\d+)),'
+                         r' +Retransmit +(?P<retransmit>(\d+))$')
 
         # Hello timer due in 00:00:02
         p10 = re.compile(r'^Hello +timer +due +in +(?P<hello>(\S+))$')
@@ -2022,17 +2022,17 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
         # Simple authentication, using keychain test (ready)
         # Simple authentication, using keychain test (not ready)
         p11_1 = re.compile(r'^Simple +authentication(?:, +using +keychain'
-                            ' +(?P<keychain>(\S+))'
-                            ' +\((not +ready|ready)\))?$')
+                            r' +(?P<keychain>(\S+))'
+                            r' +\((not +ready|ready)\))?$')
 
         # Message-digest authentication, using default key id 0
         p11_2 = re.compile(r'^Message-digest +authentication, +using'
-                            ' +default key id +(?P<key>(\S+))$')
+                            r' +default key id +(?P<key>(\S+))$')
 
         # Number of opaque link LSAs: 0, checksum sum 0
         p12 = re.compile(r'^Number +of +opaque +link +LSAs:'
-                          ' +(?P<count>(\d+)), +checksum +sum'
-                          ' +(?P<checksum>(\d+))$')
+                          r' +(?P<count>(\d+)), +checksum +sum'
+                          r' +(?P<checksum>(\d+))$')
 
         # BFD is enabled
         p13 = re.compile(r'^BFD +is +enabled$')
@@ -2053,7 +2053,7 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
 
                 # Determine if 'interface' or 'sham_link' or 'virtual_link'
                 if re.search('SL', interface):
-                    pattern = '(?P<link>\w+)-(?P<area_id>[\w\.\:]+)-(?P<local>[\w\.\:]+)-(?P<remote>[\w\.\:]+)'
+                    pattern = r'(?P<link>\w+)-(?P<area_id>[\w\.\:]+)-(?P<local>[\w\.\:]+)-(?P<remote>[\w\.\:]+)'
                     n = re.match(pattern, interface)
                     link = str(n.groupdict()['link'])
                     area_id = str(n.groupdict()['area_id'])
@@ -2063,7 +2063,7 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                     intf_type = 'sham_links'
                     intf_name = local + ' ' + remote
                 elif re.search('VL', interface):
-                    pattern = '(?P<link>\w+)-(?P<area_id>[\w\.\:]+)-(?P<router_id>[\w\.\:]+)'
+                    pattern = r'(?P<link>\w+)-(?P<area_id>[\w\.\:]+)-(?P<router_id>[\w\.\:]+)'
                     n = re.match(pattern, interface)
                     link = str(n.groupdict()['link'])
                     backbone_area_id = str(n.groupdict()['area_id'])
@@ -2495,20 +2495,20 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
         ret_dict = {}
         af = 'ipv4'
         p1 = re.compile(r'^Neighbor +(?P<neighbor_router_id>(\S+)),'
-                            ' +interface +address +(?P<address>(\S+))$')
+                            r' +interface +address +(?P<address>(\S+))$')
         p2 = re.compile(r'^Process +ID +(?P<instance>(\S+)) +VRF'
-                            ' +(?P<vrf>(\S+)), +in +area +(?P<area>(\S+))'
-                            ' +via +interface +(?P<interface>(\S+))$')
+                            r' +(?P<vrf>(\S+)), +in +area +(?P<area>(\S+))'
+                            r' +via +interface +(?P<interface>(\S+))$')
         p3 = re.compile(r'^State +is +(?P<state>(\S+)),'
-                            ' +(?P<changes>(\d+)) +state +changes,'
-                            ' +last +change +(?P<last>(\S+))$')
+                            r' +(?P<changes>(\d+)) +state +changes,'
+                            r' +last +change +(?P<last>(\S+))$')
         p4 = re.compile(r'^Neighbor +priority +is +(?P<priority>(\S+))$')
         p5 = re.compile(r'^DR +is +(?P<dr_ip>(\S+)) +BDR +is'
-                            ' +(?P<bdr_ip>(\S+))$')
+                            r' +(?P<bdr_ip>(\S+))$')
         p6 = re.compile(r'^Hello +options +(?P<hello_options>(\S+)),'
-                            ' +dbd +options +(?P<dbd_options>(\S+))$')
+                            r' +dbd +options +(?P<dbd_options>(\S+))$')
         p7 = re.compile(r'^Last +non-hello +packet +received'
-                            ' +(?P<non_hello>(\S+))$')
+                            r' +(?P<non_hello>(\S+))$')
         p8 = re.compile(r'^Dead +timer +due +in +(?P<dead_timer>(\S+))$')
 
         for line in out.splitlines():
@@ -2556,7 +2556,7 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
 
                 # Determine if 'interface' or 'sham_link' or 'virtual_link'
                 if re.search('SL', interface):
-                    pattern = '(?P<link>\w+)-(?P<area_id>[\w\.\:]+)-(?P<local>[\w\.\:]+)-(?P<remote>[\w\.\:]+)'
+                    pattern = r'(?P<link>\w+)-(?P<area_id>[\w\.\:]+)-(?P<local>[\w\.\:]+)-(?P<remote>[\w\.\:]+)'
                     n = re.match(pattern, interface)
                     link = str(n.groupdict()['link'])
                     area_id = str(n.groupdict()['area_id'])
@@ -2567,7 +2567,7 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
                     intf_name = local + ' ' + remote
 
                 elif re.search('VL', interface):
-                    pattern = '(?P<link>\w+)-(?P<area_id>[\w\.\:]+)-(?P<router_id>[\w\.\:]+)'
+                    pattern = r'(?P<link>\w+)-(?P<area_id>[\w\.\:]+)-(?P<router_id>[\w\.\:]+)'
                     n = re.match(pattern, interface)
                     link = str(n.groupdict()['link'])
                     area_id = str(n.groupdict()['area_id'])
@@ -2695,17 +2695,17 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
             }
 
         p1 = re.compile(r'^ *OSPF +Router +with +ID +\((?P<router_id>(\S+))\)'
-                            ' +\(Process +ID +(?P<instance>(\S+))'
-                            ' +VRF +(?P<vrf>(\S+))\)$')
+                            r' +\(Process +ID +(?P<instance>(\S+))'
+                            r' +VRF +(?P<vrf>(\S+))\)$')
         p2 = re.compile(r'^(?P<lsa_type_name>(.*)) +Link +States'
-                            '(?: +\(Area +(?P<area>(\S+))\))?$')
+                            r'(?: +\(Area +(?P<area>(\S+))\))?$')
         p3 = re.compile(r'^LS +age: +(?P<age>\d+)'
-                            '(?P<dummy>\S+)?$')
+                            r'(?P<dummy>\S+)?$')
         p4 = re.compile(r'^Options: +(?P<option>([a-zA-Z0-9]+))(?:'
-                            ' *\((?P<option_desc>(.*))\))?$')
+                            r' *\((?P<option_desc>(.*))\))?$')
         p5 = re.compile(r'^LS +Type: +(?P<lsa_type>(.*))$')
         p36 = re.compile(r'^Link +State +ID: +(?P<lsa_id>(\S+))'
-                            '(?: +\(.*\))?$')
+                            r'(?: +\(.*\))?$')
         p6 = re.compile(r'^Advertising +Router: +(?P<adv_router>(\S+))$')
         p7 = re.compile(r'^LS +Seq +Number: +(?P<ls_seq_num>(\S+))$')
         p8 = re.compile(r'^Checksum: +(?P<checksum>(\S+))$')
@@ -2721,15 +2721,15 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
         p17 = re.compile(r'^Number +of +links: +(?P<num>(\d+))$')
         p18 = re.compile(r'^Link +connected +to: +a +(?P<type>(.*))$')
         p19_1 = re.compile(r'^\(Link +ID\) +Network\/Subnet +Number:'
-                            ' +(?P<link_id>(\S+))$')
+                            r' +(?P<link_id>(\S+))$')
         p19_2 = re.compile(r'^\(Link +ID\) +Designated +Router +address:'
-                            ' +(?P<link_id>(\S+))$')
+                            r' +(?P<link_id>(\S+))$')
         p19_3 = re.compile(r'^\(Link +ID\) +Neighboring +Router +ID:'
-                            ' +(?P<link_id>(\S+))$')
+                            r' +(?P<link_id>(\S+))$')
         p20_1 = re.compile(r'^\(Link +Data\) +Network +Mask:'
-                            ' +(?P<link_data>(\S+))$')
+                            r' +(?P<link_data>(\S+))$')
         p20_2 = re.compile(r'^\(Link +Data\) +Router +Interface +address:'
-                            ' +(?P<link_data>(\S+))$')
+                            r' +(?P<link_data>(\S+))$')
         p21 = re.compile(r'^Number +of +TOS +metrics: +(?P<num>(\d+))$')
         p21_1 = re.compile(r'^TOS +(?P<tos>(\d+)) +Metric: +(?P<metric>(\d+))$')
         p22 = re.compile(r'^Opaque +Type: +(?P<type>(\d+))$')
@@ -2739,21 +2739,21 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
         p26 = re.compile(r'^Number +of +Links *: +(?P<links>(\d+))$')
         p27 = re.compile(r'^Link +connected +to +(?P<link>(.*))$')
         p28 = re.compile(r'^(?:Link-ID +:)? *(Link +ID|Link-ID) *:'
-                            ' +(?P<id>(\S+))$')
+                            r' +(?P<id>(\S+))$')
         p29 = re.compile(r'^(?:Interface +Address +:)? *Interface'
-                            ' +Address *: +(?P<addr>(\S+))$')
+                            r' +Address *: +(?P<addr>(\S+))$')
         p30 = re.compile(r'^Admin +Metric *: +(?P<te_metric>(\d+))$')
         p31 = re.compile(r'^Maximum +(B|b)andwidth *:'
-                            ' +(?P<max_band>(\d+))$')
+                            r' +(?P<max_band>(\d+))$')
         p32 = re.compile(r'^Maximum +(R|r)eservable +(B|b)andwidth *:'
-                            ' +(?P<max_res_band>(\d+))$')
+                            r' +(?P<max_res_band>(\d+))$')
         p33 = re.compile(r'^Affinity +Bit *: +(?P<admin_group>(\S+))$')
         p34 = re.compile(r'^Priority +(?P<num1>(\d+)) *:'
-                            ' +(?P<band1>(\d+))(?: +Priority +(?P<num2>(\d+))'
-                            ' *: +(?P<band2>(\d+)))?$')
+                            r' +(?P<band1>(\d+))(?: +Priority +(?P<num2>(\d+))'
+                            r' *: +(?P<band2>(\d+)))?$')
         p35 = re.compile(r'^Unknown +Sub-TLV *: +Type += +(?P<type>(\d+)),'
-                            ' +Length += +(?P<length>(\d+))'
-                            ' +Value += +(?P<value>(.*))$')
+                            r' +Length += +(?P<length>(\d+))'
+                            r' +Value += +(?P<value>(.*))$')
         p40 = re.compile(r'^(?P<something>([0\s]+))$')
         for line in out.splitlines():
             line = line.strip()

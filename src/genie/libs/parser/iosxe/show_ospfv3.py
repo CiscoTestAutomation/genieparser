@@ -1638,9 +1638,9 @@ class ShowOspfv3(ShowOspfv3Schema):
         # bgp 100, includes subnets in redistribution
         p4_1_3 = re.compile(
             r"^(?P<prot>(bgp|isis)) +(?P<pid>(\d+))"
-            "(?: +with +metric +mapped +to +(?P<metric>(\d+)))?"
-            "(?:, +includes +(?P<redist>(subnets)) +in +redistribution)?"
-            "(?:, +(?P<nssa>(nssa areas only)))?$"
+            r"(?: +with +metric +mapped +to +(?P<metric>(\d+)))?"
+            r"(?:, +includes +(?P<redist>(subnets)) +in +redistribution)?"
+            r"(?:, +(?P<nssa>(nssa areas only)))?$"
         )
         # Maximum limit of redistributed prefixes 100000
         # Maximum limit of redistributed prefixes 100000 (warning-only)

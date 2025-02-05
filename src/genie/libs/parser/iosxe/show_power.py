@@ -716,8 +716,8 @@ class ShowPowerInlineConsumption(ShowPowerInlineConsumptionSchema):
 
         # initial regexp pattern
         p1 = re.compile(r'^(?P<intf>[\w\-\/\.]+)\s*'
-                         '(?P<consumption_configured>\w+)\s+'
-                         '(?P<admin_consumption>[\d\.]+)$')
+                         r'(?P<consumption_configured>\w+)\s+'
+                         r'(?P<admin_consumption>[\d\.]+)$')
         
         
 

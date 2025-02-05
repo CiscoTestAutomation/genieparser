@@ -213,8 +213,8 @@ class ShowVirtualServiceList(ShowVirtualServiceListSchema):
         # lxc_upgrade             Activate Failed    c63lxc_no_onep.ova
 
         p1 = re.compile(r'^(?P<name>(\S+))\s+'
-                        '(?P<status>(\S+(?: \S+)?))\s+'
-                        '(?P<package>(\S+(?: \S+)?))$')
+                        r'(?P<status>(\S+(?: \S+)?))\s+'
+                        r'(?P<package>(\S+(?: \S+)?))$')
 
         for line in output.splitlines():
             line = line.strip()
