@@ -82,6 +82,9 @@ class ShowAuthenticationSessions(ShowAuthenticationSessionsSchema):
         else:
             out = output
 
+        if "No sessions currently exist" in out:
+            return {"interfaces": {}, "session_count": 0}
+
         # initial return dictionary
         ret_dict = {}
 
