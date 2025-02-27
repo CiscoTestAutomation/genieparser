@@ -61,6 +61,7 @@ class ShowVrfAllDetail(ShowVrfAllDetailSchema):
         vrf_dict = {}
         af_dict = {}
         rt_type = None
+        in_interfaces_section = False  # Initialize here
 
         for line in out.splitlines():
             line = line.replace('\t', '    ')
@@ -107,18 +108,22 @@ class ShowVrfAllDetail(ShowVrfAllDetailSchema):
             m = p4.match(line)
             if m:
                 vrf_dict[vrf]['interfaces'] = []
+                in_interfaces_section = True
                 continue
-            #   GigabitEthernet0/0/0/0.390
-            #   Bundle-Ether15.514
-            p4_1 = re.compile(r'^(?P<intf>([G|g]i.*|[B|b]un.*|'
-                              r'[T|t]en.*|[P|p]o.*|[V|v]lan.*|'
-                              r'[L|l]o.*))$')
 
-            m = p4_1.match(line)
-            if m:
-                intf = m.groupdict()['intf']
-                vrf_dict[vrf]['interfaces'].append(intf)
-                continue
+            if in_interfaces_section:
+                # Match interface lines
+                #   GigabitEthernet0/0/0/0.390
+                #   Bundle-Ether15.514
+                p4_1 = re.compile(r'^(?P<intf>[A-Za-z][-A-Za-z0-9/.:]+)$')
+                m = p4_1.match(line)
+                if m:
+                    intf = m.groupdict()['intf']
+                    vrf_dict[vrf]['interfaces'].append(intf)
+                    continue
+                else:
+                    # Exit the Interfaces section when a non-interface line is encountered
+                    in_interfaces_section = False
 
             # Address family IPV4 Unicast
             p5 = re.compile(r'^Address +family +(?P<af>[\w\s]+)$')
