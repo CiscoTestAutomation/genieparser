@@ -20,7 +20,8 @@ from genie.metaparser.util.schemaengine import Schema, \
                                          Or, \
                                          And, \
                                          Default, \
-                                         Use
+                                         Use, \
+                                         ListOf
 
 # import parser utils
 from genie.libs.parser.utils.common import Common
@@ -1607,4 +1608,134 @@ class ShowSpanningTreeSummaryTotals(ShowSpanningTreeSummaryTotalsSchema):
                 span_dict['stp_active'] = int(group_dict['stp_active'])
                 continue
         
+        return ret_dict
+
+
+class ShowSpanningTreeMstInterfaceSchema(MetaParser):
+    """Schema for show spanning-tree mst interface {interface}"""
+    schema = {
+        'interface': str,
+        'mst_id': int,
+        'role': str,
+        'status': str,
+        'edge_port': str,
+        'port_guard': str,
+        'link_type': str,
+        'bpdu_filter': str,
+        'boundary': str,
+        'bpdu_guard': str,
+        'bpdu_sent': int,
+        'bpdu_received': int,
+        'instances': {
+            Any(): {
+                'role': str,
+                'status': str,
+                'cost': int,
+                'priority': str,
+                'vlans_mapped': ListOf(str),
+            }
+        }
+    }
+
+class ShowSpanningTreeMstInterface(ShowSpanningTreeMstInterfaceSchema):
+    """Parser for show spanning-tree mst interface {interface}"""
+
+    cli_command = 'show spanning-tree mst interface {interface}'
+
+    def cli(self, interface='', output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(interface=interface))
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # TenGigabitEthernet1/1/2 of MST0 is backup blocking
+        p1 = re.compile(r'^(?P<interface>\S+) +of +MST(?P<mst_id>\d+) +is +(?P<role>\S+) +(?P<status>\S+)$')
+
+        # Edge port: no             (default)        port guard : none        (default)
+        p2 = re.compile(r'^Edge +port: +(?P<edge_port>\S+) +\(default\) +port +guard : +(?P<port_guard>\S+) +\(default\)$')
+
+        # Link type: point-to-point (auto)           bpdu filter: disable     (default)
+        p3 = re.compile(r'^Link +type: +(?P<link_type>\S+) +\(auto\) +bpdu +filter: +(?P<bpdu_filter>\S+) +\(default\)$')
+
+        # Boundary : internal                        bpdu guard : disable     (default)
+        p4 = re.compile(r'^Boundary : +(?P<boundary>\S+) +bpdu +guard : +(?P<bpdu_guard>\S+) +\(default\)$')
+
+        # Bpdus sent 10, received 9
+        p5 = re.compile(r'^Bpdus +sent +(?P<bpdu_sent>\d+), +received +(?P<bpdu_received>\d+)$')
+
+        # Instance Role Sts Cost      Prio.Nbr Vlans mapped
+        # 0        Back BLK 2000      128.54   1-9,21-29,41-4094
+        p6 = re.compile(r'^(?P<instance>\d+) +(?P<role>\S+) +(?P<status>\S+) +(?P<cost>\d+) +(?P<priority>\S+) +(?P<vlans_mapped>[\d\-,]+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # TenGigabitEthernet1/1/2 of MST0 is backup blocking
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({
+                    'interface': group['interface'],
+                    'mst_id': int(group['mst_id']),
+                    'role': group['role'],
+                    'status': group['status']
+                })
+                continue
+
+            # Edge port: no             (default)        port guard : none        (default)
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({
+                    'edge_port': group['edge_port'],
+                    'port_guard': group['port_guard']
+                })
+                continue
+
+            # Link type: point-to-point (auto)           bpdu filter: disable     (default)
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({
+                    'link_type': group['link_type'],
+                    'bpdu_filter': group['bpdu_filter']
+                })
+                continue
+
+            # Boundary : internal                        bpdu guard : disable     (default)
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({
+                    'boundary': group['boundary'],
+                    'bpdu_guard': group['bpdu_guard']
+                })
+                continue
+
+            # Bpdus sent 10, received 9
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({
+                    'bpdu_sent': int(group['bpdu_sent']),
+                    'bpdu_received': int(group['bpdu_received'])
+                })
+                continue
+
+            # Instance Role Sts Cost      Prio.Nbr Vlans mapped
+            # 0        Back BLK 2000      128.54   1-9,21-29,41-4094
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                instance = int(group.pop('instance'))
+                ret_dict.setdefault('instances', {}).setdefault(instance, {}).update({
+                    'role': group['role'],
+                    'status': group['status'],
+                    'cost': int(group['cost']),
+                    'priority': group['priority'],
+                    'vlans_mapped': group['vlans_mapped'].split(',')
+                })
+                continue
+
         return ret_dict

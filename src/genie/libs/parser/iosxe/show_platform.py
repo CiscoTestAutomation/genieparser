@@ -1574,8 +1574,8 @@ class ShowRedundancySchema(MetaParser):
         'red_sys_info': {
             'available_system_uptime': str,
             'switchovers_system_experienced': str,
-            'standby_failures': str,
-            'last_switchover_reason': str,
+            Optional('standby_failures'): str,
+            Optional('last_switchover_reason'): str,
             'hw_mode': str,
             'conf_red_mode': str,
             'oper_red_mode': str,
@@ -1935,12 +1935,18 @@ class ShowRedundancyStates(ShowRedundancyStatesSchema):
                 continue
 
             # Manual Swact = enabled
+            # Manual Swact = disabled (system is simplex (no peer unit))
+            # Manual Swact = cannot be initiated from this the standby unit
             m = p10.match(line)
             if m:
-                ret_dict['manual_swact'] = m.groupdict()['manual_swact']
+                manual_swact = m.groupdict()['manual_swact']
+                ret_dict['manual_swact'] = manual_swact
                 reason = m.groupdict()['manual_swact_reason']
                 if reason:
                     ret_dict['manual_swact_reason'] = reason
+                if manual_swact == 'cannot':
+                    ret_dict['manual_swact'] = 'disabled'
+                    ret_dict['manual_swact_reason'] = 'cannot be initiated from this the standby unit'
                 continue
 
             # Communications = Up
@@ -2134,7 +2140,6 @@ class ShowInventory(ShowInventorySchema):
 
         # Slot 2 Linecard
         # Slot 3 Supervisor
-        p1_8 = re.compile(r'^Slot \d Linecard|Slot \d Supervisor|Slot \d Router$')
         p1_8 = re.compile(r'^Slot \d Linecard|Slot \d Supervisor|Slot \d Router$')
 
         # PID: ASR-920-24SZ-IM   , VID: V01  , SN: CAT1902V19M
@@ -2554,10 +2559,16 @@ class ShowPlatform(ShowPlatformSchema):
         p6 = re.compile(r'^(?P<slot>[\w]+)(\/)?(?P<subslot>\d+)?\s*(?P<name>[\w\-_+\/]+)?\s*'\
                         r'(?P<state>(ok|unknown|admin down|ok, active|N\/A|ok, standby|init, active'\
                         r'|ps, fail|empty|incompatible|inserted|fail|disabled|booting|init, standby))\s*'\
-                        r'(?P<insert_time>[\w\.\:]+)$')
+                        r'(?P<insert_time>([\w\.\:]+|N\/A))$')
 
         # 4                             unknown               2d00h
         p6_1 = re.compile(r'^(?P<slot>\w+) +(?P<state>\w+(\, \w+)?) +(?P<insert_time>[\w\.\:]+)$')
+
+        # This is a sub parser for the Type / PID
+        # ASR1000-SIP40
+        # ASR1000-ESP200
+        # ASR1000-MIP100
+        p6_2 = re.compile(r'^ASR\d+-(\d+T\S+|SIP\d+|MIP\d+|ESP|X)|ISR|C9|C82|C83')
 
         # Slot      CPLD Version        Firmware Version
         # --------- ------------------- ---------------------------------------
@@ -2677,7 +2688,7 @@ class ShowPlatform(ShowPlatformSchema):
 
                             # for no-slot-type output
                             if not slot_items:
-                                if re.match(r'^ASR\d+-(\d+T\S+|SIP\d+|X)|ISR|C9|C82|C83', name):
+                                if p6_2.match(name):
                                     if 'R' in slot:
                                         lc_type = 'rp'
                                     elif re.match(r'^\d+', slot):
@@ -2722,7 +2733,7 @@ class ShowPlatform(ShowPlatformSchema):
                             platform_dict['slot'] = {}
                         if slot not in platform_dict['slot']:
                             platform_dict['slot'][slot] = {}
-                        if re.match(r'^ASR\d+-(\d+T\S+|SIP\d+|X)|ISR|C9|C82|C83', name):
+                        if p6_2.match(name):
                             if 'R' in slot:
                                 lc_type = 'rp'
                             elif re.match(r'^\d+', slot):
@@ -9465,7 +9476,8 @@ class ShowRepTopologyDetail(ShowRepTopologyDetailSchema):
 
         # BOIS168ZW2001, Te0/2 (Primary Edge No-Neighbor)
         # BOIS168ZW2001, Te0/1 (Intermediate)
-        p2 = re.compile(r'^(?P<bridge>[\w\d]+), (?P<interface>[a-z|A-Z]+\d+\/\d+(\/\d+)?) \((?P<edge>.+)\)$')
+        # BOI-AIR-AGG-1, Te0/0/26 (Primary Edge No-Neighbor)
+        p2 = re.compile(r'^(?P<bridge>[\w\d-]+), (?P<interface>[a-zA-Z]+\d+(?:\/\d+)*?) \((?P<edge>.+)\)$')
 
         # Open Port, all vlans forwarding
         # Alternate Port, some vlans blocked
@@ -9898,3 +9910,48 @@ class ShowPlatformSoftwareCpmSwitchActiveB0PacketsControlIpc(ShowPlatformSoftwar
             ret_dict['packets'][current_packet]['data'] = packet_data.strip()
 
         return ret_dict
+                
+class ShowPlatformUplinksSchema(MetaParser):
+    """
+    Schema for show platform uplinks
+    """
+    schema = {
+        'uplinks': {
+            Any(): {
+                'status': str,
+            },
+        }
+    }
+
+class ShowPlatformUplinks(ShowPlatformUplinksSchema):
+    """ Parser for show platform uplinks"""
+
+    cli_command = "show platform uplink"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Opening empty dictionary
+        ret_dict = {}
+
+        # matches the "Uplink port" and "Status" information
+        # TenGigabitEthernet4/0/6  Up
+        p1 = re.compile(r'^(?P<uplink_port>\S+)\s+(?P<status>\S+)$')
+
+        # Process each line of the output
+        for line in output.splitlines():
+            line = line.strip()
+
+            # TenGigabitEthernet4/0/6  Up
+            m = p1.match(line)
+            if m:
+                uplink_port = m.groupdict()['uplink_port']
+                status = m.groupdict()['status']
+                # Store the information in the dictionary
+                uplink_dict = ret_dict.setdefault('uplinks', {}).setdefault(uplink_port, {})
+                uplink_dict['status'] = status
+                continue
+
+        return ret_dict
+

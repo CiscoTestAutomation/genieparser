@@ -255,7 +255,7 @@ class ShowNveEthernetSegment(ShowNveEthernetSegmentSchema):
             m = p12.match(line)
             if m:
                 group = m.groupdict()
-                esi_dict.update({'df_vni_list': [i.strip() for i in group.pop['df_vni_list'].split(",")]})
+                esi_dict.update({'df_vni_list': [i.strip() for i in group.pop('df_vnis').split(",")]})
                 continue
 
             # Number of ES members: 3

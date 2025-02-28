@@ -2875,7 +2875,7 @@ class ShowControllersEthernetControllerPreemptionStats(ShowControllersEthernetCo
         p2 = re.compile(r"Total\s+frames\s+received\s+(?P<express_total_frames_recvd>\d+)\s+(?P<preemptable_total_frames_recvd>\d+)")
 
         # Total frames transmitted            0                    0
-        p3 = re.compile("Total\s+frames\s+transmitted\s+(?P<express_total_frames_transmitted>\d+)\s+(?P<preemptable_total_frames_transmitted>\d+)")
+        p3 = re.compile(r"Total\s+frames\s+transmitted\s+(?P<express_total_frames_transmitted>\d+)\s+(?P<preemptable_total_frames_transmitted>\d+)")
         
         # 64 byte frames                      0                    0
         p4  = re.compile(r"64\s+byte\s+frames\s+(?P<express_64b_counters>\d+)\s+(?P<preempt_64b_counters>\d+)") 

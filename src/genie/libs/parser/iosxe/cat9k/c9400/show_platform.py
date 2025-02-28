@@ -389,19 +389,19 @@ class ShowBootSchema(MetaParser):
 
     schema = {
         'boot_variable': str,
-        'manual_boot': bool,
+        Optional('manual_boot'): bool,
         'baud_variable': str,
-        'enable_break': bool,
-        'boot_mode': str,
-        'ipxe_timeout': str,
-        'config_file': str,
-        'standby_boot_variable': str,
-        'standby_manual_boot': bool,
-        'standby_baud_variable': str,
-        'standby_enable_break': bool,
-        'standby_boot_mode': str,
-        'standby_ipxe_timeout': str,
-        'standby_config_file': str,
+        Optional('enable_break'): bool,
+        Optional('boot_mode'): str,
+        Optional('ipxe_timeout'): str,
+        Optional('config_file'): str,
+        Optional('standby_boot_variable'): str,
+        Optional('standby_manual_boot'): bool,
+        Optional('standby_baud_variable'): str,
+        Optional('standby_enable_break'): bool,
+        Optional('standby_boot_mode'): str,
+        Optional('standby_ipxe_timeout'): str,
+        Optional('standby_config_file'): str,
     }
 
 
@@ -411,15 +411,20 @@ class ShowBoot(ShowBootSchema):
     cli_command = 'show boot'
 
     def cli(self, output=None):
+
         if output is None:
             output = self.device.execute(self.cli_command)
+        else:
+            output = output
+
+        ret_dict = {}
 
         # BOOT variable = flash:packages.conf;
-        p1 = re.compile(r'(^BOOT\s*variable)\s*=\s*(?P<boot_variable>.*);$')
+        p1 = re.compile(r'(^BOOT\s*variable)\s*=?\s*(?P<boot_variable>.*);$')
         # MANUAL_BOOT variable = no
-        p2 = re.compile(r'(^MANUAL_BOOT\s*variable)\s*=\s*(?P<manual_boot>\w+)$')
+        p2 = re.compile(r'(^MANUAL_BOOT\s*variable)\s*=?\s*(?P<manual_boot>.*)$')
         # BAUD variable = 9600
-        p3 = re.compile(r'(^BAUD\s*variable)\s*=\s*(?P<baud_variable>\w+)$')
+        p3 = re.compile(r'(^BAUD\s*variable)\s*=?\s*(?P<baud_variable>\w+)$')
         # ENABLE_BREAK variable = yes
         p4 = re.compile(r'(^ENABLE_BREAK\s*variable)\s*=?\s*(?P<enable_break>.*)$')
         # BOOTMODE variable = yes
@@ -427,14 +432,14 @@ class ShowBoot(ShowBootSchema):
         # IPXE_TIMEOUT variable = 0
         p6 = re.compile(r'(^IPXE_TIMEOUT\s*variable)\s*=?\s*(?P<ipxe_timeout>.*)$')
         # CONFIG_FILE variable = 0
-        p7 = re.compile(r'(^CONFIG_FILE\s*variable)\s*=\s*(?P<config_file>.*)$')
+        p7 = re.compile(r'(^CONFIG_FILE\s*variable)\s*=?\s*(?P<config_file>.*)$')
 
         # Standby BOOT variable = flash:packages.conf;
-        p8 = re.compile(r'(^Standby\s*BOOT\s*variable)\s*=\s*(?P<standby_boot_variable>.*);$')
+        p8 = re.compile(r'(^Standby\s*BOOT\s*variable)\s*=?\s*(?P<standby_boot_variable>.*);$')
         # Standby MANUAL_BOOT variable = no
-        p9 = re.compile(r'(^Standby\s*MANUAL_BOOT\s*variable)\s*=\s*(?P<standby_manual_boot>\w+)$')
+        p9 = re.compile(r'(^Standby\s*MANUAL_BOOT\s*variable)\s*=?\s*(?P<standby_manual_boot>\w+)$')
         # Standby BAUD variable = 9600
-        p10 = re.compile(r'(^Standby\s*BAUD\s*variable)\s*=\s*(?P<standby_baud_variable>\w+)$')
+        p10 = re.compile(r'(^Standby\s*BAUD\s*variable)\s*=?\s*(?P<standby_baud_variable>\w+)$')
         # Standby ENABLE_BREAK variable = yes
         p11 = re.compile(r'(^Standby\s*ENABLE_BREAK\s*variable)\s*=?\s*(?P<standby_enable_break>.*)$')
         # Standby BOOTMODE variable = yes
@@ -442,77 +447,76 @@ class ShowBoot(ShowBootSchema):
         # Standby IPXE_TIMEOUT variable = 0
         p13 = re.compile(r'(^Standby\s*IPXE_TIMEOUT\s*variable)\s*=?\s*(?P<standby_ipxe_timeout>.*)$')
         # Standby CONFIG_FILE variable = 0
-        p14 = re.compile(r'(^Standby\s*CONFIG_FILE\s*variable)\s*=\s*(?P<standby_config_file>.*)$')
+        p14 = re.compile(r'(^Standby\s*CONFIG_FILE\s*variable)\s*=?\s*(?P<standby_config_file>.*)$')
 
-        ret_dict = {}
         for line in output.splitlines():
             line = line.strip()
 
-            mo = p1.match(line)
-            if mo:
-                ret_dict.update(mo.groupdict())
+            m1 = p1.match(line)
+            if m1:
+                ret_dict.update(m1.groupdict())
 
-            mo = p2.match(line)
-            if mo:
-                group = mo.groupdict()
-                manual_boot = group['manual_boot'] == 'yes'
-                ret_dict.update({'manual_boot': manual_boot})
+            # Manual Boot = yes
+            m2 = p2.match(line)
+            if m2:
+                ret_dict['manual_boot'] = True if m2.groupdict()['manual_boot'].strip().lower() == 'yes' else False
+                continue
 
-            mo = p3.match(line)
-            if mo:
-                group = mo.groupdict()
+            m3 = p3.match(line)
+            if m3:
+                group = m3.groupdict()
                 ret_dict.update({'baud_variable': group['baud_variable']})
 
-            mo = p4.match(line)
-            if mo:
-                group = mo.groupdict()
+            m4 = p4.match(line)
+            if m4:
+                group = m4.groupdict()
                 enable_break = group['enable_break'] == 'yes'
                 ret_dict.update({'enable_break': enable_break})
 
-            mo = p5.match(line)
-            if mo:
-                ret_dict.update(mo.groupdict())
+            m5 = p5.match(line)
+            if m5:
+                ret_dict.update(m5.groupdict())
 
-            mo = p6.match(line)
-            if mo:
-                ret_dict.update(mo.groupdict())
+            m6 = p6.match(line)
+            if m6:
+                ret_dict.update(m6.groupdict())
 
-            mo = p7.match(line)
-            if mo:
-                ret_dict.update(mo.groupdict())
+            m7 = p7.match(line)
+            if m7:
+                ret_dict.update(m7.groupdict())
 
-            mo = p8.match(line)
-            if mo:
-                ret_dict.update(mo.groupdict())
+            m8 = p8.match(line)
+            if m8:
+                ret_dict.update(m8.groupdict())
 
-            mo = p9.match(line)
-            if mo:
-                group = mo.groupdict()
+            m9 = p9.match(line)
+            if m9:
+                group = m9.groupdict()
                 standby_manual_boot = group['standby_manual_boot'] == 'yes'
                 ret_dict.update({'standby_manual_boot': standby_manual_boot})
 
-            mo = p10.match(line)
-            if mo:
-                group = mo.groupdict()
+            m10 = p10.match(line)
+            if m10:
+                group = m10.groupdict()
                 ret_dict.update({'standby_baud_variable': group['standby_baud_variable']})
 
-            mo = p11.match(line)
-            if mo:
-                group = mo.groupdict()
+            m11 = p11.match(line)
+            if m11:
+                group = m11.groupdict()
                 standby_enable_break = group['standby_enable_break'] == 'yes'
                 ret_dict.update({'standby_enable_break': standby_enable_break})
 
-            mo = p12.match(line)
-            if mo:
-                ret_dict.update(mo.groupdict())
+            m12 = p12.match(line)
+            if m12:
+                ret_dict.update(m12.groupdict())
 
-            mo = p13.match(line)
-            if mo:
-                ret_dict.update(mo.groupdict())
+            m13 = p13.match(line)
+            if m13:
+                ret_dict.update(m13.groupdict())
 
-            mo = p14.match(line)
-            if mo:
-                ret_dict.update(mo.groupdict())
+            m14 = p14.match(line)
+            if m14:
+                ret_dict.update(m14.groupdict())
 
         return ret_dict
 

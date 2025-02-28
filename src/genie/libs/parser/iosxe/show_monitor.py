@@ -782,7 +782,43 @@ class ShowMonitorCaptureBufferDetailedSchema(MetaParser):
                 Optional('vendor_id'): str,
                 Optional('code'): str,
                 Optional('destination_address'): str,
-                Optional('source_address'): str
+                Optional('source_address'): str,
+                Optional('dhcp_message_type'): str,
+                Optional('message_type_boot_reply'): str,
+                Optional('hardware_type'): str,
+                Optional('hardware_address_length'): str,
+                Optional('hops'): str,
+                Optional('transaction_id'): str,
+                Optional('seconds_elapsed'): str,
+                Optional('bootp_flags'): str,
+                Optional('client_ip_address'): str,
+                Optional('your_ip_address'): str,
+                Optional('next_server_ip_address'): str,
+                Optional('relay_agent_ip_address'): str,
+                Optional('client_mac_address'): str,
+                Optional('client_hardware_address_padding'): str,
+                Optional('server_host_name'): str,
+                Optional('boot_file_name'): str,
+                Optional('magic_cookie'): str,
+                Optional('dhcp_option_53_message_type'): str,
+                Optional('dhcp_option_53_length'): int,
+                Optional('dhcp_option_53_dhcp'): str,
+                Optional('dhcp_option_61_client_identifier'): str,
+                Optional('dhcp_option_61_length'): int,
+                Optional('dhcp_option_61_hardware_type'): str,
+                Optional('dhcp_option_61_client_mac_address'): str,
+                Optional('dhcp_option_12_host_name'): str,
+                Optional('dhcp_option_12_length'): int,
+                Optional('dhcp_option_12_host_name_value'): str,
+                Optional('dhcp_option_255_end'): str,
+                Optional('dhcp_option_255_option_end'): int,
+                Optional('dhcp_padding'): str,
+                Optional('dhcp'): str,
+                Optional('option'): str,
+                Optional('option_end'): str,
+                Optional('padding'): str,
+                Optional('message_type'): str,
+                Optional('host_name'): str,
             }
         }
     }
@@ -790,6 +826,7 @@ class ShowMonitorCaptureBufferDetailedSchema(MetaParser):
 # ======================================================
 # Parser for 'show monitor capture buffer detailed '
 # ======================================================
+
 class ShowMonitorCaptureBufferDetailed(ShowMonitorCaptureBufferDetailedSchema):
     """Parser for 'show monitor capture buffer detailed"""
     cli_command = ['show monitor capture {capture_name} buffer detailed',
@@ -797,6 +834,8 @@ class ShowMonitorCaptureBufferDetailed(ShowMonitorCaptureBufferDetailedSchema):
                     'show monitor capture file {path} packet-number {number} detailed']
     
     def cli(self, capture_name="", filter_criteria="",path="", number="", output=None):
+        if number:
+            number = int(number)
         if output is None:
             # Build the command
             if filter_criteria:
@@ -838,6 +877,46 @@ class ShowMonitorCaptureBufferDetailed(ShowMonitorCaptureBufferDetailedSchema):
         #     1010 00.. = Differentiated Services Codepoint: Class Selector 5 (40)
         p8 = re.compile(r'^[\S\s]+\s+= Differentiated Services Codepoint: [\s\S]+ \((?P<dscp_value>\d+)\)$')
 
+        # DHCP Option: (53) DHCP Message Type (Discover)
+        p9 = re.compile(r'^Option: +\(53\) +DHCP +Message +Type +\((?P<dhcp_option_53_message_type>[\w]+)\)$')
+
+        # DHCP Option Length: 1
+        p10 = re.compile(r'^Length: +(?P<dhcp_option_53_length>\d+)$')
+
+        # DHCP: Discover (1)
+        p11 = re.compile(r'^DHCP: +(?P<dhcp_option_53_dhcp>[\w]+) +\((?P<dhcp_option_53_dhcp_value>\d+)\)$')
+
+        # DHCP Option: (61) Client identifier
+        p12 = re.compile(r'^Option: +\(61\) +Client +identifier$')
+
+        # DHCP Option Length: 7
+        p13 = re.compile(r'^Length: +(?P<dhcp_option_61_length>\d+)$')
+
+        # Hardware type: Ethernet (0x01)
+        p14 = re.compile(r'^Hardware +type: +(?P<dhcp_option_61_hardware_type>[\w]+) +\((?P<dhcp_option_61_hardware_type_value>[\w]+)\)$')
+
+        # Client MAC address: 54:00:04:de:91:23 (54:00:04:de:91:23)
+        p15 = re.compile(r'^Client +MAC +address: +(?P<dhcp_option_61_client_mac_address>[\w\:]+) +\((?P<dhcp_option_61_client_mac_address_value>[\w\:]+)\)$')
+
+        # DHCP Option: (12) Host Name
+        p16 = re.compile(r'^Option: +\(12\) +Host +Name$')
+
+        # DHCP Option Length: 11
+        p17 = re.compile(r'^Length: +(?P<dhcp_option_12_length>\d+)$')
+
+        # Host Name: Tesgine2000
+        p18 = re.compile(r'^Host +Name: +(?P<dhcp_option_12_host_name_value>[\w]+)$')
+
+        # DHCP Option: (255) End
+        p19 = re.compile(r'^Option: +\(255\) +End$')
+
+        # Option End: 255
+        p20 = re.compile(r'^Option +End: +(?P<dhcp_option_255_option_end>\d+)$')
+
+        # Padding: 000000000000000000
+        p21 = re.compile(r'^Padding: +(?P<dhcp_padding>[\w]+)$')
+
+        
         # loop to split lines of output
         for line in output.splitlines():
             line = line.strip()
@@ -925,6 +1004,94 @@ class ShowMonitorCaptureBufferDetailed(ShowMonitorCaptureBufferDetailedSchema):
             if m:
                 group = m.groupdict()
                 result_dict.update({"dscp_value":int(group['dscp_value'])})
+                continue
+
+            # DHCP Option: (53) DHCP Message Type (Discover)
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                result_dict.update({"dhcp_option_53_message_type": group['dhcp_option_53_message_type']})
+                continue
+
+            # DHCP Option Length: 1
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                result_dict.update({"dhcp_option_53_length": int(group['dhcp_option_53_length'])})
+                continue
+
+            # DHCP: Discover (1)
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                result_dict.update({"dhcp_option_53_dhcp": group['dhcp_option_53_dhcp']})
+                continue
+
+            # DHCP Option: (61) Client identifier
+            m = p12.match(line)
+            if m:
+                result_dict.update({"dhcp_option_61_client_identifier": "Client identifier"})
+                continue
+
+            # DHCP Option Length: 7
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                result_dict.update({"dhcp_option_61_length": int(group['dhcp_option_61_length'])})
+                continue
+
+            # Hardware type: Ethernet (0x01)
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                result_dict.update({"dhcp_option_61_hardware_type": group['dhcp_option_61_hardware_type']})
+                continue
+
+            # Client MAC address: 54:00:04:de:91:23 (54:00:04:de:91:23)
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                result_dict.update({"dhcp_option_61_client_mac_address": group['dhcp_option_61_client_mac_address']})
+                continue
+
+            # DHCP Option: (12) Host Name
+            m = p16.match(line)
+            if m:
+                result_dict.update({"dhcp_option_12_host_name": "Host Name"})
+                continue
+
+            # DHCP Option Length: 11
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                result_dict.update({"dhcp_option_12_length": int(group['dhcp_option_12_length'])})
+                continue
+
+            # Host Name: Tesgine2000
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                result_dict.update({"dhcp_option_12_host_name_value": group['dhcp_option_12_host_name_value']})
+                continue
+
+            # DHCP Option: (255) End
+            m = p19.match(line)
+            if m:
+                result_dict.update({"dhcp_option_255_end": "End"})
+                continue
+
+            # Option End: 255
+            m = p20.match(line)
+            if m:
+                group = m.groupdict()
+                result_dict.update({"dhcp_option_255_option_end": int(group['dhcp_option_255_option_end'])})
+                continue
+
+            # Padding: 000000000000000000
+            m = p21.match(line)
+            if m:
+                group = m.groupdict()
+                result_dict.update({"dhcp_padding": group['dhcp_padding']})
                 continue
 
         return ret_dict
@@ -1811,4 +1978,48 @@ class ShowMonitorEventTraceDmvpnAll(ShowMonitorEventTraceDmvpnAllSchema):
                     }
                 })
                 continue
+        return ret_dict
+
+class ShowMonitorCaptureFileDetailedSchema(MetaParser):
+    schema = {
+        'dhcp_offer': {
+            'client_mac_address': str,
+        }
+    }
+
+class ShowMonitorCaptureFileDetailed(ShowMonitorCaptureFileDetailedSchema):
+    cli_command = 'show monitor capture file flash:file1.pcap packet-number 7 detailed'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+
+        # Matching patterns
+        # Dynamic Host Configuration Protocol (Offer)
+        p1 = re.compile(r'^Dynamic Host Configuration Protocol \(Offer\)$')
+
+        # Client MAC address
+        p2 = re.compile(r'^Client MAC address: +(?P<client_mac_address>[\w:]+)')
+
+        dhcp_offer_section = False
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Dynamic Host Configuration Protocol (Offer)
+            m = p1.match(line)
+            if m:
+                dhcp_offer_section = True
+                ret_dict['dhcp_offer'] = {}
+                continue
+
+            # Client MAC address: 00:11:01:00:00:01 (00:11:01:00:00:01) within DHCP Offer section
+            if dhcp_offer_section:
+                m = p2.match(line)
+                if m:
+                    ret_dict['dhcp_offer']['client_mac_address'] = m.groupdict()['client_mac_address']
+                    continue
+
         return ret_dict

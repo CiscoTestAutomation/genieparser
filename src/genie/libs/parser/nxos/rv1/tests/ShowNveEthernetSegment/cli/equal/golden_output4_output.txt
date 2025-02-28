@@ -1,0 +1,26 @@
+ESI: 0300.0000.0186.a000.0309
+   Parent interface: nve1
+  ES State: Up
+  Port-channel state: N/A
+  NVE Interface: nve1
+   NVE State: Up
+   Host Learning Mode: control-plane
+  Active Vlans: 1-5,10-15,21-25,31-35,41-45,51-55,61-65,71-75,81-85,91-95,101-105,111-115,121-125,131-135,141-145,151-155,161-165,171-175,181-185,191-195,201-205,501,1006-1010,1016-1020
+   DF Vlans: 2,4,10,12,14,22,24,32,34,42,44,52,54,62,64,72,74,82,84,92,94,102,104,112,114,122,124,132,134,142,144,152,154,162,164,172,174,182,184,192,194,202,204,1006,1008,1010,1016,1018,1020
+   Active VNIs: 10002-10005,10010-10015,10021-10025,10031-10035,10041-10045,10051-10055,10061-10065,10071-10075,10081-10085,10091-10095,10101-10105,10111-10115,10121-10125,10131-10135,10141-10145,10151-10155,10161-10165,10171-10175,10181-10185,10191-10195,10201-10205,201001-201020
+  DF BDs: 8194,8196,8199,8201
+   DF VNIs: 201002,201004,201012,201014
+   CC failed for VLANs:
+  VLAN CC timer: no-timer
+  Number of ES members: 2
+  My ordinal: 0
+  DF timer start time: 00:00:00
+  Config State: N/A
+  DF List: 100.100.100.1 100.100.100.4
+  ES route added to L2RIB: True
+  EAD/ES routes added to L2RIB: False
+  EAD/EVI route timer age: not running
+  EAD/EVI timer duration: N/A
+  ESI type: Ether-segment
+  ESI DF election mode: Modulo
+----------------------------------------

@@ -1,0 +1,7 @@
+show platform software route-map R0 map
+route-map AAA, permit, sequence 100
+  Match clauses:
+    ip address (access-lists): 101
+  Set clauses:
+    ipv4 nexthop: 10.0.0.1, table_id 0
+    set force: False

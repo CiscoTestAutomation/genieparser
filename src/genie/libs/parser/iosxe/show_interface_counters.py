@@ -291,3 +291,50 @@ class ShowInterfaceCountersEtherchannel(ShowInterfaceCountersEtherchannelSchema)
                 continue
         
         return ret_dict
+
+class ShowInterfacesCountersPortSchema(MetaParser):
+    schema = {
+        "Port": {
+            Any(): {
+                "InOctets": int,
+                "InUcastPkts": int,
+                "InMcastPkts": int,
+                "InBcastPkts": int,
+            }
+        }
+    }
+
+class ShowInterfacesCountersPort(ShowInterfacesCountersPortSchema):
+    cli_command = 'show interfaces counters'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        
+        # Matching Pattern
+        # Port        InOctets    InUcastPkts    InMcastPkts    InBcastPkts
+        p1 = re.compile(
+            r"^(?P<Port>\S+)\s+(?P<InOctets>\d+)\s+(?P<InUcastPkts>\d+)\s+(?P<InMcastPkts>\d+)\s+(?P<InBcastPkts>\d+)$"
+        )
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Tw1/0/1               14937             15             81              5
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                port_dict = ret_dict.setdefault("Port", {}).setdefault(group['Port'], {})
+                port_dict.update(
+                    {
+                        "InOctets": int(group["InOctets"]),
+                        "InUcastPkts": int(group["InUcastPkts"]),
+                        "InMcastPkts": int(group["InMcastPkts"]),
+                        "InBcastPkts": int(group["InBcastPkts"]),
+                    }
+                )
+                continue
+        
+        return ret_dict

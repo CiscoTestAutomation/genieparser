@@ -1,0 +1,11 @@
+Port            Status     Port-SGT  Trust  Propagate  IngressCache EgressCache
+-------------------------------------------------------------------------------
+TenGigabitEthernet1/0/1        Enabled         0     No      No          No          No 
+TenGigabitEthernet1/0/2        Disabled        0     No      No          No          No 
+TenGigabitEthernet1/0/3        Enabled         0     No      No          No          No 
+TenGigabitEthernet1/0/4        Enabled         0     No      No          No          No 
+TenGigabitEthernet1/0/5        Enabled         0     No      No          No          No 
+TenGigabitEthernet1/0/6        Enabled         0     No      No          No          No 
+TenGigabitEthernet1/0/7        Enabled         0     No      No          No          No 
+TenGigabitEthernet1/0/8        Enabled         0     No      No          No          No 
+TenGigabitEthernet1/0/9        Disabled        0     No      No          No          No

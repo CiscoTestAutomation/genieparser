@@ -1,0 +1,268 @@
+Vlan1 is administratively down, line protocol is down , Autostate Enabled
+  Hardware is Ethernet SVI, address is 6c29.d290.a947 (bia 6c29.d290.a947)
+  MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec,
+GigabitEthernet0/0 is administratively down, line protocol is down
+  Hardware is RP management port, address is 6c29.d290.a900 (bia 6c29.d290.a900)
+  MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet1/0/1 is up, line protocol is up (connected)
+  Hardware is Ten Gigabit Ethernet, address is 6c29.d290.a901 (bia 6c29.d290.a901)
+  MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet1/0/2 is up, line protocol is up (connected)
+  Hardware is Ten Gigabit Ethernet, address is 6c29.d290.a902 (bia 6c29.d290.a902)
+  MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet1/0/3 is up, line protocol is up (connected)
+  Hardware is Ten Gigabit Ethernet, address is 6c29.d290.a903 (bia 6c29.d290.a903)
+  MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet1/0/4 is down, line protocol is down (notconnect)
+  Hardware is Ten Gigabit Ethernet, address is 6c29.d290.a904 (bia 6c29.d290.a904)
+  MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet1/0/5 is down, line protocol is down (notconnect)
+  Hardware is Ten Gigabit Ethernet, address is 6c29.d290.a905 (bia 6c29.d290.a905)
+  MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet1/0/6 is down, line protocol is down (notconnect)
+  Hardware is Ten Gigabit Ethernet, address is 6c29.d290.a906 (bia 6c29.d290.a906)
+  MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet1/0/7 is down, line protocol is down (notconnect)
+  Hardware is Ten Gigabit Ethernet, address is 6c29.d290.a907 (bia 6c29.d290.a907)
+  MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet1/0/8 is down, line protocol is down (notconnect)
+  Hardware is Ten Gigabit Ethernet, address is 6c29.d290.a908 (bia 6c29.d290.a908)
+  MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet1/0/9 is down, line protocol is down (notconnect)
+  Hardware is Ten Gigabit Ethernet, address is 6c29.d290.a909 (bia 6c29.d290.a909)
+  MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet1/0/10 is down, line protocol is down (notconnect)
+  Hardware is Ten Gigabit Ethernet, address is 6c29.d290.a90a (bia 6c29.d290.a90a)
+  MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet1/0/11 is down, line protocol is down (notconnect)
+  Hardware is Ten Gigabit Ethernet, address is 6c29.d290.a90b (bia 6c29.d290.a90b)
+  MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet1/0/12 is down, line protocol is down (notconnect)
+  Hardware is Ten Gigabit Ethernet, address is 6c29.d290.a90c (bia 6c29.d290.a90c)
+  MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet1/0/13 is down, line protocol is down (notconnect)
+  Hardware is Ten Gigabit Ethernet, address is 6c29.d290.a90d (bia 6c29.d290.a90d)
+  MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet1/0/14 is down, line protocol is down (notconnect)
+  Hardware is Ten Gigabit Ethernet, address is 6c29.d290.a90e (bia 6c29.d290.a90e)
+  MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet1/0/15 is down, line protocol is down (notconnect)
+  Hardware is Ten Gigabit Ethernet, address is 6c29.d290.a90f (bia 6c29.d290.a90f)
+  MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet1/0/16 is down, line protocol is down (notconnect)
+  Hardware is Ten Gigabit Ethernet, address is 6c29.d290.a910 (bia 6c29.d290.a910)
+  MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet1/0/17 is down, line protocol is down (notconnect)
+  Hardware is Ten Gigabit Ethernet, address is 6c29.d290.a911 (bia 6c29.d290.a911)
+  MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet1/0/18 is down, line protocol is down (notconnect)
+  Hardware is Ten Gigabit Ethernet, address is 6c29.d290.a912 (bia 6c29.d290.a912)
+  MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet1/0/19 is down, line protocol is down (notconnect)
+  Hardware is Ten Gigabit Ethernet, address is 6c29.d290.a913 (bia 6c29.d290.a913)
+  MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet1/0/20 is down, line protocol is down (notconnect)
+  Hardware is Ten Gigabit Ethernet, address is 6c29.d290.a914 (bia 6c29.d290.a914)
+  MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet1/0/21 is down, line protocol is down (notconnect)
+  Hardware is Ten Gigabit Ethernet, address is 6c29.d290.a915 (bia 6c29.d290.a915)
+  MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet1/0/22 is down, line protocol is down (notconnect)
+  Hardware is Ten Gigabit Ethernet, address is 6c29.d290.a916 (bia 6c29.d290.a916)
+  MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet1/0/23 is down, line protocol is down (notconnect)
+  Hardware is Ten Gigabit Ethernet, address is 6c29.d290.a917 (bia 6c29.d290.a917)
+  MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet1/0/24 is down, line protocol is down (notconnect)
+  Hardware is Ten Gigabit Ethernet, address is 6c29.d290.a918 (bia 6c29.d290.a918)
+  MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+GigabitEthernet1/1/1 is down, line protocol is down (notconnect)
+  Hardware is not present
+  Hardware is Gigabit Ethernet, address is 6c29.d290.a919 (bia 6c29.d290.a919)
+  MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec,
+GigabitEthernet1/1/2 is down, line protocol is down (notconnect)
+  Hardware is not present
+  Hardware is Gigabit Ethernet, address is 6c29.d290.a91a (bia 6c29.d290.a91a)
+  MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec,
+GigabitEthernet1/1/3 is down, line protocol is down (notconnect)
+  Hardware is not present
+  Hardware is Gigabit Ethernet, address is 6c29.d290.a91b (bia 6c29.d290.a91b)
+  MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec,
+GigabitEthernet1/1/4 is down, line protocol is down (notconnect)
+  Hardware is not present
+  Hardware is Gigabit Ethernet, address is 6c29.d290.a91c (bia 6c29.d290.a91c)
+  MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet1/1/1 is down, line protocol is down (notconnect)
+  Hardware is Ten Gigabit Ethernet, address is 6c29.d290.a91d (bia 6c29.d290.a91d)
+  MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet1/1/2 is down, line protocol is down (notconnect)
+  Hardware is Ten Gigabit Ethernet, address is 6c29.d290.a91e (bia 6c29.d290.a91e)
+  MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet1/1/3 is down, line protocol is down (notconnect)
+  Hardware is Ten Gigabit Ethernet, address is 6c29.d290.a91f (bia 6c29.d290.a91f)
+  MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet1/1/4 is down, line protocol is down (notconnect)
+  Hardware is Ten Gigabit Ethernet, address is 6c29.d290.a920 (bia 6c29.d290.a920)
+  MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet1/1/5 is down, line protocol is down (notconnect)
+  Hardware is Ten Gigabit Ethernet, address is 6c29.d290.a921 (bia 6c29.d290.a921)
+  MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet1/1/6 is down, line protocol is down (notconnect)
+  Hardware is Ten Gigabit Ethernet, address is 6c29.d290.a922 (bia 6c29.d290.a922)
+  MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet1/1/7 is down, line protocol is down (notconnect)
+  Hardware is Ten Gigabit Ethernet, address is 6c29.d290.a923 (bia 6c29.d290.a923)
+  MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet1/1/8 is down, line protocol is down (notconnect)
+  Hardware is Ten Gigabit Ethernet, address is 6c29.d290.a924 (bia 6c29.d290.a924)
+  MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+FortyGigabitEthernet1/1/1 is down, line protocol is down (notconnect)
+  Hardware is not present
+  Hardware is Forty Gigabit Ethernet, address is 6c29.d290.a925 (bia 6c29.d290.a925)
+  MTU 1500 bytes, BW 40000000 Kbit/sec, DLY 10 usec,
+FortyGigabitEthernet1/1/2 is down, line protocol is down (notconnect)
+  Hardware is not present
+  Hardware is Forty Gigabit Ethernet, address is 6c29.d290.a926 (bia 6c29.d290.a926)
+  MTU 1500 bytes, BW 40000000 Kbit/sec, DLY 10 usec,
+TwentyFiveGigE1/1/1 is down, line protocol is down (notconnect)
+  Hardware is not present
+  Hardware is Twenty Five Gigabit Ethernet, address is 6c29.d290.a927 (bia 6c29.d290.a927)
+  MTU 1500 bytes, BW 25000000 Kbit/sec, DLY 10 usec,
+TwentyFiveGigE1/1/2 is down, line protocol is down (notconnect)
+  Hardware is not present
+  Hardware is Twenty Five Gigabit Ethernet, address is 6c29.d290.a928 (bia 6c29.d290.a928)
+  MTU 1500 bytes, BW 25000000 Kbit/sec, DLY 10 usec,
+AppGigabitEthernet1/0/1 is up, line protocol is up (connected)
+  Hardware is App-hosting Gigabit Ethernet, address is 6c29.d290.a929 (bia 6c29.d290.a929)
+  MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet2/0/1 is up, line protocol is up (connected)
+  Hardware is Ten Gigabit Ethernet, address is ecc0.18f8.7c81 (bia ecc0.18f8.7c81)
+  MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet2/0/2 is up, line protocol is up (connected)
+  Hardware is Ten Gigabit Ethernet, address is ecc0.18f8.7c82 (bia ecc0.18f8.7c82)
+  MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet2/0/3 is up, line protocol is up (connected)
+  Hardware is Ten Gigabit Ethernet, address is ecc0.18f8.7c83 (bia ecc0.18f8.7c83)
+  MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet2/0/4 is down, line protocol is down (notconnect)
+  Hardware is Ten Gigabit Ethernet, address is ecc0.18f8.7c84 (bia ecc0.18f8.7c84)
+  MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet2/0/5 is down, line protocol is down (notconnect)
+  Hardware is Ten Gigabit Ethernet, address is ecc0.18f8.7c85 (bia ecc0.18f8.7c85)
+  MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet2/0/6 is down, line protocol is down (notconnect)
+  Hardware is Ten Gigabit Ethernet, address is ecc0.18f8.7c86 (bia ecc0.18f8.7c86)
+  MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet2/0/7 is down, line protocol is down (notconnect)
+  Hardware is Ten Gigabit Ethernet, address is ecc0.18f8.7c87 (bia ecc0.18f8.7c87)
+  MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet2/0/8 is down, line protocol is down (notconnect)
+  Hardware is Ten Gigabit Ethernet, address is ecc0.18f8.7c88 (bia ecc0.18f8.7c88)
+  MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet2/0/9 is down, line protocol is down (notconnect)
+  Hardware is Ten Gigabit Ethernet, address is ecc0.18f8.7c89 (bia ecc0.18f8.7c89)
+  MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet2/0/10 is down, line protocol is down (notconnect)
+  Hardware is Ten Gigabit Ethernet, address is ecc0.18f8.7c8a (bia ecc0.18f8.7c8a)
+  MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet2/0/11 is down, line protocol is down (notconnect)
+  Hardware is Ten Gigabit Ethernet, address is ecc0.18f8.7c8b (bia ecc0.18f8.7c8b)
+  MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet2/0/12 is down, line protocol is down (notconnect)
+  Hardware is Ten Gigabit Ethernet, address is ecc0.18f8.7c8c (bia ecc0.18f8.7c8c)
+  MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet2/0/13 is down, line protocol is down (notconnect)
+  Hardware is Ten Gigabit Ethernet, address is ecc0.18f8.7c8d (bia ecc0.18f8.7c8d)
+  MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet2/0/14 is down, line protocol is down (notconnect)
+  Hardware is Ten Gigabit Ethernet, address is ecc0.18f8.7c8e (bia ecc0.18f8.7c8e)
+  MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet2/0/15 is down, line protocol is down (notconnect)
+  Hardware is Ten Gigabit Ethernet, address is ecc0.18f8.7c8f (bia ecc0.18f8.7c8f)
+  MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet2/0/16 is down, line protocol is down (notconnect)
+  Hardware is Ten Gigabit Ethernet, address is ecc0.18f8.7c90 (bia ecc0.18f8.7c90)
+  MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet2/0/17 is down, line protocol is down (notconnect)
+  Hardware is Ten Gigabit Ethernet, address is ecc0.18f8.7c91 (bia ecc0.18f8.7c91)
+  MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet2/0/18 is down, line protocol is down (notconnect)
+  Hardware is Ten Gigabit Ethernet, address is ecc0.18f8.7c92 (bia ecc0.18f8.7c92)
+  MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet2/0/19 is down, line protocol is down (notconnect)
+  Hardware is Ten Gigabit Ethernet, address is ecc0.18f8.7c93 (bia ecc0.18f8.7c93)
+  MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet2/0/20 is down, line protocol is down (notconnect)
+  Hardware is Ten Gigabit Ethernet, address is ecc0.18f8.7c94 (bia ecc0.18f8.7c94)
+  MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet2/0/21 is down, line protocol is down (notconnect)
+  Hardware is Ten Gigabit Ethernet, address is ecc0.18f8.7c95 (bia ecc0.18f8.7c95)
+  MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet2/0/22 is down, line protocol is down (notconnect)
+  Hardware is Ten Gigabit Ethernet, address is ecc0.18f8.7c96 (bia ecc0.18f8.7c96)
+  MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet2/0/23 is down, line protocol is down (notconnect)
+  Hardware is Ten Gigabit Ethernet, address is ecc0.18f8.7c97 (bia ecc0.18f8.7c97)
+  MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet2/0/24 is down, line protocol is down (notconnect)
+  Hardware is Ten Gigabit Ethernet, address is ecc0.18f8.7c98 (bia ecc0.18f8.7c98)
+  MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+GigabitEthernet2/1/1 is down, line protocol is down (notconnect)
+  Hardware is not present
+  Hardware is Gigabit Ethernet, address is ecc0.18f8.7c99 (bia ecc0.18f8.7c99)
+  MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec,
+GigabitEthernet2/1/2 is down, line protocol is down (notconnect)
+  Hardware is not present
+  Hardware is Gigabit Ethernet, address is ecc0.18f8.7c9a (bia ecc0.18f8.7c9a)
+  MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec,
+GigabitEthernet2/1/3 is down, line protocol is down (notconnect)
+  Hardware is not present
+  Hardware is Gigabit Ethernet, address is ecc0.18f8.7c9b (bia ecc0.18f8.7c9b)
+  MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec,
+GigabitEthernet2/1/4 is down, line protocol is down (notconnect)
+  Hardware is not present
+  Hardware is Gigabit Ethernet, address is ecc0.18f8.7c9c (bia ecc0.18f8.7c9c)
+  MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet2/1/1 is down, line protocol is down (notconnect)
+  Hardware is Ten Gigabit Ethernet, address is ecc0.18f8.7c9d (bia ecc0.18f8.7c9d)
+  MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet2/1/2 is down, line protocol is down (notconnect)
+  Hardware is Ten Gigabit Ethernet, address is ecc0.18f8.7c9e (bia ecc0.18f8.7c9e)
+  MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet2/1/3 is down, line protocol is down (notconnect)
+  Hardware is Ten Gigabit Ethernet, address is ecc0.18f8.7c9f (bia ecc0.18f8.7c9f)
+  MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet2/1/4 is down, line protocol is down (notconnect)
+  Hardware is Ten Gigabit Ethernet, address is ecc0.18f8.7ca0 (bia ecc0.18f8.7ca0)
+  MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet2/1/5 is down, line protocol is down (notconnect)
+  Hardware is Ten Gigabit Ethernet, address is ecc0.18f8.7ca1 (bia ecc0.18f8.7ca1)
+  MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet2/1/6 is down, line protocol is down (notconnect)
+  Hardware is Ten Gigabit Ethernet, address is ecc0.18f8.7ca2 (bia ecc0.18f8.7ca2)
+  MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet2/1/7 is down, line protocol is down (notconnect)
+  Hardware is Ten Gigabit Ethernet, address is ecc0.18f8.7ca3 (bia ecc0.18f8.7ca3)
+  MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet2/1/8 is down, line protocol is down (notconnect)
+  Hardware is Ten Gigabit Ethernet, address is ecc0.18f8.7ca4 (bia ecc0.18f8.7ca4)
+  MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+FortyGigabitEthernet2/1/1 is down, line protocol is down (notconnect)
+  Hardware is not present
+  Hardware is Forty Gigabit Ethernet, address is ecc0.18f8.7ca5 (bia ecc0.18f8.7ca5)
+  MTU 1500 bytes, BW 40000000 Kbit/sec, DLY 10 usec,
+FortyGigabitEthernet2/1/2 is down, line protocol is down (notconnect)
+  Hardware is not present
+  Hardware is Forty Gigabit Ethernet, address is ecc0.18f8.7ca6 (bia ecc0.18f8.7ca6)
+  MTU 1500 bytes, BW 40000000 Kbit/sec, DLY 10 usec,
+TwentyFiveGigE2/1/1 is down, line protocol is down (notconnect)
+  Hardware is not present
+  Hardware is Twenty Five Gigabit Ethernet, address is ecc0.18f8.7ca7 (bia ecc0.18f8.7ca7)
+  MTU 1500 bytes, BW 25000000 Kbit/sec, DLY 10 usec,
+TwentyFiveGigE2/1/2 is down, line protocol is down (notconnect)
+  Hardware is not present
+  Hardware is Twenty Five Gigabit Ethernet, address is ecc0.18f8.7ca8 (bia ecc0.18f8.7ca8)
+  MTU 1500 bytes, BW 25000000 Kbit/sec, DLY 10 usec,
+AppGigabitEthernet2/0/1 is up, line protocol is up (connected)
+  Hardware is App-hosting Gigabit Ethernet, address is ecc0.18f8.7ca9 (bia ecc0.18f8.7ca9)
+  MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec,

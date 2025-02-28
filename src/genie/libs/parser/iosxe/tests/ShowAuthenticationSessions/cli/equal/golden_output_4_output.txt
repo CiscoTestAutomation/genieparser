@@ -1,2 +1,0 @@
-show authentication sessions
-No sessions currently exist

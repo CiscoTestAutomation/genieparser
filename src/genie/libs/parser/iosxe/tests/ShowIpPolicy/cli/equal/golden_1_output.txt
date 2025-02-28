@@ -1,0 +1,3 @@
+show ip policy
+Interface      Route map
+Gi5            AAA

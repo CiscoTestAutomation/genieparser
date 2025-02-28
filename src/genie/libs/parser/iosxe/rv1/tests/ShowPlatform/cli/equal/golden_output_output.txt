@@ -1,0 +1,11 @@
+Switch  Ports    Model                Serial No.   MAC address     Hw Ver.       Sw Ver.
+------  -----   ---------             -----------  --------------  -------       --------
+ 1       41     C9300-24UX            FOC2712Y9CG  6c29.d290.a900  V08           17.07.01
+ 2       41     C9300-24UX            FOC2712Y9BP  ecc0.18f8.7c80  V08           17.07.01
+Switch/Stack Mac Address : 6c29.d290.a900 - Local Mac Address
+Mac persistency wait time: Indefinite
+                                   Current
+Switch#   Role        Priority      State
+-------------------------------------------
+*1       Active          1          Ready
+ 2       Standby         1          Ready

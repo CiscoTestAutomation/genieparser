@@ -11,7 +11,7 @@ IOSXE c9350 parsers for the following show commands:
     * show platform hardware fed active fwd-asic resource tcam utilization
     * show inventory
     * show platform hardware fed active qos queue config interface {interface}
-    * show platform hardware fed switch {switch_var} qos queue config interface {interface}
+    * show platform hardware fed switch {switch_num} qos queue config interface {interface}
 '''
 
 # Python
@@ -1125,7 +1125,7 @@ class ShowInventory(ShowInventorySchema):
 class ShowPlatformHardwareFedSwitchQosQueueConfigSchema(MetaParser):
     """
     Schema for
-        * 'show platform hardware fed switch {switch_var} qos queue config interface {interface}'
+        * 'show platform hardware fed switch {switch_num} qos queue config interface {interface}'
     """
 
     schema = {
@@ -1188,19 +1188,19 @@ class ShowPlatformHardwareFedSwitchQosQueueConfig(
 ):
     """
     Parser for
-        * 'show platform hardware fed switch {switch_var} qos queue config interface {interface}'
+        * 'show platform hardware fed switch {switch_num} qos queue config interface {interface}'
     """
 
     cli_command = [
         "show platform hardware fed active qos queue config interface {interface}",
-        "show platform hardware fed switch {switch_var} qos queue config interface {interface}",
+        "show platform hardware fed switch {switch_num} qos queue config interface {interface}",
     ]
 
-    def cli(self, interface, switch_var=None, output=None):
+    def cli(self, interface, switch_num=None, output=None):
         if output is None:
-            if switch_var:
+            if switch_num:
                 cmd = self.cli_command[1].format(
-                    switch_var=switch_var, interface=interface
+                    switch_num=switch_num, interface=interface
                 )
             else:
                 cmd = self.cli_command[0].format(interface=interface)

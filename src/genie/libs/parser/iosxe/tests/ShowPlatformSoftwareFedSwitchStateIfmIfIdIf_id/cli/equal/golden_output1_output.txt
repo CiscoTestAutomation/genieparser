@@ -1,0 +1,76 @@
+sh platform software fed switch active ifm if-id 0x13151BDB
+Interface IF_ID         : 0x0000000013151bdb
+Interface Name          : C320150491
+Interface Block Pointer : 0x7f16cd385568
+Interface Block State   : READY
+Interface State         : Enabled
+Interface Status        : ADD, UPD
+Interface Ref-Cnt       : 2
+Interface Type          : WIRED_CLIENT
+Created Time            : 2022/09/29 12:17:16.343
+Last Modified Time      : 2022/09/29 12:17:16.387
+Current Time            : 2022/09/29 12:29:36.705
+	mac            : 001b.0c18.918d
+	parent if_id   : 0x0000000000000020
+	Client if_id   : 0x0000000013151bdb
+	Client type    : 1
+	Switch Num     : 1
+	ASIC Num       : 1
+	Client LE      : 0x7f16cd0caaa8
+	DNS punt       : False
+
+	Port Information
+	Handle ............ [0x8b00013f]
+	Type .............. [Wired-client]
+	Identifier ........ [0x13151bdb]
+	Unit .............. [320150491]
+	Port Logical Subblock
+		Client LE handle .... [0x7f16cd0caaa8]
+		Parent Identifier : 0x20
+		Asic num          : 0x1
+		Switch num        : 0x1
+		Rewrite type      : 0x0
+		Client mac        : 1:0:0:0:0:0
+		RI handle         : 53
+		DI handle         : 0
+		Dst Adj  handle   : 0
+		Dst Lookup handle : 0
+		Src Adj  handle   : 0x53
+		Src Lookup handle : 0
+	Port L2 Subblock
+		Enabled ............. [No]
+		Allow dot1q ......... [No]
+		Allow native ........ [No]
+		Default VLAN ........ [0]
+		Allow priority tag ... [No]
+		Allow unknown unicast  [No]
+		Allow unknown multicast[No]
+		Allow unknown broadcast[No]
+		Allow unknown multicast[Enabled]
+		Allow unknown unicast  [Enabled]
+		Protected ............ [No]
+		IPv4 ARP snoop ....... [No]
+		IPv6 ARP snoop ....... [No]
+		Jumbo MTU ............ [0]
+		Learning Mode ........ [0]
+		Vepa ................. [Disabled]
+		App Hosting........... [Disabled]
+	Port QoS Subblock
+		Trust Type .................... [0x7]
+		Default Value ................. [0]
+		Ingress Table Map ............. [0x0]
+		Egress Table Map .............. [0x0]
+		Queue Map ..................... [0x0]
+	Port Netflow Subblock
+	Port Policy Subblock
+	List of Ingress Policies attached to an interface
+	List of Egress Policies attached to an interface
+	Port CTS Subblock
+		Disable SGACL .................... [0x0]
+		Trust ............................ [0x0]
+		Propagate ........................ [0x0]
+		Port SGT ......................... [0xffff]
+Ref Count : 2 (feature Ref Counts + 1)
+IFM Feature Ref Counts
+	FID : 98 (AAL_FEATURE_L2_MULTICAST_IGMP), Ref Count : 1
+No Sub Blocks Present

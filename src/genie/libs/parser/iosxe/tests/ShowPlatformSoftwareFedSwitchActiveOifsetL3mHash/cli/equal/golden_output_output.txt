@@ -1,0 +1,18 @@
+ Type: s_g_vrf              State: allocated       MD5:(35ddf2ee900391c0:6ced99293343193f)
+   Fset Urid                    : 0x3000000000000007
+   Remote Port Count            : 0
+   Svi Port Count               : 0
+   Users Count                  : 1
+   Mioitem Count                : 1
+     No. AdjID          Interface          PhysicalIf        IfType          Flags
+      1. 0xf8004e31     Gi1/0/26           Gi1/0/26          phy_if          InHw 
+           Urids   => Mio:0x80::11 Parent:0x0 child_repl:0x0(------)  adj_obj:0x90::3
+           (Asic[0]=> l3_port_oid/port_oid : 2854 / 2105 )
+   Fset MCID Gid                : 8203
+   Asic[0] mcid_oid             : 2868
+   Hw IP Mcg Info Asic[0] :
+     Idx.    Member Info
+       1.    l3_port: 2854
+   Users :
+     urid:0x1000000000000565 (l3m_entry: Mvrf:0 (2.2.2.2, 232.1.1.1))
+

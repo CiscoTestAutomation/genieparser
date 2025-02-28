@@ -117,6 +117,7 @@ class ShowVrfAllDetail(ShowVrfAllDetailSchema):
             m = p4_1.match(line)
             if m:
                 intf = m.groupdict()['intf']
+                vrf_dict[vrf].setdefault('interfaces', [])
                 vrf_dict[vrf]['interfaces'].append(intf)
                 continue
 
