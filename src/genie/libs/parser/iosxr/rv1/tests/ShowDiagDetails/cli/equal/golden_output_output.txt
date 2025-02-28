@@ -1,0 +1,1089 @@
+Wed Feb 19 20:26:28.150 UTC
+Rack 0-CHASSIS IDPROM - NCS 57C1 Base Chassis, Flexible Consumption Need Smart Lic
+ Info
+    Controller Family          : 7002
+    Controller Type            : 1149
+    UDI Name                   : chassis
+    UDI Description            : NCS 57C1 Base Chassis, Flexible Consumption Need Smart Lic
+    MAC Addr. Block Size       : 256
+    Base MAC Address           : 3cfe.ac55.3000
+    Power Consumption          : 9 Watts (Maximum)
+    PID                        : NCS-57C1-48Q6-SYS
+    Version Identifier         : V01
+    Hardware Revision          : 1.0
+    Top Assy. Part Number      : 68-7362-03
+    Top Assy. Revision         : F0
+    CLEI Code                  : CMMX700ARA
+    PCA Number                 : 73-20413-03
+    PCA Revision               : C0
+    PCB Serial Number          : FOC26367GDT
+    Chassis Serial Number      : FOC2639R2H0
+    Deviation Number # 1       : 0
+    Deviation Number # 2       : 0
+    Deviation Number # 3       : 0
+    Deviation Number # 4       : 0
+    Deviation Number # 5       : 0
+
+0/RP0/CPU0-MB IDPROM - NCS 57C1 Base Chassis, Flexible Consumption Need Smart Lic
+ Info
+    Controller Family          : 7002
+    Controller Type            : 1149
+    UDI Name                   : chassis
+    UDI Description            : NCS 57C1 Base Chassis, Flexible Consumption Need Smart Lic
+    MAC Addr. Block Size       : 256
+    Base MAC Address           : 3cfe.ac55.3000
+    Power Consumption          : 9 Watts (Maximum)
+    PID                        : NCS-57C1-48Q6-SYS
+    Version Identifier         : V01
+    Hardware Revision          : 1.0
+    Top Assy. Part Number      : 68-7362-03
+    Top Assy. Revision         : F0
+    CLEI Code                  : CMMX700ARA
+    PCA Number                 : 73-20413-03
+    PCA Revision               : C0
+    PCB Serial Number          : FOC26367GDT
+    Chassis Serial Number      : FOC2639R2H0
+    Deviation Number # 1       : 0
+    Deviation Number # 2       : 0
+    Deviation Number # 3       : 0
+    Deviation Number # 4       : 0
+    Deviation Number # 5       : 0
+
+HundredGigE0/0/0/0-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info
+    IDPROM Format Revision   : 1B
+    Hardware Revision        : 1
+    PID                      : QSFP-100G-AOC1M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAEYCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : TF-FC001-NC2
+    Top Assy. Revision       : 1B
+    PCB Serial Number        : INL26310TZP-B
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 0
+    Asset ID                 :
+    Asset Alias              :
+    ECI Number               :
+
+TenGigE0/0/0/9-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info
+    IDPROM Format Revision   : 02
+    Hardware Revision        : 538980912
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : TPP4XGDS0CCISE2G
+    Top Assy. Revision       : 02
+    PCB Serial Number        : OPM26510SRN
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 0
+    Asset ID                 :
+    Asset Alias              :
+    ECI Number               :
+
+TenGigE0/0/0/10-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info
+    IDPROM Format Revision   : 02
+    Hardware Revision        : 538980912
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : TPP4XGDS0CCISE2G
+    Top Assy. Revision       : 02
+    PCB Serial Number        : OPM26510TU6
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 0
+    Asset ID                 :
+    Asset Alias              :
+    ECI Number               :
+
+TenGigE0/0/0/11-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info
+    IDPROM Format Revision   : 02
+    Hardware Revision        : 538980912
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : TPP4XGDS0CCISE2G
+    Top Assy. Revision       : 02
+    PCB Serial Number        : OPM264309S7
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 0
+    Asset ID                 :
+    Asset Alias              :
+    ECI Number               :
+
+TenGigE0/0/0/12-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info
+    IDPROM Format Revision   : 02
+    Hardware Revision        : 538980912
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : TPP4XGDS0CCISE2G
+    Top Assy. Revision       : 02
+    PCB Serial Number        : OPM26431U5G
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 0
+    Asset ID                 :
+    Asset Alias              :
+    ECI Number               :
+
+TenGigE0/0/0/13-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info
+    IDPROM Format Revision   : 02
+    Hardware Revision        : 538980912
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : TPP4XGDS0CCISE2G
+    Top Assy. Revision       : 02
+    PCB Serial Number        : OPM26451MT6
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 0
+    Asset ID                 :
+    Asset Alias              :
+    ECI Number               :
+
+TenGigE0/0/0/15-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info
+    IDPROM Format Revision   : 02
+    Hardware Revision        : 538980912
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : TPP4XGDS0CCISE2G
+    Top Assy. Revision       : 02
+    PCB Serial Number        : OPM26451MTS
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 0
+    Asset ID                 :
+    Asset Alias              :
+    ECI Number               :
+
+TenGigE0/0/0/16-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info
+    IDPROM Format Revision   : 02
+    Hardware Revision        : 538980912
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : TPP4XGDS0CCISE2G
+    Top Assy. Revision       : 02
+    PCB Serial Number        : OPM26451MTM
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 0
+    Asset ID                 :
+    Asset Alias              :
+    ECI Number               :
+
+TenGigE0/0/0/17-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info
+    IDPROM Format Revision   : 02
+    Hardware Revision        : 538980912
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : TPP4XGDS0CCISE2G
+    Top Assy. Revision       : 02
+    PCB Serial Number        : OPM26451MQS
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 0
+    Asset ID                 :
+    Asset Alias              :
+    ECI Number               :
+
+TenGigE0/0/0/19-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info
+    IDPROM Format Revision   : 02
+    Hardware Revision        : 538980912
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : TPP4XGDS0CCISE2G
+    Top Assy. Revision       : 02
+    PCB Serial Number        : OPM26451MQX
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 0
+    Asset ID                 :
+    Asset Alias              :
+    ECI Number               :
+
+TenGigE0/0/0/20-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info
+    IDPROM Format Revision   : 02
+    Hardware Revision        : 538980912
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : TPP4XGDS0CCISE2G
+    Top Assy. Revision       : 02
+    PCB Serial Number        : OPM26451MQP
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 0
+    Asset ID                 :
+    Asset Alias              :
+    ECI Number               :
+
+TenGigE0/0/0/21-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info
+    IDPROM Format Revision   : 02
+    Hardware Revision        : 538980912
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : TPP4XGDS0CCISE2G
+    Top Assy. Revision       : 02
+    PCB Serial Number        : OPM26451MQU
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 0
+    Asset ID                 :
+    Asset Alias              :
+    ECI Number               :
+
+TenGigE0/0/0/22-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info
+    IDPROM Format Revision   : 02
+    Hardware Revision        : 538980912
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : TPP4XGDS0CCISE2G
+    Top Assy. Revision       : 02
+    PCB Serial Number        : OPM26451MX2
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 0
+    Asset ID                 :
+    Asset Alias              :
+    ECI Number               :
+
+TenGigE0/0/0/23-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info
+    IDPROM Format Revision   : 02
+    Hardware Revision        : 538980912
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : TPP4XGDS0CCISE2G
+    Top Assy. Revision       : 02
+    PCB Serial Number        : OPM26510TKL
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 0
+    Asset ID                 :
+    Asset Alias              :
+    ECI Number               :
+
+TenGigE0/0/0/25-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info
+    IDPROM Format Revision   : 02
+    Hardware Revision        : 538980912
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : TPP4XGDS0CCISE2G
+    Top Assy. Revision       : 02
+    PCB Serial Number        : OPM26510SQ3
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 0
+    Asset ID                 :
+    Asset Alias              :
+    ECI Number               :
+
+TenGigE0/0/0/26-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info
+    IDPROM Format Revision   : 02
+    Hardware Revision        : 538980912
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : TPP4XGDS0CCISE2G
+    Top Assy. Revision       : 02
+    PCB Serial Number        : OPM26431XLY
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 0
+    Asset ID                 :
+    Asset Alias              :
+    ECI Number               :
+
+TenGigE0/0/0/27-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info
+    IDPROM Format Revision   : 02
+    Hardware Revision        : 538980912
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : TPP4XGDS0CCISE2G
+    Top Assy. Revision       : 02
+    PCB Serial Number        : OPM26510SRL
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 0
+    Asset ID                 :
+    Asset Alias              :
+    ECI Number               :
+
+TenGigE0/0/0/28-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info
+    IDPROM Format Revision   : 02
+    Hardware Revision        : 538980912
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : TPP4XGDS0CCISE2G
+    Top Assy. Revision       : 02
+    PCB Serial Number        : OPM26431XLU
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 0
+    Asset ID                 :
+    Asset Alias              :
+    ECI Number               :
+
+HundredGigE0/0/0/2-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info
+    IDPROM Format Revision   : A
+    Hardware Revision        : 1
+    PID                      : QSFP-100G-AOC1M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAEYCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : QAOC-100G4F1A01C
+    Top Assy. Revision       : A
+    PCB Serial Number        : DTS2552D589-A
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 0
+    Asset ID                 :
+    Asset Alias              :
+    ECI Number               :
+
+TenGigE0/0/0/29-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info
+    IDPROM Format Revision   : 02
+    Hardware Revision        : 538980912
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : TPP4XGDS0CCISE2G
+    Top Assy. Revision       : 02
+    PCB Serial Number        : OPM264307U8
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 0
+    Asset ID                 :
+    Asset Alias              :
+    ECI Number               :
+
+TenGigE0/0/0/30-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info
+    IDPROM Format Revision   : 02
+    Hardware Revision        : 538980912
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : TPP4XGDS0CCISE2G
+    Top Assy. Revision       : 02
+    PCB Serial Number        : OPM26451MUB
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 0
+    Asset ID                 :
+    Asset Alias              :
+    ECI Number               :
+
+TenGigE0/0/0/31-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info
+    IDPROM Format Revision   : 02
+    Hardware Revision        : 538980912
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : TPP4XGDS0CCISE2G
+    Top Assy. Revision       : 02
+    PCB Serial Number        : OPM26451MTU
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 0
+    Asset ID                 :
+    Asset Alias              :
+    ECI Number               :
+
+TenGigE0/0/0/32-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info
+    IDPROM Format Revision   : 02
+    Hardware Revision        : 538980912
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : TPP4XGDS0CCISE2G
+    Top Assy. Revision       : 02
+    PCB Serial Number        : OPM26451MX4
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 0
+    Asset ID                 :
+    Asset Alias              :
+    ECI Number               :
+
+TenGigE0/0/0/33-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info
+    IDPROM Format Revision   : G4
+    Hardware Revision        : 825111623
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : SFBR-709SMZ-CS1
+    Top Assy. Revision       : G4
+    PCB Serial Number        : AVD23379BK4
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 0
+    Asset ID                 :
+    Asset Alias              :
+    ECI Number               :
+
+TenGigE0/0/0/36-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info
+    IDPROM Format Revision   : 02
+    Hardware Revision        : 538980912
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : TPP4XGDS0CCISE2G
+    Top Assy. Revision       : 02
+    PCB Serial Number        : OPM26451MUE
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 0
+    Asset ID                 :
+    Asset Alias              :
+    ECI Number               :
+
+TenGigE0/0/0/37-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info
+    IDPROM Format Revision   : 02
+    Hardware Revision        : 538980912
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : TPP4XGDS0CCISE2G
+    Top Assy. Revision       : 02
+    PCB Serial Number        : OPM26451MX5
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 0
+    Asset ID                 :
+    Asset Alias              :
+    ECI Number               :
+
+HundredGigE0/0/0/3-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info
+    IDPROM Format Revision   : 1B
+    Hardware Revision        : 1
+    PID                      : QSFP-100G-AOC2M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAETCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : TF-FC002-NC2
+    Top Assy. Revision       : 1B
+    PCB Serial Number        : INL2527A5JG-A
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 0
+    Asset ID                 :
+    Asset Alias              :
+    ECI Number               :
+
+TenGigE0/0/0/39-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info
+    IDPROM Format Revision   : 1.
+    Hardware Revision        : 540028465
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C98
+    Top Assy. Revision       : 1.
+    PCB Serial Number        : ACW261708GU
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 0
+    Asset ID                 :
+    Asset Alias              :
+    ECI Number               :
+
+TenGigE0/0/0/41-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info
+    IDPROM Format Revision   : 1.
+    Hardware Revision        : 540028465
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C98
+    Top Assy. Revision       : 1.
+    PCB Serial Number        : ACW26410421
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 0
+    Asset ID                 :
+    Asset Alias              :
+    ECI Number               :
+
+TenGigE0/0/0/42-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info
+    IDPROM Format Revision   : 1.
+    Hardware Revision        : 540028465
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C98
+    Top Assy. Revision       : 1.
+    PCB Serial Number        : ACW26182JAP
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 0
+    Asset ID                 :
+    Asset Alias              :
+    ECI Number               :
+
+TenGigE0/0/0/43-IDPROM - Cisco 4x10G AOC10M Pluggable Optics Module
+ Info
+    IDPROM Format Revision   : 01
+    Hardware Revision        : 538980656
+    PID                      : QSFP-4X10G-AOC10M
+    Version Identifier       : V02
+    UDI Description          : Cisco 4x10G AOC10M Pluggable Optics Module
+    CLEI Code                : CMPQABGCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : AFBR-7IER10Z-CS2
+    Top Assy. Revision       : 01
+    PCB Serial Number        : AVE211160JF-CH1
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 0
+    Asset ID                 :
+    Asset Alias              :
+    ECI Number               :
+
+TenGigE0/0/0/44-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info
+    IDPROM Format Revision   : 1.
+    Hardware Revision        : 540028465
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C98
+    Top Assy. Revision       : 1.
+    PCB Serial Number        : ACW264101EM
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 0
+    Asset ID                 :
+    Asset Alias              :
+    ECI Number               :
+
+TenGigE0/0/0/45-IDPROM - Cisco 4x10G AOC10M Pluggable Optics Module
+ Info
+    IDPROM Format Revision   : 01
+    Hardware Revision        : 538980656
+    PID                      : QSFP-4X10G-AOC10M
+    Version Identifier       : V02
+    UDI Description          : Cisco 4x10G AOC10M Pluggable Optics Module
+    CLEI Code                : CMPQABGCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : AFBR-7IER10Z-CS2
+    Top Assy. Revision       : 01
+    PCB Serial Number        : AVE211160JF-CH2
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 0
+    Asset ID                 :
+    Asset Alias              :
+    ECI Number               :
+
+TenGigE0/0/0/46-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info
+    IDPROM Format Revision   : 1.
+    Hardware Revision        : 540028465
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C98
+    Top Assy. Revision       : 1.
+    PCB Serial Number        : ACW25190XNY
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 0
+    Asset ID                 :
+    Asset Alias              :
+    ECI Number               :
+
+TenGigE0/0/0/47-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info
+    IDPROM Format Revision   : 1.
+    Hardware Revision        : 540028465
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C98
+    Top Assy. Revision       : 1.
+    PCB Serial Number        : ACW2641042P
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 0
+    Asset ID                 :
+    Asset Alias              :
+    ECI Number               :
+
+TenGigE0/0/0/48-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info
+    IDPROM Format Revision   : 1.
+    Hardware Revision        : 540028465
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C98
+    Top Assy. Revision       : 1.
+    PCB Serial Number        : ACW23420MCN
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 0
+    Asset ID                 :
+    Asset Alias              :
+    ECI Number               :
+
+HundredGigE0/0/0/4-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info
+    IDPROM Format Revision   : 1B
+    Hardware Revision        : 1
+    PID                      : QSFP-100G-AOC1M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAEYCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : TF-FC001-NC2
+    Top Assy. Revision       : 1B
+    PCB Serial Number        : INL26300UTB-B
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 0
+    Asset ID                 :
+    Asset Alias              :
+    ECI Number               :
+
+TenGigE0/0/0/49-IDPROM - Cisco 4x10G AOC10M Pluggable Optics Module
+ Info
+    IDPROM Format Revision   : 01
+    Hardware Revision        : 538980656
+    PID                      : QSFP-4X10G-AOC10M
+    Version Identifier       : V02
+    UDI Description          : Cisco 4x10G AOC10M Pluggable Optics Module
+    CLEI Code                : CMPQABGCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : AFBR-7IER10Z-CS2
+    Top Assy. Revision       : 01
+    PCB Serial Number        : AVE211160JF-CH3
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 0
+    Asset ID                 :
+    Asset Alias              :
+    ECI Number               :
+
+TenGigE0/0/0/50-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info
+    IDPROM Format Revision   : 02
+    Hardware Revision        : 538980912
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : TPP4XGDS0CCISE2G
+    Top Assy. Revision       : 02
+    PCB Serial Number        : OPM26510SMU
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 0
+    Asset ID                 :
+    Asset Alias              :
+    ECI Number               :
+
+TenGigE0/0/0/51-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info
+    IDPROM Format Revision   : 1.
+    Hardware Revision        : 540028465
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : RTXM228-551-C98
+    Top Assy. Revision       : 1.
+    PCB Serial Number        : ACW264101EK
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 0
+    Asset ID                 :
+    Asset Alias              :
+    ECI Number               :
+
+TenGigE0/0/0/52-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info
+    IDPROM Format Revision   : 02
+    Hardware Revision        : 538980912
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : TPP4XGDS0CCISE2G
+    Top Assy. Revision       : 02
+    PCB Serial Number        : OPM26510TN2
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 0
+    Asset ID                 :
+    Asset Alias              :
+    ECI Number               :
+
+TenGigE0/0/0/53-IDPROM - Cisco 4x10G AOC10M Pluggable Optics Module
+ Info
+    IDPROM Format Revision   : 01
+    Hardware Revision        : 538980656
+    PID                      : QSFP-4X10G-AOC10M
+    Version Identifier       : V02
+    UDI Description          : Cisco 4x10G AOC10M Pluggable Optics Module
+    CLEI Code                : CMPQABGCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : AFBR-7IER10Z-CS2
+    Top Assy. Revision       : 01
+    PCB Serial Number        : AVE211160JF-CH4
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 0
+    Asset ID                 :
+    Asset Alias              :
+    ECI Number               :
+
+HundredGigE0/0/0/5-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info
+    IDPROM Format Revision   : 1B
+    Hardware Revision        : 1
+    PID                      : QSFP-100G-AOC1M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAEYCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : TF-FC001-NC2
+    Top Assy. Revision       : 1B
+    PCB Serial Number        : INL26310TVX-A
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 0
+    Asset ID                 :
+    Asset Alias              :
+    ECI Number               :
+
+TenGigE0/0/0/6-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info
+    IDPROM Format Revision   : 02
+    Hardware Revision        : 538980912
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : TPP4XGDS0CCISE2G
+    Top Assy. Revision       : 02
+    PCB Serial Number        : OPM26510THS
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 0
+    Asset ID                 :
+    Asset Alias              :
+    ECI Number               :
+
+TenGigE0/0/0/7-IDPROM - Cisco SFP+ 10G SR Pluggable Optics Module
+ Info
+    IDPROM Format Revision   : 02
+    Hardware Revision        : 538980912
+    PID                      : SFP-10G-SR
+    Version Identifier       : V03
+    UDI Description          : Cisco SFP+ 10G SR Pluggable Optics Module
+    CLEI Code                : COUIA8NCAA
+    ECI Number               : 0
+    Top Assy. Part Number    : TPP4XGDS0CCISE2G
+    Top Assy. Revision       : 02
+    PCB Serial Number        : OPM26431XM0
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 0
+    Asset ID                 :
+    Asset Alias              :
+    ECI Number               :
+
+0/PM0-PSU1100W_acpi IDPROM - NCS 57C1 1100W Forward airflow AC Power Supply
+ Info
+    Controller Family          : 00f0
+    Controller Type            : 0200
+    UDI Name                   : PSU
+    UDI Description            : NCS 57C1 1100W Forward airflow AC Power Supply
+    Hardware Revision          : 2.0
+    Power Supply Type          : AC
+    Top Assy. Part Number      : 341-100586-02
+    Deviation Number # 1       : 0
+    PCB Serial Number          : ART2711FFPD
+    PID                        : NCS-1100W-ACFW
+    Version Identifier         : V02
+    PCA Revision               : A0
+    CLEI Code                  : IPUPAP5AAB
+    ECI Number                 : 0
+    RMA Test History           : 00
+    RMA Number                 : 0-0-0-0
+    RMA History                : 00
+    Manufacturing Test Data    : 00 00 00 00 00 00 00 00
+    Field Diagnostics Data     : 00 00 00 00 00 00 00 00
+    Environment Monitor Data   : 00 06 00 fa
+    ENVMON Information         : 19 0 90 1 86 73 78 32
+                                 0 0 136 0 0 46 0 46
+                                 224 0 0 115 0 243
+    ENVMON Information         : 18 0 90 2 79 117 116 112
+                                 117 116 32 32 2 0 142 0
+                                 75 0 70 0 65 0 60 0
+                                 195
+    ENVMON Information         : 18 0 90 3 73 110 112 117
+                                 116 32 32 32 2 0 141 0
+                                 65 0 60 0 55 0 52 0
+                                 42
+    Asset ID                   :
+    Asset Alias                :
+    ECI Number                 : 1B0582
+
+0/PM1-PSU1100W_acpi IDPROM - NCS 57C1 1100W Forward airflow AC Power Supply
+ Info
+    Controller Family          : 00f0
+    Controller Type            : 0200
+    UDI Name                   : PSU
+    UDI Description            : NCS 57C1 1100W Forward airflow AC Power Supply
+    Hardware Revision          : 2.0
+    Power Supply Type          : AC
+    Top Assy. Part Number      : 341-100586-02
+    Deviation Number # 1       : 0
+    PCB Serial Number          : ART2712FE8S
+    PID                        : NCS-1100W-ACFW
+    Version Identifier         : V02
+    PCA Revision               : A0
+    CLEI Code                  : IPUPAP5AAB
+    ECI Number                 : 0
+    RMA Test History           : 00
+    RMA Number                 : 0-0-0-0
+    RMA History                : 00
+    Manufacturing Test Data    : 00 00 00 00 00 00 00 00
+    Field Diagnostics Data     : 00 00 00 00 00 00 00 00
+    Environment Monitor Data   : 00 06 00 fa
+    ENVMON Information         : 19 0 90 1 86 73 78 32
+                                 0 0 136 0 0 46 0 46
+                                 224 0 0 115 0 243
+    ENVMON Information         : 18 0 90 2 79 117 116 112
+                                 117 116 32 32 2 0 142 0
+                                 75 0 70 0 65 0 60 0
+                                 195
+    ENVMON Information         : 18 0 90 3 73 110 112 117
+                                 116 32 32 32 2 0 141 0
+                                 65 0 60 0 55 0 52 0
+                                 42
+    Asset ID                   :
+    Asset Alias                :
+    ECI Number                 : 1B0582
+
+0/FT0-FAN IDPROM - Cisco 8000 Series 1RU Fan with Port-side Air Intake Ver 2
+ Info
+    Controller Family          : 0094
+    Controller Type            : 06aa
+    PID                        : FAN-1RU-PI-V2
+    Version Identifier         : V01
+    UDI Description            : Cisco 8000 Series 1RU Fan with Port-side Air Intake Ver 2
+    Top Assy. Part Number      : 800-49985-01
+    Top Assy. Revision         : A0
+    PCB Serial Number          : NCV2637Q3C7
+    CLEI Code                  : CMUCANKBAA
+    ECI Number                 : 1A7958
+    Deviation Number # 1       : 0
+    Deviation Number # 2       : 0
+    Deviation Number # 3       : 0
+    Deviation Number # 4       : 0
+    Deviation Number # 5       : 0
+    Hardware Revision          : 0.0
+    Power Consumption          : 0 Watts (Maximum)
+    Manufacturing Test Data    : 00 00 00 00 00 00 00 00
+    Vendor ID                  : 04
+
+0/FT1-FAN IDPROM - Cisco 8000 Series 1RU Fan with Port-side Air Intake Ver 2
+ Info
+    Controller Family          : 0094
+    Controller Type            : 06aa
+    PID                        : FAN-1RU-PI-V2
+    Version Identifier         : V01
+    UDI Description            : Cisco 8000 Series 1RU Fan with Port-side Air Intake Ver 2
+    Top Assy. Part Number      : 800-49985-01
+    Top Assy. Revision         : A0
+    PCB Serial Number          : NCV2637Q3UN
+    CLEI Code                  : CMUCANKBAA
+    ECI Number                 : 1A7958
+    Deviation Number # 1       : 0
+    Deviation Number # 2       : 0
+    Deviation Number # 3       : 0
+    Deviation Number # 4       : 0
+    Deviation Number # 5       : 0
+    Hardware Revision          : 0.0
+    Power Consumption          : 0 Watts (Maximum)
+    Manufacturing Test Data    : 00 00 00 00 00 00 00 00
+    Vendor ID                  : 04
+
+0/FT2-FAN IDPROM - Cisco 8000 Series 1RU Fan with Port-side Air Intake Ver 2
+ Info
+    Controller Family          : 0094
+    Controller Type            : 06aa
+    PID                        : FAN-1RU-PI-V2
+    Version Identifier         : V01
+    UDI Description            : Cisco 8000 Series 1RU Fan with Port-side Air Intake Ver 2
+    Top Assy. Part Number      : 800-49985-01
+    Top Assy. Revision         : A0
+    PCB Serial Number          : NCV2637Q3RW
+    CLEI Code                  : CMUCANKBAA
+    ECI Number                 : 1A7958
+    Deviation Number # 1       : 0
+    Deviation Number # 2       : 0
+    Deviation Number # 3       : 0
+    Deviation Number # 4       : 0
+    Deviation Number # 5       : 0
+    Hardware Revision          : 0.0
+    Power Consumption          : 0 Watts (Maximum)
+    Manufacturing Test Data    : 00 00 00 00 00 00 00 00
+    Vendor ID                  : 04
+
+0/FT3-FAN IDPROM - Cisco 8000 Series 1RU Fan with Port-side Air Intake Ver 2
+ Info
+    Controller Family          : 0094
+    Controller Type            : 06aa
+    PID                        : FAN-1RU-PI-V2
+    Version Identifier         : V01
+    UDI Description            : Cisco 8000 Series 1RU Fan with Port-side Air Intake Ver 2
+    Top Assy. Part Number      : 800-49985-01
+    Top Assy. Revision         : A0
+    PCB Serial Number          : NCV2637Q43A
+    CLEI Code                  : CMUCANKBAA
+    ECI Number                 : 1A7958
+    Deviation Number # 1       : 0
+    Deviation Number # 2       : 0
+    Deviation Number # 3       : 0
+    Deviation Number # 4       : 0
+    Deviation Number # 5       : 0
+    Hardware Revision          : 0.0
+    Power Consumption          : 0 Watts (Maximum)
+    Manufacturing Test Data    : 00 00 00 00 00 00 00 00
+    Vendor ID                  : 04
+
+0/FT4-FAN IDPROM - Cisco 8000 Series 1RU Fan with Port-side Air Intake Ver 2
+ Info
+    Controller Family          : 0094
+    Controller Type            : 06aa
+    PID                        : FAN-1RU-PI-V2
+    Version Identifier         : V01
+    UDI Description            : Cisco 8000 Series 1RU Fan with Port-side Air Intake Ver 2
+    Top Assy. Part Number      : 800-49985-01
+    Top Assy. Revision         : A0
+    PCB Serial Number          : NCV2637Q434
+    CLEI Code                  : CMUCANKBAA
+    ECI Number                 : 1A7958
+    Deviation Number # 1       : 0
+    Deviation Number # 2       : 0
+    Deviation Number # 3       : 0
+    Deviation Number # 4       : 0
+    Deviation Number # 5       : 0
+    Hardware Revision          : 0.0
+    Power Consumption          : 0 Watts (Maximum)
+    Manufacturing Test Data    : 00 00 00 00 00 00 00 00
+    Vendor ID                  : 04

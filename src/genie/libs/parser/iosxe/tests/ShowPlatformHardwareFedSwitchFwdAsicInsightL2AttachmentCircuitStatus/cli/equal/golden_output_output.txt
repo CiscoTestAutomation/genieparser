@@ -1,0 +1,174 @@
++---------------------+--------------------+-----------------------+--------------------------+
+| AC Info             | Switch Info        | Eth Logical-port Info | Eth Port Info            |
++---------------------+--------------------+-----------------------+--------------------------+
+| ac_type: L2-DENSE   |                    | eth_port_oid: 1440    | sysport_gid: 41          |
+| ac_gid: 122880      |                    |                       | sysport_cookie: Gi1/0/1  |
+| ac_cookie: Gi1/0/1  |                    |                       |                          |
+|                     |                    |                       |                          |
+|                     |                    |                       |                          |
+| ac_type: L2-DENSE   |                    | eth_port_oid: 1460    | sysport_gid: 42          |
+| ac_gid: 122881      |                    |                       | sysport_cookie: Gi1/0/2  |
+| ac_cookie: Gi1/0/2  |                    |                       |                          |
+|                     |                    |                       |                          |
+|                     |                    |                       |                          |
+| ac_type: L2-DENSE   |                    | eth_port_oid: 1480    | sysport_gid: 45          |
+| ac_gid: 122882      |                    |                       | sysport_cookie: Gi1/0/5  |
+| ac_cookie: Gi1/0/5  |                    |                       |                          |
+|                     |                    |                       |                          |
+|                     |                    |                       |                          |
+| ac_type: L2-DENSE   |                    | eth_port_oid: 1500    | sysport_gid: 47          |
+| ac_gid: 122883      |                    |                       | sysport_cookie: Gi1/0/7  |
+| ac_cookie: Gi1/0/7  |                    |                       |                          |
+|                     |                    |                       |                          |
+|                     |                    |                       |                          |
+| ac_type: L2-DENSE   |                    | eth_port_oid: 1521    | sysport_gid: 49          |
+| ac_gid: 122884      |                    |                       | sysport_cookie: Gi1/0/9  |
+| ac_cookie: Gi1/0/9  |                    |                       |                          |
+| ac_type: L2-DENSE   |                    | vlan_tag: 1           | sysport_gid: 43          |
+| ac_gid: 122979      |                    | eth_port_oid: 2587    | sysport_cookie: Gi1/0/3  |
+| ac_cookie: Gi1/0/3  |                    |                       |                          |
+|                     |                    |                       |                          |
+|                     |                    |                       |                          |
+| ac_type: L2-DENSE   |                    | vlan_tag: 1           | sysport_gid: 44          |
+| ac_gid: 122980      |                    | eth_port_oid: 2607    | sysport_cookie: Gi1/0/4  |
+| ac_cookie: Gi1/0/4  |                    |                       |                          |
+|                     |                    |                       |                          |
+|                     |                    |                       |                          |
+| ac_type: L2-DENSE   |                    | vlan_tag: 1           | sysport_gid: 46          |
+| ac_gid: 122981      |                    | eth_port_oid: 2627    | sysport_cookie: Gi1/0/6  |
+| ac_cookie: Gi1/0/6  |                    |                       |                          |
+|                     |                    |                       |                          |
+|                     |                    |                       |                          |
+| ac_type: L2-DENSE   |                    | vlan_tag: 1           | sysport_gid: 48          |
+| ac_gid: 122982      |                    | eth_port_oid: 2647    | sysport_cookie: Gi1/0/8  |
+| ac_cookie: Gi1/0/8  |                    |                       |                          |
+|                     |                    |                       |                          |
+|                     |                    |                       |                          |
+| ac_type: L2-DENSE   |                    | vlan_tag: 1           | sysport_gid: 50          |
+| ac_gid: 122983      |                    | eth_port_oid: 2667    | sysport_cookie: Gi1/0/10 |
+| ac_cookie: Gi1/0/10 |                    |                       |                          |
+|                     |                    |                       |                          |
+|                     |                    |                       |                          |
+| ac_type: L2-DENSE   |                    | vlan_tag: 1           | sysport_gid: 75          |
+| ac_gid: 122984      |                    | eth_port_oid: 2687    | sysport_cookie: Gi1/0/35 |
+| ac_cookie: Gi1/0/35 |                    |                       |                          |
+|                     |                    |                       |                          |
+|                     |                    |                       |                          |
+| ac_type: L2-DENSE   |                    | vlan_tag: 1           | sysport_gid: 83          |
+| ac_gid: 122985      |                    | eth_port_oid: 2707    | sysport_cookie: Gi1/0/43 |
+| ac_cookie: Gi1/0/43 |                    |                       |                          |
+|                     |                    |                       |                          |
+|                     |                    |                       |                          |
+| ac_type: L2-DENSE   |                    | eth_port_oid: 2722    | sysport_gid: 298         |
+| ac_gid: 122986      |                    |                       | sysport_cookie: Gi2/0/2  |
+| ac_cookie: Gi2/0/2  |                    |                       |                          |
+|                     |                    |                       |                          |
+|                     |                    |                       |                          |
+| ac_type: L2-DENSE   |                    | eth_port_oid: 2727    | sysport_gid: 302         |
+| ac_gid: 122987      |                    |                       | sysport_cookie: Gi2/0/6  |
+| ac_cookie: Gi2/0/6  |                    |                       |                          |
+|                     |                    |                       |                          |
+|                     |                    |                       |                          |
+| ac_type: L2-DENSE   |                    | eth_port_oid: 2732    | sysport_gid: 305         |
+| ac_gid: 122988      |                    |                       | sysport_cookie: Gi2/0/9  |
+| ac_cookie: Gi2/0/9  |                    |                       |                          |
+|                     |                    |                       |                          |
+|                     |                    |                       |                          |
+| ac_type: L2-DENSE   |                    | eth_port_oid: 2737    | sysport_gid: 314         |
+| ac_gid: 122989      |                    |                       | sysport_cookie: Gi2/0/18 |
+| ac_cookie: Gi2/0/18 |                    |                       |                          |
+|                     |                    |                       |                          |
+|                     |                    |                       |                          |
+| ac_type: L2-DENSE   |                    | eth_port_oid: 2741    | lag_gid: 41              |
+| ac_gid: 122990      |                    |                       |                          |
+| ac_cookie: (n       |                    |                       |                          |
+|                     |                    |                       |                          |
+|                     |                    |                       |                          |
+| ac_type: L2-DENSE   |                    | eth_port_oid: 2745    | lag_gid: 42              |
+| ac_gid: 122991      |                    |                       |                          |
+| ac_cookie: (n       |                    |                       |                          |
+|                     |                    |                       |                          |
+|                     |                    |                       |                          |
+| ac_type: L2-DENSE   |                    | eth_port_oid: 2749    | lag_gid: 43              |
+| ac_gid: 122992      |                    |                       |                          |
+| ac_cookie: (n       |                    |                       |                          |
+|                     |                    |                       |                          |
+|                     |                    |                       |                          |
+| ac_type: L2-DENSE   |                    | eth_port_oid: 2797    | sysport_gid: 97          |
+| ac_gid: 122921      |                    |                       | sysport_cookie: Fif1/1/1 |
+| ac_cookie: Fif1/1/1 |                    |                       |                          |
+|                     |                    |                       |                          |
+|                     |                    |                       |                          |
+| ac_type: L2-DENSE   |                    | eth_port_oid: 2818    | sysport_gid: 101         |
+| ac_gid: 122925      |                    |                       | sysport_cookie: Twe1/1/5 |
+| ac_cookie: Twe1/1/5 |                    |                       |                          |
+|                     |                    |                       |                          |
+|                     |                    |                       |                          |
+| ac_type: L2-DENSE   |                    | eth_port_oid: 2839    | sysport_gid: 98          |
+| ac_gid: 122922      |                    |                       | sysport_cookie: Fif1/1/2 |
+| ac_cookie: Fif1/1/2 |                    |                       |                          |
+|                     |                    |                       |                          |
+|                     |                    |                       |                          |
+| ac_type: L2-DENSE   |                    | eth_port_oid: 2860    | sysport_gid: 102         |
+| ac_gid: 122926      |                    |                       | sysport_cookie: Twe1/1/6 |
+| ac_cookie: Twe1/1/6 |                    |                       |                          |
+|                     |                    |                       |                          |
+|                     |                    |                       |                          |
+| ac_type: L2-DENSE   |                    | eth_port_oid: 2881    | sysport_gid: 99          |
+| ac_gid: 122923      |                    |                       | sysport_cookie: Fif1/1/3 |
+| ac_cookie: Fif1/1/3 |                    |                       |                          |
+|                     |                    |                       |                          |
+|                     |                    |                       |                          |
+| ac_type: L2-DENSE   |                    | eth_port_oid: 2902    | sysport_gid: 103         |
+| ac_gid: 122927      |                    |                       | sysport_cookie: Twe1/1/7 |
+| ac_cookie: Twe1/1/7 |                    |                       |                          |
+|                     |                    |                       |                          |
+|                     |                    |                       |                          |
+| ac_type: L2-DENSE   |                    | eth_port_oid: 2923    | sysport_gid: 100         |
+| ac_gid: 122924      |                    |                       | sysport_cookie: Fif1/1/4 |
+| ac_cookie: Fif1/1/4 |                    |                       |                          |
+|                     |                    |                       |                          |
+|                     |                    |                       |                          |
+| ac_type: L2-DENSE   |                    | eth_port_oid: 2944    | sysport_gid: 104         |
+| ac_gid: 122928      |                    |                       | sysport_cookie: Twe1/1/8 |
+| ac_cookie: Twe1/1/8 |                    |                       |                          |
+|                     |                    |                       |                          |
+|                     |                    |                       |                          |
+| ac_type: L3         |                    | vlan_tag: 1           | sysport_gid: 10          |
+| ac_gid: 4098        |                    | eth_port_oid: 578     | sysport_cookie: Re1      |
+|                     |                    |                       |                          |
+|                     |                    |                       |                          |
+| ac_type: L3         |                    | vlan_tag: 4000        | sysport_gid: 10          |
+| ac_gid: 4135        |                    | vlan_tag2: 4001       | sysport_cookie: Re1      |
+|                     |                    | eth_port_oid: 578     |                          |
+|                     |                    |                       |                          |
+|                     |                    |                       |                          |
+| ac_type: L3         |                    | vlan_tag: 3           | sysport_gid: 10          |
+| ac_gid: 4099        |                    | eth_port_oid: 578     | sysport_cookie: Re1      |
+|                     |                    |                       |                          |
+|                     |                    |                       |                          |
+| ac_type: SVI        | switch_gid: 1      | vlan_tag: 1           |                          |
+| svi_gid: 1          | switch_cookie: 1   |                       |                          |
+|                     |                    |                       |                          |
+|                     |                    |                       |                          |
+| ac_type: SVI        | switch_gid: 5      | vlan_tag: 5           |                          |
+| svi_gid: 5          | switch_cookie: 5   |                       |                          |
+|                     |                    |                       |                          |
+|                     |                    |                       |                          |
+| ac_type: SVI        | switch_gid: 10     | vlan_tag: 10          |                          |
+| svi_gid: 10         | switch_cookie: 10  |                       |                          |
+|                     |                    |                       |                          |
+|                     |                    |                       |                          |
+| ac_type: SVI        | switch_gid: 69     | vlan_tag: 69          |                          |
+| svi_gid: 69         | switch_cookie: 69  |                       |                          |
+|                     |                    |                       |                          |
+|                     |                    |                       |                          |
+| ac_type: SVI        | switch_gid: 70     | vlan_tag: 70          |                          |
+| svi_gid: 70         | switch_cookie: 70  |                       |                          |
+|                     |                    |                       |                          |
+|                     |                    |                       |                          |
+| ac_type: SVI        | switch_gid: 100    | vlan_tag: 100         |                          |
+| svi_gid: 100        | switch_cookie: 100 |                       |                          |
+|                     |                    |                       |                          |
+|                     |                    |                       |                          |
++---------------------+--------------------+-----------------------+--------------------------+

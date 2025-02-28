@@ -1,0 +1,36 @@
+NAME: "0/0", DESCR: "NCS 5700 Eyrie Line Card"
+PID: NCS-57C3-MOD-SYS  , VID: V01, SN: FOC27103EET
+
+NAME: "0/0/1", DESCR: "NCS5500 12 SFP with 10G OTN, WAN PHY, MacSec, DWDM MPA"
+PID: NC55-MPA-12T-S    , VID: V01, SN: FOC27118EUD
+
+NAME: "0/0/2", DESCR: "NCS5500 4 QSFP28 with 100G MacSeC MPA"
+PID: NC55-MPA-4H-S     , VID: V02, SN: FOC26470JY6
+
+NAME: "GigabitEthernet0/0/0/0", DESCR: "Cisco SFP 1G 1000BASE-T Pluggable Optics Module"
+PID: N/A               , VID: N/A, SN: MTC174105VA
+
+NAME: "GigabitEthernet0/0/0/1", DESCR: "Cisco SFP 1G 1000BASE-T Pluggable Optics Module"
+PID: N/A               , VID: N/A, SN: MTC171800ZX
+
+NAME: "TenGigE0/0/0/2", DESCR: "Cisco SFP+ 10G SR Pluggable Optics Module"
+PID: SFP-10G-SR        , VID: V03, SN: ACW252106MX
+
+NAME: "TenGigE0/0/0/3", DESCR: "Cisco SFP+ 10G SR Pluggable Optics Module"
+PID: SFP-10G-SR        , VID: V03, SN: ACW252106NA
+
+NAME: "GigabitEthernet0/0/0/42", DESCR: "Cisco SFP 1G 1000BASE-SX Pluggable Optics Module"
+PID: GLC-SX-MMD        , VID: V03, SN: FNS250206YW
+
+NAME: "0/RP0", DESCR: "NCS 57C3 Route Processor Eyrie"
+PID: NC57-MOD-RP2-E    , VID: V02, SN: FOC271394XC
+
+NAME: "0/RP1", DESCR: "NCS 57C3 Route Processor Eyrie"
+PID: NC57-MOD-RP2-E    , VID: V02, SN: FOC271394PK
+
+NAME: "Rack 0", DESCR: "NCS57C3 Hybrid Chassis Non-SE"
+PID: NCS-57C3-MOD-SYS  , VID: V02, SN: FOC2709R26K
+
+NAME: "0/FT0", DESCR: "NC57 C3 60 mm fan tray"
+PID: NC57-C3-FAN2-FW   , VID: V01, SN: FOC2711R0QH
+

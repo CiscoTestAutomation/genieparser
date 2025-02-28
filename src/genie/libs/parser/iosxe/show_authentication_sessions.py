@@ -82,9 +82,6 @@ class ShowAuthenticationSessions(ShowAuthenticationSessionsSchema):
         else:
             out = output
 
-        if "No sessions currently exist" in out:
-            return {"interfaces": {}, "session_count": 0}
-
         # initial return dictionary
         ret_dict = {}
 
@@ -1618,6 +1615,313 @@ class ShowAuthenticationSessionsSessionId(ShowAuthenticationSessionsSessionIdSch
                 session_id_dict['method'] = m.groupdict()['method']
                 session_id_dict['domain'] = m.groupdict()['domain']
                 session_id_dict['status_fg'] = m.groupdict()['status_fg']
+                continue
+
+        return ret_dict
+
+# ==================================================================================
+# Schema for:
+#              * 'show authentication sessions interface GigabitEthernet2/0/3'
+#              * 'show authentication sessions interface GigabitEthernet2/0/3 switch standby R0'
+#              * 'show authentication sessions interface GigabitEthernet2/0/3 switch active R0'
+#              * 'show authentication sessions database interface GigabitEthernet2/0/3 switch active R0'
+#              * 'show authentication sessions database interface GigabitEthernet2/0/3 switch standby R0'
+#              * 'show authentication sessions database interface GigabitEthernet2/0/3 switch 1 R0'
+# ==================================================================================
+
+class ShowAuthenticationSessionInterfaceSwitchSchema(MetaParser):
+
+    schema = {
+        'interfaces': {
+            Any(): {
+                'mac_address': {
+                    Any(): {
+                        'method': str,
+                        'domain': str,
+                        'status': str,
+                        'session_id': str,
+                    }
+                }
+            }
+        },
+        Optional('runnable_methods'): {
+            Any(): {
+                'handle': int,
+                'priority': int,
+                'name': str,
+            }
+        }
+    }
+
+# ==================================================================================
+# Parser for:
+#           * 'show authentication sessions interface GigabitEthernet2/0/3'
+#           * 'show authentication sessions interface GigabitEthernet2/0/3 switch standby R0'
+#           * 'show authentication sessions interface GigabitEthernet2/0/3 switch active R0'
+#           * 'show authentication sessions database interface GigabitEthernet2/0/3 switch active R0'
+#           * 'show authentication sessions database interface GigabitEthernet2/0/3 switch standby R0'
+#           * 'show authentication sessions database interface GigabitEthernet2/0/3 switch 1 R0'
+# ==================================================================================
+
+class ShowAuthenticationSessionInterfaceSwitch(ShowAuthenticationSessionInterfaceSwitchSchema):
+
+    cli_command = ['show authentication sessions interface {interface}', 
+                   'show authentication sessions interface {interface} switch {switch} R0',
+                   'show authentication sessions {database} interface {interface} switch {switch} R0']
+
+    def cli(self, interface, switch='', database=False, output=None):
+
+        if output is None:
+            if switch:
+                if database:
+                    cmd = self.cli_command[2].format(interface=interface, switch=switch, database='database')
+                else:
+                    cmd = self.cli_command[1].format(interface=interface, switch=switch)
+            else:
+                cmd = self.cli_command[0].format(interface=interface)
+            output = self.device.execute(cmd)
+
+        # initial empty return dictionary
+        ret_dict = {}
+
+        # Interface                MAC Address    Method  Domain  Status Fg  Session ID
+        p1 = re.compile(r'^(?P<interface>\S+)\s+(?P<mac_address>\S+)\s+(?P<method>\S+)\s+(?P<domain>\S+)\s+(?P<status>\S+)\s+(?P<session_id>\S+)$')
+
+        # Runnable methods list:
+        p2 = re.compile(r'^Runnable methods list:$')
+
+        #   Handle  Priority  Name
+        p3 = re.compile(r'^(?P<handle>\d+)\s+(?P<priority>\d+)\s+(?P<name>\S+)$')
+
+        runnable_methods_flag = False
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Interface                MAC Address    Method  Domain  Status Fg  Session ID
+            # --------------------------------------------------------------------------------------------
+            # Te1/0/1                  0050.56bc.21a4 dot1x   UNKNOWN Unauth      5E0D130B00013C30D4524D05
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                interface = group.pop('interface')
+                mac_address = group.pop('mac_address')
+                intf_dict = ret_dict.setdefault('interfaces', {}).setdefault(interface, {}).setdefault('mac_address', {}).setdefault(mac_address, {})
+                intf_dict.update(group)
+                continue
+
+            # Runnable methods list:
+            if p2.match(line):
+                runnable_methods_flag = True
+                continue
+
+            #   Handle  Priority  Name
+            #   11         5  dot1xSup
+            #   10         5  dot1x
+            #   14        10  webauth
+            #   12        15  mab
+            if runnable_methods_flag:
+                m = p3.match(line)
+                if m:
+                    group = m.groupdict()
+                    handle = int(group.pop('handle'))
+                    priority = int(group.pop('priority'))
+                    name = group.pop('name')
+                    method_dict = ret_dict.setdefault('runnable_methods', {}).setdefault(handle, {})
+                    method_dict.update({'handle': handle, 'priority': priority, 'name': name})
+                    continue
+
+        return ret_dict
+
+class ShowAuthenticationSessionMethodSchema(MetaParser):
+    """
+    Schema for: 
+        'show authentication sessions method {method} details'
+        'show authentication sessions method {method} interface {interface} details'
+        'show authentication sessions method {method} policy'
+    """
+    schema = {
+        'mac': {
+            Any(): {
+                'interface': str,
+                'iif_id': str,
+                'ipv6_address': str,
+                'ipv4_address': str,
+                Optional('user_name'): str,
+                Optional('device_type'): str,
+                Optional('device_name'): str,
+                'status': str,
+                'domain': str,
+                'oper_host_mode': str,
+                'oper_control_dir': str,
+                Optional('session_timeout'): {
+                    'server': int,
+                    'remaining': int,
+                },
+                Optional('timeout_action'): str,
+                'common_session_id': str,
+                'acct_session_id': str,
+                'handle': str,
+                'current_policy': str,
+                'server_policies': {
+                    Optional('vlan_group'): str
+                },
+                Optional('resultant_policies'): {
+                    Optional('vlan_group'): str
+                },
+                'method_status_list': {
+                    'method': str,
+                    'state': str
+                }
+            }
+        }
+    }
+
+class ShowAuthenticationSessionMethod(ShowAuthenticationSessionMethodSchema):
+    """
+    Parser for: 
+        'show authentication sessions method {method} details'
+        'show authentication sessions method {method} interface {interface} details'
+        'show authentication sessions method {method} policy'
+    """
+    cli_command = ['show authentication sessions method {method} {details}',
+                   'show authentication sessions method {method} interface {interface} details']
+
+    def cli(self, method, details="", interface=None, output=None):
+        if output is None:
+            if interface:
+                cli = self.cli_command[1].format(method=method, interface=interface)
+            else:
+                cli = self.cli_command[0].format(method=method, details=details)
+            output = self.device.execute(cli)
+
+        # Interface:  GigabitEthernet2/0/3
+        p1 = re.compile(r'^Interface:\s+(?P<interface>\S+)$')
+
+        # IIF-ID:  0x1D8DDC61
+        p2 = re.compile(r'^IIF-ID:\s+(?P<iif_id>\S+)$')
+
+        # MAC Address:  001a.a136.c68a
+        p3 = re.compile(r'^MAC Address:\s+(?P<mac>\S+)$')
+
+        # IPv6 Address:  Unknown
+        # IPv4 Address:  192.168.194.1
+        # User-Name:  CP-7961G-GE-SEP001AA136C68A
+        # Device-type:  Cisco-IP-Phone-7961
+        # Device-name:  Cisco IP Phone 7961
+        # Status:  Authorized
+        # Domain:  VOICE
+        # Oper host mode:  multi-domain
+        # Oper control dir:  both
+        # Timeout action:  Reauthenticate
+        # Common Session ID: 2300130B0000002ABD0A2AF1
+        # Acct Session ID:  0x0000003c
+        # Handle:  0xdb000021
+        # Current Policy:  test_dot1x
+        p4 = re.compile(r'^(?P<key_name>IPv6 Address|IPv4 Address|User-Name|Device Type|Device Name|Status|Domain|Oper host mode|'
+                        r'Oper control dir|Timeout action|Common Session ID|Acct Session ID|Handle|Current Policy):\s+(?P<value>\S+)$')
+        
+        # Session timeout:  50s (server), Remaining: 27s
+        p5 = re.compile(r'^Session timeout:\s+(?P<server>\d+)s \(server\), Remaining: (?P<remaining>\d+)s$')
+        
+        # Server Policies:
+        p6 = re.compile(r'^Server Policies:$')
+
+        # Vlan Group:  Vlan: 194
+        p7 = re.compile(r'^Vlan Group:  Vlan: (?P<vlan_group>\d+)$')
+        
+        # Method status list:
+        p8 = re.compile(r'^Method status list:$')
+        
+        # Method           State
+        p9 = re.compile(r'^Method           State$')
+        
+        # dot1x           Authc Success
+        p10 = re.compile(r'^(?P<method>\S+)           (?P<state>[\S\s]+)$')
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Interface:  GigabitEthernet2/0/3
+            m = p1.match(line)
+            if m:
+                interface = m.groupdict()['interface']
+                continue
+
+            # IIF-ID:  0x1D8DDC60
+            m = p2.match(line)
+            if m:
+                iif_id = m.groupdict()['iif_id']
+                continue
+
+            # MAC Address:  001a.a136.c68a
+            m = p3.match(line)
+            if m:
+                mac = m.groupdict()['mac']
+                mac_dict = ret_dict.setdefault('mac', {}).setdefault(mac, {})
+                mac_dict['interface'] = interface
+                mac_dict['iif_id'] = iif_id
+                continue
+
+            # IPv6 Address:  Unknown
+            # IPv4 Address:  192.168.194.1
+            # User-Name:  CP-7961G-GE-SEP001AA136C68A
+            # Device-type:  Cisco-IP-Phone-7961
+            # Device-name:  Cisco IP Phone 7961
+            # Status:  Authorized
+            # Domain:  VOICE
+            # Oper host mode:  multi-domain
+            # Oper control dir:  both
+            # Timeout action:  Reauthenticate
+            # Common Session ID: 2300130B0000002ABD0A2AF0
+            # Acct Session ID:  0x0000003c
+            # Handle:  0xdb000020
+            # Current Policy:  test_dot1x
+            m = p4.match(line)
+            if m:
+                key = m.groupdict()['key_name'].lower().replace(' ', '_').replace('-', '_')
+                value = m.groupdict()['value']
+                mac_dict[key] = value
+                continue
+
+            # Session timeout:  50s (server), Remaining: 27s
+            m = p5.match(line)
+            if m:
+                session_dict = mac_dict.setdefault('session_timeout', {})
+                session_dict['server'] = int(m.groupdict()['server'])
+                session_dict['remaining'] = int(m.groupdict()['remaining'])
+                continue
+
+            # Server Policies:
+            m = p6.match(line)
+            if m:
+                server_policies_dict = mac_dict.setdefault('server_policies', {})
+                continue
+
+            # Vlan Group:  Vlan: 194
+            m = p7.match(line)
+            if m:
+                server_policies_dict['vlan_group'] = m.groupdict()['vlan_group']
+                continue
+
+            # Method status list:
+            m = p8.match(line)
+            if m:
+                method_status_dict = mac_dict.setdefault('method_status_list', {})
+                continue
+
+            # Method           State
+            m = p9.match(line)
+            if m:
+                continue
+
+            # dot1x           Authc Success
+            m = p10.match(line)
+            if m:
+                method_status_dict['method'] = m.groupdict()['method']
+                method_status_dict['state'] = m.groupdict()['state']
                 continue
 
         return ret_dict

@@ -6873,3 +6873,731 @@ class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightL2MirrorCommandStatus(Sho
                 continue
 
         return ret_dict
+
+
+class ShowPlatformHardwareFedSwitchFwdAsicInsightL2mRoutesSchema(MetaParser):
+    schema = {
+        'l2m_routes': {
+            'switch_gid': {
+                int: {
+                    'switch_cookie': int,
+                    'ip_version': int,
+                    'saddr': str,
+                    'gaddr': str,
+                    'l2_mcg_gid': int,
+                    'l2_mcg_cookie': str,
+                }
+            }
+        }
+    }
+
+class ShowPlatformHardwareFedSwitchFwdAsicInsightL2mRoutes(ShowPlatformHardwareFedSwitchFwdAsicInsightL2mRoutesSchema):
+    cli_command = "show platform hardware fed switch {switch_id} fwd-asic insight l2m_routes({switch_gid})"
+
+    def cli(self, switch_id, switch_gid, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(switch_id=switch_id, switch_gid=switch_gid))
+        
+        ret_dict = {}
+
+        # +------------+---------------+------------+-----------------------------------------+------------+------------+----------------+
+        # | switch-gid | switch-cookie | ip-version | saddr                                   | gaddr      | l2-mcg-gid | l2-mcg-cookie  |
+        # +------------+---------------+------------+-----------------------------------------+------------+------------+----------------+
+        # | 100        |      100      | 6          | ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff | ff1e::21:1 | 8271       | urid:0x20::657 |
+        # |            |               |            |                                         |            |            |                |
+        # +------------+---------------+------------+-----------------------------------------+------------+------------+----------------+
+        p1 = re.compile(
+            r"^\|\s*(?P<switch_gid>\d+)\s*\|\s*(?P<switch_cookie>\d+)\s*\|\s*(?P<ip_version>\d+)\s*\|\s*"
+            r"(?P<saddr>[\da-fA-F:]+)\s*\|\s*(?P<gaddr>[\da-fA-F:]+)\s*\|\s*(?P<l2_mcg_gid>\d+)\s*\|\s*"
+            r"(?P<l2_mcg_cookie>[\w:]+)\s*\|$"
+        )
+        
+        for line in output.splitlines():
+            line = line.strip()
+            # +------------+---------------+------------+-----------------------------------------+------------+------------+----------------+
+            # | switch-gid | switch-cookie | ip-version | saddr                                   | gaddr      | l2-mcg-gid | l2-mcg-cookie  |
+            # +------------+---------------+------------+-----------------------------------------+------------+------------+----------------+
+            # | 100        |      100      | 6          | ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff | ff1e::21:1 | 8271       | urid:0x20::657 |
+            # |            |               |            |                                         |            |            |                |
+            # +------------+---------------+------------+-----------------------------------------+------------+------------+----------------+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                switch_dict = ret_dict.setdefault('l2m_routes', {}).setdefault('switch_gid', {}).setdefault(int(group['switch_gid']), {})
+                switch_dict['switch_cookie'] = int(group['switch_cookie'])
+                switch_dict['ip_version'] = int(group['ip_version'])
+                switch_dict['saddr'] = group['saddr']
+                switch_dict['gaddr'] = group['gaddr']
+                switch_dict['l2_mcg_gid'] = int(group['l2_mcg_gid'])
+                switch_dict['l2_mcg_cookie'] = group['l2_mcg_cookie']
+                continue
+
+        return ret_dict
+
+
+class ShowPlatformHardwareFedSwitchFwdAsicInsightL2mGroupsSchema(MetaParser):
+    schema = {
+        'l2m_groups': {
+            'l2_mcg_gid': {
+                int: {
+                    'l2_mcg_cookie': str,
+                    'num_members': int,
+                    'replication_paradigm': str,
+                    'egress_counter_id': int,
+                    'egress_counter_data': list,
+                }
+            }
+        }
+    }
+
+
+class ShowPlatformHardwareFedSwitchFwdAsicInsightL2mGroups(ShowPlatformHardwareFedSwitchFwdAsicInsightL2mGroupsSchema):
+    cli_command = "show platform hardware fed switch {switch_id} fwd-asic insight l2m_groups({l2_mcg_gid})"
+
+    def cli(self, switch_id, l2_mcg_gid, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(switch_id=switch_id, l2_mcg_gid=l2_mcg_gid))
+        
+        ret_dict = {}
+
+        # +------------+----------------+-------------+----------------------+-------------------+---------------------+
+        # | l2-mcg-gid | l2-mcg-cookie  | num-members | replication-paradigm | egress-counter-id | egress-counter-data |
+        # +------------+----------------+-------------+----------------------+-------------------+---------------------+
+        # | 8271       | urid:0x20::657 | 1           |        EGRESS        | 0                 | [0,0]               |
+        # |            |                |             |                      |                   |                     |
+        # +------------+----------------+-------------+----------------------+-------------------+---------------------+
+        p1 = re.compile(
+            r"^\|\s*(?P<l2_mcg_gid>\d+)\s*\|\s*(?P<l2_mcg_cookie>[\w:]+)\s*\|\s*(?P<num_members>\d+)\s*\|\s*"
+            r"(?P<replication_paradigm>\w+)\s*\|\s*(?P<egress_counter_id>\d+)\s*\|\s*(?P<egress_counter_data>\[.*?\])\s*\|$"
+        )
+        
+        for line in output.splitlines():
+            line = line.strip()
+
+            # +------------+----------------+-------------+----------------------+-------------------+---------------------+
+            # | l2-mcg-gid | l2-mcg-cookie  | num-members | replication-paradigm | egress-counter-id | egress-counter-data |
+            # +------------+----------------+-------------+----------------------+-------------------+---------------------+
+            # | 8271       | urid:0x20::657 | 1           |        EGRESS        | 0                 | [0,0]               |
+            # |            |                |             |                      |                   |                     |
+            # +------------+----------------+-------------+----------------------+-------------------+---------------------+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                group_dict = ret_dict.setdefault('l2m_groups', {}).setdefault('l2_mcg_gid', {}).setdefault(int(group['l2_mcg_gid']), {})
+                group_dict['l2_mcg_cookie'] = group['l2_mcg_cookie']
+                group_dict['num_members'] = int(group['num_members'])
+                group_dict['replication_paradigm'] = group['replication_paradigm']
+                group_dict['egress_counter_id'] = int(group['egress_counter_id'])
+                group_dict['egress_counter_data'] = eval(group['egress_counter_data'])
+                continue
+
+        return ret_dict
+
+
+class ShowPlatformHardwareFedSwitchFwdAsicInsightIfmPortStatusSchema(MetaParser):
+    """Schema for:
+        show platform hardware fed switch {switch_id} fwd-asic insight ifm_port_status({system_port_gid})
+    """
+
+    schema = {
+        'sysport': {
+            Any(): {
+                'sysport_gid': int,
+                'port_type': str,
+                'status': str,
+                'mpp_port_id': int,
+                'rx_fc_mode': str,
+                'speed': float,
+                'sysport_cookie': str,
+                'tx_fc_mode': str,
+                'port_status_info': {
+                    'admin_state': str,
+                    'fec_mode': str,
+                    'loopback_mode': str,
+                    'link_mgmt': str,
+                    'prbs_mode': str,
+                    'full_duplex': str,
+                    'auto_neg': str,
+                    'link_state': str,
+                    'mtu': int
+                },
+                'serdes': str
+            }
+        }
+    }
+
+class ShowPlatformHardwareFedSwitchFwdAsicInsightIfmPortStatus(ShowPlatformHardwareFedSwitchFwdAsicInsightIfmPortStatusSchema):
+    """Parser for:
+       show platform hardware fed switch {switch_id} fwd-asic insight ifm_port_status({system_port_gid})
+    """
+
+    cli_command = "show platform hardware fed switch {switch_id} fwd-asic insight ifm_port_status({system_port_gid})"
+
+    def cli(self, switch_id, system_port_gid, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(switch_id=switch_id,system_port_gid=system_port_gid))
+        
+        ret_dict = {}
+
+        # | sysport_gid: 305        | port_type: MPP_PORT | status: EN-UP | mpp_port_id: 1 | rx_fc_mode: PAUSE | speed: 1.0          |
+        p1 = re.compile(r'^\|\s*sysport_gid:\s*(?P<sysport_gid>\d+)\s*\|\s*port_type:\s*(?P<port_type>\S+)\s*\|\s*status:\s*(?P<status>\S+)\s*\|\s*mpp_port_id:\s*(?P<mpp_port_id>\d+)\s*\|\s*rx_fc_mode:\s*(?P<rx_fc_mode>\S+)\s*\|\s*speed:\s*(?P<speed>\d+\.\d+)\s*\|$')
+
+        # | sysport_cookie: Gi2/0/9 |                     |               |                | tx_fc_mode: NONE  | admin_state: True   |
+        p2 = re.compile(r'^\|\s*sysport_cookie:\s*(?P<sysport_cookie>\S+)\s*\|\s*\|\s*\|\s*\|\s*tx_fc_mode:\s*(?P<tx_fc_mode>\S+)\s*\|\s*(?P<feature>\S+):\s*(?P<value>\S+)\s*\|$')
+
+        # | serdes:                 |                     |               |                |                   | fec_mode: NONE      |
+        p3 = re.compile(r'^\|\s*serdes:\s*(?P<serdes>\S*)\s*\|\s*\|\s*\|\s*\|\s*\|\s*(?P<feature>\S+):\s*(?P<value>\S+)\s*\|$')
+        
+        # |                         |                     |               |                |                   | auto_neg: False     |
+        # |                         |                     |               |                |                   | link_state: UP      |
+        p4 = re.compile(r'^\|\s*\|\s*\|\s*\|\s*\|\s*\|\s*(?P<feature>\S+):\s*(?P<value>[A-Za-z]+)\s*\|$')
+        
+        # |                         |                     |               |                |                   | mtu: 1522           |
+        p5 = re.compile(r'^\|\s*\|\s*\|\s*\|\s*\|\s*\|\s*(?P<feature>\S+):\s*(?P<value>\d+)\s*\|$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # | sysport_gid: 305        | port_type: MPP_PORT | status: EN-UP | mpp_port_id: 1 | rx_fc_mode: PAUSE | speed: 1.0          |
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                sysport_gid = int(group['sysport_gid'])
+                port_data = ret_dict.setdefault('sysport', {}).setdefault(sysport_gid, {})
+                port_data.update({
+                    'sysport_gid': sysport_gid,
+                    'port_type': group['port_type'],
+                    'status': group['status'],
+                    'mpp_port_id': int(group['mpp_port_id']),
+                    'rx_fc_mode': group['rx_fc_mode'],
+                    'speed': float(group['speed'])
+                })
+                continue
+
+            # | sysport_cookie: Gi2/0/9 |                     |               |                | tx_fc_mode: NONE  | admin_state: True   |
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                port_data['sysport_cookie'] = group['sysport_cookie']
+                port_data['tx_fc_mode'] = group['tx_fc_mode']
+                port_info = port_data.setdefault("port_status_info", {})
+                port_info[group['feature']] = group['value']
+                continue
+
+            # | serdes:                 |                     |               |                |                   | fec_mode: NONE      |
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                port_data['serdes'] = group['serdes']
+                port_info = port_data.setdefault("port_status_info", {})
+                port_info[group['feature']] = group['value']
+                continue
+
+            # |                         |                     |               |                |                   | auto_neg: False     |
+            # |                         |                     |               |                |                   | link_state: UP      |
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                port_info[group['feature']] = group['value']
+                continue
+
+            # |                         |                     |               |                |                   | mtu: 1522           |
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                port_info[group['feature']] = int(group['value'])
+                continue
+
+        return ret_dict
+
+
+class ShowPlatformHardwareFedSwitchFwdAsicInsightPortSerdesStatusSchema(MetaParser):
+    """Schema for:
+        show platform hardware fed switch {switch_id} fwd-asic insight ifm_port_serdes_status({system_port_gid})
+    """
+
+    schema = {
+        'port_info': {
+            Any(): {
+                'port_oid': int,
+                'sysport_gid': int,
+                'serdes': str,
+                Optional('port_cookie'): Or(str, None),
+                'lane_info': {
+                    'speed': float,
+                    'serdes_speed': float,
+                    'serdes_tx_ready': str,
+                    'serdes_rx_ready': str,
+                    'signal_strength_type': str,
+                    'signal_strength_val': float,
+                    'rx_ffe_taps': str,
+                    'lane': int,
+                    'signal_ok': str
+                }
+            }
+        }
+    }
+
+class ShowPlatformHardwareFedSwitchFwdAsicInsightPortSerdesStatus(ShowPlatformHardwareFedSwitchFwdAsicInsightPortSerdesStatusSchema):
+    """Parser for:
+        show platform hardware fed switch {switch_id} fwd-asic insight ifm_port_serdes_status({system_port_gid})
+    """
+
+    cli_command = "show platform hardware fed switch {switch_id} fwd-asic insight ifm_port_serdes_status({system_port_gid})"
+
+    def cli(self, switch_id, system_port_gid, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(switch_id=switch_id, system_port_gid=system_port_gid))
+        
+        ret_dict = {}
+
+        # | port_oid: 1910 |             | sysport_gid: 305 | serdes: 0/0/29-29 | speed: 1.0                       |
+        p1 = re.compile(r'^\|\s*port_oid:\s*(?P<port_oid>\d+)\s*\|\s*(?P<port_cookie>\S*)\s*\|\s*sysport_gid:\s*(?P<sysport_gid>\d+)\s*\|\s*serdes:\s*(?P<serdes>\S+)\s*\|\s*(?P<lane>\S+):\s*(?P<value>\S+)\s*\|$')
+        
+        # |                |             |                  |                   | serdes_rx_ready: True            |
+        # |                |             |                  |                   | signal_strength_type: SERDES_MSE |        
+        p2 = re.compile(r'^\|\s*\|\s*\|\s*\|\s*\|\s*(?P<lane>\S+):\s*(?P<value>[A-Za-z-_]+|N/A)\s*\|$')
+        
+        # |                |             |                  |                   | signal_strength_val: 184328.0    |
+        # |                |             |                  |                   | rx_ffe_taps: N/A                 |        
+        p3 = re.compile(r'^\|\s*\|\s*\|\s*\|\s*\|\s*(?P<lane>\S+):\s*(?P<value>\d+\.\d+)\s*\|$')
+        
+        # |                |             |                  |                   | lane: 0                          |
+        p4 = re.compile(r'^\|\s*\|\s*\|\s*\|\s*\|\s*(?P<lane>\S+):\s*(?P<value>\d+)\s*\|$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # | port_oid: 1910 |             | sysport_gid: 305 | serdes: 0/0/29-29 | speed: 1.0                       |
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                port_oid = int(group['port_oid'])
+                port_data = ret_dict.setdefault('port_info', {}).setdefault(port_oid, {})
+                port_data.update({
+                    'port_oid': int(group['port_oid']),
+                    'sysport_gid': int(group['sysport_gid']),
+                    'serdes': group['serdes'],
+                    'port_cookie': group['port_cookie'] if group['port_cookie'] else None
+                })
+                
+                lane_info = port_data.setdefault('lane_info', {})
+                lane_info[group["lane"]] = float(group["value"]) if group["lane"] == "speed" else group["value"]
+                continue
+
+            # |                |             |                  |                   | serdes_rx_ready: True            |
+            # |                |             |                  |                   | signal_strength_type: SERDES_MSE |
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                lane_info[group["lane"]] = group["value"]
+                continue
+
+            # |                |             |                  |                   | serdes_speed: 1.0                |
+            # |                |             |                  |                   | signal_strength_val: 184328.0    |
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                lane_info[group["lane"]] = float(group["value"])
+                continue
+
+            # |                |             |                  |                   | lane: 0                          |
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                lane_info[group["lane"]] = int(group["value"])
+                continue
+
+        return ret_dict
+
+
+class ShowPlatformHardwareFedSwitchFwdAsicInsightIfmPortAn37StatusSchema(MetaParser):
+    """Schema for show platform hardware fed switch {switch_id} fwd-asic insight ifm_port_an37_status({system_port_gid})"""
+
+    schema = {
+        'port_info': {
+            Any(): {
+                'port_oid': int,
+                'sysport_gid': int,
+                'sysport_cookie': str,
+                'serdes': str,
+                'mpp_port_idx': int,
+                'port_state': str,
+                'an37_mode': str,
+                'port_an37_info': {
+                    'port_speed': float,
+                    'full_duplex': str,
+                    'rx_state': int,
+                    'auto_neg_enabled': str,
+                    'an_completed': str,
+                    'link_status': str,
+                    'tx_state': int,
+                },
+            }
+        }
+    }
+
+class ShowPlatformHardwareFedSwitchFwdAsicInsightIfmPortAn37Status(ShowPlatformHardwareFedSwitchFwdAsicInsightIfmPortAn37StatusSchema):
+    """Parser for show platform hardware fed switch {switch_id} fwd-asic insight ifm_port_an37_status({system_port_gid})"""
+
+    cli_command = 'show platform hardware fed switch {switch_id} fwd-asic insight ifm_port_an37_status({system_port_gid})'
+
+    def cli(self, switch_id, system_port_gid, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(switch_id=switch_id, system_port_gid=system_port_gid))
+            
+        parsed_data = {}
+
+        # | port_oid: 1910 |             | sysport_gid: 305 | sysport_cookie: Gi2/0/9 | serdes: 0/0/29-29 | mpp_port_idx: 0 | port_state: LINK_UP | an37_mode: AN37_SGMII |     port_speed: 1.0     |
+        p1 = re.compile(r'^\|\s*port_oid:\s*(?P<port_oid>\d+)\s*\|\s*\|\s*sysport_gid:\s*(?P<sysport_gid>\d+)\s*\|\s*sysport_cookie:\s*(?P<sysport_cookie>\S+)\s*\|\s*serdes:\s*(?P<serdes>\S+)\s*\|\s*mpp_port_idx:\s*(?P<mpp_port_idx>\d+)\s*\|\s*port_state:\s*(?P<port_state>\S+)\s*\|\s*an37_mode:\s*(?P<an37_mode>\S+)\s*\|\s*(?P<port_an37_info>\S+):\s*(?P<value>\S+)\s*\|$')
+
+        # |                |             |                  |                         |                   |                 |                     |                       |    full_duplex: True    |
+        # |                |             |                  |                         |                   |                 |                     |                       | auto_neg_enabled: False |
+        p2 = re.compile(r'^\|\s*\|\s*\|\s*\|\s*\|\s*\|\s*\|\s*\|\s*\|\s*(?P<port_an37_info>\S+):\s*(?P<value>[A-Za-z-_]+)\s*\|$')
+
+        # |                |             |                  |                         |                   |                 |                     |                       |       tx_state: 0       |
+        p3 = re.compile(r'^\|\s*\|\s*\|\s*\|\s*\|\s*\|\s*\|\s*\|\s*\|\s*(?P<port_an37_info>\S+):\s*(?P<value>\d+)\s*\|$')
+
+        # |                |             |                  |                         |                   |                 |                     |                       |       rx_state: 2       |
+        # |                |             |                  |                         |                   |                 |                     |                       |       tx_state: 0       |
+        p4 = re.compile(r'^\|\s*\|\s*\|\s*\|\s*\|\s*\|\s*\|\s*\|\s*\|\s*(?P<port_an37_info>\S+):\s*(?P<value>\d+\.\d+)\s*\|$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # | port_oid: 1910 |             | sysport_gid: 305 | sysport_cookie: Gi2/0/9 | serdes: 0/0/29-29 | mpp_port_idx: 0 | port_state: LINK_UP | an37_mode: AN37_SGMII |     port_speed: 1.0     |
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                port_oid = int(group['port_oid'])
+                port_data = parsed_data.setdefault('port_info', {}).setdefault(port_oid, {})
+
+                port_data.update({
+                    'port_oid': int(group['port_oid']),
+                    'sysport_gid': int(group["sysport_gid"]),
+                    'sysport_cookie': group['sysport_cookie'],
+                    'serdes': group['serdes'],
+                    'mpp_port_idx': int(group["mpp_port_idx"]),
+                    'port_state': group['port_state'],
+                    'an37_mode': group['an37_mode']
+                })
+                port_an37_info = port_data.setdefault('port_an37_info', {})
+                port_an37_info[group["port_an37_info"]] = float(group["value"]) if group["port_an37_info"] == "port_speed" else group["value"]
+                
+                continue
+
+            # |                |             |                  |                         |                   |                 |                     |                       |   an_completed: False   |
+            # |                |             |                  |                         |                   |                 |                     |                       |     link_status: UP     |
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                port_an37_info[group["port_an37_info"]] = group["value"]
+                continue
+                
+            # |                |             |                  |                         |                   |                 |                     |                       |       rx_state: 2       |    
+            # |                |             |                  |                         |                   |                 |                     |                       |       tx_state: 0       |
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                port_an37_info[group["port_an37_info"]] = int(group["value"])
+                continue
+
+            # |                |             |                  |                         |                   |                 |                     |                       |       port_speed: 1.0       |
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                port_an37_info[group["port_an37_info"]] = float(group["value"])
+                continue
+
+        return parsed_data
+
+
+class ShowPlatformHardwareFedSwitchFwdAsicInsightIfmPortAnltStatusSchema(MetaParser):
+    """Schema for show platform hardware fed switch {switch_id} fwd-asic insight ifm_port_anlt_status({system_port_gid})"""
+
+    schema = {
+        'port_info': {
+            Any(): {
+                'port_oid': int,
+                'sysport_gid': int,
+                'sysport_cookie': str,
+                'serdes': str,
+                'port_state': str,
+                'auto_neg_enabled': str,
+                'anlt_mode': str,
+                'port_speed': float,
+                'fec_mode': str
+            }
+        }
+    }
+
+class ShowPlatformHardwareFedSwitchFwdAsicInsightIfmPortAnltStatus(ShowPlatformHardwareFedSwitchFwdAsicInsightIfmPortAnltStatusSchema):
+    """Parser for show platform hardware fed switch {switch_id} fwd-asic insight ifm_port_anlt_status({system_port_gid})"""
+
+    cli_command = 'show platform hardware fed switch {switch_id} fwd-asic insight ifm_port_anlt_status({system_port_gid})'
+
+    def cli(self, switch_id, system_port_gid, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(switch_id=switch_id, system_port_gid=system_port_gid))
+
+        parsed_data = {}
+
+        #|     1910 |             |         305 | Gi2/0/9        | 0/0/29-29 |  LINK_UP   |          False           |    NONE   |    1.0     |   NONE   |
+        p1 = re.compile(r'^\S\s+(?P<port_oid>\d+)\s+\S\s+(?P<port_cookie>\S*)\s+\S\s+(?P<sysport_gid>\d+)\s+\S\s+(?P<sysport_cookie>\S+)\s+\S\s+(?P<serdes>\S+)\s+\S\s+(?P<port_state>\S+)\s+\S\s+(?P<auto_neg_enabled>\S+)\s+\S\s+(?P<anlt_mode>\S+)\s+\S\s+(?P<port_speed>\S+)\s+\S\s+(?P<fec_mode>\S+)\s+\S$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # |     1910 |             |         305 | Gi2/0/9        | 0/0/29-29 |  LINK_UP   |          False           |    NONE   |    1.0     |   NONE   |
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                port_oid = int(group['port_oid'])
+                port_data = parsed_data.setdefault('port_info', {}).setdefault(port_oid, {})
+
+                port_data.update({
+                    'port_oid': int(group['port_oid']),
+                    'sysport_gid': int(group["sysport_gid"]),
+                    'sysport_cookie': group['sysport_cookie'],
+                    'serdes': group['serdes'],
+                    'port_state': group['port_state'],
+                    'auto_neg_enabled': group['auto_neg_enabled'],
+                    'anlt_mode': group['anlt_mode'],
+                    'port_speed': float(group['port_speed']),
+                    'fec_mode': group['fec_mode']
+                })
+                continue
+
+        return parsed_data
+
+
+class ShowPlatformHardwareFedSwitch1FwdAsicInsightIfmLagMembersSchema(MetaParser):
+    """Schema for 'show platform hardware fed switch {switch_id} fwd-asic insight ifm_lag_members({lag_gid})'"""
+    schema = {
+        'ifm_lag_members': {
+            Any(): {  
+                'lag_gid': int,
+                'member_index': int,
+                'port_type': str,
+                'port_id': int,
+                'rx_enabled': str,
+                'tx_enabled': str,
+                'weight': float,
+                'empty_lag_port': str,
+                'sysport_detail': {
+                    'sysport_gid': int,
+                    'sysport_cookie': str,
+                    'serdes': str 
+                }
+            }
+        }
+    }
+
+class ShowPlatformHardwareFedSwitch1FwdAsicInsightIfmLagMembers(ShowPlatformHardwareFedSwitch1FwdAsicInsightIfmLagMembersSchema):
+    """Parser for 'show platform hardware fed switch {switch_id} fwd-asic insight ifm_lag_members({lag_gid})'"""
+
+    cli_command = 'show platform hardware fed switch {switch_id} fwd-asic insight ifm_lag_members({lag_gid})'
+
+    def cli(self, switch_id, lag_gid, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(switch_id=switch_id, lag_gid=lag_gid))
+
+        parsed_data = {}
+        
+        # |      41 |      3       | MPP_PORT    |    2200 |    True    |    True    |  0.25  |     False      | {'sysport_gid': 85, 'sysport_cookie': 'Gi1/0/45', 'serdes': ''} |
+        p1 = re.compile(r'^\S\s+(?P<lag_gid>\d+)\s+\S\s+(?P<member_index>\d+)\s+\S\s+(?P<port_type>\S+)\s+\S\s+(?P<port_id>\d+)\s+\S\s+(?P<rx_enabled>\S+)\s+\S\s+(?P<tx_enabled>\S+)\s+\S\s+(?P<weight>[\d\.]+)\s+\S\s+(?P<empty_lag_port>\S+)\s+\S\s+\S\S+:\s+(?P<sysport_gid>\d+),\s+\S+\s+\S(?P<sysport_cookie>\w+\/\d\/\d)\S+\s+\S+\s+(?P<serdes>\S*)\S\s+\S$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # |      41 |      3       | MPP_PORT    |    2200 |    True    |    True    |  0.25  |     False      | {'sysport_gid': 85, 'sysport_cookie': 'Gi1/0/45', 'serdes': ''} |
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                lag_gid = f"{int(group['lag_gid'])}_{int(group['member_index'])}"
+                lag_data =parsed_data.setdefault('ifm_lag_members', {}).setdefault(lag_gid, {})
+                lag_data.update({
+                    'lag_gid': int(group['lag_gid']),
+                    'member_index': int(group['member_index']),
+                    'port_type': group['port_type'],
+                    'port_id': int(group['port_id']),
+                    'rx_enabled': group['rx_enabled'],
+                    'tx_enabled': group['tx_enabled'],
+                    'weight': float(group['weight']),
+                    'empty_lag_port': group['empty_lag_port']
+                })
+                
+                sysport_detail=lag_data.setdefault("sysport_detail",{})
+                sysport_detail.update({
+                    'sysport_gid': int(group['sysport_gid']),
+                    'sysport_cookie': group['sysport_cookie'],
+                    'serdes': group['serdes']
+                })
+                
+        return parsed_data
+
+
+class ShowPlatformHardwareFedSwitchFwdAsicInsightL2AttachmentCircuitStatusSchema(MetaParser):
+    """Schema for show platform hardware fed switch {switch_id} fwd-asic insight l2_attachment_circuit_status()"""
+    
+    schema = {
+        'l2_circuit_status': {
+            'l2_ace_info': {
+                Any(): {
+                    'ac_type': str,
+                    'eth_port_oid': int,
+                    'sysport_gid': int,
+                    'ac_gid': int,
+                    'sysport_cookie': str,
+                    'ac_cookie': str
+                }
+            },
+            'l3_ace_info': {
+                Any(): {
+                    'ac_type': str,
+                    'vlan_tag': int,
+                    'sysport_gid': int,
+                    'ac_gid': int,
+                    Optional('vlan_tag2'): int,
+                    'eth_port_oid': int,
+                    'sysport_cookie': str,
+                    Optional('ac_cookie'): str
+                }
+            },
+            'svi_ace_info': {
+                Any(): {
+                    'ac_type': str,
+                    'switch_gid': int,
+                    'vlan_tag': int,
+                    'svi_gid': int,
+                    'switch_cookie': int
+                }
+            }
+        }
+    }
+    
+class ShowPlatformHardwareFedSwitchFwdAsicInsightL2AttachmentCircuitStatus(ShowPlatformHardwareFedSwitchFwdAsicInsightL2AttachmentCircuitStatusSchema):
+    """Parser for show platform hardware fed switch {switch_id} fwd-asic insight l2_attachment_circuit_status()"""
+    
+    cli_command = 'show platform hardware fed switch {switch_id} fwd-asic insight l2_attachment_circuit_status()'
+
+    def cli(self, switch_id, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(switch_id=switch_id))
+
+        parsed_data = {}
+        
+        # | ac_type: L2-DENSE   |                    | eth_port_oid: 1440    | sysport_gid: 41          |
+        p1 = re.compile(r'^\S\s+ac_type:\s+(?P<ac_type>\S+)\s+\S\s+\S\s+eth_port_oid:\s+(?P<eth_port_oid>\d+)\s+\S\s+sysport_gid:\s+(?P<sysport_gid>\d+)\s+\S$')
+
+        # | ac_gid: 122880      |                    |                       | sysport_cookie: Gi1/0/1  |
+        p2 = re.compile(r'^\S\s+ac_gid:\s+(?P<ac_gid>\d+)\s+\S\s+\S\s+\S\s+sysport_cookie:\s+(?P<sysport_cookie>\S+)\s+\S$')
+        
+        #| ac_cookie: Gi1/0/1  |                    |                       |                          |
+        p3 = re.compile(r'^\S\s+ac_cookie:\s+(?P<ac_cookie>\S+)\s+\S\s+\S\s+\S\s+\S$')
+        
+        #| ac_type: L3         |                    | vlan_tag: 1           | sysport_gid: 10          |
+        p1_1 = re.compile(r'^\S\s+ac_type:\s+(?P<ac_type>\S+)\s+\S\s+\S\s+vlan_tag:\s+(?P<vlan_tag>\d+)\s+\S\s+sysport_gid:\s+(?P<sysport_gid>\d+)\s+\S$')
+        
+        #| ac_gid: 4098        |                    | eth_port_oid: 578     | sysport_cookie: Re1      |
+        p2_1 = re.compile(r'^\S\s+ac_gid:\s+(?P<ac_gid>\d+)\s+\S\s+\S\s+eth_port_oid:\s+(?P<eth_port_oid>\d+)\s+\S\s+sysport_cookie:\s+(?P<sysport_cookie>\S+)\s+\S$')
+        
+        #| ac_gid: 4135        |                    | vlan_tag2: 4001       | sysport_cookie: Re1      |
+        p2_2 = re.compile(r'^\S\s+ac_gid:\s+(?P<ac_gid>\d+)\s+\S\s+\S\s+vlan_tag2:\s+(?P<vlan_tag2>\d+)\s+\S\s+sysport_cookie:\s+(?P<sysport_cookie>\S+)\s+\S$')
+
+        # |                     |                    | eth_port_oid: 578     |                          |
+        p3_2 = re.compile(r'^\S\s+\S\s+\S\s+eth_port_oid:\s+(?P<eth_port_oid>\d+)\s+\S\s+\S$')
+        
+        #| ac_type: SVI        | switch_gid: 1      | vlan_tag: 1           |                          |
+        p4 = re.compile(r'^\S\s+ac_type:\s+(?P<ac_type>\S+)\s+\S\s+switch_gid:\s+(?P<switch_gid>\d+)\s+\S\s+vlan_tag:\s+(?P<vlan_tag>\d+)\s+\S\s+\S$')
+        
+        #| svi_gid: 1          | switch_cookie: 1   |                       |                          |
+        p5 = re.compile(r'^\S\s+svi_gid:\s+(?P<svi_gid>\d+)\s+\S\s+switch_cookie:\s+(?P<switch_cookie>\d+)\s+\S\s+\S\s+\S$')
+
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # | ac_type: L2-DENSE   |                    | eth_port_oid: 1440    | sysport_gid: 41          |
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                eth_port_oid= int(group['eth_port_oid'])
+                port_data = parsed_data.setdefault('l2_circuit_status', {}).setdefault("l2_ace_info",{}).setdefault(eth_port_oid, {})
+                port_data["ac_type"]=group['ac_type']
+                port_data["eth_port_oid"]= int(group['eth_port_oid'])
+                port_data["sysport_gid"]=int(group['sysport_gid'])
+                
+                
+                continue
+            # | ac_gid: 122880      |                    |                       | sysport_cookie: Gi1/0/1  |
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()  
+                port_data["ac_gid"]=int(group['ac_gid'])
+                port_data["sysport_cookie"]=group['sysport_cookie']
+                continue
+                
+            # | ac_cookie: Gi1/0/1  |                    |                       |                          |
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()  
+                port_data["ac_cookie"]=group['ac_cookie']
+                continue
+                
+            # | ac_type: L3         |                    | vlan_tag: 1           | sysport_gid: 10          |
+            m = p1_1.match(line)
+            if m:
+                group = m.groupdict()
+                vlan_tag= int(group['vlan_tag'])
+                port_data = parsed_data.setdefault('l2_circuit_status', {}).setdefault("l3_ace_info",{}).setdefault(vlan_tag, {})
+                port_data["ac_type"]=group['ac_type']
+                port_data["vlan_tag"]= int(group['vlan_tag'])
+                port_data["sysport_gid"]=int(group['sysport_gid'])
+                continue
+                
+            # | ac_gid: 4098        |                    | eth_port_oid: 578     | sysport_cookie: Re1      |
+            m = p2_1.match(line)
+            if m:
+                group = m.groupdict()  
+                port_data["ac_gid"]=int(group['ac_gid'])
+                port_data["eth_port_oid"]= int(group['eth_port_oid'])
+                port_data["sysport_cookie"]=group['sysport_cookie']
+                continue
+                
+            # | ac_gid: 4135        |                    | vlan_tag2: 4001       | sysport_cookie: Re1      |
+            m = p2_2.match(line)
+            if m:
+                group = m.groupdict()  
+                port_data["ac_gid"]=int(group['ac_gid'])
+                port_data["vlan_tag2"]= int(group['vlan_tag2'])
+                port_data["sysport_cookie"]=group['sysport_cookie']
+                continue
+
+            # |                     |                    | eth_port_oid: 578     |                          |
+            m = p3_2.match(line)
+            if m:
+                group = m.groupdict()  
+                port_data["eth_port_oid"]=int(group['eth_port_oid'])
+                continue
+                
+            #| ac_type: SVI        | switch_gid: 1      | vlan_tag: 1           |                          |
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()  
+                switch_gid= int(group['switch_gid'])
+                port_data = parsed_data.setdefault('l2_circuit_status', {}).setdefault("svi_ace_info",{}).setdefault(switch_gid, {})
+                port_data["ac_type"]=group['ac_type']
+                port_data["switch_gid"]= int(group['switch_gid'])
+                port_data["vlan_tag"]=int(group['vlan_tag'])
+                continue
+                
+            #| svi_gid: 1          | switch_cookie: 1   |                       |                          |
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()  
+                port_data["svi_gid"]=int(group['svi_gid'])
+                port_data["switch_cookie"]=int(group['switch_cookie'])
+                continue
+                
+        return parsed_data

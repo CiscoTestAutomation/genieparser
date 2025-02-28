@@ -1,0 +1,64 @@
+
+NAME: "c38xx Stack", DESCR: "c38xx Stack"
+PID: WS-C3850-24P-E    , VID: V01  , SN: FCW1932D0LB
+
+NAME: "Switch 1", DESCR: "WS-C3850-24P-E"
+PID: WS-C3850-24P-E    , VID: V01  , SN: FCW1932D0LB
+
+NAME: "StackPort1/1", DESCR: "StackPort1/1"
+PID: STACK-T1-50CM     , VID: V01  , SN: LCC1921G11G
+
+NAME: "StackPort1/2", DESCR: "StackPort1/2"
+PID: STACK-T1-50CM     , VID: V01  , SN: LCC1921G250
+
+NAME: "Switch 1 - Power Supply A", DESCR: "Switch 1 - Power Supply A"
+PID: C3KX-PWR-715WAC   , VID: V01  , SN: LIT14291MTJ
+
+NAME: "Switch 2", DESCR: "WS-C3850-24P-E"
+PID: WS-C3850-24P-E    , VID: V04  , SN: FOC1932X0K1
+
+NAME: "StackPort2/1", DESCR: "StackPort2/1"
+PID: STACK-T1-50CM     , VID: V01  , SN: MOC1932A0BU
+
+NAME: "StackPort2/2", DESCR: "StackPort2/2"
+PID: STACK-T1-50CM     , VID: V01  , SN: LCC1921G10J
+
+NAME: "Switch 2 - Power Supply A", DESCR: "Switch 2 - Power Supply A"
+PID: C3KX-PWR-715WAC   , VID: V01  , SN: LIT15090DUL
+
+NAME: "Switch 3", DESCR: "WS-C3850-24P-E"
+PID: WS-C3850-24P-E    , VID: V04  , SN: FCW1932C0MA
+
+NAME: "StackPort3/1", DESCR: "StackPort3/1"
+PID: STACK-T1-50CM     , VID: V01  , SN: LCC1921G10J
+
+NAME: "StackPort3/2", DESCR: "StackPort3/2"
+PID: STACK-T1-50CM     , VID: V01  , SN: LCC1921G106
+
+NAME: "Switch 3 - Power Supply A", DESCR: "Switch 3 - Power Supply A"
+PID: PWR-C1-715WAC     , VID: V01  , SN: LIT19220MG1
+
+NAME: "Switch 4", DESCR: "WS-C3850-24P-E"
+PID: WS-C3850-24P-E    , VID: V04  , SN: FCW1932D0L0
+
+NAME: "StackPort4/1", DESCR: "StackPort4/1"
+PID: STACK-T1-50CM     , VID: V01  , SN: LCC1921G250
+
+NAME: "StackPort4/2", DESCR: "StackPort4/2"
+PID: STACK-T1-50CM     , VID: V01  , SN: MOC1932A0BU
+
+NAME: "Switch 4 - Power Supply A", DESCR: ""
+PID: C3KX-PWR-715WAC   , VID: V01  , SN: LIT15140DEP
+
+NAME: "Switch 5", DESCR: "WS-C3850-24P-E"
+PID: WS-C3850-24P-E    , VID: V04  , SN: FOC1932X0F9
+
+NAME: "StackPort5/1", DESCR: "StackPort5/1"
+PID: STACK-T1-50CM     , VID: V01  , SN: LCC1921G106
+
+NAME: "StackPort5/2", DESCR: "StackPort5/2"
+PID: STACK-T1-50CM     , VID: V01  , SN: LCC1921G11G
+
+NAME: "Switch 5 - Power Supply A", DESCR: "Switch 5 - Power Supply A"
+PID: PWR-C1-715WAC     , VID: V01  , SN: LIT17130ZDU
+        

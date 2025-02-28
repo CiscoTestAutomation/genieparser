@@ -46,7 +46,8 @@ class ShowHardwareLedSchema(MetaParser):
                 'fantray_status': str,
                 'fantray_beacon': str,
                 'model': str,
-                'system': str
+                'system': str,
+                Optional('beacon'): str
             }
         },
         Optional('line_card'): {
@@ -74,7 +75,8 @@ class ShowHardwareLedSchema(MetaParser):
         Optional('fantray_status'): str,
         Optional('fantray_beacon'): str,
         Optional('model'): str,
-        Optional('system'): str
+        Optional('system'): str,
+        Optional('beacon'): str
     }
                   
 class ShowHardwareLed(ShowHardwareLedSchema):
@@ -105,7 +107,7 @@ class ShowHardwareLed(ShowHardwareLedSchema):
         p5 = re.compile(r'^BEACON:\s+(?P<beacon>.+)$')
 
         # STATUS: GREEN
-        p6 = re.compile(r'^STATUS:\s+(?P<status>\w+)$')
+        p6 = re.compile(r'^STATUS:\s+(?P<status>.+)$')
 
         # MODULE: slot 3
         p7 = re.compile(r'^MODULE:\s*slot\s*(?P<supervisor>\d+)$')
@@ -125,6 +127,7 @@ class ShowHardwareLed(ShowHardwareLedSchema):
         ret_dict = {}
         root_dict = {}
         system_flag = False
+        beacon_flag = False
         for line in output.splitlines():
             line = line.strip()
             
@@ -132,6 +135,7 @@ class ShowHardwareLed(ShowHardwareLedSchema):
             m = p0.match(line)
             if m:
                 system_flag = False
+                beacon_flag = False
                 root_dict = ret_dict.setdefault('switch', {}).setdefault(int(m.groupdict()['switch_num']), {})
                 continue
 
@@ -155,6 +159,7 @@ class ShowHardwareLed(ShowHardwareLedSchema):
             # Line Card : 1
             m = p3.match(line)
             if m:
+                beacon_flag = True
                 card_dict = root_dict.setdefault('line_card', {}).setdefault(int(m.groupdict()['line_card']), {})
                 continue
 
@@ -172,7 +177,10 @@ class ShowHardwareLed(ShowHardwareLedSchema):
             # BEACON: OFF
             m = p5.match(line)
             if m:
-                card_dict['beacon'] = m.groupdict()['beacon']
+                if beacon_flag:
+                    card_dict['beacon'] = m.groupdict()['beacon']
+                    continue
+                root_dict['beacon'] = m.groupdict()['beacon']
                 continue
 
             # STATUS: GREEN
@@ -191,6 +199,7 @@ class ShowHardwareLed(ShowHardwareLedSchema):
             m = p8.match(line)
             if m:
                 system_flag = True
+                beacon_flag = True
                 card_dict = root_dict.setdefault('supervisor', {}).setdefault(m.groupdict()['status'].lower(), {})
                 card_dict['slot'] = int(supervisor)
                 continue

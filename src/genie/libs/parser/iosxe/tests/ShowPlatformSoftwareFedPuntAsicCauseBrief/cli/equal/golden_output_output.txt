@@ -1,0 +1,35 @@
++-----------------------------------------------------------------------------------+
+| Source |         Cause        |           Rx            |           Drop          |
+|        |                      |     cur    |    delta   |     cur    |    delta   |
++-----------------------------------------------------------------------------------+
+   UKNWN   UNKNOWN                        47           47           47           47
+   INMIR   EPC                             9            9            0            0
+   INMIR   ARP MIRROR                1092039      1092039            0            0
+   INMIR   DHCP MIRROR               1493428      1493428            0            0
+    LPTS   ICMP IPv4                     409          409            0            0
+    LPTS   OSPF v2 MC                 334089       334089            0            0
+    LPTS   OSPF v2 UC                    441          441            0            0
+    LPTS   DHCPv4 C to S                  12           12           12           12
+    LPTS   IPv4 MC                       341          341            0            0
+    LPTS   UDP default IPv4              432          432            0            0
+    LPTS   ICMP IPv6 MC                16408        16408            0            0
+    LPTS   OSPF v3 MC                    862          862            0            0
+    LPTS   DHCPv6 C to S                5622         5622         5622         5622
+    LPTS   IPv6 Options                19260        19260            0            0
+    LPTS   IPv6 MC                        40           40            0            0
+   ITRAP   CISCO Protocols            525860       525860            0            0
+   ITRAP   DHCP Client(v4)               264          264            0            0
+   ITRAP   DHCP Server(v4)              3645         3645            0            0
+   ITRAP   DHCP Server(v6)                42           42            0            0
+   ITRAP   LLDP                        53864        53864            0            0
+   ITRAP   STP(IEEE)                  799679       799679            0            0
+   ITRAP   LACP                        10971        10971            0            0
+   ITRAP   GLEAN-SUBNET                  217          217            0            0
+   ITRAP   IGMP l2 lpts                   92           92            1            1
+   ITRAP   MDNS                         1824         1824            0            0
+   ITRAP   ARP Snooping                 1616         1616            0            0
+   ITRAP   DHCP Snooping                4855         4855            0            0
+   ITRAP   SISF                          341          341            0            0
+   EGMIR   EPC                            14           14            0            0
+   EGMIR   ACL MIRROR                   1211         1211            0            0
+   ETRAP   Egres DHCP Snooping            13           13            0            0

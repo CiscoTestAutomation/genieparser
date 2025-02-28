@@ -1,0 +1,28 @@
+
+show version
+Cisco Internetwork Operating System Software 
+IOS (tm) Catalyst 4000 L3 Switch Software (cat4000-I9S-M), Version 12.2(18)EW5, RELEASE SOFTWARE (fc1)
+Technical Support: http://www.cisco.com/techsupport
+Copyright (c) 1986-2005 by cisco Systems, Inc.
+Compiled Wed 07-Sep-05 11:16 by someone
+Image text-base: 0x00000000, data-base: 0x010BF898
+    
+ROM: 12.2(20r)EW1
+Dagobah Revision 95, Swamp Revision 6
+    
+GENIE123123 uptime is 1 years, 2 weeks, 3 days, 4 hours, 5 minutes
+System returned to ROM by RPR Switchover
+System restarted at 13:54:51 CET Sun Apr 15 2007
+System image file is "bootflash:cat4000-i9s-mz.122-18.EW5.bin"
+    
+cisco WS-C4507R (MPC8245) processor (revision 8) with 524288K bytes of memory.
+Processor board ID FOX093206HY
+Last reset from Reload
+2 Virtual Ethernet/IEEE 802.3  interface(s)
+244 Gigabit Ethernet/IEEE 802.3 interface(s)
+511K bytes of non-volatile configuration memory.
+    
+Configuration register is 0x2102
+    
+GENIE123123#
+    

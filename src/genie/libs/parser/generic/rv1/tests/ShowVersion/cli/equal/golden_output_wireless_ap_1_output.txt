@@ -1,0 +1,26 @@
+cisco AIR-AP4800-B-K9 ARMv7 Processor rev 1 (v7l) with 1028192/534728K bytes of
+memory.
+Processor board ID FCW2233NGVK
+AP Running Image : 17.12.0.78
+Primary Boot Image : 17.12.0.78
+Backup Boot Image : 17.13.0.33
+Primary Boot Image Hash: e10b9d9ecb375be57f2b4322fefccc734
+f5a9eb732b6118a3ce08dc
+0b9336f2e2064e21061e1c563b4aca7ccdfd6e17dc6913dac5014b9e945a02611c40b5256
+Backup Boot Image Hash: 7da06543e96f9740400141eb97dd1e3afdc3a727ae09c25f9182727
+6b936f0cb7d10552e31
+0b04d9cdc418a72a4242866d6b664484c3181742910e6ffcdb1513
+1 Multigigabit Ethernet interfaces
+1 Gigabi
+t Ethernet interfaces
+3 802.11 Radios
+Radio Driver version : 9.0.5.5-W8964
+Radio FW version : 9.1.8.1
+NSS FW version : 2.4.31
+Base ethernet MAC Address : F4:DB:E6:43:91:0C
+Part Number : 73-018776-02
+PCA Assembly Number : 000-00000-00
+PCA
+Revision Number :
+PCB Serial Number : FOC22331D4W
+--More--

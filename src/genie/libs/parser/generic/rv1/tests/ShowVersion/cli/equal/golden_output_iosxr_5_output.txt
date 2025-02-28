@@ -1,0 +1,16 @@
+Wed Dec  8 10:34:38.634 PST
+Cisco IOS XR Software, Version 7.5.1.20I LNT
+Copyright (c) 2013-2021 by Cisco Systems, Inc.
+
+Build Information:
+ Built By     : ingunawa
+ Built On     : Sat Sep 11 00:09:19 UTC 2021
+ Build Host   : iox-lnx-011
+ Workspace    : /auto/iox-lnx-011-san2/prod/7.5.1.20I.SIT_IMAGE/ncs540l/ws
+ Version      : 7.5.1.20I
+ Label        : 7.5.1.20I-PROD_BUILD_7_5_1_20I_SIT_IMAGE
+
+cisco NCS540L (C3708 @ 1.70GHz)
+cisco N540-28Z4C-SYS-A (C3708 @ 1.70GHz) processor with 8GB of memory
+tb7-r4 uptime is 4 weeks, 4 days, 22 hours, 30 minutes
+Cisco NCS 540 Series Fixed Router 28x1/10G, 4x100G, AC Chassis

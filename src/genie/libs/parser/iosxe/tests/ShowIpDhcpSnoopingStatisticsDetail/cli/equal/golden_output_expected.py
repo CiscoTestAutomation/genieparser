@@ -1,0 +1,20 @@
+expected_output =  {
+    'dhcp_snooping_packets': 0,
+    'packets_dropped_because': {
+        'idb_not_known': 0,
+        'insertion_of_opt82_fail': 0,
+        'interface_down': 0,
+        'interface_is_in_errdisabled': 0,
+        'misdirected_packets': 0,
+        'no_binding_entry': 0,
+        'nonzero_giaddr': 0,
+        'packets_with_invalid_option': 0,
+        'packets_with_invalid_size': 0,
+        'queue_full': 0,
+        'rate_limit_exceeded': 0,
+        'received_on_untrusted_ports': 0,
+        'source_mac_not_equal_to_chaddr': 0,
+        'unknown_output_interface': 0,
+        'unknown_packet': 0,
+    },
+}

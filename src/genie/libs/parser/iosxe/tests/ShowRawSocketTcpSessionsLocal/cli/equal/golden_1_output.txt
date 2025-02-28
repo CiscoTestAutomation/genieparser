@@ -1,0 +1,6 @@
+------------------- Locally configured TCP client State --------------------
+Interface  tty  dest_ip         dest_port  local_ip        local_port  state
+Lo7        49   40.1.1.1          5000     50.1.1.1          4000      DOWN
+Lo7        49   40.1.1.1          5001     50.1.1.1          4010      UP
+Lo6        50   40.1.1.1          5001     50.1.1.1          4011      UP
+0/3/0      50   40.1.1.1          5000     50.1.1.1          4544      DOWN

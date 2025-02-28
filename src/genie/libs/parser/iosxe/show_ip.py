@@ -64,7 +64,9 @@ IOSXE parsers for the following show commands:
     * show nhrp stats detail
     * show nhrp stats {tunnel} detail
     * show ip dhcp binding
-    * show ip dhcp binding vrf {vrf_name}
+    * show ip dhcp binding vrf {vrf_name} 
+    * show ip dhcp binding vrf {vrf_name} {ip_address}
+    * show ip dhcp binding {ip_address}
     * show ip dhcp binding | count Active
     * show ip nhrp summary
     * show ip dhcp snooping binding | include Total number of bindings
@@ -3268,6 +3270,8 @@ class ShowIpDhcpBindingSchema(MetaParser):
     """
     Schema for show ip dhcp binding
                show ip dhcp binding vrf {vrf_name}
+               show ip dhcp binding vrf {vrf_name} {ip_address}
+               show ip dhcp binding {ip_address}
     """
     schema = {
         Optional('dhcp_binding'): {
@@ -3286,14 +3290,21 @@ class ShowIpDhcpBinding(ShowIpDhcpBindingSchema):
 
     ''' Parser for "show ip dhcp binding"
                    " show ip dhcp binding vrf {vrf_name}"
+                   "show ip dhcp binding vrf {vrf_name} {ip_address}"
+                   "show ip dhcp binding {ip_address}"
     '''
-    cli_command = ['show ip dhcp binding', 'show ip dhcp binding vrf {vrf_name}']
+    cli_command = ['show ip dhcp binding', 'show ip dhcp binding vrf {vrf_name}', 
+                   'show ip dhcp binding vrf {vrf_name} {ip_address}', 'show ip dhcp binding {ip_address}']
 
     # Defines a function to run the cli_command
-    def cli(self, vrf_name='', output=None):
+    def cli(self, vrf_name='', ip_address='', output=None):
         if output is None:
             if vrf_name:
                 cmd = self.cli_command[1].format(vrf_name=vrf_name)
+            elif vrf_name and ip_address:
+                cmd = self.cli_command[2].format(vrf_name=vrf_name, ip_address=ip_address)   
+            elif ip_address:
+                cmd = self.cli_command[3].format(ip_address=ip_address)   
             else:
                 cmd = self.cli_command[0]
 
@@ -8110,6 +8121,159 @@ class ShowIpSourceBinding(ShowIpSourceBindingSchema):
             m = p2.match(line)
             if m:
                 ret_dict['total_bindings'] = int(m.group('total_bindings'))
+                continue
+
+        return ret_dict
+  
+# ========================================================
+# Schema for 'show ip dhcp import'
+# ========================================================
+class ShowIPDhcpImportSchema(MetaParser):
+    """Schema for 'show ip dhcp import'"""
+    schema = {
+        'address_pool_name': str,
+        'class_name': str,
+    }
+
+# ========================================================
+# Parser for 'show ip dhcp import'
+# ========================================================
+class ShowIPDhcpImport(ShowIPDhcpImportSchema):
+    """Parser for:
+       show ip dhcp import
+    """
+    
+    cli_command = 'show ip dhcp import'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        # Initialize the return dictionary
+        ret_dict = {}
+        #test1
+        p1 = re.compile(r'Address Pool Name:\s+(?P<address_pool_name>\S+)')
+        #TEST-CPE-1
+        p2 = re.compile(r'Class Name:\s+(?P<class_name>\S+)')
+
+        # Parse the output
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Address Pool Name: test1
+            m1 = p1.match(line)
+            if m1:
+                ret_dict['address_pool_name'] = m1.group('address_pool_name')
+
+            # Class Name: TEST-CPE-1
+            m2 = p2.match(line)
+            if m2:
+                ret_dict['class_name'] = m2.group('class_name')
+
+        return ret_dict
+      
+# ==============================
+# Schema for 'show ip dhcp conflicts'
+# ==============================
+class ShowIpDhcpConflictSchema(MetaParser):
+    """
+    Schema for:
+     show ip dhcp conflict
+    """
+    schema = {
+        'index': {
+            Any(): {
+                'ip_address': str, # IP address
+                'detect_method': str, # Detection method for the conflict
+                'detect_time': str,  # Time of detection of the conflict
+                Optional('vrf'): str, # VRF name
+            },
+        },
+    }
+    
+
+# ==============================
+# Parser for 'show ip dhcp conflicts'
+# ==============================
+
+class ShowIpDhcpConflict(ShowIpDhcpConflictSchema):
+    """
+    Parser for:
+    show ip dhcp conflict
+    """
+    cli_command = 'show ip dhcp conflict'
+    
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # Initialize the dictionary for parsed output
+        parsed_dict = {}
+        index = 1
+
+        # Regex pattern for extracting information
+        # 192.168.1.1                       ping                      Feb 07 2025 03:26           Mgmt-vrf  
+        p1 = re.compile(r'(?P<ip_address>\S+)\s+(?P<detect_method>\S+)\s+(?P<detect_time>.+?)(?:\s+(?P<vrf>\S+))?$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            # Skip header line or empty lines
+            if not line or line.startswith("IP address"):
+                continue
+            # 192.168.1.1                       ping                      Feb 07 2025 03:26           Mgmt-vrf
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                index_dict = parsed_dict.setdefault('index', {}).setdefault(index, {})
+                index_dict['ip_address'] = group['ip_address']
+                index_dict['detect_method'] = group['detect_method']
+                index_dict['detect_time'] = group['detect_time']
+                if group.get('vrf'):
+                    index_dict['vrf'] = group['vrf']
+
+                index += 1
+
+        return parsed_dict
+
+    
+# ===========================================
+# Schema for 'show ip policy
+# ===========================================
+class ShowIpPolicySchema(MetaParser):
+    """Schema for show ip policy"""
+    schema = {
+                'interface': str, #name of interface
+                'route_map': str, #name of route-map
+            }
+
+# ===========================================
+# Parser for 'show ip policy
+# ===========================================
+class ShowIpPolicy(ShowIpPolicySchema):
+    '''
+    Parser for:
+    show ip policy
+    '''
+    cli_command = ['show ip policy']
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        # interface Gi5          route-map AAA
+        p1 = re.compile(r'^(?P<interface>\S+)\s+(?P<route_map>\S+)$')
+
+        # Initialize the dictionary for parsed output
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+            # interface Gi5          route-map AAA
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['interface'] = group['interface']
+                ret_dict['route_map'] = group['route_map']
                 continue
 
         return ret_dict

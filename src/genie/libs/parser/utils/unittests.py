@@ -634,7 +634,7 @@ class ParserTest(aetest.Testcase):
 
                     # Write actual output to file
                     with open(f"{folder_root}/{user_test}_actual.json", "w") as f:
-                        f.write(parsed_json_data)
+                        json.dump(parsed_output, f, indent=4)
 
                     # Display device output, parsed output, and golden_output of failed tests
                     log.info(banner("The following is the actual raw output"))
@@ -743,6 +743,9 @@ class ParserTest(aetest.Testcase):
                         f"{folder_root}/{user_test}_arguments.json")
                 device = Mock(**empty_output)
                 obj = local_class(device=device)
+                spec = getfullargspec(obj.cli)
+                if 'command' in spec.args:
+                    arguments['command'] = ''
                 try:
                     obj.parse(**arguments)
                     # if -f flag provided, then add the screen handler back into

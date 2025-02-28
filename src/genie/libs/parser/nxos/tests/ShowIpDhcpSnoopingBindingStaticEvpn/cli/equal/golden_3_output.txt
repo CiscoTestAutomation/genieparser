@@ -1,0 +1,6 @@
+MacAddress         IpAddress        Lease(Sec)  Type      BD    Interface           anchor       Freeze
+-----------------  ---------------  --------  ----------  ----  -------------      -------    -----------
+00:10:01:13:01:01  100.10.1.30      infinite  static      1001  port-channel11       YES       NONE
+00:10:01:13:01:02  100.10.1.31      infinite  static      1001  port-channel11       YES       NONE
+00:10:01:13:01:03  100.10.1.32      infinite  static      1001  port-channel11       YES       NONE
+00:10:01:13:01:04  100.10.1.33      infinite  static      1001  port-channel11       YES       NONE

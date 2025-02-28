@@ -1,0 +1,22 @@
+Mod Ports                  Module-Type                            Model           Status
+--- ----- ------------------------------------------------ --------------------- --------
+1    36   36x40/100G QSFP28 Ethernet Module                N9K-C9336C-K1         ok        
+27   0    Virtual Supervisor Module                        N9K-vSUP              active *  
+
+Mod  Sw                       Hw    Slot
+---  ----------------------- ------ ----
+1    NA                       0.0    LC1 
+27   NA                       0.0    SUP1
+
+
+Mod  MAC-Address(es)                         Serial-Num
+---  --------------------------------------  ----------
+1    00-00-aa-bb-01-01 to 00-00-aa-bb-01-91  9S0QK8UHWPD
+27   00-00-aa-bb-1b-01 to 00-00-aa-bb-1b-12  9RZKKHXKJPB
+
+Mod  Online Diag Status
+---  ------------------
+1    Pass
+27   Pass
+
+* this terminal session

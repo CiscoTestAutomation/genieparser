@@ -1,0 +1,16 @@
+
+        user2@JunosHostname-1> show version 
+        fpc0:
+        --------------------------------------------------------------------------
+        Hostname: JunosHostname-1
+        Model: ex4200-24p
+        Junos: 18.2R2-S1
+        JUNOS EX  Software Suite [18.2R2-S1]
+        JUNOS FIPS mode utilities [18.2R2-S1]
+        JUNOS Crypto Software Suite [18.2R2-S1]
+        JUNOS Online Documentation [18.2R2-S1]
+        JUNOS Phone-Home Software Suite [18.2R2-S1]
+
+        {master:0}
+        user1@JunosHostname-1> 
+        

@@ -1,0 +1,18 @@
+RP/0/RSP1/CPU0:pp-r1-POD41#admin show diag chassis
+Tue Jul 30 22:58:33.148 UTC
+
+Diag Information For : 0
+  
+ Rack 0-IDPROM Info
+    Controller Family        : 00ef
+    Controller Type          : 02f5
+    PID                      : ASR-9910
+    Version Identifier       : V02
+    UDI Description          : ASR 9910 8 Line Card Slot Chassis
+    Top Assy. Part Number    : 68-5774-02
+    Top Assy. Revision       : E0  
+    Chassis Serial Number    : FOX2344P7LL
+    PCB Serial Number        : NWG23410303
+    PCA Number               : 73-11674-03
+    CLEI Code                : INMA600CRB
+    Capabilities             : 00

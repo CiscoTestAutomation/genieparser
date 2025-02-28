@@ -1,4 +1,5 @@
 expected_output = {
+    "routing_table": "Mgmt-intf",
     "entry": {
         "0.0.0.0/0": {
             "distance": "1",

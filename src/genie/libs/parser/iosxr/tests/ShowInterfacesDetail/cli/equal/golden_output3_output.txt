@@ -1,0 +1,76 @@
+GigabitEthernet0/0/0/3 is up, line protocol is up 
+
+
+  Interface state transitions: 1
+
+
+  Hardware is GigabitEthernet, address is 7cf8.80e3.f00c (bia 7cf8.80e3.f00c)
+
+
+  Internet address is Unknown
+
+
+  MTU 1514 bytes, BW 1000000 Kbit (Max: 1000000 Kbit)
+
+
+     reliability 255/255, txload 0/255, rxload 0/255
+
+
+  Encapsulation ARPA,
+
+
+  Full-duplex, 1000Mb/s, SXFD, link type is force-up
+
+
+  output flow control is off, input flow control is ut drops
+
+
+  Carrier delay (up) is 200 msec
+
+
+  loopback not set,
+
+
+  Last link flapped 3w0d
+
+
+  Last input 00:00:07, output 00:00:07
+
+
+  Last clearing of "show interface" counters 03:36:26
+
+
+  5 minute input rate 0 bits/sec, 0 packets/sec
+
+
+  5 minute output rate 0 bits/sec, 0 packets/sec
+
+
+     435 packets input, 50451 bytes, 0 total input drops
+
+
+     0 drops for unrecognized upper-level protocol
+
+
+     Received 0 broadcast packets, 435 multicast packets
+
+
+              0 runts, 0 giants, 0 throttles, 0 parity
+
+
+     0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort
+
+
+     435 packets output, 50886 bytes, 0 total output drops
+
+
+     Output 0 broadcast packets, 435 multicast packets
+
+
+     0 output errors, 0 underruns, 0 applique, 0 resets
+
+
+     0 output buffer failures, 0 output buffers swapped out
+
+
+     0 carrier transitions

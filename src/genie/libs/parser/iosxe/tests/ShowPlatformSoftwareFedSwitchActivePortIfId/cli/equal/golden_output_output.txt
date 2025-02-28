@@ -1,0 +1,19 @@
+FED PM SUB PORT Data :
+  if_id = 186
+  if_name = TwoGigabitEthernet1/0/25
+  enable: true
+  speed: auto
+  operational speed: 2500
+  duplex: auto
+  operational duplex: full
+  flowctrl: on
+  csco pd enable: TRUE
+  link state: UP
+  csco pd restart enable: TRUE
+  tdr_result: FALSE
+  psecure_inactivity_time: 0
+  psecure_feature_type: 0
+  loopback enable: FALSE
+  defaultVlan: 4095
+  port_state: Fed PM port ready
+  mode: routed

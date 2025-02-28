@@ -83,6 +83,7 @@ class ShowInterfacesSchema(MetaParser):
                 Optional('line_protocol'): str,
                 Optional('enabled'): bool,
                 Optional('is_deleted'): bool,
+                Optional('is_present'): bool,
                 Optional('connected'): bool,
                 Optional('err_disabled'): bool,
                 Optional('suspended'): bool,
@@ -237,7 +238,11 @@ class ShowInterfaces(ShowInterfacesSchema):
     """parser for show interfaces
                   show interfaces <interface>"""
 
-    cli_command = ['show interfaces', 'show interfaces {interface}', 'show interfaces | include {include}']
+    cli_command = [
+        'show interfaces',
+        'show interfaces {interface}',
+        'show interfaces | include {include}',
+        ]
     exclude = ['in_octets', 'in_pkts', 'out_octets', 'out_pkts',
                'in_rate', 'in_rate_pkts', 'out_rate', 'out_rate_pkts',
                'input_queue_size', 'in_broadcast_pkts', 'in_multicast_pkts',
@@ -287,6 +292,9 @@ class ShowInterfaces(ShowInterfacesSchema):
         # Hardware is LTE Adv CAT6 - Multimode LTE/DC-HSPA+/HSPA+/HSPA/UMTS/EDGE/GPRS
         p2_2 = re.compile(r'Hardware +is +(?P<type>[a-zA-Z0-9\-\/\+ ]+)'
                           r'(?P<mac_address>.*)(?P<phys_address>.*)')
+
+        # Hardware is not present
+        p2_3 = re.compile(r'^Hardware +is +not +present$')
 
         # Description: desc
         # Description: Pim Register Tunnel (Encap) for RP 10.186.1.1
@@ -627,6 +635,11 @@ class ShowInterfaces(ShowInterfacesSchema):
                 if autostate:
                     interface_dict[interface]['autostate'] = True if autostate == 'enabled' else False
 
+                continue
+
+            m = p2_3.match(line)
+            if m:
+                interface_dict[interface]['is_present'] = False
                 continue
 
             # Hardware is Gigabit Ethernet, address is 0057.d2ff.428c (bia 0057.d2ff.428c)
@@ -1707,7 +1720,7 @@ class ShowInterfacesSwitchportSchema(MetaParser):
                 Optional('unknown_multicast_blocked'): bool,
                 Optional('appliance_trust'): str,
                 Optional('admin_ethertype'): str,
-                Optional('oper_ethertype'): str, 
+                Optional('oper_ethertype'): str,
             },
         }
 
@@ -1844,7 +1857,7 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
         p29 = re.compile(r'^Administrative +Dot1q +Ethertype: +(?P<admin_ethertype>\w+)$')
 
         #Operational Dot1q Ethertype: 0x9100
-        p30 = re.compile(r'^Operational +Dot1q +Ethertype: +(?P<oper_ethertype>\w+)$')        
+        p30 = re.compile(r'^Operational +Dot1q +Ethertype: +(?P<oper_ethertype>\w+)$')
 
         ret_dict = {}
         private_trunk_mappings = None
@@ -2176,7 +2189,7 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
                     ret_dict[intf]['appliance_trust'] = m.groupdict()['trust']
                 continue
 
-            # Administrative Dot1q Ethertype: 0x9100    
+            # Administrative Dot1q Ethertype: 0x9100
             m = p29.match(line)
             if m:
                 admin_ethertype = m.groupdict()['admin_ethertype']
@@ -2263,7 +2276,11 @@ class ShowIpInterface(ShowIpInterfaceSchema):
     """Parser for show ip interface
                   show ip interface <interface>"""
 
-    cli_command = ['show ip interface','show ip interface {interface}', 'show ip interface | include {include}', ]
+    cli_command = [
+        'show ip interface',
+        'show ip interface {interface}',
+        'show ip interface | include {include}',
+    ]
     exclude = ['unnumbered', 'address_determined_by', '(Tunnel.*)', 'joins', 'leaves']
 
     def cli(self, interface="", include=None, output=None):
@@ -2950,7 +2967,11 @@ class ShowIpv6InterfaceSchema(MetaParser):
 
 class ShowIpv6Interface(ShowIpv6InterfaceSchema):
     """Parser for show ipv6 interface"""
-    cli_command = ['show ipv6 interface', 'show ipv6 interface {interface}', 'show ipv6 interface | include {include}']
+    cli_command = [
+        'show ipv6 interface',
+        'show ipv6 interface {interface}',
+        'show ipv6 interface | include {include}'
+    ]
 
     def cli(self, interface='', include=None, output=None):
         if output is None:
@@ -3315,7 +3336,7 @@ class ShowIpv6Interface(ShowIpv6InterfaceSchema):
                 ret_dict[intf]['addresses_config_method'] = \
                     m.groupdict()['addr_conf_method']
                 continue
-            
+
             # Hosts use DHCP to obtain routable addresses.
             p18_1 = re.compile(r'^Hosts +use +(?P<addr_conf_method>[\w\s]+) +to +obtain +routable +addresses.$')
             m = p18_1.match(line)
@@ -3346,6 +3367,7 @@ class ShowIpv6Interface(ShowIpv6InterfaceSchema):
 
                 ret_dict[intf]['ipv6']['enabled'] = False
                 continue
+
         return ret_dict
 
 
@@ -3499,7 +3521,7 @@ class ShowInterfacesCountersEtherchannel(ShowInterfacesCounters):
     def cli(self, interface,output=None):
         if output is None:
             output = self.device.execute(self.cli_command.format(interface=interface))
-            
+
         return super().cli(interface=interface, output=output)
 
 class ShowInterfacesAccountingSchema(MetaParser):
@@ -4457,7 +4479,7 @@ class ShowInterfacesMtu(ShowInterfacesMtuSchema):
 class ShowInterfacesStatusModuleSchema(MetaParser):
 
     """
-    Schema for show interfaces status module {mod} 
+    Schema for show interfaces status module {mod}
 
     """
 
@@ -4489,31 +4511,31 @@ class ShowInterfacesStatusModule(ShowInterfacesStatusModuleSchema):
         output = self.device.execute(self.cli_command[0].format(mod=mod))
 
         result_dict = {}
-        
+
         p0 = re.compile(r'(?P<var>%.*)')
 
             # Port         Name               Status       Vlan       Duplex  Speed Type
-            # Hu1/0/1                         connected    1            full    40G QSFP 40G AOC5M 
+            # Hu1/0/1                         connected    1            full    40G QSFP 40G AOC5M
             # Twe4/0/2                        connected    routed       full    10G SFP-10GBase-CX1
         p1 = re.compile(r'^(?P<interfaces>\S+)(?:\s+(?P<name>(.+)))?'
                 r'\s+(?P<status>(connected|notconnect|suspended|inactive|disabled|err-disabled|monitoring))'
                 r'\s+(?P<vlan>\S+)\s+(?P<duplex_code>[\S\-]+)\s+(?P<port_speed>[\S\-]+)(\s+(?P<type>.+))?$')
 
-        
+
         # %Module1 is not Present
-        
+
         m = p0.match(output)
         if m:
-            
+
             var = m.groupdict()['var']
             result_dict['var'] = var
-            
+
 
         for line in output.splitlines():
             line = line.strip()
 
             # Port         Name               Status       Vlan       Duplex  Speed Type
-            # Hu1/0/1                         connected    1            full    40G QSFP 40G AOC5M 
+            # Hu1/0/1                         connected    1            full    40G QSFP 40G AOC5M
 
             m = p1.match(line)
             if m:
@@ -4574,7 +4596,7 @@ class ShowPmVpInterfaceVlan(ShowPmVpInterfaceVlanSchema):
         p1 = re.compile(r"^vp:\s+(?P<vp>\S+\s+\S+)\s+es:\s+(?P<es>\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+)$")
         # sm(pm_vp 3/3(1001)), running yes, state forwarding
         p1_1 = re.compile(r"^sm\((?P<sm>\S+\s+\S+)\),\s+running\s+(?P<running>\w+),\s+state\s+(?P<state>\w+)$")
-        # Last transition recorded: (linkup)-> authentication (linkup)-> authentication (authen_enable)-> authen_fail (authen_success)-> notforwarding (forward_notnotify)-> forwarding 
+        # Last transition recorded: (linkup)-> authentication (linkup)-> authentication (authen_enable)-> authen_fail (authen_success)-> notforwarding (forward_notnotify)-> forwarding
         p1_2 = re.compile(r"^Last\s+transition\s+recorded:\s+(?P<last_transition>\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+)$")
 
 
@@ -4603,7 +4625,7 @@ class ShowPmVpInterfaceVlan(ShowPmVpInterfaceVlanSchema):
                 pm_vp_info['state'] = dict_val['state']
                 continue
 
-            # Last transition recorded: (linkup)-> authentication (linkup)-> authentication (authen_enable)-> authen_fail (authen_success)-> notforwarding (forward_notnotify)-> forwarding 
+            # Last transition recorded: (linkup)-> authentication (linkup)-> authentication (authen_enable)-> authen_fail (authen_success)-> notforwarding (forward_notnotify)-> forwarding
             m = p1_2.match(line)
             if m:
                 dict_val = m.groupdict()
@@ -4647,10 +4669,10 @@ class ShowInterfacesTransceiverSupportedlist(ShowInterfacesTransceiverSupportedl
         else:
             out = output
 
-        
+
         transceivers_supported_list = {}
-        
-        #------------------       ------------------------- 
+
+        #------------------       -------------------------
         #p1 will match dashes pattern used to create dict that to start adiing the transceiver types
         p1 = re.compile(r"\-+\s+\-+")
 
@@ -4763,10 +4785,10 @@ class ShowPmPortInterfaceSchema(MetaParser):
             'tdr_error_code': int,
             'prbs_err_code': int,
             'prbs': str,
-            
+
         },
     }
-    
+
 # ======================================================
 # Parser for 'show pm  port interface <interface> '
 # ======================================================
@@ -4781,7 +4803,7 @@ class ShowPmPortInterface(ShowPmPortInterfaceSchema):
             cmd = self.cli_command.format(interface=interface)
             output = self.device.execute(cmd)
 
-        # port 1/24  pd 0x7F837FEABD78 swidb 0x7F837EBFA020(switch)  sb 0x7F837EBFCA40 
+        # port 1/24  pd 0x7F837FEABD78 swidb 0x7F837EBFA020(switch)  sb 0x7F837EBFCA40
         p1 = re.compile(r"^port\s+(?P<port>\S+)\s+pd\s+(?P<pd>\S+)\s+swidb\s+"
              r"(?P<sw_idb>\S+)\s+sb\s+(?P<sb>\S+)$")
         #  hwidb 0x7F837EBF8C38
@@ -4808,7 +4830,7 @@ class ShowPmPortInterface(ShowPmPortInterfaceSchema):
                r"\s+mode:\s+(?P<mode>\w+)\s+encap:\s+(?P<encap>\w+)$")
         # dtp nonegotiate: FALSE 
         p1_9 = re.compile(r"^dtp\s+nonegotiate:\s+(?P<dtp_nonego>\w+)$")
-        # flowcontrol receive: on   flowcontrol send: off 
+        # flowcontrol receive: on   flowcontrol send: off
         p1_10 = re.compile(r"^flowcontrol\s+receive:\s+(?P<flow_ctrl_receive>\w+)"
                 r"\s+flowcontrol\s+send:\s+(?P<flow_ctrl_send>\w+)$")
         # linkflapcnt: 0  dtpflapcnt: 0  pagpflapcnt: 0
@@ -4816,9 +4838,9 @@ class ShowPmPortInterface(ShowPmPortInterfaceSchema):
                 r"\s+(?P<dtp_flap_cnt>\d+)\s+pagpflapcnt:\s+(?P<pagp_flap_cnt>\d+)$")
         # unidirectional: off 
         p1_12 = re.compile(r"^unidirectional:\s+(?P<unidirectional>\w+)$")
-        # operVlan: 0 
+        # operVlan: 0
         p1_13 = re.compile(r"^operVlan:\s+(?P<oper_vlan>\d+)$")
-        # flag:     0 
+        # flag:     0
         p1_14 = re.compile(r"^flag:\s+(?P<flag>\d+)$")
         # sm(pm_port 1/24), running yes, state access_multi
         p1_15 = re.compile(r"^sm\((?P<sm>\S+\s+\S+)\),\s+running\s+"
@@ -4840,9 +4862,9 @@ class ShowPmPortInterface(ShowPmPortInterfaceSchema):
         p1_21 = re.compile(r"^currentlyPrunedVlans:\s+(?P<current_pruned_vlans>\w+)$")
         # previouslyPrunedVlans:  none
         p1_22 = re.compile(r"^previouslyPrunedVlans:\s+(?P<previous_pruned_vlans>\w+)$")
-        # protocols: ip=on ipx=on misc=on other=on 
+        # protocols: ip=on ipx=on misc=on other=on
         p1_23 = re.compile(r"^protocols:\s+(?P<protocols>\S+\s+\S+\s+\S+\s+\S+)$")
-        # access mode: unknown   access vlanid: 1   native vlanid: 1 
+        # access mode: unknown   access vlanid: 1   native vlanid: 1
         p2 = re.compile(r"^access\s+mode:\s+(?P<access_mode>\w+)\s+"
              r"access\s+vlanid:\s+(?P<access_vlan_id>\d+)\s+native\s+vlanid:\s+"
              r"(?P<native_vlan_id>\d+)$")
@@ -4857,7 +4879,7 @@ class ShowPmPortInterface(ShowPmPortInterfaceSchema):
                r"(?P<pri_promiscuous_vlan>\d+)$")
         # secondary prom vlans:  none
         p2_4 = re.compile(r"^secondary\s+prom\s+vlans:\s+(?P<sec_prom_vlan>\w+)$")
-        # speed: auto speedauto: auto-default   duplex: auto   mode: access 
+        # speed: auto speedauto: auto-default   duplex: auto   mode: access
         p2_5 = re.compile(r"^speed:\s+(?P<speed>\w+)\s+speedauto:\s+"
                r"(?P<speed_auto>\S+)\s+duplex:\s+(?P<duplex>\w+)\s+"
                r"mode:\s+(?P<mode>\w+)$")
@@ -4885,14 +4907,14 @@ class ShowPmPortInterface(ShowPmPortInterfaceSchema):
                 r"prbs_err_code:\s+(?P<prbs_err_code>\d+)$")
         # PRBS: Stopped PRBS - port was admin down
         p2_12 = re.compile(r"^PRBS:\s+(?P<prbs>\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+)$")
-        
+
 
         ret_dict = {}
 
         for line in output.splitlines():
             line = line.strip()
 
-            # port 1/24  pd 0x7F837FEABD78 swidb 0x7F837EBFA020(switch)  sb 0x7F837EBFCA40 
+            # port 1/24  pd 0x7F837FEABD78 swidb 0x7F837EBFA020(switch)  sb 0x7F837EBFCA40
             m = p1.match(line)
             if m:
                 dict_val = m.groupdict()
@@ -4974,7 +4996,7 @@ class ShowPmPortInterface(ShowPmPortInterfaceSchema):
                 pm_port_info['pagp_special'] = dict_val['pagp_special']
                 continue
 
-            # speed: 100M   duplex: full   mode: access   encap: native 
+            # speed: 100M   duplex: full   mode: access   encap: native
             m = p1_8.match(line)
             if m:
                 dict_val = m.groupdict()
@@ -4986,7 +5008,7 @@ class ShowPmPortInterface(ShowPmPortInterfaceSchema):
                 pm_port_info['encap'] = dict_val['encap']
                 continue
 
-            # dtp nonegotiate: FALSE 
+            # dtp nonegotiate: FALSE
             m = p1_9.match(line)
             if m:
                 dict_val = m.groupdict()
@@ -4995,7 +5017,7 @@ class ShowPmPortInterface(ShowPmPortInterfaceSchema):
                 pm_port_info['dtp_nonego'] = dict_val['dtp_nonego']
                 continue
 
-            # flowcontrol receive: on   flowcontrol send: off 
+            # flowcontrol receive: on   flowcontrol send: off
             m = p1_10.match(line)
             if m:
                 dict_val = m.groupdict()
@@ -5016,7 +5038,7 @@ class ShowPmPortInterface(ShowPmPortInterfaceSchema):
                 pm_port_info['pagp_flap_cnt'] = int(dict_val['pagp_flap_cnt'])
                 continue
 
-            # unidirectional: off 
+            # unidirectional: off
             m = p1_12.match(line)
             if m:
                 dict_val = m.groupdict()
@@ -5025,7 +5047,7 @@ class ShowPmPortInterface(ShowPmPortInterfaceSchema):
                 pm_port_info['unidirectional'] = dict_val['unidirectional']
                 continue
 
-            # operVlan: 0 
+            # operVlan: 0
             m = p1_13.match(line)
             if m:
                 dict_val = m.groupdict()
@@ -5034,7 +5056,7 @@ class ShowPmPortInterface(ShowPmPortInterfaceSchema):
                 pm_port_info['oper_vlan'] = int(dict_val['oper_vlan'])
                 continue
 
-            # flag:     0 
+            # flag:     0
             m = p1_14.match(line)
             if m:
                 dict_val = m.groupdict()
@@ -5054,7 +5076,7 @@ class ShowPmPortInterface(ShowPmPortInterfaceSchema):
                 pm_port_info['state'] = dict_val['state']
                 continue
 
-            # Last transition recorded: (cfg_access_vvlanid)-> pagp_port_cleanup (cfg_access_vvlanid)-> pagp (cfg_access_vvlanid)-> pre_pagp_may_suspend (cfg_access_vvlanid)-> pagp_may_suspend (pagp_continue)-> start_pagp (pagp_continue)-> pagp (dont_bundle)-> pre_post_pagp (dont_bundle)-> post_pagp (dtp_access_multi)-> access_multi (bulk_sync)-> access_multi 
+            # Last transition recorded: (cfg_access_vvlanid)-> pagp_port_cleanup (cfg_access_vvlanid)-> pagp (cfg_access_vvlanid)-> pre_pagp_may_suspend (cfg_access_vvlanid)-> pagp_may_suspend (pagp_continue)-> start_pagp (pagp_continue)-> pagp (dont_bundle)-> pre_post_pagp (dont_bundle)-> post_pagp (dtp_access_multi)-> access_multi (bulk_sync)-> access_multi
             m = p1_16.match(line)
             if m:
                 dict_val = m.groupdict()
@@ -5117,7 +5139,7 @@ class ShowPmPortInterface(ShowPmPortInterfaceSchema):
                 pm_port_info['previous_pruned_vlans'] = dict_val['previous_pruned_vlans']
                 continue
 
-            # protocols: ip=on ipx=on misc=on other=on 
+            # protocols: ip=on ipx=on misc=on other=on
             m = p1_23.match(line)
             if m:
                 dict_val = m.groupdict()
@@ -5126,7 +5148,7 @@ class ShowPmPortInterface(ShowPmPortInterfaceSchema):
                 pm_port_info['protocols'] = dict_val['protocols']
                 continue
 
-            # access mode: unknown   access vlanid: 1   native vlanid: 1 
+            # access mode: unknown   access vlanid: 1   native vlanid: 1
             m = p2.match(line)
             if m:
                 dict_val = m.groupdict()
@@ -5175,7 +5197,7 @@ class ShowPmPortInterface(ShowPmPortInterfaceSchema):
                 config_values['sec_prom_vlan'] = dict_val['sec_prom_vlan']
                 continue
 
-            # speed: auto speedauto: auto-default   duplex: auto   mode: access 
+            # speed: auto speedauto: auto-default   duplex: auto   mode: access
             m = p2_5.match(line)
             if m:
                 dict_val = m.groupdict()
@@ -5187,7 +5209,7 @@ class ShowPmPortInterface(ShowPmPortInterfaceSchema):
                 config_values['mode'] = dict_val['mode']
                 continue
 
-            # encap: dot1q   nonegotiate: false 
+            # encap: dot1q   nonegotiate: false
             m = p2_6.match(line)
             if m:
                 dict_val = m.groupdict()
@@ -5196,8 +5218,8 @@ class ShowPmPortInterface(ShowPmPortInterfaceSchema):
                 config_values['encap'] = dict_val['encap']
                 config_values['nonego'] = dict_val['nonego']
                 continue
-                
-             
+
+
             # jumbo cap: true   jumbo: false  mtu: 1500  sync-delay: 210  HOL: Enable
             m = p2_7.match(line)
             if m:
@@ -5211,7 +5233,7 @@ class ShowPmPortInterface(ShowPmPortInterfaceSchema):
                 config_values['hol'] = dict_val['hol']
                 continue
 
-            # bcast-supp-level: 10000   mcast-supp-level: 10000   ucast-supp-level: 10000 
+            # bcast-supp-level: 10000   mcast-supp-level: 10000   ucast-supp-level: 10000
             m = p2_8.match(line)
             if m:
                 dict_val = m.groupdict()
@@ -5220,9 +5242,9 @@ class ShowPmPortInterface(ShowPmPortInterfaceSchema):
                 config_values['bcast_sup_level'] = int(dict_val['bcast_sup_level'])
                 config_values['mcast_sup_level'] = int(dict_val['mcast_sup_level'])
                 config_values['ucast_sup_level'] = int(dict_val['ucast_sup_level'])
-                continue            
+                continue
 
-            # disl: off   dtp nonegotiate: FALSE   media: unknown   dualmode 0 
+            # disl: off   dtp nonegotiate: FALSE   media: unknown   dualmode 0
             m = p2_9.match(line)
             if m:
                 dict_val = m.groupdict()
@@ -5232,7 +5254,7 @@ class ShowPmPortInterface(ShowPmPortInterfaceSchema):
                 config_values['dtp_nonego'] = dict_val['dtp_nonego']
                 config_values['media'] = dict_val['media']
                 config_values['dualmode'] = int(dict_val['dualmode'])
-                continue            
+                continue
 
             # tdr_ever_run: FALSE tdr_in_progress: FALSE tdr_result_valid: FALSE
             m = p2_10.match(line)
@@ -5262,7 +5284,7 @@ class ShowPmPortInterface(ShowPmPortInterfaceSchema):
                 if 'config_values' not in ret_dict:
                     config_values = ret_dict.setdefault('config_values', {})
                 config_values['prbs'] = dict_val['prbs']
-                continue            
+                continue
 
         return ret_dict
 
@@ -5290,17 +5312,17 @@ class ShowInterfacesPrivateVlanMapping(ShowInterfacesPrivateVlanMappingSchema):
         if output is None:
             output = self.device.execute(self.cli_command)
 
-        # vlan70    71             community   
+        # vlan70    71             community
         p1 = re.compile(r'^(?P<interface>\w+)\s+(?P<secondary_vlan>\d+)\s+(?P<type>\w+)$')
 
         result_dict = {}
         for line in output.splitlines():
             line = line.strip()
-            # vlan70    71             community        
+            # vlan70    71             community
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                intf_dict = result_dict.setdefault('secondary_vlan', {}).setdefault(int(group['secondary_vlan']), {})                
+                intf_dict = result_dict.setdefault('secondary_vlan', {}).setdefault(int(group['secondary_vlan']), {})
 
                 intf_dict.update({k:v for k, v in group.items() if v and k != 'secondary_vlan'})
                 intf_dict['interface'] = Common.convert_intf_name(intf_dict['interface'])
@@ -5311,7 +5333,7 @@ class ShowInterfacesPrivateVlanMapping(ShowInterfacesPrivateVlanMappingSchema):
 
 # ======================================================
 # Schema for 'show interface {interface_id} etherchannel'
-# ====================================================== 
+# ======================================================
 
 class ShowInterfaceEtherchannelSchema(MetaParser):
     """Schema for show interface {interface_id} etherchannel"""
@@ -5345,7 +5367,7 @@ class ShowInterfaceEtherchannelSchema(MetaParser):
 
 # ======================================================
 # Parser for 'show interface {interface_id} etherchannel'
-# ====================================================== 
+# ======================================================
 class ShowInterfaceEtherchannel(ShowInterfaceEtherchannelSchema):
     """Parser for show interface {interface_id} etherchannel"""
 
@@ -5372,12 +5394,12 @@ class ShowInterfaceEtherchannel(ShowInterfaceEtherchannelSchema):
         #Local information:
         #                                 LACP port    Admin     Oper    Port        Port
         # Port          Flags   State     Priority     Key       Key     Number      State
-        # Gi2/0/13      SA      down      32768        0xA       0x0     0x20E       0x4D 
+        # Gi2/0/13      SA      down      32768        0xA       0x0     0x20E       0x4D
         p6 = re.compile(r'^(?P<port>Gi[\w\/\d]+)\s+(?P<flags>\w+)\s+(?P<state>\w+)\s+(?P<priority>\d+)'
                         r'\s+(?P<admin_key>\w+)\s+(?P<oper_key>\w+)\s+(?P<port_number>\w+)\s+(?P<port_state>\w+)$')
         #Age of the port in the current state: 0d:00h:00m:29s
         p7 = re.compile(r'^Age of the port in the current state:\s+(?P<age_of_port>\S+)$')
-        
+
         ret_dict = {}
 
         for line in output.splitlines():
@@ -5390,7 +5412,7 @@ class ShowInterfaceEtherchannel(ShowInterfaceEtherchannelSchema):
                 ret_dict['port_state'] = group['port_state']
                 continue
 
-            #Channel group = 2           Mode = On              Gcchange = -            
+            #Channel group = 2           Mode = On              Gcchange = -
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -5417,7 +5439,7 @@ class ShowInterfaceEtherchannel(ShowInterfaceEtherchannelSchema):
                 ret_dict['protocol'] = group['protocol']
                 continue
 
-            #Flags:  S - Device is sending Slow LACPDUs   F - Device is sending fast LACPDUs.            
+            #Flags:  S - Device is sending Slow LACPDUs   F - Device is sending fast LACPDUs.
             m = p5.match(line)
             if m:
                 group = m.groupdict()
@@ -5438,7 +5460,7 @@ class ShowInterfaceEtherchannel(ShowInterfaceEtherchannelSchema):
             #Local information:
             #                                 LACP port    Admin     Oper    Port        Port
             # Port          Flags   State     Priority     Key       Key     Number      State
-            # Gi2/0/13      SA      down      32768        0xA       0x0     0x20E       0x4D             
+            # Gi2/0/13      SA      down      32768        0xA       0x0     0x20E       0x4D
             m = p6.match(line)
             if m:
                 group = m.groupdict()
@@ -5490,7 +5512,7 @@ class ShowInterfacesCapabilities(ShowInterfacesCapabilitiesSchema):
                 cmd = self.cli_command[1].format(interface=interface)
             else:
                 cmd = self.cli_command[0]
-            
+
             output = self.device.execute(cmd)
 
         # TenGigabitEthernet3/1/3
@@ -5504,7 +5526,7 @@ class ShowInterfacesCapabilities(ShowInterfacesCapabilitiesSchema):
 
         # tx-(2p6q3t)
         p3 = re.compile(r'^(?P<qos_tx>tx-.+)$')
-        
+
         ret_dict = {}
 
         for line in output.splitlines():
@@ -5525,12 +5547,12 @@ class ShowInterfacesCapabilities(ShowInterfacesCapabilitiesSchema):
                 key = m.groupdict()['key_name'].strip().lower().replace(' ', '_').replace('.', '')
                 int_dict[key] = m.groupdict()['value']
                 continue
-            
+
             # tx-(2p6q3t)
             m = p3.match(line)
             if m:
                 int_dict[key] = f"{int_dict[key]} {m.groupdict()['qos_tx']}"
-        
+
         return ret_dict
 
 class ShowInterfaceFlowControlSchema(MetaParser):
@@ -5550,7 +5572,7 @@ class ShowInterfaceFlowControlSchema(MetaParser):
 
 # ======================================================
 # Parser for 'show interface {interface_id} flowcontrol'
-# ====================================================== 
+# ======================================================
 class ShowInterfaceFlowControl(ShowInterfaceFlowControlSchema):
     """Parser for show interfaces {interface_id} flowcontrol"""
 
@@ -5576,7 +5598,7 @@ class ShowInterfaceFlowControl(ShowInterfaceFlowControlSchema):
             # Port            Send FlowControl  Receive FlowControl  RxPause TxPause
             #                 admin    oper     admin    oper
             # ------------    -------- -------- -------- --------    ------- -------
-            # Fo2/1/0/10      Unsupp.  Unsupp.  on       on          0       0        
+            # Fo2/1/0/10      Unsupp.  Unsupp.  on       on          0       0
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -5656,7 +5678,7 @@ class ShowInterfaceHumanReadableIncludeDrops(ShowInterfaceHumanReadableIncludeDr
     def cli(self, interface, output=None):
         if output is None:
             output = self.device.execute(self.cli_command.format(interface=interface))
-            
+
         #   Input queue: 0/2000/0/0 (size/max/drops/flushes); Total output drops: 0
 
         p1 = re.compile(r"^Input queue: (?P<size>\d+)/(?P<max>\d+)/(?P<drops>\d+)/(?P<flushes>\d+)\s+\(size/max/drops/flushes\); Total output drops:\s+(?P<total_output_drops>\d+)$")
@@ -5709,7 +5731,7 @@ class ShowInterfaceHumanReadable(ShowInterfaceHumanReadableSchema):
     def cli(self, interface, output=None):
         if output is None:
             output = self.device.execute(self.cli_command.format(interface=interface))
-            
+
         # 5 minute input rate 0 bits/sec, 0 packets/sec
         # 5 minute output rate 0 bits/sec, 0 packets/sec
         p1 = re.compile(r'^\d+\s+(minute|seconds)\s+(?P<dir>(input|output))\s+rate\s+(?P<rate>[\S\s]+)\s*,[\S\s\d]+$')

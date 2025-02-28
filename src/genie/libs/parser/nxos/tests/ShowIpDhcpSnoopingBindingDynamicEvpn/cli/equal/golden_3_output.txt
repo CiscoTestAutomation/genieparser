@@ -1,0 +1,6 @@
+MacAddress         IpAddress        Lease(Sec)  Type      BD    Interface           anchor       Freeze
+-----------------  ---------------  --------  ----------  ----  -------------      -------    -----------
+00:10:01:01:02:01  100.10.1.104     1921      dhcp-snoop  1001  Ethernet1/15/1       YES       NONE
+00:10:01:01:02:02  100.10.1.108     1921      dhcp-snoop  1001  Ethernet1/15/1       YES       NONE
+00:10:01:01:02:03  100.10.1.235     1922      dhcp-snoop  1001  Ethernet1/15/1       YES       NONE
+00:10:01:01:02:04  100.10.1.148     1922      dhcp-snoop  1001  Ethernet1/15/1       YES       NONE

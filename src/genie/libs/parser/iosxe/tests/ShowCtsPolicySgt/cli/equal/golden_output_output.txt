@@ -1,0 +1,45 @@
+CTS SGT Policy
+===============
+RBACL Monitor All : FALSE
+RBACL IP Version Supported: IPv4 & IPv6
+show sgt_tag: 30
+bypass RBM: 0
+sgt_download_disabled_flags: 0x0
+Dynamic ingress filtering: Disabled
+rbacl_download_list req: 1000
+SGT: 30-01:SGT_030  (address=0x750E40477850)
+peer-policy referencing this SGT policy:
+    peer_policy=0x750E40475B50 flag=41400001
+session waiting for installation:
+session waiting for un-installation:
+num_stale_rbacls = 0:
+SGT Policy Flag: 0x41400001
+    POLICY_READY_TO_PROGRAM
+    POLICY_PROGRAM_SUCCESS
+    POLICY_RBACL_IPV4
+RBACL Source List:
+  Source SGT: 25-00:SGT_025-0, Destination SGT: 30-01:SGT_030-0
+  rbacl_type = 80
+  rbacl_index = 1
+  name   = PERMIT_IP-01
+  IP protocol version = IPV4
+  refcnt = 2
+  flag   = 0x41000000
+    POLICY_PROGRAM_SUCCESS
+    POLICY_RBACL_IPV4
+  stale  = FALSE
+  sessions installed:
+    session hld(40000017)
+  RBACL ACEs:
+  Num ACEs: 2
+    permit ip log
+    deny ip
+
+RBACL Destination List: Not exist
+RBACL Multicast List: Not exist
+RBACL Policy Lifetime = 86400 secs
+RBACL Policy Last update time = 12:55:59 IST Wed Jan 15 2025
+Policy expires in 0:22:10:38 (dd:hr:mm:sec)
+Policy refreshes in 0:22:10:38 (dd:hr:mm:sec)
+Cache data applied = NONE
+

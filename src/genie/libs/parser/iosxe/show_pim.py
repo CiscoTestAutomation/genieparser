@@ -2424,3 +2424,72 @@ class ShowIpPimVrfMdtHistoryInterval(ShowIpPimVrfMdtHistoryIntervalSchema):
                 sub_dict['no_of_reuse'] = int(group['no_of_reuse'])
         
         return ret_dict
+    
+    
+# ==============================================================================
+# Schema Parser for 'show ip pim mdt receive'
+# ==============================================================================
+class ShowIpPimMdtReceiveSchema(MetaParser):
+    """Schema for:
+        show ip pim mdt receive"""
+    schema = {
+       'data_mdt_group' : {
+            Any() : {
+                    Optional('source') : str,
+                    Optional('up_time') : str,
+                    Optional('expires') : str,
+            }
+        }
+    }
+    
+# ==============================================================================
+# Parser for 'show ip pim mdt receive'
+# ==============================================================================
+class ShowIpPimMdtReceive(ShowIpPimMdtReceiveSchema):
+    """Parser for:
+        show ip pim mdt receive"""
+
+    cli_command = 'show ip pim mdt receive'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+        
+        # Data MDT group:
+        #  [239.192.20.32 : 2.2.2.2]  00:01:25/00:02:34
+        #  [239.192.20.33 : 2.2.2.2]  00:01:25/00:02:34
+        #  [239.192.20.34 : 2.2.2.2]  00:01:25/00:02:34
+        #  [239.192.20.35 : 2.2.2.2]  00:01:25/00:02:34
+        #  [239.192.20.36 : 2.2.2.2]  00:01:25/00:02:34
+        #  [239.192.20.37 : 2.2.2.2]  00:01:25/00:02:34
+        #  [239.192.20.38 : 2.2.2.2]  00:01:25/00:02:34
+        #  [239.192.20.39 : 2.2.2.2]  00:01:25/00:02:34
+        #  [239.192.20.40 : 2.2.2.2]  00:01:25/00:02:34
+        #  [239.192.20.41 : 2.2.2.2]  00:01:25/00:02:34
+        #  [239.192.20.42 : 2.2.2.2]  00:01:25/00:02:34
+        #  [239.192.20.43 : 2.2.2.2]  00:01:25/00:02:34
+        #  [239.192.20.44 : 2.2.2.2]  00:01:25/00:02:34
+        #  [239.192.20.45 : 2.2.2.2]  00:01:25/00:02:34
+        #  [239.192.20.46 : 2.2.2.2]  00:01:25/00:02:34
+        #  [239.192.20.47 : 2.2.2.2]  00:01:25/00:02:34
+        
+        p1 = re.compile(r'^\s*\[(?P<data_mdt_group>\d+\.\d+\.\d+\.\d+)\s*:\s*(?P<source_address>\d+\.\d+\.\d+\.\d+)\]\s+(?P<up_time>\S+)/(?P<expires>\S+)$')
+        
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # [239.192.20.38 : 2.2.2.2]  00:01:25/00:02:34
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                
+                data_mdt_group_dict = ret_dict.setdefault('data_mdt_group', {})
+                sub_dict = data_mdt_group_dict.setdefault(group['data_mdt_group'], {})
+                sub_dict['source'] = group['source_address']
+                sub_dict['up_time'] = group['up_time']
+                sub_dict['expires'] = group['expires']
+                continue
+                
+        return ret_dict

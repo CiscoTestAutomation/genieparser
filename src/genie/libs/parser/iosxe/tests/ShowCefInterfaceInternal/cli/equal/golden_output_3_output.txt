@@ -1,0 +1,44 @@
+TwoGigabitEthernet1/0/36 is up (if_number 186) ['0]
+  Corresponding hwidb fast_if_number 186
+  Corresponding hwidb firstsw->if_number 186
+  Internet address is 50.0.0.2/24
+  ICMP redirects are always sent
+  IP unicast RPF check is enabled
+  Input features: Access List, uRPF
+  Suppressed input features: MCI Check
+  IP policy routing is disabled
+  BGP based policy accounting on input is disabled
+  BGP based policy accounting on output is disabled
+  IPv6 Distributed CEF switching enabled
+  Hardware idb is TwoGigabitEthernet1/0/36
+  Fast switching type 1, interface type 146
+  IP CEF switching enabled
+  IP CEF switching turbo vector
+  IP Null turbo vector
+  IP prefix lookup IPv4 mtrie 8-8-8-8 optimized
+  Flags 0x26000, hardware flags 0x5
+  Input fast flags 0x4001, Output fast flags 0x0
+  ifindex 185(185) ['0]
+  Slot 1 (1) Slot unit 36 VC -1
+  IP MTU 1500
+  VRF: Default(0)
+ Status flags:
+  hwidb    status 210040 status2 200019 status3 40000000 status4 2000
+  fibhwidb status 210040 status2 200019 status3 40000000 status4 2000
+ Subblocks:
+  IPv4: Internet address is 50.0.0.2/24
+        Broadcast address 255.255.255.255
+        ICMP redirects are always sent
+        ICMP unreachables are always sent
+        Optimized neighbor resolution supported.
+        IP MTU 1500
+  ip verify: via=any, acl=0, drop=5084, sdrop=0, table IPv4:Default
+  IPv4 ACL: Inbound access list is 102
+          : Outbound access list is not set
+  IPv6: enabled 1 unreachable TRUE redirect TRUE mtu 1500 flags 0x0
+        Switching mode is CEF, Distributed
+        Belongs to global table IPv6:Default
+        Input features: Access List, Verify Unicast Reverse-Path
+        Inbound access list: ipv6_deny
+        Optimized neighbor resolution supported.
+  IPv6 unicast RPF: via=any acl=None, drop=5084, sdrop=0

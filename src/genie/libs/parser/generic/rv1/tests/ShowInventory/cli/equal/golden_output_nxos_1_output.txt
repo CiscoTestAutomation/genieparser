@@ -1,0 +1,20 @@
+NAME: "Chassis",  DESCR: "Nexus7000 C7009 (9 Slot) Chassis "
+PID: N7K-C7009           ,  VID: V01 ,  SN: JAF1704ARQG
+
+NAME: "Slot 1",  DESCR: "Supervisor Module-2"
+PID: N7K-SUP2            ,  VID: V01 ,  SN: JAF1708AGTH
+
+NAME: "Slot 2",  DESCR: "Supervisor Module-2"
+PID: N7K-SUP2            ,  VID: V01 ,  SN: JAF1708AGQH
+
+NAME: "Slot 3",  DESCR: "1/10 Gbps Ethernet Module"
+PID: N7K-F248XP-25E      ,  VID: V01 ,  SN: JAF1717AAND
+
+NAME: "Slot 4",  DESCR: "10/40 Gbps Ethernet Module"
+PID: N7K-F312FQ-25       ,  VID: V01 ,  SN: JAE18120FLU
+
+NAME: "Slot 33",  DESCR: "Nexus7000 C7009 (9 Slot) Chassis Power Supply"
+PID: N7K-AC-6.0KW        ,  VID: V03 ,  SN: DTM171300QB
+
+NAME: "Slot 35",  DESCR: "Nexus7000 C7009 (9 Slot) Chassis Fan Module"
+PID: N7K-C7009-FAN       ,  VID: V01 ,  SN: JAF1702AEBE

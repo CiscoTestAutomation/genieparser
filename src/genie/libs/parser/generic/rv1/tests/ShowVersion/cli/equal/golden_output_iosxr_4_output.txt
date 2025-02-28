@@ -1,0 +1,38 @@
+
+Mon Oct 14 17:44:22.298 EDT
+
+Cisco IOS XR Software, Version 6.4.2[Default]
+Copyright (c) 2019 by Cisco Systems, Inc.
+
+ROM: System Bootstrap, Version 2.12(20170128:070504) [CRS ROMMON],  
+
+
+tcore3-rohan uptime is 4 days, 5 hours, 46 minutes
+System image file is "disk0:hfr-os-mbi-6.4.2.CSCvm85739-1.0.0/0x100008/mbihfr-rp-x86e.vm"
+
+cisco CRS-16/S-B (Intel 686 F6M14S4) processor with 12582912K bytes of memory.
+Intel 686 F6M14S4 processor at 2127Mhz, Revision 2.174
+CRS 16 Slots Line Card Chassis for CRS-16/S-B
+
+2 Management Ethernet
+54 TenGigE
+59 DWDM controller(s)
+54 WANPHY controller(s)
+5 HundredGigE
+5 GigabitEthernet
+4 SONET/SDH
+4 Packet over SONET/SDH
+1019k bytes of non-volatile configuration memory.
+16726M bytes of hard disk.
+11881456k bytes of disk0: (Sector size 512 bytes).
+11881456k bytes of disk1: (Sector size 512 bytes).
+
+Boot device on node 0/0/CPU0 is lcdisk0:
+Package active on node 0/0/CPU0:
+iosxr-mpls-6.4.2.CSCvr26601, V 1.0.0[SMU], Cisco Systems, at disk0:iosxr-mpls-6.4.2.CSCvr26601-1.0.0
+    Built on Fri Oct  4 05:07:32 EDT 2019
+    By iox-lnx-smu2 in /san2/EFR/smu_r64x_6_4_2/workspace for pie
+
+hfr-px-6.4.2.CSCvr26601, V 1.0.0[SMU], Cisco Systems, at disk0:hfr-px-6.4.2.CSCvr26601-1.0.0
+    Built on Fri Oct  4 05:07:38 EDT 2019
+    By iox-lnx-smu2 in /san2/EFR/smu_r64x_6_4_2/workspace for pie

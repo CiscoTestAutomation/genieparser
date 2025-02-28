@@ -1,0 +1,26 @@
+NAME: "Chassis", DESCR: "Cisco C1111-8PLTELA Chassis"
+PID: C1111-8PLTELA     , VID: V01  , SN: FGL221190VF
+
+NAME: "Power Supply Module 0", DESCR: "External Power Supply Module"
+PID: PWR-12V           , VID: V01  , SN: JAB0929092D
+        
+NAME: "module 0", DESCR: "Cisco C1111-8PLTELA Built-In NIM controller"
+PID: C1111-8PLTELA     , VID:      , SN:
+    
+NAME: "NIM subslot 0/0", DESCR: "Front Panel 2 port Gigabitethernet Module"
+PID: C1111-2x1GE       , VID: V01  , SN:
+  
+NAME: "NIM subslot 0/1", DESCR: "C1111-ES-8"
+PID: C1111-ES-8        , VID: V01  , SN:
+
+NAME: "NIM subslot 0/2", DESCR: "C1111-LTE Module"
+PID: C1111-LTE         , VID: V01  , SN:
+
+NAME: "Modem 0 on Cellular0/2/0", DESCR: "Sierra Wireless EM7455/EM7430"
+PID: EM7455/EM7430     , VID: 1.0  , SN: 355813070074072
+
+NAME: "module R0", DESCR: "Cisco C1111-8PLTELA Route Processor"
+PID: C1111-8PLTELA     , VID: V01  , SN: FOC21520MF1
+
+NAME: "module F0", DESCR: "Cisco C1111-8PLTELA Forwarding Processor"  
+PID: C1111-8PLTELA     , VID:      , SN:

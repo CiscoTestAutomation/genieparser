@@ -1,0 +1,6 @@
+show platform
+Switch  Ports    Model                Serial No.   MAC address     Hw Ver.       Sw Ver. 
+------  -----   ---------             -----------  --------------  -------       --------
+ 1       26     ESS-3300-CON-E        FJZ274315GQ  a410.b6d4.d380  10            17.18.01      
+
+ESS-3300-CON-E-16T-uut5#

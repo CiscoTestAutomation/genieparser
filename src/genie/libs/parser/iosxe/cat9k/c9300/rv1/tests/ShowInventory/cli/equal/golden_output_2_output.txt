@@ -1,0 +1,29 @@
+NAME: "c93xx Stack", DESCR: "c93xx Stack"
+PID: C9300-48P         , VID: V01  , SN: FCW2124G09K
+
+NAME: "Switch 1", DESCR: "C9300-48P"
+PID: C9300-48P         , VID: V01  , SN: FCW2124G09K
+
+NAME: "StackPort1/1", DESCR: "StackPort1/1"
+PID: STACK-T1-50CM     , VID: V01  , SN: MOC2616A45A
+
+NAME: "StackPort1/2", DESCR: "StackPort1/2"
+PID: STACK-T1-50CM     , VID: V01  , SN: LCC2617G6RU
+
+NAME: "Switch 1 - Power Supply B", DESCR: "Switch 1 - Power Supply B"
+PID: PWR-C1-350WAC     , VID: V02  , SN: ART2125F31T
+
+NAME: "Switch 1 FRU Uplink Module 1", DESCR: "8x10G Uplink Module"
+PID: C9300-NM-8X       , VID: V01  , SN: FOC21221RPP
+
+NAME: "Switch 2", DESCR: "C9300-48P"
+PID: C9300-48P         , VID: V03  , SN: FOC2723YDDJ
+
+NAME: "StackPort2/1", DESCR: "StackPort2/1"
+PID: STACK-T1-50CM     , VID: V01  , SN: LCC2646GFF3
+
+NAME: "StackPort2/2", DESCR: "StackPort2/2"
+PID: STACK-T1-50CM     , VID: V01  , SN: MOC2616A45A
+
+NAME: "Switch 2 - Power Supply B", DESCR: "Switch 2 - Power Supply B"
+PID: PWR-C1-350WAC     , VID: V02  , SN: ART2125F30R

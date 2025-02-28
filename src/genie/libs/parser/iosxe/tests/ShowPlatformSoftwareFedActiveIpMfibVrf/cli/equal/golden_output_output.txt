@@ -1,0 +1,16 @@
+    Mvrf: 2  ( 55.55.55.2, 225.1.1.1 ) Attrs: 
+    Hw Flag                 : InHw 
+    Mlist Flags             : None
+    Mlist_hndl (Id)         : 0x118805d93d0 ( 0x1f )
+    Mlist Urid              : 0x100000000000004b
+    Fset Urid (Hash)        : 0x300000000000001d ( 42a3aa74 ) 
+    RPF Adjacency ID        : 0x71
+    CPU Credit              : 0
+    Total Packets           : 11563017 ( 2015 pps approx.)
+    OIF Count               : 2
+    OIF Details:
+      AdjID          Interface          ParentIf        HwFlag      Flags
+      0x71           Tu5                --------         ---        A 
+      0xf8004401     Po20               Fif1/0/41        ---        F NS 
+    GID                   : 8210
+    MCID OID Asic[0]      : 1562

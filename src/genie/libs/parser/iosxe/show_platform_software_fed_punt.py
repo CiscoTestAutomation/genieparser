@@ -751,3 +751,63 @@ class ShowPlatformSoftwareFedPuntEntriesInclude(ShowPlatformSoftwareFedPuntEntri
                 index += 1
                 continue
         return ret_dict   
+
+# ==========================================================================
+# Schema for 'show platform software fed switch {} punt asic-cause brief'
+# ==========================================================================
+class ShowPlatformSoftwareFedPuntAsicCauseBriefSchema(MetaParser):
+    """Schema for show platform software fed {switch} {mode} punt entries"""
+
+    schema = {
+        "cause": {
+            Any(): {
+                "source": str,
+                "rx_cur": int,
+                "rx_delta": int,
+                "drop_cur": int,
+                "drop_delta": int
+            }
+        }
+    }
+
+
+class ShowPlatformSoftwareFedPuntAsicCauseBrief(ShowPlatformSoftwareFedPuntAsicCauseBriefSchema):
+    """Parser for show platform software fed switch {mode} punt asic-cause brief"""
+
+    cli_command = [
+        "show platform software fed {switch} {mode} punt asic-cause brief",
+        "show platform software fed {mode} punt asic-cause brief",
+    ]
+
+    def cli(self, mode, switch=None, output=None):
+        if output is None:
+            if switch:
+                cmd = self.cli_command[0].format(switch=switch, mode=mode)
+            else:
+                cmd = self.cli_command[1]
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+
+        # UKNWN   UNKNOWN                        47           47           47           47
+        p1 = re.compile(
+            r"^(?P<source>[a-zA-Z]+)\s+(?P<cause>[\w\s\(\)\-]+)\s+(?P<rx_cur>\d+)\s+(?P<rx_delta>\d+)\s+(?P<drop_cur>\d+)\s+(?P<drop_delta>\d+)$"
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            #    ITRAP   CISCO Protocols            525860       525860            0            0
+            #    ITRAP   DHCP Client(v4)               264          264            0            
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                data_dict = ret_dict.setdefault('cause', {}).setdefault(group['cause'].strip(), {})
+                data_dict['source'] = group['source'].strip()
+                data_dict['rx_cur'] = int(group['rx_cur'])
+                data_dict['rx_delta'] = int(group['rx_delta'])
+                data_dict['drop_cur'] = int(group['drop_cur'])
+                data_dict['drop_delta'] = int(group['drop_delta'])
+                continue
+
+        return ret_dict

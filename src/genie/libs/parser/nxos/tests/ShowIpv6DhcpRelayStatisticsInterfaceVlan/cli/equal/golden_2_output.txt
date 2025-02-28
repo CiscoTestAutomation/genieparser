@@ -1,0 +1,40 @@
+-------------------------------------------------------------------------
+Message Type                           Rx              Tx           Drops
+-------------------------------------------------------------------------
+SOLICIT                                40               0               0
+ADVERTISE                               0              40               0
+REQUEST                                40               0               0
+CONFIRM                                 0               0               0
+RENEW                                  20               0               0
+REBIND                                  0               0               0
+REPLY                                   0              90               0
+RELEASE                                30               0               0
+DECLINE                                 0               0               0
+RECONFIGURE                             0               0               0
+INFORMATION_REQUEST                     0               0               0
+RELAY_FWD                               0             130               0
+RELAY_REPLY                           130               0               0
+UNKNOWN                                 0               0               0
+-------------------------------------------------------------------------
+Total                                 260             260               0
+-------------------------------------------------------------------------
+
+DHCPv6 Server stats:
+--------------------------------------------------------------------------------
+Relay Address           VRF name          Dest. Interface     Request   Response
+--------------------------------------------------------------------------------
+192:0:2::42            vxlan-1001            ---               130        130
+DROPS:
+------
+DHCPv6 Relay is disabled                     :   0
+Max hops exceeded                            :   0
+Packet validation fails                      :   0
+Unknown output interface                     :   0
+Invalid VRF                                  :   0
+Option insertion failed                      :   0
+Direct Replies (Recnfg/Adv/Reply) from server:   0
+IPv6 addr not configured                     :   0
+Interface error                              :   0
+VPN Option Disabled                          :   0
+IPv6 extn headers present                    :   0
+DHCP Request dropped on MCT                  :   0

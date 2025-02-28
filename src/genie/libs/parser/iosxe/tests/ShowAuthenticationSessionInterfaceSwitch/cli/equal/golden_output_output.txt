@@ -1,0 +1,21 @@
+Interface                MAC Address    Method  Domain  Status Fg  Session ID
+--------------------------------------------------------------------------------------------
+Te1/0/1                  0050.56bc.21a4 dot1x   UNKNOWN Unauth      5E0D130B00013C30D4524D05
+
+Key to Session Events Blocked Status Flags:
+
+  A - Applying Policy (multi-line status for details)
+  D - Awaiting Deletion
+  F - Final Removal in progress
+  I - Awaiting IIF ID allocation
+  P - Pushed Session
+  R - Removing User Profile (multi-line status for details)
+  U - Applying User Profile (multi-line status for details)
+  X - Unknown Blocker
+
+Runnable methods list:
+  Handle  Priority  Name
+      11         5  dot1xSup
+      10         5  dot1x
+      14        10  webauth
+      12        15  mab

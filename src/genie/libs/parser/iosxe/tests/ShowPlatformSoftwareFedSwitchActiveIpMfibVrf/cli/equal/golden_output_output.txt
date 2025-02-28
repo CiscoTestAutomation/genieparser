@@ -1,0 +1,18 @@
+show platform software fed switch active ipv6 mfib vrf ias ff1e::1 40::2
+  Mvrf: 3  ( 40::2, ff1e::1 ) Attrs:
+    Hw Flag                 : InHw
+    Mlist Flags             : None
+    Mlist_hndl (Id)         : 0x11889275ea0 ( 0xc823 )
+    Mlist Urid              : 0x10000000003238e8
+    Fset Urid (Hash)        : 0x300000000031f715 ( 68af2994 )        
+    RPF Adjacency ID        : 0xf80059d2
+    CPU Credit              : 0
+    Total Packets           : 4643 ( 9 pps approx.)
+    OIF Count               : 3
+    OIF Details:
+      AdjID          Interface          ParentIf        HwFlag      Flags
+      0xc851         Tu315              --------         ---        F NS
+      0xf80059d2     Hu1/1/0/1          --------         ---        F A
+      0xf80059f2     Hu2/1/0/1          --------         ---        F NS
+    GID                   : 8631
+    MCID OID Asic[0]      : 1346

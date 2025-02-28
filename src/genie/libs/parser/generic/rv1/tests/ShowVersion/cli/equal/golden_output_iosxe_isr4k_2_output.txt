@@ -1,0 +1,78 @@
+Cisco IOS XE Software, Version BLD_POLARIS_DEV_LATEST_20230924_003642
+Cisco IOS Software [IOSXE], ISR Software (X86_64_LINUX_IOSD-UNIVERSALK9_IAS-M), Experimental Version 17.14.20230924:023456 [BLD_POLARIS_DEV_LATEST_20230924_003642:/nobackup/mcpre/s2c-build-ws 101]
+Copyright (c) 1986-2023 by Cisco Systems, Inc.
+Compiled Sat 23-Sep-23 19:35 by mcpre
+
+
+Cisco IOS-XE software, Copyright (c) 2005-2023 by cisco Systems, Inc.
+All rights reserved.  Certain components of Cisco IOS-XE software are
+licensed under the GNU General Public License ("GPL") Version 2.0.  The
+software code licensed under GPL Version 2.0 is free software that comes
+with ABSOLUTELY NO WARRANTY.  You can redistribute and/or modify such
+GPL code under the terms of GPL Version 2.0.  For more details, see the
+documentation or "License Notice" file accompanying the IOS-XE software,
+or the applicable URL provided on the flyer accompanying the IOS-XE
+software.
+
+
+ROM: 16.7(3r)
+
+Router uptime is 5 days, 1 hour, 5 minutes
+Uptime for this control processor is 5 days, 1 hour, 8 minutes
+System returned to ROM by Enabling Install mode
+System image file is "bootflash:packages.conf"
+Last reload reason: Enabling Install mode
+
+
+
+This product contains cryptographic features and is subject to United
+States and local country laws governing import, export, transfer and
+use. Delivery of Cisco cryptographic products does not imply
+third-party authority to import, export, distribute or use encryption.
+Importers, exporters, distributors and users are responsible for
+compliance with U.S. and local country laws. By using this product you
+agree to comply with applicable laws and regulations. If you are unable
+to comply with U.S. and local laws, return this product immediately.
+
+A summary of U.S. laws governing Cisco cryptographic products may be found at:
+http://www.cisco.com/wwl/export/crypto/tool/stqrg.html
+
+If you require further assistance please contact us by sending email to
+export@cisco.com.
+
+
+
+Suite License Information for Module:'esg'
+
+--------------------------------------------------------------------------------
+Suite                 Suite Current         Type           Suite Next reboot
+--------------------------------------------------------------------------------
+FoundationSuiteK9     None                  Smart License  None
+securityk9
+appxk9
+
+
+Technology Package License Information:
+
+-----------------------------------------------------------------
+Technology    Technology-package           Technology-package
+              Current       Type           Next reboot
+------------------------------------------------------------------
+appxk9           appxk9           Smart License    appxk9
+securityk9       securityk9       Smart License    securityk9
+ipbase           ipbasek9         Smart License    ipbasek9
+
+The current throughput level is unthrottled
+
+
+Smart Licensing Status: Smart Licensing Using Policy
+
+cisco ISR4221/K9 (1RU) processor with 1639118K/3071K bytes of memory.
+Processor board ID FGL224914YB
+Router operating mode: Controller-Managed
+4 Gigabit Ethernet interfaces
+32768K bytes of non-volatile configuration memory.
+4194304K bytes of physical memory.
+7086079K bytes of flash memory at bootflash:.
+
+Configuration register is 0x2102

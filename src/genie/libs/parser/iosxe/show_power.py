@@ -207,7 +207,9 @@ class ShowPowerInlineSchema(MetaParser):
                 Optional('device'): str,
                 Optional('class'): str,
                 Optional('priority'): str,
-                Optional('max'): float
+                Optional('max'): float,
+                Optional('admin_max'): float,
+                Optional('admin_consumption'): float
             },
         },
         Optional('watts'): {
@@ -271,6 +273,15 @@ class ShowPowerInline(ShowPowerInlineSchema):
                         r'[Uu]sed\:(?P<used>[\d\.]+)\(\w+\)\s+'
                         r'[Rr]emaining\:(?P<remaining>[\d\.]+)\(\w+\)\s*$')
 
+        # Gi2/16    auto   power-deny 0.0     n/a                 n/a   4.0 
+        p4 = re.compile(r'^(?P<intf>\S+)\s+(?P<admin_state>\S+)\s+(?P<oper_state>[\w\-]+)\s+'
+                         r'(?P<power>[\d\.]+)\s+(?P<device>.+?)\s+(?P<class>\S+)\s+(?P<max>[\d\.]+)\s*$')
+                
+        # Gi2/16                 4.0                 15.4
+        p5 = re.compile(r'^(?P<intf>[\w\-\/\.]+)\s+'
+                        r'(?P<admin_max>[\d\.]+)\s+'
+                        r'(?P<admin_consumption>[\d\.]+)$')
+
         for line in out.splitlines():
             line = line.strip()
             
@@ -282,6 +293,8 @@ class ShowPowerInline(ShowPowerInlineSchema):
                 intf_dict = ret_dict.setdefault('interface', {}).setdefault(intf, {})
                 intf_dict['power'] = float(group.pop('power'))
                 intf_dict['max'] = float(group.pop('max'))
+                intf_dict['device'] = group.pop('device').strip() # Capture and strip device
+                intf_dict['class'] = group.pop('class').strip()
                 intf_dict.update({k: v for k, v in group.items() if 'n/a' not in v})
                 continue
 
@@ -321,6 +334,32 @@ class ShowPowerInline(ShowPowerInlineSchema):
                 stat_dict['available'] = float(group.pop('available'))
                 stat_dict['used'] = float(group.pop('used'))
                 stat_dict['remaining'] = float(group.pop('remaining'))
+
+            # Gi2/16    auto   power-deny 0.0     n/a                 n/a   4.0 
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                intf = Common.convert_intf_name(group.pop('intf'))
+                intf_dict = ret_dict.setdefault('interface', {}).setdefault(intf, {})
+
+                intf_dict['power'] = float(group.pop('power'))
+                intf_dict['max'] = float(group.pop('max'))
+                intf_dict['class'] = group.pop('class')  # Keep 'n/a' as is
+                intf_dict['device'] = group.pop('device').strip()  # Keep 'n/a' as is
+                
+                intf_dict.update({k: v for k, v in group.items() if 'n/a' not in v})
+                continue
+
+            # Gi2/16                 4.0                 15.4
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                intf = Common.convert_intf_name(group.pop('intf'))
+                intf_dict = ret_dict.setdefault('interface', {}).setdefault(intf, {})
+
+                intf_dict['admin_max'] = float(group.pop('admin_max'))
+                intf_dict['admin_consumption'] = float(group.pop('admin_consumption'))
+                continue
             
         # Remove statistics if we don't have any interfaces
         if 'interface' not in ret_dict and 'watts' in ret_dict:

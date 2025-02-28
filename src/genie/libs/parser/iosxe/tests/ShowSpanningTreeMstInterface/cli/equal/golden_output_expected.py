@@ -1,0 +1,30 @@
+expected_output = {
+    'boundary': 'internal',
+    'bpdu_filter': 'disable',
+    'bpdu_guard': 'disable',
+    'bpdu_received': 9,
+    'bpdu_sent': 10,
+    'edge_port': 'no',
+    'instances': {
+        0: {
+            'cost': 2000,
+            'priority': '128.54',
+            'role': 'Back',
+            'status': 'BLK',
+            'vlans_mapped': ['1-9', '21-29', '41-4094'],
+        },
+        4: {
+            'cost': 2000,
+            'priority': '128.54',
+            'role': 'Desg',
+            'status': 'LRN',
+            'vlans_mapped': ['30-40'],
+        },
+    },
+    'interface': 'TenGigabitEthernet1/1/2',
+    'link_type': 'point-to-point',
+    'mst_id': 0,
+    'port_guard': 'none',
+    'role': 'backup',
+    'status': 'blocking',
+}

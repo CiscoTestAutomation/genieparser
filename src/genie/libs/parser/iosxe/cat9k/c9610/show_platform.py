@@ -10,6 +10,7 @@ IOSXE c9610 parsers for the following show commands:
     * show platform hardware fed {switch} {mode} qos scheduler sdk interface {interface}
     * show platform hardware fed active qos queue config interface {interface}
     * show platform hardware fed switch {switch_var} qos queue config interface {interface}
+    * show platform hardware authentication status
 '''
 from genie.metaparser import MetaParser
 from genie.libs.parser.utils.common import Common
@@ -1367,4 +1368,61 @@ class ShowPlatformHardwareFedSwitchQosQueueConfig(
                 )
                 continue
         
+        return ret_dict
+
+
+class ShowPlatformHardwareAuthenticationStatusSchema(MetaParser):
+    """Schema for show platform hardware authentication status."""
+
+    schema = {
+        Any(): str
+    }
+
+
+# =====================================
+# Parser for:
+#  * 'show platform hardware authentication status'
+# =====================================
+class ShowPlatformHardwareAuthenticationStatus(
+    ShowPlatformHardwareAuthenticationStatusSchema
+):
+    """Parser for show platform hardware authentication status"""
+
+    cli_command = "show platform hardware authentication status"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+
+        # SUP 0 Authentication:  pass
+        # SUP 1 Authentication:  pass
+        # Line Card 1 Authentication:  pass
+        # Line Card 2 Authentication:  pass
+        # Line Card 5 Authentication:  pass
+        # Line Card 6 Authentication:  pass
+        # Fan Tray 1 Authentication:  pass
+        # Chassis Authentication: pass
+        p0 = re.compile(
+            r"(?P<hardware>.+Authentication):\s+(?P<Slot>(pass|Not Available|fail|Passed))$"
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # SUP 0 Authentication:  pass
+            # SUP 1 Authentication:  pass
+            # Line Card 1 Authentication:  pass
+            # Line Card 2 Authentication:  pass
+            # Line Card 5 Authentication:  pass
+            # Line Card 6 Authentication:  pass
+            # Fan Tray 1 Authentication:  pass
+            # Chassis Authentication: pass
+            m = p0.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict[group['hardware']] = group['Slot']
+                continue
+
         return ret_dict

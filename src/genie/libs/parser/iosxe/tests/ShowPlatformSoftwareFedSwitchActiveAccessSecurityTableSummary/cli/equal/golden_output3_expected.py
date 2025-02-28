@@ -1,0 +1,51 @@
+expected_output = {
+    'access_security_table_summary': {
+        'default_client_port_only_entries': {
+            1: {
+                'asic': 0,
+                'auth_act': 'FWD_ALL_LRN_ALL',
+                'flag': 'NONE',
+                'interface': 'Gi1/0/6',
+                'logical_id': 0,
+                'packets': 5,
+                'policy_oid': 1332,
+                'position': 28672,
+                'restore_auth_act': 'None',
+            },
+        },
+        'mac_client_port_and_mac_entries': {
+            1: {
+                'asic': 0,
+                'auth_act': 'FWD_ALL_LRN_ALL',
+                'drop': 'No',
+                'flag': 'NONE',
+                'interface': 'Gi1/0/6',
+                'logical_id': 0,
+                'mac': '0000.0011.1111',
+                'ovrd_vlan': 50,
+                'packets': 58,
+                'policy': 'IPv4v6',
+                'policy_oid': 7039,
+                'position': 8192,
+                'restore_auth_act': 'None',
+            },
+        },
+        'secure_mac_client_port_vlan_and_mac_entries': {
+            1: {
+                'asic': 0,
+                'auth_act': 'FWD_ALL_LRN_DATA',
+                'drop': 'No',
+                'flag': 'NONE',
+                'interface': 'Gi1/0/6',
+                'logical_id': 0,
+                'mac': '0000.0011.1111',
+                'packets': 0,
+                'policy': 'NONE',
+                'policy_oid': 1334,
+                'position': 16384,
+                'restore_auth_act': 'None',
+                'vlan': 50,
+            },
+        },
+    },
+}

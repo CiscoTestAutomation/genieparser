@@ -1,0 +1,7 @@
+[02/13/25 01:31:07.833 UTC 1 351] IPv6 RA other-config-flag notify for Gi0/0 flg 0
+[02/13/25 01:31:07.971 UTC 2 351] IPv6 RA other-config-flag notify for Bl0/4 flg 0
+[02/13/25 01:31:10.636 UTC 3 603] autoinstall: start-up config empty
+[02/13/25 01:31:10.648 UTC 4 603] autoinstall: autoinstall starting
+[02/13/25 01:31:10.648 UTC 5 603] No startup-config, starting autoinstall...
+[02/13/25 01:31:10.656 UTC 6 603] Guest Shell initialize started...
+[02/13/25 01:31:10.656 UTC 7 603] AUTO IP disabled: AUTO IP is not supported in this platform or in 

@@ -1,0 +1,41 @@
+NAME: "Chassis", DESCR: "Cisco ASR1002-HX Chassis"
+PID: ASR1002-HX        , VID: V06  , SN: FXS2510Q1SK
+
+NAME: "Power Supply Module 0", DESCR: "Cisco 750 Watt AC power supply"
+PID: ASR1000X-AC-750W  , VID: V01  , SN: POG25237XD7
+
+NAME: "Power Supply Module 1", DESCR: "Cisco 750 Watt AC power supply"
+PID: ASR1000X-AC-750W  , VID: V01  , SN: POG25237XGV
+
+NAME: "Fan Tray", DESCR: "Cisco ASR1002-HX Fan Tray"
+PID: ASR1002HX-FAN     , VID:      , SN:
+
+NAME: "module 0", DESCR: "Cisco ASR1002-HX Modular Interface Processor"
+PID: ASR1002-HX        , VID:      , SN:
+
+NAME: "SPA subslot 0/0", DESCR: "8-port Built-in Gigabit Ethernet Port Adapter"
+PID: BUILT-IN-EPA-8x1G , VID: N/A  , SN: JAE12345678
+
+NAME: "subslot 0/0 transceiver 0", DESCR: "GE T"
+PID: SP7041-E          , VID: E    , SN: MTC1720049R
+
+NAME: "subslot 0/0 transceiver 1", DESCR: "GE T"
+PID: SP7041-E          , VID: E    , SN: MTC183805YY
+
+NAME: "subslot 0/0 transceiver 2", DESCR: "GE T"
+PID: SP7041-E          , VID: E    , SN: MTC152503L0
+
+NAME: "subslot 0/0 transceiver 3", DESCR: "GE SX"
+PID: SFP-GE-S            , VID: V01  , SN: AGM1624P2YG
+
+NAME: "SPA subslot 0/1", DESCR: "8-port Built-in 10-Gigabit Ethernet Port Adapter"
+PID: BUILT-IN-EPA-8x10G, VID: N/A  , SN: JAE87654321
+
+NAME: "module R0", DESCR: "Cisco ASR1002-HX Route Processor"
+PID: ASR1002-HX        , VID: V06  , SN: JAE25291QBR
+
+NAME: "module F0", DESCR: "Cisco ASR1002-HX Embedded Services Processor"
+PID: ASR1002-HX        , VID:      , SN:
+
+NAME: "Crypto Asic F0/0", DESCR: "Asic 0 of module F0"
+PID: ASR1002HX-IPSECHW , VID: V01  , SN: JAE25060YQN

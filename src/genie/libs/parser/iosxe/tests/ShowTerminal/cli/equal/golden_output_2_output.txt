@@ -1,0 +1,31 @@
+show terminal
+Line 1, Location: "", Type: "VT100"
+Length: 0 lines, Width: 0 columns
+Baud rate (TX/RX) is 9600/9600
+Status: PSI Enabled, Ready, Active, No Exit Banner, Automore On
+Capabilities: Receives Logging Output
+Modem state: Ready
+Special Chars: Escape  Hold  Stop  Start  Disconnect  Activation
+                ^^x    none   -     -       none         
+Timeouts:      Idle EXEC    Idle Session   Modem Answer  Session   Dispatch
+                never         never                        none     not set
+                            Idle Session Disconnect Warning
+                              never 
+                            Login-sequence User Response
+                             00:00:30
+                            Autoselect Initial Wait
+                              not set 
+Modem type is unknown.
+Session limit is not set.
+Time since activation: 4d18h
+Editing is enabled.
+History is enabled, history size is 10.
+DNS resolution in show commands is enabled
+Full user help is disabled
+Allowed input transports are ssh.
+Allowed output transports are telnet ssh.
+Preferred transport is telnet.
+Shell: disabled
+Shell trace: off
+No output characters are padded
+No special data dispatching characters

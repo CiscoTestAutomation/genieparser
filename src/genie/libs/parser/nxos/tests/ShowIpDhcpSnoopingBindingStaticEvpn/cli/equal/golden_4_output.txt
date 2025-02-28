@@ -1,0 +1,18 @@
+MacAddress         IpAddress        Lease(Sec)  Type      BD    Interface           anchor       Freeze
+-----------------  ---------------  --------  ----------  ----  -------------      -------    -----------
+00:10:01:13:01:01  100.10.1.30      infinite  static      1001  port-channel11       YES       NONE
+00:10:01:13:01:02  100.10.1.31      infinite  static      1001  port-channel11       YES       NONE
+00:10:01:13:01:03  100.10.1.32      infinite  static      1001  port-channel11       YES       NONE
+00:10:01:13:01:04  100.10.1.33      infinite  static      1001  port-channel11       YES       NONE
+00:10:01:15:01:01  100.10.1.50      infinite  static      1001  nve1(peer-id: 1)     NO        NONE
+00:10:01:15:01:02  100.10.1.51      infinite  static      1001  nve1(peer-id: 1)     NO        NONE
+00:10:01:15:01:03  100.10.1.52      infinite  static      1001  nve1(peer-id: 1)     NO        NONE
+00:10:01:15:01:04  100.10.1.53      infinite  static      1001  nve1(peer-id: 1)     NO        NONE
+00:10:01:13:01:05  100.11.1.30      infinite  static      1002  port-channel11       YES       NONE
+00:10:01:13:01:06  100.11.1.31      infinite  static      1002  port-channel11       YES       NONE
+00:10:01:13:01:07  100.11.1.32      infinite  static      1002  port-channel11       YES       NONE
+00:10:01:13:01:08  100.11.1.33      infinite  static      1002  port-channel11       YES       NONE
+00:10:01:15:01:05  100.11.1.50      infinite  static      1002  nve1(peer-id: 1)     NO        NONE
+00:10:01:15:01:06  100.11.1.51      infinite  static      1002  nve1(peer-id: 1)     NO        NONE
+00:10:01:15:01:07  100.11.1.52      infinite  static      1002  nve1(peer-id: 1)     NO        NONE
+00:10:01:15:01:08  100.11.1.53      infinite  static      1002  nve1(peer-id: 1)     NO        NONE

@@ -35,6 +35,7 @@
     * show ipv6 dhcp statistics
     * show ipv6 dhcp binding 
     * show ipv6 dhcp relay binding
+    * show ipv6 general-prefix
 
 """
 
@@ -2460,6 +2461,79 @@ class ShowIpv6cefExactRoute(ShowIpv6cefExactRouteSchema):
                 ret_dict['destination'] = group['destination']
                 ret_dict['ip_adj'] = group['ip_adj']
                 ret_dict['ip_addr'] = group['ip_addr']
+                continue
+
+        return ret_dict
+
+#===============================================================================
+# Schema for 'show ipv6 general-prefix'
+#===============================================================================
+
+class ShowIpv6GeneralPrefixSchema(MetaParser):
+    """Schema for show ipv6 general-prefix"""
+
+    schema = {
+        'ipv6_prefix': {
+            Any(): {
+                'prefix': str,
+                'acquired_via': str,
+                'valid_lifetime': int,
+                'preferred_lifetime': int,
+                Optional('interfaces'): list,
+            }
+        }
+    }
+
+#===============================================================================
+# Parser for 'show ipv6 general-prefix'
+#===============================================================================
+class ShowIpv6GeneralPrefix(ShowIpv6GeneralPrefixSchema):
+    """Parser for show ipv6 general-prefix"""
+
+    cli_command = 'show ipv6 general-prefix'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # IPv6 Prefix pd_prefix, acquired via DHCP PD
+        p1 = re.compile(r'^IPv6 Prefix (?P<prefix_name>\S+), acquired via (?P<acquired_via>.+)$')
+
+        # 2001:DB8:1200::/48 Valid lifetime 1735, preferred lifetime 535
+        p2 = re.compile(r'^(?P<prefix>\S+) Valid lifetime (?P<valid_lifetime>\d+), preferred lifetime (?P<preferred_lifetime>\d+)$')
+
+        # GigabitEthernet10/0/47 (Address command)
+        p3 = re.compile(r'^(?P<interface>\S+) \(Address command\)$')
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # IPv6 Prefix pd_prefix, acquired via DHCP PD
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                prefix_name = group['prefix_name']
+                prefix_dict = ret_dict.setdefault('ipv6_prefix', {}).setdefault(prefix_name, {})
+                prefix_dict['acquired_via'] = group['acquired_via']
+                continue
+
+            # 2001:DB8:1200::/48 Valid lifetime 1735, preferred lifetime 535
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                prefix_dict['prefix'] = group['prefix']
+                prefix_dict['valid_lifetime'] = int(group['valid_lifetime'])
+                prefix_dict['preferred_lifetime'] = int(group['preferred_lifetime'])
+                continue
+
+            # GigabitEthernet10/0/47 (Address command)
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                interfaces = prefix_dict.setdefault('interfaces', [])
+                interfaces.append(group['interface'])
                 continue
 
         return ret_dict

@@ -1,0 +1,20 @@
+Building configuration...
+
+Current configuration : 316 bytes
+!
+interface TwoGigabitEthernet1/0/36
+ no switchport
+ ip address 50.0.0.2 255.255.255.0
+ ip verify unicast source reachable-via any
+ ip access-group 102 in
+ ip ospf 1 area 0
+ ipv6 address 50::2/64
+ ipv6 enable
+ ipv6 verify unicast source reachable-via any
+ ipv6 traffic-filter ipv6_deny in
+ ospfv3 1 ipv6 area 0
+
+ip verify unicast source reachable-via any
+ip verify unicast source reachable-via rx
+ip verify unicast source reachable-via rx allow-self-ping
+ip verify unicast source reachable-via rx 102

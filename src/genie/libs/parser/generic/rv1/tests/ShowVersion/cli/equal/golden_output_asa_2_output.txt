@@ -1,0 +1,59 @@
+Cisco Adaptive Security Appliance Software Version 8.4(1)
+Device Manager Version 6.4(1)
+Compiled on Thu 20-Jan-12 04:05 by builders
+System image file is "disk0:/cdisk.bin"
+Config file at boot was "disk0:/tomm_backup.cfg"
+
+asa3 up 3 days 3 hours
+Hardware:   ASA5520, 512 MB RAM, CPU Pentium 4 Celeron 2000 MHz
+Internal ATA Compact Flash, 64MB
+Slot 1: ATA Compact Flash, 128MB
+BIOS Flash AT49LW080 @ 0xfff00000, 1024KB
+
+Encryption hardware device : Cisco ASA-55x0 on-board accelerator (revision 0x0)
+Boot microcode   : CN1000-MC-BOOT-2.00
+SSL/IKE microcode: CNLite-MC-SSLm-PLUS-2.03
+IPsec microcode  : CNlite-MC-IPSECm-MAIN-2.06
+
+ 0: Ext: GigabitEthernet0/0  : address is 0013.c480.82ce, irq 9
+ 1: Ext: GigabitEthernet0/1  : address is 0013.c480.82cf, irq 9
+ 2: Ext: GigabitEthernet0/2  : address is 0013.c480.82d0, irq 9
+ 3: Ext: GigabitEthernet0/3  : address is 0013.c480.82d1, irq 9
+ 4: Ext: Management0/0       : address is 0013.c480.82cd, irq 11
+ 5: Int: Not used            : irq 11
+ 6: Int: Not used            : irq 5
+
+Licensed features for this platform:
+ Maximum Physical Interfaces       : Unlimited      perpetual
+ Maximum VLANs                     : 150            perpetual
+ Inside Hosts                      : Unlimited      perpetual
+ Failover                          : Active/Active  perpetual
+ VPN-DES                           : Enabled        perpetual
+ VPN-3DES-AES                      : Enabled        perpetual
+ Security Contexts                 : 10             perpetual
+ GTP/GPRS                          : Enabled        perpetual
+ AnyConnect Premium Peers          : 2              perpetual
+ AnyConnect Essentials             : Disabled       perpetual
+ Other VPN Peers                   : 750            perpetual
+ Total VPN Peers                   : 750            perpetual
+ Shared License                    : Enabled        perpetual
+  Shared AnyConnect Premium Peers : 12000          perpetual
+ AnyConnect for Mobile             : Disabled       perpetual
+ AnyConnect for Cisco VPN Phone    : Disabled       perpetual
+ Advanced Endpoint Assessment      : Disabled       perpetual
+ UC Phone Proxy Sessions           : 12             62 days
+ Total UC Proxy Sessions           : 12             62 days
+ Botnet Traffic Filter             : Enabled        646 days
+ Intercompany Media Engine         : Disabled       perpetual
+This platform has a Base license.
+The flash permanent activation key is the SAME as the running permanent key.
+Active Timebased Activation Key:
+0xa821d549 0x35725fe4 0xc918b97b 0xce0b987b 0x47c7c285
+Botnet Traffic Filter        : Enabled    646 days
+0xyadayad2 0xyadayad2 0xyadayad2 0xyadayad2 0xyadayad2
+Total UC Proxy Sessions      : 10         62 days
+Serial Number: JMX0938K0C0
+Running Permanent Activation Key: 0xce06dc6b 0x8a7b5ab7 0xa1e21dd4 0xd2c4b8b8 0xc4594f9c 
+Running Timebased Activation Key: 0xa821d549 0x35725fe4 0xc918b97b 0xce0b987b 0x47c7c285 
+Configuration register is 0x1
+Configuration last modified by docs at 15:23:22.339 EDT Fri Oct 30 2012

@@ -1,0 +1,11 @@
+Name: "Chassis", DESCR: "ASA 5555-X with SW, 8 GE Data, 1 GE Mgmt"
+PID: ASA5555, VID: V01, SN: AAAAA11111
+
+Name: "power supply 1", DESCR: "ASA 5545-X/5555-X AC Power Supply"
+PID: AAA-AAA-AAA, VID: N/A, SN: AAA111
+
+Name: "Storage Device 1", DESCR: "Micron 128 GB SSD MLC, Model Number: C11111-AAAAAAAA"
+PID: N/A, VID: N/A, SN: AAAAA11111
+
+Name: "module 100", DESCR: "WS-SVC-ASASM-1 Adaptive Security Appliance Service Module"
+PID: AA-AAA-111-111    , VID: V01     , SN: AAAAA11111

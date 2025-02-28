@@ -1,0 +1,10 @@
+Interface Admin  Oper       Power   Device              Class Max
+                            (Watts)                            
+--------- ------ ---------- ------- ------------------- ----- ----
+Gi1/16    auto   power-deny 0.0     n/a                 n/a   4.0  
+
+Interface  AdminPowerMax   AdminConsumption    
+             (Watts)           (Watts)           
+---------- --------------- --------------------  
+
+Gi1/16                 4.0                 15.4

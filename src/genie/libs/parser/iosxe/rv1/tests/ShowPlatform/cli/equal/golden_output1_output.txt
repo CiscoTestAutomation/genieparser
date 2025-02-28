@@ -1,0 +1,6 @@
+show platform
+Switch  Ports    Model                Serial No.   MAC address     Hw Ver.       Sw Ver. 
+------  -----   ---------             -----------  --------------  -------       --------
+ 1       12     IE-3500-8U3X          FCW2828YAN2  cc6a.339c.a000  V00           17.18.01      
+
+IE-3500-8U3X-uut1#

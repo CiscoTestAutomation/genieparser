@@ -1,0 +1,45 @@
+----------------------------------------------------------------------
+Message Type             Rx              Tx           Drops
+----------------------------------------------------------------------
+Discover                 16              16               0
+Offer                    16              16               0
+Request(*)              322             322               0
+Ack                     322             322               0
+Release(*)               18              18               0
+Decline                   0               0               0
+Inform(*)                 0               0               0
+Nack                      0               0               0
+----------------------------------------------------------------------
+Total                   694             694               0
+----------------------------------------------------------------------
+DHCP server stats:
+----------------------------------------------------------------------------
+Server           Vrf                                 Request       Response
+----------------------------------------------------------------------------
+192.0.2.42                                               356            338
+----------------------------------------------------------------------
+
+DHCP L3 FWD:
+Total Packets Received                           :         0
+Total Packets Forwarded                          :         0
+Total Packets Dropped                            :         0
+Non DHCP:
+Total Packets Received                           :         0
+Total Packets Forwarded                          :         0
+Total Packets Dropped                            :         0
+DROP:
+DHCP Relay not enabled                           :         0
+Invalid DHCP message type                        :         0
+Interface error                                  :         0
+Tx failure towards server                        :         0
+Tx failure towards client                        :         0
+Unknown output interface                         :         0
+Unknown vrf or interface for server              :         0
+Max hops exceeded                                :         0
+Option 82 validation failed                      :         0
+Packet Malformed                                 :         0
+DHCP Request dropped on MCT                      :         0
+Relay Trusted port not configured                :         0
+*  -  These counters will show correct value when switch
+receives DHCP request packet with destination ip as broadcast
+address. If request is unicast it will be HW switched

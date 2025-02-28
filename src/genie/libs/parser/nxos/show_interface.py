@@ -3,6 +3,7 @@
 NXOS parsers for the following show commands:
     * show interface
     * show interface {interface}
+    * show interface | include {include}
     * show ip interface {interface} vrf {vrf}
     * show ip interface {interface} vrf all
     * show ip interface vrf {vrf}
@@ -189,7 +190,12 @@ class ShowInterfaceSchema(MetaParser):
 class ShowInterface(ShowInterfaceSchema):
     """Parser for show interface, show interface <interface>"""
 
-    cli_command = ['show interface', 'show interface {interface}', 'show interface {interface} | include {include}', 'show interface | include {include}']
+    cli_command = [
+        'show interface',
+        'show interface {interface}',
+        'show interface | include {include}',
+        'show interface {interface} | include {include}',
+    ]
     exclude = [
         'in_unicast_pkts',
         'out_unicast_pkts',
@@ -222,17 +228,9 @@ class ShowInterface(ShowInterfaceSchema):
         'in_crc_errors',
         'reliability']
 
-    def cli(self, interface='', include='', output=None):
+    def cli(self, command, interface="", include="", output=None):
         if output is None:
-            if interface and include:
-                cmd = self.cli_command[2].format(interface=interface, include=include)
-            elif include:
-                cmd = self.cli_command[3].format(include=include)
-            elif interface:
-                cmd = self.cli_command[1].format(interface=interface)
-            else:
-                cmd = self.cli_command[0]
-            output = self.device.execute(cmd)
+            output = self.device.execute(command)
 
         # Ethernet2/1.10 is down (Administratively down)
         # Vlan1 is down (Administratively down), line protocol is down, autostate enabled
@@ -1308,7 +1306,7 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                     = interface_status
                 ip_interface_vrf_all_dict[interface]['iod'] = iod
                 ip_interface_vrf_all_dict[interface]['vrf'] = vrf
-                
+
                 if m.groupdict()['mode']:
                     mode = m.groupdict()['mode']
                     ip_interface_vrf_all_dict[interface]['mode'] = mode.split(',')
@@ -3740,7 +3738,7 @@ class ShowInterfaceStatus(ShowInterfaceStatusSchema):
 
         # Interface     Name                Status    Reason
         header_p0 = re.compile(r'Interface\s+Name\s+Status\s+Reason')
-        
+
         # Captures the below header:
         #
         # Port          Name               Status    Vlan      Duplex  Speed   Type
@@ -3765,9 +3763,9 @@ class ShowInterfaceStatus(ShowInterfaceStatusSchema):
         # Eth102/1/3    zzz (Eth1, test_st connected 205       full    a-1000
         # Po102         VPC PO access      connected 10        full    10G     --
         # nve1 -- connected -- auto auto --
-        # Po101         vPC Peer-link      connected trunk     full    10G     -- 
+        # Po101         vPC Peer-link      connected trunk     full    10G     --
         # Eth1/1        --                 connected routed    full    100G    QSFP-100G-SR1.2
-        # Eth1/7        ig1ezsit-ucs01-A:e connected trunk     full    10G     10Gbase-SR 
+        # Eth1/7        ig1ezsit-ucs01-A:e connected trunk     full    10G     10Gbase-SR
         # Eth1/15       --                 linkFlapE routed    auto    auto    QSFP-100G-CR4
         p1 = re.compile(
             r'^(?P<interface>\w\S+)\s+'
@@ -3783,11 +3781,11 @@ class ShowInterfaceStatus(ShowInterfaceStatusSchema):
             r'(?P<port_speed>\S+)\s*'
             r'(?P<type>(\S+|Fa\S+\sExt\S+))?\s*$'
         )
- 
+
         # Eth1/5 *** L2 L3-CIS-N connected trunk full a-1000 1000base-T
         # Eth1/4 *** FEX 2248TP  connected 1     full a-10G  Fabric Exte
-        
-        # Tunnel7       --                  up        no-reason 
+
+        # Tunnel7       --                  up        no-reason
         p2 = re.compile(r'(?P<interface>(\S+))\s+(?P<name>([\S\s]+))(?<! )\s+(?P<status>(\S+))\s+(?P<reason>(\S+))')
 
         for line in out.splitlines():
@@ -3798,7 +3796,7 @@ class ShowInterfaceStatus(ShowInterfaceStatusSchema):
             if m1 or m2:
                 flag = True
                 continue
-            m = p1.match(line) 
+            m = p1.match(line)
             if m:
                 group = m.groupdict()
                 interface = Common.convert_intf_name(group['interface'])
@@ -3808,13 +3806,13 @@ class ShowInterfaceStatus(ShowInterfaceStatusSchema):
                 if group['status'] is not None:
                     intf_dict['status'] =(group['status'])
                 if group['vlan'] is not None:
-                    intf_dict['vlan'] = (group['vlan'])  
+                    intf_dict['vlan'] = (group['vlan'])
                 if group['duplex_code'] is not None:
-                    intf_dict['duplex_code'] =(group['duplex_code'])  
+                    intf_dict['duplex_code'] =(group['duplex_code'])
                 if group['port_speed'] is not None:
                     intf_dict['port_speed'] =(group['port_speed'])
                 if group['type'] is not None:
-                    intf_dict['type'] =(group['type'])                   
+                    intf_dict['type'] =(group['type'])
                 continue
             m = p2.match(line)
             if m and flag:

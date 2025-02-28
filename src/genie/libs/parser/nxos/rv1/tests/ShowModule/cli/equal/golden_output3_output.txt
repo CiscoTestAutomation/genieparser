@@ -1,0 +1,44 @@
+show module
+Mod Ports             Module-Type                      Model           Status
+--- ----- ------------------------------------- --------------------- ---------
+1    0    Supervisor                            N9K-C9400-SW-GX2A     ok
+27   0    Virtual Supervisor Module             N9K-C9400-SW-GX2A     active *
+
+Mod  Sw                       Hw    Slot
+---  ----------------------- ------ ----
+1    10.3(0)INA9(0.62)        0.1    LC1
+27   10.3(0)INA9(0.62)        0.1    SUP1
+
+
+Mod  MAC-Address(es)                         Serial-Num
+---  --------------------------------------  ----------
+1    68-87-c6-23-ac-a6 to 68-87-c6-23-ad-b3  FDO26041H9M
+27   68-87-c6-23-ac-a6 to 68-87-c6-23-ad-b3  FDO26041H9M
+
+Mod  Online Diag Status
+---  ------------------
+1    Pass
+27   Pass
+
+* this terminal session
+Lem Ports             Module-Type                      Model           Status
+--- ----- ------------------------------------- --------------------- ---------
+1    16   16x200G Ethernet Module               N9K-X9400-16W         ok
+4    8    8x400G Ethernet Module                N9K-X9400-8D          ok
+
+Mod  Sw                       Hw    Slot
+---  ----------------------- ------ ----
+1    NA                       0.1    LC1
+4    NA                       0.1    LC4
+
+Lem MAC-Address(es)                         Serial-Num
+---  --------------------------------------  ----------
+1    68-87-c6-23-ac-a6 to 68-87-c6-23-ac-c5  FDO260417C1
+4    68-87-c6-23-ad-06 to 68-87-c6-23-ad-25  FDO26030YEE
+
+Lem  Online Diag Status
+---  ------------------
+1    Pass
+4    Pass
+
+sanity136-tor1#

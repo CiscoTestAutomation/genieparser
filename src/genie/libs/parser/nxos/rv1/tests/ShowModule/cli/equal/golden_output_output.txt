@@ -1,0 +1,70 @@
+
+Mod  Ports  Module-Type                         Model              Status
+---  -----  ----------------------------------- ------------------ ----------
+1    0      Supervisor Module-2                 N7K-SUP2           active *
+2    0      Supervisor Module-2                 N7K-SUP2           ha-standby
+3    48     1/10 Gbps Ethernet Module           N7K-F248XP-25E     ok
+4    12     10/40 Gbps Ethernet Module          N7K-F312FQ-25      ok
+6    32     10 Gbps Ethernet XL Module          N7K-M132XP-12L     ok
+7    24     10 Gbps Ethernet Module             N7K-M224XP-23L     ok
+8    48     10/100/1000 Mbps Ethernet XL Module N7K-M148GT-11L     ok
+
+Mod  Sw               Hw
+---  ---------------  ------
+1    8.3(0)CV(0.658)  1.0
+2    8.3(0)CV(0.658)  1.0
+3    8.3(0)CV(0.658)  1.0
+4    8.3(0)CV(0.658)  1.0
+6    8.3(0)CV(0.658)  2.0
+7    8.3(0)CV(0.658)  1.0
+8    8.3(0)CV(0.658)  2.1
+
+
+
+Mod  MAC-Address(es)                         Serial-Num
+---  --------------------------------------  ----------
+1    84-78-ac-ff-d3-dc to 84-78-ac-ff-d3-ee  JAF1708AGTH
+2    84-78-ac-ff-c8-0f to 84-78-ac-ff-c8-21  JAF1708AGQH
+3    84-78-ac-ff-f5-48 to 84-78-ac-ff-f5-7b  JAF1717AAND
+4    54-4a-00-ff-c6-ed to 54-4a-00-ff-c6-29  JAE18120FLU
+6    bc-16-65-ff-04-b8 to bc-16-65-ff-04-db  JAF1719AHMB
+7    d8-67-d9-ff-9f-d6 to d8-67-d9-ff-9f-f1  JAF1641APPF
+8    bc-16-65-ff-f2-0b to bc-16-65-ff-f3-3d  JAF1717BEAT
+
+Mod  Online Diag Status
+---  ------------------
+1    Pass
+2    Pass
+3    Pass
+4    Pass
+6    Pass
+7    Pass
+8    Pass
+
+Xbar Ports  Module-Type                         Model              Status
+---  -----  ----------------------------------- ------------------ ----------
+1    0      Fabric Module 2                     N7K-C7009-FAB-2    ok
+2    0      Fabric Module 2                     N7K-C7009-FAB-2    ok
+3    0      Fabric Module 2                     N7K-C7009-FAB-2    ok
+4    0      Fabric Module 2                     N7K-C7009-FAB-2    ok
+5    0      Fabric Module 2                     N7K-C7009-FAB-2    ok
+
+Xbar Sw               Hw
+---  ---------------  ------
+1    NA               3.1
+2    NA               3.1
+3    NA               3.1
+4    NA               3.1
+5    NA               3.1
+
+
+
+Xbar MAC-Address(es)                         Serial-Num
+---  --------------------------------------  ----------
+1    NA                                      JAF1705AEEF
+2    NA                                      JAF1705BFBM
+3    NA                                      JAF1705AELK
+4    NA                                      JAF1705BFCF
+5    NA                                      JAF1704APQH
+
+* this terminal session

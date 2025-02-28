@@ -1,0 +1,164 @@
+Client MAC Address : 2023.5104.cca3
+Client MAC Type : Universally Administered Address
+Client DUID: NA
+Client IPv4 Address : 10.184.112.198
+Client IPv6 Addresses : fe80::e7cb:ca7f:c7e5:ed8d
+Client Username : 20-23-51-04-CC-A3
+AP MAC Address : 1484.73db.e6c0
+AP Name: wdf96-ap-01-006-row
+AP slot : 0
+Client State : Associated
+Policy Profile : SSID_profile
+Ipsk Tag : c0c6c42eb551ed52
+Flex Profile : default-flex-profile
+Wireless LAN Id: 19
+WLAN Profile Name: SSID_profile
+Wireless LAN Network Name (SSID): SSID
+BSSID : 1484.73db.e6c1
+Connected For : 19 seconds 
+Protocol : 802.11n - 2.4 GHz
+Channel : 11
+Client IIF-ID : 0xa0000011
+Association Id : 1
+Authentication Algorithm : Simultaneous Authentication of Equals (SAE)
+Idle state timeout : N/A
+Session Timeout : 86400 sec (Remaining time: 86385 sec)
+Session Warning Time : Timer not running
+Input Policy Name  : None
+Input Policy State : None
+Input Policy Source : None
+Output Policy Name  : None
+Output Policy State : None
+Output Policy Source : None
+WMM Support : Enabled
+U-APSD Support : Disabled
+Fastlane Support : Disabled
+Client Active State : In-Active
+Power Save : OFF
+Supported Rates : 1.0,2.0,5.5,6.0,9.0,11.0,12.0,18.0,24.0,36.0,48.0,54.0
+AAA QoS Rate Limit Parameters:
+  QoS Average Data Rate Upstream             : 0 (kbps)
+  QoS Realtime Average Data Rate Upstream    : 0 (kbps)
+  QoS Burst Data Rate Upstream               : 0 (kbps)
+  QoS Realtime Burst Data Rate Upstream      : 0 (kbps)
+  QoS Average Data Rate Downstream           : 0 (kbps)
+  QoS Realtime Average Data Rate Downstream  : 0 (kbps)
+  QoS Burst Data Rate Downstream             : 0 (kbps)
+  QoS Realtime Burst Data Rate Downstream    : 0 (kbps)
+Mobility:
+  Move Count                  : 0
+  Mobility Role               : Local
+  Mobility Roam Type          : None
+  Mobility Complete Timestamp : 02/19/2025 19:55:42 UTC
+Client Join Time:
+  Join Time Of Client : 02/19/2025 19:55:39 UTC
+Client State Servers : None
+Client ACLs : None
+Policy Manager State: Run
+Last Policy Manager State : IP Learn Complete
+Client Entry Create Time : 16 seconds 
+Policy Type : WPA3
+Encryption Cipher : CCMP (AES)
+Authentication Key Management : SAE
+AAA override passphrase : Yes
+SAE PWE Method : Hash to Element(H2E)
+Transition Disable Bitmap : None
+User Defined (Private) Network : Disabled
+User Defined (Private) Network Drop Unicast : Disabled
+Encrypted Traffic Analytics : No
+Protected Management Frame - 802.11w : Yes
+EAP Type : Not Applicable
+VLAN Override after Webauth : No
+VLAN : default
+Multicast VLAN : 0
+VRF Name : N/A
+WiFi Direct Capabilities:
+  WiFi Direct Capable           : No
+Central NAT : DISABLED
+Session Manager:
+  Point of Attachment : capwap_9000001d
+  IIF ID             : 0x9000001D
+  Authorized         : TRUE
+  Session timeout    : 86400
+  Common Session ID: A0671C0A000005681FC7BA95
+  Acct Session ID  : 0x00000555
+  Last Tried Aaa Server Details:
+  	Server IP : 10.81.224.84
+  Auth Method Status List
+  	Method : SAE
+  		SM State        : TERMINATE
+  		Authen Status   : Success
+  Local Policies:
+  	Service Template : wlan_svc_SSID_profile (priority 254)
+  		VLAN             : 1
+  		Absolute-Timer   : 86400
+  Server Policies:
+  		Output SGT       : 2724-02
+  Resultant Policies:
+  		Output SGT       : 2724-02
+  		VLAN Name        : default
+  		VLAN             : 1
+  		Absolute-Timer   : 86400
+DNS Snooped IPv4 Addresses : None
+DNS Snooped IPv6 Addresses : None
+Client Capabilities
+  CF Pollable : Not implemented
+  CF Poll Request : Not implemented
+  Short Preamble : Not implemented
+  PBCC : Not implemented
+  Channel Agility : Not implemented
+  Listen Interval : 0
+Fast BSS Transition Details :
+  Reassociation Timeout : 0
+11v BSS Transition : Implemented
+11v DMS Capable : No
+QoS Map Capable : Yes
+FlexConnect Data Switching : N/A
+FlexConnect Dhcp Status : N/A
+FlexConnect Authentication : N/A
+Client Statistics:
+  Number of Bytes Received from Client : 0
+  Number of Bytes Sent to Client : 0
+  Number of Packets Received from Client : 0
+  Number of Packets Sent to Client : 0
+  Number of Data Retries : 0
+  Number of RTS Retries : 0
+  Number of Tx Total Dropped Packets : 0
+  Number of Duplicate Received Packets : 0
+  Number of Decrypt Failed Packets : 0
+  Number of Mic Failured Packets : 0
+  Number of Mic Missing Packets : 0
+  Number of Policy Errors : 0
+  Radio Signal Strength Indicator : -54 dBm
+  Signal to Noise Ratio : 45 dB
+Fabric status : Enabled
+  RLOC    : 10.28.102.37
+  VNID    : 8190
+  SGT     : 10020
+  Control plane name  : default-control-plane
+Radio Measurement Enabled Capabilities
+  Capabilities: Passive Beacon Measurement, Active Beacon Measurement, Table Beacon Measurement
+Client Scan Report Time : Timer not running
+Client Scan Reports 
+Assisted Roaming Neighbor List 
+Nearby AP Statistics:
+EoGRE : Pending Classification
+Device Classification Information:
+  Device Type      : Un-Classified Device
+  Device Name      : atp-ucs-2-linux-1
+  Protocol Map     : 0x000009  (OUI, DHCP)
+  Device Protocol  : DHCP
+    Type             : 12   21  
+    Data             : 15
+    00000000  00 0c 00 11 61 74 70 2d  75 63 73 2d 32 2d 6c 69  |....atp-ucs-2-li|
+    00000010  6e 75 78 2d 31                                    |nux-1           |
+    Type             : 55   21  
+    Data             : 15
+    00000000  00 37 00 11 01 02 06 0c  0f 1a 1c 79 03 21 28 29  |.7.........y.!()|
+    00000010  2a 77 f9 fc 11                                    |*w...           |
+Max Client Protocol Capability: 
+WiFi to Cellular Steering : Not implemented
+Cellular Capability : N/A
+Advanced Scheduling Requests Details:
+  Apple Specific Requests(ASR) Capabilities/Statistics:
+    Regular ASR support: DISABLED

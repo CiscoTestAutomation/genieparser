@@ -6587,9 +6587,13 @@ class ShowPlatformHardwareFpgaSwitch(ShowPlatformHardwareFpgaSwitchSchema):
             output = self.device.execute(self.cli_command.format(switch_num=switch_num))
 
         # Register Addr           FPGA Reg Description    Value
+        # or
+        # Register Addr	                  FPGA Reg Description	Register Value
+        p0 = re.compile(r"^Register\s+Addr\s+.*$")
+
         # 0x000000f0         Common Platform Board ID     0x02705919
         p1 = re.compile(
-            r"^(?P<register_address>[\w\d]+)\s+(?P<fpga_reg_desc>[\S\s]+)     (?P<value>[\w\d]+)$"
+            r"^(?P<register_address>[\w\d]+)\s+(?P<fpga_reg_desc>[\S\s]+)\s+(?P<value>[\w\d]+)$"
         )
 
         ret_dict = {}
@@ -6597,13 +6601,17 @@ class ShowPlatformHardwareFpgaSwitch(ShowPlatformHardwareFpgaSwitchSchema):
         for line in output.splitlines():
             line = line.strip()
 
+            m = p0.match(line)
+            if m:
+                continue
+
             m = p1.match(line)
             if m:
                 dict_val = m.groupdict()
                 sub_dict = ret_dict.setdefault("register_address", {}).setdefault(
                     dict_val["register_address"], {}
                 )
-                sub_dict["fpga_reg_desc"] = dict_val["fpga_reg_desc"]
+                sub_dict["fpga_reg_desc"] = dict_val["fpga_reg_desc"].strip()
                 sub_dict["value"] = dict_val["value"]
                 continue
 

@@ -1,0 +1,7 @@
+
+R1#show issu state detail
+--- Starting local lock acquisition on switch 1 ---
+Finished local lock acquisition on switch 1
+
+No ISSU operation is in progress
+        

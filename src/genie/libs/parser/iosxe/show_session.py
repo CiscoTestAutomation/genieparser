@@ -28,7 +28,7 @@ class ShowLineSchema(MetaParser):
                 'uses': int,
                 'noise': int,
                 'overruns': str,
-                'int': str,
+                Optional('int'): str,
             },
         }
     }
@@ -63,7 +63,7 @@ class ShowLine(ShowLineSchema):
                          r' +(?P<roty>[\w\-]+) +(?P<acco>[\w\-]+)'
                          r' +(?P<acci>[\w\-]+) +(?P<uses>\d+)'
                          r' +(?P<noise>\d+) +(?P<overruns>[\d\/]+)'
-                         r' +(?P<int>[\w\-]+)$')
+                         r' *(?P<int>[\w\-]+)?$')
 
         idx = 0
         for line in out.splitlines():
@@ -132,7 +132,8 @@ class ShowLine(ShowLineSchema):
                 tty_dict['uses'] = int(group['uses'])
                 tty_dict['noise'] = int(group['noise'])
                 tty_dict['overruns'] = group['overruns']
-                tty_dict['int'] = group['int']
+                if group["int"]:
+                    tty_dict['int'] = group["int"]
                 continue
 
         return ret_dict
@@ -192,7 +193,8 @@ class ShowUsers(ShowUsersSchema):
         #    10 vty 0               Virtual-Access2      0          1212321
         #    0 con 0                idle
         # *   2 vty 0         user1           idle            0   SERVICE1.CISCO.COM
-        p1 = re.compile(r'^(?:(?P<active>\*))?( +)?(?P<line>\d+ \S+ \d+)(?: {1,9}(?P<user>\S+))? '
+        # *868 vty 0/1/0 lab        idle                 00:00:00 10.61.105.18
+        p1 = re.compile(r'^(?:(?P<active>\*))?( +)?(?P<line>(\d+)(?:\s*\S+ (\d+(?:/\d+)*))?)(?: {1,9}(?P<user>\S+))? '
                         r'+(?P<host>\S+)( +)?(?P<idle>\S+)?(?: +(?P<location>\S+))?')
         # counting spaces from 1-9, check if class errors in future releases
 

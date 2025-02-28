@@ -140,6 +140,7 @@ class ShowHardwareLedSchema(MetaParser):
     schema = {
         Optional('current_mode'): str,
         Optional('led_auto_off'): str,
+        Optional('led_hw_state'): str,
         Optional('switch'): {
             Any():{
                 'system': str,
@@ -253,8 +254,14 @@ class ShowHardwareLed(ShowHardwareLedSchema):
         # Current Mode: STATUS
         p12 = re.compile(r'^Current Mode:\s+(?P<status>\w+)$')
 
-        # LED Auto off: Disabled
-        p12_1 = re.compile(r'^LED Auto off:\s+(?P<auto_off>\w+)$') 
+        # LED Auto off: Disabled // this output changed as below and new line added for hardware state.
+        # LED auto-off: Enabled
+        p12_1 = re.compile(r'^LED auto-off:\s+(?P<auto_off>\w+)$')
+
+        # LED Hardware State: OFF
+        p12_2 = re.compile(r'^LED Hardware State:\s+(?P<hw_state>\w+)$')
+
+
 
         # MASTER: GREEN
         p13 = re.compile(r'^MASTER:\s+(?P<master>\w+)$')
@@ -415,6 +422,13 @@ class ShowHardwareLed(ShowHardwareLedSchema):
             if m:
                 group = m.groupdict()
                 ret_dict.update({'led_auto_off' : group['auto_off']})
+                continue
+
+            # LED Hardware State: OFF
+            m = p12_2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({'led_hw_state' : group['hw_state']})
                 continue
 
             # MASTER: GREEN

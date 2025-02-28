@@ -1,0 +1,22 @@
+CAT9400_HA_IOX#show issu state detail
+--- Starting local lock acquisition on R0 ---
+Finished local lock acquisition on R0
+
+--- Starting installation state synchronization ---
+Finished installation state synchronization
+
+Current ISSU Status: Enabled        
+Previous ISSU Operation: Successful 
+=======================================================
+System Check                        Status
+-------------------------------------------------------
+Platform ISSU Support               Yes
+Standby Online                      Yes
+Autoboot Enabled                    Yes
+SSO Mode                            Yes
+Install Boot                        Yes
+Valid Boot Media                    Yes
+Operational Mode                    HA-STANDALONE
+=======================================================
+No ISSU operation is in progress
+        

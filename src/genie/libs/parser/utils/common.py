@@ -36,6 +36,103 @@ except:
 
 parser_data = None
 
+INTERFACE_ABBREVIATION_MAPPING_TABLE = {
+    # Please add more when face other type of interface
+        'generic':
+        # generic keys for when no OS detected
+        {
+            'Eth': 'Ethernet',
+            'Lo': 'Loopback',
+            'lo': 'Loopback',
+            'Fa': 'FastEthernet',
+            'Fas': 'FastEthernet',
+            'Po': 'Port-channel',
+            'PO': 'Port-channel',
+            'Null': 'Null',
+            'Gi': 'GigabitEthernet',
+            'Gig': 'GigabitEthernet',
+            'GE': 'GigabitEthernet',
+            'Te': 'TenGigabitEthernet',
+            'Ten': 'TenGigabitEthernet',
+            'Tw': 'TwoGigabitEthernet',
+            'Two': 'TwoGigabitEthernet',
+            'Twe': 'TwentyFiveGigE',
+            'Fi': 'FiveGigabitEthernet',
+            'Fiv': 'FiveGigabitEthernet',
+            'Fif': 'FiftyGigE',
+            'Fifty': 'FiftyGigabitEthernet',
+            'mgmt': 'mgmt',
+            'Vl': 'Vlan',
+            'Tu': 'Tunnel',
+            'Hs': 'HSSI',
+            'AT': 'ATM',
+            'Et': 'Ethernet',
+            'BD': 'BDI',
+            'Ser': 'Serial',
+            'Se': 'Serial',
+            'Fo': 'FortyGigabitEthernet',
+            'For': 'FortyGigabitEthernet',
+            'Hu': 'HundredGigE',
+            'Hun': 'HundredGigE',
+            'TwoH': 'TwoHundredGigabitEthernet',
+            'Fou': 'FourHundredGigE',
+            'vl': 'vasileft',
+            'vr': 'vasiright',
+            'BE': 'Bundle-Ether',
+            'tu': 'Tunnel',
+            'M-E': 'M-Ethernet',  # comware
+            'BAGG': 'Bridge-Aggregation',  # comware
+            'Ten-GigabitEthernet': 'TenGigabitEthernet',  # HP
+            'Wl': 'Wlan-GigabitEthernet',
+            'Di': 'Dialer',
+            'Vi': 'Virtual-Access',
+            'Ce': 'Cellular',
+            'Vp': 'Virtual-PPP',
+            'pw': 'pseudowire'
+        },
+        'iosxr':
+        # interface formats specific to iosxr
+        {
+            'BV': 'BVI',
+            'BE': 'Bundle-Ether',
+            'BP': 'Bundle-POS',
+            'Eth': 'Ethernet',
+            'Fa': 'FastEthernet',
+            'Gi': 'GigabitEthernet',
+            'Te': 'TenGigE',
+            'Tf': 'TwentyFiveGigE',
+            'Fo': 'FortyGigE',
+            'Fi': 'FiftyGigE',
+            'Hu': 'HundredGigE',
+            'Th': 'TwoHundredGigE',
+            'Fh': 'FourHundredGigE',
+            'Tsec': 'tunnel-ipsec',
+            'Ti': 'tunnel-ip',
+            'Tm': 'tunnel-mte',
+            'Tt': 'tunnel-te',
+            'Tp': 'tunnel-tp',
+            'IMA': 'IMA',
+            'IL': 'InterflexLeft',
+            'IR': 'InterflexRight',
+            'Lo': 'Loopback',
+            'Mg': 'MgmtEth',
+            'Ml': 'Multilink',
+            'Nu': 'Null',
+            'POS': 'POS',
+            'Pw': 'PW-Ether',
+            'Pi': 'PW-IW',
+            'SRP': 'SRP',
+            'Se': 'Serial',
+            'CS': 'CSI',
+            'G0': 'GCC0',
+            'G1': 'GCC1',
+            'nG': 'nVFabric-GigE',
+            'nT': 'nVFabric-TenGigE',
+            'nF': 'nVFabric-FortyGigE',
+            'nH': 'nVFabric-HundredGigE'
+        }
+    }
+
 class ParserNotFound(Exception):
     '''raise exception if parser command is not found
        first argument is parser class
@@ -215,6 +312,11 @@ def get_parser(command, device, fuzzy=False, revision=None, abstract=None, **kwa
     tokens = Lookup.tokens_from_device(device, data.order, PARSER_MODULE_NAME)
     if abstract:
         tokens.update(abstract)
+    revision = revision or tokens.get('revision')
+    if revision and not isinstance(revision, list):
+        revision = [revision]
+    if revision:
+        tokens['revision'] = revision
 
     revision = revision or tokens.get('revision')
     if revision and not isinstance(revision, list):
@@ -734,110 +836,11 @@ class Common:
         if hasattr(m, 'group') and hasattr(m1, 'group'):
             # fetches the interface type
             int_type = m.group(0)
-
             # fetch the interface number
             int_port = m1.group(0)
 
-            # Please add more when face other type of interface
-            convert = {
-                'generic':
-                # generic keys for when no OS detected
-                {
-                    'Eth': 'Ethernet',
-                    'Lo': 'Loopback',
-                    'lo': 'Loopback',
-                    'Fa': 'FastEthernet',
-                    'Fas': 'FastEthernet',
-                    'Po': 'Port-channel',
-                    'PO': 'Port-channel',
-                    'Null': 'Null',
-                    'Gi': 'GigabitEthernet',
-                    'Gig': 'GigabitEthernet',
-                    'GE': 'GigabitEthernet',
-                    'Te': 'TenGigabitEthernet',
-                    'Ten': 'TenGigabitEthernet',
-                    'Tw': 'TwoGigabitEthernet',
-                    'Two': 'TwoGigabitEthernet',
-                    'Twe': 'TwentyFiveGigE',
-                    'Fi': 'FiveGigabitEthernet',
-                    'Fiv': 'FiveGigabitEthernet',
-                    'Fif': 'FiftyGigE',
-                    'Fifty': 'FiftyGigabitEthernet',
-                    'mgmt': 'mgmt',
-                    'Vl': 'Vlan',
-                    'Tu': 'Tunnel',
-                    'Fe': '',
-                    'Hs': 'HSSI',
-                    'AT': 'ATM',
-                    'Et': 'Ethernet',
-                    'BD': 'BDI',
-                    'Ser': 'Serial',
-                    'Se': 'Serial',
-                    'Fo': 'FortyGigabitEthernet',
-                    'For': 'FortyGigabitEthernet',
-                    'Hu': 'HundredGigE',
-                    'Hun': 'HundredGigE',
-                    'TwoH': 'TwoHundredGigabitEthernet',
-                    'Fou': 'FourHundredGigE',
-                    'vl': 'vasileft',
-                    'vr': 'vasiright',
-                    'BE': 'Bundle-Ether',
-                    'tu': 'Tunnel',
-                    'M-E': 'M-Ethernet',  # comware
-                    'BAGG': 'Bridge-Aggregation',  # comware
-                    'Ten-GigabitEthernet': 'TenGigabitEthernet',  # HP
-                    'Wl': 'Wlan-GigabitEthernet',
-                    'Di': 'Dialer',
-                    'Vi': 'Virtual-Access',
-                    'Ce': 'Cellular',
-                    'Vp': 'Virtual-PPP',
-                    'pw': 'pseudowire'
-                },
-                'iosxr':
-                # interface formats specific to iosxr
-                {
-                    'BV': 'BVI',
-                    'BE': 'Bundle-Ether',
-                    'BP': 'Bundle-POS',
-                    'Eth': 'Ethernet',
-                    'Fa': 'FastEthernet',
-                    'Gi': 'GigabitEthernet',
-                    'Te': 'TenGigE',
-                    'Tf': 'TwentyFiveGigE',
-                    'Fo': 'FortyGigE',
-                    'Fi': 'FiftyGigE',
-                    'Hu': 'HundredGigE',
-                    'Th': 'TwoHundredGigE',
-                    'Fh': 'FourHundredGigE',
-                    'Tsec': 'tunnel-ipsec',
-                    'Ti': 'tunnel-ip',
-                    'Tm': 'tunnel-mte',
-                    'Tt': 'tunnel-te',
-                    'Tp': 'tunnel-tp',
-                    'IMA': 'IMA',
-                    'IL': 'InterflexLeft',
-                    'IR': 'InterflexRight',
-                    'Lo': 'Loopback',
-                    'Mg': 'MgmtEth',
-                    'Ml': 'Multilink',
-                    'Nu': 'Null',
-                    'POS': 'POS',
-                    'Pw': 'PW-Ether',
-                    'Pi': 'PW-IW',
-                    'SRP': 'SRP',
-                    'Se': 'Serial',
-                    'CS': 'CSI',
-                    'G0': 'GCC0',
-                    'G1': 'GCC1',
-                    'nG': 'nVFabric-GigE',
-                    'nT': 'nVFabric-TenGigE',
-                    'nF': 'nVFabric-FortyGigE',
-                    'nH': 'nVFabric-HundredGigE'
-                }
-            }
-
             try:
-                os_type_dict = convert[os]
+                os_type_dict = INTERFACE_ABBREVIATION_MAPPING_TABLE[os]
             except KeyError as k:
                 log.error((
                     "Check '{}' is in convert dict in utils/common.py, otherwise leave blank.\nMissing key {}\n"
