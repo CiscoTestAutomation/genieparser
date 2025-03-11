@@ -1,0 +1,21 @@
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+INFO: Please use "show license UDI" to get serial number for licensing.
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+NAME: "Chassis", DESCR: "Cisco C1100TG-1N32A terminal server"
+PID: C1100TG-1N32A     , VID: V01  , SN: FJC27431XTT
+
+NAME: "Fan Tray", DESCR: "Cisco C1100TG-1N32A Fan Assembly"
+PID: C1100TG-FANASSY   , VID:      , SN:
+
+NAME: "module 0", DESCR: "Cisco C1100TG-1N32A Built-In NIM controller"
+PID: C1100TG-1N32A     , VID:      , SN:
+
+NAME: "NIM subslot 0/1", DESCR: "32 ports Async Lite Serial"
+PID: C1100TG-A-32      , VID: V01  , SN:
+
+NAME: "NIM subslot 0/0", DESCR: "Front Panel 2 ports Gigabitethernet Module"
+PID: C1100TG-2x1GE     , VID: V01  , SN:
+
+NAME: "module R0", DESCR: "Cisco C1100TG-1N32A Route Processor"
+PID: C1100TG-1N32A     , VID: V01  , SN: PSZ27351FKR

@@ -1,0 +1,7 @@
+show users
+    Line       User       Host(s)              Idle       Location
+ 866 vty 0     lab        idle                 00:02:36 10.61.105.18
+ 867 vty 1     lab        idle                 00:02:08 10.61.105.18
+*868 vty 0/1/0 lab        idle                 00:00:00 10.61.105.18
+
+  Interface    User               Mode         Idle     Peer Address

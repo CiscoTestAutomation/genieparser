@@ -71,7 +71,6 @@
         * Modified schema to store secondary ip address
         * Improved p17 regex to capture proper ip address
         * Added p21 regex to capture secondary ip address
-
 * iosxr
     * Modified ShowBgpL2vpnEvpnSummary Parser
         * Added regex p8a and p8b

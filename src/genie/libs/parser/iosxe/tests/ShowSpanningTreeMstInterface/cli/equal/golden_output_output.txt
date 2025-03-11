@@ -1,0 +1,10 @@
+TenGigabitEthernet1/1/2 of MST0 is backup blocking
+Edge port: no             (default)        port guard : none        (default)
+Link type: point-to-point (auto)           bpdu filter: disable     (default)
+Boundary : internal                        bpdu guard : disable     (default)
+Bpdus sent 10, received 9
+
+Instance Role Sts Cost      Prio.Nbr Vlans mapped
+-------- ---- --- --------- -------- -------------------------------
+0        Back BLK 2000      128.54   1-9,21-29,41-4094
+4        Desg LRN 2000      128.54   30-40

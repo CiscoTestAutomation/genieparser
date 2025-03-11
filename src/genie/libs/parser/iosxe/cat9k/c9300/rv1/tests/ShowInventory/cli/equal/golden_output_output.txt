@@ -1,0 +1,35 @@
+NAME: "c93xx Stack", DESCR: "c93xx Stack"
+PID: C9300-24T         , VID: V02  , SN: FCW2323GHDD
+
+NAME: "Switch 1", DESCR: "C9300-24T"
+PID: C9300-24T         , VID: V02  , SN: FCW2323GHDD
+
+NAME: "StackPort1/1", DESCR: "StackPort1/1"
+PID: STACK-T1-50CM     , VID: V01  , SN: LCC2319GWK5
+
+NAME: "StackPort1/2", DESCR: "StackPort1/2"
+PID: STACK-T1-50CM     , VID: V01  , SN: LCC1942GE1F
+
+NAME: "Switch 1 - Power Supply A", DESCR: "Switch 1 - Power Supply A"
+PID: PWR-C1-350WAC-P   , VID: V01  , SN: DCC2304B10A
+
+NAME: "Switch 1 FRU Uplink Module 1", DESCR: "8x10G Uplink Module"
+PID: C9300-NM-8X       , VID: V02  , SN: FOC23191ZD0
+
+NAME: "Switch 2", DESCR: "C9300-24T"
+PID: C9300-24T         , VID: V02  , SN: FCW2323L0JB
+
+NAME: "StackPort2/1", DESCR: "StackPort2/1"
+PID: STACK-T1-50CM     , VID: V01  , SN: LCC2319GW7X
+
+NAME: "StackPort2/2", DESCR: "StackPort2/2"
+PID: STACK-T1-50CM     , VID: V01  , SN: LCC2319GWK5
+
+NAME: "Switch 2 - Power Supply A", DESCR: "Switch 2 - Power Supply A"
+PID: PWR-C1-350WAC-P   , VID: V01  , SN: DCC2310B1X2
+
+NAME: "Switch 2 FRU Uplink Module 1", DESCR: "8x10G Uplink Module"
+PID: C9300-NM-8X       , VID: V02  , SN: FOC23240RP4
+
+NAME: "Switch 3", DESCR: "C9300-24T - Provisioned"
+PID: C9300-24T         , VID:      , SN:

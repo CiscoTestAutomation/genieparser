@@ -1,0 +1,14 @@
+MacAddress         IpAddress        Lease(Sec)  Type      BD    Interface
+-----------------  ---------------  --------  ----------  ----  -------------
+00:10:01:01:02:05  100.11.1.100     3476      dhcp-snoop  1002  Ethernet1/15/1
+00:10:01:01:02:06  100.11.1.101     3476      dhcp-snoop  1002  Ethernet1/15/1
+00:10:01:01:02:07  100.11.1.102     3476      dhcp-snoop  1002  Ethernet1/15/1
+00:10:01:01:02:08  100.11.1.103     3476      dhcp-snoop  1002  Ethernet1/15/1
+00:10:01:03:02:05  100.11.1.157     3487      dhcp-snoop  1002  port-channel11
+00:10:01:03:02:06  100.11.1.250     3487      dhcp-snoop  1002  port-channel11
+00:10:01:03:02:07  100.11.1.122     3487      dhcp-snoop  1002  port-channel11
+00:10:01:03:02:08  100.11.1.194     3487      dhcp-snoop  1002  port-channel11
+00:10:01:04:02:05  100.11.1.106     3497      dhcp-snoop  1002  port-channel10
+00:10:01:04:02:06  100.11.1.104     3497      dhcp-snoop  1002  port-channel10
+00:10:01:04:02:07  100.11.1.105     3497      dhcp-snoop  1002  port-channel10
+00:10:01:04:02:08  100.11.1.107     3497      dhcp-snoop  1002  port-channel10

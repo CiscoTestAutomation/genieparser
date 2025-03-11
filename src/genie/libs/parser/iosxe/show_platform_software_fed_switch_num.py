@@ -100,10 +100,15 @@ class ShowPlatformSoftwareFedSwitchActiveStatisticsInitSchema(MetaParser):
     }
 class ShowPlatformSoftwareFedSwitchActiveStatisticsInit(ShowPlatformSoftwareFedSwitchActiveStatisticsInitSchema):
     """parser for cli 'show platform software fed switch active statistics init' """
-    cli_command = "show platform software fed switch active statistics init"
-    def cli(self, output=None):
+    cli_command = ["show platform software fed active statistics init", 
+                   "show platform software fed {switch} active statistics init"]
+    def cli(self, switch=None, output=None):
         if output is None:
-            output = self.device.execute(self.cli_command)
+            if switch:
+                cmd = self.cli_command[1].format(switch=switch)
+            else:
+                cmd = self.cli_command[0]
+            output = self.device.execute(cmd)
         ret_dict = {}
           # Punject driver                           1911
           # Post/wait stack manager/sif manager events 59008448
@@ -158,7 +163,7 @@ class ShowPlatformSoftwareFedSwitchNumberIfmMappingsPortLE(ShowPlatformSoftwareF
     """
 
     cli_command = [
-        "show platform software fed switch active ifm mappings port-le",
+        "show platform software fed active ifm mappings port-le",
         "show platform software fed switch {switch_num} ifm mappings port-le",
     ]
 
@@ -209,11 +214,16 @@ class ShowPlatformSoftwareFedSwitchActiveIfmInterfacesDetailSchema(MetaParser):
 class ShowPlatformSoftwareFedSwitchActiveIfmInterfacesDetail(ShowPlatformSoftwareFedSwitchActiveIfmInterfacesDetailSchema):
     """Parser for cli 'show platform software fed switch active ifm interfaces detail'"""
     
-    cli_command =  "show platform software fed switch active ifm interfaces detail"
+    cli_command =  ["show platform software fed active ifm interfaces detail", 
+                    "show platform software fed {switch} {mode} ifm interfaces detail"]
     
-    def cli(self, output=None):
+    def cli(self, switch=None, mode='active', output=None):
         if output is None:
-           output = self.device.execute(self.cli_command)
+            if switch:
+                cmd = self.cli_command[1].format(switch=switch, mode=mode)
+            else:
+                cmd = self.cli_command[0]
+            output = self.device.execute(cmd)
 
         # Matching patterns
         # Type_n_State      Intializing  Init_Failed  Init_Done    Ready    Pending_Delete  Delete
@@ -247,4 +257,74 @@ class ShowPlatformSoftwareFedSwitchActiveIfmInterfacesDetail(ShowPlatformSoftwar
                     }
                 )
                 continue
+        return ret_dict
+
+class ShowPlatformSoftwareFedSwitchFnfMonitorRulesAsic0Schema(MetaParser):
+    """Schema for 'show platform software fed switch {switch_num} fnf monitor-rules asic 0'"""
+
+    schema = {
+        "match_any": {
+            Any(): {
+                "match_any": int,
+                "vector_map": str,
+                "value_map": str,
+            }
+        },
+        "enable_match": {
+            Any(): {
+                "enable": int,
+                "match_any": int,
+                "rule_map": str,
+            }
+        }
+    }
+
+class ShowPlatformSoftwareFedSwitchFnfMonitorRulesAsic0(ShowPlatformSoftwareFedSwitchFnfMonitorRulesAsic0Schema):
+    """Parser for 'show platform software fed switch {switch_num} fnf monitor-rules asic 0'"""
+
+    cli_command = "show platform software fed switch {switch_num} fnf monitor-rules asic 0"
+
+    def cli(self, switch_num, output=None):
+        if output is None:
+            cmd = self.cli_command.format(switch_num=switch_num)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+
+        # Matching Patterns
+        # MatchAny   Vector Map   Value Map
+        p1 = re.compile(r"^(?P<index>\d+)\s+(?P<match_any>\d+)\s+(?P<vector_map>0x[\da-fA-F]+)\s+(?P<value_map>0x[\da-fA-F]+)$")
+
+        # Enable  MatchAny   Rule Map
+        p2 = re.compile(r"^(?P<index>\d+)\s+(?P<enable>\d+)\s+(?P<match_any>\d+)\s+(?P<rule_map>0x[\da-fA-F]+)$")
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # 0  0          0x0000       0x0000
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                index = group.pop("index")
+                match_any_dict = ret_dict.setdefault("match_any", {}).setdefault(index, {})
+                match_any_dict.update({
+                    "match_any": int(group["match_any"]),
+                    "vector_map": group["vector_map"],
+                    "value_map": group["value_map"]
+                })
+                continue
+
+            # 0     0       0     0x0000
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                index = group.pop("index")
+                enable_match_dict = ret_dict.setdefault("enable_match", {}).setdefault(index, {})
+                enable_match_dict.update({
+                    "enable": int(group["enable"]),
+                    "match_any": int(group["match_any"]),
+                    "rule_map": group["rule_map"]
+                })
+                continue
+
         return ret_dict

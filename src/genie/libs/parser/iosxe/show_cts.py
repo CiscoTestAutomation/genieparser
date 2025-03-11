@@ -1,7 +1,7 @@
 import re
 
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Optional, Any
+from genie.metaparser.util.schemaengine import Optional, Any, ListOf
 from genie.parsergen import oper_fill_tabular
 
 # ===================================
@@ -3912,5 +3912,231 @@ class ShowCtsInterfaceSummary(ShowCtsInterfaceSummarySchema):
                     "peer_id": group["peer_id"],
                     "ifc_cache": group["ifc_cache"],
                     "critical_authentication": group["critical_authentication"]})          
+        return ret_dict
+
+# ==============================================
+# Parser for 'show cts policy sgt '
+# ==============================================
+
+class ShowCtsPolicySgtSchema(MetaParser):
+    """Schema for show cts policy sgt <sgt>"""
+    schema = {
+        'cts_sgt_policy': {
+            Optional('rbacl_monitor_all'): bool,
+            Optional('rbacl_ip_version_supported'): str,
+            Optional('sgt'): str,
+            Optional('sgt_policy_flag'): str,
+            Optional('rbacl_source_list'): {
+                Any(): {
+                    'source_sgt': str,
+                    'destination_sgt': str,
+                    'rbacl_type': int,
+                    'rbacl_index': int,
+                    'name': str,
+                    'ip_protocol_version': str,
+                    'refcnt': int,
+                    'flag': str,
+                    'stale': bool,
+                    'rbacl_aces': ListOf(str)
+                }
+            },
+            Optional('rbacl_destination_list'): str,
+            Optional('rbacl_multicast_list'): str,
+            Optional('rbacl_policy_lifetime'): int,
+            Optional('rbacl_policy_last_update_time'): str,
+            Optional('policy_expires_in'): str,
+            Optional('policy_refreshes_in'): str,
+            Optional('cache_data_applied'): str
+        }
+    }
+
+class ShowCtsPolicySgt(ShowCtsPolicySgtSchema):
+    """Parser for show cts policy sgt <sgt>"""
+
+    cli_command = 'show cts policy sgt {sgt}'
+
+    def cli(self, sgt, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(sgt=sgt))
+
+        # Initialize the return dictionary
+        ret_dict = {}
+        cts_sgt_policy_dict = {}
+
+        # Regular expressions for parsing the output
+        
+        #CTS SGT Policy
+        p1 = re.compile(r'^CTS SGT Policy$')
+        #RBACL Monitor All : FALSE
+        p2 = re.compile(r'^RBACL Monitor All : (?P<rbacl_monitor_all>\S+)$')
+        #RBACL IP Version Supported: IPv4 & IPv6
+        p3 = re.compile(r'^RBACL IP Version Supported: (?P<rbacl_ip_version_supported>.+)$')
+        #SGT: 30-01:SGT_030
+        p4 = re.compile(r'^SGT: (?P<sgt>.+)$')
+        #SGT Policy Flag: 0x41400001
+        p5 = re.compile(r'^SGT Policy Flag: (?P<sgt_policy_flag>\S+)$')
+        #Source SGT: 25-00:SGT_025-0, Destination SGT: 30-01:SGT_030-0
+        p6 = re.compile(r'^Source SGT: (?P<source_sgt>.+), Destination SGT: (?P<destination_sgt>.+)$')
+        #rbacl_type = 80
+        p7 = re.compile(r'^rbacl_type = (?P<rbacl_type>\d+)$')
+        #rbacl_index = 1
+        p8 = re.compile(r'^rbacl_index = (?P<rbacl_index>\d+)$')
+        #name   = PERMIT_IP-01
+        p9 = re.compile(r'^name   = (?P<name>\S+)$')
+        #IP protocol version = IPV4
+        p10 = re.compile(r'^IP protocol version = (?P<ip_protocol_version>\S+)$')
+        #refcnt = 2
+        p11 = re.compile(r'^refcnt = (?P<refcnt>\d+)$')
+        #flag   = 0x41000000
+        p12 = re.compile(r'^flag   = (?P<flag>\S+)$')
+        #stale  = FALSE
+        p13 = re.compile(r'^stale  = (?P<stale>\S+)$')
+        #  RBACL ACEs:
+        #  permit ip log
+        #  deny ip
+        p14 = re.compile(r'^(?P<rbacl_ace>permit .+|deny .+)$')
+        #RBACL Destination List: Not exist
+        p15 = re.compile(r'^RBACL Destination List: (?P<rbacl_destination_list>.+)$')
+        #RBACL Multicast List: Not exist
+        p16 = re.compile(r'^RBACL Multicast List: (?P<rbacl_multicast_list>.+)$')
+        #RBACL Policy Lifetime = 86400 secs
+        p17 = re.compile(r'^RBACL Policy Lifetime = (?P<rbacl_policy_lifetime>\d+) secs$')
+        #RBACL Policy Last update time = 12:55:59 IST Wed Jan 15 2025
+        p18 = re.compile(r'^RBACL Policy Last update time = (?P<rbacl_policy_last_update_time>.+)$')
+        #Policy expires in 0:22:08:05 (dd:hr:mm:sec)
+        p19 = re.compile(r'^Policy expires in (?P<policy_expires_in>.+) \(dd:hr:mm:sec\)$')
+        #Policy refreshes in 0:22:08:05 (dd:hr:mm:sec)
+        p20 = re.compile(r'^Policy refreshes in (?P<policy_refreshes_in>.+) \(dd:hr:mm:sec\)$')
+        #Cache data applied = NONE
+        p21 = re.compile(r'^Cache data applied = (?P<cache_data_applied>.+)$')
+
+        rbacl_source_dict = {}
+        current_rbacl = {}
+        current_index = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Match and parse the lines
+            # CTS SGT Policy
+            if p1.match(line):
+                cts_sgt_policy_dict = ret_dict.setdefault('cts_sgt_policy', {})
+                continue
+            # RBACL Monitor All : FALSE
+            m = p2.match(line)
+            if m:
+                cts_sgt_policy_dict['rbacl_monitor_all'] = m.group('rbacl_monitor_all') == 'TRUE'
+                continue
+            # RBACL IP Version Supported: IPv4 & IPv6
+            m = p3.match(line)
+            if m:
+                cts_sgt_policy_dict['rbacl_ip_version_supported'] = m.group('rbacl_ip_version_supported')
+                continue
+            # SGT: 30-01:SGT_030
+            m = p4.match(line)
+            if m:
+                cts_sgt_policy_dict['sgt'] = m.group('sgt')
+                continue
+            # SGT Policy Flag: 0x41400001
+            m = p5.match(line)
+            if m:
+                cts_sgt_policy_dict['sgt_policy_flag'] = m.group('sgt_policy_flag')
+                continue
+            #  Source SGT: 25-00:SGT_025-0, Destination SGT: 30-01:SGT_030-0
+            #   RBACL ACEs:
+            #       permit ip log
+            #       deny ip
+            m = p6.match(line)
+            if m:
+                if current_index is not None:
+                    rbacl_source_dict[current_index] = current_rbacl
+                current_rbacl = {
+                    'source_sgt': m.group('source_sgt'),
+                    'destination_sgt': m.group('destination_sgt'),
+                    'rbacl_aces': []
+                }
+                continue
+            # rbacl_type = 80
+            m = p7.match(line)
+            if m:
+                current_rbacl['rbacl_type'] = int(m.group('rbacl_type'))
+                continue
+            # rbacl_index = 1
+            m = p8.match(line)
+            if m:
+                current_index = int(m.group('rbacl_index'))
+                current_rbacl['rbacl_index'] = current_index
+                continue
+            # name   = PERMIT_IP-01
+            m = p9.match(line)
+            if m:
+                current_rbacl['name'] = m.group('name')
+                continue
+            # IP protocol version = IPV4
+            m = p10.match(line)
+            if m:
+                current_rbacl['ip_protocol_version'] = m.group('ip_protocol_version')
+                continue
+            # refcnt = 2
+            m = p11.match(line)
+            if m:
+                current_rbacl['refcnt'] = int(m.group('refcnt'))
+                continue
+            # flag   = 0x41000000
+            m = p12.match(line)
+            if m:
+                current_rbacl['flag'] = m.group('flag')
+                continue
+            # stale  = FALSE
+            m = p13.match(line)
+            if m:
+                current_rbacl['stale'] = m.group('stale') == 'TRUE'
+                continue
+            # RBACL ACEs:
+            m = p14.match(line)
+            if m:
+                current_rbacl['rbacl_aces'].append(m.group('rbacl_ace'))
+                continue
+            # RBACL Destination List: Not exist
+            m = p15.match(line)
+            if m:
+                cts_sgt_policy_dict['rbacl_destination_list'] = m.group('rbacl_destination_list')
+                continue
+            # RBACL Multicast List: Not exist
+            m = p16.match(line)
+            if m:
+                cts_sgt_policy_dict['rbacl_multicast_list'] = m.group('rbacl_multicast_list')
+                continue
+            # RBACL Policy Lifetime = 86400 secs
+            m = p17.match(line)
+            if m:
+                cts_sgt_policy_dict['rbacl_policy_lifetime'] = int(m.group('rbacl_policy_lifetime'))
+                continue
+            # RBACL Policy Last update time = 12:55:59 IST Wed Jan 15 2025
+            m = p18.match(line)
+            if m:
+                cts_sgt_policy_dict['rbacl_policy_last_update_time'] = m.group('rbacl_policy_last_update_time')
+                continue
+            # Policy expires in 0:22:08:05 (dd:hr:mm:sec)
+            m = p19.match(line)
+            if m:
+                cts_sgt_policy_dict['policy_expires_in'] = m.group('policy_expires_in')
+                continue
+            # Policy refreshes in 0:22:08:05 (dd:hr:mm:sec)
+            m = p20.match(line)
+            if m:
+                cts_sgt_policy_dict['policy_refreshes_in'] = m.group('policy_refreshes_in')
+                continue
+            # Cache data applied = NONE
+            m = p21.match(line)
+            if m:
+                cts_sgt_policy_dict['cache_data_applied'] = m.group('cache_data_applied')
+                continue
+
+        if current_index is not None:
+            rbacl_source_dict[current_index] = current_rbacl
+
+        cts_sgt_policy_dict['rbacl_source_list'] = rbacl_source_dict
+
         return ret_dict
 

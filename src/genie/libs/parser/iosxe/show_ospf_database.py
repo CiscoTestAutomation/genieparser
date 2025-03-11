@@ -2923,6 +2923,120 @@ class ShowIpOspfDatabaseDatabaseSummary(ShowIpOspfDatabaseDatabaseSummarySchema)
             
         return parsed_dict
     
+class ShowIpv6OspfDatabaseSchema(MetaParser):
+    """Schema for show ipv6 ospf database"""
+    schema = {
+        'ospfv3': {
+            'router_id': str,
+            'process_id': int,
+            'areas': {
+                Any(): {
+                    'router_link_states': {
+                        Any(): {
+                            'adv_router': str,
+                            'age': int,
+                            'seq_num': str,
+                            'fragment_id': int,
+                            'link_count': int,
+                            'bits': str,
+                        }
+                    },
+                    'net_link_states': {
+                        Any(): {
+                            'adv_router': str,
+                            'age': int,
+                            'seq_num': str,
+                            'link_id': int,
+                            'rtr_count': int,
+                        }
+                    }
+                }
+            }
+        }
+    }
 
+class ShowIpv6OspfDatabase(ShowIpv6OspfDatabaseSchema):
+    """Parser for show ipv6 ospf database"""
 
+    cli_command = 'show ipv6 ospf database'
 
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+
+        # Matching patterns
+        # OSPFv3 Router with ID (36.36.36.36) (Process ID 100)
+        p1 = re.compile(r'^OSPFv3 +Router +with +ID +\((?P<router_id>\S+)\) +\(Process +ID +(?P<process_id>\d+)\)$')
+
+        # Router Link States (Area 0)
+        p2 = re.compile(r'^Router +Link +States +\(Area +(?P<area>\d+)\)$')
+
+        # ADV Router       Age         Seq#        Fragment ID  Link count  Bits
+        p3 = re.compile(r'^(?P<adv_router>\S+) +(?P<age>\d+) +(?P<seq_num>\S+) +(?P<fragment_id>\d+) +(?P<link_count>\d+) +(?P<bits>\S+)$')
+
+        # Net Link States (Area 0)
+        p4 = re.compile(r'^Net +Link +States +\(Area +(?P<area>\d+)\)$')
+
+        # ADV Router       Age         Seq#        Link ID    Rtr count
+        p5 = re.compile(r'^(?P<adv_router>\S+) +(?P<age>\d+) +(?P<seq_num>\S+) +(?P<link_id>\d+) +(?P<rtr_count>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # OSPFv3 Router with ID (36.36.36.36) (Process ID 100)
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ospfv3_dict = ret_dict.setdefault('ospfv3', {})
+                ospfv3_dict['router_id'] = group['router_id']
+                ospfv3_dict['process_id'] = int(group['process_id'])
+                continue
+
+            # Router Link States (Area 0)
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                area = group['area']
+                router_link_states_dict = ospfv3_dict.setdefault('areas', {}).setdefault(area, {}).setdefault('router_link_states', {})
+                continue
+
+            # 36.36.36.36     462         0x8000002C  0            11          None
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                adv_router = group['adv_router']
+                router_link_states_dict[adv_router] = {
+                    'adv_router': adv_router,
+                    'age': int(group['age']),
+                    'seq_num': group['seq_num'],
+                    'fragment_id': int(group['fragment_id']),
+                    'link_count': int(group['link_count']),
+                    'bits': group['bits']
+                }
+                continue
+
+            # Net Link States (Area 0)
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                area = group['area']
+                net_link_states_dict = ospfv3_dict.setdefault('areas', {}).setdefault(area, {}).setdefault('net_link_states', {})
+                continue
+
+            # 36.36.36.36     472         0x80000001  44         2
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                adv_router = group['adv_router']
+                net_link_states_dict[adv_router] = {
+                    'adv_router': adv_router,
+                    'age': int(group['age']),
+                    'seq_num': group['seq_num'],
+                    'link_id': int(group['link_id']),
+                    'rtr_count': int(group['rtr_count'])
+                }
+                continue
+
+        return ret_dict

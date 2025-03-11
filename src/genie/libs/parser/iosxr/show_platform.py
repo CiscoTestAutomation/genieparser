@@ -1054,10 +1054,11 @@ class AdminShowDiagChassisSchema(MetaParser):
         Optional('controller_type'): str,
         'rack_num': int,
         Optional('sn'): str,
+        Optional('pcb_serial_number'): str,
         'pid': str,
         'vid': str,
         Optional('desc'): str,
-        'clei': str,
+        Optional('clei'): str,
         Optional('eci'): str,
         Optional('pca'): str,
         Optional('top_assy_num'): str,
@@ -1149,8 +1150,7 @@ class AdminShowDiagChassis(AdminShowDiagChassisSchema):
             # S/N:   FOX1810G8LR
             # Serial Number   : FOC23158L99
             # Chassis Serial Number    : FOC23158L99
-            # PCB Serial Number        : CAT2311B0AK
-            p3 = re.compile(r'^(S\/N|((Chassis|PCB) +)?Serial +Number)(\s+)?(\:)? +(?P<serial_number>\S+)$')
+            p3 = re.compile(r'^(S\/N|(Chassis +)?Serial +Number)(\s+)?(\:)? +(?P<serial_number>\S+)$')
             m = p3.match(line)
             if m:
                 serial_num = str(m.groupdict()['serial_number'])
@@ -1161,6 +1161,16 @@ class AdminShowDiagChassis(AdminShowDiagChassisSchema):
                 else:
                     admin_show_diag_dict['sn'] = serial_num
 
+                continue
+
+            # PCB Serial Number        : CAT2311B0AK
+            p3_1 = re.compile(r'^PCB Serial +Number(\s+)?(\:)? +(?P<pcb_serial_number>\S+)$')
+            m = p3_1.match(line)
+            if m:
+                serial_num = str(m.groupdict()['pcb_serial_number'])
+                admin_show_diag_dict['pcb_serial_number'] = serial_num
+                # set sn if not already set
+                admin_show_diag_dict.setdefault('sn', serial_num)
                 continue
 
             # PID:   ASR-9006-AC-V2
@@ -1194,7 +1204,7 @@ class AdminShowDiagChassis(AdminShowDiagChassisSchema):
 
             # CLEI:  IPMUP00BRB
             # CLEI Code       : INM1J10ARA
-            p7 = re.compile(r'CLEI( +Code\s+)?: +(?P<clei>[a-zA-Z0-9\-]+)$')
+            p7 = re.compile(r'CLEI( +Code\s+)?: +(?P<clei>\S+)$')
             m = p7.match(line)
             if m:
                 admin_show_diag_dict['clei'] = \
@@ -1542,7 +1552,7 @@ class ShowDiagDetails(ShowDiagDetailsSchema):
         p2 = re.compile(r'^Controller Type\s+:\s+(?P<controller_type>\w+)$')
 
         # PID                        : 8201-32FH
-        p3 = re.compile(r'^(PID|Product ID)\s+:\s+(?P<pid>[\w-]+)$')
+        p3 = re.compile(r'^(PID|Product ID)\s+:\s+(?P<pid>[\w\.-]+)$')
 
         # Version Identifier         : V03
         p4 = re.compile(r'^(VID|Version Identifier)\s+:\s+(?P<version_identifier>.+?)$')
@@ -2082,7 +2092,7 @@ class ShowDiagDetails(ShowDiagDetailsSchema):
             m = p25.match(line)
             if m:
                 match_dict = m.groupdict()
-                pointer_block['eci_number'] = match_dict['eci_num']
+                pointer_block['eci_number'] = match_dict['eci_number']
                 continue
 
             # IDPROM Format Revision   : A

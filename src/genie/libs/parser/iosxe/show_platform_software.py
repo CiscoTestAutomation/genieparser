@@ -5814,11 +5814,16 @@ class ShowPlatformSoftwareAccessListSwitchActiveF0Summary(
 ):
     """Parser for show platform software access-list switch active F0 summary"""
 
-    cli_command = "show platform software access-list switch active F0 summary"
+    cli_command = ["show platform software access-list F0 summary", 
+                   "show platform software access-list {switch} {mode} F0 summary"]
 
-    def cli(self, output=None):
+    def cli(self, switch=None, mode='active', output=None):
         if output is None:
-            output = self.device.execute(self.cli_command)
+            if switch:
+                cmd = self.cli_command[1].format(switch=switch, mode=mode)
+            else:
+                cmd = self.cli_command[0]
+            output = self.device.execute(cmd)
 
         # Access-list                          Index        Num Ref      Dwnld ACEs
         # --------------------------------------------------------------------------
@@ -10129,3 +10134,91 @@ class ShowPlatsoftwaremcusnapshot(ShowPlatsoftwaremcusnapshotSchema):
            
         return ret_dict                        
 
+class ShowPlatformSoftwareRouteMapSchema(MetaParser):
+    """Schema for show platform software route-map R0 map"""
+    schema = {
+        'route_map': {
+            Any(): {
+                'permit': bool,
+                'sequence': int,
+                'match_clauses': {
+                    'ip_address': str
+                },
+                'set_clauses': {
+                    'ipv4_nexthop': str,
+                    'table_id': int,
+                    'set_force': bool
+                }
+            }
+        }
+    }
+
+class ShowPlatformSoftwareRouteMap(ShowPlatformSoftwareRouteMapSchema):
+    """Parser for show platform software route-map R0 map"""
+
+    cli_command = 'show platform software route-map R0 map'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+
+        # route-map AAA, permit, sequence 100
+        p1 = re.compile(r'^route-map +(?P<route_map>\S+), +(?P<permit>\S+), +sequence +(?P<sequence>\d+)$')
+
+        # ip address (access-lists): 101
+        p2 = re.compile(r'^ip address \(access-lists\): +(?P<ip_address>\S+)$')
+
+        # ipv4 nexthop: 10.0.0.1, table_id 0
+        p3 = re.compile(r'^ipv4 nexthop: +(?P<ipv4_nexthop>\S+), +table_id +(?P<table_id>\d+)$')
+
+        # set force: False
+        p4 = re.compile(r'^set force: +(?P<set_force>\S+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # route-map AAA, permit, sequence 100
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                route_map = group['route_map']
+                permit = group['permit'] == 'permit'
+                sequence = int(group['sequence'])
+                route_map_dict = ret_dict.setdefault('route_map', {}).setdefault(route_map, {})
+                route_map_dict.update({
+                    'permit': permit,
+                    'sequence': sequence
+                })
+                continue
+
+            # ip address (access-lists): 101
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                route_map_dict.setdefault('match_clauses', {}).update({
+                    'ip_address': group['ip_address']
+                })
+                continue
+
+            # ipv4 nexthop: 10.0.0.1, table_id 0
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                route_map_dict.setdefault('set_clauses', {}).update({
+                    'ipv4_nexthop': group['ipv4_nexthop'],
+                    'table_id': int(group['table_id'])
+                })
+                continue
+
+            # set force: False
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                route_map_dict.setdefault('set_clauses', {}).update({
+                    'set_force': group['set_force'] == 'True'
+                })
+                continue
+
+        return ret_dict

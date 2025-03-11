@@ -1,0 +1,19 @@
+Diag Information For : 0
+  
+ Rack 0-IDPROM Info
+    Product ID      : NCS-57C3-MODS-SYS
+    VID             : V00
+    Serial Number   : FOC24420Q20
+    CLEI Code       : \xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff
+    Part Number     : 68-7200-03
+    Part Revision   : 10
+    H/W Version     : 0.3
+
+Top Assembly Block:
+    Serial Number   : FOC2443R1D1
+    Part Number     : 68-7200-03
+    Part Revision   : 10
+    Mfg Deviation   : 0
+    H/W Version     : 0.3
+    Mfg Bits        : 0
+

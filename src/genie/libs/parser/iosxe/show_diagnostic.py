@@ -3,6 +3,7 @@
      * show diagnostic events
      * show diagnostic description module {include} test all
      * show diagnostic content module {mod_num}
+     * show diagnostic content module
      * show diagnostic result module {mod_num} test {include} detail
      * show diagnostic result switch {switch_number} test {include} detail
      * show diagnostic post
@@ -152,34 +153,44 @@ class ShowDiagnosticContentModule(ShowDiagnosticContentModuleSchema):
     """ Parser for show diagnostic content module {mod_num}"""
 
     # Parser for 'show diagnostic content module {mod_num}'
-    cli_command = 'show diagnostic content module {mod_num}'
+    cli_command = ['show diagnostic content module', 'show diagnostic content module {mod_num}']
 
-    def cli(self, mod_num, output=None): 
+    def cli(self, mod_num=None, output=None): 
 
         if output is None:
-            output = self.device.execute(self.cli_command.format(mod_num=mod_num))
+            if mod_num:
+                output = self.device.execute(self.cli_command[1].format(mod_num=mod_num))
+            else:
+                output = self.device.execute(self.cli_command[0])
         
         # initial variables
         ret_dict = {}
         
+        # module 5:
+        p0 = re.compile(r'^module +(?P<mod_num>\d+):$')
+
         #1) TestGoldPktLoopback -------------> *BPN*X**I       not configured  n/a
         p1 = re.compile(r'^(?P<test_id>\d+)\) (?P<test_name>\w+) -+> (?P<attributes>\S+)\s+(?P<test_interval>(not configured)|[\d \:\.]+)\s+(?P<threshold>(n\/a)|\d+)$')
 
         for line in output.splitlines():
             line = line.strip()
             
-            root_dict1 = ret_dict.setdefault('diag_test',{}).setdefault('module',{}).setdefault(int(mod_num),{})
+            # module 5:
+            m = p0.match(line)
+            if m:
+                mod_num = m.groupdict()['mod_num']
+                root_dict = ret_dict.setdefault('diag_test',{}).setdefault('module',{}).setdefault(int(mod_num),{})
+                continue
             
             #1) TestGoldPktLoopback -------------> *BPN*X**I       not configured  n/a
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                root_dict1 = root_dict1.setdefault(group['test_name'], {})
-                test_name = group.pop('test_name')
+                root_dict1 = root_dict.setdefault(group.pop('test_name'), {})
                 root_dict1.update({k: v for k, v in group.items()})
                 root_dict1['test_id']=int(group['test_id'])
                 continue    
-                
+
         return ret_dict
          
         

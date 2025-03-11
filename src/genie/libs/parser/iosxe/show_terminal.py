@@ -27,9 +27,9 @@ class ShowTerminalSchema(MetaParser):
             "tx": int,
             "rx": int
         },
-        "parity": str,
-        "stopbits": int,
-        "databits": int,
+        Optional("parity"): str,
+        Optional("stopbits"): int,
+        Optional("databits"): int,
         "status": ListOf(str),
         "input_transport": ListOf(str),
         "output_transport": ListOf(str)
@@ -61,8 +61,9 @@ class ShowTerminal(ShowTerminalSchema):
         p1 = re.compile(r'^Length: (?P<length>\d+) lines, Width: (?P<width>\d+) columns$')
 
         # Baud rate (TX/RX) is 9600/9600, no parity, 1 stopbits, 8 databits
-        p2 = re.compile(r'^Baud rate \(TX\/RX\) is (?P<tx>\d+)\/(?P<rx>\d+), '
-                        r'(?P<parity>\w+) parity, (?P<stopbits>\d) stopbits, (?P<databits>\w+) databits$')
+        # Baud rate (TX/RX) is 9600/9600
+        p2 = re.compile(r'^Baud rate \(TX\/RX\) is (?P<tx>\d+)\/(?P<rx>\d+)(, '
+                        r'(?P<parity>\w+) parity, (?P<stopbits>\d) stopbits, (?P<databits>\w+) databits)?$')
 
         # Status: PSI Enabled, Ready, Active, Automore On
         p3 = re.compile(r'^Status: (?P<status>.*?)$')
@@ -95,9 +96,15 @@ class ShowTerminal(ShowTerminalSchema):
                 baud_rate = ret_dict.setdefault("baud_rate", {})
                 baud_rate.update({"tx": int(m.groupdict()['tx'])})
                 baud_rate.update({"rx": int(m.groupdict()['rx'])})
-                ret_dict.setdefault("parity", m.groupdict()['parity'])
-                ret_dict.setdefault("stopbits", int(m.groupdict()['stopbits']))
-                ret_dict.setdefault("databits", int(m.groupdict()['databits']))
+                parity = m.groupdict()['parity']
+                if parity:
+                    ret_dict.setdefault("parity", parity)
+                stopbits = m.groupdict()['stopbits']
+                if stopbits:
+                    ret_dict.setdefault("stopbits", int(stopbits))
+                databits = m.groupdict()['databits']
+                if databits:
+                    ret_dict.setdefault("databits", int(databits))
 
             # Status: PSI Enabled, Ready, Active, Automore On
             m = p3.match(line)

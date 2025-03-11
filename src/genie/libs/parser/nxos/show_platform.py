@@ -1,7 +1,9 @@
 """show_platform.py
 
 NXOS parser class for below commands:
-       show version
+        show version
+        show inventory
+        show inventory <option>
         show processes cpu
         show processes cpu | include <include>
         show processes memory
@@ -378,30 +380,38 @@ class ShowVersion(ShowVersionSchema):
 
 class ShowInventorySchema(MetaParser):
     """Schema for show inventory"""
-    schema = {'name':
-                {Any():
-                    {'description': str,
-                     'slot': str,
-                     Optional('pid'): str,
-                     Optional('vid'): str,
-                     Optional('serial_number'): str}
-                },
+    schema = {
+        "name": {
+            Any(): {
+                "description": str,
+                "slot": str,
+                Optional("pid"): str,
+                Optional("vid"): str,
+                Optional("serial_number"): str,
             }
+        },
+    }
 
 
 class ShowInventory(ShowInventorySchema):
     """Parser for show inventory"""
 
-    cli_command = 'show inventory'
+    cli_command = [
+        'show inventory',
+        'show inventory {option}'
+    ]
 
-    def cli(self,output=None):
+    def cli(self, option=None, output=None):
         ''' parsing mechanism: cli
 
         Function cli() defines the cli type output parsing mechanism which
         typically contains 3 steps: executing, transforming, returning
         '''
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if option:
+                out = self.device.execute(self.cli_command[1].format(option=option))
+            else:
+                out = self.device.execute(self.cli_command[0])
         else:
             out = output
 
@@ -410,12 +420,20 @@ class ShowInventory(ShowInventorySchema):
         # NAME: "Chassis", DESCR: "NX-OSv Chassis"
         # NAME: "Slot 38",  DESCR: "Nexus7700 C7706 (6 Slot) Chassis Fan Module"
         # NAME: "FEX 106 Module 1",  DESCR: "Fabric Extender Module: 48x1GE, 4x10GE Supervisor"
-        p1 = re.compile(r'^NAME: +\"(?P<name>[\S\s]+)\", +DESCR: +\"(?P<description>[\S\s]+)\"$')
+        # NAME: Ethernet1/1,  DESCR: CISCO-INNOLIGHT
+        p1 = re.compile(r'^NAME: +\"?(?P<name>.+?)\"?, +DESCR: +\"?(?P<description>.+?)\s*\"?$')
 
+        # Slot 30
         p1_1 = re.compile(r'^Slot +(?P<slot>\d+)$')
+        # Power Supply 5
+        p1_2 = re.compile(r'^Power Supply (?P<slot>\d+)$')
+        # Fan 2
+        p1_3 = re.compile(r'^Fan (?P<slot>\d+)$')
+        # Ethernet1/1
+        p1_4 = re.compile(r'(?P<name>\w+(?P<slot>\d+)/(?P<port>\d+))')
 
         # NAME: "SAM 1",  DESCR: Service Accelarator Module
-        p1_2 = re.compile(r'^SAM +(?P<sam>\d+)$')
+        p1_5 = re.compile(r'^SAM +(?P<sam>\d+)$')
 
 
         # PID: N9K-NXOSV , VID: , SN: 92XXRQ9UCZS
@@ -425,10 +443,36 @@ class ShowInventory(ShowInventorySchema):
 
         for line in out.splitlines():
             line = line.strip()
+
+            # NAME: "Chassis", DESCR: "NX-OSv Chassis"
+            # NAME: "Slot 38",  DESCR: "Nexus7700 C7706 (6 Slot) Chassis Fan Module"
+            # NAME: "FEX 106 Module 1",  DESCR: "Fabric Extender Module: 48x1GE, 4x10GE Supervisor"
+            # NAME: Ethernet1/1,  DESCR: CISCO-INNOLIGHT
             m = p1.match(line)
             if m:
                 name = m.groupdict()['name']
                 description = m.groupdict()['description']
+
+                # Match slot number, use prefix if power supply or fan
+                slot = 'None'
+                m1_1 = p1_1.match(name)
+                m1_2 = p1_2.match(name)
+                m1_3 = p1_3.match(name)
+                m1_4 = p1_4.match(name)
+                if m1_1:
+                    slot = m1_1.groupdict()['slot']
+                elif m1_2:
+                    slot = m1_2.groupdict()['slot']
+                    slot = f'PSU{slot}'
+                elif m1_3:
+                    slot = m1_3.groupdict()['slot']
+                    slot = f'FAN{slot}'
+                elif m1_4:
+                    slot = m1_4.groupdict()['slot']
+                    port = m1_4.groupdict()['port']
+                    name = f'{slot} transceiver {port}'
+                    slot = f'{slot}/{port}'
+
                 item_dict = inventory_dict.setdefault('name', {}).setdefault(name, {})
                 item_dict.update({'description': description})
 
@@ -438,13 +482,16 @@ class ShowInventory(ShowInventorySchema):
                     slot = m1.groupdict()['slot']
 
                 # NAME: "SAM 1",  DESCR: Service Accelarator Module
-                m2 = p1_2.match(name)
+                m2 = p1_5.match(name)
                 if m2:
                     slot = m2.groupdict()['sam']
 
                 item_dict.update({'slot': slot})
                 continue
 
+            # PID: N9K-NXOSV , VID: , SN: 92XXRQ9UCZS
+            # PID: N9K-C9300-FAN2 , VID: V01 , SN: N/A
+            # PID: N2K-C2248-FAN       ,  VID: N/A ,  SN: N/A
             m = p2.match(line)
             if m:
                 if m.groupdict()['pid']:
@@ -1590,7 +1637,10 @@ class ShowVdcMembershipStatus(ShowVdcMembershipStatusSchema):
             if m:
                 continue
 
-            p4 = re.compile(r'^\s*(?P<port_type>[a-zA-Z]+)(?P<port_number>[0-9a-z/\\(\)]+) +(?P<status>[A-Z]+)$')
+            # Eth1/1    OK
+            # Eth1/2(b) OK
+            # Eth1/13(b)OK
+            p4 = re.compile(r'^\s*(?P<port_type>[a-zA-Z]+)(?P<port_number>[0-9a-z/\\(\)]+) *(?P<status>[A-Z]+)$')
             m = p4.match(line)
             if m:
                 port_type = m.groupdict()['port_type']

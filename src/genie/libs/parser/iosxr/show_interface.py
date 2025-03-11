@@ -853,7 +853,7 @@ class ShowInterfacesDetail(ShowInterfacesDetailSchema):
 
             # output flow control is off, input flow control is off
             p9_3 = re.compile(r'^\s*output +flow +control +is +(?P<flow_control_send>(off)),'
-                               r' +input +flow +control +is +(?P<flow_control_receive>(off))$')
+                               r' +input +flow +control +is (?P<flow_control_receive>\w+(?:\s+\w+)*)$')
             m = p9_3.match(line)
             if m:
                 flow_control_send = m.groupdict()['flow_control_send']
@@ -932,10 +932,8 @@ class ShowInterfacesDetail(ShowInterfacesDetailSchema):
                 if timecheck == "minute":
                     load_interval = load_interval * 60
 
-                if 'counters' not in interface_detail_dict[interface]:
-                    interface_detail_dict[interface]['counters'] = {}
-                if 'rate' not in interface_detail_dict[interface]['counters']:
-                    interface_detail_dict[interface]['counters']['rate'] = {}
+                interface_detail_dict[interface].setdefault('counters', {})
+                interface_detail_dict[interface]['counters'].setdefault('rate', {})
 
                 interface_detail_dict[interface]['counters']['rate']\
                 ['load_interval'] = load_interval
@@ -955,6 +953,8 @@ class ShowInterfacesDetail(ShowInterfacesDetailSchema):
                 in_octets = int(m.groupdict()['in_octets'])
                 in_discards = int(m.groupdict()['in_discards'])
 
+                interface_detail_dict[interface].setdefault('counters', {})
+
                 interface_detail_dict[interface]['counters']\
                 ['in_pkts'] = in_pkts
                 interface_detail_dict[interface]['counters']\
@@ -968,8 +968,9 @@ class ShowInterfacesDetail(ShowInterfacesDetailSchema):
                               r' +upper-level +protocol$')
             m = p12.match(line)
             if m:
+                interface_detail_dict[interface].setdefault('counters', {})
                 interface_detail_dict[interface]['counters']\
-                ['in_unknown_protos'] = int(m.groupdict()['in_unknown_protos'])
+                    ['in_unknown_protos'] = int(m.groupdict()['in_unknown_protos'])
                 continue
 
             # Received 0 broadcast packets, 0 multicast packets
@@ -978,6 +979,8 @@ class ShowInterfacesDetail(ShowInterfacesDetailSchema):
                               r' +multicast +packets$')
             m = p13.match(line)
             if m:
+                interface_detail_dict[interface].setdefault('counters', {})
+
                 interface_detail_dict[interface]['counters']\
                 ['in_broadcast_pkts'] = int(m.groupdict()['in_broadcast_pkts'])
                 interface_detail_dict[interface]['counters']\
@@ -990,6 +993,8 @@ class ShowInterfacesDetail(ShowInterfacesDetailSchema):
                               r' +(?P<in_parity>[0-9]+) parity$')
             m = p14.match(line)
             if m:
+                interface_detail_dict[interface].setdefault('counters', {})
+
                 interface_detail_dict[interface]['counters']\
                 ['in_runts'] = int(m.groupdict()['in_runts'])
                 interface_detail_dict[interface]['counters']\
@@ -1009,6 +1014,8 @@ class ShowInterfacesDetail(ShowInterfacesDetailSchema):
                               r' +(?P<in_abort>[0-9]+) +abort$')
             m = p15.match(line)
             if m:
+                interface_detail_dict[interface].setdefault('counters', {})
+
                 interface_detail_dict[interface]['counters']\
                 ['in_frame_errors'] = int(m.groupdict()['in_frame_errors'])
                 interface_detail_dict[interface]['counters']\
@@ -1030,6 +1037,8 @@ class ShowInterfacesDetail(ShowInterfacesDetailSchema):
             m = p16.match(line)
             if m:
                 interface_detail_dict[interface].setdefault('counters', {})
+
+                interface_detail_dict[interface].setdefault('counters', {})
                 interface_detail_dict[interface]['counters']\
                 ['out_pkts'] = int(m.groupdict()['out_pkts'])
                 interface_detail_dict[interface]['counters']\
@@ -1044,6 +1053,8 @@ class ShowInterfacesDetail(ShowInterfacesDetailSchema):
                               r' +multicast +packets$')
             m = p17.match(line)
             if m:
+                interface_detail_dict[interface].setdefault('counters', {})
+
                 interface_detail_dict[interface]['counters']\
                 ['out_broadcast_pkts'] = int(m.groupdict()['out_broadcast_pkts'])
                 interface_detail_dict[interface]['counters']\
@@ -1057,6 +1068,8 @@ class ShowInterfacesDetail(ShowInterfacesDetailSchema):
                               r' +(?P<out_resets>[0-9]+) +resets$')
             m = p18.match(line)
             if m:
+                interface_detail_dict[interface].setdefault('counters', {})
+
                 interface_detail_dict[interface]['counters']\
                 ['out_errors'] = int(m.groupdict()['out_errors'])
                 interface_detail_dict[interface]['counters']\
@@ -1073,6 +1086,8 @@ class ShowInterfacesDetail(ShowInterfacesDetailSchema):
                               r' +output +buffers +swapped +out$')
             m = p19.match(line)
             if m:
+                interface_detail_dict[interface].setdefault('counters', {})
+
                 interface_detail_dict[interface]['counters']\
                 ['out_buffer_failures'] = int(m.groupdict()['out_buffer_failures'])
                 interface_detail_dict[interface]['counters']\
@@ -1083,6 +1098,8 @@ class ShowInterfacesDetail(ShowInterfacesDetailSchema):
             p20 = re.compile(r'^\s*(?P<carrier_transitions>[0-9]+) +carrier +transitions$')
             m = p20.match(line)
             if m:
+                interface_detail_dict[interface].setdefault('counters', {})
+
                 interface_detail_dict[interface]['counters']\
                 ['carrier_transitions'] = int(m.groupdict()['carrier_transitions'])
                 continue
@@ -3104,5 +3121,140 @@ class ShowInterfaceSummary(ShowInterfaceSummarySchema):
                     'down': down,
                     'admin_down': admin_down
                 })
+
+        return ret_dict
+
+
+class ShowInterfaceSparseSchema(MetaParser):
+    """schema for show interface sparse"""
+
+    schema = {
+        "interfaces": {
+            Any(): {
+                Optional("op_state"): str,
+                Optional("admin_state"): str,
+                Optional("mac_address"): str,
+                Optional("burned_in_address"): str,
+                Optional("max_bandwidth"): int,
+                Optional("effective_bandwidth"): int,
+                Optional("mtu"): int,
+                Optional("duplex"): str,
+                Optional("ipv4"): {
+                    Any(): {
+                        "ip": str,
+                        "prefix_length": int
+                    }
+                }
+            }
+        }
+    }
+
+class ShowInterfaceSparse(ShowInterfaceSparseSchema):
+    """Parser for
+        * show interface sparse
+    """
+
+    cli_command = "show interface sparse"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Interface name :               TenGigE0/0/0/46.1604
+        p1 = re.compile(r'^Interface name : +(?P<interface>\S+)$')
+
+        # Operational state :            up
+        p2 = re.compile(r'^Operational state : +(?P<op_state>\S+)$')
+
+        # Admin state :                  up
+        p3 = re.compile(r'^Admin state : +(?P<admin_state>\S+)$')
+
+        # MAC address :                  08:4f:a9:64:d2:26
+        p4 = re.compile(r'^MAC address : +(?P<mac_address>\S+)$')
+
+        # Burned In Address :            084f.a964.d226
+        p5 = re.compile(r'^Burned In Address : +(?P<burned_in_address>\S+)$')
+
+        # Max. Bandwidth (Kbit) :        10000000
+        p6 = re.compile(r'^Max. Bandwidth \(Kbit\) : +(?P<max_bandwidth>\d+)$')
+
+        # Effective Bandwidth (Kbit) :   10000000
+        p7 = re.compile(r'^Effective Bandwidth \(Kbit\) : +(?P<effective_bandwidth>\d+)$')
+
+        # MTU (in bytes) :               1518
+        p8 = re.compile(r'^MTU \(in bytes\) : +(?P<mtu>\d+)$')
+
+        # Duplexity :                    Full-duplex
+        p9 = re.compile(r'^Duplexity : +(?P<duplex>\S+)$')
+
+        #  IPv4 Address :                 2.3.2.2/32
+        p10 = re.compile(r'^IPv4 Address : +(?P<ip>[\d\.]+)\/(?P<prefix_length>\d+)$')
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Interface name :               TenGigE0/0/0/46.1604
+            if m := p1.match(line):
+                group = m.groupdict()
+                interface_dict = ret_dict.setdefault("interfaces", {}).setdefault(group["interface"], {})
+                continue
+
+            # Operational state :            up
+            if m := p2.match(line):
+                group = m.groupdict()
+                interface_dict["op_state"] = group["op_state"]
+                continue
+
+            # Admin state :                  up
+            if m := p3.match(line):
+                group = m.groupdict()
+                interface_dict["admin_state"] = group["admin_state"]
+                continue
+
+            # MAC address :                  08:4f:a9:64:d2:26
+            if m := p4.match(line):
+                group = m.groupdict()
+                interface_dict["mac_address"] = group["mac_address"]
+                continue
+
+            # Burned In Address :            084f.a964.d226
+            if m := p5.match(line):
+                group = m.groupdict()
+                interface_dict["burned_in_address"] = group["burned_in_address"]
+                continue
+
+            # Max. Bandwidth (Kbit) :        10000000
+            if m := p6.match(line):
+                group = m.groupdict()
+                interface_dict["max_bandwidth"] = int(group["max_bandwidth"])
+                continue
+
+            # Effective Bandwidth (Kbit) :   10000000
+            if m := p7.match(line):
+                group = m.groupdict()
+                interface_dict["effective_bandwidth"] = int(group["effective_bandwidth"])
+                continue
+
+            # MTU (in bytes) :               1518
+            if m := p8.match(line):
+                group = m.groupdict()
+                interface_dict["mtu"] = int(group["mtu"])
+                continue
+
+            # Duplexity :                    Full-duplex
+            if m := p9.match(line):
+                group = m.groupdict()
+                interface_dict["duplex"] = group["duplex"]
+                continue
+
+            #  IPv4 Address :               2.3.2.2/32
+            if m := p10.match(line):
+                group = m.groupdict()
+                ipv4_dict = interface_dict.setdefault("ipv4", {}).setdefault(group["ip"], {})
+                ipv4_dict["ip"] = group["ip"]
+                ipv4_dict["prefix_length"] = int(group["prefix_length"])
+                continue
 
         return ret_dict

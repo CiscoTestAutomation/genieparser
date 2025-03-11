@@ -7,8 +7,8 @@ IOSXE parsers for the following show commands:
     * 'show ipv6 dhcp interface {interface}'
     * 'show ip dhcp snooping statistics'
     * 'show ip dhcp snooping track server'
+    * 'show ip dhcp snooping statistics detail'
 """
-
 # Python
 import re
 
@@ -659,3 +659,70 @@ class ShowIpDhcpSnoopingTrackServer(ShowIpDhcpSnoopingTrackServerSchema):
                 continue
 
         return ret_dict
+
+# =====================================================
+# Schema for 'show ip dhcp snooping statistics detail'
+# =====================================================    
+class ShowIpDhcpSnoopingStatisticsDetailSchema(MetaParser):
+
+    ''' Schema for "show ip dhcp snooping statistics detail" '''
+
+    schema = {
+        "dhcp_snooping_packets" : int,
+        "packets_dropped_because" : {
+            Any() : int
+            },        
+        }
+
+# =====================================================
+# Parser for 'show ip dhcp snooping statistics detail'
+# =====================================================
+class ShowIpDhcpSnoopingStatisticsDetail(ShowIpDhcpSnoopingStatisticsDetailSchema):
+
+    ''' Parser for "show ip dhcp snooping statistics detail" '''
+
+    cli_command = 'show ip dhcp snooping statistics detail'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+       
+        # Init vars
+        ret_dict = {}
+
+        # Packets Processed by DHCP Snooping                    = 0
+        p1 = re.compile(r'^Packets\s+Processed\s+by\s+DHCP\s+Snooping\s+=\s+(?P<dhcp_snooping_packets>\d+)$')
+
+        # Packets Dropped Because
+        p2 = re.compile(r'^Packets\s+Dropped\s+Because$')
+
+        # No binding entry                                    = 0
+        # Insertion of opt82 fail                             = 0
+        p3 = re.compile(r'^(?P<pattern>[\w\s]+)=\s+(?P<value>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Packets Processed by DHCP Snooping                    = 0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({'dhcp_snooping_packets': int(group['dhcp_snooping_packets'])})
+                continue
+
+            # Packets Dropped Because
+            m = p2.match(line)
+            if m:
+                process_dict = ret_dict.setdefault('packets_dropped_because',{})
+                continue
+
+            # Nonzero giaddr                                      = 0
+            # Source mac not equal to chaddr                      = 0 
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                scrubbed = (group['pattern'].strip()).replace(' ', '_')
+                process_dict.update({scrubbed.lower(): int(group['value'])})
+                continue
+
+        return ret_dict    

@@ -2161,7 +2161,7 @@ class ShowWirelessClientMacDetailSchema(MetaParser):
         "fastlane_support": str,
         "client_active_state": str,
         "power_save": str,
-        "current_rate": Or(float, str),
+        Optional("current_rate"): Or(float, str),
         "supported_rates": list,
         Optional("aaa_qos_rate_limit_parameters"): {
             "upstream": {
@@ -2310,7 +2310,7 @@ class ShowWirelessClientMacDetailSchema(MetaParser):
                 }
             }
         },
-        "max_client_protocol_capability": str,
+        Optional("max_client_protocol_capability"): str,
         "cellular_capability": str,
         Optional("session_warning_time"): str,
         Optional("session_timeout"): str,
@@ -2695,7 +2695,7 @@ class ShowWirelessClientMacDetail(ShowWirelessClientMacDetailSchema):
 
         # Device Classification Information:
         # Device Type      : Android
-        p79 = re.compile(r'^Device Type +: (?P<device_type>\S+)$')
+        p79 = re.compile(r'^Device Type +: (?P<device_type>[\S ]+)$')
 
         # Device Name      : android-dhcp-10
         # Device Name      : MSFT 5.0

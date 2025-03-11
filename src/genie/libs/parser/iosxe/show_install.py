@@ -1126,3 +1126,35 @@ class ShowInstallUncommitted(ShowInstallUncommittedSchema):
                 continue
 
         return ret_dict
+
+class ShowAutoInstTraceSchema(MetaParser):
+    """Schema for show auto inst trace"""
+    schema = {
+        'trace': list,
+    }
+
+class ShowAutoInstTrace(ShowAutoInstTraceSchema):
+    """Parser for show auto inst trace"""
+
+    cli_command = 'show auto inst trace'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+
+        # Matching Patterns
+        # [02/13/25 01:31:07.833 UTC 1 351] IPv6 RA other-config-flag notify for Gi0/0 flg 0
+        p1 = re.compile(r'^\[(?P<timestamp>[\d/]+ [\d:.]+ UTC) (?P<seq>\d+) (?P<code>\d+)\] (?P<message>.*)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # [02/13/25 01:31:07.833 UTC 1 351] IPv6 RA other-config-flag notify for Gi0/0 flg 0
+            m = p1.match(line)
+            if m:
+                ret_dict.setdefault('trace', []).append(m.groupdict())
+                continue
+
+        return ret_dict
