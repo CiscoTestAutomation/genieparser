@@ -206,7 +206,7 @@ class ShowIsisAdjacency(ShowIsisAdjacencySchema):
         vrf = 'default'
 
         # IS-IS p Level-1 adjacencies:
-        p1 = re.compile(r'^IS-IS +(?P<isis_name>\w+) +(?P<level_name>\S+) adjacencies:$')
+        p1 = re.compile(r'^IS-IS +(?P<isis_name>[\w-]+) +(?P<level_name>\S+) adjacencies:$')
 
         # 12a4           PO0/1/0/1        *PtoP*         Up    23       00:00:06 Capable  None
         p2 = re.compile(r'^(?P<system_id>\S+) +(?P<interface>\S+) +(?P<snpa>\S+) +(?P<state>(Up|Down|None)) +(?P<hold>\S+) '
