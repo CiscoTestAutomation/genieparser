@@ -1,0 +1,20 @@
+GigabitEthernet0/0/4 is up, line protocol is up
+  Internet address is 200.1.1.1/24
+  IGMP is enabled on interface
+  Current IGMP host version is 2
+  Current IGMP router version is 2
+  IGMP query interval is 60 seconds
+  IGMP configured query interval is 60 seconds
+  IGMP robustness-variable is 2
+  IGMP querier timeout is 120 seconds
+  IGMP configured querier timeout is 120 seconds
+  IGMP max query response time is 10 seconds
+  Last member query count is 2
+  Last member query response interval is 1000 ms
+  Inbound IGMP access group is not set
+  IGMP activity: 1 joins, 0 leaves
+  Multicast routing is enabled on interface
+  Multicast TTL threshold is 0
+  Multicast designated router (DR) is 200.1.1.1 (this system)
+  IGMP querying router is 200.1.1.1 (this system)
+  No multicast groups joined by this system

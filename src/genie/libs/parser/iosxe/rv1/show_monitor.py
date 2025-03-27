@@ -155,11 +155,58 @@ class ShowMonitorCaptureBufferDetailedSchema(MetaParser):
                         },
                         Optional('padding'): int,
                     }
+                },
+                Optional('dhcp'): {
+                    Optional('message_type'): str,
+                    Optional('hardware_type'): str,
+                    Optional('hardware_address_length'): int,
+                    Optional('hops'): int,
+                    Optional('transaction_id'): str,
+                    Optional('seconds_elapsed'): int,
+                    Optional('bootp_flags'): str,
+                    Optional('client_ip_address'): str,
+                    Optional('your_ip_address'): str,
+                    Optional('next_server_ip_address'): str,
+                    Optional('relay_agent_ip_address'): str,
+                    Optional('client_mac_address'): str,
+                    Optional('client_hardware_address_padding'): int,
+                    Optional('server_host_name'): str,
+                    Optional('boot_file_name'): str,
+                    Optional('magic_cookie'): str,
+                    Optional('option'): {
+                        Any(): {
+                            Optional('option_name'): str,
+                            Optional('option_dhcp'): str,
+                            Optional('option_length'): int,
+                            Optional('option_dhcp_server_identifier'): str,
+                            Optional('option_dhcp_ip_address_lease_time'): str,
+                            Optional('option_dhcp_renewal_time_value'): str,
+                            Optional('option_dhcp_rebinding_time_value'): str,
+                            Optional('option_dhcp_subnet_mask'): str,
+                            Optional('option_dhcp_router'): str,
+                            Optional('option_router'): str,
+                            Optional('option_subnet_mask'): str,
+                            Optional('option_ip_address_lease_time'): str,
+                            Optional('option_renewal_time_value'): str,
+                            Optional('option_rebinding_time_value'): str,
+                            Optional('option_end'): str,
+                            Optional('option_end_padding'): str,
+                            Optional('option_dhcp_code'): int,
+                            Optional('option_value'): str,
+                            Optional('lease_time_seconds'): int,
+                            Optional('lease_time_minutes'): str,
+                            Optional('renewal_time_seconds'): int,
+                            Optional('renewal_time_minutes'): str,
+                            Optional('rebinding_time_seconds'): int,
+                            Optional('rebinding_time_minutes'): str,
+                            Optional('router'): str,
+                        }
+                    },
+                    Optional('padding'): str,
                 }
             }
         }
     }
-
 
 # ======================================================
 # Parser for 'show monitor capture buffer detailed '
@@ -177,6 +224,10 @@ class ShowMonitorCaptureBufferDetailed(ShowMonitorCaptureBufferDetailedSchema):
         # initial return dictionary
         ret_dict = {}
         section_name = None
+        flowset_dict = None
+        template_dict = None
+        field_dict = None
+        flow_dict = None
 
         # Frame 1: 1496 bytes on wire (11968 bits), 80 bytes captured (640 bits) on interface /tmp/epc_ws/wif_to_ts_pipe, id 0
         p0 = re.compile(r'^Frame (?P<frame_num>\d+): +(?P<bytes_on_wire>\d+)[\s\w]+\((?P<bits_1>[\w\s]+)\)'
@@ -297,7 +348,105 @@ class ShowMonitorCaptureBufferDetailed(ShowMonitorCaptureBufferDetailedSchema):
         # Padding: 0000
         p37 = re.compile(r'^Padding: (?P<padding>\d+)$')
 
-        # loop to split lines of output
+        # Dynamic Host Configuration Protocol (Offer)
+        p38 = re.compile(r'^Dynamic Host Configuration Protocol \((?P<dhcp_message_type>[\w\s]+)\)$')
+
+        # Message type: Boot Reply (2)
+        p39 = re.compile(r'^Message type: (?P<message_type>[\w\s]+) \(\d+\)$')
+
+        # Hardware type: Ethernet (0x01)
+        p40 = re.compile(r'^Hardware type: (?P<hardware_type>[\w\s]+) \([\w\s]+\)$')
+
+        # Hardware address length: 6
+        p41 = re.compile(r'^Hardware address length: (?P<hardware_address_length>\d+)$')
+
+        # Hops: 0
+        p42 = re.compile(r'^Hops: (?P<hops>\d+)$')
+
+        # Transaction ID: 0x24415a66
+        p43 = re.compile(r'^Transaction ID: (?P<transaction_id>0x[\dA-Fa-f]+)$')
+
+        # Seconds elapsed: 0
+        p44 = re.compile(r'^Seconds elapsed: (?P<seconds_elapsed>\d+)$')
+
+        # Bootp flags: 0x0000 (Unicast)
+        p45 = re.compile(r'^Bootp flags: (?P<bootp_flags>0x[\dA-Fa-f]+) \((?P<bootp_flags_type>[\w\s]+)\)$')
+
+        # Client IP address: 0.0.0.0
+        p46 = re.compile(r'^Client IP address: (?P<client_ip_address>[\d\.]+)$')
+
+        # Your (client) IP address: 192.168.10.105
+        p47 = re.compile(r'^Your \(client\) IP address: (?P<your_ip_address>[\d\.]+)$')
+
+        # Next server IP address: 0.0.0.0
+        p48 = re.compile(r'^Next server IP address: (?P<next_server_ip_address>[\d\.]+)$')
+
+        # Relay agent IP address: 0.0.0.0
+        p49 = re.compile(r'^Relay agent IP address: (?P<relay_agent_ip_address>[\d\.]+)$')
+
+        # Client MAC address: 00:12:01:00:00:01 (00:12:01:00:00:01)
+        p50 = re.compile(r'^Client MAC address: (?P<client_mac_address>[\w\:]+) \((?P<client_mac_address_2>[\w\:]+)\)$')
+
+        # Client hardware address padding: 00000000000000000000
+        p51 = re.compile(r'^Client hardware address padding: (?P<client_hardware_address_padding>[\d]+)$')
+
+        # Server host name not given
+        p52 = re.compile(r'^Server host name (?P<server_host_name>[\w\s]+)$')
+
+        # Boot file name not given
+        p53 = re.compile(r'^Boot file name (?P<boot_file_name>[\w\s]+)$')
+
+        # Magic cookie: DHCP
+        p54 = re.compile(r'^Magic cookie: (?P<magic_cookie>[\w]+)$')
+
+        # Option: (53) DHCP Message Type (Offer)
+        p55 = re.compile(r'^Option: \((?P<option_code>\d+)\) (?P<option_name>[\w\s]+) \((?P<option_value>[\w\s]+)\)$')
+
+        # Length: 1
+        p56 = re.compile(r'^Length: (?P<option_length>\d+)$')
+
+        # DHCP: Offer (2)
+        p57 = re.compile(r'^DHCP: (?P<option_dhcp>[\w\s]+) \((?P<option_dhcp_code>\d+)\)$')
+
+        # Option: (54) DHCP Server Identifier (192.168.10.1)
+        p58 = re.compile(r'^Option: \((?P<option_code>\d+)\) (?P<option_name>[\w\s]+) \((?P<option_value>[\d\.]+)\)$')
+
+        # Option: (51) IP Address Lease Time
+        p59 = re.compile(r'^Option: \((?P<option_code>\d+)\) (?P<option_name>[\w\s]+)$')
+
+        # IP Address Lease Time: (3540s) 59 minutes
+        p60 = re.compile(r'^IP Address Lease Time: \((?P<lease_time_seconds>\d+s)\) (?P<lease_time_minutes>[\d\s\w]+)$')
+
+        # Option: (58) Renewal Time Value
+        p61 = re.compile(r'^Option: \((?P<option_code>\d+)\) (?P<option_name>[\w\s]+)$')
+
+        # Renewal Time Value: (1770s) 29 minutes, 30 seconds
+        p62 = re.compile(r'^Renewal Time Value: \((?P<renewal_time_seconds>\d+s)\) (?P<renewal_time_minutes>[\d\s\w]+)$')
+
+        # Option: (59) Rebinding Time Value
+        p63 = re.compile(r'^Option: \((?P<option_code>\d+)\) (?P<option_name>[\w\s]+)$')
+
+        # Rebinding Time Value: (3094s) 51 minutes, 34 seconds
+        p64 = re.compile(r'^Rebinding Time Value: \((?P<rebinding_time_seconds>\d+s)\) (?P<rebinding_time_minutes>[\d\s\w]+)$')
+
+        # Option: (1) Subnet Mask (255.255.255.0)
+        p65 = re.compile(r'^Option: \((?P<option_code>\d+)\) (?P<option_name>[\w\s]+) \((?P<option_value>[\d\.]+)\)$')
+
+        # Option: (3) Router
+        p66 = re.compile(r'^Option: \((?P<option_code>\d+)\) (?P<option_name>[\w\s]+)$')
+
+        # Router: 192.168.10.1
+        p67 = re.compile(r'^Router: (?P<router>[\d\.]+)$')
+
+        # Option: (255) End
+        p68 = re.compile(r'^Option: \((?P<option_code>\d+)\) (?P<option_name>[\w\s]+)$')
+
+        # Option End: 255
+        p69 = re.compile(r'^Option End: (?P<option_end>\d+)$')
+
+        # Padding: 0000000000000000000000000000000000000000
+        p70 = re.compile(r'^Padding: (?P<padding>[\d]+)$')
+
         for line in output.splitlines():
             line = line.strip()
 
@@ -394,8 +543,8 @@ class ShowMonitorCaptureBufferDetailed(ShowMonitorCaptureBufferDetailedSchema):
             m = p8.match(line)
             if m:
                 section_name = None
-                group = m.groupdict()
-                result_dict.update({"dscp_value": int(group['dscp_value'])})
+                groups = m.groupdict()
+                result_dict.update({"dscp_value": int(groups['dscp_value'])})
                 continue
 
             # Cisco NetFlow/IPFIX
@@ -408,198 +557,466 @@ class ShowMonitorCaptureBufferDetailed(ShowMonitorCaptureBufferDetailedSchema):
             # Version: 9
             m = p10.match(line)
             if m:
-                group = m.groupdict()
-                cisco_netflow_ipfix_dict.update({"version": int(group['version'])})
+                groups = m.groupdict()
+                cisco_netflow_ipfix_dict.update({"version": int(groups['version'])})
                 continue
 
             # Count: 2
             m = p11.match(line)
             if m:
-                group = m.groupdict()
-                cisco_netflow_ipfix_dict.update({"count": int(group['count'])})
+                groups = m.groupdict()
+                cisco_netflow_ipfix_dict.update({"count": int(groups['count'])})
                 continue
 
             # SysUptime: 589785.000000000 seconds
             m = p12.match(line)
             if m:
-                group = m.groupdict()
-                cisco_netflow_ipfix_dict.update({"sys_uptime": group['sys_uptime']})
+                groups = m.groupdict()
+                cisco_netflow_ipfix_dict.update({"sys_uptime": groups['sys_uptime']})
                 continue
 
             # Timestamp: Jul  4, 2024 23:33:59.000000000 IST
             m = p13.match(line)
             if m:
-                group = m.groupdict()
-                cisco_netflow_ipfix_dict.update({"timestamp": group['timestamp']})
+                groups = m.groupdict()
+                cisco_netflow_ipfix_dict.update({"timestamp": groups['timestamp']})
                 continue
 
             # CurrentSecs: 1720485886
             m = p14.match(line)
             if m:
-                group = m.groupdict()
-                cisco_netflow_ipfix_dict.update({"current_secs": int(group['current_secs'])})
+                groups = m.groupdict()
+                cisco_netflow_ipfix_dict.update({"current_secs": int(groups['current_secs'])})
                 continue
 
             # FlowSequence: 24
             m = p15.match(line)
             if m:
-                group = m.groupdict()
-                cisco_netflow_ipfix_dict.update({"flow_sequence": int(group['flow_sequence'])})
+                groups = m.groupdict()
+                cisco_netflow_ipfix_dict.update({"flow_sequence": int(groups['flow_sequence'])})
                 continue
 
             # SourceId: 16777217
             m = p16.match(line)
             if m:
-                group = m.groupdict()
-                cisco_netflow_ipfix_dict.update({"source_id": int(group['source_id'])})
+                groups = m.groupdict()
+                cisco_netflow_ipfix_dict.update({"source_id": int(groups['source_id'])})
                 continue
 
             # FlowSet 1 [id=0] (Data Template): 257
             # FlowSet 2 [id=257] (46 flows)
             m = p17.match(line)
             if m:
-                group = m.groupdict()
-                flowset_dict = cisco_netflow_ipfix_dict.setdefault(group["flowset_num"], {})
-                flowset_dict.update({"id": int(group["id"])})
+                groups = m.groupdict()
+                flowset_dict = cisco_netflow_ipfix_dict.setdefault(groups["flowset_num"], {})
+                flowset_dict.update({"id": int(groups["id"])})
                 continue
 
             # FlowSet Id: Data Template (V9) (0)
             m = p18.match(line)
-            if m:
-                group = m.groupdict()
-                flowset_dict.update({"flowset_id": group["flowset_id"]})
+            if m and flowset_dict is not None:
+                groups = m.groupdict()
+                flowset_dict.update({"flowset_id": groups["flowset_id"]})
                 continue
 
             # FlowSet Length: 44
             m = p19.match(line)
-            if m:
-                group = m.groupdict()
-                flowset_dict.update({"flowset_length": int(group["flowset_length"])})
+            if m and flowset_dict is not None:
+                groups = m.groupdict()
+                flowset_dict.update({"flowset_length": int(groups["flowset_length"])})
                 continue
 
             # Template (Id = 257, Count = 9)
             m = p20.match(line)
-            if m:
+            if m and flowset_dict is not None:
                 template_dict = flowset_dict.setdefault("template", {})
                 continue
 
             # Template Id: 257
             m = p21.match(line)
-            if m:
-                group = m.groupdict()
-                template_dict.update({"template_id": int(group["template_id"])})
+            if m and template_dict is not None:
+                groups = m.groupdict()
+                template_dict.update({"template_id": int(groups["template_id"])})
                 continue
 
             # Field Count: 9
             m = p22.match(line)
-            if m:
-                group = m.groupdict()
-                template_dict.update({"field_count": int(group["field_count"])})
+            if m and template_dict is not None:
+                groups = m.groupdict()
+                template_dict.update({"field_count": int(groups["field_count"])})
                 continue
 
             # Field (1/9): IP_SRC_ADDR
             m = p23.match(line)
-            if m:
-                group = m.groupdict()
-                field_dict = template_dict.setdefault("fields", {}).setdefault(group["field_id"], {})
+            if m and template_dict is not None:
+                groups = m.groupdict()
+                field_dict = template_dict.setdefault("fields", {}).setdefault(groups["field_id"], {})
                 continue
 
             # Type: IP_SRC_ADDR (8)
             m = p24.match(line)
-            if m:
-                group = m.groupdict()
-                field_dict.update({"type": group["type"]})
+            if m and field_dict is not None:
+                groups = m.groupdict()
+                field_dict.update({"type": groups["type"]})
                 continue
 
             # Length: 4
             m = p25.match(line)
-            if m:
-                group = m.groupdict()
-                field_dict.update({"length": int(group["length"])})
+            if m and field_dict is not None:
+                groups = m.groupdict()
+                field_dict.update({"length": int(groups["length"])})
                 continue
 
             # [Template Frame: 7291]
             m = p26.match(line)
-            if m:
-                group = m.groupdict()
-                flowset_dict.update({"template_frame": int(group["template_frame"])})
+            if m and flowset_dict is not None:
+                groups = m.groupdict()
+                flowset_dict.update({"template_frame": int(groups["template_frame"])})
                 continue
 
             # Flow 5
             m = p27.match(line)
-            if m:
-                group = m.groupdict()
-                flow_dict = flowset_dict.setdefault("flows", {}).setdefault(group["flow_id"], {})
+            if m and flowset_dict is not None:
+                groups = m.groupdict()
+                flow_dict = flowset_dict.setdefault("flows", {}).setdefault(groups["flow_id"], {})
                 continue
 
             # SrcAddr: 6.6.6.8
             m = p28.match(line)
-            if m:
-                group = m.groupdict()
-                flow_dict.update({"src_addr": group["src_addr"]})
+            if m and flow_dict is not None:
+                groups = m.groupdict()
+                flow_dict.update({"src_addr": groups["src_addr"]})
                 continue
 
             # DstAddr: 15.15.15.8
             m = p29.match(line)
-            if m:
-                group = m.groupdict()
-                flow_dict.update({"dst_addr": group["dst_addr"]})
+            if m and flow_dict is not None:
+                groups = m.groupdict()
+                flow_dict.update({"dst_addr": groups["dst_addr"]})
                 continue
 
             # DstPort: 60
             m = p30.match(line)
-            if m:
-                group = m.groupdict()
-                flow_dict.update({"dst_port": int(group["dst_port"])})
+            if m and flow_dict is not None:
+                groups = m.groupdict()
+                flow_dict.update({"dst_port": int(groups["dst_port"])})
                 continue
 
             # TCP Flags: 0x00
             m = p31.match(line)
-            if m:
-                group = m.groupdict()
-                flow_dict.update({"tcp_flags": group["tcp_flags"]})
+            if m and flow_dict is not None:
+                groups = m.groupdict()
+                flow_dict.update({"tcp_flags": groups["tcp_flags"]})
                 continue
 
             # Octets: 2470
             m = p32.match(line)
-            if m:
-                group = m.groupdict()
-                flow_dict.update({"octets": int(group["octets"])})
+            if m and flow_dict is not None:
+                groups = m.groupdict()
+                flow_dict.update({"octets": int(groups["octets"])})
                 continue
 
             # Packets: 5
             m = p33.match(line)
-            if m:
-                group = m.groupdict()
-                flow_dict.update({"packets": int(group["packets"])})
+            if m and flow_dict is not None:
+                groups = m.groupdict()
+                flow_dict.update({"packets": int(groups["packets"])})
                 continue
 
             # IPVersion: 4
             m = p34.match(line)
-            if m:
-                group = m.groupdict()
-                flow_dict.update({"ipversion": int(group["ipversion"])})
+            if m and flow_dict is not None:
+                groups = m.groupdict()
+                flow_dict.update({"ipversion": int(groups["ipversion"])})
                 continue
 
             # IP ToS: 0x00
             m = p35.match(line)
-            if m:
-                group = m.groupdict()
-                flow_dict.update({"ip_tos": group["ip_tos"]})
+            if m and flow_dict is not None:
+                groups = m.groupdict()
+                flow_dict.update({"ip_tos": groups["ip_tos"]})
                 continue
 
             # Protocol: TCP (6)
             m = p36.match(line)
-            if m:
-                group = m.groupdict()
-                flow_dict.update({"protocol": group["protocol"]})
+            if m and flow_dict is not None:
+                groups = m.groupdict()
+                flow_dict.update({"protocol": groups["protocol"]})
                 continue
 
             # Padding: 0000
             m = p37.match(line)
+            if m and flowset_dict is not None:
+                groups = m.groupdict()
+                flowset_dict.update({"padding": int(groups["padding"])})
+                continue
+
+            # Dynamic Host Configuration Protocol (Offer)
+            m = p38.match(line)
             if m:
-                group = m.groupdict()
-                flowset_dict.update({"padding": int(group["padding"])})
+                section_name = "dhcp"
+                dhcp_dict = result_dict.setdefault(section_name, {})
+                continue
+
+            # Message type: Boot Reply (2)
+            m = p39.match(line)
+            if m:
+                groups = m.groupdict()
+                dhcp_dict.update({
+                    "message_type": groups["message_type"]
+                })
+                continue
+
+            # Hardware type: Ethernet (0x01)
+            m = p40.match(line)
+            if m:
+                groups = m.groupdict()
+                dhcp_dict.update({
+                    "hardware_type": groups["hardware_type"]
+                })
+                continue
+
+            # Hardware address length: 6
+            m = p41.match(line)
+            if m:
+                groups = m.groupdict()
+                dhcp_dict.update({"hardware_address_length": int(groups["hardware_address_length"])})
+                continue
+
+            # Hops: 0
+            m = p42.match(line)
+            if m:
+                groups = m.groupdict()
+                dhcp_dict.update({"hops": int(groups["hops"])})
+                continue
+
+            # Transaction ID: 0x24415a66
+            m = p43.match(line)
+            if m:
+                groups = m.groupdict()
+                dhcp_dict.update({"transaction_id": groups["transaction_id"]})
+                continue
+
+            # Seconds elapsed: 0
+            m = p44.match(line)
+            if m:
+                groups = m.groupdict()
+                dhcp_dict.update({"seconds_elapsed": int(groups["seconds_elapsed"])})
+                continue
+
+            # Bootp flags: 0x0000 (Unicast)
+            m = p45.match(line)
+            if m:
+                groups = m.groupdict()
+                dhcp_dict.update({
+                    "bootp_flags": groups["bootp_flags"]
+                })
+                continue
+
+            # Client IP address: 0.0.0.0
+            m = p46.match(line)
+            if m:
+                groups = m.groupdict()
+                dhcp_dict.update({"client_ip_address": groups["client_ip_address"]})
+                continue
+
+            # Your (client) IP address: 192.168.10.105
+            m = p47.match(line)
+            if m:
+                groups = m.groupdict()
+                dhcp_dict.update({"your_ip_address": groups["your_ip_address"]})
+                continue
+
+            # Next server IP address: 0.0.0.0
+            m = p48.match(line)
+            if m:
+                groups = m.groupdict()
+                dhcp_dict.update({"next_server_ip_address": groups["next_server_ip_address"]})
+                continue
+
+            # Relay agent IP address: 0.0.0.0
+            m = p49.match(line)
+            if m:
+                groups = m.groupdict()
+                dhcp_dict.update({"relay_agent_ip_address": groups["relay_agent_ip_address"]})
+                continue
+
+            # Client MAC address: 00:12:01:00:00:01 (00:12:01:00:00:01)
+            m = p50.match(line)
+            if m:
+                groups = m.groupdict()
+                dhcp_dict.update({
+                    "client_mac_address": groups["client_mac_address"]
+                })
+                continue
+
+            # Client hardware address padding: 00000000000000000000
+            m = p51.match(line)
+            if m:
+                groups = m.groupdict()
+                dhcp_dict.update({"client_hardware_address_padding": int(groups["client_hardware_address_padding"])})
+                continue
+
+            # Server host name not given
+            m = p52.match(line)
+            if m:
+                groups = m.groupdict()
+                dhcp_dict.update({"server_host_name": groups["server_host_name"]})
+                continue
+
+            # Boot file name not given
+            m = p53.match(line)
+            if m:
+                groups = m.groupdict()
+                dhcp_dict.update({"boot_file_name": groups["boot_file_name"]})
+                continue
+
+            # Magic cookie: DHCP
+            m = p54.match(line)
+            if m:
+                groups = m.groupdict()
+                dhcp_dict.update({"magic_cookie": groups["magic_cookie"]})
+                continue
+
+            # Option: (53) DHCP Message Type (Offer)
+            m = p55.match(line)
+            if m:
+                groups = m.groupdict()
+                option_dict = dhcp_dict.setdefault("option", {}).setdefault(groups["option_code"], {})
+                option_dict.update({
+                    "option_name": groups["option_name"],
+                    "option_value": groups["option_value"]
+                })
+                continue
+
+            # Length: 1
+            m = p56.match(line)
+            if m:
+                groups = m.groupdict()
+                option_dict.update({"option_length": int(groups["option_length"])})
+                continue
+
+            # DHCP: Offer (2)
+            m = p57.match(line)
+            if m:
+                groups = m.groupdict()
+                option_dict.update({
+                    "option_dhcp": groups["option_dhcp"],
+                    "option_dhcp_code": int(groups["option_dhcp_code"])
+                })
+                continue
+
+            # Option: (54) DHCP Server Identifier (192.168.10.1)
+            m = p58.match(line)
+            if m:
+                groups = m.groupdict()
+                option_dict = dhcp_dict.setdefault("option", {}).setdefault(groups["option_code"], {})
+                option_dict.update({
+                    "option_name": groups["option_name"],
+                    "option_value": groups["option_value"]
+                })
+                continue
+
+            # Option: (51) IP Address Lease Time
+            m = p59.match(line)
+            if m:
+                groups = m.groupdict()
+                option_dict = dhcp_dict.setdefault("option", {}).setdefault(groups["option_code"], {})
+                option_dict.update({"option_name": groups["option_name"]})
+                continue
+
+            # IP Address Lease Time: (3540s) 59 minutes
+            m = p60.match(line)
+            if m:
+                groups = m.groupdict()
+                option_dict.update({
+                    "lease_time_seconds": int(groups["lease_time_seconds"].replace('s', '')),
+                    "lease_time_minutes": groups["lease_time_minutes"]
+                })
+                continue
+
+            # Option: (58) Renewal Time Value
+            m = p61.match(line)
+            if m:
+                groups = m.groupdict()
+                option_dict = dhcp_dict.setdefault("option", {}).setdefault(groups["option_code"], {})
+                option_dict.update({"option_name": groups["option_name"]})
+                continue
+
+            # Renewal Time Value: (1770s) 29 minutes, 30 seconds
+            m = p62.match(line)
+            if m:
+                groups = m.groupdict()
+                option_dict.update({
+                    "renewal_time_seconds": int(groups["renewal_time_seconds"].replace('s', '')),
+                    "renewal_time_minutes": groups["renewal_time_minutes"]
+                })
+                continue
+
+            # Option: (59) Rebinding Time Value
+            m = p63.match(line)
+            if m:
+                groups = m.groupdict()
+                option_dict = dhcp_dict.setdefault("option", {}).setdefault(groups["option_code"], {})
+                option_dict.update({"option_name": groups["option_name"]})
+                continue
+
+            # Rebinding Time Value: (3094s) 51 minutes, 34 seconds
+            m = p64.match(line)
+            if m:
+                groups = m.groupdict()
+                option_dict.update({
+                    "rebinding_time_seconds": int(groups["rebinding_time_seconds"].replace('s', '')),
+                    "rebinding_time_minutes": groups["rebinding_time_minutes"]
+                })
+                continue
+
+            # Option: (1) Subnet Mask (255.255.255.0)
+            m = p65.match(line)
+            if m:
+                groups = m.groupdict()
+                option_dict = dhcp_dict.setdefault("option", {}).setdefault(groups["option_code"], {})
+                option_dict.update({
+                    "option_name": groups["option_name"],
+                    "option_value": groups["option_value"]
+                })
+                continue
+
+            # Option: (3) Router
+            m = p66.match(line)
+            if m:
+                groups = m.groupdict()
+                option_dict = dhcp_dict.setdefault("option", {}).setdefault(groups["option_code"], {})
+                option_dict.update({"option_name": groups["option_name"]})
+                continue
+
+            # Router: 192.168.10.1
+            m = p67.match(line)
+            if m:
+                groups = m.groupdict()
+                option_dict.update({"router": groups["router"]})
+                continue
+
+            # Option: (255) End
+            m = p68.match(line)
+            if m:
+                groups = m.groupdict()
+                option_dict = dhcp_dict.setdefault("option", {}).setdefault(groups["option_code"], {})
+                option_dict.update({"option_name": groups["option_name"]})
+                continue
+
+            # Option End: 255
+            m = p69.match(line)
+            if m:
+                groups = m.groupdict()
+                option_dict.update({"option_end": str(groups["option_end"])})
+                continue
+
+            # Padding: 0000000000000000000000000000000000000000
+            m = p70.match(line)
+            if m:
+                groups = m.groupdict()
+                dhcp_dict.update({"padding": groups["padding"]})
                 continue
 
         return ret_dict

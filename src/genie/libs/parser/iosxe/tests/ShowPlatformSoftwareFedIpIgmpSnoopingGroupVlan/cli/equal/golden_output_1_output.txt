@@ -1,0 +1,9 @@
+  (Vlan: 10, 225.0.0.1)
+    Member ports            :
+        Port-channel2 (Port:HundredGigE1/1/0/21)
+    Dependent Users Count   : 2
+    Group Urid              : 0x6000000000000001
+    Fset Urid ( Hash )      : 0x2000000000000011 ( 134439a0 )
+    Layer 3 Stub Entry      : No
+    Gid                     : 8212
+    Mcid Asic[0]            : 1549

@@ -1,0 +1,10 @@
+R: Interface is the RPL-link
+F: Interface is faulty
+B: Interface is blocked
+FS: Local forced switch
+MS: Local manual switch
+
+RingName                         Inst NodeType  NodeState     Port0    Port1
+--------------------------------------------------------------------------------
+g8032_ring                       1    Owner     Protection    R,F,B    F        
+g8032_ring                       2    Owner     Protection    R,F,B    F 

@@ -1,0 +1,26 @@
+
+show version
+Cisco Internetwork Operating System Software 
+IOS (tm) 3000 Bootstrap Software (IGS-BOOT-R), Version 11.0(10c)XB1, PLATFORM SPECIFIC RELEASE SOFTWARE (fc1) 
+Copyright (c) 1986-1996 by cisco Systems, Inc.
+Compiled Wed 10-Sep-97 13:06 by phester
+Image text-base: 0x01010000, data-base: 0x00001000
+
+ROM: System Bootstrap, Version 11.0(10c)XB1, PLATFORM SPECIFIC RELEASE SOFTWARE (fc1)
+
+YY39-TS uptime is 31 weeks, 5 days, 5 hours, 26 minutes
+System restarted by power-on
+Running default software
+
+cisco AS2511-RJ (68030) processor (revision I) with 14336K/2048K bytes of memory.
+Processor board ID 15897747, with hardware revision 00000000
+X.25 software, Version 2.0, NET2, BFE and GOSIP compliant.
+1 Ethernet/IEEE 802.3 interface.
+1 Serial network interface.
+16 terminal lines.
+32K bytes of non-volatile configuration memory.
+16384K bytes of processor board System flash (Read/Write)
+
+Configuration register is 0x2102
+
+YY39-TS(boot)#

@@ -599,3 +599,95 @@ class ShowEthernetCfmStatistics(ShowEthernetCfmStatisticsSchema):
                 continue
 
         return parsed_dict
+
+# ====================================================================
+#  Schema for 'show ethernet ring g8032 brief'
+# ====================================================================
+class ShowEthernetRingG8032BriefSchema(MetaParser):
+    """Schema for 'show ethernet ring g8032 brief'
+    """
+    schema = {
+        'ethernet_rings': {
+            Any(): {
+                'ringname': str,
+                'inst': int,
+                'nodetype': str,
+                'nodestate': str,
+                Optional('port0'): str,
+                Optional('port1'): str,
+            }
+        }
+    }
+
+
+class ShowEthernetRingG8032Brief(ShowEthernetRingG8032BriefSchema):
+    """
+    Parser for :
+        * show ethernet ring g8032 brief
+    """
+    cli_command = 'show ethernet ring {ring} brief'
+
+    def cli(self, output=None):
+
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Switch#show ethernet ring g8032 brief 
+        # R: Interface is the RPL-link
+        # F: Interface is faulty
+        # B: Interface is blocked
+        # FS: Local forced switch
+        # MS: Local manual switch
+
+        # RingName                         Inst NodeType  NodeState     Port0    Port1
+        # --------------------------------------------------------------------------------
+        # g8032_ring                       1    Normal    Protection             F,B
+        # g8032_ring                       1    Owner     Idle          R,B
+        # g8032_ring                       1    Owner     Pending       R
+        # g8032_ring                       1    Normal    Protection             F,B
+        # g8032_ring                       1    Owner     Manual Switch R        B,MS
+        # g8032_ring                       1    Neighbor  Force Switch R
+        # g8032_ring                       1    Owner     Protection    R,F,B    F
+        # g8032_ring                       2    Owner     Protection    R,F,B    F
+        # g8032_ring                       1    Normal    Idle
+
+        p1 = re.compile(r'(?P<ringname>\S+)\s+(?P<inst>\d+)\s+(?P<nodetype>\S+)\s+(?P<nodestate>[A-Za-z\s]+?(?:\sSwitch)?)(?:\s{1,11}(?P<port0>[A-Za-z,]+))?(?:\s+(?P<port1>[A-Za-z,]+))?\s*$')
+
+        ret_dict = {}
+
+        # Initialize count to 1
+        count = 1
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # RingName                         Inst NodeType  NodeState     Port0    Port1
+            # --------------------------------------------------------------------------------
+            # g8032_ring                       1    Normal    Protection             F,B
+            # g8032_ring                       1    Owner     Idle          R,B
+            # g8032_ring                       1    Owner     Pending       R
+            # g8032_ring                       1    Normal    Protection             F,B
+            # g8032_ring                       1    Owner     Manual Switch R        B,MS
+            # g8032_ring                       1    Neighbor  Force Switch R
+            # g8032_ring                       1    Owner     Protection    R,F,B    F
+            # g8032_ring                       2    Owner     Protection    R,F,B    F
+            # g8032_ring                       1    Normal    Idle      
+            m1 = p1.match(line)
+            if m1:
+                group = m1.groupdict()
+                ethernet_rings = ret_dict.setdefault('ethernet_rings', {})
+                ethernet_dict = ethernet_rings.setdefault(count, {})
+                ethernet_dict['inst'] = int(group['inst'])
+                ethernet_dict['nodetype'] = group['nodetype']
+                ethernet_dict['nodestate'] = group['nodestate']
+                ethernet_dict['ringname'] = group['ringname']
+
+                if group['port0']:
+                    ethernet_dict['port0'] = group['port0'].strip()
+                if group['port1']:
+                    ethernet_dict['port1'] = group['port1'].strip()
+
+                count+=1
+
+        return ret_dict
+

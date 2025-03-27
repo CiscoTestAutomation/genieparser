@@ -1,0 +1,7 @@
+Active ISAKMP SA's: 0
+
+Standby ISAKMP SA's: 0
+
+Currently being negotiated ISAKMP SA's: 0
+
+Dead ISAKMP SA's: 450

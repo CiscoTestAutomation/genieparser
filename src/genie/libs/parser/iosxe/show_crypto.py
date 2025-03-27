@@ -24,6 +24,11 @@ IOSXE parsers for the following show commands:
    * show crypto ikev2 psh
    * show crypto ikev2 performance
    * show crypto map
+   * show crypto ipsec spi-lookup detail
+   * show crypto isakmp default policy
+   * show crypto isakmp sa {status}
+   * show crypto isakmp peer {peer_ip}
+   * show crypto isakmp sa count
 """
 
 # Python
@@ -9685,3 +9690,450 @@ class ShowCryptoPkiCertificatesPemServer(ShowCryptoPkiCertificatesPemServerSchem
                     ret_dict[key_name] += line+'\n'
                 
         return ret_dict
+
+# =================================================
+#  Schema for 'show crypto ipsec spi-lookup detail'
+# =================================================
+class ShowCryptoIpsecSpiLookupDetailSchema(MetaParser):
+    """Schema for show crypto ipsec spi-lookup detail"""
+    schema = {
+        'active_spi_table': {
+            'spi_entries': {
+                Any(): {
+                    'prot': str,
+                    'local_address': str,
+                    'type': str,
+                    'handle': str,
+                    'vrf': str,
+                    'remote_address': str,
+                    'idb': str,
+                }
+            }
+        },
+        'transient_spi_table': {
+            'spi_entries': {
+                Any(): {
+                    'handle': str,
+                    'r': str,
+                    'time_created': str,
+                }
+            }
+        }
+    }
+
+# =======================================
+# Parser for
+#   'show crypto ipsec spi-lookup detail'
+# =======================================
+class ShowCryptoIpsecSpiLookupDetail(ShowCryptoIpsecSpiLookupDetailSchema):
+    """Parser for show crypto ipsec spi-lookup detail"""
+
+    cli_command = 'show crypto ipsec spi-lookup detail'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # 3A4AAE22 ipsec 10.10.10.1 type 40003352 0 20.10.10.1 566
+        active_spi_entry_pattern = re.compile(
+            r'^(?P<spi>\S+)\s+(?P<prot>\S+)\s+(?P<local_address>\S+)\s+(?P<type>\S+)\s+'
+            r'(?P<handle>\S+)\s+(?P<vrf>\S+)\s+(?P<remote_address>\S+)\s+(?P<idb>\S+)$'
+        )
+
+        # 3A4AAE22 40003352 0 566
+        transient_spi_entry_pattern = re.compile(
+            r'^(?P<spi>\S+)\s+(?P<handle>\S+)\s+(?P<r>\S+)\s+(?P<time_created>\S+)$'
+        )
+
+        # Flags to determine which section we are in
+        active_spi_section = False
+        transient_spi_section = False
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Check for section headers
+            if line.startswith('Active SPI table'):
+                active_spi_section = True
+                transient_spi_section = False
+                parsed_dict.setdefault('active_spi_table', {})
+                parsed_dict['active_spi_table'].setdefault('spi_entries', {})
+                continue
+            elif line.startswith('Transient SPI table'):
+                active_spi_section = False
+                transient_spi_section = True
+                parsed_dict.setdefault('transient_spi_table', {})
+                parsed_dict['transient_spi_table'].setdefault('spi_entries', {})
+                continue
+
+            # Parse active SPI table entries
+            if active_spi_section:
+                match = active_spi_entry_pattern.match(line)
+                if match:
+                    result_dict = parsed_dict['active_spi_table']['spi_entries']
+                    spi = match.groupdict()['spi']
+                    prot = match.groupdict()['prot']
+                    local_address = match.groupdict()['local_address']
+                    spi_type = match.groupdict()['type']
+                    handle =  match.groupdict()['handle']
+                    vrf =  match.groupdict()['vrf']
+                    remote_address =  match.groupdict()['remote_address']
+                    idb =  match.groupdict()['idb']
+                    result_dict[spi] = {}
+                    result_dict[spi]['prot'] = prot
+                    result_dict[spi]['local_address'] = local_address
+                    result_dict[spi]['type'] = spi_type
+                    result_dict[spi]['handle'] = handle
+                    result_dict[spi]['vrf'] = vrf
+                    result_dict[spi]['remote_address'] = remote_address
+                    result_dict[spi]['idb'] = idb
+                    continue
+
+            # Parse transient SPI table entries
+            if transient_spi_section:
+                match = transient_spi_entry_pattern.match(line)
+                if match:
+                    result_dict = parsed_dict['transient_spi_table']['spi_entries']
+                    spi = match.groupdict()['spi']
+                    handle =  match.groupdict()['handle']
+                    r =  match.groupdict()['r']
+                    time_created =  match.groupdict()['time_created']
+                    result_dict[spi] = {}
+                    result_dict[spi]['handle'] = handle
+                    result_dict[spi]['r'] = r
+                    result_dict[spi]['time_created'] = time_created
+                    continue
+
+        return parsed_dict
+
+# ===============================================
+#  Schema for 'show crypto isakmp default policy'
+# ===============================================
+class ShowCryptoIsakmpDefaultPolicySchema(MetaParser):
+    """Schema for show crypto isakmp default policy"""
+    schema = {
+        'policies': {
+            Any(): {
+                'encryption_algorithm': str,
+                'hash_algorithm': str,
+                'authentication_method': str,
+                'diffie_hellman_group': str,
+                'lifetime': str,
+            }
+        }
+    }
+
+# =======================================
+# Parser for
+#   'show crypto isakmp default policy'
+# =======================================
+class ShowCryptoIsakmpDefaultPolicy(ShowCryptoIsakmpDefaultPolicySchema):
+    """Parser for show crypto isakmp default policy"""
+
+    cli_command = 'show crypto isakmp default policy'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # Default protection suite of priority 65514
+        p1 = re.compile(r'^Default protection suite of priority (?P<priority>\d+)$')
+
+        # encryption algorithm:   Three key triple DES
+        p2 = re.compile(r'^encryption algorithm:\s+(?P<encryption_algorithm>.+)$')
+
+        # hash algorithm:         Message Digest 5
+        p3 = re.compile(r'^hash algorithm:\s+(?P<hash_algorithm>.+)$')
+
+        # authentication method:  Pre-Shared Key
+        p4 = re.compile(r'^authentication method:\s+(?P<authentication_method>.+)$')
+
+        # Diffie-Hellman group:   #2 (1024 bit)
+        p5 = re.compile(r'^Diffie-Hellman group:\s+(?P<diffie_hellman_group>.+)$')
+
+        # lifetime:               86400 seconds, no volume limit
+        p6 = re.compile(r'^lifetime:\s+(?P<lifetime>.+)$')
+
+        current_priority = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Default protection suite of priority 65514
+            m = p1.match(line)
+            if m:
+                current_priority = int(m.group('priority'))
+                parsed_dict.setdefault('policies', {})
+                parsed_dict['policies'].setdefault(current_priority, {})
+                continue
+
+            # encryption algorithm:   Three key triple DES
+            m = p2.match(line)
+            if m and current_priority is not None:
+                parsed_dict['policies'][current_priority]['encryption_algorithm'] = m.group('encryption_algorithm')
+                continue
+
+            # hash algorithm:         Message Digest 5
+            m = p3.match(line)
+            if m and current_priority is not None:
+                parsed_dict['policies'][current_priority]['hash_algorithm'] = m.group('hash_algorithm')
+                continue
+
+            # authentication method:  Pre-Shared Key
+            m = p4.match(line)
+            if m and current_priority is not None:
+                parsed_dict['policies'][current_priority]['authentication_method'] = m.group('authentication_method')
+                continue
+
+            # Diffie-Hellman group:   #2 (1024 bit)
+            m = p5.match(line)
+            if m and current_priority is not None:
+                parsed_dict['policies'][current_priority]['diffie_hellman_group'] = m.group('diffie_hellman_group')
+                continue
+
+            # lifetime:               86400 seconds, no volume limit
+            m = p6.match(line)
+            if m and current_priority is not None:
+                parsed_dict['policies'][current_priority]['lifetime'] = m.group('lifetime')
+                continue
+
+        return parsed_dict
+
+# ============================================
+#  Schema for 'show crypto isakmp sa {status}'
+# ============================================
+class ShowCryptoIsakmpSaStatusSchema(MetaParser):
+    """Schema for show crypto isakmp sa <>"""
+
+    schema = {
+        'isakmp_stats': {
+            Or('ipv4', 'ipv6'):{
+                int:{
+                    'dst': str,
+                    'src': str,
+                    'state': str,
+                    'conn_id': int,
+                    'slot': int,
+                    'status': str,
+                },
+            },
+        },
+    }
+
+# =======================================
+# Parser for
+#   'show crypto isakmp sa {status}'
+# =======================================
+class ShowCryptoIsakmpSaStatus(ShowCryptoIsakmpSaStatusSchema):
+    """Parser for show crypto isakmp sa <>"""
+
+    cli_command = "show crypto isakmp sa {status}"
+
+    def cli(self, status='', output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(status=status))
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # IPv4 Crypto ISAKMP SA
+        # IPv6 Crypto ISAKMP SA
+        p1 = re.compile(r'^(?P<version>\S+) Crypto ISAKMP SA$')
+
+        # 10.165.201.3   10.165.200.225 QM_IDLE              5    0 ACTIVE
+        # 10.165.201.3   10.165.200.225 QM_IDLE              5    0 STDBY
+        p2 = re.compile(r'^(?P<dst>\S+)\s+(?P<src>\S+)\s+(?P<state>\S+)\s+'
+                        r'(?P<conn_id>\d+)\s+(?P<slot>\d+)\s+(?P<status>\S+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Skip the header line
+            if line.startswith('dst'):
+                continue
+
+            # IPv4 Crypto ISAKMP SA
+            # IPv6 Crypto ISAKMP SA
+            m = p1.match(line)
+            if m:
+                ser_dict = parsed_dict.setdefault('isakmp_stats', {})
+                if m.groupdict()['version'] == "IPv4":
+                    count = 0
+                    sub_dict = ser_dict.setdefault('ipv4', {})
+
+                if m.groupdict()['version'] == "IPv6":
+                    count = 0
+                    sub_dict = ser_dict.setdefault('ipv6', {})
+                continue
+
+            # 10.165.201.3   10.165.200.225 QM_IDLE              5    0 ACTIVE
+            # 10.165.201.3   10.165.200.225 QM_IDLE              5    0 STDBY
+            m = p2.match(line)
+            if m:
+                count += 1
+                sub_dict.setdefault(count, {})
+                group = m.groupdict()
+                sub_dict[count] = {
+                    'dst': group['dst'],
+                    'src': group['src'],
+                    'state': group['state'],
+                    'conn_id': int(group['conn_id']),
+                    'slot': int(group['slot']),
+                    'status': group['status'],
+                }
+
+        return parsed_dict
+
+# ==============================================
+#  Schema for 'show crypto isakmp peer {peer_ip}'
+# ==============================================
+class ShowCryptoIsakmpPeerSchema(MetaParser):
+    """Schema for show crypto isakmp peer <>"""
+
+    schema = {
+        'peer_entries': {
+            int: {
+                'peer_ip': str,
+                'port': int,
+                'local_ip': str,
+                'phase_id': str,
+            }
+        }
+    }
+
+
+# =====================================
+# Parser for
+#   'show crypto isakmp peer {peer_ip}'
+# =====================================
+class ShowCryptoIsakmpPeer(ShowCryptoIsakmpPeerSchema):
+    """Parser for show crypto isakmp peer"""
+
+    cli_command = 'show crypto isakmp peer {peer_ip}'
+
+    def cli(self, peer_ip='', output=None):
+        if output is None:
+            cmd = self.cli_command.format(peer_ip=peer_ip)
+            output = self.device.execute(cmd)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # Peer: 1.1.1.2 Port: 500 Local: 1.1.1.1
+        p1 = re.compile(r'^Peer:\s+(?P<peer>\S+)\s+Port:\s+(?P<port>\d+)\s+Local:\s+(?P<local>\S+)$')
+
+        # Phase1 id: 1.1.1.2
+        p2 = re.compile(r'^Phase\d+\s+\w+:\s+(?P<phase_id>\S+)$')
+
+
+        # Iterate over each line in the output
+        count = 0
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Peer: 1.1.1.2 Port: 500 Local: 1.1.1.1
+            m = p1.match(line)
+            if m:
+                count += 1
+                parsed_dict.setdefault('peer_entries', {})
+                sub_dict = parsed_dict['peer_entries'].setdefault(count, {})
+                group = m.groupdict()
+                peer = group['peer']
+                parsed_dict['peer_entries'][count] = {
+                    'peer_ip': peer,
+                    'port': int(group['port']),
+                    'local_ip': group['local'],
+                }
+                continue
+
+            # Phase1 id: 1.1.1.2
+            m = p2.match(line)
+            if m and peer:
+                group = m.groupdict()
+                parsed_dict['peer_entries'][count]['phase_id'] = group['phase_id']
+                peer = ''
+                continue
+
+        return parsed_dict
+
+# ==============================================
+#  Schema for 'show crypto isakmp sa count'
+# ==============================================
+class ShowCryptoIsakmpSaCountSchema(MetaParser):
+    """Schema for show crypto isakmp sa count"""
+
+    schema = {
+        'active_isakmp_sas': int,
+        'standby_isakmp_sas': int,
+        'negotiating_isakmp_sas': int,
+        'dead_isakmp_sas': int,
+    }
+
+# =====================================
+# Parser for
+#   'show crypto isakmp sa count'
+# =====================================
+class ShowCryptoIsakmpSaCount(ShowCryptoIsakmpSaCountSchema):
+    """Parser for show crypto isakmp sa count"""
+
+    cli_command = 'show crypto isakmp sa count'
+
+    def cli(self, output=None):
+        if output is None:
+            # Execute the command on the device
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # Active ISAKMP SA's: 0
+        p1 = re.compile(r'^Active ISAKMP SA\'s:\s+(?P<act_isa>\d+)$')
+
+        # Standby ISAKMP SA's: 0
+        p2 = re.compile(r'^Standby ISAKMP SA\'s:\s+(?P<stdby_isa>\d+)$')
+
+        # Currently being negotiated ISAKMP SA's: 0
+        p3 = re.compile(r'^Currently being negotiated ISAKMP SA\'s:\s+(?P<cur_isa>\d+)$')
+
+        # Dead ISAKMP SA's: 450
+        p4 = re.compile(r'^Dead ISAKMP SA\'s:\s+(?P<dead_isa>\d+)$')
+
+        # Parse each line of the output
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Active ISAKMP SA's: 0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict['active_isakmp_sas'] = int(group['act_isa'])
+                continue
+
+            # Standby ISAKMP SA's: 0
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict['standby_isakmp_sas'] = int(group['stdby_isa'])
+                continue
+
+            # Currently being negotiated ISAKMP SA's: 0
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict['negotiating_isakmp_sas'] = int(group['cur_isa'])
+                continue
+
+            # Dead ISAKMP SA's: 450
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict['dead_isakmp_sas'] = int(group['dead_isa'])
+                continue
+
+        return parsed_dict

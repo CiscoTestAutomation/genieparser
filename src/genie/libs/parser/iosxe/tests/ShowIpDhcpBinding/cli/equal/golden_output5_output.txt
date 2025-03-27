@@ -1,0 +1,12 @@
+Bindings from all pools not associated with VRF:
+IP address      Client-ID/ 		Lease expiration 	Type       State      Interface
+		Hardware address/
+		User name
+110.1.1.13      0063.6973.636f.2d35.    Infinite                Automatic  Active     GigabitEthernet1/0/23
+                6335.612e.6337.3737.
+                2e62.3764.352d.4769.
+                312f.302f.3437
+112.1.1.12      0063.6973.636f.2d35.    Mar 07 2025 02:39 PM    Automatic  Active     GigabitEthernet1/0/16
+                6335.612e.6337.3737.
+                2e62.3763.382d.4769.
+                312f.312f.32

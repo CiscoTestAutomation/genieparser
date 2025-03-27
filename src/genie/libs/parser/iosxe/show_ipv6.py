@@ -1167,6 +1167,7 @@ class ShowIpv6MfibSchema(MetaParser):
                                                      Optional('ingress_vxlan_cap'): str,
                                                      Optional('ingress_vxlan_vni'): str,
                                                      Optional('ingress_vxlan_nxthop'): str,
+                                                     Optional('ingress_mdt_ip'): str,
                                                     }
                                                 },
                                             Optional('outgoing_interfaces'): {
@@ -1183,6 +1184,7 @@ class ShowIpv6MfibSchema(MetaParser):
                                                      Optional('egress_vxlan_cap'): str,
                                                      Optional('egress_vxlan_vni'): str,
                                                      Optional('egress_vxlan_nxthop'): str,
+                                                     Optional('egress_mdt_ip'): str,
                                                     },
                                                 },
                                             },
@@ -1299,21 +1301,24 @@ class ShowIpv6Mfib(ShowIpv6MfibSchema):
         #Tunnel0, VXLAN Decap Flags: A
         #Vlan500, VXLAN v6 Encap (50000, 239.1.1.0) Flags: A
         #Port-channel5 Flags: RA A MA
+        # Tunnel0, MDTv6overv4/::FFFF:226.10.10.10 Flags: A
 
         p7 = re.compile(r'^(?P<ingress_if>[\w\/\.\-\:]+)'
-                         r'(\,\s+VXLAN +(?P<ingress_vxlan_version>[v0-9]+)?(\s+)?(?P<ingress_vxlan_cap>[\w]+)(\s+)?(\(?(?P<ingress_vxlan_vni>[0-9]+)(\,\s+)?(?P<ingress_vxlan_nxthop>[\w:./]+)?\)?)?)?'
-                         r' +Flags\: +(?P<ingress_flags>A[\s\w]+|[\s\w]+ +A[\s\w]+|A$)')
+                        r'(?:,\s*MDTv6overv4\/(?:::FFFF:)?(?P<ingress_mdt_ip>\d+\.\d+\.\d+\.\d+))?'
+                        r'(\,\s+VXLAN +(?P<ingress_vxlan_version>[v0-9]+)?(\s+)?(?P<ingress_vxlan_cap>[\w]+)(\s+)?(\(?(?P<ingress_vxlan_vni>[0-9]+)(\,\s+)?(?P<ingress_vxlan_nxthop>[\w:./]+)?\)?)?)?'
+                        r' +Flags\: +(?P<ingress_flags>A[\s\w]+|[\s\w]+ +A[\s\w]+|A$)')
 
         #Vlan2001 Flags: F NS
         #LISP0.1, (100.11.11.11, 235.1.3.167) Flags:
-        
         #Tunnel1, VXLAN v6 Decap Flags: F NS
         # Vlan200, VXLAN v4 Encap (10100, 239.1.1.1) Flags: F
         #L2LISP0.1502, L2LISP v6 Decap Flags: F NS
         #LISP0.101, 100:88:88::88 Flags: F
         #Port-channel5 Flags: RF F NS
+        # Tunnel8, MDTv6overv4/::FFFF:226.10.10.10 Flags: F NS
         p8 = re.compile(r'^(?P<egress_if>[\w\/\.\-\:]+)'
                         r'(\,\s+L2LISP\s*v6\s*Decap\s*)?'
+                        r'(?:,\s*MDTv6overv4\/(?:::FFFF:)?(?P<egress_mdt_ip>\d+\.\d+\.\d+\.\d+))?'
                         r'(\,\s+\(?(?P<egress_rloc>[\w:\.]+)(\,\s+)?(?P<egress_underlay_mcast>[\w\.]+)?\)?)?'
                         r'(\,\s+VXLAN +(?P<egress_vxlan_version>[v0-9]+)?(\s+)?(?P<egress_vxlan_cap>[\w]+)(\s+)?'
                         r'(\(?(?P<egress_vxlan_vni>[0-9]+)(\,\s+)?(?P<egress_vxlan_nxthop>[\w:.]+)?\)?)?)?'
@@ -1405,6 +1410,8 @@ class ShowIpv6Mfib(ShowIpv6MfibSchema):
                     ing_intf_dict['ingress_vxlan_nxthop']=group['ingress_vxlan_nxthop']
                 if group['ingress_vxlan_vni']:
                     ing_intf_dict['ingress_vxlan_vni']=group['ingress_vxlan_vni']
+                if group['ingress_mdt_ip']:
+                    ing_intf_dict['ingress_mdt_ip']=group['ingress_mdt_ip']
                 continue
 
 
@@ -1446,6 +1453,8 @@ class ShowIpv6Mfib(ShowIpv6MfibSchema):
                     egress_data['egress_vxlan_vni'] = group['egress_vxlan_vni']
                 if group['egress_vxlan_nxthop']:
                     egress_data['egress_vxlan_nxthop'] = group['egress_vxlan_nxthop']
+                if group['egress_mdt_ip']:
+                    egress_data['egress_mdt_ip']=group['egress_mdt_ip']
                 continue
             #CEF: Adjacency with MAC: 01005E010101000A000120010800
             m=p9_1.match(line)

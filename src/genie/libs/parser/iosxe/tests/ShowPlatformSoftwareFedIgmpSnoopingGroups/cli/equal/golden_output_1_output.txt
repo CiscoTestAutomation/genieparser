@@ -1,0 +1,13 @@
+(Vlan: 13, 225.0.0.1)
+      Member ports            : 1
+          FiftyGigE1/1/0/5
+      Dependent Users Count   : 0
+      Group Urid              : 0x600000000000000d
+      Fset Urid ( Hash )      : 0x2000000000000028 ( fdff2e9f )
+      Layer 3 Stub Entry      : No
+      Group Flags             : None
+      Gid                     : 8199
+      Mcid Asic[0]            : 1787
+      Mcid Asic[1]            : 1892
+      Mcid Asic[2]            : 1892
+      Mcid Asic[3]            : 1794

@@ -290,8 +290,11 @@ class ShowInterfaces(ShowInterfacesSchema):
                         r' *\(bia *(?P<phys_address>[a-z0-9\.]+)\))?$')
 
         # Hardware is LTE Adv CAT6 - Multimode LTE/DC-HSPA+/HSPA+/HSPA/UMTS/EDGE/GPRS
-        p2_2 = re.compile(r'Hardware +is +(?P<type>[a-zA-Z0-9\-\/\+ ]+)'
-                          r'(?P<mac_address>.*)(?P<phys_address>.*)')
+        # Hardware is BUILT-IN-4x2_5GE, address is 8c1e.8068.9f6c (bia 8c1e.8068.9f6c)
+        p2_2 = re.compile(r'Hardware +is +(?P<type>[a-zA-Z0-9\-\/\\_+ ]+)(, +address +is +(?P<mac_address>[a-f0-9\.]+)( +\(bia +(?P<phys_address>.*)\))?)?')
+
+        # Hardware is not present
+        p2_3 = re.compile(r'^Hardware +is +not +present$')
 
         # Hardware is not present
         p2_3 = re.compile(r'^Hardware +is +not +present$')
@@ -4825,10 +4828,10 @@ class ShowPmPortInterface(ShowPmPortInterfaceSchema):
         # dtp special no  pagp special no
         p1_7 = re.compile(r"^dtp\s+special\s+(?P<dtp_special>\w+)\s+pagp\s+"
                r"special\s+(?P<pagp_special>\w+)$")
-        # speed: 100M   duplex: full   mode: access   encap: native 
+        # speed: 100M   duplex: full   mode: access   encap: native
         p1_8 = re.compile(r"^speed:\s+(?P<speed>\S+)\s+duplex:\s+(?P<duplex>\w+)"
                r"\s+mode:\s+(?P<mode>\w+)\s+encap:\s+(?P<encap>\w+)$")
-        # dtp nonegotiate: FALSE 
+        # dtp nonegotiate: FALSE
         p1_9 = re.compile(r"^dtp\s+nonegotiate:\s+(?P<dtp_nonego>\w+)$")
         # flowcontrol receive: on   flowcontrol send: off
         p1_10 = re.compile(r"^flowcontrol\s+receive:\s+(?P<flow_ctrl_receive>\w+)"
@@ -4836,7 +4839,7 @@ class ShowPmPortInterface(ShowPmPortInterfaceSchema):
         # linkflapcnt: 0  dtpflapcnt: 0  pagpflapcnt: 0
         p1_11 = re.compile(r"^linkflapcnt:\s+(?P<link_flap_cnt>\d+)\s+dtpflapcnt:"
                 r"\s+(?P<dtp_flap_cnt>\d+)\s+pagpflapcnt:\s+(?P<pagp_flap_cnt>\d+)$")
-        # unidirectional: off 
+        # unidirectional: off
         p1_12 = re.compile(r"^unidirectional:\s+(?P<unidirectional>\w+)$")
         # operVlan: 0
         p1_13 = re.compile(r"^operVlan:\s+(?P<oper_vlan>\d+)$")
@@ -4845,7 +4848,7 @@ class ShowPmPortInterface(ShowPmPortInterfaceSchema):
         # sm(pm_port 1/24), running yes, state access_multi
         p1_15 = re.compile(r"^sm\((?P<sm>\S+\s+\S+)\),\s+running\s+"
                 r"(?P<running>\w+),\s+state\s+(?P<state>\S+)$")
-        # Last transition recorded: (cfg_access_vvlanid)-> pagp_port_cleanup (cfg_access_vvlanid)-> pagp (cfg_access_vvlanid)-> pre_pagp_may_suspend (cfg_access_vvlanid)-> pagp_may_suspend (pagp_continue)-> start_pagp (pagp_continue)-> pagp (dont_bundle)-> pre_post_pagp (dont_bundle)-> post_pagp (dtp_access_multi)-> access_multi (bulk_sync)-> access_multi 
+        # Last transition recorded: (cfg_access_vvlanid)-> pagp_port_cleanup (cfg_access_vvlanid)-> pagp (cfg_access_vvlanid)-> pre_pagp_may_suspend (cfg_access_vvlanid)-> pagp_may_suspend (pagp_continue)-> start_pagp (pagp_continue)-> pagp (dont_bundle)-> pre_post_pagp (dont_bundle)-> post_pagp (dtp_access_multi)-> access_multi (bulk_sync)-> access_multi
         p1_16 = re.compile(r"^Last\s+transition\s+recorded:\s+"
                 r"(?P<last_transition>\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+"
                 r"\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+"
@@ -4883,18 +4886,18 @@ class ShowPmPortInterface(ShowPmPortInterfaceSchema):
         p2_5 = re.compile(r"^speed:\s+(?P<speed>\w+)\s+speedauto:\s+"
                r"(?P<speed_auto>\S+)\s+duplex:\s+(?P<duplex>\w+)\s+"
                r"mode:\s+(?P<mode>\w+)$")
-        # encap: dot1q   nonegotiate: false 
+        # encap: dot1q   nonegotiate: false
         p2_6 = re.compile(r"^encap:\s+(?P<encap>\S+)\s+nonegotiate:\s+"
                r"(?P<nonego>\w+)$")
         # jumbo cap: true   jumbo: false  mtu: 1500  sync-delay: 210  HOL: Enable
         p2_7 = re.compile(r"^jumbo\s+cap:\s+(?P<jumbo_cap>\w+)\s+jumbo:\s+"
                r"(?P<jumbo>\w+)\s+mtu:\s+(?P<mtu>\d+)\s+sync-delay:\s+"
                r"(?P<sync_delay>\d+)\s+HOL:\s+(?P<hol>\w+)$")
-        # bcast-supp-level: 10000   mcast-supp-level: 10000   ucast-supp-level: 10000 
+        # bcast-supp-level: 10000   mcast-supp-level: 10000   ucast-supp-level: 10000
         p2_8 = re.compile(r"^bcast-supp-level:\s+(?P<bcast_sup_level>\d+)\s+"
                r"mcast-supp-level:\s+(?P<mcast_sup_level>\d+)\s+ucast-supp-level:"
                r"\s+(?P<ucast_sup_level>\d+)$")
-        # disl: off   dtp nonegotiate: FALSE   media: unknown   dualmode 0 
+        # disl: off   dtp nonegotiate: FALSE   media: unknown   dualmode 0
         p2_9 = re.compile(r"^disl:\s+(?P<disl>\w+)\s+dtp\s+nonegotiate:\s+"
                r"(?P<dtp_nonego>\w+)\s+media:\s+(?P<media>\w+)\s+dualmode\s+"
                r"(?P<dualmode>\d+)$")

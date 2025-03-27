@@ -65,12 +65,12 @@ class ShowInstallSummary(ShowInstallSummarySchema):
         # [ Switch 1 2 ] Installed Package(s) Information:
         p1 = re.compile(r'^\[ +(?P<location>[\S ]+)\] +Installed Package'
                         r'\(s\) +Information:$')
-        
+
         # SMU   U    bootflash:utah.bm.smu.may15.bin
         # IMG   C    10.69.1.0.66982
         # IMG   C    17.16.01.0.202920
         p2 = re.compile(r'^(?P<type>\S+) + (?P<state>\w) +(?P<filename_version>\S+)$')
-        
+
         # Auto abort timer: active on install_activate, time before rollback - 01:49:42
         # Auto abort timer: active , time before rollback - 00:52:16
         p3 = re.compile(r'^Auto +abort +timer: +(?P<auto_abort_timer>[\S ]+), +'
@@ -89,7 +89,7 @@ class ShowInstallSummary(ShowInstallSummarySchema):
                 location = group['location'].strip()
                 location_dict = ret_dict.setdefault('location', {}).setdefault(location, {})
                 continue
-                
+
             # SMU   U    bootflash:utah.bm.smu.may15.bin
             # IMG   C    10.69.1.0.66982
             # IMG   C    17.16.01.0.202920
@@ -102,7 +102,7 @@ class ShowInstallSummary(ShowInstallSummarySchema):
                 install_dict.update({'state': group['state']})
                 install_dict.update({'filename_version': group['filename_version']})
                 continue
-            
+
             # Auto abort timer: active on install_activate, time before rollback -  01:49:42
             # Auto abort timer: active , time before rollback - 00:52:16
             m = p3.match(line)
@@ -224,7 +224,7 @@ class ShowInstallRollbackId(ShowInstallRollbackIdSchema):
 
         for line in output.splitlines():
             line = line.strip()
-            
+
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -245,7 +245,7 @@ class ShowInstallRollbackId(ShowInstallRollbackIdSchema):
                 group = m.groupdict()
                 rollback_dict.update({'description': group['description']})
                 continue
-            
+
             m = p4.match(line)
             if m:
                 group = m.groupdict()
@@ -971,7 +971,7 @@ class ShowInstallInactive(ShowInstallInactiveSchema):
         ret_dict = {}
 
         for line in output.splitlines():
-            line = line.strip() 
+            line = line.strip()
             # IMG   C    17.06.03.0.3629
             m = p1.match(line)
             if m:
@@ -1065,7 +1065,7 @@ class ShowInstallCommitted(ShowInstallCommittedSchema):
 
 class ShowInstallUncommittedSchema(MetaParser):
     """Schema for show install uncommitted"""
-    
+
     schema = {
         Optional('uncommitted'): {
             Optional('version'): {
@@ -1155,6 +1155,136 @@ class ShowAutoInstTrace(ShowAutoInstTraceSchema):
             m = p1.match(line)
             if m:
                 ret_dict.setdefault('trace', []).append(m.groupdict())
+                continue
+
+        return ret_dict
+
+class ShowAutoInstStatSchema(MetaParser):
+    """Schema for show auto install stat"""
+    schema = {
+        'ipv4_status': str,
+        'dhcp_server': str,
+        'tftp_server': str,
+        Optional('network_config_file'): str,
+        Optional('device_config_file'): str,
+        Optional('device_image_file'): str,
+        'ipv6_status': str,
+        Optional('ipv6_device_config_file'): str,
+        'autoip_status': str,
+        'autoip_data': str,
+    }
+
+class ShowAutoInstStat(ShowAutoInstStatSchema):
+    """Parser for show auto install stat"""
+
+    cli_command = 'show auto install stat'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+
+        # Matching Patterns
+        # IPv4 Status
+        p1 = re.compile(r'^IPv4 Status\s*:\s*(?P<ipv4_status>\S+)$')
+
+        # DHCP Server
+        p2 = re.compile(r'^DHCP Server\s*:\s*(?P<dhcp_server>\S+)$')
+
+        # TFTP Server
+        p3 = re.compile(r'^TFTP Server\s*:\s*(?P<tftp_server>\S+)$')
+
+        # Network Config File
+        p4 = re.compile(r'^Network Config File\s*:\s*(?P<network_config_file>\S*)$')
+
+        # Device Config File
+        p5 = re.compile(r'^Device Config File\s*:\s*(?P<device_config_file>\S*)$')
+
+        # Device Image File
+        p6 = re.compile(r'^Device Image File\s*:\s*(?P<device_image_file>\S*)$')
+
+        # IPv6 Status
+        p7 = re.compile(r'^IPv6 Status\s*:\s*(?P<ipv6_status>\S+)$')
+
+        # IPv6 Device Config File
+        p8 = re.compile(r'^IPv6 Device Config File\s*:\s*(?P<ipv6_device_config_file>\S*)$')
+
+        # AutoIP Status
+        p9 = re.compile(r'^AutoIP Status\s*:\s*(?P<autoip_status>\S+)$')
+
+        # No Auto IP data
+        p10 = re.compile(r'^No Auto IP data$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            #  Success
+            m = p1.match(line)
+            if m:
+                ret_dict['ipv4_status'] = m.groupdict()['ipv4_status']
+                continue
+
+            # 10.10.10.1
+            m = p2.match(line)
+            if m:
+                ret_dict['dhcp_server'] = m.groupdict()['dhcp_server']
+                continue
+
+            # 10.10.10.1
+            m = p3.match(line)
+            if m:
+                ret_dict['tftp_server'] = m.groupdict()['tftp_server']
+                continue
+
+            # Network Config File
+            m = p4.match(line)
+            if m:
+                value = m.groupdict()['network_config_file']
+                if value.strip():
+                    ret_dict['network_config_file'] = value
+                continue
+
+            # Device Config File
+            m = p5.match(line)
+            if m:
+                value = m.groupdict()['device_config_file']
+                if value.strip():
+                    ret_dict['device_config_file'] = value
+                continue
+
+            # Device Image File
+            m = p6.match(line)
+            if m:
+                value = m.groupdict()['device_image_file']
+                if value.strip():
+                    ret_dict['device_image_file'] = value
+                continue
+
+            # Aborted
+            m = p7.match(line)
+            if m:
+                ret_dict['ipv6_status'] = m.groupdict()['ipv6_status']
+                continue
+
+            # IPv6 Device Config File
+            m = p8.match(line)
+            if m:
+                value = m.groupdict()['ipv6_device_config_file']
+                if value.strip():
+                    ret_dict['ipv6_device_config_file'] = value
+                continue
+
+            # FAIL
+            m = p9.match(line)
+            if m:
+                ret_dict['autoip_status'] = m.groupdict()['autoip_status']
+                continue
+
+            # No Auto IP data
+            m = p10.match(line)
+            if m:
+                ret_dict['autoip_data'] = 'No Auto IP data'
                 continue
 
         return ret_dict

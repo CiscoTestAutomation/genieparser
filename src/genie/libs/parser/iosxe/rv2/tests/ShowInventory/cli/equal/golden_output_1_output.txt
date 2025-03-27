@@ -1,0 +1,101 @@
+NAME: "Chassis", DESCR: "Cisco Catalyst Series C9500X-28C8D Chassis"
+PID: C9500X-28C8D      , VID: V00  , SN: FDO25240J1A
+
+NAME: "Slot 1 Supervisor", DESCR: "Cisco Catalyst 9500X-28C8D Switch"
+PID: C9500X-28C8D      , VID: V00  , SN: FDO2524052K
+
+NAME: "HundredGigE1/0/6", DESCR: "QSFP 100GE CU2M"
+PID: QSFP-100G-CU2M      , VID: V01  , SN: APF21340277-A                       
+
+NAME: "HundredGigE1/0/9-qsa", DESCR: "CVR 10GE SFP "
+PID: CVR-QSFP-SFP10G     , VID: V02  , SN: DTY225205F7                         
+
+NAME: "HundredGigE1/0/9", DESCR: "QSFP 4SFP10G CU5M"
+PID: QSFP-4SFP10G-CU5M   , VID: V04  , SN: JPC211001A7-CH3                     
+
+NAME: "HundredGigE1/0/13", DESCR: "QSFP 4SFP10G CU5M"
+PID: QSFP-4SFP10G-CU5M   , VID: V04  , SN: JPC211001A7                         
+
+NAME: "FourHundredGigE1/0/15", DESCR: "QSFP 40GE AOC3M"
+PID: QSFP-H40G-AOC3M     , VID: V03  , SN: DTS2443B151-B                       
+
+NAME: "FourHundredGigE1/0/17", DESCR: "QSFP 100GE AOC3M"
+PID: QSFP-100G-AOC3M     , VID: V01  , SN: FIW212908NX-A                       
+
+NAME: "FourHundredGigE1/0/19", DESCR: "QSFP-DD 400GE CU2_5M"
+PID: QDD-400G-CU2.5M     , VID: V01  , SN: LCC2352G73M-A                       
+
+NAME: "FourHundredGigE1/0/20", DESCR: "QSFP 100GE CU3M"
+PID: QSFP-100G-CU3M      , VID: V01  , SN: APF21021151-B                       
+
+NAME: "FourHundredGigE1/0/21", DESCR: "QSFP-DD 400GE CU2_5M"
+PID: QDD-400G-CU2.5M     , VID: V01  , SN: LCC2352G73M-B                       
+
+NAME: "HundredGigE1/0/23", DESCR: "QSFP 40GE AOC3M"
+PID: QSFP-H40G-AOC3M     , VID: V03  , SN: DTS2443B151-A                       
+
+NAME: "HundredGigE1/0/25", DESCR: "QSFP28 4SFP25G CU1M"
+PID: QSFP-4SFP25G-CU1M   , VID: V01  , SN: APF20490335                         
+
+NAME: "HundredGigE1/0/26", DESCR: "QSFP 100GE CU3M"
+PID: QSFP-100G-CU3M      , VID: V01  , SN: APF21021151-A                       
+
+NAME: "HundredGigE1/0/29", DESCR: "QSFP 100GE CU2M"
+PID: QSFP-100G-CU2M      , VID: V01  , SN: APF21221088-B                       
+
+NAME: "HundredGigE1/0/30", DESCR: "QSFP 100GE AOC7M"
+PID: QSFP-100G-AOC7M     , VID: V02  , SN: FIW213701X4-B                       
+
+NAME: "HundredGigE1/0/33", DESCR: "QSFP 100GE AOC7M"
+PID: QSFP-100G-AOC7M     , VID: V02  , SN: FIW213701X4-A                       
+
+NAME: "HundredGigE1/0/35", DESCR: "QSFP 100GE AOC3M"
+PID: QSFP-100G-AOC3M     , VID: V01  , SN: FIW212908NX-B                       
+
+NAME: "HundredGigE1/0/1/1", DESCR: "QSFP 100GE CU5M"
+PID: QSFP-100G-CU5M      , VID: V01  , SN: LCC2106G0HM-B                       
+
+NAME: "HundredGigE1/0/1/2", DESCR: "QSFP 100GE CU5M"
+PID: QSFP-100G-CU5M      , VID: V01  , SN: LCC2106G0HM-B                       
+
+NAME: "HundredGigE1/0/1/3", DESCR: "QSFP 100GE CU5M"
+PID: QSFP-100G-CU5M      , VID: V01  , SN: LCC2106G0HM-B                       
+
+NAME: "HundredGigE1/0/1/4", DESCR: "QSFP 100GE CU5M"
+PID: QSFP-100G-CU5M      , VID: V01  , SN: LCC2106G0HM-B                       
+
+NAME: "HundredGigE1/0/27/1", DESCR: "QSFP 100GE CU2M"
+PID: QSFP-100G-CU2M      , VID: V01  , SN: APF21221088-A                       
+
+NAME: "HundredGigE1/0/27/2", DESCR: "QSFP 100GE CU2M"
+PID: QSFP-100G-CU2M      , VID: V01  , SN: APF21221088-A                       
+
+NAME: "HundredGigE1/0/27/3", DESCR: "QSFP 100GE CU2M"
+PID: QSFP-100G-CU2M      , VID: V01  , SN: APF21221088-A                       
+
+NAME: "HundredGigE1/0/27/4", DESCR: "QSFP 100GE CU2M"
+PID: QSFP-100G-CU2M      , VID: V01  , SN: APF21221088-A                       
+
+NAME: "Power Supply Module 1", DESCR: "Cisco Catalyst 9500X Series 1.5KW-AC Forward Air Flow Power Supply"
+PID: C9K-PWR-1500WAC-F , VID: V00  , SN: QCS25215Y1S
+
+NAME: "Power Supply Module 2", DESCR: "Cisco Catalyst 9500X Series 1.5KW-AC Forward Air Flow Power Supply"
+PID: C9K-PWR-1500WAC-F , VID: V00  , SN: QCS25215Y2A
+
+NAME: "Fan Tray 1", DESCR: "Cisco Catalyst 9500X Series 1RU Reverse Air Flow"
+PID: C9K-FAN-1U-R      , VID: V00  , SN: ACI25200J0A
+
+NAME: "Fan Tray 2", DESCR: "Cisco Catalyst 9500X Series 1RU Reverse Air Flow"
+PID: C9K-FAN-1U-R      , VID: V00  , SN: ACI25200JER
+
+NAME: "Fan Tray 3", DESCR: "Cisco Catalyst 9500X Series 1RU Reverse Air Flow"
+PID: C9K-FAN-1U-R      , VID: V00  , SN: ACI25200J8R
+
+NAME: "Fan Tray 4", DESCR: "Cisco Catalyst 9500X Series 1RU Reverse Air Flow"
+PID: C9K-FAN-1U-R      , VID: V00  , SN: ACI25200JEX
+
+NAME: "Fan Tray 5", DESCR: "Cisco Catalyst 9500X Series 1RU Reverse Air Flow"
+PID: C9K-FAN-1U-R      , VID: V00  , SN: ACI25200J23
+
+NAME: "Fan Tray 6", DESCR: "Cisco Catalyst 9500X Series 1RU Reverse Air Flow"
+PID: C9K-FAN-1U-R      , VID: V00  , SN: ACI25200J09

@@ -29,7 +29,9 @@
     * show platform hardware qfp active classification feature tcam-usage
     * 'show platform hardware qfp {status} interface if-name {interface} path'
     * 'show platform hardware qfp {status} interface if-name {interface} path'
-
+    * 'show platform hardware qfp active feature cts client interface'
+    * 'show platform hardware cpp active feature firewall session create {session_context} {num_sessions}'
+    * 'show platform hardware cpp active statistics drop'
 """
 
 # Python
@@ -4936,7 +4938,7 @@ class ShowPlatformHardwareQfpActiveSystemStateSchema(MetaParser):
         }
     }
 
-    
+
 # ======================================================================================
 # Parser for 'show platform hardware qfp active system state'
 # ======================================================================================
@@ -7059,7 +7061,7 @@ class ShowPlatformHardwareIomdMacsecPortSubport(
                 continue
 
         return ret_dict
-        
+
 class ShowPlatformHardwareFedeyescanSchema(MetaParser):
     """Schema for show platform hardware fed switch {mode} npu slot 1 port {port_num} eye_scan"""
 
@@ -7070,30 +7072,30 @@ class ShowPlatformHardwareFedeyescanSchema(MetaParser):
                 Any(): Or(int,str),
                    'veye_values': {
                         Any(): Or(int,str),
-                },   
+                },
             },
         },
         'port': int,
         Optional('slot'): int,
         'cmd': str,
         'rc': str,
-        Optional('rsn'): str, 
-        Optional('reason'): str,                
-   } 
+        Optional('rsn'): str,
+        Optional('reason'): str,
+   }
 
 class ShowPlatformHardwareFedeyescan(ShowPlatformHardwareFedeyescanSchema):
     """
     show platform hardware fed switch {mode} npu slot 1 port {port_num} eye_scan
     """
 
-    cli_command = ['show platform hardware fed {switch} {mode} npu slot 1 port {port_num} eye_scan', 
+    cli_command = ['show platform hardware fed {switch} {mode} npu slot 1 port {port_num} eye_scan',
                     'show platform hardware fed {mode} npu slot 1 port {port_num} eye_scan']
 
-    def cli(self, mode, port_num, switch=None, output=None): 
+    def cli(self, mode, port_num, switch=None, output=None):
 
         if output is None:
             if switch:
-                output = self.device.execute(self.cli_command[0].format(switch=switch, mode=mode,port_num=port_num)) 
+                output = self.device.execute(self.cli_command[0].format(switch=switch, mode=mode,port_num=port_num))
             else:
                 output = self.device.execute(self.cli_command[1].format(mode=mode,port_num=port_num))
 
@@ -7109,13 +7111,13 @@ class ShowPlatformHardwareFedeyescan(ShowPlatformHardwareFedeyescanSchema):
         p3 = re.compile(r'^\"veye_data\"\:\s*\[$')
 
         #"veye_values": [
-        p4 = re.compile(r'^\"veye_values\"\:\s*\[$')	
+        p4 = re.compile(r'^\"veye_values\"\:\s*\[$')
 
         # "serdes_id": 18,
-        p5 = re.compile(r'^\"(?P<key>\w+)\"\:\s*(?P<value>.*)$')        
+        p5 = re.compile(r'^\"(?P<key>\w+)\"\:\s*(?P<value>.*)$')
 
         #64,
-        p5_1 = re.compile(r'^(?P<value>[-]?\d+)\,$')  
+        p5_1 = re.compile(r'^(?P<value>[-]?\d+)\,$')
 
         # Port = 40 Slot = 1 cmd = () rc = 0x16 reason = (null)
         p6 = re.compile(r'^Port +\= +(?P<port>\d+) +Slot +\= +(?P<slot>\d+) +cmd +\= +(?P<cmd>\([\s*\S]*\)) +rc +\= +(?P<rc>\w+) +reason +\=(?P<reason>.*)$')
@@ -7131,34 +7133,34 @@ class ShowPlatformHardwareFedeyescan(ShowPlatformHardwareFedeyescanSchema):
             if m:
                 group = m.groupdict()
                 ret_dict['npu_pdsf_procagent_get_eye_common'] = group['npu_pdsf_procagent_get_eye_common']
-                continue  
+                continue
 
             #"eye_capture": {
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                curr_dict = ret_dict.setdefault('eye_capture', {})                
+                curr_dict = ret_dict.setdefault('eye_capture', {})
                 continue
 
             #"veye_data": [
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                curr_dict = ret_dict.setdefault('eye_capture', {}).setdefault('veye_data',{})                
-                continue      
+                curr_dict = ret_dict.setdefault('eye_capture', {}).setdefault('veye_data',{})
+                continue
 
-            #"veye_values": [   
+            #"veye_values": [
             m = p4.match(line)
             if m:
-                curr_dict = ret_dict.setdefault('eye_capture', {}).setdefault('veye_data',{}).setdefault('veye_values', {})                
-                continue      
+                curr_dict = ret_dict.setdefault('eye_capture', {}).setdefault('veye_data',{}).setdefault('veye_values', {})
+                continue
 
             # "serdes_id": 18,
-            m = p5.match(line)            
+            m = p5.match(line)
             if m:
                 group = m.groupdict()
                 if  group['value'] == '{' or  group['value'] == '[':
-                    continue                
+                    continue
                 else:
                     group['key'] = group['key'].lower()
                     group['value'] = group['value'].strip(',')
@@ -7172,7 +7174,7 @@ class ShowPlatformHardwareFedeyescan(ShowPlatformHardwareFedeyescanSchema):
             if m:
                 group = m.groupdict()
                 cnt  = cnt + 1
-                key  = cnt 
+                key  = cnt
                 curr_dict.update({key: group['value']})
                 continue
 
@@ -7181,7 +7183,7 @@ class ShowPlatformHardwareFedeyescan(ShowPlatformHardwareFedeyescanSchema):
             if m:
                 group = m.groupdict()
                 ret_dict['port'] = int(group['port'])
-                ret_dict['slot'] = int(group['slot'])                
+                ret_dict['slot'] = int(group['slot'])
                 ret_dict['cmd'] = group['cmd']
                 ret_dict['rc'] = group['rc']
                 ret_dict['reason'] = group['reason']
@@ -7195,10 +7197,10 @@ class ShowPlatformHardwareFedeyescan(ShowPlatformHardwareFedeyescanSchema):
                 ret_dict['cmd'] = group['cmd']
                 ret_dict['rc'] = group['rc']
                 ret_dict['rsn'] = group['rsn']
-                continue   
+                continue
 
-        return ret_dict 
-        
+        return ret_dict
+
 class ShowPlatformHardwareFedXcvrRegistersSchema(MetaParser):
     """Schema for show platform hardware fed switch {mode} npu slot 1 port {port_num} eye_scan"""
 
@@ -7212,12 +7214,12 @@ class ShowPlatformHardwareFedXcvrRegisters(ShowPlatformHardwareFedXcvrRegistersS
     """
     show platform hardware fed {switch} {mode} xcvr {local_port} {phy} {mode_1} {device_num} {page_number} {register} {bytes}
     """
-    cli_command = 'show platform hardware fed switch {mode} xcvr {local_port} {phy} {mode_1} {device_num} {page_number} {register} {byte}' 
+    cli_command = 'show platform hardware fed switch {mode} xcvr {local_port} {phy} {mode_1} {device_num} {page_number} {register} {byte}'
 
-    def cli(self, mode, local_port, phy, mode_1, device_num, page_number, register, byte, output=None): 
+    def cli(self, mode, local_port, phy, mode_1, device_num, page_number, register, byte, output=None):
 
-        if output is None:         
-            output = self.device.execute(self.cli_command.format(mode=mode, local_port=local_port, phy=phy, mode_1=mode_1, device_num=device_num, page_number=page_number, register=register, byte=byte))  
+        if output is None:
+            output = self.device.execute(self.cli_command.format(mode=mode, local_port=local_port, phy=phy, mode_1=mode_1, device_num=device_num, page_number=page_number, register=register, byte=byte))
 
 
         ret_dict = {}
@@ -7236,26 +7238,26 @@ class ShowPlatformHardwareFedXcvrRegisters(ShowPlatformHardwareFedXcvrRegistersS
             if m:
                 group = m.groupdict()
                 ret_dict['phy_reg_value_hex'] = group['phy_reg_value_hex']
-                continue 
+                continue
 
             #"eye_capture": {
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict['phy_reg_value_dec'] = int(group['phy_reg_value_dec'])               
+                ret_dict['phy_reg_value_dec'] = int(group['phy_reg_value_dec'])
                 continue
 
-        return ret_dict      
+        return ret_dict
 
 class ShowPlatformHardwareFedSwitchActiveNpuSlotPortRecreateSchema(MetaParser):
     """Schema for show platform hardware fed switch {mode} npu slot 1 port {port_num} port-recreate"""
 
-    schema = {        
+    schema = {
         'port': str,
         'operations': {
             Any(): str,
-        },    
-   }        
+        },
+   }
 
 class ShowPlatformHardwareFedSwitchActiveNpuSlotPortRecreate(
     ShowPlatformHardwareFedSwitchActiveNpuSlotPortRecreateSchema):
@@ -7263,15 +7265,15 @@ class ShowPlatformHardwareFedSwitchActiveNpuSlotPortRecreate(
     show platform hardware fed switch {mode} npu slot 1 port {port_num} port-recreate
     """
 
-    cli_command = ['show platform hardware fed {switch} {mode} npu slot 1 port {port_num} port-recreate',        
+    cli_command = ['show platform hardware fed {switch} {mode} npu slot 1 port {port_num} port-recreate',
                     'show platform hardware fed {mode} npu slot 1 port {port_num} port-recreate']
 
 
-    def cli(self, mode, port_num, switch=None, output=None): 
+    def cli(self, mode, port_num, switch=None, output=None):
 
         if output is None:
             if  switch:
-                output = self.device.execute(self.cli_command[0].format(switch=switch, mode=mode,port_num=port_num))  
+                output = self.device.execute(self.cli_command[0].format(switch=switch, mode=mode,port_num=port_num))
             else:
                 output = self.device.execute(self.cli_command[1].format(mode=mode,port_num=port_num))
 
@@ -7299,26 +7301,266 @@ class ShowPlatformHardwareFedSwitchActiveNpuSlotPortRecreate(
                 ret_dict['port'] = group['port']
                 curr_dict = ret_dict.setdefault('operations', {})
                 curr_dict.update({'delete' : group['port']})
-                continue  
+                continue
 
             # creating port 1/40
             m = p2.match(line)
             if m:
                 group = m.groupdict()
                 curr_dict.update({'create' : group['port']})
-                continue   
+                continue
 
             # Recreate successfull 1/40
             m = p3.match(line)
             if m:
                 group = m.groupdict()
                 curr_dict.update({'recreate' : group['port']})
-                continue 
+                continue
 
             # , Enabling the port
             m = p4.match(line)
             if m:
                 curr_dict.update({'enable' : 'successful'})
-                continue                
+                continue
 
-        return ret_dict  
+        return ret_dict
+
+
+class ShowPlatformHardwareQfpActiveFeatureCtsClientInterfaceSchema(MetaParser):
+    """Schema for show platform hardware qfp active feature cts client interface"""
+    schema = {
+        'interfaces': {
+            Any(): {
+                'enable': int,
+                'policy': int,
+                'trust': int,
+                'propagate': int,
+                'internal': int,
+                'sgt': int,
+                'sgt_caching_in': int,
+                'sgt_caching_eg': int,
+                'in_dbg': int,
+                'in_err': int,
+                'out_dbg': int,
+                'out_err': int,
+            }
+        }
+    }
+
+
+class ShowPlatformHardwareQfpActiveFeatureCtsClientInterface(ShowPlatformHardwareQfpActiveFeatureCtsClientInterfaceSchema):
+    """Parser for show platform hardware qfp active feature cts client interface"""
+
+    cli_command = 'show platform hardware qfp active feature cts client interface'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # Interface GigabitEthernet0/1/1(11):
+        interface_regex = re.compile(r'^Interface\s+(?P<interface>\S+)\(\d+\):$')
+        # Enable=1, Policy=0, Trust=1, Propagate=1, Internal=0
+        attributes_regex = re.compile(
+            r'Enable=(?P<enable>\d+),\s+Policy=(?P<policy>\d+),\s+Trust=(?P<trust>\d+),\s+'
+            r'Propagate=(?P<propagate>\d+),\s+Internal=(?P<internal>\d+)'
+        )
+        # SGT=2, SGT_caching_in=1 SGT_caching_eg=0
+        sgt_regex = re.compile(
+            r'SGT=(?P<sgt>\d+),\s+SGT_caching_in=(?P<sgt_caching_in>\d+)\s+SGT_caching_eg=(?P<sgt_caching_eg>\d+)'
+        )
+        # IN_dbg/ IN_err=0/0, OUT_dbg/ OUT_err=0/0
+        dbg_err_regex = re.compile(
+            r'IN_dbg/\s+IN_err=(?P<in_dbg>\d+)/(?P<in_err>\d+),\s+OUT_dbg/\s+OUT_err=(?P<out_dbg>\d+)/(?P<out_err>\d+)'
+        )
+
+        current_interface = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Interface GigabitEthernet0/1/1(11):
+            match = interface_regex.match(line)
+            if match:
+                current_interface = match.group('interface')
+                if 'interfaces' not in parsed_dict:
+                    parsed_dict['interfaces'] = {}
+                parsed_dict['interfaces'][current_interface] = {}
+                continue
+
+            # Enable=1, Policy=0, Trust=1, Propagate=1, Internal=0
+            match = attributes_regex.match(line)
+            if match and current_interface:
+                parsed_dict['interfaces'][current_interface].update({
+                    'enable': int(match.group('enable')),
+                    'policy': int(match.group('policy')),
+                    'trust': int(match.group('trust')),
+                    'propagate': int(match.group('propagate')),
+                    'internal': int(match.group('internal')),
+                })
+                continue
+
+            # SGT=2, SGT_caching_in=1 SGT_caching_eg=0
+            match = sgt_regex.match(line)
+            if match and current_interface:
+                parsed_dict['interfaces'][current_interface].update({
+                    'sgt': int(match.group('sgt')),
+                    'sgt_caching_in': int(match.group('sgt_caching_in')),
+                    'sgt_caching_eg': int(match.group('sgt_caching_eg')),
+                })
+                continue
+
+            # IN_dbg/ IN_err=0/0, OUT_dbg/ OUT_err=0/0
+            match = dbg_err_regex.match(line)
+            if match and current_interface:
+                parsed_dict['interfaces'][current_interface].update({
+                    'in_dbg': int(match.group('in_dbg')),
+                    'in_err': int(match.group('in_err')),
+                    'out_dbg': int(match.group('out_dbg')),
+                    'out_err': int(match.group('out_err')),
+                })
+                continue
+
+        return parsed_dict
+
+
+class ShowPlatformHardwareCppActiveFeatureFirewallSessionSchema(MetaParser):
+    """Schema for show platform hardware cpp active feature firewall session create {session_context} {num_sessions}"""
+    schema = {
+        'sessions': {
+            int: {
+                'source_ip': str,
+                'destination_ip': str,
+                'source_port': int,
+                'destination_port': int,
+                'protocol': str,
+                'status': str,
+                'creation_time': str,
+                'timeout': str,
+            }
+        }
+    }
+
+
+class ShowPlatformHardwareCppActiveFeatureFirewallSession(ShowPlatformHardwareCppActiveFeatureFirewallSessionSchema):
+    """Parser for show platform hardware cpp active feature firewall session create {session_context} {num_sessions}"""
+
+    cli_command = 'show platform hardware cpp active feature firewall session create {session_context} {num_sessions}'
+
+    def cli(self, session_context, num_sessions, output=None):
+        if output is None:
+            cmd = self.cli_command.format(session_context=session_context, num_sessions=num_sessions)
+            output = self.device.execute(cmd)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        #Session ID   Source IP     Destination IP   Source Port   Dest Port   Protocol   Status       Creation Time   Timeout
+        #1            192.168.1.10  10.0.0.1         12345         80          TCP        Established  00:01:30        00:04:30
+        pattern = re.compile(
+            r'^(?P<session_id>\d+)\s+'
+            r'(?P<source_ip>\S+)\s+'
+            r'(?P<destination_ip>\S+)\s+'
+            r'(?P<source_port>\d+)\s+'
+            r'(?P<destination_port>\d+)\s+'
+            r'(?P<protocol>\S+)\s+'
+            r'(?P<status>\S+)\s+'
+            r'(?P<creation_time>\S+)\s+'
+            r'(?P<timeout>\S+)$'
+        )
+
+        # Iterate over each line of the output
+        for line in output.splitlines():
+            line = line.strip()
+
+            #Session ID   Source IP     Destination IP   Source Port   Dest Port   Protocol   Status       Creation Time   Timeout
+            #1            192.168.1.10  10.0.0.1         12345         80          TCP        Established  00:01:30        00:04:30
+            match = pattern.match(line)
+            if match:
+                group = match.groupdict()
+                session_id = int(group['session_id'])
+
+                # Use setdefault to avoid KeyError
+                session_dict = parsed_dict.setdefault('sessions', {}).setdefault(session_id, {})
+
+                # Populate the session dictionary
+                session_dict.update({
+                    'source_ip': group['source_ip'],
+                    'destination_ip': group['destination_ip'],
+                    'source_port': int(group['source_port']),
+                    'destination_port': int(group['destination_port']),
+                    'protocol': group['protocol'],
+                    'status': group['status'],
+                    'creation_time': group['creation_time'],
+                    'timeout': group['timeout'],
+                })
+
+        return parsed_dict
+
+
+class ShowPlatformHardwareCppActiveStatisticsDropSchema(MetaParser):
+    """Schema for show platform hardware cpp active statistics drop"""
+    schema = {
+        'last_clearing': str,
+        'global_drop_stats': {
+            Any(): {
+                 'packets': int,
+                 'octets': int,
+            }
+        }
+    }
+
+
+class ShowPlatformHardwareCppActiveStatisticsDrop(ShowPlatformHardwareCppActiveStatisticsDropSchema):
+    """Parser for show platform hardware cpp active statistics drop"""
+
+    cli_command = 'show platform hardware cpp active statistics drop'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # Last clearing of QFP drops statistics : never
+        p1 = re.compile(r'^Last clearing of QFP drops statistics\s*:\s*(?P<last_clearing>.+)$')
+        #-------------------------------------------------------------------------
+        # Global Drop Stats                         Packets                  Octets
+        #-------------------------------------------------------------------------
+        # BadUidbIdx                                     59                   16702
+        p2 = re.compile(r'^(?P<statistic>\S+)\s+(?P<packets>\d+)\s+(?P<octets>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Last clearing of QFP drops statistics : never
+            m = p1.match(line)
+            if m:
+                parsed_dict['last_clearing'] = m.group('last_clearing')
+                continue
+
+            #-------------------------------------------------------------------------
+            # Global Drop Stats                         Packets                  Octets
+            #-------------------------------------------------------------------------
+            # BadUidbIdx                                     59                   16702
+            m = p2.match(line)
+            if m:
+                statistic = m.group('statistic')
+                packets = int(m.group('packets'))
+                octets = int(m.group('octets'))
+
+                # Use setdefault to avoid key errors
+                stats_dict = parsed_dict.setdefault('global_drop_stats', {})
+                stats_dict[statistic] = {
+                    'packets': packets,
+                    'octets': octets
+                }
+
+        return parsed_dict
+
+
+
+        return ret_dict

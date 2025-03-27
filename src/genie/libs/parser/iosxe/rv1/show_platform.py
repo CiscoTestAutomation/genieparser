@@ -283,7 +283,8 @@ class ShowInventory(ShowInventorySchema):
         p1 = re.compile(r"^NAME: +\"(?P<name>.*)\"," r" +DESCR: +\"(?P<descr>.*)\"$")
 
         # Switch 1
-        p1_1 = re.compile(r"^Switch +(?P<slot>(\S+))$")
+        # Switch 1 Chassis
+        p1_1 = re.compile(r"^Switch +(?P<slot>(\S+))( Chassis)?$")
 
         # Power Supply Module 0
         # Power Supply Module 1

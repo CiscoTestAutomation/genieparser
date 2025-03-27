@@ -1,0 +1,10 @@
+Switch  Ports    Model                Serial No.   MAC address     Hw Ver.       Sw Ver.
+------  -----   ---------             -----------  --------------  -------       --------
+ 2       50     C9500-40X             FCW2320F01U  7802.b1f8.0800  V01           17.18.01
+Switch/Stack Mac Address : 7802.b1f8.0800 - Local Mac Address
+Mac persistency wait time: Indefinite
+                                   Current
+Switch#   Role        Priority      State
+-------------------------------------------
+ 1       Member          0          Provisioned
+*2       Active          5          Ready

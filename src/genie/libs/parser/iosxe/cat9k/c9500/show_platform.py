@@ -176,8 +176,8 @@ class ShowVersion(ShowVersionSchema):
         # AIR License Level: AIR DNA Advantage
         p11 = re.compile(r'^AIR +License +Level: +(?P<license_level>.+)$')
 
-        # SMU   CSCvz54210   17.03.03. C  cat9k_iosxe.17.03.03.CSCvz54210.SPA.smu.bin  
-        # SMU   CSCwc80043   17.03.03. C  cat9k_iosxe.17.03.03.CSCwc80043.SPA.smu.bin  
+        # SMU   CSCvz54210   17.03.03. C  cat9k_iosxe.17.03.03.CSCvz54210.SPA.smu.bin
+        # SMU   CSCwc80043   17.03.03. C  cat9k_iosxe.17.03.03.CSCwc80043.SPA.smu.bin
         # SMU   CSCwh29778   17.03.03. C  cat9k_iosxe.17.03.03.CSCwh29778.SPA.smu.bin
         p12_1 = re.compile(r'^(?P<type1>\w+) +(?P<defect_id>\S+) +(?P<sum_version>[\w.]+) +(?P<state>C|U) +(?P<file_name>\S+)$')
 
@@ -365,8 +365,8 @@ class ShowVersion(ShowVersionSchema):
                 version_dict['next_reload_license_level'] = m.groupdict()['next_reload_license_level']
                 continue
 
-            # SMU   CSCvz54210   17.03.03. C  cat9k_iosxe.17.03.03.CSCvz54210.SPA.smu.bin  
-            # SMU   CSCwc80043   17.03.03. C  cat9k_iosxe.17.03.03.CSCwc80043.SPA.smu.bin  
+            # SMU   CSCvz54210   17.03.03. C  cat9k_iosxe.17.03.03.CSCvz54210.SPA.smu.bin
+            # SMU   CSCwc80043   17.03.03. C  cat9k_iosxe.17.03.03.CSCwc80043.SPA.smu.bin
             # SMU   CSCwh29778   17.03.03. C  cat9k_iosxe.17.03.03.CSCwh29778.SPA.smu.bin
             m = p12_1.match(line)
             if m:
@@ -551,7 +551,7 @@ class ShowRedundancySchema(MetaParser):
                     'conf_red_mode': str,
                     'oper_red_mode': str,
                     'maint_mode': str,
-                    'communications': str,
+                    Optional('communications'): str,
                     Optional('communications_reason'): str,
                     },
                 'slot': {
@@ -865,7 +865,7 @@ class ShowPlatformSchema(MetaParser):
     """Schema for show platform"""
 
     schema = {
-            'chassis': str,
+            Optional('chassis'): str,
             'slot': {
                 Any(): {
                     Optional('cpld_ver'): str,
@@ -1749,7 +1749,7 @@ class ShowPlatformFedTcamPbrNat(ShowPlatformFedTcamPbrNatSchema):
                     cmd = self.cli_command[2].format(nat_region=nat_region, switch_type=switch_type)
                 else:
                     cmd = self.cli_command[1].format(nat_region=nat_region)
-  
+
             output = self.device.execute(cmd)
 
         # initial variables
@@ -2361,57 +2361,57 @@ class ShowPlatformSoftwareFedSwitchActivePuntPacketCaptureDisplayFilterKeyBrief(
 
 
         # Total captured so far :  4096 packet(s)
-        
+
         p0 = re.compile(r"Total captured so far :\s+(?P<total_captured_so_far>\d+)\s+packet")
-        
+
         # Punt Packet Number: 3659
-        
+
         p1 = re.compile(r".+Punt Packet Number\s*:\s*(?P<punt_packet_number>[\d]+)\s*\,\s*Timestamp\s*\:\s*(?P<timestamp>[\d\/\s\:\.]+).+")
-        
+
         # interface : phy: Port11lVlan101 [if-id: 0x50000000b0065], pal: Vlan101 [if-id: 0x000005ce]
-        
+
         p2 = re.compile(r"interface\s*:\s*phy\s*:\s*(?P<phy_val>[\w]+)\s+\[[\w\-\:]+\s*(?P<phy_if_id>[\w]+)\]\s*\,\s*pal\s*\:\s*(?P<pal_val>[\w]+)\s*\[[\w\-\:]+\s*(?P<pal_if_id>[\w]+)\]")
-        
+
         # misc info : cause: 7 [ARP request or response], sub-cause: 1, linktype: IP [1]
-        
+
         p3 = re.compile(r"misc info\s*\:\s*cause\s*\:\s*(?P<cause_number>[\d]+)\s*\[(?P<cause>[\w\s]+)\]\s*\,")
-        
+
         # CE hdr : dest mac: 4e41.5000.0010, src mac: 4e41.5000.0111, ethertype: 0x7102
-        
+
         p4 = re.compile(r"CE\s*hdr\s*\:\s*dest mac\s*\:\s*(?P<dest_mac>[\w\.]+)\s*\,\s*src mac\s*\:\s*(?P<src_mac>[\w\.]+)\s*\,\s*ethertype\s*\:\s*(?P<ethertype>[\w]+)")
-        
+
         # ether hdr : dest mac: ffff.ffff.ffff, src mac: 00a7.428a.7fbf
-        
+
         p5 = re.compile(r"ether\s*hdr\s*\:\s*dest mac\s*\:\s*(?P<dest_mac>[\w\.]+)\s*\,\s*src mac\s*\:\s*(?P<src_mac>[\w\.]+)")
-        
+
         # ether hdr : vlan: 101, ethertype: 0x8100
-        
+
         p6 = re.compile(r"ether\s*hdr\s*\:\s*vlan\s*\:\s*(?P<vlan>[\d]+)\s*\,\s*ethertype\s*\:\s*(?P<ethertype>[\w]+)")
-        
+
         # arp hdr : opcode: 2 (ARP Reply), src mac: 00a7.428a.7fbf dest mac: ffff.ffff.ffff
-        
+
         p7 = re.compile(r"arp\s*hdr\s*\:\s*opcode\s*\:\s*(?P<opcode>[\w\s\(\)]+)\s*\,\s*src mac\s*\:\s*(?P<src_mac>[\w\.]+)\s*dest mac\s*\:\s*(?P<dest_mac>[\w\.]+)")
-        
+
         # arp   hdr : src ip: 14.0.1.2, dest ip: 14.0.1.2
-        
+
         p8 = re.compile(r"arp\s*hdr\s*\:\s*src ip\s*\:\s*(?P<src_ip>[\d\.]+)\s*\,\s*dest ip\s*\:\s*(?P<dest_ip>[\d\.]+)")
 
         for line in out.splitlines():
             line = line.strip()
-            
+
             # Total captured so far :  4096 packet(s)
 
             m = p0.match(line)
-            
+
             if m:
                 group = m.groupdict()
                 res_dict.setdefault('total_captured_so_far' , int(group['total_captured_so_far']))
                 continue
-                
+
             # Punt Packet Number: 3659
-            
+
             m = p1.match(line)
-            
+
             if m:
                 group = m.groupdict()
                 punt_packet = res_dict.setdefault('punt_packet_number', {})
@@ -2420,9 +2420,9 @@ class ShowPlatformSoftwareFedSwitchActivePuntPacketCaptureDisplayFilterKeyBrief(
                 continue
 
             # interface : phy: Port11lVlan101 [if-id: 0x50000000b0065], pal: Vlan101 [if-id: 0x000005ce]
-            
+
             m = p2.match(line)
-            
+
             if m:
                 group = m.groupdict()
                 phy = punt_packet_details.setdefault('interface', {}).setdefault('phy',{})
@@ -2434,9 +2434,9 @@ class ShowPlatformSoftwareFedSwitchActivePuntPacketCaptureDisplayFilterKeyBrief(
                 continue
 
             # misc info : cause: 7 [ARP request or response], sub-cause: 1, linktype: IP [1]
-            
+
             m = p3.match(line)
-            
+
             if m:
                 group = m.groupdict()
                 misc = punt_packet_details.setdefault('misc_info', {})
@@ -2445,9 +2445,9 @@ class ShowPlatformSoftwareFedSwitchActivePuntPacketCaptureDisplayFilterKeyBrief(
                 continue
 
             # CE hdr : dest mac: 4e41.5000.0010, src mac: 4e41.5000.0111, ethertype: 0x7102
-            
+
             m = p4.match(line)
-            
+
             if m:
                 group = m.groupdict()
                 ce_hdr = punt_packet_details.setdefault('ce_hdr', {})
@@ -2457,9 +2457,9 @@ class ShowPlatformSoftwareFedSwitchActivePuntPacketCaptureDisplayFilterKeyBrief(
                 continue
 
             # ether hdr : dest mac: ffff.ffff.ffff, src mac: 00a7.428a.7fbf
-            
+
             m = p5.match(line)
-            
+
             if m:
                 group = m.groupdict()
                 ether_hdr = punt_packet_details.setdefault('ether_hdr', {})
@@ -2468,9 +2468,9 @@ class ShowPlatformSoftwareFedSwitchActivePuntPacketCaptureDisplayFilterKeyBrief(
                 continue
 
             # ether hdr : vlan: 101, ethertype: 0x8100
-            
+
             m = p6.match(line)
-            
+
             if m:
                 group = m.groupdict()
                 ether_hdr = punt_packet_details.setdefault('ether_hdr', {})
@@ -2479,9 +2479,9 @@ class ShowPlatformSoftwareFedSwitchActivePuntPacketCaptureDisplayFilterKeyBrief(
                 continue
 
             # arp hdr : opcode: 2 (ARP Reply), src mac: 00a7.428a.7fbf dest mac: ffff.ffff.ffff
-            
+
             m = p7.match(line)
-            
+
             if m:
                 group = m.groupdict()
                 arp_hdr = punt_packet_details.setdefault('arp_hdr', {})
@@ -2495,9 +2495,9 @@ class ShowPlatformSoftwareFedSwitchActivePuntPacketCaptureDisplayFilterKeyBrief(
                 continue
 
             # arp   hdr : src ip: 14.0.1.2, dest ip: 14.0.1.2
-            
+
             m = p8.match(line)
-            
+
             if m:
                 group = m.groupdict()
                 arp_hdr['src_ip'] = group['src_ip']
@@ -2505,7 +2505,7 @@ class ShowPlatformSoftwareFedSwitchActivePuntPacketCaptureDisplayFilterKeyBrief(
                 continue
 
         return res_dict
-        
+
 # =========================================
 # Schema for 'show platform software fed switch active punt packet-capture status'
 # =========================================
@@ -2531,7 +2531,7 @@ class ShowPlatformSoftwareFedSwitchActivePuntPacketcaptureStatusSchema(MetaParse
 class ShowPlatformSoftwareFedSwitchActivePuntPacketcaptureStatus(ShowPlatformSoftwareFedSwitchActivePuntPacketcaptureStatusSchema):
     """
 
-    Parser for 
+    Parser for
         'show platform software fed {switch} {switch_num} punt packet-capture status',
         'show platform software fed {switch_num} punt packet-capture status'
     """
@@ -2566,15 +2566,15 @@ class ShowPlatformSoftwareFedSwitchActivePuntPacketcaptureStatus(ShowPlatformSof
 
         for line in output.splitlines():
             line = line.strip()
-            
+
             # punt packet capturing: disabled. buffer wrapping: disabled
             m = p1.match(line)
             if m:
                 group = m.groupdict()
                 ret_dict['punt_packet_capturing'] = group['punt_packet_capturing']
-                ret_dict['buffer_wrapping'] = group['buffer_wrapping']     
+                ret_dict['buffer_wrapping'] = group['buffer_wrapping']
                 continue
-            
+
             # Total captured so far :    13 packet(s)
             m = p2.match(line)
             if m:
@@ -2609,7 +2609,7 @@ class ShowPlatformSoftwareFedSwitchActivePuntPacketcaptureStatus(ShowPlatformSof
 #  Schema for 'show platform software fed switch active punt packet-capture display-filter icmp brief' #
 # ======================================================================================================#
 class ShowPlatformSoftwareFedSwitchActivePuntPacketCaptureDisplayFilterIcmpBriefSchema(MetaParser):
-    
+
     """
     Schema for
         'show platform software fed {switch} {switch_num} punt packet-capture display-filter icmp brief'
@@ -2676,7 +2676,7 @@ class ShowPlatformSoftwareFedSwitchActivePuntPacketCaptureDisplayFilterIcmpBrief
 class ShowPlatformSoftwareFedSwitchActivePuntPacketCaptureDisplayFilterIcmpBrief(ShowPlatformSoftwareFedSwitchActivePuntPacketCaptureDisplayFilterIcmpBriefSchema):
     """
 
-    Parser for 
+    Parser for
         'show platform software fed {switch} {switch_num} punt packet-capture display-filter icmp brief'
         'show platform software fed {switch_num} punt packet-capture display-filter icmp brief'
     """
@@ -2698,40 +2698,40 @@ class ShowPlatformSoftwareFedSwitchActivePuntPacketCaptureDisplayFilterIcmpBrief
 
         # ------ Punt Packet Number: 41, Timestamp: 2024/06/25 16:07:00.656 ------
         p1 = re.compile(r'^------\s+Punt\s+Packet\sNumber:\s+(?P<punt_packet_number>(\d+,))\s+Timestamp:\s+(?P<timestamp>(\d+\/\d+\/\d+\s+\d+:\d+:\d+.\d+\s+------))$')
-        
+
         # interface : phy: Vlan100 [if-id: 0x00000624], pal: Vlan100 [if-id: 0x00000624]
         p2 = re.compile(r'^interface\s*:\s*phy\s*:\s*(?P<phy_val>[\w+]+)\s+\[[\w\-\:]+\s*(?P<phy_if_id>[\w+]+)\]\s*\,\s*pal\s*\:\s*(?P<pal_val>[\w+]+)\s*\[[\w\-\:]+\s*(?P<pal_if_id>(\w+\]))$')
-        
+
         # misc info : cause: 55 [For-us control], sub-cause: 0 [CPP_PUNT_SUBCAUSE_TRANSPORT_NONE], linktype: IP [1]
         p3 = re.compile(r'^misc\s*info\s*\:\s*cause\s*\:\s*(?P<cause_number>(\d+)+)\s*\[(?P<cause>[\w+\-\s+\]]+)+,\s*sub-cause\s*:\s*(?P<sub_cause_num>(\d+)\s+\[(?P<sub_cause>(\w+\]))),\s+linktype\s*:\s*(?P<link_type>(\w+\s*\[(\d)\]))$')
-        
+
         # CE    hdr : dest mac: 4e41.5000.0111, src mac: 4e41.5000.0111, ethertype: 0x7106
         p4 = re.compile(r'^CE\s*hdr\s*\:\s*dest mac\s*\:\s*(?P<dest_mac>[\w\.]+)\s*\,\s*src mac\s*\:\s*(?P<src_mac>[\w\.]+)\s*\,\s*ethertype\s*\:\s*(?P<ethertype>[\w]+)$')
-        
+
         # meta  hdr : Nxt. Hdr: 0x1, Fwd. Hdr: 0x2, SSP: 0x119
         p5 = re.compile(r'^meta\s*hdr\s*:\s+Nxt.\s*Hdr:\s*(?P<nxt_hdr>(\w*)),\s*Fwd.\s*Hdr:\s*(?P<fwd_hdr>(\w*)),\s*SSP:\s*(?P<ssp>(\w*))$')
-        
+
         # meta  hdr : DSP: 0xffff, SLP: 0x122, DLP: 0xef
         p6 = re.compile(r'^meta\s*hdr\s*:\s+DSP:\s*(?P<dsp>(\w*)),\s*SLP:\s*(?P<slp>(\w*)),\s*DLP:\s*(?P<dlp>(\w*))$')
-        
+
         # ether hdr : dest mac: 3c57.3104.7045, src mac: a0b4.39cd.70ff
         p7 = re.compile(r'^ether\s*hdr\s*\:\s*dest mac\s*\:\s*(?P<dest_mac>[\w\.]+)\s*\,\s*src mac\s*\:\s*(?P<src_mac>[\w\.]+)$')
-        
+
         # ether hdr : vlan: 100, ethertype: 0x8100
         p8 = re.compile(r'^ether\s*hdr\s*\:\s*vlan\s*\:\s*(?P<vlan>[\d]+)\s*\,\s*ethertype\s*\:\s*(?P<ether_type>[\w]+)$')
-       
+
         # ipv4  hdr : dest ip: 100.10.1.1, src ip: 1.0.0.3
         p9 = re.compile(r'^ipv4\s*hdr\s*:\s*dest\s*ip:\s*(?P<dest_ip>(\d*\.\d*\.\d*\.\d*)),\s*src\s*ip:\s*(?P<src_ip>(\d*\.\d*\.\d*\.\d*))$')
-       
+
         # ipv4  hdr : packet len: 100, ttl: 254, protocol: 1 (ICMP)
         p10 = re.compile(r'^ipv4\s*hdr\s*:\s*packet\s*len:\s*(?P<packet_len>(\d*)),\s*ttl:\s*(?P<ttl>(\d*)),\s*protocol:\s*(?P<protocol>(\d*\s*\(\w*\)))$')
-        
+
         # icmp  hdr : icmp type: 8, code: 0
         p11 = re.compile(r'^icmp\s*hdr\s*:\s*icmp\s*type:\s*(?P<icmp_type>(\d*)),\s*code:\s*(?P<code>(\d*))$')
 
         for line in out.splitlines():
             line = line.strip()
-            
+
             # Punt Packet Number: 41, Timestamp: 2024/06/25 16:07:00.656
             m = p1.match(line)
             if m:
@@ -2740,7 +2740,7 @@ class ShowPlatformSoftwareFedSwitchActivePuntPacketCaptureDisplayFilterIcmpBrief
                 punt_packet.setdefault('timestamp',group['timestamp'])
                 punt_packet_details = punt_packet.setdefault(group['punt_packet_number'], {})
                 continue
-            
+
             # interface : phy: Vlan100 [if-id: 0x00000624], pal: Vlan100 [if-id: 0x00000624]
             m = p2.match(line)
             if m:
@@ -2890,7 +2890,7 @@ class ShowPlatformSoftwareFedSwitchAclUsageIncludeAcl(ShowPlatformSoftwareFedSwi
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict['feature_type'] = group['feature_type']  
+                ret_dict['feature_type'] = group['feature_type']
                 ret_dict['acl_type'] = group['acl_type']
                 ret_dict['dir'] = group['dir']
                 ret_dict['name'] = group['name']
@@ -2898,11 +2898,11 @@ class ShowPlatformSoftwareFedSwitchAclUsageIncludeAcl(ShowPlatformSoftwareFedSwi
                 continue
 
         return ret_dict
-    
+
 
 # ======================================================================================================#
 #  Schema for 'show platform software fed switch active punt packet-capture display-filter icmpv6 brief' #
-# ======================================================================================================#    
+# ======================================================================================================#
 class ShowPlatformSoftwareFedSwitchActivePuntPacketCapturedisplayFiltericmpv6BriefSchema(MetaParser):
     """
     Schema for
@@ -2956,7 +2956,7 @@ class ShowPlatformSoftwareFedSwitchActivePuntPacketCapturedisplayFiltericmpv6Bri
                     'payload_len': int,
                     'hop_count': int,
                     'next_hdr': int
-        
+
                 }
             }
         }
@@ -2969,7 +2969,7 @@ class ShowPlatformSoftwareFedSwitchActivePuntPacketCapturedisplayFiltericmpv6Bri
 class ShowPlatformSoftwareFedSwitchActivePuntPacketCapturedisplayFiltericmpv6Brief(ShowPlatformSoftwareFedSwitchActivePuntPacketCapturedisplayFiltericmpv6BriefSchema):
     """
 
-    Parser for 
+    Parser for
         'show platform software fed {switch} {switch_num} punt packet-capture display-filter icmpv6 brief'
         'show platform software fed {switch_num} punt packet-capture display-filter icmpv6 brief'
     """
@@ -3032,7 +3032,7 @@ class ShowPlatformSoftwareFedSwitchActivePuntPacketCapturedisplayFiltericmpv6Bri
                 punt_packet_details=punt_packet.setdefault(group['punt_packet_number'], {})
                 punt_packet_details.setdefault('timestamp',group['timestamp'].strip())
                 continue
-                   
+
             # interface : phy: Port-channel10 [if-id: 0x0000058a], pal: Port-channel10 [if-id: 0x0000058a]
             m = p1.match(line)
             if m:
@@ -3044,7 +3044,7 @@ class ShowPlatformSoftwareFedSwitchActivePuntPacketCapturedisplayFiltericmpv6Bri
                 pal['val'] = group['phy_val']
                 pal['if_id'] = group['pal_if_id']
                 continue
-            
+
             # misc info : cause: 58 [Layer2 bridge domain data packet], sub-cause: 11 [NONE], linktype: IPV6 [4]
             m = p2.match(line)
             if m:
@@ -3128,7 +3128,7 @@ class ShowPlatformSoftwareFedSwitchActivePuntPacketCapturedisplayFiltericmpv6Bri
                 ipv6_hdr['hop_count'] = int(group['hop_count'])
                 ipv6_hdr['next_hdr']  =int(group['next_hdr'])
                 continue
-   
+
         return res_dict
 
 
@@ -3203,78 +3203,78 @@ class ShowPlatformSoftwareFedIpMfibVrfGroupDetail(ShowPlatformSoftwareFedIpMfibV
         ret_dict = {}
         index = 1
         index1 = 1
-    
+
         # Mvrf: 2  ( 14.14.14.2, 225.0.0.1 ) Attrs:
         p1 = re.compile(r'.* +\( +(?P<source_ip>[\w\:\.\*\/]+)+\, +(?P<group_ip>[\w\:\.\/]+)')
-    
+
         # Hw Flag                 : InHw
         p2 = re.compile(r'Hw Flag +\: +(?P<hw_flag>\w+)')
-    
+
         # Mlist_hndl (Id)         : 0x118831561f8 ( 0x1fd2 )
         p3 = re.compile(r'Mlist_hndl +\(Id\) +\: +(?P<mlist_handle>\S+)')
-    
+
         # Mlist Urid              : 0x1000000000001f91
         p4 = re.compile(r'Mlist Urid +\: +(?P<mlist_urid>\S+)')
-    
+
         # Fset Urid (Hash)        : 0x3000000000000059 ( cad91c96 )
         p5 = re.compile(r'Fset Urid +\(Hash\) +\: +(?P<fset_urid>\S+)')
-    
+
         # Fset Aux Urid           : 0x0
         p6 = re.compile(r'Fset Aux Urid +\: +(?P<fset_aux_urid>\S+)')
-    
+
         # RPF Adjacency ID        : 0xf80054f1
         p7 = re.compile(r'RPF Adjacency ID +\: +(?P<rpf_adjancency_id>\S+)')
-    
+
         # CPU Credit              : 0
         p8 = re.compile(r'CPU Credit +\: +(?P<cpu_credit>\d+)')
-    
+
         # Total Packets           : 17918 ( 19 pps approx.)
         p9 = re.compile(r'Total Packets +\: +(?P<total_packets>\d+)')
-    
+
         # npi_mroute_ent          : 0x118831bdc90
         p10 = re.compile(r'npi_mroute_ent +\: +(?P<npi_mroute_ent>\S+)')
-    
+
         # svi_fwd_ifs             : 0
         p11 = re.compile(r'svi_fwd_ifs +\: +(?P<svi_fwd_ifs>\d+)')
-    
+
         # OIF Details:
         #  AdjID          Interface          ParentIf        HwFlag      Flags      IntfType       MsgType
         #  0xf80054a1     Hu1/0/9            --------         ---        F NS       --------       NORMAL
         #  0xf80054f1     Hu1/0/23           --------         ---        A          --------       NORMAL
         p12 = re.compile(
             r'(?P<adj_id>\d\S+) +(?P<interface>[\w\:\.\/]+) +(?P<parent_if>\S+) +(?P<hw_flag>\S+) +(?P<flags>\D+) +(?P<intf_type>\S+) +(?P<msg_type>\w+)')
-    
+
         # GID                   : 8276
         p13 = re.compile(r'GID +\: +(?P<gid>\d+)')
-    
+
         # MCID OID Asic[0]      : 2282
         p14 = re.compile(r'MCID OID Asic\[0\] +\: +(?P<mcid_oid_asic>\d+)')
-    
+
         # IP MCID OID         :2282 (cookie: urid:0x30::59)
         p15 = re.compile(r'IP MCID OID +\:+(?P<ip_mcid_oid>\d+) +\(cookie\: +urid\:(?P<cookie_urid>\S+)\)')
-    
+
         # RPF PORT OID        :2130
         p16 = re.compile(r'RPF PORT OID  +\:+(?P<rpf_port_oid>\d+)')
-    
+
         # punt_on_rpf_fail    :1
         p17 = re.compile(r'punt_on_rpf_fail  +\:+(?P<punt_on_rpf_fail>\d+)')
-    
+
         # punt_and_forward    :0
         p18 = re.compile(r'punt_and_forward  +\:+(?P<punt_and_forward>\d+)')
-    
+
         # use_rpfid           :0
         p19 = re.compile(r'use_rpfid  +\:+(?P<use_rpfid>\d+)')
-    
+
         # rpfid               :0
         p20 = re.compile(r'rpfid  +\:+(?P<rpfid>\d+)')
-    
+
         # enable_rpf_check    :1
         p21 = re.compile(r'enable_rpf_check  +\:+(?P<enable_rpf_check>\d+)')
-    
+
         ret_dict = {}
         for line in output.splitlines():
             line = line.strip()
-    
+
             # Mvrf: 2  ( 14.14.14.2, 225.0.0.1 ) Attrs:
             m = p1.match(line)
             if m:
@@ -3286,77 +3286,77 @@ class ShowPlatformSoftwareFedIpMfibVrfGroupDetail(ShowPlatformSoftwareFedIpMfibV
                 index += 1
                 index1 = 1
                 continue
-    
+
             # Hw Flag                 : InHw
             m = p2.match(line)
             if m:
                 group = m.groupdict()
                 mvrf_dict['hw_flag'] = group['hw_flag']
                 continue
-    
+
             # Mlist_hndl (Id)         : 0x118831561f8 ( 0x1fd2 )
             m = p3.match(line)
             if m:
                 group = m.groupdict()
                 mvrf_dict['mlist_handle'] = group['mlist_handle']
                 continue
-    
+
             # Mlist Urid              : 0x1000000000001f91
             m = p4.match(line)
             if m:
                 group = m.groupdict()
                 mvrf_dict['mlist_urid'] = group['mlist_urid']
                 continue
-    
+
             # Fset Urid (Hash)        : 0x3000000000000059 ( cad91c96 )
             m = p5.match(line)
             if m:
                 group = m.groupdict()
                 mvrf_dict['fset_urid'] = group['fset_urid']
                 continue
-    
+
             # Fset Aux Urid           : 0x0
             m = p6.match(line)
             if m:
                 group = m.groupdict()
                 mvrf_dict['fset_aux_urid'] = group['fset_aux_urid']
                 continue
-    
+
             # RPF Adjacency ID        : 0xf80054f1
             m = p7.match(line)
             if m:
                 group = m.groupdict()
                 mvrf_dict['rpf_adjancency_id'] = group['rpf_adjancency_id']
                 continue
-    
+
             # CPU Credit              : 0
             m = p8.match(line)
             if m:
                 group = m.groupdict()
                 mvrf_dict['cpu_credit'] = int(group['cpu_credit'])
                 continue
-    
+
             # Total Packets           : 17918 ( 19 pps approx.)
             m = p9.match(line)
             if m:
                 group = m.groupdict()
                 mvrf_dict['total_packets'] = int(group['total_packets'])
                 continue
-    
+
             # npi_mroute_ent          : 0x118831bdc90
             m = p10.match(line)
             if m:
                 group = m.groupdict()
                 mvrf_dict['npi_mroute_ent'] = group['npi_mroute_ent']
                 continue
-    
+
             # svi_fwd_ifs             : 0
             m = p11.match(line)
             if m:
                 group = m.groupdict()
                 mvrf_dict['svi_fwd_ifs'] = int(group['svi_fwd_ifs'])
                 continue
-    
+
             # OIF Details:
             #  AdjID          Interface          ParentIf        HwFlag      Flags      IntfType       MsgType
             #  0xf80054a1     Hu1/0/9            --------         ---        F NS       --------       NORMAL
@@ -3374,21 +3374,21 @@ class ShowPlatformSoftwareFedIpMfibVrfGroupDetail(ShowPlatformSoftwareFedIpMfibV
                 global_dict['msg_type'] = group['msg_type']
                 index1 += 1
                 continue
-    
+
             # GID                   : 8276
             m = p13.match(line)
             if m:
                 group = m.groupdict()
                 mvrf_dict['gid'] = int(group['gid'])
                 continue
-    
+
             # MCID OID Asic[0]      : 2282
             m = p14.match(line)
             if m:
                 group = m.groupdict()
                 mvrf_dict['mcid_oid_asic'] = int(group['mcid_oid_asic'])
                 continue
-    
+
             # IP MCID OID         :2282 (cookie: urid:0x30::59)
             m = p15.match(line)
             if m:
@@ -3397,49 +3397,513 @@ class ShowPlatformSoftwareFedIpMfibVrfGroupDetail(ShowPlatformSoftwareFedIpMfibV
                 local_dict['ip_mcid_oid'] = int(group['ip_mcid_oid'])
                 local_dict['cookie_urid'] = group['cookie_urid']
                 continue
-    
+
             # RPF PORT OID        :2130
             m = p16.match(line)
             if m:
                 group = m.groupdict()
                 local_dict['rpf_port_oid'] = int(group['rpf_port_oid'])
                 continue
-    
+
             # punt_on_rpf_fail    :1
             m = p17.match(line)
             if m:
                 group = m.groupdict()
                 local_dict['punt_on_rpf_fail'] = int(group['punt_on_rpf_fail'])
                 continue
-    
+
             # punt_and_forward    :0
             m = p18.match(line)
             if m:
                 group = m.groupdict()
                 local_dict['punt_and_forward'] = int(group['punt_and_forward'])
                 continue
-    
+
             # use_rpfid           :0
             m = p19.match(line)
             if m:
                 group = m.groupdict()
                 local_dict['use_rpfid'] = int(group['use_rpfid'])
                 continue
-    
+
             # rpfid               :0
             m = p20.match(line)
             if m:
                 group = m.groupdict()
                 local_dict['rpfid'] = int(group['rpfid'])
                 continue
-    
+
             # enable_rpf_check    :1
             m = p21.match(line)
             if m:
                 group = m.groupdict()
                 local_dict['enable_rpf_check'] = int(group['enable_rpf_check'])
                 continue
-    
+
+        return ret_dict
+
+
+class ShowPlatformHardwareFedSwitchQosQueueConfigSchema(MetaParser):
+    """
+    Schema for
+        * 'show platform hardware fed switch {switch_var} qos queue config interface {interface}'
+    """
+
+    schema = {
+        "interface": {
+            Any(): {
+                "interface_id": str,
+                "voq_id": str,
+                "voq_oid": str,
+                "voq_set_size": str,
+                "base_voq_id": str,
+                "base_vsc_ids": list,
+                "voq_state": str,
+                "voq_flush": str,
+                "is_empty": str,
+                "profile_oid": {
+                    Any(): {
+                        "profile_id": str,
+                        "device_id": str,
+                        "cgm_type": str,
+                        "profile_reference_count": str,
+                        "is_reserved": str,
+                        "for_speeds": str,
+                        "associated_voq_offsets": Or(str, list),
+                        "hbm_enabled": str,
+                        Optional("hgm_block_size"): str,
+                        Optional("red_enabled"): str,
+                        Optional("fcn_enabled"): str,
+                        Optional("queue_user_config"): {
+                            Optional("q_limit_hbm_blocks"): str,
+                            "red_ema_coefficient": str,
+                            Optional("red_flag"): {
+                                Any(): {
+                                    Optional("minimun_hbm_blocks"): str,
+                                    Optional("maximum_hbm_blocks"): str,
+                                    Optional("maximum_probability"): str,
+                                },
+                            },
+                        },
+                        Optional("queue_hw_values"): {
+                            "red_action": str,
+                            Optional("red_drop_thresholds"): list,
+                            Optional("hbm_free_thresholds"): list,
+                            Optional("hbm_voq_age_thresholds"): list,
+                            Optional("hbm_voq_thresholds"): list,
+                            Optional("red_flag"): {
+                                Any(): {
+                                    "red_drop_probabilities": list,
+                                }
+                            },
+                        },
+                    }
+                },
+            }
+        }
+    }
+
+
+class ShowPlatformHardwareFedSwitchQosQueueConfig(
+    ShowPlatformHardwareFedSwitchQosQueueConfigSchema
+):
+    """
+    Parser for
+        * 'show platform hardware fed switch {switch_var} qos queue config interface {interface}'
+    """
+
+    cli_command = [
+        "show platform hardware fed active qos queue config interface {interface}",
+        "show platform hardware fed switch {switch_var} qos queue config interface {interface}",
+    ]
+
+    def cli(self, interface, switch_var=None, output=None):
+        if output is None:
+            if switch_var:
+                cmd = self.cli_command[1].format(
+                    switch_var=switch_var, interface=interface
+                )
+            else:
+                cmd = self.cli_command[0].format(interface=interface)
+
+            output = self.device.execute(cmd)
+
+        # Interface : HundredGigE2/0/34.100 (0x54C)
+        p0 = re.compile(
+            r"^Interface\s+: (?P<interface>\S+) \((?P<interface_id>\S+)\)$"
+        )
+
+        # VOQ OID        : 2114(0x842)
+        p1 = re.compile(r"^VOQ OID\s+: (?P<voq_oid>\S+)\((?P<voq_id>\S+)\)$")
+
+        # VOQ Set Size   : 3
+        p2 = re.compile(r"^VOQ Set Size\s+: (?P<voq_set_size>\S+)$")
+
+        # Base VOQ ID    : 28952
+        p3 = re.compile(r"^Base VOQ ID\s+: (?P<base_voq_id>\S+)$")
+
+        # Base VSC IDs   : 728, 792, 856, 920, 984, 1048
+        p4 = re.compile(r"^Base VSC IDs\s+: (?P<base_vsc_ids>[\w\s\,]+)$")
+
+        # VOQ State      : Active
+        p5 = re.compile(r"^VOQ State\s+: (?P<voq_state>\S+)$")
+
+        # VOQ Flush      : Flush not active
+        p6 = re.compile(r"^VOQ Flush\s+: (?P<voq_flush>.+)$")
+
+        # Is Empty       : Yes
+        p7 = re.compile(r"^Is Empty\s+: (?P<is_empty>.+)$")
+
+        # Profile OID            : 433(0x1B1)
+        p8_1 = re.compile(
+            r"^Profile OID\s+: (?P<profile_oid>\d+)\((?P<profile_id>\w+)\)$"
+        )
+
+        # Device ID              : 0
+        p9 = re.compile(r"^Device ID\s+: (?P<device_id>\d+)$")
+
+        # CGM Type               : Unicast
+        p10 = re.compile(r"^CGM Type\s+: (?P<cgm_type>\w+)$")
+
+        # Profile reference count: 73
+        p11 = re.compile(
+            r"^Profile reference count\s*: (?P<profile_reference_count>\d+)$"
+        )
+
+        # Is Reserved            : Yes
+        p12 = re.compile(r"^Is Reserved\s+: (?P<is_reserved>[\w\s]+)$")
+
+        # For speeds             : 10000000000
+        p13 = re.compile(r"^For speeds\s+: (?P<for_speeds>\d+)$")
+
+        # Associated VOQ Offsets : 0
+        p14 = re.compile(
+            r"^Associated VOQ Offsets\s+: (?P<associated_voq_offsets>[\d, ]+)$"
+        )
+
+        # HBM Enabled            : Enabled
+        p15 = re.compile(r"^HBM Enabled\s+: (?P<hbm_enabled>\w+)$")
+
+        # HBM Block Size         : 6144
+        p16 = re.compile(r"^HBM Block Size\s+: (?P<hgm_block_size>\w+)$")
+
+        # RED Enabled            : Enabled
+        p17 = re.compile(r"^RED Enabled\s+: (?P<red_enabled>\w+)$")
+
+        # FCN Enabled            : Disabled
+        p18 = re.compile(r"^FCN Enabled\s+: (?P<fcn_enabled>\w+)$")
+
+        # Queue User Config      :
+        p19 = re.compile(r"^Queue User Config\s+:$")
+
+        # Q-Limit(HBM Blocks)    : 4882
+        p19_1 = re.compile(
+            r"^Q-Limit\(HBM Blocks\)\s+: (?P<q_limit_hbm_blocks>\d+)$"
+        )
+
+        # RED EMA Coefficient    : 1.000000
+        p19_2 = re.compile(
+            r"^RED EMA Coefficient\s+: (?P<red_ema_coefficient>[\w\.]+)$"
+        )
+
+        # RED Green :
+        p19_3 = re.compile(r"^RED\s+(?P<red_flag>\w+)\s:$")
+
+        # Minium(HBM BLOCKS)   : 0
+        p19_4 = re.compile(
+            r"^Minium\(HBM BLOCKS\)\s*: (?P<minimun_hbm_blocks>\d+)$"
+        )
+
+        # Maximum(HBM BLOCKS)  : 1220
+        p19_5 = re.compile(
+            r"^Maximum\(HBM BLOCKS\)\s*: (?P<maximum_hbm_blocks>\d+)$"
+        )
+
+        # Maximum Probability  : 0
+        p19_6 = re.compile(
+            r"^Maximum Probability\s*: (?P<maximum_probability>\d+)$"
+        )
+
+        # Queue H/W Values       :
+        p20 = re.compile(r"^Queue H/W Values\s+:$")
+
+        # RED Action                     : Drop
+        p20_1 = re.compile(r"^RED Action\s+: (?P<red_action>\w+)$")
+
+        # RED Drop thresholds            : 0, 1220, 1220, 1220, 1220, 1220, 1220, 1220, 1220, 1220, 1220, 1220, 1220, 1220, 1220
+        p20_2 = re.compile(
+            r"^RED Drop thresholds\s+: (?P<red_drop_thresholds>[\w\s\,]+)$"
+        )
+
+        # RED Drop Probabilities[Green]  : 0.000000, 0.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000
+        p20_3 = re.compile(
+            r"^RED Drop Probabilities\[(?P<red_flag>[\w]+)\]\s+: (?P<red_drop_probabilities>[\w\s\,\.]+)$"
+        )
+
+        # HBM Free Thresholds            : 10000, 20000, 40000, 60000, 124992, 250000, 500000, 1000000
+        p20_4 = re.compile(
+            r"^HBM Free Thresholds\s+: (?P<hbm_free_thresholds>[\w\s\,\.]+)$"
+        )
+
+        # HBM VOQ Age Thresholds         : 1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 16, 24, 32, 64, 128
+        p20_5 = re.compile(
+            r"^HBM VOQ Age Thresholds\s+: (?P<hbm_voq_age_thresholds>[\w\s\,\.]+)$"
+        )
+
+        # HBM VOQ Thresholds             : 96, 992, 2000, 4000, 6000, 8000, 12000, 16000, 24000, 32000, 40000, 48000, 56000, 64000, 64512, 65536,
+        p20_6 = re.compile(
+            r"^HBM VOQ Thresholds\s+: (?P<hbm_voq_thresholds>[\w\s\,\.]+)$"
+        )
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Interface              : HundredGigE1/0/5 (0x54A)
+            m = p0.match(line)
+            if m:
+                int_dict = ret_dict.setdefault("interface", {}).setdefault(
+                    Common.convert_intf_name(m.groupdict()["interface"]), {}
+                )
+                int_dict["interface_id"] = m.groupdict()["interface_id"]
+                continue
+
+            # VOQ OID        : 2114(0x842)
+            m = p1.match(line)
+            if m:
+                int_dict["voq_id"] = m.groupdict()["voq_id"]
+                int_dict["voq_oid"] = m.groupdict()["voq_oid"]
+                continue
+
+            # VOQ Set Size   : 3
+            m = p2.match(line)
+            if m:
+                int_dict["voq_set_size"] = m.groupdict()["voq_set_size"]
+                continue
+
+            # Base VOQ ID    : 28952
+            m = p3.match(line)
+            if m:
+                int_dict["base_voq_id"] = m.groupdict()["base_voq_id"]
+                continue
+
+            # Base VSC IDs   : 728, 792, 856, 920, 984, 1048
+            m = p4.match(line)
+            if m:
+                int_dict["base_vsc_ids"] = (
+                    m.groupdict()["base_vsc_ids"].replace(" ", "").split(",")
+                )
+                continue
+
+            # VOQ State      : Active
+            m = p5.match(line)
+            if m:
+                int_dict["voq_state"] = m.groupdict()["voq_state"]
+                continue
+
+            # VOQ Flush      : Flush not active
+            m = p6.match(line)
+            if m:
+                int_dict["voq_flush"] = m.groupdict()["voq_flush"]
+                continue
+
+            # Is Empty       : Yes
+            m = p7.match(line)
+            if m:
+                int_dict["is_empty"] = m.groupdict()["is_empty"]
+                continue
+
+            # Profile OID            : 433(0x1B1)
+            m = p8_1.match(line)
+            if m:
+                profile_dict = int_dict.setdefault("profile_oid", {}).setdefault(
+                    m.groupdict()["profile_oid"], {}
+                )
+                profile_dict["profile_id"] = m.groupdict()["profile_id"]
+                continue
+
+            # Device ID              : 0
+            m = p9.match(line)
+            if m:
+                profile_dict["device_id"] = m.groupdict()["device_id"]
+                continue
+
+            # CGM Type               : Unicast
+            m = p10.match(line)
+            if m:
+                profile_dict["cgm_type"] = m.groupdict()["cgm_type"]
+                continue
+
+            # Profile reference count: 73
+            m = p11.match(line)
+            if m:
+                profile_dict["profile_reference_count"] = m.groupdict()[
+                    "profile_reference_count"
+                ]
+                continue
+
+            # Is Reserved            : Yes
+            m = p12.match(line)
+            if m:
+                profile_dict["is_reserved"] = m.groupdict()["is_reserved"]
+                continue
+
+            # For speeds             : 10000000000
+            m = p13.match(line)
+            if m:
+                profile_dict["for_speeds"] = m.groupdict()["for_speeds"]
+                continue
+
+            # Associated VOQ Offsets : 0
+            m = p14.match(line)
+            if m:
+                profile_dict["associated_voq_offsets"] = (
+                    m.groupdict()["associated_voq_offsets"]
+                    .replace(" ", "")
+                    .split(",")
+                )
+                continue
+
+            # HBM Enabled            : Enabled
+            m = p15.match(line)
+            if m:
+                profile_dict["hbm_enabled"] = m.groupdict()["hbm_enabled"]
+                continue
+
+            # HBM Block Size         : 6144
+            m = p16.match(line)
+            if m:
+                profile_dict["hgm_block_size"] = m.groupdict()["hgm_block_size"]
+                continue
+
+            # RED Enabled            : Enabled
+            m = p17.match(line)
+            if m:
+                profile_dict["red_enabled"] = m.groupdict()["red_enabled"]
+                continue
+
+            # FCN Enabled            : Disabled
+            m = p18.match(line)
+            if m:
+                profile_dict["fcn_enabled"] = m.groupdict()["fcn_enabled"]
+                continue
+
+            # Queue User Config      :
+            m = p18.match(line)
+            if m:
+                profile_dict["fcn_enabled"] = m.groupdict()["fcn_enabled"]
+                continue
+
+            # Queue User Config      :
+            m = p19.match(line)
+            if m:
+                queue_config_dict = profile_dict.setdefault("queue_user_config", {})
+                continue
+
+            # Q-Limit(HBM Blocks)    : 1220
+            m = p19_1.match(line)
+            if m:
+                queue_config_dict["q_limit_hbm_blocks"] = m.groupdict()[
+                    "q_limit_hbm_blocks"
+                ]
+                continue
+
+            # RED EMA Coefficient    : 1.000000
+            m = p19_2.match(line)
+            if m:
+                queue_config_dict["red_ema_coefficient"] = m.groupdict()[
+                    "red_ema_coefficient"
+                ]
+                continue
+
+            # RED Green :
+            m = p19_3.match(line)
+            if m:
+                red_dict = queue_config_dict.setdefault("red_flag", {}).setdefault(
+                    m.groupdict()["red_flag"], {}
+                )
+                continue
+
+            # Minium(HBM BLOCKS)   : 0
+            m = p19_4.match(line)
+            if m:
+                red_dict["minimun_hbm_blocks"] = m.groupdict()["minimun_hbm_blocks"]
+                continue
+
+            # Maximum(HBM BLOCKS)  : 1220
+            m = p19_5.match(line)
+            if m:
+                red_dict["maximum_hbm_blocks"] = m.groupdict()["maximum_hbm_blocks"]
+                continue
+
+            # Maximum Probability  : 0
+            m = p19_6.match(line)
+            if m:
+                red_dict["maximum_probability"] = m.groupdict()[
+                    "maximum_probability"
+                ]
+                continue
+
+            # Queue H/W Values       :
+            m = p20.match(line)
+            if m:
+                queue_hw_dict = profile_dict.setdefault("queue_hw_values", {})
+                continue
+
+            # RED Action                     : Drop
+            m = p20_1.match(line)
+            if m:
+                queue_hw_dict["red_action"] = m.groupdict()["red_action"]
+                continue
+
+            # RED Drop thresholds            : 0, 1220, 1220, 1220, 1220, 1220, 1220, 1220, 1220, 1220, 1220, 1220, 1220, 1220, 1220
+            m = p20_2.match(line)
+            if m:
+                queue_hw_dict["red_drop_thresholds"] = (
+                    m.groupdict()["red_drop_thresholds"].replace(" ", "").split(",")
+                )
+                continue
+
+            # RED Drop Probabilities[Green]  : 0.000000, 0.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000
+            m = p20_3.match(line)
+            if m:
+                red_hw_dict = queue_hw_dict.setdefault("red_flag", {}).setdefault(
+                    m.groupdict()["red_flag"], {}
+                )
+                red_hw_dict["red_drop_probabilities"] = (
+                    m.groupdict()["red_drop_probabilities"]
+                    .replace(" ", "")
+                    .split(",")
+                )
+                continue
+
+            # HBM Free Thresholds            : 10000, 20000, 40000, 60000, 124992, 250000, 500000, 1000000
+            m = p20_4.match(line)
+            if m:
+                queue_hw_dict["hbm_free_thresholds"] = (
+                    m.groupdict()["hbm_free_thresholds"].replace(" ", "").split(",")
+                )
+                continue
+
+            # HBM VOQ Age Thresholds         : 1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 16, 24, 32, 64, 128
+            m = p20_5.match(line)
+            if m:
+                queue_hw_dict["hbm_voq_age_thresholds"] = (
+                    m.groupdict()["hbm_voq_age_thresholds"]
+                    .replace(" ", "")
+                    .split(",")
+                )
+                continue
+
+            # HBM VOQ Thresholds             : 96, 992, 2000, 4000, 6000, 8000, 12000, 16000, 24000, 32000, 40000, 48000, 56000, 64000, 64512, 65536,
+            m = p20_6.match(line)
+            if m:
+                queue_hw_dict["hbm_voq_thresholds"] = (
+                    m.groupdict()["hbm_voq_thresholds"].replace(" ", "").split(",")
+                )
+                continue
+
         return ret_dict
 
 

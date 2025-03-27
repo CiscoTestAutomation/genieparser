@@ -1,0 +1,8 @@
+ L2M Fset Current Count / Max Reached          : 17 / 17                                                            
+ L2M current vp_oif count / Max Reached        : 2 / 4                                                              
+ L2M Fset Last Used Urid                       : 0x2000000000000011 (changes/sec:0 approx.)                         
+ L3M Fset Current Count / Max Reached          : 11 / 13                                                            
+ L3M current oif count /Max Reached            : 8 / 8                                                              
+ L3M Fset Last Used Urid                       : 0x300000000000000d (changes/sec:0 approx.)                         
+ L3M Fset Oif Last Used Urid                   : 0x8000000000000008 (changes/sec:0 approx.)                         
+ Oif_Obj Fset Current Count / Max Reached      : 6 / 6

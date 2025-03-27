@@ -1,0 +1,112 @@
+expected_output =  {
+    "entries":{
+        "192.240.1.1/32":{
+            "via":"192.240.1.1",
+            "tunnel":"11",
+            "created":"2d00h",
+            "expire":"never expire",
+            "type":"static",
+            "flags":[
+                "used",
+                "bfd"
+            ],
+            "nbma_address":"14.13.1.1",
+            "group":"HUB"
+        },
+        "192.240.1.2/32":{
+            "via":"192.240.1.2",
+            "tunnel":"11",
+            "created":"1d00h",
+            "expire":"expire 00:07:37",
+            "type":"dynamic",
+            "flags":[
+                "registered",
+                "nhop",
+                "bfd"
+            ],
+            "nbma_address":"75.76.1.1",
+            "group":"SPOKE_SCALE"
+        },
+        "192.240.1.4/32":{
+            "via":"192.240.1.4",
+            "tunnel":"11",
+            "created":"1d00h",
+            "expire":"expire 00:09:47",
+            "type":"dynamic",
+            "flags":[
+                "registered",
+                "nhop",
+                "bfd"
+            ],
+            "nbma_address":"15.0.1.1",
+            "group":"SPOKE_10G"
+        },
+        "192.240.1.5/32":{
+            "via":"192.240.1.5",
+            "tunnel":"11",
+            "created":"1d00h",
+            "expire":"expire 00:07:32",
+            "type":"dynamic",
+            "flags":[
+                "registered",
+                "nhop",
+                "bfd"
+            ],
+            "nbma_address":"16.0.1.1",
+            "group":"SPOKE_1G"
+        },
+        "192.240.1.6/32":{
+            "via":"192.240.1.6",
+            "tunnel":"11",
+            "created":"1d00h",
+            "expire":"expire 00:09:36",
+            "type":"dynamic",
+            "flags":[
+                "registered",
+                "nhop",
+                "bfd"
+            ],
+            "nbma_address":"17.0.1.1",
+            "group":"SPOKE_1G"
+        },
+        "192.240.1.7/32":{
+            "via":"192.240.1.7",
+            "tunnel":"11",
+            "created":"1d00h",
+            "expire":"expire 00:07:17",
+            "type":"dynamic",
+            "flags":[
+                "registered",
+                "nhop",
+                "bfd"
+            ],
+            "nbma_address":"18.0.1.1",
+            "group":"SPOKE_1G"
+        },
+        "192.240.1.8/32":{
+            "via":"192.240.1.8",
+            "tunnel":"11",
+            "created":"1d00h",
+            "expire":"expire 00:08:07",
+            "type":"dynamic",
+            "flags":[
+                "registered",
+                "nhop",
+                "bfd"
+            ],
+            "nbma_address":"19.0.1.1",
+            "group":"SPOKE_1G_SCALE"
+        },
+        "192.240.1.22/32":{
+            "via":"192.240.1.22",
+            "tunnel":"11",
+            "created":"2d00h",
+            "expire":"never expire",
+            "type":"static",
+            "flags":[
+                "bfd"
+            ],
+            "nbma_address":"85.76.1.1"
+        }
+    }
+}

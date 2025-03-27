@@ -11,6 +11,7 @@ IOSXE c9610 parsers for the following show commands:
     * show platform hardware fed active qos queue config interface {interface}
     * show platform hardware fed switch {switch_var} qos queue config interface {interface}
     * show platform hardware authentication status
+    * show platform software fed {switch} {mode} ipv6 route summary | include {match}'
 '''
 from genie.metaparser import MetaParser
 from genie.libs.parser.utils.common import Common
@@ -906,6 +907,59 @@ class ShowPlatformHardwareFedQosSchedulerSdkInterface(ShowPlatformHardwareFedQos
 
         return ret_dict
 
+# ==========================================================================
+# Schema for :
+#   * 'show platform software fed {switch} {mode} ipv6 route summary | include {match}'
+# ===========================================================================
+
+class ShowPlatformSoftwareFedIpv6RouteSummaryIncludeSchema(MetaParser):
+    """Schema for show platform software fed {switch} {mode} ipv6 route summary | include {match}"""
+    schema = {
+        'asic': {
+            Any(): {
+                'total_entries': int,
+            }
+        }
+    }
+# =====================================================================
+# Parser for:
+#   * 'show platform software fed {switch} {mode} ipv6 route summary | include {match}'
+# =====================================================================
+class ShowPlatformSoftwareFedIpv6RouteSummaryInclude(ShowPlatformSoftwareFedIpv6RouteSummaryIncludeSchema):
+    """Parser for show platform software fed {switch} {mode} ipv6 route summary | include {match}"""
+
+    cli_command = [
+        'show platform software fed {switch} {mode} ipv6 route summary | include {match}',
+        'show platform software fed {mode} ipv6 route summary | include {match}',
+    ]
+
+    def cli(self, mode, match, switch=None, output=None):
+        if output is None:
+            if switch:
+                cmd = self.cli_command[0].format(mode=mode, match=match, switch=switch)
+            else:
+                cmd = self.cli_command[1].format(mode=mode, match=match)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+
+        #Total number of v6 fib EM hw entries for device:0 = 2
+        p1 = re.compile(r'^Total number of v6 fib EM hw entries for device:(?P<asic>\d+) = (?P<total_entries>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            #Total number of v6 fib EM hw entries for device:0 = 2
+            m = p1.match(line)
+            if m:
+                asic = m.group('asic')
+                asic = int(asic)
+                total_entries = int(m.group('total_entries'))
+                asic_dict = ret_dict.setdefault('asic', {}).setdefault(asic, {})
+                asic_dict['total_entries'] = total_entries
+                continue
+
+        return ret_dict
 
 class ShowPlatformHardwareFedSwitchQosQueueConfigSchema(MetaParser):
     """
@@ -1367,7 +1421,7 @@ class ShowPlatformHardwareFedSwitchQosQueueConfig(
                     m.groupdict()["hbm_voq_thresholds"].replace(" ", "").split(",")
                 )
                 continue
-        
+
         return ret_dict
 
 
