@@ -3775,7 +3775,7 @@ class ShowInterfaceStatus(ShowInterfaceStatusSchema):
             # containing any number of blank spaces. This makes it very difficult to use a regular
             # expression to dynamically match the status column, so hard-coding offers a happy
             # middle ground.
-            r'(?P<status>connected|disabled|sfpAbsent|noOperMem|notconnec|xcvrAbsen|down|linkFlapE)\s+'
+            r'(?P<status>connected|disabled|sfpAbsent|noOperMem|notconnec|xcvrAbsen|down|linkFlapE|adminCfgC)\s+'
             r'(?P<vlan>\S+)\s+'
             r'(?P<duplex_code>\S+)\s+'
             r'(?P<port_speed>\S+)\s*'
