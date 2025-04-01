@@ -3,6 +3,7 @@ IOSXE parsers for the following show commands:
     * 'show ppp statistics'
     * 'show pppatm session'
     * 'show ppp all'
+    * 'show caller summary'
 """
 # Python
 import re
@@ -684,3 +685,95 @@ class ShowPppAll(ShowPppAllSchema):
                             
         return parsed_dict
 
+# =======================================================
+# Parser Schema for 'show caller summary'
+# =======================================================
+class ShowCallerSummarySchema(MetaParser):
+    schema = {
+        'analog_calls': int,
+        'isdn_calls': int,
+        'vpdn_calls': int,
+        'pppoa_calls': int,
+        'pppoe_calls': int,
+        'total_unique_users_logged_in': int,
+    }
+
+# =============================================
+# Parser for 'show caller summary'
+# =============================================
+class ShowCallerSummary(ShowCallerSummarySchema):
+    cli_command = 'show caller summary'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # 0   Analog calls (0 VPDN Calls)
+        p1 = re.compile(r'^(?P<analog_calls>\d+)\s+Analog calls.+$')
+
+        # 0   ISDN calls (0 VPDN Calls)
+        p2 = re.compile(r'^(?P<isdn_calls>\d+)\s+ISDN calls.+$')
+
+        # 0   VPDN calls
+        p3 = re.compile(r'^(?P<vpdn_calls>\d+)\s+VPDN calls$')
+
+        # 0   PPPoA calls
+        p4 = re.compile(r'^(?P<pppoa_calls>\d+)\s+PPPoA calls$')
+
+        # 0   PPPoE calls
+        p5 = re.compile(r'^(?P<pppoe_calls>\d+)\s+PPPoE calls$')
+
+        # 0   Total unique users logged in
+        p6 = re.compile(r'^(?P<total_users>\d+)\s+Total unique users logged in$')
+
+        # Iterate over each line in the output
+        for line in output.splitlines():
+            line = line.strip()
+
+            # 0   Analog calls (0 VPDN Calls)
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict['analog_calls'] = int(group['analog_calls'])
+                continue
+
+            # 0   ISDN calls (0 VPDN Calls)
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict['isdn_calls'] = int(group['isdn_calls'])
+                continue
+
+            # 0   VPDN calls
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict['vpdn_calls'] = int(group['vpdn_calls'])
+                continue
+
+            # 0   PPPoA  calls
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict['pppoa_calls'] = int(group['pppoa_calls'])
+                continue
+
+            # 0   PPPoE  calls
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict['pppoe_calls'] = int(group['pppoe_calls'])
+                continue
+
+            # 0   Total unique users logged in
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict['total_unique_users_logged_in'] = int(group['total_users'])
+                continue
+
+
+        return parsed_dict

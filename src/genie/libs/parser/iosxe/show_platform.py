@@ -390,9 +390,11 @@ class ShowVersion(ShowVersionSchema):
         # IOS (tm) Catalyst 4000 L3 Switch Software (cat4000-I9S-M), Version 12.2(18)EW5, RELEASE SOFTWARE (fc1)
         # IOS (tm) s72033_rp Software (s72033_rp-ADVENTERPRISEK9_WAN-M), Version 12.2(18)SXF7, RELEASE SOFTWARE (fc1)
         # IOS (tm) C2600 Software (C2600-I-M), Version 12.2(2)XA1, EARLY DEPLOYMENT RELEASE SOFTWARE (fc1)
+        # IOS (tm) 3000 Bootstrap Software (IGS-BOOT-R), Version 11.0(10c)XB1, PLATFORM SPECIFIC RELEASE SOFTWARE (fc1) 
+        # IOS (tm) 2500 Software (C2500-J-L), Version 11.2(5)P, SHARED PLATFORM, RELEASE SOFTWARE (fc1)
         p1_1 = re.compile(r'^(?P<os>[A-Z]+) +\(.*\) +(?P<platform>.+) +Software'
                           r' +\((?P<image_id>.+)\).+( +Experimental)? +[Vv]ersion'
-                          r' +(?P<version>\S+), +(EARLY DEPLOYMENT )?RELEASE SOFTWARE .*$')
+                          r' +(?P<version>\S+), +(EARLY DEPLOYMENT |PLATFORM SPECIFIC |SHARED PLATFORM, )?RELEASE SOFTWARE .*$')
 
         # 16.6.5
         p2 = re.compile(r'^(?P<ver_short>\d+\.\d+).*')
@@ -700,6 +702,8 @@ class ShowVersion(ShowVersionSchema):
             # IOS (tm) Catalyst 4000 L3 Switch Software (cat4000-I9S-M), Version 12.2(18)EW5, RELEASE SOFTWARE (fc1)
             # IOS (tm) s72033_rp Software (s72033_rp-ADVENTERPRISEK9_WAN-M), Version 12.2(18)SXF7, RELEASE SOFTWARE (fc1)
             # IOS (tm) C2600 Software (C2600-I-M), Version 12.2(2)XA1, EARLY DEPLOYMENT RELEASE SOFTWARE (fc1)
+            # IOS (tm) 3000 Bootstrap Software (IGS-BOOT-R), Version 11.0(10c)XB1, PLATFORM SPECIFIC RELEASE SOFTWARE (fc1) 
+            # IOS (tm) 2500 Software (C2500-J-L), Version 11.2(5)P, SHARED PLATFORM, RELEASE SOFTWARE (fc1)
             m = p1.match(line) or p1_1.match(line)
             if m:
                 version = m.groupdict()['version']

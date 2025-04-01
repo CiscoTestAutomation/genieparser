@@ -1,0 +1,21 @@
+Temp IP addr: 110.1.1.11  for peer on Interface: GigabitEthernet1/0/47
+Temp  sub net mask: 255.255.255.0
+   DHCP Lease server: 110.1.1.1, state: 5 Bound
+   DHCP transaction id: D7AA0C96
+   Lease: Infinite
+   No timer running
+   Retry count: 0   Client-ID: cisco-5c5a.c777.b7d5-Gi1/0/47
+   Client-ID hex dump: 636973636F2D356335612E633737372E
+                       623764352D4769312F302F3437
+   Hostname: cmt-cat9k-3
+Temp IP addr: 112.1.1.11  for peer on Interface: GigabitEthernet1/1/2
+Temp  sub net mask: 255.255.255.0
+   DHCP Lease server: 111.1.1.1, state: 5 Bound
+   DHCP transaction id: D7AA0C97
+   Lease: 95580 secs,  Renewal: 47790 secs,  Rebind: 83629 secs
+Temp default-gateway addr: 112.1.1.1
+   Next timer fires after: 12:01:35
+   Retry count: 0   Client-ID: cisco-5c5a.c777.b7c8-Gi1/1/2
+   Client-ID hex dump: 636973636F2D356335612E633737372E
+                       623763382D4769312F312F32
+   Hostname: cmt-cat9k-3

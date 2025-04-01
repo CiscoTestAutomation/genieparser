@@ -75,6 +75,9 @@ class ShowDhcpLease(ShowDhcpLeaseSchema):
         # Lease: 86400 secs,  Renewal: 43200 secs,  Rebind: 75600 secs
         p5 = re.compile(r'^\s*Lease: +(?P<lease>\d+) secs,\s+Renewal: +(?P<renewal>\d+) secs,\s+Rebind: +(?P<rebind>\d+) secs')
 
+        # Lease: Infinite
+        p5_1 = re.compile(r'^\s*Lease: +(?P<lease>Infinite)')
+
         # Temp default-gateway addr: 40.187.4.2
         p6 = re.compile(r'^\s*Temp default-gateway addr: +(?P<default_gw>\d+.\d+.\d+.\d+)')
 
@@ -138,6 +141,15 @@ class ShowDhcpLease(ShowDhcpLeaseSchema):
                     dhcp_dict[interface]['lease'] = groups['lease']
                     dhcp_dict[interface]['renewal'] = groups['renewal']
                     dhcp_dict[interface]['rebind'] = groups['rebind']
+                    continue
+
+                # Lease: Infinite
+                m = p5_1.match(line)
+                if m:
+                    groups = m.groupdict()
+                    dhcp_dict[interface]['lease'] = groups['lease']
+                    dhcp_dict[interface]['renewal'] = 'na'
+                    dhcp_dict[interface]['rebind'] = 'na'
                     continue
 
                 # Temp default-gateway addr: 40.187.4.2

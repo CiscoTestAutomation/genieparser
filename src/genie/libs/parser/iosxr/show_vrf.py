@@ -110,9 +110,13 @@ class ShowVrfAllDetail(ShowVrfAllDetailSchema):
                 continue
             #   GigabitEthernet0/0/0/0.390
             #   Bundle-Ether15.514
-            p4_1 = re.compile(r'^(?P<intf>([G|g]i.*|[B|b]un.*|'
-                              r'[T|t]en.*|[P|p]o.*|[V|v]lan.*|'
-                              r'[L|l]o.*))$')
+            #   MgmtEth0/RP0/CPU0/0
+            #   HundredGigE0/0/1/0.3801
+            p4_1 = re.compile(r'^(?P<intf>([Gg]i.*|[Bb]un.*|[Tt]en.*|[Pp]o.*|'
+                  r'[Vv]lan.*|[Ll]o.*|[Mm]gmtEth.*|[Hh]undredGigE.*|'
+                  r'[Ee]ightHundredGigE.*|[Ff]iftyGigE.*|[Ff]ortyGigE.*|'
+                  r'[Ff]ourHundredGigE.*|[Tt]wentyFiveGigE.*|'
+                  r'[Tt]woHundredGigE.*))$')
 
             m = p4_1.match(line)
             if m:

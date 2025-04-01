@@ -68,7 +68,7 @@ class ShowL2ProtocolTunnelSummary(ShowL2ProtocolTunnelSummarySchema):
         p6 = re.compile(r"^(?P<protocol>\S+)\s+(?P<action>\S+)\s+(?P<shutdown_threshold>[\d\-]+)\s+(?P<drop_threshold>[\d\-]+)$")
 
         ret_dict = {}
-
+        last_port = None  # Track the last port parsed
         for line in output.splitlines():
             line = line.strip()
 
@@ -77,39 +77,44 @@ class ShowL2ProtocolTunnelSummary(ShowL2ProtocolTunnelSummarySchema):
             if m:
                 dict_val = m.groupdict()
                 ret_dict["cos"] = dict_val["cos"]
+                continue
 
             # Drop Threshold for Encapsulated Packets: 0
             m = p2.match(line)
             if m:
                 dict_val = m.groupdict()
                 ret_dict["drop"] = dict_val["drop"]
+                continue
 
             # Tunnel: Rewrites the destination MAC address of L2 PDUs with Cisco proprietary multicast address
             m = p3.match(line)
             if m:
                 dict_val = m.groupdict()
                 ret_dict["tunnel"] = dict_val["tunnel"]
+                continue
 
             # Forward: Transport L2 PDUs to peer device
             m = p4.match(line)
             if m:
                 dict_val = m.groupdict()
                 ret_dict["forward"] = dict_val["forward"]
+                continue
 
             # Twe1/0/21           up          cdp         tunnel    40        30
             m = p5.match(line)
             if m:
                 dict_val = m.groupdict()
-                port_dict = ret_dict.setdefault("port", {}).setdefault(
-                    Common.convert_intf_name(dict_val["port"]), {}
-                )
+                last_port = Common.convert_intf_name(dict_val["port"])
+                port_dict = ret_dict.setdefault("port", {}).setdefault(last_port, {})
                 port_dict["status"] = dict_val["status"]
+
                 protocol_dict = port_dict.setdefault("protocol", {}).setdefault(
                     dict_val["protocol"], {}
                 )
                 protocol_dict["action"] = dict_val["action"]
                 protocol_dict["shutdown_threshold"] = dict_val["shutdown_threshold"]
                 protocol_dict["drop_threshold"] = dict_val["drop_threshold"]
+                continue
 
             # stp         tunnel    40        20
             m = p6.match(line)
@@ -121,5 +126,6 @@ class ShowL2ProtocolTunnelSummary(ShowL2ProtocolTunnelSummarySchema):
                 protocol_dict["action"] = dict_val["action"]
                 protocol_dict["shutdown_threshold"] = dict_val["shutdown_threshold"]
                 protocol_dict["drop_threshold"] = dict_val["drop_threshold"]
+                continue
 
         return ret_dict

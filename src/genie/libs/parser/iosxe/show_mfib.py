@@ -371,3 +371,106 @@ class ShowIpMfibCount(ShowIpMfibCountSchema):
                 continue
 
         return ret_dict
+
+# ======================================================
+# Parser for 'show ip mfib active'
+# ======================================================
+class ShowIpMfibActiveSchema(MetaParser):
+    """Schema for:
+        show ip mfib active
+        show ip mfib vrf <vrf> active
+    """
+    schema = {
+        'vrf': {
+            Any():{
+                'groups':{
+                    Any():{
+                        'source':str,
+                        'sw_rate_details':{
+                            'sw_rate_utilized':int,
+                            'utilised_speed_type':str,
+                            'max_sw_rate':int,
+                            'max_sw_speed_type':str,
+                            'duration':str,
+                        },
+                        'hw_rate_details':{
+                            'hw_rate_utilized':int,
+                            'utilised_speed_type':str,
+                            'max_hw_rate':int,
+                            'max_hw_speed_type':str,
+                        },
+                    },
+                },
+            },
+        }
+    }
+    
+class ShowIpMfibActive(ShowIpMfibActiveSchema):
+    """Parser for 
+    show ip mfib active
+    """
+
+    cli_command = 'show ip mfib active'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # initial return dictionary
+        result_dict = {}
+        
+        if not output.strip():
+            return result_dict
+        
+        ##Group: 228.1.1.1
+        p2=re.compile(r"^Group:\s+(\S+)$")
+        
+        ##Source: 161.1.1.2,
+        ##RP-tree,
+        p3=re.compile(r"(?:Source: +)?(\S+)\,$")
+        
+        ##SW Rate: 100 pps/0 kbps(1sec), 0 kbps(last 210 sec)
+        p4=re.compile(r"^SW Rate: +(?P<sw_rate_utilized>\d+) +(?P<utilised_speed_type>\S+)\/"
+                      r"(?P<max_sw_rate>\d+) +(?P<max_sw_speed_type>\S+)\(.*\(last +(?P<duration>.*)\)$")
+                      
+        ##HW Rate: 2000 pps/7750 kbps(1sec)
+        p5=re.compile(r"^HW Rate: +(?P<hw_rate_utilized>\d+) +(?P<utilised_speed_type>\S+)\/"
+                    r"(?P<max_hw_rate>\d+) +(?P<max_hw_speed_type>\S+)\(.*$")
+
+        main_dict=result_dict.setdefault("vrf",{}).setdefault('Default',{})
+        
+        for line in output.splitlines():
+            line = line.strip()
+            
+            ##Group: 228.1.1.1
+            m=p2.match(line)
+            if m:
+                group_dict=main_dict.setdefault('groups',{}).setdefault(m.groups()[0],{})
+                continue
+                
+            ##Source: 161.1.1.2,
+            m=p3.match(line)
+            if m:
+                group_dict['source']=m.groups()[0]
+                continue
+                
+            ##SW Rate: 100 pps/0 kbps(1sec), 0 kbps(last 210 sec)
+            m=p4.match(line)
+            if m:
+                r=m.groupdict()
+                sw_details=group_dict.setdefault("sw_rate_details",{})
+                for key,value in r.items():
+                    sw_details[key]=int(value) if value.isdigit() else value.strip()
+                continue
+                
+            ##HW Rate: 2000 pps/7750 kbps(1sec)
+            m=p5.match(line)
+            if m:
+                r=m.groupdict()
+                hw_details=group_dict.setdefault("hw_rate_details",{})
+                for key,value in r.items():
+                    hw_details[key]=int(value) if value.isdigit() else value.strip()
+                continue
+                
+        return result_dict
+ 

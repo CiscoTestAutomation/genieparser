@@ -1,0 +1,29 @@
+show bgp instance all vrf  UIE-INET-EDGE ipv4 unicast neighbors 10.156.17.25 received routes
+Wed Feb 26 10:33:41.458 EST
+
+BGP instance 0: 'default'
+=========================
+BGP VRF UIE-INET-EDGE, state: Active
+BGP Route Distinguisher: 911:16003
+VRF ID: 0x6000000f
+BGP router identifier 10.156.16.3, local AS number 65125
+Non-stop routing is enabled
+BGP table state: Active
+Table ID: 0xe000000f   RD version: 773537207
+BGP main routing table version 776727501
+BGP NSR Initial initsync version 166546 (Reached)
+BGP NSR/ISSU Sync-Group versions 776727501/0
+
+Status codes: s suppressed, d damped, h history, * valid, > best
+              i - internal, r RIB-failure, S stale, N Nexthop-discard
+Origin codes: i - IGP, e - EGP, ? - incomplete
+   Network            Next Hop            Metric LocPrf Weight Path
+Route Distinguisher: 911:16003 (default for vrf UIE-INET-EDGE)
+Route Distinguisher Version: 773537207
+*  0.0.0.0/0          10.156.17.25                           0 65004.19113 7018 i
+*  10.200.160.104/29  10.156.17.25             0             0 65004.19113 ?
+*  10.200.160.112/29  10.156.17.25                           0 65004.19113 65164 65247 65338 ?
+*  159.110.14.150/31  10.156.17.25                           0 65004.19113 65164 65247 65247.1402 i
+*  159.110.14.176/31  10.156.17.25                           0 65004.19113 65164 65247 ?
+*  159.110.14.178/31  10.156.17.25                           0 65004.19113 65164 65247 ?
+Processed 185 prefixes, 185 paths

@@ -6,7 +6,7 @@ expected_output = {
             'flood_md': 'OFF',
             'flood_port': ['HundredGigE2/0/12', 'Port-channel10'],
             'iosd_md': 'OFF',
-            'mroute_port': [],
+            'mroute_port': ['Port-channel10'],
             'pim_en': 'ON',
             'protocol': 'ipv4',
             'secondary_vlan': 'NO',

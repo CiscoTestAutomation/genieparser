@@ -1,0 +1,11 @@
+LISP IPv4 Mapping Cache for LISP 0 EID-table vrf internet (IID 111), 4 entries
+
+172.168.0.0/16, uptime: 00:03:39, expires: never, via pub-sub-send-map-req, send-map-request, remote-to-site
+  Negative cache entry, action: send-map-request
+173.168.0.0/16, uptime: 00:03:39, expires: never, via pub-sub-send-map-req, send-map-request, remote-to-site
+  Negative cache entry, action: send-map-request
+192.168.0.0/16, uptime: 00:03:39, expires: never, via pub-sub-send-map-req, send-map-request, local-to-site
+  Negative cache entry, action: send-map-request
+193.168.0.0/16, uptime: 00:03:26, expires: never, via pub-sub, self, complete, local-to-site
+  Locator      Uptime    State     Pri/Wgt     Encap-IID
+  16.16.16.16  00:03:26  up, self  250/50        -

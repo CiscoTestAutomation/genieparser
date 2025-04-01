@@ -1,0 +1,5 @@
+Device#show ip eigrp neighbors Te0/0/4
+EIGRP-IPv4 Neighbors for AS(100)
+H   Address                 Interface              Hold Uptime   SRTT   RTO  Q  Seq
+                                                   (sec)         (ms)       Cnt Num
+0   61.1.1.1                Te0/0/4                  13 00:00:40    1966   100  0  1882480

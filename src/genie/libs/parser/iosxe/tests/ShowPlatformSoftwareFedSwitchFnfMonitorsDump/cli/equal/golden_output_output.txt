@@ -1,0 +1,21 @@
+Monitor (0x71e214026f78):
+    profile_id(0xb277d7d7) ref_ct(0) monitor_type(4, FNF/FNF based feature)
+    wdavc_monitor_create_requested(False)
+    wdavc_remote_monitoring_remote_caching(0)
+    flags(0x0000) is_wireless(No) wireless_flags(0)
+    assurance_mon(No) mon_field_cnt(9)     is_etta_over_fnf No ettaOrBaseProfile(00000000)
+    etta_refcnt(0) swc_flag No
+    Active timeout (300) Inactive timeout (300)
+field(93) size(4) param(0) flags(1) offset(0)
+field(94) size(4) param(0) flags(1) offset(4)
+field(139) size(4) param(0) flags(1) offset(8)
+field(177) size(8) param(0) flags(0) offset(12)
+field(181) size(8) param(0) flags(0) offset(20)
+field(197) size(8) param(0) flags(0) offset(28)
+field(198) size(8) param(0) flags(0) offset(36)
+field(43) size(1) param(0) flags(1) offset(44)
+field(47) size(1) param(0) flags(1) offset(45)
+Monitor (0x71e21846e408):
+    profile_id(0x4000000000000003) ref_ct(0) monitor_type(20, SGT-Cache)
+    wdavc_monitor_create_requested(False)
+    wdavc_remote_monitoring_remote_caching(0)

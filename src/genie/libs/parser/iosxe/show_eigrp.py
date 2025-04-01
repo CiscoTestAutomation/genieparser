@@ -2,6 +2,7 @@
 IOSXE parsers for the following commands
 
     * 'show ip eigrp neighbors'
+    * 'show ip eigrp neighbors <interface>'
     * 'show ip eigrp vrf <vrf> neighbors'
     * 'show ipv6 eigrp neighbors'
     * 'show ipv6 eigrp vrf <vrf> neighbors'
@@ -12,7 +13,9 @@ IOSXE parsers for the following commands
     * 'show ipv6 eigrp interfaces'
     * 'show ipv6 eigrp interfaces detail'
     * 'show ip eigrp interfaces detail'
+    * 'show ip eigrp interfaces detail <interface>'
     * 'show ipv6 eigrp topology {ipv6_address}'
+    * 'show ip eigrp timers'
 '''
 
 # Python
@@ -20,7 +23,7 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any, Optional
+from genie.metaparser.util.schemaengine import Any, Optional, ListOf
 
 # Libs
 from genie.libs.parser.utils.common import Common
@@ -29,6 +32,7 @@ from genie.libs.parser.utils.common import Common
 class ShowEigrpNeighborsSchema(MetaParser):
     ''' Schema for:
         * 'show ip eigrp neighbors'
+        * 'show ip eigrp neighbors <interface>'
         * 'show ip eigrp vrf <vrf> neighbors'
         * 'show ipv6 eigrp neighbors'
         * 'show ipv6 eigrp vrf <vrf> neighbors'
@@ -65,8 +69,31 @@ class ShowEigrpNeighborsSchema(MetaParser):
             }
 
 
+class ShowIpEigrpTimersSchema(MetaParser):
+    """Schema for show ip eigrp timers"""
+    schema = {
+        'eigrp_instance': {
+            Any(): {
+                'hello_process': {
+                    'expiration': ListOf(str),
+                    'type': ListOf(str),
+                },
+                'update_process': {
+                    'expiration': ListOf(str),
+                    'type': ListOf(str),
+                },
+                'sia_process': {
+                    'expiration': ListOf(str),
+                    'type': ListOf(str),
+                }
+            }
+        }
+    }
+    
+
 # ====================================
 # Parser for 'show ip eigrp neighbors'
+#            'show ip eigrp neighbors <interface>'
 #            'show ip eigrp vrf <vrf> neighbors'
 #            'show ipv6 eigrp neighbors'
 #            'show ipv6 eigrp vrf <vrf> neighbors'
@@ -278,17 +305,21 @@ class ShowEigrpNeighborsSuperParser(ShowEigrpNeighborsSchema):
 # Parser for:
 #   * 'show ip eigrp vrf {vrf} neighbors'
 #   * 'show ip eigrp neighbors'
+#   * 'show ip eigrp neighbors <interface>'
 # ===============================================
 class ShowIpEigrpNeighbors(ShowEigrpNeighborsSuperParser, ShowEigrpNeighborsSchema):
 
     cli_command = ['show ip eigrp vrf {vrf} neighbors',
-                   'show ip eigrp neighbors',]
+                   'show ip eigrp neighbors',
+                   'show ip eigrp neighbors {interface}',]
     exclude = ['uptime' , 'hold']
 
-    def cli(self, vrf='', output=None):
+    def cli(self, vrf='', interface='', output=None):
         if output is None:
             if vrf:
                 cmd = self.cli_command[0].format(vrf=vrf)
+            elif interface:
+                cmd = self.cli_command[2].format(interface=interface)
             else:
                 cmd = self.cli_command[1]
             show_output = self.device.execute(cmd)
@@ -761,7 +792,7 @@ class ShowEigrpInterfacesSchema(MetaParser):
 class ShowEigrpInterfacesSuperParser(ShowEigrpInterfacesSchema):
 
     # Defines a function to run the cli_command
-    def cli(self, vrf='', output=None):
+    def cli(self, vrf='', interface='',output=None):
         out = output
 
         # Initializes the Python dictionary variable
@@ -1201,14 +1232,23 @@ class ShowIpv6EigrpInterfaces(ShowEigrpInterfacesSuperParser, ShowEigrpInterface
 
 class ShowIpEigrpInterfacesDetail(ShowEigrpInterfacesSuperParser, ShowEigrpInterfacesSchema):
 
-    ''' Parser for "show ip eigrp interfaces detail"'''
+    ''' 
+    Parser for:
+        "show ip eigrp interfaces detail"
+        "show ip eigrp interfaces detail {interface}"
+    '''
 
-    cli_command = 'show ip eigrp interfaces detail'
+    cli_command = ['show ip eigrp interfaces detail',
+                   'show ip eigrp interfaces detail {interface}']
 
     # Defines a function to run the cli_command
-    def cli(self, output=None):
+    def cli(self, interface='', output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if interface:
+                cmd = self.cli_command[1].format(interface=interface)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
         else:
             out = output
 
@@ -1582,3 +1622,61 @@ class ShowIpv6EigrpTopologyEntry(ShowIpv6EigrpTopologyEntrySchema):
                     groupdict['originating_router']
 
         return ret_dict
+
+
+class ShowIpEigrpTimers(ShowIpEigrpTimersSchema):
+    """Parser for show ip eigrp timers"""
+
+    cli_command = 'show ip eigrp timers'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize parsed data structure
+        parsed_dict = {}
+
+        # EIGRP-IPv4 Timers for AS(100)
+        p1 = re.compile(r'^EIGRP-IPv4 Timers for AS\((?P<as_number>\d+)\)$')
+        
+        # Hello Process
+        p2 = re.compile(r'^(?P<process_type>.+) Process$')
+        
+        # |           1.724  Hello (Te0/0/6.20)
+        p3 = re.compile(r'^\|\s+(?P<expiration>\d+\.\d+)\s+(?P<type>.+)$')
+
+        current_process = None
+        as_number = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # EIGRP-IPv4 Timers for AS(100)
+            m = p1.match(line)
+            if m:
+                as_number = m.group('as_number')
+                if as_number not in parsed_dict:
+                    parsed_dict['eigrp_instance'] = {}
+                    parsed_dict['eigrp_instance'][as_number] = {
+                        'hello_process': {'expiration': [], 'type': []},
+                        'update_process': {'expiration': [], 'type': []},
+                        'sia_process': {'expiration': [], 'type': []}
+                    }
+                continue
+
+            # Hello Process
+            m = p2.match(line)
+            if m:
+                current_process = m.group('process_type').lower().replace(' ', '_')
+                current_process = current_process + '_process'
+                continue
+
+            # |           1.724  Hello (Te0/0/6.20)
+            m = p3.match(line)
+            if m and current_process:
+                expiration = m.group('expiration')
+                type_ = m.group('type')
+                parsed_dict['eigrp_instance'][as_number][current_process]['expiration'].append(expiration)
+                parsed_dict['eigrp_instance'][as_number][current_process]['type'].append(type_)
+
+        return parsed_dict

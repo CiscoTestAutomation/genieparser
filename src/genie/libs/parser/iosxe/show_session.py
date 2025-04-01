@@ -148,7 +148,7 @@ class ShowUsersSchema(MetaParser):
                 Optional('user'): str,
                 'host': str,
                 Optional('idle'): str,
-                Optional('location'): str, 
+                Optional('location'): str,
             },
         },
         Optional('interface'): {
@@ -194,8 +194,9 @@ class ShowUsers(ShowUsersSchema):
         #    0 con 0                idle
         # *   2 vty 0         user1           idle            0   SERVICE1.CISCO.COM
         # *868 vty 0/1/0 lab        idle                 00:00:00 10.61.105.18
-        p1 = re.compile(r'^(?:(?P<active>\*))?( +)?(?P<line>(\d+)(?:\s*\S+ (\d+(?:/\d+)*))?)(?: {1,9}(?P<user>\S+))? '
-                        r'+(?P<host>\S+)( +)?(?P<idle>\S+)?(?: +(?P<location>\S+))?')
+        # * vty 322                 idle                 00:00:00 10.24.69.196
+        p1 = re.compile(r'^(?:(?P<active>\*))?( +)?(?P<line>(\d+)?(?:\s*\S+ (\d+(?:/\d+)*))?)(?: {1,9}(?P<user>\S+))? '
+                        r'+(?P<host>\S+)( +)?(?P<idle>\S+)?(?: +(?P<location>\S+))?$')
         # counting spaces from 1-9, check if class errors in future releases
 
         #                                                    			 foo-bar.cisco.com

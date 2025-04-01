@@ -1,0 +1,16 @@
+show ip eigrp timers
+EIGRP-IPv4 Timers for AS(100)
+  Hello Process
+    Expiration    Type
+|           2.985  (parent)
+  |           2.985  Hello (Te0/0/4)
+
+  Update Process
+    Expiration    Type
+|          13.190  (parent)
+  |          13.190  (parent)
+    |          13.190  Peer holding
+
+  SIA Process
+    Expiration    Type
+|           0.000  (parent)

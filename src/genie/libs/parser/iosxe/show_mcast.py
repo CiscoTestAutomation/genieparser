@@ -63,19 +63,19 @@ class ShowIpMrouteSchema(MetaParser):
         show ipv6 mroute vrf {vrf} {group} verbose
         show ipv6 mroute vrf {vrf} {group} {source} verbose"""
 
-    schema = {'vrf':         
+    schema = {'vrf':
                 {Any():
                     {'address_family':
-                        {Any(): 
-                            {Optional('multicast_group'): 
-                                {Any(): 
-                                    {Optional('source_address'): 
-                                        {Any(): 
+                        {Any():
+                            {Optional('multicast_group'):
+                                {Any():
+                                    {Optional('source_address'):
+                                        {Any():
                                             {Optional('uptime'): str,
                                              Optional('expire'): str,
                                              Optional('flags'): str,
                                              Optional('rp_bit'): bool,
-                                             Optional('msdp_learned'): bool,                                             
+                                             Optional('msdp_learned'): bool,
                                              Optional('rp'): str,
                                              Optional('rpf_nbr'): str,
                                              Optional('rpf_info'): str,
@@ -86,17 +86,18 @@ class ShowIpMrouteSchema(MetaParser):
                                                     }
                                                 },
                                              Optional('incoming_interface_list'):
-                                                {Any(): 
+                                                {Any():
                                                     {Optional('rpf_nbr'): str,
                                                      Optional('rpf_info'): str,
                                                      Optional('state'): str,
                                                      Optional('iif_lisp_rloc'): str,
                                                      Optional('iif_lisp_group'): str,
                                                      Optional('lisp_vrf'): str,
+                                                     Optional('iif_mdt_ip'): str,
                                                     },
                                                 },
-                                             Optional('outgoing_interface_list'): 
-                                                {Any(): 
+                                             Optional('outgoing_interface_list'):
+                                                {Any():
                                                     {'uptime': str,
                                                      'expire': str,
                                                      'state_mode': str,
@@ -169,12 +170,12 @@ class ShowIpMroute(ShowIpMrouteSchema):
 
     def cli(self, vrf='', verbose='', group='', source='', address_family='ipv4', output=None):
         cmd="show ip mroute"
-        
+
         if output is None:
             if vrf:
                 cmd += " vrf {vrf}".format(vrf=vrf)
             else:
-                vrf='default'    
+                vrf='default'
             if group:
                 cmd += " {group}".format(group=group)
             if source:
@@ -203,30 +204,33 @@ class ShowIpMroute(ShowIpMrouteSchema):
                             r' +(?P<uptime>[\w\:\.]+)\/'
                             r'(?P<expires>[\w\:\.\-]+),'
                             r'( +RP +(?P<rendezvous_point>[\w\:\.]+),)?'
-                            r' +flags: *(?P<flags>[a-zA-Z]*)$')  
-                            
+                            r' +flags: *(?P<flags>[a-zA-Z]*)$')
+
         # Incoming interface: Null, RPF nbr 224.0.0.0224.0.0.0
         # Incoming interface: Loopback0, RPF nbr 0.0.0.0, Registering
         # Incoming interface: Lspvif10, RPF nbr 3.3.3.3, MDT [10, 3.3.3.3]/00:02:11
         # Incoming interface: LISP0.4100, RPF nbr 100.22.22.22, LISP: [100.22.22.22, 232.100.100.234]
         # Incoming interface: LISP0.4100, RPF nbr 100.88.88.88, using vrf VRF1
+        # Incoming interface: Tunnel3 MDT: 239.192.20.33/00:02:34
         p3 = re.compile(r'^Incoming +interface:'
                        r' +(?P<incoming_interface>[a-zA-Z0-9\/\-\.]+),'
                        r' +RPF +nbr +(?P<rpf_nbr>[\w\:\.]+)'
+                       r'(?:,? +MDT: *(?P<iif_mdt_ip>\d+\.\d+\.\d+\.\d+))?'
+                       r'(?:\/[\d\:]+)?'  # Optional /00:02:02 part
                        r'(\s*,\s+LISP:\s\[(?P<iif_lisp_rloc>[\d\.]+)\,\s(?P<iif_lisp_group>[\d\.]+)\])?'
                        r'(\s*,\s+using\s+vrf\s+(?P<lisp_vrf>[a-zA-Z0-9]+)\s*)?'
-                       r'(, *(?P<status>.*))?$') 
-                       
+                       r'(, *(?P<status>.*))?$')
+
         # Incoming interface:Tunnel5
         p3_1 = re.compile(r'^Incoming +interface:'
-                         r' *(?P<incoming_interface>[a-zA-Z0-9\/\-\.]+)$')  
+                         r' *(?P<incoming_interface>[a-zA-Z0-9\/\-\.]+)$')
         # RPF nbr:2001:db8:90:24::6
         p3_2 = re.compile(r'^RPF +nbr: *(?P<rpf_nbr>[\w\:\.]+)$')
         # Outgoing interface list: Null
         # Outgoing interface list:
         p4 =  re.compile(r'^Outgoing +interface +list:|^Immediate +Outgoing +interface +list:'
                          r'|^Inherited +Outgoing +interface +list:'
-                         r'( *(?P<intf>\w+))?$')       
+                         r'( *(?P<intf>\w+))?$')
         # Vlan5, Forward/Dense, 00:03:25/00:00:00, H
         # Vlan5, Forward/Dense, 00:04:35/00:02:30
         # ATM0/0, VCD 14, Forward/Sparse, 00:03:57/00:02:53
@@ -235,7 +239,7 @@ class ShowIpMroute(ShowIpMrouteSchema):
         # LISP0.101, NH 100:44:44::44, Forward, 04:54:20/00:03:09
         # Vlan500, VXLAN v4 Encap: (50000, 225.2.2.2), Forward/Sparse, 00:00:54/00:02:05
         # Vlan500, VXLAN v6 Encap: (50000, FF13::1), Forward/Sparse, 00:17:31/stopped, flags:
-        p5 = re.compile(r'^(?P<outgoing_interface>[a-zA-Z0-9\/\.\-]+)(\,\s+)?'
+        p5 = re.compile(r'^(?P<outgoing_interface>[a-zA-Z0-9\/\.\-\s]+)(\,\s+)?'
                             r'(VCD +(?P<vcd>\d+))?(\,\s+)?'
                             r'(NH)?(\s+)?(\(?(?P<lisp_mcast_source>[0-9\.:]+)(\,\s+)?(?P<lisp_mcast_group>[0-9\.]+)?\)?)?(\,\s+)?'
                             r'(VXLAN +(?P<vxlan_version>[a-z0-9]+)(\s+)?(Encap:)?(\s+)?(\(?(?P<vxlan_vni>[0-9]+)(\,\s+)?(?P<vxlan_nxthop>[\w\:\.]+)?\)?)?)?(\,\s+)?'
@@ -272,13 +276,13 @@ class ShowIpMroute(ShowIpMrouteSchema):
                     if address_family.strip().lower() == 'ip':
                         address_family = 'ipv4'
                 else:
-                    address_family = 'ipv6'                   
-                continue    
+                    address_family = 'ipv6'
+                continue
 
 
-            mroute_dict.setdefault('vrf',{})     
+            mroute_dict.setdefault('vrf',{})
             mroute_data = mroute_dict['vrf'].setdefault(vrf,{}).setdefault('address_family',{}).setdefault(address_family,{})
-    
+
 
             # if IP Multicast Routing Table not in output
             if 'vrf' not in mroute_dict:
@@ -287,7 +291,7 @@ class ShowIpMroute(ShowIpMrouteSchema):
                 mroute_dict['vrf'][vrf]['address_family'] = {}
                 address_family="ipv4"
                 mroute_dict['vrf'][vrf]['address_family'][address_family] = {}
-                
+
             # (*, 239.1.1.1), 00:00:03/stopped, RP 10.4.1.1, flags: SPF
             # (10.4.1.1, 239.1.1.1), 00:00:03/00:02:57, flags: PFT
             # (*, FF07::1), 00:04:45/00:02:47, RP 2001:DB8:6::6, flags:S
@@ -319,7 +323,7 @@ class ShowIpMroute(ShowIpMrouteSchema):
                 else:
                     sub_dict['rp_bit'] = False
 
-                
+
                 rendezvous_point = m.groupdict()['rendezvous_point']
                 if rendezvous_point:
                     sub_dict['rp'] = rendezvous_point
@@ -336,7 +340,7 @@ class ShowIpMroute(ShowIpMrouteSchema):
                 incoming_interface = m.groupdict()['incoming_interface']
                 rpf_nbr = m.groupdict()['rpf_nbr']
                 rpf_info = m.groupdict()['status']
-                
+
                 sub_dict['rpf_nbr'] = rpf_nbr
                 if rpf_info:
                     sub_dict['rpf_info'] = rpf_info.lower()
@@ -357,6 +361,8 @@ class ShowIpMroute(ShowIpMrouteSchema):
                     sub_dict['incoming_interface_list'][incoming_interface]['iif_lisp_group'] = m.groupdict()['iif_lisp_group']
                 if m.groupdict()['lisp_vrf']:
                     sub_dict['incoming_interface_list'][incoming_interface]['lisp_vrf'] = m.groupdict()['lisp_vrf']
+                if m.groupdict()['iif_mdt_ip']:
+                    sub_dict['incoming_interface_list'][incoming_interface]['iif_mdt_ip'] = m.groupdict()['iif_mdt_ip']
                 continue
 
             # Incoming interface:Tunnel5
@@ -370,7 +376,7 @@ class ShowIpMroute(ShowIpMrouteSchema):
                 ing_intf_dict = sub_dict.setdefault('incoming_interface_list',{}).setdefault(incoming_interface,{})
 
                 continue
-                
+
             # ##Incoming interface list:
             p3_4 = re.compile(r'^(?P<incoming_interface>\S+)\, +(?P<state>[\w\/-]+)$')
             m = p3_4.match(line)
@@ -382,7 +388,7 @@ class ShowIpMroute(ShowIpMrouteSchema):
                 sub_dict['incoming_interface_list'][incmg_intf]={}
                 sub_dict['incoming_interface_list'][incmg_intf]['state']=res['state']
                 continue
-                
+
             # RPF nbr:2001:db8:90:24::6
             m = p3_2.match(line)
             if m:
@@ -457,9 +463,9 @@ class ShowIpMroute(ShowIpMrouteSchema):
                     if m.groupdict()['vxlan_vni']:
                         sub_dict['outgoing_interface_list'][outgoing_interface]['vxlan_vni'] = m.groupdict()['vxlan_vni']
                     if m.groupdict()['vxlan_nxthop']:
-                        sub_dict['outgoing_interface_list'][outgoing_interface]['vxlan_nxthop'] = m.groupdict()['vxlan_nxthop']   
+                        sub_dict['outgoing_interface_list'][outgoing_interface]['vxlan_nxthop'] = m.groupdict()['vxlan_nxthop']
                 continue
-                
+
             # Bidir-Upstream: Lspvif52, RPF nbr: 1.1.1.1
             p6 = re.compile(r'^Bidir-Upstream: +(?P<upstream_interface>[a-zA-Z0-9\/\-\.]+), '
                             r'+RPF +nbr\:? +(?P<rpf_nbr>[\w\:\.]+)(, *(?P<status>\w+))?$')
@@ -537,7 +543,7 @@ class ShowIpv6Mroute(ShowIpMroute):
             if vrf:
                 cmd += " vrf {vrf}".format(vrf=vrf)
             else:
-                vrf='default'    
+                vrf='default'
             if group:
                 cmd += " {group}".format(group=group)
             if source:
@@ -561,7 +567,7 @@ class ShowIpMrouteStaticSchema(MetaParser):
         show ip mroute static
         show ip mroute vrf <vrf> static
     """
-    schema = {'vrf': 
+    schema = {'vrf':
                 {Any():
                     {'mroute':
                         {Any():
@@ -604,7 +610,7 @@ class ShowIpMrouteStatic(ShowIpMrouteStaticSchema):
             p1 = re.compile(r'^Mroute: +(?P<mroute>[\w\:\.\/]+),'
                              r' RPF +neighbor: +(?P<rpf_nbr>[\w\.\:]+),'
                              r' distance: +(?P<distance>\d+)$')
-                              
+
             m = p1.match(line)
             if m:
                 mroute = m.groupdict()['mroute']
@@ -627,7 +633,7 @@ class ShowIpMrouteStatic(ShowIpMrouteStaticSchema):
                     ret_dict['vrf'][vrf]['mroute'] = {}
                 if mroute not in ret_dict['vrf'][vrf]['mroute']:
                     ret_dict['vrf'][vrf]['mroute'][mroute] = {}
-                    
+
                 if 'path' not in ret_dict['vrf'][vrf]['mroute'][mroute]:
                     ret_dict['vrf'][vrf]['mroute'][mroute]['path'] = {}
                 if path not in ret_dict['vrf'][vrf]['mroute'][mroute]['path']:
@@ -903,7 +909,7 @@ class ShowIpMrouteCount(ShowIpMrouteCountSchema):
 #=================================================
 
 class ShowConsistencyCheckerMcastStartAllSchema(MetaParser):
-    """Schema for 
+    """Schema for
         * 'show consistency-checker mcast {layer} start all'
         * 'show consistency-checker mcast {layer} start {address} {source}',
         * 'show consistency-checker mcast {layer} start {address}',
@@ -920,7 +926,7 @@ class ShowConsistencyCheckerMcastStartAllSchema(MetaParser):
 #=================================================
 
 class ShowConsistencyCheckerMcastStartAll(ShowConsistencyCheckerMcastStartAllSchema):
-    """Parser for 
+    """Parser for
         * 'show consistency-checker mcast {layer} start all',
         * 'show consistency-checker mcast {layer} start {address} {source}',
         * 'show consistency-checker mcast {layer} start {address}',
@@ -966,7 +972,7 @@ class ShowConsistencyCheckerMcastStartAll(ShowConsistencyCheckerMcastStartAllSch
                 ret_dict['layer'] = m.groupdict()['layer']
                 ret_dict['run_id'] = int(m.groupdict()['run_id'])
                 continue
-            
+
             # Single entry scan started with Run_id: 2255
             m = p2.match(line)
             if m:
@@ -979,7 +985,7 @@ class ShowConsistencyCheckerMcastStartAll(ShowConsistencyCheckerMcastStartAllSch
 # Schema for 'show consistency-checker run-id detail'
 #=================================================
 class ShowConsistencyCheckerRunIdDetailSchema(MetaParser):
-    """Schema for 
+    """Schema for
         * 'show consistency-checker run-id {id} detail'
     """
     schema = {
@@ -1003,12 +1009,12 @@ class ShowConsistencyCheckerRunIdDetailSchema(MetaParser):
 # Parser for 'show consistency-checker run-id detail'
 #=================================================
 class ShowConsistencyCheckerRunIdDetail(ShowConsistencyCheckerRunIdDetailSchema):
-    """  Parser for 
+    """  Parser for
         * 'show consistency-checker run-id {id} detail'
     """
 
     cli_command = 'show consistency-checker run-id {id} detail'
-    
+
     def cli(self, id, output=None):
         if output is None:
             output = self.device.execute(self.cli_command.format(id=id))
@@ -1018,7 +1024,7 @@ class ShowConsistencyCheckerRunIdDetail(ShowConsistencyCheckerRunIdDetailSchema)
         # Switch: 1 Process: FMAN-FP
         # Switch: 1 Process: FED
         p2 = re.compile(r'^Switch:\s+(?P<switch>[\d]+)+\s+Process:\s+(?P<process_type>[\w\s\-]+)$')
-        
+
         ret_dict = {}
         for line in output.splitlines():
             line = line.strip()
@@ -1032,7 +1038,7 @@ class ShowConsistencyCheckerRunIdDetail(ShowConsistencyCheckerRunIdDetailSchema)
             # Switch: 1 Process: FMAN-FP
             # Switch: 1 Process: FED
             m = p2.match(line)
-            if m: 
+            if m:
                 key_chain_dict = ret_dict.setdefault('switch', {}).setdefault(m.groupdict()['switch'], {})
                 key_dict = key_chain_dict.setdefault('process', {}).setdefault(m.groupdict()['process_type'], {})
                 key_dict['process_type'] = m.groupdict()['process_type']
@@ -1088,7 +1094,7 @@ class ShowConsistencyCheckerRunIdSchema(MetaParser):
                 },
             },
         }
-        
+
 #==================================================
 # Parser for 'show consistency-checker run-id'
 #==================================================
@@ -1109,7 +1115,7 @@ class ShowConsistencyCheckerRunId(ShowConsistencyCheckerRunIdSchema):
         #  l2m_group     2023/04/28 03:51:03          0         0       F GD Hw HS
         p2 = re.compile(r'^(?P<object_type>[\w\s\_]+)\s+(?P<starttime>(\d+\/){2}\d+.\d+:\d+:\d+)\s+(?P<entries>[\d]+)\s+(?P<exceptions>[\d]+)\s+\b(?P<fulltable>F)?\b\s+\b(?P<garbagedetector>GD)?\b\s+\b(?P<hwcheck>Hw)?\b\s+\b(?P<hwshadow>HS)?\b$')
 
-        # Object-Type       Start-time                State           A/  I/  M/  S/Oth 
+        # Object-Type       Start-time                State           A/  I/  M/  S/Oth
         #  l2m_vlan       2023/04/28 03:51:03      Consistent        0/  0/  0/  0/  0
         #  l2m_group      2023/04/28 03:51:03       Consistent        0/  0/  0/  0/  0
         p3 = re.compile(r'^(?P<object_type>[\w\s\-]+)\s+(?P<starttime>(\d+\/){2}\d+.\d+:\d+:\d+)\s+(?P<state>[\w]+)\s+(?P<actual>[\d]+)/\s+(?P<inherited>[\d]+)/\s+(?P<missing>[\d]+)/\s+(?P<stale>[\d]+)/\s+(?P<others>[\d]+)$')
@@ -1125,7 +1131,7 @@ class ShowConsistencyCheckerRunId(ShowConsistencyCheckerRunIdSchema):
 
         # l3m_entry      2023/11/03 12:37:18        1012         0    F Hw HS
         p6 = re.compile(r'^(?P<object_type>[\w\s\_]+)\s+(?P<starttime>(\d+\/){2}\d+.\d+:\d+:\d+)\s+(?P<entries>[\d]+)\s+(?P<exceptions>[\d]+)\s+\b(?P<fulltable>F+)?\b\s+\b(?P<hwcheck>Hw)?\b\s+\b(?P<hwshadow>HS)?\b$')
-        
+
         ret_dict = {}
 
         for line in output.splitlines():
@@ -1154,9 +1160,9 @@ class ShowConsistencyCheckerRunId(ShowConsistencyCheckerRunIdSchema):
                 object_dict['hwshadow']=m.groupdict()['hwshadow']
                 continue
 
-            # Object-Type       Start-time                State           A/  I/  M/  S/Oth 
+            # Object-Type       Start-time                State           A/  I/  M/  S/Oth
             #  l2m_vlan        2023/04/28 03:51:03      Consistent        0/  0/  0/  0/  0
-            #  l2m_group      2023/04/28 03:51:03       Consistent        0/  0/  0/  0/  0 
+            #  l2m_group      2023/04/28 03:51:03       Consistent        0/  0/  0/  0/  0
             m=p3.match(line)
             if m:
                 object_type=m.groupdict()['object_type'].strip()
@@ -1168,8 +1174,8 @@ class ShowConsistencyCheckerRunId(ShowConsistencyCheckerRunIdSchema):
                 object_dict['missing']=int(m.groupdict()['missing'])
                 object_dict['stale']=int(m.groupdict()['stale'])
                 object_dict['others']=int(m.groupdict()['others'])
-                continue 
-            
+                continue
+
             # Switch: 1 Process: FMAN-FP
             # Switch: 1 Process: FED
             m = p4.match(line)
@@ -1211,7 +1217,7 @@ class ShowConsistencyCheckerRunId(ShowConsistencyCheckerRunIdSchema):
                     object_dict['others']=int(m.groupdict()['others'])
                     object_dict['hardware']=int(m.groupdict()['hardware'])
                     continue
-            
+
             m=p6.match(line)
             if m:
                 object_type=m.groupdict()['object_type'].strip()
@@ -1223,6 +1229,5 @@ class ShowConsistencyCheckerRunId(ShowConsistencyCheckerRunIdSchema):
                 object_dict['hwcheck']=m.groupdict()['hwcheck']
                 object_dict['hwshadow']=m.groupdict()['hwshadow']
                 continue
-                    
+
         return ret_dict
-    
