@@ -1,0 +1,11 @@
+MPLS-TP:     0::101.1.1.1
+  Path protection mode: 1:1 revertive
+  PSC: Disabled
+  Timers:  Fault OAM: 20 seconds  Wait-to-Restore: 10 seconds
+           PSC: Fast-Timer: 1000 milli seconds, 3 messages
+                Slow-Timer: 5 seconds
+  Endpoints: 500    up: 500    down: 0      shut: 0     
+    Working: 500    up: 500    down: 0     
+    Protect: 500    up: 500    down: 0     
+  Midpoints: 0      working: 0      protect: 0     
+  Platform max TP interfaces: 65536

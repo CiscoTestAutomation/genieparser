@@ -1,0 +1,13 @@
+ Port: GigabitEthernet1/3
+ Ring: g8032_ring
+	 Block vlan list: 1-9,11-4095
+	 Unblock vlan list: 10
+	 REQ/ACK: 0/0
+	 Instance 1 is in Blocked state
+
+ Port: GigabitEthernet1/4
+ Ring: g8032_ring
+	 Block vlan list: 1-9,11-99,201-4095
+	 Unblock vlan list: 10,100-200
+	 REQ/ACK: 0/0
+	 Instance 1 is in Unblocked state

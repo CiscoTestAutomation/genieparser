@@ -1,0 +1,35 @@
+show monitor session 1
+session 1
+---------------
+type              : local
+mode              : extended
+ssn direction     : both
+state             : up
+source intf       :
+rx            :
+tx            :
+both          :
+source VLANs      :
+rx            :
+tx            :
+both          :
+source exception  :
+src intf all      : both
+filter VLANs      : 100
+destination ports : Eth9/2
+
+Feature       Enabled   Value   Modules Supported       Modules Not-Supported
+-----------------------------------------------------------------------------
+MTU-Trunc     No
+rate-limit-rx No
+rate-limit-tx No
+Sampling      No
+MCBE          No
+L3-TX         -         -       1                       3  4  9
+Simpl RB span No
+EXTENDED-SSN  Yes       -       1  3  4  9              -
+
+Legend:
+MCBE   = Multicast Best Effort
+L3-TX  = L3 Multicast Egress SPAN
+ExSP-X = Exception Span for type X (L3, FP, or misc)

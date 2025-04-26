@@ -1,0 +1,18 @@
+ Type: oif_vp_handles       State: allocated       MD5:(99661bffcb26f8db:c644c3f264bb9bec)
+   Fset Urid              : 0x20000000000009b3
+   Parent URID            : 0x20000000000009af
+   Remote Port Count      : 2
+   Users Count            : 1
+   VP OIF Count           : 2
+     No. VP Interface             Interface                Physical interface
+      1. Gi3/0/18Vlan3300         GigabitEthernet3/0/18    GigabitEthernet3/0/18    
+           flags:[ oif_port mrouter  ]    hw_flags: [ InHw  remote ]
+           (Asic[0]: l2_ac_oid: 0)
+      2. Gi4/0/18Vlan3300         GigabitEthernet4/0/18    GigabitEthernet4/0/18    
+           flags:[ mrouter  ]    hw_flags: [ InHw  remote ]
+           (Asic[0]: l2_ac_oid: 0)
+   FSET Gid               : 10618
+   Asic[0] mcid_oid       : 9172
+   Hw L2 Mcg Info Asic[0] :
+   Users :
+     urid:0x6000000000004c92 (l2m_grp: vlan:3300, 225.1.1.1)

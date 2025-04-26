@@ -230,7 +230,9 @@ class ShowLogging(ShowLoggingSchema):
                         r'+messages +logged, +xml +(?P<xml>\S+),$')
 
         # filtering disabled
-        p5 = re.compile(r'^filtering +(?P<filtering>\S+)$')
+        # filtering enabled (0 messages logged)
+        p5 = re.compile(r'^filtering +(?P<filtering>\S+)(?: +\(\d+ messages logged\))?$')
+
 
         # Exception Logging: size (4096 bytes)
         # Exception Logging: Disabled

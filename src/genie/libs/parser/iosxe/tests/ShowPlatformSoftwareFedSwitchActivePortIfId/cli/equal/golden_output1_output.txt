@@ -1,0 +1,19 @@
+FED PM SUB PORT Data :
+  if_id = 1171
+  if_name = FiftyGigE1/0/15
+  enable: true
+  speed: gbps10
+  operational speed: auto
+  duplex: full
+  operational duplex: auto
+  flowctrl: off
+  csco pd enable: FALSE
+  link state: UP
+  csco pd restart enable: FALSE
+  tdr_result: FALSE
+  psecure_inactivity_time: 0
+  psecure_feature_type: 0
+  loopback enable: FALSE
+  defaultVlan: 4095
+  port_state: Fed PM port ready
+  mode: routed

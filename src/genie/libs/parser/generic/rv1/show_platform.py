@@ -119,6 +119,9 @@ class ShowVersion(ShowVersionSchema):
         # cisco CRS-16/S-B (Intel 686 F6M14S4) processor with 12582912K bytes of memory.
         iosxr_platform_pattern = re.compile(r'^cisco (?P<platform>\S+|IOS(?: |-)XRv ?\d*)(?: Series)? \(.*\) processor.*$')
 
+        # ASR-9001 Chassis
+        # ASR 9006 4 Line Card Slot Chassis
+        iosxr_pid_pattern = re.compile(r'^(?P<pid>\w+[-\s]\d+) (Chassis|4 Line Card Slot Chassis( with V\d (AC|DC) PEM)?)?$')
 
         # ********************************************
         # *                  IOS                     *
@@ -314,6 +317,12 @@ class ShowVersion(ShowVersionSchema):
                     re.sub(r'\s|\-', r'', m.groupdict()['platform'].lower())
                 continue
 
+            # ASR-9001 Chassis
+            # ASR 9006 4 Line Card Slot Chassis with V2 AC PEM
+            m = iosxr_pid_pattern.match(line)
+            if m:
+                ret_dict['pid'] = m.groupdict()['pid'].replace(' ', '-')
+                continue
 
             # ********************************************
             # *                  IOS                     *

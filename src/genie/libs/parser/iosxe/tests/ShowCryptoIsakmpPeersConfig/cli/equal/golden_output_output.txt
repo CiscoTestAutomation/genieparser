@@ -1,0 +1,20 @@
+ISAKMP Peers Configuration
+Peer: 192.168.1.1
+  Key Exchange: IKEv1
+  Authentication Method: Pre-Shared Key
+  Encryption: AES-256
+  Hashing: SHA-256
+  DH Group: Group 14
+  Lifetime: 86400 seconds
+  Local ID: router.local
+  Remote ID: peer.remote
+
+Peer: 192.168.2.1
+  Key Exchange: IKEv2
+  Authentication Method: RSA-SIG
+  Encryption: AES-128
+  Hashing: SHA-1
+  DH Group: Group 5
+  Lifetime: 28800 seconds
+  Local ID: router.local
+  Remote ID: peer.remote

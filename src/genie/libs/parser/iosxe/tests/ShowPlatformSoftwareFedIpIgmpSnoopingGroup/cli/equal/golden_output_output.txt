@@ -1,0 +1,12 @@
+Number of Group entries: 16001
+
+    (Vlan: 104, 232.0.31.64)
+            Member ports            : 1
+                    HundredGigE2/0/1
+            Dependent Users Count   : 2
+            Group Urid              : 0x600000000003dd64
+            Fset Urid ( Hash )      : 0x2000000000002154 ( f2e2a15a )
+            Layer 3 Stub Entry      : No
+            Group Flags             : None
+            Gid                     : 32377
+            Mcid Asic[0]            : 2645

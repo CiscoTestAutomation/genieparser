@@ -88,6 +88,8 @@ IOSXE parsers for the following show commands:
     * show ip name-servers vrf {vrf}
     * show ip dhcp pool
     * show ip nhrp self
+    * show ip subscriber ip {ip_address}
+    * show ip sla application
     '''
 
 # Python
@@ -1745,12 +1747,14 @@ class ShowIpDhcpSnoopingBindingSchema(MetaParser):
         Optional('interfaces'): {
             Any(): {
                 'vlan': {
-                    Any(): {
+                    Any(): ListOf(
+                        {
                         'mac': str,
                         'ip': str,
                         'lease': int,
                         'type': str,
                     },
+                    ),
                 },
             },
         },
@@ -1809,10 +1813,10 @@ class ShowIpDhcpSnoopingBinding(ShowIpDhcpSnoopingBindingSchema):
                 # Build Dict
 
                 intf_dict = ret_dict.setdefault('interfaces', {}).setdefault(interface, {})
-                vlan_dict = intf_dict.setdefault('vlan', {}).setdefault(vlan, {})
+                vlan_list = intf_dict.setdefault('vlan', {}).setdefault(vlan, [])
 
                 # Set values
-                vlan_dict.update({
+                vlan_list.append({
                     'mac': group['mac'],
                     'ip': group['ip'],
                     'lease': int(group['lease']),
@@ -8636,3 +8640,446 @@ class ShowIpNhrpVrf(ShowIpNhrpVrfSchema):
                 continue
 
         return parsed_dict
+
+# ================================================
+# Schema for 'show ip subscriber ip {ip_address}'
+# ================================================
+class ShowIpSubscriberIpSchema(MetaParser):
+    """Schema for show ip subscriber ip {ip_address}"""
+    schema = {
+        'subscriber_session_information': {
+            'ip_address': str,
+            'session_id': str,
+            'state': str,
+            'username': str,
+            'mac_address': str,
+            'interface': str,
+            'vrf': str,
+            'service_policy': str,
+            'authentication_status': str,
+            'session_duration': str,
+            'last_status_change': str,
+            'accounting_method': str,
+            'accounting_status': str,
+            'total_input_packets': int,
+            'total_output_packets': int,
+            'total_input_bytes': int,
+            'total_output_bytes': int,
+        },
+        'additional_subscriber_attributes': {
+            int: {
+                    'attribute_type': str,
+                    'attribute_value': str,
+                }
+        },
+        'subscriber_feature_information': {
+            int: {
+                    'feature_name': str,
+                    'feature_status': str,
+                    Optional('feature_configuration'): str,
+                }
+            }
+        }
+
+# ================================================
+# Parser for 'show ip subscriber ip {ip_address}'
+# ================================================
+class ShowIpSubscriberIp(ShowIpSubscriberIpSchema):
+    """Parser for show ip subscriber ip {ip_address}"""
+
+    cli_command = 'show ip subscriber ip {ip_address}'
+
+    def cli(self, ip_address=None, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(ip_address=ip_address))
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # IP Address: 11.11.11.2
+        p1 = re.compile(r'^IP Address:\s+(?P<ip_address>.+)$')
+
+        # Session ID: 000123456
+        p2 = re.compile(r'^Session ID:\s+(?P<session_id>.+)$')
+
+        # State: Active
+        p3 = re.compile(r'^State:\s+(?P<state>.+)$')
+
+        # Username: user@example.com
+        p4 = re.compile(r'^Username:\s+(?P<username>.+)$')
+
+        # MAC Address: aa:bb:cc:dd:ee:ff
+        p5 = re.compile(r'^MAC Address:\s+(?P<mac_address>.+)$')
+
+        # Interface: GigabitEthernet0/0/1
+        p6 = re.compile(r'^Interface:\s+(?P<interface>.+)$')
+
+        # VRF: default
+        p7 = re.compile(r'^VRF:\s+(?P<vrf>.+)$')
+
+        # Service Policy: qos_policy
+        p8 = re.compile(r'^Service Policy:\s+(?P<service_policy>.+)$')
+
+        # Authentication Status: Authenticated
+        p9 = re.compile(r'^Authentication Status:\s+(?P<authentication_status>.+)$')
+
+        # Session Duration: 00:45:23
+        p10 = re.compile(r'^Session Duration:\s+(?P<session_duration>.+)$')
+
+         # Last Status Change: 2023-10-05 14:30:00 UTC
+        p11 = re.compile(r'^Last Status Change:\s+(?P<last_status_change>.+)$')
+
+        # Accounting Method: Radius
+        p12 = re.compile(r'^Accounting Method:\s+(?P<accounting_method>.+)$')
+
+        # Accounting Status: Accounting-Active
+        p13 = re.compile(r'^Accounting Status:\s+(?P<accounting_status>.+)$')
+
+        # Total Input Packets: 123456
+        p14 = re.compile(r'^Total Input Packets:\s+(?P<total_input_packets>\d+)$')
+
+        # Total Output Packets: 654321
+        p15 = re.compile(r'^Total Output Packets:\s+(?P<total_output_packets>\d+)$')
+
+        # Total Input Bytes: 12345678
+        p16 = re.compile(r'^Total Input Bytes:\s+(?P<total_input_bytes>\d+)$')
+
+        # Total Output Bytes: 87654321
+        p17 = re.compile(r'^Total Output Bytes:\s+(?P<total_output_bytes>\d+)$')
+
+        # Attribute Type: Custom
+        p18 = re.compile(r'^Attribute Type:\s+(?P<attribute_type>.+)$')
+
+        # Attribute Value: Value
+        p19 = re.compile(r'^Attribute Value:\s+(?P<attribute_value>.+)$')
+
+        # Feature Name: QoS
+        p20 = re.compile(r'^Feature Name:\s+(?P<feature_name>.+)$')
+
+        # Feature Status: Enabled
+        p21 = re.compile(r'^Feature Status:\s+(?P<feature_status>.+)$')
+
+        # Feature Configuration: Standard
+        p22 = re.compile(r'^Feature Configuration:\s+(?P<feature_configuration>.+)$')
+
+        attribute_index = 0
+        feature_index = 0
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # IP Address: 11.11.11.2
+            m = p1.match(line)
+            if m:
+                subscriber_session_dict = parsed_dict.setdefault('subscriber_session_information', {})
+                subscriber_session_dict['ip_address'] = m.group('ip_address')
+                continue
+
+            # Session ID: 000123456
+            m = p2.match(line)
+            if m:
+                subscriber_session_dict['session_id'] = m.group('session_id')
+                continue
+
+            # State: Active
+            m = p3.match(line)
+            if m:
+                subscriber_session_dict['state'] = m.group('state')
+                continue
+
+            # Username: user@example.com
+            m = p4.match(line)
+            if m:
+                subscriber_session_dict['username'] = m.group('username')
+                continue
+
+            # MAC Address: aa:bb:cc:dd:ee:ff
+            m = p5.match(line)
+            if m:
+                subscriber_session_dict['mac_address'] = m.group('mac_address')
+                continue
+
+            # Interface: GigabitEthernet0/0/1
+            m = p6.match(line)
+            if m:
+                subscriber_session_dict['interface'] = m.group('interface')
+                continue
+
+            # VRF: default
+            m = p7.match(line)
+            if m:
+                subscriber_session_dict['vrf'] = m.group('vrf')
+                continue
+
+            # Service Policy: qos_policy
+            m = p8.match(line)
+            if m:
+                subscriber_session_dict['service_policy'] = m.group('service_policy')
+                continue
+
+            # Authentication Status: Authenticated
+            m = p9.match(line)
+            if m:
+                subscriber_session_dict['authentication_status'] = m.group('authentication_status')
+                continue
+
+            # Session Duration: 00:45:23
+            m = p10.match(line)
+            if m:
+                subscriber_session_dict['session_duration'] = m.group('session_duration')
+                continue
+
+            # Last Status Change: 2023-10-05 14:30:00 UTC
+            m = p11.match(line)
+            if m:
+                subscriber_session_dict['last_status_change'] = m.group('last_status_change')
+                continue
+
+            # Accounting Method: Radius
+            m = p12.match(line)
+            if m:
+                subscriber_session_dict['accounting_method'] = m.group('accounting_method')
+                continue
+
+            # Accounting Status: Accounting-Active
+            m = p13.match(line)
+            if m:
+                subscriber_session_dict['accounting_status'] = m.group('accounting_status')
+                continue
+
+            #  Total Input Packets: 123456
+            m = p14.match(line)
+            if m:
+                subscriber_session_dict['total_input_packets'] = int(m.group('total_input_packets'))
+                continue
+
+            # Total Output Packets: 654321
+            m = p15.match(line)
+            if m:
+                subscriber_session_dict['total_output_packets'] = int(m.group('total_output_packets'))
+                continue
+
+            # Total Input Bytes: 12345678
+            m = p16.match(line)
+            if m:
+                subscriber_session_dict['total_input_bytes'] = int(m.group('total_input_bytes'))
+                continue
+
+            #  Total Output Bytes: 87654321
+            m = p17.match(line)
+            if m:
+                subscriber_session_dict['total_output_bytes'] = int(m.group('total_output_bytes'))
+                continue
+
+            # Attribute Type: Custom
+            m = p18.match(line)
+            if m:
+                subscriber_attributes_dict = parsed_dict.setdefault('additional_subscriber_attributes', {}).setdefault(attribute_index, {})
+                subscriber_attributes_dict['attribute_type'] = m.group('attribute_type')
+                continue
+
+            # Attribute Value: Value
+            m = p19.match(line)
+            if m:
+                subscriber_attributes_dict['attribute_value'] = m.group('attribute_value')
+                attribute_index += 1
+                continue
+
+            # Feature Name: QoS
+            m = p20.match(line)
+            if m:
+                subscriber_feature_dict = parsed_dict.setdefault('subscriber_feature_information', {}).setdefault(feature_index, {})
+                subscriber_feature_dict['feature_name'] = m.group('feature_name')
+                continue
+
+            # Feature Status: Enabled
+            m = p21.match(line)
+            if m:
+                subscriber_feature_dict['feature_status'] = m.group('feature_status')
+                continue
+
+            # Feature Configuration: Standard
+            m = p22.match(line)
+            if m:
+                subscriber_feature_dict['feature_configuration'] = m.group('feature_configuration')
+                feature_index += 1
+                continue
+
+        return parsed_dict
+
+# ===========================================
+# Schema for 'show ip sla application'
+# ===========================================
+class ShowIpSlaApplicationSchema(MetaParser):
+    """Schema for 'show ip sla application'"""
+    schema = {'ip_service_level_agreements':{
+        'version': str,
+        'supported_operation_types': ListOf(str),
+        'supported_features': ListOf(str),
+        'ip_slas_low_memory_water_mark': int,
+        'estimated_system_max_number_of_entries': int,
+        'estimated_number_of_configurable_operations': int,
+        'number_of_entries_configured': int,
+        'number_of_active_entries': int,
+        'number_of_pending_entries': int,
+        'number_of_inactive_entries': int,
+        'time_of_last_change': str,
+    }
+    }
+
+# ===========================================
+# Parser for 'show ip sla application'
+# ===========================================
+class ShowIpSlaApplication(ShowIpSlaApplicationSchema):
+    """Parser for 'show ip sla application'"""
+
+    cli_command = 'show ip sla application'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize parsed dictionary
+        parsed_dict = {}
+
+        # IP Service Level Agreements
+        p1 = re.compile(r'^\s*IP Service Level Agreements$')
+
+        # Version: Round Trip Time MIB 2.2.0, Infrastructure Engine-III
+        p2 = re.compile(r'^Version:\s+(?P<version>[\S\s]+)$')
+
+        # Supported Operation Types:
+        p3 = re.compile(r'^Supported Operation Types:$')
+
+        # Supported Features:
+        p4 = re.compile(r'^Supported Features:$')
+
+        # IP SLAs low memory water mark: 1623380481
+        p5 = re.compile(r'^IP SLAs low memory water mark:\s+(?P<value>\d+)$')
+
+        # Estimated system max number of entries: 140423
+        p6 = re.compile(r'^Estimated system max number of entries:\s+(?P<value>\d+)$')
+
+        # Estimated number of configurable operations: 139923
+        p7 = re.compile(r'^Estimated number of configurable operations:\s+(?P<value>\d+)$')
+
+        # Number of Entries configured  : 500
+        p8 = re.compile(r'^Number of Entries configured\s+:\s+(?P<value>\d+)$')
+
+        # Number of active Entries      : 500
+        p9 = re.compile(r'^Number of active Entries\s+:\s+(?P<value>\d+)$')
+
+        # Number of pending Entries     : 0
+        p10 = re.compile(r'^Number of pending Entries\s+:\s+(?P<value>\d+)$')
+
+        # Number of inactive Entries    : 0
+        p11 = re.compile(r'^Number of inactive Entries\s+:\s+(?P<value>\d+)$')
+
+        # Time of last change in whole IP SLAs: 22:34:37.309 PST Sun Feb 9 2025
+        p12 = re.compile(r'^Time of last change in whole IP SLAs:\s+(?P<value>[\S\s]+)$')
+
+        in_supported_operation_types = False
+        in_supported_features = False
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # excluding empty lines
+            if not line:
+                continue
+
+            # IP Service Level Agreements
+            m = p1.match(line)
+            if m:
+                ip_sla_dict = parsed_dict.setdefault('ip_service_level_agreements', {})
+                continue
+
+            # Version: Round Trip Time MIB 2.2.0, Infrastructure Engine-III
+            m = p2.match(line)
+            if m:
+                ip_sla_dict['version'] = m.group('version')
+                continue
+
+            # Supported Operation Types:
+            if p3.match(line):
+                in_supported_operation_types = True
+                in_supported_features = False
+                ip_sla_dict.setdefault('supported_operation_types', [])
+                continue
+
+            # Supported Features:   
+            if p4.match(line):
+                in_supported_operation_types = False
+                in_supported_features = True
+                ip_sla_dict.setdefault('supported_features', [])
+                continue
+
+            # IP SLAs low memory water mark: 1623380481
+            m = p5.match(line)
+            if m:
+                in_supported_operation_types = False
+                in_supported_features = False
+                ip_sla_dict['ip_slas_low_memory_water_mark'] = int(m.group('value'))
+                continue
+
+            # icmpEcho, path-echo, path-jitter, udpEcho, tcpConnect, http
+	    # dns, udpJitter, dhcp, ftp, lsp Group, icmpJitter, lspPing
+	    # lspTrace, 802.1agEcho VLAN, EVC, Port
+	    # 802.1agJitter VLAN, EVC, Port, pseudowirePing, y1731Delay
+	    # y1731Loss, y1731SyntheticLoss,, udpApp, wspApp, mcast
+	    # generic, https
+            if in_supported_operation_types:
+                # replacing double commas with single commas
+                line = line.replace(',,', ',')
+                ip_sla_dict['supported_operation_types'].extend(line.split(', '))
+                continue
+
+            # IPSLAs Event Publisher
+            if in_supported_features:
+                ip_sla_dict['supported_features'].append(line)
+                continue
+
+            # Estimated system max number of entries: 140423
+            m = p6.match(line)
+            if m:
+                ip_sla_dict['estimated_system_max_number_of_entries'] = int(m.group('value'))
+                continue
+
+            # Estimated number of configurable operations: 139923
+            m = p7.match(line)
+            if m:
+                ip_sla_dict['estimated_number_of_configurable_operations'] = int(m.group('value'))
+                continue
+
+            # Number of Entries configured  : 500
+            m = p8.match(line)
+            if m:
+                ip_sla_dict['number_of_entries_configured'] = int(m.group('value'))
+                continue
+
+            # Number of active Entries      : 500
+            m = p9.match(line)
+            if m:
+                ip_sla_dict['number_of_active_entries'] = int(m.group('value'))
+                continue
+
+            # Number of pending Entries     : 0
+            m = p10.match(line)
+            if m:
+                ip_sla_dict['number_of_pending_entries'] = int(m.group('value'))
+                continue
+
+            # Number of inactive Entries    : 0
+            m = p11.match(line)
+            if m:
+                ip_sla_dict['number_of_inactive_entries'] = int(m.group('value'))
+                continue
+
+            # Time of last change in whole IP SLAs: 22:34:37.309 PST Sun Feb 9 2025
+            m = p12.match(line)
+            if m:
+                ip_sla_dict['time_of_last_change'] = m.group('value')
+                continue
+
+        return parsed_dict
+

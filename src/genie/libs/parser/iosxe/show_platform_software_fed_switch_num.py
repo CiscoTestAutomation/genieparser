@@ -619,3 +619,70 @@ class ShowPlatformSoftwareFedSwitchFnfMonitorsDump(ShowPlatformSoftwareFedSwitch
                 continue
 
         return ret_dict
+
+class ShowPlatformSoftwareFedSwitchFnfProfilesDumpSchema(MetaParser):
+    """Schema for 'show platform software fed switch {switch_num} fnf profiles-dump'"""
+
+    schema = {
+        "profiles": {
+            Any(): {
+                "record_sz": int,
+                "ref": int,
+                "timeout": {
+                    "a": int,
+                    "i": int,
+                    "u": int,
+                },
+                "type": int,
+                "wdavc_fnf_max_cache_size": int,
+                "wdavc_remote_monitoring_remote_caching": int,
+            }
+        }
+    }
+
+class ShowPlatformSoftwareFedSwitchFnfProfilesDump(ShowPlatformSoftwareFedSwitchFnfProfilesDumpSchema):
+    """Parser for 'show platform software fed switch {switch_num} fnf profiles-dump'"""
+
+    cli_command = "show platform software fed switch {switch_num} fnf profiles-dump"
+
+    def cli(self, switch_num, output=None):
+        if output is None:
+            cmd = self.cli_command.format(switch_num=switch_num)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+
+        # Matching pattern
+        # ProfileID(b277d7d7) record_sz(46) ref(0) timeout a(300) i(300) u(1800) type(1) wdavc_fnf_max_cache_size(10000) wdavc_remote_monitoring_remote_caching(0)
+        p1 = re.compile(
+            r"^ProfileID\((?P<profile_id>\S+)\) record_sz\((?P<record_sz>\d+)\) ref\((?P<ref>\d+)\) "
+            r"timeout a\((?P<a>\d+)\) i\((?P<i>\d+)\) u\((?P<u>\d+)\) type\((?P<type>\d+)\) "
+            r"wdavc_fnf_max_cache_size\((?P<wdavc_fnf_max_cache_size>\d+)\) "
+            r"wdavc_remote_monitoring_remote_caching\((?P<wdavc_remote_monitoring_remote_caching>\d+)\)$"
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # ProfileID(b277d7d7) record_sz(46) ref(0) timeout a(300) i(300) u(1800) type(1) wdavc_fnf_max_cache_size(10000) wdavc_remote_monitoring_remote_caching(0)
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                profile_id = group.pop("profile_id")
+                timeout = {
+                    "a": int(group.pop("a")),
+                    "i": int(group.pop("i")),
+                    "u": int(group.pop("u")),
+                }
+                profile_dict = ret_dict.setdefault("profiles", {}).setdefault(profile_id, {})
+                profile_dict.update({
+                    "record_sz": int(group["record_sz"]),
+                    "ref": int(group["ref"]),
+                    "timeout": timeout,
+                    "type": int(group["type"]),
+                    "wdavc_fnf_max_cache_size": int(group["wdavc_fnf_max_cache_size"]),
+                    "wdavc_remote_monitoring_remote_caching": int(group["wdavc_remote_monitoring_remote_caching"]),
+                })
+                continue
+
+        return ret_dict

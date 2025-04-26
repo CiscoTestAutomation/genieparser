@@ -107,3 +107,13 @@ class ShowInventoryOID(ShowInventoryRaw):
             output = self.device.execute(self.cli_command)
             
         return super().cli(output=output)
+
+class ShowInventoryName(ShowInventoryRaw):
+    """ Parser for "show inventory {name}" """
+    cli_command = 'show inventory "{name}"'
+
+    def cli(self, name="", output = None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(name=name))
+
+        return super().cli(output = output)

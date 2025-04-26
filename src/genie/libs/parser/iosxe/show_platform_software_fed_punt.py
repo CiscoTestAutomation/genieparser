@@ -673,6 +673,7 @@ class ShowPlatformSoftwareFedPuntEntriesIncludeSchema(MetaParser):
             Any(): {
                 Optional('name') : str,
                 Optional('source'): str,
+                Optional('asic'): int,
                 Optional('priority'): int,
                 Optional('tc'): int,
                 Optional('policy'): str,
@@ -707,14 +708,17 @@ class ShowPlatformSoftwareFedPuntEntriesInclude(ShowPlatformSoftwareFedPuntEntri
                 cmd = self.cli_command[1].format(port_num=port_num, match=match)
             output = self.device.execute(cmd)   
 
+        # Initialize the parsed dictionary
         ret_dict = {}
         index = 1
         
-        #Source    Name                            Pri  TC  Policy                                    CIR-SW  CIR-HW   Pkts(A)    Bytes(A)   Pkts(D)    Bytes(D)   
-        #LPTSv4    WCCP IPv4                        16   0  system-cpp-default-v4                      60000   59127         0           0         0           0  
+        #Source    Name                            ASIC  Pri  TC  Policy                                    CIR-SW  CIR-HW   Pkts(A)    Bytes(A)   Pkts(D)    Bytes(D)
+        #LPTSv4    ICMP IPv4                          0    1   3  system-cpp-police-icmp-v4                   2500    2384     18260     3652000         0           0
+        
         p1 = re.compile(
             r'^(?P<source>\w+(?:\s+\S+)?)  +'
             r'(?P<name>[\w\s\(\)]+)\s+'
+            r'(?P<asic>\d+)\s+'
             r'(?P<priority>\d+) +'
             r'(?P<tc>\d+) +'
             r'(?P<policy>\S+) +'
@@ -725,10 +729,11 @@ class ShowPlatformSoftwareFedPuntEntriesInclude(ShowPlatformSoftwareFedPuntEntri
             r'(?P<packets_d>\d+) +'
             r'(?P<bytes_d>\d+)$')
         
+        #Source    Name                            ASIC  Pri  TC  Policy                                    CIR-SW  CIR-HW   Pkts(A)    Bytes(A)   Pkts(D)    Bytes(D)
+        #LPTSv4    ICMP IPv4                          0    1   3  system-cpp-police-icmp-v4                   2500    2384     18260     3652000         0           0
+        
         for line in output.splitlines():
-            line = line.strip()
-            #Source    Name                            Pri  TC  Policy                                    CIR-SW  CIR-HW   Pkts(A)    Bytes(A)   Pkts(D)    Bytes(D)   
-            #LPTSv4    WCCP IPv4                        16   0  system-cpp-default-v4                      60000   59127         0           0         0           0  
+            line = line.strip() 
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -736,6 +741,7 @@ class ShowPlatformSoftwareFedPuntEntriesInclude(ShowPlatformSoftwareFedPuntEntri
                 index_dict.update({int(index): {
                                     'source': str(group['source']),
                                     'name': str(group['name']),
+                                    'asic': int(group['asic']),
                                     'priority' : int(group['priority']),
                                     'tc' : int(group['tc']),
                                     'policy' : str(group['policy']),

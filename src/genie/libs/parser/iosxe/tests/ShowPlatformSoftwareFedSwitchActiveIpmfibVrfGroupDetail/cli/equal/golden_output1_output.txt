@@ -1,0 +1,25 @@
+  Mvrf: 12  ( 2000:22:2:2:2::2, ff33::1 ) Attrs: 
+    Hw Flag                 : InHw 
+    Mlist_hndl (Id)         : 0x11880515998 ( 0x293 )
+    Mlist Urid              : 0x1000000000001067
+    Fset Urid (Hash)        : 0x3000000000000016 ( d7148f65 ) 
+    Fset Aux Urid           : 0x0
+    RPF Adjacency ID        : 0xf8004ea2
+    CPU Credit              : 0
+    Total Packets           : 0 ( 0 pps approx.)
+    npi_mroute_ent          : 0x118817b4468
+    svi_fwd_ifs             : 0
+    OIF Details:
+      AdjID          Interface          ParentIf        HwFlag      Flags      IntfType       MsgType
+      0xf8004ea2     Gi1/0/12.2000      --------         ---        A          --------       NORMAL        
+      0xf8004eb2     Gi1/0/26.3000      --------         ---        F NS       --------       NORMAL        
+    GID                   : 8208
+    MCID OID Asic[0]      : 1053
+    Hardware Info ASIC[0] :
+      IP MCID OID         :1053 (cookie:urid:0x30::16)
+      RPF PORT OID        :2877
+      punt_on_rpf_fail    :1
+      punt_and_forward    :0
+      use_rpfid           :0
+      rpfid               :0
+      enable_rpf_check    :1

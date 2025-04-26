@@ -715,89 +715,88 @@ class ShowEnvironmentFan(ShowEnvironmentFanSchema):
     """
     cli_command = 'show environment fan'
     
-    def cli(self,switch="",output=None): 
+    def cli(self,switch="",output=None):
 
         if output is None:
-            # Build the command
             output = self.device.execute(self.cli_command.format(switch=switch))
      
         ret_dict = {}
+
         for line in output.splitlines():
             line=line.strip()
             
-            #Switch   FAN     Speed   State   Airflow direction
-            #---------------------------------------------------
-            # 1       1     5600      OK     Front to Back
-            # 1       2     5600      OK     Front to Back
+            # Switch   FAN     Speed   State   Airflow direction
+            # ---------------------------------------------------
+            # 1        1       5440    OK      Front to Back
+            # 1        2       5440    OK      Front to Back
+            # 1        3       5440    OK      Front to Back
 
-            p1=re.compile(r'^(?P<switch>\d)+\s+(?P<fan>\d)+\s+(?P<speed>\d+)\s+(?P<state>\S+)\s+(?P<airflow_direction>\S+\s+\S+\s+\S+)$')
+            p1 = re.compile(r'^(?P<switch>\d+)\s+(?P<fan>\d+)\s+(?P<speed>\d+)\s+(?P<state>\S+)\s+(?P<airflow_direction>\S+\s+\S+\s+\S+)$')
 
-            #FAN PS-1 is OK
-            p2=re.compile(r'^FAN+\s+PS-1+\s+\S+\s+(?P<fan_ps1>\S+)$')
+            # FAN PS-1 is NOT PRESENT
+            p2 = re.compile(r'^FAN\s+PS-1\s+\S+\s+(?P<fan_ps1>\S+)$')
 
-            #FAN PS-2 is NOT PRESENT
-            p3=re.compile(r'^FAN+\s+PS-2+\s+\S+\s+(?P<fan_ps2>\S+.*)$')
+            # FAN PS-2 is OK
+            p3 = re.compile(r'^FAN\s+PS-2\s+\S+\s+(?P<fan_ps2>\S+.*)$')
 
-            # 1       2     5600      OK     Front to Back
+            # Match fan details
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                fan = int(group["fan"])
                 switch = int(group["switch"])
+                fan = int(group["fan"])
                 sub_dict = ret_dict.setdefault('switch', {}).setdefault(switch, {})
-                sub_dict1 = sub_dict.setdefault('fan', {}).setdefault(fan, {})
-                sub_dict1.setdefault('speed', int(group['speed']))
-                sub_dict1.setdefault('state', group['state'])
-                sub_dict1.setdefault('airflow_direction', group['airflow_direction'])
+                sub_dict.setdefault('fan_ps1', "NOT PRESENT")
+                sub_dict.setdefault('fan_ps2', "NOT PRESENT")
+                fan_dict = sub_dict.setdefault('fan', {}).setdefault(fan, {})
+                fan_dict['speed'] = int(group['speed'])
+                fan_dict['state'] = group['state']
+                fan_dict['airflow_direction'] = group['airflow_direction']
                 continue
             
-            #FAN PS-1 is OK    
+            # Match FAN PS-1 status
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                fan_ps1 = group['fan_ps1'] 
-                sub_dict['fan_ps1'] = fan_ps1
+                switch = list(ret_dict.get('switch', {}).keys())[-1]
+                sub_dict = ret_dict['switch'][switch]
+                sub_dict['fan_ps1'] = group['fan_ps1']
                 continue
             
-            #FAN PS-2 is NOT PRESENT
+            # Match FAN PS-2 status
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                fan_ps2 = group['fan_ps2']
-                sub_dict['fan_ps2'] = fan_ps2
+                switch = list(ret_dict.get('switch', {}).keys())[-1]  # Get the last switch added
+                sub_dict = ret_dict['switch'][switch]
+                sub_dict['fan_ps2'] = group['fan_ps2']
                 continue
     
         return ret_dict
 
 class ShowEnvironmentPowerAllSchema(MetaParser):
-
-    schema={
+    schema = {
         "switch": {
             Any(): {
                 "pid": str,
-                "serial": str,
-                "status": str,
-                "sys_pwr": str,
-                "poe_pwr": str,
-                "watts": int,
-                "switch": {
-                    Any(): {
-                        "pid": str
-                    }
-                }
-            },
-            
+                Optional("serial"): str,
+                Optional("status"): str,
+                Optional("sys_pwr"): str,
+                Optional("poe_pwr"): str,
+                Optional("watts"): int,
+            }
         }
     }
+
 
 class ShowEnvironmentPowerAll(ShowEnvironmentPowerAllSchema):
     """
     Parser for :
         'show environment power all'
     """
-    cli_command = ['show environment power all','show environment power switch {switch_num}']
+    cli_command = ['show environment power all', 'show environment power switch {switch_num}']
     
-    def cli(self,switch_num="",output=None): 
+    def cli(self, switch_num="", output=None): 
 
         if output is None:
             # Build the command
@@ -806,37 +805,38 @@ class ShowEnvironmentPowerAll(ShowEnvironmentPowerAllSchema):
             else:
                 output = self.device.execute(self.cli_command[0])
 
-        ret_dict={}
+        ret_dict = {}
         for line in output.splitlines():
-            line=line.strip()
+            line = line.strip()
 
-            #1A  PWR-C1-1100WAC      DTN2129V1AG  OK              Good     Good     1100
-            p1=re.compile(r'^(?P<sw>\d\S)+\s+(?P<pid>\S+)\s+(?P<serial>\S+)\s+(?P<status>\S+)\s+(?P<sys_pwr>\w+)+\s+(?P<poe_pwr>\S+)\s+(?P<watts>\S+)$')
+            # 1A  PWR-C1-1100WAC      DTN2129V1AG  OK              Good     Good     1100
+            p1 = re.compile(r'^(?P<sw>\d\S+)\s+(?P<pid>\S+)\s+(?P<serial>\S+)\s+(?P<status>\S+)\s+(?P<sys_pwr>\w+)\s+(?P<poe_pwr>\S+)\s+(?P<watts>\d+)$')
        
-            #1B  Not Present
-            p2=re.compile(r'^(?P<sw>\d+\S)\s+(?P<pid>Not Present)$')
+            # 1A  Not Present
+            p2 = re.compile(r'^(?P<sw>\d\S+)\s+(?P<pid>Not Present)$')
 
-            #1A  PWR-C1-1100WAC      DTN2129V1AG  OK              Good     Good     1100
+            # Matching pattern
+            # 1A  PWR-C1-1100WAC      DTN2129V1AG  OK              Good     Good     1100
             m = p1.match(line)
             if m:
-                group=m.groupdict()
+                group = m.groupdict()
                 switch = group['sw']
-                sub_dict = ret_dict.setdefault('switch',{}).setdefault(switch,{})
-                sub_dict['pid'] = group['pid'] 
+                sub_dict = ret_dict.setdefault('switch', {}).setdefault(switch, {})
+                sub_dict['pid'] = group['pid']
                 sub_dict['serial'] = group['serial']
                 sub_dict['status'] = group['status']
                 sub_dict['sys_pwr'] = group['sys_pwr']
                 sub_dict['poe_pwr'] = group['poe_pwr']
                 sub_dict['watts'] = int(group['watts'])
                 continue
-            
-            #1B  Not Present
+
+            # 1A  Not Present
             m = p2.match(line)
             if m:
-                group=m.groupdict()
+                group = m.groupdict()
                 switch = group['sw']
-                sub_dict1 = sub_dict.setdefault('switch', {}).setdefault(switch, {})
-                sub_dict1['pid'] = group['pid']
+                sub_dict = ret_dict.setdefault('switch', {}).setdefault(switch, {})
+                sub_dict['pid'] = group['pid']
                 continue
 
         return ret_dict

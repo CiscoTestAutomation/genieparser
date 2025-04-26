@@ -987,3 +987,182 @@ class ShowObjectGroupName(ShowObjectGroupNameSchema):
                 continue
 
         return ret_dict
+
+# =============================================
+# Schema for 'show platform software fed switch active acl'
+# =============================================
+
+class ShowPlatformSoftwareFedSwitchAclSchema(MetaParser):
+    """Schema for show platform software fed switch active acl"""
+    schema = {
+              'interface': str,
+              'mac': str,
+              'policy_handle': str,
+              'policy_name': str,
+              'id': int,
+              'protocol': str,
+              'feature': str,
+              'number_of_acls': int,
+              'acl_number': int,
+              'acl_handle': str,
+              'acl_flags': str,
+              'number_of_aces': int,
+              'ace_handle': str,
+          }
+
+# =============================================
+# Parser for 'show platform software fed switch active acl'
+# =============================================
+
+class ShowPlatformSoftwareFedSwitchAcl(ShowPlatformSoftwareFedSwitchAclSchema):
+    """Parser for show platform software fed switch active acl"""
+    cli_command = [
+                    'show platform software fed {switch} {mode} acl',
+                    'show platform software fed {mode} acl',
+                    ]
+
+    def cli(self, mode="active", switch=None, output=None):
+        if output is None:
+            if switch:
+                cmd = self.cli_command[0].format(mode=mode, switch=switch)
+            else:
+                cmd = self.cli_command[1].format(mode=mode)
+                
+            output = self.device.execute(cmd) 
+        
+        ret_dict = {}
+                
+        #INTERFACE: Port-channel2.200
+        p1 = re.compile(r'INTERFACE:\s+(?P<interface>\S+)')
+        
+        #MAC 0000.0000.0000
+        p2 = re.compile(r'MAC\s+(?P<mac>\S+)')
+        
+        #Policy handle       : 0x6400024c
+        p3 = re.compile(r'Policy handle\s+:\s+(?P<policy_handle>\S+)')
+        
+        #Policy name         : epc_class_match_any_MAC_test3
+        p4 = re.compile(r'Policy name\s+:\s+(?P<policy_name>.+)')
+        
+        #ID                  : 4894880
+        p5 = re.compile(r'ID\s+:\s+(?P<id>\d+)')
+        
+        #Protocol            : [1] MAC
+        p6 = re.compile(r'Protocol\s+:\s+\[(?P<protocol>\d+)\]\s+(?P<protocol_name>\S+)')
+        
+        #Feature             : [139] AAL_FEATURE_EPC_RACL
+        p7 = re.compile(r'Feature\s+:\s+\[(?P<feature>\d+)\]\s+(?P<feature_name>\S+)')
+        
+        #Number of ACLs      : 1
+        p8 = re.compile(r'Number of ACLs\s+:\s+(?P<number_of_acls>\d+)')
+        
+        #Acl number          : 1
+        p9 = re.compile(r'Acl number\s+:\s+(?P<acl_number>\d+)')
+        
+        #Acl handle          : 0x2b00028f
+        p10 = re.compile(r'Acl handle\s+:\s+(?P<acl_handle>\S+)')
+        
+        #Acl flags           : 0x00000000
+        p11 = re.compile(r'Acl flags\s+:\s+(?P<acl_flags>\S+)')
+        
+        #Number of ACEs      : 1
+        p12 = re.compile(r'Number of ACEs\s+:\s+(?P<number_of_aces>\d+)')
+        
+        #Ace handle [1]      : 0x710003fa
+        p13 = re.compile(r'Ace handle \[(?P<index>\d+)\]\s+:\s+(?P<ace_handle>\S+)')
+
+        for line in output.splitlines():
+            line = line.strip()
+            
+            #INTERFACE: Port-channel2.200
+            m = p1.match(line)
+            if m:                
+                group = m.groupdict()
+                ret_dict['interface'] = group['interface']                                            
+                continue
+                
+            #MAC 0000.0000.0000
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['mac'] = group['mac']
+                continue
+                
+            #Policy handle       : 0x6400024c
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['policy_handle'] = group['policy_handle']
+                continue
+                
+            #Policy name         : epc_class_match_any_MAC_test3
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['policy_name'] = group['policy_name']
+                continue
+                
+            #ID                  : 4894880
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['id'] = int(group['id'])
+                continue
+                
+            #Protocol            : [1] MAC
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['protocol'] = group['protocol_name']
+                continue
+                
+            #Feature             : [139] AAL_FEATURE_EPC_RACL
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['feature'] = group['feature_name']
+                continue
+                
+            #Number of ACLs      : 1
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['number_of_acls'] = int(group['number_of_acls'])
+                continue
+                
+            #Acl number          : 1
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['acl_number'] = int(group['acl_number'])
+                continue
+                
+            #Acl handle          : 0x2b00028f
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['acl_handle'] = group['acl_handle']
+                continue
+                
+            #Acl flags           : 0x00000000
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['acl_flags'] = group['acl_flags']
+                continue
+                
+            #Number of ACEs      : 1
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['number_of_aces'] = int(group['number_of_aces'])
+                continue
+                
+            #Ace handle [1]      : 0x710003fa
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['ace_handle'] = group['ace_handle']
+                continue
+
+        return ret_dict

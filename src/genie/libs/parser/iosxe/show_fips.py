@@ -79,7 +79,8 @@ class ShowFipsStatus(ShowFipsStatusSchema):
         # Switch is in Fips Not-Configured state and not SESA Ready
         # Switch is in Fips Configured state and not SESA Ready
         # Switch is in Fips Running state and SESA Ready
-        p1 = re.compile(r'^Switch +is +in +Fips +(?P<fips_state>[\S\s]+)\s+state\s+and\s+(?P<sesa_ready>\S+)')
+        # Switch and Stacking are in Fips Not-Configured state and not SESA Ready
+        p1 = re.compile(r'^Switch (is|and Stacking are) +in +Fips +(?P<fips_state>[\S\s]+)\s+state\s+and\s+(?P<sesa_ready>\S+)')
 
         # Switch and Stacking are running in fips mode
         # Switch and Stacking are not running in fips mode

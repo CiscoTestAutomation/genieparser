@@ -1,0 +1,63 @@
+--------------------------------------------------------------------------------------------------------------
+ Parallel Key Profile Info
+--------------------------------------------------------------------------------------------------------------
+
+    << Egress >>
+
+        [Egress Paralley Key Profile: OGBIN, Idx: 0]
+
+        [Egress Paralley Key Profile: RT, Idx: 1]
+            ETH
+               OID:     [  569   491   491   491 ]
+               Ref cnt: [    0     0     0     0 ]
+               E0:     0,   530,   533,     0,     0,     0,     0,     0,     0,     0,     0,     0
+               E1:     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0
+               E2:     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0
+               E3:     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0
+               No of Key Prof: 2    Wide: False    RTF: True    Stage: TRANS
+            IPV4
+               OID:     [  571   493   493   493 ]
+               Ref cnt: [    1     1     0     0 ]
+               E0:   528,   531,   534,     0,     0,     0,     0,     0,     0,     0,     0,     0
+               E1:     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0
+               E2:     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0
+               E3:     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0
+               No of Key Prof: 3    Wide: False    RTF: True    Stage: TRANS
+            IPV6
+               OID:     [  573   495   495   495 ]
+               Ref cnt: [    0     0     0     0 ]
+               E0:   529,   532,   535,     0,     0,     0,     0,     0,     0,     0,     0,     0
+               E1:     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0
+               E2:     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0
+               E3:     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0
+               No of Key Prof: 3    Wide: True    RTF: True    Stage: TRANS
+
+        [Egress Paralley Key Profile: MRRFNF_PORT, Idx: 2]
+            ETH
+               OID:     [  570   492   492   492 ]
+               Ref cnt: [    0     0     0     0 ]
+               E0:   536,   539,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0
+               E1:   542,   545,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0
+               E2:   548,   551,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0
+               E3:     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0
+               No of Key Prof: 6    Wide: False    RTF: True    Stage: TRANS
+            IPV4
+               OID:     [  572   494   494   494 ]
+               Ref cnt: [    0     0     0     0 ]
+               E0:   537,   540,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0
+               E1:   543,   546,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0
+               E2:   549,   552,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0
+               E3:     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0
+               No of Key Prof: 6    Wide: True    RTF: True    Stage: TRANS
+            IPV6
+               OID:     [  574   496   496   496 ]
+               Ref cnt: [    0     0     0     0 ]
+               E0:   538,   541,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0
+               E1:   544,   547,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0
+               E2:   550,   553,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0
+               E3:     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0
+               No of Key Prof: 6    Wide: True    RTF: True    Stage: TRANS
+
+        [Egress Paralley Key Profile: MRRFNF_VLAN, Idx: 3]
+
+        [Egress Paralley Key Profile: MRRFNF_L3, Idx: 4]

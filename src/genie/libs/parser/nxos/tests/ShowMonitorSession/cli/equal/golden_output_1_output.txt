@@ -1,0 +1,49 @@
+show monitor session 2
+session 2
+---------------
+type              : erspan-source
+mode              : extended
+ssn direction     : both
+state             : up
+erspan-id         : 1
+vrf-name          : default
+acl-name          : acl-name not specified
+ip-ttl            : 255
+ip-dscp           : 0
+destination-ip    : 9.1.1.2
+origin-ip         : 5.5.5.5 (global)
+source intf       :
+rx            :
+tx            :
+both          :
+source VLANs      :
+rx            :
+tx            :
+both          :
+source exception  :
+src intf all      : both
+filter VLANs      : 100
+simple filter     :
+trace-route   : false
+eth-type      : 0x800
+frame-type    : IPv4
+dest-ip       : 10.10.100.11/32
+src-ip        : 10.10.100.21/32
+
+Feature       Enabled   Value   Modules Supported       Modules Not-Supported
+-----------------------------------------------------------------------------
+MTU-Trunc     No
+rate-limit-rx No
+rate-limit-tx No
+Sampling      No
+MCBE          No
+L3-TX         -         -       1                       3  4  9
+ERSPAN-ACL    -         -       -                       1  3  4  9
+ERSPAN-V2     Yes       -       1  3  4  9              -
+Simpl RB span Yes       -       1  3  4  9              -
+EXTENDED-SSN  Yes       -       1  3  4  9              -
+
+Legend:
+MCBE   = Multicast Best Effort
+L3-TX  = L3 Multicast Egress SPAN
+ExSP-X = Exception Span for type X (L3, FP, or misc)

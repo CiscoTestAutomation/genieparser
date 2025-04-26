@@ -1,0 +1,62 @@
+show platform software adjacency RP active
+Number of adjacency objects: 5
+
+Adjacency id: 0x35 (53)
+  Interface: TenGigabitEthernet0/0/13, IF index: 21, Link Type: MCP_LINK_TAG
+  Encap: 0:0:0:35
+  Encap Length: 4, Encap Type: MCP_ET_ARPA, MTU: 1500
+  Flags: incomplete
+  Incomplete behavior type: Punt
+  Fixup: unknown
+  Fixup_Flags_2: unknown
+  Nexthop addr: 227.0.0.0
+  IP FRR MCP_ADJ_IPFRR_NONE 0
+  OM handle: 0x3480212828
+
+Adjacency id: 0x36 (54)
+  Interface: TenGigabitEthernet0/0/0, IF index: 8, Link Type: MCP_LINK_TAG
+  Encap: 0:0:0:36
+  Encap Length: 4, Encap Type: MCP_ET_ARPA, MTU: 1500
+  Flags: incomplete
+  Incomplete behavior type: Punt
+  Fixup: unknown
+  Fixup_Flags_2: unknown
+  Nexthop addr: 227.0.0.0
+  IP FRR MCP_ADJ_IPFRR_NONE 0
+  OM handle: 0x3480212d20
+
+Adjacency id: 0x37 (55)
+  Interface: TenGigabitEthernet0/0/13, IF index: 21, Link Type: MCP_LINK_IP
+  Encap: 70:79:b3:e3:c:0:14:a2:a0:9:db:d0:8:0
+  Encap Length: 14, Encap Type: MCP_ET_ARPA, MTU: 1500
+  Flags: no-l3-inject
+  Incomplete behavior type: None
+  Fixup: unknown
+  Fixup_Flags_2: unknown
+  Nexthop addr: 13.0.0.3
+  IP FRR MCP_ADJ_IPFRR_NONE 0
+  OM handle: 0x348021e280
+
+Adjacency id: 0x39 (57)
+  Interface: TenGigabitEthernet0/0/13, IF index: 21, Link Type: MCP_LINK_TAG
+  Encap: 70:79:b3:e3:c:0:14:a2:a0:9:db:d0:88:47
+  Encap Length: 14, Encap Type: MCP_ET_ARPA, MTU: 1500
+  Flags: unknown
+  Incomplete behavior type: None
+  Fixup: unknown
+  Fixup_Flags_2: unknown
+  Nexthop addr: 13.0.0.3
+  IP FRR MCP_ADJ_IPFRR_NONE 0
+  OM handle: 0x348021f560
+
+Adjacency id: 0x3a (58)
+  Interface: TenGigabitEthernet0/0/0, IF index: 8, Link Type: MCP_LINK_IP
+  Encap: 14:a2:a0:9:f9:a5:14:a2:a0:9:db:c3:8:0
+  Encap Length: 14, Encap Type: MCP_ET_ARPA, MTU: 1500
+  Flags: no-l3-inject
+  Incomplete behavior type: None
+  Fixup: unknown
+  Fixup_Flags_2: unknown
+  Nexthop addr: 14.0.0.4
+  IP FRR MCP_ADJ_IPFRR_NONE 0
+  OM handle: 0x348021fa30

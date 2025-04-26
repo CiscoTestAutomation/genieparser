@@ -9921,7 +9921,7 @@ class ShowPlatformUplinksSchema(MetaParser):
     """
     schema = {
         'uplinks': {
-            Any(): {
+            str: {
                 'status': str,
             },
         }
@@ -9941,7 +9941,7 @@ class ShowPlatformUplinks(ShowPlatformUplinksSchema):
 
         # matches the "Uplink port" and "Status" information
         # TenGigabitEthernet4/0/6  Up
-        p1 = re.compile(r'^(?P<uplink_port>\S+)\s+(?P<status>\S+)$')
+        p1 = re.compile(r'^(?P<uplink_port>[A-Za-z0-9/]+)\s+(?P<status>\S+)$')
 
         # Process each line of the output
         for line in output.splitlines():
@@ -9959,3 +9959,261 @@ class ShowPlatformUplinks(ShowPlatformUplinksSchema):
 
         return ret_dict
 
+class ShowPlatformSoftwareInfrastructurePuntSchema(MetaParser):
+    """Schema for 'show platform software infrastructure punt'"""
+    schema = {
+        'lsmpi_interface_internal_stats': {
+            'enabled': int,
+            'disabled': int,
+            'throttled': int,
+            'unthrottled': int,
+            'state': str,
+            'input_buffers': int,
+            'output_buffers': int,
+            'rxdone_count': int,
+            'txdone_count': int,
+            'rx_no_particletype_count': int,
+            'tx_no_particletype_count': int,
+            'txbuf_from_shadow_count': int,
+            'no_start_of_packet': int,
+            'no_end_of_packet': int
+        },
+        'punt_drop_stats': {
+            Any(): int
+        },
+        'rp_punt_stats': {
+            Any(): int
+        },
+        'control_ipv4_protocol_stats': {
+            Any(): int
+        },
+        'control_ipv6_protocol_stats': {
+            Any(): int
+        },
+        'packet_histogram': {
+            'bytes_per_bin': int,
+            'avg_in': int,
+            'avg_out': int,
+            'pak_size': {
+                Any(): {
+                    'in_count': int,
+                    'out_count': int
+                }
+            }
+        }
+    }
+
+
+class ShowPlatformSoftwareInfrastructurePunt(ShowPlatformSoftwareInfrastructurePuntSchema):
+    """Parser for 'show platform software infrastructure punt'"""
+
+    cli_command = 'show platform software infrastructure punt'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        
+        ret_dict = {}
+
+        # enabled=0, disabled=0, throttled=0, unthrottled=0, state is ready
+        p1 = re.compile(r'^enabled=(?P<enabled>\d+), disabled=(?P<disabled>\d+), throttled=(?P<throttled>\d+), unthrottled=(?P<unthrottled>\d+), state is (?P<state>\w+)$')
+
+        # Input Buffers = 2955942
+        p2 = re.compile(r'^Input Buffers = (?P<input_buffers>\d+)$')
+
+        # Output Buffers = 327045
+        p3 = re.compile(r'^Output Buffers = (?P<output_buffers>\d+)$')
+
+        # rxdone count = 2955942
+        p4 = re.compile(r'^rxdone count = (?P<rxdone_count>\d+)$')
+
+        # txdone count = 327043
+        p5 = re.compile(r'^txdone count = (?P<txdone_count>\d+)$')
+
+        # Rx no particletype count = 0
+        p6 = re.compile(r'^Rx no particletype count = (?P<rx_no_particletype_count>\d+)$')
+
+        # Tx no particletype count = 0
+        p7 = re.compile(r'^Tx no particletype count = (?P<tx_no_particletype_count>\d+)$')
+
+        # Txbuf from shadow count = 0
+        p8 = re.compile(r'^Txbuf from shadow count = (?P<txbuf_from_shadow_count>\d+)$')
+
+        # No start of packet = 0
+        p9 = re.compile(r'^No start of packet = (?P<no_start_of_packet>\d+)$')
+
+        # No end of packet = 0
+        p10 = re.compile(r'^No end of packet = (?P<no_end_of_packet>\d+)$')
+
+        # Punt drop stats:
+        # Bad version 0
+        # Bad type 0
+        # Had feature header 0
+        p11 = re.compile(r'^(?P<stat_key>[A-Za-z\s\-<>\d]+)\s+(?P<stat_value>\d+)$')
+
+        # Packet histogram(500 bytes/bin), avg size in 541, out 197:
+        p12 = re.compile(r'^Packet histogram\((?P<bytes_per_bin>\d+) bytes/bin\), avg size in (?P<avg_in>\d+), out (?P<avg_out>\d+):$')
+
+        # Pak-Size      In-Count        Out-Count
+        p13 = re.compile(r'^(?P<pak_size>[0-9\+]+):\s+(?P<in_count>\d+)\s+(?P<out_count>\d+)$')
+
+        # FOR_US Control IPv6 protcol stats:
+        # 19211 HOP-BY-HOP packets
+        p14 = re.compile(r'^\s*(?P<stat_value>\d+)\s+(?P<stat_key>[\w\s\-\<\>/]+ packets)$')
+
+        #    FOR_US Control IPv4 protcol stats:
+        # 1407344 [proto=0] packets
+        p15 = re.compile(r'^\s*(?P<stat_value>\d+)\s+\[proto=(?P<proto>\d+)\]\s+packets$')
+
+        # Punt drop stats:
+        p16 = re.compile(r'^Punt drop stats:$')
+
+        # IOSXE-RP Punt packet causes:
+        p17 = re.compile(r'^IOSXE-RP Punt packet causes:$')
+
+        #    FOR_US Control IPv4 protcol stats:
+        p18 = re.compile(r'^FOR_US Control IPv4 protcol stats:$')
+
+        #    FOR_US Control IPv6 protcol stats:
+        p19 = re.compile(r'^FOR_US Control IPv6 protcol stats:$')
+
+        current_section = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # LSMPI interface internal stats:
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                stats_dict = ret_dict.setdefault('lsmpi_interface_internal_stats', {})
+                stats_dict.update({k: int(v) if k != 'state' else v for k, v in group.items()})
+                continue
+
+            # Input Buffers = 2955942
+            m = p2.match(line)
+            if m:
+                stats_dict['input_buffers'] = int(m.group('input_buffers'))
+                continue
+
+            # Output Buffers = 327045
+            m = p3.match(line)
+            if m:
+                stats_dict['output_buffers'] = int(m.group('output_buffers'))
+                continue
+
+            # rxdone count = 2955942
+            m = p4.match(line)
+            if m:
+                stats_dict['rxdone_count'] = int(m.group('rxdone_count'))
+                continue
+            
+            # txdone count = 327043
+            m = p5.match(line)
+            if m:
+                stats_dict['txdone_count'] = int(m.group('txdone_count'))
+                continue
+
+            # Rx no particletype count = 0
+            m = p6.match(line)
+            if m:
+                stats_dict['rx_no_particletype_count'] = int(m.group('rx_no_particletype_count'))
+                continue
+
+            # Tx no particletype count = 0
+            m = p7.match(line)
+            if m:
+                stats_dict['tx_no_particletype_count'] = int(m.group('tx_no_particletype_count'))
+                continue
+
+            # Txbuf from shadow count = 0
+            m = p8.match(line)
+            if m:
+                stats_dict['txbuf_from_shadow_count'] = int(m.group('txbuf_from_shadow_count'))
+                continue
+
+            # No start of packet = 0
+            m = p9.match(line)
+            if m:
+                stats_dict['no_start_of_packet'] = int(m.group('no_start_of_packet'))
+                continue
+
+            # No end of packet = 0
+            m = p10.match(line)
+            if m:
+                stats_dict['no_end_of_packet'] = int(m.group('no_end_of_packet'))
+                continue
+
+            # Punt drop stats:
+            # IOSXE-RP Punt packet causes:
+            # FOR_US Control IPv4 protcol stats:
+            # FOR_US Control IPv6 protcol stats:
+            if p16.match(line):
+                current_section = 'punt_drop_stats'
+                ret_dict.setdefault(current_section, {})
+                continue
+            elif p17.match(line):
+                current_section = 'rp_punt_stats'
+                ret_dict.setdefault(current_section, {})
+                continue
+            elif p18.match(line):
+                current_section = 'control_ipv4_protocol_stats'
+                ret_dict.setdefault(current_section, {})
+                continue
+            elif p19.match(line):
+                current_section = 'control_ipv6_protocol_stats'
+                ret_dict.setdefault(current_section, {})
+                continue
+            
+            # Punt drop stats:
+            # Bad version 0
+            # Bad type 0
+            # Had feature header 0
+            # Had platform header 0
+            m = p11.match(line)
+            if m and current_section:
+                key = m.group('stat_key').strip().lower().replace(" ", "_").replace("-", "_").replace("<->", "_")
+                ret_dict[current_section][key] = int(m.group('stat_value'))
+                continue
+
+            # Packet histogram(500 bytes/bin), avg size in 541, out 197:
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                current_section = 'packet_histogram'
+                ret_dict.setdefault(current_section, {
+                    'bytes_per_bin': int(group['bytes_per_bin']),
+                    'avg_in': int(group['avg_in']),
+                    'avg_out': int(group['avg_out']),
+                    'pak_size': {}
+                })
+                continue
+
+            #  Pak-Size      In-Count        Out-Count
+            # 0+:        393823           317524
+            m = p13.match(line)
+            if m and current_section == 'packet_histogram':
+                group = m.groupdict()
+                ret_dict[current_section]['pak_size'][group['pak_size']] = {
+                    'in_count': int(group['in_count']),
+                    'out_count': int(group['out_count'])
+                }
+                continue
+
+            #    FOR_US Control IPv6 protcol stats:
+            #     19211 HOP-BY-HOP packets
+            m = p14.match(line)
+            if m and current_section:
+                key = m.group('stat_key').strip().lower().replace(" ", "_").replace("-", "_").replace("<->", "_")
+                ret_dict[current_section][key] = int(m.group('stat_value'))
+                continue
+
+            # FOR_US Control IPv4 protcol stats:
+            # 1407344 [proto=0] packets
+            m = p15.match(line)
+            if m and current_section:
+                proto = m.group('proto')
+                ret_dict[current_section][proto] = int(m.group('stat_value'))
+                continue
+                
+        return ret_dict

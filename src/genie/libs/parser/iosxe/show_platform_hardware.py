@@ -29,9 +29,14 @@
     * show platform hardware qfp active classification feature tcam-usage
     * 'show platform hardware qfp {status} interface if-name {interface} path'
     * 'show platform hardware qfp {status} interface if-name {interface} path'
+    * 'show platform hardware cpp active infrastructure exmem statistics user'
     * 'show platform hardware qfp active feature cts client interface'
     * 'show platform hardware cpp active feature firewall session create {session_context} {num_sessions}'
     * 'show platform hardware cpp active statistics drop'
+    * 'show platform hardware qfp active feature tcp stats detail'
+    * 'show platform hardware qfp active classification class-group-manager class-group client cce all'
+    * 'show platform hardware qfp active datapath infrastructure sw-hqf'
+    * 'show platform hardware qfp active datapath infrastructure time basic'
 """
 
 # Python
@@ -7326,6 +7331,87 @@ class ShowPlatformHardwareFedSwitchActiveNpuSlotPortRecreate(
         return ret_dict
 
 
+class ShowPlatformHardwareCppActInfraExmemStatUserSchema(MetaParser):
+    """Schema for show platform hardware cpp active infrastructure exmem statistics user"""
+    schema = {
+        'type': {
+            str: {  # Type name, e.g., 'IRAM', 'GLOBAL', etc.
+                'qfp': int,
+                'users': {
+                    str: {  # User-Name
+                        'allocations': int,
+                        'bytes_alloc': int,
+                        'bytes_total': int,
+                    }
+                }
+            }
+        }
+    }
+
+
+class ShowPlatformHardwareCppActInfraExmemStatUser(ShowPlatformHardwareCppActInfraExmemStatUserSchema):
+    """Parser for show platform hardware cpp active infrastructure exmem statistics user"""
+
+    cli_command = 'show platform hardware cpp active infrastructure exmem statistics user'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # Type: Name: IRAM, QFP: 0
+        type_name_qfp_re = re.compile(r'^Type: Name: (?P<type_name>\S+), QFP: (?P<qfp>\d+)$')
+        # Allocations  Bytes-Alloc  Bytes-Total  User-Name
+        #-------------------------------------------------
+        #    8            58228        62464        P/I
+        allocations_re = re.compile(
+            r'^(?P<allocations>\d+)\s+(?P<bytes_alloc>\d+)\s+(?P<bytes_total>\d+)\s+(?P<user_name>.+)$'
+        )
+
+        current_type = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Type: Name: IRAM, QFP: 0
+            match = type_name_qfp_re.match(line)
+            if match:
+                type_name = match.group('type_name')
+                qfp = int(match.group('qfp'))
+                current_type = type_name
+
+                # Initialize the type dictionary
+                parsed_dict.setdefault('type', {})
+
+                if current_type not in parsed_dict['type']:
+                    parsed_dict['type'][current_type] = {
+                        'qfp': qfp,
+                        'users': {}
+                    }
+                continue
+
+            # Allocations  Bytes-Alloc  Bytes-Total  User-Name
+            #-------------------------------------------------
+            #    8            58228        62464        P/I
+            match = allocations_re.match(line)
+            if match and current_type:
+                user_name = match.group('user_name').strip()
+                allocations = int(match.group('allocations'))
+                bytes_alloc = int(match.group('bytes_alloc'))
+                bytes_total = int(match.group('bytes_total'))
+
+                # Populate the user data
+                parsed_dict['type'][current_type]['users'][user_name] = {
+                    'allocations': allocations,
+                    'bytes_alloc': bytes_alloc,
+                    'bytes_total': bytes_total
+                }
+
+        return parsed_dict
+
+
 class ShowPlatformHardwareQfpActiveFeatureCtsClientInterfaceSchema(MetaParser):
     """Schema for show platform hardware qfp active feature cts client interface"""
     schema = {
@@ -7560,7 +7646,785 @@ class ShowPlatformHardwareCppActiveStatisticsDrop(ShowPlatformHardwareCppActiveS
                 }
 
         return parsed_dict
+ 
+class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightRoutesSchema(MetaParser):
+    """Schema for:
+    * 'show platform hardware fed switch active fwd-asic insight l2m_routes'
+    * 'show platform hardware fed switch active fwd-asic insight l3m_routes'
+    """
 
+    schema = {
+        "routes": {
+            int: {
+                "switch_cookie": int,
+                "ip_version": int,
+                "saddr": str,
+                "gaddr": str,
+                "mcg_gid": int,
+                "mcg_cookie": str,
+            }
+        },
+        "dev_ids": list,
+    }
 
+class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightRoutes(ShowPlatformHardwareFedSwitchActiveFwdAsicInsightRoutesSchema):
 
+    """Parser for:
+    * 'show platform hardware fed switch active fwd-asic insight l2m_routes'
+    * 'show platform hardware fed switch active fwd-asic insight l3m_routes'
+    """
+
+    cli_command = [
+        "show platform hardware fed switch active fwd-asic insight l2m_routes",
+        "show platform hardware fed switch active fwd-asic insight l3m_routes",
+    ]
+
+    def cli(self, route_type="l2m", output=None):
+        if output is None:
+            if route_type == "l2m":
+                cmd = self.cli_command[0]
+            elif route_type == "l3m":
+                cmd = self.cli_command[1]
+            else:
+                raise ValueError("Invalid route_type. Use 'l2m' or 'l3m'.")
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+
+        # Example pattern for l2m_routes or l3m_routes:
+        # +------------+---------------+------------+-----------------+-----------+------------+----------------+
+        # | switch-gid | switch-cookie | ip-version | saddr           | gaddr     | l2-mcg-gid | l2-mcg-cookie  |
+        # +------------+---------------+------------+-----------------+-----------+------------+----------------+
+        # | 103        |      103      | 4          | 255.255.255.255 | 232.0.0.1 | 26393      | urid:0x20::8a7 |
+        # |            |               |            |                 |           |            |                |
+        # +------------+---------------+------------+-----------------+-----------+------------+----------------+
+        p1 = re.compile(
+            r"^\|\s+(?P<switch_gid>\d+)\s+\|\s+(?P<switch_cookie>\d+)\s+\|\s+(?P<ip_version>\d+)\s+\|\s+(?P<saddr>\S+)\s+\|\s+(?P<gaddr>\S+)\s+\|\s+(?P<mcg_gid>\d+)\s+\|\s+(?P<mcg_cookie>\S+)\s+\|$"
+        )
+
+        # dev_id: 0
+        # dev_id: 1
+        # dev_id: 2
+        # dev_id: 3
+        p2 = re.compile(r"^dev_id:\s+(?P<dev_id>\d+)$")
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # +------------+---------------+------------+-----------------+-----------+------------+----------------+
+            # | switch-gid | switch-cookie | ip-version | saddr           | gaddr     | l2-mcg-gid | l2-mcg-cookie  |
+            # +------------+---------------+------------+-----------------+-----------+------------+----------------+
+            # | 103        |      103      | 4          | 255.255.255.255 | 232.0.0.1 | 26393      | urid:0x20::8a7 |
+            # |            |               |            |                 |           |            |                |
+            # +------------+---------------+------------+-----------------+-----------+------------+----------------+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                switch_gid = int(group["switch_gid"])
+                route_dict = ret_dict.setdefault("routes", {}).setdefault(switch_gid, {})
+
+                route_dict.update({
+                    "switch_cookie": int(group["switch_cookie"]),
+                    "ip_version": int(group["ip_version"]),
+                    "saddr": group["saddr"],
+                    "gaddr": group["gaddr"],
+                    "mcg_gid": int(group["mcg_gid"]),
+                    "mcg_cookie": group["mcg_cookie"],
+                })
+                continue
+
+            # dev_id: 0
+            # dev_id: 1
+            # dev_id: 2
+            # dev_id: 3
+            m = p2.match(line)
+            if m:
+                dev_id = int(m.group("dev_id"))
+                dev_ids = ret_dict.setdefault("dev_ids", [])
+                dev_ids.append(dev_id)
+                continue
+            
         return ret_dict
+
+
+ 
+
+class ShowPlatformHardwareQfpActiveFeatureTcpStatsDetailSchema(MetaParser):
+    """Schema for show platform hardware qfp active feature tcp stats detail"""
+    schema = {
+        'total_tcp_sessions': int,
+        'tcp_packets_processed': int,
+        'retransmissions': int,
+        'tcp_segment_drops': {
+            'out_of_order': int,
+            'window_violation': int,
+            'checksum_error': int,
+        },
+        'connection_attempts': {
+            'successful': int,
+            'failed': int,
+        },
+        'window_size_adjustments': int,
+    }
+
+
+class ShowPlatformHardwareQfpActiveFeatureTcpStatsDetail(ShowPlatformHardwareQfpActiveFeatureTcpStatsDetailSchema):
+    """Parser for 'show platform hardware qfp active feature tcp stats detail'"""
+
+    cli_command = 'show platform hardware qfp active feature tcp stats detail'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # Total TCP Sessions: 150
+        p1 = re.compile(r'^Total TCP Sessions: +(?P<total_tcp_sessions>\d+)$')
+        # TCP Packets Processed: 12000
+        p2 = re.compile(r'^TCP Packets Processed: +(?P<tcp_packets_processed>\d+)$')
+        # Retransmissions: 50
+        p3 = re.compile(r'^Retransmissions: +(?P<retransmissions>\d+)$')
+        # TCP Segment Drops:
+        p4 = re.compile(r'^TCP Segment Drops:$')
+        # - Out of Order: 30
+        p5 = re.compile(r'^.*Out of Order: +(?P<out_of_order>\d+)$')
+        # - Window Violation: 20
+        p6 = re.compile(r'^.*Window Violation: +(?P<window_violation>\d+)$')
+        # - Checksum Error: 10
+        p7 = re.compile(r'^.*Checksum Error: +(?P<checksum_error>\d+)$')
+        # Connection Attempts:
+        p8 = re.compile(r'^Connection Attempts:$')
+        # - Successful: 145
+        p9 = re.compile(r'^.*Successful: +(?P<successful>\d+)$')
+        # - Failed: 5
+        p10 = re.compile(r'^.*Failed: +(?P<failed>\d+)$')
+        # Window Size Adjustments: 200
+        p11 = re.compile(r'^Window Size Adjustments: +(?P<window_size_adjustments>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Total TCP Sessions: 150
+            match = p1.match(line)
+            if match:
+                parsed_dict['total_tcp_sessions'] = int(match.group('total_tcp_sessions'))
+                continue
+
+            # TCP Packets Processed: 12000
+            match = p2.match(line)
+            if match:
+                parsed_dict['tcp_packets_processed'] = int(match.group('tcp_packets_processed'))
+                continue
+
+            # Retransmissions: 50
+            match = p3.match(line)
+            if match:
+                parsed_dict['retransmissions'] = int(match.group('retransmissions'))
+                continue
+
+            # TCP Segment Drops:
+            match = p4.match(line)
+            if match:
+                parsed_dict.setdefault('tcp_segment_drops', {})
+                continue
+
+            # - Out of Order: 30
+            match = p5.match(line)
+            if match:
+                parsed_dict['tcp_segment_drops']['out_of_order'] = int(match.group('out_of_order'))
+                continue
+
+            # - Window Violation: 20
+            match = p6.match(line)
+            if match:
+                parsed_dict['tcp_segment_drops']['window_violation'] = int(match.group('window_violation'))
+                continue
+
+            # - Checksum Error: 10
+            match = p7.match(line)
+            if match:
+                parsed_dict['tcp_segment_drops']['checksum_error'] = int(match.group('checksum_error'))
+                continue
+
+            # Connection Attempts:
+            match = p8.match(line)
+            if match:
+                parsed_dict.setdefault('connection_attempts', {})
+                continue
+
+            # - Successful: 145
+            match = p9.match(line)
+            if match:
+                parsed_dict['connection_attempts']['successful'] = int(match.group('successful'))
+                continue
+
+            # - Failed: 5
+            match = p10.match(line)
+            if match:
+                parsed_dict['connection_attempts']['failed'] = int(match.group('failed'))
+                continue
+
+            # Window Size Adjustments: 200
+            match = p11.match(line)
+            if match:
+                parsed_dict['window_size_adjustments'] = int(match.group('window_size_adjustments'))
+                continue
+
+        return parsed_dict
+
+class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightGroupsSchema(MetaParser):
+    """Schema for:
+    * 'show platform hardware fed switch active fwd-asic insight l3m_groups'
+    * 'show platform hardware fed switch active fwd-asic insight l2m_groups'
+    """
+
+    schema = {
+        "groups": {
+            int: {
+                "cookie": str,
+                "num_members": int,
+                "replication_paradigm": str,
+                "egress_counter_id": int,
+                "egress_counter_data": list,
+            }
+        }
+    }
+
+class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightGroups(ShowPlatformHardwareFedSwitchActiveFwdAsicInsightGroupsSchema):
+    """Parser for:
+    * 'show platform hardware fed switch active fwd-asic insight l3m_groups'
+    * 'show platform hardware fed switch active fwd-asic insight l2m_groups'
+    """
+
+    cli_command = [
+        "show platform hardware fed switch active fwd-asic insight l3m_groups",
+        "show platform hardware fed switch active fwd-asic insight l2m_groups",
+    ]
+
+    def cli(self, group_type="l3m", output=None):
+        if output is None:
+            if group_type == "l3m":
+                cmd = self.cli_command[0]
+            elif group_type == "l2m":
+                cmd = self.cli_command[1]
+            else:
+                raise ValueError("Invalid group_type. Use 'l3m' or 'l2m'.")
+            output = self.device.execute(cmd)
+
+        # Initialize the return dictionary
+        ret_dict = {}
+
+        # Example pattern for l3m_groups:
+        # +------------+----------------+-------------+----------------------+-------------------+---------------------+
+        # | l3-mcg-gid | l3-mcg-cookie  | num-members | replication-paradigm | egress-counter-id | egress-counter-data |
+        # +------------+----------------+-------------+----------------------+-------------------+---------------------+
+        # | 12345      | urid:0x30::abc | 3           |       INGRESS        | 0                 | [0,0]               |
+        # +------------+----------------+-------------+----------------------+-------------------+---------------------+
+    
+        # Example pattern for l2m_groups:
+        # +------------+----------------+-------------+----------------------+-------------------+---------------------+
+        # | l2-mcg-gid | l2-mcg-cookie  | num-members | replication-paradigm | egress-counter-id | egress-counter-data |
+        # +------------+----------------+-------------+----------------------+-------------------+---------------------+
+        # | 26393      | urid:0x20::8a7 | 2           |       INGRESS        | 0                 | [0,0]               |
+        # +------------+----------------+-------------+----------------------+-------------------+---------------------+
+
+        p1 = re.compile(
+            r"^\|\s+(?P<gid>\d+)\s+\|\s+(?P<cookie>\S+)\s+\|\s+(?P<num_members>\d+)\s+\|\s+(?P<replication_paradigm>\S+)\s+\|\s+(?P<egress_counter_id>\d+)\s+\|\s+\[(?P<egress_counter_data>[\d,]+)\]\s+\|$"
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+
+
+            # Example pattern for l3m_groups:
+            # +------------+----------------+-------------+----------------------+-------------------+---------------------+
+            # | l3-mcg-gid | l3-mcg-cookie  | num-members | replication-paradigm | egress-counter-id | egress-counter-data |
+            # +------------+----------------+-------------+----------------------+-------------------+---------------------+
+            # | 12345      | urid:0x30::abc | 3           |       INGRESS        | 0                 | [0,0]               |
+            # +------------+----------------+-------------+----------------------+-------------------+---------------------+
+        
+            # Example pattern for l2m_groups:
+            # +------------+----------------+-------------+----------------------+-------------------+---------------------+
+            # | l2-mcg-gid | l2-mcg-cookie  | num-members | replication-paradigm | egress-counter-id | egress-counter-data |
+            # +------------+----------------+-------------+----------------------+-------------------+---------------------+
+            # | 26393      | urid:0x20::8a7 | 2           |       INGRESS        | 0                 | [0,0]               |
+            # +------------+----------------+-------------+----------------------+-------------------+---------------------+
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                gid = int(group["gid"])
+                group_dict = {
+                    "cookie": group["cookie"],
+                    "num_members": int(group["num_members"]),
+                    "replication_paradigm": group["replication_paradigm"],
+                    "egress_counter_id": int(group["egress_counter_id"]),
+                    "egress_counter_data": [int(x) for x in group["egress_counter_data"].split(",")]
+                }
+                # Populate the dictionary
+                ret_dict.setdefault("groups", {})[gid] = group_dict
+            
+        return ret_dict
+
+
+class ShowPlatformHardwareQfpActiveClassificationSchema(MetaParser):
+    """Schema for 'show platform hardware qfp active classification class-group-manager class-group client cce all"""
+
+    schema = {
+        'class_groups': {
+            Any(): {
+                'name': str,
+            }
+        }
+    }
+
+
+class ShowPlatformHardwareQfpActiveClassification(ShowPlatformHardwareQfpActiveClassificationSchema):
+    """Parser for show platform hardware qfp active classification class-group-manager class-group client cce all"""
+
+    cli_command = 'show platform hardware qfp active classification class-group-manager class-group client cce all'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # class-group [CCE:7232096] classMapTest
+        p1 = re.compile(r'^class-group \[CCE:(\d+)\] (\S+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # class-group [CCE:7232096] classMapTest
+            match = p1.match(line)
+            if match:
+                cce_id = match.group(1)
+                class_group_name = match.group(2)
+
+                class_group_dict = parsed_dict.setdefault('class_groups', {})
+                class_group_dict[cce_id] = {'name': class_group_name}
+
+        return parsed_dict
+    
+    
+
+class ShowPlatformHardwareQfpActiveDatapathInfrastructureSwHqfSchema(MetaParser):
+    """Schema for show platform hardware qfp active datapath infrastructure sw-hqf"""
+    
+    schema = {
+        'name': str,
+            Optional('hqf'): {
+                int: {
+                    'ipc': {
+                        'send': int,
+                        'fc': int,
+                        'congested_cnt': int,
+                    },
+                    'recycle': {
+                        'send_hi': int,
+                        'send_lo': int,
+                        'fc_hi': int,
+                        'fc_lo': int,
+                        'cong_hi': int,
+                        'cong_lo': int,
+                    },
+                    'pkt': {
+                        'send_hi': int,
+                        'send_lo': int,
+                        'fc_full_hi': int,
+                        'fc_full_lo': int,
+                        'cong_hi': int,
+                        'cong_lo': int,
+                    },
+                    'aggr_send_stats': int,
+                    'aggr_send_lo_state': int,
+                    'aggr_send_hi_stats': int,
+                    'max_tx_burst_sz_hi': int,
+                    'max_tx_burst_sz_lo': int,
+                    'gather_failed_to_alloc_b4q': int,
+                    'ticks': int,
+                    'max_ticks_accumulated': int,
+                    'mpsc_stats': {
+                        'count': int,
+                        'enq': int,
+                        'enq_spin': int,
+                        'enq_post': int,
+                        'enq_flush': int,
+                        'sig_cnt': int,
+                        'enq_cancel': int,
+                        'deq': int,
+                        'deq_wait': int,
+                        'deq_fail': int,
+                        'deq_cancel': int,
+                        'deq_wait_timeout': int,
+                    }
+                }
+            }
+    }
+
+
+class ShowPlatformHardwareQfpActiveDatapathInfrastructureSwHqf(ShowPlatformHardwareQfpActiveDatapathInfrastructureSwHqfSchema):
+    """Parser for show platform hardware qfp active datapath infrastructure sw-hqf"""
+
+    cli_command = 'show platform hardware qfp active datapath infrastructure sw-hqf'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # Regular expressions for parsing the output
+        # Name                   : Pri1 Pri2 None / Inflight pkts
+        p1 = re.compile(r'^Name\s+:\s+(?P<name>.+)$')
+        # HQF[0] IPC: send 22624572 fc 0 congested_cnt 0
+        p2 = re.compile(r'^HQF\[(?P<index>\d+)\]\s+IPC:\s+send\s+(?P<send>\d+)\s+fc\s+(?P<fc>\d+)\s+congested_cnt\s+(?P<congested_cnt>\d+)$')
+        # HQF[0] recycle: send hi 0 send lo 6762623001
+        p3 = re.compile(r'^HQF\[(?P<index>\d+)\]\s+recycle:\s+send\s+hi\s+(?P<send_hi>\d+)\s+send\s+lo\s+(?P<send_lo>\d+)$')
+        # fc hi 0 fc lo 0
+        p4 = re.compile(r'^fc\s+hi\s+(?P<fc_hi>\d+)\s+fc\s+lo\s+(?P<fc_lo>\d+)$')
+        # cong hi 0 cong lo 0
+        p5 = re.compile(r'^cong\s+hi\s+(?P<cong_hi>\d+)\s+cong\s+lo\s+(?P<cong_lo>\d+)$')
+        # HQF[0] pkt: send hi 233619411 send lo 7565788702
+        p6 = re.compile(r'^HQF\[(?P<index>\d+)\]\s+pkt:\s+send\s+hi\s+(?P<send_hi>\d+)\s+send\s+lo\s+(?P<send_lo>\d+)$')
+        # fc/full hi 0 fc/full lo 0
+        p7 = re.compile(r'^fc/full\s+hi\s+(?P<fc_full_hi>\d+)\s+fc/full\s+lo\s+(?P<fc_full_lo>\d+)$')
+        # HQF[0] aggr send stats 14584654507 aggr send lo state 14351035183 
+        p8 = re.compile(r'^HQF\[(?P<index>\d+)\]\s+aggr\s+send\s+stats\s+(?P<aggr_send_stats>\d+)\s+aggr\s+send\s+lo\s+state\s+(?P<aggr_send_lo_state>\d+)$')
+        # aggr send hi stats 233619324
+        p9 = re.compile(r'^aggr\s+send\s+hi\s+stats\s+(?P<aggr_send_hi_stats>\d+)$')
+        # max_tx_burst_sz_hi 0 max_tx_burst_sz_lo 0
+        p10 = re.compile(r'^max_tx_burst_sz_hi\s+(?P<max_tx_burst_sz_hi>\d+)\s+max_tx_burst_sz_lo\s+(?P<max_tx_burst_sz_lo>\d+)$')
+        # HQF[0] gather: failed_to_alloc_b4q 0
+        p11 = re.compile(r'^HQF\[(?P<index>\d+)\]\s+gather:\s+failed_to_alloc_b4q\s+(?P<failed_to_alloc_b4q>\d+)$')
+        # HQF[0] ticks 106210219859, max ticks accumulated 2
+        p12 = re.compile(r'^HQF\[(?P<index>\d+)\]\s+ticks\s+(?P<ticks>\d+),\s+max\s+ticks\s+accumulated\s+(?P<max_ticks_accumulated>\d+)$')
+        # HQF[0] mpsc stats: count: 18446744060824649728
+        p13 = re.compile(r'^HQF\[(?P<index>\d+)\]\s+mpsc\s+stats:\s+count:\s+(?P<count>\d+)$')
+        # enq 1603618196 enq_spin 13412 enq_post 0 enq_flush 0
+        p14 = re.compile(r'^enq\s+(?P<enq>\d+)\s+enq_spin\s+(?P<enq_spin>\d+)\s+enq_post\s+(?P<enq_post>\d+)\s+enq_flush\s+(?P<enq_flush>\d+)$')
+        # sig_cnt:0 enq_cancel 0
+        p15 = re.compile(r'^sig_cnt:(?P<sig_cnt>\d+)\s+enq_cancel\s+(?P<enq_cancel>\d+)$')
+        # deq 14488520084 deq_wait 0 deq_fail 0 deq_cancel 0
+        p16 = re.compile(r'^deq\s+(?P<deq>\d+)\s+deq_wait\s+(?P<deq_wait>\d+)\s+deq_fail\s+(?P<deq_fail>\d+)\s+deq_cancel\s+(?P<deq_cancel>\d+)$')
+        # deq_wait_timeout 0
+        p17 = re.compile(r'^deq_wait_timeout\s+(?P<deq_wait_timeout>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Match each line with the appropriate regex pattern
+            # Name                   : Pri1 Pri2 None / Inflight pkts
+            m = p1.match(line)
+            if m:
+                parsed_dict['name'] = m.group('name')
+                continue
+            
+            # HQF[0] IPC: send 22624572 fc 0 congested_cnt 0
+            m = p2.match(line)
+            if m:
+                index = int(m.group('index'))
+                hqf_dict = parsed_dict.setdefault('hqf', {}).setdefault(index, {})
+                hqf_dict['ipc'] = {
+                    'send': int(m.group('send')),
+                    'fc': int(m.group('fc')),
+                    'congested_cnt': int(m.group('congested_cnt')),
+                }
+                continue
+            
+            # HQF[0] recycle: send hi 0 send lo 6762623001
+            m = p3.match(line)
+            if m:
+                index = int(m.group('index'))
+                hqf_dict = parsed_dict['hqf'][index]
+                hqf_dict['recycle'] = {
+                    'send_hi': int(m.group('send_hi')),
+                    'send_lo': int(m.group('send_lo')),
+                }
+                continue
+            
+            # fc hi 0 fc lo 0
+            m = p4.match(line)
+            if m:
+                hqf_dict['recycle'].update({
+                    'fc_hi': int(m.group('fc_hi')),
+                    'fc_lo': int(m.group('fc_lo')),
+                })
+                continue
+            
+            # cong hi 0 cong lo 0
+            m = p5.match(line)
+            if m:
+                if 'recycle' in hqf_dict and 'cong_hi' not in hqf_dict['recycle']:
+                    hqf_dict['recycle'].update({
+                        'cong_hi': int(m.group('cong_hi')),
+                        'cong_lo': int(m.group('cong_lo')),
+                    })
+                if 'pkt' in hqf_dict and 'cong_hi' not in hqf_dict['pkt']:
+                    hqf_dict['pkt'].update({
+                        'cong_hi': int(m.group('cong_hi')),
+                        'cong_lo': int(m.group('cong_lo')),
+                    })
+                continue
+            
+            # HQF[0] pkt: send hi 233619411 send lo 7565788702
+            m = p6.match(line)
+            if m:
+                index = int(m.group('index'))
+                hqf_dict = parsed_dict['hqf'][index]
+                hqf_dict['pkt'] = {
+                    'send_hi': int(m.group('send_hi')),
+                    'send_lo': int(m.group('send_lo')),
+                }
+                continue
+            
+            # fc/full hi 0 fc/full lo 0
+            m = p7.match(line)
+            if m:
+                hqf_dict['pkt'].update({
+                    'fc_full_hi': int(m.group('fc_full_hi')),
+                    'fc_full_lo': int(m.group('fc_full_lo')),
+                })
+                continue
+            
+            # HQF[0] aggr send stats 14584654507 aggr send lo state 14351035183
+            m = p8.match(line)
+            if m:
+                index = int(m.group('index'))
+                hqf_dict = parsed_dict['hqf'][index]
+                hqf_dict.update({
+                    'aggr_send_stats': int(m.group('aggr_send_stats')),
+                    'aggr_send_lo_state': int(m.group('aggr_send_lo_state')),
+                })
+                continue
+            
+            # aggr send hi stats 233619324
+            m = p9.match(line)
+            if m:
+                hqf_dict.update({
+                    'aggr_send_hi_stats': int(m.group('aggr_send_hi_stats')),
+                })
+                continue
+            
+            # max_tx_burst_sz_hi 0 max_tx_burst_sz_lo 0
+            m = p10.match(line)
+            if m:
+                hqf_dict.update({
+                    'max_tx_burst_sz_hi': int(m.group('max_tx_burst_sz_hi')),
+                    'max_tx_burst_sz_lo': int(m.group('max_tx_burst_sz_lo')),
+                })
+                continue
+            
+            # HQF[0] gather: failed_to_alloc_b4q 0
+            m = p11.match(line)
+            if m:
+                index = int(m.group('index'))
+                hqf_dict = parsed_dict['hqf'][index]
+                hqf_dict['gather_failed_to_alloc_b4q'] = int(m.group('failed_to_alloc_b4q'))
+                continue
+            
+            # HQF[0] ticks 106210219859, max ticks accumulated 2
+            m = p12.match(line)
+            if m:
+                index = int(m.group('index'))
+                hqf_dict = parsed_dict['hqf'][index]
+                hqf_dict.update({
+                    'ticks': int(m.group('ticks')),
+                    'max_ticks_accumulated': int(m.group('max_ticks_accumulated')),
+                })
+                continue
+            
+            # HQF[0] mpsc stats: count: 18446744060824649728
+            m = p13.match(line)
+            if m:
+                index = int(m.group('index'))
+                hqf_dict = parsed_dict['hqf'][index]
+                hqf_dict['mpsc_stats'] = {
+                    'count': int(m.group('count')),
+                }
+                continue
+            
+            # enq 1603618196 enq_spin 13412 enq_post 0 enq_flush 0
+            m = p14.match(line)
+            if m:
+                hqf_dict['mpsc_stats'].update({
+                    'enq': int(m.group('enq')),
+                    'enq_spin': int(m.group('enq_spin')),
+                    'enq_post': int(m.group('enq_post')),
+                    'enq_flush': int(m.group('enq_flush')),
+                })
+                continue
+            
+            # sig_cnt:0 enq_cancel 0
+            m = p15.match(line)
+            if m:
+                hqf_dict['mpsc_stats'].update({
+                    'sig_cnt': int(m.group('sig_cnt')),
+                    'enq_cancel': int(m.group('enq_cancel')),
+                })
+                continue
+            
+            # deq 14488520084 deq_wait 0 deq_fail 0 deq_cancel 0
+            m = p16.match(line)
+            if m:
+                hqf_dict['mpsc_stats'].update({
+                    'deq': int(m.group('deq')),
+                    'deq_wait': int(m.group('deq_wait')),
+                    'deq_fail': int(m.group('deq_fail')),
+                    'deq_cancel': int(m.group('deq_cancel')),
+                })
+                continue
+            
+            # deq_wait_timeout 0
+            m = p17.match(line)
+            if m:
+                hqf_dict['mpsc_stats'].update({
+                    'deq_wait_timeout': int(m.group('deq_wait_timeout')),
+                })
+                continue
+
+        return parsed_dict
+
+
+
+class ShowPlatformHardwareQfpActiveDatapathInfrastructureTimeBasicSchema(MetaParser):
+    """Schema for show platform hardware qfp active datapath infrastructure time basic"""
+    schema = {
+        'name': str,
+        'timers_active': int,
+        'timers_popped': int,
+        'timers_new_thread_started': int,
+        'timer_events_received': int,
+        'sysup_time': int,
+        'heartbeat_expected_seq': str,
+        'time_hb_serial': int,
+        'time_hb_errors': int,
+        Optional('hb_input'): int,
+        Optional('hb_output'): int,
+        Optional('hb_tick_limit'): int,
+        Optional('overflow'): int,
+        Optional('pending'): int,
+        Optional('ppe_timer_hb_max_tick'): int,
+    }
+
+
+class ShowPlatformHardwareQfpActiveDatapathInfrastructureTimeBasic(ShowPlatformHardwareQfpActiveDatapathInfrastructureTimeBasicSchema):
+    """Parser for show platform hardware qfp active datapath infrastructure time basic"""
+
+    cli_command = 'show platform hardware qfp active datapath infrastructure time basic'
+
+    def cli(self, output=None):
+        if output is None:
+            # Execute the command on the device
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # Define regex patterns for each line
+        # timers active 46
+        p1 = re.compile(r'^timers active (?P<timers_active>\d+)$')
+        # timers popped 0
+        p2 = re.compile(r'^timers popped (?P<timers_popped>\d+)$')
+        # timers new thread started 1498569172
+        p3 = re.compile(r'^timers new thread started (?P<timers_new_thread_started>-?\d+)$')
+        # timer events received 1498569172
+        p4 = re.compile(r'^timer events received (?P<timer_events_received>-?\d+)$')
+        # sysup time 5056156016
+        p5 = re.compile(r'^sysup time (?P<sysup_time>\d+)$')
+        # heartbeat expected seq# 0x0
+        p6 = re.compile(r'^heartbeat expected seq# (?P<heartbeat_expected_seq>0x[0-9a-fA-F]+)$')
+        # time hb searial 0
+        p7 = re.compile(r'^time hb searial (?P<time_hb_serial>\d+)$')
+        # time hb errors 0
+        p8 = re.compile(r'^time hb errors (?P<time_hb_errors>\d+)$')
+        # HB input 316009849 output 316009691 tick limit 18
+        p9 = re.compile(r'^HB input (?P<hb_input>\d+) output (?P<hb_output>\d+) tick limit (?P<hb_tick_limit>\d+)$')
+        # overflow 1584  pending 158
+        p10 = re.compile(r'^overflow (?P<overflow>\d+)  pending (?P<pending>\d+)$')
+        # PPE timer HB max tick 1
+        p11 = re.compile(r'^PPE timer HB max tick (?P<max_tick>\d+)$')
+
+        #parsed_dict['name'] = 'Time Information'
+        # Iterate over each line and match it with the corresponding regex pattern
+        for line in output.splitlines():
+            line = line.strip()
+            if 'Time Information' in line:
+                parsed_dict.setdefault('name', 'Time Information')
+            # Match each line with the appropriate regex pattern
+            # timers active 46
+            m = p1.match(line)
+            if m:
+                parsed_dict['timers_active'] = int(m.group('timers_active'))
+                continue
+            
+            # timers popped 0
+            m = p2.match(line)
+            if m:
+                parsed_dict['timers_popped'] = int(m.group('timers_popped'))
+                continue
+            
+            # timers new thread started 1498569172
+            m = p3.match(line)
+            if m:
+                parsed_dict['timers_new_thread_started'] = int(m.group('timers_new_thread_started'))
+                continue
+            
+            # timer events received 1498569172
+            m = p4.match(line)
+            if m:
+                parsed_dict['timer_events_received'] = int(m.group('timer_events_received'))
+                continue
+            
+            # sysup time 5056156016
+            m = p5.match(line)
+            if m:
+                parsed_dict['sysup_time'] = int(m.group('sysup_time'))
+                continue
+            
+            # heartbeat expected seq# 0x0
+            m = p6.match(line)
+            if m:
+                parsed_dict['heartbeat_expected_seq'] = m.group('heartbeat_expected_seq')
+                continue
+            
+            # time hb searial 0
+            m = p7.match(line)
+            if m:
+                parsed_dict['time_hb_serial'] = int(m.group('time_hb_serial'))
+                continue
+            
+            # time hb errors 0
+            m = p8.match(line)
+            if m:
+                parsed_dict['time_hb_errors'] = int(m.group('time_hb_errors'))
+                continue
+            
+            # HB input 316009849 output 316009691 tick limit 18
+            m = p9.match(line)
+            if m:
+                parsed_dict['hb_input'] = int(m.group('hb_input'))
+                parsed_dict['hb_output'] = int(m.group('hb_output'))
+                parsed_dict['hb_tick_limit'] = int(m.group('hb_tick_limit'))
+                continue
+            
+            # overflow 1584  pending 158
+            m = p10.match(line)
+            if m:
+                parsed_dict['overflow'] = int(m.group('overflow'))
+                parsed_dict['pending'] = int(m.group('pending'))
+                continue
+            
+            # PPE timer HB max tick 1
+            m = p11.match(line)
+            if m:
+                parsed_dict['ppe_timer_hb_max_tick'] = int(m.group('max_tick'))
+                continue
+
+        return parsed_dict
+

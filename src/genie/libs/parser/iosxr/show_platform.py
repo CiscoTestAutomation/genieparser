@@ -1073,7 +1073,7 @@ class AdminShowDiagChassisSchema(MetaParser):
         Optional('hw_version'): str,
         Optional('top_assembly_block'): {
             Optional('serial_number'): str,
-            'part_number': str,
+            Optional('part_number'): str,
             Optional('part_revision'): str,
             Optional('revision'): str,
             Optional('mfg_deviation'): str,

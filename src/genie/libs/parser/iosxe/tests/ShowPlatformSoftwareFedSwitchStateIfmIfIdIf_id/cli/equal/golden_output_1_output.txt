@@ -1,0 +1,72 @@
+Interface IF_ID         : 0x0000000000000456
+Interface Name          : GigabitEthernet2/0/9
+Interface Block Pointer : 0x7c049f6d2ea8
+Interface Block State   : Ready
+Interface State         : Disabled
+Interface Admin mode    : Admin down
+Interface Status        : NPD
+Interface Ref-Cnt       : 1
+Interface Type          : ETHER
+	Port Type         : SWITCH PORT
+	Port Location     : REMOTE
+	Slot              : 5
+	Unit              : 0
+	Slot Unit         : 9
+	SNMP IF Index     : 81
+	GPN               : 201
+	EC Channel        : 0
+	EC Index          : 0
+	QoS Trust Type    : 0 (UNSPECIFIED)
+Ref Count : 1 (feature Ref Counts + 1)
+No Feature Reference count Present
+IFM Feature Sub block information
+	Port Physical Subblock
+		Affinity .......... [remote]
+		LPN ............... [9]
+		GPN ............... [201]
+		Speed ............. [10MB]
+		type .............. [IFM_PORT_TYPE_L2]
+		MTU ............... [1522]
+		ac profile ........ [IFM_AC_PROFILE_L2_DEFAULT]
+	Port Subblock [0]
+		Mac port oid................... [0x624(1572)]
+		System port oid................ [0x625(1573)]
+		System port gid................ [305]
+		Ethernet port oid.............. [0x626(1574)]
+		Port mode...................... [Dense Mode]
+		Dense mode service port gid.... [122933]
+		Dense mode service port oid.... [0x627(1575)]
+		Dense mode port vid............ [0]
+		Voq oid........................ [0x0(0)]
+	Platform Subblock
+		Asic.............. [0]
+		Core.............. [0]
+		Asic Port......... [0]
+		Asic Sub Port..... [0]
+		Ifg Id............ [0]
+		Mac Num........... [0]
+		First Serdes...... [8]
+		Last Serdes....... [8]
+		FC Mode........... [0]
+		FEC Mode.......... [0]
+		Context Id........ [0]
+	Port L2 Subblock
+		L2 Port Mode ................ [port_mode_none]
+		L2 Port Mode set............. [Yes]
+		Ethertype.................... [8100]
+		Port vlan  .................. [0]
+			Native vlan (trunk) .............. [0]
+			Untagged port bd vlan (access) ... [0]
+			Default vlan (dot1q tunnel) ...... [0]
+		Native Vlan Tagging.......... [Native Vlan None]
+		status....................... [0]
+		ac profile .................. [IFM_AC_PROFILE_L2_DEFAULT]
+	 Port CTS Subblock is NULL if_id = 0x456 
+	 Port CTS Subblock
+		Disable SGACL .................... [0x0]
+		Trust ............................ [0x0]
+		Propagate ........................ [0x0]
+		Port SGT ......................... [0xffff]
+Events Log
+[2024/09/04 14:26:56.112] Created
+[2024/09/04 14:26:56.113] Mode None

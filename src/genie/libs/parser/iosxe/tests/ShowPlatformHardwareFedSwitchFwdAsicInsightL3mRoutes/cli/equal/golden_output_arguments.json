@@ -1,0 +1,4 @@
+{
+    "switch_id" : "1",
+    "filter" : "saddr='14:14:14::2',gaddr='ff13::1'"
+}

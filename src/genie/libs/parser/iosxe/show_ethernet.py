@@ -691,3 +691,132 @@ class ShowEthernetRingG8032Brief(ShowEthernetRingG8032BriefSchema):
 
         return ret_dict
 
+# ====================================================================
+#  Schema for 'show ethernet ring g8032 port status'
+# ====================================================================
+
+
+class ShowEthernetRingG8032PortStatusSchema(MetaParser):
+    """Schema for 'show ethernet ring g8032 port status'
+    """
+    schema = {
+        'ethernet_ring_ports': {
+            Any(): {
+                'ring': str,
+                'block_vlan_list': str,
+                'unblock_vlan_list': str,
+                'req/ack': str,
+                'instance': str,
+                'state': str,
+            }
+        }
+    }
+
+# ================================================================
+#  Parser for 'show ethernet ring g8032 port status'
+# =================================================================
+
+
+class ShowEthernetRingG8032PortStatus(ShowEthernetRingG8032PortStatusSchema):
+    """
+    Parser for :
+        * show ethernet ring g8032 port status
+        * show ethernet ring g8032 port status interface {interface}
+    """
+    cli_command = ['show ethernet ring g8032 port status interface {interface}', 'show ethernet ring g8032 port status']
+
+    def cli(self, interface='', cmd=None, output=None):
+
+        if output is None:
+            if interface != '':
+                output = self.device.execute(self.cli_command[0].format(interface=interface))
+            else:
+                output = self.device.execute(self.cli_command[1])
+
+        # Switch#show ethernet ring g8032 port status
+        # Port: GigabitEthernet1/3
+        # Ring: g8032_ring
+        #     Block vlan list: 1-9,11-4095
+        #     Unblock vlan list: 10
+        #     REQ/ACK: 0/0
+        #     Instance 1 is in Blocked state
+
+        # Port: GigabitEthernet1/4
+        # Ring: g8032_ring
+        #     Block vlan list: 1-9,11-99,201-4095
+        #     Unblock vlan list: 10,100-200
+        #     REQ/ACK: 0/0
+        #     Instance 1 is in Unblocked state
+
+
+        #Port: GigabitEthernet1/3
+        p1 = re.compile(r'Port: (?P<Port>\S+)')
+
+        #Ring: g8032_ring
+        p2 = re.compile(r'Ring: (?P<Ring>\S+)')
+
+        #Block vlan list: 1-9,11-4095
+        p3 = re.compile(r'Block vlan list: (?P<Block_vlan_list>\S+)')
+
+        #Unblock vlan list: 10
+        p4 = re.compile(r'Unblock vlan list: (?P<Unblock_vlan_list>\S+)')
+
+        #REQ/ACK: 0/0
+        p5 = re.compile(r'REQ/ACK: (?P<req_ack>\S+)')
+
+        #Instance 1 is in Blocked state
+        p6 = re.compile(r'Instance (?P<Instance>\d+) is in (?P<state>\S+) state')
+        
+        # initial variables
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Port: GigabitEthernet1/3
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                port = group['Port']
+                port_dict = ret_dict.setdefault('ethernet_ring_ports', {}).setdefault(port, {})
+                continue
+            
+            # Ring: g8032_ring
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                port_dict['ring'] = group['Ring']
+                continue
+
+            # Block vlan list: 1-9,11-4095
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                port_dict['block_vlan_list'] = group['Block_vlan_list']
+                continue
+
+            # Unblock vlan list: 10
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                port_dict['unblock_vlan_list'] = group['Unblock_vlan_list']
+                continue
+
+            # REQ/ACK: 0/0
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                port_dict['req/ack'] = group['req_ack']
+                continue
+
+            # Instance 1 is in Blocked state
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                port_dict['instance'] = group['Instance']
+                port_dict['state'] = group['state']
+                continue
+
+        return ret_dict
+
+

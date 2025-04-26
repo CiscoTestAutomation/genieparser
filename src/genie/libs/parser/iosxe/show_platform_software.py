@@ -31,6 +31,11 @@
     * 'show platform software memory database fed {switch_var} callsite'
     * 'show platform soft infra bipc | inc buffer'
     * 'show platform software infractructure inject'
+    * 'show platform software process list fp active'
+    * 'show platform software process list F0 name {process}'
+    * 'show platform software process list FP active name {process} '
+    * 'show platform software l2vpn fp active atom'
+    * 'show platform software adjacency RP active'
 """
 
 # Python
@@ -10222,3 +10227,532 @@ class ShowPlatformSoftwareRouteMap(ShowPlatformSoftwareRouteMapSchema):
                 continue
 
         return ret_dict
+
+"""
+Schema for show platform software process list fp active
+"""
+class ShowPlatformSoftwareProcessListFpActiveSchema(MetaParser):
+    """Schema for show platform software process list fp active"""
+    schema = {
+        'processes': {
+            Any(): {
+                'pids' : {
+                    Any() : {
+                        'ppid': int,
+                        'group_id': int,
+                        'status': str,
+                        'priority': str,
+                        'size': int,
+                    }
+                }
+            }
+        }
+    }
+ 
+"""
+Schema for show platform software process list fp active
+"""
+class ShowPlatformSoftwareProcessListFpActive(ShowPlatformSoftwareProcessListFpActiveSchema):
+    """Parser for show platform software process list fp active"""
+
+    cli_command = 'show platform software process list fp active'
+
+    def cli(self, output=None):
+        if output is None:
+            # Execute the command on the device
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        #Name                     Pid    PPid  Group Id  Status    Priority  Size
+        #------------------------------------------------------------------------------
+        #systemd                    1       0         1  S               20  13636
+        p1 = re.compile(
+            r'^(?P<name>\S+)\s+(?P<pid>\d+)\s+(?P<ppid>\d+)\s+(?P<group_id>\d+)\s+(?P<status>\S+)\s+(?P<priority>\S+)\s+(?P<size>\d+)'
+        )
+
+        lines = output.splitlines()
+        # Skip the header lines
+        lines = lines[2:]
+
+        for line in lines:
+
+            line = line.strip()
+
+            # Extract the process details
+            #systemd                    1       0         1  S               20  13636
+            m = p1.match(line)
+            if not m:
+                continue  # Skip lines that don't match
+
+            process_info = m.groupdict()
+            name = process_info['name']
+            pid = int(process_info['pid'])
+            ppid = int(process_info['ppid'])
+            group_id = int(process_info['group_id'])
+            status = process_info['status']
+            priority = process_info['priority']
+            size = int(process_info['size'])
+
+            # Add the process details to the parsed dictionary
+            #systemd                    1       0         1  S               20  13636
+            processes_dict = parsed_dict.setdefault('processes',{})
+            name_dict = processes_dict.setdefault(name,{})
+            pid_dict = name_dict.setdefault('pids',{})
+            sub_pid_dict = pid_dict.setdefault(pid,{})
+            sub_pid_dict.update({  
+                'ppid': ppid,
+                'group_id': group_id,
+                'status': status,
+                'priority': priority,
+                'size': size,
+            })
+
+        return parsed_dict
+
+
+"""
+Schema for show platform software process list F0 name {process}
+"""
+class ShowPlatformSoftwareProcessListF0NameSchema(MetaParser):
+    """Schema for show platform software process list F0 name {process}"""
+    schema = {
+        'processes': {
+            Any(): {  # Process name
+                'process_id': int,
+                'parent_process_id': int,
+                'group_id': int,
+                'status': str,
+                'session_id': int,
+                'user_time': int,
+                'kernel_time': int,
+                'priority': int,
+                'virtual_bytes': int,
+                'resident_pages': int,
+                'resident_limit': int,
+                'minor_page_faults': int,
+                'major_page_faults': int,
+            }
+        }
+    }
+
+"""
+Schema for show platform software process list F0 name {process}
+"""
+class ShowPlatformSoftwareProcessListF0Name(ShowPlatformSoftwareProcessListF0NameSchema):
+    """Parser for show platform software process list F0 name {process}"""
+
+    cli_command = 'show platform software process list F0 name {process}'
+
+    def cli(self, process, output=None):
+        if output is None:
+            cmd = self.cli_command.format(process=process)
+            output = self.device.execute(cmd)
+
+        # Initialize the parsed dictionary
+        parsed_dict ={}
+
+        # Regular expressions for parsing the output
+        #Name: fman_rp
+        p1 = re.compile(r'^Name:\s+(?P<name>\S+)$')
+
+        #Process id       : 5116
+        p2 = re.compile(r'^\s*Process id\s+:\s+(?P<process_id>\d+)$')
+
+        #Parent process id: 5049
+        p3 = re.compile(r'^\s*Parent process id\s*:\s+(?P<parent_process_id>\d+)$')
+
+        #Group id         : 5116
+        p4 = re.compile(r'^\s*Group id\s+:\s+(?P<group_id>\d+)$')
+
+        #Status           : S
+        p5 = re.compile(r'^\s*Status\s+:\s+(?P<status>\S+)$')
+
+        #Session id       : 2811
+        p6 = re.compile(r'^\s*Session id\s+:\s+(?P<session_id>\d+)$')
+
+        #User time        : 780
+        p7 = re.compile(r'^\s*User time\s+:\s+(?P<user_time>\d+)$')
+
+        #Kernel time      : 588
+        p8 = re.compile(r'^\s*Kernel time\s+:\s+(?P<kernel_time>\d+)$')
+
+        #Priority         : 20
+        p9 = re.compile(r'^\s*Priority\s+:\s+(?P<priority>\d+)$')
+
+        #Virtual bytes    : 316301312
+        p10 = re.compile(r'^\s*Virtual bytes\s+:\s+(?P<virtual_bytes>\d+)$')
+
+        #Resident pages   : 22976
+        p11 = re.compile(r'^\s*Resident pages\s+:\s+(?P<resident_pages>\d+)$')
+
+        #Resident limit   : 18446744073709551615
+        p12 = re.compile(r'^\s*Resident limit\s+:\s+(?P<resident_limit>\d+)$')
+
+        #Minor page faults: 24680
+        p13 = re.compile(r'^\s*Minor page faults\s*:\s+(?P<minor_page_faults>\d+)$')
+
+        #Major page faults: 914
+        p14 = re.compile(r'^\s*Major page faults\s*:\s+(?P<major_page_faults>\d+)$')
+
+        current_process = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Match each line with the appropriate regex
+            #Name: fman_rp
+            m = p1.match(line)
+            if m:
+                parsed_dict.setdefault('processes', {})
+                current_process = m.group('name')
+                parsed_dict['processes'][current_process] = {}
+                continue
+
+            #Process id       : 5116
+            m = p2.match(line)
+            if m:
+                parsed_dict['processes'][current_process]['process_id'] = int(m.group('process_id'))
+                continue
+
+            #Parent process id: 5049
+            m = p3.match(line)
+            if m:
+                parsed_dict['processes'][current_process]['parent_process_id'] = int(m.group('parent_process_id'))
+                continue
+            
+            #Group id         : 5116
+            m = p4.match(line)
+            if m:
+                parsed_dict['processes'][current_process]['group_id'] = int(m.group('group_id'))
+                continue
+
+            #Status           : S
+            m = p5.match(line)
+            if m:
+                parsed_dict['processes'][current_process]['status'] = m.group('status')
+                continue
+
+            #Session id       : 2811
+            m = p6.match(line)
+            if m:
+                parsed_dict['processes'][current_process]['session_id'] = int(m.group('session_id'))
+                continue
+
+            #User time        : 780
+            m = p7.match(line)
+            if m:
+                parsed_dict['processes'][current_process]['user_time'] = int(m.group('user_time'))
+                continue
+
+            #Kernel time      : 588
+            m = p8.match(line)
+            if m:
+                parsed_dict['processes'][current_process]['kernel_time'] = int(m.group('kernel_time'))
+                continue
+
+            #Priority         : 20
+            m = p9.match(line)
+            if m:
+                parsed_dict['processes'][current_process]['priority'] = int(m.group('priority'))
+                continue
+
+            #Virtual bytes    : 316301312
+            m = p10.match(line)
+            if m:
+                parsed_dict['processes'][current_process]['virtual_bytes'] = int(m.group('virtual_bytes'))
+                continue
+
+            #Resident pages   : 22976
+            m = p11.match(line)
+            if m:
+                parsed_dict['processes'][current_process]['resident_pages'] = int(m.group('resident_pages'))
+                continue
+
+            #Resident limit   : 18446744073709551615
+            m = p12.match(line)
+            if m:
+                parsed_dict['processes'][current_process]['resident_limit'] = int(m.group('resident_limit'))
+                continue
+
+            #Minor page faults: 24680
+            m = p13.match(line)
+            if m:
+                parsed_dict['processes'][current_process]['minor_page_faults'] = int(m.group('minor_page_faults'))
+                continue
+
+            #Major page faults: 914
+            m = p14.match(line)
+            if m:
+                parsed_dict['processes'][current_process]['major_page_faults'] = int(m.group('major_page_faults'))
+                continue
+
+        return parsed_dict
+
+# =====================================
+# Parser for 'show platform software process list FP active name {process}'
+# =====================================
+class ShowPlatformSoftwareProcessListFPActiveName(ShowPlatformSoftwareProcessListF0Name):
+
+    """ Parser for "show platform software process list FP active name {process}" """
+    cli_command = 'show platform software process list FP active name {process}'
+
+    def cli(self, process, output = None):
+        if output is None:
+            cmd = self.cli_command.format(process=process)
+            show_output = self.device.execute(cmd)
+        else:
+            show_output = output
+        return super().cli(process=process, output = show_output)
+
+class ShowPlatformSoftwareL2vpnFpActiveAtomSchema(MetaParser):
+    """Schema for show platform software l2vpn fp active atom"""
+    schema = {
+        'num_of_entries': int,
+        'entries': {
+            Any(): {
+                'xid': str,
+                'ifnumber': str,
+                'ac_type': str,
+                'imp': str,
+                'hw_info': str,
+                'interface_name': str,
+                Optional('vlan_info'): {
+                    'out_vlan_id': int,
+                    'in_vlan_id': int,
+                    'out_ether': str,
+                    'peer_vlan_id': int,
+                    'dot1q_any': int,
+                }
+            }
+        }
+    }
+
+class ShowPlatformSoftwareL2vpnFpActiveAtom(ShowPlatformSoftwareL2vpnFpActiveAtomSchema):
+    """Parser for show platform software l2vpn fp active atom"""
+
+    cli_command = 'show platform software l2vpn fp active atom'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # ATOM/Local Cross-connect table, Number of entries: 1
+        p1 = re.compile(r'^ATOM/Local Cross-connect table, Number of entries:\s(?P<num_of_entries>\d+)$')
+        
+        # AToM Cross-Connect xid 0x1c, ifnumber 0x1c
+        p2 = re.compile(r'^AToM Cross-Connect xid (?P<xid>0x[0-9a-f]+), ifnumber (?P<ifnumber>0x[0-9a-f]+)$')
+        
+        # AC VLAN(IW:VLAN) -> Imp 0xb4(ATOM_IMP), HW info: 1c (om_id 314 created)
+        p3 = re.compile(r'^AC (?P<ac_type>\S+)\(IW:\S+\) -> Imp (?P<imp>0x[0-9a-f]+)\(ATOM_IMP\), HW info: (?P<hw_info>\S+)')
+        
+        # Interface Name: GigabitEthernet0/0/8.100
+        p4 = re.compile(r'^Interface Name: (?P<interface_name>\S+)$')
+        
+        # VLAN Info: outVlan id: 100, inVlan id: 100, outEther: 0x8100, peerVlan id: 100, dot1qAny: 0
+        p5 = re.compile(r'^VLAN Info: outVlan id: (?P<out_vlan_id>\d+), inVlan id: (?P<in_vlan_id>\d+), outEther: (?P<out_ether>0x[0-9a-f]+), peerVlan id: (?P<peer_vlan_id>\d+), dot1qAny: (?P<dot1q_any>\d+)$')
+
+        # Parse each line of the output
+        for line in output.splitlines():
+            line = line.strip()
+
+            # ATOM/Local Cross-connect table, Number of entries: 1
+            m = p1.match(line)
+            if m:
+                parsed_dict['num_of_entries'] = int(m.group('num_of_entries'))
+                continue
+            
+            # AToM Cross-Connect xid 0x1c, ifnumber 0x1c
+            m = p2.match(line)
+            if m:
+                entry = m.groupdict()
+                xid = entry['xid']
+                entry_dict = parsed_dict.setdefault('entries', {}).setdefault(xid, {})
+                entry_dict.update(entry)
+                continue
+
+            # AC VLAN(IW:VLAN) -> Imp 0xb4(ATOM_IMP), HW info: 1c (om_id 314 created)
+            m = p3.match(line)
+            if m:
+                entry_dict.update(m.groupdict())
+                continue
+
+            # Interface Name: GigabitEthernet0/0/8.100
+            m = p4.match(line)
+            if m:
+                entry_dict['interface_name'] = m.group('interface_name')
+                continue
+
+            # VLAN Info: outVlan id: 100, inVlan id: 100, outEther: 0x8100, peerVlan id: 100, dot1qAny: 0
+            m = p5.match(line)
+            if m:
+                vlan_info = m.groupdict()
+                # Convert numeric fields to integers
+                for key in ['out_vlan_id', 'in_vlan_id', 'peer_vlan_id', 'dot1q_any']:
+                    vlan_info[key] = int(vlan_info[key])
+                entry_dict['vlan_info'] = vlan_info
+                continue
+
+        return parsed_dict
+
+class ShowPlatformSoftwareAdjacencyRpActiveSchema(MetaParser):
+    """Schema for show platform software adjacency RP active"""
+    schema = {
+        'number_of_adjacency_objects': int,
+        'adjacencies': {
+            int: {
+                'adjacency_id': str,
+                'interface': str,
+                'if_index': int,
+                'link_type': str,
+                'encap': str,
+                'encap_length': int,
+                'encap_type': str,
+                'mtu': int,
+                'flags': str,
+                'incomplete_behavior_type': str,
+                'fixup': str,
+                'fixup_flags_2': str,
+                'nexthop_addr': str,
+                'ip_frr': str,
+                'om_handle': str,
+            }
+        }
+    }
+
+class ShowPlatformSoftwareAdjacencyRpActive(ShowPlatformSoftwareAdjacencyRpActiveSchema):
+    """Parser for show platform software adjacency RP active"""
+
+    cli_command = 'show platform software adjacency RP active'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # Number of adjacency objects: 5
+        p1 = re.compile(r'^Number of adjacency objects: +(?P<number>\d+)$')
+        
+        # Adjacency id: 0x35 (53)
+        p2 = re.compile(r'^Adjacency id: +(?P<adjacency_id>0x[\da-f]+) +\((?P<adjacency_num>\d+)\)$')
+        
+        # Interface: TenGigabitEthernet0/0/13, IF index: 21, Link Type: MCP_LINK_TAG
+        p3 = re.compile(r'^Interface: +(?P<interface>[\w\/]+), +IF index: +(?P<if_index>\d+), +Link Type: +(?P<link_type>[\w_]+)$')
+        
+        # Encap: 0:0:0:35
+        p4 = re.compile(r'^Encap: +(?P<encap>[\w:]+)$')
+        
+        # Encap Length: 4, Encap Type: MCP_ET_ARPA, MTU: 1500
+        p5 = re.compile(r'^Encap Length: +(?P<encap_length>\d+), +Encap Type: +(?P<encap_type>[\w_]+), +MTU: +(?P<mtu>\d+)$')
+        
+        # Flags: incomplete
+        p6 = re.compile(r'^Flags: +(?P<flags>[\w-]+)$')
+        
+        # Incomplete behavior type: Punt
+        p7 = re.compile(r'^Incomplete behavior type: +(?P<incomplete_behavior_type>[\w]+)$')
+        
+        # Fixup: unknown
+        p8 = re.compile(r'^Fixup: +(?P<fixup>[\w]+)$')
+        
+        #  Fixup_Flags_2: unknown
+        p9 = re.compile(r'^Fixup_Flags_2: +(?P<fixup_flags_2>[\w]+)$')
+        
+        # Nexthop addr: 227.0.0.0
+        p10 = re.compile(r'^Nexthop addr: +(?P<nexthop_addr>[\d\.]+)$')
+        
+        # IP FRR MCP_ADJ_IPFRR_NONE 0
+        p11 = re.compile(r'^IP FRR +(?P<ip_frr>[\w_]+) +\d+$')
+        
+        # OM handle: 0x3480212828
+        p12 = re.compile(r'^OM handle: +(?P<om_handle>0x[\da-f]+)$')
+
+        adjacency_id = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Number of adjacency objects: 5
+            m = p1.match(line)
+            if m:
+                parsed_dict['number_of_adjacency_objects'] = int(m.group('number'))
+                continue
+
+            # Adjacency id: 0x35 (53)
+            m = p2.match(line)
+            if m:
+                adjacency_id = int(m.group('adjacency_num'))
+                adjacency_dict = parsed_dict.setdefault('adjacencies', {}).setdefault(adjacency_id, {})
+                adjacency_dict['adjacency_id'] = m.group('adjacency_id')
+                continue
+
+            # Interface: TenGigabitEthernet0/0/13, IF index: 21, Link Type: MCP_LINK_TAG
+            m = p3.match(line)
+            if m:
+                adjacency_dict['interface'] = m.group('interface')
+                adjacency_dict['if_index'] = int(m.group('if_index'))
+                adjacency_dict['link_type'] = m.group('link_type')
+                continue
+
+            # Encap: 0:0:0:35
+            m = p4.match(line)
+            if m:
+                adjacency_dict['encap'] = m.group('encap')
+                continue
+
+            # Encap Length: 4, Encap Type: MCP_ET_ARPA, MTU: 1500
+            m = p5.match(line)
+            if m:
+                adjacency_dict['encap_length'] = int(m.group('encap_length'))
+                adjacency_dict['encap_type'] = m.group('encap_type')
+                adjacency_dict['mtu'] = int(m.group('mtu'))
+                continue
+
+            # Flags: incomplete
+            m = p6.match(line)
+            if m:
+                adjacency_dict['flags'] = m.group('flags')
+                continue
+
+            #  Incomplete behavior type: Punt
+            m = p7.match(line)
+            if m:
+                adjacency_dict['incomplete_behavior_type'] = m.group('incomplete_behavior_type')
+                continue
+
+            # Fixup: unknown
+            m = p8.match(line)
+            if m:
+                adjacency_dict['fixup'] = m.group('fixup')
+                continue
+
+            # Fixup_Flags_2: unknown
+            m = p9.match(line)
+            if m:
+                adjacency_dict['fixup_flags_2'] = m.group('fixup_flags_2')
+                continue
+
+            # Nexthop addr: 227.0.0.0
+            m = p10.match(line)
+            if m:
+                adjacency_dict['nexthop_addr'] = m.group('nexthop_addr')
+                continue
+
+            # IP FRR MCP_ADJ_IPFRR_NONE 0
+            m = p11.match(line)
+            if m:
+                adjacency_dict['ip_frr'] = m.group('ip_frr')
+                continue
+
+            # OM handle: 0x3480212828
+            m = p12.match(line)
+            if m:
+                adjacency_dict['om_handle'] = m.group('om_handle')
+                continue
+
+        return parsed_dict

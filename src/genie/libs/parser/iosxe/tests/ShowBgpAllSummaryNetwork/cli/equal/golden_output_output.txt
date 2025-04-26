@@ -1,0 +1,2 @@
+2049580 network entries using 590279040 bytes of memory
+2049580 networks peaked at 15:32:57 Jan 16 2024 EST (00:00:27.974 ago)

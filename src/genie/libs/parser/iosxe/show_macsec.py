@@ -560,3 +560,53 @@ class ShowMacsecStatisticsInterface(ShowMacsecStatisticsInterfaceSchema):
                 continue
 
         return ret_dict
+
+# ==============================================
+# Schema for 'show macsec hw'
+# ==============================================
+class ShowMacsecHwSchema(MetaParser):
+    """Schema for show macsec hw"""
+    schema = {
+        'interfaces': {
+            Any(): {
+                'rxsa_inuse': int,
+            },
+        }
+    }
+# ==============================================
+# Parser for 'show macsec hw'
+# ==============================================
+
+class ShowMacsecHw(ShowMacsecHwSchema):
+    """Parser for show macsec hw"""
+
+    cli_command = 'show macsec hw'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # Regular expression to match the lines with interface and RxSA Inuse
+        # TenGigabitEthernet1/0/6 : 0
+        p1 = re.compile(r'^(?P<interface>\S+)\s+:\s+(?P<rxsa_inuse>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Match the line with interface and RxSA Inuse
+            # TenGigabitEthernet2/1/0       :       20
+            m = p1.match(line)
+            if m:
+                interface_dict = parsed_dict.setdefault('interfaces', {})
+                interface = m.group('interface')
+                rxsa_inuse = int(m.group('rxsa_inuse'))
+
+                # Populate the parsed dictionary
+                interface_dict[interface] = {
+                    'rxsa_inuse': rxsa_inuse
+                }
+
+        return parsed_dict

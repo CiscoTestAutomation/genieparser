@@ -1023,7 +1023,23 @@ class ShowPlatformSoftwareFedActiveIpv6MldSnoopingVlanDetailSchema(MetaParser):
                 Optional("secondary_vlan"): str,
                 Optional("vlan_urid"): str,
                 Optional("d_users_count"): str,
-            }
+                Optional('fset_urid'): {
+					Optional('urid'): str,
+					Optional('hash'): str           
+                },
+                Optional('fset_aux_urid'): str,
+                Optional('mrouter_ports'): ListOf(str),
+                Optional('flood_ports'): ListOf(str),
+                Optional('gid'): int,
+                Optional('mcid_asic'): int,
+                Optional('hw_info_asic'): {
+                Optional('hw_vlan_mcid_oid'): {
+                    Optional('oid'): int,
+                    Optional('cookie'): str
+                },
+                Optional('multicast_state'): str
+                    }    
+                }
         }
     }
 
@@ -1143,6 +1159,40 @@ class ShowPlatformSoftwareFedActiveIpv6MldSnoopingVlanDetail(
         # Dependant users count   : 0
         p20 = re.compile(r'^Dependant\s+users\s+count\s+:\s+(?P<d_users_count>[\s\w\s]+)$')
 
+        # Fset Urid ( hash )      : 0x200000000000000a ( 701ec04e )
+        p21 = re.compile(r'^Fset +Urid +\( +hash +\) *: *(?P<urid>\S+) +\( +(?P<hash>\S+) +\)$')
+
+        # Fset Aux Urid           : 0x0
+        p22 = re.compile(r'^Fset +Aux +Urid *: *(?P<fset_aux_urid>\S+)$')
+
+        # Mrouter ports           : 1
+        p23 = re.compile(r'^Mrouter +ports *: *(?P<mrouter_count>\d+)$')
+
+        # GigabitEthernet4/0/12
+        p24 = re.compile(r'^(?P<mrouter_port>^\s*([^\s]+)\s*\(Port:([^\)]+)\)\s*)$')
+
+        # Flood ports             :
+        p25 = re.compile(r'^Flood +ports *:$')
+
+        # GigabitEthernet1/0/46
+        p26 = re.compile(r'^(?P<flood_port>\S+)$')
+
+        # Gid                     : 8204
+        p27 = re.compile(r'^Gid *: *(?P<gid>\d+)$')
+
+        # Mcid Asic[0]            : 2872
+        p28 = re.compile(r'^Mcid +Asic\[0\] *: *(?P<mcid_asic>\d+)$')
+
+        # Hw Vlan Mcid Oid    : 2872 (cookie:urid:0x20::a)
+        p29 = re.compile(r'^Hw +Vlan +Mcid +Oid *: *(?P<oid>\d+) +\(cookie:urid:(?P<cookie>\S+)\)$')
+
+        # Multicast state     : enabled
+        p30 = re.compile(r'^Multicast +state *: *(?P<multicast_state>\S+)$')
+
+        # Parsing logic
+        flood_ports_flag = False
+        mrouter_ports_flag = False
+    
         port_list = None
         mroute_list = []
         floodport_list = []
@@ -1284,12 +1334,7 @@ class ShowPlatformSoftwareFedActiveIpv6MldSnoopingVlanDetail(
 
             # TenGigabitEthernet7/0/13
             m = p14_1.match(line)
-            if m:
-                port_list.append(m.group(0))
-
-            # Flood PortQ :
-            m = p15_1.match(line)
-            if m:
+            if m and port_list is not None:
                 port_list.append(m.group(0))
 
             # TenGigabitEthernet7/0/13
@@ -1300,6 +1345,12 @@ class ShowPlatformSoftwareFedActiveIpv6MldSnoopingVlanDetail(
                 port_list = floodport_list
                 mac_dict["flood_port"] = floodport_list
                 continue
+        
+            # Flood PortQ :
+            m = p15_1.match(line)
+            if m and port_list is not None:
+                port_list.append(m.group(0))
+    
 
             # REP RI handle : 0x0
             m = p16.match(line)
@@ -1329,6 +1380,75 @@ class ShowPlatformSoftwareFedActiveIpv6MldSnoopingVlanDetail(
             m = p20.match(line)
             if m:
                 mac_dict['d_users_count'] = m.groupdict()['d_users_count']
+                continue
+    
+            # Fset Urid ( hash )      : 0x200000000000000a ( 701ec04e )
+            m = p21.match(line)
+            if m:
+                fset_urid_dict = mac_dict.setdefault('fset_urid', {})
+                fset_urid_dict['urid'] = m.group('urid')
+                fset_urid_dict['hash'] = m.group('hash')
+                continue
+
+            # Fset Aux Urid           : 0x0
+            m = p22.match(line)
+            if m:
+                mac_dict['fset_aux_urid'] = m.group('fset_aux_urid')
+                continue
+
+            # Mrouter ports           : 1
+            m = p23.match(line)
+            if m:
+                mrouter_ports_flag = True
+                flood_ports_flag = False  
+                mac_dict['mrouter_ports'] = []
+                continue
+
+            # GigabitEthernet4/0/12 (Mrouter Port)
+            m = p24.match(line)
+            if m and mrouter_ports_flag:
+                mac_dict['mrouter_ports'].append(m.group('mrouter_port'))
+                continue
+
+            # Flood ports             :
+            m = p25.match(line)
+            if m:
+                flood_ports_flag = True
+                mrouter_ports_flag = False  
+                mac_dict['flood_ports'] = []
+                continue
+
+            # GigabitEthernet1/0/46 (Flood Port)
+            m = p26.match(line)
+            if m and flood_ports_flag:
+                mac_dict['flood_ports'].append(m.group('flood_port'))
+                continue
+
+            # Gid                     : 8204
+            m = p27.match(line)
+            if m:
+                mac_dict['gid'] = int(m.group('gid'))
+                continue
+
+            # Mcid Asic[0]            : 2872
+            m = p28.match(line)
+            if m:
+                mac_dict['mcid_asic'] = int(m.group('mcid_asic'))
+                continue
+
+            # Hw Vlan Mcid Oid    : 2872 (cookie:urid:0x20::a)
+            m = p29.match(line)
+            if m:
+                hw_info_asic = mac_dict.setdefault('hw_info_asic', {})
+                hw_vlan_mcid_oid = hw_info_asic.setdefault('hw_vlan_mcid_oid', {})
+                hw_vlan_mcid_oid['oid'] = int(m.group('oid'))
+                hw_vlan_mcid_oid['cookie'] = m.group('cookie')
+                continue
+
+            # Multicast state     : enabled
+            m = p30.match(line)
+            if m:
+                mac_dict.setdefault('hw_info_asic', {})['multicast_state'] = m.group('multicast_state')
                 continue
 
         return platform_dict
@@ -1417,7 +1537,7 @@ class ShowPlatformSoftwareFedIpv6MfibSummary(ShowPlatformSoftwareFedIpv6MfibSumm
         p0 = re.compile(r'(Multicast Vrf Current Count +\: +(?P<mcast_vrf_count>\d+))')
 
         # Mroute Current Count/Max Reached         : 7830/10118
-        p1 = re.compile(r'(Mroute Current .* +Reached +\: +(?P<mcast_current_count_reached>\d+.+)\/(?P<mcast_max_count_reached>\d+))')
+        p1 = re.compile(r'(Mroute Current .* +Reached +\: +(?P<mcast_current_count_reached>\d+)\/(?P<mcast_max_count_reached>\d+))')
 
         # (*,G) Current Count                      : 4001
         p2 = re.compile(r'(\(+\*+\,+G\) +Current Count +\: +(?P<star_g_current_count>\d+))')
@@ -1435,7 +1555,7 @@ class ShowPlatformSoftwareFedIpv6MfibSummary(ShowPlatformSoftwareFedIpv6MfibSumm
         p6 = re.compile(r'(\(+\S+\,+G\) +RetryQ Count +\: +(?P<s_g_retryq_count>\d+))')
 
         # Oifs Current Count/Max Reached           : 16126/18354
-        p7 = re.compile(r'(Oifs Current Count.* +Reached +\: +(?P<oifs_current_count_reached>\d+.+)\/(?P<oifs_current_max_reached>\d+))')
+        p7 = re.compile(r'(Oifs Current Count.* +Reached +\: +(?P<oifs_current_count_reached>\d+)\/(?P<oifs_current_max_reached>\d+))')
 
         # Last used Mlist Urid                     : 0x100000000000d3a
         p8 = re.compile(r'(Last used Mlist Urid  +\: +(?P<last_used_mlist_urid>\d+))')
@@ -2137,32 +2257,50 @@ class ShowPlatformSoftwareFedActiveIpMfibVrfSchema(MetaParser):
 
     schema = {
         'mfib': {
-            'mvrf': int,
-            'group': str,
-            'source': str,
-            'attrs': {
-                'hw_flag': str,
-                'mlist_flags': str,
-                'mlist_hndl_id': str,
-                'mlist_urid': str,
-                'fset_urid_hash': str,
-                'rpf_adjacency_id': str,
-                'cpu_credit': int,
-                'total_packets': int,
-                'pps_approx': int,
-                'oif_count': int,
-                'oif_details': ListOf({
-                    'adjid': str,
-                    'interface': str,
-                    'parentif': str,
-                    'hwflag': str,
-                    'flags': str,
-                }),
-                'gid': int,
-                'mcid_oid_asic': int,
+            int : {
+                'mvrf': int,
+                'group': str,
+                'source': str,
+                'attrs': {
+                    'hw_flag': str,
+                    'mlist_flags': str,
+                    'mlist_hndl_id': str,
+                    'mlist_urid': str,
+                    'fset_urid_hash': str,
+                    Optional('fset_aux_urid'): str,
+                    'rpf_adjacency_id': str,
+                    'cpu_credit': int,
+                    Optional('total_packets'): int,
+                    Optional('ec_seed'): int,
+                    Optional('npi_mroute_ent'): str,
+                    Optional('svi_fwd_ifs'): int,
+                    Optional('ios_f_ifs'): int,
+                    Optional('mlist_f_ifs'): int,
+                    Optional('pps_approx'): int,
+                    'oif_count': int,
+                    'oif_details': list,
+                    'gid': int,
+                    'asic': {
+                        int: {
+                            'mcid_oid_asic': int,
+                        },
+                    },
+                    Optional('hw_asic_info'): {
+                        int: {
+                            Optional('ip_mcid_oid'): int,
+                            Optional('cookie'): str,
+                            Optional('rpf_port_oid'): int,
+                            Optional('rpfid'): int,
+                            Optional('use_rpfid'): int,
+                            Optional('punt_and_forward'): int,
+                            Optional('punt_on_rpf_fail'): int,
+                            Optional('enable_rpf_check'): int,
+                            }
+                        }
+                    }
+                }
             }
         }
-    }
 
 class ShowPlatformSoftwareFedActiveIpMfibVrf(ShowPlatformSoftwareFedActiveIpMfibVrfSchema):
     """
@@ -2193,7 +2331,7 @@ class ShowPlatformSoftwareFedActiveIpMfibVrf(ShowPlatformSoftwareFedActiveIpMfib
         ret_dict = {}
 
         # Mvrf: 3  ( 40::2, ff1e::1 ) Attrs:
-        p0 = re.compile(r'^Mvrf: +(?P<mvrf>\d+) +\( +(?P<source>[\w\:\.\/]+), +(?P<group>[\w\:\.\/]+) +\) +Attrs:$')
+        p0 = re.compile(r'^Mvrf: +(?P<mvrf>\d+) +\( +(?P<source>[\w\:\.\/\*]+), +(?P<group>[\w\:\.\/]+) +\) +Attrs:( C)?$')
 
         # Hw Flag                 : InHw
         p1 = re.compile(r'^Hw Flag +: +(?P<hw_flag>\w+)$')
@@ -2209,6 +2347,9 @@ class ShowPlatformSoftwareFedActiveIpMfibVrf(ShowPlatformSoftwareFedActiveIpMfib
 
         # Fset Urid (Hash)        : 0x300000000031f715 ( 68af2994 )
         p5 = re.compile(r'^Fset Urid \(Hash\) +: +(?P<fset_urid_hash>[\w\(\)\s]+)$')
+
+        # Fset Aux Urid           : 0x0
+        p5_1 = re.compile(r'^Fset Aux Urid +: +(?P<fset_aux_urid>[\w]+)$')
 
         # RPF Adjacency ID        : 0xf80059d2
         p6 = re.compile(r'^RPF Adjacency ID +: +(?P<rpf_adjacency_id>[\w]+)$')
@@ -2227,14 +2368,53 @@ class ShowPlatformSoftwareFedActiveIpMfibVrf(ShowPlatformSoftwareFedActiveIpMfib
 
         # AdjID          Interface          ParentIf        HwFlag      Flags
         # 0xc851         Tu315              --------         ---        F NS
-        p11 = re.compile(r'^(?P<adjid>[\w]+) +(?P<interface>[\w\/]+) +(?P<parentif>[\w\-]+) +(?P<hwflag>[\w\-]+) +(?P<flags>[\w\s]+)$')
+        # AdjID          Interface          ParentIf        HwFlag      Flags      IntfType       MsgType
+        # 0xf80053e6     Tu1                --------         Cpu        A          HW_UNSUPP      NORMAL        
+        p11 = re.compile(r'^(?P<adjid>[\w]+) +(?P<interface>[\w\/]+) +(?P<parentif>[\w\-]+) +(?P<hwflag>[\w\-]+) +(?P<flags>[a-zA-Z ]+)( +(?P<intf_type>[\w]+) +(?P<msg_type>[\w]+))?$')
 
         # GID                   : 8631
         p12 = re.compile(r'^GID +: +(?P<gid>\d+)$')
 
         # MCID OID Asic[0]      : 1346
-        p13 = re.compile(r'^MCID OID Asic\[0\] +: +(?P<mcid_oid_asic>\d+)$')
+        p13 = re.compile(r'^MCID OID Asic\[(?P<asic>[\d]+)] +: +(?P<mcid_oid_asic>\d+)$')
 
+        # Hardware Info ASIC[0] :
+        p14 = re.compile(r'^Hardware Info ASIC\[(?P<asic_number>[\d]+)] +:$')
+
+        # IP MCID OID         :3272 (cookie:urid:0x30::1b6)
+        p15 = re.compile(r'^IP MCID OID +:(?P<ip_mcid_oid>\d+) +\(cookie:urid:(?P<cookie>[\w\:\.\/]+)\)$')
+
+        # RPF PORT OID        :1493
+        p16 = re.compile(r'^RPF PORT OID +:(?P<rpf_port_oid>\d+)$')
+
+        # punt_on_rpf_fail    :1
+        p17 = re.compile(r'^punt_on_rpf_fail +:(?P<punt_on_rpf_fail>\d+)$')
+
+        # punt_and_forward    :1
+        p18 = re.compile(r'^punt_and_forward +:(?P<punt_and_forward>\d+)$')
+
+        # use_rpfid           :0
+        p19 = re.compile(r'^use_rpfid +:(?P<use_rpfid>\d+)$')
+
+        # rpfid               :0
+        p20 = re.compile(r'^rpfid +:(?P<rpfid>\d+)$')
+
+        # enable_rpf_check    :1
+        p21 = re.compile(r'^enable_rpf_check +:(?P<enable_rpf_check>\d+)$')
+
+        # Ec_seed                 : 6
+        p22 = re.compile(r'^Ec_seed +: +(?P<ec_seed>\d+)$')
+
+        # npi_mroute_ent          : 0x118812c5e20
+        p23 = re.compile(r'^npi_mroute_ent +: +(?P<npi_mroute_ent>[\w]+)$')
+
+        # svi_fwd_ifs             : 2
+        p24 = re.compile(r'^svi_fwd_ifs +: +(?P<svi_fwd_ifs>\d+)$')
+
+        # ios_f_ifs/mlist_f_ifs   : 1/1
+        p25 = re.compile(r'^ios_f_ifs/mlist_f_ifs +: +(?P<ios_f_ifs>\d+)/(?P<mlist_f_ifs>\d+)$')
+
+        index = 1
         oif_details = []
         for line in output.splitlines():
             line = line.strip()
@@ -2243,11 +2423,12 @@ class ShowPlatformSoftwareFedActiveIpMfibVrf(ShowPlatformSoftwareFedActiveIpMfib
             m = p0.match(line)
             if m:
                 group = m.groupdict()
-                mfib_dict = ret_dict.setdefault('mfib', {})
+                mfib_dict = ret_dict.setdefault("mfib", {}).setdefault(index, {})
                 mfib_dict['mvrf'] = int(group['mvrf'])
                 mfib_dict['group'] = group['group']
                 mfib_dict['source'] = group['source']
                 attrs_dict = mfib_dict.setdefault('attrs', {})
+                index += 1
                 continue
 
             # Hw Flag                 : InHw
@@ -2278,6 +2459,12 @@ class ShowPlatformSoftwareFedActiveIpMfibVrf(ShowPlatformSoftwareFedActiveIpMfib
             m = p5.match(line)
             if m:
                 attrs_dict['fset_urid_hash'] = m.groupdict()['fset_urid_hash']
+                continue
+
+            # Fset Aux Urid           : 0x0
+            m = p5_1.match(line)
+            if m:
+                attrs_dict['fset_aux_urid'] = m.groupdict()['fset_aux_urid']
                 continue
 
             # RPF Adjacency ID        : 0xf80059d2
@@ -2327,7 +2514,85 @@ class ShowPlatformSoftwareFedActiveIpMfibVrf(ShowPlatformSoftwareFedActiveIpMfib
             # MCID OID Asic[0]      : 1346
             m = p13.match(line)
             if m:
-                attrs_dict['mcid_oid_asic'] = int(m.groupdict()['mcid_oid_asic'])
+                group = m.groupdict()
+                asic_dict = attrs_dict.setdefault('asic', {}).setdefault(int(group['asic']), {})            
+                asic_dict['mcid_oid_asic'] = int(group['mcid_oid_asic'])
+                continue
+
+            # Hardware Info ASIC[0] :
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                hw_dict = attrs_dict.setdefault('hw_asic_info', {}).setdefault(int(group['asic_number']), {})            
+                continue
+
+            # IP MCID OID         :3272 (cookie:urid:0x30::1b6)
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                hw_dict['ip_mcid_oid'] = int(group['ip_mcid_oid'])
+                hw_dict['cookie'] = group['cookie']
+                continue
+
+            # RPF PORT OID        :1493
+            m = p16.match(line)
+            if m:
+                hw_dict['rpf_port_oid'] = int(m.groupdict()['rpf_port_oid'])
+                continue
+
+            # punt_on_rpf_fail    :1
+            m = p17.match(line)
+            if m:
+                hw_dict['punt_on_rpf_fail'] = int(m.groupdict()['punt_on_rpf_fail'])
+                continue
+
+            # punt_and_forward    :1
+            m = p18.match(line)
+            if m:
+                hw_dict['punt_and_forward'] = int(m.groupdict()['punt_and_forward'])
+                continue
+
+            # use_rpfid           :0
+            m = p19.match(line)
+            if m:
+                hw_dict['use_rpfid'] = int(m.groupdict()['use_rpfid'])
+                continue
+
+            # rpfid               :0
+            m = p20.match(line)
+            if m:
+                hw_dict['rpfid'] = int(m.groupdict()['rpfid'])
+                continue
+
+            # enable_rpf_check    :1
+            m = p21.match(line)
+            if m:
+                hw_dict['enable_rpf_check'] = int(m.groupdict()['enable_rpf_check'])
+                continue
+
+            # Ec_seed                 : 6
+            m = p22.match(line)
+            if m:
+                attrs_dict['ec_seed'] = int(m.groupdict()['ec_seed'])
+                continue
+
+            # npi_mroute_ent          : 0x118812c5e20
+            m = p23.match(line)
+            if m:
+                attrs_dict['npi_mroute_ent'] = m.groupdict()['npi_mroute_ent']
+                continue
+
+            # svi_fwd_ifs             : 2
+            m = p24.match(line)
+            if m:
+                attrs_dict['svi_fwd_ifs'] = int(m.groupdict()['svi_fwd_ifs'])
+                continue
+
+            # ios_f_ifs/mlist_f_ifs   : 1/1
+            m = p25.match(line)
+            if m:
+                attrs_dict['ios_f_ifs'] = int(m.groupdict()['ios_f_ifs'])
+                attrs_dict['mlist_f_ifs'] = int(m.groupdict()['mlist_f_ifs'])
                 continue
 
         log.debug(f"Parsed data: {ret_dict}")
@@ -2363,18 +2628,24 @@ class ShowPlatformSoftwareFedSwitchActiveIpMfibVrf(ShowPlatformSoftwareFedSwitch
     """Parser for show platform software fed switch active ipv6 mfib vrf {vrf_name} {group} {source}"""
 
     cli_command = [
-        'show platform software fed switch active ipv6 mfib vrf {vrf_name} {group} {source}',
-        'show platform software fed switch active ipv6 mfib {group} {source}',
-        'show platform software fed active ipv6 mfib vrf {vrf_name} {group} {source}',
-        'show platform software fed active ipv6 mfib {group} {source}'
+        'show platform software fed {switch} {active} ipv6 mfib vrf {vrf_name} {group} {source}',
+        'show platform software fed {switch} {active} ipv6 mfib {group} {source}',
+        'show platform software fed {active} ipv6 mfib vrf {vrf_name} {group} {source}',
+        'show platform software fed {active} ipv6 mfib {group} {source}'
     ]
 
-    def cli(self, vrf_name='', group='', source='', output=None):
+    def cli(self, switch='', active='', vrf_name='', group='', source='', output=None):
         if output is None:
             if vrf_name:
-                cmd = self.cli_command[0].format(vrf_name=vrf_name, group=group, source=source)
+                if switch:
+                    cmd = self.cli_command[0].format(switch=switch, active=active, vrf_name=vrf_name, group=group, source=source)
+                else:
+                    cmd = self.cli_command[2].format(active=active, vrf_name=vrf_name, group=group, source=source)
             else:
-                cmd = self.cli_command[1].format(group=group, source=source)
+                if switch:
+                    cmd = self.cli_command[1].format(switch=switch, active=active, group=group, source=source)
+                else:
+                    cmd = self.cli_command[3].format(active=active, group=group, source=source)
             output = self.device.execute(cmd)
 
         ret_dict = {}
@@ -2658,5 +2929,349 @@ class ShowPlatformSoftwareFedIpIgmpSnoopingGroupVlan(ShowPlatformSoftwareFedIpIg
 
         if hw_group_entry_asic:
             ret_dict['hw_group_entry_asic'] = hw_group_entry_asic
+
+        return ret_dict
+
+
+class ShowPlatformSoftwareFedIpIgmpSnoopingGroupSchema(MetaParser):
+    """Schema for show platform software fed [switch] [module] ip igmp snooping group"""
+    schema = {
+        Optional('number_of_group_entries'): int,
+        'groups': ListOf({
+            'vlan': int,
+            'group': str,
+            'member_ports': ListOf(str),
+            'dependent_users_count': int,
+            'group_urid': str,
+            'fset_urid_hash': str,
+            'layer_3_stub_entry': str,
+            'group_flags': str,
+            'gid': int,
+            'mcid_asic': int
+        })
+    }
+
+class ShowPlatformSoftwareFedIpIgmpSnoopingGroup(ShowPlatformSoftwareFedIpIgmpSnoopingGroupSchema):
+    """Parser for show platform software fed [switch] [module] ip igmp snooping group"""
+
+    cli_command = 'show platform software fed {switch} {module} ip igmp snooping group'
+
+    def cli(self, switch='', module='', output=None):
+        if output is None:
+            cmd = self.cli_command.format(switch=switch, module=module)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+        groups = []
+
+        # Regex patterns
+        # Number of Group entries: 1
+        p0 = re.compile(r'^Number of Group entries: +(?P<number_of_group_entries>\d+)$')
+
+        # (Vlan: 104, 232.0.31.64)
+        p1 = re.compile(r'^\(Vlan: +(?P<vlan>\d+), +(?P<group>[\d\.]+)\)$')
+        # Member ports           : Port-channel2
+        p2 = re.compile(r'^Member ports +: +(?P<member_ports_count>\d+)$')
+        # Member ports
+        p3 = re.compile(r'^(?P<member_port>[\w\/]+)$')
+        # Dependent Users Count
+        p4 = re.compile(r'^Dependent Users Count +: +(?P<dependent_users_count>\d+)$')
+        # Group Urid
+        p5 = re.compile(r'^Group Urid +: +(?P<group_urid>[\w]+)$')
+        # Fset Urid ( Hash )
+        p6 = re.compile(r'^Fset Urid \( Hash \) +: +[\w]+ \( (?P<fset_urid_hash>[\w]+) \)$')
+        # Layer 3 Stub Entry
+        p7 = re.compile(r'^Layer 3 Stub Entry +: +(?P<layer_3_stub_entry>\w+)$')
+        # Group Flags
+        p8 = re.compile(r'^Group Flags +: +(?P<group_flags>\w+)$')
+        # Gid
+        p9 = re.compile(r'^Gid +: +(?P<gid>\d+)$')
+        # Mcid Asic[0]
+        p10 = re.compile(r'^Mcid Asic\[0\] +: +(?P<mcid_asic>\d+)$')
+
+        current_group = None
+        member_ports = []
+
+        for line in output.splitlines():
+            line = line.strip().rstrip('\\')
+
+            # Match Number of Group entries
+            m = p0.match(line)
+            if m:
+                ret_dict['number_of_group_entries'] = int(m.group('number_of_group_entries'))
+                continue
+
+            # Match (Vlan: 104, 232.0.31.64)
+            m = p1.match(line)
+            if m:
+                # Save the previous group if it exists
+                if current_group:
+                    current_group['member_ports'] = member_ports
+                    groups.append(current_group)
+                # Start a new group
+                current_group = {
+                    'vlan': int(m.group('vlan')),
+                    'group': m.group('group')
+                }
+                member_ports = []
+                continue
+
+            # Match Member ports
+            m = p2.match(line)
+            if m:
+                continue
+
+            # Match individual member ports
+            m = p3.match(line)
+            if m:
+                member_ports.append(m.group('member_port'))
+                continue
+
+            # Match Dependent Users Count   : 2
+            m = p4.match(line)
+            if m:
+                current_group['dependent_users_count'] = int(m.group('dependent_users_count'))
+                continue
+
+            # Match Group Urid              : 0x600000000003dd64
+            m = p5.match(line)
+            if m:
+                current_group['group_urid'] = m.group('group_urid')
+                continue
+
+            # Match Fset Urid ( Hash )      : 0x2000000000002154 ( f2e2a15a )
+            m = p6.match(line)
+            if m:
+                current_group['fset_urid_hash'] = m.group('fset_urid_hash')
+                continue
+
+            # Match Layer 3 Stub Entry      : No
+            m = p7.match(line)
+            if m:
+                current_group['layer_3_stub_entry'] = m.group('layer_3_stub_entry')
+                continue
+
+            # Match Group Flags             : None
+            m = p8.match(line)
+            if m:
+                current_group['group_flags'] = m.group('group_flags')
+                continue
+
+            # Match Gid                     : 32377
+            m = p9.match(line)
+            if m:
+                current_group['gid'] = int(m.group('gid'))
+                continue
+
+            # Match Mcid Asic[0]            : 2645
+            m = p10.match(line)
+            if m:
+                current_group['mcid_asic'] = int(m.group('mcid_asic'))
+                continue
+
+        # Add the last group
+        if current_group:
+            current_group['member_ports'] = member_ports
+            groups.append(current_group)
+
+        # Add groups to the final dictionary
+        ret_dict['groups'] = groups
+        return ret_dict
+
+class ShowPlatformSoftwareFedActiveIpTypeMfibGroupSchema(MetaParser):
+    """
+    Schema for show platform software fed {switch} {switch_var} ip mfib {group}
+    """
+    schema = {
+        'mfib': {
+            int : {
+                'mvrf': int,
+                'group': str,
+                'source': str,
+                'attrs': {
+                    'hw_flag': str,
+                    'mlist_flags': str,
+                    'mlist_hndl_id': str,
+                    'mlist_urid': str,
+                    'fset_urid_hash': str,
+                    'rpf_adjacency_id': str,
+                    'cpu_credit': int,
+                    Optional('total_packets'): int,
+                    Optional('pps_approx'): int,
+                    'oif_count': int,
+                    'oif_details': list,
+                    'gid': int,
+                    'asic': {
+                        int: {
+                            'mcid_oid_asic': int,
+                        },
+                    }
+                }
+            }
+        }
+    }
+
+class ShowPlatformSoftwareFedActiveIpTypeMfibGroup(ShowPlatformSoftwareFedActiveIpTypeMfibGroupSchema):
+    """
+    Parser for show platform software fed {switch} {switch_var} {ip_type} mfib {group}
+    """
+
+    cli_command = [
+        'show platform software fed {switch} {switch_var} {ip_type} mfib {group}',
+        'show platform software fed {switch_var} {ip_type} mfib {group}'
+    ]
+
+    def cli(self, switch='', switch_var='', group='', ip_type='', output=None):
+        if output is None:
+            if switch:
+                cmd = self.cli_command[0].format(switch=switch, switch_var=switch_var, group=group, ip_type=ip_type)
+            else:
+                cmd = self.cli_command[1].format(switch_var=switch_var, group=group, ip_type=ip_type)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+
+        # Mvrf: 3  ( 40::2, ff1e::1 ) Attrs:
+        # Mvrf: 0  ( *, ff13::1 ) Attrs: C
+        p0 = re.compile(r'^Mvrf: +(?P<mvrf>\d+) +\( +(?P<source>[\w\:\.\/\*]+), +(?P<group>[\w\:\.\/]+) +\) +Attrs:( C)?$')
+
+        # Hw Flag                 : InHw
+        p1 = re.compile(r'^Hw Flag +: +(?P<hw_flag>\w+)$')
+
+        # Mlist Flags             : None
+        p2 = re.compile(r'^Mlist Flags +: +(?P<mlist_flags>\w+)$')
+
+        # Mlist_hndl (Id)         : 0x11889275ea0 ( 0xc823 )
+        p3 = re.compile(r'^Mlist_hndl \(Id\) +: +(?P<mlist_hndl_id>[\w\(\)\s]+)$')
+
+        # Mlist Urid              : 0x10000000003238e8
+        p4 = re.compile(r'^Mlist Urid +: +(?P<mlist_urid>[\w]+)$')
+
+        # Fset Urid (Hash)        : 0x300000000031f715 ( 68af2994 )
+        p5 = re.compile(r'^Fset Urid \(Hash\) +: +(?P<fset_urid_hash>[\w\(\)\s]+)$')
+
+        # RPF Adjacency ID        : 0xf80059d2
+        p6 = re.compile(r'^RPF Adjacency ID +: +(?P<rpf_adjacency_id>[\w]+)$')
+
+        # CPU Credit              : 0
+        p7 = re.compile(r'^CPU Credit +: +(?P<cpu_credit>\d+)$')
+
+        # Total Packets           : 4643 ( 9 pps approx.)
+        p8 = re.compile(r'^Total Packets +: +(?P<total_packets>\d+) +\( +(?P<pps_approx>\d+) pps approx\.\)$')
+
+        # OIF Count               : 3
+        p9 = re.compile(r'^OIF Count +: +(?P<oif_count>\d+)$')
+
+        # OIF Details:
+        p10 = re.compile(r'^OIF Details:$')
+
+        # AdjID          Interface          ParentIf        HwFlag      Flags
+        # 0xc851         Tu315              --------         ---        F NS
+        p11 = re.compile(r'^(?P<adjid>[\w]+) +(?P<interface>[\w\/]+) +(?P<parentif>[\w\-]+) +(?P<hwflag>[\w\-]+) +(?P<flags>[\w\s]+)$')
+
+        # GID                   : 8631
+        p12 = re.compile(r'^GID +: +(?P<gid>\d+)$')
+
+        # MCID OID Asic[0]      : 1346
+        p13 = re.compile(r'^MCID OID Asic\[(?P<asic>[\d]+)] +: +(?P<mcid_oid_asic>\d+)$')
+
+        index = 1
+        oif_details = []
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Mvrf: 3  ( 40::2, ff1e::1 ) Attrs:
+            m = p0.match(line)
+            if m:
+                group = m.groupdict()
+                mfib_dict = ret_dict.setdefault("mfib", {}).setdefault(index, {})
+                mfib_dict['mvrf'] = int(group['mvrf'])
+                mfib_dict['group'] = group['group']
+                mfib_dict['source'] = group['source']
+                attrs_dict = mfib_dict.setdefault('attrs', {})
+                index += 1
+                continue
+
+            # Hw Flag                 : InHw
+            m = p1.match(line)
+            if m:
+                attrs_dict['hw_flag'] = m.groupdict()['hw_flag']
+                continue
+
+            # Mlist Flags             : None
+            m = p2.match(line)
+            if m:
+                attrs_dict['mlist_flags'] = m.groupdict()['mlist_flags']
+                continue
+
+            # Mlist_hndl (Id)         : 0x11889275ea0 ( 0xc823 )
+            m = p3.match(line)
+            if m:
+                attrs_dict['mlist_hndl_id'] = m.groupdict()['mlist_hndl_id']
+                continue
+
+            # Mlist Urid              : 0x10000000003238e8
+            m = p4.match(line)
+            if m:
+                attrs_dict['mlist_urid'] = m.groupdict()['mlist_urid']
+                continue
+
+            # Fset Urid (Hash)        : 0x300000000031f715 ( 68af2994 )
+            m = p5.match(line)
+            if m:
+                attrs_dict['fset_urid_hash'] = m.groupdict()['fset_urid_hash']
+                continue
+
+            # RPF Adjacency ID        : 0xf80059d2
+            m = p6.match(line)
+            if m:
+                attrs_dict['rpf_adjacency_id'] = m.groupdict()['rpf_adjacency_id']
+                continue
+
+            # CPU Credit              : 0
+            m = p7.match(line)
+            if m:
+                attrs_dict['cpu_credit'] = int(m.groupdict()['cpu_credit'])
+                continue
+
+            # Total Packets           : 4643 ( 9 pps approx.)
+            m = p8.match(line)
+            if m:
+                attrs_dict['total_packets'] = int(m.groupdict()['total_packets'])
+                attrs_dict['pps_approx'] = int(m.groupdict()['pps_approx'])
+                continue
+
+            # OIF Count               : 3
+            m = p9.match(line)
+            if m:
+                attrs_dict['oif_count'] = int(m.groupdict()['oif_count'])
+                continue
+
+            # OIF Details:
+            m = p10.match(line)
+            if m:
+                attrs_dict['oif_details'] = oif_details
+                continue
+
+            # AdjID          Interface          ParentIf        HwFlag      Flags
+            # 0xc851         Tu315              --------         ---        F NS
+            m = p11.match(line)
+            if m:
+                oif_details.append(m.groupdict())
+                continue
+
+            # GID                   : 8631
+            m = p12.match(line)
+            if m:
+                attrs_dict['gid'] = int(m.groupdict()['gid'])
+                continue
+
+            # MCID OID Asic[0]      : 1346
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                asic_dict = attrs_dict.setdefault('asic', {}).setdefault(int(group['asic']), {})            
+                asic_dict['mcid_oid_asic'] = int(group['mcid_oid_asic'])
+                continue
 
         return ret_dict

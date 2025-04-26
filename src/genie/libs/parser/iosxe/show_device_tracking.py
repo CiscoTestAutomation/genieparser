@@ -1,9 +1,10 @@
 import re
 
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any, Optional, Or
+from genie.metaparser.util.schemaengine import Any, Optional, Or , ListOf
 
 from genie.libs.parser.utils.common import Common
+
 
 
 # ==================================
@@ -2269,7 +2270,7 @@ class ShowDeviceTrackingDatabaseMacDetails(ShowDeviceTrackingDatabaseMacDetailsS
             r"^(?P<dev_code>\S+)"
             r"\s+(?P<link_layer_address>(\S+\.\S+\.\S+))"
             r"\s+(?P<interface>\S+)"
-            r"\s+(?P<vlan_id>\d+)"
+            r"\s+(?P<vlan_id>\d+)(\s*\(\s*\d+\))?"
             r"\s+(?P<prlvl>\S+|\S+\s?\S+)"
             r"\s+(?P<state>\S+)"
             r"(\s+(?P<time_left>\S+\ss|N\/A))?"
@@ -2878,3 +2879,111 @@ class ShowDeviceTrackingDatabaseDetails(ShowDeviceTrackingDatabaseDetailsSchema)
                 continue
                 
         return device_tracking_database_details_dict
+        
+class ShowDeviceTrackingMessagesDetailedNumSchema(MetaParser):
+    """Schema for the cli show device-tracking messages detailed {number}"""
+    schema = {
+        "messages": ListOf({
+            Optional("timestamp"): str,
+            Optional("vlan"): str,
+            Optional("interface"): str,
+            Optional("about_interface"): str,
+            Optional("security_level"): str,
+            Optional("mac_address"): str,
+            Optional("protocol"): str,
+            Optional("message_type"): str,
+            Optional("status"): str,
+            Optional("num_addresses"): int,
+            Optional("ipv6_address"): str,
+            Optional("lifetime"): str,
+            Optional("drop_reason"): str,
+        })
+    }
+
+class ShowDeviceTrackingMessagesDetailedNum(ShowDeviceTrackingMessagesDetailedNumSchema):
+    """Parser for the cli show device-tracking messages detailed {number}"""
+
+    cli_command = "show device-tracking messages detailed {number}"
+
+    def cli(self, number, output=None):
+        if output is None:
+            cmd = self.cli_command.format(number=number)
+            output = self.device.execute(cmd)
+
+        ret_dict = {} 
+        messages = []
+        current_entry = {}
+
+        # [Mon Sep 02 05:45:03.000] VLAN 50, From Gi3/0/46 seclvl [glean], MAC b07d.479e.7d9a: DHCPv6::REN,
+        p1 = re.compile(r'^\[(?P<timestamp>.+?)\] VLAN (?P<vlan>\d+), From (?P<interface>\S+) seclvl \[(?P<security_level>\S+)\], MAC (?P<mac_address>\S+): (?P<protocol>\S+)::(?P<message_type>\S+),?$')
+
+        # [Mon Sep 02 05:45:03.000] VLAN 50, From Po126 seclvl [glean], DHCPv6::REP, no IPv6 target.
+        p2 = re.compile(r'^\[(?P<timestamp>.+?)\] VLAN (?P<vlan>\d+), From (?P<interface>\S+) seclvl \[(?P<security_level>\S+)\], (?P<protocol>\S+)::(?P<message_type>\S+), (?P<status>no IPv6 target)\.$')
+
+        # [Mon Sep 02 05:45:03.000] VLAN 50, From Po126 seclvl [glean], about Gi3/0/46, MAC b07d.479e.7d9a: DHCPv6::REP,
+        p3 = re.compile(r'^\[(?P<timestamp>.+?)\] VLAN (?P<vlan>\d+), From (?P<interface>\S+) seclvl \[(?P<security_level>\S+)\], about (?P<about_interface>\S+), MAC (?P<mac_address>\S+): (?P<protocol>\S+)::(?P<message_type>\S+),$')
+
+        # 1 addresses advertised:
+        p4 = re.compile(r'^(?P<num_addresses>\d+) addresses advertised:$')
+
+        # IPv6 addr: FE80::7ABC:1AFF:FEC2:EEE5
+        p5 = re.compile(r'^IPv6 addr: (?P<ipv6_address>\S+)$')
+
+        # IPv6 addr: 100:50:2:0:1959:ED35:5D2A:3E4B, Packet ignored.
+        p6 = re.compile(r'^IPv6 addr: (?P<ipv6_address>[A-Fa-f0-9:]+), Packet ignored\.$')
+
+        # IPv6 addr: 100:50:2:0:1959:ED35:5D2A:3E4B, lifetime: 0x5==5
+        p7 = re.compile(r'^IPv6 addr: (?P<ipv6_address>\S+), lifetime: (?P<lifetime>0x[0-9a-fA-F]+==\d+),$')
+
+        # Drop reason=Packet not authorized on port
+        p8 = re.compile(r'Drop reason=(?P<drop_reason>.+)')
+
+        # Iterate over the lines in the output
+        for line in output.splitlines():
+            line = line.strip()
+
+            # [Mon Sep 02 05:45:03.000] VLAN 50, From Po126 seclvl [glean], DHCPv6::REP, no IPv6 target.
+            # [Mon Sep 02 05:45:03.000] VLAN 50, From Po126 seclvl [glean], about Gi3/0/46, MAC b07d.479e.7d9a: DHCPv6::REP,
+            # IPv6 addr: FE80::7ABC:1AFF:FEC2:EEE5
+            for pattern in (p1, p2, p3):
+                m = pattern.match(line)
+                if m:
+                    current_entry = {k: v for k, v in m.groupdict().items() if v}
+                    messages.append(current_entry)
+                    break
+            
+            #  1 addresses advertised:
+            m = p4.match(line)
+            if m and current_entry:
+                current_entry["num_addresses"] = int(m.group("num_addresses"))
+                continue
+
+            # IPv6 addr: FE80::7ABC:1AFF:FEC2:EEE5
+            m = p5.match(line)
+            if m and current_entry:
+                current_entry["ipv6_address"] = m.group("ipv6_address")
+                continue
+
+            # IPv6 addr: 100:50:2:0:1959:ED35:5D2A:3E4B, Packet ignored.
+            m = p6.match(line)
+            if m and current_entry:
+                current_entry["ipv6_address"] = m.group("ipv6_address")
+                continue
+
+            # 	IPv6 addr: 100:50:2:0:1959:ED35:5D2A:3E4B, lifetime: 0x5==5,
+            m = p7.match(line)
+            if m and current_entry:
+                current_entry["ipv6_address"] = m.group("ipv6_address")
+                current_entry["lifetime"] = m.group("lifetime")
+                continue
+
+            # Drop reason=Packet not authorized on port
+            m = p8.search(line)
+            if m and current_entry:
+                current_entry["drop_reason"] = m.group("drop_reason").strip()
+                continue
+
+            if messages:
+                ret_dict["messages"] = messages
+
+        return ret_dict

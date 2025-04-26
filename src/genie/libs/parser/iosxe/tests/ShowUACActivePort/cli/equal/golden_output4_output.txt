@@ -1,0 +1,2 @@
+Uplink Autoconfig: Enable
+IfName       UID  State  L2   Created  SVI  IPAssign  IPState  Route  Static  Score

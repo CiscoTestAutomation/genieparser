@@ -42,6 +42,7 @@
         *  show mpls traffic-eng autoroute
         *  show mpls traffic-eng topology
         *  show mpls traffic-eng fast-reroute database detail
+	*  show mpls tp summary
 """
 
 import re
@@ -5099,3 +5100,176 @@ class ShowMplsTrafficEngFastRerouteDatabaseDetail \
                 continue
 
         return ret_dict
+
+class ShowMplsTpSummarySchema(MetaParser):
+    """Schema for show mpls tp summary"""
+    schema = {
+        'mpls_tp': {
+	    str: {
+                'path_protection_mode': str,
+                'psc': str,
+                'timers': {
+                    'fault_oam': str,
+                    'wait_to_restore': str,
+                    'psc': {
+                        'fast_timer': str,
+                        'messages': int,
+                        'slow_timer': str,
+                    }
+                },
+                'endpoints': {
+                    'total': int,
+                    'up': int,
+                    'down': int,
+                    'shut': int,
+                    'working': {
+                        'total': int,
+                        'up': int,
+                        'down': int,
+                    },
+                    'protect': {
+                        'total': int,
+                        'up': int,
+                        'down': int,
+                    }
+                },
+                'midpoints': {
+                    'total': int,
+                    'working': int,
+                    'protect': int,
+                },
+                'platform_max_tp_interfaces': int,
+            }
+        }
+    }
+
+class ShowMplsTpSummary(ShowMplsTpSummarySchema):
+    """Parser for show mpls tp summary"""
+
+    cli_command = 'show mpls tp summary'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # Regular expressions for parsing the MPLS-TP output
+        # Matches: "MPLS-TP:     0::101.1.1.1"
+        p1 = re.compile(r'^MPLS-TP:\s+(?P<mpls_tp_id>\S+)$')
+        # Matches: "Path protection mode: 1:1 revertive"
+        p2 = re.compile(r'^Path protection mode:\s+(?P<path_protection_mode>.+)$')
+        # Matches: "PSC: Disabled"
+        p3 = re.compile(r'^PSC:\s+(?P<psc>\S+)$')
+        # Matches: "Timers:  Fault OAM: 20 seconds  Wait-to-Restore: 10 seconds"
+        p4 = re.compile(r'^Timers:\s+Fault OAM:\s+(?P<fault_oam>\d+\s+\w+)\s+Wait-to-Restore:\s+(?P<wait_to_restore>\d+\s+\w+)$')
+        # Matches: "PSC: Fast-Timer: 1000 milli seconds, 3 messages"
+        p5 = re.compile(r'^\s*PSC:\s+Fast-Timer:\s+(?P<fast_timer>\d+)\s+\w+\s+\w+,\s+(?P<messages>\d+)\s+messages\s*$') 
+        # Matches: "Slow-Timer: 5 seconds"
+        p6 = re.compile(r'^Slow-Timer:\s+(?P<slow_timer>\d+\s+\w+)$')
+        # Matches: "Endpoints: 500    up: 500    down: 0      shut: 0"
+        p7 = re.compile(r'^Endpoints:\s+(?P<total>\d+)\s+up:\s+(?P<up>\d+)\s+down:\s+(?P<down>\d+)\s+shut:\s+(?P<shut>\d+)$')
+        # Matches: "    Working: 500    up: 500    down: 0"
+        p8 = re.compile(r'^Working:\s+(?P<total>\d+)\s+up:\s+(?P<up>\d+)\s+down:\s+(?P<down>\d+)$')
+        # Matches: "    Protect: 500    up: 500    down: 0"
+        p9 = re.compile(r'^Protect:\s+(?P<total>\d+)\s+up:\s+(?P<up>\d+)\s+down:\s+(?P<down>\d+)$')
+        # Matches: "Midpoints: 0      working: 0      protect: 0"
+        p10 = re.compile(r'^Midpoints:\s+(?P<total>\d+)\s+working:\s+(?P<working>\d+)\s+protect:\s+(?P<protect>\d+)$')
+        # Matches: "Platform max TP interfaces: 65536"
+        p11 = re.compile(r'^Platform max TP interfaces:\s+(?P<platform_max_tp_interfaces>\d+)$')
+
+        # Parse each line of the output
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Match MPLS-TP ID
+            m = p1.match(line)
+            if m:
+                mpls_tp_id = m.group('mpls_tp_id')
+                mpls_tp_dict = parsed_dict.setdefault('mpls_tp', {}).setdefault(mpls_tp_id, {})
+                continue
+
+            # Match Path protection mode
+            m = p2.match(line)
+            if m:
+                mpls_tp_dict['path_protection_mode'] = m.group('path_protection_mode')
+                continue
+
+            # Match PSC:
+            m = p3.match(line)
+            if m:
+                mpls_tp_dict['psc'] = m.group('psc')
+                continue
+
+            # Match Timers: Fault OAM and Wait-to-Restore
+            m = p4.match(line)
+            if m:
+                timers_dict = mpls_tp_dict.setdefault('timers', {})
+                timers_dict['fault_oam'] = m.group('fault_oam')
+                timers_dict['wait_to_restore'] = m.group('wait_to_restore')
+                continue
+
+            m = p6.match(line)
+            if m:
+                psc_dict = timers_dict.setdefault('psc', {})
+
+            # Match PSC: Fast-Timer and messages.
+            m = p5.match(line)
+            if m:
+                psc_dict = timers_dict.setdefault('psc', {})
+                psc_dict['fast_timer'] = m.group('fast_timer')
+                psc_dict['messages'] = int(m.group('messages'))
+                continue
+
+            # Match Slow-Timer
+            m = p6.match(line)
+            if m:
+                psc_dict = timers_dict.setdefault('psc', {})
+                psc_dict['slow_timer'] = m.group('slow_timer')
+                continue
+
+            # Match Endpoints
+            m = p7.match(line)
+            if m:
+                endpoints_dict = mpls_tp_dict.setdefault('endpoints', {})
+                endpoints_dict['total'] = int(m.group('total'))
+                endpoints_dict['up'] = int(m.group('up'))
+                endpoints_dict['down'] = int(m.group('down'))
+                endpoints_dict['shut'] = int(m.group('shut'))
+                continue
+
+            # Match Working
+            m = p8.match(line)
+            if m:
+                working_dict = endpoints_dict.setdefault('working', {})
+                working_dict['total'] = int(m.group('total'))
+                working_dict['up'] = int(m.group('up'))
+                working_dict['down'] = int(m.group('down'))
+                continue
+
+            # Match Protect
+            m = p9.match(line)
+            if m:
+                protect_dict = endpoints_dict.setdefault('protect', {})
+                protect_dict['total'] = int(m.group('total'))
+                protect_dict['up'] = int(m.group('up'))
+                protect_dict['down'] = int(m.group('down'))
+                continue
+
+            # Match Midpoints
+            m = p10.match(line)
+            if m:
+                midpoints_dict = mpls_tp_dict.setdefault('midpoints', {})
+                midpoints_dict['total'] = int(m.group('total'))
+                midpoints_dict['working'] = int(m.group('working'))
+                midpoints_dict['protect'] = int(m.group('protect'))
+                continue
+
+            # Match Platform max TP interfaces.
+            m = p11.match(line)
+            if m:
+                mpls_tp_dict['platform_max_tp_interfaces'] = int(m.group('platform_max_tp_interfaces'))
+                continue
+
+        return parsed_dict

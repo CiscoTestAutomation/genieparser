@@ -1,0 +1,7 @@
+show platform software l2vpn fp active atom
+ATOM/Local Cross-connect table, Number of entries: 1
+
+AToM Cross-Connect xid 0x1c, ifnumber 0x1c
+  AC VLAN(IW:VLAN) -> Imp 0xb4(ATOM_IMP), HW info: 1c (om_id 314 created)
+ Interface Name: GigabitEthernet0/0/8.100
+  VLAN Info: outVlan id: 100, inVlan id: 200, outEther: 0x8100, peerVlan id: 0, dot1qAny: 0
