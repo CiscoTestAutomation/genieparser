@@ -4,7 +4,8 @@ expected_output = {
             "host": "idle",
             "idle": "00:00:00",
             "location": "10.24.69.196",
-            "active": True
+            "active": True,
+            "tty": "322"
         }
     }
 }

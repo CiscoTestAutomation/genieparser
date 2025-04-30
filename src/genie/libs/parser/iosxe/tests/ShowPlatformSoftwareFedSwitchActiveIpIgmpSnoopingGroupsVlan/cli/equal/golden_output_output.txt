@@ -1,0 +1,13 @@
+(Vlan: 4000, ff1e::1)
+      Member ports            : 1
+          GigabitEthernet1/0/46
+      Dependent Users Count   : 0
+      Group Urid              : 0x700000000000000d
+      Fset Urid ( Hash )      : 0x2000000000000016 ( 8aaef195 )
+      Fset Aux Urid           : 0x0
+      Layer 3 Stub Entry      : No
+      Ec seed                 : 7
+      Gid                     : 8205
+      Mcid Asic[0]            : 2873
+      Hw Group Entry Asic[0]: 
+          Hw Mcid Oid         : 2873 (cookie: urid:0x20::16)

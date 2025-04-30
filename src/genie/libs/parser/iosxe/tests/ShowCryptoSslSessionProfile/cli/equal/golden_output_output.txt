@@ -1,0 +1,16 @@
+SSL Session Profile
+Profile Name: DefaultProfile
+  Protocol: TLSv1.2
+  Cipher Suite: AES256-SHA
+  Authentication: Certificate
+  Session Timeout: 3600 seconds
+  Renegotiation: Enabled
+  Keepalive Interval: 60 seconds
+
+Profile Name: CustomProfile
+  Protocol: TLSv1.3
+  Cipher Suite: AES128-GCM-SHA256
+  Authentication: Pre-Shared Key
+  Session Timeout: 1800 seconds
+  Renegotiation: Disabled
+  Keepalive Interval: 120 seconds

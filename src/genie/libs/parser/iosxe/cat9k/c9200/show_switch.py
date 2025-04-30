@@ -33,28 +33,27 @@ class ShowSwitchStackPortsSummary(ShowSwitchStackPortsSummarySchema):
     Parser for:
         * show switch stack-ports summary
     """
-
     cli_command = ['show switch stack-ports summary']
 
     def cli(self, output=None):
         if not output:
             output = self.device.execute(self.cli_command[0])
-
+        
         # initial return dictionary
         ret_dict = {}
 
         # initial regexp pattern
         # 1/1        OK           2/2            50cm           Yes       Yes           Yes       3                   No
         
-        p1 = re.compile(r"^(?P<stackport_id>\S+)" 
-                        r"+(?P<port_status>\w+)" 
-                        r"+(?P<neighbor>\S+)" 
-                        r"+(?P<cable_length>\w+)" 
-                        r"+(?P<link_ok>\w+)" 
-                        r"+(?P<link_active>\w+)" 
-                        r"+(?P<sync_ok>\w+)" 
-                        r"+(?P<link_changes_count>\d+)" 
-                        r"+(?P<in_loopback>\w+)")
+        p1 = re.compile(r"^(?P<stackport_id>\S+)\s+"  
+                r"(?P<port_status>\w+)\s+"  
+                r"(?P<neighbor>\S+)\s+"  
+                r"(?P<cable_length>\S+)\s+"  
+                r"(?P<link_ok>\w+)\s+"  
+                r"(?P<link_active>\w+)\s+"  
+                r"(?P<sync_ok>\w+)\s+"  
+                r"(?P<link_changes_count>\d+)\s+"  
+                r"(?P<in_loopback>\w+)$")
 
         for line in output.splitlines():
             line = line.strip()

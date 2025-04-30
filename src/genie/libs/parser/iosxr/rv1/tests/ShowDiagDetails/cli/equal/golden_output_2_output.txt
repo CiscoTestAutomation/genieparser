@@ -1,0 +1,1354 @@
+show diag details
+Wed Mar 26 00:25:57.724 UTC
+
+HundredGigE0/0/0/0-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : A
+    Hardware Revision        : 8257
+    PID                      : QSFP-100G-AOC2M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAETCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : QAOC-100G4F1A02C
+    Top Assy. Revision       : A
+    PCB Serial Number        : DTS2413A644-A
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/0/0/1-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : A
+    Hardware Revision        : 8257
+    PID                      : QSFP-100G-AOC2M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAETCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : QAOC-100G4F1A02C
+    Top Assy. Revision       : A
+    PCB Serial Number        : DTS2413A655-A
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/0/0/2-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : A
+    Hardware Revision        : 8257
+    PID                      : QSFP-100G-AOC2M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAETCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : QAOC-100G4F1A02C
+    Top Assy. Revision       : A
+    PCB Serial Number        : DTS2413A684-A
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/0/0/3-IDPROM - Non-Cisco QSFP28 100G AEC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 16
+    Hardware Revision        : 13873
+    PID                      : CAC43X301D4PA0HW
+    Version Identifier       : 16
+    UDI Description          : Non-Cisco QSFP28 100G AEC Pluggable Optics Module
+    CLEI Code                : 
+    ECI Number               : 0
+    Top Assy. Part Number    : CAC43X301D4PA0HW
+    Top Assy. Revision       : 16
+    PCB Serial Number        : FQ4Q13X02000058
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/0/0/4-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : A
+    Hardware Revision        : 8257
+    PID                      : QSFP-100G-AOC2M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAETCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : QAOC-100G4F1A02C
+    Top Assy. Revision       : A
+    PCB Serial Number        : DTS2413A703-A
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/0/0/5-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : A
+    Hardware Revision        : 8257
+    PID                      : QSFP-100G-AOC2M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAETCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : QAOC-100G4F1A02C
+    Top Assy. Revision       : A
+    PCB Serial Number        : DTS2413A645-A
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/0/0/6-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : A
+    Hardware Revision        : 8257
+    PID                      : QSFP-100G-AOC2M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAETCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : QAOC-100G4F1A02C
+    Top Assy. Revision       : A
+    PCB Serial Number        : DTS2413A702-B
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/0/0/7-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1B
+    Hardware Revision        : 16945
+    PID                      : QSFP-100G-AOC2M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAETCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : TF-FC002-NC2
+    Top Assy. Revision       : 1B
+    PCB Serial Number        : INL24102702-B
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/0/0/8-IDPROM - Non-Cisco QSFP28 100G AEC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 16
+    Hardware Revision        : 13873
+    PID                      : CAC43X301D4PA0HW
+    Version Identifier       : 16
+    UDI Description          : Non-Cisco QSFP28 100G AEC Pluggable Optics Module
+    CLEI Code                : 
+    ECI Number               : 0
+    Top Assy. Part Number    : CAC43X301D4PA0HW
+    Top Assy. Revision       : 16
+    PCB Serial Number        : FQ4Q13X02000058
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/0/0/9-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : A
+    Hardware Revision        : 8257
+    PID                      : QSFP-100G-AOC2M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAETCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : QAOC-100G4F1A02C
+    Top Assy. Revision       : A
+    PCB Serial Number        : DTS2413A642-A
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/0/0/10-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1B
+    Hardware Revision        : 16945
+    PID                      : QSFP-100G-AOC2M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAETCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : TF-FC002-NC2
+    Top Assy. Revision       : 1B
+    PCB Serial Number        : INL24102594-B
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/0/0/11-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : A
+    Hardware Revision        : 8257
+    PID                      : QSFP-100G-AOC2M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAETCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : QAOC-100G4F1A02C
+    Top Assy. Revision       : A
+    PCB Serial Number        : DTS2413A656-A
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/0/0/12-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1B
+    Hardware Revision        : 16945
+    PID                      : QSFP-100G-AOC2M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAETCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : TF-FC002-NC2
+    Top Assy. Revision       : 1B
+    PCB Serial Number        : INL24102641-A
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/0/0/13-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : A
+    Hardware Revision        : 8257
+    PID                      : QSFP-100G-AOC2M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAETCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : QAOC-100G4F1A02C
+    Top Assy. Revision       : A
+    PCB Serial Number        : DTS2413A643-B
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/0/0/14-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : A
+    Hardware Revision        : 8257
+    PID                      : QSFP-100G-AOC2M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAETCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : QAOC-100G4F1A02C
+    Top Assy. Revision       : A
+    PCB Serial Number        : DTS2413A719-A
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/0/0/15-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : A
+    Hardware Revision        : 8257
+    PID                      : QSFP-100G-AOC2M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAETCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : QAOC-100G4F1A02C
+    Top Assy. Revision       : A
+    PCB Serial Number        : DTS2413A648-B
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/0/0/16-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1B
+    Hardware Revision        : 16945
+    PID                      : QSFP-100G-AOC2M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAETCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : TF-FC002-NC2
+    Top Assy. Revision       : 1B
+    PCB Serial Number        : INL24102599-B
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/0/0/17-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1B
+    Hardware Revision        : 16945
+    PID                      : QSFP-100G-AOC2M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAETCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : TF-FC002-NC2
+    Top Assy. Revision       : 1B
+    PCB Serial Number        : INL24090834-A
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/0/0/18-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : A
+    Hardware Revision        : 8257
+    PID                      : QSFP-100G-AOC2M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAETCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : QAOC-100G4F1A02C
+    Top Assy. Revision       : A
+    PCB Serial Number        : DTS2413A692-A
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/0/0/19-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : A
+    Hardware Revision        : 8257
+    PID                      : QSFP-100G-AOC2M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAETCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : QAOC-100G4F1A02C
+    Top Assy. Revision       : A
+    PCB Serial Number        : DTS2413A707-A
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/0/0/20-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : A
+    Hardware Revision        : 8257
+    PID                      : QSFP-100G-AOC2M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAETCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : QAOC-100G4F1A02C
+    Top Assy. Revision       : A
+    PCB Serial Number        : DTS2413A663-A
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/0/0/21-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1B
+    Hardware Revision        : 16945
+    PID                      : QSFP-100G-AOC2M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAETCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : TF-FC002-NC2
+    Top Assy. Revision       : 1B
+    PCB Serial Number        : INL24102638-A
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/0/0/22-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : A
+    Hardware Revision        : 8257
+    PID                      : QSFP-100G-AOC2M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAETCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : QAOC-100G4F1A02C
+    Top Assy. Revision       : A
+    PCB Serial Number        : DTS2413A698-A
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/0/0/23-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : A
+    Hardware Revision        : 8257
+    PID                      : QSFP-100G-AOC2M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAETCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : QAOC-100G4F1A02C
+    Top Assy. Revision       : A
+    PCB Serial Number        : DTS2413A713-A
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+0/RP0-MB-IDPROM - NC5502 Route Processor Card
+ Info 
+Common Blocks:
+    Block Signature : 0xabab
+    Block Version   : 3
+    Block Length    : 160
+    Block Checksum  : 0x1713
+    EEPROM Size     : 65535
+    Block Count     : 3
+    FRU Major Type  : 0x6002
+    FRU Minor Type  : 0x100
+    OEM String      : Cisco Systems, Inc.
+    Product ID      : NCS-5502-SE
+    Serial Number   : FOC232333ZM
+    Part Number     : 73-17816-06
+    Part Revision   : D0
+    Mfg Deviation   : 
+    H/W Version     : 1.2
+    Mfg Bits        : 0
+    Engineer Use    : 0
+    snmpOID         : 9.12.3.1.3.1801.0.0
+    Power Consump   : 876 W
+    RMA Code        : 0-0-0-0
+    CLEI Code       : INM1T00ARA
+    VID             : V01
+RP Module Specific Block:
+    Block Signature : 0x6002
+    Block Version   : 2
+    Block Length    : 103
+    Block Checksum  : 0x5ca
+    Feature Bits    : 0x0
+    HW Changes Bits : 0x72001f
+    Card Index      : 27014
+    MAC Addresses   : 2c-01-b5-0a-40-02
+    Number of MACs  : 18
+    Number of EPLD  : 0
+    Port Type-Num   : 0-0
+    Sensor #1       : 0,0
+    Sensor #2       : 0,0
+    Sensor #3       : 0,0
+    Sensor #4       : 0,0
+    Sensor #5       : 0,0
+    Sensor #6       : 0,0
+    Sensor #7       : 0,0
+    Sensor #8       : 0,0
+    Max Connector Power: 2880 W
+    Cooling Requirement: 250
+    Ambient Temperature: 40
+Temperature Sensor Block:
+    Number of Valid Sensors : 0
+
+
+HundredGigE0/0/0/24-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : A
+    Hardware Revision        : 8257
+    PID                      : QSFP-100G-AOC2M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAETCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : QAOC-100G4F1A02C
+    Top Assy. Revision       : A
+    PCB Serial Number        : DTS2413A649-B
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/0/0/25-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1B
+    Hardware Revision        : 16945
+    PID                      : QSFP-100G-AOC2M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAETCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : TF-FC002-NC2
+    Top Assy. Revision       : 1B
+    PCB Serial Number        : INL24102611-A
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/0/0/26-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1B
+    Hardware Revision        : 16945
+    PID                      : QSFP-100G-AOC2M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAETCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : TF-FC002-NC2
+    Top Assy. Revision       : 1B
+    PCB Serial Number        : INL24102447-A
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/0/0/27-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : A
+    Hardware Revision        : 8257
+    PID                      : QSFP-100G-AOC2M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAETCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : QAOC-100G4F1A02C
+    Top Assy. Revision       : A
+    PCB Serial Number        : DTS2413A667-A
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/0/0/28-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : A
+    Hardware Revision        : 8257
+    PID                      : QSFP-100G-AOC2M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAETCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : QAOC-100G4F1A02C
+    Top Assy. Revision       : A
+    PCB Serial Number        : DTS2413A694-A
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/0/0/29-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : A
+    Hardware Revision        : 8257
+    PID                      : QSFP-100G-AOC2M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAETCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : QAOC-100G4F1A02C
+    Top Assy. Revision       : A
+    PCB Serial Number        : DTS2413A691-A
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/0/0/30-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : A
+    Hardware Revision        : 8257
+    PID                      : QSFP-100G-AOC2M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAETCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : QAOC-100G4F1A02C
+    Top Assy. Revision       : A
+    PCB Serial Number        : DTS2413A709-A
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/0/0/31-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : A
+    Hardware Revision        : 8257
+    PID                      : QSFP-100G-AOC2M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAETCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : QAOC-100G4F1A02C
+    Top Assy. Revision       : A
+    PCB Serial Number        : DTS2413A705-B
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/0/0/32-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : A
+    Hardware Revision        : 8257
+    PID                      : QSFP-100G-AOC2M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAETCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : QAOC-100G4F1A02C
+    Top Assy. Revision       : A
+    PCB Serial Number        : DTS2413A686-B
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/0/0/33-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1B
+    Hardware Revision        : 16945
+    PID                      : QSFP-100G-AOC2M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAETCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : TF-FC002-NC2
+    Top Assy. Revision       : 1B
+    PCB Serial Number        : INL24102482-A
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/0/0/34-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1B
+    Hardware Revision        : 16945
+    PID                      : QSFP-100G-AOC2M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAETCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : TF-FC002-NC2
+    Top Assy. Revision       : 1B
+    PCB Serial Number        : INL24090927-A
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/0/0/35-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1B
+    Hardware Revision        : 16945
+    PID                      : QSFP-100G-AOC2M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAETCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : TF-FC002-NC2
+    Top Assy. Revision       : 1B
+    PCB Serial Number        : INL24102497-B
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/0/0/36-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : A
+    Hardware Revision        : 8257
+    PID                      : QSFP-100G-AOC2M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAETCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : QAOC-100G4F1A02C
+    Top Assy. Revision       : A
+    PCB Serial Number        : DTS2413A646-A
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/0/0/37-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : A
+    Hardware Revision        : 8257
+    PID                      : QSFP-100G-AOC2M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAETCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : QAOC-100G4F1A02C
+    Top Assy. Revision       : A
+    PCB Serial Number        : DTS2413A687-A
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/0/0/38-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : A
+    Hardware Revision        : 8257
+    PID                      : QSFP-100G-AOC2M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAETCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : QAOC-100G4F1A02C
+    Top Assy. Revision       : A
+    PCB Serial Number        : DTS2413A671-B
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/0/0/39-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1B
+    Hardware Revision        : 16945
+    PID                      : QSFP-100G-AOC2M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAETCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : TF-FC002-NC2
+    Top Assy. Revision       : 1B
+    PCB Serial Number        : INL24102469-A
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/0/0/40-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1B
+    Hardware Revision        : 16945
+    PID                      : QSFP-100G-AOC2M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAETCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : TF-FC002-NC2
+    Top Assy. Revision       : 1B
+    PCB Serial Number        : INL24102578-A
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/0/0/41-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1B
+    Hardware Revision        : 16945
+    PID                      : QSFP-100G-AOC2M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAETCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : TF-FC002-NC2
+    Top Assy. Revision       : 1B
+    PCB Serial Number        : INL24102516-B
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/0/0/42-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1B
+    Hardware Revision        : 16945
+    PID                      : QSFP-100G-AOC2M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAETCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : TF-FC002-NC2
+    Top Assy. Revision       : 1B
+    PCB Serial Number        : INL24102454-A
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/0/0/43-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1B
+    Hardware Revision        : 16945
+    PID                      : QSFP-100G-AOC2M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAETCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : TF-FC002-NC2
+    Top Assy. Revision       : 1B
+    PCB Serial Number        : INL24102428-B
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/0/0/44-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1B
+    Hardware Revision        : 16945
+    PID                      : QSFP-100G-AOC2M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAETCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : TF-FC002-NC2
+    Top Assy. Revision       : 1B
+    PCB Serial Number        : INL24120446-A
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/0/0/45-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1B
+    Hardware Revision        : 16945
+    PID                      : QSFP-100G-AOC2M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAETCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : TF-FC002-NC2
+    Top Assy. Revision       : 1B
+    PCB Serial Number        : INL24090910-B
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/0/0/46-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1B
+    Hardware Revision        : 16945
+    PID                      : QSFP-100G-AOC2M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAETCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : TF-FC002-NC2
+    Top Assy. Revision       : 1B
+    PCB Serial Number        : INL24102511-B
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+HundredGigE0/0/0/47-IDPROM - Cisco QSFP28 100G AOC Pluggable Optics Module
+ Info:
+    IDPROM Format Revision   : 1B
+    Hardware Revision        : 16945
+    PID                      : QSFP-100G-AOC2M
+    Version Identifier       : V03
+    UDI Description          : Cisco QSFP28 100G AOC Pluggable Optics Module
+    CLEI Code                : CMPQAETCAB
+    ECI Number               : 0
+    Top Assy. Part Number    : TF-FC002-NC2
+    Top Assy. Revision       : 1B
+    PCB Serial Number        : INL24090825-B
+    PCA Number               : N/A
+    PCA Revision             : N/A
+    Deviation Number # 1     : 
+    Asset ID                 : 
+    Asset Alias              : 
+    ECI Number               : 
+
+0/RP0-DB-IDPROM - NC5502 Route Processor Card
+ Info 
+Common Blocks:
+    Block Signature : 0xabab
+    Block Version   : 3
+    Block Length    : 160
+    Block Checksum  : 0x1683
+    EEPROM Size     : 65535
+    Block Count     : 3
+    FRU Major Type  : 0x6003
+    FRU Minor Type  : 0x100
+    OEM String      : Cisco Systems, Inc.
+    Product ID      : NCS-5502-SE
+    Serial Number   : FOC232333K8
+    Part Number     : 73-17818-08
+    Part Revision   : D0
+    Mfg Deviation   : 
+    H/W Version     : 1.2
+    Mfg Bits        : 0
+    Engineer Use    : 0
+    snmpOID         : 9.12.3.1.3.1801.0.0
+    Power Consump   : 1046 W
+    RMA Code        : 0-0-0-0
+    CLEI Code       : INM1T00ARA
+    VID             : V01
+RP Module Specific Block:
+    Block Signature : 0x6003
+    Block Version   : 2
+    Block Length    : 103
+    Block Checksum  : 0x411
+    Feature Bits    : 0x0
+    HW Changes Bits : 0xf2001f
+    Card Index      : 27014
+    MAC Addresses   : 00-00-00-00-00-00
+    Number of MACs  : 0
+    Number of EPLD  : 0
+    Port Type-Num   : 0-0
+    Sensor #1       : 0,0
+    Sensor #2       : 0,0
+    Sensor #3       : 0,0
+    Sensor #4       : 0,0
+    Sensor #5       : 0,0
+    Sensor #6       : 0,0
+    Sensor #7       : 0,0
+    Sensor #8       : 0,0
+    Max Connector Power: 2880 W
+    Cooling Requirement: 0
+    Ambient Temperature: 40
+Temperature Sensor Block:
+    Number of Valid Sensors : 0
+
+
+Rack 0-IDPROM - NCS5502 2RU Chassis
+ Info 
+Common Blocks:
+    Block Signature : 0xabab
+    Block Version   : 3
+    Block Length    : 160
+    Block Checksum  : 0x1810
+    EEPROM Size     : 65535
+    Block Count     : 6
+    FRU Major Type  : 0x6001
+    FRU Minor Type  : 0x100
+    OEM String      : Cisco Systems, Inc.
+    Product ID      : NCS-5502-SE
+    Serial Number   : FOC232333L0
+    Part Number     : 73-17817-06
+    Part Revision   : F0
+    Mfg Deviation   : D523943
+    H/W Version     : 1.2
+    Mfg Bits        : 1
+    Engineer Use    : 0
+    snmpOID         : 9.12.3.1.3.1801.0.0
+    Power Consump   : 99 W
+    RMA Code        : 0-0-0-0
+    CLEI Code       : INM1T00ARA
+    VID             : V01
+Chassis Specific Block:
+    Block Signature : 0x6001
+    Block Version   : 3
+    Block Length    : 39
+    Block Checksum  : 0x407
+    Feature Bits    : 0x0
+    HW Changes Bits : 0xe01d1
+    Stackmib OID    : 0
+    MAC Addresses   : d4-6a-35-32-6c-00
+    Number of MACs  : 1024
+    OEM Enterprise  : 0
+    OEM MIB Offset  : 0
+    MAX Connector Power: 720 W
+    Cooling Coefficient: 0
+Second Serial Number Specific Block:
+    Serial Number   : FOC2348R0A2
+
+Top Assembly Block:
+    Block Signature : 0x600a
+    Block Version   : 1
+    Block Length    : 72
+    Block Checksum  : 0xd46
+    Serial Number   : FOC2348R0A2
+    Part Number     : 68-5877-01
+    Part Revision   : G0
+    Mfg Deviation   : D523943
+    H/W Version     : 1.0
+    Mfg Bits        : 1
+
+
+0/PM0-IDPROM - NCS 5500 AC 2KW Power Supply Port-S Intake/Front-to-back
+ Info 
+Common Blocks:
+    Block Signature : 0xabab
+    Block Version   : 3
+    Block Length    : 160
+    Block Checksum  : 0x187c
+    EEPROM Size     : 65535
+    Block Count     : 2
+    FRU Major Type  : 0xab01
+    FRU Minor Type  : 0x100
+    OEM String      : Cisco Systems, Inc.
+    Product ID      : NC55-2KW-ACFW
+    Serial Number   : POG2233J63S
+    Part Number     : 341-100516-01
+    Part Revision   : B0
+    Mfg Deviation   : 
+    H/W Version     : 0.2
+    Mfg Bits        : 0
+    Engineer Use    : 1
+    snmpOID         : 9.12.3.1.6.555.0.0
+    Power Consump   : 2004 W
+    RMA Code        : 0-0-0-0
+    CLEI Code       : IPUPAP2AAA
+    VID             : V01
+Power Supply Specific Block:
+    Block Signature : 0xab01
+    Block Version   : 2
+    Block Length    : 36
+    Block Checksum  : 0x1db
+    Feature Bits    : 0x0
+    Current 110v    : 8300
+    Current 220v    : 16700
+    Stackmib OID    : 0
+    Current mode1   : 0
+    Current mode2   : 0
+    Current mode3   : 0
+    Current mode4   : 0
+    Max Float Current mode1: 0
+    Max Float Current mode2: 0
+    Max Float Current mode3: 0
+    Max Float Current mode4: 0
+
+
+0/PM1-IDPROM - NCS 5500 AC 2KW Power Supply Port-S Intake/Front-to-back
+ Info 
+Common Blocks:
+    Block Signature : 0xabab
+    Block Version   : 3
+    Block Length    : 160
+    Block Checksum  : 0x187f
+    EEPROM Size     : 65535
+    Block Count     : 2
+    FRU Major Type  : 0xab01
+    FRU Minor Type  : 0x100
+    OEM String      : Cisco Systems, Inc.
+    Product ID      : NC55-2KW-ACFW
+    Serial Number   : POG2346J63Q
+    Part Number     : 341-100516-01
+    Part Revision   : B0
+    Mfg Deviation   : 
+    H/W Version     : 0.2
+    Mfg Bits        : 0
+    Engineer Use    : 1
+    snmpOID         : 9.12.3.1.6.555.0.0
+    Power Consump   : 2004 W
+    RMA Code        : 0-0-0-0
+    CLEI Code       : IPUPAP2AAA
+    VID             : V01
+Power Supply Specific Block:
+    Block Signature : 0xab01
+    Block Version   : 2
+    Block Length    : 36
+    Block Checksum  : 0x1db
+    Feature Bits    : 0x0
+    Current 110v    : 8300
+    Current 220v    : 16700
+    Stackmib OID    : 0
+    Current mode1   : 0
+    Current mode2   : 0
+    Current mode3   : 0
+    Current mode4   : 0
+    Max Float Current mode1: 0
+    Max Float Current mode2: 0
+    Max Float Current mode3: 0
+    Max Float Current mode4: 0
+
+
+0/PM2-IDPROM - NCS 5500 AC 2KW Power Supply Port-S Intake/Front-to-back
+ Info 
+Common Blocks:
+    Block Signature : 0xabab
+    Block Version   : 3
+    Block Length    : 160
+    Block Checksum  : 0x187e
+    EEPROM Size     : 65535
+    Block Count     : 2
+    FRU Major Type  : 0xab01
+    FRU Minor Type  : 0x100
+    OEM String      : Cisco Systems, Inc.
+    Product ID      : NC55-2KW-ACFW
+    Serial Number   : POG2233J65S
+    Part Number     : 341-100516-01
+    Part Revision   : B0
+    Mfg Deviation   : 
+    H/W Version     : 0.2
+    Mfg Bits        : 0
+    Engineer Use    : 1
+    snmpOID         : 9.12.3.1.6.555.0.0
+    Power Consump   : 2004 W
+    RMA Code        : 0-0-0-0
+    CLEI Code       : IPUPAP2AAA
+    VID             : V01
+Power Supply Specific Block:
+    Block Signature : 0xab01
+    Block Version   : 2
+    Block Length    : 36
+    Block Checksum  : 0x1db
+    Feature Bits    : 0x0
+    Current 110v    : 8300
+    Current 220v    : 16700
+    Stackmib OID    : 0
+    Current mode1   : 0
+    Current mode2   : 0
+    Current mode3   : 0
+    Current mode4   : 0
+    Max Float Current mode1: 0
+    Max Float Current mode2: 0
+    Max Float Current mode3: 0
+    Max Float Current mode4: 0
+
+
+0/PM3-IDPROM - NCS 5500 AC 2KW Power Supply Port-S Intake/Front-to-back
+ Info 
+Common Blocks:
+    Block Signature : 0xabab
+    Block Version   : 3
+    Block Length    : 160
+    Block Checksum  : 0x1884
+    EEPROM Size     : 65535
+    Block Count     : 2
+    FRU Major Type  : 0xab01
+    FRU Minor Type  : 0x100
+    OEM String      : Cisco Systems, Inc.
+    Product ID      : NC55-2KW-ACFW
+    Serial Number   : POG2346J60Y
+    Part Number     : 341-100516-01
+    Part Revision   : B0
+    Mfg Deviation   : 
+    H/W Version     : 0.2
+    Mfg Bits        : 0
+    Engineer Use    : 1
+    snmpOID         : 9.12.3.1.6.555.0.0
+    Power Consump   : 2004 W
+    RMA Code        : 0-0-0-0
+    CLEI Code       : IPUPAP2AAA
+    VID             : V01
+Power Supply Specific Block:
+    Block Signature : 0xab01
+    Block Version   : 2
+    Block Length    : 36
+    Block Checksum  : 0x1db
+    Feature Bits    : 0x0
+    Current 110v    : 8300
+    Current 220v    : 16700
+    Stackmib OID    : 0
+    Current mode1   : 0
+    Current mode2   : 0
+    Current mode3   : 0
+    Current mode4   : 0
+    Max Float Current mode1: 0
+    Max Float Current mode2: 0
+    Max Float Current mode3: 0
+    Max Float Current mode4: 0
+
+
+0/FT0-IDPROM - NC5502 Fan Tray Forward Flow
+ Info 
+Common Blocks:
+    Block Signature : 0xabab
+    Block Version   : 3
+    Block Length    : 160
+    Block Checksum  : 0xb9c
+    EEPROM Size     : 65535
+    Block Count     : 3
+    FRU Major Type  : 0xab04
+    FRU Minor Type  : 0xf0
+    OEM String      : 0
+    Product ID      : NC55-2RU-FAN-FW
+    Serial Number   : N/A
+    Part Number     : 0
+    Part Revision   : 0
+    Mfg Deviation   : 
+    H/W Version     : 0.1
+    Mfg Bits        : 0
+    Engineer Use    : 0
+    snmpOID         : 0.0.0.0.0.0.0.0
+    Power Consump   : 0 W
+    RMA Code        : 0-0-0-0
+    CLEI Code       : 0
+    VID             : V01
+Fan Module Specific Block:
+    Feature Bits    : 0x0
+    HW Changes Bits : 0x0
+    Stackmib OID    : 0
+    Cooling Capacity    : 0
+    Ambient Temperature : 0
+Second Serial Number Specific Block:
+    Serial Number   : 
+
+
+0/FT1-IDPROM - NC5502 Fan Tray Forward Flow
+ Info 
+Common Blocks:
+    Block Signature : 0xabab
+    Block Version   : 3
+    Block Length    : 160
+    Block Checksum  : 0xb9c
+    EEPROM Size     : 65535
+    Block Count     : 3
+    FRU Major Type  : 0xab04
+    FRU Minor Type  : 0xf0
+    OEM String      : 0
+    Product ID      : NC55-2RU-FAN-FW
+    Serial Number   : N/A
+    Part Number     : 0
+    Part Revision   : 0
+    Mfg Deviation   : 
+    H/W Version     : 0.1
+    Mfg Bits        : 0
+    Engineer Use    : 0
+    snmpOID         : 0.0.0.0.0.0.0.0
+    Power Consump   : 0 W
+    RMA Code        : 0-0-0-0
+    CLEI Code       : 0
+    VID             : V01
+Fan Module Specific Block:
+    Feature Bits    : 0x0
+    HW Changes Bits : 0x0
+    Stackmib OID    : 0
+    Cooling Capacity    : 0
+    Ambient Temperature : 0
+Second Serial Number Specific Block:
+    Serial Number   : 
+
+
+0/FT2-IDPROM - NC5502 Fan Tray Forward Flow
+ Info 
+Common Blocks:
+    Block Signature : 0xabab
+    Block Version   : 3
+    Block Length    : 160
+    Block Checksum  : 0xb9c
+    EEPROM Size     : 65535
+    Block Count     : 3
+    FRU Major Type  : 0xab04
+    FRU Minor Type  : 0xf0
+    OEM String      : 0
+    Product ID      : NC55-2RU-FAN-FW
+    Serial Number   : N/A
+    Part Number     : 0
+    Part Revision   : 0
+    Mfg Deviation   : 
+    H/W Version     : 0.1
+    Mfg Bits        : 0
+    Engineer Use    : 0
+    snmpOID         : 0.0.0.0.0.0.0.0
+    Power Consump   : 0 W
+    RMA Code        : 0-0-0-0
+    CLEI Code       : 0
+    VID             : V01
+Fan Module Specific Block:
+    Feature Bits    : 0x0
+    HW Changes Bits : 0x0
+    Stackmib OID    : 0
+    Cooling Capacity    : 0
+    Ambient Temperature : 0
+Second Serial Number Specific Block:
+    Serial Number   : 
+

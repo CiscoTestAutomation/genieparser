@@ -1,0 +1,53 @@
+LSMPI interface internal stats:
+enabled=0, disabled=0, throttled=0, unthrottled=0, state is ready
+Input Buffers = 2955942
+Output Buffers = 327045
+rxdone count = 2955942
+txdone count = 327043
+Rx no particletype count = 0
+Tx no particletype count = 0
+Txbuf from shadow count = 0
+No start of packet = 0
+No end of packet = 0
+Punt drop stats:
+Bad version 0
+Bad type 0
+Had feature header 0
+Had platform header 0
+Feature header missing 0
+Common header mismatch 0
+Bad total length 0
+Bad packet length 0
+Bad network offset 0
+Not punt header 0
+Unknown link type 0
+No swidb 3
+Bad ESS feature header  0
+No ESS feature 0
+No SSLVPN feature 0
+No PPP bridge feature 0
+Punt For PPP bridge type packets 0
+Punt For Us type unknown 0
+EPC CP RX Pkt cleansed 0
+Punt cause out of range 0
+IOSXE-RP Punt packet causes:
+        1370 Layer2 control and legacy packets
+       60566 ARP request or response packets
+         268 For-us data packets
+         612 IPV6 Hop-by-hop Options packets
+        4332 RP<->QFP keepalive packets
+     1426555 For-us control packets
+        9390 Layer2 bridge domain data packet packets
+       62519 Layer2 control protocols packets
+         414 snoop packets packets
+
+   FOR_US Control IPv4 protcol stats:
+        1407344 [proto=0] packets
+
+   FOR_US Control IPv6 protcol stats:
+          19211 HOP-BY-HOP packets
+Packet histogram(500 bytes/bin), avg size in 541, out 197:
+ Pak-Size      In-Count        Out-Count
+      0+:        393823           317524
+    500+:       1123362             3749
+   1000+:         48841                0

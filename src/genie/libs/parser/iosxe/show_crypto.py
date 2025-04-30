@@ -29,6 +29,9 @@ IOSXE parsers for the following show commands:
    * show crypto isakmp sa {status}
    * show crypto isakmp peer {peer_ip}
    * show crypto isakmp sa count
+   * show crypto isakmp peers config
+   * show crypto ssl authorization policy
+   * show crypto ssl session profile
 """
 
 # Python
@@ -10137,3 +10140,276 @@ class ShowCryptoIsakmpSaCount(ShowCryptoIsakmpSaCountSchema):
                 continue
 
         return parsed_dict
+
+# ==============================================
+#  Schema for 'show crypto isakmp peers config'
+# ==============================================
+class ShowCryptoIsakmpPeersConfigSchema(MetaParser):
+    """Schema for show crypto isakmp peers config"""
+    schema = {
+        'peers': {
+            Any(): {
+                'key_exchange': str,
+                'authentication_method': str,
+                'encryption': str,
+                'hashing': str,
+                'dh_group': str,
+                'lifetime': int,
+                'local_id': str,
+                'remote_id': str,
+            }
+        }
+    }
+
+# =====================================
+# Parser for
+#   'show crypto isakmp peers config'
+# =====================================
+class ShowCryptoIsakmpPeersConfig(ShowCryptoIsakmpPeersConfigSchema):
+    """Parser for show crypto isakmp peers config"""
+
+    cli_command = 'show crypto isakmp peers config'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # Peer: 192.168.1.1
+        # Peer: 192.168.2.1
+        p1 = re.compile(r'^Peer:\s+(?P<peer_ip>\S+)$')
+
+        # Key Exchange: IKEv1
+        p2 = re.compile(r'^Key Exchange:\s+(?P<key_exchange>\S+)$')
+
+        # Authentication Method: Pre-Shared Key
+        p3 = re.compile(r'^Authentication Method:\s+(?P<authentication_method>[\w\s-]+)$')
+
+        # Encryption: AES-256
+        p4 = re.compile(r'^Encryption:\s+(?P<encryption>\S+)$')
+
+        # Hashing: SHA-256
+        p5 = re.compile(r'^Hashing:\s+(?P<hashing>\S+)$')
+
+        # DH Group: Group 14
+        p6 = re.compile(r'^DH Group:\s+(?P<dh_group>[\w\s]+)$')
+
+        # Lifetime: 86400 seconds
+        p7 = re.compile(r'^Lifetime:\s+(?P<lifetime>\d+)\s+seconds$')
+
+        # Local ID: router.local
+        p8 = re.compile(r'^Local ID:\s+(?P<local_id>\S+)$')
+
+        # Remote ID: peer.remote
+        p9 = re.compile(r'^Remote ID:\s+(?P<remote_id>\S+)$')
+
+        current_peer = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Peer: 192.168.1.1
+            # Peer: 192.168.2.1
+            m = p1.match(line)
+            if m:
+                current_peer = m.group('peer_ip')
+                parsed_dict.setdefault('peers', {})
+                parsed_dict['peers'].setdefault(current_peer, {})
+                continue
+
+            # Key Exchange: IKEv2
+            m = p2.match(line)
+            if m and current_peer:
+                parsed_dict['peers'][current_peer]['key_exchange'] = m.group('key_exchange')
+                continue
+
+            # Authentication Method: RSA-SIG
+            m = p3.match(line)
+            if m and current_peer:
+                parsed_dict['peers'][current_peer]['authentication_method'] = m.group('authentication_method')
+                continue
+
+            # Encryption: AES-128
+            m = p4.match(line)
+            if m and current_peer:
+                parsed_dict['peers'][current_peer]['encryption'] = m.group('encryption')
+                continue
+
+            # Hashing: SHA-1
+            m = p5.match(line)
+            if m and current_peer:
+                parsed_dict['peers'][current_peer]['hashing'] = m.group('hashing')
+                continue
+
+            # DH Group: Group 5
+            m = p6.match(line)
+            if m and current_peer:
+                parsed_dict['peers'][current_peer]['dh_group'] = m.group('dh_group')
+                continue
+
+            # Lifetime: 28800 seconds
+            m = p7.match(line)
+            if m and current_peer:
+                parsed_dict['peers'][current_peer]['lifetime'] = int(m.group('lifetime'))
+                continue
+
+            # Local ID: router.local
+            m = p8.match(line)
+            if m and current_peer:
+                parsed_dict['peers'][current_peer]['local_id'] = m.group('local_id')
+                continue
+
+            # Remote ID: peer.remote
+            m = p9.match(line)
+            if m and current_peer:
+                parsed_dict['peers'][current_peer]['remote_id'] = m.group('remote_id')
+                continue
+        
+        return parsed_dict
+
+# =================================================
+#  Schema for 'show crypto ssl authorization policy'
+# =================================================
+class ShowCryptoSslAuthorizationPolicySchema(MetaParser):
+    """Schema for show crypto ssl authorization policy"""
+    schema = {
+        'policies': {
+            Any(): {
+                'rule': str,
+                'user_group': str,
+                'permissions': str,
+                'source': str,
+                'destination': str,
+                'action': str,
+            }
+        }
+    }
+
+# ==================================================
+#  Parser for 'show crypto ssl authorization policy'
+# ==================================================
+class ShowCryptoSslAuthorizationPolicy(ShowCryptoSslAuthorizationPolicySchema):
+    """Parser for show crypto ssl authorization policy"""
+
+    cli_command = 'show crypto ssl authorization policy'
+
+    def cli(self, output=None):
+        if output is None:
+            # Execute the command to get the output
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # Policy Name: EmployeePolicy
+        # Rule: AllowAccess
+        # User Group: Employees
+        # Permissions: Full Access
+        # Source: Internal Network
+        # Destination: All Networks
+        # Action: Permit
+        pat = re.compile(r'(?P<entity>[\w\s]+):\s+(?P<value>[\w\s]+)$')
+
+        current_policy = None
+
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # Policy Name: EmployeePolicy
+            # Rule: AllowAccess
+            # User Group: Employees
+            # Permissions: Full Access
+            # Source: Internal Network
+            # Destination: All Networks
+            # Action: Permit
+            m = pat.match(line)
+            if m:
+                parsed_dict.setdefault('policies', {})
+                entity = m.groupdict()['entity']
+                if 'Policy Name' in entity:
+                    current_policy = m.groupdict()['value']
+                    parsed_dict['policies'].setdefault(current_policy, {})
+                else:
+                    entity = entity.lower().replace(' ', '_')
+                    parsed_dict['policies'][current_policy][entity] = m.groupdict()['value']
+
+
+        return parsed_dict
+
+# ==================================================
+#  Schema for 'show crypto ssl session profile'
+# ==================================================
+class ShowCryptoSslSessionProfileSchema(MetaParser):
+    """Schema for show crypto ssl session profile"""
+    schema = {
+        'profiles': {
+            Any(): {
+                'protocol': str,
+                'cipher_suite': str,
+                'authentication': str,
+                'session_timeout_in_seconds': int,
+                'renegotiation': str,
+                'keepalive_interval_in_seconds': int,
+            }
+        }
+    }
+
+
+# ==================================================
+#  Parser for 'show crypto ssl session profile'
+# ==================================================
+class ShowCryptoSslSessionProfile(ShowCryptoSslSessionProfileSchema):
+    """Parser for show crypto ssl session profile"""
+
+    cli_command = 'show crypto ssl session profile'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # Profile Name: DefaultProfile
+        # Protocol: TLSv1.2
+        # Cipher Suite: AES256-SHA
+        # Authentication: Certificate
+        # Session Timeout: 3600 seconds
+        # Renegotiation: Enabled
+        # Keepalive Interval: 60 seconds
+        pat = re.compile(r'(?P<entity>[\w\s]+):\s+(?P<value>[\w\s\-\.]+)$')
+
+        current_profile = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Profile Name: DefaultProfile
+            # Protocol: TLSv1.2
+            # Cipher Suite: AES256-SHA
+            # Authentication: Certificate
+            # Session Timeout: 3600 seconds
+            # Renegotiation: Enabled
+            # Keepalive Interval: 60 seconds
+            m = pat.match(line)
+            if m:
+                parsed_dict.setdefault('profiles', {})
+                entity = m.groupdict()['entity']
+                if 'Profile Name' in entity:
+                    current_profile = m.groupdict()['value']
+                    parsed_dict['profiles'].setdefault(current_profile, {})
+                else:
+                    entity = entity.lower().replace(' ', '_')
+                    value = m.groupdict()['value']
+                    if 'seconds' in value:
+                        entity += '_in_seconds'
+                        value = value.split()[0]
+                        parsed_dict['profiles'][current_profile][entity] = int(value)
+                    else:
+                        parsed_dict['profiles'][current_profile][entity] = value
+
+
+        return parsed_dict
+

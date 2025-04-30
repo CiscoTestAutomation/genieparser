@@ -811,26 +811,34 @@ class ShowIpv6MldGroups(ShowIpv6MldGroupsSchema):
 
 class ShowPlatformSoftwareMldSnoopingGroupsCountSchema(MetaParser):
     schema = {
-             'ipv6_mld_snooping_entries': int
-             }
+        Optional('ipv6_mld_snooping_entries'): int,
+        Optional('total_group_count'): int,
+        Optional('total_stub_group_count'): int
+        }
 
 class ShowPlatformSoftwareMldSnoopingGroupsCount(ShowPlatformSoftwareMldSnoopingGroupsCountSchema):
 
     cli_command = [
-                  'show platform software fed {switch} active ipv6 mld snooping groups count',
-                  'show platform software fed active ipv6 mld snooping groups count'
+                  'show platform software fed {switch} {active} ipv6 mld snooping groups count',
+                  'show platform software fed {active} ipv6 mld snooping groups count'
                   ]
 
-    def cli(self, output=None, switch=''):
+    def cli(self, output=None, switch='', active=''):
         if output is None:
             if switch:
-                cmd = self.cli_command[0].format(switch=switch)
+                cmd = self.cli_command[0].format(switch=switch, active=active)
             else:
-                cmd = self.cli_command[1]
+                cmd = self.cli_command[1].format(active=active)
             output = self.device.execute(cmd)
         dict_count = {}
         # Total number of entries:8000
         p1 = re.compile(r'^Total\s+number\s+of\s+entries\:(?P<ipv6_mld_snooping_entries>\d+)$')
+
+        # Total Group Count       : 9789
+        p2 = re.compile(r'(Total Group Count +\: +(?P<total_group_count>\d+))')
+
+        # Total Stub Group Count  : 9787
+        p3 = re.compile(r'(Total Stub Group Count +\: +(?P<total_stub_group_count>\d+))')
 
         for line in output.splitlines():
             line = line.strip()
@@ -841,5 +849,20 @@ class ShowPlatformSoftwareMldSnoopingGroupsCount(ShowPlatformSoftwareMldSnooping
                 groups = m.groupdict()
                 count = int(groups['ipv6_mld_snooping_entries'])
                 dict_count['ipv6_mld_snooping_entries'] = count
+                continue
 
-        return (dict_count)
+            # Total Group Count       : 9789
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                dict_count['total_group_count'] = int(group['total_group_count'])
+                continue
+
+            # Total Stub Group Count  : 9787
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                dict_count['total_stub_group_count'] = int(group['total_stub_group_count'])
+                continue
+
+        return dict_count

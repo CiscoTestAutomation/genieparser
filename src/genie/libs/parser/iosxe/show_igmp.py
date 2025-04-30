@@ -1254,7 +1254,7 @@ class ShowIpIgmpGroups(ShowIpIgmpGroupsSchema):
                 cmd = self.cli_command[1].format(interface=interface)
             else:
                 cmd = self.cli_command[0]
-            output = self.device.execute(self.cli_command)
+            output = self.device.execute(cmd)
 
         # initial variables
         igmp_dict = {}

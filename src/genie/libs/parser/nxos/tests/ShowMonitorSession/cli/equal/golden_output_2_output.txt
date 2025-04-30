@@ -1,0 +1,14 @@
+show monitor session 2
+session 2
+---------------
+type              : erspan-destination
+state             : up
+erspan-id         : 1
+vrf-name          : default
+source-ip         : 9.1.1.2
+destination ports : Eth4/8
+
+Feature       Enabled   Value   Modules Supported       Modules Not-Supported
+-----------------------------------------------------------------------------
+Type-II       Yes       -       3  4  9                 1
+Type-III      Yes       -       3  4  9                 1

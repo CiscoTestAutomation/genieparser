@@ -897,11 +897,12 @@ class ShowPlatformSoftwareFedSwitchActiveMatmMactable(
 ):
     """Parser for show platform software fed switch active matm macTable"""
 
-    cli_command = ["show platform software fed switch active matm macTable"]
+    cli_command = ["show platform software fed switch active matm macTable",
+                   "show platform software fed active matm macTable"]
 
-    def cli(self, output=None):
+    def cli(self, command=None, output=None, **kwargs):
         if output is None:
-            output = self.device.execute(self.cli_command)
+            output = self.device.execute(command)
 
         ret_dict = {}
 

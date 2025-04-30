@@ -1,0 +1,6 @@
+show platform software l2vpn fp active atom
+ATOM/Local Cross-connect table, Number of entries: 1
+
+AToM Cross-Connect xid 0x34, ifnumber 0x34
+  AC ETHER(IW:IP) -> Imp 0xbd(ATOM_IMP), HW info: 34 (om_id 423 created)
+ Interface Name: GigabitEthernet2/0/16

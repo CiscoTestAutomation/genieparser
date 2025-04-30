@@ -111,7 +111,8 @@ class ShowPlatformInventory(ShowPlatformSchema):
 
         # PSU0            PSU2KW-ACPI     0.0             POG2416K01K     2000W AC Power Module with Port-side Air Intake
         # psutray0            8800-HV-TRAY    1.0                  FOC2549NLQG     Cisco 8800 Power Tray for AC/HVAC/HVDC Power Supply
-        p3 = re.compile(r'^(?P<psu>(PSU|psutray)?\d*?)\s+(?P<product_id>[a-zA-Z0-9@.\-]+)\s+(?P<version>[0-9]*\.[0-9]+)\s+(?P<serial_num>[A-Za-z0-9]+)\s+(?P<description>.*)(\s+)?$')
+        #PSU1            UCSC-PSU1-2300W A0                   DTM274202RX     UCS 2300W AC-DC High Line RSP02 Power Supply
+        p3 = re.compile(r'^(?P<psu>(?:PSU|psutray)\d+)\s+(?P<product_id>[a-zA-Z0-9@.\- ]+?)\s+(?P<version>[A-Za-z0-9.\-]+)\s+(?P<serial_num>[A-Za-z0-9]+)\s+(?P<description>.+)$')
 
         #     psutray1.psu0   PSU6.3KW-20A-HV 1.0                  DTM255000NP     6.3KW AC/HVAC/HVDC Power Supply-20A
         p3_1 = re.compile(r'^(?P<psu_id>(PSU|psutray)?\d*\.(PSU|psu)\d*)\s+(?P<product_id>[a-zA-Z0-9@.\-]+)\s+(?P<version>[0-9]*\.[0-9]+)\s+(?P<serial_num>[A-Za-z0-9]+)\s+(?P<description>.*)(\s+)?$')

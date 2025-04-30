@@ -7665,3 +7665,523 @@ class ShowPlatformHardwareFedSwitchFwdAsicResourceTcamTableNflAclFormat0(ShowPla
                 continue
 
         return ret_dict
+
+class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightVrfRouteTableSchema(MetaParser):
+    """Schema for `show platform hardware fed switch active fwd-asic insight vrf_route_table()`"""
+    schema = {
+        'vrf_route_table': {
+            Any(): {
+                'ip_version': int,
+                'routes': ListOf({
+                    'ip_prefix': str,
+                    'dest_type': str,
+                    'dest_id': int,
+                    'dest_info': str,
+                    'class_id': int,
+                    'drop': bool,
+                    'route_user_data': str
+                })
+            }
+        }
+    }
+
+class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightVrfRouteTable(ShowPlatformHardwareFedSwitchActiveFwdAsicInsightVrfRouteTableSchema):
+    """Parser for `show platform hardware fed switch active fwd-asic insight vrf_route_table()`"""
+
+    cli_command = 'show platform hardware fed switch active fwd-asic insight vrf_route_table()'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+
+        # +---------+------------+--------------------+--------------+---------+-----------+----------+-------+-----------------+
+        # | Vrf GID | IP Version | IP Prefix          | Dest Type    | Dest ID | Dest Info | Class ID | Drop  | Route User Data |
+        # +---------+------------+--------------------+--------------+---------+-----------+----------+-------+-----------------+
+        # | 2       | 4          | 14.1.0.255/32      | for_us       | 0       | N/A       | 0        | False | 104865530382056 |
+        p1 = re.compile(r'^\|\s*(?P<vrf_gid>\d+)\s*\|\s*(?P<ip_version>\d+)\s*\|\s*(?P<ip_prefix>\S+)\s*\|\s*(?P<dest_type>\S+)\s*\|\s*(?P<dest_id>\d+)\s*\|\s*(?P<dest_info>\S+)\s*\|\s*(?P<class_id>\d+)\s*\|\s*(?P<drop>\S+)\s*\|\s*(?P<route_user_data>\S+)\s*\|$')
+
+        current_vrf_gid = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # +---------+------------+--------------------+--------------+---------+-----------+----------+-------+-----------------+
+            # | Vrf GID | IP Version | IP Prefix          | Dest Type    | Dest ID | Dest Info | Class ID | Drop  | Route User Data |
+            # +---------+------------+--------------------+--------------+---------+-----------+----------+-------+-----------------+
+            # | 2       | 4          | 14.1.0.255/32      | for_us       | 0       | N/A       | 0        | False | 104865530382056 |
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                vrf_gid = int(group['vrf_gid'])
+                if vrf_gid != current_vrf_gid:
+                    current_vrf_gid = vrf_gid
+                    vrf_dict = ret_dict.setdefault('vrf_route_table', {}).setdefault(vrf_gid, {})
+                    vrf_dict['ip_version'] = int(group['ip_version'])
+                    vrf_dict['routes'] = []
+
+                route_entry = {
+                    'ip_prefix': group['ip_prefix'],
+                    'dest_type': group['dest_type'],
+                    'dest_id': int(group['dest_id']),
+                    'dest_info': group['dest_info'],
+                    'class_id': int(group['class_id']),
+                    'drop': group['drop'].lower() == 'true',
+                    'route_user_data': group['route_user_data']
+                }
+                vrf_dict['routes'].append(route_entry)
+
+        return ret_dict
+
+class ShowPlatformHardwareFedSwitchFwdAsicInsightIfmLagStatusSchema(MetaParser):
+    """Schema for 'show platform hardware fed switch {switch_id} fwd-asic insight ifm_lag_status()'"""
+    schema = {
+        'lag_status': {
+            Any(): {
+                'lag_gid': int,
+                'member_count': int,
+                'lag_cookie': str,
+                'ordering_mode': str,
+                'lb_mode': str,
+                'egress_tm_enable': str
+            }
+        }
+    }
+
+class ShowPlatformHardwareFedSwitchFwdAsicInsightIfmLagStatus(ShowPlatformHardwareFedSwitchFwdAsicInsightIfmLagStatusSchema):
+    """Parser for 'show platform hardware fed switch {switch_id} fwd-asic insight ifm_lag_status()'"""
+
+    cli_command = 'show platform hardware fed switch {switch_id} fwd-asic insight ifm_lag_status()'
+
+    def cli(self, switch_id, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(switch_id=switch_id))
+
+        parsed_data = {}
+
+        # | lag_gid: 429 | member_count: 8 | lag_cookie: Po5          |
+        p1 = re.compile(r'^\|\s*lag_gid:\s*(?P<lag_gid>\d+)\s*\|\s*member_count:\s*(?P<member_count>\d+)\s*\|\s*lag_cookie:\s*(?P<lag_cookie>\S+)\s*\|$')
+
+        # |              |                 | ordering_mode: UNORDERED |
+        # |              |                 | lb_mode: DYNAMIC         |
+        # |              |                 | egress_tm_enable: False  |
+        p2 = re.compile(r'^\|\s*\|\s*\|\s*(?P<key>\S+):\s*(?P<value>\S+)\s*\|$')
+
+        current_lag = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # | lag_gid: 429 | member_count: 8 | lag_cookie: Po5          |
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                current_lag = int(group['lag_gid'])
+                lag_data = parsed_data.setdefault('lag_status', {}).setdefault(current_lag, {})
+                lag_data.update({
+                    'lag_gid': current_lag,
+                    'member_count': int(group['member_count']),
+                    'lag_cookie': group['lag_cookie']
+                })
+                continue
+
+            # |              |                 | ordering_mode: UNORDERED |
+            # |              |                 | lb_mode: DYNAMIC         |
+            # |              |                 | egress_tm_enable: False  |
+            m = p2.match(line)
+            if m and current_lag is not None:
+                group = m.groupdict()
+                lag_data[group['key']] = group['value']
+                continue
+
+        return parsed_data
+
+        
+class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightL2MirrorCommandL2Schema(MetaParser):
+    """Schema for:
+        show platform hardware fed switch active fwd-asic insight l2_mirror_command_l2()
+    """
+    schema = {
+        'l2_mirror_command_l2': {
+            'mirror_gid': {
+                Any(): {
+                    'dest_port_gid': int,
+                    'dest_port_tc': int,
+                    'probability': float,
+                    'source_mac': str,
+                    'dest_mac': str,
+                    'vlan_tag': int,
+                    'admit_counter_data': str,
+                    'drop_counter_data': str,
+                }
+            }
+        }
+    }
+
+class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightL2MirrorCommandL2(ShowPlatformHardwareFedSwitchActiveFwdAsicInsightL2MirrorCommandL2Schema):
+    """Parser for:
+        show platform hardware fed switch active fwd-asic insight l2_mirror_command_l2()
+    """
+
+    cli_command = "show platform hardware fed switch active fwd-asic insight l2_mirror_command_l2()"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+
+        # +------------+---------------+--------------+-------------+------------+----------+----------+--------------------+-------------------+
+        # | Mirror GID | Dest port GID | Dest port TC | Probability | Source Mac | Dest Mac | Vlan Tag | Admit Counter Data | Drop Counter Data |
+        # +------------+---------------+--------------+-------------+------------+----------+----------+--------------------+-------------------+
+        # |          2 |          1367 |            0 |         1.0 |            |          |        0 |                    |                   |
+        p1 = re.compile(
+            r"^\|\s*(?P<mirror_gid>\d+)\s*\|\s*(?P<dest_port_gid>\d+)\s*\|\s*(?P<dest_port_tc>\d+)\s*\|\s*"
+            r"(?P<probability>[\d.]+)\s*\|\s*(?P<source_mac>\S*)\s*\|\s*(?P<dest_mac>\S*)\s*\|\s*"
+            r"(?P<vlan_tag>\d+)\s*\|\s*(?P<admit_counter_data>\S*)\s*\|\s*(?P<drop_counter_data>\S*)\s*\|$"
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Match the table rows
+            # Example pattern: "| Mirror GID | Dest port TC | Dest port GID | Probability | Source Mac | Dest Mac | Vlan Tag | Admit Counter Data | Drop Counter Data |"
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                mirror_gid = int(group['mirror_gid'])
+                mirror_dict = ret_dict.setdefault('l2_mirror_command_l2', {}).setdefault('mirror_gid', {}).setdefault(mirror_gid, {})
+                mirror_dict['dest_port_gid'] = int(group['dest_port_gid'])
+                mirror_dict['dest_port_tc'] = int(group['dest_port_tc'])
+                mirror_dict['probability'] = float(group['probability'])
+                mirror_dict['source_mac'] = group['source_mac']
+                mirror_dict['dest_mac'] = group['dest_mac']
+                mirror_dict['vlan_tag'] = int(group['vlan_tag'])
+                mirror_dict['admit_counter_data'] = group['admit_counter_data']
+                mirror_dict['drop_counter_data'] = group['drop_counter_data']
+                continue
+
+        return ret_dict
+    
+class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightVrfPortsSchema(MetaParser):
+    """Schema for:
+       * show platform hardware fed switch active fwd-asic insight vrf_ports_detail()
+       * show platform hardware fed switch active fwd-asic insight vrf_ports()
+    """
+    schema = {
+        'vrf_ports': {
+            Any(): {
+                'vrf_gid': int,
+                'l3_port_gid': int,
+                'l3_port_type': str,
+                'ether_port_oid': int,
+                'mac_address': ListOf(str),
+                Optional('active_state'): str,
+                Optional('urpf_mode'): str,
+                Optional('l3_ac_ing_vlan_tag1'): int,
+                Optional('l3_ac_egr_vlan_tag1'): int,
+                Optional('vrf_cookie'): str
+            }
+        }
+    }
+
+class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightVrfPorts(ShowPlatformHardwareFedSwitchActiveFwdAsicInsightVrfPortsSchema):
+    
+    """Parser for:
+       * show platform hardware fed switch active fwd-asic insight vrf_ports_detail()
+       * show platform hardware fed switch active fwd-asic insight vrf_ports()
+    """
+
+    cli_command = [
+        'show platform hardware fed switch active fwd-asic insight vrf_ports_detail',
+        'show platform hardware fed switch active fwd-asic insight vrf_ports'
+    ]
+
+    def cli(self, command, output=None):
+        if output is None:
+            output = self.device.execute(command)
+
+        ret_dict = {}
+
+        # | 2 | 4099 | L3_AC_PORT | 302 | ['4e:41:50:00:01:14'] | | NONE | {'val': 3} | {'val': 3} |
+        p1 = re.compile(r'^\|\s*(?P<vrf_gid>\d+)\s*\|\s*(?P<l3_port_gid>\d+)\s*\|\s*(?P<l3_port_type>\S+)\s*\|\s*(?P<ether_port_oid>\d+)\s*\|\s*(?P<mac_address>\[.*?\])\s*\|\s*(?P<active_state>\S*)\s*\|\s*(?P<urpf_mode>\S*)\s*\|\s*(?P<l3_ac_ing_vlan_tag1>\{.*?\}|\d+)?\s*\|\s*(?P<l3_ac_egr_vlan_tag1>\{.*?\}|\d+)?\s*\|$')
+
+        # | 2 | TwoH1/10/0/41 | 4099 | l3-ac-gid | 4e:41:50:00:01:14 | 302 | 3 | 3 |
+        p2 = re.compile(r'^\|\s*(?P<vrf_gid>\d+)\s*\|\s*(?P<vrf_cookie>\S*)\s*\|\s*(?P<l3_port_gid>\d+)\s*\|\s*(?P<l3_port_type>\S+)\s*\|\s*(?P<mac_address>\S+)\s*\|\s*(?P<ether_port_oid>\d+)\s*\|\s*(?P<l3_ac_ing_vlan_tag1>\d+)\s*\|\s*(?P<l3_ac_egr_vlan_tag1>\d+)\s*\|$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # | 2 | 4099 | L3_AC_PORT | 302 | ['4e:41:50:00:01:14'] | | NONE | {'val': 3} | {'val': 3} |
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                vrf_gid = int(group['vrf_gid'])
+                l3_port_gid = int(group['l3_port_gid'])
+                vrf_port_key = f"{vrf_gid}_{l3_port_gid}"
+                vrf_port_dict = ret_dict.setdefault('vrf_ports', {}).setdefault(vrf_port_key, {})
+                vrf_port_dict['vrf_gid'] = vrf_gid
+                vrf_port_dict['l3_port_gid'] = l3_port_gid
+                vrf_port_dict['l3_port_type'] = group['l3_port_type']
+                vrf_port_dict['ether_port_oid'] = int(group['ether_port_oid'])
+                vrf_port_dict['mac_address'] = eval(group['mac_address'])
+                if group['active_state']:
+                    vrf_port_dict['active_state'] = group['active_state']
+                if group['urpf_mode']:
+                    vrf_port_dict['urpf_mode'] = group['urpf_mode']
+                if group['l3_ac_ing_vlan_tag1']:
+                    vrf_port_dict['l3_ac_ing_vlan_tag1'] = int(eval(group['l3_ac_ing_vlan_tag1'])['val'])
+                if group['l3_ac_egr_vlan_tag1']:
+                    vrf_port_dict['l3_ac_egr_vlan_tag1'] = int(eval(group['l3_ac_egr_vlan_tag1'])['val'])
+                continue
+
+            # | 2 | TwoH1/10/0/41 | 4099 | l3-ac-gid | 4e:41:50:00:01:14 | 302 | 3 | 3 |
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                vrf_gid = int(group['vrf_gid'])
+                l3_port_gid = int(group['l3_port_gid'])
+                vrf_port_key = f"{vrf_gid}_{l3_port_gid}"
+                vrf_port_dict = ret_dict.setdefault('vrf_ports', {}).setdefault(vrf_port_key, {})
+                vrf_port_dict['vrf_gid'] = vrf_gid
+                vrf_port_dict['l3_port_gid'] = l3_port_gid
+                vrf_port_dict['l3_port_type'] = group['l3_port_type']
+                vrf_port_dict['ether_port_oid'] = int(group['ether_port_oid'])
+                vrf_port_dict['mac_address'] = [group['mac_address']]
+                vrf_port_dict['vrf_cookie'] = group['vrf_cookie']
+                vrf_port_dict['l3_ac_ing_vlan_tag1'] = int(group['l3_ac_ing_vlan_tag1'])
+                vrf_port_dict['l3_ac_egr_vlan_tag1'] = int(group['l3_ac_egr_vlan_tag1'])
+                continue
+        return ret_dict
+
+class ShowPlatformHardwareFedSwitchFwdAsicInsightIfmLagStatusSchema(MetaParser):
+    """Schema for 'show platform hardware fed switch {switch_id} fwd-asic insight ifm_lag_status({lag_gid})'"""
+    schema = {
+        'ifm_lag_status': {
+            Any(): {
+                'lag_gid': int,
+                'member_count': int,
+                'lag_info': {
+                    'ordering_mode': str,
+                    'lb_mode': str,
+                    'egress_tm_enable': str,
+                    'lag_cookie': str
+                }
+            }
+        }
+    }
+
+class ShowPlatformHardwareFedSwitchFwdAsicInsightIfmLagStatus(ShowPlatformHardwareFedSwitchFwdAsicInsightIfmLagStatusSchema):
+    """Parser for 'show platform hardware fed switch {switch_id} fwd-asic insight ifm_lag_status({lag_gid})'"""
+
+    cli_command = 'show platform hardware fed switch {switch_id} fwd-asic insight ifm_lag_status({lag_gid})'
+
+    def cli(self, switch_id, lag_gid, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(switch_id=switch_id, lag_gid=lag_gid))
+
+        parsed_data = {}
+
+        # | lag_gid: 41 | member_count: 4 | ordering_mode: UNORDERED |
+        p1 = re.compile(r'^\|\s*lag_gid:\s*(?P<lag_gid>\d+)\s*\|\s*member_count:\s*(?P<member_count>\d+)\s*\|\s*(?P<feature>\S+):\s*(?P<value>\S+)\s*\|$')
+        
+        # |             |                 | lb_mode: DYNAMIC         |
+        # |             |                 | egress_tm_enable: False  |
+        # |             |                 | lag_cookie:              |
+        p2 = re.compile(r'^\|\s*\|\s*\|\s*(?P<feature>\S+):\s*(?P<value>\S*)\s*\|$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # | lag_gid: 41 | member_count: 4 | ordering_mode: UNORDERED |
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                lag_gid = int(group['lag_gid'])
+                lag_data = parsed_data.setdefault('ifm_lag_status', {}).setdefault(lag_gid, {})
+
+                lag_data.update({
+                    'lag_gid': int(group["lag_gid"]),
+                    'member_count': int(group['member_count'])
+                })
+                lag_info = lag_data.setdefault('lag_info', {})
+                lag_info[group["feature"]] = group["value"]
+                
+                continue
+            
+            # |             |                 | lb_mode: DYNAMIC         |
+            # |             |                 | egress_tm_enable: False  |
+            # |             |                 | lag_cookie:              |
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                lag_info[group["feature"]] = group["value"]
+        
+                continue
+
+        return parsed_data
+
+
+class ShowPlatformHardwareFedSwitchFwdAsicInsightIfmPortErrStatusSchema(MetaParser):
+    """Schema for show platform hardware fed switch {switch_id} fwd-asic insight ifm_port_err_status({system_port_gid})"""
+
+    schema = {
+        'port_info': {
+            Any(): {
+                'port_oid': int,
+                'sysport_gid': int,
+                'serdes': str,
+                'speed': float,
+                'mac_port_state': str,
+                Optional('port_cookie'): str,
+                'port_err_status_info': {
+                    'link_status': str,
+                    'link_fault_status': str,
+                    'high_ber': str,
+                    'pcs_status': str,
+                    'port_signal_ok': str,
+                    'mac_port_link_stt_changed': str,
+                    'auto_neg_enabled': str,
+                    'kr_fec_lock': str,
+                    'pcs_lock': str,
+                    'pcs_an_lock': str,
+                },
+            }
+        }
+    }
+
+class ShowPlatformHardwareFedSwitchFwdAsicInsightIfmPortErrStatus(ShowPlatformHardwareFedSwitchFwdAsicInsightIfmPortErrStatusSchema):
+    """Parser for show platform hardware fed switch {switch_id} fwd-asic insight ifm_port_err_status({system_port_gid})"""
+
+    cli_command = 'show platform hardware fed switch {switch_id} fwd-asic insight ifm_port_err_status({system_port_gid})'
+
+    def cli(self, switch_id, system_port_gid, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(switch_id=switch_id, system_port_gid=system_port_gid))
+
+        parsed_data = {}
+
+        # | port_oid: 1910 |             | sys_port_gid: 305 | serdes: 0/0/29-29 | speed: 1.0 | mac_port_state: LINK_UP |         link_status: True          |
+        p1 = re.compile(r'^\|\s*port_oid:\s*(?P<port_oid>\d+)\s*\|\s*(?P<port_cookie>\S*)\s*\|\s*sys_port_gid:\s*(?P<sysport_gid>\d+)\s*\|\s*serdes:\s*(?P<serdes>\S+)\s*\|\s*speed:\s*(?P<speed>\d+\.\d+)\s*\|\s*mac_port_state:\s*(?P<mac_port_state>\S+)\s*\|\s*(?P<port_err_info>\S+):\s*(?P<err_status>\S+)\s*\|$')
+
+        # |                |             |                   |                   |            |                         |     link_fault_status: Unknown     |
+        # |                |             |                   |                   |            |                         |           high_ber: True           |
+        # |                |             |                   |                   |            |                         |          pcs_status: True          |
+        # |                |             |                   |                   |            |                         |        port_signal_ok: True        |
+        p2 = re.compile(r'^\|\s*\|\s*\|\s*\|\s*\|\s*\|\s*\|\s*(?P<port_err_info>\S+):\s*(?P<err_status>\S+)\s*\|$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # | port_oid: 1910 |             | sys_port_gid: 305 | serdes: 0/0/29-29 | speed: 1.0 | mac_port_state: LINK_UP |         link_status: True          |
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                port_oid = int(group['port_oid'])
+                port_data = parsed_data.setdefault('port_info', {}).setdefault(port_oid, {})
+
+                port_data.update({
+                    'port_oid': int(group['port_oid']),
+                    'sysport_gid': int(group["sysport_gid"]),
+                    'serdes': group['serdes'],
+                    'speed': float(group['speed']),
+                    'mac_port_state': group['mac_port_state'],
+                })
+                if group['port_cookie']:
+                    port_data['port_cookie'] = group['port_cookie']                
+                port_err_status_info = port_data.setdefault('port_err_status_info', {})
+                port_err_status_info[group["port_err_info"]] = group["err_status"]
+                continue
+
+            # |                |             |                   |                   |            |                         |     link_fault_status: Unknown     |
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                port_err_status_info[group["port_err_info"]] = group["err_status"]
+                continue
+
+        return parsed_data
+
+class ShowPlatformHardwareFedSwitchFwdAsicInsightL3mRoutesSchema(MetaParser):
+
+    schema = {
+        'l3m_routes': {
+            'l3_mcg_gid': {
+                int: {
+                    'gaddr': {
+                        str: {
+                            'ip_version': {
+                                int: {
+                                    'vrf_gid': int,
+                                    'counter_id': int,
+                                    'vrf_cookie': str,
+                                    'saddr': str,
+                                    'l3_mcg_cookie': str,
+                                    'snoop': str,
+                                    'rpf_enabled': str,
+                                    'rpf_path_type': str,
+                                    'rpf_path_id': int,
+                                    'rpf_fail_punt': str,
+                                    'counter_data': str,
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+class ShowPlatformHardwareFedSwitchFwdAsicInsightL3mRoutes(ShowPlatformHardwareFedSwitchFwdAsicInsightL3mRoutesSchema):
+    cli_command = "show platform hardware fed switch {switch_id} fwd-asic insight l3m_routes({filter})"
+
+    def cli(self, switch_id, filter, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(switch_id=switch_id, filter=filter))
+
+        ret_dict = {}
+
+        # +---------+------------+------------+-------------+---------+------------+----------------+-------+-------------+---------------+-------------+---------------+------------+-----------------+
+        # | vrf-gid | vrf-cookie | ip-version | saddr       | gaddr   | l3-mcg-gid | l3-mcg-cookie  | snoop | rpf-enabled | rpf-path-type | rpf-path-id | rpf-fail-punt | counter-id | counter-data    |
+        # +---------+------------+------------+-------------+---------+------------+----------------+-------+-------------+---------------+-------------+---------------+------------+-----------------+
+        # | 0       |    N/A     | 6          | 14:14:14::2 | ff13::1 | 8275       | urid:0x30::1de | False |     True    |   L3_SVI_GID  | 13          |      True     | 3609       | [14386,7308088] |
+        # |         |            |            |             |         |            |                |       |             |               |             |               |            |                 |
+        # +---------+------------+------------+-------------+---------+------------+----------------+-------+-------------+---------------+-------------+---------------+------------+-----------------+
+        p1 = re.compile(
+            r"^\|\s*(?P<vrf_gid>\d+)\s*\|\s*(?P<vrf_cookie>[\w\/]+)\s*\|\s*(?P<ip_version>\d+)\s*\|\s*"
+            r"(?P<saddr>[\da-fA-F:.]+)\s*\|\s*(?P<gaddr>[\da-fA-F:.]+)\s*\|\s*(?P<l3_mcg_gid>\d+)\s*\|\s*"
+            r"(?P<l3_mcg_cookie>[\w:]+)\s*\|\s*(?P<snoop>\w+)\s*\|\s*(?P<rpf_enabled>\w+)\s*\|\s*"
+            r"(?P<rpf_path_type>\w+)\s*\|\s*(?P<rpf_path_id>\d+)\s*\|\s*(?P<rpf_fail_punt>[\-\w]+)\s*\|\s*"
+            r"(?P<counter_id>\d+)\s*\|\s+\[(?P<counter_data>[\d,]+)\]\s+\|$"
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # +---------+------------+------------+-------------+---------+------------+----------------+-------+-------------+---------------+-------------+---------------+------------+-----------------+
+            # | vrf-gid | vrf-cookie | ip-version | saddr       | gaddr   | l3-mcg-gid | l3-mcg-cookie  | snoop | rpf-enabled | rpf-path-type | rpf-path-id | rpf-fail-punt | counter-id | counter-data    |
+            # +---------+------------+------------+-------------+---------+------------+----------------+-------+-------------+---------------+-------------+---------------+------------+-----------------+
+            # | 0       |    N/A     | 6          | 14:14:14::2 | ff13::1 | 8275       | urid:0x30::1de | False |     True    |   L3_SVI_GID  | 13          |      True     | 3609       | [14386,7308088] |
+            # |         |            |            |             |         |            |                |       |             |               |             |               |            |                 |
+            # +---------+------------+------------+-------------+---------+------------+----------------+-------+-------------+---------------+-------------+---------------+------------+-----------------+            
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                l3_mcg_gid = ret_dict.setdefault('l3m_routes', {}).setdefault('l3_mcg_gid', {}).setdefault(int(group['l3_mcg_gid']), {})
+                counter_dict = l3_mcg_gid.setdefault('gaddr', {}).setdefault(group['gaddr'], {})
+                ip_dict = counter_dict.setdefault('ip_version', {}).setdefault(int(group['ip_version']), {})
+                ip_dict['vrf_gid'] = int(group['vrf_gid'])
+                ip_dict['vrf_cookie'] = group['vrf_cookie']
+                ip_dict['counter_id'] = int(group['counter_id'])
+                ip_dict['saddr'] = group['saddr']
+                ip_dict['l3_mcg_cookie'] = group['l3_mcg_cookie']
+                ip_dict['snoop'] = group['snoop']
+                ip_dict['rpf_enabled'] = group['rpf_enabled']
+                ip_dict['rpf_path_type'] = group['rpf_path_type']
+                ip_dict['rpf_path_id'] = int(group['rpf_path_id'])
+                ip_dict['rpf_fail_punt'] = group['rpf_fail_punt']
+                ip_dict['counter_data'] = group['counter_data']
+                continue
+
+        return ret_dict			

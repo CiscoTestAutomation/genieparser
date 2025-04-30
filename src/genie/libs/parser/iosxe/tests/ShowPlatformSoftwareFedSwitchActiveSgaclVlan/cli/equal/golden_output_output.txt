@@ -1,0 +1,4 @@
+Vlan id  		 HW state
+---------------------------------
+vlan50   		 Success
+vlan60   		 Success

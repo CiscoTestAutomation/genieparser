@@ -1,0 +1,6 @@
+{
+    "switch_type":"active",
+    "ip_type":"ip",
+    "vrf_name":"vrf1",
+    "group":"227.0.1.95"
+}

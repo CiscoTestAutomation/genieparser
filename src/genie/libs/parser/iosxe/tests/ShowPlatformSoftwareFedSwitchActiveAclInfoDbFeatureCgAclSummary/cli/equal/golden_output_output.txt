@@ -1,0 +1,3 @@
+ CG id     ACL name                                  Feature       No of ACEs        Protocol       Ingress        Egress
+---------------------------------------------------------------------------------------------------------------------------
+ 1040      implicit_deny:xACSACLx-IP-S1_PermitGW_DenyOther_V4-669eaa40:  Cgacl         8                 IPv4           Y              N

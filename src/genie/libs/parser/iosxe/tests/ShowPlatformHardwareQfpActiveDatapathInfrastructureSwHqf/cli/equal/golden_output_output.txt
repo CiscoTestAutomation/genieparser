@@ -1,0 +1,22 @@
+C8300-2N2S-4T2X# show platform hardware qfp active datapath infrastructure sw-hqf
+Name                   : Pri1 Pri2 None / Inflight pkts
+
+HQF[0] IPC: send 18525356 fc 0 congested_cnt 0
+HQF[0] recycle: send hi 0 send lo 5537369354
+             fc hi 0 fc lo 0
+             cong hi 0 cong lo 0
+HQF[0] pkt: send hi 166419295 send lo 7561468909 
+          fc/full hi 0 fc/full lo 0
+          cong hi 0 cong lo 0
+HQF[0] aggr send stats 13283782914 aggr send lo state 13117363619 
+    aggr send hi stats 166419295
+    max_tx_burst_sz_hi 0 max_tx_burst_sz_lo 0
+HQF[0] gather: failed_to_alloc_b4q 0
+HQF[0] ticks 86964907881, max ticks accumulated 1
+HQF[0] mpsc stats: count: 18446744060824649728
+                   enq 338224573 enq_spin 13405 enq_post 0 enq_flush 0
+                   sig_cnt:0 enq_cancel 0
+                   deq 13223126461 deq_wait 0 deq_fail 0 deq_cancel 0
+                   deq_wait_timeout 0
+
+

@@ -476,11 +476,6 @@ class ShowInventory(ShowInventorySchema):
                 item_dict = inventory_dict.setdefault('name', {}).setdefault(name, {})
                 item_dict.update({'description': description})
 
-                slot = "None"
-                m1 = p1_1.match(name)
-                if m1:
-                    slot = m1.groupdict()['slot']
-
                 # NAME: "SAM 1",  DESCR: Service Accelarator Module
                 m2 = p1_5.match(name)
                 if m2:

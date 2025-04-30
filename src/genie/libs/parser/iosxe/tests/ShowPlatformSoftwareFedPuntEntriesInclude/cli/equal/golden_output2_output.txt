@@ -1,0 +1,7 @@
+Source    Name                            ASIC  Pri  TC  Policy                                    CIR-SW  CIR-HW   Pkts(A)    Bytes(A)   Pkts(D)    Bytes(D)
+TRAP      IP Options(v4) Rx                  0    5   3  system-cpp-police-sw-forward                2000    1907         0           0         0           0
+TRAP      IP Options(v4) Tx                  0    5   3  system-cpp-police-sw-forward                2000    1907         0           0         0           0
+LPTSv6    IPv6 Options                       0   28   4  system-cpp-police-proto-snoop-v6            2000    1907         0           0         0           0
+TRAP      IP Options(v4) Rx                  1    5   3  system-cpp-police-sw-forward                2000    1907      8156     1631200         0           0
+TRAP      IP Options(v4) Tx                  1    5   3  system-cpp-police-sw-forward                2000    1907      8156     1631200         0           0
+LPTSv6    IPv6 Options                       1   28   4  system-cpp-police-proto-snoop-v6            2000    1907         0           0         0           0

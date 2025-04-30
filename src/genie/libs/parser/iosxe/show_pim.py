@@ -2648,3 +2648,78 @@ class ShowIpv6PimMdtSend(ShowIpv6PimMdtSendSchema):
                 continue
 
         return ret_dict
+    
+
+# ==============================================================================
+# Schema Parser for 'show ipv6 pim mdt receive'
+# Schema Parser for 'show ipv6 pim vrf {vrf_name} mdt receive'
+# ==============================================================================
+class ShowIpv6PimMdtReceiveSchema(MetaParser):
+    """Schema for:
+        show ipv6 pim mdt receive
+        show ipv6 pim vrf {vrf_name} mdt receive """
+        
+    schema = {
+        'vrf' : {
+            Any(): {
+                'mdt' : {
+                    Any(): {
+                        Optional('source'):str,
+                        Optional('group'):str,
+                        Optional('up_time') : str,
+                        Optional('expires') : str,
+                    }
+                }       
+            }
+        }       
+    }
+    
+# ==============================================================================
+# Parser for 'show ipv6 pim mdt receive'
+# Parser for 'show ipv6 pim vrf {vrf_name} mdt receive'
+# ==============================================================================
+class ShowIpv6PimMdtReceive(ShowIpv6PimMdtReceiveSchema):
+    """Parser for:
+        show ipv6 pim mdt receive
+        show ipv6 pim vrf {vrf} mdt receive """
+
+    cli_command = ['show ipv6 pim mdt receive', 'show ipv6 pim vrf {vrf} mdt receive']
+
+    def cli(self, vrf='', output=None):
+        if output is None:
+            if vrf:
+                output = self.device.execute(self.cli_command[1].format(vrf=vrf))
+            else:
+                output = self.device.execute(self.cli_command[0])
+                vrf = 'Default'
+                
+        ret_dict = {}
+        index=0
+
+        # Joined MDT-data [group/mdt number : source]  uptime/expires for VRF: vrf1
+        #  [239.192.20.32 : 2.2.2.2]  00:12:56/00:02:05
+        #  [239.192.20.33 : 2.2.2.2]  00:12:56/00:02:05
+        #  [239.192.20.34 : 2.2.2.2]  00:12:56/00:02:05
+        #  [239.192.20.35 : 2.2.2.2]  00:12:56/00:02:05
+        
+        p1 = re.compile(r'^\s*\[(?P<data_mdt_group>\d+\.\d+\.\d+\.\d+)\s*:\s*(?P<source_address>\d+\.\d+\.\d+\.\d+)\]\s+(?P<up_time>\S+)/(?P<expires>\S+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            #  [239.192.20.32 : 2.2.2.2]  00:12:56/00:02:05
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                
+                ret_dict.setdefault('vrf', {}).setdefault(vrf, {}).setdefault('mdt', {})  
+                sub_dict = ret_dict['vrf'][vrf]["mdt"].setdefault(index, {})
+                sub_dict['source'] = group['source_address']
+                sub_dict['group'] = group['data_mdt_group']
+                sub_dict['up_time'] = group['up_time']
+                sub_dict['expires'] = group['expires']
+                
+                index += 1
+                continue  
+
+        return ret_dict

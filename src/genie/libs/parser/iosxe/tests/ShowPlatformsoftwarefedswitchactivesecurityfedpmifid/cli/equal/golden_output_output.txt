@@ -1,0 +1,16 @@
+IIF-ID   = 0000000000000456
+IIF-Name = GigabitEthernet2/0/10
+Auth Behavior Value  = 3
+Auth Behavior Desc   = AL_BH_DROP_ALL_LRN_DATA
+Secure Feature Flags = 0x1
+Secure Feature Desc  = dot1x
+PSec Inactivity Time = 0
+
+L2 Port Platform Information
+
+
+    Security Feature Flags: dot1x (Asic: 0; Accsec Logical ID: 0)
+    @la_accsec_auth_acl_bh:LA_ACCSEC_AUTH_ACL_BH_DROP_ALL_LRN_DATA
+    @l2_port_accsec_ftr:L2_PORT_ACCSEC_FTR_ENABLE
+    @la_accsec_table_ftr_type:LA_ACCSEC_TBL_FTR_TYPE_DEFAULT_CLIENT
+    @la_accsec_table_mask_type:LA_ACCSEC_TBL_MASK_TYPE_PORT_ONLY

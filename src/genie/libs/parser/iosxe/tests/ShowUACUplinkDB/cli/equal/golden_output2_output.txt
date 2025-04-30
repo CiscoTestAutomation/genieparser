@@ -1,0 +1,12 @@
+Uplink Autoconfig: Enable
+IPV4 Uplink: GigabitEthernet1/0/1
+        Ping Pass Count: 0 
+        GW ARP Pass Count:1
+IPV6 Uplink: GigabitEthernet1/0/1
+        Ping Pass Count: 303 
+        GW ARP Pass Count:9
+IfName      Score  State  IPAddress            Subnet/Prefix  ARPFail  PingFail    GWProbe       Ping ReScore
+Gi1/0/1         0     14  20.20.20.33          255.255.255.0        0         1   40F88DE4   431EFB60       1
+Gi1/0/2         3      9  30.30.30.24          255.255.255.0        0         0   40F88DE4   40F7B4AC       0
+IfName      Score  State  IPv6Address                 Prefix  ARPFail  PingFail    GWProbe       Ping ReScore
+Gi1/0/1         3      9  2001:20::4664:3CFF:FEE7:A64     64        0         1   40F88DE4   431EFB60       0

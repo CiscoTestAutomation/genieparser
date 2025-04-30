@@ -1,0 +1,18 @@
+show install summary
+
+[ Switch 1 ] Installed Package(s) Information:
+
+State (St): I - Inactive, U - Activated & Uncommitted,
+
+            C - Activated & Committed, D - Deactivated & Uncommitted
+
+--------------------------------------------------------------------------------
+
+Type  St   Filename/Version    
+
+--------------------------------------------------------------------------------
+
+IMG   C    16.6.6.0                                                            
+
+
+D9300-48T-2040#

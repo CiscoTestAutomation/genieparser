@@ -2905,12 +2905,13 @@ class ShowPlatformSoftwareFedSwitchPortSummary(
 ):
     """Parser for show platform software fed switch {mode} port summary"""
 
-    cli_command = "show platform software fed switch {mode} port summary"
+    cli_command = ["show platform software fed switch {mode} port summary", 
+                   "show platform software fed {mode} port summary"]
 
-    def cli(self, mode, output=None):
+    def cli(self, command=None, output=None, **kwargs):
         if output is None:
             # excute command to get output
-            output = self.device.execute(self.cli_command.format(mode=mode))
+            output = self.device.execute(command)
 
         # initial variables
         ret_dict = {}
@@ -2947,8 +2948,9 @@ class ShowPlatformSoftwareFedSwitchSecurityfedDhcpsnoopVlanVlanidSchema(MetaPars
 
     schema = {
         "trust_status": str,
-        "vlan": int,
-        "snooping_handle": str,
+        Optional("vlan"): int,
+        Optional("snooping_handle"): str,
+        Optional("handle_value"): str,
         Optional("interfaces"): {
             Any(): {Optional("port"): str, Optional("mode"): str},
         },
@@ -2989,7 +2991,10 @@ class ShowPlatformSoftwareFedSwitchSecurityfedDhcpsnoopVlanVlanid(
         p2 = re.compile(r"No\s+trust\s+ports\s+for\s+this\s+vlan")
 
         # GigabitEthernet1/0/3             trust
-        p3 = re.compile(r"(?P<port>.*\d+\/\d+\/\d+)\s+(?P<mode>\S+)")
+        p3 = re.compile(r"^(?P<port>[\w\-\/]+)\s+(?P<mode>\S+)$")
+
+        # Value of Snooping DI handle is:: 0x5C4
+        p4 = re.compile(r"^Value\s+of\s+Snooping\s+DI\s+handle\s+is::\s+(?P<handle_value>\S+)$")
 
         for line in output.splitlines():
             line = line.strip()
@@ -3021,6 +3026,13 @@ class ShowPlatformSoftwareFedSwitchSecurityfedDhcpsnoopVlanVlanid(
                 )
                 intf_dict.update({k: v for k, v in group.items()})
                 ret_dict["trust_status"] = "yes"
+                continue
+
+            # Value of Snooping DI handle is:: 0x5C4
+            m1 = p4.match(line)
+            if m1:
+                group = m1.groupdict()
+                ret_dict["handle_value"] = group["handle_value"]
                 continue
 
         return ret_dict
@@ -4454,7 +4466,6 @@ class ShowPlatformSoftwareFedSwitchActiveVpSummaryVlan(
 # Schema for 'show platform software fed switch <state> ifm if-id <if_id> '
 # ======================================================
 
-
 class ShowPlatformSoftwareFedSwitchStateIfmIfIdIf_idSchema(MetaParser):
     """Schema for show platform software fed switch <state> ifm if-id <if_id>"""
 
@@ -4466,6 +4477,7 @@ class ShowPlatformSoftwareFedSwitchStateIfmIfIdIf_idSchema(MetaParser):
             Optional("blk_state"): str,
             Optional("state"): str,
             Optional("status"): str,
+            Optional("intf_admin_mode"): str,
             Optional("ref_count"): int,
             Optional("type"): str,
             Optional("create_time"): str,
@@ -4480,6 +4492,78 @@ class ShowPlatformSoftwareFedSwitchStateIfmIfIdIf_idSchema(MetaParser):
             Optional("client_le"): str,
             Optional("dns_punt"): str,
             Optional("ref_count_feature"): str,
+            
+        },
+        Optional("interface_details"): {
+            Optional("port_type"): str,
+            Optional("port_location"): str,
+            Optional("slot"): int,
+            Optional("slot_unit"): int,
+            Optional("unit"): int,
+            Optional("snmp_index"): int,
+            Optional("gpn"): int,
+            Optional("ec_channel"): int,
+            Optional("ec_index"): int,
+            Optional("ipv4_mtu"): int,
+            Optional("ipv6_mtu"): int,
+            Optional("ipv4_vrf_id"): int,
+            Optional("ipv6_vrf_id"): int,
+            Optional("protocol_flags"): str,
+            Optional("misc_flags"): str,
+            Optional("icmpv4_flags"): str,
+            Optional("icmpv6_flags"): str,
+            Optional("mac_address"): str,
+            Optional("qos_trust_type"): str,
+        },
+        Optional("port_phy_sub"): {
+            Optional("affinity"): str,
+            Optional("lpn"): int,
+            Optional("gpn"): int,
+            Optional("speed"): str,
+            Optional("type"): str,
+            Optional("mtu"): int,
+            Optional("ac_profile"): str,
+        },
+        Optional("port_sub"): {
+            Optional("mac_port_oid"): str,
+            Optional("system_port_oid"): str,
+            Optional("system_port_gid"): int,
+            Optional("ethernet_port_oid"): str,
+            Optional("port_sub_block_port_mode"): str,
+            Optional("dense_mode_service_port_gid"): str,
+            Optional("dense_mode_service_port_oid"): str,
+            Optional("dense_mode_port_vid"): str,
+            Optional("vog_oid"): str,
+        },
+        Optional("platform_sub"): {
+            Optional("core"): int,
+            Optional("asic_port"): int,
+            Optional("mac_num"): int,
+            Optional("asic"): int,
+            Optional("asic_sub_port"): int,
+            Optional("ifg_id"): int,
+            Optional("first_serdes"): int,
+            Optional("last_serdes"): int,
+            Optional("fc_mode"): int,
+            Optional("fec_mode"): int,
+            Optional("context_id"): int,
+        },
+        Optional("port_l2_sub"): {
+            Optional("port_mode"): str,
+            Optional("port_mode_set"): str,
+            Optional("vlan"): int,
+            Optional("ethertype"): int,
+            Optional("native_vlan_tagging"): str,
+            Optional("bd_vlan"): int,
+            Optional("status"): int,
+            Optional("ac_profile"): str,
+
+            Optional("l2_sub_block_port_vlan"): {
+                Optional("l2_sub_block_port_vlan"): int,
+                Optional("native_vlan_trunk"): int,
+                Optional("untagged_port_bd_vlan"): int,
+                Optional("default_vlan"): int,
+            },
         },
         Optional("port_info"): {
             Optional("handle"): str,
@@ -4526,6 +4610,7 @@ class ShowPlatformSoftwareFedSwitchStateIfmIfIdIf_idSchema(MetaParser):
             Optional("q_map"): str,
         },
         Optional("port_cts_subblk"): {
+            Optional("cts_if_id"): str,
             Optional("disable_sgacl"): str,
             Optional("trust"): str,
             Optional("propagate"): str,
@@ -4546,16 +4631,12 @@ class ShowPlatformSoftwareFedSwitchStateIfmIfIdIf_id(
 ):
     """Parser for show platform software fed switch <state> ifm if-id <if_id>"""
 
-    cli_command = ["show platform software fed {state} ifm if-id {if_id}",
-                   "show platform software fed {switch} {state} ifm if-id {if_id}"]
+    cli_command = ["show platform software fed {state} ifm if-id {if_id}", 
+                   "show platform software fed switch {state} ifm if-id {if_id}"]
 
-    def cli(self, state=None, if_id=None, switch=None, output=None):
+    def cli(self, command=None, output=None, **kwargs):
         if output is None:
-            if switch:
-                cmd = self.cli_command[1].format(switch=switch, state=state, if_id=if_id)
-            else:
-                cmd = self.cli_command[0].format(state=state, if_id=if_id)
-            output = self.device.execute(cmd)
+            output = self.device.execute(command)
 
         # Interface Name          : C320150491
         p1 = re.compile(r"^Interface\s+Name\s+:\s+(?P<name>\S+)$")
@@ -4567,8 +4648,13 @@ class ShowPlatformSoftwareFedSwitchStateIfmIfIdIf_id(
         p1_3 = re.compile(r"^Interface\s+Block\s+State\s+:\s+(?P<blk_state>\w+)$")
         # Interface State         : Enabled
         p1_4 = re.compile(r"^Interface\s+State\s+:\s+(?P<state>\w+)$")
-        # Interface Status        : ADD, UPD
-        p1_5 = re.compile(r"^Interface\s+Status\s+:\s+(?P<status>\S+\s+\S+)$")
+
+        # Interface Admin mode : Admin Up
+        p1_4_1 = re.compile(
+            r"^Interface\s+Admin\s+mode\s+:\s+(?P<intf_admin_mode>\S+\s+\S+)$"
+        )
+        # Interface Status        : NPD
+        p1_5 = re.compile(r"^Interface\s+Status\s+:\s+(?P<status>.*)$")
         # Interface Ref-Cnt       : 2
         p1_6 = re.compile(r"^Interface\s+Ref-Cnt\s+:\s+(?P<ref_count>\d+)$")
         # Interface Type          : WIRED_CLIENT
@@ -4693,6 +4779,267 @@ class ShowPlatformSoftwareFedSwitchStateIfmIfIdIf_id(
         p7 = re.compile(
             r"^FID\s+:\s+(?P<fid>\S+\s+\S+),\s+Ref\s+Count\s+:\s+(?P<ref_count>\d+)$"
         )
+        # Port Type : ROUTE PORT
+        p9_1 = re.compile(r"^Port Type+\s+:\s+(?P<port_type>.*)$")
+
+        # Port Location : LOCAL
+        p9_2 = re.compile(r"^Port Location+\s+:\s+(?P<port_location>.*)$")
+
+        # Slot : 13
+        p9_3 = re.compile(r"^Slot\s+:\s+(?P<slot>\d+)$")
+
+        # Unit : 0
+        p9_4 = re.compile(r"^Unit\s+:\s+(?P<unit>\d+)$")
+
+        # Slot Unit : 19
+        p9_5 = re.compile(r"^Slot\s+Unit\s+:\s+(?P<slot_unit>\d+)$")
+
+        # SNMP IF Index : 119
+        p9_6 = re.compile(r"^SNMP\s+IF\s+Index\s+:\s+(?P<snmp_index>\d+)$")
+
+        # GPN : 979
+        p9_7 = re.compile(r"^GPN\s+:\s+(?P<gpn>\d+)$")
+
+        # EC Channel : 0
+        p9_8 = re.compile(r"^EC\s+Channel\s+:\s+(?P<ec_channel>\d+)$")
+
+        # EC Index : 0
+        p9_9 = re.compile(r"^EC\s+Index\s+:\s+(?P<ec_index>\d+)$")
+
+        # IPv4 MTU : 2000
+        p9_10 = re.compile(r"^IPv4\s+MTU\s+:\s+(?P<ipv4_mtu>\d+)$")
+
+        # IPv6 MTU : 0
+        p9_11 = re.compile(r"^IPv6\s+MTU\s+:\s+(?P<ipv6_mtu>\d+)$")
+
+        # IPv4 VRF ID : 0
+        p9_12 = re.compile(r"^IPv4\s+VRF\s+ID\s+:\s+(?P<ipv4_vrf_id>\d+)$")
+
+        # IPv6 VRF ID : 65535
+        p9_13 = re.compile(r"^IPv6\s+VRF\s+ID\s+:\s+(?P<ipv6_vrf_id>\d+)$")
+
+        # Protocol flags : 0x0003 [ ipv4 ipv6 ]
+        p9_14 = re.compile(
+            r"^Protocol\s+flags\s+:\s+(?P<protocol_flags>\S+\s+\S+\s+\S+\s+\S+\s+\S+)$"
+        )
+
+        # Misc flags : 0x0041 [ ipv4 --- ]
+        p9_15 = re.compile(
+            r"^Misc\s+flags\s+:\s+(?P<misc_flags>\S+\s+\S+\s+\S+\s+\S+\s+\S+)$"
+        )
+
+        # ICMPv4 flags : 0x03 [ unreachable redirect ]
+        p9_16 = re.compile(
+            r"^ICMPv4\s+flags\s+:\s+(?P<icmpv4_flags>\S+\s+\S+\s+\S+\s+\S+\s+\S+)$"
+        )
+
+        # ICMPv6 flags : 0x03 [ unreachable redirect ]
+        p9_17 = re.compile(
+            r"^ICMPv6\s+flags\s+:\s+(?P<icmpv6_flags>\S+\s+\S+\s+\S+\s+\S+\s+\S+)$"
+        )
+
+        # Mac Address : 6c:b2:ae:4a:54:c5
+        p9_18 = re.compile(r"^Mac\s+Address\s+:\s+(?P<mac_address>\S+)$")
+
+        # QoS Trust Type : 3 (DSCP)
+        p9_19 = re.compile(
+            r"^QoS\s+Trust\s+Type\s+:\s+(?P<qos_trust_type>\S+\s+\S+)$"
+        )
+
+        # Affinity .......... [local]
+        p11 = re.compile(
+            r"^Affinity\s+\.+\s+\[(?P<affinity>\w+)\]$"
+        )
+
+        # LPN ............... [19]
+        p11_1 = re.compile(
+            r"^LPN\s+\.+\s+\[(?P<lpn>\d+)\]$"
+        )
+
+        # GPN ............... [979]
+        p11_2 = re.compile(
+            r"^GPN\s+\.+\s+\[(?P<gpn>\d+)\]$"
+        )
+
+        # Speed ............. [40GB]
+        p11_3 = re.compile(
+            r"^Speed\s+\.+\s+\[(?P<speed>\S+)\]$"
+        )
+
+        # type .............. [IFM_PORT_TYPE_L3]
+        p11_4 = re.compile(
+            r"^type\s+\.+\s+\[(?P<type>\S+)\]$"
+        )
+
+        # MTU ............... [2022]
+        p11_5 = re.compile(
+            r"^MTU\s+\.+\s+\[(?P<mtu>\d+)\]$"
+        )
+
+        # ac profile ........ [IFM_AC_PROFILE_DEFAULT]
+        p11_6 = re.compile(
+            r"^ac\s+profile\s+\.{8}\s+\[(?P<ac_profile>\S+)\]$"
+        )
+
+        # Mac port oid................... [4444]
+        p12 = re.compile(
+            r"^Mac port oid\S+\s+\[(?P<mac_port_oid>\S+)\]$"
+        )
+
+        # System port oid................ [4448]
+        p12_1 = re.compile(
+            r"^System\s+port\s+oid\.+\s+\[(?P<system_port_oid>\S+)\]$"
+        )
+
+        # System port gid................ [223]
+        p12_2 = re.compile(
+            r"^System\s+port\s+gid\.+\s+\[(?P<system_port_gid>\d+)\]$"
+        )
+
+        # Ethernet port oid.............. [4459]
+        p12_3 = re.compile(
+            r"^Ethernet\s+port\s+oid\.+\s+\[(?P<ethernet_port_oid>\S+)\]$"
+        )
+
+        # Port mode...................... [Dense Mode] 
+        p12_3_1 = re.compile(
+            r"^Port mode\S+\s+\[(?P<port_sub_block_port_mode>.*)\]$"
+        )
+
+        # Dense mode service port gid.... [122994] 
+        p12_3_2 = re.compile(
+            r"^Dense mode service port gid....\s+\[(?P<dense_mode_service_port_gid>\S+)\]$"
+        )
+
+        # Dense mode service port oid.... [0xa0b(2571)] 
+        p12_3_3 = re.compile(
+            r"^Dense mode service port oid\S+\s+\[(?P<dense_mode_service_port_oid>\S+)\]$"
+        )
+
+        # Dense mode port vid............ [50] 
+        p12_3_4 = re.compile(
+            r"^Dense mode port vid\S+\s+\[(?P<dense_mode_port_vid>\d+)\]$"
+        )
+
+        # Voq oid........................ [4446]
+        p12_4 = re.compile(
+            r"^Voq\s+oid\.+\s+\[(?P<vog_oid>\S+)\]$"
+        )
+
+        # Asic.............. [0]
+        p13 = re.compile(r"^Asic\.+\s+\[(?P<asic>\d+)\]$")
+
+        # Core.............. [5]
+        p13_1 = re.compile(r"^Core\.+\s+\[(?P<core>\d+)\]$")
+
+        # Asic Port......... [0]
+        p13_2 = re.compile(
+            r"^Asic\s+Port\.+\s+\[(?P<asic_port>\d+)\]$"
+        )
+
+        # Asic Sub Port..... [65535]
+        p13_3 = re.compile(
+            r"^Asic\s+Sub\s+Port\.+\s+\[(?P<asic_sub_port>\d+)\]$"
+        )
+
+        # Ifg Id............ [0]
+        p13_4 = re.compile(
+            r"^Ifg\s+Id\.+\s+\[(?P<ifg_id>\d+)\]$"
+        )
+
+        # Mac Num........... [211]
+        p13_5 = re.compile(
+            r"^Mac\s+Num\.+\s+\[(?P<mac_num>\d+)\]$"
+        )
+
+        # First Serdes...... [10]
+        p13_6 = re.compile(
+            r"^First\s+Serdes\.+\s+\[(?P<first_serdes>\d+)\]$"
+        )
+
+        # Last Serdes....... [11]
+        p13_7 = re.compile(
+            r"^Last\s+Serdes\.+\s+\[(?P<last_serdes>\d+)\]$"
+        )
+
+        # FC Mode........... [0]
+        p13_8 = re.compile(
+            r"^FC\s+Mode\.+\s+\[(?P<fc_mode>\d+)\]$"
+        )
+
+        # FEC Mode.......... [0]
+        p13_9 = re.compile(
+            r"^FEC\s+Mode\.+\s+\[(?P<fec_mode>\d+)\]$"
+        )
+
+        # Context Id........ [0]
+        p13_10 = re.compile(
+            r"^Context\s+Id\.+\s+\[(?P<context_id>\d+)\]$"
+        )
+
+        # L2 Port Mode ................ [port_mode_dynamic]
+        p14 = re.compile(
+            r"^L2\s+Port\s+Mode\s+\.+\s+\[(?P<port_mode>\S+)\]$"
+        )
+
+        # L2 Port Mode set............. [No]
+        p14_1 = re.compile(
+            r"^L2\s+Port\s+Mode\s+set\.+\s+\[(?P<port_mode_set>\w+)\]$"
+        )
+
+        # Default vlan ................ [0]
+        p14_2 = re.compile(
+            r"^Default\s+vlan\s+\.+\s+\[(?P<vlan>\d+)\]$"
+        )
+
+        # Ethertype.................... [8100]
+        p14_3 = re.compile(
+            r"^Ethertype\.+\s+\[(?P<ethertype>\d+)\]$"
+        )
+
+        # Port vlan  .................. [50] 
+        p14_3_1 = re.compile(
+            r"^Port vlan\s+\S+\s+\[(?P<l2_sub_block_port_vlan>\d+)\]$"
+        )
+
+        # Native vlan (trunk) .............. [0] 
+        p14_3_2 = re.compile(
+            r"^Native vlan \(trunk\)\s+\.+\s+\[(?P<native_vlan_trunk>\d+)\]$"
+        )
+
+        # Untagged port bd vlan (access) ... [50]
+        p14_3_3 = re.compile(
+            r"^Untagged port bd vlan \(access\)\s+\.+\s+\[(?P<untagged_port_bd_vlan>\d+)\]$"
+        )
+
+        # Default vlan (dot1q tunnel) ...... [0] 
+        p14_3_4 = re.compile(
+            r"^Default vlan \(dot1q tunnel\)\s+\.+\s+\[(?P<default_vlan>\d+)\]$"
+        )
+
+        # Native Vlan Tagging.......... [Native Vlan None]
+        p14_3_5 = re.compile(
+            r"^Native Vlan Tagging\S+\s+\[(?P<native_vlan_tagging>.*)\]$"
+        )
+
+        # untagged port bd vlan ....... [0]
+        p14_4 = re.compile(
+            r"^untagged\s+port\s+bd\s+vlan\s+\.+\s+\[(?P<bd_vlan>\d+)\]$"
+        )
+
+        # status....................... [0]
+        p14_5 = re.compile(
+            r"^status\.+\s+\[(?P<status>\d+)\]$"
+        )
+
+        # ac profile .................. [IFM_AC_PROFILE_DEFAULT]
+        p14_6 = re.compile(
+            r"^ac\s+profile\s+\.{18}\s+\[(?P<ac_profile>\S+)\]$"
+        )
+        # Port CTS Subblock is NULL if_id = 0x14c3c6db 
+
+        p19 = re.compile(
+            r"^Port CTS Subblock is NULL if_id\s+=\s+(?P<cts_if_id>\S+)$")
 
         ret_dict = {}
 
@@ -4702,8 +5049,7 @@ class ShowPlatformSoftwareFedSwitchStateIfmIfIdIf_id(
             m = p1.match(line)
             if m:
                 dict_val = m.groupdict()
-                if "int_info" not in ret_dict:
-                    int_info = ret_dict.setdefault("int_info", {})
+                int_info = ret_dict.setdefault("int_info", {})
                 int_info["name"] = dict_val["name"]
                 continue
 
@@ -4711,8 +5057,7 @@ class ShowPlatformSoftwareFedSwitchStateIfmIfIdIf_id(
             m = p1_1.match(line)
             if m:
                 dict_val = m.groupdict()
-                if "int_info" not in ret_dict:
-                    int_info = ret_dict.setdefault("int_info", {})
+                int_info = ret_dict.setdefault("int_info", {})
                 int_info["if_id"] = dict_val["if_id"]
                 continue
 
@@ -4720,8 +5065,7 @@ class ShowPlatformSoftwareFedSwitchStateIfmIfIdIf_id(
             m = p1_2.match(line)
             if m:
                 dict_val = m.groupdict()
-                if "int_info" not in ret_dict:
-                    int_info = ret_dict.setdefault("int_info", {})
+                int_info = ret_dict.setdefault("int_info", {})
                 int_info["blk_ptr"] = dict_val["blk_ptr"]
                 continue
 
@@ -4729,8 +5073,7 @@ class ShowPlatformSoftwareFedSwitchStateIfmIfIdIf_id(
             m = p1_3.match(line)
             if m:
                 dict_val = m.groupdict()
-                if "int_info" not in ret_dict:
-                    int_info = ret_dict.setdefault("int_info", {})
+                int_info = ret_dict.setdefault("int_info", {})
                 int_info["blk_state"] = dict_val["blk_state"]
                 continue
 
@@ -4738,26 +5081,183 @@ class ShowPlatformSoftwareFedSwitchStateIfmIfIdIf_id(
             m = p1_4.match(line)
             if m:
                 dict_val = m.groupdict()
-                if "int_info" not in ret_dict:
-                    int_info = ret_dict.setdefault("int_info", {})
+                int_info = ret_dict.setdefault("int_info", {})
                 int_info["state"] = dict_val["state"]
+                continue
+
+            # Interface Admin mode : Admin Up
+            m = p1_4_1.match(line)
+            if m:
+                dict_val = m.groupdict()
+                int_info = ret_dict.setdefault("int_info", {})
+                int_info["intf_admin_mode"] = dict_val["intf_admin_mode"]
                 continue
 
             # Interface Status        : ADD, UPD
             m = p1_5.match(line)
             if m:
                 dict_val = m.groupdict()
-                if "int_info" not in ret_dict:
-                    int_info = ret_dict.setdefault("int_info", {})
+                int_info = ret_dict.setdefault("int_info", {})
                 int_info["status"] = dict_val["status"]
+                continue
+
+            # Port Type : ROUTE PORT
+            m = p9_1.match(line)
+            if m:
+                dict_val = m.groupdict()
+                interface_details = ret_dict.setdefault("interface_details", {})
+                interface_details["port_type"] = dict_val["port_type"]
+                continue
+
+            # Port Location : LOCAL
+            m = p9_2.match(line)
+            if m:
+                dict_val = m.groupdict()
+                interface_details = ret_dict.setdefault("interface_details", {})
+                interface_details["port_location"] = dict_val["port_location"]
+                continue
+
+            # Slot : 13
+            m = p9_3.match(line)
+            if m:
+                dict_val = m.groupdict()
+                interface_details = ret_dict.setdefault("interface_details", {})
+                interface_details["slot"] = int(dict_val["slot"])
+                continue
+
+            # Unit : 0
+            m = p9_4.match(line)
+            if m:
+                dict_val = m.groupdict()
+                interface_details = ret_dict.setdefault("interface_details", {})
+                interface_details["unit"] = int(dict_val["unit"])
+                continue
+
+            # Slot Unit : 19
+            m = p9_5.match(line)
+            if m:
+                dict_val = m.groupdict()
+                interface_details = ret_dict.setdefault("interface_details", {})
+                interface_details["slot_unit"] = int(dict_val["slot_unit"])
+                continue
+
+            # SNMP IF Index : 119
+            m = p9_6.match(line)
+            if m:
+                dict_val = m.groupdict()
+                interface_details = ret_dict.setdefault("interface_details", {})
+                interface_details["snmp_index"] = int(dict_val["snmp_index"])
+                continue
+
+            # GPN : 979
+            m = p9_7.match(line)
+            if m:
+                dict_val = m.groupdict()
+                interface_details = ret_dict.setdefault("interface_details", {})
+                interface_details["gpn"] = int(dict_val["gpn"])
+                continue
+
+            # EC Channel : 0
+            m = p9_8.match(line)
+            if m:
+                dict_val = m.groupdict()
+                interface_details = ret_dict.setdefault("interface_details", {})
+                interface_details["ec_channel"] = int(dict_val["ec_channel"])
+                continue
+
+            # EC Index : 0
+            m = p9_9.match(line)
+            if m:
+                dict_val = m.groupdict()
+                interface_details = ret_dict.setdefault("interface_details", {})
+                interface_details["ec_index"] = int(dict_val["ec_index"])
+                continue
+
+            # IPv4 MTU : 2000
+            m = p9_10.match(line)
+            if m:
+                dict_val = m.groupdict()
+                interface_details = ret_dict.setdefault("interface_details", {})
+                interface_details["ipv4_mtu"] = int(dict_val["ipv4_mtu"])
+                continue
+
+            # IPv6 MTU : 0
+            m = p9_11.match(line)
+            if m:
+                dict_val = m.groupdict()
+                interface_details = ret_dict.setdefault("interface_details", {})
+                interface_details["ipv6_mtu"] = int(dict_val["ipv6_mtu"])
+                continue
+
+            # IPv4 VRF ID : 0
+            m = p9_12.match(line)
+            if m:
+                dict_val = m.groupdict()
+                interface_details = ret_dict.setdefault("interface_details", {})
+                interface_details["ipv4_vrf_id"] = int(dict_val["ipv4_vrf_id"])
+                continue
+
+            # IPv6 VRF ID : 65535
+            m = p9_13.match(line)
+            if m:
+                dict_val = m.groupdict()
+                interface_details = ret_dict.setdefault("interface_details", {})
+                interface_details["ipv6_vrf_id"] = int(dict_val["ipv6_vrf_id"])
+                continue
+
+            # Protocol flags : 0x0003 [ ipv4 ipv6 ]
+            m = p9_14.match(line)
+            if m:
+                dict_val = m.groupdict()
+                interface_details = ret_dict.setdefault("interface_details", {})
+                interface_details["protocol_flags"] = dict_val["protocol_flags"]
+                continue
+
+            # Misc flags : 0x0041 [ ipv4 --- ]
+            m = p9_15.match(line)
+            if m:
+                dict_val = m.groupdict()
+                interface_details = ret_dict.setdefault("interface_details", {})
+                interface_details["misc_flags"] = dict_val["misc_flags"]
+                continue
+
+            # ICMPv4 flags : 0x03 [ unreachable redirect ]
+            m = p9_16.match(line)
+            if m:
+                dict_val = m.groupdict()
+                interface_details = ret_dict.setdefault("interface_details", {})
+                interface_details["icmpv4_flags"] = dict_val["icmpv4_flags"]
+                continue
+
+            # ICMPv6 flags : 0x03 [ unreachable redirect ]
+            m = p9_17.match(line)
+            if m:
+                dict_val = m.groupdict()
+                interface_details = ret_dict.setdefault("interface_details", {})
+                interface_details["icmpv6_flags"] = dict_val["icmpv6_flags"]
+                continue
+
+            # Mac Address : 6c:b2:ae:4a:54:c5
+            m = p9_18.match(line)
+            if m:
+                dict_val = m.groupdict()
+                interface_details = ret_dict.setdefault("interface_details", {})
+                interface_details["mac_address"] = dict_val["mac_address"]
+                continue
+
+            # QoS Trust Type : 3 (DSCP)
+            m = p9_19.match(line)
+            if m:
+                dict_val = m.groupdict()
+                interface_details = ret_dict.setdefault("interface_details", {})
+                interface_details["qos_trust_type"] = dict_val["qos_trust_type"]
                 continue
 
             # Interface Ref-Cnt       : 2
             m = p1_6.match(line)
             if m:
                 dict_val = m.groupdict()
-                if "int_info" not in ret_dict:
-                    int_info = ret_dict.setdefault("int_info", {})
+                int_info = ret_dict.setdefault("int_info", {})
                 int_info["ref_count"] = int(dict_val["ref_count"])
                 continue
 
@@ -4765,8 +5265,7 @@ class ShowPlatformSoftwareFedSwitchStateIfmIfIdIf_id(
             m = p1_7.match(line)
             if m:
                 dict_val = m.groupdict()
-                if "int_info" not in ret_dict:
-                    int_info = ret_dict.setdefault("int_info", {})
+                int_info = ret_dict.setdefault("int_info", {})
                 int_info["type"] = dict_val["type"]
                 continue
 
@@ -4774,8 +5273,7 @@ class ShowPlatformSoftwareFedSwitchStateIfmIfIdIf_id(
             m = p1_8.match(line)
             if m:
                 dict_val = m.groupdict()
-                if "int_info" not in ret_dict:
-                    int_info = ret_dict.setdefault("int_info", {})
+                int_info = ret_dict.setdefault("int_info", {})
                 int_info["create_time"] = dict_val["create_time"]
                 continue
 
@@ -4783,8 +5281,7 @@ class ShowPlatformSoftwareFedSwitchStateIfmIfIdIf_id(
             m = p1_9.match(line)
             if m:
                 dict_val = m.groupdict()
-                if "int_info" not in ret_dict:
-                    int_info = ret_dict.setdefault("int_info", {})
+                int_info = ret_dict.setdefault("int_info", {})
                 int_info["last_modfd_time"] = dict_val["last_modfd_time"]
                 continue
 
@@ -4792,80 +5289,71 @@ class ShowPlatformSoftwareFedSwitchStateIfmIfIdIf_id(
             m = p1_10.match(line)
             if m:
                 dict_val = m.groupdict()
-                if "int_info" not in ret_dict:
-                    int_info = ret_dict.setdefault("int_info", {})
+                int_info = ret_dict.setdefault("int_info", {})
                 int_info["cur_time"] = dict_val["cur_time"]
                 continue
 
-            #   mac            : 001b.0c18.918d
+            # mac : 001b.0c18.918d
             m = p1_11.match(line)
             if m:
                 dict_val = m.groupdict()
-                if "int_info" not in ret_dict:
-                    int_info = ret_dict.setdefault("int_info", {})
+                int_info = ret_dict.setdefault("int_info", {})
                 int_info["mac"] = dict_val["mac"]
                 continue
 
-            #   parent if_id   : 0x0000000000000020
+            # parent if_id   : 0x0000000000000020
             m = p1_12.match(line)
             if m:
                 dict_val = m.groupdict()
-                if "int_info" not in ret_dict:
-                    int_info = ret_dict.setdefault("int_info", {})
+                int_info = ret_dict.setdefault("int_info", {})
                 int_info["parent_if_id"] = dict_val["parent_if_id"]
                 continue
 
-            #   Client if_id   : 0x0000000013151bdb
+            # Client if_id   : 0x0000000013151bdb
             m = p1_13.match(line)
             if m:
                 dict_val = m.groupdict()
-                if "int_info" not in ret_dict:
-                    int_info = ret_dict.setdefault("int_info", {})
+                int_info = ret_dict.setdefault("int_info", {})
                 int_info["client_if_id"] = dict_val["client_if_id"]
                 continue
 
-            #   Switch Num     : 1
+            # Switch Num     : 1
             m = p1_14.match(line)
             if m:
                 dict_val = m.groupdict()
-                if "int_info" not in ret_dict:
-                    int_info = ret_dict.setdefault("int_info", {})
+                int_info = ret_dict.setdefault("int_info", {})
                 int_info["switch_num"] = int(dict_val["switch_num"])
                 continue
 
-            #   Client type    : 1
+            # Client type    : 1
             m = p1_15.match(line)
             if m:
                 dict_val = m.groupdict()
-                if "int_info" not in ret_dict:
-                    int_info = ret_dict.setdefault("int_info", {})
+                int_info = ret_dict.setdefault("int_info", {})
                 int_info["client_type"] = int(dict_val["client_type"])
                 continue
 
-            #   ASIC Num       : 1
+            # ASIC Num       : 1
             m = p1_16.match(line)
             if m:
                 dict_val = m.groupdict()
-                if "int_info" not in ret_dict:
-                    int_info = ret_dict.setdefault("int_info", {})
+                int_info = ret_dict.setdefault("int_info", {})
                 int_info["asic_num"] = int(dict_val["asic_num"])
                 continue
 
-            #   Client LE      : 0x7f16cd0caaa8
+            # Client LE      : 0x7f16cd0caaa8
             m = p1_17.match(line)
             if m:
                 dict_val = m.groupdict()
-                if "int_info" not in ret_dict:
-                    int_info = ret_dict.setdefault("int_info", {})
+                int_info = ret_dict.setdefault("int_info", {})
                 int_info["client_le"] = dict_val["client_le"]
                 continue
 
-            #   DNS punt       : False
+            # DNS punt       : False
             m = p1_18.match(line)
             if m:
                 dict_val = m.groupdict()
-                if "int_info" not in ret_dict:
-                    int_info = ret_dict.setdefault("int_info", {})
+                int_info = ret_dict.setdefault("int_info", {})
                 int_info["dns_punt"] = dict_val["dns_punt"]
                 continue
 
@@ -4873,71 +5361,63 @@ class ShowPlatformSoftwareFedSwitchStateIfmIfIdIf_id(
             m = p1_19.match(line)
             if m:
                 dict_val = m.groupdict()
-                if "int_info" not in ret_dict:
-                    int_info = ret_dict.setdefault("int_info", {})
+                int_info = ret_dict.setdefault("int_info", {})
                 int_info["ref_count_feature"] = dict_val["ref_count_feature"]
                 continue
 
-            #   Handle ............ [0x8b00013f]
+            # Handle ............ [0x8b00013f]
             m = p2.match(line)
             if m:
                 dict_val = m.groupdict()
-                if "port_info" not in ret_dict:
-                    port_info = ret_dict.setdefault("port_info", {})
+                port_info = ret_dict.setdefault("port_info", {})
                 port_info["handle"] = dict_val["handle"]
                 continue
 
-            #   Type .............. [Wired-client]
+            # Type .............. [Wired-client]
             m = p2_1.match(line)
             if m:
                 dict_val = m.groupdict()
-                if "port_info" not in ret_dict:
-                    port_info = ret_dict.setdefault("port_info", {})
+                port_info = ret_dict.setdefault("port_info", {})
                 port_info["type"] = dict_val["type"]
                 continue
 
-            #   Identifier ........ [0x13151bdb]
+            # Identifier ........ [0x13151bdb]
             m = p2_2.match(line)
             if m:
                 dict_val = m.groupdict()
-                if "port_info" not in ret_dict:
-                    port_info = ret_dict.setdefault("port_info", {})
+                port_info = ret_dict.setdefault("port_info", {})
                 port_info["identifier"] = dict_val["identifier"]
                 continue
 
-            #   Unit .............. [320150491]
+            # Unit .............. [320150491]
             m = p2_3.match(line)
             if m:
                 dict_val = m.groupdict()
-                if "port_info" not in ret_dict:
-                    port_info = ret_dict.setdefault("port_info", {})
+                port_info = ret_dict.setdefault("port_info", {})
                 port_info["unit"] = dict_val["unit"]
                 continue
 
-            #       Client LE handle .... [0x7f16cd0caaa8]
+            # Client LE handle .... [0x7f16cd0caaa8]
             m = p3.match(line)
             if m:
                 dict_val = m.groupdict()
-                if "port_logical_subblk" not in ret_dict:
-                    port_logical_subblk = ret_dict.setdefault("port_logical_subblk", {})
+                port_logical_subblk = ret_dict.setdefault("port_logical_subblk", {})
                 port_logical_subblk["client_le_handle"] = dict_val["client_le_handle"]
                 continue
 
-            #       Parent Identifier : 0x20
+            # Parent Identifier : 0x20
             m = p3_1.match(line)
             if m:
                 dict_val = m.groupdict()
-                if "port_logical_subblk" not in ret_dict:
-                    port_logical_subblk = ret_dict.setdefault("port_logical_subblk", {})
+                port_logical_subblk = ret_dict.setdefault("port_logical_subblk", {})
                 port_logical_subblk["parent_identifier"] = dict_val["parent_identifier"]
                 continue
 
-            #       Asic num          : 0x1
+            # Asic num          : 0x1
             m = p3_2.match(line)
             if m:
                 dict_val = m.groupdict()
-                if "port_logical_subblk" not in ret_dict:
-                    port_logical_subblk = ret_dict.setdefault("port_logical_subblk", {})
+                port_logical_subblk = ret_dict.setdefault("port_logical_subblk", {})
                 port_logical_subblk["asic_num"] = dict_val["asic_num"]
                 continue
 
@@ -4945,8 +5425,7 @@ class ShowPlatformSoftwareFedSwitchStateIfmIfIdIf_id(
             m = p3_3.match(line)
             if m:
                 dict_val = m.groupdict()
-                if "port_logical_subblk" not in ret_dict:
-                    port_logical_subblk = ret_dict.setdefault("port_logical_subblk", {})
+                port_logical_subblk = ret_dict.setdefault("port_logical_subblk", {})
                 port_logical_subblk["switch_num"] = dict_val["switch_num"]
                 continue
 
@@ -4954,8 +5433,7 @@ class ShowPlatformSoftwareFedSwitchStateIfmIfIdIf_id(
             m = p3_4.match(line)
             if m:
                 dict_val = m.groupdict()
-                if "port_logical_subblk" not in ret_dict:
-                    port_logical_subblk = ret_dict.setdefault("port_logical_subblk", {})
+                port_logical_subblk = ret_dict.setdefault("port_logical_subblk", {})
                 port_logical_subblk["rewr_type"] = dict_val["rewr_type"]
                 continue
 
@@ -4963,8 +5441,7 @@ class ShowPlatformSoftwareFedSwitchStateIfmIfIdIf_id(
             m = p3_5.match(line)
             if m:
                 dict_val = m.groupdict()
-                if "port_logical_subblk" not in ret_dict:
-                    port_logical_subblk = ret_dict.setdefault("port_logical_subblk", {})
+                port_logical_subblk = ret_dict.setdefault("port_logical_subblk", {})
                 port_logical_subblk["client_mac"] = dict_val["client_mac"]
                 continue
 
@@ -4972,8 +5449,7 @@ class ShowPlatformSoftwareFedSwitchStateIfmIfIdIf_id(
             m = p3_6.match(line)
             if m:
                 dict_val = m.groupdict()
-                if "port_logical_subblk" not in ret_dict:
-                    port_logical_subblk = ret_dict.setdefault("port_logical_subblk", {})
+                port_logical_subblk = ret_dict.setdefault("port_logical_subblk", {})
                 port_logical_subblk["ri_handle"] = int(dict_val["ri_handle"])
                 continue
 
@@ -4981,8 +5457,7 @@ class ShowPlatformSoftwareFedSwitchStateIfmIfIdIf_id(
             m = p3_7.match(line)
             if m:
                 dict_val = m.groupdict()
-                if "port_logical_subblk" not in ret_dict:
-                    port_logical_subblk = ret_dict.setdefault("port_logical_subblk", {})
+                port_logical_subblk = ret_dict.setdefault("port_logical_subblk", {})
                 port_logical_subblk["di_handle"] = int(dict_val["di_handle"])
                 continue
 
@@ -4990,8 +5465,7 @@ class ShowPlatformSoftwareFedSwitchStateIfmIfIdIf_id(
             m = p3_8.match(line)
             if m:
                 dict_val = m.groupdict()
-                if "port_logical_subblk" not in ret_dict:
-                    port_logical_subblk = ret_dict.setdefault("port_logical_subblk", {})
+                port_logical_subblk = ret_dict.setdefault("port_logical_subblk", {})
                 port_logical_subblk["dst_adj_handle"] = int(dict_val["dst_adj_handle"])
                 continue
 
@@ -4999,8 +5473,7 @@ class ShowPlatformSoftwareFedSwitchStateIfmIfIdIf_id(
             m = p3_9.match(line)
             if m:
                 dict_val = m.groupdict()
-                if "port_logical_subblk" not in ret_dict:
-                    port_logical_subblk = ret_dict.setdefault("port_logical_subblk", {})
+                port_logical_subblk = ret_dict.setdefault("port_logical_subblk", {})
                 port_logical_subblk["dst_lkp_handle"] = int(dict_val["dst_lkp_handle"])
                 continue
 
@@ -5008,8 +5481,7 @@ class ShowPlatformSoftwareFedSwitchStateIfmIfIdIf_id(
             m = p3_10.match(line)
             if m:
                 dict_val = m.groupdict()
-                if "port_logical_subblk" not in ret_dict:
-                    port_logical_subblk = ret_dict.setdefault("port_logical_subblk", {})
+                port_logical_subblk = ret_dict.setdefault("port_logical_subblk", {})
                 port_logical_subblk["src_adj_handle"] = dict_val["src_adj_handle"]
                 continue
 
@@ -5017,8 +5489,7 @@ class ShowPlatformSoftwareFedSwitchStateIfmIfIdIf_id(
             m = p3_11.match(line)
             if m:
                 dict_val = m.groupdict()
-                if "port_logical_subblk" not in ret_dict:
-                    port_logical_subblk = ret_dict.setdefault("port_logical_subblk", {})
+                port_logical_subblk = ret_dict.setdefault("port_logical_subblk", {})
                 port_logical_subblk["src_lkp_handle"] = int(dict_val["src_lkp_handle"])
                 continue
 
@@ -5026,35 +5497,28 @@ class ShowPlatformSoftwareFedSwitchStateIfmIfIdIf_id(
             m = p4.match(line)
             if m:
                 dict_val = m.groupdict()
-                if "port_l2_subblk" not in ret_dict:
-                    port_l2_subblk = ret_dict.setdefault("port_l2_subblk", {})
+                port_l2_subblk = ret_dict.setdefault("port_l2_subblk", {})
                 port_l2_subblk["enabled"] = dict_val["enabled"]
-                continue
 
             #       Allow dot1q ......... [No]
             m = p4_1.match(line)
             if m:
                 dict_val = m.groupdict()
-                if "port_l2_subblk" not in ret_dict:
-                    port_l2_subblk = ret_dict.setdefault("port_l2_subblk", {})
+                port_l2_subblk = ret_dict.setdefault("port_l2_subblk", {})
                 port_l2_subblk["allow_dot1q"] = dict_val["allow_dot1q"]
-                continue
 
             #       Allow native ........ [No]
             m = p4_2.match(line)
             if m:
                 dict_val = m.groupdict()
-                if "port_l2_subblk" not in ret_dict:
-                    port_l2_subblk = ret_dict.setdefault("port_l2_subblk", {})
+                port_l2_subblk = ret_dict.setdefault("port_l2_subblk", {})
                 port_l2_subblk["allow_native"] = dict_val["allow_native"]
                 continue
-
             #       Default VLAN ........ [0]
             m = p4_3.match(line)
             if m:
                 dict_val = m.groupdict()
-                if "port_l2_subblk" not in ret_dict:
-                    port_l2_subblk = ret_dict.setdefault("port_l2_subblk", {})
+                port_l2_subblk = ret_dict.setdefault("port_l2_subblk", {})
                 port_l2_subblk["def_vlan"] = int(dict_val["def_vlan"])
                 continue
 
@@ -5062,8 +5526,7 @@ class ShowPlatformSoftwareFedSwitchStateIfmIfIdIf_id(
             m = p4_4.match(line)
             if m:
                 dict_val = m.groupdict()
-                if "port_l2_subblk" not in ret_dict:
-                    port_l2_subblk = ret_dict.setdefault("port_l2_subblk", {})
+                port_l2_subblk = ret_dict.setdefault("port_l2_subblk", {})
                 port_l2_subblk["allow_priority_tag"] = dict_val["allow_priority_tag"]
                 continue
 
@@ -5071,8 +5534,7 @@ class ShowPlatformSoftwareFedSwitchStateIfmIfIdIf_id(
             m = p4_5.match(line)
             if m:
                 dict_val = m.groupdict()
-                if "port_l2_subblk" not in ret_dict:
-                    port_l2_subblk = ret_dict.setdefault("port_l2_subblk", {})
+                port_l2_subblk = ret_dict.setdefault("port_l2_subblk", {})
                 port_l2_subblk["allow_unkn_ucast"] = dict_val["allow_unkn_ucast"]
                 continue
 
@@ -5080,8 +5542,7 @@ class ShowPlatformSoftwareFedSwitchStateIfmIfIdIf_id(
             m = p4_6.match(line)
             if m:
                 dict_val = m.groupdict()
-                if "port_l2_subblk" not in ret_dict:
-                    port_l2_subblk = ret_dict.setdefault("port_l2_subblk", {})
+                port_l2_subblk = ret_dict.setdefault("port_l2_subblk", {})
                 port_l2_subblk["allow_unkn_mcast"] = dict_val["allow_unkn_mcast"]
                 continue
 
@@ -5089,8 +5550,7 @@ class ShowPlatformSoftwareFedSwitchStateIfmIfIdIf_id(
             m = p4_7.match(line)
             if m:
                 dict_val = m.groupdict()
-                if "port_l2_subblk" not in ret_dict:
-                    port_l2_subblk = ret_dict.setdefault("port_l2_subblk", {})
+                port_l2_subblk = ret_dict.setdefault("port_l2_subblk", {})
                 port_l2_subblk["allow_unkn_bcast"] = dict_val["allow_unkn_bcast"]
                 continue
 
@@ -5098,8 +5558,7 @@ class ShowPlatformSoftwareFedSwitchStateIfmIfIdIf_id(
             m = p4_8.match(line)
             if m:
                 dict_val = m.groupdict()
-                if "port_l2_subblk" not in ret_dict:
-                    port_l2_subblk = ret_dict.setdefault("port_l2_subblk", {})
+                port_l2_subblk = ret_dict.setdefault("port_l2_subblk", {})
                 port_l2_subblk["protected"] = dict_val["protected"]
                 continue
 
@@ -5107,8 +5566,7 @@ class ShowPlatformSoftwareFedSwitchStateIfmIfIdIf_id(
             m = p4_9.match(line)
             if m:
                 dict_val = m.groupdict()
-                if "port_l2_subblk" not in ret_dict:
-                    port_l2_subblk = ret_dict.setdefault("port_l2_subblk", {})
+                port_l2_subblk = ret_dict.setdefault("port_l2_subblk", {})
                 port_l2_subblk["ipv4_arp_snp"] = dict_val["ipv4_arp_snp"]
                 continue
 
@@ -5116,8 +5574,7 @@ class ShowPlatformSoftwareFedSwitchStateIfmIfIdIf_id(
             m = p4_10.match(line)
             if m:
                 dict_val = m.groupdict()
-                if "port_l2_subblk" not in ret_dict:
-                    port_l2_subblk = ret_dict.setdefault("port_l2_subblk", {})
+                port_l2_subblk = ret_dict.setdefault("port_l2_subblk", {})
                 port_l2_subblk["ipv6_arp_snp"] = dict_val["ipv6_arp_snp"]
                 continue
 
@@ -5125,8 +5582,7 @@ class ShowPlatformSoftwareFedSwitchStateIfmIfIdIf_id(
             m = p4_11.match(line)
             if m:
                 dict_val = m.groupdict()
-                if "port_l2_subblk" not in ret_dict:
-                    port_l2_subblk = ret_dict.setdefault("port_l2_subblk", {})
+                port_l2_subblk = ret_dict.setdefault("port_l2_subblk", {})
                 port_l2_subblk["jumbo_mtu"] = int(dict_val["jumbo_mtu"])
                 continue
 
@@ -5134,8 +5590,7 @@ class ShowPlatformSoftwareFedSwitchStateIfmIfIdIf_id(
             m = p4_12.match(line)
             if m:
                 dict_val = m.groupdict()
-                if "port_l2_subblk" not in ret_dict:
-                    port_l2_subblk = ret_dict.setdefault("port_l2_subblk", {})
+                port_l2_subblk = ret_dict.setdefault("port_l2_subblk", {})
                 port_l2_subblk["learning_mode"] = int(dict_val["learning_mode"])
                 continue
 
@@ -5143,8 +5598,7 @@ class ShowPlatformSoftwareFedSwitchStateIfmIfIdIf_id(
             m = p4_13.match(line)
             if m:
                 dict_val = m.groupdict()
-                if "port_l2_subblk" not in ret_dict:
-                    port_l2_subblk = ret_dict.setdefault("port_l2_subblk", {})
+                port_l2_subblk = ret_dict.setdefault("port_l2_subblk", {})
                 port_l2_subblk["vepa"] = dict_val["vepa"]
                 continue
 
@@ -5152,8 +5606,7 @@ class ShowPlatformSoftwareFedSwitchStateIfmIfIdIf_id(
             m = p4_14.match(line)
             if m:
                 dict_val = m.groupdict()
-                if "port_l2_subblk" not in ret_dict:
-                    port_l2_subblk = ret_dict.setdefault("port_l2_subblk", {})
+                port_l2_subblk = ret_dict.setdefault("port_l2_subblk", {})
                 port_l2_subblk["app_hosting"] = dict_val["app_hosting"]
                 continue
 
@@ -5161,8 +5614,7 @@ class ShowPlatformSoftwareFedSwitchStateIfmIfIdIf_id(
             m = p5.match(line)
             if m:
                 dict_val = m.groupdict()
-                if "port_qos_subblk" not in ret_dict:
-                    port_qos_subblk = ret_dict.setdefault("port_qos_subblk", {})
+                port_qos_subblk = ret_dict.setdefault("port_qos_subblk", {})
                 port_qos_subblk["trust_type"] = dict_val["trust_type"]
                 continue
 
@@ -5170,8 +5622,7 @@ class ShowPlatformSoftwareFedSwitchStateIfmIfIdIf_id(
             m = p5_1.match(line)
             if m:
                 dict_val = m.groupdict()
-                if "port_qos_subblk" not in ret_dict:
-                    port_qos_subblk = ret_dict.setdefault("port_qos_subblk", {})
+                port_qos_subblk = ret_dict.setdefault("port_qos_subblk", {})
                 port_qos_subblk["def_value"] = int(dict_val["def_value"])
                 continue
 
@@ -5179,8 +5630,7 @@ class ShowPlatformSoftwareFedSwitchStateIfmIfIdIf_id(
             m = p5_2.match(line)
             if m:
                 dict_val = m.groupdict()
-                if "port_qos_subblk" not in ret_dict:
-                    port_qos_subblk = ret_dict.setdefault("port_qos_subblk", {})
+                port_qos_subblk = ret_dict.setdefault("port_qos_subblk", {})
                 port_qos_subblk["ingrs_tbl_map"] = dict_val["ingrs_tbl_map"]
                 continue
 
@@ -5188,8 +5638,7 @@ class ShowPlatformSoftwareFedSwitchStateIfmIfIdIf_id(
             m = p5_3.match(line)
             if m:
                 dict_val = m.groupdict()
-                if "port_qos_subblk" not in ret_dict:
-                    port_qos_subblk = ret_dict.setdefault("port_qos_subblk", {})
+                port_qos_subblk = ret_dict.setdefault("port_qos_subblk", {})
                 port_qos_subblk["egrs_tbl_map"] = dict_val["egrs_tbl_map"]
                 continue
 
@@ -5197,8 +5646,7 @@ class ShowPlatformSoftwareFedSwitchStateIfmIfIdIf_id(
             m = p5_4.match(line)
             if m:
                 dict_val = m.groupdict()
-                if "port_qos_subblk" not in ret_dict:
-                    port_qos_subblk = ret_dict.setdefault("port_qos_subblk", {})
+                port_qos_subblk = ret_dict.setdefault("port_qos_subblk", {})
                 port_qos_subblk["q_map"] = dict_val["q_map"]
                 continue
 
@@ -5206,8 +5654,7 @@ class ShowPlatformSoftwareFedSwitchStateIfmIfIdIf_id(
             m = p6.match(line)
             if m:
                 dict_val = m.groupdict()
-                if "port_cts_subblk" not in ret_dict:
-                    port_cts_subblk = ret_dict.setdefault("port_cts_subblk", {})
+                port_cts_subblk = ret_dict.setdefault("port_cts_subblk", {})
                 port_cts_subblk["disable_sgacl"] = dict_val["disable_sgacl"]
                 continue
 
@@ -5215,8 +5662,7 @@ class ShowPlatformSoftwareFedSwitchStateIfmIfIdIf_id(
             m = p6_1.match(line)
             if m:
                 dict_val = m.groupdict()
-                if "port_cts_subblk" not in ret_dict:
-                    port_cts_subblk = ret_dict.setdefault("port_cts_subblk", {})
+                port_cts_subblk = ret_dict.setdefault("port_cts_subblk", {})
                 port_cts_subblk["trust"] = dict_val["trust"]
                 continue
 
@@ -5224,8 +5670,7 @@ class ShowPlatformSoftwareFedSwitchStateIfmIfIdIf_id(
             m = p6_2.match(line)
             if m:
                 dict_val = m.groupdict()
-                if "port_cts_subblk" not in ret_dict:
-                    port_cts_subblk = ret_dict.setdefault("port_cts_subblk", {})
+                port_cts_subblk = ret_dict.setdefault("port_cts_subblk", {})
                 port_cts_subblk["propagate"] = dict_val["propagate"]
                 continue
 
@@ -5233,8 +5678,7 @@ class ShowPlatformSoftwareFedSwitchStateIfmIfIdIf_id(
             m = p6_3.match(line)
             if m:
                 dict_val = m.groupdict()
-                if "port_cts_subblk" not in ret_dict:
-                    port_cts_subblk = ret_dict.setdefault("port_cts_subblk", {})
+                port_cts_subblk = ret_dict.setdefault("port_cts_subblk", {})
                 port_cts_subblk["port_sgt"] = dict_val["port_sgt"]
                 continue
 
@@ -5242,16 +5686,345 @@ class ShowPlatformSoftwareFedSwitchStateIfmIfIdIf_id(
             m = p7.match(line)
             if m:
                 dict_val = m.groupdict()
-                if "ifm_feature_ref_counts" not in ret_dict:
-                    ifm_feature_ref_counts = ret_dict.setdefault(
-                        "ifm_feature_ref_counts", {}
-                    )
+                ifm_feature_ref_counts = ret_dict.setdefault("ifm_feature_ref_counts", {})
                 ifm_feature_ref_counts["fid"] = dict_val["fid"]
                 ifm_feature_ref_counts["ref_count"] = int(dict_val["ref_count"])
                 continue
 
-        return ret_dict
+            # Affinity .......... [local]
+            m = p11.match(line)
+            if m:
+                dict_val = m.groupdict()
+                port_phy_sub = ret_dict.setdefault("port_phy_sub", {})
+                port_phy_sub["affinity"] = dict_val["affinity"]
+                continue
 
+            # LPN ............... [19]
+            m = p11_1.match(line)
+            if m:
+                dict_val = m.groupdict()
+                port_phy_sub = ret_dict.setdefault("port_phy_sub", {})
+                port_phy_sub["lpn"] = int(dict_val["lpn"])
+                continue
+
+            # GPN ............... [979]
+            m = p11_2.match(line)
+            if m:
+                dict_val = m.groupdict()
+                port_phy_sub = ret_dict.setdefault("port_phy_sub", {})
+                port_phy_sub["gpn"] = int(dict_val["gpn"])
+                continue
+
+            # Speed ............. [40GB]
+            m = p11_3.match(line)
+            if m:
+                dict_val = m.groupdict()
+                port_phy_sub = ret_dict.setdefault("port_phy_sub", {})
+                port_phy_sub["speed"] = dict_val["speed"]
+                continue
+
+            # type .............. [IFM_PORT_TYPE_L3]
+            m = p11_4.match(line)
+            if m:
+                dict_val = m.groupdict()
+                port_phy_sub = ret_dict.setdefault("port_phy_sub", {})
+                port_phy_sub["type"] = dict_val["type"]
+                continue
+
+            # MTU ............... [2022]
+            m = p11_5.match(line)
+            if m:
+                dict_val = m.groupdict()
+                port_phy_sub = ret_dict.setdefault("port_phy_sub", {})
+                port_phy_sub["mtu"] = int(dict_val["mtu"])
+                continue
+
+            # ac profile ........ [IFM_AC_PROFILE_DEFAULT]
+            m = p11_6.match(line)
+            if m:
+                dict_val = m.groupdict()
+                port_phy_sub = ret_dict.setdefault("port_phy_sub", {})
+                port_phy_sub["ac_profile"] = dict_val["ac_profile"]
+                continue
+
+            # Mac port oid................... [4444]
+            m = p12.match(line)
+            if m:
+                dict_val = m.groupdict()
+                port_sub = ret_dict.setdefault("port_sub", {})
+                port_sub["mac_port_oid"] = dict_val["mac_port_oid"]
+                continue
+
+            # System port oid................ [4448]
+            m = p12_1.match(line)
+            if m:
+                dict_val = m.groupdict()
+                port_sub = ret_dict.setdefault("port_sub", {})
+                port_sub["system_port_oid"] = dict_val["system_port_oid"]
+                continue
+
+            # System port gid................ [223]
+            m = p12_2.match(line)
+            if m:
+                dict_val = m.groupdict()
+                port_sub = ret_dict.setdefault("port_sub", {})
+                port_sub["system_port_gid"] = int(dict_val["system_port_gid"])
+                continue
+
+            # Ethernet port oid.............. [4459]
+            m = p12_3.match(line)
+            if m:
+                dict_val = m.groupdict()
+                port_sub = ret_dict.setdefault("port_sub", {})
+                port_sub["ethernet_port_oid"] = dict_val["ethernet_port_oid"]
+                continue
+            
+            # Port mode...................... [Dense Mode] 
+            m = p12_3_1.match(line)
+            if m:
+                dict_val = m.groupdict()
+                port_sub = ret_dict.setdefault("port_sub", {})
+                port_sub["port_sub_block_port_mode"] = dict_val["port_sub_block_port_mode"]
+                continue
+            
+            # Dense mode service port gid.... [122994] 
+            m = p12_3_2.match(line)
+            if m:
+                dict_val = m.groupdict()
+                port_sub = ret_dict.setdefault("port_sub", {})
+                port_sub["dense_mode_service_port_gid"] = dict_val["dense_mode_service_port_gid"]
+                continue
+            
+            # Dense mode service port oid.... [0xa0b(2571)] 
+            m = p12_3_3.match(line)
+            if m:
+                dict_val = m.groupdict()
+                port_sub = ret_dict.setdefault("port_sub", {})
+                port_sub["dense_mode_service_port_oid"] = dict_val["dense_mode_service_port_oid"]
+                continue
+
+            # Dense mode port vid............ [50] 
+            m = p12_3_4.match(line)
+            if m:
+                dict_val = m.groupdict()
+                port_sub = ret_dict.setdefault("port_sub", {})
+                port_sub["dense_mode_port_vid"] = dict_val["dense_mode_port_vid"]
+                continue
+
+            # Voq oid........................ [4446]
+            m = p12_4.match(line)
+            if m:
+                dict_val = m.groupdict()
+                port_sub = ret_dict.setdefault("port_sub", {})
+                port_sub["vog_oid"] = dict_val["vog_oid"]
+                continue
+
+            # Asic.............. [0]
+            m = p13.match(line)
+            if m:
+                dict_val = m.groupdict()
+                platform_sub = ret_dict.setdefault("platform_sub", {})
+                platform_sub["asic"] = int(dict_val["asic"])
+                continue
+
+            # Core.............. [5]
+            m = p13_1.match(line)
+            if m:
+                dict_val = m.groupdict()
+                platform_sub = ret_dict.setdefault("platform_sub", {})
+                platform_sub["core"] = int(dict_val["core"])
+                continue
+
+            # Asic Port......... [0]
+            m = p13_2.match(line)
+            if m:
+                dict_val = m.groupdict()
+                platform_sub = ret_dict.setdefault("platform_sub", {})
+                platform_sub["asic_port"] = int(dict_val["asic_port"])
+                continue
+
+            # Asic Sub Port..... [65535]
+            m = p13_3.match(line)
+            if m:
+                dict_val = m.groupdict()
+                platform_sub = ret_dict.setdefault("platform_sub", {})
+                platform_sub["asic_sub_port"] = int(dict_val["asic_sub_port"])
+                continue
+
+            # Ifg Id............ [0]
+            m = p13_4.match(line)
+            if m:
+                dict_val = m.groupdict()
+                platform_sub = ret_dict.setdefault("platform_sub", {})
+                platform_sub["ifg_id"] = int(dict_val["ifg_id"])
+                continue
+
+            # Mac Num........... [211]
+            m = p13_5.match(line)
+            if m:
+                dict_val = m.groupdict()
+                platform_sub = ret_dict.setdefault("platform_sub", {})
+                platform_sub["mac_num"] = int(dict_val["mac_num"])
+                continue
+
+            # First Serdes...... [10]
+            m = p13_6.match(line)
+            if m:
+                dict_val = m.groupdict()
+                platform_sub = ret_dict.setdefault("platform_sub", {})
+                platform_sub["first_serdes"] = int(dict_val["first_serdes"])
+                continue
+
+            # Last Serdes....... [11]
+            m = p13_7.match(line)
+            if m:
+                dict_val = m.groupdict()
+                platform_sub = ret_dict.setdefault("platform_sub", {})
+                platform_sub["last_serdes"] = int(dict_val["last_serdes"])
+                continue
+
+            # FC Mode........... [0]
+            m = p13_8.match(line)
+            if m:
+                dict_val = m.groupdict()
+                platform_sub = ret_dict.setdefault("platform_sub", {})
+                platform_sub["fc_mode"] = int(dict_val["fc_mode"])
+                continue
+
+            # FEC Mode.......... [0]
+            m = p13_9.match(line)
+            if m:
+                dict_val = m.groupdict()
+                platform_sub = ret_dict.setdefault("platform_sub", {})
+                platform_sub["fec_mode"] = int(dict_val["fec_mode"])
+                continue
+
+            # Context Id........ [0]
+            m = p13_10.match(line)
+            if m:
+                dict_val = m.groupdict()
+                platform_sub = ret_dict.setdefault("platform_sub", {})
+                platform_sub["context_id"] = int(dict_val["context_id"])
+                continue
+
+            # L2 Port Mode ................ [port_mode_dynamic]
+            m = p14.match(line)
+            if m:
+                dict_val = m.groupdict()
+                port_l2_sub = ret_dict.setdefault("port_l2_sub", {})
+                port_l2_sub["port_mode"] = dict_val["port_mode"]
+                continue
+
+            # L2 Port Mode set............. [No]
+            m = p14_1.match(line)
+            if m:
+                dict_val = m.groupdict()
+                port_l2_sub = ret_dict.setdefault("port_l2_sub", {})
+                port_l2_sub["port_mode_set"] = dict_val["port_mode_set"]
+                continue
+
+            # Default vlan ................ [0]
+            m = p14_2.match(line)
+            if m:
+                dict_val = m.groupdict()
+                port_l2_sub = ret_dict.setdefault("port_l2_sub", {})
+                port_l2_sub["vlan"] = int(dict_val["vlan"])
+                continue
+
+            # Ethertype.................... [8100]
+            m = p14_3.match(line)
+            if m:
+                dict_val = m.groupdict()
+                port_l2_sub = ret_dict.setdefault("port_l2_sub", {})
+                port_l2_sub["ethertype"] = int(dict_val["ethertype"])
+                continue
+            
+            # Port vlan  .................. [50] 
+            # Port vlan  .................. [50] 
+            m = p14_3_1.match(line)
+            if m:
+                dict_val = m.groupdict()
+                if "port_l2_sub" not in ret_dict:
+                    port_l2_sub = ret_dict.setdefault("port_l2_sub", {})
+                if "l2_sub_block_port_vlan" not in port_l2_sub:
+                    l2_sub_block_port_vlan = port_l2_sub.setdefault("l2_sub_block_port_vlan", {})
+                l2_sub_block_port_vlan["l2_sub_block_port_vlan"] = int(dict_val["l2_sub_block_port_vlan"])
+                continue
+            
+            # Native vlan (trunk) .............. [0]
+            m = p14_3_2.match(line)
+            if m:
+                dict_val = m.groupdict()
+                if "port_l2_sub" not in ret_dict:
+                    port_l2_sub = ret_dict.setdefault("port_l2_sub", {})
+                if "l2_sub_block_port_vlan" not in l2_sub_block_port_vlan:
+                    l2_sub_block_port_vlan = l2_sub_block_port_vlan.setdefault("l2_sub_block_port_vlan", {})
+                l2_sub_block_port_vlan["native_vlan_trunk"] = int(dict_val["native_vlan_trunk"])
+                continue
+            
+            #  Untagged port bd vlan (access) ... [50]
+            m = p14_3_3.match(line)
+            if m:
+                dict_val = m.groupdict()
+                if "port_l2_sub" not in ret_dict:
+                    port_l2_sub = ret_dict.setdefault("port_l2_sub", {})
+                if "l2_sub_block_port_vlan" not in l2_sub_block_port_vlan:
+                    l2_sub_block_port_vlan = l2_sub_block_port_vlan.setdefault("l2_sub_block_port_vlan", {})
+                l2_sub_block_port_vlan["untagged_port_bd_vlan"] = int(dict_val["untagged_port_bd_vlan"])
+                continue
+            
+            #  Default vlan (dot1q tunnel) ...... [0]
+            m = p14_3_4.match(line)
+            if m:
+                dict_val = m.groupdict()
+                if "port_l2_sub" not in ret_dict:
+                    port_l2_sub = ret_dict.setdefault("port_l2_sub", {})
+                if "l2_sub_block_port_vlan" not in l2_sub_block_port_vlan:
+                    l2_sub_block_port_vlan = l2_sub_block_port_vlan.setdefault("l2_sub_block_port_vlan", {})
+                l2_sub_block_port_vlan["default_vlan"] = int(dict_val["default_vlan"])
+                continue
+            
+            # Native Vlan Tagging.......... [Native Vlan None]
+            m = p14_3_5.match(line)
+            if m:
+                dict_val = m.groupdict()
+                port_l2_sub = ret_dict.setdefault("port_l2_sub", {})
+                port_l2_sub["native_vlan_tagging"] = dict_val["native_vlan_tagging"]
+                continue
+            
+            # untagged port bd vlan ....... [0]
+            m = p14_4.match(line)
+            if m:
+                dict_val = m.groupdict()
+                port_l2_sub = ret_dict.setdefault("port_l2_sub", {})
+                port_l2_sub["bd_vlan"] = int(dict_val["bd_vlan"])
+                continue
+
+            # status....................... [0]
+            m = p14_5.match(line)
+            if m:
+                dict_val = m.groupdict()
+                port_l2_sub = ret_dict.setdefault("port_l2_sub", {})
+                port_l2_sub["status"] = int(dict_val["status"])
+                continue
+
+            # ac profile .................. [IFM_AC_PROFILE_DEFAULT]
+            m = p14_6.match(line)
+            if m:
+                dict_val = m.groupdict()
+                port_l2_sub = ret_dict.setdefault("port_l2_sub", {})
+                port_l2_sub["ac_profile"] = dict_val["ac_profile"]
+                continue
+
+            # # Port CTS Subblock is NULL if_id = 0x14c3c6db 
+            m = p19.match(line)
+            if m:
+                dict_val = m.groupdict()
+                port_cts_subblk = ret_dict.setdefault("port_cts_subblk", {})
+                port_cts_subblk["cts_if_id"] = dict_val["cts_if_id"]
+                continue
+
+        return ret_dict
 
 # ======================================================
 # Parser for 'show platform software fed {switch} active ifm interfaces vlan',
@@ -5951,11 +6724,13 @@ class ShowPlatformSoftwareFedSwitchSwitchFnfFlowRecordAsicAsicStartIndexIndexNum
 # ======================================================
 # Parser for 'show platform software fed {switch} {mode} acl info db summary '
 # ======================================================
-
-
 class ShowPlatformSoftwareFedSwitchActiveAclInfoDbSummarySchema(MetaParser):
-    """Schema for show platform software fed {switch} {mode} acl info db summary"""
-
+    """Schema for:
+       'show platform software fed switch active acl info db summary'
+       'show platform software fed {switch} {mode} acl info db summary'
+       'show platform software fed {mode} acl info db summary'
+       'show platform software fed {switch} {mode} acl info db feature sgacl summary'
+    """
     schema = {
         "acl_summary": {
             Any(): {
@@ -5973,15 +6748,24 @@ class ShowPlatformSoftwareFedSwitchActiveAclInfoDbSummarySchema(MetaParser):
 class ShowPlatformSoftwareFedSwitchActiveAclInfoDbSummary(
     ShowPlatformSoftwareFedSwitchActiveAclInfoDbSummarySchema
 ):
-    """Parser for show platform software fed {switch} {mode} acl info db summary"""
+    """Parser for:
+       'show platform software fed switch active acl info db summary'
+       'show platform software fed {switch} {mode} acl info db summary'
+       'show platform software fed {mode} acl info db summary'
+       'show platform software fed {switch} {mode} acl info db feature sgacl summary'
+    """
+    cli_command = [
+        "show platform software fed switch active acl info db summary",
+        "show platform software fed {switch} {mode} acl info db summary",
+        "show platform software fed {mode} acl info db summary",
+        "show platform software fed {switch} {mode} acl info db feature {feature_name} summary"
+    ]
 
-    cli_command = ["show platform software fed switch active acl info db summary",
-                   "show platform software fed {switch} {mode} acl info db summary",
-                    "show platform software fed {mode} acl info db summary"]
-
-    def cli(self, switch=None, mode=None, output=None):
+    def cli(self, switch=None, mode=None, feature_name=None, output=None):
         if output is None:
-            if switch and mode:
+            if switch and mode and feature_name:
+                cmd = self.cli_command[3].format(switch=switch, mode=mode, feature_name=feature_name)
+            elif switch and mode:
                 cmd = self.cli_command[1].format(switch=switch, mode=mode)
             elif mode:
                 cmd = self.cli_command[2].format(mode=mode)
@@ -6018,7 +6802,7 @@ class ShowPlatformSoftwareFedSwitchActiveAclInfoDbSummary(
                 int_dict["egress"] = group["egress"]
                 continue
 
-        return ret_dict
+        return ret_dict   
 
 
 # ============================================================================
@@ -9418,21 +10202,6 @@ class ShowPlatformSoftwareFedSwitchActiveipecrexactroutesourceipdestinationip(Sh
 
         return ret_dict
 
-class ShowPlatformSoftwareFedSwitchActiveInjectBriefSchema(MetaParser):
-    """
-    Schema for show platform software fed switch active inject ios-cause brief
-    """
-
-    schema = {
-        "cause_dict": {
-            Any(): {
-                "cause": int,
-                "rcvd": int,
-                "dropped": int,
-            },
-        },
-    }
-
 # ====================================================
 # Parser for show platform software fed igmp snooping vlan detail'
 # ====================================================
@@ -9464,10 +10233,18 @@ class ShowPlatformSoftwareFedIgmpSnoopingVlanDetailSchema(MetaParser):
                 Optional("secondary_vlan"): str,
                 Optional("vlan_urid"): str,
                 Optional("d_users_count"): str,
+                Optional("fset_urid_hash"): str,
+                Optional("fset_aux_urid"): str,
+                Optional("gid"): int,
+                Optional("mcid_asic"): int,
+                Optional("hw_info_asic"): 
+                {
+                    "hw_vlan_mcid_oid": str,
+                    "multicast_state": str
+                }
             }
         }
     }
-
 
 class ShowPlatformSoftwareFedIgmpSnoopingVlanDetail(ShowPlatformSoftwareFedIgmpSnoopingVlanDetailSchema):
     """Parser for show Platform Software fed igmp snooping vlan detail"""
@@ -9587,12 +10364,31 @@ class ShowPlatformSoftwareFedIgmpSnoopingVlanDetail(ShowPlatformSoftwareFedIgmpS
 
         # Secondary Vlan          : NO
         p17 = re.compile(r'^Secondary\s+Vlan\s+:\s+(?P<secondary_vlan>[\s\w\s]+)$')
-
+            
         # Vlan Urid               : 0x5000000000000008
         p18 = re.compile(r'^Vlan\s+Urid\s+:\s+(?P<vlan_urid>[\s\w\s]+)$')
 
+        #  Fset Urid ( hash )      : 0x20000000000009af ( ed2a6e06 )
+        p18_1 = re.compile(r'^Fset Urid \( hash \)\s+:\s+(?P<fset_urid_hash>[\S+\s]+.)$')
+
+        # Fset Aux Urid           : 0x0
+        p18_2 = re.compile(r'^Fset Aux Urid\s+:\s+(?P<fset_aux_urid>\S+)$')
+            
         # Dependant users count   : 0
         p19 = re.compile(r'^Dependant\s+users\s+count\s+:\s+(?P<d_users_count>[\s\w\s]+)$')
+
+        # Gid                     : 10604
+        p20= re.compile(r'^Gid\s+:\s+(?P<gid>\d+)$')
+
+        # Mcid Asic[0]            : 8997
+        p21 = re.compile(r'^Mcid Asic\[(?P<asic>\d+)\]\s+:\s+(?P<mcid>\d+)$')
+
+        # Hw Vlan Mcid Oid    : 8997 (cookie:urid:0x20::9af)
+        p22 = re.compile(r'Hw Vlan Mcid Oid\s+:\s+(?P<hw_vlan_mcid_oid>[\S\s]+.)$')
+
+        # Multicast state     : disabled
+        p23 = re.compile(r'Multicast state\s+:\s+(?P<multicast_state>[\S\s]+.)$')
+
 
         port_list = None
         mroute_list = []
@@ -9757,21 +10553,73 @@ class ShowPlatformSoftwareFedIgmpSnoopingVlanDetail(ShowPlatformSoftwareFedIgmpS
             if m:
                 mac_dict['secondary_vlan'] = m.groupdict()['secondary_vlan']
                 continue
-
+    
             # Vlan Urid               : 0x5000000000000008
             m = p18.match(line)
             if m:
                 mac_dict['vlan_urid'] = m.groupdict()['vlan_urid']
                 continue
 
+            # Fset Urid ( hash )      : 0x20000000000009af ( ed2a6e06 )
+            match = p18_1.match(line)
+            if match:
+                mac_dict['fset_urid_hash'] = match.group('fset_urid_hash')
+                continue
+
+            # Fset Aux Urid           : 0x0
+            match = p18_2.match(line)
+            if match:
+                mac_dict['fset_aux_urid'] = match.group('fset_aux_urid')
+                continue
+    
             # Dependant users count   : 0
             m = p19.match(line)
             if m:
                 mac_dict['d_users_count'] = m.groupdict()['d_users_count']
                 continue
 
-        return platform_dict
+            #  Gid                     : 10604
+            match = p20.match(line)
+            if match:
+                mac_dict['gid'] = int(match.group('gid'))
+                continue
 
+            # Mcid Asic[0]            : 8997
+            match = p21.match(line)
+            if match:
+                mac_dict['mcid_asic'] = int(match.group('mcid'))
+                continue
+
+            # Hw Vlan Mcid Oid    : 8997 (cookie:urid:0x20::9af)
+            match = p22.match(line)
+            if match:
+                mac_dict.setdefault('hw_info_asic', {})
+                mac_dict['hw_info_asic']['hw_vlan_mcid_oid'] = match.group('hw_vlan_mcid_oid')
+                continue
+
+            # Multicast state     : disabled
+            match = p23.match(line)
+            if match:
+                mac_dict.setdefault('hw_info_asic', {})
+                mac_dict['hw_info_asic']['multicast_state'] = match.group('multicast_state')
+                continue
+
+        return platform_dict
+    
+class ShowPlatformSoftwareFedSwitchActiveInjectBriefSchema(MetaParser):
+    """
+    Schema for show platform software fed switch active inject ios-cause brief
+    """
+
+    schema = {
+        "cause_dict": {
+            Any(): {
+                "cause": int,
+                "rcvd": int,
+                "dropped": int,
+            },
+        },
+    }
 
 class ShowPlatformSoftwareFedSwitchActiveInjectBrief(
     ShowPlatformSoftwareFedSwitchActiveInjectBriefSchema
@@ -13420,11 +14268,16 @@ class ShowPlatformSoftwareFedSwitchActiveOifsetL3mHashSchema(MetaParser):
 class ShowPlatformSoftwareFedSwitchActiveOifsetL3mHash(ShowPlatformSoftwareFedSwitchActiveOifsetL3mHashSchema):
     """Parser for 'show platform software fed switch active oifset l3m hash 35ddf2ee detail'"""
 
-    cli_command = 'show platform software fed switch active oifset l3m hash {hash} detail'
-
-    def cli(self, hash, output=None):
+    cli_command = [
+        'show platform software fed switch {switch} {module} oifset l3m',
+        'show platform software fed switch {switch} {module} oifset l3m hash {hash} detail'
+    ]
+    def cli(self, switch='', module='', hash='', output=None):
         if output is None:
-            cmd = self.cli_command.format(hash=hash)
+            if hash:
+                cmd = self.cli_command[1].format(switch=switch, module=module, hash=hash)
+            else:
+                cmd = self.cli_command[0].format(switch=switch, module=module)
             output = self.device.execute(cmd)
 
         # Initialize an empty result dictionary
@@ -13607,16 +14460,16 @@ class ShowPlatformSoftwareFedSwitchActiveIpMulticastInterface(ShowPlatformSoftwa
     """
 
     cli_command = [
-        "show platform software fed switch {module} ip multicast interface {if_id}",
-        "show platform software fed switch {module} ipv6 multicast interface {if_id}"
+        "show platform software fed {switch} {module} {ip_type} multicast interface {if_id}",
+        "show platform software fed {module} {ip_type} multicast interface {if_id}"
     ]
 
-    def cli(self, module, if_id, ipv6=None, output=None):
+    def cli(self, module, if_id, switch='', ip_type='', output=None):
         if output is None:
-            if ipv6:
-                cmd = self.cli_command[1].format(module=module, if_id=if_id)
+            if switch:
+                cmd = self.cli_command[0].format(module=module, if_id=if_id, switch=switch, ip_type=ip_type)
             else:
-                cmd = self.cli_command[0].format(module=module, if_id=if_id)
+                cmd = self.cli_command[1].format(module=module, if_id=if_id, ip_type=ip_type)
             output = self.device.execute(cmd)
 
         # Initialize result dictionary
@@ -13665,7 +14518,7 @@ class ShowPlatformSoftwareFedSwitchActivePortIfIdSchema(MetaParser):
         "if_name": str,
         "enable": bool,
         "speed": str,
-        "operational_speed": int,
+        "operational_speed": Or(int, str),
         "duplex": str,
         "operational_duplex": str,
         "flowctrl": str,
@@ -13711,7 +14564,7 @@ class ShowPlatformSoftwareFedSwitchActivePortIfId(ShowPlatformSoftwareFedSwitchA
         p4 = re.compile(r'^speed\s*:\s*(?P<speed>\S+)$')
 
         # operational speed : 100
-        p5 = re.compile(r'^operational speed\s*:\s*(?P<operational_speed>\d+)$')
+        p5 = re.compile(r'^operational speed\s*:\s*(?P<operational_speed>\S+)$')
 
         # duplex : auto
         p6 = re.compile(r'^duplex\s*:\s*(?P<duplex>\S+)$')
@@ -13782,7 +14635,10 @@ class ShowPlatformSoftwareFedSwitchActivePortIfId(ShowPlatformSoftwareFedSwitchA
             # operational speed: 2500
             m = p5.match(line)
             if m:
-                ret_dict['operational_speed'] = int(m.groupdict()['operational_speed'])
+                try:
+                    ret_dict['operational_speed'] = int(m.groupdict()['operational_speed'])
+                except ValueError:
+                    ret_dict['operational_speed'] = m.groupdict()['operational_speed']
                 continue
 
             # duplex: auto
@@ -14731,3 +15587,1339 @@ class ShowPlatformSoftwareFedSwitchActiveOifset(ShowPlatformSoftwareFedSwitchAct
                 continue
 
         return ret_dict
+    
+class ShowPlatformSoftwareFedSwAcAccessSecurityAuthAclSumSchema(MetaParser):
+    """Schema for 'show platform software fed switch {switch_type} access-security auth-acl sum'"""
+    schema = {
+        'auth_acl_summary': {
+            Any(): {
+                'asic': int,
+                'auth_behavior': str,
+                'ipv4_acl_oid': int,
+                'ipv4_drop_count': int,
+                'ipv6_acl_oid': int,
+                'ipv6_drop_count': int,
+                'mac_acl_oid': int,
+                'mac_drop_count': int,
+            }
+        }
+    }
+
+class ShowPlatformSoftwareFedSwAcAccessSecurityAuthAclSum(ShowPlatformSoftwareFedSwAcAccessSecurityAuthAclSumSchema):
+    """Parser for 'show platform software fed switch {switch_type} access-security auth-acl summary'"""
+
+    cli_command = 'show platform software fed switch {switch_type} access-security auth-acl summary'
+
+    def cli(self, switch_type, output=None):
+        if output is None:
+            output = self.device.execute(
+                self.cli_command.format(switch_type=switch_type)
+            )
+
+        # Initialize parsed_data as an empty dictionary
+        parsed_data = {}
+        
+        # 0    FWD_ALL_LRN_ALL    487                   0                     497                   0                     507                   0
+        # 0    FWD_ALL_LRN_DATA   489                   0                     499                   0                     509                   0
+        # 0    DROP_ALL_NO_LRN    491                   0                     501                   0                     511                   0
+        # 0    DROP_ALL_LRN_DATA  494                   0                     504                   0                     514                   0
+        p1 = re.compile(
+            r'(?P<asic>\d+)\s+(?P<auth_behavior>\S+)\s+(?P<ipv4_acl_oid>\d+)\s+(?P<ipv4_drop_count>\d+)\s+(?P<ipv6_acl_oid>\d+)\s+(?P<ipv6_drop_count>\d+)\s+(?P<mac_acl_oid>\d+)\s+(?P<mac_drop_count>\d+)'
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # 0    FWD_ALL_LRN_ALL    487                   0                     497                   0                     507                   0
+            # 0    FWD_ALL_LRN_DATA   489                   0                     499                   0                     509                   0
+            # 0    DROP_ALL_NO_LRN    491                   0                     501                   0                     511                   0
+            # 0    DROP_ALL_LRN_DATA  494                   0                     504                   0                     514                   0
+            match = p1.match(line)
+            if match:
+                key = f"{match.group('asic')}_{match.group('auth_behavior')}"
+                parsed_data.setdefault("auth_acl_summary",{})
+                parsed_data['auth_acl_summary'][key] = {
+                    'asic': int(match.group('asic')),
+                    'auth_behavior': match.group('auth_behavior'),
+                    'ipv4_acl_oid': int(match.group('ipv4_acl_oid')),
+                    'ipv4_drop_count': int(match.group('ipv4_drop_count')),
+                    'ipv6_acl_oid': int(match.group('ipv6_acl_oid')),
+                    'ipv6_drop_count': int(match.group('ipv6_drop_count')),
+                    'mac_acl_oid': int(match.group('mac_acl_oid')),
+                    'mac_drop_count': int(match.group('mac_drop_count'))
+                }
+
+        return parsed_data
+
+class ShowPlatformsoftwarefedswitchactivesecurityfedpmifidSchema(MetaParser):
+    """Schema for 'show platform security pm information'"""
+
+    schema = {
+        'iif_id': str,
+        'iif_name': str,
+        'auth_behavior': {
+            'value': int,
+            'description': str,
+        },
+        'secure_feature': {
+            'flags': str,
+            'description': str,
+        },
+        'psec_inactivity_time': int,
+        Optional('l2_port_platform_information'): {
+            'security_feature_flags': {
+                'description': str,
+                'asic': int,
+                'accsec_logical_id': int,
+            },
+            'accsec_auth_acl_behavior': str,
+            'l2_port_accsec_feature': str,
+            'accsec_table_feature_type': str,
+            'accsec_table_mask_type': str,
+        }
+    }
+
+class ShowPlatformsoftwarefedswitchactivesecurityfedpmifid(ShowPlatformsoftwarefedswitchactivesecurityfedpmifidSchema):
+    """Parser for 'show platform software fed switch {switch_type} security-fed pm if-id {port_if_id} '"""
+
+    cli_command = "show platform software fed switch {switch_type} security-fed pm if-id {port_if_id}"
+
+    def cli(self, switch_type,port_if_id,output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(switch_type=switch_type, port_if_id=port_if_id))
+
+        # Initialize the dictionary
+        ret_dict = {}
+
+        # IIF-ID   = 000000000000040d 
+        p1 = re.compile(r'IIF-ID\s*=\s*(?P<iif_id>\S+)')
+
+        # IIF-Name = GigabitEthernet1/0/6
+        p2 = re.compile(r'IIF-Name\s*=\s*(?P<iif_name>\S+)')
+
+        # Auth Behavior Value  = 3
+        p3 = re.compile(r'Auth Behavior Value\s*=\s*(?P<value>\d+)')
+
+        # Auth Behavior Desc   = AL_BH_DROP_ALL_LRN_DATA
+        p4 = re.compile(r'Auth Behavior Desc\s*=\s*(?P<description>\S+)')
+
+        # Secure Feature Flags = 0x1
+        p5 = re.compile(r'Secure Feature Flags\s*=\s*(?P<flags>\S+)')
+
+        # Secure Feature Desc  = dot1x
+        p6 = re.compile(r'Secure Feature Desc\s*=\s*(?P<description>\S+)')
+
+        # PSec Inactivity Time = 0
+        p7 = re.compile(r'PSec Inactivity Time\s*=\s*(?P<time>\d+)')
+
+        # Security Feature Flags: dot1x (Asic: 0; Accsec Logical ID: 0)
+        p8 = re.compile(r'Security Feature Flags:\s*(?P<description>\S+)\s*\(Asic:\s*(?P<asic>\d+);\s*Accsec Logical ID:\s*(?P<accsec_logical_id>\d+)\)')
+
+        # @la_accsec_auth_acl_bh:LA_ACCSEC_AUTH_ACL_BH_DROP_ALL_LRN_DATA
+        p9 = re.compile(r'@la_accsec_auth_acl_bh:(?P<accsec_auth_acl_behavior>\S+)')
+
+        # @l2_port_accsec_ftr:L2_PORT_ACCSEC_FTR_ENABLE
+        p10 = re.compile(r'@l2_port_accsec_ftr:(?P<l2_port_accsec_feature>\S+)')
+
+        # @la_accsec_table_ftr_type:LA_ACCSEC_TBL_FTR_TYPE_DEFAULT_CLIENT
+        p11 = re.compile(r'@la_accsec_table_ftr_type:(?P<accsec_table_feature_type>\S+)')
+
+        # @la_accsec_table_mask_type:LA_ACCSEC_TBL_MASK_TYPE_PORT_ONLY
+        p12 = re.compile(r'@la_accsec_table_mask_type:(?P<accsec_table_mask_type>\S+)')
+
+        # Loop through each line of the output
+        for line in output.splitlines():
+            line = line.strip()
+
+            # IIF-ID   = 000000000000040d 
+            m = p1.match(line)
+            if m:
+                ret_dict['iif_id'] = m.group('iif_id')
+                continue
+
+            # IIF-Name = GigabitEthernet1/0/6 
+            m = p2.match(line)
+            if m:
+                ret_dict['iif_name'] = m.group('iif_name')
+                continue
+
+            # Auth Behavior Value  = 3
+            m = p3.match(line)
+            if m:
+                ret_dict.setdefault('auth_behavior', {})['value'] = int(m.group('value'))
+                continue
+
+            # Auth Behavior Desc   = AL_BH_DROP_ALL_LRN_DATA
+            m = p4.match(line)
+            if m:
+                ret_dict['auth_behavior']['description'] = m.group('description')
+                continue
+
+            # Secure Feature Flags = 0x1
+            m = p5.match(line)
+            if m:
+                ret_dict.setdefault('secure_feature', {})['flags'] = m.group('flags')
+                continue
+
+            # Secure Feature Desc  = dot1x
+            m = p6.match(line)
+            if m:
+                ret_dict['secure_feature']['description'] = m.group('description')
+                continue
+
+            # PSec Inactivity Time = 0
+            m = p7.match(line)
+            if m:
+                ret_dict['psec_inactivity_time'] = int(m.group('time'))
+                continue
+
+            # Security Feature Flags: dot1x (Asic: 0; Accsec Logical ID: 0)
+            m = p8.match(line)
+            if m:
+                l2_port_platform = ret_dict.setdefault('l2_port_platform_information', {})
+                l2_port_platform.setdefault('security_feature_flags', {})['description'] = m.group('description')
+                l2_port_platform['security_feature_flags']['asic'] = int(m.group('asic'))
+                l2_port_platform['security_feature_flags']['accsec_logical_id'] = int(m.group('accsec_logical_id'))
+                continue
+
+            # @la_accsec_auth_acl_bh:LA_ACCSEC_AUTH_ACL_BH_DROP_ALL_LRN_DATA
+            m = p9.match(line)
+            if m:
+                ret_dict['l2_port_platform_information']['accsec_auth_acl_behavior'] = m.group('accsec_auth_acl_behavior')
+                continue
+
+            # @l2_port_accsec_ftr:L2_PORT_ACCSEC_FTR_ENABLE
+            m = p10.match(line)
+            if m:
+                ret_dict['l2_port_platform_information']['l2_port_accsec_feature'] = m.group('l2_port_accsec_feature')
+                continue
+
+            # @la_accsec_table_ftr_type:LA_ACCSEC_TBL_FTR_TYPE_DEFAULT_CLIENT
+            m = p11.match(line)
+            if m:
+                ret_dict['l2_port_platform_information']['accsec_table_feature_type'] = m.group('accsec_table_feature_type')
+                continue
+
+            # @la_accsec_table_mask_type:LA_ACCSEC_TBL_MASK_TYPE_PORT_ONLY
+            m = p12.match(line)
+            if m:
+                ret_dict['l2_port_platform_information']['accsec_table_mask_type'] = m.group('accsec_table_mask_type')
+                continue
+
+        return ret_dict
+    
+class ShowPlatformSoftwareFedSwitchActiveAclInfoDbFeatureCgAclSummarySchema(MetaParser):
+    """Schema for show platform software fed switch active acl info db feature cgacl summary"""
+
+    schema = {
+        'cg_id': {
+          Any(): { 
+                'acl_name': str,
+                'feature': str,
+                'no_of_aces': int,
+                'protocol': str,
+                'ingress': str,
+                'egress': str,
+            }
+        }
+    }
+    
+
+class ShowPlatformSoftwareFedSwitchActiveAclInfoDbFeatureCgAclSummary(ShowPlatformSoftwareFedSwitchActiveAclInfoDbFeatureCgAclSummarySchema):
+    """Parser for show platform software fed switch active acl info db feature cgacl summary"""
+
+    cli_command = 'show platform software fed switch {switch_mode} acl info db feature cgacl summary'
+
+    def cli(self, switch_mode , output=None):
+        if output is None:
+            cmd = self.cli_command.format(switch_mode=switch_mode)
+            output = self.device.execute(cmd) 
+                   
+        # 1040      implicit_deny:xACSACLx-IP-S1_PermitGW_DenyOther_V4-669eaa40:  Cgacl         8                 IPv4           Y              N
+        p1 = re.compile(r"^\s*(?P<cg_id>\d+)\s+(?P<acl_name>[\w!:\-x]+)\s+(?P<feature>\S+)\s+(?P<no_of_aces>\d+)\s+(?P<protocol>\S+)\s+(?P<ingress>\S+)\s+(?P<egress>\S+)$")
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # 1040      implicit_deny:xACSACLx-IP-S1_PermitGW_DenyOther_V4-669eaa40:  Cgacl         8                 IPv4           Y              N
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                index = int(group['cg_id'])
+                ret_dict.setdefault('cg_id', {})
+                ret_dict['cg_id'][index] = {
+                    'acl_name': group['acl_name'],
+                    'feature': group['feature'],
+                    'no_of_aces': int(group['no_of_aces']),
+                    'protocol': group['protocol'],
+                    'ingress': group['ingress'],
+                    'egress': group['egress'],
+                }
+            continue
+        return ret_dict
+
+class ShowPlatSoftFedSwAcAccessSecurityDcTableSummarySchema(MetaParser):
+    """Schema for
+    show plat soft fed sw ac access-security dc-table summary
+    """
+
+    schema = {
+        'dc_table_summary': {
+            Any(): {
+                'interface': str,
+                'logical_id': int,
+                'position': int,
+                'asic': int,
+                'auth_act': str,
+                'restore_auth_act': str,
+                'flag': str,
+                'policy_oid': int,
+                'packets': int
+            }
+        }
+    }
+
+class ShowPlatSoftFedSwAcAccessSecurityDcTableSummary(ShowPlatSoftFedSwAcAccessSecurityDcTableSummarySchema):
+    """Parser for
+    show plat soft fed sw ac access-security dc-table summary
+    show plat soft fed sw ac access-security dc-table interface if-id {port_if_id}
+    """
+
+    cli_command = [
+        "show platform software fed {switch} {mode} access-security dc-table summary",
+        "show platform software fed {switch} {mode} access-security dc-table interface if-id {port_if_id}"
+    ]
+
+    def cli(self, switch='', mode='', port_if_id='', output=None):
+        if output is None:
+            if port_if_id:
+                cmd = self.cli_command[1].format(switch=switch, mode=mode, port_if_id=port_if_id)
+            else:
+                cmd = self.cli_command[0].format(switch=switch, mode=mode)
+
+            output = self.device.execute(cmd)
+
+        # Interface    Logical-ID Position   Asic# Auth-Act           Restore-Auth-Act   Flag         Policy-OID Packets    
+        # --- ------------ ---------- ---------- ----- ------------------ ------------------ ------------ ---------- ---------- 
+        # 1 Gi2/0/10     0          24576      0     DROP_ALL_LRN_DATA  None               NONE         573        152725830 
+        p1 = re.compile(r'(?P<index>\d+)\s+(?P<interface>\S+)\s+(?P<logical_id>\d+)\s+(?P<position>\d+)\s+(?P<asic>\d+)\s+(?P<auth_act>\S+)\s+(?P<restore_auth_act>\S+)\s+(?P<flag>\S+)\s+(?P<policy_oid>\d+)\s+(?P<packets>\d+)$')
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                index = int(group['index'])
+    
+                # Interface    Logical-ID Position   Asic# Auth-Act           Restore-Auth-Act   Flag         Policy-OID Packets    
+                # --- ------------ ---------- ---------- ----- ------------------ ------------------ ------------ ---------- ---------- 
+                # 1 Gi2/0/10     0          24576      0     DROP_ALL_LRN_DATA  None               NONE         573        152725830 
+    
+                ret_dict.setdefault('dc_table_summary', {})[index] = {
+                    'interface': group['interface'],
+                    'logical_id': int(group['logical_id']),
+                    'position': int(group['position']),
+                    'asic': int(group['asic']),
+                    'auth_act': group['auth_act'],
+                    'restore_auth_act': group['restore_auth_act'],
+                    'flag': group['flag'],
+                    'policy_oid': int(group['policy_oid']),
+                    'packets': int(group['packets']),
+                }
+                continue
+
+        return ret_dict
+    
+class ShowPlatformSoftwareFedSwitchActiveIpIgmpSnoopingGroupsVlanSchema(MetaParser):
+    """Schema for 
+    Show platform software fed {switch} {module} ip igmp snooping groups vlan {vlan_id} {group} detail
+    Show platform software fed {switch} {module}  ipv6 mld snooping group vlan  {vlan_id} {group} detail"""
+
+    schema = {
+        "vlan": int,
+        "ip_address": str,
+        "member_ports_count": int,
+        Optional("member_ports"): str,
+        "dependant_users_count": int,
+        "group_urid": str,
+        "fset_urid_hash": str,
+        "fset_aux_urid": str,
+        "layer_3_stub_entry": str,
+        "ec_seed": int,
+        "gid": int,
+        "mcid_asic": int,
+        "hw_info_asic": {
+            "hw_group_entry_asic": str
+        }
+    }
+
+class ShowPlatformSoftwareFedSwitchActiveIpIgmpSnoopingGroupsVlan(ShowPlatformSoftwareFedSwitchActiveIpIgmpSnoopingGroupsVlanSchema):
+    """Parser for 
+    Show platform software fed {switch} {module} ip igmp snooping groups vlan {vlan_id} {group} detail
+    Show platform software fed {switch} {module}  ipv6 mld snooping group vlan  {vlan_id} {group} detail"""
+
+
+    cli_command = 'show platform software fed switch {switch_type} {ip_type} {snooping_type} snooping groups vlan {vlan_id} {group} detail'
+
+    def cli(self, switch_type, vlan_id='', group='', snooping_type='', ip_type='', output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(switch_type=switch_type, ip_type=ip_type, snooping_type=snooping_type, vlan_id=vlan_id, group=group))
+
+        ret_dict = {}
+
+        # (Vlan: 3300, 225.1.1.1)
+        p1 = re.compile(r'^\(Vlan: (?P<vlan>\d+), (?P<ip_address>\S+)\)$')
+
+        # Member ports            : 1
+        p2 = re.compile(r'^Member ports\s+:\s+(?P<member_ports_count>\d+)$')
+
+        # GigabitEthernet3/0/18
+        p3 = re.compile(r'(?P<intf>(?:\S+?gigabit\S*|[A-Za-z]+[0-9\/]+))$')
+
+        # Dependent Users Count   : 0
+        p4 = re.compile(r'^Dependent Users Count\s+:\s+(?P<dependant_users_count>\d+)$')
+
+        # Group Urid              : 0x6000000000004c92
+        p5 = re.compile(r'^Group Urid\s+:\s+(?P<group_urid>\S+)$')
+
+        # Fset Urid ( Hash )      : 0x20000000000009b3 ( 99661bff )
+        p6 = re.compile(r'^Fset Urid \( Hash \)\s+:\s+(?P<fset_urid_hash>[\S\s]+)$')
+
+        # Fset Aux Urid           : 0x0
+        p7 = re.compile(r'^Fset Aux Urid\s+:\s+(?P<fset_aux_urid>\S+)$')
+
+        # Layer 3 Stub Entry      : No
+        p8 = re.compile(r'^Layer 3 Stub Entry\s+:\s+(?P<layer_3_stub_entry>\S+)$')
+
+        # Ec seed                 : 4
+        p9 = re.compile(r'^Ec seed\s+:\s+(?P<ec_seed>\d+)$')
+
+        # Gid                     : 10618
+        p10 = re.compile(r'^Gid\s+:\s+(?P<gid>\d+)$')
+
+        # Mcid Asic[0]            : 9172
+        p11 = re.compile(r'^Mcid Asic\[(?P<asic>\d+)\]\s+:\s+(?P<mcid>\d+)$')
+
+        # Hw Mcid Oid         : 9172 (cookie: urid:0x20::9b3)
+        p12 = re.compile(r'Hw Mcid Oid\s+:\s+(?P<hw_vlan_mcid_oid>[\S\s]+.)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # (Vlan: 3300, 225.1.1.1)
+            match = p1.match(line)
+            if match:
+                ret_dict['vlan'] = int(match.group('vlan'))
+                ret_dict['ip_address'] = match.group('ip_address')
+                continue
+
+            # Member ports            : 1
+            match = p2.match(line)
+            if match:
+                ret_dict['member_ports_count'] = int(match.group('member_ports_count'))
+                continue
+
+            # GigabitEthernet3/0/18
+            match = p3.match(line)
+            if match:
+                ret_dict['member_ports'] = match.group('intf')
+                continue
+
+            # Dependent Users Count   : 0
+            match = p4.match(line)
+            if match:
+                ret_dict['dependant_users_count'] = int(match.group('dependant_users_count'))
+                continue
+
+            # Group Urid              : 0x6000000000004c92
+            match = p5.match(line)
+            if match:
+                ret_dict['group_urid'] = match.group('group_urid')
+                continue
+
+            # Fset Urid ( Hash )      : 0x20000000000009b3 ( 99661bff )
+            match = p6.match(line)
+            if match:
+                ret_dict['fset_urid_hash'] = match.group('fset_urid_hash')
+                continue
+
+            # Fset Aux Urid           : 0x0
+            match = p7.match(line)
+            if match:
+                ret_dict['fset_aux_urid'] = match.group('fset_aux_urid')
+                continue
+
+            # Layer 3 Stub Entry      : No
+            match = p8.match(line)
+            if match:
+                ret_dict['layer_3_stub_entry'] = match.group('layer_3_stub_entry')
+                continue
+
+            # Ec seed                 : 4
+            match = p9.match(line)
+            if match:
+                ret_dict['ec_seed'] = int(match.group('ec_seed'))
+                continue
+
+            # Gid                     : 10618
+            match = p10.match(line)
+            if match:
+                ret_dict['gid'] = int(match.group('gid'))
+                continue
+
+            # Mcid Asic[0]            : 9172
+            match = p11.match(line)
+            if match:
+                ret_dict['mcid_asic'] = int(match.group('mcid'))
+                continue
+
+            # Hw Mcid Oid         : 9172 (cookie: urid:0x20::9b3)
+            match = p12.match(line)
+            if match:
+                ret_dict['hw_info_asic'] = {'hw_group_entry_asic': match.group('hw_vlan_mcid_oid')}
+                continue
+
+        return ret_dict
+        
+class ShowPlatformSoftwareFedSwitchActiveIpmfibVrfGroupDetailSchema(MetaParser):
+    """Schema for 
+    show platform software fed switch {active} ip mfib vrf {vrf_name} {group} detail
+    Show platform software fed switch {active} ip mfib vrf {vrf_name} {group}
+    Show platform software fed switch {active} ipv6 mfib vrf {vrf_name} {group} detail
+    """
+    schema ={
+        'ip_range': {
+            Any(): {
+                'mvrf': int,
+                'hw_flag': str,
+                'mlist_hndl_id': str,
+                'mlist_urid': str,
+                'fset_urid': str,
+                Optional('fset_urid_hash'): str,
+                Optional('fset_aux_urid'): str,
+                'rpf_adjacency_id': str,
+                'cpu_credit': int,
+                'total_packets': {
+                    'count': int,
+                    'pps': str
+                },
+                Optional('npi_mroute_ent'): str,
+                Optional('svi_fwd_ifs'): int,
+                'oif_details': {
+                    Any(): {  # The interface names are dynamic
+                        'adjid': str,
+                        'interface': str,
+                        'parent_if': str,
+                        'hw_flag': str,
+                        'flags': str,
+                        Optional('intf_type'): str,
+                        Optional('msg_type'): str
+                    }
+                },
+                'gid': int,
+                'mcid_oid_asics': {
+                    'asic_id': int,
+                    'mcid_oid': int
+                },
+                Optional('hardware_info'): {
+                    Optional('asic_id'): int,
+                    Optional('ip_mcid_oid'): int,
+                    Optional('ip_mcid_oid_cookie'): str,
+                    Optional('rpf_port_oid'): int,
+                    Optional('punt_on_rpf_fail'): int,
+                    Optional('punt_and_forward'): int,
+                    Optional('use_rpfid'): int,
+                    Optional('rpfid'): int,
+                    Optional('enable_rpf_check'): int
+                }
+            }   
+        }
+    }
+
+class ShowPlatformSoftwareFedSwitchActiveIpmfibVrfGroupDetail(ShowPlatformSoftwareFedSwitchActiveIpmfibVrfGroupDetailSchema):
+  
+    """Parser for show platform software fed switch {active} ip mfib vrf {vrf_name} {group} detail,
+       show platform software fed switch {active} ip mfib vrf {vrf_name} {group},
+       and show platform software fed switch {active} ipv6 mfib vrf {vrf_name} {group} detail"""
+
+    # Merged IPv6 and detail handling into one command list using ip_type placeholder
+    cli_command = [
+        "show platform software fed switch {switch_type} {ip_type} mfib vrf {vrf_name} {group}",
+        "show platform software fed switch {switch_type} {ip_type} mfib vrf {vrf_name} {group} detail",
+    ]
+
+    def cli(self, switch_type, vrf_name, group, ip_type, output=None):
+        
+        if output is None:
+            # Determine which command to run based on ip_type (IPv6 vs IPv4) and detail flag
+            if ip_type == 'ipv6':
+                cmd_index = 1  # Use detailed command for IPv6
+            else:
+                cmd_index = 0  # Use regular command for IPv4
+            
+            # Generate the command based on the chosen index
+            cmd = self.cli_command[cmd_index].format(
+                switch_type=switch_type,
+                vrf_name=vrf_name,
+                group=group,
+                ip_type=ip_type
+            )
+
+            # Execute the command on the device
+            output = self.device.execute(cmd)
+
+        parsed_dict = {}
+
+        # Mvrf: 2  ( *, 227.0.1.95 ) Attrs: C 
+        p1 = re.compile(r'Mvrf: (?P<mvrf_id>\d+)  \((?P<ip_range>[\S\s]+?)\)')
+
+        # Hw Flag                 : InHw 
+        p2 = re.compile(r'^Hw Flag\s+:\s+(?P<hw_flag>\S+)$')
+
+        # Mlist_hndl (Id)         : 0x1188151eb90 ( 0x57a ) 
+        p3 = re.compile(r'^Mlist_hndl \(Id\)\s*:\s*(?P<mlist_hndl_id>[\S\s]+)$')
+
+
+        # Mlist Urid              : 0x1000000000000546 
+        p4 = re.compile(r'^Mlist Urid\s+:\s+(?P<mlist_urid>\S+)$')
+
+        # Fset Urid (Hash)        : 0x3000000000000509 ( 1836cd06 )
+        p5 = re.compile(r'^Fset Urid \(Hash\)\s*:\s*(?P<fset_urid>[\S\s]+)$')
+
+        # Fset Aux Urid           : 0x0 
+        p6 = re.compile(r'^Fset Aux Urid\s+:\s+(?P<fset_aux_urid>\S+)$')
+
+        # RPF Adjacency ID        : 0xf80055d1 
+        p7 = re.compile(r'^RPF Adjacency ID\s+:\s+(?P<rpf_adjacency_id>\S+)$')
+
+        # CPU Credit              : 0 
+        p8 = re.compile(r'^CPU Credit\s+:\s+(?P<cpu_credit>\d+)$')
+
+        # Total Packets           : 0 ( 0 pps approx.) 
+        p9 = re.compile(r'Total Packets\s+:\s+(?P<total_packets_count>\d+) \((?P<total_packets_pps>\s+\d+ pps approx.)\)')
+
+        # npi_mroute_ent          : 0x11881a6a230 
+        p10 = re.compile(r'^npi_mroute_ent\s+:\s+(?P<npi_mroute_ent>\S+)$')
+
+        # svi_fwd_ifs             : 1 
+        p11 = re.compile(r'^svi_fwd_ifs\s+:\s+(?P<svi_fwd_ifs>\d+)$')
+
+        # OIF Details: 
+        p12 = re.compile(r'^OIF Details:$')
+
+        # AdjID          Interface          ParentIf        HwFlag      Flags      IntfType       MsgType 
+        p13 = re.compile(r'^AdjID\s+Interface\s+ParentIf\s+HwFlag\s+Flags\s+(?:\s+IntfType\s+MsgType)?$')
+
+        # 0xf80055d1     Vl103              --------         ---        A          SVI_IF         NORMAL  
+        p14 = re.compile(r'^(?P<adjid>\S+)\s+(?P<interface>\S+)\s+(?P<parent_if>\S+)\s+(?P<hw_flag>\S+)\s+(?P<flags>\S+)\s*(?:\s+(?P<intf_type>\S+))?\s*(?:\s+(?P<msg_type>\S+))?$')
+ 
+        # GID                   : 9487 
+        p15 = re.compile(r'^GID\s+:\s+(?P<gid>\d+)$')
+
+        # MCID OID Asic[0]      : 5270 
+        p16 = re.compile(r'^MCID OID Asic\[(?P<asic_id>\d+)\]\s+:\s+(?P<mcid_oid>\d+)$')
+
+        # Hardware Info ASIC[0] :
+        p17 = re.compile(r'^Hardware Info ASIC\[(?P<asic_id>\d+)\] :$')
+
+        #  IP MCID OID         :5270 (cookie: urid:0x30::509) 
+        p18 = re.compile(r'IP MCID OID\s+:(?P<ip_mcid_oid>\d+) \(cookie: urid:(?P<cookie>[\S\s]+?)\)')
+
+        # RPF PORT OID        :3286 
+        p19 = re.compile(r'RPF PORT OID\s+:(?P<rpf_port_oid>\d+)')
+
+        # punt_on_rpf_fail    :1 
+        p20 = re.compile(r'^punt_on_rpf_fail\s+:(?P<punt_on_rpf_fail>\d+)')
+
+        # punt_and_forward    :0 
+        p21 = re.compile(r'^punt_and_forward\s+:(?P<punt_and_forward>\d+)')
+
+        # use_rpfid           :0 
+        p22 = re.compile(r'^use_rpfid\s+:(?P<use_rpfid>\d+)')
+
+        # rpfid               :0 
+        p23 = re.compile(r'^rpfid\s+:(?P<rpfid>\d+)')
+
+        # enable_rpf_check    :1 
+        p24 = re.compile(r'^enable_rpf_check\s+:(?P<enable_rpf_check>\d+)')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # # Mvrf: 2  ( *, 227.0.1.95 ) Attrs: C 
+            match = p1.match(line)
+            if match:
+                mvrf_id = match.group('mvrf_id')
+                ip_range = match.group('ip_range')
+                parsed_dict.setdefault('ip_range', {}).setdefault(ip_range,{})
+                parsed_dict.setdefault('ip_range', {})[ip_range]['mvrf'] = int(mvrf_id)
+            
+                continue
+
+            # Hw Flag                 : InHw 
+            match = p2.match(line)
+            if match :
+                parsed_dict.setdefault('ip_range', {}).setdefault(ip_range,{})
+                parsed_dict['ip_range'][ip_range]['hw_flag'] = match.group('hw_flag')
+                continue
+
+            # Mlist_hndl (Id)         : 0x1188151eb90 ( 0x57a ) 
+            match = p3.match(line)
+            if match :
+                parsed_dict.setdefault('ip_range', {}).setdefault(ip_range,{})
+                parsed_dict['ip_range'][ip_range]['mlist_hndl_id'] = match.group('mlist_hndl_id')
+                continue
+
+            # Mlist Urid              : 0x1000000000000546 
+            match = p4.match(line)
+            if match :
+                parsed_dict.setdefault('ip_range', {}).setdefault(ip_range,{})
+                parsed_dict['ip_range'][ip_range]['mlist_urid'] = match.group('mlist_urid')
+                continue
+
+            # Fset Urid (Hash)        : 0x3000000000000509 ( 1836cd06 )
+            match = p5.match(line)
+            if match :
+                parsed_dict.setdefault('ip_range', {}).setdefault(ip_range,{})
+                parsed_dict['ip_range'][ip_range]['fset_urid'] = match.group('fset_urid')
+                continue
+
+            # Fset Aux Urid           : 0x0 
+            match = p6.match(line)
+            if match and ip_range:
+                parsed_dict['ip_range'][ip_range]['fset_aux_urid'] = match.group('fset_aux_urid')
+                continue
+
+            # RPF Adjacency ID        : 0xf80055d1 
+            match = p7.match(line)
+            if match :
+                parsed_dict.setdefault('ip_range', {}).setdefault(ip_range,{})
+                parsed_dict['ip_range'][ip_range]['rpf_adjacency_id'] = match.group('rpf_adjacency_id')
+                continue
+
+            # CPU Credit              : 0 
+            match = p8.match(line)
+            if match :
+                parsed_dict.setdefault('ip_range', {}).setdefault(ip_range,{})
+                parsed_dict['ip_range'][ip_range]['cpu_credit'] = int(match.group('cpu_credit'))
+                continue
+
+            # Total Packets           : 0 ( 0 pps approx.) 
+            match = p9.match(line)
+            if match :
+                parsed_dict['ip_range'][ip_range].setdefault('total_packets',{})
+                parsed_dict['ip_range'][ip_range]['total_packets']['count'] = int(match.group('total_packets_count'))
+                parsed_dict['ip_range'][ip_range]['total_packets']['pps'] = match.group('total_packets_pps')
+                continue
+
+            # npi_mroute_ent          : 0x11881a6a230 
+            match = p10.match(line)
+            if match :
+                parsed_dict['ip_range'][ip_range]['npi_mroute_ent'] = match.group('npi_mroute_ent')
+                continue
+
+            # svi_fwd_ifs             : 1 
+            match = p11.match(line)
+            if match :
+                parsed_dict['ip_range'][ip_range]['svi_fwd_ifs'] = int(match.group('svi_fwd_ifs'))
+                continue
+
+            # OIF Details: 
+            match = p12.match(line)
+            if match :
+                continue
+
+            # AdjID          Interface          ParentIf        HwFlag      Flags      IntfType       MsgType 
+            match = p13.match(line)
+            if match :
+                continue
+
+            # 0xf80055d1     Vl103              --------         ---        A          SVI_IF         NORMAL  
+            match = p14.match(line)
+            if match:
+                
+                adjid = match.group('adjid')
+                interface = match.group('interface')
+                
+                # Skip header row and any other irrelevant rows
+                if interface != 'Interface' and adjid != 'MCID' and adjid != 'IP':
+                    parsed_dict['ip_range'][ip_range].setdefault('oif_details',{})
+                    parsed_dict['ip_range'][ip_range]['oif_details'][interface] = {
+                        'adjid':match.group('adjid'),
+                        'interface': match.group('interface'),
+                        'parent_if': match.group('parent_if'),
+                        'hw_flag': match.group('hw_flag'),
+                        'flags': match.group('flags'),
+                        'intf_type': match.group('intf_type'),
+                        'msg_type': match.group('msg_type')
+                    }
+                    continue
+
+            # GID                   : 9487 
+            match = p15.match(line)
+            if match :
+                parsed_dict['ip_range'][ip_range]['gid'] = int(match.group('gid'))
+                continue
+
+            # MCID OID Asic[0]      : 5270 
+            match = p16.match(line)
+            if match :
+                asic_id = int(match.group('asic_id'))
+                mcid_oid = int(match.group('mcid_oid'))
+                parsed_dict['ip_range'][ip_range].setdefault('mcid_oid_asics', {})['asic_id'] = asic_id
+                parsed_dict['ip_range'][ip_range].setdefault('mcid_oid_asics', {})['mcid_oid'] = mcid_oid
+                continue
+
+            # Hardware Info ASIC[0] :
+            match = p17.match(line)
+            if match :
+                asic_id = int(match.group('asic_id'))
+                parsed_dict['ip_range'][ip_range].setdefault('hardware_info', {})['asic_id'] = asic_id
+                continue
+
+            #  IP MCID OID         :5270 (cookie: urid:0x30::509) 
+            match = p18.match(line)
+            if match :
+                parsed_dict['ip_range'][ip_range]['hardware_info']['ip_mcid_oid'] = int(match.group('ip_mcid_oid'))
+                parsed_dict['ip_range'][ip_range]['hardware_info']["ip_mcid_oid_cookie"]=match.group('cookie')
+                continue
+
+            # RPF PORT OID        :3286 
+            match = p19.match(line)
+            if match :
+                parsed_dict['ip_range'][ip_range]['hardware_info']['rpf_port_oid'] = int(match.group('rpf_port_oid'))
+                continue
+
+            # punt_on_rpf_fail    :1 
+            match = p20.match(line)
+            if match :
+                parsed_dict['ip_range'][ip_range]['hardware_info']['punt_on_rpf_fail'] = int(match.group('punt_on_rpf_fail'))
+                continue
+
+            # punt_and_forward    :0 
+            match = p21.match(line)
+            if match :
+                parsed_dict['ip_range'][ip_range]['hardware_info']['punt_and_forward'] = int(match.group('punt_and_forward'))
+                continue
+
+            # use_rpfid           :0 
+            match = p22.match(line)
+            if match :
+                parsed_dict['ip_range'][ip_range]['hardware_info']['use_rpfid'] = int(match.group('use_rpfid'))
+                continue
+
+            # rpfid               :0 
+            match = p23.match(line)
+            if match :
+                parsed_dict['ip_range'][ip_range]['hardware_info']['rpfid'] = int(match.group('rpfid'))
+                continue
+
+            # enable_rpf_check    :1 
+            match = p24.match(line)
+            if match :
+                parsed_dict['ip_range'][ip_range]['hardware_info']['enable_rpf_check'] = int(match.group('enable_rpf_check'))
+                continue
+
+        return parsed_dict
+
+class ShowPlatformSoftwareFedSwitchAclParallelKeyProfileEgressSchema(MetaParser):
+    """Schema for:
+       * show platform software fed switch <active/stby> acl man parallel-key-profile egress all
+    """
+    schema = {
+        'egress': {
+            Any(): {  # Profile name
+                "index": int,
+                Optional("protocols"): {
+                    Any(): {  # ETH, IPV4, IPV6
+                        "oid": ListOf(int),
+                        "ref_cnt": ListOf(int),
+                        "e_values": {
+                            Any(): ListOf(int),  # E0, E1, E2, E3
+                        },
+                        "no_of_key_prof": int,
+                        "wide": bool,
+                        "rtf": bool,
+                        "stage": str,
+                    }
+                }
+            }
+        }
+    }
+
+
+class ShowPlatformSoftwareFedSwitchAclParallelKeyProfileEgress(ShowPlatformSoftwareFedSwitchAclParallelKeyProfileEgressSchema):
+    """Parser for:
+       * show platform software fed switch <active/stby> acl man parallel-key-profile egress all
+    """
+
+    cli_command = "show platform software fed switch {state} acl man parallel-key-profile egress all"
+
+    def cli(self, state, output=None):
+        if output is None:
+            cmd = self.cli_command.format(state=state)
+            output = self.device.execute(cmd)
+
+        # Initialize variables
+        ret_dict = {}
+        current_profile = None
+        current_protocol = None
+
+        # [Egress Paralley Key Profile: RT, Idx: 1]
+        p1 = re.compile(r"^\[Egress Paralley Key Profile: (?P<profile_name>[\w\-]+), Idx: (?P<index>\d+)\]$")
+        
+        # IPV4
+        p2 = re.compile(r"^(?P<protocol>\w+)$")
+
+        # OID:     [  571   493   493   493 ]
+        p3 = re.compile(r"^OID:\s+\[\s+(?P<oid>[\d\s]+)\]$")
+
+        # Ref cnt: [    1     1     0     0 ]
+        p4 = re.compile(r"^Ref cnt:\s+\[\s+(?P<ref_cnt>[\d\s]+)\]$")
+
+        # E0:   528,   531,   534,     0,     0,     0,     0,     0,     0,     0,     0,     0
+        p5 = re.compile(r"^(?P<e_value>E\d):\s+(?P<values>[\d,\s]+)$")
+
+        # No of Key Prof: 3    Wide: False    RTF: True    Stage: TRANS
+        p6 = re.compile(
+            r"^No of Key Prof:\s+(?P<no_of_key_prof>\d+)\s+Wide:\s+(?P<wide>\w+)\s+RTF:\s+(?P<rtf>\w+)\s+Stage:\s+(?P<stage>\w+)$"
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # [Egress Paralley Key Profile: RT, Idx: 1]
+            m = p1.match(line)
+            if m:
+                profile_name = m.group("profile_name")
+                index = int(m.group("index"))
+                current_profile = profile_name
+                profile_dict = ret_dict.setdefault("egress", {}).setdefault(current_profile, {"index": index})
+                continue
+
+            # IPV4
+            m = p2.match(line)
+            if m:
+                current_protocol = m.group("protocol")
+                protocol_dict = profile_dict.setdefault("protocols", {})
+                protocol_dict[current_protocol] = {"e_values": {}}
+                continue
+
+            # OID:     [  571   493   493   493 ]
+            m = p3.match(line)
+            if m and current_protocol:
+                oid = list(map(int, m.group("oid").split()))
+                protocol_dict[current_protocol]["oid"] = oid
+                continue
+
+            # Ref cnt: [    1     1     0     0 ]
+            m = p4.match(line)
+            if m and current_protocol:
+                ref_cnt = list(map(int, m.group("ref_cnt").split()))
+                protocol_dict[current_protocol]["ref_cnt"] = ref_cnt
+                continue
+
+            # E0:   528,   531,   534,     0,     0,     0,     0,     0,     0,     0,     0,     0
+            m = p5.match(line)
+            if m and current_protocol:
+                e_value = m.group("e_value")
+                values = list(map(int, m.group("values").replace(",", "").split()))
+                protocol_dict[current_protocol]["e_values"][e_value] = values
+                continue
+
+            # No of Key Prof: 3    Wide: False    RTF: True    Stage: TRANS
+            m = p6.match(line)
+            if m and current_protocol:
+                protocol_dict[current_protocol].update(
+                    {
+                        "no_of_key_prof": int(m.group("no_of_key_prof")),
+                        "wide": m.group("wide").lower() == "true",
+                        "rtf": m.group("rtf").lower() == "true",
+                        "stage": m.group("stage"),
+                    }
+                )
+                continue
+
+        return ret_dict
+
+class ShowPlatformSoftwareFedSwitchActiveAclSgaclCellSgtDgtSchema(MetaParser):
+    """Schema for show platform software fed switch {switch_type} acl sgacl cell {sgt} {dgt}"""
+
+    schema = {
+        'monitor_mode': str,
+        'acl_cg_id': int,
+        'protocol': str,
+        'asic_num': {
+            Any(): {
+                'cell_oid':int,
+            },
+        },
+        'asic_num1': {
+            Any(): {
+                'counter_oid':int,
+            },
+        },
+    }
+
+class ShowPlatformSoftwareFedSwitchActiveAclSgaclCellSgtDgt(ShowPlatformSoftwareFedSwitchActiveAclSgaclCellSgtDgtSchema):
+    """Parser for show platform software fed switch {switch_type} acl sgacl cell {sgt} {dgt}"""
+
+    cli_command = "show platform software fed switch {switch_type} acl sgacl cell {sgt} {dgt}"
+
+    def cli(self, switch_type, sgt  ,dgt, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(switch_type=switch_type,sgt=sgt,dgt=dgt))
+
+        # Initialize the dictionary
+        ret_dict = {}
+
+        # monintor mode: 0
+        p1 = re.compile(r"^monintor mode:\s+(?P<monitor_mode>\d+)$")
+
+        #ACL CG_ID:     273
+        p2 = re.compile(r"^ACL CG_ID:\s+(?P<acl_cg_id>\d+)$")
+
+        # Protocol:      IPv4
+        p3 = re.compile(r"^Protocol:\s+(?P<protocol>\S+)$")
+
+        # Asic Num:      0  Cell OID:      2076 
+        p4 = re.compile(r"^Asic Num:\s+(?P<asic_num>\d+)\s+Cell OID:\s+(?P<cell_oid>\d+)$")
+
+        # ASIC Num:      0  Counter OID:   2077 
+        p5 = re.compile(r"^ASIC Num:\s+(?P<asic_num1>\d+)\s+Counter OID:\s+(?P<counter_oid>\d+)$")
+            
+        for line in output.splitlines():
+            line = line.strip()
+
+            # monintor mode: 0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['monitor_mode']=group['monitor_mode']
+                continue
+
+            #ACL CG_ID:     273
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['acl_cg_id']=int(group['acl_cg_id'])
+                continue
+            
+            # Protocol:      IPv4
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['protocol']=group['protocol']
+                continue
+
+            # Asic Num:      0  Cell OID:      2076     
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict = ret_dict.setdefault('asic_num', {}).setdefault(group['asic_num'],{})
+                root_dict['cell_oid']=int(group['cell_oid'])
+                continue
+            
+            # ASIC Num:      0  Counter OID:   2077 
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict_1 = ret_dict.setdefault('asic_num1', {}).setdefault(group['asic_num1'],{})
+                root_dict_1['counter_oid']=int(group['counter_oid'])
+                continue
+        return ret_dict
+
+class ShowPlatformSoftwareFedSwitchActiveSgaclVlanSchema(MetaParser):
+    """Schema for show platform software fed switch {switch_type} sgacl vlan"""
+
+    schema = {
+        'vlan_id':{
+            Any(): {
+                'hw_state': str
+            }
+        }
+       
+    }
+
+class ShowPlatformSoftwareFedSwitchActiveSgaclVlan(ShowPlatformSoftwareFedSwitchActiveSgaclVlanSchema):
+    """Parser for show platform software fed switch {switch_type} sgacl vlan"""
+
+    cli_command = "show platform software fed switch {switch_type} sgacl vlan"
+
+    def cli(self, switch_type, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(switch_type=switch_type))
+
+        # Initialize the dictionary
+        ret_dict = {}
+
+        # Vlan id  		 HW state
+        # ---------------------------------
+        # vlan50   		 Success
+
+        p1 = re.compile(r"^(?P<vlan_id>\S+)\s+(?P<hw_state>\S+)$")
+        
+        for line in output.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                root_dict = ret_dict.setdefault('vlan_id', {}).setdefault(group['vlan_id'],{})
+                root_dict['hw_state']=group['hw_state']
+                continue
+            
+        return ret_dict 
+
+class ShowPlatformSoftwareFedSwitchActiveSecurityfedWrclientsifidSchema(MetaParser):
+    """Schema for show platform software fed switch {switch_type} security-fed wrclients if_id {port_if_id}""" 
+
+    schema = {
+        'interfaces': {
+            Any(): {
+                'client_ifid': str,
+                'mac': str,
+                'host_mode': str,
+                'auth_behavior': str,
+                'ipv4_cgacl_name': str,
+                'ipv6_cgacl_name': str,
+            }
+        }
+    }
+
+class ShowPlatformSoftwareFedSwitchActiveSecurityfedWrclientsifid(ShowPlatformSoftwareFedSwitchActiveSecurityfedWrclientsifidSchema):
+    """Parser for show platform software fed switch {switch_type} security-fed wrclients if_id {port_if_id}"""
+
+    cli_command = "show platform software fed switch {switch_type} security-fed wrclients if_id {port_if_id}"
+    def cli(self, switch_type, port_if_id, output=None):
+        if output is None :
+            output = self.device.execute(
+                self.cli_command.format(switch_type=switch_type, port_if_id=port_if_id)
+            )
+
+        ret_dict = {}
+
+        # 0x27fda427   0000.0033.3333   MULTI_AUTH    LA_BH_FWD_ALL_LRN_DATA  implicit_deny_v6!implicit_deny:xACSACLx-IPV6-S1_PermitGW_DenyOther_V6-669eaa28!xACSACLx-IP-S1_PermitGW_DenyOther_V4-669eaa40: implicit_deny_v6!implicit_deny:xACSACLx-IPV6-S1_PermitGW_DenyOther_V6-669eaa28!xACSACLx-IP-S1_PermitGW_DenyOther_V4-669eaa40:
+        p1 = re.compile(
+            r'^(?P<client_ifid>\w+)\s+(?P<mac>\S+)\s+(?P<host_mode>\S+)\s+(?P<auth_behavior>\S+)\s+'
+            r'(?P<ipv4_cgacl_name>[\S\s]+)\s+(?P<ipv6_cgacl_name>[\S\s]+)$'
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # 0x27fda427   0000.0033.3333   MULTI_AUTH    LA_BH_FWD_ALL_LRN_DATA  implicit_deny_v6!implicit_deny:xACSACLx-IPV6-S1_PermitGW_DenyOther_V6-669eaa28!xACSACLx-IP-S1_PermitGW_DenyOther_V4-669eaa40: implicit_deny_v6!implicit_deny:xACSACLx-IPV6-S1_PermitGW_DenyOther_V6-669eaa28!xACSACLx-IP-S1_PermitGW_DenyOther_V4-669eaa40:        
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                client_ifid = group['client_ifid']
+                ret_dict.setdefault('interfaces', {}).setdefault(client_ifid, {}).update({
+                    'client_ifid': group['client_ifid'],
+                    'mac': group['mac'],
+                    'host_mode': group['host_mode'],
+                    'auth_behavior': group['auth_behavior'],
+                    'ipv4_cgacl_name': group['ipv4_cgacl_name'].strip(),
+                    'ipv6_cgacl_name': group['ipv6_cgacl_name'].strip()
+                })
+                continue
+
+        return ret_dict
+
+class ShowPlatformSoftwareFedSwitchActiveOifsetUridl2mhashSchema(MetaParser):
+    """
+    Schema for
+        * 'Show platform software fed {switch} {module} oifset l2m hash {hash_data} detail'
+    """
+    schema = {
+    'type': str,
+    'state': str,
+    'md5': str,
+    'fset_urid': str,
+    Optional('remote_port_count'): int,
+    'parent_urid': str,
+    'users_count': int,
+    'vp_oif_count': int,
+    'fset_gid': int,
+    'asic_mcid_oid': int,
+    'hw_l2_mcg_info': str,
+    Optional('vp_interface_details'): {
+        Any(): {
+            'vp_interface': str,
+            'interface': str,
+            'physical_interface': str,
+            'flags': str,
+            'hw_flags': str,
+            'asic': {
+                'asic_num': int,
+                'l2_ac_oid': int,
+            },
+        },
+    },
+    'users': {
+            Any(): {  # URID as the key
+                'l2m_grp': {
+                    'vlan': str,
+                    'group_ip': str,
+                },
+            },
+        },
+    }
+
+class ShowPlatformSoftwareFedSwitchActiveOifsetUridl2mhash(ShowPlatformSoftwareFedSwitchActiveOifsetUridl2mhashSchema):
+    """
+    Parser for
+        * 'Show platform software fed {switch} {module} oifset l2m hash {hash_data} detail'
+    """
+
+    cli_command = 'show platform software fed switch {switch_type} oifset l2m hash {hash_id} detail'
+    
+    def cli(self, switch_type, hash_id=None, output=None):
+        if output is None:
+            if hash_id:
+                cmd = self.cli_command.format(switch_type=switch_type, hash_id=hash_id)
+                output = self.device.execute(cmd)
+
+        vp_index = 0
+        parsed_dict ={}
+        vp_interfaces = {}
+        users = {}
+
+        # Type: oif_vp_handles       State: allocated       MD5:(99661bffcb26f8db:c644c3f264bb9bec)
+        p1 = re.compile(r'^Type:\s+(?P<type>\S+)\s+State:\s+(?P<state>\S+)\s+MD5:\((?P<md5>\S+)\)$')
+
+        # Fset Urid              : 0x20000000000009b3
+        p2 = re.compile(r'^Fset\s+Urid\s+:\s+(?P<fset_urid>\S+)$')
+
+        # Parent URID            : 0x20000000000009af
+        p3 = re.compile(r'^Parent\s+URID\s+:\s+(?P<parent_urid>\S+)$')
+
+        # Remote Port Count      : 2
+        p4 = re.compile(r'^Remote\s+Port\s+:\s+(?P<remote_port_count>\d+)$')
+
+        # Users Count            : 1
+        p5 = re.compile(r'^Users\s+Count\s+:\s+(?P<users_count>\d+)$')
+
+        # VP OIF Count           : 2
+        p6 = re.compile(r'^VP\s+OIF\s+Count\s+:\s+(?P<vp_oif_count>\d+)$')
+
+        # 1. Gi3/0/18Vlan3300         GigabitEthernet3/0/18    GigabitEthernet3/0/18   
+        p7 = re.compile(r'^(?P<num>\d+)\. +(?P<vp_interface>\S+) +(?P<interface>\S+) +(?P<physical_interface>\S+)$')
+
+        # flags:[ oif_port mrouter  ]    hw_flags: [ InHw  remote ]
+        p8 = re.compile(r'^flags:\[\s+(?P<flags>.*)\s+\]\s+hw_flags:\s+\[\s+(?P<hw_flags>.*)\]$')
+
+        #  (Asic[0]: l2_ac_oid: 0)
+        p9 = re.compile(r'^\(Asic\[(?P<asic_num>\d+)\]:\s+l2_ac_oid:\s+(?P<l2_ac_oid>\d+)\)$')
+
+        # FSET Gid               : 10618
+        p10 = re.compile(r'^FSET\s+Gid\s+:\s+(?P<fset_gid>\d+)$')
+
+        # Asic[0] mcid_oid       : 9172
+        p11 = re.compile(r'^Asic\[0\] +mcid_oid *: *(?P<asic_mcid_oid>\d+)$')
+
+        # Hw L2 Mcg Info Asic[0] :
+        p12 = re.compile(r'^Hw +L2 +Mcg +Info +Asic\[0\] *: *(?P<hw_l2_mcg_info>.*)$')
+
+        # urid:0x6000000000004c92 (l2m_grp: vlan:3300, 225.1.1.1)
+        p13 = re.compile(r'^urid:(?P<urid>\S+)\s+\(l2m_grp:\s+vlan:(?P<vlan>\S+),\s+(?P<group_ip>\S+)\)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Type: oif_vp_handles State: allocated MD5:(99661bffcb26f8db:c644c3f264bb9bec)
+            m = p1.match(line)
+            if m:
+                parsed_dict.update(m.groupdict())
+                continue
+
+            # Fset Urid              : 0x20000000000009b3
+            m = p2.match(line)
+            if m:
+                parsed_dict['fset_urid'] = m.group('fset_urid')
+                continue
+
+            # Parent URID            : 0x20000000000009af
+            m = p3.match(line)
+            if m:
+                parsed_dict['parent_urid'] = m.group('parent_urid')
+                continue
+
+            # Remote Port Count      : 2
+            m = p4.match(line)
+            if m:
+                parsed_dict['remote_port_count'] = int(m.group('remote_port_count'))
+                continue
+
+            # Users Count            : 1
+            m = p5.match(line)
+            if m:
+                parsed_dict['users_count'] = int(m.group('users_count'))
+                continue
+
+            # VP OIF Count           : 2
+            m = p6.match(line)
+            if m:
+                parsed_dict['vp_oif_count'] = int(m.group('vp_oif_count'))
+                continue
+
+            # 1. Gi3/0/18Vlan3300 GigabitEthernet3/0/18 GigabitEthernet3/0/18
+            m = p7.match(line)
+            if m:
+                vp_index += 1
+                vp_dict = parsed_dict.setdefault('vp_interface_details', {}).setdefault(vp_index, {})
+                vp_dict.update({
+                    'vp_interface': m.group('vp_interface'),
+                    'interface': m.group('interface'),
+                    'physical_interface': m.group('physical_interface')
+                })
+                continue
+
+            # flags:[ oif_port mrouter  ] hw_flags: [ InHw  remote ]
+            m = p8.match(line)
+            if m:
+                vp_dict['flags'] = m.group('flags')
+                vp_dict['hw_flags'] = m.group('hw_flags')
+                continue
+
+            # (Asic[0]: l2_ac_oid: 0)
+            m = p9.match(line)
+            if m:
+                vp_dict.setdefault('asic', {})['asic_num'] = int(m.group('asic_num'))
+                vp_dict.setdefault('asic', {})['l2_ac_oid'] = int(m.group('l2_ac_oid'))
+                continue
+
+            # FSET Gid               : 10618
+            m = p10.match(line)
+            if m:
+                parsed_dict['fset_gid'] = int(m.group('fset_gid'))
+                continue
+
+            # Asic[0] mcid_oid       : 9172
+            m = p11.match(line)
+            if m:
+                parsed_dict['asic_mcid_oid'] = int(m.group('asic_mcid_oid'))
+                continue
+
+            # Hw L2 Mcg Info Asic[0] :
+            m = p12.match(line)
+            if m:
+                parsed_dict['hw_l2_mcg_info'] = m.group('hw_l2_mcg_info')
+                continue
+            
+            # urid:0x6000000000004c92 (l2m_grp: vlan:3300, 225.1.1.1)
+            m = p13.match(line)
+            if m:
+                user_dict = parsed_dict.setdefault('users', {})
+                urid = m.group('urid')
+                user_dict[urid] = {
+                    'l2m_grp': {
+                        'vlan': m.group('vlan'),
+                        'group_ip': m.group('group_ip')
+                    }
+                }
+                continue
+        return parsed_dict 

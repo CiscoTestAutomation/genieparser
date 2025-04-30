@@ -40,7 +40,7 @@ class ShowInstallSummarySchema(MetaParser):
                         'filename_version': str,
                     }
                 },
-                'auto_abort_timer': str,
+                Optional('auto_abort_timer'): str,
                 Optional('time_before_rollback'): str,
             },
         },
