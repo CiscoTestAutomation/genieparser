@@ -820,3 +820,77 @@ class ShowEthernetRingG8032PortStatus(ShowEthernetRingG8032PortStatusSchema):
         return ret_dict
 
 
+class ShowEthernetCFMEFDMepsSchema(MetaParser):
+    """Schema for 'show ethernet cfm efd meps'
+    """
+    schema = {
+        'efd_meps': {
+            'domain': str,
+            'service': str,
+            'notify': str,
+            'efd': str,
+            Optional('meps_info'): {
+                int: {
+                    'id': str,
+                    'interface': str,
+                    'srvcinst': str,
+                    'defect': str,
+                    'threshold': str,
+                    'triggered': str,
+                }
+            }
+        }
+    }
+
+
+class ShowEthernetCFMEFDMeps(ShowEthernetCFMEFDMepsSchema):
+    """
+    Parser for :
+        * show ethernet cfm efd meps
+    """
+    cli_command = 'show ethernet cfm efd meps'
+
+    def cli(self, output=None):
+
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Domain g8032_domain, Service vlan-id 10: notify G.8032 Controller, EFD not triggered
+        p1 = re.compile(r'Domain (?P<Domain>\S+), Service (?P<Service>.*): notify (?P<notify>.*), EFD (?P<EFD>.*)')
+
+        #     11 Gi1/3      N/A      None          DefMACstatus  No
+        p2 = re.compile(r'(?P<ID>\d+)\s+(?P<Interface>\S+)\s+(?P<SrvcInst>\S+)\s+(?P<Defect>\S+)\s+(?P<Threshold>\S+)\s+(?P<Triggered>\S+)')
+
+        # initial return dictionary
+        ret_dict = {}
+        count = 0
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Domain g8032_domain, Service vlan-id 10: notify G.8032 Controller, EFD not triggered
+            m = p1.match(line)
+            if m:
+                domain_dict = ret_dict.setdefault('efd_meps', {})
+                domain_dict['domain'] = m.groupdict()['Domain']
+                domain_dict['service'] = m.groupdict()['Service']
+                domain_dict['notify'] = m.groupdict()['notify']
+                domain_dict['efd'] = m.groupdict()['EFD']
+                continue
+
+            #     11 Gi1/3      N/A      None          DefMACstatus  No
+            m = p2.match(line)
+            if m:
+                count += 1
+                group = m.groupdict()
+                mep_status_dict = domain_dict.setdefault('meps_info', {})
+                mep_dict = mep_status_dict.setdefault(count, {})
+                mep_dict['id'] = group['ID']
+                mep_dict['interface'] = group['Interface']
+                mep_dict['srvcinst'] = group['SrvcInst']
+                mep_dict['defect'] = group['Defect']
+                mep_dict['threshold'] = group['Threshold']
+                mep_dict['triggered'] = group['Triggered']
+                continue
+
+        return ret_dict

@@ -1,0 +1,77 @@
+NAME: "Rack 0", DESCR: "Cisco 8203 1RU System with 32x400GE QSFP56-DD & 12x100GE QSFP28"
+PID: 8201-32FH         , VID: V00, SN: FOC2422NMRH
+
+NAME: "Rack 0-Control Card Slot 0", DESCR: "8201-32FH Route Processor Slot 0"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "Rack 0-Fan Tray Slot 0", DESCR: "8201-32FH Fan Tray Slot 0"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "Rack 0-Fan Tray Slot 2", DESCR: "8201-32FH Fan Tray Slot 2"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "Rack 0-PSU Slot 0", DESCR: "8201-32FH Power Module Slot 0"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "Rack 0-PSU Slot 1", DESCR: "8201-32FH Power Module Slot 1"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "Rack 0-Control_Sensor", DESCR: "Control Sensor"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "Rack 0-Chassis IDPROM", DESCR: "Cisco 8203 1RU System with 32x400GE QSFP56-DD & 12x100GE QSFP28"
+PID: 8201-32FH         , VID: V00, SN: FOC2422NMRH
+
+NAME: "0/RP0/CPU0", DESCR: "Cisco 8203 1RU System with 32x400GE QSFP56-DD & 12x100GE QSFP28"
+PID: 8201-32FH         , VID: V00, SN: FOC2420NWJ8
+
+NAME: "0/FT0", DESCR: "1RU Fan with Port-side Air Intake"
+PID: FAN-1RU-PI        , VID: V01 , SN: SUN23460069
+
+NAME: "0/FT5", DESCR: "1RU Fan with Port-side Air Intake"
+PID: FAN-1RU-PI        , VID: V01 , SN: SUN234600A4
+
+NAME: "0/PM0", DESCR: "2000W AC Power Module with Port-side Air Intake"
+PID: PSU2KW-ACPI       , VID: V01 , SN: POG2329K01Y
+
+NAME: "0/PM1", DESCR: "2000W AC Power Module with Port-side Air Intake"
+PID: PSU2KW-ACPI       , VID: V01 , SN: POG2329K01M
+
+NAME: "0/RP0/CPU0-Mother Board", DESCR: "8201-32FH Mother Board"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "0/RP0/CPU0-Power Board 1", DESCR: "Power Board"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "0/RP0/CPU0-CPU Board", DESCR: "CPU Board"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "0/FT0-Status/Attention", DESCR: "LED Sensor"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "0/FT0-FT IDPROM", DESCR: "1RU Fan with Port-side Air Intake"
+PID: FAN-1RU-PI        , VID: V01 , SN: SUN23460069
+
+NAME: "0/FT1-Fan 1", DESCR: "Fan Module"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "0/FT1-Status/Attention", DESCR: "LED Sensor"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "0/FT1-FT IDPROM", DESCR: "1RU Fan with Port-side Air Intake"
+PID: FAN-1RU-PI        , VID: V01 , SN: SUN2346006F
+
+NAME: "0/PM0-Fan 1", DESCR: "PSU2KW ACPI PSU Fan Module"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "0/PM0-Input_Curr", DESCR: "Current Sensor"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "0/PM0-PO-SecMCU", DESCR: "Secondary Controller"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "0/PM0-PSU2KW_ACPI IDPROM", DESCR: "2000W AC Power Module with Port-side Air Intake"
+PID: PSU2KW-ACPI       , VID: V01 , SN: POG2329K01Y
+
+NAME: "0/RP0/CPU0-MB_3_3V_R_L1_IOUT", DESCR: "Current Sensor - MB_3.3V_R_L1_IOUT"
+PID: N/A               , VID: N/A, SN: N/A

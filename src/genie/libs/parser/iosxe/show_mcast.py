@@ -222,8 +222,9 @@ class ShowIpMroute(ShowIpMrouteSchema):
                        r'(, *(?P<status>.*))?$')
 
         # Incoming interface:Tunnel5
-        p3_1 = re.compile(r'^Incoming +interface:'
-                         r' *(?P<incoming_interface>[a-zA-Z0-9\/\-\.]+)$')
+        # Incoming interface: Tunnel3 MDT: 239.192.20.33/00:02:34
+        p3_1 = re.compile(r'^Incoming +interface: *(?P<incoming_interface>[a-zA-Z0-9\/\-\.]+)'
+                          r'(?: +MDT: *(?P<iif_mdt_ip>[0-9\.]+))?.*$')
         # RPF nbr:2001:db8:90:24::6
         p3_2 = re.compile(r'^RPF +nbr: *(?P<rpf_nbr>[\w\:\.]+)$')
         # Outgoing interface list: Null
@@ -374,7 +375,8 @@ class ShowIpMroute(ShowIpMrouteSchema):
                     continue
 
                 ing_intf_dict = sub_dict.setdefault('incoming_interface_list',{}).setdefault(incoming_interface,{})
-
+                if m.groupdict()['iif_mdt_ip']:
+                    ing_intf_dict['iif_mdt_ip'] = m.groupdict()['iif_mdt_ip']
                 continue
 
             # ##Incoming interface list:

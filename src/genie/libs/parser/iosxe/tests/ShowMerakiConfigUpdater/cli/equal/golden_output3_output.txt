@@ -1,0 +1,29 @@
+Config Updater
+------------------------------------
+  Current state:                Ready
+ 
+Latest operation
+------------------------------------
+  Cloud config ready
+ 
+  Download running config: Pass
+    start time(UTC): 2025-04-04 23:13:38
+    result time(UTC): 2025-04-04 23:19:08
+    Downloaded config location: /flash/meraki/config_updater/monitor/dwnld_running.config
+  Apply running config: Pass
+    start time(UTC): 2025-04-04 23:19:08
+    result time(UTC): 2025-04-04 23:19:17
+  Get running config: Pass
+    start time(UTC): 2025-04-04 23:19:17
+    result time(UTC): 2025-04-04 23:19:23
+    Running config location: /flash/meraki/config_updater/monitor/upload.config
+  Get presigned url: Fail, Retrying
+    start time(UTC): 2025-04-04 23:19:23
+    result time(UTC): 2025-04-04 23:24:31
+    dashboard status code: 502
+    retry timeout: 300 sec
+    dashboard provided: No
+    retry count: 2/3
+    retry time(UTC): 2025-04-04 23:29:37
+  Upload config: Not started
+  

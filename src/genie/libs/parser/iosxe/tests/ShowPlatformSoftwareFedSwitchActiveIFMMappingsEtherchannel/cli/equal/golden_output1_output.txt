@@ -1,0 +1,9 @@
+Mappings Table
+
+
+
+Chan  Interface                         IF_ID               
+
+----------------------------------------------------------
+
+1     Port-channel1                     0x000000bc 

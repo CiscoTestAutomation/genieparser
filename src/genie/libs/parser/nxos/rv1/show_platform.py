@@ -70,6 +70,21 @@ class ShowModuleSchema(MetaParser):
                 Optional("serial_number"): str,
             }
         },
+        Optional("sam"): {
+            Optional(Any()): #Module
+            {
+                Optional(Any()): # SAM
+                {
+                Optional("module_type"): str,
+                Optional("model"): str,
+                Optional("status"): str,
+                Optional("software"): str,
+                Optional("hardware"): str,
+                Optional("online_diag_status"): str,
+                Optional("serial_number"): str
+                }
+            }
+        },
     }
 
 
@@ -106,6 +121,9 @@ class ShowModule(ShowModuleSchema):
         # Lem Ports             Module-Type                      Model           Status
         p2_1 = re.compile(r"^\s*Lem.*$")
 
+        # 1    1     DPU                       DPU-PART-NUM          ok
+        p2_3 = re.compile(r"^\s*(?P<module>\d+)\s+(?P<sam_number>\d+)\s+(?P<descr>Service Accelerator Module|DPU)\s+(?P<model>[A-Za-z0-9\-]+)\s+(?P<status>\S+)")
+
         # 1 18 1/10/25/40G IPS, 4/8/16/32G FC/Sup-4 DS-C9220I-K9-SUP active *
         # 8    36   36x400G QSFP56-DD Ethernet Module                N9K-X9836DM-A         ok
         # 27   0    Supervisor Module                                N9K-C9800-SUP-A       active *
@@ -135,6 +153,11 @@ class ShowModule(ShowModuleSchema):
         #  active *
         p7 = re.compile(r"^\s*(?P<status>\S+)")
 
+        # 1    1    1.99.0-43                     FSJ2128000B      Pass
+        p8 = re.compile(r"^(?P<module>\d+)\s+(?P<sam_number>\d+)\s+(?P<software>\S+)"
+                        r"\s+(?P<hardware>\S+)?\s+(?P<serial_num>\S+)"
+                        r"(\s+(?P<diag_status>\S+))$")
+
         for line in out.splitlines():
             line = line.rstrip()
 
@@ -144,6 +167,8 @@ class ShowModule(ShowModuleSchema):
                 table_header = "slot"
                 if "slot" not in module_dict:
                     module_dict["slot"] = {}
+                if ("Mod DPU" in line or "Mod SAM" in line) and "sam" not in module_dict:
+                    module_dict['sam'] = {}
                 continue
 
             # Xbar Ports  Module-Type                         Model              Status
@@ -161,6 +186,20 @@ class ShowModule(ShowModuleSchema):
                 lem_hit = True
                 if "lem" not in module_dict:
                     module_dict["lem"] = {}
+                continue
+
+            # 1    1     DPU                       N9324C-SE1U-DPU       ok
+            m = p2_3.match(line)
+            if m:
+                match_dict = m.groupdict()
+                mod = match_dict.get("module")
+                sam_num = match_dict.get("sam_number")
+                descr = match_dict.get("descr")
+                model = match_dict.get("model")
+                status = match_dict.get("status")
+                sam_dict_module = module_dict["sam"].setdefault(mod, {})
+                sam_dict_sam = sam_dict_module.setdefault(sam_num, {})
+                sam_dict_sam.update({"module_type": descr, "model": model, "status": status})
                 continue
 
             # 1 18 1/10/25/40G IPS, 4/8/16/32G FC/Sup-4 DS-C9220I-K9-SUP active *
@@ -403,6 +442,26 @@ class ShowModule(ShowModuleSchema):
                         "status"
                     ] = m.groupdict()["status"].strip()
                 parse_status = False
+
+            #1    1    1.99.0-43                     FDO283707X4      Pass
+            m = p8.match(line)
+            if m:
+                match_dict = m.groupdict()
+                mod = match_dict.get("module")
+                sam_num = match_dict.get("sam_number")
+                software = match_dict.get("software")
+                hardware = match_dict.get("hardware")
+                sn = match_dict.get("serial_num")
+                diag_status = match_dict.get("diag_status")
+                sam_dict = module_dict["sam"]
+                sam_dict[mod][sam_num].update({
+                    "software": software,
+                    "online_diag_status": diag_status,
+                    "serial_number": sn
+                    })
+                if hardware: sam_dict[mod][sam_num].update({'hardware': hardware})
+
+                continue
 
         # The case of n9k virtual device where no module was showing "supervisor" in the module type
         # if "slot" in module_dict:

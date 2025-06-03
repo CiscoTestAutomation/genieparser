@@ -1,0 +1,45 @@
+Showing SDM Template Info
+
+This is the Core template.
+Feature-Name                                        Reserved-Scale
+Unicast MAC addresses                               131072
+FIB Host Route                                      131072
+OGACL                                               2048
+SGACL Hosts                                         24576
+SGACL Cells                                         24576
+Max MPLS Label                                      65536
+L3 Multicast entries                                32768
+L2 Multicast entries                                16384
+Number of VLANs                                     4094 (**)
+Overflow Unicast MAC addresses                      512 (**)
+Overflow L2 Multicast entries                       512 (**)
+Overflow L3 Multicast entries                       512 (**)
+Ipv4/Ipv6 shared unicast routes                     131072 (**)
+Overflow shared unicast routes                      1000000 (**)
+STP Instances                                       4094 (**)
+Tunnels                                             1024 (**)
+VRF                                                 3839 (**)
+Max MPLS VPN Routes Per-Vrf label mode              1000000 (**)
+Max MPLS VPN Routes Per-Prefix label mode           65536 (**)
+Max L3 adjacency                                    131072 (**)
+Max L3 Interface                                    12288 (**)
+Max MPLS TE TUNNEL                                  4096 (**)
+Security ACL IN                                     21504
+Security ACL OUT                                    21504
+QOS ACL IN                                          5120
+QOS ACL OUT                                         5120
+PBRNAT ACL IN                                       8192
+PBRNAT ACL OUT                                      8192
+MIRROR ACL IN                                       1024
+MIRROR ACL OUT                                      1024
+FNF ACL IN                                          2048
+FNF ACL OUT                                         2048
+FNF FLOW IN                                         32768
+FNF FLOW OUT                                        32768
+
+(**) - SDM library is referred to only obtain scale
+
+Resource scale information
+EM                                                  1280000
+HCAM                                                131072
+OTHER                                               0

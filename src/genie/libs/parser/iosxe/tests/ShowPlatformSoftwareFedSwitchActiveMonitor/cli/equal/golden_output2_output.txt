@@ -1,0 +1,27 @@
+Session 0
+---------
+  Session Type         : Local Session
+  Source Ports         : RX: GigabitEthernet1/0/3 TX: None
+  Destination Ports    : None
+  Source VLANs         : None
+  Destination VLANs    : None
+  Source RSPAN VLAN    : 0
+  DST RSPAN VLAN       : 0
+  Ingress Forwarding   : Disabled
+  Filter VLANs         : None
+  ERSPAN Enable        : 0
+  ERSPAN Hw Programmed : 0
+  ERSPAN Mandatory Cfg : 0
+  ERSPAN Id            : 0
+  Gre Prot             : 0
+  MTU                  : 0
+  Ip Tos               : 0 (DSCP:0)
+  Ip Ttl               : 0
+  Ipv6 flow label      : 0
+  Cos                  : 0
+  Vrf Id               : 0
+  Tunnel IfId          : 0
+  Dst Ip               : 0.0.0.0
+  Org Ip               : 0.0.0.0
+  SGT count            : 0
+  SGT Tag(s)           :

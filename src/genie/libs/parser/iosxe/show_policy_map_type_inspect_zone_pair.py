@@ -10,6 +10,7 @@ from genie.libs.parser.utils.common import Common
 
 class ShowPolicyMapTypeInspectZonePairSchema(MetaParser):
     ''' Schema for show policy-map type inspect zone-pair {zone_pair_name}
+                   show policy-map type inspect zone-pair in-self
                    show policy-map type inspect zone-pair  '''
     schema = {
         "zone_pair":{
@@ -59,9 +60,12 @@ class ShowPolicyMapTypeInspectZonePair(ShowPolicyMapTypeInspectZonePairSchema):
 
     """ Parser for:
       show policy-map type inspect zone-pair
+      show policy-map type inspect zone-pair in-self
       show policy-map type inspect zone-pair {zone_pair_name} """
     
-    cli_command = ["show policy-map type inspect zone-pair","show policy-map type inspect zone-pair {zone_pair_name}"]
+    cli_command = ["show policy-map type inspect zone-pair",
+                   "show policy-map type inspect zone-pair in-self",
+                   "show policy-map type inspect zone-pair {zone_pair_name}"]
 
     def cli(self, zone_pair_name='',output=None):
         if output is None:

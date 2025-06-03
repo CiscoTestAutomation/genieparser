@@ -53,6 +53,7 @@ expected_output = {
                                         "ignore_mtu_mismatch": "Disabled",
                                         "transmit_mtu_zero": "Disabled",
                                         "lsp": "Up",
+                                        "load_balancing_hashing": "src-dst-ip",
                                         "status_tlv": "not set",
                                         "mpls": {
                                             "label": {
@@ -140,6 +141,7 @@ expected_output = {
                                         "ignore_mtu_mismatch": "Disabled",
                                         "transmit_mtu_zero": "Disabled",
                                         "lsp": "Up",
+                                        "load_balancing_hashing": "src-dst-ip",
                                         "status_tlv": "not set",
                                         "mpls": {
                                             "label": {
@@ -254,6 +256,7 @@ expected_output = {
                                         "ignore_mtu_mismatch": "Disabled",
                                         "transmit_mtu_zero": "Disabled",
                                         "lsp": "Up",
+                                        "load_balancing_hashing": "src-dst-ip",
                                         "status_tlv": "not set",
                                         "mpls": {
                                             "label": {

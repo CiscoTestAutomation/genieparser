@@ -29,6 +29,7 @@
     * 'show platform software object-manager switch {switch} F0 object {object}'
     * 'show platform software memory database fed {switch} {switch_var} callsite'
     * 'show platform software memory database fed {switch_var} callsite'
+    * 'show platform software memory database forwarding-manager {slot} active brief | include {options}'
     * 'show platform soft infra bipc | inc buffer'
     * 'show platform software infractructure inject'
     * 'show platform software process list fp active'
@@ -36,6 +37,11 @@
     * 'show platform software process list FP active name {process} '
     * 'show platform software l2vpn fp active atom'
     * 'show platform software adjacency RP active'
+    * 'show platform software nat fp active qfp-stats'
+    * 'show platform software mpls fp active eos'
+    * 'show platform software multicast stats'
+    * 'show platform software interface fp active name Port-channel32'
+    * 'show platform software nat fp active interface'
 """
 
 # Python
@@ -48,7 +54,7 @@ from xml.dom import minidom
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional, Use, And
+from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional, ListOf, Use, And
 from genie.libs.parser.utils.common import Common
 from genie.parsergen import oper_fill_tabular
 
@@ -10753,6 +10759,989 @@ class ShowPlatformSoftwareAdjacencyRpActive(ShowPlatformSoftwareAdjacencyRpActiv
             m = p12.match(line)
             if m:
                 adjacency_dict['om_handle'] = m.group('om_handle')
+                continue
+
+        return parsed_dict
+
+class ShowPlatformSoftwareNatFpActiveQfpStatsSchema(MetaParser):
+    schema = {
+        'interface': {
+            'add': int,
+            'upd': int,
+            'del': int,
+            'ack': int,
+            'err': int,
+        },
+        'timeout': {
+            'set': int,
+            'ack': int,
+            'err': int,
+        },
+        'service': {
+            'set': int,
+            'ack': int,
+            'err': int,
+        },
+    }
+
+class ShowPlatformSoftwareNatFpActiveQfpStats(ShowPlatformSoftwareNatFpActiveQfpStatsSchema):
+    """Parser for 'show platform software nat fp active qfp-stats'"""
+
+    cli_command = 'show platform software nat fp active qfp-stats'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        parsed_dict = {}
+        # Interface add: 10, upd: 20, del: 5, ack: 30, err: 0
+        p1 = re.compile(
+            r'^interface add: (?P<add>\d+), upd: (?P<upd>\d+), del: (?P<del>\d+), ack: (?P<ack>\d+), err: (?P<err>\d+)$'
+        )
+        # Timeout set: 100, ack: 98, err: 2
+        p2 = re.compile(
+            r'^timeout set: (?P<set>\d+), ack: (?P<ack>\d+), err: (?P<err>\d+)$'
+        )
+        # Service set: 50, ack: 50, err: 0
+        p3 = re.compile(
+            r'^service set: (?P<set>\d+), ack: (?P<ack>\d+), err: (?P<err>\d+)$'
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Interface add: 10, upd: 20, del: 5, ack: 30, err: 0
+            m = p1.match(line)
+            if m:
+                parsed_dict.setdefault('interface', {}).update({k: int(v) for k, v in m.groupdict().items()})
+                continue
+
+            # Timeout set: 100, ack: 98, err: 2
+            m = p2.match(line)
+            if m:
+                parsed_dict.setdefault('timeout', {}).update({k: int(v) for k, v in m.groupdict().items()})
+                continue
+
+            # Service set: 50, ack: 50, err: 0
+            m = p3.match(line)
+            if m:
+                parsed_dict.setdefault('service', {}).update({k: int(v) for k, v in m.groupdict().items()})
+                continue
+
+        return parsed_dict
+
+class ShowPlatformSoftwareInterfaceFpActiveSchema(MetaParser):
+    schema = {
+        'name': str,
+        'id': int,
+        'qfp_id': int,
+        'schedules': int,
+        'type': str,
+        'state': str,
+        'snmp_id': int,
+        'mtu': int,
+        Optional('ip_address'): str,
+        Optional('ipv6_address'): str,
+        'flags': ListOf(str),
+        'icmp_flags': ListOf(str),
+        'icmp6_flags': ListOf(str),
+        'smi_protocols': ListOf(str),
+        Optional('authenticated_user'): str,
+        'frr_linkdown_id': int,
+        'vnet_name': str,
+        'vnet_tag': int,
+        'vnet_extra_info': int,
+        'dirty': str,
+        'aom_dependency_sanity_check': str,
+        'aom_obj_id': int,
+        'ether_channel_id': int,
+        'load_balancing_method': str,
+        'number_of_member_links': int,
+        'members': ListOf(str),
+        'number_of_buckets': int,
+        'buckets': ListOf({
+            'id': int,
+            'link': str
+        })
+    }
+class ShowPlatformSoftwareInterfaceFpActive(ShowPlatformSoftwareInterfaceFpActiveSchema):
+    cli_command = 'show platform software interface fp active name {name}'
+
+    def cli(self, name=" ", output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(name=name))
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+        # Name: Te0/0/0, ID: 5, QFP ID: 1, Schedules: 2
+        p1 = re.compile(r'^Name: +(?P<name>\S+), +ID: +(?P<id>\d+), +QFP ID: +(?P<qfp_id>\d+), +Schedules: +(?P<schedules>\d+)$')
+
+        # Type: Ethernet, State: UP, SNMP ID: 101, MTU: 1500
+        p2 = re.compile(r'^Type: +(?P<type>\S+), +State: +(?P<state>\S+), +SNMP ID: +(?P<snmp_id>\d+), +MTU: +(?P<mtu>\d+)$')
+
+        # IP Address: 192.168.1.1
+        p3 = re.compile(r'^IP Address: +(?P<ip_address>\S+)$')
+
+        # IPV6 Address: 2001:0db8:85a3::8a2e:0370:7334
+        p4 = re.compile(r'^IPV6 Address: +(?P<ipv6_address>\S+)$')
+
+        # Flags: Up Broadcast Running
+        p5 = re.compile(r'^Flags: +(?P<flags>[\S\s]+)$')
+
+        # ICMP Flags: Enabled
+        p6 = re.compile(r'^ICMP Flags: +(?P<icmp_flags>[\S\s]+)$')
+
+        # ICMP6 Flags: Disabled
+        p7 = re.compile(r'^ICMP6 Flags: +(?P<icmp6_flags>[\S\s]+)$')
+
+        # SMI enabled on protocol(s): ARP, IP, MPLS
+        p8 = re.compile(r'^SMI enabled on protocol\(s\): +(?P<smi_protocols>[\S\s]+)$')
+
+        # Authenticated-user: admin
+        p9 = re.compile(r'^Authenticated-user: +(?P<authenticated_user>.*)$')
+
+        # FRR linkdown ID: 300
+        p10 = re.compile(r'^FRR linkdown ID: +(?P<frr_linkdown_id>\d+)$')
+
+        # vNet Name: RED, vNet Tag: 10, vNet Extra Information: 5
+        p11 = re.compile(r'^vNet Name: +(?P<vnet_name>.*), +vNet Tag: +(?P<vnet_tag>\d+), +vNet Extra Information: +(?P<vnet_extra_info>\d+)$')
+
+        # Dirty: No
+        p12 = re.compile(r'^Dirty: +(?P<dirty>\S+)$')
+
+        # AOM dependency sanity check: Passed
+        p13 = re.compile(r'^AOM dependency sanity check: +(?P<aom_dependency_sanity_check>\S+)$')
+
+        # AOM Obj ID: 456
+        p14 = re.compile(r'^AOM Obj ID: +(?P<aom_obj_id>\d+)$')
+
+        # Ether-Channel ID: 3, Load-balancing method: src-dst-ip
+        p15 = re.compile(r'^Ether-Channel ID: +(?P<ether_channel_id>\d+), +Load-balancing method: +(?P<load_balancing_method>[\S\s]+)$')
+
+        # Number of member links: 2
+        p16 = re.compile(r'^Number of member links: +(?P<number_of_member_links>\d+)$')
+
+        # Members: Te0/0/0, Te0/0/1
+        p17 = re.compile(r'^Members: +(?P<members>[\S\s]+)$')
+
+        # Number of buckets: 256
+        p18 = re.compile(r'^Number of buckets: +(?P<number_of_buckets>\d+)$')
+
+        # ID: 1, link: Up
+        p19 = re.compile(r'^ID: +(?P<id>\d+), +link: +(?P<link>\S+)$')
+
+
+        # Parse each line of the output
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Name: Te0/0/0, ID: 5, QFP ID: 1, Schedules: 2
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict['name'] = group['name']
+                parsed_dict['id'] = int(group['id'])
+                parsed_dict['qfp_id'] = int(group['qfp_id'])
+                parsed_dict['schedules'] = int(group['schedules'])
+                continue
+
+            # Type: Ethernet, State: UP, SNMP ID: 101, MTU: 1500
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict['type'] = group['type']
+                parsed_dict['state'] = group['state']
+                parsed_dict['snmp_id'] = int(group['snmp_id'])
+                parsed_dict['mtu'] = int(group['mtu'])
+                continue
+
+            # IP Address: 192.168.1.1
+            m = p3.match(line)
+            if m:
+                parsed_dict['ip_address'] = m.group('ip_address')
+                continue
+
+            # IPV6 Address: 2001:0db8:85a3::8a2e:0370:7334
+            m = p4.match(line)
+            if m:
+                parsed_dict['ipv6_address'] = m.group('ipv6_address')
+                continue
+
+            # Flags: Up Broadcast Runnings
+            m = p5.match(line)
+            if m:
+                parsed_dict['flags'] = m.group('flags').split(', ')
+                continue
+
+            # ICMP Flags: Enabled
+            m = p6.match(line)
+            if m:
+                parsed_dict['icmp_flags'] = m.group('icmp_flags').split(', ')
+                continue
+
+            # ICMP6 Flags: Disabled
+            m = p7.match(line)
+            if m:
+                parsed_dict['icmp6_flags'] = m.group('icmp6_flags').split(', ')
+                continue
+
+            # SMI enabled on protocol(s): ARP, IP, MPLS
+            m = p8.match(line)
+            if m:
+                parsed_dict['smi_protocols'] = m.group('smi_protocols').split(', ')
+                continue
+
+            # Authenticated-user: admin
+            m = p9.match(line)
+            if m:
+                parsed_dict['authenticated_user'] = m.group('authenticated_user').strip()
+                continue
+
+            # FRR linkdown ID: 300
+            m = p10.match(line)
+            if m:
+                parsed_dict['frr_linkdown_id'] = int(m.group('frr_linkdown_id'))
+                continue
+
+            # vNet Name: RED, vNet Tag: 10, vNet Extra Information: 5
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict['vnet_name'] = group['vnet_name'].strip()
+                parsed_dict['vnet_tag'] = int(group['vnet_tag'])
+                parsed_dict['vnet_extra_info'] = int(group['vnet_extra_info'])
+                continue
+
+            # Dirty: No
+            m = p12.match(line)
+            if m:
+                parsed_dict['dirty'] = m.group('dirty')
+                continue
+
+            # AOM dependency sanity check: Passed
+            m = p13.match(line)
+            if m:
+                parsed_dict['aom_dependency_sanity_check'] = m.group('aom_dependency_sanity_check')
+                continue
+
+            # AOM Obj ID: 456
+            m = p14.match(line)
+            if m:
+                parsed_dict['aom_obj_id'] = int(m.group('aom_obj_id'))
+                continue
+
+            # Ether-Channel ID: 3, Load-balancing method: src-dst-ip
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict['ether_channel_id'] = int(group['ether_channel_id'])
+                parsed_dict['load_balancing_method'] = group['load_balancing_method']
+                continue
+
+            # Number of member links: 2
+            m = p16.match(line)
+            if m:
+                parsed_dict['number_of_member_links'] = int(m.group('number_of_member_links'))
+                continue
+
+            # Members: Te0/0/0, Te0/0/1
+            m = p17.match(line)
+            if m:
+                parsed_dict['members'] = m.group('members').split(', ')
+                continue
+
+            # Number of buckets: 256
+            m = p18.match(line)
+            if m:
+                parsed_dict['number_of_buckets'] = int(m.group('number_of_buckets'))
+                continue
+
+            # ID: 1, link: Up
+            m = p19.match(line)
+            if m:
+                bucket = {'id': int(m.group('id')), 'link': m.group('link')}
+                parsed_dict.setdefault('buckets', []).append(bucket)
+                continue
+
+        return parsed_dict
+
+class ShowPlatformSoftwareMulticastStatsSchema(MetaParser):
+    """Schema for show platform software multicast stats"""
+    schema = {
+        'bad_fman_stats': int,
+        'access_without_platform_markings': int,
+        'punts_without_subblocks': int,
+        'v4_mfib_entry_add_messages': int,
+        'v4_mfib_entry_modify_messages': int,
+        'v4_mfib_entry_delete_messages': int,
+        'duplicate_v4_entry_deletes': int,
+        'v4_mfib_outgoing_interface_add_messages': int,
+        'v4_mfib_outgoing_interface_modify_messages': int,
+        'v4_mfib_outgoing_interface_delete_messages': int,
+        'v4_interface_enable_messages': int,
+        'v4_interface_disable_messages': int,
+        'oif_v4_adds_missing_adjacency': int,
+        'oif_v4_missing_adjs_added': int,
+        'oif_v4_adj_creation_skipped': int,
+        'oif_v4_adj_creation_failure': int,
+        'oif_v4_id_creation_failure': int,
+        'oif_v4_deletes_missing_adj_using_cached_id': int,
+        'oif_v4_deletes_missing_id_cache': int,
+        'oif_v4_add_modify_ic_flag_update_failure': int,
+        'oif_v4_deletes_ic_flag_update_failure': int,
+        'mgre_non_autorp_packets_for_autorp_groups': int,
+        'mgre_autorp_packets_injected_to_p2mp_interface': int,
+        'v6_mfib_entry_add_messages': int,
+        'v6_mfib_entry_modify_messages': int,
+        'v6_mfib_entry_delete_messages': int,
+        'duplicate_v6_entry_deletes': int,
+        'v6_mfib_outgoing_interface_add_messages': int,
+        'v6_mfib_outgoing_interface_modify_messages': int,
+        'v6_mfib_outgoing_interface_delete_messages': int,
+        'v6_interface_enable_messages': int,
+        'v6_interface_disable_messages': int,
+        'oif_v6_adds_missing_adjacency': int,
+        'oif_v6_missing_adjs_added': int,
+        'oif_v6_adj_creation_skipped': int,
+        'oif_v6_adj_creation_failure': int,
+        'oif_v6_id_creation_failure': int,
+        'oif_v6_deletes_missing_adj_using_cached_id': int,
+        'oif_v6_deletes_missing_id_cache': int,
+        'oif_v6_add_modify_ic_flag_update_failure': int,
+        'oif_v6_delete_ic_flag_update_failure': int,
+        'downloads_with_unknown_af': int,
+        'oif_ic_count_add_modify_failure': int,
+        'oif_ic_count_deletes_failure': int,
+        'oif_a_count_add_modify_failure': int,
+        'oif_a_count_deletes_failure': int,
+    }
+
+class ShowPlatformSoftwareMulticastStats(ShowPlatformSoftwareMulticastStatsSchema):
+    """Parser for show platform software multicast stats"""
+
+    cli_command = 'show platform software multicast stats'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # Define regex patterns using re.compile
+        # 12 Number of bad fman stats
+        p1 = re.compile(r'(?P<value>\d+) Number of bad fman stats')
+
+        # 25 Number of access to entries without platform markings
+        p2 = re.compile(r'(?P<value>\d+) Number of access to entries without platform markings')
+
+        # 3 Number of punts without subblocks
+        p3 = re.compile(r'(?P<value>\d+) Number of punts without subblocks')
+
+        # 100 v4-mfib-entry add messages
+        p4 = re.compile(r'(?P<value>\d+) v4-mfib-entry add messages')
+
+        # 200 v4-mfib-entry modify messages
+        p5 = re.compile(r'(?P<value>\d+) v4-mfib-entry modify messages')
+
+        # 150 v4-mfib-entry delete messages
+        p6 = re.compile(r'(?P<value>\d+) v4-mfib-entry delete messages')
+
+        # 5 Number of duplicate v4 entry deletes
+        p7 = re.compile(r'(?P<value>\d+) Number of duplicate v4 entry deletes')
+
+        # 10 v4-mfib-outgoing-interface add messages
+        p8 = re.compile(r'(?P<value>\d+) v4-mfib-outgoing-interface add messages')
+
+        # 8 v4-mfib-outgoing-interface modify messages
+        p9 = re.compile(r'(?P<value>\d+) v4-mfib-outgoing-interface modify messages')
+
+        # 6 v4-mfib-outgoing-interface delete messages
+        p10 = re.compile(r'(?P<value>\d+) v4-mfib-outgoing-interface delete messages')
+
+        # 300 v4-interface enable messages
+        p11 = re.compile(r'(?P<value>\d+) v4-interface enable messages')
+
+        # 120 v4-interface disable messages
+        p12 = re.compile(r'(?P<value>\d+) v4-interface disable messages')
+
+        # 50 Oif v4 adds, missing adjacency
+        p13 = re.compile(r'(?P<value>\d+) Oif v4 adds, missing adjacency')
+
+        # 30 Oif v4 missing adj's added
+        p14 = re.compile(r'(?P<value>\d+) Oif v4 missing adj\'s added')
+
+        # 12 Oif v4 adj creation skipped
+        p15 = re.compile(r'(?P<value>\d+) Oif v4 adj creation skipped')
+
+        # 3 Oif v4 adj creation failure
+        p16 = re.compile(r'(?P<value>\d+) Oif v4 adj creation failure')
+
+        # 2 Oif v4 ID creation failure
+        p17 = re.compile(r'(?P<value>\d+) Oif v4 ID creation failure')
+
+        # 18 Oif v4 deletes, missing adj using cached ID
+        p18 = re.compile(r'(?P<value>\d+) Oif v4 deletes, missing adj using cached ID')
+
+        # 5 Oif v4 deletes, missing ID cache
+        p19 = re.compile(r'(?P<value>\d+) Oif v4 deletes, missing ID cache')
+
+        # 7 Oif v4 add/modify, IC flag update failure
+        p20 = re.compile(r'(?P<value>\d+) Oif v4 add/modify, IC flag update failure')
+
+        # 4 Oif v4 deletes, IC flag update failure
+        p21 = re.compile(r'(?P<value>\d+) Oif v4 deletes, IC flag update failure')
+
+        # 8 mGRE, non-AutoRP Packets for AutoRP groups
+        p22 = re.compile(r'(?P<value>\d+) mGRE, non-AutoRP Packets for AutoRP groups')
+
+        # 2 mGRE, AutoRP Packets injected to p2MP interface
+        p23 = re.compile(r'(?P<value>\d+) mGRE, AutoRP Packets injected to p2MP interface')
+
+        # 14 v6-mfib-entry add messages
+        p24 = re.compile(r'(?P<value>\d+) v6-mfib-entry add messages')
+
+        # 9 v6-mfib-entry modify messages
+        p25 = re.compile(r'(?P<value>\d+) v6-mfib-entry modify messages')
+
+        # 11 v6-mfib-entry delete messages
+        p26 = re.compile(r'(?P<value>\d+) v6-mfib-entry delete messages')
+
+        # 6 Number of duplicate v6 entry deletes
+        p27 = re.compile(r'(?P<value>\d+) Number of duplicate v6 entry deletes')
+
+        # 20 v6-mfib-outgoing-interface add messages
+        p28 = re.compile(r'(?P<value>\d+) v6-mfib-outgoing-interface add messages')
+
+        # 15 v6-mfib-outgoing-interface modify messages
+        p29 = re.compile(r'(?P<value>\d+) v6-mfib-outgoing-interface modify messages')
+
+        # 25 v6-mfib-outgoing-interface delete messages
+        p30 = re.compile(r'(?P<value>\d+) v6-mfib-outgoing-interface delete messages')
+
+        # 50 v6-interface enable messages
+        p31 = re.compile(r'(?P<value>\d+) v6-interface enable messages')
+
+        # 45 v6-interface disable messages
+        p32 = re.compile(r'(?P<value>\d+) v6-interface disable messages')
+
+        # 23 Oif v6 adds, missing adjacency
+        p33 = re.compile(r'(?P<value>\d+) Oif v6 adds, missing adjacency')
+
+        # 19 Oif v6 missing adj's added
+        p34 = re.compile(r'(?P<value>\d+) Oif v6 missing adj\'s added')
+
+        # 7 Oif v6 adj creation skipped
+        p35 = re.compile(r'(?P<value>\d+) Oif v6 adj creation skipped')
+
+        # 4 Oif v6 adj creation failure
+        p36 = re.compile(r'(?P<value>\d+) Oif v6 adj creation failure')
+
+        # 3 Oif v6 ID creation failure
+        p37 = re.compile(r'(?P<value>\d+) Oif v6 ID creation failure')
+
+        # 17 Oif v6 deletes, missing adj using cached ID
+        p38 = re.compile(r'(?P<value>\d+) Oif v6 deletes, missing adj using cached ID')
+
+        # 9 Oif v6 deletes, missing ID cache
+        p39 = re.compile(r'(?P<value>\d+) Oif v6 deletes, missing ID cache')
+
+        # 6 Oif v6 add/modify, IC flag update failure
+        p40 = re.compile(r'(?P<value>\d+) Oif v6 add/modify, IC flag update failure')
+
+        # 3 Oif v6 delete, IC flag update failure
+        p41 = re.compile(r'(?P<value>\d+) Oif v6 delete, IC flag update failure')
+
+        # 2 Number of downloads with unknown AF
+        p42 = re.compile(r'(?P<value>\d+) Number of downloads with unknown AF')
+
+        # 5 Oif IC count add/modify failure
+        p43 = re.compile(r'(?P<value>\d+) Oif IC count add/modify failure')
+
+        # 3 Oif IC count deletes failure
+        p44 = re.compile(r'(?P<value>\d+) Oif IC count deletes failure')
+
+        # 2 Oif A count add/modify failure
+        p45 = re.compile(r'(?P<value>\d+) Oif A count add/modify failure')
+
+        # 1 Oif A count deletes failure
+        p46 = re.compile(r'(?P<value>\d+) Oif A count deletes failure')
+
+        # Iterate over each line in the output
+        for line in output.splitlines():
+            line = line.strip()
+
+            # 12 Number of bad fman stats
+            match = p1.match(line)
+            if match:
+                parsed_dict['bad_fman_stats'] = int(match.group('value'))
+                continue
+
+            # 25 Number of access to entries without platform markings
+            match = p2.match(line)
+            if match:
+                parsed_dict['access_without_platform_markings'] = int(match.group('value'))
+                continue
+
+            # 3 Number of punts without subblocks
+            match = p3.match(line)
+            if match:
+                parsed_dict['punts_without_subblocks'] = int(match.group('value'))
+                continue
+
+            # 100 v4-mfib-entry add messages
+            match = p4.match(line)
+            if match:
+                parsed_dict['v4_mfib_entry_add_messages'] = int(match.group('value'))
+                continue
+
+            # 200 v4-mfib-entry modify messages
+            match = p5.match(line)
+            if match:
+                parsed_dict['v4_mfib_entry_modify_messages'] = int(match.group('value'))
+                continue
+
+            # 150 v4-mfib-entry delete messages
+            match = p6.match(line)
+            if match:
+                parsed_dict['v4_mfib_entry_delete_messages'] = int(match.group('value'))
+                continue
+
+            # 5 Number of duplicate v4 entry deletes
+            match = p7.match(line)
+            if match:
+                parsed_dict['duplicate_v4_entry_deletes'] = int(match.group('value'))
+                continue
+
+            # 10 v4-mfib-outgoing-interface add messages
+            match = p8.match(line)
+            if match:
+                parsed_dict['v4_mfib_outgoing_interface_add_messages'] = int(match.group('value'))
+                continue
+
+            # 8 v4-mfib-outgoing-interface modify messages
+            match = p9.match(line)
+            if match:
+                parsed_dict['v4_mfib_outgoing_interface_modify_messages'] = int(match.group('value'))
+                continue
+
+            # 6 v4-mfib-outgoing-interface delete messages
+            match = p10.match(line)
+            if match:
+                parsed_dict['v4_mfib_outgoing_interface_delete_messages'] = int(match.group('value'))
+                continue
+
+            # 300 v4-interface enable messages
+            match = p11.match(line)
+            if match:
+                parsed_dict['v4_interface_enable_messages'] = int(match.group('value'))
+                continue
+
+            # 120 v4-interface disable messages
+            match = p12.match(line)
+            if match:
+                parsed_dict['v4_interface_disable_messages'] = int(match.group('value'))
+                continue
+
+            # 50 Oif v4 adds, missing adjacency
+            match = p13.match(line)
+            if match:
+                parsed_dict['oif_v4_adds_missing_adjacency'] = int(match.group('value'))
+                continue
+
+            # 30 Oif v4 missing adj's added
+            match = p14.match(line)
+            if match:
+                parsed_dict['oif_v4_missing_adjs_added'] = int(match.group('value'))
+                continue
+
+            # 12 Oif v4 adj creation skipped
+            match = p15.match(line)
+            if match:
+                parsed_dict['oif_v4_adj_creation_skipped'] = int(match.group('value'))
+                continue
+
+            # 3 Oif v4 adj creation failure
+            match = p16.match(line)
+            if match:
+                parsed_dict['oif_v4_adj_creation_failure'] = int(match.group('value'))
+                continue
+
+            # 2 Oif v4 ID creation failure
+            match = p17.match(line)
+            if match:
+                parsed_dict['oif_v4_id_creation_failure'] = int(match.group('value'))
+                continue
+
+            # 18 Oif v4 deletes, missing adj using cached ID
+            match = p18.match(line)
+            if match:
+                parsed_dict['oif_v4_deletes_missing_adj_using_cached_id'] = int(match.group('value'))
+                continue
+
+            # 5 Oif v4 deletes, missing ID cache
+            match = p19.match(line)
+            if match:
+                parsed_dict['oif_v4_deletes_missing_id_cache'] = int(match.group('value'))
+                continue
+
+            # 7 Oif v4 add/modify, IC flag update failure
+            match = p20.match(line)
+            if match:
+                parsed_dict['oif_v4_add_modify_ic_flag_update_failure'] = int(match.group('value'))
+                continue
+
+            # 4 Oif v4 deletes, IC flag update failure
+            match = p21.match(line)
+            if match:
+                parsed_dict['oif_v4_deletes_ic_flag_update_failure'] = int(match.group('value'))
+                continue
+
+            # 8 mGRE, non-AutoRP Packets for AutoRP groups
+            match = p22.match(line)
+            if match:
+                parsed_dict['mgre_non_autorp_packets_for_autorp_groups'] = int(match.group('value'))
+                continue
+
+            # 2 mGRE, AutoRP Packets injected to p2MP interface
+            match = p23.match(line)
+            if match:
+                parsed_dict['mgre_autorp_packets_injected_to_p2mp_interface'] = int(match.group('value'))
+                continue
+
+            # 14 v6-mfib-entry add messages
+            match = p24.match(line)
+            if match:
+                parsed_dict['v6_mfib_entry_add_messages'] = int(match.group('value'))
+                continue
+
+            # 9 v6-mfib-entry modify messages
+            match = p25.match(line)
+            if match:
+                parsed_dict['v6_mfib_entry_modify_messages'] = int(match.group('value'))
+                continue
+
+            # 11 v6-mfib-entry delete messages
+            match = p26.match(line)
+            if match:
+                parsed_dict['v6_mfib_entry_delete_messages'] = int(match.group('value'))
+                continue
+
+            # 6 Number of duplicate v6 entry deletes
+            match = p27.match(line)
+            if match:
+                parsed_dict['duplicate_v6_entry_deletes'] = int(match.group('value'))
+                continue
+
+            # 20 v6-mfib-outgoing-interface add messages
+            match = p28.match(line)
+            if match:
+                parsed_dict['v6_mfib_outgoing_interface_add_messages'] = int(match.group('value'))
+                continue
+
+            # 15 v6-mfib-outgoing-interface modify messages
+            match = p29.match(line)
+            if match:
+                parsed_dict['v6_mfib_outgoing_interface_modify_messages'] = int(match.group('value'))
+                continue
+
+            # 25 v6-mfib-outgoing-interface delete messages
+            match = p30.match(line)
+            if match:
+                parsed_dict['v6_mfib_outgoing_interface_delete_messages'] = int(match.group('value'))
+                continue
+
+            # 50 v6-interface enable messages
+            match = p31.match(line)
+            if match:
+                parsed_dict['v6_interface_enable_messages'] = int(match.group('value'))
+                continue
+
+            # 45 v6-interface disable messages
+            match = p32.match(line)
+            if match:
+                parsed_dict['v6_interface_disable_messages'] = int(match.group('value'))
+                continue
+
+            # 23 Oif v6 adds, missing adjacency
+            match = p33.match(line)
+            if match:
+                parsed_dict['oif_v6_adds_missing_adjacency'] = int(match.group('value'))
+                continue
+
+            # 19 Oif v6 missing adj's added
+            match = p34.match(line)
+            if match:
+                parsed_dict['oif_v6_missing_adjs_added'] = int(match.group('value'))
+                continue
+
+            # 7 Oif v6 adj creation skipped
+            match = p35.match(line)
+            if match:
+                parsed_dict['oif_v6_adj_creation_skipped'] = int(match.group('value'))
+                continue
+
+            # 4 Oif v6 adj creation failure
+            match = p36.match(line)
+            if match:
+                parsed_dict['oif_v6_adj_creation_failure'] = int(match.group('value'))
+                continue
+
+            # 3 Oif v6 ID creation failure
+            match = p37.match(line)
+            if match:
+                parsed_dict['oif_v6_id_creation_failure'] = int(match.group('value'))
+                continue
+
+            # 17 Oif v6 deletes, missing adj using cached ID
+            match = p38.match(line)
+            if match:
+                parsed_dict['oif_v6_deletes_missing_adj_using_cached_id'] = int(match.group('value'))
+                continue
+
+            # 9 Oif v6 deletes, missing ID cache
+            match = p39.match(line)
+            if match:
+                parsed_dict['oif_v6_deletes_missing_id_cache'] = int(match.group('value'))
+                continue
+
+            # 6 Oif v6 add/modify, IC flag update failure
+            match = p40.match(line)
+            if match:
+                parsed_dict['oif_v6_add_modify_ic_flag_update_failure'] = int(match.group('value'))
+                continue
+
+            # 3 Oif v6 delete, IC flag update failure
+            match = p41.match(line)
+            if match:
+                parsed_dict['oif_v6_delete_ic_flag_update_failure'] = int(match.group('value'))
+                continue
+
+            # 2 Number of downloads with unknown AF
+            match = p42.match(line)
+            if match:
+                parsed_dict['downloads_with_unknown_af'] = int(match.group('value'))
+                continue
+
+            # 5 Oif IC count add/modify failure
+            match = p43.match(line)
+            if match:
+                parsed_dict['oif_ic_count_add_modify_failure'] = int(match.group('value'))
+                continue
+
+            # 3 Oif IC count deletes failure
+            match = p44.match(line)
+            if match:
+                parsed_dict['oif_ic_count_deletes_failure'] = int(match.group('value'))
+                continue
+
+            # 2 Oif A count add/modify failure
+            match = p45.match(line)
+            if match:
+                parsed_dict['oif_a_count_add_modify_failure'] = int(match.group('value'))
+                continue
+
+            # 1 Oif A count deletes failure
+            match = p46.match(line)
+            if match:
+                parsed_dict['oif_a_count_deletes_failure'] = int(match.group('value'))
+                continue
+
+        return parsed_dict
+
+class ShowPlatformSoftwareMplsFpActiveEosSchema(MetaParser):
+    """Schema for show platform software mpls fp active eos"""
+    schema = {
+        'number_of_eos_choice_entries': int,
+        'eos_choices': {
+            int: {
+                'number_of_paths': int,
+                'next_object_type': ListOf(str),  # Use ListOf for type validation
+                'next_object_index': ListOf(str),  # Use ListOf for type validation
+                Optional('aom_id'): int,
+                Optional('cpp_handle'): str,
+                Optional('flags'): int
+            }
+        }
+    }
+
+class ShowPlatformSoftwareMplsFpActiveEos(ShowPlatformSoftwareMplsFpActiveEosSchema):
+    """Parser for show platform software mpls fp active eos"""
+    cli_command = 'show platform software mpls fp active eos'
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        parsed_dict = {}
+        eos_choice = None
+        # Define regex patterns
+
+        # Number of EOS Choice entries: 12
+        p1 = re.compile(r'^Number of EOS Choice entries:\s+(?P<entry_count>\d+)$')
+
+        # EOS Choice 142, Number of paths: 2
+        p2 = re.compile(r'^EOS Choice\s+(?P<eos_choice>0x[0-9a-fA-F]+|\d+),\s+Number of paths:\s+(?P<number_of_paths>\d+)$')
+
+        # Next Object Type: OBJ_LABEL, OBJ_LABEL
+        p3 = re.compile(r'^Next Object Type:\s+(?P<next_object_type>.+)$')
+
+        # Next Object Index: 0x1d, 0x1e
+        p4 = re.compile(r'^Next Object Index:\s+(?P<next_object_index>.+)$')
+
+        # aom id: 5, CPP handle: 0x7, flags: 0
+        p5 = re.compile(r'^aom id:\s+(?P<aom_id>\d+),\s+CPP handle:\s+(?P<cpp_handle>\S+),\s+flags:\s+(?P<flags>\d+)$')
+
+        # Process each line of the output
+        for line in output.splitlines():
+            line = line.strip()
+            # Number of EOS Choice entries: 12
+            m = p1.match(line)
+            if m:
+                parsed_dict['number_of_eos_choice_entries'] = int(m.group('entry_count'))
+                continue
+
+            # EOS Choice 142, Number of paths: 2
+            m = p2.match(line)
+            if m:
+                eos_choice_raw = m.group('eos_choice')
+                eos_choice = int(eos_choice_raw, 16) if eos_choice_raw.startswith('0x') else int(eos_choice_raw)
+                parsed_dict.setdefault('eos_choices', {}).setdefault(eos_choice, {})
+                parsed_dict['eos_choices'][eos_choice]['number_of_paths'] = int(m.group('number_of_paths'))
+                continue
+
+            # Next Object Type: OBJ_LABEL, OBJ_LABEL
+            m = p3.match(line)
+            if m and eos_choice is not None:
+                types = [t.strip() for t in m.group('next_object_type').split(',')]
+                parsed_dict['eos_choices'][eos_choice]['next_object_type'] = types
+                continue
+
+            # Next Object Index: 0x1d, 0x1e
+            m = p4.match(line)
+            if m and eos_choice is not None:
+                indexes = [i.strip() for i in m.group('next_object_index').split(',')]
+                parsed_dict['eos_choices'][eos_choice]['next_object_index'] = indexes
+                continue
+
+            # aom id: 5, CPP handle: 0x7, flags: 0
+            m = p5.match(line)
+            if m and eos_choice is not None:
+                parsed_dict['eos_choices'][eos_choice]['aom_id'] = int(m.group('aom_id'))
+                parsed_dict['eos_choices'][eos_choice]['cpp_handle'] = m.group('cpp_handle')
+                parsed_dict['eos_choices'][eos_choice]['flags'] = int(m.group('flags'))
+                continue
+        return parsed_dict
+
+class ShowPlatformSoftwareMemoryDatabaseForwardingManagerSchema(MetaParser):
+    """Schema for 'show platform software memory database forwarding-manager {slot} active brief | include {options}'"""
+    schema = {
+        'entries': {
+            str: {  # This will be the table/type name
+                'count': int,
+                'database': str,
+            }
+        }
+    }
+
+class ShowPlatformSoftwareMemoryDatabaseForwardingManager(ShowPlatformSoftwareMemoryDatabaseForwardingManagerSchema):
+    """Parser for 'show platform software memory database forwarding-manager {slot} active brief | include {options}'"""
+
+    cli_command = 'show platform software memory database forwarding-manager {slot} active brief | include {options}'
+
+    def cli(self, slot='', options='', output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(slot=slot, options=options))
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # 1 entries [nat_db] table nat_addr_range/0
+        p0 = re.compile(r'(\d+) entries \[(\w+)\] \w+ (\S+)/\d+')
+
+        # Process each line of the output
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # 1 entries [nat_db] table nat_addr_range/0
+            m = p0.match(line)
+            if m:
+                count, database, name = m.groups()
+                # Use setdefault to avoid key errors
+                entry_dict = parsed_dict.setdefault('entries', {}).setdefault(name, {})
+                entry_dict['count'] = int(count)
+                entry_dict['database'] = database
+
+        return parsed_dict
+
+class ShowPlatformSoftwareNatFpActiveInterfaceSchema(MetaParser):
+    """Schema for show platform software nat fp active interface"""
+    schema = {
+        'interfaces': {
+            str: {
+                'interface_handle': int,
+                'domain': str,
+                'static_host_allowed': str,
+                'qfp_handle': int,
+            }
+        }
+    }
+
+class ShowPlatformSoftwareNatFpActiveInterface(ShowPlatformSoftwareNatFpActiveInterfaceSchema):
+    """Parser for show platform software nat fp active interface"""
+
+    cli_command = 'show platform software nat fp active interface'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # Regular expressions for parsing the output
+		
+		#Name: GigabitEthernet0/0/2, Inteface handle: 10
+        p1 = re.compile(r'^Name: +(?P<name>\S+), +Inteface +handle: +(?P<interface_handle>\d+)$')
+		
+		#Domain: OUTSIDE, Static-host allowed: No
+        p2 = re.compile(r'^Domain: +(?P<domain>\S+), +Static-host +allowed: +(?P<static_host_allowed>\S+)$')
+		
+		#QFP handle: 9
+        p3 = re.compile(r'^QFP +handle: +(?P<qfp_handle>\d+)$')
+
+        # Iterate over each line in the output
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Match the first line of each interface block
+			#Name: GigabitEthernet0/0/2, Inteface handle: 10
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                interface_name = group['name']
+                interface_handle = int(group['interface_handle'])
+
+                # Use setdefault to avoid KeyError
+                interface_dict = parsed_dict.setdefault('interfaces', {}).setdefault(interface_name, {})
+                interface_dict['interface_handle'] = interface_handle
+                continue
+
+            # Match the second line of each interface block
+			#Domain: OUTSIDE, Static-host allowed: No
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict['domain'] = group['domain']
+                interface_dict['static_host_allowed'] = group['static_host_allowed']
+                continue
+
+            # Match the third line of each interface block
+			#QFP handle: 9
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict['qfp_handle'] = int(group['qfp_handle'])
                 continue
 
         return parsed_dict

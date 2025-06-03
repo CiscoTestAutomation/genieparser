@@ -1,0 +1,7 @@
+Interface Vlan300
+  FNF:  monitor:          FlowMonitor-1
+        direction:        Input
+        traffic(ip):      on
+  FNF:  monitor:          FlowMonitor-1
+        direction:        Output
+        traffic(ip):      on

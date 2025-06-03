@@ -1,0 +1,6 @@
+#show controller optics 0/0/0/16/2 db
+Tue May  6 16:41:59.073 UTC
+
+ Transport Admin State: In Service
+
+ Controller State: Down

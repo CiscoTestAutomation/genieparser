@@ -68,7 +68,7 @@ class ShowL2ProtocolTunnelSummary(ShowL2ProtocolTunnelSummarySchema):
         p6 = re.compile(r"^(?P<protocol>\S+)\s+(?P<action>\S+)\s+(?P<shutdown_threshold>[\d\-]+)\s+(?P<drop_threshold>[\d\-]+)$")
 
         ret_dict = {}
-        last_port = None  # Track the last port parsed
+        port_dict = {}
         for line in output.splitlines():
             line = line.strip()
 
@@ -104,8 +104,9 @@ class ShowL2ProtocolTunnelSummary(ShowL2ProtocolTunnelSummarySchema):
             m = p5.match(line)
             if m:
                 dict_val = m.groupdict()
-                last_port = Common.convert_intf_name(dict_val["port"])
-                port_dict = ret_dict.setdefault("port", {}).setdefault(last_port, {})
+                port_dict = ret_dict.setdefault("port", {}).setdefault(
+                    Common.convert_intf_name(dict_val["port"]), {}
+                )
                 port_dict["status"] = dict_val["status"]
 
                 protocol_dict = port_dict.setdefault("protocol", {}).setdefault(

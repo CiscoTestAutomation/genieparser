@@ -1,0 +1,37 @@
+show ipv6 mroute vrf vrf1
+Multicast Routing Table
+Flags: D - Dense, S - Sparse, B - Bidir Group, s - SSM Group,
+       C - Connected, L - Local, I - Received Source Specific Host Report,
+       P - Pruned, R - RP-bit set, F - Register flag, T - SPT-bit set,
+       J - Join SPT, Y - Joined MDT-data group,
+       y - Sending to MDT-data group
+       g - BGP signal originated, G - BGP Signal received,
+       N - BGP Shared-Tree Prune received, n - BGP C-Mroute suppressed,
+       q - BGP Src-Active originated, Q - BGP Src-Active received
+       E - Extranet
+Timers: Uptime/Expires
+Interface state: Interface, State
+
+(*, FF8E::), 00:06:39/00:02:57, RP FC00::1:1:1, flags: S
+  Incoming interface: Tunnel2
+  RPF nbr: ::FFFF:2.2.2.2
+  Immediate Outgoing interface list:
+    Port-channel40, Forward, 00:06:39/00:02:57
+
+(2001::2, FF8E::), 00:06:39/00:02:57, flags: STY
+  Incoming interface: Tunnel2 MDT: 239.192.20.41/00:02:17
+  RPF nbr: ::FFFF:2.2.2.2
+  Immediate Outgoing interface list:
+    Port-channel40, Forward, 00:06:39/00:02:57
+
+(*, FF8E::1), 00:06:39/00:02:57, RP FC00::1:1:1, flags: S
+  Incoming interface: Tunnel2
+  RPF nbr: ::FFFF:2.2.2.2
+  Immediate Outgoing interface list:
+    Port-channel40, Forward, 00:06:39/00:02:57
+
+(2001::2, FF8E::1), 00:06:39/00:02:57, flags: STY
+  Incoming interface: Tunnel2 MDT: 239.192.20.40/00:02:17
+  RPF nbr: ::FFFF:2.2.2.2
+  Immediate Outgoing interface list:
+    Port-channel40, Forward, 00:06:39/00:02:57

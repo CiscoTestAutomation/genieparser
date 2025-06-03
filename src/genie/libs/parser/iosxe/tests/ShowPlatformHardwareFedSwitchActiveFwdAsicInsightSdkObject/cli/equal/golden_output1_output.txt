@@ -1,0 +1,4 @@
+# tc_profile object
+cookie: 'Gi1/0/21'
+device: =oref('device', oid=0x0)
+oid: =0x1e6 

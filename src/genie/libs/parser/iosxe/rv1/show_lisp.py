@@ -329,6 +329,8 @@ class ShowLispInstanceIdService(ShowLispInstanceIdServiceSchema):
         # ETR Map-Server(s) (last map-reg sent):    *** NOT FOUND ***
         p31_1 = re.compile(r'ETR Map-Server\(s\): +(?P<ems_not_found>\*\*\* NOT FOUND \*\*\*)$')
 
+        # ETR Map-Server(s):                        44.44.44.44 (00:00:07)
+        # ETR Map-Server(s):                        100:44:44:44 (00:00:07)
         # ETR Map-Server(s) (last map-reg sent):    3120:3120:3120:3120:3120:3120:3120:3120 (00:01:08, TCP)
         # ETR Map-Server(s) (last map-reg sent):    3130:3130:3130:3130:3130:3130:3130:3130 (00:00:09, UDP)
         # ETR Map-Server(s) (last map-reg sent):    3140:3140:3140:3140:3140:3140:3140:3140 (never)
@@ -347,7 +349,7 @@ class ShowLispInstanceIdService(ShowLispInstanceIdServiceSchema):
         #                                           3120:3120:3120:3120:3120:3120:3120:3120 prefix-list site1list domain-id 1 (00:01:08, TCP)
         #                                           3130:3130:3130:3130:3130:3130:3130:3130 prefix-list site1list domain-id 1 (00:00:09, UDP)
         #                                           3140:3140:3140:3140:3140:3140:3140:3140 prefix-list site1list domain-id 1 (never)
-        p31_2 = re.compile(r'(ETR Map-Server\(s\) \(last map-reg sent\):)? *(?P<ems_address>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'
+        p31_2 = re.compile(r'(ETR Map-Server\(s\)( \(last map-reg sent\))?:)? *(?P<ems_address>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'
                            r'|([a-fA-F\d\:]+))( prefix-list (?P<ems_prefix_list>\w+))?( domain-id (?P<ems_domain_id>\d+))?'
                            r' \((?P<ems_last_map_reg_time>[\w:\d]+)(, (?P<ems_last_transport_state>TCP|UDP))?\)$')
 
@@ -777,7 +779,8 @@ class ShowLispInstanceIdService(ShowLispInstanceIdServiceSchema):
                 ems_dict = instance_dict.setdefault('etr_map_servers', {})
                 ems_dict.update({'found': False})
                 continue
-
+            # ETR Map-Server(s):                        44.44.44.44 (00:00:07)
+            # ETR Map-Server(s):                        100:44:44:44 (00:00:07)
             # ETR Map-Server(s) (last map-reg sent):    3120:3120:3120:3120:3120:3120:3120:3120 (00:01:08, TCP)
             # ETR Map-Server(s) (last map-reg sent):    3130:3130:3130:3130:3130:3130:3130:3130 (00:00:09, UDP)
             # ETR Map-Server(s) (last map-reg sent):    3140:3140:3140:3140:3140:3140:3140:3140 (never)

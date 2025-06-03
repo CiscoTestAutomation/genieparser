@@ -1,0 +1,43 @@
+Type: vlan_group           State: allocated       MD5:(4b26a02a5cb35fda:8ac5cb15c5a2aa87)
+    Fset Urid              : 0x2000000000000001
+    Parent URID            : 0x0
+    Remote Port Count      : 0
+    Users Count            : 1
+    VP OIF Count           : 0
+    FSET Gid               : 8193
+    Asic[0] mcid_oid       : 2223
+
+Type: vlan_group           State: allocated       MD5:(d7cc48995242c698:167e8ad0954671bd)
+    Fset Urid              : 0x2000000000000002
+    Parent URID            : 0x0
+    Remote Port Count      : 0
+    Users Count            : 1
+    VP OIF Count           : 0
+    FSET Gid               : 8194
+    Asic[0] mcid_oid       : 2224
+
+Type: vlan_group           State: allocated       MD5:(c52449f83a553f2c:be027e40570983a7)
+    Fset Urid              : 0x2000000000000003
+    Parent URID            : 0x0
+    Remote Port Count      : 1
+    Users Count            : 11
+    VP OIF Count           : 1
+      No. VP Interface             Interface                Physical interface
+        1. Po103_V103               Port-channel103          -------------            
+              flags:[ mrouter  ]    hw_flags: [ InHw  ]
+    FSET Gid               : 8196
+    FSET Svl Link          : Idx: 0x87 Port: HundredGigE0/13   Gid: 65534
+    Asic[0] mcid_oid       : 901
+
+Type: vlan_group           State: allocated       MD5:(7ccbdd49119a520d:a2019adb238d6f3f)
+    Fset Urid              : 0x2000000000000004
+    Parent URID            : 0x0
+    Remote Port Count      : 1
+    Users Count            : 1
+    VP OIF Count           : 1
+      No. VP Interface             Interface                Physical interface
+        1. Po103_V103               Port-channel103          -------------            
+              flags:[ mrouter  ]    hw_flags: [ InHw  ]
+    FSET Gid               : 8197
+    FSET Svl Link          : Idx: 0x84 Port: HundredGigE0/13   Gid: 65531
+    Asic[0] mcid_oid       : 909

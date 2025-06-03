@@ -1,0 +1,12 @@
+Edge-1#show device-tracking data mac d4e8.801f.4875
+Codes: L - Local, S - Static, ND - Neighbor Discovery, ARP - Address Resolution Protocol, DH4 - IPv4 DHCP, DH6 - IPv6 DHCP, PKT - Other Packet, API - API created
+Preflevel flags (prlvl):
+0001:MAC and LLA match 0002:Orig trunk 0004:Orig access
+0008:Orig trusted trunk 0010:Orig trusted access 0020:DHCP assigned
+0040:Cga authenticated 0080:Cert authenticated 0100:Statically assigned
+
+Network Layer Address Link Layer Address Interface vlan prlvl age state Time left
+macDB has 1 entries for mac d4e8.801f.4875,vlan 1021, 1 dynamic
+DH4 172.19.10.11 d4e8.801f.4875 Te1/0/4 1021 0024 4s REACHABLE 243 s(678399 s)
+macDB has 1 entries for mac d4e8.801f.4875,vlan 1022, 1 dynamic
+ARP 172.19.12.11 d4e8.801f.4875 Te1/0/4 1022 0005 110s REACHABLE 140 s try 0

@@ -1,0 +1,10 @@
+QFP IPSEC state:
+
+ Crypto throughput license (kbps) (Aggregate): 10000 
+Message counter:
+  Type                  Request          Reply (OK)       Reply (Error)    
+  -----------------------------------------------------------------------
+  Initialize            1                1                0              
+  Initialize            5                5                0
+ 
+ 

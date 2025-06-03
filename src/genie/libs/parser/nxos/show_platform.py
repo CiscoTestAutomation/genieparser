@@ -476,6 +476,10 @@ class ShowInventory(ShowInventorySchema):
                 item_dict = inventory_dict.setdefault('name', {}).setdefault(name, {})
                 item_dict.update({'description': description})
 
+                m1 = p1_1.match(name)
+                if m1:
+                    slot = m1.groupdict()['slot']
+
                 # NAME: "SAM 1",  DESCR: Service Accelarator Module
                 m2 = p1_5.match(name)
                 if m2:
@@ -988,7 +992,7 @@ class ShowModuleSchema(MetaParser):
                         }
                     }
                 },
-              }
+            }
 
 class ShowModule(ShowModuleSchema):
     """Parser for show module"""
@@ -1025,8 +1029,8 @@ class ShowModule(ShowModuleSchema):
         # Lem Ports             Module-Type                      Model           Status
         p2_1 = re.compile(r'^\s*Lem.*$')
 
-        # 1    1     Service Accelerator Module                       DPU-PART-NUM          ok
-        p2_3 = re.compile(r'^\s*(?P<module>\d+)\s+(?P<sam_number>\d+)\s+(?P<descr>Service Accelerator Module)\s+(?P<model>[A-Za-z0-9\-]+)\s+(?P<status>\S+)')
+        # 1    1     DPU                       DPU-PART-NUM          ok
+        p2_3 = re.compile(r'^\s*(?P<module>\d+)\s+(?P<sam_number>\d+)\s+(?P<descr>Service Accelerator Module|DPU)\s+(?P<model>[A-Za-z0-9\-]+)\s+(?P<status>\S+)')
 
         # 1 18 1/10/25/40G IPS, 4/8/16/32G FC/Sup-4 DS-C9220I-K9-SUP active *
         # 8    36   36x400G QSFP56-DD Ethernet Module                N9K-X9836DM-A         ok
@@ -1066,7 +1070,7 @@ class ShowModule(ShowModuleSchema):
                 table_header = 'slot'
                 if 'slot' not in module_dict:
                     module_dict['slot'] = {}
-                if 'Mod SAM' in line and 'sam' not in module_dict:
+                if ('Mod DPU' in line or 'Mod SAM' in line) and 'sam' not in module_dict:
                     module_dict['sam'] = {}
                 continue
 
@@ -1088,7 +1092,7 @@ class ShowModule(ShowModuleSchema):
                 continue
 
 
-            # 1    1     Service Accelerator Module                       N9324C-SE1U-DPU       ok
+            # 1    1     DPU                       N9324C-SE1U-DPU       ok
             m = p2_3.match(line)
             if m:
                 match_dict = m.groupdict()
@@ -1275,9 +1279,9 @@ class ShowModule(ShowModuleSchema):
                 sam_dict[mod][sam_num].update({
                     'software': software,
                     'online_diag_status': diag_status,
-                    'hardware': hardware if hardware else '',
                     'serial_number': sn
                     })
+                if hardware: sam_dict[mod][sam_num].update({'hardware': hardware})
 
                 continue
 

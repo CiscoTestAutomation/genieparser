@@ -1,0 +1,7 @@
+ Host Access Table for Gi3/0/10
+ ==============================
+ Current feature:  psec
+
+ Source Address      vlan      Access Mode      feature    type
+ --------------------------------------------------------------
+ Default			ask

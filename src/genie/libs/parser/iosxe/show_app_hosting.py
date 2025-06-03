@@ -114,6 +114,135 @@ class ShowApphostingInfra(ShowApphostingInfraSchema):
         return parsed_dict
 
 
+# =======================================================
+# Schema for 'show app-hosting utilization appid {appid}'
+# =======================================================
+
+class showApphostingUtilSchema(MetaParser):
+    """ Schema for show app-hosting utilization """
+    schema = {
+        'app_name': str,
+        'cpu_util': {
+            'alloc': str,
+            'used': str,
+            'core_info': str,
+        },
+        'mem_util': {
+            'alloc': str,
+            'used': str,
+        },
+        'disk_util': {
+            'alloc': str,
+            'used': str,
+        },
+    }
+
+# =======================================================
+# Parser for 'show app-hosting utilization appid {appid}'
+# =======================================================
+class ShowApphostingUtil(showApphostingUtilSchema):
+    """ Parser for "show app-hosting utilization" """
+
+    cli_command = "show app-hosting utilization appid {appid}"
+
+    def cli(self, appid, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(appid=appid))
+        # Application: thousand_eyes
+        p1 = re.compile(r'^Application: +(?P<app_id>.+)$')
+        # CPU Utilization:
+        p2 = re.compile(r'^CPU Utilization:$')
+        # CPU Allocation: 7400 units
+        p3 = re.compile(r'^CPU Allocation: (?P<cpu_alloc>\d+) units$')
+        # CPU Used:       0.00 %
+        p4 = re.compile(r'^CPU Used: +(?P<cpu_used>.+)$')
+        # CPU Cores:      0-7
+        p5 = re.compile(r'^CPU Cores: +(?P<cpu_core>.+)$')
+        # Memory Utilization:
+        p6 = re.compile(r'^Memory Utilization:$')
+        # Memory Allocation: 2048 MB
+        p7 = re.compile(r'^Memory Allocation: +(?P<mem_alloc>.+)$')
+        # Memory Used:       15272 KB
+        p8 = re.compile(r'^Memory Used: +(?P<mem_used>.+)$')
+        # Disk Utilization:
+        p9 = re.compile(r'^Disk Utilization:$')
+        # Disk Allocation: 51 MB
+        p10 = re.compile(r'^Disk Allocation: +(?P<disk_alloc>.+)$')
+        # Disk Used:       50.05 MB
+        p11 = re.compile(r'^Disk Used: +(?P<disk_used>.+)$')
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Application: thousand_eyes
+            m = p1.match(line)
+            if m:
+                ret_dict['app_name'] = m.groupdict()['app_id']
+                continue
+
+            # CPU Utilization
+            m = p2.match(line)
+            if m:
+                cpu_utilization_dict = ret_dict.setdefault('cpu_util', {})
+                continue
+
+            # CPU Allocation: 7400 units
+            m = p3.match(line)
+            if m:
+                cpu_utilization_dict['alloc'] = m.groupdict()['cpu_alloc']
+                continue
+
+            # CPU Used:       0.00 %
+            m = p4.match(line)
+            if m:
+                cpu_utilization_dict['used'] = m.groupdict()['cpu_used']
+                continue
+
+            # CPU Cores:      0-7
+            m = p5.match(line)
+            if m:
+                cpu_utilization_dict['core_info'] = m.groupdict()['cpu_core']
+                continue
+
+            # Memory Utilization:
+            m = p6.match(line)
+            if m:
+                memory_utilization_dict = ret_dict.setdefault('mem_util', {})
+                continue
+
+            # Memory Allocation: 2048 MB
+            m = p7.match(line)
+            if m:
+                memory_utilization_dict['alloc'] = m.groupdict()['mem_alloc']
+                continue
+
+            # Memory Used:       15272 KB
+            m = p8.match(line)
+            if m:
+                memory_utilization_dict['used'] = m.groupdict()['mem_used']
+                continue
+
+            # Disk Utilization:
+            m = p9.match(line)
+            if m:
+                disk_utilization_dict = ret_dict.setdefault('disk_util', {})
+                continue
+
+            # Disk Allocation: 51 MB
+            m = p10.match(line)
+            if m:
+                disk_utilization_dict['alloc'] = m.groupdict()['disk_alloc']
+                continue
+
+            # Disk Used:       50.05 MB
+            m = p11.match(line)
+            if m:
+                disk_utilization_dict['used'] = m.groupdict()['disk_used']
+                continue
+
+        return ret_dict 
 # ===========================================
 # Schema for 'show app-hosting list'
 # ===========================================

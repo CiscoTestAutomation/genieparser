@@ -1,0 +1,31 @@
+Subscriber session information:
+  MAC Address: aaaa.bbbb.1111
+  IP Address: 11.11.11.2
+  Session ID: 000123456
+  State: Active
+  Interface: GigabitEthernet0/0/1
+  VRF: default
+  Username: user@example.com
+  Service Policy: qos_policy
+  Authentication Status: Authenticated
+  Session Duration: 00:45:23
+  Last Status Change: 2023-10-05 14:30:00 UTC
+  Accounting Method: Radius
+  Accounting Status: Accounting-Active
+
+  Total Input Packets: 123456
+  Total Output Packets: 654321
+  Total Input Bytes: 12345678
+  Total Output Bytes: 87654321
+
+Subscriber Attributes:
+  Attribute Type: Location
+  Attribute Value: New York
+
+Subscriber Features:
+  Feature Name: QoS
+  Feature Status: Enabled
+  Feature Configuration: Standard
+
+  Feature Name: Firewall
+  Feature Status: Disabled

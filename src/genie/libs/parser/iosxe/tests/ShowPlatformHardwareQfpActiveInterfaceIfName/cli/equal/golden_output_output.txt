@@ -1,0 +1,161 @@
+show platform hardware qfp active interface if-name Port-channel1
+
+General interface information
+
+  Interface Name: Port-channel1
+
+  Interface state: VALID
+
+  Platform interface handle: 66
+
+  QFP interface handle: 73
+
+  Rx uidb: 262130
+
+  Tx uidb: 262071
+
+  Channel: 115
+
+Interface Relationships
+
+  if_h   Member Interface Name
+
+  46  	TenGigabitEthernet3/1/0
+
+  47  	TenGigabitEthernet3/1/1
+
+  
+
+
+
+BGPPA/QPPB interface configuration information
+
+  Ingress: BGPPA/QPPB not configured. flags: 0000
+
+  Egress : BGPPA not configured. flags: 0000
+
+
+
+layer2_input enabled. 
+
+layer2_output enabled. 
+
+ess_ac_input enabled. 
+
+
+
+Features Bound to Interface:
+
+ 2 GIC FIA state
+
+70 PUNT INJECT DB
+
+55 ethernet
+
+ 1 IFM
+
+Protocol 8 - layer2_input
+
+FIA handle - CP:0x621c7d7ed9d8  DP:0x40e00100
+
+  LAYER2_INPUT_SIA (M)
+
+  LAYER2_INPUT_LOOKUP_PROCESS (M)
+
+  LAYER2_INPUT_GOTO_OUTPUT_FEATURE (M)
+
+Protocol 9 - layer2_output
+
+FIA handle - CP:0x621c7d7ec858  DP:0x40e1dd00
+
+  OUTPUT_ETHER_CHNL_L2_BUNDLE_PRE_ENQ
+
+  LAYER2_OUTPUT_DROP_POLICY (M)
+
+  LAYER2_OUTPUT_ETHER_CHANNEL_BUNDLE_ENQ
+
+  DEF_IF_DROP_FIA (M)
+
+Protocol 14 - ess_ac_input
+
+FIA handle - CP:0x621c7d7ec998  DP:0x40e1bb00
+
+  PPPOE_GET_SESSION
+
+  ESS_ENTER_SWITCHING
+
+  PPPOE_HANDLE_UNCLASSIFIED_SESSION
+
+  DEF_IF_DROP_FIA (M)
+
+
+
+QfpEth Port-Channel Information
+
+  Bundle ID: 1
+
+  DPS Addr: 0x0000621c7e670e30
+
+  Submap Table Addr: 0x49514000
+
+  Bundle Config Table Addr: 0x718dc9d0
+
+  Load Balance Table Addr: 0x718dd2b0
+
+  Link Config Table Addr: 0x718d09b0
+
+  Bucket: 255
+
+  Distribution Algorithm: Flow
+
+  Member Link Information
+
+    Idx:00 -> TenGigabitEthernet3/1/0
+
+    Idx:01 -> TenGigabitEthernet3/1/1
+
+  Load Balance Table
+
+    bucket[00]=0
+
+    bucket[01]=0
+
+    bucket[02]=0
+
+    bucket[03]=0
+
+    bucket[04]=0
+
+    bucket[05]=0
+
+    bucket[06]=0
+
+    bucket[07]=0
+
+    bucket[08]=1
+
+    bucket[09]=1
+
+    bucket[10]=1
+
+    bucket[11]=1
+
+    bucket[12]=1
+
+    bucket[13]=1
+
+    bucket[14]=1
+
+    bucket[15]=1
+
+  QOS Mode: Aggregate
+
+  Schedule ID: 0x00000000
+
+  Queue ID: 0x00000000
+
+  VLAN AutoSense: No
+
+
+
+13RU_2#

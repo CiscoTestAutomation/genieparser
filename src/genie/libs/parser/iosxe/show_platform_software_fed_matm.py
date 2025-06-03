@@ -40,7 +40,7 @@ class ShowPlatformSoftwareFedMatmMacTableSchema(MetaParser):
     """Schema for show Platform Software Fed matm MacTable"""
 
     schema = {
-        "mac": {
+        Optional("mac"): {
             Any(): {
                 Optional("mac"): str,
                 Optional("vlanport"): int,
@@ -56,21 +56,34 @@ class ShowPlatformSoftwareFedMatmMacTableSchema(MetaParser):
                 Optional("etime"): int,
                 Optional("port"): str,
                 Optional("con"): str,
-            }
-        }
+            },
+        },
+        Optional("total_mac"): int,
+        Optional("summary"): {
+            "total_secure": int,
+            "total_drop": int,
+            "total_lisp_local": int,
+            "total_lisp_remote": int,
+        },
     }
 
 
 class ShowPlatformSoftwareFedMatmMacTable(ShowPlatformSoftwareFedMatmMacTableSchema):
     """Parser for show Platform Software Fed matm mactable"""
 
-    cli_command = "show platform software fed {state} matm macTable vlan {vlan}"
+    cli_command = [
+        "show platform software fed {state} matm macTable vlan {vlan}",
+        "show platform software fed {switch} {state} matm macTable vlan {vlan}",
+    ]
 
-    def cli(self, state="", vlan="", output=None):
+    def cli(self, state="", vlan="", switch=None, output=None):
         if output is None:
-            output = self.device.execute(
-                self.cli_command.format(state=state, vlan=vlan)
-            )
+            if switch:
+                cmd = self.cli_command[1].format(switch=switch, state=state, vlan=vlan)
+            else:
+                cmd = self.cli_command[0].format(state=state, vlan=vlan)
+            output = self.device.execute(cmd)
+
         platform_dict = {}
 
         # VLAN   MAC                  Type  Seq#    EC_Bi  Flags  machandle           siHandle            riHandle            diHandle              *a_time  *e_time  ports                                                         Con
@@ -86,6 +99,24 @@ class ShowPlatformSoftwareFedMatmMacTable(ShowPlatformSoftwareFedMatmMacTableSch
             r"(?P<atime>\d+) + (?P<etime>[\d\s]+) +"
             r"(?P<port>[\w\.\_\/\s\s]+) + (?P<con>[\s\w\s]+)$"
         )
+
+        # Total Mac number of addresses:: 5
+        p1 = re.compile(r"Total Mac number of addresses::\s+(?P<total_mac>\d+)")
+
+        # Summary:
+        p2 = re.compile(r"Summary:")
+
+        # Total number of secure addresses:: 4
+        p3 = re.compile(r"Total number of secure addresses::\s+(?P<total_secure>\d+)")
+
+        # Total number of drop addresses:: 0
+        p4 = re.compile(r"Total number of drop addresses::\s+(?P<total_drop>\d+)")
+
+        # Total number of lisp local addresses:: 0
+        p5 = re.compile(r"Total number of lisp local addresses::\s+(?P<total_lisp_local>\d+)")
+
+        # Total number of lisp remote addresses:: 0
+        p6 = re.compile(r"Total number of lisp remote addresses::\s+(?P<total_lisp_remote>\d+)")
 
         for line in output.splitlines():
             line = line.strip()
@@ -110,6 +141,42 @@ class ShowPlatformSoftwareFedMatmMacTable(ShowPlatformSoftwareFedMatmMacTableSch
                     }
                 )
 
+            # Total Mac number of addresses:: 5
+            m = p1.match(line)
+            if m:
+                platform_dict["total_mac"] = int(m.groupdict()["total_mac"])
+                continue
+
+            # Summary:
+            m = p2.match(line)
+            if m:
+                summary_dict = platform_dict.setdefault("summary", {})
+                continue
+
+            # Total number of secure addresses:: 4
+            m = p3.match(line)
+            if m:
+                summary_dict["total_secure"] = int(m.groupdict()["total_secure"])
+                continue
+
+            # Total number of drop addresses:: 0
+            m = p4.match(line)
+            if m:
+                summary_dict["total_drop"] = int(m.groupdict()["total_drop"])
+                continue
+
+            # Total number of lisp local addresses:: 0
+            m = p5.match(line)
+            if m:
+                summary_dict["total_lisp_local"] = int(m.groupdict()["total_lisp_local"])
+                continue
+
+            # Total number of lisp remote addresses:: 0
+            m = p6.match(line)
+            if m:
+                summary_dict["total_lisp_remote"] = int(m.groupdict()["total_lisp_remote"])
+                continue
+            
         return platform_dict
 
 

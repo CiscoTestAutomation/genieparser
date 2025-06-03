@@ -154,6 +154,9 @@ class ShowVersion(ShowVersionSchema):
         # BOOTLDR: System Bootstrap, Version 17.1.1[FC2], RELEASE SOFTWARE (P)
         p5 = re.compile(r'^BOOTLDR: +(?P<bootldr_version>[\S\s]+)$')
 
+        # ROM: IOS-XE ROMMONBOOTLDR: System Bootstrap, Version 17.11.0.1r, DEVELOPMENT SOFTWARE
+        p4and5 = re.compile(r'^ROM: +(?P<rom>.+)BOOTLDR: +(?P<bootldr>[\S\s]+)$')
+
         # SF2 uptime is 1 day, 18 hours, 48 minutes
         p6 = re.compile(r'^(?P<hostname>.+) +uptime +is +(?P<uptime>.+)$')
 
@@ -312,14 +315,23 @@ class ShowVersion(ShowVersionSchema):
             m = p4.match(line)
             if m:
                 rom = m.groupdict()['rom']
-                version_dict['rom'] = rom
-                continue
+                if "ROMMONBOOTLDR" not in rom:
+                    version_dict['rom'] = rom
+                    continue
 
             # BOOTLDR: System Bootstrap, Version 17.1.1[FC2], RELEASE SOFTWARE (P)
             m = p5.match(line)
             if m:
                 version_dict['bootldr_version'] = m.groupdict()['bootldr_version']
                 version_dict['bootldr'] = m.groupdict()['bootldr_version']
+                continue
+
+            # ROM: IOS-XE ROMMONBOOTLDR: System Bootstrap, Version 17.11.0.1r, DEVELOPMENT SOFTWARE
+            m = p4and5.match(line)
+            if m:
+                version_dict['bootldr_version'] = m.groupdict()['bootldr']
+                version_dict['bootldr'] = m.groupdict()['bootldr']
+                version_dict['rom'] = m.groupdict()['rom']
                 continue
 
             # SF2 uptime is 1 day, 18 hours, 48 minutes

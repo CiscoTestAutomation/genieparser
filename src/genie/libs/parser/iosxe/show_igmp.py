@@ -1344,7 +1344,7 @@ class ShowIpIgmpSnoopingQuerierVlanDetailSchema(MetaParser):
             'tcn_query_count': int,
             'tcn_query_interval': int,
         },
-        'vlan': {     
+        Optional('vlan'): {     
             Any(): {       
                 'admin_state': str,                             
                 'admin_version': int,

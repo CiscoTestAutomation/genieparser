@@ -3698,27 +3698,31 @@ class ShowCtsPolicyServerDetails(ShowCtsPolicyServerDetailsSchema):
         results_dict = {}
         
         # Server Name  : cts-auto-cls1-ise1.cisco.com
-        p0 = re.compile(r'^server +name +: +(?P<server_name>\S+)$')
+        # Server Name   : CTS-HTTP-IPV4-1
+        p0 = re.compile(r'^\s*[Ss]erver +[Nn]ame\s*: +(?P<server_name>\S+)$')
         # Server Status : Inactive
-        p1 = re.compile(r'^server +status +: +(?P<server_status>\S+)$')
+        p1 = re.compile(r'^\s*[Ss]erver +[Ss]tatus\s*: +(?P<server_status>\S+)$')
         # IPv4 Address     : 10.76.119.181 (Reachable)
-        p2 = re.compile(r'^ipv4\s+address\s*: +(?P<ipv4_address>\S+)(:?\s*\((?P<ipv4_status>\S+)\))?$')
+        p2 = re.compile(r'^\s*[Ii][Pp][Vv]4\s+[Aa]ddress\s*: +(?P<ipv4_address>\S+)(?:\s*\((?P<ipv4_status>\S+)\))?$')
         # Domain-name      : cts-auto-cls1-ise3.cisco.com (Reachable)
-        p3 = re.compile(r'^domain-name\s*: +(?P<domain_name>\S+) +\((?P<domain_status>\S+)\)$')
+        # Domain-name      : CTS-HTTP-IPV4-1.cisco.com (Reachable)
+        p3 = re.compile(r'^\s*[Dd]omain-[Nn]ame\s*: +(?P<domain_name>\S+) +\((?P<domain_status>\S+)\)$')
         # Trustpoint       : cts_tp_cts-auto-cls1-ise3.cisco.com_2
-        p4 = re.compile(r'^trustpoint +: +(?P<trustpoint>\S+)$')
+        # Trustpoint       : CTS-HTTP-IPV4-1
+        p4 = re.compile(r'^\s*[Tt]rustpoint\s*: +(?P<trustpoint>\S+)$')
         # Port-num         : 9063
-        p5 = re.compile(r'^port-num +: +(?P<port_num>\d+)$')
+        p5 = re.compile(r'^\s*[Pp]ort-[Nn]um\s*: +(?P<port_num>\d+)$')
         #     Retransmit count : 3
-        p6 = re.compile(r'^retransmit +count +: +(?P<retransmit_count>\d+)$')
+        p6 = re.compile(r'^\s*[Rr]etransmit +[Cc]ount\s*: +(?P<retransmit_count>\d+)$')
         #     Timeout          : 15
-        p7 = re.compile(r'^timeout +: +(?P<timeout>\d+)$')
+        p7 = re.compile(r'^\s*[Tt]imeout\s*: +(?P<timeout>\d+)$')
         #    App Content type : JSON
-        p8 = re.compile(r'^app +content +type +: +(?P<app_content_type>\S+)$')
+        p8 = re.compile(r'^\s*[Aa]pp +[Cc]ontent +[Tt]ype\s*: +(?P<app_content_type>\S+)$')
         #    Trustpoint chain : NOT CONFIGURED
-        p9 = re.compile(r'^trustpoint +chain +: +(?P<trustpoint_chain>.*)$')
+        p9 = re.compile(r'^\s*[Tt]rustpoint +[Cc]hain\s*: +(?P<trustpoint_chain>.*)$')
         # IPv6 Address     : 1100::101 (Reachable)
-        p10 = re.compile(r'^ipv6\s+address\s+:\s+(?P<ipv6_address>[\w:]+)(:?\s*\((?P<ipv6_status>\w+)\))?$')
+        p10 = re.compile(r'^\s*[Ii][Pp][Vv]6\s+[Aa]ddress\s*: +(?P<ipv6_address>[\w:]+)(?:\s*\((?P<ipv6_status>\w+)\))?$')
+
         
         for line in output.splitlines():
             line = line.strip()

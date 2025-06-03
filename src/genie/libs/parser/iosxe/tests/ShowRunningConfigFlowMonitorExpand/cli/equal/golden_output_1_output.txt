@@ -1,0 +1,55 @@
+Current configuration:
+!
+flow record DreamLine-Record
+ match datalink mac source address input
+ match datalink mac destination address input
+ match datalink ethertype
+ match datalink vlan input
+ match datalink dot1q priority
+ match datalink dot1q vlan input
+ match ipv4 protocol
+ match ipv4 source address
+ match ipv4 destination address
+ match transport source-port
+ match transport destination-port
+ match interface input
+ collect counter bytes
+ collect counter packets
+ collect timestamp sys-uptime first
+!
+!
+flow exporter DDoS-Exporter
+ destination 220.64.0.236
+ source Loopback0
+ dscp 57
+ ttl 67
+ transport udp 5000
+!
+!
+flow exporter Kentik_Exporter
+ destination 192.186.1.1
+ source Loopback0
+ dscp 57
+ ttl 67
+ transport udp 2055
+ match counter packets long gt 456677
+ export-protocol ipfix 
+!         
+!         
+flow exporter KTOA-Exporter
+ destination 192.186.1.1
+ source Loopback0
+ dscp 57
+ ttl 67
+ transport udp 2055
+ match counter packets long gt 456677
+ export-protocol netflow-v9
+!         
+!         
+flow monitor DreamLine-Monitor
+ exporter DDoS-Exporter
+ exporter Kentik_Exporter
+ exporter KTOA-Exporter
+ cache entries 40000
+ record DreamLine-Record
+!         

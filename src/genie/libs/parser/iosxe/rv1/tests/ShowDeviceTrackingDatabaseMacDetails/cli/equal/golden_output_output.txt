@@ -1,0 +1,15 @@
+     MAC                    Interface  vlan(prim) prlvl      state            Time left        Policy           Input_index
+
+AUT  dead.beef.0001         Gi1/0/1    20  (  20) TRUSTED    MAC-REACHABLE    235 s            LISP-DT-GUARD-VLAN 9       
+
+	 Attached IP: 20.0.0.1        
+
+L    cc70.edae.dd56         Vl20       20  (  20) TRUSTED    MAC-REACHABLE    N/A              LISP-DT-GUARD-VLAN 53      
+
+L    ba25.cdf4.ad38         Vl20       20  (  20) TRUSTED    MAC-REACHABLE    N/A              LISP-DT-GUARD-VLAN 53      
+
+	 Attached IP: 20.0.0.254      
+
+	 Attached IP: FE80::B825:CDFF:FEF4:AD38
+
+	 Attached IP: 2001::100   

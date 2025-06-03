@@ -1,0 +1,76 @@
+platform software fed switch 2 ifm if-id 0x532' +++
+show platform software fed switch 2 ifm if-id 0x532
+Interface IF_ID         : 0x0000000000000532
+Interface Name          : HundredGigE2/0/29/1
+Interface Block Pointer : 0x78acf19af018
+Interface Block State   : Ready
+Interface State         : Enabled
+Interface Admin mode    : Admin Up
+Interface Status        : NPD
+Interface Ref-Cnt       : 1
+Interface Type          : ETHER
+	Port Type         : SWITCH PORT
+	Port Location     : LOCAL
+	Slot              : 5
+	Unit              : 0
+	Slot Unit         : 143
+	SNMP IF Index     : 302
+	GPN               : 335
+	EC Channel        : 0
+	EC Index          : 0
+	QoS Trust Type    : 3 (DSCP)
+Ref Count : 1 (feature Ref Counts + 1)
+No Feature Reference count Present
+IFM Feature Sub block information
+	Port Physical Subblock
+		Affinity .......... [local]
+		LPN ............... [143]
+		GPN ............... [335]
+		Speed ............. [25GB]
+		type .............. [IFM_PORT_TYPE_L2]
+		MTU ............... [1522]
+		ac profile ........ [IFM_AC_PROFILE_L2_DEFAULT]
+	Port Subblock [0]
+		Mac port oid................... [0x76e(1902)]
+		System port oid................ [0x772(1906)]
+		System port gid................ [1362]
+		Ethernet port oid.............. [0x77d(1917)]
+		Voq oid........................ [0x770(1904)]
+	Platform Subblock
+		Asic.............. [0]
+		Core.............. [3]
+		Asic Port......... [0]
+		Asic Sub Port..... [0]
+		Ifg Id............ [0]
+		Mac Num........... [79]
+		First Serdes...... [8]
+		Last Serdes....... [8]
+		FC Mode........... [0]
+		FEC Mode.......... [0]
+		Context Id........ [0]
+	 Port CTS Subblock is NULL if_id = 0x532
+	 Port CTS Subblock
+		Disable SGACL .................... [0x0]
+		Trust ............................ [0x0]
+		Propagate ........................ [0x0]
+		Port SGT ......................... [0xffff]
+Events Log
+[2025/03/24 19:24:18.763] Inactive
+[2025/03/24 19:26:35.520] XCVR enable
+[2025/03/24 19:26:35.520] Port mode enable
+[2025/03/24 19:28:45.957] AC profile set success
+[2025/03/24 19:28:45.964] Mode None
+[2025/03/24 19:28:45.966] Activated
+[2025/03/24 19:28:46.016] link state down
+[2025/03/24 19:28:48.634] link state up
+[2025/03/24 19:28:48.647] Mode None
+[2025/03/24 19:28:48.647] Mode Access
+[2025/03/24 19:28:48.650] Mode Access
+[2025/03/24 19:29:27.800] Mode Access
+[2025/03/24 19:29:27.813] Deactivated
+[2025/03/24 19:29:27.951] link state down
+[2025/03/24 19:29:49.818] AC profile set success
+[2025/03/24 19:29:49.829] Mode Access
+[2025/03/24 19:29:49.829] Activated
+[2025/03/24 19:29:49.881] link state down
+[2025/03/24 19:29:52.325] link state up

@@ -194,8 +194,8 @@ class ShowSystemStatus(ShowSystemStatusSchema):
             m5 = p5.match(line)
             if m5:
                 group = m5.groupdict()
-                group = bool(group['value'])
-                parsed_dict.update({'engineering_signed': group})
+                value = group['value'].strip().lower()
+                parsed_dict['engineering_signed'] = value == 'true'
                 continue
 
             # Memory usage:            1907024K total,    1462908K used,   444116K free

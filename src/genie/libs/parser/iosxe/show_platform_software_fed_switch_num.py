@@ -686,3 +686,54 @@ class ShowPlatformSoftwareFedSwitchFnfProfilesDump(ShowPlatformSoftwareFedSwitch
                 continue
 
         return ret_dict
+
+class ShowPlatformSoftwareFedSwitchFnfProfileMapsDumpSchema(MetaParser):
+    """Schema for 'show platform software fed switch {switch_num} fnf profile-maps-dump'"""
+
+    schema = {
+        "profile_maps": {
+            Any(): {
+                "iif_id": str,
+                "fmask_hdl_ingress": int,
+                "fmask_hdl_egress": int,
+            }
+        }
+    }
+
+
+class ShowPlatformSoftwareFedSwitchFnfProfileMapsDump(ShowPlatformSoftwareFedSwitchFnfProfileMapsDumpSchema):
+    """Parser for 'show platform software fed switch {switch_num} fnf profile-maps-dump'"""
+
+    cli_command = "show platform software fed switch {switch_num} fnf profile-maps-dump"
+
+    def cli(self, switch_num, output=None):
+        if output is None:
+            cmd = self.cli_command.format(switch_num=switch_num)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+
+        # Matching pattern
+        # profile map (0x7b4dc0032908:2994198487) iif_id(bc) fmask_hdl_ingress(3959422977) fmask_hdl_egress(0)
+        p1 = re.compile(
+            r"^profile map \((?P<profile_map_id>0x[\da-fA-F]+:\d+)\) iif_id\((?P<iif_id>\w+)\) "
+            r"fmask_hdl_ingress\((?P<fmask_hdl_ingress>\d+)\) fmask_hdl_egress\((?P<fmask_hdl_egress>\d+)\)$"
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # profile map (0x7b4dc0032908:2994198487) iif_id(bc) fmask_hdl_ingress(3959422977) fmask_hdl_egress(0)
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                profile_map_id = group.pop("profile_map_id")
+                profile_map_dict = ret_dict.setdefault("profile_maps", {}).setdefault(profile_map_id, {})
+                profile_map_dict.update({
+                    "iif_id": group["iif_id"],
+                    "fmask_hdl_ingress": int(group["fmask_hdl_ingress"]),
+                    "fmask_hdl_egress": int(group["fmask_hdl_egress"]),
+                })
+                continue
+
+        return ret_dict

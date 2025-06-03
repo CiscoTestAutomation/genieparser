@@ -2991,10 +2991,10 @@ class ShowLispMapCacheSuperParser(ShowLispMapCacheSuperParserSchema):
         # 50.1.1.0/24, uptime: 2d09h, expires: 20:10:07, via map-reply, complete, local-to-site
         # aabb.cc00.ca00/48, uptime: 00:00:23, expires: 00:59:36, via map-reply, complete, local-to-site
         # 193.168.0.0/16, uptime: 00:03:26, expires: never, via pub-sub, self, complete, local-to-site
-
+        # 192.0.0.0/8, uptime: 00:21:36, expires: 6d23h, via transient-publication, complete
         p2 = re.compile(r'^(?P<eid_prefix>[a-fA-F\d\:]+\/\d{1,3}|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\/'
                         r'\d{1,2}|[a-fA-F\d\.]+\/\d{1,3}),\s+uptime:\s(?P<uptime>\S+),\sexpires:\s'
-                        r'(?P<expiry_time>\d{1,2}:\d{2}:\d{2}|never),\svia\s(?P<via>\S+(, self)?)(,'
+                        r'(?P<expiry_time>\d{1,2}:\d{2}:\d{2}|\w+),\svia\s(?P<via>\S+(, self)?)(,'
                         r'\s(?P<map_reply_state>(complete|unknown-eid-forward|forward-native'
                         r'|send-map-request|drop|incomplete)))?'
                         r'(,\s(?P<site>local-to-site|remote-to-site))?$')
@@ -3041,6 +3041,7 @@ class ShowLispMapCacheSuperParser(ShowLispMapCacheSuperParserSchema):
 
             # 0.0.0.0/0, uptime: 2d09h, expires: 00:12:57, via map-reply, unknown-eid-forward
             # 193.168.0.0/16, uptime: 00:03:26, expires: never, via pub-sub, self, complete, local-to-site
+            # 192.0.0.0/8, uptime: 00:21:36, expires: 6d23h, via transient-publication, complete
             m = p2.match(line)
             if m:
                 group = m.groupdict()

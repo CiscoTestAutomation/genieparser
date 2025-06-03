@@ -1,0 +1,4 @@
+Config Monitor
+------------------------------------
+  Current state:                Connecting to netconf
+  

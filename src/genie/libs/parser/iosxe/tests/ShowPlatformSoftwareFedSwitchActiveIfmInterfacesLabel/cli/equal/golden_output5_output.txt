@@ -1,0 +1,5 @@
+Interface                         IF_ID               State             
+
+----------------------------------------------------------------------
+
+VirtualPortGroup1                 0x000000bf          READY  

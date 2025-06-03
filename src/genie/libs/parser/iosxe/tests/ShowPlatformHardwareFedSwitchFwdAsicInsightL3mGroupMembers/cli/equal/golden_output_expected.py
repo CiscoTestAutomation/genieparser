@@ -1,0 +1,52 @@
+expected_output =  {
+    'l3m_group_members': {
+        'l3_mcg_gid': {
+            8210: {
+                'idx': {
+                    1: {
+                        'l3_port_gid': 369,
+                        'l2_mcg_gid': 8209,
+                        'l2_port_gid': 0,
+                        'l2_port_type': 'NONE',
+                        'l3_mcg_member_gid': 0,
+                        'l3_port_type': 'L3_SVI_PORT',
+                        'mc_fanout_group_oid': 0,
+                        'mc_gre_encap_oid': 0,
+                        'next_hop_gid': 0,
+                        'stack_port_oid': 0,
+                        'sysport_gid': 0,
+                        'type': 'L2_MCG',
+                    },                    
+                    2: {
+                        'l3_port_gid': 0,
+                        'l2_mcg_gid': 0,
+                        'l2_port_gid': 0,
+                        'l2_port_type': 'NONE',
+                        'l3_mcg_member_gid': 0,
+                        'l3_port_type': 'NONE',
+                        'mc_fanout_group_oid': 0,
+                        'mc_gre_encap_oid': 0,
+                        'next_hop_gid': 0,
+                        'stack_port_oid': 0,
+                        'sysport_gid': 0,
+                        'type': 'NONE',
+                    },
+                    3: {
+                        'l3_port_gid': 379,
+                        'l2_mcg_gid': 8201,
+                        'l2_port_gid': 0,
+                        'l2_port_type': 'NONE',
+                        'l3_mcg_member_gid': 0,
+                        'l3_port_type': 'L3_SVI_PORT',
+                        'mc_fanout_group_oid': 0,
+                        'mc_gre_encap_oid': 0,
+                        'next_hop_gid': 0,
+                        'stack_port_oid': 0,
+                        'sysport_gid': 0,
+                        'type': 'L2_MCG',
+                    },
+                },
+            },
+        },
+    },
+    }

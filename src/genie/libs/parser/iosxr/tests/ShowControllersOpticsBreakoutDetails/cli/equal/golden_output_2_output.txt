@@ -1,0 +1,6 @@
+#show controller optics 0/0/0/2 breakout-details
+Tue May  6 15:21:53.526 UTC
+Optics Port                	: Optics0_0_0_2
+No:of Breakouts            	: 0
+Physical Channels per intf 	: 0
+Interface Speed            	: 0G

@@ -1,0 +1,36 @@
+expected_output = {
+    'ingress_key_profiles': {
+        'ACCSEC': {
+            'fields': ['0x1', '0x2', '0x21', '0x14', '0x2f'],
+            'hw_merge_grp': 2,
+            'hw_merge_idx': 0,
+            'index': 0,
+            'label': 'LIF7',
+            'no_of_fields': 5,
+            'oid': [472, 394, 394, 394],
+            'pkp_idx': 0,
+            'type': 'ETH',
+        },
+        'MRR0_PORT': {
+            'hw_merge_grp': 0,
+            'hw_merge_idx': 0,
+            'index': 2,
+            'label': 'NPP1',
+            'no_of_fields': 0,
+            'oid': [474, 396, 396, 396],
+            'pkp_idx': 2,
+            'type': 'ETH',
+        },
+        'SRCGRD': {
+            'fields': ['0x1', '0x2', '0x21', '0x14', '0x11', '0x1c', '0x1d', '0x2f'],
+            'hw_merge_grp': 2,
+            'hw_merge_idx': 0,
+            'index': 1,
+            'label': 'NPP1',
+            'no_of_fields': 8,
+            'oid': [473, 395, 395, 395],
+            'pkp_idx': 1,
+            'type': 'ETH',
+        },
+    },
+}

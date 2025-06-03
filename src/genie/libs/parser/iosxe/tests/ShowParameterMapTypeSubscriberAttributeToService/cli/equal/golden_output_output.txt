@@ -1,0 +1,37 @@
+Parameter-map name: BUILTIN_DEVICE_TO_TEMPLATE
+ Map: 10 device-type regex "Cisco-IP-Phone"
+  Action(s):
+     20 interface-template IP_PHONE_INTERFACE_TEMPLATE
+ Map: 20 device-type regex "Cisco-IP-Camera"
+  Action(s):
+     20 interface-template IP_CAMERA_INTERFACE_TEMPLATE
+ Map: 30 device-type regex "Cisco-DMP"
+  Action(s):
+     20 interface-template DMP_INTERFACE_TEMPLATE
+ Map: 40 oui eq "00.0f.44"
+  Action(s):
+     20 interface-template DMP_INTERFACE_TEMPLATE
+ Map: 50 oui eq "00.23.ac"
+  Action(s):
+     20 interface-template DMP_INTERFACE_TEMPLATE
+ Map: 60 device-type regex "Cisco-AIR-AP"
+  Action(s):
+     20 interface-template AP_INTERFACE_TEMPLATE
+ Map: 70 device-type regex "Cisco-AIR-LAP"
+  Action(s):
+     20 interface-template LAP_INTERFACE_TEMPLATE
+ Map: 80 device-type regex "Cisco-TelePresence"
+  Action(s):
+     20 interface-template TP_INTERFACE_TEMPLATE
+ Map: 90 device-type regex "Surveillance-Camera"
+  Action(s):
+     10 interface-template MSP_CAMERA_INTERFACE_TEMPLATE
+ Map: 100 device-type regex "Video-Conference"
+  Action(s):
+     10 interface-template MSP_VC_INTERFACE_TEMPLATE
+ Map: 110 device-type regex "Cisco-IP-Phone"
+  Action(s):
+     10 interface-template IP_PHONE_INTERFACE_TEMPLATE
+ Map: 120 device-type regex "Cisco-IP-Phone"
+  Action(s):
+     10 interface-template IP_PHONE_INTERFACE_TEMPLATE

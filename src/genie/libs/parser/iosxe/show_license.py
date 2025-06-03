@@ -1872,16 +1872,13 @@ class ShowLicenseAll(ShowLicenseAllSchema):
           m = p11.match(line)
           if m:
             group = m.groupdict()
-            if group['trust_code_installed']:
-              if group['trust_code_installed'].strip()=='<none>':
-                continue
-              # else:
-                # trust_code_installed_dict=smart_licensing_status_dict.setdefault('trust_code_installed',group['trust_code_installed'].strip())
-                # continue
+            if group['trust_code_installed'].strip() == '<none>':
+              continue
             else:
               trust_code_installed_dict=smart_licensing_status_dict.setdefault('trust_code_installed',{})
               continue
           #Active: PID:C9300-24UX,SN:FCW2303D16Y
+          #Active: PID:C9350-48T,SN:FOC2820Y07F
           m = p11_1.match(line)
           if m:
             group = m.groupdict()
@@ -3008,8 +3005,9 @@ class ShowLicenseTechSupport(ShowLicenseTechSupportSchema):
         #Device Telemetry Report Summary
         p14 = re.compile(r'^(?P<device_telemetry_report_summary>Device +Telemetry +Report +Summary)\:$')      
         #Trust Code Installed:
-        p14_1 = re.compile(r'^(?P<trust_code_installed>Trust +Code +Installed)\:$') 
-        
+        #Trust Code Installed:    Trust Code Type: CSSM
+        p14_1 = re.compile(r'^Trust +Code +Installed:(?:\s+Trust +Code +Type: +\S+)?$')
+
         #Below set of expressions are for capturing data lines (For eg. key-value pairs)
         #<none>
         p0_2 = re.compile(r'^\s*\<(?P<value>none)\>$')
@@ -3070,7 +3068,8 @@ class ShowLicenseTechSupport(ShowLicenseTechSupportSchema):
         
         #Trust Code Installed: <none> 
         #Trust Code Installed: Feb 27 09:06:59 2024 IST
-        p14_data1 = re.compile(r'^Trust +Code +Installed\: +(?P<trust_code_installed>.*)$')
+        #Trust Code Installed:    Trust Code Type: CSSM
+        p14_data1 = re.compile(r'^Trust +Code +Installed\: +(?P<trust_code_installed>(<none>|\w{3} +\d{1,2} +[\d:]+ +\d{4} +\w+))$')
         # Authorized Count: 0
         p2_2 = re.compile(r'^Authorized Count:\s+(?P<authorized_count>\d+)$')
         # Out-Of-Compliance Count: 0
@@ -3082,7 +3081,8 @@ class ShowLicenseTechSupport(ShowLicenseTechSupportSchema):
         # Day-0 Verification: NO
         p2_6 = re.compile(r'^Day-0 Verification:\s+(?P<day0_verification>\w+)$')
         #Product Analytics: AVAILABLE
-        p16 = re.compile(r'^Product Analytics:\s+(?P<product_analytics>\S+)$')
+        #Product Analytics: NOT AVAILABLE
+        p16 = re.compile(r'^Product Analytics:\s+(?P<product_analytics>AVAILABLE|NOT AVAILABLE)$')
         #Not Available Reason: <empty>
         p16_1 = re.compile(r'^Not Available Reason:\s+(?P<not_available_reason>.*)$')
         #Total current Product Analytics reports: 0
