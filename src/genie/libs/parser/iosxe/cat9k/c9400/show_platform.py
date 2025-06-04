@@ -243,7 +243,7 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
         #  V1: VX1          R0                Normal            869 mV               	na
         #  Temp:    inlet   R0                Normal            32 Celsius          	(56 ,66 ,96 ,98 )(Celsius)
         p5 = re.compile(
-            r'(?P<sensor_name>\S+(:\s+\S+)?)\s+(?P<location>\S+)\s+(?P<state>\S+)\s+(?P<reading>\d+\s+\S+(\s+(AC|DC))?)\s+(\((?P<minor>\d+\s*),(?P<major>\d+\s*),(?P<critical>\d+\s*),(?P<shutdown>\d+\s*)\)\((?P<unit>\S+)\))?'
+            r'(?P<sensor_name>\S+(:\s+\S+)?)\s+(?P<location>\S+[0-9])\s+(?P<state>\S+)\s+(?P<reading>\d+\s+\S+(\s+(AC|DC))?)\s+(\((?P<minor>\d+\s*),(?P<major>\d+\s*),(?P<critical>\d+\s*),(?P<shutdown>\d+\s*)\)\((?P<unit>\S+)\))?'
         )
 
         # Power                                                       Fan States
