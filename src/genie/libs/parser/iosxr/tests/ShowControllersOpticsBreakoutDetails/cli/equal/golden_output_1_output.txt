@@ -1,0 +1,6 @@
+#show controller optics 0/0/0/16 breakout-details
+Tue May  6 16:34:51.367 UTC
+Optics Port                	: Optics0_0_0_16
+No:of Breakouts            	: 4
+Physical Channels per intf 	: 1
+Interface Speed            	: 10G

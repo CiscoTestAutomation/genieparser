@@ -1,0 +1,16 @@
+FED ARP SNOOPING PORT Data :
+  if_id = 1258
+  if_name = GigabitEthernet3/0/11
+  ARP SNOOP enable: TRUE
+  Punject Port Profile: TRUE
+  EtherChannel member: FALSE
+  EtherChannel: FALSE
+  EtherChannel if_id = 0
+  ref_cnt = 0
+
+  ===== ASIC Specific Section =====
+
+  Information about ACL with OID(1398) on ASIC(0)
+    Position Action  Counter OID
+    ----------------------------
+    0        PUNT    1399

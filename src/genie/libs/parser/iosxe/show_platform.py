@@ -8932,14 +8932,15 @@ class ShowXfsuStatusSchema(MetaParser):
     """
     schema = {
         Optional('reload_fast_platform_status'): str,
-        'graceful_reload_infra_status': str,
-        'uptime_before_fast_reload': int,
-        'client': {
+        Optional('graceful_reload_infra_status'): str,
+        Optional('uptime_before_fast_reload'): int,
+        Optional('client'): {
             Any(): {
                 'id': str,
                 'status': str
             }
-        }
+        },
+        Optional('xfsu_platform_status'): str
     }
 
 
@@ -8966,6 +8967,9 @@ class ShowXfsuStatus(ShowXfsuStatusSchema):
         # Client GR_CLIENT_FIB                   : (0x10203001) Status: GR stack none: Up
         # Client GR_CLIENT_RIB                   : (0x10203000) Status: GR stack none: Up
         p4 = re.compile(r'^Client (?P<client>\S+)\s+: \((?P<id>\S+)\) Status: (?P<status>.+)$')
+
+        # xFSU PLATFORM Status: Stack reloaded, all nodes connected
+        p5 = re.compile(r'^xFSU PLATFORM Status: (?P<xfsu_platform_status>.+)$')
 
         ret_dict = {}
         for line in output.splitlines():
@@ -8999,6 +9003,12 @@ class ShowXfsuStatus(ShowXfsuStatusSchema):
                 client_dict = ret_dict.setdefault('client', {}).setdefault(output_dict['client'].lower().replace('-', '_'), {})
                 client_dict['id'] = output_dict['id']
                 client_dict['status'] = output_dict['status']
+                continue
+
+            # xFSU PLATFORM Status: Stack reloaded, all nodes connected
+            m = p5.match(line)
+            if m:
+                ret_dict['xfsu_platform_status'] = m.groupdict()['xfsu_platform_status']
                 continue
         return ret_dict
 

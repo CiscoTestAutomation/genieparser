@@ -1,0 +1,8 @@
+Config Updater
+------------------------------------
+  Current state:                Connecting to netconf
+  No config save scheduled.
+
+Latest operation
+------------------------------------
+  None

@@ -5108,8 +5108,9 @@ class ShowBgpSessions(ShowBgpSessionsSchema):
                             r'(?P<notifications_sent>\d+)\/'
                             r'(?P<notifications_received>\d+)$')
         # fe80::7e21:eff:fe2e:cc58%Ethernet1/2
+        # fe80::205:ff:fe00:15%port-channel15
         p6_1 = re.compile(r'^(?P<nei>[a-zA-Z0-9\.\:\/\[\]\,]+)%'
-                           r'(?P<linklocal_interfaceport>[a-zA-Z0-9\.\:\/\[\]\,]+)$')
+                           r'(?P<linklocal_interfaceport>[a-zA-Z0-9\.\-\:\/\[\]\,]+)$')
         #                     1 0     00:00:18|00:00:17|00:00:17 E   20230/179        0/0
         p6_2 = re.compile(r'^(?P<asn>\d+) +'
                             r'(?P<dropped>\d+) +'

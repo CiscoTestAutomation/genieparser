@@ -1,0 +1,21 @@
+Router# show platform hardware port 0/0/0 ezman info
+
+Port: 0/0/0
+--------------------------------------------
+Admin Status: Up
+Operational Status: Up
+Link Status: Up
+Port Speed: 10 Gbps
+Duplex: Full
+MTU: 1500
+Auto-Negotiation: Enabled
+Flow Control: Disabled
+MAC Address: 00:1A:2B:3C:4D:5E
+CRC Errors: 0
+Input Packets: 1234567
+Output Packets: 1234560
+Input Errors: 0
+Output Errors: 0
+Last Clear Counters: 2025-04-01 10:20:30
+Temperature: 45 C
+Power Draw: 3.2 

@@ -1,0 +1,179 @@
+NAME: "Rack 0", DESCR: "Cisco 8200 2RU 32x400G QSFP56-DD w/IOS XR HBM MACsec"
+PID: 8202-32FH-M       , VID: V00, SN: FLM2532080Q
+
+NAME: "Rack 0-Control Card Slot 0", DESCR: "8202-32fh-m Route Processor Slot 0"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "Rack 0-Fan Tray Slot 0", DESCR: "2RU Fan Tray Slot 0"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "Rack 0-Chassis IDPROM", DESCR: "Cisco 8200 2RU 32x400G QSFP56-DD w/IOS XR HBM MACsec"
+PID: 8202-32FH-M       , VID: V00, SN: FLM2532080Q
+
+NAME: "0/RP0/CPU0", DESCR: "Cisco 8200 2RU 32x400G QSFP56-DD w/IOS XR HBM MACsec"
+PID: 8202-32FH-M       , VID: V00, SN: FLM25280C61
+
+NAME: "0/FT3", DESCR: "Cisco 8000 Series 2RU Fan with Port-side Air Intake Ver3"
+PID: FAN-2RU-PI-V3     , VID: V00 , SN: DCH2442R4P7
+
+NAME: "0/PM0", DESCR: "2000W AC Power Module with Port-side Air Intake"
+PID: PSU2KW-ACPI       , VID: V01 , SN: POG2515K04N
+
+NAME: "0/FB0", DESCR: "Cisco 8000 Series Fan Controller Board on 8202-32FH-M"
+PID: 8202-32FH-M[FB]   , VID: N/A, SN: FLM252604RR
+
+NAME: "0/RP0/CPU0-Mother Board", DESCR: "8202-32fh-m Mother Board"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "0/RP0/CPU0-Daughter Board", DESCR: "Daughter Board"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "0/RP0/CPU0-Fan Card", DESCR: "Fan Card"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "0/FT2-Input_Cur", DESCR: "Board Current Sensor - Input Current"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "0/FT2-Status/Attention", DESCR: "LED Sensor"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "0/FT2-Input_Pow", DESCR: "Board Power Sensor - Input Power"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "0/FT2-FT IDPROM", DESCR: "Cisco 8000 Series 2RU Fan with Port-side Air Intake Ver3"
+PID: FAN-2RU-PI-V3     , VID: V00 , SN: DCH2442R4ML
+
+NAME: "0/FT3-Fan 0", DESCR: "Fan Module"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "0/PM0-PO-SecMCU", DESCR: "Secondary Controller"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "0/PM0-PSU2KW_ACPI IDPROM", DESCR: "2000W AC Power Module with Port-side Air Intake"
+PID: PSU2KW-ACPI       , VID: V01 , SN: POG2515K04N
+
+NAME: "0/PM1-Fan 0", DESCR: "PSU2KW ACPI PSU Fan Module"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "0/PM1-Fan 1", DESCR: "PSU2KW ACPI PSU Fan Module"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "0/PM1-Output_Power", DESCR: "Power Sensor"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "0/PM1-Inlet_Temp", DESCR: "Temperature Sensor"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "0/PM1-HSNK_Temp", DESCR: "Temperature Sensor"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "0/PM1-Outlet_Temp", DESCR: "Temperature Sensor"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "0/PM1-Input_Vol", DESCR: "Voltage Sensor"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "0/PM1-Output_Vol", DESCR: "Voltage Sensor"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "0/FB0-IoFpgaGolden", DESCR: "Coldspring Golden region"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "0/FB0-IoFpga", DESCR: "Coldspring Upgrade region"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "0/FB0-FB IDPROM", DESCR: "Cisco 8000 Series Fan Controller Board on 8202-32FH-M"
+PID: 8202-32FH-M[FB]   , VID: N/A, SN: FLM252604RR
+
+NAME: "0/RP0/CPU0-RT_VDD_A_MB_I", DESCR: "#P0V8_VDD_RT_A"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "0/RP0/CPU0-RT_AVDD_A_MB_I", DESCR: "#P0V85_AVD_RT_A"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "0/RP0/CPU0-RT_VDD_B_MB_I", DESCR: "#P0V8_VDD_RT_B"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "0/RP0/CPU0-RT_VDDK_A_MB_I", DESCR: "#VP0P85_RT_VDDK_A_MB"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "0/RP0/CPU0-RT_VDDK_B_MB_I", DESCR: "#VP0P85_RT_VDDK_B_MB"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "0/RP0/CPU0-Attention", DESCR: "LED Sensor"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "0/RP0/CPU0-Status", DESCR: "LED Sensor"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "0/RP0/CPU0-P3V3_QSFP_R_MB_E_T", DESCR: "#VP3P3_QSFP_R_MB_EXT"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "0/RP0/CPU0-U369_ADC_A_MB_T", DESCR: "#ADC0_A_Die_Temperature Sensor"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "0/RP0/CPU0-U369_ADC_B_MB_T", DESCR: "#ADC0_B_Die_Temperature Sensor"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "0/RP0/CPU0-NPU_0_T7", DESCR: "#NE corner"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "0/RP0/CPU0-NPU_0_T9", DESCR: "#SW corner"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "0/RP0/CPU0-NPU_HBM_0_T1", DESCR: "#HBM stack"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "0/RP0/CPU0-NPU_HBM_0_T2", DESCR: "#HBM stack"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "0/RP0/CPU0-RT_VDD_A_MB_V", DESCR: "#P0V8_VDD_RT_A"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "0/RP0/CPU0-RT_AVDD_A_MB_V", DESCR: "#P0V85_AVD_RT_A"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "0/RP0/CPU0-P12V0_E_MB_1_V", DESCR: "#VP12P0_E at controller"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "0/RP0/CPU0-RT_VDD_B_MB_V", DESCR: "#P0V8_VDD_RT_B"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "0/RP0/CPU0-RT_AVDD_B_MB_V", DESCR: "#P0V85_AVD_RT_B"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "FortyGigE0/0/0/23-Rx Lane 3 Power", DESCR: "Power Sensor"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "FortyGigE0/0/0/23-Module Temp", DESCR: "Temperature Sensor"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "FortyGigE0/0/0/23-3.3 V", DESCR: "Voltage Sensor"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "FortyGigE0/0/0/23-IDPROM", DESCR: "Non-Cisco QSFP+ 40G AOC Pluggable Optics Module"
+PID: 1AT-1Q2M02XX-03A  , VID: 03, SN: 1QA-0467693
+
+NAME: "FourHundredGigE0/0/0/28-Voltage Sensor", DESCR: "Voltage Sensor"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "FourHundredGigE0/0/0/28-IDPROM", DESCR: "Non-Cisco QSFPDD 400G FR4 Pluggable Optics Module"
+PID: T-DQ4CNL-NGL      , VID: 1A, SN: IDOAWI800105
+
+NAME: "FourHundredGigE0/0/0/29-Rx Lane 3 Power", DESCR: "Power Sensor"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "FourHundredGigE0/0/0/29-Temperature Sensor", DESCR: "Temperature Sensor"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "FourHundredGigE0/0/0/29-Voltage Sensor", DESCR: "Voltage Sensor"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "FourHundredGigE0/0/0/29-IDPROM", DESCR: "Non-Cisco QSFPDD 400G FR4 Pluggable Optics Module"
+PID: T-DQ4CNL-NGL      , VID: 1A, SN: IDOBPI660186
+
+NAME: "HundredGigE0/0/0/30-Tx Lane 0 Current", DESCR: "Current Sensor"
+PID: N/A               , VID: N/A, SN: N/A
+
+NAME: "HundredGigE0/0/0/30-Rx Lane 0 Power", DESCR: "Power Sensor"
+PID: N/A               , VID: N/A, SN: N/A

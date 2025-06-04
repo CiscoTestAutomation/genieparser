@@ -1,0 +1,36 @@
+show module
+Mod Ports                  Module-Type                            Model           Status
+--- ----- ------------------------------------------------ --------------------- --------
+1    24   24x40/100G QSFP28 Ethernet Module                N9324C-SE1U           ok        
+27   0    Virtual Supervisor Module                        N9324C-SE1U           active *  
+
+Mod  Sw                       Hw    Slot
+---  ----------------------- ------ ----
+1    10.5(2)IMG9(0.219)       0.0    NA  
+27   10.5(2)IMG9(0.219)       0.0    VSUP
+
+
+Mod  MAC-Address(es)                         Serial-Num
+---  --------------------------------------  ----------
+1    04-e3-87-8a-59-24 to 04-e3-87-8a-5a-08  FDO28450766
+27   04-e3-87-8a-59-24 to 04-e3-87-8a-5a-08  FDO28450766
+
+Mod  Online Diag Status
+---  ------------------
+1    Pass
+27   Pass
+
+* this terminal session 
+Mod DPU   Module-Type           Model           Status
+--- ---  ------------- --------------------- --------
+1    1     DPU             N9324C-SE1U-DPU       ok        
+1    2     DPU             N9324C-SE1U-DPU       ok        
+1    3     DPU             N9324C-SE1U-DPU       ok        
+1    4     DPU             N9324C-SE1U-DPU       ok        
+
+Mod DPU     Sw            Hw      Serial-Num   Online Diag Status
+--- ---  ------------- ---------- ------------ ------------------
+1    1    1.5.17                 JI     FDO28450CLJ      Pass
+1    2    1.5.17                 JI     FDO28450CLJ      Pass
+1    3    1.5.17                 JI     FDO28450CLK      Pass
+1    4    1.5.17                 JI     FDO28450CLK      Pass

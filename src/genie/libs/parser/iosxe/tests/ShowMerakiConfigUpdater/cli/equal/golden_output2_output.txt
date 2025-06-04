@@ -1,0 +1,21 @@
+Config Updater
+------------------------------------
+  Current state:                Ready
+ 
+Latest operation
+------------------------------------
+  Upload running config after save
+ 
+  Save config: Completed
+    start time(UTC): 2025-04-09 23:44:24
+    result time(UTC): 2025-04-09 23:44:30
+  Get running config: Pass
+    start time(UTC): 2025-04-09 23:44:24
+    result time(UTC): 2025-04-09 23:44:30
+    Running config location: /flash/meraki/config_updater/monitor/upload.config
+  Get presigned url: Not needed
+    start time(UTC): 2025-04-09 23:44:30
+    result time(UTC): 2025-04-09 23:44:32
+    dashboard status code: 204
+  Upload config: Not started
+  

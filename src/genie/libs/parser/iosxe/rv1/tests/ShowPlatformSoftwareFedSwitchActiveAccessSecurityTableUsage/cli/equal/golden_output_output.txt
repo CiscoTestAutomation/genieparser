@@ -1,0 +1,20 @@
+Access Security Client Classification Table Usage details:
+
+Feature           Mask                Asic#            Maximum          In-Use           Total-Allocated  Total-Freed
+-------------------------------------------------------------------------------------------------------------------------
+Dot1x-MAC-Drop    Port-VLAN-MAC       0                4096             0                0                0
+Dot1x-MAC-Drop    Port-VLAN-MAC       1                4096             0                0                0
+MAC-Client        Port-VLAN-MAC       0                4096             0                0                0
+MAC-Client        Port-VLAN-MAC       1                4096             0                0                0
+MAC-Client        Port-MAC            0                4096             0                0                0
+MAC-Client        Port-MAC            1                4096             0                0                0
+MAC-Client        MAC                 0                4096             0                0                0
+MAC-Client        MAC                 1                4096             0                0                0
+Secure-MAC        Port-VLAN-MAC       0                4096             0                10               10
+Secure-MAC        Port-VLAN-MAC       1                4096             4                47               43
+Secure-MAC        Port-MAC            0                4096             0                0                0
+Secure-MAC        Port-MAC            1                4096             0                0                0
+Default-Client    Port-VLAN           0                4096             0                0                0
+Default-Client    Port-VLAN           1                4096             0                0                0
+Default-Client    Port                0                4096             0                4                4
+Default-Client    Port                1                4096             1                32               31

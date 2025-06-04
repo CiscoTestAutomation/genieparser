@@ -16,6 +16,8 @@
     * 'show platform software fed {mode} qos interface {interface} ingress npi detailed'
     * 'show platform software fed active qos policy target status'
     * 'show platform software fed switch {switch} qos policy target status'
+    * 'show platform software fed {switch} {mode} qos interface {interface} ingress sdk detailed asic {asic}'
+    * 'show platform software fed {mode} qos interface {interface} ingress sdk detailed asic {asic}'
 """
 # Python
 import re
@@ -580,20 +582,13 @@ class ShowPlatformSoftwareFedQosInterfaceSuperParser(
     """Parser for show platform software fed {switch} {mode} qos interface {interface} ingress npd detailed"""
 
     cli_command = [
-        "show platform software fed {switch} {mode} qos interface {interface} ingress npd detailed",
+        "show platform software fed switch {mode} qos interface {interface} ingress npd detailed",
         "show platform software fed {mode} qos interface {interface} ingress npd detailed",
     ]
 
-    def cli(self, mode, interface, switch=None, output=None):
+    def cli(self, command=None, output=None, **kwargs):
         if output is None:
-            if switch:
-                cmd = self.cli_command[0].format(
-                    switch=switch, mode=mode, interface=interface
-                )
-            else:
-                cmd = self.cli_command[1].format(mode=mode, interface=interface)
-
-            output = self.device.execute(cmd, timeout=600)
+            output = self.device.execute(command, timeout=600)
 
         # [HundredGigE1/0/5, map1, Ingress]: CGID = 0x738310
         # [HundredGigE1/0/1.1, map1, Ingress]: CGID = 0x738310
@@ -1871,3 +1866,20 @@ class ShowPlatformSoftwareFedQosInterfaceIngressNpiDetailed(
                 continue
 
         return ret_dict
+
+
+class ShowPlatformSoftwareFedQosInterfaceIngressSdkDetailedAsicAll(
+    ShowPlatformSoftwareFedQosInterfaceSuperParser
+):
+    """Parser for show platform software fed {switch} {mode} qos interface {interface} ingress sdk detailed asic {asic}"""
+
+    cli_command = [
+        "show platform software fed switch {mode} qos interface {interface} ingress sdk detailed asic {asic}",
+        "show platform software fed {mode} qos interface {interface} ingress sdk detailed asic {asic}"
+    ]
+
+    def cli(self, command=None, output=None, **kwargs):
+        if output is None:
+            output = self.device.execute(command, timeout=600)
+
+        return super().cli(output=output, **kwargs)

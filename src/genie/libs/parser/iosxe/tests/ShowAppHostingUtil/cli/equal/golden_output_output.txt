@@ -1,0 +1,12 @@
+Application: thousand_eyes
+CPU Utilization:
+  CPU Allocation: 7400 units
+  CPU Used:       0.00 %
+  CPU Cores:      0-7
+
+Memory Utilization:
+  Memory Allocation: 2048 MB
+  Memory Used:       63616 KB
+Disk Utilization:
+  Disk Allocation: 51 MB
+  Disk Used:       50.05 MB

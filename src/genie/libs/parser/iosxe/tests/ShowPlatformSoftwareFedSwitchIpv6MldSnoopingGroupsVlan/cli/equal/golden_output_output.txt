@@ -1,0 +1,351 @@
+Number of Group entries: 40
+
+  (Vlan: 13, ff13::2:14)
+      Member ports            : 0
+      Dependent Users Count   : 2
+      Group Urid              : 0x70000000000003c6
+      Fset Urid ( Hash )      : 0x2000000000007d82 ( 7839ab25 )
+      Layer 3 Stub Entry      : Yes
+      Group Flags             : None
+      Gid                     : 8198
+      Mcid Asic[0]            : 0
+
+  (Vlan: 13, ff13::2:13)
+      Member ports            : 0
+      Dependent Users Count   : 2
+      Group Urid              : 0x70000000000003c5
+      Fset Urid ( Hash )      : 0x2000000000007d82 ( 7839ab25 )
+      Layer 3 Stub Entry      : Yes
+      Group Flags             : None
+      Gid                     : 8198
+      Mcid Asic[0]            : 0
+
+  (Vlan: 13, ff13::2:12)
+      Member ports            : 0
+      Dependent Users Count   : 2
+      Group Urid              : 0x70000000000003c4
+      Fset Urid ( Hash )      : 0x2000000000007d82 ( 7839ab25 )
+      Layer 3 Stub Entry      : Yes
+      Group Flags             : None
+      Gid                     : 8198
+      Mcid Asic[0]            : 0
+
+  (Vlan: 13, ff13::2:11)
+      Member ports            : 0
+      Dependent Users Count   : 2
+      Group Urid              : 0x70000000000003c3
+      Fset Urid ( Hash )      : 0x2000000000007d82 ( 7839ab25 )
+      Layer 3 Stub Entry      : Yes
+      Group Flags             : None
+      Gid                     : 8198
+      Mcid Asic[0]            : 0
+
+  (Vlan: 13, ff13::2:10)
+      Member ports            : 0
+      Dependent Users Count   : 2
+      Group Urid              : 0x70000000000003c2
+      Fset Urid ( Hash )      : 0x2000000000007d82 ( 7839ab25 )
+      Layer 3 Stub Entry      : Yes
+      Group Flags             : None
+      Gid                     : 8198
+      Mcid Asic[0]            : 0
+
+  (Vlan: 13, ff13::2:f)
+      Member ports            : 0
+      Dependent Users Count   : 2
+      Group Urid              : 0x70000000000003c1
+      Fset Urid ( Hash )      : 0x2000000000007d82 ( 7839ab25 )
+      Layer 3 Stub Entry      : Yes
+      Group Flags             : None
+      Gid                     : 8198
+      Mcid Asic[0]            : 0
+
+  (Vlan: 13, ff13::2:e)
+      Member ports            : 0
+      Dependent Users Count   : 2
+      Group Urid              : 0x70000000000003c0
+      Fset Urid ( Hash )      : 0x2000000000007d82 ( 7839ab25 )
+      Layer 3 Stub Entry      : Yes
+      Group Flags             : None
+      Gid                     : 8198
+      Mcid Asic[0]            : 0
+
+  (Vlan: 13, ff13::2:d)
+      Member ports            : 0
+      Dependent Users Count   : 2
+      Group Urid              : 0x70000000000003bf
+      Fset Urid ( Hash )      : 0x2000000000007d82 ( 7839ab25 )
+      Layer 3 Stub Entry      : Yes
+      Group Flags             : None
+      Gid                     : 8198
+      Mcid Asic[0]            : 0
+
+  (Vlan: 13, ff13::2:c)
+      Member ports            : 0
+      Dependent Users Count   : 2
+      Group Urid              : 0x70000000000003be
+      Fset Urid ( Hash )      : 0x2000000000007d82 ( 7839ab25 )
+      Layer 3 Stub Entry      : Yes
+      Group Flags             : None
+      Gid                     : 8198
+      Mcid Asic[0]            : 0
+
+  (Vlan: 13, ff13::2:b)
+      Member ports            : 0
+      Dependent Users Count   : 2
+      Group Urid              : 0x70000000000003bd
+      Fset Urid ( Hash )      : 0x2000000000007d82 ( 7839ab25 )
+      Layer 3 Stub Entry      : Yes
+      Group Flags             : None
+      Gid                     : 8198
+      Mcid Asic[0]            : 0
+
+  (Vlan: 13, ff13::2:a)
+      Member ports            : 0
+      Dependent Users Count   : 2
+      Group Urid              : 0x70000000000003bc
+      Fset Urid ( Hash )      : 0x2000000000007d82 ( 7839ab25 )
+      Layer 3 Stub Entry      : Yes
+      Group Flags             : None
+      Gid                     : 8198
+      Mcid Asic[0]            : 0
+
+  (Vlan: 13, ff13::2:9)
+      Member ports            : 0
+      Dependent Users Count   : 2
+      Group Urid              : 0x70000000000003bb
+      Fset Urid ( Hash )      : 0x2000000000007d82 ( 7839ab25 )
+      Layer 3 Stub Entry      : Yes
+      Group Flags             : None
+      Gid                     : 8198
+      Mcid Asic[0]            : 0
+
+  (Vlan: 13, ff13::2:8)
+      Member ports            : 0
+      Dependent Users Count   : 2
+      Group Urid              : 0x70000000000003ba
+      Fset Urid ( Hash )      : 0x2000000000007d82 ( 7839ab25 )
+      Layer 3 Stub Entry      : Yes
+      Group Flags             : None
+      Gid                     : 8198
+      Mcid Asic[0]            : 0
+
+  (Vlan: 13, ff13::2:7)
+      Member ports            : 0
+      Dependent Users Count   : 2
+      Group Urid              : 0x70000000000003b9
+      Fset Urid ( Hash )      : 0x2000000000007d82 ( 7839ab25 )
+      Layer 3 Stub Entry      : Yes
+      Group Flags             : None
+      Gid                     : 8198
+      Mcid Asic[0]            : 0
+
+  (Vlan: 13, ff13::2:6)
+      Member ports            : 0
+      Dependent Users Count   : 2
+      Group Urid              : 0x70000000000003b8
+      Fset Urid ( Hash )      : 0x2000000000007d82 ( 7839ab25 )
+      Layer 3 Stub Entry      : Yes
+      Group Flags             : None
+      Gid                     : 8198
+      Mcid Asic[0]            : 0
+
+  (Vlan: 13, ff13::2:5)
+      Member ports            : 0
+      Dependent Users Count   : 2
+      Group Urid              : 0x70000000000003b7
+      Fset Urid ( Hash )      : 0x2000000000007d82 ( 7839ab25 )
+      Layer 3 Stub Entry      : Yes
+      Group Flags             : None
+      Gid                     : 8198
+      Mcid Asic[0]            : 0
+
+  (Vlan: 13, ff13::2:4)
+      Member ports            : 0
+      Dependent Users Count   : 2
+      Group Urid              : 0x70000000000003b6
+      Fset Urid ( Hash )      : 0x2000000000007d82 ( 7839ab25 )
+      Layer 3 Stub Entry      : Yes
+      Group Flags             : None
+      Gid                     : 8198
+      Mcid Asic[0]            : 0
+
+  (Vlan: 13, ff13::2:3)
+      Member ports            : 0
+      Dependent Users Count   : 2
+      Group Urid              : 0x70000000000003b5
+      Fset Urid ( Hash )      : 0x2000000000007d82 ( 7839ab25 )
+      Layer 3 Stub Entry      : Yes
+      Group Flags             : None
+      Gid                     : 8198
+      Mcid Asic[0]            : 0
+
+  (Vlan: 13, ff13::2:2)
+      Member ports            : 0
+      Dependent Users Count   : 2
+      Group Urid              : 0x70000000000003b4
+      Fset Urid ( Hash )      : 0x2000000000007d82 ( 7839ab25 )
+      Layer 3 Stub Entry      : Yes
+      Group Flags             : None
+      Gid                     : 8198
+      Mcid Asic[0]            : 0
+
+  (Vlan: 13, ff13::2:1)
+      Member ports            : 0
+      Dependent Users Count   : 2
+      Group Urid              : 0x70000000000003b3
+      Fset Urid ( Hash )      : 0x2000000000007d82 ( 7839ab25 )
+      Layer 3 Stub Entry      : Yes
+      Group Flags             : None
+      Gid                     : 8198
+      Mcid Asic[0]            : 0
+
+  (Vlan: 13, ff13::14)
+      Member ports            : 0
+      Dependent Users Count   : 1
+      Group Urid              : 0x7000000000000401
+      Fset Urid ( Hash )      : 0x2000000000007d82 ( 7839ab25 )
+      Layer 3 Stub Entry      : Yes
+      Group Flags             : None
+      Gid                     : 8198
+      Mcid Asic[0]            : 0
+
+  (Vlan: 13, ff13::13)
+      Member ports            : 0
+      Dependent Users Count   : 1
+      Group Urid              : 0x70000000000003f8
+      Fset Urid ( Hash )      : 0x2000000000007d82 ( 7839ab25 )
+      Layer 3 Stub Entry      : Yes
+      Group Flags             : None
+      Gid                     : 8198
+      Mcid Asic[0]            : 0
+
+  (Vlan: 13, ff13::12)
+      Member ports            : 0
+      Dependent Users Count   : 1
+      Group Urid              : 0x7000000000000400
+      Fset Urid ( Hash )      : 0x2000000000007d82 ( 7839ab25 )
+      Layer 3 Stub Entry      : Yes
+      Group Flags             : None
+      Gid                     : 8198
+      Mcid Asic[0]            : 0
+
+  (Vlan: 13, ff13::11)
+      Member ports            : 0
+      Dependent Users Count   : 1
+      Group Urid              : 0x70000000000003f6
+      Fset Urid ( Hash )      : 0x2000000000007d82 ( 7839ab25 )
+      Layer 3 Stub Entry      : Yes
+      Group Flags             : None
+      Gid                     : 8198
+      Mcid Asic[0]            : 0
+
+  (Vlan: 13, ff13::10)
+      Member ports            : 0
+      Dependent Users Count   : 1
+      Group Urid              : 0x70000000000003fe
+      Fset Urid ( Hash )      : 0x2000000000007d82 ( 7839ab25 )
+      Layer 3 Stub Entry      : Yes
+      Group Flags             : None
+      Gid                     : 8198
+      Mcid Asic[0]            : 0
+
+  (Vlan: 13, ff13::f)
+      Member ports            : 0
+      Dependent Users Count   : 1
+      Group Urid              : 0x70000000000003f7
+      Fset Urid ( Hash )      : 0x2000000000007d82 ( 7839ab25 )
+      Layer 3 Stub Entry      : Yes
+      Group Flags             : None
+      Gid                     : 8198
+      Mcid Asic[0]            : 0
+
+  (Vlan: 13, ff13::e)
+      Member ports            : 0
+      Dependent Users Count   : 1
+      Group Urid              : 0x70000000000003ff
+      Fset Urid ( Hash )      : 0x2000000000007d82 ( 7839ab25 )
+      Layer 3 Stub Entry      : Yes
+      Group Flags             : None
+      Gid                     : 8198
+      Mcid Asic[0]            : 0
+
+  (Vlan: 13, ff13::d)
+      Member ports            : 0
+      Dependent Users Count   : 1
+      Group Urid              : 0x70000000000003f5
+      Fset Urid ( Hash )      : 0x2000000000007d82 ( 7839ab25 )
+      Layer 3 Stub Entry      : Yes
+      Group Flags             : None
+      Gid                     : 8198
+      Mcid Asic[0]            : 0
+
+  (Vlan: 13, ff13::c)
+      Member ports            : 0
+      Dependent Users Count   : 1
+      Group Urid              : 0x70000000000003fb
+      Fset Urid ( Hash )      : 0x2000000000007d82 ( 7839ab25 )
+      Layer 3 Stub Entry      : Yes
+      Group Flags             : None
+      Gid                     : 8198
+      Mcid Asic[0]            : 0
+
+  (Vlan: 13, ff13::b)
+      Member ports            : 0
+      Dependent Users Count   : 1
+      Group Urid              : 0x70000000000003f2
+      Fset Urid ( Hash )      : 0x2000000000007d82 ( 7839ab25 )
+      Layer 3 Stub Entry      : Yes
+      Group Flags             : None
+      Gid                     : 8198
+      Mcid Asic[0]            : 0
+
+  (Vlan: 13, ff13::a)
+      Member ports            : 0
+      Dependent Users Count   : 1
+      Group Urid              : 0x70000000000003fd
+      Fset Urid ( Hash )      : 0x2000000000007d82 ( 7839ab25 )
+      Layer 3 Stub Entry      : Yes
+      Group Flags             : None
+      Gid                     : 8198
+      Mcid Asic[0]            : 0
+
+  (Vlan: 13, ff13::9)
+      Member ports            : 0
+      Dependent Users Count   : 1
+      Group Urid              : 0x70000000000003f1
+      Fset Urid ( Hash )      : 0x2000000000007d82 ( 7839ab25 )
+      Layer 3 Stub Entry      : Yes
+      Group Flags             : None
+      Gid                     : 8198
+      Mcid Asic[0]            : 0
+
+  (Vlan: 13, ff13::8)
+      Member ports            : 0
+      Dependent Users Count   : 1
+      Group Urid              : 0x70000000000003f9
+      Fset Urid ( Hash )      : 0x2000000000007d82 ( 7839ab25 )
+      Layer 3 Stub Entry      : Yes
+      Group Flags             : None
+      Gid                     : 8198
+      Mcid Asic[0]            : 0
+
+  (Vlan: 13, ff13::7)
+      Member ports            : 0
+      Dependent Users Count   : 1
+      Group Urid              : 0x70000000000003f0
+      Fset Urid ( Hash )      : 0x2000000000007d82 ( 7839ab25 )
+      Layer 3 Stub Entry      : Yes
+      Group Flags             : None
+      Gid                     : 8198
+      Mcid Asic[0]            : 0
+
+  (Vlan: 13, ff13::6)
+      Member ports            : 0
+      Dependent Users Count   : 1
+      Group Urid              : 0x70000000000003fc
+      Fset Urid ( Hash )      : 0x2000000000007d82 ( 7839ab25 )
+      Layer 3 Stub Entry      : Yes
+      Group Flags             : None
+      Gid                     : 8198
+      Mcid Asic[0]            : 0

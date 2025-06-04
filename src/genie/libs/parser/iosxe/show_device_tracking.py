@@ -1444,20 +1444,21 @@ class ShowDeviceTrackingDatabaseMacMacSchema(MetaParser):
     """Schema for show device-tracking database mac {mac}."""
 
     schema = {
-        "macDB_count": int,
-        "vlan": int,
-        "dynamic_count": int,
-        "entries": {
-            int: {
-                "dev_code": str,
-                "network_layer_address": str,
-                "link_layer_address": str,
-                "interface": str,
-                "vlan_id": int,
-                "pref_level_code": int,
-                "age": str,
-                "state": str,
-                Optional("time_left"): str,
+        Any(): {  
+            "macDB_count": int,
+            "dynamic_count": int,
+            "entries": {
+                int: {
+                    "dev_code": str,
+                    "network_layer_address": str,
+                    "link_layer_address": str,
+                    "interface": str,
+                    "vlan_id": int,
+                    "pref_level_code": int,
+                    "age": str,
+                    "state": str,
+                    Optional("time_left"): str,
+                }
             }
         }
     }
@@ -1497,6 +1498,7 @@ class ShowDeviceTrackingDatabaseMacMac(ShowDeviceTrackingDatabaseMacMacSchema):
             r"^macDB has (?P<entries>\d+) entries for mac \S+,vlan (?P<vlan_id>\d+), (?P<dynamic_count>\d+) dynamic$"
         )
         # S   10.10.10.11                              dead.beef.0001         Twe1/0/41  38         0100       4s         REACHABLE  308 s
+        #DH4  172.19.10.11                             d4e8.801f.4875         Te1/0/4   1021        0024       4s         REACHABLE  243 s(678399 s)
         entry_capture = re.compile(
             r"^(?P<code>\S+)\s+"
             r"(?P<network_layer_address>\S+)\s+"
@@ -1505,11 +1507,14 @@ class ShowDeviceTrackingDatabaseMacMac(ShowDeviceTrackingDatabaseMacMacSchema):
             r"(?P<vlan_id>\d+)\s+"
             r"(?P<prlvl>\d+)\s+"
             r"(?P<age>\S+)\s+"
-            r"(?P<state>\S+)\s+"
-            r"((try\s\d\sN/A)|(?P<time_left>\S+\s\S+))$"
+            r"(?P<state>\S+)"
+            r"(?:\s+(?P<time_left>\d+\s\w+))?"              
+            r"(?:\([^)]+\))?"                               
+            r"(?:\s+try\s+\d+)?"                           
+            r"(?:\s+N/A)?$"                                 
         )
 
-        entry_num = 0
+        vlan_entry_counters = {}
         for line in out.splitlines():
             line = line.strip()
 
@@ -1521,16 +1526,18 @@ class ShowDeviceTrackingDatabaseMacMac(ShowDeviceTrackingDatabaseMacMacSchema):
                 entries = int(groups['entries'])
                 vlan_id = int(groups['vlan_id'])
                 dynamic_count = int(groups['dynamic_count'])
-
-                device_tracking_database_mac_dict['macDB_count'] = entries
-                device_tracking_database_mac_dict['vlan'] = vlan_id
-                device_tracking_database_mac_dict['dynamic_count'] = dynamic_count
-                continue
+                
+                 # Initialize or update VLAN-specific information
+                if vlan_id not in device_tracking_database_mac_dict:
+                    device_tracking_database_mac_dict[vlan_id] = {}
+                    device_tracking_database_mac_dict[vlan_id]["macDB_count"] = entries
+                    device_tracking_database_mac_dict[vlan_id]["dynamic_count"] = dynamic_count
+                    device_tracking_database_mac_dict[vlan_id]["entries"] = {}
+                    continue
 
             # S   10.10.10.11                              dead.beef.0001         Twe1/0/41  38         0100       4s         REACHABLE  308 s
             match = entry_capture.match(line)
             if match:
-                entry_num += 1
                 groups = match.groupdict()
 
                 code = groups['code']
@@ -1541,8 +1548,13 @@ class ShowDeviceTrackingDatabaseMacMac(ShowDeviceTrackingDatabaseMacMacSchema):
                 prlvl = int(groups['prlvl'])
                 age = groups['age']
                 state = groups['state']
+                if vlan not in vlan_entry_counters:
+                    vlan_entry_counters[vlan] = 0
+                vlan_entry_counters[vlan] += 1
+                entry_num = vlan_entry_counters[vlan]
 
-                index_dict = device_tracking_database_mac_dict.setdefault('entries', {}).setdefault(entry_num, {})
+                 # Add the entry details under the correct VLAN
+                index_dict = device_tracking_database_mac_dict[vlan]["entries"].setdefault(entry_num, {})
 
                 index_dict['dev_code'] = code
                 index_dict['network_layer_address'] = ip
@@ -1588,6 +1600,7 @@ class ShowDeviceTrackingDatabaseMacMacDetailsSchema(MetaParser):
             Optional("reachable"): int,
             Optional("stale"): int,
             Optional("down"): int,
+            Optional("unknown"): int,
             "total": int,
         },
         "entries": {
@@ -1602,6 +1615,7 @@ class ShowDeviceTrackingDatabaseMacMacDetailsSchema(MetaParser):
                 "age": str,
                 "state": str,
                 Optional("time_left"): str,
+                Optional("session_id"): str,
                 "filter": str,
                 "in_crimson": str,
                 "client_id": str,
@@ -1673,23 +1687,16 @@ class ShowDeviceTrackingDatabaseMacMacDetails(ShowDeviceTrackingDatabaseMacMacDe
             r"^macDB has (?P<entries>\d+) entries for mac \S+,vlan (?P<vlan_id>\d+), (?P<dynamic_count>\d+) dynamic$"
         )
         # S   10.10.10.11                              dead.beef.0001(R)      Twe1/0/41  trunk      38  (  38)      0100       63s        REACHABLE  249 s            no         yes          0000.0000.0000
+        #DH4  172.19.5.10                              b811.4b0e.2630(R)      Te1/0/14   trunk      2045 (2045)     0024       9s         REACHABLE  233 s(691141 s)  no         yes          b811.4b0e.2630     (unspecified)    LISP-DT-GUARD-VLAN (Device-tracking)
         entry_capture = re.compile(
-            r"^(?P<dev_code>\S+)"
-            r"\s+(?P<network_layer_address>(\S\S\.\S\S\.\S\S\.\S\S))"
-            r"\s+(?P<link_layer_address>\S+)"
-            r"\s+(?P<interface>\S+)"
-            r"\s+(?P<mode>\S+)"
-            r"\s+(?P<vlan>\d+)\s+\(\s+\d+\)"
-            r"\s+(?P<prlvl>\d+)"
-            r"\s+(?P<age>\S+)"
-            r"\s+(?P<state>\S+)"
-            r"(\s+(?P<time_left>(\S+\ss)))?"
-            r"\s+(?P<filter>\S+)"
-            r"\s+(?P<in_crimson>\S+)"
-            r"\s+(?P<client_id>\S+)"
-            r"(\s+(?P<policy>(.*)))?$"
+            r"^(?P<dev_code>\S+)\s+(?P<network_layer_address>\S+)\s+(?P<link_layer_address>\S+)\s+"
+            r"(?P<interface>\S+)\s+(?P<mode>\S+)\s+(?P<vlan>\d+)\s*\(\s*\d+\)\s+(?P<prlvl>\d+)\s+"
+            r"(?P<age>\S+)\s+(?P<state>\S+)\s+(?P<time_left>\d+\s+s(?:\(\d+\s+s\))?)?\s+"
+            r"(?P<filter>\S+)\s+(?P<in_crimson>\S+)\s+(?P<client_id>\S+)"
+            r"(?:\s+(?P<policy>\(unspecified\)))?"
+            r"(?:\s+(?P<session_id>.+?))?\s*$"
         )
-
+        
         key = ""
         entry_counter = 0
         for line in out.splitlines():
@@ -1784,6 +1791,9 @@ class ShowDeviceTrackingDatabaseMacMacDetails(ShowDeviceTrackingDatabaseMacMacDe
                 if groups['policy']:
                     policy = groups['policy']
                     index_dict['policy'] = policy
+                if groups['session_id']:
+                    session_id = groups['session_id']
+                    index_dict['session_id'] = session_id
                 continue
 
         return device_tracking_database_mac_details_dict

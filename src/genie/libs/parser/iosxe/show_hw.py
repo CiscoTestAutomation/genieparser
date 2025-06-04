@@ -7,6 +7,7 @@ IOSXE parsers for the following show commands:
     * show hardware led port {port} {mode}
     * hw-module beacon RP {supervisor} status
     * hw-module beacon slot {slot_num} status
+    * show hw-module subslot all oir
 '''
 
 # Python
@@ -823,3 +824,53 @@ class HardwareModuleBeaconSlotStatus(HardwareModuleBeaconSlotStatusSchema):
                 continue
   
         return ret_dict
+
+class ShowHwModuleSubslotOirSchema(MetaParser):
+    """Schema for show hw-module subslot {slot} oir"""
+    schema = {
+        'subslots': {
+            str: {
+                'model': str,
+                'operational_status': str,
+            }
+        }
+    }
+
+class ShowHwModuleSubslotOir(ShowHwModuleSubslotOirSchema):
+    """Parser for show hw-module subslot {slot} oir"""
+
+    cli_command = 'show hw-module subslot {slot} oir'
+
+    def cli(self, slot='', output=None):
+        if output is None:
+            # Execute the command on the device
+            output = self.device.execute(self.cli_command.format(slot=slot))
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # Define the regular expression pattern to match each line of the output
+        # subslot 0/0             ISR4451-X-4x1GE      ok 
+        p0 = re.compile(r'^subslot\s+(?P<subslot>\S+)\s+(?P<model>\S+)\s+(?P<operational_status>\S+)$')
+
+        # Iterate over each line in the output
+        for line in output.splitlines():
+            line = line.strip()
+            # subslot 0/0             ISR4451-X-4x1GE      ok
+            if not line:
+                continue
+
+            # subslot 0/0             ISR4451-X-4x1GE      ok
+            m = p0.match(line)
+            if m:
+                # Extract the matched groups
+                subslot = m.group('subslot')
+                model = m.group('model')
+                operational_status = m.group('operational_status')
+
+                # Use setdefault to avoid key errors
+                subslot_dict = parsed_dict.setdefault('subslots', {}).setdefault(subslot, {})
+                subslot_dict['model'] = model
+                subslot_dict['operational_status'] = operational_status
+
+        return parsed_dict

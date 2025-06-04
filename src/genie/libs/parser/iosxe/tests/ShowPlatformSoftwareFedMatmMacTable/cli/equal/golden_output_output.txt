@@ -1,0 +1,44 @@
+VLAN   MAC                   Type  Seq#    EC_Bi  Flags  machandle           siHandle            riHandle            diHandle              *a_time  *e_time  ports                                                         Con
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+10     0000.0000.0001       0x202    2649      0      0  0x0                 0x0                 0x0                 0x0                        60        0  TenGigabitEthernet1/0/11                                      No
+
+
+
+
+10     0000.0000.0003       0x202    2650      0      0  0x0                 0x0                 0x0                 0x0                        60        0  TenGigabitEthernet1/0/11                                      No
+
+
+
+
+10     0000.0000.0005       0x202    2651      0      0  0x0                 0x0                 0x0                 0x0                        60        0  TenGigabitEthernet1/0/11                                      No
+
+
+
+
+10     0000.0000.0007       0x202    2652      0      0  0x0                 0x0                 0x0                 0x0                        60        0  TenGigabitEthernet1/0/11                                      No
+
+
+
+
+10     b08b.d08d.ba46         0x1    2654     14      0  0x0                 0x0                 0x0                 0x0                       300       60  Port-channel12                                                No
+
+
+
+
+
+Total Mac number of addresses:: 5
+Summary:
+Total number of secure addresses:: 4
+Total number of drop addresses:: 0
+Total number of lisp local addresses:: 0
+Total number of lisp remote addresses:: 0
+*a_time=aging_time(secs)  *e_time=total_elapsed_time(secs)
+Type:
+MAT_DYNAMIC_ADDR           0x1  MAT_STATIC_ADDR            0x2  MAT_CPU_ADDR               0x4  MAT_DISCARD_ADDR           0x8
+MAT_ALL_VLANS             0x10  MAT_NO_FORWARD            0x20  MAT_IPMULT_ADDR           0x40  MAT_RESYNC                0x80
+MAT_DO_NOT_AGE           0x100  MAT_SECURE_ADDR          0x200  MAT_NO_PORT              0x400  MAT_DROP_ADDR            0x800
+MAT_DUP_ADDR            0x1000  MAT_NULL_DESTINATION    0x2000  MAT_DOT1X_ADDR          0x4000  MAT_ROUTER_ADDR         0x8000
+MAT_WIRELESS_ADDR      0x10000  MAT_SECURE_CFG_ADDR    0x20000  MAT_OPQ_DATA_PRESENT   0x40000  MAT_WIRED_TUNNEL_ADDR  0x80000
+MAT_DLR_ADDR          0x100000  MAT_MRP_ADDR          0x200000  MAT_MSRP_ADDR         0x400000  MAT_LISP_LOCAL_ADDR   0x800000
+MAT_LISP_REMOTE_ADDR 0x1000000  MAT_VPLS_ADDR        0x2000000  MAT_LISP_GW_ADDR     0x4000000  MAT_ALIASING         0x8000000
+MAT_CDP_BYPASS_ADDR 0x10000000

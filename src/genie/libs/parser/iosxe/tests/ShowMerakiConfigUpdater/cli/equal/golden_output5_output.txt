@@ -1,0 +1,22 @@
+Config Updater
+------------------------------------
+  Current state:                Executing Get
+  Last config save time(UTC): 2025-03-18 22:19:16
+  Next config save is scheduled.
+  Next config save time(UTC): 2025-03-18 22:51:20
+
+Latest operation
+------------------------------------
+  Cloud config ready
+
+  Download running config: Pass
+    start time(UTC): 2025-03-18 22:20:37
+    result time(UTC): 2025-03-18 22:21:19
+    Downloaded config location: /flash/meraki/config_updater/monitor/dwnld_running.config
+  Apply running config: Pass
+    start time(UTC): 2025-03-18 22:21:19
+    result time(UTC): 2025-03-18 22:21:20
+  Get running config: In progress
+    start time(UTC): 2025-03-18 22:21:20
+  Get presigned url: Not started
+  Upload config: Not started

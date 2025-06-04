@@ -2,7 +2,6 @@ expected_output = {
     "sam": {
         "1": {
             "1": {
-                "hardware": "",
                 "model": "N9324C-SE1U-DPU",
                 "module_type": "Service Accelerator Module",
                 "online_diag_status": "Pass",
@@ -11,7 +10,6 @@ expected_output = {
                 "status": "ok"
             },
             "2": {
-                "hardware": "",
                 "model": "N9324C-SE1U-DPU",
                 "module_type": "Service Accelerator Module",
                 "online_diag_status": "Pass",
@@ -20,7 +18,6 @@ expected_output = {
                 "status": "ok"
             },
             "3": {
-                "hardware": "",
                 "model": "N9324C-SE1U-DPU",
                 "module_type": "Service Accelerator Module",
                 "online_diag_status": "Pass",
@@ -29,7 +26,6 @@ expected_output = {
                 "status": "ok"
             },
             "4": {
-                "hardware": "",
                 "model": "N9324C-SE1U-DPU",
                 "module_type": "Service Accelerator Module",
                 "online_diag_status": "Pass",

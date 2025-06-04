@@ -161,6 +161,7 @@ class ShowIpv6PimBsrElectionSchema(MetaParser):
                     Any(): {
                         'rp': {
                             'bsr': {
+                                Optional('bsr_system'): str,
                                 Optional('bsr_candidate'): {
                                     Optional('address'): str,
                                     Optional('hash_mask_length'): int,
@@ -175,7 +176,6 @@ class ShowIpv6PimBsrElectionSchema(MetaParser):
                                     Optional('expires'): str,
                                     Optional('rpf_interface'): str,
                                     Optional('rpf_address'): str,
-
                                 },
                             },
                         },
@@ -212,6 +212,12 @@ class ShowIpv6PimBsrElection(ShowIpv6PimBsrElectionSchema):
         # initial variables
         ret_dict = {}
         af_name = 'ipv6'
+
+        # This system is the Bootstrap Router (BSR)
+        p7 = re.compile(r'^\s*This system is the Bootstrap Router \(BSR\)$')
+
+        # This system is candidate BSR
+        p8 = re.compile(r'^\s*This system is candidate BSR$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -317,6 +323,16 @@ class ShowIpv6PimBsrElection(ShowIpv6PimBsrElectionSchema):
                 ret_dict['vrf'][vrf]['address_family'][af_name] \
                     ['rp']['bsr']['bsr_candidate']['priority'] = can_priority
                 continue
+
+            # This system is the Bootstrap Router (BSR)
+            m = p7.match(line)
+            if m:
+                continue
+            # This system is candidate BSR
+            m = p8.match(line)
+            if m:
+                continue
+
 
         return ret_dict
 

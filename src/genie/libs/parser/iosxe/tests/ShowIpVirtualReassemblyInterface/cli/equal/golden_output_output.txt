@@ -1,0 +1,20 @@
+Virtual Fragment Reassembly (VFR) Information for interface GigabitEthernet4:
+  VFR is enabled
+  Maximum number of fragments: 64
+  Maximum packet length: 1500 bytes
+  Timeout (seconds): 30
+  Current number of reassembly contexts: 3
+  Current number of fragments: 15
+  Reassembly timeout events: 2
+  Reassembly fail events: 1
+  Reassembly success events: 20
+
+  Last packet dropped due to VFR:
+    Fragment count exceeded
+    Packet length exceeded
+
+Statistics since last clear:
+  Total packets received: 1000
+  Total fragments received: 200
+  Total packets reassembled: 950
+  Total packets dropped due to VFR: 50

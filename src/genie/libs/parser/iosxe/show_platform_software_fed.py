@@ -44,6 +44,12 @@
     * 'show platform software fed active ifm interface_name tunnel5'
     * 'show platform software fed switch active oifset urid <id>'
     * 'show platform software fed switch active oifset urid <id> detail'
+    * 'show platform software fed switch active ifm interfaces virtualportgroup'
+    * 'show platform software fed active ifm interfaces virtualportgroup'
+    * 'show platform software fed switch {mode} ifm interfaces ethernet'
+    * 'show platform software fed active ifm interfaces ethernet'
+    * 'show platform software fed switch active ifm interfaces loopback'
+    * 'show platform software fed active ifm interfaces loopback'
 
 """
 # Python
@@ -1045,24 +1051,21 @@ class ShowPlatformSoftwareFedSwitchActiveIfmInterfacesLabel(ShowPlatformSoftware
     """
 
     cli_command = [
-        "show platform software fed {switch} active ifm interfaces {label}",
-        "show platform software fed active ifm interfaces {label}",
+        "show platform software fed switch active ifm interfaces lisp",
+        "show platform software fed active ifm interfaces lisp",
+        "show platform software fed switch active ifm interfaces sw-subif",
+        "show platform software fed active ifm interfaces sw-subif",
+        "show platform software fed switch active ifm interfaces virtualportgroup",
+        "show platform software fed active ifm interfaces virtualportgroup",
+        "show platform software fed switch {mode} ifm interfaces ethernet",
+        "show platform software fed active ifm interfaces ethernet",
+        "show platform software fed switch active ifm interfaces loopback",
+        "show platform software fed active ifm interfaces loopback"
     ]
 
-    label = ["lisp", "sw-subif"]
-
-    def cli(self, label="", switch=None, output=None):
+    def cli(self, command=None, output=None, **kwargs):
         if output is None:
-            if switch and label:
-                output = self.device.execute(
-                    self.cli_command[0].format(switch=switch, label=label)
-                )
-            elif label:
-                output = self.device.execute(self.cli_command[1].format(label=label))
-            else:
-                return ImportError
-        else:
-            output = output
+            output = self.device.execute(command)
 
         # initial return dictionary
         ret_dict = {}
@@ -4632,9 +4635,10 @@ class ShowPlatformSoftwareFedSwitchStateIfmIfIdIf_id(
     """Parser for show platform software fed switch <state> ifm if-id <if_id>"""
 
     cli_command = ["show platform software fed {state} ifm if-id {if_id}", 
-                   "show platform software fed switch {state} ifm if-id {if_id}"]
+                   "show platform software fed switch {state} ifm if-id {if_id}",
+                   "show platform software fed switch {switch_number} ifm if-id {if_id}"]
 
-    def cli(self, command=None, output=None, **kwargs):
+    def cli(self, command=None, output=None, if_id = "", switch_number="", **kwargs):
         if output is None:
             output = self.device.execute(command)
 
@@ -6167,7 +6171,7 @@ class ShowPlatformSoftwareFedActiveMonitorSchema(MetaParser):
         Optional("destination_vlans"): list,
         "source_rspan_vlan": int,
         "destination_rspan_vlan": int,
-        "encap": str,
+        Optional("encap"): str,
         "ingress_forwarding": str,
         Optional("filter_vlans"): list,
         "erspan_enable": int,
@@ -7953,18 +7957,13 @@ class ShowPlatformSoftwareFedSwitchActiveIFMMappingsEtherchannel(
     """Parser for sh platform software fed {switch} {active} ifm mappings etherchannel"""
 
     cli_command = [
-        "show platform software fed {switch} {mode} ifm mappings etherchannel",
-        "show platform software fed {mode} ifm mappings etherchannel",
+        "show platform software fed switch {mode} ifm mappings etherchannel",
+        "show platform software fed active ifm mappings etherchannel",
     ]
 
-    def cli(self, mode, switch=None, timeout=600, output=None):
+    def cli(self, command=None, timeout=600, output=None, **kwargs):
         if output is None:
-            if switch:
-                cmd = self.cli_command[0].format(switch=switch, mode=mode)
-            else:
-                cmd = self.cli_command[1].format(mode=mode)
-
-            output = self.device.execute(cmd, timeout=timeout)
+            output = self.device.execute(command, timeout=timeout)
 
         # 241   Port-channel241                   0x00000038
         p1 = re.compile(
@@ -11120,18 +11119,36 @@ class ShowPlatformSoftwareFedSwitchActiveSecurityFedArpIfSchema(MetaParser):
             'etherchannel_member': bool,
             'etherchannel': bool,
             'etherchannel_if_id': int,
-            'ref_cnt': int
+            'ref_cnt': int,
+            Optional('asic_specific_section'): {
+                Any(): {
+                    'acl_oid': int,
+                    'positions': {
+                        Any(): {
+                            'action': str,
+                            'counter_oid': int
+                        }
+                    }
+                }
+            }            
         }
     }
 
 class ShowPlatformSoftwareFedSwitchActiveSecurityFedArpIf(ShowPlatformSoftwareFedSwitchActiveSecurityFedArpIfSchema):
-    """Parser for 'show platform software fed switch active security-fed arp if {if_id}'"""
+    """Parser for 'show platform software fed switch active security-fed arp if {if_id}', 
+    'show platform software fed {switch} {switch_num} security-fed arp-snoop if-id {if_id}'"""
 
-    cli_command = 'show platform software fed switch active security-fed arp if {if_id}'
+    cli_command = [
+        'show platform software fed switch active security-fed arp if {if_id}',
+        'show platform software fed {switch} {switch_num} security-fed arp-snoop if-id {if_id}'
+        ]
 
-    def cli(self, if_id, output=None):
+    def cli(self, if_id, switch="", switch_num="", output=None):
         if output is None:
-            output = self.device.execute(self.cli_command.format(if_id=if_id))
+            if switch:
+                output = self.device.execute(self.cli_command[1].format(if_id=if_id,switch=switch,switch_num=switch_num))
+            else:
+                output = self.device.execute(self.cli_command[0].format(if_id=if_id))
 
         # Initialize the parsed dictionary
         ret_dict = {}
@@ -11163,6 +11180,15 @@ class ShowPlatformSoftwareFedSwitchActiveSecurityFedArpIf(ShowPlatformSoftwareFe
         # ref_cnt = 0
         p8 = re.compile(r'^\s*ref_cnt\s+=\s+(?P<ref_cnt>\d+)\s*$')
 
+        # Information about ACL with OID(1398) on ASIC(0)
+        p9 = re.compile(r'^Information about ACL with OID\((?P<acl_oid>\d+)\) on ASIC\((?P<asic>\d+)\)$')
+
+        # 0        PUNT    1399
+        p10 = re.compile(r'^(?P<position>\d+)\s+(?P<action>\S+)\s+(?P<counter_oid>\d+)$')
+
+        asic_specific_section = {}
+        current_asic = None
+        current_acl_oid = None
         for line in output.splitlines():
             line = line.strip()
 
@@ -11220,6 +11246,30 @@ class ShowPlatformSoftwareFedSwitchActiveSecurityFedArpIf(ShowPlatformSoftwareFe
             if m:
                 data_dict['ref_cnt'] = int(m.group('ref_cnt'))
                 continue
+
+            # Information about ACL with OID(1398) on ASIC(0)
+            m = p9.match(line)
+            if m:
+                current_acl_oid = int(m.group('acl_oid'))
+                current_asic = int(m.group('asic'))
+                asic_specific_section[current_asic] = {
+                    'acl_oid': current_acl_oid,
+                    'positions': {}
+                }
+                continue
+
+            # 0        PUNT    1399
+            m = p10.match(line)
+            if m and current_asic is not None:
+                position = int(m.group('position'))
+                asic_specific_section[current_asic]['positions'][position] = {
+                    'action': m.group('action'),
+                    'counter_oid': int(m.group('counter_oid'))
+                }
+                continue
+
+        if asic_specific_section:
+            data_dict['asic_specific_section'] = asic_specific_section
 
         return ret_dict
 
@@ -11823,11 +11873,17 @@ class ShowPlatformSoftwareFedSwitchActiveSecurityFedSisfStatisticsSchema(MetaPar
 
 class ShowPlatformSoftwareFedSwitchActiveSecurityFedSisfStatistics(ShowPlatformSoftwareFedSwitchActiveSecurityFedSisfStatisticsSchema):
     # Parser for 'show platform software fed switch active security-fed sisf statistics'
-    cli_command = 'show platform software fed switch active security-fed sisf statistics'
+    cli_command = [
+        'show platform software fed switch {switch_var} security-fed sisf statistics',
+        'show platform software fed switch {switch_var} security-fed sisf statistics {clear}']
 
-    def cli(self, output=None):
+    def cli(self, switch_var="", clear="", output=None):
         if output is None:
-            output = self.device.execute(self.cli_command)
+            if clear:
+                cmd = self.cli_command[1].format(switch_var=switch_var, clear=clear)
+            else:
+                cmd = self.cli_command[0].format(switch_var=switch_var)
+            output = self.device.execute(cmd)
 
         parsed_dict = {}
 
@@ -14269,8 +14325,8 @@ class ShowPlatformSoftwareFedSwitchActiveOifsetL3mHash(ShowPlatformSoftwareFedSw
     """Parser for 'show platform software fed switch active oifset l3m hash 35ddf2ee detail'"""
 
     cli_command = [
-        'show platform software fed switch {switch} {module} oifset l3m',
-        'show platform software fed switch {switch} {module} oifset l3m hash {hash} detail'
+        'show platform software fed {switch} {module} oifset l3m',
+        'show platform software fed {switch} {module} oifset l3m hash {hash} detail'
     ]
     def cli(self, switch='', module='', hash='', output=None):
         if output is None:
@@ -15251,9 +15307,9 @@ class ShowPlatformSoftwareFedSwitchActiveOifsetUridSchema(MetaParser):
         'md5': str,
         'fset_urid': str,
         'remote_port_count': int,
-        'svi_port_count': int,
+        Optional('svi_port_count'): int,
         'users_count': int,
-        'mioitem_count': int,
+        Optional('mioitem_count'): int,
         Optional('interfaces'): {
             int: {
                 'adjid': str,
@@ -15274,7 +15330,7 @@ class ShowPlatformSoftwareFedSwitchActiveOifsetUridSchema(MetaParser):
                 }
             }
         },
-        'fset_mcidgid': int,
+        Optional('fset_mcidgid'): int,
         'asic_0_mcid_oid': int,
         Optional('hw_ip_mcg_info_asic_0'): {
             int: {
@@ -15305,16 +15361,16 @@ class ShowPlatformSoftwareFedSwitchActiveOifsetUrid(ShowPlatformSoftwareFedSwitc
     """
 
     cli_command = [
-        'show platform software fed switch active oifset urid {id}',
-        'show platform software fed switch active oifset urid {id} detail'
+        'show platform software fed switch {active} oifset urid {id}',
+        'show platform software fed switch {active} oifset urid {id} {detail}'
     ]
 
-    def cli(self, id, detail=False, output=None):
+    def cli(self, id, detail="",active="", output=None):
         if output is None:
             if detail:
-                cmd = self.cli_command[1].format(id=id)
+                cmd = self.cli_command[1].format(id=id, active=active, detail=detail)
             else:
-                cmd = self.cli_command[0].format(id=id)
+                cmd = self.cli_command[0].format(id=id, active=active)
             output = self.device.execute(cmd)
 
         # Initialize an empty result dictionary
@@ -15498,11 +15554,11 @@ class ShowPlatformSoftwareFedSwitchActiveOifsetSchema(MetaParser):
 
 class ShowPlatformSoftwareFedSwitchActiveOifset(ShowPlatformSoftwareFedSwitchActiveOifsetSchema):
     """Parser for show platform software fed switch active oifset"""
-    cli_command = 'show platform software fed switch active oifset'
+    cli_command = 'show platform software fed switch {active} oifset'
 
-    def cli(self, output=None):
+    def cli(self, active="", output=None):
         if output is None:
-            output = self.device.execute(self.cli_command)
+            output = self.device.execute(self.cli_command.format(active=active))
 
         ret_dict = {}
 
@@ -16103,7 +16159,7 @@ class ShowPlatformSoftwareFedSwitchActiveIpmfibVrfGroupDetailSchema(MetaParser):
                 Optional('fset_aux_urid'): str,
                 'rpf_adjacency_id': str,
                 'cpu_credit': int,
-                'total_packets': {
+                Optional('total_packets'): {
                     'count': int,
                     'pps': str
                 },
@@ -16175,7 +16231,7 @@ class ShowPlatformSoftwareFedSwitchActiveIpmfibVrfGroupDetail(ShowPlatformSoftwa
         parsed_dict = {}
 
         # Mvrf: 2  ( *, 227.0.1.95 ) Attrs: C 
-        p1 = re.compile(r'Mvrf: (?P<mvrf_id>\d+)  \((?P<ip_range>[\S\s]+?)\)')
+        p1 = re.compile(r'Mvrf: (?P<mvrf_id>\d+)  \((?P<ip_range>[\S\s]+?)\) +Attrs:( C)?$')
 
         # Hw Flag                 : InHw 
         p2 = re.compile(r'^Hw Flag\s+:\s+(?P<hw_flag>\S+)$')
@@ -16657,9 +16713,9 @@ class ShowPlatformSoftwareFedSwitchActiveSgaclVlan(ShowPlatformSoftwareFedSwitch
         # Initialize the dictionary
         ret_dict = {}
 
-        # Vlan id  		 HW state
+        # Vlan id        HW state
         # ---------------------------------
-        # vlan50   		 Success
+        # vlan50         Success
 
         p1 = re.compile(r"^(?P<vlan_id>\S+)\s+(?P<hw_state>\S+)$")
         
@@ -16923,3 +16979,859 @@ class ShowPlatformSoftwareFedSwitchActiveOifsetUridl2mhash(ShowPlatformSoftwareF
                 }
                 continue
         return parsed_dict 
+
+class ShowPlatformSoftwareFedSwitchActiveSecurityFedDhcpSnoopVlanDetailSchema(MetaParser):
+    """Schema for show platform software fed switch active security-fed dhcp-snoop vlan {vlan} detail"""
+
+    schema = {
+        "vlan": int,
+        "multicast_group_id": ListOf({
+            "oid": int,
+            "asic": int
+        }),
+        "trusted_ports_multicast_gid": str,
+        "punject_switch_profile": str,
+        Optional('no_trust_ports'): bool,
+        Optional("trusted_ports"): ListOf({
+            "interface": str,
+            "interface_id": str,
+            "po_id": str
+        }),
+        "asic_specific_section": ListOf({
+            "asic": int,
+            "acl_oid": int,
+            "entries": ListOf({
+                "position": int,
+                "protocol": str,
+                "src_port": int,
+                "dst_port": int,
+                "action": str,
+                "counter_oid": int
+            })
+        })
+    }
+
+class ShowPlatformSoftwareFedSwitchActiveSecurityFedDhcpSnoopVlanDetail(ShowPlatformSoftwareFedSwitchActiveSecurityFedDhcpSnoopVlanDetailSchema):
+    """Parser for show platform software fed switch active security-fed dhcp-snoop vlan {vlan} detail"""
+
+    cli_command = 'show platform software fed switch {active} security-fed dhcp-snoop vlan {vlan} detail'
+
+    def cli(self, active="",vlan="", output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(vlan=vlan,active=active))
+
+        ret_dict = {}
+
+        # Vlan= 20
+        p0 = re.compile(r'^Vlan= +(?P<vlan>\d+)$')
+
+        # Multicast Group with OID(4254) on ASIC(0)
+        p1 = re.compile(r'^Multicast Group with OID\((?P<oid>\d+)\) on ASIC\((?P<asic>\d+)\)$')
+
+        # Trusted ports multicast group GID:: 0x2038
+        p2 = re.compile(r'^Trusted ports multicast group GID:: +(?P<gid>\S+)$')
+
+        # Punject Switch Profile: FALSE
+        p3 = re.compile(r'^Punject Switch Profile: +(?P<profile>\w+)$')
+
+        # Port-channel12                                                    0x00000524        0x00000000
+        p4 = re.compile(r'^(?P<interface>\S+)\s+(?P<interface_id>\S+)\s+(?P<po_id>\S+)$')
+
+        # Information about ACL with OID(1438) on ASIC(0)
+        p5 = re.compile(r'^Information about ACL with OID\((?P<acl_oid>\d+)\) on ASIC\((?P<asic>\d+)\)$')
+
+        # 0        UDP      68       67       PUNT    1439
+        p6 = re.compile(r'^(?P<position>\d+)\s+(?P<protocol>\S+)\s+(?P<src_port>\d+)\s+(?P<dst_port>\d+)\s+(?P<action>\S+)\s+(?P<counter_oid>\d+)$')
+
+        # No trust ports for this vlan
+        p7 = re.compile(r'^No trust ports for this vlan$')
+
+        multicast_group_id = []
+        trusted_ports = []
+        asic_specific_section = []
+        acl_entries = []
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Vlan= 20
+            m = p0.match(line)
+            if m:
+                ret_dict['vlan'] = int(m.group('vlan'))
+                continue
+
+            # Multicast Group with OID(4254) on ASIC(0)
+            m = p1.match(line)
+            if m:
+                multicast_group_id.append({
+                    "oid": int(m.group('oid')),
+                    "asic": int(m.group('asic'))
+                })
+                continue
+
+            # Trusted ports multicast group GID:: 0x2038
+            m = p2.match(line)
+            if m:
+                ret_dict['trusted_ports_multicast_gid'] = m.group('gid')
+                continue
+
+            # Punject Switch Profile: FALSE
+            m = p3.match(line)
+            if m:
+                ret_dict['punject_switch_profile'] = m.group('profile')
+                continue
+
+            # Port-channel12                                                    0x00000524        0x00000000
+            m = p4.match(line)
+            if m:
+                trusted_ports.append({
+                    "interface": m.group('interface'),
+                    "interface_id": m.group('interface_id'),
+                    "po_id": m.group('po_id')
+                })
+                continue
+
+            # Information about ACL with OID(1438) on ASIC(0)
+            m = p5.match(line)
+            if m:
+                if acl_entries:
+                    asic_specific_section.append({
+                        "asic": current_asic,
+                        "acl_oid": current_acl_oid,
+                        "entries": acl_entries
+                    })
+                    acl_entries = []
+                current_acl_oid = int(m.group('acl_oid'))
+                current_asic = int(m.group('asic'))
+                continue
+
+            # 0        UDP      68       67       PUNT    1439
+            m = p6.match(line)
+            if m:
+                acl_entries.append({
+                    "position": int(m.group('position')),
+                    "protocol": m.group('protocol'),
+                    "src_port": int(m.group('src_port')),
+                    "dst_port": int(m.group('dst_port')),
+                    "action": m.group('action'),
+                    "counter_oid": int(m.group('counter_oid'))
+                })
+                continue
+
+            # No trust ports for this vlan
+            m = p7.match(line)
+            if m:
+                ret_dict['no_trust_ports'] = True
+                continue
+
+        if acl_entries:
+            asic_specific_section.append({
+                "asic": current_asic,
+                "acl_oid": current_acl_oid,
+                "entries": acl_entries
+            })
+
+        if multicast_group_id:
+            ret_dict['multicast_group_id'] = multicast_group_id
+
+        if trusted_ports:
+            ret_dict['trusted_ports'] = trusted_ports
+
+        if asic_specific_section:
+            ret_dict['asic_specific_section'] = asic_specific_section
+
+        return ret_dict
+
+class ShowPlatformDhcpSnoopingClientStatsSchema(MetaParser):
+    """Schema for show platform dhcpsnooping client stats {mac_address}"""
+
+    schema = {
+        'client_mac': str,
+        'packet_trace': ListOf({
+            'timestamp': str,
+            'destination_mac': str,
+            'destination_ip': str,
+            'vlan': int,
+            'message': str,
+            'handler_action': str
+        })
+    }
+
+class ShowPlatformDhcpSnoopingClientStats(ShowPlatformDhcpSnoopingClientStatsSchema):
+    """Parser for show platform dhcpsnooping client stats {mac_address}"""
+
+    cli_command = 'show platform dhcpsnooping client stats {mac_address}'
+
+    def cli(self, mac_address, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(mac_address=mac_address))
+
+        ret_dict = {}
+
+        # Packet Trace for client MAC 44AE.25D3.6006:
+        p0 = re.compile(r'^Packet Trace for client MAC\s+(?P<client_mac>[\da-fA-F.]+):$')
+
+        # Timestamp                Destination MAC  Destination Ip  VLAN  Message      Handler:Action
+        # ------------------------ ---------------- --------------- ----  ------------ ----------------
+        # 2025/03/19 11:08:53.012  FFFF.FFFF.FFFF   255.255.255.255 100  DHCPDISCOVER(B) PUNT:RECEIVED
+        p1 = re.compile(
+            r'^(?P<timestamp>\d{4}/\d{2}/\d{2} \d{2}:\d{2}:\d{2}\.\d{3})\s+'
+            r'(?P<destination_mac>[0-9A-Fa-f\.]+)\s+'
+            r'(?P<destination_ip>[0-9\.\:]+)\s+'
+            r'(?P<vlan>\d+)\s+'
+            r'(?P<message>\S+)\s+'
+            r'(?P<handler_action>\S+:\S+)$'
+        )
+
+        packet_trace = []
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Packet Trace for client MAC 44AE.25D3.6006:
+            m = p0.match(line)
+            if m:
+                ret_dict['client_mac'] = m.group('client_mac')
+
+            # Match the packet trace lines
+            m = p1.match(line)
+            if m:
+                ret_dict['packet_trace']=packet_trace
+                ret_dict['packet_trace'].append({
+                    'timestamp': m.group('timestamp'),
+                    'destination_mac': m.group('destination_mac'),
+                    'destination_ip': m.group('destination_ip'),
+                    'vlan': int(m.group('vlan')),
+                    'message': m.group('message'),
+                    'handler_action': m.group('handler_action')
+                })
+
+        return ret_dict
+
+class ShowPlatformSoftwareFedSwitchActiveEtherchannelLoadBalanceMacAddrSchema(MetaParser):
+    """Schema for:
+        * 'show platform software fed switch active etherchannel <eth_channel_id> load-balance mac-addr <src> <dst>'
+    """
+    schema = {
+        'dest_port': str
+    }
+
+class ShowPlatformSoftwareFedSwitchActiveEtherchannelLoadBalanceMacAddr(ShowPlatformSoftwareFedSwitchActiveEtherchannelLoadBalanceMacAddrSchema):
+    """Parser for:
+        * 'show platform software fed switch active etherchannel <eth_channel_id> load-balance mac-addr <src> <dst>'
+    """
+
+    cli_command = [
+        'show platform software fed {switch} {switch_type} etherchannel {eth_channel_id} load-balance mac-addr {src} {dst}',
+        'show platform software fed {switch_type} etherchannel {eth_channel_id} load-balance mac-addr {src} {dst}'
+    ]
+
+    def cli(self, switch_type, eth_channel_id, src, dst, switch=None, output=None):
+        if output is None:
+            if switch:
+                cmd = self.cli_command[0].format(switch=switch, switch_type=switch_type, eth_channel_id=eth_channel_id, src=src, dst=dst)
+            else:
+                cmd = self.cli_command[1].format(switch_type=switch_type, eth_channel_id=eth_channel_id, src=src, dst=dst)
+            output = self.device.execute(cmd)
+
+        # Initialize the parsed dictionary
+        ret_dict = {}
+
+        # Matching Pattern
+        # Dest Port: : HundredGigE1/3/0/13
+        p1 = re.compile(r'^Dest Port: : (?P<dest_port>\S+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # HundredGigE1/3/0/13
+            m = p1.match(line)
+            if m:
+                ret_dict['dest_port'] = m.group('dest_port')
+                continue
+
+        return ret_dict
+
+# =============================================
+# Schema for 'show platform software fed active sdm feature'
+# =============================================
+
+class ShowPlatformSoftwareFedActiveSdmFeatureSchema(MetaParser):
+    """ Schema for show platform software fed active sdm feature """
+    schema = {
+        'entries': {
+            Any(): {  
+                Any(): {  
+                    'reserved': int,
+                    'used': int,
+                    'percent_used': int,
+                    'max': int,
+                    'alloc_fail': int,
+                    'capped_max': int,
+                    'asic': int,
+                    'slice': int
+                }
+            }
+        }
+    }
+
+class ShowPlatformSoftwareFedActiveSdmFeature(ShowPlatformSoftwareFedActiveSdmFeatureSchema):
+    """ Parser for show platform software fed active sdm feature """
+    cli_command = 'show platform software fed active sdm feature'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+        entry_dict = ret_dict.setdefault('entries', {})
+        
+        # QOS ACL IN            1024        0           0      0           0           5120        2      1
+        # QOS ACL IN            1024        16          1      16          0           5120        3      1
+        # QOS ACL OUT           1024        0           0      0           0           5120        0      0
+        # QOS ACL OUT           1024        0           0      0           0           5120        1      0
+        p0 = re.compile(
+            r'^(?P<feature>[A-Za-z0-9\/\-\s]+?)\s{2,}'
+            r'(?P<reserved>\d+)\s+'
+            r'(?P<used>\d+)\s+'
+            r'(?P<percent_used>\d+)\s+'
+            r'(?P<max>\d+)\s+'
+            r'(?P<alloc_fail>\d+)\s+'
+            r'(?P<capped_max>\d+)\s+'
+            r'(?P<asic>\d+)\s+'
+            r'(?P<slice>\d+)$'
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line or line.startswith('Feature Name') or line.startswith('-') or line.startswith('NPI SDM Feature Table'):
+                continue
+
+            # QOS ACL IN            1024        0           0      0           0           5120        2      1
+            # QOS ACL IN            1024        16          1      16          0           5120        3      1
+            # QOS ACL OUT           1024        0           0      0           0           5120        0      0
+            # QOS ACL OUT           1024        0           0      0           0           5120        1      0
+            m = p0.match(line)
+            if m:
+                group = m.groupdict()
+                feature = group['feature'].strip()
+                index = f"{group['asic']}"
+
+                feature_dict = entry_dict.setdefault(feature, {})
+                feature_dict[index] = {
+                    'reserved': int(group['reserved']),
+                    'used': int(group['used']),
+                    'percent_used': int(group['percent_used']),
+                    'max': int(group['max']),
+                    'alloc_fail': int(group['alloc_fail']),
+                    'capped_max': int(group['capped_max']),
+                    'asic': int(group['asic']),
+                    'slice': int(group['slice']),
+                }
+
+        return ret_dict
+    
+class ShowPlatformSoftwareFedSwitchAclBindDbInterfaceFeatureDirDetailAsicSchema(MetaParser):
+    """Schema for
+       * show platform software fed switch <act/stby> acl bind db interface {interface} feature {feature} dir {dir} detail asic {asic}
+    """
+    schema = {
+        'interface_name': str,
+        'direction': str,
+        'feature': str,
+        'protocol': str,
+        'cg_id': int,
+        'cg_name': str,
+        'status': str,
+        'src_og_lkup_hdl': int,
+        'dst_og_lkup_hdl': int,
+    }
+
+
+class ShowPlatformSoftwareFedSwitchAclBindDbInterfaceFeatureDirDetailAsic(ShowPlatformSoftwareFedSwitchAclBindDbInterfaceFeatureDirDetailAsicSchema):
+    """Parser for
+       * show platform software fed switch <act/stby> acl bind db interface {interface} feature {feature} dir {dir} detail asic {asic}
+    """
+
+    cli_command = 'show platform software fed switch {state} acl bind db interface {interface} feature {feature} dir {dir} detail asic {asic}'
+
+    def cli(self, state, interface, feature, dir, asic, output=None):
+        if output is None:
+            cmd = self.cli_command.format(state=state, interface=interface, feature=feature, dir=dir, asic=asic)
+            output = self.device.execute(cmd)
+
+        # Initialize the parsed dictionary
+        ret_dict = {}
+
+        # Interface Name: Vl300
+        p1 = re.compile(r'^Interface Name:\s+(?P<interface_name>\S+)$')
+
+        # Direction: Ingress
+        p2 = re.compile(r'^Direction:\s+(?P<direction>\S+)$')
+
+        # Feature         : Racl
+        p3 = re.compile(r'^Feature\s+:\s+(?P<feature>\S+)$')
+
+        # Protocol        : IPv4
+        p4 = re.compile(r'^Protocol\s+:\s+(?P<protocol>\S+)$')
+
+        # CG ID           : 11
+        p5 = re.compile(r'^CG ID\s+:\s+(?P<cg_id>\d+)$')
+
+        # CG Name         : aclscale-30
+        p6 = re.compile(r'^CG Name\s+:\s+(?P<cg_name>\S+)$')
+
+        # Status          : Success
+        p7 = re.compile(r'^Status\s+:\s+(?P<status>\S+)$')
+
+        # Src_og_lkup_hdl : 0
+        p8 = re.compile(r'^Src_og_lkup_hdl\s+:\s+(?P<src_og_lkup_hdl>\d+)$')
+
+        # Dst_og_lkup_hdl : 0
+        p9 = re.compile(r'^Dst_og_lkup_hdl\s+:\s+(?P<dst_og_lkup_hdl>\d+)$')
+
+        # Parse each line of the output
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Interface Name: Vl300
+            m = p1.match(line)
+            if m:
+                ret_dict['interface_name'] = m.group('interface_name')
+                continue
+
+            # Direction: Ingress
+            m = p2.match(line)
+            if m:
+                ret_dict['direction'] = m.group('direction')
+                continue
+
+            # Feature         : Racl
+            m = p3.match(line)
+            if m:
+                ret_dict['feature'] = m.group('feature')
+                continue
+
+            # Protocol        : IPv4
+            m = p4.match(line)
+            if m:
+                ret_dict['protocol'] = m.group('protocol')
+                continue
+
+            # CG ID           : 11
+            m = p5.match(line)
+            if m:
+                ret_dict['cg_id'] = int(m.group('cg_id'))
+                continue
+
+            # CG Name         : aclscale-30
+            m = p6.match(line)
+            if m:
+                ret_dict['cg_name'] = m.group('cg_name')
+                continue
+
+            # Status          : Success
+            m = p7.match(line)
+            if m:
+                ret_dict['status'] = m.group('status')
+                continue
+
+            # Src_og_lkup_hdl : 0
+            m = p8.match(line)
+            if m:
+                ret_dict['src_og_lkup_hdl'] = int(m.group('src_og_lkup_hdl'))
+                continue
+
+            # Dst_og_lkup_hdl : 0
+            m = p9.match(line)
+            if m:
+                ret_dict['dst_og_lkup_hdl'] = int(m.group('dst_og_lkup_hdl'))
+                continue
+
+        return ret_dict 
+
+class ShowPlatformSoftwareFedSwitchAclManKeyProfileEgressAllSchema(MetaParser):
+    """Schema for 'show platform software fed {switch} {mode} acl man key-profile egress all'"""
+
+    schema = {
+        'egress_key_profiles': {
+            Any(): {  # Profile name (e.g., OGBIN_SRC, OGBIN_DST, RACL)
+                'index': int,
+                Optional('type'): str,
+                Optional('oid'): ListOf(int),
+                Optional('hw_merge_idx'): int,
+                Optional('hw_merge_grp'): int,
+                Optional('pkp_idx'): int,
+                Optional('label'): str,
+                Optional('no_of_fields'): int,
+                Optional('fields'): ListOf(str),
+            }
+        }
+    }
+
+
+class ShowPlatformSoftwareFedSwitchAclManKeyProfileEgressAll(ShowPlatformSoftwareFedSwitchAclManKeyProfileEgressAllSchema):
+    """Parser for 'show platform software fed {switch} {mode} acl man key-profile egress all'"""
+
+    cli_command = 'show platform software fed {switch} {mode} acl man key-profile egress all'
+
+    def cli(self, switch='',mode='', output=None):
+        if output is None:
+            cmd = self.cli_command.format(switch=switch, mode=mode)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+        current_profile = None
+        current_type = None
+
+        # [Egress Key Profile: OGBIN_SRC, Idx: 0]
+        p1 = re.compile(r'^\[Egress Key Profile: (?P<profile_name>\S+), Idx: (?P<index>\d+)\]$')
+
+        # IPV4 or IPV6
+        p2 = re.compile(r'^\s*(?P<type>IPV4|IPV6)$')
+
+        # OID: [  528   450   450   450 ]
+        p3 = re.compile(r'^\s*OID: \[\s*(?P<oid>[\d\s]+)\]$')
+
+        #  Idx: 0    HW Merge Grp: 0    PKP Idx: 1    Label: LIF7
+        p4 = re.compile(r'^\s*HW Merge Idx: (?P<hw_merge_idx>\d+)\s+HW Merge Grp: (?P<hw_merge_grp>\d+)\s+PKP Idx: (?P<pkp_idx>\d+)\s+Label: (?P<label>\S+)$')
+        
+        # No of fields: 13 [ 0x14 0x15 0x7 0x11 0xa 0xf 0x1c 0x1d 0x20 0x1e 0x1f 0x3a 0x3c ]
+        p5 = re.compile(r'^\s*No of fields: (?P<no_of_fields>\d+)\s+\[\s*(?P<fields>[\w\s]+)\]$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # [Egress Key Profile: OGBIN_SRC, Idx: 0]
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                current_profile = group['profile_name']
+                ret_dict.setdefault('egress_key_profiles', {})[current_profile] = {
+                    'index': int(group['index']),
+                }
+                continue
+
+            # type :IPV4 or IPV6
+            m = p2.match(line)
+            if m and current_profile:
+                current_type = m.group('type')
+                ret_dict['egress_key_profiles'][current_profile]['type'] = current_type
+                continue
+
+            # OID: [  528   450   450   450 ]
+            m = p3.match(line)
+            if m and current_profile:
+                oid_list = list(map(int, m.group('oid').split()))
+                ret_dict['egress_key_profiles'][current_profile]['oid'] = oid_list
+                continue
+
+            # HW Merge Idx: 0    HW Merge Grp: 0    PKP Idx: 1    Label: LIF7
+            m = p4.match(line)
+            if m and current_profile:
+                group = m.groupdict()
+                ret_dict['egress_key_profiles'][current_profile].update({
+                    'hw_merge_idx': int(group['hw_merge_idx']),
+                    'hw_merge_grp': int(group['hw_merge_grp']),
+                    'pkp_idx': int(group['pkp_idx']),
+                    'label': group['label'],
+                })
+                continue
+
+            # No of fields: 13 [ 0x14 0x15 0x7 0x11 0xa 0xf 0x1c 0x1d 0x20 0x1e 0x1f 0x3a 0x3c ]
+            m = p5.match(line)
+            if m and current_profile:
+                group = m.groupdict()
+                fields_list = group['fields'].split()
+                ret_dict['egress_key_profiles'][current_profile].update({
+                    'no_of_fields': int(group['no_of_fields']),
+                    'fields': fields_list,
+                })
+                continue
+
+        return ret_dict
+
+class ShowPlatformSoftwareFedOifsetL2mSchema(MetaParser):
+    """Schema for:
+        * 'show platform software fed {switch} {module} oifset l2m'
+        * 'show platform software fed {switch} {module} oifset l2m hash <hash_data>'
+    """
+    schema = {
+        'oifsets': {
+            Any(): {
+                'type': str,
+                'state': str,
+                'md5': str,
+                'fset_urid': str,
+                'parent_urid': str,
+                'remote_port_count': int,
+                'users_count': int,
+                'vp_oif_count': int,
+                Optional('fset_gid'): int,
+                Optional('asic_mcid_oid'): int,
+                Optional('fset_svl_link'): {
+                    'idx': str,
+                    'port': str,
+                    'gid': int,
+                },
+                Optional('hw_l2_mcg_info_asic'): ListOf(str),
+                Optional('users'): ListOf(dict),
+                Optional('vp_interfaces'): ListOf(dict),
+            }
+        }
+    }
+
+class ShowPlatformSoftwareFedOifsetL2m(ShowPlatformSoftwareFedOifsetL2mSchema):
+    """Parser for:
+        * 'show platform software fed {switch} {module} oifset l2m'
+        * 'show platform software fed {switch} {module} oifset l2m hash <hash_data>'
+    """
+
+    cli_command = [
+        'show platform software fed {switch} {module} oifset l2m',
+        'show platform software fed {switch} {module} oifset l2m hash {hash_data}'
+    ]
+
+    def cli(self, switch='', module='', hash_data='', output=None):
+        if output is None:
+            if hash_data:
+                cmd = self.cli_command[1].format(switch=switch, module=module, hash_data=hash_data)
+            else:
+                cmd = self.cli_command[0].format(switch=switch, module=module)
+            output = self.device.execute(cmd)
+
+        # Initialize the return dictionary 
+        ret_dict = {}
+
+        # Matching patterns
+        # "Type: vlan_group           State: allocated       MD5:(d7cc48995242c698:167e8ad0954671bd)"
+        p1 = re.compile(r'^Type:\s+(?P<type>\S+)\s+State:\s+(?P<state>\S+)\s+MD5:\((?P<md5>[\w:]+)\)$')
+
+        # Fset Urid              : 0x2000000000000002
+        p2 = re.compile(r'^Fset Urid\s+:\s+(?P<fset_urid>\S+)$')
+
+        # Parent URID            : 0x0
+        p3 = re.compile(r'^Parent URID\s+:\s+(?P<parent_urid>\S+)$')
+
+        # Remote Port Count      : 0
+        p4 = re.compile(r'^Remote Port Count\s+:\s+(?P<remote_port_count>\d+)$')
+
+        # Users Count
+        p5 = re.compile(r'^Users Count\s+:\s+(?P<users_count>\d+)$')
+
+        # VP OIF Count
+        p6 = re.compile(r'^VP OIF Count\s+:\s+(?P<vp_oif_count>\d+)$')
+
+        # FSET Gid  
+        p7 = re.compile(r'^FSET Gid\s+:\s+(?P<fset_gid>\d+)$')
+
+        # Asic[0] mcid_oid 
+        p8 = re.compile(r'^Asic\[\d+\] mcid_oid\s+:\s+(?P<asic_mcid_oid>\d+)$')
+
+        # FSET Svl Link
+        p9 = re.compile(r'^FSET Svl Link\s+:\s+Idx:\s+(?P<idx>\S+)\s+Port:\s+(?P<port>[\w/]+)\s+Gid:\s+(?P<gid>\d+)$')
+
+        # Hw L2 Mcg Info Asic[0]
+        p10 = re.compile(r'^Hw L2 Mcg Info Asic\[\d+\]\s*:\s*(?P<hw_l2_mcg_info_asic>.*)$')
+
+        # urid:0x5000000000000002 (l2m_vlan:ipv6 vlan:1)
+        p11 = re.compile(r'^urid:(?P<urid>\S+)\s+\((?P<info>.+)\)$')
+
+        # 1. Po103_V103               Port-channel103          -------------
+        p12 = re.compile(r'^\d+\.\s+(?P<vp_interface>\S+)\s+(?P<interface>\S+)\s+(?P<physical_interface>\S+)$')
+
+        current_oifset = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Type: vlan_group           State: allocated       MD5:(d7cc48995242c698:167e8ad0954671bd)
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                current_oifset = groups['md5']
+                oifset_dict = ret_dict.setdefault('oifsets', {}).setdefault(current_oifset, {})
+                oifset_dict.update({
+                    'type': groups['type'],
+                    'state': groups['state'],
+                    'md5': groups['md5']
+                })
+                continue
+
+            # Fset Urid              : 0x2000000000000002
+            m = p2.match(line)
+            if m and current_oifset:
+                ret_dict['oifsets'][current_oifset]['fset_urid'] = m.group('fset_urid')
+                continue
+
+            # Parent URID            : 0x0
+            m = p3.match(line)
+            if m and current_oifset:
+                ret_dict['oifsets'][current_oifset]['parent_urid'] = m.group('parent_urid')
+                continue
+
+            # Remote Port Count      : 0
+            m = p4.match(line)
+            if m and current_oifset:
+                ret_dict['oifsets'][current_oifset]['remote_port_count'] = int(m.group('remote_port_count'))
+                continue
+
+            # Users Count            : 1
+            m = p5.match(line)
+            if m and current_oifset:
+                ret_dict['oifsets'][current_oifset]['users_count'] = int(m.group('users_count'))
+                continue
+
+            # VP OIF Count           : 0
+            m = p6.match(line)
+            if m and current_oifset:
+                ret_dict['oifsets'][current_oifset]['vp_oif_count'] = int(m.group('vp_oif_count'))
+                continue
+
+            # FSET Gid               : 8194
+            m = p7.match(line)
+            if m and current_oifset:
+                ret_dict['oifsets'][current_oifset]['fset_gid'] = int(m.group('fset_gid'))
+                continue
+
+            # Asic[0] mcid_oid       : 2224
+            m = p8.match(line)
+            if m and current_oifset:
+                ret_dict['oifsets'][current_oifset]['asic_mcid_oid'] = int(m.group('asic_mcid_oid'))
+                continue
+
+            # FSET Svl Link          : Idx: 0x87 Port: HundredGigE0/13   Gid: 65534
+            m = p9.match(line)
+            if m and current_oifset:
+                ret_dict['oifsets'][current_oifset]['fset_svl_link'] = {
+                    'idx': m.group('idx'),
+                    'port': m.group('port'),
+                    'gid': int(m.group('gid'))
+                }
+                continue
+
+            # Hw L2 Mcg Info Asic[0] :
+            m = p10.match(line)
+            if m and current_oifset:
+                hw_l2_mcg_info_asic = m.group('hw_l2_mcg_info_asic')
+                hw_l2_mcg_info_list = ret_dict['oifsets'][current_oifset].setdefault('hw_l2_mcg_info_asic', [])
+                hw_l2_mcg_info_list.append(hw_l2_mcg_info_asic)
+                continue
+
+            # urid:0x5000000000000002 (l2m_vlan:ipv6 vlan:1)
+            m = p11.match(line)
+            if m and current_oifset:
+                users_list = ret_dict['oifsets'][current_oifset].setdefault('users', [])
+                users_list.append({
+                    'urid': m.group('urid'),
+                    'info': m.group('info')
+                })
+                continue
+
+            # 1. Po103_V103               Port-channel103          -------------
+            m = p12.match(line)
+            if m and current_oifset:
+                vp_interfaces_list = ret_dict['oifsets'][current_oifset].setdefault('vp_interfaces', [])
+                vp_interfaces_list.append({
+                    'vp_interface': m.group('vp_interface'),
+                    'interface': m.group('interface'),
+                    'physical_interface': m.group('physical_interface')
+                })
+                continue
+
+        return ret_dict
+
+class ShowPlatformSoftwareFedSwitchAclManKeyProfileIngressAllSchema(MetaParser):
+    """Schema for 'show platform software fed {switch} {mode} acl man key-profile ingress all'"""
+
+    schema = {
+        'ingress_key_profiles': {
+            Any(): {  
+                'index': int,
+                Optional('type'): str,
+                'oid': ListOf(int),
+                'hw_merge_idx': int,
+                'hw_merge_grp': int,
+                'pkp_idx': int,
+                'label': str,
+                'no_of_fields': int,
+                Optional('fields'): ListOf(str),
+            }
+        }
+    }
+
+
+class ShowPlatformSoftwareFedSwitchAclManKeyProfileIngressAll(ShowPlatformSoftwareFedSwitchAclManKeyProfileIngressAllSchema):
+    """Parser for 'show platform software fed {switch} {mode} acl man key-profile ingress all'"""
+
+    cli_command = 'show platform software fed {switch} {mode} acl man key-profile ingress all'
+
+    def cli(self, switch='', mode='', output=None):
+        if output is None:
+            cmd = self.cli_command.format(switch=switch, mode=mode)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+        current_profile = None
+
+        # Regex for [Ingress Key Profile: ACCSEC, Idx: 0]
+        p1 = re.compile(r'^\[Ingress Key Profile: (?P<profile_name>\S+), Idx: (?P<index>\d+)\]$')
+        # regex for ETH
+        p2 = re.compile(r'^\s*(?P<type>\S+)$')
+        # regex for OID: [  472   394   394   394 ]
+        p3 = re.compile(r'^\s*OID: \[\s*(?P<oid>[\d\s]+)\]$')
+        # regex for HW Merge Idx: 0    HW Merge Grp: 2    PKP Idx: 0    Label: LIF7
+        p4 = re.compile(r'^\s*HW Merge Idx: (?P<hw_merge_idx>\d+)\s+HW Merge Grp: (?P<hw_merge_grp>\d+)\s+PKP Idx: (?P<pkp_idx>\d+)\s+Label: (?P<label>\S+)$')
+        # regx for No of fields: 5 [ 0x1 0x2 0x21 0x14 0x2f ]
+        p5 = re.compile(r'^\s*No of fields: (?P<no_of_fields>\d+)\s+\[\s*(?P<fields>[\w\s]+)\]$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # [Ingress Key Profile: ACCSEC, Idx: 0]
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                current_profile = group['profile_name']
+                ret_dict.setdefault('ingress_key_profiles', {})[current_profile] = {
+                    'index': int(group['index']),
+                    'no_of_fields': 0
+                }
+                continue
+
+            # ETH
+            m = p2.match(line)
+            if m and current_profile:
+                ret_dict['ingress_key_profiles'][current_profile]['type'] = m.group('type')
+                continue
+
+            # OID: [  472   394   394   394 ]
+            m = p3.match(line)
+            if m and current_profile:
+                oid_list = list(map(int, m.group('oid').split()))
+                ret_dict['ingress_key_profiles'][current_profile]['oid'] = oid_list
+                continue
+
+            # HW Merge Idx: 0    HW Merge Grp: 2    PKP Idx: 0    Label: LIF7
+            m = p4.match(line)
+            if m and current_profile:
+                group = m.groupdict()
+                ret_dict['ingress_key_profiles'][current_profile].update({
+                    'hw_merge_idx': int(group['hw_merge_idx']),
+                    'hw_merge_grp': int(group['hw_merge_grp']),
+                    'pkp_idx': int(group['pkp_idx']),
+                    'label': group['label'],
+                })
+                continue
+
+            # No of fields: 5 [ 0x1 0x2 0x21 0x14 0x2f ]
+            m = p5.match(line)
+            if m and current_profile:
+                group = m.groupdict()
+                fields_list = group['fields'].split()
+                ret_dict['ingress_key_profiles'][current_profile].update({
+                    'no_of_fields': int(group['no_of_fields']),
+                    'fields': fields_list,
+                })
+                continue
+
+        return ret_dict	        

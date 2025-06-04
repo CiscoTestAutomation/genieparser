@@ -1,0 +1,7 @@
+Interface HundredGigE5/0/15
+  FNF:  monitor:          DreamLine-Monitor
+        direction:        Input
+        traffic(ip):      sampler Netflow-Sample
+  FNF:  monitor:          FlowMonitor-1
+        direction:        Output
+        traffic(ip):      sampler Netflow-Sample

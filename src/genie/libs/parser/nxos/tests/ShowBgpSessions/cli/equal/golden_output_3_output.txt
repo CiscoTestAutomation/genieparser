@@ -1,7 +1,7 @@
-Total peers 4, established peers 4
+Total peers 5, established peers 5
 ASN 1
 VRF default, local ASN 1
-peers 4, established peers 4, local router-id 1.1.1.1
+peers 5, established peers 5, local router-id 1.1.1.1
 State: I-Idle, A-Active, O-Open, E-Established, C-Closing, S-Shutdown
 
 Neighbor        ASN    Flaps LastUpDn|LastRead|LastWrit St Port(L/R)  Notif(S/R)
@@ -11,3 +11,5 @@ fe80::a111:2222:3333:e11%Ethernet1/1
                     1 0     01:05:51|00:00:50|00:00:50 E   27490/179        0/0
 fe80::b111:2222:3333:e11%Ethernet1/2
                     1 0     01:05:50|00:00:49|00:00:50 E   48598/179        0/0
+fe80::205:ff:fe00:15%port-channel15
+                    1 0     00:07:53|00:00:02|00:00:24 E   42142/179        0/0

@@ -1877,3 +1877,88 @@ class ShowLoggingProcess(ShowLoggingProcessSchema):
 
         return ret_dict
 
+
+class ShowLoggingCountSchema(MetaParser):
+    """Schema for:
+        * 'show logging count'
+    """
+    schema = {
+        'facility': {
+            Any(): {
+                'message_name': {
+                    Any(): {
+                        'severity': int,
+                        'occurrences': int,
+                        'last_time': str
+                    }
+                },
+                Optional('total'): int
+            }
+        }
+    }
+
+
+class ShowLoggingCount(ShowLoggingCountSchema):
+    """Parser for:
+        * 'show logging count'
+    """
+
+    cli_command = 'show logging count'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize variables
+        ret_dict = {}
+
+        # Facility       Message Name                     Sev Occur      Last Time
+        # ==================================================================================
+        # SYS            CONFIG_I                           5    1 *May  1 06:13:57.803
+        # SYS            LOGGINGHOST_STARTSTOP              6    2 *May  1 06:13:56.862
+        # -------------  -------------------------------  ----------------------------------
+        # SYS TOTAL                                              3
+        p1 = re.compile(r'^(?P<facility>\S+)\s+(?P<message_name>[\S ]+?)\s+(?P<severity>\d+)\s+(?P<occurrences>\d+)\s+(?P<last_time>[\S ]+)$')
+        # Facility  ,SYS TOTAL                                              3
+        p2 = re.compile(r'^(?P<facility>\S+)\s+TOTAL\s+(?P<total>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Facility       Message Name                     Sev Occur      Last Time
+            # ==================================================================================
+            # SYS            CONFIG_I                           5    1 *May  1 06:13:57.803
+            # SYS            LOGGINGHOST_STARTSTOP              6    2 *May  1 06:13:56.862
+            # -------------  -------------------------------  ----------------------------------
+            # SYS TOTAL                                                  3
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                facility = group['facility']
+                message_name = group['message_name'].strip()
+                severity = int(group['severity'])
+                occurrences = int(group['occurrences'])
+                last_time = group['last_time']
+
+                facility_dict = ret_dict.setdefault('facility', {}).setdefault(facility, {})
+                message_dict = facility_dict.setdefault('message_name', {}).setdefault(message_name, {})
+                message_dict.update({
+                    'severity': severity,
+                    'occurrences': occurrences,
+                    'last_time': last_time
+                })
+                continue
+
+            # Facility  ,SYS TOTAL                                              3
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                facility = group['facility']
+                total = int(group['total'])
+
+                facility_dict = ret_dict.setdefault('facility', {}).setdefault(facility, {})
+                facility_dict['total'] = total
+                continue
+
+        return ret_dict

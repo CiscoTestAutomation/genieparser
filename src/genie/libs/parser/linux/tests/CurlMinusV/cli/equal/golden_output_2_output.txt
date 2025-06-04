@@ -1,0 +1,4 @@
+curl 7.85.0 (x86_64-iosxe-linux-gnu) libcurl/7.85.0 OpenSSL/1.1.1u-fips zlib/1.2.13 c-ares/1.18.1 libidn2/2.3.3 libssh2/1.10.0 nghttp2/1.49.0
+Release-Date: 2022-08-31
+Protocols: file ftp ftps http https scp sftp tftp
+Features: alt-svc AsynchDNS HSTS HTTP2 HTTPS-proxy IDN IPv6 Largefile libz NTLM SSL threadsafe TLS-SRP UnixSockets

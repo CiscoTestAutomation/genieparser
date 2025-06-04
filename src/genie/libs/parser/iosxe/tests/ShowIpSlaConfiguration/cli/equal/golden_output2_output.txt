@@ -1,0 +1,20 @@
+IP SLAs Configuration:
+Entry Number: 2
+   Owner: -
+   Tag: -
+   Type of operation to perform: udp-jitter
+   Target address: 192.168.2.1
+   Source address: 192.168.2.2
+   Request size (ARR data bytes): 32
+   Timeout (milliseconds): 3000
+   Frequency (seconds): 30
+   Status of entry (SNMP RowStatus): Active
+   Threshold (milliseconds): 1000
+   Distribution Statistics:
+      Number of statistics hours kept: 4
+      Number of statistics distributions buckets kept: 2
+      Statistic distribution interval (milliseconds): 10
+   Enhanced History:
+      Number of history Lives kept: 0
+      Number of history Buckets kept: 20
+      History Filter Type: None

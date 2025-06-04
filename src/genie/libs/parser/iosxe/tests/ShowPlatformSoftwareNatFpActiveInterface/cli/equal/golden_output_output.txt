@@ -1,0 +1,9 @@
+Dump NAT interface config
+
+Name: GigabitEthernet0/0/2, Inteface handle: 10
+  Domain: OUTSIDE, Static-host allowed: No
+  QFP handle: 9
+
+Name: GigabitEthernet0/0/4, Inteface handle: 12
+  Domain: INSIDE, Static-host allowed: No
+  QFP handle: 11

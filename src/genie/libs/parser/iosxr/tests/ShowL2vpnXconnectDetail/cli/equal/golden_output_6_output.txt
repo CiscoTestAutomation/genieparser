@@ -1,0 +1,40 @@
+show l2vpn xconnect detail
+
+Fri Sep 29 13:18:50.710 UTC
+
+Group EVPL-ACCT1412-VRF0301412-CoS, XC VRF331412.12:14, state is up; Interworking none
+  Local CE ID: 12, Remote CE ID: 14, Discovery State: Advertised
+  AC: TenGigE0/0/0/2.1412, state is up
+    Type VLAN; Num Ranges: 1
+    Rewrite Tags: []
+    VLAN ranges: [1412, 1412]
+    MTU 9086; XC ID 0x120000a; interworking none
+    Statistics:
+      packets: received 281821766, sent 282110318
+      bytes: received 394493304868, sent 394895862950
+      drops: illegal VLAN 0, illegal length 0
+  PW: neighbor 8.33.10.3, PW ID 786446, state is up ( established )
+    PW class not set, XC ID 0xa0000005
+    Encapsulation MPLS, Auto-discovered (BGP), protocol BGP
+    Source address 8.33.10.8
+    PW type Ethernet VLAN, control word enabled, interworking none
+    PW backup disable delay 0 sec
+    Sequencing not set
+    LSP : Up
+    Load Balance Hashing: src-dst-ip
+    Flow Label flags configured (Tx=1,Rx=1), negotiated (Tx=1,Rx=1)
+
+      MPLS         Local                          Remote                        
+      ------------ ------------------------------ -----------------------------
+      Label        24438                          524283                        
+      MTU          9086                           9082                          
+      Control word enabled                        enabled                       
+      PW type      Ethernet VLAN                  Ethernet VLAN                 
+      CE-ID        12                             14                            
+      ------------ ------------------------------ -----------------------------
+    MIB cpwVcIndex: 2684354565
+    Create time: 26/07/2023 14:30:00 (9w1d ago)
+    Last time status changed: 12/09/2023 19:10:58 (2w2d ago)
+    Statistics:
+      packets: received 282110318, sent 281821766
+      bytes: received 394895862950, sent 394493304868

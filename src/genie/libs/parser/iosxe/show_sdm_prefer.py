@@ -82,7 +82,9 @@ class ShowSdmPreferSchema(MetaParser):
             Optional('max_nat_entries'): int,
             Optional('feature_name'): str,
             Optional('fib_host_route'): int,
-            Optional('og_sgacl_hosts'): int
+            Optional('og_sgacl_hosts'): int,
+            Optional('qos_acl_in'): int,
+            Optional('qos_acl_out'): int
     }
 }
 
@@ -265,6 +267,12 @@ class ShowSdmPrefer(ShowSdmPreferSchema):
 
         # OG/SGACL Hosts/Cells                                2048
         p49 = re.compile(r'^OG\/SGACL Hosts\/Cells\:?\s+(?P<og_sgacl_hosts>\d+)$')
+
+        # QOS ACL IN                                          5120
+        p50 = re.compile(r'^QOS\s+ACL\s+IN+\s+(?P<qos_acl_in>\d+)$')
+
+        # QOS ACL OUT                                         5120
+        p51 = re.compile(r'^QOS\s+ACL\s+OUT+\s+(?P<qos_acl_out>\d+)$')
 
         # loop to split lines of output
         for line in out.splitlines():
@@ -631,6 +639,18 @@ class ShowSdmPrefer(ShowSdmPreferSchema):
             m = p49.match(line)
             if m:
                 re_dict["og_sgacl_hosts"] = int(m.groupdict()['og_sgacl_hosts'])
+                continue
+
+            # QOS ACL IN                                          5120
+            m = p50.match(line)
+            if m:
+                re_dict["qos_acl_in"] = int(m.groupdict()['qos_acl_in'])
+                continue
+
+            # QOS ACL OUT                                          5120
+            m = p51.match(line)
+            if m:
+                re_dict["qos_acl_out"] = int(m.groupdict()['qos_acl_out'])
                 continue
 
         return result_dict

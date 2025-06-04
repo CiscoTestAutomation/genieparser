@@ -1,12 +1,12 @@
 expected_output = {
-    "total_established_peers": 4, 
+    "total_established_peers": 5, 
     "local_as": 1, 
     "vrf": {
         "default": {
             "router_id": "1.1.1.1", 
-            "vrf_established_peers": 4, 
+            "vrf_established_peers": 5, 
             "local_as": 1, 
-            "vrf_peers": 4, 
+            "vrf_peers": 5, 
             "neighbor": {
                 "99.99.99.99": {
                     "state": "established", 
@@ -45,6 +45,19 @@ expected_output = {
                     "last_write": "00:00:50", 
                     "last_flap": "01:05:50", 
                     "linklocal_interfaceport": "Ethernet1/2"
+                },
+                "fe80::205:ff:fe00:15": {
+                    "last_read": "00:00:02",
+                    "notifications_sent": 0,
+                    "remote_as": 1,
+                    "local_port": 42142,
+                    "remote_port": 179,
+                    "state": "established",
+                    "notifications_received": 0,
+                    "connections_dropped": 0,
+                    "last_write": "00:00:24",
+                    "last_flap": "00:07:53",
+                    "linklocal_interfaceport": "port-channel15"
                 }, 
                 "98.98.98.98": {
                     "state": "established", 
@@ -61,5 +74,5 @@ expected_output = {
             }
         }
     }, 
-    "total_peers": 4
+    "total_peers": 5
 }

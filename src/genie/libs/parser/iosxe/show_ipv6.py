@@ -36,6 +36,7 @@
     * show ipv6 dhcp binding 
     * show ipv6 dhcp relay binding
     * show ipv6 general-prefix
+    * show ipv6 pim neighbor {intf}
 
 """
 
@@ -2546,3 +2547,134 @@ class ShowIpv6GeneralPrefix(ShowIpv6GeneralPrefixSchema):
                 continue
 
         return ret_dict
+    
+
+class ShowIpv6PimNeighborIntfSchema(MetaParser):
+    """Schema for show ipv6 pim neighbor Te0/0/4"""
+    schema = {
+        'interface': str,
+        'neighbors': {
+            Any(): {
+                'uptime': str,
+                'expires': str,
+                'mode': str,
+                'dr_priority': int,
+                'bsr_priority': int,
+                'hello_interval': str,
+                'neighbor_interface': str,
+                'neighbor_state': str,
+            }
+        }
+    }
+
+class ShowIpv6PimNeighborIntf(ShowIpv6PimNeighborIntfSchema):
+    """Parser for show ipv6 pim neighbor Te0/0/4"""
+
+    cli_command = 'show ipv6 pim neighbor {interface}'
+
+    def cli(self, interface=None, output=None):
+        if output is None:
+            cmd = self.cli_command.format(interface=interface)
+            output = self.device.execute(cmd)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # Regular expressions for parsing the output
+        # Example: "PIM Neighbor Table for Interface: GigabitEthernet0/0/0"
+        p1 = re.compile(r'^PIM +Neighbor +Table +for +Interface: +(?P<interface>\S+)$')
+
+        # Example: "Neighbor Address: 192.168.1.1"
+        p2 = re.compile(r'^Neighbor +Address: +(?P<neighbor_address>\S+)$')
+
+        # Example: "Uptime: 00:15:23"
+        p3 = re.compile(r'^Uptime: +(?P<uptime>\S+)$')
+
+        # Example: "Expires: 00:01:47"
+        p4 = re.compile(r'^Expires: +(?P<expires>\S+)$')
+
+        # Example: "Mode: Dense"
+        p5 = re.compile(r'^Mode: +(?P<mode>\S+)$')
+
+        # Example: "DR Priority: 1"
+        p6 = re.compile(r'^DR +Priority: +(?P<dr_priority>\d+)$')
+
+        # Example: "BSR Priority: 5"
+        p7 = re.compile(r'^BSR +Priority: +(?P<bsr_priority>\d+)$')
+
+        # Example: "Hello Interval: 30 seconds"
+        p8 = re.compile(r'^Hello +Interval: +(?P<hello_interval>[\d\s\w]+)$')
+
+        # Example: "Neighbor Interface: GigabitEthernet0/0/0"
+        p9 = re.compile(r'^Neighbor +Interface: +(?P<neighbor_interface>\S+)$')
+
+        # Example: "Neighbor State: Up"
+        p10 = re.compile(r'^Neighbor +State: +(?P<neighbor_state>\S+)$')
+
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # PIM Neighbor Table for Interface: GigabitEthernet0/0/0
+            m = p1.match(line)
+            if m:
+                interface = m.group('interface')
+                parsed_dict['interface'] = interface
+                continue
+
+            # Neighbor Address: 192.168.1.1
+            m = p2.match(line)
+            if m:
+                neighbor_address = m.group('neighbor_address')
+                neighbor_dict = parsed_dict.setdefault('neighbors', {}).setdefault(neighbor_address, {})
+                continue
+
+            # Uptime: 00:15:23
+            m = p3.match(line)
+            if m:
+                neighbor_dict['uptime'] = m.group('uptime')
+                continue
+
+            # Expires: 00:01:47
+            m = p4.match(line)
+            if m:
+                neighbor_dict['expires'] = m.group('expires')
+                continue
+
+            # Mode: Dense
+            m = p5.match(line)
+            if m:
+                neighbor_dict['mode'] = m.group('mode')
+                continue
+
+            # DR Priority: 1
+            m = p6.match(line)
+            if m:
+                neighbor_dict['dr_priority'] = int(m.group('dr_priority'))
+                continue
+
+            # BSR Priority: 5
+            m = p7.match(line)
+            if m:
+                neighbor_dict['bsr_priority'] = int(m.group('bsr_priority'))
+                continue
+
+            # Hello Interval: 30 seconds
+            m = p8.match(line)
+            if m:
+                neighbor_dict['hello_interval'] = m.group('hello_interval')
+                continue
+
+            # Neighbor Interface: GigabitEthernet0/0/1
+            m = p9.match(line)
+            if m:
+                neighbor_dict['neighbor_interface'] = m.group('neighbor_interface')
+                continue
+
+            # Neighbor State: Up
+            m = p10.match(line)
+            if m:
+                neighbor_dict['neighbor_state'] = m.group('neighbor_state')
+                continue
+
+        return parsed_dict

@@ -1,0 +1,68 @@
+show platform software nat fp active qfp-stats
+
+Dump NAT QFP client stats
+
+
+interface add: 16, upd: 0, del: 12, ack: 28, err: 0
+
+timeout set: 60, ack: 60, err: 0
+
+service set: 184, ack: 184, err: 0
+
+modify-in-progress set: 0, ack: 0, err: 0
+
+esp set: 0, ack: 0, err: 0
+
+dnsv6 set: 0, ack: 0, err: 0
+
+settings set: 0, ack: 0, err: 0
+
+PAP settings set: 0, ack: 0, err: 0
+
+Flow entries set: 1, ack: 1, err: 0
+
+pool add: 2, del: 2, ack: 4, err: 0
+
+addr range add: 2, upd: 0, del: 2, ack: 4, err: 0
+
+static mapping add: 3, upd: 0, del: 2, ack: 0, err: 0
+
+dyn mapping add: 2, upd: 0, del: 0, ack: 4, err: 0
+
+dyn pat mapping add: 0, del: 2, ack: 0, err: 0
+
+porlist add: 0, del: 0, ack: 0, err: 0
+
+Logging add: 0, upd: 0, del: 0, ack: 0, err: 0
+
+Per-VRF logging add: 0, upd: 0, del: 0, ack: 0, err: 0
+
+Sess replicate add: 0, upd: 0, del: 0, ack: 0, err: 0
+
+max entry set: 1, clr: 0, ack: 1, err: 0
+
+ifaddr change notify: 0, ack: 0, err: 0
+
+debug set: 0, clr: 0, ack: 0, err: 0
+
+dp static-rt add: 0, del: 0, err: 0
+
+dp ipalias add: 6, del: 6, err: 0
+
+dp portlist req: 0, ret: 0, err: 0
+
+dp wlan sess est: 0, term: 0, err: 0
+
+mib setup enable: 0, disable: 0, ack: 0, err: 0
+
+mib addr-bind query: 0, reply: 0, err: 0
+
+MISC settings set: 0, ack: 0, err: 0
+
+Gatekeeper settings set: 0, ack: 0, err: 0
+
+Log destination set: 0, ack: 0, err: 0
+
+
+
+isrv2#

@@ -32,6 +32,8 @@ IOSXE parsers for the following show commands:
    * show crypto isakmp peers config
    * show crypto ssl authorization policy
    * show crypto ssl session profile
+   * show crypto pki crls
+   * show crypto pki crls download
 """
 
 # Python
@@ -9736,7 +9738,7 @@ class ShowCryptoIpsecSpiLookupDetail(ShowCryptoIpsecSpiLookupDetailSchema):
     def cli(self, output=None):
         if output is None:
             output = self.device.execute(self.cli_command)
-
+            
         # Initialize the parsed dictionary
         parsed_dict = {}
 
@@ -10413,3 +10415,233 @@ class ShowCryptoSslSessionProfile(ShowCryptoSslSessionProfileSchema):
 
         return parsed_dict
 
+# ==================================================
+#  Schema for 'ShowCryptoPkiCrls'
+# ==================================================
+class ShowCryptoPkiCrlsSchema(MetaParser):
+    """Schema for `ShowCryptoPkiCrls`"""
+    schema = {
+        'crl_issuer_name': str,
+        'last_update': str,
+        'next_update': str,
+        'crl_downloaded_at': str,
+        'retrieved_from': str,
+        'crl_der_size': int,
+        'crl_cache_status': str,
+        'parsed_crl_cache': {
+            'current_size': int,
+            'maximum_size': int
+        }
+    }
+
+# ==================================================
+#  Parser for 'ShowCryptoPkiCrls'
+# ==================================================
+class ShowCryptoPkiCrls(ShowCryptoPkiCrlsSchema):
+    """Parser for `ShowCryptoPkiCrls`"""
+
+    cli_command = 'show crypto pki crls'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        parsed_data = {}
+
+        # CRL Issuer Name:
+        # cn=root C=pki
+        p1 = re.compile(r'^\s*(?P<crl_issuer_name>.+)$')
+
+        # LastUpdate: 12:39:13 IST Jan 27 2025
+        p2 = re.compile(r'^LastUpdate:\s+(?P<last_update>.+)$')
+
+        # NextUpdate: 13:09:13 IST Jan 27 2025
+        p3 = re.compile(r'^NextUpdate:\s+(?P<next_update>.+)$')
+
+        # CRL downloaded at: 12:40:18 IST Jan 27 2025
+        p4 = re.compile(r'^CRL downloaded at:\s+(?P<crl_downloaded_at>.+)$')
+
+        # Retrieved from CRL Distribution Point:
+        #   ** CDP Not Published - Retrieved via SCEP
+        p5 = re.compile(r'^\s*Retrieved from CRL Distribution Point:\s*$')
+        p5_1 = re.compile(r'^\s*\*\*\s*(?P<retrieved_from>.+)$')
+
+        # CRL DER is 350 bytes
+        p6 = re.compile(r'^CRL DER is\s+(?P<crl_der_size>\d+)\s+bytes$')
+
+        # CRL is stored in parsed CRL cache
+        p7 = re.compile(r'^CRL is stored in parsed CRL cache$')
+
+        # Parsed CRL cache current size is 350 bytes
+        p8 = re.compile(r'^Parsed CRL cache current size is\s+(?P<current_size>\d+)\s+bytes$')
+
+        # Parsed CRL cache maximum size is 65536 bytes
+        p9 = re.compile(r'^Parsed CRL cache maximum size is\s+(?P<maximum_size>\d+)\s+bytes$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # CRL Issuer Name:
+            # cn=root C=pki
+            m = p1.match(line)
+            if m and 'crl_issuer_name' not in parsed_data:
+                parsed_data['crl_issuer_name'] = m.group('crl_issuer_name')
+                continue
+
+            # LastUpdate: 12:39:13 IST Jan 27 2025
+            m = p2.match(line)
+            if m:
+                parsed_data['last_update'] = m.group('last_update')
+                continue
+
+            # NextUpdate: 13:09:13 IST Jan 27 2025
+            m = p3.match(line)
+            if m:
+                parsed_data['next_update'] = m.group('next_update')
+                continue
+
+            # CRL downloaded at: 12:40:18 IST Jan 27 2025
+            m = p4.match(line)
+            if m:
+                parsed_data['crl_downloaded_at'] = m.group('crl_downloaded_at')
+                continue
+
+            # Retrieved from CRL Distribution Point:
+            m = p5.match(line)
+            if m:
+                continue
+
+            #   ** CDP Not Published - Retrieved via SCEP
+            m = p5_1.match(line)
+            if m:
+                parsed_data['retrieved_from'] = m.group('retrieved_from')
+                continue
+
+            # CRL DER is 350 bytes
+            m = p6.match(line)
+            if m:
+                parsed_data['crl_der_size'] = int(m.group('crl_der_size'))
+                continue
+
+            # CRL is stored in parsed CRL cache
+            m = p7.match(line)
+            if m:
+                parsed_data['crl_cache_status'] = 'stored in parsed CRL cache'
+                continue
+
+            # Parsed CRL cache current size is 350 bytes
+            m = p8.match(line)
+            if m:
+                parsed_data.setdefault('parsed_crl_cache', {})['current_size'] = int(m.group('current_size'))
+                continue
+
+            # Parsed CRL cache maximum size is 65536 bytes
+            m = p9.match(line)
+            if m:
+                parsed_data.setdefault('parsed_crl_cache', {})['maximum_size'] = int(m.group('maximum_size'))
+                continue
+
+        return parsed_data
+
+# =======================================
+# Schema for
+#   'show crypto pki crls download'
+# =======================================
+class ShowCryptoPkiCrlsDownloadSchema(MetaParser):
+    """Schema for show crypto pki crls download"""
+    schema = {
+        'trustpoints': {
+            Any(): {
+                Optional('crl_static_time_download_entries'): [str],
+                'crl_prepublish_time': str,
+                'crl_maximum_retry_attempts': int,
+                'crl_retry_time_interval': str,
+            }
+        }
+    }
+
+# =======================================
+# Parser for
+#   'show crypto pki crls download'
+# =======================================
+class ShowCryptoPkiCrlsDownload(ShowCryptoPkiCrlsDownloadSchema):
+    """Parser for show crypto pki crls download"""
+
+    cli_command = 'show crypto pki crls download'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # Regular expressions for parsing the output
+        # CRL download for trustpoints 
+        p1 = re.compile(r'^CRL download for trustpoints :$')
+
+        # Example: Trustpoint1
+        p2 = re.compile(r'^\s*(?P<trustpoint>\S+)$')  # Handle leading spaces for trustpoint
+
+        # Example: Mon 12:00
+        p3 = re.compile(r'^\s+(?P<time>\w+ \d{2}:\d{2})$')  # Match the time entries with spaces
+
+        # Example: CRL prepublish time : 30 minutes
+        p4 = re.compile(r'^CRL prepublish time\s+:\s+(?P<prepublish_time>\d+ minutes)$')  # Handle spaces
+
+        # Example: CRL maximum retry attempts : 5
+        p5 = re.compile(r'^CRL maximum retry attempts\s+:\s+(?P<max_retry_attempts>\d+)$')  # Handle spaces
+
+        # Example: CRL retry time interval : 15 minutes
+        p6 = re.compile(r'^CRL retry time interval\s+:\s+(?P<retry_time_interval>\d+ minutes)$')  # Handle spaces
+
+        current_trustpoint = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # This line indicates the start of the CRL download section.
+            m = p1.match(line)
+            if m:
+                parsed_dict.setdefault('trustpoints', {})
+                continue
+
+            # Match trustpoint
+            # This line specifies the name of a trustpoint.
+            m = p2.match(line)
+            if m:
+                current_trustpoint = m.group('trustpoint')
+                trustpoint_dict = parsed_dict.setdefault('trustpoints', {}).setdefault(current_trustpoint, {})
+                continue
+
+            # Match static time download entries
+            # This line specifies a static time download entry for the current trustpoint.
+            m = p3.match(line)
+            if m and current_trustpoint:
+                time = m.group('time')
+                trustpoint_dict = parsed_dict['trustpoints'][current_trustpoint]
+                trustpoint_dict.setdefault('crl_static_time_download_entries', [])
+                trustpoint_dict['crl_static_time_download_entries'].append(time)
+
+            # Match prepublish time
+            # This line specifies the prepublish time for the current trustpoint.
+            m = p4.match(line)
+            if m and current_trustpoint:
+                trustpoint_dict['crl_prepublish_time'] = m.group('prepublish_time')
+                continue
+
+            # Match maximum retry attempts
+            # This line specifies the maximum retry attempts for the current trustpoint.
+            m = p5.match(line)
+            if m and current_trustpoint:
+                trustpoint_dict['crl_maximum_retry_attempts'] = int(m.group('max_retry_attempts'))
+                continue
+
+            # Match retry time interval
+            # This line specifies the retry time interval for the current trustpoint.
+            m = p6.match(line)
+            if m and current_trustpoint:
+                trustpoint_dict['crl_retry_time_interval'] = m.group('retry_time_interval')
+                continue
+
+        return parsed_dict
