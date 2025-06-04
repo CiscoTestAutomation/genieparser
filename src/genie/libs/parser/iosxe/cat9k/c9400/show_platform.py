@@ -159,7 +159,7 @@ class ShowEnvironmentAllSchema(MetaParser):
         Optional('minor_alarms'): int,
         'sensor_list': {
             Any(): {
-                'slot': {
+                'location': {
                     Any(): {
                         'sensor': {
                             Any(): {
@@ -243,7 +243,7 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
         #  V1: VX1          R0                Normal            869 mV               	na
         #  Temp:    inlet   R0                Normal            32 Celsius          	(56 ,66 ,96 ,98 )(Celsius)
         p5 = re.compile(
-            r'(?P<sensor_name>\S+(:\s+\S+)?)\s+(?P<slot>([A-Z][0-9]|\d/\d))\s+(?P<state>\S+)\s+(?P<reading>\d+\s+\S+(\s+(AC|DC))?)\s+(\((?P<minor>\d+\s*),(?P<major>\d+\s*),(?P<critical>\d+\s*),(?P<shutdown>\d+\s*)\)\((?P<unit>\S+)\))?'
+            r'(?P<sensor_name>\S+(:\s+\S+)?)\s+(?P<location>\S+)\s+(?P<state>\S+)\s+(?P<reading>\d+\s+\S+(\s+(AC|DC))?)\s+(\((?P<minor>\d+\s*),(?P<major>\d+\s*),(?P<critical>\d+\s*),(?P<shutdown>\d+\s*)\)\((?P<unit>\S+)\))?'
         )
 
         # Power                                                       Fan States
@@ -314,8 +314,8 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
             if m:
                 group = m.groupdict()
                 sensor_name = group.pop('sensor_name')
-                slot = group.pop('slot')
-                fin_dict = sensor_dict.setdefault('slot', {}).setdefault(slot, {}).\
+                location = group.pop('location')
+                fin_dict = sensor_dict.setdefault('location', {}).setdefault(location, {}).\
                     setdefault('sensor', {}).setdefault(sensor_name, {})
 
                 fin_dict['state'] = group['state']
