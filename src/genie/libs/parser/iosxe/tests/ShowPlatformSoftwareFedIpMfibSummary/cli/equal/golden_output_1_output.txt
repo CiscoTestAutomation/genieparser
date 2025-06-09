@@ -1,0 +1,10 @@
+Mfib v4 All Tables summary:
+  Multicast Vrf Current Count              : 2
+  Mroute Current Count/Max Reached         : 7830/10118
+  (*,G) Current Count                      : 4001
+  (S,G) Current Count                      : 3829
+  (*,G/m) RetryQ Count                     : 0
+  (*,G) RetryQ Count                       : 0
+  (S,G) RetryQ Count                       : 0
+  Oifs Current Count/Max Reached           : 16126/18354
+  Last used Mlist Urid                     : 0x100000000000d3a9

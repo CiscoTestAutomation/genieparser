@@ -1,0 +1,2 @@
+show hardware led port GigabitEthernet1/0/13 status
+ACT_GREEN

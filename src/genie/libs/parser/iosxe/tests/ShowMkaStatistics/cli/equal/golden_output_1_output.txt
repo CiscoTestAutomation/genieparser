@@ -1,0 +1,59 @@
+MKA Global Statistics
+=====================
+MKA Session Totals
+   Secured.................... 2
+   Fallback Secured........... 0
+   Reauthentication Attempts.. 0
+
+   Deleted (Secured).......... 0
+   Keepalive Timeouts......... 0
+
+CA Statistics
+   Pairwise CAKs Derived...... 0
+   Pairwise CAK Rekeys........ 0
+   Group CAKs Generated....... 0
+   Group CAKs Received........ 0
+
+SA Statistics
+   SAKs Generated............. 1
+   SAKs Rekeyed............... 0
+   SAKs Received.............. 1
+   SAK Responses Received..... 1
+
+MKPDU Statistics
+   MKPDUs Validated & Rx...... 501325
+      "Distributed SAK"..... 1
+      "Distributed CAK"..... 0
+   MKPDUs Transmitted......... 543079
+      "Distributed SAK"..... 1
+      "Distributed CAK"..... 0
+
+MKA Error Counter Totals
+========================
+Session Failures
+   Bring-up Failures................ 0
+   Reauthentication Failures........ 0
+   Duplicate Auth-Mgr Handle........ 0
+
+SAK Failures
+   SAK Generation................... 0
+   Hash Key Generation.............. 0
+   SAK Encryption/Wrap.............. 0
+   SAK Decryption/Unwrap............ 0
+   SAK Cipher Mismatch.............. 0
+
+CA Failures
+   Group CAK Generation............. 0
+   Group CAK Encryption/Wrap........ 0
+   Group CAK Decryption/Unwrap...... 0
+   Pairwise CAK Derivation.......... 0
+   CKN Derivation................... 0
+   ICK Derivation................... 0
+   KEK Derivation................... 0
+   Invalid Peer MACsec Capability... 0
+
+MACsec Failures
+   Rx SC Creation................... 0
+   Tx SC Creation................... 0
+   Rx SA Installation............... 0
+   Tx SA Installation............... 0

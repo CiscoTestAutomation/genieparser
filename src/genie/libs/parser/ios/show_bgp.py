@@ -33,17 +33,18 @@ from genie.libs.parser.iosxe.show_bgp import ShowBgpAllDetail as ShowBgpAllDetai
                                              ShowBgpAllSummary as ShowBgpAllSummary_iosxe,\
                                              ShowBgpAllClusterIds as ShowBgpAllClusterIds_iosxe,\
                                              ShowBgpAllNeighbors as ShowBgpAllNeighbors_iosxe, \
-                                             ShowIpBgpAllDampeningParameters as ShowIpBgpAllDampeningParameters_iosxe,\
                                              ShowBgpAllNeighborsAdvertisedRoutes as ShowBgpAllNeighborsAdvertisedRoutes_iosxe,\
                                              ShowBgpAllNeighborsRoutes as ShowBgpAllNeighborsRoutes_iosxe,\
                                              ShowBgpAllNeighborsPolicy as ShowBgpAllNeighborsPolicy_iosxe,\
                                              ShowBgpAllNeighborsReceivedRoutes as ShowBgpAllNeighborsReceivedRoutes_iosxe,\
+                                             ShowBgpSummary as ShowBgpSummary_iosxe
+
+from genie.libs.parser.iosxe.show_ip_bgp import \
+                                             ShowIpBgpAllDampeningParameters as ShowIpBgpAllDampeningParameters_iosxe,\
                                              ShowIpBgpTemplatePeerPolicy as ShowIpBgpTemplatePeerPolicy_iosxe,\
                                              ShowIpBgpTemplatePeerSession as ShowIpBgpTemplatePeerSession_iosxe, \
-                                             ShowBgpSummary as ShowBgpSummary_iosxe, \
                                              ShowIpBgp as ShowIpBgp_iosxe, \
                                              ShowIpBgpRegexp as ShowIpBgpRegexp_iosxe
-
 
 class ShowIpBgp(ShowIpBgp_iosxe):
     """Parser for show ip bgp"""
@@ -77,7 +78,7 @@ class ShowBgpAllSummary(ShowBgpAllSummary_iosxe):
 class ShowBgpAllClusterIds(ShowBgpAllClusterIds_iosxe):
     """
        Parser for show bgp all cluster-ids
-       Executing 'show vrf detail | inc \(VRF' to collect vrf names.
+       Note: this parser executes 'show vrf detail | inc \\(VRF' to collect vrf names.
     """
     pass
 

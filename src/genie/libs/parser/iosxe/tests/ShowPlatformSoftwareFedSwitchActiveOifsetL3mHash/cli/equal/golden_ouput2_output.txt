@@ -1,0 +1,25 @@
+Type: s_g_vrf              State: allocated       MD5:(9a7bd17c9f727428:7d2424963dcb5c24)
+    Fset Urid                    : 0x300000000002f4fc
+    Remote Port Count            : 2
+    Svi Port Count               : 2
+    Users Count                  : 1
+    Mioitem Count                : 3
+      No. AdjID          Interface          PhysicalIf        IfType          Flags
+        1. 0xf80055d1     Vl103              -----------       svi_if          InHw Remote
+              Urids   => Mio:0x80::fb72e Parent:0x60::3bd93 child_repl:0x20::214f(7e53f42b)  adj_obj:0x90::33
+              (Asic[0]=> l3_port_oid/port_oid/nh_oid : 50573 / 0 / 0)
+        2. 0xf80055e1     Vl104              -----------       svi_if          InHw Remote
+              Urids   => Mio:0x80::a3217 Parent:0x60::3bd94 child_repl:0x20::2154(f2e2a15a)  adj_obj:0x90::35
+              (Asic[0]=> l3_port_oid/port_oid/nh_oid : 2645 / 0 / 0)
+        3. 0xffffffff     Po241              Hu0/13            svl_if          InHw
+              Urids   => Mio:0x80::e0e4b Parent:0x0 child_repl:0x0(------)  adj_obj:0x90::36
+              (Asic[0]=> l3_port_oid/port_oid/nh_oid : 649 / 636 / 0)
+    Fset MCID Gid                : 10131
+    Asic[0] mcid_oid             : 6161
+    Hw IP Mcg Info Asic[0] :
+      Idx.    Member Info
+         1.    stackport: 649
+         2.    l2_mcg: 50573 (cookie: urid:0x20::214f), l3_port: 2160
+         3.    l2_mcg: 2645 (cookie: urid:0x20::2154), l3_port: 2185
+    Users :
+      urid:0x100000000002f595 (l3m_entry: Mvrf:0 (104.1.1.2, 232.0.0.8))

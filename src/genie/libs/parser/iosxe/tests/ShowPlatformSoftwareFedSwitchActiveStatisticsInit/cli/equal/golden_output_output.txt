@@ -1,0 +1,96 @@
+Function_Name                            Initilization Time(us)
+Platform VFT initialization              2784243
+Parse environment variables              3
+SupSlot Position Update                  146
+Fed IPC chasfs context Init              294
+OIR                                      65
+Fed Event Ctx Create                     432
+Fed Services Create                      471
+Event dispatcher thread                  2406
+Distributed Stacking                     162
+Shared memory                            155
+FPGA init                                3
+Gold Post                                19
+Gold timer                               10603
+CRYPTO TEST                              37097
+Punject driver                           1911
+Post/wait stack manager/sif manager events 59008448
+IFM                                      134875
+FED Generic Platform Callback Registration 4
+L2 Control                               51
+PM                                       133
+STP                                      8
+FSS Infra                                189
+Pkt-Ofld                                 2
+FNF                                      22242
+CFM                                      2791
+Security                                 6108
+ACL                                      5872
+SGACL                                    27
+CTS_ACI                                  26
+FSPAN                                    2892
+FED SPAN                                 26
+MATM                                     8728
+CPU Punject Path                         17380
+PTP                                      4143
+AVC                                      51
+Wired AVC                                47549
+SGT_CACHING                              67
+LISP VXLAN                               795
+SUBINT                                   11508
+LISP SFLTR                               102
+EFP                                      18
+EFP                                      16
+Consistency Checker                      17
+L2 Multicast                             6358
+mDNS Snooping                            19
+Access Tunnel                            146
+Wired Client                             332
+FED main interrupts thread.              82
+DAI                                      50
+L3 unicast                               45761
+QOS                                      45221
+Tiny Cfg                                 34
+FSS Forwarding                           24745
+eWLC                                     42
+LI                                       43
+VLAN_TRANSLATE                           20
+SIS                                      18
+L2NAT                                    1
+FSS Poll Init                            2
+FSS Interface Enable                     14419
+Backup interface                         6
+Show forward                             6035
+Debug Manager Init                       124
+REP                                      297
+FED STATS                                85
+FED Learning                             62
+Fed VPG                                  2
+OBFL                                     879
+CDP                                      241
+UDLD                                     160
+LLDP                                     173
+OFSDN                                    186
+DHCP Snooping                            902
+DNS Snooping                             6
+Macsec                                   942
+IPsec                                    7
+MSRP                                     169
+MVRP                                     138
+EPC                                      32
+EPC_WS                                   13
+EW                                       29
+L2 Bcast                                 292
+L3 Multicast                             1804
+IE-MRP                                   2
+Debug Cond DP Trace                      12
+Install ACL control region entries       5450
+SISF                                     1211
+Fed DBAL                                 27
+Fed Emul Oper DB                         4
+Fed Oper DB                              2814
+Fed common DB                            4547
+Fed DBAL interfaces                      3
+FED Post-Init                            364
+Publish packet ready to stack/sif manager 108
+Total Functions                          62276497

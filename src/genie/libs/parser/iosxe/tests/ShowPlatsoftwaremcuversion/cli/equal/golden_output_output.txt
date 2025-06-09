@@ -1,0 +1,7 @@
+Switch 1 MCU:
+Software Version   0.0
+System Type        0
+Device Id          0
+Device Revision    0
+Hardware Version   0
+Bootloader Version 0

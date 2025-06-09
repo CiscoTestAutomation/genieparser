@@ -1,4 +1,4 @@
 {
-    "switch": "switch",
-    "mode": "standby"
+    "nat_region": "NAT_1",
+    "switch_type": "standby"
 }

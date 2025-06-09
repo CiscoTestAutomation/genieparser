@@ -36,8 +36,15 @@ from genie.libs.parser.iosxe.show_platform import \
     ShowPlatformPower as ShowPlatformPower_iosxe, \
     ShowProcessesCpuHistory as ShowProcessesCpuHistory_iosxe, \
     ShowProcessesCpuPlatform as ShowProcessesCpuPlatform_iosxe, \
-    ShowPlatformSoftwareStatusControl as ShowPlatformSoftwareStatusControl_iosxe, \
-    ShowPlatformSoftwareSlotActiveMonitorMem as ShowPlatformSoftwareSlotActiveMonitorMem_iosxe, \
+    ShowEnvironment as ShowEnvironment_iosxe, \
+    ShowModule as ShowModule_iosxe, \
+    ShowSwitch as ShowSwitch_iosxe, \
+    ShowSwitchDetail as ShowSwitchDetail_iosxe, \
+    ShowBootvar as ShowBootvar_iosxe, \
+    ShowBoot as ShowBoot_iosxe, \
+    ShowProcessesMemory as ShowProcessesMemory_iosxe
+
+from genie.libs.parser.iosxe.show_platform_hardware import \
     ShowPlatformHardware as ShowPlatformHardware_iosxe, \
     ShowPlatformHardwarePlim as ShowPlatformHardwarePlim_iosxe, \
     ShowPlatformHardwareQfpBqsOpmMapping as ShowPlatformHardwareQfpBqsOpmMapping_iosxe, \
@@ -46,14 +53,11 @@ from genie.libs.parser.iosxe.show_platform import \
     ShowPlatformHardwareSerdesInternal as ShowPlatformHardwareSerdesInternal_iosxe, \
     ShowPlatformHardwareQfpBqsStatisticsChannelAll as ShowPlatformHardwareQfpBqsStatisticsChannelAll_iosxe, \
     ShowPlatformHardwareQfpInterfaceIfnameStatistics as ShowPlatformHardwareQfpInterfaceIfnameStatistics_iosxe, \
-    ShowPlatformHardwareQfpStatisticsDrop as ShowPlatformHardwareQfpStatisticsDrop_iosxe, \
-    ShowEnvironment as ShowEnvironment_iosxe, \
-    ShowModule as ShowModule_iosxe, \
-    ShowSwitch as ShowSwitch_iosxe, \
-    ShowSwitchDetail as ShowSwitchDetail_iosxe, \
-    ShowBootvar as ShowBootvar_iosxe, \
-    ShowBoot as ShowBoot_iosxe, \
-    ShowProcessesMemory as ShowProcessesMemory_iosxe
+    ShowPlatformHardwareQfpStatisticsDrop as ShowPlatformHardwareQfpStatisticsDrop_iosxe
+
+from genie.libs.parser.iosxe.show_platform_software import \
+    ShowPlatformSoftwareStatusControl as ShowPlatformSoftwareStatusControl_iosxe, \
+    ShowPlatformSoftwareSlotActiveMonitorMem as ShowPlatformSoftwareSlotActiveMonitorMem_iosxe
 
 
 class ShowVersion(ShowVersion_iosxe):

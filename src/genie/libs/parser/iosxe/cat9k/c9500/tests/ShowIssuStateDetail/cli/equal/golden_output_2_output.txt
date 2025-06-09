@@ -1,0 +1,14 @@
+Current ISSU Status: Disabled       
+Previous ISSU Operation: N/A        
+=======================================================
+System Check                        Status
+-------------------------------------------------------
+Platform ISSU Support               Yes
+Standby Online                      No
+Autoboot Enabled                    Yes
+SSO Mode                            No
+Install Boot                        Yes
+Valid Boot Media                    Yes
+Operational Mode                    NONE
+=======================================================
+No ISSU operation is in progress

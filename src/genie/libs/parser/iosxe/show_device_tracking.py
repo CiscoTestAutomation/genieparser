@@ -1,9 +1,11 @@
 import re
 
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any, Optional, Or
+from genie.metaparser.util.schemaengine import Any, Optional, Or , ListOf
 
 from genie.libs.parser.utils.common import Common
+
+
 
 # ==================================
 # Schema for:
@@ -42,14 +44,18 @@ class ShowDeviceTrackingDatabaseSchema(MetaParser):
 class ShowDeviceTrackingDatabase(ShowDeviceTrackingDatabaseSchema):
     """Parser for show device-tracking database"""
 
-    cli_command = ['show device-tracking database','show device-tracking database vlan {vlan_id}']
+    cli_command = ['show device-tracking database',
+                   'show device-tracking database vlan {vlan_id}',
+                   'show device-tracking database address {address}']
 
-    def cli(self, vlan_id=None, output=None):
+    def cli(self, vlan_id=None, address=None, output=None):
         if output is None:
             if vlan_id:
                 output = self.device.execute(self.cli_command[1].format(vlan_id=vlan_id))
+            elif address:
+                output = self.device.execute(self.cli_command[2].format(address=address))
             else:
-                output = self.device.execute(self.cli_command[0])
+                output = self.device.execute(self.cli_command[0], timeout=300)
 
         device_tracking_database_dict = {}
 
@@ -76,27 +82,36 @@ class ShowDeviceTrackingDatabase(ShowDeviceTrackingDatabaseSchema):
         # Binding Table has 10 entries, 0 dynamic (limit 200000)
         binding_table_capture = re.compile(
             r"^Binding\s+Table\s+has\s+(?P<binding_table_count>\d+)\s+entries,\s+(?P<dynamic_entry_count>\d+)\s+dynamic\s+\(limit\s+(?P<binding_table_limit>\d+)\)$")
-         # vlanDB has 17 entries for vlan 101, 16 dynamic
+
+        # vlanDB has 17 entries for vlan 101, 16 dynamic
         vlan_db_capture = re.compile(
             r"^vlanDB\s+has\s+(?P<vlan_db_count>\d+)\s+entries\s+for\s+vlan\s+(?P<vlandb_id>\d+)+,\s+(?P<vlan_dynamic_entry_count>\d+)\s+dynamic$")
+
         # Codes: L - Local, S - Static, ND - Neighbor Discovery, ARP - Address Resolution Protocol, DH4 - IPv4 DHCP, DH6 - IPv6 DHCP, PKT - Other Packet, API - API created
         codes_capture = re.compile(
             r"^Codes:\s+L\s+-\s+Local,\s+S\s+-\s+Static,\s+ND\s+-\s+Neighbor\s+Discovery,\s+ARP\s+-\s+Address\s+Resolution\s+Protocol,\s+DH4\s+-\s+IPv4\s+DHCP,\s+DH6\s+-\s+IPv6\s+DHCP,\s+PKT\s+-\s+Other\s+Packet,\s+API\s+-\s+API\s+created$")
+
         # Preflevel flags (prlvl):
         pref_level_flag_codes_capture = re.compile(r"^Preflevel\s+flags\s+\(prlvl\):$")
+
         # 0001:MAC and LLA match     0002:Orig trunk            0004:Orig access
         pref_level_flags_2_capture = re.compile(
             r"^0001:MAC\s+and\s+LLA\s+match\s+0002:Orig\s+trunk\s+0004:Orig\s+access$")
+
         # 0008:Orig trusted trunk    0010:Orig trusted access   0020:DHCP assigned
         _capture = re.compile(r"^0008:Orig\s+trusted\s+trunk\s+0010:Orig\s+trusted\s+access\s+0020:DHCP\s+assigned$")
+
         # 0040:Cga authenticated     0080:Cert authenticated    0100:Statically assigned
-        _capture = re.compile(r"^0040:Cga\s+authenticated\s+0080:Cert\s+authenticated\s+0100:Statically\s+assigned$")
+        _capture1 = re.compile(r"^0040:Cga\s+authenticated\s+0080:Cert\s+authenticated\s+0100:Statically\s+assigned$")
+
         #     Network Layer Address                   Link Layer Address Interface  vlan  prlvl age    state     Time left
         device_info_header_capture = re.compile(
             r"^Network\s+Layer\s+Address\s+Link\s+Layer\s+Address\s+Interface\s+vlan\s+prlvl\s+age\s+state\s+Time\s+left$")
+
         # L   10.22.66.10                            7081.05ff.eb40     Vl230      230   0100  10194mn REACHABLE
         device_info_capture = re.compile(
             r"^(?P<dev_code>\S+)\s+(?P<network_layer_address>\S+)\s+(?P<link_layer_address>\S+)\s+(?P<interface>\S+)\s+(?P<vlan_id>\d+)\s+(?P<pref_level_code>\d+)\s+(?P<age>\S+)\s+(?P<state>\S+)$")
+
         # DH4 10.160.43.197                           94d4.69ff.e606  Te8/0/37       1023  0025  116s  REACHABLE  191 s try 0(557967 s)
         device_info_capture_database = re.compile(
             r"^(?P<dev_code>\S+)\s+"
@@ -157,8 +172,8 @@ class ShowDeviceTrackingDatabase(ShowDeviceTrackingDatabaseSchema):
                 continue
 
             # 0040:Cga authenticated     0080:Cert authenticated    0100:Statically assigned
-            elif _capture.match(line):
-                _capture_match = _capture.match(line)
+            elif _capture1.match(line):
+                _capture_match = _capture1.match(line)
                 groups = _capture_match.groupdict()
                 continue
 
@@ -1429,20 +1444,21 @@ class ShowDeviceTrackingDatabaseMacMacSchema(MetaParser):
     """Schema for show device-tracking database mac {mac}."""
 
     schema = {
-        "macDB_count": int,
-        "vlan": int,
-        "dynamic_count": int,
-        "entries": {
-            int: {
-                "dev_code": str,
-                "network_layer_address": str,
-                "link_layer_address": str,
-                "interface": str,
-                "vlan_id": int,
-                "pref_level_code": int,
-                "age": str,
-                "state": str,
-                Optional("time_left"): str,
+        Any(): {  
+            "macDB_count": int,
+            "dynamic_count": int,
+            "entries": {
+                int: {
+                    "dev_code": str,
+                    "network_layer_address": str,
+                    "link_layer_address": str,
+                    "interface": str,
+                    "vlan_id": int,
+                    "pref_level_code": int,
+                    "age": str,
+                    "state": str,
+                    Optional("time_left"): str,
+                }
             }
         }
     }
@@ -1482,6 +1498,7 @@ class ShowDeviceTrackingDatabaseMacMac(ShowDeviceTrackingDatabaseMacMacSchema):
             r"^macDB has (?P<entries>\d+) entries for mac \S+,vlan (?P<vlan_id>\d+), (?P<dynamic_count>\d+) dynamic$"
         )
         # S   10.10.10.11                              dead.beef.0001         Twe1/0/41  38         0100       4s         REACHABLE  308 s
+        #DH4  172.19.10.11                             d4e8.801f.4875         Te1/0/4   1021        0024       4s         REACHABLE  243 s(678399 s)
         entry_capture = re.compile(
             r"^(?P<code>\S+)\s+"
             r"(?P<network_layer_address>\S+)\s+"
@@ -1490,11 +1507,14 @@ class ShowDeviceTrackingDatabaseMacMac(ShowDeviceTrackingDatabaseMacMacSchema):
             r"(?P<vlan_id>\d+)\s+"
             r"(?P<prlvl>\d+)\s+"
             r"(?P<age>\S+)\s+"
-            r"(?P<state>\S+)\s+"
-            r"((try\s\d\sN/A)|(?P<time_left>\S+\s\S+))$"
+            r"(?P<state>\S+)"
+            r"(?:\s+(?P<time_left>\d+\s\w+))?"              
+            r"(?:\([^)]+\))?"                               
+            r"(?:\s+try\s+\d+)?"                           
+            r"(?:\s+N/A)?$"                                 
         )
 
-        entry_num = 0
+        vlan_entry_counters = {}
         for line in out.splitlines():
             line = line.strip()
 
@@ -1506,16 +1526,18 @@ class ShowDeviceTrackingDatabaseMacMac(ShowDeviceTrackingDatabaseMacMacSchema):
                 entries = int(groups['entries'])
                 vlan_id = int(groups['vlan_id'])
                 dynamic_count = int(groups['dynamic_count'])
-
-                device_tracking_database_mac_dict['macDB_count'] = entries
-                device_tracking_database_mac_dict['vlan'] = vlan_id
-                device_tracking_database_mac_dict['dynamic_count'] = dynamic_count
-                continue
+                
+                 # Initialize or update VLAN-specific information
+                if vlan_id not in device_tracking_database_mac_dict:
+                    device_tracking_database_mac_dict[vlan_id] = {}
+                    device_tracking_database_mac_dict[vlan_id]["macDB_count"] = entries
+                    device_tracking_database_mac_dict[vlan_id]["dynamic_count"] = dynamic_count
+                    device_tracking_database_mac_dict[vlan_id]["entries"] = {}
+                    continue
 
             # S   10.10.10.11                              dead.beef.0001         Twe1/0/41  38         0100       4s         REACHABLE  308 s
             match = entry_capture.match(line)
             if match:
-                entry_num += 1
                 groups = match.groupdict()
 
                 code = groups['code']
@@ -1526,8 +1548,13 @@ class ShowDeviceTrackingDatabaseMacMac(ShowDeviceTrackingDatabaseMacMacSchema):
                 prlvl = int(groups['prlvl'])
                 age = groups['age']
                 state = groups['state']
+                if vlan not in vlan_entry_counters:
+                    vlan_entry_counters[vlan] = 0
+                vlan_entry_counters[vlan] += 1
+                entry_num = vlan_entry_counters[vlan]
 
-                index_dict = device_tracking_database_mac_dict.setdefault('entries', {}).setdefault(entry_num, {})
+                 # Add the entry details under the correct VLAN
+                index_dict = device_tracking_database_mac_dict[vlan]["entries"].setdefault(entry_num, {})
 
                 index_dict['dev_code'] = code
                 index_dict['network_layer_address'] = ip
@@ -1573,6 +1600,7 @@ class ShowDeviceTrackingDatabaseMacMacDetailsSchema(MetaParser):
             Optional("reachable"): int,
             Optional("stale"): int,
             Optional("down"): int,
+            Optional("unknown"): int,
             "total": int,
         },
         "entries": {
@@ -1587,6 +1615,7 @@ class ShowDeviceTrackingDatabaseMacMacDetailsSchema(MetaParser):
                 "age": str,
                 "state": str,
                 Optional("time_left"): str,
+                Optional("session_id"): str,
                 "filter": str,
                 "in_crimson": str,
                 "client_id": str,
@@ -1658,23 +1687,16 @@ class ShowDeviceTrackingDatabaseMacMacDetails(ShowDeviceTrackingDatabaseMacMacDe
             r"^macDB has (?P<entries>\d+) entries for mac \S+,vlan (?P<vlan_id>\d+), (?P<dynamic_count>\d+) dynamic$"
         )
         # S   10.10.10.11                              dead.beef.0001(R)      Twe1/0/41  trunk      38  (  38)      0100       63s        REACHABLE  249 s            no         yes          0000.0000.0000
+        #DH4  172.19.5.10                              b811.4b0e.2630(R)      Te1/0/14   trunk      2045 (2045)     0024       9s         REACHABLE  233 s(691141 s)  no         yes          b811.4b0e.2630     (unspecified)    LISP-DT-GUARD-VLAN (Device-tracking)
         entry_capture = re.compile(
-            r"^(?P<dev_code>\S+)"
-            r"\s+(?P<network_layer_address>(\S\S\.\S\S\.\S\S\.\S\S))"
-            r"\s+(?P<link_layer_address>\S+)"
-            r"\s+(?P<interface>\S+)"
-            r"\s+(?P<mode>\S+)"
-            r"\s+(?P<vlan>\d+)\s+\(\s+\d+\)"
-            r"\s+(?P<prlvl>\d+)"
-            r"\s+(?P<age>\S+)"
-            r"\s+(?P<state>\S+)"
-            r"(\s+(?P<time_left>(\S+\ss)))?"
-            r"\s+(?P<filter>\S+)"
-            r"\s+(?P<in_crimson>\S+)"
-            r"\s+(?P<client_id>\S+)"
-            r"(\s+(?P<policy>(.*)))?$"
+            r"^(?P<dev_code>\S+)\s+(?P<network_layer_address>\S+)\s+(?P<link_layer_address>\S+)\s+"
+            r"(?P<interface>\S+)\s+(?P<mode>\S+)\s+(?P<vlan>\d+)\s*\(\s*\d+\)\s+(?P<prlvl>\d+)\s+"
+            r"(?P<age>\S+)\s+(?P<state>\S+)\s+(?P<time_left>\d+\s+s(?:\(\d+\s+s\))?)?\s+"
+            r"(?P<filter>\S+)\s+(?P<in_crimson>\S+)\s+(?P<client_id>\S+)"
+            r"(?:\s+(?P<policy>\(unspecified\)))?"
+            r"(?:\s+(?P<session_id>.+?))?\s*$"
         )
-
+        
         key = ""
         entry_counter = 0
         for line in out.splitlines():
@@ -1769,6 +1791,9 @@ class ShowDeviceTrackingDatabaseMacMacDetails(ShowDeviceTrackingDatabaseMacMacDe
                 if groups['policy']:
                     policy = groups['policy']
                     index_dict['policy'] = policy
+                if groups['session_id']:
+                    session_id = groups['session_id']
+                    index_dict['session_id'] = session_id
                 continue
 
         return device_tracking_database_mac_details_dict
@@ -2255,7 +2280,7 @@ class ShowDeviceTrackingDatabaseMacDetails(ShowDeviceTrackingDatabaseMacDetailsS
             r"^(?P<dev_code>\S+)"
             r"\s+(?P<link_layer_address>(\S+\.\S+\.\S+))"
             r"\s+(?P<interface>\S+)"
-            r"\s+(?P<vlan_id>\d+)"
+            r"\s+(?P<vlan_id>\d+)(\s*\(\s*\d+\))?"
             r"\s+(?P<prlvl>\S+|\S+\s?\S+)"
             r"\s+(?P<state>\S+)"
             r"(\s+(?P<time_left>\S+\ss|N\/A))?"
@@ -2446,3 +2471,529 @@ class ShowDeviceTrackingDatabaseInterfaceCount(ShowDeviceTrackingDatabaseInterfa
                 dict_count['count'] = count
 
         return dict_count
+
+
+class ShowDeviceTrackingCapturePolicySchema(MetaParser):
+    """Schema for show device tracking capture policy """
+
+    schema = {
+        Optional("hw_policy_db"): {
+            Any(): {
+                "targets": int,
+                "targets_list": {
+                    Any(): {
+                        "type": int,
+                        "handle": str
+                    }
+                }
+            }
+        },
+        "target_db": {
+            Any(): {
+                "hw_policy_signature": str,
+                "policies": int,
+                "rules": int,
+                "sig": str,
+                "sw_policy": {
+                    "policy": str,
+                    "feature": str
+                },
+                "mask_id": {
+                    Any(): {
+                        "rule": str,
+                        "protocol": str,
+                        "mask": str,
+                        "action": str,
+                        "match1": int,
+                        "match2": int,
+                        "feat": str
+                    }
+                }
+            }
+        }
+    }
+
+class ShowDeviceTrackingCapturePolicy(ShowDeviceTrackingCapturePolicySchema):
+    """ show device-tracking capture-policy """
+    """ show device-tracking capture-policy interface {interface_name} """
+    """ show device-tracking capture-policy vlan {vlan_id} """
+
+    cli_command = [
+        'show device-tracking capture-policy',
+        'show device-tracking capture-policy interface {interface_name}',
+        'show device-tracking capture-policy vlan {vlan_id}'
+    ]
+
+    def cli(self, interface_name=None, vlan_id=None, output=None):
+        if output is None:
+            if interface_name:
+                cmd = self.cli_command[1].format(interface_name=interface_name)
+            elif vlan_id:
+                cmd = self.cli_command[2].format(vlan_id=vlan_id)
+            else:
+                cmd = self.cli_command[0]
+            
+            output = self.device.execute(cmd) 
+            
+        parsed_dict = {}
+
+        # HW Policy 0000039C #targets:2 
+        p1 = re.compile(r'^HW Policy (?P<policy_id>\w+) #targets:(?P<targets>\d+)$')
+        
+        # Target Gi1/0/4 type 0 handle 40B  
+        p2 = re.compile(r'^Target (?P<target>[\S\s]+?)\s+type (?P<type>\d+) handle (?P<handle>\S+)$')
+        
+        # HW Target Gi1/0/4 HW policy signature 0000039C policies#:2 rules#:6 sig 0000039C 
+        p3 = re.compile(r'^HW Target (?P<target>[\S\s]+?)\s+HW policy signature (?P<signature>\S+) policies#:(?P<policies>\d+) \S{1,7}\W{0,1}(?P<rules>\d+) sig (?P<sig>\S+)$')
+
+        # SW policy dhcp_client feature DHCP Guard  
+        p4 = re.compile(r'^SW policy (?P<policy>\S+) feature (?P<feature>.+)$')
+        
+        # Rule DHCP SERVER SOURCE Protocol UDP mask 00000200 action PUNT match1 0 match2 546 #feat:1 feature DHCP Guard 
+        p5 = re.compile(r'^Rule (?P<rule>[\S\s]+?) Protocol (?P<protocol>\S+) mask (?P<mask>\S+) action (?P<action>\S+) match1 (?P<match1>\d+) match2 (?P<match2>\d+)\W{0,1}#feat:(?P<feat>\d+)$')
+
+        policy_id = None
+        current_target = None
+        current_policy = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # HW Policy 0000039C #targets:2
+            match = p1.match(line)
+            if match:
+                policy_id = match.group('policy_id')
+                targets = int(match.group('targets'))
+                parsed_dict.setdefault('hw_policy_db', {})[policy_id] = {
+                    'targets': targets,
+                    'targets_list': {}
+                }
+                continue
+                
+            # Target Gi1/0/4 type 0 handle 40B
+            match = p2.match(line)
+            if match:
+                target = match.group('target')
+                type_ = int(match.group('type'))
+                handle = match.group('handle')
+                if policy_id:
+                    parsed_dict['hw_policy_db'][policy_id]['targets_list'][target] = {
+                        'type': type_,
+                        'handle': handle
+                    }
+                continue
+
+            # HW Target Gi1/0/4 HW policy signature 0000039C policies#:2 rules#:6 sig 0000039C
+            match = p3.match(line)
+            if match:
+                current_target = match.group('target')
+                signature = match.group('signature')
+                policies = int(match.group('policies'))
+                rules = int(match.group('rules'))
+                sig = match.group('sig')
+                parsed_dict.setdefault('target_db', {})[current_target] = {
+                    'hw_policy_signature': signature,
+                    'policies': policies,
+                    'rules': rules,
+                    'sig': sig,
+                    'sw_policy': {}
+                }
+                continue
+
+            # SW policy dhcp_client feature DHCP Guard 
+            match = p4.match(line)
+            if match:
+                if current_target:
+                    policy = match.group('policy')
+                    feature = match.group('feature')
+                    parsed_dict['target_db'][current_target]['sw_policy'] = {
+                        'policy': policy,
+                        'feature': feature
+                    }
+                continue
+
+            # Rule DHCP SERVER SOURCE Protocol UDP mask 00000200 action PUNT match1 0 match2 546 #feat:1 feature DHCP Guard 
+            match = p5.match(line)
+            if match:
+                if current_target:
+                    rule = match.group('rule')
+                    protocol = match.group('protocol')
+                    mask = match.group('mask')
+                    action = match.group('action')
+                    match1 = int(match.group('match1'))
+                    match2 = int(match.group('match2'))
+                    feat = match.group('feat')
+                    parsed_dict['target_db'][current_target].setdefault("mask_id", {})[mask] = {
+                        'rule': rule,
+                        'protocol': protocol,
+                        'mask': mask,
+                        'action': action,
+                        'match1': match1,
+                        'match2': match2,
+                        'feat': feat
+                    }
+                continue
+
+        return parsed_dict
+        
+# ========================
+# Schema for:
+#   * 'show device-tracking database details'
+# ========================
+class ShowDeviceTrackingDatabaseDetailsSchema(MetaParser):
+    '''Schema for:
+        * 'show device-tracking database details'
+        * 'show device-tracking database interface {interface_name} details'
+        * 'show device-tracking database vlan {vlan_id} details'
+    '''
+
+    schema = {
+        "binding_table_configuration": {
+            "max/box": str,
+            "max/port": str,
+            "max/vlan": str,
+            "max/mac": str,
+        },
+        "binding_table_count": {
+            "dynamic": int,
+            "local": int,
+            "total": int,
+        },
+        "binding_table_state_count": {
+            Optional("verify"): int,
+            Optional("reachable"): int,
+            Optional("stale"): int,
+            Optional("down"): int,
+            Optional("incomplete"): int,
+            Optional("creating"): int,
+            Optional("tentative"): int,
+            "total": int,
+        },
+        Optional("vlandb"): {
+            "vlan_id": int,
+            "total_entries": int,
+            "dynamic_entries": int,
+        },
+        Optional("portdb"): {
+            "interface": str,
+            "total_entries": int,
+            "dynamic_entries": int,
+        },
+        "device": {
+            int: {
+                "dev_code": str,
+                "network_layer_address": str,
+                "link_layer_address": str,
+                "interface": str,
+                "mode": str,
+                "vlan_id": int,
+                "pref_level_code": int,
+                "age": str,
+                "state": str,
+                Optional("time_left"): str,
+                "filter": str,
+                "in_crimson": str,
+                "client_id": str,
+                Optional("policy"): str,
+            },
+        },
+    }
+
+
+# ========================
+# Parser for:
+#   * 'show device-tracking database details'
+# ========================
+class ShowDeviceTrackingDatabaseDetails(ShowDeviceTrackingDatabaseDetailsSchema):
+    '''Parser for:
+        * 'show device-tracking database details'
+        * 'show device-tracking database interface {interface_name} details'
+        * 'show device-tracking database vlan {vlan_id} details'
+    '''
+
+    cli_command = ['show device-tracking database details','show device-tracking database interface {interface_name} details','show device-tracking database vlan {vlan_id} details']
+
+    def cli(self, interface_name='', vlan_id='',output=None):
+        if output is None:
+            if vlan_id:
+                cmd = self.cli_command[2].format(vlan_id=vlan_id)
+            elif interface_name:
+                cmd = self.cli_command[1].format(interface_name=interface_name)
+            else:
+                cmd = self.cli_command[0]
+                
+            out = self.device.execute(cmd)
+
+        device_tracking_database_details_dict = {}
+        device_index = 0
+        binding_key = ''
+
+        #  Binding table configuration:
+        binding_table_configuration_capture = re.compile(r'^Binding\s+table\s+configuration:$')
+        #  Binding table current counters:
+        binding_table_counter_capture = re.compile(r'^Binding\s+table\s+current\s+counters:$')
+        #  Binding table counters by state:
+        binding_table_state_capture = re.compile(r'^Binding\s+table\s+counters\s+by\s+state:$')
+
+        #  max/box  : no limit
+        #  max/vlan : no limit
+        #  max/port : no limit
+        #  max/mac  : no limit
+        #  dynamic  : 1
+        #  local    : 1
+        #  total    : 4
+        #  REACHABLE  : 1
+        #  STALE      : 2
+        #  DOWN       : 1
+        #  INCOMPLETE : 1
+        #  CREATING   : 1
+        #  TENTATIVE  : 1
+        #    total    : 6
+        binding_table_info = re.compile(r'^(?P<parameter>(\S+))\s+:\s+(?P<info>(.*))$')
+
+        #     Network Layer Address                    Link Layer Address     Interface  mode       vlan(prim)   prlvl      age        state      Time left        Filter     In Crimson   Client ID          Policy (feature)
+        device_header_capture = re.compile(r'^Network\s+Layer\s+Address\s+Link\s+Layer\s+Address\s+Interface\s+mode\s+vlan\(prim\)\s+prlvl\s+age\s+state\s+Time\s+left\s+Filter\s+In\s+Crimson\s+Client\s+ID\s+Policy\s+\(feature\)$')
+
+        # ND  100.100.100.1                            dead.beef.0001(S)      Twe1/0/42  access     39  (  39)      0024       92mn       STALE      83192 s          no         no           0000.0000.0000     test (Device-tracking)
+        # L   39.39.39.1                               5c5a.c791.d69f(R)      Vl39       svi        39  (  39)      0100       11591mn    REACHABLE                   no         yes          0000.0000.0000
+        # S   10.10.10.10                              dead.beef.0001(S)      Twe1/0/42  access     39  (  39)      0100       59mn       STALE      N/A              no         yes          0000.0000.0000
+        # S   1000::1                                  000a.000b.000c(D)      Twe1/0/1   trunk      100 ( 100)      0100       30565mn    DOWN       N/A              no         yes          0000.0000.0000
+        # DH4 10.0.0.2                                 000b.000c.000d(D)      Gi1/0/1    access     100 ( 100)      0024       45mn       STALE      221 s(7177 s)    no         yes          000b.000c.000d
+        # DH4 110.0.0.3                                0001.0003.0002(R)      Gi1/0/23   access     110 ( 110)      0024       3mn        REACHABLE  12 s try 0(6722 s) no         yes          0001.0003.0002     (unspecified)              LISP-DT-GUARD-VLAN-MULTI-IP (Device-tracking)
+        device_info_capture = re.compile(r'^(?P<dev_code>(\S+))\s+(?P<network_layer_address>(\S+))'
+                                         r'\s+(?P<link_layer_address>(\S+))\s+(?P<interface>(\S+))'
+                                         r'\s+(?P<mode>(\S+))\s+(?P<vlan_id>(\d+))\s+\(\s+\d+\)'
+                                         r'\s+(?P<pref_level_code>(\d+))\s+(?P<age>(\S+))'
+                                         r'\s+(?P<state>(\S+))\s+'
+                                         r'(?P<time_left>(try\s\d\s\d+\ss)|(N\/A)|(\d+\ss\stry\s\d)|'
+                                         r'(\d+\ss)|(\d+\s+s\(\d+\s+s\))|(\d+\s+s\s+try\s+\d+\(\d+\s+s\)))?'
+                                         r'\s+(?P<filter>(yes|no))\s+(?P<in_crimson>(\S+))'
+                                         r'\s+(?P<client_id>(\S+))(\s+(?P<policy>(.*)))?$')
+        # New regex patterns for vlanDB and portDB lines
+        # Example input that this regex will match:
+        # "vlanDB has 10 entries for vlan 39, 5 dynamic"
+        vlan_db_capture = re.compile(r'^vlanDB\s+has\s+(?P<total_entries>\d+)\s+entries\s+for\s+vlan\s+(?P<vlan_id>\d+),\s+(?P<dynamic_entries>\d+)\s+dynamic$')
+        
+        # Example input that this regex will match:
+        # "portDB has 15 entries for interface Twe1/0/42, 8 dynamic"
+        port_db_capture = re.compile(r'^portDB\s+has\s+(?P<total_entries>\d+)\s+entries\s+for\s+interface\s+(?P<interface>[\w\/]+),\s+(?P<dynamic_entries>\d+)\s+dynamic$')
+
+        optional_parameters = [
+            'time_left',
+            'policy',
+        ]
+
+        for line in out.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+            #  Binding table configuration:
+            match = binding_table_configuration_capture.match(line)
+            if match:
+                binding_key = "binding_table_configuration"
+                device_tracking_database_details_dict.setdefault(binding_key, {})
+                continue
+            
+            #  Binding table current counters:
+            match = binding_table_counter_capture.match(line)
+            if match:
+                binding_key = "binding_table_count"
+                device_tracking_database_details_dict.setdefault(binding_key, {})
+                continue
+
+            #  Binding table counters by state:
+            match = binding_table_state_capture.match(line)
+            if match:
+                binding_key = "binding_table_state_count"
+                device_tracking_database_details_dict.setdefault(binding_key, {})
+                continue
+
+            #     Network Layer Address                    Link Layer Address     Interface  mode       vlan(prim)   prlvl      age        state      Time left        Filter     In Crimson   Client ID          Policy (feature)
+            match = device_header_capture.match(line)
+            if match:
+                device_tracking_database_details_dict.setdefault('device', {})
+                continue
+
+            #  max/box  : no limit
+            #  max/vlan : no limit
+            #  max/port : no limit
+            #  max/mac  : no limit
+            #  dynamic  : 1
+            #  local    : 1
+            #  total    : 4
+            #  REACHABLE  : 1
+            #  STALE      : 2
+            #  DOWN       : 1
+            #  INCOMPLETE : 1
+            #  CREATING   : 1
+            #  TENTATIVE  : 1
+            #    total    : 6
+            match = binding_table_info.match(line)
+            if match:
+                groups = match.groupdict()
+                key = groups['parameter'].lower()
+                value = groups['info']
+                binding_table_dict = device_tracking_database_details_dict.setdefault(binding_key, {})
+                if value.isdigit():
+                    binding_table_dict[key] = int(value)
+                else:
+                    binding_table_dict[key] = value
+                continue
+
+            # ND  100.100.100.1                            dead.beef.0001(S)      Twe1/0/42  access     39  (  39)      0024       92mn       STALE      83192 s          no         no           0000.0000.0000     test (Device-tracking)
+            # L   39.39.39.1                               5c5a.c791.d69f(R)      Vl39       svi        39  (  39)      0100       11591mn    REACHABLE                   no         yes          0000.0000.0000
+            # S   10.10.10.10                              dead.beef.0001(S)      Twe1/0/42  access     39  (  39)      0100       59mn       STALE      N/A              no         yes          0000.0000.0000
+            # S   1000::1                                  000a.000b.000c(D)      Twe1/0/1   trunk      100 ( 100)      0100       30565mn    DOWN       N/A              no         yes          0000.0000.0000
+            # DH4 10.0.0.2                                 000b.000c.000d(D)      Gi1/0/1    access     100 ( 100)      0024       45mn       STALE      221 s(7177 s)    no         yes          000b.000c.000d
+            # DH4 110.0.0.3                                0001.0003.0002(R)      Gi1/0/23   access     110 ( 110)      0024       3mn        REACHABLE  12 s try 0(6722 s) no         yes          0001.0003.0002     (unspecified)              LISP-DT-GUARD-VLAN-MULTI-IP (Device-tracking)
+            match = device_info_capture.match(line)
+            if match:
+                device_index += 1
+                groups = match.groupdict()
+                for parameter in optional_parameters:
+                    if groups[parameter] is None:
+                        groups[parameter] = ''
+
+                if not device_tracking_database_details_dict.get('device', {}):
+                    device_tracking_database_details_dict.setdefault('device', {})
+
+                device_dict = device_tracking_database_details_dict.setdefault('device', {}) \
+                                                                .setdefault(device_index, {})
+
+                for key, value in groups.items():
+                    if value.isdigit():
+                        device_dict[key] = int(value)
+                    else:
+                        device_dict[key] = value
+
+            # Matching the vlanDB line
+            # "vlanDB has 10 entries for vlan 39, 5 dynamic"
+            match = vlan_db_capture.match(line)
+            if match:
+                groups = match.groupdict()
+                vlan_db_dict = device_tracking_database_details_dict.setdefault('vlandb', {})
+                vlan_db_dict['vlan_id'] = int(groups['vlan_id'])
+                vlan_db_dict['total_entries'] = int(groups['total_entries'])
+                vlan_db_dict['dynamic_entries'] = int(groups['dynamic_entries'])
+                continue
+
+            # Matching the portDB line
+            # "portDB has 15 entries for interface Twe1/0/42, 8 dynamic"
+            match = port_db_capture.match(line)
+            if match:
+                groups = match.groupdict()
+                port_db_dict = device_tracking_database_details_dict.setdefault('portdb', {})
+                port_db_dict['interface'] = groups['interface']
+                port_db_dict['total_entries'] = int(groups['total_entries'])
+                port_db_dict['dynamic_entries'] = int(groups['dynamic_entries'])
+                continue
+                
+        return device_tracking_database_details_dict
+        
+class ShowDeviceTrackingMessagesDetailedNumSchema(MetaParser):
+    """Schema for the cli show device-tracking messages detailed {number}"""
+    schema = {
+        "messages": ListOf({
+            Optional("timestamp"): str,
+            Optional("vlan"): str,
+            Optional("interface"): str,
+            Optional("about_interface"): str,
+            Optional("security_level"): str,
+            Optional("mac_address"): str,
+            Optional("protocol"): str,
+            Optional("message_type"): str,
+            Optional("status"): str,
+            Optional("num_addresses"): int,
+            Optional("ipv6_address"): str,
+            Optional("lifetime"): str,
+            Optional("drop_reason"): str,
+        })
+    }
+
+class ShowDeviceTrackingMessagesDetailedNum(ShowDeviceTrackingMessagesDetailedNumSchema):
+    """Parser for the cli show device-tracking messages detailed {number}"""
+
+    cli_command = "show device-tracking messages detailed {number}"
+
+    def cli(self, number, output=None):
+        if output is None:
+            cmd = self.cli_command.format(number=number)
+            output = self.device.execute(cmd)
+
+        ret_dict = {} 
+        messages = []
+        current_entry = {}
+
+        # [Mon Sep 02 05:45:03.000] VLAN 50, From Gi3/0/46 seclvl [glean], MAC b07d.479e.7d9a: DHCPv6::REN,
+        p1 = re.compile(r'^\[(?P<timestamp>.+?)\] VLAN (?P<vlan>\d+), From (?P<interface>\S+) seclvl \[(?P<security_level>\S+)\], MAC (?P<mac_address>\S+): (?P<protocol>\S+)::(?P<message_type>\S+),?$')
+
+        # [Mon Sep 02 05:45:03.000] VLAN 50, From Po126 seclvl [glean], DHCPv6::REP, no IPv6 target.
+        p2 = re.compile(r'^\[(?P<timestamp>.+?)\] VLAN (?P<vlan>\d+), From (?P<interface>\S+) seclvl \[(?P<security_level>\S+)\], (?P<protocol>\S+)::(?P<message_type>\S+), (?P<status>no IPv6 target)\.$')
+
+        # [Mon Sep 02 05:45:03.000] VLAN 50, From Po126 seclvl [glean], about Gi3/0/46, MAC b07d.479e.7d9a: DHCPv6::REP,
+        p3 = re.compile(r'^\[(?P<timestamp>.+?)\] VLAN (?P<vlan>\d+), From (?P<interface>\S+) seclvl \[(?P<security_level>\S+)\], about (?P<about_interface>\S+), MAC (?P<mac_address>\S+): (?P<protocol>\S+)::(?P<message_type>\S+),$')
+
+        # 1 addresses advertised:
+        p4 = re.compile(r'^(?P<num_addresses>\d+) addresses advertised:$')
+
+        # IPv6 addr: FE80::7ABC:1AFF:FEC2:EEE5
+        p5 = re.compile(r'^IPv6 addr: (?P<ipv6_address>\S+)$')
+
+        # IPv6 addr: 100:50:2:0:1959:ED35:5D2A:3E4B, Packet ignored.
+        p6 = re.compile(r'^IPv6 addr: (?P<ipv6_address>[A-Fa-f0-9:]+), Packet ignored\.$')
+
+        # IPv6 addr: 100:50:2:0:1959:ED35:5D2A:3E4B, lifetime: 0x5==5
+        p7 = re.compile(r'^IPv6 addr: (?P<ipv6_address>\S+), lifetime: (?P<lifetime>0x[0-9a-fA-F]+==\d+),$')
+
+        # Drop reason=Packet not authorized on port
+        p8 = re.compile(r'Drop reason=(?P<drop_reason>.+)')
+
+        # Iterate over the lines in the output
+        for line in output.splitlines():
+            line = line.strip()
+
+            # [Mon Sep 02 05:45:03.000] VLAN 50, From Po126 seclvl [glean], DHCPv6::REP, no IPv6 target.
+            # [Mon Sep 02 05:45:03.000] VLAN 50, From Po126 seclvl [glean], about Gi3/0/46, MAC b07d.479e.7d9a: DHCPv6::REP,
+            # IPv6 addr: FE80::7ABC:1AFF:FEC2:EEE5
+            for pattern in (p1, p2, p3):
+                m = pattern.match(line)
+                if m:
+                    current_entry = {k: v for k, v in m.groupdict().items() if v}
+                    messages.append(current_entry)
+                    break
+            
+            #  1 addresses advertised:
+            m = p4.match(line)
+            if m and current_entry:
+                current_entry["num_addresses"] = int(m.group("num_addresses"))
+                continue
+
+            # IPv6 addr: FE80::7ABC:1AFF:FEC2:EEE5
+            m = p5.match(line)
+            if m and current_entry:
+                current_entry["ipv6_address"] = m.group("ipv6_address")
+                continue
+
+            # IPv6 addr: 100:50:2:0:1959:ED35:5D2A:3E4B, Packet ignored.
+            m = p6.match(line)
+            if m and current_entry:
+                current_entry["ipv6_address"] = m.group("ipv6_address")
+                continue
+
+            # 	IPv6 addr: 100:50:2:0:1959:ED35:5D2A:3E4B, lifetime: 0x5==5,
+            m = p7.match(line)
+            if m and current_entry:
+                current_entry["ipv6_address"] = m.group("ipv6_address")
+                current_entry["lifetime"] = m.group("lifetime")
+                continue
+
+            # Drop reason=Packet not authorized on port
+            m = p8.search(line)
+            if m and current_entry:
+                current_entry["drop_reason"] = m.group("drop_reason").strip()
+                continue
+
+            if messages:
+                ret_dict["messages"] = messages
+
+        return ret_dict

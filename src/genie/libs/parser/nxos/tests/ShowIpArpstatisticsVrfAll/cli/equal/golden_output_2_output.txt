@@ -1,0 +1,71 @@
+ARP State Machine Stats
+
+ARP packet statistics for context default
+ Sent:
+ Total 24812, RewritePkt 0, Requests 12466, Replies 136320, Requests on L2 0, Replies on L2 0,
+ Gratuitous 64, Tunneled 0, Dropped 0, DroppedRewritePkt 0,
+ ForceReqSentBroadcast 0, ForceReqSentUnicast 0, ForceReqThrottled 0,
+ ForceReqStaleTimerReset 0, ForceReqStaleLPSSEntryDeleted 0, ForceReqNoAdjLPSSAddFailed 0
+ Send packet drops details:
+    MBUF operation failed               : 0
+    Context not yet created             : 0
+    Invalid context                     : 0
+    Invalid ifindex                     : 0
+    Invalid SRC IP                      : 0
+    Invalid DEST IP                     : 0
+    Destination is our own IP           :  40
+    Unattached IP                       :  0
+    Adjacency Couldn't be added         :  0
+    Null Source IP                      :  0
+    Null Source MAC                     :  0
+    Client Enqueue Failed               :  0
+    Dest. not reachable for proxy arp   :  0
+    Dest. unreachable for enhanced proxy:  0
+    Dest. on L2 port being tracked      :  0
+    Invalid Local proxy arp             :  0
+    Invalid proxy arp                   :  0
+   VIP is not active                   :  0
+   ARP refresh skipped over core and flooded on server :  0
+ Received:
+ Total 549100, Requests 536702, Replies 12394, Requests on L2 0, Replies on L2 0
+ Proxy arp 0, Local-Proxy arp 0,  Enhanced Proxy arp 0, Anycast proxy Proxy arp 0,  L2 Port-track Proxy arp 0,  Tunneled 0, Fastpath 0, Snooped 0, Dropped 12432, on Server Port 0, No-Mbuf Drop 0
+ Received packet drops details:
+    Appeared on a wrong interface       : 0
+    Incorrect length                    : 0
+    Invalid OPCODE packet             : 0
+    Invalid protocol packet             : 0
+ Invalid Hardware type                  : 0
+    Invalid context                     : 0
+    Context not yet created             : 0
+    Invalid layer 2 address length      : 0
+    Invalid layer 3 address length      : 0
+    Invalid source IP address           : 0
+    Source IP address is our own        : 0
+    No mem to create per intf structure : 0
+    Source address mismatch with subnet : 0
+    Directed broadcast source           : 0
+    Invalid destination IP address      : 0
+    Non-local destination IP address    : 0
+    Non-active FHRP dest IP address. Learn and drop
+                                        : 0
+    Invalid source MAC address          : 0
+    Source MAC address is our own       : 0
+    Received before arp initialization  : 0
+    L2 packet on proxy-arp-enabled interface
+                                        : 0
+    L2 packet on untrusted L2 port      : 0
+    Packet with VIP on standby FHRP     : 0
+    Grat arp received on proxy-arp-enabled interface
+                                        : 0
+    Requests came for exising entries   : 15
+    Requests came on a l2 interface     : 0
+    L2FM query failed for a L2 Address  : 0
+    Dropping due to tunneling failures  : 0
+    Glean requests recv count : 63
+    ARP refresh requests received from clients: 0
+    Number of Signals received from L2rib : 0
+    Drop Dynamic Entry, Static Entry Present: 0
+
+ ARP adjacency statistics
+
+ Adds 32, Deletes 0, Timeouts 0, delDynamicOnStaticAdd 0

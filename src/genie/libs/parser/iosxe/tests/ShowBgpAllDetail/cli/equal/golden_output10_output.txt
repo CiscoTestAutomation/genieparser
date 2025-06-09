@@ -1,0 +1,33 @@
+show ip bgp 1.1.1.1/32
+BGP routing table entry for 1.1.1.1/32, version 162
+Paths: (4 available, best #4, table default)
+Multipath: eBGP
+Not advertised to any peer
+Refresh Epoch 2
+65000 65001, (received & used)
+10.10.10.1 from 10.10.10.1 (192.168.1.1)
+Origin IGP, localpref 100, valid, external, multipath
+Community: 1:1
+rx pathid: 0, tx pathid: 0
+Updated on Nov 15 2024 16:52:30 EST
+Refresh Epoch 2
+65000 65001, (received & used)
+10.10.20.1 from 10.10.20.1 (192.168.1.2)
+Origin IGP, localpref 100, valid, external, multipath
+Community: 1:1
+rx pathid: 0, tx pathid: 0
+Updated on Nov 15 2024 16:52:28 EST
+Refresh Epoch 2
+65000 65001, (received & used)
+10.10.30.1 from 10.10.30.1 (192.168.1.3)
+Origin IGP, localpref 100, valid, external, multipath(oldest)
+Community: 1:1
+rx pathid: 0, tx pathid: 0
+Updated on Nov 15 2024 16:51:56 EST
+Refresh Epoch 2
+65000 65001, (received & used)
+10.10.40.1 from 10.10.40.1 (192.168.1.4)
+Origin IGP, localpref 100, valid, external, multipath, best
+Community: 1:1
+rx pathid: 0, tx pathid: 0x0
+Updated on Nov 15 2024 16:51:54 EST

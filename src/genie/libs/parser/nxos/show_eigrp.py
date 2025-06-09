@@ -65,21 +65,21 @@ class ShowEigrpNeighborsSuperParser(ShowEigrpNeighborsSchema):
         # IPv6-EIGRP neighbors for process 100 VRF default
         # IPv6-EIGRP neighbors for process 100 VRF VRF1
         r1 = re.compile(r'^(?P<address_family>IP|IPv4|IPv6)'
-                        '\-EIGRP\s+neighbors\s*for\s*process \s*'
-                        '(?P<as_num>\d+)\s*VRF\s*(?P<vrf>\S+)$')
+                        r'\-EIGRP\s+neighbors\s*for\s*process \s*'
+                        r'(?P<as_num>\d+)\s*VRF\s*(?P<vrf>\S+)$')
 
         # 1   10.13.90.1              Eth1/2.90       13   01:56:49  1    50    0   16
         # 0   10.23.90.2              Eth1/1.90       11   01:46:12  15   90    0   22
         # 0   fe80::f816:3eff:fecf:5a5b               Eth1/1.90       12   01:40:09  10   60    0   30
         # 1   fe80::f816:3eff:fe62:65af               Eth1/2.90       12   01:40:07  4    50    0   22
         r2 = re.compile(r'^(?P<peer_handle>\d+) +'
-                        '(?P<nbr_address>\S+) +'
-                        '(?P<eigrp_interface>[A-Za-z]+\s*[\d\/\.]+) +'
-                        '(?P<hold>\d+) +(?P<uptime>\S+) +'
-                        '(?P<srtt>\d+) +'
-                        '(?P<rto>\d+) +'
-                        '(?P<q_cnt>\d+) +'
-                        '(?P<last_seq_number>\d+)$')
+                        r'(?P<nbr_address>\S+) +'
+                        r'(?P<eigrp_interface>[A-Za-z]+\s*[\d\/\.]+) +'
+                        r'(?P<hold>\d+) +(?P<uptime>\S+) +'
+                        r'(?P<srtt>\d+) +'
+                        r'(?P<rto>\d+) +'
+                        r'(?P<q_cnt>\d+) +'
+                        r'(?P<last_seq_number>\d+)$')
 
         parsed_dict = {}
 
@@ -236,32 +236,32 @@ class ShowEigrpNeighborsDetailSuperParser(ShowEigrpNeighborsDetailSchema):
         # IPv6-EIGRP neighbors for process 100 VRF default
         # IPv6-EIGRP neighbors for process 100 VRF VRF1
         r1 = re.compile(r'^(?P<address_family>IP|IPv4|IPv6)'
-                        '\-EIGRP\s+neighbors\s*for\s*process \s*'
-                        '(?P<as_num>\d+)\s*VRF\s*(?P<vrf>\S+)$')
+                        r'\-EIGRP\s+neighbors\s*for\s*process \s*'
+                        r'(?P<as_num>\d+)\s*VRF\s*(?P<vrf>\S+)$')
 
         # 1   10.13.90.1              Eth1/2.90       14   01:58:11  1    50    0   16
         # 0   10.23.90.2              Eth1/1.90       13   01:47:34  15   90    0   22
         # 0   fe80::f816:3eff:fecf:5a5b               Eth1/1.90       12   01:41:31  10   60    0   30
         # 0   fe80::f816:3eff:fecf:5a5b               Eth1/1.390      11   01:45:50  10   60    0   10
         r2 = re.compile(r'^(?P<peer_handle>\d+) +'
-                        '(?P<nbr_address>\S+) +'
-                        '(?P<eigrp_interface>[A-Za-z]+\s*[\d\/\.]+) +'
-                        '(?P<hold>\d+) +(?P<uptime>\S+) +'
-                        '(?P<srtt>\d+) +'
-                        '(?P<rto>\d+) +'
-                        '(?P<q_cnt>\d+) +'
-                        '(?P<last_seq_number>\d+)$')
+                        r'(?P<nbr_address>\S+) +'
+                        r'(?P<eigrp_interface>[A-Za-z]+\s*[\d\/\.]+) +'
+                        r'(?P<hold>\d+) +(?P<uptime>\S+) +'
+                        r'(?P<srtt>\d+) +'
+                        r'(?P<rto>\d+) +'
+                        r'(?P<q_cnt>\d+) +'
+                        r'(?P<last_seq_number>\d+)$')
 
         # Version 3.3/2.0, Retrans: 1, Retries: 0, BFD state: N/A, Prefixes: 3
         # Version 3.3/2.0, Retrans: 1, Retries: 0, BFD state: N/A, Prefixes: 3
         # Version 23.0/2.0, Retrans: 1, Retries: 0, BFD state: N/A
         r3 = re.compile(r'Version\s*(?P<os_majorver>\d+)\.'
-                        '(?P<os_minorver>\d+)\/(?P<tlv_majorrev>\d+)\.'
-                        '(?P<tlv_minorrev>\d+), +Retrans\s*:\s*'
-                        '(?P<retransmit_count>\d+)\, +Retries\s*:\s*'
-                        '(?P<retry_count>\d+)\,* *BFD\s+state\:\s*'
-                        '(?P<bfd_state>[\w\/]+)\,*\s*'
-                        '(?:Prefixes\s*:\s*(?P<prefixes>\d+))?')
+                        r'(?P<os_minorver>\d+)\/(?P<tlv_majorrev>\d+)\.'
+                        r'(?P<tlv_minorrev>\d+), +Retrans\s*:\s*'
+                        r'(?P<retransmit_count>\d+)\, +Retries\s*:\s*'
+                        r'(?P<retry_count>\d+)\,* *BFD\s+state\:\s*'
+                        r'(?P<bfd_state>[\w\/]+)\,*\s*'
+                        r'(?:Prefixes\s*:\s*(?P<prefixes>\d+))?')
 
         parsed_dict = {}
 
@@ -438,23 +438,23 @@ class ShowEigrpTopologySuperParser(ShowEigrpTopologySchema):
         # IP-EIGRP Topology Table for AS(1)/ID(10.0.0.1) VRF default
         # IPv6-EIGRP Topology Table for AS(0)/ID(0.0.0.0) VRF vrf1
         r1 = re.compile(r'^(?P<address_family>IP|IPv4|IPv6)'
-                        '\-EIGRP\s+Topology\s+Table\s+for\s+'
-                        'AS\((?P<as_num>\d+)\)\/ID\((?P<routerid>\S+)\)'
-                        '\s+VRF\s+(?P<vrf>\S+)$')
+                        r'\-EIGRP\s+Topology\s+Table\s+for\s+'
+                        r'AS\((?P<as_num>\d+)\)\/ID\((?P<routerid>\S+)\)'
+                        r'\s+VRF\s+(?P<vrf>\S+)$')
 
         # P 10.1.1.0/24, 1 successors, FD is 2816
         # P 2001:1::1:0/112, 1 successors, FD is 2816
         # P 10.4.1.0/24, 2 successors, FD is Inaccessible
         r2 = re.compile(r'^(?P<state>P|A|U|Q|R|r|s)\s+(?P<route>\S+),\s+'
-                        '(?P<num_successors>\d+)\s+successors,'
-                        '\s+FD\s+is\s+(?P<fd>(\d+)|Inaccessible)$')
+                        r'(?P<num_successors>\d+)\s+successors,'
+                        r'\s+FD\s+is\s+(?P<fd>(\d+)|Inaccessible)$')
 
         # via Connected, Ethernet1/2
         # via Rstatic (51200/0)
         # via 10.1.1.2 (3072/576), Ethernet1/2
         r3 = re.compile(r'via\s+(?P<nexthop>\S+)'
-                        '(\s+\((?P<fd>\d+)\/(?P<rd>\d+)\))?'
-                        '(,\s(?P<interface>\S+))?$')
+                        r'(\s+\((?P<fd>\d+)\/(?P<rd>\d+)\))?'
+                        r'(,\s(?P<interface>\S+))?$')
 
         parsed_dict:dict = {}
 

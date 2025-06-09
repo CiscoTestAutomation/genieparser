@@ -46,16 +46,16 @@ class ShowBeaconAll(ShowBeaconAllSchema):
         # *2                  OFF
 
         p1_0 = re.compile(r'^\w+#\s+Beacon\s+Status$')
-        p1_1 = re.compile('^[*]?(?P<switch_number>\d+)\s+(?P<beacon_status>\w+)$')
+        p1_1 = re.compile(r'^[*]?(?P<switch_number>\d+)\s+(?P<beacon_status>\w+)$')
 
         # Power-Supply#   Beacon Status
         # ---------------------------------
          # 1                  OFF
         p2_0 = re.compile(r'Power-Supply#\s+Beacon\s+Status$')
-        p2_1 = re.compile('^(?P<power_supply>\d+)\s+(?P<power_supply_beacon_status>\w+)$')
+        p2_1 = re.compile(r'^(?P<power_supply>\d+)\s+(?P<power_supply_beacon_status>\w+)$')
 
         #FANTRAY BEACON:     OFF
-        p3 = re.compile('^FANTRAY BEACON:\s+(?P<fantray_beacon_status>\w+)$')
+        p3 = re.compile(r'^FANTRAY BEACON:\s+(?P<fantray_beacon_status>\w+)$')
 
 
         for line in output.splitlines():

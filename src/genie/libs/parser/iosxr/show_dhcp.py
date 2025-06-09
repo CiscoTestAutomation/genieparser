@@ -76,9 +76,9 @@ class ShowDhcpIpv4ProxyBinding(ShowDhcpIpv4ProxyBindingSchema):
 
         # 5001.0009.0002  51.1.1.3        BOUND      80989      Gi0/0/0/3.500        DHCP-VRF   0x0
         p1 = re.compile(r'^((?P<mac_address>[\w\.]+)\s+(?P<ip_address>[\w\.]+)'
-                        '\s+(?P<state>\w+)\s+(?P<lease_remaining>\d+)\s+'
-                        '(?P<interface_name>\S+)\s+(?P<vrf_name>\S+)\s+'
-                        '(?P<sublabel>\S+))$')
+                        r'\s+(?P<state>\w+)\s+(?P<lease_remaining>\d+)\s+'
+                        r'(?P<interface_name>\S+)\s+(?P<vrf_name>\S+)\s+'
+                        r'(?P<sublabel>\S+))$')
 
 
         for line in output.splitlines():

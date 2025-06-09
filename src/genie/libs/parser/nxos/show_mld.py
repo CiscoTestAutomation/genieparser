@@ -132,53 +132,53 @@ class ShowIpv6MldInterface(ShowIpv6MldInterfaceSchema):
 
         # MLD Interfaces for VRF "VRF1", count: 4
         p1_1 = re.compile(r'^MLD +Interfaces +for +VRF +\"(?P<vrf>\S+)\", '
-                           'count: +(?P<count>\d+)$')
+                           r'count: +(?P<count>\d+)$')
 
         # Ethernet2/1, Interface status: protocol-up/link-up/admin-up
         p2 = re.compile(r'^(?P<intf>[\w\/\.\-]+), +'
-                         'Interface +status: +protocol\-(?P<protocol_status>\w+)\/'
-                         'link\-(?P<link_status>\w+)\/'
-                         'admin\-(?P<admin_status>\w+)$')
+                         r'Interface +status: +protocol\-(?P<protocol_status>\w+)\/'
+                         r'link\-(?P<link_status>\w+)\/'
+                         r'admin\-(?P<admin_status>\w+)$')
 
         # 2001:db8:8404:751c::1/64 [VALID]
         p3 = re.compile(r'^(?P<address>(?P<ip>[a-z0-9\:]+)'
-                         '\/(?P<prefix_length>[0-9]+))'
-                         ' *\[(?P<status>[a-zA-Z]+)\]$')
+                         r'\/(?P<prefix_length>[0-9]+))'
+                         r' *\[(?P<status>[a-zA-Z]+)\]$')
 
         # Link Local Address : fe80::5054:ff:fed7:c01f(VALID)
         p3_1 = re.compile(r'^Link +Local +Address *: *'
-                         '(?P<address>[\w\:]+)'
-                         '\((?P<status>[a-zA-Z]+)\)$')
+                         r'(?P<address>[\w\:]+)'
+                         r'\((?P<status>[a-zA-Z]+)\)$')
 
         # IPv6 Link-local Address: fe80::5054:ff:fed7:c01f
         p3_2 = re.compile(r'^IPv6 +Link\-local +Address *: *'
-                         '(?P<address>[\w\:]+)$')
+                         r'(?P<address>[\w\:]+)$')
 
         # Active Querier: fe80::5054:ff:fed7:c01f
         p4 = re.compile(r'^Active +Querier: +(?P<querier>[\w\.\:]+)$')
 
         # Querier version: 2, next query sent in: 00:05:18
         p4_1 = re.compile(r'^Querier +version: +(?P<version>\d+), +'
-                         'next +query +sent +in: +(?P<in>[\w\.\:]+)$')
+                         r'next +query +sent +in: +(?P<in>[\w\.\:]+)$')
 
         # MLD Membership count: 2
         p5 = re.compile(r'^MLD +Membership +count: +(?P<count>\d+)$')
 
         # MLD version: 2, host version: 2
         p7 = re.compile(r'^MLD +version: +(?P<ver>\d+), +'
-                         'host +version: +(?P<host_ver>\d+)$')
+                         r'host +version: +(?P<host_ver>\d+)$')
 
         # MLD query interval: 366 secs, configured value: 366 secs
         p8 = re.compile(r'^MLD +query +interval: +(?P<intverval>\d+) +secs, +'
-                         'configured +value: +(?P<conf_intvl>\d+) +secs$')
+                         r'configured +value: +(?P<conf_intvl>\d+) +secs$')
 
         # MLD max response time: 16 secs, configured value: 16 secs
         p9 = re.compile(r'^MLD +max +response +time: +(?P<time>\d+) +secs, +'
-                         'configured +value: +(?P<conf_time>\d+) +secs$')
+                         r'configured +value: +(?P<conf_time>\d+) +secs$')
 
         # MLD startup query interval: 91 secs, configured value: 31 secs
         p10 = re.compile(r'^MLD +startup +query +interval: +(?P<intvl>\d+) +secs, +'
-                         'configured +value: +(?P<conf_intvl>\d+) +secs$')
+                         r'configured +value: +(?P<conf_intvl>\d+) +secs$')
 
         # MLD startup query count: 7
         p11 = re.compile(r'^MLD +startup +query +count: +(?P<count>\d+)$')
@@ -191,18 +191,18 @@ class ShowIpv6MldInterface(ShowIpv6MldInterfaceSchema):
 
         # MLD group timeout: 2578 secs, configured value: 260 secs
         p14 = re.compile(r'^MLD +group +timeout: +(?P<timeout>\d+) +secs, +'
-                         'configured +value: +(?P<conf_timeout>\d+) +secs$')
+                         r'configured +value: +(?P<conf_timeout>\d+) +secs$')
 
         # MLD querier timeout: 2570 secs, configured value: 255 secs
         p15 = re.compile(r'^MLD +querier +timeout: +(?P<timeout>\d+) +secs, +'
-                         'configured +value: +(?P<conf_timeout>\d+) +secs$')
+                         r'configured +value: +(?P<conf_timeout>\d+) +secs$')
 
         # MLD unsolicited report interval: 1 secs
         p16 = re.compile(r'^MLD +unsolicited +report +interval: +(?P<val>\d+) +secs$')
 
         # MLD robustness variable: 7, configured value: 7
         p17 = re.compile(r'^MLD +robustness +variable: +(?P<val1>\d+), +'
-                          'configured +value: +(?P<val2>\d+)$')
+                          r'configured +value: +(?P<val2>\d+)$')
 
         # MLD reporting for link-local groups: disabled
         p18 = re.compile(r'^MLD +reporting +for +link\-local +groups: +(?P<status>\w+)$')
@@ -218,7 +218,7 @@ class ShowIpv6MldInterface(ShowIpv6MldInterfaceSchema):
 
         # MLD State Limit: 6400,  Available States: 6400
         p23 = re.compile(r'^MLD +State +Limit: +(?P<max_groups>\d+), +'
-                          'Available +States: +(?P<available_groups>\d+)$')
+                          r'Available +States: +(?P<available_groups>\d+)$')
 
         # ICMPv6 MLD Statistics (sent/received):
         #   V1 Queries:          0/0
@@ -564,27 +564,25 @@ class ShowIpv6MldGroups(ShowIpv6MldGroupsSchema):
 
         # MLD Connected Group Membership for VRF "default" - 2 total entries
         p1 = re.compile(r'^MLD +Connected +Group +Membership +for +VRF +\"(?P<vrf>\S+)\"'
-                         ' +\- +(?P<entries>\d+) +total +entries$')
+                         r' +\- +(?P<entries>\d+) +total +entries$')
 
         # ff38::1
         p2 = re.compile(r'^(?P<group>[\w\.\:]+)$')
 
-        # fffe::1            D   Ethernet1/2.10         00:13:56  00:03:31  fe80::200:7cff:fe06:af79
-        p3 = re.compile(r'^(?P<group>\w+\:\:\w+) +(?P<type>\w+) +(?P<intf>[\w\.\/\-]+)'
-            r' +(?P<uptime>[\w\.\:]+) +(?P<expires>[\w\.\:]+) +(?P<last_reporter>[\w\.\:]+)$')
-
         #   2001:20:1:1::254 D    Ethernet1/2.10         00:13:56  00:03:31  fe80::200:7cff:fe06:af79
-        p4 = re.compile(r'^(?P<source>[\w\.\:]+) +(?P<type>\w+) +(?P<intf>[\w\.\/\-]+)'
+        # ff04:230:11:1::1   D   Vlan2                  23:20:22  00:02:36  fe80::10:23:4:30
+        #   10:11:1::10      D    Vlan20                 23:20:22  00:03:50  fe80::10:22:1:20
+        p4 = re.compile(r'^(?P<whitespace>\s*)?(?P<source>[\w\.\:]+) +(?P<type>\w+) +(?P<intf>[\w\.\/\-]+)'
             r' +(?P<uptime>[\w\.\:]+) +(?P<expires>[\w\.\:]+) +(?P<last_reporter>[\w\.\:]+)$')
 
         # (2001:db8:0:abcd::2, ff30::2)
         p5 = re.compile(r'^\((?P<source>[\w\.\:\*]+), *(?P<group>[\w\.\:]+)\)$')
 
-        # Type: Static, Interface: Ethernet2/1
-        p6 = re.compile(r'^Type: +(?P<type>\w+), Interface: +(?P<intf>[\w\.\/\-]+)$')
+        #   Type: Static, Interface: Ethernet2/1
+        p6 = re.compile(r'^\s+Type: +(?P<type>\w+), Interface: +(?P<intf>[\w\.\/\-]+)$')
 
-        # Uptime/Expires: 00:26:28/never, Last Reporter: 2001:db8:8404:907f::1
-        p7 = re.compile(r'^Uptime\/Expires *: +(?P<uptime>[\w\.\:]+)/(?P<expires>[\w\.\:]+), +'
+        #   Uptime/Expires: 00:26:28/never, Last Reporter: 2001:db8:8404:907f::1
+        p7 = re.compile(r'^\s+Uptime\/Expires *: +(?P<uptime>[\w\.\:]+)/(?P<expires>[\w\.\:]+), +'
             r'Last +Reporter *: +(?P<last_reporter>[\w\.\:]+)$')
 
         # initial variables
@@ -594,7 +592,7 @@ class ShowIpv6MldGroups(ShowIpv6MldGroupsSchema):
         sub_dict = {}
 
         for line in out.splitlines():
-            line = line.strip()
+            line = line.rstrip()
 
             # show ipv6 mld groups
             m = p0.match(line)
@@ -618,30 +616,24 @@ class ShowIpv6MldGroups(ShowIpv6MldGroupsSchema):
                 group = m.groupdict()['group']
                 continue
 
-            # fffe::1            D   Ethernet1/2.10         00:13:56  00:03:31  fe80::200:7cff:fe06:af79
-            m = p3.match(line)
-            if m:
-                group = m.groupdict()['group']
-                intf = Common.convert_intf_name(m.groupdict()['intf'])
-
-                sub_dict = ret_dict.setdefault('vrfs', {}).setdefault(vrf, {}).setdefault(
-                    'interface', {}).setdefault(intf, {}).setdefault('group', {}).setdefault(group, {})
-
-                sub_dict['type'] = m.groupdict()['type'].lower()
-                sub_dict['expire'] = m.groupdict()['expires']
-                sub_dict['up_time'] = m.groupdict()['uptime']
-                sub_dict['last_reporter'] = m.groupdict()['last_reporter']
-                continue
-
             #   2001:20:1:1::254 D    Ethernet1/2.10         00:13:56  00:03:31  fe80::200:7cff:fe06:af79
+            # ff04:230:11:1::1   D   Vlan2                  23:20:22  00:02:36  fe80::10:23:4:30
+            #   10:11:1::10      D    Vlan20                 23:20:22  00:03:50  fe80::10:22:1:20
             m = p4.match(line)
             if m:
+                no_of_whitespace = m.groupdict()['whitespace'].count(' ')
                 intf = Common.convert_intf_name(m.groupdict()['intf'])
-                source = m.groupdict()['source']
+                if no_of_whitespace:
+                    source = m.groupdict()['source']
 
-                sub_dict = ret_dict.setdefault('vrfs', {}).setdefault(vrf, {}).setdefault(
-                    'interface', {}).setdefault(intf, {}).setdefault('group', {}).setdefault(
-                    group, {}).setdefault('source', {}).setdefault(source, {})
+                    sub_dict = ret_dict.setdefault('vrfs', {}).setdefault(vrf, {}).setdefault(
+                        'interface', {}).setdefault(intf, {}).setdefault('group', {}).setdefault(
+                        group, {}).setdefault('source', {}).setdefault(source, {})
+                else:
+                    group = m.groupdict()['source']
+
+                    sub_dict = ret_dict.setdefault('vrfs', {}).setdefault(vrf, {}).setdefault(
+                        'interface', {}).setdefault(intf, {}).setdefault('group', {}).setdefault(group, {})
 
                 sub_dict['type'] = m.groupdict()['type'].lower()
                 sub_dict['expire'] = m.groupdict()['expires']
@@ -656,7 +648,7 @@ class ShowIpv6MldGroups(ShowIpv6MldGroupsSchema):
                 source = m.groupdict()['source']
                 continue
 
-            # Type: Static, Interface: Ethernet2/1
+            #   Type: Static, Interface: Ethernet2/1
             m = p6.match(line)
             if m:
                 intf = Common.convert_intf_name(m.groupdict()['intf'])
@@ -664,7 +656,6 @@ class ShowIpv6MldGroups(ShowIpv6MldGroupsSchema):
                     ret_dict['vrfs'][vrf]['interface'] = {}
                 if intf not in ret_dict['vrfs'][vrf]['interface']:
                     ret_dict['vrfs'][vrf]['interface'][intf] = {}
-
 
                 if 'group' not in ret_dict['vrfs'][vrf]['interface'][intf]:
                     ret_dict['vrfs'][vrf]['interface'][intf]['group'] = {}
@@ -684,7 +675,7 @@ class ShowIpv6MldGroups(ShowIpv6MldGroupsSchema):
                 sub_dict['type'] = m.groupdict()['type'].lower()
                 continue
 
-            # Uptime/Expires: 00:26:28/never, Last Reporter: 2001:db8:8404:907f::1
+            #   Uptime/Expires: 00:26:28/never, Last Reporter: 2001:db8:8404:907f::1
             m = p7.match(line)
             if m:
                 sub_dict['expire'] = m.groupdict()['expires']
@@ -776,12 +767,12 @@ class ShowIpv6MldLocalGroups(ShowIpv6MldLocalGroupsSchema):
 
         #         Local    Eth2/1      00:03:07  
         p2_1 = re.compile(r'^(?P<type>\w+) +(?P<intf>[\w\.\-\/]+) +'
-                           '(?P<last_reported>[\w\.\:]+)$')
+                           r'(?P<last_reported>[\w\.\:]+)$')
 
         # Group Address    Source Address   Type     Interface   Last Reported 
         # fffe::2          *                Local    Eth1/2.12   00:27:31  
         p3 = re.compile(r'^(?P<group>[\w\.\:]+) +(?P<source>[\w\.\:\*]+) +'
-                           '(?P<type>\w+) +(?P<intf>[\w\.\-\/]+) +(?P<last_reported>[\w\.\:]+)$')
+                           r'(?P<type>\w+) +(?P<intf>[\w\.\-\/]+) +(?P<last_reported>[\w\.\:]+)$')
 
         # initial variables
         ret_dict = {}

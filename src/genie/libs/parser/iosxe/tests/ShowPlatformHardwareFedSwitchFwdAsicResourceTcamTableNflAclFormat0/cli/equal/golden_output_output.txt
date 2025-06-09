@@ -1,0 +1,16 @@
+Printing entries for region INGRESS_NFL_ACL_CONTROL (325) type 6 asic 0
+========================================================
+Printing entries for region INGRESS_NFL_ACL_GACL (326) type 6 asic 0
+========================================================
+Printing entries for region INGRESS_NFL_ACL_PACL (327) type 6 asic 0
+========================================================
+Printing entries for region INGRESS_NFL_ACL_VACL (328) type 6 asic 0
+========================================================
+Printing entries for region INGRESS_NFL_ACL_RACL (329) type 6 asic 0
+========================================================
+Printing entries for region INGRESS_NFL_ACL_SSID (330) type 6 asic 0
+========================================================
+Printing entries for region INGRESS_NFL_CATCHALL (331) type 6 asic 0
+========================================================
+TAQ-5 Index-224 (A:0,C:0) Valid StartF-1 StartA-1 SkipF-0 SkipA-0
+Mask1 00f00000:00000000:00000000:00000000:00000000:00000000:00000000:00000000

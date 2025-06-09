@@ -1,0 +1,265 @@
+Hub#sh monitor event-trace dmvpn all 
+
+dmtunnel:
+
+Tracing currently disabled, from exec command
+
+
+nhrp_event:
+
+*Jun 22 06:39:28.358: NHRP-CACHE-ADD tunnel: Tu1 target: 192.168.10. nbma_src: 1.1.1.1 vpn_src: 192.168.10.1 nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3 vrf: global(0x0) label: none
+*Jun 22 06:39:28.362: NHRP-TUNNEL-ENDPOINT-ADD tunnel: Tu1 Added tunnel endpoints nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3
+*Jun 22 06:39:28.362: NHRP-SUBBLOCK-ADD tunnel:  Successfuly attached nhrp subblock for tunnel endpoints nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3
+*Jun 22 06:39:28.362: NHRP-SB-NODE-CREATE tunnel: Tu1 Inserted subblock node for cache target: 192.168.10.3/125 nhop nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3
+*Jun 22 06:39:29.166: NHRP-CACHE-ADD tunnel: Tu1 target: 192.168.10. nbma_src: 1.1.1.1 vpn_src: 192.168.10.1 nbma_dest: 2.2.2.1 vpn_dest: 192.168.10.2 vrf: global(0x0) label: none
+*Jun 22 06:39:29.170: NHRP-TUNNEL-ENDPOINT-ADD tunnel: Tu1 Added tunnel endpoints nbma_dest: 2.2.2.1 vpn_dest: 192.168.10.2
+*Jun 22 06:39:29.170: NHRP-SUBBLOCK-ADD tunnel:  Successfuly attached nhrp subblock for tunnel endpoints nbma_dest: 2.2.2.1 vpn_dest: 192.168.10.2
+*Jun 22 06:39:29.170: NHRP-SB-NODE-CREATE tunnel: Tu1 Inserted subblock node for cache target: 192.168.10.2/125 nhop nbma_dest: 2.2.2.1 vpn_dest: 192.168.10.2
+*Jun 22 06:39:52.828: NHRP-CACHE-DELETE tunnel: Tu1 nbma_src: 1.1.1.1 vpn_src: 0.0.0.0 nbma_dest: 2.2.2.1 vpn_dest: 192.168.10. vrf: global(0x0) label: none reason: EXT - Admin action (config/clear commands)
+*Jun 22 06:39:52.828: NHRP-SB-NODE-DELETE tunnel: Tu1 Deleted subblock node for cache target: 192.168.10.2/0 nhop nbma_dest: 2.2.2.1 vpn_dest: 192.168.10.2
+*Jun 22 06:39:52.829: NHRP-TUNNEL-ENDPOINT-DELETE tunnel: Tu1 Deleting tunnel endpoints nbma_dest: 2.2.2.1 vpn_dest: 192.168.10.2
+*Jun 22 06:39:52.829: NHRP-SUBBLOCK-DELETE tunnel:  removed nhrp subblock from the overlay endpoint
+*Jun 22 06:39:52.829: NHRP-CACHE-DELETE tunnel: Tu1 nbma_src: 1.1.1.1 vpn_src: 0.0.0.0 nbma_dest: 3.3.3.1 vpn_dest: 192.168.10. vrf: global(0x0) label: none reason: EXT - Admin action (config/clear commands)
+*Jun 22 06:39:52.829: NHRP-SB-NODE-DELETE tunnel: Tu1 Deleted subblock node for cache target: 192.168.10.3/0 nhop nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3
+*Jun 22 06:39:52.830: NHRP-TUNNEL-ENDPOINT-DELETE tunnel: Tu1 Deleting tunnel endpoints nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3
+*Jun 22 06:39:52.830: NHRP-SUBBLOCK-DELETE tunnel:  removed nhrp subblock from the overlay endpoint
+*Jun 22 06:39:54.342: NHRP-CACHE-DELETE tunnel: Tu1 nbma_src: 2.2.2.1 vpn_src: 0.0.0.0 nbma_dest: 1.1.1.1 vpn_dest: 192.168.10. vrf: global(0x0) label: none reason: EXT - Admin action (config/clear commands)
+*Jun 22 06:39:54.342: NHRP-SB-NODE-DELETE tunnel: Tu1 Deleted subblock node for cache target: 192.168.10.1/0 nhop nbma_dest: 1.1.1.1 vpn_dest: 192.168.10.1
+*Jun 22 06:39:54.344: NHRP-TUNNEL-ENDPOINT-DELETE tunnel: Tu1 Deleting tunnel endpoints nbma_dest: 1.1.1.1 vpn_dest: 192.168.10.1
+*Jun 22 06:39:54.344: NHRP-SUBBLOCK-DELETE tunnel:  removed nhrp subblock from the overlay endpoint
+*Jun 22 06:39:54.634: NHRP-SEND-PURGE-REQ tunnel: Tu1 host with nbma_src: 2.2.2.1 vpn_src: 0.0.0.0 send purge request to nbma_dest: UNKNOWN vpn_dest: 192.168.10.1 vrf: global(0x0) label: none
+*Jun 22 06:39:56.804: NHRP-CACHE-DELETE tunnel: Tu1 nbma_src: 3.3.3.1 vpn_src: 0.0.0.0 nbma_dest: 1.1.1.1 vpn_dest: 192.168.10. vrf: global(0x0) label: none reason: EXT - Admin action (config/clear commands)
+*Jun 22 06:39:56.804: NHRP-SB-NODE-DELETE tunnel: Tu1 Deleted subblock node for cache target: 192.168.10.1/4 nhop nbma_dest: 1.1.1.1 vpn_dest: 192.168.10.1
+*Jun 22 06:39:56.806: NHRP-TUNNEL-ENDPOINT-DELETE tunnel: Tu1 Deleting tunnel endpoints nbma_dest: 1.1.1.1 vpn_dest: 192.168.10.1
+*Jun 22 06:39:56.806: NHRP-SUBBLOCK-DELETE tunnel:  removed nhrp subblock from the overlay endpoint
+*Jun 22 06:39:57.095: NHRP-SEND-PURGE-REQ tunnel: Tu1 host with nbma_src: 3.3.3.1 vpn_src: 0.0.0.0 send purge request to nbma_dest: UNKNOWN vpn_dest: 192.168.10.1 vrf: global(0x0) label: none
+*Jun 22 06:51:10.254: NHRP-RECV-RES-REQ tunnel: Tu1 host with nbma_src: 1.1.1.1 vpn_src: 192.168.10.3 received resolution request from nbma_dest: 2.2.2.1 vpn_dest: 192.168.10.2 vrf: global(0x0) label: none
+*Jun 22 06:51:24.825: NHRP-CACHE-DELETE tunnel: Tu1 nbma_src: 1.1.1.1 vpn_src: 0.0.0.0 nbma_dest: 2.2.2.1 vpn_dest: 192.168.10. vrf: global(0x0) label: none reason: EXT - Admin action (config/clear commands)
+*Jun 22 06:51:24.825: NHRP-SB-NODE-DELETE tunnel: Tu1 Deleted subblock node for cache target: 192.168.10.2/125 nhop nbma_dest: 2.2.2.1 vpn_dest: 192.168.10.2
+*Jun 22 06:51:24.826: NHRP-TUNNEL-ENDPOINT-DELETE tunnel: Tu1 Deleting tunnel endpoints nbma_dest: 2.2.2.1 vpn_dest: 192.168.10.2
+*Jun 22 06:51:24.826: NHRP-SUBBLOCK-DELETE tunnel:  removed nhrp subblock from the overlay endpoint
+*Jun 22 06:51:24.826: NHRP-CACHE-DELETE tunnel: Tu1 nbma_src: 1.1.1.1 vpn_src: 0.0.0.0 nbma_dest: 3.3.3.1 vpn_dest: 192.168.10. vrf: global(0x0) label: none reason: EXT - Admin action (config/clear commands)
+*Jun 22 06:51:24.828: NHRP-SB-NODE-DELETE tunnel: Tu1 Deleted subblock node for cache target: 192.168.10.3/125 nhop nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3
+*Jun 22 06:51:24.828: NHRP-TUNNEL-ENDPOINT-DELETE tunnel: Tu1 Deleting tunnel endpoints nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3
+*Jun 22 06:51:24.829: NHRP-SUBBLOCK-DELETE tunnel:  removed nhrp subblock from the overlay endpoint
+*Jun 23 12:56:43.550: NHRP-CACHE-ADD tunnel: Tu1 target: 192.168.10. nbma_src: 2.2.2.1 vpn_src: 192.168.10.2 nbma_dest: 1.1.1.1 vpn_dest: 192.168.10.3 vrf: global(0x0) label: none
+*Jun 23 12:56:43.551: NHRP-CACHE-UPDATE tunnel: Tu1 target: 192.168.10. nbma_src: 2.2.2.1 vpn_src: 192.168.10.2 nbma_dest: 1.1.1.1 vpn_dest: 192.168.10.3 vrf: global(0x0) label: none
+*Jun 23 12:56:43.553: NHRP-TUNNEL-ENDPOINT-ADD tunnel: Tu1 Added tunnel endpoints nbma_dest: 1.1.1.1 vpn_dest: 192.168.10.3
+*Jun 23 12:56:43.553: NHRP-SUBBLOCK-ADD tunnel:  Successfuly attached nhrp subblock for tunnel endpoints nbma_dest: 1.1.1.1 vpn_dest: 192.168.10.3
+*Jun 23 12:56:43.553: NHRP-SB-NODE-CREATE tunnel: Tu1 Inserted subblock node for cache target: 192.168.10.3/0 nhop nbma_dest: 1.1.1.1 vpn_dest: 192.168.10.3
+*Jun 23 12:56:43.560: NHRP-SEND-RES-REQ tunnel: Tu1 host with nbma_src: 2.2.2.1 vpn_src: 192.168.10.2 send resolution request to nbma_dest: 1.1.1.1 vpn_dest: 192.168.10.3 vrf: global(0x0) label: none
+*Jun 23 12:56:43.568: NHRP-RECV-RES-REPLY tunnel: Tu1 host with nbma_src: 2.2.2.1 vpn_src: 192.168.10.2 received resolution reply from nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3 vrf: global(0x0) label: none
+*Jun 23 12:56:43.568: NHRP-CACHE-UPDATE tunnel: Tu1 target: 192.168.10. nbma_src: 2.2.2.1 vpn_src: 192.168.10.2 nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3 vrf: global(0x0) label: none
+*Jun 23 12:56:43.568: NHRP-SB-NODE-DELETE tunnel: Tu1 Deleted subblock node for cache target: 192.168.10.3/0 nhop nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3
+*Jun 23 12:56:43.568: NHRP-CACHE-NBMA-NHOP-CHANGE tunnel: Tu1 cache address change nbma old: 1.1.1.1 -> new: 3.3.3.1
+*Jun 23 12:56:43.568: NHRP-SUBBLOCK-DELETE tunnel:  removed nhrp subblock from the overlay endpoint
+*Jun 23 12:56:43.572: NHRP-TUNNEL-ENDPOINT-ADD tunnel: Tu1 Added tunnel endpoints nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3
+*Jun 23 12:56:43.572: NHRP-SUBBLOCK-ADD tunnel:  Successfuly attached nhrp subblock for tunnel endpoints nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3
+*Jun 23 12:56:43.572: NHRP-SB-NODE-CREATE tunnel: Tu1 Inserted subblock node for cache target: 192.168.10.3/0 nhop nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3
+*Jun 23 12:56:43.707: NHRP-RECV-RES-REQ tunnel: Tu1 host with nbma_src: 3.3.3.1 vpn_src: 192.168.10.3 received resolution request from nbma_dest: 2.2.2.1 vpn_dest: 192.168.10.2 vrf: global(0x0) label: none
+*Jun 23 12:56:43.707: NHRP-CACHE-ADD tunnel: Tu1 target: 192.168.10. nbma_src: 3.3.3.1 vpn_src: 192.168.10.3 nbma_dest: 2.2.2.1 vpn_dest: 192.168.10.2 vrf: global(0x0) label: none
+*Jun 23 12:56:43.710: NHRP-TUNNEL-ENDPOINT-ADD tunnel: Tu1 Added tunnel endpoints nbma_dest: 2.2.2.1 vpn_dest: 192.168.10.2
+*Jun 23 12:56:43.710: NHRP-SUBBLOCK-ADD tunnel:  Successfuly attached nhrp subblock for tunnel endpoints nbma_dest: 2.2.2.1 vpn_dest: 192.168.10.2
+*Jun 23 12:56:43.710: NHRP-SB-NODE-CREATE tunnel: Tu1 Inserted subblock node for cache target: 192.168.10.2/0 nhop nbma_dest: 2.2.2.1 vpn_dest: 192.168.10.2
+*Jun 23 12:56:43.711: NHRP-CACHE-ADD tunnel: Tu1 target: 192.168.10. nbma_src: 3.3.3.1 vpn_src: 192.168.10.3 nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3 vrf: global(0x0) label: none
+*Jun 23 12:56:43.712: NHRP-SEND-RES-REPLY tunnel: Tu1 host with nbma_src: 3.3.3.1 vpn_src: 192.168.10.3 send resolution reply to nbma_dest: 2.2.2.1 vpn_dest: 192.168.10.2 vrf: global(0x0) label: illegal
+*Jun 22 07:02:43.481: NHRP-RECV-PURGE-REQ tunnel: Tu1 host with nbma_src: 1.1.1.1 vpn_src: 192.168.10.1 receive purge request from nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3 vrf: global(0x0) label: explicit-null
+*Jun 22 07:05:32.471: NHRP-CACHE-UPDATE tunnel: Tu1 target: 192.168.10. nbma_src: 1.1.1.1 vpn_src: 192.168.10.1 nbma_dest: 2.2.2.1 vpn_dest: 192.168.10.2 vrf: global(0x0) label: none
+*Jun 22 07:05:32.471: NHRP-TUNNEL-ENDPOINT-ADD tunnel: Tu1 Added tunnel endpoints nbma_dest: 2.2.2.1 vpn_dest: 192.168.10.2
+*Jun 22 07:06:05.498: NHRP-CACHE-UPDATE tunnel: Tu1 target: 192.168.10. nbma_src: 1.1.1.1 vpn_src: 192.168.10.1 nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3 vrf: global(0x0) label: none
+*Jun 22 07:06:05.498: NHRP-TUNNEL-ENDPOINT-ADD tunnel: Tu1 Added tunnel endpoints nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3
+*Jun 22 07:06:06.423: NHRP-CACHE-DELETE tunnel: Tu1 nbma_src: 1.1.1.1 vpn_src: 0.0.0.0 nbma_dest: 2.2.2.1 vpn_dest: 192.168.10. vrf: global(0x0) label: none reason: EXT - Admin action (config/clear commands)
+*Jun 22 07:06:06.423: NHRP-SB-NODE-DELETE tunnel: Tu1 Deleted subblock node for cache target: 192.168.10.2/125 nhop nbma_dest: 2.2.2.1 vpn_dest: 192.168.10.2
+*Jun 22 07:06:06.424: NHRP-TUNNEL-ENDPOINT-DELETE tunnel: Tu1 Deleting tunnel endpoints nbma_dest: 2.2.2.1 vpn_dest: 192.168.10.2
+*Jun 22 07:06:06.424: NHRP-SUBBLOCK-DELETE tunnel:  removed nhrp subblock from the overlay endpoint
+*Jun 22 07:06:06.425: NHRP-CACHE-DELETE tunnel: Tu1 nbma_src: 1.1.1.1 vpn_src: 0.0.0.0 nbma_dest: 3.3.3.1 vpn_dest: 192.168.10. vrf: global(0x0) label: none reason: EXT - Admin action (config/clear commands)
+*Jun 22 07:06:06.425: NHRP-SB-NODE-DELETE tunnel: Tu1 Deleted subblock node for cache target: 192.168.10.3/125 nhop nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3
+*Jun 22 07:06:06.426: NHRP-TUNNEL-ENDPOINT-DELETE tunnel: Tu1 Deleting tunnel endpoints nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3
+*Jun 22 07:06:06.426: NHRP-SUBBLOCK-DELETE tunnel:  removed nhrp subblock from the overlay endpoint
+*Jun 22 07:06:10.528: NHRP-CACHE-DELETE tunnel: Tu1 nbma_src: 3.3.3.1 vpn_src: 0.0.0.0 nbma_dest: 1.1.1.1 vpn_dest: 192.168.10. vrf: global(0x0) label: none reason: EXT - Admin action (config/clear commands)
+*Jun 22 07:06:10.528: NHRP-SB-NODE-DELETE tunnel: Tu1 Deleted subblock node for cache target: 192.168.10.1/4 nhop nbma_dest: 1.1.1.1 vpn_dest: 192.168.10.1
+*Jun 22 07:06:10.528: NHRP-TUNNEL-ENDPOINT-DELETE tunnel: Tu1 Deleting tunnel endpoints nbma_dest: 1.1.1.1 vpn_dest: 192.168.10.1
+*Jun 22 07:06:10.528: NHRP-SUBBLOCK-DELETE tunnel:  removed nhrp subblock from the overlay endpoint
+*Jun 22 07:06:10.841: NHRP-SEND-PURGE-REQ tunnel: Tu1 host with nbma_src: 3.3.3.1 vpn_src: 0.0.0.0 send purge request to nbma_dest: UNKNOWN vpn_dest: 192.168.10.1 vrf: global(0x0) label: none
+*Jun 22 07:06:10.841: NHRP-CACHE-DELETE tunnel: Tu1 nbma_src: 3.3.3.1 vpn_src: 0.0.0.0 nbma_dest: 2.2.2.1 vpn_dest: 192.168.10. vrf: global(0x0) label: none reason: EXT - Admin action (config/clear commands)
+*Jun 22 07:06:10.841: NHRP-SB-NODE-DELETE tunnel: Tu1 Deleted subblock node for cache target: 192.168.10.2/0 nhop nbma_dest: 2.2.2.1 vpn_dest: 192.168.10.2
+*Jun 22 07:06:10.842: NHRP-TUNNEL-ENDPOINT-DELETE tunnel: Tu1 Deleting tunnel endpoints nbma_dest: 2.2.2.1 vpn_dest: 192.168.10.2
+*Jun 22 07:06:10.842: NHRP-SUBBLOCK-DELETE tunnel:  removed nhrp subblock from the overlay endpoint
+*Jun 22 07:06:10.842: NHRP-CACHE-DELETE tunnel: Tu1 nbma_src: 3.3.3.1 vpn_src: 0.0.0.0 nbma_dest: 3.3.3.1 vpn_dest: 192.168.10. vrf: global(0x0) label: none reason: EXT - Admin action (config/clear commands)
+*Jun 22 08:56:36.789: NHRP-CACHE-DELETE tunnel: Tu1 nbma_src: 1.1.1.1 vpn_src: 192.168.10.1 nbma_dest: 2.2.2.1 vpn_dest: 192.168.10. vrf: global(0x0) label: none reason: EXT - Tunnel Interface AdminDown
+*Jun 22 08:56:36.789: NHRP-SB-NODE-DELETE tunnel: Tu1 Deleted subblock node for cache target: 192.168.10.2/125 nhop nbma_dest: 2.2.2.1 vpn_dest: 192.168.10.2
+*Jun 22 08:56:36.790: NHRP-TUNNEL-ENDPOINT-DELETE tunnel: Tu1 Deleting tunnel endpoints nbma_dest: 2.2.2.1 vpn_dest: 192.168.10.2
+*Jun 22 08:56:36.790: NHRP-SUBBLOCK-DELETE tunnel:  removed nhrp subblock from the overlay endpoint
+*Jun 22 08:56:36.793: NHRP-CACHE-DELETE tunnel: Tu1 nbma_src: 1.1.1.1 vpn_src: 192.168.10.1 nbma_dest: 3.3.3.1 vpn_dest: 192.168.10. vrf: global(0x0) label: none reason: EXT - Tunnel Interface AdminDown
+*Jun 22 08:56:36.794: NHRP-SB-NODE-DELETE tunnel: Tu1 Deleted subblock node for cache target: 192.168.10.3/0 nhop nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3
+*Jun 22 08:56:36.794: NHRP-TUNNEL-ENDPOINT-DELETE tunnel: Tu1 Deleting tunnel endpoints nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3
+*Jun 22 08:56:36.794: NHRP-SUBBLOCK-DELETE tunnel:  removed nhrp subblock from the overlay endpoint
+*Jun 22 09:00:12.851: NHRP-CACHE-DELETE tunnel: Tu1 nbma_src: 2.2.2.1 vpn_src: 0.0.0.0 nbma_dest: 1.1.1.1 vpn_dest: 192.168.10. vrf: global(0x0) label: none reason: EXT - Admin action (config/clear commands)
+*Jun 22 09:00:12.851: NHRP-SB-NODE-DELETE tunnel: Tu1 Deleted subblock node for cache target: 192.168.10.1/0 nhop nbma_dest: 1.1.1.1 vpn_dest: 192.168.10.1
+*Jun 22 09:00:12.851: NHRP-TUNNEL-ENDPOINT-DELETE tunnel: Tu1 Deleting tunnel endpoints nbma_dest: 1.1.1.1 vpn_dest: 192.168.10.1
+*Jun 22 09:00:12.851: NHRP-SUBBLOCK-DELETE tunnel:  removed nhrp subblock from the overlay endpoint
+*Jun 22 09:00:13.165: NHRP-SEND-PURGE-REQ tunnel: Tu1 host with nbma_src: 2.2.2.1 vpn_src: 0.0.0.0 send purge request to nbma_dest: UNKNOWN vpn_dest: 192.168.10.1 vrf: global(0x0) label: none
+*Jun 22 09:00:13.165: NHRP-CACHE-DELETE tunnel: Tu1 nbma_src: 2.2.2.1 vpn_src: 0.0.0.0 nbma_dest: 3.3.3.1 vpn_dest: 192.168.10. vrf: global(0x0) label: none reason: EXT - Admin action (config/clear commands)
+*Jun 22 09:00:13.165: NHRP-SB-NODE-DELETE tunnel: Tu1 Deleted subblock node for cache target: 192.168.10.3/0 nhop nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3
+*Jun 22 09:00:13.166: NHRP-TUNNEL-ENDPOINT-DELETE tunnel: Tu1 Deleting tunnel endpoints nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3
+*Jun 22 09:00:13.166: NHRP-SUBBLOCK-DELETE tunnel:  removed nhrp subblock from the overlay endpoint
+*Jun 22 09:00:15.505: NHRP-CACHE-DELETE tunnel: Tu1 nbma_src: 3.3.3.1 vpn_src: 0.0.0.0 nbma_dest: 1.1.1.1 vpn_dest: 192.168.10. vrf: global(0x0) label: none reason: EXT - Admin action (config/clear commands)
+*Jun 22 09:00:15.505: NHRP-SB-NODE-DELETE tunnel: Tu1 Deleted subblock node for cache target: 192.168.10.1/4 nhop nbma_dest: 1.1.1.1 vpn_dest: 192.168.10.1
+*Jun 22 09:00:15.505: NHRP-TUNNEL-ENDPOINT-DELETE tunnel: Tu1 Deleting tunnel endpoints nbma_dest: 1.1.1.1 vpn_dest: 192.168.10.1
+*Jun 22 09:00:15.505: NHRP-SUBBLOCK-DELETE tunnel:  removed nhrp subblock from the overlay endpoint
+*Jun 22 09:00:15.810: NHRP-SEND-PURGE-REQ tunnel: Tu1 host with nbma_src: 3.3.3.1 vpn_src: 0.0.0.0 send purge request to nbma_dest: UNKNOWN vpn_dest: 192.168.10.1 vrf: global(0x0) label: none
+*Jun 22 09:00:15.810: NHRP-CACHE-DELETE tunnel: Tu1 nbma_src: 3.3.3.1 vpn_src: 0.0.0.0 nbma_dest: 2.2.2.1 vpn_dest: 192.168.10. vrf: global(0x0) label: none reason: EXT - Admin action (config/clear commands)
+*Jun 22 09:00:15.810: NHRP-SB-NODE-DELETE tunnel: Tu1 Deleted subblock node for cache target: 192.168.10.2/0 nhop nbma_dest: 2.2.2.1 vpn_dest: 192.168.10.2
+*Jun 22 09:00:15.810: NHRP-TUNNEL-ENDPOINT-DELETE tunnel: Tu1 Deleting tunnel endpoints nbma_dest: 2.2.2.1 vpn_dest: 192.168.10.2
+*Jun 22 09:00:15.810: NHRP-SUBBLOCK-DELETE tunnel:  removed nhrp subblock from the overlay endpoint
+*Jun 22 09:00:15.811: NHRP-CACHE-DELETE tunnel: Tu1 nbma_src: 3.3.3.1 vpn_src: 0.0.0.0 nbma_dest: 3.3.3.1 vpn_dest: 192.168.10. vrf: global(0x0) label: none reason: EXT - Admin action (config/clear commands)
+*Jun 23 13:48:45.584: NHRP-CACHE-ADD tunnel: Tu1 target: 192.168.10. nbma_src: 1.1.1.1 vpn_src: 192.168.10.1 nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3 vrf: global(0x0) label: none
+*Jun 23 13:48:45.588: NHRP-TUNNEL-ENDPOINT-ADD tunnel: Tu1 Added tunnel endpoints nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3
+*Jun 23 13:48:45.588: NHRP-SUBBLOCK-ADD tunnel:  Successfuly attached nhrp subblock for tunnel endpoints nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3
+*Jun 23 13:48:45.588: NHRP-SB-NODE-CREATE tunnel: Tu1 Inserted subblock node for cache target: 192.168.10.3/125 nhop nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3
+*Jun 23 13:48:50.000: NHRP-RECV-PURGE-REQ tunnel: Tu1 host with nbma_src: 1.1.1.1 vpn_src: 192.168.10.1 receive purge request from nbma_dest: 2.2.2.1 vpn_dest: 192.168.10.2 vrf: global(0x0) label: explicit-null
+*Jun 23 13:51:23.557: NHRP-RECV-PURGE-REQ tunnel: Tu1 host with nbma_src: 1.1.1.1 vpn_src: 192.168.10.2 receive purge request from nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3 vrf: global(0x0) label: explicit-null
+*Jun 23 13:51:38.852: NHRP-CACHE-UPDATE tunnel: Tu1 target: 192.168.10. nbma_src: 1.1.1.1 vpn_src: 192.168.10.1 nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3 vrf: global(0x0) label: none
+*Jun 23 13:51:38.852: NHRP-TUNNEL-ENDPOINT-ADD tunnel: Tu1 Added tunnel endpoints nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3
+*Jun 23 13:54:58.853: NHRP-CACHE-UPDATE tunnel: Tu1 target: 192.168.10. nbma_src: 1.1.1.1 vpn_src: 192.168.10.1 nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3 vrf: global(0x0) label: none
+*Jun 23 13:54:58.853: NHRP-TUNNEL-ENDPOINT-ADD tunnel: Tu1 Added tunnel endpoints nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3
+*Jun 23 13:58:18.854: NHRP-CACHE-UPDATE tunnel: Tu1 target: 192.168.10. nbma_src: 1.1.1.1 vpn_src: 192.168.10.1 nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3 vrf: global(0x0) label: none
+*Jun 23 13:58:18.854: NHRP-TUNNEL-ENDPOINT-ADD tunnel: Tu1 Added tunnel endpoints nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3
+*Jun 23 14:01:38.855: NHRP-CACHE-UPDATE tunnel: Tu1 target: 192.168.10. nbma_src: 1.1.1.1 vpn_src: 192.168.10.1 nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3 vrf: global(0x0) label: none
+*Jun 23 14:01:38.855: NHRP-TUNNEL-ENDPOINT-ADD tunnel: Tu1 Added tunnel endpoints nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3
+*Jun 23 14:04:58.854: NHRP-CACHE-UPDATE tunnel: Tu1 target: 192.168.10. nbma_src: 1.1.1.1 vpn_src: 192.168.10.1 nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3 vrf: global(0x0) label: none
+*Jun 23 14:04:58.854: NHRP-TUNNEL-ENDPOINT-ADD tunnel: Tu1 Added tunnel endpoints nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3
+*Jun 23 14:08:18.854: NHRP-CACHE-UPDATE tunnel: Tu1 target: 192.168.10. nbma_src: 1.1.1.1 vpn_src: 192.168.10.1 nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3 vrf: global(0x0) label: none
+*Jun 23 14:08:18.854: NHRP-TUNNEL-ENDPOINT-ADD tunnel: Tu1 Added tunnel endpoints nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3
+*Jun 23 14:11:38.855: NHRP-CACHE-UPDATE tunnel: Tu1 target: 192.168.10. nbma_src: 1.1.1.1 vpn_src: 192.168.10.1 nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3 vrf: global(0x0) label: none
+*Jun 23 14:11:38.855: NHRP-TUNNEL-ENDPOINT-ADD tunnel: Tu1 Added tunnel endpoints nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3
+*Jun 23 13:48:49.757: NHRP-SEND-PURGE-REQ tunnel: Tu1 host with nbma_src: 2.2.2.1 vpn_src: 192.168.10.2 send purge request to nbma_dest: UNKNOWN vpn_dest: 192.168.10.1 vrf: global(0x0) label: none
+*Jun 23 13:51:22.428: NHRP-CACHE-DELETE tunnel: Tu1 nbma_src: 2.2.2.1 vpn_src: 192.168.10.2 nbma_dest: 3.3.3.1 vpn_dest: 192.168.10. vrf: global(0x0) label: none reason: No Reason
+*Jun 23 13:51:22.428: NHRP-SB-NODE-DELETE tunnel: Tu1 Deleted subblock node for cache target: 192.168.10.3/0 nhop nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3
+*Jun 23 13:51:22.429: NHRP-TUNNEL-ENDPOINT-DELETE tunnel: Tu1 Deleting tunnel endpoints nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3
+*Jun 23 13:51:22.429: NHRP-SUBBLOCK-DELETE tunnel:  removed nhrp subblock from the overlay endpoint
+*Jun 23 13:51:22.569: NHRP-CACHE-DELETE tunnel: Tu1 nbma_src: 3.3.3.1 vpn_src: 192.168.10.3 nbma_dest: 2.2.2.1 vpn_dest: 192.168.10. vrf: global(0x0) label: none reason: No Reason
+*Jun 23 13:51:22.569: NHRP-SB-NODE-DELETE tunnel: Tu1 Deleted subblock node for cache target: 192.168.10.2/4 nhop nbma_dest: 2.2.2.1 vpn_dest: 192.168.10.2
+*Jun 23 13:51:22.571: NHRP-TUNNEL-ENDPOINT-DELETE tunnel: Tu1 Deleting tunnel endpoints nbma_dest: 2.2.2.1 vpn_dest: 192.168.10.2
+*Jun 23 13:51:22.571: NHRP-SUBBLOCK-DELETE tunnel:  removed nhrp subblock from the overlay endpoint
+*Jun 23 13:51:22.574: NHRP-CACHE-DELETE tunnel: Tu1 nbma_src: 3.3.3.1 vpn_src: 192.168.10.3 nbma_dest: 3.3.3.1 vpn_dest: 192.168.10. vrf: global(0x0) label: none reason: No Reason
+*Jun 23 13:51:23.462: NHRP-SEND-PURGE-REQ tunnel: Tu1 host with nbma_src: 3.3.3.1 vpn_src: 192.168.10.3 send purge request to nbma_dest: UNKNOWN vpn_dest: 192.168.10.2 vrf: global(0x0) label: none
+
+
+
+
+
+
+
+nhrp_error:
+
+*Jun 22 06:39:25.903: NHRP-EXIT-PATH-ERR tunnel: Tu1 Unable to send Registration - no NHSes configured
+*Jun 22 06:39:26.902: NHRP-EXIT-PATH-ERR tunnel: Tu1 Unable to send Registration - no NHSes configured
+*Jun 22 06:39:52.244: NHRP-EXIT-PATH-ERR tunnel: Tu1 Unable to send Registration - no NHSes configured
+*Jun 22 06:39:52.247: NHRP-EXIT-PATH-ERR tunnel: Tu1 Unable to send Registration - no NHSes configured
+*Jun 22 06:39:27.417: NHRP-CTRL-PLANE-RETRANS tunnel: Tu1 retransmitting registration request for vpn_dest: 192.168.10.1 reqid 589 retrans ivl 2 sec vrf: NONE label: explicit-null
+*Jun 22 06:39:28.923: NHRP-CTRL-PLANE-RETRANS tunnel: Tu1 retransmitting registration request for vpn_dest: 192.168.10.1 reqid 589 retrans ivl 4 sec vrf: NONE label: explicit-null
+*Jun 22 06:39:54.633: NHRP-EXIT-PATH-ERR tunnel: Gi1 nhrp_write:netid not configured/mismatch
+*Jun 22 06:39:28.262: NHRP-CTRL-PLANE-RETRANS tunnel: Tu1 retransmitting registration request for vpn_dest: 192.168.10.1 reqid 2802 retrans ivl 2 sec vrf: NONE label: explicit-null
+*Jun 22 06:39:57.095: NHRP-EXIT-PATH-ERR tunnel: Gi1 nhrp_write:netid not configured/mismatch
+*Jun 22 06:51:24.237: NHRP-EXIT-PATH-ERR tunnel: Tu1 Unable to send Registration - no NHSes configured
+*Jun 22 06:51:24.239: NHRP-EXIT-PATH-ERR tunnel: Tu1 Unable to send Registration - no NHSes configured
+*Jun 22 07:06:05.822: NHRP-EXIT-PATH-ERR tunnel: Tu1 Unable to send Registration - no NHSes configured
+*Jun 22 07:06:05.824: NHRP-EXIT-PATH-ERR tunnel: Tu1 Unable to send Registration - no NHSes configured
+*Jun 22 07:05:23.196: NHRP-EXIT-PATH-ERR tunnel: Tu1 Unable to send Registration - no NHSes configured
+*Jun 22 07:06:10.839: NHRP-EXIT-PATH-ERR tunnel: Gi1 nhrp_write:netid not configured/mismatch
+*Jun 22 07:06:10.840: NHRP-EXIT-PATH-ERR tunnel: Gi1 nhrp_write:netid not configured/mismatch
+*Jun 22 08:59:23.404: NHRP-CTRL-PLANE-RETRANS tunnel: Tu1 retransmitting registration request for vpn_dest: 192.168.10.1 reqid 608 retrans ivl 2 sec vrf: NONE label: explicit-null
+*Jun 22 08:59:25.064: NHRP-CTRL-PLANE-RETRANS tunnel: Tu1 retransmitting registration request for vpn_dest: 192.168.10.1 reqid 608 retrans ivl 4 sec vrf: NONE label: explicit-null
+*Jun 22 08:59:28.072: NHRP-CTRL-PLANE-RETRANS tunnel: Tu1 retransmitting registration request for vpn_dest: 192.168.10.1 reqid 608 retrans ivl 8 sec vrf: NONE label: explicit-null
+*Jun 22 08:59:35.292: NHRP-CTRL-PLANE-RETRANS tunnel: Tu1 retransmitting registration request for vpn_dest: 192.168.10.1 reqid 608 retrans ivl 16 sec vrf: NONE label: explicit-null
+*Jun 22 08:59:49.979: NHRP-CTRL-PLANE-RETRANS tunnel: Tu1 retransmitting registration request for vpn_dest: 192.168.10.1 reqid 608 retrans ivl 32 sec vrf: NONE label: explicit-null
+*Jun 22 09:00:13.164: NHRP-EXIT-PATH-ERR tunnel: Gi1 nhrp_write:netid not configured/mismatch
+Jun 23 13:48:34.477: NHRP-EXIT-PATH-ERR tunnel: Tu1 Unable to send Registration - no NHSes configured
+*Jun 23 13:48:35.478: NHRP-EXIT-PATH-ERR tunnel: Tu1 Unable to send Registration - no NHSes configured
+*Jun 23 13:48:36.478: NHRP-EXIT-PATH-ERR tunnel: Tu1 Unable to send Registration - no NHSes configured
+*Jun 23 13:51:23.556: NHRP-EXIT-PATH-ERR tunnel: Tu1 nhrp_write:Encapsulation Failed
+*Jun 23 13:51:23.558: NHRP-REPLY-NAK tunnel: Tu1 sending error indication for received pak: purge request with pak vpn_src: 192.168.10.3 vpn_dest: 192.168.10.2 err_code: protocol generic error
+*Jun 23 13:51:23.559: NHRP-SEND-ERROR-INDICATION tunnel: Tu1 sending error indication for received pak: purge request with pak vpn_src: 192.168.10.3 vpn_dest: 192.168.10.2 err_code: protocol generic error
+*Jun 23 13:50:55.988: NHRP-EXIT-PATH-ERR tunnel: Tu1 Unable to send Registration - no NHSes configured
+Jun 23 13:48:45.489: NHRP-CTRL-PLANE-RETRANS tunnel: Tu1 retransmitting registration request for vpn_dest: 192.168.10.1 reqid 3188 retrans ivl 32 sec vrf: NONE label: explicit-null
+*Jun 23 13:51:23.462: NHRP-EXIT-PATH-ERR tunnel: Tu1 nhrp_write:Encapsulation Failed
+*Jun 23 13:51:23.466: NHRP-RECV-ERROR-INDICATION tunnel: Tu1 receiving error indication for sent pak: purge request with pak vpn_src: 192.168.10.3 vpn_dest: 192.168.10.2 err_code: protocol generic error
+*Jun 23 13:51:23.559: NHRP-SEND-ERROR-INDICATION tunnel: Tu1 sending error indication for received pak: purge request with pak vpn_src: 192.168.10.3 vpn_dest: 192.168.10.2 err_code: protocol generic error
+*Jun 23 13:51:23.558: NHRP-REPLY-NAK tunnel: Tu1 sending error indication for received pak: purge request with pak vpn_src: 192.168.10.3 vpn_dest: 192.168.10.2 err_code: protocol generic error
+*Jun 23 13:51:22.570: NHRP-NHP-DOWN tunnel: Tu1 NHP down nbma_src: 3.3.3.1 vpn_src: 192.168.10.3 nbma_dest: 2.2.2.1 vpn_dest: 192.168.10.2 vrf: global(0x0) reason: No Reason
+
+
+nhrp_exception:
+
+*Jun 22 06:39:28.361: NHRP-NHC-UP tunnel: Tu1 NHC up nbma_src: 1.1.1.1 vpn_src: 192.168.10.1 nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3 vrf: global(0x0)
+*Jun 22 06:39:29.169: NHRP-NHC-UP tunnel: Tu1 NHC up nbma_src: 1.1.1.1 vpn_src: 192.168.10.1 nbma_dest: 2.2.2.1 vpn_dest: 192.168.10.2 vrf: global(0x0)
+*Jun 22 06:39:52.827: NHRP-NHC-DOWN tunnel: Tu1 NHC down nbma_src: 1.1.1.1 vpn_src: 0.0.0.0 nbma_dest: 2.2.2.1 vpn_dest: 192.168.10.2 vrf: global(0x0) reason: EXT - Admin action (config/clear commands)
+*Jun 22 06:39:52.828: NHRP-NHC-DOWN tunnel: Tu1 NHC down nbma_src: 1.1.1.1 vpn_src: 0.0.0.0 nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3 vrf: global(0x0) reason: EXT - Admin action (config/clear commands)
+*Jun 22 06:39:28.361: NHRP-NHC-UP tunnel: Tu1 NHC up nbma_src: 1.1.1.1 vpn_src: 192.168.10.1 nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3 vrf: global(0x0)
+*Jun 22 06:39:29.169: NHRP-NHC-UP tunnel: Tu1 NHC up nbma_src: 1.1.1.1 vpn_src: 192.168.10.1 nbma_dest: 2.2.2.1 vpn_dest: 192.168.10.2 vrf: global(0x0)
+*Jun 22 06:39:52.827: NHRP-NHC-DOWN tunnel: Tu1 NHC down nbma_src: 1.1.1.1 vpn_src: 0.0.0.0 nbma_dest: 2.2.2.1 vpn_dest: 192.168.10.2 vrf: global(0x0) reason: EXT - Admin action (config/clear commands)
+*Jun 22 06:39:52.828: NHRP-NHC-DOWN tunnel: Tu1 NHC down nbma_src: 1.1.1.1 vpn_src: 0.0.0.0 nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3 vrf: global(0x0) reason: EXT - Admin action (config/clear commands)
+*Jun 22 06:39:26.498: NHRP-NHS-RECOVERY-NHS-STATE  NHS vpn_dest: 192.168.10.1 Tunnel1 vrf 0 cluster 0 priority 0 transitioned to 'expecting replies' from ' ' 
+
+*Jun 22 06:39:28.930: NHRP-NHS-UP tunnel: Tu1 NHS up nbma_src: 2.2.2.1 vpn_src: 192.168.10.2 nbma_dest: 1.1.1.1 vpn_dest: 192.168.10.1 vrf: global(0x0)
+*Jun 22 06:39:54.342: NHRP-NHS-DOWN tunnel: Tu1 NHS down nbma_src: 2.2.2.1 vpn_src: 0.0.0.0 nbma_dest: 1.1.1.1 vpn_dest: 192.168.10.1 vrf: global(0x0) reason: EXT - Admin action (config/clear commands)
+*Jun 22 06:39:54.343: NHRP-NHS-RECOVERY-NHS-STATE  NHS vpn_dest: 192.168.10.1 Tunnel1 vrf 0 cluster 0 priority 0 transitioned to 'expecting replies' from 'responding expecting replies' 
+*Jun 22 06:39:27.475: NHRP-NHS-RECOVERY-NHS-STATE  NHS vpn_dest: 192.168.10.1 Tunnel1 vrf 0 cluster 0 priority 0 transitioned to 'expecting replies' from ' ' 
+
+*Jun 22 06:39:28.270: NHRP-NHS-UP tunnel: Tu1 NHS up nbma_src: 3.3.3.1 vpn_src: 192.168.10.3 nbma_dest: 1.1.1.1 vpn_dest: 192.168.10.1 vrf: global(0x0)
+*Jun 22 06:39:56.804: NHRP-NHS-DOWN tunnel: Tu1 NHS down nbma_src: 3.3.3.1 vpn_src: 0.0.0.0 nbma_dest: 1.1.1.1 vpn_dest: 192.168.10.1 vrf: global(0x0) reason: EXT - Admin action (config/clear commands)
+*Jun 22 06:39:56.805: NHRP-NHS-RECOVERY-NHS-STATE  NHS vpn_dest: 192.168.10.1 Tunnel1 vrf 0 cluster 0 priority 0 transitioned to 'expecting replies' from 'responding expecting replies' 
+*Jun 22 06:51:24.826: NHRP-NHC-DOWN tunnel: Tu1 NHC down nbma_src: 1.1.1.1 vpn_src: 0.0.0.0 nbma_dest: 2.2.2.1 vpn_dest: 192.168.10.2 vrf: global(0x0) reason: EXT - Admin action (config/clear commands)
+*Jun 22 06:51:24.828: NHRP-NHC-DOWN tunnel: Tu1 NHC down nbma_src: 1.1.1.1 vpn_src: 0.0.0.0 nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3 vrf: global(0x0) reason: EXT - Admin action (config/clear commands)
+*Jun 23 12:56:43.572: NHRP-NHP-UP tunnel: Tu1 NHP up nbma_src: 2.2.2.1 vpn_src: 192.168.10.2 nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3 vrf: global(0x0)
+*Jun 23 12:56:43.710: NHRP-NHP-UP tunnel: Tu1 NHP up nbma_src: 3.3.3.1 vpn_src: 192.168.10.3 nbma_dest: 2.2.2.1 vpn_dest: 192.168.10.2 vrf: global(0x0)
+*Jun 22 07:06:06.424: NHRP-NHC-DOWN tunnel: Tu1 NHC down nbma_src: 1.1.1.1 vpn_src: 0.0.0.0 nbma_dest: 2.2.2.1 vpn_dest: 192.168.10.2 vrf: global(0x0) reason: EXT - Admin action (config/clear commands)
+*Jun 22 07:06:06.425: NHRP-NHC-DOWN tunnel: Tu1 NHC down nbma_src: 1.1.1.1 vpn_src: 0.0.0.0 nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3 vrf: global(0x0) reason: EXT - Admin action (config/clear commands)
+*Jun 22 07:02:43.386: NHRP-NHS-DOWN tunnel: Tu1 NHS down nbma_src: 3.3.3.1 vpn_src: 192.168.10.3 nbma_dest: 1.1.1.1 vpn_dest: 192.168.10.1 vrf: global(0x0) reason: EXT - Admin action (config/clear commands)
+*Jun 22 07:02:43.387: NHRP-NHS-RECOVERY-NHS-STATE  NHS vpn_dest: 192.168.10.1 Tunnel1 vrf 0 cluster 0 priority 0 transitioned to 'expecting replies' from 'responding expecting replies' 
+
+*Jun 22 07:02:43.387: NHRP-NHP-UP tunnel: Tu1 NHP up nbma_src: 3.3.3.1 vpn_src: 192.168.10.3 nbma_dest: 1.1.1.1 vpn_dest: 192.168.10.1 vrf: global(0x0)
+*Jun 22 07:06:05.400: NHRP-NHP-DOWN tunnel: Tu1 NHP down nbma_src: 3.3.3.1 vpn_src: 192.168.10.3 nbma_dest: 1.1.1.1 vpn_dest: 192.168.10.1 vrf: global(0x0) reason: EXT - Admin action (config/clear commands)
+*Jun 22 07:06:05.402: NHRP-NHS-RECOVERY-NHS-STATE  NHS vpn_dest: 192.168.10.1 Tunnel1 vrf 0 cluster 0 priority 0 transitioned to 'expecting replies' from ' ' 
+
+*Jun 22 07:06:05.404: NHRP-NHS-UP tunnel: Tu1 NHS up nbma_src: 3.3.3.1 vpn_src: 192.168.10.3 nbma_dest: 1.1.1.1 vpn_dest: 192.168.10.1 vrf: global(0x0)
+*Jun 22 07:06:10.841: NHRP-NHP-DOWN tunnel: Tu1 NHP down nbma_src: 3.3.3.1 vpn_src: 0.0.0.0 nbma_dest: 2.2.2.1 vpn_dest: 192.168.10.2 vrf: global(0x0) reason: EXT - Admin action (config/clear commands)
+*Jun 22 08:56:36.789: NHRP-NHC-DOWN tunnel: Tu1 NHC down nbma_src: 1.1.1.1 vpn_src: 192.168.10.1 nbma_dest: 2.2.2.1 vpn_dest: 192.168.10.2 vrf: global(0x0) reason: EXT - Tunnel Interface AdminDown
+*Jun 22 08:56:36.794: NHRP-NHC-DOWN tunnel: Tu1 NHC down nbma_src: 1.1.1.1 vpn_src: 192.168.10.1 nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3 vrf: global(0x0) reason: EXT - Tunnel Interface AdminDown
+*Jun 22 08:59:28.070: NHRP-NHS-DOWN tunnel: Tu1 NHS down nbma_src: 2.2.2.1 vpn_src: 192.168.10.2 nbma_dest: 1.1.1.1 vpn_dest: 192.168.10.1 vrf: global(0x0) reason: NHRP - Registration Failure
+*Jun 22 08:59:28.071: NHRP-NHS-RECOVERY-NHS-STATE  NHS vpn_dest: 192.168.10.1 Tunnel1 vrf 0 cluster 0 priority 0 transitioned to 'expecting replies' from 'responding expecting replies' 
+
+*Jun 22 09:00:13.165: NHRP-NHP-DOWN tunnel: Tu1 NHP down nbma_src: 2.2.2.1 vpn_src: 0.0.0.0 nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3 vrf: global(0x0) reason: EXT - Admin action (config/clear commands)
+*Jun 22 09:00:00.997: NHRP-NHS-DOWN tunnel: Tu1 NHS down nbma_src: 3.3.3.1 vpn_src: 192.168.10.3 nbma_dest: 1.1.1.1 vpn_dest: 192.168.10.1 vrf: global(0x0) reason: NHRP - Registration Failure
+*Jun 22 09:00:00.998: NHRP-NHS-RECOVERY-NHS-STATE  NHS vpn_dest: 192.168.10.1 Tunnel1 vrf 0 cluster 0 priority 0 transitioned to 'expecting replies' from 'responding expecting replies' 
+
+*Jun 22 09:00:15.810: NHRP-NHP-DOWN tunnel: Tu1 NHP down nbma_src: 3.3.3.1 vpn_src: 0.0.0.0 nbma_dest: 2.2.2.1 vpn_dest: 192.168.10.2 vrf: global(0x0) reason: EXT - Admin action (config/clear commands)
+*Jun 23 13:48:45.587: NHRP-NHC-UP tunnel: Tu1 NHC up nbma_src: 1.1.1.1 vpn_src: 192.168.10.1 nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3 vrf: global(0x0)
+*Jun 23 13:48:49.757: NHRP-NHP-UP tunnel: Tu1 NHP up nbma_src: 2.2.2.1 vpn_src: 192.168.10.2 nbma_dest: 1.1.1.1 vpn_dest: 192.168.10.1 vrf: global(0x0)
+*Jun 23 13:51:22.428: NHRP-NHP-DOWN tunnel: Tu1 NHP down nbma_src: 2.2.2.1 vpn_src: 192.168.10.2 nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3 vrf: global(0x0) reason: No Reason
+*Jun 23 13:48:45.497: NHRP-NHS-RECOVERY-NHS-STATE  NHS vpn_dest: 192.168.10.1 Tunnel1 vrf 0 cluster 0 priority 0 transitioned to 'responding expecting replies' from 'expecting replies' 
+
+*Jun 23 13:48:45.497: NHRP-NHS-UP tunnel: Tu1 NHS up nbma_src: 3.3.3.1 vpn_src: 192.168.10.3 nbma_dest: 1.1.1.1 vpn_dest: 192.168.10.1 vrf: global(0x0)
+*Jun 23 13:51:22.570: NHRP-NHP-DOWN tunnel: Tu1 NHP down nbma_src: 3.3.3.1 vpn_src: 192.168.10.3 nbma_dest: 2.2.2.1 vpn_dest: 192.168.10.2 vrf: global(0x0) reason: No Reason
+
+
+tp_ss_events:
+
+Tracing currently disabled, from exec command
+
+interrupt context allocation count = 0
+
+Hub#
+
+nhrp_event:
+
+*Jul 27 07:30:25.534: NHRP-TUNNEL-ENDPOINT-ADD tunnel: Tu1 add/update tunnel endpoints nbma_dest: 1.1.1.1 vpn_dest: 192.168.10.1
+*Jul 27 13:40:27.167: NHRP-TUNNEL-ENDPOINT-ADD tunnel: Tu1 add/update tunnel endpoints nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3
+*Jul 27 13:40:27.381: NHRP-TUNNEL-ENDPOINT-ADD tunnel: Tu1 add/update tunnel endpoints nbma_dest: 2.2.2.1 vpn_dest: 192.168.10.2
+
+nhrp_error:
+
+*Aug 14 09:23:53.935: NHRP-CTRL-PLANE-RETRANS tunnel: Tu1 retransmitting Registration Request for vpn_dest: 192.168.10.1 reqid 123 retrans 2 sec vrf: global(0x0) label: explicit-null
+*Aug 14 09:23:55.457: NHRP-CTRL-PLANE-RETRANS tunnel: Tu1 retransmitting Registration Request for vpn_dest: 192.168.10.1 reqid 123 retrans 4 sec vrf: global(0x0) label: explicit-null
+*Aug 15 13:59:48.248: NHRP-NHP-DOWN tunnel: Tu1 NHP down nbma_src: 2.2.2.1 vpn_src: 192.168.10.2 nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3 vrf: global(0x0) reason: NHRP - Hold time expiry

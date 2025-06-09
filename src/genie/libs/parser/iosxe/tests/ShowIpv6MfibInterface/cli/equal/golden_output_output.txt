@@ -1,0 +1,15 @@
+IPv6 Multicast Forwarding (MFIB) status:
+    Configuration Status: enabled
+    Operational Status: running
+    Initialization State: Running
+    Total signalling packets queued: 0
+    Process Status: may enable - 3 - pid 711
+    Tables 1/1/0 (active/mrib/io)
+
+MFIB interface             status    CEF-based output
+                                  [configured,available]
+TenGigabitEthernet0/1/0    up     [yes       ,yes      ]
+TenGigabitEthernet0/1/1    up     [yes       ,yes      ]
+Tunnel0                    up     [yes       ,no       ]
+Tunnel1                    up     [yes       ,yes      ]
+Tunnel2                    up     [yes       ,no       ]

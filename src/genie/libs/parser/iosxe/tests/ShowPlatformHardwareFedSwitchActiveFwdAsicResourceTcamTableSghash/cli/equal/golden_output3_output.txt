@@ -1,0 +1,17 @@
+S1-UUT#show platform hardware fed switch active fwd-asic insight sgmatrix(max_asic=1,sgt=4,dgt=6,protocol_in='ipv6') 
+
+-------------------------- List of SG-ACL Matrix Cells for Device ID = 0 --------------------------- 
+
+Total Entries: 7 
+
+S_NO    SGT        DGT             Monitor Mode    ACL_ID     IP_version 
+
+1       4          6               0               5          ipv4       
+
+2       5          6               0               7          ipv4       
+
+3       40002      40004           0               8          ipv6       
+
+5       65535      65534           0               6          ipv6       
+
+7       65535      65535           0               0          ipv6   

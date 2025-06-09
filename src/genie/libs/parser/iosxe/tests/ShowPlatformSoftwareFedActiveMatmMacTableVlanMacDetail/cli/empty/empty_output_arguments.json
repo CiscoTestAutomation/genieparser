@@ -1,0 +1,6 @@
+{
+    "switch": "switch",
+    "mode": "active",
+    "vlan_id": "300",
+    "dynamic_mac": "0030.8200.21e7"
+}

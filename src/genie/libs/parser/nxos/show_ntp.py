@@ -53,6 +53,7 @@ class ShowNtpPeerStatusSchema(MetaParser):
         }
     }
 
+
 # ==============================================
 #  Parser for show ntp peer-status
 # ==============================================
@@ -90,20 +91,21 @@ class ShowNtpPeerStatus(ShowNtpPeerStatusSchema):
         #    remote               local                 st   poll   reach delay   vrf
         # =127.127.1.0            10.100.100.1            8   64       0   0.00000
         p2 = re.compile(r'^(?P<mode_code>[\*\-\+\=]+)? *(?P<remote>[\w\.\:]+) +'
-                         '(?P<local>[\w\.\:]+) +(?P<st>\d+) +'
-                         '(?P<poll>\d+) +(?P<reach>\d+) +(?P<delay>[\d\.]+)'
-                         '( *(?P<vrf>\S+))?$')
+                        r'(?P<local>[\w\.\:]+) +(?P<st>\d+) +'
+                        r'(?P<poll>\d+) +(?P<reach>\d+) +(?P<delay>[\d\.]+)'
+                        r'( *(?P<vrf>\S+))?$')
 
         #     remote                                 local
-        #*10.25.1.11                              10.126.80.251 
-        p2_1 = re.compile(r'^(?P<mode_code>[\*\-\+\=]+)? *(?P<remote>[\w\.\:]+) +'
-                         '(?P<local>[\w\.\:]+)')
-        
+        # *10.25.1.11                              10.126.80.251
+        # *1.1.1.1                           2.2.2.2
+        p2_1 = re.compile(r'^(?P<mode_code>[\*\-\+\=]+)? *(?P<remote>[\d\.\:]+) +'
+                          r'(?P<local>[\w\.\:]+)$')
+
         #   st   poll   reach delay   vrf
         #  3   64     377   0.00580default
+        #  1   64     377   0.02710 management
         p2_2 = re.compile(r'(?P<st>\d+) +(?P<poll>\d+) +(?P<reach>\d+) '
-                           '+(?P<delay>[\d\.]+)( *(?P<vrf>\S+))?$')
-
+                          r'+(?P<delay>[\d\.]+)( *(?P<vrf>\S+))?$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -114,6 +116,7 @@ class ShowNtpPeerStatus(ShowNtpPeerStatusSchema):
             m = p1.match(line)
             if m:
                 ret_dict['total_peers'] = int(m.groupdict()['total_peer'])
+                continue
 
             # *10.4.1.1                                  0.0.0.0                                   8   16     377   0.01311 default
             # =127.127.1.0            10.100.100.1            8   64       0   0.00000
@@ -142,14 +145,20 @@ class ShowNtpPeerStatus(ShowNtpPeerStatusSchema):
                     clock_dict['clock_stratum'] = int(groups['st'])
                     clock_dict['associations_address'] = peer
                     clock_dict['root_delay'] = float(groups['delay'])
-            
+                continue
+
+            # *10.25.1.11                              10.126.80.251
+            # *1.1.1.1                           2.2.2.2
             m = p2_1.match(line)
             if m:
                 groups = m.groupdict()
                 peer = groups['remote']
                 mode = self.MODE_MAP.get(groups['mode_code'])
                 local = groups['local']
+                continue
 
+            #  3   64     377   0.00580default
+            #  1   64     377   0.02710 management
             m = p2_2.match(line)
             if m:
                 groups = m.groupdict()
@@ -165,6 +174,15 @@ class ShowNtpPeerStatus(ShowNtpPeerStatusSchema):
                 peer_dict['delay'] = float(groups['delay'])
                 if groups['vrf']:
                     peer_dict['vrf'] = groups['vrf']
+
+                # ops clock_state structure
+                if 'sync' in mode:
+                    clock_dict = ret_dict.setdefault('clock_state', {}).setdefault('system_status', {})
+                    clock_dict['clock_state'] = mode
+                    clock_dict['clock_stratum'] = int(groups['st'])
+                    clock_dict['associations_address'] = peer
+                    clock_dict['root_delay'] = float(groups['delay'])
+                continue
 
         # check if has synchronized peers, if no create unsynchronized entry
         if ret_dict and not ret_dict.get('clock_state'):

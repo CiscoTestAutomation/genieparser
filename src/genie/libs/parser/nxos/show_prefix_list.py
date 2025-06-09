@@ -68,7 +68,7 @@ class ShowIpPrefixList(ShowIpPrefixListSchema):
             # ip prefix-list test: 5 entries
             # ipv6 prefix-list test6: 4 entries
             p1 = re.compile(r'^(ipv6|ip) +prefix\-list +(?P<name>\S+)\: +'
-                             '(?P<entries>\d+) +entries$')
+                             r'(?P<entries>\d+) +entries$')
             m = p1.match(line)
             if m:
                 name = m.groupdict()['name']
@@ -89,8 +89,8 @@ class ShowIpPrefixList(ShowIpPrefixListSchema):
             # seq 25 permit 10.169.0.0/8 ge 16 le 24
             # seq 10 permit 192.0.2.0/24 eq 25
             p3 = re.compile(r'^seq +(?P<seq>\d+) +(?P<action>\w+) +'
-                             '(?P<prefixes>(?P<prefix>[\w\.\|:]+)\/(?P<mask>\d+))'
-                             '( *(?P<range>[lgeq\d\s]+))?$')
+                             r'(?P<prefixes>(?P<prefix>[\w\.\|:]+)\/(?P<mask>\d+))'
+                             r'( *(?P<range>[lgeq\d\s]+))?$')
             m = p3.match(line)
             if m:
                 prefixes = m.groupdict()['prefixes']

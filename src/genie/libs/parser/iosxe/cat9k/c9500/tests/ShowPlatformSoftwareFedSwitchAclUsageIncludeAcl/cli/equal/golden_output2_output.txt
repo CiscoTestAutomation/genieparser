@@ -1,0 +1,2 @@
+Feature Type            ACL Type        Dir             Name                    Entries Used
+PACL                    IPV4            Ingress         racl_permit_ingress     2

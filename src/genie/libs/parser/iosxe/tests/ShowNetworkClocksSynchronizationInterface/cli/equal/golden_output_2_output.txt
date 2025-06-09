@@ -1,0 +1,49 @@
+
+GigabitEthernet0/0/2
+-----------------------------
+Description: None
+Signal Type: NA
+
+Mode: Synchronous (Ql-enabled)
+ESMC Tx: ENABLED
+ESMC Rx: ENABLED
+QL Receive: QL-DNU
+QL Receive Configured: -
+QL Receive Overrided: -
+QL Transmit: QL-SEC
+QL Transmit Configured: -
+
+Hold-off: 300
+Holdoff Configured: FALSE
+Wait-to-restore: 300
+WTR Configured: FALSE
+Lock out: FALSE
+Signal Fail: FALSE
+Alarms: FALSE
+Reason for alarm flag: 0
+Slot Disabled: FALSE
+
+Hold off Timer: STOPPED
+Wait to restore Timer: STOPPED
+Switchover Timer: STOPPED
+ESMC Tx Timer: RUNNING
+ESMC Rx Timer: RUNNING
+Tsm delay Timer: STOPPED
+
+
+Nominated Outputs:
+---------------------
+
+T0
+-----
+Selected source: FALSE
+Priority: 1
+Force Switch: FALSE
+Manual Switch: FALSE
+Manual Switch in progress: FALSE
+Don't Use: FALSE
+Been Selected: FALSE
+SNMP input source index: 11
+SNMP parent source index: 0
+Intf_sig_nv: 0
+

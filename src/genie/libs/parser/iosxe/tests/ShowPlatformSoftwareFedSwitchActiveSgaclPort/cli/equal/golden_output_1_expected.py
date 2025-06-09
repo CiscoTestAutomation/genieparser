@@ -1,0 +1,76 @@
+expected_output={
+      'port': {
+        'TenGigabitEthernet1/0/1': {
+          'enforcement': 'Enabled',
+          'port_sgt': 0,
+          'trust': 'No',
+          'propogate': 'No',
+          'ingress': 'No',
+          'egress': 'No',
+        },
+        'TenGigabitEthernet1/0/2': {
+          'enforcement': 'Disabled',
+          'port_sgt': 0,
+          'trust': 'No',
+          'propogate': 'No',
+          'ingress': 'No',
+          'egress': 'No',
+        },
+        'TenGigabitEthernet1/0/3': {
+          'enforcement': 'Enabled',
+          'port_sgt': 0,
+          'trust': 'No',
+          'propogate': 'No',
+          'ingress': 'No',
+          'egress': 'No',
+        },
+        'TenGigabitEthernet1/0/4': {
+          'enforcement': 'Enabled',
+          'port_sgt': 0,
+          'trust': 'No',
+          'propogate': 'No',
+          'ingress': 'No',
+          'egress': 'No',
+        },
+        'TenGigabitEthernet1/0/5': {
+          'enforcement': 'Enabled',
+          'port_sgt': 0,
+          'trust': 'No',
+          'propogate': 'No',
+          'ingress': 'No',
+          'egress': 'No',
+        },
+        'TenGigabitEthernet1/0/6': {
+          'enforcement': 'Enabled',
+          'port_sgt': 0,
+          'trust': 'No',
+          'propogate': 'No',
+          'ingress': 'No',
+          'egress': 'No',
+        },
+        'TenGigabitEthernet1/0/7': {
+          'enforcement': 'Enabled',
+          'port_sgt': 0,
+          'trust': 'No',
+          'propogate': 'No',
+          'ingress': 'No',
+          'egress': 'No',
+        },
+        'TenGigabitEthernet1/0/8': {
+          'enforcement': 'Enabled',
+          'port_sgt': 0,
+          'trust': 'No',
+          'propogate': 'No',
+          'ingress': 'No',
+          'egress': 'No',
+        },
+        'TenGigabitEthernet1/0/9': {
+          'enforcement': 'Disabled',
+          'port_sgt': 0,
+          'trust': 'No',
+          'propogate': 'No',
+          'ingress': 'No',
+          'egress': 'No',
+        }
+      }
+    }

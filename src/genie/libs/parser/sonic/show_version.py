@@ -59,71 +59,187 @@ class ShowVersion(ShowVersionSchema):
             output = self.device.execute(self.cli_command)
 
         # SONiC Software Version: SONiC.azure_cisco_202205.5324-dirty-20230707.044127
-        # SONiC OS Version: 11
-        # Distribution: Debian 11.7
-        # Kernel: 5.10.0-18-2-amd64
-        # Build commit: a2dedc96c
-        # Build date: Fri Jul  7 14:22:57 UTC 2023
-        # Built by: sonicci@sonic-ci-7-lnx
-        #
-        # Platform: x86_64-8201_32fh_o-r0
-        # HwSKU: 32x400Gb
-        # ASIC: cisco-8000
-        # ASIC Count: 1
-        # Serial Number: FOC2217FQXV
-        # Model Number: 8201-32FH-O
-        # Hardware Revision: 0.33
-        # Uptime: 17:07:15 up 15 min,  1 user,  load average: 0.82, 1.00, 0.90
-        # Date: Thu 02 Nov 2023 17:07:15
-        p1 = re.compile(r'^(?P<key>.+): +(?P<value>.+)')
-        # Uptime: 17:07:15 up 15 min,  1 user,  load average: 0.82, 1.00, 0.90
-        p1_1 = re.compile(r'^Uptime: (?P<uptime>.+), +(?P<users>\d+) user, +load average: (?P<load_average>.+)$')
+        p0 = re.compile(r'^SONiC Software Version: (?P<sw_version>.*)$')
 
-        # REPOSITORY                    TAG                  IMAGE ID           SIZE
-        # docker-macsec                 latest               44ef5532977a       332MB
-        p2 = re.compile(r'^(?P<repository>\S+) +(?P<tag>\S+) +(?P<image_id>\w+) +(?P<size>\S+)$')
+        # SONiC OS Version: 11
+        p1 = re.compile(r'^SONiC OS Version: (?P<os_version>\d+)$')
+
+        # Distribution: Debian 11.7
+        p2 = re.compile(r'^Distribution: (?P<distribution>.*)$')
+
+        # Kernel: 5.10.0-18-2-amd64
+        p3 = re.compile(r'^Kernel: (?P<kernel>.*)$')
+
+        # Build commit: a2dedc96c
+        p4 = re.compile(r'^Build commit: (?P<build_commit>\w+)$')
+
+        # Build date: Fri Jul  7 14:22:57 UTC 2023
+        p5 = re.compile(r'^Build date: (?P<build_date>.*)$')
+
+        # Built by: sonicci@sonic-ci-7-lnx
+        p6 = re.compile(r'^Built by: (?P<built_by>.*)$')
+
+        # Platform: x86_64-8201_32fh_o-r0
+        p7 = re.compile(r'^Platform: (?P<platform>.*)$')
+
+        # HwSKU: 32x400Gb
+        p8 = re.compile(r'^HwSKU: (?P<hwsku>[\w-]+)$')
+
+        # ASIC: cisco-8000
+        p9 = re.compile(r'^ASIC: (?P<asic>[\w-]+)$')
+
+        # ASIC Count: 1
+        p10 = re.compile(r'^ASIC Count: (?P<asic_count>\d+)$')
+
+        # Serial Number: FOC2217FQXV
+        p11 = re.compile(r'^Serial Number: (?P<serial_number>\w+)$')
+
+        # Model Number: 8201-32FH-O
+        p12 = re.compile(r'^Model Number: (?P<model_number>[\w-]+)$')
+
+        # Hardware Revision: 0.33
+        p13 = re.compile(r'^Hardware (Revision|Rev): (?P<hw_revision>[\w.]+)$')
+
+        # Uptime: 17:07:15 up 15 min,  1 user,  load average: 0.82, 1.00, 0.90
+        p14 = re.compile(r'^Uptime: (?P<uptime>.+), +(?P<users>\d+) user, +load average: (?P<load_average>.+)$')
+
+        # Date: Thu 02 Nov 2023 17:07:15
+        p15 = re.compile(r'^Date: (?P<date>.+)$')
+
+        # REPOSITORY     TAG                                                      IMAGE ID           SIZE
+        # docker-macsec  latest                                                   44ef5532977a       332MB
+        # docker-snmp    azure_cisco_tortuga_202305.10234-dirty-20240326.030556   fa3b3f6e4927       359MB
+        p16 = re.compile(r'^(?P<repository>[\w-]+) +(?P<tag>[\w/_/-/.]+) +(?P<image_id>\w+) +(?P<size>\w+)$')
 
         ret_dict = {}
         for line in output.splitlines():
             line = line.strip()
 
+            # SONiC Software Version: SONiC.azure_cisco_202205.5324-dirty-20230707.044127
+            m = p0.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault('sonic_software_version', group['sw_version'])
+                continue
+
+            # SONiC OS Version: 11
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault('sonic_os_version', int(group['os_version']))
+                continue
+
             # Distribution: Debian 11.7
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault('distribution', group['distribution'])
+                continue
+
             # Kernel: 5.10.0-18-2-amd64
-            if m := p1.match(line):
-                key = m.groupdict()['key']
-                if 'uptime:' in key.lower():
-                    # Uptime: 17:07:15 up 15 min,  1 user,  load average: 0.82, 1.00, 0.90
-                    if m := p1_1.match(line):
-                        group = m.groupdict()
-                        ret_dict.update({
-                            'uptime': group['uptime'],
-                            'users': int(group['users']),
-                            'load_average': [float(i) for i in group['load_average'].split(', ')]
-                        })
-                        continue
-                else:
-                    key = key.lower().replace(' ', '_')
-                try:
-                    value = int(m.groupdict()['value'])
-                except ValueError:
-                    value = m.groupdict()['value']
-
-                if key == 'hwsku':
-                    ret_dict.update({'hardware_sku': value})
-                elif key == 'hardware_rev':
-                    ret_dict.update({'hardware_revision': value})
-                else:
-                    ret_dict.update({key: value})
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault('kernel', group['kernel'])
                 continue
 
+            # Build commit: a2dedc96c
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault('build_commit', group['build_commit'])
+                continue
+
+            # Build date: Fri Jul  7 14:22:57 UTC 2023
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault('build_date', group['build_date'])
+                continue
+
+            # Built by: sonicci@sonic-ci-7-lnx
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault('built_by', group['built_by'])
+                continue
+
+            # Platform: x86_64-8201_32fh_o-r0
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault('platform', group['platform'])
+                continue
+
+            # HwSKU: 32x400Gb
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault('hardware_sku', group['hwsku'])
+                continue
+
+            # ASIC: cisco-8000
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault('asic', group['asic'])
+                continue
+
+            # ASIC Count: 1
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault('asic_count', int(group['asic_count']))
+                continue
+
+            # Serial Number: FOC2217FQXV
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault('serial_number', group['serial_number'])
+                continue
+
+            # Model Number: 8201-32FH-O
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault('model_number', group['model_number'])
+                continue
+
+            # Hardware Revision: 0.33
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault('hardware_revision', group['hw_revision'])
+                continue
+
+            # Uptime: 17:07:15 up 15 min,  1 user,  load average: 0.82, 1.00, 0.90
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault('uptime', group['uptime'])
+                ret_dict.setdefault('users', int(group['users']))
+                ret_dict.setdefault('load_average', [float(i) for i in group['load_average'].split(', ')])
+                continue
+
+            # Date: Thu 02 Nov 2023 17:07:15
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault('date', group['date'])
+                continue
+
+            # REPOSITORY                    TAG                  IMAGE ID           SIZE
             # docker-macsec                 latest               44ef5532977a       332MB
-            if m := p2.match(line):
-                docker_dict = ret_dict.setdefault('docker_images', {}).setdefault('image_id', {}). \
-                    setdefault(m.groupdict()['image_id'], {})
-                docker_dict.update({
-                    'repository': m.groupdict()['repository'],
-                    'tag': m.groupdict()['tag'],
-                    'size': m.groupdict()['size']
-                })
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                if 'docker_images' not in ret_dict:
+                    docker_image = ret_dict.setdefault('docker_images',{})
+                img_id = docker_image.setdefault('image_id',{}).setdefault(group['image_id'], {})
+                img_id.setdefault('repository', group['repository'])
+                img_id.setdefault('tag', group['tag'])
+                img_id.setdefault('size', group['size'])
                 continue
+
         return ret_dict

@@ -3,6 +3,7 @@ IOSXE C9300 parsers for the following show commands:
     * show inventory
     * 'show platform software fed {state} matm macTable vlan {vlan}'
     * 'show platform software fed {switch} {state} matm macTable vlan {vlan}'
+    * 'test platform hardware fep switch {switch_num} {fep_slot} dump-statistics'
 """
 # Python
 import re
@@ -167,7 +168,10 @@ class ShowEnvironmentAllSchema(MetaParser):
 
 class ShowEnvironmentAll(ShowEnvironmentAllSchema):
     """Parser for show environment all"""
-    PS_MAPPING = {'A': '1', 'B': '2'}
+    # Althoguht currently only A-C are used, just in case, make it A-H
+    # create a mapping dict for A-H to 1-8
+    # PS_MAPPING = {'A': '1', 'B': '2', 'C': '3' .... 'H': '8'}
+    PS_MAPPING = {chr(i): str(i-64) for i in range(65, 73)}
 
     cli_command = 'show environment all'
 
@@ -379,6 +383,8 @@ class ShowPlatformHardwareAuthenticationStatusSchema(MetaParser):
                    'stack_cable_b_authentication': str,
                     Optional('stack_adapter_a_authentication'):str,
                     Optional('stack_adapter_b_authentication'):str,
+                    Optional('rot_asic_0_authentication'): str,
+                    Optional('rot_asic_1_authentication'): str,
              },
     },
     }
@@ -414,6 +420,9 @@ class ShowPlatformHardwareAuthenticationStatus(ShowPlatformHardwareAuthenticatio
         p6 = re.compile(r'^Stack Adapter A (Authentication:|Authenticatio)\s+(?P<stack_adapter_a_authentication>[\s\w]+)$')
         # Stack Adapter B Authentication Passed
         p7 = re.compile(r'^Stack Adapter B (Authentication:|Authenticatio)\s+(?P<stack_adapter_b_authentication>[\s\w]+)$')
+        # Rot Asic 0 Authentication Passed
+        # Rot Asic 1 Authentication Passed
+        p8 = re.compile(r'^RoT Asic-(?P<asic_no>\d) Authentication:\s+(?P<rot_asic_authentication>[\s\w]+)$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -467,6 +476,17 @@ class ShowPlatformHardwareAuthenticationStatus(ShowPlatformHardwareAuthenticatio
             if m:
                 group = m.groupdict()
                 switch_id_dict['stack_adapter_b_authentication'] = group['stack_adapter_b_authentication']
+                continue
+
+            # RoT Asic-0 Authentication:    Failed
+            # RoT Asic-1 Authentication:    Passed
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                # key i.e. rot_asic_0_authentication or rot_asic_1_authentication
+                asic_no = group['asic_no']
+                rot_dict_key = f'rot_asic_{asic_no}_authentication'
+                switch_id_dict[rot_dict_key] = group['rot_asic_authentication']
                 continue
         
         return result_dict
@@ -893,6 +913,164 @@ class ShowPlatformSoftwareFedMatmMactableVlan(ShowPlatformSoftwareFedMatmMactabl
             if m:
                 type_dict = ret_dict.setdefault('type', {})
                 [type_dict.update({each_pair.groupdict()['key'].lower():each_pair.groupdict()['value']}) for each_pair in m]
+                continue
+
+        return ret_dict
+
+class TestPlatformHardwareFepSwitchDumpStatisticsSchema(MetaParser):
+    """
+    Schema for test platform hardware fep switch {switch_num} {fep_slot} dump-statistics
+    """
+    schema = {
+        'fru_fep_statistics': {
+            Optional('input_voltage'): float,
+            Optional('input_current'): float,
+            Optional('input_power'): float,
+            Optional('output_voltage'): float,
+            Optional('output_current'): float,
+            Optional('output_power'): float,
+            Optional('inlet_temp'): float,
+            Optional('outlet_temp'): float,
+            Optional('hot_spot_temp'): float,
+            Optional('fan_speed'): int,
+            Optional('status_word'): str,
+            Optional('status_fans'): str,
+            Optional('vout_mode'): str,
+        }
+    }
+
+class TestPlatformHardwareFepSwitchDumpStatistics(TestPlatformHardwareFepSwitchDumpStatisticsSchema):
+    """Parser for test platform hardware fep switch {switch_num} {fep_slot} dump-statistics"""
+                  
+    cli_command = "test platform hardware fep switch {switch_num} {fep_slot} dump-statistics"
+
+    def cli(self, switch_num, fep_slot, output=None):
+        if output is None:
+            # execute command to get output
+            output = self.device.execute(self.cli_command.format(switch_num=switch_num, fep_slot=fep_slot))
+
+        # Initialize the return dictionary
+        ret_dict = {}
+
+        # Input voltage:   206.750V
+        p1 = re.compile(r'Input voltage:\s+(?P<input_voltage>\S+)\s*V')
+        
+        # Input current:   0.508A
+        p2 = re.compile(r'Input current:\s+(?P<input_current>\S+)\s*A')
+        
+        # Input power:     96.500W
+        p3 = re.compile(r'Input power:\s+(?P<input_power>\S+)\s*W')
+        
+        # Output voltage:  55.914V
+        p4 = re.compile(r'Output voltage:\s+(?P<output_voltage>\S+)\s*V')
+        
+        # Output current:  1.492A
+        p5 = re.compile(r'Output current:\s+(?P<output_current>\S+)\s*A')
+        
+        # Output power:    84.0W
+        p6 = re.compile(r'Output power:\s+(?P<output_power>\S+)\s*W')
+        
+        # Inlet temp:      35.625 degrees
+        p7 = re.compile(r'Inlet temp:\s+(?P<inlet_temp>\S+)\s*degrees')
+        
+        # Outlet temp:     45.500 degrees
+        p8 = re.compile(r'Outlet temp:\s+(?P<outlet_temp>\S+)\s*degrees')
+        
+        # Hot-spot temp:   57.0 degrees
+        p9 = re.compile(r'Hot-spot temp:\s+(?P<hot_spot_temp>\S+)\s*degrees')
+        
+        # Fan speed:       3248 RPM
+        p10 = re.compile(r'Fan speed:\s+(?P<fan_speed>\d+)\s*RPM')
+        
+        # Status word:     0x0
+        p11 = re.compile(r'Status word:\s+(?P<status_word>\S+)')
+        
+        # Status fans:     0x0
+        p12 = re.compile(r'Status fans:\s+(?P<status_fans>\S+)')
+        
+        # VOUT_MODE:       0x19
+        p13 = re.compile(r'VOUT_MODE:\s+(?P<vout_mode>\S+)')
+
+        # Extract information using regular expressions
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Input voltage:   206.750V
+            m = p1.match(line)
+            if m:
+                ret_dict.setdefault('fru_fep_statistics', {})['input_voltage'] = float(m.group('input_voltage'))
+                continue
+
+            # Input current:   0.508A
+            m = p2.match(line)
+            if m:
+                ret_dict.setdefault('fru_fep_statistics', {})['input_current'] = float(m.group('input_current'))
+                continue
+
+            # Input power:     96.500W
+            m = p3.match(line)
+            if m:
+                ret_dict.setdefault('fru_fep_statistics', {})['input_power'] = float(m.group('input_power'))
+                continue
+
+            # Output voltage:  55.914V
+            m = p4.match(line)
+            if m:
+                ret_dict.setdefault('fru_fep_statistics', {})['output_voltage'] = float(m.group('output_voltage'))
+                continue
+
+            # Output current:  1.492A
+            m = p5.match(line)
+            if m:
+                ret_dict.setdefault('fru_fep_statistics', {})['output_current'] = float(m.group('output_current'))
+                continue
+
+            # Output power:    84.0W
+            m = p6.match(line)
+            if m:
+                ret_dict.setdefault('fru_fep_statistics', {})['output_power'] = float(m.group('output_power'))
+                continue
+
+            # Inlet temp:      35.625 degrees
+            m = p7.match(line)
+            if m:
+                ret_dict.setdefault('fru_fep_statistics', {})['inlet_temp'] = float(m.group('inlet_temp'))
+                continue
+
+            # Outlet temp:     45.500 degrees
+            m = p8.match(line)
+            if m:
+                ret_dict.setdefault('fru_fep_statistics', {})['outlet_temp'] = float(m.group('outlet_temp'))
+                continue
+
+            # Hot-spot temp:   57.0 degrees
+            m = p9.match(line)
+            if m:
+                ret_dict.setdefault('fru_fep_statistics', {})['hot_spot_temp'] = float(m.group('hot_spot_temp'))
+                continue
+
+            # Fan speed:       3248 RPM
+            m = p10.match(line)
+            if m:
+                ret_dict.setdefault('fru_fep_statistics', {})['fan_speed'] = int(m.group('fan_speed'))
+                continue
+
+            # Status word:     0x0
+            m = p11.match(line)
+            if m:
+                ret_dict.setdefault('fru_fep_statistics', {})['status_word'] = m.group('status_word')
+                continue
+
+            # Status fans:     0x0
+            m = p12.match(line)
+            if m:
+                ret_dict.setdefault('fru_fep_statistics', {})['status_fans'] = m.group('status_fans')
+                continue
+
+            # VOUT_MODE:       0x19
+            m = p13.match(line)
+            if m:
+                ret_dict.setdefault('fru_fep_statistics', {})['vout_mode'] = m.group('vout_mode')
                 continue
 
         return ret_dict

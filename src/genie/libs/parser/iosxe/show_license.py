@@ -608,7 +608,8 @@ class ShowLicenseStatus(ShowLicenseStatusSchema):
         #Active: PID:C9300-24UX,SN:FCW2303D16Y
         p11_2=re.compile(r'^Active: +(?P<active>)+PID:+(?P<pid>.*),+SN:+(?P<sn>.*)$')
         #INSTALLED on Sep 27 12:22:33 2021 UTC
-        p11_3=re.compile(r'^INSTALLED +on +.*|^<none>.*')
+        # <none> removed as it also appears in other contexts, like 'Features Authorized'
+        p11_3=re.compile(r'^INSTALLED +on +.*')
         #Standby:
         p11_4=re.compile(r'^Standby: +(?P<standby>)')
         # Standby: PID:C9300-24U,SN:FHH2043P09E
@@ -992,7 +993,7 @@ class ShowLicenseStatus(ShowLicenseStatusSchema):
               active['active']=group
               result_dict['trust_code_installed']=active
               continue
-          #INSTALLED on Sep 27 12:22:33 2021 UTC | <none>
+          #INSTALLED on Sep 27 12:22:33 2021 UTC
           m = p11_3.match(line)
           if m:
             group = m.group(0)
@@ -1227,7 +1228,7 @@ class ShowLicenseAllSchema(MetaParser):
       Optional('one_minute'): str,
       Optional('five_minutes'): str,
       Optional('ntp_time'): str,
-      Optional('smart_licensing_status'):{
+      Optional('smart_licensing_status'): {
         Optional('license_conversion'):{
                 Optional('automatic_conversion_enabled'):str,
                 Optional('last_data_push'):str,
@@ -1259,10 +1260,10 @@ class ShowLicenseAllSchema(MetaParser):
            Optional('proxy'):str,
            Optional('vrf'):str,
         },
-        'miscellaneous':{
+        Optional('miscellaneous'):{
            'custom_id':str,
         },
-        'policy':{
+        Optional('policy'):{
            'policy_in_use':str,
            Optional('policy_name'):str,
            'reporting_ack_required':str,
@@ -1287,7 +1288,7 @@ class ShowLicenseAllSchema(MetaParser):
               'report_on_change_days':str,
             },
         },
-        'usage_reporting':{
+        Optional('usage_reporting'):{
            'last_ack_received':str,
            'next_ack_deadline':str,
            'reporting_push_interval':str,
@@ -1662,6 +1663,7 @@ class ShowLicenseAll(ShowLicenseAllSchema):
             else:
               smart_licensing_status_dict.setdefault('export_authorization_key',{}).setdefault('features_authorized',group)
               continue
+
           #Status: DISABLED
           m = p4.match(line)
           if m:
@@ -1676,12 +1678,14 @@ class ShowLicenseAll(ShowLicenseAllSchema):
           m = p5.match(line)
           if m:
             group = m.groupdict()
+            smart_licensing_status_dict=ret_dict.setdefault('smart_licensing_status',{})
             smart_licensing_status_dict.setdefault('account_information',{}).setdefault('smart_account',group['smart_account'])
             continue
           #Virtual Account: SLE_Test
           m = p5_1.match(line)
           if m:
             group = m.groupdict()
+            smart_licensing_status_dict=ret_dict.setdefault('smart_licensing_status',{})
             smart_licensing_status_dict.setdefault('account_information',{}).setdefault('virtual_account',group['virtual_account'])
             continue
 
@@ -1868,16 +1872,13 @@ class ShowLicenseAll(ShowLicenseAllSchema):
           m = p11.match(line)
           if m:
             group = m.groupdict()
-            if group['trust_code_installed']:
-              if group['trust_code_installed'].strip()=='<none>':
-                continue
-              # else:
-                # trust_code_installed_dict=smart_licensing_status_dict.setdefault('trust_code_installed',group['trust_code_installed'].strip())
-                # continue
+            if group['trust_code_installed'].strip() == '<none>':
+              continue
             else:
               trust_code_installed_dict=smart_licensing_status_dict.setdefault('trust_code_installed',{})
               continue
           #Active: PID:C9300-24UX,SN:FCW2303D16Y
+          #Active: PID:C9350-48T,SN:FOC2820Y07F
           m = p11_1.match(line)
           if m:
             group = m.groupdict()
@@ -2530,6 +2531,8 @@ class ShowLicenseTechSupportSchema(MetaParser):
                 },
                 Optional('server_identity_check'):str,
                 Optional('vrf'):str,
+                Optional('trust_point'):str,
+                Optional('ip_mode'):str
             },
             'miscellaneous':{
                 'custom_id':str,
@@ -2584,12 +2587,17 @@ class ShowLicenseTechSupportSchema(MetaParser):
                     'count': int,
                     'version': str,
                     'status': str,
+                    Optional('authorized_count'): int,
+                    Optional('outofcompliance_count'): int,
+                    Optional('insufficient_count'): int,
+                    Optional('no_license'): int,
                     'status_time':str,
                     'request_time':str,
                     'export_status': str,
                     'feature_name': str,
                     'feature_description': str,
                     Optional('enforcement_type'): str,
+                    Optional('day0_verification'): str,
                     Optional('license_type'): str,
                     Optional('measurements'):{
                         Optional('entitlement'):{
@@ -2712,6 +2720,11 @@ class ShowLicenseTechSupportSchema(MetaParser):
             Optional('mia'):str,
             Optional('report_module_status'):str,
         },
+        Optional('product_analytics_report_summary'):{
+            Optional('product_analytics'): str,
+            Optional('not_available_reason'): str,
+            Optional('total_current_product_analytics_reports'): int,
+        },
         Optional('telemetry_report_summary'):{
             'device_telemetry':str,
             'total_current_telemetry_reports':int,
@@ -2791,6 +2804,12 @@ class ShowLicenseTechSupportSchema(MetaParser):
             'systeminitbyevent':str,
             'smarttransportserveridcheck':str,
             'smarttransportproxysupport':str,
+            Optional('trustpointenrollmentonboot'):str,
+            Optional('smartagentpurgeallreports'):str,
+            Optional('smartagentslpenhanced'):str,
+            Optional('smartagentmaxermnotifylistsize'):int,
+            Optional('smartagentday0enforcement'):str,
+            Optional('smartagentunifiedlicensing'):str,
             Optional('smartagentmaxsinglereportsize'):int,
             Optional('smartagentslacreturnforcedallowed'):str,
             Optional('smartagenttelemetryrumreportmax'):int,
@@ -2986,8 +3005,9 @@ class ShowLicenseTechSupport(ShowLicenseTechSupportSchema):
         #Device Telemetry Report Summary
         p14 = re.compile(r'^(?P<device_telemetry_report_summary>Device +Telemetry +Report +Summary)\:$')      
         #Trust Code Installed:
-        p14_1 = re.compile(r'^(?P<trust_code_installed>Trust +Code +Installed)\:$') 
-        
+        #Trust Code Installed:    Trust Code Type: CSSM
+        p14_1 = re.compile(r'^Trust +Code +Installed:(?:\s+Trust +Code +Type: +\S+)?$')
+
         #Below set of expressions are for capturing data lines (For eg. key-value pairs)
         #<none>
         p0_2 = re.compile(r'^\s*\<(?P<value>none)\>$')
@@ -2996,7 +3016,10 @@ class ShowLicenseTechSupport(ShowLicenseTechSupportSchema):
         p0_5 = re.compile(r'^\s*(?P<value>No +Purchase +Information +Available)$')
 
         #Generalised expression for all lines in <Key>: <Value> format
-        p0_3=re.compile(r'^(?P<key>[\s*\w]+.*)\: +(?P<value>[\S\s]+.*)$')
+        # Need to stop matching at the fist colon(:) as value can have colon(:)
+        #  i.e 'Failure Reason: Server error occurred: LS_LICENGINE_FAIL_TO_CONNECT'
+        # Need to match double or more consecutive colons(::) in value
+        p0_3=re.compile(r'^(?P<key>[^:]+)\:+ *(?P<value>[\S\s]+.*)$')
 
         #Active: PID:C9300-24UX,SN:FCW2134L00C
         #Standby: PID:C9300-24U,SN:FOC2129Z02H
@@ -3045,7 +3068,25 @@ class ShowLicenseTechSupport(ShowLicenseTechSupportSchema):
         
         #Trust Code Installed: <none> 
         #Trust Code Installed: Feb 27 09:06:59 2024 IST
-        p14_data1 = re.compile(r'^Trust +Code +Installed\: +(?P<trust_code_installed>.*)$')
+        #Trust Code Installed:    Trust Code Type: CSSM
+        p14_data1 = re.compile(r'^Trust +Code +Installed\: +(?P<trust_code_installed>(<none>|\w{3} +\d{1,2} +[\d:]+ +\d{4} +\w+))$')
+        # Authorized Count: 0
+        p2_2 = re.compile(r'^Authorized Count:\s+(?P<authorized_count>\d+)$')
+        # Out-Of-Compliance Count: 0
+        p2_3 = re.compile(r'^Out-Of-Compliance Count:\s+(?P<outofcompliance_count>\d+)$')
+        # Insufficient Count: 0
+        p2_4 = re.compile(r'^Insufficient Count:\s+(?P<insufficient_count>\d+)$')
+        # No license: 0
+        p2_5 = re.compile(r'^No license:\s+(?P<no_license>\d+)$')
+        # Day-0 Verification: NO
+        p2_6 = re.compile(r'^Day-0 Verification:\s+(?P<day0_verification>\w+)$')
+        #Product Analytics: AVAILABLE
+        #Product Analytics: NOT AVAILABLE
+        p16 = re.compile(r'^Product Analytics:\s+(?P<product_analytics>AVAILABLE|NOT AVAILABLE)$')
+        #Not Available Reason: <empty>
+        p16_1 = re.compile(r'^Not Available Reason:\s+(?P<not_available_reason>.*)$')
+        #Total current Product Analytics reports: 0
+        p16_2 = re.compile(r'^Total current Product Analytics reports:\s+(?P<total_current_product_analytics_reports>\d+)$')
         
         for line in output.splitlines():
             line=line.strip()            
@@ -3125,6 +3166,30 @@ class ShowLicenseTechSupport(ShowLicenseTechSupportSchema):
                 group=m.groupdict()
                 current_dict=ret_dict.setdefault('usage_report_summary', {})
                 continue
+                        
+            # Product Analytics Report Summary:
+            # ================================
+            # Product Analytics: AVAILABLE
+            m = p16.match(line)
+            if m:
+               group = m.groupdict()
+               product_analytics_dict = ret_dict.setdefault('product_analytics_report_summary', {})
+               product_analytics_dict.setdefault('product_analytics',group['product_analytics'])
+               continue
+            
+            # Match Not Available Reason
+            m = p16_1.match(line)
+            if m:
+               group = m.groupdict()
+               product_analytics_dict.setdefault('not_available_reason',group['not_available_reason'])
+               continue
+            
+            # Match Total current reports
+            m = p16_2.match(line)
+            if m:
+                group = m.groupdict()
+                product_analytics_dict.setdefault('total_current_product_analytics_reports',int(group['total_current_product_analytics_reports']))
+                continue 
 
             m = p11.match(line)
             if m:
@@ -3137,18 +3202,21 @@ class ShowLicenseTechSupport(ShowLicenseTechSupportSchema):
                 group=m.groupdict()
                 current_dict=ret_dict.setdefault('platform_provided_mapping_table', {})                  
                 continue
+            
             #Telemetry Report Summary (new output section in 17.11.1)
             m = p13.match(line)
             if m:
                 group=m.groupdict()
                 current_dict=ret_dict.setdefault('telemetry_report_summary', {})
                 continue
+            
         #Device telemetry  report  summary (new  output  section  in 17.11.1)
             m = p14.match(line)
             if m:
                 group=m.groupdict()
                 current_dict=ret_dict.setdefault('device_telemetry_report_summary', {})
                 continue
+            
         #Setting the dictionary position for sub headings (2nd level and further levels down)
             m = p1_1.match(line)
             if m:
@@ -3250,7 +3318,42 @@ class ShowLicenseTechSupport(ShowLicenseTechSupportSchema):
             if m:
                 group=m.groupdict()
                 current_dict = handle_dict.setdefault('measurements',{}).setdefault('entitlement',{})
-                continue 
+                continue
+            
+            #Authorized Count: 0
+            m = p2_2.match(line)
+            if m:
+                group=m.groupdict()
+                handle_dict['authorized_count'] = int(group['authorized_count'])
+                continue
+            
+            #Out-Of-Compliance Count: 0
+            m = p2_3.match(line)
+            if m:
+               group=m.groupdict()
+               handle_dict['outofcompliance_count'] = int(group['outofcompliance_count'])
+               continue
+            
+            #Insufficient Count: 0
+            m = p2_4.match(line)
+            if m:
+                group=m.groupdict()
+                handle_dict['insufficient_count'] = int(group['insufficient_count'])
+                continue
+            
+            #No license: 0
+            m = p2_5.match(line)
+            if m:
+                group=m.groupdict()
+                handle_dict['no_license'] = int(group['no_license'])
+                continue
+            
+            #Day-0 Verification: NO
+            m = p2_6.match(line)
+            if m:
+                group=m.groupdict()
+                handle_dict['day0_verification'] = group['day0_verification']
+                continue
 
             m = p3_1.match(line)
             if m:
@@ -3582,10 +3685,15 @@ class ShowLicenseTechSupport(ShowLicenseTechSupportSchema):
                         current_dict.update({key: int(group['value'])})              
                         continue
                     key = group['key'].replace(' ', '_').replace('.', '_').replace('-', "").replace(':', "").replace('(', "").replace(')', "").lower()
-                    if key == 'server_identity_check' or key == 'vrf':
+                    if key in ('server_identity_check', 'vrf', 'trust_point', 'ip_mode'):
                         current_dict = ret_dict.setdefault('smart_licensing_status',{}).setdefault('transport',{})   
                     if key == 'soft_enforced':
                         current_dict = handle_dict
+
+                    # To handle special case (not real cli output) in unittest
+                    # No time source, *17:05:54.449 UTC Mon Jul 29 2024
+                    if re.match("no_time_source", key):
+                       continue
                         
                     if group['value'].isdigit():
                         current_dict.update({key: int(group['value'])}) 
@@ -3654,7 +3762,7 @@ class ShowLicenseHistoryMessage(ShowLicenseHistoryMessageSchema):
             # Trust Establishment:
             match = p2.match(line)
             if match:
-                tmp_key = re.sub('\s+', '_', match.groupdict()['key_name'].lower())
+                tmp_key = re.sub(r'\s+', '_', match.groupdict()['key_name'].lower())
                 tmp_key = re.sub('import_', '', tmp_key)
                 continue
 

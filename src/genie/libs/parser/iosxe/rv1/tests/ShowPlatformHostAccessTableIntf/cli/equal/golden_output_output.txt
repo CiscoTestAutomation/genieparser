@@ -1,0 +1,11 @@
+ Host Access Table for Te1/0/11
+ ==============================
+ Current feature:  psec
+
+ Source Address      vlan      Access Mode      feature    type
+ --------------------------------------------------------------
+ 0000.0000.0001        10         permit         psec        dynamic
+ 0000.0000.0003        10         permit         psec        dynamic
+ 0000.0000.0005        10         permit         psec        dynamic
+ 0000.0000.0007        10         permit         psec        dynamic
+ Default			ask

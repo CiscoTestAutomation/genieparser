@@ -1,0 +1,57 @@
+Interface IF_ID         : 0x000000000000044f
+Interface Name          : Tunnel5
+Interface Block Pointer : 0x7d13d14ceb38
+Interface Block State   : Ready
+Interface State         : Enabled
+Interface Status        : UPD, 
+Interface Ref-Cnt       : 1
+Interface Type          : TUNNEL
+Bootup breakout Config Done Slot 0: Port: 0
+	Unit           : 0
+	SNMP IF Index  : 0
+	Tunnel Mode    : 12 [MDT GRE]
+	Hw Support     : No
+	Tunnel Vrf     : 0
+	IPv4 MTU       : 0
+	IPv6 MTU       : 0
+	IPv4 VRF ID    : 0
+	IPv6 VRF ID    : 0
+	Protocol flags : 0x0007 [ ipv4 ipv6 pim_ipv4 ]
+	Misc flags     : 0x0005 [ ipv4 mcast_v4 ]
+	ICMPv4 flags   : 0x00 [ None ]
+	ICMPv6 flags   : 0x00 [ None ]
+Ref Count : 1 (feature Ref Counts + 1)
+No Feature Reference count Present
+IFM Feature Sub block information
+	Port L3Tunnel Subblock
+		Src IP ............ [1.1.1.1]
+		MTU ............... [1500]
+		mod_flags ......... [0]
+		Tun Mode .......... [0]
+		vrf ............... [2]
+		v6_tableid ........ [0xffff]
+		tvrf .............. [0]
+		ttl ............... [0]
+		tos ............... [0]
+		Tun Mode .......... [Unsuppoted Mode(12)]
+		stag .............. [0]
+		Tun flags ......... [0]
+		Tun Enabled ....... [Yes(1)]
+		MDT GRE L3Tunnel Subblock
+		Port L3Tunnel NPD Subblock
+		Rm handle ......... [0]
+		Port Gid .......... [17]
+		tPort Gid ......... [16]
+		Asic .............. [0]
+		Port OID .......... [0x602]
+                tPort OID ......... [0x5fb]
+		mdt decap OID ...... [0x603]
+		Ing Counter OID ... [0x604]
+		Egr Counter OID ... [0x600]
+	 Port CTS Subblock is NULL if_id = 0x44f 
+	 Port CTS Subblock
+		Disable SGACL .................... [0x0]
+		Trust ............................ [0x0]
+		Propagate ........................ [0x0]
+		Port SGT ......................... [0xffff]
+Events Log

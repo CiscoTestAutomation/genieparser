@@ -59,10 +59,10 @@ class ShowPdmSteeringPolicy(ShowPdmSteeringPolicySchema):
         #     1 redirect protocol 6 src-port any dst-port eq 15000 service \
         #        service_INFRA_VN (0 match)
         p2 = re.compile(r"^(?P<s_no>[\d]+)\s*redirect protocol\s*"\
-                "(?P<protocol>[\d]+)\s*src-port\s*(eq)?\s*"\
-                "(?P<src_port>[\w]+)\s*dst-port\s*(eq)?\s*"\
-                "(?P<dst_port>[\w]+)\s*service\s*(?P<service>[\w]+)"\
-                "\s*\(\s*(?P<pdm_counters>[\d]+)\s*(match|matches)\)$")
+                r"(?P<protocol>[\d]+)\s*src-port\s*(eq)?\s*"\
+                r"(?P<src_port>[\w]+)\s*dst-port\s*(eq)?\s*"\
+                r"(?P<dst_port>[\w]+)\s*service\s*(?P<service>[\w]+)"\
+                r"\s*\(\s*(?P<pdm_counters>[\d]+)\s*(match|matches)\)$")
         for line in output.splitlines():
             line = line.strip()
 

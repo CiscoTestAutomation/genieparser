@@ -3,6 +3,8 @@
 IOSXR parsers for the following show commands:
 
     * traceroute {traceroute} numeric timeout {timeout} probe {probe} ttl {min} {max} source {source}
+    * traceroute
+    * traceroute vrf {vrf_name} {address}
 
 '''
 
@@ -11,12 +13,13 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional
+from genie.metaparser.util.schemaengine import Any, Optional
 
 
 # ================
 # Schema for:
 #   * 'traceroute'
+#   * 'traceroute vrf {vrf_name} {address}'
 # ================
 class TracerouteSchema(MetaParser):
 
@@ -65,20 +68,27 @@ class TracerouteSchema(MetaParser):
 # ================
 # Schema for:
 #   * 'traceroute'
+#   * 'traceroute vrf {vrf_name} {address}'
 # ================
 class Traceroute(TracerouteSchema):
 
     ''' Parser for:
         * 'traceroute'
+        * 'traceroute vrf {vrf_name} {address}'
     '''
 
-    def cli(self, output):
+    cli_command  = ["traceroute", "traceroute vrf {vrf_name} {address}"]
+
+    def cli(self, vrf_name=None, address=None, output=None):
+        if output is None:
+            if vrf_name and address:
+                output = self.device.execute(self.cli_command[1].format(vrf_name=vrf_name, address=address))
+            else:
+                output = self.device.execute(self.cli_command[0])
 
         # Init vars
         ret_dict = {}
         vrf, tr_dict = None, None
-        # Set output
-        out = output
         # init index for paths
         index = 1
         # Type escape sequence to abort.
@@ -91,33 +101,33 @@ class Traceroute(TracerouteSchema):
 
         # Tracing MPLS Label Switched Path to 172.31.165.220/32, timeout is 2 seconds
         p1_2 = re.compile(r'^Tracing +MPLS +Label +Switched +Path +to'
-                           ' +(?P<traceroute>\S+), +timeout +is'
-                           ' +(?P<timeout>(\d+)) +seconds$')
+                           r' +(?P<traceroute>\S+), +timeout +is'
+                           r' +(?P<timeout>(\d+)) +seconds$')
 
         # Tracing the route to www.cisco.com (10.36.3.3)
         p1_3 = re.compile(r'^Tracing +the +route +to +(?P<name_of_address>\S+)'
-                           ' \(+(?P<traceroute>\S+)\)$')
+                           r' \(+(?P<traceroute>\S+)\)$')
 
         # VRF info: (vrf in name/id, vrf out name/id)
 
         # 1 10.1.1.2 (red/1001, red/1001)
         # 2 10.2.1.2 (red/1001, red/1001)
         p2 = re.compile(r'^((?P<hop>(\d+)) +)?(?P<address>([a-zA-Z0-9\.\:]+))'
-                         ' +\((?P<vrf_in_name>(\S+))\/(?P<vrf_in_id>(\d+)),'
-                         ' +(?P<vrf_out_name>(\S+))\/(?P<vrf_out_id>(\d+))\)$')
+                         r' +\((?P<vrf_in_name>(\S+))\/(?P<vrf_in_id>(\d+)),'
+                         r' +(?P<vrf_out_name>(\S+))\/(?P<vrf_out_id>(\d+))\)$')
 
         # L 1 10.169.197.93 MRU 1552 [Labels: implicit-null Exp: 0] 1 ms
         # ! 2 10.169.197.102 1 ms
         p3_1 = re.compile(r'^(?P<code>(!|Q|.|L|D|M|P|R|I|X)) +(?P<hop>(\d+))'
-                           ' +(?P<address>([a-zA-Z0-9\.\:]+))'
-                           '(?: +MRU +(?P<mru>(\d+)))?'
-                           '(?: +\[Labels: +(?P<label_name>(\S+)) +Exp: +(?P<exp>(\d+))\])?'
-                           ' +(?P<probe_msec>(.*))$')
+                           r' +(?P<address>([a-zA-Z0-9\.\:]+))'
+                           r'(?: +MRU +(?P<mru>(\d+)))?'
+                           r'(?: +\[Labels: +(?P<label_name>(\S+)) +Exp: +(?P<exp>(\d+))\])?'
+                           r' +(?P<probe_msec>(.*))$')
 
         # 0 192.168.197.94 MRU 1552 [Labels: 1015 Exp: 0]
         p3_2 = re.compile(r'^((?P<hop>(\d+)) +)?(?P<address>([a-zA-Z0-9\.\:]+))'
-                           ' +MRU +(?P<mru>(\d+)) +\[Labels: +(?P<label_name>(\S+))'
-                           ' +Exp: +(?P<exp>(\d+))\]$')
+                           r' +MRU +(?P<mru>(\d+)) +\[Labels: +(?P<label_name>(\S+))'
+                           r' +Exp: +(?P<exp>(\d+))\]$')
 
         # 1 172.31.255.125 [MPLS: Label 624 Exp 0] 70 msec 200 msec 19 msec
         # 2 10.0.9.1 [MPLS: Label 300678 Exp 0] 177 msec 150 msec 9 msec
@@ -129,14 +139,14 @@ class Traceroute(TracerouteSchema):
         # 8 10.169.197.101 1 msec 1 msec *
         # 1 10.19.198.29 [MPLS: Labels 16052/16062/16063/39 Exp 0] 2 msec 2 msec 2 msec
         p4 = re.compile(r'^((?P<hop>(\d+)) +)?(?P<address>([a-zA-Z0-9\.\:]+))(?: +\[(?P<label_name>(MPLS))'
-                ': +Labels? (?P<label>(\S+)) +Exp +(?P<exp>(\d+))\])? +(?P<probe_msec>(\d+.*))$')
+                r': +Labels? (?P<label>(\S+)) +Exp +(?P<exp>(\d+))\])? +(?P<probe_msec>(\d+.*))$')
         # 1 p5DC5A26A.dip0.t-ipconnect.de (10.169.197.93) 0 msec *  1 msec *  0 msec
         p5 = re.compile(r'^((?P<hop>(\d+)) +)?(?P<name>[\S]+)'
-                         ' +\(+(?P<address>([\d\.]+))\) +(?P<probe_msec>(.*))$')
+                         r' +\(+(?P<address>([\d\.]+))\) +(?P<probe_msec>(.*))$')
         # 1  *
         p6 = re.compile(r'^((?P<hop>(\d+)) +)?(?P<address>\*)$')
 
-        for line in out.splitlines():
+        for line in output.splitlines():
             line = line.strip()
             
             # traceroute 10.151.22.22
@@ -166,7 +176,7 @@ class Traceroute(TracerouteSchema):
                                    setdefault(traceroute, {})
                 tr_dict['timeout_seconds'] = int(group['timeout'])
                 if '/' in traceroute:
-                    new_out = re.search('(?P<ip>[\d\.]+)\/+(?P<mask>\d+)', traceroute)
+                    new_out = re.search(r'(?P<ip>[\d\.]+)\/+(?P<mask>\d+)', traceroute)
                     address = new_out.groupdict()['ip']
                     mask = new_out.groupdict()['mask']
                     tr_dict['address'] = address

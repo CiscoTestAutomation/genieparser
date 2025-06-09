@@ -1,0 +1,8 @@
+IPv6 Multicast Forwarding (MFIB) status:
+
+Configuration Status: enabled
+Operational Status: running
+Initialization State: Running
+Total signalling packets queued: 0
+Process Status: may enable - 3 - pid 737
+Tables 1/1/0 (active/mrib/io)

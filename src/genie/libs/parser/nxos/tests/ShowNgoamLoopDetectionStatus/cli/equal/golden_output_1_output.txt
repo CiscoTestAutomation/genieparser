@@ -1,0 +1,8 @@
+VlanId     Port       Status       NumLoops      DetectionTime             ClearedTime
+===================================================================================================
+101        Eth1/11    BLOCKED      2             Thu Jun 13 10:50:43 2024  Wed Jun 12 02:23:35 2024
+102        Eth1/11    BLOCKED      2             Thu Jun 13 10:50:43 2024  Wed Jun 12 02:23:35 2024
+103        Eth1/11    BLOCKED      2             Thu Jun 13 10:50:43 2024  Wed Jun 12 02:23:35 2024
+104        Eth1/11    BLOCKED      2             Thu Jun 13 10:50:43 2024  Wed Jun 12 02:23:35 2024
+
+

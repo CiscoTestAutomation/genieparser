@@ -35,7 +35,7 @@ class ShowCefDetailSchema(MetaParser):
                                                 Any(): {
                                                     'load': int,
                                                     'via_address': str,
-                                                    'via_flags': str
+                                                    Optional('via_flags'): str
                                                 },
                                             },
                                         },
@@ -63,7 +63,10 @@ class ShowCefDetailSchema(MetaParser):
                                             Optional('next_hop_table'): str,
                                             Optional('sid_list'): str,
                                             'via_address': str,
-                                            'via_flags': str,
+                                            Optional('via_flags'): str,
+                                            Optional('via_class'): int,
+                                            Optional('weight'): int,
+                                            Optional('via_interface'): str,
                                         },
                                     },
                                     'load_distribution': {
@@ -163,28 +166,28 @@ class ShowCefDetail(ShowCefDetailSchema):
 
         # Prefix Len 32, traffic index 0, precedence n/a, priority 3
         p3 = re.compile(r'^Prefix +Len +(?P<length>[\d]+), +traffic +index'
-                        ' +(?P<traffic_index>[\d]+), +precedence'
-                        ' +(?P<precedence>[\S]+), +priority'
-                        ' +(?P<priority>[\d]+)$')
+                        r' +(?P<traffic_index>[\d]+), +precedence'
+                        r' +(?P<precedence>[\S]+), +priority'
+                        r' +(?P<priority>[\d]+)$')
 
         # gateway array (0x78967928) reference count 2, flags 0x8078, source lsd (5), 1 backups
         p4 = re.compile(r'^gateway +array +\((?P<gateway_array>[\w\d]+)\)'
-                        ' +reference +count +(?P<reference_count>[\d]+),'
-                        ' +flags +(?P<flag_hex>[\w\d]+), +source +(?P<source_type>lsd|rib)'
-                        ' +\((?P<source_lsd_rib>[\d]+)\), (?P<backups>[\d]+) +backups$')
+                        r' +reference +count +(?P<reference_count>[\d]+),'
+                        r' +flags +(?P<flag_hex>[\w\d]+), +source +(?P<source_type>lsd|rib)'
+                        r' +\((?P<source_lsd_rib>[\d]+)\), (?P<backups>[\d]+) +backups$')
 
         # [3 type 4 flags 0x108441 (0x793d4b28) ext 0x0 (0x0)]
         p5 = re.compile(r'^\[(?P<flag_count>[\d]+) +type +(?P<flag_type>[\d]+)'
-                        ' +flags +(?P<flags>[\S\s]+)$')
+                        r' +flags +(?P<flags>[\S\s]+)$')
 
         # LW-LDI[type=1, refc=1, ptr=0x78b064d8, sh-ldi=0x793d4b28]
         p6 = re.compile(r'^LW-LDI\[type=(?P<type>[\d]+),'
-                        ' +refc=(?P<refc>[\d]+), +ptr=(?P<ptr>[\w]+),'
-                        ' +sh-ldi=(?P<sh_ldi>[\w]+)\]$')
+                        r' +refc=(?P<refc>[\d]+), +ptr=(?P<ptr>[\w]+),'
+                        r' +sh-ldi=(?P<sh_ldi>[\w]+)\]$')
 
         # gateway array update type-time 1 Oct 13 18:18:19.680
         p7 = re.compile(r'^gateway +array +update +type-time'
-                        ' +(?P<type_time>[\d]+) +(?P<updated_at>[\w\s:.]+)$')
+                        r' +(?P<type_time>[\d]+) +(?P<updated_at>[\w\s:.]+)$')
 
         # LDI Update time Oct 13 18:18:19.691
         # LW-LDI-TS Oct 13 18:18:19.691
@@ -195,6 +198,11 @@ class ShowCefDetail(ShowCefDetailSchema):
         p10 = re.compile(r'^via +(?P<via>[\S]+), +(?P<dependencies>[\w]{1,})'
                          r' +dependencies, +(?P<via_flags>[\w]+)'
                          r' +\[([\S\s]+)\]$')
+        
+        #via 10.10.32.141/32, TenGigE0/1/0/30.4, 8 dependencies, weight 0, class 0 [flags 0x0]
+        p10_1 = re.compile(r'^via +(?P<via>[\S]+),+ (?P<via_interface>[\S]+),'
+                           r' +(?P<dependencies>\d+) +dependencies, +weight +(?P<weight>\d+),'
+                           r'+ class +(?P<via_class>\d+)+ \[([\S\s]+)\]$')
 
         # path-idx 0 NHID 0x0 [0x78b4cbf8 0x0]
         # path-idx 1 NHID 0x0 [0x78b4fbf8 0x0]
@@ -213,8 +221,8 @@ class ShowCefDetail(ShowCefDetailSchema):
         # next hop 10.55.0.2/32 Te0/4/0/15.1 labels imposed {None}
         # next hop 10.1.15.2/32 Te0/3/0/15.16 labels imposed {None}
         p14 = re.compile(r'^next +hop +(?P<address>[\S]+)'
-                         ' +(?P<interface>[\S]+) +labels'
-                         ' +imposed +\{(?P<labels>[\S]+)\}')
+                         r' +(?P<interface>[\S]+) +labels'
+                         r' +imposed +\{(?P<labels>[\S]+)\}')
 
         # Weight distribution:
         p15 = re.compile(r'^Weight +distribution:$')
@@ -222,14 +230,14 @@ class ShowCefDetail(ShowCefDetailSchema):
         # slot 0, weight 1, normalized_weight 1, class 0
         # slot 31, weight 1, normalized_weight 1, class 0
         p16 = re.compile(r'^slot +(?P<slot>[\d]+), +weight'
-                         ' +(?P<weight>[\d]+), +normalized_weight'
-                         ' +(?P<normalized_weight>[\d]+), +class'
-                         ' +(?P<class>[\d]+)$')
+                         r' +(?P<weight>[\d]+), +normalized_weight'
+                         r' +(?P<normalized_weight>[\d]+), +class'
+                         r' +(?P<class>[\d]+)$')
 
         # Load distribution: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 (refcount 3)
         p17 = re.compile(r'^Load +distribution: +'
-                         '(?P<distribution>[\d\s]+) +'
-                         '\(refcount (?P<refcount>[\d]+)\)$')
+                         r'(?P<distribution>[\d\s]+) +'
+                         r'\(refcount (?P<refcount>[\d]+)\)$')
 
         # Hash  OK  Interface                 Address
         # 0     Y   recursive                 10.55.0.2
@@ -384,7 +392,21 @@ class ShowCefDetail(ShowCefDetailSchema):
                 entries_dict.update({str(entries_id): via_dict})
                 entries_id += 1
                 continue
-
+            #via 10.10.32.141/32, TenGigE0/1/0/30.4, 8 dependencies, weight 0, class 0 [flags 0x0]   
+            m = p10_1.match(line)
+            if m:
+                group = m.groupdict()
+                via_dict = {
+                    'via_address': group['via'],
+                    'via_interface': group['via_interface'],
+                    'dependencies': int(group['dependencies']),
+                    'weight': int(group['weight']),
+                    'via_class': int(group['via_class'])
+                }
+                entries_dict.update({str(entries_id): via_dict})
+                entries_id += 1
+                continue
+            
             # path-idx 0 NHID 0x0 [0x78b4cbf8 0x0]
             # path-idx 0 NHID 0x0 [0x8b001f38 0x0], Internal 0x89d70af0
             m = p11.match(line)
@@ -792,7 +814,7 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
         p21 = re.compile(r'^Path\s+Grouping\s+ID:\s+(?P<path_grouping_id>\d+)$')
 
         # SRv6 Headend: H.Encaps.Red [f3216], SID-list {fc00:c000:1002:e002::}
-        p22 = re.compile(R'^SRv6\s+Headend:\s+(?P<srv6_headend>(.*)),\s+SID-list\s+{(?P<sid_list>[\w:]+)}$')
+        p22 = re.compile(r'^SRv6\s+Headend:\s+(?P<srv6_headend>(.*)),\s+SID-list\s+{(?P<sid_list>[\w:]+)}$')
 
         # initial variables
         ret_dict = {}
@@ -823,7 +845,7 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
             if m:
                 group = m.groupdict()
                 code1 = group['code1']
-                source_protocol_code = re.split('\*|\(\!\)|\(\>\)', code1)[0].strip()
+                source_protocol_code = re.split(r'\*|\(\!\)|\(\>\)', code1)[0].strip()
                 for key,val in self.source_protocol_dict.items():
                     if source_protocol_code in val:
                         source_protocol = key
@@ -921,7 +943,7 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
                         route_dict.update({'active': True})
                     
                     if code1:
-                        source_protocol_code = re.split('\*|\(\!\)|\(\>\)', code1)[0].strip()
+                        source_protocol_code = re.split(r'\*|\(\!\)|\(\>\)', code1)[0].strip()
                         for key,val in self.source_protocol_dict.items():
                             if source_protocol_code in val:
                                 source_protocol = key
@@ -1012,7 +1034,7 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
                     route_dict.update({'active': True})
                 
                 if code1:
-                    source_protocol_code = re.split('\*|\(\!\)|\(\>\)', code1)[0].strip()
+                    source_protocol_code = re.split(r'\*|\(\!\)|\(\>\)', code1)[0].strip()
                     for key,val in self.source_protocol_dict.items():
                         if source_protocol_code in val:
                             source_protocol = key
@@ -1369,9 +1391,10 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
         p20 = re.compile(r'^Path\s+Grouping\s+ID:\s+(?P<path_grouping_id>\d+)$')
 
         # SRv6 Headend: H.Encaps.Red [f3216], SID-list {fc00:c000:1002:e003::}
-        p21 = re.compile(R'^SRv6\s+Headend:\s+(?P<srv6_headend>(.*)),\s+SID-list\s+{(?P<sid_list>[\w:]+)}$')
+        p21 = re.compile(r'^SRv6\s+Headend:\s+(?P<srv6_headend>(.*)),\s+SID-list\s+{(?P<sid_list>[\w:]+)}$')
 
         ret_dict = {}
+        outgoing_interface_dict = {}
         address_family = 'ipv6'
         index = 0
         if not vrf:

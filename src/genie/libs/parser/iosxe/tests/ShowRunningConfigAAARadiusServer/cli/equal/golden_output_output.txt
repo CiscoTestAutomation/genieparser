@@ -1,0 +1,11 @@
+!
+!
+radius server TMP_NAME
+ address ipv4 16.0.0.104
+ key radius/dtls
+ dtls port 2083
+ dtls watchdoginterval 2
+ dtls retries 2
+ dtls trustpoint client Client
+ dtls trustpoint server Server
+!

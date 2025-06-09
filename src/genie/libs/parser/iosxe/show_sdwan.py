@@ -2357,12 +2357,12 @@ class ShowSdwanTunnelSla(ShowSdwanTunnelSlaSchema):
         p3 = re.compile(r'^(?P<sla_key>[\S]+)\s+(?P<sla_value>[\d]+)$')
         # ipsec  150.0.4.1  29.129.29.1   12346  12366  29.0.0.29    blue   metro-ethernet   0     0        0       0,1    __all_tunnels__, aarSla  None
         p4 = re.compile(r'(?P<protocol>[a-z]+)\s+(?P<src_ip>[a-zA-Z0-9\.\:]+)\s+(?P<dst_ip>[a-zA-Z0-9\.\:]+)\s+(?P<src_port>[\d]+)\s+'
-        '(?P<dst_port>[\d]+)\s+(?P<remote_system_ip>[\S]+)\s+(?P<t_local_color>[0-9a-zA-Z\-\_]+)\s+(?P<t_remote_color>[0-9a-zA-Z\-\_]+)'
-        '\s+(?P<mean_loss>[\d]+)\s+(?P<mean_latency>[\d]+)\s+(?P<mean_jitter>[\d]+)\s+(?P<sla_class_index>[\S]+)\s+(?P<sla_class_name>[\S\s]+)'
-        '\s+(?P<fallback_sla_class_index>[\S]+)$')
+        r'(?P<dst_port>[\d]+)\s+(?P<remote_system_ip>[\S]+)\s+(?P<t_local_color>[0-9a-zA-Z\-\_]+)\s+(?P<t_remote_color>[0-9a-zA-Z\-\_]+)'
+        r'\s+(?P<mean_loss>[\d]+)\s+(?P<mean_latency>[\d]+)\s+(?P<mean_jitter>[\d]+)\s+(?P<sla_class_index>[\S]+)\s+(?P<sla_class_name>[\S\s]+)'
+        r'\s+(?P<fallback_sla_class_index>[\S]+)$')
         # 0  ipsec  150.0.2.1  150.0.3.1  private1  biz-internet  __all_tunnels__, aarSla
         p4_1 = re.compile(r'^(?P<index>[0-9]+)\s+(?P<protocol>[a-z]+)\s+(?P<src_ip>[a-zA-Z0-9\.\:]+)\s+(?P<dst_ip>[a-zA-Z0-9\.\:]+)\s+'
-        '(?P<local_color>[0-9a-zA-Z\-\_]+)\s+(?P<remote_color>[0-9a-zA-Z\-\_]+)\s+(?P<sla_class_name>[\S\s]+)$')
+        r'(?P<local_color>[0-9a-zA-Z\-\_]+)\s+(?P<remote_color>[0-9a-zA-Z\-\_]+)\s+(?P<sla_class_name>[\S\s]+)$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -2506,7 +2506,7 @@ class ShowSdwanAppRouteStatistics(ShowSdwanAppRouteStatisticsSchema):
         # app-route statistics 150.0.5.1 150.0.6.1 12346 12346
         # app-route statistics 150.0.5.1 150.0.7.1 12346 12346
         p1 = re.compile(r'^app-route\s+statistics\s+(?P<source>[\S]+)\s+(?P<destination>[\S]+)\s+(?P<protocol>[a-zA-Z]+)\s+'
-        '(?P<src_port>[\d]+)\s+(?P<dst_port>[\d]+)$')
+        r'(?P<src_port>[\d]+)\s+(?P<dst_port>[\d]+)$')
 
         # app-probe-class-list None
         p1_1 = re.compile(r'^app-probe-class-list\s+(?P<app_probe_name>[\S]+)$')
@@ -2687,7 +2687,7 @@ class ShowSdwanAppRouteSlaClass(ShowSdwanAppRouteSlaClassSchema):
 
         # 0       __all_tunnels__       0     0        0        0          None                  None
         p1 = re.compile(r'^(?P<index>[0-9]+)\s+(?P<name>[\S]+)\s+(?P<loss>[\d]+)\s+(?P<latency>[\d]+)\s+(?P<jitter>[\d]+)'
-        '\s+(?P<class_id>[\d]+)\s+(?P<app_probe_class>[\S]+)\s+(?P<fallback_best_tunnel>[\S]+)$')
+        r'\s+(?P<class_id>[\d]+)\s+(?P<app_probe_class>[\S]+)\s+(?P<fallback_best_tunnel>[\S]+)$')
 
         # app-route sla-class 1
         p2 = re.compile(r'^app-route\s+sla-class\s+(?P<index>[\d]+)$')
@@ -7130,7 +7130,7 @@ class ShowSdwanOmpMulticastRoutes(ShowSdwanOmpMulticastRoutesSchema):
             if m:
                 index = 1
                 group = m.groupdict()
-                if not re.match('^\s*$', group['af']):
+                if not re.match(r'^\s*$', group['af']):
                     af = group['af']
                 vpn = group['vpn']
                 tenant = group['tenant']
@@ -7228,7 +7228,7 @@ class ShowSdwanOmpMulticastAutoDiscover(ShowSdwanOmpMulticastAutoDiscoverSchema)
             if m:
                 index = 1
                 group = m.groupdict()
-                if not re.match('^\s*$', group['af']):
+                if not re.match(r'^\s*$', group['af']):
                     af = group['af']
                 vpn = group['vpn']
                 tenant = group['tenant']

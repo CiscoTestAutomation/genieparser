@@ -318,6 +318,8 @@ class ShowPolicyMapTypeSchema(MetaParser):
                                                         Optional('police_bps'): int,
                                                         Optional('police_limit'): int,
                                                         Optional('extended_limit'): int,
+                                                        Optional('rate_bps'): int,
+                                                        Optional('burst_bytes'): int,
                                                         Optional('bandwidth_remaining_ratio'): int,
                                                         Optional('conformed'): {
                                                             Optional('packets'): int,
@@ -615,7 +617,7 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
         # GigabitEthernet0/1/5
         # Something else
         p1 = re.compile(r'^(?P<top_level>(Control Plane|Giga.*|FiveGiga.*|[Pp]seudo.*|Fast.*|[Ss]erial.*|'
-                        r'Ten.*|[Ee]thernet.*|[Tt]unnel.*|[Hh]undred.*|Port-channel\d+))$')
+                        r'Ten.*|[Ee]thernet.*|[Tt]wentyFiveGigE.+|.+GigabitEthernet.+|FiftyGigE.+|[Tt]wenty.*|[Tt]en.*|[Ff]our.*|[Ff]ortyGigabit.*|[Tt]unnel.*|[Hh]undred.*|Port-channel\d+.\d+|Port-channel\d+))$')
 
         # GigabitEthernet0/1/5 : Service Group 1
         p1_0 = re.compile(r'^(?P<top_level>(Giga.*)): +Service Group +(?P<service_group>(\d+))$')
@@ -859,7 +861,7 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
 
         # random-detect precedence 2 100 bytes 200 bytes 10
         p33_1 = re.compile(r'^random-detect +precedence +(?P<precedence>(\d+)) +'
-                            '(?P<bytes1>(\d+)) bytes +(?P<bytes2>(\d+)) bytes +(?P<bytes3>(\d+))$')
+                            r'(?P<bytes1>(\d+)) bytes +(?P<bytes2>(\d+)) bytes +(?P<bytes3>(\d+))$')
 
         # packet output 90, packet drop 0
         p34 = re.compile(r'^packet +output +(?P<packet_output>(\d+)), +packet +drop +(?P<packet_drop>(\d+))$')
@@ -953,16 +955,15 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
             # Port-channel1: Service Group 1
             m = p1_1.match(line)
             if m:
-
+                top_level = m.groupdict()['top_level']
                 # check if previous dict on stack is more deeply nested than the current item
                 while dict_stack[-1][0] >= len_white:
                     dict_stack.pop()
 
-                top_level = m.groupdict()['top_level']
-                service_group = int(m.groupdict()['service_group'])
                 top_level_dict = ret_dict.setdefault(top_level, {})
                 dict_stack.append((len_white, top_level_dict,))
-                top_level_dict['service_group'] = service_group
+                if 'service_group' in m.groupdict():
+                    top_level_dict['service_group'] = int(m.groupdict()['service_group'])                
                 continue
 
             # Service-policy input: Control_Plane_In
@@ -1976,6 +1977,8 @@ class ShowPolicyMapControlPlaneClassMapSchema(MetaParser):
                     Optional('police_bps'): int,
                     Optional('police_limit'): int,
                     Optional('extended_limit'): int,
+                    Optional('rate_pps'): int,
+                    Optional('burst_pkt'): int,
                     Optional('conformed'): {
                         Optional('packets'): int,
                         Optional('bytes'): int,
@@ -2100,6 +2103,9 @@ class ShowPolicyMapControlPlaneClassMap(ShowPolicyMapControlPlaneClassMapSchema)
 
         # Marker statistics: Disabled
         p11_2 = re.compile(r'^Marker +statistics: +(?P<marker_statistics>(\w+))$')
+        
+        #rate 2000 pps, burst 11264 packets
+        p13 = re.compile(r'^rate +(?P<rate_pps>(\d+)) pps, +burst +(?P<burst_pkt>(\d+)) packets$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -2282,7 +2288,13 @@ class ShowPolicyMapControlPlaneClassMap(ShowPolicyMapControlPlaneClassMapSchema)
                     value = m.groupdict()['value']
                 target_dict.update({action: value})
                 continue
-
+            # rate 2000 pps, burst 11264 packets
+            m = p13.match(line)
+            if m:
+                police_dict = class_dict.setdefault('police', {})
+                police_dict['rate_pps'] = int(m.groupdict()['rate_pps'])
+                police_dict['burst_pkt'] = int(m.groupdict()['burst_pkt'])
+                continue
         return ret_dict
 
 
@@ -2434,7 +2446,7 @@ class ShowPolicyMap(ShowPolicyMapSchema):
 
         # police cir percent 20 bc 300 ms pir percent 40 be 400 ms
         p2_1 = re.compile(r'^police +cir +percent +(?P<cir_percent>(\d+)) +bc +(?P<bc_ms>(\d+)) +ms +pir +percent +'
-                           '(?P<pir_percent>(\d+)) +be +(?P<be_ms>(\d+)) ms$')
+                           r'(?P<pir_percent>(\d+)) +be +(?P<be_ms>(\d+)) ms$')
 
         # police cir 1000000 bc 31250 pir 2000000 be 31250
         p2_2 = re.compile(r'^police +cir +(?P<cir_bps>(\d+)) +bc +(?P<cir_bc_bytes>(\d+)) +pir +(?P<pir>(\d+)) +be +(?P<pir_be_bytes>(\d+))$')
@@ -2515,11 +2527,11 @@ class ShowPolicyMap(ShowPolicyMapSchema):
         # default (0)   -                -                1/10
 
         p8_3 = re.compile(r'^(?P<class_val>(\w+(\s+\(\d+\))?)) +(?P<min_threshold>([\w\-]+)) +(?P<max_threshold>([\w\-]+)) '
-                           '+(?P<mark_probability>([0-9]+)/([0-9]+))$')
+                           r'+(?P<mark_probability>([0-9]+)/([0-9]+))$')
 
         # cir 30% bc 10 (msec) be 10 (msec)
         p9 = re.compile(r'^cir +(?P<cir_percent>(\d+))% +bc (?P<bc_msec>(\d+)) \(msec\) +'
-                         'be (?P<be_msec>(\d+)) \(msec\)$')
+                         r'be (?P<be_msec>(\d+)) \(msec\)$')
 
         # priority
         p10 = re.compile(r'^priority( +(?P<priority_kbps>\d+) +\(kbps\))?$')
@@ -2549,13 +2561,13 @@ class ShowPolicyMap(ShowPolicyMapSchema):
 
         # police cir 500000 conform-burst 10000 pir 1000000 peak-burst 10000 conform-action transmit exceed-action set-prec-transmit 2 violate-action drop
         p15 = re.compile(r'^police +cir +(?P<cir_bps>(\d+)) +conform-burst +(?P<conform_burst>(\d+)) +'
-                          'pir +(?P<pir>(\d+)) +peak-burst +(?P<peak_burst>(\d+)) +conform-action +'
-                          '(?P<conform_action>(\w+)) +exceed-action +(?P<exceed_action>([\w\-\s]+)) +'
-                          'violate-action +(?P<violate_action>(\w+))$')
+                          r'pir +(?P<pir>(\d+)) +peak-burst +(?P<peak_burst>(\d+)) +conform-action +'
+                          r'(?P<conform_action>(\w+)) +exceed-action +(?P<exceed_action>([\w\-\s]+)) +'
+                          r'violate-action +(?P<violate_action>(\w+))$')
 
         # police percent 5 2 ms 0 ms conform-action transmit exceed-action drop violate-action drop
         p15_1 = re.compile(r'^police +percent +(?P<cir_percent>(\d+)) +(?P<bc_ms>(\d+)) ms +(?P<be_ms>(\d+)) ms +conform-action +(?P<conform_action>(\w+)) '
-                            '+exceed-action +(?P<exceed_action>([\w\-\s]+)) +violate-action +(?P<violate_action>(\w+))$')
+                            r'+exceed-action +(?P<exceed_action>([\w\-\s]+)) +violate-action +(?P<violate_action>(\w+))$')
 
         # time-based wred, exponential weight 9
         p16 = re.compile(r'^(?P<wred_type>[\w-]+) +wred, +exponential +weight +(?P<exponential_weight>(\d+))$')
@@ -2979,10 +2991,10 @@ class ShowPolicyMapTypeControlSubscriberBindingPolicyName(ShowPolicyMapTypeContr
         ret_dict = {}
 
         #PMAP_DefaultWiredDot1xClosedAuth_1X_MAB          Gi1/0/1
-        p1 = re.compile('^(?P<pname>\S+)?\s+(?P<int>[\w\/]+)$')
+        p1 = re.compile(r'^(?P<pname>\S+)?\s+(?P<int>[\w\/]+)$')
 
         #                                                 Gi1/1/1
-        p2 = re.compile('^(?P<int>[\w\/]+)$')
+        p2 = re.compile(r'^(?P<int>[\w\/]+)$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -3097,7 +3109,7 @@ class ShowPolicyMapTypeQueueingSuperParser(ShowPolicyMapTypeSchema):
 
         # GigabitEthernet0/1/5
         p0 = re.compile(r'^(?P<top_level>(Control Plane|Giga.*|FiveGiga.*|[Pp]seudo.*|Fast.*|[Ss]erial.*|'
-                         'Ten.*|[Ee]thernet.*|[Tt]unnel.*))$')
+                         r'Ten.*|[Ee]thernet.*|[Tt]unnel.*))$')
 
         # Port-channel1: Service Group 1
         p0_1 = re.compile(r'^(?P<top_level>([Pp]ort.*)): +Service Group +(?P<service_group>(\d+))$')
@@ -3153,7 +3165,7 @@ class ShowPolicyMapTypeQueueingSuperParser(ShowPolicyMapTypeSchema):
 
         # shape (average) cir 474656, bc 1899, be 1899
         p11 = re.compile(r'^shape +\(+(?P<shape_type>(\w+))+\) +cir +(?P<shape_cir_bps>(\d+)), +'
-                            'bc +(?P<shape_bc_bps>(\d+)), +be +(?P<shape_be_bps>(\d+))$')
+                            r'bc +(?P<shape_bc_bps>(\d+)), +be +(?P<shape_be_bps>(\d+))$')
 
         # target shape rate 474656
         p12 = re.compile(r'^target +shape +rate +(?P<target_shape_rate>(\d+))$')
@@ -3163,7 +3175,7 @@ class ShowPolicyMapTypeQueueingSuperParser(ShowPolicyMapTypeSchema):
 
         # Priority: 10% (100000 kbps), burst bytes 2500000, b/w exceed drops: 44577300
         p14 = re.compile(r'^Priority:\s+(?P<percent>(\d+))%\s+\((?P<kbps>(\d+))\s+kbps\),\s+burst\sbytes\s+(?P<burst_bytes>(\d)+),(\s+'
-                          'b/w\sexceed\sdrops:\s+(?P<exceed_drops>(\d+)))?$')
+                          r'b/w\sexceed\sdrops:\s+(?P<exceed_drops>(\d+)))?$')
 
         # Priority Level: 1
         p15 = re.compile(r'^Priority +Level: +(?P<priority_level>(\d+))$')
@@ -3560,4 +3572,104 @@ class ShowPolicyMapTypeQueueingPolicyname(ShowPolicyMapTypeQueueingPolicynameSch
             if m:
                 class_map_dict['priority_level'] = int(m.groupdict()['priority_level'])
 
+        return ret_dict
+    
+# =============================================
+# Schema for 'show policy-map type packet-service'
+# =============================================
+
+class ShowPolicyMapTypePacketServiceSchema(MetaParser):
+    """
+    Schema for show policy-map type packet-service
+    """
+    schema = {
+        'packet_services': { 
+            str: {
+                'classes': {
+                    str: {
+                        'capture': {
+                            'name': str,
+                            'limit': int,
+                            'ip_type': str,
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+# =============================================
+# Parser for 'show policy-map type packet-service'
+# =============================================
+
+class ShowPolicyMapTypePacketService(ShowPolicyMapTypePacketServiceSchema):
+    """Parser for show policy-map type packet-service
+    """
+    cli_command = 'show policy-map type packet-service'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+            
+        ret_dict = {}
+        
+        if out:
+            ret_dict.setdefault('packet_services', {})
+        
+        # Policy Map type packet-service epc_policy_match_any_MAC_test1
+        p0 = re.compile(r'Policy Map type packet-service\s+(?P<policy_map>\S+(?:\s+\S+)*)')
+        
+        # Class epc_class_match_any_MAC_test1
+        p1 = re.compile(r'Class\s+(?P<class_name>\S+(?:\s+\S+)*)')
+        
+        # name match_any_MAC_test1
+        p2 = re.compile(r'\s*name\s+(?P<capture_name>\S+)')
+        
+        # limit packet-rate 1000
+        p3 = re.compile(r'\s*limit\s+packet-rate\s+(?P<limit>\d+)')
+        
+        # ip_type ipv4
+        p4 = re.compile(r'\s*ip_type\s+(?P<ip_type>\S+)')
+
+        current_policy_map = ''
+        current_class = ''
+        capture_config = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+            
+            # Policy Map type packet-service epc_policy_match_any_MAC_test1
+            policy_map_match = p0.match(line)
+            if policy_map_match:
+                current_policy_map = policy_map_match.group('policy_map')
+                ret_dict['packet_services'].setdefault(current_policy_map, {'classes': {}})
+                continue
+            
+            # Class epc_class_match_any_MAC_test1
+            class_match = p1.match(line)
+            if class_match and current_policy_map:
+                current_class = class_match.group('class_name')
+                ret_dict['packet_services'][current_policy_map]['classes'].setdefault(current_class, {'capture': {}})
+                capture_config = {}
+                continue
+            
+            # name match_any_MAC_test1
+            name_match = p2.match(line)
+            if name_match:
+                capture_config['name'] = name_match.group('capture_name')
+            
+            # limit packet-rate 1000    
+            limit_match = p3.match(line)
+            if limit_match:
+                capture_config['limit'] = int(limit_match.group('limit'))
+            
+            # ip_type ipv4    
+            ip_type_match = p4.match(line)
+            if ip_type_match:
+                capture_config['ip_type'] = ip_type_match.group('ip_type')
+                if current_policy_map and current_class:
+                    ret_dict['packet_services'][current_policy_map]['classes'][current_class]['capture'] = capture_config.copy()
+            
         return ret_dict

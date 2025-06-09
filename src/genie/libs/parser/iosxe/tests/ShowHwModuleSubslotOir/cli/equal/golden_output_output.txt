@@ -1,0 +1,6 @@
+Module                  Model                Operational Status
+----------------------- -------------------- ------------------------
+subslot 0/0             ISR4451-X-4x1GE      ok
+subslot 0/1             NIM-2MFT-T1/E1       ok
+subslot 0/2             NIM-8MFT-T1/E1       ok
+subslot 0/3             NIM-8MFT-T1/E1       ok

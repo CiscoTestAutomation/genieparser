@@ -3,10 +3,12 @@ show_igmp.py
 
 IOSXE parsers for the following show commands:
 
-    * show ip igmp interface 
+    * show ip igmp interface
+    * show ip igmp interface <WORD>
     * show ip igmp vrf <WORD> interface 
     * show ip igmp groups detail
     * show ip igmp vrf <WORD> groups detail
+    * show ip igmp groups  <WORD> detail
     * show ip igmp ssm-mapping
     * show ip igmp ssm-mapping <WORD>
     * show ip igmp vrf <WORD> ssm-mapping <WORD>
@@ -15,6 +17,7 @@ IOSXE parsers for the following show commands:
     * show ip igmp snooping groups
     * show ip igmp vrf {vrf} snooping groups
     * show platform software fed switch active ip igmp snooping groups count
+    * show ip igmp groups <WORD>
 """
 
 # Python
@@ -36,6 +39,7 @@ class ShowIpIgmpInterfaceSchema(MetaParser):
     """
     Schema for 'show ip igmp interface'
     Schema for 'show ip igmp vrf <WORD> interface'
+    Schema for 'show ip igmp interface <WORD>'
     """
 
     schema = {'vrf':
@@ -89,14 +93,17 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
     """
     Parser for 'show ip igmp interface'
     Parser for 'show ip igmp vrf <WORD> interface'
+    Parser for 'show ip igmp interface <WORD>'
     """
-    cli_command = ['show ip igmp vrf {vrf} interface','show ip igmp interface']
+    cli_command = ['show ip igmp vrf {vrf} interface','show ip igmp interface', 'show ip igmp interface {interface}']
     exclude = ['joins', 'leaves']
 
-    def cli(self, vrf='',output=None):
+    def cli(self, vrf='', interface= '', output=None):
         if output is None:
             if vrf:
                 cmd = self.cli_command[0].format(vrf=vrf)
+            elif interface:
+                cmd = self.cli_command[2].format(interface=interface)
             else:
                 cmd = self.cli_command[1]
 
@@ -114,7 +121,7 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
 
             # Global IGMP State Limit : 1 active out of 20 max
             p1 = re.compile(r'^Global +IGMP +State +Limit *: +'
-                             '(?P<active>\d+) +active +out +of +(?P<global_max_groups>\d+) +max$')
+                             r'(?P<active>\d+) +active +out +of +(?P<global_max_groups>\d+) +max$')
             m = p1.match(line)
             if m:
                 max_groups = int(m.groupdict()['global_max_groups'])
@@ -130,7 +137,7 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
 
             # GigabitEthernet1 is up, line protocol is up
             p2 = re.compile(r'^(?P<intf>[\w\-\.\/]+) +is +(?P<intf_status>[\w\s]+), +'
-                             'line +protocol +is +(?P<oper_status>\w+)$')
+                             r'line +protocol +is +(?P<oper_status>\w+)$')
             m = p2.match(line)
             if m:
                 intf = m.groupdict()['intf']
@@ -198,7 +205,7 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
 
             # IGMP configured query interval is 133 seconds
             p8 = re.compile(r'^IGMP +configured +query +interval +is +'
-                             '(?P<query_interval>\d+) +seconds$')
+                             r'(?P<query_interval>\d+) +seconds$')
             m = p8.match(line)
             if m:                
                 ret_dict['vrf'][vrf]['interface'][intf]['configured_query_interval'] = \
@@ -207,7 +214,7 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
 
             # IGMP querier timeout is 266 seconds
             p9 = re.compile(r'^IGMP +querier +timeout +is +'
-                             '(?P<timeout>\d+) +seconds$')
+                             r'(?P<timeout>\d+) +seconds$')
             m = p9.match(line)
             if m:                
                 ret_dict['vrf'][vrf]['interface'][intf]['querier_timeout'] = \
@@ -216,7 +223,7 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
 
             # IGMP configured querier timeout is 266 seconds
             p10 = re.compile(r'^IGMP +configured +querier +timeout +is +'
-                             '(?P<timeout>\d+) +seconds$')
+                             r'(?P<timeout>\d+) +seconds$')
             m = p10.match(line)
             if m:                
                 ret_dict['vrf'][vrf]['interface'][intf]['configured_querier_timeout'] = \
@@ -225,7 +232,7 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
 
             # IGMP max query response time is 10 seconds
             p11 = re.compile(r'^IGMP +max +query +response +time +is +'
-                             '(?P<time>\d+) +seconds$')
+                             r'(?P<time>\d+) +seconds$')
             m = p11.match(line)
             if m:                
                 ret_dict['vrf'][vrf]['interface'][intf]['query_max_response_time'] = \
@@ -242,7 +249,7 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
 
             # Last member query response interval is 100 ms
             p13 = re.compile(r'^Last +member +query +response +interval +is '
-                              '+(?P<time>\d+) +ms$')
+                              r'+(?P<time>\d+) +ms$')
             m = p13.match(line)
             if m:                
                 ret_dict['vrf'][vrf]['interface'][intf]['last_member_query_interval'] = \
@@ -271,7 +278,7 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
 
             # Interface IGMP State Limit : 1 active out of 10 max
             p16 = re.compile(r'^Interface +IGMP +State +Limit *: +'
-                              '(?P<active>\d+) +active +out +of +(?P<max>\d+) +max$')
+                              r'(?P<active>\d+) +active +out +of +(?P<max>\d+) +max$')
             m = p16.match(line)
             if m:                
                 ret_dict['vrf'][vrf]['interface'][intf]['max_groups'] = int(m.groupdict()['max'])
@@ -299,7 +306,7 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
 
             # Multicast designated router (DR) is 10.1.2.1 (this system)
             p19 = re.compile(r'^Multicast +designated +router +\(DR\) +'
-                              'is +(?P<ip>[\w\.\:]+)(?P<dummy> *\([\w\s]+\))?$')
+                              r'is +(?P<ip>[\w\.\:]+)(?P<dummy> *\([\w\s]+\))?$')
             m = p19.match(line)
             if m:
                 if 'multicast' not in ret_dict['vrf'][vrf]['interface'][intf]:
@@ -313,7 +320,7 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
 
             # IGMP querying router is 10.1.2.1 (this system)
             p20 = re.compile(r'^IGMP +querying +router +is +(?P<querier>[\w\.\:]+)'
-                              '(?P<dummy> *\([\w\s]+\))?$')
+                              r'(?P<dummy> *\([\w\s]+\))?$')
             m = p20.match(line)
             if m:
                 ret_dict['vrf'][vrf]['interface'][intf]['querier'] = \
@@ -359,6 +366,7 @@ class ShowIpIgmpGroupsDetailSchema(MetaParser):
     """
     Schema for 'show ip igmp groups detail'
     Schema for 'show ip igmp vrf <WORD> groups detail'
+    Schema for 'show ip igmp groups  <WORD> detail'
     """
 
     schema = {'vrf':
@@ -421,6 +429,7 @@ class ShowIpIgmpGroupsDetail(ShowIpIgmpGroupsDetailSchema):
     """
     Parser for 'show ip igmp groups detail'
     Parser for 'show ip igmp vrf <WORD> groups detail'
+    Parser for 'show ip igmp groups  <WORD> detail'
     """
     exclude = ['expire', 'up_time', 'ast_reporter']
 
@@ -436,12 +445,15 @@ class ShowIpIgmpGroupsDetail(ShowIpIgmpGroupsDetailSchema):
                 pass
         return ret_dict
 
-    cli_command = ['show ip igmp vrf {vrf} groups detail', 'show ip igmp groups detail']
+    cli_command = ['show ip igmp vrf {vrf} groups detail', 'show ip igmp groups detail', 'show ip igmp groups {ip} detail']
 
-    def cli(self, vrf='',output=None):
+    def cli(self, vrf='', ip='', output=None):
         if output is None:
             if vrf:
                 cmd = self.cli_command[0].format(vrf=vrf)
+            elif ip:
+                vrf = 'default'
+                cmd = self.cli_command[2].format(ip=ip)
             else:
                 vrf = 'default'
                 cmd = self.cli_command[1]
@@ -525,7 +537,7 @@ class ShowIpIgmpGroupsDetail(ShowIpIgmpGroupsDetailSchema):
             # Group mode:        INCLUDE
             # Group mode:        EXCLUDE (Expires: 00:06:06)
             p5 = re.compile(r'^Group +mode: +(?P<group_mode>\w+)'
-                             '( *\(Expires: +(?P<expire>[\w\.\:]+)\))?$')
+                             r'( *\(Expires: +(?P<expire>[\w\.\:]+)\))?$')
             m = p5.match(line)
             if m:
                 group_mode = m.groupdict()['group_mode']
@@ -546,11 +558,11 @@ class ShowIpIgmpGroupsDetail(ShowIpIgmpGroupsDetailSchema):
             # Source Address   Uptime    v3 Exp   CSR Exp   Fwd  Flags
             # 10.4.1.1         00:05:06  stopped   stopped   Yes  L
             p7 = re.compile(r'^(?P<source>[\w\.\:]+) +'
-                             '(?P<up_time>[\w\.\:]+) +'
-                             '(?P<v3_exp>\w+) +'
-                             '(?P<csr_exp>\w+) +'
-                             '(?P<forward>\w+) +'
-                             '(?P<source_flags>\w+)$')
+                             r'(?P<up_time>[\w\.\:]+) +'
+                             r'(?P<v3_exp>\w+) +'
+                             r'(?P<csr_exp>\w+) +'
+                             r'(?P<forward>\w+) +'
+                             r'(?P<source_flags>\w+)$')
             m = p7.match(line)
             if m:
                 source = m.groupdict()['source']
@@ -903,10 +915,10 @@ class ShowIpIgmpSnoopingGroupsSchema(MetaParser):
     schema = {
         'igmp_groups': {
             Any(): {
-                'vlan_id': str,
-                'type': str,
-                'version': str,
-                'port': str
+                Optional('vlan_id'): str,
+                Optional('type'): str,
+                Optional('version'): str,
+                Optional('port'): str
             },
         }
     }
@@ -934,10 +946,20 @@ class ShowIpIgmpSnoopingGroups(ShowIpIgmpSnoopingGroupsSchema):
             # 10        225.1.1.1                igmp        v2          Tw1/0/4, Tw1/0/25
             p1 = re.compile(r'^(?P<vlan_id>\d+) +(?P<group_ip>[\d\.]+) +(?P<type>\w+) +(?P<version>\w+) +(?P<port>[\S,\s]+)$')
 
+			# 12        225.0.0.1                S                       Po92
+            p1_0 = re.compile(r'^(?P<vlan_id>\d+) +(?P<group_ip>[\d\.]+) +(?P<type>\w+) +(?P<port>[\S,\s]+)$')
+
             m = p1.match(line)
             if m:
                 group = m.groupdict()
                 igmp_dict.setdefault('igmp_groups', {}).setdefault(group.pop('group_ip'), group)
+                continue
+
+            m = p1_0.match(line)
+            if m:
+                group = m.groupdict()
+                igmp_dict.setdefault('igmp_groups', {}).setdefault(group.pop('group_ip'), group)
+                continue
 
         return igmp_dict
 
@@ -1056,7 +1078,7 @@ class ShowIpIgmpSnoopingGroupsVlanHosts(
             out = output
 
         parsed_dict = oper_fill_tabular(
-            header_fields=["Host \(MAC\/IP\)", "Filter mode",
+            header_fields=[r"Host \(MAC\/IP\)", "Filter mode",
                            "Expires", "Uptime", "# Sources"],
             label_fields=['host_addr', 'filter', 'expire', 'uptime', 'sources'],
             index=[0], device_output=out, device_os='iosxe'
@@ -1100,7 +1122,7 @@ class ShowIpIgmpVrfGroups(ShowIpIgmpVrfGroupsSchema):
         igmp_dict = {}
         
         # 228.1.1.1        Vlan111                  00:03:07  00:02:59  151.1.1.2
-        p1=re.compile("^(?P<groupip>[\d\.]+)\s+(?P<interface>\S+)\s+(?P<uptime>\S+)\s+(?P<expires>\S+)\s+(?P<last_reporter>\S+).*$")
+        p1=re.compile(r"^(?P<groupip>[\d\.]+)\s+(?P<interface>\S+)\s+(?P<uptime>\S+)\s+(?P<expires>\S+)\s+(?P<last_reporter>\S+).*$")
 
         for line in output.splitlines():
             line = line.strip()
@@ -1204,6 +1226,7 @@ class ShowIpIgmpVrfSnoopingGroups(ShowIpIgmpVrfSnoopingGroupsSchema):
 class ShowIpIgmpGroupsSchema(MetaParser):
     """
     Schema for 'show ip igmp groups'
+    Schema for 'show ip igmp groups <WORD>'
     """
 
     schema = {
@@ -1221,12 +1244,17 @@ class ShowIpIgmpGroupsSchema(MetaParser):
 class ShowIpIgmpGroups(ShowIpIgmpGroupsSchema):
     """
     Parser for 'show ip igmp groups'
+    Parser for 'show ip igmp groups <WORD>'
     """
-    cli_command = 'show ip igmp groups'
+    cli_command = ['show ip igmp groups', 'show ip igmp groups {interface}']
 
-    def cli(self, output=None):
+    def cli(self, interface = '', output=None):
         if output is None:
-            output = self.device.execute(self.cli_command)
+            if interface:
+                cmd = self.cli_command[1].format(interface=interface)
+            else:
+                cmd = self.cli_command[0]
+            output = self.device.execute(cmd)
 
         # initial variables
         igmp_dict = {}
@@ -1292,40 +1320,6 @@ class ShowIpIgmpSnoopingMrouterVlan(ShowIpIgmpSnoopingMrouterVlanSchema):
                 ret_dict[vlan_id]['port'] = port
         return vlan_dict
 
-class ShowPlatformSoftwareIgmpSnoopingGroupsCountSchema(MetaParser):
-    schema = {
-             'ip_igmp_snooping_entries': int
-             }
-
-class ShowPlatformSoftwareIgmpSnoopingGroupsCount(ShowPlatformSoftwareIgmpSnoopingGroupsCountSchema):
-
-    cli_command = [
-                  'show platform software fed {switch} active ip igmp snooping groups count',
-                  'show platform software fed active ip igmp snooping groups count'
-                  ]
-
-    def cli(self, output=None, switch=''):
-        if output is None:
-            if switch:
-                cmd = self.cli_command[0].format(switch=switch)
-            else:
-                cmd = self.cli_command[1]
-            output = self.device.execute(cmd)
-        dict_count = {}
-        # Total number of entries:8000
-        p1 = re.compile(r'^Total\s+number\s+of\s+entries\:(?P<ip_igmp_snooping_entries>\d+)$')
-
-        for line in output.splitlines():
-            line = line.strip()
-
-            # Number of lines which match regexp = 240
-            m = p1.match(line)
-            if m:
-                groups = m.groupdict()
-                count = int(groups['ip_igmp_snooping_entries'])
-                dict_count['ip_igmp_snooping_entries'] = count
-
-        return (dict_count)
 
 
 # ===============================================================
@@ -1350,7 +1344,7 @@ class ShowIpIgmpSnoopingQuerierVlanDetailSchema(MetaParser):
             'tcn_query_count': int,
             'tcn_query_interval': int,
         },
-        'vlan': {     
+        Optional('vlan'): {     
             Any(): {       
                 'admin_state': str,                             
                 'admin_version': int,
@@ -1552,6 +1546,101 @@ class ShowIpIgmpSnoopingQuerierVlanDetail(ShowIpIgmpSnoopingQuerierVlanDetailSch
             if m:
                 group = m.groupdict()
                 vlan_dict['tcn_query_pending_count'] = int(group['tcn_query_pending_count'])
+                continue
+
+        return ret_dict
+
+# ========================================================
+# Parser for show ip igmp snooping groups vlan {vlan} {group}
+# ========================================================
+
+class ShowIpIgmpSnoopingGroupsVlanGroupSchema(MetaParser):
+    """
+    Schema for show ip igmp snooping groups vlan {vlan} {group}
+    """
+
+    schema = {
+        'igmp_groups': {
+            Any(): {
+                'vlan': str,
+                'type': str,
+                'version': str,
+                'port_list': str
+            }
+        }
+    }
+
+class ShowIpIgmpSnoopingGroupsVlanGroup(ShowIpIgmpSnoopingGroupsVlanGroupSchema):
+    """ Parser for show ip igmp snooping groups vlan {vlan} {group}"""
+
+    cli_command = ['show ip igmp snooping groups vlan {vlan} {group}']
+
+    def cli(self, vlan=None, group=None, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command[0].format(vlan=vlan, group=group))
+
+        # initial variables
+        ret_dict = {}
+        
+        # Vlan      Group                    Type        Version     Port List
+        # -----------------------------------------------------------------------
+        # 11        225.0.0.1                igmp        v3          Po92
+        p1=re.compile(r'^(?P<vlan>[\w\.\/\-]+) +(?P<group>[\w\.\:]+) +(?P<type>[\w\.\:]+) +(?P<version>[\w\.\:]+) +(?P<port_list>[\w\.\:\/]+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            # 11        225.0.0.1                igmp        v3          Po92
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault('igmp_groups', {}).setdefault(group.pop('group'), group)
+        return ret_dict
+
+class ShowIpIgmpMembershipSchema(MetaParser):
+    """Schema for 'show ip igmp membership'"""
+
+    schema = {
+        'group': {
+            Any(): {
+                'reporter': str,
+                'uptime': str,
+                'expire': str,
+                'flags': str,
+                'interface': str,
+            }
+        }
+    }
+
+class ShowIpIgmpMembership(ShowIpIgmpMembershipSchema):
+    """Parser for 'show ip igmp membership'"""
+
+    cli_command = 'show ip igmp membership'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # initial variables
+        ret_dict = {}
+
+        # Matching Patterns
+        #  Channel/Group                  Reporter        Uptime   Exp.  Flags  Interface
+        # *,225.1.1.1                    4.1.1.2         00:02:06 02:34 2A     Tw1/0/36
+        p1 = re.compile(r'^(?P<group>[\*\d\.,]+)\s+(?P<reporter>[\d\.]+)\s+(?P<uptime>[\d:]+)\s+(?P<expire>[\d:]+)\s+(?P<flags>\w+)\s+(?P<interface>\S+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # *,225.1.1.1                    4.1.1.2         00:02:06 02:34 2A     Tw1/0/36
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()['group']
+                group_dict = ret_dict.setdefault('group', {}).setdefault(group, {})
+                group_dict['reporter'] = m.groupdict()['reporter']
+                group_dict['uptime'] = m.groupdict()['uptime']
+                group_dict['expire'] = m.groupdict()['expire']
+                group_dict['flags'] = m.groupdict()['flags']
+                group_dict['interface'] = m.groupdict()['interface']
                 continue
 
         return ret_dict

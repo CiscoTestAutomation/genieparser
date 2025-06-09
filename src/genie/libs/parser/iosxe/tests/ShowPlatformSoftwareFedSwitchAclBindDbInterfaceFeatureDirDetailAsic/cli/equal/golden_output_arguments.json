@@ -1,0 +1,7 @@
+{
+    "state" : "active",
+    "interface" : "vlan 300",
+    "feature" : "racl",
+    "dir" : "in",
+    "asic" : "0"
+}

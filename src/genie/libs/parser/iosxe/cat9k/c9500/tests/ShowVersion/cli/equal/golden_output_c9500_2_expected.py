@@ -1,7 +1,8 @@
 
 expected_output = {
-   'version': {   'bootldr_version': 'System Bootstrap, Version 17.1.1r, '
+   'version': {    'bootldr_version': 'System Bootstrap, Version 17.1.1r, '
                                       'RELEASE SOFTWARE (P)',
+                   'bootldr': 'System Bootstrap, Version 17.1.1r, RELEASE SOFTWARE (P)',
                    'chassis': 'C9500-12Q',
                    'code_name': 'Amsterdam',
                    'compiled_by': 'mcpre',

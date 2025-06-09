@@ -86,7 +86,7 @@ class ShowVersion(ShowVersionSchema):
         # Cisco IOS XR Software, Version 6.3.1.15I
         # Cisco IOS XR Software, Version 6.1.4.10I[Default]
         p1 = re.compile(r'\s*Cisco +IOS +XR +Software, +Version'
-                        ' +(?P<software_version>[A-Z0-9\.]+)(?:\[Default\])?(\sLNT)?$')
+                        r' +(?P<software_version>[A-Z0-9\.]+)(?:\[Default\])?(\sLNT)?$')
 
         # System uptime is 1 week, 1 day, 5 hours, 47 minutes
         # PE1 uptime is 3 hours, 11 minutes
@@ -94,7 +94,7 @@ class ShowVersion(ShowVersionSchema):
 
         # System image file is "disk0:asr9k-os-mbi-6.1.4.10I/0x100305/mbiasr9k-rsp3.vm"
         p3 = re.compile(r'\s*System +image +file +is'
-                        ' +\"(?P<image>[a-zA-Z0-9\:\/\.\-]+)\"$')
+                        r' +\"(?P<image>[a-zA-Z0-9\:\/\.\-]+)\"$')
 
         # cisco IOS-XRv 9000 () processor
         p4 = re.compile(r'\s*cisco +(?P<device_family>[a-zA-Z0-9\-\s]+)'
@@ -116,8 +116,8 @@ class ShowVersion(ShowVersionSchema):
 
         # Configuration register on node 0/RSP0/CPU0 is 0x1922
         p6 = re.compile(r'\s*Configuration +register +on +node'
-                        ' +(?P<node>[A-Z0-9\/]+) +is'
-                        ' +(?P<config_register>[x0-9]+)$')
+                        r' +(?P<node>[A-Z0-9\/]+) +is'
+                        r' +(?P<config_register>[x0-9]+)$')
 
         # ASR 9006 4 Line Card Slot Chassis with V2 AC PEM
         p7 = re.compile(r'\s*.*Chassis.*$')
@@ -183,7 +183,7 @@ class ShowVersion(ShowVersionSchema):
                 show_version_dict['config_register'] = \
                     m.groupdict()['config_register']
                 node = str(m.groupdict()['node'])
-                if re.search('CPU0', node):
+                if re.search(r'CPU0', node):
                     show_version_dict['rp_config_register'] = \
                         str(m.groupdict()['config_register'])
                 continue
@@ -268,7 +268,7 @@ class ShowSdrDetail(ShowSdrDetailSchema):
             # SDR_name             : Owner
             # SDR name           : default-sdr
             p2 = re.compile(r'\s*(SDR_name|SDR name) *:'
-                             ' +(?P<sdr_name>[a-zA-Z\-]+)$')
+                             r' +(?P<sdr_name>[a-zA-Z\-]+)$')
             m = p2.match(line)
             if m:
                 sdr_detail['sdr_id'][sdr_id]['sdr_name'] = \
@@ -277,7 +277,7 @@ class ShowSdrDetail(ShowSdrDetailSchema):
 
             # dSDRsc node          : 0/0/CPU0
             p3 = re.compile(r'\s*dSDRsc +node *:'
-                             ' +(?P<dsdrsc_node>[a-zA-Z0-9\/]+)$')
+                             r' +(?P<dsdrsc_node>[a-zA-Z0-9\/]+)$')
             m = p3.match(line)
             if m:
                 sdr_detail['sdr_id'][sdr_id]['dsdrsc_node'] \
@@ -286,7 +286,7 @@ class ShowSdrDetail(ShowSdrDetailSchema):
 
             # dSDRsc partner node  : NONE
             p4 = re.compile(r'\s*dSDRsc +partner +node *:'
-                             ' +(?P<dsdrsc_partner_node>[a-zA-Z0-9\/]+)$')
+                             r' +(?P<dsdrsc_partner_node>[a-zA-Z0-9\/]+)$')
             m = p4.match(line)
             if m:
                 sdr_detail['sdr_id'][sdr_id]['dsdrsc_partner_node'] = \
@@ -296,7 +296,7 @@ class ShowSdrDetail(ShowSdrDetailSchema):
             # primary node1        : 0/0/CPU0
             # SDR lead (Primary) : 0x1000
             p5 = re.compile(r'\s*(primary +node1|SDR +lead +\(Primary\)) *:'
-                             ' +(?P<primary_node1>[a-zA-Z0-9\/]+)$')
+                             r' +(?P<primary_node1>[a-zA-Z0-9\/]+)$')
             m = p5.match(line)
             if m:
                 sdr_detail['sdr_id'][sdr_id]['primary_node1'] = \
@@ -306,7 +306,7 @@ class ShowSdrDetail(ShowSdrDetailSchema):
             # primary node2        : NONE
             # SDR lead (Backup)  : 0xffffffff
             p6 = re.compile(r'\s*(primary +node2|SDR +lead +\(Backup\)) *:'
-                             ' +(?P<primary_node2>[a-zA-Z0-9\/]+)$')
+                             r' +(?P<primary_node2>[a-zA-Z0-9\/]+)$')
             m = p6.match(line)
             if m:
                 sdr_detail['sdr_id'][sdr_id]['primary_node2'] = \
@@ -315,7 +315,7 @@ class ShowSdrDetail(ShowSdrDetailSchema):
 
             # mac addr             : 025e.eaff.fb57
             p7 = re.compile(r'\s*mac +addr *:'
-                             ' +(?P<mac_address>[a-zA-Z0-9\.]+)$')
+                             r' +(?P<mac_address>[a-zA-Z0-9\.]+)$')
             m = p7.match(line)
             if m:
                 sdr_detail['sdr_id'][sdr_id]['mac_address'] = \
@@ -326,10 +326,10 @@ class ShowSdrDetail(ShowSdrDetailSchema):
             # RP         0/RSP0/CPU0   IOS XR RUN        Primary    0/RSP1/CPU0
             # RP         0/RSP0/CPU0   IOS XR RUN        Primary    0/RSP1/CPU0
             p8 = re.compile(r'\s*(?P<type>[a-zA-Z0-9\-]+)'
-                             ' +(?P<node_name>[a-zA-Z0-9\/]+)'
-                             ' +(?P<node_status>[IOS XR RUN|OPERATIONAL|POWERED_ON]+)'
-                             ' +(?P<red_state>[a-zA-Z\/\-]+)?'
-                             ' +(?P<partner_name>[a-zA-Z0-9\/]+)$')
+                             r' +(?P<node_name>[a-zA-Z0-9\/]+)'
+                             r' +(?P<node_status>[IOS XR RUN|OPERATIONAL|POWERED_ON]+)'
+                             r' +(?P<red_state>[a-zA-Z\/\-]+)?'
+                             r' +(?P<partner_name>[a-zA-Z0-9\/]+)$')
             m = p8.match(line)
             if m:
                 if 'membership' not in sdr_detail['sdr_id'][sdr_id]:
@@ -403,11 +403,11 @@ class ShowPlatform(ShowPlatformSchema):
         # 1/10/CPU0     FP-X              N/A                UNPOWERED       NPWR,NSHUT,MON
 
         p1 = re.compile(r'^\s*(?P<node>[a-zA-Z0-9\/]+)'
-                            '\s+(?P<name>[a-zA-Z0-9\-\.]+)'
-                            '(?:\((?P<redundancy_state>[a-zA-Z]+)\))?'
-                            '(?: +(?P<plim>[a-zA-Z0-9(\/|\-| )]+))?'
-                            '\s+(?P<state>(UNPOWERED|DISABLED|IOS XR RUN|OK|OPERATIONAL|POWERED_ON))'
-                            '\s+(?P<config_state>[a-zA-Z\,]+)$')
+                            r'\s+(?P<name>[a-zA-Z0-9\-\.]+)'
+                            r'(?:\((?P<redundancy_state>[a-zA-Z]+)\))?'
+                            r'(?: +(?P<plim>[a-zA-Z0-9(\/|\-| )]+))?'
+                            r'\s+(?P<state>(SW_INACTIVE|IN-RESET|UNPOWERED|DISABLED|IOS XR RUN|OK|OPERATIONAL|POWERED_ON))'
+                            r'\s+(?P<config_state>[a-zA-Z\,]+)$')
 
         # Init vars
         show_platform = {}
@@ -544,8 +544,8 @@ class ShowPlatformVm(ShowPlatformVmSchema):
             # 0/RSP1/CPU0     RP(STANDBY)    0/RSP0/CPU0     FINAL Band      192.168.166.4
 
             p1 = re.compile(r'^(?P<node>[\S\/]+) +(?P<type>[(RP|LC)\s*\((ACTIVE|STANDBY)\)]+)'
-                             ' +(?P<partner_name>[NONE|(?:\S)]+) +(?P<sw_status>[a-zA-Z\s]+)'
-                             ' +(?P<ip_address>[\S]+)$')
+                             r' +(?P<partner_name>[NONE|(?:\S)]+) +(?P<sw_status>[a-zA-Z\s]+)'
+                             r' +(?P<ip_address>[\S]+)$')
 
             m = p1.match(line)
             if m:
@@ -603,7 +603,7 @@ class ShowInstallActiveSummary(ShowInstallActiveSummarySchema):
         # disk0:asr9k-mini-px-6.1.21.15I
         # xrv9k-xr-6.2.2.14I version=6.2.2.14I [Boot image]
         p2 = re.compile(r'\s*Active +Packages:'
-                                ' *(?P<num_active_packages>[0-9]+)?$')
+                                r' *(?P<num_active_packages>[0-9]+)?$')
 
         # Active Packages: XR: 201    All: 1532
         p3 = re.compile(r'^Active +Packages: +XR: +(?P<xr>[\d]+)\s+All: +(?P<all>[\d]+)$')
@@ -752,7 +752,7 @@ class ShowInstallInactiveSummary(ShowInstallInactiveSummarySchema):
             # disk0:asr9k-mini-px-6.1.21.15I
             # xrv9k-xr-6.2.2.14I version=6.2.2.14I [Boot image]
             p2 = re.compile(r'\s*Inactive +Packages:'
-                             ' *(?P<num_inactive_packages>[0-9]+)?$')
+                             r' *(?P<num_inactive_packages>[0-9]+)?$')
             m = p2.match(line)
             if m:
                 previous_line_inactive_packages = True
@@ -812,13 +812,13 @@ class ShowInstallCommitSummary(ShowInstallCommitSummarySchema):
         # disk0:asr9k-mini-px-6.1.21.15I
         # xrv9k-xr-6.2.2.14I version=6.2.2.14I [Boot image]
         p2 = re.compile(r'\s*Committed +Packages:'
-                        ' *(?P<num_committed_packages>[0-9]+)?$')
+                        r' *(?P<num_committed_packages>[0-9]+)?$')
         
         # disk0:xrvr-full-x-6.2.1.23I
         # disk0:asr9k-mini-px-6.1.21.15I
         # xrv9k-xr-6.2.2.14I version=6.2.2.14I [Boot image]
         p3 = re.compile(r'\s*Active +Packages:'
-                        ' *(?P<num_active_packages>[0-9]+)?$')
+                        r' *(?P<num_active_packages>[0-9]+)?$')
         
         # Committed Packages: XR: 201    All: 1532
         p4 = re.compile(r'^Committed +Packages: +XR: +(?P<xr>[\d]+)\s+All: +(?P<all>[\d]+)$')
@@ -1054,10 +1054,11 @@ class AdminShowDiagChassisSchema(MetaParser):
         Optional('controller_type'): str,
         'rack_num': int,
         Optional('sn'): str,
+        Optional('pcb_serial_number'): str,
         'pid': str,
         'vid': str,
         Optional('desc'): str,
-        'clei': str,
+        Optional('clei'): str,
         Optional('eci'): str,
         Optional('pca'): str,
         Optional('top_assy_num'): str,
@@ -1072,7 +1073,7 @@ class AdminShowDiagChassisSchema(MetaParser):
         Optional('hw_version'): str,
         Optional('top_assembly_block'): {
             Optional('serial_number'): str,
-            'part_number': str,
+            Optional('part_number'): str,
             Optional('part_revision'): str,
             Optional('revision'): str,
             Optional('mfg_deviation'): str,
@@ -1149,8 +1150,7 @@ class AdminShowDiagChassis(AdminShowDiagChassisSchema):
             # S/N:   FOX1810G8LR
             # Serial Number   : FOC23158L99
             # Chassis Serial Number    : FOC23158L99
-            # PCB Serial Number        : CAT2311B0AK
-            p3 = re.compile(r'^(S\/N|((Chassis|PCB) +)?Serial +Number)(\s+)?(\:)? +(?P<serial_number>\S+)$')
+            p3 = re.compile(r'^(S\/N|(Chassis +)?Serial +Number)(\s+)?(\:)? +(?P<serial_number>\S+)$')
             m = p3.match(line)
             if m:
                 serial_num = str(m.groupdict()['serial_number'])
@@ -1161,6 +1161,16 @@ class AdminShowDiagChassis(AdminShowDiagChassisSchema):
                 else:
                     admin_show_diag_dict['sn'] = serial_num
 
+                continue
+
+            # PCB Serial Number        : CAT2311B0AK
+            p3_1 = re.compile(r'^PCB Serial +Number(\s+)?(\:)? +(?P<pcb_serial_number>\S+)$')
+            m = p3_1.match(line)
+            if m:
+                serial_num = str(m.groupdict()['pcb_serial_number'])
+                admin_show_diag_dict['pcb_serial_number'] = serial_num
+                # set sn if not already set
+                admin_show_diag_dict.setdefault('sn', serial_num)
                 continue
 
             # PID:   ASR-9006-AC-V2
@@ -1194,7 +1204,7 @@ class AdminShowDiagChassis(AdminShowDiagChassisSchema):
 
             # CLEI:  IPMUP00BRB
             # CLEI Code       : INM1J10ARA
-            p7 = re.compile(r'CLEI( +Code\s+)?: +(?P<clei>[a-zA-Z0-9\-]+)$')
+            p7 = re.compile(r'CLEI( +Code\s+)?: +(?P<clei>\S+)$')
             m = p7.match(line)
             if m:
                 admin_show_diag_dict['clei'] = \
@@ -1542,7 +1552,7 @@ class ShowDiagDetails(ShowDiagDetailsSchema):
         p2 = re.compile(r'^Controller Type\s+:\s+(?P<controller_type>\w+)$')
 
         # PID                        : 8201-32FH
-        p3 = re.compile(r'^(PID|Product ID)\s+:\s+(?P<pid>[\w-]+)$')
+        p3 = re.compile(r'^(PID|Product ID)\s+:\s+(?P<pid>[\w\.-]+)$')
 
         # Version Identifier         : V03
         p4 = re.compile(r'^(VID|Version Identifier)\s+:\s+(?P<version_identifier>.+?)$')
@@ -1618,61 +1628,61 @@ class ShowDiagDetails(ShowDiagDetailsSchema):
         p27 = re.compile(r'^Common Blocks:$')
 
         # Block Signature : 0xabab
-        p28 = re.compile('^Block Signature\s+:\s+(?P<block_signature>\w+)$')
+        p28 = re.compile(r'^Block Signature\s+:\s+(?P<block_signature>\w+)$')
 
         # Block Version   : 3
-        p29 = re.compile('^Block Version\s+:\s+(?P<block_version>\d+)$')
+        p29 = re.compile(r'^Block Version\s+:\s+(?P<block_version>\d+)$')
 
         # Block Length    : 160
-        p30 = re.compile('^Block Length\s+:\s+(?P<block_length>\d+)$')
+        p30 = re.compile(r'^Block Length\s+:\s+(?P<block_length>\d+)$')
 
         # Block Checksum  : 0x1b10
-        p31 = re.compile('^Block Checksum\s+:\s+(?P<block_checksum>.+?)$')
+        p31 = re.compile(r'^Block Checksum\s+:\s+(?P<block_checksum>.+?)$')
 
         # EEPROM Size     : 65535
-        p32 = re.compile('^EEPROM Size\s+:\s+(?P<eeprom_size>\d+)$')
+        p32 = re.compile(r'^EEPROM Size\s+:\s+(?P<eeprom_size>\d+)$')
 
         # Block Count     : 4
-        p33 = re.compile('^Block Count\s+:\s+(?P<block_count>\d+)$')
+        p33 = re.compile(r'^Block Count\s+:\s+(?P<block_count>\d+)$')
 
         # FRU Major Type  : 0x6003
-        p34 = re.compile('^FRU Major Type\s+:\s+(?P<fru_major_type>\w+)$')
+        p34 = re.compile(r'^FRU Major Type\s+:\s+(?P<fru_major_type>\w+)$')
 
         # FRU Minor Type  : 0x0
-        p35 = re.compile('^FRU Minor Type\s+:\s+(?P<fru_minor_type>\w+)$')
+        p35 = re.compile(r'^FRU Minor Type\s+:\s+(?P<fru_minor_type>\w+)$')
 
         # OEM String      : Cisco Systems, Inc.
-        p36 = re.compile('^OEM String\s+:\s+(?P<oem_string>.+?)$')
+        p36 = re.compile(r'^OEM String\s+:\s+(?P<oem_string>.+?)$')
 
         # Serial Number   : JAE24480QCT
-        p37 = re.compile('^Serial Number\s+:\s+(?P<serial_number>\w+)$')
+        p37 = re.compile(r'^Serial Number\s+:\s+(?P<serial_number>\w+)$')
 
         # Part Number     : 73-102072-04
-        p38 = re.compile('^Part Number\s+:\s+(?P<part_number>.+?)$')
+        p38 = re.compile(r'^Part Number\s+:\s+(?P<part_number>.+?)$')
 
         # Part Revision   : 05
-        p39 = re.compile('^Part Revision\s+:\s+(?P<part_revision>\w+)$')
+        p39 = re.compile(r'^Part Revision\s+:\s+(?P<part_revision>\w+)$')
 
         # Mfg Deviation   : 000000000
-        p40 = re.compile('^Mfg Deviation\s+:\s+(?P<mfg_deviation>\w+)$')
+        p40 = re.compile(r'^Mfg Deviation\s+:\s+(?P<mfg_deviation>\w+)$')
 
         # H/W Version     : 0.300
-        p41 = re.compile('^H/W Version\s+:\s+(?P<hw_version>.+?)$')
+        p41 = re.compile(r'^H/W Version\s+:\s+(?P<hw_version>.+?)$')
 
         # Mfg Bits        : 0
-        p42 = re.compile('^Mfg Bits\s+:\s+(?P<mfg_bits>\w+)$')
+        p42 = re.compile(r'^Mfg Bits\s+:\s+(?P<mfg_bits>\w+)$')
 
         # Engineer Use    : 0
-        p43 = re.compile('^Engineer Use\s+:\s+(?P<engineer_use>\w+)$')
+        p43 = re.compile(r'^Engineer Use\s+:\s+(?P<engineer_use>\w+)$')
 
         # snmpOID         : 9.12.3.1.9.2.708.0
-        p44 = re.compile('^snmpOID\s+:\s+(?P<snmpoid>.+?)$')
+        p44 = re.compile(r'^snmpOID\s+:\s+(?P<snmpoid>.+?)$')
 
         # RMA Code        : 0-0-0-0
-        p45 = re.compile('^RMA Code\s+:\s+(?P<rma_code>.+?)$')
+        p45 = re.compile(r'^RMA Code\s+:\s+(?P<rma_code>.+?)$')
 
         # Card Specific Block:
-        p46 = re.compile('^Card Specific Block:$')
+        p46 = re.compile(r'^Card Specific Block:$')
 
         # Feature Bits    : 0x0
         p47 = re.compile(r'^Feature Bits\s+:\s+(?P<feature_bits>\w+)$')
@@ -2082,7 +2092,7 @@ class ShowDiagDetails(ShowDiagDetailsSchema):
             m = p25.match(line)
             if m:
                 match_dict = m.groupdict()
-                pointer_block['eci_number'] = match_dict['eci_num']
+                pointer_block['eci_number'] = match_dict['eci_number']
                 continue
 
             # IDPROM Format Revision   : A
@@ -2729,8 +2739,8 @@ class ShowRedundancySummary(ShowRedundancySummarySchema):
 
             # 0/RSP0/CPU0(A)   0/RSP1/CPU0(S) (Node Not Ready, NSR: Not Configured)
             p1 = re.compile(r'\s*(?P<node>[a-zA-Z0-9\/\(\)]+)'
-                             ' +(?P<standby_node>[a-zA-Z0-9\/\(\)]+)'
-                             ' +\((?P<node_detail>[a-zA-Z\,\:\s]+)\)$')
+                             r' +(?P<standby_node>[a-zA-Z0-9\/\(\)]+)'
+                             r' +\((?P<node_detail>[a-zA-Z\,\:\s]+)\)$')
             m = p1.match(line)
             if m:
                 if 'node' not in redundancy_summary:
@@ -2738,7 +2748,7 @@ class ShowRedundancySummary(ShowRedundancySummarySchema):
 
                 # Check if node type is active or primary
                 node = str(m.groupdict()['node']).strip()
-                if re.search("\(P\)", node):
+                if re.search(r"\(P\)", node):
                     type = 'primary'
                 else:
                     type = 'active'
@@ -2746,7 +2756,7 @@ class ShowRedundancySummary(ShowRedundancySummarySchema):
                 # Check standby or backup node
                 backup_node = None
                 standby_node = str(m.groupdict()['standby_node'])
-                if re.search("\(B\)", standby_node):
+                if re.search(r"\(B\)", standby_node):
                     backup_node = standby_node
                 elif standby_node == 'N/A':
                     continue
@@ -2769,7 +2779,7 @@ class ShowRedundancySummary(ShowRedundancySummarySchema):
 
             # 0/0/CPU0             N/A
             p2 = re.compile(r'\s*(?P<node>[a-zA-Z0-9\/\(\)]+)'
-                             ' +(?P<standby_node>[a-zA-Z0-9\/\(\)]+)$')
+                             r' +(?P<standby_node>[a-zA-Z0-9\/\(\)]+)$')
             m = p2.match(line)
             if m:
                 if 'node' not in redundancy_summary:
@@ -2777,7 +2787,7 @@ class ShowRedundancySummary(ShowRedundancySummarySchema):
 
                 # Check if node type is active or primary
                 node = str(m.groupdict()['node']).strip()
-                if re.search("\(P\)", node):
+                if re.search(r"\(P\)", node):
                     type = 'primary'
                 else:
                     type = 'active'
@@ -2785,7 +2795,7 @@ class ShowRedundancySummary(ShowRedundancySummarySchema):
                 # Check standby or backup node
                 backup_node = None
                 standby_node = str(m.groupdict()['standby_node'])
-                if re.search("\(B\)", standby_node):
+                if re.search(r"\(B\)", standby_node):
                     backup_node = standby_node
 
                 # set everything
@@ -2865,7 +2875,7 @@ class ShowRedundancy(ShowRedundancySchema):
 
             # Redundancy information for node 0/RP0/CPU0
             p1 = re.compile(r'\s*Redundancy +information +for +node'
-                             ' +(?P<node>[a-zA-Z0-9\/]+):$')
+                             r' +(?P<node>[a-zA-Z0-9\/]+):$')
             m = p1.match(line)
             if m:
                 if 'node' not in redundancy_dict:
@@ -2877,7 +2887,7 @@ class ShowRedundancy(ShowRedundancySchema):
 
             # Node 0/RSP0/CPU0 is in ACTIVE role
             p2 = re.compile(r'\s*Node +([a-zA-Z0-9\/]+) +is +in'
-                             ' +(?P<role>[a-zA-Z]+) +role$')
+                             r' +(?P<role>[a-zA-Z]+) +role$')
             m = p2.match(line)
             if m:
                 redundancy_dict['node'][node]['role'] = \
@@ -2886,8 +2896,8 @@ class ShowRedundancy(ShowRedundancySchema):
 
             # Node Redundancy Partner (0/RSP1/CPU0) is in STANDBY role
             p3_1 =  re.compile(r'\s*Node *Redundancy *Partner'
-                                ' *\((?P<node>[a-zA-Z0-9\/]+)\) *is *in'
-                                ' *(?P<role>[a-zA-Z]+) *role$')
+                                r' *\((?P<node>[a-zA-Z0-9\/]+)\) *is *in'
+                                r' *(?P<role>[a-zA-Z]+) *role$')
             m = p3_1.match(line)
             if m:
                 if 'standby' in str(m.groupdict()['role']).lower():
@@ -2896,8 +2906,8 @@ class ShowRedundancy(ShowRedundancySchema):
 
             # Partner node (0/RP1/CPU0) is in STANDBY role (eXR)
             p3_2 =  re.compile(r'\s*Partner *node'
-                                ' *\((?P<node>[a-zA-Z0-9\/]+)\) *is *in'
-                                ' *(?P<role>[a-zA-Z]+) *role$')
+                                r' *\((?P<node>[a-zA-Z0-9\/]+)\) *is *in'
+                                r' *(?P<role>[a-zA-Z]+) *role$')
             m = p3_2.match(line)
             if m:
                 if 'standby' in str(m.groupdict()['role']).lower():
@@ -2906,8 +2916,8 @@ class ShowRedundancy(ShowRedundancySchema):
 
             # Process Redundancy Partner (0/RSP0/CPU0) is in BACKUP role
             p3_3 =  re.compile(r'\s*Process *Redundancy *Partner'
-                                ' *\((?P<node>[a-zA-Z0-9\/]+)\) *is *in'
-                                ' *(?P<role>[a-zA-Z]+) *role$')
+                                r' *\((?P<node>[a-zA-Z0-9\/]+)\) *is *in'
+                                r' *(?P<role>[a-zA-Z]+) *role$')
             m = p3_3.match(line)
             if m:
                 if 'backup' in str(m.groupdict()['role']).lower():
@@ -2917,7 +2927,7 @@ class ShowRedundancy(ShowRedundancySchema):
             # Standby node in 0/RSP1/CPU0 is ready
             # Standby node in 0/RSP1/CPU0 is NSR-ready
             p3_2 = re.compile(r'\s*Standby *node *in *([a-zA-Z0-9\/]+)'
-                               ' *is *(?P<ready>[a-zA-Z\-]+)$')
+                               r' *is *(?P<ready>[a-zA-Z\-]+)$')
             m = p3_2.match(line)
             if m:
                 redundancy_dict['node'][node]['ready'] = \
@@ -2926,7 +2936,7 @@ class ShowRedundancy(ShowRedundancySchema):
 
             # Node 0/RP0/CPU0 has no valid partner
             p3 = re.compile(r'\s*Node +([a-zA-Z0-9\/]+) +has +(?P<valid_partner>\S+)'
-                             ' +valid +partner$')
+                             r' +valid +partner$')
             m = p3.match(line)
             if m:
                 redundancy_dict['node'][node]['valid_partner'] = \
@@ -2935,9 +2945,9 @@ class ShowRedundancy(ShowRedundancySchema):
 
             # v6-routing       0/RSP0/CPU0     N/A             Not Ready
             p4 = re.compile(r'\s*(?P<group>[a-zA-Z0-9\-]+)'
-                             ' +(?P<primary>[A-Z0-9\/]+)'
-                             ' +(?P<backup>[A-Z0-9\/]+)'
-                             ' +(?P<status>[a-zA-Z\-\s]+)$')
+                             r' +(?P<primary>[A-Z0-9\/]+)'
+                             r' +(?P<backup>[A-Z0-9\/]+)'
+                             r' +(?P<status>[a-zA-Z\-\s]+)$')
             m = p4.match(line)
             if m:
                 if 'group' not in redundancy_dict['node'][node]:
@@ -2956,7 +2966,7 @@ class ShowRedundancy(ShowRedundancySchema):
 
             # NSR not ready since Backup is not Present
             p5 = re.compile(r'\s*NSR +(?P<primary_rmf_state>[a-zA-Z\s]+) +since'
-                             ' +(?P<primary_rmf_state_reason>[a-zA-Z\s]+)$')
+                             r' +(?P<primary_rmf_state_reason>[a-zA-Z\s]+)$')
             m = p5.match(line)
             if m:
                 redundancy_dict['node'][node]['primary_rmf_state'] = \
@@ -2968,8 +2978,8 @@ class ShowRedundancy(ShowRedundancySchema):
 
             # A9K-RSP440-TR reloaded Thu Apr 27 02:14:12 2017: 1 hour, 16 minutes ago
             p6 = re.compile(r'\s*(?P<node_name>[a-zA-Z0-9\-]+) +reloaded'
-                             ' +(?P<last_reload_timestamp>[a-zA-Z0-9\:\s]+):'
-                             ' +(?P<time_since_last_reload>[a-zA-Z0-9\,\s]+)$')
+                             r' +(?P<last_reload_timestamp>[a-zA-Z0-9\:\s]+):'
+                             r' +(?P<time_since_last_reload>[a-zA-Z0-9\,\s]+)$')
             m = p6.match(line)
             if m:
                 redundancy_dict['node'][node]['last_reload_timestamp'] =\
@@ -2983,10 +2993,10 @@ class ShowRedundancy(ShowRedundancySchema):
             # Active node booted Tue Jan  2 07:32:33 2018: 1 day, 1 hour, 6 minutes ago
             # Active node booted Thu Jan 11 12:32:03 2018: 1 week, 4 days, 20 hours, 19 minutes ago
             p7 = re.compile(r'\s*Active +node +booted'
-                            ' +(?P<node_uptime_timestamp>[a-zA-Z0-9\:\s]+):'
-                            ' +(?P<node_uptime>((?P<ignore>\d+ \w+, *)?((?P<week>\d+) +(week|weeks), )?'
-                            '(((?P<day>\d+) +(day|days))?, )?)?(((?P<hour>\d+) +(hour|hours))?, )?'
-                            '(((?P<minute>\d+) +(minute|minutes))|((?P<second>\d+) +(seconds|seconds)))?) +ago$')
+                            r' +(?P<node_uptime_timestamp>[a-zA-Z0-9\:\s]+):'
+                            r' +(?P<node_uptime>((?P<ignore>\d+ \w+, *)?((?P<week>\d+) +(week|weeks), )?'
+                            r'(((?P<day>\d+) +(day|days))?, )?)?(((?P<hour>\d+) +(hour|hours))?, )?'
+                            r'(((?P<minute>\d+) +(minute|minutes))|((?P<second>\d+) +(seconds|seconds)))?) +ago$')
             m = p7.match(line)
             if m:
                 redundancy_dict['node'][node]['node_uptime_timestamp'] = \
@@ -3010,8 +3020,8 @@ class ShowRedundancy(ShowRedundancySchema):
 
             # Standby node boot Thu Aug 10 08:29:18 2017: 1 day, 32 minutes ago
             p7_1 = re.compile(r'\s*Standby +node +boot'
-                               ' +(?P<standby_node_timestamp>[a-zA-Z0-9\:\s]+):'
-                               ' +(?P<time_since_standby_boot>[a-zA-Z0-9\,\s]+)$')
+                               r' +(?P<standby_node_timestamp>[a-zA-Z0-9\:\s]+):'
+                               r' +(?P<time_since_standby_boot>[a-zA-Z0-9\,\s]+)$')
             m = p7_1.match(line)
             if m:
                 standby_node_timestamp = str(m.groupdict()['standby_node_timestamp'])
@@ -3027,8 +3037,8 @@ class ShowRedundancy(ShowRedundancySchema):
             # Standby node last went ready Fri Aug 11 07:13:26 2017: 1 hour, 48 minutes ago
 
             p7_2 = re.compile(r'\s*Standby *node *last *went *not *ready'
-                               ' *(?P<standby_node_not_ready>[a-zA-Z0-9\:\s]+):'
-                               ' *(?P<time_since_standby_node_not_ready>[a-zA-Z0-9\,\s]+)$')
+                               r' *(?P<standby_node_not_ready>[a-zA-Z0-9\:\s]+):'
+                               r' *(?P<time_since_standby_node_not_ready>[a-zA-Z0-9\,\s]+)$')
             m = p7_2.match(line)
             if m:
                 standby_node_not_ready = str(m.groupdict()['standby_node_not_ready'])
@@ -3041,8 +3051,8 @@ class ShowRedundancy(ShowRedundancySchema):
                 continue
 
             p7_3 = re.compile(r'\s*Standby *node *last *went *ready'
-                               ' *(?P<standby_node_ready>[a-zA-Z0-9\:\s]+):'
-                               ' *(?P<time_since_standby_node_ready>[a-zA-Z0-9\,\s]+)$')
+                               r' *(?P<standby_node_ready>[a-zA-Z0-9\:\s]+):'
+                               r' *(?P<time_since_standby_node_ready>[a-zA-Z0-9\,\s]+)$')
             m = p7_3.match(line)
             if m:
                 standby_node_ready = str(m.groupdict()['standby_node_ready'])
@@ -3056,8 +3066,8 @@ class ShowRedundancy(ShowRedundancySchema):
 
             # Last switch-over Thu Apr 27 03:29:57 2017: 1 minute ago
             p8 = re.compile(r'\s*Last +switch-over'
-                        ' +(?P<last_switchover_timepstamp>[a-zA-Z0-9\:\s]+):'
-                        ' +(?P<time_since_last_switchover>[a-zA-Z0-9\,\s]+)$')
+                        r' +(?P<last_switchover_timepstamp>[a-zA-Z0-9\:\s]+):'
+                        r' +(?P<time_since_last_switchover>[a-zA-Z0-9\,\s]+)$')
             m = p8.match(line)
             if m:
                 redundancy_dict['node'][node]['last_switchover_timepstamp'] = \
@@ -3068,7 +3078,7 @@ class ShowRedundancy(ShowRedundancySchema):
 
             # Active node reload  Cause: Initiating switch-over.
             p9 = re.compile(r'\s*Active +node +reload *(?:Cause)?:'
-                             ' +(?P<reload_cause>[a-zA-Z\-\s]+).$')
+                             r' +(?P<reload_cause>[a-zA-Z\-\s]+).$')
             m = p9.match(line)
             if m:
                 redundancy_dict['node'][node]['reload_cause'] = \
@@ -3159,8 +3169,8 @@ class Dir(DirSchema):
             # 1012660 kbytes total (939092 kbytes free)
             # 2562719744 bytes total (1918621184 bytes free)
             p2 = re.compile(r'\s*(?P<total_bytes>[0-9]+ +(kbytes|bytes))'
-                             ' +total +\((?P<total_free_bytes>[0-9]+'
-                             ' +(kbytes|bytes)) +free\)$')
+                             r' +total +\((?P<total_free_bytes>[0-9]+'
+                             r' +(kbytes|bytes)) +free\)$')
             m = p2.match(line)
             if m:
                 dir_dict['dir']['total_bytes'] = \
@@ -3176,9 +3186,9 @@ class Dir(DirSchema):
             # 10541310    -rwx  6142        Mon May 18 19:16:01 2020  prod2_vxlan_config
 
             p3 = re.compile(r'^\s*(?P<index>[0-9]+) +(?P<permission>[a-z\-]+)(\.)?('
-                            ' +(?P<unknown>[0-9]+))? +(?P<size>[0-9]+)( +(?P<date>[a-zA-Z]{3}))? '
-                            '+(?P<month>[a-zA-Z]{3}) +(?P<day>[0-9]{,3})( +(?P<time>[\d\:]+))?( '
-                            '+(?P<year>[0-9]{4}))? +(?P<file>[a-zA-Z0-9\.\/\_\-\+\>\s]+)$')
+                            r' +(?P<unknown>[0-9]+))? +(?P<size>[0-9]+)( +(?P<date>[a-zA-Z]{3}))? '
+                            r'+(?P<month>[a-zA-Z]{3}) +(?P<day>[0-9]{,3})( +(?P<time>[\d\:]+))?( '
+                            r'+(?P<year>[0-9]{4}))? +(?P<file>[a-zA-Z0-9\.\/\_\-\+\>\s]+)$')
             m = p3.match(line)
             if m:
                 file = m.groupdict()['file']

@@ -1,0 +1,52 @@
+---------------------------------
+Thu Aug 29 16:44:53.231 WEST
+ 
+Bundle-Ether98
+  Status:                                    Up
+  Local links <active/standby/configured>:   5 / 0 / 5
+  Local bandwidth <effective/available>:     50000000 (50000000) kbps
+  MAC address (source):                      dada.dada.dada (Configured)
+  Inter-chassis link:                        No
+  Minimum active links / bandwidth:          1 / 1 kbps
+  Maximum active links:                      64
+  Wait while timer:                          Off
+  Load balancing:                            
+    Link order signaling:                    Not configured
+    Hash type:                               Default
+    Locality threshold:                      None
+  LACP:                                      Operational
+    Flap suppression timer:                  100 ms
+    Cisco extensions:                        Disabled
+    Non-revertive:                           Disabled
+  mLACP:                                     Operational
+    ICCP Group:                              98
+    Role:                                    Active
+    Foreign links <active/configured>:       0 / 5
+    Switchover type:                         Non-revertive
+    Recovery delay:                          60 s
+    Maximize threshold:                      1 link
+  IPv4 BFD:                                  Not configured
+  IPv6 BFD:                                  Not configured
+ 
+  Port                  Device           State        Port ID         B/W, kbps
+  --------------------  ---------------  -----------  --------------  ----------
+  Te0/0/0/16            Local            Active       0x00db, 0xa001    10000000
+      Link is Active
+  Te0/7/0/7             Local            Active       0x00db, 0xa005    10000000
+      Link is Active
+  Te0/7/0/13            Local            Active       0x00db, 0xa004    10000000
+      Link is Active
+  Te0/7/0/14            Local            Active       0x00db, 0xa002    10000000
+      Link is Active
+  Te0/7/0/15            Local            Active       0x00db, 0xa003    10000000
+      Link is Active
+  Te0/4/0/12            193.126.0.87     Standby      0x00dc, 0x9009    10000000
+      Link is marked as Standby by mLACP peer
+  Te0/4/0/13            193.126.0.87     Standby      0x00dc, 0x900a    10000000
+      Link is marked as Standby by mLACP peer
+  Te0/4/0/7             193.126.0.87     Standby      0x00dc, 0x9006    10000000
+      Link is marked as Standby by mLACP peer
+  Te0/4/0/8             193.126.0.87     Standby      0x00dc, 0x9007    10000000
+      Link is marked as Standby by mLACP peer
+  Te0/4/0/9             193.126.0.87     Standby      0x00dc, 0x9008    10000000
+      Link is marked as Standby by mLACP peer

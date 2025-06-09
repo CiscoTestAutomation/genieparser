@@ -1,0 +1,6 @@
+MTTEdge-GD#sh inventory "Power Supply Module 0" 
+NAME: "Power Supply Module 0", DESCR: "Cisco Catalyst 9800-40 750W AC Power Supply Reverse Air"
+PID: C9800-AC-750W-R   , VID: V01  , SN: ART2229FAR7
+
+
+MTTEdge-GD#

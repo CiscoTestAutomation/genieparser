@@ -77,13 +77,13 @@ class Route(RouteSchema):
         # 192.168.1.0     0.0.0.0         255.255.255.0   U     600    0        0 wlo1
 
         p1 = re.compile(r'(?P<destination>[a-z0-9\.\:]+)'
-                        ' +(?P<gateway>[a-z0-9\.\:_]+)'
-                        ' +(?P<mask>[a-z0-9\.\:]+)'
-                        ' +(?P<flags>[a-zA-Z]+)'
-                        ' +(?P<metric>(\d+))'
-                        ' +(?P<ref>(\d+))'
-                        ' +(?P<use>(\d+))'
-                        ' +(?P<interface>\S+)'
+                        r' +(?P<gateway>[a-z0-9\.\:_]+)'
+                        r' +(?P<mask>[a-z0-9\.\:]+)'
+                        r' +(?P<flags>[a-zA-Z]+)'
+                        r' +(?P<metric>(\d+))'
+                        r' +(?P<ref>(\d+))'
+                        r' +(?P<use>(\d+))'
+                        r' +(?P<interface>\S+)'
                         )
         
         # Initializes the Python dictionary variable
@@ -174,67 +174,67 @@ class IpRouteShowTableAll(RouteSchema):
         # default via 192.168.1.1 dev enp7s0 proto dhcp metric 100 
 
         p1 = re.compile(r'default via (?P<gateway>[a-z0-9\.\:]+)'
-                         ' dev (?P<device>[a-z0-9\.\-]+)'
-                         ' proto (?P<proto>[a-z]+)'
-                         ' metric (?P<metric>[\d]+)'
+                         r' dev (?P<device>[a-z0-9\.\-]+)'
+                         r' proto (?P<proto>[a-z]+)'
+                         r' metric (?P<metric>[\d]+)'
                          )
 
         # 169.254.0.0/16 dev enp7s0 scope link metric 1000 
 
         p2 = re.compile(r'(?P<destination>[a-z0-9\.\:\/]+)'
-                         ' dev (?P<device>[a-z0-9\.\-]+)'
-                         ' scope (?P<scope>\w+)'
-                         ' metric (?P<metric>[\d]+)'
+                         r' dev (?P<device>[a-z0-9\.\-]+)'
+                         r' scope (?P<scope>\w+)'
+                         r' metric (?P<metric>[\d]+)'
                          )
 
         # 172.17.0.0/16 dev docker0 proto kernel scope link src 172.17.0.1
 
         p3 = re.compile(r'(?P<destination>[a-z0-9\.\:\/]+)'
-                         ' dev (?P<device>[a-z0-9\.\-]+)'
-                         ' proto (?P<proto>\w+)'
-                         ' scope (?P<scope>\w+)'
-                         ' src (?P<src>[a-z0-9\.\:\/]+)'
+                         r' dev (?P<device>[a-z0-9\.\-]+)'
+                         r' proto (?P<proto>\w+)'
+                         r' scope (?P<scope>\w+)'
+                         r' src (?P<src>[a-z0-9\.\:\/]+)'
                          )
 
         # 172.18.0.0/16 dev br-d19b23fac393 proto kernel scope link src 172.18.0.1 linkdown 
 
         p4 = re.compile(r'(?P<destination>[a-z0-9\.\:\/]+)'
-                         ' dev (?P<device>[a-z0-9\.\-]+)'
-                         ' proto (?P<proto>\w+)'
-                         ' scope (?P<scope>\w+)'
-                         ' src (?P<src>[a-z0-9\.\:\/]+)'
-                         ' linkdown '
+                         r' dev (?P<device>[a-z0-9\.\-]+)'
+                         r' proto (?P<proto>\w+)'
+                         r' scope (?P<scope>\w+)'
+                         r' src (?P<src>[a-z0-9\.\:\/]+)'
+                         r' linkdown '
                          )       
 
         # 192.168.1.0/24 dev enp7s0 proto kernel scope link src 192.168.1.212 metric 100
 
         p5 = re.compile(r'(?P<destination>[a-z0-9\.\:\/]+)'
-                         ' dev (?P<device>[a-z0-9\.\-]+)'
-                         ' proto (?P<proto>\w+)'
-                         ' scope (?P<scope>\w+)'
-                         ' src (?P<src>[a-z0-9\.\:\/]+)'
-                         ' metric (?P<metric>[\d]+)'
+                         r' dev (?P<device>[a-z0-9\.\-]+)'
+                         r' proto (?P<proto>\w+)'
+                         r' scope (?P<scope>\w+)'
+                         r' src (?P<src>[a-z0-9\.\:\/]+)'
+                         r' metric (?P<metric>[\d]+)'
                          )
 
         # broadcast 127.0.0.0 dev lo table local proto kernel scope link src 127.0.0.1 
 
         p6 = re.compile(r'broadcast (?P<destination>[a-z0-9\.\:\/]+)'
-                         ' dev (?P<device>[a-z0-9\.\-]+)'
-                         ' table (?P<table>\w+)'
-                         ' proto (?P<proto>\w+)'
-                         ' scope (?P<scope>\w+)'
-                         ' src (?P<src>[a-z0-9\.\:\/]+)'
+                         r' dev (?P<device>[a-z0-9\.\-]+)'
+                         r' table (?P<table>\w+)'
+                         r' proto (?P<proto>\w+)'
+                         r' scope (?P<scope>\w+)'
+                         r' src (?P<src>[a-z0-9\.\:\/]+)'
                          )
                          
         
         # local 10.233.44.70 dev kube-ipvs0 table local proto kernel scope host src 10.233.44.70
 
         p7 = re.compile(r'local (?P<destination>[a-z0-9\.\:\/]+)'
-                         ' dev (?P<device>[a-z0-9\.\-]+)'
-                         ' table (?P<table>\w+)'
-                         ' proto (?P<proto>\w+)'
-                         ' scope (?P<scope>\w+)'
-                         ' src (?P<src>[a-z0-9\.\:\/]+)'
+                         r' dev (?P<device>[a-z0-9\.\-]+)'
+                         r' table (?P<table>\w+)'
+                         r' proto (?P<proto>\w+)'
+                         r' scope (?P<scope>\w+)'
+                         r' src (?P<src>[a-z0-9\.\:\/]+)'
                          )
 
 

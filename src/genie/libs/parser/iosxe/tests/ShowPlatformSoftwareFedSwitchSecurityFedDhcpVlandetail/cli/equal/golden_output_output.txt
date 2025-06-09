@@ -1,0 +1,39 @@
+FED DHCP SNOOPING VLAN Data : 
+
+  Vlan= 50 
+
+  Multicast Group ID: 
+
+    Multicast Group with OID(11177) on ASIC(0) 
+
+  Trusted ports multicast group GID:: 0x2016 
+
+  Punject Switch Profile: TRUE 
+
+  Trusted Port                                                      Interface Id      PO ID              
+
+  ---------------------------------------------------------------------------------------------------- 
+
+  Port-channel120                                                   0x000004da        0x00000000         
+
+  GigabitEthernet2/0/25                                             0x00000421        0x000004da         
+
+  GigabitEthernet3/0/3                                              0x00000495        0x000004da         
+
+ 
+
+  ===== ASIC Specific Section ===== 
+
+ 
+
+  Information about ACL with OID(547) on ASIC(0) 
+
+    Position Protocol Src Port Dst Port Action  Counter OID 
+
+    ------------------------------------------------------- 
+
+    0        UDP      68       67       PUNT    548  
+
+    1        UDP      67       68       PUNT    548  
+
+    2        UDP      67       67       PUNT    548 

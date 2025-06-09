@@ -1,0 +1,34 @@
+show ip mfib vrf vrf1
+Entry Flags:    C - Directly Connected, S - Signal, IA - Inherit A flag,
+                ET - Data Rate Exceeds Threshold, K - Keepalive
+                DDE - Data Driven Event, HW - Hardware Installed
+                ME - MoFRR ECMP entry, MNE - MoFRR Non-ECMP entry, MP - MFIB 
+                MoFRR Primary, RP - MRIB MoFRR Primary, P - MoFRR Primary
+                MS  - MoFRR  Entry in Sync, MC - MoFRR entry in MoFRR Client,
+                e   - Encap helper tunnel flag.
+I/O Item Flags: IC - Internal Copy, NP - Not platform switched,
+                NS - Negate Signalling, SP - Signal Present,
+                A - Accept, F - Forward, RA - MRIB Accept, RF - MRIB Forward,
+                MA - MFIB Accept, A2 - Accept backup,
+                RA2 - MRIB Accept backup, MA2 - MFIB Accept backup
+
+Forwarding Counts: Pkt Count/Pkts per second/Avg Pkt Size/Kbits per second
+Other counts:      Total/RPF failed/Other drops
+I/O Item Counts:   HW Pkt Count/FS Pkt Count/PS Pkt Count   Egress Rate in pps
+VRF vrf1
+(192.168.1.2,232.0.0.6) Flags: HW
+   SW Forwarding: 0/0/0/0, Other: 0/0/0
+   HW Forwarding:   32804078/3000/496/11625, Other: 0/0/0
+   Tunnel1, MDT/232.0.0.1 Flags: A
+   Port-channel40 Flags: F NS
+     Pkts: 0/0/0    Rate: 0 pps
+ (*,232.0.0.7) Flags: C HW
+   SW Forwarding: 0/0/0/0, Other: 0/0/0
+   HW Forwarding:   0/0/0/0, Other: 0/0/0
+   Tunnel1, MDT/232.0.0.1 Flags: A
+ (192.168.1.2,232.0.0.7) Flags: HW
+   SW Forwarding: 0/0/0/0, Other: 0/0/0
+   HW Forwarding:   32815778/3000/496/11625, Other: 0/0/0
+   Tunnel1, MDT/232.0.0.1 Flags: A
+   Port-channel40 Flags: F NS
+     Pkts: 0/0/0    Rate: 0 pps

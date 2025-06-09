@@ -1,0 +1,47 @@
+NAME: "Chassis", DESCR: "Cisco Catalyst Series C9500X-32QC Chassis"
+PID: C9500X-28C8D      , VID: V02  , SN: FDO28490L7X
+
+NAME: "Slot 1 Supervisor", DESCR: "Cisco Catalyst 9500X-28C8D Switch"
+PID: C9500X-28C8D      , VID: V02  , SN: FDO284906ED
+
+NAME: "FourHundredGigE1/0/15", DESCR: "QSFP 100GE CU3M"
+PID: QSFP-100G-CU3M      , VID: V01  , SN: APF28391E4A-B
+
+NAME: "FourHundredGigE1/0/16", DESCR: "QSFP 100GE CU3M"
+PID: QSFP-100G-CU3M      , VID: V01  , SN: APF282601YD-A
+
+NAME: "HundredGigE1/0/33", DESCR: "QSFP 40GE SR4"
+PID: QSFP-40G-SR4        , VID: V03  , SN: ACW28410DS2
+
+NAME: "HundredGigE1/0/34", DESCR: "QSFP 40GE SR4"
+PID: QSFP-40G-SR4        , VID: V03  , SN: ACW28410DS4
+
+NAME: "HundredGigE1/0/35", DESCR: "QSFP 40GE SR4"
+PID: QSFP-40G-SR4        , VID: V03  , SN: ACW28410DJ0
+
+NAME: "HundredGigE1/0/36", DESCR: "QSFP 40GE SR4"
+PID: QSFP-40G-SR4        , VID: V03  , SN: ACW28410DJ7
+
+NAME: "Power Supply Module 1", DESCR: "Cisco Catalyst 9500X Series 1.5KW-AC Power Supply"
+PID: C9K-PWR-1500WAC   , VID: V01  , SN: QCS27325YDE
+
+NAME: "Power Supply Module 2", DESCR: "Cisco Catalyst 9500X Series 1.5KW-AC Power Supply"
+PID: C9K-PWR-1500WAC   , VID: V01  , SN: QCS27325YD6
+
+NAME: "Fan Tray 1", DESCR: "Cisco Catalyst 9500X Series 1RU Reverse Air Flow"
+PID: C9500X-FAN-1U-R   , VID: V01  , SN: ACI28020DR9
+
+NAME: "Fan Tray 2", DESCR: "Cisco Catalyst 9500X Series 1RU Reverse Air Flow"
+PID: C9500X-FAN-1U-R   , VID: V01  , SN: ACI28020DZD
+
+NAME: "Fan Tray 3", DESCR: "Cisco Catalyst 9500X Series 1RU Reverse Air Flow"
+PID: C9500X-FAN-1U-R   , VID: V01  , SN: ACI28020DWJ
+
+NAME: "Fan Tray 4", DESCR: "Cisco Catalyst 9500X Series 1RU Reverse Air Flow"
+PID: C9500X-FAN-1U-R   , VID: V01  , SN: ACI28020DSK
+
+NAME: "Fan Tray 5", DESCR: "Cisco Catalyst 9500X Series 1RU Reverse Air Flow"
+PID: C9500X-FAN-1U-R   , VID: V01  , SN: ACI28020DU7
+
+NAME: "Fan Tray 6", DESCR: "Cisco Catalyst 9500X Series 1RU Reverse Air Flow"
+PID: C9500X-FAN-1U-R   , VID: V01  , SN: ACI28020DN8

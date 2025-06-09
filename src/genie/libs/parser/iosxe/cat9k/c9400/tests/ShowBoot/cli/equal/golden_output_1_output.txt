@@ -1,0 +1,8 @@
+show boot
+BOOT variable = bootflash:/packages.conf;
+MANUAL_BOOT variable does not exist
+BAUD variable = 9600
+ENABLE_BREAK variable does not exist
+BOOTMODE variable does not exist
+IPXE_TIMEOUT variable does not exist
+CONFIG_FILE variable does not exist

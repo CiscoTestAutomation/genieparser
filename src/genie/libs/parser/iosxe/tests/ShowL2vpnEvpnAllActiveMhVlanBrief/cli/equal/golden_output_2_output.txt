@@ -1,0 +1,5 @@
+VLAN  VNI      Local MAC Remote MAC State
+----- -------- --------- ---------- --------------------
+1100  21100    0         0          No BGP, Incomplete
+1101  21101    0         0          No BGP, Incomplete
+1102  21102    0         0          No BGP, Incomplete

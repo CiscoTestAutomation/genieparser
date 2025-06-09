@@ -139,6 +139,7 @@ class ShowSystemStatus(ShowSystemStatusSchema):
         # Last reboot:             Initiated by user - activate 99.99.999-4567.
         # CPU-reported reboot:     Not Applicable
         # Boot loader version:     Not applicable
+        # Boot loader version:     U-Boot 2013.07-g6c63781 (Build time: Aug 10 2023 - 08:06:08)
         # System uptime:           0 days 21 hrs 35 min 28 sec
         # Current time:            Thu Aug 06 02:49:25 PDT 2020
         # Processes:               250 total
@@ -149,8 +150,7 @@ class ShowSystemStatus(ShowSystemStatusSchema):
         # Commit pending:          false
         # Configuration template:  CLItemplate_srp_vedge
         # Chassis serial number:   None
-        p10 = re.compile(r'^(?P<key>.*):\s+(?P<value>.*)$')
-
+        p10 = re.compile(r'^(?P<key>.*?):\s+(?P<value>.*)$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -194,8 +194,8 @@ class ShowSystemStatus(ShowSystemStatusSchema):
             m5 = p5.match(line)
             if m5:
                 group = m5.groupdict()
-                group = bool(group['value'])
-                parsed_dict.update({'engineering_signed': group})
+                value = group['value'].strip().lower()
+                parsed_dict['engineering_signed'] = value == 'true'
                 continue
 
             # Memory usage:            1907024K total,    1462908K used,   444116K free

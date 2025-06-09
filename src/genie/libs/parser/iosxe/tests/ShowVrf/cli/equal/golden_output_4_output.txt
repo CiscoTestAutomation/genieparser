@@ -1,0 +1,16 @@
+Name                             Default RD            Protocols   Interfaces
+  blue                             1.1.1.1:1(auto)       ipv4,ipv6   
+  green                            200:101               ipv4,ipv6   Lo11
+                                                                     Vl212
+                                                                     Vl222
+                                                                     Vl113
+                                                                     Vl114
+                                                                     Vl123
+                                                                     Vl124
+  red                              100:101               ipv4,ipv6   Lo10
+                                                                     Vl211
+                                                                     Vl221
+                                                                     Vl111
+                                                                     Vl112
+                                                                     Vl121
+                                                                     Vl122

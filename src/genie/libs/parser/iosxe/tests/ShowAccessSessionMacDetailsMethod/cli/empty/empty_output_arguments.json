@@ -1,0 +1,7 @@
+{
+    "mac": "001a.a136.c68a",
+    "interface": "GigabitEthernet2/0/3",
+    "method": "dot1x",
+    "mode": "active, standby",
+    "rp_slot": "R0"
+}

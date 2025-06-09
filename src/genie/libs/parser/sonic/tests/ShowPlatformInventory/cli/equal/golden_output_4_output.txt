@@ -1,0 +1,29 @@
+show platform inventory
+    Name                Product ID      Version              Serial Number   Description
+ 
+Chassis
+    CHASSIS             8102-28FH-DPU-O 0.20                 FLM282702AJ     Cisco 28x400G QSFPDD DPU-Enabled 2RU Smart Switch,Open SW
+ 
+Route Processors
+    RP0                 8102-28FH-DPU-O 0.20                 FLM282204W1     Cisco 28x400G QSFPDD DPU-Enabled 2RU Smart Switch,Open SW
+ 
+Sled Cards
+    SLED0               8K-DPU400-2A    0.20                 FLM28220578     Cisco 800 2xDPU Sled AMD Elba
+    SLED1               8K-DPU400-2A    0.20                 FLM2822056L     Cisco 800 2xDPU Sled AMD Elba
+    SLED2               8K-DPU400-2A    0.20                 FLM2822055J     Cisco 800 2xDPU Sled AMD Elba
+    SLED3               8K-DPU400-2A    0.20                 FLM2822055A     Cisco 800 2xDPU Sled AMD Elba
+ 
+Dpu Modules
+    DPU0                N/A             N/A                  N/A             Powered Off
+    DPU1                N/A             N/A                  N/A             Powered Off
+    DPU2                N/A             N/A                  N/A             Powered Off
+    DPU3                N/A             N/A                  N/A             Powered Off
+    DPU4                N/A             N/A                  N/A             Powered Off
+    DPU5                N/A             N/A                  N/A             Powered Off
+    DPU6                N/A             N/A                  N/A             Powered Off
+    DPU7                N/A             N/A                  N/A             Powered Off
+ 
+Power Supplies
+    psutray                                                                 
+        PSU0            UCSC-PSU1-2300W A0                   DTM273804D0     UCS 2300W AC-DC High Line RSP02 Power Supply
+        PSU1            UCSC-PSU1-2300W A0                   DTM274202RX     UCS 2300W AC-DC High Line RSP02 Power Supply

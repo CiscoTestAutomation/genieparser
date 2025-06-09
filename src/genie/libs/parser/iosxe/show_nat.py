@@ -1861,7 +1861,7 @@ class ShowPlatformSoftwareFedSwitchActiveNatFlowsSchema(MetaParser):
               'og_ip_port': str,                          
             },
         },
-        'no_of_flows': int,  
+        Optional('no_of_flows'): int,  
     }
 class ShowPlatformSoftwareFedSwitchActiveNatFlows(ShowPlatformSoftwareFedSwitchActiveNatFlowsSchema):
     """
@@ -1869,12 +1869,15 @@ class ShowPlatformSoftwareFedSwitchActiveNatFlows(ShowPlatformSoftwareFedSwitchA
     """
 
     cli_command = ['show platform software fed {switch} {mode} nat flows',
-                   'show platform software fed active nat flows']     
+                   'show platform software fed active nat flows',
+                   'show platform software fed {switch} {mode} nat flows {flow_based_on} {flow_based_on_value}']     
 
-    def cli(self, switch=None, mode=None, output=None):
+    def cli(self, switch=None, mode=None, flow_based_on=None, flow_based_on_value=None, output=None):
 
         if output is None:
-            if switch and mode:
+            if switch and mode and flow_based_on and flow_based_on_value:
+                cmd = self.cli_command[2].format(switch=switch, mode=mode, flow_based_on=flow_based_on, flow_based_on_value=flow_based_on_value)
+            elif switch and mode:
                 cmd = self.cli_command[0].format(switch=switch, mode=mode)
             else:
                 cmd = self.cli_command[1]
@@ -1918,4 +1921,77 @@ class ShowPlatformSoftwareFedSwitchActiveNatFlows(ShowPlatformSoftwareFedSwitchA
                 group = m.groupdict()
                 ret_dict['no_of_flows'] = int(group['no_of_flows'])
                 continue
+        
+        return ret_dict
+        
+        
+class ShowPlatformSoftwareFedSwitchActiveNatPoolsSchema(MetaParser):
+    """
+    Schema for show platform software fed switch active nat pools
+    """
+    schema = {
+        'index':{
+            Any():{
+              'pool_id': str,                          
+              'pool_name': str,
+              'start_addr': str,
+              'end_addr': str,                        
+            },
+        },
+        'number_of_pools': int
+    }
+    
+class ShowPlatformSoftwareFedSwitchActiveNatPools(ShowPlatformSoftwareFedSwitchActiveNatPoolsSchema):
+    """
+    show platform software fed switch active nat pools
+    """
+
+    cli_command = ['show platform software fed {switch} {mode} nat pools',
+                   'show platform software fed active nat pools']           
+
+    def cli(self, switch=None, mode=None, output=None):
+
+        if output is None:
+            if switch and mode:
+                cmd = self.cli_command[0].format(switch=switch, mode=mode)
+            else:
+                cmd = self.cli_command[1]
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+        index = 1
+        index_dict = {}
+        
+        # Pool ID |                      Pool Name |      Start Addr |        End Addr |
+        # ----------------------------------------------------------------------------------
+        # 0x1     |                      in_pool_1 |        35.0.0.2 |       35.0.0.10 |
+        p0 = re.compile(r'^(?P<pool_id>\w+)\s+\|+\s+(?P<pool_name>\S+)\s+\|+\s+(?P<start_addr>\S+)\s+\|+\s+(?P<end_addr>\S+)\s+\|$')
+
+        # Number of Pools : 22
+        p1 = re.compile(r'^Number of Pools +: +(?P<number_of_pools>\d+)$')
+
+        for line in output.splitlines(): 
+            line = line.strip()   
+
+            # Pool ID |                      Pool Name |      Start Addr |        End Addr |
+            # ----------------------------------------------------------------------------------
+            # 0x1     |                      in_pool_1 |        35.0.0.2 |       35.0.0.10 |
+            m = p0.match(line)
+            if m:
+                group = m.groupdict()
+                index_dict = ret_dict.setdefault('index', {}).setdefault(index,{})
+                index_dict['pool_id'] = group['pool_id']
+                index_dict['pool_name'] = group['pool_name']
+                index_dict['start_addr'] = group['start_addr']
+                index_dict['end_addr'] = group['end_addr']
+                index += 1
+                continue
+                
+            # Number of Pools : 22
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['number_of_pools'] = int(group['number_of_pools'])
+                continue
+       
         return ret_dict

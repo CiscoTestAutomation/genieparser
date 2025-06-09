@@ -1,0 +1,96 @@
+S1-UUT#show platform software fed switch active acl info sdk detail  
+
+-------------------------------------------------------------- 
+
+         ACLs info details (programmed in datapath) 
+
+-------------------------------------------------------------- 
+
+ 
+
+Class Group Name: V4SGACL;000  
+
+   Direction: Egress 
+
+      Feature         : Sgacl 
+
+      Protocol        : IPv4 
+
+      CG ID           : 273 
+
+      Pol Hdl         : 0x5405cf68 
+
+-------------------------------------------------------------- 
+
+ ACL (OID: 0x81E, No of ACEs: 1) 
+
+-------------------------------------------------------------- 
+
+   
+
+    IPV4 ACE Key/Mask 
+
+        ipv4_src: value = 0.0.0.0       mask = 0.0.0.0 
+
+        ipv4_dst: value = 0.0.0.0       mask = 0.0.0.0 
+
+            proto     tos      tcp_flg     ttl       ipv4_flags    src_port     dst_port 
+
+        V:  0x0       0x0      0x0         0x0       0x0           0x0          0x0 
+
+        M:  0x0       0x0      0x0         0x0       0x0           0x0          0x0 
+
+           
+
+    Result Action 
+
+        Punt : N    Drop : Y    Mirror : N    Counter: 0x0 (0) 
+
+-------------------------------------------------------------- 
+
+ 
+
+Class Group Name: V6SGACL<000  
+
+   Direction: Egress 
+
+      Feature         : Sgacl 
+
+      Protocol        : IPv6 
+
+      CG ID           : 545 
+
+      Pol Hdl         : 0x5405f6c8 
+
+-------------------------------------------------------------- 
+
+ ACL (OID: 0x823, No of ACEs: 1) 
+
+-------------------------------------------------------------- 
+
+   
+
+    IPV6 ACE Key/Mask 
+
+        src_mac: value = 0x0.0x0.0x0.0x0.0x0.0x0 
+
+                  mask = 0x0.0x0.0x0.0x0.0x0.0x0 
+
+        dst_mac: value = 0x0.0x0.0x0.0x0.0x0.0x0 
+
+                  mask = 0x0.0x0.0x0.0x0.0x0.0x0 
+
+            ext_h     tos      tcp_flg     ttl       ipv4_flags    src_port     dst_port 
+
+        V:  0x0       0x0      0x0         0x0       0x0           0x0          0x0 
+
+        M:  0x0       0x0      0x0         0x0       0x0           0x0          0x0 
+
+  
+
+    Result Action 
+
+        Punt : N    Drop : Y    Mirror : N    Counter: 0x0 (0) 
+
+-------------------------------------------------------------- 
+

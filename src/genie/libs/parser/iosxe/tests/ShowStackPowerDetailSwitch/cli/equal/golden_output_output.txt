@@ -1,0 +1,18 @@
+Power Stack                      Stack   Stack    Total   Rsvd    Alloc   Sw_Avail Num  Num
+    Name                             Mode    Topolgy  Pwr(W)  Pwr(W)  Pwr(W)   Pwr(W)  SW   PS
+    --------------------             ------  -------  ------  ------  ------  ------  ----- -----
+    Powerstack-1                     SP-PS   Stndaln  1100    0       575     525       1    1   
+
+Power stack name: Powerstack-1
+    Stack mode: Power sharing
+    Stack topology: Standalone
+    Switch 1:
+        Power budget: 1100
+        Power allocated: 575
+        Low port priority value: 22
+        High port priority value: 13
+        Switch priority value: 4
+        Port 1 status: Shut
+        Port 2 status: Shut
+        Neighbor on port 1: 0000.0000.0000
+        Neighbor on port 2: 0000.0000.0000

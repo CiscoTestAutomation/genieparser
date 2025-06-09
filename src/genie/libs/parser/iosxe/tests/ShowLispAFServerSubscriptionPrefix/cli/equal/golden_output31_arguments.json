@@ -1,0 +1,6 @@
+{
+    "lisp_id": 0,
+    "instance_id": "4100",
+    "address_family": "ipv4",
+    "eid_prefix": "172.168.0.0/16"
+}

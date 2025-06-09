@@ -1,0 +1,78 @@
+Interfaces for OSPF 51
+
+Bundle-Ether63001 is up, line protocol is up 
+  Internet Address 172.25.12.129/31, Area 0, SID 0, Strict-SPF SID 0
+  Label stack Primary label 1 Backup label 3 SRTE label 10
+  auto path capability supported
+  Process ID 51, Router ID 172.25.12.4, Network Type POINT_TO_POINT, Cost: 10
+  LDP Sync Enabled, Sync Status: Achieved
+  Transmit Delay is 1 sec, State POINT_TO_POINT, MTU 9164, MaxPktSz 9000
+  Forward reference No, Unnumbered no,  Bandwidth 10000000 
+  Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+    Hello due in 00:00:04:871
+  Index 2/2, flood queue length 0
+  Next 0(0)/0(0)
+  Last flood scan length is 8, maximum is 8
+  Last flood scan time is 0 msec, maximum is 0 msec
+  LS Ack List: current length 0, high water mark 44
+  Neighbor Count is 1, Adjacent neighbor count is 1
+    Adjacent with neighbor 172.25.12.2
+  Suppress hello for 0 neighbor(s)
+  Message digest authentication enabled
+    Youngest key id is 1
+  Multi-area interface Count is 0
+  Segment Routing Forwarding MPLS enabled: Yes
+  Adjacency hold timer expired last : Never
+  Exchange timer expired last : Never
+Bundle-Ether63002 is up, line protocol is up 
+  Internet Address 172.25.12.131/31, Area 0, SID 0, Strict-SPF SID 0
+  Label stack Primary label 1 Backup label 3 SRTE label 10
+  auto path capability supported
+  Process ID 51, Router ID 172.25.12.4, Network Type POINT_TO_POINT, Cost: 10
+  LDP Sync Enabled, Sync Status: Achieved
+  Transmit Delay is 1 sec, State POINT_TO_POINT, MTU 9164, MaxPktSz 9000
+  Forward reference No, Unnumbered no,  Bandwidth 10000000 
+  Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+    Hello due in 00:00:02:836
+  Index 3/3, flood queue length 0
+  Next 0(0)/0(0)
+  Last flood scan length is 2, maximum is 6
+  Last flood scan time is 0 msec, maximum is 0 msec
+  LS Ack List: current length 0, high water mark 43
+  Neighbor Count is 1, Adjacent neighbor count is 1
+    Adjacent with neighbor 172.25.12.3
+  Suppress hello for 0 neighbor(s)
+  Message digest authentication enabled
+    Youngest key id is 1
+  Multi-area interface Count is 0
+  Segment Routing Forwarding MPLS enabled: Yes
+  Adjacency hold timer expired last : Never
+  Exchange timer expired last : Never
+Loopback0 is up, line protocol is up 
+  Internet Address 172.25.12.4/32, Area 0, SID 0, Strict-SPF SID 0
+  Label stack Primary label 0 Backup label 0 SRTE label 0
+  Process ID 51, Router ID 172.25.12.4, Network Type LOOPBACK, Cost: 1
+  Loopback interface is treated as a stub Host
+tunnel-te10100 is up, line protocol is up 
+  Internet Address 0.0.0.0/0, Area 0, SID 0, Strict-SPF SID 0
+  Label stack Primary label 0 Backup label 0 SRTE label 0
+  Process ID 51, Router ID 172.25.12.4, Network Type POINT_TO_POINT
+  Interface is a tunnel igp-shortcut (RSVP-TE)
+  Transmit Delay is 1 sec, State POINT_TO_POINT, MTU 0, MaxPktSz 576
+  Forward reference No, Unnumbered no,  Bandwidth 100000 
+  RIB LC sync Yes
+  Timer intervals configured, Hello 10, Dead 40, Wait 0, Retransmit 5
+    No Hellos (Passive interface) 
+  Index 0/0, flood queue length 0
+  Next 0(0)/0(0)
+  Last flood scan length is 0, maximum is 0
+  Last flood scan time is 0 msec, maximum is 0 msec
+  LS Ack List: current length 0, high water mark 0
+  Neighbor Count is 0, Adjacent neighbor count is 0
+  Suppress hello for 0 neighbor(s)
+  Message digest authentication enabled
+    Youngest key id is 1
+  Multi-area interface Count is 0
+  Segment Routing Forwarding MPLS enabled: No
+  Adjacency hold timer expired last : Never
+  Exchange timer expired last : Never

@@ -1,0 +1,8 @@
+Number of IPv4 Adjacency entries: 1
+Adjacency ID        Adjacency IPAddress                     Dest MacAddr        Nexthop Type        Interface         
+0xb                 10.1.1.2                                8024.8f24.4902      NORMAL              Port-channel241
+ADJ Hardware Details:
+ADJ:objid:11 nh_type:NHADJ_NORMAL iif_id:0x86 ether_type:0x8 #child:0
+    srcmac:8024.8f1b.8902 dstmac:8024.8f24.4902
+   NPD: device:0 nh_gid/oid:0/0 old_gid/oid:0/0 parent_oid:0
+       fec_oid:0 was_nor_nh:0 cr_def:1 stale:0 l3port_valid:0

@@ -1,7 +1,7 @@
 import re
 
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Optional, Any
+from genie.metaparser.util.schemaengine import Optional, Any, ListOf
 from genie.parsergen import oper_fill_tabular
 
 # ===================================
@@ -2252,7 +2252,14 @@ class ShowCtsInterfaceSchema(MetaParser):
                     'authz_fail': int,
                     'port_auth_fail': int
                 },
-                'l3_ipm': str
+                'l3_ipm': str,
+                Optional('vlan_sgt_map'): {
+                    Any(): {
+                        'index': int,
+                        'vlan': int,
+                        'sgt': int,
+                    },
+                }
             },
         }
     }
@@ -2355,6 +2362,8 @@ class ShowCtsInterface(ShowCtsInterfaceSchema):
 
         # L3_IPM:   disabled.
         p26 = re.compile(r'^L3 IPM:\s+(?P<l3_ipm>\S+).')
+
+        p27 = re.compile(r'Index\s+:\s+(?P<index>\d+)\s+Vlan\s+:\s+(?P<vlan>\d+)\s+SGT\s+:\s+(?P<sgt>\d+)')
 
         for line in output.splitlines():
             line = line.strip()
@@ -2539,6 +2548,20 @@ class ShowCtsInterface(ShowCtsInterfaceSchema):
                 l3_ipm = group['l3_ipm']
                 intf_dict['l3_ipm'] = l3_ipm
 
+            # Vlan sgt-map 
+            # Index : 0   Vlan : 200 SGT : 65200
+            # Index : 1   Vlan : 100 SGT : 65
+            m = p27.match(line)
+            if m:
+                group = m.groupdict()
+                index = int(group['index'])
+                intf_dict.setdefault('vlan_sgt_map', {})
+                intf_dict['vlan_sgt_map'][index] = {
+                    'index': index,
+                    'vlan': int(group['vlan']),
+                    'sgt': int(group['sgt']),
+                }
+
         return ret_dict
 
 class ShowCtsRolebasedSgtMapIpSchema(MetaParser):
@@ -2592,8 +2615,10 @@ class ShowCtsRoleBasedSgtMapAllSchema(MetaParser):
             Optional('total_sxp'): int,
             Optional('total_internal'): int,
             Optional('total_local'): int,
-            Optional('total_l3if'): int,
+            Optional('total_cached'): int,
+            Optional('total_l3if') : int,
             Optional('total_vlan'): int
+
         },
         Optional('ipv6_sgt_bindings'): {
             Any(): {
@@ -2606,7 +2631,8 @@ class ShowCtsRoleBasedSgtMapAllSchema(MetaParser):
             Optional('total_sxp'): int,
             Optional('total_internal'): int,
             Optional('total_local'): int,
-            Optional('total_l3if'): int,
+            Optional('total_cached'): int,
+            Optional('total_l3if') : int,
             Optional('total_vlan'): int
         }
     }
@@ -2647,7 +2673,6 @@ class ShowCtsRoleBasedSgtMapAll(ShowCtsRoleBasedSgtMapAllSchema):
         # Total number of L3IF     bindings = 2
         # Total number of VLAN     bindings = 1
         p2 = re.compile(r'^Total\s+number\s+of\s+(?P<binding_type>(\S+))\s+bindings\s+=\s+(?P<binding_count>(\d+))$')
-
         for line in output.splitlines():
             line = line.strip()
 
@@ -3184,16 +3209,16 @@ class ShowCtsServerList(ShowCtsServerListSchema):
         p4 = re.compile(r'^Ignore\s+preferred\s+server$')
         # Server Group Deadtime = 20 secs (default)
         p5 = re.compile(r'^Server\s+Group\s+Deadtime\s+=\s+(?P<server_group_dead_time>\d+)\s+'
-        '(?P<server_group_dead_time_unit>\S+)')
+        r'(?P<server_group_dead_time_unit>\S+)')
         # Global Server Liveness Automated Test Deadtime = 20 secs
         p6 = re.compile(r'^Global\s+Server\s+Liveness\s+Automated\s+Test\s+Deadtime\s+=\s+'
-        '(?P<dead_time>\d+)\s+(?P<dead_time_unit>\S+)$')
+        r'(?P<dead_time>\d+)\s+(?P<dead_time_unit>\S+)$')
         # Global Server Liveness Automated Test Idle Time = 60 mins
         p7 = re.compile(r'^Global\s+Server\s+Liveness\s+Automated\s+Test\s+Idle\s+Time\s+=\s+'
-        '(?P<idle_time>\d+)\s+(?P<idle_time_unit>\S+)$')
+        r'(?P<idle_time>\d+)\s+(?P<idle_time_unit>\S+)$')
         # Global Server Liveness Automated Test = ENABLED (default)
         p8 = re.compile(r'^Global\s+Server\s+Liveness\s+Automated\s+Test\s+=\s+'
-        '(?P<status>.*)$')
+        r'(?P<status>.*)$')
         # Preferred list, 1 server(s):
         p9 = re.compile(r'^Preferred\s+list.*$')
         # Installed list: SL1-1E6E6AE57D4E2A9B320D1844C68BA291, 3 server(s):
@@ -3205,8 +3230,8 @@ class ShowCtsServerList(ShowCtsServerListSchema):
         # auto-test = TRUE, keywrap-enable = FALSE, idle-time = 120 mins, deadtime = 20 secs
         # auto-test = TRUE, idle-time = 120 mins, deadtime = 20 secs
         p13 = re.compile(r'^auto-test\s+=\s+(?P<auto_test_status>\S+),\s+(keywrap-enable\s+=\s+'
-        '(?P<keywrap_enable>\S+),\s+)?idle-time\s+=\s+(?P<idle_time>\d+)\s+(?P<idle_time_unit>\S+),'
-        '\s+deadtime\s+=\s+(?P<dead_time>\d+)\s+(?P<dead_time_unit>\S+)$')
+        r'(?P<keywrap_enable>\S+),\s+)?idle-time\s+=\s+(?P<idle_time>\d+)\s+(?P<idle_time_unit>\S+),'
+        r'\s+deadtime\s+=\s+(?P<dead_time>\d+)\s+(?P<dead_time_unit>\S+)$')
         # HTTP Server-list:
         p14 = re.compile(r'^HTTP\s+Server\-list:$')
         # Server Name  : cts-auto-cls1-ise1.cisco.com
@@ -3484,31 +3509,31 @@ class ShowCtsPolicyServerStatistics(ShowCtsPolicyServerStatisticsSchema):
         # Number of Response recv fail  : 3
         p5 = re.compile(r'^number +of +response +recv +fail +: +(?P<num_of_res_recv_fail>\d+)$')
         #     HTTP 200 OK                 : 5
-        p6 = re.compile('^http +200 +ok +: +(?P<http_200_ok>\d+)$')
+        p6 = re.compile(r'^http +200 +ok +: +(?P<http_200_ok>\d+)$')
         #     HTTP 400 BadReq             : 0
-        p7 = re.compile('^http +400 +badreq +: +(?P<http_400_badreq>\d+)$')
+        p7 = re.compile(r'^http +400 +badreq +: +(?P<http_400_badreq>\d+)$')
         #     HTTP 401 UnAuthorized Req   : 1
-        p8 = re.compile('^http +401 +unauthorized +req +: +(?P<http_401_unauthorized_req>\d+)$')
+        p8 = re.compile(r'^http +401 +unauthorized +req +: +(?P<http_401_unauthorized_req>\d+)$')
         #     HTTP 403 Req Forbidden      : 0
-        p9 = re.compile('^http +403 +req +forbidden +: +(?P<http_403_req_forbidden>\d+)$')
+        p9 = re.compile(r'^http +403 +req +forbidden +: +(?P<http_403_req_forbidden>\d+)$')
         #     HTTP 404 NotFound           : 0
-        p10 = re.compile('^http +404 +notfound +: +(?P<http_404_notfound>\d+)$')
+        p10 = re.compile(r'^http +404 +notfound +: +(?P<http_404_notfound>\d+)$')
         #     HTTP 408 ReqTimeout         : 0
-        p11 = re.compile('^http +408 +reqtimeout +: +(?P<http_408_reqtimeout>\d+)$')
+        p11 = re.compile(r'^http +408 +reqtimeout +: +(?P<http_408_reqtimeout>\d+)$')
         #     HTTP 415 UnSupported Media  : 0
-        p12 = re.compile('^http +415 +unsupported +media +: +(?P<http_415_unsupported_media>\d+)$')
+        p12 = re.compile(r'^http +415 +unsupported +media +: +(?P<http_415_unsupported_media>\d+)$')
         #     HTTP 500 ServerErr          : 0
-        p13 = re.compile('^http +500 +servererr +: +(?P<http_500_servererr>\d+)$')
+        p13 = re.compile(r'^http +500 +servererr +: +(?P<http_500_servererr>\d+)$')
         #     HTTP 501 Req NoSupport      : 0
-        p14 = re.compile('^http +501 +req +nosupport +: +(?P<http_501_req_nosupport>\d+)$')
+        p14 = re.compile(r'^http +501 +req +nosupport +: +(?P<http_501_req_nosupport>\d+)$')
         #     HTTP 503 Service Unavailable: 0
-        p15 = re.compile('^http +503 +service +unavailable *: +(?P<http_503_service_unavailable>\d+)$')
+        p15 = re.compile(r'^http +503 +service +unavailable *: +(?P<http_503_service_unavailable>\d+)$')
         #     HTTP 429 Too Many Requests  : 0
-        p16 = re.compile('^http +429 +too +many +requests +: +(?P<http_429_too_many_requests>\d+)$')
+        p16 = re.compile(r'^http +429 +too +many +requests +: +(?P<http_429_too_many_requests>\d+)$')
         #     TCP or TLS handshake error  : 2
-        p17 = re.compile('^tcp +or +tls +handshake +error +: +(?P<tcp_or_tls_handshake_err>\d+)$')
+        p17 = re.compile(r'^tcp +or +tls +handshake +error +: +(?P<tcp_or_tls_handshake_err>\d+)$')
         #     HTTP Other Error            : 0
-        p18 = re.compile('^http +other +error +: +(?P<http_other_err>\d+)$')
+        p18 = re.compile(r'^http +other +error +: +(?P<http_other_err>\d+)$')
        
         for line in output.splitlines():
             line = line.strip()
@@ -3673,27 +3698,31 @@ class ShowCtsPolicyServerDetails(ShowCtsPolicyServerDetailsSchema):
         results_dict = {}
         
         # Server Name  : cts-auto-cls1-ise1.cisco.com
-        p0 = re.compile(r'^server +name +: +(?P<server_name>\S+)$')
+        # Server Name   : CTS-HTTP-IPV4-1
+        p0 = re.compile(r'^\s*[Ss]erver +[Nn]ame\s*: +(?P<server_name>\S+)$')
         # Server Status : Inactive
-        p1 = re.compile(r'^server +status +: +(?P<server_status>\S+)$')
+        p1 = re.compile(r'^\s*[Ss]erver +[Ss]tatus\s*: +(?P<server_status>\S+)$')
         # IPv4 Address     : 10.76.119.181 (Reachable)
-        p2 = re.compile(r'^ipv4\s+address\s*: +(?P<ipv4_address>\S+)(:?\s*\((?P<ipv4_status>\S+)\))?$')
+        p2 = re.compile(r'^\s*[Ii][Pp][Vv]4\s+[Aa]ddress\s*: +(?P<ipv4_address>\S+)(?:\s*\((?P<ipv4_status>\S+)\))?$')
         # Domain-name      : cts-auto-cls1-ise3.cisco.com (Reachable)
-        p3 = re.compile(r'^domain-name\s*: +(?P<domain_name>\S+) +\((?P<domain_status>\S+)\)$')
+        # Domain-name      : CTS-HTTP-IPV4-1.cisco.com (Reachable)
+        p3 = re.compile(r'^\s*[Dd]omain-[Nn]ame\s*: +(?P<domain_name>\S+) +\((?P<domain_status>\S+)\)$')
         # Trustpoint       : cts_tp_cts-auto-cls1-ise3.cisco.com_2
-        p4 = re.compile(r'^trustpoint +: +(?P<trustpoint>\S+)$')
+        # Trustpoint       : CTS-HTTP-IPV4-1
+        p4 = re.compile(r'^\s*[Tt]rustpoint\s*: +(?P<trustpoint>\S+)$')
         # Port-num         : 9063
-        p5 = re.compile(r'^port-num +: +(?P<port_num>\d+)$')
+        p5 = re.compile(r'^\s*[Pp]ort-[Nn]um\s*: +(?P<port_num>\d+)$')
         #     Retransmit count : 3
-        p6 = re.compile('^retransmit +count +: +(?P<retransmit_count>\d+)$')
+        p6 = re.compile(r'^\s*[Rr]etransmit +[Cc]ount\s*: +(?P<retransmit_count>\d+)$')
         #     Timeout          : 15
-        p7 = re.compile('^timeout +: +(?P<timeout>\d+)$')
+        p7 = re.compile(r'^\s*[Tt]imeout\s*: +(?P<timeout>\d+)$')
         #    App Content type : JSON
-        p8 = re.compile('^app +content +type +: +(?P<app_content_type>\S+)$')
+        p8 = re.compile(r'^\s*[Aa]pp +[Cc]ontent +[Tt]ype\s*: +(?P<app_content_type>\S+)$')
         #    Trustpoint chain : NOT CONFIGURED
-        p9 = re.compile('^trustpoint +chain +: +(?P<trustpoint_chain>.*)$')
+        p9 = re.compile(r'^\s*[Tt]rustpoint +[Cc]hain\s*: +(?P<trustpoint_chain>.*)$')
         # IPv6 Address     : 1100::101 (Reachable)
-        p10 = re.compile(r'^ipv6\s+address\s+:\s+(?P<ipv6_address>[\w:]+)(:?\s*\((?P<ipv6_status>\w+)\))?$')
+        p10 = re.compile(r'^\s*[Ii][Pp][Vv]6\s+[Aa]ddress\s*: +(?P<ipv6_address>[\w:]+)(?:\s*\((?P<ipv6_status>\w+)\))?$')
+
         
         for line in output.splitlines():
             line = line.strip()
@@ -3887,5 +3916,231 @@ class ShowCtsInterfaceSummary(ShowCtsInterfaceSummarySchema):
                     "peer_id": group["peer_id"],
                     "ifc_cache": group["ifc_cache"],
                     "critical_authentication": group["critical_authentication"]})          
+        return ret_dict
+
+# ==============================================
+# Parser for 'show cts policy sgt '
+# ==============================================
+
+class ShowCtsPolicySgtSchema(MetaParser):
+    """Schema for show cts policy sgt <sgt>"""
+    schema = {
+        'cts_sgt_policy': {
+            Optional('rbacl_monitor_all'): bool,
+            Optional('rbacl_ip_version_supported'): str,
+            Optional('sgt'): str,
+            Optional('sgt_policy_flag'): str,
+            Optional('rbacl_source_list'): {
+                Any(): {
+                    'source_sgt': str,
+                    'destination_sgt': str,
+                    'rbacl_type': int,
+                    'rbacl_index': int,
+                    'name': str,
+                    'ip_protocol_version': str,
+                    'refcnt': int,
+                    'flag': str,
+                    'stale': bool,
+                    'rbacl_aces': ListOf(str)
+                }
+            },
+            Optional('rbacl_destination_list'): str,
+            Optional('rbacl_multicast_list'): str,
+            Optional('rbacl_policy_lifetime'): int,
+            Optional('rbacl_policy_last_update_time'): str,
+            Optional('policy_expires_in'): str,
+            Optional('policy_refreshes_in'): str,
+            Optional('cache_data_applied'): str
+        }
+    }
+
+class ShowCtsPolicySgt(ShowCtsPolicySgtSchema):
+    """Parser for show cts policy sgt <sgt>"""
+
+    cli_command = 'show cts policy sgt {sgt}'
+
+    def cli(self, sgt, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(sgt=sgt))
+
+        # Initialize the return dictionary
+        ret_dict = {}
+        cts_sgt_policy_dict = {}
+
+        # Regular expressions for parsing the output
+        
+        #CTS SGT Policy
+        p1 = re.compile(r'^CTS SGT Policy$')
+        #RBACL Monitor All : FALSE
+        p2 = re.compile(r'^RBACL Monitor All : (?P<rbacl_monitor_all>\S+)$')
+        #RBACL IP Version Supported: IPv4 & IPv6
+        p3 = re.compile(r'^RBACL IP Version Supported: (?P<rbacl_ip_version_supported>.+)$')
+        #SGT: 30-01:SGT_030
+        p4 = re.compile(r'^SGT: (?P<sgt>.+)$')
+        #SGT Policy Flag: 0x41400001
+        p5 = re.compile(r'^SGT Policy Flag: (?P<sgt_policy_flag>\S+)$')
+        #Source SGT: 25-00:SGT_025-0, Destination SGT: 30-01:SGT_030-0
+        p6 = re.compile(r'^Source SGT: (?P<source_sgt>.+), Destination SGT: (?P<destination_sgt>.+)$')
+        #rbacl_type = 80
+        p7 = re.compile(r'^rbacl_type = (?P<rbacl_type>\d+)$')
+        #rbacl_index = 1
+        p8 = re.compile(r'^rbacl_index = (?P<rbacl_index>\d+)$')
+        #name   = PERMIT_IP-01
+        p9 = re.compile(r'^name   = (?P<name>\S+)$')
+        #IP protocol version = IPV4
+        p10 = re.compile(r'^IP protocol version = (?P<ip_protocol_version>\S+)$')
+        #refcnt = 2
+        p11 = re.compile(r'^refcnt = (?P<refcnt>\d+)$')
+        #flag   = 0x41000000
+        p12 = re.compile(r'^flag   = (?P<flag>\S+)$')
+        #stale  = FALSE
+        p13 = re.compile(r'^stale  = (?P<stale>\S+)$')
+        #  RBACL ACEs:
+        #  permit ip log
+        #  deny ip
+        p14 = re.compile(r'^(?P<rbacl_ace>permit .+|deny .+)$')
+        #RBACL Destination List: Not exist
+        p15 = re.compile(r'^RBACL Destination List: (?P<rbacl_destination_list>.+)$')
+        #RBACL Multicast List: Not exist
+        p16 = re.compile(r'^RBACL Multicast List: (?P<rbacl_multicast_list>.+)$')
+        #RBACL Policy Lifetime = 86400 secs
+        p17 = re.compile(r'^RBACL Policy Lifetime = (?P<rbacl_policy_lifetime>\d+) secs$')
+        #RBACL Policy Last update time = 12:55:59 IST Wed Jan 15 2025
+        p18 = re.compile(r'^RBACL Policy Last update time = (?P<rbacl_policy_last_update_time>.+)$')
+        #Policy expires in 0:22:08:05 (dd:hr:mm:sec)
+        p19 = re.compile(r'^Policy expires in (?P<policy_expires_in>.+) \(dd:hr:mm:sec\)$')
+        #Policy refreshes in 0:22:08:05 (dd:hr:mm:sec)
+        p20 = re.compile(r'^Policy refreshes in (?P<policy_refreshes_in>.+) \(dd:hr:mm:sec\)$')
+        #Cache data applied = NONE
+        p21 = re.compile(r'^Cache data applied = (?P<cache_data_applied>.+)$')
+
+        rbacl_source_dict = {}
+        current_rbacl = {}
+        current_index = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Match and parse the lines
+            # CTS SGT Policy
+            if p1.match(line):
+                cts_sgt_policy_dict = ret_dict.setdefault('cts_sgt_policy', {})
+                continue
+            # RBACL Monitor All : FALSE
+            m = p2.match(line)
+            if m:
+                cts_sgt_policy_dict['rbacl_monitor_all'] = m.group('rbacl_monitor_all') == 'TRUE'
+                continue
+            # RBACL IP Version Supported: IPv4 & IPv6
+            m = p3.match(line)
+            if m:
+                cts_sgt_policy_dict['rbacl_ip_version_supported'] = m.group('rbacl_ip_version_supported')
+                continue
+            # SGT: 30-01:SGT_030
+            m = p4.match(line)
+            if m:
+                cts_sgt_policy_dict['sgt'] = m.group('sgt')
+                continue
+            # SGT Policy Flag: 0x41400001
+            m = p5.match(line)
+            if m:
+                cts_sgt_policy_dict['sgt_policy_flag'] = m.group('sgt_policy_flag')
+                continue
+            #  Source SGT: 25-00:SGT_025-0, Destination SGT: 30-01:SGT_030-0
+            #   RBACL ACEs:
+            #       permit ip log
+            #       deny ip
+            m = p6.match(line)
+            if m:
+                if current_index is not None:
+                    rbacl_source_dict[current_index] = current_rbacl
+                current_rbacl = {
+                    'source_sgt': m.group('source_sgt'),
+                    'destination_sgt': m.group('destination_sgt'),
+                    'rbacl_aces': []
+                }
+                continue
+            # rbacl_type = 80
+            m = p7.match(line)
+            if m:
+                current_rbacl['rbacl_type'] = int(m.group('rbacl_type'))
+                continue
+            # rbacl_index = 1
+            m = p8.match(line)
+            if m:
+                current_index = int(m.group('rbacl_index'))
+                current_rbacl['rbacl_index'] = current_index
+                continue
+            # name   = PERMIT_IP-01
+            m = p9.match(line)
+            if m:
+                current_rbacl['name'] = m.group('name')
+                continue
+            # IP protocol version = IPV4
+            m = p10.match(line)
+            if m:
+                current_rbacl['ip_protocol_version'] = m.group('ip_protocol_version')
+                continue
+            # refcnt = 2
+            m = p11.match(line)
+            if m:
+                current_rbacl['refcnt'] = int(m.group('refcnt'))
+                continue
+            # flag   = 0x41000000
+            m = p12.match(line)
+            if m:
+                current_rbacl['flag'] = m.group('flag')
+                continue
+            # stale  = FALSE
+            m = p13.match(line)
+            if m:
+                current_rbacl['stale'] = m.group('stale') == 'TRUE'
+                continue
+            # RBACL ACEs:
+            m = p14.match(line)
+            if m:
+                current_rbacl['rbacl_aces'].append(m.group('rbacl_ace'))
+                continue
+            # RBACL Destination List: Not exist
+            m = p15.match(line)
+            if m:
+                cts_sgt_policy_dict['rbacl_destination_list'] = m.group('rbacl_destination_list')
+                continue
+            # RBACL Multicast List: Not exist
+            m = p16.match(line)
+            if m:
+                cts_sgt_policy_dict['rbacl_multicast_list'] = m.group('rbacl_multicast_list')
+                continue
+            # RBACL Policy Lifetime = 86400 secs
+            m = p17.match(line)
+            if m:
+                cts_sgt_policy_dict['rbacl_policy_lifetime'] = int(m.group('rbacl_policy_lifetime'))
+                continue
+            # RBACL Policy Last update time = 12:55:59 IST Wed Jan 15 2025
+            m = p18.match(line)
+            if m:
+                cts_sgt_policy_dict['rbacl_policy_last_update_time'] = m.group('rbacl_policy_last_update_time')
+                continue
+            # Policy expires in 0:22:08:05 (dd:hr:mm:sec)
+            m = p19.match(line)
+            if m:
+                cts_sgt_policy_dict['policy_expires_in'] = m.group('policy_expires_in')
+                continue
+            # Policy refreshes in 0:22:08:05 (dd:hr:mm:sec)
+            m = p20.match(line)
+            if m:
+                cts_sgt_policy_dict['policy_refreshes_in'] = m.group('policy_refreshes_in')
+                continue
+            # Cache data applied = NONE
+            m = p21.match(line)
+            if m:
+                cts_sgt_policy_dict['cache_data_applied'] = m.group('cache_data_applied')
+                continue
+
+        if current_index is not None:
+            rbacl_source_dict[current_index] = current_rbacl
+
+        cts_sgt_policy_dict['rbacl_source_list'] = rbacl_source_dict
+
         return ret_dict
 

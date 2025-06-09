@@ -1,0 +1,29 @@
+
+Cisco Internetwork Operating System Software 
+IOS (tm) 2500 Software (C2500-J-L), Version 11.2(5)P, SHARED PLATFORM, RELEASE SOFTWARE (fc1)
+Copyright (c) 1986-1997 by cisco Systems, Inc.
+Compiled Mon 07-Apr-97 12:10 by tej
+Image text-base: 0x0303E4C8, data-base: 0x00001000
+
+ROM: System Bootstrap, Version 11.0(10c)XB1, PLATFORM SPECIFIC RELEASE SOFTWARE (fc1)
+ROM: 3000 Bootstrap Software (IGS-BOOT-R), Version 11.0(10c)XB1, PLATFORM SPECIFIC RELEASE SOFTWARE (fc1) 
+
+CS12-19-4 uptime is 2 weeks, 1 day, 9 hours, 17 minutes
+System restarted by bus error at PC 0x31ABEF8, address 0xFC4AFC48 at 21:14:28 EST Tue Feb 25 2025
+System image file is "flash:c2500-j-l.112-5.P", booted via flash
+
+cisco AS2511-RJ (68030) processor (revision E) with 6144K/2048K bytes of memory.
+Processor board ID 11857685, with hardware revision 00000000
+Bridging software.
+SuperLAT software copyright 1990 by Meridian Technology Corp).
+X.25 software, Version 2.0, NET2, BFE and GOSIP compliant.
+TN3270 Emulation software (copyright 1994 by TGV Inc).
+1 Ethernet/IEEE 802.3 interface(s)
+1 Serial network interface(s)
+16 terminal line(s)
+32K bytes of non-volatile configuration memory.
+8192K bytes of processor board System flash (Read ONLY)
+
+Configuration register is 0x2102
+ 
+

@@ -10,8 +10,8 @@ IOSXE c9500 parsers for the following show commands:
    * show platform hardware fed switch active fwd-asic resource tcam table pbr record 0 format 0 | begin {nat_region}
    * show platform software fed active fnf record-count asic {asic_num}
    * show platform software fed {switch} active fnf record-count asic {asic_num}
-   * show platform software fed switch standby acl usage | include {acl_name}
-   * show platform software fed switch standby acl usage
+   * show platform software fed switch {switch_num} acl usage | include {acl_name}
+   * show platform software fed switch {switch_num} acl usage
    * show platform hardware fed switch standby fwd-asic resource tcam utilization
    * show platform software bp crimson statistics
 '''
@@ -97,15 +97,15 @@ class ShowPlatformSoftwareObjectmanager(ShowPlatformSoftwareObjectmanagerSchema)
 
         #Object update: Pending-issue: 0, Pending-acknowledgement: 0
         p2 = re.compile(r'^Object +update:\s+Pending-issue:\s+(?P<pending_issue>\d+), +'
-                         'Pending-acknowledgement:\s+(?P<pending_ack>\d+)$')
+                         r'Pending-acknowledgement:\s+(?P<pending_ack>\d+)$')
 
         #Batch begin:   Pending-issue: 0, Pending-acknowledgement: 0
         p3 = re.compile(r'Batch +begin:\s+Pending-issue:\s+(?P<pending_issue>\d+), +'
-                         'Pending-acknowledgement:\s+(?P<pending_ack>\d+)$')
+                         r'Pending-acknowledgement:\s+(?P<pending_ack>\d+)$')
 
         #Batch end:     Pending-issue: 0, Pending-acknowledgement: 0
         p4 = re.compile(r'Batch +end:\s+Pending-issue:\s+(?P<pending_issue>\d+), +'
-                         'Pending-acknowledgement:\s+(?P<pending_ack>\d+)$')
+                         r'Pending-acknowledgement:\s+(?P<pending_ack>\d+)$')
 
         #Command:       Pending-acknowledgement: 0
         p5 = re.compile(r'Command:\s+Pending-acknowledgement:\s+(?P<pending_ack>\d+)')
@@ -281,7 +281,13 @@ class ShowPlatformFedActiveTcamUtilizationSchema(MetaParser):
             'free0': int,
             'ingress_wide_direction': str,
             'inw_used0': int,
-            'inw_free0': int
+            'inw_free0': int,
+            Optional('resource'): {
+                Any(): {
+                    'used': int,
+                    'free': int
+                }
+            }
         },
         'Slice1': {
             'egress_wide_direction': str,
@@ -289,7 +295,13 @@ class ShowPlatformFedActiveTcamUtilizationSchema(MetaParser):
             'free1': int,
             'ingress_wide_direction': str,
             'inw_used1': int,
-            'inw_free1': int
+            'inw_free1': int,
+            Optional('resource'): {
+                Any(): {
+                    'used': int,
+                    'free': int
+                }
+            }
         },
         'Slice2': {
             'egress_wide_direction': str,
@@ -297,7 +309,13 @@ class ShowPlatformFedActiveTcamUtilizationSchema(MetaParser):
             'free2': int,
             'ingress_wide_direction': str,
             'inw_used2': int,
-            'inw_free2': int
+            'inw_free2': int,
+            Optional('resource'): {
+                Any(): {
+                    'used': int,
+                    'free': int
+                }
+            }
         },
         'Slice3': {
             'egress_wide_direction': str,
@@ -305,7 +323,13 @@ class ShowPlatformFedActiveTcamUtilizationSchema(MetaParser):
             'free3': int,
             'ingress_wide_direction': str,
             'inw_used3': int,
-            'inw_free3': int
+            'inw_free3': int,
+            Optional('resource'): {
+                Any(): {
+                    'used': int,
+                    'free': int
+                }
+            }
         },
         'Slice4': {
             'egress_wide_direction': str,
@@ -313,7 +337,13 @@ class ShowPlatformFedActiveTcamUtilizationSchema(MetaParser):
             'free4': int,
             'ingress_wide_direction': str,
             'inw_used4': int,
-            'inw_free4': int
+            'inw_free4': int,
+            Optional('resource'): {
+                Any(): {
+                    'used': int,
+                    'free': int
+                }
+            }
         },
         'Slice5': {
             'egress_wide_direction': str,
@@ -321,7 +351,13 @@ class ShowPlatformFedActiveTcamUtilizationSchema(MetaParser):
             'free5': int,
             'ingress_wide_direction': str,
             'inw_used5': int,
-            'inw_free5': int
+            'inw_free5': int,
+            Optional('resource'): {
+                Any(): {
+                    'used': int,
+                    'free': int
+                }
+            }
         },
     }
 
@@ -332,12 +368,18 @@ class ShowPlatformFedActiveTcamUtilization(ShowPlatformFedActiveTcamUtilizationS
     """ Parser for show platform hardware fed active fwd-asic resource tcam utilization"""
 
     cli_command = ['show platform hardware fed switch {mode} fwd-asic resource tcam utilization',
-                   'show platform hardware fed active fwd-asic resource tcam utilization']
+                   'show platform hardware fed active fwd-asic resource tcam utilization',
+                   'show platform hardware fed switch {mode} fwd-asic resource tcam utilization {asic}',
+                   'show platform hardware fed active fwd-asic resource tcam utilization {asic}']
 
-    def cli(self, output=None, mode=None):
+    def cli(self, output=None, mode=None, asic=None):
         if output is None:
-            if mode:
+            if mode and asic:
+                cmd = self.cli_command[2].format(mode=mode, asic=asic)
+            elif mode:
                 cmd = self.cli_command[0].format(mode=mode)
+            elif asic:
+                cmd = self.cli_command[3].format(asic=asic)
             else:
                 cmd = self.cli_command[1]
             output = self.device.execute(cmd)
@@ -350,8 +392,14 @@ class ShowPlatformFedActiveTcamUtilization(ShowPlatformFedActiveTcamUtilizationS
 
         # Egress Wide TCAM entries
         p2 = re.compile(r'^Egress +(?P<egress_wide_direction>([a-zA-Z]+)) +TCAM +entries\s+(?P<used0>(\d+))\s+(?P<free0>(\d+))\s+(?P<used1>(\d+))\s+(?P<free1>(\d+))\s+(?P<used2>(\d+))\s+(?P<free2>(\d+))\s+(?P<used3>(\d+))\s+(?P<free3>(\d+))\s+(?P<used4>(\d+))\s+(?P<free4>(\d+))\s+(?P<used5>(\d+))\s+(?P<free5>(\d+)).*$')
+        
         # Ingress Wide TCAM entries
         p3 = re.compile(r'^Ingress +(?P<ingress_wide_direction>([a-zA-Z]+)) +TCAM +entries\s+(?P<inw_used0>(\d+))\s+(?P<inw_free0>(\d+))\s+(?P<inw_used1>(\d+))\s+(?P<inw_free1>(\d+))\s+(?P<inw_used2>(\d+))\s+(?P<inw_free2>(\d+))\s+(?P<inw_used3>(\d+))\s+(?P<inw_free3>(\d+))\s+(?P<inw_used4>(\d+))\s+(?P<inw_free4>(\d+))\s+(?P<inw_used5>(\d+))\s+(?P<inw_free5>(\d+)).*$')
+
+        # Ingress Narrow_Pool_0 TCAM entries       39 112712     39 112712      0     0      0     0      0     0      0     0
+        p4 = re.compile(r'(?P<resource>.+)\s+(?P<slice0_used>\d+)\s+(?P<slice0_free>\d+)\s+(?P<slice1_used>\d+)\s+'
+                        r'(?P<slice1_free>\d+)\s+(?P<slice2_used>\d+)\s+(?P<slice2_free>\d+)\s+(?P<slice3_used>\d+)\s+'
+                        r'(?P<slice3_free>\d+)\s+(?P<slice4_used>\d+)\s+(?P<slice4_free>\d+)\s+(?P<slice5_used>\d+)\s+(?P<slice5_free>\d+)$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -377,8 +425,9 @@ class ShowPlatformFedActiveTcamUtilization(ShowPlatformFedActiveTcamUtilizationS
                 if slice_id5 not in slice_dict:
                     slice_dict[slice_id5] = {}
                 continue
+            
+            # Egress Wide TCAM entries
             m = p2.match(line)
-
             if m:
                 group = m.groupdict()
                 direction = group["egress_wide_direction"]
@@ -395,7 +444,9 @@ class ShowPlatformFedActiveTcamUtilization(ShowPlatformFedActiveTcamUtilizationS
                     free = 'free' + str(x)
                     slice_dict[slice_id][used] = int(group[used])
                     slice_dict[slice_id][free] = int(group[free])
-
+                continue
+            
+            # Ingress Wide TCAM entries
             m = p3.match(line)
             if m:
                 group = m.groupdict()
@@ -413,6 +464,23 @@ class ShowPlatformFedActiveTcamUtilization(ShowPlatformFedActiveTcamUtilizationS
                     inw_free = 'inw_free' + str(x)
                     slice_dict[slice_id][inw_used] = int(group[inw_used])
                     slice_dict[slice_id][inw_free] = int(group[inw_free])
+                continue
+            
+            # Ingress Narrow_Pool_0 TCAM entries       39 112712     39 112712      0     0      0     0      0     0      0     0
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                resource_name = group['resource'].strip().lower().replace(' ', '_')
+                for x in range(6):
+                    slice_id = 'Slice' + str(x).strip()
+                    used = f'slice{x}_used'
+                    free = f'slice{x}_free'
+                    if 'resource' not in slice_dict[slice_id]:
+                        slice_dict[slice_id]['resource'] = {}
+                    slice_dict[slice_id]['resource'][resource_name] = {}
+                    slice_dict[slice_id]['resource'][resource_name]['used'] = int(group[used])
+                    slice_dict[slice_id]['resource'][resource_name]['free'] = int(group[free])
+                continue
 
         return slice_dict
 
@@ -695,99 +763,6 @@ class ShowPlatformFedSwitchActiveIfmMapping(ShowPlatformFedSwitchActiveIfmMappin
                 continue
         return ret_dict
 
-# =========================================================
-#  Schema for
-#  * 'show platform software fed switch standby acl usage'
-#  * 'show platform software fed switch standby acl usage | include {acl_name}'
-# =========================================================
-class ShowPlatformSoftwareFedSwitchStandbyAclUsageSchema(MetaParser):
-    """Schema for 'show platform software fed switch standby acl usage
-    """
-    schema = {
-        Optional('acl_usage'): {
-            Optional('ace_software'): {
-                 Optional('vmr_max'): int,
-                 Optional('used'): int,
-             },
-            'acl_name': {
-                Any(): {
-                    'direction': {
-                        Any(): {
-                            'feature_type': str,
-                            'acl_type': str,
-                            'entries_used': int,
-                        },
-                    },
-                },
-            },
-        }
-    }
-
-# =========================================================
-#  Parser for
-#  * 'show platform software fed switch standby acl usage'
-#  * 'show platform software fed switch standby acl usage | include {acl_name}'
-# =========================================================
-class ShowPlatformSoftwareFedSwitchStandbyAclUsage(ShowPlatformSoftwareFedSwitchStandbyAclUsageSchema):
-    """
-    Parser for :
-        * show platform software fed switch standby acl usage
-        * show platform software fed switch standby acl usage | include {acl_name}
-    """
-
-    cli_command = ['show platform software fed switch standby acl usage',
-                   'show platform software fed switch standby acl usage | include {acl_name}']
-
-    def cli(self, acl_name="", output=None):
-        if output is None:
-            if acl_name:
-                cmd = self.cli_command[1].format(acl_name=acl_name)
-            else:
-                cmd = self.cli_command[0]
-            output = self.device.execute(cmd)
-
-        # #####  ACE Software VMR max:196608 used:253
-        p1 = re.compile(r'^\#\#\#\#\#\s+ACE\sSoftware\sVMR\smax\:(?P<vmr_max>\d+)\sused\:(?P<used>\d+)$')
-
-        #   RACL        IPV4     Ingress   PBR-DMVPN    92
-        p2 = re.compile(r'^(?P<feature_type>\S+)\s+(?P<acl_type>\S+)\s+(?P<direction>\S+)\s+(?P<name>\S+)\s+(?P<entries_used>\d+)$')
-
-        # initial return dictionary
-        ret_dict ={}
-
-        for line in output.splitlines():
-            line = line.strip()
-
-            acl_usage = ret_dict.setdefault('acl_usage', {})
-
-            # #####  ACE Software VMR max:196608 used:253
-            m = p1.match(line)
-            if m:
-                group = m.groupdict()
-                acl_usage = ret_dict.setdefault('acl_usage', {})
-                ace_software = acl_usage.setdefault('ace_software', {})
-
-                vmr_max = group['vmr_max']
-                ace_software['vmr_max'] = int(vmr_max)
-
-                used = group['used']
-                ace_software['used'] = int(used)
-                continue
-
-            #   RACL        IPV4     Ingress   PBR-DMVPN    92
-            m = p2.match(line)
-            if m:
-                group = m.groupdict()
-                acl_name = acl_usage.setdefault('acl_name', {}).setdefault(
-                    Common.convert_intf_name(group['name']), {})
-                direction = acl_name.setdefault('direction', {}).setdefault(
-                    Common.convert_intf_name(group['direction']), {})
-
-                direction['feature_type'] = group['feature_type']
-                direction['acl_type'] = group['acl_type']
-                direction['entries_used'] = int(group['entries_used'])
-                continue
-        return ret_dict
 
 # =========================================================
 #  Schema for
@@ -960,7 +935,7 @@ class ShowPlatformSoftwareBpCrimsonStatistics(ShowPlatformSoftwareBpCrimsonStati
         p9 = re.compile(r'MAX .ms.\s+\:\s+(?P<MAX>\d+)')
 
         # Record Free Failures
-        p10 = re.compile('^(?P<record_free_failures>Record Free Failures\:)$')
+        p10 = re.compile(r'^(?P<record_free_failures>Record Free Failures\:)$')
 
         for line in output.splitlines():
             line=line.strip()
@@ -1251,11 +1226,11 @@ class ShowPlatformHardwareFedSwitchQosDscpcosCounters(ShowPlatformHardwareFedSwi
 
 # =========================================================
 #  Schema for
-#  * 'show platform software fed switch active acl usage'
-#  * 'show platform software fed switch active acl usage | include {acl_name}'
+#  * 'show platform software fed switch {switch_num} acl usage'
+#  * 'show platform software fed switch {switch_num} acl usage | include {acl_name}'
 # =========================================================
-class ShowPlatformSoftwareFedSwitchActivEAclUsageSchema(MetaParser):
-    """Schema for 'show platform software fed switch standby acl usage
+class ShowPlatformSoftwareFedSwitchActiveAclUsageSchema(MetaParser):
+    """Schema for 'show platform software fed switch {switch_num} acl usage
     """
     schema = {
         Optional('acl_usage'): {
@@ -1279,25 +1254,25 @@ class ShowPlatformSoftwareFedSwitchActivEAclUsageSchema(MetaParser):
 
 # =========================================================
 #  Parser for
-#  * 'show platform software fed switch active acl usage'
-#  * 'show platform software fed switch active acl usage | include {acl_name}'
+#  * 'show platform software fed switch {switch_num} acl usage'
+#  * 'show platform software fed switch {switch_num} acl usage | include {acl_name}'
 # =========================================================
-class ShowPlatformSoftwareFedSwitchActivEAclUsage(ShowPlatformSoftwareFedSwitchActivEAclUsageSchema):
+class ShowPlatformSoftwareFedSwitchActiveAclUsage(ShowPlatformSoftwareFedSwitchActiveAclUsageSchema):
     """
     Parser for :
-        * show platform software fed switch active acl usage
-        * show platform software fed switch active acl usage | include {acl_name}
+        * show platform software fed switch {switch_num} acl usage
+        * show platform software fed switch {switch_num} acl usage | include {acl_name}
     """
 
-    cli_command = ['show platform software fed switch active acl usage',
-                   'show platform software fed switch active acl usage | include {acl_name}']
+    cli_command = ['show platform software fed switch {switch_num} acl usage',
+                   'show platform software fed switch {switch_num} acl usage | include {acl_name}']
 
-    def cli(self, acl_name="", output=None):
+    def cli(self, switch_num='active', acl_name="", output=None):
         if output is None:
             if acl_name:
-                cmd = self.cli_command[1].format(acl_name=acl_name)
+                cmd = self.cli_command[1].format(switch_num=switch_num, acl_name=acl_name)
             else:
-                cmd = self.cli_command[0]
+                cmd = self.cli_command[0].format(switch_num=switch_num)
             output = self.device.execute(cmd)
 
         # #####  ACE Software VMR max:196608 used:253

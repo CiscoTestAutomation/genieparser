@@ -1,0 +1,36 @@
+show platform software fed switch active ipv6 mfib FF13:0:0:0:0:0:0:1
+  Mvrf: 0  ( *, ff13::1 ) Attrs: C
+    Hw Flag                 : InHw
+    Mlist Flags             : None
+    Mlist_hndl (Id)         : 0x11881016d58 ( 0x200000e2 )
+    Mlist Urid              : 0x1000000000000242
+    Fset Urid (Hash)        : 0x30000000000001b6 ( 046df384 )
+    RPF Adjacency ID        : 0xf8005317
+    CPU Credit              : 1
+    Total Packets           : 0 ( 0 pps approx.)
+    OIF Count               : 2
+    OIF Details:
+      AdjID          Interface          ParentIf        HwFlag      Flags
+      0xf80052f2     Vl11               --------         ---        F NS
+      0xf8005317     Tu2                --------         Cpu        A NS
+    GID                   : 8228
+    MCID OID Asic[0]      : 3272
+    MCID OID Asic[1]      : 3206
+
+  Mvrf: 0  ( 14:14:14::2, ff13::1 ) Attrs: C
+    Hw Flag                 : InHw
+    Mlist Flags             : None
+    Mlist_hndl (Id)         : 0x11880fdcd80 ( 0x2000010a )
+    Mlist Urid              : 0x100000000000026a
+    Fset Urid (Hash)        : 0x30000000000001de ( c99925d9 )
+    RPF Adjacency ID        : 0xf80052b2
+    CPU Credit              : 0
+    Total Packets           : 3208010 ( 6122 pps approx.)
+    OIF Count               : 2
+    OIF Details:
+      AdjID          Interface          ParentIf        HwFlag      Flags
+      0xf80052b2     Vl13               --------         ---        A
+      0xf80052f2     Vl11               --------         ---        F NS
+    GID                   : 8275
+    MCID OID Asic[0]      : 3339
+    MCID OID Asic[1]      : 3253

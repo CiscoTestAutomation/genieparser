@@ -46,10 +46,14 @@ from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional
 from genie.libs.parser.utils.common import Common
 
 # import iosxe parser
-from genie.libs.parser.iosxe.show_lisp import ShowLispSession as ShowLispSession_iosxe,\
-                                              ShowLispPlatform as ShowLispPlatform_iosxe,\
+from genie.libs.parser.iosxe.show_lisp import \
                                               ShowLispExtranet as ShowLispExtranet_iosxe,\
-                                              ShowLispDynamicEidDetail as ShowLispDynamicEidDetail_iosxe,\
+                                              ShowLispInstanceIdService as ShowLispInstanceIdService_iosxe
+
+from genie.libs.parser.iosxe.show_lisp_session import ShowLispSession as ShowLispSession_iosxe
+from genie.libs.parser.iosxe.show_lisp_platform import ShowLispPlatform as ShowLispPlatform_iosxe
+from genie.libs.parser.iosxe.show_lisp_dynamic import ShowLispDynamicEidDetail as ShowLispDynamicEidDetail_iosxe
+from genie.libs.parser.iosxe.show_lisp_service import \
                                               ShowLispService as ShowLispService_iosxe,\
                                               ShowLispServiceMapCache as ShowLispServiceMapCache_iosxe,\
                                               ShowLispServiceRlocMembers as ShowLispServiceRlocMembers_iosxe,\
@@ -58,8 +62,8 @@ from genie.libs.parser.iosxe.show_lisp import ShowLispSession as ShowLispSession
                                               ShowLispServiceDatabase as ShowLispServiceDatabase_iosxe,\
                                               ShowLispServiceServerSummary as ShowLispServiceServerSummary_iosxe,\
                                               ShowLispServiceServerDetailInternal as ShowLispServiceServerDetailInternal_iosxe,\
-                                              ShowLispServiceStatistics as ShowLispServiceStatistics_iosxe,\
-                                              ShowLispInstanceIdService as ShowLispInstanceIdService_iosxe
+                                              ShowLispServiceStatistics as ShowLispServiceStatistics_iosxe
+
 
 # ==============================
 # Parser for 'show lisp session'

@@ -344,7 +344,7 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
 
         # Local LDP Identifier: 10.52.26.119:0 
         p1 = re.compile(r'^Local +LDP +Identifier: ' 
-                        '(?P<local_ldp_identifier>[\d\.\:]+)$') 
+                        r'(?P<local_ldp_identifier>[\d\.\:]+)$') 
 
         # Discovery Sources: 
         p2 = re.compile(r'^Discovery +Sources:$') 
@@ -360,12 +360,12 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
         # LDP Id: 10.12.31.251:0
         # LDP Id: 10.52.31.244:0, Transport address: 10.52.31.244 
         p5 = re.compile(r'^(?P<ldp_tdp>\w+) +Id:(?P<space>\s{1,2})?(?P<ldp_tdp_id>[\d\.\:]+)(,' 
-                        ' +Transport +address: +(?P<transport_ip_addr>[\d\.]+)|)$')
+                        r' +Transport +address: +(?P<transport_ip_addr>[\d\.]+)|)$')
 
         # Hold time: 15 sec (local:15 sec, peer:15 sec) 
         p6 = re.compile(r'^Hold +time: +(?P<holdtime_sec>\d+) +sec ' 
-                        '\(local:(?P<proposed_local>\d+) +sec, ' 
-                        'peer:(?P<proposed_peer>\d+) +sec\)$') 
+                        r'\(local:(?P<proposed_local>\d+) +sec, ' 
+                        r'peer:(?P<proposed_peer>\d+) +sec\)$') 
 
         # (expiring in 12.5 sec)
         p7 = re.compile(r'\(expiring +in +(?P<expiring_in>\d.*) +sec\)$')
@@ -375,19 +375,19 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
 
         # Source address: 10.166.0.57; Transport address: 10.52.31.247
         p9 = re.compile(r'^Source +address: +(?P<source_ip_addr>[\d\.]+);'
-                        ' +Transport +address: +(?P<transport_ip_addr>[\d\.]+)$')
+                        r' +Transport +address: +(?P<transport_ip_addr>[\d\.]+)$')
 
         # Hello interval: 5 sec (due in 2.3 sec)
         p10 = re.compile(r'^Hello +interval: +(?P<hello_interval>\d+) +sec'
-                        ' +\(due +in +(?P<hello_due_time>\S+ \S+)\)$')
+                        r' +\(due +in +(?P<hello_due_time>\S+ \S+)\)$')
 
         # Quick-start: Enabled
         p11 = re.compile(r'^Quick-start: +(?P<quick_start>\S+)$')
 
         # 10.1.1.1 -> 10.3.3.3 (active), xmit/recv
         p12 = re.compile(r'^(?P<source>[\d\.]+) +\-> +(?P<destination>[\d\.]+)'
-                            ' +\((?P<status>(active|passive|active\/passive)+)\),'
-                            ' +(?P<xmit>xmit)?\/?(?P<recv>recv)?$')
+                            r' +\((?P<status>(active|passive|active\/passive)+)\),'
+                            r' +(?P<xmit>xmit)?\/?(?P<recv>recv)?$')
 
         # TODO Unlike iosxe, 'Hello interval', 'quick-start', 'hold time', 'established' 
         # are also used for interfaces, hence Targeted Hello is omitted.
@@ -583,14 +583,14 @@ class ShowMplsLdpDiscoveryDetail(ShowMplsLdpDiscoveryDetailSchema):
 
         # Local LDP Identifier: 10.94.1.1:0
         p1 = re.compile(r'^Local +LDP +Identifier: '
-                        '(?P<local_ldp_identifier>[\d\.\:]+)$')
+                        r'(?P<local_ldp_identifier>[\d\.\:]+)$')
 
         # Discovery Sources:
         p2 = re.compile(r'^Discovery +Sources:$')
 
         # TenGigE0/3/0/0 (0xa0004c0) : xmit/recv
         p3 = re.compile(r'^(?P<interface>\S+) \((?P<interface_hex>[\w]+)\)'
-                        ' : (?P<xmit>xmit)?\/?(?P<recv>recv)?$')
+                        r' : (?P<xmit>xmit)?\/?(?P<recv>recv)?$')
 
         # VRF: 'default' (0x60000000)
         p4 = re.compile(r'^VRF: \'(?P<vrf>\S+)\' +\((?P<vrf_hex>[\w]+)\)$')
@@ -600,12 +600,12 @@ class ShowMplsLdpDiscoveryDetail(ShowMplsLdpDiscoveryDetailSchema):
 
         # Source address: 10.120.0.1; Transport address: 10.94.1.1
         p6 = re.compile(r'^Source +address: +(?P<source_ip_addr>[\d\.]+);'
-                        ' +Transport +address: +(?P<transport_ip_addr>[\d\.]+)$')
+                        r' +Transport +address: +(?P<transport_ip_addr>[\d\.]+)$')
 
         # Hold time: 15 sec (local:15 sec, peer:45 sec)
         p7 = re.compile(r'^Hold +time: +(?P<holdtime_sec>\d+) +sec '
-                        '\(local:(?P<proposed_local>\d+) +sec, '
-                        'peer:(?P<proposed_peer>\d+) +sec\)$')
+                        r'\(local:(?P<proposed_local>\d+) +sec, '
+                        r'peer:(?P<proposed_peer>\d+) +sec\)$')
 
         # (expiring in 11 sec)
         # (expiring in 14.5 sec)
@@ -613,11 +613,11 @@ class ShowMplsLdpDiscoveryDetail(ShowMplsLdpDiscoveryDetailSchema):
 
         # Established: Nov  6 14:39:26.164 (5w2d ago)
         p9 = re.compile(r'^Established: +(?P<established_date>\S.*) '
-                        '+\((?P<established_elapsed>\S*) +ago\)$')
+                        r'+\((?P<established_elapsed>\S*) +ago\)$')
 
         # Hello interval: 5 sec (due in 563 msec)
         p10 = re.compile(r'^Hello +interval: +(?P<hello_interval>\d+) +sec'
-                        ' +\(due +in +(?P<hello_due_time>\S+ +\S+)\)$')
+                        r' +\(due +in +(?P<hello_due_time>\S+ +\S+)\)$')
 
         # Quick-start: Enabled
         p11 = re.compile(r'^Quick-start: +(?P<quick_start>\S+)$')
@@ -628,7 +628,7 @@ class ShowMplsLdpDiscoveryDetail(ShowMplsLdpDiscoveryDetailSchema):
         #     Jan  4 05:20:34.814: User cleared session manually
         #     Jan  4 05:28:48.641: User cleared session manually
         p13 = re.compile(r'^(?P<timestamp>[A-Z][a-z]{2}\s+[0-9]{1,2}\s[0-9:.]+)'
-                         ':\s+(?P<reason>[\w\s]+)$')
+                         r':\s+(?P<reason>[\w\s]+)$')
 
         #         (Last up for 00:06:56)
         #         (Last up for 00:08:05)
@@ -930,8 +930,8 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
         # Peer LDP Identifier: 10.16.0.2:0
         # Peer LDP Ident: 10.169.197.252:0; Local LDP Ident 10.169.197.254:0
         p1 = re.compile(r'^Peer +LDP +(Ident|Identifier): *'
-        '(?P<peer_ldp>[\d\.]+):(?P<label_space_id>\d+)(; '
-        '+Local +LDP +(Ident|Identifier) +(?P<local_ldp>\S+)$)?')
+        r'(?P<peer_ldp>[\d\.]+):(?P<label_space_id>\d+)(; '
+        r'+Local +LDP +(Ident|Identifier) +(?P<local_ldp>\S+)$)?')
 
         # TCP connection: 10.16.0.2:646 - 10.16.0.9:38143
         p2 = re.compile(r'^TCP +connection: *(?P<tcp_connection>[\S\s]+)$')
@@ -941,7 +941,7 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
 
         # Session Holdtime: 180 sec
         p4 = re.compile(r'Session Holdtime: +(?P<session_holdtime>\d+)'
-        ' +(?P<rate>(sec|ms))$')
+        r' +(?P<rate>(sec|ms))$')
 
         # Password: not required, none, in use
         p5 = re.compile(r'^Password: +(?P<password>[\S\s]+)$')
@@ -951,14 +951,14 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
         #     State: Oper; Msgs sent/rcvd: 5855/6371; Downstream on demand
         #     State: Oper; Msgs sent/rcvd: 24710/24702; Downstream-Unsolicited
         p6 = re.compile(r'^State: *(?P<state>\w+); +Msgs +sent\/rcvd:'
-        ' *(?P<msg_sent>\d+)\/(?P<msg_rcvd>\d+)(;'
-        ' +(?P<neighbor>[\w\s/-]+))?(; +Last +TIB +rev +sent +'
-        '(?P<last_tib_rev_sent>\d+))?$')
+        r' *(?P<msg_sent>\d+)\/(?P<msg_rcvd>\d+)(;'
+        r' +(?P<neighbor>[\w\s/-]+))?(; +Last +TIB +rev +sent +'
+        r'(?P<last_tib_rev_sent>\d+))?$')
 
         #  Up time: 04:26:14
         #  Up time: 3d21h; UID: 4; Peer Id 0
         p7 = re.compile(r'^Up +time: *(?P<up_time>[\w\:]+)(; '
-        '+UID: *(?P<uid>\d+); +Peer +Id +(?P<peer_id>\d+);?)?$')
+        r'+UID: *(?P<uid>\d+); +Peer +Id +(?P<peer_id>\d+);?)?$')
 
         #     LDP discovery sources:
         #       ATM3/0.1
@@ -970,7 +970,7 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
 
         #       GigabitEthernet0/0/0, Src IP addr: 10.169.197.93
         p9 = re.compile(r'(?P<interface>[A-Za-z-]+[\d/.]+)((,|;)'
-        ' +Src +IP +addr: *(?P<src_ip_address>[\d\.]+))?$')
+        r' +Src +IP +addr: *(?P<src_ip_address>[\d\.]+))?$')
 
         #'Targeted Hello (10.36.3.3 ->172.20.22.22, active, passive)'
         # 'Targeted Hello 192.168.189.2 ->192.168.189.4, active, passive;'
@@ -983,14 +983,14 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
         #'Targeted Hello 10.36.3.3 ->172.20.22.22'
         # 'Targeted Hello (10.36.3.3 ->172.20.22.22)'
         p10 = re.compile(r'Targeted +Hello +\(?(?P<ldp_ip>[\d/.]+)'
-        '\s*->\s*(?P<tdp_ip>[\d/.]+),?\s*'
-        '(?P<key1>[\S\s]+)+(,|;)? +(?P<key2>passive)?')
+        r'\s*->\s*(?P<tdp_ip>[\d/.]+),?\s*'
+        r'(?P<key1>[\S\s]+)+(,|;)? +(?P<key2>passive)?')
 
         # holdtime: 15000 ms, hello interval: 5000 ms
         # holdtime: infinite, hello interval: 10000 ms
         p11 = re.compile(r'^holdtime: *(?P<holdtime>(\d+|\w+)) '
-        '*(?P<hold_rate>(ms|sec))?, +hello +interval: '
-        '*(?P<hello_interval>\d+) +(?P<hello_rate>(ms|sec))$')
+        r'*(?P<hold_rate>(ms|sec))?, +hello +interval: '
+        r'*(?P<hello_interval>\d+) +(?P<hello_rate>(ms|sec))$')
 
         # Addresses bound to this peer:
         # IPv4: (4)
@@ -1000,21 +1000,21 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
 
         # Peer holdtime: 180000 ms; KA interval: 60000 ms; Peer state: estab
         p13 = re.compile(r'^Peer +holdtime: *(?P<peer_holdtime>\d+) +'
-        '(?P<peer_rate>(ms|sec)); +KA +interval: '
-        '*(?P<ka_interval>\d+) +(?P<ka_rate>(ms|sec));'
-        ' +Peer +state: +(?P<peer_state>\S+)$')
+        r'(?P<peer_rate>(ms|sec)); +KA +interval: '
+        r'*(?P<ka_interval>\d+) +(?P<ka_rate>(ms|sec));'
+        r' +Peer +state: +(?P<peer_state>\S+)$')
         
         # Clients: Dir Adj Client
         p14 = re.compile(r'^Clients: +(?P<clients>[\S\s]+)$')
 
         # Inbound label filtering: accept acl 'pfx_acl2'
         p15 = re.compile(r'^Inbound +label +filtering: +'
-        '(?P<inbound_label_filtering>[\S\s]+)$') 
+        r'(?P<inbound_label_filtering>[\S\s]+)$') 
 
         #Enabled, state: Ready
         #LDP Session Protection: enabled, state: protecting
         p16 = re.compile(r'(LDP +Session +Protection:? )?(E|e)nabled, +state: '
-        '+(?P<session_state>\w+)$')
+        r'+(?P<session_state>\w+)$')
 
         #Duration: 30 seconds
         #duration: infinite
@@ -1391,24 +1391,24 @@ class ShowMplsLdpNeighborBrief(ShowMplsLdpNeighborBriefSchema):
         # -----------------  --  ---  ----------  ----------  ----------  ------------
         # 10.205.2.254:0     Y   Y    31w0d       2     0     10    0     77     0
         p1 = re.compile(r'^(?P<peer>[\d\.:]+)\s+(?P<gr>[\w]+)\s+'
-                         '(?P<nsr>[\w]+)\s+(?P<up_time>[\w\d\:]+)\s+'
-                         '(?P<discovery_ipv4>[\d]+)\s+(?P<discovery_ipv6>[\d]+)\s+'
-                         '(?P<addresses_ipv4>[\d]+)\s+(?P<addresses_ipv6>[\d]+)\s+'
-                         '(?P<labels_ipv4>[\d]+)\s+(?P<labels_ipv6>[\d]+)$')
+                         r'(?P<nsr>[\w]+)\s+(?P<up_time>[\w\d\:]+)\s+'
+                         r'(?P<discovery_ipv4>[\d]+)\s+(?P<discovery_ipv6>[\d]+)\s+'
+                         r'(?P<addresses_ipv4>[\d]+)\s+(?P<addresses_ipv6>[\d]+)\s+'
+                         r'(?P<labels_ipv4>[\d]+)\s+(?P<labels_ipv6>[\d]+)$')
 
         # Peer              GR Up Time         Discovery Address
         # ----------------- -- --------------- --------- -------
         # 10.36.3.3:0         Y  00:01:04                3       8
         # 10.16.2.2:0         N  00:01:02                2       5
         p2 = re.compile(r'^(?P<peer>[\d\.:]+) +(?P<gr>[\w]+) +(?P<up_time>[\d\:]+) +'
-                         '(?P<discovery>(\d+)) +(?P<address>(\d+))$')
+                         r'(?P<discovery>(\d+)) +(?P<address>(\d+))$')
 
         # Peer               GR  NSR  Up Time     Discovery  Address  IPv4 Label
         # -----------------  --  ---  ----------  ---------  -------  ----------
         # 10.16.2.2:0          N   Y    01:39:50            1        4          19
         # 10.36.3.3:0          N   N    01:38:04            1        3           5
         p3 = re.compile(r'^(?P<peer>[\d\.:]+) +(?P<gr>(\w+)) +(?P<nsr>(\w+)) +(?P<up_time>[\d\:]+) +'
-                         '(?P<discovery>(\d+)) +(?P<address>(\d+)) +(?P<labels_ipv4>(\d+))$')
+                         r'(?P<discovery>(\d+)) +(?P<address>(\d+)) +(?P<labels_ipv4>(\d+))$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -1564,23 +1564,23 @@ class ShowMplsLabelTableDetail(ShowMplsLabelTableDetailSchema):
         # 0     16001   LDP:lsd_test_ut                 InUse  No
         #               Static:lsd_test_ut              InUse  No
         p1 = re.compile(r'(?P<table>\d+\s+)?(?P<label>\d+\s+)?(?P<owner>[\S]+)'
-        '\s+(?P<state>\S+)\s+(?P<rewrite>\w+)$')
+        r'\s+(?P<state>\S+)\s+(?P<rewrite>\w+)$')
 
         # (Lbl-blk SRGB, vers:0, (start_label=16000, size=8000)
         # (Lbl-blk SRLB, vers:0, (start_label=15000, size=1000, app_notify=0)
         p2 = re.compile(r'^\((?P<label_type>[\S\s]+),\s+vers:(?P<vers>\d+),'
-            '\s+\(start_label=(?P<start_label>\d+),\s+size=(?P<size>\d+)'
-            '(,\s+app_notify=(?P<app_notify>\d+))?\)$')
+            r'\s+\(start_label=(?P<start_label>\d+),\s+size=(?P<size>\d+)'
+            r'(,\s+app_notify=(?P<app_notify>\d+))?\)$')
 
         # (SR Adj Segment IPv4, vers:0, index=0, type=0, intf=Gi0/0/0/1, nh=10.1.2.2)
         p3 = re.compile(r'^\((?P<sr_label_type>[\S\s]+),\s+vers:(?P<vers>\d+),'
-            '\s+index=(?P<index>\d+),\s+type=(?P<type>\d+),\s+intf=(?P<interface>\S+),'
-            '\s+nh=(?P<nh>\S+)\)$')
+            r'\s+index=(?P<index>\d+),\s+type=(?P<type>\d+),\s+intf=(?P<interface>\S+),'
+            r'\s+nh=(?P<nh>\S+)\)$')
             
         # (IPv4, vers:0, default, 10.4.1.1/24)
         # (IPv4, vers:0, , 10.229.10.10/15)
         p4 = re.compile(r'^\((?P<label_type>[\S\s]+),\s+vers:(?P<vers>\d+),'
-        ' +(?P<default>default)?, +(?P<prefix>\S+)\)$')
+        r' +(?P<default>default)?, +(?P<prefix>\S+)\)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -2121,6 +2121,9 @@ class ShowMplsLdpParametersSchema(MetaParser):
             "oor-state": {
                 "oor-memory": str
             },
+            Optional("igp-sync-delay"): {
+                "interface-up-time-sec": int
+            },
         },
     }
 
@@ -2214,7 +2217,8 @@ class ShowMplsLdpParameters(ShowMplsLdpParametersSchema):
             r' +Forwarding +State +Holdtime:(?P<forwarding_state_holdtime_seconds>\d+) +sec$')
 
         # NSR: Enabled, Sync-ed
-        p21 = re.compile(r'^NSR: +(?P<nsr_value>\w+)(, +(?P<synced_value>Sync-ed))?$')
+        # NSR: Enabled, Not Sync-ed
+        p21 = re.compile(r'^NSR: +(?P<nsr_value>\w+)(, +(?P<synced_value>Sync-ed|Not Sync-ed))?$')
 
         # Timeouts:
         p22 = re.compile(r'^Timeouts:$')
@@ -2250,6 +2254,12 @@ class ShowMplsLdpParameters(ShowMplsLdpParametersSchema):
         # Memory: Normal
         p30 = re.compile(
             r'^Memory: +(?P<oor_memory_value>(Normal|Major|Critical))$')
+
+        # IGP sync delay:
+        p31 = re.compile(r'^IGP +sync +delay:$')
+
+        # Interface up: 20 sec
+        p32 = re.compile(r'^Interface +up: +(?P<interface_up_time>\d+) +sec$')
 
         # Looping through each line
         for line in out.splitlines():
@@ -2487,6 +2497,19 @@ class ShowMplsLdpParameters(ShowMplsLdpParametersSchema):
             if m:
                 group = m.groupdict()
                 oor_state_dict['oor-memory'] = group['oor_memory_value']
+                continue
+
+            # IGP sync delay:
+            m = p31.match(line)
+            if m:
+                interface_up_time_dict = parameters_dict.setdefault('igp-sync-delay', {})
+                continue
+
+            # Interface up: 20 sec
+            m = p32.match(line)
+            if m:
+                group = m.groupdict()
+                interface_up_time_dict['interface-up-time-sec'] = int(group['interface_up_time'])
                 continue
 
         return ret_dict

@@ -1,0 +1,22 @@
+Thu Jun 27 13:14:00.563 UTC
+Node              Type                       State             Config state
+--------------------------------------------------------------------------------
+0/RSP0/CPU0       A9K-RSP5-SE(Active)        IOS XR RUN        NSHUT
+0/RSP1/CPU0       A9K-RSP5-SE(Standby)       IOS XR RUN        NSHUT
+0/FT0             ASR-9910-FAN               OPERATIONAL       NSHUT
+0/FT1             ASR-9910-FAN               OPERATIONAL       NSHUT
+0/1/CPU0          A9K-MOD400-TR              IOS XR RUN        NSHUT
+0/1/0             A9K-MPA-20X10GE            OK
+0/1/1             A9K-MPA-20X10GE            OK
+0/3               A99-32X100GE-CM            SW_INACTIVE       NSHUT
+0/5/CPU0          A9K-MOD400-TR              IOS XR RUN        NSHUT
+0/5/0             A9K-MPA-20X10GE            OK
+0/5/1             A9K-MPA-20X10GE            OK
+0/6/CPU0          A99-32X100GE-TR            IOS XR RUN        NSHUT
+0/FC0             A99-SFC3-S                 OPERATIONAL       NSHUT
+0/FC1             A99-SFC3-S                 OPERATIONAL       NSHUT
+0/FC2             A99-SFC3-S                 OPERATIONAL       NSHUT
+0/FC3             A99-SFC3-S                 OPERATIONAL       NSHUT
+0/FC4             A99-SFC3-S                 OPERATIONAL       NSHUT
+0/PT0             A9K-DC-PEM-V3              OPERATIONAL       NSHUT
+0/PT1             A9K-DC-PEM-V3              OPERATIONAL       NSHUT

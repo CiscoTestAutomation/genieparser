@@ -1,0 +1,57 @@
+expected_output = {
+    "mfib":{
+        1:{
+            "attrs":{
+                "asic":{
+                    0:{
+                        "mcid_oid_asic":7773
+                    }
+                },
+                "cpu_credit":0,
+                "ec_seed":4,
+                "fset_aux_urid":"0x0",
+                "fset_urid_hash":"0x300000000000e553 ( d9f70324 )",
+                "gid":10294,
+                "hw_asic_info":{
+                    0:{
+                        "cookie":"0x30::e553",
+                        "enable_rpf_check":1,
+                        "ip_mcid_oid":7773,
+                        "punt_and_forward":0,
+                        "punt_on_rpf_fail":1,
+                        "rpf_port_oid":7734,
+                        "rpfid":0,
+                        "use_rpfid":0
+                    }
+                },
+                "hw_flag":"InHw",
+                "ios_f_ifs":1,
+                "mlist_f_ifs":1,
+                "mlist_flags":"None",
+                "mlist_hndl_id":"0x118835bf398 ( 0x40003ede )",
+                "mlist_urid":"0x100000000000acb7",
+                "npi_mroute_ent":"0x118835b7a68",
+                "oif_count":1,
+                "oif_details":[
+                    {
+                        "adjid":"0xf8005442",
+                        "interface":"Vl109",
+                        "flags":[
+                            "F",
+                            "A"
+                        ],
+                        "intf_type":"SVI_IF",
+                        "msg_type":"NORMAL"
+                    }
+                ],
+                "pps_approx":0,
+                "rpf_adjacency_id":"0xf8005442",
+                "svi_fwd_ifs":2,
+                "total_packets":0
+            },
+            "group":"ff35::1",
+            "mvrf":0,
+            "source":"2000:109:1:1:1::2"
+        }
+    }
+}

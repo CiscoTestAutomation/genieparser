@@ -1,0 +1,6 @@
+{
+    "switch_type":"active",
+    "ip_type":"ipv6",
+    "vrf_name":"red",
+    "group":"ff33::1"
+}

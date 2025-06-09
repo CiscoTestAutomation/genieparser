@@ -89,9 +89,9 @@ class ShowIpPrefixListDetail(ShowIpPrefixListDetailSchema):
             # count: 5, range entries: 4, sequences: 5 - 25, refcount: 2
             # count: 0, range entries: 0, refcount: 1
             p2 = re.compile(r'^count: +(?P<count>\d+), +'
-                             'range entries: +(?P<entries>\d+),( +'
-                             'sequences: +(?P<sequences>[\d\-\s]+),)? +'
-                             'refcount: +(?P<refcount>\d+)$')
+                             r'range entries: +(?P<entries>\d+),( +'
+                             r'sequences: +(?P<sequences>[\d\-\s]+),)? +'
+                             r'refcount: +(?P<refcount>\d+)$')
             m = p2.match(line)
             if m:
                 ret_dict['prefix_set_name'][name]['count'] = int(m.groupdict()['count'])
@@ -107,9 +107,9 @@ class ShowIpPrefixListDetail(ShowIpPrefixListDetailSchema):
             # seq 20 permit 10.94.0.0/8 ge 24 (hit count: 0, refcount: 2)
             # seq 25 permit 10.169.0.0/8 ge 16 le 24 (hit count: 0, refcount: 3)
             p3 = re.compile(r'^seq +(?P<seq>\d+) +(?P<action>\w+) +'
-                             '(?P<prefixes>(?P<prefix>[\w\.\|:]+)\/(?P<mask>\d+))'
-                             '( *(?P<range>[lge\d\s]+))?'
-                             ' +\(hit +count: +(?P<hit_count>\d+), +refcount: +(?P<refcount>\d+)\)$')
+                             r'(?P<prefixes>(?P<prefix>[\w\.\|:]+)\/(?P<mask>\d+))'
+                             r'( *(?P<range>[lge\d\s]+))?'
+                             r' +\(hit +count: +(?P<hit_count>\d+), +refcount: +(?P<refcount>\d+)\)$')
             m = p3.match(line)
             if m:
                 prefixes = m.groupdict()['prefixes']

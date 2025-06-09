@@ -25,7 +25,8 @@ expected_output = {
         'l2_vpn_eompls_attachment_circuit': 256, 
         'max_vpls_bridge_domains': 128, 
         'max_vpls_peers_per_bridge_domain': 32, 
-        'max_vpls/vpws_pseudowires': 1024
+        'max_vpls/vpws_pseudowires': 1024,
+        'l2_muticast_entries': 8192
     }
 }
 

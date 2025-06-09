@@ -1,0 +1,101 @@
+show platform software multicast stats
+
+Statistics for platform multicast operations:
+
+ 0 Number of bad fman stats
+
+ 0 Number of access to entries without platform markings
+
+ 0 Number of punts without subblocks
+
+ 5 v4-mfib-entry add messages
+
+ 5 v4-mfib-entry modify messages
+
+ 0 v4-mfib-entry delete messages
+
+ 0 Number of duplicate v4 entry deletes
+
+ 8 v4-mfib-outgoing-interface add messages
+
+ 0 v4-mfib-outgoing-interface modify messages
+
+ 0 v4-mfib-outgoing-interface delete messages
+
+ 14 v4-interface enable messages
+
+ 0 v4-interface disable messages
+
+ 0 Oif v4 adds, missing adjacency
+
+ 0 Oif v4 missing adj's added
+
+ 0 Oif v4 adj creation skipped
+
+ 0 Oif v4 adj creation failure
+
+ 0 Oif v4 ID creation failure
+
+ 0 Oif v4 deletes, missing adj using cached ID
+
+ 0 Oif v4 deletes, missing ID cache
+
+ 0 Oif v4 add/modify, IC flag update failure
+
+ 0 Oif v4 deletes, IC flag update failure
+
+ 440731 mGRE, non-AutoRP Packets for AutoRP groups
+
+ 0 mGRE, AutoRP Packets injected to p2MP interface
+
+ 90 v6-mfib-entry add messages
+
+ 0 v6-mfib-entry modify messages
+
+ 0 v6-mfib-entry delete messages
+
+ 0 Number of duplicate v6 entry deletes
+
+ 0 v6-mfib-outgoing-interface add messages
+
+ 0 v6-mfib-outgoing-interface modify messages
+
+ 0 v6-mfib-outgoing-interface delete messages
+
+ 14 v6-interface enable messages
+
+ 0 v6-interface disable messages
+
+ 0 Oif v6 adds, missing adjacency
+
+ 0 Oif v6 missing adj's added
+
+ 0 Oif v6 adj creation skipped
+
+ 0 Oif v6 adj creation failure
+
+ 0 Oif v6 ID creation failure
+
+ 0 Oif v6 deletes, missing adj using cached ID
+
+ 0 Oif v6 deletes, missing ID cache
+
+ 0 Oif v6 add/modify, IC flag update failure
+
+ 0 Oif v6 delete, IC flag update failure
+
+ 0 Number of downloads with unknown AF
+
+ 0 Oif IC count add/modify failure
+
+ 0 Oif IC count deletes failure
+
+ 0 Oif A count add/modify failure
+
+ 0 Oif A count deletes failure
+
+
+
+bender3#
+
+--- 01:29:28 ---

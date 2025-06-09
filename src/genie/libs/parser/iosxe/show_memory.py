@@ -1,5 +1,5 @@
 """show_memory.py
-
+    * 'show memory debug leaks summary'
 """
 # python
 import re
@@ -49,8 +49,8 @@ class ShowMemoryStatistics(ShowMemoryStatisticsSchema):
 
         # initial regexp pattern
         p1 = re.compile(r'^(?P<name>\S+( \w)?) +(?P<head>\w+) +(?P<total>\d+) +'
-                         '(?P<used>\d+) +(?P<free>\d+) +'
-                         '(?P<lowest>\d+) +(?P<largest>\d+)$')
+                         r'(?P<used>\d+) +(?P<free>\d+) +'
+                         r'(?P<lowest>\d+) +(?P<largest>\d+)$')
 
         p2 = re.compile(r'^Tracekey *: +(?P<tracekey>\S+)$')
 
@@ -623,3 +623,77 @@ class ShowMemoryDebugIncrementalLeaks(ShowMemoryDebugLeaksSchema):
                 continue
 
         return ret_dict
+
+class ShowMemoryDebugLeaksSummarySchema(MetaParser):
+    """Schema for show memory debug leaks summary"""
+    schema = {
+    Optional('tracekey'): str,
+    'memory_blocks': {
+            Optional(str): {
+                'size': str,
+                'blocks': str,
+                'bytes': str,
+                'what': str,
+                'alloc_pc': str,
+            }
+        }
+    }
+
+
+class ShowMemoryDebugLeaksSummary(ShowMemoryDebugLeaksSummarySchema):
+    """Parser for show memory debug leaks summary"""
+
+    cli_command = 'show memory debug leaks summary'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # Tracekey : 1#50bb0560a294e78d5c720c4dd666d9f5
+        p1 = re.compile(r'^Tracekey *: +(?P<tracekey>\S+)$')
+
+        # Processor memory
+        # reserve Processor memory
+        # lsmpi_io memory
+        p2 = re.compile(r'^(?P<memory>[\w\s]*memory)$')
+
+        # 10.0.0.1        80  1234   Placeholder_proc        Placeholder_name               Placeholder_pc
+        p3 = re.compile(r'(?P<size>\d+)\s+(?P<blocks>\d+)\s+(?P<bytes>\d+)\s+(?P<what>\S+\s+\S+)\s+(?P<alloc_pc>\S+)\s*')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Tracekey : 1#50bb0560a294e78d5c720c4dd666d9f5
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict['tracekey'] = group['tracekey']
+                continue
+
+            # Processor memory
+            # lsmpi_io memory
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                current_memory_type = group['memory'].lower().replace(' ', '_')
+                continue
+
+            # 0000002884 0000000001 0000002884     *In-use Packet                  :5DFA5320E000+AEE5BEF
+            m = p3.match(line)
+            if m and current_memory_type:
+                group = m.groupdict()
+                memory_blocks = parsed_dict.setdefault('memory_blocks', {})
+                memory_type_dict = memory_blocks.setdefault(current_memory_type, {})
+                memory_type_dict.update({
+                    'size': group['size'],
+                    'blocks': group['blocks'],
+                    'bytes': group['bytes'],
+                    'what': group['what'],
+                    'alloc_pc': group['alloc_pc'],
+                })
+                continue
+
+        return parsed_dict

@@ -1,0 +1,179 @@
+Vlan Id                             :1 
+Unicast Octets In                  :0 
+Unicast Packets In                 :0 
+Multicast Octets In                :6832 
+Multicast Packets In               :22 
+Broadcast Octets In                :0 
+Broadcast Packets In               :0 
+Unicast Octets Out                 :0 
+Unicast Packets Out                :0 
+L3 Unicast Octets In                :0 
+L3 Unicast Packets In               :0 
+
+Vlan Id                             :10 
+Unicast Octets In                  :288790 
+Unicast Packets In                 :1691 
+Multicast Octets In                :0 
+Multicast Packets In               :0 
+Broadcast Octets In                :599484 
+Broadcast Packets In               :3729 
+Unicast Octets Out                 :288790 
+Unicast Packets Out                :1691 
+L3 Unicast Octets In                :0 
+L3 Unicast Packets In               :0 
+
+Vlan Id                             :11 
+Unicast Octets In                  :68616 
+Unicast Packets In                 :341 
+Multicast Octets In                :0 
+Multicast Packets In               :0 
+Broadcast Octets In                :386008 
+Broadcast Packets In               :2041 
+Unicast Octets Out                 :68616 
+Unicast Packets Out                :341 
+L3 Unicast Octets In                :0 
+L3 Unicast Packets In               :0 
+
+Vlan Id                             :20 
+Unicast Octets In                  :0 
+Unicast Packets In                 :0 
+Multicast Octets In                :0 
+Multicast Packets In               :0 
+Broadcast Octets In                :0 
+Broadcast Packets In               :0 
+Unicast Octets Out                 :0 
+Unicast Packets Out                :0 
+L3 Unicast Octets In                :0 
+L3 Unicast Packets In               :0 
+
+Vlan Id                             :21 
+Unicast Octets In                  :0 
+Unicast Packets In                 :0 
+Multicast Octets In                :0 
+Multicast Packets In               :0 
+Broadcast Octets In                :0 
+Broadcast Packets In               :0 
+Unicast Octets Out                 :0 
+Unicast Packets Out                :0 
+L3 Unicast Octets In                :0 
+L3 Unicast Packets In               :0 
+
+Vlan Id                             :110 
+Unicast Octets In                  :0 
+Unicast Packets In                 :0 
+Multicast Octets In                :0 
+Multicast Packets In               :0 
+Broadcast Octets In                :1358 
+Broadcast Packets In               :12 
+Unicast Octets Out                 :0 
+Unicast Packets Out                :0 
+L3 Unicast Octets In                :0 
+L3 Unicast Packets In               :0 
+
+Vlan Id                             :111 
+Unicast Octets In                  :0 
+Unicast Packets In                 :0 
+Multicast Octets In                :0 
+Multicast Packets In               :0 
+Broadcast Octets In                :1010 
+Broadcast Packets In               :7 
+Unicast Octets Out                 :0 
+Unicast Packets Out                :0 
+L3 Unicast Octets In                :0 
+L3 Unicast Packets In               :0 
+
+Vlan Id                             :120 
+Unicast Octets In                  :0 
+Unicast Packets In                 :0 
+Multicast Octets In                :0 
+Multicast Packets In               :0 
+Broadcast Octets In                :0 
+Broadcast Packets In               :0 
+Unicast Octets Out                 :0 
+Unicast Packets Out                :0 
+L3 Unicast Octets In                :0 
+L3 Unicast Packets In               :0 
+
+Vlan Id                             :121 
+Unicast Octets In                  :0 
+Unicast Packets In                 :0 
+Multicast Octets In                :0 
+Multicast Packets In               :0 
+Broadcast Octets In                :0 
+Broadcast Packets In               :0 
+Unicast Octets Out                 :0 
+Unicast Packets Out                :0 
+L3 Unicast Octets In                :0 
+L3 Unicast Packets In               :0 
+
+Vlan Id                             :999 
+Unicast Octets In                  :0 
+Unicast Packets In                 :0 
+Multicast Octets In                :0 
+Multicast Packets In               :0 
+Broadcast Octets In                :364 
+Broadcast Packets In               :5 
+Unicast Octets Out                 :0 
+Unicast Packets Out                :0 
+L3 Unicast Octets In                :0 
+L3 Unicast Packets In               :0 
+
+Vlan Id                             :1001 
+Unicast Octets In                  :86528 
+Unicast Packets In                 :676 
+Multicast Octets In                :130176 
+Multicast Packets In               :1020 
+Broadcast Octets In                :130992 
+Broadcast Packets In               :1025 
+Unicast Octets Out                 :43264 
+Unicast Packets Out                :338 
+L3 Unicast Octets In                :0 
+L3 Unicast Packets In               :0 
+
+Vlan Id                             :1002 
+Unicast Octets In                  :346240 
+Unicast Packets In                 :2706 
+Multicast Octets In                :129792 
+Multicast Packets In               :1014 
+Broadcast Octets In                :520096 
+Broadcast Packets In               :4069 
+Unicast Octets Out                 :259712 
+Unicast Packets Out                :2030 
+L3 Unicast Octets In                :0 
+L3 Unicast Packets In               :0 
+
+Vlan Id                             :1003 
+Unicast Octets In                  :64 
+Unicast Packets In                 :1 
+Multicast Octets In                :384 
+Multicast Packets In               :6 
+Broadcast Octets In                :1756 
+Broadcast Packets In               :19 
+Unicast Octets Out                 :43328 
+Unicast Packets Out                :339 
+L3 Unicast Octets In                :0 
+L3 Unicast Packets In               :0 
+
+Vlan Id                             :3001 
+Unicast Octets In                  :0 
+Unicast Packets In                 :0 
+Multicast Octets In                :66924 
+Multicast Packets In               :338 
+Broadcast Octets In                :0 
+Broadcast Packets In               :0 
+Unicast Octets Out                 :86528 
+Unicast Packets Out                :676 
+L3 Unicast Octets In                :0 
+L3 Unicast Packets In               :0 
+
+Vlan Id                             :4045 
+Unicast Octets In                  :0 
+Unicast Packets In                 :0 
+Multicast Octets In                :0 
+Multicast Packets In               :0 
+Broadcast Octets In                :0 
+Broadcast Packets In               :0 
+Unicast Octets Out                 :0 
+Unicast Packets Out                :0 
+L3 Unicast Octets In                :0 
+L3 Unicast Packets In               :0

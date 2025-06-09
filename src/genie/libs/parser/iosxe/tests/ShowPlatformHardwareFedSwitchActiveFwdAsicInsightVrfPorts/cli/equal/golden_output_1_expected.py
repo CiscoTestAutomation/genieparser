@@ -1,0 +1,48 @@
+expected_output = {
+    'vrf_ports': {
+        '0_4098': {
+            'ether_port_oid': 302,
+            'l3_ac_egr_vlan_tag1': 1,
+            'l3_ac_ing_vlan_tag1': 1,
+            'l3_port_gid': 4098,
+            'l3_port_type': 'L3_AC_PORT',
+            'mac_address': ['4e:41:50:00:01:14'],
+            'urpf_mode': 'NONE',
+            'vrf_gid': 0,
+        },
+        '0_4135': {
+            'ether_port_oid': 7400,
+            'l3_port_gid': 4135,
+            'l3_port_type': 'L3_AC_PORT',
+            'mac_address': ['8c:44:a5:a8:b7:45'],
+            'urpf_mode': 'NONE',
+            'vrf_gid': 0,
+        },
+        '0_4136': {
+            'ether_port_oid': 7429,
+            'l3_port_gid': 4136,
+            'l3_port_type': 'L3_AC_PORT',
+            'mac_address': ['8c:44:a5:a8:b7:45'],
+            'urpf_mode': 'NONE',
+            'vrf_gid': 0,
+        },
+        '0_4137': {
+            'ether_port_oid': 7458,
+            'l3_port_gid': 4137,
+            'l3_port_type': 'L3_AC_PORT',
+            'mac_address': ['8c:44:a5:a8:b7:45'],
+            'urpf_mode': 'NONE',
+            'vrf_gid': 0,
+        },
+        '2_4099': {
+            'ether_port_oid': 302,
+            'l3_ac_egr_vlan_tag1': 3,
+            'l3_ac_ing_vlan_tag1': 3,
+            'l3_port_gid': 4099,
+            'l3_port_type': 'L3_AC_PORT',
+            'mac_address': ['4e:41:50:00:01:14'],
+            'urpf_mode': 'NONE',
+            'vrf_gid': 2,
+        },
+    },
+}

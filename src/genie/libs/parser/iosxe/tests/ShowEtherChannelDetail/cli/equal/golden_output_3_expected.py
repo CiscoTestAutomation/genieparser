@@ -1,0 +1,120 @@
+expected_output = {
+    'group_state': 'L2',
+    'max_port_channels': 16,
+    'max_ports': 16,
+    'minimum_links': 0,
+    'port': {
+        'TenGigabitEthernet1/0/1': {
+            'age': '0d:00h:01m:15s',
+            'channel_group': 1,
+            'gc': '-',
+            'gcchange': '-',
+            'load': '0x00',
+            'local_information': {
+                'port': {
+                    'TenGigabitEthernet1/0/1': {
+                        'admin_key': '0x1',
+                        'flags': 'SA',
+                        'lacp_priority': 32768,
+                        'oper_key': '0x1',
+                        'port_number': '0x102',
+                        'port_state': '0x3D',
+                        'state': 'bndl',
+                    },
+                },
+            },
+            'mode': 'Active',
+            'partner_information': {
+                'port': {
+                    'TenGigabitEthernet1/0/1': {
+                        'admin_key': '0x0',
+                        'age': '22s',
+                        'dev_id': 'a410.b6bb.ba00',
+                        'flags': 'SA',
+                        'lacp_priority': 32768,
+                        'oper_key': '0x1',
+                        'port_number': '0x20B',
+                        'port_state': '0x3D',
+                    },
+                },
+            },
+            'port_channel': 'Po1',
+            'port_index': 0,
+            'port_state': 'Up Mstr Assoc In-Bndl',
+            'protocol': 'LACP',
+            'pseudo_port_channel': 'Po1',
+        },
+        'TenGigabitEthernet1/0/2': {
+            'age': '0d:00h:01m:15s',
+            'channel_group': 1,
+            'gc': '-',
+            'gcchange': '-',
+            'load': '0x00',
+            'local_information': {
+                'port': {
+                    'TenGigabitEthernet1/0/2': {
+                        'admin_key': '0x1',
+                        'flags': 'SA',
+                        'lacp_priority': 32768,
+                        'oper_key': '0x1',
+                        'port_number': '0x103',
+                        'port_state': '0x3D',
+                        'state': 'bndl',
+                    },
+                },
+            },
+            'mode': 'Active',
+            'partner_information': {
+                'port': {
+                    'TenGigabitEthernet1/0/2': {
+                        'admin_key': '0x0',
+                        'age': '19s',
+                        'dev_id': 'a410.b6bb.ba00',
+                        'flags': 'SA',
+                        'lacp_priority': 32768,
+                        'oper_key': '0x1',
+                        'port_number': '0x21B',
+                        'port_state': '0x3D',
+                    },
+                },
+            },
+            'port_channel': 'Po1',
+            'port_index': 0,
+            'port_state': 'Up Mstr Assoc In-Bndl',
+            'protocol': 'LACP',
+            'pseudo_port_channel': 'Po1',
+        },
+    },
+    'port_channel': {
+        'Po1': {
+            'age': '0d:00h:01m:19s',
+            'hot_standby': 'null',
+            'last_port_bundled': {
+                'port': 'TenGigabitEthernet1/0/2',
+                'time': '0d:00h:01m:15s',
+            },
+            'logical_slot': '12/1',
+            'number_of_ports': 2,
+            'port': {
+                'TenGigabitEthernet1/0/1': {
+                    'ec_state': 'Active',
+                    'index': 0,
+                    'load': '00',
+                    'no_of_bits': 0,
+                },
+                'TenGigabitEthernet1/0/2': {
+                    'ec_state': 'Active',
+                    'index': 0,
+                    'load': '00',
+                    'no_of_bits': 0,
+                },
+            },
+            'port_security': 'Disabled',
+            'protocol': 'LACP',
+            'state': 'Port-channel Ag-Inuse',
+        },
+    },
+    'port_channels': 1,
+    'ports': 2,
+    'protocol': 'LACP',
+}

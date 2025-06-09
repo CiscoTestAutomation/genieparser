@@ -1,0 +1,53 @@
+ Port-channel10.2001
+
+  Service-policy input: p1
+
+    Class-map: class-default (match-any)
+      4800000 packets
+      Match: any
+      QoS Set
+         traffic-class dscp table dscp2tc
+         discard-class dscp table dscp2discard
+ TwentyFiveGigE1/1/2
+
+  Service-policy input: map1
+
+    Class-map: cs1 (match-all)
+      0 packets
+      Match:  dscp cs1 (8)
+      police:
+          rate 100000000 bps, burst 10240 bytes
+        conformed 0 bytes; actions:
+          transmit
+        exceeded 0 bytes; actions:
+          drop
+        conformed 0000 bps, exceeded 0000 bps
+
+    Class-map: cs2 (match-all)
+      0 packets
+      Match:  dscp cs2 (16)
+      police:
+          rate 100000000 bps, burst 10240 bytes
+        conformed 0 bytes; actions:
+          transmit
+        exceeded 0 bytes; actions:
+          drop
+        conformed 0000 bps, exceeded 0000 bps
+
+    Class-map: cs5 (match-all)
+      3643365 packets
+      Match:  dscp cs5 (40)
+      QoS Set
+        traffic-class 7
+        dscp cs7
+      police:
+          rate 500000000 bps, burst 10240 bytes
+        conformed 3679932000 bytes; actions:
+          transmit
+        exceeded 3606798000 bytes; actions:
+          drop
+        conformed 88628000 bps, exceeded 86867000 bps
+
+    Class-map: class-default (match-any)
+      17 packets
+      Match: any

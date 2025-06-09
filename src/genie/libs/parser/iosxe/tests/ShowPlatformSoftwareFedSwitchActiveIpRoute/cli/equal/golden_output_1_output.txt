@@ -1,0 +1,11 @@
+Number of npi_ipv4route entries = 9        
+Object ID           IPv4 Address        Mask Length         Parent Type         Parent ObjectID     SGT                 
+0x5bb0d60dd878      100.60.2.200        32                  IPNEXTHOP_ID        0x5f                0                   
+0x5bb0d60d7ea8      100.50.0.0          32                  RECV                0x0                 0                   
+0x5bb0d60d1ce8      100.25.10.100       32                  IPNEXTHOP_ID        0x50                0                   
+0x5bb0d60addf8      100.50.255.255      32                  RECV                0x0                 0                   
+0x5bb0d60adbb8      100.25.255.255      32                  RECV                0x0                 0                   
+0x5bb0d60aa208      100.50.2.1          32                  RECV                0x0                 0                   
+0x5bb0d60a8688      100.50.0.0          16                  GLEAN               0x0                 0                   
+0x5bb0d60a4a18      100.77.0.0          16                  GLEAN               0x0                 0                   
+0x5bb0d60a4858      100.100.0.0         16                  GLEAN               0x0                 0    

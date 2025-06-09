@@ -1,0 +1,4 @@
+IPV4 ACL MGMT-ACL
+Total ACEs Configured: 4
+Configured on interfaces:
+Active on interfaces:

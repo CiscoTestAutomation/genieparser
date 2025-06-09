@@ -1,0 +1,19 @@
+Interface GigabitEthernet0/0/0/2 (PTP port number 1)
+  IPv4, Address 192.168.254.1, Unicast
+    Configured priority: None (128)
+    Configured clock class: None
+    Configured delay asymmetry: None
+    Announce granted:   8 per-second,      300 seconds
+    Sync granted:       64 per-second,     300 seconds
+    Delay-resp granted: 64 per-second,     300 seconds
+    Qualified for 8 hours, 26 minutes, 9 seconds
+    Clock ID: b0aefffe04cc9b
+    Received clock properties:
+      Domain: 44, Priority1: 128, Priority2: 128, Class: 6
+      Accuracy: 0x21, Offset scaled log variance: 0x4e5d
+      Steps-removed: 1, Time source: GPS, Timescale: PTP
+      Frequency-traceable, Time-traceable
+      Current UTC offset: 37 seconds (valid)
+    Parent properties:
+      Clock ID: b0aefffe04cc9b
+      Port number: 1

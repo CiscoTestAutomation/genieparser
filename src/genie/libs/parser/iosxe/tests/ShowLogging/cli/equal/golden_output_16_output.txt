@@ -1,0 +1,41 @@
+Syslog logging: enabled (0 messages dropped, 27 messages rate-limited, 0 flushes, 0 overruns, xml disabled, filtering disabled)
+
+No Active Message Discriminator.
+
+
+
+No Inactive Message Discriminator.
+
+
+    Console logging: disabled
+    Monitor logging: level informational, 1297 messages logged, xml disabled,
+                     filtering disabled
+        Logging to: vty2(1297)
+    Buffer logging:  level informational, 5501 messages logged, xml disabled,
+                    filtering disabled
+    Exception Logging: size (4096 bytes)
+    Count and timestamp logging messages: disabled
+    Persistent logging: disabled
+
+No active filter modules.
+
+    Trap logging: level informational, 5509 message lines logged
+        Logging to 2001:DB8::1  (MGMT) (udp port 514, audit disabled,
+              link up),
+              5508 message lines logged, 
+              0 message lines rate-limited, 
+              0 message lines dropped-by-MD, 
+              xml disabled, sequence number disabled
+              filtering disabled
+        Logging to 2001:DB8::2  (MGMT) (udp port 514, audit disabled,
+              link up),
+              5509 message lines logged, 
+              0 message lines rate-limited, 
+              0 message lines dropped-by-MD, 
+              xml disabled, sequence number disabled
+              filtering disabled
+        Logging Source-Interface:       VRF Name:
+        Loopback0                       MGMT
+    TLS Profiles: 
+
+Log Buffer (10000000 bytes):

@@ -1,0 +1,33 @@
+show device-tracking capture-policy interface GigabitEthernet 1/0/4 
+
+HW Target Gi1/0/4 HW policy signature 0000039C policies#:2 rules 6 sig 0000039C 
+
+SW policy dhcp_client feature DHCP Guard - Active 
+
+SW policy ra_host feature RA guard - Active 
+
+ 
+
+Rule DHCP SERVER SOURCE Protocol UDP mask 00000200 action PUNT match1 0 match2 546#feat:1 
+
+feature DHCP Guard 
+
+Rule DHCP CLIENT Protocol UDP mask 00000080 action PUNT match1 0 match2 547#feat:1 
+
+feature DHCP Guard 
+
+Rule DHCP SERVER Protocol UDP mask 00000100 action PUNT match1 547 match2 0#feat:1 
+
+feature DHCP Guard 
+
+Rule RS Protocol ICMPV6 mask 00000004 action PUNT match1 133 match2 0#feat:1 
+
+feature RA guard 
+
+Rule RA Protocol ICMPV6 mask 00000008 action PUNT match1 134 match2 0#feat:1 
+
+feature RA guard 
+
+Rule REDIR Protocol ICMPV6 mask 00000010 action PUNT match1 137 match2 0#feat:1 
+
+feature RA guard 

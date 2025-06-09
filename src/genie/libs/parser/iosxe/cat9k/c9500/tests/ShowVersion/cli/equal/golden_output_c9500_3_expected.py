@@ -13,6 +13,7 @@ expected_output = {
       "os":"IOS-XE",
       "rom":"IOS-XE ROMMON",
       "bootldr_version":"System Bootstrap, Version 17.11.1r, RELEASE SOFTWARE (P)",
+      "bootldr":"System Bootstrap, Version 17.11.1r, RELEASE SOFTWARE (P)",
       "hostname":"denis_scorpion",
       "uptime":"1 week, 1 day, 19 hours, 23 minutes",
       "uptime_this_cp":"1 week, 1 day, 19 hours, 25 minutes",

@@ -1,0 +1,51 @@
+Interface IF_ID         : 0x0015000000000001
+Interface Name          : Puntport/0
+Interface Block Pointer : 0x7c74d4279228
+Interface Block State   : Ready
+Interface State         : Enabled
+Interface Status        : ADD,
+Interface Ref-Cnt       : 1
+Interface Type          : INTERNAL INTERFACE
+Bootup breakout Config Done Slot 0: Port: 0
+        Port Type         : EGRESS CPU
+        Port Location     : REMOTE
+        Slot              : 0
+        Unit              : 0
+        Slot Unit         : 0
+        Num Queues        : 0
+Ref Count : 1 (feature Ref Counts + 1)
+No Feature Reference count Present
+IFM Feature Sub block information
+        Port Physical Subblock
+                Affinity .......... [local]
+                LPN ............... [0]
+                GPN ............... [2568]
+                Speed ............. [1GB]
+                type .............. [IFM_PORT_TYPE_INVALID]
+                MTU ............... [0]
+                ac profile ........ [IFM_AC_PROFILE_DEFAULT]
+        Port Subblock [0]
+                Mac port oid................... [0xe4(228)]
+                System port oid................ [0xe9(233)]
+                System port gid................ [4]
+                Ethernet port oid.............. [0xf5(245)]
+                Voq oid........................ [0xe7(231)]
+        Platform Subblock
+                Asic.............. [0]
+                Core.............. [0]
+                Asic Port......... [0]
+                Asic Sub Port..... [0]
+                Ifg Id............ [0]
+                Mac Num........... [0]
+                First Serdes...... [0]
+                Last Serdes....... [0]
+                FC Mode........... [0]
+                FEC Mode.......... [0]
+                Context Id........ [0]
+         Port CTS Subblock is NULL if_id = 0x1
+         Port CTS Subblock
+                Disable SGACL .................... [0x0]
+                Trust ............................ [0x0]
+                Propagate ........................ [0x0]
+                Port SGT ......................... [0xffff]
+Events Log

@@ -311,7 +311,7 @@ class ShowCefInterfacePolicyStatistics(ShowCefInterfacePolicyStatisticsSchema):
             if match_obj:
                 dict_val = match_obj.groupdict()
                 int_name = dict_val['intf']
-                ret_dict.setdefault('Interfaces', {})\
+                ret_dict.setdefault('interfaces', {})\
                     .setdefault(int_name, {})
                 data_dict  = ret_dict['interfaces'][int_name]
                 data_dict['status'] = dict_val['status']
@@ -527,7 +527,8 @@ class ShowCefInterfaceInternalSchema(MetaParser):
                     Optional('ipv6'): {
                         Optional('discarded_packets'): int
                     }
-                }
+                },
+                Optional('ip_unicast_rpf_check'): bool,
             }
         }
     }
@@ -604,6 +605,9 @@ class ShowCefInterfaceInternal(ShowCefInterfaceInternalSchema):
         # Protocol discard for IPv4 - discarded packets: 0
         # Protocol discard for IPv6 - discarded packets: 0
         p21 = re.compile(r'^Protocol discard for\s+(?P<protocol>(IPv4|IPv6))\s+- discarded packets:\s+(?P<discarded_packets>\d+)$')
+
+        # IP unicast RPF check is enabled
+        p22 = re.compile(r'^IP unicast RPF check is enabled$')
 
         ret_dict = dict()
         subblock_flag = False
@@ -749,6 +753,12 @@ class ShowCefInterfaceInternal(ShowCefInterfaceInternalSchema):
                     'ipv4' if 'IPv4' in m.groupdict()['protocol'] else 'ipv6', {}
                 )
                 block_dict['discarded_packets'] = int(m.groupdict()['discarded_packets'])
+                continue
+
+            # IP unicast RPF check is enabled
+            m = p22.match(line)
+            if m:
+                int_dict.update({'ip_unicast_rpf_check': True})
                 continue
 
         return ret_dict

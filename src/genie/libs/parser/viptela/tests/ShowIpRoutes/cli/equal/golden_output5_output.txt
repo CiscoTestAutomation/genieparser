@@ -1,0 +1,41 @@
+vedge# show ip routes
+Codes Proto-sub-type:
+  IA -> ospf-intra-area, IE -> ospf-inter-area,
+  E1 -> ospf-external1, E2 -> ospf-external2,
+  N1 -> ospf-nssa-external1, N2 -> ospf-nssa-external2,
+  e -> bgp-external, i -> bgp-internal
+Codes Status flags:
+  F -> fib, S -> selected, I -> inactive,
+  B -> blackhole, R -> recursive, L -> import
+
+                                            PROTOCOL  NEXTHOP     NEXTHOP          NEXTHOP                                                   
+VPN    PREFIX              PROTOCOL         SUB TYPE  IF NAME     ADDR             VPN      TLOC IP          COLOR            ENCAP  STATUS  
+---------------------------------------------------------------------------------------------------------------------------------------------
+0      0.0.0.0/0           static           -         10ge0/0     10.96.4.2        -        -                -                -      F,S     
+0      0.0.0.0/0           static           -         10ge0/1     10.96.4.9        -        -                -                -      F,S     
+0      10.1.1.65/32        connected        -         system      -                -        -                -                -      F,S     
+0      10.96.4.2/31        connected        -         10ge0/0     -                -        -                -                -      F,S     
+0      10.96.4.8/31        connected        -         10ge0/1     -                -        -                -                -      F,S     
+1      0.0.0.0/0           omp              -         -           -                -        10.1.1.68        biz-internet     ipsec  F,S     
+1      0.0.0.0/0           omp              -         -           -                -        10.1.1.68        public-internet  ipsec  F,S     
+1      0.0.0.0/0           omp              -         -           -                -        10.1.1.68        green            ipsec  F,S     
+1      10.1.1.63/32        ospf             IA        ge2/1       10.26.1.7        -        -                -                -      F,S     
+1      10.1.1.64/32        ospf             IA        ge2/0       10.26.1.5        -        -                -                -      F,S     
+1      10.1.1.65/32        ospf             IA        loopback0   -                -        -                -                -      -       
+1      10.1.1.65/32        connected        -         loopback0   -                -        -                -                -      F,S     
+1      10.1.1.72/32        omp              -         -           -                -        10.1.1.72        public-internet  ipsec  F,S     
+1      10.1.1.72/32        omp              -         -           -                -        10.1.1.72        green            ipsec  F,S     
+1      10.1.1.73/32        omp              -         -           -                -        10.1.1.72        public-internet  ipsec  F,S     
+1      10.1.1.73/32        omp              -         -           -                -        10.1.1.72        green            ipsec  F,S        
+1      10.26.1.0/31        ospf             IA        ge2/0       10.26.1.5        -        -                -                -      F,S     
+1      10.26.1.2/31        ospf             IA        ge2/1       10.26.1.7        -        -                -                -      F,S     
+1      10.26.1.4/31        ospf             IA        ge2/0       -                -        -                -                -      -       
+1      10.26.1.4/31        connected        -         ge2/0       -                -        -                -                -      F,S     
+1      10.26.1.6/31        ospf             IA        ge2/1       -                -        -                -                -      -       
+1      10.26.1.6/31        connected        -         ge2/1       -                -        -                -                -      F,S     
+1      10.26.6.0/24        ospf             IA        ge2/0       10.26.1.5        -        -                -                -      F,S     
+512    0.0.0.0/0           static           -         mgmt0       10.8.1.1         -        -                -                -      F,S     
+512    10.8.1.0/24         connected        -         mgmt0       -                -        -                -                -      F,S     
+65528  192.168.0.0/24      connected        -         loopback65528-                -        -                -                -      F,S     
+65530  192.168.0.0/24      connected        -         loopback65530-                -        -                -                -      F,S     
+65530  192.168.1.0/24      connected        -         loopback65531-                -        -                -                -      F,S

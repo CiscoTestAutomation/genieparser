@@ -1,0 +1,101 @@
+Type: Name: IRAM, QFP: 0
+  Allocations  Bytes-Alloc  Bytes-Total  User-Name                                 
+  -------------------------------------------------------------------------------
+  1            217600       218112       CPP_FIA                                   
+Type: Name: GLOBAL, QFP: 0
+  Allocations  Bytes-Alloc  Bytes-Total  User-Name                                 
+  -------------------------------------------------------------------------------
+  8            58228        62464        P/I                                       
+  1            65536        65536        EPBR                                      
+  1            12320        13312        DPSS                                      
+  1            16384        16384        FHS                                       
+  1            512          1024         FME                                       
+  1            12320        13312        EPC                                       
+  1            8192         8192         MMA                                       
+  1            12320        13312        SBC                                       
+  1            8            1024         CFT                                       
+  1            4            1024         CVLA                                      
+  13           393680       398336       CEF                                       
+  1            512          1024         B2B HA                                    
+  1            65536        65536        PALCI CLIENT                              
+  4            9562896      9564160      QM RM                                     
+  1            131072       131072       Qm 32                                     
+  1            65536        65536        Qm 16                                     
+  1            32768        32768        ING_EGR_UIDB                              
+  1            1048576      1048576      TCAM                                      
+  1            16384        16384        ING EGR OUTPUT CHUNK_Queue_0              
+  1            16384        16384        ING-EGR_IfMap_0                           
+  5            41856        45056        GIC                                       
+  1            65536        65536        CPP XOS HASH TABLE CHUNK                  
+  1            1360         2048         FNF                                       
+  1            512          1024         DEBUGCOND                                 
+  1            1048576      1048576      PLU Mgr_CEF_0_0                           
+  1            1048576      1048576      PLU Mgr_CEF_0_3                           
+  1            983040       983040       PLU Mgr_CEF_0_9                           
+  1            1114112      1114112      PLU Mgr_CEF_0_10                          
+  1            16384        16384        Unprotected CEF Exmem                     
+  4            42740        46080        SSLVPN                                    
+  1            32816        33792        NWPI                                      
+  2            270432       272384       L2ES                                      
+Type: Name: GLOBAL, QFP: 0
+  Allocations  Bytes-Alloc  Bytes-Total  User-Name                                 
+  -------------------------------------------------------------------------------
+  1            16           1024         cpp_epc_sbs_client                        
+  12           377720       388096       BFD                                       
+  1            1024         1024         cpp-evpn                                  
+  5            86032        87040        SC                                        
+  1            16384        16384        CPP SC VRF TABLE CHUNK                    
+  1            16384        16384        CPP SC VRFNAME TABLE CHUNK                
+  1            4096         4096         SMI                                       
+  1            40           1024         cpp_smi_sbs_client                        
+  45           100048       138240       TFC                                       
+  1            40960        40960        CPP VRF TABLE CHUNK                       
+  1            24576        24576        CPP VRFNAME TABLE CHUNK                   
+  1            16384        16384        CPP IPV4 TABLE ID TABLE CHUNK             
+  1            16384        16384        CPP IPV6 TABLE ID TABLE CHUNK             
+  8            162624       165888       TUNNEL                                    
+  1            12320        13312        ERSPAN                                    
+  1            144          1024         cpp_erspan_sbs_client                     
+  11           2707808      2710528      ESS                                       
+  1            147560       148480       CPP ACL Exmem SPB                         
+  2            32           2048         ICMP                                      
+  3            10080        11264        cpp_punt_sbs_client                       
+  1            320          1024         punt path chunk 0                         
+  1            32000        32768        punt subblock chunk 0                     
+  46           20608        47104        punt policer chunk 0                      
+  32           1212852      1238016      PKTLOG                                    
+  1            512          1024         queue info chunk 0                        
+  1            16           1024         CPP IPHC                                  
+  7            1326112      1329152      IPFRAG                                    
+  1            16000        16384        cpp_ipfrag_sb_chunk                       
+  10           26048        34816        cpp_ipfrag_sbs_client                     
+  1            48000        48128        cpp_ipreass_sb_chunk                      
+  1            16000        16384        cpp_ipreass_cur_dgram_cnt_chunk           
+  1            96000        96256        cpp_ipv6reass_sb_chunk                    
+Type: Name: GLOBAL, QFP: 0
+  Allocations  Bytes-Alloc  Bytes-Total  User-Name                                 
+  -------------------------------------------------------------------------------
+  1            6400         7168         sbs_cef                                   
+  1            65536        65536        bier replicate                            
+Type: Name: LOCAL, QFP: 0
+  Allocations  Bytes-Alloc  Bytes-Total  User-Name                                 
+  -------------------------------------------------------------------------------
+  2            16777216     16777216     ING_EGR_UIDB                              
+  1            1458176      1458176      ING EGR INPUT CHUNK_Config_0              
+  1            16384        16384        ING EGR INPUT CHUNK_Sm_Name_0             
+  1            32768        32768        ING EGR INPUT CHUNK_Lg_Name_0             
+  1            1212416      1212416      ING EGR OUTPUT CHUNK_Config_0             
+  1            16384        16384        ING EGR OUTPUT CHUNK_Sm_Name_0            
+  1            32768        32768        ING EGR OUTPUT CHUNK_Lg_Name_0            
+  1            256          1024         SPAMARMOT                                 
+Type: Name: LOCAL_PVT, QFP: 0
+  Allocations  Bytes-Alloc  Bytes-Total  User-Name                                 
+  -------------------------------------------------------------------------------
+  2            3270624      3270656      QM RM                                     
+Type: Name: UNMAP_LOCAL, QFP: 0
+  Allocations  Bytes-Alloc  Bytes-Total  User-Name                                 
+  -------------------------------------------------------------------------------
+  1            1048576      1048576      PLU Mgr_PLU_LOCAL_0_0                     
+  1            1048576      1048576      PLU Mgr_PLU_LOCAL_0_1                     
+  1            786432       786432       PLU Mgr_PLU_LOCAL_0_2                     
+

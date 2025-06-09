@@ -1,0 +1,7 @@
+Flags: M -- MLD snooping, S -- Static, E -- EVPN sync
+
+Vlan      Group                    Type        Version     Port List
+-----------------------------------------------------------------------
+Group Address (Vlan 11)        : FF13::1
+Host type                      : v1
+Member Ports                   : Po92

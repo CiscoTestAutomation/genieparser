@@ -6,8 +6,9 @@ IOSXE parsers for the following show commands:
     * 'show ipv6 dhcp interface'
     * 'show ipv6 dhcp interface {interface}'
     * 'show ip dhcp snooping statistics'
+    * 'show ip dhcp snooping track server'
+    * 'show ip dhcp snooping statistics detail'
 """
-
 # Python
 import re
 
@@ -74,6 +75,9 @@ class ShowDhcpLease(ShowDhcpLeaseSchema):
         # Lease: 86400 secs,  Renewal: 43200 secs,  Rebind: 75600 secs
         p5 = re.compile(r'^\s*Lease: +(?P<lease>\d+) secs,\s+Renewal: +(?P<renewal>\d+) secs,\s+Rebind: +(?P<rebind>\d+) secs')
 
+        # Lease: Infinite
+        p5_1 = re.compile(r'^\s*Lease: +(?P<lease>Infinite)')
+
         # Temp default-gateway addr: 40.187.4.2
         p6 = re.compile(r'^\s*Temp default-gateway addr: +(?P<default_gw>\d+.\d+.\d+.\d+)')
 
@@ -137,6 +141,15 @@ class ShowDhcpLease(ShowDhcpLeaseSchema):
                     dhcp_dict[interface]['lease'] = groups['lease']
                     dhcp_dict[interface]['renewal'] = groups['renewal']
                     dhcp_dict[interface]['rebind'] = groups['rebind']
+                    continue
+
+                # Lease: Infinite
+                m = p5_1.match(line)
+                if m:
+                    groups = m.groupdict()
+                    dhcp_dict[interface]['lease'] = groups['lease']
+                    dhcp_dict[interface]['renewal'] = 'na'
+                    dhcp_dict[interface]['rebind'] = 'na'
                     continue
 
                 # Temp default-gateway addr: 40.187.4.2
@@ -589,3 +602,139 @@ class ShowIpDhcpSnoopingStatistics(ShowIpDhcpSnoopingStatisticsSchema):
                 continue
 
         return ret_dict
+
+# ==========================
+# Schema for 'show ip dhcp snooping track server'
+# ==========================
+class ShowIpDhcpSnoopingTrackServerSchema(MetaParser):
+
+    ''' Schema for "show ip dhcp snooping track server" '''
+
+    schema = {
+        'vlan' : {
+            Any():{
+                'mac': {
+                    Any():
+                        {
+                            'ip_address' : str,
+                            'mac_address': str,
+                            'client_subnet': str,
+                            'subnet_mask': str,
+                            'relay_agent_address': str,
+                            'last_updated': str
+                        }
+                }
+            }
+        }
+    }
+
+# ==========================
+# Parser for 'show ip dhcp snooping statistics'
+# ==========================
+class ShowIpDhcpSnoopingTrackServer(ShowIpDhcpSnoopingTrackServerSchema):
+
+    ''' Parser for "show ip dhcp snooping track server" '''
+
+    cli_command = 'show ip dhcp snooping track server'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+       
+        # Init vars
+        ret_dict = {}
+
+        # 10   20.1.2.1        68ca.e423.b846 20.1.2.0        255.255.255.0   0.0.0.0           Jul 17 2024 14:53:41 
+        p1 = re.compile(r'^(?P<vlan>\d+) +(?P<ip>\S+) +(?P<mac>\S+) +(?P<client>\S+) +(?P<mask>\S+) +(?P<relay>\S+) +(?P<time>[\S+\s+]+)$')
+
+        for line in output.splitlines():
+
+            line = line.strip()
+            # 10   20.1.2.1        68ca.e423.b846 20.1.2.0        255.255.255.0   0.0.0.0           Jul 17 2024 14:53:41 
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                vlan = group['vlan']
+                mac = group['mac']
+                # Build Dict
+                vlan_dict = ret_dict.setdefault('vlan', {}).setdefault(vlan, {})
+                mac_dict = vlan_dict.setdefault('mac', {}).setdefault(mac, {})
+                # Set values
+                mac_dict.update({
+                    'ip_address': group['ip'],
+                    'mac_address': group['mac'],
+                    'client_subnet': group['client'],
+                    'subnet_mask': group['mask'],
+                    'relay_agent_address': group['relay'],
+                    'last_updated': group['time']
+                })
+                continue
+
+        return ret_dict
+
+# =====================================================
+# Schema for 'show ip dhcp snooping statistics detail'
+# =====================================================    
+class ShowIpDhcpSnoopingStatisticsDetailSchema(MetaParser):
+
+    ''' Schema for "show ip dhcp snooping statistics detail" '''
+
+    schema = {
+        "dhcp_snooping_packets" : int,
+        "packets_dropped_because" : {
+            Any() : int
+            },        
+        }
+
+# =====================================================
+# Parser for 'show ip dhcp snooping statistics detail'
+# =====================================================
+class ShowIpDhcpSnoopingStatisticsDetail(ShowIpDhcpSnoopingStatisticsDetailSchema):
+
+    ''' Parser for "show ip dhcp snooping statistics detail" '''
+
+    cli_command = 'show ip dhcp snooping statistics detail'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+       
+        # Init vars
+        ret_dict = {}
+
+        # Packets Processed by DHCP Snooping                    = 0
+        p1 = re.compile(r'^Packets\s+Processed\s+by\s+DHCP\s+Snooping\s+=\s+(?P<dhcp_snooping_packets>\d+)$')
+
+        # Packets Dropped Because
+        p2 = re.compile(r'^Packets\s+Dropped\s+Because$')
+
+        # No binding entry                                    = 0
+        # Insertion of opt82 fail                             = 0
+        p3 = re.compile(r'^(?P<pattern>[\w\s]+)=\s+(?P<value>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Packets Processed by DHCP Snooping                    = 0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({'dhcp_snooping_packets': int(group['dhcp_snooping_packets'])})
+                continue
+
+            # Packets Dropped Because
+            m = p2.match(line)
+            if m:
+                process_dict = ret_dict.setdefault('packets_dropped_because',{})
+                continue
+
+            # Nonzero giaddr                                      = 0
+            # Source mac not equal to chaddr                      = 0 
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                scrubbed = (group['pattern'].strip()).replace(' ', '_')
+                process_dict.update({scrubbed.lower(): int(group['value'])})
+                continue
+
+        return ret_dict    

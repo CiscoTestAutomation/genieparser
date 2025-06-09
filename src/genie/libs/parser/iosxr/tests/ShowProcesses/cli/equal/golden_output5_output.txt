@@ -1,0 +1,93 @@
+show processes optics_driver location 0/RP0/CPU0
+Thu May  1 14:15:16.484 UTC
+                  Job Id: 380
+                     PID: 8930
+            Process name: optics_driver
+         Executable path: /opt/cisco/install-iosxr/base/bin/optics_driver
+              Instance #: 1
+              Version ID: 00.00.0000
+                 Respawn: ON
+           Respawn count: 1
+            Last started: Thu May  1 08:51:34 2025
+           Process state: Run
+           Package state: Normal
+                    core: MAINMEM
+               Max. core: 0
+                   Level: 99
+               Placement: None
+            startup_path: /opt/cisco/install-iosxr/base/startup/optics_driver.startup
+                   Ready: 2.650s
+        Process cpu time: 273.370 user, 77.120 kernel, 350.490 total
+JID    TID  Stack  pri  state        NAME             rt_pri
+380    8930    0K 20 Sleeping     optics_driver       0
+380    9121    0K 20 Sleeping     libsani_backing     0
+380    9127    0K 20 Sleeping     lwm_service_thr     0
+380    9137    0K 20 Sleeping     qsm_service_thr     0
+380    9187    0K 20 Sleeping     chkpt_evm           0
+380    9188    0K 20 Sleeping     evm_signal_thre     0
+380    9190    0K 20 Sleeping     insight__event      0
+380    9289    0K 20 Sleeping     BSP_Port_Timer      0
+380    9291    0K 20 Sleeping     MQ_S0_C0_P0         0
+380    9292    0K 20 Sleeping     MQ_S0_C0_P1         0
+380    9294    0K 20 Sleeping     MQ_S0_C0_P2         0
+380    9295    0K 20 Sleeping     MQ_S0_C0_P3         0
+380    9296    0K 20 Sleeping     MQ_S0_C0_P4         0
+380    9297    0K 20 Sleeping     MQ_S0_C0_P5         0
+380    9298    0K 20 Sleeping     MQ_S0_C0_P6         0
+380    9299    0K 20 Sleeping     MQ_S0_C0_P7         0
+380    9300    0K 20 Sleeping     MQ_S0_C0_P8         0
+380    9301    0K 20 Sleeping     MQ_S0_C0_P9         0
+380    9302    0K 20 Sleeping     MQ_S0_C0_P10        0
+380    9303    0K 20 Sleeping     MQ_S0_C0_P11        0
+380    9304    0K 20 Sleeping     MQ_S0_C0_P12        0
+380    9305    0K 20 Sleeping     MQ_S0_C0_P13        0
+380    9306    0K 20 Sleeping     MQ_S0_C0_P14        0
+380    9307    0K 20 Sleeping     MQ_S0_C0_P15        0
+380    9308    0K 20 Sleeping     MQ_S0_C0_P16        0
+380    9309    0K 20 Sleeping     MQ_S0_C0_P17        0
+380    9310    0K 20 Sleeping     MQ_S0_C0_P18        0
+380    9311    0K 20 Sleeping     MQ_S0_C0_P19        0
+380    9312    0K 20 Sleeping     MQ_S0_C0_P20        0
+380    9313    0K 20 Sleeping     MQ_S0_C0_P21        0
+380    9314    0K 20 Sleeping     MQ_S0_C0_P22        0
+380    9315    0K 20 Sleeping     MQ_S0_C0_P23        0
+380    9316    0K 20 Sleeping     MQ_S0_C0_P24        0
+380    9317    0K 20 Sleeping     MQ_S0_C0_P25        0
+380    9318    0K 20 Sleeping     MQ_S0_C0_P26        0
+380    9319    0K 20 Sleeping     MQ_S0_C0_P27        0
+380    9320    0K 20 Sleeping     MQ_S0_C0_P28        0
+380    9321    0K 20 Sleeping     MQ_S0_C0_P29        0
+380    9322    0K 20 Sleeping     MQ_S0_C0_P30        0
+380    9323    0K 20 Sleeping     MQ_S0_C0_P31        0
+380    9330    0K 20 Sleeping     col_dom_thread      0
+380    9331    0K 20 Sleeping     aipc-lrd_thread     0
+380    9333    0K 20 Sleeping     xros_mmap_peer      0
+380    9336    0K 20 Sleeping     parser_ctrc_th      0
+380    9345    0K 20 Sleeping     opt chkpt thd       0
+380    9415    0K 20 Sleeping     Optics PTAH         0
+380    9416    0K 20 Sleeping     ptah_common_eve     0
+380    9427    0K 20 Sleeping     async               0
+380    9437    0K 20 Sleeping     optics_driver       0
+380    9438    0K 20 Sleeping     pm_ui thread        0
+380    9449    0K 20 Sleeping     telemetry_event     0
+380    9461    0K 20 Sleeping     dying gasp          0
+380    9606    0K 20 Sleeping     insight_exec_4      0
+380    9798    0K 20 Sleeping     opt_portinit_2      0
+380    9799    0K 20 Sleeping     opt_portinit_0      0
+380    9800    0K 20 Sleeping     opt_portinit_2      0
+380    9801    0K 20 Sleeping     opt_portinit_0      0
+380    9802    0K 20 Sleeping     opt_portinit_2      0
+380    9803    0K 20 Sleeping     opt_portinit_0      0
+380    9804    0K 20 Sleeping     opt_portinit_2      0
+380    9809    0K 20 Sleeping     opt_portinit_2      0
+380    9810    0K 20 Sleeping     opt_portinit_0      0
+380    9813    0K 20 Sleeping     opt_portinit_2      0
+380    9814    0K 20 Sleeping     opt_portinit_0      0
+380    9815    0K 20 Sleeping     opt_portinit_0      0
+380    9816    0K 20 Sleeping     opt_portinit_0      0
+380    9817    0K 20 Sleeping     opt_portinit_2      0
+380    9818    0K 20 Sleeping     opt_portinit_2      0
+380    9819    0K 20 Sleeping     evctrl-255          0
+380    9821    0K 20 Sleeping     opt_invcpm_init     0
+380    11783    0K 20 Sleeping     opt_portinit_0      0
+380    12505    0K 20 Sleeping     opt_portinit_2      0

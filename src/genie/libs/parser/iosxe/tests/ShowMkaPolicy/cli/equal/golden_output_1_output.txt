@@ -1,0 +1,13 @@
+MKA Policy Summary...
+
+Codes : CO - Confidentiality Offset, ICVIND - Include ICV-Indicator,
+        SAKR OLPL - SAK-Rekey On-Live-Peer-Loss,
+        DP - Delay Protect, KS Prio - Key Server Priority
+
+Policy            KS   DP    CO SAKR  ICVIND Cipher          Interfaces        
+Name              Prio          OLPL         Suite(s)        Applied           
+===============================================================================
+*DEFAULT POLICY*  0    FALSE 0  FALSE TRUE   GCM-AES-128     
+                                             GCM-AES-256     
+
+MACSEC_POLICY_1   0    FALSE 0  FALSE TRUE   GCM-AES-256     Te0/0/0    Te0/0/1

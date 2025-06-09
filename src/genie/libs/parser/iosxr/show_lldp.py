@@ -48,9 +48,9 @@ class ShowLldp(ShowLldpSchema):
         # LLDP hold time advertised is 120 seconds
         # LLDP interface reinitialisation delay is 2 seconds
         p2 = re.compile(r'^LLDP( +advertisements +are +sent +every +'
-            '(?P<hello_timer>\d+))?( +hold +time +advertised +is +'
-            '(?P<hold_timer>\d+))?( +interface +reinitialisation '
-            '+delay +is +(?P<reinit_delay>\d+))? +seconds$')
+            r'(?P<hello_timer>\d+))?( +hold +time +advertised +is +'
+            r'(?P<hold_timer>\d+))?( +interface +reinitialisation '
+            r'+delay +is +(?P<reinit_delay>\d+))? +seconds$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -391,8 +391,8 @@ class ShowLldpTraffic(ShowLldpTrafficSchema):
         # Total frames received in error: 0
         # Total frames discarded: 0
         p1 = re.compile(r'^Total +frames +(in: +(?P<frame_in>\d+))?(out: +'
-            '(?P<frame_out>\d+))?(received +in +error: +(?P<frame_error_in>'
-            '\d+))?(discarded: +(?P<frame_discard>\d+))?$')
+            r'(?P<frame_out>\d+))?(received +in +error: +(?P<frame_error_in>'
+            r'\d+))?(discarded: +(?P<frame_discard>\d+))?$')
 
         # Total entries aged: 0
         p2 = re.compile(r'Total +entries +aged: +(?P<entries_aged_out>\d+)$')
@@ -400,7 +400,7 @@ class ShowLldpTraffic(ShowLldpTrafficSchema):
         # Total TLVs discarded: 119
         # Total TLVs unrecognized: 119
         p3 = re.compile(r'Total +TLVs +(discarded: +(?P<tlv_discard>\d+))?'
-            '(unrecognized: +(?P<tlv_unknown>\d+))?')
+            r'(unrecognized: +(?P<tlv_unknown>\d+))?')
         
         #Total TLVs accepted: 1183
         p4 = re.compile(r'^Total TLVs accepted: (?P<tlv_accepted>\d+)$')
@@ -488,7 +488,7 @@ class ShowLldpInterface(ShowLldpInterfaceSchema):
         # Tx state: IDLE
         # Rx state: WAIT FOR FRAME
         p2 = re.compile(r'^(Tx: (?P<tx>\w+))?(Rx: (?P<rx>\w+))?(Tx +state: +'
-            '(?P<tx_state>\w+))?(Rx +state: +(?P<rx_state>[\w ]+))?$')
+            r'(?P<tx_state>\w+))?(Rx +state: +(?P<rx_state>[\w ]+))?$')
 
         for line in out.splitlines():
             line = line.strip()

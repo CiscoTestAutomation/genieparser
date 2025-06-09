@@ -12,7 +12,7 @@ expected_output = {
                     'lspid': {
                         'P-9001-1.00-00': {
                             'lspid': 'P-9001-1.00-00',
-                            'lsp_seq_num': '* 0x000007f7  ',
+                            'lsp_seq_num': '* 0x000007f7',
                             'lsp_checksum': '0x54eb',
                             'lsp_holdtime': '533',
                             'rcvd': '*',
@@ -36,7 +36,7 @@ expected_output = {
                     'lspid': {
                         'P-9001-1.00-00': {
                             'lspid': 'P-9001-1.00-00',
-                            'lsp_seq_num': '* 0x0000038f  ',
+                            'lsp_seq_num': '* 0x0000038f',
                             'lsp_checksum': '0xfcf3',
                             'lsp_holdtime': '1106',
                             'rcvd': '*',

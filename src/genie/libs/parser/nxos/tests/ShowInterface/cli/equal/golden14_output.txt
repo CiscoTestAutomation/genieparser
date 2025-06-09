@@ -1,0 +1,268 @@
+mgmt0 is up
+admin state is up,
+  Hardware: GigabitEthernet, address: 3c13.cc2e.9580 (bia 3c13.cc2e.9580)
+  MTU 1500 bytes, BW 1000000 Kbit , DLY 10 usec
+Ethernet1/1 is up
+admin state is up, Dedicated Interface
+  Hardware: 100/1000/10000/25000 Ethernet, address: 3c13.cc2e.9587 (bia 3c13.cc2e.9588)
+  MTU 9216 bytes, BW 10000000 Kbit , DLY 10 usec
+Ethernet1/2 is up
+admin state is up, Dedicated Interface
+  Hardware: 100/1000/10000/25000 Ethernet, address: 3c13.cc2e.9587 (bia 3c13.cc2e.9589)
+  MTU 9216 bytes, BW 10000000 Kbit , DLY 10 usec
+Ethernet1/3 is up
+admin state is up, Dedicated Interface
+  Hardware: 100/1000/10000/25000 Ethernet, address: 3c13.cc2e.9587 (bia 3c13.cc2e.958a)
+  MTU 9216 bytes, BW 10000000 Kbit , DLY 10 usec
+Ethernet1/4 is up
+admin state is up, Dedicated Interface
+  Hardware: 100/1000/10000/25000 Ethernet, address: 3c13.cc2e.9587 (bia 3c13.cc2e.958b)
+  MTU 9216 bytes, BW 10000000 Kbit , DLY 10 usec
+Ethernet1/5 is up
+admin state is up, Dedicated Interface
+  Hardware: 100/1000/10000/25000 Ethernet, address: 3c13.cc2e.9587 (bia 3c13.cc2e.958c)
+  MTU 9216 bytes, BW 10000000 Kbit , DLY 10 usec
+Ethernet1/6 is down (Administratively down)
+admin state is down, Dedicated Interface
+  Hardware: 100/1000/10000/25000 Ethernet, address: 3c13.cc2e.9587 (bia 3c13.cc2e.958d)
+  MTU 9216 bytes, BW 25000000 Kbit , DLY 10 usec
+Ethernet1/7 is down (Administratively down)
+admin state is down, Dedicated Interface
+  Hardware: 100/1000/10000/25000 Ethernet, address: 3c13.cc2e.9587 (bia 3c13.cc2e.958e)
+  MTU 9216 bytes, BW 25000000 Kbit , DLY 10 usec
+Ethernet1/8 is up
+admin state is up, Dedicated Interface
+  Hardware: 100/1000/10000/25000 Ethernet, address: 3c13.cc2e.9587 (bia 3c13.cc2e.958f)
+  MTU 9216 bytes, BW 10000000 Kbit , DLY 10 usec
+Ethernet1/9 is up
+admin state is up, Dedicated Interface
+  Hardware: 100/1000/10000/25000 Ethernet, address: 3c13.cc2e.9587 (bia 3c13.cc2e.9590)
+  MTU 9216 bytes, BW 10000000 Kbit , DLY 10 usec
+Ethernet1/10 is down (Channel admin down)
+admin state is up, Dedicated Interface
+  Hardware: 100/1000/10000/25000 Ethernet, address: 3c13.cc2e.9587 (bia 3c13.cc2e.9591)
+  MTU 9216 bytes, BW 25000000 Kbit , DLY 10 usec
+Ethernet1/11 is down (Channel admin down)
+admin state is up, Dedicated Interface
+  Hardware: 100/1000/10000/25000 Ethernet, address: 3c13.cc2e.9587 (bia 3c13.cc2e.9592)
+  MTU 9216 bytes, BW 25000000 Kbit , DLY 10 usec
+Ethernet1/12 is up
+admin state is up, Dedicated Interface
+  Hardware: 100/1000/10000/25000 Ethernet, address: 3c13.cc2e.9593 (bia 3c13.cc2e.9593)
+  MTU 1500 bytes, BW 10000000 Kbit , DLY 10 usec
+Ethernet1/13 is down (suspended(no LACP PDUs))
+admin state is up, Dedicated Interface
+  Hardware: 100/1000/10000/25000 Ethernet, address: 3c13.cc2e.9587 (bia 3c13.cc2e.9594)
+  MTU 9216 bytes, BW 10000000 Kbit , DLY 10 usec
+Ethernet1/14 is up
+admin state is up, Dedicated Interface
+  Hardware: 100/1000/10000/25000 Ethernet, address: 3c13.cc2e.9587 (bia 3c13.cc2e.9595)
+  MTU 1500 bytes, BW 10000000 Kbit , DLY 10 usec
+Ethernet1/15 is up
+admin state is up, Dedicated Interface
+  Hardware: 100/1000/10000/25000 Ethernet, address: 3c13.cc2e.9587 (bia 3c13.cc2e.9596)
+  MTU 9216 bytes, BW 10000000 Kbit , DLY 10 usec
+Ethernet1/16 is up
+admin state is up, Dedicated Interface
+  Hardware: 100/1000/10000/25000 Ethernet, address: 3c13.cc2e.9597 (bia 3c13.cc2e.9597)
+  MTU 1500 bytes, BW 10000000 Kbit , DLY 10 usec
+Ethernet1/17 is down (XCVR not inserted)
+admin state is up, Dedicated Interface
+  Hardware: 100/1000/10000/25000 Ethernet, address: 3c13.cc2e.9587 (bia 3c13.cc2e.9598)
+  MTU 9216 bytes, BW 25000000 Kbit , DLY 10 usec
+Ethernet1/18 is up
+admin state is up, Dedicated Interface
+  Hardware: 100/1000/10000/25000 Ethernet, address: 3c13.cc2e.9587 (bia 3c13.cc2e.9599)
+  MTU 9216 bytes, BW 10000000 Kbit , DLY 10 usec
+Ethernet1/19 is up
+admin state is up, Dedicated Interface
+  Hardware: 100/1000/10000/25000 Ethernet, address: 3c13.cc2e.9587 (bia 3c13.cc2e.959a)
+  MTU 9216 bytes, BW 10000000 Kbit , DLY 10 usec
+Ethernet1/20 is up
+admin state is up, Dedicated Interface
+  Hardware: 100/1000/10000/25000 Ethernet, address: 3c13.cc2e.959b (bia 3c13.cc2e.959b)
+  MTU 1500 bytes, BW 10000000 Kbit , DLY 10 usec
+Ethernet1/21 is down (XCVR not inserted)
+admin state is up, Dedicated Interface
+  Hardware: 100/1000/10000/25000 Ethernet, address: 3c13.cc2e.9587 (bia 3c13.cc2e.959c)
+  MTU 9216 bytes, BW 25000000 Kbit , DLY 10 usec
+Ethernet1/22 is down (XCVR not inserted)
+admin state is up, Dedicated Interface
+  Hardware: 100/1000/10000/25000 Ethernet, address: 3c13.cc2e.9587 (bia 3c13.cc2e.959d)
+  MTU 9216 bytes, BW 25000000 Kbit , DLY 10 usec
+Ethernet1/23 is down (XCVR not inserted)
+admin state is up, Dedicated Interface
+  Hardware: 100/1000/10000/25000 Ethernet, address: 3c13.cc2e.9587 (bia 3c13.cc2e.959e)
+  MTU 9216 bytes, BW 25000000 Kbit , DLY 10 usec
+Ethernet1/24 is down (XCVR not inserted)
+admin state is up, Dedicated Interface
+  Hardware: 100/1000/10000/25000 Ethernet, address: 3c13.cc2e.9587 (bia 3c13.cc2e.959f)
+  MTU 9216 bytes, BW 25000000 Kbit , DLY 10 usec
+Ethernet1/25 is up
+admin state is up, Dedicated Interface
+  Hardware: 100/1000/10000/25000 Ethernet, address: 3c13.cc2e.95a0 (bia 3c13.cc2e.95a0)
+  MTU 9216 bytes, BW 10000000 Kbit , DLY 10 usec
+Ethernet1/26 is down (XCVR not inserted)
+admin state is up, Dedicated Interface
+  Hardware: 100/1000/10000/25000 Ethernet, address: 3c13.cc2e.9587 (bia 3c13.cc2e.95a1)
+  MTU 9216 bytes, BW 25000000 Kbit , DLY 10 usec
+Ethernet1/27 is down (XCVR not inserted)
+admin state is up, Dedicated Interface
+  Hardware: 100/1000/10000/25000 Ethernet, address: 3c13.cc2e.9587 (bia 3c13.cc2e.95a2)
+  MTU 9216 bytes, BW 25000000 Kbit , DLY 10 usec
+Ethernet1/28 is down (XCVR not inserted)
+admin state is up, Dedicated Interface
+  Hardware: 100/1000/10000/25000 Ethernet, address: 3c13.cc2e.9587 (bia 3c13.cc2e.95a3)
+  MTU 9216 bytes, BW 25000000 Kbit , DLY 10 usec
+Ethernet1/29 is down (XCVR not inserted)
+admin state is up, Dedicated Interface
+  Hardware: 100/1000/10000/25000 Ethernet, address: 3c13.cc2e.9587 (bia 3c13.cc2e.95a4)
+  MTU 9216 bytes, BW 25000000 Kbit , DLY 10 usec
+Ethernet1/30 is down (XCVR not inserted)
+admin state is up, Dedicated Interface
+  Hardware: 100/1000/10000/25000 Ethernet, address: 3c13.cc2e.9587 (bia 3c13.cc2e.95a5)
+  MTU 9216 bytes, BW 25000000 Kbit , DLY 10 usec
+Ethernet1/31 is down (XCVR not inserted)
+admin state is up, Dedicated Interface
+  Hardware: 100/1000/10000/25000 Ethernet, address: 3c13.cc2e.9587 (bia 3c13.cc2e.95a6)
+  MTU 9216 bytes, BW 25000000 Kbit , DLY 10 usec
+Ethernet1/32 is down (XCVR not inserted)
+admin state is up, Dedicated Interface
+  Hardware: 100/1000/10000/25000 Ethernet, address: 3c13.cc2e.9587 (bia 3c13.cc2e.95a7)
+  MTU 9216 bytes, BW 25000000 Kbit , DLY 10 usec
+Ethernet1/33 is down (XCVR not inserted)
+admin state is up, Dedicated Interface
+  Hardware: 100/1000/10000/25000 Ethernet, address: 3c13.cc2e.9587 (bia 3c13.cc2e.95a8)
+  MTU 9216 bytes, BW 25000000 Kbit , DLY 10 usec
+Ethernet1/34 is down (XCVR not inserted)
+admin state is up, Dedicated Interface
+  Hardware: 100/1000/10000/25000 Ethernet, address: 3c13.cc2e.9587 (bia 3c13.cc2e.95a9)
+  MTU 9216 bytes, BW 25000000 Kbit , DLY 10 usec
+Ethernet1/35 is down (XCVR not inserted)
+admin state is up, Dedicated Interface
+  Hardware: 100/1000/10000/25000 Ethernet, address: 3c13.cc2e.9587 (bia 3c13.cc2e.95aa)
+  MTU 9216 bytes, BW 25000000 Kbit , DLY 10 usec
+Ethernet1/36 is down (XCVR not inserted)
+admin state is up, Dedicated Interface
+  Hardware: 100/1000/10000/25000 Ethernet, address: 3c13.cc2e.9587 (bia 3c13.cc2e.95ab)
+  MTU 9216 bytes, BW 25000000 Kbit , DLY 10 usec
+Ethernet1/37 is down (XCVR not inserted)
+admin state is up, Dedicated Interface
+  Hardware: 100/1000/10000/25000 Ethernet, address: 3c13.cc2e.9587 (bia 3c13.cc2e.95ac)
+  MTU 9216 bytes, BW 25000000 Kbit , DLY 10 usec
+Ethernet1/38 is down (XCVR not inserted)
+admin state is up, Dedicated Interface
+  Hardware: 100/1000/10000/25000 Ethernet, address: 3c13.cc2e.9587 (bia 3c13.cc2e.95ad)
+  MTU 9216 bytes, BW 25000000 Kbit , DLY 10 usec
+Ethernet1/39 is down (XCVR not inserted)
+admin state is up, Dedicated Interface
+  Hardware: 100/1000/10000/25000 Ethernet, address: 3c13.cc2e.9587 (bia 3c13.cc2e.95ae)
+  MTU 9216 bytes, BW 25000000 Kbit , DLY 10 usec
+Ethernet1/40 is down (XCVR not inserted)
+admin state is up, Dedicated Interface
+  Hardware: 100/1000/10000/25000 Ethernet, address: 3c13.cc2e.9587 (bia 3c13.cc2e.95af)
+  MTU 9216 bytes, BW 25000000 Kbit , DLY 10 usec
+Ethernet1/41 is down (XCVR not inserted)
+admin state is up, Dedicated Interface
+  Hardware: 100/1000/10000/25000 Ethernet, address: 3c13.cc2e.9587 (bia 3c13.cc2e.95b0)
+  MTU 9216 bytes, BW 25000000 Kbit , DLY 10 usec
+Ethernet1/42 is down (XCVR not inserted)
+admin state is up, Dedicated Interface
+  Hardware: 100/1000/10000/25000 Ethernet, address: 3c13.cc2e.9587 (bia 3c13.cc2e.95b1)
+  MTU 9216 bytes, BW 25000000 Kbit , DLY 10 usec
+Ethernet1/43 is down (XCVR not inserted)
+admin state is up, Dedicated Interface
+  Hardware: 100/1000/10000/25000 Ethernet, address: 3c13.cc2e.9587 (bia 3c13.cc2e.95b2)
+  MTU 9216 bytes, BW 25000000 Kbit , DLY 10 usec
+Ethernet1/44 is down (XCVR not inserted)
+admin state is up, Dedicated Interface
+  Hardware: 100/1000/10000/25000 Ethernet, address: 3c13.cc2e.9587 (bia 3c13.cc2e.95b3)
+  MTU 9216 bytes, BW 25000000 Kbit , DLY 10 usec
+Ethernet1/45 is down (XCVR not inserted)
+admin state is up, Dedicated Interface
+  Hardware: 100/1000/10000/25000 Ethernet, address: 3c13.cc2e.9587 (bia 3c13.cc2e.95b4)
+  MTU 9216 bytes, BW 25000000 Kbit , DLY 10 usec
+Ethernet1/46 is down (XCVR not inserted)
+admin state is up, Dedicated Interface
+  Hardware: 100/1000/10000/25000 Ethernet, address: 3c13.cc2e.9587 (bia 3c13.cc2e.95b5)
+  MTU 9216 bytes, BW 25000000 Kbit , DLY 10 usec
+Ethernet1/47 is down (XCVR not inserted)
+admin state is up, Dedicated Interface
+  Hardware: 100/1000/10000/25000 Ethernet, address: 3c13.cc2e.9587 (bia 3c13.cc2e.95b6)
+  MTU 9216 bytes, BW 25000000 Kbit , DLY 10 usec
+Ethernet1/48 is up
+admin state is up, Dedicated Interface
+  Hardware: 100/1000/10000/25000 Ethernet, address: 3c13.cc2e.9587 (bia 3c13.cc2e.95b7)
+  MTU 9216 bytes, BW 10000000 Kbit , DLY 10 usec
+Ethernet1/48.2 is up
+admin state is up, Dedicated Interface, [parent interface is Ethernet1/48]
+  Hardware: 100/1000/10000/25000 Ethernet, address: 3c13.cc2e.9587 (bia 3c13.cc2e.95b7)
+  MTU 9216 bytes, BW 10000000 Kbit , DLY 10 usec
+Ethernet1/49 is down (XCVR not inserted)
+admin state is up, Dedicated Interface
+  Hardware: 1000/10000/25000/40000/50000/100000 Ethernet, address: 3c13.cc2e.9587 (bia 3c13.cc2e.95b8)
+  MTU 9216 bytes, BW 100000000 Kbit , DLY 10 usec
+Ethernet1/50 is down (XCVR not inserted)
+admin state is up, Dedicated Interface
+  Hardware: 1000/10000/25000/40000/50000/100000 Ethernet, address: 3c13.cc2e.9587 (bia 3c13.cc2e.95bc)
+  MTU 9216 bytes, BW 100000000 Kbit , DLY 10 usec
+Ethernet1/51 is down (XCVR not inserted)
+admin state is up, Dedicated Interface
+  Hardware: 1000/10000/25000/40000/50000/100000 Ethernet, address: 3c13.cc2e.9587 (bia 3c13.cc2e.95c0)
+  MTU 9216 bytes, BW 100000000 Kbit , DLY 10 usec
+Ethernet1/52 is down (XCVR not inserted)
+admin state is up, Dedicated Interface
+  Hardware: 1000/10000/25000/40000/50000/100000 Ethernet, address: 3c13.cc2e.9587 (bia 3c13.cc2e.95c4)
+  MTU 9216 bytes, BW 100000000 Kbit , DLY 10 usec
+Ethernet1/53 is up
+admin state is up, Dedicated Interface
+  Hardware: 1000/10000/25000/40000/50000/100000 Ethernet, address: 3c13.cc2e.9587 (bia 3c13.cc2e.95c8)
+  MTU 9216 bytes, BW 40000000 Kbit , DLY 10 usec
+Ethernet1/54 is down (XCVR not inserted)
+admin state is up, Dedicated Interface
+  Hardware: 1000/10000/25000/40000/50000/100000 Ethernet, address: 3c13.cc2e.9587 (bia 3c13.cc2e.95cc)
+  MTU 9216 bytes, BW 100000000 Kbit , DLY 10 usec
+port-channel8 is down (No operational members)
+admin state is up,
+  Hardware: Port-Channel, address: 3c13.cc2e.9587 (bia 0000.0000.0000)
+  MTU 1500 bytes, BW 100000 Kbit , DLY 10 usec
+port-channel12 is down (Administratively down)
+admin state is down,
+  Hardware: Port-Channel, address: 3c13.cc2e.9587 (bia 0000.0000.0000)
+  MTU 9216 bytes, BW 100000 Kbit , DLY 10 usec
+port-channel25 is down (No operational members)
+admin state is up,
+  Hardware: Port-Channel, address: 3c13.cc2e.9587 (bia 0000.0000.0000)
+  MTU 1500 bytes, BW 100000 Kbit , DLY 10 usec
+port-channel50 is down (No operational members)
+admin state is up,
+  Hardware: Port-Channel, address: 3c13.cc2e.9587 (bia 3c13.cc2e.9594)
+  MTU 9216 bytes, BW 100000 Kbit , DLY 10 usec
+port-channel200 is up
+admin state is up,
+  Hardware: Port-Channel, address: 3c13.cc2e.9597 (bia 3c13.cc2e.9597)
+  MTU 1500 bytes, BW 20000000 Kbit , DLY 10 usec
+loopback0 is up
+admin state is up,
+  Hardware: Loopback
+  MTU 1500 bytes, BW 8000000 Kbit , DLY 5000 usec
+loopback2 is up
+admin state is up,
+  Hardware: Loopback
+  MTU 1500 bytes, BW 8000000 Kbit , DLY 5000 usec
+loopback254 is up
+admin state is up,
+  Hardware: Loopback
+  MTU 1500 bytes, BW 8000000 Kbit , DLY 5000 usec
+Vlan1 is down (Administratively down), line protocol is down, autostate enabled
+  MTU 1500 bytes, BW 1000000 Kbit, DLY 10 usec,
+Vlan200 is up, line protocol is up, autostate enabled
+  MTU 1500 bytes, BW 1000000 Kbit, DLY 10 usec,
+Vlan201 is up, line protocol is up, autostate enabled
+  MTU 1500 bytes, BW 1000000 Kbit, DLY 10 usec,
+Vlan2303 is up, line protocol is up, autostate enabled
+  MTU 1500 bytes, BW 1000000 Kbit, DLY 10 usec,
+Vlan2304 is up, line protocol is up, autostate enabled
+  MTU 1500 bytes, BW 1000000 Kbit, DLY 10 usec,
+Vlan2305 is up, line protocol is up, autostate enabled
+  MTU 1500 bytes, BW 1000000 Kbit, DLY 10 usec,

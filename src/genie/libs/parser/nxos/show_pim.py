@@ -169,9 +169,9 @@ class ShowIpv6PimInterface(ShowIpv6PimInterfaceSchema):
 
             # Ethernet2/2, Interface status: protocol-up/link-up/admin-up
             p2 = re.compile(r'^\s*(?P<interface_name>[\w\/\.\-]+),'
-                            ' +Interface +status: +protocol\-(?P<oper_status>[\w]+)/'
-                            'link\-(?P<link_status>[\w]+)/'
-                            'admin\-(?P<admin_status>[\w]+)$')
+                            r' +Interface +status: +protocol\-(?P<oper_status>[\w]+)/'
+                            r'link\-(?P<link_status>[\w]+)/'
+                            r'admin\-(?P<admin_status>[\w]+)$')
             m = p2.match(line)
             if m:
                 interface_name = m.groupdict()['interface_name']
@@ -183,7 +183,7 @@ class ShowIpv6PimInterface(ShowIpv6PimInterfaceSchema):
             # IPv6 address:
             #   10.11.33.11, IP subnet: 10.11.33.0/24
             p3 = re.compile(r'^\s*(?P<space>\s{4})'
-                            '(?P<address>[^Error:][\w\/\:]+)( +\[VALID\])?$')
+                            r'(?P<address>[^Error:][\w\/\:]+)( +\[VALID\])?$')
             m = p3.match(line)
             if m:
                 address_list.append(m.groupdict()['address'])
@@ -191,7 +191,7 @@ class ShowIpv6PimInterface(ShowIpv6PimInterfaceSchema):
             # PIM6 DR: fe80::5054:ff:fe89:740c, DR's priority: 1
             # PIM DR: fe80::5054:ff:fe89:740c, DR's priority: 1
             p4 = re.compile(r'^\s*PIM6? +DR: +(?P<dr_address>[\w\:]+),'
-                            ' +DR\'s +priority: +(?P<dr_priority>[\d]+)$')
+                            r' +DR\'s +priority: +(?P<dr_priority>[\d]+)$')
             m = p4.match(line)
             if m:
                 dr_address = m.groupdict()['dr_address']
@@ -208,8 +208,8 @@ class ShowIpv6PimInterface(ShowIpv6PimInterfaceSchema):
             # PIM6 hello interval: 45 secs (configured 44444 ms), next hello sent in: 00:00:05
             # PIM hello interval: 45 secs (configured 44444 ms), next hello sent in: 00:00:05
             p6 = re.compile(r'^\s*PIM6? +hello +interval: +(?P<hello_interval>[\d]+) +secs'
-                            '( +\(configured +(?P<configured_interval_ms>\d+) +ms\))?,'
-                            ' +next +hello +sent +in: +(?P<hello_expiration>[\w\:]+)$')
+                            r'( +\(configured +(?P<configured_interval_ms>\d+) +ms\))?,'
+                            r' +next +hello +sent +in: +(?P<hello_expiration>[\w\:]+)$')
             m = p6.match(line)
             if m:
                 hello_interval = m.groupdict()['hello_interval']
@@ -332,9 +332,9 @@ class ShowIpv6PimInterface(ShowIpv6PimInterfaceSchema):
 
             # Hellos: 360/474 (early: 0), JPs: 0/0, Asserts: 0/0
             p23 = re.compile(r'^\s*Hellos: +(?P<hellos>[\d\/]+)'
-                             '( +\(early: +(?P<early>\d+)\))?,'
-                             ' +JPs: +(?P<jps>[\d\/]+),'
-                             ' +Asserts: +(?P<asserts>[\d\/]+)$')
+                             r'( +\(early: +(?P<early>\d+)\))?,'
+                             r' +JPs: +(?P<jps>[\d\/]+),'
+                             r' +Asserts: +(?P<asserts>[\d\/]+)$')
             m = p23.match(line)
             if m:
                 hellos = m.groupdict()['hellos']
@@ -343,7 +343,7 @@ class ShowIpv6PimInterface(ShowIpv6PimInterfaceSchema):
 
             # Grafts: 0/0, Graft-Acks: 0/0
             p24 = re.compile(r'^\s*Grafts: +(?P<grafts>[\d\/]+),'
-                             ' +Graft-Acks: +(?P<graft_acks>[\d\/]+)$')
+                             r' +Graft-Acks: +(?P<graft_acks>[\d\/]+)$')
             m = p24.match(line)
             if m:
                 grafts = m.groupdict()['grafts']
@@ -351,9 +351,9 @@ class ShowIpv6PimInterface(ShowIpv6PimInterfaceSchema):
 
             # DF-Offers: 0/0, DF-Winners: 0/0, DF-Backoffs: 0/0, DF-Passes: 0/0
             p25 = re.compile(r'^\s*DF-Offers: +(?P<df_offers>[\d\/]+),'
-                             ' +DF-Winners: +(?P<df_winners>[\d\/]+),'
-                             ' +DF-Backoffs: +(?P<df_backoffs>[\d\/]+),'
-                             ' +DF-Passes: +(?P<df_passes>[\d\/]+)$')
+                             r' +DF-Winners: +(?P<df_winners>[\d\/]+),'
+                             r' +DF-Backoffs: +(?P<df_backoffs>[\d\/]+),'
+                             r' +DF-Passes: +(?P<df_passes>[\d\/]+)$')
             m = p25.match(line)
             if m:
                 df_offers = m.groupdict()['df_offers']
@@ -363,8 +363,8 @@ class ShowIpv6PimInterface(ShowIpv6PimInterfaceSchema):
 
             #    Checksum errors: 0, Invalid packet types/DF subtypes: 0/0
             p26 = re.compile(r'^\s*Checksum errors: +(?P<checksum>[\d]+),'
-                             ' +Invalid +packet +types\/DF +subtypes:'
-                             ' +(?P<invalid_packet_types>[\d]+)/(?P<invalid_df_subtypes>[\d]+)$')
+                             r' +Invalid +packet +types\/DF +subtypes:'
+                             r' +(?P<invalid_packet_types>[\d]+)/(?P<invalid_df_subtypes>[\d]+)$')
             m = p26.match(line)
             if m:
                 checksum = m.groupdict()['checksum']
@@ -379,8 +379,8 @@ class ShowIpv6PimInterface(ShowIpv6PimInterfaceSchema):
 
             #    Packet length errors: 0, Bad version packets: 0, Packets from self: 0
             p28 = re.compile(r'^\s*Packet +length +errors: +(?P<packet_length_errors>[\d]+),'
-                             ' +Bad +version +packets: +(?P<bad_version_packets>[\d]+),'
-                             ' +Packets +from +self: +(?P<packets_from_self>[\d]+)$')
+                             r' +Bad +version +packets: +(?P<bad_version_packets>[\d]+),'
+                             r' +Packets +from +self: +(?P<packets_from_self>[\d]+)$')
             m = p28.match(line)
             if m:
                 packet_length_errors = m.groupdict()['packet_length_errors']
@@ -395,21 +395,21 @@ class ShowIpv6PimInterface(ShowIpv6PimInterfaceSchema):
 
             #    Packets received on passiveinterface: 0
             p30 = re.compile(r'^\s*Packets +received +on +passiveinterface:'
-                             ' +(?P<packets_received_on_passiveinterface>[\d]+)$')
+                             r' +(?P<packets_received_on_passiveinterface>[\d]+)$')
             m = p30.match(line)
             if m:
                 packets_received_on_passiveinterface = m.groupdict()['packets_received_on_passiveinterface']
 
             #    JPs received on RPF-interface: 0
             p31 = re.compile(r'^\s*JPs +received +on +RPF\-interface:'
-                             ' +(?P<jp_received_on_rpf_interface>[\d]+)$')
+                             r' +(?P<jp_received_on_rpf_interface>[\d]+)$')
             m = p31.match(line)
             if m:
                 jps_received_on_rpf_interface = m.groupdict()['jp_received_on_rpf_interface']
 
             #    (*,G) Joins received with no/wrong RP: 0/0
             p32 = re.compile(r'^\s*(?P<s_g>[\w\(\)\,\*]+) +Joins +received +with +no\/+wrong RP:'
-                             ' +(?P<joins_received_with_no_rp>\d+)/(?P<joins_received_with_wrong_rp>\d+)$')
+                             r' +(?P<joins_received_with_no_rp>\d+)/(?P<joins_received_with_wrong_rp>\d+)$')
             m = p32.match(line)
             if m:
                 joins_received_with_no_rp = m.groupdict()['joins_received_with_no_rp']
@@ -417,7 +417,7 @@ class ShowIpv6PimInterface(ShowIpv6PimInterfaceSchema):
 
             #  (*,G)/(S,G) JPs received for SSM/Bidir groups: 0/0
             p33 = re.compile(r'^\s*(?P<s_g>[\w\(\)\,\*\/]+) +JPs +received +for +SSM\/Bidir +groups:'
-                             ' +(?P<joins_received_with_ssm_groups>\d+)/(?P<joins_received_with_bidir_groups>\d+)$')
+                             r' +(?P<joins_received_with_ssm_groups>\d+)/(?P<joins_received_with_bidir_groups>\d+)$')
             m = p33.match(line)
             if m:
                 joins_received_with_ssm_groups = m.groupdict()['joins_received_with_ssm_groups']
@@ -425,14 +425,14 @@ class ShowIpv6PimInterface(ShowIpv6PimInterfaceSchema):
 
             # JPs filtered by inbound policy: 0
             p34 = re.compile(r'^\s*JPs +filtered +by +inbound +policy:'
-                             ' +(?P<jps_filtered_by_inbound_policy>\d+)$')
+                             r' +(?P<jps_filtered_by_inbound_policy>\d+)$')
             m = p34.match(line)
             if m:
                 jps_filtered_by_inbound_policy = m.groupdict()['jps_filtered_by_inbound_policy']
 
             # JPs filtered by outbound policy: 0
             p35 = re.compile(r'^\s*JPs +filtered +by +outbound +policy:'
-                             ' +(?P<jps_filtered_by_outbound_policy>\d+)$')
+                             r' +(?P<jps_filtered_by_outbound_policy>\d+)$')
             m = p35.match(line)
             if m:
                 jps_filtered_by_outbound_policy = m.groupdict()['jps_filtered_by_outbound_policy']
@@ -831,7 +831,7 @@ class ShowPimRp(ShowPimRpSchema):
             # BSR: Not Operational
             # BSR: 10.1.5.1*, next Bootstrap message in: 00:00:01,
             p2 = re.compile(r'^\s*BSR: +(?P<bsr>[\w\S]+)'
-                            '(, +next +Bootstrap +message +in: +(?P<next_bsr_message>[\w\S]+),)?$')
+                            r'(, +next +Bootstrap +message +in: +(?P<next_bsr_message>[\w\S]+),)?$')
             m = p2.match(line)
             if m:
                 bsr = m.groupdict()['bsr'].replace('*','')
@@ -877,8 +877,8 @@ class ShowPimRp(ShowPimRpSchema):
 
             # BSR: 10.1.5.5, uptime: 18:04:20, expires: 00:01:50,
             p2_1 = re.compile(r'^\s*BSR(\:)? +(?P<bsr_candidate>[\w\s\.\*\:]+)'
-                            ', +uptime: +(?P<bsr_uptime>[\w\.\:]+)'
-                            ', +expires: +(?P<bsr_expires>[\w\.\:]+),$')
+                            r', +uptime: +(?P<bsr_uptime>[\w\.\:]+)'
+                            r', +expires: +(?P<bsr_expires>[\w\.\:]+),$')
             m = p2_1.match(line)
             if m:
                 bsr_candidate = m.groupdict()['bsr_candidate'].replace('*', '')
@@ -932,7 +932,7 @@ class ShowPimRp(ShowPimRpSchema):
 
             # Auto-RP RPA: 10.229.11.11*, next Discovery message in: 00:00:15
             p3 = re.compile(r'^\s*Auto-RP RPA: +(?P<auto_rp_address>[\w\S]+),'
-                            ' +next +[d|D]iscovery +message +in: +(?P<next_discory_message>[\w\S]+)$')
+                            r' +next +[d|D]iscovery +message +in: +(?P<next_discory_message>[\w\S]+)$')
             m = p3.match(line)
             if m:
                 auto_rp_address = m.groupdict()['auto_rp_address'].replace('*','')
@@ -1056,8 +1056,8 @@ class ShowPimRp(ShowPimRpSchema):
 
             # RP: 10.21.33.33, (0), uptime: 03:52:52, expires: never,
             p8 = re.compile(r'^\s*RP: +(?P<rp>[\w\d\S]+), +\(+(?P<df_ordinal>[\d\S]+)+\),'
-                            ' +uptime: +(?P<uptime>[\w\.\:]+),'
-                            ' +expires: +(?P<expires>[\w\d\S][^,]+)(?P<comma>[\,]+)?$')
+                            r' +uptime: +(?P<uptime>[\w\.\:]+),'
+                            r' +expires: +(?P<expires>[\w\d\S][^,]+)(?P<comma>[\,]+)?$')
             m = p8.match(line)
             if m:
                 rp_dict = parsed_output.setdefault('vrf', {}).setdefault(vrf_name, {})\
@@ -1087,8 +1087,8 @@ class ShowPimRp(ShowPimRpSchema):
             # uptime: 1d13h   priority: 255, 
             # uptime: 2d21h, (A) (B),  priority: 192
             p8_2 = re.compile(r'^\s*uptime: +(?P<uptime>[\w\.\:]+),?'
-                               '( +(?P<modes>( *\(\w\)){0,3}),)? '
-                               '+priority: +(?P<priority>\d+),?$')
+                               r'( +(?P<modes>( *\(\w\)){0,3}),)? '
+                               r'+priority: +(?P<priority>\d+),?$')
             m = p8_2.match(line)
             if m:
                 uptime = m.groupdict()['uptime']
@@ -1097,8 +1097,9 @@ class ShowPimRp(ShowPimRpSchema):
 
             # RP-source: (local), 
             # RP-source: (local), group-map: BIDIR_SPARSE1, 
+            # RP-source: (local), Null-Register Packing disabled
             p8_3 = re.compile(r'^\s*RP\-source:( +(?P<rp_source>\S+))? +\(+(?P<info_source_type>\w+)+\),'
-                               ' *(group-map: +(?P<route_map>[\w\-]+),)?$')
+                              r' *(group-map: +(?P<route_map>[\w\-]+),|Null-Register Packing disabled)?$')
             m = p8_3.match(line)
             if m:
                 code = None
@@ -1149,9 +1150,9 @@ class ShowPimRp(ShowPimRpSchema):
             #  priority: 92, RP-source: 10.1.5.1 (B), group ranges:
             #  priority: 0, RP-source: (local), group-map: PIM6-STATIC-RP, group ranges:
             p9 = re.compile(r'^\s*priority: +(?P<priority>\d+),'
-                            ' +RP\-source:( +(?P<rp_source>[\w\S]+))? +\(+(?P<info_source_type>\w+)+\),'
-                            '( *group-map: +(?P<route_map>\S+),)?'
-                            ' +group +ranges:$')
+                            r' +RP\-source:( +(?P<rp_source>[\w\S]+))? +\(+(?P<info_source_type>\w+)+\),'
+                            r'( *group-map: +(?P<route_map>\S+),)?'
+                            r' +group +ranges:$')
             m = p9.match(line)
             if m:
                 connection_flag = True
@@ -1176,8 +1177,8 @@ class ShowPimRp(ShowPimRpSchema):
             #      ff1e::3002/128 ff1e::3001/128
             # 226.0.0.0/8   (bidir)  ,  expires: 00:02:24 (A)
             p10 = re.compile(r'^\s*(?P<group_ranges>[\w\/\.\:\s]+)'
-                             '( +\((?P<bidir>\w+)\))?'
-                             '( *, *expires: (?P<expires>[\w\.\:]+)( *\((?P<code>\w+)\))?)?$')
+                             r'( +\((?P<bidir>\w+)\))?'
+                             r'( *, *expires: (?P<expires>[\w\.\:]+)( *\((?P<code>\w+)\))?)?$')
             m = p10.match(line)
             if m and connection_flag:
                 expire_dict = {}
@@ -1316,7 +1317,7 @@ class ShowPimRp(ShowPimRpSchema):
 
             #    priority: 111, hash-length: 30
             p13 = re.compile(r'^\s*priority: +(?P<priority>\d+),'
-                             ' +hash-length: +(?P<hash_length>\d+)$')
+                             r' +hash-length: +(?P<hash_length>\d+)$')
             m = p13.match(line)
             if m:
                 bsr_prioprity = int(m.groupdict()['priority'])
@@ -1448,7 +1449,7 @@ class ShowIpv6PimDf(ShowIpv6PimDfSchema):
 
             # Bidir-PIM6 Designated Forwarder Information for VRF "default"
             p1 = re.compile(r'^\s*Bidir-PIM6 +Designated +Forwarder'
-                            ' +Information +for +VRF \"(?P<vrf>[\w]+)\"$')
+                            r' +Information +for +VRF \"(?P<vrf>[\w]+)\"$')
             m = p1.match(line)
             if m:
                 vrf = m.groupdict()['vrf']
@@ -1466,7 +1467,7 @@ class ShowIpv6PimDf(ShowIpv6PimDfSchema):
 
             #           [0/0]           ff09::/16
             p3 = re.compile(r'^\s*(?P<space>\s{23})'
-                            '\[(?P<metrics_pref>[\d\-]+)/(?P<metrics>[\d\-]+)\] +(?P<group_range>[\w\.\:\/]+)$')
+                            r'\[(?P<metrics_pref>[\d\-]+)/(?P<metrics>[\d\-]+)\] +(?P<group_range>[\w\.\:\/]+)$')
             m = p3.match(line)
             if m:
 
@@ -1477,9 +1478,9 @@ class ShowIpv6PimDf(ShowIpv6PimDfSchema):
             # Interface     DF Address                 DF State DF Metric  DF Uptime
             # Eth2/1        fe80::5054:ff:fe89:740c    Winner   [0/0]      00:00:48
             p4 = re.compile(r'^\s*(?P<interface>[\w\-\/]+) +(?P<df_address>[\S]+)'
-                            ' +(?P<df_state>\w+)'
-                            ' +\[(?P<winner_metrics_pref>[\d\-]+)/(?P<winner_metrics>[\d\-]+)\]'
-                            ' +(?P<df_uptime>\S+)$')
+                            r' +(?P<df_state>\w+)'
+                            r' +\[(?P<winner_metrics_pref>[\d\-]+)/(?P<winner_metrics>[\d\-]+)\]'
+                            r' +(?P<df_uptime>\S+)$')
             m = p4.match(line)
             if m:
                 interface = Common.convert_intf_name(m.groupdict()['interface'])
@@ -1638,7 +1639,7 @@ class ShowIpPimDf(ShowIpPimDfSchema):
 
             # Bidir-PIM Designated Forwarder Information for VRF "default"
             p1 = re.compile(r'^\s*Bidir-PIM +Designated +Forwarder'
-                            ' +Information +for +VRF \"(?P<vrf>[\w]+)\"$')
+                            r' +Information +for +VRF \"(?P<vrf>[\w]+)\"$')
             m = p1.match(line)
             if m:
                 vrf = m.groupdict()['vrf']
@@ -1647,8 +1648,8 @@ class ShowIpPimDf(ShowIpPimDfSchema):
             # RP Address (ordinal)   DF-bits          RP Metric  Group Range
             # 10.16.2.2 (2)            00000002 (1)     [0/0]      224.128.0.0/9
             p2 = re.compile(r'^\s*(?P<rp_address>[\d\.]+) +\((?P<ordinal>\d+)\)'
-                            ' +(?P<df_bits>[\w\s\(\)]+)'
-                            ' +\[(?P<metrics_pref>\d+)/(?P<metrics>\d+)\] +(?P<group_range>[\d\.\/]+)$')
+                            r' +(?P<df_bits>[\w\s\(\)]+)'
+                            r' +\[(?P<metrics_pref>\d+)/(?P<metrics>\d+)\] +(?P<group_range>[\d\.\/]+)$')
             m = p2.match(line)
             if m:
                 rp_address = m.groupdict()['rp_address']
@@ -1663,10 +1664,10 @@ class ShowIpPimDf(ShowIpPimDfSchema):
             #  Ethernet2/2                 10.2.0.2         Lose       [0/0]        00:28:14
 
             p3 = re.compile(r'^\s*(?P<interface>\S+) +(?P<df_address>\S+)'
-                            ' +(?P<df_state>\w+)'
-                            ' +\[(?P<winner_metrics_pref>\d+)/(?P<winner_metrics>\d+)\]'
-                            ' +(?P<df_uptime>\S+)'
-                            '( +\((?P<is_rpf>\S+)\))?$')
+                            r' +(?P<df_state>\w+)'
+                            r' +\[(?P<winner_metrics_pref>\d+)/(?P<winner_metrics>\d+)\]'
+                            r' +(?P<df_uptime>\S+)'
+                            r'( +\((?P<is_rpf>\S+)\))?$')
             m = p3.match(line)
             if m:
                 interface = Common.convert_intf_name(m.groupdict()['interface'])
@@ -1847,7 +1848,7 @@ class ShowIpv6PimRoute(ShowIpv6PimRouteSchema):
 
             # PIM6 Routing Table for VRF "VRF1" - 1 entries
             p1 = re.compile(r'^\s*PIM6 +Routing +Table +for +VRF +\"(?P<vrf_name>[\S]+)\" +\-'
-                            ' +(?P<counter>\d+) +entries$')
+                            r' +(?P<counter>\d+) +entries$')
             m = p1.match(line)
             if m:
                 vrf_name = m.groupdict()['vrf_name']
@@ -1857,11 +1858,11 @@ class ShowIpv6PimRoute(ShowIpv6PimRouteSchema):
             # (*, ff30::/12), expires 00:02:31 Route Fabric owned : FALSE
             # (*, ff30::/12), expires 0.000000 Route Fabric owned : FALSE (00:00:02)
             p2 = re.compile(r'^\s*\((?P<source_address>[\S]+)'
-                            ', +(?P<group>[\S]+)\),'
-                            '( +RP +(?P<rp>[\S\-]+),)?( +(?P<mode>\w+),)?'
-                            ' +expires +(?P<expires>[\w\.\:\(\)\s]+)'
-                            ' +Route +Fabric +owned +: ((?P<fabric_owned>[\w]+)( *(?P<dummy>\S+))?)'
-                            '(, +(?P<rp_bit>[\S]+))?$')
+                            r', +(?P<group>[\S]+)\),'
+                            r'( +RP +(?P<rp>[\S\-]+),)?( +(?P<mode>\w+),)?'
+                            r' +expires +(?P<expires>[\w\.\:\(\)\s]+)'
+                            r' +Route +Fabric +owned +: ((?P<fabric_owned>[\w]+)( *(?P<dummy>\S+))?)'
+                            r'(, +(?P<rp_bit>[\S]+))?$')
             m = p2.match(line)
             if m:
                 rp_bit = False
@@ -1882,7 +1883,7 @@ class ShowIpv6PimRoute(ShowIpv6PimRouteSchema):
 
                 expire_value = m.groupdict()['expires']
                 if '(' in expire_value:
-                    p2_1 = re.compile('^\s*(?P<expires_1>[\d\S]+) +\((?P<expires_2>[\S]+)\)$')
+                    p2_1 = re.compile(r'^\s*(?P<expires_1>[\d\S]+) +\((?P<expires_2>[\S]+)\)$')
                     match_1 = p2_1.match(expire_value)
                     if match_1:
                         expires = match_1.groupdict()['expires_2']
@@ -1899,7 +1900,7 @@ class ShowIpv6PimRoute(ShowIpv6PimRouteSchema):
 
             # Incoming interface: Null, RPF nbr 0.0.0.0
             p3 = re.compile(r'^\s*Incoming +interface: (?P<incoming_interface>[\S]+),'
-                           ' +RPF +nbr +(?P<rpf_nbr>[\S]+)$')
+                           r' +RPF +nbr +(?P<rpf_nbr>[\S]+)$')
             m = p3.match(line)
             if m:
                 incoming_interface = m.groupdict()['incoming_interface']
@@ -1907,8 +1908,8 @@ class ShowIpv6PimRoute(ShowIpv6PimRouteSchema):
 
             # Oif-list: (0) 00000000, timeout-list: (0) 00000000
             p4 = re.compile(r'^\s*Oif-list: +\((?P<oif_count>[\d]+)\)'
-                            ' +(?P<oif_bf_str>[\S]+), +timeout\-list: +\((?P<timeout_count>[\d]+)\)'
-                            ' +(?P<timeout_bf_str>[\S]+)$')
+                            r' +(?P<oif_bf_str>[\S]+), +timeout\-list: +\((?P<timeout_count>[\d]+)\)'
+                            r' +(?P<timeout_bf_str>[\S]+)$')
             m = p4.match(line)
             if m:
                 oif_count = m.groupdict()['oif_count']
@@ -1918,8 +1919,8 @@ class ShowIpv6PimRoute(ShowIpv6PimRouteSchema):
 
             # Immediate-list: (0) 00000000, timeout-list: (0) 00000000
             p5 = re.compile(r'^\s*Immediate-list: +\((?P<imm_count>[\d]+)\)'
-                            ' +(?P<imm_bf_str>[\S]+), +timeout\-list: +\((?P<timeout_count>[\d]+)\)'
-                            ' +(?P<timeout_bf_str>[\S]+)$')
+                            r' +(?P<imm_bf_str>[\S]+), +timeout\-list: +\((?P<timeout_count>[\d]+)\)'
+                            r' +(?P<timeout_bf_str>[\S]+)$')
             m = p5.match(line)
             if m:
                 imm_count = m.groupdict()['imm_count']
@@ -1929,7 +1930,7 @@ class ShowIpv6PimRoute(ShowIpv6PimRouteSchema):
 
             # Sgr-prune-list: (0) 00000000
             p5 = re.compile(r'^\s*Sgr-prune-list: +\((?P<sgr_count>[\d]+)\)'
-                            ' +(?P<sgr_prune_str>[\S]+)$')
+                            r' +(?P<sgr_prune_str>[\S]+)$')
             m = p5.match(line)
             if m:
                 sgr_count = m.groupdict()['sgr_count']
@@ -1937,7 +1938,7 @@ class ShowIpv6PimRoute(ShowIpv6PimRouteSchema):
 
             # Timeout-interval: 3, JP-holdtime round-up: 3
             p6 = re.compile(r'^\s*Timeout-interval: +(?P<timeout_interval>\d+)'
-                            ', +JP-holdtime +round-up: +(?P<jp_round_up>\d+)$')
+                            r', +JP-holdtime +round-up: +(?P<jp_round_up>\d+)$')
             m = p6.match(line)
             if m:
                 timeout_interval = m.groupdict()['timeout_interval']
@@ -2117,13 +2118,13 @@ class ShowIpv6PimNeighbor(ShowIpv6PimNeighborSchema):
             # fe80::282:eaff:feed:1b08     Ethernet1/1.10       00:12:53  00:01:38  1        yes     n/a     no
             # fe80::282:eaff:feed:1b08        Eth2/2      07:31:36  00:01:28  1    yes     n/a
             p2 = re.compile(r'^(?P<neighbor>[\S]+) +'
-                             '(?P<intf_name>[\S]+) +'
-                             '(?P<up_time>[\S]+) +'
-                             '(?P<expires>[\S]+) +'
-                             '(?P<dr_priority>\d+) +'
-                             '(?P<bidir_capable>\w+) +'
-                             '(?P<bfd_state>[\S]+) *'
-                             '(?:(?P<ecmp_redirect_capable>\S+))?')
+                             r'(?P<intf_name>[\S]+) +'
+                             r'(?P<up_time>[\S]+) +'
+                             r'(?P<expires>[\S]+) +'
+                             r'(?P<dr_priority>\d+) +'
+                             r'(?P<bidir_capable>\w+) +'
+                             r'(?P<bfd_state>[\S]+) *'
+                             r'(?:(?P<ecmp_redirect_capable>\S+))?')
             m = p2.match(line)
             if m:
                 second_address_flag = False
@@ -2315,7 +2316,7 @@ class ShowIpPimRoute(ShowIpPimRouteSchema):
 
             # PIM Routing Table for VRF "VRF1" - 1 entries
             p1 = re.compile(r'^\s*PIM +Routing +Table +for +VRF +\"(?P<vrf_name>[\S]+)\" +\-'
-                            ' +(?P<counter>\d+) +entries$')
+                            r' +(?P<counter>\d+) +entries$')
             m = p1.match(line)
             if m:
                 vrf_name = m.groupdict()['vrf_name']
@@ -2324,10 +2325,10 @@ class ShowIpPimRoute(ShowIpPimRouteSchema):
             # (*, 232.0.0.0/8), expires 0.000000 (00:00:01)
             # (*, 233.0.0.0/24), RP 10.66.12.12, bidir, expires 00:01:58, RP-bit
             p2 = re.compile(r'^\s*\((?P<source_address>[\S]+)'
-                            ', +(?P<group>[\S]+)\),'
-                            '( +RP +(?P<rp>[\S\-]+),)?( +(?P<mode>\w+),)?'
-                            ' +expires +(?P<expires>[\w\.\:\(\)\s]+)'
-                            '(, +(?P<rp_bit>[\S]+))?$')
+                            r', +(?P<group>[\S]+)\),'
+                            r'( +RP +(?P<rp>[\S\-]+),)?( +(?P<mode>\w+),)?'
+                            r' +expires +(?P<expires>[\w\.\:\(\)\s]+)'
+                            r'(, +(?P<rp_bit>[\S]+))?$')
             m = p2.match(line)
             if m:
                 rp_bit = False
@@ -2345,7 +2346,7 @@ class ShowIpPimRoute(ShowIpPimRouteSchema):
                     is_rpt = False
                 expire_value = m.groupdict()['expires']
                 if '(' in expire_value:
-                    p2_1 = re.compile('^\s*(?P<expires_1>[\d\S]+) +\((?P<expires_2>[\S]+)\)$')
+                    p2_1 = re.compile(r'^\s*(?P<expires_1>[\d\S]+) +\((?P<expires_2>[\S]+)\)$')
                     match_1 = p2_1.match(expire_value)
                     if match_1:
                         expires = match_1.groupdict()['expires_2']
@@ -2362,7 +2363,7 @@ class ShowIpPimRoute(ShowIpPimRouteSchema):
 
             # Incoming interface: Null, RPF nbr 0.0.0.0
             p3 = re.compile(r'^\s*Incoming +interface: (?P<incoming_interface>[\S]+),'
-                           ' +RPF +nbr +(?P<rpf_nbr>[\S]+)$')
+                           r' +RPF +nbr +(?P<rpf_nbr>[\S]+)$')
             m = p3.match(line)
             if m:
                 incoming_interface = m.groupdict()['incoming_interface']
@@ -2370,8 +2371,8 @@ class ShowIpPimRoute(ShowIpPimRouteSchema):
 
             # Oif-list: (0) 00000000, timeout-list: (0) 00000000
             p4 = re.compile(r'^\s*Oif-list: +\((?P<oif_count>[\d]+)\)'
-                            ' +(?P<oif_bf_str>[\S]+), +timeout\-list: +\((?P<timeout_count>[\d]+)\)'
-                            ' +(?P<timeout_bf_str>[\S]+)$')
+                            r' +(?P<oif_bf_str>[\S]+), +timeout\-list: +\((?P<timeout_count>[\d]+)\)'
+                            r' +(?P<timeout_bf_str>[\S]+)$')
             m = p4.match(line)
             if m:
                 oif_count = m.groupdict()['oif_count']
@@ -2381,8 +2382,8 @@ class ShowIpPimRoute(ShowIpPimRouteSchema):
 
             # Immediate-list: (0) 00000000, timeout-list: (0) 00000000
             p5 = re.compile(r'^\s*Immediate-list: +\((?P<imm_count>[\d]+)\)'
-                            ' +(?P<imm_bf_str>[\S]+), +timeout\-list: +\((?P<timeout_count>[\d]+)\)'
-                            ' +(?P<timeout_bf_str>[\S]+)$')
+                            r' +(?P<imm_bf_str>[\S]+), +timeout\-list: +\((?P<timeout_count>[\d]+)\)'
+                            r' +(?P<timeout_bf_str>[\S]+)$')
             m = p5.match(line)
             if m:
                 imm_count = m.groupdict()['imm_count']
@@ -2392,7 +2393,7 @@ class ShowIpPimRoute(ShowIpPimRouteSchema):
 
             # Sgr-prune-list: (0) 00000000
             p5 = re.compile(r'^\s*Sgr-prune-list: +\((?P<sgr_count>[\d]+)\)'
-                            ' +(?P<sgr_prune_str>[\S]+)$')
+                            r' +(?P<sgr_prune_str>[\S]+)$')
             m = p5.match(line)
             if m:
                 sgr_count = m.groupdict()['sgr_count']
@@ -2400,7 +2401,7 @@ class ShowIpPimRoute(ShowIpPimRouteSchema):
 
             # Timeout-interval: 3, JP-holdtime round-up: 3
             p6 = re.compile(r'^\s*Timeout-interval: +(?P<timeout_interval>\d+)'
-                            ', +JP-holdtime +round-up: +(?P<jp_round_up>\d+)$')
+                            r', +JP-holdtime +round-up: +(?P<jp_round_up>\d+)$')
             m = p6.match(line)
             if m:
                 timeout_interval = m.groupdict()['timeout_interval']
@@ -2563,10 +2564,10 @@ class ShowIpv6PimGroupRange(ShowIpv6PimGroupRangeSchema):
             # Group-range               Mode      RP-address          Shared-tree-only range
             # ff3x::/32                 SSM       -                   -
             p2 = re.compile(r'^\s*(?P<group_range>[^\s*Group-range][\S]+)'
-                            ' +(?P<mode>[\S]+)'
-                            ' +(?P<rp_address>[\S]+)'
-                            '( +(?P<shared_tree_only>[\S]+))?'
-                            '( +(?P<range>[\S]+))?$')
+                            r' +(?P<mode>[\S]+)'
+                            r' +(?P<rp_address>[\S]+)'
+                            r'( +(?P<shared_tree_only>[\S]+))?'
+                            r'( +(?P<range>[\S]+))?$')
             m = p2.match(line)
             if m:
                 group_range = m.groupdict()['group_range']
@@ -2693,13 +2694,13 @@ class ShowIpPimNeighbor(ShowIpPimNeighborSchema):
             #                                                          Priority Capable State     Capable
             # 10.2.3.3        Ethernet1/3.11       00:31:08  00:01:39  1        yes     n/a     no
             p2 = re.compile(r'^\s*(?P<neighbor>[\S]+)'
-                            ' +(?P<intf_name>[\S]+)'
-                            ' +(?P<up_time>[\S]+)'
-                            ' +(?P<expires>[\S]+)'
-                            ' +(?P<dr_priority>\d+)'
-                            ' +(?P<bidir_capable>\w+)'
-                            ' +(?P<bfd_state>[\S]+)'
-                            '( +(?P<redict_capable>[\S]+))?$')
+                            r' +(?P<intf_name>[\S]+)'
+                            r' +(?P<up_time>[\S]+)'
+                            r' +(?P<expires>[\S]+)'
+                            r' +(?P<dr_priority>\d+)'
+                            r' +(?P<bidir_capable>\w+)'
+                            r' +(?P<bfd_state>[\S]+)'
+                            r'( +(?P<redict_capable>[\S]+))?$')
             m = p2.match(line)
             if m:
                 neighbor = m.groupdict()['neighbor']
@@ -2844,8 +2845,8 @@ class ShowIpPimVrfDetail(ShowIpPimVrfDetailSchema):
             #          ID       ID          Count      Enabled    Enabled
             # default               1        0x00000001  3          no          no
             p1 = re.compile(r'^\s*(?P<vrf>[\w\d]+) +(?P<vrf_id>\d+)'
-                            ' +(?P<table_id>0x[a_f0-9]+) +(?P<interface_count>\d+)'
-                            ' +(?P<bfd>\w+)? +(?P<mvpn>\w+)?$')
+                            r' +(?P<table_id>0x[a_f0-9]+) +(?P<interface_count>\d+)'
+                            r' +(?P<bfd>\w+)? +(?P<mvpn>\w+)?$')
             m = p1.match(line)
             if m:
                 expiry_timer_configured = sg_expiry_timer_infinity = False
@@ -2919,7 +2920,7 @@ class ShowIpPimVrfDetail(ShowIpPimVrfDetailSchema):
 
             # Register source  interface : loopback0 address : 10.4.1.1
             p4 = re.compile(r'^\s*Register +source +interface +: +(?P<intf_name>[\w\d\S]+)'
-                            ' +address +: +(?P<address>[\w\d\S]+)$')
+                            r' +address +: +(?P<address>[\w\d\S]+)$')
             m = p4.match(line)
             if m:
                 register_source = m.groupdict()['intf_name']
@@ -2971,8 +2972,8 @@ class ShowIpPimVrfDetail(ShowIpPimVrfDetailSchema):
             # (S,G)-expiry timer: configured, infinity
             # (S,G)-expiry timer: configured, 1200 secs
             p7 = re.compile(r'^\s*\(S\,G\)\-expiry +timer: +(?P<expiry_timer_configured>\w+)'
-                            '(, +(?P<sg_expiry_timer_infinity>[\w]+))?'
-                            '(, +(?P<sg_expiry_timer>[\d]+) +secs)?$')
+                            r'(, +(?P<sg_expiry_timer_infinity>[\w]+))?'
+                            r'(, +(?P<sg_expiry_timer>[\d]+) +secs)?$')
             m = p7.match(line)
             if m:
                 if m.groupdict()['expiry_timer_configured']:
@@ -3031,7 +3032,7 @@ class ShowIpPimVrfDetail(ShowIpPimVrfDetailSchema):
 
             #  (S,G)-expiry timer config version 1, active version 1
             p9 = re.compile(r'^\s*\(S\,G\)\-expiry +timer +config +version +(?P<expiry_timer_config_version>\d+)'
-                            '+, +active +version +(?P<expiry_timer_active_version>\d+)$')
+                            r'+, +active +version +(?P<expiry_timer_active_version>\d+)$')
             m = p9.match(line)
             if m:
                 expiry_timer_config_version = int(m.groupdict()['expiry_timer_config_version'])
@@ -3160,11 +3161,11 @@ class ShowIpPimGroupRange(ShowIpPimGroupRangeSchema):
             # Group-range        Action    Mode      RP-address       Shared-tree-only range
             # 232.0.0.0/8        Accept    SSM       -                -         Local
             p2 = re.compile(r'^\s*(?P<group_range>[^\s*Group-range][\S]+)'
-                            ' +(?P<action>[\S]+)'
-                            ' +(?P<mode>[\S]+)'
-                            ' +(?P<rp_address>[\S]+)'
-                            ' +(?P<shared_tree_only>[\S]+)'
-                            '( +(?P<range>[\S]+))?$')
+                            r' +(?P<action>[\S]+)'
+                            r' +(?P<mode>[\S]+)'
+                            r' +(?P<rp_address>[\S]+)'
+                            r' +(?P<shared_tree_only>[\S]+)'
+                            r'( +(?P<range>[\S]+))?$')
             m = p2.match(line)
             if m:
                 group_range = m.groupdict()['group_range']
@@ -3317,7 +3318,7 @@ class ShowIpPimPolicyStaticticsRegisterPolicy(ShowIpPimPolicyStaticticsRegisterP
 
             # route-map pim_register_vrf permit 10
             p1 = re.compile(r'^\s*route-map +(?P<route_map>[\S]+)'
-                            ' +permit +(?P<route_map_permit>[\S]+)$')
+                            r' +permit +(?P<route_map_permit>[\S]+)$')
             m = p1.match(line)
             if m:
                 accept_register = m.groupdict()['route_map']
@@ -3329,8 +3330,8 @@ class ShowIpPimPolicyStaticticsRegisterPolicy(ShowIpPimPolicyStaticticsRegisterP
 
             # match ip multicast group 239.2.2.2/32                      C: 0      M: 0
             p1_1 = re.compile(r'^\s*match +ip +multicast +group +(?P<group>[\w\.\/]+)'
-                              '( +[c|C]: +(?P<c>\d+))?'
-                              '( +[m|M]: +(?P<m>\d+))?$')
+                              r'( +[c|C]: +(?P<c>\d+))?'
+                              r'( +[m|M]: +(?P<m>\d+))?$')
             m = p1_1.match(line)
             if m:
                 group = m.groupdict()['group'].rstrip()
@@ -3343,10 +3344,10 @@ class ShowIpPimPolicyStaticticsRegisterPolicy(ShowIpPimPolicyStaticticsRegisterP
 
             # ip prefix-list testprefixlist seq 5 permit 239.3.3.3/32      M: 0
             p2_1 = re.compile(r'^\s*ip +prefix-list +(?P<prefix_list>[\S]+)'
-                              '( +seq +(?P<seq>\d+))?'
-                              '( +permit +(?P<permit>[\S]+))?'
-                              '( +[c|C]: +(?P<c>\d+))?'
-                              '( +[m|M]: +(?P<m>\d+))?$')
+                              r'( +seq +(?P<seq>\d+))?'
+                              r'( +permit +(?P<permit>[\S]+))?'
+                              r'( +[c|C]: +(?P<c>\d+))?'
+                              r'( +[m|M]: +(?P<m>\d+))?$')
             m = p2_1.match(line)
             if m:
                 accept_register = m.groupdict()['prefix_list']
@@ -3589,10 +3590,10 @@ class ShowIpPimInterface(ShowIpPimInterfaceSchema):
 
             # Ethernet2/2, Interface status: protocol-up/link-up/admin-up
             p2 = re.compile(r'^\s*(?P<interface_name>[\w\/\.\-]+),?'
-                            ' +Interface +status:'
-                            ' +protocol-(?P<oper_status>[\w]+)(/)?'
-                            'link\-(?P<link_status>[\w]+)(/)?'
-                            'admin\-(?P<admin_status>[\w]+)$')
+                            r' +Interface +status:'
+                            r' +protocol-(?P<oper_status>[\w]+)(/)?'
+                            r'link\-(?P<link_status>[\w]+)(/)?'
+                            r'admin\-(?P<admin_status>[\w]+)$')
             m = p2.match(line)
             if m:
                 interface_name = m.groupdict()['interface_name']
@@ -3603,7 +3604,7 @@ class ShowIpPimInterface(ShowIpPimInterfaceSchema):
 
             # IP address: 10.11.33.11, IP subnet: 10.11.33.0/24
             p3 = re.compile(r'^\s*IP +address: +(?P<address>[\w\.]+),'
-                            ' +IP +subnet: +(?P<ip_subnet>[\w\.\/]+)$')
+                            r' +IP +subnet: +(?P<ip_subnet>[\w\.\/]+)$')
             m = p3.match(line)
             if m:
                 address = m.groupdict()['address']
@@ -3611,7 +3612,7 @@ class ShowIpPimInterface(ShowIpPimInterfaceSchema):
 
             # PIM DR: 10.11.33.11, DR's priority: 144
             p4 = re.compile(r'^\s*PIM +DR: +(?P<dr_address>[\w\.]+),'
-                            ' +DR\'s +priority: +(?P<dr_priority>[\d]+)$')
+                            r' +DR\'s +priority: +(?P<dr_priority>[\d]+)$')
             m = p4.match(line)
             if m:
                 dr_address = m.groupdict()['dr_address']
@@ -3626,8 +3627,8 @@ class ShowIpPimInterface(ShowIpPimInterfaceSchema):
 
             # PIM hello interval: 45 secs (configured 44444 ms), next hello sent in: 00:00:05
             p6 = re.compile(r'^\s*PIM +hello +interval: +(?P<hello_interval>[\d]+) +secs'
-                            '( +\(configured +(?P<configured_interval_ms>\d+) +ms\))?,'
-                            ' +next +hello +sent +in: +(?P<hello_expiration>[\w\:]+)$')
+                            r'( +\(configured +(?P<configured_interval_ms>\d+) +ms\))?,'
+                            r' +next +hello +sent +in: +(?P<hello_expiration>[\w\:]+)$')
             m = p6.match(line)
             if m:
                 hello_interval = m.groupdict()['hello_interval']
@@ -3734,9 +3735,9 @@ class ShowIpPimInterface(ShowIpPimInterfaceSchema):
 
             # Hellos: 360/474 (early: 0), JPs: 0/0, Asserts: 0/0
             p23 = re.compile(r'^\s*Hellos: +(?P<hellos>[\d\/]+)'
-                             ' +\(early: +(?P<early>\d+)\)?,'
-                             ' +JPs: +(?P<jps>[\d\/]+),'
-                             ' +Asserts: +(?P<asserts>[\d\/]+)$')
+                             r' +\(early: +(?P<early>\d+)\)?,'
+                             r' +JPs: +(?P<jps>[\d\/]+),'
+                             r' +Asserts: +(?P<asserts>[\d\/]+)$')
             m = p23.match(line)
             if m:
                 hellos = m.groupdict()['hellos']
@@ -3745,7 +3746,7 @@ class ShowIpPimInterface(ShowIpPimInterfaceSchema):
 
             # Grafts: 0/0, Graft-Acks: 0/0
             p24 = re.compile(r'^\s*Grafts: +(?P<grafts>[\d\/]+),'
-                             ' +Graft-Acks: +(?P<graft_acks>[\d\/]+)$')
+                             r' +Graft-Acks: +(?P<graft_acks>[\d\/]+)$')
             m = p24.match(line)
             if m:
                 grafts = m.groupdict()['grafts']
@@ -3753,9 +3754,9 @@ class ShowIpPimInterface(ShowIpPimInterfaceSchema):
 
             # DF-Offers: 0/0, DF-Winners: 0/0, DF-Backoffs: 0/0, DF-Passes: 0/0
             p25 = re.compile(r'^\s*DF-Offers: +(?P<df_offers>[\d\/]+),'
-                             ' +DF-Winners: +(?P<df_winners>[\d\/]+),'
-                             ' +DF-Backoffs: +(?P<df_backoffs>[\d\/]+),'
-                             ' +DF-Passes: +(?P<df_passes>[\d\/]+)$')
+                             r' +DF-Winners: +(?P<df_winners>[\d\/]+),'
+                             r' +DF-Backoffs: +(?P<df_backoffs>[\d\/]+),'
+                             r' +DF-Passes: +(?P<df_passes>[\d\/]+)$')
             m = p25.match(line)
             if m:
                 df_offers = m.groupdict()['df_offers']
@@ -3765,8 +3766,8 @@ class ShowIpPimInterface(ShowIpPimInterfaceSchema):
 
             #    Checksum errors: 0, Invalid packet types/DF subtypes: 0/0
             p26 = re.compile(r'^\s*Checksum errors: +(?P<checksum>[\d]+),'
-                             ' +Invalid +packet +types\/DF +subtypes:'
-                             ' +(?P<invalid_packet_types>[\d]+)/(?P<invalid_df_subtypes>[\d]+)$')
+                             r' +Invalid +packet +types\/DF +subtypes:'
+                             r' +(?P<invalid_packet_types>[\d]+)/(?P<invalid_df_subtypes>[\d]+)$')
             m = p26.match(line)
             if m:
                 checksum = m.groupdict()['checksum']
@@ -3781,8 +3782,8 @@ class ShowIpPimInterface(ShowIpPimInterfaceSchema):
 
             #    Packet length errors: 0, Bad version packets: 0, Packets from self: 0
             p28 = re.compile(r'^\s*Packet +length +errors: +(?P<packet_length_errors>[\d]+),'
-                             ' +Bad +version +packets: +(?P<bad_version_packets>[\d]+),'
-                             ' +Packets +from +self: +(?P<packets_from_self>[\d]+)$')
+                             r' +Bad +version +packets: +(?P<bad_version_packets>[\d]+),'
+                             r' +Packets +from +self: +(?P<packets_from_self>[\d]+)$')
             m = p28.match(line)
             if m:
                 packet_length_errors = m.groupdict()['packet_length_errors']
@@ -3797,21 +3798,21 @@ class ShowIpPimInterface(ShowIpPimInterfaceSchema):
 
             #    Packets received on passiveinterface: 0
             p30 = re.compile(r'^\s*Packets +received +on +passiveinterface:'
-                             ' +(?P<packets_received_on_passiveinterface>[\d]+)$')
+                             r' +(?P<packets_received_on_passiveinterface>[\d]+)$')
             m = p30.match(line)
             if m:
                 packets_received_on_passiveinterface = m.groupdict()['packets_received_on_passiveinterface']
 
             #    JPs received on RPF-interface: 0
             p31 = re.compile(r'^\s*JPs +received +on +RPF\-interface:'
-                             ' +(?P<jp_received_on_rpf_interface>[\d]+)$')
+                             r' +(?P<jp_received_on_rpf_interface>[\d]+)$')
             m = p31.match(line)
             if m:
                 jps_received_on_rpf_interface = m.groupdict()['jp_received_on_rpf_interface']
 
             #    (*,G) Joins received with no/wrong RP: 0/0
             p32 = re.compile(r'^\s*(?P<s_g>[\w\(\)\,\*]+) +Joins +received +with +no\/+wrong RP:'
-                             ' +(?P<joins_received_with_no_rp>\d+)/(?P<joins_received_with_wrong_rp>\d+)$')
+                             r' +(?P<joins_received_with_no_rp>\d+)/(?P<joins_received_with_wrong_rp>\d+)$')
             m = p32.match(line)
             if m:
                 joins_received_with_no_rp = m.groupdict()['joins_received_with_no_rp']
@@ -3819,7 +3820,7 @@ class ShowIpPimInterface(ShowIpPimInterfaceSchema):
 
             #  (*,G)/(S,G) JPs received for SSM/Bidir groups: 0/0
             p33 = re.compile(r'^\s*(?P<s_g>[\w\(\)\,\*\/]+) +JPs +received +for +SSM\/Bidir +groups:'
-                             ' +(?P<joins_received_with_ssm_groups>\d+)/(?P<joins_received_with_bidir_groups>\d+)$')
+                             r' +(?P<joins_received_with_ssm_groups>\d+)/(?P<joins_received_with_bidir_groups>\d+)$')
             m = p33.match(line)
             if m:
                 joins_received_with_ssm_groups = m.groupdict()['joins_received_with_ssm_groups']
@@ -3827,14 +3828,14 @@ class ShowIpPimInterface(ShowIpPimInterfaceSchema):
 
             # JPs filtered by inbound policy: 0
             p34 = re.compile(r'^\s*JPs +filtered +by +inbound +policy:'
-                             ' +(?P<jps_filtered_by_inbound_policy>\d+)$')
+                             r' +(?P<jps_filtered_by_inbound_policy>\d+)$')
             m = p34.match(line)
             if m:
                 jps_filtered_by_inbound_policy = m.groupdict()['jps_filtered_by_inbound_policy']
 
             # JPs filtered by outbound policy: 0
             p35 = re.compile(r'^\s*JPs +filtered +by +outbound +policy:'
-                             ' +(?P<jps_filtered_by_outbound_policy>\d+)$')
+                             r' +(?P<jps_filtered_by_outbound_policy>\d+)$')
             m = p35.match(line)
             if m:
                 jps_filtered_by_outbound_policy = m.groupdict()['jps_filtered_by_outbound_policy']
@@ -4123,8 +4124,8 @@ class ShowIpv6PimVrfAllDetail(ShowIpv6PimVrfAllDetailSchema):
             #          ID       ID          Count      Enabled
             # default               1        0x80000001  3          no
             p1 = re.compile(r'^\s*(?P<vrf>[\w\d]+) +(?P<vrf_id>\d+)'
-                            ' +(?P<table_id>0x[a_f0-9]+) +(?P<interface_count>\d+)'
-                            ' +(?P<bfd>\w+)$')
+                            r' +(?P<table_id>0x[a_f0-9]+) +(?P<interface_count>\d+)'
+                            r' +(?P<bfd>\w+)$')
             m = p1.match(line)
             if m:
                 vrf_name = m.groupdict()['vrf']
@@ -4336,40 +4337,40 @@ class ShowRunningConfigPim(ShowRunningConfigPimSchema):
 
         # ip pim bsr bsr-candidate loopback0 priority 128
         p2 = re.compile(r'^ip(v6)? +pim *(bsr)? +bsr\-candidate +(?P<bsr_candidate_interface>[\w\/\.\-]+)'
-                         '( +hash\-len +(?P<bsr_candidate_hash_mask_length>\d+))?'
-                         '( priority +(?P<bsr_candidate_priority>\d+))?')
+                         r'( +hash\-len +(?P<bsr_candidate_hash_mask_length>\d+))?'
+                         r'( priority +(?P<bsr_candidate_priority>\d+))?')
 
         # ip pim rp-address 10.144.6.6 group-list 234.0.0.0/8
         # ip pim rp-address 10.144.6.6 group-list 239.1.1.0/24 bidir
         p3 = re.compile(r'^(?P<af>ip|ipv6) +pim +rp\-address +(?P<static_rp_address>[\w\.\:]+) +'
-                         '((group\-list +(?P<static_rp_group_list>[\w\.]+\/\d+))|'
-                         '(route\-map +(?P<static_rp_route_map>\w+))|'
-                         '(prefix\-list +(?P<static_rp_prefix_list>\w+)))'
-                         '( *(?P<dummy>.*))?$$')
+                         r'((group\-list +(?P<static_rp_group_list>[\w\.]+\/\d+))|'
+                         r'(route\-map +(?P<static_rp_route_map>\w+))|'
+                         r'(prefix\-list +(?P<static_rp_prefix_list>\w+)))'
+                         r'( *(?P<dummy>.*))?$$')
 
         # ip pim bsr rp-candidate loopback0 group-list 235.0.0.0/8 priority 128
         # ip pim rp-candidate Ethernet1/1 group-list 239.0.0.0/24 priority 10 interval 60 bidir
         p4 = re.compile(r'^(?P<af>ip|ipv6) +pim( *bsr)? +rp\-candidate +(?P<bsr_rp_candidate_interface>[\w\/\.\-]+) +'
-                         '((group\-list +(?P<bsr_rp_candidate_group_list>[\w\.]+\/\d+))|'
-                         '(route\-map +(?P<bsr_rp_candidate_route_map>\w+))|'
-                         '(prefix\-list +(?P<bsr_rp_candidate_prefix_list>\w+)))'
-                         '( *(?P<dummy>.*))?$')
+                         r'((group\-list +(?P<bsr_rp_candidate_group_list>[\w\.]+\/\d+))|'
+                         r'(route\-map +(?P<bsr_rp_candidate_route_map>\w+))|'
+                         r'(prefix\-list +(?P<bsr_rp_candidate_prefix_list>\w+)))'
+                         r'( *(?P<dummy>.*))?$')
 
         # ip pim send-rp-announce loopback0 group-list 236.0.0.0/8
         # ----  ipv6 not supported -----
         p5 = re.compile(r'^ip +pim +(send\-rp\-announce|(auto\-rp +rp\-candidate)) +'
-                         '((?P<send_rp_announce_intf>(lo|Lo|Eth|eth|Port|port)\w+)|'
-                         '(?P<send_rp_announce_rp_group>(\d+\.){3}\d+)) +'
-                         '((group\-list +(?P<send_rp_announce_group_list>[\w\.]+\/\d+))|'
-                         '(route\-map +(?P<send_rp_announce_route_map>\w+))|'
-                         '(prefix\-list +(?P<send_rp_announce_prefix_list>\w+)))'
-                         '(?P<dummy>.*)?$')
+                         r'((?P<send_rp_announce_intf>(lo|Lo|Eth|eth|Port|port)\w+)|'
+                         r'(?P<send_rp_announce_rp_group>(\d+\.){3}\d+)) +'
+                         r'((group\-list +(?P<send_rp_announce_group_list>[\w\.]+\/\d+))|'
+                         r'(route\-map +(?P<send_rp_announce_route_map>\w+))|'
+                         r'(prefix\-list +(?P<send_rp_announce_prefix_list>\w+)))'
+                         r'(?P<dummy>.*)?$')
 
         # ip pim send-rp-discovery loopback0
         # ip pim send-rp-discovery loopback0 scope 34
         # ----  ipv6 not supported -----
         p6 = re.compile(r'^ip +pim +send\-rp\-discovery +(?P<send_rp_discovery_intf>[\w\/\.\-]+)'
-                         '( scope +(?P<send_rp_discovery_scope>\d+))?$')
+                         r'( scope +(?P<send_rp_discovery_scope>\d+))?$')
 
         # ip pim ssm range 232.0.0.0/8
         p7 = re.compile(r'^$')
@@ -4464,8 +4465,8 @@ class ShowRunningConfigPim(ShowRunningConfigPimSchema):
                 rp_dict.setdefault('prefix_list', groups['bsr_rp_candidate_prefix_list']) \
                     if groups['bsr_rp_candidate_prefix_list'] else None
 
-                interval = re.search('interval +(\d+)', groups['dummy'])
-                priority = re.search('priority +(\d+)', groups['dummy'])
+                interval = re.search(r'interval +(\d+)', groups['dummy'])
+                priority = re.search(r'priority +(\d+)', groups['dummy'])
                 bidir = re.search('bidir', groups['dummy'])
                 if interval:
                     rp_dict['interval'] = int(interval.groups()[0])
@@ -4492,8 +4493,8 @@ class ShowRunningConfigPim(ShowRunningConfigPimSchema):
                     if groups['send_rp_announce_route_map'] else None
                 rp_dict.setdefault('prefix_list', groups['send_rp_announce_prefix_list']) \
                     if groups['send_rp_announce_prefix_list'] else None
-                interval = re.search('interval +(\d+)', groups['dummy'])
-                scope = re.search('scope +(\d+)', groups['dummy'])
+                interval = re.search(r'interval +(\d+)', groups['dummy'])
+                scope = re.search(r'scope +(\d+)', groups['dummy'])
                 bidir = re.search('bidir', groups['dummy'])
                 if interval:
                     rp_dict['interval'] = int(interval.groups()[0])

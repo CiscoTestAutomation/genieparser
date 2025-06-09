@@ -1,0 +1,12 @@
+capture statistics collected at software:
+        capture duration - 9 seconds
+        packets received - 29269
+        packets dropped - 0
+        packets oversized - 0
+        packets errored - 0
+        packets sent - 29269
+        bytes received - 3629356
+        bytes dropped - 0
+        bytes oversized - 0
+        bytes errored - 0
+        bytes sent - 3629356

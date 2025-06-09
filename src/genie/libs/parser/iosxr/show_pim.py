@@ -69,11 +69,11 @@ class ShowPimVrfMstatic(ShowPimVrfMstaticSchema):
 
             # * 10.10.10.10/32 via GigabitEthernet0/0/0/0 with nexthop 192.168.1.1 and distance 0
             p1 = re.compile(r'^\s*(?P<var>(\*))'
-                             ' *(?P<address>(\S+))'
-                             '\/(?P<prefix_mask>[0-9]+) +via'
-                             ' +(?P<interface_name>(\S+)) +with +nexthop'
-                             ' +(?P<neighbor_address>(\S+)) +and +distance'
-                             ' +(?P<admin_distance>[0-9]+)$')
+                             r' *(?P<address>(\S+))'
+                             r'\/(?P<prefix_mask>[0-9]+) +via'
+                             r' +(?P<interface_name>(\S+)) +with +nexthop'
+                             r' +(?P<neighbor_address>(\S+)) +and +distance'
+                             r' +(?P<admin_distance>[0-9]+)$')
             m = p1.match(line)
             if m:
                 # Get values
@@ -184,7 +184,7 @@ class ShowPimVrfInterfaceDetail(ShowPimVrfInterfaceDetailSchema):
 
             # PIM interfaces in VRF default
             p1 = re.compile(r'^PIM +interfaces +in +VRF'
-                             ' +(?P<vrf_name>[a-zA-Z0-9\-]+)$')
+                             r' +(?P<vrf_name>[a-zA-Z0-9\-]+)$')
             m = p1.match(line)
             if m:
                 vrf_name = str(m.groupdict()['vrf_name'])
@@ -244,7 +244,7 @@ class ShowPimVrfInterfaceDetail(ShowPimVrfInterfaceDetailSchema):
 
             # Primary Address : fe80::85c6:bdff:fe62:61e
             p4 = re.compile(r'^Primary +Address *:'
-                             ' +(?P<primary_address>(\S+))$')
+                             r' +(?P<primary_address>(\S+))$')
             m = p4.match(line)
             if m:
                 if m.groupdict()['primary_address']:
@@ -271,8 +271,8 @@ class ShowPimVrfInterfaceDetail(ShowPimVrfInterfaceDetailSchema):
 
             # BFD : Off/150 ms/3
             p7 = re.compile(r'^BFD *: (?P<enable>(Off|On))'
-                             '\/(?P<interval>[0-9]+)'
-                             ' *ms\/(?P<dmultiplier>[0-9]+)$')
+                             r'\/(?P<interval>[0-9]+)'
+                             r' *ms\/(?P<dmultiplier>[0-9]+)$')
             m = p7.match(line)
             if m:
                 # Get values
@@ -301,7 +301,7 @@ class ShowPimVrfInterfaceDetail(ShowPimVrfInterfaceDetailSchema):
             # Propagation delay : 500
             # Propagation delay : 500   (config: 500)
             p9 = re.compile(r'^Propagation +delay *:'
-                             ' +(?P<propagation_delay>[0-9]+)')
+                             r' +(?P<propagation_delay>[0-9]+)')
             m = p9.match(line)
             if m:
                 sub_dict['propagation_delay'] = \
@@ -311,7 +311,7 @@ class ShowPimVrfInterfaceDetail(ShowPimVrfInterfaceDetailSchema):
             # Override Interval : 2500
             # Override Interval : 2500   (config: 2500)
             p10 = re.compile(r'^Override +Interval *:'
-                              ' +(?P<override_interval>[0-9]+)')
+                              r' +(?P<override_interval>[0-9]+)')
             m = p10.match(line)
             if m:
                 sub_dict['override_interval'] = \
@@ -327,7 +327,7 @@ class ShowPimVrfInterfaceDetail(ShowPimVrfInterfaceDetailSchema):
 
             # Neighbor Filter : -
             p12 = re.compile(r'^Neighbor +Filter *:'
-                              ' +(?P<neighbor_filter>(\S+))$')
+                              r' +(?P<neighbor_filter>(\S+))$')
             m = p12.match(line)
             if m:
                 sub_dict['neighbor_filter'] = m.groupdict()['neighbor_filter']
@@ -408,7 +408,7 @@ class ShowPimVrfRpfSummary(ShowPimVrfRpfSummarySchema):
 
             # ISIS Mcast Topology Not configured
             p1 = re.compile(r'^\s*ISIS +Mcast +Topology'
-                             ' +(?P<status>[a-zA-Z0-9\s\_\-]+)$')
+                             r' +(?P<status>[a-zA-Z0-9\s\_\-]+)$')
             m = p1.match(line)
             if m:
                 status = m.groupdict()['status']
@@ -420,7 +420,7 @@ class ShowPimVrfRpfSummary(ShowPimVrfRpfSummarySchema):
 
             # MoFRR Flow-based    Not configured
             p2 = re.compile(r'^\s*MoFRR +Flow-based'
-                             ' +(?P<status>[a-zA-Z0-9\s\_\-]+)$')
+                             r' +(?P<status>[a-zA-Z0-9\s\_\-]+)$')
             m = p2.match(line)
             if m:
                 status = m.groupdict()['status']
@@ -454,7 +454,7 @@ class ShowPimVrfRpfSummary(ShowPimVrfRpfSummarySchema):
 
             # PIM RPFs registered with Unicast RIB table
             p5 = re.compile(r'^\s*PIM +RPFs +registered +with'
-                             ' +(?P<table>[a-zA-Z0-9\s\_\-]+)$')
+                             r' +(?P<table>[a-zA-Z0-9\s\_\-]+)$')
             m = p5.match(line)
             if m:
                 if m.groupdict()['table']:
@@ -464,7 +464,7 @@ class ShowPimVrfRpfSummary(ShowPimVrfRpfSummarySchema):
 
             # Default RPF Table: IPv4-Unicast-default
             p6 = re.compile(r'^\s*Default +RPF +Table:'
-                             ' +(?P<table>[a-zA-Z0-9\s\_\-]+)$')
+                             r' +(?P<table>[a-zA-Z0-9\s\_\-]+)$')
             m = p6.match(line)
             if m:
                 if m.groupdict()['table']:
@@ -473,7 +473,7 @@ class ShowPimVrfRpfSummary(ShowPimVrfRpfSummarySchema):
 
             # RIB Convergence Timeout Value: 00:30:00
             p7 = re.compile(r'^\s*RIB +Convergence +Timeout +Value:'
-                             ' +(?P<time>(\S+))$')
+                             r' +(?P<time>(\S+))$')
             m = p7.match(line)
             if m:
                 if m.groupdict()['time']:
@@ -483,7 +483,7 @@ class ShowPimVrfRpfSummary(ShowPimVrfRpfSummarySchema):
 
             # RIB Convergence Time Left:     00:00:00
             p8 = re.compile(r'^\s*RIB +Convergence +Time Left:'
-                             ' +(?P<time>(\S+))$')
+                             r' +(?P<time>(\S+))$')
             m = p8.match(line)
             if m:
                 if m.groupdict()['time']:
@@ -493,7 +493,7 @@ class ShowPimVrfRpfSummary(ShowPimVrfRpfSummarySchema):
 
             # Multipath RPF Selection is Enabled
             p9 = re.compile(r'^\s*Multipath +RPF +Selection +is'
-                             ' +(?P<status>[a-zA-Z0-9\s\_\-]+)$')
+                             r' +(?P<status>[a-zA-Z0-9\s\_\-]+)$')
             m = p9.match(line)
             if m:
                 status = m.groupdict()['status']
@@ -525,7 +525,7 @@ class ShowPimVrfRpfSummary(ShowPimVrfRpfSummarySchema):
 
             # RIB Table converged
             p11 = re.compile(r'^\s*RIB +Table'
-                              ' +(?P<status>[a-zA-Z0-9\s\_\-]+)$')
+                              r' +(?P<status>[a-zA-Z0-9\s\_\-]+)$')
             m = p11.match(line)
             if m:
                 status = m.groupdict()['status']

@@ -1,0 +1,8 @@
+Gi1/4
+---------------------------------------------------------------------
+Port Preemption Frame Drops
+    Express Tx Drops....................... [13]
+    Express Rx Drops....................... [1]
+    Preemptable Tx Drops................... [1]
+    Preemptable Rx Drops................... [1]
+     Fragment Drops......................... [1]

@@ -77,7 +77,7 @@ class ShowIsisSegmentRoutingPrefixSidMap(ShowIsisSegmentRoutingPrefixSidMapSchem
         # 10.4.1.100/32         100          20          
         # 10.4.1.150/32         150          10          
         p2 = re.compile(r'(?P<prefix>[\w\.\/]+)\s+(?P<sid_index>\d+)'
-                        '\s+(?P<range>\d+)(\s+(?P<flags>)[\w\s]+$)?')
+                        r'\s+(?P<range>\d+)(\s+(?P<flags>)[\w\s]+$)?')
 
         # Number of mapping entries: 2
         p3 = re.compile(r'Number of mapping entries:\s+(?P<entries>\d+)')
@@ -156,13 +156,13 @@ class ShowOspfSegmentRoutingPrefixSidMap(ShowOspfSegmentRoutingPrefixSidMapSchem
         ret_dict = {}
         # SRMS active policy for Process ID 1
         p1 = re.compile(r'^SRMS (?P<status>\w+) policy for Process '
-                        'ID (?P<process_id>\d+)$')
+                        r'ID (?P<process_id>\d+)$')
 
         # Prefix               SID Index    Range        Flags
         # 10.4.1.100/32         100          20          
         # 10.4.1.150/32         150          10          
         p2 = re.compile(r'(?P<prefix>[\w\.\/]+)\s+(?P<sid_index>\d+)'
-                        '\s+(?P<range>\d+)(\s+(?P<flags>)[\w\s]+$)?')
+                        r'\s+(?P<range>\d+)(\s+(?P<flags>)[\w\s]+$)?')
 
         # Number of mapping entries: 2
         p3 = re.compile(r'Number of mapping entries:\s+(?P<entries>\d+)')
@@ -237,7 +237,7 @@ class ShowPceIPV4Peer(ShowPceIPV4PeerSchema):
         p2 = re.compile(r'^State: (?P<state>\w+)$')
 
         p3 = re.compile(r'Capabilities: (?P<stateful>\w+)\,\s+'
-                        '(?P<segment_routing>[\w\-]+)\,\s+(?P<update>\w+)$')
+                        r'(?P<segment_routing>[\w\-]+)\,\s+(?P<update>\w+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -278,23 +278,23 @@ class ShowPceIPV4PeerDetailSchema(MetaParser):
         'pce_peer_database': {
             Any(): {
                 'state': str,
-                'capabilities': {
+                Optional('capabilities'): {
                     'stateful': bool,
                     'segment-routing': bool,
                     'update': bool,
                     Optional('instantiation'): bool
                 },
-                'pcep': {
-                    'uptime': str,
-                    'session_id_local': int,
-                    'session_id_remote': int,
+                Optional('pcep'): {
+                    Optional('uptime'): str,
+                    Optional('session_id_local'): int,
+                    Optional('session_id_remote'): int,
                 },
                 Optional('md5'): str,
-                'ka': {
-                    'sending_intervals': int,
-                    'minimum_acceptable_inteval': int,
+                Optional('ka'): {
+                    Optional('sending_intervals'): int,
+                    Optional('minimum_acceptable_inteval'): int,
                 },
-                'peer_timeout': int,
+                Optional('peer_timeout'): int,
                 Optional('maximum_sid_depth'): int,
                 'statistics': {
                     'rx': {
@@ -341,55 +341,57 @@ class ShowPceIPV4PeerDetail(ShowPceIPV4PeerDetailSchema):
             out = output
 
         ret_dict = {}
+        pcep_dict = {}
+        ka_dict = {}
 
         p1 = re.compile(r'^Peer address: (?P<address>[\d\.]+)$')
 
         p2 = re.compile(r'^State: (?P<state>\w+)$')
 
         p3 = re.compile(r'^Capabilities: (?P<stateful>\w+)\,\s+'
-                        '(?P<segment_routing>[\w\-]+)\,\s+(?P<update>\w+)$')
+                        r'(?P<segment_routing>[\w\-]+)\,\s+(?P<update>\w+)$')
             
         p4 = re.compile(r'^PCEP has been up for: (?P<pcep_up_time>[\w+\:]+)$')
 
         p5 = re.compile(r'^PCEP session ID: local (?P<local_id>\d+)\, remote '
-                        '(?P<remote_id>\d+)$')
+                        r'(?P<remote_id>\d+)$')
 
         p6 = re.compile(r'^Sending KA every (?P<ka_time_intervals>\d+)'
-                        '\s+seconds$')
+                        r'\s+seconds$')
 
         p7 = re.compile(r'^Minimum acceptable KA interval: '
-                        '(?P<minimum_ka_interval>\d+)\s+seconds$')
+                        r'(?P<minimum_ka_interval>\d+)\s+seconds$')
 
         p8 = re.compile(r'^Peer timeout after (?P<peer_timeout>\d+)\sseconds$')
 
         p9 = re.compile(r'^Keepalive messages:\s+rx\s+'
-                        '(?P<keepalive_messages_rx>\d+)\s+tx\s+(?P<keepalive_messages_tx>\d+)$')
+                        r'(?P<keepalive_messages_rx>\d+)\s+tx\s+(?P<keepalive_messages_tx>\d+)$')
 
         p10 = re.compile(r'Request messages:\s+rx\s+(?P<request_messages_rx>'
-                         '\d+)\s+tx\s+(?P<request_messages_tx>\d+)$')
+                         r'\d+)\s+tx\s+(?P<request_messages_tx>\d+)$')
 
         p11 = re.compile(r'^Reply messages:\s+rx\s+(?P<reply_messages_rx>\d+)'
-                         '\s+tx\s+(?P<reply_messages_tx>\d+)$')
+                         r'\s+tx\s+(?P<reply_messages_tx>\d+)$')
 
         p12 = re.compile(r'^Error messages:\s+rx\s+(?P<error_messages_rx>\d+)'
-                         '\s+tx\s+(?P<error_messages_tx>\d+)$')
+                         r'\s+tx\s+(?P<error_messages_tx>\d+)$')
 
         p13 = re.compile(r'^Open messages:\s+rx\s+(?P<open_messages_rx>\d+)\s+'
-                         'tx\s+(?P<open_messages_tx>\d+)$')
+                         r'tx\s+(?P<open_messages_tx>\d+)$')
 
         p14 = re.compile(r'^Report messages:\s+rx\s+(?P<report_messages_rx>\d+)'
-                         '\s+tx\s+(?P<report_messages_tx>\d+)$')
+                         r'\s+tx\s+(?P<report_messages_tx>\d+)$')
 
         p15 = re.compile(r'^Update messages:\s+rx\s+(?P<update_messages_rx>\d+)'
-                         '\s+tx\s+(?P<update_messages_tx>\d+)$')
+                         r'\s+tx\s+(?P<update_messages_tx>\d+)$')
 
         p16 = re.compile(r'^Initiate messages:\s+rx\s+(?P<initiate_messages_rx>'
-                         '\d+)\s+tx\s+(?P<initiate_messages_tx>\d+)$')
+                         r'\d+)\s+tx\s+(?P<initiate_messages_tx>\d+)$')
         
         # Capabilities: Stateful, Segment-Routing, Update, Instantiation
         p17 = re.compile(r'^Capabilities: (?P<stateful>\w+)\,\s+'
-                        '(?P<segment_routing>[\w\-]+)\,\s+(?P<update>\w+)'
-                        '\,\s+(?P<instantiation>\w+)')
+                        r'(?P<segment_routing>[\w\-]+)\,\s+(?P<update>\w+)'
+                        r'\,\s+(?P<instantiation>\w+)')
         
         # MD5: Enabled
         p18 = re.compile(r'^MD5:\s+(?P<md5>\w+)$')
@@ -605,7 +607,7 @@ class ShowPceIPV4PeerPrefix(ShowPceIPV4PeerprefixSchema):
         p3 = re.compile(r'^Host name: (?P<host_name>\w+)$')
 
         p4 = re.compile(r'^ISIS system ID: (?P<system_id>[\w\.]+\s+level-\d+)'
-                        '( ASN: (?P<asn>\w+) domain ID: (?P<domain_id>\d+))*')
+                        r'( ASN: (?P<asn>\w+) domain ID: (?P<domain_id>\d+))*')
 
         p5 = re.compile(r'^(?P<adv_prefixes>\d+\.\d+\.\d+\.\d+)$')
 
@@ -934,11 +936,11 @@ class ShowPceLsp(ShowPceLspSchema):
         p3 = re.compile(r'^LSP\[(?P<lsp_number>\d+)\]:$')
 
         p4 = re.compile(r'^source (?P<lsp_source>[\d\.]+), destination '
-                        '(?P<lsp_destination>[\d\.]+), tunnel ID (?P<tunnel_id>\d+), '
-                        'LSP ID (?P<lsp_id>\d+)$')
+                        r'(?P<lsp_destination>[\d\.]+), tunnel ID (?P<tunnel_id>\d+), '
+                        r'LSP ID (?P<lsp_id>\d+)$')
 
         p5 = re.compile(r'State: Admin (?P<admin_state>\w+), Operation '
-                        '(?P<operation_state>\w+)$')
+                        r'(?P<operation_state>\w+)$')
 
         p6 = re.compile(r'^Setup type: (?P<setup_type>[\w\s]+)$')
 
@@ -1086,45 +1088,45 @@ class ShowPceLspDetail(ShowPceLspDetailSchema):
         p3 = re.compile(r'^LSP\[(?P<lsp_number>\d+)\]:$')
 
         p4 = re.compile(r'^source (?P<lsp_source>[\d\.]+), destination '
-                        '(?P<lsp_destination>[\d\.]+), tunnel ID '
-                        '(?P<tunnel_id>\d+), LSP ID (?P<lsp_id>\d+)$')
+                        r'(?P<lsp_destination>[\d\.]+), tunnel ID '
+                        r'(?P<tunnel_id>\d+), LSP ID (?P<lsp_id>\d+)$')
 
         p5 = re.compile(r'State: Admin (?P<admin_state>\w+), Operation '
-                        '(?P<operation_state>\w+)$')
+                        r'(?P<operation_state>\w+)$')
 
         p6 = re.compile(r'^Setup type: (?P<setup_type>[\w\s]+)$')
 
         p7 = re.compile(r'^Binding SID: (?P<binding_sid>\d+)$')
 
         p8 = re.compile(r'^plsp-id (?P<plsp_id>\d+), flags: D:(?P<d_flag>\d+) '
-                        'S:(?P<s_flag>\d+) R:(?P<r_flag>\d+) A:'
-                        '(?P<a_flag>\d+) O:(?P<o_flag>\d+)$')
+                        r'S:(?P<s_flag>\d+) R:(?P<r_flag>\d+) A:'
+                        r'(?P<a_flag>\d+) O:(?P<o_flag>\d+)$')
 
         #   Reported path: 
         p9 = re.compile(r'^(?P<specified_path>\w+) path:$')
 
         p10 = re.compile(r'^Metric type: (?P<metric_type>\w+), '
-                         'Accumulated Metric (?P<accumulated_metric>\d+)$')
+                         r'Accumulated Metric (?P<accumulated_metric>\d+)$')
 
         # SID[0]: Adj, Label 24000, Address: local 10.10.10.1 remote 10.10.10.2
         p11 = re.compile(r'^SID\[(?P<sid_number>\d+)\]: (?P<sid_type>\w+), '
-                         'Label (?P<sid_label>\d+), Address: local '
-                         '(?P<sid_local_address>[\d\.]+) remote '
-                         '(?P<sid_remote_address>[\d\.]+)$')
+                         r'Label (?P<sid_label>\d+), Address: local '
+                         r'(?P<sid_local_address>[\d\.]+) remote '
+                         r'(?P<sid_remote_address>[\d\.]+)$')
         # June 13 2016 13:28:29     Report
         p12 = re.compile(r'^(?P<event_time>\w+ \d+ \d+ [\d\:]+)\s+ '
-                         '(?P<event_type>\w+)$')
+                         r'(?P<event_type>\w+)$')
         # Symbolic-name: rtrA_t1, LSP-ID: 2,
         p13 = re.compile(r'^Symbolic-name: (?P<symbolic_name>\w+), '
-                         '(?P<id_name>[\w\-]+): (?P<symbolic_id>\d+),$')
+                         r'(?P<id_name>[\w\-]+): (?P<symbolic_id>\d+),$')
         # Source: 192.168.0.1 Destination: 192.168.0.4,
         p14 = re.compile(r'^Source: (?P<event_source>[\d\.]+) Destination: '
-                         '(?P<dest_source>[\d\.]+),$')
+                         r'(?P<dest_source>[\d\.]+),$')
 
         # D:1, R:0, A:1 O:1, Sig.BW: 0, Act.BW: 0
         p15 = re.compile(r'^D:(?P<d_event>\d+), R:(?P<r_event>\d+), '
-                         'A:(?P<a_event>\d+) O:(?P<o_event>\d+), Sig\.BW: '
-                         '(?P<event_sig>\d+), Act.BW: (?P<event_act>\d+)$')
+                         r'A:(?P<a_event>\d+) O:(?P<o_event>\d+), Sig\.BW: '
+                         r'(?P<event_sig>\d+), Act.BW: (?P<event_act>\d+)$')
 
         p16 = re.compile(r'Peer: (?P<event_peer>[\d\.]+)')
 
@@ -1273,7 +1275,7 @@ class ShowSegmentRoutingLocalBlockInconsistencies(ShowSegmentRoutingLocalBlockIn
             out = output
         # SRLB inconsistencies range: Start/End: 30000/30009
         p1 = re.compile(r'(?P<inconsistency_type>\w+) inconsistencies range: '
-                        'Start\/End: (?P<start>\d+)\/(?P<end>\d+)')
+                        r'Start\/End: (?P<start>\d+)\/(?P<end>\d+)')
 
         ret_dict = {}
 
@@ -1327,7 +1329,7 @@ class ShowSegmentRoutingMappingServerPrefixSidMapIPV4(ShowSegmentRoutingMappingS
 
         # 10.186.1.0/24          400          300          
         p1 = re.compile(r'(?P<prefix>[\w\.\/]+)\s+(?P<sid_index>\d+)'
-                        '\s+(?P<range>\d+)(\s+(?P<flags>)[\w\s]+$)?')
+                        r'\s+(?P<range>\d+)(\s+(?P<flags>)[\w\s]+$)?')
         # Number of mapping entries: 2
         p2 = re.compile(r'Number of mapping entries:\s+(?P<entries>\d+)')
 
@@ -1486,7 +1488,6 @@ class ShowSegmentRoutingSrv6LocatorSid(ShowSegmentRoutingSrv6LocatorSidSchema):
                 output = self.device.execute(self.cli_command[0])
 
         ret_dict = {}
-        locator_dict = ret_dict.setdefault('locator',{})
 
         # SID    Behavior    Context    Owner    State    RW
         p = re.compile(r'SID\s+Behavior\s+Context\s+Owner\s+State\s+RW')
@@ -1516,6 +1517,7 @@ class ShowSegmentRoutingSrv6LocatorSid(ShowSegmentRoutingSrv6LocatorSidSchema):
             if m:
                 group = m.groupdict()
                 sid = group.pop('sid')
+                locator_dict = ret_dict.setdefault('locator', {})
                 sid_dict = locator_dict.setdefault(locator, {}).setdefault('sid',{}).setdefault(sid,{})
                 sid_dict.update(group)
                 continue
@@ -1626,12 +1628,12 @@ class ShowSegmentRoutingTrafficEnggPccLsp(
  
         # Source 10.0.0.2, Destination 10.0.0.14, Tunnel ID 1, LSP ID 1048
         p3 = re.compile(r'^Source (?P<lsp_source>[\d\.]+), Destination '
-                        '(?P<lsp_destination>[\d\.]+), Tunnel ID (?P<tunnel_id>\d+), '
-                        'LSP ID (?P<lsp_id>\d+)$')
+                        r'(?P<lsp_destination>[\d\.]+), Tunnel ID (?P<tunnel_id>\d+), '
+                        r'LSP ID (?P<lsp_id>\d+)$')
         
         # State: Admin up, Operation up
         p4 = re.compile(r'State: Admin (?P<admin_state>\w+), Operation '
-                          '(?P<operation_state>\w+)$')
+                          r'(?P<operation_state>\w+)$')
         
         # Setup type: SR
         p5 = re.compile(r'^Setup type: (?P<setup_type>[\w\s]+)$')
@@ -1812,7 +1814,7 @@ class ShowSegmentRoutingTrafficEngPolicyColorEndpoint(ShowSegmentRoutingTrafficE
         #         16072 [Prefix-SID, 10.189.5.253 - 10.189.6.253]
         #         16063
         p13 = re.compile(r'^(?P<sid>[\d]+)(?: +\[(?P<sid_type>[\S]+), +(?P<local_address>[\S]+)'
-                         '( +- +(?P<remote_address>[\S]+))?\])?$')
+                         r'( +- +(?P<remote_address>[\S]+))?\])?$')
         
         #     Binding SID: 15000
         p14 = re.compile(r'^Binding +SID: +(?P<binding_sid>[\d]+)$')

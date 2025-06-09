@@ -63,14 +63,14 @@ class TestFuzzyRegexSearchCommand(unittest.TestCase):
         self.assertEqual(results[0][2], {'interface': 'argument'})
 
         results = common._fuzzy_search_command(
-                        r'\/dna\/intent\/api\/v1\/interface\/argument', True)
+                        '/dna/intent/api/v1/interface/argument', True)
         self.assertTrue(len(results), 1)
         self.assertEqual(results[0][0],
                                     '/dna/intent/api/v1/interface/{interface}')
         self.assertEqual(results[0][2], {'interface': 'argument'})
 
         results = common._fuzzy_search_command(
-                                    r'\/dna\/intent\/api\/v1\/interface', True)
+                                    '/dna/intent/api/v1/interface', True)
         self.assertTrue(len(results), 1)
         self.assertEqual(results[0][0], '/dna/intent/api/v1/interface')
 
@@ -116,6 +116,10 @@ class TestFuzzyRegexSearchCommand(unittest.TestCase):
                                             'sh red blu abc arg bg w w'.split(),
                         'show {one} blue abc {arg} bgp {a} {b}', {}, True)[0],
                             {'one': 'red', 'arg': 'arg', 'a': 'w', 'b': 'w'})
+
+        self.assertEqual(common._matches_fuzzy(0, 0, 'show version get_args(abc)'.split(),
+                                               'show version get_args({args})', {}, True)[0],
+                                               {'args': 'abc'})
 
     def test_matching_negative(self):
         self.assertIsNone(common._matches_fuzzy(0, 0, 'sh ver blue'.split(),
@@ -338,7 +342,7 @@ class TestFuzzyRegexSearchCommand(unittest.TestCase):
         self.assertEqual([i[0] for i in common._fuzzy_search_command(
             'sh l2 mac-learning type al loc wee', True)],
             ['show l2vpn mac-learning {mac_type} all location {location}'])
-        self.assertEqual([i[0] for i in common._fuzzy_search_command('\/dna', True)],
+        self.assertEqual([i[0] for i in common._fuzzy_search_command('/dna', True)],
                                             ['/dna/intent/api/v1/interface'])
 
     def test_prefix_single_character_search(self):
@@ -354,7 +358,7 @@ class TestFuzzyRegexSearchCommand(unittest.TestCase):
                                         'show evpn ethernet-segment private')
         self.assertEqual(len(common._fuzzy_search_command('s e (ipv4|ipv6) n d',
                                                                     True)), 2)
-        self.assertEqual(len(common._fuzzy_search_command('s e \| .* p', True)), 1)
+        self.assertEqual(len(common._fuzzy_search_command('s e \\| .* p', True)), 1)
 
     def test_negative_prefix_search(self):
         self.assertEqual(common._fuzzy_search_command('s e e x w p', True), [])
@@ -395,7 +399,7 @@ class TestFuzzyRegexSearchCommand(unittest.TestCase):
         self.assertEqual(result[0][0], '/dna/intent/api/v1/interface')
 
         result = common._fuzzy_search_command(r'sh plat s proc slot switch act R' +
-                                        ' monitor \| inc Mem :\|Swap:', True)
+                                        ' monitor \\| inc Mem :\\|Swap:', True)
         self.assertEqual(len(result), 1)
         self.assertEqual(result[0][0], 'show platform software process slot ' +
                                 'switch active R0 monitor | inc Mem :|Swap:')

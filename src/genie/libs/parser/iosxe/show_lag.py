@@ -149,9 +149,9 @@ class ShowLacpCounters(ShowLacpCountersSchema):
 
         p1 = re.compile(r'^\s*Channel +group: +(?P<channel_group>[\d]+)$')
         p2 = re.compile(r'^\s*(?P<interface>[\w\/]+) +(?P<lacp_out_pkts>[\d]+) +(?P<lacp_in_pkts>[\d]+)'
-                         ' +(?P<marker_out_pkts>[\d]+) +(?P<marker_in_pkts>[\d]+)'
-                         '( +(?P<marker_response_out_pkts>[\d]+) +(?P<marker_response_in_pkts>[\d]+))?'
-                         ' +(?P<lacp_pkts>[\d]+)( +(?P<lacp_errors>[\d]+))?$')
+                         r' +(?P<marker_out_pkts>[\d]+) +(?P<marker_in_pkts>[\d]+)'
+                         r'( +(?P<marker_response_out_pkts>[\d]+) +(?P<marker_response_in_pkts>[\d]+))?'
+                         r' +(?P<lacp_pkts>[\d]+)( +(?P<lacp_errors>[\d]+))?$')
 
         for line in out.splitlines():
             if line:
@@ -252,10 +252,10 @@ class ShowLacpInternal(ShowLacpInternalSchema):
         # Fa4/1     saC      bndl     30s         32768        100     100     0xc1     0x75
         p1 = re.compile(r'^\s*Channel +group +(?P<channel_group>[\d]+)$')
         p2 = re.compile(r'^\s*(?P<interface>[\w\/]+) +(?P<flags>[\w]+)'
-                        ' +(?P<state>[\S]+)( +(?P<lacp_interval>[\w]+))?'
-                        ' +(?P<lacp_port_priority>[\d]+) +(?P<admin_key>[\w]+)'
-                        ' +(?P<oper_key>[\w]+) +(?P<port_num>[\w]+)'
-                        ' +(?P<port_state>[\w]+)$')
+                        r' +(?P<state>[\S]+)( +(?P<lacp_interval>[\w]+))?'
+                        r' +(?P<lacp_port_priority>[\d]+) +(?P<admin_key>[\w]+)'
+                        r' +(?P<oper_key>[\w]+) +(?P<port_num>[\w]+)'
+                        r' +(?P<port_state>[\w]+)$')
 
         for line in out.splitlines():
             if line:
@@ -359,9 +359,9 @@ class ShowLacpNeighbor(ShowLacpNeighborSchema):
         # Gi5/0/0   SP      32768     0011.20ff.9926  11s    0x1    0x14   0x3C
         p1 = re.compile(r'^\s*Channel +group +(?P<channel_group>[\d]+) +neighbors$')
         p2 = re.compile(r'^\s*(?P<interface>[\w\/]+) +(?P<flags>[\w]+)'
-                        ' +(?P<lacp_port_priority>[\d]+) +(?P<partner_id>[\w\.]+) +(?P<age>[\d]+)s +(?P<admin_key>[\w]+)'
-                        ' +(?P<oper_key>[\w]+) +(?P<port_num>[\w]+)'
-                        '( +(?P<port_state>[\w]+))?$')
+                        r' +(?P<lacp_port_priority>[\d]+) +(?P<partner_id>[\w\.]+) +(?P<age>[\d]+)s +(?P<admin_key>[\w]+)'
+                        r' +(?P<oper_key>[\w]+) +(?P<port_num>[\w]+)'
+                        r'( +(?P<port_state>[\w]+))?$')
 
         for line in out.splitlines():
             if line:
@@ -460,8 +460,8 @@ class ShowPagpCounters(ShowPagpCountersSchema):
 
         p1 = re.compile(r'^\s*Channel +group: +(?P<channel_group>[\d]+)$')
         p2 = re.compile(r'^\s*(?P<interface>[\w\/]+) +(?P<information_out_pkts>[\d]+)'
-                        ' +(?P<information_in_pkts>[\d]+) +(?P<flush_out_pkts>[\d]+) +(?P<flush_in_pkts>[\d]+)'
-                        ' +(?P<pagp_errors>[\d]+)$')
+                        r' +(?P<information_in_pkts>[\d]+) +(?P<flush_out_pkts>[\d]+) +(?P<flush_in_pkts>[\d]+)'
+                        r' +(?P<pagp_errors>[\d]+)$')
 
         for line in out.splitlines():
             if line:
@@ -548,8 +548,8 @@ class ShowPagpNeighbor(ShowPagpNeighborSchema):
         # Gi0/1     iosvl2-2             5e02.40ff.8101   Gi0/1       11s SC      10001
         # Gi1/0/15    R5                   6c41.6aff.5d65   Gi1/0/1      5s  SC       A0001
         p2 = re.compile(r'^(?P<interface>[\w\/\.\-]+) +(?P<partner_name>[\w\-\.]+)'
-                        ' +(?P<partner_id>[\w\.]+) *(?P<partner_port>[\w\/\.\-]+) +(?P<age>[\d]+)s +(?P<flags>[\w]+)'
-                        ' *(?P<group_cap>[\w]+)$')
+                        r' +(?P<partner_id>[\w\.]+) *(?P<partner_port>[\w\/\.\-]+) +(?P<age>[\d]+)s +(?P<flags>[\w]+)'
+                        r' *(?P<group_cap>[\w]+)$')
 
         for line in out.splitlines():
             if line:
@@ -650,9 +650,9 @@ class ShowPagpInternal(ShowPagpInternalSchema):
 
         p1 = re.compile(r'^\s*Channel +group +(?P<channel_group>[\d]+)$')
         p2 = re.compile(r'^\s*(?P<interface>[\w\/]+) +(?P<flags>[\w\s]+)'
-                        ' +(?P<state>[\w\/]+)( +(?P<timers>[\w]+))? +(?P<hello_interval>[\d]+)[\w]'
-                        ' +(?P<partner_count>[\d]+) +(?P<pagp_port_priority>[\d]+)'
-                        ' +(?P<learn_method>[\w]+) +(?P<group_ifindex>[\d]+)$')
+                        r' +(?P<state>[\w\/]+)( +(?P<timers>[\w]+))? +(?P<hello_interval>[\d]+)[\w]'
+                        r' +(?P<partner_count>[\d]+) +(?P<pagp_port_priority>[\d]+)'
+                        r' +(?P<learn_method>[\w]+) +(?P<group_ifindex>[\d]+)$')
 
         for line in out.splitlines():
             if line:
@@ -779,9 +779,9 @@ class ShowEtherchannelSummary(ShowEtherchannelSummarySchema):
         p1 = re.compile(r'^\s*Number +of +channel-groups +in +use: +(?P<number_of_lag_in_use>[\d]+)$')
         p2 = re.compile(r'^\s*Number +of +aggregators: +(?P<number_of_aggregators>[\d]+)$')
         p3 = re.compile(r'^\s*(?P<bundle_id>[\d\s]+)(?P<name>[\w\-]+)\((?P<flags>[\w]+)\)?'
-                        '( +(?P<protocol>[\w\-]+))?( +((?P<ports>[\w\-\s\/\(\)]+)))?$')
+                        r'( +(?P<protocol>[\w\-]+))?( +((?P<ports>[\w\-\s\/\(\)]+)))?$')
         p4 = re.compile(r'^\s*(?P<bundle_id>[\d\t]+)(?P<name>[\w\-\t]+)\((?P<flags>[\w]+)\)'
-                        '(?P<protocol>[\w\-\t]+)?((?P<ports>[\w\-\s\/\(\)]+))?$')
+                        r'(?P<protocol>[\w\-\t]+)?((?P<ports>[\w\-\s\/\(\)]+))?$')
         # Group  Port-channel  Protocol    Ports
         # ------+-------------+-----------+-----------------------------------------------
         # 10     Po10(SU)        PAgP        Gi1/0/15(P)     Gi1/0/16(P)     
@@ -1051,7 +1051,7 @@ class ShowLacpNeighborDetail(ShowLacpNeighborDetailSchema):
         # Port           System ID             Port Number     Age         Flags
         # Gi0/0/1         00127,6487.88ff.68ef  0x2              28s        FA
         p2 = re.compile(r'^\s*(?P<interface>[\w/]+) +(?P<system_id>[\w,.]+) +(?P<port_num>[\w]+)'
-                        ' +(?P<age>[\d]+)s +(?P<flags>[\w]+)$')
+                        r' +(?P<age>[\d]+)s +(?P<flags>[\w]+)$')
 
         # Port Priority        Oper Key        Port State
         # 100                  0x1             0x3F
@@ -1060,7 +1060,7 @@ class ShowLacpNeighborDetail(ShowLacpNeighborDetailSchema):
         # Activity:   Timeout:   Aggregation:   Synchronization:
         # Active      Short      Yes            Yes
         p4 = re.compile(r'^\s*(?P<activity>[\w]+) +(?P<timeout>Long|Short)'
-                        ' +(?P<aggregatable>[\w]+) +(?P<synchronization>[\w]+)$')
+                        r' +(?P<aggregatable>[\w]+) +(?P<synchronization>[\w]+)$')
 
         # Collecting:   Distributing:   Defaulted:   Expired:
         # Yes           Yes             No           No 
@@ -1180,8 +1180,8 @@ class ShowEtherChannelDetailSchema(MetaParser):
                 'state': str,
                 'protocol': str,
                 'port_security': str,
-                'fast_switchover': str,
-                'dampening': str,
+                Optional('fast_switchover'): str,
+                Optional('dampening'): str,
                 Optional('last_port_bundled'): {
                     'time': str,
                     'port': str

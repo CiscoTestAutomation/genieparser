@@ -69,12 +69,18 @@ class ShowControlConnections(ShowControlConnectionsSchema):
         # ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         # vsmart  dtls 1.1.1.3         4294937295 1      10.0.2.162                              12646 100.0.0.3                               12646 Cisco                   blue            No    up     14:12:19:13 0
         # vsmart  dtls 1.1.1.3         4294937295 1      10.0.2.162                              12646 100.0.0.3                               12646 Cisco                   green           No    up     14:12:19:02 0
+        #
+        #
+        # Parser handles fully populated uptime values for long uptimes and more than single digit controller group ids         
+        # vsmart  dtls 10.8.1.82       1001       1      10.0.111.82                             12346 10.0.111.82                             12346 Cisco-SDWAN               blue            No    up     90:20:54:2810          
+        # vsmart  dtls 10.8.1.82       1001       1      10.0.111.82                             12346 10.0.111.82                             12346 Cisco-SDWAN               green           No    up     90:20:54:2610          
+        # vmanage dtls 10.8.1.85       1001       0      10.0.111.85                             12346 10.0.111.85                             12346 Cisco-SDWAN               private1        No    up     90:20:54:300  
         p1 = re.compile(r"ORGANIZATION{1}")
         m = p1.search(out)
         if m:
             # cEdge starting 17.04 onward
             # vsmart  dtls 1.1.1.5         4294950463 1      10.0.5.64                               12346 34.250.253.50                           12346 SDWAN-VIPTELA - 249781  custom1         No    up     24:22:07:45 0 
-            p1 = re.compile(r"(?P<peer_type>\w+)\s+(?P<peer_protocol>\w+)\s+(?P<peer_system_ip>\S+)\s+(?P<site_id>\d+)\s+(?P<domain_id>\d+)\s+(?P<peer_private_ip>\S+)\s+(?P<peer_private_port>\S+)\s+(?P<peer_public_ip>\S+)\s+(?P<peer_public_port>\d+)\s+(?P<peer_organization>(.*?)(?=\s{2}))\s+(?P<local_color>\S+)\s+(?P<proxy_state>\S+)\s+(?P<state>\S+)\s+(?P<uptime>\S+)\s+(?P<controller_group_id>\S+)")
+            p1 = re.compile(r"(?P<peer_type>\w+)\s+(?P<peer_protocol>\w+)\s+(?P<peer_system_ip>\S+)\s+(?P<site_id>\d+)\s+(?P<domain_id>\d+)\s+(?P<peer_private_ip>\S+)\s+(?P<peer_private_port>\S+)\s+(?P<peer_public_ip>\S+)\s+(?P<peer_public_port>\d+)\s+((?P<peer_organization>(.*?)(?=\s{2}))\s+)?(?P<local_color>\S+)\s+(?P<proxy_state>\S+)\s+(?P<state>\S+)\s+(?P<uptime>\d+:\d+:\d+:\d{2})(\s+)?(?P<controller_group_id>\S+)")
             keys.insert(8, "peer_organization")
         else:
             # vEdge & cEdge prior to 17.04
@@ -473,18 +479,18 @@ class ShowControlConnectionHistory(ShowControlConnectionHistorySchema):
         if m:
             # cEdge starting 17.04 onward
             p1 = re.compile(r'(?P<peer_type>v[a-zA-Z]+)\s+(?P<peer_protocol>[a-zA-Z]+)\s+(?P<peer_system_ip>-|\d+.\d+.\d+.\d+)'
-                           '\s+(?P<site_id>\d+)\s+(?P<domain_id>\d+)\s+(?P<peer_private_ip>\d+.\d+.\d+.\d+)'
-                           '\s+(?P<peer_private_port>\d+)\s+(?P<peer_public_ip>\d+.\d+.\d+.\d+)\s+(?P<peer_public_port>\d+)'
-                           '\s+(?P<local_color>[a-zA-Z0-9_-]+)\s+(?P<state>\w+)\s+(?P<local_error>\w+)'
-                           '\s+(?P<remote_error>\w+)\s+(?P<repeat_count>\d+)\s+(?P<peer_organization>(.*?)[ ]{0,0})\s+(?P<downtime>\w+\S+)')
+                           r'\s+(?P<site_id>\d+)\s+(?P<domain_id>\d+)\s+(?P<peer_private_ip>\d+.\d+.\d+.\d+)'
+                           r'\s+(?P<peer_private_port>\d+)\s+(?P<peer_public_ip>\d+.\d+.\d+.\d+)\s+(?P<peer_public_port>\d+)'
+                           r'\s+(?P<local_color>[a-zA-Z0-9_-]+)\s+(?P<state>\w+)\s+(?P<local_error>\w+)'
+                           r'\s+(?P<remote_error>\w+)\s+(?P<repeat_count>\d+)\s+(?P<peer_organization>(.*?)[ ]{0,0})\s+(?P<downtime>\w+\S+)')
             keys.insert(8, "peer_organization")
         else:
             # vEdge & cEdge prior to 17.04
             p1 = re.compile(r'(?P<peer_type>v[a-zA-Z]+)\s+(?P<peer_protocol>[a-zA-Z]+)\s+(?P<peer_system_ip>-|\d+.\d+.\d+.\d+)'
-                           '\s+(?P<site_id>\d+)\s+(?P<domain_id>\d+)\s+(?P<peer_private_ip>\d+.\d+.\d+.\d+)'
-                           '\s+(?P<peer_private_port>\d+)\s+(?P<peer_public_ip>\d+.\d+.\d+.\d+)\s+(?P<peer_public_port>\d+)'
-                           '\s+(?P<local_color>[a-zA-Z0-9_-]+)\s+(?P<state>\w+)\s+(?P<local_error>\w+)'
-                           '\s+(?P<remote_error>\w+)\s+(?P<repeat_count>\d+)\s+(?P<downtime>\w+\S+)')
+                           r'\s+(?P<site_id>\d+)\s+(?P<domain_id>\d+)\s+(?P<peer_private_ip>\d+.\d+.\d+.\d+)'
+                           r'\s+(?P<peer_private_port>\d+)\s+(?P<peer_public_ip>\d+.\d+.\d+.\d+)\s+(?P<peer_public_port>\d+)'
+                           r'\s+(?P<local_color>[a-zA-Z0-9_-]+)\s+(?P<state>\w+)\s+(?P<local_error>\w+)'
+                           r'\s+(?P<remote_error>\w+)\s+(?P<repeat_count>\d+)\s+(?P<downtime>\w+\S+)')
 
         for line in output.splitlines():
             line = line.strip()

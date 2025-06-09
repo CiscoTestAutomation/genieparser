@@ -1,0 +1,98 @@
+Frame 32: 342 bytes on wire (2736 bits), 342 bytes captured (2736 bits) on interface /tmp/epc_ws/wif_to_ts_pipe, id 0
+    Interface id: 0 (/tmp/epc_ws/wif_to_ts_pipe)
+        Interface name: /tmp/epc_ws/wif_to_ts_pipe
+    Encapsulation type: Ethernet (1)
+    Arrival Time: Mar  5, 2025 10:50:53.906874000 UTC
+    [Time shift for this packet: 0.000000000 seconds]
+    Epoch Time: 1741171853.906874000 seconds
+    [Time delta from previous captured frame: 0.073407000 seconds]
+    [Time delta from previous displayed frame: 0.000000000 seconds]
+    [Time since reference or first frame: 12.715753000 seconds]
+    Frame Number: 32
+    Frame Length: 342 bytes (2736 bits)
+    Capture Length: 342 bytes (2736 bits)
+    [Frame is marked: False]
+    [Frame is ignored: False]
+    [Protocols in frame: eth:ethertype:ip:udp:dhcp]
+Ethernet II, Src: 6c:6c:d3:d1:cd:46 (6c:6c:d3:d1:cd:46), Dst: 00:12:01:00:00:01 (00:12:01:00:00:01)
+    Destination: 00:12:01:00:00:01 (00:12:01:00:00:01)
+        Address: 00:12:01:00:00:01 (00:12:01:00:00:01)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Source: 6c:6c:d3:d1:cd:46 (6c:6c:d3:d1:cd:46)
+        Address: 6c:6c:d3:d1:cd:46 (6c:6c:d3:d1:cd:46)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Type: IPv4 (0x0800)
+Internet Protocol Version 4, Src: 192.168.10.1, Dst: 192.168.10.105
+    0100 .... = Version: 4
+    .... 0101 = Header Length: 20 bytes (5)
+    Differentiated Services Field: 0x00 (DSCP: CS0, ECN: Not-ECT)
+        0000 00.. = Differentiated Services Codepoint: Default (0)
+        .... ..00 = Explicit Congestion Notification: Not ECN-Capable Transport (0)
+    Total Length: 328
+    Identification: 0x0090 (144)
+    Flags: 0x0000
+        0... .... .... .... = Reserved bit: Not set
+        .0.. .... .... .... = Don't fragment: Not set
+        ..0. .... .... .... = More fragments: Not set
+    Fragment offset: 0
+    Time to live: 255
+    Protocol: UDP (17)
+    Header checksum: 0x245a [validation disabled]
+    [Header checksum status: Unverified]
+    Source: 192.168.10.1
+    Destination: 192.168.10.105
+User Datagram Protocol, Src Port: 67, Dst Port: 68
+    Source Port: 67
+    Destination Port: 68
+    Length: 308
+    Checksum: 0xe3f9 [unverified]
+    [Checksum Status: Unverified]
+    [Stream index: 1]
+    [Timestamps]
+        [Time since first frame: 0.000000000 seconds]
+        [Time since previous frame: 0.000000000 seconds]
+Dynamic Host Configuration Protocol (Offer)
+    Message type: Boot Reply (2)
+    Hardware type: Ethernet (0x01)
+    Hardware address length: 6
+    Hops: 0
+    Transaction ID: 0x24415a66
+    Seconds elapsed: 0
+    Bootp flags: 0x0000 (Unicast)
+        0... .... .... .... = Broadcast flag: Unicast
+        .000 0000 0000 0000 = Reserved flags: 0x0000
+    Client IP address: 0.0.0.0
+    Your (client) IP address: 192.168.10.105
+    Next server IP address: 0.0.0.0
+    Relay agent IP address: 0.0.0.0
+    Client MAC address: 00:12:01:00:00:01 (00:12:01:00:00:01)
+    Client hardware address padding: 00000000000000000000
+    Server host name not given
+    Boot file name not given
+    Magic cookie: DHCP
+    Option: (53) DHCP Message Type (Offer)
+        Length: 1
+        DHCP: Offer (2)
+    Option: (54) DHCP Server Identifier (192.168.10.1)
+        Length: 4
+        DHCP Server Identifier: 192.168.10.1
+    Option: (51) IP Address Lease Time
+        Length: 4
+        IP Address Lease Time: (3540s) 59 minutes
+    Option: (58) Renewal Time Value
+        Length: 4
+        Renewal Time Value: (1770s) 29 minutes, 30 seconds
+    Option: (59) Rebinding Time Value
+        Length: 4
+        Rebinding Time Value: (3094s) 51 minutes, 34 seconds
+    Option: (1) Subnet Mask (255.255.255.0)
+        Length: 4
+        Subnet Mask: 255.255.255.0
+    Option: (3) Router
+        Length: 4
+        Router: 192.168.10.1
+    Option: (255) End
+        Option End: 255
+    Padding: 0000000000000000000000000000000000000000

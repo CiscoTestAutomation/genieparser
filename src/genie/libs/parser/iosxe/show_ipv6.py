@@ -18,6 +18,7 @@
     * show ipv6 mrib route vrf {vrf} {group}
     * show ipv6 mrib route vrf {vrf} {group} {source}   
     * show ipv6 mfib
+    * show ipv6 mfib status
     * show ipv6 mfib {group}
     * show ipv6 mfib {group} {source}
     * show ipv6 mfib verbose
@@ -34,6 +35,8 @@
     * show ipv6 dhcp statistics
     * show ipv6 dhcp binding 
     * show ipv6 dhcp relay binding
+    * show ipv6 general-prefix
+    * show ipv6 pim neighbor {intf}
 
 """
 
@@ -111,8 +114,8 @@ class ShowIpv6Neighbors(ShowIpv6NeighborsSchema):
         # IPv6 Address                              Age Link-layer Addr State Interface
         # 2001:db8:8548:1::2                                 0 fa16.3eff.09c8  REACH Gi2
         p1 = re.compile(r'^(?P<ip>([\w\:]+))\s+(?P<age>\S+)\s+'
-                        '(?P<link_layer_address>\S+)\s+(?P<neighbor_state>\S+)'
-                        '\s+(?P<interface>\S+)$')
+                        r'(?P<link_layer_address>\S+)\s+(?P<neighbor_state>\S+)'
+                        r'\s+(?P<interface>\S+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -168,8 +171,8 @@ class ShowIpv6NeighborsDetail(ShowIpv6NeighborsSchema):
         # IPv6 Address                              TRLV Age Link-layer Addr State Interface
         # FE80::F816:3EFF:FEFF:F3DC                   0    0 fa16.3eff.f3dc  REACH Gi2.90
         p1 = re.compile(r'^(?P<ip>([\w\:]+))\s+(?P<trlv>\S)\s+(?P<age>\S+)\s+'
-                         '(?P<link_layer_address>\S+)\s+(?P<neighbor_state>\S+)\s+'
-                         '(?P<interface>\S+)$')
+                         r'(?P<link_layer_address>\S+)\s+(?P<neighbor_state>\S+)\s+'
+                         r'(?P<interface>\S+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -894,23 +897,23 @@ class ShowIpv6Mrib(ShowIpv6MribSchema):
         #(2001:192:168:7::11,FF05:1:1::1) RPF nbr: 2001:150:1:1::1 Flags: L C
 
         p1 = re.compile(r'^\((?P<source_address>[\w\:\.\*\/]+)\,'
-                     '(?P<multicast_group>[\w\:\.\/]+)\)'
-                     ' +RPF nbr: (?P<RPF_nbr>[\w\:\.\/]+)'
-                     '\s+Flags\:(?P<mrib_flags>[\w\s]+|$)')
+                     r'(?P<multicast_group>[\w\:\.\/]+)\)'
+                     r' +RPF nbr: (?P<RPF_nbr>[\w\:\.\/]+)'
+                     r'\s+Flags\:(?P<mrib_flags>[\w\s]+|$)')
 
         # GigabitEthernet2/0/6 Flags: A NS 
         # Tunnel1 Flags: A NS  		 
         p2 = re.compile(r'^(?P<ingress_if>[\w\.\/\, ]+)'
-                         '\s+Flags\: +(?P<ingress_flags>A[\s\w]+|[\s\w]+ +A[\s\w]+|A$)') 
+                         r'\s+Flags\: +(?P<ingress_flags>A[\s\w]+|[\s\w]+ +A[\s\w]+|A$)') 
 						 
         #  LISP0.1 Flags: F NS  Next-hop: 100.154.154.154
         #  LISP0.1 Flags: F NS   Next-hop: (100.11.11.11, 235.1.3.167)
         p3 = re.compile(r'^(?P<egress_if>[\w\.\/\,]+)'
-                        '\s+Flags\:\s+(?P<egress_flags>F[\s\w]+)+Next-hop\:\s+(?P<egress_next_hop>([\w\:\.\*\/]+)|(\([\w\:\.\*\/]+\, +[\w\:\.\*\/]+\)))')
+                        r'\s+Flags\:\s+(?P<egress_flags>F[\s\w]+)+Next-hop\:\s+(?P<egress_next_hop>([\w\:\.\*\/]+)|(\([\w\:\.\*\/]+\, +[\w\:\.\*\/]+\)))')
 
         #  Vlan2006 Flags: F LI NS
         p4=re.compile(r'^(?P<egress_if>[\w\.\/\, ]+)'
-                        '\s+Flags\: +(?P<egress_flags>F[\s\w]+)')            
+                        r'\s+Flags\: +(?P<egress_flags>F[\s\w]+)')            
 
         for line in output.splitlines():
             line=(line.strip()).replace('\t',' ')
@@ -989,6 +992,119 @@ class ShowIpv6Mrib(ShowIpv6MribSchema):
                        
         return mrib_dict
 
+# ========================================================
+# Parser for 'show ipv6 mfib status'
+# ========================================================
+
+class ShowIpv6MfibStatusSchema(MetaParser):
+    """
+    Schema for 'show ipv6 mfib status'
+
+    """
+    schema = {
+        'configuration_status' : str,
+        'operational_status' : str,
+        'initialization_state' : str,
+        'total_signalling_packets_queued' : int,
+        'Process_status' : {
+            'status' : str,
+            'pid' : int
+        },
+        'table' : {
+            'active' : int,
+            'mrib' : int,
+            'io' : int
+        },
+    }
+
+class ShowIpv6MfibStatus(ShowIpv6MfibStatusSchema):
+
+    '''
+    Parser for 'show ipv6 mfib status'
+
+    '''
+
+    cli_command = 'show ipv6 mfib status'
+    def cli(self,output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        
+        # Configuration Status: enabled
+        p1 = re.compile(r'^Configuration Status: +(?P<configuration_status>\w+)$')
+
+        # Operational Status: running
+        p2 = re.compile(r'^Operational Status: +(?P<operational_status>\w+)$')
+
+        # Initialization State: Running
+        p3 = re.compile(r'^Initialization State: +(?P<initialization_state>\w+)$')
+
+        # Total signalling packets queued: 0
+        p4 = re.compile(r'^Total signalling packets queued: +(?P<total_signalling_packets_queued>\d+)$')
+
+        # Process Status: may enable - 3 - pid 737
+        p5 = re.compile(r'^Process Status: may +(?P<status>\w+) - \d+ - pid +(?P<pid>\d+)')
+
+        # Tables 1/1/0 (active/mrib/io)
+        p6 = re.compile(r'^Tables (?P<active>\d)+(\/)+(?P<mrib>\d)(\/)+(?P<io>\d) +(\()+active+(\/)+mrib+(\/)+io+(\))$')
+        
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # Configuration Status: enabled
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['configuration_status'] = group['configuration_status']
+                continue
+
+            # Operational Status: running
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['operational_status'] = group['operational_status']
+                continue
+
+            # Initialization State: Running
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['initialization_state'] = group['initialization_state']
+                continue
+
+            # Total signalling packets queued: 0
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['total_signalling_packets_queued'] = int(group['total_signalling_packets_queued'])
+                continue
+
+            # Process Status: may enable - 3 - pid 737
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                process_dict = ret_dict.setdefault('Process_status',{})
+                process_dict.update({
+                    'status': group['status'],
+                    'pid': int(group['pid'])
+                })
+                continue
+
+            # Tables 1/1/0 (active/mrib/io)
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                table_dict = ret_dict.setdefault('table',{})
+                table_dict.update({
+                    'active' : int(group['active']),
+                    'mrib' : int(group['mrib']),
+                    'io' : int(group['io'])
+                    })
+                continue
+
+        return ret_dict
+
 # Schema for  show ipv6 mfib
 # Schema for  show ipv6 mfib {group}
 # Schema for  show ipv6 mfib {group} {source}
@@ -1052,6 +1168,7 @@ class ShowIpv6MfibSchema(MetaParser):
                                                      Optional('ingress_vxlan_cap'): str,
                                                      Optional('ingress_vxlan_vni'): str,
                                                      Optional('ingress_vxlan_nxthop'): str,
+                                                     Optional('ingress_mdt_ip'): str,
                                                     }
                                                 },
                                             Optional('outgoing_interfaces'): {
@@ -1068,6 +1185,7 @@ class ShowIpv6MfibSchema(MetaParser):
                                                      Optional('egress_vxlan_cap'): str,
                                                      Optional('egress_vxlan_vni'): str,
                                                      Optional('egress_vxlan_nxthop'): str,
+                                                     Optional('egress_mdt_ip'): str,
                                                     },
                                                 },
                                             },
@@ -1157,11 +1275,11 @@ class ShowIpv6Mfib(ShowIpv6MfibSchema):
         #  (*,FF05:1:1::1) Flags: C HW
         # (2001:70:1:1::10,FF05:1:1::1) Flags: HW
         p3 = re.compile(r'^\((?P<source_address>[\w\:\.\*\/]+)\,'
-                     '(?P<multicast_group>[\w\:\.\/]+)\)'
-                     '\s+Flags\:\s*(?P<mfib_flags>[\w\s]*)$')
+                     r'(?P<multicast_group>[\w\:\.\/]+)\)'
+                     r'\s+Flags\:\s*(?P<mfib_flags>[\w\s]*)$')
         #0x1AF0  OIF-IC count: 0, OIF-A count: 1
         p4 = re.compile(r'\w+ +OIF-IC count: +(?P<oif_ic_count>[\w]+)'
-                   '\, +OIF-A count: +(?P<oif_a_count>[\w]+)$')
+                   r'\, +OIF-A count: +(?P<oif_a_count>[\w]+)$')
         # SW Forwarding: 0/0/0/0, Other: 0/0/0
         p5 = re.compile(r'SW Forwarding\:\s+(?P<sw_packet_count>[\w]+)\/'
                      r'(?P<sw_packets_per_second>[\w]+)\/'
@@ -1184,21 +1302,24 @@ class ShowIpv6Mfib(ShowIpv6MfibSchema):
         #Tunnel0, VXLAN Decap Flags: A
         #Vlan500, VXLAN v6 Encap (50000, 239.1.1.0) Flags: A
         #Port-channel5 Flags: RA A MA
+        # Tunnel0, MDTv6overv4/::FFFF:226.10.10.10 Flags: A
 
         p7 = re.compile(r'^(?P<ingress_if>[\w\/\.\-\:]+)'
-                         r'(\,\s+VXLAN +(?P<ingress_vxlan_version>[v0-9]+)?(\s+)?(?P<ingress_vxlan_cap>[\w]+)(\s+)?(\(?(?P<ingress_vxlan_vni>[0-9]+)(\,\s+)?(?P<ingress_vxlan_nxthop>[\w:./]+)?\)?)?)?'
-                         r' +Flags\: +(?P<ingress_flags>A[\s\w]+|[\s\w]+ +A[\s\w]+|A$)')
+                        r'(?:,\s*MDTv6overv4\/(?:::FFFF:)?(?P<ingress_mdt_ip>\d+\.\d+\.\d+\.\d+))?'
+                        r'(\,\s+VXLAN +(?P<ingress_vxlan_version>[v0-9]+)?(\s+)?(?P<ingress_vxlan_cap>[\w]+)(\s+)?(\(?(?P<ingress_vxlan_vni>[0-9]+)(\,\s+)?(?P<ingress_vxlan_nxthop>[\w:./]+)?\)?)?)?'
+                        r' +Flags\: +(?P<ingress_flags>A[\s\w]+|[\s\w]+ +A[\s\w]+|A$)')
 
         #Vlan2001 Flags: F NS
         #LISP0.1, (100.11.11.11, 235.1.3.167) Flags:
-        
         #Tunnel1, VXLAN v6 Decap Flags: F NS
         # Vlan200, VXLAN v4 Encap (10100, 239.1.1.1) Flags: F
         #L2LISP0.1502, L2LISP v6 Decap Flags: F NS
         #LISP0.101, 100:88:88::88 Flags: F
         #Port-channel5 Flags: RF F NS
+        # Tunnel8, MDTv6overv4/::FFFF:226.10.10.10 Flags: F NS
         p8 = re.compile(r'^(?P<egress_if>[\w\/\.\-\:]+)'
                         r'(\,\s+L2LISP\s*v6\s*Decap\s*)?'
+                        r'(?:,\s*MDTv6overv4\/(?:::FFFF:)?(?P<egress_mdt_ip>\d+\.\d+\.\d+\.\d+))?'
                         r'(\,\s+\(?(?P<egress_rloc>[\w:\.]+)(\,\s+)?(?P<egress_underlay_mcast>[\w\.]+)?\)?)?'
                         r'(\,\s+VXLAN +(?P<egress_vxlan_version>[v0-9]+)?(\s+)?(?P<egress_vxlan_cap>[\w]+)(\s+)?'
                         r'(\(?(?P<egress_vxlan_vni>[0-9]+)(\,\s+)?(?P<egress_vxlan_nxthop>[\w:.]+)?\)?)?)?'
@@ -1211,9 +1332,9 @@ class ShowIpv6Mfib(ShowIpv6MfibSchema):
         p9_2 = re.compile(r'^CEF\: +(?P<egress_adj_mac>[\w \(\.\)]+)$')
         #Pkts: 0/0/2    Rate: 0 pps
         p10 = re.compile(r'^Pkts\:\s+(?P<egress_hw_pkt_count>[\w]+)\/'
-                         '(?P<egress_fs_pkt_count>[\w]+)\/'
-                         '(?P<egress_ps_pkt_count>[\w]+)'
-                         '\s+Rate\:\s+(?P<egress_pkt_rate>[\w]+)\s+pps$')
+                         r'(?P<egress_fs_pkt_count>[\w]+)\/'
+                         r'(?P<egress_ps_pkt_count>[\w]+)'
+                         r'\s+Rate\:\s+(?P<egress_pkt_rate>[\w]+)\s+pps$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -1290,6 +1411,8 @@ class ShowIpv6Mfib(ShowIpv6MfibSchema):
                     ing_intf_dict['ingress_vxlan_nxthop']=group['ingress_vxlan_nxthop']
                 if group['ingress_vxlan_vni']:
                     ing_intf_dict['ingress_vxlan_vni']=group['ingress_vxlan_vni']
+                if group['ingress_mdt_ip']:
+                    ing_intf_dict['ingress_mdt_ip']=group['ingress_mdt_ip']
                 continue
 
 
@@ -1331,6 +1454,8 @@ class ShowIpv6Mfib(ShowIpv6MfibSchema):
                     egress_data['egress_vxlan_vni'] = group['egress_vxlan_vni']
                 if group['egress_vxlan_nxthop']:
                     egress_data['egress_vxlan_nxthop'] = group['egress_vxlan_nxthop']
+                if group['egress_mdt_ip']:
+                    egress_data['egress_mdt_ip']=group['egress_mdt_ip']
                 continue
             #CEF: Adjacency with MAC: 01005E010101000A000120010800
             m=p9_1.match(line)
@@ -2349,3 +2474,207 @@ class ShowIpv6cefExactRoute(ShowIpv6cefExactRouteSchema):
                 continue
 
         return ret_dict
+
+#===============================================================================
+# Schema for 'show ipv6 general-prefix'
+#===============================================================================
+
+class ShowIpv6GeneralPrefixSchema(MetaParser):
+    """Schema for show ipv6 general-prefix"""
+
+    schema = {
+        'ipv6_prefix': {
+            Any(): {
+                'prefix': str,
+                'acquired_via': str,
+                'valid_lifetime': int,
+                'preferred_lifetime': int,
+                Optional('interfaces'): list,
+            }
+        }
+    }
+
+#===============================================================================
+# Parser for 'show ipv6 general-prefix'
+#===============================================================================
+class ShowIpv6GeneralPrefix(ShowIpv6GeneralPrefixSchema):
+    """Parser for show ipv6 general-prefix"""
+
+    cli_command = 'show ipv6 general-prefix'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # IPv6 Prefix pd_prefix, acquired via DHCP PD
+        p1 = re.compile(r'^IPv6 Prefix (?P<prefix_name>\S+), acquired via (?P<acquired_via>.+)$')
+
+        # 2001:DB8:1200::/48 Valid lifetime 1735, preferred lifetime 535
+        p2 = re.compile(r'^(?P<prefix>\S+) Valid lifetime (?P<valid_lifetime>\d+), preferred lifetime (?P<preferred_lifetime>\d+)$')
+
+        # GigabitEthernet10/0/47 (Address command)
+        p3 = re.compile(r'^(?P<interface>\S+) \(Address command\)$')
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # IPv6 Prefix pd_prefix, acquired via DHCP PD
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                prefix_name = group['prefix_name']
+                prefix_dict = ret_dict.setdefault('ipv6_prefix', {}).setdefault(prefix_name, {})
+                prefix_dict['acquired_via'] = group['acquired_via']
+                continue
+
+            # 2001:DB8:1200::/48 Valid lifetime 1735, preferred lifetime 535
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                prefix_dict['prefix'] = group['prefix']
+                prefix_dict['valid_lifetime'] = int(group['valid_lifetime'])
+                prefix_dict['preferred_lifetime'] = int(group['preferred_lifetime'])
+                continue
+
+            # GigabitEthernet10/0/47 (Address command)
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                interfaces = prefix_dict.setdefault('interfaces', [])
+                interfaces.append(group['interface'])
+                continue
+
+        return ret_dict
+    
+
+class ShowIpv6PimNeighborIntfSchema(MetaParser):
+    """Schema for show ipv6 pim neighbor Te0/0/4"""
+    schema = {
+        'interface': str,
+        'neighbors': {
+            Any(): {
+                'uptime': str,
+                'expires': str,
+                'mode': str,
+                'dr_priority': int,
+                'bsr_priority': int,
+                'hello_interval': str,
+                'neighbor_interface': str,
+                'neighbor_state': str,
+            }
+        }
+    }
+
+class ShowIpv6PimNeighborIntf(ShowIpv6PimNeighborIntfSchema):
+    """Parser for show ipv6 pim neighbor Te0/0/4"""
+
+    cli_command = 'show ipv6 pim neighbor {interface}'
+
+    def cli(self, interface=None, output=None):
+        if output is None:
+            cmd = self.cli_command.format(interface=interface)
+            output = self.device.execute(cmd)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # Regular expressions for parsing the output
+        # Example: "PIM Neighbor Table for Interface: GigabitEthernet0/0/0"
+        p1 = re.compile(r'^PIM +Neighbor +Table +for +Interface: +(?P<interface>\S+)$')
+
+        # Example: "Neighbor Address: 192.168.1.1"
+        p2 = re.compile(r'^Neighbor +Address: +(?P<neighbor_address>\S+)$')
+
+        # Example: "Uptime: 00:15:23"
+        p3 = re.compile(r'^Uptime: +(?P<uptime>\S+)$')
+
+        # Example: "Expires: 00:01:47"
+        p4 = re.compile(r'^Expires: +(?P<expires>\S+)$')
+
+        # Example: "Mode: Dense"
+        p5 = re.compile(r'^Mode: +(?P<mode>\S+)$')
+
+        # Example: "DR Priority: 1"
+        p6 = re.compile(r'^DR +Priority: +(?P<dr_priority>\d+)$')
+
+        # Example: "BSR Priority: 5"
+        p7 = re.compile(r'^BSR +Priority: +(?P<bsr_priority>\d+)$')
+
+        # Example: "Hello Interval: 30 seconds"
+        p8 = re.compile(r'^Hello +Interval: +(?P<hello_interval>[\d\s\w]+)$')
+
+        # Example: "Neighbor Interface: GigabitEthernet0/0/0"
+        p9 = re.compile(r'^Neighbor +Interface: +(?P<neighbor_interface>\S+)$')
+
+        # Example: "Neighbor State: Up"
+        p10 = re.compile(r'^Neighbor +State: +(?P<neighbor_state>\S+)$')
+
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # PIM Neighbor Table for Interface: GigabitEthernet0/0/0
+            m = p1.match(line)
+            if m:
+                interface = m.group('interface')
+                parsed_dict['interface'] = interface
+                continue
+
+            # Neighbor Address: 192.168.1.1
+            m = p2.match(line)
+            if m:
+                neighbor_address = m.group('neighbor_address')
+                neighbor_dict = parsed_dict.setdefault('neighbors', {}).setdefault(neighbor_address, {})
+                continue
+
+            # Uptime: 00:15:23
+            m = p3.match(line)
+            if m:
+                neighbor_dict['uptime'] = m.group('uptime')
+                continue
+
+            # Expires: 00:01:47
+            m = p4.match(line)
+            if m:
+                neighbor_dict['expires'] = m.group('expires')
+                continue
+
+            # Mode: Dense
+            m = p5.match(line)
+            if m:
+                neighbor_dict['mode'] = m.group('mode')
+                continue
+
+            # DR Priority: 1
+            m = p6.match(line)
+            if m:
+                neighbor_dict['dr_priority'] = int(m.group('dr_priority'))
+                continue
+
+            # BSR Priority: 5
+            m = p7.match(line)
+            if m:
+                neighbor_dict['bsr_priority'] = int(m.group('bsr_priority'))
+                continue
+
+            # Hello Interval: 30 seconds
+            m = p8.match(line)
+            if m:
+                neighbor_dict['hello_interval'] = m.group('hello_interval')
+                continue
+
+            # Neighbor Interface: GigabitEthernet0/0/1
+            m = p9.match(line)
+            if m:
+                neighbor_dict['neighbor_interface'] = m.group('neighbor_interface')
+                continue
+
+            # Neighbor State: Up
+            m = p10.match(line)
+            if m:
+                neighbor_dict['neighbor_state'] = m.group('neighbor_state')
+                continue
+
+        return parsed_dict

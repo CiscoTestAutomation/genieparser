@@ -8,6 +8,7 @@ IOSXE parsers for the following show commands:
     * 'show running-config aaa'
     * 'show running-config nve'
     * 'show running-config | section bgp'
+    * 'show running-config all | section class {class_map}'
 '''
 
 # Python
@@ -88,9 +89,9 @@ class ShowRunPolicyMap(ShowRunPolicyMapSchema):
         # police cir 100000 pir  70000 conform-action transmit  exceed-action drop
         # police cir 8000000 bc 4000 be 1000 conform-action transmit  exceed-action transmit  violate-action drop
         p1 = re.compile(r'^police +cir +(?P<cir_bps>(\d+))( +pir +(?P<pir_bps>(\d+)))?'
-            '( +bc +(?P<cir_bc_bytes>(\d+)))?( +be +(?P<cir_be_bytes>(\d+)))?'
-            ' +conform-action +(?P<conformed>(\w+)) +exceed-action +(?P<exceeded>(\w+))'
-            '( +violate-action +(?P<violated>(\w+)))?$')
+            r'( +bc +(?P<cir_bc_bytes>(\d+)))?( +be +(?P<cir_be_bytes>(\d+)))?'
+            r' +conform-action +(?P<conformed>(\w+)) +exceed-action +(?P<exceeded>(\w+))'
+            r'( +violate-action +(?P<violated>(\w+)))?$')
 
         # policy-map L3VPN-out_child
         # policy-map type queueing child
@@ -461,7 +462,11 @@ class ShowRunInterfaceSchema(MetaParser):
                             }
                         }
                     }
-                }
+                },
+                Optional('ip_verify_unicast_source_reachable_via'): str,
+                Optional('ip_verify_unicast_source_reachable_via_rx'): str,
+                Optional('ip_verify_unicast_source_reachable_via_rx_allow_self_ping'): bool,
+                Optional('ip_verify_unicast_source_reachable_via_rx_acl'): str,
             }
         }
     }
@@ -848,6 +853,18 @@ class ShowRunInterface(ShowRunInterfaceSchema):
 
         # service-policy type queueing output 2p6q
         p112 = re.compile(r'^service-policy +type +(?P<policy_type>[\S]+) +output +(?P<output_name>[\S]+)$')
+
+        # ip verify unicast source reachable-via any
+        p113 = re.compile(r'^ip verify unicast source reachable-via (?P<reachable_via>\S+)$')
+        
+        # ip verify unicast source reachable-via rx
+        p114 = re.compile(r'^ip verify unicast source reachable-via rx$')
+        
+        # ip verify unicast source reachable-via rx allow-self-ping
+        p115 = re.compile(r'^ip verify unicast source reachable-via rx allow-self-ping$')
+        
+        # ip verify unicast source reachable-via rx 102
+        p116 = re.compile(r'^ip verify unicast source reachable-via rx (?P<acl>\S+)$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -1736,6 +1753,32 @@ class ShowRunInterface(ShowRunInterfaceSchema):
                 })
                 continue
 
+            # ip verify unicast source reachable-via any
+            m = p113.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'ip_verify_unicast_source_reachable_via': group['reachable_via']})
+                continue
+        
+            # ip verify unicast source reachable-via rx
+            m = p114.match(line)
+            if m:
+                intf_dict.update({'ip_verify_unicast_source_reachable_via_rx': 'rx'})
+                continue
+        
+            # ip verify unicast source reachable-via rx allow-self-ping
+            m = p115.match(line)
+            if m:
+                intf_dict.update({'ip_verify_unicast_source_reachable_via_rx_allow_self_ping': True})
+                continue
+        
+            # ip verify unicast source reachable-via rx 102
+            m = p116.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'ip_verify_unicast_source_reachable_via_rx_acl': group['acl']})
+                continue
+            
         return config_dict
 
 
@@ -4771,5 +4814,187 @@ class ShowRunSectionMacAddress(ShowRunSectionMacAddressSchema):
                 ret_dict['mac_address'] = dict_val['mac_address']
                 ret_dict['type'] = dict_val['type']
                 ret_dict['port'] = dict_val['port']
+
+        return ret_dict
+        
+# ==========================================================================
+# Schema for :
+#   * 'show running-config all | section class {class_map}'
+# ===========================================================================
+class ShowRunningConfigAllClassMapSchema(MetaParser):
+
+    ''' Schema for :
+        * 'show running-config all | section class {class_map}'
+    '''
+
+    schema = {
+        'class': {
+            Any(): {
+                Optional('police'): {
+                    Optional('rate_pps'): int,
+                    Optional('rate'): int,
+                    },
+                },
+            },    
+        }                   
+
+# =====================================================================
+# Parser for:
+#   * 'show running-config all | section class {class_map}'
+# =====================================================================
+class ShowRunningConfigAllClassMap(ShowRunningConfigAllClassMapSchema):
+    ''' Parser for
+        * 'show running-config all | section class {class_map}'
+    '''
+
+    cli_command = 'show running-config all | section class {class_map}'
+
+    def cli(self, class_map='', output=None):
+
+        if output is None:
+            output = self.device.execute(self.cli_command.format(class_map=class_map))
+
+        ret_dict={}
+        police_dict={}
+        class_map_dict={}
+
+        # class system-cpp-default-v4
+        p1 = re.compile(r'^class +(?P<class_map>([\w\-\_]+))$')
+
+        # police rate 2000 pps
+        # police rate 10000000000
+        p2 = re.compile(r'^police +rate +(?P<rate>\d+)\s*((?P<rate_mode>pps))?$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # class system-cpp-default-v4
+            m = p1.match(line)
+            if m:
+                class_map = m.groupdict()['class_map']
+                class_map_dict = ret_dict.setdefault('class', {}).setdefault(class_map, {})
+                continue
+
+            # police rate 2000 pps
+            # police rate 10000000000
+            m = p2.match(line)
+            if m:
+                #police_line = 1
+                police_dict = class_map_dict.setdefault('police', {})
+                if m.groupdict()['rate_mode']:
+                    police_dict['rate_pps'] = int(m.groupdict()['rate'])
+                else:
+                    police_dict['rate'] = int(m.groupdict()['rate'])
+                continue
+        return ret_dict
+
+class ShowRunningConfigAAARadiusServerSchema(MetaParser):
+    """Schema for show running-config aaa radius-server"""
+    schema = {
+        'radius_server': {
+            Any(): {
+                'address_type': str,
+                'address': str,
+                'key': str,
+                'dtls_port': int,
+                'dtls_watchdoginterval': int,
+                'dtls_retries': int,
+                'dtls_trustpoint_client': str,
+                'dtls_trustpoint_server': str,
+            }
+        }
+    }
+
+class ShowRunningConfigAAARadiusServer(ShowRunningConfigAAARadiusServerSchema):
+    """Parser for show running-config aaa radius-server"""
+
+    cli_command = 'show running-config aaa radius-server'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+        radius_server_name = None
+
+        # Matching patterns
+        # radius server TMP_NAME
+        p1 = re.compile(r'^radius server (?P<name>\S+)$')
+
+        # address ipv4 16.0.0.104
+        p2 = re.compile(r'^address (?P<address_type>\S+) (?P<address>\S+)$')
+
+        # key radius/dtls
+        p3 = re.compile(r'^key (?P<key>\S+)$')
+
+        # dtls port 2083
+        p4 = re.compile(r'^dtls port (?P<dtls_port>\d+)$')
+
+        # dtls watchdoginterval 2
+        p5 = re.compile(r'^dtls watchdoginterval (?P<dtls_watchdoginterval>\d+)$')
+
+        # dtls retries 2
+        p6 = re.compile(r'^dtls retries (?P<dtls_retries>\d+)$')
+
+        # dtls trustpoint client Client
+        p7 = re.compile(r'^dtls trustpoint client (?P<dtls_trustpoint_client>\S+)$')
+
+        # dtls trustpoint server Server
+        p8 = re.compile(r'^dtls trustpoint server (?P<dtls_trustpoint_server>\S+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # radius server TMP_NAME
+            m = p1.match(line)
+            if m:
+                radius_server_name = m.groupdict()['name']
+                radius_server_dict = ret_dict.setdefault('radius_server', {}).setdefault(radius_server_name, {})
+                continue
+
+            # address ipv4 16.0.0.104
+            m = p2.match(line)
+            if m:
+                radius_server_dict.update({
+                    'address_type': m.groupdict()['address_type'],
+                    'address': m.groupdict()['address']
+                })
+                continue
+
+            # key radius/dtls
+            m = p3.match(line)
+            if m:
+                radius_server_dict.update({'key': m.groupdict()['key']})
+                continue
+
+            # dtls port 2083
+            m = p4.match(line)
+            if m:
+                radius_server_dict.update({'dtls_port': int(m.groupdict()['dtls_port'])})
+                continue
+
+            # dtls watchdoginterval 2
+            m = p5.match(line)
+            if m:
+                radius_server_dict.update({'dtls_watchdoginterval': int(m.groupdict()['dtls_watchdoginterval'])})
+                continue
+
+            # dtls retries 2
+            m = p6.match(line)
+            if m:
+                radius_server_dict.update({'dtls_retries': int(m.groupdict()['dtls_retries'])})
+                continue
+
+            # dtls trustpoint client Client
+            m = p7.match(line)
+            if m:
+                radius_server_dict.update({'dtls_trustpoint_client': m.groupdict()['dtls_trustpoint_client']})
+                continue
+
+            # dtls trustpoint server Server
+            m = p8.match(line)
+            if m:
+                radius_server_dict.update({'dtls_trustpoint_server': m.groupdict()['dtls_trustpoint_server']})
+                continue
 
         return ret_dict

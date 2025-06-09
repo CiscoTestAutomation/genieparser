@@ -1,0 +1,326 @@
+Tag null:
+IS-IS Level-2 Link State Database:
+LSPID                 LSP Seq Num  LSP Checksum  LSP Holdtime/Rcvd      ATT/P/OL
+iolPE1.00-00        * 0x00000004   0x271B                 872/*         0/0/0
+  Area Address: 49.0000
+  NLPID:        0xCC 0x8E 
+  Router CAP:   0.0.0.0, D:0, S:0
+    SRv6 Oflag:0
+  Hostname: iolPE1
+  Metric: 10         IS-Extended iolP1.00
+    Interface IPV6 Address: 2001:1::1
+    Neighbor IPV6 Address: 2001:1::2
+    Affinity: 0x00000008
+    Extended Affinity: 
+        0x00000008
+    Admin. Weight: 1000
+    Physical LINK BW: 10000 kbits/sec
+    Uni Link Delay(Avg.) A-bit:0 Value:10
+    Uni Link Delay(Min/Max) A-bit:0 Min:10 Max:10
+    Uni Link Delay(Var.) Value:0 
+    End.X SID: FCCC:CCC1:A1:E000:: uA (PSP/USD) B:0 S:0 P:0 Algorithm:0 Weight:0
+      SID Structure:
+        Block Length: 32, Node-ID Length: 16, Func-Length: 16, Args-Length: 0
+  Metric: 10         IS-Extended iolP1.00
+    Interface IPV6 Address: 2001:2::1
+    Neighbor IPV6 Address: 2001:2::2
+    Affinity: 0x00000008
+    Extended Affinity: 
+        0x00000008
+    Admin. Weight: 1000
+    Physical LINK BW: 10000 kbits/sec
+    Uni Link Delay(Avg.) A-bit:0 Value:15
+    Uni Link Delay(Min/Max) A-bit:0 Min:15 Max:15
+    Uni Link Delay(Var.) Value:0 
+    End.X SID: FCCC:CCC1:A1:E001:: uA (PSP/USD) B:0 S:0 P:0 Algorithm:0 Weight:0
+      SID Structure:
+        Block Length: 32, Node-ID Length: 16, Func-Length: 16, Args-Length: 0
+  Metric: 10         IS-Extended iolP2.00
+    Interface IPV6 Address: 2012:2::1
+    Neighbor IPV6 Address: 2012:2::2
+    Admin. Weight: 10
+    Physical LINK BW: 10000 kbits/sec
+    End.X SID: FCCC:CCC1:A1:E003:: uA (PSP/USD) B:0 S:0 P:0 Algorithm:0 Weight:0
+      SID Structure:
+        Block Length: 32, Node-ID Length: 16, Func-Length: 16, Args-Length: 0
+  Metric: 10         IS-Extended iolP2.00
+    Interface IPV6 Address: 2012:1::1
+    Neighbor IPV6 Address: 2012:1::2
+    Admin. Weight: 10
+    Physical LINK BW: 10000 kbits/sec
+    End.X SID: FCCC:CCC1:A1:E002:: uA (PSP/USD) B:0 S:0 P:0 Algorithm:0 Weight:0
+      SID Structure:
+        Block Length: 32, Node-ID Length: 16, Func-Length: 16, Args-Length: 0
+  IPv6 Address: C01:1::1
+  IPv6 Router ID: C01:1::1
+  Metric: 0          IPv6 FCCC:CCC1:A1::/48
+    Prefix-attr: X:0 R:0 N:0
+  Metric: 10         IPv6 C01:1::/64
+    Prefix-attr: X:0 R:0 N:0
+  Metric: 10         IPv6 2001:1::/64
+    Prefix-attr: X:0 R:0 N:0
+  Metric: 10         IPv6 2001:2::/64
+    Prefix-attr: X:0 R:0 N:0
+  Metric: 10         IPv6 2012:1::/64
+    Prefix-attr: X:0 R:0 N:0
+  Metric: 10         IPv6 2012:2::/64
+    Prefix-attr: X:0 R:0 N:0
+  SRv6 Locator: (MT-IPv4) FCCC:CCC1:A1::/48 Metric:0 Algorithm:0
+    End SID: FCCC:CCC1:A1:: uN (PSP/USD)
+      SID Structure:
+        Block Length: 32, Node-ID Length: 16, Func-Length: 0, Args-Length: 0
+iolPE2.00-00          0x00000005   0xD603                 844/1199      0/0/0
+  Area Address: 49.0000
+  NLPID:        0xCC 0x8E 
+  Router CAP:   0.0.0.0, D:0, S:0
+    SRv6 Oflag:0
+  Hostname: iolPE2
+  Metric: 10         IS-Extended iolP3.00
+    Interface IPV6 Address: 2023:1::1
+    Neighbor IPV6 Address: 2023:1::2
+    Admin. Weight: 10
+    Physical LINK BW: 10000 kbits/sec
+    End.X SID: FCCC:CCC1:C3:E000:: uA (PSP/USD) B:0 S:0 P:0 Algorithm:0 Weight:0
+      SID Structure:
+        Block Length: 32, Node-ID Length: 16, Func-Length: 16, Args-Length: 0
+  Metric: 10         IS-Extended iolP3.00
+    Interface IPV6 Address: 2023:2::1
+    Neighbor IPV6 Address: 2023:2::2
+    Admin. Weight: 10
+    Physical LINK BW: 10000 kbits/sec
+    End.X SID: FCCC:CCC1:C3:E003:: uA (PSP/USD) B:0 S:0 P:0 Algorithm:0 Weight:0
+      SID Structure:
+        Block Length: 32, Node-ID Length: 16, Func-Length: 16, Args-Length: 0
+  Metric: 10         IS-Extended iolP1.00
+    Interface IPV6 Address: 2021:2::2
+    Neighbor IPV6 Address: 2021:2::1
+    Admin. Weight: 10
+    Physical LINK BW: 10000 kbits/sec
+    End.X SID: FCCC:CCC1:C3:E002:: uA (PSP/USD) B:0 S:0 P:0 Algorithm:0 Weight:0
+      SID Structure:
+        Block Length: 32, Node-ID Length: 16, Func-Length: 16, Args-Length: 0
+  Metric: 10         IS-Extended iolP1.00
+    Interface IPV6 Address: 2021:1::2
+    Neighbor IPV6 Address: 2021:1::1
+    Admin. Weight: 10
+    Physical LINK BW: 10000 kbits/sec
+    End.X SID: FCCC:CCC1:C3:E001:: uA (PSP/USD) B:0 S:0 P:0 Algorithm:0 Weight:0
+      SID Structure:
+        Block Length: 32, Node-ID Length: 16, Func-Length: 16, Args-Length: 0
+  IPv6 Address: C02:1::1
+  IPv6 Address: C02:1::2
+  IPv6 Router ID: C02:1::1
+  Metric: 0          IPv6 FCCC:CCC1:C3::/48
+    Prefix-attr: X:0 R:0 N:0
+  Metric: 10         IPv6 C02:1::/64
+    Prefix-attr: X:0 R:0 N:0
+  Metric: 10         IPv6 2023:1::/64
+    Prefix-attr: X:0 R:0 N:0
+  Metric: 10         IPv6 2023:2::/64
+    Prefix-attr: X:0 R:0 N:0
+  Metric: 10         IPv6 2021:1::/64
+    Prefix-attr: X:0 R:0 N:0
+  Metric: 10         IPv6 2021:2::/64
+    Prefix-attr: X:0 R:0 N:0
+  SRv6 Locator: (MT-IPv4) FCCC:CCC1:C3::/48 Metric:0 Algorithm:0
+    End SID: FCCC:CCC1:C3:: uN (PSP/USD)
+      SID Structure:
+        Block Length: 32, Node-ID Length: 16, Func-Length: 0, Args-Length: 0
+iolP1.00-00           0x00000005   0x7340                 844/1200      0/0/0
+  Area Address: 49.0000
+  NLPID:        0xCC 0x8E 
+  Router CAP:   0.0.0.0, D:0, S:0
+    SRv6 Oflag:0
+  Hostname: iolP1
+  Metric: 10         IS-Extended iolP3.00
+    Interface IPV6 Address: 2013:1::1
+    Neighbor IPV6 Address: 2013:1::2
+    Admin. Weight: 10
+    Physical LINK BW: 10000 kbits/sec
+    End.X SID: FCCC:CCC1:AA11:E004:: uA (PSP/USD) B:0 S:0 P:0 Algorithm:0 Weight:0
+      SID Structure:
+        Block Length: 32, Node-ID Length: 16, Func-Length: 16, Args-Length: 0
+  Metric: 10         IS-Extended iolPE1.00
+    Interface IPV6 Address: 2001:1::2
+    Neighbor IPV6 Address: 2001:1::1
+    Admin. Weight: 10
+    Physical LINK BW: 10000 kbits/sec
+    End.X SID: FCCC:CCC1:AA11:E000:: uA (PSP/USD) B:0 S:0 P:0 Algorithm:0 Weight:0
+      SID Structure:
+        Block Length: 32, Node-ID Length: 16, Func-Length: 16, Args-Length: 0
+  Metric: 10         IS-Extended iolPE1.00
+    Interface IPV6 Address: 2001:2::2
+    Neighbor IPV6 Address: 2001:2::1
+    Admin. Weight: 10
+    Physical LINK BW: 10000 kbits/sec
+    End.X SID: FCCC:CCC1:AA11:E001:: uA (PSP/USD) B:0 S:0 P:0 Algorithm:0 Weight:0
+      SID Structure:
+        Block Length: 32, Node-ID Length: 16, Func-Length: 16, Args-Length: 0
+  Metric: 10         IS-Extended iolPE2.00
+    Interface IPV6 Address: 2021:2::1
+    Neighbor IPV6 Address: 2021:2::2
+    Admin. Weight: 10
+    Physical LINK BW: 10000 kbits/sec
+    End.X SID: FCCC:CCC1:AA11:E003:: uA (PSP/USD) B:0 S:0 P:0 Algorithm:0 Weight:0
+      SID Structure:
+        Block Length: 32, Node-ID Length: 16, Func-Length: 16, Args-Length: 0
+  Metric: 10         IS-Extended iolPE2.00
+    Interface IPV6 Address: 2021:1::1
+    Neighbor IPV6 Address: 2021:1::2
+    Admin. Weight: 10
+    Physical LINK BW: 10000 kbits/sec
+    Uni Link Delay(Avg.) A-bit:0 Value:15
+    Uni Link Delay(Min/Max) A-bit:0 Min:15 Max:15
+    Uni Link Delay(Var.) Value:0 
+    End.X SID: FCCC:CCC1:AA11:E002:: uA (PSP/USD) B:0 S:0 P:0 Algorithm:0 Weight:0
+      SID Structure:
+        Block Length: 32, Node-ID Length: 16, Func-Length: 16, Args-Length: 0
+  IPv6 Address: C1:1::1
+  IPv6 Router ID: C1:1::1
+  Metric: 0          IPv6 FCCC:CCC1:AA11::/48
+    Prefix-attr: X:0 R:0 N:0
+  Metric: 10         IPv6 C1:1::/64
+    Prefix-attr: X:0 R:0 N:0
+  Metric: 10         IPv6 2001:1::/64
+    Prefix-attr: X:0 R:0 N:0
+  Metric: 10         IPv6 2001:2::/64
+    Prefix-attr: X:0 R:0 N:0
+  Metric: 10         IPv6 2021:1::/64
+    Prefix-attr: X:0 R:0 N:0
+  Metric: 10         IPv6 2021:2::/64
+    Prefix-attr: X:0 R:0 N:0
+  Metric: 10         IPv6 2013:1::/64
+    Prefix-attr: X:0 R:0 N:0
+  SRv6 Locator: (MT-IPv4) FCCC:CCC1:AA11::/48 Metric:0 Algorithm:0
+    End SID: FCCC:CCC1:AA11:: uN (PSP/USD)
+      SID Structure:
+        Block Length: 32, Node-ID Length: 16, Func-Length: 0, Args-Length: 0
+iolP2.00-00           0x00000001   0xE018                 871/1200      0/0/0
+  Area Address: 49.0000
+  NLPID:        0xCC 0x8E 
+  Router CAP:   0.0.0.0, D:0, S:0
+    SRv6 Oflag:0
+  Hostname: iolP2
+  Metric: 10         IS-Extended iolP3.00
+    Interface IPV6 Address: 2032:2::1
+    Neighbor IPV6 Address: 2032:2::2
+    Admin. Weight: 10
+    Physical LINK BW: 10000 kbits/sec
+    End.X SID: FCCC:CCC1:AA22:E003:: uA (PSP/USD) B:0 S:0 P:0 Algorithm:0 Weight:0
+      SID Structure:
+        Block Length: 32, Node-ID Length: 16, Func-Length: 16, Args-Length: 0
+  Metric: 10         IS-Extended iolP3.00
+    Interface IPV6 Address: 2032:1::1
+    Neighbor IPV6 Address: 2032:1::2
+    Admin. Weight: 10
+    Physical LINK BW: 10000 kbits/sec
+    End.X SID: FCCC:CCC1:AA22:E000:: uA (PSP/USD) B:0 S:0 P:0 Algorithm:0 Weight:0
+      SID Structure:
+        Block Length: 32, Node-ID Length: 16, Func-Length: 16, Args-Length: 0
+  Metric: 10         IS-Extended iolPE1.00
+    Interface IPV6 Address: 2012:2::2
+    Neighbor IPV6 Address: 2012:2::1
+    Admin. Weight: 10
+    Physical LINK BW: 10000 kbits/sec
+    End.X SID: FCCC:CCC1:AA22:E002:: uA (PSP/USD) B:0 S:0 P:0 Algorithm:0 Weight:0
+      SID Structure:
+        Block Length: 32, Node-ID Length: 16, Func-Length: 16, Args-Length: 0
+  Metric: 10         IS-Extended iolPE1.00
+    Interface IPV6 Address: 2012:1::2
+    Neighbor IPV6 Address: 2012:1::1
+    Admin. Weight: 10
+    Physical LINK BW: 10000 kbits/sec
+    End.X SID: FCCC:CCC1:AA22:E001:: uA (PSP/USD) B:0 S:0 P:0 Algorithm:0 Weight:0
+      SID Structure:
+        Block Length: 32, Node-ID Length: 16, Func-Length: 16, Args-Length: 0
+  IPv6 Address: C2:1::1
+  IPv6 Router ID: C2:1::1
+  Metric: 10         IPv6 2032:1::/64
+    Prefix-attr: X:0 R:0 N:0
+  Metric: 10         IPv6 2012:1::/64
+    Prefix-attr: X:0 R:0 N:0
+  Metric: 10         IPv6 2012:2::/64
+    Prefix-attr: X:0 R:0 N:0
+  Metric: 10         IPv6 2032:2::/64
+    Prefix-attr: X:0 R:0 N:0
+  Metric: 0          IPv6 FCCC:CCC1:AA22::/48
+    Prefix-attr: X:0 R:0 N:0
+  Metric: 10         IPv6 C2:1::/64
+    Prefix-attr: X:0 R:0 N:0
+  SRv6 Locator: (MT-IPv4) FCCC:CCC1:AA22::/48 Metric:0 Algorithm:0
+    End SID: FCCC:CCC1:AA22:: uN (PSP/USD)
+      SID Structure:
+        Block Length: 32, Node-ID Length: 16, Func-Length: 0, Args-Length: 0
+iolP3.00-00           0x00000005   0xA884                 871/1199      0/0/0
+  Area Address: 49.0000
+  NLPID:        0xCC 0x8E 
+  Router CAP:   0.0.0.0, D:0, S:0
+    SRv6 Oflag:0
+  Hostname: iolP3
+  Metric: 10         IS-Extended iolP1.00
+    Interface IPV6 Address: 2013:1::2
+    Neighbor IPV6 Address: 2013:1::1
+    Admin. Weight: 10
+    Physical LINK BW: 10000 kbits/sec
+    End.X SID: FCCC:CCC1:AA33:E003:: uA (PSP/USD) B:0 S:0 P:0 Algorithm:0 Weight:0
+      SID Structure:
+        Block Length: 32, Node-ID Length: 16, Func-Length: 16, Args-Length: 0
+  Metric: 10         IS-Extended iolPE2.00
+    Interface IPV6 Address: 2023:1::2
+    Neighbor IPV6 Address: 2023:1::1
+    Admin. Weight: 15
+    Physical LINK BW: 10000 kbits/sec
+    Uni Link Delay(Avg.) A-bit:0 Value:25
+    Uni Link Delay(Min/Max) A-bit:0 Min:25 Max:25
+    Uni Link Delay(Var.) Value:0 
+    End.X SID: FCCC:CCC1:AA33:E001:: uA (PSP/USD) B:0 S:0 P:0 Algorithm:0 Weight:0
+      SID Structure:
+        Block Length: 32, Node-ID Length: 16, Func-Length: 16, Args-Length: 0
+  Metric: 10         IS-Extended iolPE2.00
+    Interface IPV6 Address: 2023:2::2
+    Neighbor IPV6 Address: 2023:2::1
+    Admin. Weight: 15
+    Physical LINK BW: 10000 kbits/sec
+    Uni Link Delay(Avg.) A-bit:0 Value:25
+    Uni Link Delay(Min/Max) A-bit:0 Min:25 Max:25
+    Uni Link Delay(Var.) Value:0 
+    End.X SID: FCCC:CCC1:AA33:E002:: uA (PSP/USD) B:0 S:0 P:0 Algorithm:0 Weight:0
+      SID Structure:
+        Block Length: 32, Node-ID Length: 16, Func-Length: 16, Args-Length: 0
+  Metric: 10         IS-Extended iolP2.00
+    Interface IPV6 Address: 2032:2::2
+    Neighbor IPV6 Address: 2032:2::1
+    Admin. Weight: 10
+    Physical LINK BW: 10000 kbits/sec
+    End.X SID: FCCC:CCC1:AA33:E004:: uA (PSP/USD) B:0 S:0 P:0 Algorithm:0 Weight:0
+      SID Structure:
+        Block Length: 32, Node-ID Length: 16, Func-Length: 16, Args-Length: 0
+  Metric: 10         IS-Extended iolP2.00
+    Interface IPV6 Address: 2032:1::2
+    Neighbor IPV6 Address: 2032:1::1
+    Admin. Weight: 10
+    Physical LINK BW: 10000 kbits/sec
+    End.X SID: FCCC:CCC1:AA33:E000:: uA (PSP/USD) B:0 S:0 P:0 Algorithm:0 Weight:0
+      SID Structure:
+        Block Length: 32, Node-ID Length: 16, Func-Length: 16, Args-Length: 0
+  IPv6 Address: C3:1::1
+  IPv6 Router ID: C3:1::1
+  Metric: 0          IPv6 FCCC:CCC1:AA33::/48
+    Prefix-attr: X:0 R:0 N:0
+  Metric: 10         IPv6 C3:1::/64
+    Prefix-attr: X:0 R:0 N:0
+  Metric: 10         IPv6 2032:1::/64
+    Prefix-attr: X:0 R:0 N:0
+  Metric: 10         IPv6 2023:1::/64
+    Prefix-attr: X:0 R:0 N:0
+  Metric: 10         IPv6 2023:2::/64
+    Prefix-attr: X:0 R:0 N:0
+  Metric: 10         IPv6 2013:1::/64
+    Prefix-attr: X:0 R:0 N:0
+  Metric: 10         IPv6 2032:2::/64
+    Prefix-attr: X:0 R:0 N:0
+  SRv6 Locator: (MT-IPv4) FCCC:CCC1:AA33::/48 Metric:0 Algorithm:0
+    End SID: FCCC:CCC1:AA33:: uN (PSP/USD)
+      SID Structure:
+        Block Length: 32, Node-ID Length: 16, Func-Length: 0, Args-Length: 0
+        

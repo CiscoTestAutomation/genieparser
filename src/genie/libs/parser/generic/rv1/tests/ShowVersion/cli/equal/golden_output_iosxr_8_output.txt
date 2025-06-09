@@ -1,0 +1,22 @@
+Cisco IOS XR Software, Version 6.7.35.03I[Default]
+Copyright (c) 2021 by Cisco Systems, Inc.
+
+ROM: System Bootstrap, Version 0.76(c) 1994-2012 by Cisco Systems,  Inc.
+
+PE4 uptime is 31 weeks, 3 days, 3 hours, 23 minutes
+System image file is "disk0:asr9k-os-mbi-6.7.35.03I/0x100305/mbiasr9k-rsp3.vm"
+
+cisco ASR9K Series (Intel 686 F6M14S4) processor with 6291456K bytes of memory.
+Intel 686 F6M14S4 processor at 2128MHz, Revision 2.174
+ASR 9006 4 Line Card Slot Chassis with V2 AC PEM
+
+1 FastEthernet
+2 Management Ethernet
+24 TenGigE
+24 DWDM controller(s)
+503k bytes of non-volatile configuration memory.
+6114M bytes of hard disk.
+12510192k bytes of disk0: (Sector size 512 bytes).
+12510192k bytes of disk1: (Sector size 512 bytes).
+
+Configuration register on node 0/RSP0/CPU0 is 0x102

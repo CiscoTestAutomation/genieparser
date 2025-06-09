@@ -1,0 +1,10 @@
+CS1#sh mac address-table dynamic interface TwentyFiveGigE 1/0/43 vlan 802
+          Mac Address Table
+-------------------------------------------
+
+Vlan    Mac Address       Type        Ports
+----    -----------       --------    -----
+ 802    000c.293e.116b    DYNAMIC     Twe1/0/43
+ 802    40a6.b79e.1588    DYNAMIC     Twe1/0/43
+Total Mac Addresses for this criterion: 2
+CS1#

@@ -1,0 +1,4 @@
+Interface  Filter-type  Filter-mode  IP-address       Mac-address        Vlan
+---------  -----------  -----------  ---------------  -----------------  ----
+Gi1/0/2    ip          active       192.168.100.2                       100
+Gi2/0/3    ip           active       192.168.100.3                       100

@@ -1,0 +1,10 @@
+#show controller optics 0/0/0/16 fec-thresholds
+Thu May  8 04:18:10.264 UTC
+
+ FEC Threshold Information
+
+                                Raise                    Clear
+ Media FEC excess degrade   :   0.0000E+00               0.0000E+00
+ Media FEC detected degrade :   0.0000E+00               0.0000E+00
+ Host FEC excess degrade    :   0.0000E+00               0.0000E+00
+ Host FEC detected degrade  :   0.0000E+00               0.0000E+00

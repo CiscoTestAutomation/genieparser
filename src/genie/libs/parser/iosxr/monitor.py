@@ -1,6 +1,12 @@
 """monitor.py
-Iosxr parsers for the following show commands:
+IOSXR parsers for the following show commands:
+    * monitor interface
+    * monitor interface full-name
+    * monitor interface filter physical
     * monitor interface {interface}
+    * monitor interface {interface} full-name
+    * monitor interface {interface} full-name wide
+    * monitor interface {interface} wide full-name
 """
 # Python
 import re
@@ -12,81 +18,121 @@ from genie.metaparser.util.schemaengine import (Any,
         Optional, Use, SchemaTypeError, Schema)
 from genie.libs.parser.utils.common import Common
 
-""" Schema for:
-      * monitor interface {interface}
-"""
 
-class MonitorInterfaceInterfaceSchema(MetaParser):
+class MonitorInterfaceSchema(MetaParser):
+    """ Schema for:
+        * monitor interface
+        * monitor interface full-name
+        * monitor interface filter physical
+        * monitor interface {interface}
+        * monitor interface {interface} full-name
+        * monitor interface {interface} full-name wide
+        * monitor interface {interface} wide full-name
+    """
     schema = {
-    "monitor_time": {
-        Any(): {
-            "hostname": str,
-            "sys_up_time": str,
-            Optional("protocol"): str,
-            Optional("line_protocol_status"): str,
-            Optional("interface_status"): str,
-            Optional("encapsulation"): str,
-            Optional("interface"): {
-                Any(): {
-                    Optional("interface_status"): str,
-                    Optional("input_bps"): int,
-                    Optional("output_bps"): int,
-                    Optional("input_bps_percent"): float,
-                    Optional("output_bps_percent"): float,
-                    Optional("input_bytes"): float,
-                    Optional("input_bytes_unit"): str,
-                    Optional("output_bytes"): float,
-                    Optional("output_bytes_unit"): str,
-                    Optional("input_delta"): int,
-                    Optional("output_delta"): int,
-                    Optional("traffic_stats"): {
-                        "input_packets": int,
-                        "input_packets_delta": int,
-                        "input_pps": int,
-                        "input_bytes": int,
-                        "input_bytes_delta": int,
-                        "input_kbps_rate": int,
-                        "input_kbps_delta": float,
-                        "output_packets": int,
-                        "output_packets_delta": int,
-                        "output_pps": int,
-                        "output_bytes": int,
-                        "output_bytes_delta": int,
-                        "output_kbps_rate": int,
-                        "output_kbps_delta": float
-                    },
-                    Optional("error_stats"):{
-                        "input_total": int,
-                        "input_total_delta": int,
-                        "input_crc": int,
-                        "input_crc_delta": int,
-                        Optional("input_frame"): int,
-                        Optional("input_frame_delta"): int,
-                        "input_overrun": int,
-                        "input_overrun_delta": int,
-                        "output_total": int,
-                        "output_total_delta": int,
-                        Optional("output_underrun"): int,
-                        Optional("output_underrun_delta"): int
+        "monitor_time": {
+            Any(): {
+                "hostname": str,
+                "sys_up_time": str,
+                Optional("protocol"): str,
+                Optional("line_protocol_status"): str,
+                Optional("interface_status"): str,
+                Optional("encapsulation"): str,
+                Optional("interface"): {
+                    Any(): {
+                        Optional("interface_status"): str,
+                        Optional("input_bps"): int,
+                        Optional("output_bps"): int,
+                        Optional("input_bps_percent"): float,
+                        Optional("output_bps_percent"): float,
+                        Optional("input_bytes"): float,
+                        Optional("input_bytes_unit"): str,
+                        Optional("output_bytes"): float,
+                        Optional("output_bytes_unit"): str,
+                        Optional("input_delta"): int,
+                        Optional("output_delta"): int,
+                        Optional("input_drops"): int,
+                        Optional("input_drops_delta"): int,
+                        Optional("output_drops"): int,
+                        Optional("output_drops_delta"): int,
+                        Optional("err_in"): int,
+                        Optional("err_in_delta"): int,
+                        Optional("err_crc"): int,
+                        Optional("err_crc_delta"): int,
+                        Optional("err_fr"): int,
+                        Optional("err_fr_delta"): int,
+                        Optional("err_ovr"): int,
+                        Optional("err_ovr_delta"): int,
+                        Optional("err_out"): int,
+                        Optional("err_out_delta"): int,
+                        Optional("err_und"): int,
+                        Optional("err_und_delta"): int,
+                        Optional("traffic_stats"): {
+                            "input_packets": int,
+                            "input_packets_delta": int,
+                            "input_pps": int,
+                            "input_bytes": int,
+                            "input_bytes_delta": int,
+                            "input_kbps_rate": int,
+                            "input_kbps_delta": float,
+                            "output_packets": int,
+                            "output_packets_delta": int,
+                            "output_pps": int,
+                            "output_bytes": int,
+                            "output_bytes_delta": int,
+                            "output_kbps_rate": int,
+                            "output_kbps_delta": float,
+                            Optional("input_total_drops"): int,
+                            Optional("input_total_drops_delta"): int,
+                            Optional("output_total_drops_delta"): int,
+                            Optional("output_total_drops"): int,
+                        },
+                        Optional("error_stats"): {
+                            "input_total": int,
+                            "input_total_delta": int,
+                            "input_crc": int,
+                            "input_crc_delta": int,
+                            Optional("input_frame"): int,
+                            Optional("input_frame_delta"): int,
+                            "input_overrun": int,
+                            "input_overrun_delta": int,
+                            "output_total": int,
+                            "output_total_delta": int,
+                            Optional("output_underrun"): int,
+                            Optional("output_underrun_delta"): int,
+                        },
                     }
-                }
-            },
+                },
+            }
         }
     }
-}
 
 
-""" Parser for:
-      * monitor interface {interface}
-"""
-class MonitorInterfaceInterface(MonitorInterfaceInterfaceSchema):
+class MonitorInterface(MonitorInterfaceSchema):
+    """ Parser for:
+        * monitor interface
+        * monitor interface full-name
+        * monitor interface filter physical
+        * monitor interface {interface}
+        * monitor interface {interface} full-name
+        * monitor interface {interface} full-name wide
+        * monitor interface {interface} wide full-name
+    """
 
-    cli_command = ['monitor interface {interface}']
+    cli_command = [
+        'monitor interface',
+        'monitor interface full-name',
+        'monitor interface filter physical',
+        'monitor interface {interface}',
+        'monitor interface {interface} full-name',
+        'monitor interface {interface} full-name wide',
+        'monitor interface {interface} wide full-name',
+    ]
 
-    def cli(self, output=None, interface=None, timeout=10):
+    def cli(self, command, output=None, timeout=10, **kwargs):
 
         if output is None:
-            self.device.sendline(self.cli_command[0].format(interface=interface))
+            self.device.sendline(command)
             try:
                 out = self.device.expect(
                     [r"{}\s+Monitor\sTime:[\s\S]+Quit='q'".format(self.device._hostname)],
@@ -118,13 +164,49 @@ class MonitorInterfaceInterface(MonitorInterfaceInterfaceSchema):
         p2 = re.compile(r'^Protocol:(?P<protocol>\S+)$')
 
         # Hu0/0/0/0             22000/  0%    23000/  0%   114.6M/0        280.5M/0
-        p3 = re.compile(r'^(?P<interface>\S+)\s+(?P<input_bps>[\d]+)\/\s+?(?P<input_bps_percent>[\S]+)'
-                        r'%\s+(?P<output_bps>[\d]+)\/\s+?(?P<output_bps_percent>[\S]+)%\s+'
-                        r'(?P<input_bytes>[\d\.]+)(?P<int_bytes>\w)?\/(?P<input_delta>[\d]+)\s+'
-                        r'(?P<output_bytes>[\d\.]+)(?P<out_bytes>\w)?\/(?P<output_delta>[\d]+)$')
+        # Te0/0/1/0                 0/  0%        0/  0%    81.1G/305       68.9G/0             0/0             0/0
+        p3 = re.compile(r'^(?P<interface>\S+)\s+(?P<input_bps>\d+)\/\s*(?P<input_bps_percent>[\S]+)%\s+'
+                r'(?P<output_bps>\d+)\/\s*(?P<output_bps_percent>[\S]+)%\s+'
+                r'(?P<input_bytes>[\d\.]+)(?P<int_bytes>\w?)\/(?P<input_delta>\d+)\s+'
+                r'(?P<output_bytes>[\d\.]+)(?P<out_bytes>\w?)\/(?P<output_delta>\d+)'
+                r'(?:\s+(?P<input_drops>\d+)\/(?P<input_drops_delta>\d+)\s+'
+                r'(?P<output_drops>\d+)\/(?P<output_drops_delta>\d+))?$')
+
+        #      0/  0%        0/  0%    81.1G/0         68.9G/0             0/0             0/0        TenGigE0/0/1/0
+        p3_1 = re.compile(r'^\s*(?P<input_bps>\d+)\/\s*'
+                          r'(?P<input_bps_percent>\S+)%\s+'
+                          r'(?P<output_bps>\d+)\/\s*'
+                          r'(?P<output_bps_percent>\S+)%\s+'
+                          r'(?P<input_bytes>[\d\.]+)(?P<int_bytes>\w?)\/'
+                          r'(?P<input_delta>\d+)\s+'
+                          r'(?P<output_bytes>[\d\.]+)(?P<out_bytes>\w?)\/'
+                          r'(?P<output_delta>\d+)'
+                          r'(?:\s+(?P<input_drops>\d+)\/(?P<input_drops_delta>\d+)\s+'
+                          r'(?P<output_drops>\d+)\/(?P<output_drops_delta>\d+))?\s*'
+                          r'(?P<interface>\S+)?$')
 
         # Gi0/0/0/1            (statistics not available)
-        p3_1 = re.compile(r'^(?P<interface>\S+)\s+\((?P<statistics>[\s\S]+)\)')
+        p3_2 = re.compile(r'^(?P<interface>\S+)\s+\((?P<statistics>[\s\S]+)\)')
+
+        #                    (statistics not available)                                              EINT0/RSP1/CPU0
+        p3_3 = re.compile(r'^\s*(?P<statistics>\(statistics not available\))\s+(?P<interface>\S+)$')
+
+        # Interface : TenGigE0/0/1/0
+        p3_4 = re.compile(r'^Interface\s*:\s*(?P<interface>\S+)$')
+
+        #      0/  0%        0/  0%    81.1G/0         68.9G/0           0/0             0/0           1/0           0/0           0/0           0/0           0/0           0/0
+        p3_5 = re.compile(r'^\s*(?P<input_bps>\d+)\/\s*(?P<input_bps_percent>\S+)%\s+'
+                          r'(?P<output_bps>\d+)\/\s*(?P<output_bps_percent>\S+)%\s+'
+                          r'(?P<input_bytes>[\d\.]+)(?P<int_bytes>\w?)\/(?P<input_delta>\d+)\s+'
+                          r'(?P<output_bytes>[\d\.]+)(?P<out_bytes>\w?)\/(?P<output_delta>\d+)'
+                          r'(?:\s+(?P<input_drops>\d+)\/(?P<input_drops_delta>\d+)\s+'
+                          r'(?P<output_drops>\d+)\/(?P<output_drops_delta>\d+))?\s+'
+                          r'(?P<err_in>\d+)\/(?P<err_in_delta>\d+)\s+'
+                          r'(?P<err_crc>\d+)\/(?P<err_crc_delta>\d+)\s+'
+                          r'(?P<err_fr>\d+)\/(?P<err_fr_delta>\d+)\s+'
+                          r'(?P<err_ovr>\d+)\/(?P<err_ovr_delta>\d+)\s+'
+                          r'(?P<err_out>\d+)\/(?P<err_out_delta>\d+)\s+'
+                          r'(?P<err_und>\d+)\/(?P<err_und_delta>\d+)\s*$')
 
         # MgmtEth0/RP0/CPU0/0 is up, line protocol is up
         p4 = re.compile(r'^(?P<interface>\S+) +is +(?P<interface_status>\S+), '
@@ -193,6 +275,12 @@ class MonitorInterfaceInterface(MonitorInterfaceInterfaceSchema):
         #0
         p19_2 = re.compile(r'^(?P<output_underrun_delta>\d+)$')
 
+        # Input  Total Drops:                     0                            0
+        p20 = re.compile(r'^Input\s+Total Drops:\s*(?P<input_total_drops>\d+)\s*(?P<input_total_drops_delta>\d+)$')
+
+        # Output Total Drops:                     0                            0
+        p21 = re.compile(r'^Output Total Drops:\s*(?P<output_total_drops>\d+)\s*(?P<output_total_drops_delta>\d+)$')
+
         for line in out.splitlines():
 
             #To remove all ANSI directives
@@ -219,6 +307,7 @@ class MonitorInterfaceInterface(MonitorInterfaceInterfaceSchema):
                 continue
 
             # Hu0/0/0/0             22000/  0%    23000/  0%   114.6M/0        280.5M/0
+            # Te0/0/1/0                 0/  0%        0/  0%    81.1G/305       68.9G/0             0/0             0/0
             m = p3.match(line)
             if m:
                 group = m.groupdict()
@@ -254,10 +343,60 @@ class MonitorInterfaceInterface(MonitorInterfaceInterfaceSchema):
                     each_intf_dict.update({'input_bytes_unit': group['int_bytes']})
                 if group['out_bytes']:
                     each_intf_dict.update({'output_bytes_unit': group['out_bytes']})
+                if group['input_drops']:
+                    each_intf_dict.update({'input_drops': int(group['input_drops'])})
+                if group['input_drops_delta']:
+                    each_intf_dict.update({'input_drops_delta': int(group['input_drops_delta'])})
+                if group['output_drops']:
+                    each_intf_dict.update({'output_drops': int(group['output_drops'])})
+                if group['output_drops_delta']:
+                    each_intf_dict.update({'output_drops_delta': int(group['output_drops_delta'])})
+                continue
+
+            #      0/  0%        0/  0%    81.1G/0         68.9G/0             0/0             0/0        TenGigE0/0/1/0
+            m = p3_1.match(line)
+            if m:
+                group = m.groupdict()
+                #convert interface to full name
+                interface = Common.convert_intf_name(group['interface'])
+
+                interface_dict = monitor_time_dict.setdefault("interface", {})
+                each_intf_dict = interface_dict.setdefault(interface, {})
+                each_intf_dict.update({
+                    'input_bps': int(group['input_bps']),
+                    'output_bps': int(group['output_bps']),
+                    'input_delta': int(group['input_delta']),
+                    'output_delta': int(group['output_delta']),
+                    'input_bytes': float(group['input_bytes']),
+                    'output_bytes': float(group['output_bytes']),
+                    'input_drops': int(group['input_drops']),
+                    'input_drops_delta': int(group['input_drops_delta']),
+                    'output_drops': int(group['output_drops']),
+                    'output_drops_delta': int(group['output_drops_delta']),
+                })
+
+
+                if group['input_bps_percent'] == '--':
+                    input_bps_percent = 0.0
+                else:
+                    input_bps_percent = float(group['input_bps_percent'])
+
+                if group['output_bps_percent'] == '--':
+                    output_bps_percent = 0.0
+                else:
+                    output_bps_percent = float(group['output_bps_percent'])
+
+                each_intf_dict.update({'input_bps_percent': input_bps_percent,
+                                       'output_bps_percent': output_bps_percent})
+
+                if group['int_bytes']:
+                    each_intf_dict.update({'input_bytes_unit': group['int_bytes']})
+                if group['out_bytes']:
+                    each_intf_dict.update({'output_bytes_unit': group['out_bytes']})
                 continue
 
             # Gi0/0/0/1            (statistics not available)
-            m = p3_1.match(line)
+            m = p3_2.match(line)
             if m:
                 group = m.groupdict()
                 # convert interface to full name
@@ -266,8 +405,76 @@ class MonitorInterfaceInterface(MonitorInterfaceInterfaceSchema):
                 interface_dict = monitor_time_dict.setdefault("interface", {})
                 each_intf_dict = interface_dict.setdefault(interface, {})
                 each_intf_dict.update({'interface_status': group['statistics']})
+                continue
+            #                    (statistics not available)                                              EINT0/RSP1/CPU0
+            m = p3_3.match(line)
+            if m:
+                group = m.groupdict()
+                # convert interface to full name
+                interface = Common.convert_intf_name(group['interface'])
+                interface_dict = monitor_time_dict.setdefault("interface", {})
+                each_intf_dict = interface_dict.setdefault(interface, {})
+                each_intf_dict.update({'interface_status': group['statistics']})
+                continue
 
+            # Interface : TenGigE0/0/1/0
+            m = p3_4.match(line)
+            if m:
+                group = m.groupdict()
+                interface = Common.convert_intf_name(group['interface']) 
+                interface_dict = monitor_time_dict.setdefault("interface", {})
+                each_intf_dict = interface_dict.setdefault(interface, {})
+                continue
 
+            #     0/  0%        0/  0%    81.1G/0         68.9G/0           0/0             0/0           1/0           0/0           0/0           0/0           0/0           0/0
+            m = p3_5.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict = monitor_time_dict.setdefault("interface", {})
+                each_intf_dict = interface_dict.setdefault(interface, {})
+                each_intf_dict.update({
+                    'input_bps': int(group['input_bps']),
+                    'output_bps': int(group['output_bps']),
+                    'input_delta': int(group['input_delta']),
+                    'output_delta': int(group['output_delta']),
+                    'input_bytes': float(group['input_bytes']),
+                    'output_bytes': float(group['output_bytes']),
+                    'input_drops': int(group['input_drops']),
+                    'input_drops_delta': int(group['input_drops_delta']),
+                    'output_drops': int(group['output_drops']),
+                    'output_drops_delta': int(group['output_drops_delta']),
+                    'err_in': int(group['err_in']),
+                    'err_in_delta': int(group['err_in_delta']),
+                    'err_crc': int(group['err_crc']),
+                    'err_crc_delta': int(group['err_crc_delta']),
+                    'err_fr': int(group['err_fr']),
+                    'err_fr_delta': int(group['err_fr_delta']),
+                    'err_ovr': int(group['err_ovr']),
+                    'err_ovr_delta': int(group['err_ovr_delta']),
+                    'err_out': int(group['err_out']),
+                    'err_out_delta': int(group['err_out_delta']),
+                    'err_und': int(group['err_und']),
+                    'err_und_delta': int(group['err_und_delta']),
+                })
+
+                if group['input_bps_percent'] == '--':
+                    input_bps_percent = 0.0
+                else:
+                    input_bps_percent = float(group['input_bps_percent'])
+
+                if group['output_bps_percent'] == '--':
+                    output_bps_percent = 0.0
+                else:
+                    output_bps_percent = float(group['output_bps_percent'])
+
+                each_intf_dict.update({'input_bps_percent': input_bps_percent,
+                                       'output_bps_percent': output_bps_percent})
+
+                if group['int_bytes']:
+                    each_intf_dict.update({'input_bytes_unit': group['int_bytes']})
+                if group['out_bytes']:
+                    each_intf_dict.update({'output_bytes_unit': group['out_bytes']})
+                continue
             # MgmtEth0/RP0/CPU0/0 is up, line protocol is up
             m = p4.match(line)
             if m:
@@ -316,7 +523,7 @@ class MonitorInterfaceInterface(MonitorInterfaceInterfaceSchema):
             m = p9.match(line)
             if m:
                 group = m.groupdict()
-                input_kbps_delta = re.sub('[\s%]+', "", group['input_kbps_delta'])
+                input_kbps_delta = re.sub(r'[\s%]+', "", group['input_kbps_delta'])
 
                 if group['input_kbps_rate'] == 'NA':
                     input_kbps_rate = 0
@@ -359,7 +566,7 @@ class MonitorInterfaceInterface(MonitorInterfaceInterfaceSchema):
             m = p13.match(line)
             if m:
                 group = m.groupdict()
-                output_kbps_delta = re.sub('[\s%]+', "", group['output_kbps_delta'])
+                output_kbps_delta = re.sub(r'[\s%]+', "", group['output_kbps_delta'])
 
                 if group['output_kbps_rate'] == 'NA':
                     output_kbps_rate = 0
@@ -374,6 +581,22 @@ class MonitorInterfaceInterface(MonitorInterfaceInterfaceSchema):
 
                 traffic_stats_dict.update({'output_kbps_rate': output_kbps_rate,
                                            'output_kbps_delta': output_kbps_delta})
+                continue
+
+            # Input  Total Drops:                     0                            0
+            m = p20.match(line)
+            if m:
+                group = m.groupdict()
+                traffic_stats_dict.update({'input_total_drops': int(group['input_total_drops']),
+                                           'input_total_drops_delta': int(group['input_total_drops_delta'])})
+                continue
+
+            # Output Total Drops:                     0                            0
+            m = p21.match(line)
+            if m:
+                group = m.groupdict()
+                traffic_stats_dict.update({'output_total_drops': int(group['output_total_drops']),
+                                           'output_total_drops_delta': int(group['output_total_drops_delta'])})
                 continue
 
             # Input  Total:                           0                            0

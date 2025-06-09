@@ -1,0 +1,7 @@
+Multicast Routing: enabled
+Multicast Multipath: enabled (algorithm: basic)
+Multicast Route limit: No limit
+Multicast Fallback group mode: Dense
+Number of multicast boundaries configured with filter-autorp option: 0
+MoFRR: Disabled
+Multicast Service-Reflect Capabilities:

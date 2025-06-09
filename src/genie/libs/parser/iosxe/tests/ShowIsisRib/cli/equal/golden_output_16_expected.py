@@ -214,18 +214,8 @@ expected_output = {
                                                         "lfa_type": "remote LFA",
                                                         "algo": {
                                                             0: {
-                                                                "label": "16004",
-                                                                "sid_index": 4,
-                                                                "flags": {
-                                                                    "r_flag": False,
-                                                                    "n_flag": True,
-                                                                    "p_flag": False,
-                                                                    "e_flag": False,
-                                                                    "v_flag": False,
-                                                                    "l_flag": False
-                                                                }
-                                                            },
-                                                            1: {}
+                                                                "label": "100061"
+                                                            }
                                                         },
                                                         "repair_source": {
                                                             "host": "asr1k-24"
@@ -258,6 +248,21 @@ expected_output = {
                                                         "r_flag": False,
                                                         "n_flag": True
                                                     },
+                                                    "algo": {
+                                                        0: {
+                                                            "sid_index": 4,
+                                                            "flags": {
+                                                                "r_flag": False,
+                                                                "n_flag": True,
+                                                                "p_flag": False,
+                                                                "e_flag": False,
+                                                                "v_flag": False,
+                                                                "l_flag": False
+                                                            },
+                                                            "label": "16004"
+                                                        },
+                                                        1: {}
+                                                    },
                                                     "repair_path": {
                                                         "attributes": {
                                                             "DS": True,
@@ -275,6 +280,7 @@ expected_output = {
                                                         "lfa_type": "TI-LFA node/SRLG-protecting",
                                                         "algo": {
                                                             0: {
+                                                                "sid_index": 3,
                                                                 "flags": {
                                                                     "r_flag": False,
                                                                     "n_flag": True,
@@ -302,12 +308,7 @@ expected_output = {
                                                         }
                                                     },
                                                     "srgb_start": 16000,
-                                                    "srgb_range": 8000,
-                                                    "algo": {
-                                                        0: {
-                                                            "sid_index": 3
-                                                        }
-                                                    }
+                                                    "srgb_range": 8000
                                                 }
                                             }
                                         }
@@ -321,3 +322,4 @@ expected_output = {
         }
     }
 }
+

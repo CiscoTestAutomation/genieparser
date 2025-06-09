@@ -1,0 +1,27 @@
+expected_output={
+    "l3m_routes":{
+        "l3_mcg_gid":{
+            8275:{
+                "gaddr":{
+                    "ff13::1":{
+                        "ip_version":{
+                            6:{
+                                "counter_data":"14386,7308088",
+                                "counter_id": 3609,
+                                "l3_mcg_cookie":"urid:0x30::1de",
+                                "rpf_enabled":"True",
+                                "rpf_fail_punt":"True",
+                                "rpf_path_id":13,
+                                "rpf_path_type":"L3_SVI_GID",
+                                "saddr":"14:14:14::2",
+                                "snoop":"False",
+                                "vrf_cookie":"N/A",
+                                "vrf_gid":0
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

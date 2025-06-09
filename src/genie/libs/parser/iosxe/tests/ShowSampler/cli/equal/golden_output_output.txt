@@ -1,0 +1,3 @@
+Export_ID     Description	    Type		    rate		    samples		    requests                users
+
+2	            Userdefined	    Random		    1outof1000	    0		            0	                flowmonitorm4(ip,Vl100,Input)0outof0

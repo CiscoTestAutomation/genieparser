@@ -111,7 +111,7 @@ class ShowIpv6NeighborDetail(ShowIpv6NeighborDetailSchema):
         # No. of Adjacency hit with type GLEAN: Packet count 0, Byte count 0
         # No. of Adjacency hit with type NORMAL: Packet count 0, Byte count 0
         p1 = re.compile(r'^No. +of +Adjacency +hit +with +type +(?P<adjacency>([\w\s]+)): +Packet +count +'
-                        '(?P<packet_count>(\d+)), +Byte +count +(?P<byte_count>(\d+))$')
+                        r'(?P<packet_count>(\d+)), +Byte +count +(?P<byte_count>(\d+))$')
 
         # Adjacency statistics last updated before: never
         p2 = re.compile(r'^Adjacency +statistics +last +updated +before: '
@@ -357,7 +357,7 @@ class ShowIpv6NdInterface(ShowIpv6NdInterfaceSchema):
             r'^\s*ICMPv6 ND Interfaces for VRF +\"(?P<vrf>[\w]+)\"$')
         # Ethernet1/1, Interface status: protocol-up/link-up/admin-up
         p2 = re.compile(r'^\s*(?P<interface>[\w\/\.]+), +Interface status:'
-                        ' +protocol-(?P<protocol_status>[\w]+)/link-(?P<link_status>[\w]+)/admin-(?P<admin_status>[\w]+)$')
+                        r' +protocol-(?P<protocol_status>[\w]+)/link-(?P<link_status>[\w]+)/admin-(?P<admin_status>[\w]+)$')
         #   IPv6 address:
         p3 = re.compile(r'^\s*IPv6 address:$')
         #     2001:db8:c56d:4::3/64 [VALID]
@@ -685,8 +685,8 @@ class ShowIpv6IcmpNeighborDetail(ShowIpv6IcmpNeighborDetailSchema):
             r'^\s*ICMPv6 Adjacency Table for +(?P<vrf>[\w]+) +VRFs$')
 
         p2 = re.compile(r'^\s*(?P<neighbor>[\w\:]+)?( +(?P<age>[\d\:]+)'
-                        ' +(?P<link_layer_address>[a-f0-9\.]+) +(?P<neighbor_state>[\w]+) +(?P<interface>[\w\/\.]+)'
-                        ' +(?P<physical_interface>[\w\/\.]+))?$')
+                        r' +(?P<link_layer_address>[a-f0-9\.]+) +(?P<neighbor_state>[\w]+) +(?P<interface>[\w\/\.]+)'
+                        r' +(?P<physical_interface>[\w\/\.]+))?$')
 
         for line in out.splitlines():
             if line:
@@ -801,13 +801,13 @@ class ShowIpv6Routers(ShowIpv6RoutersSchema):
         # Router fe80::f816:3eff:feff:e5a2 on Ethernet1/1 , last update time 3.2 min
         # Router fe80::e6c7:22ff:fe15:4cc1 on port-channel1.100 , last update time 1.3 min
         p1 = re.compile(r'^((?P<router>\w+) )?(?P<neighbor>[a-f0-9\:]+) +on'
-                        ' +(?P<interface>[\S]+) +,'
-                        ' +last +update +time +(?P<last_update>[\d\.]+) +min$')
+                        r' +(?P<interface>[\S]+) +,'
+                        r' +last +update +time +(?P<last_update>[\d\.]+) +min$')
 
         # Current_hop_limit 64, Lifetime 1800, AddrFlag 0, OtherFlag 0, MTU 1500
         p2 = re.compile(r'^Current_hop_limit +(?P<current_hop_limit>\d+), +Lifetime +(?P<lifetime>\d+),'
-                        ' +AddrFlag +(?P<addr_flag>\d+), +OtherFlag +(?P<other_flag>\d+),'
-                        ' +MTU +(?P<mtu>\d+)$')
+                        r' +AddrFlag +(?P<addr_flag>\d+), +OtherFlag +(?P<other_flag>\d+),'
+                        r' +MTU +(?P<mtu>\d+)$')
 
         #  HomeAgentFlag 0, Preference Medium
         p3 = re.compile(

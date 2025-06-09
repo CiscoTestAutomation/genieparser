@@ -1,0 +1,12 @@
+FED ARP SNOOPING VLAN Data :
+  Vlan= 50
+  Punject Switch Profile: FALSE
+  ARP SNOOP enable: TRUE
+  Information about ACL with OID(1443) on ASIC(0)
+    Position Action  Counter OID
+    ----------------------------
+    0        PUNT    1444
+  Information about ACL with OID(1377) on ASIC(1)
+    Position Action  Counter OID
+    ----------------------------
+    0        PUNT    1378

@@ -62,8 +62,8 @@ class ShowProcessesMemoryPlatformSorted(ShowProcessesMemoryPlatformSortedSchema)
 
 		# System memory: 7703908K total, 3863776K used, 3840132K free, 
 		p1 = re.compile(r'System +memory: +(?P<total>(\d+\w?)) +total,'
-						' +(?P<used>(\d+\w?)) +used,'
-						' +(?P<free>(\d+\w?)) +free,')
+						r' +(?P<used>(\d+\w?)) +used,'
+						r' +(?P<free>(\d+\w?)) +free,')
 
 		# Lowest: 3707912K
 		p2 = re.compile(r'Lowest: (?P<lowest>(\d+\w?))')
@@ -73,8 +73,8 @@ class ShowProcessesMemoryPlatformSorted(ShowProcessesMemoryPlatformSortedSchema)
 		# ----------------------------------------------------------------------
 		#  16994  233305    887872     136       388    887872   linux_iosd-imag
 		p3 = re.compile(r'(?P<pid>(\d+))(\s+)(?P<text>(\d+))(\s+)(?P<data>(\d+))'
-						'(\s+)(?P<stack>(\d+))(\s+)(?P<dynamic>(\d+))'
-						'(\s+)(?P<RSS>(\d+))(\s+)(?P<name>([\w-])+)')
+						r'(\s+)(?P<stack>(\d+))(\s+)(?P<dynamic>(\d+))'
+						r'(\s+)(?P<RSS>(\d+))(\s+)(?P<name>([\w-])+)')
 
 		for line in out.splitlines():
 			line = line.strip()

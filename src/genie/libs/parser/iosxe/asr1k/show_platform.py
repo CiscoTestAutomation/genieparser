@@ -54,7 +54,7 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
         p1 = re.compile(r'^Sensor +List: +(?P<sensor_list>[\w\s]+)$')
 
         p2 = re.compile(r'^(?P<sensor_name>([\w\d\:]+( [\w]+( [\w]+)?)?)) +(?P<location>[\w\d]+)'
-                         ' +(?P<state>([\w]+ [\w]+ [\d%]+)|([\w]+)) +(?P<reading>[\w\d\s]+)$')
+                         r' +(?P<state>([\w]+ [\w]+ [\d%]+)|([\w]+)) +(?P<reading>[\w\d\s]+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -120,7 +120,7 @@ class ShowEnvironmentAllIncludeLocation(ShowEnvironmentAllIncludeLocationSchema)
         p1 = re.compile(r'^Sensor +List: +(?P<sensor_list>[\w\s]+)$')
 
         p2 = re.compile(r'^(?P<sensor_name>([\w\d\:]+( [\w]+( [\w]+)?)?)) +(?P<location>[\w\d]+)'
-                         ' +(?P<state>([\w]+ [\w]+ [\d%]+)|([\w]+)) +(?P<reading>[\w\d\s]+)$')
+                         r' +(?P<state>([\w]+ [\w]+ [\d%]+)|([\w]+)) +(?P<reading>[\w\d\s]+)$')
 
         for line in out.splitlines():
             line = line.strip()

@@ -1,0 +1,114 @@
+Active Multicast Sources - sending >= 4 kbps
+Default
+Group: 239.192.20.32
+  Source: 2.2.2.2,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 17033 sec)
+   HW Rate: 1500 pps/6093 kbps(1sec)
+  Source: 4.4.4.4,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 17028 sec)
+   HW Rate: 1500 pps/6234 kbps(1sec)
+Group: 239.192.20.33
+  Source: 2.2.2.2,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 17033 sec)
+   HW Rate: 3000 pps/12187 kbps(1sec)
+  Source: 4.4.4.4,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 17028 sec)
+   HW Rate: 1500 pps/6234 kbps(1sec)
+Group: 239.192.20.34
+  Source: 2.2.2.2,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 17033 sec)
+   HW Rate: 2999 pps/12187 kbps(1sec)
+  Source: 4.4.4.4,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 17028 sec)
+   HW Rate: 1500 pps/6234 kbps(1sec)
+Group: 239.192.20.35
+  Source: 2.2.2.2,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 17033 sec)
+   HW Rate: 3000 pps/12187 kbps(1sec)
+  Source: 4.4.4.4,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 17028 sec)
+   HW Rate: 1500 pps/6234 kbps(1sec)
+Group: 239.192.20.36
+  Source: 2.2.2.2,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 17033 sec)
+   HW Rate: 3000 pps/12187 kbps(1sec)
+  Source: 4.4.4.4,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 17028 sec)
+   HW Rate: 1500 pps/6234 kbps(1sec)
+Group: 239.192.20.37
+  Source: 2.2.2.2,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 17033 sec)
+   HW Rate: 1500 pps/6093 kbps(1sec)
+  Source: 4.4.4.4,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 17028 sec)
+   HW Rate: 1500 pps/6234 kbps(1sec)
+Group: 239.192.20.38
+  Source: 2.2.2.2,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 17033 sec)
+   HW Rate: 1500 pps/6093 kbps(1sec)
+  Source: 4.4.4.4,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 17028 sec)
+   HW Rate: 1500 pps/6234 kbps(1sec)
+Group: 239.192.20.39
+  Source: 2.2.2.2,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 17033 sec)
+   HW Rate: 1500 pps/6093 kbps(1sec)
+  Source: 4.4.4.4,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 17028 sec)
+   HW Rate: 1500 pps/6234 kbps(1sec)
+Group: 239.192.20.40
+  Source: 2.2.2.2,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 17033 sec)
+   HW Rate: 1500 pps/6093 kbps(1sec)
+  Source: 4.4.4.4,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 17028 sec)
+   HW Rate: 1500 pps/6234 kbps(1sec)
+Group: 239.192.20.41
+  Source: 2.2.2.2,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 17033 sec)
+   HW Rate: 1500 pps/6093 kbps(1sec)
+  Source: 4.4.4.4,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 17028 sec)
+   HW Rate: 1500 pps/6234 kbps(1sec)
+Group: 239.192.20.42
+  Source: 2.2.2.2,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 17033 sec)
+   HW Rate: 1500 pps/6093 kbps(1sec)
+  Source: 4.4.4.4,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 17028 sec)
+   HW Rate: 1500 pps/6234 kbps(1sec)
+Group: 239.192.20.43
+  Source: 2.2.2.2,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 17033 sec)
+   HW Rate: 1500 pps/6093 kbps(1sec)
+  Source: 4.4.4.4,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 17028 sec)
+   HW Rate: 1500 pps/6234 kbps(1sec)
+Group: 239.192.20.44
+  Source: 2.2.2.2,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 17033 sec)
+   HW Rate: 1500 pps/6093 kbps(1sec)
+  Source: 4.4.4.4,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 17028 sec)
+   HW Rate: 3000 pps/12468 kbps(1sec)
+Group: 239.192.20.45
+  Source: 2.2.2.2,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 17033 sec)
+   HW Rate: 1500 pps/6093 kbps(1sec)
+  Source: 4.4.4.4,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 17028 sec)
+   HW Rate: 3000 pps/12468 kbps(1sec)
+Group: 239.192.20.46
+  Source: 2.2.2.2,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 17033 sec)
+   HW Rate: 1500 pps/6093 kbps(1sec)
+  Source: 4.4.4.4,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 17028 sec)
+   HW Rate: 2999 pps/12468 kbps(1sec)
+Group: 239.192.20.47
+  Source: 2.2.2.2,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 17033 sec)
+   HW Rate: 1500 pps/6093 kbps(1sec)
+  Source: 4.4.4.4,
+   SW Rate: 0 pps/0 kbps(1sec), 0 kbps(last 17028 sec)
+   HW Rate: 3000 pps/12468 kbps(1sec)

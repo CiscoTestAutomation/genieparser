@@ -1,0 +1,15 @@
+Slot    Reg Name          Reg Value       Description
+ ------  ---------------   --------------  ---------------------------------------------------------------------
+ PS2     REAL_TIME_FAULT   0x00 0x00 0x00  No Faults
+ PS5     REAL_TIME_FAULT   0x00 0x00 0x00  No Faults
+
+ PS2     LATCHED_FAULT     0x00 0x00 0x02  Vout out of range
+ PS5     LATCHED_FAULT     0x00 0x00 0x00  No Faults
+
+
+ Power     Input     Input     Input     Input     Input     Input     Output    Output    Output    Fan1      Fan2      Heatsink
+ Supply    CurrentA  CurrentB  VoltageA  VoltageB  PowerA    PowerB    Current   Voltage   Power     Speed     Speed     Temperature
+ (Slot)    (A)       (A)       (V)       (V)       (W)       (W)       (A)       (V)       (W)       (rpm)     (rpm)     (C)
+ --------- --------- --------- --------- --------- --------- --------- --------- --------- --------- --------- --------- ---------
+ PS2       1.6       n.a       239       n.a       348       n.a       5.7       55        313       4108      3978      48
+ PS5       1.7       n.a       239       n.a       391       n.a       6.5       55        355       4065      4065      47

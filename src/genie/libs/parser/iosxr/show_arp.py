@@ -69,8 +69,8 @@ class ShowArpDetail(ShowArpDetailSchema):
         # 10.1.2.2        -          fa16.3eff.f847  Interface  Unknown ARPA GigabitEthernet0/0/0/0
         # 10.1.2.3        01:42:59   0896.adff.66f2  Dynamic    Dynamic ARPA Bundle-Ether1
         p1 = re.compile(r'^(?P<ip_address>[\w\.]+) +(?P<age>[\w\:\-]+)'
-            ' +(?P<mac_address>[\w\.]+) +(?P<state>\w+) +(?P<flag>\w+)'
-            ' +(?P<type>[\w\.]+) +(?P<interface>[\w\.\/\-]+)$')
+            r' +(?P<mac_address>[\w\.]+) +(?P<state>\w+) +(?P<flag>\w+)'
+            r' +(?P<type>[\w\.]+) +(?P<interface>[\w\.\/\-]+)$')
 
         # initial variables
         ret_dict = {}
@@ -165,57 +165,57 @@ class ShowArpTrafficDetail(ShowArpTrafficDetailSchema):
 
         # Recv: 108 requests, 8 replies
         p3 = re.compile(r'^Recv: +(?P<in_requests_pkts>\w+) +requests, '
-            '+(?P<in_replies_pkts>[\w]+) +replies( '
-            '+\((?P<unsolicited>\w+) +unsolicited\))*')
+            r'+(?P<in_replies_pkts>[\w]+) +replies( '
+            r'+\((?P<unsolicited>\w+) +unsolicited\))*')
 
         # Sent: 8 requests, 108 replies (0 proxy, 0 local proxy, 2 gratuitous)
         p4 = re.compile(r'^Sent: +(?P<out_requests_pkts>\w+) +requests,'
-            ' +(?P<out_replies_pkts>\w+) +replies +\((?P<out_proxy>\w+)'
-            ' +proxy, +(?P<out_local_proxy>\w+) +local +proxy,'
-            ' +(?P<out_gratuitous_pkts>\w+) +gratuitous\)$')
+            r' +(?P<out_replies_pkts>\w+) +replies +\((?P<out_proxy>\w+)'
+            r' +proxy, +(?P<out_local_proxy>\w+) +local +proxy,'
+            r' +(?P<out_gratuitous_pkts>\w+) +gratuitous\)$')
 
         # 0 requests recv, 0 replies sent, 0 gratuitous replies sent
         p5 = re.compile(r'^(?P<subscriber_intf_requests>\w+) +requests +recv,'
-            ' +(?P<subscriber_intf_replies>\w+) +replies +sent,'
-            ' +(?P<subscriber_intf_gratuitous>\w+) +gratuitous +replies +sent$')
+            r' +(?P<subscriber_intf_replies>\w+) +replies +sent,'
+            r' +(?P<subscriber_intf_gratuitous>\w+) +gratuitous +replies +sent$')
 
         # Resolve requests rcvd: 0
         p6 = re.compile(r'^Resolve +requests +rcvd:'
-            ' +(?P<resolve_rcvd_requests>\w+)$')
+            r' +(?P<resolve_rcvd_requests>\w+)$')
 
         # Resolve requests dropped: 0
         p7 = re.compile(r'^Resolve +requests +dropped:'
-            ' +(?P<resolve_dropped_requests>\w+)$')
+            r' +(?P<resolve_dropped_requests>\w+)$')
 
         # Errors: 0 out of memory, 0 no buffers, 0 out of subnet
         p8 = re.compile(r'^Errors:'
-            ' +(?P<out_of_memory_errors>\w+) +out +of +memory,'
-            ' +(?P<no_buffers_errors>\w+) +no +buffers,'
-            ' +(?P<out_of_subnet_errors>\w+) +out +of +(subnet|sunbet)$')
+            r' +(?P<out_of_memory_errors>\w+) +out +of +memory,'
+            r' +(?P<no_buffers_errors>\w+) +no +buffers,'
+            r' +(?P<out_of_subnet_errors>\w+) +out +of +(subnet|sunbet)$')
 
         # ARP cache:
         p9 = re.compile(r'^ARP +cache:$')
 
         # Total ARP entries in cache: 4
         p10 = re.compile(r'^Total +ARP +entries +in +cache:'
-            ' +(?P<total_arp_entries>\w+)$')
+            r' +(?P<total_arp_entries>\w+)$')
 
         # Dynamic: 2, Interface: 2, Standby: 0
         p11 = re.compile(r'^Dynamic: +(?P<dynamic>\w+),'
-            ' +Interface: +(?P<interface>\w+),'
-            ' +Standby: +(?P<standby>\w+)$')
+            r' +Interface: +(?P<interface>\w+),'
+            r' +Standby: +(?P<standby>\w+)$')
 
         # Alias: 0,   Static: 0,    DHCP: 0
         # Alias: 0,   Static: 0,    DHCP: 0,    DropAdj: 0
         p12 = re.compile(r'^Alias: +(?P<alias>\w+),'
-            ' +Static: +(?P<static>\w+),'
-            ' +DHCP: +(?P<dhcp>\w+)'
-            '(, +DropAdj: +(?P<drop_adj>\d+))?$')
+            r' +Static: +(?P<static>\w+),'
+            r' +DHCP: +(?P<dhcp>\w+)'
+            r'(, +DropAdj: +(?P<drop_adj>\d+))?$')
 
         # IP Packet drop count for node 0/0/CPU0: 0
         p13 = re.compile(r'^IP +Packet +drop +count +for +node'
-            ' +(?P<ip_packet_rack_slot_module>[\w\/]+):'
-            ' +(?P<ip_packet_drop_count>\w+)$')
+            r' +(?P<ip_packet_rack_slot_module>[\w\/]+):'
+            r' +(?P<ip_packet_drop_count>\w+)$')
 
         # Total ARP-IDB:2
         p14 = re.compile(r'^Total +ARP-IDB:(?P<total_arp_idb>\w+)$')

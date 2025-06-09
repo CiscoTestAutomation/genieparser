@@ -77,8 +77,8 @@ class ShowRouteMap(ShowRouteMapSchema):
 
             # route-map test, permit, sequence 10 
             p1 =  re.compile(r'^\s*route-map *(?P<name>\S+)\,'
-                              ' *(?P<route_disposition>[\w\W]+)\, *sequence'
-                              ' *(?P<statements>[0-9]+)$')
+                              r' *(?P<route_disposition>[\w\W]+)\, *sequence'
+                              r' *(?P<statements>[0-9]+)$')
             m = p1.match(line)
             if m:
                 name = str(m.groupdict()['name'])
@@ -107,7 +107,7 @@ class ShowRouteMap(ShowRouteMapSchema):
 
             # as-path (as-path filter): aspathlist1 
             p2 = re.compile(r'^\s*as-path *\(as-path *filter\):'
-                             ' *(?P<match_as_path_list>[a-z0-9]+)$')
+                             r' *(?P<match_as_path_list>[a-z0-9]+)$')
             m = p2.match(line)
             if m:                
                 route_map_dict[name]['statements'][statements]['conditions']\
@@ -116,7 +116,7 @@ class ShowRouteMap(ShowRouteMapSchema):
 
             # as-number (as-path-list filter): List1, List2                 
             p2_1 = re.compile(r'^\s*as-number *\(as-path-list *filter\)\:'
-                               ' *(?P<match_as_number_list>[\w\W\,\s]+)$')
+                               r' *(?P<match_as_number_list>[\w\W\,\s]+)$')
             m = p2_1.match(line)
             if m:
                 match_as_number_list = m.groupdict()['match_as_number_list']
@@ -129,7 +129,7 @@ class ShowRouteMap(ShowRouteMapSchema):
 
             # ip address prefix-lists: test-test 
             p3 = re.compile(r'^\s*ip *address *prefix-lists:'
-                             ' *(?P<match_prefix_list>[a-zA-Z0-9\S]+)$')
+                             r' *(?P<match_prefix_list>[a-zA-Z0-9\S]+)$')
             m = p3.match(line)
             if m:
                 route_map_dict[name]['statements'][statements]['conditions']\
@@ -138,7 +138,7 @@ class ShowRouteMap(ShowRouteMapSchema):
 
             # ip address (access-lists): pbr-sample
             p3_1 = re.compile(r'^\s*ip *address *\(access-lists\):'
-                             ' *(?P<match_access_list>[a-zA-Z0-9\-\S]+)$')
+                             r' *(?P<match_access_list>[a-zA-Z0-9\-\S]+)$')
             m = p3_1.match(line)
             if m:
                 route_map_dict[name]['statements'][statements]['conditions']\
@@ -147,7 +147,7 @@ class ShowRouteMap(ShowRouteMapSchema):
 
             #ip next-hop prefix-lists: test
             p4 =  re.compile(r'^\s*ip *next-hop *prefix-lists:'
-                              ' *(?P<match_nexthop_in>[a-zA-Z0-9\S]+)$')
+                              r' *(?P<match_nexthop_in>[a-zA-Z0-9\S]+)$')
             m = p4.match(line)
             if m:
                 route_map_dict[name]['statements'][statements]['conditions']\
@@ -156,7 +156,7 @@ class ShowRouteMap(ShowRouteMapSchema):
 
             # ipv6 address prefix-lists: test-test
             p5 = re.compile(r'^\s*ipv6 *address *prefix-lists:'
-                             ' *(?P<match_prefix_list_v6>[a-zA-Z0-9\S]+)$')
+                             r' *(?P<match_prefix_list_v6>[a-zA-Z0-9\S]+)$')
             m = p5.match(line)
             if m:
                 route_map_dict[name]['statements'][statements]['conditions']\
@@ -165,7 +165,7 @@ class ShowRouteMap(ShowRouteMapSchema):
 
             # ipv6 address (access-lists): pbr-sample
             p5_1 = re.compile(r'^\s*ipv6 *address *\(access-lists\):'
-                             ' *(?P<match_access_list_v6>[a-zA-Z0-9\S]+)$')
+                             r' *(?P<match_access_list_v6>[a-zA-Z0-9\S]+)$')
             m = p5_1.match(line)
             if m:
                 route_map_dict[name]['statements'][statements]['conditions']\
@@ -174,7 +174,7 @@ class ShowRouteMap(ShowRouteMapSchema):
 
             # ipv6 next-hop prefix-lists: test2
             p6 = re.compile(r'^\s*ipv6 *next-hop *prefix-lists:'
-                             ' *(?P<match_nexthop_in_v6>[a-zA-Z0-9\-\s]+)$')
+                             r' *(?P<match_nexthop_in_v6>[a-zA-Z0-9\-\s]+)$')
             m = p6.match(line)
             if m:
                 route_map_dict[name]['statements'][statements]['conditions']\
@@ -199,7 +199,7 @@ class ShowRouteMap(ShowRouteMapSchema):
 
             #community  (community-list filter): test3 
             p10 = re.compile(r'^\s*community *\(community-list *filter\):'
-                              ' *(?P<match_community_list>[a-z0-9\-\s]+)$')
+                              r' *(?P<match_community_list>[a-z0-9\-\s]+)$')
             m = p10.match(line)
             if m:
                 route_map_dict[name]['statements'][statements]['conditions']\
@@ -216,7 +216,7 @@ class ShowRouteMap(ShowRouteMapSchema):
 
             # extcommunity  (extcommunity-list filter): testing
             p11_1 = re.compile(r'^\s*extcommunity *\(extcommunity-list *filter\):'
-                                ' *(?P<match_ext_community_list>[a-zA-Z]+)$')
+                                r' *(?P<match_ext_community_list>[a-zA-Z]+)$')
             m = p11_1.match(line)
             if m:
                 route_map_dict[name]['statements'][statements]['conditions']\
@@ -331,9 +331,9 @@ class ShowRouteMap(ShowRouteMapSchema):
 
             #community 100:1 no-export no-advertise additive 
             p20_1 = re.compile(r'^\s*community *(?P<set_community>[0-9\:]+)(?:'
-                                ' *(?P<set_community_no_export>(no-export)))?(?:'
-                                ' *(?P<set_community_no_advertise>(no-advertise)))?(?:'
-                                ' *(?P<set_community_additive>(additive)))?$')
+                                r' *(?P<set_community_no_export>(no-export)))?(?:'
+                                r' *(?P<set_community_no_advertise>(no-advertise)))?(?:'
+                                r' *(?P<set_community_additive>(additive)))?$')
             m = p20_1.match(line)
             if m:
                 set_community = str(m.groupdict()['set_community'])
@@ -353,7 +353,7 @@ class ShowRouteMap(ShowRouteMapSchema):
 
             #as-path prepend 10 10 10 
             p21 = re.compile(r'^\s*as-path *prepend'
-                              ' *(?P<set_as_path_prepend>[0-9\s]+)$')
+                              r' *(?P<set_as_path_prepend>[0-9\s]+)$')
             m = p21.match(line)
             if m:
                 set_as_path_prepend = str(m.groupdict()['set_as_path_prepend'])
@@ -376,7 +376,7 @@ class ShowRouteMap(ShowRouteMapSchema):
 
             #extcomm-list cisco delete
             p22 = re.compile(r'^\s*extcomm-list'
-                              ' *(?P<set_ext_community_delete>[a-z]+) *delete$')
+                              r' *(?P<set_ext_community_delete>[a-z]+) *delete$')
             m = p22.match(line)
             if m:
                 route_map_dict[name]['statements'][statements]['actions']\
@@ -386,8 +386,8 @@ class ShowRouteMap(ShowRouteMapSchema):
 
             # extcommunity RT:100:10 additive 
             p23 = re.compile(r'^\s*extcommunity'
-                              ' *RT:(?P<set_ext_community_rt>[0-9\:]+)'
-                              ' *(?P<set_ext_community_rt_additive>(additive))$')
+                              r' *RT:(?P<set_ext_community_rt>[0-9\:]+)'
+                              r' *(?P<set_ext_community_rt_additive>(additive))$')
             m = p23.match(line)
             if m:
 
@@ -404,7 +404,7 @@ class ShowRouteMap(ShowRouteMapSchema):
 
             # extcommunity RT:100:10
             p23_1 = re.compile(r'^\s*extcommunity'
-                                ' *RT:(?P<set_ext_community_rt>[0-9\:]+)$')
+                                r' *RT:(?P<set_ext_community_rt>[0-9\:]+)$')
             m = p23_1.match(line)
             if m:
                 set_ext_community_rt = str(m.groupdict()['set_ext_community_rt'])

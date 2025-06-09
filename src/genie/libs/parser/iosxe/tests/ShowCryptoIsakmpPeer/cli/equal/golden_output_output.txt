@@ -1,0 +1,4 @@
+Peer: 1.1.1.2 Port: 500 Local: 1.1.1.1
+ Phase1 id: 1.1.1.2
+Peer: 1.1.1.2 Port: 600 Local: 1.1.1.3
+ Phase1 id: 1.1.1.2

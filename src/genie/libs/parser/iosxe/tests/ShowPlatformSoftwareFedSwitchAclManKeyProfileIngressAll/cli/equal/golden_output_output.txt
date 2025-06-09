@@ -1,0 +1,21 @@
+--------------------------------------------------------------------------------------------------------------
+ Key Profile Info
+--------------------------------------------------------------------------------------------------------------
+    << Ingress >>
+
+        [Ingress Key Profile: ACCSEC, Idx: 0]
+            ETH
+               OID: [  472   394   394   394 ]
+               HW Merge Idx: 0    HW Merge Grp: 2    PKP Idx: 0    Label: LIF7
+               No of fields: 5 [ 0x1 0x2 0x21 0x14 0x2f ]
+
+        [Ingress Key Profile: SRCGRD, Idx: 1]
+            ETH
+               OID: [  473   395   395   395 ]
+               HW Merge Idx: 0    HW Merge Grp: 2    PKP Idx: 1    Label: NPP1
+               No of fields: 8 [ 0x1 0x2 0x21 0x14 0x11 0x1c 0x1d 0x2f ]
+
+        [Ingress Key Profile: MRR0_PORT, Idx: 2]
+            ETH
+               OID: [  474   396   396   396 ]
+               HW Merge Idx: 0    HW Merge Grp: 0    PKP Idx: 2    Label: NPP1

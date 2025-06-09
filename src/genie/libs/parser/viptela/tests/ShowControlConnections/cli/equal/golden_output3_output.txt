@@ -1,0 +1,13 @@
+
+        vEdge# show control connections
+                                                                                               PEER                                          PEER                                          CONTROLLER 
+        PEER    PEER PEER            SITE       DOMAIN PEER                                    PRIV  PEER                                    PUB                                           GROUP      
+        TYPE    PROT SYSTEM IP       ID         ID     PRIVATE IP                              PORT  PUBLIC IP                               PORT  ORGANIZATION            LOCAL COLOR     PROXY STATE UPTIME      ID         
+        ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        vsmart  dtls 10.8.1.82       1001       1      10.0.111.82                             12346 10.0.111.82                             12346 Cisco-SDWAN               public-internet No    up     90:19:42:0410          
+        vsmart  dtls 10.8.1.82       1001       1      10.0.111.82                             12346 10.0.111.82                             12346 Cisco-SDWAN               biz-internet    No    up     90:19:41:4310          
+        vsmart  dtls 10.8.1.82       1001       1      10.0.111.82                             12346 10.0.111.82                             12346 Cisco-SDWAN               private1        No    up     90:19:42:2010          
+        vsmart  dtls 10.8.1.82       1001       1      10.0.111.82                             12346 10.0.111.82                             12346 Cisco-SDWAN               private2        No    up     90:19:42:2210          
+        vsmart  dtls 10.8.1.82       1001       1      10.0.111.82                             12346 10.0.111.82                             12346 Cisco-SDWAN               blue            No    up     90:19:42:1610          
+        vsmart  dtls 10.8.1.82       1001       1      10.0.111.82                             12346 10.0.111.82                             12346 Cisco-SDWAN               green           No    up     90:19:42:1410          
+        vmanage dtls 10.8.1.85       1001       0      10.0.111.85                             12346 10.0.111.85                             12346 Cisco-SDWAN               private1        No    up     90:19:42:180

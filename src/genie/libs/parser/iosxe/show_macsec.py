@@ -19,9 +19,21 @@ class ShowMacsecSummarySchema(MetaParser):
     schema = {
         'interfaces': {
             Any(): {
-                'transmit_sc': str,
-                'receive_sc': str
+                Optional('transmit_sc'): str,
+                Optional('receive_sc'): str
             },
+            Optional('macsec_capable'): {
+                Any(): {
+                    'extension': str,
+                    Optional('installed_rx_sc'): int
+                }
+            },
+            Optional('macsec_enabled'): {
+                Any(): {
+                    'receive_sc': int,
+                    'vlan': int
+                }
+            }
         }
     }
 
@@ -48,12 +60,24 @@ class ShowMacsecSummary(ShowMacsecSummarySchema):
         # Fif1/6/0/32.2001                   1                   2
         p1 = re.compile(r'^(?P<interface>[\w\s\.\-\/]+)\s+(?P<transmit_sc>\d+)\s+(?P<receive_sc>\d+)$')
 
+        # TenGigabitEthernet0/0/0                 One tag-in-clear                 1
+        # TenGigabitEthernet0/0/1                 One tag-in-clear
+        p2 = re.compile(r'^(?P<interface>[\w\.\-\/]+)\s+(?P<extension>\w+\s[\w\-]+)\s*(?P<installed_rx_sc>\d+)?$')
+
+        # TenGigabitEthernet0/0/0.10   :        1       10
+        p3 = re.compile(r'^(?P<interface>[\w\.\/]+)\s+\:\s+(?P<receive_sc>\d+)\s*(?P<vlan>\d+)?$')
+
         ret_dict = {}
+
         if out != '':
             res_dict = ret_dict.setdefault('interfaces', {})
+
         for line in out.splitlines():
             line = line.strip()
 
+            # Te2/0/13                           1                   1
+            # port-channel1                      1                   2
+            # Fif1/6/0/32.2001                   1                   2
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -62,6 +86,29 @@ class ShowMacsecSummary(ShowMacsecSummarySchema):
                 intf_dict = res_dict.setdefault(interface,{})
                 intf_dict['transmit_sc'] = group['transmit_sc']
                 intf_dict['receive_sc'] = group['receive_sc']
+                continue
+
+            # TenGigabitEthernet0/0/0                 One tag-in-clear                 1
+            # TenGigabitEthernet0/0/1                 One tag-in-clear
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                interface = Common.convert_intf_name(intf=group['interface'].strip())
+                intf_dict = res_dict.setdefault('macsec_capable', {}).setdefault(interface, {})
+                intf_dict['extension'] = group['extension'].strip()
+                if group['installed_rx_sc']:
+                    intf_dict['installed_rx_sc'] = int(group['installed_rx_sc'].strip())
+                continue
+
+            # TenGigabitEthernet0/0/0.10   :        1       10
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                interface = Common.convert_intf_name(intf=group['interface'].strip())
+                intf_dict = res_dict.setdefault('macsec_enabled', {}).setdefault(interface, {})
+                intf_dict['receive_sc'] = int(group['receive_sc'].strip())
+                intf_dict['vlan'] = int(group['vlan'].strip())
+                continue
 
         return ret_dict
 
@@ -83,14 +130,14 @@ class ShowMacsecPostSchema(MetaParser):
 # ======================================================
 # Parser for 'show macsec post'
 # ======================================================
-    
+
 class ShowMacsecPost(ShowMacsecPostSchema):
     """Parser for 'show macsec post'"""
 
     cli_command = 'show macsec post'
 
     def cli(self, output=None):
-        
+
         if output is None:
             output = self.device.execute(self.cli_command)
 
@@ -107,21 +154,21 @@ class ShowMacsecPost(ShowMacsecPostSchema):
 
 
         for line in output.splitlines():
-            line = line.strip()  
+            line = line.strip()
 
         # MACsec Capable Interface                         POST Result
         # --------------------------------------------------------------
         # TenGigabitEthernet0/0/0                             NONE
-            
+
             m = p1.match(line)
             if m:
-                group = m.groupdict() 
-                interface = group['macsec_capable_interface']  
+                group = m.groupdict()
+                interface = group['macsec_capable_interface']
                 int_dict = ret_dict.setdefault('interfaces', {}).setdefault(interface, {})
-                int_dict['post_result'] = group['post_result']  
-                continue 
+                int_dict['post_result'] = group['post_result']
+                continue
 
-        return ret_dict  
+        return ret_dict
 
 
 # ==============================================
@@ -154,13 +201,13 @@ class ShowMacsecStatisticsInterfaceSchema(MetaParser):
                 'if_out_errors': int
         },
         'transmit_sc_counters': {
-            Any(): {   
+            Any(): {
                 'out_pkts_protected': int,
                 'out_pkts_encrypted': int
             }
         },
         'receive_sa_counters': {
-            Any(): {   
+            Any(): {
                 'sci': str,
                 'an': str,
                 'in_pkts_unchecked': int,
@@ -178,7 +225,7 @@ class ShowMacsecStatisticsInterfaceSchema(MetaParser):
 #==============================================
 #Parser for 'show macsec statistics interface {interface}'
 #==============================================
-	
+
 class ShowMacsecStatisticsInterface(ShowMacsecStatisticsInterfaceSchema):
 
     cli_command = 'show macsec statistics interface {interface}'
@@ -189,7 +236,7 @@ class ShowMacsecStatisticsInterface(ShowMacsecStatisticsInterfaceSchema):
             output = self.device.execute(self.cli_command.format(interface=interface))
         else:
             out = output
-        
+
         ret_dict = {}
 
         #  Ingress Untag Pkts:       0
@@ -288,97 +335,97 @@ class ShowMacsecStatisticsInterface(ShowMacsecStatisticsInterfaceSchema):
         for line in output.splitlines():
             line = line.strip()
 
-            #  Ingress Untag Pkts:       0		
+            #  Ingress Untag Pkts:       0
             m = p1.match(line)
             if m:
                 groups = m.groupdict()
                 sec_counters_dict = ret_dict
-                sec_counters_dict = sec_counters_dict.setdefault('sec_counters', {})	   
+                sec_counters_dict = sec_counters_dict.setdefault('sec_counters', {})
                 sec_counters_dict['ingress_untag_pkts'] = int(groups['ingress_untag_pkts'])
                 continue
 
             #   Ingress No Tag Pkts:      0
             m = p2.match(line)
             if m:
-                groups = m.groupdict()	
+                groups = m.groupdict()
                 sec_counters_dict['ingress_no_tag_pkts'] = int(groups['ingress_no_tag_pkts'])
                 continue
 
             #   Ingress Bad Tag Pkts:     0
             m = p3.match(line)
             if m:
-                groups = m.groupdict()	
+                groups = m.groupdict()
                 sec_counters_dict['ingress_bad_tag_pkts'] = int(groups['ingress_bad_tag_pkts'])
                 continue
 
             #   Ingress Unknown SCI Pkts: 0
             m = p4.match(line)
             if m:
-                groups = m.groupdict()	
+                groups = m.groupdict()
                 sec_counters_dict['ingress_unknown_sci_pkts'] = int(groups['ingress_unknown_sci_pkts'])
                 continue
 
             #   Ingress No SCI Pkts:      0
             m = p5.match(line)
             if m:
-                groups = m.groupdict()	
+                groups = m.groupdict()
                 sec_counters_dict['ingress_no_sci_pkts'] =int( groups['ingress_no_sci_pkts'])
                 continue
 
             #   Ingress Overrun Pkts:     0
             m = p6.match(line)
             if m:
-                groups = m.groupdict()	
+                groups = m.groupdict()
                 sec_counters_dict['ingress_overrun_pkts'] = int(groups['ingress_overrun_pkts'])
                 continue
 
             #   Ingress Validated Octets: 0
             m = p7.match(line)
             if m:
-                groups = m.groupdict()	
+                groups = m.groupdict()
                 sec_counters_dict['ingress_validated_octets'] = int(groups['ingress_validated_octets'])
                 continue
 
             #   Ingress Decrypted Octets: 184493007008
             m = p8.match(line)
             if m:
-                groups = m.groupdict()	
+                groups = m.groupdict()
                 sec_counters_dict['ingress_decrypted_octets'] = int(groups['ingress_decrypted_octets'])
                 continue
 
-            #   Egress Untag Pkts:        0    
+            #   Egress Untag Pkts:        0
             m = p9.match(line)
             if m:
-                groups = m.groupdict()    
+                groups = m.groupdict()
                 sec_counters_dict['egress_untag_pkts'] = int(groups['egress_untag_pkts'])
                 continue
 
             #   Egress Too Long Pkts:     0
             m = p10.match(line)
             if m:
-                groups = m.groupdict()    
+                groups = m.groupdict()
                 sec_counters_dict['egress_too_long_pkts'] = int(groups['egress_too_long_pkts'])
                 continue
 
             #   Egress Protected Octets:  0
             m = p11.match(line)
             if m:
-                groups = m.groupdict()    
+                groups = m.groupdict()
                 sec_counters_dict['egress_protected_octets'] = int(groups['egress_protected_octets'])
                 continue
 
             #   Egress Encrypted Octets:  3519888
             m = p12.match(line)
             if m:
-                groups = m.groupdict()    
+                groups = m.groupdict()
                 sec_counters_dict['egress_encrypted_octets'] = int(groups['egress_encrypted_octets'])
                 continue
 
             #   IF In Octets:             186176188032
             m = p13.match(line)
             if m:
-                groups = m.groupdict() 
-                controlled_counters_dict = ret_dict   
+                groups = m.groupdict()
+                controlled_counters_dict = ret_dict
                 controlled_counters_dict = controlled_counters_dict.setdefault('controlled_counters',{})
                 controlled_counters_dict['if_in_octects'] = int(groups['if_in_octects'])
                 continue
@@ -386,42 +433,42 @@ class ShowMacsecStatisticsInterface(ShowMacsecStatisticsInterfaceSchema):
             #   IF In Packets:            134202116
             m = p14.match(line)
             if m:
-                groups = m.groupdict()    
+                groups = m.groupdict()
                 controlled_counters_dict['if_in_packets'] = int(groups['if_in_packets'])
                 continue
 
             #   IF In Discard:            0
             m = p15.match(line)
             if m:
-                groups = m.groupdict()    
+                groups = m.groupdict()
                 controlled_counters_dict['if_in_discard'] = int(groups['if_in_discard'])
                 continue
 
             #   IF In Errors:             0
             m = p16.match(line)
             if m:
-                groups = m.groupdict()    
+                groups = m.groupdict()
                 controlled_counters_dict['if_in_errors'] = int(groups['if_in_errors'])
                 continue
 
             #   IF Out Octets:            3623448
             m = p17.match(line)
             if m:
-                groups = m.groupdict()    
+                groups = m.groupdict()
                 controlled_counters_dict['if_out_octects'] = int(groups['if_out_octects'])
                 continue
 
             #   IF Out Packets:           8630
             m = p18.match(line)
             if m:
-                groups = m.groupdict()    
+                groups = m.groupdict()
                 controlled_counters_dict['if_out_packets'] = int(groups['if_out_packets'])
                 continue
 
             #   IF Out Errors:            0
             m = p19.match(line)
             if m:
-                groups = m.groupdict()    
+                groups = m.groupdict()
                 controlled_counters_dict['if_out_errors'] = int(groups['if_out_errors'])
                 continue
 
@@ -459,7 +506,7 @@ class ShowMacsecStatisticsInterface(ShowMacsecStatisticsInterfaceSchema):
             #   In Pkts Unchecked:        0
             m = p24.match(line)
             if m:
-                groups = m.groupdict()    
+                groups = m.groupdict()
                 sci_dict['in_pkts_unchecked'] = int(groups['in_pkts_unchecked'])
                 continue
 
@@ -497,7 +544,7 @@ class ShowMacsecStatisticsInterface(ShowMacsecStatisticsInterfaceSchema):
                 groups = m.groupdict()
                 sci_dict['in_pkts_not_using_sa'] = int(groups['in_pkts_not_using_sa'])
                 continue
-            
+
             #   In Pkts Unused SA:        0
             m = p30.match(line)
             if m:
@@ -513,3 +560,53 @@ class ShowMacsecStatisticsInterface(ShowMacsecStatisticsInterfaceSchema):
                 continue
 
         return ret_dict
+
+# ==============================================
+# Schema for 'show macsec hw'
+# ==============================================
+class ShowMacsecHwSchema(MetaParser):
+    """Schema for show macsec hw"""
+    schema = {
+        'interfaces': {
+            Any(): {
+                'rxsa_inuse': int,
+            },
+        }
+    }
+# ==============================================
+# Parser for 'show macsec hw'
+# ==============================================
+
+class ShowMacsecHw(ShowMacsecHwSchema):
+    """Parser for show macsec hw"""
+
+    cli_command = 'show macsec hw'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # Regular expression to match the lines with interface and RxSA Inuse
+        # TenGigabitEthernet1/0/6 : 0
+        p1 = re.compile(r'^(?P<interface>\S+)\s+:\s+(?P<rxsa_inuse>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Match the line with interface and RxSA Inuse
+            # TenGigabitEthernet2/1/0       :       20
+            m = p1.match(line)
+            if m:
+                interface_dict = parsed_dict.setdefault('interfaces', {})
+                interface = m.group('interface')
+                rxsa_inuse = int(m.group('rxsa_inuse'))
+
+                # Populate the parsed dictionary
+                interface_dict[interface] = {
+                    'rxsa_inuse': rxsa_inuse
+                }
+
+        return parsed_dict

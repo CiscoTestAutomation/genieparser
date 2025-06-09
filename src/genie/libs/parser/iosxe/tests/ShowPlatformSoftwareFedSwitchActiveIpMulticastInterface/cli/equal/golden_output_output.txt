@@ -1,0 +1,4 @@
+Pim State           :Enabled
+Vrf ID              :0
+Hw Info Asic[0] :
+  Hw Pim State      :Enabled

@@ -1,0 +1,4 @@
+Uplink Autoconfig: Enable
+IfName       UID  State  L2   Created  SVI  IPAssign  IPState  Route  Static  Score
+Gi1/0/1     4158      3  Up   No       Yes  ( 1   1)  (14  9)  (1 1)  (0  0)  (0 3)
+Gi1/0/2     4159      3  Up   No       Yes  ( 1   0)  ( 9  0)  (0 0)  (0  0)  (3 0)

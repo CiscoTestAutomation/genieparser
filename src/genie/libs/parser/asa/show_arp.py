@@ -58,8 +58,8 @@ class ShowArp(ShowArpSchema):
         # outside 10.10.1.1 aa11.bbff.ee55 alias
         # outside 10.10.1.1/1 aa11.bbff.ee55 -
         p1 = re.compile(r'^(?P<name>\S+) +(?P<ip>\d+.\d+.\d+.\d+)'
-            '(\/(?P<prefix_length>[0-9]+))? +(?P<link_layer_address>\S+.\S+.\S+) '
-            '+(?P<age>\S+)$')
+            r'(\/(?P<prefix_length>[0-9]+))? +(?P<link_layer_address>\S+.\S+.\S+) '
+            r'+(?P<age>\S+)$')
 
         for line in out.splitlines():
             line = line.strip()

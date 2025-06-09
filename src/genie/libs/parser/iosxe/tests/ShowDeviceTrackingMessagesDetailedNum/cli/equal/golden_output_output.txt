@@ -1,0 +1,11 @@
+[Tue Sep 03 06:03:36.000] VLAN 50, From Gi3/0/46 seclvl [glean], MAC b07d.479e.7d9a: DHCPv6::REN,
+ 1 addresses advertised:
+        IPv6 addr: 100:50:2:0:1959:ED35:5D2A:3E4B, Packet ignored.
+
+ [Tue Sep 03 06:03:36.000] VLAN 50, From Po126 seclvl [glean], DHCPv6::REP, no IPv6 target.
+
+ [Tue Sep 03 06:03:36.000] VLAN 50, From Po126 seclvl [glean], about Gi3/0/46, MAC b07d.479e.7d9a: DHCPv6::REP,
+ 1 addresses advertised:
+        IPv6 addr: 100:50:2:0:1959:ED35:5D2A:3E4B, lifetime: 0x5==5,
+
+ [Tue Sep 03 06:03:38.000] VLAN 50, From Gi3/0/46 seclvl [glean], DHCPv6::REN, no IPv6 target. 

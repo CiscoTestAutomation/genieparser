@@ -85,26 +85,26 @@ class ShowMkaSessions(ShowMkaSessionsSchema):
         # initial return dictionary
         ret_dict = {}
   
-        p1 = re.compile('^Total MKA Sessions\.+ (?P<total_mka_sessions>\d+)$')
-        p2 = re.compile('^Secured Sessions\.+ (?P<secured_mka_sessions>\d+)$')
-        p3 = re.compile('^Pending Sessions\.+ (?P<pending_mka_sessions>\d+)$')
+        p1 = re.compile(r'^Total MKA Sessions\.+ (?P<total_mka_sessions>\d+)$')
+        p2 = re.compile(r'^Secured Sessions\.+ (?P<secured_mka_sessions>\d+)$')
+        p3 = re.compile(r'^Pending Sessions\.+ (?P<pending_mka_sessions>\d+)$')
 
         # Matching patterns
         #Hu2/6/0/39     70b3.171e.b282/0103 *DEFAULT POLICY* NO                NO
         p4 = re.compile(r'(?P<interface>\S+\/\S+) +'
-                    '(?P<local_txsci>\w+\.\w+\.\w+\/\w+) +'
-                    '(?P<policy_name>\S+(?: +\S+)?) +'
-                    '(?P<inherited>\w+) +'
-                    '(?P<key_server>\w+(?: +\w+)?)')
+                    r'(?P<local_txsci>\w+\.\w+\.\w+\/\w+) +'
+                    r'(?P<policy_name>\S+(?: +\S+)?) +'
+                    r'(?P<inherited>\w+) +'
+                    r'(?P<key_server>\w+(?: +\w+)?)')
 
         # Matching patterns
         #259            00a7.42ce.d57f/0074 1                Secured           10
         #2              40f0.78b9.2a81/0002 1                Secured           FA5132C4F968EED9A1B0C2AFD5608288
         p5 = re.compile(r'(?P<port_id>\d+) +'
-                        '(?P<peer_rxsci>\w+\.\w+\.\w+\/\w+) +'
-                        '(?P<macsec_peers>\w+) +'
-                        '(?P<status>.*) '
-                        '(?P<ckn>\S+)')
+                        r'(?P<peer_rxsci>\w+\.\w+\.\w+\/\w+) +'
+                        r'(?P<macsec_peers>\w+) +'
+                        r'(?P<status>.*) '
+                        r'(?P<ckn>\S+)')
 
         session_count = 0
         for line in out.splitlines():
@@ -337,11 +337,11 @@ class ShowMkaSessionsInterfaceDetails(ShowMkaSessionsInterfaceDetailsSchema):
         p37 = re.compile(r'^Potential Peers List:')
         p38 = re.compile(r'^Dormant Peers List:')
         p39 = re.compile(re.compile(r'(?P<mi>\S+) +'
-                            '(?P<mn>\S+) +'
-                        '(?P<rx_sci>\w+\.\w+\.\w+\/\w+) +'
-                        '(?P<ks_priority>\w+) +'
-                        '(?P<rxsa_installed>\w+) +'
-                        '(?P<ssci>\w+)')) 
+                            r'(?P<mn>\S+) +'
+                        r'(?P<rx_sci>\w+\.\w+\.\w+\/\w+) +'
+                        r'(?P<ks_priority>\w+) +'
+                        r'(?P<rxsa_installed>\w+) +'
+                        r'(?P<ssci>\w+)')) 
 
         for line in out.splitlines():
             out_dict = ret_dict.setdefault('sessions', {})
@@ -1267,65 +1267,65 @@ class ShowMkaSummary(ShowMkaSummarySchema):
             out = output
         # initial return dictionary
         ret_dict = {}
-        p1 = re.compile('^Total MKA Sessions\.+ (?P<total_mka_sessions>\d+)$')
-        p2 = re.compile('^Secured Sessions\.+ (?P<secured_mka_sessions>\d+)$')
-        p3 = re.compile('^Pending Sessions\.+ (?P<pending_mka_sessions>\d+)$')
+        p1 = re.compile(r'^Total MKA Sessions\.+ (?P<total_mka_sessions>\d+)$')
+        p2 = re.compile(r'^Secured Sessions\.+ (?P<secured_mka_sessions>\d+)$')
+        p3 = re.compile(r'^Pending Sessions\.+ (?P<pending_mka_sessions>\d+)$')
         p4 = re.compile(r'(?P<interface>\S+\/\S+) +'
-                    '(?P<local_txsci>\w+\.\w+\.\w+\/\w+) +'
-                    '(?P<policy_name>\S+(?: +\S+)?) +'
-                    '(?P<inherited>\w+) +'
-                    '(?P<key_server>\w+(?: +\w+)?)')
+                    r'(?P<local_txsci>\w+\.\w+\.\w+\/\w+) +'
+                    r'(?P<policy_name>\S+(?: +\S+)?) +'
+                    r'(?P<inherited>\w+) +'
+                    r'(?P<key_server>\w+(?: +\w+)?)')
         p5 = re.compile(r'(?P<port_id>\d+) +'
-                        '(?P<peer_rxsci>\w+\.\w+\.\w+\/\w+) +'
-                        '(?P<macsec_peers>\w+) +'
-                        '(?P<status>.*) '
-                        '(?P<ckn>\d+)')
-        p6 = re.compile('^Secured\.+ (?P<secured>\d+)$')
-        p7 = re.compile('^Reauthentication Attempts\.+ (?P<reauthentication_attempts>\d+)$')
-        p8 = re.compile('^Deleted \(Secured\)\.+ (?P<deleted_secured>\d+)$')
-        p9 = re.compile('^Keepalive Timeouts\.+ (?P<keepalive_timeouts>\d+)$')
-        p10 = re.compile('^CA Statistics$')
-        p11 = re.compile('^Pairwise CAKs Derived\.+ (?P<pairwise_caks_derived>\d+)$')
-        p12 = re.compile('^Pairwise CAK Rekeys\.+ (?P<pairwaise_cak_rekeys>\d+)$')
-        p13 = re.compile('^Group CAKs Generated\.+ (?P<group_caks_generated>\d+)$')
-        p14 = re.compile('^Group CAKs Received\.+ (?P<group_caks_received>\d+)$')
-        p15 = re.compile('^SA Statistics$')
-        p16 = re.compile('^SAKs Generated\.+ (?P<saks_generated>\d+)$')
-        p17 = re.compile('^SAKs Rekeyed\.+ (?P<saks_rekeyed>\d+)$')
-        p18 = re.compile('^SAKs Received\.+ (?P<saks_received>\d+)$')
-        p19 = re.compile('^SAK Responses Received\.+ (?P<sak_responses_received>\d+)$')
-        p20 = re.compile('^MKPDU Statistics$')
-        p21 = re.compile('^MKPDUs Validated \& Rx\.+ (?P<mkpdus_validated>\d+)$')
-        p22 = re.compile('^\"Distributed SAK\"\.+ (?P<distributed_sak>\d+)$')
-        p23 = re.compile('^\"Distributed CAK\"\.+ (?P<distributed_cak>\d+)$')
-        p24 = re.compile('^MKPDUs Transmitted\.+ (?P<mkpdus_transmitted>\d+)$')
+                        r'(?P<peer_rxsci>\w+\.\w+\.\w+\/\w+) +'
+                        r'(?P<macsec_peers>\w+) +'
+                        r'(?P<status>.*) '
+                        r'(?P<ckn>\d+)')
+        p6 = re.compile(r'^Secured\.+ (?P<secured>\d+)$')
+        p7 = re.compile(r'^Reauthentication Attempts\.+ (?P<reauthentication_attempts>\d+)$')
+        p8 = re.compile(r'^Deleted \(Secured\)\.+ (?P<deleted_secured>\d+)$')
+        p9 = re.compile(r'^Keepalive Timeouts\.+ (?P<keepalive_timeouts>\d+)$')
+        p10 = re.compile(r'^CA Statistics$')
+        p11 = re.compile(r'^Pairwise CAKs Derived\.+ (?P<pairwise_caks_derived>\d+)$')
+        p12 = re.compile(r'^Pairwise CAK Rekeys\.+ (?P<pairwaise_cak_rekeys>\d+)$')
+        p13 = re.compile(r'^Group CAKs Generated\.+ (?P<group_caks_generated>\d+)$')
+        p14 = re.compile(r'^Group CAKs Received\.+ (?P<group_caks_received>\d+)$')
+        p15 = re.compile(r'^SA Statistics$')
+        p16 = re.compile(r'^SAKs Generated\.+ (?P<saks_generated>\d+)$')
+        p17 = re.compile(r'^SAKs Rekeyed\.+ (?P<saks_rekeyed>\d+)$')
+        p18 = re.compile(r'^SAKs Received\.+ (?P<saks_received>\d+)$')
+        p19 = re.compile(r'^SAK Responses Received\.+ (?P<sak_responses_received>\d+)$')
+        p20 = re.compile(r'^MKPDU Statistics$')
+        p21 = re.compile(r'^MKPDUs Validated \& Rx\.+ (?P<mkpdus_validated>\d+)$')
+        p22 = re.compile(r'^\"Distributed SAK\"\.+ (?P<distributed_sak>\d+)$')
+        p23 = re.compile(r'^\"Distributed CAK\"\.+ (?P<distributed_cak>\d+)$')
+        p24 = re.compile(r'^MKPDUs Transmitted\.+ (?P<mkpdus_transmitted>\d+)$')
 
-        p25 = re.compile('^Bring\-up Failures\.+ (?P<bringup_failures>\d+)$')
-        p26 = re.compile('^Reauthentication Failures\.+ (?P<reauthentication_failures>\d+)$')
-        p27 = re.compile('^Duplicate Auth\-Mgr Handle\.+ (?P<duplicate_auth_mgr_handle>\d+)$')
-        p28 = re.compile('^SAK Generation\.+ (?P<sak_generation>\d+)$')
-        p29 = re.compile('^Hash Key Generation\.+ (?P<hash_key_generation>\d+)$')
-        p30 = re.compile('^SAK Encryption\/Wrap\.+ (?P<sak_encryption_wrap>\d+)$')
-        p31 = re.compile('^SAK Decryption\/Unwrap\.+ (?P<sak_decryption_unwrap>\d+)$')
-        p32 = re.compile('^SAK Cipher Mismatch\.+ (?P<sak_cipher_mismatch>\d+)$')
-        p33 = re.compile('^Group CAK Generation\.+ (?P<group_cak_generation>\d+)$')
-        p34 = re.compile('^Group CAK Encryption\/Wrap\.+ (?P<group_cak_encryption_wrap>\d+)$')
-        p35 = re.compile('^Group CAK Decryption\/Unwrap\.+ (?P<group_cak_decryption_unwrap>\d+)$')
-        p36 = re.compile('^Pairwise CAK Derivation\.+ (?P<pairwise_cak_derivation>\d+)$')
-        p37 = re.compile('^CKN Derivation\.+ (?P<ckn_derivation>\d+)$')
-        p38 = re.compile('^ICK Derivation\.+ (?P<ick_derivation>\d+)$')
-        p39 = re.compile('^KEK Derivation\.+ (?P<kek_derivation>\d+)$')
-        p40 = re.compile('^Invalid Peer MACsec Capability\.+ (?P<invalid_peer_macsec_capability>\d+)$')
+        p25 = re.compile(r'^Bring\-up Failures\.+ (?P<bringup_failures>\d+)$')
+        p26 = re.compile(r'^Reauthentication Failures\.+ (?P<reauthentication_failures>\d+)$')
+        p27 = re.compile(r'^Duplicate Auth\-Mgr Handle\.+ (?P<duplicate_auth_mgr_handle>\d+)$')
+        p28 = re.compile(r'^SAK Generation\.+ (?P<sak_generation>\d+)$')
+        p29 = re.compile(r'^Hash Key Generation\.+ (?P<hash_key_generation>\d+)$')
+        p30 = re.compile(r'^SAK Encryption\/Wrap\.+ (?P<sak_encryption_wrap>\d+)$')
+        p31 = re.compile(r'^SAK Decryption\/Unwrap\.+ (?P<sak_decryption_unwrap>\d+)$')
+        p32 = re.compile(r'^SAK Cipher Mismatch\.+ (?P<sak_cipher_mismatch>\d+)$')
+        p33 = re.compile(r'^Group CAK Generation\.+ (?P<group_cak_generation>\d+)$')
+        p34 = re.compile(r'^Group CAK Encryption\/Wrap\.+ (?P<group_cak_encryption_wrap>\d+)$')
+        p35 = re.compile(r'^Group CAK Decryption\/Unwrap\.+ (?P<group_cak_decryption_unwrap>\d+)$')
+        p36 = re.compile(r'^Pairwise CAK Derivation\.+ (?P<pairwise_cak_derivation>\d+)$')
+        p37 = re.compile(r'^CKN Derivation\.+ (?P<ckn_derivation>\d+)$')
+        p38 = re.compile(r'^ICK Derivation\.+ (?P<ick_derivation>\d+)$')
+        p39 = re.compile(r'^KEK Derivation\.+ (?P<kek_derivation>\d+)$')
+        p40 = re.compile(r'^Invalid Peer MACsec Capability\.+ (?P<invalid_peer_macsec_capability>\d+)$')
 
-        p41 = re.compile('^Rx SC Creation\.+ (?P<rx_sc_creation>\d+)$')
-        p42 = re.compile('^Tx SC Creation\.+ (?P<tx_sc_creation>\d+)$')
-        p43 = re.compile('^Rx SA Installation\.+ (?P<rx_sa_installation>\d+)$')
-        p44 = re.compile('^Tx SA Installation\.+ (?P<tx_sa_installation>\d+)$')
-        p45 = re.compile('^MKPDU Tx\.+ (?P<mkpdu_tx>\d+)$')
-        p46 = re.compile('^MKPDU Rx ICV Verification\.+ (?P<mkpdu_rx_icv_verification>\d+)$')
-        p47 = re.compile('^MKPDU Rx Validation\.+ (?P<mkpdu_rx_validation>\d+)$')
-        p48 = re.compile('^MKPDU Rx Bad Peer MN\.+ (?P<mkpdu_rx_bad_peer_mn>\d+)$')
-        p49 = re.compile('^MKPDU Rx Non\-recent Peerlist MN\.+ (?P<mkpdu_rx_nonrecent_peerlist_mn>\d+)$')
+        p41 = re.compile(r'^Rx SC Creation\.+ (?P<rx_sc_creation>\d+)$')
+        p42 = re.compile(r'^Tx SC Creation\.+ (?P<tx_sc_creation>\d+)$')
+        p43 = re.compile(r'^Rx SA Installation\.+ (?P<rx_sa_installation>\d+)$')
+        p44 = re.compile(r'^Tx SA Installation\.+ (?P<tx_sa_installation>\d+)$')
+        p45 = re.compile(r'^MKPDU Tx\.+ (?P<mkpdu_tx>\d+)$')
+        p46 = re.compile(r'^MKPDU Rx ICV Verification\.+ (?P<mkpdu_rx_icv_verification>\d+)$')
+        p47 = re.compile(r'^MKPDU Rx Validation\.+ (?P<mkpdu_rx_validation>\d+)$')
+        p48 = re.compile(r'^MKPDU Rx Bad Peer MN\.+ (?P<mkpdu_rx_bad_peer_mn>\d+)$')
+        p49 = re.compile(r'^MKPDU Rx Non\-recent Peerlist MN\.+ (?P<mkpdu_rx_nonrecent_peerlist_mn>\d+)$')
 
         session_count = 0
         for line in out.splitlines():
@@ -1668,8 +1668,8 @@ class ShowMkaStatisticsSchema(MetaParser):
                                 'macsec-failures': {'rx-sa-installation': int,
                                         'rx-sc-creation': int,
                                         'tx-sa-installation': int,
-                                        'tx-sc-creation': 0},
-                                'mkpdu-failures': {'mkpdu-rx-bad-peer-mn': int,
+                                        'tx-sc-creation': int},
+                                Optional('mkpdu-failures'): {'mkpdu-rx-bad-peer-mn': int,
                                         'mkpdu-rx-icv-verification': int,
                                         Optional('mkpdu-rx-fallback-icv-ver'): int,
                                         'mkpdu-rx-nonrecent-peerlist-mn': int,
@@ -1712,145 +1712,145 @@ class ShowMkaStatistics(ShowMkaStatisticsSchema):
         ret_dict = {}
 
         # MKA Session Totals
-        p0 = re.compile('^MKA Session Totals$')
+        p0 = re.compile(r'^MKA Session Totals$')
 
         #Secured.................... 3
-        p1 = re.compile('^Secured\.+ (?P<secured>\d+)$')
+        p1 = re.compile(r'^Secured\.+ (?P<secured>\d+)$')
 
         #Fallback Secured........... 2
-        p2 = re.compile('^Fallback Secured\.+ (?P<fallback_secured>\d+)$')
+        p2 = re.compile(r'^Fallback Secured\.+ (?P<fallback_secured>\d+)$')
 
         #Reauthentication Attempts.. 4
-        p3 = re.compile('^Reauthentication Attempts\.+ (?P<reauthentication_attempts>\d+)$')
+        p3 = re.compile(r'^Reauthentication Attempts\.+ (?P<reauthentication_attempts>\d+)$')
 
         #Deleted (Secured).......... 2
-        p4 = re.compile('^Deleted \(Secured\)\.+ (?P<deleted_secured>\d+)$')
+        p4 = re.compile(r'^Deleted \(Secured\)\.+ (?P<deleted_secured>\d+)$')
 
         #Keepalive Timeouts......... 0
-        p5 = re.compile('^Keepalive Timeouts\.+ (?P<keepalive_timeouts>\d+)$')
+        p5 = re.compile(r'^Keepalive Timeouts\.+ (?P<keepalive_timeouts>\d+)$')
 
         #CA Statistics
-        p6 = re.compile('^CA Statistics$')
+        p6 = re.compile(r'^CA Statistics$')
 
         #Pairwise CAKs Derived...... 4
-        p7 = re.compile('^Pairwise CAKs Derived\.+ (?P<pairwise_caks_derived>\d+)$')
+        p7 = re.compile(r'^Pairwise CAKs Derived\.+ (?P<pairwise_caks_derived>\d+)$')
 
         #Pairwise CAK Rekeys........ 4
-        p8 = re.compile('^Pairwise CAK Rekeys\.+ (?P<pairwaise_cak_rekeys>\d+)$')
+        p8 = re.compile(r'^Pairwise CAK Rekeys\.+ (?P<pairwaise_cak_rekeys>\d+)$')
 
         #Group CAKs Generated....... 0
-        p9 = re.compile('^Group CAKs Generated\.+ (?P<group_caks_generated>\d+)$')
+        p9 = re.compile(r'^Group CAKs Generated\.+ (?P<group_caks_generated>\d+)$')
 
         #Group CAKs Received........ 0
-        p10 = re.compile('^Group CAKs Received\.+ (?P<group_caks_received>\d+)$')
+        p10 = re.compile(r'^Group CAKs Received\.+ (?P<group_caks_received>\d+)$')
 
         #SA Statistics
-        p11 = re.compile('^SA Statistics$')
+        p11 = re.compile(r'^SA Statistics$')
 
         #SAKs Generated............. 0
-        p12 = re.compile('^SAKs Generated\.+ (?P<saks_generated>\d+)$')
+        p12 = re.compile(r'^SAKs Generated\.+ (?P<saks_generated>\d+)$')
 
         #SAKs Rekeyed............... 1479
-        p13 = re.compile('^SAKs Rekeyed\.+ (?P<saks_rekeyed>\d+)$')
+        p13 = re.compile(r'^SAKs Rekeyed\.+ (?P<saks_rekeyed>\d+)$')
 
         #SAKs Received.............. 1480
-        p14 = re.compile('^SAKs Received\.+ (?P<saks_received>\d+)$')
+        p14 = re.compile(r'^SAKs Received\.+ (?P<saks_received>\d+)$')
 
         #SAK Responses Received..... 0
-        p15 = re.compile('^SAK Responses Received\.+ (?P<sak_responses_received>\d+)$')
+        p15 = re.compile(r'^SAK Responses Received\.+ (?P<sak_responses_received>\d+)$')
 
         #MKPDU Statistics
-        p16 = re.compile('^MKPDU Statistics$')
+        p16 = re.compile(r'^MKPDU Statistics$')
 
         #MKPDUs Validated & Rx...... 44937
-        p17 = re.compile('^MKPDUs Validated \& Rx\.+ (?P<mkpdus_validated>\d+)$')
+        p17 = re.compile(r'^MKPDUs Validated \& Rx\.+ (?P<mkpdus_validated>\d+)$')
 
         #"Distributed SAK"..... 1480
-        p18 = re.compile('^\"Distributed SAK\"\.+ (?P<distributed_sak>\d+)$')
+        p18 = re.compile(r'^\"Distributed SAK\"\.+ (?P<distributed_sak>\d+)$')
 
         #"Distributed CAK"..... 0
-        p19 = re.compile('^\"Distributed CAK\"\.+ (?P<distributed_cak>\d+)$')
+        p19 = re.compile(r'^\"Distributed CAK\"\.+ (?P<distributed_cak>\d+)$')
 
         #MKPDUs Transmitted......... 91067
-        p20 = re.compile('^MKPDUs Transmitted\.+ (?P<mkpdus_transmitted>\d+)$')
+        p20 = re.compile(r'^MKPDUs Transmitted\.+ (?P<mkpdus_transmitted>\d+)$')
 
         #Bring-up Failures................ 0
-        p21 = re.compile('^Bring\-up Failures\.+ (?P<bringup_failures>\d+)$')
+        p21 = re.compile(r'^Bring\-up Failures\.+ (?P<bringup_failures>\d+)$')
 
         #Reauthentication Failures........ 0
-        p22 = re.compile('^Reauthentication Failures\.+ (?P<reauthentication_failures>\d+)$')
+        p22 = re.compile(r'^Reauthentication Failures\.+ (?P<reauthentication_failures>\d+)$')
 
         #Duplicate Auth-Mgr Handle........ 0
-        p23 = re.compile('^Duplicate Auth\-Mgr Handle\.+ (?P<duplicate_auth_mgr_handle>\d+)$')
+        p23 = re.compile(r'^Duplicate Auth\-Mgr Handle\.+ (?P<duplicate_auth_mgr_handle>\d+)$')
 
         #SAK Generation................... 0
-        p24 = re.compile('^SAK Generation\.+ (?P<sak_generation>\d+)$')
+        p24 = re.compile(r'^SAK Generation\.+ (?P<sak_generation>\d+)$')
 
         #Hash Key Generation.............. 0
-        p25 = re.compile('^Hash Key Generation\.+ (?P<hash_key_generation>\d+)$')
+        p25 = re.compile(r'^Hash Key Generation\.+ (?P<hash_key_generation>\d+)$')
 
         #SAK Encryption/Wrap.............. 0
-        p26 = re.compile('^SAK Encryption\/Wrap\.+ (?P<sak_encryption_wrap>\d+)$')
+        p26 = re.compile(r'^SAK Encryption\/Wrap\.+ (?P<sak_encryption_wrap>\d+)$')
 
         #SAK Decryption/Unwrap............ 0
-        p27 = re.compile('^SAK Decryption\/Unwrap\.+ (?P<sak_decryption_unwrap>\d+)$')
+        p27 = re.compile(r'^SAK Decryption\/Unwrap\.+ (?P<sak_decryption_unwrap>\d+)$')
 
         #SAK Cipher Mismatch.............. 0
-        p28 = re.compile('^SAK Cipher Mismatch\.+ (?P<sak_cipher_mismatch>\d+)$')
+        p28 = re.compile(r'^SAK Cipher Mismatch\.+ (?P<sak_cipher_mismatch>\d+)$')
 
         #Group CAK Generation............. 0
-        p29 = re.compile('^Group CAK Generation\.+ (?P<group_cak_generation>\d+)$')
+        p29 = re.compile(r'^Group CAK Generation\.+ (?P<group_cak_generation>\d+)$')
 
         #Group CAK Encryption/Wrap........ 0
-        p30 = re.compile('^Group CAK Encryption\/Wrap\.+ (?P<group_cak_encryption_wrap>\d+)$')
+        p30 = re.compile(r'^Group CAK Encryption\/Wrap\.+ (?P<group_cak_encryption_wrap>\d+)$')
 
         #Group CAK Decryption/Unwrap...... 0
-        p31 = re.compile('^Group CAK Decryption\/Unwrap\.+ (?P<group_cak_decryption_unwrap>\d+)$')
+        p31 = re.compile(r'^Group CAK Decryption\/Unwrap\.+ (?P<group_cak_decryption_unwrap>\d+)$')
         
         #Pairwise CAK Derivation.......... 0
-        p32 = re.compile('^Pairwise CAK Derivation\.+ (?P<pairwise_cak_derivation>\d+)$')
+        p32 = re.compile(r'^Pairwise CAK Derivation\.+ (?P<pairwise_cak_derivation>\d+)$')
 
         #CKN Derivation................... 0
-        p33 = re.compile('^CKN Derivation\.+ (?P<ckn_derivation>\d+)$')
+        p33 = re.compile(r'^CKN Derivation\.+ (?P<ckn_derivation>\d+)$')
 
         #ICK Derivation................... 0
-        p34 = re.compile('^ICK Derivation\.+ (?P<ick_derivation>\d+)$')
+        p34 = re.compile(r'^ICK Derivation\.+ (?P<ick_derivation>\d+)$')
 
         #KEK Derivation................... 0
-        p35 = re.compile('^KEK Derivation\.+ (?P<kek_derivation>\d+)$')
+        p35 = re.compile(r'^KEK Derivation\.+ (?P<kek_derivation>\d+)$')
 
         #Invalid Peer MACsec Capability... 0
-        p36 = re.compile('^Invalid Peer MACsec Capability\.+ (?P<invalid_peer_macsec_capability>\d+)$')
+        p36 = re.compile(r'^Invalid Peer MACsec Capability\.+ (?P<invalid_peer_macsec_capability>\d+)$')
 
         #Rx SC Creation................... 0
-        p37 = re.compile('^Rx SC Creation\.+ (?P<rx_sc_creation>\d+)$')
+        p37 = re.compile(r'^Rx SC Creation\.+ (?P<rx_sc_creation>\d+)$')
 
         #Tx SC Creation................... 0
-        p38 = re.compile('^Tx SC Creation\.+ (?P<tx_sc_creation>\d+)$')
+        p38 = re.compile(r'^Tx SC Creation\.+ (?P<tx_sc_creation>\d+)$')
 
         #Rx SA Installation............... 0
-        p39 = re.compile('^Rx SA Installation\.+ (?P<rx_sa_installation>\d+)$')
+        p39 = re.compile(r'^Rx SA Installation\.+ (?P<rx_sa_installation>\d+)$')
 
         #Tx SA Installation............... 0
-        p40 = re.compile('^Tx SA Installation\.+ (?P<tx_sa_installation>\d+)$')
+        p40 = re.compile(r'^Tx SA Installation\.+ (?P<tx_sa_installation>\d+)$')
 
         #MKPDU Tx............................... 0
-        p41 = re.compile('^MKPDU Tx\.+ (?P<mkpdu_tx>\d+)$')
+        p41 = re.compile(r'^MKPDU Tx\.+ (?P<mkpdu_tx>\d+)$')
 
         #MKPDU Rx ICV Verification.............. 44647
-        p42 = re.compile('^MKPDU Rx ICV Verification\.+ (?P<mkpdu_rx_icv_verification>\d+)$')
+        p42 = re.compile(r'^MKPDU Rx ICV Verification\.+ (?P<mkpdu_rx_icv_verification>\d+)$')
 
         #MKPDU Rx Fallback ICV Verification..... 0
-        p43 = re.compile('^MKPDU Rx Fallback ICV Verification\.+ (?P<mkpdu_rx_icv_fallback_ver>\d+)$')
+        p43 = re.compile(r'^MKPDU Rx Fallback ICV Verification\.+ (?P<mkpdu_rx_icv_fallback_ver>\d+)$')
         
         #MKPDU Rx Validation.................... 0
-        p44 = re.compile('^MKPDU Rx Validation\.+ (?P<mkpdu_rx_validation>\d+)$')
+        p44 = re.compile(r'^MKPDU Rx Validation\.+ (?P<mkpdu_rx_validation>\d+)$')
         
         #MKPDU Rx Bad Peer MN................... 0
-        p45 = re.compile('^MKPDU Rx Bad Peer MN\.+ (?P<mkpdu_rx_bad_peer_mn>\d+)$')
+        p45 = re.compile(r'^MKPDU Rx Bad Peer MN\.+ (?P<mkpdu_rx_bad_peer_mn>\d+)$')
 
         #MKPDU Rx Non-recent Peerlist MN........ 0
-        p46 = re.compile('^MKPDU Rx Non\-recent Peerlist MN\.+ (?P<mkpdu_rx_nonrecent_peerlist_mn>\d+)$')
+        p46 = re.compile(r'^MKPDU Rx Non\-recent Peerlist MN\.+ (?P<mkpdu_rx_nonrecent_peerlist_mn>\d+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -1858,77 +1858,112 @@ class ShowMkaStatistics(ShowMkaStatisticsSchema):
             if m0:
                 group = m0.groupdict()
                 mka_session_totals = ret_dict.setdefault('mka-session-totals', {})
+                continue
+
             m1 = p1.match(line)
             if m1:
                 group = m1.groupdict()
                 mka_session_totals['secured'] = int(group['secured'])
+                continue
+
             m2 = p2.match(line)
             if m2:
                 group = m2.groupdict()
                 mka_session_totals['fallback-secured'] = int(group['fallback_secured'])
+                continue
+
             m3 = p3.match(line)
             if m3:
                 group = m3.groupdict()
                 mka_session_totals['reauthentication-attempts'] = int(group['reauthentication_attempts'])
+                continue
+
             m4 = p4.match(line)
             if m4:
                 group = m4.groupdict()
                 mka_session_totals['deleted-secured'] = int(group['deleted_secured'])
+                continue
+
             m5 = p5.match(line)
             if m5:
                 group = m5.groupdict()
                 mka_session_totals['keepalive-timeouts'] = int(group['keepalive_timeouts'])
+                continue
 
             m6 = p6.match(line)
             if m6:
                 group = m6.groupdict()
                 ca_statistics = ret_dict.setdefault('ca-statistics', {})
+                continue
+
             m7 = p7.match(line)
             if m7:
                 group = m7.groupdict()
                 ca_statistics['pairwise-caks-derived'] = int(group['pairwise_caks_derived'])
+                continue
+
             m8 = p8.match(line)
             if m8:
                 group = m8.groupdict()
                 ca_statistics['pairwaise-cak-rekeys'] = int(group['pairwaise_cak_rekeys'])
+                continue
+
             m9 = p9.match(line)
             if m9:
                 group = m9.groupdict()
                 ca_statistics['group-caks-generated'] = int(group['group_caks_generated'])
+                continue
+
             m10 = p10.match(line)
             if m10:
                 group = m10.groupdict()
                 ca_statistics['group-caks-received'] = int(group['group_caks_received'])
+                continue
+
             m11 = p11.match(line)
             if m11:
                 group = m11.groupdict()
                 sa_statistics = ret_dict.setdefault('sa-statistics', {})
+                continue
+
             m12 = p12.match(line)
             if m12:
                 group = m12.groupdict()
                 sa_statistics['saks-generated'] = int(group['saks_generated'])
+                continue
+
             m13 = p13.match(line)
             if m13:
                 group = m13.groupdict()
                 sa_statistics['saks-rekeyed'] = int(group['saks_rekeyed'])
+                continue
+
             m14 = p14.match(line)
             if m14:
                 group = m14.groupdict()
                 sa_statistics['saks-received'] = int(group['saks_received'])
+                continue
+
             m15 = p15.match(line)
             if m15:
                 group = m15.groupdict()
                 sa_statistics['sak-responses-received'] = int(group['sak_responses_received'])
+                continue
+
             m16 = p16.match(line)
             if m16:
                 group = m16.groupdict()
                 mkpdu_statistics = ret_dict.setdefault('mkpdu-statistics', {})
+                continue
+
             m17 = p17.match(line)
             if m17:
                 group = m17.groupdict()
                 mkpdu_received = mkpdu_statistics.setdefault('mkpdu-received', {})
                 mkpdu = 'received'
                 mkpdu_statistics['mkpdus-validated-received'] = int(group['mkpdus_validated'])
+                continue
+
             m18 = p18.match(line)
             if m18:
                 group = m18.groupdict()
@@ -1936,6 +1971,8 @@ class ShowMkaStatistics(ShowMkaStatisticsSchema):
                     mkpdu_received['distributed-sak'] = int(group['distributed_sak'])
                 elif mkpdu == 'transmitted':
                     mkpdu_transmitted['distributed-sak'] = int(group['distributed_sak'])
+                continue
+
             m19 = p19.match(line)
             if m19:
                 group = m19.groupdict()
@@ -1943,12 +1980,15 @@ class ShowMkaStatistics(ShowMkaStatisticsSchema):
                     mkpdu_received['distributed-cak'] = int(group['distributed_cak'])
                 elif mkpdu == 'transmitted':
                     mkpdu_transmitted['distributed-cak'] = int(group['distributed_cak'])
+                continue
+
             m20 = p20.match(line)
             if m20:
                 group = m20.groupdict()
                 mkpdu_transmitted = mkpdu_statistics.setdefault('mkpdu-transmitted', {})
                 mkpdu = 'transmitted'
                 mkpdu_statistics['mkpdus-transmitted'] = int(group['mkpdus_transmitted'])
+                continue
 
             m21 = p21.match(line)
             if m21:
@@ -1956,114 +1996,162 @@ class ShowMkaStatistics(ShowMkaStatisticsSchema):
                 mka_error = ret_dict.setdefault('mka-error-counters', {})
                 sess_fail = mka_error.setdefault('session-failures', {})
                 sess_fail['bringup-failures'] = int(group['bringup_failures'])
+                continue
+
             m22 = p22.match(line)
             if m22:
                 group = m22.groupdict()
                 sess_fail['reauthentication-failures'] = int(group['reauthentication_failures'])
+                continue
+
             m23 = p23.match(line)
             if m23:
                 group = m23.groupdict()
                 sess_fail['duplicate-auth-mgr-handle'] = int(group['duplicate_auth_mgr_handle'])
+                continue
 
             m24 = p24.match(line)
             if m24:
                 group = m24.groupdict()
                 sak_fail = mka_error.setdefault('sak-failures', {})
                 sak_fail['sak-generation'] = int(group['sak_generation'])
+                continue
+
             m25 = p25.match(line)
             if m25:
                 group = m25.groupdict()
                 sak_fail['hash-key-generation'] = int(group['hash_key_generation'])
+                continue
+
             m26 = p26.match(line)
             if m26:
                 group = m26.groupdict()
                 sak_fail['sak-encryption-wrap'] = int(group['sak_encryption_wrap'])
+                continue
+
             m27 = p27.match(line)
             if m27:
                 group = m27.groupdict()
                 sak_fail['sak-decryption-unwrap'] = int(group['sak_decryption_unwrap'])
+                continue
+
             m28 = p28.match(line)
             if m28:
                 group = m28.groupdict()
                 sak_fail['sak-cipher-mismatch'] = int(group['sak_cipher_mismatch'])
+                continue
 
             m29 = p29.match(line)
             if m29:
                 group = m29.groupdict()
                 ca_fail = mka_error.setdefault('ca-failures', {})
                 ca_fail['group-sak-generation'] = int(group['group_cak_generation'])
+                continue
+
             m30 = p30.match(line)
             if m30:
                 group = m30.groupdict()
                 ca_fail['group-cak-encryption-wrap'] = int(group['group_cak_encryption_wrap'])
+                continue
+
             m31 = p31.match(line)
             if m31:
                 group = m31.groupdict()
                 ca_fail['group-cak-decryption-unwrap'] = int(group['group_cak_decryption_unwrap'])
+                continue
+
             m32 = p32.match(line)
             if m32:
                 group = m32.groupdict()
                 ca_fail['pairwise-cak-derivation'] = int(group['pairwise_cak_derivation'])
+                continue
+
             m33 = p33.match(line)
             if m33:
                 group = m33.groupdict()
                 ca_fail['ckn-derivation'] = int(group['ckn_derivation'])
+                continue
+
             m34 = p34.match(line)
             if m34:
                 group = m34.groupdict()
                 ca_fail['ick-derivation'] = int(group['ick_derivation'])
+                continue
+
             m35 = p35.match(line)
             if m35:
                 group = m35.groupdict()
                 ca_fail['kek-derivation'] = int(group['kek_derivation'])
+                continue
+
             m36 = p36.match(line)
             if m36:
                 group = m36.groupdict()
                 ca_fail['invalid-peer-macsec-capability'] = int(group['invalid_peer_macsec_capability'])
+                continue
 
             m37 = p37.match(line)
             if m37:
                 group = m37.groupdict()
                 macsec_fail = mka_error.setdefault('macsec-failures', {})
                 macsec_fail['rx-sc-creation'] = int(group['rx_sc_creation'])
+                continue
+
             m38 = p38.match(line)
             if m38:
                 group = m38.groupdict()
                 macsec_fail['tx-sc-creation'] = int(group['tx_sc_creation'])
+                continue
+
             m39 = p39.match(line)
             if m39:
                 group = m39.groupdict()
                 macsec_fail['rx-sa-installation'] = int(group['rx_sa_installation'])
+                continue
+
             m40 = p40.match(line)
             if m40:
                 group = m40.groupdict()
                 macsec_fail['tx-sa-installation'] = int(group['tx_sa_installation'])
+                continue
 
             m41 = p41.match(line)
             if m41:
                 group = m41.groupdict()
                 mkpdu_fail = mka_error.setdefault('mkpdu-failures', {})
                 mkpdu_fail['mkpdu_tx'] = int(group['mkpdu_tx'])
+                continue
+
             m42 = p42.match(line)
             if m42:
                 group = m42.groupdict()
                 mkpdu_fail['mkpdu-rx-icv-verification'] = int(group['mkpdu_rx_icv_verification'])
+                continue
+
             m43 = p43.match(line)
             if m43:
                 group = m43.groupdict()
                 mkpdu_fail['mkpdu-rx-fallback-icv-ver'] = int(group['mkpdu_rx_icv_fallback_ver'])
+                continue
+
             m44 = p44.match(line)
             if m44:
                 group = m44.groupdict()
                 mkpdu_fail['mkpdu-rx-validation'] = int(group['mkpdu_rx_validation'])
+                continue
+
             m45 = p45.match(line)
             if m45:
                 group = m45.groupdict()
                 mkpdu_fail['mkpdu-rx-bad-peer-mn'] = int(group['mkpdu_rx_bad_peer_mn'])
+                continue
+
             m46 = p46.match(line)
             if m46:
                 group = m46.groupdict()
                 mkpdu_fail['mkpdu-rx-nonrecent-peerlist-mn'] = int(group['mkpdu_rx_nonrecent_peerlist_mn'])
+                continue
+
         return ret_dict
 # ==============================================
 # Parser for 'show mka policy'
@@ -2073,7 +2161,7 @@ class ShowMkaPolicySchema(MetaParser):
     """
 
     schema = {
-        'send_secure_announcements': str,
+        Optional('send_secure_announcements'): str,
         'policy': {
             Any(): {
                 'key_server_priority': int,
@@ -2129,6 +2217,7 @@ class ShowMkaPolicy(ShowMkaPolicySchema):
                 if group["interfaces"]:
                     int_list = policy_dict.setdefault("interfaces", group["interfaces"].split())
                 continue
+
             m3 = p3.match(line)
             if m3:
                 group = m3.groupdict()

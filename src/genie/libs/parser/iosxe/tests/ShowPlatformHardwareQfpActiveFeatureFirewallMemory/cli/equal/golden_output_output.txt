@@ -1,0 +1,65 @@
+show platform hardware qfp active feature firewall memory
+
+                     ==FW memory info==
+
+Chunk-Pool Allocated   Total_Free Init-Num   Low_Wat   Increment Elem_sz
+
+--------------------------------------------------------------------------
+
+scb        2           131070     131072     32768     98304     352    
+
+hostdb     0           15360      15360      1024      2048      112    
+
+teardown   0           1280       1280       80        160       32     
+
+ha retry   0           2048       2048       512       1024      144    
+
+dst pool   0           15360      15360      1024      2048      80     
+
+
+
+                         ------------Total History----------
+
+Chunk-Pool   Inuse      |Allocated    Freed       Alloc_Fail|
+
+------------------------------------------------------------
+
+scb          2           2            0           0         
+
+hostdb       0           0            0           0         
+
+dst pool     0           0            0           0         
+
+
+
+Table-Name   Address      Size     
+
+-----------------------------------------
+
+scb          0x46832400   524288         
+
+hostdb       0x46a32400   3072           
+
+zonepair     0x479e6800   1024           
+
+dchannel     0x4717fc00   16384          
+
+
+
+FW persona timer tbl address 0x471da020 entries: 131072 num_tbls 16 stagger 10,
+
+FW persona hostdb mtx (lock address): 0x46c1b800
+
+FW persona un-created sessions due to max session limit:  0
+
+FW persona agg-age sess teardown halfopen: 0, non-halfopen: 0
+
+FW persona number of times hostdb clear session stopped: 0
+
+FW total number of thread: 892, number of cpu complex: 1 
+
+
+
+6X#
+
+--- 22:27:19 ---

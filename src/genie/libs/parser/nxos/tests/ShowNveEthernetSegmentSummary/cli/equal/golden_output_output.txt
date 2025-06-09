@@ -1,0 +1,4 @@
+ESI                              Parent interface   ES State
+------------------------------   ------------------ ----------
+0300.0a00.0b00.0c00.0066         port-channel102    Up
+0300.0a00.0b00.0c00.0067         port-channel103    Up

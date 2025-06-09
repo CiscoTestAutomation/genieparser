@@ -1,0 +1,34 @@
+----------------------------------------------------------------------
+Message Type             Rx              Tx           Drops
+----------------------------------------------------------------------
+Discover             122932          122932               0
+Offer                     4               4               0
+Request                 502             502               0
+Ack                     404             404               0
+Release                   0               0               0
+Decline                   0               0               0
+Inform                    0               0               0
+Nack                      0               0               0
+----------------------------------------------------------------------
+Total                123842          123842               0
+----------------------------------------------------------------------
+DHCP L2 Forwarding:
+Total Packets Forwarded                          :         0
+Total Packets Received                           :         0
+Total Packets Dropped                            :         0
+Non DHCP:
+Total Packets Received                           :         0
+Total Packets Forwarded                          :         0
+Total Packets Dropped                            :         0
+DROP:
+Received on untrusted port                       :         0
+Unknown Failure                                  :         0
+Source mac validation failed                     :         0
+Binding entry validation Failed                  :         0
+Invalid DHCP message type                        :         0
+Interface error                                  :         0
+Tx over trusted port failed                      :         0
+Trust port not configured                        :         0
+Vlan validation failure                          :         0
+Insertion of option 82 failed                    :         0
+Packet Malformed                                 :         0

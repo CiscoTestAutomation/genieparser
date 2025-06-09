@@ -1,0 +1,21 @@
+show platform inventory
+    Name                Product ID      Version         Serial Number   Description
+ 
+Chassis
+    CHASSIS             8101-32FH-O     0.41            FLM25320591     Cisco 8100 32x400G QSFPDD 1RU Fixed System w/o HBM, Open SW
+ 
+Route Processors
+    RP0                 8101-32FH-O     0.41            FLM2528059A     Cisco 8100 32x400G QSFPDD 1RU Fixed System w/o HBM, Open SW
+ 
+Power Supplies
+    psutray
+        PSU0            PSU2KW-ACPI     0.0             POG2416K01K     2000W AC Power Module with Port-side Air Intake
+        PSU1            PSU2KW-ACPI     0.0             POG2416K01E     2000W AC Power Module with Port-side Air Intake
+ 
+Cooling Devices
+    fantray0            FAN-1RU-PE-V2   0.0             NCV26322018
+    fantray1            FAN-1RU-PE-V2   0.0             NCV2632201B
+    fantray2            FAN-1RU-PE-V2   0.0             NCV2632200Y
+    fantray3            FAN-1RU-PE-V2   0.0             NCV2632200U
+    fantray4            FAN-1RU-PE-V2   0.0             NCV26322012
+    fantray5            FAN-1RU-PI-V2   0.0             NCV2622Q906

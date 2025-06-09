@@ -1,0 +1,6 @@
+{
+    "sw_number": 1,
+    "interface": "GigabitEthernet1/0/3",
+    "queue_id": 6,
+    "match": "Q-Limit"
+}

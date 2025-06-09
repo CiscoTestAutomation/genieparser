@@ -1,0 +1,12 @@
+dut#sh pl so fed sw ac oifset urid 0x30::8                                                                                                                                                                                              
+ Type: s_g_vrf              State: allocated       MD5:(606b9e45e551431a:e7637c8a2fbd4182)                                                                                                                                              
+   Fset Urid                    : 0x3000000000000008                                                                                                                                                                                    
+   Remote Port Count            : 0                                                                                                                                                                                                     
+   Svi Port Count               : 1                                                                                                                                                                                                     
+   Users Count                  : 1                                                                                                                                                                                                     
+   Mioitem Count                : 1                                                                                 
+     No. AdjID          Interface          PhysicalIf        IfType          Flags                                  
+      1. 0xf8004af1     Vl20               -----------       svi_if          InHw IngressRep                        
+           Urids   => Mio:0x80::6 Parent:0x60::4 child_repl:0x20::11(113854e3)  adj_obj:0x90::2                     
+   Fset MCID Gid                : 8216                                                                              
+   Asic[0] mcid_oid             : 1541  

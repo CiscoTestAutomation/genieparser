@@ -2,6 +2,7 @@
 IOSXE parsers for the following commands
 
     * 'show ip eigrp neighbors'
+    * 'show ip eigrp neighbors <interface>'
     * 'show ip eigrp vrf <vrf> neighbors'
     * 'show ipv6 eigrp neighbors'
     * 'show ipv6 eigrp vrf <vrf> neighbors'
@@ -12,7 +13,9 @@ IOSXE parsers for the following commands
     * 'show ipv6 eigrp interfaces'
     * 'show ipv6 eigrp interfaces detail'
     * 'show ip eigrp interfaces detail'
+    * 'show ip eigrp interfaces detail <interface>'
     * 'show ipv6 eigrp topology {ipv6_address}'
+    * 'show ip eigrp timers'
 '''
 
 # Python
@@ -20,7 +23,7 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any, Optional
+from genie.metaparser.util.schemaengine import Any, Optional, ListOf
 
 # Libs
 from genie.libs.parser.utils.common import Common
@@ -29,6 +32,7 @@ from genie.libs.parser.utils.common import Common
 class ShowEigrpNeighborsSchema(MetaParser):
     ''' Schema for:
         * 'show ip eigrp neighbors'
+        * 'show ip eigrp neighbors <interface>'
         * 'show ip eigrp vrf <vrf> neighbors'
         * 'show ipv6 eigrp neighbors'
         * 'show ipv6 eigrp vrf <vrf> neighbors'
@@ -65,8 +69,31 @@ class ShowEigrpNeighborsSchema(MetaParser):
             }
 
 
+class ShowIpEigrpTimersSchema(MetaParser):
+    """Schema for show ip eigrp timers"""
+    schema = {
+        'eigrp_instance': {
+            Any(): {
+                'hello_process': {
+                    'expiration': ListOf(str),
+                    'type': ListOf(str),
+                },
+                'update_process': {
+                    'expiration': ListOf(str),
+                    'type': ListOf(str),
+                },
+                'sia_process': {
+                    'expiration': ListOf(str),
+                    'type': ListOf(str),
+                }
+            }
+        }
+    }
+    
+
 # ====================================
 # Parser for 'show ip eigrp neighbors'
+#            'show ip eigrp neighbors <interface>'
 #            'show ip eigrp vrf <vrf> neighbors'
 #            'show ipv6 eigrp neighbors'
 #            'show ipv6 eigrp vrf <vrf> neighbors'
@@ -77,14 +104,14 @@ class ShowEigrpNeighborsSuperParser(ShowEigrpNeighborsSchema):
 
         # EIGRP-IPv4 Neighbors for AS(1100) VRF(VRF1)
         r1 = re.compile(r'^EIGRP\-(?P<address_family>IPv4|IPv6)\s'
-            '*Neighbors\s*for \w+\(\s*(?P<as_num>\d+)\)\s*(?:VRF\((?P<vrf>\S+)\))?$')
+            r'*Neighbors\s*for \w+\(\s*(?P<as_num>\d+)\)\s*(?:VRF\((?P<vrf>\S+)\))?$')
 
         # EIGRP-IPv6 VR(test) Address-Family Neighbors for AS(100)
         # EIGRP-IPv4 VR(test) Address-Family Neighbors for AS(100) VRF(VRF1)
-        r2 = re.compile('^EIGRP\-(?P<address_family>IPv4|IPv6)\s* '
-                        'VR\s*\((?P<name>\S+)\) Address-Family Neighbors\s'
-                        '*for \w+\(\s*(?P<as_num>\d+)\)\s*'
-                        '(?:VRF\((?P<vrf>\S+)\))?$')
+        r2 = re.compile(r'^EIGRP\-(?P<address_family>IPv4|IPv6)\s* '
+                        r'VR\s*\((?P<name>\S+)\) Address-Family Neighbors\s'
+                        r'*for \w+\(\s*(?P<as_num>\d+)\)\s*'
+                        r'(?:VRF\((?P<vrf>\S+)\))?$')
 
         # When VRF is not on the same line as r1 and r2
         # VRF(VRF1)
@@ -96,21 +123,21 @@ class ShowEigrpNeighborsSuperParser(ShowEigrpNeighborsSchema):
         # 2   10.1.1.9     Gi0/0      14    00:02:24  206    5000   0   5
         # 1   10.1.2.3     Gi0/1      11    00:20:39  2202   5000   0   5
         r4 = re.compile(r'^(?P<peer_handle>\d+) +'
-                        '(?P<nbr_address>\S+) +'
-                        '(?P<eigrp_interface>[A-Za-z]+\s*[\.\d\/]+) +'
-                        '(?P<hold>\d+) +(?P<uptime>\S+) +'
-                        '(?P<srtt>\d+) +'
-                        '(?P<rto>\d+) +'
-                        '(?P<q_cnt>\d+) +'
-                        '(?P<last_seq_number>\d+)$')
+                        r'(?P<nbr_address>\S+) +'
+                        r'(?P<eigrp_interface>[A-Za-z]+\s*[\.\d\/]+) +'
+                        r'(?P<hold>\d+) +(?P<uptime>\S+) +'
+                        r'(?P<srtt>\d+) +'
+                        r'(?P<rto>\d+) +'
+                        r'(?P<q_cnt>\d+) +'
+                        r'(?P<last_seq_number>\d+)$')
         # H   Address                 Interface       Hold Uptime   SRTT   RTO  Q  Seq
         #                                             (sec)         (ms)       Cnt Num
         # 1   Link Local Address:     Gi0/0/0/1.90      12 01:36:14   11   200  0  28
         r5 = re.compile(r'^(?P<peer_handle>\d+) +Link\-local\s+address: +'
-                        '(?P<eigrp_interface>[A-Za-z]+\s*[\d\/\.]+) +'
-                        '(?P<hold>\d+) +(?P<uptime>\S+) +(?P<srtt>\d+) +'
-                        '(?P<rto>\d+) +(?P<q_cnt>\d+) +'
-                        '(?P<last_seq_number>\d+)$')
+                        r'(?P<eigrp_interface>[A-Za-z]+\s*[\d\/\.]+) +'
+                        r'(?P<hold>\d+) +(?P<uptime>\S+) +(?P<srtt>\d+) +'
+                        r'(?P<rto>\d+) +(?P<q_cnt>\d+) +'
+                        r'(?P<last_seq_number>\d+)$')
 
         # fe80::5c00:ff:fe02:7
         # fe80::5c00:ff:fe02:7
@@ -278,17 +305,21 @@ class ShowEigrpNeighborsSuperParser(ShowEigrpNeighborsSchema):
 # Parser for:
 #   * 'show ip eigrp vrf {vrf} neighbors'
 #   * 'show ip eigrp neighbors'
+#   * 'show ip eigrp neighbors <interface>'
 # ===============================================
 class ShowIpEigrpNeighbors(ShowEigrpNeighborsSuperParser, ShowEigrpNeighborsSchema):
 
     cli_command = ['show ip eigrp vrf {vrf} neighbors',
-                   'show ip eigrp neighbors',]
+                   'show ip eigrp neighbors',
+                   'show ip eigrp neighbors {interface}',]
     exclude = ['uptime' , 'hold']
 
-    def cli(self, vrf='', output=None):
+    def cli(self, vrf='', interface='', output=None):
         if output is None:
             if vrf:
                 cmd = self.cli_command[0].format(vrf=vrf)
+            elif interface:
+                cmd = self.cli_command[2].format(interface=interface)
             else:
                 cmd = self.cli_command[1]
             show_output = self.device.execute(cmd)
@@ -386,15 +417,15 @@ class ShowIpEigrpNeighborsDetailSuperParser(ShowIpEigrpNeighborsDetailSchema):
         # EIGRP-IPv4 VR(foo) Address-Family Neighbors for AS(1)
         # EIGRP-IPv4 VR(foo) Address-Family Neighbors for AS(1) VRF(VRF1)
         r1 = re.compile(r'EIGRP\-(?P<address_family>IPv4|IPv6)\s+VR'
-                        '\((?P<name>\w+)\)\s+Address\-Family\s*Neighbors'
-                        '\s*for \w*\(\s*(?P<as_num>[\S]+)\)\s*'
-                        '(?:VRF\((?P<vrf>\S+)\))?')
+                        r'\((?P<name>\w+)\)\s+Address\-Family\s*Neighbors'
+                        r'\s*for \w*\(\s*(?P<as_num>[\S]+)\)\s*'
+                        r'(?:VRF\((?P<vrf>\S+)\))?')
 
         # EIGRP-IPv4 Neighbors for AS(100)
         # EIGRP-IPv4 Neighbors for AS(100) VRF(VRF1)
         r2 = re.compile(r'EIGRP\-(?P<address_family>IPv4|IPv6)\s*'
-                        'Neighbors\s*for \w+\(\s*(?P<as_num>\d+)\)\s*'
-                        '(?:VRF\((?P<vrf>\S+)\))?')
+                        r'Neighbors\s*for \w+\(\s*(?P<as_num>\d+)\)\s*'
+                        r'(?:VRF\((?P<vrf>\S+)\))?')
 
         # When VRF is alone in a line
         # VRF(VRF1)
@@ -406,20 +437,20 @@ class ShowIpEigrpNeighborsDetailSuperParser(ShowIpEigrpNeighborsDetailSchema):
         # 0     10.1.2.1    Et1/0       11      00:02:31 12     200     0       6
         # 1     10.1.2.3    Gi0/1       11      00:20:39 2202   5000    0       5
         r3 = re.compile(r'^(?P<peer_handle>\d+) +'
-                        '(?P<nbr_address>\S+) +'
-                        '(?P<eigrp_interface>[A-Za-z]+\s*[\.\d\/]+) +'
-                        '(?P<hold>\d+) +(?P<uptime>\S+) +'
-                        '(?P<srtt>\d+) +'
-                        '(?P<rto>\d+) +'
-                        '(?P<q_cnt>\d+) +'
-                        '(?P<last_seq_number>\d+)$')
+                        r'(?P<nbr_address>\S+) +'
+                        r'(?P<eigrp_interface>[A-Za-z]+\s*[\.\d\/]+) +'
+                        r'(?P<hold>\d+) +(?P<uptime>\S+) +'
+                        r'(?P<srtt>\d+) +'
+                        r'(?P<rto>\d+) +'
+                        r'(?P<q_cnt>\d+) +'
+                        r'(?P<last_seq_number>\d+)$')
 
         # 1   Link-local address:     Gi3.90                   11 01:30:32   10   100  0  29
         r4 = re.compile(r'^(?P<peer_handle>\d+) +Link\-local\s+address: +'
-                        '(?P<eigrp_interface>[A-Za-z]+\s*[\d\/\.]+) +'
-                        '(?P<hold>\d+) +(?P<uptime>\S+) +(?P<srtt>\d+) +'
-                        '(?P<rto>\d+) +(?P<q_cnt>\d+) +'
-                        '(?P<last_seq_number>\d+)$')
+                        r'(?P<eigrp_interface>[A-Za-z]+\s*[\d\/\.]+) +'
+                        r'(?P<hold>\d+) +(?P<uptime>\S+) +(?P<srtt>\d+) +'
+                        r'(?P<rto>\d+) +(?P<q_cnt>\d+) +'
+                        r'(?P<last_seq_number>\d+)$')
         # fe80::5c00:ff:fe02:7
         # fe80::5c00:ff:fe02:7
         r5 = re.compile(r'^(?P<nbr_address>\S+:\S*:\S*:\S*:\S*:\S+)$')
@@ -428,19 +459,19 @@ class ShowIpEigrpNeighborsDetailSuperParser(ShowIpEigrpNeighborsDetailSchema):
         # Version 5.1/3.0, Retrans: 2, Retries: 0, Prefixes: 1
         # Version 23.0/2.0, Retrans: 0, Retries: 0
         r6 = re.compile(r'Version\s*'
-                        '(?P<os_majorver>\d+)\.(?P<os_minorver>\d+)\/'
-                        '(?P<tlv_majorrev>\d+)\.(?P<tlv_minorrev>\d+), +'
-                        'Retrans\s*:\s*(?P<retransmit_count>\d+)\, +'
-                        'Retries\s*:\s*(?P<retry_count>\d+)\,* *'
-                        '(?:Prefixes\s*:\s*(?P<prefixes>\d+))?')
+                        r'(?P<os_majorver>\d+)\.(?P<os_minorver>\d+)\/'
+                        r'(?P<tlv_majorrev>\d+)\.(?P<tlv_minorrev>\d+), +'
+                        r'Retrans\s*:\s*(?P<retransmit_count>\d+)\, +'
+                        r'Retries\s*:\s*(?P<retry_count>\d+)\,* *'
+                        r'(?:Prefixes\s*:\s*(?P<prefixes>\d+))?')
 
         # Topology-ids from peer - 0
         r7 = re.compile(r'Topology\-ids\s+from\s+peer\s+\-\s+'
-                        '(?P<topology_ids_from_peer>\d+)')
+                        r'(?P<topology_ids_from_peer>\d+)')
 
         #  Topologies advertised to peer:   base
         r8 = re.compile(r'Topologies\s+advertised\s+to\s+peer:\s*'
-                        '(?P<topology_advert_to_peer>\w+)')
+                        r'(?P<topology_advert_to_peer>\w+)')
 
         parsed_dict = {}
 
@@ -761,7 +792,7 @@ class ShowEigrpInterfacesSchema(MetaParser):
 class ShowEigrpInterfacesSuperParser(ShowEigrpInterfacesSchema):
 
     # Defines a function to run the cli_command
-    def cli(self, vrf='', output=None):
+    def cli(self, vrf='', interface='',output=None):
         out = output
 
         # Initializes the Python dictionary variable
@@ -1042,16 +1073,16 @@ class ShowEigrpTopologySuperParser(ShowIpEigrpTopologySchema):
         # IPv6-EIGRP Topology Table for AS(1)/ID(2001:0DB8:10::/64)
         # IPv6-EIGRP Topology Table for AS(1)/ID(2001:0DB8:10::/64) VRF(red)
         r2 = re.compile(r'^(?P<address_family>IPv4|IPv6)\-EIGRP\s*'
-        'Topology\s*Table\s*for\s*\w+\(\s*(?P<as_num>\d+)\)\/\w+\(\s*(?P<eigrp_id>\S+)\)\s*'
-        '(?:VRF\((?P<vrf>\S+)\))?$')
+        r'Topology\s*Table\s*for\s*\w+\(\s*(?P<as_num>\d+)\)\/\w+\(\s*(?P<eigrp_id>\S+)\)\s*'
+        r'(?:VRF\((?P<vrf>\S+)\))?$')
 
         # P 10.169.0.0/16, 1 successors, FD is 2816
         # P 10.36.3.3/32, 1 successors, FD is 130816
         # P 10.4.1.1/32, 1 successors, FD is 2816, tag is 900
         # P 2001:0DB8:3::/64, 1 successors, FD is 281600
         r3 = re.compile(r'^(?P<code>[\w\*]+)\s*(?P<network>\S+),\s*'
-        '(?P<successor_count>[\d])\s*successors,\s*FD\s*is\s*(?P<fd>[\d]+)?,'
-        '?( +tag\s*is\s*(?P<tag>[\S]+))?$')
+        r'(?P<successor_count>[\d])\s*successors,\s*FD\s*is\s*(?P<fd>[\d]+)?,'
+        r'?( +tag\s*is\s*(?P<tag>[\S]+))?$')
 
         # via Connected, GigabitEthernet0/0/0
         # via 10.169.0.1 (130816/128256), GigabitEthernet0/0/0
@@ -1201,14 +1232,23 @@ class ShowIpv6EigrpInterfaces(ShowEigrpInterfacesSuperParser, ShowEigrpInterface
 
 class ShowIpEigrpInterfacesDetail(ShowEigrpInterfacesSuperParser, ShowEigrpInterfacesSchema):
 
-    ''' Parser for "show ip eigrp interfaces detail"'''
+    ''' 
+    Parser for:
+        "show ip eigrp interfaces detail"
+        "show ip eigrp interfaces detail {interface}"
+    '''
 
-    cli_command = 'show ip eigrp interfaces detail'
+    cli_command = ['show ip eigrp interfaces detail',
+                   'show ip eigrp interfaces detail {interface}']
 
     # Defines a function to run the cli_command
-    def cli(self, output=None):
+    def cli(self, interface='', output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if interface:
+                cmd = self.cli_command[1].format(interface=interface)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
         else:
             out = output
 
@@ -1582,3 +1622,61 @@ class ShowIpv6EigrpTopologyEntry(ShowIpv6EigrpTopologyEntrySchema):
                     groupdict['originating_router']
 
         return ret_dict
+
+
+class ShowIpEigrpTimers(ShowIpEigrpTimersSchema):
+    """Parser for show ip eigrp timers"""
+
+    cli_command = 'show ip eigrp timers'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize parsed data structure
+        parsed_dict = {}
+
+        # EIGRP-IPv4 Timers for AS(100)
+        p1 = re.compile(r'^EIGRP-IPv4 Timers for AS\((?P<as_number>\d+)\)$')
+        
+        # Hello Process
+        p2 = re.compile(r'^(?P<process_type>.+) Process$')
+        
+        # |           1.724  Hello (Te0/0/6.20)
+        p3 = re.compile(r'^\|\s+(?P<expiration>\d+\.\d+)\s+(?P<type>.+)$')
+
+        current_process = None
+        as_number = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # EIGRP-IPv4 Timers for AS(100)
+            m = p1.match(line)
+            if m:
+                as_number = m.group('as_number')
+                if as_number not in parsed_dict:
+                    parsed_dict['eigrp_instance'] = {}
+                    parsed_dict['eigrp_instance'][as_number] = {
+                        'hello_process': {'expiration': [], 'type': []},
+                        'update_process': {'expiration': [], 'type': []},
+                        'sia_process': {'expiration': [], 'type': []}
+                    }
+                continue
+
+            # Hello Process
+            m = p2.match(line)
+            if m:
+                current_process = m.group('process_type').lower().replace(' ', '_')
+                current_process = current_process + '_process'
+                continue
+
+            # |           1.724  Hello (Te0/0/6.20)
+            m = p3.match(line)
+            if m and current_process:
+                expiration = m.group('expiration')
+                type_ = m.group('type')
+                parsed_dict['eigrp_instance'][as_number][current_process]['expiration'].append(expiration)
+                parsed_dict['eigrp_instance'][as_number][current_process]['type'].append(type_)
+
+        return parsed_dict

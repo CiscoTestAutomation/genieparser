@@ -1,10 +1,10 @@
 """show_lag.py
    supported commands:
      *  show lacp system-id
-     *  show bundle 
+     *  show bundle
      *  show bundle <interface>
      *  show bundle reasons
-     *  show bundle <interface> reasons 
+     *  show bundle <interface> reasons
      *  show lacp
      *  show lacp <interface>
 """
@@ -13,7 +13,7 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Optional
+from genie.metaparser.util.schemaengine import Any, Optional, Or
 
 # import parser utils
 from genie.libs.parser.utils.common import Common
@@ -85,7 +85,7 @@ class ShowBundleSchema(MetaParser):
                 'min_active_link': int,
                 'min_active_bw_kbps': int,
                 'max_active_link': int,
-                'wait_while_timer_ms': int,
+                'wait_while_timer_ms': Or(int, str),
                 Optional('load_balance'): {
                     Optional('load_balance'): str,
                     Optional('link_order_signaling'): str,
@@ -146,7 +146,7 @@ class ShowBundleSchema(MetaParser):
 class ShowBundle(ShowBundleSchema):
     """Parser for show bundle"""
 
-    cli_command = ['show bundle {interface}','show bundle']
+    cli_command = ['show bundle {interface}', 'show bundle']
 
     def cli(self, interface='', output=None):
         if output is None:
@@ -171,7 +171,7 @@ class ShowBundle(ShowBundleSchema):
 
         # Local links <active/standby/configured>:  2 / 0 / 2
         p3 = re.compile(r'^Local +links.*: *(?P<active>[\d]+)'
-                         ' *\/ *(?P<standby>[\d]+) *\/ *(?P<configured>[\d]+)$')
+                        r' *\/ *(?P<standby>[\d]+) *\/ *(?P<configured>[\d]+)$')
 
         # Local bandwidth <effective/available>:  2000000 (2000000) kbps
         # Local bandwidth <effective/available>:  100000 / 100000 kbps
@@ -185,7 +185,7 @@ class ShowBundle(ShowBundleSchema):
 
         # Minimum active links / bandwidth:  1 / 1 kbps
         p7 = re.compile(r'^Minimum +active +links.*: *(?P<min_active_link>[\d]+)'
-                         ' *\/ *(?P<min_active_bw_kbps>[\d]+).*$')
+                        r' *\/ *(?P<min_active_bw_kbps>[\d]+).*$')
 
         # Maximum active links:  8
         # Maximum active links:  32 (from partner)
@@ -193,7 +193,8 @@ class ShowBundle(ShowBundleSchema):
 
         # Wait while timer:  2000 ms
         # Wait-while timer:  2000 ms
-        p9 = re.compile(r'^Wait( +|-)while +timer: *(?P<wait_while_timer_ms>[\d]+).*$')
+        # Wait while timer:                          Off
+        p9 = re.compile(r'^Wait( +|-)while +timer: *(?P<wait_while_timer_ms>(\d|\w)+).*$')
 
         # Load balancing:
         # Load-balancing:  Default
@@ -234,7 +235,7 @@ class ShowBundle(ShowBundleSchema):
 
         # Foreign links <active/configured>:  1 / 1
         p12_3 = re.compile(r'^Foreign +links.*: *(?P<foreign_links_active>[\d]+)'
-                            ' *\/ *(?P<foreign_links_configured>[\d]+)$')
+                           r' *\/ *(?P<foreign_links_configured>[\d]+)$')
 
         # Switchover type:  Revertive
         p12_4 = re.compile(r'^Switchover +type: *(?P<switchover_type>[\w\s\-]+)$')
@@ -273,7 +274,7 @@ class ShowBundle(ShowBundleSchema):
         # Port                  Device           State        Port ID         B/W, kbps
         # Gi0/0/0/0             Local            Active       0x000a, 0x0001     1000000
         p14 = re.compile(r'^(?P<interface>[\S]+) +(?P<device>[\S]+) +(?P<state>[\w]+)'
-                          ' +(?P<port_id>[\w]+, *[\w]+) +(?P<bw_kbps>[\d]+)$')
+                         r' +(?P<port_id>[\w]+, *[\w]+) +(?P<bw_kbps>[\d]+)$')
 
         # Link is Active
         # Link is Standby due to maximum-active links configuration
@@ -361,10 +362,14 @@ class ShowBundle(ShowBundleSchema):
                 continue
 
             # Wait while timer:  2000 ms
+            # Wait while timer:                          Off
             m = p9.match(line)
             if m:
                 group = m.groupdict()
-                bundle_dict.update({'wait_while_timer_ms': int(group['wait_while_timer_ms'])})
+                try:
+                    bundle_dict.update({'wait_while_timer_ms': int(group['wait_while_timer_ms'])})
+                except ValueError:
+                    bundle_dict.update({'wait_while_timer_ms': group['wait_while_timer_ms']})
                 continue
 
             # Load balancing:
@@ -594,7 +599,7 @@ class ShowBundleReasons(ShowBundle):
             out = output
 
         return super().cli(interface=interface, output=out)
-        
+
 
 class ShowLacpSchema(MetaParser):
     """Schema for show lacp"""
@@ -605,11 +610,12 @@ class ShowLacpSchema(MetaParser):
                 'name': str,
                 'bundle_id': int,
                 'lacp_mode': str,
+                Optional('iccp_group'): int,
                 'port': {
                     Any(): {
                         'interface': str,
                         'bundle_id': int,
-                        'rate': int,
+                        Optional('rate'): int,
                         'state': str,
                         'port_id': str,
                         'key': str,
@@ -619,7 +625,7 @@ class ShowLacpSchema(MetaParser):
                         'collecting': bool,
                         'distributing': bool,
                         'partner': {
-                            'rate': int,
+                            Optional('rate'): int,
                             'state': str,
                             'port_id': str,
                             'key': str,
@@ -643,7 +649,7 @@ class ShowLacpSchema(MetaParser):
 
 
 class ShowLacp(ShowLacpSchema):
-    """parser for 
+    """parser for
     show lacp
     show lacp <inteface>
     """
@@ -663,19 +669,21 @@ class ShowLacp(ShowLacpSchema):
         result_dict = {}
 
         # Bundle-Ether1
-        p1 = re.compile(r'^Bundle-Ether(?P<bundle_id>[\d]+)$')
+        # Bundle-Ether13 (ICCP Group 13)
+        p1 = re.compile(r'^(?P<name>Bundle-Ether(?P<bundle_id>[\d]+))( \(ICCP Group (?P<iccp_group>\d+)\))?$')
 
         #   Port          (rate)  State    Port ID       Key    System ID
         #   Gi0/0/0/0        30s  ascdA--- 0x000a,0x0001 0x0001 0x0064,00-1b-0c-ff-6a-36
         #    Partner         30s  as--A--- 0x8000,0x0004 0x0002 0x8000,00-0c-86-ff-c6-81
-        p2 = re.compile(r'^(?P<interface>[\S]+) +(?P<rate>[\d]+)s +(?P<state>[\w-]+)'
-                         ' +(?P<port_id>[\w, ]+) +(?P<key>[\w]+)'
-                         ' +(?P<system_id>[\w\-, ]+)$')
+        #   Te0/1/0/8             a---AF-- 0x8003,0x9001 0x000d 0x0001,40-55-39-63-6c-e5
+        p2 = re.compile(r'^(?P<interface>[\S]+)( +(?P<rate>[\d]+)s)? +(?P<state>[\w-]+)'
+                        r' +(?P<port_id>[\w,]+) +(?P<key>[\w]+)'
+                        r' +(?P<system_id>[\w\-,]+)$')
 
         #   Port                  Receive    Period Selection  Mux       A Churn P Churn
-        #   Gi0/0/0/0             Current    Slow   Selected   Distrib   None    None   
+        #   Gi0/0/0/0             Current    Slow   Selected   Distrib   None    None
         p3 = re.compile(r'^(?P<interface>[\S]+) +(?P<receive>[\w]+) +(?P<period>[\w]+) +(?P<selection>[\w]+)'
-                         ' +(?P<mux>[\w]+) +(?P<a_churn>[\w]+) +(?P<p_churn>[\w]+)$')
+                        r' +(?P<mux>[\w]+) +(?P<a_churn>[\w]+) +(?P<p_churn>[\w]+)$')
 
         for line in out.splitlines():
             if line:
@@ -683,19 +691,22 @@ class ShowLacp(ShowLacpSchema):
             else:
                 continue
 
-            # Bundle-Ether1 
+            # Bundle-Ether1
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                name = m.group()
+                name = group['name']
                 bundle_dict = result_dict.setdefault('interfaces', {}).setdefault(name, {})
                 bundle_dict.update({'name': name})
                 bundle_dict.update({'bundle_id': int(group['bundle_id'])})
+                if group['iccp_group']:
+                    bundle_dict.update({'iccp_group': int(group['iccp_group'])})
                 continue
 
             #   Port          (rate)  State    Port ID       Key    System ID
             #   Gi0/0/0/0        30s  ascdA--- 0x000a,0x0001 0x0001 0x0064,00-1b-0c-ff-6a-36
             #    Partner         30s  as--A--- 0x8000,0x0004 0x0002 0x8000,00-0c-86-ff-c6-81
+            #   Te0/1/0/8             a---AF-- 0x8003,0x9001 0x000d 0x0001,40-55-39-63-6c-e5
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -708,7 +719,8 @@ class ShowLacp(ShowLacpSchema):
                     bundle_dict.update({'lacp_mode': 'active' if "A" in state else 'passive'})
                 else:
                     sub_dict = bundle_dict.setdefault('port', {}).setdefault(interface, {}).setdefault('partner', {})
-                sub_dict.update({'rate': int(group['rate'])})
+                if group['rate']:
+                    sub_dict.update({'rate': int(group['rate'])})
                 sub_dict.update({'state': state})
                 sub_dict.update({'port_id': group['port_id']})
                 sub_dict.update({'key': group['key']})
@@ -736,4 +748,3 @@ class ShowLacp(ShowLacpSchema):
                 continue
 
         return result_dict
-

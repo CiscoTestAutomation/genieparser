@@ -164,3 +164,6 @@ IP Route Table for VRF "VRF_Flow1_1"
  
 100.1.4.10/32, ubest/mbest: 1/0, all-best (0x63636363)
     *via 4.4.4.2%default, [200/2219], 05:08:59, bgp-3, internal, tag 10, segid: 501001 tunnelid: 0x4040402 encap: VXLAN
+
+222.1.1.0/24, ubest/mbest: 1/0, all-best
+    *via 11.11.23.1, [20/0], 00:02:29, bgp-1000, external, tag 1

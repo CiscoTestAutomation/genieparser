@@ -1,0 +1,45 @@
+show inventory
+NAME: "Chassis",  DESCR: "Nexus9000 N9324C-SE1U Chassis"
+PID: N9324C-SE1U         ,  VID:     ,  SN: N/A
+
+NAME: "Slot 1",  DESCR: "24x40/100G QSFP28 Ethernet Module"
+PID: N9324C-SE1U         ,  VID:     ,  SN: N/A
+
+NAME: "Slot 27",  DESCR: "24x40/100G QSFP28 Ethernet Module"
+PID: N9324C-SE1U         ,  VID:     ,  SN: N/A
+
+NAME: "SAM 1",  DESCR: "Service Accelarator Module"
+PID: DSS-MTFUJI          ,  VID:     ,  SN: FSJ2128000B
+
+NAME: "SAM 2",  DESCR: "Service Accelarator Module"
+PID: DSS-MTFUJI          ,  VID:     ,  SN: FSJ2128000C
+
+NAME: "SAM 3",  DESCR: "Service Accelarator Module"
+PID: DSS-MTFUJI          ,  VID:     ,  SN: FSJ2128000D
+
+NAME: "SAM 4",  DESCR: "Service Accelarator Module"
+PID: DSS-MTFUJI          ,  VID:     ,  SN: FSJ2128000E
+
+NAME: "Power Supply 1",  DESCR: "Nexus9000 N9324C-SE1U Chassis Power Supply"
+PID: NXA-PAC-1400W-PI    ,  VID: V01 ,  SN: DCA2738P0SW
+
+NAME: "Power Supply 2",  DESCR: "Nexus9000 N9324C-SE1U Chassis Power Supply"
+PID: NXA-PAC-1400W-PI    ,  VID: V01 ,  SN: DCA2738P0SX
+
+NAME: "Fan 1",  DESCR: "Nexus9000 N9324C-SE1U Chassis Fan Module"
+PID: NXA-SFAN-35CFM-PI   ,  VID: V01 ,  SN: N/A
+
+NAME: "Fan 2",  DESCR: "Nexus9000 N9324C-SE1U Chassis Fan Module"
+PID: NXA-SFAN-35CFM-PI   ,  VID: V01 ,  SN: N/A
+
+NAME: "Fan 3",  DESCR: "Nexus9000 N9324C-SE1U Chassis Fan Module"
+PID: NXA-SFAN-35CFM-PI   ,  VID: V01 ,  SN: N/A
+
+NAME: "Fan 4",  DESCR: "Nexus9000 N9324C-SE1U Chassis Fan Module"
+PID: NXA-SFAN-35CFM-PI   ,  VID: V01 ,  SN: N/A
+
+NAME: "Fan 5",  DESCR: "Nexus9000 N9324C-SE1U Chassis Fan Module"
+PID: NXA-SFAN-35CFM-PI   ,  VID: V01 ,  SN: N/A
+
+NAME: "Fan 6",  DESCR: "Nexus9000 N9324C-SE1U Chassis Fan Module"
+PID: NXA-SFAN-35CFM-PI   ,  VID: V01 ,  SN: N/A

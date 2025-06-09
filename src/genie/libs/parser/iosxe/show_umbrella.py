@@ -46,8 +46,8 @@ class ShowUmbrellaDeviceid(ShowUmbrellaDeviceidSchema):
         
         # Te2/0/12                tag_9300         200 SUCCESS     010aa1c364862f56
         p1 = re.compile(r'^(?P<interface>[\w\/\.\-]+) '
-               '+(?P<tag>[\w\_\-]+) +(?P<status>\w+\s+\w+) '
-               '+(?P<device_id>[\w\-]+)$')
+               r'+(?P<tag>[\w\_\-]+) +(?P<status>\w+\s+\w+) '
+               r'+(?P<device_id>[\w\-]+)$')
 
         for line in out.splitlines():
             line = line.strip()

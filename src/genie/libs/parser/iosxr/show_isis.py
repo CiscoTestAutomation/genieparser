@@ -210,14 +210,14 @@ class ShowIsisAdjacency(ShowIsisAdjacencySchema):
 
         # 12a4           PO0/1/0/1        *PtoP*         Up    23       00:00:06 Capable  None
         p2 = re.compile(r'^(?P<system_id>\S+) +(?P<interface>\S+) +(?P<snpa>\S+) +(?P<state>(Up|Down|None)) +(?P<hold>\S+) '
-                         '+(?P<changed>\S+) +(?P<nsf>\S+) +(?P<bfd>(Up|Down|None|Init))$')
+                         r'+(?P<changed>\S+) +(?P<nsf>\S+) +(?P<bfd>(Up|Down|None|Init))$')
 
         # Total adjacency count: 1
         p3 = re.compile(r'^Total +adjacency +count: +(?P<adjacency_count>(\d+))$')
 
         # R1_xe          Gi0/0/0/0.115    fa16.3eff.4f49 Up    26   22:30:26 Yes None None
         p4 = re.compile(r'^(?P<system_id>\S+) +(?P<interface>\S+) +(?P<snpa>\S+) +(?P<state>(Up|Down|None)) +(?P<hold>\S+) '
-                         '+(?P<changed>\S+) +(?P<nsf>\S+) +(?P<ipv4_bfd>([\s\w]+)) +(?P<ipv6_bfd>([\w\s]+))$')
+                         r'+(?P<changed>\S+) +(?P<nsf>\S+) +(?P<ipv4_bfd>([\s\w]+)) +(?P<ipv6_bfd>([\w\s]+))$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -347,7 +347,7 @@ class ShowIsisNeighbors(ShowIsisNeighborsSchema):
 
         # R1_xe          Gi0/0/0/0.115    fa16.3eff.4f49 Up    24       L1L2 Capable
         p2 = re.compile(r'^(?P<system_id>\S+) +(?P<interface>\S+) +(?P<snpa>\S+) +(?P<state>(Up|Down|None|Init)+) +(?P<holdtime>\S+) '
-                         '+(?P<type>\S+) +(?P<ietf_nsf>\S+)$')
+                         r'+(?P<type>\S+) +(?P<ietf_nsf>\S+)$')
 
         # Total neighbor count: 1
         p3 = re.compile(r'^Total\sneighbor\scount:\s+(?P<neighbor_count>\S+)$')
@@ -579,7 +579,7 @@ class ShowIsis(ShowIsisSchema):
         # IPv6 Unicast
         # IPv4 Unicast VRF VRF1
         r13 = re.compile(r'(?P<topology>(IPv6|IPv4)\s+Unicast)'
-                          '(\s*VRF\s*(?P<topology_vrf>\S+))?')
+                          r'(\s*VRF\s*(?P<topology_vrf>\S+))?')
 
         # Level-1
         # Level-2
@@ -587,7 +587,7 @@ class ShowIsis(ShowIsisSchema):
 
         # Metric style (generate/accept): Wide/Wide
         r15 = re.compile(r'Metric\s+style\s*\(generate\/accept\)\s*:\s*'
-                          '(?P<generate_style>\w+)\/(?P<accept_style>\w+)')
+                          r'(?P<generate_style>\w+)\/(?P<accept_style>\w+)')
 
         # Metric: 10
         r16 = re.compile(r'Metric\s*:\s*(?P<metric>\d+)')
@@ -603,22 +603,22 @@ class ShowIsis(ShowIsisSchema):
 
         # Advertise Passive Interface Prefixes Only: No
         r20 = re.compile(r'Advertise\s+Passive\s+Interface\s+Prefixes\s+Only'
-                          '\s*:\s*(?P<adv_passive_only>\S+)')
+                          r'\s*:\s*(?P<adv_passive_only>\S+)')
 
         # SRLB not allocated
         # SRLB allocated: 15000 - 15999
         r21 = re.compile(r'SRLB\s*(?P<srlb>[\w\s]+)'
-                          '(\:\s*(?P<start>\d+)\s*\-\s*(?P<end>\d+))?')
+                          r'(\:\s*(?P<start>\d+)\s*\-\s*(?P<end>\d+))?')
 
         # SRGB allocated: 16000 - 81534
         # SRGB not allocated
         r22 = re.compile(r'SRGB\s*(?P<srgb>[\w\s]+)'
-                          '(\:\s*(?P<start>\d+)\s*\-\s*(?P<end>\d+))?')
+                          r'(\:\s*(?P<start>\d+)\s*\-\s*(?P<end>\d+))?')
 
         # Loopback0 is running actively (active in configuration)
         # GigabitEthernet0/0/0/0 is running actively (active in configuration)
         r23 = re.compile(r'(?P<interface>\S+)\s+is\s+(?P<running_state>[\s\w]+)'
-                          '\s+\((?P<configuration_state>[\w\s]+)\)')
+                          r'\s+\((?P<configuration_state>[\w\s]+)\)')
 
         # OSPF process 75688
         r24 = re.compile(r'^(?P<protocol>\S+) process +(?P<process>\d+)$')
@@ -980,7 +980,7 @@ class ShowIsisHostname(ShowIsisHostnameSchema):
         # 2     1720.18ff.0213 leaf-2.qa-site1
         # 2     1720.18ff.0250 tor-23.tenlab-cloud
         r2 = re.compile(r'(?P<level>[\d\,]+)\s+(?P<local_router>\**)\s+'
-                         '(?P<system_id>\S+)\s+(?P<dynamic_hostname>\S+)')
+                         r'(?P<system_id>\S+)\s+(?P<dynamic_hostname>\S+)')
 
         parsed_output = {}
         vrf = 'default'
@@ -1061,44 +1061,44 @@ class ShowIsisStatisticsSchema(MetaParser):
                     'hello': {
                         'rate_per_sec': int,
                         'average_transmit_time_sec': int,
-                        'average_transmit_time_nsec': int,
+                        Optional('average_transmit_time_nsec'): int,
                     },
                     'csnp': {
                         'rate_per_sec': int,
                         'average_transmit_time_sec': int,
-                        'average_transmit_time_nsec': int,
+                        Optional('average_transmit_time_nsec'): int,
                     },
                     'psnp': {
                         'rate_per_sec': int,
                         'average_transmit_time_sec': int,
-                        'average_transmit_time_nsec': int,
+                        Optional('average_transmit_time_nsec'): int,
                     },
                     'lsp': {
                         'rate_per_sec': int,
                         'average_transmit_time_sec': int,
-                        'average_transmit_time_nsec': int,
+                        Optional('average_transmit_time_nsec'): int,
                     },
                 },
                 'process_time': {
                     'hello': {
                         'rate_per_sec': int,
                         'average_process_time_sec': int,
-                        'average_process_time_nsec': int,
+                        Optional('average_process_time_nsec'): int,
                     },
                     'csnp': {
                         'rate_per_sec': int,
                         'average_process_time_sec': int,
-                        'average_process_time_nsec': int,
+                        Optional('average_process_time_nsec'): int,
                     },
                     'psnp': {
                         'rate_per_sec': int,
                         'average_process_time_sec': int,
-                        'average_process_time_nsec': int,
+                        Optional('average_process_time_nsec'): int,
                     },
                     'lsp': {
                         'rate_per_sec': int,
                         'average_process_time_sec': int,
-                        'average_process_time_nsec': int,
+                        Optional('average_process_time_nsec'): int,
                     },
                 },
                 'level': {
@@ -1198,26 +1198,32 @@ class ShowIsisStatistics(ShowIsisStatisticsSchema):
         r9 = re.compile(r'UPD\s+Queue\s+size\s*:\s*(?P<upd_queue_size>\d+)')
 
         # Average transmit times and rate:
-        r10 = re.compile(r'Average\s+transmit\s+times\s+and\s+rate\s*:')
+        # Average transmit times and rates:
+        r10 = re.compile(r'Average\s+transmit\s+times\s+and\s+rates?\s*:')
 
         # Average process times and rate:
-        r11 = re.compile(r'Average\s+process\s+times\s+and\s+rate\s*:')
+        # Average process times and rates:
+        r11 = re.compile(r'Average\s+process\s+times\s+and\s+rates?\s*:')
 
         # Hello:          0 s,      66473 ns,         15/s
-        r12 = re.compile(r'Hello\s*:\s+(?P<time_s>\d+)\s*\w+\,\s+'
-                         r'(?P<time_ns>\d+)\s*\w+\,\s+(?P<rate>\d+)/\w+')
+        # Hello:          0 us          2/s
+        r12 = re.compile(r'Hello\s*:\s+(?P<time_s>\d+)\s*\w+(\,\s+'
+                         r'(?P<time_ns>\d+)\s*\w+\,)?\s+(?P<rate>\d+)/\w+')
 
         # CSNP:           0 s,      26914 ns,          1/s
-        r13 = re.compile(r'CSNP\s*:\s+(?P<time_s>\d+)\s*\w+\,\s+'
-                         r'(?P<time_ns>\d+)\s*\w+\,\s+(?P<rate>\d+)/\w+')
+        # CSNP:           0 us          0/s
+        r13 = re.compile(r'CSNP\s*:\s+(?P<time_s>\d+)\s*\w+(\,\s+'
+                         r'(?P<time_ns>\d+)\s*\w+\,)?\s+(?P<rate>\d+)/\w+')
 
         # PSNP:           0 s,       4113 ns,          0/s
-        r14 = re.compile(r'PSNP\s*:\s+(?P<time_s>\d+)\s*\w+\,\s+'
-                         r'(?P<time_ns>\d+)\s*\w+\,\s+(?P<rate>\d+)/\w+')
+        # PSNP:           0 us          0/s
+        r14 = re.compile(r'PSNP\s*:\s+(?P<time_s>\d+)\s*\w+(\,\s+'
+                         r'(?P<time_ns>\d+)\s*\w+\,)?\s+(?P<rate>\d+)/\w+')
 
         # LSP:            0 s,      52706 ns,          0/s
-        r15 = re.compile(r'LSP\s*:\s+(?P<time_s>\d+)\s*\w+\,\s+(?P<time_ns>'
-                         r'\d+)\s*\w+\,\s+(?P<rate>\d+)/\w+')
+        # LSP:            0 us          0/s
+        r15 = re.compile(r'LSP\s*:\s+(?P<time_s>\d+)\s*\w+(\,\s+(?P<time_ns>'
+                         r'\d+)\s*\w+\,)?\s+(?P<rate>\d+)/\w+')
 
         # Level-1:
         r16 = re.compile(r'Level\-(?P<level>\d+):')
@@ -1413,13 +1419,11 @@ class ShowIsisStatistics(ShowIsisStatisticsSchema):
             result = r12.match(line)
             if result:
                 group = result.groupdict()
-                time1 = int(group['time_s'])
-                time2 = int(group['time_ns'])
-                rate = int(group['rate'])
                 hello_dict = process_transmit_time_dict.setdefault('hello', {})
-                hello_dict[average_time_key_name_sec] = time1
-                hello_dict[average_time_key_name_nsec] = time2
-                hello_dict['rate_per_sec'] = rate
+                hello_dict[average_time_key_name_sec] = int(group['time_s'])
+                if group['time_ns']:
+                    hello_dict[average_time_key_name_nsec] = int(group['time_ns'])
+                hello_dict['rate_per_sec'] = int(group['rate'])
 
                 continue
 
@@ -1427,13 +1431,11 @@ class ShowIsisStatistics(ShowIsisStatisticsSchema):
             result = r13.match(line)
             if result:
                 group = result.groupdict()
-                time1 = int(group['time_s'])
-                time2 = int(group['time_ns'])
-                rate = int(group['rate'])
                 csnp_dict = process_transmit_time_dict.setdefault('csnp', {})
-                csnp_dict[average_time_key_name_sec] = time1
-                csnp_dict[average_time_key_name_nsec] = time2
-                csnp_dict['rate_per_sec'] = rate
+                csnp_dict[average_time_key_name_sec] = int(group['time_s'])
+                if group['time_ns']:
+                    csnp_dict[average_time_key_name_nsec] = int(group['time_ns'])
+                csnp_dict['rate_per_sec'] = int(group['rate'])
 
                 continue
 
@@ -1441,13 +1443,11 @@ class ShowIsisStatistics(ShowIsisStatisticsSchema):
             result = r14.match(line)
             if result:
                 group = result.groupdict()
-                time1 = int(group['time_s'])
-                time2 = int(group['time_ns'])
-                rate = int(group['rate'])
                 psnp_dict = process_transmit_time_dict.setdefault('psnp', {})
-                psnp_dict[average_time_key_name_sec] = time1
-                psnp_dict[average_time_key_name_nsec] = time2
-                psnp_dict['rate_per_sec'] = rate
+                psnp_dict[average_time_key_name_sec] = int(group['time_s'])
+                if group['time_ns']:
+                    psnp_dict[average_time_key_name_nsec] = int(group['time_ns'])
+                psnp_dict['rate_per_sec'] = int(group['rate'])
 
                 continue
 
@@ -1455,13 +1455,11 @@ class ShowIsisStatistics(ShowIsisStatisticsSchema):
             result = r15.match(line)
             if result:
                 group = result.groupdict()
-                time1 = int(group['time_s'])
-                time2 = int(group['time_ns'])
-                rate = int(group['rate'])
                 lsp_dict = process_transmit_time_dict.setdefault('lsp', {})
-                lsp_dict[average_time_key_name_sec] = time1
-                lsp_dict[average_time_key_name_nsec] = time2
-                lsp_dict['rate_per_sec'] = rate
+                lsp_dict[average_time_key_name_sec] = int(group['time_s'])
+                if group['time_ns']:
+                    lsp_dict[average_time_key_name_nsec] = int(group['time_ns'])
+                lsp_dict['rate_per_sec'] = int(group['rate'])
 
                 continue
 
@@ -1719,7 +1717,7 @@ class ShowIsisSpfLog(ShowIsisSpfLogSchema):
 
         # IS-IS TEST Level 2 IPv4 Unicast Route Calculation Log
         r1 = re.compile(r'IS\-IS\s+(?P<instance>\S+)\s+Level\s+(?P<level>\d+)'
-                         '\s+(?P<address_family>.+)\s+Route\s+Calculation\s+Log')
+                         r'\s+(?P<address_family>.+)\s+Route\s+Calculation\s+Log')
 
         # --- Mon Oct  7 2019 ---
         r2 = re.compile(r'\-\-\-\s+(?P<log_date>[\s\w]+)\s+\-\-\-')
@@ -1730,8 +1728,8 @@ class ShowIsisSpfLog(ShowIsisSpfLogSchema):
         # 00:00:17.514   PRC     0    64     6      bla-host1.12-34 PREFIXBAD
         # 23:42:51.522 PPFRR     0    64     1                      PERPREFIXFRR
         r3 = re.compile(r'(?P<timestamp>[0-9\:\.]+)\s+(?P<log_type>\S+)\s+(?P<time_ms>\d+)'
-                         '\s+(?P<total_nodes>\d+)\s+(?P<trigger_count>\d+)\s+'
-                         '(?P<first_trigger_lsp>\S*)\s+(?P<triggers>[\w\s]+)')
+                         r'\s+(?P<total_nodes>\d+)\s+(?P<trigger_count>\d+)\s+'
+                         r'(?P<first_trigger_lsp>\S*)\s+(?P<triggers>[\w\s]+)')
 
         parsed_output = {}
         log_index = 1
@@ -1987,8 +1985,8 @@ class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
         # All Priorities         0        -    0
         # All Priorities         0       0     0
         r12 = re.compile(r'(?P<priority_level>\w+)\s+Priorit(y|ies)\s*:*\s+'
-                          '(?P<reach>\d+)\s+(?P<unreach>\d+|\-)\s+'
-                          '(?P<total>\d+)')
+                          r'(?P<reach>\d+)\s+(?P<unreach>\d+|\-)\s+'
+                          r'(?P<total>\d+)')
 
         # SR uloop:              No
         r13 = re.compile(r'^SR +uloop: +(?P<sr_uloop>\w+)$')
@@ -2309,7 +2307,7 @@ class ShowIsisLspLog(ShowIsisLspLogSchema):
         # ISIS isp Level 1 LSP log
         # Level 1 LSP log
         r1 = re.compile(r'(IS\-*IS\s+(?P<instance>.+)\s+)?Level\s+'
-                         '(?P<level>\d+)\s+LSP\s+log')
+                         r'(?P<level>\d+)\s+LSP\s+log')
 
         # --- Thu Sep 26 2019 ---
         # --- Mon Sep 30 2019 ---
@@ -2320,8 +2318,8 @@ class ShowIsisLspLog(ShowIsisLspLogSchema):
         # 16:15:03.822     2  BE2              DELADJ
         # 00:02:36         1
         r3 = re.compile(r'(?P<timestamp>[0-9\:\.]+)\s+(?P<count>\d+)\s*'
-                         '(?P<interface>[A-Z]+[a-z]*[\/*\d\.]+)?\s*'
-                         '(?P<triggers>[\w*\s]*)')
+                         r'(?P<interface>[A-Z]+[a-z]*[\/*\d\.]+)?\s*'
+                         r'(?P<triggers>[\w*\s]*)')
 
         parsed_output = {}
         log_date = ''
@@ -2786,7 +2784,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
         # Measured Delay:           Min:- Avg:- Max:- usec
         # Normalized Delay:         Min:- Avg:- Max:- usec
         r63 = re.compile(r'^(?P<delay_name>[a-zA-Z ]+):\s+Min:(?P<min>[-\d]+)\s+'
-                         'Avg:(?P<avg>[-\d]+)\s+Max:(?P<max>[-\d]+)\s+usec$')
+                         r'Avg:(?P<avg>[-\d]+)\s+Max:(?P<max>[-\d]+)\s+usec$')
 
         parsed_output = {}
         interface_flag = False
@@ -3830,7 +3828,7 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
 
         # Metric: 40         IP-Extended-Interarea 10.7.8.0/24
         r15 = re.compile(r'Metric\s*:\s*(?P<metric>\d+)\s+IP\-Extended\-'
-                          'Interarea\s+(?P<ip_interarea>\S+)')
+                          r'Interarea\s+(?P<ip_interarea>\S+)')
 
         # Metric: 40         MT (IPv6 Unicast) IPv6-Interarea 2001:db8:10:7::/64
         r16 = re.compile(r'Metric\s*:\s*(?P<metric>\d+)\s+MT\s+\('
@@ -5616,9 +5614,12 @@ class ShowIsisDatabase(ShowIsisDatabaseSchema):
         # PE-9001-1.00-00 0x0000039f 0xa464 931 /1199 0/0/0
         # XRv9k-PE1.00-00     * 0x0000141f   0xfc84        432             0/0/0
         # AGG-PE-A.00-00        0x00001430   0x09c6        917             0/0/0
-        p3 = re.compile(r'^(?P<lspid>[A-Za-z\-0-9\.]+)\s+(?P<lsp_seq_num>[\w \*]+)\s+'
-                        r'(?P<lsp_checksum>\w+)\s+(?P<lsp_holdtime>\d+)\s+(?:\/'
-                        r'(?P<rcvd>[\d\*]+)\s+)?(?P<attach_bit>[\d]+)\/(?P<p_bit>[\d]+)\/(?P<overload_bit>[\d]+)$')
+        # P1.00-00 * 0x00000046 0x273f 43588/* 0/0/0
+        p3 = re.compile(r'^(?P<lspid>[A-Za-z0-9\-\s\.]+?)\s+'
+                r'(?P<lsp_seq_num>\*?\s*0x[0-9A-Fa-f]+)\s+'
+                r'(?P<lsp_checksum>0x[0-9A-Fa-f]+)\s+'
+                r'(?P<lsp_holdtime>\d+)(?:\s*\/\s*(?P<rcvd>[\d\*]+))?\s+'
+                r'(?P<attach_bit>\d+)\/(?P<p_bit>\d+)\/(?P<overload_bit>\d+)$')
 
         # Total Level-2 LSP count: 4 Local Level-2 LSP count: 1
         p4 = re.compile(r'^Total\s+Level-(?P<total_level>\d+)\s+LSP\s+count:\s+(?P<total_lsp_count>\d+)\s+'
@@ -5793,423 +5794,3 @@ class ShowIsisIpv4Topology(ShowIsisIpv4TopologySchema):
                 continue
 
         return result_dict
-
-class ShowIsisDatabaseVerboseNeighborSchema(MetaParser):
-    ''' Schema for commands:
-        * show isis instance {instance_name} database verbose {neighbor_device}
-    '''
-    Schema = {
-        'instance' : {
-            Any() : {
-                'level': {
-                    Any() : {
-                        'lspid': {
-                            Any() : {
-                                'lsp' : {
-                                    'seq_num': str,
-                                    Optional('local_router'): bool,
-                                    'checksum': str,
-                                    'holdtime': int,
-                                    Optional('received'): int,
-                                    'attach_bit': int,
-                                    'p_bit': int,
-                                    'overload_bit': int,
-                                },
-                                Optional('router_id'): str,
-                                Optional('router_cap'): str,
-                                Optional('area_address'): str,
-                                Optional('nlpid'): list,
-                                Optional('mt_entries'): {
-                                    Any() : {
-                                        Optional('attach_bit'): int,
-                                        Optional('p_bit'): int,
-                                        Optional('overload_bit'): int,
-                                    }
-                                },
-                                Optional('ipv6_address'): str,
-                                Optional('ip_address'): str,
-                                Optional('hostname'): str,
-                                Optional('router_cap'): str,
-                            },
-                            Optional('extended_is_neighbor'):{
-                                Any() :{
-                                    'metric': int,
-                                    Optional("local_interface_id"): int,
-                                    Optional("interface_ip_address"): str,
-                                    Optional("remote_interface_id"): int,
-                                    Optional("neighbor_ip_address"): str,
-                                    Optional("physical_link_bw"): str,
-                                    Optional("adj_sid"): {
-                                        'f': int,
-                                        'b': int,
-                                        'v': int,
-                                        'l': int,
-                                        's': int,
-                                        'p': int,
-                                        'weight': int,
-                                        'adj_sid': int,
-                                    },
-                                    Optional('extended_ipv4_reachability'):{
-                                        Any() :{
-                                            'ip_prefix': str,
-                                            'prefix_length': str,
-                                            'metric': int,
-                                            Optional('prefix_sid_index'):{
-                                                'prefix_sid_index': int,
-                                                Optional('algorithm'): int,
-                                                'r': int,
-                                                'n': int,
-                                                'p': int,
-                                                'e': int,
-                                                'v': int,
-                                                'l': int,
-                                            },
-                                            Optional('prefix_attribute_flags'):{
-                                                'x': int,
-                                                'r': int,
-                                                'n': int,
-                                                'e': int,
-                                                'a': int,
-                                            },
-                                        },
-                                    },
-                                },
-                            },
-                        },
-                        Optional('total_lsp_count'): int,
-                        Optional('local_lsp_count'): int,
-                    },
-                },
-            },
-        },
-    }
-    
-class ShowIsisDatabaseVerboseNeighbor(ShowIsisDatabaseVerboseNeighborSchema):
-    ''' Parser for commands:
-       * show isis instance {instance_name} database verbose {neighbor_device}
-    '''
-
-    cli_command = ['show isis instance {instance_name} database verbose {neighbor_device}']
-
-    def cli(self, instance_name='', neighbor_device='', output=None):
-
-        if output is None:
-            command = self.cli_command[0].format(instance_name=instance_name, neighbor_device=neighbor_device)
-            output = self.device.execute(command)
-            
-        if not output.strip():
-           return {}
-            
-        # IS-IS test (Level-1) Link State Database
-        # IS-IS test (Level-2) Link State Database
-        # IS-IS Level-1 Link State Database
-        p1 = re.compile(r'IS\-IS\s+(?P<instance>\S+)?\s*\(*Level\-'
-                        r'(?P<level>\d+)\)*\s+Link\s+State\s+Database')
-        
-        # LSPID                 LSP Seq Num  LSP Checksum  LSP Holdtime/Rcvd  ATT/P/OL
-        # P4B.00-00             0x00000e7e   0xaeaf        990  /1200         0/0/0                
-        p2 = re.compile(r'^(?P<lspid>[\w\-\.]+)( *(?P<local_router>\*))? +'
-                r'(?P<lsp_seq_num>\w+) +(?P<lsp_checksum>\w+) +(?P<lsp_holdtime>\d+|\*)'
-                r'( *\/(?P<lsp_rcvd>\d+|\*))? +(?P<attach_bit>\d+)\/(?P<p_bit>\d+)\/'
-                r'(?P<overload_bit>\d+)$')
-                
-        # Area Address:   49.0002
-        p3 = re.compile(r'Area\s+Address\s*:\s*(?P<area_address>\S+)')
-
-        # NLPID: 0xcc
-        # NLPID: 0xCC 0x8E
-        p4 = re.compile(r'NLPID\s*:\s*(?P<nlpid>[\w\s]+)')
-        
-        # MT:    IPv6 Unicast                1/0/0
-        # MT:    IPv6 Unicast                0/0/0
-        p5 = re.compile(r'MT\s*:\s*(?P<mt>IPv(4|6)\s+\w+)\s+'
-                         r'(?P<attach_bit>\d+)/(?P<p_bit>\d+)/'
-                         r'(?P<overload_bit>\d+)')
-                         
-        # IPv6 Address:   2001:db8:3:3:3::3
-        p6 = re.compile(r'IPv6\s+Address\s*:\s*(?P<ipv6_address>\S+)')
-        
-        # Hostname:       PE4A
-        p7 = re.compile(r'^(Hostname:\s+(?P<host_name>)\S+)')
-        
-        # IP Address:     10.36.3.3
-        p8 = re.compile(r'IP\s*Address\s*:\s*(?P<ip_address>\S+)')
-        
-        # Router Cap:     172.19.1.2 D:0 S:0
-        p9 = re.compile(r'^Router +Cap: +(?P<router_cap>[\S ]+)$')
-        
-        # Metric: 10         IS-Extended R3.03
-        # Metric: 10         IS-Extended R5.01
-        p10 = re.compile(r'Metric\s*:\s*(?P<metric>\d+)\s+IS\-Extended\s+'
-                         r'(?P<is_extended>\S+)')
-        
-        # Local Interface ID: 1, Remote Interface ID: 1
-        p11 = re.compile(r'^Local\s+Interface\s+ID:\s+(?P<local_intrf_id>\d+),\s+'
-                         r'Remote\s+Interface\s+ID:\s+(?P<remote_intrf_id>\d+)$')
-                         
-        # Interface IP Address: 10.12.14.2
-        p12 = re.compile(r'^Interface\s+IP\s+Address: (?P<interface_ip_address>[\d\.]+)$')
-                         
-        # Neighbor IP Address: 12.12.12.2
-        p13 = re.compile(r'^Neighbor\s+IP\s+Address: (?P<neighbor_ip>[\d\.]+)$')
-        
-        #  Physical BW: 20000000 kbits/sec
-        p14 = re.compile(r'Physical\s+BW:\s(?P<physical_link>\d+\s+\w+\/\w+)$')
-        
-        #  Physical BW: 20000000 kbits/sec
-        p15 = re.compile(r'^ADJ-SID:\s+F:(?P<f_flag>[01]+)\s+B:(?P<b_flag>[01]+)\s+V:(?P<v_flag>[01])\s+L:(?P<l_flag>[01]+)\s+S:(?P<s_flag>[01])\s+P:(?P<p_flag>[01]+)\s+weight:(?P<weight>\d+)\s+Adjacency-sid:(?P<adj_sid>\d+)$')
-        
-        # Metric: 10         IP-Extended 10.36.3.0/24
-        # Metric: 10         IP-Extended 10.2.3.0/24
-        p16 = re.compile(r'Metric\s*:\s*(?P<metric>\d+)\s+IP\-Extended\s+'
-                        r'(?P<ip_address>[\d\.\/]+)')
-        
-        # Prefix-SID Index: 14, Algorithm:0, R:0 N:1 P:0 E:0 V:0 L:0                
-        p17 = re.compile(r'^Prefix-SID\s+Index:\s(?P<prefix_sid_index>\d+),\s+Algorithm:(?P<algorithm>\d+),\s+R:(?P<r_flag>[01]+)\s+N:(?P<n_flag>[01]+)\s+P:(?P<p_flag>[01])\s+E:(?P<e_flag>[01]+)\s+V:(?P<v_flag>[01]+)\s+L:(?P<l_flag>[01]+)$') 
-        
-        # Prefix Attribute Flags: X:0 R:0 N:0 E:0 A:0
-        p18 = re.compile(r'^Prefix\s+Attribute\s+Flags:\s+X:(?P<x_flag>[01]+)\s+R:(?P<r_flag>[01]+)\s+N:(?P<n_flag>[01])\s+E:(?P<e_flag>[01]+)\s+A:(?P<a_flag>[01]+)$') 
-        
-        # Total Level-1 LSP count: 11     Local Level-1 LSP count: 1
-        # Total Level-2 LSP count: 11     Local Level-2 LSP count: 1
-        p19 = re.compile(r'Total\s+Level\-(?P<total_level>\d+)\s+LSP\s+count\s*:'
-                         r'\s*(?P<total_lsp_count>\d+)\s+Local\s*Level-'
-                         r'(?P<local_level>\d+)\s+LSP\s+count\s*:\s*'
-                         r'(?P<local_lsp_count>\d+)')
-        
-        parsed_output = {}
-
-
-        for line in output.splitlines():
-            line = line.strip()
-            
-            
-            # IS-IS test (Level-1) Link State Database
-            # IS-IS test (Level-2) Link State Database
-            result = p1.match(line)
-            if result:
-                group = result.groupdict()
-                level = int(group['level'])
-                instance = group['instance']
-                instance = instance if instance else ''
-                level_dict = parsed_output\
-                    .setdefault('instance', {})\
-                    .setdefault(instance, {})\
-                    .setdefault('level', {})\
-                    .setdefault(level, {})
-                continue
-            
-            # LSPID                 LSP Seq Num  LSP Checksum  LSP Holdtime/Rcvd  ATT/P/OL
-            # P4B.00-00             0x00000e7e   0xaeaf        990  /1200         0/0/0     
-            result = p2.match(line)
-            if result:
-                group = result.groupdict()
-                lspid = group['lspid']
-                local_router = group['local_router']
-                lsp_seq_num = group['lsp_seq_num']
-                lsp_checksum = group['lsp_checksum']
-                lsp_holdtime = group['lsp_holdtime']
-                lsp_rcvd = group['lsp_rcvd']
-                attach_bit = int(group['attach_bit'])
-                p_bit = int(group['p_bit'])
-                overload_bit = int(group['overload_bit'])
-                lspid_dict = level_dict\
-                    .setdefault('lspid', {})\
-                    .setdefault(lspid, {})
-
-                lsp_dict = lspid_dict.setdefault('lsp', {})
-                lsp_dict['seq_num'] = lsp_seq_num
-                lsp_dict['checksum'] = lsp_checksum
-                lsp_dict['local_router'] = bool(local_router)
-                lsp_dict['holdtime'] = int(lsp_holdtime)
-                if lsp_rcvd and '*' not in lsp_rcvd:
-                    lsp_dict['received'] = int(lsp_rcvd)
-                lsp_dict['attach_bit'] = attach_bit
-                lsp_dict['p_bit'] = p_bit
-                lsp_dict['overload_bit'] = overload_bit
-                continue
-            
-            # Area Address:   49.0002
-            result = p3.match(line)
-            if result:
-                group = result.groupdict()
-                area_address = group['area_address']
-                lspid_dict['area_address'] = area_address
-                continue
-
-            # NLPID: 0xcc
-            # NLPID: 0xCC 0x8E
-            result = p4.match(line)
-            if result:
-                group = result.groupdict()
-                parsed_nlpid = group['nlpid'].split()
-                for nlpid in parsed_nlpid:
-                    nlpid_list = lspid_dict.get('nlpid', [])
-                    nlpid_list.append(nlpid)
-                lspid_dict['nlpid'] = nlpid_list
-                continue
-            
-            # MT:    IPv6 Unicast                1/0/0
-            # MT:    IPv6 Unicast                0/0/0
-            result = p5.match(line)
-            if result:
-                group = result.groupdict()
-                mt_entry = group['mt']
-                attach_bit = group['attach_bit']
-                p_bit = group['p_bit']
-                overload_bit = group['overload_bit']
-                topology_dict = lspid_dict\
-                    .setdefault('mt_entries', {})\
-                    .setdefault(mt_entry, {})
-                if attach_bit:
-                    topology_dict['attach_bit'] = int(attach_bit)
-                if p_bit:
-                    topology_dict['p_bit'] = int(p_bit)
-                if overload_bit:
-                    topology_dict['overload_bit'] = int(overload_bit)
-                continue
-            
-            # IPv6 Address:   2001:db8:3:3:3::3
-            result = p6.match(line)
-            if result:
-                group = result.groupdict()
-                ipv6_address = group['ipv6_address']
-                lspid_dict['ipv6_address'] = ipv6_address
-                continue
-            
-            # IPv6 Address:   2001:db8:3:3:3::3
-            result = p7.match(line)
-            if result:
-                group = result.groupdict()
-                hostname = group['host_name']
-                lspid_dict['hostname'] = hostname 
-                continue
-            
-            # IP Address:     10.0.0.14
-            result = p8.match(line)
-            if result:
-                group = result.groupdict()
-                ip_address = group['ip_address']
-                lspid_dict['ip_address'] = ip_address
-                continue
-            
-            # Router Cap:     10.0.0.14 D:0 S:0
-            result = p9 .match(line)
-            if result:
-                group = result.groupdict()
-                router_cap = group['router_cap']
-                lspid_dict['router_cap'] = router_cap
-                continue
-            
-            # Metric: 10         IS-Extended P2B.00
-            # Metric: 10         IS-Extended P3B.00
-            result = p10.match(line)
-            if result:
-                group = result.groupdict()
-                metric = int(group['metric'])
-                is_extended = group['is_extended']
-                is_extended_dict =  lspid_dict\
-                    .setdefault('extended_is_neighbor', {})\
-                    .setdefault(is_extended, {})
-                is_extended_dict['metric'] = metric
-
-                continue
-            
-            # Local Interface ID: 1, Remote Interface ID: 1
-            m = p11.match(line)
-            if m:
-                group = m.groupdict()
-                is_extended_dict["local_interface_id"] = int(group["local_intrf_id"])
-                is_extended_dict["remote_interface_id"] = int(group["remote_intrf_id"])
-                continue
-            
-            # Neighbor IP Address: 12.12.12.2
-            m = p12.match(line)
-            if m:
-                group = m.groupdict()
-                is_extended_dict["interface_ip_address"] = group["interface_ip_address"]
-                continue
-            
-            # Neighbor IP Address: 12.12.12.2
-            m = p13.match(line)
-            if m:
-                group = m.groupdict()
-                is_extended_dict["neighbor_ip_address"] = group["neighbor_ip"]
-                continue
-            
-            #  Physical BW: 20000000 kbits/sec
-            m = p14.match(line)
-            if m:
-                group = m.groupdict()
-                is_extended_dict["physical_link_bw"] = group["physical_link"]
-                continue
-            
-            # ADJ-SID: F:0 B:0 V:1 L:1 S:0 P:0 weight:0 Adjacency-sid:24003
-            m = p15.match(line)
-            if m:
-                group = m.groupdict()
-                adj_dict = is_extended_dict.setdefault('adj_sid', {})
-                adj_dict['f'] = int(group['f_flag'])
-                adj_dict['b'] = int(group['b_flag'])
-                adj_dict['v'] = int(group['v_flag'])
-                adj_dict['l'] = int(group['l_flag'])
-                adj_dict['s'] = int(group['s_flag'])
-                adj_dict['p'] = int(group['p_flag'])
-                adj_dict['weight'] = int(group['weight'])
-                adj_dict['adj_sid'] = int(group['adj_sid'])
-                continue
-            
-            # Metric: 0          IP-Extended 10.0.0.14/32
-            result = p16.match(line)
-            if result:
-                group = result.groupdict()
-                metric = int(group['metric'])
-                ip_address = group['ip_address']
-                ip_extended_dict = lspid_dict\
-                    .setdefault('extended_ipv4_reachability', {})\
-                    .setdefault(ip_address, {})
-                ip_len_list = ip_address.split('/')
-                ip_extended_dict['ip_prefix'] = ip_len_list[0]
-                if len(ip_len_list) > 1:
-                    ip_extended_dict['prefix_length'] = ip_len_list[1]
-                ip_extended_dict['metric'] = metric
-                continue
-            
-            # Prefix-SID Index: 14, Algorithm:0, R:0 N:1 P:0 E:0 V:0 L:0
-            result = p17.match(line)
-            if result:
-                group = result.groupdict()
-                prefix_dict = ip_extended_dict.setdefault('prefix_sid_index', {})
-                prefix_dict['prefix_sid_index'] = int(group['prefix_sid_index'])
-                prefix_dict['algorithm'] = int(group['algorithm'])
-                prefix_dict['r'] = int(group['r_flag'])
-                prefix_dict['n'] = int(group['n_flag'])
-                prefix_dict['p'] = int(group['p_flag'])
-                prefix_dict['e'] = int(group['e_flag'])
-                prefix_dict['v'] = int(group['v_flag'])
-                prefix_dict['l'] = int(group['l_flag'])
-                continue
-            
-            # Prefix Attribute Flags: X:0 R:0 N:0 E:0 A:0
-            result = p18.match(line)
-            if result:
-                group = result.groupdict()
-                prefix_att_dict = ip_extended_dict.setdefault('prefix_attribute_flags', {})
-                prefix_att_dict['x'] = int(group['x_flag'])
-                prefix_att_dict['r'] = int(group['r_flag'])
-                prefix_att_dict['n'] = int(group['n_flag'])
-                prefix_att_dict['e'] = int(group['e_flag'])
-                prefix_att_dict['a'] = int(group['a_flag'])
-                continue
-                
-            # Total Level-2 LSP count: 1     Local Level-2 LSP count: 0
-            result = p19.match(line)
-            if result:
-                group = result.groupdict()
-                total_lsp_count = int(group['total_lsp_count'])
-                local_lsp_count = int(group['local_lsp_count'])
-                level_dict['total_lsp_count'] = total_lsp_count
-                level_dict['local_lsp_count'] = local_lsp_count
-                continue
-            
-        return parsed_output

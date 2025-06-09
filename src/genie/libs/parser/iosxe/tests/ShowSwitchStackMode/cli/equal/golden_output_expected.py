@@ -62,6 +62,15 @@ expected_output = {
              'mode': 'N+1',
              'configured': 'None',
              'state': 'Ready'
+         },
+         '8': {
+             'switch_id': 8,
+             'role': 'Member',
+             'mac_address': '10b3.c62f.9a00',
+             'version': 'V02',
+             'mode': 'N+1',
+             'configured': 'None',
+             'state': 'Ready',         
          }
      }
  } 

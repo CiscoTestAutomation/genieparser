@@ -20,6 +20,8 @@ NXOS parser for the following show commands:
     * show ip route vrf {vrf}
     * show ip route vrf all
     * show ip route
+    * show ip route summary vrf {vrf}
+    * show ip route summary
     * show ipv6 route {route} {protocol} interface {interface} vrf {vrf}
     * show ipv6 route {route} {protocol} interface {interface}
     * show ipv6 route {route} {protocol} vrf {vrf}
@@ -37,8 +39,8 @@ NXOS parser for the following show commands:
     * show ipv6 route vrf {vrf}
     * show ipv6 route vrf all
     * show ipv6 route
-    * show ip route summary vrf {vrf}
-    * show ip route summary
+    * show ipv6 route summary vrf {vrf}
+    * show ipv6 route summary
 """
 
 # Python
@@ -325,7 +327,9 @@ class ShowRoutingIpv6VrfAll(ShowRoutingVrfAll):
 class ShowIpRouteSummarySchema(MetaParser):
     """Schema for
         * show ip route summary
-        * show ip route summary vrf {vrf} """
+        * show ip route summary vrf {vrf}
+        * show ipv6 route summary
+        * show ipv6 route summary vrf {vrf} """
 
     schema = {
         'vrf': {
@@ -411,7 +415,6 @@ class ShowIpRouteSummary(ShowIpRouteSummarySchema):
                 group = m.groupdict()
                 sub_dict = routeSummary_dict.setdefault('vrf', {}).setdefault(vrf, {})
                 sub_dict.update({'total_'+group['route_path']: int(group['route_path_val'])})
-
                 continue
 
             if parse_num_routes:
@@ -448,6 +451,19 @@ class ShowIpRouteSummary(ShowIpRouteSummarySchema):
                 continue
 
         return routeSummary_dict
+
+
+class ShowIpv6RouteSummary(ShowIpRouteSummary):
+    """Parser for
+        * show ipv6 route summary
+        * show ipv6 route summary vrf {vrf}"""
+
+    cli_command = ['show ipv6 route summary vrf {vrf}',
+                   'show ipv6 route summary']
+
+    def cli(self, vrf='', output=None):
+        return super().cli(vrf=vrf, output=output)
+
 
 # ====================================================
 # Schema for:
@@ -717,13 +733,14 @@ class ShowIpRoute(ShowIpRouteSchema):
         # 192.168.1.0/24, ubest/mbest: 1/0, attached, direct, pervasive
         # 192.168.1.1/32, ubest/mbest: 1/0, attached, pervasive
         # 100.1.1.1/32, ubest/mbest: 2/0, all-best (0x63636363)
+        # 222.1.1.0/24, ubest/mbest: 1/0, all-best
 
         p2 = re.compile(r'^(?P<route>[\w\/\.\:]+), +(ubest/mbest: +'
                         r'(?P<ubest_mbest>[\d\/]+)( +time)?)?((?P<ubest>\d+) '
                         r'+ucast +next-hops, +(?P<mbest>\d+) +mcast +next-hops)?'
                         r'(, +(?P<attached>[\w]+))?( +(?P<attached2>[\w]+))?'
                         r'(\,)?( +(?P<direct>direct))?(\,)?( +(?P<pervasive>pervasive))?'
-                        r'(, +(all-best +\((?P<all_best>[0-9x]+)\))?)?$')
+                        r'(, +(all-best *\(?(?P<all_best>[0-9x]*)\)?)?)?$')
 
         # *via 10.2.3.2, Eth1/4, [1/0], 01:01:30, static
         # *via 10.1.3.1, Eth1/2, [110/41], 01:01:18, ospf-1, intra
@@ -738,10 +755,13 @@ class ShowIpRoute(ShowIpRouteSchema):
         # *via 10.55.130.3%default, [33/0], 3d10h, bgp-1, internal, tag 1 (evpn), segid: 50051 tunnelid: 0x64008203 encap: VXLAN
         # *via 2001:db8:626b:2101::3/128, [200/7], 01:51:32, bgp-10001, internal, tag 20001
         # *via 100.100.100.1%default, [200/0], 01:25:26, bgp-1000, internal, tag 3000, segid: 601011 (Asymmetric) tunnelid: 0x64646401 encap: VXLAN
+        # *via 18.1.202.25, Eth1/31, [110/2], 7w5d, ospf-NDI-FABRIC, intra
+        # *via 2001:100:20:12:212:8ff:fe00:8, Vlan118, [190/0], 0.000000, hmm
+        # *via ::ffff:40.17.113.1%default:IPv4, [200/0], 13:21:23, bgp-65101, , tag 6555, segid 50003 tunnelid: 0x28117101 encap: VXLAN
         p3 = re.compile(r'^\s*(?P<star>[*]+)?via +(?P<next_hop>[\s\w\:\.\/\%\!\#\$\*\+\-\;\=\@\^\_\{\}]+),'
                         r'( +(?P<interface>[\w\/\.]+))?,? +\[(?P<route_preference>[\d\/]+)\],'
-                        r' +(?P<date>[0-9][\w\:]+)?,?( +(?P<source_protocol>[\w\-]+))?,?'
-                        r'( +(?P<source_protocol_status>[\w-]+))?,?( +tag +(?P<tag>[\d]+))?,?'
+                        r' +(?P<date>[0-9][\w\:\.]+)?,?( +(?P<source_protocol>[\w\-]+))?,?'
+                        r'( +(?P<source_protocol_status>[\w-]*))?,?( +tag +(?P<tag>[\d]+))?,?'
                         r'( +\((?P<hidden>hidden)\))?'
                         r'\s*(?P<vpn>[a-zA-Z\(\)\-]+)?,?( +segid:? +(?P<segid>\d+))?,?'
                         r'( +\((?P<asymmetric>Asymmetric)\))?'
@@ -898,7 +918,7 @@ class ShowIpRoute(ShowIpRouteSchema):
                 if groups['source_protocol']:
                     if '-' in groups['source_protocol']:
                         source_protocol = groups['source_protocol'].split('-')[0]
-                        process_id = groups['source_protocol'].split('-')[1]
+                        process_id = groups['source_protocol'].split('-',maxsplit=1)[1]
                     else:
                         source_protocol = groups['source_protocol']
 

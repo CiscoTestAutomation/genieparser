@@ -1,0 +1,23 @@
+Router# show ipv6 pim neighbor Te0/0/4
+
+PIM Neighbor Table for Interface: TenGigabitEthernet0/0/4
+---------------------------------------------------------
+Neighbor Address: 2001:0DB8:0:1::1
+  Uptime: 00:15:42
+  Expires: 00:02:18
+  Mode: Sparse
+  DR Priority: 1
+  BSR Priority: 0
+  Hello Interval: 30 seconds
+  Neighbor Interface: TenGigabitEthernet0/0/4
+  Neighbor State: Up
+
+Neighbor Address: 2001:0DB8:0:1::2
+  Uptime: 00:14:30
+  Expires: 00:03:30
+  Mode: Sparse
+  DR Priority: 1
+  BSR Priority: 0
+  Hello Interval: 30 seconds
+  Neighbor Interface: TenGigabitEthernet0/0/4
+  Neighbor State: Up

@@ -13,6 +13,7 @@ import argparse
 import traceback
 import importlib
 from unittest.mock import Mock
+from inspect import getfullargspec
 import importlib.util as _importlib_util
 
 # pyATS
@@ -73,32 +74,30 @@ def get_operating_systems(_os):
     """Helper Script to get operating systems."""
     if _os:
         return [_os]
-    EXCLUDED_FOLDERS = ['__pycache__', 'utils']
+    EXCLUDED_FOLDERS = ['__pycache__', 'utils', 'template']
     # Gather all folders in our running directory and get their parsers
     return [
-        f.path.replace('./', '') for f in os.scandir('.')
-        if f.is_dir() and f.path.replace('./', '') not in EXCLUDED_FOLDERS
+        f.name for f in os.scandir(pathlib.Path(_parser.__file__).parent)
+        if f.is_dir() and f.name not in EXCLUDED_FOLDERS
     ]
 
 
-# The get_tokens function dynamically finds tokens by leveraging globs. This
-# works based on the deterministic folder structure. Within a given OS root folder one can
-# determine that a sub folder is in fact a token, if there is a "tests" directory. Upon removing
-# the .py via [-2], there is now a list of files to import from.
-def get_tokens(folder):
-    return [
-        path.split("/")[-2] for path in glob.glob(str(folder / '*' / 'tests'))
-    ]
-
-
-def get_files(folder, token=None):
+def get_files(folder):
+    tests_pattern = re.compile(r"^\S+/tests/\S+$")
+    expected_pattern = re.compile(r"^.*_expected.*.py$")
+    split_base = str(folder).split('/')
     files = []
-    for parse_file in glob.glob(str(folder / "*.py")):
+    for parse_file in glob.glob(str(folder / "**/*.py"), recursive=True):
         if parse_file.endswith("__init__.py"):
             continue
         if parse_file.startswith("_"):
             continue
-        files.append({"parse_file": parse_file, "token": token})
+        if tests_pattern.match(parse_file):
+            continue
+        if expected_pattern.match(parse_file):
+            continue
+        tokens = [t for t in parse_file.split('/')[:-1] if t not in split_base]
+        files.append({"parse_file": parse_file, "tokens": tokens})
     return files
 
 
@@ -294,12 +293,12 @@ class ParserGenerator(object):
     def __iter__(self):
         """Sets the uid of each parser step to its class name. Adds token if it exists"""
         for d in self.data:
-            if not re.match(f'{d["operating_system"]}_\S+',
+            if not re.match(fr'{d["operating_system"]}_\S+',
                             d['local_class'].__module__):
                 continue
-            if d['token']:
+            if d['tokens']:
                 yield Iteration(
-                    uid=f"{d['local_class'].__name__} -> {d['token']}",
+                    uid=f"{' -> '.join(d['tokens'])} -> {d['local_class'].__name__}",
                     parameters={"data": d})
             else:
                 yield Iteration(uid=d['local_class'].__name__,
@@ -345,42 +344,36 @@ class SuperFileBasedTesting(aetest.Testcase):
                     f"{pathlib.Path(_parser.__file__).parent}/{operating_system}"
                 )
 
-            # Please refer to get_tokens comments for the how, the what is a genie token, such as
-            # "asr1k" or "c3850" to provide namespaced parsing.
-            tokens = get_tokens(base_folder)
             parse_files = list(get_files(base_folder))
-            for token in tokens:
-                parse_files.extend(get_files(base_folder / token, token))
             # Get all of the root level files
             for details in parse_files:
                 parse_file = details["parse_file"]
-                token = details["token"]
+                base_folder = pathlib.Path(parse_file).parent
+                tokens = details["tokens"]
                 # Load all of the classes in each of those files, and search for classes
                 # that have a `cli` method
                 _module = None
                 module_name = os.path.basename(parse_file[:-len(".py")])
-                if token:
-                    module_name = f"{operating_system}_{token}_{module_name}"
+                if tokens:
+                    module_name = f"{operating_system}_{'_'.join(tokens)}_{module_name}"
                 else:
                     module_name = f"{operating_system}_{module_name}"
                 _module = importlib.machinery.SourceFileLoader(
                     module_name, parse_file).load_module()
                 for name, local_class in inspect.getmembers(_module):
-                    if token:
-                        folder_root_equal = pathlib.Path(
-                            f"{operating_system}/{token}/{name}/cli/equal")
-                        folder_root_empty = pathlib.Path(
-                            f"{operating_system}/{token}/{name}/cli/empty")
-                    else:
-                        folder_root_equal = pathlib.Path(
-                            f"{operating_system}/{name}/cli/equal")
-                        folder_root_empty = pathlib.Path(
-                            f"{operating_system}/{name}/cli/empty")
+                    folder_root_equal = pathlib.Path(
+                        f"{base_folder}/tests/{name}/cli/equal")
+                    folder_root_empty = pathlib.Path(
+                        f"{base_folder}/tests/{name}/cli/empty")
+
+                    # Skip over super parsers
+                    if "super" in name.lower():
+                        continue
 
                     # This is used in conjunction with the arguments that are run at command line, to skip over all tests you are
                     # not concerned with. Basically, it allows a user to not have to wait for 100s of tests to run, to run their
                     # one test.
-                    if _token and _token != token:
+                    if _token and _token not in tokens:
                         continue
                     # Same as previous, however, for class
                     if _class and _class != name:
@@ -394,16 +387,35 @@ class SuperFileBasedTesting(aetest.Testcase):
 
                         if not folder_root_equal.exists():
                             if _show_missing_unittests or _class:
-                                if token:
+                                if tokens:
                                     log.warning(
-                                        f'Equal unittests for {operating_system}-> {token} -> {name} don\'t exist'
+                                        f"Equal unittests for {operating_system} -> {' -> '.join(tokens)} -> {name} don\'t exist"
                                     )
                                     glo_values.missingParsers.append(
-                                        f" {operating_system} -> {token} -> {name}"
+                                        f" {operating_system} -> {' -> '.join(tokens)} -> {name}"
                                     )
                                 else:
                                     log.warning(
                                         f'Equal unittests for {operating_system} -> {name} don\'t exist'
+                                    )
+                                    glo_values.missingParsers.append(
+                                        f" {operating_system} -> {name}")
+                            glo_values.missingCount += 1
+                            continue
+
+                        # If empty folder is missing, then throw warning and skip further execution for that parser
+                        if not folder_root_empty.exists():
+                            if _show_missing_unittests or _class:
+                                if tokens:
+                                    log.warning(
+                                        f"Empty unittests for {operating_system} -> {' -> '.join(tokens)} -> {name} don\'t exist"
+                                    )
+                                    glo_values.missingParsers.append(
+                                        f" {operating_system} -> {' -> '.join(tokens)} -> {name}"
+                                    )
+                                else:
+                                    log.warning(
+                                        f'Empty unittests for {operating_system} -> {name} don\'t exist'
                                     )
                                     glo_values.missingParsers.append(
                                         f" {operating_system} -> {name}")
@@ -420,18 +432,14 @@ class SuperFileBasedTesting(aetest.Testcase):
                             continue
 
                         self.parsers_list.append({
-                            "local_class":
-                            local_class,
-                            "operating_system":
-                            operating_system,
-                            "display_only_failed":
-                            _display_only_failed,
-                            "token":
-                            token,
-                            "number":
-                            _number,
-                            "show_missing_unittests":
-                            _show_missing_unittests,
+                            "local_class": local_class,
+                            "operating_system": operating_system,
+                            "folder_root_equal": folder_root_equal,
+                            "folder_root_empty": folder_root_empty,
+                            "display_only_failed": _display_only_failed,
+                            "tokens": tokens,
+                            "number": _number,
+                            "show_missing_unittests": _show_missing_unittests,
                         })
 
         aetest.loop.mark(ParserTest,
@@ -482,12 +490,14 @@ class ParserTest(aetest.Testcase):
     def test(self, data, steps):
         local_class = data['local_class']
         operating_system = data['operating_system']
+        folder_root_equal = data['folder_root_equal']
+        folder_root_empty = data['folder_root_empty']
         _display_only_failed = data['display_only_failed']
-        token = data['token']
+        tokens = data['tokens']
         _number = data['number']
         name = local_class.__name__
-        if token:
-            msg = f"{operating_system} -> Token -> {token} -> {name}"
+        if tokens:
+            msg = f"{operating_system} -> {' -> '.join(tokens)} -> {name}"
         else:
             msg = f"{operating_system} -> {name}"
         with steps.start(msg, continue_=True) as class_step:
@@ -497,15 +507,15 @@ class ParserTest(aetest.Testcase):
                         continue_=True,
                 ) as golden_steps:
                     self.test_golden(golden_steps, local_class,
-                                     operating_system, _display_only_failed,
-                                     token, _number)
+                                     operating_system, folder_root_equal,
+                                     _display_only_failed, tokens, _number)
 
                 with class_step.start(
                         f"Test Empty -> {operating_system} -> {name}",
                         continue_=True,
                 ) as empty_steps:
                     self.test_empty(empty_steps, local_class, operating_system,
-                                    token)
+                                    folder_root_empty, tokens)
             else:
                 class_step.skipped(
                     f"Parser class {name} is in EXCLUDE_CLASSES.")
@@ -515,16 +525,19 @@ class ParserTest(aetest.Testcase):
                     steps,
                     local_class,
                     operating_system,
+                    folder_root_equal,
                     display_only_failed=None,
-                    token=None,
+                    tokens=None,
                     number=None):
         """Test step that finds any output named with _output.txt, and compares to similar named .py file."""
-        if token:
-            folder_root = pathlib.Path(
-                f"{operating_system}/{token}/{local_class.__name__}/cli/equal")
-        else:
-            folder_root = pathlib.Path(
-                f"{operating_system}/{local_class.__name__}/cli/equal")
+        folder_root = folder_root_equal
+        # Below lines of code are not valid anymore due to the new abstraction logic introduced in 24.4
+        # if tokens:
+        #     folder_root = pathlib.Path(
+        #         f"{operating_system}/{'/'.join(tokens)}/{local_class.__name__}/cli/equal")
+        # else:
+        #     folder_root = pathlib.Path(
+        #         f"{operating_system}/{local_class.__name__}/cli/equal")
 
         # Get list of output files to parse and sort
         convert = lambda text: int(text) if text.isdigit() else text
@@ -545,6 +558,7 @@ class ParserTest(aetest.Testcase):
         ]
 
         if len(output_glob) == 0:
+            log.error(f"{folder_root}/*_output.txt")
             steps.failed(
                 f"No files found in appropriate directory for {local_class}")
 
@@ -554,8 +568,8 @@ class ParserTest(aetest.Testcase):
         for user_defined in output_glob:
             glo_values.parserTotal += 1
             user_test = os.path.basename(user_defined[:-len("_output.txt")])
-            if token:
-                msg = f"Gold -> {operating_system} -> Token {token} -> {local_class.__name__} -> {user_test}"
+            if tokens:
+                msg = f"Gold -> {operating_system} -> {' -> '.join(tokens)} -> {local_class.__name__} -> {user_test}"
             else:
                 msg = f"Gold -> {operating_system} -> {local_class.__name__} -> {user_test}"
 
@@ -569,6 +583,16 @@ class ParserTest(aetest.Testcase):
 
                 golden_parsed_output = read_python_file(
                     f"{folder_root}/{user_test}_expected.py")
+
+                # Verify that the parsed output can be serialized to JSON. If not, raise an error
+                try:
+                    json.dumps(golden_parsed_output)
+                except TypeError as e:
+                    raise AssertionError(
+                        f"Parsed output for {local_class} cannot be serialized to JSON. "
+                        f"Exception:\n\n{str(e)}\n\n"
+                    )
+
                 arguments = {}
                 if os.path.exists(f"{folder_root}/{user_test}_arguments.json"):
                     arguments = read_json_file(
@@ -576,6 +600,9 @@ class ParserTest(aetest.Testcase):
 
                 device = Mock(**golden_output)
                 obj = local_class(device=device)
+                spec = getfullargspec(obj.cli)
+                if 'command' in spec.args:
+                    arguments['command'] = ''
                 try:
                     parsed_output = obj.parse(**arguments)
                 except Exception as e:
@@ -607,7 +634,7 @@ class ParserTest(aetest.Testcase):
 
                     # Write actual output to file
                     with open(f"{folder_root}/{user_test}_actual.json", "w") as f:
-                        f.write(parsed_json_data)
+                        json.dump(parsed_output, f, indent=4)
 
                     # Display device output, parsed output, and golden_output of failed tests
                     log.info(banner("The following is the actual raw output"))
@@ -671,15 +698,19 @@ class ParserTest(aetest.Testcase):
                    steps,
                    local_class,
                    operating_system,
-                   token=None,
+                   folder_root_empty,
+                   tokens=None,
                    display_only_failed=None):
         """Test step that looks for empty output."""
-        if token:
-            folder_root = pathlib.Path(
-                f"{operating_system}/{token}/{local_class.__name__}/cli/empty")
-        else:
-            folder_root = pathlib.Path(
-                f"{operating_system}/{local_class.__name__}/cli/empty")
+        folder_root = folder_root_empty
+        # Below lines of code are not valid anymore due to the new abstraction logic introduced in 24.4
+        # if tokens:
+        #     folder_root = pathlib.Path(
+        #         f"{operating_system}/{'/'.join(tokens)}/{local_class.__name__}/cli/empty")
+        # else:
+        #     folder_root = pathlib.Path(
+        #         f"{operating_system}/{local_class.__name__}/cli/empty")
+
         output_glob = glob.glob(f"{folder_root}/*_output.txt")
 
         all_txt_glob = sorted(glob.glob(f"{folder_root}/*.txt"))
@@ -691,8 +722,8 @@ class ParserTest(aetest.Testcase):
         for user_defined in output_glob:
             glo_values.parserTotal += 1
             user_test = os.path.basename(user_defined[:-len("_output.txt")])
-            if token:
-                msg = f"Empty -> {operating_system} -> {token} -> {local_class.__name__} -> {user_test}"
+            if tokens:
+                msg = f"Empty -> {operating_system} -> {' -> '.join(tokens)} -> {local_class.__name__} -> {user_test}"
             else:
                 msg = f"Empty -> {operating_system} -> {local_class.__name__} -> {user_test}"
             with steps.start(msg, continue_=True) as step_within:
@@ -712,6 +743,9 @@ class ParserTest(aetest.Testcase):
                         f"{folder_root}/{user_test}_arguments.json")
                 device = Mock(**empty_output)
                 obj = local_class(device=device)
+                spec = getfullargspec(obj.cli)
+                if 'command' in spec.args:
+                    arguments['command'] = ''
                 try:
                     obj.parse(**arguments)
                     # if -f flag provided, then add the screen handler back into
@@ -828,7 +862,7 @@ def _parse_args(operating_system=None,
     _token = args.token
     _display_only_failed = args.display_only_failed
     _number = args.number
-    _external_folder = args.external_folder
+    _external_folder = kwargs.get('external_folder') or args.external_folder
     _show_missing_unittests = args.show_missing_unittests
 
     return {

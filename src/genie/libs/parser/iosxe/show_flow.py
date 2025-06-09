@@ -7,6 +7,7 @@ IOSXE parsers for the following show commands:
     * show flow monitor {flow_monitor_name} statistics
     * show flow monitor
     * show flow monitor sdwan_flow_monitor cache filter interface input <> ipv4 source address <>
+    * 'show flow monitor {name} cache filter {ip_version} source address {src_addr} {ip_version} destination address {dst_addr} format table'
 '''
 
 # Python
@@ -62,7 +63,7 @@ class ShowFlowMonitor(ShowFlowMonitorSchema):
 
     cli_command = 'show flow monitor {name} cache format table'
 
-    def cli(self, name, output=None):
+    def cli(self, name="", output=None):
         if output is None:
             cmd = self.cli_command.format(name=name)
             out = self.device.execute(cmd)
@@ -93,9 +94,9 @@ class ShowFlowMonitor(ShowFlowMonitorSchema):
 
         # 10.4.1.10         10.4.10.1                    0              0  0xC0         89                   100                     1
         p7 = re.compile(r'^(?P<ipv4_src_addr>\S+) +(?P<ipv4_dst_addr>\S+) +'
-                        '(?P<trns_src_port>\d+) +(?P<trns_dst_port>\d+) +'
-                        '(?P<ip_tos>\S+) +(?P<ip_port>\d+) +(?P<bytes_long>\d+) +'
-                        '(?P<pkts_long>\d+)$')
+                        r'(?P<trns_src_port>\d+) +(?P<trns_dst_port>\d+) +'
+                        r'(?P<ip_tos>\S+) +(?P<ip_port>\d+) +(?P<bytes_long>\d+) +'
+                        r'(?P<pkts_long>\d+)$')
         for line in out.splitlines():
 
             line = line.strip()
@@ -227,6 +228,7 @@ class ShowFlowMonitorCacheSchema(MetaParser):
                 Optional('datalink_mac_src_input'): str,
                 Optional('datalink_mac_dst_input'): str,
                 Optional('interface_input'): str,
+                Optional('datalink_mac_dst_output'): str,
             },
         },
         Optional('proto_entries'): {
@@ -265,6 +267,22 @@ class ShowFlowMonitorCache(ShowFlowMonitorCacheSchema):
         # Init vars
         ret_dict = {}
         index = 0
+        match = {}
+
+        # entry_dict intializes on p8 or p9 condition
+        # but some output doesn't match these conditions.
+        # this variable checks the entry_dict created
+        entry_dict_created = False
+
+        def check_match(val):
+            nonlocal entry_dict_created, index
+            if entry_dict_created:
+                if match.get(val):
+                    index += 1
+            else:
+                index += 1
+                entry_dict_created = True
+                match.update({val: 1})
 
         # Cache type:                               Normal (Platform cache)
         p1 = re.compile(r'^Cache +type: +(?P<cache_type>[\S\s]+)$')
@@ -388,10 +406,8 @@ class ShowFlowMonitorCache(ShowFlowMonitorCacheSchema):
         # INTERFACE INPUT:                         Po31
         p38 = re.compile(r'^INTERFACE INPUT:\s+(?P<interface_input>[\w\.\/]+)$')
 
-        # entry_dict intializes on p8 or p9 condition
-        # but some output doesn't match these conditions.
-        # this variable checks the entry_dict created
-        entry_dict_created = False
+        # DATALINK MAC DESTINATION ADDRESS OUTPUT:  1000.0E2A.4F57
+        p39 = re.compile(r'^DATALINK MAC DESTINATION ADDRESS OUTPUT:\s+(?P<datalink_mac_dst_output>[\w\s\.]+)$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -495,14 +511,9 @@ class ShowFlowMonitorCache(ShowFlowMonitorCacheSchema):
             m = p10.match(line)
             if m:
                 group = m.groupdict()
-
-                if not entry_dict_created:
-                    index += 1
-                    entry_dict = ret_dict.setdefault('entries', {}).setdefault(
-                        index, {})
-
+                check_match("ipv4")
+                entry_dict = ret_dict.setdefault('entries', {}).setdefault(index, {})
                 entry_dict.update({'ipv4_src_addr': group['src']})
-
                 continue
 
             # IPV4 DESTINATION ADDRESS:  192.168.189.253
@@ -537,12 +548,8 @@ class ShowFlowMonitorCache(ShowFlowMonitorCacheSchema):
             m = p15.match(line)
             if m:
                 group = m.groupdict()
-
-                if not entry_dict_created:
-                    index += 1
-                    entry_dict = ret_dict.setdefault('entries', {}).setdefault(
-                        index, {})
-
+                check_match("ipv6")
+                entry_dict = ret_dict.setdefault('entries', {}).setdefault(index, {})
                 entry_dict.update({'ipv6_src_addr': group['ipv6_src_addr']})
                 continue
 
@@ -676,10 +683,9 @@ class ShowFlowMonitorCache(ShowFlowMonitorCacheSchema):
             m = p34.match(line)
             if m:        
                 group = m.groupdict()
-                index += 1
+                check_match("datalink_eth")
                 entry_dict = ret_dict.setdefault('entries', {}).setdefault(index, {})      
                 entry_dict.update({'datalink_ethertype': group['datalink_ethertype']})
-                entry_dict_created = True
                 continue
                             
             # DATALINK VLAN INPUT:                     0
@@ -695,6 +701,8 @@ class ShowFlowMonitorCache(ShowFlowMonitorCacheSchema):
             m = p36.match(line)
             if m:
                 group = m.groupdict()
+                check_match("datalink_mac_source")
+                entry_dict = ret_dict.setdefault('entries', {}).setdefault(index, {})
                 entry_dict.update({'datalink_mac_src_input': group['datalink_mac_src_input']})
                 continue
 
@@ -710,6 +718,14 @@ class ShowFlowMonitorCache(ShowFlowMonitorCacheSchema):
             if m:
                 group = m.groupdict()
                 entry_dict.update({'interface_input': group['interface_input']})
+                continue
+
+            # DATALINK MAC DESTINATION ADDRESS OUTPUT:    1000.0E2A.4F57
+            m = p39.match(line)
+            if m:
+                group = m.groupdict()
+                entry_dict = ret_dict.setdefault('entries', {}).setdefault(index, {})
+                entry_dict.update({'datalink_mac_dst_output': group['datalink_mac_dst_output']})
                 continue
 
         return ret_dict
@@ -2503,5 +2519,505 @@ class ShowFlowMonitorCacheFilterInterfaceIPv4(ShowFlowMonitorCacheFilterInterfac
             if m:
                 group = m.groupdict()
                 flow_dict['application_name'] = group['application_name']
+
+        return ret_dict
+
+
+class ShowSamplerSchema(MetaParser):
+    """schema for 'show sampler {sampler name }'"""
+    schema = {
+        "export_id":{
+            Any():{
+                "description": str,
+                "type": str,
+                "rate":str,
+                "samples": int,
+                "requests": int,
+                "users": str,
+            }
+        }
+    }
+
+class ShowSampler(ShowSamplerSchema):
+    """parser for the command ' show sampler {sampler name}'"""
+
+    cli_command = 'show sampler {name}'
+
+    def cli(self, name='', output=None):
+        if output is None:
+            cmd = self.cli_command.format(name=name)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+
+        # Export_ID     Description	Type		rate		samples		requests   users
+        # 2	         Userdefined	Random		1outof1000	0		0	flowmonitorm4(ip,Vl100,Input)0outof0
+        p1 = re.compile(r"^(?P<export_id>\d+)\s+(?P<description>.+?)\s+(?P<type>\S+)\s+(?P<rate>.+?)\s+(?P<samples>\d+)\s+(?P<requests>\d+)\s+(?P<users>.+?)$")
+
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # Export_ID     Description	Type		rate		samples		requests   users
+            # 2	        Userdefined	    Random		1outof1000	0		0	flowmonitorm4(ip,Vl100,Input)0outof0
+            
+            m = p1.match(line)
+
+            if m:
+                group = m.groupdict()
+                export_id_dict = (
+                    ret_dict.setdefault("export_id",{}).setdefault(group["export_id"], {})
+                )
+                export_id_dict.update(
+                    {
+                        "description": group["description"],
+                        "type": group["type"],
+                        "rate":group["rate"],
+                        "samples": int(group["samples"]),
+                        "requests": int(group["requests"]),
+                        "users": group["users"],
+                    }
+                )
+            continue
+            
+        return ret_dict
+
+
+class ShowFlowMonitorS1InputCacheFilterSchema(MetaParser):
+    ''' Schema for 
+        * show flow monitor {name} cache filter {ip_version} source address {src_addr} {ip_version} destination address {dst_addr} format table
+    '''
+    schema = {
+        'cache_type': str,
+        'cache_size': int,
+        'current_entries': int,
+        'flows_added': int,
+        'flows_aged': {
+            'total': int,
+            Optional('active_timeout_secs'): int,
+            Optional('active_timeout'): int,
+            Optional('inactive_timeout_secs'): int,
+            Optional('inactive_timeout'): int,
+
+        },
+        'entries':{
+            Any(): {
+                'src_addr': str,
+                'dst_addr': str,
+                'interface': str,
+                'flow_cts_src_group_tag': int,
+                'flow_cts_dst_group_tag': int,
+                'ip_version': int,
+                'ip_prot': int,
+                'ip_ttl': int,
+                'pkts_long': int,
+            }
+        }
+    }
+
+class ShowFlowMonitorS1InputCacheFilter(ShowFlowMonitorS1InputCacheFilterSchema):
+    ''' Parser for 
+        * show flow monitor {name} cache filter {ip_version} source address {src_addr} {ip_version} destination address {dst_addr} format table
+    '''
+    
+    cli_command = 'show flow monitor {name} cache filter {ip_version} source address {src_addr} {ip_version_2} destination address {dst_addr} format table'
+
+    def cli(self, name, ip_version, src_addr, dst_addr, ip_version_2=None, output=None):
+        if output is None:
+            cmd = self.cli_command.format(name=name, ip_version=ip_version, src_addr=src_addr, dst_addr=dst_addr, ip_version_2=ip_version_2)
+            output = self.device.execute(cmd)
+
+        # Cache type: Normal (Platform cache)
+        p1 = re.compile(r'^Cache +type:\s+(?P<cache_type>[\S\s]+)$')
+
+        # Cache size: 10000
+        p2 = re.compile(r'^Cache +size:\s+(?P<cache_size>\d+)$')
+
+        # Current entries: 6
+        p3 = re.compile(r'^Current +entries:\s+(?P<current_entries>\d+)$')
+
+        # Flows added: 78
+        p4 = re.compile(r'^Flows +added:\s+(?P<flows_added>\d+)$')
+
+        # Flows aged: 72
+        p5 = re.compile(r'^Flows +aged:\s+(?P<flows_aged>\d+)$')
+
+        # Active timeout (60 secs) 36
+        p6 = re.compile(r"^Active timeout +\((?P<active_timeout_secs>\d+) secs\) +(?P<active_timeout>\d+)$")
+
+        # Inactive timeout (60 secs) 36
+        p7 = re.compile(r"^Inactive timeout +\((?P<inactive_timeout_secs>\d+) secs\) +(?P<inactive_timeout>\d+)$")
+
+        # 100:1::123	   200:1::123	  Tw1/0/25	          100	                      0	              6	          59	   63	    13746
+        # 100.1.1.123      200.1.1.123     Tw1/0/25           100                         0               4           61       64       13978
+        p8 = re.compile(r'^(?P<src_addr>(\d+\.\d+\.\d+\.\d+|[a-fA-F0-9:]+))\s+(?P<dst_addr>(\d+\.\d+\.\d+\.\d+|[a-fA-F0-9:]+))\s+(?P<interface>\S+)\s+(?P<flow_cts_src_group_tag>\d+)\s+(?P<flow_cts_dst_group_tag>\d+)\s+(?P<ip_version>\d+)\s+(?P<ip_prot>\d+)\s+(?P<ip_ttl>\d+)\s+(?P<pkts_long>\d+)$')
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Cache type: Normal (Platform cache)
+            m = p1.match(line)
+            if m:
+                ret_dict['cache_type'] = m.groupdict()['cache_type']
+                continue
+
+            # Cache size
+            m = p2.match(line)
+            if m:
+                ret_dict['cache_size'] = int(m.groupdict()['cache_size'])
+                continue
+
+            # Current entries
+            m = p3.match(line)
+            if m:
+                ret_dict['current_entries'] = int(m.groupdict()['current_entries'])
+                continue
+
+            # Flows added
+            m = p4.match(line)
+            if m:
+                ret_dict['flows_added'] = int(m.groupdict()['flows_added'])
+                continue
+
+            # Flows aged
+            m = p5.match(line)
+            if m:
+                ret_dict.setdefault('flows_aged', {})['total'] = int(m.groupdict()['flows_aged'])
+                continue
+
+            # Active timeout 
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['flows_aged'].update({k: int(v) for k, v in group.items()})
+                continue
+
+            # Inactive timeout
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['flows_aged'].update({k: int(v) for k, v in group.items()})
+                continue
+            
+            # 100:1::123	   200:1::123	  Tw1/0/25	          100	                      0	              6	          59	   63	    13746
+            # 100.1.1.123      200.1.1.123      Tw1/0/25           100                       0                4           61       64       13978
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                index = len(ret_dict.get('entries', {})) + 1
+                entry_dict = ret_dict.setdefault('entries', {}).setdefault(index, {})
+                entry_dict.update({
+                    'src_addr': group['src_addr'],
+                    'dst_addr': group['dst_addr'],
+                    'interface':  (group['interface']),
+                    'flow_cts_src_group_tag': int(group['flow_cts_src_group_tag']),
+                    'flow_cts_dst_group_tag': int(group['flow_cts_dst_group_tag']),
+                    'ip_version': int(group['ip_version']),
+                    'ip_prot': int(group['ip_prot']),
+                    'ip_ttl': int(group['ip_ttl']),
+                    'pkts_long': int(group['pkts_long']),
+                })
+        
+        return ret_dict
+        
+        
+class ShowRunningConfigFlowMonitorExpandSchema(MetaParser):
+    """Schema for 'show running-config flow monitor {name} expand'"""
+    schema = {
+        'flow_monitor': {
+            Any(): {
+                'record': str,
+                'exporters': ListOf(str),
+                'cache_entries': int,
+            }
+        },
+        'flow_record': {
+            Any(): {
+                'matches': ListOf(str),
+                Optional('collects'): ListOf(str),
+            }
+        },
+        'flow_exporter': {
+            Any(): {
+                'destination': str,
+                'source': str,
+                'dscp': int,
+                'ttl': int,
+                'transport_protocol': str,
+                'port': int,
+                Optional('match_counter_packets_long_gt'): int,
+                Optional('export_protocol'): str,
+            }
+        }
+    }
+
+class ShowRunningConfigFlowMonitorExpand(ShowRunningConfigFlowMonitorExpandSchema):
+    """Parser for 'show running-config flow monitor {monitor_name} expand'"""
+
+    cli_command = 'show running-config flow monitor {monitor_name} expand'
+
+    def cli(self, monitor_name, output=None):
+        if output is None:
+            cmd = self.cli_command.format(monitor_name=monitor_name)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+        current_section = None
+
+        # flow record DreamLine-Record
+        p1 = re.compile(r'^flow\s+record\s+(?P<record_name>\S+)$')
+
+        # match ipv4 protocol
+        # match datalink mac source address input
+        p2 = re.compile(r'^match\s+(?P<match_field>.*)$')
+
+        # collect counter bytes
+        p3 = re.compile(r'^collect\s+(?P<collect_field>.*)$')
+
+        # flow exporter DDoS-Exporter
+        p4 = re.compile(r'^flow\s+exporter\s+(?P<exporter_name>\S+)$')
+
+        # destination 220.64.0.236
+        p5 = re.compile(r'^destination\s+(?P<destination>\S+)$')
+
+        # source Loopback0
+        p6 = re.compile(r'^source\s+(?P<source>\S+)$')
+
+        # dscp 57
+        p7 = re.compile(r'^dscp\s+(?P<dscp>\d+)$')
+
+        # ttl 67
+        p8 = re.compile(r'^ttl\s+(?P<ttl>\d+)$')
+
+        # transport udp 5000
+        p9 = re.compile(r'^transport\s+(?P<protocol>\S+)\s+(?P<port>\d+)$')
+
+        # match counter packets long gt 456677
+        p10 = re.compile(r'^match\s+counter\s+packets\s+long\s+gt\s+(?P<match_counter_packets_long_gt>\d+)$')
+
+        # export-protocol ipfix
+        p11 = re.compile(r'^export-protocol\s+(?P<export_protocol>\S+)$')
+
+        # flow monitor DreamLine-Monitor
+        p12 = re.compile(r'^flow\s+monitor\s+(?P<monitor_name>\S+)$')
+
+        # exporter DDoS-Exporter
+        p13 = re.compile(r'^exporter\s+(?P<exporter_name>\S+)$')
+
+        # cache entries 40000
+        p14 = re.compile(r'^cache\s+entries\s+(?P<cache_entries>\d+)$')
+
+        # record DreamLine-Record
+        p15 = re.compile(r'^record\s+(?P<record_name>\S+)$')
+
+        for line in output.splitlines():
+
+            line = line.strip()
+
+            # flow record DreamLine-Record
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                record_name = group['record_name']
+                record_dict = ret_dict.setdefault('flow_record', {}).setdefault(record_name, {})
+                current_section = 'flow_record'
+                continue
+
+            # match ipv4 protocol
+            m = p2.match(line)
+            if m and current_section == 'flow_record':
+                group = m.groupdict()
+                matches = record_dict.setdefault('matches', [])
+                matches.append(group['match_field'])
+                continue
+
+            # collect counter bytes
+            m = p3.match(line)
+            if m and current_section == 'flow_record':
+                group = m.groupdict()
+                collects = record_dict.setdefault('collects', [])
+                collects.append(group['collect_field'])
+                continue
+
+            # flow exporter DDoS-Exporter
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                exporter_name = group['exporter_name']
+                exporter_dict = ret_dict.setdefault('flow_exporter', {}).setdefault(exporter_name, {})
+                current_section = 'flow_exporter'
+                continue
+
+            # destination 220.64.0.236
+            m = p5.match(line)
+            if m and current_section == 'flow_exporter':
+                group = m.groupdict()
+                exporter_dict['destination'] = group['destination']
+                continue
+
+            # source Loopback0
+            m = p6.match(line)
+            if m and current_section == 'flow_exporter':
+                group = m.groupdict()
+                exporter_dict['source'] = group['source']
+                continue
+
+            # dscp 57
+            m = p7.match(line)
+            if m and current_section == 'flow_exporter':
+                group = m.groupdict()
+                exporter_dict['dscp'] = int(group['dscp'])
+                continue
+
+            # ttl 67
+            m = p8.match(line)
+            if m and current_section == 'flow_exporter':
+                group = m.groupdict()
+                exporter_dict['ttl'] = int(group['ttl'])
+                continue
+
+            # transport udp 5000
+            m = p9.match(line)
+            if m and current_section == 'flow_exporter':
+                group = m.groupdict()
+                exporter_dict['transport_protocol'] = group['protocol']
+                exporter_dict['port'] = int(group['port'])
+                continue
+
+            # match counter packets long gt 456677
+            m = p10.match(line)
+            if m and current_section == 'flow_exporter':
+                group = m.groupdict()
+                exporter_dict['match_counter_packets_long_gt'] = int(group['match_counter_packets_long_gt'])
+                continue
+
+            # export-protocol ipfix
+            m = p11.match(line)
+            if m and current_section == 'flow_exporter':
+                group = m.groupdict()
+                exporter_dict['export_protocol'] = group['export_protocol']
+                continue
+
+            # flow monitor DreamLine-Monitor
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                monitor_name = group['monitor_name']
+                monitor_dict = ret_dict.setdefault('flow_monitor', {}).setdefault(monitor_name, {})
+                current_section = 'flow_monitor'
+                continue
+
+            # exporter DDoS-Exporter
+            m = p13.match(line)
+            if m and current_section == 'flow_monitor':
+                group = m.groupdict()
+                exporters = monitor_dict.setdefault('exporters', [])
+                exporters.append(group['exporter_name'])
+                continue
+
+            # cache entries 40000
+            m = p14.match(line)
+            if m and current_section == 'flow_monitor':
+                group = m.groupdict()
+                monitor_dict['cache_entries'] = int(group['cache_entries'])
+                continue
+
+            # record DreamLine-Record
+            m = p15.match(line)
+            if m and current_section == 'flow_monitor':
+                group = m.groupdict()
+                monitor_dict['record'] = group['record_name']
+                continue
+
+        return ret_dict
+        
+class ShowFlowInterfaceSchema(MetaParser):
+    """Schema for 'show flow interface'"""
+    schema = {
+        'interface': {
+            Any(): {
+                'fnf': {
+                    Any(): {  # Monitor name
+                        'direction': {
+                            Any(): {  # Input or Output
+                                'traffic': {
+                                    'type': str,
+                                    Optional('sampler'): str,
+                                    Optional('status'): str,
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+class ShowFlowInterface(ShowFlowInterfaceSchema):
+    """Parser for 'show flow interface'"""
+
+    cli_command = 'show flow interface'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+
+        # Interface Vlan300
+        p1 = re.compile(r'^Interface\s+(?P<interface>\S+)$')
+
+        # FNF:  monitor:          FlowMonitor-1
+        p2 = re.compile(r'^FNF:\s+monitor:\s+(?P<monitor>\S+)$')
+
+        # direction:        Input
+        p3 = re.compile(r'^direction:\s+(?P<direction>\S+)$')
+
+        # traffic(ip):      sampler Netflow-Sample
+        # traffic(ip):      on
+        p4 = re.compile(r'^traffic\((?P<type>\S+)\):\s+(sampler\s+(?P<sampler>\S+)|(?P<status>on))$')
+
+        current_interface = None
+        current_monitor = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Interface Vlan300
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                current_interface = group['interface']
+                intf_dict = ret_dict.setdefault('interface', {}).setdefault(current_interface, {})
+                continue
+
+            # FNF:  monitor:          FlowMonitor-1
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                current_monitor = group['monitor']
+                fnf_dict = intf_dict.setdefault('fnf', {}).setdefault(current_monitor, {})
+                continue
+
+            # direction:        Input
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                direction = group['direction']
+                direction_dict = fnf_dict.setdefault('direction', {}).setdefault(direction, {})
+                continue
+
+            # traffic(ip):      sampler Netflow-Sample
+            # traffic(ip):      on
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                traffic_dict = direction_dict.setdefault('traffic', {})
+                traffic_dict['type'] = group['type']
+                if group.get('sampler'):
+                    traffic_dict['sampler'] = group['sampler']
+                elif group.get('status') == 'on':
+                    traffic_dict['status'] = 'on'
+                continue
 
         return ret_dict

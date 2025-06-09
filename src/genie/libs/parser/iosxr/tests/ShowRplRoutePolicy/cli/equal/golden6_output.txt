@@ -1,0 +1,21 @@
+show rpl route-policy
+
+Wed Aug 28 08:45:38.904 UTC
+Listing for all Route Policy objects
+
+route-policy DENY_ALL
+  drop
+end-policy
+!
+route-policy PASS_ALL
+  pass
+end-policy
+!
+route-policy V002:EXPORT
+  if (as-path in aspath_20_deny) then
+    drop
+  else
+    set extcommunity rt (64911:303712001) additive
+  endif
+end-policy
+!

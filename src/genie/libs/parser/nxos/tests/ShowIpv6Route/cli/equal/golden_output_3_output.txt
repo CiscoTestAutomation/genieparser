@@ -1,0 +1,34 @@
+IPv6 Routing Table for VRF "myvrf_50003"
+'*' denotes best ucast next-hop
+'**' denotes best mcast next-hop
+'[x/y]' denotes [preference/metric]
+
+2001:100:20:b::/64, ubest/mbest: 1/0, attached
+    *via 2001:100:20:b::1, Vlan111, [0/0], 3d21h, direct, tag 12345
+2001:100:20:b::1/128, ubest/mbest: 1/0, attached
+    *via 2001:100:20:b::1, Vlan111, [0/0], 3d21h, local, tag 12345
+2001:100:20:b:12::1/128, ubest/mbest: 1/0
+    *via ::ffff:40.17.113.3%default:IPv4, [200/0], 0.000000, bgp-65103, internal, tag 6555
+, segid 50003 tunnelid: 0x28117103 encap: VXLAN
+
+2001:100:20:b:12::2/128, ubest/mbest: 1/0
+    *via ::ffff:40.17.113.3%default:IPv4, [200/0], 0.000000, bgp-65103, internal, tag 6555
+, segid 50003 tunnelid: 0x28117103 encap: VXLAN
+
+2001:100:20:b:12::3/128, ubest/mbest: 1/0
+    *via ::ffff:40.17.113.3%default:IPv4, [200/0], 0.000000, bgp-65103, , tag 6555
+, segid 50003 tunnelid: 0x28117103 encap: VXLAN
+
+2001:100:20:b:12::4/128, ubest/mbest: 1/0
+    *via ::ffff:40.17.113.3%default:IPv4, [200/0], 0.000000, bgp-65103, , tag 6555
+, segid 50003 tunnelid: 0x28117103 encap: VXLAN
+
+2001:100:20:b:44::1/128, ubest/mbest: 1/0, attached
+    *via 2001:100:20:b:44::1, Vlan111, [190/0], 1d20h, hmm
+2001:100:20:b:44::5/128, ubest/mbest: 1/0, attached
+    *via 2001:100:20:b:44::5, Vlan111, [190/0], 1d20h, hmm
+2001:100:20:b:44::8/128, ubest/mbest: 1/0, attached
+    *via 2001:100:20:b:44::8, Vlan111, [190/0], 1d20h, hmm
+2001:100:20:b:44::9/128, ubest/mbest: 1/0, attached
+    *via 2001:100:20:b:44::9, Vlan111, [190/0], 1d20h, hmm
+

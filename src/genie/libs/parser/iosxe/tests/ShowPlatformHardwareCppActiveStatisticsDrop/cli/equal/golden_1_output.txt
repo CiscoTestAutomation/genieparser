@@ -1,0 +1,11 @@
+Last clearing of QFP drops statistics : never
+
+-------------------------------------------------------------------------
+Global Drop Stats                         Packets                  Octets  
+-------------------------------------------------------------------------
+BadUidbIdx                                     59                   16702  
+Ipv4AclLookupMiss                            1000                   34000  
+Ipv4NoRoute                                    41                    1968  
+Ipv6NoRoute                                    16                     896  
+UnconfiguredIpv4Fia                          2533                  389422  
+UnconfiguredIpv6Fia                          3482                  396913

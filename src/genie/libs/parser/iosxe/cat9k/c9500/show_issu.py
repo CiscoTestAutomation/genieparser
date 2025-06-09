@@ -62,19 +62,21 @@ class ShowIssuStateDetail(ShowIssuStateDetailSchema):
 
         # Init parsed dict
         ret_dict = {}
+        slot_info = False
+        default_slot = '1'
 
         # Compile regexp patterns
 
         # Finished local lock acquisition on R0
         p0 = re.compile(r'^Finished +local +lock +acquisition'
-                         ' +on +(?P<slot>(\S+))$')
+                         r' +on +(?P<slot>(\S+))$')
 
         # No ISSU operation is in progress
         p1 = re.compile(r'^No +ISSU +operation +is +in +progress$')
 
         # Current ISSU Status: Disabled
         p2 = re.compile(r'^Current +ISSU +Status: +(?P<current_status>(\S+))$')
-        
+
         # Previous ISSU Operation: N/A
         p3 = re.compile(r'^Previous +ISSU +Operation: +(?P<previous_operation>(\S+))$')
 
@@ -100,15 +102,17 @@ class ShowIssuStateDetail(ShowIssuStateDetailSchema):
         p10 = re.compile(r'^Valid +Boot +Media +(?P<valid_boot_media>(\S+))$')
 
         # Parse all lines
+        slot_dict = {}
         for line in out.splitlines():
             line = line.strip()
-            
+
             # Finished local lock acquisition on R0
             # p0 = re.compile(r'^Finished +local +lock +acquisition'
             #                  ' +on +(?P<slot>(\S+))$')
             m = p0.match(line)
             if m:
                 slot = m.groupdict()['slot']
+                slot_info = True
                 slot_dict = ret_dict.setdefault('slot', {}).setdefault(slot, {})
                 slot_dict['issu_in_progress'] = False
                 continue
@@ -125,6 +129,8 @@ class ShowIssuStateDetail(ShowIssuStateDetailSchema):
             # p2 = re.compile(r'^Current +ISSU +Status: +(?P<current_status>(\S+))$')
             m = p2.match(line)
             if m:
+                if slot_info is False:
+                    slot_dict = ret_dict.setdefault('slot', {}).setdefault(default_slot, {})
                 current_status = m.groupdict()['current_status']
                 slot_dict['current_status'] = current_status
                 continue
@@ -263,7 +269,7 @@ class ShowIssuRollbackTimer(ShowIssuRollbackTimerSchema):
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict['rollback_timer_time'] = group['rollback_time']                
+                ret_dict['rollback_timer_time'] = group['rollback_time']
                 continue
 
         return ret_dict

@@ -1,0 +1,17 @@
+ Packets Processed by DHCP Snooping                    = 0
+ Packets Dropped Because
+   IDB not known                                       = 0
+   Queue full                                          = 0
+   Interface is in errdisabled                         = 0
+   Rate limit exceeded                                 = 0
+   Received on untrusted ports                         = 0
+   Nonzero giaddr                                      = 0
+   Source mac not equal to chaddr                      = 0
+   No binding entry                                    = 0
+   Insertion of opt82 fail                             = 0
+   Unknown packet                                      = 0
+   Interface Down                                      = 0
+   Unknown output interface                            = 0
+   Misdirected Packets                                 = 0
+   Packets with Invalid Size                           = 0
+   Packets with Invalid Option                         = 0

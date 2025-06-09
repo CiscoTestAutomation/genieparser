@@ -85,11 +85,13 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
         # *~127.127.1.1     .LOCL.           0      6     16   377  0.000   0.000  1.204
         #  ~10.4.1.1        .INIT.          16      -   1024     0  0.000   0.000 15937.
         # +~10.16.2.2       127.127.1.1      8    137     64     1 15.917 556.786 7938.0
+        # *172.16.229.65    .GNSS.           1 -   59   64  377    1.436   73.819  10.905
+        # *~2001:DB8:EEE8  2001:DB8::EEE8   2    337    512   377  1.957  -2.107  1.078
         p1 = re.compile(r'^(?P<mode_code>[x\*\#\+\- ])?(?P<configured>[\~])? *(?P<remote>[\w\.\:]+) +'
-                         '(?P<refid>[\w\.]+) +(?P<stratum>\d+) +'
-                         '(?P<receive_time>[\d\-]+) +(?P<poll>\d+) +'
-                         '(?P<reach>\d+) +(?P<delay>[\d\.]+) +'
-                         '(?P<offset>[\d\.\-]+) +(?P<disp>[\d\.\-]+)$')
+                        r'(?P<refid>[\w\.\:]+) +(?P<stratum>\d+) +'
+                        r'(?P<receive_time>[\d\-]+) +(?P<poll>\d+) +'
+                        r'(?P<reach>\d+) +(?P<delay>[\d\.]+) +'
+                        r'(?P<offset>[\d\.\-]+) +(?P<disp>[\d\.\-]+)$')
 
 
         for line in out.splitlines():
@@ -97,7 +99,11 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
             if not line:
                 continue
 
+            # *~127.127.1.1     .LOCL.           0      6     16   377  0.000   0.000  1.204
+            #  ~10.4.1.1        .INIT.          16      -   1024     0  0.000   0.000 15937.
+            # +~10.16.2.2       127.127.1.1      8    137     64     1 15.917 556.786 7938.0
             # *172.16.229.65    .GNSS.           1 -   59   64  377    1.436   73.819  10.905
+            # *~2001:DB8:EEE8  2001:DB8::EEE8   2    337    512   377  1.957  -2.107  1.078
             m = p1.match(line)
             if m:
                 groups = m.groupdict()
@@ -128,20 +134,17 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
                                   'offset': float(groups['offset']),
                                   'jitter': float(groups['disp'])})
 
-                # ops clock_state structure
-                if groups['mode_code']:
-                    if '*' in groups['mode_code']:
-                        clock_dict = ret_dict.setdefault('clock_state', {}).setdefault('system_status', {})
-                        clock_dict['clock_state'] = mode
-                        clock_dict['clock_stratum'] = int(groups['stratum'])
-                        clock_dict['associations_address'] = peer
-                        clock_dict['root_delay'] = float(groups['delay'])
-                        clock_dict['clock_offset'] = float(groups['offset'])
-                        clock_dict['clock_refid'] = groups['refid']
-                        clock_dict['associations_local_mode'] = local_mode
-                    else:
-                        clock_dict = ret_dict.setdefault('clock_state', {}).setdefault('system_status', {})
-                        clock_dict['clock_state'] = 'unsynchronized'
+
+                # Update clock_state if the peer is synchronized
+                if groups['mode_code'] and '*' in groups['mode_code']:
+                    clock_dict = ret_dict.setdefault('clock_state', {}).setdefault('system_status', {})
+                    clock_dict['clock_state'] = mode
+                    clock_dict['clock_stratum'] = int(groups['stratum'])
+                    clock_dict['associations_address'] = peer
+                    clock_dict['root_delay'] = float(groups['delay'])
+                    clock_dict['clock_offset'] = float(groups['offset'])
+                    clock_dict['clock_refid'] = groups['refid']
+                    clock_dict['associations_local_mode'] = local_mode
     
         # check if has synchronized peers, if no create unsynchronized entry
         if ret_dict and not ret_dict.get('clock_state'):
@@ -203,15 +206,15 @@ class ShowNtpStatus(ShowNtpStatusSchema):
         # Clock is synchronized, stratum 2, reference assoc id 1, reference is 192.0.2.1
         # Clock is synchronized (adding leap second), stratum 1, reference is 192.168.4.20
         p1 = re.compile(r'Clock +is +(?P<clock_state>\w+)(?P<leapsecond> +\(adding +leap +second\))?,'
-            ' +stratum +(?P<stratum>\d+),(?: +reference +assoc +id +'
-            '(?P<assoc_id>[\d]+),)? +reference +is +(?P<refid>[\w\.]+)$')
+            r' +stratum +(?P<stratum>\d+),(?: +reference +assoc +id +'
+            r'(?P<assoc_id>[\d]+),)? +reference +is +(?P<refid>[\w\.]+)$')
 
         # Clock is unsynchronized, stratum 16, no reference clock
         p1_1 = re.compile(r'^Clock +is +(?P<clock_state>\w+), +stratum +(?P<stratum>\d+), +no +reference +clock$')
 
         # nominal freq is 250.0000 Hz, actual freq is 250.0000 Hz, precision is 2**10
         p2 = re.compile(r'^nominal +freq +is +(?P<nom_freq>[\d\.]+) +Hz, actual +freq +is'
-                         ' +(?P<act_freq>[\d\.]+) +Hz, precision +is +(?P<precision>[\d\*]+)$')
+                         r' +(?P<act_freq>[\d\.]+) +Hz, precision +is +(?P<precision>[\d\*]+)$')
 
         # ntp uptime is 1921500 (1/100 of seconds), resolution is 4000
         p3 = re.compile(r'^ntp +uptime +is +(?P<uptime>[\d\s\w\/\(\)]+), +resolution +is +(?P<resolution>[\d]+)$')
@@ -374,8 +377,8 @@ class ShowNtpConfig(ShowNtpConfigSchema):
         # ntp server 10.16.2.2 source Loopback0
         # ntp server 10.3.254.100 prefer
         p1 = re.compile(r"^ntp +(?P<type>\w+)( +vrf +(?P<vrf>\S+))? "
-                         "+(?P<address>[\w\.\:]+)( +source +"
-                         "(?P<source_interface>[\w]+))?(?P<prefer> prefer)?$")
+                         r"+(?P<address>[\w\.\:]+)( +source +"
+                         r"(?P<source_interface>[\w]+))?(?P<prefer> prefer)?$")
 
         for line in out.splitlines():
             line = line.strip()
@@ -521,9 +524,9 @@ class ShowNtpAssociationsDetail(ShowNtpAssociationsDetailSchema):
         # 192.168.13.57 configured, our_master, sane, valid, stratum 3
         # 192.168.255.254 configured, ipv4, authenticated (' ' reject), insane, invalid, stratum 3
         p1 = re.compile(r'^(?P<address>[\w\.\:]+) +(?P<configured>\w+),( +(?P<ip_type>ipv4|ipv6),)?'
-                         '( +(?P<authenticated>authenticated)( +\(\'\W\' +\S+\))?,)?( +(?P<our_master>our_master),)?'
-                         '( +(?P<selected>selected),)? +(?P<insane>\w+), +(?P<invalid>\w+),'
-                         '( +(?P<unsynced>unsynced),)? +stratum +(?P<stratum>\d+)$')
+                         r'( +(?P<authenticated>authenticated)( +\(\'\W\' +\S+\))?,)?( +(?P<our_master>our_master),)?'
+                         r'( +(?P<selected>selected),)? +(?P<insane>\w+), +(?P<invalid>\w+),'
+                         r'( +(?P<unsynced>unsynced),)? +stratum +(?P<stratum>\d+)$')
 
         # ref ID 10.10.10.254      , time DBAB02D6.9E354130 (18:49:35.873 UTC Thu Jul 11 2019)
         # ref ID 172.16.255.254, time DBAB02D6.9E354130 (16:08:06.618 EST Fri Oct 14 2016)
@@ -532,20 +535,20 @@ class ShowNtpAssociationsDetail(ShowNtpAssociationsDetailSchema):
         # our mode client, peer mode server, our poll intvl 512, peer poll intvl 512
         # our mode client, peer mode server, our poll intvl 512, peer poll intvl 512
         p3 = re.compile(r'^our +mode +(?P<mode>\w+), +peer +mode +(?P<peer_mode>\w+),'
-                         ' +our +poll +intvl +(?P<poll_intv>\d+),'
-                         ' +peer +poll +intvl +(?P<peer_poll_intv>\d+)$')
+                         r' +our +poll +intvl +(?P<poll_intv>\d+),'
+                         r' +peer +poll +intvl +(?P<peer_poll_intv>\d+)$')
 
         # root delay 0.00 msec, root disp 14.52, reach 377, sync dist 28.40
         p4 = re.compile(r'^root +delay +(?P<root_delay_msec>[\d\.]+) +msec, +root +disp +(?P<root_disp>[\d\.]+),'
-                         ' +reach +(?P<reach>[\d\.]+),'
-                         ' +sync +dist +(?P<sync_dist>[\d\.]+)$')
+                         r' +reach +(?P<reach>[\d\.]+),'
+                         r' +sync +dist +(?P<sync_dist>[\d\.]+)$')
 
         # delay 0.00 msec, offset 0.0000 msec, dispersion 7.23, jitter 0.97 
         # delay 0.00 msec, offset -1.0000 msec, dispersion 5.64, jitter 0.97 msec
         # delay 7.86 msec, offset 11.176 msec, dispersion 3.62
         p5 = re.compile(r'^delay +(?P<delay_msec>[\d\.]+) +msec, +offset +(?P<offset_msec>[\d\.\-]+)'
-                         ' +msec, +dispersion +(?P<dispersion>[\d\.]+)'
-                         '(, +jitter +(?P<jitter_msec>[\d\.]+)( +msec)?)?$')
+                         r' +msec, +dispersion +(?P<dispersion>[\d\.]+)'
+                         r'(, +jitter +(?P<jitter_msec>[\d\.]+)( +msec)?)?$')
 
         # precision 2**10, version 4
         p6 = re.compile(r'^precision +(?P<precision>[\d\*]+), +version +(?P<version>\d+)$')
@@ -557,8 +560,8 @@ class ShowNtpAssociationsDetail(ShowNtpAssociationsDetailSchema):
 
         # assoc in packets 27, assoc out packets 27, assoc error packets 0
         p8 = re.compile(r'^assoc +in +packets +(?P<assoc_in_packets>\d+),'
-                         ' +assoc +out +packets +(?P<assoc_out_packets>\d+),'
-                         ' +assoc +error +packets +(?P<assoc_error_packets>[\d\.]+)$')
+                         r' +assoc +out +packets +(?P<assoc_out_packets>\d+),'
+                         r' +assoc +error +packets +(?P<assoc_error_packets>[\d\.]+)$')
 
         # org time 00000000.00000000 (09:00:00.000 EST Mon Jan 1 1900)
         p9 = re.compile(r'^org +time +(?P<org_time>[\w\:\s\(\)\.]+)$')

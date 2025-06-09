@@ -5,6 +5,10 @@ IOSXR parsers for the following show commands:
     * show controller fia diagshell {diagshell_unit} 'l2 show' location {location}
     * show controllers coherentDSP {port}
     * show controllers optics {port}
+    * show controllers optics {port} fec-thresholds
+    * show controllers optics {port} breakout-details
+    * show controllers optics {port} dwdm-carrier-map
+    * show controllers optics {port} db
     * show controllers fia diagshell {diagshell_unit} "diag cosq qpair egq map" location {location}
 '''
 
@@ -76,10 +80,10 @@ class ShowControllersFiaDiagshellL2showLocation(ShowControllersFiaDiagshellL2sho
         # mac=fc:00:00:ff:01:9c vlan=2544 GPORT=0x8000048 Trunk=0 encap_id=0x2007
         # mac=fc:00:00:ff:01:0c vlan=2524 GPORT=0xc000000 Trunk=0 Static encap_id=0x3001'
         p2 = re.compile(r'^mac\=(?P<mac>[A-Fa-f0-9:]+) +vlan=(?P<vlan>\d+)'
-                         ' +GPORT\=(?P<gport>\d+|0x[A-Fa-f0-9]+)'
-                         '(?: +Trunk\=(?P<trunk>\d+))?'
-                         '(?: +(?P<b_static>(Static)))?'
-                         ' +encap_id\=(?P<encap_id>\d+|0x[A-Fa-f0-9\']+)$')
+                         r' +GPORT\=(?P<gport>\d+|0x[A-Fa-f0-9]+)'
+                         r'(?: +Trunk\=(?P<trunk>\d+))?'
+                         r'(?: +(?P<b_static>(Static)))?'
+                         r' +encap_id\=(?P<encap_id>\d+|0x[A-Fa-f0-9\']+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -472,7 +476,6 @@ class ShowControllersOpticsSchema(MetaParser):
         },
     }
 
-
 # ===========================================
 # Parser for 'show controllers optics {port}'
 # ===========================================
@@ -516,9 +519,9 @@ class ShowControllersOptics(ShowControllersOpticsSchema):
         # DWDM carrier Info: C BAND, MSA ITU Channel=97, Frequency=191.30THz,
         # DWDM Carrier Info: Unavailable, MSA ITU Channel= Unavailable, Frequency= Unavailable , Wavelength= Unavailable
         p6 = re.compile(r'^DWDM +[Cc]arrier +Info: +(?P<dwdm_carrier_info>[\w\s]+), '
-                         '+MSA +ITU +Channel *= *(?P<msa_itu_channel>[\w]+), '
-                         '+Frequency *= *(?P<frequency>[\w\.]+) *,'
-                         '( +Wavelength *= *(?P<wavelength>[\S\s]+))?$')
+                         r'+MSA +ITU +Channel *= *(?P<msa_itu_channel>[\w]+), '
+                         r'+Frequency *= *(?P<frequency>[\w\.]+) *,'
+                         r'( +Wavelength *= *(?P<wavelength>[\S\s]+))?$')
 
         # Wavelength=1567.133nm
         p7 = re.compile(r'^Wavelength *= *(?P<wavelength>[\S\s]+)$')
@@ -1018,6 +1021,350 @@ class ShowControllersOptics(ShowControllersOpticsSchema):
                 continue
 
         return result_dict
+
+
+# ===========================================
+# Schema for 'show controllers optics {port} fec-thresholds'
+# ===========================================
+class ShowControllersOpticsFecThresholdsSchema(MetaParser):
+    '''Schema for:
+        * show controllers optics {port} fec-thresholds
+    '''
+
+    schema = {
+        'media_fec_excess_degrade': {
+            'raise': str,
+            'clear': str,
+        },
+        'media_fec_detected_degrade': {
+            'raise': str,
+            'clear': str,
+        },
+        'host_fec_excess_degrade': {
+            'raise': str,
+            'clear': str,
+        },
+        'host_fec_detected_degrade': {
+            'raise': str,
+            'clear': str,
+        }
+    }
+
+
+# ===========================================
+# Parser for 'show controllers optics {port} fec-thresholds'
+# ===========================================
+class ShowControllersOpticsFecThresholds(ShowControllersOpticsFecThresholdsSchema):
+    '''Parser for:
+        * show controllers optics {port} fec-thresholds
+    '''
+
+    cli_command = 'show controllers optics {port} fec-thresholds'
+
+    def cli(self, port, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command.format(port=port))
+        else:
+            out = output
+
+        result_dict = {}
+
+        # regex for scientific notation number
+        scientific_notation_regex = '[\d.]+E[+-]\d+'
+        # regex for scientific notation number under 'raise' column
+        raise_regex = f'?P<raise>{scientific_notation_regex}'
+        # regex for scientific notation number under 'clear' column
+        clear_regex = f'?P<clear>{scientific_notation_regex}'
+
+        #  Media FEC excess degrade   :   2.0500E-02               2.0200E-02
+        #  Media FEC excess degrade   :   0.0000E+00               0.0000E+00
+        p1 = re.compile(fr'^Media FEC excess degrade\s+:\s+({raise_regex})\s+({clear_regex})$')
+
+        #  Media FEC detected degrade :   1.9500E-02               1.9000E-02
+        #  Media FEC detected degrade :   0.0000E+00               0.0000E+00
+        p2 = re.compile(fr'^Media FEC detected degrade\s+:\s+({raise_regex})\s+({clear_regex})$')
+
+        #  Host FEC excess degrade    :   2.3900E-04               2.4000E-05
+        #  Host FEC excess degrade    :   0.0000E+00               0.0000E+00
+        p3 = re.compile(fr'^Host FEC excess degrade\s+:\s+({raise_regex})\s+({clear_regex})$')
+
+        #  Host FEC detected degrade  :   9.0000E-05               9.0000E-06
+        #  Host FEC detected degrade  :   0.0000E+00               0.0000E+00
+        p4 = re.compile(fr'^Host FEC detected degrade\s+:\s+({raise_regex})\s+({clear_regex})$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            #  Media FEC excess degrade   :   2.0500E-02               2.0200E-02
+            m = p1.match(line)
+            if m:
+                media_fec_excess_dict = result_dict.setdefault('media_fec_excess_degrade', {})
+                media_fec_excess_dict.update({k:v for k,v in m.groupdict().items()})
+                continue
+
+            #  Media FEC detected degrade :   1.9500E-02               1.9000E-02
+            m = p2.match(line)
+            if m:
+                media_fec_detected_dict = result_dict.setdefault('media_fec_detected_degrade', {})
+                media_fec_detected_dict.update({k:v for k,v in m.groupdict().items()})
+                continue
+
+            #  Host FEC excess degrade    :   2.3900E-04               2.4000E-05
+            m = p3.match(line)
+            if m:
+                host_fec_excess_dict = result_dict.setdefault('host_fec_excess_degrade', {})
+                host_fec_excess_dict.update({k:v for k,v in m.groupdict().items()})
+                continue
+
+            #  Host FEC detected degrade  :   9.0000E-05               9.0000E-06
+            m = p4.match(line)
+            if m:
+                host_fec_detected_dict = result_dict.setdefault('host_fec_detected_degrade', {})
+                host_fec_detected_dict.update({k:v for k,v in m.groupdict().items()})
+
+        return result_dict
+
+
+# ============================================================
+# Schema for 'show controllers optics {port} breakout-details'
+# ============================================================
+class ShowControllersOpticsBreakoutDetailsSchema(MetaParser):
+    '''Schema for:
+        * show controllers optics {port} breakout-details
+    '''
+
+    schema = {
+        'optics_port': str,
+        'num_breakouts': int,
+        'channels_per_intf': int,
+        'interface_speed': str
+    }
+
+
+# ============================================================
+# Parser for 'show controllers optics {port} breakout-details'
+# ============================================================
+class ShowControllersOpticsBreakoutDetails(ShowControllersOpticsBreakoutDetailsSchema):
+    '''Parser for:
+        * show controllers optics {port} breakout-details
+    '''
+
+    cli_command = 'show controllers optics {port} breakout-details'
+
+    def cli(self, port, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command.format(port=port))
+        else:
+            out = output
+
+        result_dict = {}
+
+        # Optics Port                	: Optics0_0_0_16
+        p1 = re.compile(r'^Optics Port\s+: (?P<optics_port>Optics[\d_]+)$')
+
+        # No:of Breakouts            	: 4
+        p2 = re.compile(r'^No:of Breakouts\s+: (?P<num_breakouts>\d+)$')
+
+        # Physical Channels per intf 	: 1
+        p3 = re.compile(r'^Physical Channels per intf\s+: (?P<channels_per_intf>\d+)$')
+
+        # Interface Speed            	: 10G
+        p4 = re.compile(r'^Interface Speed\s+: (?P<interface_speed>[\d]+[A-Z]+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # Optics Port                	: Optics0_0_0_16
+            m = p1.match(line)
+            if m:
+                result_dict['optics_port'] = m.groupdict()['optics_port']
+                continue
+
+            # No:of Breakouts            	: 4
+            m = p2.match(line)
+            if m:
+                result_dict['num_breakouts'] = int(m.groupdict()['num_breakouts'])
+                continue
+
+            # Physical Channels per intf 	: 1
+            m = p3.match(line)
+            if m:
+                result_dict['channels_per_intf'] = int(m.groupdict()['channels_per_intf'])
+                continue
+
+            # Interface Speed            	: 10G
+            m = p4.match(line)
+            if m:
+                result_dict['interface_speed'] = m.groupdict()['interface_speed']
+
+        return result_dict
+
+
+# ============================================================
+# Schema for 'show controllers optics {port} dwdm-carrier-map'
+# ============================================================
+class ShowControllersOpticsDwdmCarrierMapSchema(MetaParser):
+    '''Schema for:
+        * show controllers optics {port} dwdm-carrier-map
+    '''
+
+    schema = {
+        'dwdm_carrier_band': str,
+        'msa_itu_channel_range_supported': str,
+        'dwdm_carrier_map_table': {
+            'itu_ch_num': {
+                Any() :{
+                    'g_694_1_ch_num': int,
+                    'frequency': float,
+                    'wavelength': float
+                }
+            }
+        }
+    }
+
+
+# ============================================================
+# Parser for 'show controllers optics {port} dwdm-carrier-map'
+# ============================================================
+class ShowControllersOpticsDwdmCarrierMap(ShowControllersOpticsDwdmCarrierMapSchema):
+    '''Parser for:
+        * show controllers optics {port} dwdm-carrier-map
+    '''
+
+    cli_command = 'show controllers optics {port} dwdm-carrier-map'
+
+    def cli(self, port, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command.format(port=port))
+        else:
+            out = output
+
+        result_dict = {}
+
+        # DWDM Carrier Band:: OPTICS_C_BAND
+        p1 = re.compile(r'^DWDM Carrier Band:: (?P<dwdm_carrier_band>[\w_]+)$')
+
+        # MSA ITU channel range supported: 1~97
+        p2 = re.compile(r'^MSA ITU channel range supported: (?P<msa_itu_channel_range_supported>\d+~\d+)$')
+
+        # ----------------------------------------------------
+        # ITU Ch      G.694.1     Frequency     Wavelength
+        # Num        Ch Num        (THz)          (nm)
+        # ----------------------------------------------------
+        #     1        60           196.10      1528.773
+        # ----------------------------------------------------
+        #     2        59           196.05      1529.163
+        # ----------------------------------------------------
+        #     3        58           196.00      1529.553
+        # ----------------------------------------------------
+        #     74       -13           192.45      1557.768
+        # ----------------------------------------------------
+        p3 = re.compile(r'^(?P<itu_ch_num>\d+)\s+(?P<g_694_1_ch_num>-?\d+)\s+'
+                        r'(?P<frequency>[\d.]+)\s+(?P<wavelength>[\d.]+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # DWDM Carrier Band:: OPTICS_C_BAND
+            m = p1.match(line)
+            if m:
+                result_dict['dwdm_carrier_band'] = m.groupdict()['dwdm_carrier_band']
+                continue
+
+            # MSA ITU channel range supported: 1~97
+            m = p2.match(line)
+            if m:
+                result_dict['msa_itu_channel_range_supported'] = m.groupdict()['msa_itu_channel_range_supported']
+                continue
+
+            # ----------------------------------------------------
+            # ITU Ch      G.694.1     Frequency     Wavelength
+            # Num        Ch Num        (THz)          (nm)
+            # ----------------------------------------------------
+            #     1        60           196.10      1528.773
+            # ----------------------------------------------------
+            #     74       -13           192.45      1557.768
+            # ----------------------------------------------------
+            m = p3.match(line)
+            if m:
+                itu_ch_num_dict = result_dict.setdefault('dwdm_carrier_map_table', {})\
+                                             .setdefault('itu_ch_num', {})\
+                                             .setdefault(int(m.groupdict()['itu_ch_num']), {})
+                itu_ch_num_dict.update({
+                    'g_694_1_ch_num': int(m.groupdict()['g_694_1_ch_num']),
+                    'frequency': float(m.groupdict()['frequency']),
+                    'wavelength': float(m.groupdict()['wavelength']),
+                })
+
+        return result_dict
+
+
+# ===========================================
+# Schema for 'show controllers optics {port} db'
+# ===========================================
+class ShowControllersOpticsDbSchema(MetaParser):
+    '''Schema for:
+        * show controllers optics {port} db
+    '''
+
+    schema = {
+        'transport_admin_state': str,
+        'controller_state': str
+    }
+
+
+# ===========================================
+# Parser for 'show controllers optics {port} db'
+# ===========================================
+class ShowControllersOpticsDb(ShowControllersOpticsDbSchema):
+    '''Parser for:
+        * show controllers optics {port} db
+    '''
+
+    cli_command = 'show controllers optics {port} db'
+
+    def cli(self, port, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command.format(port=port))
+        else:
+            out = output
+
+        result_dict = {}
+
+        # Transport Admin State: In Service
+        p1 = re.compile(r'^Transport Admin State:\s+(?P<transport_admin_state>[\w\s]+)$')
+
+        # Controller State:  Up
+        p2 = re.compile(r'^Controller State:\s+(?P<controller_state>\w+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # Transport Admin State: In Service
+            m = p1.match(line)
+            if m:
+                result_dict['transport_admin_state'] = m.groupdict()['transport_admin_state']
+                continue
+
+            # Controller State:  Up
+            m = p2.match(line)
+            if m:
+                result_dict['controller_state'] = m.groupdict()['controller_state']
+
+        return result_dict
+
 
 # ===============================================================================
 # Schema for 'show controllers fia diagshell 0 "diag egr_calendars" location all'

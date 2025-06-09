@@ -1,0 +1,19 @@
+S1-UUT#show platform hardware fed switch active fwd-asic insight ipv6_sgt_mapping(devid=0,ipv6_address_in='30::2') 
+
+------------------------ ASIC 0 IPv6 - SGT mapping ------------------------ 
+
+EM - Exact Match 
+
+LPM - Longest Prefix Match 
+
+Total IPv6-SGT EM entries = 2 
+
+Total IPv6-SGT LPM entries = 4 
+
+SNo.   IPv6-ADDRESS                               MASKLEN VRFID SGT   VALID 
+
+---------------------------------------------------------------------------- 
+
+0      30::2                                      128     0     40002 1     
+
+---------------------------------------------------------------------------- 

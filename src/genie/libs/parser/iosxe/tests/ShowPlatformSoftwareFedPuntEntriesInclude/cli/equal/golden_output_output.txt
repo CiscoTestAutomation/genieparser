@@ -1,0 +1,3 @@
+Source    Name                            ASIC  Pri  TC  Policy                                    CIR-SW  CIR-HW   Pkts(A)    Bytes(A)   Pkts(D)    Bytes(D)
+TRAP      RACL Drop(punt to cpu for icmp     0    1   2  system-cpp-default                          2000    1907         0           0         0           0
+LPTSv4    ICMP IPv4                          0    1   3  system-cpp-police-icmp-v4                   2500    2384     18260     3652000         0           0

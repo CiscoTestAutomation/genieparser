@@ -88,8 +88,8 @@ class ShowVlan(ShowVlanSchema):
         # 100  V100                             suspended
         # 105  Misc. Name                       active    Gi1/0/13, Gi1/0/14, Gi1/0/15, Gi1/0/16, Gi1/0/19
         p1 = re.compile(r'^(?P<vlan_id>[0-9]+)\s+(?P<name>(?=\S).*(?<=\S))'
-                         '\s+(?P<status>(active|suspended|(.*)lshut|(.*)unsup)+)'
-                         '(?P<interfaces>[\s\S]+)?$')
+                         r'\s+(?P<status>(active|suspended|(.*)lshut|(.*)unsup)+)'
+                         r'(?P<interfaces>[\s\S]+)?$')
 
         #                                                Gi1/0/19, Gi1/0/20, Gi1/0/21, Gi1/0/22
         p2 = re.compile(r'^\s*(?P<space>\s{48})(?P<interfaces>[\w\s\/\,]+)?$')
@@ -98,9 +98,9 @@ class ShowVlan(ShowVlanSchema):
         # ---- ----- ---------- ----- ------ ------ -------- ---- -------- ------ ------
         # 1    enet  100001     1500  -      -      -        -    -        0      0
         p3 = re.compile(r'^\s*(?P<vlan_id>[0-9]+) +(?P<type>[a-zA-Z]+)'
-                        ' +(?P<said>\d+) +(?P<mtu>[\d\-]+) +(?P<parent>[\w\-]+)?'
-                        ' +(?P<ring_no>[\w\-]+)? +(?P<bridge_no>[\w\-]+)? +(?P<stp>[\w\-]+)?'
-                        ' +(?P<bridge_mode>[\w\-]+)? +(?P<trans1>[\d\-]+) +(?P<trans2>[\d\-]+)$')
+                        r' +(?P<said>\d+) +(?P<mtu>[\d\-]+) +(?P<parent>[\w\-]+)?'
+                        r' +(?P<ring_no>[\w\-]+)? +(?P<bridge_no>[\w\-]+)? +(?P<stp>[\w\-]+)?'
+                        r' +(?P<bridge_mode>[\w\-]+)? +(?P<trans1>[\d\-]+) +(?P<trans2>[\d\-]+)$')
 
         # Remote SPAN VLANs
         # -------------------------------------
@@ -121,15 +121,15 @@ class ShowVlan(ShowVlanSchema):
         #         303       community
         # 101     402       non-operational
         p5 = re.compile(r'^\s*(?P<primary>[0-9a-zA-Z]+)? +(?P<secondary>\d+)'
-                        ' +(?P<type>[\w\-]+)( +(?P<interfaces>[\s\S]+))?')
+                        r' +(?P<type>[\w\-]+)( +(?P<interfaces>[\s\S]+))?')
 
         # VLAN AREHops STEHops Backup CRF
         # ---- ------- ------- ----------
         # 1003 7       7       off
         p6 = re.compile(r'^\s*(?P<vlan_id>\d+)\s+'
-                         '(?P<are_hops>\d+)\s+'
-                         '(?P<ste_hops>\d+)\s+'
-                         '(?P<backup_crf>\S+)\s*$')
+                         r'(?P<are_hops>\d+)\s+'
+                         r'(?P<ste_hops>\d+)\s+'
+                         r'(?P<backup_crf>\S+)\s*$')
 
         vlan_dict = {}
         primary = prev_line = ""
@@ -622,20 +622,20 @@ class ShowVlanId(ShowVlanIdSchema):
 
         vlan_dict = {}
         p1 = re.compile(r'(?P<vlan_id>\d+) +(?P<vlan_name>\S+|\S+.*\S+) +'
-                        r'(?P<status>active|suspended|act/lshut|sus/lshut)'
-                        r'(?:\s+(?P<ports>([A-Za-z\-]+[\/\d\-\:\.]+\d+)(.*)))?')
-        p2 = re.compile(r'(?P<ports>([A-Za-z\-]+[\/\d\-\:\.]+\d+)(.*))')
+                                r'(?P<status>active|suspended|act/lshut|sus/lshut)'
+                                r'(?:\s+(?P<ports>([A-Za-z\-]+[\/\d\-\:\.]+\d+)(.*)|([A-za-z0-9]+\:\d+(.*))))?')
+        p2 = re.compile(r'(?P<ports>([A-Za-z\-]+[\/\d\-\:\.]+\d+)(.*)|([A-za-z0-9]+\:\d+(.*)))')
         p3 = re.compile(r'\d+ +'
-                    '(?P<type>\w+) +'
-                    '(?P<said>\d+) +'
-                    '(?P<mtu>\d+) +'
-                    '(?P<parent>\S+) +'
-                    '(?P<ring_no>\S+) +'
-                    '(?P<bridge_no>\S+) +'
-                    '(?P<stp>\S+) +'
-                    '(?P<brdg_mode>\S+) +'
-                    '(?P<trans1>\d+) +'
-                    '(?P<trans2>\d+)')
+                    r'(?P<type>\w+) +'
+                    r'(?P<said>\d+) +'
+                    r'(?P<mtu>\d+) +'
+                    r'(?P<parent>\S+) +'
+                    r'(?P<ring_no>\S+) +'
+                    r'(?P<bridge_no>\S+) +'
+                    r'(?P<stp>\S+) +'
+                    r'(?P<brdg_mode>\S+) +'
+                    r'(?P<trans1>\d+) +'
+                    r'(?P<trans2>\d+)')
 
         for line in out.splitlines():
             line = line.strip()

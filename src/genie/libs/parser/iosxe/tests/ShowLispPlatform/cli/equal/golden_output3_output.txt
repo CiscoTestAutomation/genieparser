@@ -1,0 +1,42 @@
+show lisp platform
+  Parallel LISP instance limit:      2000
+  RLOC forwarding support:
+   IPv4 RLOC, local:                 OK
+   IPv6 RLOC, local:                 OK
+   MAC RLOC, local:                  Unsupported
+   IPv4 RLOC, remote:                OK
+   IPv6 RLOC, remote:                OK
+   MAC RLOC, remote:                 Unsupported
+  Support for signal+forward:
+   IPv4:                             Unsupported
+   IPv6:                             Unsupported
+   MAC:                              Unsupported
+  Platform reported limits:
+   L3 limit:                         2262144
+     Total Current utilization:      10%
+     IPv4 multiplier:                1
+     IPv4 local EID counter:         3
+     IPv4 remote EID counter:        130
+     IPv4 remote EID idle counter:   1
+     IPv4 mapping cache full:        no
+     IPv6 multiplier:                2
+     IPv6 local EID counter:         3
+     IPv6 remote EID counter:        4
+     IPv6 remote EID idle counter:   0
+     IPv6 mapping cache full:        no
+   L2 limit:                         262144
+     Total Current utilization:      0%
+     MAC multiplier:                 1
+     MAC local EID counter:          0
+     MAC remote EID counter:         0
+     MAC remote EID idle counter:    0
+     MAC mapping cache full:         no
+	 Software-only counters:
+     IPv4 local EID counter:         0
+     IPv4 remote EID counter:        0
+     IPv6 local EID counter:         0
+     IPv6 remote EID counter:        0
+     MAC local EID counter:          0
+     MAC remote EID counter:         0
+  Latest supported config style:     Service and instance
+  Current config style:              Service and instance

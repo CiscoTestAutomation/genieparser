@@ -61,10 +61,17 @@ class ShowApSummary(ShowApSummarySchema):
         # AP002C.C862.E708  2      AIR-AP1815I-A-K9      002c.c862.e708  002c.c88a.fd20  default location    US    9.4.57.241    Registered
         if "Country Code" not in out and "Regulatory Domain" not in out:
             ap_neighbor_info_capture = re.compile(
-                   r"^(?P<ap_name>\S+)\s+(?P<slots_count>\d+)\s+(?P<ap_model>\S+)\s+" 
-                   "(?P<ethernet_mac>\S+)\s+(?P<radio_mac>\S+)\s+(?P<location>.*)\s+" 
-                   "(?P<country>\S+)\s+(?P<ap_ip_address>\d+\.\d+\.\d+\.\d+)\s+" 
-                   "(?P<state>(Registered))")
+                                                r"^(?P<ap_name>\S+)\s+"
+                                                r"(?P<slots_count>\d+)\s+"
+                                                r"(?P<ap_model>\S+)\s+"
+                                                r"(?P<ethernet_mac>\S+)\s+"
+                                                r"(?P<radio_mac>\S+)\s+"
+                                                r"(?P<location>.*?)\s+"
+                                                r"(?P<country>\S+)\s+"
+                                                r"(?P<ap_ip_address>(?:\d{1,3}\.){3}\d{1,3}|(?:[0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}|(?:[0-9a-fA-F]{1,4}:){1,7}:|(?:[0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|(?:[0-9a-fA-F]{1,4}:){1,5}(?::[0-9a-fA-F]{1,4}){1,2}|(?:[0-9a-fA-F]{1,4}:){1,4}(?::[0-9a-fA-F]{1,4}){1,3}|(?:[0-9a-fA-F]{1,4}:){1,3}(?::[0-9a-fA-F]{1,4}){1,4}|(?:[0-9a-fA-F]{1,4}:){1,2}(?::[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:(?:(?::[0-9a-fA-F]{1,4}){1,6})|:(?:(?::[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(?::[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+"
+                                                r"(?P<state>Registered)"
+        # regex changed for ap_ip_address to handle ipv4 and ipv6 address
+    )
         else:
             # For the new output
             # CC = Country Code
@@ -73,12 +80,20 @@ class ShowApSummary(ShowApSummarySchema):
             # AP Name                          Slots AP Model             Ethernet MAC   Radio MAC      CC   RD   IP Address                                State        Location
             # ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
             # APF8B7.E2C4.1120                 2     AIR-AP1852I-B-K9     f8b7.e2c4.1120 f8b7.e2c4.9b60 US   -B   20.20.13.142                              Registered   default location
+            #AP002A.1087.CA0A                 2     AIR-AP2802E-D-K9     002a.1087.ca0a 00a2.eefd.9f20 IN   -D   2001:9:3:13:c822:82c8:32da:484d           Registered   default location
             ap_neighbor_info_capture = re.compile(
-                r"^(?P<ap_name>\S+)\s+(?P<slots_count>\d+)\s+(?P<ap_model>\S+)\s+"
-                "(?P<ethernet_mac>\S+)\s+(?P<radio_mac>\S+)\s+(?P<country>.*)\s+"
-                "(?P<regulatory_domain>\S+)\s+(?P<ap_ip_address>\d+\.\d+\.\d+\.\d+)\s+"
-                "(?P<state>(Registered))\s+(?P<location>.*)")
-
+                                                r"^(?P<ap_name>\S+)\s+"
+                                                r"(?P<slots_count>\d+)\s+"
+                                                r"(?P<ap_model>\S+)\s+"
+                                                r"(?P<ethernet_mac>\S+)\s+"
+                                                r"(?P<radio_mac>\S+)\s+"
+                                                r"(?P<country>.*?)\s+"
+                                                r"(?P<regulatory_domain>\S+)\s+"
+                                                r"(?P<ap_ip_address>(?:\d{1,3}\.){3}\d{1,3}|(?:[0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}|(?:[0-9a-fA-F]{1,4}:){1,7}:|(?:[0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|(?:[0-9a-fA-F]{1,4}:){1,5}(?::[0-9a-fA-F]{1,4}){1,2}|(?:[0-9a-fA-F]{1,4}:){1,4}(?::[0-9a-fA-F]{1,4}){1,3}|(?:[0-9a-fA-F]{1,4}:){1,3}(?::[0-9a-fA-F]{1,4}){1,4}|(?:[0-9a-fA-F]{1,4}:){1,2}(?::[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:(?:(?::[0-9a-fA-F]{1,4}){1,6})|:(?:(?::[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(?::[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+"
+                                                r"(?P<state>Registered)\s+"
+                                                r"(?P<location>.*)"
+                                            )
+            # regex changed for ap_ip_address to handle ipv4 and ipv6 address
 
         remove_lines = ('AP Name', '----')
 
@@ -106,6 +121,7 @@ class ShowApSummary(ShowApSummarySchema):
                 ap_neighbor_count = int(groups['ap_neighbor_count'])
                 ap_summary_dict['ap_neighbor_count'] = ap_neighbor_count
             # a121-cap22                       2      9130AXI   a4b2.32ff.2db9  2c57.41ff.b979  Fab A  UK          10.6.33.106                               Registered
+            # AP002A.1087.CA0A                 2     AIR-AP2802E-D-K9     002a.1087.ca0a 00a2.eefd.9f20 IN   -D   2001:9:3:13:c822:82c8:32da:484d           Registered   default location
             elif ap_neighbor_info_capture.match(line):
                 ap_neighbor_info_match = ap_neighbor_info_capture.match(line)
                 groups = ap_neighbor_info_match.groupdict()
@@ -338,7 +354,7 @@ class ShowApDot115GhzChannelSchema(MetaParser):
             Optional("wlc_leader_ip"): str,
             Optional("wlc_leader_ipv4"): str,
             Optional("wlc_leader_ipv6"): str,
-            "last_run_seconds": int,
+            Optional("last_run_seconds"): int,
             "dca_level": str,
             Optional("dca_aggressive"): str,
             "dca_db": int,
@@ -406,7 +422,40 @@ class ShowApDot115GhzChannel(ShowApDot115GhzChannelSchema):
         #     Allowed Channel List                     : 36,40,44,48,149,153,157,161 
         #     Unused Channel List                      : 52,56,60,64,100,104,108,112,116,120,124,128,132,136,140,144,165,169,173 
 
-        lead_auto_chan_assn_capture = re.compile(r"^Leader\s+Automatic\s+Channel\s+Assignment$")
+
+        #new o/p
+        # Local Automatic Channel Assignment
+        #     Channel Assignment Mode                    : AUTO
+        #     Channel Update Interval                    : 600 seconds
+        #     Anchor time (Hour of the day)              : 0
+        #     Channel Update Contribution
+        #         Noise                                    : Enable
+        #         Interference                             : Enable
+        #         Load                                     : Disable
+        #         Device Aware                             : Disable
+        #     CleanAir Event-driven RRM option           : Disabled
+        #     Zero Wait DFS                              : Disabled
+        #     Channel Assignment Leader                  : dao (9.3.100.10)
+
+        #     DCA Sensitivity Level                      : MEDIUM : 15 dB
+        #     DCA 802.11n/ac Channel Width               : best
+        #     DBS Max Channel Width                      : 40 MHz
+        #     DCA Minimum Energy Limit                   : -95 dBm
+        #     DCA Aggressive on startup                  : Enabled
+        #     Channel Energy Levels
+        #         Minimum                                  : -86 dBm
+        #         Average                                  : -84 dBm
+        #         Maximum                                  : -82 dBm
+        #     Channel Dwell Times
+        #         Minimum                                  : 12 hours 38 minutes 5 seconds 
+        #         Average                                  : 4 days 1 hour 16 minutes 37 seconds 
+        #         Maximum                                  : 15 days 9 hours 33 minutes 48 seconds 
+        #     802.11a 5 GHz Auto-RF Channel List
+        #         Allowed Channel List                     : 36,40,44,48,52,56,60,64,100,104,108,112,116,120,124,128,132,136,140,144,149,153,157,161
+        #         Unused Channel List                      : 165,169,173
+
+
+        lead_auto_chan_assn_capture = re.compile(r"^(Leader|Local)\s+Automatic\s+Channel\s+Assignment$") #changed regex to handle Local or Leader Automatic Channel Assigment key
         #   Channel Assignment Mode                    : AUTO
         chan_assn_mode_capture = re.compile(r"^Channel\s+Assignment\s+Mode\s+:\s+(?P<chan_assn_mode>\S+)")
         #   Channel Update Interval                    : 12 Hours
@@ -429,7 +478,7 @@ class ShowApDot115GhzChannel(ShowApDot115GhzChannelSchema):
             r"^CleanAir\s+Event-driven\s+RRM\s+option\s+:\s+(?P<clean_air>(Enabled|Disabled))$")
         #   Channel Assignment Leader                  : sj-00a-ewlc1 (10.7.5.133)
         #   Channel Assignment Leader                  : vidya-ewlc-5 (9.4.62.51) (2001:9:4:62::51) 
-        chan_assn_leader_capture = re.compile('^Channel\s+Assignment\s+Leader\s+:\s+(?P<wlc_leader_name>\S+)\s+((?P<wlc_leader_ip>\(\d+\.\d+\.\d+\.\d+\))|(?P<wlc_leader_ipv4>\(\d+\.\d+\.\d+\.\d+\))\s+(?P<wlc_leader_ipv6>\(\d+\:\d+\:\d+\:\d+\::\d+\)))$')
+        chan_assn_leader_capture = re.compile(r'^Channel\s+Assignment\s+Leader\s+:\s+(?P<wlc_leader_name>\S+)\s+((?P<wlc_leader_ip>\(\d+\.\d+\.\d+\.\d+\))|(?P<wlc_leader_ipv4>\(\d+\.\d+\.\d+\.\d+\))\s+(?P<wlc_leader_ipv6>\(\d+\:\d+\:\d+\:\d+\::\d+\)))$')
         #   Last Run                                   : 15995 seconds ago
         last_run_capture = re.compile(r"^Last\s+Run\s+:\s+(?P<last_run_seconds>\d+)\s+seconds\s+ago$")
         #   DCA Sensitivity Level                      : MEDIUM : 15 dB
@@ -832,9 +881,9 @@ class ShowApDot115GhzSummary(ShowApDot115GhzSummarySchema):
         # ab22-cap10                   5c50.15ff.8fe4 1       Enabled        Up            20     *6/8 (9 dBm)    (132)*
         # BHS-A-204 				   00a7.42ff.d4d0 1 	  Enabled 		 Up 		   20 	   3/7 (12 dBm)   (124)   Local
         p1 = re.compile(r"^(?P<ap_name>\S+)\s+(?P<mac_address>\S+)\s+"
-                                       "(?P<slot>\d+)\s+(?P<admin_state>(Enabled|Disabled))\s+(?P<oper_state>\S+)\s+"
-                                       "(?P<width>\d+)\s+(?P<tx_pwr>(\*\d\/\d.*dBm\))|(\d\/\d.*dBm\)))\s+"
-                                       "(?P<channel>\S+)\s*(?P<mode>\S+|^.{0}$)?$")
+                                       r"(?P<slot>\d+)\s+(?P<admin_state>(Enabled|Disabled))\s+(?P<oper_state>\S+)\s+"
+                                       r"(?P<width>\d+)\s+(?P<tx_pwr>(\*\d\/\d.*dBm\))|(\d\/\d.*dBm\)))\s+"
+                                       r"(?P<channel>\S+)\s*(?P<mode>\S+|^.{0}$)?$")
 
         for line in out.splitlines():
             line = line.strip()
@@ -3037,8 +3086,8 @@ class ShowApImage(ShowApImageSchema):
 
         ap_image_info_capture = re.compile(
             r"^(?P<ap_name>\S+)\s+(?P<primary_image>\d+\.\d+\.\d+\.\d+)\s+(?P<backup_image>\d+\.\d+\.\d+\.\d+)\s+"
-            "(?P<predownload_status>\S+)\s+(?P<predownload_version>\d+\.\d+\.\d+\.\d+)\s+(?P<next_retry_time>\S+)\s+"
-            "(?P<retry_count>\d+)\s+(?P<method>.*)")
+            r"(?P<predownload_status>\S+)\s+(?P<predownload_version>\d+\.\d+\.\d+\.\d+)\s+(?P<next_retry_time>\S+)\s+"
+            r"(?P<retry_count>\d+)\s+(?P<method>.*)")
 
         remove_lines = ('AP Name', '----')
 

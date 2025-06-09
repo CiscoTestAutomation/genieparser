@@ -4,6 +4,7 @@ IOSXE parsers for the following show commands:
 
     * traceroute {traceroute} numeric timeout {timeout} probe {probe} ttl {min} {max} source {source}
     * traceroute mpls traffic-eng tunnel {tunnelid}
+    * tracerout {ip_address}
 
 '''
 
@@ -24,6 +25,7 @@ class TracerouteSchema(MetaParser):
     ''' Schema for:
         * 'traceroute'
         * 'traceroute mpls traffic-eng tunnel {tunnelid}'
+        * 'traceroute {ip_address}'
     '''
 
     schema = {
@@ -185,7 +187,7 @@ class Traceroute(TracerouteSchema):
                                    setdefault(traceroute, {})
                 tr_dict['timeout_seconds'] = int(group['timeout'])
                 if '/' in traceroute:
-                    new_out = re.search('(?P<ip>[\d\.]+)\/+(?P<mask>\d+)', traceroute)
+                    new_out = re.search(r'(?P<ip>[\d\.]+)\/+(?P<mask>\d+)', traceroute)
                     address = new_out.groupdict()['ip']
                     mask = new_out.groupdict()['mask']
                     tr_dict['address'] = address
@@ -425,6 +427,18 @@ class TracerouteMPLSIPv4(Traceroute):
             output=output
         return super().cli(output=output)
 
+class TracerouteIpAddress(Traceroute):
+
+    ''' Parser for:
+        * 'traceroute {ip_address}'
+    '''
+    cli_command = 'traceroute {ip_address}'
+
+    def cli(self, ip_address, output=None):
+        if not output:
+            output = self.device.execute(self.cli_command.format(ip_address=ip_address))
+        return super().cli(output=output)
+
 # ======================================================
 # Schema for 'traceroute ipv6 address'
 # ======================================================
@@ -491,7 +505,7 @@ class TracerouteIpv6(TracerouteIpv6Schema):
                     probe_list = group['probe'].strip()
                 else:
                     probe_list = group['probe'].strip()
-                probe_list = re.split('msec|\*|ms', probe_list)
+                probe_list = re.split(r'msec|\*|ms', probe_list)
                 probe_list[:] = [x.strip() for x in probe_list if x and not x.isspace()]
                 for probe in probe_list:
                     probe_dict = hop_dict.setdefault('probe',{})

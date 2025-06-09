@@ -1,0 +1,13 @@
+DT-C8300-2N2S-4T2X_BR2# show platform hardware qfp active datapath infrastructure time basic
+Time Information
+timers active 46
+timers popped 0
+timers new thread started 1509713330
+timer events received 1509713330
+sysup time 5093748704
+heartbeat expected seq# 0x0
+time hb searial 0
+time hb errors 0
+HB input 318359392 output 318359234 tick limit 18
+overflow 1584  pending 158
+PPE timer HB max tick 1

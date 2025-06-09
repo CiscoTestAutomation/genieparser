@@ -1,0 +1,11 @@
+SW  PID                 Serial#     Status           Sys Pwr  PoE Pwr  Watts
+--  ------------------  ----------  ---------------  -------  -------  -----
+1A  PWR-C2-1600WAC-I    LIT21253552  OK              Good     n/a      1600
+1B  PWR-C2-500WAC-I     LIT21253555  OK              Good     n/a      500
+1C  PWR-C2-850WAC-I     LIT21253558  OK              Good     n/a      850
+2A  PWR-C2-1600WAC-I    LIT21253552  OK              Good     n/a      1600
+2B  PWR-C2-500WAC-I     LIT21253555  OK              Good     n/a      500
+2C  PWR-C2-850WAC-I     LIT21253558  OK              Good     n/a      850
+3A  PWR-C2-1600WAC-I    LIT21253552  OK              Good     Good     1600
+3B  PWR-C2-500WAC-I     LIT21253555  OK              Good     Good     500
+3C  PWR-C2-850WAC-I     LIT21253558  OK              Good     Good     850

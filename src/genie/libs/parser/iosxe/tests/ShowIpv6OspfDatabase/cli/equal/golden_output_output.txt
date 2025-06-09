@@ -1,0 +1,18 @@
+OSPFv3 Router with ID (36.36.36.36) (Process ID 100)
+
+    Router Link States (Area 0) 
+
+ADV Router       Age         Seq#        Fragment ID  Link count  Bits
+36.36.36.36     462         0x8000002C  0            11          None
+46.46.46.46     1689        0x80000027  0            10          None
+50.0.0.2        473         0x80000003  0            1           None
+56.56.56.56     1609        0x80000021  0            8           None
+66.66.66.66     1575        0x80000020  0            8           None
+ 
+
+Net Link States (Area 0)  
+
+ADV Router       Age         Seq#        Link ID    Rtr count
+36.36.36.36     472         0x80000001  44         2
+46.46.46.46     1823        0x80000001  13         2
+46.46.46.46     1809        0x80000001  14         2

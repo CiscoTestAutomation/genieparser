@@ -1,0 +1,39 @@
+show system status
+
+Viptela (tm) vedge Operating System Software
+Copyright (c) 2013-2024 by Viptela, Inc.
+Controller Compatibility: 
+Version: 20.9.5.2.13
+Build: 13
+
+
+System logging to host  is disabled
+System logging to disk is enabled
+
+System state:            GREEN. All daemons up
+System FIPS state:       Enabled
+
+Last reboot:             Initiated by user - activate 20.9.5.2.13. 
+CPU-reported reboot:     Warm Reset(CHIP RESET)
+Boot loader version:     U-Boot 2013.07-g6c63781 (Build time: Aug 10 2023 - 08:06:08)
+
+System uptime:           1 days 00 hrs 30 min 16 sec
+Current time:            Wed Oct 16 13:25:32 EDT 2024
+
+Load average:            1 minute: 0.37, 5 minutes: 0.41, 15 minutes: 0.50
+Processes:               305 total
+CPU allocation:          32 total,   2 control,   30 data
+CPU states:              2.14% user,   9.06% system,   88.80% idle
+Memory usage:            5985120K total,    3439796K used,   2200720K free
+                         87320K buffers,  257284K cache
+
+Disk usage:              Filesystem      Size   Used  Avail   Use %  Mounted on
+                         /dev/root       6104M  1090M  4685M   19%   /
+
+Personality:             vedge
+Model name:              vedge-2000
+Services:                None
+vManaged:                true
+Commit pending:          false
+Configuration template:  Headend-Template
+Chassis serial number:   None

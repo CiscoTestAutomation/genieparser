@@ -88,7 +88,7 @@ class ShowIpv6MldInterface(ShowIpv6MldInterfaceSchema):
 
             # Global State Limit : 0 active out of 64000 max
             p1 = re.compile(r'^Global +State +Limit *: +'
-                             '(?P<active>\d+) +active +out +of +(?P<global_max_groups>\d+) +max$')
+                             r'(?P<active>\d+) +active +out +of +(?P<global_max_groups>\d+) +max$')
             m = p1.match(line)
             if m:
                 max_groups = int(m.groupdict()['global_max_groups'])
@@ -103,7 +103,7 @@ class ShowIpv6MldInterface(ShowIpv6MldInterfaceSchema):
 
             # GigabitEthernet1 is up, line protocol is up
             p2 = re.compile(r'^(?P<intf>[\w\-\.\/]+) +is +(?P<intf_status>[\w\s]+), +'
-                             'line +protocol +is +(?P<oper_status>\w+)$')
+                             r'line +protocol +is +(?P<oper_status>\w+)$')
             m = p2.match(line)
             if m:
                 intf = m.groupdict()['intf']
@@ -157,7 +157,7 @@ class ShowIpv6MldInterface(ShowIpv6MldInterfaceSchema):
 
             # MLD querier timeout is 740 seconds
             p9 = re.compile(r'^MLD +querier +timeout +is +'
-                             '(?P<timeout>\d+) +seconds$')
+                             r'(?P<timeout>\d+) +seconds$')
             m = p9.match(line)
             if m:                
                 ret_dict['vrf'][vrf]['interface'][intf]['querier_timeout'] = \
@@ -166,7 +166,7 @@ class ShowIpv6MldInterface(ShowIpv6MldInterfaceSchema):
 
             # MLD max query response time is 16 seconds
             p11 = re.compile(r'^MLD +max +query +response +time +is +'
-                             '(?P<time>\d+) +seconds$')
+                             r'(?P<time>\d+) +seconds$')
             m = p11.match(line)
             if m:                
                 ret_dict['vrf'][vrf]['interface'][intf]['query_max_response_time'] = \
@@ -175,7 +175,7 @@ class ShowIpv6MldInterface(ShowIpv6MldInterfaceSchema):
 
             # Last member query response interval is 1 seconds
             p13 = re.compile(r'^Last +member +query +response +interval +is '
-                              '+(?P<time>\d+) +(seconds|ms)$')
+                              r'+(?P<time>\d+) +(seconds|ms)$')
             m = p13.match(line)
             if m:                
                 ret_dict['vrf'][vrf]['interface'][intf]['last_member_query_interval'] = \
@@ -204,7 +204,7 @@ class ShowIpv6MldInterface(ShowIpv6MldInterfaceSchema):
 
             # Interface State Limit : 0 active out of 6400 max
             p16 = re.compile(r'^Interface +State +Limit *: +'
-                              '(?P<active>\d+) +active +out +of +(?P<max>\d+) +max$')
+                              r'(?P<active>\d+) +active +out +of +(?P<max>\d+) +max$')
             m = p16.match(line)
             if m:                
                 ret_dict['vrf'][vrf]['interface'][intf]['max_groups'] = int(m.groupdict()['max'])
@@ -213,7 +213,7 @@ class ShowIpv6MldInterface(ShowIpv6MldInterfaceSchema):
 
             # MLD querying router is FE80::5054:FF:FE7C:DC70 (this system)
             p20 = re.compile(r'^MLD +querying +router +is +(?P<querier>[\w\.\:]+)'
-                              '(?P<dummy> *\([\w\s]+\))?$')
+                              r'(?P<dummy> *\([\w\s]+\))?$')
             m = p20.match(line)
             if m:
                 ret_dict['vrf'][vrf]['interface'][intf]['querier'] = \
@@ -350,7 +350,7 @@ class ShowIpv6MldGroupsDetail(ShowIpv6MldGroupsDetailSchema):
             # Router mode:        INCLUDE
             # Router mode:        EXCLUDE (Expires: 00:06:06)
             p5 = re.compile(r'^Router +mode: +(?P<filter_mode>\w+)'
-                             '( *\(Expires: +(?P<expire>[\w\.\:]+)\))?$')
+                             r'( *\(Expires: +(?P<expire>[\w\.\:]+)\))?$')
             m = p5.match(line)
             if m:
                 filter_mode = m.groupdict()['filter_mode']
@@ -376,10 +376,10 @@ class ShowIpv6MldGroupsDetail(ShowIpv6MldGroupsDetailSchema):
 
             # 2001:DB8:2:2::2                         08:13:22  00:06:42  Yes  Remote Local 2D
             p7 = re.compile(r'^(?P<source>[\w\.\:]+) +'
-                             '(?P<up_time>[\w\.\:]+) +'
-                             '(?P<expire>[\w\.\:]+) +'
-                             '(?P<forward>\w+) +'
-                             '(?P<flags>[\w\s]+)$')
+                             r'(?P<up_time>[\w\.\:]+) +'
+                             r'(?P<expire>[\w\.\:]+) +'
+                             r'(?P<forward>\w+) +'
+                             r'(?P<flags>[\w\s]+)$')
             m = p7.match(line)
             if m:
                 source = m.groupdict()['source']
@@ -795,7 +795,8 @@ class ShowIpv6MldGroups(ShowIpv6MldGroupsSchema):
         
         # FF1E::         Vlan10         00:00:27  not used
         # FF1E::1        Te1/0/3        00:01:49  00:01:46
-        p1=re.compile(r'(?P<group>[\w\.\:]+) +(?P<intf>[\w\.\/\-]+) +(?P<uptime>[\d\:]+) +(?P<expires>(?:[\d\:]+)|(?:[\w\s]+)|(?:not used))$')
+        # FF8E::4        Vlan100        1d00h     00:03:11
+        p1 = re.compile(r'(?P<group>[\w\.\:]+) +(?P<intf>[\w\.\/\-]+) +(?P<uptime>[\d\:dh]+) +(?P<expires>(?:[\d\:]+)|(?:[\w\s]+)|(?:not used))$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -810,26 +811,34 @@ class ShowIpv6MldGroups(ShowIpv6MldGroupsSchema):
 
 class ShowPlatformSoftwareMldSnoopingGroupsCountSchema(MetaParser):
     schema = {
-             'ipv6_mld_snooping_entries': int
-             }
+        Optional('ipv6_mld_snooping_entries'): int,
+        Optional('total_group_count'): int,
+        Optional('total_stub_group_count'): int
+        }
 
 class ShowPlatformSoftwareMldSnoopingGroupsCount(ShowPlatformSoftwareMldSnoopingGroupsCountSchema):
 
     cli_command = [
-                  'show platform software fed {switch} active ipv6 mld snooping groups count',
-                  'show platform software fed active ipv6 mld snooping groups count'
+                  'show platform software fed {switch} {active} ipv6 mld snooping groups count',
+                  'show platform software fed {active} ipv6 mld snooping groups count'
                   ]
 
-    def cli(self, output=None, switch=''):
+    def cli(self, output=None, switch='', active=''):
         if output is None:
             if switch:
-                cmd = self.cli_command[0].format(switch=switch)
+                cmd = self.cli_command[0].format(switch=switch, active=active)
             else:
-                cmd = self.cli_command[1]
+                cmd = self.cli_command[1].format(active=active)
             output = self.device.execute(cmd)
         dict_count = {}
         # Total number of entries:8000
         p1 = re.compile(r'^Total\s+number\s+of\s+entries\:(?P<ipv6_mld_snooping_entries>\d+)$')
+
+        # Total Group Count       : 9789
+        p2 = re.compile(r'(Total Group Count +\: +(?P<total_group_count>\d+))')
+
+        # Total Stub Group Count  : 9787
+        p3 = re.compile(r'(Total Stub Group Count +\: +(?P<total_stub_group_count>\d+))')
 
         for line in output.splitlines():
             line = line.strip()
@@ -840,5 +849,20 @@ class ShowPlatformSoftwareMldSnoopingGroupsCount(ShowPlatformSoftwareMldSnooping
                 groups = m.groupdict()
                 count = int(groups['ipv6_mld_snooping_entries'])
                 dict_count['ipv6_mld_snooping_entries'] = count
+                continue
 
-        return (dict_count)
+            # Total Group Count       : 9789
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                dict_count['total_group_count'] = int(group['total_group_count'])
+                continue
+
+            # Total Stub Group Count  : 9787
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                dict_count['total_stub_group_count'] = int(group['total_stub_group_count'])
+                continue
+
+        return dict_count

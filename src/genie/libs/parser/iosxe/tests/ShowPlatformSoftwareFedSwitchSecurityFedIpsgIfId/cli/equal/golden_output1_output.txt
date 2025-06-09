@@ -1,0 +1,5 @@
+S1-UUT#show platform software fed switch 3 security-fed ipsg if-id 0x43e
+IP                 Handle         Mac                  Handle
+=============================================================
+50.0.0.2           1086     00:14:01:00:00:01    1086
+

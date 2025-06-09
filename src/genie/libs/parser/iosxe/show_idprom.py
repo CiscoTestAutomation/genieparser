@@ -455,55 +455,55 @@ class ShowIdpromInterface(ShowIdpromInterfaceSchema):
         ret_dict = {}
         
         # IDPROM for transceiver
-        p1 = re.compile('^(?P<idprom_for_transceiver>IDPROM for transceiver)')
+        p1 = re.compile(r'^(?P<idprom_for_transceiver>IDPROM for transceiver)')
         
         # Description         = QSFP28 optics (type 134)
-        p2 = re.compile('^Description\s+=\s+(?P<description>.*)$')
+        p2 = re.compile(r'^Description\s+=\s+(?P<description>.*)$')
 
         # Transceiver Ty     = QSFP 100GE CU1M (464)
-        p3 = re.compile('^Transceiver Type:\s+=\s+(?P<transceiver_type>.*)$')
+        p3 = re.compile(r'^Transceiver Type:\s+=\s+(?P<transceiver_type>.*)$')
 
         # Product Identifier (PID)   = QSFP-100G-CU1M
-        p4 = re.compile('^Product Identifier\s+\(PID\)\s+=\s+(?P<product_identifier>.*)$')
+        p4 = re.compile(r'^Product Identifier\s+\(PID\)\s+=\s+(?P<product_identifier>.*)$')
  
         # Vendor Revision            = A
         # Vendor Revision            = 1.0
-        p5 = re.compile('^Vendor Revision\s+=\s+(?P<vendor_revision>[\w.]+)$')
+        p5 = re.compile(r'^Vendor Revision\s+=\s+(?P<vendor_revision>[\w.]+)$')
 
         # Serial Number (SN)         = APF22340870-A
-        p6 = re.compile('^Serial Number\s+\(SN\)\s+=\s+(?P<serial_number>[\w\S]+)$')
+        p6 = re.compile(r'^Serial Number\s+\(SN\)\s+=\s+(?P<serial_number>[\w\S]+)$')
         
         # Vendor Name                = CISCO-AMPHENOL
-        p7 = re.compile('^Vendor Name\s+=\s+(?P<vendor_name>[\w\S]+)$')
+        p7 = re.compile(r'^Vendor Name\s+=\s+(?P<vendor_name>[\w\S]+)$')
 
         # Vendor OUI (IEEE company ID)     = 78.A7.14 (7907092)
-        p8 = re.compile('^Vendor OUI\s+\(IEEE company ID\)\s+=\s+(?P<vendor_oui>.*)$')
+        p8 = re.compile(r'^Vendor OUI\s+\(IEEE company ID\)\s+=\s+(?P<vendor_oui>.*)$')
         
         # CLEI code      = CMPQACECAA
-        p9 = re.compile('^CLEI code\s+=\s+(?P<clei_code>[\w]+)$')
+        p9 = re.compile(r'^CLEI code\s+=\s+(?P<clei_code>[\w]+)$')
     
         # Cisco part number      = 37-1666-01
-        p10 = re.compile('^Cisco part number\s+=\s+(?P<cisco_part_number>[\d\S]+)$')
+        p10 = re.compile(r'^Cisco part number\s+=\s+(?P<cisco_part_number>[\d\S]+)$')
 
         # Device State      = Enabled.
-        p11 = re.compile('^Device State\s+=\s+(?P<device_state>[\w\S]+)$')
+        p11 = re.compile(r'^Device State\s+=\s+(?P<device_state>[\w\S]+)$')
         
         # Date code (yy/mm/dd)    = 18/08/25
-        p12 = re.compile('^Date code\s+\S+\s+=\s+(?P<date_code>[\d\S]+)$')
+        p12 = re.compile(r'^Date code\s+\S+\s+=\s+(?P<date_code>[\d\S]+)$')
 
         # Connector type      = No separable connector
         # Connector type      = LC.
-        p13 = re.compile('^Connector type\s+=\s+(?P<connector_type>[\w\s.]+)$')
+        p13 = re.compile(r'^Connector type\s+=\s+(?P<connector_type>[\w\s.]+)$')
 
         # Encoding           = 64B66B
         # Encoding           = 8B10B (1)
-        p14= re.compile('^Encoding\s+=\s+(?P<encoding>.*)$')
+        p14= re.compile(r'^Encoding\s+=\s+(?P<encoding>.*)$')
         
         # Nominal bitrate per channel    = 25GE (25500 Mbits/s)
-        p15 = re.compile('^Nominal bitrate per channel\s+=\s+(?P<nominal_bitrate_per_channel>.*)$')
+        p15 = re.compile(r'^Nominal bitrate per channel\s+=\s+(?P<nominal_bitrate_per_channel>.*)$')
 
         # Vendor part number                        = AFBR-2CAR10Z-CS1
-        p16 = re.compile('^Vendor part number\s+=\s+(?P<vendor_part_number>\S+)$')
+        p16 = re.compile(r'^Vendor part number\s+=\s+(?P<vendor_part_number>\S+)$')
 
         for line in output.splitlines():
             line=line.strip()

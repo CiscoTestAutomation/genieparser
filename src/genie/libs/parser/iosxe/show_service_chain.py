@@ -84,6 +84,7 @@ class ShowSdwanServiceChainStatsDetailSchema(MetaParser):
                 'vrf': int,
                 'label': int,
                 'status': str,
+                Optional('track_obj'): int,
                 'service': {
                     str: {
                         'sent': int,
@@ -92,7 +93,17 @@ class ShowSdwanServiceChainStatsDetailSchema(MetaParser):
                             str: {
                                 str: {
                                     'sent': int,
-                                    'rcvd': int
+                                    'rcvd': int,
+                                    Optional('tx_tracker'): {
+                                        'sent': int,
+                                        'dropped': int,
+                                        'rtt': int
+                                    },
+                                    Optional('rx_tracker'): {
+                                        'sent': int,
+                                        'dropped': int,
+                                        'rtt': int
+                                    }
                                 }
                             }
                         }
@@ -119,6 +130,7 @@ class ShowSdwanServiceChainStatsDetail(ShowSdwanServiceChainStatsDetailSchema):
 
         # initial return dictionary
         ret_dict = {}
+        ha_mode_found = False
 
         # Summary: SC1, VRF: 101, Label: 1014, Status: Up
         p1 = re.compile(r'^Summary:\s+(?P<sc>\S+)\,\s+VRF:\s+(?P<vrf>\d+)\,\s+Label:\s+(?P<label>\d+)\,\s+Status:\s+(?P<status>\w+)$')
@@ -130,10 +142,41 @@ class ShowSdwanServiceChainStatsDetail(ShowSdwanServiceChainStatsDetailSchema):
         # HA Pair 1: IPv6
         # HA Pair 2: Tunnel IPv6
         # HA Pair 3: Tunnel IPv4
-        p3 = re.compile(r'^HA\s+Pair\s+(?P<ha_num>\d+):\s+(?P<type>[\S\s]+)$')
+        # ha_pair 1: ipv4
+        p3 = re.compile(r'^(HA\s+Pair|ha_pair)\s+(?P<ha_num>\d+):\s+(?P<type>.+)$')
 
         # Active Sent: 1101144045 Rcvd: 1101143388
         p4 = re.compile(r'^(?P<ha_mode>(Active|Backup))\s+Sent:\s+(?P<ha_send>\d+)\s+Rcvd:\s+(?P<ha_rcvd>\d+)$')
+
+        # Service Chain: SC2
+        p5 = re.compile(r'^Service Chain:\s+(?P<sc>\w+)\s*$')
+
+        # vrf: 201
+        p6 = re.compile(r'^vrf:\s+(?P<vrf>\d+)\s*$')
+
+        # label: 1015
+        p7 = re.compile(r'^label:\s+(?P<label>\d+)\s*$')
+
+        # state: up
+        p8 = re.compile(r'^state:\s+(?P<status>[a-zA-Z]+)\s*$')
+
+        # track obj: 20
+        p9 = re.compile(r'^track obj:\s+(?P<track_obj>\d+)\s*$')
+
+        # service: FW
+        # service: NETSVC2
+        p10 = re.compile(r'^service:\s+(?P<service>\S+)\s*$')
+
+        # tx: 570100617 rx: 578128069
+        p11 = re.compile(r'^tx:\s+(?P<t_send>\d+)\s*rx:\s+(?P<t_rcvd>\d+)\s*$')
+
+        # active
+        # backup
+        p12 = re.compile(r'^(?P<ha_mode>(active|backup))\s*$')
+
+        # tx tracker: sent: 6978 dropped: 15 rtt: 1
+        # rx tracker: sent: 0 dropped: 0 rtt: 0
+        p13 = re.compile(r'^(?P<tracker>\w+)\s+tracker:\s+sent:\s+(?P<sent>\d+)\s+dropped:\s+(?P<dropped>\d+)\s+rtt:\s+(?P<rtt>\d+)$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -150,7 +193,7 @@ class ShowSdwanServiceChainStatsDetail(ShowSdwanServiceChainStatsDetailSchema):
                     'status': group['status']
                 })
                 continue
-            
+
             # Service: FW Sent: 3151958519 Rcvd: 3126458239
             m = p2.match(line)
             if m:
@@ -164,6 +207,10 @@ class ShowSdwanServiceChainStatsDetail(ShowSdwanServiceChainStatsDetailSchema):
                 continue
 
             # HA Pair 1: IPv4
+            # HA Pair 1: IPv6
+            # HA Pair 2: Tunnel IPv6
+            # HA Pair 3: Tunnel IPv4
+            # ha_pair 1: ipv4
             m = p3.match(line)
             if m:
                 group = m.groupdict()
@@ -186,7 +233,93 @@ class ShowSdwanServiceChainStatsDetail(ShowSdwanServiceChainStatsDetailSchema):
                     'rcvd': int(group['ha_rcvd'])
                 })
                 continue
-            
+
+            # Service Chain: SC2
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                chain_dict = ret_dict.setdefault('service_chain', {})
+                sc_dict = chain_dict.setdefault(group['sc'], {})
+                ha_mode_found = False
+                continue
+
+            # vrf: 201
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                sc_dict['vrf'] = int(group['vrf'])
+                continue
+
+            # label: 1015
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                sc_dict['label'] = int(group['label'])
+                continue
+
+            # state: up
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                sc_dict['status'] = group['status']
+                continue
+
+            # track obj: 20
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                sc_dict['track_obj'] = int(group['track_obj'])
+                continue
+
+            # service: FW
+            # service: NETSVC2
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                ser_dict = sc_dict.setdefault('service', {})
+                srv_dict = ser_dict.setdefault(group['service'], {})
+                continue
+
+            # tx: 570100617 rx: 578128069
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                if ha_mode_found:
+                    type_dict.update({
+                        'sent': int(group['t_send']),
+                        'rcvd': int(group['t_rcvd'])
+                    })
+                else:
+                    srv_dict.update({
+                        'sent': int(group['t_send']),
+                        'rcvd': int(group['t_rcvd'])
+                    })
+                continue
+
+            # active
+            # backup
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                ha_mode = group['ha_mode'].lower()
+                type_dict = ha_dict.setdefault(ha_mode, {})
+                ha_mode_found = True
+                continue
+
+            # tx tracker: sent: 6978 dropped: 15 rtt: 1
+            # rx tracker: sent: 0 dropped: 0 rtt: 0
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                tracker = group['tracker']
+                tracker_dict = type_dict.setdefault(f'{tracker}_tracker', {})
+                tracker_dict.update({
+                    'sent': int(group['sent']),
+                    'dropped': int(group['dropped']),
+                    'rtt': int(group['rtt'])
+                })
+                continue
+
         return ret_dict
 
 # =============================================================================================
@@ -215,7 +348,7 @@ class ShowSdwanQfpActiveDatapathStats(ShowSdwanQfpActiveDatapathStatsSchema):
         # Get output by executing cmd on device
         if output is None:
             output = self.device.execute(self.cli_command.format(filter=filter))
-    
+
         # initial return dictionary
         ret_dict = {}
 
@@ -232,7 +365,7 @@ class ShowSdwanQfpActiveDatapathStats(ShowSdwanQfpActiveDatapathStatsSchema):
                 drop_dict = ret_dict.setdefault('statistics', {})
                 drop_dict.update({group['type']: int(group['drop'])})
                 continue
-    
+
         return ret_dict
 
 # ====================================
@@ -268,7 +401,7 @@ class ShowEndpointTracker(ShowEndpointTrackerSchema):
         # Get output by executing cmd on device
         if output is None:
             output = self.device.execute(self.cli_command)
-    
+
         # initial return dictionary
         ret_dict = {}
 
@@ -292,7 +425,7 @@ class ShowEndpointTracker(ShowEndpointTrackerSchema):
                     'next_hop': group['hop']
                 })
                 continue
-    
+
         return ret_dict
 
 # ====================================
@@ -326,7 +459,7 @@ class ShowTrackDynamic(ShowTrackDynamicSchema):
         # Get output by executing cmd on device
         if output is None:
             output = self.device.execute(self.cli_command)
-    
+
         # initial return dictionary
         ret_dict = {}
 
@@ -379,5 +512,5 @@ class ShowTrackDynamic(ShowTrackDynamicSchema):
                     'route_map': group['map']
                 })
                 continue
-    
+
         return ret_dict

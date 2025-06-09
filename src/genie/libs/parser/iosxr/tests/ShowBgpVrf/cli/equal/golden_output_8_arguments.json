@@ -1,0 +1,4 @@
+{
+    "vrf": "xNet",
+    "address_family": "ipv6 unicast"
+}

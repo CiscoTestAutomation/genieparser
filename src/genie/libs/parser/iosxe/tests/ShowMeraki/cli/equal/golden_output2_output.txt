@@ -1,0 +1,4 @@
+Switch                 Serial                                               Migration
+Num    PID             Number             Cloud ID        Mac Address       Status       Mode
+-----------------------------------------------------------------------------------------------
+1   C9200L-48P-4G      JAE25171718        Q2ZZ-JYE2-DTVV  bcd2.95ab.4e00    Registered   C9K-M

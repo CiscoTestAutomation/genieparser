@@ -20,7 +20,7 @@ from genie.metaparser.util.schemaengine import Schema, \
 
 # import parser utils
 from genie.libs.parser.utils.common import Common
-
+from genie.libs.parser.iosxe.show_fdb import ShowMacAddressTable as ShowMacAddressTable_iosxe
 
 
 # ==============================================
@@ -63,9 +63,9 @@ class ShowMacAddressTableDynamic(ShowMacAddressTableDynamicSchema):
         # initial return dictionary
         vlan_dict = {}
         p1 = re.compile(r'(?P<vlan_id>\d+) +'
-                    '(?P<mac>([a-zA-Z0-9]+\.){2}[a-zA-Z0-9]+) +'
-                    '(?P<type>\w+) +'
-                    '(?P<port>\S+)')
+                    r'(?P<mac>([a-zA-Z0-9]+\.){2}[a-zA-Z0-9]+) +'
+                    r'(?P<type>\w+) +'
+                    r'(?P<port>\S+)')
 
         port_count = 1
         for line in out.splitlines():
@@ -415,3 +415,89 @@ class ShowPlatformSoftwareMatmSwitchTable(ShowPlatformSoftwareMatmSwitchTableSch
                 continue
 
         return ret_dict
+
+# ================================================================================================
+# Parser for 'show mac address-table dynamic'& 'show mac address-table dynamic interface {intf_name}'
+# =================================================================================================
+class ShowMacAddressTableDynamicAllSchema(MetaParser):
+    """
+    Schema for:
+        * show mac address-table dynamic
+        * show mac address-table dynamic interface {intf_name}
+    """
+    schema = {
+        'mac_address_table': {
+            str: {
+                'vlan': int,
+                'mac_address': str,
+                'type': str,
+                'ports': str,
+            },
+        },
+        'total_mac_addresses': int,
+    }
+
+class ShowMacAddressTableDynamicAll(ShowMacAddressTableDynamicAllSchema):
+    """
+    Parser for:
+        * show mac address-table dynamic
+        * show mac address-table dynamic interface {intf_name}
+    """
+    cli_command = [
+        'show mac address-table dynamic',
+        'show mac address-table dynamic interface {intf_name}'
+    ]
+
+    def cli(self, intf_name=None, output=None):
+        if intf_name:
+            cmd = self.cli_command[1].format(intf_name=intf_name)
+        else:
+            cmd = self.cli_command[0]
+        if output is None:
+            output = self.device.execute(cmd)
+
+        # initializing dictionary
+        ret_dict = {}
+
+        # Vlan    Mac Address       Type        Ports
+        # ----    -----------       --------    -----
+        #    1    00bf.7715.6a0b    DYNAMIC     Tw1/0/25
+        #    1    cc7f.763d.9a1a    DYNAMIC     Tw1/0/25
+        p1 = re.compile(r'^(?P<vlan>\d+)\s+(?P<mac_address>[a-fA-F0-9.]+)\s+(?P<type>\w+)\s+(?P<ports>\S+)$')
+
+        # Total Mac Addresses for this criterion: 5
+        p2 = re.compile(r'^Total Mac Addresses for this criterion: (?P<total_mac_addresses>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            # Vlan    1    Mac Address 00bf.7715.6a0b  Type DYNAMIC  Ports Tw1/0/25
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                mac_table = ret_dict.setdefault('mac_address_table', {})
+                mac_entry = group['mac_address']
+                mac_table[mac_entry] = {
+                    'vlan': int(group['vlan']),
+                    'mac_address': group['mac_address'],
+                    'type': group['type'],
+                    'ports': group['ports'],
+                }
+                continue
+            # Total Mac Addresses for this criterion: 5
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['total_mac_addresses'] = int(group['total_mac_addresses'])
+                continue
+        return ret_dict
+
+class ShowMacAddressTableDynamicVlan(ShowMacAddressTable_iosxe):
+    """ Parser for show mac address-table dynamic vlan {vlan_id} """
+    cli_command = 'show mac address-table dynamic interface {intf} vlan {vlanid}'
+
+    def cli(self, intf="",vlanid="",output = None):
+        if output is None:
+            show_output = self.device.execute(self.cli_command.format(intf = intf, vlanid = vlanid))
+        else:
+            show_output = output
+        return super().cli(output = show_output)

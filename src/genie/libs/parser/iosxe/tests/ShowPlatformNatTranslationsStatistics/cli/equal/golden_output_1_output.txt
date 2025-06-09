@@ -1,0 +1,7 @@
+NAT Type                : Mixed
+Netflow Type            : NA
+Flow Record             : Disabled
+Dynamic NAT entries     : 10 entries
+Static NAT entries      : 10 entries
+Total NAT entries       : 20 entries
+Total HW Resource (TCAM): 60 of 3072 /1 .95% utilization

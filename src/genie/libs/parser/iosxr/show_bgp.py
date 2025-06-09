@@ -82,7 +82,7 @@ logger.setLevel(logging.INFO)
 # ========================================
 
 class ShowBgpEgressEngineeringSchema(MetaParser):
-    
+
     ''' Schema for show bgp egress-engineering '''
     schema = {
         'peer_set':{
@@ -113,7 +113,7 @@ class ShowBgpEgressEngineering(ShowBgpEgressEngineeringSchema):
     ''' Parser for show bgp egress-engineering'''
 
     cli_command = ['show bgp egress-engineering']
-    
+
 
     def cli (self, output=None):
         if output is None:
@@ -125,11 +125,11 @@ class ShowBgpEgressEngineering(ShowBgpEgressEngineeringSchema):
 
         #  Egress Engineering Peer Set: 192.168.1.2/32 (10b87210)
         p1 = re.compile(r'Egress +Engineering +Peer +Set: +(?P<prefix>[\d\/\.]+) '
-        '+(?P<peer_set_id>\S+)')
+        r'+(?P<peer_set_id>\S+)')
 
         #   Version: 2, rn_version: 2
         p2 = re.compile(r'(?P<key_1>[\w\s]+): +(?P<value_1>[\S\s]+), +(?P<key_2>[\w\s]+): '
-        '+(?P<value_2>\d+)')
+        r'+(?P<value_2>\d+)')
 
         #    Local ASN: 1
         #     Remote ASN: 2
@@ -181,17 +181,17 @@ class ShowBgpEgressEngineering(ShowBgpEgressEngineeringSchema):
                     update_value = [int(item.strip()) if item.strip().isdigit() \
                         else item.strip() for item in update_value]
                 elif group['value'].isdigit():
-                    update_value = int(group['value']) 
+                    update_value = int(group['value'])
                 else:
-                    update_value = group['value'] 
+                    update_value = group['value']
 
                 peer_dict.update({group['key'].strip().lower().\
                     replace(' ','_') : update_value})
-                    
+
                 continue
 
         return ret_dict
-    
+
 
 # =======================================
 # Parser for 'show bgp instances'
@@ -346,13 +346,13 @@ class ShowPlacementProgramAll(ShowPlacementProgramAllSchema):
 
         ret_dict = {}
         p1 = re.compile(r'^\s*(?P<program>[a-zA_Z0-9\_\-]+)'
-                        '(?:\((?P<instance>\S+)\))?'
-                        ' +(?P<group>\S+)'
-                        ' +(?P<jid>\S+)'
-                        ' +(?P<active_rp>\S+)'
-                        ' +(?P<active_state>\S+)'
-                        ' +(?P<standby_rp>\S+)'
-                        ' +(?P<standby_state>\S+)$')
+                        r'(?:\((?P<instance>\S+)\))?'
+                        r' +(?P<group>\S+)'
+                        r' +(?P<jid>\S+)'
+                        r' +(?P<active_rp>\S+)'
+                        r' +(?P<active_state>\S+)'
+                        r' +(?P<standby_rp>\S+)'
+                        r' +(?P<standby_state>\S+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -390,7 +390,7 @@ class ShowPlacementProgramAll(ShowPlacementProgramAllSchema):
                 ret_dict['program'][program]['instance'][instance]['active_state'] = active_state
 
                 continue
-    
+
         return ret_dict
 
 
@@ -399,7 +399,7 @@ class ShowPlacementProgramAll(ShowPlacementProgramAllSchema):
 # ===================================================================
 
 class ShowBgpInstanceAfGroupConfigurationSchema(MetaParser):
-    
+
     """Schema for show bgp instance af-group configuration"""
 
     schema = {
@@ -456,36 +456,36 @@ class ShowBgpInstanceAfGroupConfiguration(ShowBgpInstanceAfGroupConfigurationSch
 
         ret_dict = {}
         pp1 = re.compile(r'\s*router +bgp +(?P<bgp_id>\d+)'
-                         '(?: +instance +(?P<instance_name>[a-zA-Z0-9]+))?'
-                         ' +af-group +(?P<pp_name>[a-zA-Z0-9\-\_]+)')
+                         r'(?: +instance +(?P<instance_name>[a-zA-Z0-9]+))?'
+                         r' +af-group +(?P<pp_name>[a-zA-Z0-9\-\_]+)')
         p1 = re.compile(r'^af\-group +(?P<pp>[\w\-\.\:]+) +'
-                        'address\-family +(?P<af>[\w\s]+)$')
+                        r'address\-family +(?P<af>[\w\s]+)$')
         p2 = re.compile(r'^default\-originate *(policy)? *'
-                        '(?P<policy>[\w\-\.\:\s]+)? +'
-                        '\[(?P<inherit>[\w\-\.\:\s]+)?\]$')
+                        r'(?P<policy>[\w\-\.\:\s]+)? +'
+                        r'\[(?P<inherit>[\w\-\.\:\s]+)?\]$')
         p3 = re.compile(r'^maximum\-prefix +'
-                        '(?P<no>[\d]+)? +(?P<th>[\d]+)? +(?P<re>[\d]+)? +'
-                        '\[(?P<inherit>[\w\-\.\:\s]+)?\]$')
+                        r'(?P<no>[\d]+)? +(?P<th>[\d]+)? +(?P<re>[\d]+)? +'
+                        r'\[(?P<inherit>[\w\-\.\:\s]+)?\]$')
         p4 = re.compile(r'^next\-hop\-self +'
-                        '\[(?P<inherit>[\w\-\.\:\s]+)?\]$')
+                        r'\[(?P<inherit>[\w\-\.\:\s]+)?\]$')
         p5 = re.compile(r'^policy +(?P<map>[\w]+) +in +'
-                        '\[(?P<inherit>[\w\-\.\:\s]+)?\]$')
+                        r'\[(?P<inherit>[\w\-\.\:\s]+)?\]$')
         p6 = re.compile(r'^policy +(?P<map>[\w]+) +out +'
-                        '\[(?P<inherit>[\w\-\.\:\s]+)?\]$')
+                        r'\[(?P<inherit>[\w\-\.\:\s]+)?\]$')
         p7 = re.compile(r'^route\-reflector\-client +'
-                        '\[(?P<inherit>[\w\-\.\:\s]+)?\]$')
+                        r'\[(?P<inherit>[\w\-\.\:\s]+)?\]$')
         p8 = re.compile(r'^send\-community\-ebgp +'
-                        '\[(?P<inherit>[\w\-\.\:\s]+)?\]$')
+                        r'\[(?P<inherit>[\w\-\.\:\s]+)?\]$')
         p9 = re.compile(r'^send\-extended\-community\-ebgp +'
-                        '\[(?P<inherit>[\w\-\.\:\s]+)?\]$')
+                        r'\[(?P<inherit>[\w\-\.\:\s]+)?\]$')
         p10 = re.compile(r'^site\-of\-origin +(?P<soo>[\w\:]+) +'
-                         '\[(?P<inherit>[\w\-\.\:\s]+)?\]$')
+                         r'\[(?P<inherit>[\w\-\.\:\s]+)?\]$')
         p11 = re.compile(r'^soft\-reconfiguration +(?P<soft>[\w\s]+) +'
-                         '\[(?P<inherit>[\w\-\.\:\s]+)?\]$')
+                         r'\[(?P<inherit>[\w\-\.\:\s]+)?\]$')
         p12 = re.compile(r'^allowas\-in +(?P<al>\d+)? *'
-                         '\[(?P<inherit>[\w\-\.\:\s]+)?\]$')
+                         r'\[(?P<inherit>[\w\-\.\:\s]+)?\]$')
         p13 = re.compile(r'^as\-override *'
-                         '\[(?P<inherit>[\w\-\.\:\s]+)?\]$')
+                         r'\[(?P<inherit>[\w\-\.\:\s]+)?\]$')
 
         cmd = ''
 
@@ -507,7 +507,7 @@ class ShowBgpInstanceAfGroupConfiguration(ShowBgpInstanceAfGroupConfigurationSch
                     ret_dict['instance'] = {}
                 if instance_name not in ret_dict['instance']:
                     ret_dict['instance'][instance_name] = {}
-        
+
                 # af-group af_group
                 if 'pp_name' not in ret_dict['instance'][instance_name]:
                     ret_dict['instance'][instance_name]['pp_name'] = {}
@@ -519,7 +519,7 @@ class ShowBgpInstanceAfGroupConfiguration(ShowBgpInstanceAfGroupConfigurationSch
 
                 # use for send_community key value tracker
                 send_community = []
-        
+
                 for line in out.splitlines():
                     line = line.strip()
                     # af_group address-family IPv4 Unicast
@@ -531,92 +531,92 @@ class ShowBgpInstanceAfGroupConfiguration(ShowBgpInstanceAfGroupConfigurationSch
                             ret_dict['instance'][instance_name]['pp_name'][pp_name]\
                                 ['address_family'] = af
                         continue
-        
+
                     # default-originate policy allpass            []
 
                     m = p2.match(line)
                     if m:
                         ret_dict['instance'][instance_name]['pp_name'][pp_name]\
                             ['default_originate'] = True
-        
+
                         if m.groupdict()['policy']:
                             ret_dict['instance'][instance_name]['pp_name'][pp_name]\
                                 ['default_originate_route_map'] = \
                                     m.groupdict()['policy'].strip()
-        
+
                         if m.groupdict()['inherit']:
                             ret_dict['instance'][instance_name]['pp_name'][pp_name]\
                                 ['default_originate_inherit'] = m.groupdict()['inherit']
                         continue
-        
+
                     # maximum-prefix 429 75 35                    []
 
                     m = p3.match(line)
                     if m:
                         ret_dict['instance'][instance_name]['pp_name'][pp_name]\
                             ['maximum_prefix_max_prefix_no'] = int(m.groupdict()['no'])
-        
+
                         if m.groupdict()['th']:
                             ret_dict['instance'][instance_name]['pp_name'][pp_name]\
                                 ['maximum_prefix_threshold'] = int(m.groupdict()['th'])
-        
+
                         if m.groupdict()['re']:
                             ret_dict['instance'][instance_name]['pp_name'][pp_name]\
                                 ['maximum_prefix_restart'] = int(m.groupdict()['re'])
-        
+
                         if m.groupdict()['inherit']:
                             ret_dict['instance'][instance_name]['pp_name'][pp_name]\
                                 ['maximum_prefix_warning_only'] = m.groupdict()['inherit']
                         continue
-        
+
                     # next-hop-self                               []
 
                     m = p4.match(line)
                     if m:
                         ret_dict['instance'][instance_name]['pp_name'][pp_name]\
                             ['next_hop_self'] = True
-        
+
                         if m.groupdict()['inherit']:
                             ret_dict['instance'][instance_name]['pp_name'][pp_name]\
                                 ['next_hop_self_inherit'] = m.groupdict()['inherit']
                         continue
-        
+
                     # policy allpass in                           []
 
                     m = p5.match(line)
                     if m:
                         ret_dict['instance'][instance_name]['pp_name'][pp_name]\
                             ['route_map_name_in'] = m.groupdict()['map']
-        
+
                         if m.groupdict()['inherit']:
                             ret_dict['instance'][instance_name]['pp_name'][pp_name]\
                                 ['route_map_name_in_inherit'] = m.groupdict()['inherit']
                         continue
-        
+
                     # policy allpass out                          []
 
                     m = p6.match(line)
                     if m:
                         ret_dict['instance'][instance_name]['pp_name'][pp_name]\
                             ['route_map_name_out'] = m.groupdict()['map']
-        
+
                         if m.groupdict()['inherit']:
                             ret_dict['instance'][instance_name]['pp_name'][pp_name]\
                                 ['route_map_name_out_inherit'] = m.groupdict()['inherit']
                         continue
-        
+
                     # route-reflector-client                      []
 
                     m = p7.match(line)
                     if m:
                         ret_dict['instance'][instance_name]['pp_name'][pp_name]\
                             ['route_reflector_client'] = True
-        
+
                         if m.groupdict()['inherit']:
                             ret_dict['instance'][instance_name]['pp_name'][pp_name]\
                                 ['route_reflector_client_inherit'] = m.groupdict()['inherit']
                         continue
-        
+
                     # send-community-ebgp                         []
 
                     m = p8.match(line)
@@ -624,26 +624,26 @@ class ShowBgpInstanceAfGroupConfiguration(ShowBgpInstanceAfGroupConfigurationSch
                         send_community.append('standard')
                         ret_dict['instance'][instance_name]['pp_name'][pp_name]\
                             ['send_comm_ebgp'] = True
-        
+
                         if m.groupdict()['inherit']:
                             ret_dict['instance'][instance_name]['pp_name'][pp_name]\
                                 ['send_comm_ebgp_inherit'] = m.groupdict()['inherit']
                         continue
-        
+
                     # send-extended-community-ebgp                []
 
                     m = p9.match(line)
                     if m:
                         send_community.append('extended')
-        
+
                         ret_dict['instance'][instance_name]['pp_name'][pp_name]\
                             ['send_ext_comm_ebgp'] = True
-        
+
                         if m.groupdict()['inherit']:
                             ret_dict['instance'][instance_name]['pp_name'][pp_name]\
                                 ['send_ext_comm_ebgp_inherit'] = m.groupdict()['inherit']
                         continue
-        
+
                     # send_community
                     if send_community:
                         if len(send_community) == 2:
@@ -652,48 +652,48 @@ class ShowBgpInstanceAfGroupConfiguration(ShowBgpInstanceAfGroupConfigurationSch
                         else:
                             ret_dict['instance'][instance_name]['pp_name'][pp_name]\
                                 ['send_community'] = send_community[0]
-        
+
                     # site-of-origin 100:1                        []
 
                     m = p10.match(line)
                     if m:
                         ret_dict['instance'][instance_name]['pp_name'][pp_name]\
                             ['soo'] = m.groupdict()['soo']
-        
+
                         if m.groupdict()['inherit']:
                             ret_dict['instance'][instance_name]['pp_name'][pp_name]\
                                 ['soo_inherit'] = m.groupdict()['inherit']
                         continue
-        
+
                     # soft-reconfiguration inbound always         []
 
                     m = p11.match(line)
                     if m:
                         ret_dict['instance'][instance_name]['pp_name'][pp_name]\
                             ['soft_reconfiguration'] = m.groupdict()['soft'].strip()
-        
+
                         if m.groupdict()['inherit']:
                             ret_dict['instance'][instance_name]['pp_name'][pp_name]\
                                 ['soft_reconfiguration_inherit'] \
                                     = m.groupdict()['inherit']
                         continue
-        
+
                     # allowas-in 10                               []
 
                     m = p12.match(line)
                     if m:
                         ret_dict['instance'][instance_name]['pp_name'][pp_name]\
                             ['allowas_in'] = True
-        
+
                         if m.groupdict()['al']:
                             ret_dict['instance'][instance_name]['pp_name'][pp_name]\
                                 ['allowas_in_as_number'] = int(m.groupdict()['al'])
-        
+
                         if m.groupdict()['inherit']:
                             ret_dict['instance'][instance_name]['pp_name'][pp_name]\
                                 ['allowas_in_inherit'] = m.groupdict()['inherit']
                         continue
-        
+
                     # as-override                                 []
 
                     m = p13.match(line)
@@ -776,35 +776,35 @@ class ShowBgpInstanceSessionGroupConfiguration(ShowBgpInstanceSessionGroupConfig
 
         cmd = ''
         pp1 = re.compile(r'\s*router +bgp +(?P<bgp_id>\d+)'
-                         '(?: +instance +(?P<instance_name>[a-zA-Z0-9]+))?'
-                         '(?: +neighbor +(?P<neighbor_id>[0-9\.\:]+) +use)?'
-                         ' +session-group +(?P<ps_name>[a-zA-Z0-9\-\_]+)')
+                         r'(?: +instance +(?P<instance_name>[a-zA-Z0-9]+))?'
+                         r'(?: +neighbor +(?P<neighbor_id>[0-9\.\:]+) +use)?'
+                         r' +session-group +(?P<ps_name>[a-zA-Z0-9\-\_]+)')
         p2 = re.compile(r'^remote\-as +(?P<as>\d+)? +'
-                        '\[(?P<inherit>[\w\-\.\:\s]+)?\]$')
+                        r'\[(?P<inherit>[\w\-\.\:\s]+)?\]$')
         p3 = re.compile(r'^description +(?P<descr>[\w\,\.\:\-\s]+) +'
-                        '\[(?P<inherit>[\w\-\.\:\s]+)?\]$')
+                        r'\[(?P<inherit>[\w\-\.\:\s]+)?\]$')
         p4 = re.compile(r'^ebgp\-multihop +(?P<num>\d+)? *'
-                        '\[(?P<inherit>[\w\-\.\:\s]+)?\]$')
+                        r'\[(?P<inherit>[\w\-\.\:\s]+)?\]$')
         p5 = re.compile(r'^local\-as +(?P<as>\d+) +(?P<v1>no\-prepend)? +'
-                        '(?P<v2>replace\-as)? *(?P<v3>dual\-as)? *'
-                        '\[(?P<inherit>[\w\-\.\:\s]+)?\]$')
+                        r'(?P<v2>replace\-as)? *(?P<v3>dual\-as)? *'
+                        r'\[(?P<inherit>[\w\-\.\:\s]+)?\]$')
         p6 = re.compile(r'^password +encrypted +(?P<psw>\w+) +'
-                        '\[(?P<inherit>[\w\-\.\:\s]+)?\]$')
+                        r'\[(?P<inherit>[\w\-\.\:\s]+)?\]$')
         p7 = re.compile(r'^shutdown +'
-                        '\[(?P<inherit>[\w\-\.\:\s]+)?\]$')
+                        r'\[(?P<inherit>[\w\-\.\:\s]+)?\]$')
         p8 = re.compile(r'^timers +(?P<keep>\d+) +'
-                        '(?P<hold>\d+) +(?P<mim>\d+)? *'
-                        '\[(?P<inherit>[\w\-\.\:\s]+)?\]$')
+                        r'(?P<hold>\d+) +(?P<mim>\d+)? *'
+                        r'\[(?P<inherit>[\w\-\.\:\s]+)?\]$')
         p9 = re.compile(r'^update\-source +(?P<intf>[\w\.\/]+) +'
-                        '\[(?P<inherit>[\w\-\.\:\s]+)?\]$')
+                        r'\[(?P<inherit>[\w\-\.\:\s]+)?\]$')
         p10 = re.compile(r'^suppress\-4byteas +'
-                         '\[(?P<inherit>[\w\-\.\:\s]+)?\]$')
+                         r'\[(?P<inherit>[\w\-\.\:\s]+)?\]$')
         p11 = re.compile(r'^session\-open\-mode +(?P<mode>[\w\-]+) +'
-                         '\[(?P<inherit>[\w\-\.\:\s]+)?\]$')
+                         r'\[(?P<inherit>[\w\-\.\:\s]+)?\]$')
         p12 = re.compile(r'^bfd fast-detect +'
-                         '\[(?P<inherit>[\w\-\.\:\s]+)?\]$')
+                         r'\[(?P<inherit>[\w\-\.\:\s]+)?\]$')
         p13 = re.compile(r'^ignore\-connected *'
-                         '\[(?P<inherit>[\w\-\.\:\s]+)?\]$')
+                         r'\[(?P<inherit>[\w\-\.\:\s]+)?\]$')
 
         for line1 in out.splitlines():
             line1 = line1.strip()
@@ -889,7 +889,7 @@ class ShowBgpInstanceSessionGroupConfiguration(ShowBgpInstanceSessionGroupConfig
                     if m:
                         ret_dict['instance'][instance_name]['peer_session'][ps_name]\
                             ['local_as_as_no'] = int(m.groupdict()['as'])
-        
+
                         if m.groupdict()['v1']:
                             ret_dict['instance'][instance_name]['peer_session']\
                                 [ps_name]['local_no_prepend'] = True
@@ -899,7 +899,7 @@ class ShowBgpInstanceSessionGroupConfiguration(ShowBgpInstanceSessionGroupConfig
                         if m.groupdict()['v3']:
                             ret_dict['instance'][instance_name]['peer_session']\
                                 [ps_name]['local_dual_as'] = True
-        
+
                         if m.groupdict()['inherit']:
                             ret_dict['instance'][instance_name]['peer_session']\
                                 [ps_name]['local_as_inherit'] = m.groupdict()['inherit']
@@ -911,7 +911,7 @@ class ShowBgpInstanceSessionGroupConfiguration(ShowBgpInstanceSessionGroupConfig
                     if m:
                         ret_dict['instance'][instance_name]['peer_session'][ps_name]\
                             ['password_text'] = m.groupdict()['psw']
-        
+
                         if m.groupdict()['inherit']:
                             ret_dict['instance'][instance_name]['peer_session'][ps_name]\
                                 ['password_text_inherit'] = m.groupdict()['inherit']
@@ -923,7 +923,7 @@ class ShowBgpInstanceSessionGroupConfiguration(ShowBgpInstanceSessionGroupConfig
                     if m:
                         ret_dict['instance'][instance_name]['peer_session'][ps_name]\
                             ['shutdown'] = True
-        
+
                         if m.groupdict()['inherit']:
                             ret_dict['instance'][instance_name]['peer_session']\
                                 [ps_name]['shutdown_inherit'] = m.groupdict()['inherit']
@@ -935,14 +935,14 @@ class ShowBgpInstanceSessionGroupConfiguration(ShowBgpInstanceSessionGroupConfig
                     if m:
                         ret_dict['instance'][instance_name]['peer_session'][ps_name]\
                             ['keepalive_interval'] = int(m.groupdict()['keep'])
-        
+
                         ret_dict['instance'][instance_name]['peer_session'][ps_name]\
                             ['holdtime'] =int(m.groupdict()['hold'])
-        
+
                         if m.groupdict()['mim']:
                             ret_dict['instance'][instance_name]['peer_session'][ps_name]\
                                 ['ps_minimum_holdtime'] = int(m.groupdict()['mim'])
-        
+
                         if m.groupdict()['inherit']:
                             ret_dict['instance'][instance_name]['peer_session'][ps_name]\
                                 ['timers_inherit'] = m.groupdict()['inherit']
@@ -1212,105 +1212,105 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
         p1_1 = re.compile(r'^\s*VRF: +(?P<vrf>[a-zA-Z0-9\_]+)$')
         p1_1_1 = re.compile(r'^BGP +Process +Information: +VRF +(?P<vrf>[\S]+)$')
         p1_2 = re.compile(r'^\s*BGP *Route *Distinguisher:'
-                          ' *(?P<route_distinguisher>\S+)$')
+                          r' *(?P<route_distinguisher>\S+)$')
         p2 = re.compile(r'BGP *is *operating *in *'
-                        '(?P<operation_mode>\w+) *mode$')
+                        r'(?P<operation_mode>\w+) *mode$')
         p3 = re.compile(r'^Autonomous *System *number *format: *'
-                        '(?P<as_format>[a-zA-Z]+)$')
+                        r'(?P<as_format>[a-zA-Z]+)$')
 
         #Autonomous System: 65108.65108
         p4 = re.compile(r'^Autonomous *System: *(?P<as_number>[0-9\.]+)$')
         p5 = re.compile(r'^Router *ID: *(?P<router_id>[\w\.\:]+) *'
-                        '(\([\w\s]+\))?$')
+                        r'(\([\w\s]+\))?$')
         p6_1 = re.compile(r'^Default *Cluster *ID: *'
-                          '(?P<default_cluster_id>[\w\.\:]+) *'
-                          '(\([\w\s\:\.\,]+\))?$')
+                          r'(?P<default_cluster_id>[\w\.\:]+) *'
+                          r'(\([\w\s\:\.\,]+\))?$')
         p6_2 = re.compile(r'^Active *Cluster *IDs: *'
-                          '(?P<active_cluster_id>[\w\.\:]+)$')
+                          r'(?P<active_cluster_id>[\w\.\:]+)$')
         p7_1 = re.compile(r'^Always compare MED is enabled$')
         p7_2 = re.compile(r'^Comparing router ID for eBGP paths$')
         p7_4 = re.compile(r'^Treating missing MED as worst$')
         p8 = re.compile(r'^Fast +external +fallover +enabled$')
         p9 = re.compile(r'^Platform *RLIMIT *max: *'
-                        '(?P<platform_rlimit_max>[0-9\,]+) *bytes$')
+                        r'(?P<platform_rlimit_max>[0-9\,]+) *bytes$')
         p10 = re.compile(r'^Maximum +limit +for +BMP +buffer +size: *'
-                         '(?P<size>[a-zA-Z0-9]+) *MB$')
+                         r'(?P<size>[a-zA-Z0-9]+) *MB$')
         p11 = re.compile(r'^Default *value *for *BMP *buffer *size: *'
-                         '(?P<size>[a-zA-Z0-9]+) *MB$')
+                         r'(?P<size>[a-zA-Z0-9]+) *MB$')
         p12 = re.compile(r'^Current *limit *for *BMP *buffer *size: *'
-                         '(?P<size>[a-zA-Z0-9]+) *MB$')
+                         r'(?P<size>[a-zA-Z0-9]+) *MB$')
         p13 = re.compile(r'^Current *utilization *of *BMP *buffer *'
-                         'limit: *(?P<limit>[a-zA-Z0-9]+) *B$')
+                         r'limit: *(?P<limit>[a-zA-Z0-9]+) *B$')
         p14 = re.compile(r'^Neighbor *logging *is *(?P<nbr_logging>\w+)$')
         p15 = re.compile(r'^Enforce +first +AS +(?P<as_enabled>\w+)$')
         p16 = re.compile(r'^Default *local *preference: *'
-                         '(?P<preference>[0-9]+)$')
+                         r'(?P<preference>[0-9]+)$')
         p17 = re.compile(r'^Default *keepalive: *(?P<keepalive>[0-9]+)$')
         p18 = re.compile(r'^Non\-stop *routing *is +(?P<status>[a-zA-Z]+)$')
         p19 = re.compile(r'^Update *delay: *(?P<update_delay>[0-9]+)$')
         p20 = re.compile(r'^Generic *scan *interval: *'
-                         '(?P<scan_interval>[0-9]+)$')
+                         r'(?P<scan_interval>[0-9]+)$')
         p21 = re.compile(r'^BGP *Speaker *process: *'
-                         '(?P<speaker>\w+), +Node: +(?P<node>\w+)$')
+                         r'(?P<speaker>\w+), +Node: +(?P<node>\w+)$')
         p22 = re.compile(r'^Restart *count: *(?P<restart_count>[0-9]+)$')
         p23 = re.compile(r'^(?P<vrf_info>[\w\-]+) +VRFs: +'
-                         '(?P<total>[0-9]+) +'
-                         '(?P<nbrs_estab>[0-9]+)/(?P<cfg>[0-9]+)$')
+                         r'(?P<total>[0-9]+) +'
+                         r'(?P<nbrs_estab>[0-9]+)/(?P<cfg>[0-9]+)$')
         p24_1 = re.compile(r'^Updates:'
-                           ' *(?P<sent>[0-9]+) *(?P<received>[0-9]+)$')
+                           r' *(?P<sent>[0-9]+) *(?P<received>[0-9]+)$')
         p24_2 = re.compile(r'^Notifications:'
-                           ' *(?P<sent>[0-9]+) *(?P<received>[0-9]+)$')
+                           r' *(?P<sent>[0-9]+) *(?P<received>[0-9]+)$')
         p26 = re.compile(r'^Pool +(?P<pool>\w+): +(?P<alloc>\d+) +'
-                         '(?P<free>\d+)$')
+                         r'(?P<free>\d+)$')
         p25 = re.compile(r'^(?P<att>[\w\s]+): +(?P<number>[0-9]+) +'
-                         '(?P<memory_used>[0-9]+)$')
+                         r'(?P<memory_used>[0-9]+)$')
         p29 = re.compile(r'^Address *family: *(?P<af>[a-zA-Z0-9\s\-\_]+)$')
         p29_1 = re.compile(r'^VRF +(?P<current_vrf>(\S+)) +Address +family:'
-                           ' +(?P<af>[a-zA-Z0-9\s\-\_]+)'
-                           '(?: +\(Table +(?P<table_state>[a-z]+)\))?$')
+                           r' +(?P<af>[a-zA-Z0-9\s\-\_]+)'
+                           r'(?: +\(Table +(?P<table_state>[a-z]+)\))?$')
         p30 = re.compile(r'^Dampening +is +(?P<dampening>[\w\s]+)$')
         p31 = re.compile(r'^Client +reflection +is +enabled +in +global +config$')
         p31_1 = re.compile(r'^Client +reflection +is +not +enabled +in +global +config$')
         p32 = re.compile(r'^Dynamic *MED *is *(?P<dynamic_med>\w+)$')
         p33 = re.compile(r'^Dynamic *MED *interval *: *'
-                         '(?P<interval>[a-zA-Z0-9\s]+)$')
+                         r'(?P<interval>[a-zA-Z0-9\s]+)$')
         p34 = re.compile(r'^Dynamic *MED *Timer *: *'
-                         '(?P<dynamic_med_timer>[a-zA-Z0-9\s]+)$')
+                         r'(?P<dynamic_med_timer>[a-zA-Z0-9\s]+)$')
         p35 = re.compile(r'^Dynamic *MED *Periodic *Timer *: *'
-                         '(?P<timer>[a-zA-Z0-9\s]+)$')
+                         r'(?P<timer>[a-zA-Z0-9\s]+)$')
         p36 = re.compile(r'^Scan *interval: *(?P<scan_interval>[\w\s]+)$')
         p37 = re.compile(r'^Total *prefixes *scanned: *'
-                         '(?P<scan>[a-zA-Z0-9\s]+)$')
+                         r'(?P<scan>[a-zA-Z0-9\s]+)$')
         p38 = re.compile(r'^Prefixes *scanned *per *segment: *'
-                         '(?P<prefix_scan>[a-zA-Z0-9\s]+)$')
+                         r'(?P<prefix_scan>[a-zA-Z0-9\s]+)$')
         p39 = re.compile(r'^Number *of *scan *segments: *'
-                         '(?P<num_of_scan_segments>[a-zA-Z0-9\s]+)$')
+                         r'(?P<num_of_scan_segments>[a-zA-Z0-9\s]+)$')
         p40 = re.compile(r'^Nexthop *resolution *minimum *prefix\-length: *'
-                         '(?P<length>[\w\s\(\)]+)$')
+                         r'(?P<length>[\w\s\(\)]+)$')
         p41 = re.compile(r'^Main *Table *Version: *(?P<main_tab_ver>[\w\s]+)$')
         p42 = re.compile(r'^Table *version *synced *to *RIB: *'
-                         '(?P<rib>[a-zA-Z0-9\s]+)$')
+                         r'(?P<rib>[a-zA-Z0-9\s]+)$')
         p43 = re.compile(r'^Table *version *acked *by *RIB: *'
-                         '(?P<rib>[a-zA-Z0-9\s]+)$')
+                         r'(?P<rib>[a-zA-Z0-9\s]+)$')
         p44 = re.compile(r'^RIB *has *not *converged: *'
-                         '(?P<rib>[a-zA-Z0-9\s]+)$')
+                         r'(?P<rib>[a-zA-Z0-9\s]+)$')
         p54 = re.compile(r'^RIB *table *prefix\-limit *reached +\? *'
-                         '\[(?P<rib>\w+)\], +version +(?P<ver>\d+)$')
+                         r'\[(?P<rib>\w+)\], +version +(?P<ver>\d+)$')
         p45 = re.compile(r'^Permanent +Network +(?P<status>\w+)$')
         p46 = re.compile(r'^State: *(?P<state>[a-zA-Z\s]+).$')
         p47 = re.compile(r'^BGP *Table *Version: *(?P<tab_ver>\w+)$')
         p48 = re.compile(r'^Attribute *download: *(?P<attr>[\w\s]+)$')
         p49 = re.compile(r'^Label *retention *timer *value *'
-                         '(?P<timer>[a-zA-Z0-9\s]+)$')
+                         r'(?P<timer>[a-zA-Z0-9\s]+)$')
         p50 = re.compile(r'^Soft *Reconfig *Entries: *(?P<ent>\d+)$')
         p51 = re.compile(r'^Table *bit\-field *size *: *'
-                         '(?P<size>[0-9\s]+) *Chunk *element *size *: *'
-                         '(?P<elememt_size>\d+)$')
+                         r'(?P<size>[0-9\s]+) *Chunk *element *size *: *'
+                         r'(?P<elememt_size>\d+)$')
         p52 = re.compile(r'^(?P<thread>\w+\s\w+) *'
-                         '(?P<trigger>\w+\s\d+\s[\d\:\.]+) +(?P<ver>[0-9]+) +'
-                         '(?P<tbl_ver>[0-9]+) +(?P<trig_tid>[0-9]+)$')
+                         r'(?P<trigger>\w+\s\d+\s[\d\:\.]+) +(?P<ver>[0-9]+) +'
+                         r'(?P<tbl_ver>[0-9]+) +(?P<trig_tid>[0-9]+)$')
         p53 = re.compile(r'^(?P<remote>[\w\s\-]+): *(?P<v1>\d+) *'
-                         '(?P<v2>[0-9]+)$')
+                         r'(?P<v2>[0-9]+)$')
         # Init dict
         ret_dict = {}
 
@@ -2076,16 +2076,16 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
                     ['address_family'][af]['chunk_elememt_size'] = chunk_elememt_size
                 continue
 
-            #                    Last 8 Triggers       Ver         Tbl Ver     Trig TID  
+            #                    Last 8 Triggers       Ver         Tbl Ver     Trig TID
 
-            # Label Thread       Jun 28 19:10:16.427   43          43          3         
-            #                    Jun 28 19:10:16.417   43          43          3         
-            #                    Jun 28 19:09:29.680   43          43          3         
-            #                    Jun 28 19:09:29.670   43          43          3         
-            #                    Jun 28 18:29:34.604   43          43          3         
-            #                    Jun 28 18:29:29.595   33          43          4         
-            #                    Jun 28 18:29:29.595   33          38          3         
-            #                    Jun 28 18:24:52.694   33          33          3       
+            # Label Thread       Jun 28 19:10:16.427   43          43          3
+            #                    Jun 28 19:10:16.417   43          43          3
+            #                    Jun 28 19:09:29.680   43          43          3
+            #                    Jun 28 19:09:29.670   43          43          3
+            #                    Jun 28 18:29:34.604   43          43          3
+            #                    Jun 28 18:29:29.595   33          43          4
+            #                    Jun 28 18:29:29.595   33          38          3
+            #                    Jun 28 18:24:52.694   33          33          3
             #                    Total triggers: 17
 
 
@@ -2131,8 +2131,8 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
             # Remote Prefixes:      10              0
             # Remote Path-elems:    10              0
 
-            #                       Number          Mem Used      
-            # Remote Prefixes:      10              920         
+            #                       Number          Mem Used
+            # Remote Prefixes:      10              920
             # Remote Path-elems:    10              630
 
             if re.compile(r'^Allocated +Freed$').match(line):
@@ -2351,7 +2351,7 @@ class ShowBgpInstanceNeighborsDetailSchema(MetaParser):
                                  Optional('non_stop_routing'): bool,
                                  Optional('tcp_initial_sync'): str,
                                  Optional('tcp_initial_sync_phase_two'): str,
-                                 Optional('tcp_initial_sync_done'): str, 
+                                 Optional('tcp_initial_sync_done'): str,
                                  Optional('enforcing_first_as'): str,
                                  Optional('multiprotocol_capability'): str,
                                  Optional('bgp_negotiated_keepalive_timers'):
@@ -2446,7 +2446,7 @@ class ShowBgpInstanceNeighborsDetailSchema(MetaParser):
                                         {Optional('state'): str,
                                          Optional('mode'): str,
                                          Optional('last_reset'): str,
-                                         Optional('reset_reason'): str,                                                     
+                                         Optional('reset_reason'): str,
                                          Optional('connections_established'): int,
                                          Optional('connections_dropped'): int,
                                          Optional('ttl_security'): str,
@@ -2490,14 +2490,14 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
        'show bgp instance {instance} {vrf_type} {vrf} neighbors detail',
        'show bgp instance {instance} {vrf_type} {vrf} {address_family} neighbors detail']
 
-    exclude = ['bgp_table_version', 'rd_version', 'nsr_initial_init_ver_status', 
+    exclude = ['bgp_table_version', 'rd_version', 'nsr_initial_init_ver_status',
         'nsr_initial_initsync_version', 'filter_group', 'last_ack_version', 'neighbor_version',
-        'prefix_advertised', 'prefix_withdrawn', 'update_group', 'attempted', 'keepalives', 
-        'opens', 'updates', 'connections_dropped', 'connections_established', 'foreign_port', 
+        'prefix_advertised', 'prefix_withdrawn', 'update_group', 'attempted', 'keepalives',
+        'opens', 'updates', 'connections_dropped', 'connections_established', 'foreign_port',
         'last_full_not_set_pulse_count', 'last_ka_expiry_before_reset', 'last_ka_expiry_before_second_last',
-        'last_read', 'last_read_before_reset', 'last_write', 'last_write_attempted', 
+        'last_read', 'last_read_before_reset', 'last_write', 'last_write_attempted',
         'last_write_before_reset', 'last_write_pulse_rcvd', 'last_write_pulse_rcvd_before_reset',
-        'last_write_thread_event_before_reset', 'last_write_thread_event_second_last', 
+        'last_write_thread_event_before_reset', 'last_write_thread_event_second_last',
         'last_write_written', 'second_attempted', 'second_last_write', 'second_last_write_before_attempted',
         'second_last_write_before_reset', 'second_last_write_before_written', 'second_written', 'up_time',
         'written', 'eor_status', 'local_port', 'last_reset', 'last_ka_start_before_reset', 'last_ka_start_before_second_last', 'totals',
@@ -2505,7 +2505,7 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
         'cummulative_no_by_orf_policy', 'cummulative_no_by_policy', 'cummulative_no_failed_rt_match'
         , 'cummulative_no_no_policy', 'route_refresh_request_sent']
 
-        
+
     def cli(self, vrf_type='all', vrf='all', instance='all', neighbor='', address_family='', output=None):
         assert vrf_type in ['all', 'vrf']
         assert address_family in ['', 'ipv4 unicast', 'ipv6 unicast']
@@ -2545,24 +2545,24 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
         # Init variables
         ret_dict = {}
         p1 = re.compile(r'^BGP +instance +(?P<instance_number>[0-9]+): +'
-                            '(?P<instance>[a-zA-Z0-9\-\_\']+)$')
+                            r'(?P<instance>[a-zA-Z0-9\-\_\']+)$')
         p2 =  re.compile(r'^\s*BGP +neighbor +is +(?P<neighbor>[a-zA-Z0-9\.\:]+)$')
         p2_1 =  re.compile(r'^\s*BGP +neighbor +is +(?P<neighbor>[a-zA-Z0-9\.\:]+), +vrf +(?P<vrf>\S+)$')
         p3 = re.compile(r'^Remote +AS +(?P<remote_as>[0-9]+), +local +AS +(?P<local_as_as_no>[0-9]+)(?:, +(?P<local_as_no_prepend>no-prepend))?(?:, +(?P<local_as_replace_as>replace-as))?(?:, +(?P<local_as_dual_as>dual-as))?(?:, +(?P<link_state>[a-zA-Z\s]+))?$')
         p4 = re.compile(r'^Remote *router *ID *(?P<router_id>[a-zA-Z0-9\.\:]+)$')
         p5 = re.compile(r'^\s*BGP +state += +(?P<session_state>[a-zA-Z0-9]+)'
-                            '(?:, +up +for +(?P<up_time>[\w\:]+))?$')
+                            r'(?:, +up +for +(?P<up_time>[\w\:]+))?$')
         p5_1 = re.compile(r'^\s*BGP +state += +(?P<session_state>[a-zA-Z0-9]+)(?:(?P<reason>.*))')
         p6 = re.compile(r'^NSR *State: *(?P<nsr_state>[a-zA-Z]+)$')
         p7 = re.compile(r'^Last *read *(?P<last_read>[0-9\:]+), *Last *read *before *reset *(?P<last_read_before_reset>[0-9\:]+)$')
         p8 = re.compile(r'^Hold +time +is +(?P<holdtime>[0-9]+), +keepalive'
-                            ' +interval +is +(?P<keepalive_interval>[0-9]+)'
-                            ' +seconds$')
+                            r' +interval +is +(?P<keepalive_interval>[0-9]+)'
+                            r' +seconds$')
         p9 = re.compile(r'^Configured +hold +time:'
-                            ' +(?P<holdtime>[0-9]+), +keepalive:'
-                            ' +(?P<keepalive_interval>[0-9]+), +min'
-                            ' +acceptable +hold +time:'
-                            ' +(?P<min_acceptable_hold_time>[0-9]+)$')
+                            r' +(?P<holdtime>[0-9]+), +keepalive:'
+                            r' +(?P<keepalive_interval>[0-9]+), +min'
+                            r' +acceptable +hold +time:'
+                            r' +(?P<min_acceptable_hold_time>[0-9]+)$')
         p10 = re.compile(r'^Last *write *(?P<last_write>[0-9\:]+), *attempted *(?P<attempted>[0-9]+), *written *(?P<written>[0-9]+)$')
         p11 = re.compile(r'^Second *last *write *(?P<second_last_write>[0-9\:]+), *attempted *(?P<second_attempted>[0-9]+), *written *(?P<second_written>[0-9]+)$')
         p12 = re.compile(r'^Last *write *before *reset *(?P<last_write_before_reset>[0-9\:]+), *attempted *(?P<last_write_attempted>[0-9]+), *written *(?P<last_write_written>[0-9]+)$')
@@ -2586,21 +2586,21 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
                           r'(?: \(old \+ new\))?)?(?:( +and))? *(?:(?P<rcvd>(Y|y)es|(N|n)o|received+)(?: \(old \+ new\))?)$')
         p28 = re.compile(r'^InQ *depth: *(?P<message_stats_input_queue>[0-9]+), *OutQ *depth: *(?P<message_stats_output_queue>[0-9]+)$')
         p29 = re.compile(r'^(?P<name>[a-zA-Z\s]+) *: *'
-                            '(?P<last_sent>\w+ *\d+ *[\d\:\.]+) *'
-                            '(?P<sent>[0-9]+) *'
-                            '(?P<last_received>\w+ *\d+ *[\d\:\.\-]+) *'
-                            '(?P<received>[0-9]+)$')
+                            r'(?P<last_sent>\w+ *\d+ *[\d\:\.]+) *'
+                            r'(?P<sent>[0-9]+) *'
+                            r'(?P<last_received>\w+ *\d+ *[\d\:\.\-]+) *'
+                            r'(?P<received>[0-9]+)$')
         p29_1 = re.compile(r'^(?P<name>[a-zA-Z\s]+) *: *'
-                            '(?P<last_sent>[\-]+) *'
-                            '(?P<sent>[0-9]+) *'
-                            '(?P<last_received>[\-]+) *'
-                            '(?P<received>[0-9]+)$')
+                            r'(?P<last_sent>[\-]+) *'
+                            r'(?P<sent>[0-9]+) *'
+                            r'(?P<last_received>[\-]+) *'
+                            r'(?P<received>[0-9]+)$')
         p30 = re.compile(r'^Minimum *time *between *advertisement *runs *is *(?P<minimum_time_between_adv_runs>[0-9]+) *secs$')
         p31 = re.compile(r'^Inbound *message *logging *enabled, *(?P<inbound_message>[0-9]+) *messages *buffered$')
         p32 = re.compile(r'^Outbound *message *logging *enabled, *(?P<outbound_message>[0-9]+) *messages *buffered$')
         p33 = re.compile(r'^For +Address +Family *: +(?P<address_family>[\S\s]+)$')
         p34 = re.compile(r'^BGP +neighbor +version'
-                            ' +(?P<neighbor_version>[0-9]+)$')
+                            r' +(?P<neighbor_version>[0-9]+)$')
         p35 = re.compile(r'^Update +group: +(?P<update_group>[0-9\.]+) +Filter-group: +(?P<filter_group>[0-9\.]+) +(?P<refresh_request_status>[a-zA-Z\s]+)$')
         p36 = re.compile(r'^Route *refresh *request: *received *(?P<route_refresh_request_received>[0-9]+), *sent *(?P<route_refresh_request_sent>[0-9]+)$')
         p37 = re.compile(r'^Policy *for *incoming *advertisements *is *(?P<route_map_name_in>[\w\-\_]+)$')
@@ -2612,7 +2612,7 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
         p43 = re.compile(r'^By *ORF *policy: *(?P<cummulative_no_by_orf_policy>[0-9]+), *By *policy: *(?P<cummulative_no_by_policy>[0-9]+)$')
         p44 = re.compile(r'^Prefix +advertised +(?P<prefix_advertised>[0-9]+), +suppressed +(?P<prefix_suppressed>[0-9]+), +withdrawn +(?P<prefix_withdrawn>[0-9]+)$')
         p45 = re.compile(r'^Maximum +prefixes +allowed'
-                        ' +(?P<maximum_prefix_max_prefix_no>[0-9]+)$')
+                        r' +(?P<maximum_prefix_max_prefix_no>[0-9]+)$')
         p46 = re.compile(r'^Threshold +for +(?P<warn>warning)? *message +(?P<threshold_warning_message>[0-9\%]+), +restart +interval +(?P<threshold_restart_interval>[0-9]+) +min$')
         p47 = re.compile(r'^An *EoR *(?P<eor_status>[a-z\-\s]+)$')
         p48 = re.compile(r'^Last *ack *version *(?P<last_ack_version>[0-9]+), *Last *synced *ack *version *(?P<last_synced_ack_version>[0-9]+)$')
@@ -2621,7 +2621,7 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
         p50_1 = re.compile(r'^Advertise +routes +with +local-label +via +(?P<additional_routes_local_label>[a-zA-Z\s]+)$')
         p50_2 = re.compile(r'^Send +Multicast +Attributes$')
         p51 = re.compile(r'^Connections *(?P<bgp_state>\w+) *'
-                            '(?P<num>[0-9]+)\; *dropped *(?P<connections_dropped>[0-9]+)$')
+                            r'(?P<num>[0-9]+)\; *dropped *(?P<connections_dropped>[0-9]+)$')
         p52 = re.compile(r'^Local *host: *(?P<local_host>[\w\.\:]+), *Local *port: *(?P<local_port>[0-9]+), *IF *Handle: *(?P<if_handle>[a-z0-9]+)$')
         p53 = re.compile(r'^Foreign *host: *(?P<foreign_host>[\w\.\:]+), *Foreign *port: *(?P<foreign_port>[0-9]+)$')
         p54 = re.compile(r'^Last *reset *(?P<last_reset>[0-9\:]+)$')
@@ -2630,10 +2630,10 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
         p57 = re.compile(r'^Private +AS +number +removed +from +updates +to +this +neighbor$')
         p58 = re.compile(r'^Administratively +shut +down$')
         p59 = re.compile(r'^External +BGP +neighbor +may +be +up +to +'
-                            '(?P<hop>\d+) +hops +away$')
+                            r'(?P<hop>\d+) +hops +away$')
         p60 = re.compile(r'^TCP +open +mode: +(?P<mode>[\w\s]+)$')
         p61 = re.compile(r'^My +AS +number +is +allowed +(?P<num>\d+) +'
-                            'times +in +received +updates$')
+                            r'times +in +received +updates$')
         p62 = re.compile(r'^Route\-Reflector +Client$')
         p63 = re.compile(r'^(?P<send_com>\w+) +community +attribute +sent +to +this +neighbor$')
         p64 = re.compile(r'^Inbound +soft +reconfiguration +allowed$')
@@ -2700,13 +2700,13 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
                 if neighbor not in ret_dict['instance'][instance]['vrf'][vrf]['neighbor']:
                     ret_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor] = {}
                 sub_dict = ret_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]
-                
+
                 # Default values - overwritten if configured
                 sub_dict['suppress_four_byte_as_capability'] = False
                 sub_dict['remove_private_as'] = False
                 sub_dict['shutdown'] = False
                 continue
-            
+
             # Remote AS 200, local AS 100, external link
             # Remote AS 200, local AS 100, no-prepend, replace-as, dual-as, external link
             m = p3.match(line)
@@ -2913,7 +2913,7 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
                 sub_dict['last_ka_error_before_reset'] = last_ka_error_before_reset
                 sub_dict['last_ka_error_ka_not_sent'] = last_ka_error_ka_not_sent
                 continue
-            
+
             # Last KA start before reset 00:00:00, second last 00:00:00
 
             m = p19.match(line)
@@ -2940,7 +2940,7 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
                 sub_dict['non_stop_routing'] = True
                 continue
 
-            # TCP Initial Sync :              ---                   
+            # TCP Initial Sync :              ---
 
             m = p22.match(line)
             if m:
@@ -2961,11 +2961,11 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
             # TCP Initial Sync Done :         ---
             m = p24.match(line)
             if m:
-                tcp_initial_sync_done = str(m.groupdict()['tcp_initial_sync_done']) 
+                tcp_initial_sync_done = str(m.groupdict()['tcp_initial_sync_done'])
 
                 sub_dict['tcp_initial_sync_done'] = tcp_initial_sync_done
-                continue             
-            
+                continue
+
             # Enforcing first AS is enabled
 
             m = p25.match(line)
@@ -3037,7 +3037,7 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
                 sub_dict['message_stats_output_queue'] = message_stats_output_queue
                 sub_dict['message_stats_input_queue'] = message_stats_input_queue
                 continue
-           
+
             #                    Last_Sent               Sent  Last_Rcvd               Rcvd
             #    Open:           Jun 28 18:24:28.875        1  Jun 28 18:24:28.875        1
             #    Notification:   ---                        0  ---                        0
@@ -3060,7 +3060,7 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
                     sub_dict['bgp_neighbor_counters']['messages']['sent'] = {}
                 if 'received' not in sub_dict['bgp_neighbor_counters']['messages']:
                     sub_dict['bgp_neighbor_counters']['messages']['received'] = {}
-                
+
                 # keep the name same as ops
                 m = m or m1
                 name = m.groupdict()['name'].lower() + 's'
@@ -3099,7 +3099,7 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
 
             # For Address Family: IPv4 Unicast
 
-            m = p33.match(line)            
+            m = p33.match(line)
             if m:
                 address_family = str(m.groupdict()['address_family']).lower()
                 address_family.strip()
@@ -3109,7 +3109,7 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
                 if address_family not in sub_dict['address_family']:
                     sub_dict['address_family'][address_family] = {}
                     continue
-            
+
             # BGP neighbor version 43
 
             m = p34.match(line)
@@ -3117,7 +3117,7 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
                 sub_dict['address_family'][address_family]['neighbor_version'] =\
                     int(m.groupdict()['neighbor_version'])
                 continue
-            
+
             # Update group: 0.2 Filter-group: 0.2  No Refresh request being processed
 
             m = p35.match(line)
@@ -3179,7 +3179,7 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
 
                 sub_dict['address_family'][address_family]['exact_no_prefixes_denied'] = exact_no_prefixes_denied
                 continue
-            
+
             # Cumulative no. of prefixes denied: 5.
 
             m = p41.match(line)
@@ -3187,7 +3187,7 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
                 cummulative_no_prefixes_denied = int(m.groupdict()['cummulative_no_prefixes_denied'])
 
                 sub_dict['address_family'][address_family]['cummulative_no_prefixes_denied'] = cummulative_no_prefixes_denied
-                continue            
+                continue
 
             # No policy: 5, Failed RT match: 0
 
@@ -3252,7 +3252,7 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
                 eor_status = str(m.groupdict()['eor_status'])
 
                 sub_dict['address_family'][address_family]['eor_status'] = eor_status
-                continue         
+                continue
 
             # Last ack version 43, Last synced ack version 0
 
@@ -3264,7 +3264,7 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
                 sub_dict['address_family'][address_family]['last_synced_ack_version'] = last_synced_ack_version
                 sub_dict['address_family'][address_family]['last_ack_version'] = last_ack_version
                 continue
-            
+
             # Outstanding version objects: current 0, max 1
 
             m = p49.match(line)
@@ -3385,21 +3385,21 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
             m = p56.match(line)
             if m:
                 sub_dict['description'] = m.groupdict()['description']
-                
+
             # Private AS number removed from updates to this neighbor
 
             m = p57.match(line)
             if m:
                 sub_dict['remove_private_as'] = True
                 continue
-                
+
             # Administratively shut down
 
             m = p58.match(line)
             if m:
                 sub_dict['shutdown'] = True
                 continue
-                
+
             # External BGP neighbor may be up to 222 hops away
 
             m = p59.match(line)
@@ -3608,7 +3608,7 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
 # =============================================================================
 
 class ShowBgpInstanceNeighborsReceivedRoutesSchema(MetaParser):
-    
+
     """Schema for:
         show bgp instance all all all neighbors <neighbor> received routes
         show bgp instance all vrf all neighbors <neighbor> received routes
@@ -3714,7 +3714,6 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
         ret_dict = {}
         instance = None
         address_family = None
-
         if vrf_type == 'all':
             vrf = 'default'
             af = ''
@@ -3725,11 +3724,12 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
             else:
                 af = 'vpnv4 unicast'
 
+
         # handle route table name
         routes = 'received' if 'received' in route_type else 'routes'
         p1 = re.compile(r'^BGP *instance *(?P<instance_number>[0-9]+): *(?P<instance>[a-zA-Z0-9\-\_\']+)$')
-        p15 = re.compile(r'^BGP *VRF *(?P<vrf>[a-zA-Z0-9]+), *'
-                            'state: *(?P<state>[a-zA-Z]+)$')
+        p15 = re.compile(r'^BGP *VRF *(?P<vrf>[a-zA-Z0-9-]+), *'
+                            r'state: *(?P<state>[a-zA-Z]+)$')
         p15_1 = re.compile(r'^BGP Route Distinguisher: *(?P<route_distinguisher>\S+)')
         p16 = re.compile(r'^\s*VRF *ID: *(?P<vrf_id>[a-z0-9]+)$')
         p2 = re.compile(r'^Address *Family: *(?P<address_family>[a-zA-Z0-9\s]+)$')
@@ -3744,22 +3744,22 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
         p10 = re.compile(r'^BGP *NSR/ISSU *Sync-Group *versions *(?P<nsr_issu_sync_group_versions>[0-9\/\s]+)$')
         p11 = re.compile(r'^BGP *scan *interval *(?P<scan_interval>[0-9\S]+) *secs$')
         p12 = re.compile(r'^Route +Distinguisher: *(?P<route_distinguisher>\S+) *'
-                            '(\(default +for +vrf +(?P<default_vrf>[a-zA-Z0-9]+)\))?$')
+                            r'(\(default +for +vrf +(?P<default_vrf>[a-zA-Z0-9]+)\))?$')
         p13 = re.compile(r'^(?P<status_codes>(i|s|x|S|d|h|\*|\>|\s)+)? *'
-                            '(?P<prefix>(?P<ip>[\w\.\:\/\[\]]+)\/(?P<mask>\d+))?( +'
-                            '(?P<next_hop>[\w\.\:]+) *(?P<number>[\d\.\s\{\}]+)?'
-                            '(?: *(?P<origin_codes>(i|e|\?)))?)?$')      
+                            r'(?P<prefix>(?P<ip>[\w\.\:\/\[\]]+)\/(?P<mask>\d+))?( +'
+                            r'(?P<next_hop>[\w\.\:]+) *(?P<number>[\d\.\s\{\}]+)?'
+                            r'(?: *(?P<origin_codes>(i|e|\?)))?)?$')
         p13_1 = re.compile(r'(?P<path>[\d\.\s]+)'
-                        ' *(?P<origin_codes>(i|e|\?))?$')
+                        r' *(?P<origin_codes>(i|e|\?))?$')
 
         p14 = re.compile(r'^Processed *(?P<processed_prefixes>[0-9]+) *'
-                            'prefixes, *(?P<processed_paths>[0-9]+) *paths$')
+                            r'prefixes, *(?P<processed_paths>[0-9]+) *paths$')
 
         #    Network            Next Hop            Metric LocPrf Weight Path
         #                       10.4.1.1                    100      0    i
         p17 = re.compile(r'^(?P<next_hop>[\w\.\:]+) +((?P<metric>[0-9]+))? +'
-                            '(?P<locprf>[0-9]+) +(?P<weight>[0-9]+) '
-                            '*(?P<path>[\S]+)$')
+                            r'(?P<locprf>[0-9]+) +(?P<weight>[0-9]+) '
+                            r'*(?P<path>[\S]+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -3922,22 +3922,22 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
                 try:
                     sub_dict['state'] = state
                 except Exception:
-                    pass                    
+                    pass
 
                 try:
                     sub_dict['vrf_id'] = vrf_id
                 except Exception:
-                    pass                    
+                    pass
 
                 try:
                     sub_dict['router_identifier'] = router_identifier
                 except Exception:
-                    pass                    
+                    pass
 
                 try:
                     sub_dict['route_distinguisher'] = route_distinguisher
                 except Exception:
-                    pass                    
+                    pass
 
                 try:
                     sub_dict['local_as'] = local_as
@@ -3947,7 +3947,7 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
                 try:
                     sub_dict['generic_scan_interval'] = generic_scan_interval
                 except Exception:
-                    pass                    
+                    pass
 
                 try:
                     sub_dict['non_stop_routing'] = non_stop_routing
@@ -3967,7 +3967,7 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
                 try:
                     sub_dict['rd_version'] = rd_version
                 except Exception:
-                    pass                    
+                    pass
 
                 try:
                     sub_dict['routing_table_version'] = bgp_table_version
@@ -3995,7 +3995,7 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
                     pass
 
                 continue
-                    
+
             # *>i10.9.6.0/24        10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
             # *> 2001:db8:cdc9:121::/64     2001:db8:20:1:5::5
             # *>i[T][L15][L1x1][N[c12365][b10.4.1.1][s10.16.2.2]][P[p10.4.1.1/32]]/800
@@ -4013,22 +4013,22 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
                     try:
                         sub_dict['state'] = state
                     except Exception:
-                        pass                    
+                        pass
 
                     try:
                         sub_dict['vrf_id'] = vrf_id
                     except Exception:
-                        pass                    
+                        pass
 
                     try:
                         sub_dict['router_identifier'] = router_identifier
                     except Exception:
-                        pass                    
+                        pass
 
                     try:
                         sub_dict['route_distinguisher'] = route_distinguisher
                     except Exception:
-                        pass                    
+                        pass
 
                     try:
                         sub_dict['local_as'] = local_as
@@ -4038,7 +4038,7 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
                     try:
                         sub_dict['generic_scan_interval'] = generic_scan_interval
                     except Exception:
-                        pass                    
+                        pass
 
                     try:
                         sub_dict['non_stop_routing'] = non_stop_routing
@@ -4058,7 +4058,7 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
                     try:
                         sub_dict['rd_version'] = rd_version
                     except Exception:
-                        pass                    
+                        pass
 
                     try:
                         sub_dict['routing_table_version'] = bgp_table_version
@@ -4084,7 +4084,7 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
                         sub_dict['scan_interval'] = scan_interval
                     except Exception:
                         pass
-                    
+
                 status_codes = str(m.groupdict()['status_codes'])
                 status_codes = status_codes.replace(" ", "")
                 next_hop = m.groupdict()['next_hop']
@@ -4094,11 +4094,11 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
 
                 if prefix:
                     index = 1
-                    pre_net = prefix            
+                    pre_net = prefix
                 else:
                     prefix = pre_net
                     index += 1
-                
+
                 if prefix not in sub_dict[routes]:
                     sub_dict[routes][prefix] = {}
 
@@ -4118,24 +4118,24 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
                     # metric   locprf  weight path
                     # 2219      211       0 200 33299 51178 47751 {27016}
                     m1 = re.compile(r'^(?P<metric>[0-9]+)  +'
-                                 '(?P<locprf>[0-9]+)  +'
-                                 '(?P<weight>[0-9]+) '
-                                 '(?P<path>[0-9\.\{\}\s]+)$').match(group_num)
-    
+                                 r'(?P<locprf>[0-9]+)  +'
+                                 r'(?P<weight>[0-9]+) '
+                                 r'(?P<path>[0-9\.\{\}\s]+)$').match(group_num)
+
                     # metric   locprf  weight path
                     # 2219                0 200 33299 51178 47751 {27016}
                     # locprf   weight path
                     # 211         0 200 33299 51178 47751 {27016} 65000.65000
-    
+
                     m2 = re.compile(r'^(?P<value>[0-9]+)'
-                                 '(?P<space>\s{2,20})'
-                                 '(?P<weight>[0-9]+) '
-                                 '(?P<path>[0-9\.\{\}\s]+)$').match(group_num)
-    
+                                r'(?P<space>\s{2,20})'
+                                 r'(?P<weight>[0-9]+) '
+                                 r'(?P<path>[0-9\.\{\}\s]+)$').match(group_num)
+
                     # weight path
                     # 0 200 33299 51178 47751 {27016} 65000.65000
                     m3 = re.compile(r'^(?P<weight>[0-9]+) '
-                                 '(?P<path>(([\d\.]+\s)|(\{[\d\.]+\}\s))+)$')\
+                                 r'(?P<path>(([\d\.]+\s)|(\{[\d\.]+\}\s))+)$')\
                                .match(group_num)
 
                     if m1:
@@ -4154,7 +4154,7 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
                         else:
                             sub_dict[routes][prefix]['index'][index]['locprf'] = \
                                 m2.groupdict()['value']
-    
+
                         sub_dict[routes][prefix]['index'][index]['weight'] = \
                             m2.groupdict()['weight']
                         sub_dict[routes][prefix]['index'][index]['path'] = \
@@ -4189,10 +4189,10 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
                 processed_prefixes = int(m.groupdict()['processed_prefixes'])
                 processed_paths = int(m.groupdict()['processed_paths'])
                 sub_dict['processed_prefixes'] = processed_prefixes
-                sub_dict['processed_paths'] = processed_paths                    
+                sub_dict['processed_paths'] = processed_paths
                 continue
-    
-        return ret_dict 
+
+        return ret_dict
 
 
 # ===============================================================================
@@ -4310,7 +4310,7 @@ class ShowBgpInstanceNeighborsAdvertisedRoutes(ShowBgpInstanceNeighborsAdvertise
         p2 = re.compile(r'^VRF: *(?P<vrf>[a-zA-Z0-9\_]+)$')
         p7 = re.compile(r'^Address *Family: *(?P<address_family>[a-zA-Z0-9\s]+)$')
         p3 = re.compile(r'^Route *Distinguisher: *(?P<route_distinguisher>\S+) *'
-                        '(\(default *for *vrf (?P<default_vrf>[0-9A-Z]+)\))?$')
+                        r'(\(default *for *vrf (?P<default_vrf>[0-9A-Z]+)\))?$')
         p4 = re.compile(
             r'^(?P<prefix>(?P<ip>[\w\.\:\[\]]+)/(?P<mask>\d+)) *(?P<next_hop>[\w\.\:]+) *('
             r'?P<froms>[\w\.\:]+) *'
@@ -4572,7 +4572,7 @@ class ShowBgpInstanceNeighborsRoutesSchema(MetaParser):
         }
 
 class ShowBgpInstanceNeighborsRoutes(ShowBgpInstanceNeighborsRoutesSchema, ShowBgpInstanceNeighborsReceivedRoutes):
-    
+
     """ Parser for:
         show bgp instance all all all neighbors <WORD> routes
         show bgp instance all vrf all neighbors <WORD> routes
@@ -4643,12 +4643,12 @@ class ShowBgpInstanceSummarySchema(MetaParser):
                                         'sendtblver': int,
                                         'standbyver': int}}}},
                         Optional('neighbor'):
-                            {Any():        
+                            {Any():
                                 {'remote_as': Or(int, str),
                                 'address_family':
                                     {Any():
                                         {'tbl_ver': int,
-                                        'spk': int,   
+                                        'spk': int,
                                         'msg_rcvd': int,
                                         'msg_sent': int,
                                         'input_queue': int,
@@ -4710,53 +4710,53 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
         else:
             out = output
         p1 = re.compile(r'^\s*BGP *instance *(?P<instance_number>[0-9]+):'
-                        ' *(?P<instance>[a-zA-Z0-9\-\_\']+)$')
+                        r' *(?P<instance>[a-zA-Z0-9\-\_\']+)$')
         p2 = re.compile(r'^\s*VRF: *(?P<vrf>[\S]+)$')
         p3 = re.compile(r'^\s*Address *Family:'
-                        ' *(?P<address_family>[\S\s]+)$')
+                        r' *(?P<address_family>[\S\s]+)$')
         p4 = re.compile(r'^\s*BGP *VRF *(?P<bgp_vrf>[a-zA-Z0-9]+), *state:'
-                        ' *(?P<vrf_state>[a-zA-Z]+)$')
+                        r' *(?P<vrf_state>[a-zA-Z]+)$')
         p5 = re.compile(r'^\s*BGP *Route *Distinguisher:'
-                        ' *(?P<route_distinguisher>\S+)$')
+                        r' *(?P<route_distinguisher>\S+)$')
         p6 = re.compile(r'^\s*VRF *ID: *(?P<vrf_id>[a-z0-9]+)$')
         p7 = re.compile(r'^\s*BGP *router *identifier'
-                        ' *(?P<router_id>[0-9\.]+)\, *local *AS *number'
-                        ' *(?P<local_as>[0-9\.]+)$')
+                        r' *(?P<router_id>[0-9\.]+)\, *local *AS *number'
+                        r' *(?P<local_as>[0-9\.]+)$')
         p8 = re.compile(r'^\s*BGP *generic *scan *interval'
-                        ' *(?P<generic_scan_interval>[0-9]+) *secs$')
+                        r' *(?P<generic_scan_interval>[0-9]+) *secs$')
         p9 = re.compile(r'^\s*Non-stop *routing *is'
-                        ' *(?P<non_stop_routing>[A-Za-z]+)$')
+                        r' *(?P<non_stop_routing>[A-Za-z]+)$')
         p10 = re.compile(r'^\s*BGP *table *state:'
-                         ' *(?P<table_state>[a-zA-Z]+)$')
+                         r' *(?P<table_state>[a-zA-Z]+)$')
         p11 = re.compile(r'^\s*Table *ID: *(?P<table_id>[a-z0-9]+)'
-                         '(?: *RD *version: (?P<rd_version>[0-9]+))?$')
+                         r'(?: *RD *version: (?P<rd_version>[0-9]+))?$')
         p12 = re.compile(r'^\s*BGP *main *routing *table *version'
-                         ' *(?P<bgp_table_version>[0-9]+)$')
+                         r' *(?P<bgp_table_version>[0-9]+)$')
         p13 = re.compile(r'^\s*BGP *NSR *Initial *initsync *version'
-                         ' *(?P<nsr_initial_initsync_version>[0-9]+)'
-                         ' *\((?P<nsr_initial_init_ver_status>[a-zA-Z]+)\)$')
+                         r' *(?P<nsr_initial_initsync_version>[0-9]+)'
+                         r' *\((?P<nsr_initial_init_ver_status>[a-zA-Z]+)\)$')
         p14 = re.compile(r'^\s*BGP *NSR/ISSU *Sync-Group *versions'
-                         ' *(?P<nsr_issu_sync_group_versions>[0-9\/]+)$')
+                         r' *(?P<nsr_issu_sync_group_versions>[0-9\/]+)$')
         p15 = re.compile(
             r'^\s*BGP *scan *interval *(?P<scan_interval>[0-9]+) *secs$')
         p16 = re.compile(
             r'^\s*BGP *is *operating *in *(?P<operation_mode>[a-zA-Z]+) *mode.$')
         p17 = re.compile(r'^\s*(?P<process>[a-zA-Z]+) *(?P<rcvtblver>[0-9]+)'
-                         ' *(?P<brib_rib>[0-9]+) *(?P<labelver>[0-9]+)'
-                         ' *(?P<importver>[0-9]+) *(?P<sendtblver>[0-9]+)'
-                         ' *(?P<standbyver>[0-9]+)$')
+                         r' *(?P<brib_rib>[0-9]+) *(?P<labelver>[0-9]+)'
+                         r' *(?P<importver>[0-9]+) *(?P<sendtblver>[0-9]+)'
+                         r' *(?P<standbyver>[0-9]+)$')
         p17_1 = re.compile(r'^\s*(?P<neighbor>[a-zA-Z0-9\.\:]+)$')
         p17_2 = re.compile(r'^\s*(?P<spk>[0-9]+)\s+(?P<remote_as>[0-9\.]+)'
-                           '\s+(?P<msg_rcvd>[0-9]+)\s+(?P<msg_sent>[0-9]+)'
-                           '\s+(?P<tbl_ver>[0-9]+)\s+(?P<input_queue>[0-9]+)'
-                           '\s+(?P<output_queue>[0-9]+)\s+(?P<up_down>[a-z0-9\:]+)'
-                           '\s+(?P<state_pfxrcd>.+)$')
+                           r'\s+(?P<msg_rcvd>[0-9]+)\s+(?P<msg_sent>[0-9]+)'
+                           r'\s+(?P<tbl_ver>[0-9]+)\s+(?P<input_queue>[0-9]+)'
+                           r'\s+(?P<output_queue>[0-9]+)\s+(?P<up_down>[a-z0-9\:]+)'
+                           r'\s+(?P<state_pfxrcd>.+)$')
         p17_3 = re.compile(r'^\s*(?P<neighbor>[a-zA-Z0-9\.\:]+) +(?P<spk>[0-9]+)'
-                           ' +(?P<remote_as>[0-9\.]+) +(?P<msg_rcvd>[0-9]+)'
-                           ' +(?P<msg_sent>[0-9]+)'
-                           ' +(?P<tbl_ver>[0-9]+) +(?P<input_queue>[0-9]+)'
-                           ' +(?P<output_queue>[0-9]+) +(?P<up_down>[a-z0-9\:]+)'
-                           ' +(?P<state_pfxrcd>.+)$')
+                           r' +(?P<remote_as>[0-9\.]+) +(?P<msg_rcvd>[0-9]+)'
+                           r' +(?P<msg_sent>[0-9]+)'
+                           r' +(?P<tbl_ver>[0-9]+) +(?P<input_queue>[0-9]+)'
+                           r' +(?P<output_queue>[0-9]+) +(?P<up_down>[a-z0-9\:]+)'
+                           r' +(?P<state_pfxrcd>.+)$')
 
         # Init vars
         bgp_instance_summary_dict = {}
@@ -4780,7 +4780,7 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
         for line in out.splitlines():
             line = line.rstrip()
 
-            # BGP instance 0: 'default' 
+            # BGP instance 0: 'default'
 
             m = p1.match(line)
             if m:
@@ -4817,7 +4817,7 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
                     if address_family not in bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family']:
                         bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family'][address_family] = {}
                         continue
-            
+
             # Address Family: VPNv4 Unicast
 
             m = p3.match(line)
@@ -4855,14 +4855,14 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
                 route_distinguisher = str(m.groupdict()['route_distinguisher'])
                 bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family'][address_family]['route_distinguisher'] = route_distinguisher
                 continue
-            
+
             # VRF ID: 0x60000001
 
             m = p6.match(line)
             if m:
                 vrf_id = str(m.groupdict()['vrf_id'])
                 bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family'][address_family]['vrf_id'] = vrf_id
-                continue 
+                continue
 
             # BGP router identifier 10.229.11.11, local AS number 100
 
@@ -4920,7 +4920,7 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
             m = p12.match(line)
             if m:
                 bgp_table_version = int(m.groupdict()['bgp_table_version'])
-                bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family'][address_family]['bgp_table_version'] =  bgp_table_version       
+                bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family'][address_family]['bgp_table_version'] =  bgp_table_version
                 continue
 
             # BGP NSR Initial initsync version 11 (Reached)
@@ -4973,7 +4973,7 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
                 bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family'][address_family]['process'][process]['importver'] =  int(m.groupdict()['importver'])
                 bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family'][address_family]['process'][process]['sendtblver'] =  int(m.groupdict()['sendtblver'])
                 bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family'][address_family]['process'][process]['standbyver'] =  int(m.groupdict()['standbyver'])
-                continue 
+                continue
 
             # Neighbor        Spk    AS MsgRcvd MsgSent   TblVer  InQ OutQ  Up/Down  St/PfxRcd
             # 2001:db8:20:1:5::5
@@ -4987,7 +4987,7 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
                 if neighbor not in bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor']:
                     bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor] = {}
                     continue
-            
+
             # Neighbor        Spk    AS         msg_rcvd msg_sent   TblVer  InQ OutQ  Up/Down  St/PfxRcd
             #                   3   200             0       0        0    0    0 00:00:00 Idle
             #                   0   200             0       0        0    0    0 00:00:00 Idle (Admin)!
@@ -5005,10 +5005,10 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
                     bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['remote_as'] = int(m.groupdict()['remote_as'])
                 except:
                     bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['remote_as'] = m.groupdict()['remote_as']
-                
+
                 if route_distinguisher is not None:
                         bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['address_family'][address_family]['route_distinguisher'] =  route_distinguisher
-                bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['address_family'][address_family]['spk'] = int(m.groupdict()['spk'])                
+                bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['address_family'][address_family]['spk'] = int(m.groupdict()['spk'])
                 bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['address_family'][address_family]['msg_rcvd'] = int(m.groupdict()['msg_rcvd'])
                 bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['address_family'][address_family]['msg_sent'] = int(m.groupdict()['msg_sent'])
                 bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['address_family'][address_family]['tbl_ver'] = int(m.groupdict()['tbl_ver'])
@@ -5042,7 +5042,7 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
                     bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['remote_as'] = m.groupdict()['remote_as']
                 if route_distinguisher is not None:
                         bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['address_family'][address_family]['route_distinguisher'] =  route_distinguisher
-                bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['address_family'][address_family]['spk'] = int(m.groupdict()['spk'])                
+                bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['address_family'][address_family]['spk'] = int(m.groupdict()['spk'])
                 bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['address_family'][address_family]['msg_rcvd'] = int(m.groupdict()['msg_rcvd'])
                 bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['address_family'][address_family]['msg_sent'] = int(m.groupdict()['msg_sent'])
                 bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['address_family'][address_family]['tbl_ver'] = int(m.groupdict()['tbl_ver'])
@@ -5051,7 +5051,7 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
                 bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['address_family'][address_family]['up_down'] =  str(m.groupdict()['up_down'])
                 bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['address_family'][address_family]['state_pfxrcd'] = str(m.groupdict()['state_pfxrcd'])
                 continue
-                
+
         return bgp_instance_summary_dict
 
 
@@ -5101,8 +5101,8 @@ class ShowBgpInstanceAllAllSchema(MetaParser):
                                  Optional('route_distinguisher'): str,
                                  Optional('prefix'):
                                     {Any():
-                                        {Optional('index'): 
-                                            {Any(): 
+                                        {Optional('index'):
+                                            {Any():
                                                 {
                                                 Optional('next_hop'): str,
                                                 Optional('status_codes'): str,
@@ -5242,7 +5242,7 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
         p13 = re.compile(r'^\s*BGP +NSR/ISSU +Sync-Group +versions'
                          r' +(?P<nsr_issu_sync_group_versions>[0-9\/\s]+)$')
 
-        # BGP scan interval 60 secs 
+        # BGP scan interval 60 secs
         p14 = re.compile(r'^\s*BGP +scan +interval +(?P<scan_interval>[0-9]+)'
                          r' +secs$')
 
@@ -5365,18 +5365,18 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
             if m:
                 group = m.groupdict()
                 af_dict['router_identifier'] = group['router_identifier']
-              
+
                 try:
                     af_dict['local_as']= int(group['local_as'])
                 except:
                     af_dict['local_as']= group['local_as']
-                continue 
+                continue
 
-            # BGP generic scan interval 60 secs 
+            # BGP generic scan interval 60 secs
             m = p7.match(line)
             if m:
                 af_dict['generic_scan_interval'] = m.groupdict()['interval']
-                continue          
+                continue
 
             # Non-stop routing is enabled
             m = p8.match(line)
@@ -5510,7 +5510,7 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
                 pfx_dict['status_codes'] = group['status_codes'].strip().replace(" ", "")
                 if group['origin_codes']:
                     pfx_dict['origin_codes'] = group['origin_codes']
-                
+
                 # Parse and set the numbers
                 group_num = group['number']
                 m1 = re.compile(r'^(?P<metric>[0-9]+)  +(?P<locprf>[0-9]+)  +(?P<weight>[0-9]+) (?P<path>[0-9\.\{\}\s]+)$').match(group_num)
@@ -5556,7 +5556,7 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
                 af_dict['processed_paths'] = int(group['processed_paths'])
                 continue
 
-        return parsed_dict 
+        return parsed_dict
 
 
 ################################################################################
@@ -5594,12 +5594,12 @@ class ShowBgpSessions(ShowBgpSessionsSchema):
     # TODO schema
     cli_command = 'show bgp sessions'
     def cli(self, output=None):
-        
+
         if output is None:
             out = self.device.execute(self.cli_command)
         else:
             out = output
-        
+
         ret_dict = {}
         instance = 'default'
 
@@ -5607,8 +5607,8 @@ class ShowBgpSessions(ShowBgpSessionsSchema):
         # 2001:1:1:1::1   default                 0 65000     0     0  Established  None
         # 10.1.7.212     default                 0 10396     0     0  Established  NSR Ready
         p1 = re.compile(r'^(?P<neighbor>\S+) +(?P<vrf>\S+) +(?P<spk>\d+) +'
-            '(?P<as_number>\d+) +(?P<in_q>\d+) +(?P<out_q>\d+) +'
-            '(?P<nbr_state>\w+) +(?P<nsr_state>[\w\s]+)$')
+            r'(?P<as_number>\d+) +(?P<in_q>\d+) +(?P<out_q>\d+) +'
+            r'(?P<nbr_state>\w+) +(?P<nsr_state>[\w\s]+)$')
 
         # 2001:db8:4401:4453::6f9
         p1_1 = re.compile(r'^(?P<neighbor>[\w\d:]+)$')
@@ -5689,7 +5689,7 @@ class ShowBgpSessions(ShowBgpSessionsSchema):
         return ret_dict
 
 # ===========================================
-# Parser for 
+# Parser for
 #   * 'show bgp instance {instance} sessions'
 # ===========================================
 
@@ -5703,7 +5703,7 @@ class ShowBgpInstanceSessions(ShowBgpSessions):
         return super().cli(output=out)
 
 # ===========================================
-# Parser for 
+# Parser for
 #   * 'show bgp instance all sessions'
 # ===========================================
 
@@ -5725,7 +5725,7 @@ class ShowBgpVrfDbVrfAllSchema(MetaParser):
     '''
 
     schema = {
-        'vrf': 
+        'vrf':
             {Any():
                 {'id': str,
                 'rd': str,
@@ -5757,7 +5757,7 @@ class ShowBgpVrfDbVrfAll(ShowBgpVrfDbVrfAllSchema):
         vrf_dict = {}
 
         # VRF                              ID          RD                REF AFs
-        # default                          0x60000000  0:0:0             8   v4u, Vv4u, v6u, 
+        # default                          0x60000000  0:0:0             8   v4u, Vv4u, v6u,
         # NOVI-TST                         0x60000001  172.16.2.88:0     4   v4u
         # test_ipv6_overlay                0x0         0:0:0             2   v4u, v6u
         # BTV-nPVR-MULTICAST-IAAS          0x60000004  172.16.2.88:1     4   v4u
@@ -5767,7 +5767,7 @@ class ShowBgpVrfDbVrfAll(ShowBgpVrfDbVrfAllSchema):
         # VPWS:10293                       -           172.16.2.88:10293 2   L2evpn
         # EVPN-Multicast-BTV               -           172.16.2.88:1000  2   L2evpn
         p1 = re.compile(r'^(?P<vrf>(\S+)) +(?P<id>([x0-9\-]+)) +(?P<rd>(\S+))'
-                         ' +(?P<ref>(\d+)) +(?P<afs>(.*))$')
+                         r' +(?P<ref>(\d+)) +(?P<afs>(.*))$')
 
         #                                                                  Vv6u, L2evpn
         p2 = re.compile(r'^(?P<item>([a-zA-Z0-9\,\s]+))$')
@@ -5776,7 +5776,7 @@ class ShowBgpVrfDbVrfAll(ShowBgpVrfDbVrfAllSchema):
             line = line.strip()
 
             # VRF                              ID          RD                REF AFs
-            # default                          0x60000000  0:0:0             8   v4u, Vv4u, v6u, 
+            # default                          0x60000000  0:0:0             8   v4u, Vv4u, v6u,
             # NOVI-TST                         0x60000001  172.16.2.88:0     4   v4u
             # test_ipv6_overlay                0x0         0:0:0             2   v4u, v6u
             # BTV-nPVR-MULTICAST-IAAS          0x60000004  172.16.2.88:1     4   v4u
@@ -5819,10 +5819,10 @@ class ShowBgpL2vpnEvpnSchema(MetaParser):
     """
 
     schema = {
-        'vrf': 
-            {Any(): 
-                {'address_family': 
-                    {Any(): 
+        'vrf':
+            {Any():
+                {'address_family':
+                    {Any():
                         {
                          Optional('router_identifier'): str,
                          Optional('local_as'): int,
@@ -5849,9 +5849,9 @@ class ShowBgpL2vpnEvpnSchema(MetaParser):
                          Optional('processed_prefix'): int,
                          Optional('processed_paths'): int,
                          Optional('prefixes'):
-                            {Any(): 
-                                {'index': 
-                                    {Any(): 
+                            {Any():
+                                {'index':
+                                    {Any():
                                         {Optional('next_hop'): str,
                                          Optional('status_codes'): str,
                                          Optional('path_type'): str,
@@ -5869,7 +5869,7 @@ class ShowBgpL2vpnEvpnSchema(MetaParser):
                 },
             },
         }
-        
+
 
 # ================================
 # Parser for 'show bgp l2vpn evpn'
@@ -5908,77 +5908,77 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
 
         p = re.compile(r'^\s*Network +Next Hop +Metric +LocPrf +Weight Path$')
         p1 = re.compile(r'^\s*BGP +routing +table +information +for +VRF'
-                            ' +(?P<vrf_name>\S+), +address +family'
-                            ' +(?P<address_family>[\w\s\-\_]+)$')
+                            r' +(?P<vrf_name>\S+), +address +family'
+                            r' +(?P<address_family>[\w\s\-\_]+)$')
         p2 = re.compile(r'^\s*BGP +table +version +is'
-                            ' +(?P<bgp_table_version>[0-9]+), +(L|l)ocal'
-                            ' +(R|r)outer +ID +is +(?P<local_router_id>[0-9\.]+)$')
+                            r' +(?P<bgp_table_version>[0-9]+), +(L|l)ocal'
+                            r' +(R|r)outer +ID +is +(?P<local_router_id>[0-9\.]+)$')
         p3_1 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)?'
-                            '(?P<path_type>(i|e|c|l|a|r|I))?'
-                            '(?P<prefix>[\w\.\:\/\[\]\,]{3,})'
-                            '(?: *(?P<next_hop>[\w\.\:\/\[\]\,]+))?$')
+                            r'(?P<path_type>(i|e|c|l|a|r|I))?'
+                            r'(?P<prefix>[\w\.\:\/\[\]\,]{3,})'
+                            r'(?: *(?P<next_hop>[\w\.\:\/\[\]\,]+))?$')
         p3_1_1 = re.compile(r'^(?P<status_codes>(s|x|S|d|h|\*|\>)+)(?P<path_type>'
-                            '(i|e|c|l|a|r|I))(?P<prefix>[\w\.\/]+) '
-                            '+(?P<next_hop>[\w\.\/]+) +'
-                            '(?P<metric>\d+) +(?P<localprf>\d+) '
-                            '+(?P<weight>\d+) +(?P<path>[\d ]+) +'
-                            '(?P<origin_codes>(i|e|\?|\||&))$')
+                            r'(i|e|c|l|a|r|I))(?P<prefix>[\w\.\/]+) '
+                            r'+(?P<next_hop>[\w\.\/]+) +'
+                            r'(?P<metric>\d+) +(?P<localprf>\d+) '
+                            r'+(?P<weight>\d+) +(?P<path>[\d ]+) +'
+                            r'(?P<origin_codes>(i|e|\?|\||&))$')
         p3_1_2 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)'
-                            ' (?P<path_type>(i|e|c|l|a|r|I)) '
-                            '(?: *(?P<next_hop>[\w\.\:\/\[\]\,]+))?$')
+                            r' (?P<path_type>(i|e|c|l|a|r|I)) '
+                            r'(?: *(?P<next_hop>[\w\.\:\/\[\]\,]+))?$')
         p3_2 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)'
-                            '(?P<path_type>(i|e|c|l|a|r|I))'
-                            '(?P<prefix>[\w\.\:\/\[\]\,]+)'
-                            ' +(?P<next_hop>[\w\.\:]+)'
-                            ' +(?P<numbers>[\w\s\(\)\{\}]+)'
-                            ' +(?P<origin_codes>(i|e|\?|\&|\|))$')
+                            r'(?P<path_type>(i|e|c|l|a|r|I))'
+                            r'(?P<prefix>[\w\.\:\/\[\]\,]+)'
+                            r' +(?P<next_hop>[\w\.\:]+)'
+                            r' +(?P<numbers>[\w\s\(\)\{\}]+)'
+                            r' +(?P<origin_codes>(i|e|\?|\&|\|))$')
         p3_2_1 = re.compile(r'^\s*(?P<status_codes>(\*\>|s|x|S|d|h|\*|\>|\s)+)'
-                            '(?P<path_type>(i|e|c|l|a|r|I))?'
-                            '( *(?P<origin_codes>(i|e|\?|\&|\|)+))'
-                            '(?P<prefix>[\w\.\:\/\[\]\,]+)'
-                            ' +(?P<next_hop>[\w\.\:]+)'
-                            ' +(?P<numbers>[\w\s\(\)\{\}\?]+)$')
+                            r'(?P<path_type>(i|e|c|l|a|r|I))?'
+                            r'( *(?P<origin_codes>(i|e|\?|\&|\|)+))'
+                            r'(?P<prefix>[\w\.\:\/\[\]\,]+)'
+                            r' +(?P<next_hop>[\w\.\:]+)'
+                            r' +(?P<numbers>[\w\s\(\)\{\}\?]+)$')
         p3_3 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)?'
-                            '(?P<path_type>(i|e|c|l|a|r|I))?'
-                            ' *(?P<next_hop>[\w\.\:]{8,})'
-                            '(?: +(?P<numbers>[\w\s\(\)\{\}]+))?'
-                            ' +(?P<origin_codes>(i|e|\?|\|))$')
+                            r'(?P<path_type>(i|e|c|l|a|r|I))?'
+                            r' *(?P<next_hop>[\w\.\:]{8,})'
+                            r'(?: +(?P<numbers>[\w\s\(\)\{\}]+))?'
+                            r' +(?P<origin_codes>(i|e|\?|\|))$')
         p3_3_1 = re.compile(r'^\s*(?P<status_codes>(\*\>|s|x|S|d|h|\*|\>|\s)+)'
-                            '(?P<path_type>(i|e|c|l|a|r|I))?'
-                            '( *(?P<origin_codes>(i|e|\?|\&|\|)+))'
-                            ' +(?P<next_hop>[\w\.\:]+)'
-                            ' +(?P<numbers>[\w\s\(\)\{\}\?]+)$')
+                            r'(?P<path_type>(i|e|c|l|a|r|I))?'
+                            r'( *(?P<origin_codes>(i|e|\?|\&|\|)+))'
+                            r' +(?P<next_hop>[\w\.\:]+)'
+                            r' +(?P<numbers>[\w\s\(\)\{\}\?]+)$')
         p3_3_2 = re.compile(r'^\s*(?P<numbers>[0-9\s\(\)\{\}]+)? +'
-                            '(?P<origin_codes>(i|e|\?|\|))$')
+                            r'(?P<origin_codes>(i|e|\?|\|))$')
         p3_4 = re.compile(r'^\s*(?P<next_hop>[a-zA-Z0-9\.\:\/\[\]\,]+)$')
         p4 = re.compile(r'^\s*Route +Distinguisher *: +(?P<route_distinguisher>(\S+))'
-                            '(?: +\(((VRF +(?P<default_vrf>\S+))|'
-                            '((?P<default_vrf1>\S+)VNI +(?P<vni>\d+)'
-                            '|(default +for +vrf +(?P<default_vrf2>\S+))))\))?$')
-        
+                            r'(?: +\(((VRF +(?P<default_vrf>\S+))|'
+                            r'((?P<default_vrf1>\S+)VNI +(?P<vni>\d+)'
+                            r'|(default +for +vrf +(?P<default_vrf2>\S+))))\))?$')
+
         p5 = re.compile(r'^\s*BGP *router *identifier *(?P<router_identifier>[0-9\.]+)'
-                         ', *local *AS *number *(?P<local_as>[0-9]+)$')
+                         r', *local *AS *number *(?P<local_as>[0-9]+)$')
         p6 =  re.compile(r'^\s*BGP *generic *scan *interval *'
-                            '(?P<generic_scan_interval>[0-9]+) *secs$')
+                            r'(?P<generic_scan_interval>[0-9]+) *secs$')
         p7 = re.compile(r'^\s*Non-stop *routing *is'
-                        ' *(?P<non_stop_routing>[A-Za-z]+)$')
+                        r' *(?P<non_stop_routing>[A-Za-z]+)$')
         p8 = re.compile(r'^\s*BGP *table *state: *(?P<table_state>[a-zA-Z]+)$')
         p9 = re.compile(r'^\s*Table *ID: *(?P<table_id>[a-z0-9]+)'
-                         ' *RD *version: (?P<rd_version>[0-9]+)$')
+                         r' *RD *version: (?P<rd_version>[0-9]+)$')
         p10 = re.compile(r'^\s*BGP *main *routing *table *version'
-                         ' *(?P<bgp_table_version>[0-9]+)$')
+                         r' *(?P<bgp_table_version>[0-9]+)$')
         p11 = re.compile(r'^\s*BGP *NSR *Initial *initsync *version *'
-                            '(?P<nsr_initial_initsync_version>[0-9]+)'
-                          ' *\((?P<nsr_initial_init_ver_status>[a-zA-Z]+)\)$')
+                            r'(?P<nsr_initial_initsync_version>[0-9]+)'
+                          r' *\((?P<nsr_initial_init_ver_status>[a-zA-Z]+)\)$')
         p12 = re.compile(r'^\s*BGP *NSR/ISSU *Sync-Group *versions *'
-                            '(?P<nsr_issu_sync_group_versions>[0-9\/\s]+)$')
+                            r'(?P<nsr_issu_sync_group_versions>[0-9\/\s]+)$')
         p13 = re.compile(r'^\s*BGP *scan *interval *(?P<scan_interval>[0-9\s]+) *secs$')
         p14 = re.compile(r'^(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)'
-                            '(?P<path_type>(i|e|c|l|a|r|I))? *(?P<prefix>[\w\.\/\[\]\,]+)$')
+                            r'(?P<path_type>(i|e|c|l|a|r|I))? *(?P<prefix>[\w\.\/\[\]\,]+)$')
         p15 = re.compile(r'^(?P<next_hop>[\w\.\:]+) *(?P<number>[\d\s\{\}]+)?'
-                            '(?: *(?P<origin_codes>(i|e|\?)))$')
+                            r'(?: *(?P<origin_codes>(i|e|\?)))$')
         p16 = re.compile(r'^\s*Processed +(?P<processed_prefix>[0-9]+) +prefixes, +'
-                            '(?P<processed_paths>[0-9]+) +paths$')
+                            r'(?P<processed_paths>[0-9]+) +paths$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -6051,7 +6051,7 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                     index_dict.update({'status_codes': status_codes})
                     index_dict.update({'path_type': path_type})
                 continue
-            
+
             # *> [3][0][32][192.168.19.35]/70
             m = p14.match(line)
             if m:
@@ -6062,12 +6062,12 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                 # Set af_dict
                 af_dict = parsed_dict.setdefault('vrf', {}).setdefault(vrf_name, {})\
                         .setdefault('address_family', {}).setdefault(address_family, {})
-                
+
                 prefix_dict = af_dict.setdefault('prefixes', {}). \
                                 setdefault(prefix, {}). \
                                 setdefault('index', {}). \
                                 setdefault(current_index, {})
-                
+
                 prefix_dict.update({'status_codes': status_codes})
                 prefix_index_dict.update({prefix: current_index})
                 continue
@@ -6076,7 +6076,7 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
             # Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist
             # Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath
             # Network            Next Hop         Metric   LocPrf   Weight Path
-            
+
             # *>i[2]:[77][7,0][10.69.9.9,1,151587081][10.135.1.1,22][10.106.101.1,10.76.1.30]/616
             # *>i2001:db8:aaaa:1::/113       ::ffff:10.106.101.1
             m = p3_1.match(line)
@@ -6096,7 +6096,7 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                 prefix = m.groupdict()['prefix']
                 if status_codes == None or path_type == None or prefix == None:
                     continue
-            
+
                 # Set keys
                 index_dict = af_dict.setdefault('prefixes', {}).setdefault(prefix, {})\
                   .setdefault('index', {}).setdefault(index, {})
@@ -6112,9 +6112,9 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                     index_dict.update({'weight': int(m.groupdict()['weight'])})
                 if 'path' in m.groupdict():
                     index_dict.update({'path': m.groupdict()['path'].strip()})
-                if 'origin_codes' in m.groupdict():                
+                if 'origin_codes' in m.groupdict():
                     index_dict.update({'origin_codes': m.groupdict()['origin_codes']})
-                
+
                 # Check if aggregate_address_ipv4_address
                 if path_type and 'a' in path_type:
                     address, mask = prefix.split("/")
@@ -6151,7 +6151,7 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                 # Set keys
                 index_dict = af_dict.setdefault('prefixes', {}).setdefault(prefix, {})\
                   .setdefault('index', {}).setdefault(index, {})
-                
+
                 index_dict.update({'next_hop': next_hop})
                 if origin_codes:
                     index_dict.update({'origin_codes': origin_codes})
@@ -6169,28 +6169,28 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
 
                 # Parse numbers
                 numbers = m.groupdict()['numbers']
-                
+
                 # Metric     LocPrf     Weight Path
                 #    4444       100          0  10 3 10 20 30 40 50 60 70 80 90
                 m1 = re.compile(r'^(?P<metric>[0-9]+)'
-                                 '(?P<space1>\s{5,10})'
-                                 '(?P<localprf>[0-9]+)'
-                                 '(?P<space2>\s{5,10})'
-                                 '(?P<weight>[0-9]+)'
-                                 '(?: *(?P<path>[0-9\{\}\s]+))?$').match(numbers)
+                                 r'(?P<space1>\s{5,10})'
+                                 r'(?P<localprf>[0-9]+)'
+                                 r'(?P<space2>\s{5,10})'
+                                 r'(?P<weight>[0-9]+)'
+                                 r'(?: *(?P<path>[0-9\{\}\s]+))?$').match(numbers)
 
                 #    100        ---          0 10 20 30 40 50 60 70 80 90
                 #    ---        100          0 10 20 30 40 50 60 70 80 90
                 #    100        ---      32788 ---
-                #    ---        100      32788 --- 
+                #    ---        100      32788 ---
                 m2 = re.compile(r'^(?P<value>[0-9]+)'
-                                 '(?P<space>\s{2,21})'
-                                 '(?P<weight>[0-9]+)'
-                                 '(?: *(?P<path>[0-9\{\}\s]+))?$').match(numbers)
+                                 r'(?P<space>\s{2,21})'
+                                 r'(?P<weight>[0-9]+)'
+                                 r'(?: *(?P<path>[0-9\{\}\s]+))?$').match(numbers)
 
                 #    ---        ---      32788 200 33299 51178 47751 {27016}
                 m3 = re.compile(r'^(?P<weight>[0-9]+)'
-                                 ' +(?P<path>[0-9\{\}\s]+)$').match(numbers)
+                                 r' +(?P<path>[0-9\{\}\s]+)$').match(numbers)
 
                 if m1:
                     index_dict.update({'metric': int(m1.groupdict()['metric'])})
@@ -6219,28 +6219,28 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
             if m:
                 # Parse numbers
                 numbers = m.groupdict()['numbers']
-                
+
                 # Metric     LocPrf     Weight Path
                 #    4444       100          0  10 3 10 20 30 40 50 60 70 80 90
                 m1 = re.compile(r'^(?P<metric>[0-9]+)'
-                                 '(?P<space1>\s{5,10})'
-                                 '(?P<localprf>[0-9]+)'
-                                 '(?P<space2>\s{5,10})'
-                                 '(?P<weight>[0-9]+)'
-                                 '(?: *(?P<path>[0-9\{\}\s]+))?$').match(numbers)
+                                 r'(?P<space1>\s{5,10})'
+                                 r'(?P<localprf>[0-9]+)'
+                                 r'(?P<space2>\s{5,10})'
+                                 r'(?P<weight>[0-9]+)'
+                                 r'(?: *(?P<path>[0-9\{\}\s]+))?$').match(numbers)
 
                 #    100        ---          0 10 20 30 40 50 60 70 80 90
                 #    ---        100          0 10 20 30 40 50 60 70 80 90
                 #    100        ---      32788 ---
-                #    ---        100      32788 --- 
+                #    ---        100      32788 ---
                 m2 = re.compile(r'^(?P<value>[0-9]+)'
-                                 '(?P<space>\s{2,21})'
-                                 '(?P<weight>[0-9]+)'
-                                 '(?: *(?P<path>[0-9\{\}\s]+))?$').match(numbers)
+                                 r'(?P<space>\s{2,21})'
+                                 r'(?P<weight>[0-9]+)'
+                                 r'(?: *(?P<path>[0-9\{\}\s]+))?$').match(numbers)
 
                 #    ---        ---      32788 200 33299 51178 47751 {27016}
                 m3 = re.compile(r'^(?P<weight>[0-9]+)'
-                                 ' +(?P<path>[0-9\{\}\s]+)$').match(numbers)
+                                 r' +(?P<path>[0-9\{\}\s]+)$').match(numbers)
 
                 if m1:
                     index_dict.update({'metric': int(m1.groupdict()['metric'])})
@@ -6273,7 +6273,7 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
             if m:
                 route_distinguisher = m.groupdict()['route_distinguisher']
                 new_address_family = original_address_family + ' RD ' + route_distinguisher
-                
+
                 # Set keys
                 naf_dict = parsed_dict.setdefault('vrf', {}).setdefault(vrf_name, {})\
                   .setdefault('address_family', {}).setdefault(new_address_family, {})
@@ -6284,7 +6284,7 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                 if m.groupdict()['default_vrf']:
                     naf_dict.update({'default_vrf': m.groupdict()['default_vrf']})
                 elif m.groupdict()['default_vrf1']:
-                    naf_dict.update({'default_vrf': m.groupdict()['default_vrf1']})                            
+                    naf_dict.update({'default_vrf': m.groupdict()['default_vrf1']})
 
                 # Reset address_family key and af_dict for use in other regex
                 address_family = new_address_family
@@ -6313,7 +6313,7 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
             if m:
                 # New prefix, reset index count
                 index = 1
-                
+
                 # Get keys
                 status_codes = m.groupdict()['status_codes']
                 path_type = m.groupdict()['path_type']
@@ -6331,28 +6331,28 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
 
                 # Parse numbers
                 numbers = m.groupdict()['numbers']
-                
+
                 # Metric     LocPrf     Weight Path
                 #    4444       100          0  10 3 10 20 30 40 50 60 70 80 90
                 m1 = re.compile(r'^(?P<metric>[0-9]+)'
-                                 '(?P<space1>\s{5,10})'
-                                 '(?P<localprf>[0-9]+)'
-                                 '(?P<space2>\s{5,10})'
-                                 '(?P<weight>[0-9]+)'
-                                 '(?: *(?P<path>[0-9\{\}\s]+))?$').match(numbers)
+                                 r'(?P<space1>\s{5,10})'
+                                 r'(?P<localprf>[0-9]+)'
+                                 r'(?P<space2>\s{5,10})'
+                                 r'(?P<weight>[0-9]+)'
+                                 r'(?: *(?P<path>[0-9\{\}\s]+))?$').match(numbers)
 
                 #    100        ---          0 10 20 30 40 50 60 70 80 90
                 #    ---        100          0 10 20 30 40 50 60 70 80 90
                 #    100        ---      32788 ---
-                #    ---        100      32788 --- 
+                #    ---        100      32788 ---
                 m2 = re.compile(r'^(?P<value>[0-9]+)'
-                                 '(?P<space>\s{2,21})'
-                                 '(?P<weight>[0-9]+)'
-                                 '(?: *(?P<path>[0-9\{\}\s]+))?$').match(numbers)
+                                 r'(?P<space>\s{2,21})'
+                                 r'(?P<weight>[0-9]+)'
+                                 r'(?: *(?P<path>[0-9\{\}\s]+))?$').match(numbers)
 
                 #    ---        ---      32788 200 33299 51178 47751 {27016}
                 m3 = re.compile(r'^(?P<weight>[0-9]+)'
-                                 ' +(?P<path>[0-9\{\}\s]+)$').match(numbers)
+                                 r' +(?P<path>[0-9\{\}\s]+)$').match(numbers)
 
                 if m1:
                     index_dict.update({'metric': int(m1.groupdict()['metric'])})
@@ -6400,8 +6400,8 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                 af_dict.update({'router_identifier': router_identifier})
                 af_dict.update({'local_as': local_as})
                 continue
-            
-            # BGP generic scan interval 60 secs 
+
+            # BGP generic scan interval 60 secs
 
             m = p6.match(line)
             if m:
@@ -6411,7 +6411,7 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                     .setdefault('address_family', {}).setdefault(address_family, {})
                 af_dict.update({'generic_scan_interval': generic_scan_interval})
                 continue
-            
+
             # Non-stop routing is enabled
 
             m = p7.match(line)
@@ -6422,7 +6422,7 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                     .setdefault('address_family', {}).setdefault(address_family, {})
                 af_dict.update({'non_stop_routing': non_stop_routing})
                 continue
-            
+
             # BGP table state: Active
 
             m = p8.match(line)
@@ -6433,7 +6433,7 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                     .setdefault('address_family', {}).setdefault(address_family, {})
                 af_dict.update({'table_state': table_state})
                 continue
-            
+
             # Table ID: 0x0   RD version: 0
 
             m = p9.match(line)
@@ -6446,7 +6446,7 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                 af_dict.update({'table_id': table_id})
                 af_dict.update({'rd_version': rd_version})
                 continue
-            
+
             # BGP main routing table version 43
 
             m = p10.match(line)
@@ -6457,7 +6457,7 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                     .setdefault('address_family', {}).setdefault(address_family, {})
                 af_dict.update({'bgp_table_version': bgp_table_version})
                 continue
-            
+
             # BGP NSR Initial initsync version 11 (Reached)
 
             m = p11.match(line)
@@ -6470,7 +6470,7 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                 af_dict.update({'nsr_initial_initsync_version': nsr_initial_initsync_version})
                 af_dict.update({'nsr_initial_init_ver_status': nsr_initial_init_ver_status})
                 continue
-            
+
             # BGP NSR/ISSU Sync-Group versions 0/0
 
             m = p12.match(line)
@@ -6481,7 +6481,7 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                     .setdefault('address_family', {}).setdefault(address_family, {})
                 af_dict.update({'nsr_issu_sync_group_versions': nsr_issu_sync_group_versions})
                 continue
-            
+
             # BGP scan interval 60 secs
 
             m = p13.match(line)
@@ -6492,18 +6492,18 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                     .setdefault('address_family', {}).setdefault(address_family, {})
                af_dict.update({'scan_interval': scan_interval})
                continue
-            
+
             # 0.0.0.0                                0 i
             m = p15.match(line)
             if m:
                 group = m.groupdict()
-                
+
                 if prefix_dict:
-                    
+
                     next_hop = group['next_hop']
 
                     prefix_dict.update({'next_hop': next_hop})
-                    
+
                     # dealing with the group of metric, locprf, weight, path
                     group_num = group['number']
 
@@ -6511,26 +6511,26 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                         # metric   locprf  weight path
                         # 2219      211       0 200 33299 51178 47751 {27016}
                         m1 = re.compile(r'^(?P<metric>[0-9]+)  +'
-                                    '(?P<locprf>[0-9]+)  +'
-                                    '(?P<weight>[0-9]+) '
-                                    '(?P<path>[0-9\{\}\s]+)$').match(group_num)
-        
+                                    r'(?P<locprf>[0-9]+)  +'
+                                    r'(?P<weight>[0-9]+) '
+                                    r'(?P<path>[0-9\{\}\s]+)$').match(group_num)
+
                         # metric   locprf  weight path
                         # 2219                0 200 33299 51178 47751 {27016}
                         # locprf   weight path
                         # 211         0 200 33299 51178 47751 {27016}
-        
+
                         m2 = re.compile(r'^(?P<value>[0-9]+)'
-                                    '(?P<space>\s{2,20})'
-                                    '(?P<weight>[0-9]+) '
-                                    '(?P<path>[0-9\{\}\s]+)$').match(group_num)
-        
+                                    r'(?P<space>\s{2,20})'
+                                    r'(?P<weight>[0-9]+) '
+                                    r'(?P<path>[0-9\{\}\s]+)$').match(group_num)
+
                         # weight path
                         # 0 200 33299 51178 47751 {27016}
                         m3 = re.compile(r'^(?P<weight>[0-9]+) '
-                                    '(?P<path>((\d+\s)|(\{\d+\}\s))+)$')\
+                                    r'(?P<path>((\d+\s)|(\{\d+\}\s))+)$')\
                                 .match(group_num)
-        
+
                         if m1:
                             prefix_dict['metric'] = m1.groupdict()['metric']
                             prefix_dict['localprf'] =  int(m1.groupdict()['locprf'])
@@ -6542,7 +6542,7 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                             else:
                                 prefix_dict['localprf'] = \
                                    int(m2.groupdict()['value'])
-        
+
                             prefix_dict['weight'] = \
                                 int(m2.groupdict()['weight'])
                             prefix_dict['path'] = \
@@ -6557,7 +6557,7 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                         prefix_dict['origin_codes'] = \
                             m.groupdict()['origin_codes']
                 continue
-            
+
             # Processed 40 prefixes, 50 paths
             m = p16.match(line)
             if m:
@@ -6577,7 +6577,7 @@ class ShowBgpL2vpnEvpnAdvertisedSchema(MetaParser):
     '''
 
     schema = {
-        'neighbor': 
+        'neighbor':
             {Any():
                 {'address_family':
                     {Any():
@@ -6644,7 +6644,7 @@ class ShowBgpL2vpnEvpnAdvertised(ShowBgpL2vpnEvpnAdvertisedSchema):
         # [2][0][48][7777.77ff.7779][0]/104 is advertised to 10.55.0.10
         # [1][0009.08ff.0d0c.0403.0201][0]/120 is advertised to 10.100.5.5
         p2 = re.compile(r'^(?P<prefix>\[[^/]+\])/(?P<prefix_length>(\d+)) +is'
-                         ' +advertised +to +(?P<neighbor>(\S+))$')
+                         r' +advertised +to +(?P<neighbor>(\S+))$')
 
         #  Path info:
         p3 = re.compile(r'^Path info:$')
@@ -6652,20 +6652,20 @@ class ShowBgpL2vpnEvpnAdvertised(ShowBgpL2vpnEvpnAdvertisedSchema):
         #    neighbor: Local           neighbor router id: 10.1.8.8
         #    neighbor: Local           neighbor router id: 10.196.7.7
         p4 = re.compile(r'^neighbor: +(?P<neighbor>(\S+)) +neighbor +router'
-                         ' +id: +(?P<neighbor_router_id>(\S+))$')
+                         r' +id: +(?P<neighbor_router_id>(\S+))$')
 
         #    valid  redistributed  best  import-candidate
         p5 = re.compile(r'^(?P<flags>(valid.*))$')
 
         #    Received Path ID 0, Local Path ID 0, version 12
         p6 = re.compile(r'^Received +Path +ID +(?P<rx_path_id>(\d+)), +Local'
-                         ' +Path +ID +(?P<local_path_id>(\d+)), +version'
-                         ' (?P<version>(\d+))$')
+                         r' +Path +ID +(?P<local_path_id>(\d+)), +version'
+                         r' (?P<version>(\d+))$')
 
         #  Attributes after inbound policy was applied:
         #  Attributes after outbound policy was applied:
         p7 = re.compile(r'^Attributes +after +(?P<type>(outbound|inbound))'
-                         ' +policy +was +applied:$')
+                         r' +policy +was +applied:$')
 
         #    next hop: 10.1.8.8
         p8 = re.compile(r'^next +hop:(?: +(?P<nexthop>(\S+)))?$')
@@ -6674,10 +6674,10 @@ class ShowBgpL2vpnEvpnAdvertised(ShowBgpL2vpnEvpnAdvertisedSchema):
         #    ORG AS EXTCOMM
         p9 = re.compile(r'^(?P<community_attributes>(EXTCOMM|ORG AS EXTCOMM))$')
 
-        #    origin: IGP  
+        #    origin: IGP
         p10 = re.compile(r'^origin:(?: +(?P<origin>.*))?$')
 
-        #    aspath: 
+        #    aspath:
         p11 = re.compile(r'^aspath:(?: +(?P<aspath>.*))?$')
 
         #    community: no-export
@@ -6984,7 +6984,7 @@ class ShowBgpNexthops(ShowBgpNexthopsSchema):
         ret_dict = {}
         ipaddress_dict = {}
         nexthop_address_dict = {}
-        nexthop_dict = {}        
+        nexthop_dict = {}
 
 
         # VRF: default
@@ -7012,7 +7012,7 @@ class ShowBgpNexthops(ShowBgpNexthopsSchema):
         p8 = re.compile(r'^Gateway:\s+((?P<gateway>[\s\S]+))$')
 
         # Resolving Route: 10.4.16.16/32 (static)
-        p9 = re.compile(r'^Resolving Route:\s+((?P<resolving_route>[\s\S]+))$')        
+        p9 = re.compile(r'^Resolving Route:\s+((?P<resolving_route>[\s\S]+))$')
 
         # Paths: 0
         p10 = re.compile(r'^Paths:\s+((?P<paths>[\d]+)\s*)$')
@@ -7051,14 +7051,14 @@ class ShowBgpNexthops(ShowBgpNexthopsSchema):
         p21 = re.compile(r'^Reference Counts:\s+(\[(?P<reference_counts>[\d]+)\])$')
 
         # Interface Handle: 0x0
-        p22 = re.compile(r'^Interface Handle:\s+((?P<interface_handle>[\w]+))$')                        
+        p22 = re.compile(r'^Interface Handle:\s+((?P<interface_handle>[\w]+))$')
 
         # Attr ref-count: 4
         p23 = re.compile(r'^Attr ref-count:\s+((?P<attr_ref_count>[\d]+))$')
-        
+
         for line in out.splitlines():
             line = line.strip()
-                
+
             # VRF: default
             m = p1.match(line)
             if m:
@@ -7067,19 +7067,19 @@ class ShowBgpNexthops(ShowBgpNexthopsSchema):
 
                 #define vrf_dict dictionary and set to 'vrf'
                 vrf_dict = ret_dict.setdefault('vrf', {})
-                
+
                 #define def_dict dictionary and assigned to vrf_dict
                 def_dict = vrf_dict.setdefault(vrf,{})
 
                 #define af_dict dictionary and set to 'address_family'
-                af_dict = def_dict.setdefault('address_family',{})                
+                af_dict = def_dict.setdefault('address_family',{})
                 continue
-            
+
             # Nexthop ID: 0x6000074, Version: 0x0
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                #update nexthop_address_dict               
+                #update nexthop_address_dict
                 nexthop_address_dict.update({'nexthop_id': group['nexthop_id']})
                 nexthop_address_dict.update({'version': group['version']})
                 continue
@@ -7096,7 +7096,7 @@ class ShowBgpNexthops(ShowBgpNexthopsSchema):
             m = p4.match(line)
             if m:
                 group = m.groupdict()
-                nexthop_address_dict.update({'nexthop_handle': group['nexthop_handle']})  
+                nexthop_address_dict.update({'nexthop_handle': group['nexthop_handle']})
                 rib_related_dict = nexthop_address_dict.setdefault('rib_related_information',{})
                 continue
 
@@ -7107,8 +7107,8 @@ class ShowBgpNexthops(ShowBgpNexthopsSchema):
                 #set first_interface_handle_dict
                 first_interface_handle = group['first_interface_handle']
                 first_interface_handle_dict = rib_related_dict.setdefault('first_interface_handle',{})\
-                                                                .setdefault(first_interface_handle,{})                                                                             
-                continue            
+                                                                .setdefault(first_interface_handle,{})
+                continue
 
             # Gateway TBL Id: 0xe0000000    Gateway Flags: 0x00000080
             m = p6.match(line)
@@ -7118,38 +7118,38 @@ class ShowBgpNexthops(ShowBgpNexthopsSchema):
                 first_interface_handle_dict.update({'gateway_tbl_id':group['gateway_tbl_id']})
                 first_interface_handle_dict.update({'gateway_flags':group['gateway_flags']})
                 continue
-            
+
             # Gateway Handle: 0x7fba14059ce0
             m = p7.match(line)
             if m:
                 group = m.groupdict()
                 #update first_interface_handle_dict
                 first_interface_handle_dict.update({'gateway_handle':group['gateway_handle']})
-                continue 
-            
+                continue
+
             # Gateway: reachable, non-Connected route, prefix length 32
             m = p8.match(line)
             if m:
                 group = m.groupdict()
                 #update first_interface_handle_dict
                 first_interface_handle_dict.update({'gateway':group['gateway']})
-                continue         
-            
+                continue
+
             # Resolving Route: 10.4.16.16/32 (static)
             m = p9.match(line)
             if m:
                 group = m.groupdict()
                 #update first_interface_handle_dict
                 first_interface_handle_dict.update({'resolving_route':group['resolving_route']})
-                continue 
+                continue
 
             # Paths: 0
             m = p10.match(line)
             if m:
                 group = m.groupdict()
                 #update first_interface_handle_dict
-                first_interface_handle_dict.update({'paths':int(group['paths'])}) 
-                continue       
+                first_interface_handle_dict.update({'paths':int(group['paths'])})
+                continue
 
             # RIB Nexhop ID: 0x0
             m = p11.match(line)
@@ -7157,23 +7157,23 @@ class ShowBgpNexthops(ShowBgpNexthopsSchema):
                 group = m.groupdict()
                 #update first_interface_handle_dict
                 first_interface_handle_dict.update({'rib_nexthop_id':group['rib_nexthop_id']})
-                continue 
-            
+                continue
+
             # Status: [Reachable][Not Connected][Not Local]
             m = p12.match(line)
             if m:
                 group = m.groupdict()
                 #update first_interface_handle_dict
                 first_interface_handle_dict.update({'status':group['status']})
-                continue         
-            
+                continue
+
             # Metric: 0
             m = p13.match(line)
             if m:
                 group = m.groupdict()
                 #update first_interface_handle_dict
                 first_interface_handle_dict.update({'metric':int(group['metric'])})
-                continue                      
+                continue
 
             # Registration: Asynchronous, Completed: 00:02:15
             m = p14.match(line)
@@ -7182,7 +7182,7 @@ class ShowBgpNexthops(ShowBgpNexthopsSchema):
                 #update first_interface_handle_dict
                 first_interface_handle_dict.update({'registration':group['registration']})
                 first_interface_handle_dict.update({'completed':group['completed']})
-                continue   
+                continue
 
             # Events: Critical (1)/Non-critical (0)
             m = p15.match(line)
@@ -7190,7 +7190,7 @@ class ShowBgpNexthops(ShowBgpNexthopsSchema):
                 group = m.groupdict()
                 #update first_interface_handle_dict
                 first_interface_handle_dict.update({'events':group['events']})
-                continue   
+                continue
 
             # Last Received: 00:02:14 (Critical)
             m = p16.match(line)
@@ -7198,7 +7198,7 @@ class ShowBgpNexthops(ShowBgpNexthopsSchema):
                 group = m.groupdict()
                 #update first_interface_handle_dict
                 first_interface_handle_dict.update({'last_received':group['last_received']})
-                continue   
+                continue
 
             # Last gw update: (Crit-notif) 00:02:14(rib)
             m = p17.match(line)
@@ -7206,27 +7206,27 @@ class ShowBgpNexthops(ShowBgpNexthopsSchema):
                 group = m.groupdict()
                 #update first_interface_handle_dict
                 first_interface_handle_dict.update({'last_gw_update':group['last_gw_update']})
-                continue                                      
+                continue
 
             # Reference Count: 1
             m = p18.match(line)
             if m:
                 group = m.groupdict()
                 #update first_interface_handle_dict
-                first_interface_handle_dict.update({'reference_count':int(group['reference_count'])})                
-                continue      
+                first_interface_handle_dict.update({'reference_count':int(group['reference_count'])})
+                continue
 
             # Active Tables: [IPv4 Unicast]
             m = p19.match(line)
             if m:
                 group = m.groupdict()
                 #set prefix_related_dict
-                prefix_related_dict = nexthop_address_dict.setdefault('prefix_related_information',{}) 
+                prefix_related_dict = nexthop_address_dict.setdefault('prefix_related_information',{})
                 #remove [] from [IPv4]
                 active_tables = group['active_tables'].replace('[','').replace(']','')
                 #update prefix_related_dict
                 prefix_related_dict.update({'active_tables':active_tables})
-                
+
                 #update top ipaddress_dict with child nexthop_address_dict dictionary
                 ipaddress_dict.update({ipaddress:nexthop_address_dict})
 
@@ -7235,7 +7235,7 @@ class ShowBgpNexthops(ShowBgpNexthopsSchema):
 
                 #update top af_dict with child nexthop_dict dictionary
                 af_dict.update({active_tables:nexthop_dict})
-                continue  
+                continue
 
             # Metrices: [0x0]
             m = p20.match(line)
@@ -7244,7 +7244,7 @@ class ShowBgpNexthops(ShowBgpNexthopsSchema):
                 metrics = group['metrics'].replace('[','').replace(']','')
                 #update prefix_related_dict
                 prefix_related_dict.update({'metrics':metrics})
-                continue 
+                continue
 
             # Reference Counts: [1]
             m = p21.match(line)
@@ -7252,7 +7252,7 @@ class ShowBgpNexthops(ShowBgpNexthopsSchema):
                 group = m.groupdict()
                 #update prefix_related_dict
                 prefix_related_dict.update({'reference_counts':int(group['reference_counts'])})
-                continue   
+                continue
 
             # Interface Handle: 0x0
             m = p22.match(line)
@@ -7260,15 +7260,15 @@ class ShowBgpNexthops(ShowBgpNexthopsSchema):
                 group = m.groupdict()
                 #update nexthop_address_dict
                 nexthop_address_dict.update({'interface_handle': group['interface_handle']})
-                continue   
+                continue
 
             # Attr ref-count: 4
             m = p23.match(line)
             if m:
                 group = m.groupdict()
                 #update nexthop_address_dict
-                nexthop_address_dict.update({'attr_ref_count': int(group['attr_ref_count'])})  
-                continue  
+                nexthop_address_dict.update({'attr_ref_count': int(group['attr_ref_count'])})
+                continue
 
         return ret_dict
 
@@ -7402,9 +7402,9 @@ class ShowBgpAllAllNexthops(ShowBgpAllAllNexthopsSchema):
                          r'+EPE +Standby +Version: +(?P<epe_standby_version>[\d]+)$')
 
         # 108.10.10.1     [R][NC][NL]          2   e0000000   1/0    00:13:49 (Cri)        1/4
-        p17 = re.compile('^(?P<next_hop>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+(?P<status>[\S]+)\s+'
-                         '(?P<metric>\d+)\s+(?P<tbl_id>\S+)\s+(?P<notf>\S+)\s+(?P<last_rib_event>\S+'
-                         '\s\(\w+\))\s+(?P<ref_count>\S+)$')
+        p17 = re.compile(r'^(?P<next_hop>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+(?P<status>[\S]+)\s+'
+                         r'(?P<metric>\d+)\s+(?P<tbl_id>\S+)\s+(?P<notf>\S+)\s+(?P<last_rib_event>\S+'
+                         r'\s\(\w+\))\s+(?P<ref_count>\S+)$')
 
         # 2000:108:10:10::1
         p18 = re.compile(r'^(?P<next_hop_ipv6>[a-fA-F\d\:]+)$')
@@ -7652,9 +7652,9 @@ class ShowBgpBrief(ShowBgpBriefSchema):
 
         # *> 111.111.111.111/32 108.10.0.2               0           100 65401 i
         # *                     108.11.0.2               0             0 65401 i
-        p1 = re.compile('^.*\s(?P<next_hop>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+'
-                        '(?P<metric>\d+)\s+(?P<locprf>\d+)\s+(?P<weight>\d+)\s+'
-                        '(?P<path>\D)$')
+        p1 = re.compile(r'^.*\s(?P<next_hop>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+'
+                        r'(?P<metric>\d+)\s+(?P<locprf>\d+)\s+(?P<weight>\d+)\s+'
+                        r'(?P<path>\D)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -7771,46 +7771,46 @@ class ShowBgpBestpathCompare(ShowBgpBestpathCompareSchema):
         next_line_update_group = False
 
         # Speaker                  5           5
-        p1 = re.compile('^(?P<process>\w+)\s+(?P<brib_rib>\d+)\s+(?P<send_tbl_ver>\d+)$')
+        p1 = re.compile(r'^(?P<process>\w+)\s+(?P<brib_rib>\d+)\s+(?P<send_tbl_ver>\d+)$')
 
         # Last Modified: Mar  9 02:23:41.504 for 00:00:35
-        p2 = re.compile('^Last +Modified: (?P<last_modified>.*)$')
+        p2 = re.compile(r'^Last +Modified: (?P<last_modified>.*)$')
 
         # Paths: (2 available, best #1)
-        p3 = re.compile('^Paths: +\((?P<available_paths>\d+) +available\, '
-                        '+best +\#(?P<best_path>\d+)\)$')
+        p3 = re.compile(r'^Paths: +\((?P<available_paths>\d+) +available\, '
+                        r'+best +\#(?P<best_path>\d+)\)$')
 
         # Path #1: Received by speaker 0
-        p4 = re.compile('^Path+ #(?P<path_num>\d+).*$')
+        p4 = re.compile(r'^Path+ #(?P<path_num>\d+).*$')
 
         # Advertised IPv4 Unicast paths to update-groups (with more than one peer):
-        p5 = re.compile('^.*(?P<group2>update-groups).*$')
+        p5 = re.compile(r'^.*(?P<group2>update-groups).*$')
 
         # Not advertised to any peer
         p6 = re.compile(r'^Not +advertised +to +any +peer$')
 
         # 0.1 0.3
-        p7 = re.compile('^(?P<group1>[\d\.]+)(?: +(?P<group2>[\d\.]+))$')
+        p7 = re.compile(r'^(?P<group1>[\d\.]+)(?: +(?P<group2>[\d\.]+))$')
 
         # 108.10.0.2 from 108.10.0.2 (192.68.33.108)
-        p8 = re.compile('^((?P<next_hop>[0-9\.]+)+ from +(?P<gateway>[0-9\.]+) '
-                        '+\((?P<originator>[0-9\.]+)\))$')
+        p8 = re.compile(r'^((?P<next_hop>[0-9\.]+)+ from +(?P<gateway>[0-9\.]+) '
+                        r'+\((?P<originator>[0-9\.]+)\))$')
 
         # Origin IGP, metric 0, localpref 100, weight 100, valid, external, best, group-best
-        p9 = re.compile('^Origin +(?P<origin>[a-zA-Z]+),(?: '
-                        '+metric (?P<metric>[0-9]+),?)?(?: '
-                        '+localpref (?P<localpref>[0-9]+),?)?(?: '
-                        '+weight (?P<weight>[0-9]+),?)?(?: '
-                        '+(?P<valid>valid?,))?(?: '
-                        '+(?P<state>(internal|external|local)\,?))?(\,)?(?: '
-                        '(?P<best>best))?(\,)?(?: (?P<group_best>group-best))?$')
+        p9 = re.compile(r'^Origin +(?P<origin>[a-zA-Z]+),(?: '
+                        r'+metric (?P<metric>[0-9]+),?)?(?: '
+                        r'+localpref (?P<localpref>[0-9]+),?)?(?: '
+                        r'+weight (?P<weight>[0-9]+),?)?(?: '
+                        r'+(?P<valid>valid?,))?(?: '
+                        r'+(?P<state>(internal|external|local)\,?))?(\,)?(?: '
+                        r'(?P<best>best))?(\,)?(?: (?P<group_best>group-best))?$')
 
         #  Received Path ID 0, Local Path ID 0, version 0
-        p10 = re.compile('^Received Path ID (?P<received_path_id>(\d+)), Local Path ID '
-                        '(?P<local_path_id>(\d+)), version (?P<version>(\d+))$')
+        p10 = re.compile(r'^Received Path ID (?P<received_path_id>(\d+)), Local Path ID '
+                        r'(?P<local_path_id>(\d+)), version (?P<version>(\d+))$')
 
         # Origin-AS validity: (disabled)
-        p11 = re.compile('^Origin-AS validity: \((?P<origin_as_validity>\w+)\)$')
+        p11 = re.compile(r'^Origin-AS validity: \((?P<origin_as_validity>\w+)\)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -7984,6 +7984,7 @@ class ShowBgpVrfAfPrefixSchema(MetaParser):
                     Any(): {
                         'prefix': str,
                         Optional('rd'): str,
+                        Optional('srv6_vpn_sid') : str,
                         'last_modified': str,
                         Optional('local_label'): str,
                         'paths': {
@@ -8102,12 +8103,15 @@ class ShowBgpVrfAfPrefix(ShowBgpVrfAfPrefixSchema):
                                              prefix=prefix))
         else:
             out = output
-        
+
         # BGP routing table entry for 2000:71:1:1::1/128, Route Distinguisher: 50.1.1.4:2
         # BGP routing table entry for [1][0000.0000.0000.0001.0500][10001]/120, Route Distinguisher: 10.0.0.1:1001
         # BGP routing table entry for fc00:a000:1000:101::2/128
         p1 = re.compile(r'^BGP\s+routing\s+table\s+entry\s+for\s+(?P<prefix>(?P<ip>[a-z0-9.:\/\[\]]+)\/(?P<mask>\d+))'
                         r'(?:,\s+Route\s+Distinguisher:\s+(?P<rd>[\d.:]+))?$')
+
+        # SRv6-VPN SID: fc00:c000:1002:e008::/64
+        p1_1 = re.compile(r'^SRv6-VPN\s+SID:\s+(?P<vpn_sid>\S+)')
 
         # Last Modified: Mar 27 02:45:20.105 for 1d15h
         p2 = re.compile(r'^Last +Modified: (?P<last_modified>.*)$')
@@ -8183,7 +8187,7 @@ class ShowBgpVrfAfPrefix(ShowBgpVrfAfPrefixSchema):
         # Source AFI: VPNv6 Unicast, Source VRF: SRV6_L3VPN_BE, Source Route Distinguisher: 100:1
         p15 = re.compile(r'^Source\s+AFI:\s+(?P<source_afi>[a-zA-Z0-9 ]+),\s+Source\s+VRF:\s+(?P<source_vrf>[a-zA-Z0-9_]+)'
                          r',\s+Source\s+Route\s+Distinguisher:\s+(?P<source_rd>[\d.:]+)$')
-        
+
         # PSID-Type:L3, SubTLV Count:1, R:0x00,
         p16 = re.compile(r'^PSID-Type:(?P<psid_type>\w+),\s+SubTLV\s+Count:(?P<subtlv_count>\d+)(?:(,\s+R:(?P<r_value>\w+),))?$')
 
@@ -8195,7 +8199,7 @@ class ShowBgpVrfAfPrefix(ShowBgpVrfAfPrefixSchema):
         p18 = re.compile(r'^T:(?P<t_value>\d+)\(Sid\s+information\),\s+Sid:(?P<sid_value>[a-f0-9.:]+),\s+'
                          r'F:(?P<f_value>\w+),\s+R2:(?P<r2_value>\w+),\s+Behavior:(?P<behaviour>\d+),\s+'
                          r'R3:(?P<r3_value>\w+),\s+SS-TLV\s+Count:(?P<sstlv_count>\d+)$')
-        
+
         # T:1(Sid structure):
         p19 = re.compile(r'^T:(?P<t_value>\d+)\(Sid\s+structure\):$')
 
@@ -8228,10 +8232,17 @@ class ShowBgpVrfAfPrefix(ShowBgpVrfAfPrefixSchema):
                                     setdefault(vrf_name, {}).\
                                     setdefault('address_family', {}).\
                                     setdefault(address_family, {})
-                
+
                 vrf_dict['prefix'] = group['prefix']
                 if group['rd']:
                     vrf_dict['rd'] = group['rd']
+                continue
+
+            # SRv6-VPN SID: fc00:c000:1002:e008::/64
+            m = p1_1.match(line)
+            if m:
+                group = m.groupdict()
+                vrf_dict['srv6_vpn_sid'] = group['vpn_sid']
                 continue
 
             # Last Modified: Mar 27 02:45:20.105 for 1d15h
@@ -8355,7 +8366,7 @@ class ShowBgpVrfAfPrefix(ShowBgpVrfAfPrefixSchema):
                         next_hop_dict['origin_codes'] = 'e'
                     else:
                         next_hop_dict['origin_codes'] = 'i'
-                
+
                 if group['group_best']:
                     next_hop_dict['group_best'] = group['group_best']
                 if group['backup']:
@@ -8576,7 +8587,7 @@ class ShowBgpVrfSchema(MetaParser):
                             Any(): {
                                 'remote_as': Or(int, str),
                                 'tbl_ver': int,
-                                'spk': int,   
+                                'spk': int,
                                 'msg_rcvd': int,
                                 'msg_sent': int,
                                 'input_queue': int,
@@ -8696,9 +8707,16 @@ class ShowBgpVrf(ShowBgpVrfSchema):
         # *>i10.169.1.0/24      10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
         # *>i192.168.111.0/24       10.189.99.98                                                    0       0 i
         # *> 10.7.7.7/32        10.10.10.107             0             0 65107.65107 ?
+        # OR
+        # s>i2001:718::2:99/128 195.113.156.4            0    100      0 i
+        # s i                   195.113.156.4            0    100      0 i
+        # s>i2001:718::2:101/128
+        #                       10.2.8.1                 0    100      0 i
+        # s i                   10.2.8.1                 0    100      0 i
+        # s>i2001:718::2:116/128
         p13 = re.compile(r'^(?P<status_codes>(i|s|x|S|d|h|\*|\>|\s)+)'
-                         r' *(?P<prefix>(?P<ip>[0-9\.\:\[\]]+)\/(?P<mask>\d+))?'
-                         r' +(?P<next_hop>\S+) +(?P<number>[\d\.\s\{\}]+)'
+                         r' *(?P<prefix>(?P<ip>[0-9a-f\.\:\[\]]+)\/(?P<mask>\d+))?[\n\r]*'
+                         r' +(?P<next_hop>\S+)[\n\r]* +(?P<number>[\d\.\s\{\}]+)'
                          r'(?: *(?P<origin_codes>(i|e|\?)))?$')
 
         # Processed 40 prefixes, 50 paths
@@ -8707,41 +8725,41 @@ class ShowBgpVrf(ShowBgpVrfSchema):
 
         # BGP is operating in STANDALONE mode.
         p15 = re.compile(r'BGP *is *operating *in *'
-                        '(?P<operation_mode>\w+) *mode$')
+                        r'(?P<operation_mode>\w+) *mode$')
 
         # Process       RcvTblVer   bRIB/RIB   LabelVer  ImportVer  SendTblVer  StandbyVer
         #Speaker              19         19         19         19          19           0
         p16 = re.compile(r'^\s*(?P<process>[a-zA-Z]+) *(?P<rcvtblver>[0-9]+)'
-                         ' *(?P<brib_rib>[0-9]+) *(?P<labelver>[0-9]+)'
-                         ' *(?P<importver>[0-9]+) *(?P<sendtblver>[0-9]+)'
-                         ' *(?P<standbyver>[0-9]+)$')
+                         r' *(?P<brib_rib>[0-9]+) *(?P<labelver>[0-9]+)'
+                         r' *(?P<importver>[0-9]+) *(?P<sendtblver>[0-9]+)'
+                         r' *(?P<standbyver>[0-9]+)$')
 
         # Neighbor        Spk    AS MsgRcvd MsgSent   TblVer  InQ OutQ  Up/Down  St/PfxRcd
         # 192.168.2.2       0   200     353     353       19    0    0 05:49:05          3
         p17 = re.compile(r'^\s*(?P<neighbor>[a-zA-Z0-9\.\:]+) +(?P<spk>[0-9]+)'
-                           ' +(?P<remote_as>[0-9\.]+) +(?P<msg_rcvd>[0-9]+)'
-                           ' +(?P<msg_sent>[0-9]+)'
-                           ' +(?P<tbl_ver>[0-9]+) +(?P<input_queue>[0-9]+)'
-                           ' +(?P<output_queue>[0-9]+) +(?P<up_down>[a-z0-9\:]+)'
-                           ' +(?P<state_pfxrcd>.+)$')
+                           r' +(?P<remote_as>[0-9\.]+) +(?P<msg_rcvd>[0-9]+)'
+                           r' +(?P<msg_sent>[0-9]+)'
+                           r' +(?P<tbl_ver>[0-9]+) +(?P<input_queue>[0-9]+)'
+                           r' +(?P<output_queue>[0-9]+) +(?P<up_down>[a-z0-9\:]+)'
+                           r' +(?P<state_pfxrcd>.+)$')
 
         # *> 1.1.1.1/32         fc00:c000:1001:e000::                       per-vrf      MAIN
         # *>i3.3.3.3/32         NO SRv6 Sid                                 -            -
         # * i                   NO SRv6 Sid                                 -            -
         p18 = re.compile(r'^(?P<status_codes>(i|s|x|S|d|h|\*|\>|\s)+)\s*'
-                         '(?P<prefix>(?P<ip>[.0-9a-fA-F:]+)\/(?P<mask>\d+))?\s+'
-                         '(?P<local_sid>[ \w:]+)\s+(?P<alloc_mode>[\w-]+)\s+'
-                         '(?P<locator>[\w-]+)$')
+                         r'(?P<prefix>(?P<ip>[.0-9a-fA-F:]+)\/(?P<mask>\d+))?\s+'
+                         r'(?P<local_sid>[ \w:]+)\s+(?P<alloc_mode>[\w-]+)\s+'
+                         r'(?P<locator>[\w-]+)$')
 
         # *>ifc00:a000:2000:200::3/128
         # *> fd00:ffff:100:11::/64
         p19 = re.compile(r'^(?P<status_codes>(i|s|x|S|d|h|\*|\>|\s)+)\s*'
-                         '(?P<prefix>(?P<ip>[\w:]+)\/(?P<mask>\d+))$')
+                         r'(?P<prefix>(?P<ip>[\w:]+)\/(?P<mask>\d+))$')
 
         # fc00:c000:1001:e001::                       per-vrf      MAIN
         # NO SRv6 Sid                                 -            -
         p20 = re.compile(r'^(?P<local_sid>[\da-fA-F:|NO SRv6 Sid]+)\s+(?P<alloc_mode>[\w-]+)'
-                         '\s+(?P<locator>[\w-]+)$')
+                         r'\s+(?P<locator>[\w-]+)$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -8797,12 +8815,12 @@ class ShowBgpVrf(ShowBgpVrfSchema):
             if m:
                 group = m.groupdict()
                 af_dict['router_identifier'] = group['router_identifier']
-              
+
                 try:
                     af_dict['local_as']= int(group['local_as'])
                 except:
                     af_dict['local_as']= group['local_as']
-                continue 
+                continue
 
             # Non-stop routing is enabled
             m = p6.match(line)
@@ -8850,7 +8868,7 @@ class ShowBgpVrf(ShowBgpVrfSchema):
             if m:
                 group = m.groupdict()
                 rd = group['route_distinguisher']
-                
+
                 af_dict['route_distinguisher'] = rd
                 if group['default_vrf']:
                     af_dict['default_vrf'] = group['default_vrf'].lower()
@@ -8879,7 +8897,7 @@ class ShowBgpVrf(ShowBgpVrfSchema):
                 pfx_dict['status_codes'] = group['status_codes'].strip().replace(" ", "")
                 if group['origin_codes']:
                     pfx_dict['origin_codes'] = group['origin_codes']
-                
+
                 # Parse and set the numbers
                 group_num = group['number']
                 m1 = re.compile(r'^(?P<metric>[0-9]+)  +(?P<locprf>[0-9]+)  +(?P<weight>[0-9]+) (?P<path>[0-9\.\{\}\s]+)$').match(group_num)
@@ -8937,7 +8955,7 @@ class ShowBgpVrf(ShowBgpVrfSchema):
                 af_dict['process'][process]['importver'] =  int(m.groupdict()['importver'])
                 af_dict['process'][process]['sendtblver'] =  int(m.groupdict()['sendtblver'])
                 af_dict['process'][process]['standbyver'] =  int(m.groupdict()['standbyver'])
-                continue 
+                continue
 
             # Neighbor        Spk    AS msg_rcvd msg_sent   TblVer  InQ OutQ  Up/Down  St/PfxRcd
             # 10.1.5.5          0   200      60      62       63    0    0 00:57:32          0
@@ -8956,7 +8974,7 @@ class ShowBgpVrf(ShowBgpVrfSchema):
                 except:
                     af_dict['neighbor'][neighbor]['remote_as'] = m.groupdict()['remote_as']
 
-                af_dict['neighbor'][neighbor]['spk'] = int(m.groupdict()['spk'])                
+                af_dict['neighbor'][neighbor]['spk'] = int(m.groupdict()['spk'])
                 af_dict['neighbor'][neighbor]['msg_rcvd'] = int(m.groupdict()['msg_rcvd'])
                 af_dict['neighbor'][neighbor]['msg_sent'] = int(m.groupdict()['msg_sent'])
                 af_dict['neighbor'][neighbor]['tbl_ver'] = int(m.groupdict()['tbl_ver'])
@@ -9099,7 +9117,7 @@ class ShowBgpAddressFamilySchema(MetaParser):
                     Any(): {
                         'remote_as': Or(int, str),
                         'tbl_ver': int,
-                        'spk': int,   
+                        'spk': int,
                         'msg_rcvd': int,
                         'msg_sent': int,
                         'input_queue': int,
@@ -9122,16 +9140,23 @@ class ShowBgpAddressFamily(ShowBgpAddressFamilySchema):
     '''Parser for:
         'show bgp'
         'show bgp {address_family}'
+        'show bgp {address_family} community {community}'
+        'show bgp {address_family} community {community} {exact_match}'
     '''
+    cli_command = [
+        'show bgp',
+        'show bgp {address_family}',
+        'show bgp {address_family} community {community}',
+        'show bgp {address_family} community {community} {exact_match}',]
 
-    cli_command = ['show bgp',
-                   'show bgp {address_family}']
-
-    def cli(self, address_family=None, output=None):
-
+    def cli(self, address_family=None, community=None, exact_match=None, output=None):
         # Execute command
         if output is None:
-            if address_family:
+            if address_family and community and exact_match:
+                command = self.cli_command[3].format(address_family=address_family, community=community, exact_match=exact_match)
+            elif address_family and community:
+                command = self.cli_command[2].format(address_family=address_family, community=community)
+            elif address_family:
                 command = self.cli_command[1].format(address_family=address_family)
             else:
                 command = self.cli_command[0]
@@ -9176,7 +9201,7 @@ class ShowBgpAddressFamily(ShowBgpAddressFamilySchema):
         p8 = re.compile(r'^\s*BGP +NSR/ISSU +Sync-Group +versions'
                          r' +(?P<nsr_issu_sync_group_versions>[0-9\/\s]+)$')
 
-        # BGP scan interval 60 secs 
+        # BGP scan interval 60 secs
         p9 = re.compile(r'^\s*BGP +scan +interval +(?P<scan_interval>[0-9]+)'
                          r' +secs$')
 
@@ -9193,9 +9218,16 @@ class ShowBgpAddressFamily(ShowBgpAddressFamilySchema):
         # *>i10.169.1.0/24      10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
         # *>i192.168.111.0/24       10.189.99.98                                                    0       0 i
         # *> 10.7.7.7/32        10.10.10.107             0             0 65107.65107 ?
+        # OR
+        # s>i2001:718::2:99/128 195.113.156.4            0    100      0 i
+        # s i                   195.113.156.4            0    100      0 i
+        # s>i2001:718::2:101/128
+        #                       10.2.8.1                 0    100      0 i
+        # s i                   10.2.8.1                 0    100      0 i
+        # s>i2001:718::2:116/128
         p11 = re.compile(r'^(?P<status_codes>(i|s|x|S|d|h|\*|\>|\s)+)'
-                         r' *(?P<prefix>(?P<ip>[0-9\.\:\[\]]+)\/(?P<mask>\d+))?'
-                         r' +(?P<next_hop>\S+) +(?P<number>[\d\.\s\{\}]+)'
+                         r' *(?P<prefix>(?P<ip>[0-9a-f\.\:\[\]]+)\/(?P<mask>\d+))?[\n\r]*'
+                         r' +(?P<next_hop>\S+)[\n\r]* +(?P<number>[\d\.\s\{\}]+)'
                          r'(?: *(?P<origin_codes>(i|e|\?)))?$')
 
         # Processed 40 prefixes, 50 paths
@@ -9204,24 +9236,24 @@ class ShowBgpAddressFamily(ShowBgpAddressFamilySchema):
 
         # BGP is operating in STANDALONE mode.
         p13 = re.compile(r'BGP *is *operating *in *'
-                        '(?P<operation_mode>\w+) *mode.$')
+                        r'(?P<operation_mode>\w+) *mode.$')
 
         # Process       RcvTblVer   bRIB/RIB   LabelVer  ImportVer  SendTblVer  StandbyVer
         #Speaker              19         19         19         19          19           0
         p14 = re.compile(r'^\s*(?P<process>[a-zA-Z]+) *(?P<rcvtblver>[0-9]+)'
-                         ' *(?P<brib_rib>[0-9]+) *(?P<labelver>[0-9]+)'
-                         ' *(?P<importver>[0-9]+) *(?P<sendtblver>[0-9]+)'
-                         ' *(?P<standbyver>[0-9]+)$')
+                         r' *(?P<brib_rib>[0-9]+) *(?P<labelver>[0-9]+)'
+                         r' *(?P<importver>[0-9]+) *(?P<sendtblver>[0-9]+)'
+                         r' *(?P<standbyver>[0-9]+)$')
 
         # Neighbor        Spk    AS MsgRcvd MsgSent   TblVer  InQ OutQ  Up/Down  St/PfxRcd
         # 192.168.2.2       0   200     353     353       19    0    0 05:49:05          3
         p15 = re.compile(r'^\s*(?P<neighbor>[a-zA-Z0-9\.\:]+) +(?P<spk>[0-9]+)'
-                           ' +(?P<remote_as>[0-9\.]+) +(?P<msg_rcvd>[0-9]+)'
-                           ' +(?P<msg_sent>[0-9]+)'
-                           ' +(?P<tbl_ver>[0-9]+) +(?P<input_queue>[0-9]+)'
-                           ' +(?P<output_queue>[0-9]+) +(?P<up_down>[a-z0-9\:]+)'
-                           ' +(?P<state_pfxrcd>.+)$')
-        
+                           r' +(?P<remote_as>[0-9\.]+) +(?P<msg_rcvd>[0-9]+)'
+                           r' +(?P<msg_sent>[0-9]+)'
+                           r' +(?P<tbl_ver>[0-9]+) +(?P<input_queue>[0-9]+)'
+                           r' +(?P<output_queue>[0-9]+) +(?P<up_down>[a-z0-9\:]+)'
+                           r' +(?P<state_pfxrcd>.+)$')
+
         # Dampening is not enabled
         # Dampening enabled
         p16 = re.compile(r'^Dampening +(?:(is +))?(?P<dampening_status>[\w\s]+)$')
@@ -9237,18 +9269,18 @@ class ShowBgpAddressFamily(ShowBgpAddressFamilySchema):
                 address_family = address_family.replace(" ", "_").lower()
                 af_dict = ret_dict.setdefault('address_family', {}).setdefault(address_family, {})
                 af_dict['router_identifier'] = group['router_identifier']
-              
+
                 try:
                     af_dict['local_as']= int(group['local_as'])
                 except:
                     af_dict['local_as']= group['local_as']
-                continue 
+                continue
 
             # BGP generic scan interval 60 secs
             m = p2.match(line)
             if m:
                 af_dict['generic_scan_interval'] = int(m.groupdict()['interval'])
-                continue          
+                continue
 
             # Non-stop routing is enabled
             m = p3.match(line)
@@ -9338,7 +9370,7 @@ class ShowBgpAddressFamily(ShowBgpAddressFamilySchema):
                 pfx_dict['status_codes'] = group['status_codes'].strip().replace(" ", "")
                 if group['origin_codes']:
                     pfx_dict['origin_codes'] = group['origin_codes']
-                
+
                 # Parse and set the numbers
                 group_num = group['number']
                 m1 = re.compile(r'^(?P<metric>[0-9]+)  +(?P<locprf>[0-9]+)  +(?P<weight>[0-9]+) (?P<path>[0-9\.\{\}\s]+)$').match(group_num)
@@ -9390,7 +9422,7 @@ class ShowBgpAddressFamily(ShowBgpAddressFamilySchema):
                 process = groupdict.pop('process')
                 process_dict = af_dict.setdefault('process', {}).setdefault(process, {})
                 process_dict.update({k:int(v) for k,v in group.items()})
-                continue 
+                continue
 
             # Neighbor        Spk    AS msg_rcvd msg_sent   TblVer  InQ OutQ  Up/Down  St/PfxRcd
             # 10.1.5.5          0   200      60      62       63    0    0 00:57:32          0
@@ -9437,7 +9469,7 @@ class ShowBgpAddressfamilyPrefixSchema(MetaParser):
                             'as_path': {
                                 Any(): {
                                     'bgp_peer_neighbor_ip': {
-                                        Any(): 
+                                        Any():
                                         {
                                             Optional('metric'): int,
                                             'origin_neighbors_ip': str,
@@ -9468,9 +9500,9 @@ class ShowBgpAddressfamilyPrefixSchema(MetaParser):
                                                         'sstlv_count': int,
                                                          Optional('subsubtlv'): {
                                                              't_value':int
-                                                             
+
                                                          }
-                                                        
+
                                                     }
                                                 }
                                             }
@@ -9484,7 +9516,7 @@ class ShowBgpAddressfamilyPrefixSchema(MetaParser):
             }
         }
     }
-    
+
 # ======================================================================
 # Parser for 'show bgp {address_family} {bgp_prefix}'
 # ======================================================================
@@ -9496,33 +9528,33 @@ class ShowBgpAddressfamilyPrefix(ShowBgpAddressfamilyPrefixSchema):
     cli_command = ['show bgp {address_family} {bgp_prefix}']
 
     def cli(self, address_family='', bgp_prefix='', output=None):
-        
+
         ret_dict = {}
-        
+
         if output is None:
             out = self.device.execute(self.cli_command[0].format(address_family=address_family, bgp_prefix=bgp_prefix))
         else:
             out = output
-        
-        # BGP routing table entry for fc00:a000:1000:101::1/128    
+
+        # BGP routing table entry for fc00:a000:1000:101::1/128
         p1 = re.compile(r'^BGP +routing +table +entry +for +(?P<prefix>[a-z0-9+.:]+.[0-9]+)')
-        
+
         # Last Modified: Nov  2 09:48:44.893 for 05:33:53
         p2 = re.compile(r'^Last +Modified: (?P<last_modified>.*)$')
-        
+
         # Paths: (2 available, best #1)
         p3 = re.compile(r'^Paths:\s+\((?P<total_available_paths>\d+)\s+available,\s+best\s+#(?P<best_path>\d+)\)$')
-        
+
         # Not advertised to any peer
         p4 = re.compile(r'^Not\s+advertised\s+to\s+any\s+peer$')
 
         # Advertised to PE peers (in unique update groups):
         # Advertised to CE peers (in unique update groups):
         p5 = re.compile(r'^Advertised\s+to\s+(?P<peer_name>[a-zA-Z0-9]+)\s+peers\s+\(in\s+unique\s+update\s+groups\):$')
-        
+
         # Path #1: Received by speaker 0
         p6 = re.compile(r'^Path\s+#(?P<path_num>\d+):.*$')
-        
+
         # 7000
         # Local
         p7 = re.compile(r'^(?P<as_path>[a-zA-Z0-9]+)$')
@@ -9532,7 +9564,7 @@ class ShowBgpAddressfamilyPrefix(ShowBgpAddressfamilyPrefixSchema):
         # :: from :: (50.1.1.4)
         p8 = re.compile(r'^(?P<bgp_peer_neighbor_ip>[\w.:]+)\s+(?:\(metric\s+(?P<metric>\d+)\)\s+)?'
                         r'from\s+(?P<origin_neighbors_ip>[\w.:]+)\s*(?:\((?P<origin_router_id>[\w.:]+)\))?')
-        
+
         # Origin incomplete, metric 0, localpref 100, valid, internal, best, group-best, import-candidate, imported
         # Origin IGP, metric 0, localpref 100, valid, external, best, group-best, import-candidate
         # Origin incomplete, metric 0, localpref 100, weight 32768, valid, redistributed, best, group-best, import-candidate
@@ -9550,34 +9582,34 @@ class ShowBgpAddressfamilyPrefix(ShowBgpAddressfamilyPrefixSchema):
                          r'(?: (?P<add_path>add-path),*)?'
                          r'(?: (?P<import_candidate>import-candidate?),*)?'
                          r'(?: (?P<imported>imported?),*)?')
-                         
+
          #  Received Path ID 0, Local Path ID 0, version 715
         p10 = re.compile(r'^Received\s+Path\s+ID\s+(?P<received_path_id>(\d+)),\s+'
                          r'Local\s+Path\s+ID\s+(?P<local_path_id>(\d+)),\s+'
                          r'version\s+(?P<version>(\d+))$')
-                         
+
         # Extended community: RT:100:1001
         p11 = re.compile(r'^Extended\s+community:(?:\s+(?P<extended_community>.*))?$')
-        
+
         # Originator: 50.1.1.1, Cluster list: 50.1.1.8
         # Originator: 10.0.0.3, Cluster list: 10.0.0.11, 10.0.0.13
         p12 = re.compile(r'^Originator:\s+(?P<originator>[\d.]+),\s+Cluster\s+list:\s+(?P<cluster_list>[\d., ]+)$')
-        
+
         # PSID-Type:L3, SubTLV Count:1, R:0x00,
         p13 = re.compile(r'^PSID-Type:(?P<psid_type>\w+),\s+SubTLV\s+Count:(?P<subtlv_count>\d+)$')
-        
+
          # SubTLV:
         # SubSubTLV:
         p14 = re.compile(r'^(?P<tlv_name>SubTLV|SubSubTLV):$')
-        
+
         # T:1(Sid information), Sid:fc00:c000:2003::, F:0x00, R2:0x00, Behavior:62, R3:0x00, SS-TLV Count:1
         p15 = re.compile(r'T:(?P<t_value>\d+)\(Sid\s+information\),\s+Sid:(?P<sid_value>[a-f0-9.:]+),\s+Behavior:(?P<behaviour>\d+),\s+SS-TLV\s+Count:(?P<sstlv_count>\d+)$')
-        
+
         # T:1(Sid structure):
         p16 = re.compile(r'^T:(?P<t_value>\d+)\(Sid\s+structure\):$')
-        
+
         # Initialize dictionary
-       
+
         next_line_update_group = False
         if address_family:
             if 'ipv4' in address_family:
@@ -9597,14 +9629,14 @@ class ShowBgpAddressfamilyPrefix(ShowBgpAddressfamilyPrefixSchema):
                                     setdefault(address_family, {})
                 vrf_dict['prefix'] = group['prefix']
                 continue
-            
+
             # Last Modified: Mar 27 02:45:20.105 for 1d15h
             m = p2.match(line)
             if m:
                 group = m.groupdict()
                 vrf_dict['last_modified'] = group['last_modified']
                 continue
-            
+
             # Paths: (1 available, best #1)
             m = p3.match(line)
             if m:
@@ -9613,7 +9645,7 @@ class ShowBgpAddressfamilyPrefix(ShowBgpAddressfamilyPrefixSchema):
                 paths_dict['total_available_paths'] = int(group['total_available_paths'])
                 paths_dict['best_path'] = int(group['best_path'])
                 continue
-            
+
             # Not advertised to any peer
             m = p4.match(line)
             if m:
@@ -9628,7 +9660,7 @@ class ShowBgpAddressfamilyPrefix(ShowBgpAddressfamilyPrefixSchema):
                 peer_name = group['peer_name']
                 next_line_update_group = True
                 continue
-            
+
             # Path #1: Received by speaker 0
             m = p6.match(line)
             if m:
@@ -9636,7 +9668,7 @@ class ShowBgpAddressfamilyPrefix(ShowBgpAddressfamilyPrefixSchema):
                 path = int(group['path_num'])
                 each_path_dict = paths_dict.setdefault('path', {}).setdefault(path,{})
                 continue
-            
+
             # 7000
             # Local
             m = p7.match(line)
@@ -9660,7 +9692,7 @@ class ShowBgpAddressfamilyPrefix(ShowBgpAddressfamilyPrefixSchema):
                 next_hop_dict['origin_neighbors_ip'] = group['origin_neighbors_ip']
                 next_hop_dict['origin_router_id'] = group['origin_router_id']
                 continue
-            
+
             # Origin incomplete, metric 0, localpref 100, valid, internal, best, group-best, import-candidate, imported
             # Origin IGP, metric 0, localpref 100, valid, external, best, group-best, import-candidate
             # Origin incomplete, metric 0, localpref 100, weight 32768, valid, redistributed, best, group-best, import-candidate
@@ -9695,7 +9727,7 @@ class ShowBgpAddressfamilyPrefix(ShowBgpAddressfamilyPrefixSchema):
                         status_codes += 'i'
                 next_hop_dict['status_codes'] = status_codes
                 continue
-            
+
             # Received Path ID 0, Local Path ID 0, version 715
             m = p10.match(line)
             if m:
@@ -9704,7 +9736,7 @@ class ShowBgpAddressfamilyPrefix(ShowBgpAddressfamilyPrefixSchema):
                 next_hop_dict['local_path_id'] = int(group['local_path_id'])
                 next_hop_dict['version'] = int(group['version'])
                 continue
-            
+
             # Extended community: RT:100:1001
             m = p11.match(line)
             if m:
@@ -9712,7 +9744,7 @@ class ShowBgpAddressfamilyPrefix(ShowBgpAddressfamilyPrefixSchema):
                 value = group['extended_community']
                 next_hop_dict['extended_community'] = value
                 continue
-            
+
             # Originator: 50.1.1.1, Cluster list: 50.1.1.8
             # Originator: 10.0.0.3, Cluster list: 10.0.0.11, 10.0.0.13
             m = p12.match(line)
@@ -9724,7 +9756,7 @@ class ShowBgpAddressfamilyPrefix(ShowBgpAddressfamilyPrefixSchema):
                 cluster_list = cluster_list_str.split(', ')
                 next_hop_dict['cluster_list'] = cluster_list
                 continue
-            
+
             #  PSID-Type:L3, SubTLV Count:1
             m = p13.match(line)
             if m:
@@ -9735,12 +9767,12 @@ class ShowBgpAddressfamilyPrefix(ShowBgpAddressfamilyPrefixSchema):
                 psid_dict['psid_type'] = psid_type
                 psid_dict['subtlv_count'] = int(group['subtlv_count'])
                 continue
-            # SubTLV:    
+            # SubTLV:
             m = p14.match(line)
             if m:
                 group = m.groupdict()
                 subtlv_dict = psid_dict.setdefault('subtlv',{})
-            
+
             # T:1(Sid information), Sid:fc00:c000:2003::, F:0x00, R2:0x00, Behavior:62, R3:0x00, SS-TLV Count:1
             m = p15.match(line)
             if m:
@@ -9750,7 +9782,7 @@ class ShowBgpAddressfamilyPrefix(ShowBgpAddressfamilyPrefixSchema):
                 subtlv_dict['behaviour'] = group['behaviour']
                 subtlv_dict['sstlv_count'] = int(group['sstlv_count'])
                 continue
-            
+
             # T:1(Sid structure):
             m = p16.match(line)
             if m:
@@ -9759,7 +9791,7 @@ class ShowBgpAddressfamilyPrefix(ShowBgpAddressfamilyPrefixSchema):
                 t_dict['t_value'] = int(group['t_value'])
                 continue
         return ret_dict
-        
+
 # ===========================================================
 # Parser for:
 # 'show bgp dampened-paths'
@@ -9798,8 +9830,8 @@ class ShowBgpDampedPathsSchema(MetaParser):
             }
         }
     }
-    
-    
+
+
 # ======================================================================
 # Parser for 'show bgp dampened-paths'
 # ======================================================================
@@ -9815,85 +9847,85 @@ class ShowBgpDampedPaths(ShowBgpDampedPathsSchema):
 
         if output is None:
             output = self.device.execute(self.cli_command[0])
-            
+
         ret_dict = {}
-        
-        # BGP router identifier 50.1.1.1, local AS number 100    
+
+        # BGP router identifier 50.1.1.1, local AS number 100
         p1 = re.compile(r'^\s*BGP +router +identifier +(?P<router_identifier>(\S+)),'
                         r' +local +AS +number +(?P<local_as>([\d\.]+))$')
-        
+
         # BGP generic scan interval 60 secs
         p2 =  re.compile(r'^\s*BGP *generic *scan *interval *'
-                            '(?P<generic_scan_interval>[0-9]+) *secs$')
-        
+                            r'(?P<generic_scan_interval>[0-9]+) *secs$')
+
         # Non-stop routing is enabled
         p3 = re.compile(r'^\s*Non-stop *routing *is'
-                        ' *(?P<non_stop_routing>[A-Za-z]+)$')
-        
+                        r' *(?P<non_stop_routing>[A-Za-z]+)$')
+
         # BGP table state: Active
         p4 = re.compile(r'^\s*BGP *table *state: *(?P<table_state>[a-zA-Z]+)$')
-        
+
         # Table ID: 0xe0000000   RD version: 177
         p5 = re.compile(r'^\s*Table *ID: *(?P<table_id>[a-z0-9]+)'
-                         ' *RD *version: (?P<rd_version>[0-9]+)$')
-        
+                         r' *RD *version: (?P<rd_version>[0-9]+)$')
+
         # BGP main routing table version 177
         p6 = re.compile(r'^\s*BGP *main *routing *table *version'
-                         ' *(?P<bgp_table_version>[0-9]+)$')
-        
+                         r' *(?P<bgp_table_version>[0-9]+)$')
+
         # BGP NSR Initial initsync version 38 (Reached)
         p7 = re.compile(r'^\s*BGP *NSR *Initial *initsync *version *'
-                            '(?P<nsr_initial_initsync_version>[0-9]+)'
-                          ' *\((?P<nsr_initial_init_ver_status>[a-zA-Z]+)\)$')
-        
+                            r'(?P<nsr_initial_initsync_version>[0-9]+)'
+                          r' *\((?P<nsr_initial_init_ver_status>[a-zA-Z]+)\)$')
+
         # BGP NSR/ISSU Sync-Group versions 0/0
         p8 = re.compile(r'^\s*BGP *NSR/ISSU *Sync-Group *versions *'
-                            '(?P<nsr_issu_sync_group_versions>[0-9\/\s]+)$')
-        
+                            r'(?P<nsr_issu_sync_group_versions>[0-9\/\s]+)$')
+
         # BGP scan interval 60 secs
         p9 = re.compile(r'^\s*BGP *scan *interval *(?P<scan_interval>[0-9\s]+) *secs$')
-        
+
         # BGP scan interval 60 secs
         p10 = re.compile(r'^Dampening +(?:(is +))?(?P<dampening_status>[\w\s]+)$')
-        
+
         # Network            From            Reuse    Path
         # *d 80.21.1.0/30       80.11.10.2      00:07:40 5000 ?
         p11 = re.compile(r'^(?P<status_codes>(s|x|S|d|h|\*|\>)+)\s+(?P<network>[\w\.\/]+)\s+(?P<from>[\w\.]+)\s+(?P<reuse>\d+:\d+\d+:\d+)\s+(?P<path>\d+)')
-                        
+
         for line in output.splitlines():
             line = line.strip()
-            
-            # BGP router identifier 50.1.1.1, local AS number 100 
+
+            # BGP router identifier 50.1.1.1, local AS number 100
             m = p1.match(line)
             if m:
                 group = m.groupdict()
                 routes = group['router_identifier']
                 route_dict = ret_dict.setdefault('bgp_routes', {}).setdefault(routes,{})
-                route_dict['router_identifier'] = routes 
-                route_dict['local_as'] = group['local_as']   
+                route_dict['router_identifier'] = routes
+                route_dict['local_as'] = group['local_as']
                 continue
-            
+
             # BGP generic scan interval 60 secs
             m = p2.match(line)
             if m:
                 group = m.groupdict()
                 route_dict['generic_scan_interval'] = int(group['generic_scan_interval'])
                 continue
-            
+
             # Non-stop routing is enabled
             m = p3.match(line)
             if m:
                 group = m.groupdict()
                 route_dict['non_stop_routing'] = True
                 continue
-            
+
             # BGP table state: Active
             m = p4.match(line)
             if m:
                 group = m.groupdict()
                 route_dict['table_state'] = group['table_state']
                 continue
-            
+
             # Table ID: 0xe0000000   RD version: 177
             m = p5.match(line)
             if m:
@@ -9901,14 +9933,14 @@ class ShowBgpDampedPaths(ShowBgpDampedPathsSchema):
                 route_dict['table_id'] = group['table_id']
                 route_dict['rd_version'] = int(group['rd_version'])
                 continue
-            
+
             # BGP main routing table version 177
             m = p6.match(line)
             if m:
                 group = m.groupdict()
                 route_dict['bgp_table_version'] = int(group['bgp_table_version'])
                 continue
-            
+
             # BGP NSR Initial initsync version 38 (Reached)
             m = p7.match(line)
             if m:
@@ -9916,28 +9948,28 @@ class ShowBgpDampedPaths(ShowBgpDampedPathsSchema):
                 route_dict['nsr_initial_initsync_version'] = int(group['nsr_initial_initsync_version'])
                 route_dict['nsr_initial_init_ver_status'] = int(group['nsr_initial_initsync_version'])
                 continue
-            
+
             # BGP NSR/ISSU Sync-Group versions 0/0
             m = p8.match(line)
             if m:
                 group = m.groupdict()
                 route_dict['nsr_issu_sync_group_versions'] = group['nsr_issu_sync_group_versions']
                 continue
-            
+
             # BGP scan interval 60 secs
             m = p9.match(line)
             if m:
                 group = m.groupdict()
                 route_dict['scan_interval'] = int(group['scan_interval'])
                 continue
-            
+
             # BGP scan interval 60 secs
             m = p10.match(line)
             if m:
                 group = m.groupdict()
                 route_dict['dampening_status'] = group['dampening_status']
                 continue
-            
+
             # Network            From            Reuse    Path
              # *d 80.21.1.0/30       80.11.10.2      00:07:40 5000 ?
             m = p11.match(line)
@@ -9953,5 +9985,5 @@ class ShowBgpDampedPaths(ShowBgpDampedPathsSchema):
                 continue
 
         return ret_dict
-        
-        
+
+

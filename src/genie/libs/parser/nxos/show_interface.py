@@ -3,6 +3,7 @@
 NXOS parsers for the following show commands:
     * show interface
     * show interface {interface}
+    * show interface | include {include}
     * show ip interface {interface} vrf {vrf}
     * show ip interface {interface} vrf all
     * show ip interface vrf {vrf}
@@ -38,6 +39,10 @@ NXOS parsers for the following show commands:
     * show interface {interface} transceiver details
     * show interface fec
     * show interface hardware-mappings
+    * show interface counters errors
+    * show interface  {interface} counters  errors
+    * show interface snmp-ifindex
+    * show bfd neighbor interface {interface} detail
 '''
 
 # python
@@ -49,7 +54,7 @@ from genie.metaparser.util.schemaengine import Schema, Any, Optional, ListOf
 
 # import parser utils
 from genie.libs.parser.utils.common import Common
-
+from genie.libs.parser.nxos.show_bfd import ShowBfdNeighborDetail as ShowBfdNeighborDetail_nxos
 
 # ===========================
 # Schema for 'show interface'
@@ -185,7 +190,12 @@ class ShowInterfaceSchema(MetaParser):
 class ShowInterface(ShowInterfaceSchema):
     """Parser for show interface, show interface <interface>"""
 
-    cli_command = ['show interface', 'show interface {interface}']
+    cli_command = [
+        'show interface',
+        'show interface {interface}',
+        'show interface | include {include}',
+        'show interface {interface} | include {include}',
+    ]
     exclude = [
         'in_unicast_pkts',
         'out_unicast_pkts',
@@ -218,13 +228,9 @@ class ShowInterface(ShowInterfaceSchema):
         'in_crc_errors',
         'reliability']
 
-    def cli(self, interface="", output=None):
+    def cli(self, command, interface="", include="", output=None):
         if output is None:
-            if interface:
-                cmd = self.cli_command[1].format(interface=interface)
-            else:
-                cmd = self.cli_command[0]
-            output = self.device.execute(cmd)
+            output = self.device.execute(command)
 
         # Ethernet2/1.10 is down (Administratively down)
         # Vlan1 is down (Administratively down), line protocol is down, autostate enabled
@@ -1275,7 +1281,7 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
             line = line.rstrip()
             # IP Interface Status for VRF "VRF1"
             p1 = re.compile(r'^\s*IP *Interface *Status *for *VRF'
-                            ' *(?P<vrf>\S+)$')
+                            r' *(?P<vrf>\S+)$')
             m = p1.match(line)
             if m:
                 vrf = m.groupdict()['vrf']
@@ -1285,8 +1291,8 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
             # Ethernet2/1, Interface status: protocol-up/link-up/admin-up, iod: 36,
             # lo2, Interface status: protocol-up/link-up/admin-up, iod: 7, mode: anycast-mac,external
             p2 = re.compile(r'^\s*(?P<interface>[a-zA-Z0-9\/\-\.]+), *Interface'
-                            ' *status: *(?P<interface_status>[a-z\-\/\s]+),'
-                            ' *iod: *(?P<iod>[0-9]+),(?: *mode: *(?P<mode>[a-zA-Z0-9\-\,]+))?$')
+                            r' *status: *(?P<interface_status>[a-z\-\/\s]+),'
+                            r' *iod: *(?P<iod>[0-9]+),(?: *mode: *(?P<mode>[a-zA-Z0-9\-\,]+))?$')
             m = p2.match(line)
             if m:
                 interface = m.groupdict()['interface']
@@ -1300,7 +1306,7 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                     = interface_status
                 ip_interface_vrf_all_dict[interface]['iod'] = iod
                 ip_interface_vrf_all_dict[interface]['vrf'] = vrf
-                
+
                 if m.groupdict()['mode']:
                     mode = m.groupdict()['mode']
                     ip_interface_vrf_all_dict[interface]['mode'] = mode.split(',')
@@ -1314,13 +1320,13 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                 # check if the ipv4 and address already assgined during the unnumbered block
                 if 'ipv4' in ip_interface_vrf_all_dict[interface]:
                     for key in ip_interface_vrf_all_dict[interface]['ipv4'].keys():
-                        if re.match('^\d+.\d+.\d+.\d+\/\d+', key):
+                        if re.match(r'^\d+.\d+.\d+.\d+\/\d+', key):
                             address = key
                 continue
 
             # Unnumbered interfaces of loopback0: first iod 46
             p2_1 = re.compile(r'^\s*Unnumbered +interfaces +of +(?P<unnumbered_intf>[\w\.\/]+): *'
-                              'first +iod +(?P<first_iod>\d+)$')
+                              r'first +iod +(?P<first_iod>\d+)$')
             m = p2_1.match(line)
             if m:
                 unnumbered_intf = m.groupdict()['unnumbered_intf']
@@ -1341,9 +1347,9 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
             # IP address: 10.4.4.4, IP subnet: 10.4.4.0/24 secondary
             # IP address: 10.64.4.4, IP subnet: 10.64.4.0/24
             p3 = re.compile(r'^\s*IP *address: *(?P<ip>[0-9\.]+), *IP'
-                            ' *subnet: *(?P<ip_subnet>[a-z0-9\.]+)\/'
-                            '(?P<prefix_length>[0-9]+)'
-                            ' *(?P<secondary>(secondary))?$')
+                            r' *subnet: *(?P<ip_subnet>[a-z0-9\.]+)\/'
+                            r'(?P<prefix_length>[0-9]+)'
+                            r' *(?P<secondary>(secondary))?$')
             m = p3.match(line)
             if m:
                 ip = m.groupdict()['ip']
@@ -1435,7 +1441,7 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                 continue
 
             # IP address: none
-            p3_2 = re.compile('^\s*IP +address: +(?P<ip>\S+)$')
+            p3_2 = re.compile(r'^\s*IP +address: +(?P<ip>\S+)$')
             m = p3_2.match(line)
             if m:
                 group = m.groupdict()
@@ -1470,7 +1476,7 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
 
             # IP broadcast address: 255.255.255.255
             p4 = re.compile(r'^\s*IP *broadcast *address:'
-                            ' *(?P<broadcast_address>[0-9\.]+)$')
+                            r' *(?P<broadcast_address>[0-9\.]+)$')
             m = p4.match(line)
             if m:
                 broadcast_address = str(m.groupdict()['broadcast_address'])
@@ -1481,7 +1487,7 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
             # IP multicast groups locally joined: none
             # 224.0.0.6  224.0.0.5  224.0.0.2
             p5 = re.compile(r'^\s*IP *multicast *groups *locally *joined:'
-                            ' *(?P<multicast_groups_address>[a-z]+)$')
+                            r' *(?P<multicast_groups_address>[a-z]+)$')
             m = p5.match(line)
             if m:
                 multicast_groups_address = m.groupdict()['multicast_groups_address']
@@ -1515,7 +1521,7 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
 
             # IP MTU: 1600 bytes (using link MTU)
             p6 = re.compile(r'^\s*IP *MTU: *(?P<ip_mtu>[0-9]+)'
-                            ' *bytes *\(using *link *MTU\)$')
+                            r' *bytes *\(using *link *MTU\)$')
             m = p6.match(line)
             if m:
                 ip_mtu = int(m.groupdict()['ip_mtu'])
@@ -1525,8 +1531,8 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
 
             # IP primary address route-preference: 0, tag: 0
             p7 = re.compile(r'^\s*IP *primary *address *route-preference:'
-                            ' *(?P<route_preference>[0-9]+), *tag:'
-                            ' *(?P<route_tag>[0-9]+)$')
+                            r' *(?P<route_preference>[0-9]+), *tag:'
+                            r' *(?P<route_tag>[0-9]+)$')
             m = p7.match(line)
             if m:
                 route_preference = m.groupdict()['route_preference']
@@ -1552,7 +1558,7 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
 
             # IP Local Proxy ARP : disabled
             p9 = re.compile(r'^\s*IP *Local *Proxy *ARP *:'
-                            ' *(?P<local_proxy_arp>[a-z]+)$')
+                            r' *(?P<local_proxy_arp>[a-z]+)$')
             m = p9.match(line)
             if m:
                 local_proxy_arp = m.groupdict()['local_proxy_arp']
@@ -1563,7 +1569,7 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
 
             # IP multicast routing: disabled
             p10 = re.compile(r'^\s*IP *multicast *routing:'
-                             ' *(?P<multicast_routing>[a-z]+)$')
+                             r' *(?P<multicast_routing>[a-z]+)$')
             m = p10.match(line)
             if m:
                 multicast_routing = m.groupdict()['multicast_routing']
@@ -1574,7 +1580,7 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
 
             # IP icmp redirects: disabled
             p11 = re.compile(r'^\s*IP *icmp *redirects:'
-                             ' *(?P<icmp_redirects>[a-z]+)$')
+                             r' *(?P<icmp_redirects>[a-z]+)$')
             m = p11.match(line)
             if m:
                 icmp_redirects = m.groupdict()['icmp_redirects']
@@ -1585,7 +1591,7 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
 
             # IP directed-broadcast: disabled
             p12 = re.compile(r'^\s*IP directed-broadcast:'
-                             ' *(?P<directed_broadcast>[a-z]+)$')
+                             r' *(?P<directed_broadcast>[a-z]+)$')
             m = p12.match(line)
             if m:
                 directed_broadcast = m.groupdict()['directed_broadcast']
@@ -1606,7 +1612,7 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
 
             # IP icmp unreachables (except port): disabled
             p14 = re.compile(r'^\s*IP *icmp *unreachables *\(except *port\):'
-                             ' *(?P<icmp_unreachable>[a-z]+)$')
+                             r' *(?P<icmp_unreachable>[a-z]+)$')
             m = p14.match(line)
             if m:
                 icmp_unreachable = m.groupdict()['icmp_unreachable']
@@ -1617,7 +1623,7 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
 
             # IP icmp port-unreachable: enabled
             p15 = re.compile(r'^\s*IP *icmp *port-unreachable:'
-                             ' *(?P<icmp_port_unreachable>[a-z]+)$')
+                             r' *(?P<icmp_port_unreachable>[a-z]+)$')
             m = p15.match(line)
             if m:
                 icmp_port_unreachable = m.groupdict()['icmp_port_unreachable']
@@ -1628,7 +1634,7 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
 
             # IP unicast reverse path forwarding: loose allow default
             p16 = re.compile(r'^\s*IP\s+unicast\s+reverse\s+path\s+forwarding:\s+'
-                             '(?P<unicast_reverse_path>([\w\s]+)\s*)$')
+                             r'(?P<unicast_reverse_path>([\w\s]+)\s*)$')
             m = p16.match(line)
             if m:
                 unicast_reverse_path = m.groupdict()['unicast_reverse_path']
@@ -1676,11 +1682,11 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
             if 'ipv4' in ip_interface_vrf_all_dict[interface]:
                 # Unicast packets    : 0/0/0/0/0
                 p20 = re.compile(r'^\s*Unicast *packets *:'
-                                 ' *(?P<unicast_packets_sent>[0-9]+)\/'
-                                 '(?P<unicast_packets_received>[0-9]+)\/'
-                                 '(?P<unicast_packets_forwarded>[0-9]+)\/'
-                                 '(?P<unicast_packets_originated>[0-9]+)\/'
-                                 '(?P<unicast_packets_consumed>[0-9]+)$')
+                                 r' *(?P<unicast_packets_sent>[0-9]+)\/'
+                                 r'(?P<unicast_packets_received>[0-9]+)\/'
+                                 r'(?P<unicast_packets_forwarded>[0-9]+)\/'
+                                 r'(?P<unicast_packets_originated>[0-9]+)\/'
+                                 r'(?P<unicast_packets_consumed>[0-9]+)$')
                 m = p20.match(line)
                 if m:
                     if 'counters' not in ip_interface_vrf_all_dict[interface]['ipv4'][address]:
@@ -1700,11 +1706,11 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
 
                 # Unicast bytes      : 0/0/0/0/0
                 p21 = re.compile(r'^\s*Unicast *bytes *:'
-                                 ' *(?P<unicast_bytes_sent>[0-9]+)\/'
-                                 '(?P<unicast_bytes_received>[0-9]+)\/'
-                                 '(?P<unicast_bytes_forwarded>[0-9]+)\/'
-                                 '(?P<unicast_bytes_originated>[0-9]+)\/'
-                                 '(?P<unicast_bytes_consumed>[0-9]+)$')
+                                 r' *(?P<unicast_bytes_sent>[0-9]+)\/'
+                                 r'(?P<unicast_bytes_received>[0-9]+)\/'
+                                 r'(?P<unicast_bytes_forwarded>[0-9]+)\/'
+                                 r'(?P<unicast_bytes_originated>[0-9]+)\/'
+                                 r'(?P<unicast_bytes_consumed>[0-9]+)$')
                 m = p21.match(line)
                 if m:
                     ip_interface_vrf_all_dict[interface]['ipv4']['counters'] \
@@ -1721,11 +1727,11 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
 
                 # Multicast packets  : 0/0/0/0/0
                 p22 = re.compile(r'^\s*Multicast *packets *:'
-                                 ' *(?P<multicast_packets_sent>[0-9]+)\/'
-                                 '(?P<multicast_packets_received>[0-9]+)\/'
-                                 '(?P<multicast_packets_forwarded>[0-9]+)\/'
-                                 '(?P<multicast_packets_originated>[0-9]+)\/'
-                                 '(?P<multicast_packets_consumed>[0-9]+)$')
+                                 r' *(?P<multicast_packets_sent>[0-9]+)\/'
+                                 r'(?P<multicast_packets_received>[0-9]+)\/'
+                                 r'(?P<multicast_packets_forwarded>[0-9]+)\/'
+                                 r'(?P<multicast_packets_originated>[0-9]+)\/'
+                                 r'(?P<multicast_packets_consumed>[0-9]+)$')
                 m = p22.match(line)
                 if m:
                     ip_interface_vrf_all_dict[interface]['ipv4']['counters'] \
@@ -1742,11 +1748,11 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
 
                 # Multicast bytes    : 0/0/0/0/0
                 p23 = re.compile(r'^\s*Multicast *bytes *:'
-                                 ' *(?P<multicast_bytes_sent>[0-9]+)\/'
-                                 '(?P<multicast_bytes_received>[0-9]+)\/'
-                                 '(?P<multicast_bytes_forwarded>[0-9]+)\/'
-                                 '(?P<multicast_bytes_originated>[0-9]+)\/'
-                                 '(?P<multicast_bytes_consumed>[0-9]+)$')
+                                 r' *(?P<multicast_bytes_sent>[0-9]+)\/'
+                                 r'(?P<multicast_bytes_received>[0-9]+)\/'
+                                 r'(?P<multicast_bytes_forwarded>[0-9]+)\/'
+                                 r'(?P<multicast_bytes_originated>[0-9]+)\/'
+                                 r'(?P<multicast_bytes_consumed>[0-9]+)$')
                 m = p23.match(line)
                 if m:
                     ip_interface_vrf_all_dict[interface]['ipv4']['counters'] \
@@ -1763,11 +1769,11 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
 
                 # Broadcast packets  : 0/0/0/0/0
                 p24 = re.compile(r'^\s*Broadcast *packets *:'
-                                 ' *(?P<broadcast_packets_sent>[0-9]+)\/'
-                                 '(?P<broadcast_packets_received>[0-9]+)\/'
-                                 '(?P<broadcast_packets_forwarded>[0-9]+)\/'
-                                 '(?P<broadcast_packets_originated>[0-9]+)\/'
-                                 '(?P<broadcast_packets_consumed>[0-9]+)$')
+                                 r' *(?P<broadcast_packets_sent>[0-9]+)\/'
+                                 r'(?P<broadcast_packets_received>[0-9]+)\/'
+                                 r'(?P<broadcast_packets_forwarded>[0-9]+)\/'
+                                 r'(?P<broadcast_packets_originated>[0-9]+)\/'
+                                 r'(?P<broadcast_packets_consumed>[0-9]+)$')
                 m = p24.match(line)
                 if m:
                     ip_interface_vrf_all_dict[interface]['ipv4']['counters'] \
@@ -1784,11 +1790,11 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
 
                 # Broadcast bytes    : 0/0/0/0/0
                 p25 = re.compile(r'^\s*Broadcast *bytes *:'
-                                 ' *(?P<broadcast_bytes_sent>[0-9]+)\/'
-                                 '(?P<broadcast_bytes_received>[0-9]+)\/'
-                                 '(?P<broadcast_bytes_forwarded>[0-9]+)\/'
-                                 '(?P<broadcast_bytes_originated>[0-9]+)\/'
-                                 '(?P<broadcast_bytes_consumed>[0-9]+)$')
+                                 r' *(?P<broadcast_bytes_sent>[0-9]+)\/'
+                                 r'(?P<broadcast_bytes_received>[0-9]+)\/'
+                                 r'(?P<broadcast_bytes_forwarded>[0-9]+)\/'
+                                 r'(?P<broadcast_bytes_originated>[0-9]+)\/'
+                                 r'(?P<broadcast_bytes_consumed>[0-9]+)$')
                 m = p25.match(line)
                 if m:
                     ip_interface_vrf_all_dict[interface]['ipv4']['counters'] \
@@ -1805,11 +1811,11 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
 
                 # Labeled packets    : 0/0/0/0/0
                 p26 = re.compile(r'^\s*Labeled *packets *:'
-                                 ' *(?P<labeled_packets_sent>[0-9]+)\/'
-                                 '(?P<labeled_packets_received>[0-9]+)\/'
-                                 '(?P<labeled_packets_forwarded>[0-9]+)\/'
-                                 '(?P<labeled_packets_originated>[0-9]+)\/'
-                                 '(?P<labeled_packets_consumed>[0-9]+)$')
+                                 r' *(?P<labeled_packets_sent>[0-9]+)\/'
+                                 r'(?P<labeled_packets_received>[0-9]+)\/'
+                                 r'(?P<labeled_packets_forwarded>[0-9]+)\/'
+                                 r'(?P<labeled_packets_originated>[0-9]+)\/'
+                                 r'(?P<labeled_packets_consumed>[0-9]+)$')
                 m = p26.match(line)
                 if m:
                     ip_interface_vrf_all_dict[interface]['ipv4']['counters'] \
@@ -1826,11 +1832,11 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
 
                 # Labeled bytes      : 0/0/0/0/0
                 p27 = re.compile(r'^\s*Labeled *bytes *:'
-                                 ' *(?P<labeled_bytes_sent>[0-9]+)\/'
-                                 '(?P<labeled_bytes_received>[0-9]+)\/'
-                                 '(?P<labeled_bytes_forwarded>[0-9]+)\/'
-                                 '(?P<labeled_bytes_originated>[0-9]+)\/'
-                                 '(?P<labeled_bytes_consumed>[0-9]+)$')
+                                 r' *(?P<labeled_bytes_sent>[0-9]+)\/'
+                                 r'(?P<labeled_bytes_received>[0-9]+)\/'
+                                 r'(?P<labeled_bytes_forwarded>[0-9]+)\/'
+                                 r'(?P<labeled_bytes_originated>[0-9]+)\/'
+                                 r'(?P<labeled_bytes_consumed>[0-9]+)$')
                 m = p27.match(line)
                 if m:
                     ip_interface_vrf_all_dict[interface]['ipv4']['counters'] \
@@ -1847,7 +1853,7 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
 
             # WCCP Redirect outbound: disabled
             p28 = re.compile(r'^\s*WCCP *Redirect *outbound:'
-                             ' *(?P<wccp_redirect_outbound>[a-z]+)$')
+                             r' *(?P<wccp_redirect_outbound>[a-z]+)$')
             m = p28.match(line)
             if m:
                 wccp_redirect_outbound = m.groupdict()['wccp_redirect_outbound']
@@ -1858,7 +1864,7 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
 
             # WCCP Redirect inbound: disabled
             p29 = re.compile(r'^\s*WCCP *Redirect *inbound:'
-                             ' *(?P<wccp_redirect_inbound>[a-z]+)$')
+                             r' *(?P<wccp_redirect_inbound>[a-z]+)$')
             m = p29.match(line)
             if m:
                 wccp_redirect_inbound = m.groupdict()['wccp_redirect_inbound']
@@ -1869,7 +1875,7 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
 
             # WCCP Redirect exclude: disabled
             p30 = re.compile(r'^\s*WCCP *Redirect *exclude:'
-                             ' *(?P<wccp_redirect_exclude>[a-z]+)$')
+                             r' *(?P<wccp_redirect_exclude>[a-z]+)$')
             m = p30.match(line)
             if m:
                 wccp_redirect_exclude = m.groupdict()['wccp_redirect_exclude']
@@ -1949,11 +1955,11 @@ class ShowVrfAllInterface(ShowVrfAllInterfaceSchema):
             # Ethernet2/5               default                              1  --
             # Ethernet2/6               default                              1  --
             # port-channel1101          default                              1  --
-
+            # Vlan3960                  KVTC_TEST_SU_KLAIDA                 31  --
             p1 = re.compile(r'^\s*(?P<interface>[a-zA-Z0-9\.\/\-]+)'
-                            ' *(?P<vrf>[a-zA-Z0-9]+)'
-                            ' *(?P<vrf_id>[0-9]+)'
-                            ' *(?P<site_of_origin>[a-zA-Z\-]+)$')
+                            r' *(?P<vrf>[a-zA-Z0-9_]+)'
+                            r' *(?P<vrf_id>[0-9]+)'
+                            r' *(?P<site_of_origin>[a-zA-Z\-]+)$')
 
             m = p1.match(line)
             if m:
@@ -2069,7 +2075,7 @@ class ShowInterfaceSwitchport(ShowInterfaceSwitchportSchema):
             # Access Mode VLAN: 7 (server-vlan7)
             # Access Mode VLAN: 551 (Test_VM_192.168.1.0/24)
             p5 = re.compile(r'^\s*Access *Mode *VLAN: *(?P<access_vlan>[0-9]+)'
-                            '(?: *\((?P<access_vlan_mode>[\S\s]+)\))?$')
+                            r'(?: *\((?P<access_vlan_mode>[\S\s]+)\))?$')
             m = p5.match(line)
             if m:
                 access_vlan = int(m.groupdict()['access_vlan'])
@@ -2086,8 +2092,8 @@ class ShowInterfaceSwitchport(ShowInterfaceSwitchportSchema):
             # Trunking Native Mode VLAN: 3967 (Vlan not created)
             # Trunking Native Mode VLAN: 451 (VM_Machines_192.168.1.0/24)
             p6 = re.compile(r'^\s*Trunking *Native *Mode *VLAN:'
-                            ' *(?P<native_vlan>[0-9]+)'
-                            ' *\((?P<native_vlan_mode>[\S\s]+)\)$')
+                            r' *(?P<native_vlan>[0-9]+)'
+                            r' *\((?P<native_vlan_mode>[\S\s]+)\)$')
             m = p6.match(line)
             if m:
                 native_vlan = int(m.groupdict()['native_vlan'])
@@ -2110,8 +2116,8 @@ class ShowInterfaceSwitchport(ShowInterfaceSwitchportSchema):
 
             # Administrative private-vlan primary host-association: 2000
             p8 = re.compile(r'^\s*Administrative *private-vlan *primary'
-                            ' *host-association:'
-                            ' *(?P<admin_priv_vlan_primary_host_assoc>\w+)$')
+                            r' *host-association:'
+                            r' *(?P<admin_priv_vlan_primary_host_assoc>\w+)$')
             m = p8.match(line)
             if m:
                 admin_priv_vlan_primary_host_assoc = m.groupdict()['admin_priv_vlan_primary_host_assoc']
@@ -2122,8 +2128,8 @@ class ShowInterfaceSwitchport(ShowInterfaceSwitchportSchema):
 
             # Administrative private-vlan secondary host-association: 110
             p9 = re.compile(r'^\s*Administrative *private-vlan *secondary'
-                            ' *host-association:'
-                            ' *(?P<admin_priv_vlan_secondary_host_assoc>\w+)$')
+                            r' *host-association:'
+                            r' *(?P<admin_priv_vlan_secondary_host_assoc>\w+)$')
             m = p9.match(line)
             if m:
                 admin_priv_vlan_secondary_host_assoc \
@@ -2135,8 +2141,8 @@ class ShowInterfaceSwitchport(ShowInterfaceSwitchportSchema):
 
             # Administrative private-vlan primary mapping: none
             p10 = re.compile(r'^\s*Administrative *private-vlan *primary'
-                             ' *mapping:'
-                             ' *(?P<admin_priv_vlan_primary_mapping>\w+)$')
+                             r' *mapping:'
+                             r' *(?P<admin_priv_vlan_primary_mapping>\w+)$')
             m = p10.match(line)
             if m:
                 admin_priv_vlan_primary_mapping \
@@ -2149,8 +2155,8 @@ class ShowInterfaceSwitchport(ShowInterfaceSwitchportSchema):
 
             # Administrative private-vlan secondary mapping: none
             p11 = re.compile(r'^\s*Administrative *private-vlan *secondary'
-                             ' *mapping:'
-                             ' *(?P<admin_priv_vlan_secondary_mapping>\w+)$')
+                             r' *mapping:'
+                             r' *(?P<admin_priv_vlan_secondary_mapping>\w+)$')
             m = p11.match(line)
             if m:
                 admin_priv_vlan_secondary_mapping = m.groupdict()['admin_priv_vlan_secondary_mapping']
@@ -2161,8 +2167,8 @@ class ShowInterfaceSwitchport(ShowInterfaceSwitchportSchema):
 
             # Administrative private-vlan trunk native VLAN: 1
             p12 = re.compile(r'^\s*Administrative *private-vlan *trunk *native'
-                             ' *VLAN:'
-                             ' *(?P<admin_priv_vlan_trunk_native_vlan>\w+)$')
+                             r' *VLAN:'
+                             r' *(?P<admin_priv_vlan_trunk_native_vlan>\w+)$')
             m = p12.match(line)
             if m:
                 admin_priv_vlan_trunk_native_vlan = m.groupdict()['admin_priv_vlan_trunk_native_vlan']
@@ -2173,8 +2179,8 @@ class ShowInterfaceSwitchport(ShowInterfaceSwitchportSchema):
 
             # Administrative private-vlan trunk encapsulation: dot1q
             p13 = re.compile(r'^\s*Administrative *private-vlan *trunk'
-                             ' *encapsulation:'
-                             ' *(?P<admin_priv_vlan_trunk_encapsulation>[a-z0-9]+)$')
+                             r' *encapsulation:'
+                             r' *(?P<admin_priv_vlan_trunk_encapsulation>[a-z0-9]+)$')
             m = p13.match(line)
             if m:
                 admin_priv_vlan_trunk_encapsulation = m.groupdict()['admin_priv_vlan_trunk_encapsulation']
@@ -2185,8 +2191,8 @@ class ShowInterfaceSwitchport(ShowInterfaceSwitchportSchema):
 
             # Administrative private-vlan trunk normal VLANs: none
             p14 = re.compile(r'^\s*Administrative *private-vlan *trunk'
-                             ' *normal VLANs:'
-                             ' *(?P<admin_priv_vlan_trunk_normal_vlans>\w+)$')
+                             r' *normal VLANs:'
+                             r' *(?P<admin_priv_vlan_trunk_normal_vlans>\w+)$')
             m = p14.match(line)
             if m:
                 admin_priv_vlan_trunk_normal_vlans = m.groupdict()['admin_priv_vlan_trunk_normal_vlans']
@@ -2198,8 +2204,8 @@ class ShowInterfaceSwitchport(ShowInterfaceSwitchportSchema):
             # Administrative private-vlan trunk private VLANs: none
             # Administrative private-vlan trunk private VLANs: none(0 none)
             p15 = re.compile(r'^\s*Administrative *private-vlan *trunk'
-                             ' *private VLANs:'
-                             ' *(?P<admin_priv_vlan_trunk_private_vlans>\w+)(?P<dummy>.*)?$')
+                             r' *private VLANs:'
+                             r' *(?P<admin_priv_vlan_trunk_private_vlans>\w+)(?P<dummy>.*)?$')
             m = p15.match(line)
             if m:
                 admin_priv_vlan_trunk_private_vlans = m.groupdict()['admin_priv_vlan_trunk_private_vlans']
@@ -2210,7 +2216,7 @@ class ShowInterfaceSwitchport(ShowInterfaceSwitchportSchema):
 
             # Operational private-vlan: (2500,101)
             p16 = re.compile(r'^\s*Operational *private-vlan:'
-                             ' *(?P<operational_private_vlan>\S+)$')
+                             r' *(?P<operational_private_vlan>\S+)$')
             m = p16.match(line)
             if m:
                 operational_private_vlan = m.groupdict()['operational_private_vlan']
@@ -2259,6 +2265,7 @@ class ShowIpv6InterfaceVrfAllSchema(MetaParser):
                   'ipv6_link_local': str,
                   'ipv6_link_local_state': str,
                   'ipv6_ll_state': str,
+                  Optional('rfc_compliant'): bool,
                   Optional('ipv6_virtual_add'): str,
                   Optional('ipv6_virtual_groups'): list,
                   Optional('virtual_add'): bool,
@@ -2330,7 +2337,7 @@ class ShowIpv6InterfaceVrfAll(ShowIpv6InterfaceVrfAllSchema):
 
             # IPv6 Interface Status for VRF "VRF1"
             p1 = re.compile(r'^\s*IPv6 *Interface *Status *for *VRF'
-                            ' *(?P<vrf>\S+)$')
+                            r' *(?P<vrf>\S+)$')
             m = p1.match(line)
             if m:
                 vrf = m.groupdict()['vrf']
@@ -2340,8 +2347,8 @@ class ShowIpv6InterfaceVrfAll(ShowIpv6InterfaceVrfAllSchema):
             # Ethernet2/1, Interface status: protocol-up/link-up/admin-up, iod: 36
             # port-channel2.101, Interface status: protocol-down/link-down/admin-up, iod: 71
             p2 = re.compile(r'^\s*(?:(?P<interface>[a-zA-Z0-9\/\-\.]+)), Interface'
-                            ' *status: *(?P<interface_status>[a-z\-\/]+),'
-                            ' *iod: *(?P<iod>[0-9]+)$')
+                            r' *status: *(?P<interface_status>[a-z\-\/]+),'
+                            r' *iod: *(?P<iod>[0-9]+)$')
             m = p2.match(line)
             if m:
 
@@ -2380,8 +2387,8 @@ class ShowIpv6InterfaceVrfAll(ShowIpv6InterfaceVrfAllSchema):
 
             # 2001:db8:1:1::1/64 [VALID]
             p3_3 = re.compile(r'^\s*(?P<ip>[a-z0-9\:]+)'
-                              '\/(?P<prefix_length>[0-9]+)'
-                              ' *\[(?P<status>[a-zA-Z]+)\]$')
+                              r'\/(?P<prefix_length>[0-9]+)'
+                              r' *\[(?P<status>[a-zA-Z]+)\]$')
             m = p3_3.match(line)
             if m:
                 ip = m.groupdict()['ip']
@@ -2410,7 +2417,7 @@ class ShowIpv6InterfaceVrfAll(ShowIpv6InterfaceVrfAllSchema):
 
             # IPv6 subnet:  2001:db8:1:1::/64
             p4 = re.compile(r'^\s*IPv6 *subnet:'
-                            ' *(?P<ipv6_subnet>[a-z0-9\:\/]+)$')
+                            r' *(?P<ipv6_subnet>[a-z0-9\:\/]+)$')
             m = p4.match(line)
             if m:
                 ipv6_subnet = m.groupdict()['ipv6_subnet']
@@ -2420,17 +2427,27 @@ class ShowIpv6InterfaceVrfAll(ShowIpv6InterfaceVrfAllSchema):
 
             # IPv6 link-local address: fe80::a8aa:bbff:febb:cccc (default) [VALID]
             p5 = re.compile(r'^\s*IPv6 *link-local *address:'
-                            ' *(?P<ipv6_link_local>[a-z0-9\:\s]+)'
-                            ' *\((?P<ipv6_link_local_state>[a-z]+)\)'
-                            ' *\[(?P<ipv6_ll_state>[A-Z]+)\]$')
+                            r' *(?P<ipv6_link_local>[a-z0-9\:\s]+)'
+                            r' *\((?P<ipv6_link_local_state>[a-z]+)\)'
+                            r' *\[(?P<ipv6_ll_state>[A-Z]+)\]'
+                            r'( *\[(?P<rfc_compliant>[a-zA-Z\ ]+)\])?$')
             m = p5.match(line)
             if m:
-                ipv6_link_local = m.groupdict()['ipv6_link_local']
-                ipv6_link_local_state = m.groupdict()['ipv6_link_local_state']
-                ipv6_ll_state = m.groupdict()['ipv6_ll_state'].lower()
+                group = m.groupdict()
+                ipv6_link_local = group['ipv6_link_local']
+                ipv6_link_local_state = group['ipv6_link_local_state']
+                ipv6_ll_state = group['ipv6_ll_state'].lower()
+                rfc_compliant_status = group.get('rfc_compliant', None)
 
                 if 'ipv6' not in ipv6_interface_dict[interface]:
                     ipv6_interface_dict[interface]['ipv6'] = {}
+
+                if rfc_compliant_status:
+                    rfc_compliant_status = rfc_compliant_status.lower()
+                    if 'non' in rfc_compliant_status:
+                        ipv6_interface_dict[interface]['ipv6']['rfc_compliant'] = False
+                    else:
+                        ipv6_interface_dict[interface]['ipv6']['rfc_compliant'] = True
 
                 ipv6_interface_dict[interface]['ipv6']['ipv6_link_local'] = ipv6_link_local
                 ipv6_interface_dict[interface]['ipv6']['ipv6_link_local_state'] = ipv6_link_local_state
@@ -2439,7 +2456,7 @@ class ShowIpv6InterfaceVrfAll(ShowIpv6InterfaceVrfAllSchema):
 
             # IPv6 virtual addresses configured: none
             p6 = re.compile(r'^\s*IPv6 *virtual *addresses *configured:'
-                            ' *(?P<ipv6_virtual_add>\w+)$')
+                            r' *(?P<ipv6_virtual_add>\w+)$')
             m = p6.match(line)
             if m:
                 ipv6_virtual_add = m.groupdict()['ipv6_virtual_add']
@@ -2476,7 +2493,7 @@ class ShowIpv6InterfaceVrfAll(ShowIpv6InterfaceVrfAllSchema):
 
             # IPv6 multicast routing: disabled
             p7 = re.compile(r'^\s*IPv6 *multicast *routing:'
-                            ' *(?P<ipv6_multicast_routing>[a-z]+)$')
+                            r' *(?P<ipv6_multicast_routing>[a-z]+)$')
             m = p7.match(line)
             if m:
                 ipv6_multicast_routing = m.groupdict()['ipv6_multicast_routing']
@@ -2486,7 +2503,7 @@ class ShowIpv6InterfaceVrfAll(ShowIpv6InterfaceVrfAllSchema):
 
             # IPv6 report link local: disabled
             p8 = re.compile(r'^\s*IPv6 *report *link *local:'
-                            ' *(?P<ipv6_report_link_local>[a-z]+)$')
+                            r' *(?P<ipv6_report_link_local>[a-z]+)$')
             m = p8.match(line)
             if m:
                 ipv6_report_link_local = m.groupdict()['ipv6_report_link_local']
@@ -2497,7 +2514,7 @@ class ShowIpv6InterfaceVrfAll(ShowIpv6InterfaceVrfAllSchema):
 
             # IPv6 Forwarding feature: disabled
             p9 = re.compile(r'^\s*IPv6 *Forwarding *feature:'
-                            ' *(?P<ipv6_forwarding_feature>[a-z]+)$')
+                            r' *(?P<ipv6_forwarding_feature>[a-z]+)$')
             m = p9.match(line)
             if m:
                 ipv6_forwarding_feature = m.groupdict()['ipv6_forwarding_feature']
@@ -2555,7 +2572,7 @@ class ShowIpv6InterfaceVrfAll(ShowIpv6InterfaceVrfAllSchema):
 
             # IPv6 MTU: 1600 (using link MTU)
             p13 = re.compile(r'^\s*IPv6 *MTU: *(?P<ipv6_mtu>[0-9]+)'
-                             ' *\(using *link *MTU\)$')
+                             r' *\(using *link *MTU\)$')
             m = p13.match(line)
             if m:
                 ipv6_mtu = int(m.groupdict()['ipv6_mtu'])
@@ -2565,7 +2582,7 @@ class ShowIpv6InterfaceVrfAll(ShowIpv6InterfaceVrfAllSchema):
 
             # IPv6 unicast reverse path forwarding: loose allow default
             p14 = re.compile(r'^\s*IPv6\s+unicast\s+reverse\s+path\s+forwarding:\s+'
-                             '(?P<ipv6_unicast_rev_path_forwarding>([\w\s]+)\s*)$')
+                             r'(?P<ipv6_unicast_rev_path_forwarding>([\w\s]+)\s*)$')
             m = p14.match(line)
             if m:
                 ipv6_unicast_rev_path_forwarding = m.groupdict() \
@@ -2578,7 +2595,7 @@ class ShowIpv6InterfaceVrfAll(ShowIpv6InterfaceVrfAllSchema):
 
             # IPv6 load sharing: none
             p15 = re.compile(r'^\s*IPv6 *load *sharing:'
-                             ' *(?P<ipv6_load_sharing>\w+)$')
+                             r' *(?P<ipv6_load_sharing>\w+)$')
             m = p15.match(line)
             if m:
                 ipv6_load_sharing = m.groupdict()['ipv6_load_sharing']
@@ -2589,7 +2606,7 @@ class ShowIpv6InterfaceVrfAll(ShowIpv6InterfaceVrfAllSchema):
 
             # IPv6 interface statistics last reset: never
             p16 = re.compile(r'^\s*IPv6 *interface *statistics *last *reset:'
-                             ' *(?P<ipv6_last_reset>[a-z]+)$')
+                             r' *(?P<ipv6_last_reset>[a-z]+)$')
             m = p16.match(line)
             if m:
                 ipv6_last_reset = m.groupdict()['ipv6_last_reset']
@@ -2600,9 +2617,9 @@ class ShowIpv6InterfaceVrfAll(ShowIpv6InterfaceVrfAllSchema):
 
             # Unicast packets:      0/0/0
             p18 = re.compile(r'^\s*Unicast *packets:'
-                             ' *(?P<unicast_packets_forwarded>[0-9]+)\/'
-                             '(?P<unicast_packets_originated>[0-9]+)\/'
-                             '(?P<unicast_packets_consumed>[0-9]+)$')
+                             r' *(?P<unicast_packets_forwarded>[0-9]+)\/'
+                             r'(?P<unicast_packets_originated>[0-9]+)\/'
+                             r'(?P<unicast_packets_consumed>[0-9]+)$')
             m = p18.match(line)
             if m:
                 if 'counters' not in ipv6_interface_dict[interface]['ipv6']:
@@ -2618,8 +2635,8 @@ class ShowIpv6InterfaceVrfAll(ShowIpv6InterfaceVrfAllSchema):
 
             # Unicast bytes:        0/0/0
             p19 = re.compile(r'^\s*Unicast *bytes: *(?P<unicast_bytes_forwarded>[0-9]+)'
-                             '\/(?P<unicast_bytes_originated>[0-9]+)\/'
-                             '(?P<unicast_bytes_consumed>[0-9]+)$')
+                             r'\/(?P<unicast_bytes_originated>[0-9]+)\/'
+                             r'(?P<unicast_bytes_consumed>[0-9]+)$')
             m = p19.match(line)
             if m:
                 ipv6_interface_dict[interface]['ipv6']['counters'] \
@@ -2632,8 +2649,8 @@ class ShowIpv6InterfaceVrfAll(ShowIpv6InterfaceVrfAllSchema):
 
             # Multicast packets:    0/12/9
             p20 = re.compile(r'^\s*Multicast *packets: *(?P<multicast_packets_forwarded>[0-9]+)'
-                             '\/(?P<multicast_packets_originated>[0-9]+)\/'
-                             '(?P<multicast_packets_consumed>[0-9]+)$')
+                             r'\/(?P<multicast_packets_originated>[0-9]+)\/'
+                             r'(?P<multicast_packets_consumed>[0-9]+)$')
             m = p20.match(line)
             if m:
                 ipv6_interface_dict[interface]['ipv6']['counters'] \
@@ -2646,8 +2663,8 @@ class ShowIpv6InterfaceVrfAll(ShowIpv6InterfaceVrfAllSchema):
 
             # Multicast bytes:      0/1144/640
             p21 = re.compile(r'^\s*Multicast *bytes: *(?P<multicast_bytes_forwarded>[0-9]+)\/'
-                             '(?P<multicast_bytes_originated>[0-9]+)\/'
-                             '(?P<multicast_bytes_consumed>[0-9]+)$')
+                             r'(?P<multicast_bytes_originated>[0-9]+)\/'
+                             r'(?P<multicast_bytes_consumed>[0-9]+)$')
             m = p21.match(line)
             if m:
                 ipv6_interface_dict[interface]['ipv6']['counters'] \
@@ -3453,17 +3470,17 @@ class ShowNveInterface(ShowNveInterfaceSchema):
 
         # Interface: nve1, State: Up, encapsulation: VXLAN
         p1 = re.compile(r'^\s*Interface: +(?P<intf>[\w]+)\,'
-                        ' +State: +(?P<state>[\w]+)\, +encapsulation:'
-                        ' +(?P<encapsulation>[\w]+)$')
+                        r' +State: +(?P<state>[\w]+)\, +encapsulation:'
+                        r' +(?P<encapsulation>[\w]+)$')
 
         # Source-Interface: loopback0 (primary: 10.4.0.1, secondary: 0.0.0.0)
         p2 = re.compile(r'^\s*Source-Interface: +(?P<src_intf>[a-zA-Z0-9\-]+)'
-                        ' +\(primary: +(?P<primary>[a-zA-Z0-9\.]+)\, +secondary:'
-                        ' +(?P<secondary>[a-zA-Z0-9\.]+)\)$')
+                        r' +\(primary: +(?P<primary>[a-zA-Z0-9\.]+)\, +secondary:'
+                        r' +(?P<secondary>[a-zA-Z0-9\.]+)\)$')
 
         # VPC Capability: VPC-VIP-Only [not-notified]
         p3 = re.compile(r'^\s*VPC Capability: +(?P<vpc>[a-zA-Z0-9\-]+)'
-                        ' +\[(?P<notified>[a-zA-Z\-]+)\]$')
+                        r' +\[(?P<notified>[a-zA-Z\-]+)\]$')
 
         for line in out.splitlines():
             line = line.rstrip()
@@ -3721,7 +3738,7 @@ class ShowInterfaceStatus(ShowInterfaceStatusSchema):
 
         # Interface     Name                Status    Reason
         header_p0 = re.compile(r'Interface\s+Name\s+Status\s+Reason')
-        
+
         # Captures the below header:
         #
         # Port          Name               Status    Vlan      Duplex  Speed   Type
@@ -3746,9 +3763,9 @@ class ShowInterfaceStatus(ShowInterfaceStatusSchema):
         # Eth102/1/3    zzz (Eth1, test_st connected 205       full    a-1000
         # Po102         VPC PO access      connected 10        full    10G     --
         # nve1 -- connected -- auto auto --
-        # Po101         vPC Peer-link      connected trunk     full    10G     -- 
+        # Po101         vPC Peer-link      connected trunk     full    10G     --
         # Eth1/1        --                 connected routed    full    100G    QSFP-100G-SR1.2
-        # Eth1/7        ig1ezsit-ucs01-A:e connected trunk     full    10G     10Gbase-SR 
+        # Eth1/7        ig1ezsit-ucs01-A:e connected trunk     full    10G     10Gbase-SR
         # Eth1/15       --                 linkFlapE routed    auto    auto    QSFP-100G-CR4
         p1 = re.compile(
             r'^(?P<interface>\w\S+)\s+'
@@ -3764,11 +3781,11 @@ class ShowInterfaceStatus(ShowInterfaceStatusSchema):
             r'(?P<port_speed>\S+)\s*'
             r'(?P<type>(\S+|Fa\S+\sExt\S+))?\s*$'
         )
- 
+
         # Eth1/5 *** L2 L3-CIS-N connected trunk full a-1000 1000base-T
         # Eth1/4 *** FEX 2248TP  connected 1     full a-10G  Fabric Exte
-        
-        # Tunnel7       --                  up        no-reason 
+
+        # Tunnel7       --                  up        no-reason
         p2 = re.compile(r'(?P<interface>(\S+))\s+(?P<name>([\S\s]+))(?<! )\s+(?P<status>(\S+))\s+(?P<reason>(\S+))')
 
         for line in out.splitlines():
@@ -3779,7 +3796,7 @@ class ShowInterfaceStatus(ShowInterfaceStatusSchema):
             if m1 or m2:
                 flag = True
                 continue
-            m = p1.match(line) 
+            m = p1.match(line)
             if m:
                 group = m.groupdict()
                 interface = Common.convert_intf_name(group['interface'])
@@ -3789,13 +3806,13 @@ class ShowInterfaceStatus(ShowInterfaceStatusSchema):
                 if group['status'] is not None:
                     intf_dict['status'] =(group['status'])
                 if group['vlan'] is not None:
-                    intf_dict['vlan'] = (group['vlan'])  
+                    intf_dict['vlan'] = (group['vlan'])
                 if group['duplex_code'] is not None:
-                    intf_dict['duplex_code'] =(group['duplex_code'])  
+                    intf_dict['duplex_code'] =(group['duplex_code'])
                 if group['port_speed'] is not None:
                     intf_dict['port_speed'] =(group['port_speed'])
                 if group['type'] is not None:
-                    intf_dict['type'] =(group['type'])                   
+                    intf_dict['type'] =(group['type'])
                 continue
             m = p2.match(line)
             if m and flag:
@@ -5127,6 +5144,8 @@ class ShowInterfaceCountersSchema(MetaParser):
                 'out_ucast_pkts': int,
                 'out_mcast_pkts': int,
                 'out_bcast_pkts': int,
+                Optional('in_pkts'): int,
+                Optional('out_pkts'): int
             }
         }
     }
@@ -5161,10 +5180,13 @@ class ShowInterfaceCounters(ShowInterfaceCountersSchema):
         #Port                                  InMcastPkts                      InBcastPkts
         #Port                                    OutOctets                     OutUcastPkts
         #Port                                 OutMcastPkts                     OutBcastPkts
+        # Port                                       InPkts                          OutPkts
         p0 = re.compile(r'Port\s+(?:(?P<in_octets>InOctets)|(?P<out_octets>OutOctets)|'
-                        r'(?P<in_mcast_pkts>InMcastPkts)|(?P<out_mcast_pkts>OutMcastPkts))\s+'
+                        r'(?P<in_mcast_pkts>InMcastPkts)|(?P<out_mcast_pkts>OutMcastPkts)|'
+                        r'(?P<in_pkts>InPkts))\s+'
                         r'(?:(?P<in_ucast_pkts>InUcastPkts)|(?P<in_bcast_pkts>InBcastPkts)|'
-                        r'(?P<out_ucast_pkts>OutUcastPkts)|(?P<out_bcast_pkts>OutBcastPkts))')
+                        r'(?P<out_ucast_pkts>OutUcastPkts)|(?P<out_bcast_pkts>OutBcastPkts)|'
+                        r'(?P<out_pkts>OutPkts))')
 
         #Eth1/46                                  21454282                           199828
         # Vlan2                                     --                                --
@@ -5196,3 +5218,196 @@ class ShowInterfaceCounters(ShowInterfaceCountersSchema):
                 continue
 
         return result_dict
+
+
+#############################################################################
+# Schema For show interface counters errors
+#############################################################################
+class ShowInterfaceCountersErrorsSchema(MetaParser):
+    """schema for
+        * show interface counters errors
+        * show interfaces {interfaces} counters errors
+    """
+
+    schema = {
+        'interfaces': {
+            Any(): {
+                'align_err': str,
+                'fcs_err': str,
+                'xmit_err': str,
+                'rcv_err': str,
+                'undersize': str,
+                'out_discards': str,
+                'single_col': str,
+                'multi_col': str,
+                'late_col': str,
+                'exces_col': str,
+                'carri_sen': str,
+                'runts': str,
+                'giants': str,
+                'sqetest_err': str,
+                'deffered_tx': str,
+                'intmactx_er': str,
+                'intmacrx_er': str,
+                'symbol_err': str,
+                'in_discards': str,
+                Optional('stomped_crc'): str
+            }
+        }
+    }
+
+
+#############################################################################
+# Parser For show interface counters errors
+#############################################################################
+class ShowInterfaceCountersErrors(ShowInterfaceCountersErrorsSchema):
+    """parser for
+        * show interface counters errors
+        * show interfaces {interfaces} counters errors
+
+    """
+
+    cli_command = ['show interface counters errors',
+                   'show interface {interface} counters errors']
+
+    def cli(self, interface="", output=None):
+        if output is None:
+            if interface:
+                cmd = self.cli_command[1].format(interface=interface)
+            else:
+                cmd = self.cli_command[0]
+            output = self.device.execute(cmd)
+
+        result_dict = {}
+
+        # Port          Align-Err    FCS-Err   Xmit-Err    Rcv-Err  UnderSize OutDiscards
+        # Port         Single-Col  Multi-Col   Late-Col  Exces-Col  Carri-Sen       Runts
+        # Port          Giants SQETest-Err Deferred-Tx IntMacTx-Er IntMacRx-Er Symbol-Err
+        p0 = re.compile(r'^Port\s+(?:(?P<align_err>Align-Err).*(?P<fcs_err>FCS-Err).*(?P<xmit_err>Xmit-Err).*(?P<rcv_err>Rcv-Err).*(?P<undersize>UnderSize).*(?P<out_discards>OutDiscards))$|'
+                        r'^Port\s+(?:(?P<single_col>Single-Col).*(?P<multi_col>Multi-Col).*(?P<late_col>Late-Col).*(?P<exces_col>Exces-Col).*(?P<carri_sen>Carri-Sen).*(?P<runts>Runts))$|'
+                        r'^Port\s+(?:(?P<giants>Giants).*(?P<sqetest_err>SQETest-Err).*(?P<deffered_tx>Deferred-Tx).*(?P<intmactx_er>IntMacTx-Er).*(?P<intmacrx_er>IntMacRx-Er).*(?P<symbol_err>Symbol-Err))$')
+
+        # Port         InDiscards
+        # Port         Stomped-CRC
+        p1 = re.compile(r'^Port\s+(?:(?P<in_discards>InDiscards))$|'
+                        r'^Port\s+(?:(?P<stomped_crc>Stomped-CRC))$')
+
+
+        # Eth1/1                0          0          0          0          0           0
+        # Eth1/1                0          --         0          0          0           0
+        p2 = re.compile(r'^(?P<interface>\S+)\s+(?P<val1>\d+|\S+)\s+(?P<val2>\d+|\S+)\s+(?P<val3>\d+|\S+)\s+(?P<val4>\d+|\S+)\s+(?P<val5>\d+|\S+)\s+(?P<val6>\d+|\S+)$')
+
+        # Eth1/1                0
+        # Eth1/1                0
+        p3 = re.compile(r'^(?P<interface>\S+)\s+(?P<val1>\d+|\S+)$')
+
+        key1, key2, key3, key4, key5, key6 = None, None, None, None, None, None
+
+        for line in output.splitlines():
+            line = line.rstrip()
+
+            # Port          Align-Err    FCS-Err   Xmit-Err    Rcv-Err  UnderSize OutDiscards
+            # Port         Single-Col  Multi-Col   Late-Col  Exces-Col  Carri-Sen       Runts
+            # Port          Giants SQETest-Err Deferred-Tx IntMacTx-Er IntMacRx-Er Symbol-Err
+
+            m = p0.match(line)
+            if m:
+                key1, key2, key3, key4, key5, key6 = [key for key in m.groupdict().keys() if m.groupdict()[key]]
+                continue
+
+            m = p1.match(line)
+            if m:
+                key1,  = [key for key in m.groupdict().keys() if m.groupdict()[key]]
+                continue
+
+            m = p2.match(line)
+            if m:
+                counter_dict = m.groupdict()
+                interface = Common.convert_intf_name(
+                    counter_dict['interface'])
+
+                intfs_dict = result_dict.setdefault('interfaces', {})
+                intfs_dict.setdefault(interface, {})
+
+                intfs_dict[interface][key1] = counter_dict['val1']
+                intfs_dict[interface][key2] = counter_dict['val2']
+                intfs_dict[interface][key3] = counter_dict['val3']
+                intfs_dict[interface][key4] = counter_dict['val4']
+                intfs_dict[interface][key5] = counter_dict['val5']
+                intfs_dict[interface][key6] = counter_dict['val6']
+                continue
+
+            m = p3.match(line)
+            if m and 'interface' not in line:
+                interface = Common.convert_intf_name(
+                    m.groupdict()['interface'])
+
+                intfs_dict = result_dict.setdefault('interfaces', {})
+                intfs_dict.setdefault(interface, {})
+
+                intfs_dict[interface][key1] = m.groupdict()['val1']
+                continue
+
+        return result_dict
+
+
+
+#############################################################################
+# Schema For show interface snmp-ifindex
+#############################################################################
+class ShowInterfaceSnmpIfIndexSchema(MetaParser):
+    """schema for
+        * show interface snmp-ifindex
+    """
+
+    schema = {
+            Any(): {
+                'if_index': str,
+                'if_index_hexa': str
+            }
+        }
+
+
+#############################################################################
+# Parser For show interface snmp-ifindex
+#############################################################################
+class ShowInterfaceSnmpIfIndex(ShowInterfaceSnmpIfIndexSchema):
+    """parser for
+        * show interface snmp-ifindex
+
+    """
+
+    cli_command = ['show interface snmp-ifindex']
+
+    def cli(self, output=None):
+        if output is None:
+            cmd = self.cli_command[0]
+            output = self.device.execute(cmd)
+
+        snmp_index_dict = {}
+
+        # mgmt0           83886080   (0x5000000 )
+        # Eth1/1          436207616  (0x1a000000)
+        p1 = re.compile(r'^(?P<interface>\S+)\s+(?P<ifindex>\d+)\s+\((?P<ifindexhex>[x0-9a-f]+)\)$')
+
+        for line in output.splitlines():
+            line = line.rstrip()
+
+            # mgmt0           83886080   (0x5000000 )
+            # Eth1/1          436207616  (0x1a000000)
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                port = group['interface']
+                index = group['ifindex']
+                hexaindex = group['ifindexhex']
+                snmp_index_dict.update({port: {'if_index': index, 'if_index_hexa': hexaindex}})
+                continue
+
+        return snmp_index_dict
+
+class ShowBfdNeighborInterface(ShowBfdNeighborDetail_nxos):
+    """
+        'show bfd neighbor interface {interface} detail'
+    """
+    pass

@@ -1,0 +1,51 @@
+  Mvrf: 2  ( *, 227.0.0.1 ) Attrs: C
+    Hw Flag                 : InHw
+    Mlist_hndl (Id)         : 0x118807d8e78 ( 0x5b )
+    Mlist Urid              : 0x1000000000000017
+    Fset Urid (Hash)        : 0x3000000000000004 ( 64cbf57e )
+    Fset Aux Urid           : 0x0
+    RPF Adjacency ID        : 0xf80054d6
+    CPU Credit              : 1
+    Total Packets           : 0 ( 0 pps approx.)
+    npi_mroute_ent          : 0x118825a0178
+    svi_fwd_ifs             : 0
+    OIF Details:
+      AdjID          Interface          ParentIf        HwFlag      Flags      IntfType       MsgType
+      0xf80054d6     Tu0                --------         Cpu        A          --------       NORMAL
+      0xf8005551     Hu1/0/23           --------         ---        F NS       --------       NORMAL
+    GID                   : 8195
+    MCID OID Asic[0]      : 2113
+    Hardware Info ASIC[0] :
+      IP MCID OID         :2113 (cookie: urid:0x30::4)
+      RPF PORT OID        :660
+      punt_on_rpf_fail    :1
+      punt_and_forward    :1
+      use_rpfid           :0
+      rpfid               :0
+      enable_rpf_check    :1
+
+  Mvrf: 2  ( 11.11.11.2, 227.0.0.1 ) Attrs:
+    Hw Flag                 : InHw
+    Mlist_hndl (Id)         : 0x1188334c298 ( 0x1ff5 )
+    Mlist Urid              : 0x1000000000001fbf
+    Fset Urid (Hash)        : 0x3000000000000046 ( 99d23813 )
+    Fset Aux Urid           : 0x0
+    RPF Adjacency ID        : 0xf8005501
+    CPU Credit              : 0
+    Total Packets           : 0 ( 0 pps approx.)
+    npi_mroute_ent          : 0x118833ccf78
+    svi_fwd_ifs             : 0
+    OIF Details:
+      AdjID          Interface          ParentIf        HwFlag      Flags      IntfType       MsgType
+      0xf8005501     Hu1/0/9            --------         ---        A          --------       NORMAL
+      0xf8005551     Hu1/0/23           --------         ---        F NS       --------       NORMAL
+    GID                   : 8259
+    MCID OID Asic[0]      : 2256
+    Hardware Info ASIC[0] :
+      IP MCID OID         :2256 (cookie: urid:0x30::46)
+      RPF PORT OID        :2116
+      punt_on_rpf_fail    :1
+      punt_and_forward    :0
+      use_rpfid           :0
+      rpfid               :0
+      enable_rpf_check    :1

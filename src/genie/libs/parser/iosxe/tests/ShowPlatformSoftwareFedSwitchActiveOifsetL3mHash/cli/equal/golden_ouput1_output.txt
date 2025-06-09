@@ -1,0 +1,63 @@
+Type: s_g_vrf              State: allocated       MD5:(4fbba44abde5dcc2:a03a2f9846afbe18)
+    Fset Urid                    : 0x300000000002f4f9
+    Remote Port Count            : 2
+    Svi Port Count               : 2
+    Users Count                  : 1
+    Mioitem Count                : 3
+      No. AdjID          Interface          PhysicalIf        IfType          Flags
+        1. 0xf80055d1     Vl103              -----------       svi_if          InHw Remote
+              Urids   => Mio:0x80::cb6ab Parent:0x60::3bd8d child_repl:0x20::214c(8ce6139b)  adj_obj:0x90::33
+        2. 0xf80055e1     Vl104              -----------       svi_if          InHw Remote
+              Urids   => Mio:0x80::a320e Parent:0x60::3bd8e child_repl:0x20::2154(f2e2a15a)  adj_obj:0x90::35
+        3. 0xffffffff     Po241              Hu0/13            svl_if          InHw
+              Urids   => Mio:0x80::e0e4e Parent:0x0 child_repl:0x0(------)  adj_obj:0x90::36
+    Fset MCID Gid                : 8195
+    Asic[0] mcid_oid             : 3010
+
+Type: s_g_vrf              State: allocated       MD5:(feb96e0ef6ef8ff6:e1f96cd719a78e63)
+    Fset Urid                    : 0x300000000002f4fa
+    Remote Port Count            : 2
+    Svi Port Count               : 2
+    Users Count                  : 1
+    Mioitem Count                : 3
+      No. AdjID          Interface          PhysicalIf        IfType          Flags
+        1. 0xf80055d1     Vl103              -----------       svi_if          InHw Remote
+              Urids   => Mio:0x80::fb720 Parent:0x60::3ffc1 child_repl:0x20::2151(fa4afe06)  adj_obj:0x90::33
+        2. 0xf80055e1     Vl104              -----------       svi_if          InHw Remote
+              Urids   => Mio:0x80::a3211 Parent:0x60::3bd90 child_repl:0x20::2154(f2e2a15a)  adj_obj:0x90::35
+        3. 0xffffffff     Po241              Hu0/13            svl_if          InHw
+              Urids   => Mio:0x80::e0e4d Parent:0x0 child_repl:0x0(------)  adj_obj:0x90::36
+    Fset MCID Gid                : 10129
+    Asic[0] mcid_oid             : 6147
+
+Type: s_g_vrf              State: allocated       MD5:(85079337ad8b08f1:dbe6e482362a05c7)
+    Fset Urid                    : 0x300000000002f4fb
+    Remote Port Count            : 2
+    Svi Port Count               : 2
+    Users Count                  : 1
+    Mioitem Count                : 3
+      No. AdjID          Interface          PhysicalIf        IfType          Flags
+        1. 0xf80055d1     Vl103              -----------       svi_if          InHw Remote
+              Urids   => Mio:0x80::fb73f Parent:0x60::3bd91 child_repl:0x20::2150(9951984d)  adj_obj:0x90::33
+        2. 0xf80055e1     Vl104              -----------       svi_if          InHw Remote
+              Urids   => Mio:0x80::a3214 Parent:0x60::3bd92 child_repl:0x20::2154(f2e2a15a)  adj_obj:0x90::35
+        3. 0xffffffff     Po241              Hu0/13            svl_if          InHw
+              Urids   => Mio:0x80::e0e4c Parent:0x0 child_repl:0x0(------)  adj_obj:0x90::36
+    Fset MCID Gid                : 10130
+    Asic[0] mcid_oid             : 6154
+
+Type: s_g_vrf              State: allocated       MD5:(9a7bd17c9f727428:7d2424963dcb5c24)
+    Fset Urid                    : 0x300000000002f4fc
+    Remote Port Count            : 2
+    Svi Port Count               : 2
+    Users Count                  : 1
+    Mioitem Count                : 3
+      No. AdjID          Interface          PhysicalIf        IfType          Flags
+        1. 0xf80055d1     Vl103              -----------       svi_if          InHw Remote
+              Urids   => Mio:0x80::fb72e Parent:0x60::3bd93 child_repl:0x20::214f(7e53f42b)  adj_obj:0x90::33
+        2. 0xf80055e1     Vl104              -----------       svi_if          InHw Remote
+              Urids   => Mio:0x80::a3217 Parent:0x60::3bd94 child_repl:0x20::2154(f2e2a15a)  adj_obj:0x90::35
+        3. 0xffffffff     Po241              Hu0/13            svl_if          InHw
+              Urids   => Mio:0x80::e0e4b Parent:0x0 child_repl:0x0(------)  adj_obj:0x90::36
+    Fset MCID Gid                : 10131
+    Asic[0] mcid_oid             : 6161

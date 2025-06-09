@@ -119,7 +119,7 @@ class ShowStaticTopologyDetail(ShowStaticTopologyDetailSchema):
 
         # VRF: default Table Id: 0xe0000000 AFI: IPv4 SAFI: Unicast
         p1 = re.compile(r'^\s*VRF: +(?P<vrf>[\w]+) +Table +Id: +(?P<table_id>[\w]+) +AFI: +(?P<af>[\w]+)'
-                        ' +SAFI: +(?P<safi>[\w]+)$')
+                        r' +SAFI: +(?P<safi>[\w]+)$')
 
         # Prefix/Len          Interface                Nexthop             Object              Explicit-path       Metrics
         # 2001:1:1:1::1/128   GigabitEthernet0_0_0_3   2001:10:1:2::1      None                None                [0/0/1/0/1]

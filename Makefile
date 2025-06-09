@@ -45,7 +45,7 @@ TRUSTED_HOST  = pyats-pypi.cisco.com
 
 # Development pkg requirements
 RELATED_PKGS = genie.libs.parser
-DEPENDENCIES = xmltodict requests "netaddr<1.0.0"
+DEPENDENCIES = xmltodict requests netaddr
 
 ifeq ($(MAKECMDGOALS), devnet)
 	BUILD_CMD += --devnet
@@ -160,7 +160,7 @@ develop:
 	@pip uninstall -y $(RELATED_PKGS) || true
 	@pip install $(DEPENDENCIES)
 
-	@$(PYTHON) setup.py develop --no-deps
+	@pip install -e . --no-deps
 
 	@echo ""
 	@echo "Completed building and installing: $@"
@@ -168,13 +168,18 @@ develop:
 	@echo "Done."
 	@echo ""
 
+	@echo "--------------------------------------------------------------------"
+	@echo "Development environment have been setup."
+	@echo -e "\e[1;33mWarning: Do make json to generate json files to acccess the genie features!!!\e[0m"
+	@echo "--------------------------------------------------------------------"
+
 undevelop:
 	@echo ""
 	@echo "--------------------------------------------------------------------"
 	@echo "Uninstalling $(PKG_NAME) development distributable: $@"
 	@echo ""
 
-	@$(PYTHON) setup.py develop --no-deps -q --uninstall
+	@pip uninstall $(PKG_NAME) -y
 
 	@echo ""
 	@echo "Completed uninstalling: $@"

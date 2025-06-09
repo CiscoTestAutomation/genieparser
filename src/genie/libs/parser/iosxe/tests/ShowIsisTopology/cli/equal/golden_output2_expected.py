@@ -7,7 +7,7 @@ expected_output = {
                         "R1-asr1k-43": {
                             "metric": 33554428,
                             "interface": {
-                                "Gi0/1/4": {
+                                "GigabitEthernet0/1/4": {
                                     "next_hop": "R3-asr1k-53",
                                     "snpa": "c014.fe84.b306"
                                 }
@@ -16,7 +16,7 @@ expected_output = {
                         "R3-asr1k-53": {
                             "metric": 16777214,
                             "interface": {
-                                "Gi0/1/4": {
+                                "GigabitEthernet0/1/4": {
                                     "next_hop": "R3-asr1k-53",
                                     "snpa": "c014.fe84.b306"
                                 }
@@ -26,11 +26,11 @@ expected_output = {
                         "R6-asr1k-20": {
                             "metric": 16777214,
                             "interface": {
-                                "Gi0/0/2": {
+                                "GigabitEthernet0/0/2": {
                                     "next_hop": "R6-asr1k-20",
                                     "snpa": "3c57.31c1.fb32"
                                 },
-                                "Gi0/0/3": {
+                                "GigabitEthernet0/0/3": {
                                     "next_hop": "R6-asr1k-20",
                                     "snpa": "3c57.31c1.fb33"
                                 }
@@ -44,7 +44,7 @@ expected_output = {
                         "R1-asr1k-43": {
                             "metric": 33554428,
                             "interface": {
-                                "Gi0/1/4": {
+                                "GigabitEthernet0/1/4": {
                                     "next_hop": "R3-asr1k-53",
                                     "snpa": "c014.fe84.b306"
                                 }
@@ -53,7 +53,7 @@ expected_output = {
                         "R3-asr1k-53": {
                             "metric": 16777214,
                             "interface": {
-                                "Gi0/1/4": {
+                                "GigabitEthernet0/1/4": {
                                     "next_hop": "R3-asr1k-53",
                                     "snpa": "c014.fe84.b306"
                                 }
@@ -63,11 +63,11 @@ expected_output = {
                         "R6-asr1k-20": {
                             "metric": 16777214,
                             "interface": {
-                                "Gi0/0/2": {
+                                "GigabitEthernet0/0/2": {
                                     "next_hop": "R6-asr1k-20",
                                     "snpa": "3c57.31c1.fb32"
                                 },
-                                "Gi0/0/3": {
+                                "GigabitEthernet0/0/3": {
                                     "next_hop": "R6-asr1k-20",
                                     "snpa": "3c57.31c1.fb33"
                                 }

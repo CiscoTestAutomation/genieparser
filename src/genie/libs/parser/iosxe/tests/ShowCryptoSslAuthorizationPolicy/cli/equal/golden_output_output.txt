@@ -1,0 +1,24 @@
+SSL Authorization Policy
+Policy Name: EmployeePolicy
+  Rule: AllowAccess
+    User Group: Employees
+    Permissions: Full Access
+    Source: Internal Network
+    Destination: All Networks
+    Action: Permit
+
+Policy Name: GuestPolicy
+  Rule: LimitedAccess
+    User Group: Guests
+    Permissions: Restricted Access
+    Source: Guest VLAN
+    Destination: Limited Networks
+    Action: Permit
+
+Policy Name: AdminPolicy
+  Rule: AdminAccess
+    User Group: Administrators
+    Permissions: Full Access
+    Source: Any
+    Destination: All Networks
+    Action: Permit

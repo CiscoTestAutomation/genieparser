@@ -108,20 +108,20 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
 
         #  ~10.16.2.2          127.127.1.1       9    52    64  377   69.18  -518066   4.702
         p1 = re.compile(r'^(?P<mode_code>[x\*\#\+\- ])?(?P<configured>[\~])? *(?P<remote>[\w\.\:]+) +'
-                         '(?P<refid>[\w\.]+) +(?P<stratum>\d+) +'
-                         '(?P<receive_time>[\d\-]+) +(?P<poll>\d+) +'
-                         '(?P<reach>\d+) +(?P<delay>[\d\.]+) +'
-                         '(?P<offset>[\d\.\-]+) +(?P<disp>[\d\.\-]+)$')
+                         r'(?P<refid>[\w\.]+) +(?P<stratum>\d+) +'
+                         r'(?P<receive_time>[\d\-]+) +(?P<poll>\d+) +'
+                         r'(?P<reach>\d+) +(?P<delay>[\d\.]+) +'
+                         r'(?P<offset>[\d\.\-]+) +(?P<disp>[\d\.\-]+)$')
 
         #  ~10.4.1.1 vrf VRF1
         p2 = re.compile(r'^(?P<mode_code>[x\*\#\+\- ])?(?P<configured>[\~])? *(?P<remote>[\w\.\:]+) +'
-                         'vrf +(?P<vrf>\w+)$')
+                         r'vrf +(?P<vrf>\w+)$')
 
         #                    .INIT.           16     -  1024    0    0.00   0.000   15937
         p3 = re.compile(r'^(?P<refid>[\w\.]+) +(?P<stratum>\d+) +'
-                         '(?P<receive_time>[\d\-]+) +(?P<poll>\d+) +'
-                         '(?P<reach>\d+) +(?P<delay>[\d\.]+) +'
-                         '(?P<offset>[\d\.\-]+) +(?P<disp>[\d\.\-]+)$')
+                         r'(?P<receive_time>[\d\-]+) +(?P<poll>\d+) +'
+                         r'(?P<reach>\d+) +(?P<delay>[\d\.]+) +'
+                         r'(?P<offset>[\d\.\-]+) +(?P<disp>[\d\.\-]+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -346,42 +346,42 @@ class ShowNtpStatus(ShowNtpStatusSchema):
 
         # Clock is synchronized, stratum 1, reference is .LOCL.
         p1 = re.compile(r'^Clock +is +(?P<clock_state>\w+), +stratum'
-            ' +(?P<stratum>\d+), +reference +is +(?P<refid>[\w\.]+)$')
+            r' +(?P<stratum>\d+), +reference +is +(?P<refid>[\w\.]+)$')
 
         # Clock is unsynchronized, stratum 16, no reference clock
         p1_1 = re.compile(r'^Clock +is +(?P<clock_state>\w+), +stratum'
-            ' +(?P<stratum>\d+), +no +reference +clock$')
+            r' +(?P<stratum>\d+), +no +reference +clock$')
 
         # nominal freq is 250.0000 Hz, actual freq is 250.0000 Hz, precision is 2**10
         p2 = re.compile(r'^nominal +freq +is +(?P<nom_freq>[\d\.]+) +Hz,'
-            ' actual +freq +is +(?P<act_freq>[\d\.]+) +Hz, precision +is +(?P<precision>[\d\*]+)$')
+            r' actual +freq +is +(?P<act_freq>[\d\.]+) +Hz, precision +is +(?P<precision>[\d\*]+)$')
 
         # ntp uptime is 1921500 (1/100 of seconds), resolution is 4000
         p3 = re.compile(r'^ntp +uptime +is +(?P<uptime>[\d\s\w\/\(\)]+),'
-            ' +resolution +is +(?P<resolution>[\d]+)$')
+            r' +resolution +is +(?P<resolution>[\d]+)$')
 
         # reference time is DF9FFBA0.8B020DC8 (15:43:28.543 UTC Wed Nov 21 2018)
         p4 = re.compile(r'^reference +time +is +(?P<reftime>[\w\s\.\:\(\)]+)$')
 
         # clock offset is 0.0000 msec, root delay is 0.00 msec
         p5 = re.compile(r'^clock +offset +is +(?P<offset>[\d\.\-]+) +msec,'
-            ' +root +delay +is +(?P<rootdelay>[\d\.]+) +msec$')
+            r' +root +delay +is +(?P<rootdelay>[\d\.]+) +msec$')
 
         # root dispersion is 2.31 msec, peer dispersion is 1.20 msec
         p6 = re.compile(r'^root +dispersion +is +(?P<rootdispersion>[\d\.]+)'
-            ' +msec, +peer +dispersion +is +(?P<peerdispersion>[\d\.]+) +msec$')
+            r' +msec, +peer +dispersion +is +(?P<peerdispersion>[\d\.]+) +msec$')
 
         # loopfilter state is 'CTRL' (Normal Controlled Loop), drift is 0.000000000 s/s
         p7 = re.compile(r'^loopfilter +state +is +(?P<leap_status>[\'\s\w\(\)]+),'
-            ' +drift +is +(?P<drift>[\d\.\s\w\/\-]+)$')
+            r' +drift +is +(?P<drift>[\d\.\s\w\/\-]+)$')
 
         # system poll interval is 16, last update was 9 sec ago.
         p8 = re.compile(r'^system +poll +interval +is +(?P<poll>\d+),'
-            ' +last +update +was +(?P<last_update>[\d\s\w]+).*$')
+            r' +last +update +was +(?P<last_update>[\d\s\w]+).*$')
 
         # system poll interval is 64, never updated
         p8_1 = re.compile(r'^system +poll +interval +is +(?P<poll>\d+),'
-            ' +never +updated.*$')
+            r' +never +updated.*$')
 
         for line in out.splitlines():
             line = line.strip()

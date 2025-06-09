@@ -70,8 +70,8 @@ class ShowVrfAllDetail(ShowVrfAllDetailSchema):
             # VRF A:MGMT; RD 1:100; VPN ID not set
             # RD 172.16.94.0:1000
             p1 = re.compile(r'^VRF +(?P<vrf>[\w\-:]+); +'
-                             'RD +(?P<rd>[\w\s\:\<\>\.]+); +'
-                             'VPN +ID +(?P<vpn_id>[\w\s\:]+)$')
+                             r'RD +(?P<rd>[\w\s\:\<\>\.]+); +'
+                             r'VPN +ID +(?P<vpn_id>[\w\s\:]+)$')
             m = p1.match(line)
             if m:
                 vrf = m.groupdict()['vrf']
@@ -110,13 +110,18 @@ class ShowVrfAllDetail(ShowVrfAllDetailSchema):
                 continue
             #   GigabitEthernet0/0/0/0.390
             #   Bundle-Ether15.514
-            p4_1 = re.compile(r'^(?P<intf>([G|g]i.*|[B|b]un.*|'
-                              r'[T|t]en.*|[P|p]o.*|[V|v]lan.*|'
-                              r'[L|l]o.*))$')
+            #   MgmtEth0/RP0/CPU0/0
+            #   HundredGigE0/0/1/0.3801
+            p4_1 = re.compile(r'^(?P<intf>([Gg]i.*|[Bb]un.*|[Tt]en.*|[Pp]o.*|'
+                  r'[Vv]lan.*|[Ll]o.*|[Mm]gmtEth.*|[Hh]undredGigE.*|'
+                  r'[Ee]ightHundredGigE.*|[Ff]iftyGigE.*|[Ff]ortyGigE.*|'
+                  r'[Ff]ourHundredGigE.*|[Tt]wentyFiveGigE.*|'
+                  r'[Tt]woHundredGigE.*))$')
 
             m = p4_1.match(line)
             if m:
                 intf = m.groupdict()['intf']
+                vrf_dict[vrf].setdefault('interfaces', [])
                 vrf_dict[vrf]['interfaces'].append(intf)
                 continue
 

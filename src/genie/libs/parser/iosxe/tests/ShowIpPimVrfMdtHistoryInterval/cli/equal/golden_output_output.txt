@@ -1,0 +1,3 @@
+MDT-data group        Number of reuse 
+     10.9.9.8           3 
+     10.9.9.9           2 

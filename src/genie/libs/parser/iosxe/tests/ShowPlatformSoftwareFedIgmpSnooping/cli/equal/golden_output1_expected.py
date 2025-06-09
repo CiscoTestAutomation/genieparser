@@ -6,6 +6,9 @@ expected_output = {
             'mroute_port': [],
             'snoop_state': 'ON',
             'stp_tcn_flood': 'OFF',
+            'evpn_en': 'OFF',
+            'iosd_md': 'OFF',
+            'pim_en': 'ON',
         },
     },
 }

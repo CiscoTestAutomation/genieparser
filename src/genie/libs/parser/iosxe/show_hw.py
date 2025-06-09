@@ -5,6 +5,9 @@ IOSXE parsers for the following show commands:
     * show hw-module usbflash1 security status
     * show hw-module {filesystem} security-lock status
     * show hardware led port {port} {mode}
+    * hw-module beacon RP {supervisor} status
+    * hw-module beacon slot {slot_num} status
+    * show hw-module subslot all oir
 '''
 
 # Python
@@ -137,7 +140,8 @@ class ShowHardwareLedSchema(MetaParser):
     """
     schema = {
         Optional('current_mode'): str,
-        Optional('led_ecomode'): str,
+        Optional('led_auto_off'): str,
+        Optional('led_hw_state'): str,
         Optional('switch'): {
             Any():{
                 'system': str,
@@ -205,82 +209,88 @@ class ShowHardwareLed(ShowHardwareLedSchema):
         root_dict = ret_dict
 
         # SWITCH: 1
-        p1 = re.compile('^SWITCH:\s+(?P<switch_num>\d+)$')
+        p1 = re.compile(r'^SWITCH:\s+(?P<switch_num>\d+)$')
 
         # SYSTEM: GREEN
-        p2 = re.compile('^SYSTEM:\s+(?P<system>\w+)$')
+        p2 = re.compile(r'^SYSTEM:\s+(?P<system>\w+)$')
 
         # BEACON: OFF
-        p3 = re.compile('^BEACON:\s+(?P<beacon>\w+)$')
+        p3 = re.compile(r'^BEACON:\s+(?P<beacon>\w+)$')
 
         # PORT STATUS: (124) Hu1/0/1:GREEN Hu1/0/2:OFF Hu1/0/3:GREEN Hu1/0/4:OFF Hu1/0/5:OFF Hu1/0/6:GREEN Hu1/0/7:OFF Hu1/0/8:OFF Hu1/0/9:OFF Hu1/0/10:GREEN Hu1/0/11:GREEN Hu1/0/12:GREEN Hu1/0/13:GREEN Hu1/0/14:GREEN Fou1/0/15:GREEN Fou1/0/16:GREEN Fou1/0/17:GREEN Fou1/0/18:GREEN Fou1/0/19:GREEN Fou1/0/20:GREEN Fou1/0/21:GREEN Fou1/0/22:GREEN Hu1/0/23:GREEN Hu1/0/24:GREEN Hu1/0/25:OFF Hu1/0/26:GREEN Hu1/0/27:GREEN Hu1/0/28:GREEN Hu1/0/29:GREEN Hu1/0/30:GREEN Hu1/0/31:OFF Hu1/0/32:GREEN Hu1/0/33:GREEN Hu1/0/34:GREEN Hu1/0/35:GREEN Hu1/0/36:GREEN
-        p4 = re.compile('^PORT STATUS:\s+\S+\s+(?P<led_ports>((\S+:\w+\s*))+)$')
+        p4 = re.compile(r'^PORT STATUS:\s+\S+\s+(?P<led_ports>((\S+:\w+\s*))+)$')
         
         #STATUS: (28) Gi1/0/1:FLASH_GREEN Gi1/0/2:BLACK Gi1/0/3:BLACK Gi1/0/4:BLACK Gi1/0/5:FLASH_GREEN Gi1/0/6:FLASH_GREEN Gi1/0/7:FLASH_GREEN Gi1/0/8:FLASH_GREEN Gi1/0/9:BLACK Gi1/0/10:FLASH_GREEN Gi1/0/11:FLASH_GREEN Gi1/0/12:BLACK Gi1/0/13:BLACK Gi1/0/14:BLACK Gi1/0/15:BLACK Gi1/0/16:BLACK Gi1/0/17:BLACK Gi1/0/18:BLACK Gi1/0/19:BLACK Gi1/0/20:BLACK Gi1/0/21:BLACK Gi1/0/22:BLACK Gi1/0/23:FLASH_GREEN Gi1/0/24:FLASH_GREEN Gi1/0/25:BLACK Gi1/0/26:BLACK Gi1/0/27:BLACK Gi1/0/28:BLACK
-        p4_1 = re.compile('^STATUS:\s+\((?P<port_nums_in_status>\d+)\)+\s+(?P<led_ports>((\S+:[\w-]+\s*))+)$')
+        p4_1 = re.compile(r'^STATUS:\s+\((?P<port_nums_in_status>\d+)\)+\s+(?P<led_ports>((\S+:[\w-]+\s*))+)$')
 
         # RJ45 CONSOLE: GREEN
-        p5 = re.compile('^RJ45 CONSOLE:\s+(?P<rj45_console>\w+)$')
+        p5 = re.compile(r'^RJ45 CONSOLE:\s+(?P<rj45_console>\w+)$')
 
         # FANTRAY 1 STATUS: GREEN
-        p6 = re.compile('^FANTRAY\s+(?P<fantray_num>\d+)\s+STATUS:\s+(?P<fantray_status>\w+)$')
+        p6 = re.compile(r'^FANTRAY\s+(?P<fantray_num>\d+)\s+STATUS:\s+(?P<fantray_status>\w+)$')
 
         # POWER-SUPPLY 1 BEACON: OFF
-        p7 = re.compile('^POWER-SUPPLY\s+(?P<power_supply_num>\d+)\s+BEACON:\s+(?P<power_supply_status>\w+)$')
+        p7 = re.compile(r'^POWER-SUPPLY\s+(?P<power_supply_num>\d+)\s+BEACON:\s+(?P<power_supply_status>\w+)$')
         
         #DC-A: GREEN
-        p7_1 = re.compile('^DC-A:\s+(?P<dc_a>\w+)$')
+        p7_1 = re.compile(r'^DC-A:\s+(?P<dc_a>\w+)$')
 
         #DC-B: BLACK
-        p7_2 = re.compile('^DC-B:\s+(?P<dc_b>\w+)$')
+        p7_2 = re.compile(r'^DC-B:\s+(?P<dc_b>\w+)$')
 
         # SYSTEM PSU: AMBER
-        p8 = re.compile('^SYSTEM PSU:\s+(?P<system_psu>\w+)$')
+        p8 = re.compile(r'^SYSTEM PSU:\s+(?P<system_psu>\w+)$')
 
         # SYSTEM FAN: GREEN
-        p9 = re.compile('^SYSTEM FAN:\s+(?P<system_fan>\w+)$')
+        p9 = re.compile(r'^SYSTEM FAN:\s+(?P<system_fan>\w+)$')
 
         #EXPRESS-SETUP: BLACK
-        p10 = re.compile('^EXPRESS-SETUP:\s+(?P<express_setup>\w+)$')
+        p10 = re.compile(r'^EXPRESS-SETUP:\s+(?P<express_setup>\w+)$')
 
         # ALARM-OUT: GREEN
         # ALARM-IN1: GREEN
         # ALARM-IN2: GREEN
-        p11 = re.compile('^(?P<alarm>ALARM\-\w+):\s+(?P<alarm_color>\w+)$')
+        p11 = re.compile(r'^(?P<alarm>ALARM\-\w+):\s+(?P<alarm_color>\w+)$')
 
         # Current Mode: STATUS
-        p12 = re.compile('^Current Mode:\s+(?P<status>\w+)$')
+        p12 = re.compile(r'^Current Mode:\s+(?P<status>\w+)$')
 
-        # LED Ecomode: Enabled
-        p12_1 = re.compile('^LED Ecomode:\s+(?P<ecomode>\w+)$')
+        # LED Auto off: Disabled // this output changed as below and new line added for hardware state.
+        # LED auto-off: Enabled
+        p12_1 = re.compile(r'^LED auto-off:\s+(?P<auto_off>\w+)$')
+
+        # LED Hardware State: OFF
+        p12_2 = re.compile(r'^LED Hardware State:\s+(?P<hw_state>\w+)$')
+
+
 
         # MASTER: GREEN
-        p13 = re.compile('^MASTER:\s+(?P<master>\w+)$')
+        p13 = re.compile(r'^MASTER:\s+(?P<master>\w+)$')
 
         # DUPLEX: (65) Tw1/0/1:BLACK Tw1/0/2:BLACK Tw1/0/3:BLACK 
         # Tw1/0/4:GREEN Tw1/0/5:BLACK Tw1/0/6:BLACK Tw1/0/7:BLACK
-        p14 = re.compile('^DUPLEX:\s+\S+\s+(?P<duplex>((\S+:\S+\s*))+)$')
+        p14 = re.compile(r'^DUPLEX:\s+\S+\s+(?P<duplex>((\S+:\S+\s*))+)$')
 
         # SPEED: (65) Tw1/0/1:BLACK Tw1/0/2:BLACK Tw1/0/3:BLACK 
         # Tw1/0/4:BLINK_GREEN Tw1/0/5:BLACK Tw1/0/6:BLACK Tw1/0/7:BLACK
-        p15 = re.compile('^SPEED:\s+\S+\s+(?P<speed>((\S+:\S+\s*))+)$')
+        p15 = re.compile(r'^SPEED:\s+\S+\s+(?P<speed>((\S+:\S+\s*))+)$')
 
         # STACK: (65) Tw1/0/1:FLASH_GREEN Tw1/0/2:BLACK Tw1/0/3:BLACK
         # Tw1/0/4:BLACK Tw1/0/5:BLACK Tw1/0/6:BLACK Tw1/0/7:BLACK Tw1/0/8:BLACK
-        p16 = re.compile('^STACK:\s+\S+\s+(?P<stack_port>((\S+:\S+\s*))+)$')
+        p16 = re.compile(r'^STACK:\s+\S+\s+(?P<stack_port>((\S+:\S+\s*))+)$')
 
         # POE: (65) Tw1/0/1:BLACK Tw1/0/2:BLACK Tw1/0/3:BLACK Tw1/0/4:BLACK
         # Tw1/0/5:BLACK Tw1/0/6:BLACK Tw1/0/7:BLACK Tw1/0/8:BLACK Tw1/0/9:BLACK
-        p17 = re.compile('^POE:\s+\S+\s+(?P<poe>((\S+:\S+\s*))+)$')
+        p17 = re.compile(r'^POE:\s+\S+\s+(?P<poe>((\S+:\S+\s*))+)$')
 
         # STACK POWER: BLACK
-        p18 = re.compile('^STACK POWER:\s+(?P<stack_power>\w+)$')
+        p18 = re.compile(r'^STACK POWER:\s+(?P<stack_power>\w+)$')
 
         # XPS: BLACK
-        p19 = re.compile('^XPS:\s+(?P<xps>\w+)$')
+        p19 = re.compile(r'^XPS:\s+(?P<xps>\w+)$')
 
         # USB CONSOLE: BLACK
-        p20 = re.compile('^USB CONSOLE:\s+(?P<usb_console>\w+)$')
+        p20 = re.compile(r'^USB CONSOLE:\s+(?P<usb_console>\w+)$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -408,11 +418,18 @@ class ShowHardwareLed(ShowHardwareLedSchema):
                 ret_dict.update({'current_mode' : group['status']})
                 continue
 
-            # LED Ecomode: Enabled
+            # LED Auto off: Disabled
             m = p12_1.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict.update({'led_ecomode' : group['ecomode']})
+                ret_dict.update({'led_auto_off' : group['auto_off']})
+                continue
+
+            # LED Hardware State: OFF
+            m = p12_2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({'led_hw_state' : group['hw_state']})
                 continue
 
             # MASTER: GREEN
@@ -490,6 +507,7 @@ class ShowHardwareLed(ShowHardwareLedSchema):
         return ret_dict
 
 
+
 class ShowHardwareLedPortSchema(MetaParser):
     """
     Schema for show hardware led port {port}
@@ -513,7 +531,7 @@ class ShowHardwareLedPort(ShowHardwareLedPortSchema):
         ret_dict = {}
         
         # GREEN
-        p1 = re.compile('^(?P<port_status>\w+)$')
+        p1 = re.compile(r'^(?P<port_status>\w+)$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -699,8 +717,8 @@ class ShowHardwareLedPortModeSchema(MetaParser):
     Schema for show hardware led port {port} {mode}
     """
     schema = {
-        'current_mode': str,
-        'status': str 
+        Optional('current_mode'): str,
+        'status': str
     }
 
 class ShowHardwareLedPortMode(ShowHardwareLedPortModeSchema):
@@ -736,3 +754,123 @@ class ShowHardwareLedPortMode(ShowHardwareLedPortModeSchema):
                 continue
   
         return ret_dict
+
+
+class HardwareModuleBeaconFanTrayStatusSchema(MetaParser):
+    """
+    Schema for hw-module beacon fan-tray status
+    """
+    schema = {
+        'fantray_beacon_led': str
+    }
+
+class HardwareModuleBeaconFanTrayStatus(HardwareModuleBeaconFanTrayStatusSchema):
+    """Parser for hw-module beacon fan-tray status"""
+
+    cli_command = "hw-module beacon fan-tray status"
+    
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Fantray Beacon LED: OFF
+        p1 = re.compile(r'^Fantray Beacon LED: (?P<fantray_beacon_led>\w+)$')
+
+        ret_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # Fantray Beacon LED: OFF
+            m = p1.match(line)
+            if m:
+                ret_dict['fantray_beacon_led'] = m.groupdict()['fantray_beacon_led']
+                continue
+  
+        return ret_dict
+
+
+class HardwareModuleBeaconSlotStatusSchema(MetaParser):
+    """
+    Schema for hw-module beacon slot {slot_num} status
+    """
+    schema = {
+        'slot_status': str
+    }
+
+class HardwareModuleBeaconSlotStatus(HardwareModuleBeaconSlotStatusSchema):
+    """Parser for hw-module beacon slot {slot_num} status"""
+
+    cli_command = ["hw-module beacon slot {slot_num} status", "hw-module beacon RP {supervisor} status"]
+    
+    def cli(self, slot_num=None, supervisor=None, output=None):
+        if output is None:
+            if slot_num:
+                output = self.device.execute(self.cli_command[0].format(slot_num=slot_num))
+            else:
+                output = self.device.execute(self.cli_command[1].format(supervisor=supervisor))
+
+        # BLACK
+        # SOLID BLUE
+        p1 = re.compile(r'^(?P<slot_status>[\w\s]+)$')
+
+        ret_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # BLACK
+            m = p1.match(line)
+            if m:
+                ret_dict['slot_status'] = m.groupdict()['slot_status']
+                continue
+  
+        return ret_dict
+
+class ShowHwModuleSubslotOirSchema(MetaParser):
+    """Schema for show hw-module subslot {slot} oir"""
+    schema = {
+        'subslots': {
+            str: {
+                'model': str,
+                'operational_status': str,
+            }
+        }
+    }
+
+class ShowHwModuleSubslotOir(ShowHwModuleSubslotOirSchema):
+    """Parser for show hw-module subslot {slot} oir"""
+
+    cli_command = 'show hw-module subslot {slot} oir'
+
+    def cli(self, slot='', output=None):
+        if output is None:
+            # Execute the command on the device
+            output = self.device.execute(self.cli_command.format(slot=slot))
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # Define the regular expression pattern to match each line of the output
+        # subslot 0/0             ISR4451-X-4x1GE      ok 
+        p0 = re.compile(r'^subslot\s+(?P<subslot>\S+)\s+(?P<model>\S+)\s+(?P<operational_status>\S+)$')
+
+        # Iterate over each line in the output
+        for line in output.splitlines():
+            line = line.strip()
+            # subslot 0/0             ISR4451-X-4x1GE      ok
+            if not line:
+                continue
+
+            # subslot 0/0             ISR4451-X-4x1GE      ok
+            m = p0.match(line)
+            if m:
+                # Extract the matched groups
+                subslot = m.group('subslot')
+                model = m.group('model')
+                operational_status = m.group('operational_status')
+
+                # Use setdefault to avoid key errors
+                subslot_dict = parsed_dict.setdefault('subslots', {}).setdefault(subslot, {})
+                subslot_dict['model'] = model
+                subslot_dict['operational_status'] = operational_status
+
+        return parsed_dict

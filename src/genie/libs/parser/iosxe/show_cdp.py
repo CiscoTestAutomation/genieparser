@@ -100,10 +100,18 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
         #                     Eth1/39/1      159    R S I s
         # ENT-DNAC-EG00-ESX03
         #                     Ten 1/1/2      154         S    VMware ES vmnic2
+        # R1.cisco.com
+        #                Gig 0/2/0         169              R I   ASR1002   Gig 0/0/0
+        # R2.cisco.com
+        #                Gig 0/2/2         167             R B S  CISCO2951 Gig 0/0
+        # R3.cisco.com
+        #                Multilink3        165              R I   ASR1002   Multilink1
+        # R4.cisco.com
+        #                Ser 0/1/0:0       160             R S I  ISR4451-X Ser 0/1/0:0
         p4 = re.compile(r'^(?P<device_id>\S+)$')
-        p5 = re.compile(r'(?P<local_interface>[a-zA-Z]+[\s]*[\d/.]+) +'
+        p5 = re.compile(r'(?P<local_interface>[a-zA-Z]+[\s]*[\d/.]+(:\d+)?)?\s+'
                         r'(?P<hold_time>\d+) +(?P<capability>[RTBSsHIrPDCM\s]+)( +'
-                        r'(?P<platform>VMware ES|\S+))?( (?P<port_id>[\.a-zA-Z0-9/\s]+))?$')
+                        r'(?P<platform>VMware ES|\S+))?( (?P<port_id>[\.a-zA-Z0-9/\s]+(:\d+)?))?$')
 
         # Total cdp entries displayed : 13
         p6 = re.compile(r'^Total cdp entries displayed :\s+(?P<total_entries>\d+)$')
@@ -763,7 +771,7 @@ class ShowCdpEntrySchema(MetaParser):
                         'device_id': str,
                         'hold_time': int,
                         'cdp_version': int,
-                        'peer_mac': str,
+                        Optional('peer_mac'): str,
                         'vtp_mgmt_domain': str,
                         Optional('native_vlan'): int,
                         'duplex': str,

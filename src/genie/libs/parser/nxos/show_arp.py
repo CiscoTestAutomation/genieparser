@@ -297,7 +297,7 @@ class ShowIpArpSummaryVrfAll(ShowIpArpSummaryVrfAllSchema):
 
 		# Incomplete : 0 (Throttled : 0)
 		p2 = re.compile(r'^\s*Incomplete +: +(?P<incomplete>\w+)'
-			' +\(Throttled +: +(?P<throttled>\w+)\)$')
+			r' +\(Throttled +: +(?P<throttled>\w+)\)$')
 
 		# Unknown    : 0
 		p3 = re.compile(r'^\s*Unknown +: +(?P<unknown>[\d]+)$')
@@ -350,6 +350,8 @@ class ShowIpArpstatisticsVrfAllSchema(MetaParser):
 				'gratuitous': int,
 				'tunneled': int,
 				'dropped': int,
+				Optional('rewritepkt'): int,
+				Optional('droppedrewritepkt'): int,
 				'drops_details': {
 					'mbuf_operation_failed': int,
 					Optional('context_not_created'): int,
@@ -425,6 +427,7 @@ class ShowIpArpstatisticsVrfAllSchema(MetaParser):
 				'adjacency_deletes': int,
 				'adjacency_timeouts': int,
 				Optional('failed_due_to_limits'): int,
+				Optional('del_dynamic_on_static_add'): int
 				}
 			}
 		}
@@ -462,14 +465,16 @@ class ShowIpArpstatisticsVrfAll(ShowIpArpstatisticsVrfAllSchema):
 		p1_1 = re.compile(r'^\s*Received:$')
 
 		# Total 0, Requests 22632, Replies 6582, Requests on L2 0, Replies on L2 0,
-		p2 = re.compile(r'^\s*Total +(?P<total>[\w]+), +Requests '
+		# Total 24812, RewritePkt 0, Requests 12466, Replies 136320, Requests on L2 0, Replies on L2 0,
+		p2 = re.compile(r'^\s*Total +(?P<total>[\w]+)(, +RewritePkt +(?P<rewritepkt>[\w]+))?, +Requests '
 			r'+(?P<requests>[\w]+), +Replies +(?P<replies>[\w]+), '
 			r'+Requests +on +L2 +(?P<l2_requests>[\w]+), +Replies +on +L2 '
 			r'+(?P<l2_replies>[\w]+)(,)?$')
 
 		# Gratuitous 58, Tunneled 0, Dropped 0
+		# Gratuitous 64, Tunneled 0, Dropped 0, DroppedRewritePkt 0,
 		p3 = re.compile(r'^\s*Gratuitous +(?P<gratuitous>[\w]+), +Tunneled '
-			'+(?P<tunneled>[\w]+), +Dropped +(?P<dropped>[\w]+)$')
+			r'+(?P<tunneled>[\w]+), +Dropped +(?P<dropped>[\w]+)(, +DroppedRewritePkt +(?P<droppedrewritepkt>[\w]+),)?$')
 
 		# Proxy arp 0, Local-Proxy arp 0,  Enhanced Proxy arp 0, Anycast proxy Proxy arp 0,  L2 Port-track Proxy arp 0,  Tunneled 0, Fastpath 0, Snooped 0, Dropped 28218  on Server Port 0 
 		# Proxy arp 0, Local-Proxy arp 0, Tunneled 0, Fastpath 0, Snooped 0, Dropped 4
@@ -654,9 +659,11 @@ class ShowIpArpstatisticsVrfAll(ShowIpArpstatisticsVrfAllSchema):
 						 r'+(?P<number_of_signals_received_from_l2rib>[\d]+)$')
 
 		# Adds 43, Deletes 12, Timeouts 12
+		# Adds 32, Deletes 0, Timeouts 0, delDynamicOnStaticAdd 0
 		p50 = re.compile(r'^\s*Adds +(?P<adjacency_adds>[\w]+), +Deletes '
 						 r'+(?P<adjacency_deletes>[\w]+), +Timeouts '
-						 r'+(?P<adjacency_timeouts>[\w]+)$')
+						 r'+(?P<adjacency_timeouts>[\w]+)'
+						 r'(, +delDynamicOnStaticAdd +(?P<del_dynamic_on_static_add>[\w]+))?$')
 
 		# Failed due to limits: 0
 		p51 = re.compile(r'^\s*Failed +due +to +limits: '
@@ -709,7 +716,7 @@ class ShowIpArpstatisticsVrfAll(ShowIpArpstatisticsVrfAllSchema):
 				groups = m.groupdict()
 				# total, requests, replies, l2_requests, l2_replies
 				ret_dict['statistics'][direction].update({k: \
-					int(v) for k, v in groups.items()})
+					int(v) for k, v in groups.items() if v})
 				continue
 
 			m = p3.match(line)
@@ -717,7 +724,7 @@ class ShowIpArpstatisticsVrfAll(ShowIpArpstatisticsVrfAllSchema):
 				groups = m.groupdict()
 				# gratuitous, tunneled, dropped
 				ret_dict['statistics']['sent'].update({k: \
-					int(v) for k, v in groups.items()})
+					int(v) for k, v in groups.items() if v})
 				continue
 
 			m = p4.match(line)
@@ -1081,7 +1088,7 @@ class ShowIpArpstatisticsVrfAll(ShowIpArpstatisticsVrfAllSchema):
 				groups = m.groupdict()
 				# adjacency_adds, adjacency_deletes, adjacency_timeouts
 				ret_dict['statistics']['adjacency'].update({k: int(v) \
-					for k, v in groups.items()})
+					for k, v in groups.items() if v})
 				continue
 
 			m = p51.match(line)

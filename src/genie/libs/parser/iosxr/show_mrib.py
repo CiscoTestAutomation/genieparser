@@ -89,9 +89,9 @@ class ShowMribVrfRoute(ShowMribVrfRouteSchema):
             # (*,ff00::/8)
             # (2001:db8:1:0:1:1:1:2,ff15::1:1)
             p1 = re.compile(r'^\s*\((?P<source_address>(\S+))\,'
-                             '(?P<multicast_group>(\S+))\)'
-                             '(?: *RPF +nbr: +(?P<rpf_nbr>(\S+)))?'
-                             '(?: *Flags: +(?P<flags>[a-zA-Z\s]+))?$')
+                             r'(?P<multicast_group>(\S+))\)'
+                             r'(?: *RPF +nbr: +(?P<rpf_nbr>(\S+)))?'
+                             r'(?: *Flags: +(?P<flags>[a-zA-Z\s]+))?$')
             m = p1.match(line)
             if m:
                 # Get values
@@ -140,7 +140,7 @@ class ShowMribVrfRoute(ShowMribVrfRouteSchema):
 
             # RPF nbr: 2001:db8:b901:0:150:150:150:150 Flags: L C RPF P
             p2 = re.compile(r'^\s*RPF +nbr: +(?P<rpf_nbr>(\S+))'
-                             ' +Flags: (?P<flags>[a-zA-Z\s]+)$')
+                             r' +Flags: (?P<flags>[a-zA-Z\s]+)$')
             m = p2.match(line)
             if m:
                 rpf_nbr = m.groupdict()['rpf_nbr']
@@ -178,7 +178,7 @@ class ShowMribVrfRoute(ShowMribVrfRouteSchema):
 
             # MVPN Remote TID: 0x0
             p7 = re.compile(r'^\s*MVPN +Remote +TID:'
-                             ' +(?P<mvpn_remote_tid>(\S+))$')
+                             r' +(?P<mvpn_remote_tid>(\S+))$')
             m = p7.match(line)
             if m:
                 sub_dict['mvpn_remote_tid'] = m.groupdict()['mvpn_remote_tid']
@@ -223,9 +223,9 @@ class ShowMribVrfRoute(ShowMribVrfRouteSchema):
             # mdtvpn1 Flags: F NS MI MT MA, Up: 00:02:53
             # Bundle-Ether1.100 (0/12/CPU0) Flags: F NS, Up: 5d22h
             p12 = re.compile(r'^\s*(?P<interface>(\S+))'
-                              '( *\((?P<location>[\S\s]+)\))?'
-                              ' +Flags: +(?P<flags>[a-zA-Z\s]+), +Up:'
-                              ' +(?P<uptime>(\S+))$')
+                              r'( *\((?P<location>[\S\s]+)\))?'
+                              r' +Flags: +(?P<flags>[a-zA-Z\s]+), +Up:'
+                              r' +(?P<uptime>(\S+))$')
             m = p12.match(line)
             if m:
                 # Get values

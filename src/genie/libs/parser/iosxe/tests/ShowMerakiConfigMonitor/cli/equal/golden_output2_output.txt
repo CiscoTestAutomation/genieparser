@@ -1,0 +1,19 @@
+Config Monitor
+------------------------------------
+  Current state:                Ready
+
+Local config changes:
+------------------------------------
+1.  Config change (UTC): 2025-04-02 08:03:05
+  Total number of xpaths seen: 1
+  Displaying only first 1 XPaths
+    XPATH: /ios:native/ios:interface/ios:GigabitEthernet[ios:name='0/0']/ios-eth:negotiation/ios-eth:auto
+    Operation: Delete
+2.  Config change (UTC): 2025-04-01 22:22:38
+  Total number of xpaths seen: 2
+  Displaying only first 2 XPaths
+    XPATH: /ios:native/ios:interface/ios:GigabitEthernet[ios:name='0/0']/ios-eth:negotiation/ios-eth:auto
+    Operation: Delete
+    XPATH: /ios:native/ios:interface/ios:GigabitEthernet[ios:name='3/0/1']
+    Operation: Create
+    

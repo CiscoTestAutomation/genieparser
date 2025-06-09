@@ -1,0 +1,27 @@
+Tag 1:
+
+IS-IS Level-2 Link State Database:
+LSPID                 LSP Seq Num  LSP Checksum  LSP Holdtime/Rcvd      ATT/P/OL
+R1.00-00            * 0x000000EE   0x5CB6                 554/*         0/0/0
+  Area Address: 49.1234
+  NLPID:        0xCC 0x8E 
+  Topology:     IPv4 (0x0) 
+                IPv6 (0x2) 
+  Router CAP:   1.1.1.1, D:0, S:0
+    Segment Routing: I:1 V:0, SRGB Base: 16000 Range: 13001
+    Segment Routing Local Block: SRLB Base: 15000 Range: 1000
+    Node-MSD 
+      MSD: 16
+  Hostname: R1
+  Metric: 10         IS-Extended R3.00
+    Interface IP Address: 19.19.19.1
+    Neighbor IP Address: 19.19.19.2
+    Admin. Weight: 50
+    Physical LINK BW: 10000 kbits/sec
+    Uni Link Delay(Avg.) A-bit:0 Value:50
+    Uni Link Delay(Min/Max) A-bit:0 Min:50 Max:50
+    Uni Link Delay(Var.) Value:0 
+    ASLA: L flag: 0, SA-Length 1, UDA-Length 0
+    Standard Applications:  FLEX-ALGO
+             Bit mask:  0x10
+     Appl spec Admin. Weight: 50

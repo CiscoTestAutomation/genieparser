@@ -42,13 +42,13 @@ class ShowParserEncryptFileStatus(ShowParserEncryptFileStatusSchema):
         ret_dict = {}
         
         #Feature:            Enabled
-        p1=re.compile('^Feature\:\s+(?P<feature>Enabled|Disabled)$')
+        p1=re.compile(r'^Feature\:\s+(?P<feature>Enabled|Disabled)$')
         
         #File Format:        Cipher text
-        p2=re.compile('^File Format:\s+(?P<format>(Plain|Cipher) text)$')
+        p2=re.compile(r'^File Format:\s+(?P<format>(Plain|Cipher) text)$')
         
         #Encryption Version: ver1 
-        p3= re.compile('^Encryption Version:\s+(?P<encrypt_ver>\S+)$')
+        p3= re.compile(r'^Encryption Version:\s+(?P<encrypt_ver>\S+)$')
         
         for line in output.splitlines():
             line = line.strip() 

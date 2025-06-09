@@ -62,29 +62,29 @@ class ShowSystemInternalSysmgrServiceName(
         # Service "__inst_012__isis" ("isis", 61):
         # Service "feature-mgr" ("feature-mgr", 135):
         p1 = re.compile(r'^Service +\"(?P<inst>[\w\-]+)\" *'
-                         '\(\"(?P<process_name>[\w\-]+)\", *'
-                         '(?P<internal_id>\d+)\):$')
+                         r'\(\"(?P<process_name>[\w\-]+)\", *'
+                         r'(?P<internal_id>\d+)\):$')
 
         # UUID = 0x2C7, PID = 6547, SAP = 1008
         # UUID = 0x59D, PID = 5418, no SAP
         # UUID = 0x42000118, -- Currently not running --
         p2 = re.compile(r'^UUID *= *(?P<uuid>\w+), *'
-                         '((PID *= *(?P<pid>\d+), *'
-                         '(SAP *= *(?P<sap>\d+)|no SAP))'
-                         '|(-- Currently not running --))$')
+                         r'((PID *= *(?P<pid>\d+), *'
+                         r'(SAP *= *(?P<sap>\d+)|no SAP))'
+                         r'|(-- Currently not running --))$')
 
         # State: SRV_STATE_WAIT_SPAWN_CONDITION (entered at time Tue Mar 26 17:31:06 2013).
         # State: SRV_STATE_HAP_FAILED [unstable] (entered at time Thu Oct 26 13:46:32 2017).
         p3 = re.compile(r'^State: *(?P<state>[\w\s\[\]]+) *'
-                         '\(entered +at +time +'
-                         '(?P<state_start_date>[\w\s\:]+)\).$')
+                         r'\(entered +at +time +'
+                         r'(?P<state_start_date>[\w\s\:]+)\).$')
 
         # Restart count: 1
         p4 = re.compile(r'^Restart +count: +(?P<restart_count>\d+)$')
 
         # Time of last restart: Sat Jul  1 14:49:10 2017.
         p5 = re.compile(r'^Time +of +last +restart: +'
-                         '(?P<last_restart_date>[\w\s\:]+).$')
+                         r'(?P<last_restart_date>[\w\s\:]+).$')
 
         # The service never crashed since the last reboot.
         # The service has never been started since the last reboot.
@@ -95,7 +95,7 @@ class ShowSystemInternalSysmgrServiceName(
 
         # Reason of last termination: SYSMGR_DEATH_REASON_FAILURE_SIGNAL
         p8 = re.compile(r'^Reason +of +last +termination: +'
-                         '(?P<last_terminate_reason>\w+)$')
+                         r'(?P<last_terminate_reason>\w+)$')
 
         # Plugin ID: 0
         p9 = re.compile(r'^Plugin +ID: +(?P<plugin_id>\d+)$')
@@ -276,9 +276,9 @@ class ShowSystemInternalL2fwderMac(ShowSystemInternalL2fwderMacSchema):
 
             # G  1008    5e01.80ff.0007    static   -          F     F   sup-eth1(R)
             p1 = re.compile(r'^\s*(?P<entry>[A-Z\*\(\+\)]+) +(?P<vlan>[0-9]+) '
-                '+(?P<mac_address>[0-9a-z\.]+) +(?P<mac_type>[a-z]+) '
-                '+(?P<age>[0-9\-\:]+) +(?P<secure>[A-Z]+) +(?P<ntfy>[A-Z]+) '
-                '+(?P<ports>[a-zA-Z0-9\-\(\)\s\.\/]+)$')
+                r'+(?P<mac_address>[0-9a-z\.]+) +(?P<mac_type>[a-z]+) '
+                r'+(?P<age>[0-9\-\:]+) +(?P<secure>[A-Z]+) +(?P<ntfy>[A-Z]+) '
+                r'+(?P<ports>[a-zA-Z0-9\-\(\)\s\.\/]+)$')
             m = p1.match(line)
             if m:
 

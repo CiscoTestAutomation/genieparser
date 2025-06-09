@@ -1,0 +1,56 @@
+Smart Licensing Status
+======================
+ 
+Smart Licensing is ENABLED
+ 
+Registration:
+  Status: REGISTERED
+  Smart Account: Cisco Systems, TAC
+Virtual Account: RADKit-LMM-NA
+  Export-Controlled Functionality: ALLOWED
+  Initial Registration: SUCCEEDED on Mar 13 08:09:24 2024 UTC
+  Last Renewal Attempt: None
+  Next Renewal Attempt: Sep 09 08:09:24 2024 UTC
+  Registration Expires: Mar 13 08:04:57 2025 UTC
+ 
+License Authorization: 
+  Status: AUTHORIZED on Mar 13 08:09:28 2024 UTC
+  Last Communication Attempt: SUCCEEDED on Mar 13 08:09:28 2024 UTC
+  Next Communication Attempt: Apr 12 08:09:28 2024 UTC
+  Communication Deadline: Jun 11 08:05:02 2024 UTC
+ 
+Export Authorization Key:
+  Features Authorized:
+    <none>
+ 
+Utility:
+  Status: DISABLED
+ 
+Data Privacy:
+  Sending Hostname: yes
+    Callhome hostname privacy: DISABLED
+    Smart Licensing hostname privacy: DISABLED
+  Version privacy: DISABLED
+ 
+Transport:
+  Type: Callhome
+ 
+License Usage
+==============
+ 
+No licenses in use
+ 
+Product Information
+===================
+UDI: PID:CSR1000V,SN:9NZ7O74FICQ
+ 
+Agent Version
+=============
+Smart Agent for Licensing: 4.8.5.4_rel/22
+ 
+Reservation Info
+================ 
+License reservation: DISABLED
+ 
+ 
+ 

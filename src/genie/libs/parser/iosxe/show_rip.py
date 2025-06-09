@@ -91,7 +91,7 @@ class ShowIpRipDatabase(ShowIpRipDatabaseSchema):
 
         #    [4] via 10.1.2.2, 00:00:00, GigabitEthernet2.100
         p4 = re.compile(r'^\s*\[(?P<metric>\d+)\] +via +(?P<next_hop>[\d\.\/]+),'
-                        ' +(?P<expire_time>[\w\:]+), +(?P<interface>\S+)$')
+                        r' +(?P<expire_time>[\w\:]+), +(?P<interface>\S+)$')
 
         result_dict = {}
 
@@ -262,7 +262,7 @@ class ShowIpv6Rip(ShowIpv6RipSchema):
         # RIP VRF "red", port 521, multicast-group 2001:DB8::/32, pid 295
         # RIP process "one", port 521, multicast-group FF02::9, pid 55
         p1 = re.compile(r'^\s*RIP +(VRF|process)+ +(?P<vrf>[\S\s]+), +port +(?P<port>\d+),'
-                        ' +multicast\-group +(?P<multicast_group>[\w\:\/]+), +pid +(?P<pid>\d+)$')
+                        r' +multicast\-group +(?P<multicast_group>[\w\:\/]+), +pid +(?P<pid>\d+)$')
         #    Administrative distance is 120. Maximum paths is 16
         p2 = re.compile(r'^\s*Administrative +distance +is +(?P<distance>\d+). +Maximum +paths +is +(?P<maximum_path>\d+)$')
         #    Updates every 30 seconds, expire after 180

@@ -11,6 +11,7 @@ import warnings
 import importlib
 import pkg_resources
 from packaging import version
+from inspect import getfullargspec
 from json.decoder import JSONDecodeError
 
 from pyats.log.utils import banner
@@ -34,6 +35,104 @@ except:
     INTERNAL = False
 
 parser_data = None
+
+INTERFACE_ABBREVIATION_MAPPING_TABLE = {
+    # Please add more when face other type of interface
+        'generic':
+        # generic keys for when no OS detected
+        {
+            'Eth': 'Ethernet',
+            'SEth': 'Service-Ethernet',
+            'Lo': 'Loopback',
+            'lo': 'Loopback',
+            'Fa': 'FastEthernet',
+            'Fas': 'FastEthernet',
+            'Po': 'Port-channel',
+            'PO': 'Port-channel',
+            'Null': 'Null',
+            'Gi': 'GigabitEthernet',
+            'Gig': 'GigabitEthernet',
+            'GE': 'GigabitEthernet',
+            'Te': 'TenGigabitEthernet',
+            'Ten': 'TenGigabitEthernet',
+            'Tw': 'TwoGigabitEthernet',
+            'Two': 'TwoGigabitEthernet',
+            'Twe': 'TwentyFiveGigE',
+            'Fi': 'FiveGigabitEthernet',
+            'Fiv': 'FiveGigabitEthernet',
+            'Fif': 'FiftyGigE',
+            'Fifty': 'FiftyGigabitEthernet',
+            'mgmt': 'mgmt',
+            'Vl': 'Vlan',
+            'Tu': 'Tunnel',
+            'Hs': 'HSSI',
+            'AT': 'ATM',
+            'Et': 'Ethernet',
+            'BD': 'BDI',
+            'Ser': 'Serial',
+            'Se': 'Serial',
+            'Fo': 'FortyGigabitEthernet',
+            'For': 'FortyGigabitEthernet',
+            'Hu': 'HundredGigE',
+            'Hun': 'HundredGigE',
+            'TwoH': 'TwoHundredGigabitEthernet',
+            'Fou': 'FourHundredGigE',
+            'vl': 'vasileft',
+            'vr': 'vasiright',
+            'BE': 'Bundle-Ether',
+            'tu': 'Tunnel',
+            'M-E': 'M-Ethernet',  # comware
+            'BAGG': 'Bridge-Aggregation',  # comware
+            'Ten-GigabitEthernet': 'TenGigabitEthernet',  # HP
+            'Wl': 'Wlan-GigabitEthernet',
+            'Di': 'Dialer',
+            'Vi': 'Virtual-Access',
+            'Ce': 'Cellular',
+            'Vp': 'Virtual-PPP',
+            'pw': 'pseudowire'
+        },
+        'iosxr':
+        # interface formats specific to iosxr
+        {
+            'BV': 'BVI',
+            'BE': 'Bundle-Ether',
+            'BP': 'Bundle-POS',
+            'Eth': 'Ethernet',
+            'Fa': 'FastEthernet',
+            'Gi': 'GigabitEthernet',
+            'Te': 'TenGigE',
+            'Tf': 'TwentyFiveGigE',
+            'Fo': 'FortyGigE',
+            'Fi': 'FiftyGigE',
+            'Hu': 'HundredGigE',
+            'Th': 'TwoHundredGigE',
+            'Fh': 'FourHundredGigE',
+            'Tsec': 'tunnel-ipsec',
+            'Ti': 'tunnel-ip',
+            'Tm': 'tunnel-mte',
+            'Tt': 'tunnel-te',
+            'Tp': 'tunnel-tp',
+            'IMA': 'IMA',
+            'IL': 'InterflexLeft',
+            'IR': 'InterflexRight',
+            'Lo': 'Loopback',
+            'Mg': 'MgmtEth',
+            'Ml': 'Multilink',
+            'Nu': 'Null',
+            'POS': 'POS',
+            'Pw': 'PW-Ether',
+            'Pi': 'PW-IW',
+            'SRP': 'SRP',
+            'Se': 'Serial',
+            'CS': 'CSI',
+            'G0': 'GCC0',
+            'G1': 'GCC1',
+            'nG': 'nVFabric-GigE',
+            'nT': 'nVFabric-TenGigE',
+            'nF': 'nVFabric-FortyGigE',
+            'nH': 'nVFabric-HundredGigE'
+        }
+    }
 
 class ParserNotFound(Exception):
     '''raise exception if parser command is not found
@@ -64,71 +163,71 @@ def _load_parser_json():
         parsers = ''
 
     if not os.path.isfile(parsers):
-        log.warning('parsers.json does not exist, make sure you '
-                    'are running with latest version of '
-                    'genie.libs.parsers')
-        parser_data = AbstractTree(order=token_order, feature='parser')
-    else:
-        # Open all the parsers in json file
-        with open(parsers) as f:
-            try:
-                json_data = json.load(f)
-            except JSONDecodeError:
-                log.error(banner("parser json file could be corrupted. "
-                                 "Please try 'make json'"))
-                raise
-        parser_data = AbstractTree.from_json(json_data,
-                                             package=PARSER_MODULE_NAME,
-                                             feature='parser')
-        if parser_data.order != token_order:
-            raise KeyError('Loaded token order from json does not match '
-                           'package token order\n{} != {}'.\
-                                format(parser_data.order, token_order))
+        raise Exception('parsers.json does not exist, make sure you '
+                        'are running with latest version of '
+                        'genie.libs.parsers. Do make json to generate '
+                        'json files to use the parsers.')
 
-        # check if provided external parser packages
-        PYATS_EXT_PARSER_ENV_VAR = PYATS_EXT_PARSER.upper().replace('.', '_')
-        ext_parser_packages = []
+    # Open all the parsers in json file
+    with open(parsers) as f:
+        try:
+            json_data = json.load(f)
+        except JSONDecodeError:
+            log.error(banner("parser json file could be corrupted. "
+                                "Please try 'make json'"))
+            raise
+    parser_data = AbstractTree.from_json(json_data,
+                                            package=PARSER_MODULE_NAME,
+                                            feature='parser')
+    if parser_data.order != token_order:
+        raise KeyError('Loaded token order from json does not match '
+                        'package token order\n{} != {}'.\
+                            format(parser_data.order, token_order))
 
-        ext_parser_package_conf = cfg.get(PYATS_EXT_PARSER)
-        if ext_parser_package_conf:
-            ext_parser_packages = ext_parser_packages.split(',')
-            ext_parser_packages.extend(cfg.get(PYATS_EXT_PARSER))
+    # check if provided external parser packages
+    PYATS_EXT_PARSER_ENV_VAR = PYATS_EXT_PARSER.upper().replace('.', '_')
+    ext_parser_packages = []
 
-        ext_parser_package_env = os.environ.get(PYATS_EXT_PARSER_ENV_VAR)
-        if ext_parser_package_env:
-            ext_parser_packages_from_env = ext_parser_package_env.split(',')
-            ext_parser_packages.extend(ext_parser_packages_from_env)
+    ext_parser_package_conf = cfg.get(PYATS_EXT_PARSER)
+    if ext_parser_package_conf:
+        ext_parser_packages_from_conf = ext_parser_package_conf.split(',')
+        ext_parser_packages.extend(ext_parser_packages_from_conf)
 
-        for ep in pkg_resources.iter_entry_points(ENTRY_POINT_NAME):
-            parser_package = ep.load()
-            if callable(parser_package):
-                log.warning(
-                    f'{ep.name}: callable parser loading is deprecated. '
-                    'Please create an abstracted package instead.')
-                _load_parser_callable(parser_package, parser_data)
-            else:
-                ext_parser_packages.append(ep.module_name)
+    ext_parser_package_env = os.environ.get(PYATS_EXT_PARSER_ENV_VAR)
+    if ext_parser_package_env:
+        ext_parser_packages_from_env = ext_parser_package_env.split(',')
+        ext_parser_packages.extend(ext_parser_packages_from_env)
 
-        # remove duplicates
-        ext_parser_packages = set(ext_parser_packages)
-        log.debug(f'External parser packages: {ext_parser_packages}')
+    for ep in pkg_resources.iter_entry_points(ENTRY_POINT_NAME):
+        parser_package = ep.load()
+        if callable(parser_package):
+            log.warning(
+                f'{ep.name}: callable parser loading is deprecated. '
+                'Please create an abstracted package instead.')
+            _load_parser_callable(parser_package, parser_data)
+        else:
+            ext_parser_packages.append(ep.module_name)
 
-        for ext_parser_package in ext_parser_packages:
-            log.debug(f'Extending {ext_parser_package}')
-            ext = ExtendParsers(ext_parser_package)
-            ext.extend()
+    # remove duplicates
+    ext_parser_packages = set(ext_parser_packages)
+    log.debug(f'External parser packages: {ext_parser_packages}')
 
-            extend_info = ext.output.pop('extend_info', None)
+    for ext_parser_package in ext_parser_packages:
+        log.debug(f'Extending {ext_parser_package}')
+        ext = ExtendParsers(ext_parser_package)
+        ext.extend()
 
-            extend_matrix = AbstractTree.from_json(ext.output,
-                                                   package=PARSER_MODULE_NAME,
-                                                   feature='parser')
-            parser_data.update(extend_matrix)
+        extend_info = ext.output.pop('extend_info', None)
 
-            log.debug("External parser {} counts: {}\nSummary:\n{}".format(
-                ext_parser_package,
-                len(extend_info),
-                json.dumps(extend_info, indent=2)))
+        extend_matrix = AbstractTree.from_json(ext.output,
+                                                package=PARSER_MODULE_NAME,
+                                                feature='parser')
+        parser_data.update(extend_matrix)
+
+        log.debug("External parser {} counts: {}\nSummary:\n{}".format(
+            ext_parser_package,
+            len(extend_info),
+            json.dumps(extend_info, indent=2)))
 
     return parser_data
 
@@ -187,7 +286,7 @@ def format_output(parser_data, tab=2):
     s = ['{\n']
     if parser_data is None:
         return parser_data
-    for k, v in sorted(parser_data.items()):
+    for k, v in sorted(parser_data.items(), key=str):
         v = format_output(v, tab + 2) if isinstance(v, dict) else repr(v)
         s.append('%s%r: %s,\n' % ('  ' * tab, k, v))
     s.append('%s}' % ('  ' * (tab - 2)))
@@ -201,7 +300,7 @@ def get_parser_exclude(command, device):
         return []
 
 
-def get_parser(command, device, fuzzy=False, abstract=None):
+def get_parser(command, device, fuzzy=False, revision=None, abstract=None, **kwargs):
     '''From a show command and device, return parser class and kwargs if any'''
     global parser_data
 
@@ -209,11 +308,22 @@ def get_parser(command, device, fuzzy=False, abstract=None):
         data = _load_parser_json()
     else:
         data = parser_data
-        
+
     # get tokens from device including specific ones for genie.libs.parser
     tokens = Lookup.tokens_from_device(device, data.order, PARSER_MODULE_NAME)
     if abstract:
         tokens.update(abstract)
+    revision = revision or tokens.get('revision')
+    if revision and not isinstance(revision, list):
+        revision = [revision]
+    if revision:
+        tokens['revision'] = revision
+
+    revision = revision or tokens.get('revision')
+    if revision and not isinstance(revision, list):
+        revision = [revision]
+    if revision:
+        tokens['revision'] = revision
 
     results = _fuzzy_search_command(command, fuzzy, tokens)
     valid_results = []
@@ -254,10 +364,15 @@ def get_parser(command, device, fuzzy=False, abstract=None):
         # valid_results is a list of found parsers for a given show command
         #  - first element in this list is the closest parser match found
         #  - each element has the format (show command, class, kwargs)
+        # valid_results[0][0] is the matched command string from the parser cli_command
         # valid_results[0][1] is the class of the best match
         # valid_results[0][2] is a dict of parser kwargs
         parser_class = valid_results[0][1]
         parser_kwargs = valid_results[0][2]
+        spec = getfullargspec(parser_class.cli)
+        if 'command' in spec.args:
+            cmd = valid_results[0][0]
+            parser_kwargs['command'] = cmd.format(**parser_kwargs)
         log.debug(f'Parser class: {parser_class} arguments: {parser_kwargs}')
         return parser_class, parser_kwargs
 
@@ -290,18 +405,15 @@ def _fuzzy_search_command(search,
         parser_cls = None
         if abstract:
             parser_cls = _get_parser_cls(search, abstract)
-            if parser_cls is None:
-                # No matching class for this command and dict of abstract tokens
-                # Do not return this parser
-                return []
-        return [(search, parser_cls, {})]
+        if parser_cls is not None:
+            return [(search, parser_cls, {})]
 
     # Preprocess if fuzzy
     if fuzzy:
         search = search.lstrip('^').rstrip('$').replace(r'\ ', ' ').replace(
             r'\-', '-').replace('\\"', '"').replace('\\,', ',').replace(
                 '\\\'', '\'').replace('\\*', '*').replace('\\:', ':').replace(
-                    '\\^', '^').replace('\\/', '/')
+                    '\\^', '^').replace('\\/', '/').replace('\\(', '(').replace('\\)', ')')
 
     # Fix search to remove extra spaces
     search = ' '.join(filter(None, search.split()))
@@ -419,15 +531,17 @@ def _is_regular_token(token):
         # Remove escaped characters
         candidate = token.replace('/', '')
         candidate = candidate.replace('"', '')
-        candidate = candidate.replace(r'\^', '')
+        candidate = candidate.replace('\\^', '')
         candidate = candidate.replace('\'', '')
         candidate = candidate.replace('-', '')
         candidate = candidate.replace('^', '')
         candidate = candidate.replace('_', '')
         candidate = candidate.replace(':', '')
         candidate = candidate.replace(',', '')
-        candidate = candidate.replace(r'\.', '')
-        candidate = candidate.replace(r'\|', '')
+        candidate = candidate.replace('\\.', '')
+        candidate = candidate.replace('\\|', '')
+        candidate = candidate.replace('(', '')
+        candidate = candidate.replace(')', '')
 
         token_is_regular = candidate.isalnum() or candidate == ''
 
@@ -462,7 +576,7 @@ def _matches_fuzzy(i,
 
     # Initialize by counting how many arguments this command needs
     if required_arguments is None:
-        required_arguments = len(re.findall('{.*?}', command))
+        required_arguments = len(re.findall(r'{.*?}', command))
 
     while i < len(tokens):
         # If command token index is greater than its length, stop
@@ -491,7 +605,7 @@ def _matches_fuzzy(i,
                 # /dna/intent/api/v1/interface/{interface}
                 if not command_token.startswith('{'):
                     # Find before and after string
-                    groups = re.match('(.*){.*?}(.*)', command_token).groups()
+                    groups = re.match(r'(.*){.*?}(.*)', command_token).groups()
                     is_found = False
 
                     if len(groups) == 2:
@@ -505,9 +619,9 @@ def _matches_fuzzy(i,
 
                             # Find the argument using the escaped start and end
                             kwargs[re.search(
-                                '{(.*)}',
+                                r'{(.*)}',
                                 command_token).groups()[0]] = re.match(
-                                    '{}(.*){}'.format(start, end),
+                                    r'{}(.*){}'.format(start, end),
                                     token).groups()[0]
 
                             is_found = True
@@ -516,7 +630,7 @@ def _matches_fuzzy(i,
                     if not is_found:
                         return None
                 else:
-                    argument_key = re.search('{(.*)}',
+                    argument_key = re.search(r'{(.*)}',
                                              command_token).groups()[0]
                     i += 1
                     j += 1
@@ -723,109 +837,11 @@ class Common:
         if hasattr(m, 'group') and hasattr(m1, 'group'):
             # fetches the interface type
             int_type = m.group(0)
-
             # fetch the interface number
             int_port = m1.group(0)
 
-            # Please add more when face other type of interface
-            convert = {
-                'generic':
-                # generic keys for when no OS detected
-                {
-                    'Eth': 'Ethernet',
-                    'Lo': 'Loopback',
-                    'lo': 'Loopback',
-                    'Fa': 'FastEthernet',
-                    'Fas': 'FastEthernet',
-                    'Po': 'Port-channel',
-                    'PO': 'Port-channel',
-                    'Null': 'Null',
-                    'Gi': 'GigabitEthernet',
-                    'Gig': 'GigabitEthernet',
-                    'GE': 'GigabitEthernet',
-                    'Te': 'TenGigabitEthernet',
-                    'Ten': 'TenGigabitEthernet',
-                    'Tw': 'TwoGigabitEthernet',
-                    'Two': 'TwoGigabitEthernet',
-                    'Twe': 'TwentyFiveGigE',
-                    'Fi': 'FiveGigabitEthernet',
-                    'Fiv': 'FiveGigabitEthernet',
-                    'Fif': 'FiftyGigE',
-                    'Fifty': 'FiftyGigabitEthernet',
-                    'mgmt': 'mgmt',
-                    'Vl': 'Vlan',
-                    'Tu': 'Tunnel',
-                    'Fe': '',
-                    'Hs': 'HSSI',
-                    'AT': 'ATM',
-                    'Et': 'Ethernet',
-                    'BD': 'BDI',
-                    'Se': 'Serial',
-                    'Fo': 'FortyGigabitEthernet',
-                    'For': 'FortyGigabitEthernet',
-                    'Hu': 'HundredGigE',
-                    'Hun': 'HundredGigE',
-                    'TwoH': 'TwoHundredGigabitEthernet',
-                    'Fou': 'FourHundredGigE',
-                    'vl': 'vasileft',
-                    'vr': 'vasiright',
-                    'BE': 'Bundle-Ether',
-                    'tu': 'Tunnel',
-                    'M-E': 'M-Ethernet',  # comware
-                    'BAGG': 'Bridge-Aggregation',  # comware
-                    'Ten-GigabitEthernet': 'TenGigabitEthernet',  # HP
-                    'Wl': 'Wlan-GigabitEthernet',
-                    'Di': 'Dialer',
-                    'Vi': 'Virtual-Access',
-                    'Ce': 'Cellular',
-                    'Vp': 'Virtual-PPP',
-                    'pw': 'pseudowire'
-                },
-                'iosxr':
-                # interface formats specific to iosxr
-                {
-                    'BV': 'BVI',
-                    'BE': 'Bundle-Ether',
-                    'BP': 'Bundle-POS',
-                    'Eth': 'Ethernet',
-                    'Fa': 'FastEthernet',
-                    'Gi': 'GigabitEthernet',
-                    'Te': 'TenGigE',
-                    'Tf': 'TwentyFiveGigE',
-                    'Fo': 'FortyGigE',
-                    'Fi': 'FiftyGigE',
-                    'Hu': 'HundredGigE',
-                    'Th': 'TwoHundredGigE',
-                    'Fh': 'FourHundredGigE',
-                    'Tsec': 'tunnel-ipsec',
-                    'Ti': 'tunnel-ip',
-                    'Tm': 'tunnel-mte',
-                    'Tt': 'tunnel-te',
-                    'Tp': 'tunnel-tp',
-                    'IMA': 'IMA',
-                    'IL': 'InterflexLeft',
-                    'IR': 'InterflexRight',
-                    'Lo': 'Loopback',
-                    'Mg': 'MgmtEth',
-                    'Ml': 'Multilink',
-                    'Nu': 'Null',
-                    'POS': 'POS',
-                    'Pw': 'PW-Ether',
-                    'Pi': 'PW-IW',
-                    'SRP': 'SRP',
-                    'Se': 'Serial',
-                    'CS': 'CSI',
-                    'G0': 'GCC0',
-                    'G1': 'GCC1',
-                    'nG': 'nVFabric-GigE',
-                    'nT': 'nVFabric-TenGigE',
-                    'nF': 'nVFabric-FortyGigE',
-                    'nH': 'nVFabric-HundredGigE'
-                }
-            }
-
             try:
-                os_type_dict = convert[os]
+                os_type_dict = INTERFACE_ABBREVIATION_MAPPING_TABLE[os]
             except KeyError as k:
                 log.error((
                     "Check '{}' is in convert dict in utils/common.py, otherwise leave blank.\nMissing key {}\n"
@@ -1080,3 +1096,109 @@ class Common:
             final_hours = "0{}".format(final_hours)
 
         return "{}:{}:{}".format(final_hours, final_minutes, final_seconds)
+
+
+def check_for_duplicate(data):
+    """
+    Checks for duplicate entries within a nested data structure and logs warnings for each duplicate found.
+
+    This function iterates over the nodes of AbstractTree. For each command, it constructs
+    a dictionary representation of its sub-trees and checks for duplicates within these sub-trees.
+    If duplicates are found, a warning is logged with the command name, and the command is added to
+    a list of duplicates.
+
+    Parameters:
+    data (AbstractTree): The AbstractTree to be checked for duplicates
+
+    Returns:
+    list: A list of command names that have duplicates.
+    """
+    duplicates = []
+    for cmd, cmd_value in data.nodes.items():
+        data_dict = {}
+        if isinstance(cmd_value.nodes, dict) and len(cmd_value.nodes.keys()) >= 2:
+            for node, sub_tree in cmd_value.nodes.items():
+                sub_tree_dict = data_dict.setdefault(node, {})
+                _check_tree(sub_tree, sub_tree_dict)
+            if _find_duplicate(data_dict):
+                log.warning(f'{cmd} is a duplicate')
+                duplicates.append(cmd)
+    return duplicates
+
+def _check_tree(tree, sub_tree_dict):
+    """
+    Recursively constructs a dictionary representation of a tree structure.
+
+    This function traverses a tree starting from the given `tree` object. For each node in the tree,
+    it updates `sub_tree_dict` to include the node and its sub-nodes, effectively building a nested
+    dictionary representation of the tree.
+
+    Parameters:
+    tree (object): An object with a `nodes` attribute that is a dictionary. Each key-value pair represents
+                   a node and its associated value, which may contain further nodes.
+    sub_tree_dict (dict): A dictionary used to store the nested structure of the tree.
+
+    Returns:
+    None
+    """
+    for node, node_value in tree.nodes.items():
+        node_dict = sub_tree_dict.setdefault(node, {})
+        if node_value.nodes != {}:
+            for key, value in node_value.nodes.items():
+                node_output = node_dict.setdefault(key, {})
+                _check_tree(value, node_output)
+
+
+def _find_duplicate(tree_dict):
+    """
+    Determines if there are duplicate structures within a tree dictionary.
+
+    This function checks for duplicates by comparing branches of a tree stored in `tree_dict`.
+    It assumes that one of the branches (stored in `base`) is used as a reference and compares it
+    against other branches in the tree dictionary. If a duplicate structure is found, the function
+    returns True.
+
+    Parameters:
+    tree_dict (dict): A dictionary representing a tree structure with nodes as keys and sub-trees as values.
+                      It is assumed to have a 'base' branch initially stored under the None key.
+
+    Returns:
+    bool: True if a duplicate structure is found, False otherwise.
+    """
+    base = tree_dict.pop(None)  # Assumes there is a base structure under the None key
+    nodes = set(tree_dict.keys())
+    for key in base.keys():
+        for node in nodes:
+            if key in tree_dict[node].keys():
+                if _check_branch(base[key], tree_dict[node][key]):
+                    return True
+    return False
+
+
+def _check_branch(base, other):
+    """
+    Compares two branches of a tree structure to determine if they are identical.
+
+    This recursive function checks if two branches (`base` and `other`) of a tree are identical by
+    comparing their keys and corresponding sub-branches. If both branches are empty, they are considered
+    identical.
+
+    Parameters:
+    base (dict): A dictionary representing a branch of a tree.
+    other (dict): Another dictionary representing a branch of a tree to compare with `base`.
+
+    Returns:
+    bool: True if both branches are identical, False otherwise.
+    """
+    if base == {} and other == {}:
+        return True
+
+    for key in base.keys():
+        if key in other:
+            # Check if the sub-branches are identical
+            if not _check_branch(base[key], other[key]):
+                return False
+        else:
+            return False
+
+    return True

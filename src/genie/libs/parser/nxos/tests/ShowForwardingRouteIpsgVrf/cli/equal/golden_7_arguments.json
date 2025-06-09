@@ -1,0 +1,5 @@
+{
+	"ipsg_module": "1",
+	"max_count": 100,
+	"vrf": "vxlan-3001"
+}

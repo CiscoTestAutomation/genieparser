@@ -1,0 +1,2 @@
+class system-cpp-default-v4
+ police rate 60000 pps

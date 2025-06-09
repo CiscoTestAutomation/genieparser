@@ -1,0 +1,9 @@
+{
+    "switch": 1,
+    "portchannelnum": 10,
+    "source": "1.1.1.1",
+    "destination": "2.2.2.2",
+    "protocol": 23,
+    "sour_port": 24,
+    "dest_port": 34
+} 

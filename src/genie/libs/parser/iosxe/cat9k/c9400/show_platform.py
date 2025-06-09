@@ -10,6 +10,8 @@ IOSXE C9400 parsers for the following show commands:
     * 'Show module'
     * 'show platform hardware chassis fantray detail'
     * 'show platform hardware chassis fantray detail switch {mode}'
+    * 'show platform hardware chassis power-supply detail switch {instance} all'
+    * 'show platform hardware chassis power-supply detail all'
 '''
 
 # Python
@@ -387,19 +389,19 @@ class ShowBootSchema(MetaParser):
 
     schema = {
         'boot_variable': str,
-        'manual_boot': bool,
+        Optional('manual_boot'): bool,
         'baud_variable': str,
-        'enable_break': bool,
-        'boot_mode': str,
-        'ipxe_timeout': str,
-        'config_file': str,
-        'standby_boot_variable': str,
-        'standby_manual_boot': bool,
-        'standby_baud_variable': str,
-        'standby_enable_break': bool,
-        'standby_boot_mode': str,
-        'standby_ipxe_timeout': str,
-        'standby_config_file': str,
+        Optional('enable_break'): bool,
+        Optional('boot_mode'): str,
+        Optional('ipxe_timeout'): str,
+        Optional('config_file'): str,
+        Optional('standby_boot_variable'): str,
+        Optional('standby_manual_boot'): bool,
+        Optional('standby_baud_variable'): str,
+        Optional('standby_enable_break'): bool,
+        Optional('standby_boot_mode'): str,
+        Optional('standby_ipxe_timeout'): str,
+        Optional('standby_config_file'): str,
     }
 
 
@@ -409,15 +411,20 @@ class ShowBoot(ShowBootSchema):
     cli_command = 'show boot'
 
     def cli(self, output=None):
+
         if output is None:
             output = self.device.execute(self.cli_command)
+        else:
+            output = output
+
+        ret_dict = {}
 
         # BOOT variable = flash:packages.conf;
-        p1 = re.compile(r'(^BOOT\s*variable)\s*=\s*(?P<boot_variable>.*);$')
+        p1 = re.compile(r'(^BOOT\s*variable)\s*=?\s*(?P<boot_variable>.*);$')
         # MANUAL_BOOT variable = no
-        p2 = re.compile(r'(^MANUAL_BOOT\s*variable)\s*=\s*(?P<manual_boot>\w+)$')
+        p2 = re.compile(r'(^MANUAL_BOOT\s*variable)\s*=?\s*(?P<manual_boot>.*)$')
         # BAUD variable = 9600
-        p3 = re.compile(r'(^BAUD\s*variable)\s*=\s*(?P<baud_variable>\w+)$')
+        p3 = re.compile(r'(^BAUD\s*variable)\s*=?\s*(?P<baud_variable>\w+)$')
         # ENABLE_BREAK variable = yes
         p4 = re.compile(r'(^ENABLE_BREAK\s*variable)\s*=?\s*(?P<enable_break>.*)$')
         # BOOTMODE variable = yes
@@ -425,14 +432,14 @@ class ShowBoot(ShowBootSchema):
         # IPXE_TIMEOUT variable = 0
         p6 = re.compile(r'(^IPXE_TIMEOUT\s*variable)\s*=?\s*(?P<ipxe_timeout>.*)$')
         # CONFIG_FILE variable = 0
-        p7 = re.compile(r'(^CONFIG_FILE\s*variable)\s*=\s*(?P<config_file>.*)$')
+        p7 = re.compile(r'(^CONFIG_FILE\s*variable)\s*=?\s*(?P<config_file>.*)$')
 
         # Standby BOOT variable = flash:packages.conf;
-        p8 = re.compile(r'(^Standby\s*BOOT\s*variable)\s*=\s*(?P<standby_boot_variable>.*);$')
+        p8 = re.compile(r'(^Standby\s*BOOT\s*variable)\s*=?\s*(?P<standby_boot_variable>.*);$')
         # Standby MANUAL_BOOT variable = no
-        p9 = re.compile(r'(^Standby\s*MANUAL_BOOT\s*variable)\s*=\s*(?P<standby_manual_boot>\w+)$')
+        p9 = re.compile(r'(^Standby\s*MANUAL_BOOT\s*variable)\s*=?\s*(?P<standby_manual_boot>\w+)$')
         # Standby BAUD variable = 9600
-        p10 = re.compile(r'(^Standby\s*BAUD\s*variable)\s*=\s*(?P<standby_baud_variable>\w+)$')
+        p10 = re.compile(r'(^Standby\s*BAUD\s*variable)\s*=?\s*(?P<standby_baud_variable>\w+)$')
         # Standby ENABLE_BREAK variable = yes
         p11 = re.compile(r'(^Standby\s*ENABLE_BREAK\s*variable)\s*=?\s*(?P<standby_enable_break>.*)$')
         # Standby BOOTMODE variable = yes
@@ -440,77 +447,76 @@ class ShowBoot(ShowBootSchema):
         # Standby IPXE_TIMEOUT variable = 0
         p13 = re.compile(r'(^Standby\s*IPXE_TIMEOUT\s*variable)\s*=?\s*(?P<standby_ipxe_timeout>.*)$')
         # Standby CONFIG_FILE variable = 0
-        p14 = re.compile(r'(^Standby\s*CONFIG_FILE\s*variable)\s*=\s*(?P<standby_config_file>.*)$')
+        p14 = re.compile(r'(^Standby\s*CONFIG_FILE\s*variable)\s*=?\s*(?P<standby_config_file>.*)$')
 
-        ret_dict = {}
         for line in output.splitlines():
             line = line.strip()
 
-            mo = p1.match(line)
-            if mo:
-                ret_dict.update(mo.groupdict())
+            m1 = p1.match(line)
+            if m1:
+                ret_dict.update(m1.groupdict())
 
-            mo = p2.match(line)
-            if mo:
-                group = mo.groupdict()
-                manual_boot = group['manual_boot'] == 'yes'
-                ret_dict.update({'manual_boot': manual_boot})
+            # Manual Boot = yes
+            m2 = p2.match(line)
+            if m2:
+                ret_dict['manual_boot'] = True if m2.groupdict()['manual_boot'].strip().lower() == 'yes' else False
+                continue
 
-            mo = p3.match(line)
-            if mo:
-                group = mo.groupdict()
+            m3 = p3.match(line)
+            if m3:
+                group = m3.groupdict()
                 ret_dict.update({'baud_variable': group['baud_variable']})
 
-            mo = p4.match(line)
-            if mo:
-                group = mo.groupdict()
+            m4 = p4.match(line)
+            if m4:
+                group = m4.groupdict()
                 enable_break = group['enable_break'] == 'yes'
                 ret_dict.update({'enable_break': enable_break})
 
-            mo = p5.match(line)
-            if mo:
-                ret_dict.update(mo.groupdict())
+            m5 = p5.match(line)
+            if m5:
+                ret_dict.update(m5.groupdict())
 
-            mo = p6.match(line)
-            if mo:
-                ret_dict.update(mo.groupdict())
+            m6 = p6.match(line)
+            if m6:
+                ret_dict.update(m6.groupdict())
 
-            mo = p7.match(line)
-            if mo:
-                ret_dict.update(mo.groupdict())
+            m7 = p7.match(line)
+            if m7:
+                ret_dict.update(m7.groupdict())
 
-            mo = p8.match(line)
-            if mo:
-                ret_dict.update(mo.groupdict())
+            m8 = p8.match(line)
+            if m8:
+                ret_dict.update(m8.groupdict())
 
-            mo = p9.match(line)
-            if mo:
-                group = mo.groupdict()
+            m9 = p9.match(line)
+            if m9:
+                group = m9.groupdict()
                 standby_manual_boot = group['standby_manual_boot'] == 'yes'
                 ret_dict.update({'standby_manual_boot': standby_manual_boot})
 
-            mo = p10.match(line)
-            if mo:
-                group = mo.groupdict()
+            m10 = p10.match(line)
+            if m10:
+                group = m10.groupdict()
                 ret_dict.update({'standby_baud_variable': group['standby_baud_variable']})
 
-            mo = p11.match(line)
-            if mo:
-                group = mo.groupdict()
+            m11 = p11.match(line)
+            if m11:
+                group = m11.groupdict()
                 standby_enable_break = group['standby_enable_break'] == 'yes'
                 ret_dict.update({'standby_enable_break': standby_enable_break})
 
-            mo = p12.match(line)
-            if mo:
-                ret_dict.update(mo.groupdict())
+            m12 = p12.match(line)
+            if m12:
+                ret_dict.update(m12.groupdict())
 
-            mo = p13.match(line)
-            if mo:
-                ret_dict.update(mo.groupdict())
+            m13 = p13.match(line)
+            if m13:
+                ret_dict.update(m13.groupdict())
 
-            mo = p14.match(line)
-            if mo:
-                ret_dict.update(mo.groupdict())
+            m14 = p14.match(line)
+            if m14:
+                ret_dict.update(m14.groupdict())
 
         return ret_dict
 
@@ -565,38 +571,38 @@ class ShowModule(ShowModuleSchema):
 
         # initial regexp pattern
         p1 = re.compile(r'^(?P<switch>\d+) *'
-                        '(?P<port>\w+) +'
-                        '(?P<model>[\w\-]+) +'
-                        '(?P<serial_number>\w+) +'
-                        '(?P<mac_address>[\w\.]+) +'
-                        '(?P<hw_ver>\w+) +'
-                        '(?P<sw_ver>[\w\.]+)$')
-        
+                        r'(?P<port>\w+) +'
+                        r'(?P<model>[\w\-]+) +'
+                        r'(?P<serial_number>\w+) +'
+                        r'(?P<mac_address>[\w\.]+) +'
+                        r'(?P<hw_ver>\w+) +'
+                        r'(?P<sw_ver>[\w\.]+)$')
+
         # Chassis Type: C9500X-28C8D
 
         # Mod Ports Card Type                                   Model          Serial No.
         # ---+-----+--------------------------------------+--------------+--------------
         # 1   38   Cisco Catalyst 9500X-28C8D Switch           C9500X-28C8D     FDO25030SLN
-        # 10  24   24-Port 10 Gigabit Ethernet (SFP+)          C9400-LC-24XS    JAE21500658        
-    
+        # 10  24   24-Port 10 Gigabit Ethernet (SFP+)          C9400-LC-24XS    JAE21500658
+
         p2=re.compile(r'^(?P<mod>[\d]+)\s+(?P<ports>[\d]+)\s+(?P<card_type>.*)\s+(?P<model>\S+)\s+(?P<serial>\S+)$')
-                
+
         # Mod MAC addresses                    Hw   Fw           Sw                 Status
         # ---+--------------------------------+----+------------+------------------+--------
         # 1   F87A.4125.1400 to F87A.4125.147D 0.2  17.7.0.41     BLD_POLARIS_DEV_LA ok
-            
+
         p3=re.compile(r'^(?P<mod_1>\d+)+\s+(?P<mac_address>[\w\.]+) .*(?P<hw>\d+.?\d+?) +(?P<fw>\S+) +(?P<sw>\S+) +(?P<status>\S+)$')
-        
+
         #Mod Redundancy Role     Operating Mode  Configured Mode  Redundancy Status
         #---+-------------------+---------------+---------------+------------------
         #3   Active              sso             sso              Active
-        #4   Standby             sso             sso              Standby Hot        
+        #4   Standby             sso             sso              Standby Hot
 
         p4=re.compile(r'^(?P<mod_2>\d+)+ *(?P<redundancy_role>\S+) *(?P<operating_redundancy_mode>\S+) *(?P<configured_redundancy_mode>\S+) *(?P<redundancy_status>.*)$')
-        
-        #Chassis MAC address range: 512 addresses from f87a.4125.1400 to f87a.4125.15ff 
+
+        #Chassis MAC address range: 512 addresses from f87a.4125.1400 to f87a.4125.15ff
         p5=re.compile(r'^Chassis MAC address range: (?P<number_of_mac_address>\d+) addresses from (?P<chassis_mac_address_lower_range>.*) to (?P<chassis_mac_address_upper_range>.*)$')
-        
+
         for line in output.splitlines():
             line = line.strip()
 
@@ -609,8 +615,8 @@ class ShowModule(ShowModuleSchema):
                 switch = group.pop('switch')
                 switch_dict = ret_dict.setdefault('switch', {}).setdefault(int(switch), {})
                 switch_dict.update({k: v.lower() for k, v in group.items()})
-                continue    
-                
+                continue
+
             # Chassis Type: C9500X-28C8D
 
             # Mod Ports Card Type                                   Model          Serial No.
@@ -624,11 +630,11 @@ class ShowModule(ShowModuleSchema):
                 switch_dict.update({k: v.strip() for k, v in group.items()})
                 switch_dict['ports']=int(group['ports'])
                 continue
-                
+
             # Mod MAC addresses                    Hw   Fw           Sw                 Status
             # ---+--------------------------------+----+------------+------------------+--------
             # 1   F87A.4125.1400 to F87A.4125.147D 0.2  17.7.0.41     BLD_POLARIS_DEV_LA ok
-            
+
             m=p3.match(line)
             if m:
                 group = m.groupdict()
@@ -636,7 +642,7 @@ class ShowModule(ShowModuleSchema):
                 switch_dict = ret_dict.setdefault('module', {}).setdefault(int(switch), {})
                 switch_dict.update({k: v.strip() for k, v in group.items()})
                 continue
-                
+
             # Mod Redundancy Role     Operating Redundancy Mode Configured Redundancy Mode
             # ---+-------------------+-------------------------+---------------------------
             # 1   Active              non-redundant             Non-redundant
@@ -647,15 +653,15 @@ class ShowModule(ShowModuleSchema):
                 switch_dict = ret_dict.setdefault('module', {}).setdefault(int(switch), {})
                 switch_dict.update({k: v.lower().strip() for k, v in group.items()})
                 continue
-            
-            #Chassis MAC address range: 512 addresses from f87a.4125.1400 to f87a.4125.15ff 
+
+            #Chassis MAC address range: 512 addresses from f87a.4125.1400 to f87a.4125.15ff
             m=p5.match(line)
             if m:
                 group=m.groupdict()
                 ret_dict.update({k: v.lower().strip() for k, v in group.items()})
                 ret_dict['number_of_mac_address'] = int(group['number_of_mac_address'])
                 continue
-                
+
         return ret_dict
 
 
@@ -684,14 +690,14 @@ class ShowHardwareLedSchema(MetaParser):
         Optional('power_supply_beacon_status'):{
             int : str
         }
-    }     
+    }
 
 class ShowHardwareLed(ShowHardwareLedSchema):
     """ Parser for show hardware led"""
 
     cli_command = "show hardware led"
-    
-    def cli(self,output=None): 
+
+    def cli(self,output=None):
         if output is None:
             output = self.device.execute(self.cli_command)
 
@@ -699,50 +705,50 @@ class ShowHardwareLed(ShowHardwareLedSchema):
         ret_dict = {}
 
         # SWITCH: C9404R
-        p1 = re.compile('^SWITCH:\s+(?P<switch>\S+)$')
+        p1 = re.compile(r'^SWITCH:\s+(?P<switch>\S+)$')
 
         # SYSTEM: GREEN
-        p2 = re.compile('^SYSTEM:\s+(?P<system>\w+)$')
+        p2 = re.compile(r'^SYSTEM:\s+(?P<system>\w+)$')
 
         # Line Card : 1
         # SUPERVISOR: ACTIVE
-        p3 = re.compile('^(Line Card :|SUPERVISOR:)\s+(?P<line_card_supervisor>\w+)$')
+        p3 = re.compile(r'^(Line Card :|SUPERVISOR:)\s+(?P<line_card_supervisor>\w+)$')
 
         # PORT STATUS: (48)
-        p4 = re.compile('^PORT STATUS:\s+\((?P<port_nums_in_status>\d+)\)+\s+(?P<led_ports>((\S+:[\w-]+\s*))+)$')
+        p4 = re.compile(r'^PORT STATUS:\s+\((?P<port_nums_in_status>\d+)\)+\s+(?P<led_ports>((\S+:[\w-]+\s*))+)$')
 
         # BEACON:     OFF
-        p5 = re.compile('^BEACON:\s+(?P<beacon>\w+)$')
+        p5 = re.compile(r'^BEACON:\s+(?P<beacon>\w+)$')
 
         # STATUS: GREEN
-        p6 = re.compile('^STATUS:\s+(?P<status>\w+)$')
+        p6 = re.compile(r'^STATUS:\s+(?P<status>\w+)$')
 
         # GROUP LED: UPLINK-G1:GREEN UPLINK-G2:BLACK UPLINK-G3:BLACK UPLINK-G4:BLACK
-        p7 = re.compile('^GROUP LED:\s+(?P<group_led>((\S+:\w+\s*))+)$')
+        p7 = re.compile(r'^GROUP LED:\s+(?P<group_led>((\S+:\w+\s*))+)$')
 
         # RJ45 CONSOLE: GREEN
-        p8 = re.compile('^RJ45 CONSOLE:\s+(?P<rj45_console>\w+)$')
+        p8 = re.compile(r'^RJ45 CONSOLE:\s+(?P<rj45_console>\w+)$')
 
         # FANTRAY STATUS: GREEN
-        p9 = re.compile('^FANTRAY STATUS:\s+(?P<fantray_status>\w+)$')
+        p9 = re.compile(r'^FANTRAY STATUS:\s+(?P<fantray_status>\w+)$')
 
         # FANTRAY BEACON: BLACK
-        p10 = re.compile('^FANTRAY BEACON:\s+(?P<fantray_beacon>\w+)$')
+        p10 = re.compile(r'^FANTRAY BEACON:\s+(?P<fantray_beacon>\w+)$')
 
         # POWER-SUPPLY 1 BEACON: OFF
-        p11 = re.compile('^POWER-SUPPLY\s+(?P<power_supply_num>\d+)\s+BEACON:\s+(?P<power_supply_status>\w+)$')
+        p11 = re.compile(r'^POWER-SUPPLY\s+(?P<power_supply_num>\d+)\s+BEACON:\s+(?P<power_supply_status>\w+)$')
 
 
         for line in output.splitlines():
             line = line.strip()
-            
+
             # SWITCH: C9404R
             m = p1.match(line)
             if m:
                 group = m.groupdict()
                 ret_dict['switch'] = group["switch"]
                 continue
-            
+
             # SYSTEM: GREEN
             m = p2.match(line)
             if m:
@@ -755,21 +761,21 @@ class ShowHardwareLed(ShowHardwareLedSchema):
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                slot_dict=ret_dict.setdefault('line_card_supervisor',{}).setdefault(group['line_card_supervisor'],{})       
+                slot_dict=ret_dict.setdefault('line_card_supervisor',{}).setdefault(group['line_card_supervisor'],{})
                 continue
 
             # BEACON:     OFF
             m = p5.match(line)
             if m:
                 group = m.groupdict()
-                slot_dict.update({'beacon': group['beacon']})      
+                slot_dict.update({'beacon': group['beacon']})
                 continue
-            
+
             # STATUS: GREEN
             m = p6.match(line)
             if m:
                 group = m.groupdict()
-                slot_dict.update({'status': group['status']})      
+                slot_dict.update({'status': group['status']})
                 continue
 
             # PORT STATUS: (48)
@@ -782,7 +788,7 @@ class ShowHardwareLed(ShowHardwareLedSchema):
                     port_led_dict.update({Common.convert_intf_name(port[0]): port[1]})
                 continue
 
-            
+
             # GROUP LED: UPLINK-G1:GREEN UPLINK-G2:BLACK UPLINK-G3:BLACK UPLINK-G4:BLACK
             m = p7.match(line)
             if m:
@@ -792,12 +798,12 @@ class ShowHardwareLed(ShowHardwareLedSchema):
                     group_led_dict = slot_dict.setdefault('group_led',{})
                     group_led_dict.update({(uplink[0]): uplink[1]})
                 continue
-            
+
             # RJ45 CONSOLE: GREEN
             m = p8.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict.update({'rj45_console': group['rj45_console']})      
+                ret_dict.update({'rj45_console': group['rj45_console']})
                 continue
 
             # FANTRAY STATUS: GREEN
@@ -806,14 +812,14 @@ class ShowHardwareLed(ShowHardwareLedSchema):
                 group = m.groupdict()
                 ret_dict.update({'fantray_status': group['fantray_status']})
                 continue
-                
+
             # FANTRAY BEACON: BLACK
             m = p10.match(line)
             if m:
                 group = m.groupdict()
                 ret_dict.update({'fantray_beacon': group['fantray_beacon']})
                 continue
-            
+
             # POWER-SUPPLY 1 BEACON: OFF
             m = p11.match(line)
             if m:
@@ -1031,3 +1037,312 @@ class ShowPlatformHardwareChassisFantrayDetailSwitch(ShowPlatformHardwareChassis
                 continue
 
         return ret_dict
+
+class ShowPlatformHardwareChassisFantrayDetailSchema(MetaParser):
+    """ Schema for show platform hardware chassis fantray detail"""
+
+    schema = {
+        'fantray_details': {
+            int: {
+                'fan': {
+                    Any(): Or(str, int),
+                },
+                'throttle': str,
+                'interrupt_source': str,
+                'temp': Or(int, str),
+                'press': Or(int, str)
+            }
+        },
+        Optional('interrupt_source_register'): int,
+        Optional('global_version'): int,
+        Optional('beacon_led_status'): str,
+        Optional('status_led'): str
+    }
+
+class ShowPlatformHardwareChassisFantrayDetail(ShowPlatformHardwareChassisFantrayDetailSchema):
+    """ Parser for show platform hardware chassis fantray detail"""
+
+    cli_command = 'show platform hardware chassis fantray detail'
+
+    def cli(self, output=None):
+        if output is None:
+            # Execute command to get output
+            output = self.device.execute(self.cli_command)
+
+        # Initial return dictionary
+        ret_dict = {}
+
+        # Row  Fan1   | Fan2   | Fan3   | Fan4   | Throttle | Interrupt Source | Temp | Press
+        p1 = re.compile(r'^\s*Row\s+(?P<header>.*)$')
+
+        # 1    3450     3510     3480     3510     35%        0x0                28       102
+        p2 = re.compile(r'^\s*(?P<row>\d+)\s+(?P<fan_data>.*)\s+(?P<throttle>\S+)\s+(?P<interrupt_source>\S+)\s+(?P<temp>\S+)\s+(?P<press>\S+)$')
+
+        # Fantray global interrupt source register
+        p3 = re.compile(r'^Fantray global interrupt source register = (?P<interrupt_source_register>\S+)$')
+
+        # Fantray global version
+        p4 = re.compile(r'^Fantray global version: (?P<global_version>\d+)$')
+
+        # Fantray beacon LED status
+        p5 = re.compile(r'^Fantray beacon LED status: (?P<beacon_led_status>\S+)$')
+
+        # Fantray status LED
+        p6 = re.compile(r'^Fantray status LED: (?P<status_led>\S+)$')
+
+        headers = []  # Initialize headers list
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Row Fan1 | Fan2 | Fan3 | Fan4 | Throttle | Interrupt Source | Temp | Press
+            m = p1.match(line)
+            if m:
+                # Extracting and cleaning up the headers
+                headers = [header.strip() for header in m.group('header').split('|')]
+                continue
+
+            # 1 3450 3510 3480 3510 35% 0x0 28 102
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                row = int(group.pop('row'))
+                fan_data = group.pop('fan_data').split()
+                ret_dict.setdefault('fantray_details', {})[row] = {
+                    'fan': {headers[i]: int(value) if value.isdigit() else value for i, value in enumerate(fan_data)},
+                    'throttle': group['throttle'],
+                    'interrupt_source': group['interrupt_source'],
+                    'temp': int(group['temp']) if group['temp'].isdigit() else group['temp'],
+                    'press': int(group['press']) if group['press'].isdigit() else group['press']
+                }
+                continue
+
+            # Fantray global interrupt source register
+            m = p3.match(line)
+            if m:
+                ret_dict['interrupt_source_register'] = int(m.group('interrupt_source_register'), 16)
+                continue
+
+            # Fantray global version
+            m = p4.match(line)
+            if m:
+                ret_dict['global_version'] = int(m.group('global_version'))
+                continue
+
+            # Fantray beacon LED status
+            m = p5.match(line)
+            if m:
+                ret_dict['beacon_led_status'] = m.group('beacon_led_status')
+                continue
+
+            # Fantray status LED
+            m = p6.match(line)
+            if m:
+                ret_dict['status_led'] = m.group('status_led')
+                continue
+
+        return ret_dict
+
+class ShowPlatformHardwareChassisFantrayDetailSwitchSchema(MetaParser):
+    """ Schema for show platform hardware chassis fantray detail switch {mode}"""
+
+    schema = {
+        'fantray_details': {
+            Any(): {
+                'fan': {
+                    Any(): str
+                },
+                'throttle': str,
+                'interrupt_source': str,
+                'temp': str,
+                'press': str
+            }
+        },
+        Optional('interrupt_source_register'): str,
+        Optional('global_version'): str,
+        Optional('beacon_led_status'): str,
+        Optional('status_led'): str
+    }
+
+
+class ShowPlatformHardwareChassisFantrayDetailSwitch(ShowPlatformHardwareChassisFantrayDetailSwitchSchema):
+    """ Parser for show platform hardware chassis fantray detail switch {mode}"""
+
+    cli_command = 'show platform hardware chassis fantray detail switch {mode}'
+
+    def cli(self, mode, output=None):
+        if output is None:
+            # Execute command to get output
+            output = self.device.execute(self.cli_command.format(mode=mode))
+
+        # Initial return dictionary
+        ret_dict = {}
+
+        # Row  Fan1   | Fan2   | Fan3   | Fan4   | Throttle | Interrupt Source | Temp | Press
+        p1 = re.compile(r'^\s*Row\s+(?P<header>.*)$')
+
+        # 1    3450     3510     3480     3510     35%        0x0                28       102
+        p2 = re.compile(r'^\s*(?P<row>\d+)\s+(?P<fan_data>.*?)\s+(?P<throttle>\S+)\s+(?P<interrupt_source>\S+)\s+(?P<temp>\S+)\s+(?P<press>\S+)$')
+
+        # Pattern for Fantray global interrupt source register
+        p3 = re.compile(r'^Fantray global interrupt source register = (?P<interrupt_source_register>\S+)$')
+
+        # Pattern for Fantray global version
+        p4 = re.compile(r'^Fantray global version: (?P<global_version>\S+)$')
+
+        # Pattern for Fantray beacon LED status
+        p5 = re.compile(r'^Fantray beacon LED status: (?P<beacon_led_status>\S+)$')
+
+        # Pattern for Fantray status LED
+        p6 = re.compile(r'^Fantray status LED: (?P<status_led>\S+)$')
+
+        headers = []  # Initialize headers list
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Extract headers
+            m = p1.match(line)
+            if m:
+                # Extracting and cleaning up the headers
+                headers = [header.strip() for header in m.group('header').split('|')]
+                continue
+
+            # Check for the row data
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                row = group.pop('row')
+                fan_data = group.pop('fan_data').split()
+                ret_dict.setdefault('fantray_details', {})[row] = {
+                    'fan': {headers[i]: value for i, value in enumerate(fan_data)},
+                    **group
+                }
+                continue
+
+            # Fantray global interrupt source register
+            m = p3.match(line)
+            if m:
+                ret_dict['interrupt_source_register'] = m.group('interrupt_source_register')
+                continue
+
+            # Fantray global version
+            m = p4.match(line)
+            if m:
+                ret_dict['global_version'] = m.group('global_version')
+                continue
+
+            # Fantray beacon LED status
+            m = p5.match(line)
+            if m:
+                ret_dict['beacon_led_status'] = m.group('beacon_led_status')
+                continue
+
+            # Fantray status LED
+            m = p6.match(line)
+            if m:
+                ret_dict['status_led'] = m.group('status_led')
+                continue
+
+        return ret_dict
+
+class ShowPlatformHardwareChassisPowerSupplyDetailSwitchAllSchema(MetaParser):
+    """
+    Schema for show platform hardware chassis power-supply detail all
+               show platform hardware chassis power-supply detail switch {mode} all
+    """
+    schema = {
+        'power_supplies': {
+            Any(): {
+                'input': {
+                    Any(): Or(str, float),
+                },
+                'output': {
+                    Any(): Or(str, float),
+                },
+                'fan1_speed': int,
+                'fan2_speed': int,
+                'heatsink_temperature': int,
+                'faults': {
+                    Any(): {
+                        'reg_value': str,
+                        'description': str,
+                    }
+                }
+            }
+        }
+    }
+
+class ShowPlatformHardwareChassisPowerSupplyDetailSwitchAll(ShowPlatformHardwareChassisPowerSupplyDetailSwitchAllSchema):
+    """ Parser for show platform hardware chassis power-supply detail all
+                   show platform hardware chassis power-supply detail switch {mode} all"""
+
+    # Define the CLI commands to retrieve the output
+    cli_command = [
+        'show platform hardware chassis power-supply detail switch {mode} all',
+        'show platform hardware chassis power-supply detail all'
+    ]
+
+    def cli(self, mode=None, output=None):
+        # If output is not provided, execute the appropriate CLI command to get it
+        if output is None:
+            if mode:
+                cmd = self.cli_command[0].format(mode=mode)
+            else:
+                cmd = self.cli_command[1]
+            output = self.device.execute(cmd)
+
+        # Initialize return dictionary
+        ret_dict = {}
+
+        # PS2       1.6       n.a       239       n.a       348       n.a       5.7       55        310       4151      3957      48
+        p1 = re.compile(r'^\s*(?P<slot>PS\d+)\s+(?P<current_a>\S+)\s+(?P<current_b>\S+)\s+(?P<voltage_a>\S+)\s+(?P<voltage_b>\S+)\s+(?P<power_a>\S+)\s+(?P<power_b>\S+)\s+(?P<current>\S+)\s+(?P<voltage>\S+)\s+(?P<power>\S+)\s+(?P<fan1_speed>\S+)\s+(?P<fan2_speed>\S+)\s+(?P<heatsink_temperature>\S+)$')
+
+        # PS2     REAL_TIME_FAULT   0x00 0x00 0x00  No Faults
+        p2 = re.compile(r'^(?P<slot>PS\d+)\s+(?P<reg_name>\S+)\s+(?P<reg_value>(?:0x[\dA-Fa-f]+\s*)+)\s+(?P<description>.+)$')
+
+        # Parse each line of the output
+        for line in output.splitlines():
+            line = line.strip()
+
+            # PS2       1.6       n.a       239       n.a       348       n.a       5.7       55        310       4151      3957      48
+            m = p1.match(line)
+            if m:
+                slot = m.group('slot')
+                # Initialize power supply details for the current slot if not present
+                ret_dict.setdefault('power_supplies', {}).setdefault(slot, {})
+
+                # Process input power details
+                input_details = {}
+                for key in ['current_a', 'current_b', 'voltage_a', 'voltage_b', 'power_a', 'power_b']:
+                    input_details[key] = m.group(key) if m.group(key) == 'n.a' else float(m.group(key))
+
+                ret_dict['power_supplies'][slot]['input'] = input_details
+
+                # Process output power details
+                output_details = {}
+                for key in ['current', 'voltage', 'power']:
+                    output_details[key] = m.group(key) if m.group(key) == 'n.a' else float(m.group(key))
+
+                ret_dict['power_supplies'][slot]['output'] = output_details
+
+                ret_dict['power_supplies'][slot]['fan1_speed'] = int(m.group('fan1_speed'))
+                ret_dict['power_supplies'][slot]['fan2_speed'] = int(m.group('fan2_speed'))
+                ret_dict['power_supplies'][slot]['heatsink_temperature'] = int(m.group('heatsink_temperature'))
+                continue
+
+            # PS2     REAL_TIME_FAULT   0x00 0x00 0x00  No Faults
+            m = p2.match(line)
+            if m:
+                slot = m.group('slot')
+                # Initialize fault details for the current slot if not present
+                ret_dict.setdefault('power_supplies', {}).setdefault(slot, {}).setdefault('faults', {})
+                # Populate fault details
+                ret_dict['power_supplies'][slot]['faults'][m.group('reg_name')] = {
+                    'reg_value': m.group('reg_value'),
+                    'description': m.group('description'),
+                }
+                continue
+
+        return ret_dict
+

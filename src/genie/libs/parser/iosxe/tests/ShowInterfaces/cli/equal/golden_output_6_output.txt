@@ -1,0 +1,30 @@
+TwoGigabitEthernet0/0/0 is up, line protocol is up
+Hardware is BUILT-IN-4x2_5GE, address is 8c1e.8068.9f6c (bia 8c1e.8068.9f6c)
+MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec,
+TwoGigabitEthernet0/0/1 is down, line protocol is down
+Hardware is BUILT-IN-4x2_5GE, address is 8c1e.8068.9f6d (bia 8c1e.8068.9f6d)
+MTU 1500 bytes, BW 2500000 Kbit/sec, DLY 10 usec,
+TwoGigabitEthernet0/0/2 is down, line protocol is down
+Hardware is BUILT-IN-4x2_5GE, address is 8c1e.8068.9f6e (bia 8c1e.8068.9f6e)
+MTU 1500 bytes, BW 2500000 Kbit/sec, DLY 10 usec,
+TwoGigabitEthernet0/0/3 is administratively down, line protocol is down
+Hardware is BUILT-IN-4x2_5GE, address is 8c1e.8068.9f6f (bia 8c1e.8068.9f6f)
+MTU 1500 bytes, BW 2500000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet0/1/0 is down, line protocol is down
+Hardware is BUILT-IN-2x10GE-C, address is 8c1e.8068.9f70 (bia 8c1e.8068.9f70)
+MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+TenGigabitEthernet0/1/1 is down, line protocol is down
+Hardware is BUILT-IN-2x10GE-C, address is 8c1e.8068.9f71 (bia 8c1e.8068.9f71)
+MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+GigabitEthernet0 is up, line protocol is up
+Hardware is RP management port, address is 8c1e.8068.9f61 (bia 8c1e.8068.9f61)
+MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec,
+Vlan1 is up, line protocol is up , Autostate Enabled
+Hardware is Ethernet SVI, address is 8c1e.8068.9f6b (bia 8c1e.8068.9f6b)
+MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec,
+Vlan195 is up, line protocol is up , Autostate Enabled
+Hardware is Ethernet SVI, address is 8c1e.8068.9f6b (bia 8c1e.8068.9f6b)
+MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec,
+Vlan855 is up, line protocol is up , Autostate Enabled
+Hardware is Ethernet SVI, address is 8c1e.8068.9f6b (bia 8c1e.8068.9f6b)
+MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec,

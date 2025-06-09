@@ -1114,11 +1114,15 @@ class ShowEnvironmentStack(ShowEnvironmentStackSchema):
         # SWITCH: 1
         p1 = re.compile(r'^\s*SWITCH: (?P<switch_id>\d+)$')
 
+        # Switch	 FAN	 Speed	 State	 Airflow direction
+        # ---------------------------------------------------
         #  1       1     14240     OK     Front to Back
-        p2 = re.compile(r'^\s*(?P<switch>\d+)\s+(?P<fan>\d+)\s+(?P<speed>\d+)\s+(?P<state>\w+)\s+(?P<airflow_direction>[\w\ ]+)$')
+        #  1  	  1	0	  NOT PRESENT or FAULTY	 Front to Back
+        p2 = re.compile(r'^\s*(?P<switch>\d+)\s+(?P<fan>\d+)\s+(?P<speed>\d+)\s+(?P<state>(\w+|NOT PRESENT or FAULTY))\s+(?P<airflow_direction>[\w\ ]+)$')
 
         # FAN PS-1 is NOT PRESENT
-        p3 = re.compile(r'^\s*FAN (?P<fan_name>\S+) is (?P<fan_status>[\w\s]+)$')
+        # FAN PS-1 is OK, Airflow is Front to Back
+        p3 = re.compile(r'^\s*FAN (?P<fan_name>\S+) is (?P<fan_status>[\w\s]+)(,\s+Airflow is [\w\s]+)?$')
 
         # Switch 1: SYSTEM TEMPERATURE is OK
         p4 = re.compile(r'^Switch \d+: SYSTEM TEMPERATURE is (?P<sys_temp_status>[\w\s]+)$')

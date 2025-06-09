@@ -39,6 +39,10 @@ class ShowModuleSchema(MetaParser):
                 'card_type':str,
                 'model':str,
                 'serial':str,
+                Optional('status'):str,
+                Optional('redundancy_role'):str,
+                Optional('operating_redundancy_mode'):str,
+                Optional('configured_redundancy_mode'):str
             }
         },
         'status':{
@@ -77,12 +81,12 @@ class ShowModule(ShowModuleSchema):
         switch_dict=ret_dict={}
         #initial regex pattern
         p1=re.compile(r'^(?P<switch>\d+) *'
-                        '(?P<port>\w+) +'
-                        '(?P<model>[\w\-]+) +'
-                        '(?P<serial_number>\w+) +'
-                        '(?P<mac_address>[\w\.]+) +'
-                        '(?P<hw_ver>\w+) +'
-                        '(?P<sw_ver>[\w\.]+)$')
+                        r'(?P<port>\w+) +'
+                        r'(?P<model>[\w\-]+) +'
+                        r'(?P<serial_number>\w+) +'
+                        r'(?P<mac_address>[\w\.]+) +'
+                        r'(?P<hw_ver>\w+) +'
+                        r'(?P<sw_ver>[\w\.]+)$')
               
 	#Chassis Type: C9606R              
 
@@ -106,14 +110,14 @@ class ShowModule(ShowModuleSchema):
         #5   A478.0633.5D80 to A478.0633.5DFF 2.0  17.7.1r[FC3]  17.03.01           ok         
         #6   AC7A.5650.1A00 to AC7A.5650.1A7F 2.0  17.7.1r[FC3]  17.03.01           ok
         
-        p3=re.compile(r'^(?P<mod>\d .* +)(?P<mac_address>[\w\.]+) .*(?P<hw>\d+.?\d+?) +(?P<fw>\S+) +(?P<sw>\S+) +(?P<status>\S+)$')
+        p3=re.compile(r'^(?P<mod>\d+)\s+(?P<mac_address>[\w\.\s]*) .*(?P<hw>\d+.?\d+?)\s+(?P<fw>\S+)\s+(?P<sw>\S+)\s+(?P<status>\S+)$')
     
         #Mod Redundancy Role     Operating Redundancy Mode Configured Redundancy Mode
         #---+-------------------+-------------------------+---------------------------
         #3   Standby             sso                       sso                       
         #4   Active              sso                       sso   
     
-        p4=re.compile(r'^\d+ *(?P<redundancy_role>\S+) *(?P<operating_redundancy_mode>\S+) *(?P<configured_redundancy_mode>\S+)$')
+        p4=re.compile(r'^(?P<mod>\d+)\s*(?P<redundancy_role>\S+) *(?P<operating_redundancy_mode>\S+) *(?P<configured_redundancy_mode>\S+)$')
         
         #Chassis MAC address range: 64 addresses from 6cb2.ae4a.5540 to 6cb2.ae4a.557f 
         	
@@ -137,17 +141,27 @@ class ShowModule(ShowModuleSchema):
                 switch_dict['ports']=int(group['ports'])
                 switch_dict=ret_dict
                 continue
+            
+            # Mod MAC addresses                    Hw   Fw           Sw                 Status
+            # ---+--------------------------------+----+------------+------------------+--------
+            # 1   AC4A.67AA.CE80 to AC4A.67AA.CEFF 2.0  17.7.1r[FC3]  17.03.01           ok  
             m=p3.match(line)
             if m:
                 group = m.groupdict()
                 switch = group.pop('mod')
+                ret_dict.setdefault('module', {}).setdefault(int(switch), {}).setdefault('status', group['status'])
                 switch_dict = ret_dict.setdefault('status', {}).setdefault(str(switch), {})            
                 switch_dict.update({k: v.strip() for k, v in group.items()})
                 switch_dict=ret_dict
                 continue
+            
+            # Mod Redundancy Role     Operating Redundancy Mode Configured Redundancy Mode
+            # 3   Standby             sso                       sso     
             m=p4.match(line)
             if m:
                 group = m.groupdict()
+                module = group.pop('mod')
+                ret_dict.setdefault('module', {}).setdefault(int(module), {}).update({k: v.lower().strip() for k, v in group.items()})
                 switch = group.pop('redundancy_role')
                 switch_dict = ret_dict.setdefault('sup', {}).setdefault(str(switch), {})
                 switch_dict.update({k: v.lower().strip() for k, v in group.items()})

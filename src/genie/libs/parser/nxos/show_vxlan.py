@@ -5,6 +5,7 @@ NXOS parser for the following show commands:
     * show nve interface <nve> detail
     * show nve ethernet-segment
     * show nve vni
+    * show nve vni <vni>
     * show nve vni summary
     * show nve multisite dci-links
     * show nve multisite fabric-links
@@ -24,7 +25,7 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Optional
+from genie.metaparser.util.schemaengine import Any, Optional
 
 from genie.libs.parser.utils.common import Common
 
@@ -69,10 +70,10 @@ class ShowL2routeEvpnImetAllDetail(ShowL2routeEvpnImetAllDetailSchema):
 
 
         p1 = re.compile(r'^(?P<topo_id>[\d]+) + (?P<vni>[\d]+)'
-                         ' + (?P<prod_type>[\w]+) * (?P<ip_addr>[\w\:]+)'
-                         ' + (?P<eth_tag_id>[\d]+) + + (?P<pmsi_flags>[\d]+)'
-                         ' + (?P<flags>[\w-]) + (?P<type>[\d]+) + (?P<vni_label>[\d]+)'
-                         ' + (?P<tunnel_id>[\w\:]+) + (?P<client_nfn>[\d]+)$')
+                         r' + (?P<prod_type>[\w]+) * (?P<ip_addr>[\w\:]+)'
+                         r' + (?P<eth_tag_id>[\d]+) + + (?P<pmsi_flags>[\d]+)'
+                         r' + (?P<flags>[\w-]) + (?P<type>[\d]+) + (?P<vni_label>[\d]+)'
+                         r' + (?P<tunnel_id>[\w\:]+) + (?P<client_nfn>[\d]+)$')
 
         result_dict = {}
 
@@ -155,7 +156,7 @@ class ShowNvePeers(ShowNvePeersSchema):
         # nve1      172.31.201.40   Down  CP        0.000000 n/a
 
         p1 = re.compile(r'^\s*(?P<nve_name>[\w\/]+) +(?P<peer_ip>[\w\.\:]+) +(?P<peer_state>[\w]+)'
-                        ' +(?P<learn_type>[\w]+) +(?P<uptime>[\w\:\.]+) +(?P<router_mac>[\w\.\/]+)$')
+                        r' +(?P<learn_type>[\w]+) +(?P<uptime>[\w\:\.]+) +(?P<router_mac>[\w\.\/]+)$')
 
         for line in out.splitlines():
             if line:
@@ -245,14 +246,16 @@ class ShowNveVniSummary(ShowNveVniSummarySchema):
 
         return result_dict
 
+
 # ====================================================
 #  schema for show nve vni
 # ====================================================
 class ShowNveVniSchema(MetaParser):
     """Schema for:
-        show nve vni"""
+        show nve vni
+        show nve vni <vni>"""
 
-    schema ={
+    schema = {
         Any(): {
             'vni': {
                 Any(): {
@@ -267,19 +270,24 @@ class ShowNveVniSchema(MetaParser):
         }
     }
 
+
 # ====================================================
 #  Parser for show nve vni
 # ====================================================
 class ShowNveVni(ShowNveVniSchema):
     """parser for:
-        show nve vni"""
+        show nve vni
+        show nve vni <vni>"""
 
-    cli_command = 'show nve vni'
+    cli_command = ['show nve vni', 'show nve vni {vni}']
 
-    def cli(self, output=None):
+    def cli(self, vni=None, output=None):
         # excute command to get output
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if vni:
+                out = self.device.execute(self.cli_command[1].format(vni=vni))
+            else:
+                out = self.device.execute(self.cli_command[0])
         else:
             out = output
 
@@ -292,6 +300,7 @@ class ShowNveVni(ShowNveVniSchema):
         p1 = re.compile(r'^(?P<nve_name>[\w\/]+) +(?P<vni>[\d]+) +(?P<mcast>[\w\.\/]+) +'
                         r'(?P<vni_state>[\w]+) +(?P<mode>[\w]+) +(?P<type>\w+ +\[[\w\-]+\])'
                         r'(?: +(?P<flags>[\w\-\s]+))?$')
+
         for line in out.splitlines():
             line = line.strip()
 
@@ -300,7 +309,7 @@ class ShowNveVni(ShowNveVniSchema):
                 group = m.groupdict()
                 nve_name = group.pop('nve_name')
                 vni = int(group.pop('vni'))
-                nve_dict = result_dict.setdefault(nve_name,{}).setdefault('vni',{}).setdefault(vni,{})
+                nve_dict = result_dict.setdefault(nve_name, {}).setdefault('vni', {}).setdefault(vni, {})
                 nve_dict.update({'vni': vni})
                 nve_dict.update({'mcast': group.pop('mcast').lower()})
                 nve_dict.update({'vni_state': group.pop('vni_state').lower()})
@@ -448,12 +457,12 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
         result_dict = {}
         # Interface: nve1, State: Up, encapsulation: VXLAN
         p1 = re.compile(r'^\s*Interface: +(?P<nve_name>[\w\/]+), +State: +(?P<state>[\w]+),'
-                        ' +encapsulation: +(?P<encapsulation>[\w]+)$')
+                        r' +encapsulation: +(?P<encapsulation>[\w]+)$')
         p2 = re.compile(r'^\s*VPC Capability: +(?P<vpc_capability>[\w\s\-\[\]]+)$')
         p3 = re.compile(r'^\s*Local Router MAC: +(?P<local_router_mac>[\w\.]+)$')
         p4 = re.compile(r'^\s*Host Learning Mode: +(?P<host_learning_mode>[\w\-]+)$')
         p5 = re.compile(r'^\s*Source-Interface: +(?P<source_if>[\w\/]+)'
-                        ' +\(primary: +(?P<primary_ip>[\w\.]+), +secondary: +(?P<secondary_ip>[\w\.]+)\)$')
+                        r' +\(primary: +(?P<primary_ip>[\w\.]+), +secondary: +(?P<secondary_ip>[\w\.]+)\)$')
 
         # Source-Interface: loopback1 (primary: 2001:db8:646:a2bb:0:abcd:1234:4)
         # Anycast-Interface: loopback2 (secondary: 2001:db8:646:a2bb:0:abcd:5678:5)
@@ -462,7 +471,7 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
 
         # Source - Interface: loopback1(primary: 100: 100:100::6, secondary: 0.0.0.0)
         p5_3 = re.compile(r'^\s*Source-Interface: +(?P<source_if>[\w\/]+)'                      
-                        ' +\(primary: +(?P<primary_ip>[\w\.\:]+), +secondary: +(?P<secondary_ip>[\w\.]+)\)$')
+                        r' +\(primary: +(?P<primary_ip>[\w\.\:]+), +secondary: +(?P<secondary_ip>[\w\.]+)\)$')
 
         p6 = re.compile(r'^\s*Source +Interface +State: +(?P<source_state>[\w]+)$')
         p7 = re.compile(r'^\s*IR +Capability +Mode: +(?P<mode>[\w]+)$')
@@ -483,7 +492,7 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
         p20_1 = re.compile(r'^\s*Nve +MultiSite +Src +node +last +notif +sent: +(?P<notif_sent>[\w\-]+)$')
         p21 = re.compile(
             r'^\s*Multisite +bgw\-if: +(?P<multisite_bgw_if>[\w\/\-]+) +\(ip: +(?P<multisite_bgw_if_ip>[\w\.]+),'
-            ' +admin: +(?P<multisite_bgw_if_admin_state>[\w]+), +oper: +(?P<multisite_bgw_if_oper_state>[\w]+)\)$')
+            r' +admin: +(?P<multisite_bgw_if_admin_state>[\w]+), +oper: +(?P<multisite_bgw_if_oper_state>[\w]+)\)$')
         p22 = re.compile(r'^\s*Multisite +bgw\-if +oper +down +reason: +(?P<reason>[\w\.\s]+)$')
         # Multi-Site delay-restore time: 180 seconds
         p23 = re.compile(r'^\s*Multi(-S|s)ite +delay\-restore +time: +(?P<multisite_convergence_time>\d+) +seconds$')
@@ -1139,7 +1148,7 @@ class ShowL2routeEvpnEternetSegmentAll(ShowL2routeEvpnEternetSegmentAllSchema):
         # 0300.00ff.0001.2c00.0309 192.168.111.55         VXLAN nve1         64
 
         p1 = re.compile(r'^\s*(?P<ethernet_segment>(?!ESI)[\w\.]+) +(?P<originating_rtr>[\d\.]+)'
-                        ' +(?P<prod_name>[\w]+) +(?P<int_ifhdl>[\w\/]+) +(?P<client_nfn>[\w\.]+)$')
+                        r' +(?P<prod_name>[\w]+) +(?P<int_ifhdl>[\w\/]+) +(?P<client_nfn>[\w\.]+)$')
         for line in out.splitlines():
             if line:
                 line = line.rstrip()
@@ -1375,8 +1384,8 @@ class ShowL2routeMacAllDetail(ShowL2routeMacAllDetailSchema):
 
         #  11          0000.1111.0108 BGP    Spl           0          3.2.2.1 (Label: 10011)
         p1 = re.compile(r'^\s*(?P<topo_id>[\d]+) +(?P<mac_addr>[\w\.]+) +(?P<prod_type>[\w\,]+)'
-                        ' +(?P<flags>[\w\,\-]+) +(?P<seq_num>[\d]+) +(?P<next_hop1>[\w\/\.]+)\s*'
-                        '(?:\(Label: (?P<label>\d+)\).*)?$')
+                        r' +(?P<flags>[\w\,\-]+) +(?P<seq_num>[\d]+) +(?P<next_hop1>[\w\/\.]+)\s*'
+                        r'(?:\(Label: (?P<label>\d+)\).*)?$')
         #  3.2.2.2 (Label: 10011)
         p2 = re.compile(r'^\s*(?P<next_hop2>[\d\/\.]+)')
         #  Route Resolution Type: ESI
@@ -1536,8 +1545,8 @@ class ShowL2routeMacIpAllDetail(ShowL2routeMacIpAllDetailSchema):
         # 101         0011.00ff.0034 BGP  10.36.3.2                      10.70.0.2
         # 202         0011.01ff.0002 BGP    --            0         2001:db8:646::5678:1 6:1:1::2
         p1 = re.compile(r'^\s*(?P<topo_id>[\d]+) +(?P<mac_addr>[\w\.]+) +(?P<mac_ip_prod_type>[\w\,]+)'
-                        '( +(?P<mac_ip_flags>[\w\,\-]+))?( +(?P<seq_num>[\d]+))? +(?P<host_ip>[\w\/\.\:]+)'
-                        ' +(?P<next_hop1>[\w\/\.\:]+)$')
+                        r'( +(?P<mac_ip_flags>[\w\,\-]+))?( +(?P<seq_num>[\d]+))? +(?P<host_ip>[\w\/\.\:]+)'
+                        r' +(?P<next_hop1>[\w\/\.\:]+)$')
 
         p2 = re.compile(r'^\s*Sent +To: +(?P<sent_to>[\w]+)$')
         p3 = re.compile(r'^\s*SOO: +(?P<soo>[\d]+)$')
@@ -1549,8 +1558,8 @@ class ShowL2routeMacIpAllDetail(ShowL2routeMacIpAllDetailSchema):
         # 201         0011.01ff.0001 10.1.1.2       BGP    --            0         2001:db8:646:a2bb:0:abcd:5678:1
         # 202         0011.01ff.0001 5:1:1:1::2     BGP    --            0         2001:db8:646:a2bb:0:abcd:5678:1
         p5 = re.compile(r'^\s*(?P<topo_id>[\d]+) +(?P<mac_addr>[\w\.]+) +(?P<host_ip>[\w\/\.\:]+)'
-                        ' +(?P<mac_ip_prod_type>[\w\,]+)'
-                        ' +(?P<mac_ip_flags>[\w\,\-]+) +(?P<seq_num>[\d]+) +(?P<next_hop1>[\w\/\.\:]+)$')
+                        r' +(?P<mac_ip_prod_type>[\w\,]+)'
+                        r' +(?P<mac_ip_flags>[\w\,\-]+) +(?P<seq_num>[\d]+) +(?P<next_hop1>[\w\/\.\:]+)$')
 
         for line in out.splitlines():
             if line:
@@ -1907,7 +1916,8 @@ class ShowRunningConfigNvOverlay(ShowRunningConfigNvOverlaySchema):
         p17 = re.compile(r'^ingress-replication +protocol +bgp$')
         #   multisite mcast-group 226.1.1.1
         p18 = re.compile(r'^multisite mcast-group +(?P<multisite_mcast_group>[\d\.]+)$')
-
+        #   peer-ip 25.25.25.25
+        p19 = re.compile(r'^\s*peer-ip (?P<peer_ip>\S+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -2008,6 +2018,14 @@ class ShowRunningConfigNvOverlay(ShowRunningConfigNvOverlaySchema):
                 for vni in nve_vni_list:
                     vni_dict = nve_dict.setdefault('vni', {}).setdefault(vni, {})
                     vni_dict.update({'mcast_group': mcast})
+                continue
+
+            m = p19.match(line)
+            if m:
+                peer_ip = m.groupdict().pop('peer_ip')
+                for vni in nve_vni_list:
+                    vni_dict = nve_dict.setdefault('vni', {}).setdefault(vni, {})
+                    vni_dict.update({'peer_ip': peer_ip})
                 continue
 
             m = p12.match(line)
@@ -2376,12 +2394,12 @@ class ShowFabricMulticastIpSaAdRoute(ShowFabricMulticastIpSaAdRouteSchema):
         # VRF "vpc-keepalive" MVPN SA AD Route Database VNI: 0
 
         p1 = re.compile(r'^\s*VRF +\"(?P<vrf_name>\S+)\" +MVPN +SA +AD +Route +Database'
-                        ' +VNI: +(?P<vnid>[\d]+)$')
+                        r' +VNI: +(?P<vnid>[\d]+)$')
 
         # Src Active AD route: (1.1.11.3/32, 226.0.0.1/32) uptime: 00:12:32
         # SA-AD Route: (1.1.11.3/32, 226.0.0.1/32) uptime: 00:12:32
         p2 = re.compile(r'((^\s*SA\-AD +Route:)|(^\s*Src +Active +AD +route:)) +\((?P<saddr>[\w\/\.]+), +(?P<gaddr>[\w\/\.]+)\)'
-                        ' +uptime: +(?P<uptime>[\w\.\:]+)$')
+                        r' +uptime: +(?P<uptime>[\w\.\:]+)$')
 
         #  Interested Fabric Nodes:
         p3 = re.compile(r'^\s*Interested Fabric Nodes:$')
@@ -2508,13 +2526,13 @@ class ShowFabricMulticastIpMroute(ShowFabricMulticastIpMrouteSchema):
         # VRF "trm-vxlan-3001" Fabric mroute Database VNI: 203001
 
         p1 = re.compile(r'^\s*VRF +\"(?P<vrf_name>\S+)\" +Fabric +mroute +Database'\
-                        ' +VNI: +(?P<vnid>[\d]+)$')
+                        r' +VNI: +(?P<vnid>[\d]+)$')
 
 
         # Fabric Mroute: (179.1.12.11 / 32, 225.1.1.1 / 32) ptr: 0x56207780cbcc flags:0 uptime:00:01:01
 
         p2 = re.compile(r'^\s*Fabric +Mroute: +\((?P<saddr>[\w\/\.\*]+), +(?P<gaddr>[\w\/\.]+)\) +ptr: +0[xX][0-9a-'\
-                        'fA-F]+ flags: +[0-9]+ +uptime: +(?P<uptime>[\w\.\:]+)$')
+                        r'fA-F]+ flags: +[0-9]+ +uptime: +(?P<uptime>[\w\.\:]+)$')
 
         # RD-RT ext comm Route-Import:  0b 64 64 64 06 0b b9 00 01 5a 5a 5a 06 80 0b e8 03 00 00
         p3 = re.compile(r'^\s*RD-RT ext comm Route-Import: +(?P<vri>[\w\s]+)$')
@@ -2524,7 +2542,7 @@ class ShowFabricMulticastIpMroute(ShowFabricMulticastIpMrouteSchema):
         #   This node, uptime: 00:30:25    RPF Neighbor: 102.1.1.1
         #   100.100.100.1 (core), uptime: 00:30:25    RPF Neighbor: 102.1.1.1
         p5 = re.compile(r'^\s*(?P<interested_fabric_nodes>[\w\s\.]+) *(\((?P<loc>[\w]+)\))? *, +uptime: +'\
-                         '(?P<interest_uptime>[\w\.\:]+) +RPF +Neighbor: +(?P<rpfneighbor>[\w\/\.]+)$')
+                         r'(?P<interest_uptime>[\w\.\:]+) +RPF +Neighbor: +(?P<rpfneighbor>[\w\/\.]+)$')
 
         for line in out.splitlines():
             if not line:
@@ -2724,3 +2742,66 @@ class ShowL2routeEvpnMacIpEvi(ShowL2routeMacIpAllDetail):
         else:
             show_output = output
         return super().cli(output=show_output)
+
+# ===========================================================================================
+#   Schema for 'show nve ethernet-segment summary' and 'show nve ethernet-segment summary esi <esi_id>' 
+# ============================================================================================
+class ShowNveEthernetSegmentSummarySchema(MetaParser):
+    """Schema for:
+          show nve ethernet-segment summary 
+          show nve ethernet-segment summary esi <esi_id>"""
+
+    schema ={
+                'ethernet_segment': {
+                    'esi': {
+                        Any(): {
+                            'esi': str,
+                            'parent_if_name': str,
+                            'es_state': str,
+                        },
+                    },
+                },
+            }
+    
+# ===========================================================================================
+#   Parser for 'show nve ethernet-segment summary' and 'show nve ethernet-segment summary esi <esi_id>'
+# ===========================================================================================
+class ShowNveEthernetSegmentSummary(ShowNveEthernetSegmentSummarySchema):
+    """Parser for:
+          show nve ethernet-segment summary 
+          show nve ethernet-segment summary esi <esi_id>"""
+
+    cli_command = ['show nve ethernet-segment summary', 'show nve ethernet-segment summary esi {esi_id}']
+
+    def cli(self, esi_id="", output=None):
+        # excute command to get output
+        if output is None:
+            if esi_id:
+                cmd = self.cli_command[1].format(esi_id=esi_id)
+            else:
+                cmd = self.cli_command[0]
+            output = self.device.execute(cmd)
+
+        result_dict = {}
+
+        # ESI                              Parent interface   ES State  
+        # ------------------------------   ------------------ ----------
+        # 0300.0a00.0b00.0c00.0066         port-channel102    Up         
+        # 0300.0a00.0b00.0c00.0067         port-channel103    Up         
+
+        p1 = re.compile(r'^(?P<esi_id>([0-9a-f]{4}.){4}[0-9a-f]{4})\s+(?P<parent>\S+)\s+(?P<esi_state>\S+)\s*$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            #0300.0a00.0b00.0c00.0066         port-channel102    Up
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                esi = group.pop('esi_id')
+                esi_dict = result_dict.setdefault('ethernet_segment', {}).setdefault('esi', {}).setdefault(esi, {})   
+                esi_dict.update({'esi': esi,
+                                 'parent_if_name': group.pop('parent'),
+                                 'es_state': group.pop('esi_state')})
+                continue
+        return result_dict
+
