@@ -1,0 +1,4 @@
+show platform software fed active ip igmp snooping groups vlan 100 count
+
+Total Group Count       : 16000
+Total Stub Group Count  : 0

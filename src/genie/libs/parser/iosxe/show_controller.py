@@ -2962,4 +2962,4 @@ class ShowControllersEthernetControllerPreemptionStats(ShowControllersEthernetCo
                 continue
 
         return config_dict
-
+    

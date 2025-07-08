@@ -1,0 +1,385 @@
+  Zone-pair: new-trusted-untrusted
+  Service-policy inspect : firewall_policy
+
+    Class-map: class_1 (match-any)
+      Match: protocol 802-11-iapp
+      Match: protocol ace-svr
+      Match: protocol aol
+      Match: protocol appleqtc
+      Match: protocol bgp
+      Match: protocol biff
+      Match: protocol bootpc
+      Match: protocol bootps
+      Inspect
+        Session creations since subsystem startup or last reset 0
+        Current session counts (estab/half-open/terminating) [0:0:0]
+        Maxever session counts (estab/half-open/terminating) [0:0:0]
+        Last session created never
+        Last statistic reset never
+        Last session creation rate 0
+        Last half-open session total 0
+
+    Class-map: class_2 (match-any)
+      Match: protocol cddbp
+      Match: protocol cifs
+      Match: protocol cisco-fna
+      Match: protocol cisco-net-mgmt
+      Match: protocol cisco-svcs
+      Match: protocol cisco-sys
+      Match: protocol cisco-tdp
+      Match: protocol cisco-tna
+      Inspect
+        Session creations since subsystem startup or last reset 0
+        Current session counts (estab/half-open/terminating) [0:0:0]
+        Maxever session counts (estab/half-open/terminating) [0:0:0]
+        Last session created never
+        Last statistic reset never
+        Last session creation rate 0
+        Last half-open session total 0
+
+    Class-map: class_3 (match-any)
+      Match: protocol citrix
+      Match: protocol citriximaclient
+      Match: protocol clp
+      Match: protocol creativepartnr
+      Match: protocol creativeserver
+      Match: protocol cuseeme
+      Match: protocol daytime
+      Match: protocol dbase
+      Inspect
+        Session creations since subsystem startup or last reset 0
+        Current session counts (estab/half-open/terminating) [0:0:0]
+        Maxever session counts (estab/half-open/terminating) [0:0:0]
+        Last session created never
+        Last statistic reset never
+        Last session creation rate 0
+        Last half-open session total 0
+
+    Class-map: class_4 (match-any)
+      Match: protocol dbcontrol_agent
+      Match: protocol ddns-v3
+      Match: protocol dhcp-failover
+      Match: protocol discard
+      Match: protocol dns
+      Match: protocol dnsix
+      Match: protocol echo
+      Match: protocol entrust-svc-handler
+      Inspect
+        Session creations since subsystem startup or last reset 0
+        Current session counts (estab/half-open/terminating) [0:0:0]
+        Maxever session counts (estab/half-open/terminating) [0:0:0]
+        Last session created never
+        Last statistic reset never
+        Last session creation rate 0
+        Last half-open session total 0
+
+    Class-map: class_5 (match-any)
+      Match: protocol entrust-svcs
+      Match: protocol exec
+      Match: protocol fcip-port
+      Match: protocol finger
+      Match: protocol ftps
+      Match: protocol gdoi
+      Match: protocol giop
+      Match: protocol ftp
+      Inspect
+        Session creations since subsystem startup or last reset 0
+        Current session counts (estab/half-open/terminating) [0:0:0]
+        Maxever session counts (estab/half-open/terminating) [0:0:0]
+        Last session created never
+        Last statistic reset never
+        Last session creation rate 0
+        Last half-open session total 0
+
+    Class-map: class_6 (match-any)
+      Match: protocol gopher
+      Match: protocol gtpv0
+      Match: protocol gtpv1
+      Match: protocol h225ras
+      Match: protocol h323
+      Match: protocol h323callsigalt
+      Match: protocol hp-alarm-mgr
+      Match: protocol hp-collector
+      Inspect
+        Session creations since subsystem startup or last reset 0
+        Current session counts (estab/half-open/terminating) [0:0:0]
+        Maxever session counts (estab/half-open/terminating) [0:0:0]
+        Last session created never
+        Last statistic reset never
+        Last session creation rate 0
+        Last half-open session total 0
+
+    Class-map: class_7 (match-any)
+      Match: protocol hp-managed-node
+      Match: protocol hsrp
+      Match: protocol http
+      Match: protocol https
+      Match: protocol ica
+      Match: protocol icabrowser
+      Match: protocol icmp
+      Match: protocol ident
+      Inspect
+        Session creations since subsystem startup or last reset 0
+        Current session counts (estab/half-open/terminating) [0:0:0]
+        Maxever session counts (estab/half-open/terminating) [0:0:0]
+        Last session created never
+        Last statistic reset never
+        Last session creation rate 0
+        Last half-open session total 0
+
+    Class-map: class_8 (match-any)
+      Match: protocol igmpv3lite
+      Match: protocol imap
+      Match: protocol imap3
+      Match: protocol imaps
+      Match: protocol ipass
+      Match: protocol ipsec-msft
+      Match: protocol ipx
+      Match: protocol irc
+      Inspect
+        Session creations since subsystem startup or last reset 0
+        Current session counts (estab/half-open/terminating) [0:0:0]
+        Maxever session counts (estab/half-open/terminating) [0:0:0]
+        Last session created never
+        Last statistic reset never
+        Last session creation rate 0
+        Last half-open session total 0
+
+    Class-map: class_9 (match-any)
+      Match: protocol irc-serv
+      Match: protocol ircs
+      Match: protocol ircu
+      Match: protocol isakmp
+      Match: protocol iscsi
+      Match: protocol iscsi-target
+      Match: protocol kazaa
+      Match: protocol kerberos
+      Inspect
+        Session creations since subsystem startup or last reset 0
+        Current session counts (estab/half-open/terminating) [0:0:0]
+        Maxever session counts (estab/half-open/terminating) [0:0:0]
+        Last session created never
+        Last statistic reset never
+        Last session creation rate 0
+        Last half-open session total 0
+
+    Class-map: class_10 (match-any)
+      Match: protocol kermit
+      Match: protocol l2tp
+      Match: protocol ldap
+      Match: protocol ldap-admin
+      Match: protocol ldaps
+      Match: protocol login
+      Match: protocol lotusmtap
+      Match: protocol lotusnote
+      Inspect
+        Session creations since subsystem startup or last reset 0
+        Current session counts (estab/half-open/terminating) [0:0:0]
+        Maxever session counts (estab/half-open/terminating) [0:0:0]
+        Last session created never
+        Last statistic reset never
+        Last session creation rate 0
+        Last half-open session total 0
+
+    Class-map: class_11 (match-any)
+      Match: protocol mgcp
+      Match: protocol microsoft-ds
+      Match: protocol ms-cluster-net
+      Match: protocol ms-dotnetster
+      Match: protocol ms-sna
+      Match: protocol ms-sql
+      Match: protocol ms-sql-m
+      Match: protocol msexch-routing
+      Inspect
+        Session creations since subsystem startup or last reset 0
+        Current session counts (estab/half-open/terminating) [0:0:0]
+        Maxever session counts (estab/half-open/terminating) [0:0:0]
+        Last session created never
+        Last statistic reset never
+        Last session creation rate 0
+        Last half-open session total 0
+
+    Class-map: class_12 (match-any)
+      Match: protocol msnmsgr
+      Match: protocol msrpc
+      Match: protocol mysql
+      Match: protocol n2h2server
+      Match: protocol ncp
+      Match: protocol net8-cman
+      Match: protocol netbios-dgm
+      Match: protocol netbios-ns
+      Inspect
+        Session creations since subsystem startup or last reset 0
+        Current session counts (estab/half-open/terminating) [0:0:0]
+        Maxever session counts (estab/half-open/terminating) [0:0:0]
+        Last session created never
+        Last statistic reset never
+        Last session creation rate 0
+        Last half-open session total 0
+
+    Class-map: class_13 (match-any)
+      Match: protocol netbios-ssn
+      Match: protocol netshow
+      Match: protocol netstat
+      Match: protocol nfs
+      Match: protocol nntp
+      Match: protocol ntp
+      Match: protocol oem-agent
+      Match: protocol oracle
+      Inspect
+        Session creations since subsystem startup or last reset 0
+        Current session counts (estab/half-open/terminating) [0:0:0]
+        Maxever session counts (estab/half-open/terminating) [0:0:0]
+        Last session created never
+        Last statistic reset never
+        Last session creation rate 0
+        Last half-open session total 0
+
+    Class-map: class_14 (match-any)
+      Match: protocol oracle-em-vp
+      Match: protocol oraclenames
+      Match: protocol orasrv
+      Match: protocol pcanywheredata
+      Match: protocol pcanywherestat
+      Match: protocol pop3
+      Match: protocol pop3s
+      Match: protocol pptp
+      Inspect
+        Session creations since subsystem startup or last reset 0
+        Current session counts (estab/half-open/terminating) [0:0:0]
+        Maxever session counts (estab/half-open/terminating) [0:0:0]
+        Last session created never
+        Last statistic reset never
+        Last session creation rate 0
+        Last half-open session total 0
+
+    Class-map: class_15 (match-any)
+      Match: protocol pwdgen
+      Match: protocol qmtp
+      Match: protocol r-winsock
+      Match: protocol radius
+      Match: protocol rdb-dbs-disp
+      Match: protocol realmedia
+      Match: protocol realsecure
+      Match: protocol router
+      Inspect
+        Session creations since subsystem startup or last reset 0
+        Current session counts (estab/half-open/terminating) [0:0:0]
+        Maxever session counts (estab/half-open/terminating) [0:0:0]
+        Last session created never
+        Last statistic reset never
+        Last session creation rate 0
+        Last half-open session total 0
+
+    Class-map: class_16 (match-any)
+      Match: protocol rsvd
+      Match: protocol rsvp-encap
+      Match: protocol rsvp_tunnel
+      Match: protocol rtc-pm-port
+      Match: protocol rtelnet
+      Match: protocol rtsp
+      Match: protocol send
+      Match: protocol shell
+      Inspect
+        Session creations since subsystem startup or last reset 0
+        Current session counts (estab/half-open/terminating) [0:0:0]
+        Maxever session counts (estab/half-open/terminating) [0:0:0]
+        Last session created never
+        Last statistic reset never
+        Last session creation rate 0
+        Last half-open session total 0
+
+    Class-map: class_17 (match-any)
+      Match: protocol sip
+      Match: protocol sip-tls
+      Match: protocol skinny
+      Match: protocol sms
+      Match: protocol smtp
+      Match: protocol snmp
+      Match: protocol snmptrap
+      Match: protocol socks
+      Inspect
+        Session creations since subsystem startup or last reset 0
+        Current session counts (estab/half-open/terminating) [0:0:0]
+        Maxever session counts (estab/half-open/terminating) [0:0:0]
+        Last session created never
+        Last statistic reset never
+        Last session creation rate 0
+        Last half-open session total 0
+
+    Class-map: class_18 (match-any)
+      Match: protocol sql-net
+      Match: protocol sqlserv
+      Match: protocol sqlsrv
+      Match: protocol ssh
+      Match: protocol sshell
+      Match: protocol ssp
+      Match: protocol streamworks
+      Match: protocol stun
+      Inspect
+        Session creations since subsystem startup or last reset 0
+        Current session counts (estab/half-open/terminating) [0:0:0]
+        Maxever session counts (estab/half-open/terminating) [0:0:0]
+        Last session created never
+        Last statistic reset never
+        Last session creation rate 0
+        Last half-open session total 0
+
+    Class-map: class_19 (match-any)
+      Match: protocol sunrpc
+      Match: protocol syslog
+      Match: protocol syslog-conn
+      Match: protocol tacacs
+      Match: protocol tacacs-ds
+      Match: protocol tarantella
+      Match: protocol tcp
+      Match: protocol telnet
+      Inspect
+        Session creations since subsystem startup or last reset 0
+        Current session counts (estab/half-open/terminating) [0:0:0]
+        Maxever session counts (estab/half-open/terminating) [0:0:0]
+        Last session created never
+        Last statistic reset never
+        Last session creation rate 0
+        Last half-open session total 0
+
+    Class-map: class_20 (match-any)
+      Match: protocol telnets
+      Match: protocol tftp
+      Match: protocol time
+      Match: protocol timed
+      Match: protocol tr-rsrb
+      Match: protocol ttc
+      Match: protocol udp
+      Match: protocol uucp
+      Inspect
+        Session creations since subsystem startup or last reset 0
+        Current session counts (estab/half-open/terminating) [0:0:0]
+        Maxever session counts (estab/half-open/terminating) [0:0:0]
+        Last session created never
+        Last statistic reset never
+        Last session creation rate 0
+        Last half-open session total 0
+
+    Class-map: class_21 (match-any)
+      Match: protocol vdolive
+      Match: protocol vqp
+      Match: protocol webster
+      Match: protocol who
+      Match: protocol wins
+      Match: protocol x11
+      Match: protocol xdmcp
+      Match: protocol ymsgr
+      Inspect
+        Session creations since subsystem startup or last reset 0
+        Current session counts (estab/half-open/terminating) [0:0:0]
+        Maxever session counts (estab/half-open/terminating) [0:0:0]
+        Last session created never
+        Last statistic reset never
+        Last session creation rate 0
+        Last half-open session total 0
+
+    Class-map: class-default (match-any)
+      Match: any
+      Drop (default action)
+        0 packets, 0 bytes

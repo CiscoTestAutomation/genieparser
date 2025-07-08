@@ -1,0 +1,8 @@
+Dump NAT pool config
+
+ID: 3, Name: abc, Type: Generic, Mask: 255.255.255.0
+  Flags: Unknown, Acct name:
+    Address range blocks: 1
+    Start: 42.0.0.3, End: 42.0.0.3
+  Last stats update: 02/20 03:57:22.711119081
+  Last refcount value: 1

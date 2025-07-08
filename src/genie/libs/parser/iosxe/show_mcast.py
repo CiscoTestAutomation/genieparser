@@ -19,6 +19,8 @@ IOSXE parsers for the following show commands:
     * 'show consistency-checker mcast <layer> start <address> <source>',
     * 'show consistency-checker mcast <layer> start vrf <instance_name> <address> <source>',
     * 'show consistency-checker mcast <layer> start vlan <vlan_id> <address>
+    * 'show control cpu'
+
 """
 
 # Python
@@ -1230,6 +1232,138 @@ class ShowConsistencyCheckerRunId(ShowConsistencyCheckerRunIdSchema):
                 object_dict['fulltable']=m.groupdict()['fulltable']
                 object_dict['hwcheck']=m.groupdict()['hwcheck']
                 object_dict['hwshadow']=m.groupdict()['hwshadow']
+                continue
+
+        return ret_dict
+
+
+class ShowControlCpuSchema(MetaParser):
+    """Schema for 'show control cpu'"""
+    schema = {
+        "queues": {
+            Any(): {
+                "retrieved": int,
+                "dropped": int,
+                "invalid": int,
+                "hol_block": int,
+            }
+        }
+    }
+
+class ShowControlCpu(ShowControlCpuSchema):
+    """Parser for 'show control cpu'"""
+
+    cli_command = "show control cpu"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+
+        # Example lines:
+        # queue                      retrieved   dropped     invalid     hol-block
+        # -------------------------------------------------------------------------
+        # Routing Protocol           327         0           0           0
+        # L2 Protocol                23362       0           0           0
+        # sw forwarding              433         425         0           0
+
+        p = re.compile(
+            r"^(?P<queue>[\w\s\-]+?)\s{2,}(?P<retrieved>\d+)\s+(?P<dropped>\d+)\s+(?P<invalid>\d+)\s+(?P<hol_block>\d+)$"
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+
+                    # Example lines:
+            # queue                      retrieved   dropped     invalid     hol-block
+            # -------------------------------------------------------------------------
+            # Routing Protocol           327         0           0           0
+            # L2 Protocol                23362       0           0           0
+            # sw forwarding              433         425         0           0
+            m = p.match(line)
+            if m:
+                group = m.groupdict()
+                queue_name = group["queue"].strip()
+                # Initialize queues dict only if a match is found
+                queue_dict = ret_dict.setdefault("queues", {})
+                queue_dict[queue_name] = {
+                    "retrieved": int(group["retrieved"]),
+                    "dropped": int(group["dropped"]),
+                    "invalid": int(group["invalid"]),
+                    "hol_block": int(group["hol_block"]),
+                }
+                
+        return ret_dict
+class ShowIpv6MldSnoopingAddressSchema(MetaParser):
+    """Schema for:
+        show ipv6 mld snooping address vlan {vlan} {group}
+    """
+    schema = {
+        'vlan': {
+            Any(): {
+                'group': {
+                    Any(): {
+                        'type': str,
+                        Optional('version'): str,
+                        'port_list': str,
+                        Optional('source_ip'): str,
+                    }
+                }
+            }
+        }
+    }
+
+class ShowIpv6MldSnoopingAddress(ShowIpv6MldSnoopingAddressSchema):
+    """Parser for:
+        show ipv6 mld snooping address vlan {vlan} {group}
+    """
+    cli_command = 'show ipv6 mld snooping address vlan {vlan} {group}'
+
+    def cli(self, vlan, group, output=None):
+        if output is None:
+            cmd = self.cli_command.format(vlan=vlan, group=group)
+            output = self.device.execute(cmd)
+
+        # Initialize return dictionary
+        ret_dict = {}
+        current_vlan = None
+        current_group = None
+
+        # 100       FF33::2:1                M           v2          Fif1/0/33
+        p1 = re.compile(
+            r'^(?P<vlan>\d+)\s+(?P<group>[A-Fa-f0-9:]+)\s+(?P<type>[MSE]+)\s+(?P<version>v\d+)\s+(?P<port_list>[\w\/]+)$'
+        )
+        # /101:1:1::11           M                       Fif1/0/33
+        p2 = re.compile(
+            r'^\/?(?P<source_ip>[\/A-Fa-f0-9:]+)\s+(?P<type>[MSE]+)\s+(?P<port_list>[\w\/]+)$'
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # 100       FF33::2:1                M           v2          Fif1/0/33
+            m = p1.match(line)
+            if m:
+                group_dict = m.groupdict()
+                current_vlan = group_dict['vlan']  # Update current VLAN
+                current_group = group_dict['group']  # Update current group
+                vlan_dict = ret_dict.setdefault('vlan', {}).setdefault(current_vlan, {})
+                group_dict_entry = vlan_dict.setdefault('group', {}).setdefault(current_group, {})
+                group_dict_entry['type'] = group_dict['type']
+                group_dict_entry['version'] = group_dict['version']
+                group_dict_entry['port_list'] = group_dict['port_list']
+                continue
+
+            # /101:1:1::11           M                       Fif1/0/33
+            m = p2.match(line)
+            if m and current_vlan and current_group:
+                source_dict = m.groupdict()
+                vlan_dict = ret_dict.setdefault('vlan', {}).setdefault(current_vlan, {})
+                group_dict = vlan_dict.setdefault('group', {})
+                source_entry = group_dict.setdefault(source_dict['source_ip'], {})
+                source_entry['type'] = source_dict['type']
+                source_entry['port_list'] = source_dict['port_list']
                 continue
 
         return ret_dict

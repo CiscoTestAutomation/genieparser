@@ -1,0 +1,10 @@
+Legend: St=State    XC St=State in the L2VPN Service      Prio=Priority
+        UP=Up       DN=Down            AD=Admin Down      IA=Inactive
+        SB=Standby  HS=Hot Standby     RV=Recovering      NH=No Hardware
+        m=manually selected
+
+  Interface          Group       Encapsulation                   Prio  St  XC St
+  ---------          -----       -------------                   ----  --  -----
+VPLS name: ce2, State: UP
+  pw100002                       ce2(VFI)                        0     UP  UP
+  pw101              core_pw     106.0.0.2:101(MPLS)             0     UP  UP

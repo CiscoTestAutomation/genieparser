@@ -14,6 +14,7 @@ expected_output={
           'ipv4_src_mask': '0x00000000',
           'ipv4_dst_value': '0x00000000',
           'ipv4_dst_mask': '0x00000000',
+          'packet_count': 0,
           'pro': {
             'V': {
               'proto': '0x0',
@@ -60,6 +61,7 @@ expected_output={
           'ipv4_src_mask': '0x00000000',
           'ipv4_dst_value': '0x00000000',
           'ipv4_dst_mask': '0x00000000',
+          'packet_count': 0,
           'pro': {
             'V': {
               'proto': '0x11',

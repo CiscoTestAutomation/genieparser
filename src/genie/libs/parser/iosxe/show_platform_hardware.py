@@ -10075,3 +10075,447 @@ class ShowPlatformHardwareQfpActiveFeatureNatDataStats(ShowPlatformHardwareQfpAc
                 parsed_dict.setdefault('counters', {}).setdefault(counter, value)
                 continue
         return parsed_dict
+
+class ShowPlatformHardwareQfpActiveFeatureFirewallClientStatisticsSchema(MetaParser):
+    '''Schema for show platform hardware qfp active feature firewall client statistics'''
+    schema = {
+        'zonepair_entry_count': int,
+        'filler_block_count': int,
+        'action_block_count': int,
+        'l7_params_block_count': int,
+        'statistics_table_count': int,
+        'statistics_block_count': int,
+        'class_name_table_entry_count': int,
+        'number_of_vrf_interfaces_with_zone': int,
+        'number_of_zoned_interfaces': int,
+        'number_of_zones': int,
+        'number_of_zone_pairs_with_policy': int,
+        'number_of_avc_policy': int,
+        'inspect_parameter_map_count': int,
+        'multi_tenancy': str,
+        'pending_multi_tenancy': str,
+        'vrf_related_objects': {
+            'vrf_parameter_map_count': int,
+            'vrf_parameter_map_binding_count': int,
+            'vrf_stats': int,
+            'vrf_drop_stats': int,
+        },
+        'zone_related_objects': {
+            'zone_parameter_map_count': int,
+            'zone_parameter_map_binding_count': int,
+        },
+        'scb_pool': {
+            'number_of_entries': int,
+            'entry_limit': int,
+            'size': int,
+            'number_of_additions': int,
+        },
+        'synflood_hostdb_pool': {
+            'number_of_entries': int,
+            'entry_limit': int,
+            'size': int,
+            'number_of_additions': int,
+        },
+        'session_teardown_pool': {
+            'number_of_entries': int,
+            'entry_limit': int,
+            'size': int,
+            'number_of_additions': int,
+        },
+        'syncookie_destination_pool': {
+            'number_of_entries': int,
+            'entry_limit': int,
+            'size': int,
+            'number_of_additions': int,
+        },
+        'errors': {
+            'failed_to_zero_global_drop_stats': int,
+            'failed_to_allocate_drop_stats': int,
+            'failed_to_zero_global_resource_stats': int,
+            'failed_to_allocate_resource_stats': int,
+            'failed_to_walk_vrf_domains': int,
+            'failed_to_re_enable_firewall': int,
+            'failed_to_disable_firewall': int,
+            'failed_to_allocate_clear_command_buffer': int,
+            'failed_to_send_clear_session_ipc': int,
+        }
+    }
+
+class ShowPlatformHardwareQfpActiveFeatureFirewallClientStatistics(ShowPlatformHardwareQfpActiveFeatureFirewallClientStatisticsSchema):
+    '''Parser for show platform hardware qfp active feature firewall client statistics'''
+    cli_command = 'show platform hardware qfp active feature firewall client statistics'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        parsed = {}
+
+        #Zonepair table entry count: 1
+        p1 = re.compile(r'^Zonepair table entry count: +(?P<zonepair_entry_count>\d+)$')
+
+        #Filler block count: 2
+        p2 = re.compile(r'^Filler block count: +(?P<filler_block_count>\d+)$')
+
+        #Action block count: 2
+        p3 = re.compile(r'^Action block count: +(?P<action_block_count>\d+)$')
+
+        #L7 params block count: 0
+        p4 = re.compile(r'^L7 params block count: +(?P<l7_params_block_count>\d+)$')
+
+        #Statistics table count: 2
+        p5 = re.compile(r'^Statistics table count: +(?P<statistics_table_count>\d+)$')
+
+        #Statistics block count: 8
+        p6 = re.compile(r'^Statistics block count: +(?P<statistics_block_count>\d+)$')
+
+        #Class name table entry count: 2
+        p7 = re.compile(r'^Class name table entry count: +(?P<class_name_table_entry_count>\d+)$')
+
+        #Number of vrf interfaces with zone: 0
+        p8 = re.compile(r'^Number of vrf interfaces with zone: +(?P<number_of_vrf_interfaces_with_zone>\d+)$')
+
+        #Number of zoned interfaces: 2
+        p9 = re.compile(r'^Number of zoned interfaces: +(?P<number_of_zoned_interfaces>\d+)$')
+
+        #Number of zones: 2
+        p10 = re.compile(r'^Number of zones: +(?P<number_of_zones>\d+)$')
+
+        #Number of zone pairs with policy: 1
+        p11 = re.compile(r'^Number of zone pairs with policy: +(?P<number_of_zone_pairs_with_policy>\d+)$')
+
+        #Number of AVC policy: 0
+        p12 = re.compile(r'^Number of AVC policy: +(?P<number_of_avc_policy>\d+)$')
+
+        #Inspect parameter map count: 1
+        p13 = re.compile(r'^Inspect parameter map count: +(?P<inspect_parameter_map_count>\d+)$')
+
+        #Multi-tenancy: No
+        p14 = re.compile(r'^Multi-tenancy: +(?P<multi_tenancy>\w+)$')
+
+        #Pending Multi-tenancy: No
+        p15 = re.compile(r'^Pending Multi-tenancy: +(?P<pending_multi_tenancy>\w+)$')
+
+        #VRF related objects:
+        p16 = re.compile(r'^VRF related objects:$')
+
+        #VRF-ParameterMap count: 1,
+        p17 = re.compile(r'^\s*VRF-ParameterMap count: +(?P<vrf_parameter_map_count>\d+),$')
+
+        #VRF-ParameterMap Binding count: 0,
+        p18 = re.compile(r'^\s*VRF-ParameterMap Binding count: +(?P<vrf_parameter_map_binding_count>\d+),$')
+
+        #VRF stats: 1,
+        p19 = re.compile(r'^\s*VRF stats: +(?P<vrf_stats>\d+),$')
+
+        #VRF drop stats: 1
+        p20 = re.compile(r'^\s*VRF drop stats: +(?P<vrf_drop_stats>\d+)$')
+
+        #Zone related objects:
+        p21 = re.compile(r'^Zone related objects:$')
+
+        #Zone-ParameterMap count: 0,
+        p22 = re.compile(r'^\s*Zone-ParameterMap count: +(?P<zone_parameter_map_count>\d+),$')
+
+        #Zone-ParameterMap Binding count: 0
+        p23 = re.compile(r'^\s*Zone-ParameterMap Binding count: +(?P<zone_parameter_map_binding_count>\d+)$')
+
+        #SCB pool:
+        p24 = re.compile(r'^(?P<pool_name>.+ pool):$')
+
+        #number of entries: 16384,
+        p25 = re.compile(r'^\s*number of entries: +(?P<number_of_entries>\d+),$')
+
+        #entry limit: 1048576,
+        p26 = re.compile(r'^\s*entry limit: +(?P<entry_limit>\d+),$')
+
+        #size: 8913728,
+        p27 = re.compile(r'^\s*size: +(?P<size>\d+),$')
+
+        #size: 11072, number of additions: 0
+        p28 = re.compile(r'^\s*size: +(?P<size>\d+), number of additions: +(?P<number_of_additions>\d+)$')
+
+        #number of additions: 0
+        p29 = re.compile(r'^\s*number of additions: +(?P<number_of_additions>\d+)$')
+
+        #entry limit: 0, size: 983872,
+        p30 = re.compile(r'^\s*entry limit: +(?P<entry_limit>\d+), size: +(?P<size>\d+),$')
+
+        #Errors:
+        p31 = re.compile(r'^Errors:$')
+
+        #Failed to zero global drop stats: 0,
+        p32 = re.compile(r'^\s*Failed to zero global drop stats: +(?P<failed_to_zero_global_drop_stats>\d+),$')
+
+        #Failed to allocate drop stats: 0,
+        p33 = re.compile(r'^\s*Failed to allocate drop stats: +(?P<failed_to_allocate_drop_stats>\d+),$')
+
+        #Failed to zero global resource stats: 0,
+        p34 = re.compile(r'^\s*Failed to zero global resource stats: +(?P<failed_to_zero_global_resource_stats>\d+),$')
+
+        #Failed to allocate resource stats: 0,
+        p35 = re.compile(r'^\s*Failed to allocate resource stats: +(?P<failed_to_allocate_resource_stats>\d+),$')
+
+        #Failed to walk vrf domains: 0,
+        p36 = re.compile(r'^\s*Failed to walk vrf domains: +(?P<failed_to_walk_vrf_domains>\d+),$')
+
+        #Failed to re-enable firewall: 0,
+        p37 = re.compile(r'^\s*Failed to re-enable firewall: +(?P<failed_to_re_enable_firewall>\d+),$')
+
+        #Failed to disable firewall: 0,
+        p38 = re.compile(r'^\s*Failed to disable firewall: +(?P<failed_to_disable_firewall>\d+),$')
+
+        #Failed to allocate clear command buffer: 0,
+        p39 = re.compile(r'^\s*Failed to allocate clear command buffer: +(?P<failed_to_allocate_clear_command_buffer>\d+),$')
+
+        #Failed to send clear session IPC: 0
+        p40 = re.compile(r'^\s*Failed to send clear session IPC: +(?P<failed_to_send_clear_session_ipc>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            #Zonepair table entry count: 1
+            m = p1.match(line)
+            if m:
+                parsed['zonepair_entry_count'] = int(m.group('zonepair_entry_count'))
+                continue
+
+            #Filler block count: 2
+            m = p2.match(line)
+            if m:
+                parsed['filler_block_count'] = int(m.group('filler_block_count'))
+                continue
+
+            #Action block count: 2
+            m = p3.match(line)
+            if m:
+                parsed['action_block_count'] = int(m.group('action_block_count'))
+                continue
+
+            #L7 params block count: 0
+            m = p4.match(line)
+            if m:
+                parsed['l7_params_block_count'] = int(m.group('l7_params_block_count'))
+                continue
+
+            #Statistics table count: 2
+            m = p5.match(line)
+            if m:
+                parsed['statistics_table_count'] = int(m.group('statistics_table_count'))
+                continue
+
+            #Statistics block count: 8
+            m = p6.match(line)
+            if m:
+                parsed['statistics_block_count'] = int(m.group('statistics_block_count'))
+                continue
+
+            #Class name table entry count: 2
+            m = p7.match(line)
+            if m:
+                parsed['class_name_table_entry_count'] = int(m.group('class_name_table_entry_count'))
+                continue
+
+            #Number of vrf interfaces with zone: 0
+            m = p8.match(line)
+            if m:
+                parsed['number_of_vrf_interfaces_with_zone'] = int(m.group('number_of_vrf_interfaces_with_zone'))
+                continue
+
+            #Number of zoned interfaces: 2
+            m = p9.match(line)
+            if m:
+                parsed['number_of_zoned_interfaces'] = int(m.group('number_of_zoned_interfaces'))
+                continue
+
+            #Number of zones: 2
+            m = p10.match(line)
+            if m:
+                parsed['number_of_zones'] = int(m.group('number_of_zones'))
+                continue
+
+            #Number of zone pairs with policy: 1
+            m = p11.match(line)
+            if m:
+                parsed['number_of_zone_pairs_with_policy'] = int(m.group('number_of_zone_pairs_with_policy'))
+                continue
+
+            #Number of AVC policy: 0
+            m = p12.match(line)
+            if m:
+                parsed['number_of_avc_policy'] = int(m.group('number_of_avc_policy'))
+                continue
+
+            #Inspect parameter map count: 1
+            m = p13.match(line)
+            if m:
+                parsed['inspect_parameter_map_count'] = int(m.group('inspect_parameter_map_count'))
+                continue
+
+            #Multi-tenancy: No
+            m = p14.match(line)
+            if m:
+                parsed['multi_tenancy'] = m.group('multi_tenancy')
+                continue
+
+            #Pending Multi-tenancy: No
+            m = p15.match(line)
+            if m:
+                parsed['pending_multi_tenancy'] = m.group('pending_multi_tenancy')
+                continue
+
+            #VRF related objects:
+            m = p16.match(line)
+            if m:
+                continue
+
+            #VRF-ParameterMap count: 1,
+            m = p17.match(line)
+            if m:
+                vrf_related_objects = parsed.setdefault('vrf_related_objects', {})
+                vrf_related_objects['vrf_parameter_map_count'] = int(m.group('vrf_parameter_map_count'))
+                continue
+
+            #VRF-ParameterMap Binding count: 0,
+            m = p18.match(line)
+            if m:
+                vrf_related_objects['vrf_parameter_map_binding_count'] = int(m.group('vrf_parameter_map_binding_count'))
+                continue
+
+            #VRF stats: 1,
+            m = p19.match(line)
+            if m:
+                vrf_related_objects['vrf_stats'] = int(m.group('vrf_stats'))
+                continue
+
+            #VRF drop stats: 1
+            m = p20.match(line)
+            if m:
+                vrf_related_objects['vrf_drop_stats'] = int(m.group('vrf_drop_stats'))
+                continue
+
+            #Zone related objects:
+            m = p21.match(line)
+            if m:
+                continue
+
+            #Zone-ParameterMap count: 0,
+            m = p22.match(line)
+            if m:
+                zone_related_objects = parsed.setdefault('zone_related_objects', {})
+                zone_related_objects['zone_parameter_map_count'] = int(m.group('zone_parameter_map_count'))
+                continue
+
+            #Zone-ParameterMap Binding count: 0
+            m = p23.match(line)
+            if m:
+                zone_related_objects['zone_parameter_map_binding_count'] = int(m.group('zone_parameter_map_binding_count'))
+                continue
+
+            #SCB pool:
+            m = p24.match(line)
+            if m:
+                current_section = m.group('pool_name').rstrip(':').lower().replace(' ', '_')
+                parsed[current_section] = {}
+                continue
+            if current_section and current_section.endswith('_pool'):
+
+                #number of entries: 16384,
+                m = p25.match(line)
+                if m:
+                    parsed[current_section]['number_of_entries'] = int(m.group('number_of_entries'))
+                    continue
+
+                #entry limit: 0, size: 983872,
+                m = p30.match(line)
+                if m:
+                    parsed[current_section]['entry_limit'] = int(m.group('entry_limit'))
+                    parsed[current_section]['size'] = int(m.group('size'))
+                    continue
+
+                #entry limit: 1048576,
+                m = p26.match(line)
+                if m:
+                    parsed[current_section]['entry_limit'] = int(m.group('entry_limit'))
+                    continue
+
+                #size: 11072, number of additions: 0
+                m = p28.match(line)
+                if m:
+                    parsed[current_section]['size'] = int(m.group('size'))
+                    parsed[current_section]['number_of_additions'] = int(m.group('number_of_additions'))
+                    continue
+
+                #size: 8913728,
+                m = p27.match(line)
+                if m:
+                    parsed[current_section]['size'] = int(m.group('size'))
+                    continue
+
+                #number of additions: 0
+                m = p29.match(line)
+                if m:
+                    parsed[current_section]['number_of_additions'] = int(m.group('number_of_additions'))
+                    continue
+
+            #Errors:
+            m = p31.match(line)
+            if m:
+                errors = parsed.setdefault('errors', {})
+                continue
+
+            #Failed to zero global drop stats: 0,
+            m = p32.match(line)
+            if m:
+                errors['failed_to_zero_global_drop_stats'] = int(m.group('failed_to_zero_global_drop_stats'))
+                continue
+
+            #Failed to allocate drop stats: 0,
+            m = p33.match(line)
+            if m:
+                errors['failed_to_allocate_drop_stats'] = int(m.group('failed_to_allocate_drop_stats'))
+                continue
+
+            #Failed to zero global resource stats: 0,
+            m = p34.match(line)
+            if m:
+                errors['failed_to_zero_global_resource_stats'] = int(m.group('failed_to_zero_global_resource_stats'))
+                continue
+
+            #Failed to allocate resource stats: 0,
+            m = p35.match(line)
+            if m:
+                errors['failed_to_allocate_resource_stats'] = int(m.group('failed_to_allocate_resource_stats'))
+                continue
+
+            #Failed to walk vrf domains: 0,
+            m = p36.match(line)
+            if m:
+                errors['failed_to_walk_vrf_domains'] = int(m.group('failed_to_walk_vrf_domains'))
+                continue
+
+            #Failed to re-enable firewall: 0,
+            m = p37.match(line)
+            if m:
+                errors['failed_to_re_enable_firewall'] = int(m.group('failed_to_re_enable_firewall'))
+                continue
+
+            #Failed to disable firewall: 0,
+            m = p38.match(line)
+            if m:
+                errors['failed_to_disable_firewall'] = int(m.group('failed_to_disable_firewall'))
+                continue
+
+            #Failed to allocate clear command buffer: 0,
+            m = p39.match(line)
+            if m:
+                errors['failed_to_allocate_clear_command_buffer'] = int(m.group('failed_to_allocate_clear_command_buffer'))
+                continue
+
+            #Failed to send clear session IPC: 0
+            m = p40.match(line)
+            if m:
+                errors['failed_to_send_clear_session_ipc'] = int(m.group('failed_to_send_clear_session_ipc'))
+                continue
+
+        return parsed

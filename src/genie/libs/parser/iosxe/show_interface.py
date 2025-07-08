@@ -34,6 +34,7 @@
     * show interfaces {interface} capabilities
     * show interfaces {interface} vlan mapping
     * show interfaces {interface} human-readable
+    * show interfaces transceiver module {mod}
 """
 
 import os
@@ -4135,7 +4136,6 @@ class ShowInterfacesTransceiverDetail(ShowInterfacesTransceiverDetailSchema):
                     intf_dict[stat]['LowWarnThreshold'] = float(m.groupdict()['LWT'])
                     intf_dict[stat]['LowAlarmThreshold'] = float(m.groupdict()['LAT'])
                     continue
-
         return result_dict
 
 
@@ -5752,6 +5752,83 @@ class ShowInterfaceHumanReadable(ShowInterfaceHumanReadableSchema):
                 ret_dict.update({
                     group['dir']: group['rate']
                 })
+                continue
+
+        return ret_dict
+
+
+
+# ======================================================
+# Schema for 'show interfaces transceiver module {mod}'
+# ======================================================
+
+class ShowInterfacesTransceiverModuleSchema(MetaParser):
+    """Schema for show interfaces transceiver module {mod}"""
+
+    schema = {
+        'interface': {
+            Any() : {
+            Optional('temperature'): str,
+            Optional('voltage'): str,
+            Optional('current'): str,
+            Optional('tx_power'): str,
+            Optional('rx_power'): str,
+            }
+        }
+    }
+
+# ======================================================
+# Parser for 'show interfaces transceiver module {mod}'
+# ======================================================
+
+class ShowInterfacesTransceiverModule(ShowInterfacesTransceiverModuleSchema):
+    """Parser for show interfaces transceiver module {mod}"""
+
+    cli_command = 'show interfaces transceiver module {mod}'
+
+    def cli(self, mod, output=None):
+
+        if output is None:
+            output = self.device.execute(self.cli_command.format(mod=mod))
+        
+        #                                             Optical   Optical
+        #             Temperature  Voltage  Current   Tx Power  Rx Power
+        # Port         (Celsius)    (Volts)  (mA)      (dBm)     (dBm)
+        # ---------    -----------  -------  --------  --------  --------
+        # Te1/2        50.3       3.25       9.9      -5.7      -4.4
+
+        p1 = re.compile(
+            r'^(?P<interface>\S+)\s+'
+            r'(?P<temperature>[-+]?\d+(\.\d+)?)\s+'
+            r'(?P<voltage>[-+]?\d+(\.\d+)?)\s+'
+            r'(?P<current>[-+]?\d+(\.\d+)?)\s+'
+            r'(?P<tx_power>[-+]?\d+(\.\d+)?)\s+'
+            r'(?P<rx_power>[-+]?\d+(\.\d+)?)$'
+        )
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Skip headers or empty lines
+            if not line or line.startswith(("Port", "Temperature", "-", "Optical")):
+                continue
+
+            #                                             Optical   Optical
+            #             Temperature  Voltage  Current   Tx Power  Rx Power
+            # Port         (Celsius)    (Volts)  (mA)      (dBm)     (dBm)
+            # ---------    -----------  -------  --------  --------  --------
+            # Te1/2        50.3       3.25       9.9      -5.7      -4.4
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict = ret_dict.setdefault('interface', {}).setdefault(group['interface'], {})
+                intf_dict['temperature'] = f"{group['temperature']}"
+                intf_dict['voltage'] = f"{group['voltage']}"
+                intf_dict['current'] = f"{group['current']}"
+                intf_dict['tx_power'] = f"{group['tx_power']}"
+                intf_dict['rx_power'] = f"{group['rx_power']}"
                 continue
 
         return ret_dict

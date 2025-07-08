@@ -1,0 +1,8 @@
+Interface FiftyGigE1/0/36
+  FNF:  monitor:          datalink_monitor_in
+        direction:        Input
+        traffic(datalink):sampler sampler_random
+Interface Port-channel10
+  FNF:  monitor:          datalink_monitor_in
+        direction:        Input
+        traffic(datalink):sampler sampler_random

@@ -2334,7 +2334,8 @@ class ShowPlatformSoftwareFedActiveIpMfibVrf(ShowPlatformSoftwareFedActiveIpMfib
         p0 = re.compile(r'^Mvrf: +(?P<mvrf>\d+) +\( +(?P<source>[\w\:\.\/\*]+), +(?P<group>[\w\:\.\/]+) +\) +Attrs:( C)?$')
 
         # Hw Flag                 : InHw
-        p1 = re.compile(r'^Hw Flag +: +(?P<hw_flag>\w+)$')
+        # Hw Flag                 : InHw  EntryActive
+        p1 = re.compile(r'^Hw Flag +: +(?P<hw_flag>[\w\s]+)$')
 
         # Mlist Flags             : None
         p2 = re.compile(r'^Mlist Flags +: +(?P<mlist_flags>\w+)$')
@@ -2653,7 +2654,8 @@ class ShowPlatformSoftwareFedSwitchActiveIpMfibVrf(ShowPlatformSoftwareFedSwitch
         p0 = re.compile(r'^Mvrf: +(?P<mvrf>\d+) +\( +(?P<source>[\w\:\.\/]+), +(?P<group>[\w\:\.\/]+) +\) +Attrs:$')
 
         # Hw Flag                 : InHw
-        p1 = re.compile(r'^Hw Flag +: +(?P<hw_flag>\w+)$')
+        # Hw Flag                 : InHw  EntryActive
+        p1 = re.compile(r'^Hw Flag +: +(?P<hw_flag>[\w\s]+)$')        
 
         # Mlist Flags             : None
         p2 = re.compile(r'^Mlist Flags +: +(?P<mlist_flags>\w+)$')
@@ -3135,7 +3137,8 @@ class ShowPlatformSoftwareFedActiveIpTypeMfibGroup(ShowPlatformSoftwareFedActive
         p0 = re.compile(r'^Mvrf: +(?P<mvrf>\d+) +\( +(?P<source>[\w\:\.\/\*]+), +(?P<group>[\w\:\.\/]+) +\) +Attrs:( C)?$')
 
         # Hw Flag                 : InHw
-        p1 = re.compile(r'^Hw Flag +: +(?P<hw_flag>\w+)$')
+        # Hw Flag                 : InHw  EntryActive
+        p1 = re.compile(r'^Hw Flag +: +(?P<hw_flag>[\w\s]+)$')        
 
         # Mlist Flags             : None
         p2 = re.compile(r'^Mlist Flags +: +(?P<mlist_flags>\w+)$')
@@ -3784,7 +3787,8 @@ class ShowPlatformSoftwareFedSwitchActiveIpTypeMfibVrfDetail(ShowPlatformSoftwar
         p0 = re.compile(r'^Mvrf: +(?P<mvrf>\d+) +\( +(?P<source>[\w\:\.\/\*]+), +(?P<group>[\w\:\.\/]+) +\) +Attrs:( C)?$')
 
         # Hw Flag                 : InHw
-        p1 = re.compile(r'^Hw Flag +: +(?P<hw_flag>\w+)$')
+        # Hw Flag                 : InHw  EntryActive
+        p1 = re.compile(r'^Hw Flag +: +(?P<hw_flag>[\w\s]+)$')        
 
         # Mlist Flags             : None
         p2 = re.compile(r'^Mlist Flags +: +(?P<mlist_flags>\w+)$')
@@ -4056,6 +4060,50 @@ class ShowPlatformSoftwareFedSwitchActiveIpTypeMfibVrfDetail(ShowPlatformSoftwar
             if m:
                 attrs_dict['ios_f_ifs'] = int(m.groupdict()['ios_f_ifs'])
                 attrs_dict['mlist_f_ifs'] = int(m.groupdict()['mlist_f_ifs'])
+                continue
+
+        return ret_dict
+
+class ShowPlatformSoftwareIgmpSnoopingGroupsVlanCountSchema(MetaParser):
+    """Schema for 'show platform software fed {state} ip igmp snooping groups vlan {vlan} count'"""
+    schema = {
+        'total_group_count': int,
+        'total_stub_group_count': int
+    }
+
+class ShowPlatformSoftwareIgmpSnoopingGroupsVlanCount(ShowPlatformSoftwareIgmpSnoopingGroupsVlanCountSchema):
+    """Parser for 'show platform software fed {state} ip igmp snooping groups vlan {vlan} count'"""
+
+    cli_command = 'show platform software fed {state} ip igmp snooping groups vlan {vlan} count'
+
+    def cli(self, state, vlan, output=None):
+        if output is None:
+            cmd = self.cli_command.format(state=state, vlan=vlan)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+
+        # Total Group Count       : 16000
+        p1 = re.compile(r'^Total Group Count\s+:\s+(?P<total_group_count>\d+)$')
+
+        # Total Stub Group Count  : 0
+        p2 = re.compile(r'^Total Stub Group Count\s+:\s+(?P<total_stub_group_count>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Total Group Count       : 16000
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['total_group_count'] = int(group['total_group_count'])
+                continue
+
+            # Total Stub Group Count  : 0
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['total_stub_group_count'] = int(group['total_stub_group_count'])
                 continue
 
         return ret_dict 

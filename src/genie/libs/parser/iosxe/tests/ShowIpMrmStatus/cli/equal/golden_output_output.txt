@@ -1,0 +1,10 @@
+IP MRM status report cache:
+Timestamp
+    Manager         Test Sender     Test Receiver   Pkt Loss/Dup (%)      Ehsr
+Aug  2 08:52:48
+    10.1.1.2        10.1.1.1        10.1.1.3        1            (0%)     304
+Aug  2 08:52:58
+    10.1.1.2        10.1.1.1        10.1.1.3        1            (4%)     353
+Aug  2 08:53:03
+    10.1.1.2        10.1.1.1        10.1.1.3        1            (0%)     379
+

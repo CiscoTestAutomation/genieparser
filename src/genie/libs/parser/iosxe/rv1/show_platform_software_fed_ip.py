@@ -97,7 +97,8 @@ class ShowPlatformSoftwareFedSwitchActiveIpMfibVrf(ShowPlatformSoftwareFedSwitch
         p0 = re.compile(r'^Mvrf: +(?P<mvrf>\d+) +\( +(?P<source>[\w\:\.\/\*]+), +(?P<group>[\w\:\.\/]+) +\) +Attrs:( C)?$')
 
         # Hw Flag                 : InHw
-        p1 = re.compile(r'^Hw Flag +: +(?P<hw_flag>\w+)$')
+        # Hw Flag                 : InHw  EntryActive
+        p1 = re.compile(r'^Hw Flag +: +(?P<hw_flag>[\w\s]+)$')        
 
         # Mlist Flags             : None
         p2 = re.compile(r'^Mlist Flags +: +(?P<mlist_flags>\w+)$')

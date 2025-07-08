@@ -1644,3 +1644,41 @@ class ShowIpIgmpMembership(ShowIpIgmpMembershipSchema):
                 continue
 
         return ret_dict
+    
+class ShowIpIgmpSnoopingGroupsVlanCountSchema(MetaParser):
+    """Schema for 'show ip igmp snooping groups vlan {vlan} count'"""
+
+    schema = {
+        'vlan': {
+            Any(): {
+                'count': int,
+            }
+        }
+    }
+
+class ShowIpIgmpSnoopingGroupsVlanCount(ShowIpIgmpSnoopingGroupsVlanCountSchema):
+    """Parser for 'show ip igmp snooping groups vlan {vlan} count'"""
+
+    cli_command = 'show ip igmp snooping groups vlan {vlan} count'
+
+    def cli(self, vlan, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(vlan=vlan))
+
+        # initial variables
+        ret_dict = {}
+
+        # Total number of groups in Vlan 100:   16000
+        p1 = re.compile(r"^Total number of groups in Vlan (?P<vlan>\d+):\s+(?P<count>\d+)$")
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Total number of groups in Vlan 100:   16000
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault('vlan', {}).setdefault(group['vlan'], {})['count'] = int(group['count'])
+                continue
+
+        return ret_dict

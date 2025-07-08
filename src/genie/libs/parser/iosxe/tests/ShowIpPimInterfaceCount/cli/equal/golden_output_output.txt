@@ -1,0 +1,6 @@
+sh ip pim int count
+
+State: * - Fast Switched, D - Distributed Fast Switched
+       H - Hardware Switching Enabled
+Address          Interface                FS  Mpackets In/Out
+10.1.1.3         GigabitEthernet0/1       *   0/0

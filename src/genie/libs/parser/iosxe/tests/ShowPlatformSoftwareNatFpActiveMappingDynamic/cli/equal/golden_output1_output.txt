@@ -1,0 +1,11 @@
+Dump NAT dynamic mapping config
+
+Mapping id: 2
+  Domain: INSIDE, Lookup: LOOKUP_LOCAL
+  Flags: routemap,routemap2,routemap3
+  Pool name: xyz, Pool id: 2
+  Route-map name: NAT-MAP
+    CGM class group: INSIDE_SRC_CG, CGM class id: 268435458
+  Dynamic PAT: No
+  Last stats update: 02/20 03:56:32.711040681
+  Last refcount value: 5

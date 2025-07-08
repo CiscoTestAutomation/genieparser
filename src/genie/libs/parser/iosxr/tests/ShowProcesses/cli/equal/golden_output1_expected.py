@@ -4,7 +4,7 @@ expected_output = {
             "available": "1.892s",
             "core": "COPY",
             "executable_path": "/opt/cisco/XR/packages/xrv9k-isis-10.9.0.0-r651/rp/bin/isis",
-            "instance": "1",
+            "instance": 1,
             "last_started": "Wed Jan 30 20:43:04 2019",
             "max_core": 0,
             "package_state": "Normal",

@@ -16,7 +16,7 @@ IOSXE c9610 parsers for the following show commands:
 from genie.metaparser import MetaParser
 from genie.libs.parser.utils.common import Common
 import re
-from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional, Use, And
+from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional, Use, And, ListOf
 from genie.libs.parser.iosxe.cat9k.c9600.show_platform import ShowPlatformFedActiveTcamUtilization as ShowPlatformFedActiveTcamUtilization_c9600
 
 
@@ -1477,6 +1477,167 @@ class ShowPlatformHardwareAuthenticationStatus(
             if m:
                 group = m.groupdict()
                 ret_dict[group['hardware']] = group['Slot']
+                continue
+
+        return ret_dict
+
+class ShowPlatformSoftwareFedIpRouteSummarySchema(MetaParser):
+    schema = {
+        'v4_fib_summary': {
+            'sw_entries': int,
+            'devices': ListOf({
+                'device_id': int,
+                'lpm_hw_entries': int,
+                'em_hw_entries': int
+            })
+        },
+        Optional('successful_platform_updates'): {
+            Any(): int
+        },
+        Optional('failed_platform_updates'): {
+            Any(): int
+        },
+        Optional('misc_adj_stats'): {
+            Any(): int
+        },
+        Optional('l3_control_generic_count'): int,
+        Optional('ecr_summary'): {
+            Optional('successful_platform_updates'): {
+                Any(): int
+            },
+            Optional('failed_platform_updates'): {
+                Any(): int
+            }
+        },
+        Optional('adjacency_summary'): {
+            Optional('successful_platform_updates'): {
+                Any(): int
+            },
+            Optional('failed_platform_updates'): {
+                Any(): int
+            },
+            Optional('misc_adj_stats'): {
+                Any(): int
+            }
+        },
+        Optional('l3_ac_port_summary'): {
+            Optional('successful_platform_updates'): {
+                Any(): int
+            },
+            Optional('failed_platform_updates'): {
+                Any(): int
+            }
+        }
+    }
+
+class ShowPlatformSoftwareFedIpRouteSummary(ShowPlatformSoftwareFedIpRouteSummarySchema):
+    """Parser for show platform software fed {switch} ip route summary"""
+
+    cli_command = 'show platform software fed {switch} ip route summary'
+
+    def cli(self, switch, output=None):
+        if output is None:
+            cmd = self.cli_command.format(switch=switch)
+            output = self.device.execute(cmd)
+
+        # Initialize the return dictionary as empty
+        ret_dict = {}
+
+        # Total number of v4 fib sw entries = 6
+        p1 = re.compile(r'^Total number of v4 fib sw entries = (?P<sw_entries>\d+)$')
+
+        # Total number of v4 fib LPM hw entries for device:0 = 5
+        p2 = re.compile(r'^Total number of v4 fib LPM hw entries for device:(?P<device_id>\d+) = (?P<lpm_hw_entries>\d+)$')
+
+        # Total number of v4 fib EM hw entries for device:0 = 2
+        p3 = re.compile(r'^Total number of v4 fib EM hw entries for device:(?P<device_id>\d+) = (?P<em_hw_entries>\d+)$')
+
+        # ipv4route add ok:889350
+        p4 = re.compile(r'^(?P<key>[\w\s]+):(?P<value>\d+)$')
+
+        current_section = None
+        current_subsection = None
+        v4_fib_summary = None
+        devices = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Total number of v4 fib sw entries = 6
+            m = p1.match(line)
+            if m:
+                if v4_fib_summary is None:
+                    v4_fib_summary = ret_dict.setdefault('v4_fib_summary', {})
+                    devices = v4_fib_summary.setdefault('devices', [])
+                v4_fib_summary['sw_entries'] = int(m.group('sw_entries'))
+                continue
+
+            # Total number of v4 fib LPM hw entries for device:0 = 5
+            m = p2.match(line)
+            if m:
+                if v4_fib_summary is None:
+                    v4_fib_summary = ret_dict.setdefault('v4_fib_summary', {})
+                    devices = v4_fib_summary.setdefault('devices', [])
+                device_id = int(m.group('device_id'))
+                lpm_hw_entries = int(m.group('lpm_hw_entries'))
+                current_device = {'device_id': device_id, 'lpm_hw_entries': lpm_hw_entries, 'em_hw_entries': 0}
+                devices.append(current_device)
+                continue
+
+            # Total number of v4 fib EM hw entries for device:0 = 2
+            m = p3.match(line)
+            if m:
+                if v4_fib_summary is None:
+                    continue  # no devices to update, skip
+                em_hw_entries = int(m.group('em_hw_entries'))
+                for device in devices:
+                    if device['device_id'] == int(m.group('device_id')):
+                        device['em_hw_entries'] = em_hw_entries
+                        break
+                continue
+
+            # ipv4route add ok:889350
+            m = p4.match(line)
+            if m:
+                key = m.group('key').strip().lower().replace(' ', '_')
+                value = int(m.group('value'))
+                if current_section:
+                    section_dict = ret_dict.setdefault(current_section, {})
+                    if current_subsection:
+                        subsection_dict = section_dict.setdefault(current_subsection, {})
+                        subsection_dict[key] = value
+                    else:
+                        section_dict[key] = value
+                continue
+
+            # Section headers
+            if 'Successful Platform updates:' in line:
+                current_subsection = 'successful_platform_updates'
+                continue
+            elif 'Failed Platform updates:' in line:
+                current_subsection = 'failed_platform_updates'
+                continue
+            elif 'Misc Adj Stats:' in line:
+                current_subsection = 'misc_adj_stats'
+                continue
+            elif 'l3 control generic count:' in line:
+                current_section = None
+                current_subsection = None
+                m = re.match(r'l3 control generic count:\s*(\d+)', line, re.I)
+                if m:
+                    ret_dict['l3_control_generic_count'] = int(m.group(1))
+                continue
+            elif 'ECR SUMMARY' in line:
+                current_section = 'ecr_summary'
+                current_subsection = None
+                continue
+            elif 'ADJACENCY SUMMARY' in line:
+                current_section = 'adjacency_summary'
+                current_subsection = None
+                continue
+            elif 'L3 AC PORT SUMMARY' in line:
+                current_section = 'l3_ac_port_summary'
+                current_subsection = None
                 continue
 
         return ret_dict

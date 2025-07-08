@@ -1,0 +1,20 @@
++-------------------------------------------------+-----------+----------+---------------+-------------+----------------+----------+---------------+
+| Trap Type                                       | Direction | Priority | Traffic Class | L2 Punt OID | Skip Inject-Up | Skip p2p | Overwrite phb |
++-------------------------------------------------+-----------+----------+---------------+-------------+----------------+----------+---------------+
+| ETHERNET_ACCEPTABLE_FORMAT                      | NONE      |          |               |             |                |          |               |
+|                                                 |           |          |               |             |                |          |               |
+| ETHERNET_ACL_DROP                               | EGRESS    |    1     |       0       |             | False          | False    | True          |
+|                                                 |           |          |               |             |                |          |               |
+| ETHERNET_ACL_FORCE_PUNT                         | EGRESS    |    21    |       0       |             | False          | False    | True          |
+|                                                 |           |          |               |             |                |          |               |
+| ETHERNET_ARP                                    | NONE      |          |               |             |                |          |               |
+|                                                 |           |          |               |             |                |          |               |
+| ETHERNET_NO_TERMINATION_ON_L3_PORT              | INGRESS   |    80    |       0       |             | True           | False    | True          |
+|                                                 |           |          |               |             |                |          |               |
+| ETHERNET_CISCO_PROTOCOLS                        | INGRESS   |    3     |       5       |     375     | True           | True     | True          |
+|                                                 |           |          |               |             |                |          |               |
+| ETHERNET_DA_ERROR                               | INGRESS   |    10    |       0       |             | True           | False    | True          |
+|                                                 |           |          |               |             |                |          |               |
+| ETHERNET_DHCPV4_CLIENT                          | INGRESS   |    3     |       4       |     374     | True           | True     | True          |
+|                                                 |           |          |               |             |                |          |               |
+| ETHERNET_DHCPV4_SERVER                          | INGRESS   |    3     |       4       |     374     | True           | True     | True          |

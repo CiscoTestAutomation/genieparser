@@ -34,6 +34,8 @@ IOSXE parsers for the following show commands:
    * show crypto ssl session profile
    * show crypto pki crls
    * show crypto pki crls download
+   * show crypto ipsec sa ipv6 detailed
+   * show crypto ikev2 diagnose error
 """
 
 # Python
@@ -10642,6 +10644,442 @@ class ShowCryptoPkiCrlsDownload(ShowCryptoPkiCrlsDownloadSchema):
             m = p6.match(line)
             if m and current_trustpoint:
                 trustpoint_dict['crl_retry_time_interval'] = m.group('retry_time_interval')
+                continue
+
+        return parsed_dict
+
+
+# =================================================
+#  Schema for 'show crypto ipsec sa ipv6 detailed'
+# =================================================
+class ShowCryptoIpsecSaIpv6DetailedSchema(MetaParser):
+    """Schema for `show crypto ipsec sa ipv6 detailed`"""
+    schema = {
+        'interfaces': {
+            Any(): {
+                'crypto_map_tag': str,
+                'local_addr': str,
+                'protected_vrf': str,
+                'identities': {
+                    Any(): {
+                        'local_ident': str,
+                        'remote_ident': {
+                            Any() : {
+                                'remote_ident': str,
+                                'current_peer': str,
+                                'port': int,
+                                'permit_flags': list,
+                                'pkts_encaps': int,
+                                'pkts_encrypt': int,
+                                'pkts_digest': int,
+                                'pkts_decaps': int,
+                                'pkts_decrypt': int,
+                                'pkts_verify': int,
+                                'local_crypto_endpt': str,
+                                'remote_crypto_endpt': str,
+                                'plaintext_mtu': int,
+                                'path_mtu': int,
+                                'ipv6_mtu': int,
+                                'ipv6_mtu_idb': str,
+                                'current_outbound_spi': str,
+                                'pfs': str,
+                                'dh_group': str,
+                                'inbound_esp_sas': {
+                                    'spi': str,
+                                    'transform': str,
+                                    'in_use_settings': list,
+                                    'conn_id': int,
+                                    'flow_id': str,
+                                    'sibling_flags': str,
+                                    'crypto_map': str,
+                                    'initiator': bool,
+                                    'sa_timing': str,
+                                    'iv_size': int,
+                                    'replay_detection_support': str,
+                                    'status': str,
+                                },
+                                'outbound_esp_sas': {
+                                    'spi': str,
+                                    'transform': str,
+                                    'in_use_settings': list,
+                                    'conn_id': int,
+                                    'flow_id': str,
+                                    'sibling_flags': str,
+                                    'crypto_map': str,
+                                    'initiator': bool,
+                                    'sa_timing': str,
+                                    'iv_size': int,
+                                    'replay_detection_support': str,
+                                    'status': str,
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+
+# ================================================
+# Parser for 'show crypto ipsec sa ipv6 detailed'
+# ================================================
+class ShowCryptoIpsecSaIpv6Detailed(ShowCryptoIpsecSaIpv6DetailedSchema):
+    """Parser for `show crypto ipsec sa ipv6 detailed`"""
+
+    cli_command = 'show crypto ipsec sa ipv6 detailed'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # interface: Tunnel2002
+        p1 = re.compile(r'^interface: +(?P<interface>\S+)$')
+
+        # Crypto map tag: Tunnel2002-vesen-head-0, local addr 4180::56:0:1
+        p2 = re.compile(r'^Crypto map tag: +(?P<crypto_map_tag>[\S\s]+), +local addr +(?P<local_addr>\S+)$')
+
+        # protected vrf: (none)
+        p3 = re.compile(r'^protected vrf: +(?P<protected_vrf>\S+)$')
+
+        # local  ident (addr/mask/prot/port): (4180::56:0:1/128/0/12346)
+        p4 = re.compile(r'^local +ident \(addr/mask/prot/port\): +\((?P<local_ident>[\S\s]+)\)$')
+
+        # remote ident (addr/mask/prot/port): (4180::70:0:1/128/0/12346)
+        p5 = re.compile(r'^remote ident \(addr/mask/prot/port\): +\((?P<remote_ident>[\S\s]+)\)$')
+
+        # current_peer 4180::70:0:1 port 12346
+        p6 = re.compile(r'^current_peer +(?P<current_peer>\S+) +port +(?P<port>\d+)$')
+
+        # PERMIT, flags={origin_is_acl,}
+        p7 = re.compile(r'^PERMIT, +flags=\{(?P<permit_flags>[\S\s]+)\}$')
+
+        # #pkts encaps: 169162, #pkts encrypt: 169162, #pkts digest: 169162
+        p8 = re.compile(r'^#pkts encaps: +(?P<pkts_encaps>\d+), +#pkts encrypt: +(?P<pkts_encrypt>\d+), +#pkts digest: +(?P<pkts_digest>\d+)$')
+
+        # #pkts decaps: 169163, #pkts decrypt: 169163, #pkts verify: 169163
+        p9 = re.compile(r'^#pkts decaps: +(?P<pkts_decaps>\d+), +#pkts decrypt: +(?P<pkts_decrypt>\d+), +#pkts verify: +(?P<pkts_verify>\d+)$')
+
+        # local crypto endpt.: 4180::56:0:1,
+        p10 = re.compile(r'^local crypto endpt.: +(?P<local_crypto_endpt>\S+),$')
+
+        # remote crypto endpt.: 4180::70:0:1
+        p11 = re.compile(r'^remote crypto endpt.: +(?P<remote_crypto_endpt>\S+)$')
+
+        # plaintext mtu 1438, path mtu 1480, ipv6 mtu 1480, ipv6 mtu idb Tunnel2002
+        p12 = re.compile(r'^plaintext mtu +(?P<plaintext_mtu>\d+), +path mtu +(?P<path_mtu>\d+), +ipv6 mtu +(?P<ipv6_mtu>\d+), +ipv6 mtu idb +(?P<ipv6_mtu_idb>\S+)$')
+        
+        # current outbound spi: 0x102(258)
+        p13 = re.compile(r'^current outbound spi: +(?P<current_outbound_spi>\S+)$')
+
+        # PFS (Y/N): N, DH group: none
+        p14 = re.compile(r'^PFS \(Y/N\): +(?P<pfs>\S+), +DH group: +(?P<dh_group>\S+)$')
+
+        # spi: [Not Available]
+        p15 = re.compile(r'^spi: +(?P<spi>\[Not Available\])$')
+
+        # transform: esp-gcm 256 ,
+        p16 = re.compile(r'^transform: +(?P<transform>[\S\s]+),$')
+
+        # in use settings ={Transport UDP-Encaps, esn}
+        p17 = re.compile(r'^in use settings =\{(?P<in_use_settings>[\S\s]+)\}$')
+
+        # conn id: 2027, flow_id: ESG:27, sibling_flags FFFFFFFF80000009, crypto map: Tunnel2002-vesen-head-0, initiator : False
+        p18 = re.compile(r'^conn id: +(?P<conn_id>\d+), +flow_id: +(?P<flow_id>\S+), +sibling_flags +(?P<sibling_flags>\S+), +crypto map: +(?P<crypto_map>[\S\s]+), +initiator : +(?P<initiator>\S+)$')
+        
+        # sa timing: remaining key lifetime is not applicable
+        p19 = re.compile(r'^sa timing: +(?P<sa_timing>[\S\s]+)$')
+
+        # IV size: 8 bytes
+        p20 = re.compile(r'^IV size: +(?P<iv_size>\d+) +bytes$')
+
+        # replay detection support: Y
+        p21 = re.compile(r'^replay detection support: +(?P<replay_detection_support>\S+)$')
+
+        # Status: ACTIVE(ACTIVE)
+        p22 = re.compile(r'^Status: +(?P<status>[\S\s]+)$')
+
+        current_interface = None
+        current_identity = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # interface: Tunnel2002
+            m = p1.match(line)
+            if m:
+                current_interface = m.group('interface')
+                intf_dict = parsed_dict.setdefault('interfaces', {})
+                current_dict = intf_dict.setdefault(current_interface,{})
+                continue
+
+            # Crypto map tag: Tunnel2002-vesen-head-0, local addr 4180::56:0:1
+            m = p2.match(line)
+            if m:
+                current_dict['crypto_map_tag'] = m.group('crypto_map_tag')
+                current_dict['local_addr'] = m.group('local_addr')
+                continue
+
+            # protected vrf: (none)
+            m = p3.match(line)
+            if m:
+                current_dict['protected_vrf'] = m.group('protected_vrf')
+                continue
+
+            # local  ident (addr/mask/prot/port): (4180::56:0:1/128/0/12346)
+            m = p4.match(line)
+            if m:
+                current_identity = m.group('local_ident')
+                if 'identities' not in parsed_dict['interfaces'][current_interface]:
+                    ident_dict = current_dict.setdefault('identities',{})
+                if current_identity not in parsed_dict['interfaces'][current_interface]['identities']:
+                    current_ident = ident_dict.setdefault(current_identity, {})
+                    current_ident['local_ident'] = current_identity
+                continue
+
+            # remote ident (addr/mask/prot/port): (4180::70:0:1/128/0/12346)
+            m = p5.match(line)
+            if m:
+                remote_identity = m.group('remote_ident')
+                remote_ident = current_ident.setdefault('remote_ident', {})
+                current_remote_ident = remote_ident.setdefault(remote_identity, {})
+                current_remote_ident['remote_ident'] = remote_identity
+                continue
+
+            # current_peer 4180::70:0:1 port 12346
+            m = p6.match(line)
+            if m:
+                current_remote_ident['current_peer'] = m.group('current_peer')
+                current_remote_ident['port'] = int(m.group('port'))
+                continue
+
+            # PERMIT, flags={origin_is_acl,}
+            m = p7.match(line)
+            if m:
+                current_remote_ident['permit_flags'] = m.group('permit_flags').split(',')
+                continue
+
+            # #pkts encaps: 169162, #pkts encrypt: 169162, #pkts digest: 169162
+            m = p8.match(line)
+            if m:
+                current_remote_ident['pkts_encaps'] = int(m.group('pkts_encaps'))
+                current_remote_ident['pkts_encrypt'] = int(m.group('pkts_encrypt'))
+                current_remote_ident['pkts_digest'] = int(m.group('pkts_digest'))
+                continue
+
+            # #pkts decaps: 169163, #pkts decrypt: 169163, #pkts verify: 169163
+            m = p9.match(line)
+            if m:
+                current_remote_ident['pkts_decaps'] = int(m.group('pkts_decaps'))
+                current_remote_ident['pkts_decrypt'] = int(m.group('pkts_decrypt'))
+                current_remote_ident['pkts_verify'] = int(m.group('pkts_verify'))
+                continue
+
+            # local crypto endpt.: 4180::56:0:1,
+            m = p10.match(line)
+            if m:
+                current_remote_ident['local_crypto_endpt'] = m.group('local_crypto_endpt')
+                continue
+
+            # remote crypto endpt.: 4180::70:0:1
+            m = p11.match(line)
+            if m:
+                current_remote_ident['remote_crypto_endpt'] = m.group('remote_crypto_endpt')
+                continue
+
+            # plaintext mtu 1438, path mtu 1480, ipv6 mtu 1480, ipv6 mtu idb Tunnel2002
+            m = p12.match(line)
+            if m:
+                current_remote_ident['plaintext_mtu'] = int(m.group('plaintext_mtu'))
+                current_remote_ident['path_mtu'] = int(m.group('path_mtu'))
+                current_remote_ident['ipv6_mtu'] = int(m.group('ipv6_mtu'))
+                current_remote_ident['ipv6_mtu_idb'] = m.group('ipv6_mtu_idb')
+                continue
+
+            # current outbound spi: 0x102(258)
+            m = p13.match(line)
+            if m:
+                current_remote_ident['current_outbound_spi'] = m.group('current_outbound_spi')
+                continue
+
+            # PFS (Y/N): N, DH group: none
+            m = p14.match(line)
+            if m:
+                current_remote_ident['pfs'] = m.group('pfs')
+                current_remote_ident['dh_group'] = m.group('dh_group')
+                continue
+
+            # Match inbound esp sas
+            if 'inbound esp sas:' in line:
+                inbound_esp_sas_dict = current_remote_ident.setdefault('inbound_esp_sas', {})
+                continue
+
+            # Match outbound esp sas
+            if 'outbound esp sas:' in line:
+                outbound_esp_sas_dict = current_remote_ident.setdefault('outbound_esp_sas', {})
+                continue
+
+            # spi: [Not Available]
+            m = p15.match(line)
+            if m:
+                if 'outbound_esp_sas' in current_remote_ident:
+                    outbound_esp_sas_dict['spi'] = m.group('spi')
+                else:
+                    inbound_esp_sas_dict['spi'] = m.group('spi')
+
+            # transform: esp-gcm 256 ,
+            m = p16.match(line)
+            if m:                    
+                if 'outbound_esp_sas' in current_remote_ident:
+                    outbound_esp_sas_dict['transform'] = m.group('transform')
+                else:
+                    inbound_esp_sas_dict['transform'] = m.group('transform')
+
+            # in use settings ={Transport UDP-Encaps, esn}
+            m = p17.match(line)
+            if m:
+                settings = m.group('in_use_settings').split(',')
+                if 'outbound_esp_sas' in current_remote_ident:
+                    outbound_esp_sas_dict['in_use_settings'] = settings
+                else:
+                    inbound_esp_sas_dict['in_use_settings'] = settings
+
+            # conn id: 2027, flow_id: ESG:27, sibling_flags FFFFFFFF80000009, crypto map: Tunnel2002-vesen-head-0, initiator : False
+            m = p18.match(line)
+            if m:
+                if 'outbound_esp_sas' in current_remote_ident:
+                    outbound_esp_sas_dict['conn_id'] = int(m.group('conn_id'))
+                    outbound_esp_sas_dict['flow_id'] = m.group('flow_id')
+                    outbound_esp_sas_dict['sibling_flags'] = m.group('sibling_flags')
+                    outbound_esp_sas_dict['crypto_map'] = m.group('crypto_map')
+                    outbound_esp_sas_dict['initiator'] = m.group('initiator') == 'True'
+                else:
+                    inbound_esp_sas_dict['conn_id'] = int(m.group('conn_id'))
+                    inbound_esp_sas_dict['flow_id'] = m.group('flow_id')
+                    inbound_esp_sas_dict['sibling_flags'] = m.group('sibling_flags')
+                    inbound_esp_sas_dict['crypto_map'] = m.group('crypto_map')
+                    inbound_esp_sas_dict['initiator'] = m.group('initiator') == 'True'
+
+            # sa timing: remaining key lifetime is not applicable
+            m = p19.match(line)
+            if m:
+                if 'outbound_esp_sas' in current_remote_ident:
+                    outbound_esp_sas_dict['sa_timing'] = m.group('sa_timing')
+                else:
+                    inbound_esp_sas_dict['sa_timing'] = m.group('sa_timing')
+
+            # IV size: 8 bytes
+            m = p20.match(line)
+            if m:
+                if 'outbound_esp_sas' in current_remote_ident:
+                    outbound_esp_sas_dict['iv_size'] = int(m.group('iv_size'))
+                else:
+                    inbound_esp_sas_dict['iv_size'] = int(m.group('iv_size'))
+
+            # replay detection support: Y
+            m = p21.match(line)
+            if m:
+                if 'outbound_esp_sas' in current_remote_ident:
+                    outbound_esp_sas_dict['replay_detection_support'] = m.group('replay_detection_support')
+                else:
+                    inbound_esp_sas_dict['replay_detection_support'] = m.group('replay_detection_support')
+
+            # Status: ACTIVE(ACTIVE)
+            m = p22.match(line)
+            if m:
+                if 'outbound_esp_sas' in current_remote_ident:
+                    outbound_esp_sas_dict['status'] = m.group('status')
+                else:
+                    inbound_esp_sas_dict['status'] = m.group('status')
+
+        return parsed_dict
+
+
+# =================================================
+#  Schema for 'show crypto ikev2 diagnose error'
+# =================================================
+class ShowCryptoIkev2DiagnoseErrorSchema(MetaParser):
+    """Schema for `show crypto ikev2 diagnose error`"""
+    schema = {
+        'exit_path_table': {
+            'status': str,
+            'current_entry': int,
+            'deleted': int,
+            'max_allow': int,
+        },
+        Optional('errors'): {
+            int: {
+                'message': str,
+                'traceback': list,
+            }
+        }
+    }
+
+
+# ================================================
+# Parser for 'show crypto ikev2 diagnose error'
+# ================================================
+class ShowCryptoIkev2DiagnoseError(ShowCryptoIkev2DiagnoseErrorSchema):
+    """Parser for `show crypto ikev2 diagnose error`"""
+
+    cli_command = 'show crypto ikev2 diagnose error'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # Exit Path Table - status: disable, current entry 1, deleted 0, max allow 50
+        p1 = re.compile(
+            r'^Exit Path Table - status: (?P<status>\w+), '
+            r'current entry (?P<current_entry>\d+), '
+            r'deleted (?P<deleted>\d+), '
+            r'max allow (?P<max_allow>\d+)$'
+        )
+
+        # Error(1): A supplied parameter is incorrect
+        p2 = re.compile(r'^Error\((?P<error_code>\d+)\): (?P<message>.+)$')
+        
+        #-Traceback= 1#331406e74d9f0b63997a672584b5e8c5 :5DE32C0BE000+C2CDC54 :5DE32C0BE000+C2FC4EA :5DE32C0BE000+C2F4C61 :5DE32C0BE000+7B5771C :5DE32C0BE000+7AFB3A4 :5DE32C0BE000+7AF3119 :5DE32C0BE000+7AF243F :5DE32C0BE000+7AEDE90
+        p3 = re.compile(r'^-Traceback= (?P<traceback>.+)$')
+
+        current_error_code = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Exit Path Table - status: disable, current entry 1, deleted 0, max allow 50
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                exit_path_table = parsed_dict.setdefault('exit_path_table', {})
+                exit_path_table['status'] = group['status']
+                exit_path_table['current_entry'] = int(group['current_entry'])
+                exit_path_table['deleted'] = int(group['deleted'])
+                exit_path_table['max_allow'] = int(group['max_allow'])
+                continue
+
+            # Error(1): A supplied parameter is incorrect
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                current_error_code = int(group['error_code'])
+                errors = parsed_dict.setdefault('errors', {})
+                error_entry = errors.setdefault(current_error_code, {})
+                error_entry['message'] = group['message']
+                error_entry['traceback'] = []
+                continue
+
+            #-Traceback= 1#331406e74d9f0b63997a672584b5e8c5 :5DE32C0BE000+C2CDC54 :5DE32C0BE000+C2FC4EA :5DE32C0BE000+C2F4C61 :5DE32C0BE000+7B5771C :5DE32C0BE000+7AFB3A4 :5DE32C0BE000+7AF3119 :5DE32C0BE000+7AF243F :5DE32C0BE000+7AEDE90
+            m = p3.match(line)
+            if m and current_error_code is not None:
+                group = m.groupdict()
+                errors[current_error_code]['traceback'].append(group['traceback'])
                 continue
 
         return parsed_dict

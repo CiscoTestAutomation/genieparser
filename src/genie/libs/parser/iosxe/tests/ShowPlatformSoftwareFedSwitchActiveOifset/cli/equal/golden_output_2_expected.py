@@ -1,0 +1,15 @@
+expected_output = {
+    'l2m_current_vp_oif_count': 5,
+    'l2m_fset_current_count': 6,
+    'l2m_fset_last_used_urid': '0x200000000000bb71',
+    'l2m_fset_max_reached': 7992,
+    'l2m_vp_oif_max_reached': 8,
+    'l3m_current_oif_count': 0,
+    'l3m_fset_current_count': 0,
+    'l3m_fset_last_used_urid': '0x3000000000000000',
+    'l3m_fset_max_reached': 0,
+    'l3m_fset_oif_last_used_urid': '0x8000000000000000',
+    'l3m_oif_max_reached': 0,
+    'oif_obj_fset_current_count': 0,
+    'oif_obj_fset_max_reached': 0,
+}

@@ -1,0 +1,3 @@
+Destination address: 2.2.2.2, total number of vc: 3
+  0 unknown, 3 up, 0 down, 0 admin down, 0 recovering, 0 standby, 0 hotstandby
+  3 active vc on MPLS interface Tp1

@@ -1,0 +1,104 @@
+Total number of v4 fib sw entries = 6         
+Total number of v4 fib LPM hw entries for device:0 = 5         
+Total number of v4 fib EM hw entries for device:0 = 2         
+Total number of v4 fib LPM hw entries for device:1 = 5         
+Total number of v4 fib EM hw entries for device:1 = 2         
+Total number of v4 fib LPM hw entries for device:2 = 5         
+Total number of v4 fib EM hw entries for device:2 = 2         
+Total number of v4 fib LPM hw entries for device:3 = 5         
+Total number of v4 fib EM hw entries for device:3 = 2         
+
+Successful Platform updates:
+ipv4route add ok:889350
+ipv4route add npd ok:889350
+ipv4route mod ok:6
+ipv4route mod npd ok:1519966
+ipv4route del ok:889440
+ipv4route del npd res busy:0
+ipv4route del npd ok:889440
+ipv4route bulk add ok:12998
+ipv4route bulk add npd ok:12998
+ipv4route bulk mod ok:0
+ipv4route bulk mod npd ok:0
+ipv4route bulk del ok:12998
+ipv4route bulk del npd ok:12998
+Failed Platform updates:
+ipv4route add fail:327
+ipv4route add npd fail:0
+ipv4route add npd oor:327
+ipv4route mod fail:0
+ipv4route mod npd fail:0
+ipv4route mod npd oor:0
+ipv4route del fail:0
+ipv4route del npd fail:0
+ipv4route bulk add fail:0
+ipv4route bulk add npd fail:0
+ipv4route bulk mod fail:0
+ipv4route bulk mod npd fail:0
+ipv4route bulk del fail:0
+ipv4route bulk del npd fail:0
+l3 control generic count:0
+ECR SUMMARY
+Successful Platform updates:
+ipv4 ecr add ok:0
+ipv4 ecr add npd ok:0
+ipv4 ecr mod ok:0
+ipv4 ecr mod npd ok:0
+ipv4 ecr del ok:0
+ipv4 ecr del npd ok:0
+Failed Platform updates:
+ipv4 ecr add fail:0
+ipv4 ecr add npd fail:0
+ipv4 ecr mod fail:0
+ipv4 ecr mod npd fail:0
+ipv4 ecr del fail:0
+ipv4 ecr del npd fail:0
+ADJACENCY SUMMARY
+Successful Platform updates:
+ipv4 adj add ok:596334
+ipv4 adj add npd ok:596332
+ipv4 adj mod ok:643293
+ipv4 adj mod npd ok:643290
+ipv4 adj del ok:596334
+ipv4 adj del npd ok:596332
+Failed Platform updates:
+ipv4 adj add fail:0
+ipv4 adj add npd fail:0
+ipv4 adj add npd oor:0
+ipv4 adj mod fail:0
+ipv4 adj mod npd fail:0
+ipv4 adj mod npd oor:0
+ipv4 adj del fail:0
+ipv4 adj del npd fail:0
+Misc Adj Stats:
+Adj undo ipaddress entry fail:0
+Adj undo create record fail:0
+L3 AC PORT SUMMARY
+Successful Platform updates:
+l3acport add ok:13
+l3acport add npd ok:13
+l3acport mod ok:191
+l3acport mod npd ok:191
+l3acport del ok:12
+l3acport del npd ok:12
+Failed Platform updates:
+l3acport add fail:0
+l3acportadd npd fail:0
+l3acport add npd oor:0
+l3acport mod fail:0
+l3acport mod npd fail:0
+l3acport mod npd oor:0
+l3acport mod npd resource busy:0
+l3acport del fail:0
+l3acport del npd fail:0
+l3acport del npd resource busy:0
+l3acport alloc ingress counter ok:52
+l3acport alloc ingress counter OOR:0
+l3acport alloc ingress counter failed:0
+l3acport alloc egress counter ok:52
+l3acport alloc egress counter OOR:0
+l3acport alloc egress counter failed:0
+l3acport free ingress counter ok:48
+l3acport free ingress counter failed:0
+l3acport free egress counter ok:48
+l3acport free egress counter failed:0

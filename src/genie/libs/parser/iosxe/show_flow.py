@@ -41,10 +41,15 @@ class ShowFlowMonitorSchema(MetaParser):
                             Any(): {
                                 'trns_src_port': int,
                                 'trns_dst_port': int,
-                                'ip_tos': str,
-                                'ip_port': int,
-                                'bytes_long': int,
+                                Optional('ip_tos'): str,
+                                Optional('ip_port'): int,
+                                Optional('bytes_long'): int,
                                 'pkts_long': int,
+                                Optional('time_abs_first'): str,
+                                Optional('time_abs_last'): str,
+                                Optional('bytes_layer2_long'): int,
+                                Optional('intf_input'): str,
+                                Optional('ip_prot'): int,
                             }
                         }
                     }
@@ -92,11 +97,24 @@ class ShowFlowMonitor(ShowFlowMonitorSchema):
         # Flows aged:                                   0
         p6 = re.compile(r'^Flows +aged: +(?P<flows_aged>\d+)$')
 
-        # 10.4.1.10         10.4.10.1                    0              0  0xC0         89                   100                     1
+        # 10.4.1.10         10.4.10.1                    0              0  0xC0         89                   100 
         p7 = re.compile(r'^(?P<ipv4_src_addr>\S+) +(?P<ipv4_dst_addr>\S+) +'
                         r'(?P<trns_src_port>\d+) +(?P<trns_dst_port>\d+) +'
                         r'(?P<ip_tos>\S+) +(?P<ip_port>\d+) +(?P<bytes_long>\d+) +'
                         r'(?P<pkts_long>\d+)$')
+        
+        # 102.1.1.52       101.1.1.52                   0              0  Po10                       61                     1    11:22:19.297   11:22:19.297                     0                    1
+        p8 = re.compile(r'^(?P<ipv4_src_addr>\S+)\s+'
+                 r'(?P<ipv4_dst_addr>\S+)\s+'
+                 r'(?P<trns_src_port>\d+)\s+'
+                 r'(?P<trns_dst_port>\d+)\s+'
+                 r'(?P<intf_input>\S+)\s+'
+                 r'(?P<ip_prot>\d+)\s+'
+                 r'(?P<pkts_long>\d+)\s+'
+                 r'(?P<time_abs_first>\S+)\s+'
+                 r'(?P<time_abs_last>\S+)\s+'
+                 r'(?P<bytes_layer2_long>\d+)$')
+        
         for line in out.splitlines():
 
             line = line.strip()
@@ -144,7 +162,8 @@ class ShowFlowMonitor(ShowFlowMonitorSchema):
                 continue
 
             # 10.4.1.10         10.4.10.1                    0              0  0xC0         89                   100                     1
-            m = p7.match(line)
+            # 102.1.1.52       101.1.1.52                   0              0  Po10                       61                     1    11:22:19.297   11:22:19.297                     0                    1
+            m = p7.match(line) or p8.match(line)
             if m:
                 group = m.groupdict()
 
@@ -156,18 +175,29 @@ class ShowFlowMonitor(ShowFlowMonitorSchema):
                     setdefault(group['ipv4_dst_addr'], {}).\
                     setdefault('index', {}).\
                     setdefault(index, {})
-
                 ipv4_dst_addr_dict.update({'trns_src_port': int(group['trns_src_port'])})
                 ipv4_dst_addr_dict.update({'trns_dst_port': int(group['trns_dst_port'])})
-                ipv4_dst_addr_dict.update({'ip_tos': group['ip_tos']})
-                ipv4_dst_addr_dict.update({'ip_port': int(group['ip_port'])})
-                ipv4_dst_addr_dict.update({'bytes_long': int(group['bytes_long'])})
+                if 'intf_input' in group:
+                    ipv4_dst_addr_dict.update({'intf_input': group['intf_input']})
+                if 'ip_prot' in group:
+                    ipv4_dst_addr_dict.update({'ip_prot': int(group['ip_prot'])})
+                if 'ip_port' in group:
+                    ipv4_dst_addr_dict.update({'ip_port': int(group['ip_port'])})
                 ipv4_dst_addr_dict.update({'pkts_long': int(group['pkts_long'])})
+                if 'time_abs_first' in group:
+                    ipv4_dst_addr_dict.update({'time_abs_first': group['time_abs_first']})
+                if 'time_abs_last' in group:
+                    ipv4_dst_addr_dict.update({'time_abs_last': group['time_abs_last']})
+                if 'bytes_layer2_long' in group:
+                    ipv4_dst_addr_dict.update({'bytes_layer2_long': int(group['bytes_layer2_long'])})
+                if 'ip_tos' in group:
+                    ipv4_dst_addr_dict.update({'ip_tos': group['ip_tos']})
+                if 'bytes_long' in group:
+                    ipv4_dst_addr_dict.update({'bytes_long': int(group['bytes_long'])})
 
                 dst_addr_index.update({group['ipv4_dst_addr']: index})
 
                 continue
-
         return ret_dict
 
 
@@ -2975,7 +3005,7 @@ class ShowFlowInterface(ShowFlowInterfaceSchema):
 
         # traffic(ip):      sampler Netflow-Sample
         # traffic(ip):      on
-        p4 = re.compile(r'^traffic\((?P<type>\S+)\):\s+(sampler\s+(?P<sampler>\S+)|(?P<status>on))$')
+        p4 = re.compile(r'^traffic\((?P<type>\S+)\):\s*(sampler\s+(?P<sampler>\S+)|(?P<status>on))$')
 
         current_interface = None
         current_monitor = None

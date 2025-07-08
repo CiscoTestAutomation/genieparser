@@ -1,0 +1,25 @@
+MPLS-TP tunnel 1:
+      src global id: 0     node id: 101.1.1.1  tunnel: 1    
+      dst global id: 0     node id: 103.3.3.3  tunnel: 1    
+      description:  
+      Admin: up           Oper: up
+      bandwidth:         0
+      BFD template:  BFD                  
+      protection trigger: LDI LKR
+      PSC: Disabled
+      working-lsp: Standby      lsp num 0
+         BFD State: Up
+         Lockout  : Clear
+         Fault OAM: Clear
+         Signal Degrade: No
+         0::101.1.1.1::1::0::103.3.3.3::1::0  (working/standby)
+            in label 4100    label table 0      out label 5200   
+            outgoing tp-link 1   interface Te0/0/13
+            Forwarding: Installed,  Bandwidth: 0 Admitted
+      protect-lsp: Active      lsp num 1
+         BFD State: Up
+         Lockout  : Clear
+         Fault OAM: Clear
+         Signal Degrade: No
+         0::101.1.1.1::1::0::103.3.3.3::1::1  (protect/active)
+            in label 6100    label table 0      out label 6400
