@@ -635,6 +635,5 @@ class ShowSwitchDetail(ShowSwitchDetail_iosxe):
 
 
 class ShowProcessesMemory(ShowProcessesMemory_iosxe):
-    """Parser for show switch detail"""
-
+    """Parser for show processes memory"""
     pass
