@@ -159,7 +159,7 @@ class ShowEnvironmentAllSchema(MetaParser):
         Optional('minor_alarms'): int,
         'sensor_list': {
             Any(): {
-                'slot': {
+                'location': {
                     Any(): {
                         'sensor': {
                             Any(): {
@@ -237,13 +237,18 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
         # Sensor List:  Environmental Monitoring
         p4 = re.compile(r'Sensor\s+List:\s+(?P<sensor_list>.+)')
 
-        #  Sensor           Location          State          Reading           Threshold(Minor,Major,Critical,Shutdown)
-        #  Temp: Coretemp   R0                Normal            48 Celsius          	(107,117,123,125)(Celsius)
-        #  Temp: UADP       R0                Normal            56 Celsius          	(107,117,123,125)(Celsius)
-        #  V1: VX1          R0                Normal            869 mV               	na
-        #  Temp:    inlet   R0                Normal            32 Celsius          	(56 ,66 ,96 ,98 )(Celsius)
+        # Sensor           Location          State          Reading           Threshold(Minor,Major,Critical,Shutdown)
+        # Temp: Coretemp   Chassis1-R0       Normal            46 Celsius                (107,117,123,125)(Celsius)
+        # Temp: UADP       Chassis1-R0       Normal            54 Celsius                (107,117,123,125)(Celsius)
+        # V1: VX1          Chassis1-R0       Normal            871 mV                    na
+        # V1: VX2          Chassis1-R0       Normal            1498 mV                   na
+        # V1: VX3          Chassis1-R0       Normal            1055 mV                   na
+        # V1: VX4          Chassis1-R0       Normal            852 mV                    na
+        # V1: VX5          Chassis1-R0       Normal            1507 mV                   na
+        # V1: VX6          Chassis1-R0       Normal            1301 mV                   na
+        # V1: VX7          Chassis1-R0       Normal            1005 mV                   na
         p5 = re.compile(
-            r'(?P<sensor_name>\S+(:\s+\S+)?)\s+(?P<slot>([A-Z][0-9]|\d/\d))\s+(?P<state>\S+)\s+(?P<reading>\d+\s+\S+(\s+(AC|DC))?)\s+(\((?P<minor>\d+\s*),(?P<major>\d+\s*),(?P<critical>\d+\s*),(?P<shutdown>\d+\s*)\)\((?P<unit>\S+)\))?'
+            r'(?P<sensor_name>\S+(:\s+\S+)?)\s+(?P<location>\S+[0-9])\s+(?P<state>\S+)\s+(?P<reading>\d+\s+\S+(\s+(AC|DC))?)\s+(\((?P<minor>\d+\s*),(?P<major>\d+\s*),(?P<critical>\d+\s*),(?P<shutdown>\d+\s*)\)\((?P<unit>\S+)\))?'
         )
 
         # Power                                                       Fan States
@@ -314,8 +319,8 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
             if m:
                 group = m.groupdict()
                 sensor_name = group.pop('sensor_name')
-                slot = group.pop('slot')
-                fin_dict = sensor_dict.setdefault('slot', {}).setdefault(slot, {}).\
+                location = group.pop('location')
+                fin_dict = sensor_dict.setdefault('location', {}).setdefault(location, {}).\
                     setdefault('sensor', {}).setdefault(sensor_name, {})
 
                 fin_dict['state'] = group['state']
