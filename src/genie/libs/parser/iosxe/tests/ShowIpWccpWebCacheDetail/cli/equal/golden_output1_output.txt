@@ -1,0 +1,40 @@
+R1#show ip wccp web-cache detail
+
+WCCP Client information:
+        WCCP Client ID:          209.165.200.225
+        Protocol Version:        2.0
+        State:                   Usable
+        Redirection:             GRE
+        Packet Return:           GRE
+        Assignment:              HASH
+        Connect Time:            1w5d
+        Redirected Packets:
+          Process:               0
+          CEF:                   0
+        GRE Bypassed Packets:
+          Process:               0
+          CEF:                   0
+        Hash Allotment:          128 of 256 (50.00%)
+        Initial Hash Info:       00000000000000000000000000000000
+                                 00000000000000000000000000000000
+        Assigned Hash Info:      AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+                                 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+
+        WCCP Client ID:          192.0.2.11
+        Protocol Version:        2.01
+        State:                   Usable
+        Redirection:             GRE
+        Packet Return:           GRE
+        Assignment:              HASH
+        Connect Time:            1w5d
+        Redirected Packets:
+          Process:               0
+          CEF:                   0
+        GRE Bypassed Packets:
+          Process:               0
+          CEF:                   0
+        Hash Allotment:          128 of 256 (50.00%)
+        Initial Hash Info:       00000000000000000000000000000000
+                                 00000000000000000000000000000000
+        Assigned Hash Info:      55555555555555555555555555555555
+                                 55555555555555555555555555555555

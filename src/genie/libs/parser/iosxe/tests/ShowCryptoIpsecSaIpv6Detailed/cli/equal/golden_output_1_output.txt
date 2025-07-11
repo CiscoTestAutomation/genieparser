@@ -1,0 +1,394 @@
+interface: Tunnel2002
+    Crypto map tag: Tunnel2002-vesen-head-0, local addr 4180::56:0:1
+
+   protected vrf: (none)
+   local  ident (addr/mask/prot/port): (4180::56:0:1/128/0/12346)
+   remote ident (addr/mask/prot/port): (4180::151:0:1/128/0/12426)
+   current_peer 4180::151:0:1 port 12426
+     PERMIT, flags={origin_is_acl,}
+    #pkts encaps: 6938, #pkts encrypt: 6938, #pkts digest: 6938
+    #pkts decaps: 6936, #pkts decrypt: 6936, #pkts verify: 6936
+    #pkts compressed: 0, #pkts decompressed: 0
+    #pkts not compressed: 0, #pkts compr. failed: 0
+    #pkts not decompressed: 0, #pkts decompress failed: 0
+    #pkts no sa (send) 0, #pkts invalid sa (rcv) 0
+    #pkts encaps failed (send) 0, #pkts decaps failed (rcv) 0
+    #pkts invalid prot (recv) 0, #pkts verify failed: 0
+    #pkts invalid identity (recv) 0, #pkts invalid len (rcv) 0
+    #pkts replay rollover (send): 0, #pkts replay rollover (rcv) 0
+    ##pkts replay failed (rcv): 0
+    #pkts tagged (send): 0, #pkts untagged (rcv): 0
+    #pkts not tagged (send): 0, #pkts not untagged (rcv): 0
+    #pkts internal err (send): 0, #pkts internal err (recv) 0
+
+     local crypto endpt.: 4180::56:0:1,
+     remote crypto endpt.: 4180::151:0:1
+     plaintext mtu 1438, path mtu 1480, ipv6 mtu 1480, ipv6 mtu idb Tunnel2002
+     current outbound spi: 0x11C(284)
+     PFS (Y/N): N, DH group: none
+
+     inbound esp sas:
+      spi: [Not Available]
+        transform: esp-gcm 256 ,
+        in use settings ={Transport UDP-Encaps, esn}
+        conn id: 2071, flow_id: ESG:71, sibling_flags FFFFFFFF80000009, crypto map: Tunnel2002-vesen-head-0, initiator : False
+        sa timing: remaining key lifetime is not applicable
+        Kilobyte Volume Rekey has been disabled
+        IV size: 8 bytes
+        replay detection support: Y
+        Status: ACTIVE(ACTIVE)
+
+     inbound ah sas:
+
+     inbound pcp sas:
+
+     outbound esp sas:
+      spi: [Not Available]
+        transform: esp-gcm 256 ,
+        in use settings ={Transport UDP-Encaps, esn}
+        conn id: 2072, flow_id: ESG:72, sibling_flags FFFFFFFF80000009, crypto map: Tunnel2002-vesen-head-0, initiator : False
+        sa timing: remaining key lifetime is not applicable
+        Kilobyte Volume Rekey has been disabled
+        IV size: 8 bytes
+        replay detection support: Y
+        Status: ACTIVE(ACTIVE)
+
+     outbound ah sas:
+
+     outbound pcp sas:
+
+   protected vrf: (none)
+   local  ident (addr/mask/prot/port): (4180::56:0:1/128/0/12346)
+   remote ident (addr/mask/prot/port): (4180::60:0:1/128/0/12346)
+   current_peer 4180::60:0:1 port 12346
+     PERMIT, flags={origin_is_acl,}
+    #pkts encaps: 3425, #pkts encrypt: 3425, #pkts digest: 3425
+    #pkts decaps: 0, #pkts decrypt: 0, #pkts verify: 0
+    #pkts compressed: 0, #pkts decompressed: 0
+    #pkts not compressed: 0, #pkts compr. failed: 0
+    #pkts not decompressed: 0, #pkts decompress failed: 0
+    #pkts no sa (send) 0, #pkts invalid sa (rcv) 0
+    #pkts encaps failed (send) 0, #pkts decaps failed (rcv) 0
+    #pkts invalid prot (recv) 0, #pkts verify failed: 0
+    #pkts invalid identity (recv) 0, #pkts invalid len (rcv) 0
+    #pkts replay rollover (send): 0, #pkts replay rollover (rcv) 0
+    ##pkts replay failed (rcv): 0
+    #pkts tagged (send): 0, #pkts untagged (rcv): 0
+    #pkts not tagged (send): 0, #pkts not untagged (rcv): 0
+    #pkts internal err (send): 0, #pkts internal err (recv) 0
+
+     local crypto endpt.: 4180::56:0:1,
+     remote crypto endpt.: 4180::60:0:1
+     plaintext mtu 1438, path mtu 1480, ipv6 mtu 1480, ipv6 mtu idb Tunnel2002
+     current outbound spi: 0x10E(270)
+     PFS (Y/N): N, DH group: none
+
+     inbound esp sas:
+      spi: [Not Available]
+        transform: esp-gcm 256 ,
+        in use settings ={Transport UDP-Encaps, esn}
+        conn id: 2079, flow_id: ESG:79, sibling_flags FFFFFFFF80000009, crypto map: Tunnel2002-vesen-head-0, initiator : False
+        sa timing: remaining key lifetime is not applicable
+        Kilobyte Volume Rekey has been disabled
+        IV size: 8 bytes
+        replay detection support: Y
+        Status: ACTIVE(ACTIVE)
+
+     inbound ah sas:
+
+     inbound pcp sas:
+
+     outbound esp sas:
+      spi: [Not Available]
+        transform: esp-gcm 256 ,
+        in use settings ={Transport UDP-Encaps, esn}
+        conn id: 2080, flow_id: ESG:80, sibling_flags FFFFFFFF80000009, crypto map: Tunnel2002-vesen-head-0, initiator : False
+        sa timing: remaining key lifetime is not applicable
+        Kilobyte Volume Rekey has been disabled
+        IV size: 8 bytes
+        replay detection support: Y
+        Status: ACTIVE(ACTIVE)
+
+     outbound ah sas:
+
+     outbound pcp sas:
+
+   protected vrf: (none)
+   local  ident (addr/mask/prot/port): (4180::56:0:1/128/0/12346)
+   remote ident (addr/mask/prot/port): (4180::11:0:1/128/0/12406)
+   current_peer 4180::11:0:1 port 12406
+     PERMIT, flags={origin_is_acl,}
+    #pkts encaps: 3432, #pkts encrypt: 3432, #pkts digest: 3432
+    #pkts decaps: 0, #pkts decrypt: 0, #pkts verify: 0
+    #pkts compressed: 0, #pkts decompressed: 0
+    #pkts not compressed: 0, #pkts compr. failed: 0
+    #pkts not decompressed: 0, #pkts decompress failed: 0
+    #pkts no sa (send) 0, #pkts invalid sa (rcv) 0
+    #pkts encaps failed (send) 0, #pkts decaps failed (rcv) 0
+    #pkts invalid prot (recv) 0, #pkts verify failed: 0
+    #pkts invalid identity (recv) 0, #pkts invalid len (rcv) 0
+    #pkts replay rollover (send): 0, #pkts replay rollover (rcv) 0
+    ##pkts replay failed (rcv): 0
+    #pkts tagged (send): 0, #pkts untagged (rcv): 0
+    #pkts not tagged (send): 0, #pkts not untagged (rcv): 0
+    #pkts internal err (send): 0, #pkts internal err (recv) 0
+
+     local crypto endpt.: 4180::56:0:1,
+     remote crypto endpt.: 4180::11:0:1
+     plaintext mtu 1438, path mtu 1480, ipv6 mtu 1480, ipv6 mtu idb Tunnel2002
+     current outbound spi: 0x2DF(735)
+     PFS (Y/N): N, DH group: none
+
+     inbound esp sas:
+      spi: [Not Available]
+        transform: esp-gcm 256 ,
+        in use settings ={Transport UDP-Encaps, esn}
+        conn id: 2081, flow_id: ESG:81, sibling_flags FFFFFFFF80000009, crypto map: Tunnel2002-vesen-head-0, initiator : False
+        sa timing: remaining key lifetime is not applicable
+        Kilobyte Volume Rekey has been disabled
+        IV size: 8 bytes
+        replay detection support: Y
+        Status: ACTIVE(ACTIVE)
+
+     inbound ah sas:
+
+     inbound pcp sas:
+
+     outbound esp sas:
+      spi: [Not Available]
+        transform: esp-gcm 256 ,
+        in use settings ={Transport UDP-Encaps, esn}
+        conn id: 2082, flow_id: ESG:82, sibling_flags FFFFFFFF80000009, crypto map: Tunnel2002-vesen-head-0, initiator : False
+        sa timing: remaining key lifetime is not applicable
+        Kilobyte Volume Rekey has been disabled
+        IV size: 8 bytes
+        replay detection support: Y
+        Status: ACTIVE(ACTIVE)
+
+     outbound ah sas:
+
+     outbound pcp sas:
+
+   protected vrf: (none)
+   local  ident (addr/mask/prot/port): (4180::56:0:1/128/0/12346)
+   remote ident (addr/mask/prot/port): (4180::2:0:1/128/0/12426)
+   current_peer 4180::2:0:1 port 12426
+     PERMIT, flags={origin_is_acl,}
+    #pkts encaps: 6599, #pkts encrypt: 6599, #pkts digest: 6599
+    #pkts decaps: 6591, #pkts decrypt: 6591, #pkts verify: 6591
+    #pkts compressed: 0, #pkts decompressed: 0
+    #pkts not compressed: 0, #pkts compr. failed: 0
+    #pkts not decompressed: 0, #pkts decompress failed: 0
+    #pkts no sa (send) 0, #pkts invalid sa (rcv) 0
+    #pkts encaps failed (send) 0, #pkts decaps failed (rcv) 0
+    #pkts invalid prot (recv) 0, #pkts verify failed: 0
+    #pkts invalid identity (recv) 0, #pkts invalid len (rcv) 0
+    #pkts replay rollover (send): 0, #pkts replay rollover (rcv) 0
+    ##pkts replay failed (rcv): 0
+    #pkts tagged (send): 0, #pkts untagged (rcv): 0
+    #pkts not tagged (send): 0, #pkts not untagged (rcv): 0
+    #pkts internal err (send): 0, #pkts internal err (recv) 0
+
+     local crypto endpt.: 4180::56:0:1,
+     remote crypto endpt.: 4180::2:0:1
+     plaintext mtu 1438, path mtu 1480, ipv6 mtu 1480, ipv6 mtu idb Tunnel2002
+     current outbound spi: 0x183(387)
+     PFS (Y/N): N, DH group: none
+
+     inbound esp sas:
+      spi: [Not Available]
+        transform: esp-gcm 256 ,
+        in use settings ={Transport UDP-Encaps, esn}
+        conn id: 2075, flow_id: ESG:75, sibling_flags FFFFFFFF80000009, crypto map: Tunnel2002-vesen-head-0, initiator : False
+        sa timing: remaining key lifetime is not applicable
+        Kilobyte Volume Rekey has been disabled
+        IV size: 8 bytes
+        replay detection support: Y
+        Status: ACTIVE(ACTIVE)
+
+     inbound ah sas:
+
+     inbound pcp sas:
+
+     outbound esp sas:
+      spi: [Not Available]
+        transform: esp-gcm 256 ,
+        in use settings ={Transport UDP-Encaps, esn}
+        conn id: 2076, flow_id: ESG:76, sibling_flags FFFFFFFF80000009, crypto map: Tunnel2002-vesen-head-0, initiator : False
+        sa timing: remaining key lifetime is not applicable
+        Kilobyte Volume Rekey has been disabled
+        IV size: 8 bytes
+        replay detection support: Y
+        Status: ACTIVE(ACTIVE)
+
+     outbound ah sas:
+
+     outbound pcp sas:
+
+   protected vrf: (none)
+   local  ident (addr/mask/prot/port): (4180::56:0:1/128/0/12346)
+   remote ident (addr/mask/prot/port): (4180::226:0:1/128/0/12346)
+   current_peer 4180::226:0:1 port 12346
+     PERMIT, flags={origin_is_acl,}
+    #pkts encaps: 6948, #pkts encrypt: 6948, #pkts digest: 6948
+    #pkts decaps: 6946, #pkts decrypt: 6946, #pkts verify: 6946
+    #pkts compressed: 0, #pkts decompressed: 0
+    #pkts not compressed: 0, #pkts compr. failed: 0
+    #pkts not decompressed: 0, #pkts decompress failed: 0
+    #pkts no sa (send) 0, #pkts invalid sa (rcv) 0
+    #pkts encaps failed (send) 0, #pkts decaps failed (rcv) 0
+    #pkts invalid prot (recv) 0, #pkts verify failed: 0
+    #pkts invalid identity (recv) 0, #pkts invalid len (rcv) 0
+    #pkts replay rollover (send): 0, #pkts replay rollover (rcv) 0
+    ##pkts replay failed (rcv): 0
+    #pkts tagged (send): 0, #pkts untagged (rcv): 0
+    #pkts not tagged (send): 0, #pkts not untagged (rcv): 0
+    #pkts internal err (send): 0, #pkts internal err (recv) 0
+
+     local crypto endpt.: 4180::56:0:1,
+     remote crypto endpt.: 4180::226:0:1
+     plaintext mtu 1438, path mtu 1480, ipv6 mtu 1480, ipv6 mtu idb Tunnel2002
+     current outbound spi: 0x119(281)
+     PFS (Y/N): N, DH group: none
+
+     inbound esp sas:
+      spi: [Not Available]
+        transform: esp-gcm 256 ,
+        in use settings ={Transport UDP-Encaps, esn}
+        conn id: 2077, flow_id: ESG:77, sibling_flags FFFFFFFF80000009, crypto map: Tunnel2002-vesen-head-0, initiator : False
+        sa timing: remaining key lifetime is not applicable
+        Kilobyte Volume Rekey has been disabled
+        IV size: 8 bytes
+        replay detection support: Y
+        Status: ACTIVE(ACTIVE)
+
+     inbound ah sas:
+
+     inbound pcp sas:
+
+     outbound esp sas:
+      spi: [Not Available]
+        transform: esp-gcm 256 ,
+        in use settings ={Transport UDP-Encaps, esn}
+        conn id: 2078, flow_id: ESG:78, sibling_flags FFFFFFFF80000009, crypto map: Tunnel2002-vesen-head-0, initiator : False
+        sa timing: remaining key lifetime is not applicable
+        Kilobyte Volume Rekey has been disabled
+        IV size: 8 bytes
+        replay detection support: Y
+        Status: ACTIVE(ACTIVE)
+
+     outbound ah sas:
+
+     outbound pcp sas:
+
+   protected vrf: (none)
+   local  ident (addr/mask/prot/port): (4180::56:0:1/128/0/12346)
+   remote ident (addr/mask/prot/port): (4180::221:0:1/128/0/12346)
+   current_peer 4180::221:0:1 port 12346
+     PERMIT, flags={origin_is_acl,}
+    #pkts encaps: 6930, #pkts encrypt: 6930, #pkts digest: 6930
+    #pkts decaps: 6928, #pkts decrypt: 6928, #pkts verify: 6928
+    #pkts compressed: 0, #pkts decompressed: 0
+    #pkts not compressed: 0, #pkts compr. failed: 0
+    #pkts not decompressed: 0, #pkts decompress failed: 0
+    #pkts no sa (send) 0, #pkts invalid sa (rcv) 0
+    #pkts encaps failed (send) 0, #pkts decaps failed (rcv) 0
+    #pkts invalid prot (recv) 0, #pkts verify failed: 0
+    #pkts invalid identity (recv) 0, #pkts invalid len (rcv) 0
+    #pkts replay rollover (send): 0, #pkts replay rollover (rcv) 0
+    ##pkts replay failed (rcv): 0
+    #pkts tagged (send): 0, #pkts untagged (rcv): 0
+    #pkts not tagged (send): 0, #pkts not untagged (rcv): 0
+    #pkts internal err (send): 0, #pkts internal err (recv) 0
+
+     local crypto endpt.: 4180::56:0:1,
+     remote crypto endpt.: 4180::221:0:1
+     plaintext mtu 1438, path mtu 1480, ipv6 mtu 1480, ipv6 mtu idb Tunnel2002
+     current outbound spi: 0x11A(282)
+     PFS (Y/N): N, DH group: none
+
+     inbound esp sas:
+      spi: [Not Available]
+        transform: esp-gcm 256 ,
+        in use settings ={Transport UDP-Encaps, esn}
+        conn id: 2069, flow_id: ESG:69, sibling_flags FFFFFFFF80000009, crypto map: Tunnel2002-vesen-head-0, initiator : False
+        sa timing: remaining key lifetime is not applicable
+        Kilobyte Volume Rekey has been disabled
+        IV size: 8 bytes
+        replay detection support: Y
+        Status: ACTIVE(ACTIVE)
+
+     inbound ah sas:
+
+     inbound pcp sas:
+
+     outbound esp sas:
+      spi: [Not Available]
+        transform: esp-gcm 256 ,
+        in use settings ={Transport UDP-Encaps, esn}
+        conn id: 2070, flow_id: ESG:70, sibling_flags FFFFFFFF80000009, crypto map: Tunnel2002-vesen-head-0, initiator : False
+        sa timing: remaining key lifetime is not applicable
+        Kilobyte Volume Rekey has been disabled
+        IV size: 8 bytes
+        replay detection support: Y
+        Status: ACTIVE(ACTIVE)
+
+     outbound ah sas:
+
+     outbound pcp sas:
+
+   protected vrf: (none)
+   local  ident (addr/mask/prot/port): (4180::56:0:1/128/0/12346)
+   remote ident (addr/mask/prot/port): (4180::20:0:1/128/0/12346)
+   current_peer 4180::20:0:1 port 12346
+     PERMIT, flags={origin_is_acl,}
+    #pkts encaps: 5083, #pkts encrypt: 5083, #pkts digest: 5083
+    #pkts decaps: 2343, #pkts decrypt: 2343, #pkts verify: 2343
+    #pkts compressed: 0, #pkts decompressed: 0
+    #pkts not compressed: 0, #pkts compr. failed: 0
+    #pkts not decompressed: 0, #pkts decompress failed: 0
+    #pkts no sa (send) 0, #pkts invalid sa (rcv) 0
+    #pkts encaps failed (send) 0, #pkts decaps failed (rcv) 0
+    #pkts invalid prot (recv) 0, #pkts verify failed: 0
+    #pkts invalid identity (recv) 0, #pkts invalid len (rcv) 0
+    #pkts replay rollover (send): 0, #pkts replay rollover (rcv) 0
+    ##pkts replay failed (rcv): 0
+    #pkts tagged (send): 0, #pkts untagged (rcv): 0
+    #pkts not tagged (send): 0, #pkts not untagged (rcv): 0
+    #pkts internal err (send): 0, #pkts internal err (recv) 0
+
+     local crypto endpt.: 4180::56:0:1,
+     remote crypto endpt.: 4180::20:0:1
+     plaintext mtu 1438, path mtu 1480, ipv6 mtu 1480, ipv6 mtu idb Tunnel2002
+     current outbound spi: 0x119(281)
+     PFS (Y/N): N, DH group: none
+
+     inbound esp sas:
+      spi: [Not Available]
+        transform: esp-gcm 256 ,
+        in use settings ={Transport UDP-Encaps, esn}
+        conn id: 2073, flow_id: ESG:73, sibling_flags FFFFFFFF80000009, crypto map: Tunnel2002-vesen-head-0, initiator : False
+        sa timing: remaining key lifetime is not applicable
+        Kilobyte Volume Rekey has been disabled
+        IV size: 8 bytes
+        replay detection support: Y
+        Status: ACTIVE(ACTIVE)
+
+     inbound ah sas:
+
+     inbound pcp sas:
+
+     outbound esp sas:
+      spi: [Not Available]
+        transform: esp-gcm 256 ,
+        in use settings ={Transport UDP-Encaps, esn}
+        conn id: 2074, flow_id: ESG:74, sibling_flags FFFFFFFF80000009, crypto map: Tunnel2002-vesen-head-0, initiator : False
+        sa timing: remaining key lifetime is not applicable
+        Kilobyte Volume Rekey has been disabled
+        IV size: 8 bytes
+        replay detection support: Y
+        Status: ACTIVE(ACTIVE)
+
+     outbound ah sas:
+
+     outbound pcp sas:

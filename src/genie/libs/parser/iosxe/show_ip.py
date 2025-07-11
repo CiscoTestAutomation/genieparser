@@ -96,6 +96,8 @@ IOSXE parsers for the following show commands:
     * show ip sla configuration {entry_number}
     * show ip subscriber mac {mac_address}
     * show ip virtual-assembly {interface}
+    * show ipv mld vrf {vrf} groups {group}
+    * show ip wccp web-cache detail
     '''
 
 # Python
@@ -9881,6 +9883,394 @@ class ShowIpVirtualReassemblyInterface(ShowIpVirtualReassemblyInterfaceSchema):
             m = p18.match(line)
             if m:
                 statistics_dict['total_packets_dropped_due_to_vfr'] = int(m.group('total_packets_dropped_due_to_vfr'))
+                continue
+
+        return parsed_dict
+
+
+
+# ====================================================
+# Schema for 'show ipv mld vrf {vrf} groups {group}'
+# ====================================================
+class ShowIpvMldVrfGroupsSchema(MetaParser):
+    """Schema for show ipv mld vrf {vrf} groups {group}"""
+
+    schema = {
+        'mld_connected_group_membership': ListOf({
+            'group_address': str,
+            'interface': str,
+            'uptime': str,
+            'expires': str,
+        })
+    }
+
+
+# ====================================================
+# Parser for 'show ipv mld vrf {vrf} groups {group}'
+# ====================================================
+class ShowIpvMldVrfGroups(ShowIpvMldVrfGroupsSchema):
+    """Parser for show ipv mld vrf {vrf} groups {group}"""
+
+    cli_command = 'show ipv mld vrf {vrf} groups {group}'
+
+    def cli(self, vrf="", group="", output=None):
+        if output is None:
+            cmd = self.cli_command.format(vrf=vrf, group=group)
+            output = self.device.execute(cmd)
+
+        # Initialize parsed dictionary
+        parsed_dict = {}
+
+        # Define regex patterns
+        # Group entry: "FF08:4000::1                            Gi0/2/3.2                                            00:00:00  00:04:19"
+        p_group_entry = re.compile(
+            r'^(?P<group_address>[0-9A-Fa-f:]+)\s+'
+            r'(?P<interface>\S+)\s+'
+            r'(?P<uptime>\d{2}:\d{2}:\d{2})\s+'
+            r'(?P<expires>\d{2}:\d{2}:\d{2})$'
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            if not line:
+                continue
+
+            # Skip header lines
+            if 'MLD Connected Group Membership' in line or 'Group Address' in line or 'Interface' in line:
+                continue
+
+            # Match group entry
+            # Example: "FF08:4000::1                            Gi0/2/3.2                                            00:00:00  00:04:19"
+            m = p_group_entry.match(line)
+            if m:
+                group_address = m.group('group_address')
+
+                mld_groups = parsed_dict.setdefault('mld_connected_group_membership', [])
+
+                group_dict = {
+                    'group_address': group_address,
+                    'interface': m.group('interface'),
+                    'uptime': m.group('uptime'),
+                    'expires': m.group('expires')
+                }
+
+                mld_groups.append(group_dict)
+                continue
+
+        return parsed_dict
+
+class ShowIpMrmStatusSchema(MetaParser):
+    """Schema for 'show ip mrm status'"""
+    schema = {
+        'status_report_cache': {
+            'timestamp': ListOf({
+                'date': str,
+                'manager': str,
+                'test_sender': str,
+                'test_receiver': str,
+                'pkt_loss_dup': str,
+                'ehsr': int,
+            })
+        }
+    }
+
+class ShowIpMrmStatus(ShowIpMrmStatusSchema):
+    """Parser for 'show ip mrm status'"""
+
+    cli_command = 'show ip mrm status'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # Regular expression to match the p0 and p1
+        # "Jun 20 12:30:45"
+        p0 = re.compile(r'^(?P<date>\w+\s+\d+\s+\d+:\d+:\d+)$')
+        # manager: 10.1.1.2, test sender: 10.1.1.1, test receiver:10.1.1.3, packet loss/duplication:  (0%) , and EHSR (Error Handling Success Rate): 304.
+        p1 = re.compile(
+            r'^(?P<manager>\S+)\s+(?P<test_sender>\S+)\s+(?P<test_receiver>\S+)\s+'
+            r'(?P<pkt_loss_dup>\d+\s+\(\d+%\))\s+(?P<ehsr>\d+)$'
+        )
+
+        # Iterate over each line in the output
+        current_date = None
+        for line in output.splitlines():
+            line = line.strip()
+
+            # "jun 20 12:30:45"
+            m0 = p0.match(line)
+            if m0:
+                current_date = m0.group('date')
+                continue
+
+            # manager: 10.1.1.2, test sender: 10.1.1.1, test receiver:10.1.1.3, packet loss/duplication:  (0%) , and EHSR (Error Handling Success Rate): 304.
+            m1 = p1.match(line)
+            if m1 and current_date:
+                # Extract data using named groups
+                manager = m1.group('manager')
+                test_sender = m1.group('test_sender')
+                test_receiver = m1.group('test_receiver')
+                pkt_loss_dup = m1.group('pkt_loss_dup')
+                ehsr = int(m1.group('ehsr'))
+
+                # Use setdefault to avoid KeyError
+                timestamp_list = parsed_dict.setdefault('status_report_cache', {}).setdefault('timestamp', [])
+
+                # Append the extracted data to the list
+                timestamp_list.append({
+                    'date': current_date,
+                    'manager': manager,
+                    'test_sender': test_sender,
+                    'test_receiver': test_receiver,
+                    'pkt_loss_dup': pkt_loss_dup,
+                    'ehsr': ehsr,
+                })
+
+        return parsed_dict
+
+class ShowIpPimInterfaceCountSchema(MetaParser):
+    """Schema for 'show ip pim interface count'"""
+    schema = {
+        'interfaces': {
+            str: {  # Interface name
+                'address': str,
+                'fs': str,
+                'mpackets_in': int,
+                'mpackets_out': int,
+            }
+        }
+    }
+
+
+class ShowIpPimInterfaceCount(ShowIpPimInterfaceCountSchema):
+    """Parser for 'show ip pim interface count'"""
+
+    cli_command = 'show ip pim interface count'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # address: 10.1.1.3, interface: GigabitEthernet0/1,fs: *, mpackets In/out: 0/0
+        p1 = re.compile(r'^(?P<address>\d+\.\d+\.\d+\.\d+)\s+'
+                        r'(?P<interface>\S+)\s+'
+                        r'(?P<fs>\S+)\s+'
+                        r'(?P<mpackets_in>\d+)/(?P<mpackets_out>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # address: 10.1.1.3, interface: GigabitEthernet0/1, fs: *, mpackets In/out: 0/0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                interface = group['interface']
+                # Use setdefault to avoid KeyError
+                interface_dict = parsed_dict.setdefault('interfaces', {}).setdefault(interface, {})
+                interface_dict['address'] = group['address']
+                interface_dict['fs'] = group['fs']
+                interface_dict['mpackets_in'] = int(group['mpackets_in'])
+                interface_dict['mpackets_out'] = int(group['mpackets_out'])
+
+        return parsed_dict
+
+
+# ================================================================================
+# Schema for 'show ip wccp web-cache detail'
+# ================================================================================
+class ShowIpWccpWebCacheDetailSchema(MetaParser):
+    """Schema for show ip wccp web-cache detail"""
+
+    schema = {
+        'wccp_client_information': {
+            Any(): {  # WCCP Client ID (IP address)
+                'client_id': str,
+                'protocol_version': str,
+                'state': str,
+                'redirection': str,
+                'packet_return': str,
+                'assignment': str,
+                'connect_time': str,
+                'redirected_packets': {
+                    'process': int,
+                    'cef': int,
+                },
+                'gre_bypassed_packets': {
+                    'process': int,
+                    'cef': int,
+                },
+                'hash_allotment': str,
+                'hash_allotment_percentage': float,
+                'initial_hash_info': str,
+                'assigned_hash_info': str,
+            }
+        }
+    }
+
+# ================================================================================
+# Parser for 'show ip wccp web-cache detail'
+# ================================================================================
+class ShowIpWccpWebCacheDetail(ShowIpWccpWebCacheDetailSchema):
+    """Parser for show ip wccp web-cache detail"""
+
+    cli_command = ['show ip wccp web-cache detail']
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command[0])
+
+        # Initialize result dictionary
+        parsed_dict = {}
+
+        # Regular expressions for parsing
+        # WCCP Client ID:          209.165.200.225
+        p1 = re.compile(r'^\s*WCCP Client ID:\s+(?P<client_id>\S+)$')
+        # Protocol Version:        2.0
+        p2 = re.compile(r'^\s*Protocol Version:\s+(?P<protocol_version>\S+)$')
+        # State:                   Usable
+        p3 = re.compile(r'^\s*State:\s+(?P<state>\S+)$')
+        # Redirection:             GRE
+        p4 = re.compile(r'^\s*Redirection:\s+(?P<redirection>\S+)$')
+        # Packet Return:           GRE
+        p5 = re.compile(r'^\s*Packet Return:\s+(?P<packet_return>\S+)$')
+        # Assignment:              HASH
+        p6 = re.compile(r'^\s*Assignment:\s+(?P<assignment>\S+)$')
+        # Connect Time:            1w5d
+        p7 = re.compile(r'^\s*Connect Time:\s+(?P<connect_time>\S+)$')
+        # Process:               0
+        p8 = re.compile(r'^\s*Process:\s+(?P<process>\d+)$')
+        # CEF:                   0
+        p9 = re.compile(r'^\s*CEF:\s+(?P<cef>\d+)$')
+        # Hash Allotment:          128 of 256 (50.00%)
+        p10 = re.compile(r'^\s*Hash Allotment:\s+(?P<hash_allotment>\d+ of \d+) \((?P<percentage>[\d.]+)%\)$')
+        # Initial Hash Info:       00000000000000000000000000000000
+        p11 = re.compile(r'^\s*Initial Hash Info:\s+(?P<initial_hash>.+)$')
+        # Assigned Hash Info:      AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        p12 = re.compile(r'^\s*Assigned Hash Info:\s+(?P<assigned_hash>.+)$')
+        # Continuation lines for hash info (starting with spaces)
+        p13 = re.compile(r'^\s+(?P<hash_continuation>[A-F0-9]+)$')
+
+        current_client = None
+        current_section = None
+        hash_continuation_type = None
+
+        for line in output.splitlines():
+            if not line.strip():
+                continue
+
+            # WCCP Client ID:          209.165.200.225
+            m = p1.match(line)
+            if m:
+                client_id = m.group('client_id')
+
+                parsed_dict.setdefault('wccp_client_information', {})[client_id] = {
+                    'client_id': client_id
+                }
+                current_client = parsed_dict['wccp_client_information'][client_id]
+                current_section = None
+                hash_continuation_type = None
+                continue
+
+            if current_client is None:
+                continue
+
+            # Protocol Version:        2.0
+            m = p2.match(line)
+            if m:
+                current_client['protocol_version'] = m.group('protocol_version')
+                continue
+
+            # State:                   Usable
+            m = p3.match(line)
+            if m:
+                current_client['state'] = m.group('state')
+                continue
+
+            # Redirection:             GRE
+            m = p4.match(line)
+            if m:
+                current_client['redirection'] = m.group('redirection')
+                continue
+
+            # Packet Return:           GRE
+            m = p5.match(line)
+            if m:
+                current_client['packet_return'] = m.group('packet_return')
+                continue
+
+            # Assignment:              HASH
+            m = p6.match(line)
+            if m:
+                current_client['assignment'] = m.group('assignment')
+                continue
+
+            # Connect Time:            1w5d
+            m = p7.match(line)
+            if m:
+                current_client['connect_time'] = m.group('connect_time')
+                continue
+
+            # Redirected Packets:
+            if 'Redirected Packets:' in line:
+                current_section = 'redirected_packets'
+                current_client.setdefault('redirected_packets', {})
+                continue
+
+            # GRE Bypassed Packets:
+            if 'GRE Bypassed Packets:' in line:
+                current_section = 'gre_bypassed_packets'
+                current_client.setdefault('gre_bypassed_packets', {})
+                continue
+
+            # Process:               0
+            m = p8.match(line)
+            if m and current_section:
+                current_client[current_section]['process'] = int(m.group('process'))
+                continue
+
+            # CEF:                   0
+            m = p9.match(line)
+            if m and current_section:
+                current_client[current_section]['cef'] = int(m.group('cef'))
+                current_section = None  # Reset after CEF (last item in section)
+                continue
+
+            # Hash Allotment:          128 of 256 (50.00%)
+            m = p10.match(line)
+            if m:
+                current_client['hash_allotment'] = m.group('hash_allotment')
+                current_client['hash_allotment_percentage'] = float(m.group('percentage'))
+                continue
+
+            # Initial Hash Info:       00000000000000000000000000000000
+            m = p11.match(line)
+            if m:
+                current_client['initial_hash_info'] = m.group('initial_hash')
+                hash_continuation_type = 'initial'
+                continue
+
+            # Assigned Hash Info:      AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+            m = p12.match(line)
+            if m:
+                current_client['assigned_hash_info'] = m.group('assigned_hash')
+                hash_continuation_type = 'assigned'
+                continue
+
+            # Hash continuation lines
+            m = p13.match(line)
+            if m and hash_continuation_type:
+                hash_value = m.group('hash_continuation')
+                if hash_continuation_type == 'initial':
+                    current_client['initial_hash_info'] += hash_value
+                elif hash_continuation_type == 'assigned':
+                    current_client['assigned_hash_info'] += hash_value
                 continue
 
         return parsed_dict

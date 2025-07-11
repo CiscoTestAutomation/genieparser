@@ -1,0 +1,26 @@
+R1#show mpls tp lsps detail
+
+MPLS-TP LSP Name: my_tp_tunnel_1_1, ID: 1
+  Source: my_tp_tunnel (R1:1)
+  Destination: my_tp_tunnel (R2:1)
+  State: Up, Role: Head
+  OAM-Profile: default, BFD-Profile: default
+  CC-CV State: Down, CC-CV Session ID: 0
+  Working LSP:
+    InLabel: Pop, OutLabel: 16, Interface: GigabitEthernet3
+    FEC: 1.1.1.1/32, Weight: 1, Backup: No
+  Protect LSP:
+    Not established
+
+MPLS-TP LSP Name: my_tp_tunnel_2_1, ID: 2  
+  Source: my_tp_tunnel (R1:2)
+  Destination: my_tp_tunnel (R2:2)
+  State: Down, Role: Tail
+  OAM-Profile: profile1, BFD-Profile: profile2
+  CC-CV State: Up, CC-CV Session ID: 12345
+  Working LSP:
+    InLabel: 20, OutLabel: Untagged, Interface: GigabitEthernet4
+    FEC: 2.2.2.2/32, Weight: 2, Backup: Yes
+  Protect LSP:
+    InLabel: 21, OutLabel: 18, Interface: GigabitEthernet5
+    FEC: 3.3.3.3/32, Weight: 1, Backup: No

@@ -1,0 +1,3 @@
+show ip igmp snooping groups vlan 100 count
+
+Total number of groups in Vlan 100:   16000

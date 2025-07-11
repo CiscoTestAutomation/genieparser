@@ -1,4 +1,5 @@
 {
+    "switch" : "switch",
     "state" : "active",
     "interface" : "vlan 300",
     "feature" : "racl",

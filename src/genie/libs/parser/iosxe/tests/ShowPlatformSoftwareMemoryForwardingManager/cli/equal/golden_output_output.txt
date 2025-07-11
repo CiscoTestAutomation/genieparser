@@ -1,0 +1,34 @@
+    module                  allocated     requested     allocs        frees         
+  ------------------------------------------------------------------------------
+  nat-dnsv6               168           152           1             0
+  nat-pap-settings        168           152           1             0
+  nat64 static mapping I  112           96            1             0
+  nat64 pool ID           112           96            1             0
+  nat64 dynamic flow inf  112           96            1             0
+  nat64 dynamic mapping   112           96            1             0
+  nat64 dynamic mapping   112           96            1             0
+  nat64 CGM class         112           96            1             0
+  nat64 pool              112           96            1             0
+  nat64 pool range        112           96            1             0
+  nat64 adjacency         112           96            1             0
+  nat64 replication       112           96            1             0
+  nat64 alias             112           96            1             0
+  nat64 map-t dmr         112           96            1             0
+  nat64 map-t bmr         112           96            1             0
+  nat64 static mapping    112           96            1             0
+  nat64 timeout           112           96            1             0
+  nat64 logging           112           96            1             0
+  nat64 global stateless  112           96            1             0
+  nat64 intf              112           96            1             0
+  nat64 service           112           96            1             0
+  nat64 limit             112           96            1             0
+  nat66 intf              112           96            1             0
+  nat64 vrf stateful pre  112           96            1             0
+  nat66 prefix trans      112           96            1             0
+  nat-dyn-map             0             0             24            24
+  nat-pool                0             0             8             8
+  nat-cgm-class           0             0             88            88
+  nat-show-ctx            0             0             116           116
+  nat-mib-event           0             0             1             1
+  nat-static-map          0             0             56            56
+  nat-addr-range          0             0             8             8

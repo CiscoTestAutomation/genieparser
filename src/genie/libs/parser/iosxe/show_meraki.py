@@ -145,6 +145,12 @@ class ShowMerakiConnectSchema(MetaParser):
             'tx_errors': int,
             'rx_drop_packets': int,
             'tx_drop_packets': int,
+            Optional('rx_packets_delta'): int,
+            Optional('tx_packets_delta'): int,
+            Optional('rx_errors_delta'): int,
+            Optional('tx_errors_delta'): int,
+            Optional('rx_drop_packets_delta'): int,
+            Optional('tx_drop_packets_delta'): int,
         },
        Optional('meraki_device_registration'):{
         'url': str,
@@ -198,6 +204,12 @@ class ShowMerakiConnect(ShowMerakiConnectSchema):
         #   Tx Errors:                  0
         #   Rx Drop Packets:            0
         #   Tx Drop Packets:            0
+        #   Rx Packets (Last 5s):       18
+        #   Tx Packets (Last 5s):       17
+        #   Rx Errors (Last 5s):        0
+        #   Tx Errors (Last 5s):        0
+        #   Rx Drop Packets (Last 5s):  0
+        #   Tx Drop Packets (Last 5s):  0
 
         #   url:                        https://catalyst.meraki.com/nodes/register
         #   Device Number:              1
@@ -218,6 +230,9 @@ class ShowMerakiConnect(ShowMerakiConnectSchema):
 
         #service meraki connect is disabled
         p3 = re.compile(r"^(service\s+meraki\s+connect)\s+is\s+(disabled)$")
+
+        # Pattern to match delta fields "(Last 5s)"
+        delta_pattern = re.compile(r'\(last\s+\d+s\)', re.IGNORECASE)
 
         ret_dict = {} #level-0 dictionary
         stack_dict_index = 0 #level-1 dictionary
@@ -247,6 +262,12 @@ class ShowMerakiConnect(ShowMerakiConnectSchema):
             #   Tx Errors:                  0
             #   Rx Drop Packets:            0
             #   Tx Drop Packets:            0
+            #   Rx Packets (Last 5s):       18
+            #   Tx Packets (Last 5s):       17
+            #   Rx Errors (Last 5s):        0
+            #   Tx Errors (Last 5s):        0
+            #   Rx Drop Packets (Last 5s):  0
+            #   Tx Drop Packets (Last 5s):  0
 
             #   url:                        https://catalyst.meraki.com/nodes/register
             #   Device Number:              1
@@ -263,7 +284,15 @@ class ShowMerakiConnect(ShowMerakiConnectSchema):
                 # Extract matched groups from the regex match object
                 dict_val = m1.groupdict()
                 # Process the key and value from the matched groups
-                key_converted_to_lowercase_with_underscore = dict_val['key'].strip().replace(' ', '_').lower()
+                key = dict_val['key'].strip()
+                
+                # Check if the key contains "(last Xsecs)" pattern and convert to delta
+                if delta_pattern.search(key):
+                    # Remove the "(last Xsecs)" part and add "_delta" suffix
+                    key_without_delta = delta_pattern.sub('', key).strip()
+                    key_converted_to_lowercase_with_underscore = key_without_delta.replace(' ', '_').lower() + '_delta'
+                else:
+                    key_converted_to_lowercase_with_underscore = key.replace(' ', '_').lower()
                 value = dict_val['value'].strip()
                 # Check if stack_dict_index is greater than 0
                 if stack_dict_index > 0:
@@ -862,4 +891,3 @@ class ShowMerakiMigration(ShowMerakiMigrationSchema):
                     reasons = True
                     continue
         return parsed_dict
-

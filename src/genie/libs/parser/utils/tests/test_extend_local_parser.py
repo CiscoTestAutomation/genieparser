@@ -14,7 +14,6 @@ class TestExtendParser(unittest.TestCase):
         ext = ExtendParsers('genie.libs.parser.utils.tests.dummy_parser')
         ext.extend()
         ext.output.pop('extend_info')
-
         self.assertEqual(ext.output,
             {
                 'show clock': {
@@ -103,6 +102,7 @@ class TestExtendParser(unittest.TestCase):
                     'model',
                     'submodel',
                     'pid',
+                    'chassis_type',
                     'version',
                     'os_flavor',
                     'revision'

@@ -4242,7 +4242,7 @@ class ShowProcessesCpuSorted(ShowProcessesCpuSortedSchema):
                 else:
                     cmd = self.cli_command[0]
 
-            out = self.device.execute(cmd)
+            out = self.device.execute(cmd,timeout=300)
         else:
             out = output
 

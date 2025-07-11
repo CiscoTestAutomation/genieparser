@@ -28,7 +28,7 @@ class ShowProcessesSchema(MetaParser):
                 Optional('pid'): int,
                 Optional('process_name'): str,
                 Optional('executable_path'): str,
-                Optional('instance'): str,
+                Optional('instance'): int,
                 Optional('version_id'): str,
                 Optional('respawn'): str,
                 Optional('respawn_count'): int,
@@ -40,6 +40,8 @@ class ShowProcessesSchema(MetaParser):
                 Optional('core'): str,
                 Optional('registered_item'): str,
                 Optional('max_core'): int,
+                Optional('level'): int,
+                Optional('mandatory'): str,
                 Optional('placement'): str,
                 Optional('startup_path'): str,
                 Optional('ready'): str,
@@ -136,6 +138,12 @@ class ShowProcesses(ShowProcessesSchema):
         # Max. core: 0
         r15 = re.compile(r'Max\.\s+core\s*:\s*(?P<max_core>\d+)')
 
+        # Level: 14
+        r23 = re.compile(r'Level\s*:\s*(?P<level>\d+)')
+
+        # Mandatory: ON
+        r24 = re.compile(r'Mandatory\s*:\s*(?P<mandatory>(ON|OFF))')
+
         # Placement: Placeable
         r16 = re.compile(r'Placement\s*:\s*(?P<placement>.+)')
 
@@ -212,7 +220,7 @@ class ShowProcesses(ShowProcessesSchema):
             result = r5.match(line)
             if result:
                 group = result.groupdict()
-                instance_number = group['instance_number']
+                instance_number = int(group['instance_number'])
                 job_dict['instance'] = instance_number
 
                 continue
@@ -304,6 +312,24 @@ class ShowProcesses(ShowProcessesSchema):
                 group = result.groupdict()
                 max_core = int(group['max_core'])
                 job_dict['max_core'] = max_core
+
+                continue
+
+            # Level: 14
+            result = r23.match(line)
+            if result:
+                group = result.groupdict()
+                level = int(group['level'])
+                job_dict['level'] = level
+
+                continue
+
+            # Mandatory: ON
+            result = r24.match(line)
+            if result:
+                group = result.groupdict()
+                mandatory = group['mandatory']
+                job_dict['mandatory'] = mandatory
 
                 continue
 

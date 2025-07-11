@@ -49,7 +49,8 @@ class ShowInventoryRaw(ShowInventoryRawSchema):
         # PID: 8201-32FH         , VID: V00, SN: FOC2422NMRH
         # PID: 8202-32FH-M[FB]   , VID: N/A, SN: FLM252604RR
         # PID: N/A               , VID: N/A, SN: N/A
-        p2 = re.compile(r'^PID:\s+(?P<pid>[\w\/\-\[\]]+|N\/A)\s*,'
+        # PID: PSU6.3KW-HV       , VID: V01, SN: DTM2339018G
+        p2 = re.compile(r'^PID:\s+(?P<pid>[\w\/\.\-\[\]]+|N\/A)\s*,'
                         r' VID:\s+(?P<vid>[\w\/\-]+|N\/A)\s*,'
                         r' SN:\s+(?P<sn>[\w\/\-]+|N\/A)$')
 

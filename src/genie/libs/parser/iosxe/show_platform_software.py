@@ -42,6 +42,11 @@
     * 'show platform software multicast stats'
     * 'show platform software interface fp active name Port-channel32'
     * 'show platform software nat fp active interface'
+    * 'show platform software access-list fp active statistics'
+    * 'show platform software nat fp active pool'
+    * 'show platform software nat fp active mapping dynamic'
+    * 'show platform software memory forwarding-manager F0 brief | include {option}'
+    * 'show platform software firewall FP active pairs'
 """
 
 # Python
@@ -11699,8 +11704,7 @@ class ShowPlatformSoftwareNatFpActiveInterface(ShowPlatformSoftwareNatFpActiveIn
         # Initialize the parsed dictionary
         parsed_dict = {}
 
-        # Regular expressions for parsing the output
-		
+    # Regular expressions for parsing the output
 		#Name: GigabitEthernet0/0/2, Inteface handle: 10
         p1 = re.compile(r'^Name: +(?P<name>\S+), +Inteface +handle: +(?P<interface_handle>\d+)$')
 		
@@ -11745,3 +11749,660 @@ class ShowPlatformSoftwareNatFpActiveInterface(ShowPlatformSoftwareNatFpActiveIn
                 continue
 
         return parsed_dict
+
+class ShowPlatformSoftwareAccessListFpActiveStatisticsSchema(MetaParser):
+    """Schema for show platform software access-list fp active statistics"""
+    schema = {
+        'set_log_threshold': {
+            'threshold': int,
+            'interval': int,
+        },
+        'ipv4_access_list': {
+            'entry_add': int,
+            'entry_delete': int,
+            'bind': int,
+            'unbind': int,
+            'resequence': int,
+            'delete': int,
+        },
+        'ipv6_access_list': {
+            'entry_add': int,
+            'entry_delete': int,
+            'bind': int,
+            'unbind': int,
+            'resequence': int,
+            'delete': int,
+        },
+        'mac_access_list': {
+            'entry_add': int,
+            'entry_delete': int,
+            'bind': int,
+            'unbind': int,
+            'delete': int,
+        },
+        'access_list_sync': {
+            'start': int,
+            'end': int,
+        },
+        'qfp_match_add': {
+            'add': int,
+            'replace': int,
+            'ack_success': int,
+            'ack_error': int,
+        },
+        'qfp_match_delete': {
+            'delete': int,
+            'ack_success': int,
+            'ack_error': int,
+        },
+        'qfp_action_edit': {
+            'edit': int,
+            'ack_success': int,
+            'ack_error': int,
+        },
+        'qfp_action_replace': {
+            'replace': int,
+            'ack_success': int,
+            'ack_error': int,
+        },
+        'qfp_bind': {
+            'bind': int,
+            'ack_success': int,
+            'ack_error': int,
+        },
+        'qfp_unbind': {
+            'unbind': int,
+            'ack_success': int,
+            'ack_error': int,
+        },
+    }
+
+class ShowPlatformSoftwareAccessListFpActiveStatistics(ShowPlatformSoftwareAccessListFpActiveStatisticsSchema):
+    """Parser for show platform software access-list fp active statistics"""
+
+    cli_command = 'show platform software access-list fp active statistics'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # Regular expressions for parsing the output
+        # Set Log Threshold: 0, Interval: 0
+        p1 = re.compile(r'^Set Log Threshold: (?P<threshold>\d+), Interval: (?P<interval>\d+)$')
+
+        # IPv4 Access-list Entry Add: 1, Delete: 0
+        p2 = re.compile(r'^IPv4 Access-list Entry Add: (?P<entry_add>\d+), Delete: (?P<entry_delete>\d+)$')
+
+        # IPv4 Access-list Bind: 0, Unbind: 0
+        p3 = re.compile(r'^IPv4 Access-list Bind: (?P<bind>\d+), Unbind: (?P<unbind>\d+)$')
+
+        # IPv4 Access-list Resequence: 0, Delete: 1
+        p4 = re.compile(r'^IPv4 Access-list Resequence: (?P<resequence>\d+), Delete: (?P<delete>\d+)$')
+
+        # IPv6 Access-list Entry Add: 0, Delete: 0
+        p5 = re.compile(r'^IPv6 Access-list Entry Add: (?P<entry_add>\d+), Delete: (?P<entry_delete>\d+)$')
+
+        # IPv6 Access-list Bind: 0, Unbind: 0
+        p6 = re.compile(r'^IPv6 Access-list Bind: (?P<bind>\d+), Unbind: (?P<unbind>\d+)$')
+
+        # IPv6 Access-list Resequence: 0, Delete: 0
+        p7 = re.compile(r'^IPv6 Access-list Resequence: (?P<resequence>\d+), Delete: (?P<delete>\d+)$')
+
+        # MAC Access-list Entry Add: 0, Delete: 0
+        p8 = re.compile(r'^MAC Access-list Entry Add: (?P<entry_add>\d+), Delete: (?P<entry_delete>\d+)$')
+
+        # MAC Access-list Bind: 0, Unbind: 0
+        p9 = re.compile(r'^MAC Access-list Bind: (?P<bind>\d+), Unbind: (?P<unbind>\d+)$')
+
+        # MAC Access-list Delete: 0
+        p10 = re.compile(r'^MAC Access-list Delete: (?P<delete>\d+)$')
+
+        # Access-list Sync Start: 0, End: 0
+        p11 = re.compile(r'^Access-list Sync Start: (?P<start>\d+), End: (?P<end>\d+)$')
+
+        # QFP Match Add: 0, Replace: 0, ACK Success: 0, ACK Error: 0
+        p12 = re.compile(r'^QFP Match Add: (?P<add>\d+), Replace: (?P<replace>\d+), ACK Success: (?P<ack_success>\d+), ACK Error: (?P<ack_error>\d+)$')
+
+        # QFP Match Delete: 0, ACK Success: 0, ACK Error: 0
+        p13 = re.compile(r'^QFP Match Delete: (?P<delete>\d+), ACK Success: (?P<ack_success>\d+), ACK Error: (?P<ack_error>\d+)$')
+
+        # QFP Action Edit: 0, ACK Success: 0, ACK Error: 0
+        p14 = re.compile(r'^QFP Action Edit: (?P<edit>\d+), ACK Success: (?P<ack_success>\d+), ACK Error: (?P<ack_error>\d+)$')
+
+        # QFP Action Replace: 0, ACK Success: 0, ACK Error: 0
+        p15 = re.compile(r'^QFP Action Replace: (?P<replace>\d+), ACK Success: (?P<ack_success>\d+), ACK Error: (?P<ack_error>\d+)$')
+
+        # QFP Bind: 0, ACK Success: 0, ACK Error: 0
+        p16 = re.compile(r'^QFP Bind: (?P<bind>\d+), ACK Success: (?P<ack_success>\d+), ACK Error: (?P<ack_error>\d+)$')
+
+        # QFP Unbind: 0, ACK Success: 0, ACK Error: 0
+        p17 = re.compile(r'^QFP Unbind: (?P<unbind>\d+), ACK Success: (?P<ack_success>\d+), ACK Error: (?P<ack_error>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Match and parse each line
+            # Set Log Threshold: 0, Interval: 0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict.setdefault('set_log_threshold', {}).update({
+                    'threshold': int(group['threshold']),
+                    'interval': int(group['interval']),
+                })
+                continue
+
+            # IPv4 Access-list Entry Add: 1, Delete: 0
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict.setdefault('ipv4_access_list', {}).update({
+                    'entry_add': int(group['entry_add']),
+                    'entry_delete': int(group['entry_delete']),
+                })
+                continue
+
+            # IPv4 Access-list Bind: 0, Unbind: 0
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict.setdefault('ipv4_access_list', {}).update({
+                    'bind': int(group['bind']),
+                    'unbind': int(group['unbind']),
+                })
+                continue
+
+            # IPv4 Access-list Resequence: 0, Delete: 1
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict.setdefault('ipv4_access_list', {}).update({
+                    'resequence': int(group['resequence']),
+                    'delete': int(group['delete']),
+                })
+                continue
+
+            # IPv6 Access-list Entry Add: 0, Delete: 0
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict.setdefault('ipv6_access_list', {}).update({
+                    'entry_add': int(group['entry_add']),
+                    'entry_delete': int(group['entry_delete']),
+                })
+                continue
+
+            # IPv6 Access-list Bind: 0, Unbind: 0
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict.setdefault('ipv6_access_list', {}).update({
+                    'bind': int(group['bind']),
+                    'unbind': int(group['unbind']),
+                })
+                continue
+
+            # IPv6 Access-list Resequence: 0, Delete: 0
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict.setdefault('ipv6_access_list', {}).update({
+                    'resequence': int(group['resequence']),
+                    'delete': int(group['delete']),
+                })
+                continue
+
+            # MAC Access-list Entry Add: 0, Delete: 0
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict.setdefault('mac_access_list', {}).update({
+                    'entry_add': int(group['entry_add']),
+                    'entry_delete': int(group['entry_delete']),
+                })
+                continue
+
+            # MAC Access-list Bind: 0, Unbind: 0
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict.setdefault('mac_access_list', {}).update({
+                    'bind': int(group['bind']),
+                    'unbind': int(group['unbind']),
+                })
+                continue
+
+            # MAC Access-list Delete: 0
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict.setdefault('mac_access_list', {}).update({
+                    'delete': int(group['delete']),
+                })
+                continue
+
+            # Access-list Sync Start: 0, End: 0
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict.setdefault('access_list_sync', {}).update({
+                    'start': int(group['start']),
+                    'end': int(group['end']),
+                })
+                continue
+
+            # QFP Match Add: 0, Replace: 0, ACK Success: 0, ACK Error: 0
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict.setdefault('qfp_match_add', {}).update({
+                    'add': int(group['add']),
+                    'replace': int(group['replace']),
+                    'ack_success': int(group['ack_success']),
+                    'ack_error': int(group['ack_error']),
+                })
+                continue
+
+            # QFP Match Delete: 0, ACK Success: 0, ACK Error: 0
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict.setdefault('qfp_match_delete', {}).update({
+                    'delete': int(group['delete']),
+                    'ack_success': int(group['ack_success']),
+                    'ack_error': int(group['ack_error']),
+                })
+                continue
+
+            # QFP Action Edit: 0, ACK Success: 0, ACK Error: 0
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict.setdefault('qfp_action_edit', {}).update({
+                    'edit': int(group['edit']),
+                    'ack_success': int(group['ack_success']),
+                    'ack_error': int(group['ack_error']),
+                })
+                continue
+
+            # QFP Action Replace: 0, ACK Success: 0, ACK Error: 0
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict.setdefault('qfp_action_replace', {}).update({
+                    'replace': int(group['replace']),
+                    'ack_success': int(group['ack_success']),
+                    'ack_error': int(group['ack_error']),
+                })
+                continue
+
+            # QFP Bind: 0, ACK Success: 0, ACK Error: 0
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict.setdefault('qfp_bind', {}).update({
+                    'bind': int(group['bind']),
+                    'ack_success': int(group['ack_success']),
+                    'ack_error': int(group['ack_error']),
+                })
+                continue
+
+            # QFP Unbind: 0, ACK Success: 0, ACK Error: 0
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict.setdefault('qfp_unbind', {}).update({
+                    'unbind': int(group['unbind']),
+                    'ack_success': int(group['ack_success']),
+                    'ack_error': int(group['ack_error']),
+                })
+                continue
+
+        return parsed_dict
+
+class ShowPlatformSoftwareNatFpActivePoolSchema(MetaParser):
+    """Schema for show platform software nat fp active pool"""
+    schema = {
+        'nat_pools': {
+            int: {  # ID is an integer
+                'name': str,
+                'type': str,
+                'mask': str,
+                'flags': str,
+                Optional('acct_name'): str,
+                'address_range_blocks': int,
+                'start': str,
+                'end': str,
+                'last_stats_update': str,
+                'last_refcount_value': int,
+            }
+        }
+    }
+
+class ShowPlatformSoftwareNatFpActivePool(ShowPlatformSoftwareNatFpActivePoolSchema):
+    """Parser for show platform software nat fp active pool"""
+
+    cli_command = 'show platform software nat fp active pool'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # Regular expressions for parsing the output
+
+        #ID: 3, Name: abc, Type: Generic, Mask: 255.255.255.0
+        p1 = re.compile(r'^ID: +(?P<id>\d+), +Name: +(?P<name>\S+), +Type: +(?P<type>\S+), +Mask: +(?P<mask>\S+)$')
+
+        #Flags: Unknown, Acct name:
+        p2 = re.compile(r'^Flags: +(?P<flags>\S+), +Acct name: *(?P<acct_name>\S+)?$')
+		
+        #Address range blocks: 1
+        p3 = re.compile(r'^Address range blocks: +(?P<address_range_blocks>\d+)$')
+
+        #Start: 42.0.0.3, End: 42.0.0.3
+        p4 = re.compile(r'^Start: +(?P<start>\S+), +End: +(?P<end>\S+)$')
+
+        #Last stats update: 02/20 03:57:22.711119081
+        p5 = re.compile(r'^Last stats update: +(?P<last_stats_update>.+)$')
+
+        #Last refcount value: 1
+        p6 = re.compile(r'^Last refcount value: +(?P<last_refcount_value>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            #ID: 3, Name: abc, Type: Generic, Mask: 255.255.255.0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                pool_id = int(group['id'])
+                pool_dict = parsed_dict.setdefault('nat_pools', {}).setdefault(pool_id, {})
+                pool_dict.update({
+                    'name': group['name'],
+                    'type': group['type'],
+                    'mask': group['mask']
+                })
+                continue
+
+            #Flags: Unknown, Acct name:
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                if group['acct_name']:
+                    pool_dict.update({
+                        'flags': group['flags'],
+                        'acct_name': group['acct_name']
+                    })
+                else:
+                    pool_dict.update({
+                        'flags': group['flags']
+                    })
+                continue
+
+            #Address range blocks: 1
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                pool_dict.update({
+                    'address_range_blocks': int(group['address_range_blocks'])
+                })
+                continue
+
+            #Start: 42.0.0.3, End: 42.0.0.3
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                pool_dict.update({
+                    'start': group['start'],
+                    'end': group['end']
+                })
+                continue
+
+            #Last stats update: 02/20 03:57:22.711119081
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                pool_dict.update({
+                    'last_stats_update': group['last_stats_update']
+                })
+                continue
+
+            #Last refcount value: 1
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                pool_dict.update({
+                    'last_refcount_value': int(group['last_refcount_value'])
+                })
+                continue
+
+        return parsed_dict
+
+class ShowPlatformSoftwareNatFpActiveMappingDynamicSchema(MetaParser):
+    """Schema for show platform software nat fp active mapping dynamic"""
+
+    schema = {
+        'mapping_id': {
+            int: {
+                'domain': str,
+                'lookup': str,
+                'flags': ListOf(str),
+                'pool_name': str,
+                'pool_id': int,
+                'route_map_name': str,
+                'cgm_class_group': str,
+                'cgm_class_id': int,
+                'dynamic_pat': str,
+                'last_stats_update': str,
+                'last_refcount_value': int,
+        }
+    }
+}
+
+class ShowPlatformSoftwareNatFpActiveMappingDynamic(ShowPlatformSoftwareNatFpActiveMappingDynamicSchema):
+    """Parser for show platform software nat fp active mapping dynamic"""
+
+    cli_command = 'show platform software nat fp active mapping dynamic'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # Regular expressions for parsing the output
+        # Define regex patterns for each line of interest
+
+        #Mapping id: 2
+        p1 = re.compile(r'^Mapping +id: +(?P<mapping_id>\d+)$')
+
+        #Domain: INSIDE, Lookup: LOOKUP_LOCAL
+        p2 = re.compile(r'^Domain: +(?P<domain>\S+), +Lookup: +(?P<lookup>\S+)$')
+
+        #Flags: routemap
+        p3 = re.compile(r'^Flags: +(?P<flags>\S+)$')
+
+        #Pool name: xyz, Pool id: 2
+        p4 = re.compile(r'^Pool +name: +(?P<pool_name>\S+), +Pool +id: +(?P<pool_id>\d+)$')
+
+        #Route-map name: NAT-MAP
+        p5 = re.compile(r'^Route-map +name: +(?P<route_map_name>\S+)$')
+
+        #CGM class group: INSIDE_SRC_CG, CGM class id: 268435458
+        p6 = re.compile(r'^CGM +class +group: +(?P<cgm_class_group>\S+), +CGM +class +id: +(?P<cgm_class_id>\d+)$')
+
+        #Dynamic PAT: No
+        p7 = re.compile(r'^Dynamic +PAT: +(?P<dynamic_pat>\S+)$')
+
+        #Last stats update: 02/20 03:56:32.711040681
+        p8 = re.compile(r'^Last +stats +update: +(?P<last_stats_update>.+)$')
+
+        #Last refcount value: 5 
+        p9 = re.compile(r'^Last +refcount +value: +(?P<last_refcount_value>\d+)$')
+
+        # Iterate over each line in the output
+        for line in output.splitlines():
+            line = line.strip()
+
+            #Mapping id: 2
+            m = p1.match(line)
+            if m:
+                mapping_id = int(m.group('mapping_id'))
+                mapping_dict = parsed_dict.setdefault('mapping_id', {}).setdefault(mapping_id, {})
+                continue
+
+            #Domain: INSIDE, Lookup: LOOKUP_LOCAL
+            m = p2.match(line)
+            if m:
+                mapping_dict['domain'] = m.group('domain')
+                mapping_dict['lookup'] = m.group('lookup')
+                continue
+
+            #Flags: routemap
+            m = p3.match(line)
+            if m:
+                mapping_dict['flags'] = m.group('flags').split(',')
+                continue
+
+            #Pool name: xyz, Pool id: 2
+            m = p4.match(line)
+            if m:
+                mapping_dict['pool_name'] = m.group('pool_name')
+                mapping_dict['pool_id'] = int(m.group('pool_id'))
+                continue
+
+            #Route-map name: NAT-MAP
+            m = p5.match(line)
+            if m:
+                mapping_dict['route_map_name'] = m.group('route_map_name')
+                continue
+
+            #CGM class group: INSIDE_SRC_CG, CGM class id: 268435458
+            m = p6.match(line)
+            if m:
+                mapping_dict['cgm_class_group'] = m.group('cgm_class_group')
+                mapping_dict['cgm_class_id'] = int(m.group('cgm_class_id'))
+                continue
+
+            #Dynamic PAT: No
+            m = p7.match(line)
+            if m:
+                mapping_dict['dynamic_pat'] = m.group('dynamic_pat')
+                continue
+
+            #Last stats update: 02/20 03:56:32.711040681
+            m = p8.match(line)
+            if m:
+                mapping_dict['last_stats_update'] = m.group('last_stats_update')
+                continue
+
+            #Last refcount value: 5
+            m = p9.match(line)
+            if m:
+                mapping_dict['last_refcount_value'] = int(m.group('last_refcount_value'))
+                continue
+
+        return parsed_dict
+
+class ShowPlatformSoftwareMemoryForwardingManagerSchema(MetaParser):
+    """Schema for show platform software memory forwarding-manager F0 brief | include {option}"""
+    schema = {
+        'module': {
+            str: {
+                'allocated': int,
+                'requested': int,
+                'allocs': int,
+                'frees': int,
+            }
+        }
+    }
+class ShowPlatformSoftwareMemoryForwardingManager(ShowPlatformSoftwareMemoryForwardingManagerSchema):
+    """Parser for show platform software memory forwarding-manager F0 brief | include {option}"""
+
+    cli_command = 'show platform software memory forwarding-manager F0 brief | include {option}'
+
+    def cli(self, output=None):
+        if output is None:
+            # Execute the command to get the output
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # Regular expression to match each line of the output
+        #nat-pap-settings        168           152           1             0
+        p1 = re.compile(r'^(?P<module>[\w\s-]+)\s+(?P<allocated>\d+)\s+(?P<requested>\d+)\s+(?P<allocs>\d+)\s+(?P<frees>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # Match the line with the regular expression
+            #nat-pap-settings        168           152           1             0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                module = group['module'].strip()
+                module_dict = parsed_dict.setdefault('module', {}).setdefault(module, {})
+                module_dict['allocated'] = int(group['allocated'])
+                module_dict['requested'] = int(group['requested'])
+                module_dict['allocs'] = int(group['allocs'])
+                module_dict['frees'] = int(group['frees'])
+
+        return parsed_dict
+
+class ShowPlatformSoftwareFirewallFPActivePairsSchema(MetaParser):
+    '''Schema for show platform software firewall FP active pairs'''
+    schema = {
+        'zone_pair': {
+            Any(): {
+                'source_zone': str,
+                'destination_zone': str,
+                'obj_id': str,
+            }
+        }
+    }
+
+class ShowPlatformSoftwareFirewallFPActivePairs(ShowPlatformSoftwareFirewallFPActivePairsSchema):
+    '''Parser for show platform software firewall FP active pairs'''
+    
+    cli_command = 'show platform software firewall FP active pairs'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        parsed = {}
+
+        #Zone-Pair Name          Source Zone             Destination Zone        Obj-id
+        #------------------------------------------------------------------------------
+        #z1-z2                   z1                      z2                      1
+        #z2-z1                   z2                      z1                      2
+        p1 = re.compile(r'^(?P<zone_pair_name>\S+)\s+(?P<source_zone>\S+)\s+(?P<destination_zone>\S+)\s+(?P<obj_id>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            #Zone-Pair Name          Source Zone             Destination Zone        Obj-id
+            #------------------------------------------------------------------------------
+            #z1-z2                   z1                      z2                      1
+            #z2-z1                   z2                      z1                      2
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                zone_pairs_dict = parsed.setdefault('zone_pair', {})
+                zone_pairs_dict[group['zone_pair_name']] = {
+                    'source_zone': group['source_zone'],
+                    'destination_zone': group['destination_zone'],
+                    'obj_id': group['obj_id'],
+                }
+
+        return parsed

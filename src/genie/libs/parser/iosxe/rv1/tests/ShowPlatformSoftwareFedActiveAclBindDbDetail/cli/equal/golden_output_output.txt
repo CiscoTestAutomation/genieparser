@@ -1,0 +1,73 @@
+--------------------------------------------------------------
+         ACLs Bind details (programmed in datapath)
+--------------------------------------------------------------
+
+Interface Name: Gi2/0/31
+   Direction: Ingress
+      Feature         : Pacl
+      Protocol        : IPv4
+      CG ID           : 10
+      CG Name         : pre-auth
+      Status          : Success
+      Src_og_lkup_hdl : 0
+      Dst_og_lkup_hdl : 0
+
+Interface Name: Vl50
+   Direction: Ingress
+      Feature         : Racl
+      Protocol        : IPv4
+      CG ID           : 40
+      CG Name         : RACLv4in
+      Status          : Success
+      Src_og_lkup_hdl : 0
+      Dst_og_lkup_hdl : 0
+
+Interface Name: Vl50
+   Direction: Egress
+      Feature         : Racl
+      Protocol        : IPv4
+      CG ID           : 41
+      CG Name         : RACLv4out
+      Status          : Success
+      Src_og_lkup_hdl : 0
+      Dst_og_lkup_hdl : 0
+
+Interface Name: Vl50
+   Direction: Ingress
+      Feature         : Racl
+      Protocol        : IPv6
+      CG ID           : 42
+      CG Name         : RACLv6in
+      Status          : Success
+      Src_og_lkup_hdl : 0
+      Dst_og_lkup_hdl : 0
+
+Interface Name: Vl50
+   Direction: Egress
+      Feature         : Racl
+      Protocol        : IPv6
+      CG ID           : 43
+      CG Name         : RACLv6out
+      Status          : Success
+      Src_og_lkup_hdl : 0
+      Dst_og_lkup_hdl : 0
+
+Interface Name: C1105577996
+   Direction: Ingress
+      Feature         : Cgacl
+      Protocol        : IPv4
+      CG ID           : 528
+      CG Name         : implicit_deny_v6!implicit_deny:xACSACLx-IPV6-Identity_Automtion_1_v6-679269cd!xACSACLx-IP-Identity_Automation_1-67926946:
+      Status          : Success
+      Src_og_lkup_hdl : 0
+      Dst_og_lkup_hdl : 0
+
+Interface Name: C1105577996
+   Direction: Ingress
+      Feature         : Cgacl
+      Protocol        : IPv6
+      CG ID           : 544
+      CG Name         : implicit_deny_v6!implicit_deny:xACSACLx-IPV6-Identity_Automtion_1_v6-679269cd!xACSACLx-IP-Identity_Automation_1-67926946:
+      Status          : Success
+      Src_og_lkup_hdl : 0
+      Dst_og_lkup_hdl : 0

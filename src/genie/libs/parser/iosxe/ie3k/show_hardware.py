@@ -160,18 +160,19 @@ class ShowHardwareLedSchema(MetaParser):
     Schema for show hardware led
     """
     schema = {
-        'current_mode': str,        
+        Optional('current_mode'): str,        
         'system':str,
         'status':{
             str: str
         },
         'number_of_ports_in_status':str,
         'express_setup':str,
-        'dc_a':str,
-        'dc_b':str,
+        Optional('dc_a'):str,
+        Optional('dc_b'):str,
         'alarm-out':str,
-        'alarm-in1':str,
-        'alarm-in2':str,
+        Optional('alarm-in1'):str,
+        Optional('alarm-in2'):str,
+        Optional('alarm-in'):str,
         'poe': str
     }     
                        
@@ -206,13 +207,15 @@ class ShowHardwareLed(ShowHardwareLedSchema):
         # ALARM-OUT: GREEN
         # ALARM-IN1: GREEN
         # ALARM-IN2: GREEN
+        # ALARM-IN: GREEN
         p6 = re.compile(r'^(?P<alarm>ALARM\-\w+):\s+(?P<alarm_color>\w+)$')
 
         # POE: BLACK
         p7 = re.compile(r'^POE:\s+(?P<poe>\w+)$')
 
+        # STATUS: (26) Te1/1: Te1/2: Gi1/3:BLACK-BLACK Gi1/4:BLACK-BLACK Gi1/5:BLACK-BLACK Gi1/6:BLACK-BLACK Gi1/7:BLACK Gi1/8:BLACK Gi1/9:BLACK Gi1/10:BLACK Gi2/1:BLACK-BLACK Gi2/2:BLACK-BLACK Gi2/3:BLACK-BLACK Gi2/4:BLACK-BLACK Gi2/5:BLACK Gi2/6:BLACK Gi2/7:BLACK Gi2/8:BLACK Gi2/9:BLACK Gi2/10:BLACK Gi2/11:BLACK Gi2/12:BLACK Gi2/13:
         # STATUS: (28) Gi1/1:FLASH_GREEN Gi1/2:FLASH_GREEN Gi1/3:FLASH_GREEN Gi1/4:ACT_GREEN Gi1/5:BLACK Gi1/6:ACT_GREEN Gi1/7:BLACK Gi1/8:BLACK Gi1/9:ACT_GREEN Gi1/10:ACT_GREEN Gi1/11:ACT_GREEN Gi2/1:ACT_GREEN Gi2/2:BLACK Gi2/3:BLACK Gi2/4:BLACK Gi2/5:ACT_GREEN Gi2/6:BLACK Gi2/7:BLACK Gi2/8:ACT_AMBER Gi2/9:ACT_GREEN Gi2/10:BLACK Gi2/11:BLACK Gi2/12:BLACK Gi2/13:ACT_GREEN Gi2/14:BLACK Gi2/15:BLACK Gi2/16:ACT_GREEN
-        p8 = re.compile(r'^STATUS:\s+\((?P<port_nums_in_status>\d+)\)+\s+(?P<led_ports>((\S+:[\w-]+\s*))+)$')
+        p8 = re.compile(r'^STATUS:\s+\((?P<port_nums_in_status>\d+)\)\s+(?P<led_ports>(?:\S+:[\w-]*\s*)+)$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -242,19 +245,22 @@ class ShowHardwareLed(ShowHardwareLedSchema):
             m = p4.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict.update({'dc_a': group['dc_a']})
-                continue
+                if group['dc_a']:
+                    ret_dict.update({'dc_a': group['dc_a']})
+                    continue
 
             # DC-B: GREEN
             m = p5.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict.update({'dc_b': group['dc_b']})
-                continue
+                if group['dc_b']:
+                    ret_dict.update({'dc_b': group['dc_b']})
+                    continue
 
             # ALARM-OUT: GREEN
             # ALARM-IN1: GREEN
             # ALARM-IN2: GREEN
+            # ALARM-IN: GREEN
             m = p6.match(line)
             if m:
                 group = m.groupdict()

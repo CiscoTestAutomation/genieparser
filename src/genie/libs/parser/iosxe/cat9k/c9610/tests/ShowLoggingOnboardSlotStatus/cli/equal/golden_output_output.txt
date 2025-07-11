@@ -1,0 +1,27 @@
+--------------------------------------------------------------------------------
+OBFL Application Status
+--------------------------------------------------------------------------------
+Application Uptime:
+Path: /obfl_cc/1/
+Cli enable status: enabled
+Application Message:
+Path: /obfl_cc/1/
+Cli enable status: enabled
+Application Voltage:
+Path: /obfl_cc/1/
+Cli enable status: enabled
+Application Temperature:
+Path: /obfl_cc/1/
+Cli enable status: enabled
+Application POE:
+Path: /obfl_cc/1/
+Cli enable status: disabled
+Application Environment:
+Path: /obfl_cc/1/
+Cli enable status: enabled
+Application Counter:
+Path: /obfl_cc/1/
+Cli enable status: enabled
+Application Clilog:
+Path: /obfl_cc/1/
+Cli enable status: enabled

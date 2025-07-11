@@ -1,0 +1,7 @@
+Validatating the configlet demo
+        Validation failed
+        Validation Time: 253 msec
+
+        Failed command: hostname 1234
+        Failed reason: 
+% Hostname contains one or more illegal characters. 

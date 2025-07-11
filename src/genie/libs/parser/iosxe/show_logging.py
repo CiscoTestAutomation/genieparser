@@ -13,6 +13,7 @@ IOSXE parsers for the following show commands:
     * show logging onboard rp {rp} {feature} detail
     * show logging process smd reverse
     * show logging process smd {switch} {mode} reverse
+    * show logging onboard slot {slot} uptime latest
 '''
 
 # Python
@@ -1877,6 +1878,52 @@ class ShowLoggingProcess(ShowLoggingProcessSchema):
 
         return ret_dict
 
+
+class ShowLoggingOnboardSlotUptimeSchema(MetaParser):
+    """Schema for show logging onboard slot {slot} uptime latest"""
+    schema = {
+        'slot': {
+            str: {
+                'resets': ListOf(
+                    {
+                        'reset_reason': str,
+                        'power_on': str
+                    }
+                )
+            }
+        }
+    }
+
+
+
+class ShowLoggingOnboardSlotUptime(ShowLoggingOnboardSlotUptimeSchema):
+    """Parser for show logging onboard slot {slot} uptime latest"""
+
+    cli_command = 'show logging onboard slot {slot} uptime latest'
+
+    def cli(self, slot='R0', output=None):
+        if output is None:
+            cmd = self.cli_command.format(slot=slot)
+            output = self.device.execute(cmd)
+
+        parsed_dict = {}
+        # R0      PowerCycle            05/17/25 15:40:12
+        p1 = re.compile(r'^(?P<slot>\S+)\s+(?P<reset_reason>[\w\s]+)\s+(?P<power_on>\d{2}/\d{2}/\d{2} \d{2}:\d{2}:\d{2})$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            # R0      PowerCycle            05/17/25 15:40:12
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                slot_dict = parsed_dict.setdefault('slot', {}).setdefault(group['slot'], {})
+                resets_list = slot_dict.setdefault('resets', [])
+                resets_list.append({
+                    'reset_reason': group['reset_reason'].strip(),
+                    'power_on': group['power_on'].strip()
+                })
+
+        return parsed_dict
 
 class ShowLoggingCountSchema(MetaParser):
     """Schema for:

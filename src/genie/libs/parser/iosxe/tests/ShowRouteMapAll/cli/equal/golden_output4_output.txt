@@ -1,0 +1,21 @@
+route-map test2, permit, sequence 20
+  Match clauses:
+    ip address prefix-lists: test test_2 test&3
+    route-type level-1 level-2 
+    interface GigabitEthernet1 GigabitEthernet2 
+    as-path (as-path filter): 100 
+    community (community-list filter): test 
+    extcommunity (extcommunity-list filter):test 
+  Set clauses:
+    metric -20
+    metric-type type-1
+    origin igp
+    ip next-hop 10.36.3.3
+     ipv6 next-hop 2001:DB8:3::1
+    ipv6 next-hop verify-availability 10:24::00 10 track 150 [up]
+    ipv6 next-hop verify-availability 10:23::00 11 track 140 [down]
+    ipv6 vrf red next-hop verify-availability 10:22::00 12 track 130 [undefined]
+    ip next-hop verify-availability 12.0.0.0 17 track 150 [down]
+    ip vrf red next-hop verify-availability 12.0.0.10 15 track 150  [down]
+    ipv6 next-hop recursive vrf Mgmt-vrf 12::0 force
+  Policy routing matches: 0 packets, 0 bytes

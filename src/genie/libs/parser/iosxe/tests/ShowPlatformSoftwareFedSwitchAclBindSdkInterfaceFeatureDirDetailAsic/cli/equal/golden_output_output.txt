@@ -1,0 +1,35 @@
+--------------------------------------------------------------
+ACLs Bind details (programmed in datapath)
+--------------------------------------------------------------
+
+Interface Name: Vl300 
+Direction: Ingress
+Feature : Racl
+Protocol : IPv4
+CG ID : 11
+CG Name : aclscale-30
+--------------------------------------------------------------
+ACL (OID: 0x453, No of ACEs: 30001)
+--------------------------------------------------------------
+
+IPV4 ACE Key/Mask
+ipv4_src: value = 110.80.0.1 mask = 255.255.255.255
+ipv4_dst: value = 210.100.0.1 mask = 255.255.255.255
+proto tos tcp_flg ttl ipv4_flags src_port dst_port
+V: 0x0 0x0 0x0 0x0 0x0 0x0 0x0
+M: 0x0 0x0 0x0 0x0 0x0 0x0 0x0
+
+Result Action
+Punt : N Drop : N Mirror: N Counter: 0x0 (0)
+--------------------------------------------------------------
+
+IPV4 ACE Key/Mask
+ipv4_src: value = 110.80.0.2 mask = 255.255.255.255
+ipv4_dst: value = 210.100.0.2 mask = 255.255.255.255
+proto tos tcp_flg ttl ipv4_flags src_port dst_port
+V: 0x0 0x0 0x0 0x0 0x0 0x0 0x0
+M: 0x0 0x0 0x0 0x0 0x0 0x0 0x0
+
+Result Action
+Punt : N Drop : N Mirror: N Counter: 0x0 (0)
+--------------------------------------------------------------

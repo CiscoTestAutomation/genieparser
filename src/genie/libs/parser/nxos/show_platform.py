@@ -145,7 +145,11 @@ class ShowVersion(ShowVersionSchema):
 
             # System version: 9.3(6)
             p5 = re.compile(r'^\s*system: +version +(?P<system_version>[\w.\(\)]+)$')
-            m = p5.match(line)
+
+            #system:    version 15.3(2b) [build 15.3(2b)]
+            p5_1 = re.compile(r'^\s*system: +version +(?P<system_version>[\w\.\(\)\[\]\s]+)$')
+
+            m = p5.match(line) or p5_1.match(line)
             if m:
                 system_version = str(m.groupdict()['system_version'])
 

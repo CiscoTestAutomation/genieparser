@@ -205,9 +205,12 @@ class ShowInstallRollbackId(ShowInstallRollbackIdSchema):
         ret_dict = {}
 
         # Rollback id - 5 (Created on 2021-10-21 16:34:06.000000000 +0000)
-        p1 = re.compile(r'Rollback\s*id\s*-\s*(?P<rollback_id>\d+)\s*\('
-                        r'Created\s*on\s*(?P<date>\d*-\d*-\d*)\s*'
-                        r'(?P<time>\d*:\d*:\d*.\d*)')
+        
+        # Rollback id - 2 (Created on Wed Jun 18 07:51:18 UTC 2025)
+        p1 = re.compile(r'Rollback\s*id\s*-\s*(?P<rollback_id>\d+)\s*\(Created\s*on\s*'
+                        r'(?P<date>(?:\d{4}-\d{2}-\d{2}|[A-Za-z]{3}\s[A-Za-z]{3}\s\d{2}))'
+                        r'\s*(?P<time>\d{2}:\d{2}:\d{2}(?:\.\d+)?)(?:\s*(?P<timezone>[A-Z]+))?'
+                        r'\s*(?P<year>\d{4})?\)?')
 
         # Label: No Label
         p2 = re.compile(r'Label:\s*(?P<label>.*)')

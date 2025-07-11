@@ -1,0 +1,27 @@
+ parameter-map type inspect param
+  log dropped-packet off
+  log flow off
+  icmp unreachable drop
+  audit-trail off
+  alert on
+  max-incomplete low  unlimited
+  max-incomplete high unlimited
+  one-minute low  unlimited
+  one-minute high unlimited
+  sessions rate low  unlimited
+  sessions rate high unlimited
+  udp idle-time 30 ageout-time 30
+  udp halfopen idle-time 30000 ms ageout-time 30000 ms
+  icmp idle-time 10 ageout-time 10
+  dns-timeout 5
+  tcp window scaling enforcement loose on
+  zone-mismatch drop off
+  application-inspect all
+  tcp idle-time 3600 ageout-time 3600
+  tcp finwait-time 1 ageout-time 1
+  tcp synwait-time 30 ageout-time 30
+  tcp half-open on, half-close on, idle on
+  tcp max-incomplete host unlimited block-time 0
+  sessions maximum unlimited
+  number of packet per flow default
+  

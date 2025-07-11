@@ -1346,3 +1346,46 @@ class ShowPlatformHardwareChassisPowerSupplyDetailSwitchAll(ShowPlatformHardware
 
         return ret_dict
 
+class ShowPlatformUplinksSchema(MetaParser):
+    """
+    Schema for show platform uplinks
+    """
+    schema = {
+        'uplinks': {
+            str: {
+                'status': str,
+            },
+        }
+    }
+
+class ShowPlatformUplinks(ShowPlatformUplinksSchema):
+    """ Parser for show platform uplinks"""
+
+    cli_command = "show platform uplink"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Opening empty dictionary
+        ret_dict = {}
+
+        # matches the "Uplink port" and "Status" information
+        # TenGigabitEthernet4/0/6  Up
+        p1 = re.compile(r'^(?P<uplink_port>[A-Za-z0-9/]+)\s+(?P<status>\S+)$')
+
+        # Process each line of the output
+        for line in output.splitlines():
+            line = line.strip()
+
+            # TenGigabitEthernet4/0/6  Up
+            m = p1.match(line)
+            if m:
+                uplink_port = m.groupdict()['uplink_port']
+                status = m.groupdict()['status']
+                # Store the information in the dictionary
+                uplink_dict = ret_dict.setdefault('uplinks', {}).setdefault(uplink_port, {})
+                uplink_dict['status'] = status
+                continue
+
+        return ret_dict

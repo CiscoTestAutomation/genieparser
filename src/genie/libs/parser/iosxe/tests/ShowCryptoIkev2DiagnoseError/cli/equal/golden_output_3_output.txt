@@ -1,0 +1,3 @@
+Exit Path Table - status: disable, current entry 0, deleted 0, max allow 50
+
+

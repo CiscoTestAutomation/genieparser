@@ -1,0 +1,17 @@
+Switch  Ports    Model                Serial No.   MAC address     Hw Ver.       Sw Ver. 
+
+------  -----   ---------             -----------  --------------  -------       --------
+
+ 1       120    C9500-24Q             FCW2152A23U  003c.1052.c400  V01           17.19.01      
+
+Switch/Stack Mac Address : 003c.1052.c400 - Local Mac Address
+
+Mac persistency wait time: Indefinite
+
+                                   Current
+
+Switch#   Role        Priority      State 
+
+-------------------------------------------
+
+*1       Active          1          Ready               

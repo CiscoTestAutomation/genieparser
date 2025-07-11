@@ -1,0 +1,5 @@
+Sno  Event          Result   Username   Time(M/D H:M:S)  Target-config
+~~~  ~~~~~          ~~~~~~   ~~~~~~~~   ~~~~~~~~~~~~~~~  ~~~~~~~~~~~~~
+1    REPLACE        Failure  campus     05/15 18:13:46   checkpoint1
+2    ROLLBACK-ON-FL Failure  campus     05/15 18:11:42   snapshot.cfg
+3    ROLLBACK       Success  campus     05/15 18:11:11   checkpoint1

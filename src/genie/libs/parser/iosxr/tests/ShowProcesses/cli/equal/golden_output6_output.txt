@@ -1,0 +1,35 @@
+show processes shelfmgr location 0/2/CPU0
+Wed Jun 18 05:49:40.452 UTC
+                  Job Id: 271
+                     PID: 6817
+            Process name: shelfmgr
+         Executable path: /opt/cisco/install-iosxr/base/sbin/shelfmgr
+              Instance #: 1
+                    Args: -S sysmgr
+              Version ID: 00.00.0000
+                 Respawn: ON
+           Respawn count: 1
+            Last started: Tue Jun 17 05:06:20 2025
+           Process state: Run
+           Package state: Normal
+                    core: MAINMEM
+               Max. core: 0
+                   Level: 14
+               Mandatory: ON
+           MaintModeProc: ON
+               Placement: None
+            startup_path: /opt/cisco/install-iosxr/base/startup/shelfmgr.startup
+                   Ready: 32.920s
+        Process cpu time: 1.510 user, 0.450 kernel, 1.960 total
+JID    TID  Stack  pri  state        NAME             rt_pri
+271    6817    0K 20 Sleeping     shelfmgr_main       0
+271    6938    0K 20 Sleeping     libsani_backing     0
+271    6942    0K 20 Sleeping     lwm_service_thr     0
+271    6946    0K 20 Sleeping     qsm_service_thr     0
+271    6949    0K 20 Sleeping     memdbg_stats        0
+271    7195    0K 20 Sleeping     pmfpga_mq_hdlr      0
+271    7196    0K 20 Sleeping     pmfpga_fit_req      0
+271    7220    0K 20 Sleeping     evctrl-255          0
+271    7408    0K 20 Sleeping     chkpt_evm           0
+271    7409    0K 20 Sleeping     evm_signal_thre     0
+271    7411    0K 20 Sleeping     parser_ctrc_th      0

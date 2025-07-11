@@ -1,0 +1,4 @@
+Sno  Event          Result   Username   Time(M/D H:M:S)  Target-config
+~~~  ~~~~~          ~~~~~~   ~~~~~~~~   ~~~~~~~~~~~~~~~  ~~~~~~~~~~~~~
+1    MERGE-TMR      Success  campus     05/15 18:11:34   demo2
+2    MERGE          Success  campus     05/15 18:11:02   demo1

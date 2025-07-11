@@ -1299,12 +1299,12 @@ class ShowPlatformSoftwareFedQosInterfaceIngressNpdDetailed(
     """Parser for show platform software fed {switch} {mode} qos interface {interface} ingress npd detailed"""
 
     cli_command = [
-        "show platform software fed {switch} {mode} qos interface {interface} ingress npd detailed",
+        "show platform software fed switch {mode} qos interface {interface} ingress npd detailed",
         "show platform software fed {mode} qos interface {interface} ingress npd detailed",
     ]
 
-    def cli(self, mode, interface, switch=None, output=None):
-        return super().cli(mode=mode, interface=interface, switch=switch, output=output)
+    def cli(self, command=None, output=None, **kwargs):
+        return super().cli(command=command, output=output, **kwargs)
 
 
 class ShowPlatformSoftwareFedQosInterfaceIngressNpd(
@@ -1313,12 +1313,12 @@ class ShowPlatformSoftwareFedQosInterfaceIngressNpd(
     """Parser for show platform software fed {switch} {mode} qos interface {interface} ingress npd"""
 
     cli_command = [
-        "show platform software fed {switch} {mode} qos interface {interface} ingress npd",
+        "show platform software fed switch {mode} qos interface {interface} ingress npd",
         "show platform software fed {mode} qos interface {interface} ingress npd",
     ]
 
-    def cli(self, mode, interface, switch=None, output=None):
-        return super().cli(mode=mode, interface=interface, switch=switch, output=output)
+    def cli(self, command=None, output=None, **kwargs):
+        return super().cli(command=command, output=output, **kwargs)
 
 
 class ShowPlatformSoftwareFedQosInterfaceEgressSdkDetailed(
@@ -1327,12 +1327,12 @@ class ShowPlatformSoftwareFedQosInterfaceEgressSdkDetailed(
     """Parser for show platform software fed {switch} {mode} qos interface {interface} egress sdk detailed"""
 
     cli_command = [
-        "show platform software fed {switch} {mode} qos interface {interface} egress sdk detailed",
+        "show platform software fed switch {mode} qos interface {interface} egress sdk detailed",
         "show platform software fed {mode} qos interface {interface} egress sdk detailed",
     ]
 
-    def cli(self, mode, interface, switch=None, output=None):
-        return super().cli(mode=mode, interface=interface, switch=switch, output=output)
+    def cli(self, command=None, output=None, **kwargs):
+        return super().cli(command=command, output=output, **kwargs)
 
 
 class ShowPlatformSoftwareFedQosInterfaceIngressSdk(
@@ -1345,8 +1345,8 @@ class ShowPlatformSoftwareFedQosInterfaceIngressSdk(
         "show platform software fed {mode} qos interface {interface} ingress sdk",
     ]
 
-    def cli(self, mode, interface, switch=None, output=None):
-        return super().cli(mode=mode, interface=interface, switch=switch, output=output)
+    def cli(self, command=None, output=None, **kwargs):
+        return super().cli(command=command, output=output, **kwargs)
 
 
 class ShowPlatformSoftwareFedQosInterfaceIngressSdkDetailed(
@@ -1355,12 +1355,12 @@ class ShowPlatformSoftwareFedQosInterfaceIngressSdkDetailed(
     """Parser for show platform software fed {switch} {mode} qos interface {interface} ingress sdk detailed"""
 
     cli_command = [
-        "show platform software fed {switch} {mode} qos interface {interface} ingress sdk detailed",
+        "show platform software fed switch {mode} qos interface {interface} ingress sdk detailed",
         "show platform software fed {mode} qos interface {interface} ingress sdk detailed",
     ]
 
-    def cli(self, mode, interface, switch=None, output=None):
-        return super().cli(mode=mode, interface=interface, switch=switch, output=output)
+    def cli(self, command=None, output=None, **kwargs):
+        return super().cli(command=command, output=output, **kwargs)
 
 
 class ShowPlatformSoftwareFedQosInterfaceEgressNpdDetailed(
@@ -1369,12 +1369,12 @@ class ShowPlatformSoftwareFedQosInterfaceEgressNpdDetailed(
     """Parser for show platform software fed {switch} {mode} qos interface {interface} egress npd detailed"""
 
     cli_command = [
-        "show platform software fed {switch} {mode} qos interface {interface} egress npd detailed",
+        "show platform software fed switch {mode} qos interface {interface} egress npd detailed",
         "show platform software fed {mode} qos interface {interface} egress npd detailed",
     ]
 
-    def cli(self, mode, interface, switch=None, output=None):
-        return super().cli(mode=mode, interface=interface, switch=switch, output=output)
+    def cli(self, command=None, output=None, **kwargs):
+        return super().cli(command=command, output=output, **kwargs)
 
 
 class ShowPlatformSoftwareFedQosInterfaceIngressNpiDetailedSchema(MetaParser):
@@ -1879,7 +1879,4 @@ class ShowPlatformSoftwareFedQosInterfaceIngressSdkDetailedAsicAll(
     ]
 
     def cli(self, command=None, output=None, **kwargs):
-        if output is None:
-            output = self.device.execute(command, timeout=600)
-
-        return super().cli(output=output, **kwargs)
+        return super().cli(command=command, output=output, **kwargs)

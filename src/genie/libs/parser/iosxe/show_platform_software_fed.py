@@ -7019,6 +7019,7 @@ class ShowPlatformSoftwareFedActiveAclInfoDbDetailSchema(MetaParser):
                         Optional("counter"): str,
                         Optional("counter_asic") :str,
                         Optional("counter_oid") :str,
+                        Optional("packet_count") :int,
                         Optional("logging") :str,
                     },
                 },
@@ -7036,24 +7037,28 @@ class ShowPlatformSoftwareFedActiveAclInfoDbDetail(
     """Parser for:
         * "show platform software fed {switch} {mode} acl info db detail",
         * "show platform software fed {mode} acl info db detail",
-        * "show platform software fed switch {mode} acl info db feature {feature_name} detail",
-        * "show platform software fed switch {mode} acl info db feature {feature_name} dir {in_out} cgid {cg_id} detail"
+        * "show platform software fed {switch} {mode} acl info db feature {feature_name} detail",
+        * "show platform software fed {switch} {mode} acl info db feature {feature_name} dir {in_out} cgid {cg_id} detail",
+        * "show platform software fed {switch} {mode} acl info db feature {feature_name} dir {in_out} detail"
     """
     cli_command = [
         "show platform software fed {switch} {mode} acl info db detail",
         "show platform software fed {mode} acl info db detail",
-        "show platform software fed switch {mode} acl info db feature {feature_name} detail",
-        "show platform software fed switch {mode} acl info db feature {feature_name} dir {in_out} cgid {cg_id} detail"
+        "show platform software fed {switch} {mode} acl info db feature {feature_name} detail",
+        "show platform software fed {switch} {mode} acl info db feature {feature_name} dir {in_out} cgid {cg_id} detail",
+        "show platform software fed {switch} {mode} acl info db feature {feature_name} dir {in_out} detail"
     ]
 
     def cli(self, mode, switch=None, feature_name=None, in_out=None, cg_id=None, output=None):
         if output is None:
             if switch and mode:
                 cmd = self.cli_command[0].format(mode=mode, switch=switch)
-            elif mode and feature_name:
-                cmd = self.cli_command[2].format(mode=mode, feature_name=feature_name)
-            elif mode and feature_name and in_out and cg_id:
-                cmd = self.cli_command[3].format(mode=mode, feature_name=feature_name, in_out=in_out, cg_id=cg_id)
+            elif switch and mode and feature_name:
+                cmd = self.cli_command[2].format(switch=switch, mode=mode, feature_name=feature_name)
+            elif switch and mode and feature_name and in_out and cg_id:
+                cmd = self.cli_command[3].format(switch=switch, mode=mode, feature_name=feature_name, in_out=in_out, cg_id=cg_id)
+            elif switch and mode and feature_name and in_out:
+                cmd = self.cli_command[4].format(switch=switch, mode=mode, feature_name=feature_name, in_out=in_out)    
             else:
                 cmd = self.cli_command[1].format(mode=mode)
 
@@ -7148,7 +7153,7 @@ class ShowPlatformSoftwareFedActiveAclInfoDbDetail(
         p10_1 = re.compile(r'Result\s+action: (?P<result>\S+)\s+Logging: (?P<logging>\S+)')
 
         # Counter handle: (asic: 0 , OID: 0xAC6 (0))
-        p11 = re.compile(r'Counter handle: \(asic: (?P<counter_asic>\d+) , OID: (?P<counter_oid>\S+) \(\d+\)\)')
+        p11 = re.compile(r'Counter handle: \(asic: (?P<counter_asic>\d+) , OID: (?P<counter_oid>\S+) \((?P<packet_count>\d+)\)\)')
 
         ret_dict = {}
 
@@ -7362,6 +7367,7 @@ class ShowPlatformSoftwareFedActiveAclInfoDbDetail(
                 group = m.groupdict()
                 seq_dict["counter_asic"] = group["counter_asic"]
                 seq_dict["counter_oid"] = group["counter_oid"]
+                seq_dict["packet_count"] = int(group["packet_count"])
 
         return ret_dict
 
@@ -7728,11 +7734,12 @@ class ShowPlatformSoftwareFedSwitchActiveAclOgPcl(
 ):
     """Parser for show platform software fed switch active acl og-pcl"""
 
-    cli_command = "show platform software fed switch active acl og-pcl"
+    cli_command = ["show platform software fed switch {mode} acl og-pcl", 
+                   "show platform software fed active acl og-pcl"]
 
-    def cli(self, output=None):
+    def cli(self, command=None, output=None, **kwargs):
         if output is None:
-            output = self.device.execute(self.cli_command)
+            output = self.device.execute(command)
 
         # lkup-id   proto     num-ogs     ref-cnt    bits-used    prefixes  in HW
         # 0x3d      IPv4           1           2           1           4    Y
@@ -12246,11 +12253,11 @@ class ShowPlatformSoftwareFedSwitchActiveIfmMappingsGpn(ShowPlatformSoftwareFedS
 
 class ShowPlatformSoftwareFedSwitchActiveAclBindSdkDetailSchema(MetaParser):
     """Schema for
-        show platform software fed switch {switch_var} acl {acl} sdk detail,
-        show platform software fed switch {switch_var} acl {acl} sdk feature {feature_name} dir in cgid {cg_id} detail,
-        show platform software fed switch {switch_var} acl {acl} sdk feature {feature_name} dir in detail asic {asic_no},
-        show platform software fed switch {switch_var} acl {acl} sdk feature {feature_name} detail,
-        show platform software fed switch {switch_var} acl {acl} sdk if-id {if_id} detail.
+        show platform software fed {switch} {switch_var} acl {acl} sdk detail,
+        show platform software fed {switch} {switch_var} acl {acl} sdk feature {feature_name} dir {dir} cgid {cg_id} detail,
+        show platform software fed {switch} {switch_var} acl {acl} sdk feature {feature_name} dir {dir} detail asic {asic_no},
+        show platform software fed {switch} {switch_var} acl {acl} sdk feature {feature_name} detail,
+        show platform software fed {switch} {switch_var} acl {acl} sdk if-id {if_id} detail.
     """
     schema = {
         'interface_class_name': {
@@ -12291,35 +12298,35 @@ class ShowPlatformSoftwareFedSwitchActiveAclBindSdkDetailSchema(MetaParser):
 
 class ShowPlatformSoftwareFedSwitchActiveAclBindSdkDetail(ShowPlatformSoftwareFedSwitchActiveAclBindSdkDetailSchema):
     """Parser for
-        show platform software fed switch {switch_var} acl {acl} sdk detail,
-        show platform software fed switch {switch_var} acl {acl} sdk feature {feature_name} dir in cgid {cg_id} detail,
-        show platform software fed switch {switch_var} acl {acl} sdk feature {feature_name} dir in detail asic {asic_no},
-        show platform software fed switch {switch_var} acl {acl} sdk feature {feature_name} detail,
-        show platform software fed switch {switch_var} acl {acl} sdk if-id {if_id} detail.
+        show platform software fed {switch} {switch_var} acl {acl} sdk detail,
+        show platform software fed {switch} {switch_var} acl {acl} sdk feature {feature_name} dir {dir} cgid {cg_id} detail,
+        show platform software fed {switch} {switch_var} acl {acl} sdk feature {feature_name} dir {dir} detail asic {asic_no},
+        show platform software fed {switch} {switch_var} acl {acl} sdk feature {feature_name} detail,
+        show platform software fed {switch} {switch_var} acl {acl} sdk if-id {if_id} detail.
     """
 
-    cli_command = ['show platform software fed switch {switch_var} acl {acl} sdk detail',
-        'show platform software fed switch {switch_var} acl {acl} sdk feature {feature_name} dir in cgid {cg_id} detail',
-        'show platform software fed switch {switch_var} acl {acl} sdk feature {feature_name} dir in detail asic {asic_no}',
-        'show platform software fed switch {switch_var} acl {acl} sdk feature {feature_name} detail',
-        'show platform software fed switch {switch_var} acl {acl} sdk if-id {if_id} detail']
+    cli_command = ['show platform software fed {switch} {switch_var} acl {acl} sdk detail',
+        'show platform software fed {switch} {switch_var} acl {acl} sdk feature {feature_name} dir {dir} cgid {cg_id} detail',
+        'show platform software fed {switch} {switch_var} acl {acl} sdk feature {feature_name} dir {dir} detail asic {asic_no}',
+        'show platform software fed {switch} {switch_var} acl {acl} sdk feature {feature_name} detail',
+        'show platform software fed {switch} {switch_var} acl {acl} sdk if-id {if_id} detail']
 
-    def cli(self, switch_var=None, acl=None, feature_name=None, cg_id=None, asic_no=None, if_id=None, output=None):
+    def cli(self, switch=None, switch_var=None, acl=None, feature_name=None, dir=None, cg_id=None, asic_no=None, if_id=None, output=None):
         if output is None:
             if switch_var and acl and feature_name and cg_id:
-                cmd = self.cli_command[1].format(switch_var=switch_var, acl=acl, feature_name=feature_name, cg_id=cg_id)
+                cmd = self.cli_command[1].format(switch=switch, switch_var=switch_var, acl=acl, feature_name=feature_name, dir=dir, cg_id=cg_id)
 
             elif switch_var and acl and feature_name and asic_no:
-                cmd = self.cli_command[2].format(switch_var=switch_var, acl=acl, feature_name=feature_name, asic_no=asic_no)
+                cmd = self.cli_command[2].format(switch=switch, switch_var=switch_var, acl=acl, feature_name=feature_name, dir=dir, asic_no=asic_no)
 
             elif switch_var and acl and feature_name:
-                cmd = self.cli_command[3].format(switch_var=switch_var, acl=acl, feature_name=feature_name)
+                cmd = self.cli_command[3].format(switch=switch, switch_var=switch_var, acl=acl, feature_name=feature_name)
 
             elif switch_var and acl and if_id:
-                cmd = self.cli_command[4].format(switch_var=switch_var, acl=acl, if_id=if_id)
+                cmd = self.cli_command[4].format(switch=switch, switch_var=switch_var, acl=acl, if_id=if_id)
 
             elif switch_var and acl:
-                cmd = self.cli_command[0].format(switch_var=switch_var, acl=acl)
+                cmd = self.cli_command[0].format(switch=switch, switch_var=switch_var, acl=acl)
 
             else:
                 cmd = None
@@ -15554,11 +15561,17 @@ class ShowPlatformSoftwareFedSwitchActiveOifsetSchema(MetaParser):
 
 class ShowPlatformSoftwareFedSwitchActiveOifset(ShowPlatformSoftwareFedSwitchActiveOifsetSchema):
     """Parser for show platform software fed switch active oifset"""
-    cli_command = 'show platform software fed switch {active} oifset'
+    cli_command = [
+        'show platform software fed {switch} {active} oifset',
+        'show platform software fed {active} oifset'
+        ]
 
-    def cli(self, active="", output=None):
+    def cli(self, switch="", active="", output=None):
         if output is None:
-            output = self.device.execute(self.cli_command.format(active=active))
+            if switch:
+                output = self.device.execute(self.cli_command[0].format(switch=switch, active=active))
+            else:
+                output = self.device.execute(self.cli_command[1].format(active=active))
 
         ret_dict = {}
 
@@ -16484,7 +16497,7 @@ class ShowPlatformSoftwareFedSwitchActiveIpmfibVrfGroupDetail(ShowPlatformSoftwa
 
 class ShowPlatformSoftwareFedSwitchAclParallelKeyProfileEgressSchema(MetaParser):
     """Schema for:
-       * show platform software fed switch <active/stby> acl man parallel-key-profile egress all
+       * show platform software fed {switch} {state} acl man parallel-key-profile egress all
     """
     schema = {
         'egress': {
@@ -16510,14 +16523,14 @@ class ShowPlatformSoftwareFedSwitchAclParallelKeyProfileEgressSchema(MetaParser)
 
 class ShowPlatformSoftwareFedSwitchAclParallelKeyProfileEgress(ShowPlatformSoftwareFedSwitchAclParallelKeyProfileEgressSchema):
     """Parser for:
-       * show platform software fed switch <active/stby> acl man parallel-key-profile egress all
+       * show platform software fed {switch} {state} acl man parallel-key-profile egress all
     """
 
-    cli_command = "show platform software fed switch {state} acl man parallel-key-profile egress all"
+    cli_command = "show platform software fed {switch} {state} acl man parallel-key-profile egress all"
 
-    def cli(self, state, output=None):
+    def cli(self, switch, state, output=None):
         if output is None:
-            cmd = self.cli_command.format(state=state)
+            cmd = self.cli_command.format(switch=switch, state=state)
             output = self.device.execute(cmd)
 
         # Initialize variables
@@ -17332,7 +17345,7 @@ class ShowPlatformSoftwareFedActiveSdmFeature(ShowPlatformSoftwareFedActiveSdmFe
     
 class ShowPlatformSoftwareFedSwitchAclBindDbInterfaceFeatureDirDetailAsicSchema(MetaParser):
     """Schema for
-       * show platform software fed switch <act/stby> acl bind db interface {interface} feature {feature} dir {dir} detail asic {asic}
+       * show platform software fed {switch} {state} acl bind db interface {interface} feature {feature} dir {dir} detail asic {asic}
     """
     schema = {
         'interface_name': str,
@@ -17349,14 +17362,14 @@ class ShowPlatformSoftwareFedSwitchAclBindDbInterfaceFeatureDirDetailAsicSchema(
 
 class ShowPlatformSoftwareFedSwitchAclBindDbInterfaceFeatureDirDetailAsic(ShowPlatformSoftwareFedSwitchAclBindDbInterfaceFeatureDirDetailAsicSchema):
     """Parser for
-       * show platform software fed switch <act/stby> acl bind db interface {interface} feature {feature} dir {dir} detail asic {asic}
+       * show platform software fed {switch} {state} acl bind db interface {interface} feature {feature} dir {dir} detail asic {asic}
     """
 
-    cli_command = 'show platform software fed switch {state} acl bind db interface {interface} feature {feature} dir {dir} detail asic {asic}'
+    cli_command = 'show platform software fed {switch} {state} acl bind db interface {interface} feature {feature} dir {dir} detail asic {asic}'
 
-    def cli(self, state, interface, feature, dir, asic, output=None):
+    def cli(self, switch, state, interface, feature, dir, asic, output=None):
         if output is None:
-            cmd = self.cli_command.format(state=state, interface=interface, feature=feature, dir=dir, asic=asic)
+            cmd = self.cli_command.format(switch=switch, state=state, interface=interface, feature=feature, dir=dir, asic=asic)
             output = self.device.execute(cmd)
 
         # Initialize the parsed dictionary
@@ -17835,3 +17848,432 @@ class ShowPlatformSoftwareFedSwitchAclManKeyProfileIngressAll(ShowPlatformSoftwa
                 continue
 
         return ret_dict	        
+
+class ShowPlatformSoftwareFedSwitchAclParallelKeyProfileIngressSchema(MetaParser):
+    """Schema for:
+       * show platform software fed {switch} {state} acl man parallel-key-profile ingress all
+    """
+    schema = {
+        'ingress': {
+            Any(): {  # Profile name
+                "index": int,
+                Optional("protocols"): {
+                    Any(): {  # ETH, IPV4, IPV6
+                        "oid": list,
+                        "ref_cnt": list,
+                        "e_values": {
+                            Any(): list,  # E0, E1, E2, E3
+                        },
+                        "no_of_key_prof": int,
+                        "wide": bool,
+                        "rtf": bool,
+                        "stage": str,
+                    }
+                }
+            }
+        }
+    }
+
+
+class ShowPlatformSoftwareFedSwitchAclParallelKeyProfileIngress(ShowPlatformSoftwareFedSwitchAclParallelKeyProfileIngressSchema):
+    """Parser for:
+       * show platform software fed {switch} {state} acl man parallel-key-profile ingress all
+    """
+
+    cli_command = "show platform software fed {switch} {state} acl man parallel-key-profile ingress all"
+
+    def cli(self, switch, state, output=None):
+        if output is None:
+            cmd = self.cli_command.format(state=state, switch=switch)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+        current_profile = None
+        current_protocol = None
+
+        #  [Ingress Paralley Key Profile: ACCSEC, Idx: 0]
+        p1 = re.compile(r"^\[Ingress Paralley Key Profile: (?P<profile_name>[\w\-]+), Idx: (?P<index>\d+)\]$")
+        
+        # ETH
+        p2 = re.compile(r"^(?P<protocol>\w+)$")
+
+        # OID:     [  554   476   476   476 ]
+        p3 = re.compile(r"^OID:\s+\[\s+(?P<oid>[\d\s]+)\]$")
+        
+        # Ref cnt: [    0     0     0     0 ]
+        p4 = re.compile(r"^Ref cnt:\s+\[\s+(?P<ref_cnt>[\d\s]+)\]$")
+        
+        # E0:     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0
+        p5 = re.compile(r"^(?P<e_value>E\d):\s+(?P<values>[\d,\s]+)$")
+        
+        # No of Key Prof: 1    Wide: True    RTF: False    Stage: TERM
+        p6 = re.compile(
+            r"^No of Key Prof:\s+(?P<no_of_key_prof>\d+)\s+Wide:\s+(?P<wide>\w+)\s+RTF:\s+(?P<rtf>\w+)\s+Stage:\s+(?P<stage>\w+)$"
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            #  [Ingress Paralley Key Profile: ACCSEC, Idx: 0]
+            m = p1.match(line)
+            if m:
+                profile_name = m.group("profile_name")
+                index = int(m.group("index"))
+                current_profile = profile_name
+                ret_dict.setdefault("ingress", {}).setdefault(current_profile, {"index": index})
+                continue
+
+            # ETH
+            m = p2.match(line)
+            if m:
+                current_protocol = m.group("protocol")
+                ret_dict["ingress"][current_profile].setdefault("protocols", {})
+                ret_dict["ingress"][current_profile]["protocols"][current_protocol] = {
+                    "e_values": {},
+                    "oid": [],
+                    "ref_cnt": [],
+                    "no_of_key_prof": 0,
+                    "wide": False,
+                    "rtf": False,
+                    "stage": "",
+                }
+                continue
+
+            # OID:     [  554   476   476   476 ]
+            m = p3.match(line)
+            if m and current_protocol:
+                oid = list(map(int, m.group("oid").split()))
+                ret_dict["ingress"][current_profile]["protocols"][current_protocol]["oid"] = oid
+                continue
+
+            # Ref cnt: [    0     0     0     0 ]
+            m = p4.match(line)
+            if m and current_protocol:
+                ref_cnt = list(map(int, m.group("ref_cnt").split()))
+                ret_dict["ingress"][current_profile]["protocols"][current_protocol]["ref_cnt"] = ref_cnt
+                continue
+
+            # E0:     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0
+            m = p5.match(line)
+            if m and current_protocol:
+                e_value = m.group("e_value")
+                values = list(map(int, m.group("values").replace(",", "").split()))
+                ret_dict["ingress"][current_profile]["protocols"][current_protocol]["e_values"][e_value] = values
+                continue
+
+            # No of Key Prof: 1    Wide: True    RTF: False    Stage: TERM
+            m = p6.match(line)
+            if m and current_protocol:
+                ret_dict["ingress"][current_profile]["protocols"][current_protocol].update(
+                    {
+                        "no_of_key_prof": int(m.group("no_of_key_prof")),
+                        "wide": m.group("wide").lower() == "true",
+                        "rtf": m.group("rtf").lower() == "true",
+                        "stage": m.group("stage"),
+                    }
+                )
+                continue
+
+        return ret_dict
+    
+class ShowPlatformSoftwareFedSwitchAclBindSdkInterfaceFeatureDirDetailAsicSchema(MetaParser):
+    """Schema for
+       * show platform software fed {switch} {state} acl bind sdk interface {interface} feature {feature} dir {dir} detail asic {asic}
+    """
+    schema = {
+        'interface_name': str,
+        'direction': str,
+        'feature': str,
+        'protocol': str,
+        'cg_id': int,
+        'cg_name': str,
+        'acl': {
+            'oid': str,
+            'no_of_aces': int,
+            'entries': ListOf({
+                'ipv4_src': {
+                    'value': str,
+                    'mask': str,
+                },
+                'ipv4_dst': {
+                    'value': str,
+                    'mask': str,
+                },
+                'proto': str,
+                'tos': str,
+                'tcp_flg': str,
+                'ttl': str,
+                'ipv4_flags': str,
+                'src_port': str,
+                'dst_port': str,
+                'result_action': {
+                    'punt': str,
+                    'drop': str,
+                    'mirror': str,
+                    'counter': str,
+                    'counter_value': int,
+                }
+            })
+        }
+    }
+
+
+class ShowPlatformSoftwareFedSwitchAclBindSdkInterfaceFeatureDirDetailAsic(ShowPlatformSoftwareFedSwitchAclBindSdkInterfaceFeatureDirDetailAsicSchema):
+    """Parser for
+       * show platform software fed {switch} {state} acl bind sdk interface {interface} feature {feature} dir {dir} detail asic {asic}
+    """
+
+    cli_command = 'show platform software fed {switch} {state} acl bind sdk interface {interface} feature {feature} dir {dir} detail asic {asic}'
+
+    def cli(self,state, switch, interface, feature, dir, asic, output=None):
+        if output is None:
+            cmd = self.cli_command.format(switch=switch, state=state, interface=interface, feature=feature, dir=dir, asic=asic)
+            output = self.device.execute(cmd)
+
+        # Initialize parsed dictionary
+        parsed_dict = {}
+
+        # Interface Name: Vl300
+        p1 = re.compile(r'^Interface Name:\s+(?P<interface_name>\S+)$')
+
+        # Direction: Ingress
+        p2 = re.compile(r'^Direction:\s+(?P<direction>\S+)$')
+
+        # Feature : Racl
+        p3 = re.compile(r'^Feature\s+:\s+(?P<feature>\S+)$')
+
+        # Protocol : IPv4
+        p4 = re.compile(r'^Protocol\s+:\s+(?P<protocol>\S+)$')
+
+        # CG ID : 11
+        p5 = re.compile(r'^CG ID\s+:\s+(?P<cg_id>\d+)$')
+
+        # CG Name : aclscale-30
+        p6 = re.compile(r'^CG Name\s+:\s+(?P<cg_name>\S+)$')
+        
+        # ACL (OID: 0x453, No of ACEs: 30001)
+        p7 = re.compile(r'^ACL\s+\(OID:\s+(?P<oid>\S+),\s+No of ACEs:\s+(?P<no_of_aces>\d+)\)$')
+
+        # ipv4_src: value = 110.80.0.1 mask = 255.255.255.255
+        p8 = re.compile(r'^ipv4_src:\s+value\s+=\s+(?P<value>\S+)\s+mask\s+=\s+(?P<mask>\S+)$')
+
+        # ipv4_dst: value = 210.100.0.1 mask = 255.255.255.255
+        p9 = re.compile(r'^ipv4_dst:\s+value\s+=\s+(?P<value>\S+)\s+mask\s+=\s+(?P<mask>\S+)$')
+
+        # V:  0x0 0x0 0x0 0x0 0x0 0x0 0x0
+        p10 = re.compile(r'^V:\s+(?P<proto>\S+)\s+(?P<tos>\S+)\s+(?P<tcp_flg>\S+)\s+(?P<ttl>\S+)\s+(?P<ipv4_flags>\S+)\s+(?P<src_port>\S+)\s+(?P<dst_port>\S+)$')
+        
+        # Punt : N Drop : N Mirror: N Counter: 0x0 (0)
+        p11 = re.compile(r'^Punt\s+:\s+(?P<punt>\S+)\s+Drop\s+:\s+(?P<drop>\S+)\s+Mirror:\s+(?P<mirror>\S+)\s+Counter:\s+(?P<counter>\S+)\s+\((?P<counter_value>\d+)\)$')
+
+        current_entry = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Interface Name: Vl300
+            m = p1.match(line)
+            if m:
+                parsed_dict['interface_name'] = m.group('interface_name')
+                continue
+
+            # Direction: Ingress
+            m = p2.match(line)
+            if m:
+                parsed_dict['direction'] = m.group('direction')
+                continue
+
+            # Feature : Racl
+            m = p3.match(line)
+            if m:
+                parsed_dict['feature'] = m.group('feature')
+                continue
+
+            # Protocol : IPv4
+            m = p4.match(line)
+            if m:
+                parsed_dict['protocol'] = m.group('protocol')
+                continue
+
+            # CG ID : 11
+            m = p5.match(line)
+            if m:
+                parsed_dict['cg_id'] = int(m.group('cg_id'))
+                continue
+
+            # CG Name : aclscale-30
+            m = p6.match(line)
+            if m:
+                parsed_dict['cg_name'] = m.group('cg_name')
+                continue
+
+            # ACL (OID: 0x453, No of ACEs: 30001)
+            m = p7.match(line)
+            if m:
+                acl_dict = parsed_dict.setdefault('acl', {})
+                acl_dict['oid'] = m.group('oid')
+                acl_dict['no_of_aces'] = int(m.group('no_of_aces'))
+                acl_dict['entries'] = []
+                continue
+
+            # ipv4_src: value = 110.80.0.1 mask = 255.255.255.255
+            m = p8.match(line)
+            if m:
+                current_entry = {
+                    'ipv4_src': {
+                        'value': m.group('value'),
+                        'mask': m.group('mask'),
+                    }
+                }
+                acl_dict['entries'].append(current_entry)
+                continue
+
+            # ipv4_dst: value = 210.100.0.1 mask = 255.255.255.255
+            m = p9.match(line)
+            if m and current_entry:
+                current_entry['ipv4_dst'] = {
+                    'value': m.group('value'),
+                    'mask': m.group('mask'),
+                }
+                continue
+
+            # V:  0x0 0x0 0x0 0x0 0x0 0x0 0x0
+            m = p10.match(line)
+            if m and current_entry:
+                current_entry.update({
+                    'proto': m.group('proto'),
+                    'tos': m.group('tos'),
+                    'tcp_flg': m.group('tcp_flg'),
+                    'ttl': m.group('ttl'),
+                    'ipv4_flags': m.group('ipv4_flags'),
+                    'src_port': m.group('src_port'),
+                    'dst_port': m.group('dst_port'),
+                })
+                continue
+
+            # Punt : N Drop : N Mirror: N Counter: 0x0 (0)
+            m = p11.match(line)
+            if m and current_entry:
+                current_entry['result_action'] = {
+                    'punt': m.group('punt'),
+                    'drop': m.group('drop'),
+                    'mirror': m.group('mirror'),
+                    'counter': m.group('counter'),
+                    'counter_value': int(m.group('counter_value')),
+                }
+                continue
+
+        return parsed_dict    
+
+
+class ShowPlatformSoftwareFedSwitchAclManagerAclGroupSchema(MetaParser):
+    """Schema for:
+        show platform software fed {switch} <active/stby> acl manager acl-group interface <interface>
+    """
+
+    schema = {
+        'direction': str,
+        'asic': int,
+        'pkt_fmt': str,
+        'acl_groups': {
+            Any(): str,  
+        }
+    }
+
+class ShowPlatformSoftwareFedSwitchAclManagerAclGroup(ShowPlatformSoftwareFedSwitchAclManagerAclGroupSchema):
+    """Parser for:
+       show platform software fed {switch} <active/stby> acl manager acl-group interface <interface>
+    """
+
+    cli_command = 'show platform software fed {switch} {mode} acl manager acl-group interface {interface}'
+
+    def cli(self, switch='', mode='', interface='', output=None):
+        if output is None:
+            cmd = self.cli_command.format(switch=switch, mode=mode, interface=interface)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+
+        # Dir: Ingress  Asic: 0  PKT_FMT: ETH
+        p1 = re.compile(r'^Dir:\s+(?P<direction>\S+)\s+Asic:\s+(?P<asic>\d+)\s+PKT_FMT:\s+(?P<pkt_fmt>\S+)$')
+
+        # ACCSEC     :  0x0
+        p2 = re.compile(r'^(?P<acl_group>\S+)\s+:\s+(?P<value>\S+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Dir: Ingress  Asic: 0  PKT_FMT: ETH
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['direction'] = group['direction']
+                ret_dict['asic'] = int(group['asic'])
+                ret_dict['pkt_fmt'] = group['pkt_fmt']
+                continue
+
+            # ACCSEC     :  0x0
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                acl_groups = ret_dict.setdefault('acl_groups', {})
+                acl_groups[group['acl_group']] = group['value']
+                continue
+
+        return ret_dict
+    
+class ShowPlatformSoftwareFedSwitchAclManagerAclGroupIifIdSchema(MetaParser):
+    """Schema for:
+       * show platform software fed {switch} acl manager acl-group iif_id <if_id_num>
+    """
+
+    schema = {
+        'direction': str,
+        'asic': int,
+        'pkt_fmt': str,
+        'acl_groups': {
+            Any(): str,  
+        }
+    }
+
+class ShowPlatformSoftwareFedSwitchAclManagerAclGroupIifId(ShowPlatformSoftwareFedSwitchAclManagerAclGroupIifIdSchema):
+    """Parser for:
+       * show platform software fed {switch} acl manager acl-group iif_id <if_id_num>
+    """
+
+    cli_command = 'show platform software fed {switch} acl manager acl-group iif_id {if_id_num}'
+
+    def cli(self, switch='', if_id_num='', output=None):
+        if output is None:
+            cmd = self.cli_command.format(switch=switch, if_id_num=if_id_num)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+
+        # Dir: Ingress  Asic: 1  PKT_FMT: ETH
+        p1 = re.compile(r'^Dir:\s+(?P<direction>\S+)\s+Asic:\s+(?P<asic>\d+)\s+PKT_FMT:\s+(?P<pkt_fmt>\S+)$')
+
+        # ACCSEC     :  0x0
+        p2 = re.compile(r'^(?P<acl_group>\S+)\s+:\s+(?P<value>\S+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Dir: Ingress  Asic: 1  PKT_FMT: ETH
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['direction'] = group['direction']
+                ret_dict['asic'] = int(group['asic'])
+                ret_dict['pkt_fmt'] = group['pkt_fmt']
+                continue
+
+            # ACCSEC     :  0x0
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                acl_groups = ret_dict.setdefault('acl_groups', {})
+                acl_groups[group['acl_group']] = group['value']
+                continue
+
+        return ret_dict
