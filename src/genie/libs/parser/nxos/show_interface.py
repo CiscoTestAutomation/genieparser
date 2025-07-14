@@ -248,6 +248,7 @@ class ShowInterface(ShowInterfaceSchema):
         # Ethernet1/13 is down (SFP validation failed)
         # Ethernet1/13 is down (Channel admin down)
         # Ethernet140/1/26 is down (linkFlapErrDisabled, port: error)
+        # Ethernet1/38 is down (storm control errDisable)
         p1 = re.compile(r'^(?P<interface>\S+)\s*is\s*'
                         r'(?P<link_state>(down|up|'
                         r'inactive|Transceiver +validation +failed|'
@@ -271,7 +272,8 @@ class ShowInterface(ShowInterfaceSchema):
                         r'(\(.*ACK.*\))?'
                         r'(\(inactive\))?'
                         r'(\(Hardware\s+failure\))?'
-                        r'(\(linkFlapErrDisabled, +port: +error\))?$')
+                        r'(\(linkFlapErrDisabled, +port: +error\))?'
+                        r'(\(storm\s+control\s+errDisable\))?$')
 
         # admin state is up
         # admin state is up,
