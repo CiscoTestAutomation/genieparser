@@ -358,7 +358,7 @@ class ShowVersion(ShowVersionSchema):
     cli_command = 'show version'
     exclude = ['system_restarted_at', 'uptime_this_cp', 'uptime']
 
-    def cli(self, output=None):
+    def cli(self, output=None, is_standby=False):
         """parsing mechanism: cli
 
         Function cli() defines the cli type output parsing mechanism which
@@ -366,7 +366,10 @@ class ShowVersion(ShowVersionSchema):
         cuting, transforming, returning
         """
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if is_standby:
+                out = self.device.execute('show version',target='standby')
+            else:    
+                out = self.device.execute(self.cli_command)
         else:
             out = output
 
@@ -5678,11 +5681,12 @@ class ShowPlatformResourcesSchema(MetaParser):
                         'state': str
                     },
                     Optional(Any()): {
-                        'usage_kb': int,
-                        'usage_perc': int,
-                        'max_kb': int,
+                        Optional('usage_kb'): int,
+                        'usage_perc': Or(int,float),
+                        Optional('max_perc'): int,
+                        Optional('max_kb'): int,
                         'warning_perc': int,
-                        'critical_perc': int,
+                        Optional('critical_perc'): int,
                         'state': str
                     }
                 }
@@ -7129,6 +7133,21 @@ class ShowPlatformPacketTracePacketSchema(MetaParser):
                         'type': str,
                         'code': str
                     },
+                    Optional('zbfw'): {
+                        'action': str,
+                        'egress_interface': str,
+                        'avc_classification_id': str,
+                        'avc_classification_name': str,
+                        'output_vpn_id': str,
+                        'class_map_name': str,
+                        'input_vpn_id': str,
+                        'zone_pair_name': str,
+                        'utd_context_id': str,
+                        'policy_name': str,
+                        'input_vrf_id': str,
+                        'input_interface': str,
+                        'output_vrf_id': str
+                    },
                     Optional('cft'): {
                         'api': str,
                         'packet_capabilities': str,
@@ -8495,7 +8514,8 @@ class ShowProcessesPid(ShowProcessesPidSchema):
         # Define RegExes for each possible kind of line
 
         # Process ID 3 [Network Synchronization Selection Control Process], TTY 0
-        p1 = re.compile(r'^Process +ID +(?P<pid>(\S+)) +\[ *(?P<process_name>([ a-zA-Z0-9]+)) *\], TTY +(?P<tty>(\S+))$')
+        # Process ID 89 [IF-MGR control process], TTY 0
+        p1 = re.compile(r'^Process +ID +(?P<pid>(\S+)) +\[ *(?P<process_name>([ a-zA-Z0-9-]+)) *\], TTY +(?P<tty>(\S+))$')
 
         #   Holding: 41960, Maximum: 0, Allocated: 0, Freed: 0
         p2 = re.compile(r'^Holding: +(?P<holding>(\d+)), +Maximum: +(?P<maximum>(\d+)), +Allocated: +(?P<allocated>(\d+)), +Freed: +(?P<freed>(\d+))$')
@@ -8513,7 +8533,8 @@ class ShowProcessesPid(ShowProcessesPidSchema):
         p6 = re.compile(r'^Age: +(?P<age>(\S+)) msec, +Runtime: +(?P<runtime>(\d+)) msec$')
 
         #   State: Waiting for Event, Priority: Critical
-        p7 = re.compile(r'^State: +(?P<state>([ a-zA-Z0-9]+)), +Priority: +(?P<priority>(\S+))$')
+        #   State: Sleeping (Periodic), Priority: Low
+        p7 = re.compile(r'^State: +(?P<state>([ a-zA-Z0-9\(\)]+)), +Priority: +(?P<priority>(\S+))$')
 
 
         # Iterate over output lines to check which pattern is matched
@@ -9874,12 +9895,16 @@ class ShowPlatformSoftwareCpmSwitchActiveB0PacketsControlIpcSchema(MetaParser):
 class ShowPlatformSoftwareCpmSwitchActiveB0PacketsControlIpc(ShowPlatformSoftwareCpmSwitchActiveB0PacketsControlIpcSchema):
     """Parser for 'show platform software cpm switch active b0 packets ipc tx'"""
 
-    cli_command = 'show platform software cpm switch {mode} b0 packets {controlmode} {transmitmode}'
+    cli_command = ['show platform software cpm switch {mode} BP {mode2} packets {controlmode} {transmitmode}',
+                   'show platform software cpm switch {mode} B0 packets {controlmode} {transmitmode}']
 
-    def cli(self, mode=None, controlmode=None, transmitmode=None, output=None):
+    def cli(self, mode,  mode2=None, controlmode=None, transmitmode=None, output=None):
+
         if output is None:
-            cmd = self.cli_command.format(mode=mode, controlmode=controlmode, transmitmode=transmitmode)
-            output = self.device.execute(cmd)
+            if  mode2:
+                output = self.device.execute(self.cli_command[0].format(mode=mode, mode2=mode2, controlmode=controlmode, transmitmode=transmitmode))
+            else:
+                output = self.device.execute(self.cli_command[1].format(mode=mode, controlmode=controlmode, transmitmode=transmitmode))
         
         # Initialize the parsed dictionary
         ret_dict = {}
@@ -10227,3 +10252,296 @@ class ShowPlatformSoftwareInfrastructurePunt(ShowPlatformSoftwareInfrastructureP
                 continue
                 
         return ret_dict
+
+class ShowPlatformDiagSchema(MetaParser):
+    """Schema for show platform diag"""
+    schema = {
+        "chassis_type": str,
+        "slots": {
+            Any(): {
+                "type": str,
+                Optional("running_state"): str,
+                Optional("internal_state"): str,
+                Optional("internal_operational_state"): str,
+                Optional("physical_insert_detect_time"): str,
+                Optional("software_declared_up_time"): str,
+                Optional("cpld_version"): str,
+                Optional("firmware_version"): str,
+                Optional("state"): str,
+                Optional("hardware_ready_signal_time"): str,
+                Optional("packet_ready_signal_time"): str,
+                Optional("sub_slots"): {
+                    Any(): {
+                        "type": str,
+                        "operational_status": str,
+                        "internal_state": str,
+                        "physical_insert_detect_time": str,
+                        "logical_insert_detect_time": str,
+                    }
+                }
+            }
+        }
+    }
+
+class ShowPlatformDiag(ShowPlatformDiagSchema):
+    """Parser for show platform diag"""
+
+    cli_command = "show platform diag"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        parsed_dict = {}
+
+        # Chassis type: ISR4461/K9
+        p1 = re.compile(r'^Chassis type: +(?P<chassis_type>\S+)$')
+        # Slot: 0, ISR4461/K9
+        p2 = re.compile(r'^Slot: +(?P<slot_name>\S+), +(?P<slot_type>.+)$')
+        # Sub-slot: 0/0, ISR4461-4x1G-2xTG
+        p3 = re.compile(r'^Sub-slot: +(?P<sub_slot_name>\S+), +(?P<sub_slot_type>.+)$')
+        # Operational status          : ok
+        p4 = re.compile(r'^Operational status +: +(?P<operational_status>.+)$')
+        # Internal state              : inserted
+        p5 = re.compile(r'^Internal state +: +(?P<internal_state>.+)$')
+        # Physical insert detect time : 00:01:28 (1w1d ago)
+        p6 = re.compile(r'^Physical insert detect time +: +(?P<physical_insert_detect_time>.+)$')
+        # Logical insert detect time  : 00:01:28 (1w1d ago)
+        p7 = re.compile(r'^Logical insert detect time +: +(?P<logical_insert_detect_time>.+)$')
+        # Running state               : ok
+        p8 = re.compile(r'^Running state +: +(?P<running_state>.+)$')
+        # Internal operational state  : ok
+        p9 = re.compile(r'^Internal operational state +: +(?P<internal_operational_state>.+)$')
+        # Physical insert detect time : 00:00:40 (1w1d ago)
+        p10 = re.compile(r'^Physical insert detect time +: +(?P<physical_insert_detect_time>.+)$')
+        # Software declared up time   : 00:01:17 (1w1d ago)
+        p11 = re.compile(r'^Software declared up time +: +(?P<software_declared_up_time>.+)$')
+        # CPLD version                : 18012322
+        p12 = re.compile(r'^CPLD version +: +(?P<cpld_version>.+)$')
+        # Firmware version            : 17.15(1r)
+        p13 = re.compile(r'^Firmware version +: +(?P<firmware_version>.+)$')
+        # State                       : empty
+        p14 = re.compile(r'^State +: +(?P<state>.+)$')
+        # Hardware ready signal time  : 00:01:10 (1w1d ago)
+        p15 = re.compile(r'^Hardware ready signal time +: +(?P<hardware_ready_signal_time>.+)$')
+        # Packet ready signal time    : 00:02:11 (1w1d ago)
+        p16 = re.compile(r'^Packet ready signal time +: +(?P<packet_ready_signal_time>.+)$')
+
+
+        current_slot = None
+        current_sub_slot = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Chassis type: ISR4461/K9
+            m1 = p1.match(line)
+            if m1:
+                parsed_dict["chassis_type"] = m1.groupdict()["chassis_type"]
+                parsed_dict.setdefault("slots", {})
+                continue
+
+            # Slot: 0, ISR4461/K9
+            m2 = p2.match(line)
+            if m2:
+                current_slot = m2.groupdict()["slot_name"]
+                slot_type = m2.groupdict()["slot_type"]
+                parsed_dict["slots"].setdefault(current_slot, {})
+                parsed_dict["slots"][current_slot]["type"] = slot_type
+                current_sub_slot = None # Reset sub-slot context for new slot
+                continue
+
+            # Sub-slot: 0/0, ISR4461-4x1G-2xTG
+            m3 = p3.match(line)
+            if m3 and current_slot:
+                current_sub_slot = m3.groupdict()["sub_slot_name"]
+                sub_slot_type = m3.groupdict()["sub_slot_type"]
+                parsed_dict["slots"][current_slot].setdefault("sub_slots", {})
+                parsed_dict["slots"][current_slot]["sub_slots"].setdefault(current_sub_slot, {})
+                parsed_dict["slots"][current_slot]["sub_slots"][current_sub_slot]["type"] = sub_slot_type
+                continue
+
+            if current_slot:
+                if current_sub_slot:
+                    # Operational status          : ok
+                    m4 = p4.match(line)
+                    if m4:
+                        parsed_dict["slots"][current_slot]["sub_slots"][current_sub_slot]["operational_status"] = m4.groupdict()["operational_status"]
+                        continue
+
+                    # Internal state              : inserted
+                    m5 = p5.match(line)
+                    if m5:
+                        parsed_dict["slots"][current_slot]["sub_slots"][current_sub_slot]["internal_state"] = m5.groupdict()["internal_state"]
+                        continue
+
+                    # Physical insert detect time : 00:01:28 (1w1d ago)
+                    m6 = p6.match(line)
+                    if m6:
+                        parsed_dict["slots"][current_slot]["sub_slots"][current_sub_slot]["physical_insert_detect_time"] = m6.groupdict()["physical_insert_detect_time"]
+                        continue
+
+                    # Logical insert detect time  : 00:01:28 (1w1d ago)
+                    m7 = p7.match(line)
+                    if m7:
+                        parsed_dict["slots"][current_slot]["sub_slots"][current_sub_slot]["logical_insert_detect_time"] = m7.groupdict()["logical_insert_detect_time"]
+                        continue
+                else:
+                    # Running state               : ok
+                    m8 = p8.match(line)
+                    if m8:
+                        parsed_dict["slots"][current_slot]["running_state"] = m8.groupdict()["running_state"]
+                        continue
+
+                    # Internal operational state  : ok
+                    m9 = p9.match(line)
+                    if m9:
+                        parsed_dict["slots"][current_slot]["internal_operational_state"] = m9.groupdict()["internal_operational_state"]
+                        continue
+
+                    # Physical insert detect time : 00:00:40 (1w1d ago)
+                    m10 = p10.match(line)
+                    if m10:
+                        parsed_dict["slots"][current_slot]["physical_insert_detect_time"] = m10.groupdict()["physical_insert_detect_time"]
+                        continue
+
+                    # Software declared up time   : 00:01:17 (1w1d ago)
+                    m11 = p11.match(line)
+                    if m11:
+                        parsed_dict["slots"][current_slot]["software_declared_up_time"] = m11.groupdict()["software_declared_up_time"]
+                        continue
+
+                    # CPLD version                : 18012322
+                    m12 = p12.match(line)
+                    if m12:
+                        parsed_dict["slots"][current_slot]["cpld_version"] = m12.groupdict()["cpld_version"]
+                        continue
+
+                    # Firmware version            : 17.15(1r)
+                    m13 = p13.match(line)
+                    if m13:
+                        parsed_dict["slots"][current_slot]["firmware_version"] = m13.groupdict()["firmware_version"]
+                        continue
+
+                    # State                       : empty
+                    m14 = p14.match(line)
+                    if m14:
+                        parsed_dict["slots"][current_slot]["state"] = m14.groupdict()["state"]
+                        continue
+
+                    # Hardware ready signal time  : 00:01:10 (1w1d ago)
+                    m15 = p15.match(line)
+                    if m15:
+                        parsed_dict["slots"][current_slot]["hardware_ready_signal_time"] = m15.groupdict()["hardware_ready_signal_time"]
+                        continue
+
+                    # Packet ready signal time    : 00:02:11 (1w1d ago)
+                    m16 = p16.match(line)
+                    if m16:
+                        parsed_dict["slots"][current_slot]["packet_ready_signal_time"] = m16.groupdict()["packet_ready_signal_time"]
+                        continue
+
+                    # Internal state              : online
+                    m17 = p5.match(line)
+                    if m17:
+                        parsed_dict["slots"][current_slot]["internal_state"] = m17.groupdict()["internal_state"]
+                        continue
+
+        return parsed_dict
+
+
+class ShowEnvironmentTemperatureAllSchema(MetaParser):
+    """Schema for show environment temperature all"""
+    schema = {
+        'switch': {
+            Any(): {
+                'system_temperature_state': str,
+                'temperature_sensors': {
+                    Any(): {
+                        'value': int,
+                        'state': str,
+                        'yellow_threshold': int,
+                        'red_threshold': int
+                    }
+                }
+            }
+        }
+    }
+
+class ShowEnvironmentTemperatureAll(ShowEnvironmentTemperatureAllSchema):
+    """Parser for show environment temperature all"""
+
+    cli_command = 'show environment temperature all'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+        switch = None
+        sensor_name = None
+
+        # Switch 3: SYSTEM TEMPERATURE is OK
+        p1 = re.compile(r'^Switch\s+(?P<switch>\d+):\s+SYSTEM TEMPERATURE is (?P<state>\S+)$')
+
+        #Switch 3 - Inlet Temp Sensor 45 C
+        p2 = re.compile(r'^Switch\s+(?P<switch>\d+)\s*-\s*(?P<sensor_name>.+?)\s+Temp Sensor\s+(?P<value>\d+)\s*C$')
+
+        # Temperature State: GREEN
+        p3 = re.compile(r'^Temperature State:\s+(?P<state>\w+)$')
+
+        #Yellow Threshold : 80 C
+        p4 = re.compile(r'^Yellow Threshold\s*:\s*(?P<yellow>\d+)\s*C$')
+
+        # Red Threshold : 90 C  
+        p5 = re.compile(r'^Red Threshold\s*:\s*(?P<red>\d+)\s*C$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Switch 3: SYSTEM TEMPERATURE is OK
+            m = p1.match(line)
+            if m:
+                switch = m.group('switch')
+                state = m.group('state').lower()
+                switch_dict = ret_dict.setdefault('switch', {}).setdefault(switch, {})
+                switch_dict['system_temperature_state'] = state
+                continue
+
+            # Switch 3 - Inlet Temp Sensor 45 C
+            m = p2.match(line)
+            if m:
+                switch = m.group('switch')
+                sensor_name = m.group('sensor_name').lower().replace(' ', '_')
+                value = int(m.group('value'))
+                sensor_dict = ret_dict.setdefault('switch', {}).setdefault(switch, {}) \
+                    .setdefault('temperature_sensors', {}).setdefault(sensor_name, {})
+                sensor_dict['value'] = value
+                continue
+
+            # Temperature State: GREEN
+            m = p3.match(line)
+            if m and switch and sensor_name:
+                state = m.group('state').lower()
+                sensor_dict = ret_dict['switch'][switch]['temperature_sensors'][sensor_name]
+                sensor_dict['state'] = state
+                continue
+
+            # Yellow Threshold : 80 C
+            m = p4.match(line)
+            if m and switch and sensor_name:
+                yellow = int(m.group('yellow'))
+                sensor_dict = ret_dict['switch'][switch]['temperature_sensors'][sensor_name]
+                sensor_dict['yellow_threshold'] = yellow
+                continue
+
+            # Red Threshold : 90 C
+            m = p5.match(line)
+            if m and switch and sensor_name:
+                red = int(m.group('red'))
+                sensor_dict = ret_dict['switch'][switch]['temperature_sensors'][sensor_name]
+                sensor_dict['red_threshold'] = red
+                continue
+
+        return ret_dict
+

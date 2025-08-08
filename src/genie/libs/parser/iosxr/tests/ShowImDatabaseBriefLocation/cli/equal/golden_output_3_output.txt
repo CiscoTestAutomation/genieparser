@@ -1,0 +1,90 @@
+RP/0/RP0/CPU0:ios#show im database brief location 0/2/CPU0
+Tue Jul 22 06:57:34.585 UTC
+
+View: OWN - Owner, L3P - Local 3rd Party, G3P - Global 3rd Party, LDP - Local Data Plane
+      GDP - Global Data Plane, RED - Redundancy, UL - UL
+
+Node 0/2/CPU0 (0x200)
+
+ Handle   | Name                 | State    | MTU |#P|#C| Views             |
+----------|----------------------|----------|-----|--|--|-------------------|
+0x08000008 FI0/2/CPU0             up          8000 12 13 GDP|LDP|L3P|OWN
+0x08000010 Op0/2/0/0              down           -  0  0 GDP|LDP|L3P|OWN
+0x08000018 Op0/2/0/35             down           -  0  0 GDP|LDP|L3P|OWN
+0x08000020 Op0/2/0/34             down           -  0  0 GDP|LDP|L3P|OWN
+0x08000028 Op0/2/0/33             down           -  0  0 GDP|LDP|L3P|OWN
+0x08000030 Op0/2/0/32             down           -  0  0 GDP|LDP|L3P|OWN
+0x08000038 Op0/2/0/31             down           -  0  0 GDP|LDP|L3P|OWN
+0x08000040 Op0/2/0/30             down           -  0  0 GDP|LDP|L3P|OWN
+0x08000048 Op0/2/0/29             down           -  0  0 GDP|LDP|L3P|OWN
+0x08000050 Op0/2/0/28             down           -  0  0 GDP|LDP|L3P|OWN
+0x08000058 Op0/2/0/27             down           -  0  0 GDP|LDP|L3P|OWN
+0x08000060 Op0/2/0/26             down           -  0  0 GDP|LDP|L3P|OWN
+0x08000068 Op0/2/0/25             down           -  0  0 GDP|LDP|L3P|OWN
+0x08000070 Op0/2/0/24             down           -  0  0 GDP|LDP|L3P|OWN
+0x08000078 Op0/2/0/23             down           -  0  0 GDP|LDP|L3P|OWN
+0x08000080 Op0/2/0/22             up             -  0  0 GDP|LDP|L3P|OWN
+0x08000088 Op0/2/0/21             down           -  0  0 GDP|LDP|L3P|OWN
+0x08000090 Op0/2/0/20             down           -  0  0 GDP|LDP|L3P|OWN
+0x08000098 Op0/2/0/19             down           -  0  0 GDP|LDP|L3P|OWN
+0x080000a0 Op0/2/0/18             down           -  0  0 GDP|LDP|L3P|OWN
+0x080000a8 Op0/2/0/17             down           -  0  0 GDP|LDP|L3P|OWN
+0x080000b0 Op0/2/0/16             down           -  0  0 GDP|LDP|L3P|OWN
+0x080000b8 Op0/2/0/15             down           -  0  0 GDP|LDP|L3P|OWN
+0x080000c0 Op0/2/0/14             down           -  0  0 GDP|LDP|L3P|OWN
+0x080000c8 Op0/2/0/13             down           -  0  0 GDP|LDP|L3P|OWN
+0x080000d0 Op0/2/0/12             down           -  0  0 GDP|LDP|L3P|OWN
+0x080000d8 Op0/2/0/11             down           -  0  0 GDP|LDP|L3P|OWN
+0x080000e0 Op0/2/0/10             up             -  0  0 GDP|LDP|L3P|OWN
+0x080000e8 Op0/2/0/9              down           -  0  0 GDP|LDP|L3P|OWN
+0x080000f0 Op0/2/0/8              down           -  0  0 GDP|LDP|L3P|OWN
+0x080000f8 Op0/2/0/7              down           -  0  0 GDP|LDP|L3P|OWN
+0x08000100 Op0/2/0/6              down           -  0  0 GDP|LDP|L3P|OWN
+0x08000108 Op0/2/0/5              up             -  0  0 GDP|LDP|L3P|OWN
+0x08000110 Op0/2/0/4              up             -  0  0 GDP|LDP|L3P|OWN
+0x08000118 Op0/2/0/3              down           -  0  0 GDP|LDP|L3P|OWN
+0x08000120 Op0/2/0/2              down           -  0  0 GDP|LDP|L3P|OWN
+0x08000128 Op0/2/0/1              down           -  0  0 GDP|LDP|L3P|OWN
+0x08000138 FH0/2/0/35             shutdown    1514  2  3 GDP|LDP|L3P|OWN
+0x08000140 FH0/2/0/34             shutdown    1514  2  3 GDP|LDP|L3P|OWN
+0x08000148 FH0/2/0/1              down        1514  2  3 GDP|LDP|L3P|OWN
+0x08000158 FH0/2/0/3              down        1514  2  3 GDP|LDP|L3P|OWN
+0x08000168 FH0/2/0/7              down        1514  2  3 GDP|LDP|L3P|OWN
+0x08000178 FH0/2/0/9              down        1514  2  3 GDP|LDP|L3P|OWN
+0x08000188 FH0/2/0/11             down        1514  2  3 GDP|LDP|L3P|OWN
+0x08000190 FH0/2/0/12             shutdown    1514  2  3 GDP|LDP|L3P|OWN
+0x08000198 FH0/2/0/13             shutdown    1514  2  3 GDP|LDP|L3P|OWN
+0x080001a8 FH0/2/0/15             down        1514  2  3 GDP|LDP|L3P|OWN
+0x080001b0 FH0/2/0/16             shutdown    1514  2  3 GDP|LDP|L3P|OWN
+0x080001b8 FH0/2/0/17             shutdown    1514  2  3 GDP|LDP|L3P|OWN
+0x080001c0 FH0/2/0/18             shutdown    1514  2  3 GDP|LDP|L3P|OWN
+0x080001c8 FH0/2/0/19             shutdown    1514  2  3 GDP|LDP|L3P|OWN
+0x080001d8 FH0/2/0/21             shutdown    1514  2  3 GDP|LDP|L3P|OWN
+0x080001e0 FH0/2/0/22             down        1514  2  3 GDP|LDP|L3P|OWN
+0x080001e8 FH0/2/0/23             shutdown    1514  2  3 GDP|LDP|L3P|OWN
+0x080001f0 FH0/2/0/24             shutdown    1514  2  3 GDP|LDP|L3P|OWN
+0x080001f8 FH0/2/0/25             shutdown    1514  2  3 GDP|LDP|L3P|OWN
+0x08000200 FH0/2/0/26             shutdown    1514  2  3 GDP|LDP|L3P|OWN
+0x08000208 FH0/2/0/27             shutdown    1514  2  3 GDP|LDP|L3P|OWN
+0x08000210 FH0/2/0/28             shutdown    1514  2  3 GDP|LDP|L3P|OWN
+0x08000218 FH0/2/0/29             shutdown    1514  2  3 GDP|LDP|L3P|OWN
+0x08000220 FH0/2/0/30             shutdown    1514  2  3 GDP|LDP|L3P|OWN
+0x08000230 FH0/2/0/32             down        1514  2  3 GDP|LDP|L3P|OWN
+0x08000238 FH0/2/0/33             shutdown    1514  2  3 GDP|LDP|L3P|OWN
+0x08000248 Fo0/2/0/5              up          1514  2  3 GDP|LDP|L3P|OWN
+0x08000490 FH0/2/0/0              down        1514  2  3 GDP|LDP|L3P|OWN
+0x08000498 FH0/2/0/2              down        1514  2  3 GDP|LDP|L3P|OWN
+0x080004a0 Fo0/2/0/4              up          1514  2  3 GDP|LDP|L3P|OWN
+0x080004a8 FH0/2/0/6              down        1514  2  3 GDP|LDP|L3P|OWN
+0x080004b0 FH0/2/0/8              down        1514  2  3 GDP|LDP|L3P|OWN
+0x080004b8 FH0/2/0/10             down        1514  2  3 GDP|LDP|L3P|OWN
+0x080004c0 FH0/2/0/14             down        1514  2  3 GDP|LDP|L3P|OWN
+0x080004c8 FH0/2/0/20             down        1514  2  3 GDP|LDP|L3P|OWN
+0x080004d0 FH0/2/0/31             down        1514  2  3 GDP|LDP|L3P|OWN
+0x7c000008 FI0/RP1/CPU0           N/A         8000  0  0 GDP
+0x7c000010 PT0/RP1/CPU0/0         N/A         1514  1  1 GDP
+0x7c000018 Mg0/RP1/CPU0/0         N/A         1514  1  1 GDP
+0x78000008 FI0/RP0/CPU0           N/A         8000  0  0 GDP
+0x78000010 PT0/RP0/CPU0/0         N/A         1514  1  1 GDP
+0x78000018 Mg0/RP0/CPU0/0         N/A         1514  1  1 GDP
+0x7800000c Nu0                    N/A         1500  0  0 GDP

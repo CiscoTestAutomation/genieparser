@@ -1,0 +1,4 @@
+Forwarding Manager Firewall VRF and Parameter-Map Binding
+
+  VRF Name: green, VRF ID: 40, Parameter-Map: vrf-pmap
+  VRF Name: default, VRF ID: 0, Parameter-Map: vrf-default

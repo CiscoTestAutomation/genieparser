@@ -6,6 +6,7 @@ IOSXE parsers for the following show commands:
     * show ipv6 mld vrf <WORD> interface 
     * show ipv6 mld groups detail
     * show ipv6 mld vrf <WORD> groups detail
+    * show ipv6 mld groups <group> <interface> detail
     * show ipv6 mld ssm-map
     * show ipv6 mld ssm-map <WORD>
     * show ipv6 mld vrf <WORD> ssm-map <WORD>
@@ -226,15 +227,18 @@ class ShowIpv6MldInterface(ShowIpv6MldInterfaceSchema):
 
 
 
-# ==================================================
+# ============================================================
 # Parser for 'show ipv6 mld groups detail'
 # Parser for 'show ipv6 mld vrf <WORD> groups detail'
-# ==================================================
+# Parser for 'show ipv6 mld groups <group> <interface> detail'
+# ============================================================
 
 class ShowIpv6MldGroupsDetailSchema(MetaParser):
     """Schema for:
         show ipv6 mld groups detail
-        show ipv6 mld vrf <vrf> groups detail"""
+        show ipv6 mld vrf <vrf> groups detail
+        show ipv6 mld groups <group> <interface> detail
+        """
 
     schema = {'vrf':
                 {Any(): {
@@ -278,22 +282,32 @@ class ShowIpv6MldGroupsDetailSchema(MetaParser):
 class ShowIpv6MldGroupsDetail(ShowIpv6MldGroupsDetailSchema):
     """Parser for:
         show ipv6 mld groups detail
-        show ipv6 mld vrf <vrf> groups detail"""
+        show ipv6 mld vrf <vrf> groups detail
+        show ipv6 mld groups <group> <interface> detail
+    """
 
-    cli_command = ['show ipv6 mld vrf {vrf} groups detail', 'show ipv6 mld groups detail']
+    cli_command = ['show ipv6 mld groups detail',
+                   'show ipv6 mld vrf {vrf} groups detail',
+                   'show ipv6 mld groups {group} {interface} detail']
     exclude = ['expire', 'up_time']
 
 
-    def cli(self, vrf='', output=None):
+    def cli(self, vrf='', group='', interface='', output=None):
         if output is None:
             if vrf:
-                cmd = self.cli_command[0].format(vrf=vrf)
+                cmd = self.cli_command[1].format(vrf=vrf)
+            elif group and interface:
+                vrf = 'default'
+                cmd = self.cli_command[2].format(group=group, interface=interface)
             else:
                 vrf = 'default'
-                cmd = self.cli_command[1]
+                cmd = self.cli_command[0]
             out = self.device.execute(cmd)
         else:
             out = output
+            # Set default vrf if not provided and no output given
+            if not vrf:
+                vrf = 'default'
 
         # initial variables
         ret_dict = {}
@@ -366,6 +380,13 @@ class ShowIpv6MldGroupsDetail(ShowIpv6MldGroupsDetailSchema):
             if m:
                 last_reporter = m.groupdict()['last_reporter']
                 ret_dict['vrf'][vrf]['interface'][intf]['group'][group]['last_reporter'] = last_reporter
+                continue
+
+            # Source list is empty
+            p6_1 = re.compile(r'^Source +list +is +empty$')
+            m = p6_1.match(line)
+            if m:
+                # When source list is empty, we continue without creating source entries
                 continue
 
             # Source Address                          Uptime    Expires   Fwd  Flags

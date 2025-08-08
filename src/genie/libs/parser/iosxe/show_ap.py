@@ -1351,7 +1351,7 @@ class ShowApConfigGeneralSchema(MetaParser):
                 Optional("rogue_containment_auto_rate"): str,
                 Optional("rogue_containment_of_standalone_flexconnect_aps"): str,
                 Optional("rogue_detection_report_interval"): int,
-                Optional("rogue_ap_minimum_rssi"): float,
+                Optional("rogue_ap_minimum_rssi"): Or(float, int),
                 Optional("rogue_ap_minimum_transient_time"): int,
                 Optional("ap_tcp_mss_adjust"): str,
                 Optional("ap_tcp_mss_size"): int,

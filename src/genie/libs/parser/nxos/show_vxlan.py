@@ -501,7 +501,7 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
             r'^\s*Multi(-S|s)ite +bgw\-if +oper +down +reason: +(?P<multisite_convergence_time_left>\d+) +seconds$')
         p25 = re.compile(r'Multisite +delay-restore +time +left: +(?P<multisite_convergence_time_left>\d+) +seconds$')
         # Multisite dci-advertise-pip configured: True
-        p26 = re.compile(r'Multisite +dci-advertise-pip +configured: +(?P<multisite_dci_advertise_pip>\S+)')
+        p26 = re.compile(r'^Multisite +dci-advertise-pip +configured: +(?P<multisite_dci_advertise_pip>\S+)')
 
         for nve in nve_list:
             if not output:
@@ -510,7 +510,7 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
                 out = output
             for line in out.splitlines():
                 if line:
-                    line = line.rstrip()
+                    line = line.strip()
                 else:
                     continue
 
@@ -599,10 +599,8 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
                 m = p9.match(line)
                 if m:
                     group = m.groupdict()
-                    if group.get("flags"):
-                        nve_dict.update({'nve_flags': group.pop('flags')})
-                    else:
-                        nve_dict.update({'nve_flags': ""})
+                    flags = group.pop('flags') or ''
+                    nve_dict.update({'nve_flags': flags})
                     continue
 
                 #  Interface Handle: 0x49000001

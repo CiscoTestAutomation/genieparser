@@ -18,10 +18,14 @@ from genie.libs.parser.utils.common import Common
 import re
 from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional, Use, And, ListOf
 from genie.libs.parser.iosxe.cat9k.c9600.show_platform import ShowPlatformFedActiveTcamUtilization as ShowPlatformFedActiveTcamUtilization_c9600
-
+from genie.libs.parser.iosxe.cat9k.c9600.show_platform import ShowPlatformFedStandbyTcamUtilization as ShowPlatformFedStandbyTcamUtilization_c9600
 
 class ShowPlatformFedActiveTcamUtilization(ShowPlatformFedActiveTcamUtilization_c9600):
     """ Parser for show platform hardware fed active fwd-asic resource tcam utilization"""
+    pass
+
+class ShowPlatformFedStandbyTcamUtilization(ShowPlatformFedStandbyTcamUtilization_c9600):
+    """ Parser for show platform hardware fed standby fwd-asic resource tcam utilization"""
     pass
 
 

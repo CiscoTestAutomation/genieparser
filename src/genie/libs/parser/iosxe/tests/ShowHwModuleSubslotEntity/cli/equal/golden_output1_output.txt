@@ -1,0 +1,202 @@
+Entity state for SPA in subslot 0/1
+SPA type:                 (0xC55) EPA-18X1GE
+last spa type:            (0xC55) EPA-18X1GE
+oper_status:              (1) ok
+card status:              (2) full
+last trap: spa type:      (0xC55) EPA-18X1GE
+last trap: oper status:   (1) ok
+last_spa_env_get_ok:      false
+last_spa_env_read_time:   (0) 145245938 msecs ago
+resync_reqd:              false
+resync_count:             0
+
+SPA physical index:       1520
+SPA container index:      1028
+
+transceiver 0
+  container index:        1571
+  module entity index:    1572
+  port index:             1573
+  chassis index:          0
+  operational status:     (2) ok
+  non-zero xcvr sensors:
+
+transceiver 1
+  container index:        1583
+  module entity index:    1584
+  port index:             1585
+  chassis index:          0
+  operational status:     (2) ok
+  non-zero xcvr sensors:
+
+transceiver 2
+  container index:        1595
+  module entity index:    1596
+  port index:             1597
+  chassis index:          0
+  operational status:     (2) ok
+  non-zero xcvr sensors:
+    sensor 0:     1599
+    sensor 1:     1600
+    sensor 2:     1601
+    sensor 3:     1602
+    sensor 4:     1603
+
+transceiver 3
+  container index:        1607
+  module entity index:    1608
+  port index:             1609
+  chassis index:          0
+  operational status:     (3) disabled
+  non-zero xcvr sensors:
+    sensor 0:     1611
+    sensor 1:     1612
+    sensor 2:     1613
+    sensor 3:     1614
+    sensor 4:     1615
+
+transceiver 4
+  container index:        1619
+  module entity index:    1620
+  port index:             1621
+  chassis index:          0
+  operational status:     (2) ok
+  non-zero xcvr sensors:
+
+transceiver 5
+  container index:        1631
+  module entity index:    1632
+  port index:             1633
+  chassis index:          0
+  operational status:     (3) disabled
+  non-zero xcvr sensors:
+    sensor 0:     1635
+    sensor 1:     1636
+    sensor 2:     1637
+    sensor 3:     1638
+    sensor 4:     1639
+
+transceiver 6
+  container index:        1643
+  module entity index:    1644
+  port index:             1645
+  chassis index:          0
+  operational status:     (3) disabled
+  non-zero xcvr sensors:
+    sensor 0:     1647
+    sensor 1:     1648
+    sensor 2:     1649
+    sensor 3:     1650
+    sensor 4:     1651
+
+transceiver 7
+  container index:        1655
+  module entity index:    1656
+  port index:             1657
+  chassis index:          0
+  operational status:     (2) ok
+  non-zero xcvr sensors:
+    sensor 0:     1659
+    sensor 1:     1660
+    sensor 2:     1661
+    sensor 3:     1662
+    sensor 4:     1663
+
+transceiver 8
+  container index:        1667
+  module entity index:    0
+  port index:             0
+  chassis index:          0
+  operational status:     (6) missing
+  non-zero xcvr sensors:
+
+transceiver 9
+  container index:        1679
+  module entity index:    1680
+  port index:             1681
+  chassis index:          0
+  operational status:     (2) ok
+  non-zero xcvr sensors:
+    sensor 0:     1683
+    sensor 1:     1684
+    sensor 2:     1685
+    sensor 3:     1686
+    sensor 4:     1687
+
+transceiver 10
+  container index:        1691
+  module entity index:    0
+  port index:             0
+  chassis index:          0
+  operational status:     (6) missing
+  non-zero xcvr sensors:
+
+transceiver 11
+  container index:        1703
+  module entity index:    0
+  port index:             0
+  chassis index:          0
+  operational status:     (6) missing
+  non-zero xcvr sensors:
+
+transceiver 12
+  container index:        1715
+  module entity index:    0
+  port index:             0
+  chassis index:          0
+  operational status:     (6) missing
+  non-zero xcvr sensors:
+
+transceiver 13
+  container index:        1727
+  module entity index:    1728
+  port index:             1729
+  chassis index:          0
+  operational status:     (2) ok
+  non-zero xcvr sensors:
+
+transceiver 14
+  container index:        1739
+  module entity index:    1740
+  port index:             1741
+  chassis index:          0
+  operational status:     (2) ok
+  non-zero xcvr sensors:
+
+transceiver 15
+  container index:        1751
+  module entity index:    0
+  port index:             0
+  chassis index:          0
+  operational status:     (6) missing
+  non-zero xcvr sensors:
+
+transceiver 16
+  container index:        1763
+  module entity index:    0
+  port index:             0
+  chassis index:          0
+  operational status:     (6) missing
+  non-zero xcvr sensors:
+
+transceiver 17
+  container index:        1775
+  module entity index:    0
+  port index:             0
+  chassis index:          0
+  operational status:     (6) missing
+  non-zero xcvr sensors:
+
+non-zero SPA temp sensors:
+sensor 0 has index 1546
+
+non-zero SPA volt sensors:
+sensor 0 has index 1558
+sensor 1 has index 1559
+sensor 2 has index 1560
+sensor 3 has index 1561
+sensor 4 has index 1562
+sensor 5 has index 1563
+
+non-zero SPA power sensors:
+all power sensor indices are zero

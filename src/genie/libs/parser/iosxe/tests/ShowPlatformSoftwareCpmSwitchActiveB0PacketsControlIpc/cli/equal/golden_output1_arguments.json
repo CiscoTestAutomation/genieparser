@@ -1,0 +1,6 @@
+{
+	"mode" 		: "active",
+        "mode2"         : "active",
+	"controlmode" 	: "control",
+	"transmitmode" 	: "rx"
+}

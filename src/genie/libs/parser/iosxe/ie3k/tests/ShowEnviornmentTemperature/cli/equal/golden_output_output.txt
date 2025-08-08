@@ -1,0 +1,8 @@
+Supervisor Temperature Value: 48 C
+Temperature State: GREEN
+
+System Temperature thresholds
+-------------------------------
+Minor Threshold    : 80 C (Yellow)
+Major Threshold    : 90 C (Red)
+Critical Threshold : 96 C

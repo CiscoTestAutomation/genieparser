@@ -1,0 +1,6 @@
+Host            Max Entries Use Count  Miss Count
+-------------------------------------------------
+
+15.0.0.5        100         1          0
+
+Total number of limit entries: 1

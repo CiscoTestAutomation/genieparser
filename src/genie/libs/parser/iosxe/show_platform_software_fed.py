@@ -16998,19 +16998,21 @@ class ShowPlatformSoftwareFedSwitchActiveSecurityFedDhcpSnoopVlanDetailSchema(Me
 
     schema = {
         "vlan": int,
-        "multicast_group_id": ListOf({
+        Optional("multicast_group_id"): ListOf({
             "oid": int,
             "asic": int
         }),
-        "trusted_ports_multicast_gid": str,
+        Optional("trusted_ports_multicast_gid"): str,
         "punject_switch_profile": str,
         Optional('no_trust_ports'): bool,
+        Optional("dhcp_snoop_enable"): str,
+        Optional("valid_snooping_di_handle"): str,
         Optional("trusted_ports"): ListOf({
             "interface": str,
             "interface_id": str,
             "po_id": str
         }),
-        "asic_specific_section": ListOf({
+        Optional("asic_specific_section"): ListOf({
             "asic": int,
             "acl_oid": int,
             "entries": ListOf({
@@ -17058,6 +17060,12 @@ class ShowPlatformSoftwareFedSwitchActiveSecurityFedDhcpSnoopVlanDetail(ShowPlat
 
         # No trust ports for this vlan
         p7 = re.compile(r'^No trust ports for this vlan$')
+
+        # DHCP SNOOP enable: FALSE
+        p8 = re.compile(r'^DHCP SNOOP enable: +(?P<dhcp_snoop_enable>\w+)$')
+
+        # Valid Snooping DI handle:none
+        p9 = re.compile(r'^Valid Snooping DI handle:(?P<di_handle>\S+)$')
 
         multicast_group_id = []
         trusted_ports = []
@@ -17135,6 +17143,20 @@ class ShowPlatformSoftwareFedSwitchActiveSecurityFedDhcpSnoopVlanDetail(ShowPlat
             m = p7.match(line)
             if m:
                 ret_dict['no_trust_ports'] = True
+                continue
+
+            # DHCP SNOOP enable: FALSE
+            m = p8.match(line)
+            if m:
+                group= m.groupdict()
+                ret_dict['dhcp_snoop_enable'] = group['dhcp_snoop_enable']
+                continue
+
+            # Valid Snooping DI handle:none
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['valid_snooping_di_handle'] = group['di_handle']
                 continue
 
         if acl_entries:

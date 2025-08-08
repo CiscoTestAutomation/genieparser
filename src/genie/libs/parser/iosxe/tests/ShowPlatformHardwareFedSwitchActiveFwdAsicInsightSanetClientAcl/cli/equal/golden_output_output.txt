@@ -1,0 +1,186 @@
+Sec_RAITT#$rm hardware fed switch active fwd-asic insight sanet_client_acl()
++-------------------+----------+---------------------------+-----------------------------------+-------------------------+--------------+
+| Client Policy OID | Priority | ACL Rule Key Fields       | ACL Rule Action Commands          | Identity ACL Group Info | Packet Count |
++-------------------+----------+---------------------------+-----------------------------------+-------------------------+--------------+
+|              1225 |        0 | VLAN_OUTER: vid:5         | DROP: false                       |                    1226 |           14 |
+|                   |          | SA: b0:7d:47:9e:7d:99     | IDENTITY_CLIENT_POLICY: 1225      |                         |              |
+|                   |          | SOURCE_SYSTEM_PORT: 0x22d | IPV4_CLIENT_POLICY_APPLIED: false |                         |              |
+|                   |          |                           | IPV6_CLIENT_POLICY_APPLIED: false |                         |              |
+|                   |          |                           | COUNTER: 1942                     |                         |              |
+|                   |          |                           |                                   |                         |              |
+|              1943 |     8192 | SA: b0:7d:47:9e:7d:99     | DROP: false                       |                    1944 |            0 |
+|                   |          | SOURCE_SYSTEM_PORT: 0x22d | IDENTITY_CLIENT_POLICY: 1943      |                         |              |
+|                   |          |                           | IPV4_CLIENT_POLICY_APPLIED: false |                         |              |
+|                   |          |                           | IPV6_CLIENT_POLICY_APPLIED: false |                         |              |
+|                   |          |                           | COUNTER: 1945                     |                         |              |
+|                   |          |                           |                                   |                         |              |
+|              3991 |     8193 | SA: b0:7d:47:9e:7d:9b     | DROP: false                       |                    3992 |           29 |
+|                   |          | SOURCE_SYSTEM_PORT: 0x22f | IDENTITY_CLIENT_POLICY: 3991      |                         |              |
+|                   |          |                           | IPV4_CLIENT_POLICY_APPLIED: true  |                         |              |
+|                   |          |                           | IPV6_CLIENT_POLICY_APPLIED: true  |                         |              |
+|                   |          |                           | OVERRIDE_VLAN: 7                  |                         |              |
+|                   |          |                           | COUNTER: 3993                     |                         |              |
+|                   |          |                           |                                   |                         |              |
+|              3972 |     8194 | SA: b0:7d:47:9e:7d:9d     | DROP: false                       |                    3973 |         4188 |
+|                   |          | SOURCE_SYSTEM_PORT: 0x231 | IDENTITY_CLIENT_POLICY: 3972      |                         |              |
+|                   |          |                           | IPV4_CLIENT_POLICY_APPLIED: true  |                         |              |
+|                   |          |                           | IPV6_CLIENT_POLICY_APPLIED: true  |                         |              |
+|                   |          |                           | OVERRIDE_VLAN: 9                  |                         |              |
+|                   |          |                           | COUNTER: 3974                     |                         |              |
+|                   |          |                           |                                   |                         |              |
+|              3975 |     8195 | SA: b0:7d:47:9e:7d:9e     | DROP: false                       |                    3976 |           20 |
+|                   |          | SOURCE_SYSTEM_PORT: 0x232 | IDENTITY_CLIENT_POLICY: 3975      |                         |              |
+|                   |          |                           | IPV4_CLIENT_POLICY_APPLIED: true  |                         |              |
+|                   |          |                           | IPV6_CLIENT_POLICY_APPLIED: true  |                         |              |
+|                   |          |                           | OVERRIDE_VLAN: 10                 |                         |              |
+|                   |          |                           | COUNTER: 3977                     |                         |              |
+|                   |          |                           |                                   |                         |              |
+|              3986 |     8197 | SA: b0:7d:47:9e:7d:98     | DROP: false                       |                    3987 |         5451 |
+|                   |          | SOURCE_SYSTEM_PORT: 0x22c | IDENTITY_CLIENT_POLICY: 3986      |                         |              |
+|                   |          |                           | IPV4_CLIENT_POLICY_APPLIED: false |                         |              |
+|                   |          |                           | IPV6_CLIENT_POLICY_APPLIED: false |                         |              |
+|                   |          |                           | OVERRIDE_VLAN: 4                  |                         |              |
+|                   |          |                           | COUNTER: 3988                     |                         |              |
+|                   |          |                           |                                   |                         |              |
+|              4065 |     8198 | SA: b0:7d:47:9e:7d:9c     | DROP: false                       |                    4066 |          498 |
+|                   |          | SOURCE_SYSTEM_PORT: 0x230 | IDENTITY_CLIENT_POLICY: 4065      |                         |              |
+|                   |          |                           | IPV4_CLIENT_POLICY_APPLIED: true  |                         |              |
+|                   |          |                           | IPV6_CLIENT_POLICY_APPLIED: true  |                         |              |
+|                   |          |                           | OVERRIDE_VLAN: 8                  |                         |              |
+|                   |          |                           | COUNTER: 4067                     |                         |              |
+|                   |          |                           |                                   |                         |              |
+|              4140 |     8199 | SA: b0:7d:47:9e:7d:95     | DROP: false                       |                    4141 |         7719 |
+|                   |          | SOURCE_SYSTEM_PORT: 0x229 | IDENTITY_CLIENT_POLICY: 4140      |                         |              |
+|                   |          |                           | IPV4_CLIENT_POLICY_APPLIED: false |                         |              |
+|                   |          |                           | IPV6_CLIENT_POLICY_APPLIED: false |                         |              |
+|                   |          |                           | COUNTER: 4142                     |                         |              |
+|                   |          |                           |                                   |                         |              |
+|              4144 |     8200 | SA: b0:7d:47:9e:7d:97     | DROP: false                       |                    4145 |         2935 |
+|                   |          | SOURCE_SYSTEM_PORT: 0x22b | IDENTITY_CLIENT_POLICY: 4144      |                         |              |
+|                   |          |                           | IPV4_CLIENT_POLICY_APPLIED: true  |                         |              |
+|                   |          |                           | IPV6_CLIENT_POLICY_APPLIED: true  |                         |              |
+|                   |          |                           | OVERRIDE_VLAN: 3                  |                         |              |
+|                   |          |                           | COUNTER: 4146                     |                         |              |
+|                   |          |                           |                                   |                         |              |
+|              4152 |     8201 | SA: b0:7d:47:9e:7d:96     | DROP: false                       |                    4153 |         2936 |
+|                   |          | SOURCE_SYSTEM_PORT: 0x22a | IDENTITY_CLIENT_POLICY: 4152      |                         |              |
+|                   |          |                           | IPV4_CLIENT_POLICY_APPLIED: false |                         |              |
+|                   |          |                           | IPV6_CLIENT_POLICY_APPLIED: false |                         |              |
+|                   |          |                           | OVERRIDE_VLAN: 2                  |                         |              |
+|                   |          |                           | COUNTER: 4154                     |                         |              |
+|                   |          |                           |                                   |                         |              |
+|              1223 |    16385 | VLAN_OUTER: vid:7         | DROP: false                       |                    1224 |            0 |
+|                   |          | SA: b0:7d:47:9e:7d:9b     | IDENTITY_CLIENT_POLICY: 1223      |                         |              |
+|                   |          | SOURCE_SYSTEM_PORT: 0x22f | IPV4_CLIENT_POLICY_APPLIED: false |                         |              |
+|                   |          |                           | IPV6_CLIENT_POLICY_APPLIED: false |                         |              |
+|                   |          |                           | COUNTER: 3994                     |                         |              |
+|                   |          |                           |                                   |                         |              |
+|              1223 |    16386 | VLAN_OUTER: vid:8         | DROP: false                       |                    1224 |            0 |
+|                   |          | SA: b0:7d:47:9e:7d:9c     | IDENTITY_CLIENT_POLICY: 1223      |                         |              |
+|                   |          | SOURCE_SYSTEM_PORT: 0x230 | IPV4_CLIENT_POLICY_APPLIED: false |                         |              |
+|                   |          |                           | IPV6_CLIENT_POLICY_APPLIED: false |                         |              |
+|                   |          |                           | COUNTER: 3492                     |                         |              |
+|                   |          |                           |                                   |                         |              |
+|              1223 |    16387 | VLAN_OUTER: vid:1         | DROP: false                       |                    1224 |            0 |
+|                   |          | SA: b0:7d:47:9e:7d:95     | IDENTITY_CLIENT_POLICY: 1223      |                         |              |
+|                   |          | SOURCE_SYSTEM_PORT: 0x229 | IPV4_CLIENT_POLICY_APPLIED: false |                         |              |
+|                   |          |                           | IPV6_CLIENT_POLICY_APPLIED: false |                         |              |
+|                   |          |                           | COUNTER: 4143                     |                         |              |
+|                   |          |                           |                                   |                         |              |
+|              1223 |    16388 | VLAN_OUTER: vid:3         | DROP: false                       |                    1224 |            0 |
+|                   |          | SA: b0:7d:47:9e:7d:97     | IDENTITY_CLIENT_POLICY: 1223      |                         |              |
+|                   |          | SOURCE_SYSTEM_PORT: 0x22b | IPV4_CLIENT_POLICY_APPLIED: false |                         |              |
+|                   |          |                           | IPV6_CLIENT_POLICY_APPLIED: false |                         |              |
+|                   |          |                           | COUNTER: 4147                     |                         |              |
+|                   |          |                           |                                   |                         |              |
+|              1223 |    16389 | VLAN_OUTER: vid:2         | DROP: false                       |                    1224 |            0 |
+|                   |          | SA: b0:7d:47:9e:7d:96     | IDENTITY_CLIENT_POLICY: 1223      |                         |              |
+|                   |          | SOURCE_SYSTEM_PORT: 0x22a | IPV4_CLIENT_POLICY_APPLIED: false |                         |              |
+|                   |          |                           | IPV6_CLIENT_POLICY_APPLIED: false |                         |              |
+|                   |          |                           | COUNTER: 4155                     |                         |              |
+|                   |          |                           |                                   |                         |              |
+|              1223 |    16390 | VLAN_OUTER: vid:10        | DROP: false                       |                    1224 |            0 |
+|                   |          | SA: b0:7d:47:9e:7d:9e     | IDENTITY_CLIENT_POLICY: 1223      |                         |              |
+|                   |          | SOURCE_SYSTEM_PORT: 0x232 | IPV4_CLIENT_POLICY_APPLIED: false |                         |              |
+|                   |          |                           | IPV6_CLIENT_POLICY_APPLIED: false |                         |              |
+|                   |          |                           | COUNTER: 3981                     |                         |              |
+|                   |          |                           |                                   |                         |              |
+|              1223 |    16391 | VLAN_OUTER: vid:9         | DROP: false                       |                    1224 |            0 |
+|                   |          | SA: b0:7d:47:9e:7d:9d     | IDENTITY_CLIENT_POLICY: 1223      |                         |              |
+|                   |          | SOURCE_SYSTEM_PORT: 0x231 | IPV4_CLIENT_POLICY_APPLIED: false |                         |              |
+|                   |          |                           | IPV6_CLIENT_POLICY_APPLIED: false |                         |              |
+|                   |          |                           | COUNTER: 3980                     |                         |              |
+|                   |          |                           |                                   |                         |              |
+|              1223 |    16393 | VLAN_OUTER: vid:4         | DROP: false                       |                    1224 |            0 |
+|                   |          | SA: b0:7d:47:9e:7d:98     | IDENTITY_CLIENT_POLICY: 1223      |                         |              |
+|                   |          | SOURCE_SYSTEM_PORT: 0x22c | IPV4_CLIENT_POLICY_APPLIED: false |                         |              |
+|                   |          |                           | IPV6_CLIENT_POLICY_APPLIED: false |                         |              |
+|                   |          |                           | COUNTER: 3989                     |                         |              |
+|                   |          |                           |                                   |                         |              |
+|              1227 |    28672 | SOURCE_SYSTEM_PORT: 0x22f | DROP: false                       |                    1228 |            3 |
+|                   |          |                           | IDENTITY_CLIENT_POLICY: 1227      |                         |              |
+|                   |          |                           | IPV4_CLIENT_POLICY_APPLIED: false |                         |              |
+|                   |          |                           | IPV6_CLIENT_POLICY_APPLIED: false |                         |              |
+|                   |          |                           | COUNTER: 3952                     |                         |              |
+|                   |          |                           |                                   |                         |              |
+|              1227 |    28673 | SOURCE_SYSTEM_PORT: 0x230 | DROP: false                       |                    1228 |            2 |
+|                   |          |                           | IDENTITY_CLIENT_POLICY: 1227      |                         |              |
+|                   |          |                           | IPV4_CLIENT_POLICY_APPLIED: false |                         |              |
+|                   |          |                           | IPV6_CLIENT_POLICY_APPLIED: false |                         |              |
+|                   |          |                           | COUNTER: 3953                     |                         |              |
+|                   |          |                           |                                   |                         |              |
+|              1221 |    28674 | SOURCE_SYSTEM_PORT: 0x233 | DROP: false                       |                    1222 |            0 |
+|                   |          |                           | IDENTITY_CLIENT_POLICY: 1221      |                         |              |
+|                   |          |                           | IPV4_CLIENT_POLICY_APPLIED: false |                         |              |
+|                   |          |                           | IPV6_CLIENT_POLICY_APPLIED: false |                         |              |
+|                   |          |                           | COUNTER: 3954                     |                         |              |
+|                   |          |                           |                                   |                         |              |
+|              1227 |    28675 | SOURCE_SYSTEM_PORT: 0x22b | DROP: false                       |                    1228 |            1 |
+|                   |          |                           | IDENTITY_CLIENT_POLICY: 1227      |                         |              |
+|                   |          |                           | IPV4_CLIENT_POLICY_APPLIED: false |                         |              |
+|                   |          |                           | IPV6_CLIENT_POLICY_APPLIED: false |                         |              |
+|                   |          |                           | COUNTER: 3961                     |                         |              |
+|                   |          |                           |                                   |                         |              |
+|              1227 |    28676 | SOURCE_SYSTEM_PORT: 0x22e | DROP: false                       |                    1228 |            1 |
+|                   |          |                           | IDENTITY_CLIENT_POLICY: 1227      |                         |              |
+|                   |          |                           | IPV4_CLIENT_POLICY_APPLIED: false |                         |              |
+|                   |          |                           | IPV6_CLIENT_POLICY_APPLIED: false |                         |              |
+|                   |          |                           | COUNTER: 3962                     |                         |              |
+|                   |          |                           |                                   |                         |              |
+|              1227 |    28677 | SOURCE_SYSTEM_PORT: 0x231 | DROP: false                       |                    1228 |           17 |
+|                   |          |                           | IDENTITY_CLIENT_POLICY: 1227      |                         |              |
+|                   |          |                           | IPV4_CLIENT_POLICY_APPLIED: false |                         |              |
+|                   |          |                           | IPV6_CLIENT_POLICY_APPLIED: false |                         |              |
+|                   |          |                           | COUNTER: 3963                     |                         |              |
+|                   |          |                           |                                   |                         |              |
+|              1227 |    28678 | SOURCE_SYSTEM_PORT: 0x232 | DROP: false                       |                    1228 |          121 |
+|                   |          |                           | IDENTITY_CLIENT_POLICY: 1227      |                         |              |
+|                   |          |                           | IPV4_CLIENT_POLICY_APPLIED: false |                         |              |
+|                   |          |                           | IPV6_CLIENT_POLICY_APPLIED: false |                         |              |
+|                   |          |                           | COUNTER: 3964                     |                         |              |
+|                   |          |                           |                                   |                         |              |
+|              1227 |    28679 | SOURCE_SYSTEM_PORT: 0x229 | DROP: false                       |                    1228 |            3 |
+|                   |          |                           | IDENTITY_CLIENT_POLICY: 1227      |                         |              |
+|                   |          |                           | IPV4_CLIENT_POLICY_APPLIED: false |                         |              |
+|                   |          |                           | IPV6_CLIENT_POLICY_APPLIED: false |                         |              |
+|                   |          |                           | COUNTER: 3966                     |                         |              |
+|                   |          |                           |                                   |                         |              |
+|              1227 |    28680 | SOURCE_SYSTEM_PORT: 0x22a | DROP: false                       |                    1228 |            1 |
+|                   |          |                           | IDENTITY_CLIENT_POLICY: 1227      |                         |              |
+|                   |          |                           | IPV4_CLIENT_POLICY_APPLIED: false |                         |              |
+|                   |          |                           | IPV6_CLIENT_POLICY_APPLIED: false |                         |              |
+|                   |          |                           | COUNTER: 3967                     |                         |              |
+|                   |          |                           |                                   |                         |              |
+|              1227 |    28681 | SOURCE_SYSTEM_PORT: 0x22c | DROP: false                       |                    1228 |           13 |
+|                   |          |                           | IDENTITY_CLIENT_POLICY: 1227      |                         |              |
+|                   |          |                           | IPV4_CLIENT_POLICY_APPLIED: false |                         |              |
+|                   |          |                           | IPV6_CLIENT_POLICY_APPLIED: false |                         |              |
+|                   |          |                           | COUNTER: 3968                     |                         |              |
+|                   |          |                           |                                   |                         |              |
+|              1227 |    28682 | SOURCE_SYSTEM_PORT: 0x22d | DROP: false                       |                    1228 |          211 |
+|                   |          |                           | IDENTITY_CLIENT_POLICY: 1227      |                         |              |
+|                   |          |                           | IPV4_CLIENT_POLICY_APPLIED: false |                         |              |
+|                   |          |                           | IPV6_CLIENT_POLICY_APPLIED: false |                         |              |
+|                   |          |                           | COUNTER: 3969                     |                         |              |
+|                   |          |                           |                                   |                         |              |
++-------------------+----------+---------------------------+-----------------------------------+-------------------------+--------------+

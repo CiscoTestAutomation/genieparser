@@ -1,64 +1,64 @@
-expected_output={
+expected_output = {
   'ifm_lag_members': {
     '41_0': {
+      'empty_lag_port': 'False',
       'lag_gid': 41,
       'member_index': 0,
-      'port_type': 'MPP_PORT',
       'port_id': 2622,
+      'port_type': 'MPP_PORT',
       'rx_enabled': 'True',
+      'sysport_detail': {
+        'serdes': "''",
+        'sysport_cookie': 'Gi1/0/4',
+        'sysport_gid': 44,
+      },
       'tx_enabled': 'True',
       'weight': 0.25,
-      'empty_lag_port': 'False',
-      'sysport_detail': {
-        'sysport_gid': 44,
-        'sysport_cookie': 'Gi1/0/4',
-        'serdes': "''"
-      }
     },
     '41_1': {
+      'empty_lag_port': 'False',
       'lag_gid': 41,
       'member_index': 1,
-      'port_type': 'MPP_PORT',
       'port_id': 2662,
+      'port_type': 'MPP_PORT',
       'rx_enabled': 'True',
+      'sysport_detail': {
+        'serdes': "''",
+        'sysport_cookie': 'Gi1/0/35',
+        'sysport_gid': 75,
+      },
       'tx_enabled': 'True',
       'weight': 0.25,
-      'empty_lag_port': 'False',
-      'sysport_detail': {
-        'sysport_gid': 75,
-        'sysport_cookie': 'Gi1/0/3',
-        'serdes': "''"
-      }
     },
     '41_2': {
+      'empty_lag_port': 'False',
       'lag_gid': 41,
       'member_index': 2,
-      'port_type': 'REMOTE_PORT',
       'port_id': 2322,
+      'port_type': 'REMOTE_PORT',
       'rx_enabled': 'True',
+      'sysport_detail': {
+        'serdes': "''",
+        'sysport_cookie': 'Gi2/0/1',
+        'sysport_gid': 297,
+      },
       'tx_enabled': 'True',
       'weight': 0.25,
-      'empty_lag_port': 'False',
-      'sysport_detail': {
-        'sysport_gid': 297,
-        'sysport_cookie': 'Gi2/0/1',
-        'serdes': "''"
-      }
     },
     '41_3': {
+      'empty_lag_port': 'False',
       'lag_gid': 41,
       'member_index': 3,
-      'port_type': 'MPP_PORT',
       'port_id': 2200,
+      'port_type': 'MPP_PORT',
       'rx_enabled': 'True',
+      'sysport_detail': {
+        'serdes': "''",
+        'sysport_cookie': 'Gi1/0/45',
+        'sysport_gid': 85,
+      },
       'tx_enabled': 'True',
       'weight': 0.25,
-      'empty_lag_port': 'False',
-      'sysport_detail': {
-        'sysport_gid': 85,
-        'sysport_cookie': 'Gi1/0/4',
-        'serdes': "''"
-      }
-    }
-  }
+    },
+  },
 }

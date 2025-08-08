@@ -1,0 +1,10 @@
+MAP-T Domain 1
+   Mode MAP-T
+   Default-mapping-rule
+      Ip-v6-prefix 2001:DA8:B001:FFFF::/64
+   Basic-mapping-rule
+      Ip-v6-prefix 2001:DA8:B001::/56
+      Ip-v4-prefix 202.1.0.128/28
+      Port-parameters
+         Share-ratio 16   Contiguous-ports 64   Start-port 1024
+         Share-ratio-bits 4   Contiguous-ports-bits 6   Port-offset-bits 6

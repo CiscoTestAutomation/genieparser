@@ -1,6 +1,7 @@
 expected_output = {
     "current_mode": "STATUS",
     "system": "GREEN",
+    "usb_console": "BLACK",
     "express_setup": "BLACK",
     "alarm-out": "GREEN",
     "alarm-in": "GREEN",

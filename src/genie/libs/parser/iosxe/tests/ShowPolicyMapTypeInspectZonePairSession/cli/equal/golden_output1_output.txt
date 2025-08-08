@@ -1,0 +1,17 @@
+show policy-map type inspect zone-pair z1z2 session
+  Zone-pair: z1z2
+  Service-policy inspect : pmap
+
+    Class-map: cmap (match-any)
+      Match: protocol udp
+      Inspect
+        Established Sessions
+         Session ID 0x00000000 (10.1.1.1:10001)=>(20.1.1.1:20001) udp SIS_OPEN
+          Created 00:00:22, Last heard 00:00:13
+          Bytes sent (initiator:responder) [10000:0]
+
+
+    Class-map: class-default (match-any)
+      Match: any
+      Drop
+        0 packets, 0 bytes

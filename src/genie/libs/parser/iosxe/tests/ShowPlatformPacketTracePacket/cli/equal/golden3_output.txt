@@ -1,0 +1,32 @@
+show platform packet-trace packet 2
+Packet: 2           CBUG ID: 2
+Summary
+  Input     : GigabitEthernet0/1/3
+  Output    : GigabitEthernet0/1/0
+  State     : FWD
+  Timestamp
+    Start   : 11086832720465 ns (07/02/2025 18:23:26.637782 UTC)
+    Stop    : 11086833456167 ns (07/02/2025 18:23:26.638518 UTC)
+Path Trace
+  Feature: IPV4(Output)
+    Input       : GigabitEthernet0/1/3
+    Output      : GigabitEthernet0/1/0
+    Source      : 10.1.1.1
+    Destination : 20.1.1.1
+    Protocol    : 17 (UDP)
+      SrcPort   : 10001
+      DstPort   : 20001
+  Feature: ZBFW
+    Action  : Fwd
+    Zone-pair name         : in-out
+    Class-map name         : cmap
+    Policy    name         : pmap
+    Input interface        : GigabitEthernet0/1/3
+    Egress interface       : GigabitEthernet0/1/0
+    Input  VPN ID          : 65535
+    Output VPN ID          : 65535
+    Input  VRF ID:Name     : 0:
+    Output VRF ID:Name     : 0:
+    AVC Classification ID  : 0
+    AVC Classification name: N/A
+    UTD Context ID         : 0

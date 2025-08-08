@@ -34,6 +34,7 @@
     * show interfaces {interface} capabilities
     * show interfaces {interface} vlan mapping
     * show interfaces {interface} human-readable
+    * show interfaces transceiver properties
     * show interfaces transceiver module {mod}
 """
 
@@ -5757,6 +5758,159 @@ class ShowInterfaceHumanReadable(ShowInterfaceHumanReadableSchema):
         return ret_dict
 
 
+# ======================================================
+# Schema for 'show interfaces transceiver properties'
+# ======================================================
+
+class ShowInterfacesTransceiverPropertiesSchema(MetaParser):
+    """Schema for show interfaces transceiver properties"""
+
+    schema = {
+        'interface': {
+            Any(): {
+                Optional('administrative_speed'): str,
+                Optional('administrative_duplex'): str,
+                Optional('administrative_auto_mdix'): str,
+                Optional('administrative_power_inline'): str,
+                Optional('operational_speed'): str,
+                Optional('operational_duplex'): str,
+                Optional('operational_auto_mdix'): str,
+                Optional('media_type'): str,
+                Optional('max_allocated_power'): str,
+                Optional('transceiver_max_power'): str                
+            }
+        }
+    }
+    
+# ======================================================
+# Parser for 'show interfaces transceiver properties'
+# ======================================================
+
+class ShowInterfacesTransceiverProperties(ShowInterfacesTransceiverPropertiesSchema):
+    """Parser for show interfaces transceiver properties"""
+
+    cli_command = 'show interfaces transceiver properties'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Name: Te1/0/1
+        p1 = re.compile(r'^Name\s+:\s+(?P<interface>\S+)$')
+
+        # Administrative Speed: 1000 Mbps
+        p2 = re.compile(r'^Administrative Speed:\s+(?P<value>\S+)$')
+
+        # Administrative Duplex: full
+        p3 = re.compile(r'^Administrative Duplex:\s+(?P<value>\S+)$')
+
+        # Administrative Auto-MDIX: off
+        p4 = re.compile(r'^Administrative Auto-MDIX:\s+(?P<value>\S+)$')
+
+        # Administrative Power Inline: off
+        p5 = re.compile(r'^Administrative Power Inline:\s+(?P<value>\S+)$')
+
+        # Operational Speed: 1000 Mbps
+        p6 = re.compile(r'^Operational Speed:\s+(?P<value>\S+)$')
+
+        # Operational Duplex: full
+        p7 = re.compile(r'^Operational Duplex:\s+(?P<value>\S+)$')
+
+        # Operational Auto-MDIX: off
+        p8 = re.compile(r'^Operational Auto-MDIX:\s+(?P<value>\S+)$')
+
+        # Media Type: SFP
+        p9 = re.compile(r'^Media Type:\s+(?P<value>.+)$')
+
+        # Max Allocated Power: Max
+        p10 = re.compile(r'^Max Allocated Power:\s+(?P<value>.+)$')
+
+        # Transceiver Max Power: N/A
+        p11 = re.compile(r'^Transceiver Max Power:\s+(?P<value>.+)$')
+
+        # Configured Media: 1000BASE-T
+        p12 = re.compile(r'^Configured\s+Media\s*:\s*(?P<value>.+)$')
+
+        # Active Media: 1000BASE-T
+        p13 = re.compile(r'^Active\s+Media\s*:\s*(?P<value>.+)$')
+
+        ret_dict = {}
+        int_dict = None
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # Name: Te1/0/1
+            m = p1.match(line)
+            if m:
+                intf = m.group("interface")
+                int_dict = ret_dict.setdefault("interface", {}).setdefault(intf, {})
+                continue
+   
+
+            # Administrative Speed: 1000 Mbps
+            m = p2.match(line)
+            if m:
+                int_dict["administrative_speed"] = m.group("value")
+                continue
+
+            # Administrative Duplex: full   
+            m = p3.match(line) 
+            if m:
+                int_dict["administrative_duplex"] = m.group("value")
+                continue
+
+            # Administrative Auto-MDIX: off
+            m = p4.match(line)
+            if m :
+                int_dict["administrative_auto_mdix"] = m.group("value") 
+                continue           
+
+            # Administrative Power Inline: off
+            m = p5.match(line)
+            if m:
+                int_dict["administrative_power_inline"] = m.group("value")
+                continue
+            
+            # Operational Speed: 1000 Mbps
+            m = p6.match(line)
+            if m:         
+                int_dict["operational_speed"] = m.group("value")
+                continue
+            
+            # Operational Duplex: full
+            m = p7.match(line)
+            if m:
+                int_dict["operational_duplex"] = m.group("value")
+                continue
+            
+            # Operational Auto-MDIX: off
+            m = p8.match(line)
+            if m :
+                int_dict["operational_auto_mdix"] = m.group("value")
+                continue
+
+            # Media Type: SFP
+            m = p9.match(line)  
+            if m :
+                int_dict["media_type"] = m.group("value")
+                continue
+
+            # Max Allocated Power: Max
+            m = p10.match(line)
+            if m :
+                int_dict["max_allocated_power"] = m.group("value")  
+                continue
+
+            # Transceiver Max Power: N/A
+            m = p11.match(line)
+            if m :
+                int_dict["transceiver_max_power"] = m.group("value")
+                continue
+                        
+        return ret_dict
 
 # ======================================================
 # Schema for 'show interfaces transceiver module {mod}'

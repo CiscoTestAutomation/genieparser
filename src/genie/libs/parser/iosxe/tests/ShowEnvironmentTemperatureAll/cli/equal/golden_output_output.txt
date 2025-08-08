@@ -1,0 +1,79 @@
+Switch#show environment temperature all
+Switch 1: SYSTEM TEMPERATURE is OK
+Switch 1 - Inlet Temp Sensor 48 C
+Temperature State: GREEN
+Yellow Threshold : 80 C
+Red Threshold    : 96 C
+
+Switch 1 - Outlet Temp Sensor 47 C
+Temperature State: GREEN
+Yellow Threshold : 80 C
+Red Threshold    : 96 C
+
+Switch 1 - External-1 Temp Sensor 48 C
+Temperature State: GREEN
+Yellow Threshold : 80 C
+Red Threshold    : 96 C
+
+Switch 1 - External-2 Temp Sensor 44 C
+Temperature State: GREEN
+Yellow Threshold : 80 C
+Red Threshold    : 96 C
+
+Switch 1 - HotSpot Temp Sensor 52 C
+Temperature State: GREEN
+Yellow Threshold : 105 C
+Red Threshold    : 125 C
+
+Switch 2: SYSTEM TEMPERATURE is OK
+Switch 2 - Inlet Temp Sensor 41 C
+Temperature State: GREEN
+Yellow Threshold : 80 C
+Red Threshold    : 96 C
+
+Switch 2 - Outlet Temp Sensor 44 C
+Temperature State: GREEN
+Yellow Threshold : 80 C
+Red Threshold    : 96 C
+
+Switch 2 - External-1 Temp Sensor 41 C
+Temperature State: GREEN
+Yellow Threshold : 80 C
+Red Threshold    : 96 C
+
+Switch 2 - External-2 Temp Sensor 39 C
+Temperature State: GREEN
+Yellow Threshold : 80 C
+Red Threshold    : 96 C
+
+Switch 2 - HotSpot Temp Sensor 45 C
+Temperature State: GREEN
+Yellow Threshold : 105 C
+Red Threshold    : 125 C
+
+Switch 3: SYSTEM TEMPERATURE is OK
+Switch 3 - Inlet Temp Sensor 45 C
+Temperature State: GREEN
+Yellow Threshold : 80 C
+Red Threshold    : 96 C
+
+Switch 3 - Outlet Temp Sensor 46 C
+Temperature State: GREEN
+Yellow Threshold : 80 C
+Red Threshold    : 96 C
+
+Switch 3 - External-1 Temp Sensor 45 C
+Temperature State: GREEN
+Yellow Threshold : 80 C
+Red Threshold    : 96 C
+
+Switch 3 - External-2 Temp Sensor 41 C
+Temperature State: GREEN
+Yellow Threshold : 80 C
+Red Threshold    : 96 C
+
+Switch 3 - HotSpot Temp Sensor 50 C
+Temperature State: GREEN
+Yellow Threshold : 105 C
+Red Threshold    : 125 C
+

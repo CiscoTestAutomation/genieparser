@@ -91,13 +91,13 @@ class ShowSoftwareAuthenticityRunning(ShowSoftwareAuthenticityRunningSchema):
         p1 = re.compile(r'^PACKAGE (?P<package_name>.+)$')
         
         #SYSTEM IMAGE
-        p2 = re.compile(r'^SYSTEM IMAGE(?P<system_image>.+)$')
+        p2 = re.compile(r'^SYSTEM IMAGE$')
         
         #ROMMON
-        p3 = re.compile(r'^ROMMON(?P<rommon>.+)$')
+        p3 = re.compile(r'^ROMMON$')
         
         # Microloader
-        p4 = re.compile(r'^Microloader(?P<microloader>.+)$')
+        p4 = re.compile(r'^Microloader$')
         
         #General- Common Name           : CiscoSystems
         p5 = re.compile(r'^(?P<key>[\w\s]+): (?P<value>.+)$')

@@ -4144,3 +4144,147 @@ class ShowCtsPolicySgt(ShowCtsPolicySgtSchema):
 
         return ret_dict
 
+# ===================================
+# Schema for:
+#  * 'show cts ha sync-status'
+# ===================================
+class ShowCtsHaSyncStatusSchema(MetaParser):
+    """Schema for show cts ha sync-status."""
+
+    schema = {
+        "cts_ha_sync_status": {
+            "environment_data_sync": str,
+            "policy_sync": str,
+        }
+    }
+
+
+# ===================================
+# Parser for:
+#  * 'show cts ha sync-status'
+# ===================================
+class ShowCtsHaSyncStatus(ShowCtsHaSyncStatusSchema):
+    """Parser for show cts ha sync-status"""
+
+    cli_command = 'show cts ha sync-status'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # CTS environment-data sync to standby is complete or not started.
+        p1 = re.compile(r"^CTS\s+environment-data\s+sync\s+to\s+standby\s+is\s+(?P<environment_data_sync>.+)\.$")
+
+        # CTS policy sync to standby is complete or not started.
+        p2 = re.compile(r"^CTS\s+policy\s+sync\s+to\s+standby\s+is\s+(?P<policy_sync>.+)\.$")
+
+        for line in out.splitlines():
+            line = line.strip()
+            
+            # CTS environment-data sync to standby is complete or not started.
+            m = p1.match(line)
+            if m:
+                if "cts_ha_sync_status" not in ret_dict:
+                    ret_dict["cts_ha_sync_status"] = {}
+                ret_dict["cts_ha_sync_status"]["environment_data_sync"] = m.group('environment_data_sync')
+                continue
+
+            # CTS policy sync to standby is complete or not started.
+            m = p2.match(line)
+            if m:
+                if "cts_ha_sync_status" not in ret_dict:
+                    ret_dict["cts_ha_sync_status"] = {}
+                ret_dict["cts_ha_sync_status"]["policy_sync"] = m.group('policy_sync')
+                continue
+
+        return ret_dict
+
+
+# ===================================
+# Schema for:
+#  * 'show cts provisioning queue'
+# ===================================
+class ShowCtsProvisioningQueueSchema(MetaParser):
+    """Schema for show cts provisioning queue."""
+
+    schema = {
+        "cts_provisioning_queue": {
+            "servers": {
+                Any(): {
+                    "server_ip": str,
+                    "server_type": str,
+                    "provisioned": str,
+                    "aid": str
+                }
+            }
+        }
+    }
+
+
+# ===================================
+# Parser for:
+#  * 'show cts provisioning queue'
+# ===================================
+class ShowCtsProvisioningQueue(ShowCtsProvisioningQueueSchema):
+    """Parser for show cts provisioning queue"""
+
+    cli_command = 'show cts provisioning queue'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # Server: 10.77.128.95, Type: Radius, Provisioned: YES     
+        p1 = re.compile(r"^Server:\s+(?P<server_ip>\d+\.\d+\.\d+\.\d+),\s+Type:\s+(?P<server_type>.*?),\s+Provisioned:\s+(?P<provisioned>YES|NO)")
+
+        # AID: 1695af86d38b22dc7c9500408e2dd35d
+        p2 = re.compile(r"^AID:\s+(?P<aid>\S+)")
+
+        server_index = 1
+        current_server = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+            
+            # Skip empty lines
+            if not line:
+                continue
+
+            # Server: 10.77.128.95, Type: Radius, Provisioned: YES
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                current_server = {
+                    "server_ip": groups['server_ip'],
+                    "server_type": groups['server_type'],
+                    "provisioned": groups['provisioned']
+                }
+                continue
+
+            # AID: 1695af86d38b22dc7c9500408e2dd35d
+            m = p2.match(line)
+            if m:
+                groups = m.groupdict()
+                current_server["aid"] = groups['aid']
+                
+                # Initialize the dictionary structure if not exists
+                if "cts_provisioning_queue" not in ret_dict:
+                    ret_dict["cts_provisioning_queue"] = {}
+                if "servers" not in ret_dict["cts_provisioning_queue"]:
+                    ret_dict["cts_provisioning_queue"]["servers"] = {}
+                
+                # Add the complete server entry
+                ret_dict["cts_provisioning_queue"]["servers"][server_index] = current_server
+                server_index += 1
+                current_server = {}
+                continue
+
+        return ret_dict

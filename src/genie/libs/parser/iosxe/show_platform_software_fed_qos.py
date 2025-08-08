@@ -332,9 +332,9 @@ class ShowPlatformSoftwareFedSwitchQosPolicyTargetStatus(
     def cli(self, switch=None, output=None):
         if output is None:
             if switch:
-                cmd = self.cli_command[0]
-            else:
                 cmd = self.cli_command[1].format(switch=switch)
+            else:
+                cmd = self.cli_command[0]
 
             output = self.device.execute(cmd)
 
@@ -541,6 +541,7 @@ class ShowPlatformSoftwareFedQosInterfaceSuperParserSchema(MetaParser):
         },
         Optional("bind_information"): {
             "port_type": str,
+            Optional('asic'): int,
             Optional("iqp_counter_size"): int,
             Optional("iqp_counter_oid"): str,
             Optional("eqp_counter_size"): int,
@@ -763,7 +764,8 @@ class ShowPlatformSoftwareFedQosInterfaceSuperParser(
 
         # NPD: Bind Information
         # SDK: Bind Information
-        p7 = re.compile(r"^(NPD|SDK): Bind Information$")
+        # SDK: Bind Information (Asic: 1)
+        p7 = re.compile(r"^(NPD|SDK): Bind Information\s*(\(Asic: (?P<asic>\d+)\))?$")
 
         # Port Type: L3
         # Port Type: L2 ETHER CHANNEL
@@ -1166,9 +1168,12 @@ class ShowPlatformSoftwareFedQosInterfaceSuperParser(
 
             # NPD: Bind Information
             # SDK: Bind Information
+            # SDK: Bind Information (Asic: 1)
             m = p7.match(line)
             if m:
                 bind_dict = ret_dict.setdefault("bind_information", {})
+                if m.groupdict()['asic']:
+                    bind_dict.setdefault("asic", int(m.groupdict()["asic"]))
                 continue
 
             # Port Type: L3

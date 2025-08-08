@@ -1,0 +1,6 @@
+Pwr Supply         Type     Status     Voltage
+
+------------------------------------------------
+POWER SUPPLY-A      DC      OK      24V
+
+POWER SUPPLY-B      DC      Alarm Disabled

@@ -36,6 +36,8 @@ IOSXE parsers for the following show commands:
    * show crypto pki crls download
    * show crypto ipsec sa ipv6 detailed
    * show crypto ikev2 diagnose error
+   * show crypto pki counters
+   * show crypto pki trustpool count downloaded
 """
 
 # Python
@@ -44,6 +46,7 @@ import re
 # Metaparser
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Optional, Or
+from genie.metaparser.util.schemaengine import ListOf
 
 # Genie Libs
 from genie.libs.parser.utils.common import Common
@@ -4671,7 +4674,8 @@ class ShowCryptoIpsecSaDetail(ShowCryptoIpsecSaDetailSchema):
             output = self.device.execute(self.cli_command)
 
         # interface: GigabitEthernet3
-        p1 = re.compile(r'^interface:+ (?P<interface>[\w\d]+)$')
+        # interface: GigabitEthernet0/0/0
+        p1 = re.compile(r'^interface:+ (?P<interface>[\w\d\/]+)$')
 
         # Crypto map tag: vpn-crypto-map, local addr 1.1.1.2
         p2 = re.compile(r'^Crypto map tag: (?P<crypto_map_tag>[\w\d\-]+), +local addr +(?P<local_addr>[\d\.]+)$')
@@ -11081,5 +11085,167 @@ class ShowCryptoIkev2DiagnoseError(ShowCryptoIkev2DiagnoseErrorSchema):
                 group = m.groupdict()
                 errors[current_error_code]['traceback'].append(group['traceback'])
                 continue
+
+        return parsed_dict
+
+# =================================================
+#  Schema for 'show crypto pki counters'
+# =================================================
+class ShowCryptoPkiCountersSchema(MetaParser):
+    """Schema for `show crypto pki counters`"""
+    schema = {
+        'pki_sessions_started': int,
+        'pki_sessions_ended': int,
+        'pki_sessions_active': int,
+        'successful_validations': int,
+        'failed_validations': int,
+        'bypassed_validations': int,
+        'pending_validations': int,
+        'crls_checked': int,
+        'crl_fetch_attempts': int,
+        'crl_failed_attempts': int,
+        'crl_rejected_busy_fetching': int,
+        'aaa_authorizations': int,
+    }
+
+# =================================================
+#  Parser for 'show crypto pki counters'
+# =================================================
+class ShowCryptoPkiCounters(ShowCryptoPkiCountersSchema):
+    """Parser for `show crypto pki counters`"""
+
+    cli_command = 'show crypto pki counters'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+
+        # PKI Sessions Started: 12
+        p1 = re.compile(r'^PKI Sessions Started:\s*(?P<val>\d+)$')
+        # PKI Sessions Ended: 12
+        p2 = re.compile(r'^PKI Sessions Ended:\s*(?P<val>\d+)$')
+        # PKI Sessions Active: 0
+        p3 = re.compile(r'^PKI Sessions Active:\s*(?P<val>\d+)$')
+        # Successful Validations: 6
+        p4 = re.compile(r'^Successful Validations:\s*(?P<val>\d+)$')
+        # Failed Validations: 0
+        p5 = re.compile(r'^Failed Validations:\s*(?P<val>\d+)$')
+        # Bypassed Validations: 0
+        p6 = re.compile(r'^Bypassed Validations:\s*(?P<val>\d+)$')
+        # Pending Validations: 0
+        p7 = re.compile(r'^Pending Validations:\s*(?P<val>\d+)$')
+        # CRLs checked: 0
+        p8 = re.compile(r'^CRLs checked:\s*(?P<val>\d+)$')
+        # CRL - fetch attempts: 0
+        p9 = re.compile(r'^CRL - fetch attempts:\s*(?P<val>\d+)$')
+        # CRL - failed attempts: 0
+        p10 = re.compile(r'^CRL - failed attempts:\s*(?P<val>\d+)$')
+        # CRL - rejected busy fetching: 0
+        p11 = re.compile(r'^CRL - rejected busy fetching:\s*(?P<val>\d+)$')
+        # AAA authorizations: 0
+        p12 = re.compile(r'^AAA authorizations:\s*(?P<val>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            # PKI Sessions Started: <number>
+            m = p1.match(line)
+            if m:
+                ret_dict['pki_sessions_started'] = int(m.group('val'))
+                continue
+            # PKI Sessions Ended: <number>
+            m = p2.match(line)
+            if m:
+                ret_dict['pki_sessions_ended'] = int(m.group('val'))
+                continue
+            # PKI Sessions Active: <number>
+            m = p3.match(line)
+            if m:
+                ret_dict['pki_sessions_active'] = int(m.group('val'))
+                continue
+            # Successful Validations: <number>
+            m = p4.match(line)
+            if m:
+                ret_dict['successful_validations'] = int(m.group('val'))
+                continue
+            # Failed Validations: <number>
+            m = p5.match(line)
+            if m:
+                ret_dict['failed_validations'] = int(m.group('val'))
+                continue
+            # Bypassed Validations: <number>
+            m = p6.match(line)
+            if m:
+                ret_dict['bypassed_validations'] = int(m.group('val'))
+                continue
+            # Pending Validations: <number>
+            m = p7.match(line)
+            if m:
+                ret_dict['pending_validations'] = int(m.group('val'))
+                continue
+            # CRLs checked: <number>
+            m = p8.match(line)
+            if m:
+                ret_dict['crls_checked'] = int(m.group('val'))
+                continue
+            # CRL - fetch attempts: <number>
+            m = p9.match(line)
+            if m:
+                ret_dict['crl_fetch_attempts'] = int(m.group('val'))
+                continue
+            # CRL - failed attempts: <number>
+            m = p10.match(line)
+            if m:
+                ret_dict['crl_failed_attempts'] = int(m.group('val'))
+                continue
+            # CRL - rejected busy fetching: <number>
+            m = p11.match(line)
+            if m:
+                ret_dict['crl_rejected_busy_fetching'] = int(m.group('val'))
+                continue
+            # AAA authorizations: <number>
+            m = p12.match(line)
+            if m:
+                ret_dict['aaa_authorizations'] = int(m.group('val'))
+                continue
+
+        return ret_dict
+        
+# =================================================
+#  Schema for 'show crypto pki trustpool | count Downloaded'
+# =================================================
+class ShowCryptoPkiTrustpoolCountDownloadedSchema(MetaParser):
+    """Schema for `show crypto pki trustpool | count Downloaded`"""
+    schema = {
+        'trustpool_downloaded_count': int,
+    }
+
+# =================================================
+#  Parser for 'show crypto pki trustpool | count Downloaded'
+# =================================================
+
+class ShowCryptoPkiTrustpoolCountDownloaded(ShowCryptoPkiTrustpoolCountDownloadedSchema):
+    """Parser for `show crypto pki trustpool | count Downloaded`"""
+
+    cli_command = 'show crypto pki trustpool | count Downloaded'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # Number of lines which match regexp = 123
+        p1 = re.compile(r'^Number of lines which match regexp\s*=\s*(?P<count>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            # Number of lines which match regexp = 123
+            m = p1.match(line)
+            if m:
+                parsed_dict['trustpool_downloaded_count'] = int(m.group('count'))
+                break
 
         return parsed_dict

@@ -1,0 +1,47 @@
+show policy-firewall config
+Zone-pair              : in-out
+Source Zone            : inside
+  Member Interfaces:
+    GigabitEthernet0/1/3
+Destination Zone       : outside
+  Member Interfaces:
+    GigabitEthernet0/1/0
+Service-policy inspect : pmap
+  Class-map : nested_cmap (match-any)
+   Match class-map cmap
+   Match protocol tcp
+  Action : inspect
+   Parameter-map : param
+  Class-map : class-default (match-any)
+   Match any
+  Action : drop log
+   Parameter-map : Default
+---------------------------
+Parameter-map Configuration:
+  Parameter-map type inspect: param
+  --------------------------
+   alert messages                 : on
+   all application inspection     : on
+   audit trailing                 : off
+   logging dropped-packets        : off
+   logging flow        : off
+   UTD Context ID      : 0
+   icmp session idle-time         : 60 sec, ageout-time: 60 sec
+   dns session idle-time          : 5 sec
+   tcp session half-open          : on, half-close: on, idle: on
+   tcp session idle-time          : 80 sec, ageout-time: 80 sec
+   tcp session FIN wait-time      : 1 sec, FIN ageout-time: 1 sec
+   tcp session SYN wait-time      : 30 sec, SYN ageout-time: 30 sec
+   tcp loose window scaling enforcement: off
+   tcp max-half-open connections/host  : unlimited block-time: 0 min
+   udp half-open session idle-time: 30000 ms, ageout-time: 30000 ms
+   udp session idle-time          : 60 sec, ageout-time: 60 sec
+   sessions, connections/min threshold (low) : unlimited
+   sessions, connections/min threshold (high): unlimited
+   sessions, connection rate threshold (low) : unlimited
+   sessions, connection rate threshold (high): unlimited
+   sessions, max-incomplete threshold (low)  : unlimited
+   sessions, max-incomplete threshold (high) : unlimited
+   sessions, maximum no. of inspect sessions : unlimited
+   total number of packets per flow          : default
+   zone mismatch drop option      : off

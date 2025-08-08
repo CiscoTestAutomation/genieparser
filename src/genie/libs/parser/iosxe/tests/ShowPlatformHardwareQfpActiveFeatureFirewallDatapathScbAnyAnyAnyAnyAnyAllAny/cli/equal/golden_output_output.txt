@@ -1,0 +1,8 @@
+ShowPlatformHardwareQfpActiveFeatureFirewallDropClear
+show platform hardware qfp active feature firewall datapath scb any any any any any all any
+[s=session  i=imprecise channel c=control channel  d=data channel u=utd inspect A/D=appfw action allow/deny]
+Session ID:0x00000004 192.168.32.1 11001 192.168.132.1 0 proto 6 (-global-:0:-global-:0) (0x1:tcp)	[sc]
+Session ID:0x00000002 192.168.32.1 11001 192.168.132.1 21 proto 6 (-global-:0:-global-:0) (0x4:ftp)	[sc]
+ +-Session ID:0x00000003 192.168.32.1 0 192.168.132.1 41902 proto 6 (-global-:0:-global-:0) (0x2e:ftp data)	[id]
+Session ID:0x00000000 10.1.1.1 10001 20.1.1.1 20001 proto 17 (-global-:0:-global-:0) (0x2:udp)	[sc]
+Session ID:0x00000001 10.1.1.2 10001 20.1.1.2 20001 proto 17 (-global-:0:-global-:0) (0x2:udp)	[sc]

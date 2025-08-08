@@ -370,9 +370,10 @@ class ShowPlatformFedActiveTcamUtilization(ShowPlatformFedActiveTcamUtilizationS
     cli_command = ['show platform hardware fed switch {mode} fwd-asic resource tcam utilization',
                    'show platform hardware fed active fwd-asic resource tcam utilization',
                    'show platform hardware fed switch {mode} fwd-asic resource tcam utilization {asic}',
-                   'show platform hardware fed active fwd-asic resource tcam utilization {asic}']
+                   'show platform hardware fed active fwd-asic resource tcam utilization {asic}',
+                   'show platform hardware fed active fwd-asic resource tcam utilization {asic} slice-id {slice_id}']
 
-    def cli(self, output=None, mode=None, asic=None):
+    def cli(self, output=None, mode=None, asic=None, slice_id=None):
         if output is None:
             if mode and asic:
                 cmd = self.cli_command[2].format(mode=mode, asic=asic)
@@ -380,6 +381,8 @@ class ShowPlatformFedActiveTcamUtilization(ShowPlatformFedActiveTcamUtilizationS
                 cmd = self.cli_command[0].format(mode=mode)
             elif asic:
                 cmd = self.cli_command[3].format(asic=asic)
+            elif slice_id:
+                cmd = self.cli_command[4].format(asic=asic, slice_id=slice_id)
             else:
                 cmd = self.cli_command[1]
             output = self.device.execute(cmd)
@@ -1412,3 +1415,111 @@ class ShowPlatformSwitchActiveTcamUtilization(ShowPlatformTcamUtilizationswitchA
                 continue
 
         return ret_dict
+
+class ShowPlatformFedStandbyTcamUtilizationSchema(MetaParser):
+    """Schema for show platform hardware fed standby fwd-asic resource tcam utilization"""
+    schema = {
+        str: {  
+            Optional('egress_wide_direction'): str,
+            Optional('used'): int,
+            Optional('free'): int,
+            Optional('ingress_wide_direction'): str,
+            Optional('inw_used'): int,
+            Optional('inw_free'): int,
+            Optional('resource'): {
+                Any(): {  
+                    'used': int,
+                    'free': int
+                }
+            }
+        }
+    }
+
+class ShowPlatformFedStandbyTcamUtilization(ShowPlatformFedStandbyTcamUtilizationSchema):
+    """Parser for show platform hardware fed standby fwd-asic resource tcam utilization"""
+
+    cli_command = [
+        'show platform hardware fed standby fwd-asic resource tcam utilization',
+        'show platform hardware fed standby fwd-asic resource tcam utilization {asic}'
+    ]
+
+    def cli(self, output=None, mode=None, asic=None):
+        if output is None:
+            if asic:
+                cmd = self.cli_command[1].format(asic=asic)
+            else:
+                cmd = self.cli_command[0]
+            output = self.device.execute(cmd)
+        
+        if not output.strip():
+            return {}
+
+        # Initialize slice dictionary
+        slice_dict = {}
+
+        # Slice0       Slice1       Slice2       Slice3       Slice4       Slice5
+        p1 = re.compile(r'(?:Slice\d+\s+)*Slice\d+$')
+        #Egress Narrow_Pool_1 TCAM entries         0  8701      0  8701      0  8701      0  8701      0  8701      0  8701
+        p2 = re.compile(r'^Egress +(?P<egress_wide_direction>[a-zA-Z]+) +TCAM +entries\s+(?P<values>(?:\d+\s+)*\d+)$')
+        # Egress Narrow_Pool_0 TCAM entries         1  8700      1  8700      1  8700      1  8700      1  8700      1  8700
+        p3 = re.compile(r'^Ingress +(?P<ingress_wide_direction>[a-zA-Z]+) +TCAM +entries\s+(?P<values>(?:\d+\s+)*\d+)$')
+        # Ingress Narrow_Pool_0 TCAM entries        8  8620      8  8620      8  8620      8  8620      8  8620      8  8620
+        p4 = re.compile(r'^(?P<resource>.+) +TCAM +entries\s+(?P<values>(?:\d+\s+)*\d+)$')
+        
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # Slice0       Slice1       Slice2       Slice3       Slice4       Slice5
+            if p1.match(line):
+                continue  
+
+            #Egress Narrow_Pool_1 TCAM entries         0  8701      0  8701      0  8701      0  8701      0  8701      0  8701
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                values = list(map(int, group['values'].split()))
+                num_slices = len(values) // 2
+                for i in range(num_slices):
+                    slice_id = f'slice{i}'
+                    if slice_id not in slice_dict:
+                        slice_dict[slice_id] = {}
+                    slice_dict[slice_id]['egress_wide_direction'] = group['egress_wide_direction']
+                    slice_dict[slice_id]['used'] = values[i * 2]
+                    slice_dict[slice_id]['free'] = values[i * 2 + 1]
+                continue
+
+            # Egress Narrow_Pool_0 TCAM entries         1  8700      1  8700      1  8700      1  8700      1  8700      1  8700
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                values = list(map(int, group['values'].split()))
+                num_slices = len(values) // 2
+                for i in range(num_slices):
+                    slice_id = f'slice{i}'
+                    if slice_id not in slice_dict:
+                        slice_dict[slice_id] = {}
+                    slice_dict[slice_id]['ingress_wide_direction'] = group['ingress_wide_direction']
+                    slice_dict[slice_id]['inw_used'] = values[i * 2]
+                    slice_dict[slice_id]['inw_free'] = values[i * 2 + 1]
+                continue
+
+            # Ingress Narrow_Pool_0 TCAM entries        8  8620      8  8620      8  8620      8  8620      8  8620      8  8620
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                resource_name = group['resource'].strip().lower().replace(' ', '_')
+                values = list(map(int, group['values'].split()))
+                num_slices = len(values) // 2
+                for i in range(num_slices):
+                    slice_id = f'slice{i}'
+                    if slice_id not in slice_dict:
+                        slice_dict[slice_id] = {}
+                    if 'resource' not in slice_dict[slice_id]:
+                        slice_dict[slice_id]['resource'] = {}
+                    slice_dict[slice_id]['resource'][resource_name] = {
+                        'used': values[i * 2],
+                        'free': values[i * 2 + 1]
+                    }
+                continue
+
+        return slice_dict

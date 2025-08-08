@@ -37,7 +37,8 @@
     * show ipv6 dhcp relay binding
     * show ipv6 general-prefix
     * show ipv6 pim neighbor {intf}
-
+    * show ipv6 cef exact-route {source} {destination}
+    * show ipv6 mfib count
 """
 
 # Python
@@ -2678,3 +2679,191 @@ class ShowIpv6PimNeighborIntf(ShowIpv6PimNeighborIntfSchema):
                 continue
 
         return parsed_dict
+
+
+
+# ====================================================
+#  schema for show ipv6 mfib count
+# ====================================================
+class ShowIpv6MfibCountSchema(MetaParser):
+    """Schema for show ipv6 mfib count"""
+    
+    schema = {
+        'ip_multicast_statistics': {
+            'total_routes': int,
+            'total_groups': int,
+            'average_sources_per_group': float,
+            'forwarding_counts_description': str,
+            'other_counts_description': str,
+            'groups': {
+                Any(): {
+                    Optional('rp_tree'): {
+                        'forwarding': {
+                            'pkt_count': int,
+                            'pkts_per_second': int,
+                            'avg_pkt_size': int,
+                            'kilobits_per_second': int,
+                        },
+                        'other': {
+                            'total': int,
+                            'rpf_failed': int,
+                            'other_drops': int,
+                        }
+                    },
+                    Optional('sources'): {
+                        Any(): {
+                            'forwarding': {
+                                'pkt_count': int,
+                                'pkts_per_second': int,
+                                'avg_pkt_size': int,
+                                'kilobits_per_second': int,
+                            },
+                            'other': {
+                                'total': int,
+                                'rpf_failed': int,
+                                'other_drops': int,
+                            }
+                        }
+                    },
+                    Optional('total_shown'): {
+                        'source_count': int,
+                        'pkt_count': int,
+                    }
+                }
+            }
+        }
+    }
+
+# ====================================================
+#  parser for show ipv6 mfib count
+# ====================================================
+class ShowIpv6MfibCount(ShowIpv6MfibCountSchema):
+    """Parser for show ipv6 mfib count"""
+    
+    cli_command = 'show ipv6 mfib count'
+    
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        
+        # Initialize return dictionary
+        ret_dict = {}
+        
+        # IP Multicast Statistics
+        p1 = re.compile(r'^IP Multicast Statistics$')
+        
+        # 54 routes, 7 groups, 0.14 average sources per group
+        p2 = re.compile(r'^(?P<routes>\d+) routes, (?P<groups>\d+) groups, (?P<avg_sources>[\d\.]+) average sources per group$')
+        
+        # Forwarding Counts: Pkt Count/Pkts per second/Avg Pkt Size/Kilobits per second
+        p3 = re.compile(r'^Forwarding Counts: (?P<forward_desc>.+)$')
+        
+        # Other counts: Total/RPF failed/Other drops(OIF-null, rate-limit etc)
+        p4 = re.compile(r'^Other counts: (?P<other_desc>.+)$')
+        
+        # Group: FF00::/8
+        p5 = re.compile(r'^Group: (?P<group>[\w\:\/]+)$')
+        
+        # RP-tree:    Forwarding: 0/0/0/0, Other: 0/0/0
+        p6 = re.compile(r'^RP-tree:\s+Forwarding: (?P<pkt_count>\d+)/(?P<pkts_per_sec>\d+)/(?P<avg_pkt_size>\d+)/(?P<kbps>\d+), Other: (?P<total>\d+)/(?P<rpf_failed>\d+)/(?P<other_drops>\d+)$')
+        
+        # Source: 10::1:1:200,   Forwarding: 367/10/100/7, Other: 0/0/0
+        p7 = re.compile(r'^Source: (?P<source>[\w\:\.]+),\s+Forwarding: (?P<pkt_count>\d+)/(?P<pkts_per_sec>\d+)/(?P<avg_pkt_size>\d+)/(?P<kbps>\d+), Other: (?P<total>\d+)/(?P<rpf_failed>\d+)/(?P<other_drops>\d+)$')
+        
+        # Tot. shown: Source count: 1, pkt count: 369
+        p8 = re.compile(r'^Tot\. shown: Source count: (?P<source_count>\d+), pkt count: (?P<pkt_count>\d+)$')
+        
+        current_group = None
+        
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # IP Multicast Statistics
+            m = p1.match(line)
+            if m:
+                stats_dict = ret_dict.setdefault('ip_multicast_statistics', {})
+                continue
+            
+            # 54 routes, 7 groups, 0.14 average sources per group
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                stats_dict['total_routes'] = int(group['routes'])
+                stats_dict['total_groups'] = int(group['groups'])
+                stats_dict['average_sources_per_group'] = float(group['avg_sources'])
+                continue
+            
+            # Forwarding Counts: Pkt Count/Pkts per second/Avg Pkt Size/Kilobits per second
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                stats_dict['forwarding_counts_description'] = group['forward_desc']
+                continue
+            
+            # Other counts: Total/RPF failed/Other drops(OIF-null, rate-limit etc)
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                stats_dict['other_counts_description'] = group['other_desc']
+                continue
+            
+            # Group: FF00::/8
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                current_group = group['group']
+                groups_dict = stats_dict.setdefault('groups', {})
+                groups_dict.setdefault(current_group, {})
+                continue
+            
+            # RP-tree:    Forwarding: 0/0/0/0, Other: 0/0/0
+            m = p6.match(line)
+            if m and current_group:
+                group = m.groupdict()
+                group_dict = stats_dict['groups'][current_group]
+                rp_tree_dict = group_dict.setdefault('rp_tree', {})
+                
+                forwarding_dict = rp_tree_dict.setdefault('forwarding', {})
+                forwarding_dict['pkt_count'] = int(group['pkt_count'])
+                forwarding_dict['pkts_per_second'] = int(group['pkts_per_sec'])
+                forwarding_dict['avg_pkt_size'] = int(group['avg_pkt_size'])
+                forwarding_dict['kilobits_per_second'] = int(group['kbps'])
+                
+                other_dict = rp_tree_dict.setdefault('other', {})
+                other_dict['total'] = int(group['total'])
+                other_dict['rpf_failed'] = int(group['rpf_failed'])
+                other_dict['other_drops'] = int(group['other_drops'])
+                continue
+            
+            # Source: 10::1:1:200,   Forwarding: 367/10/100/7, Other: 0/0/0
+            m = p7.match(line)
+            if m and current_group:
+                group = m.groupdict()
+                group_dict = stats_dict['groups'][current_group]
+                sources_dict = group_dict.setdefault('sources', {})
+                source_name = group['source']
+                source_dict = sources_dict.setdefault(source_name, {})
+                
+                forwarding_dict = source_dict.setdefault('forwarding', {})
+                forwarding_dict['pkt_count'] = int(group['pkt_count'])
+                forwarding_dict['pkts_per_second'] = int(group['pkts_per_sec'])
+                forwarding_dict['avg_pkt_size'] = int(group['avg_pkt_size'])
+                forwarding_dict['kilobits_per_second'] = int(group['kbps'])
+                
+                other_dict = source_dict.setdefault('other', {})
+                other_dict['total'] = int(group['total'])
+                other_dict['rpf_failed'] = int(group['rpf_failed'])
+                other_dict['other_drops'] = int(group['other_drops'])
+                continue
+            
+            # Tot. shown: Source count: 1, pkt count: 369
+            m = p8.match(line)
+            if m and current_group:
+                group = m.groupdict()
+                group_dict = stats_dict['groups'][current_group]
+                total_shown_dict = group_dict.setdefault('total_shown', {})
+                total_shown_dict['source_count'] = int(group['source_count'])
+                total_shown_dict['pkt_count'] = int(group['pkt_count'])
+                continue
+        
+        return ret_dict

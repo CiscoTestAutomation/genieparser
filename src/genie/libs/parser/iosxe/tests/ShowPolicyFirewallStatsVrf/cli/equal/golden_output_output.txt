@@ -1,0 +1,15 @@
+VRF: green, Parameter-Map: vrf-pmap
+  Interface reference count: 2
+       Total Session Count(estab + half-open): 20, Exceed: 0
+       Total Session Aggressive Aging Period Off, Event Count: 0
+
+                Half Open
+       Protocol Session Cnt     Exceed
+       -------- -----------     ------
+       All      20              0
+       UDP      0               0
+       ICMP     0               0
+       TCP      20              0
+
+       TCP Syn Flood Half Open Count: 20, Exceed: 834
+       Half Open Aggressive Aging Period Off, Event Count: 0

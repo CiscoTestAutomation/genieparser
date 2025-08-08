@@ -14,7 +14,7 @@ IOSXE parsers for the following show commands:
     * show ip nbar version
     * show ip nat translations
     * show ip nat translations total
-    * show ip nat translation udp total
+    * show ip nat translation {protocol} total
     * show ip nat translations vrf {vrf} total
     * show ip nat translations verbose
     * show ip nat statistics
@@ -98,6 +98,8 @@ IOSXE parsers for the following show commands:
     * show ip virtual-assembly {interface}
     * show ipv mld vrf {vrf} groups {group}
     * show ip wccp web-cache detail
+    * show ip wccp web-cache clients
+    * show ip nat pool name {pool}
     '''
 
 # Python
@@ -7792,44 +7794,43 @@ class ShowIpNatTranslationsTotal(ShowIpNatTranslationsTotalSchema):
         return ret_dict
 
 # ===============================================
-# Schema for 'show ip nat translation udp total'
+# Schema for 'show ip nat translation {protocol} total'
 # ===============================================
 
 class ShowIpNatTranslationUdpTotalSchema(MetaParser):
-    """Schema for show ip nat translation udp total"""
+    """Schema for show ip nat translation {protocol} total"""
     schema = {
         'total_translations': int
     }
 
 class ShowIpNatTranslationUdpTotal(ShowIpNatTranslationUdpTotalSchema):
-    """Parser for show ip nat translation udp total"""
+    """Parser for show ip nat translations {protocol} total"""
 
-    cli_command = 'show ip nat translation udp total'
+    cli_command = 'show ip nat translations {protocol} total'
 
-    def cli(self, output=None):
+    def cli(self, protocol='', output=None):
         if output is None:
-            # Normally, you would use the device connection to execute the command
-            output = self.device.execute(self.cli_command)
+            # Execute the command on the device
+            output = self.device.execute(self.cli_command.format(protocol=protocol))
 
         # Initialize the parsed dictionary
         parsed_dict = {}
 
-        # Define the regex pattern to match the output line
         # Total number of translations: 2
-        pattern = re.compile(r'^Total number of translations: (?P<total>\d+)$')
+        p1 = re.compile(r'^Total +number +of +translations: +(?P<total>\d+)$')
 
-        # Iterate over each line in the output
         for line in output.splitlines():
             line = line.strip()
 
-            # Match the line against the pattern
-            # Total number of translations: 2
-            m = pattern.match(line)
+            #Total number of translations: 2
+            m = p1.match(line)
             if m:
                 # Use setdefault to avoid KeyError
                 parsed_dict.setdefault('total_translations', int(m.group('total')))
+                continue
 
         return parsed_dict
+
 # ==============================
 # Schema for 'show ip name-servers', 'show ip name-servers vrf {vrf}'
 # ==============================
@@ -10271,6 +10272,279 @@ class ShowIpWccpWebCacheDetail(ShowIpWccpWebCacheDetailSchema):
                     current_client['initial_hash_info'] += hash_value
                 elif hash_continuation_type == 'assigned':
                     current_client['assigned_hash_info'] += hash_value
+                continue
+
+        return parsed_dict
+
+# ====================================================
+# Schema for 'show ip wccp web-cache clients'
+# ====================================================
+
+class ShowIpWccpWebCacheClientsSchema(MetaParser):
+    """Schema for show ip wccp web-cache clients"""
+
+    schema = {
+        'wccp_client_information': {
+            Any(): {  # Client ID
+                'client_id': str,
+                'protocol_version': str,
+                'state': str,
+                'redirection': str,
+                'packet_return': str,
+                'assignment': str,
+                'packets_redirected': int,
+                'connect_time': str,
+            }
+        }
+    }
+
+
+# ====================================================
+# Parser for 'show ip wccp web-cache clients'
+# ====================================================
+
+class ShowIpWccpWebCacheClients(ShowIpWccpWebCacheClientsSchema):
+    """Parser for show ip wccp web-cache clients"""
+
+    cli_command = 'show ip wccp web-cache clients'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize result dictionary
+        parsed_dict = {}
+
+        # Regular expressions for parsing
+        # WCCP Client information:
+        p1 = re.compile(r'^\s*WCCP Client information:\s*$')
+        # WCCP Client ID:          10.1.100.10
+        p2 = re.compile(r'^\s*WCCP Client ID:\s+(?P<client_id>\S+)$')
+        # Protocol Version:        2.0
+        p3 = re.compile(r'^\s*Protocol Version:\s+(?P<protocol_version>\S+)$')
+        # State:                   Usable
+        p4 = re.compile(r'^\s*State:\s+(?P<state>\S+)$')
+        # Redirection:             GRE
+        p5 = re.compile(r'^\s*Redirection:\s+(?P<redirection>\S+)$')
+        # Packet Return:           GRE
+        p6 = re.compile(r'^\s*Packet Return:\s+(?P<packet_return>\S+)$')
+        # Assignment:              HASH
+        p7 = re.compile(r'^\s*Assignment:\s+(?P<assignment>\S+)$')
+        # Packets Redirected:      1234567
+        p8 = re.compile(r'^\s*Packets Redirected:\s+(?P<packets_redirected>\d+)$')
+        # Connect Time:            01:12:45
+        p9 = re.compile(r'^\s*Connect Time:\s+(?P<connect_time>\S+)$')
+
+        current_client = None
+
+        for line in output.splitlines():
+            # Skip empty lines
+            if not line.strip():
+                continue
+
+            # WCCP Client information:
+            m = p1.match(line)
+            if m:
+                # Reset current client for new client block
+                current_client = None
+                continue
+
+            # WCCP Client ID:          10.1.100.10
+            m = p2.match(line)
+            if m:
+                client_id = m.group('client_id')
+                parsed_dict.setdefault('wccp_client_information', {})
+                parsed_dict['wccp_client_information'][client_id] = {
+                    'client_id': client_id
+                }
+                current_client = parsed_dict['wccp_client_information'][client_id]
+                continue
+
+            if current_client is None:
+                continue
+
+            # Protocol Version:        2.0
+            m = p3.match(line)
+            if m:
+                current_client['protocol_version'] = m.group('protocol_version')
+                continue
+
+            # State:                   Usable
+            m = p4.match(line)
+            if m:
+                current_client['state'] = m.group('state')
+                continue
+
+            # Redirection:             GRE
+            m = p5.match(line)
+            if m:
+                current_client['redirection'] = m.group('redirection')
+                continue
+
+            # Packet Return:           GRE
+            m = p6.match(line)
+            if m:
+                current_client['packet_return'] = m.group('packet_return')
+                continue
+
+            # Assignment:              HASH
+            m = p7.match(line)
+            if m:
+                current_client['assignment'] = m.group('assignment')
+                continue
+
+            # Packets Redirected:      1234567
+            m = p8.match(line)
+            if m:
+                current_client['packets_redirected'] = int(m.group('packets_redirected'))
+                continue
+
+            # Connect Time:            01:12:45
+            m = p9.match(line)
+            if m:
+                current_client['connect_time'] = m.group('connect_time')
+                continue
+
+        return parsed_dict
+
+# ===========================================
+# Schema for 'show ip nat pool name {pool_name}'
+# ===========================================
+class ShowIpNatPoolNameSchema(MetaParser):
+    """Schema for show ip nat pool name {pool_name}"""
+    schema = {
+        'pool_name': {
+            Any(): {
+                'id': int,
+                'addresses': {
+                    'assigned': str,
+                    'available': str,
+                },
+                'udp_low_ports': {
+                    'assigned': str,
+                    'available': str,
+                },
+                'tcp_low_ports': {
+                    'assigned': str,
+                    'available': str,
+                },
+                'udp_high_ports': {
+                    'assigned': str,
+                    'available': str,
+                },
+                'tcp_high_ports': {
+                    'assigned': str,
+                    'available': str,
+                },
+            }
+        }
+    }
+
+# ===========================================
+# Parser for 'show ip nat pool name {pool_name}'
+# ===========================================
+class ShowIpNatPoolName(ShowIpNatPoolNameSchema):
+    """Parser for show ip nat pool name {pool_name}"""
+
+    cli_command = 'show ip nat pool name {pool_name}'
+
+    def cli(self, pool_name, output=None):
+        if output is None:
+            cmd = self.cli_command.format(pool_name=pool_name)
+            output = self.device.execute(cmd)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # Regular expressions for parsing the output
+        #Pool name natpool1, id 1
+        p1 = re.compile(r'^Pool +name +(?P<pool_name>\S+), +id +(?P<id>\d+)$')
+
+        #Addresses                          0                  254
+        p2 = re.compile(r'^Addresses +(?P<assigned>\d+) +(?P<available>\d+)$')
+
+        #  UDP Low Ports                      0               130048
+        p3 = re.compile(r'^UDP +Low +Ports +(?P<assigned>\d+) +(?P<available>\d+)$')
+
+        #  TCP Low Ports                      0               130048
+        p4 = re.compile(r'^TCP +Low +Ports +(?P<assigned>\d+) +(?P<available>\d+)$')
+
+        #  UDP High Ports                     0             1638604
+        p5 = re.compile(r'^UDP +High +Ports +(?P<assigned>\d+) +(?P<available>\d+)$')
+
+        #  TCP High Ports                     0             16386048
+        p6 = re.compile(r'^TCP +High +Ports +(?P<assigned>\d+) +(?P<available>\d+)$')
+
+        # Variables to hold the current pool name
+        current_pool_name = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Match pool name and id
+            #Pool name natpool1, id 1
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                current_pool_name = group['pool_name']
+                pool_id = int(group['id'])
+                pool_dict = parsed_dict.setdefault('pool_name', {}).setdefault(current_pool_name, {})
+                pool_dict['id'] = pool_id
+                continue
+
+            # Match addresses
+            #Addresses                          0                  254
+            m = p2.match(line)
+            if m and current_pool_name:
+                group = m.groupdict()
+                pool_dict['addresses'] = {
+                    'assigned': group['assigned'],
+                    'available': group['available'],
+                }
+                continue
+
+            # Match UDP low ports
+            #  UDP Low Ports                      0               130048 
+            m = p3.match(line)
+            if m and current_pool_name:
+                group = m.groupdict()
+                pool_dict['udp_low_ports'] = {
+                    'assigned': group['assigned'],
+                    'available': group['available'],
+                }
+                continue
+
+            # Match TCP low ports
+            #  TCP Low Ports                      0               130048
+            m = p4.match(line)
+            if m and current_pool_name:
+                group = m.groupdict()
+                pool_dict['tcp_low_ports'] = {
+                    'assigned': group['assigned'],
+                    'available': group['available'],
+                }
+                continue
+
+            # Match UDP high ports
+            #  UDP High Ports                     0             16386048
+            m = p5.match(line)
+            if m and current_pool_name:
+                group = m.groupdict()
+                pool_dict['udp_high_ports'] = {
+                    'assigned': group['assigned'],
+                    'available': group['available'],
+                }
+                continue
+
+            # Match TCP high ports
+            # TCP High Ports                     0             16386048
+            m = p6.match(line)
+            if m and current_pool_name:
+                group = m.groupdict()
+                pool_dict['tcp_high_ports'] = {
+                    'assigned': group['assigned'],
+                    'available': group['available'],
+                }
                 continue
 
         return parsed_dict

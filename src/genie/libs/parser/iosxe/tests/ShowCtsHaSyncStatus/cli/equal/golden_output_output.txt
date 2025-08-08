@@ -1,0 +1,3 @@
+sh cts ha sync-status                 
+CTS environment-data sync to standby is complete or not started.
+CTS policy sync to standby is complete or not started.

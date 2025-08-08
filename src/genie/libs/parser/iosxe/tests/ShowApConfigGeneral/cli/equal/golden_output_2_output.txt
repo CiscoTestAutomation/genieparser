@@ -1,0 +1,161 @@
+Cisco AP Name   : my_ap_name
+=================================================
+
+Cisco AP Identifier                             : 2ce3.8ef5.2aa0
+Country Code                                    : DE
+Regulatory Domain Allowed by Country            : 802.11bg:-E   802.11a:-E   802.11 6GHz:-E
+Radio Authority IDs                             : None
+AP Country Code                                 : DE  - 
+AP Regulatory Domain
+  802.11bg                                      : -E
+  802.11a                                       : -E
+  802.11 6GHz                                   : -E
+MAC Address                                     : 8c88.8118.8010
+IP Address Configuration                        : DHCP
+IP Address                                      : 10.99.84.67
+IP Netmask                                      : 255.255.255.0
+Gateway IP Address                              : 10.99.84.1
+CAPWAP Path MTU                                 : 0
+Capwap Active Window Size                       : 1
+Telnet State                                    : Disabled
+CPU Type                                        :  ARMv8 Processor rev 4 (v8l)
+Memory Type                                     : DDR4
+Memory Size                                     : 1800192 KB
+SSH State                                       : Disabled
+Serial Console State                            : Disabled
+Cisco AP Location                               : default location
+AP Floor ID                                     : 0
+AP Location Mode                                : Unknown
+Site Tag Name                                   : default-site-tag
+RF Tag Name                                     : Typical-RF-Profile
+Policy Tag Name                                 : PT_Floor1_8d64d
+AP join Profile                                 : default-ap-profile
+Flex Profile                                    : default-flex-profile
+Primary Cisco Controller Name                   : lab-wlan-01
+Primary Cisco Controller IP Address             : 10.99.87.198
+Secondary Cisco Controller Name                 : lab-wlan-02
+Secondary Cisco Controller IP Address           : 10.99.87.214
+Tertiary Cisco Controller Name                  : Not Configured
+Tertiary Cisco Controller IP Address            : 0.0.0.0
+Administrative State                            : Enabled
+Operation State                                 : Registered
+NAT External IP Address                         : 10.99.84.67
+AP Certificate type                             : Manufacturer Installed Certificate
+AP Certificate Expiry-time                      : 08/09/2099 20:58:26
+AP Certificate issuer common-name               : High Assurance SUDI CA
+AP Certificate Policy                           : Default
+AP CAPWAP-DTLS LSC Status
+    Certificate status        : Not Available
+AP 802.1x LSC Status
+    Certificate status        : Available
+    Issuer certificate hash   : 56fdeebc558d0119bc2ee0fa039300d50208ce02
+    Certificate expiry time   : 07/17/2026 12:53:54
+AP LSC authentication state                     : Invalid
+AP Mode                                         : Local
+AP VLAN tagging state                           : Disabled
+AP VLAN tag                                     : 0
+CAPWAP Preferred mode                           : Not Configured
+CAPWAP UDP-Lite                                 : Not Configured
+AP Submode                                      : Not Configured
+Office Extend Mode                              : Disabled
+Link-Encryption                                 : Disabled
+Dhcp Server                                     : Disabled
+Remote AP Debug                                 : Disabled
+Logging Trap Severity Level                     : emergency
+Logging Syslog facility                         : kern
+Software Version                                : 17.12.4.162
+Boot Version                                    : 1.1.2.4
+Mini IOS Version                                : 0.0.0.0
+Stats Reporting Period                          : 0
+LED State                                       : Disabled
+MDNS Group Id                                   : 0
+MDNS Rule Name                                  : 
+MDNS Group Method                               : None
+PoE Pre-Standard Switch                         : Disabled
+PoE Power Injector MAC Address                  : Disabled
+Power Type/Mode                                 : PoE/Full Power
+Number of Slots                                 : 3
+AP Model                                        : CW9166I-E
+IOS Version                                     : 17.12.4.162
+Reset Button                                    : Disabled
+AP Serial Number                                : KWC2904079X
+Management Frame Validation                     : Capable
+Management Frame Protection                     : Not capable
+AP User Name                                    : Not Configured
+AP 802.1X User Mode                             : Global
+AP 802.1X User Name                             : Not Configured
+Cisco AP System Logging Host                    : 
+Cisco AP Secured Logging TLS mode               : Disabled
+AP Up Time                                      : 5 days 19 hours 55 minutes 17 seconds 
+AP CAPWAP Up Time                               : 5 days 19 hours 53 minutes 53 seconds 
+Join Date and Time                              : 07/17/2025 13:07:59
+Join Taken Time                                 : 1 minute 23 seconds 
+Join Priority                                   : 1
+AP Link Latency                                 : Disable
+AP Lag Configuration Status                     : Disabled
+Lag Support for AP                              : No
+Rogue Detection                                 : Disabled
+Rogue Containment auto-rate                     : Disabled
+Rogue PMF Denial                           : Disabled
+Rogue Containment of standalone flexconnect APs : Disabled
+Rogue Detection Report Interval                 : 0
+Rogue AP minimum RSSI                           : 0
+Rogue AP minimum transient time                 : 0
+AP TCP MSS Adjust                               : Disabled
+AP TCP MSS Size                                 : 0
+AP IPv6 TCP MSS Adjust                          : Disabled
+AP IPv6 TCP MSS Size                            : 0
+Hyperlocation Admin Status                      : Disabled
+Retransmit count                                : 0
+Retransmit interval                             : 0
+Kernel core dump :                               
+  Configured limit                            : 0
+  Kernel core dumps collected on AP           : 0
+Fabric status                                   : Enabled
+RLOC                                            : 
+Control plane name                             : 
+FIPS status                                     : Disabled
+WLANCC status                                   : Disabled
+USB Module Type                                 : USB Module
+USB Module State                                : Disabled
+USB Operational State                           : Disabled
+USB Override                                    : Disabled
+GAS rate limit Admin status                     : Disabled
+WPA3 Capability                                 : Enabled
+EWC-AP Capability                               : Disabled
+AWIPS Capability                                : Enabled
+AID Management Capability                       : Enabled
+Proxy Hostname                                  : Not Configured
+Proxy Port                                      : Not Configured
+Proxy NO_PROXY list                             : Not Configured
+GRPC server status                              : Disabled
+Unencrypted Data Keep Alive                     : Enabled
+Local DHCP Server                               : Disabled
+Traffic Distribution Statistics Capability      : Enabled
+Dual DFS Statistics                             : Disabled
+AP Upgrade Out-Of-Band Capability               : Enabled 
+AP statistics                                   : Disabled
+AP power derate Capability                      : Enabled
+AP PMK Propagation Capability                   : Enabled 
+AP FTM Responder Capability                     : Enabled 
+AP FTM Initiator Capability                     : Enabled 
+AP UWB Responder Capability                     : Disabled 
+AP UWB Initiator Capability                     : Disabled 
+6GHz Standard-Power mode                        : Not Allowed
+Mesh DCA Run Status                             : N/A
+Last Mesh DCA Run                               : 
+Meraki Capable AP                               : Yes
+Radio Reset Reason Statistics
+Slot 0
+Slot 1
+  Unknown Reason                                                         : 1         
+Slot 2
+  Unknown Reason                                                         : 1         
+Slot 3
+  Unknown Reason                                                         : 1         
+
+Radio Failure Reason Statistics
+Slot 0
+Slot 1
+Slot 2
+Slot 3

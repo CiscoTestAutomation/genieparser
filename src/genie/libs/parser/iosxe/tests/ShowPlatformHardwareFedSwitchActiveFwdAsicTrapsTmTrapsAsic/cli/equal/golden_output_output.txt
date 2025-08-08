@@ -1,0 +1,34 @@
+---------------------------------------------------------------------------------------------------------------------------
+Trap ID  | Asic |                           TM Trap                            |     Prev     |   Current    |    Delta    
+---------------------------------------------------------------------------------------------------------------------------
+       2 |  0 | STATISTICAL_METER_PACKET_GOT_DROPPED_DUE_TO_STATISTICAL_METER |    118459634 |   4333278472 |   4214818838
+       3 |  0 |                           ETHERNET_METERS_PACKET_OUT_OF_RATE |        19143 |        19143 |            0
+       4 |  0 |                                 RXPDR_A_COUNTER_DSP_OVERFLOW |       130267 |       130267 |            0
+       5 |  0 |                                  RXPDR_A_COUNTER_VN_OVERFLOW |       106303 |       106303 |            0
+       6 |  0 |                                RXPDR_A_COUNTER_MCID_OVERFLOW |       118590 |       118590 |            0
+       7 |  0 |                                     RXPDR_B_COUNTER_OVERFLOW |       117073 |       117073 |            0
+       9 |  0 |                                     RXPDR_RXRQ1_DSP_OVERFLOW |       119440 |       119440 |            0
+      10 |  0 |                                      RXPDR_RXRQ1_VN_OVERFLOW |       129492 |       129492 |            0
+      11 |  0 |                                         RXPDR_RXRQ2_OVERFLOW |       129819 |       129819 |            0
+      12 |  0 |                                         RXPDR_RXRQ3_OVERFLOW |       105216 |       105216 |            0
+      13 |  0 |                                            SRC_CGM_SQ_OR_SQG |       105847 |       105847 |            0
+      14 |  0 |                                          SRC_CGM_CTC_OR_CTCG |        93005 |        93005 |            0
+      15 |  0 |                                             SRC_CGM_HEADROOM |       105796 |       105796 |            0
+      16 |  0 |                         VOQ_CGM_TOTAL_EVICTED_BUFFERS_YELLOW |       143393 |       143393 |            0
+      17 |  0 |                          VOQ_CGM_TOTAL_EVICTED_BUFFERS_GREEN |       106203 |       106203 |            0
+      18 |  0 |                               VOQ_CGM_SMS_WRED_BUFFERS_GREEN |       117619 |       117619 |            0
+      19 |  0 |                              VOQ_CGM_SMS_WRED_BUFFERS_YELLOW |       129716 |       129716 |            0
+      20 |  0 |                                       VOQ_CGM_SMS_PDS_YELLOW |       117170 |       117170 |            0
+      21 |  0 |                                        VOQ_CGM_SMS_PDS_GREEN |        93896 |        93896 |            0
+      22 |  0 |                                  VOQ_CGM_DRAM_BUFFERS_YELLOW |        92587 |        92587 |            0
+      23 |  0 |                                   VOQ_CGM_DRAM_BUFFERS_GREEN |       130765 |       130765 |            0
+      24 |  0 |                                     VOQ_CGM_DRAM_WRED_YELLOW |       105748 |       105748 |            0
+      25 |  0 |                                      VOQ_CGM_DRAM_WRED_GREEN |       105652 |       105652 |            0
+      26 |  0 |                                 VOQ_CGM_PD_COUNTERS_OVERFLOW |       130484 |       130484 |            0
+      27 |  0 |                                 VOQ_CGM_CANNOT_EVICT_TO_DRAM |       118942 |       118942 |            0
+      28 |  0 |                        VOQ_CGM_NON_GUARANTEED_SPACE_OVERFLOW |       130736 |       130736 |            0
+      29 |  0 |                                     RXPDR_J_COUNTER_OVERFLOW |       117939 |       117939 |            0
+      30 |  0 |                                     RXPDR_RXRQ0_DSP_OVERFLOW |       143258 |       143258 |            0
+      31 |  0 |                                      RXPDR_RXRQ0_VN_OVERFLOW |       130531 |       130531 |            0
+      32 |  0 |                                       RXPDR_RXRQ_DEQ_MC_DROP |       118114 |       118114 |            0
+---------------------------------------------------------------------------------------------------------------------------

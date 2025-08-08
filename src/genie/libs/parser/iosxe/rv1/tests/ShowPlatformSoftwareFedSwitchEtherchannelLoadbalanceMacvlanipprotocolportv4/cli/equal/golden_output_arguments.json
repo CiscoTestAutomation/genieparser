@@ -1,0 +1,11 @@
+{	
+	"switch": 1,
+	"portchannelnum": 10,
+	"sourcemac": "0218.ba87.edd1 0218.ba87.edd1",
+	"vlan_id": 100,
+	"sourceip": "1.1.1.1",
+	"destinationip": "2.2.2.2",
+	"protocol": 93,
+	"sour_port": 21,
+	"dest_port": 21
+}

@@ -1,0 +1,88 @@
+#show controllers optics 0/2/0/4
+Wed Jul  9 06:44:33.173 UTC
+
+ Controller State: Administratively Down
+
+ Transport Admin State: Out Of Service
+
+ Laser State: Off
+
+ Host Squelch Status: Enable
+
+ Media linkdown preFEC degrade : Disabled
+
+ LED State: Off
+
+ FEC State: FEC DISABLED
+
+ Power Mode: Low
+
+ Dom Data Status: Ready
+
+ Last link flapped: 00:05:05
+
+ Optics Status
+
+         Optics Type:  QSFP+ 40G 4x10G BASE LR
+         Wavelength = 1307.00 nm
+         Loopback Host : None
+         Loopback Media : None
+
+         Alarm Status:
+         -------------
+         Detected Alarms:
+                 LOW-RX1-PWR   LOW-RX2-PWR   LOW-RX3-PWR   LOW-RX4-PWR
+                 LOW-TX1-PWR   LOW-TX2-PWR   LOW-TX3-PWR   LOW-TX4-PWR
+                 LOW-TX1_LBC   LOW-TX2_LBC   LOW-TX3_LBC   LOW-TX4_LBC
+
+         LOS/LOL/Fault Status:
+         Detected LOS/LOL/FAULT: RX-LOS
+
+
+
+         Performance Monitoring: Disable
+
+         THRESHOLD VALUES
+         ----------------
+
+         Parameter                 High Alarm  Low Alarm  High Warning  Low Warning
+         ------------------------  ----------  ---------  ------------  -----------
+         Rx Power Threshold(dBm)          3.4      -18.4           0.4        -14.4
+         Rx Power Threshold(mW)           2.1        0.0           1.0          0.0
+         Tx Power Threshold(dBm)          3.4      -12.2           0.4         -8.2
+         Tx Power Threshold(mW)           2.1        0.0           1.0          0.1
+         LBC Threshold(mA)              81.75      10.38         76.30        12.45
+         Temp. Threshold(celsius)       75.00      -5.00         70.00         0.00
+         Voltage Threshold(volt)         3.63       2.97          3.46         3.10
+
+         Configured Tx Power = 0.00 dBm
+         Configured Tx Power(mW) = 1.00 mW
+         Configured CD High Threshold = 160000 ps/nm
+         Configured CD lower Threshold = -160000 ps/nm
+         Configured OSNR lower Threshold = 0.00 dB
+         Configured DGD Higher Threshold = 0.00 ps
+         Polarization parameters not supported by optics
+
+         Lane  Laser Bias    TX Power    RX Power  Output Frequency
+         ----  ----------  ----------  ----------  ----------------
+           0      0.0 mA  -40.00 dBm  -40.00 dBm       N/A
+           1      0.0 mA  -40.00 dBm  -40.00 dBm       N/A
+           2      0.0 mA  -40.00 dBm  -40.00 dBm       N/A
+           3      0.0 mA  -40.00 dBm  -40.00 dBm       N/A
+
+         Temperature = 14.39 Celsius
+         Voltage = 3.36 V
+
+ Transceiver Vendor Details
+
+         Form Factor            : QSFP+
+         Optics type            : QSFP+ 40G 4x10G BASE LR
+         Name                   : CISCO-INNOLIGHT
+         OUI Number             : 44.7c.7f
+         Part Number            : TR-IQ13L-NC2
+         Rev Number             : 1B
+         Serial Number          : INL21370445
+         PID                    : QSFP-4X10G-LR-S
+         VID                    : V02
+         Hardware Version       : 66.49
+         Date Code(yy/mm/dd)    : 17/09/16

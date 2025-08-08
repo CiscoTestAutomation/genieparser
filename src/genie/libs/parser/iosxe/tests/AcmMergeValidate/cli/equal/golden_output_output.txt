@@ -1,7 +1,10 @@
-Validatating the configlet demo
-        Validation failed
-        Validation Time: 253 msec
-
-        Failed command: hostname 1234
-        Failed reason: 
-% Hostname contains one or more illegal characters. 
+Config Validation of Configlet: flash:meta-new
+    Validation Stage 
+	Status : Fail
+	Time   : 3915 msec
+	Failed command: 
+	    enrollment pkcs12
+	Failed reason: 
+	    enrollment pkcs12
+	      ^
+	    % Invalid input detected at '^' marker.
