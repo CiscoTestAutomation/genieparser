@@ -1,0 +1,23 @@
+ Capabilities
+
+  Ciphers Supported:        GCM-AES-128 GCM-AES-256
+  Cipher:                   GCM-AES-128
+  Confidentiality Offset:   0
+  Replay Window:            0
+  Delay Protect Enable:     FALSE
+  Include-SCI:              TRUE
+
+ Transmit SC:
+  SCI:                      C4AB4D35DB44000D
+  Transmitting:             TRUE
+ Transmit SA:
+  Next PN:                  34
+  Delay Protect AN/nextPN:  NA/0
+
+ Receive SC:
+  SCI:                      788517C39C64000D
+  Receiving:                TRUE
+ Receive SA:
+  Next PN:                  35
+  AN:                       0
+  Delay Protect AN/LPN:     0/0

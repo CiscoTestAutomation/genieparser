@@ -8,6 +8,7 @@ expected_output = {
     "alarm-in1": "GREEN",
     "alarm-in2": "GREEN",
     "number_of_ports_in_status": "26",
+    "console": "BLACK",
     "status": {
         "TenGigabitEthernet1/1": "",
         "TenGigabitEthernet1/2": "",

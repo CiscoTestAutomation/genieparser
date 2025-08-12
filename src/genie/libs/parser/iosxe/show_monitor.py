@@ -4,6 +4,8 @@ IOSXE parsers for the following show commands:
     * show monitor
     * show monitor session {session}
     * show monitor capture
+    * show monitor event-trace crypto pki event all
+    * show monitor event-trace crypto pki error all
 
 '''
 
@@ -2023,3 +2025,122 @@ class ShowMonitorCaptureFileDetailed(ShowMonitorCaptureFileDetailedSchema):
                     continue
 
         return ret_dict
+
+# =================================================
+#  Schema for 'show monitor event-trace crypto pki event all'
+# =================================================
+class ShowMonitorEventTraceCryptoPkiEventAllSchema(MetaParser):
+    """Schema for `show monitor event-trace crypto pki event all`"""
+    schema = {
+        'event_trace': {
+            'event': {
+                int: {
+                    'timestamp': str,
+                    'event_message': str,
+                }
+            }
+        }
+    }
+
+# =================================================
+#  Parser for 'show monitor event-trace crypto pki event all'
+# =================================================
+
+class ShowMonitorEventTraceCryptoPkiEventAll(ShowMonitorEventTraceCryptoPkiEventAllSchema):
+    """Parser for `show monitor event-trace crypto pki event all`"""
+
+    cli_command = 'show monitor event-trace crypto pki event all'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        parsed_dict = {}
+        event_idx = 1
+
+        # Example: 'Jun  9 13:30:43.826: Trustpoint- rootca:HTTP Server is disabled.'
+        p1 = re.compile(r'^(?P<timestamp>\w{3}\s+\d+\s+\d{2}:\d{2}:\d{2}\.\d{3}):\s*(?P<event_message>.*)$')
+
+        # Example: '    This is a continuation line'
+        p2 = re.compile(r'^\s+(?P<cont>.+)$')
+
+        current_event = None
+
+        for line in output.splitlines():
+            line = line.rstrip()
+            #Jun  9 13:30:43.826: Trustpoint- rootca:HTTP Server is disabled.
+            m = p1.match(line)
+            if m:
+                current_event = event_idx
+                event_dict = parsed_dict.setdefault('event_trace', {}).setdefault('event', {}).setdefault(current_event, {})
+                event_dict['timestamp'] = m.group('timestamp')
+                event_dict['event_message'] = m.group('event_message')
+                event_idx += 1
+                continue
+            # p2: Matches lines that start with one or more spaces followed by any characters (continuation lines)
+            m = p2.match(line)
+            if m and current_event:
+                event_dict = parsed_dict['event_trace']['event'][current_event]
+                event_dict['event_message'] += '\n' + m.group('cont')
+                continue
+
+        return parsed_dict
+
+# =================================================
+#  Schema for 'show monitor event-trace crypto pki error all'
+# =================================================
+class ShowMonitorEventTraceCryptoPkiErrorAllSchema(MetaParser):
+    """Schema for `show monitor event-trace crypto pki error all`"""
+    schema = {
+        'event_trace': {
+            'event': {
+                int: {
+                    Optional('timestamp'): str,
+                    Optional('event_message'): str,
+                }
+            }
+        }
+    }
+
+# =================================================
+#  Parser for 'show monitor event-trace crypto pki error all'
+# =================================================
+class ShowMonitorEventTraceCryptoPkiErrorAll(ShowMonitorEventTraceCryptoPkiErrorAllSchema):
+    """Parser for `show monitor event-trace crypto pki error all`"""
+
+    cli_command = 'show monitor event-trace crypto pki error all'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        parsed_dict = {}
+        event_idx = 1
+
+        # Example: 'Jun  9 13:30:43.826: <event_message>'
+        p1 = re.compile(r'^(?P<timestamp>\w{3}\s+\d+\s+\d{2}:\d{2}:\d{2}\.\d{3}):\s*(?P<event_message>.*)$')
+
+        # Example: '    This is a continuation line'
+        p2 = re.compile(r'^\s+(?P<cont>.+)$')
+
+        current_event = None
+
+        for line in output.splitlines():
+            line = line.rstrip()
+            # p1: Matches a log line starting with a timestamp (e.g. 'Jun  9 13:30:43.826:') followed by an event message.
+            m = p1.match(line)
+            if m:
+                current_event = event_idx
+                event_dict = parsed_dict.setdefault('event_trace', {}).setdefault('event', {}).setdefault(current_event, {})
+                event_dict['timestamp'] = m.group('timestamp')
+                event_dict['event_message'] = m.group('event_message')
+                event_idx += 1
+                continue
+            # p2: Matches lines that start with one or more spaces followed by any characters (continuation lines)
+            m = p2.match(line)
+            if m and current_event:
+                event_dict = parsed_dict['event_trace']['event'][current_event]
+                event_dict['event_message'] += '\n' + m.group('cont')
+                continue
+
+        return parsed_dict

@@ -1,0 +1,347 @@
+Name : Gi1/0/1
+Administrative Speed: auto
+Administrative Duplex: auto
+Administrative Auto-MDIX: on
+Administrative Power Inline: N/A
+Operational Speed: auto
+Operational Duplex: auto
+Operational Auto-MDIX: on
+Media Type: unknown
+Max Allocated Power: Max
+Transceiver Max Power: N/A
+
+Name : Gi1/0/2
+Administrative Speed: auto
+Administrative Duplex: auto
+Administrative Auto-MDIX: on
+Administrative Power Inline: N/A
+Operational Speed: auto
+Operational Duplex: auto
+Operational Auto-MDIX: on
+Media Type: unknown
+Max Allocated Power: Max
+Transceiver Max Power: N/A
+
+Name : Gi1/0/3
+Administrative Speed: auto
+Administrative Duplex: auto
+Administrative Auto-MDIX: on
+Administrative Power Inline: N/A
+Operational Speed: auto
+Operational Duplex: auto
+Operational Auto-MDIX: on
+Media Type: unknown
+Max Allocated Power: Max
+Transceiver Max Power: N/A
+
+Name : Gi1/0/4
+Administrative Speed: auto
+Administrative Duplex: auto
+Administrative Auto-MDIX: on
+Administrative Power Inline: N/A
+Operational Speed: auto
+Operational Duplex: auto
+Operational Auto-MDIX: on
+Media Type: unknown
+Max Allocated Power: Max
+Transceiver Max Power: N/A
+
+Name : Gi1/0/5
+Administrative Speed: auto
+Administrative Duplex: auto
+Administrative Auto-MDIX: on
+Administrative Power Inline: N/A
+Operational Speed: auto
+Operational Duplex: auto
+Operational Auto-MDIX: on
+Media Type: unknown
+Max Allocated Power: Max
+Transceiver Max Power: N/A
+
+Name : Gi1/0/6
+Administrative Speed: auto
+Administrative Duplex: auto
+Administrative Auto-MDIX: on
+Administrative Power Inline: N/A
+Operational Speed: auto
+Operational Duplex: auto
+Operational Auto-MDIX: on
+Media Type: unknown
+Max Allocated Power: Max
+Transceiver Max Power: N/A
+
+Name : Gi1/0/7
+Administrative Speed: auto
+Administrative Duplex: auto
+Administrative Auto-MDIX: on
+Administrative Power Inline: N/A
+Operational Speed: auto
+Operational Duplex: auto
+Operational Auto-MDIX: on
+Media Type: unknown
+Max Allocated Power: Max
+Transceiver Max Power: N/A
+
+Name : Gi1/0/8
+Administrative Speed: auto
+Administrative Duplex: auto
+Administrative Auto-MDIX: on
+Administrative Power Inline: N/A
+Operational Speed: auto
+Operational Duplex: auto
+Operational Auto-MDIX: on
+Media Type: unknown
+Max Allocated Power: Max
+Transceiver Max Power: N/A
+
+Name : Gi1/0/9
+Administrative Speed: auto
+Administrative Duplex: auto
+Administrative Auto-MDIX: on
+Administrative Power Inline: N/A
+Operational Speed: auto
+Operational Duplex: auto
+Operational Auto-MDIX: on
+Media Type: unknown
+Max Allocated Power: Max
+Transceiver Max Power: N/A
+
+Name : Gi1/0/10
+Administrative Speed: auto
+Administrative Duplex: auto
+Administrative Auto-MDIX: on
+Administrative Power Inline: N/A
+Operational Speed: auto
+Operational Duplex: auto
+Operational Auto-MDIX: on
+Media Type: unknown
+Max Allocated Power: Max
+Transceiver Max Power: N/A
+
+Name : Gi1/0/11
+Administrative Speed: auto
+Administrative Duplex: auto
+Administrative Auto-MDIX: on
+Administrative Power Inline: N/A
+Operational Speed: auto
+Operational Duplex: auto
+Operational Auto-MDIX: on
+Media Type: unknown
+Max Allocated Power: Max
+Transceiver Max Power: N/A
+
+Name : Gi1/0/12
+Administrative Speed: auto
+Administrative Duplex: auto
+Administrative Auto-MDIX: on
+Administrative Power Inline: N/A
+Operational Speed: auto
+Operational Duplex: auto
+Operational Auto-MDIX: on
+Media Type: unknown
+Max Allocated Power: Max
+Transceiver Max Power: N/A
+
+Name : Gi1/0/13
+Administrative Speed: auto
+Administrative Duplex: auto
+Administrative Auto-MDIX: on
+Administrative Power Inline: N/A
+Operational Speed: auto
+Operational Duplex: auto
+Operational Auto-MDIX: on
+Media Type: unknown
+Max Allocated Power: Max
+Transceiver Max Power: N/A
+
+Name : Gi1/0/14
+Administrative Speed: auto
+Administrative Duplex: auto
+Administrative Auto-MDIX: on
+Administrative Power Inline: N/A
+Operational Speed: auto
+Operational Duplex: auto
+Operational Auto-MDIX: on
+Media Type: unknown
+Max Allocated Power: Max
+Transceiver Max Power: N/A
+
+Name : Gi1/0/15
+Administrative Speed: auto
+Administrative Duplex: auto
+Administrative Auto-MDIX: on
+Administrative Power Inline: N/A
+Operational Speed: auto
+Operational Duplex: auto
+Operational Auto-MDIX: on
+Media Type: unknown
+Max Allocated Power: Max
+Transceiver Max Power: N/A
+
+Name : Gi1/0/16
+Administrative Speed: auto
+Administrative Duplex: auto
+Administrative Auto-MDIX: on
+Administrative Power Inline: N/A
+Operational Speed: auto
+Operational Duplex: auto
+Operational Auto-MDIX: on
+Media Type: unknown
+Max Allocated Power: Max
+Transceiver Max Power: N/A
+
+Name : Gi1/0/17
+Administrative Speed: auto
+Administrative Duplex: auto
+Administrative Auto-MDIX: on
+Administrative Power Inline: N/A
+Operational Speed: 1000
+Operational Duplex: full 
+Operational Auto-MDIX: on
+Media Type: 10/100/1000BaseTX SFP
+Max Allocated Power: Max
+Transceiver Max Power: N/A
+
+Name : Gi1/0/18
+Administrative Speed: auto
+Administrative Duplex: auto
+Administrative Auto-MDIX: on
+Administrative Power Inline: N/A
+Operational Speed: auto
+Operational Duplex: auto
+Operational Auto-MDIX: on
+Media Type: unknown
+Max Allocated Power: Max
+Transceiver Max Power: N/A
+
+Name : Gi1/0/19
+Administrative Speed: auto
+Administrative Duplex: auto
+Administrative Auto-MDIX: on
+Administrative Power Inline: N/A
+Operational Speed: auto
+Operational Duplex: auto
+Operational Auto-MDIX: on
+Media Type: unknown
+Max Allocated Power: Max
+Transceiver Max Power: N/A
+
+Name : Gi1/0/20
+Administrative Speed: auto
+Administrative Duplex: auto
+Administrative Auto-MDIX: on
+Administrative Power Inline: N/A
+Operational Speed: auto
+Operational Duplex: auto
+Operational Auto-MDIX: on
+Media Type: unknown
+Max Allocated Power: Max
+Transceiver Max Power: N/A
+
+Name : Gi1/0/21
+Administrative Speed: auto
+Administrative Duplex: auto
+Administrative Auto-MDIX: on
+Administrative Power Inline: N/A
+Operational Speed: auto
+Operational Duplex: auto
+Operational Auto-MDIX: on
+Media Type: unknown
+Max Allocated Power: Max
+Transceiver Max Power: N/A
+
+Name : Gi1/0/22
+Administrative Speed: auto
+Administrative Duplex: auto
+Administrative Auto-MDIX: on
+Administrative Power Inline: N/A
+Operational Speed: auto
+Operational Duplex: auto
+Operational Auto-MDIX: on
+Media Type: unknown
+Max Allocated Power: Max
+Transceiver Max Power: N/A
+
+Name : Gi1/0/23
+Administrative Speed: auto
+Administrative Duplex: auto
+Administrative Auto-MDIX: on
+Administrative Power Inline: N/A
+Operational Speed: 100
+Operational Duplex: half
+Operational Auto-MDIX: on
+Media Type: 10/100/1000BaseTX
+Max Allocated Power: Max
+Transceiver Max Power: N/A
+
+Name : Gi1/0/24
+Administrative Speed: auto
+Administrative Duplex: auto
+Administrative Auto-MDIX: on
+Administrative Power Inline: N/A
+Operational Speed: auto
+Operational Duplex: auto
+Operational Auto-MDIX: on
+Media Type: unknown
+Max Allocated Power: Max
+Transceiver Max Power: N/A
+
+Name : Gi1/0/25
+Administrative Speed: auto
+Administrative Duplex: auto
+Administrative Auto-MDIX: on
+Administrative Power Inline: N/A
+Operational Speed: auto
+Operational Duplex: auto
+Operational Auto-MDIX: on
+Media Type: unknown
+Max Allocated Power: Max
+Transceiver Max Power: N/A
+
+Name : Gi1/0/26
+Administrative Speed: auto
+Administrative Duplex: auto
+Administrative Auto-MDIX: on
+Administrative Power Inline: N/A
+Operational Speed: auto
+Operational Duplex: auto
+Operational Auto-MDIX: on
+Media Type: unknown
+Max Allocated Power: Max
+Transceiver Max Power: N/A
+
+Name : Gi1/0/27
+Administrative Speed: auto
+Administrative Duplex: auto
+Administrative Auto-MDIX: on
+Administrative Power Inline: N/A
+Operational Speed: auto
+Operational Duplex: auto
+Operational Auto-MDIX: on
+Media Type: unknown
+Max Allocated Power: Max
+Transceiver Max Power: N/A
+
+Name : Gi1/0/28
+Administrative Speed: auto
+Administrative Duplex: auto
+Administrative Auto-MDIX: on
+Administrative Power Inline: N/A
+Operational Speed: auto
+Operational Duplex: auto
+Operational Auto-MDIX: on
+Media Type: unknown
+Max Allocated Power: Max
+Transceiver Max Power: N/A
+
+Name : Ap1/0/1
+Administrative Speed: auto
+Administrative Duplex: auto
+Administrative Auto-MDIX: on
+Administrative Power Inline: N/A
+Operational Speed: 1000
+Operational Duplex: full 
+Operational Auto-MDIX: on
+Media Type: App-hosting port
+Max Allocated Power: Max
+Transceiver Max Power: N/A

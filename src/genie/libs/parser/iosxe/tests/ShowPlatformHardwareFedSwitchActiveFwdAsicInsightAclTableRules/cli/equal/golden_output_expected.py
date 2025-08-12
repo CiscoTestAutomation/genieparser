@@ -1,0 +1,32 @@
+expected_output =  {
+    "acl_oid":{
+        1321:{
+            "acl_rule_action":[
+                {
+                    "type":"DROP",
+                    "data":"1"
+                },
+                {
+                    "type":"COUNTER",
+                    "data":"['OID':'1322']"
+                },
+                {
+                    "type":"SUPPRESS_MAC_LEARNING",
+                    "data":"TRUE"
+                }
+            ],
+            "acl_rule_counter_pkts":0,
+            "acl_rule_match":{
+                "key_type":{
+                    "IS_IDENTITY_CLIENT_POLICY_APPLIED":[
+                        {
+                            "value":"0",
+                            "mask":"1"
+                        }
+                    ]
+                }
+            },
+            "rule_priority":0
+        }
+    }
+}

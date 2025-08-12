@@ -47,6 +47,10 @@
     * 'show platform software nat fp active mapping dynamic'
     * 'show platform software memory forwarding-manager F0 brief | include {option}'
     * 'show platform software firewall FP active pairs'
+    * show platform software firewall RP active vrf-pmap-binding
+    * show platform software firewall FP active vrf-pmap-binding
+    * 'show platform software nat ipalias'
+    * 'show platform software trace level ios rp active | in pki'
 """
 
 # Python
@@ -12406,3 +12410,136 @@ class ShowPlatformSoftwareFirewallFPActivePairs(ShowPlatformSoftwareFirewallFPAc
                 }
 
         return parsed
+
+class ShowPlatformSoftwareFirewallRPActiveVrfPmapBindingSchema(MetaParser):
+    '''Schema for show platform software firewall RP active vrf-pmap-binding'''
+    schema = {
+        'vrf': {
+            Any(): {
+                'vrf_name': str,
+                'vrf_id': int,
+                'parameter_map': str,
+		}
+	    }
+	}
+
+class ShowPlatformSoftwareFirewallRPActiveVrfPmapBinding(ShowPlatformSoftwareFirewallRPActiveVrfPmapBindingSchema):
+    '''Parser for show platform software firewall RP active vrf-pmap-binding
+                  show platform software firewall FP active vrf-pmap-binding'''
+
+    cli_command = 'show platform software firewall {processor} active vrf-pmap-binding'
+
+    def cli(self, processor="", output=None):
+
+        if output is None:
+            if processor:
+                cmd = self.cli_command.format(processor=processor)
+                output = self.device.execute(cmd)
+
+            else:
+                out = output
+
+        # Init return dictionary
+        parsed = {}
+
+        # Regex patterns
+        #  VRF Name: default, VRF ID: 0, Parameter-Map: vrf-default
+        p1 = re.compile(r'^VRF Name: +(?P<vrf_name>\S+), +VRF ID: +(?P<vrf_id>\d+), +Parameter-Map: +(?P<parameter_map>\S+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Match VRF information
+            #VRF Name: default, VRF ID: 0, Parameter-Map: vrf-default
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                vrf_dict = parsed.setdefault('vrf', {}).setdefault(group['vrf_name'], {})
+                vrf_dict['vrf_name'] = group['vrf_name']
+                vrf_dict['vrf_id'] = int(group['vrf_id'])
+                vrf_dict['parameter_map'] = group['parameter_map']
+
+        return parsed
+
+class ShowPlatformSoftwareNatIpaliasSchema(MetaParser):
+    schema = {
+        'ip_address': {
+            Any(): {  # IP address as key
+                 'table_id': int
+        }
+    }
+}
+
+class ShowPlatformSoftwareNatIpalias(ShowPlatformSoftwareNatIpaliasSchema):
+    """Parser for show platform software nat ipalias"""
+
+    cli_command = 'show platform software nat ipalias'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # initial return dictionary
+        parsed = {}
+
+        # IP Address          Table ID
+        # 80.0.0.11           0
+        p1 = re.compile(r'^(?P<ip_address>\S+)\s+(?P<table_id>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Skip header line
+            if 'IP Address' in line and 'Table ID' in line:
+                continue
+
+            # Match IP address and table ID
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ip_address_dict = parsed.setdefault('ip_address', {})
+                ip_address_dict[group['ip_address']] ={
+                     'table_id': int(group['table_id']),
+                }
+
+        return parsed
+
+# =================================================
+#  Schema for 'show platform software trace level ios rp active | in pki'
+# =================================================
+class ShowPlatformSoftwareTraceLevelIosRpActiveInPkiSchema(MetaParser):
+    """Schema for 'show platform software trace level ios rp active | in pki'"""
+    schema = {
+        str: str  # module name : level
+    }
+
+# =================================================
+#  Parser for 'show platform software trace level ios rp active | in pki'
+# =================================================
+class ShowPlatformSoftwareTraceLevelIosRpActiveInPki(ShowPlatformSoftwareTraceLevelIosRpActiveInPkiSchema):
+    """Parser for 'show platform software trace level ios rp active | in pki'"""
+
+    cli_command = 'show platform software trace level ios rp active | in pki'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+            parsed_dict = {}
+
+
+        # Example line: "pki    Noise"
+        p1 = re.compile(r'^(?P<module>\S+)\s+(?P<level>\S+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+            # Match lines with a module name followed by a log level, e.g., "pki    Noise"
+            m = p1.match(line)
+            if m:
+                module = m.group('module')
+                level = m.group('level')
+                parsed_dict[module] = level
+
+        return parsed_dict

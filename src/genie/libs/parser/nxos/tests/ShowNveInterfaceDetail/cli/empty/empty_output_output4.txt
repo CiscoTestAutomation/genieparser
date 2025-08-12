@@ -1,0 +1,26 @@
+Nevada-Node1# show nve interface nve 1 detail
+Interface: nve1, State: Up, encapsulation: VXLAN
+ VPC Capability: VPC-VIP-Only [notified]
+ Local Router MAC: 0c75.bd37.49cf
+ Host Learning Mode: Control-Plane
+ Source-Interface: loopback1 (primary: 200.200.200.7, secondary: 200.200.200.11)
+ Source Interface State: Up
+ Virtual RMAC Advertisement: Yes
+ NVE Flags:
+ Interface Handle: 0x49000001
+ Source Interface hold-down-time: 180
+ Source Interface hold-up-time: 30
+ Remaining hold-down time: 0 seconds
+ Virtual Router MAC: 0200.c8c8.c80b
+ Virtual Router MAC Re-origination: 0200.c8c8.c847
+ Interface state: nve-intf-add-complete
+ Fabric convergence time: 135 seconds
+ Fabric convergence time left: 0 seconds
+ Multisite delay-restore time: 600 seconds
+ Multisite delay-restore time left: 0 seconds
+ Multisite dci-advertise-pip configured: False
+ Multisite fabric-advertise-pip l3 configured: False
+ Multisite bgw-if: loopback2 (ip: 200.200.200.71, admin: Up, oper: Up)
+ Multisite bgw-if oper down reason:
+
+Nevada-Node1#

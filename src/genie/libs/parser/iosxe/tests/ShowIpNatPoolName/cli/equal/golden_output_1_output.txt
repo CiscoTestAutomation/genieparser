@@ -1,0 +1,14 @@
+
+NAT Pool Statistics
+
+Pool name natpool1, id 1
+                              Assigned            Available
+  Addresses                          0                  254
+  UDP Low Ports                      0               130048
+  TCP Low Ports                      0               130048
+  UDP High Ports                     0             16386048
+  TCP High Ports                     0             16386048
+
+(Low ports are less than 1024. High ports are greater than or equal to 1024.)
+
+

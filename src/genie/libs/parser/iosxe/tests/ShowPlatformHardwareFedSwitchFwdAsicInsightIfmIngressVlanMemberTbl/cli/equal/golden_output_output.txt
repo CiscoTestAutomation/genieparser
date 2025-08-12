@@ -1,0 +1,4 @@
+Number of entries:524288
+Looking up Ingress Entry for Vlan-Id 100 NPP-Attrib-Index 12:
+NPP-Attrib-Index     VLAN-id     STP-Learn-Type STP-State-Block
+12                   100         0              1             

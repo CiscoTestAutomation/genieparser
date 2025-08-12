@@ -21,7 +21,7 @@ class ShowHardwareLedStateSchema(MetaParser):
     schema = {
         'system': str,
         'express_setup': str,
-        'poe': str,
+        Optional('poe'): str,
         'dc_a': str,
         'dc_b': str,
         'alarm_out': str,
@@ -72,7 +72,7 @@ class ShowHardwareLedState(ShowHardwareLedStateSchema):
         p9 = re.compile(r'^EIP-NET-LED:\s+(?P<eip_net_led>\w+)$')
 
         # Gi1/1 BLACK
-        p10 = re.compile(r'^(?P<interface>\S+)\s+(?P<led_state>\w+)$')
+        p10 = re.compile(r'^(?P<interface>\S+)\s+(?P<led_state>\w+(?:\([^)]+\))?)$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -172,8 +172,23 @@ class ShowHardwareLedSchema(MetaParser):
         'alarm-out':str,
         Optional('alarm-in1'):str,
         Optional('alarm-in2'):str,
+        Optional('alarm-in3'):str,
+        Optional('alarm-in4'):str,
         Optional('alarm-in'):str,
-        'poe': str
+        Optional('poe'): str,
+        Optional('switch'): str,
+        Optional('sd_card'): str,
+        Optional('mode_speed'): str,
+        Optional('mode_duplex'): str,
+        Optional('mode_redundancy'): str,
+        Optional('mode_stack'): str,
+        Optional('usb_type_host'): str,
+        Optional('stack_active'): str,
+        Optional('stack_a'): str,
+        Optional('stack_b'): str,
+        Optional('rj45_console'): str,
+        Optional('usb_console'): str,
+        Optional('console'): str,
     }     
                        
 class ShowHardwareLed(ShowHardwareLedSchema):
@@ -207,6 +222,8 @@ class ShowHardwareLed(ShowHardwareLedSchema):
         # ALARM-OUT: GREEN
         # ALARM-IN1: GREEN
         # ALARM-IN2: GREEN
+        # ALARM-IN3: GREEN
+        # ALARM-IN4: GREEN
         # ALARM-IN: GREEN
         p6 = re.compile(r'^(?P<alarm>ALARM\-\w+):\s+(?P<alarm_color>\w+)$')
 
@@ -216,6 +233,37 @@ class ShowHardwareLed(ShowHardwareLedSchema):
         # STATUS: (26) Te1/1: Te1/2: Gi1/3:BLACK-BLACK Gi1/4:BLACK-BLACK Gi1/5:BLACK-BLACK Gi1/6:BLACK-BLACK Gi1/7:BLACK Gi1/8:BLACK Gi1/9:BLACK Gi1/10:BLACK Gi2/1:BLACK-BLACK Gi2/2:BLACK-BLACK Gi2/3:BLACK-BLACK Gi2/4:BLACK-BLACK Gi2/5:BLACK Gi2/6:BLACK Gi2/7:BLACK Gi2/8:BLACK Gi2/9:BLACK Gi2/10:BLACK Gi2/11:BLACK Gi2/12:BLACK Gi2/13:
         # STATUS: (28) Gi1/1:FLASH_GREEN Gi1/2:FLASH_GREEN Gi1/3:FLASH_GREEN Gi1/4:ACT_GREEN Gi1/5:BLACK Gi1/6:ACT_GREEN Gi1/7:BLACK Gi1/8:BLACK Gi1/9:ACT_GREEN Gi1/10:ACT_GREEN Gi1/11:ACT_GREEN Gi2/1:ACT_GREEN Gi2/2:BLACK Gi2/3:BLACK Gi2/4:BLACK Gi2/5:ACT_GREEN Gi2/6:BLACK Gi2/7:BLACK Gi2/8:ACT_AMBER Gi2/9:ACT_GREEN Gi2/10:BLACK Gi2/11:BLACK Gi2/12:BLACK Gi2/13:ACT_GREEN Gi2/14:BLACK Gi2/15:BLACK Gi2/16:ACT_GREEN
         p8 = re.compile(r'^STATUS:\s+\((?P<port_nums_in_status>\d+)\)\s+(?P<led_ports>(?:\S+:[\w-]*\s*)+)$')
+
+        # SWITCH: 1
+        p9 = re.compile(r'^SWITCH:\s+(?P<switch>\d+)$')
+
+        # SD-CARD: GREEN
+        p10 = re.compile(r'^SD-CARD:\s+(?P<sd_card>\w+)$')
+
+        # MODE-SPEED: BLACK
+        # MODE-DUPLEX: BLACK
+        # MODE-REDUNDANCY: BLACK
+        # MODE-STACK: BLACK
+        #p11 = re.compile(r'^(?P<mode>MODE\-\w+):\s+(?P<mode_color>\w+)$')
+        p11 = re.compile(r'^MODE-(?P<mode>\w+):\s+(?P<mode_color>\w+)$')
+
+        # USB-TYPE-A-HOST: BLACK
+        p12 = re.compile(r'^USB-TYPE-A-HOST:\s+(?P<usb_type_host>\w+)$')
+
+        # STACK-ACTIVE: BLACK
+        # STACK-A: BLACK
+        # STACK-B: BLACK
+        #p13 = re.compile(r'^(?P<stack>\S+):\s+(?P<stack_color>\w+)$')
+        p13 = re.compile(r'^STACK-(?P<name>ACTIVE|A|B):\s+(?P<stack_color>\w+)$')
+
+        # RJ45 CONSOLE: GREEN
+        p14 = re.compile(r'^RJ45\s+CONSOLE:\s+(?P<rj45_console>\w+)$')
+
+        # USB CONSOLE: BLACK
+        p15 = re.compile(r'^USB\s+CONSOLE:\s+(?P<usb_console>\w+)$')
+
+        # CONSOLE: BLACK
+        p16 = re.compile(r'^CONSOLE:\s+(?P<console>\w+)$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -283,6 +331,69 @@ class ShowHardwareLed(ShowHardwareLedSchema):
                     port = (port.split(':'))
                     port_led_dict = ret_dict.setdefault('status',{})
                     port_led_dict.update({Common.convert_intf_name(port[0]): port[1]})
+                continue
+
+            # SWITCH: 1
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({'switch' : group['switch']})
+                continue
+
+            # SD-CARD: GREEN
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({'sd_card' : group['sd_card']})
+                continue
+
+            # MODE-SPEED: BLACK
+            # MODE-DUPLEX: BLACK
+            # MODE-REDUNDANCY: BLACK    
+            # MODE-STACK: BLACK
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                #ret_dict.update({group['mode'].lower() : group['mode_color']})
+                ret_dict[f"mode_{group['mode'].lower()}"] = group['mode_color']
+                continue
+
+            # USB-TYPE-A-HOST: BLACK
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({'usb_type_host' : group['usb_type_host']})
+                continue
+
+            # STACK-ACTIVE: BLACK
+            # STACK-A: BLACK        
+            # STACK-B: BLACK
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                #ret_dict.update({'stack_' + group['stack'].lower() : group['stack_color']})
+                ret_dict[f"stack_{group['name'].lower()}"] = group['stack_color']
+                continue
+
+            # RJ45 CONSOLE: GREEN
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({'rj45_console' : group['rj45_console']})
+                continue
+
+            # USB CONSOLE: BLACK
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({'usb_console' : group['usb_console']})
+                continue
+
+            # CONSOLE: BLACK
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({'console' : group['console']})
                 continue
 
         return ret_dict

@@ -1,3 +1,12 @@
+""" show_macsec.py
+ Supported commands:
+    * show macsec summary
+    * show macsec post
+    * show macsec statistics interface {interface}
+    * show macsec hw
+    * show macsec status interface {interface}
+"""
+
 import re
 
 from genie.metaparser import MetaParser
@@ -610,3 +619,243 @@ class ShowMacsecHw(ShowMacsecHwSchema):
                 }
 
         return parsed_dict
+
+
+# ==============================================
+# Parser for 'show macsec status interface {interface}'
+# ==============================================
+class ShowMacsecStatusInterfaceSchema(MetaParser):
+    """Schema for 'show macsec status interface {interface}'"""
+    schema = {
+        'capabilities': {
+            'ciphers_supported': str,
+            'cipher': str,
+            'confidentiality_offset': int,
+            'replay_window': int,
+            'delay_protect_enable': bool,
+            Optional('access_control'): str,
+            Optional('dot1q_in_clear'): str,
+            'include_sci': bool,
+        },
+        'transmit_sc': {
+            'sci': str,
+            'transmitting': bool,
+        },
+        'transmit_sa': {
+            'next_pn': int,
+            'delay_protect_an_nextpn': str,
+        },
+        'receive_sc': {
+            'sci': str,
+            'receiving': bool,
+        },
+        'receive_sa': {
+            'next_pn': int,
+            'an': int,
+            'delay_protect_an_lpn': str,
+        }
+    }
+
+
+# ==============================================
+# Parser for 'show macsec status interface {interface}'
+# ==============================================
+
+class ShowMacsecStatusInterface(ShowMacsecStatusInterfaceSchema):
+    """Parser for 'show macsec status interface {interface}'"""
+
+    cli_command = 'show macsec status interface {interface}'
+
+    def cli(self, interface, output=None):
+        if output is None:
+            # get output from device
+            output = self.device.execute(self.cli_command.format(interface=interface))
+
+        ret_dict = {}
+        receive_sc = False
+        receive_sa = False
+
+        # Ciphers Supported:        GCM-AES-128 GCM-AES-256
+        p0 = re.compile(r'^Ciphers\s+Supported:\s+(?P<ciphers_supported>[\w\-\s]+)$')
+
+        # Cipher:                   GCM-AES-128
+        p1 = re.compile(r'^Cipher:\s+(?P<cipher>[\w\-\s]+)$')
+
+        # Confidentiality Offset:   0
+        p2 = re.compile(r'^Confidentiality\s+Offset:\s+(?P<confidentiality_offset>\d+)$')
+
+        # Replay Window:            64
+        p3 = re.compile(r'^Replay\s+Window:\s+(?P<replay_window>\d+)$')
+
+        # Delay Protect Enable:     FALSE
+        p4 = re.compile(r'^Delay\s+Protect\s+Enable:\s+(?P<delay_protect_enable>\bTRUE\b|\bFALSE\b)$', re.IGNORECASE)
+
+        # Access Control:           must-secure
+        p5 = re.compile(r'^Access\s+Control:\s+(?P<access_control>[\w\-\s]+)$')
+
+        # Dot1q In Clear:           0 Tag(s)
+        p6 = re.compile(r'^Dot1q\s+In\s+Clear:\s+(?P<dot1q_in_clear>[\w\s()]+)$')
+
+        # Include-SCI:              TRUE
+        p7 = re.compile(r'^Include-SCI:\s+(?P<include_sci>\bTRUE\b|\bFALSE\b)$', re.IGNORECASE)
+
+        # SCI:                      481BA4654B52000A
+        p8 = re.compile(r'^SCI:\s+(?P<sci>\w+)$')
+
+        # Transmitting:             TRUE
+        p9 = re.compile(r'^Transmitting:\s+(?P<transmitting>\bTRUE\b|\bFALSE\b)$', re.IGNORECASE)
+
+        # Next PN:                  9450
+        p10 = re.compile(r'^Next\s+PN:\s+(?P<next_pn>\d+)$')
+
+        # Delay Protect AN/nextPN:  NA/0
+        p11 = re.compile(r'^Delay\s+Protect\s+AN/nextPN:\s+(?P<delay_protect_an_nextpn>[\w/]+)$')
+
+        # Receive SC:
+        p12 = re.compile(r'^Receive\s+SC:$')
+
+        # Receiving:                TRUE
+        p13 = re.compile(r'^Receiving:\s+(?P<receiving>\bTRUE\b|\bFALSE\b)$', re.IGNORECASE)
+
+        # Receive SA:
+        p14 = re.compile(r'^Receive\s+SA:$')
+
+        # AN:                       0
+        p15 = re.compile(r'^AN:\s+(?P<an>\d+)$')
+
+        # Delay Protect AN/LPN:     0/0
+        p16 = re.compile(r'^Delay\s+Protect\s+AN/LPN:\s+(?P<delay_protect_an_lpn>[\w/]+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            #  Ciphers Supported:        GCM-AES-128 GCM-AES-256
+            m = p0.match(line)
+            if m:
+                groups = m.groupdict()
+                capabilities_dict = ret_dict.setdefault('capabilities', {})
+                capabilities_dict['ciphers_supported'] = groups['ciphers_supported']
+                continue
+
+            #   Cipher:                   GCM-AES-128
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                capabilities_dict['cipher'] = groups['cipher']
+                continue
+
+            #   Confidentiality Offset:   0
+            m = p2.match(line)
+            if m:
+                groups = m.groupdict()
+                capabilities_dict['confidentiality_offset'] = int(groups['confidentiality_offset'])
+                continue
+
+            #   Replay Window:            64
+            m = p3.match(line)
+            if m:
+                groups = m.groupdict()
+                capabilities_dict['replay_window'] = int(groups['replay_window'])
+                continue
+
+            #   Delay Protect Enable:     FALSE
+            m = p4.match(line)
+            if m:
+                groups = m.groupdict()
+                capabilities_dict['delay_protect_enable'] = groups['delay_protect_enable'].upper() == 'TRUE'
+                continue
+
+            #   Access Control:           must-secure
+            m = p5.match(line)
+            if m:
+                groups = m.groupdict()
+                capabilities_dict['access_control'] = groups['access_control']
+                continue
+
+            #   Dot1q In Clear:           0 Tag(s)
+            m = p6.match(line)
+            if m:
+                groups = m.groupdict()
+                capabilities_dict['dot1q_in_clear'] = groups['dot1q_in_clear']
+                continue
+
+            #   Include-SCI:              TRUE
+            m = p7.match(line)
+            if m:
+                groups = m.groupdict()
+                capabilities_dict['include_sci'] = groups['include_sci'].upper() == 'TRUE'
+                continue
+
+            #   SCI:                      481BA4654B52000A
+            m = p8.match(line)
+            if m:
+                groups = m.groupdict()
+                if receive_sc:
+                    receive_sc_dict = ret_dict.setdefault('receive_sc', {})
+                    receive_sc_dict['sci'] = groups['sci']
+                else:
+                    transmit_sc_dict = ret_dict.setdefault('transmit_sc', {})
+                    transmit_sc_dict['sci'] = groups['sci']
+                continue
+
+            #   Transmitting:             TRUE
+            m = p9.match(line)
+            if m:
+                groups = m.groupdict()
+                transmit_sc_dict['transmitting'] = groups['transmitting'].upper() == 'TRUE'
+                continue
+
+            #   Next PN:                  9450
+            m = p10.match(line)
+            if m:
+                groups = m.groupdict()
+                if receive_sa:
+                    receive_sa_dict = ret_dict.setdefault('receive_sa', {})
+                    receive_sa_dict['next_pn'] = int(groups['next_pn'])
+                else:
+                    transmit_sa_dict = ret_dict.setdefault('transmit_sa', {})
+                    transmit_sa_dict['next_pn'] = int(groups['next_pn'])
+                continue
+
+            #   Delay Protect AN/nextPN:  NA/0
+            m = p11.match(line)
+            if m:
+                groups = m.groupdict()
+                transmit_sa_dict['delay_protect_an_nextpn'] = groups['delay_protect_an_nextpn']
+                continue
+
+            #   Receive SC:
+            m = p12.match(line)
+            if m:
+                receive_sc = True
+                continue
+
+            #   Receiving:                TRUE
+            m = p13.match(line)
+            if m:
+                groups = m.groupdict()
+                receive_sc_dict['receiving'] = groups['receiving'].upper() == 'TRUE'
+                continue
+
+            #   Receive SA:
+            m = p14.match(line)
+            if m:
+                receive_sa = True
+                continue
+
+            #   AN:                       0
+            m = p15.match(line)
+            if m:
+                groups = m.groupdict()
+                receive_sa_dict['an'] = int(groups['an'])
+                continue
+
+            #   Delay Protect AN/LPN:     0/0
+            m = p16.match(line)
+            if m:
+                groups = m.groupdict()
+                receive_sa_dict['delay_protect_an_lpn'] = groups['delay_protect_an_lpn']
+                continue
+
+        return ret_dict
+

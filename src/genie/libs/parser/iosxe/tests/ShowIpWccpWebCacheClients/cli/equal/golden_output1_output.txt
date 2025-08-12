@@ -1,0 +1,19 @@
+WCCP Client information:
+  WCCP Client ID:          10.1.100.10
+  Protocol Version:        2.0
+  State:                   Usable
+  Redirection:             GRE
+  Packet Return:           GRE
+  Assignment:              HASH
+  Packets Redirected:      1234567
+  Connect Time:            01:12:45
+
+WCCP Client information:
+  WCCP Client ID:          10.1.100.11
+  Protocol Version:        2.0
+  State:                   Usable
+  Redirection:             L2
+  Packet Return:           L2
+  Assignment:              MASK
+  Packets Redirected:      987654
+  Connect Time:            00:45:12

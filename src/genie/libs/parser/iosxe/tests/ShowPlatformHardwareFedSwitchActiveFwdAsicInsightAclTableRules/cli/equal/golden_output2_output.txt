@@ -1,0 +1,497 @@
++-------------------------------------------------------------------------------------+
+| ACL Table Rules (acl-oid : 3710, acl-cookie : Racl::OUT::14::Inbound_RACL_Deny_OUT) |
++-------------------------------------------------------------------------------------+
++---------------+---------------------------------------------------------------------------+------------------------------------+-----------------------+
+| Rule Priority | ACL Rule Match Keys                                                       | ACL Rule Action Fields             | ACL Rule Counter Pkts |
++---------------+---------------------------------------------------------------------------+------------------------------------+-----------------------+
+| 32            | key-type: PROTOCOL                                                        | action-type: DROP                  | 0                     |
+|               | value: 17                                                                 | action-data: 0                     |                       |
+|               | mask: 255                                                                 | action-type: DROP                  |                       |
+|               | key-type: SPORT                                                           | action-data: 0                     |                       |
+|               | value: 67                                                                 | action-type: FORCE_TRAP_WITH_EVENT |                       |
+|               | mask: 65535                                                               | action-data: L3_ACL_FORCE_PUNT     |                       |
+|               | key-type: DPORT                                                           | action-type: COUNTER               |                       |
+|               | value: 68                                                                 | action-data: ['OID':'3711']        |                       |
+|               | mask: 65535                                                               | action-type: DROP                  |                       |
+|               | key-type: IPV4_SIP                                                        | action-data: 0                     |                       |
+|               | value: 0.0.0.0                                                            | action-type: DROP                  |                       |
+|               | mask: 0.0.0.0                                                             | action-data: 0                     |                       |
+|               | key-type: IPV4_DIP                                                        | action-type: DROP                  |                       |
+|               | value: 0.0.0.0                                                            | action-data: 0                     |                       |
+|               | mask: 0.0.0.0                                                             | action-type: DROP                  |                       |
+|               | key-type: IS_ROUTED                                                       | action-data: 0                     |                       |
+|               | value: 1                                                                  | action-type: DROP                  |                       |
+|               | mask: 1                                                                   | action-data: 0                     |                       |
+|               | key-type: PROTOCOL                                                        | action-type: DROP                  |                       |
+|               | value: 17                                                                 | action-data: 0                     |                       |
+|               | mask: 255                                                                 | action-type: DROP                  |                       |
+|               | key-type: IPV4_SIP                                                        | action-data: 0                     |                       |
+|               | value: 0.0.0.0                                                            | action-type: DROP                  |                       |
+|               | mask: 0.0.0.0                                                             | action-data: 0                     |                       |
+|               | key-type: IPV4_DIP                                                        | action-type: DROP                  |                       |
+|               | value: 0.0.0.0                                                            | action-data: 0                     |                       |
+|               | mask: 0.0.0.0                                                             | action-type: DROP                  |                       |
+|               | key-type: IPV4_FLAGS                                                      | action-data: 0                     |                       |
+|               | value: ['fragment':'1', 'df': '0', 'mf':0', 'is_fragment':'0']            | action-type: DROP                  |                       |
+|               | mask: ['fragment':'1', 'df':'0', 'mf':'0', 'is_fragment':'0']             | action-data: 0                     |                       |
+|               | key-type: IS_ROUTED                                                       | action-type: DROP                  |                       |
+|               | value: 1                                                                  | action-data: 0                     |                       |
+|               | mask: 1                                                                   | action-type: DROP                  |                       |
+|               | key-type: PROTOCOL                                                        | action-data: 0                     |                       |
+|               | value: 6                                                                  | action-type: DROP                  |                       |
+|               | mask: 255                                                                 | action-data: 0                     |                       |
+|               | key-type: DPORT                                                           | action-type: DROP                  |                       |
+|               | value: 5700                                                               | action-data: 0                     |                       |
+|               | mask: 65535                                                               | action-type: DROP                  |                       |
+|               | key-type: IPV4_SIP                                                        | action-data: 0                     |                       |
+|               | value: 0.0.0.0                                                            | action-type: DROP                  |                       |
+|               | mask: 0.0.0.0                                                             | action-data: 0                     |                       |
+|               | key-type: IPV4_DIP                                                        | action-type: DROP                  |                       |
+|               | value: 0.0.0.0                                                            | action-data: 0                     |                       |
+|               | mask: 0.0.0.0                                                             | action-type: DROP                  |                       |
+|               | key-type: IS_ROUTED                                                       | action-data: 0                     |                       |
+|               | value: 1                                                                  | action-type: DROP                  |                       |
+|               | mask: 1                                                                   | action-data: 0                     |                       |
+|               | key-type: PROTOCOL                                                        | action-type: DROP                  |                       |
+|               | value: 1                                                                  | action-data: 0                     |                       |
+|               | mask: 255                                                                 | action-type: DROP                  |                       |
+|               | key-type: MSG_TYPE                                                        | action-data: 0                     |                       |
+|               | value: 0                                                                  | action-type: DROP                  |                       |
+|               | mask: 0                                                                   | action-data: 0                     |                       |
+|               | key-type: MSG_CODE                                                        | action-type: DROP                  |                       |
+|               | value: 0                                                                  | action-data: 0                     |                       |
+|               | mask: 0                                                                   | action-type: DROP                  |                       |
+|               | key-type: IPV4_SIP                                                        | action-data: 0                     |                       |
+|               | value: 0.0.0.0                                                            | action-type: DROP                  |                       |
+|               | mask: 0.0.0.0                                                             | action-data: 0                     |                       |
+|               | key-type: IPV4_DIP                                                        | action-type: DROP                  |                       |
+|               | value: 0.0.0.0                                                            | action-data: 0                     |                       |
+|               | mask: 0.0.0.0                                                             | action-type: DROP                  |                       |
+|               | key-type: IS_ROUTED                                                       | action-data: 0                     |                       |
+|               | value: 1                                                                  | action-type: DROP                  |                       |
+|               | mask: 1                                                                   | action-data: 0                     |                       |
+|               | key-type: PROTOCOL                                                        | action-type: FORCE_TRAP_WITH_EVENT |                       |
+|               | value: 6                                                                  | action-data: L3_ACL_FORCE_PUNT     |                       |
+|               | mask: 255                                                                 | action-type: COUNTER               |                       |
+|               | key-type: TCP_FLAGS                                                       | action-data: ['OID':'3712']        |                       |
+|               | value: ['fin':'0', 'syn':'0', 'rst':'0','psh':'0', 'ack': '1', 'urg':'0'] |                                    |                       |
+|               | mask: ['fin':'0', 'syn':'0', 'rst':'0','psh':'0', 'ack': '1', 'urg':'0']  |                                    |                       |
+|               | key-type: IPV4_SIP                                                        |                                    |                       |
+|               | value: 0.0.0.0                                                            |                                    |                       |
+|               | mask: 0.0.0.0                                                             |                                    |                       |
+|               | key-type: IPV4_DIP                                                        |                                    |                       |
+|               | value: 0.0.0.0                                                            |                                    |                       |
+|               | mask: 0.0.0.0                                                             |                                    |                       |
+|               | key-type: IS_ROUTED                                                       |                                    |                       |
+|               | value: 1                                                                  |                                    |                       |
+|               | mask: 1                                                                   |                                    |                       |
+|               | key-type: PROTOCOL                                                        |                                    |                       |
+|               | value: 6                                                                  |                                    |                       |
+|               | mask: 255                                                                 |                                    |                       |
+|               | key-type: IPV4_SIP                                                        |                                    |                       |
+|               | value: 0.0.0.0                                                            |                                    |                       |
+|               | mask: 0.0.0.0                                                             |                                    |                       |
+|               | key-type: IPV4_DIP                                                        |                                    |                       |
+|               | value: 0.0.0.0                                                            |                                    |                       |
+|               | mask: 0.0.0.0                                                             |                                    |                       |
+|               | key-type: IPV4_FLAGS                                                      |                                    |                       |
+|               | value: ['fragment':'1', 'df': '0', 'mf':0', 'is_fragment':'0']            |                                    |                       |
+|               | mask: ['fragment':'1', 'df':'0', 'mf':'0', 'is_fragment':'0']             |                                    |                       |
+|               | key-type: IS_ROUTED                                                       |                                    |                       |
+|               | value: 1                                                                  |                                    |                       |
+|               | mask: 1                                                                   |                                    |                       |
+|               | key-type: PROTOCOL                                                        |                                    |                       |
+|               | value: 6                                                                  |                                    |                       |
+|               | mask: 255                                                                 |                                    |                       |
+|               | key-type: TCP_FLAGS                                                       |                                    |                       |
+|               | value: ['fin':'0', 'syn':'0', 'rst':'0','psh':'0', 'ack': '0', 'urg':'0'] |                                    |                       |
+|               | mask: ['fin':'1', 'syn':'0', 'rst':'0','psh':'0', 'ack': '1', 'urg':'0']  |                                    |                       |
+|               | key-type: IPV4_SIP                                                        |                                    |                       |
+|               | value: 0.0.0.0                                                            |                                    |                       |
+|               | mask: 0.0.0.0                                                             |                                    |                       |
+|               | key-type: IPV4_DIP                                                        |                                    |                       |
+|               | value: 0.0.0.0                                                            |                                    |                       |
+|               | mask: 0.0.0.0                                                             |                                    |                       |
+|               | key-type: IS_ROUTED                                                       |                                    |                       |
+|               | value: 1                                                                  |                                    |                       |
+|               | mask: 1                                                                   |                                    |                       |
+|               | key-type: PROTOCOL                                                        |                                    |                       |
+|               | value: 6                                                                  |                                    |                       |
+|               | mask: 255                                                                 |                                    |                       |
+|               | key-type: IPV4_SIP                                                        |                                    |                       |
+|               | value: 0.0.0.0                                                            |                                    |                       |
+|               | mask: 0.0.0.0                                                             |                                    |                       |
+|               | key-type: IPV4_DIP                                                        |                                    |                       |
+|               | value: 0.0.0.0                                                            |                                    |                       |
+|               | mask: 0.0.0.0                                                             |                                    |                       |
+|               | key-type: IPV4_FLAGS                                                      |                                    |                       |
+|               | value: ['fragment':'1', 'df': '0', 'mf':0', 'is_fragment':'0']            |                                    |                       |
+|               | mask: ['fragment':'1', 'df':'0', 'mf':'0', 'is_fragment':'0']             |                                    |                       |
+|               | key-type: IS_ROUTED                                                       |                                    |                       |
+|               | value: 1                                                                  |                                    |                       |
+|               | mask: 1                                                                   |                                    |                       |
+|               | key-type: PROTOCOL                                                        |                                    |                       |
+|               | value: 6                                                                  |                                    |                       |
+|               | mask: 255                                                                 |                                    |                       |
+|               | key-type: DPORT                                                           |                                    |                       |
+|               | value: 5650                                                               |                                    |                       |
+|               | mask: 65535                                                               |                                    |                       |
+|               | key-type: IPV4_SIP                                                        |                                    |                       |
+|               | value: 0.0.0.0                                                            |                                    |                       |
+|               | mask: 0.0.0.0                                                             |                                    |                       |
+|               | key-type: IPV4_DIP                                                        |                                    |                       |
+|               | value: 0.0.0.0                                                            |                                    |                       |
+|               | mask: 0.0.0.0                                                             |                                    |                       |
+|               | key-type: IS_ROUTED                                                       |                                    |                       |
+|               | value: 1                                                                  |                                    |                       |
+|               | mask: 1                                                                   |                                    |                       |
+|               | key-type: PROTOCOL                                                        |                                    |                       |
+|               | value: 6                                                                  |                                    |                       |
+|               | mask: 255                                                                 |                                    |                       |
+|               | key-type: DPORT                                                           |                                    |                       |
+|               | value: 5648                                                               |                                    |                       |
+|               | mask: 65534                                                               |                                    |                       |
+|               | key-type: IPV4_SIP                                                        |                                    |                       |
+|               | value: 0.0.0.0                                                            |                                    |                       |
+|               | mask: 0.0.0.0                                                             |                                    |                       |
+|               | key-type: IPV4_DIP                                                        |                                    |                       |
+|               | value: 0.0.0.0                                                            |                                    |                       |
+|               | mask: 0.0.0.0                                                             |                                    |                       |
+|               | key-type: IS_ROUTED                                                       |                                    |                       |
+|               | value: 1                                                                  |                                    |                       |
+|               | mask: 1                                                                   |                                    |                       |
+|               | key-type: PROTOCOL                                                        |                                    |                       |
+|               | value: 6                                                                  |                                    |                       |
+|               | mask: 255                                                                 |                                    |                       |
+|               | key-type: DPORT                                                           |                                    |                       |
+|               | value: 5632                                                               |                                    |                       |
+|               | mask: 65520                                                               |                                    |                       |
+|               | key-type: IPV4_SIP                                                        |                                    |                       |
+|               | value: 0.0.0.0                                                            |                                    |                       |
+|               | mask: 0.0.0.0                                                             |                                    |                       |
+|               | key-type: IPV4_DIP                                                        |                                    |                       |
+|               | value: 0.0.0.0                                                            |                                    |                       |
+|               | mask: 0.0.0.0                                                             |                                    |                       |
+|               | key-type: IS_ROUTED                                                       |                                    |                       |
+|               | value: 1                                                                  |                                    |                       |
+|               | mask: 1                                                                   |                                    |                       |
+|               | key-type: PROTOCOL                                                        |                                    |                       |
+|               | value: 6                                                                  |                                    |                       |
+|               | mask: 255                                                                 |                                    |                       |
+|               | key-type: DPORT                                                           |                                    |                       |
+|               | value: 5120                                                               |                                    |                       |
+|               | mask: 65024                                                               |                                    |                       |
+|               | key-type: IPV4_SIP                                                        |                                    |                       |
+|               | value: 0.0.0.0                                                            |                                    |                       |
+|               | mask: 0.0.0.0                                                             |                                    |                       |
+|               | key-type: IPV4_DIP                                                        |                                    |                       |
+|               | value: 0.0.0.0                                                            |                                    |                       |
+|               | mask: 0.0.0.0                                                             |                                    |                       |
+|               | key-type: IS_ROUTED                                                       |                                    |                       |
+|               | value: 1                                                                  |                                    |                       |
+|               | mask: 1                                                                   |                                    |                       |
+|               | key-type: PROTOCOL                                                        |                                    |                       |
+|               | value: 6                                                                  |                                    |                       |
+|               | mask: 255                                                                 |                                    |                       |
+|               | key-type: DPORT                                                           |                                    |                       |
+|               | value: 5100                                                               |                                    |                       |
+|               | mask: 65532                                                               |                                    |                       |
+|               | key-type: IPV4_SIP                                                        |                                    |                       |
+|               | value: 0.0.0.0                                                            |                                    |                       |
+|               | mask: 0.0.0.0                                                             |                                    |                       |
+|               | key-type: IPV4_DIP                                                        |                                    |                       |
+|               | value: 0.0.0.0                                                            |                                    |                       |
+|               | mask: 0.0.0.0                                                             |                                    |                       |
+|               | key-type: IS_ROUTED                                                       |                                    |                       |
+|               | value: 1                                                                  |                                    |                       |
+|               | mask: 1                                                                   |                                    |                       |
+|               | key-type: PROTOCOL                                                        |                                    |                       |
+|               | value: 6                                                                  |                                    |                       |
+|               | mask: 255                                                                 |                                    |                       |
+|               | key-type: DPORT                                                           |                                    |                       |
+|               | value: 5104                                                               |                                    |                       |
+|               | mask: 65520                                                               |                                    |                       |
+|               | key-type: IPV4_SIP                                                        |                                    |                       |
+|               | value: 0.0.0.0                                                            |                                    |                       |
+|               | mask: 0.0.0.0                                                             |                                    |                       |
+|               | key-type: IPV4_DIP                                                        |                                    |                       |
+|               | value: 0.0.0.0                                                            |                                    |                       |
+|               | mask: 0.0.0.0                                                             |                                    |                       |
+|               | key-type: IS_ROUTED                                                       |                                    |                       |
+|               | value: 1                                                                  |                                    |                       |
+|               | mask: 1                                                                   |                                    |                       |
+|               | key-type: PROTOCOL                                                        |                                    |                       |
+|               | value: 6                                                                  |                                    |                       |
+|               | mask: 255                                                                 |                                    |                       |
+|               | key-type: IPV4_SIP                                                        |                                    |                       |
+|               | value: 0.0.0.0                                                            |                                    |                       |
+|               | mask: 0.0.0.0                                                             |                                    |                       |
+|               | key-type: IPV4_DIP                                                        |                                    |                       |
+|               | value: 0.0.0.0                                                            |                                    |                       |
+|               | mask: 0.0.0.0                                                             |                                    |                       |
+|               | key-type: IPV4_FLAGS                                                      |                                    |                       |
+|               | value: ['fragment':'1', 'df': '0', 'mf':0', 'is_fragment':'0']            |                                    |                       |
+|               | mask: ['fragment':'1', 'df':'0', 'mf':'0', 'is_fragment':'0']             |                                    |                       |
+|               | key-type: IS_ROUTED                                                       |                                    |                       |
+|               | value: 1                                                                  |                                    |                       |
+|               | mask: 1                                                                   |                                    |                       |
+|               | key-type: PROTOCOL                                                        |                                    |                       |
+|               | value: 6                                                                  |                                    |                       |
+|               | mask: 255                                                                 |                                    |                       |
+|               | key-type: DPORT                                                           |                                    |                       |
+|               | value: 6000                                                               |                                    |                       |
+|               | mask: 65535                                                               |                                    |                       |
+|               | key-type: IPV4_SIP                                                        |                                    |                       |
+|               | value: 0.0.0.0                                                            |                                    |                       |
+|               | mask: 0.0.0.0                                                             |                                    |                       |
+|               | key-type: IPV4_DIP                                                        |                                    |                       |
+|               | value: 0.0.0.0                                                            |                                    |                       |
+|               | mask: 0.0.0.0                                                             |                                    |                       |
+|               | key-type: IS_ROUTED                                                       |                                    |                       |
+|               | value: 1                                                                  |                                    |                       |
+|               | mask: 1                                                                   |                                    |                       |
+|               | key-type: PROTOCOL                                                        |                                    |                       |
+|               | value: 6                                                                  |                                    |                       |
+|               | mask: 255                                                                 |                                    |                       |
+|               | key-type: DPORT                                                           |                                    |                       |
+|               | value: 5984                                                               |                                    |                       |
+|               | mask: 65520                                                               |                                    |                       |
+|               | key-type: IPV4_SIP                                                        |                                    |                       |
+|               | value: 0.0.0.0                                                            |                                    |                       |
+|               | mask: 0.0.0.0                                                             |                                    |                       |
+|               | key-type: IPV4_DIP                                                        |                                    |                       |
+|               | value: 0.0.0.0                                                            |                                    |                       |
+|               | mask: 0.0.0.0                                                             |                                    |                       |
+|               | key-type: IS_ROUTED                                                       |                                    |                       |
+|               | value: 1                                                                  |                                    |                       |
+|               | mask: 1                                                                   |                                    |                       |
+|               | key-type: PROTOCOL                                                        |                                    |                       |
+|               | value: 6                                                                  |                                    |                       |
+|               | mask: 255                                                                 |                                    |                       |
+|               | key-type: DPORT                                                           |                                    |                       |
+|               | value: 5952                                                               |                                    |                       |
+|               | mask: 65504                                                               |                                    |                       |
+|               | key-type: IPV4_SIP                                                        |                                    |                       |
+|               | value: 0.0.0.0                                                            |                                    |                       |
+|               | mask: 0.0.0.0                                                             |                                    |                       |
+|               | key-type: IPV4_DIP                                                        |                                    |                       |
+|               | value: 0.0.0.0                                                            |                                    |                       |
+|               | mask: 0.0.0.0                                                             |                                    |                       |
+|               | key-type: IS_ROUTED                                                       |                                    |                       |
+|               | value: 1                                                                  |                                    |                       |
+|               | mask: 1                                                                   |                                    |                       |
+|               | key-type: PROTOCOL                                                        |                                    |                       |
+|               | value: 6                                                                  |                                    |                       |
+|               | mask: 255                                                                 |                                    |                       |
+|               | key-type: DPORT                                                           |                                    |                       |
+|               | value: 5888                                                               |                                    |                       |
+|               | mask: 65472                                                               |                                    |                       |
+|               | key-type: IPV4_SIP                                                        |                                    |                       |
+|               | value: 0.0.0.0                                                            |                                    |                       |
+|               | mask: 0.0.0.0                                                             |                                    |                       |
+|               | key-type: IPV4_DIP                                                        |                                    |                       |
+|               | value: 0.0.0.0                                                            |                                    |                       |
+|               | mask: 0.0.0.0                                                             |                                    |                       |
+|               | key-type: IS_ROUTED                                                       |                                    |                       |
+|               | value: 1                                                                  |                                    |                       |
+|               | mask: 1                                                                   |                                    |                       |
+|               | key-type: PROTOCOL                                                        |                                    |                       |
+|               | value: 6                                                                  |                                    |                       |
+|               | mask: 255                                                                 |                                    |                       |
+|               | key-type: DPORT                                                           |                                    |                       |
+|               | value: 5750                                                               |                                    |                       |
+|               | mask: 65534                                                               |                                    |                       |
+|               | key-type: IPV4_SIP                                                        |                                    |                       |
+|               | value: 0.0.0.0                                                            |                                    |                       |
+|               | mask: 0.0.0.0                                                             |                                    |                       |
+|               | key-type: IPV4_DIP                                                        |                                    |                       |
+|               | value: 0.0.0.0                                                            |                                    |                       |
+|               | mask: 0.0.0.0                                                             |                                    |                       |
+|               | key-type: IS_ROUTED                                                       |                                    |                       |
+|               | value: 1                                                                  |                                    |                       |
+|               | mask: 1                                                                   |                                    |                       |
+|               | key-type: PROTOCOL                                                        |                                    |                       |
+|               | value: 6                                                                  |                                    |                       |
+|               | mask: 255                                                                 |                                    |                       |
+|               | key-type: DPORT                                                           |                                    |                       |
+|               | value: 5752                                                               |                                    |                       |
+|               | mask: 65528                                                               |                                    |                       |
+|               | key-type: IPV4_SIP                                                        |                                    |                       |
+|               | value: 0.0.0.0                                                            |                                    |                       |
+|               | mask: 0.0.0.0                                                             |                                    |                       |
+|               | key-type: IPV4_DIP                                                        |                                    |                       |
+|               | value: 0.0.0.0                                                            |                                    |                       |
+|               | mask: 0.0.0.0                                                             |                                    |                       |
+|               | key-type: IS_ROUTED                                                       |                                    |                       |
+|               | value: 1                                                                  |                                    |                       |
+|               | mask: 1                                                                   |                                    |                       |
+|               | key-type: PROTOCOL                                                        |                                    |                       |
+|               | value: 6                                                                  |                                    |                       |
+|               | mask: 255                                                                 |                                    |                       |
+|               | key-type: DPORT                                                           |                                    |                       |
+|               | value: 5760                                                               |                                    |                       |
+|               | mask: 65408                                                               |                                    |                       |
+|               | key-type: IPV4_SIP                                                        |                                    |                       |
+|               | value: 0.0.0.0                                                            |                                    |                       |
+|               | mask: 0.0.0.0                                                             |                                    |                       |
+|               | key-type: IPV4_DIP                                                        |                                    |                       |
+|               | value: 0.0.0.0                                                            |                                    |                       |
+|               | mask: 0.0.0.0                                                             |                                    |                       |
+|               | key-type: IS_ROUTED                                                       |                                    |                       |
+|               | value: 1                                                                  |                                    |                       |
+|               | mask: 1                                                                   |                                    |                       |
+|               | key-type: PROTOCOL                                                        |                                    |                       |
+|               | value: 6                                                                  |                                    |                       |
+|               | mask: 255                                                                 |                                    |                       |
+|               | key-type: IPV4_SIP                                                        |                                    |                       |
+|               | value: 0.0.0.0                                                            |                                    |                       |
+|               | mask: 0.0.0.0                                                             |                                    |                       |
+|               | key-type: IPV4_DIP                                                        |                                    |                       |
+|               | value: 0.0.0.0                                                            |                                    |                       |
+|               | mask: 0.0.0.0                                                             |                                    |                       |
+|               | key-type: IPV4_FLAGS                                                      |                                    |                       |
+|               | value: ['fragment':'1', 'df': '0', 'mf':0', 'is_fragment':'0']            |                                    |                       |
+|               | mask: ['fragment':'1', 'df':'0', 'mf':'0', 'is_fragment':'0']             |                                    |                       |
+|               | key-type: IS_ROUTED                                                       |                                    |                       |
+|               | value: 1                                                                  |                                    |                       |
+|               | mask: 1                                                                   |                                    |                       |
+|               | key-type: PROTOCOL                                                        |                                    |                       |
+|               | value: 17                                                                 |                                    |                       |
+|               | mask: 255                                                                 |                                    |                       |
+|               | key-type: DPORT                                                           |                                    |                       |
+|               | value: 6000                                                               |                                    |                       |
+|               | mask: 65535                                                               |                                    |                       |
+|               | key-type: IPV4_SIP                                                        |                                    |                       |
+|               | value: 0.0.0.0                                                            |                                    |                       |
+|               | mask: 0.0.0.0                                                             |                                    |                       |
+|               | key-type: IPV4_DIP                                                        |                                    |                       |
+|               | value: 0.0.0.0                                                            |                                    |                       |
+|               | mask: 0.0.0.0                                                             |                                    |                       |
+|               | key-type: IS_ROUTED                                                       |                                    |                       |
+|               | value: 1                                                                  |                                    |                       |
+|               | mask: 1                                                                   |                                    |                       |
+|               | key-type: PROTOCOL                                                        |                                    |                       |
+|               | value: 17                                                                 |                                    |                       |
+|               | mask: 255                                                                 |                                    |                       |
+|               | key-type: DPORT                                                           |                                    |                       |
+|               | value: 5984                                                               |                                    |                       |
+|               | mask: 65520                                                               |                                    |                       |
+|               | key-type: IPV4_SIP                                                        |                                    |                       |
+|               | value: 0.0.0.0                                                            |                                    |                       |
+|               | mask: 0.0.0.0                                                             |                                    |                       |
+|               | key-type: IPV4_DIP                                                        |                                    |                       |
+|               | value: 0.0.0.0                                                            |                                    |                       |
+|               | mask: 0.0.0.0                                                             |                                    |                       |
+|               | key-type: IS_ROUTED                                                       |                                    |                       |
+|               | value: 1                                                                  |                                    |                       |
+|               | mask: 1                                                                   |                                    |                       |
+|               | key-type: PROTOCOL                                                        |                                    |                       |
+|               | value: 17                                                                 |                                    |                       |
+|               | mask: 255                                                                 |                                    |                       |
+|               | key-type: DPORT                                                           |                                    |                       |
+|               | value: 5952                                                               |                                    |                       |
+|               | mask: 65504                                                               |                                    |                       |
+|               | key-type: IPV4_SIP                                                        |                                    |                       |
+|               | value: 0.0.0.0                                                            |                                    |                       |
+|               | mask: 0.0.0.0                                                             |                                    |                       |
+|               | key-type: IPV4_DIP                                                        |                                    |                       |
+|               | value: 0.0.0.0                                                            |                                    |                       |
+|               | mask: 0.0.0.0                                                             |                                    |                       |
+|               | key-type: IS_ROUTED                                                       |                                    |                       |
+|               | value: 1                                                                  |                                    |                       |
+|               | mask: 1                                                                   |                                    |                       |
+|               | key-type: PROTOCOL                                                        |                                    |                       |
+|               | value: 17                                                                 |                                    |                       |
+|               | mask: 255                                                                 |                                    |                       |
+|               | key-type: DPORT                                                           |                                    |                       |
+|               | value: 5888                                                               |                                    |                       |
+|               | mask: 65472                                                               |                                    |                       |
+|               | key-type: IPV4_SIP                                                        |                                    |                       |
+|               | value: 0.0.0.0                                                            |                                    |                       |
+|               | mask: 0.0.0.0                                                             |                                    |                       |
+|               | key-type: IPV4_DIP                                                        |                                    |                       |
+|               | value: 0.0.0.0                                                            |                                    |                       |
+|               | mask: 0.0.0.0                                                             |                                    |                       |
+|               | key-type: IS_ROUTED                                                       |                                    |                       |
+|               | value: 1                                                                  |                                    |                       |
+|               | mask: 1                                                                   |                                    |                       |
+|               | key-type: PROTOCOL                                                        |                                    |                       |
+|               | value: 17                                                                 |                                    |                       |
+|               | mask: 255                                                                 |                                    |                       |
+|               | key-type: DPORT                                                           |                                    |                       |
+|               | value: 5632                                                               |                                    |                       |
+|               | mask: 65280                                                               |                                    |                       |
+|               | key-type: IPV4_SIP                                                        |                                    |                       |
+|               | value: 0.0.0.0                                                            |                                    |                       |
+|               | mask: 0.0.0.0                                                             |                                    |                       |
+|               | key-type: IPV4_DIP                                                        |                                    |                       |
+|               | value: 0.0.0.0                                                            |                                    |                       |
+|               | mask: 0.0.0.0                                                             |                                    |                       |
+|               | key-type: IS_ROUTED                                                       |                                    |                       |
+|               | value: 1                                                                  |                                    |                       |
+|               | mask: 1                                                                   |                                    |                       |
+|               | key-type: PROTOCOL                                                        |                                    |                       |
+|               | value: 17                                                                 |                                    |                       |
+|               | mask: 255                                                                 |                                    |                       |
+|               | key-type: DPORT                                                           |                                    |                       |
+|               | value: 5120                                                               |                                    |                       |
+|               | mask: 65024                                                               |                                    |                       |
+|               | key-type: IPV4_SIP                                                        |                                    |                       |
+|               | value: 0.0.0.0                                                            |                                    |                       |
+|               | mask: 0.0.0.0                                                             |                                    |                       |
+|               | key-type: IPV4_DIP                                                        |                                    |                       |
+|               | value: 0.0.0.0                                                            |                                    |                       |
+|               | mask: 0.0.0.0                                                             |                                    |                       |
+|               | key-type: IS_ROUTED                                                       |                                    |                       |
+|               | value: 1                                                                  |                                    |                       |
+|               | mask: 1                                                                   |                                    |                       |
+|               | key-type: PROTOCOL                                                        |                                    |                       |
+|               | value: 17                                                                 |                                    |                       |
+|               | mask: 255                                                                 |                                    |                       |
+|               | key-type: DPORT                                                           |                                    |                       |
+|               | value: 5100                                                               |                                    |                       |
+|               | mask: 65532                                                               |                                    |                       |
+|               | key-type: IPV4_SIP                                                        |                                    |                       |
+|               | value: 0.0.0.0                                                            |                                    |                       |
+|               | mask: 0.0.0.0                                                             |                                    |                       |
+|               | key-type: IPV4_DIP                                                        |                                    |                       |
+|               | value: 0.0.0.0                                                            |                                    |                       |
+|               | mask: 0.0.0.0                                                             |                                    |                       |
+|               | key-type: IS_ROUTED                                                       |                                    |                       |
+|               | value: 1                                                                  |                                    |                       |
+|               | mask: 1                                                                   |                                    |                       |
+|               | key-type: PROTOCOL                                                        |                                    |                       |
+|               | value: 17                                                                 |                                    |                       |
+|               | mask: 255                                                                 |                                    |                       |
+|               | key-type: DPORT                                                           |                                    |                       |
+|               | value: 5104                                                               |                                    |                       |
+|               | mask: 65520                                                               |                                    |                       |
+|               | key-type: IPV4_SIP                                                        |                                    |                       |
+|               | value: 0.0.0.0                                                            |                                    |                       |
+|               | mask: 0.0.0.0                                                             |                                    |                       |
+|               | key-type: IPV4_DIP                                                        |                                    |                       |
+|               | value: 0.0.0.0                                                            |                                    |                       |
+|               | mask: 0.0.0.0                                                             |                                    |                       |
+|               | key-type: IS_ROUTED                                                       |                                    |                       |
+|               | value: 1                                                                  |                                    |                       |
+|               | mask: 1                                                                   |                                    |                       |
+|               | key-type: PROTOCOL                                                        |                                    |                       |
+|               | value: 17                                                                 |                                    |                       |
+|               | mask: 255                                                                 |                                    |                       |
+|               | key-type: IPV4_SIP                                                        |                                    |                       |
+|               | value: 0.0.0.0                                                            |                                    |                       |
+|               | mask: 0.0.0.0                                                             |                                    |                       |
+|               | key-type: IPV4_DIP                                                        |                                    |                       |
+|               | value: 0.0.0.0                                                            |                                    |                       |
+|               | mask: 0.0.0.0                                                             |                                    |                       |
+|               | key-type: IPV4_FLAGS                                                      |                                    |                       |
+|               | value: ['fragment':'1', 'df': '0', 'mf':0', 'is_fragment':'0']            |                                    |                       |
+|               | mask: ['fragment':'1', 'df':'0', 'mf':'0', 'is_fragment':'0']             |                                    |                       |
+|               | key-type: IS_ROUTED                                                       |                                    |                       |
+|               | value: 1                                                                  |                                    |                       |
+|               | mask: 1                                                                   |                                    |                       |
+|               | key-type: IS_ROUTED                                                       |                                    |                       |
+|               | value: 1                                                                  |                                    |                       |
+|               | mask: 1                                                                   |                                    |                       |
+|               |                                                                           |                                    |                       |
++---------------+---------------------------------------------------------------------------+------------------------------------+-----------------------+

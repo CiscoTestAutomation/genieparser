@@ -169,13 +169,13 @@ class ShowInventory(ShowInventorySchema):
         p1 = re.compile(r"^NAME: +\"(?P<name>.*)\"," r" +DESCR: +\"(?P<descr>.*)\"$")
 
         # Switch 1
-        p1_1 = re.compile(r"^Switch +(?P<slot>(\S+))$")
-
+        # Switch 1 Chassis
+        p1_1 = re.compile(r"^Switch +(?P<slot>\d+)(?: +Chassis)?$")
         # Power Supply Module 0
         # Power Supply Module 1
         # Switch 1 - Power Supply B
-        p1_2 = re.compile(r"^(Switch (?P<slot>\d+) - )?Power Supply (Module )?(?P<subslot>[\d\w]+)$")
-
+        # Switch 2 Power Supply Module 1
+        p1_2 =  re.compile(r"^(?:Switch +(?P<switch>\d+) - |Switch +(?P<switch2>\d+) +)?Power Supply (Module )?(?P<subslot>[\d\w]+)$")
         # SPA subslot 0/0
         # IM subslot 0/1
         # NIM subslot 0/0
@@ -188,14 +188,16 @@ class ShowInventory(ShowInventorySchema):
         p1_5 = re.compile(r"^StackPort(?P<slot>(\d+))/(?P<subslot>(\d+))$")
 
         # Fan Tray
-        p1_6 = re.compile(r"^Fan +Tray|\d+$")
+        # Switch 1 Fan Tray
+        p1_6 = re.compile(r"^(?:Switch +(?P<switch>\d+) +)?Fan +Tray(?: +(?P<subslot>\d+))?$")
 
         # Modem 0 on Cellular0/2/0
         p1_7 = re.compile(r"^Modem +(?P<modem>\S+) +on +Cellular(?P<slot>\d+)\/(?P<subslot>.*)$")
 
         # Slot 2 Linecard
         # Slot 3 Supervisor
-        p1_8 = re.compile(r'^Slot\s*(?P<slot>\d+)\s*(Linecard|Supervisor|Router)$')
+        # Switch 1 Slot 2 Linecard
+        p1_8 =  re.compile(r"^(?:Switch +(?P<switch>\d+) +)?(?:Slot +)?(?P<slot>\d+)\s*(?P<type>Linecard|Supervisor|Router)$")
         # Supervisor
         p1_9 = re.compile(r"^Supervisor$")
 
@@ -241,6 +243,7 @@ class ShowInventory(ShowInventorySchema):
                 # ------------------------------------------------------------------
 
                 # Switch 1
+                # Switch 1 Chassis
                 m1_1 = p1_1.match(name)
                 if m1_1:
                     slot = m1_1.groupdict()["slot"]
@@ -253,10 +256,13 @@ class ShowInventory(ShowInventorySchema):
 
                 # Power Supply Module 0
                 # Switch 1 - Power Supply B
+                # Switch 2 Power Supply Module 1
                 m1_2 = p1_2.match(name)
                 if m1_2:
-                    slot = m1_2.groupdict()["slot"]
-                    subslot = m1_2.groupdict()["subslot"]
+                    group = m1_2.groupdict()
+                    # Prefer 'switch' from 'Switch 1 - Power Supply A'
+                    slot = group.get("switch") or group.get("switch2")
+                    subslot = group["subslot"]
 
                     if slot is None:
                         slot = f"P{subslot}"
@@ -288,6 +294,7 @@ class ShowInventory(ShowInventorySchema):
                     subslot = None
 
                 # Fan Tray
+                # Switch 2 Fan Tray
                 m1_6 = p1_6.match(name)
                 if m1_6:
                     slot = name.replace(" ", "_")

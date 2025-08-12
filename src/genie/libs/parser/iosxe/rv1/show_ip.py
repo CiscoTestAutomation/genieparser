@@ -3,6 +3,7 @@
 IOSXE revision 1 parsers for the following show commands:
 
     * 'show inventory'
+    * show ip policy
 """
 
 #Python
@@ -122,3 +123,49 @@ class ShowIpDhcpSnoopingBinding(ShowIpDhcpSnoopingBindingSchema):
 
         return ret_dict
 
+
+# ===========================================
+# Schema for 'show ip policy
+# ===========================================
+class ShowIpPolicySchema(MetaParser):
+    """Schema for show ip policy"""
+    schema = {
+                'interface': {
+                    Any(): {  # interface name
+                        'route_map': str  # name of route-map
+                    }
+                }
+            }
+
+# ===========================================
+# Parser for 'show ip policy
+# ===========================================
+class ShowIpPolicy(ShowIpPolicySchema):
+    '''
+    Parser for:
+        show ip policy
+    '''
+    cli_command = ['show ip policy']
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        # interface Gi5          route-map AAA
+        # Vlan101        pbr_green_1
+        p1 = re.compile(r'^(?P<interface>\S+)\s+(?P<route_map>\S+)$')
+
+        # Initialize the dictionary for parsed output
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+            # interface Gi5          route-map AAA
+            # Vlan101        pbr_green_1
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict = ret_dict.setdefault('interface', {}).setdefault(Common.convert_intf_name(group['interface']), {})
+                interface_dict['route_map'] = group['route_map']
+                continue
+
+        return ret_dict

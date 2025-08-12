@@ -1,5 +1,4 @@
 expected_output = {
-
   'interface': 'Gi1/0/1',
   'if_id': '1032',
   'phy_registers': {
@@ -54,7 +53,7 @@ expected_output = {
     '8': {
       'register_number': '0008',
       'hex_bit_value': '0000',
-      'register_name': 'Link Partner Next page Register ',
+      'register_name': 'Link Partner Next page Register',
       'bits': '0000000000000000'
     },
     '9': {

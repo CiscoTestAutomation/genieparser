@@ -1,0 +1,26 @@
+ALARM CONTACT 1
+   Status:      not asserted
+   Description: external alarm contact 1
+   Severity:    minor
+   Trigger:     closed
+ALARM CONTACT 2
+   Status:      not asserted
+   Description: external alarm contact 2
+   Severity:    minor
+   Trigger:     closed
+
+Supervisor Temperature Value: 48 C
+Temperature State: GREEN
+
+System Temperature thresholds
+-------------------------------
+Minor Threshold    : 80 C (Yellow)
+Major Threshold    : 90 C (Red)
+Critical Threshold : 96 C 
+
+Pwr Supply         Type     Status     Voltage
+
+------------------------------------------------
+POWER SUPPLY-A      DC      OK      24V
+
+POWER SUPPLY-B      DC      OK      54V

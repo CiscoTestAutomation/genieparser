@@ -1,0 +1,8 @@
+{
+    "switch": 1,
+    "portchannelnum": 10,
+    "sourcemac": "e80::2e36:f8ff:fe4b:e227",
+    "destinationmac": "e80::2e36:f8ff:fe4b:e227",
+    "flow_label": 45,
+    "next_header": 46
+}

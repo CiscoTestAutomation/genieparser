@@ -1,0 +1,39 @@
+Current ISSU Status: In Progress
+Previous ISSU Operation: Successful
+=======================================================
+System Check                        Status
+-------------------------------------------------------
+Platform ISSU Support               Yes
+Standby Online                      Yes
+Autoboot Enabled                    Yes
+SSO Mode                            Yes
+Install Boot                        Yes
+Valid Boot Media                    Yes
+Operational Mode                    HA-STANDALONE
+=======================================================
+Added Image:
+Name                                Compatible
+-------------------------------------------------------
+17.19.01.0.224242                   Yes
+
+Operation type: One-shot ISSU
+Install type  : Image installation using ISSU
+Current state : Activated state
+Last operation: Commit R0
+
+Completed operations:
+
+Operation                              Start time
+-------------------------------------------------------
+Activate location standby R1           2025-07-01:07:30:06
+Activate location active R0            2025-07-01:07:37:20
+Switchover                             2025-07-01:07:38:19
+Commit R1                              2025-07-01:07:46:54
+Commit R0                              2025-07-01:07:46:58
+
+State transition: Added -> Standby activated -> Active switched-over -> Activated -> Activated
+
+Auto abort timer: inactive
+Abort Reason: N/A
+Running image: bootflash:packages.conf
+Operating mode: sso, terminal state reached

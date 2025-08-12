@@ -1,0 +1,18 @@
+show debug
+IOSXE Conditional Debug Configs:
+
+Conditional Debug Global State: Stop
+
+
+IOSXE Packet Tracing Configs:
+
+
+
+
+
+HSRP:
+  HSRP Errors debugging is on
+  HSRP Events debugging is on
+    (protocol, neighbor, redundancy, track, ha, arp, interface)
+  HSRP Packets debugging is on
+    (Coup, Resign)

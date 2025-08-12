@@ -1,0 +1,123 @@
+Jun  9 13:08:58.289: Trustpoint- client:Manual enrollment for trustpoint
+Jun  9 13:08:59.351: Trustpoint- client:Sending GetCACaps request with msg = GET /cgi-bin/pkiclient.exe?operation=GetCACaps&message=client HTTP/1.0
+User-Agent: Mozilla/4.0 (compatible; MSIE 5.0; Cisco PKI)
+Host: 6.28.19.141
+
+
+Jun  9 13:08:59.375: Trustpoint- client:Capabilities received : GET NEXT CA CERT, RENEWAL, SHA1, SHA256, SHA384, SHA512,
+Jun  9 13:08:59.391: Trustpoint- client:
+			CSR Fingerprint MD5 : 0AD9955A6885213797DE145CBAB688EF
+			CSR Fingerprint SHA1: 583381E9DDC3D287CC59BA96ED12AF917097D339
+			CSR Fingerprint SHA2: 5DEB1BCCDE7ADB48448DAFD89996701ECDA17E30E3F3E532D6EC5B249752A195
+Jun  9 13:08:59.391: Trustpoint- client:
+			CSR Fingerprint (unsigned) MD5 : 5DC501B7C8E2987F4E4646B2C64F36A3
+Jun  9 13:08:59.425: Trustpoint- client:Client sending PKCSReq
+Jun  9 13:08:59.906: Trustpoint- client:Received pki message.
+Jun  9 13:08:59.907: Trustpoint- client:Client received CertRep - GRANTED.
+Jun  9 13:08:59.921: Trustpoint- client:An ID certificate has been installed under
+			Issuer-name  : cn=RCA1 C=pki
+			Subject-name : unstructuredname=pki-reg4,cn=R1 C=pki
+			Serial-number: 03
+			End-date     : 2025-06-09T18:58:58Z
+Jun  9 13:08:59.923: Trustpoint- client:ID Certificate will expire in 0 Days 0 hours 19 mins 59 secs at 2025-06-09T18:58:58Z.
+			Issuer-name  : cn=RCA1 C=pki
+			Subject-name : hostname=pki-reg4,cn=R1 C=pki
+			Serial-number: 03
+			Auto-Renewal : Not Enabled
+Jun  9 13:08:59.924: Trustpoint- client:Started shadow timer for 28304632 seconds.
+pki-reg4#
+2185:  Checking if 'Trustpoint- client' is present in the logs
+2186:  'Trustpoint- client:Client received CertRep - GRANTED.' is present in the logs.
+2187:  checking show logging process ios module pki level on rtr4
+2188:  +++ pki-reg4(alias=rtr4) with via 'a': executing command 'show logging process ios module pki level notice' +++
+show logging process ios module pki level notice
+Logging display requested on 2025/06/09 18:40:03 (IST) for Hostname: [pki-reg4], Model: [C8000V], Version: [17.19.01], SN: [99SAMH3YXAF], MD_SN: [SSI130300YK]
+
+Displaying logs from the last 0 days, 0 hours, 10 minutes, 0 seconds
+executing cmd on chassis: local; rp slot: 0;  location: local ...
+Unified Decoder Library Init .. DONE
+Found 1 UTF Streams
+
+2025/06/09 18:37:29.127271342 {iosrp_R0-0}{255}: [pki] [16525]: (warn): CRYPTO_PKI: 'primary' trustpoint being removed
+2025/06/09 18:37:29.127275917 {iosrp_R0-0}{255}: [pki] [16525]: (note): CRYPTO_PKI: Deleting trustpoint TP-self-signed-1830766103
+2025/06/09 18:37:29.127555346 {iosrp_R0-0}{255}: [pki] [16525]: (note): CRYPTO_PKI: disassociating handle 1073741826 with trustpoint TP-self-signed-1830766103
+2025/06/09 18:37:29.438466483 {iosrp_R0-0}{255}: [pki] [16525]: (note): CRYPTO_PKI: Deleting trustpoint SLA-TrustPoint
+2025/06/09 18:37:29.439159165 {iosrp_R0-0}{255}: [pki] [16525]: (note): CRYPTO_PKI: disassociating handle 1073741857 with trustpoint SLA-TrustPoint
+2025/06/09 18:38:53.271378528 {iosrp_R0-0}{255}: [pki] [16525]: (note): CRYPTO_PKI: Creating trustpoint client
+2025/06/09 18:38:53.271383095 {iosrp_R0-0}{255}: [pki] [16525]: (note): CRYPTO_PKI: handle 1073741862 associated with trustpoint client
+2025/06/09 18:38:53.369896264 {iosrp_R0-0}{255}: [pki] [16525]: (warn): CRYPTO_PKI: Can not select my full public key (client)
+2025/06/09 18:38:54.661866392 {iosrp_R0-0}{255}: [pki] [16525]: (note): client:Enrollment: SCEP
+2025/06/09 18:38:54.661932559 {iosrp_R0-0}{255}: [pki] [16525]: (note): CRYPTO_PKI: dequeue CRYPTO_REQ_CA_CERT message to crypto_ca_req_q
+2025/06/09 18:38:54.661954206 {iosrp_R0-0}{255}: [pki] [16525]: (note): client:Client sending GetCACert request: GET /cgi-bin/pkiclient.exe?operation=GetCACert&message=client HTTP/1.0
+User-Agent: Mozilla/4.0 (compatible; MSIE 5.0; Cisco PKI)
+Host: 6.28.19.141
+
+2025/06/09 18:38:56.667702189 {iosrp_R0-0}{255}: [pki] [16525]: (note): client:Client received CA certificate.
+2025/06/09 18:38:56.667715020 {iosrp_R0-0}{255}: [pki] [16525]: (note): CRYPTO_PKI: Bypassing SCEP capabilities request 0
+2025/06/09 18:38:56.668281926 {iosrp_R0-0}{255}: [pki] [16525]: (note): CRYPTO_PKI: Cert record not found for issuer serial.
+2025/06/09 18:38:56.678307472 {iosrp_R0-0}{255}: [pki] [16525]: (note): client:A CA certificate has been installed
+			Issuer-name  : cn=RCA1 C=pki
+			Subject-name : cn=RCA1 C=pki
+			Serial-number: 02
+			End-date     : 2026-06-08T18:38:51Z
+2025/06/09 18:38:56.678809464 {iosrp_R0-0}{255}: [pki] [16525]: (note): CRYPTO_PKI: Cert record not found for issuer serial.
+2025/06/09 18:38:56.679929260 {iosrp_R0-0}{255}: [pki] [16525]: (note): PKI:Cert valid: 18:38:51 IST Jun 9 2025-18:38:51 IST Jun 8 2026 shadow 09:02:51 IST May 3 2026
+2025/06/09 18:38:56.679933341 {iosrp_R0-0}{255}: [pki] [16525]: (note): client:Started shadow timer for 28304635 seconds.
+2025/06/09 18:38:58.290759744 {iosrp_R0-0}{255}: [pki] [16525]: (note): client:Manual enrollment for trustpoint
+2025/06/09 18:38:59.352380891 {iosrp_R0-0}{255}: [pki] [16525]: (note): CRYPTO_PKI: dequeue CRYPTO_REQ_CERT message to crypto_ca_req_q
+2025/06/09 18:38:59.352417437 {iosrp_R0-0}{255}: [pki] [16525]: (note): client:Sending GetCACaps request with msg = GET /cgi-bin/pkiclient.exe?operation=GetCACaps&message=client HTTP/1.0
+User-Agent: Mozilla/4.0 (compatible; MSIE 5.0; Cisco PKI)
+Host: 6.28.19.141
+
+2025/06/09 18:38:59.376643360 {iosrp_R0-0}{255}: [pki] [16525]: (note): client:Capabilities received : GET NEXT CA CERT, RENEWAL, SHA1, SHA256, SHA384, SHA512,
+2025/06/09 18:38:59.392481525 {iosrp_R0-0}{255}: [pki] [16525]: (note): client:
+			CSR Fingerprint MD5 : 0AD9955A6885213797DE145CBAB688EF
+			CSR Fingerprint SHA1: 583381E9DDC3D287CC59BA96ED12AF917097D339
+			CSR Fingerprint SHA2: 5DEB1BCCDE7ADB48448DAFD89996701ECDA17E30E3F3E532D6EC5B249752A195
+2025/06/09 18:38:59.392530166 {iosrp_R0-0}{255}: [pki] [16525]: (note): client:
+			CSR Fingerprint (unsigned) MD5 : 5DC501B7C8E2987F4E4646B2C64F36A3
+2025/06/09 18:38:59.426365958 {iosrp_R0-0}{255}: [pki] [16525]: (note): client:Client sending PKCSReq
+2025/06/09 18:38:59.907656411 {iosrp_R0-0}{255}: [pki] [16525]: (note): client:Received pki message.
+2025/06/09 18:38:59.909034221 {iosrp_R0-0}{255}: [pki] [16525]: (note): client:Client received CertRep - GRANTED.
+2025/06/09 18:38:59.922729147 {iosrp_R0-0}{255}: [pki] [16525]: (note): client:An ID certificate has been installed under
+			Issuer-name  : cn=RCA1 C=pki
+			Subject-name : unstructuredname=pki-reg4,cn=R1 C=pki
+			Serial-number: 03
+			End-date     : 2025-06-09T18:58:58Z
+2025/06/09 18:38:59.923619498 {iosrp_R0-0}{255}: [pki] [16525]: (note): CRYPTO_PKI: Cert record not found for issuer serial.
+2025/06/09 18:38:59.924692500 {iosrp_R0-0}{255}: [pki] [16525]: (note): client:ID Certificate will expire in 0 Days 0 hours 19 mins 59 secs at 2025-06-09T18:58:58Z.
+			Issuer-name  : cn=RCA1 C=pki
+			Subject-name : hostname=pki-reg4,cn=R1 C=pki
+			Serial-number: 03
+			Auto-Renewal : Not Enabled
+2025/06/09 18:38:59.926068249 {iosrp_R0-0}{255}: [pki] [16525]: (note): PKI:Cert valid: 18:38:51 IST Jun 9 2025-18:38:51 IST Jun 8 2026 shadow 09:02:51 IST May 3 2026
+2025/06/09 18:38:59.926072739 {iosrp_R0-0}{255}: [pki] [16525]: (note): client:Started shadow timer for 28304632 seconds.
+===========================================================
+======= Unified Trace Decoder Information/Statistics ======
+===========================================================
+----------------- Decoder Input Information ---------------
+===========================================================
+ Num of Unique Streams .. 1
+ Total UTF To Process ... 1
+ Total UTM To Process ... 37271
+ UTM Process Filter ..... ios
+ MRST Filter Rules ...... 48
+===========================================================
+----------------- Decoder Output Information --------------
+===========================================================
+ First UTM TimeStamp ............... 2025/06/09 15:21:24.750766751
+ Last UTM TimeStamp ................ 2025/06/09 18:40:00.231755961
+ UTM [Skipped / Rendered / Total] .. 37239 / 32 / 37271
+ UTM [ENCODED] ..................... 32
+ UTM [PLAIN TEXT] .................. 0
+ UTM [DYN LIB] ..................... 0
+ UTM [MODULE ID] ................... 0
+ UTM [TDL TAN] ..................... 19
+ UTM [APP CONTEXT] ................. 0
+ UTM [MARKER] ...................... 0
+ UTM [PCAP] ........................ 0
+ UTM [LUID NOT FOUND] .............. 0
+ UTM Level [EMERGENCY / ALERT / CRITICAL / ERROR] .. 0 / 0 / 0 / 0
+ UTM Level [WARNING / NOTICE / INFO / DEBUG] ....... 2 / 30 / 0 / 0
+ UTM Level [VERBOSE / NOISE / INVALID] ............. 0 / 0 / 0
+===========================================================

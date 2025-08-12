@@ -1,0 +1,5 @@
+{
+    "switch": "switch",
+    "switch_id" : "1",
+    "files" : "(\"npp_attrib_index\",\"vlan_id\",\"stp_learn_type\",\"stp_state_block\")"
+}

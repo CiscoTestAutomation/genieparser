@@ -46,6 +46,7 @@
         *  show mpls l2transport summary
         *  show mpls tp tunnel-tp 1 lsps detail
         *  show mpls tp lsps detail
+        *  show mpls traffic-eng fast-reroute database
 """
 
 import re
@@ -5796,3 +5797,459 @@ class ShowMplsTpLspsDetail(ShowMplsTpLspsDetailSchema):
                 continue
 
         return parsed_dict
+
+
+# ================================================================================
+# Schema for 'show mpls traffic-eng link-management summary'
+# ================================================================================
+class ShowMplsTrafficEngLinkManagementSummarySchema(MetaParser):
+    """Schema for show mpls traffic-eng link-management summary"""
+
+    schema = {
+        'system_information': {
+            'links_count': int,
+            'flooding_system': str,
+        },
+        'igp_areas': {
+            Any(): {
+                'flooding_protocol': str,
+                'flooding_status': str,
+                'periodic_flooding': str,
+                'flooded_links': int,
+                'igp_system_id': str,
+                'mpls_te_router_id': str,
+                'neighbors': int,
+            }
+        },
+        'links': {
+            Any(): {
+                'interface': str,
+                'remote_ip': str,
+                'local_intfc_id': int,
+                'srlgs': str,
+                'intfc_switching_capability_descriptors': {
+                    'default': str,
+                },
+                'link_label_type': str,
+                'physical_bandwidth': str,
+                'max_res_global_bw': str,
+                'max_res_sub_bw': str,
+                'mpls_te_link_state': str,
+                'inbound_admission': str,
+                'outbound_admission': str,
+                'link_mtu': {
+                    'ip': int,
+                    'mpls': int,
+                }
+            }
+        }
+    }
+
+
+# ================================================================================
+# Parser for 'show mpls traffic-eng link-management summary'
+# ================================================================================
+class ShowMplsTrafficEngLinkManagementSummary(ShowMplsTrafficEngLinkManagementSummarySchema):
+    """Parser for show mpls traffic-eng link-management summary"""
+
+    cli_command = ['show mpls traffic-eng link-management summary']
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command[0])
+
+        # Initialize result dictionary
+        parsed_dict = {}
+
+        # Regular expressions for parsing
+        # Links Count: 4
+        p1 = re.compile(r'^Links Count:\s+(?P<links_count>\d+)$')
+
+        # Flooding System: enabled
+        p2 = re.compile(r'^Flooding System:\s+(?P<flooding_system>\w+)$')
+
+        # IGP Area ID:: ospf 100  area 0
+        p3 = re.compile(r'^IGP Area ID::\s+(?P<igp_area>.+)$')
+
+        # Flooding Protocol: OSPF
+        p4 = re.compile(r'^Flooding Protocol:\s+(?P<flooding_protocol>\w+)$')
+
+        # Flooding Status: data flooded
+        p5 = re.compile(r'^Flooding Status:\s+(?P<flooding_status>.+)$')
+
+        # Periodic Flooding: enabled (every 60 seconds, next in 12 seconds)
+        p6 = re.compile(r'^Periodic Flooding:\s+(?P<periodic_flooding>.+)$')
+
+        # Flooded Links: 3
+        p7 = re.compile(r'^Flooded Links:\s+(?P<flooded_links>\d+)$')
+
+        # IGP System ID: 10.2.1.1
+        p8 = re.compile(r'^IGP System ID:\s+(?P<igp_system_id>[\d\.]+)$')
+
+        # MPLS TE Router ID: 10.2.1.1
+        p9 = re.compile(r'^MPLS TE Router ID:\s+(?P<mpls_te_router_id>[\d\.]+)$')
+
+        # Neighbors: 3
+        p10 = re.compile(r'^Neighbors:\s+(?P<neighbors>\d+)$')
+
+        # Link ID:: Gi0/1/2 (172.2.5.2)
+        p11 = re.compile(r'^Link ID::\s+(?P<interface>\S+)\s+\((?P<remote_ip>[\d\.]+)\)$')
+
+        # Local Intfc ID: 13
+        p12 = re.compile(r'^Local Intfc ID:\s+(?P<local_intfc_id>\d+)$')
+
+        # SRLGs: None
+        p13 = re.compile(r'^SRLGs:\s+(?P<srlgs>.+)$')
+
+        # Default: Intfc Switching Cap psc1, Encoding ethernet
+        p14 = re.compile(r'^Default:\s+(?P<default>.+)$')
+
+        # Link Label Type: Packet
+        p15 = re.compile(r'^Link Label Type:\s+(?P<link_label_type>.+)$')
+
+        # Physical Bandwidth: 1000000 kbits/sec
+        p16 = re.compile(r'^Physical Bandwidth:\s+(?P<physical_bandwidth>.+)$')
+
+        # Max Res Global BW: 750000 kbits/sec (reserved: 0% in, 0% out)
+        p17 = re.compile(r'^Max Res Global BW:\s+(?P<max_res_global_bw>.+)$')
+
+        # Max Res Sub BW: 0 kbits/sec (reserved: 100% in, 100% out)
+        p18 = re.compile(r'^Max Res Sub BW:\s+(?P<max_res_sub_bw>.+)$')
+
+        # MPLS TE Link State: MPLS TE on, RSVP on, admin-up, flooded
+        p19 = re.compile(r'^MPLS TE Link State:\s+(?P<mpls_te_link_state>.+)$')
+
+        # Inbound Admission: reject-huge
+        p20 = re.compile(r'^Inbound Admission:\s+(?P<inbound_admission>.+)$')
+
+        # Outbound Admission: allow-if-room
+        p21 = re.compile(r'^Outbound Admission:\s+(?P<outbound_admission>.+)$')
+
+        # Link MTU: IP 1500, MPLS 1500
+        p22 = re.compile(r'^Link MTU:\s+IP\s+(?P<ip>\d+),\s+MPLS\s+(?P<mpls>\d+)$')
+
+        current_igp_area = None
+        current_link = None
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # Links Count: 4
+            m = p1.match(line)
+            if m:
+                if 'system_information' not in parsed_dict:
+                    parsed_dict['system_information'] = {}
+                parsed_dict['system_information']['links_count'] = int(m.group('links_count'))
+                continue
+
+            # Flooding System: enabled
+            m = p2.match(line)
+            if m:
+                if 'system_information' not in parsed_dict:
+                    parsed_dict['system_information'] = {}
+                parsed_dict['system_information']['flooding_system'] = m.group('flooding_system')
+                continue
+
+            # IGP Area ID:: ospf 100  area 0
+            m = p3.match(line)
+            if m:
+                current_igp_area = m.group('igp_area')
+                if 'igp_areas' not in parsed_dict:
+                    parsed_dict['igp_areas'] = {}
+                parsed_dict['igp_areas'][current_igp_area] = {}
+                continue
+
+            if current_igp_area is None:
+                continue
+
+            # Flooding Protocol: OSPF
+            m = p4.match(line)
+            if m:
+                parsed_dict['igp_areas'][current_igp_area]['flooding_protocol'] = m.group('flooding_protocol')
+                continue
+
+            # Flooding Status: data flooded
+            m = p5.match(line)
+            if m:
+                parsed_dict['igp_areas'][current_igp_area]['flooding_status'] = m.group('flooding_status')
+                continue
+
+            # Periodic Flooding: enabled (every 60 seconds, next in 12 seconds)
+            m = p6.match(line)
+            if m:
+                parsed_dict['igp_areas'][current_igp_area]['periodic_flooding'] = m.group('periodic_flooding')
+                continue
+
+            # Flooded Links: 3
+            m = p7.match(line)
+            if m:
+                parsed_dict['igp_areas'][current_igp_area]['flooded_links'] = int(m.group('flooded_links'))
+                continue
+
+            # IGP System ID: 10.2.1.1
+            m = p8.match(line)
+            if m:
+                parsed_dict['igp_areas'][current_igp_area]['igp_system_id'] = m.group('igp_system_id')
+                continue
+
+            # MPLS TE Router ID: 10.2.1.1
+            m = p9.match(line)
+            if m:
+                parsed_dict['igp_areas'][current_igp_area]['mpls_te_router_id'] = m.group('mpls_te_router_id')
+                continue
+
+            # Neighbors: 3
+            m = p10.match(line)
+            if m:
+                parsed_dict['igp_areas'][current_igp_area]['neighbors'] = int(m.group('neighbors'))
+                continue
+
+            # Link ID:: Gi0/1/2 (172.2.5.2)
+            m = p11.match(line)
+            if m:
+                interface = m.group('interface')
+                remote_ip = m.group('remote_ip')
+                current_link = f"{interface}_{remote_ip}"
+                if 'links' not in parsed_dict:
+                    parsed_dict['links'] = {}
+                parsed_dict['links'][current_link] = {
+                    'interface': interface,
+                    'remote_ip': remote_ip
+                }
+                continue
+
+            if current_link is None:
+                continue
+
+            # Local Intfc ID: 13
+            m = p12.match(line)
+            if m:
+                parsed_dict['links'][current_link]['local_intfc_id'] = int(m.group('local_intfc_id'))
+                continue
+
+            # SRLGs: None
+            m = p13.match(line)
+            if m:
+                parsed_dict['links'][current_link]['srlgs'] = m.group('srlgs')
+                continue
+
+            # Default: Intfc Switching Cap psc1, Encoding ethernet
+            m = p14.match(line)
+            if m:
+                if 'intfc_switching_capability_descriptors' not in parsed_dict['links'][current_link]:
+                    parsed_dict['links'][current_link]['intfc_switching_capability_descriptors'] = {}
+                parsed_dict['links'][current_link]['intfc_switching_capability_descriptors']['default'] = m.group('default')
+                continue
+
+            # Link Label Type: Packet
+            m = p15.match(line)
+            if m:
+                parsed_dict['links'][current_link]['link_label_type'] = m.group('link_label_type')
+                continue
+
+            # Physical Bandwidth: 1000000 kbits/sec
+            m = p16.match(line)
+            if m:
+                parsed_dict['links'][current_link]['physical_bandwidth'] = m.group('physical_bandwidth')
+                continue
+
+            # Max Res Global BW: 750000 kbits/sec (reserved: 0% in, 0% out)
+            m = p17.match(line)
+            if m:
+                parsed_dict['links'][current_link]['max_res_global_bw'] = m.group('max_res_global_bw')
+                continue
+
+            # Max Res Sub BW: 0 kbits/sec (reserved: 100% in, 100% out)
+            m = p18.match(line)
+            if m:
+                parsed_dict['links'][current_link]['max_res_sub_bw'] = m.group('max_res_sub_bw')
+                continue
+
+            # MPLS TE Link State: MPLS TE on, RSVP on, admin-up, flooded
+            m = p19.match(line)
+            if m:
+                parsed_dict['links'][current_link]['mpls_te_link_state'] = m.group('mpls_te_link_state')
+                continue
+
+            # Inbound Admission: reject-huge
+            m = p20.match(line)
+            if m:
+                parsed_dict['links'][current_link]['inbound_admission'] = m.group('inbound_admission')
+                continue
+
+            # Outbound Admission: allow-if-room
+            m = p21.match(line)
+            if m:
+                parsed_dict['links'][current_link]['outbound_admission'] = m.group('outbound_admission')
+                continue
+
+            # Link MTU: IP 1500, MPLS 1500
+            m = p22.match(line)
+            if m:
+                parsed_dict['links'][current_link]['link_mtu'] = {
+                    'ip': int(m.group('ip')),
+                    'mpls': int(m.group('mpls'))
+                }
+                continue
+
+        return parsed_dict
+
+# ====================================================
+# Schema for 'show mpls traffic-eng fast-reroute database'
+# ====================================================
+
+class ShowMplsTrafficEngFastRerouteDatabaseSchema(MetaParser):
+    """Schema for show mpls traffic-eng fast-reroute database"""
+
+    schema = {
+        Optional('tunnel_head_end_item_frr_information'): {
+            Any(): {  # Tunnel name
+                'protected_tunnel': str,
+                'in_label': str,
+                'out_intf_label': str,
+                'frr_intf_label': str,
+                'status': str,
+            }
+        },
+        Optional('prefix_item_frr_information'): {
+            Any(): {  # Prefix
+                'prefix': str,
+                'tunnel': str,
+                'in_label': str,
+                'out_intf_label': str,
+                'frr_intf_label': str,
+                'status': str,
+            }
+        },
+        Optional('lsp_midpoint_item_frr_information'): {
+            Any(): {  # LSP identifier
+                'lsp_identifier': str,
+                'in_label': str,
+                'out_intf_label': str,
+                'frr_intf_label': str,
+                'status': str,
+            }
+        }
+    }
+
+
+# ====================================================
+# Parser for 'show mpls traffic-eng fast-reroute database'
+# ====================================================
+
+class ShowMplsTrafficEngFastRerouteDatabase(ShowMplsTrafficEngFastRerouteDatabaseSchema):
+    """Parser for show mpls traffic-eng fast-reroute database"""
+
+    cli_command = 'show mpls traffic-eng fast-reroute database'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize result dictionary
+        ret_dict = {}
+
+        # Regular expressions for parsing
+        # Section headers
+        # Tunnel head end item frr information:
+        p1 = re.compile(r'^\s*Tunnel head end item frr information:\s*$')
+
+        # Prefix item frr information:
+        p2 = re.compile(r'^\s*Prefix item frr information:\s*$')
+
+        # LSP midpoint item frr information:
+        p3 = re.compile(r'^\s*LSP midpoint item frr information:\s*$')
+
+        # Data parsing patterns
+        # Tunnel head end: Tunnel500                     Tun hd   AT4/0.100:Untagg Tu501:20         ready
+        p4 = re.compile(r'^\s*(?P<tunnel_name>\S+)\s+(?P<in_label>\S+\s+\S+)\s+(?P<out_intf_label>\S+)\s+(?P<frr_intf_label>\S+)\s+(?P<status>\S+)\s*$')
+
+        # Prefix item: 10.0.0.8/32        Tu500      18       AT4/0.100:Pop ta  Tu501:20        ready
+        p5 = re.compile(r'^\s*(?P<prefix>\S+)\s+(?P<tunnel>\S+)\s+(?P<in_label>\S+)\s+(?P<out_intf_label>\S+(?:\s+\S+)?)\s+(?P<frr_intf_label>\S+)\s+(?P<status>\S+)\s*$')
+
+        # LSP midpoint: LSP_ID  in_label  out_intf_label  frr_intf_label  status
+        p6 = re.compile(r'^\s*(?P<lsp_id>\S+)\s+(?P<in_label>\S+)\s+(?P<out_intf_label>\S+)\s+(?P<frr_intf_label>\S+)\s+(?P<status>\S+)\s*$')
+
+        # State tracking
+        current_section = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Skip empty lines
+            if not line:
+                continue
+
+            # Section headers
+            # Tunnel head end item frr information:
+            m = p1.match(line)
+            if m:
+                current_section = 'tunnel_head_end'
+                continue
+
+            # Prefix item frr information:
+            m = p2.match(line)
+            if m:
+                current_section = 'prefix_item'
+                continue
+
+            # LSP midpoint item frr information:
+            m = p3.match(line)
+            if m:
+                current_section = 'lsp_midpoint'
+                continue
+
+            # Parse data lines based on current section
+            if current_section == 'tunnel_head_end':
+                # Parse tunnel head end entries
+                # Example: Tunnel500                     Tun hd   AT4/0.100:Untagg Tu501:20         ready
+                m = p4.match(line)
+                if m:
+                    tunnel_name = m.group('tunnel_name')
+
+                    ret_dict.setdefault('tunnel_head_end_item_frr_information', {})
+                    ret_dict['tunnel_head_end_item_frr_information'][tunnel_name] = {
+                        'protected_tunnel': tunnel_name,
+                        'in_label': m.group('in_label'),
+                        'out_intf_label': m.group('out_intf_label'),
+                        'frr_intf_label': m.group('frr_intf_label'),
+                        'status': m.group('status'),
+                    }
+
+            elif current_section == 'prefix_item':
+                # Parse prefix entries
+                # Example: 10.0.0.8/32        Tu500      18       AT4/0.100:Pop ta  Tu501:20        ready
+                m = p5.match(line)
+                if m:
+                    prefix = m.group('prefix')
+
+                    ret_dict.setdefault('prefix_item_frr_information', {})
+                    ret_dict['prefix_item_frr_information'][prefix] = {
+                        'prefix': prefix,
+                        'tunnel': m.group('tunnel'),
+                        'in_label': m.group('in_label'),
+                        'out_intf_label': m.group('out_intf_label'),
+                        'frr_intf_label': m.group('frr_intf_label'),
+                        'status': m.group('status'),
+                    }
+
+            elif current_section == 'lsp_midpoint':
+                # Parse LSP midpoint entries
+                # Example: LSP_ID  in_label  out_intf_label  frr_intf_label  status
+                m = p6.match(line)
+                if m:
+                    lsp_id = m.group('lsp_id')
+
+                    ret_dict.setdefault('lsp_midpoint_item_frr_information', {})
+                    ret_dict['lsp_midpoint_item_frr_information'][lsp_id] = {
+                        'lsp_identifier': lsp_id,
+                        'in_label': m.group('in_label'),
+                        'out_intf_label': m.group('out_intf_label'),
+                        'frr_intf_label': m.group('frr_intf_label'),
+                        'status': m.group('status'),
+                    }
+
+        return ret_dict
+

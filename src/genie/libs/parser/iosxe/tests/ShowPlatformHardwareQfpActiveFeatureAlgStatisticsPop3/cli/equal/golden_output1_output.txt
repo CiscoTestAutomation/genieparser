@@ -1,0 +1,24 @@
+=== POP3 AIC ucode info ===
+
+Total packets parsed:
+   request: 14
+   response: 0
+
+Total packets policy-inspected:
+   request: 16
+
+Memory management:
+   scb - alloc 2, free 2, low mem req 0, alloc fail 0
+
+Reset session:
+   CLI match: 10
+   no pop3 engine: 0
+   dirty-bit - new session: 0, exist session: 0, after parse: 0, after match: 0
+
+Drop packets info:
+   no regex table: 0
+   fragmanted packet: 0
+   command pending: 0
+
+Abort inspection info:
+   policy not-exist: 0

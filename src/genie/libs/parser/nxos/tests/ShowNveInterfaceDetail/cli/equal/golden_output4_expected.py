@@ -1,0 +1,30 @@
+expected_output = {
+    'nve1': {
+        'nve_name': 'nve1',
+        'if_state': 'up',
+        'encap_type': 'vxlan',
+        'vpc_capability': 'vpc-vip-only [notified]',
+        'local_rmac': '0c75.bd37.49cf',
+        'host_reach_mode': 'control-plane',
+        'source_if': 'loopback1',
+        'primary_ip': '200.200.200.7',
+        'secondary_ip': '200.200.200.11',
+        'src_if_state': 'up',
+        'adv_vmac': True,
+        'nve_flags': '',
+        'nve_if_handle': 1224736769,
+        'src_if_holddown_tm': 180,
+        'src_if_holdup_tm': 30,
+        'src_if_holddown_left': 0,
+        'vip_rmac': '0200.c8c8.c80b',
+        'vip_rmac_ro': '0200.c8c8.c847',
+        'sm_state': 'nve-intf-add-complete',
+        'multisite_convergence_time': 600,
+        'multisite_convergence_time_left': 0,
+        'multisite_dci_advertise_pip': False,
+        'multisite_bgw_if': 'loopback2',
+        'multisite_bgw_if_ip': '200.200.200.71',
+        'multisite_bgw_if_admin_state': 'up',
+        'multisite_bgw_if_oper_state': 'up'
+    }
+}

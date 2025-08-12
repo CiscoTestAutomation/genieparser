@@ -1,0 +1,6 @@
+show platform hardware qfp active feature firewall drop clear
+-------------------------------------------------------------------------------
+Drop Reason                                                             Packets
+-------------------------------------------------------------------------------
+Packet rcvd in SCB close state                                                7
+All drop counts cleared.

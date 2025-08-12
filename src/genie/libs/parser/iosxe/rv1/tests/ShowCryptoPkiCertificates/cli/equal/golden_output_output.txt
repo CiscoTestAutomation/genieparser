@@ -1,0 +1,68 @@
+show crypto pki certificates                                                                                                                                                                                                                
+Certificate                                                                                                                                                                                                                                 
+Status: Available                                                                                                                                                                                                                         
+Certificate Serial Number (hex): 03612596745103596F2C                                                                                                                                                                                      
+Certificate Usage: General Purpose                                                                                                                                                                                                         
+Issuer:
+o=Cisco
+cn=High Assurance SUDI CA
+Subject:
+Name: IE-3100-8P2C
+Serial Number: PID:IE-3100-8P2C SN:FDO2912J66T
+cn=IE-3100-8P2C
+ou=ACT-2 Lite SUDI
+o=Cisco
+serialNumber=PID:IE-3100-8P2C SN:FDO2912J66T
+Validity Date:
+start date: 02:55:32 UTC Apr 24 2025
+end   date: 20:58:26 UTC Aug 9 2099
+Associated Trustpoints: CISCO_IDEVID_SUDI
+
+CA Certificate
+Status: Available
+Certificate Serial Number (hex): 0A6475524CD8617C62
+Certificate Usage: Signature
+Issuer:
+cn=Cisco Root CA 2099
+o=Cisco
+Subject:
+o=Cisco
+cn=High Assurance SUDI CA
+CRL Distribution Points:
+http://www.cisco.com/security/pki/crl/crca2099.crl
+Validity Date:
+start date: 20:28:08 UTC Aug 11 2016
+end   date: 20:58:27 UTC Aug 9 2099
+Associated Trustpoints: CISCO_IDEVID_SUDI Trustpool
+
+CA Certificate
+Status: Available
+Certificate Serial Number (hex): 019A335878CE16C1C1
+Certificate Usage: Signature
+Issuer:
+cn=Cisco Root CA 2099
+o=Cisco
+Subject:
+cn=Cisco Root CA 2099
+o=Cisco
+Validity Date:
+start date: 20:58:28 UTC Aug 9 2016
+end   date: 20:58:28 UTC Aug 9 2099
+Associated Trustpoints: CISCO_IDEVID_SUDI0 Trustpool
+
+CA Certificate
+Status: Available
+Certificate Serial Number (hex): 0A6475524CD8617C62
+Certificate Usage: Signature
+Issuer:
+cn=Cisco Root CA 2099
+o=Cisco 
+Subject:
+o=Cisco
+cn=High Assurance SUDI CA
+CRL Distribution Points:  
+http://www.cisco.com/security/pki/crl/crca2099.crl
+Validity Date:
+start date: 20:28:08 UTC Aug 11 2016
+end   date: 20:58:27 UTC Aug 9 2099 
+Associated Trustpoints: CISCO_IDEVID_SUDI Trustpool

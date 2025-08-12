@@ -1,0 +1,61 @@
+show platform hardware qfp active feature alg statistics sip clear
+
+SIP info pool used chunk entries number: 1
+
+RECEIVE
+Register:           0 -> 200-OK:            0
+Invite:             1 -> 200-OK:            0   Rexmit-invite           1
+Update:             0 -> 200-OK:            0
+Bye:                0 -> 200-OK:            0
+Subscribe:          0 -> 200-OK:            0
+Refer:              0 -> 200-OK:            0
+Prack:              0 -> 200-OK:            0
+Trying:             0    Ringing:           0    Ack:                   0
+Info:               0    Cancel:            0    Sess Prog:             0
+Message:            0    Notify:            0
+Publish:            0    Options:           0
+1xx:                0    2xx:               0
+OtherReq:           0    OtherOk:           0    3xx-6xx:               0
+
+Events
+Null dport:                   0   Media Port Zero:                0
+Malform Media:                0   No Content Length:              0
+Cr Trunk Chnls:               1   Del Trunk Chnls:                0
+start trunk timer:            1   restart trunk timer:            0
+stop trunk timer:             0   trunk timer timeout:            0
+Cr dbl entry:                 0   Del dbl entry:                  0
+Cr dbl cfg entry:             0   Del dbl cfg entry:              0
+start dbl trig tmr:           0   restart dbl trig tmr:           0
+stop dbl trig tmr:            0   dbl trig timeout:               0
+start dbl blk tmr:            0   restart dbl blk tmr:            0
+stop dbl blk tmr:             0   dbl blk tmr timeout:            0
+start dbl idle tmr:           0   restart dbl idle tmr:           0
+stop dbl idle tmr:            0   dbl idle tmr timeout:           0
+Media Addr Zero:              0   Need More Data:                 0
+SIP PKT Alloc:                2   SIP PKT Free:                   2
+SIP MSG Alloc:                0   SIP MSG Free:                   0
+
+Errors
+Create Token Err:             0    Add portlist Err:              0
+Invalid Offset:               0    Invalid Pktlen:                0
+Free Magic:                   0    Double Free:                   0
+Sess Retmem Failed:           0    Sess Malloc Failed             0
+Pkt Retmem Failed:            0    Pkt Malloc Failed:             0
+Msg Retmem Failed:            0    Msg Malloc Failed:             0
+Bad Format:                   0    Invalid Proto:                 0
+Add ALG state Fail:           0    No Call-id:                    0
+Parse SIP Hdr Fail:           0    Parse SDP Fail:                0
+Error New Chnl:               0    Huge Size:                     0
+Create Failed:                0    Not SIP Msg:                   0
+
+Writeback Errors
+Offset Err:                   0    PA Err:                        0
+No Info:                      0
+
+DoS Errors
+Dbl Retmem Failed:            0    Dbl Malloc Failed:             0
+DblCfg Retm Failed:           0    DblCfg Malloc Failed:          0
+Session wlock ovflw:          0    Global wlock ovflw:            0
+Blacklisted:                  0
+
+SIP ALG counters cleared after display.

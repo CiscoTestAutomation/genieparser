@@ -300,3 +300,447 @@ class ShowPlatformSudiCertificateNonce(ShowPlatformSudiCertificateNonceSchema):
                 continue
 
         return ret_dict
+
+class ShowEnvironmentPowerSchema(MetaParser):
+    """Schema for show environment power"""
+
+    schema = {
+        'power_supplies': {
+            Any(): {
+                'type': str,
+                'status': str,
+                Optional('voltage'): str
+            }
+        }
+    }
+
+class ShowEnvironmentPower(ShowEnvironmentPowerSchema):
+    """Parser for show environment power"""
+
+    cli_command = 'show environment power'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+
+        # POWER SUPPLY-A      DC      OK      24V
+        p1 = re.compile(r'^(?P<name>\w+\s\S+)\s+(?P<type>\S+)\s+(?P<status>\S+)\s{2,}(?P<voltage>\S+)$')
+
+        # POWER SUPPLY-B      DC      OK
+        p2 = re.compile(r'^(?P<name>\w+\s\S+)\s+(?P<type>\S+)\s+(?P<status>.+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            if 'Pwr Supply' in line:
+                continue
+
+            # POWER SUPPLY-A      DC      OK      24V
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                name = group['name']
+                power_supply_dict = ret_dict.setdefault('power_supplies', {}).setdefault(name, {})
+                power_supply_dict.update({
+                    'type': group['type'],
+                    'status': group['status'],
+                    'voltage': group['voltage']
+                })
+                continue
+
+            # POWER SUPPLY-B      DC      OK
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                name = group['name']
+                power_supply_dict = ret_dict.setdefault('power_supplies', {}).setdefault(name, {})
+                power_supply_dict.update({
+                    'type': group['type'],
+                    'status': group['status'],
+                })
+                continue
+
+        return ret_dict
+
+class ShowEnvironmentTemperatureSchema(MetaParser):
+    """Schema for show environment temperature"""
+
+    schema = {
+        'supervisor_temp_value': str,
+        'supervisor_temp_state': str,
+        'system_temperature_thresholds': {
+            'minor_threshold': str,
+            'major_threshold': str,
+            'critical_threshold': str
+        }
+    }
+
+class ShowEnvironmentTemperature(ShowEnvironmentTemperatureSchema):
+    """Parser for show environment temperature"""
+
+    cli_command = 'show environment temperature'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+
+        # Supervisor Temperature Value: 48 C
+        p1 = re.compile(r'^Supervisor +Temperature +Value: +(?P<supervisor_temp_value>.+)$')
+
+        # Temperature State: GREEN
+        p2 = re.compile(r'^Temperature +State: +(?P<supervisor_temp_state>\S+)$')
+
+        # Minor Threshold    : 80 C (Yellow)
+        p3 = re.compile(r'^Minor +Threshold +: +(?P<minor_threshold>.+)$')
+
+        # Major Threshold    : 90 C (Red)
+        p4 = re.compile(r'^Major +Threshold +: +(?P<major_threshold>.+)$')
+
+        # Critical Threshold : 96 C
+        p5 = re.compile(r'^Critical +Threshold +: +(?P<critical_threshold>.+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Supervisor Temperature Value: 48 C
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({'supervisor_temp_value': group['supervisor_temp_value']})
+                continue
+
+            # Temperature State: GREEN
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({'supervisor_temp_state': group['supervisor_temp_state']})
+                continue
+
+            # Minor Threshold    : 80 C (Yellow)
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault('system_temperature_thresholds', {}).update({'minor_threshold': group['minor_threshold']})
+                continue
+
+            # Major Threshold    : 90 C (Red)
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault('system_temperature_thresholds', {}).update({'major_threshold': group['major_threshold']})
+                continue
+
+            # Critical Threshold : 96 C
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault('system_temperature_thresholds', {}).update({'critical_threshold': group['critical_threshold']})
+                continue
+
+        return ret_dict
+
+class ShowEnvironmentAlarmContactSchema(MetaParser):
+    """Schema for show environment alarm contact"""
+
+    schema = {
+        Any(): {
+            'status': str,
+            'description': str,
+            'severity': str,
+            'trigger': str,
+        }
+    }
+
+class ShowEnvironmentAlarmContact(ShowEnvironmentAlarmContactSchema):
+    """Parser for show environment alarm contact"""
+
+    cli_command = 'show environment alarm contact'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+
+        # ALARM CONTACT 1
+        p1 = re.compile(r'^ALARM +CONTACT +(?P<contact>\d+)$')
+
+        # Status:      not asserted
+        p2 = re.compile(r'^Status: +(?P<status>.+)$')
+
+        # Description: external alarm contact 1
+        p3 = re.compile(r'^Description: +(?P<description>.+)$')
+
+        # Severity:    minor
+        p4 = re.compile(r'^Severity: +(?P<severity>.+)$')
+
+        # Trigger:     closed
+        p5 = re.compile(r'^Trigger: +(?P<trigger>.+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # ALARM CONTACT 1
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                contact = 'ALARM CONTACT ' + group['contact']
+                alarm_contact_dict = ret_dict.setdefault(contact, {})
+                continue
+
+            # Status:      not asserted
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                alarm_contact_dict.update({'status': group['status']})
+                continue
+
+            # Description: external alarm contact 1
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                alarm_contact_dict.update({'description': group['description']})
+                continue
+
+            # Severity:    minor
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                alarm_contact_dict.update({'severity': group['severity']})
+                continue
+
+            # Trigger:     closed
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                alarm_contact_dict.update({'trigger': group['trigger']})
+                continue
+
+        return ret_dict
+
+class ShowEnvironmentAllSchema(MetaParser):
+    """Schema for show environment all"""
+
+    schema = {
+        'alarms': {
+            Any(): {
+                'status': str,
+                'description': str,
+                'severity': str,
+                'trigger': str,
+            }
+        },
+        'temperatures': {
+            'supervisor_temp_value': str,
+            'supervisor_temp_state': str,
+            'system_temperature_thresholds': {
+                'minor_threshold': str,
+                'major_threshold': str,
+                'critical_threshold': str
+            }
+        },
+        'power_supplies': {
+            Any(): {
+                'type': str,
+                'status': str,
+                Optional('voltage'): str
+            }
+        }
+    }
+
+class ShowEnvironmentAll(ShowEnvironmentAllSchema):
+    """Parser for show environment all"""
+
+    cli_command = 'show environment all'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+
+        # ALARM CONTACT 1
+        p1 = re.compile(r'^ALARM +CONTACT +(?P<contact>\d+)$')
+
+        # Status:      not asserted
+        p2 = re.compile(r'^Status: +(?P<status>.+)$')
+
+        # Description: external alarm contact 1
+        p3 = re.compile(r'^Description: +(?P<description>.+)$')
+
+        # Severity:    minor
+        p4 = re.compile(r'^Severity: +(?P<severity>.+)$')
+
+        # Trigger:     closed   
+        p5 = re.compile(r'^Trigger: +(?P<trigger>.+)$')
+
+        # ALARM CONTACT 2
+        p6 = re.compile(r'^ALARM +CONTACT +(?P<contact>\d+)$')
+
+        # Status:      not asserted
+        p7 = re.compile(r'^Status: +(?P<status>.+)$')
+
+        # Description: external alarm contact 2
+        p8 = re.compile(r'^Description: +(?P<description>.+)$')
+
+        # Severity:    minor
+        p9 = re.compile(r'^Severity: +(?P<severity>.+)$')
+
+        # Trigger:     closed
+        p10 = re.compile(r'^Trigger: +(?P<trigger>.+)$')
+
+        # Supervisor Temperature Value: 48 C
+        p11 = re.compile(r'^Supervisor +Temperature +Value: +(?P<supervisor_temp_value>.+)$')
+
+        # Temperature State: GREEN
+        p12 = re.compile(r'^Temperature +State: +(?P<supervisor_temp_state>\S+)$')
+
+        # Minor Threshold    : 80 C (Yellow)
+        p13 = re.compile(r'^Minor +Threshold +: +(?P<minor_threshold>.+)$')
+
+        # Major Threshold    : 90 C (Red)
+        p14 = re.compile(r'^Major +Threshold +: +(?P<major_threshold>.+)$')
+
+        # Critical Threshold : 96 C
+        p15 = re.compile(r'^Critical +Threshold +: +(?P<critical_threshold>.+)$')
+
+        # POWER SUPPLY-A      DC      OK      24V
+        p16 = re.compile(r'^POWER +SUPPLY-A +(?P<type>\S+) +(?P<status>\S+) +(?P<voltage>\S+)$')
+
+        # POWER SUPPLY-B      DC      OK      54V
+        p17 = re.compile(r'^POWER +SUPPLY-B +(?P<type>\S+) +(?P<status>\S+) +(?P<voltage>\S+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # ALARM CONTACT 1
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                contact = 'ALARM CONTACT ' + group['contact']
+                alarm_dict = ret_dict.setdefault('alarms', {}).setdefault(contact, {})
+                continue
+
+            #    Status:      not asserted
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                alarm_dict.update({'status': group['status']})
+                continue
+
+            #    Description: external alarm contact 1
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                alarm_dict.update({'description': group['description']})
+                continue
+
+            #    Severity:    minor
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                alarm_dict.update({'severity': group['severity']})
+                continue
+
+            #    Trigger:     closed
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                alarm_dict.update({'trigger': group['trigger']})
+                continue
+
+            # ALARM CONTACT 2
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                contact = 'ALARM CONTACT ' + group['contact']
+                alarm_dict = ret_dict.setdefault('alarms', {}).setdefault(contact, {})
+                continue
+
+            #    Status:      not asserted
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                alarm_dict.update({'status': group['status']})
+                continue
+
+            #    Description: external alarm contact 2
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                alarm_dict.update({'description': group['description']})
+                continue
+
+            #    Severity:    minor
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                alarm_dict.update({'severity': group['severity']})
+                continue
+
+            #    Trigger:     closed
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                alarm_dict.update({'trigger': group['trigger']})
+                continue
+
+            # Supervisor Temperature Value: 48 C
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault('temperatures', {}).update({'supervisor_temp_value': group['supervisor_temp_value']})
+                continue
+
+            # Temperature State: GREEN
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault('temperatures', {}).update({'supervisor_temp_state': group['supervisor_temp_state']})
+                continue
+
+            # Minor Threshold    : 80 C (Yellow)
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault('temperatures', {}).setdefault('system_temperature_thresholds', {}).update(
+                    {'minor_threshold': group['minor_threshold']})
+                continue
+
+            # Major Threshold    : 90 C (Red)
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault('temperatures', {}).setdefault('system_temperature_thresholds', {}).update(
+                    {'major_threshold': group['major_threshold']})
+                continue
+
+            # Critical Threshold : 96 C 
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault('temperatures', {}).setdefault('system_temperature_thresholds', {}).update(
+                    {'critical_threshold': group['critical_threshold']})
+                continue
+
+            # POWER SUPPLY-A      DC      OK      24V
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault('power_supplies', {}).setdefault('POWER SUPPLY-A', {}).update(
+                    {'type': group['type'], 'status': group['status'], 'voltage': group['voltage']})
+                continue
+
+            # POWER SUPPLY-B      DC      OK      54V
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault('power_supplies', {}).setdefault('POWER SUPPLY-B', {}).update(
+                    {'type': group['type'], 'status': group['status'], 'voltage': group['voltage']})
+                continue
+
+        return ret_dict

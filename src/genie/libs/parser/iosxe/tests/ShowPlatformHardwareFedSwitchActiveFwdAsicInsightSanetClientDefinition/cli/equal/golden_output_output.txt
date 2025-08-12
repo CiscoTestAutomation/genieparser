@@ -1,0 +1,19 @@
+Sec_RAITT#$e fed switch active fwd-asic insight sanet_client_definition()
++---------+--------------------+--------------------+-----------+----------------------------+
+| ACL OID | Identity Key P-OID | ACL MATCH FIELDS   | ACL P-OID | ACL commands               |
++---------+--------------------+--------------------+-----------+----------------------------+
+|    1230 |               1009 | SA                 |      1229 | IDENTITY_CLIENT_POLICY     |
+|         |                    | VLAN_OUTER         |           | OVERRIDE_VLAN              |
+|         |                    | VRF_GID            |           | DROP                       |
+|         |                    | IPV4_SIP           |           | COUNTER                    |
+|         |                    | SOURCE_SYSTEM_PORT |           | IPV4_CLIENT_POLICY_APPLIED |
+|         |                    |                    |           | IPV6_CLIENT_POLICY_APPLIED |
+|         |                    |                    |           |                            |
+|    1231 |               1008 | SA                 |      1223 | IDENTITY_CLIENT_POLICY     |
+|         |                    | VLAN_OUTER         |           | OVERRIDE_VLAN              |
+|         |                    | VRF_GID            |           | DROP                       |
+|         |                    | IPV4_SIP           |           | COUNTER                    |
+|         |                    | SOURCE_SYSTEM_PORT |           | IPV4_CLIENT_POLICY_APPLIED |
+|         |                    |                    |           | IPV6_CLIENT_POLICY_APPLIED |
+|         |                    |                    |           |                            |
++---------+--------------------+--------------------+-----------+----------------------------+
