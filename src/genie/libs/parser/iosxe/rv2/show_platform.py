@@ -166,6 +166,7 @@ class ShowInventory(ShowInventorySchema):
         # NAME: "Modem 0 on Cellular0/2/0", DESCR: "Sierra Wireless EM7455/EM7430"
         # NAME: "1", DESCR: "WS-C3560CX-12PC-S"
         # NAME: "Fo1/1/1", DESCR: "QSFP 40G SR BD SFP"
+        # NAME: "1", DESCR: "IE-4000-16T4G-E"
         p1 = re.compile(r"^NAME: +\"(?P<name>.*)\"," r" +DESCR: +\"(?P<descr>.*)\"$")
 
         # Switch 1
@@ -237,6 +238,11 @@ class ShowInventory(ShowInventorySchema):
                 if 'xx Stack' in name:
                     main_dict = ret_dict.setdefault('main', {})
                     main_dict['swstack'] = True
+
+                if name.isdigit():
+                    slot = name
+                    slot_dict = ret_dict.setdefault("slot", {}).setdefault(slot, {})
+                    continue
 
                 # ------------------------------------------------------------------
                 # Define slot_dict
@@ -352,6 +358,20 @@ class ShowInventory(ShowInventorySchema):
                     main_dict["pid"] = pid
                     main_dict["vid"] = vid
                     main_dict["sn"] = sn
+                    continue
+
+                elif name.isdigit():
+                    main_dict = (
+                        ret_dict.setdefault("main", {})
+                        .setdefault("chassis", {})
+                        .setdefault(pid, {})
+                    )
+                    main_dict["name"] = name
+                    main_dict["descr"] = descr
+                    main_dict["pid"] = pid
+                    main_dict["vid"] = vid
+                    main_dict["sn"] = sn
+                    slot_dict = ret_dict.setdefault("slot", {}).setdefault(name, {})
                     continue
 
                 if "Supervisor" in name:

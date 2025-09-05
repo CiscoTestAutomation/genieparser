@@ -74,4 +74,6 @@ expected_output = {'Ethernet1/6': {'admin_state': 'up',
                                              'rxload': '1/255',
                                              'switchport_monitor': 'off',
                                              'txload': '1/255',
-                                             'types': '100/1000/10000 Ethernet'}}
+                                             'types': '100/1000/10000 Ethernet',
+                                             'link_down_reason': 'Link not connected'
+                                             }}

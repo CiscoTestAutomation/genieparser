@@ -1,0 +1,17 @@
+show platform software fed switch 3 wdavc function wdavc_ft_show_all_flows_seg_ui
+CurrFlows=2, Watermark=3
+
+IX  |IP1                                     |IP2                                     |PORT1|PORT2|L3   |L4   |VRF |TIMEOUT|APP                             |TUPLE   |FLOW     |IS FIF  |CLIENTS|BYPASS|FINAL |#PKTS |BYPASS|
+    |                                        |                                        |     |     |PROTO|PROTO|VLAN|SEC  HL|NAME                            |TYPE    |TYPE     |SWAPPED |ALLW BP|      |      |      |PKT   |
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+1   |20.0.0.2                                |30.0.0.2                                |52059|80   |1    |6    |0   |360  HW|facebook                        |Full    |Real Flow|Yes     |0x01   |True  |True  |40    |3     |
+
+    SEG IDX |I/F ID |OPST I/F |SEG DIR |.1Q VLAN|FIF DIR | SEEN  |Is SET |DOP ID |NFL HDL ST |BPS PND |APP PND |FRST TS |LAST TS |BYTES  |PKTS   |TCP FLGS|
+    -------------------------------------------------------------------------------------------------------------------------------------------------------
+    0       |1050   |1051     |Ingress |0       |True    |True   |True   |0      |4        VV|0       |0       |1754294626000|1754294649000|26629  |319    |0       |
+
+2   |20.0.0.2                                |30.0.0.2                                |80   |52059|1    |6    |0   |360  HW|http                            |Full    |Real Flow|Yes     |0x01   |True  |True  |40    |3     |
+
+    SEG IDX |I/F ID |OPST I/F |SEG DIR |.1Q VLAN|FIF DIR | SEEN  |Is SET |DOP ID |NFL HDL ST |BPS PND |APP PND |FRST TS |LAST TS |BYTES  |PKTS   |TCP FLGS|
+    -------------------------------------------------------------------------------------------------------------------------------------------------------
+    0       |1050   |1051     |Ingress |0       |True    |True   |True   |0      |5        VV|0       |0       |1754294626000|1754294642000|353106 |328    |0       |

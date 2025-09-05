@@ -1,0 +1,53 @@
+show flow monitor A1 cache
+  Cache type:                               Normal (Platform cache)
+  Cache size:                                65536
+  Current entries:                               2
+
+  Flows added:                                   2
+  Flows aged:                                    0
+
+TRNS SOURCE PORT:                         80
+TRNS DESTINATION PORT:                    52059
+CONNECTION IPV4 INITIATOR ADDRESS:        30.0.0.2
+CONNECTION IPV4 RESPONDER ADDRESS:        20.0.0.2
+CONNECTION RESPONDER PORT:                80
+FLOW OBSPOINT ID:                         27
+IP VERSION:                               4
+IP PROTOCOL:                              6
+APPLICATION NAME:                         port http
+interface input:                          Gi3/0/19
+flow direction:                           Input
+flow cts source group tag:                0
+counter bytes long:                       495314
+timestamp abs first:                      08:02:48.000
+timestamp abs last:                       08:04:28.000
+connection initiator:                     Reverse initiator
+connection count new:                     1
+connection server packets counter:        459
+connection client packets counter:        0
+connection initiator port:                52059
+connection server network bytes counter:  495314
+connection client network bytes counter:  0
+
+TRNS SOURCE PORT:                         52059
+TRNS DESTINATION PORT:                    80
+CONNECTION IPV4 INITIATOR ADDRESS:        20.0.0.2
+CONNECTION IPV4 RESPONDER ADDRESS:        30.0.0.2
+CONNECTION RESPONDER PORT:                80
+FLOW OBSPOINT ID:                         27
+IP VERSION:                               4
+IP PROTOCOL:                              6
+APPLICATION NAME:                         layer7 facebook
+interface input:                          Gi3/0/19
+flow direction:                           Input
+flow cts source group tag:                0
+counter bytes long:                       33470
+timestamp abs first:                      08:02:48.000
+timestamp abs last:                       08:04:28.000
+connection initiator:                     Initiator
+connection count new:                     1
+connection server packets counter:        0
+connection client packets counter:        399
+connection initiator port:                52059
+connection server network bytes counter:  0
+connection client network bytes counter:  33470

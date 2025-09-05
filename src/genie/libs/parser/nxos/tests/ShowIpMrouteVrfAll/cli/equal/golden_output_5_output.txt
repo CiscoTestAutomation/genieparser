@@ -1,0 +1,6 @@
+IP Multicast Routing Table for VRF "default"
+
+    (1.2.3.4/32, 225.0.0.249/32), uptime: 01:07:11, static ip pim
+      Incoming interface: Ethernet1/2, RPF nbr: 10.2.3.1, internal (Router-Id: 2.2.2.2)
+      Outgoing interface list: (count: 1)
+        loopback0, uptime: 01:07:11, static

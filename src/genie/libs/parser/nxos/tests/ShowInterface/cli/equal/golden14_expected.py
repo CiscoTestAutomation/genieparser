@@ -108,7 +108,8 @@ expected_output = {
         "phys_address": "3c13.cc2e.958d",
         "delay": 10,
         "mtu": 9216,
-        "bandwidth": 25000000
+        "bandwidth": 25000000,
+        "link_down_reason": "Administratively down"
     },
     "Ethernet1/7": {
         "port_channel": {
@@ -124,7 +125,8 @@ expected_output = {
         "phys_address": "3c13.cc2e.958e",
         "delay": 10,
         "mtu": 9216,
-        "bandwidth": 25000000
+        "bandwidth": 25000000,
+        "link_down_reason": "Administratively down"
     },
     "Ethernet1/8": {
         "port_channel": {
@@ -172,7 +174,8 @@ expected_output = {
         "phys_address": "3c13.cc2e.9591",
         "delay": 10,
         "mtu": 9216,
-        "bandwidth": 25000000
+        "bandwidth": 25000000,
+        "link_down_reason": "Channel admin down"
     },
     "Ethernet1/11": {
         "port_channel": {
@@ -188,7 +191,8 @@ expected_output = {
         "phys_address": "3c13.cc2e.9592",
         "delay": 10,
         "mtu": 9216,
-        "bandwidth": 25000000
+        "bandwidth": 25000000,
+        "link_down_reason": "Channel admin down"
     },
     "Ethernet1/12": {
         "port_channel": {
@@ -220,7 +224,8 @@ expected_output = {
         "phys_address": "3c13.cc2e.9594",
         "delay": 10,
         "mtu": 9216,
-        "bandwidth": 10000000
+        "bandwidth": 10000000,
+        "link_down_reason": "suspended(no LACP PDUs)"
     },
     "Ethernet1/14": {
         "port_channel": {
@@ -284,7 +289,8 @@ expected_output = {
         "phys_address": "3c13.cc2e.9598",
         "delay": 10,
         "mtu": 9216,
-        "bandwidth": 25000000
+        "bandwidth": 25000000,
+        "link_down_reason": "XCVR not inserted"
     },
     "Ethernet1/18": {
         "port_channel": {
@@ -348,7 +354,8 @@ expected_output = {
         "phys_address": "3c13.cc2e.959c",
         "delay": 10,
         "mtu": 9216,
-        "bandwidth": 25000000
+        "bandwidth": 25000000,
+        "link_down_reason": "XCVR not inserted"
     },
     "Ethernet1/22": {
         "port_channel": {
@@ -364,7 +371,8 @@ expected_output = {
         "phys_address": "3c13.cc2e.959d",
         "delay": 10,
         "mtu": 9216,
-        "bandwidth": 25000000
+        "bandwidth": 25000000,
+        "link_down_reason": "XCVR not inserted"
     },
     "Ethernet1/23": {
         "port_channel": {
@@ -380,7 +388,8 @@ expected_output = {
         "phys_address": "3c13.cc2e.959e",
         "delay": 10,
         "mtu": 9216,
-        "bandwidth": 25000000
+        "bandwidth": 25000000,
+        "link_down_reason": "XCVR not inserted"
     },
     "Ethernet1/24": {
         "port_channel": {
@@ -396,7 +405,8 @@ expected_output = {
         "phys_address": "3c13.cc2e.959f",
         "delay": 10,
         "mtu": 9216,
-        "bandwidth": 25000000
+        "bandwidth": 25000000,
+        "link_down_reason": "XCVR not inserted"
     },
     "Ethernet1/25": {
         "port_channel": {
@@ -428,7 +438,8 @@ expected_output = {
         "phys_address": "3c13.cc2e.95a1",
         "delay": 10,
         "mtu": 9216,
-        "bandwidth": 25000000
+        "bandwidth": 25000000,
+        "link_down_reason": "XCVR not inserted"
     },
     "Ethernet1/27": {
         "port_channel": {
@@ -444,7 +455,8 @@ expected_output = {
         "phys_address": "3c13.cc2e.95a2",
         "delay": 10,
         "mtu": 9216,
-        "bandwidth": 25000000
+        "bandwidth": 25000000,
+        "link_down_reason": "XCVR not inserted"
     },
     "Ethernet1/28": {
         "port_channel": {
@@ -460,7 +472,8 @@ expected_output = {
         "phys_address": "3c13.cc2e.95a3",
         "delay": 10,
         "mtu": 9216,
-        "bandwidth": 25000000
+        "bandwidth": 25000000,
+        "link_down_reason": "XCVR not inserted"
     },
     "Ethernet1/29": {
         "port_channel": {
@@ -476,7 +489,8 @@ expected_output = {
         "phys_address": "3c13.cc2e.95a4",
         "delay": 10,
         "mtu": 9216,
-        "bandwidth": 25000000
+        "bandwidth": 25000000,
+        "link_down_reason": "XCVR not inserted"
     },
     "Ethernet1/30": {
         "port_channel": {
@@ -492,7 +506,8 @@ expected_output = {
         "phys_address": "3c13.cc2e.95a5",
         "delay": 10,
         "mtu": 9216,
-        "bandwidth": 25000000
+        "bandwidth": 25000000,
+        "link_down_reason": "XCVR not inserted"
     },
     "Ethernet1/31": {
         "port_channel": {
@@ -508,7 +523,8 @@ expected_output = {
         "phys_address": "3c13.cc2e.95a6",
         "delay": 10,
         "mtu": 9216,
-        "bandwidth": 25000000
+        "bandwidth": 25000000,
+        "link_down_reason": "XCVR not inserted"
     },
     "Ethernet1/32": {
         "port_channel": {
@@ -524,7 +540,8 @@ expected_output = {
         "phys_address": "3c13.cc2e.95a7",
         "delay": 10,
         "mtu": 9216,
-        "bandwidth": 25000000
+        "bandwidth": 25000000,
+        "link_down_reason": "XCVR not inserted"
     },
     "Ethernet1/33": {
         "port_channel": {
@@ -540,7 +557,8 @@ expected_output = {
         "phys_address": "3c13.cc2e.95a8",
         "delay": 10,
         "mtu": 9216,
-        "bandwidth": 25000000
+        "bandwidth": 25000000,
+        "link_down_reason": "XCVR not inserted"
     },
     "Ethernet1/34": {
         "port_channel": {
@@ -556,7 +574,8 @@ expected_output = {
         "phys_address": "3c13.cc2e.95a9",
         "delay": 10,
         "mtu": 9216,
-        "bandwidth": 25000000
+        "bandwidth": 25000000,
+        "link_down_reason": "XCVR not inserted"
     },
     "Ethernet1/35": {
         "port_channel": {
@@ -572,7 +591,8 @@ expected_output = {
         "phys_address": "3c13.cc2e.95aa",
         "delay": 10,
         "mtu": 9216,
-        "bandwidth": 25000000
+        "bandwidth": 25000000,
+        "link_down_reason": "XCVR not inserted"
     },
     "Ethernet1/36": {
         "port_channel": {
@@ -588,7 +608,8 @@ expected_output = {
         "phys_address": "3c13.cc2e.95ab",
         "delay": 10,
         "mtu": 9216,
-        "bandwidth": 25000000
+        "bandwidth": 25000000,
+        "link_down_reason": "XCVR not inserted"
     },
     "Ethernet1/37": {
         "port_channel": {
@@ -604,7 +625,8 @@ expected_output = {
         "phys_address": "3c13.cc2e.95ac",
         "delay": 10,
         "mtu": 9216,
-        "bandwidth": 25000000
+        "bandwidth": 25000000,
+        "link_down_reason": "XCVR not inserted"
     },
     "Ethernet1/38": {
         "port_channel": {
@@ -620,7 +642,8 @@ expected_output = {
         "phys_address": "3c13.cc2e.95ad",
         "delay": 10,
         "mtu": 9216,
-        "bandwidth": 25000000
+        "bandwidth": 25000000,
+        "link_down_reason": "XCVR not inserted"
     },
     "Ethernet1/39": {
         "port_channel": {
@@ -636,7 +659,8 @@ expected_output = {
         "phys_address": "3c13.cc2e.95ae",
         "delay": 10,
         "mtu": 9216,
-        "bandwidth": 25000000
+        "bandwidth": 25000000,
+        "link_down_reason": "XCVR not inserted"
     },
     "Ethernet1/40": {
         "port_channel": {
@@ -652,7 +676,8 @@ expected_output = {
         "phys_address": "3c13.cc2e.95af",
         "delay": 10,
         "mtu": 9216,
-        "bandwidth": 25000000
+        "bandwidth": 25000000,
+        "link_down_reason": "XCVR not inserted"
     },
     "Ethernet1/41": {
         "port_channel": {
@@ -668,7 +693,8 @@ expected_output = {
         "phys_address": "3c13.cc2e.95b0",
         "delay": 10,
         "mtu": 9216,
-        "bandwidth": 25000000
+        "bandwidth": 25000000,
+        "link_down_reason": "XCVR not inserted"
     },
     "Ethernet1/42": {
         "port_channel": {
@@ -684,7 +710,8 @@ expected_output = {
         "phys_address": "3c13.cc2e.95b1",
         "delay": 10,
         "mtu": 9216,
-        "bandwidth": 25000000
+        "bandwidth": 25000000,
+        "link_down_reason": "XCVR not inserted"
     },
     "Ethernet1/43": {
         "port_channel": {
@@ -700,7 +727,8 @@ expected_output = {
         "phys_address": "3c13.cc2e.95b2",
         "delay": 10,
         "mtu": 9216,
-        "bandwidth": 25000000
+        "bandwidth": 25000000,
+        "link_down_reason": "XCVR not inserted"
     },
     "Ethernet1/44": {
         "port_channel": {
@@ -716,7 +744,8 @@ expected_output = {
         "phys_address": "3c13.cc2e.95b3",
         "delay": 10,
         "mtu": 9216,
-        "bandwidth": 25000000
+        "bandwidth": 25000000,
+        "link_down_reason": "XCVR not inserted"
     },
     "Ethernet1/45": {
         "port_channel": {
@@ -732,7 +761,8 @@ expected_output = {
         "phys_address": "3c13.cc2e.95b4",
         "delay": 10,
         "mtu": 9216,
-        "bandwidth": 25000000
+        "bandwidth": 25000000,
+        "link_down_reason": "XCVR not inserted"
     },
     "Ethernet1/46": {
         "port_channel": {
@@ -748,7 +778,8 @@ expected_output = {
         "phys_address": "3c13.cc2e.95b5",
         "delay": 10,
         "mtu": 9216,
-        "bandwidth": 25000000
+        "bandwidth": 25000000,
+        "link_down_reason": "XCVR not inserted"
     },
     "Ethernet1/47": {
         "port_channel": {
@@ -764,7 +795,8 @@ expected_output = {
         "phys_address": "3c13.cc2e.95b6",
         "delay": 10,
         "mtu": 9216,
-        "bandwidth": 25000000
+        "bandwidth": 25000000,
+        "link_down_reason": "XCVR not inserted"
     },
     "Ethernet1/48": {
         "port_channel": {
@@ -813,7 +845,8 @@ expected_output = {
         "phys_address": "3c13.cc2e.95b8",
         "delay": 10,
         "mtu": 9216,
-        "bandwidth": 100000000
+        "bandwidth": 100000000,
+        "link_down_reason": "XCVR not inserted"
     },
     "Ethernet1/50": {
         "port_channel": {
@@ -829,7 +862,8 @@ expected_output = {
         "phys_address": "3c13.cc2e.95bc",
         "delay": 10,
         "mtu": 9216,
-        "bandwidth": 100000000
+        "bandwidth": 100000000,
+        "link_down_reason": "XCVR not inserted"
     },
     "Ethernet1/51": {
         "port_channel": {
@@ -845,7 +879,8 @@ expected_output = {
         "phys_address": "3c13.cc2e.95c0",
         "delay": 10,
         "mtu": 9216,
-        "bandwidth": 100000000
+        "bandwidth": 100000000,
+        "link_down_reason": "XCVR not inserted"
     },
     "Ethernet1/52": {
         "port_channel": {
@@ -861,7 +896,8 @@ expected_output = {
         "phys_address": "3c13.cc2e.95c4",
         "delay": 10,
         "mtu": 9216,
-        "bandwidth": 100000000
+        "bandwidth": 100000000,
+        "link_down_reason": "XCVR not inserted"
     },
     "Ethernet1/53": {
         "port_channel": {
@@ -893,7 +929,8 @@ expected_output = {
         "phys_address": "3c13.cc2e.95cc",
         "delay": 10,
         "mtu": 9216,
-        "bandwidth": 100000000
+        "bandwidth": 100000000,
+        "link_down_reason": "XCVR not inserted"
     },
     "port-channel8": {
         "port_channel": {
@@ -905,7 +942,8 @@ expected_output = {
         "admin_state": "up",
         "delay": 10,
         "mtu": 1500,
-        "bandwidth": 100000
+        "bandwidth": 100000,
+        "link_down_reason": "No operational members"
     },
     "port-channel12": {
         "port_channel": {
@@ -917,7 +955,8 @@ expected_output = {
         "admin_state": "down",
         "delay": 10,
         "mtu": 9216,
-        "bandwidth": 100000
+        "bandwidth": 100000,
+        "link_down_reason": "Administratively down"
     },
     "port-channel25": {
         "port_channel": {
@@ -929,7 +968,8 @@ expected_output = {
         "admin_state": "up",
         "delay": 10,
         "mtu": 1500,
-        "bandwidth": 100000
+        "bandwidth": 100000,
+        "link_down_reason": "No operational members"
     },
     "port-channel50": {
         "port_channel": {
@@ -941,7 +981,8 @@ expected_output = {
         "admin_state": "up",
         "delay": 10,
         "mtu": 9216,
-        "bandwidth": 100000
+        "bandwidth": 100000,
+        "link_down_reason": "No operational members"
     },
     "port-channel200": {
         "port_channel": {
@@ -1002,7 +1043,8 @@ expected_output = {
         "autostate": True,
         "delay": 10,
         "mtu": 1500,
-        "bandwidth": 1000000
+        "bandwidth": 1000000,
+        "link_down_reason": "Administratively down"
     },
     "Vlan200": {
         "port_channel": {

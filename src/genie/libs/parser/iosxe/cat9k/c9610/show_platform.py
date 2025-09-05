@@ -12,6 +12,7 @@ IOSXE c9610 parsers for the following show commands:
     * show platform hardware fed switch {switch_var} qos queue config interface {interface}
     * show platform hardware authentication status
     * show platform software fed {switch} {mode} ipv6 route summary | include {match}'
+    * show platform hardware fed {switch} {mode} qos queue stats internal port_type {port_type} port_num {port_num} asic {asic}
 '''
 from genie.metaparser import MetaParser
 from genie.libs.parser.utils.common import Common
@@ -1642,6 +1643,148 @@ class ShowPlatformSoftwareFedIpRouteSummary(ShowPlatformSoftwareFedIpRouteSummar
             elif 'L3 AC PORT SUMMARY' in line:
                 current_section = 'l3_ac_port_summary'
                 current_subsection = None
+                continue
+
+        return ret_dict
+
+class ShowPlatformHardwareFedQosQueueStatsInternalPortTypePortNumAsicSchema(MetaParser):
+    """Schema for show platform hardware fed {switch} {mode} qos queue stats internal port type {port_type} port num {port_num} asic {asic}"""
+    schema = {
+        'interface': {
+            Any(): {  
+                'interface_id': str,
+                'stats_polling': str,
+                Optional('counters_warning'): str,
+                'asic': {
+                    Any(): { 
+                        'voq_id': {
+                            Any(): {  
+                                'packets': {
+                                    'enqueued': int,
+                                    'dropped': int,
+                                    'total': int
+                                },
+                                'bytes': {
+                                    'enqueued': int,
+                                    'dropped': int,
+                                    'total': int
+                                },
+                                'slice': {
+                                    Any(): { 
+                                        'sms_bytes': int,
+                                        'hbm_blocks': int,
+                                        'hbm_bytes': int
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+class ShowPlatformHardwareFedQosQueueStatsInternalPortTypePortNumAsic(ShowPlatformHardwareFedQosQueueStatsInternalPortTypePortNumAsicSchema):
+    """Parser for show platform hardware fed {switch} {mode} qos queue stats internal port_type recycle-port port_num {port_num} asic {asic}"""  
+    cli_command = [
+        "show platform hardware fed {switch} {mode} qos queue stats internal port_type recycle-port port_num {port_num} asic {asic}",
+        "show platform hardware fed {mode} qos queue stats internal port_type recycle-port port_num {port_num} asic {asic}"
+    ]
+
+    def cli(self, mode, port_num, asic, switch=None, output=None):
+        if output is None:
+            if switch:
+                cmd = self.cli_command[0].format(switch=switch, mode=mode, port_num=port_num, asic=asic)
+            else:
+                cmd = self.cli_command[1].format(mode=mode, port_num=port_num, asic=asic)
+            
+            output = self.device.execute(cmd)
+        
+        # VOQ Stats For : Recircport/1 [ 0x1 ]
+        p0 = re.compile(r'^VOQ Stats For : (?P<interface>[\w\/]+)\s+\[\s+(?P<interface_id>0x\w+)\s+\]$')
+
+        # Stats Polling : Enabled
+        p1 = re.compile(r'^Stats Polling\s+:\s+(?P<stats_polling>\w+)$')
+
+        # | Asic     |                                 0
+        p2 = re.compile(r'^\|\s+Asic\s+\|\s+(?P<asic>\d+)$')
+
+        # 0     | Enqueued |                                 0 |                                 0 |
+        # | Dropped  |                                 0 |                                 0 |
+        # | Total    |                                 0 |                                 0 |
+        p3 = re.compile(r'^(?P<voq_id>\d+)?\s*\|\s+(?P<header>\w+)\s+\|\s+(?P<packets>\d+)\s+\|\s+(?P<bytes>\d+)\s+\|$')
+
+        # |   Slice  |         0 |         1 |         2 |         3 |         4 |         5 |
+        p4 = re.compile(r'^\|\s+Slice\s+\|\s+(?P<slice0>\d+)\s\|\s+(?P<slice1>\d+)\s\|\s+(?P<slice2>\d+)\s\|\s+(?P<slice3>\d+)\s\|\s+(?P<slice4>\d+)\s\|\s+(?P<slice5>\d+)\s\|$')
+
+        # |SMS Bytes |         0 |         0 |         0 |         0 |         0 |         0 |
+        # |HBM Blocks|         0 |         0 |         0 |         0 |         0 |         0 |
+        # |HBM Bytes |         0 |         0 |         0 |         0 |         0 |         0 |
+        p5 = re.compile(r'^\|\s*(?P<slice_type>SMS Bytes|HBM Blocks|HBM Bytes)\s*\|\s+(?P<slice0>\d+)\s\|\s+(?P<slice1>\d+)\s\|\s+(?P<slice2>\d+)\s\|\s+(?P<slice3>\d+)\s\|\s+(?P<slice4>\d+)\s\|\s+(?P<slice5>\d+)\s\|$')
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # VOQ Stats For : Recircport/1 [ 0x1 ]
+            m = p0.match(line)
+            if m:
+                int_dict = ret_dict.setdefault('interface', {}).setdefault(m.groupdict()['interface'], {})
+                int_dict['interface_id'] = m.groupdict()['interface_id']
+                continue
+
+            # Stats Polling : Enabled
+            m = p1.match(line)
+            if m:
+                int_dict['stats_polling'] = m.groupdict()['stats_polling']
+                continue
+
+            # | Asic     |                                 0
+            m = p2.match(line)
+            if m:
+                asic_dict = int_dict.setdefault('asic', {}).setdefault(int(m.groupdict()['asic']), {})
+                continue
+
+            # 0      | Enqueued |                                 0 |                                 0 |
+            # | Dropped  |                                 0 |                                 0 |
+            # | Total    |                                 0 |                                 0 |
+            m = p3.match(line)
+            if m:
+                res_dict = m.groupdict()
+                if res_dict['voq_id']:
+                    voq_dict = asic_dict.setdefault('voq_id', {}).setdefault(res_dict['voq_id'], {})
+
+                pkts_dict = voq_dict.setdefault('packets', {})
+                bytes_dict = voq_dict.setdefault('bytes', {})
+                pkts_dict.setdefault(res_dict['header'].lower(), int(res_dict['packets']))
+                bytes_dict.setdefault(res_dict['header'].lower(), int(res_dict['bytes']))
+                continue
+
+            # |   Slice  |         0 |         1 |         2 |         3 |         4 |         5 |
+            m = p4.match(line)
+            if m:
+                slice_dict = voq_dict.setdefault('slice', {})
+                group = m.groupdict()
+                slice_dict0 = slice_dict.setdefault(group['slice0'], {})
+                slice_dict1 = slice_dict.setdefault(group['slice1'], {})
+                slice_dict2 = slice_dict.setdefault(group['slice2'], {})
+                slice_dict3 = slice_dict.setdefault(group['slice3'], {})
+                slice_dict4 = slice_dict.setdefault(group['slice4'], {})
+                slice_dict5 = slice_dict.setdefault(group['slice5'], {})
+                continue
+
+            # |SMS Bytes |         0 |         0 |         0 |         0 |         0 |         0 |
+            m = p5.match(line)
+            if m:
+                grp_output = m.groupdict()
+                slice_type = grp_output['slice_type'].replace(' ', '_').lower()
+                slice_dict0.setdefault(slice_type, int(grp_output['slice0']))
+                slice_dict1.setdefault(slice_type, int(grp_output['slice1']))
+                slice_dict2.setdefault(slice_type, int(grp_output['slice2']))
+                slice_dict3.setdefault(slice_type, int(grp_output['slice3']))
+                slice_dict4.setdefault(slice_type, int(grp_output['slice4']))
+                slice_dict5.setdefault(slice_type, int(grp_output['slice5']))
                 continue
 
         return ret_dict

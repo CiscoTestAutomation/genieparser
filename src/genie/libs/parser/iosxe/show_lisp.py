@@ -5923,7 +5923,7 @@ class ShowLispInstanceIdServiceStatisticsSchema(MetaParser):
                                 'dropped': int
                                 }
                             },
-                        'itr_map_resolvers': {
+                        Optional('itr_map_resolvers'): {
                             str: {
                                 'last_reply': str,
                                 'metric': int,
@@ -5938,7 +5938,7 @@ class ShowLispInstanceIdServiceStatisticsSchema(MetaParser):
                                     }
                                 }
                             },
-                        'etr_map_servers': {
+                        Optional('etr_map_servers'): {
                             str: {
                                 'avgrtt': {
                                     '5_sec': int,

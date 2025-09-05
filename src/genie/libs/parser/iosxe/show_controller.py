@@ -5,6 +5,7 @@ IOSXE parsers for the following show commands:
     * 'show controller VDSL {interface}'
     * 'show controller ethernet-controller {interface}'
     * 'show controller ethernet-controller'
+    * 'show controller {controller_name}'
 '''
 
 import re
@@ -12,7 +13,6 @@ from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional, Use
 # import parser utils
 from genie.libs.parser.utils.common import Common
-
 
 class ShowControllerVDSLSchema(MetaParser):
     """Schema for show controller VDSL {interface}"""
@@ -2964,4 +2964,276 @@ class ShowControllersEthernetControllerPreemptionStats(ShowControllersEthernetCo
                 continue
 
         return config_dict
-    
+
+class ShowControllerT1Schema(MetaParser):
+    '''Schema for show controller T1 command which includes all the schema_fields.
+      This schema defines the structure for parsing T1 controller data,
+      allowing for dynamic retrieval of various attributes related to T1 interfaces.
+      Each T1 interface is represented as a key in the schema,
+      with corresponding fields specified for data extraction and validation.'''
+    schema = {
+        'interface': {
+            str: {
+                'status': str,
+                'applique_type': str,
+                Optional('cable_length'): str,
+                'alarms': str,
+                'alarm_trigger': str,
+                Optional('soaking_time'): str,
+                Optional('clearance_time'): str,
+                Optional('ais_state'): str,
+                Optional('los_state'): str,
+                Optional('lof_state'): str,
+                Optional('international_bit'): str,
+                Optional('national_bits'): str,
+                'framing': str,
+                'line_code': str,
+                'clock_source': str,
+                Optional('ber_thresholds'): { # Made BER thresholds optional as it might not always be present or fully parsed
+                    'sf': str,
+                    'sd': str,
+                },
+                'data_current_interval': {
+                    'line_code_violations': int,
+                    'path_code_violations': int,
+                    'slip_secs': int,
+                    'fr_loss_secs': int,
+                    'line_err_secs': int,
+                    'degraded_mins': int,
+                    'errored_secs': int,
+                    'bursty_err_secs': int,
+                    'severely_err_secs': int,
+                    'unavail_secs': int,
+                },
+                'total_data': {
+                    'line_code_violations': int,
+                    'path_code_violations': int,
+                    'slip_secs': int,
+                    'fr_loss_secs': int,
+                    'line_err_secs': int,
+                    'degraded_mins': int,
+                    'errored_secs': int,
+                    'bursty_err_secs': int,
+                    'severely_err_secs': int,
+                    'unavail_secs': int,
+                },
+            },
+        },
+    }
+
+
+class ShowControllerT1(ShowControllerT1Schema):
+    '''Parser for show controller {controller_name} '''
+    cli_command = 'show controller {controller_name}'
+
+    def cli(self, output=None):
+        if output is None:
+            # In a real Genie environment, self.device.execute(self.cli_command) would be used.
+            # For standalone testing, 'output' would be passed directly.
+            output = self.device.execute(self.cli_command)
+
+        parsed = {}
+        interface_dict = {}
+        current_data_section = None # State variable to track which data section we are in
+
+        # T1 0/1/0 is up 
+        # Updated regex to match either T1 or E1
+        p1 = re.compile(r'^(?P<interface>(T1|E1) \d+/\d+/\d+) is (?P<status>\w+)$')
+
+        # Applique type is XYZ
+        p2 = re.compile(r'^Applique type is (?P<applique_type>.+)$')
+
+        # Cablelength is 10m
+        p3 = re.compile(r'^Cablelength is (?P<cable_length>.+)$')
+
+        # No alarms detected.
+        p4 = re.compile(r'^No alarms detected\.$')
+
+        # alarm-trigger is not set
+        p5 = re.compile(r'^alarm-trigger is not set$')
+
+        # Soaking time: 3, Clearance time: 10
+        p6 = re.compile(r'^Soaking time: (?P<soaking_time>\d+), Clearance time: (?P<clearance_time>\d+)$')
+
+        # AIS State:clear  LOS State:clear  LOF State:clear
+        p7 = re.compile(r'^AIS State:(?P<ais_state>\w+)  LOS State:(?P<los_state>\w+)  LOF State:(?P<lof_state>\w+)$')
+
+        # Framing is ESF, Line Code is B8ZS, Clock Source is Line.
+        p8 = re.compile(r'^Framing is (?P<framing>\w+), Line Code is (?P<line_code>\w+), Clock Source is (?P<clock_source>[^.]+)\.$')
+
+        # BER thresholds:  SF = 10e-3  SD = 10e-6
+        p9 = re.compile(r'^BER thresholds:  SF = (?P<sf>[\d.e-]+)  SD = (?P<sd>[\d.e-]+)$')
+
+        # Data in current interval (446 seconds elapsed):
+        p10 = re.compile(r'^Data in current interval \(\d+ seconds elapsed\):$')
+
+        # 0 Line Code Violations, 0 Path Code Violations 
+        p11 = re.compile(r'^\s*(?P<line_code_violations>\d+) Line Code Violations, (?P<path_code_violations>\d+) Path Code Violations$')
+
+        # 0 Slip Secs, 0 Fr Loss Secs, 0 Line Err Secs, 0 Degraded Mins 
+        p12 = re.compile(r'^\s*(?P<slip_secs>\d+) Slip Secs, (?P<fr_loss_secs>\d+) Fr Loss Secs, (?P<line_err_secs>\d+) Line Err Secs, (?P<degraded_mins>\d+) Degraded Mins$')
+
+        # 0 Errored Secs, 0 Bursty Err Secs, 0 Severely Err Secs, 0 Unavail Secs 
+        p13 = re.compile(r'^\s*(?P<errored_secs>\d+) Errored Secs, (?P<bursty_err_secs>\d+) Bursty Err Secs, (?P<severely_err_secs>\d+) Severely Err Secs, (?P<unavail_secs>\d+) Unavail Secs$')
+
+        # Total Data (last 24 hours)
+        p14 = re.compile(r'^\s*Total Data \(last 24 hours\)$')
+
+        # 0 Line Code Violations, 0 Path Code Violations, 
+        p15 = re.compile(r'^\s*(?P<line_code_violations>\d+) Line Code Violations, (?P<path_code_violations>\d+) Path Code Violations,$')
+
+        # 0 Slip Secs, 0 Fr Loss Secs, 0 Line Err Secs, 0 Degraded Mins, 
+        p16 = re.compile(r'^\s*(?P<slip_secs>\d+) Slip Secs, (?P<fr_loss_secs>\d+) Fr Loss Secs, (?P<line_err_secs>\d+) Line Err Secs, (?P<degraded_mins>\d+) Degraded Mins,$')
+
+        # International Bit: 1, National Bits: 11111 
+        p17 = re.compile(r'^International Bit: (?P<international_bit>\d+), National Bits: (?P<national_bits>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # T1 0/1/0 is up
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                interface_name = group['interface']
+                interface_dict = parsed.setdefault('interface', {}).setdefault(interface_name, {})
+                interface_dict['status'] = group['status']
+                current_data_section = None # Reset section for new interface
+                continue
+
+            # Applique type is XYZ
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict['applique_type'] = group['applique_type']
+                continue
+
+            # Cablelength is 10m
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict['cable_length'] = group['cable_length']
+                continue
+
+            # No alarms detected.
+            m = p4.match(line)
+            if m:
+                interface_dict['alarms'] = 'No alarms detected'
+                continue
+
+            # alarm-trigger is not set
+            m = p5.match(line)
+            if m:
+                interface_dict['alarm_trigger'] = 'not set'
+                continue
+
+            # Soaking time: 3, Clearance time: 10
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict['soaking_time'] = group['soaking_time']
+                interface_dict['clearance_time'] = group['clearance_time']
+                continue
+
+            # AIS State:clear  LOS State:clear  LOF State:clear
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict['ais_state'] = group['ais_state']
+                interface_dict['los_state'] = group['los_state']
+                interface_dict['lof_state'] = group['lof_state']
+                continue
+
+            # Framing is ESF, Line Code is B8ZS, Clock Source is Line.
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict['framing'] = group['framing']
+                interface_dict['line_code'] = group['line_code']
+                interface_dict['clock_source'] = group['clock_source']
+                continue
+
+            # BER thresholds:  SF = 10e-3  SD = 10e-6
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                ber_thresholds_dict = interface_dict.setdefault('ber_thresholds', {})
+                ber_thresholds_dict['sf'] = group['sf']
+                ber_thresholds_dict['sd'] = group['sd']
+                continue
+
+            # International Bit: 1, National Bits: 11111
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict['international_bit'] = group['international_bit']
+                interface_dict['national_bits'] = group['national_bits']
+                continue
+
+            # Data in current interval (446 seconds elapsed):
+            m = p10.match(line)
+            if m:
+                current_data_section = 'data_current_interval'
+                interface_dict.setdefault('data_current_interval', {}) # Ensure dict exists
+                continue
+
+            # Total Data (last 24 hours)
+            m = p14.match(line)
+            if m:
+                current_data_section = 'total_data'
+                interface_dict.setdefault('total_data', {}) # Ensure dict exists
+                continue
+
+            # Now handle the data lines based on current_data_section
+            if current_data_section:
+                target_dict = interface_dict[current_data_section]
+
+                # Lines for 'data_current_interval' (no trailing comma)
+                if current_data_section == 'data_current_interval':
+                    # 0 Line Code Violations, 0 Path Code Violations
+                    m = p11.match(line)
+                    if m:
+                        group = m.groupdict()
+                        target_dict['line_code_violations'] = int(group['line_code_violations'])
+                        target_dict['path_code_violations'] = int(group['path_code_violations'])
+                        continue
+                    # 0 Slip Secs, 0 Fr Loss Secs, 0 Line Err Secs, 0 Degraded Mins
+                    m = p12.match(line)
+                    if m:
+                        group = m.groupdict()
+                        target_dict['slip_secs'] = int(group['slip_secs'])
+                        target_dict['fr_loss_secs'] = int(group['fr_loss_secs'])
+                        target_dict['line_err_secs'] = int(group['line_err_secs'])
+                        target_dict['degraded_mins'] = int(group['degraded_mins'])
+                        continue
+
+                # Lines for 'total_data' (with trailing comma)
+                elif current_data_section == 'total_data':
+                    # 0 Line Code Violations, 0 Path Code Violations
+                    m = p15.match(line)
+                    if m:
+                        group = m.groupdict()
+                        target_dict['line_code_violations'] = int(group['line_code_violations'])
+                        target_dict['path_code_violations'] = int(group['path_code_violations'])
+                        continue
+                    # 0 Slip Secs, 0 Fr Loss Secs, 0 Line Err Secs, 0 Degraded Mins
+                    m = p16.match(line)
+                    if m:
+                        group = m.groupdict()
+                        target_dict['slip_secs'] = int(group['slip_secs'])
+                        target_dict['fr_loss_secs'] = int(group['fr_loss_secs'])
+                        target_dict['line_err_secs'] = int(group['line_err_secs'])
+                        target_dict['degraded_mins'] = int(group['degraded_mins'])
+                        continue
+
+                # 0 Errored Secs, 0 Bursty Err Secs, 0 Severely Err Secs, 0 Unavail Secs
+                m = p13.match(line)
+                if m:
+                    group = m.groupdict()
+                    target_dict['errored_secs'] = int(group['errored_secs'])
+                    target_dict['bursty_err_secs'] = int(group['bursty_err_secs'])
+                    target_dict['severely_err_secs'] = int(group['severely_err_secs'])
+                    target_dict['unavail_secs'] = int(group['unavail_secs'])
+                    continue
+
+        return parsed

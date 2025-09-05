@@ -744,3 +744,68 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
                 continue
 
         return ret_dict
+
+class ShowPlatformStatusSchema(MetaParser):
+    """Schema for show platform status"""
+    schema = {
+        'hardware_locations': {
+            Any(): {
+                'status': str,
+                Optional('issuer'): str,
+                Optional('subject'): str
+            }
+        }
+    }
+
+class ShowPlatformStatus(ShowPlatformStatusSchema):
+    """Parser for show platform status"""
+    cli_command = 'show platform status'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+
+        # Main Board Authentication Status:
+        p1 = re.compile(r'^(?P<hardware_location>.+) Status:$')
+
+        # Status: Normal
+        p2 = re.compile(r'^Status:\s+(?P<status>.+)$')
+
+        # Issuer: /CN=High Assurance SUDI CA/O=Cisco
+        p3 = re.compile(r'^Issuer:\s+(?P<issuer>.+)$')
+
+        # Subject: /serialNumber=PID:IE-3100-3P1U2S SN:FDO2902JF4N/O=Cisco/OU=ACT-2 Lite SUDI/CN=IE-3100-3P1U2S
+        p4 = re.compile(r'^Subject:\s+(?P<subject>.+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Main Board Authentication Status:
+            # Linecard Authentication Status:
+            m = p1.match(line)
+            if m:
+                hardware_location = str(m.group('hardware_location')).strip()
+                inner_dict = ret_dict.setdefault('hardware_locations', {}).setdefault(hardware_location, {})
+                continue
+
+            # Status: Normal
+            m = p2.match(line)
+            if m:
+                inner_dict['status'] = str(m.group('status')).strip()
+                continue
+
+            # Issuer: /CN=High Assurance SUDI CA/O=Cisco
+            m = p3.match(line)
+            if m:
+                inner_dict['issuer'] = str(m.group('issuer')).strip()
+                continue
+
+            # Subject: /serialNumber=PID:IE-3100-3P1U2S SN:FDO2902JF4N/O=Cisco/OU=ACT-2 Lite SUDI/CN=IE-3100-3P1U2S
+            m = p4.match(line)
+            if m:
+                inner_dict['subject'] = str(m.group('subject')).strip()
+                continue
+
+        return ret_dict

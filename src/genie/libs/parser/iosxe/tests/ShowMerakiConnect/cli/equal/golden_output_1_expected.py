@@ -4,14 +4,14 @@ expected_output = {
             '1': {
                 'cloud_id': 'N/A',
                 'error': 'Product type is not supported',
-                'mac_address': '6C:71:0D:3D:EA:80',
+                'mac_address': 'XX:XX:XX:XX:XX:XX',
                 'pid': 'C9300-24U',
-                'serial_number': 'FJC2342S0TH',
+                'serial_number': 'XXXXXXXXXXX',
                 'status': 'Failed',
                 'timestamp(utc)': '2024-02-14 03:22:48',
             },
         },
-        'url': 'https://catalyst.meraki.com/nodes/register',
+        'url': 'https://example.meraki.com/nodes/register',
     },
     'meraki_tunnel_config': {
         'client_ipv6_addr': '::',

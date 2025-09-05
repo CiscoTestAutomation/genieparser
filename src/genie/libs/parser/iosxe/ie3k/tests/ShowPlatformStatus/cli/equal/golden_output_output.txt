@@ -1,0 +1,9 @@
+Main Board Authentication Status:
+---------------------------------
+Status: Normal
+Issuer: /CN=High Assurance SUDI CA/O=Cisco
+Subject: /serialNumber=PID:IE-3100-3P1U2S SN:FDO2902JF4N/O=Cisco/OU=ACT-2 Lite SUDI/CN=IE-3100-3P1U2S
+
+Linecard Authentication Status:
+---------------------------------
+Status: Not present

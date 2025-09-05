@@ -3,9 +3,7 @@ expected_output = {
     "cache_size": 10000,
     "current_entries": 2,
     "flows_added": 2,
-    "flows_aged": {
-        "total": 0
-    },
+    "flows_aged": {"total": 0},
     "entries": {
         1: {
             "datalink_mac_src_input": "F4DB.E673.5602",
@@ -19,7 +17,7 @@ expected_output = {
             "tcp_flags": "0x00",
             "counter_bytes": 1269086,
             "counter_pkts_long": 2569,
-            "fw_fw_event": 1
+            "fw_fw_event": 1,
         },
         2: {
             "datalink_mac_src_input": "F4DB.E673.5602",
@@ -33,7 +31,7 @@ expected_output = {
             "tcp_flags": "0x00",
             "counter_bytes": 1270074,
             "counter_pkts_long": 2571,
-            "fw_fw_event": 1
-        }
-    }
+            "fw_fw_event": 1,
+        },
+    },
 }

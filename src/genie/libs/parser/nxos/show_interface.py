@@ -73,6 +73,7 @@ class ShowInterfaceSchema(MetaParser):
             Optional("line_protocol"): str,
             Optional("autostate"): bool,
             Optional("link_state"): str,
+            Optional("link_down_reason"): str,
             Optional("phys_address"): str,
             Optional("port_speed"): str,
             Optional("port_speed_unit"): str,
@@ -270,9 +271,39 @@ class ShowInterface(ShowInterfaceSchema):
                         r'(\(No\s+operational\s+members\))?'
                         r'(\(.*ACK.*\))?'
                         r'(\(inactive\))?'
+                        r'(\(.*\))?' #match anything in brackets
                         r'(\(Hardware\s+failure\))?'
+                        r'((port-channel-members-down))?'
                         r'(\(linkFlapErrDisabled, +port: +error\))?$')
-
+        
+        # Ethernet1/1 is down (Transceiver validation failed)
+        # Ethernet1/3 is down (SFP validation failed)
+        # Ethernet1/13 is down (Channel admin down)
+        # Ethernet1/40 is down (linkFlapErrDisabled, port: error)
+        # Ethernet1/5 is down (Authorization pending)
+        # Ethernet1/62 is down (hpoXcvrUnsupported)
+        p1_1 = re.compile(r""".*\((?P<link_down_reason>
+                Administratively\ down |           # Admin down
+                XCVR\ speed\ mismatch |            # Transceiver speed mismatch
+                Authorization\ pending |           # Auth issue
+                XCVR\ not\ inserted |              # No transceiver
+                qsaPresent |                       # QSA present
+                hpoXcvrUnsupported |               # Unsupported transceiver
+                Unsupported\ media-type\ or\ configuration |
+                Link\ not\ connected |             # Link issue
+                No\ operational\ members |         # No members up
+                Channel\ admin\ down |             # Channel is down
+                linkFlapErrDisabled,\ port:\ error | # Link flap
+                Transceiver\ validation\ failed |
+                Hardware\ failure |
+                ErrDisabled |
+                SFP\ checksum\ error |
+                suspended\(no\ LACP\ PDUs\) |
+                SFP\ validation\ failed |
+                DCX\-No\ ACK\ in\ 100\ PDUs |
+                \(VLAN\/BD\ is\ down\)
+            )\)?""", re.VERBOSE)
+        
         # admin state is up
         # admin state is up,
         # admin state is up, Dedicated Interface
@@ -367,7 +398,7 @@ class ShowInterface(ShowInterfaceSchema):
         # Auto-Negotiation is turned on
         # Auto-Negotiation is turned on  FEC mode is Auto
         p12 = re.compile(r'^Auto-Negotiation is turned (?P<auto_negotiate>(off|on))'
-                         r'(?: *FEC mode is (?P<fec_mode>(Auto)))?$')
+                         r'(?: *FEC mode is (?P<fec_mode>(\S+)))?$')
 
         # Input flow-control is off, output flow-control is off
         # Input flow-control is off, output flow-control is on
@@ -529,6 +560,13 @@ class ShowInterface(ShowInterfaceSchema):
             # Ethernet1/3 is down (XCVR not inserted)
             # Ethernet1/1 is down (DCX-No ACK in 100 PDUs)
             m = p1.match(line)
+            
+            # Ethernet1/3 is down (SFP validation failed)
+            # Ethernet1/13 is down (Channel admin down)
+            # Ethernet1/40 is down (linkFlapErrDisabled, port: error)
+            # Ethernet1/5 is down (Authorization pending)
+            # Ethernet1/62 is down (hpoXcvrUnsupported)
+            m2 = p1_1.match(line)
             if m:
                 group = m.groupdict()
                 interface = group['interface']
@@ -557,9 +595,16 @@ class ShowInterface(ShowInterfaceSchema):
                         interface_dict[interface]['oper_status'] = group['line_protocol']
 
                 if group['autostate']:
-                    interface_dict[interface]['autostate'] = True if group['autostate'] == 'enabled' else False
+                    interface_dict[interface]['autostate'] = True if group['autostate'] == 'enabled' else False 
+                
+                if m2:
+                    link_down_reason = m2.groupdict()['link_down_reason']
+                    interface_dict[interface]['link_down_reason'] = link_down_reason
+                
                 continue
-
+            
+            
+            
             # admin state is up
             # admin state is up,
             # admin state is up, Dedicated Interface
@@ -3767,6 +3812,8 @@ class ShowInterfaceStatus(ShowInterfaceStatusSchema):
         # Eth1/1        --                 connected routed    full    100G    QSFP-100G-SR1.2
         # Eth1/7        ig1ezsit-ucs01-A:e connected trunk     full    10G     10Gbase-SR
         # Eth1/15       --                 linkFlapE routed    auto    auto    QSFP-100G-CR4
+        # Eth1/10       --                 hpoXcvrUn routed    auto    auto    QSFP-400G-ZR-S
+        # Eth1/10       --                 authPendi routed    auto    auto    QSFP-400G-ZR-S
         p1 = re.compile(
             r'^(?P<interface>\w\S+)\s+'
             r'(?P<name>.+?)\s+'
@@ -3775,7 +3822,7 @@ class ShowInterfaceStatus(ShowInterfaceStatusSchema):
             # containing any number of blank spaces. This makes it very difficult to use a regular
             # expression to dynamically match the status column, so hard-coding offers a happy
             # middle ground.
-            r'(?P<status>connected|disabled|sfpAbsent|noOperMem|notconnec|xcvrAbsen|down|linkFlapE)\s+'
+            r'(?P<status>connected|disabled|sfpAbsent|noOperMem|notconnec|xcvrAbsen|down|linkFlapE|authPendi|olsInsert|XcvrHighT|adminCfgC|qsaPresen|xcvrSpeed|suspended|intFailEr|init|invalidXv|hpoXcvrUn)\s+'
             r'(?P<vlan>\S+)\s+'
             r'(?P<duplex_code>\S+)\s+'
             r'(?P<port_speed>\S+)\s*'
@@ -4271,7 +4318,7 @@ class ShowInterfaceTransceiver(ShowInterfaceTransceiverSchema):
 
         p10 = re.compile(r'^\s*cisco\s+part\s+number\s+is\s+(?P<cis_part_num>[0-9-]+)\s*')
 
-        p11 = re.compile(r'^\s*cisco\s+product\s+id\s+is\s+(?P<prod_id>[A-Z0-9-]+)\s*')
+        p11 = re.compile(r'^\s*cisco\s+product\s+id\s+is\s+(?P<prod_id>[A-Z0-9-/]+)\s*')
 
         p12 = re.compile(r'^\s*cisco\s+version\s+id\s+is\s+(?P<ver_id>[A-Z0-9]+)\s*')
 
@@ -5410,4 +5457,65 @@ class ShowBfdNeighborInterface(ShowBfdNeighborDetail_nxos):
     """
         'show bfd neighbor interface {interface} detail'
     """
-    pass
+    pass 
+
+
+#############################################################################
+# Schema for 'show interface counters table'
+#############################################################################
+class ShowInterfaceCountersTableSchema(MetaParser):
+    """Schema for show interface counters table"""
+
+    schema = {
+        'interfaces': {
+            Any(): {
+                'description': str,
+                'interval': str,
+                'rx_mbps': float,
+                'rx_percent': str,
+                'tx_mbps': float,
+                'tx_percent': str,
+            }
+        }
+    }
+
+#############################################################################
+# Parser for 'show interface counters table'
+#############################################################################
+class ShowInterfaceCountersTable(ShowInterfaceCountersTableSchema):
+    """Parser for show interface counters table"""
+
+    cli_command = 'show interface counters table'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        result_dict = {}
+
+        # Port            Description       Intvl   Rx Mbps   Rx %%   Tx Mbps      Tx %%
+        # Ethernet1/1               N/A          30/30  0.0       0.0%   0.0       0.0%
+        # Ethernet1/2               N/A          30/30  0.0       0.0%   0.0       0.0%
+        p1 = re.compile(r'^(?P<interface>\S+)\s+(?P<description>\S+)\s+(?P<interval>\S+)\s+(?P<rx_mbps>\S+)\s+(?P<rx_percent>\S+)\s+(?P<tx_mbps>\S+)\s+(?P<tx_percent>\S+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            
+            # Ethernet1/1               N/A          30/30  0.0       0.0%   0.0       0.0%
+            # Ethernet1/2               N/A          30/30  0.0       0.0%   0.0       0.0%
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                interface = group['interface']
+                intf_dict = result_dict.setdefault('interfaces', {}).setdefault(interface, {})
+                intf_dict['description'] = group['description']
+                intf_dict['interval'] = group['interval']
+                intf_dict['rx_mbps'] = float(group['rx_mbps'])
+                intf_dict['rx_percent'] = group['rx_percent'].strip('%')
+                intf_dict['tx_mbps'] = float(group['tx_mbps'])
+                intf_dict['tx_percent'] = group['tx_percent'].strip('%')
+                continue
+
+        return result_dict

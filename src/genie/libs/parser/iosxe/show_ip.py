@@ -100,6 +100,8 @@ IOSXE parsers for the following show commands:
     * show ip wccp web-cache detail
     * show ip wccp web-cache clients
     * show ip nat pool name {pool}
+    * show ip ospf database nssa
+    * show ip nat bpa
     '''
 
 # Python
@@ -10545,6 +10547,256 @@ class ShowIpNatPoolName(ShowIpNatPoolNameSchema):
                     'assigned': group['assigned'],
                     'available': group['available'],
                 }
+                continue
+
+        return parsed_dict
+
+class ShowIpOspfDatabaseNssaSchema(MetaParser):
+    '''Schema for show ip ospf database nssa'''
+    schema = {
+        'ospf_router': {
+            'router_id': str,
+            'process_id': int,
+            'type_7_as_external_link_states': {
+                'area': int,
+                'link_states': {
+                    Any(): {
+                        'ls_age': int,
+                        'options': str,
+                        'ls_type': str,
+                        'link_state_id': str,
+                        'advertising_router': str,
+                        'ls_seq_number': str,
+                        'checksum': int,
+                        'length': int,
+                        'network_mask': int,
+                        'metric_type': int,
+                        'mtid': int,
+                        'metric': int,
+                        'forward_address': str,
+                        'external_route_tag': int,
+                    }
+                }
+            }
+        }
+    }
+
+class ShowIpOspfDatabaseNssa(ShowIpOspfDatabaseNssaSchema):
+    '''Parser for show ip ospf database nssa'''
+    cli_command = 'show ip ospf database nssa'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        parsed = {}
+        # OSPF Router with ID (10.0.0.1) (Process ID 1)
+        p1 = re.compile(r'^OSPF Router with ID \((?P<router_id>[\d\.]+)\) \(Process ID (?P<process_id>\d+)\)$')
+        # Type-7 AS External Link States (Area 40)
+        p2 = re.compile(r'^\s*Type-7 AS External Link States \(Area (?P<area>\d+)\)$')
+        # LS age: 117
+        p3 = re.compile(r'^\s*LS age: (?P<ls_age>\d+)$')
+        # Options: (No TOS-capability, Type 7/5 translation, DC)
+        p4 = re.compile(r'^\s*Options: (?P<options>.*)$')
+        # LS Type: AS External Link
+        p5 = re.compile(r'^\s*LS Type: (?P<ls_type>.*)$')
+        # Link State ID: 223.255.0.0 (External Network Number )
+        p6 = re.compile(r'^\s*Link State ID: (?P<link_state_id>[\d\.]+) \(External Network Number \)$')
+        # Advertising Router: 1.1.1.1
+        p7 = re.compile(r'^\s*Advertising Router: (?P<advertising_router>[\d\.]+)$')
+        # LS Seq Number: 80000001
+        p8 = re.compile(r'^\s*LS Seq Number: (?P<ls_seq_number>\w+)$')
+        # Checksum: 0x66B7
+        p9 = re.compile(r'^\s*Checksum: (?P<checksum>0x\w+)$')
+        # Length: 36
+        p10 = re.compile(r'^\s*Length: (?P<length>\d+)$')
+        #  Network Mask: /16
+        p11 = re.compile(r'^\s*Network Mask: (?P<network_mask>/\d+)$')
+        # Metric Type: 1 (Comparable directly to link state metric)
+        p12 = re.compile(r'^\s*Metric Type: (?P<metric_type>\d+) \((?P<metric_type_desc>.*)\)$')
+        # MTID: 0
+        p13 = re.compile(r'^\s*MTID: (?P<mtid>\d+)$')
+        # Metric: 10
+        p14 = re.compile(r'^\s*Metric: (?P<metric>\d+)$')
+        # Forward Address: 10.10.10.1
+        p15 = re.compile(r'^\s*Forward Address: (?P<forward_address>[\d\.]+)$')
+        # External Route Tag: 0
+        p16 = re.compile(r'^\s*External Route Tag: (?P<external_route_tag>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            # OSPF Router with ID (1.1.1.1) (Process ID 1)
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_router_dict = parsed.setdefault('ospf_router', {})
+                ospf_router_dict['router_id'] = group['router_id']
+                ospf_router_dict['process_id'] = int(group['process_id'])
+                continue
+            # Type-7 AS External Link States (Area 40)
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                link_states_dict = ospf_router_dict.setdefault('type_7_as_external_link_states', {})
+                link_states_dict['area'] = int(group['area'])
+                link_states_dict['link_states'] = {}
+                continue
+            # LS age: 117
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                link_state_dict = link_states_dict['link_states'].setdefault(len(link_states_dict['link_states']), {})
+                link_state_dict['ls_age'] = int(group['ls_age'])
+                continue
+            # Options: (No TOS-capability, Type 7/5 translation, DC)
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                link_state_dict['options'] = group['options']
+                continue
+            # LS Type: AS External Link
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                link_state_dict['ls_type'] = group['ls_type']
+                continue
+            # Link State ID: 223.255.0.0 (External Network Number )
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                link_state_dict['link_state_id'] = group['link_state_id']
+                continue
+            # Advertising Router: 1.1.1.1
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                link_state_dict['advertising_router'] = group['advertising_router']
+                continue
+            # LS Seq Number: 80000001
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                link_state_dict['ls_seq_number'] = group['ls_seq_number']
+                continue
+            # Checksum: 0x66B7
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                link_state_dict['checksum'] = int(group['checksum'], 16)
+                continue
+            # Length: 36
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                link_state_dict['length'] = int(group['length'])
+                continue
+            # Network Mask: /16
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                link_state_dict['network_mask'] = int(group['network_mask'].lstrip('/'))
+                continue
+            # Metric Type: 1 (Comparable directly to link state metric)
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                link_state_dict['metric_type'] = int(group['metric_type'])
+                continue
+            # MTID: 0
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                link_state_dict['mtid'] = int(group['mtid'])
+                continue
+            # Metric: 10
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                link_state_dict['metric'] = int(group['metric'])
+                continue
+            # Forward Address: 10.10.10.1
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                link_state_dict['forward_address'] = group['forward_address']
+                continue
+            # External Route Tag: 0
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                link_state_dict['external_route_tag'] = int(group['external_route_tag'])
+                continue
+
+        return parsed
+
+class ShowIpNatBpaSchema(MetaParser):
+    """Schema for show ip nat bpa"""
+    schema = {
+        'paired_address_pooling': {
+            'limit': int,
+        },
+        'bulk_port_allocation': {
+            'port_set_size': int,
+            'port_step_size': int,
+            'single_set': bool,
+        }
+    }
+
+class ShowIpNatBpa(ShowIpNatBpaSchema):
+    """Parser for show ip nat bpa"""
+
+    cli_command = 'show ip nat bpa'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # Regular expressions for parsing the output
+		
+        # Limit:            1000 local addresses per global address
+        p1 = re.compile(r'^Limit:\s+(?P<limit>\d+) local addresses per global address$')
+		
+	# Port set size:    64 ports in each port set allocation
+        p2 = re.compile(r'^Port set size:\s+(?P<port_set_size>\d+) ports in each port set allocation$')
+		
+	# Port step size:   16
+        p3 = re.compile(r'^Port step size:\s+(?P<port_step_size>\d+)$')
+		
+	# Single set:       True
+        p4 = re.compile(r'^Single set:\s+(?P<single_set>\w+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Limit:            1000 local addresses per global address
+            m = p1.match(line)
+            if m:
+                paired_address_pooling = parsed_dict.setdefault('paired_address_pooling', {})
+                paired_address_pooling['limit'] = int(m.group('limit'))
+                continue
+
+            # Port set size:    64 ports in each port set allocation
+            m = p2.match(line)
+            if m:
+                bulk_port_allocation = parsed_dict.setdefault('bulk_port_allocation', {})
+                bulk_port_allocation['port_set_size'] = int(m.group('port_set_size'))
+                continue
+
+            # Port step size:   16
+            m = p3.match(line)
+            if m:
+                bulk_port_allocation = parsed_dict.setdefault('bulk_port_allocation', {})
+                bulk_port_allocation['port_step_size'] = int(m.group('port_step_size'))
+                continue
+
+            # Single set:       True
+            m = p4.match(line)
+            if m:
+                bulk_port_allocation = parsed_dict.setdefault('bulk_port_allocation', {})
+                bulk_port_allocation['single_set'] = m.group('single_set').lower() == 'true'
                 continue
 
         return parsed_dict

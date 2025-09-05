@@ -1,0 +1,6 @@
+IPv6 Multicast Routing Table for VRF "default"
+
+(2001:db8:dd::1/128, ff05::32/128), uptime: 00:10:17, static ipv6 pim6
+  Incoming interface: Ethernet1/2, RPF nbr: fe80::21e:14ff:fe79:1b08 ,internal (Router-Id: 2.2.2.2)
+  Outgoing interface list: (count: 1)
+    loopback0, uptime: 00:10:17, static

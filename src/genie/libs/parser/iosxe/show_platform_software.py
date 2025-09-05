@@ -51,6 +51,8 @@
     * show platform software firewall FP active vrf-pmap-binding
     * 'show platform software nat ipalias'
     * 'show platform software trace level ios rp active | in pki'
+    * 'show platform software firewall RP active zones'
+    * 'show platform software firewall FP active zones'
 """
 
 # Python
@@ -2795,12 +2797,17 @@ class ShowPlatformSoftwareObjectManagerFpActiveStatistics(
     cli_command = [
         "show platform software object-manager switch {switchstate} {serviceprocessor} active statistics",
         "show platform software object-manager FP active statistics",
+        "show platform software object-manager switch {switchstate} {serviceprocessor} statistics"
     ]
 
     def cli(self, switchstate="", serviceprocessor="", output=None):
         if output is None:
             if switchstate:
                 cmd = self.cli_command[0].format(
+                    switchstate=switchstate, serviceprocessor=serviceprocessor
+                )
+            elif switchstate and serviceprocessor:
+                cmd = self.cli_command[2].format(
                     switchstate=switchstate, serviceprocessor=serviceprocessor
                 )
             else:
@@ -12543,3 +12550,69 @@ class ShowPlatformSoftwareTraceLevelIosRpActiveInPki(ShowPlatformSoftwareTraceLe
                 parsed_dict[module] = level
 
         return parsed_dict
+
+class ShowPlatformSoftwareFirewallRPActiveZonesSchema(MetaParser):
+    '''Schema for show platform software firewall RP active zones
+	          show platform software firewall FP active zones'''
+schema = {
+        'zones': {
+            Any(): {
+                'zone_name': str,
+                'parameter_map': str,
+                Optional('obj_id'): int,
+            }
+        }
+    }
+class ShowPlatformSoftwareFirewallRPActiveZones(ShowPlatformSoftwareFirewallRPActiveZonesSchema):
+    '''Parser for show platform software firewall RP active zones
+                  show platform software firewall FP active zones'''
+
+    cli_command = 'show platform software firewall {processor} active zones'
+
+    def cli(self, processor="", output=None):
+
+        if output is None:
+            if processor:
+                cmd = self.cli_command.format(processor=processor)
+                output = self.device.execute(cmd)
+            else:
+                out = output
+
+        # Init return dictionary
+        parsed = {}
+
+        # Regex patterns
+        #  Zone Name: in, parameter-map:
+        p1_RP = re.compile(r'^Zone +Name: +(?P<zone_name>\S+), +parameter-map: *(?P<parameter_map>.*)$')
+
+        #  Zone Name: in, parameter-map: (null), Obj-id 116
+        p1_FP = re.compile(r'^Zone +Name: +(?P<zone_name>\S+), +parameter-map: +(?P<parameter_map>\S+), +Obj-id +(?P<obj_id>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            # Zone Name: in, parameter-map:
+            m = p1_RP.match(line)
+            if m:
+                group = m.groupdict()
+                zones_dict = parsed.setdefault('zones', {})
+                if group['parameter_map']: # This checks if the string is not empty
+                    zones_dict[group['zone_name']] = {
+                        'zone_name': group['zone_name'],
+                        'parameter_map': group['parameter_map']
+                    }
+                else: # If parameter_map is empty, only include 'zone_name'
+                    zones_dict[group['zone_name']] = {
+                        'zone_name': group['zone_name']
+                    }
+
+            #  Zone Name: in, parameter-map: (null), Obj-id 116
+            m = p1_FP.match(line)
+            if m:
+                group = m.groupdict()
+                zones_dict = parsed.setdefault('zones', {})
+                zones_dict[group['zone_name']] = {
+                    'zone_name': group['zone_name'],
+                    'parameter_map': group['parameter_map'],
+                    'obj_id': int(group['obj_id']),
+                }
+        return parsed

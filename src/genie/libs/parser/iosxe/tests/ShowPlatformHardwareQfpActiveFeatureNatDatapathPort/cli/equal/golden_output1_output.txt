@@ -1,0 +1,27 @@
+show platform hardware qfp active feature nat datapath port
+Static Portlist: 
+End Static Portlist
+Bit stats: 1stword 217 scan 4 scanread 132
+TCP ALG Ports: 5060 1723 1720 139 137 135 389 111 8554 53 554 21 514 513 512 
+UDP ALG Ports: 5060 1719 1718 138 137 111 8554 69 53 554 496 
+TCP high range Ports: 
+UDP high range Ports: 
+
+IF Overload gaddr 100.64.100.2 Proto 17 PoolID 0x490400 MappingID 0x2 VrfID 0 Flags0x1
+Max ports could be available:lo 512 hi 58k Ports allocated(NAT): 1097
+Ports used: lo 0 hi 0 Ports free: lo 73 hi 1024
+IF Overload gaddr 176.16.100.88 Proto 6 PoolID 0x490400 MappingID 0x1 VrfID 0 Flags0x1
+Max ports could be available:lo 512 hi 58k Ports allocated(NAT): 1097
+Ports used: lo 0 hi 0 Ports free: lo 73 hi 1024
+IF Overload gaddr 100.64.100.2 Proto 1 PoolID 0xf0000 MappingID 0x2 VrfID 0 Flags0xf
+Max ports could be available:lo 1024 hi 64k Ports allocated(NAT): 65535
+Ports used: lo 0 hi 0 Ports free: lo 0 hi 65535
+IF Overload gaddr 176.16.100.88 Proto 1 PoolID 0x0 MappingID 0x1 VrfID 0 Flags0xf
+Max ports could be available:lo 1024 hi 64k Ports allocated(NAT): 65535
+Ports used: lo 0 hi 0 Ports free: lo 0 hi 65535
+IF Overload gaddr 100.64.100.2 Proto 6 PoolID 0x4903fd MappingID 0x2 VrfID 0 Flags0x1
+Max ports could be available:lo 512 hi 58k Ports allocated(NAT): 1097
+Ports used: lo 0 hi 3 Ports free: lo 73 hi 1021
+IF Overload gaddr 176.16.100.88 Proto 17 PoolID 0x4903ff MappingID 0x1 VrfID 0 Flags0x1
+Max ports could be available:lo 512 hi 58k Ports allocated(NAT): 1097
+Ports used: lo 0 hi 1 Ports free: lo 73 hi 1023

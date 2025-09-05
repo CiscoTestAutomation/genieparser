@@ -10506,3 +10506,691 @@ class ShowPlatformHardwareFedSwitchActiveFwdAsicTrapsTmTrapsAsic(ShowPlatformHar
                 continue
 
         return ret_dict
+        
+class ShowPlatformHardwareFedSwitchFwdAsicInsightSanetAccsecClientTableSchema(MetaParser):
+    """Schema for 'show platform hardware fed switch <num> fwd-asic insight sanet_accsec_client_table()'"""
+    schema = {
+        'entries': {
+            int: {
+                'mask': str,
+                'sysport_gid': int,
+                'mac': str,
+                'vlan': int,
+                'client_pid': int,
+                'client_vlan': int,
+                'drop': int,
+                'policy': str,
+                'ovrd_vlan': int
+            }
+        },
+        'mask_type': {
+            str: str  # e.g., 'P': 'Port_id 0xff'
+        }
+    }
+
+class ShowPlatformHardwareFedSwitchFwdAsicInsightSanetAccsecClientTable(
+    ShowPlatformHardwareFedSwitchFwdAsicInsightSanetAccsecClientTableSchema):
+
+    cli_command = 'show platform hardware fed switch {switch} fwd-asic insight sanet_accsec_client_table()'
+
+    def cli(self, switch, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(switch=switch))
+
+        result_dict = {}
+        
+        # |  1   |  P_MAC    |  579                    |  0000.9922.2222  |  0      |  5          |  50          |  0      | IPv4v6 | 1          |
+        # |  2   |  P_MAC_V  |  579                    |  0000.9922.2222  |  50     |  2          |  0           |  0      | NONE   | 0          |
+        p1 = re.compile(
+            r'^\|\s+(?P<no>\d+)\s+\|\s+(?P<mask>\S+)\s+\|\s+(?P<sysport_gid>\d+)\s+\|'
+            r'\s+(?P<mac>[0-9a-fA-F\.]+)\s+\|\s+(?P<vlan>\d+)\s+\|\s+(?P<client_pid>\d+)\s+\|'
+            r'\s+(?P<client_vlan>\d+)\s+\|\s+(?P<drop>\d+)\s+\|\s+(?P<policy>\S+)\s+\|\s+(?P<ovrd_vlan>\d+)\s+\|'
+        )
+
+        # P : Port_id 0xff
+        # MAC : MAC FFFF.FFFF.FFFF
+        # V : Vid 0xfff
+        p2 = re.compile(r'^(?P<type>P|MAC|V)\s*:\s*(?P<desc>.+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # |  1   |  P_MAC    |  579                    |  0000.9922.2222  |  0      |  5          |  50          |  0      | IPv4v6 | 1          |
+            # |  2   |  P_MAC_V  |  579                    |  0000.9922.2222  |  50     |  2          |  0           |  0      | NONE   | 0          |
+            m1 = p1.match(line)
+            if m1:
+                group = m1.groupdict()
+                entries_dict=result_dict.setdefault('entries',{}).setdefault(int(group['no']),{})
+                entries_dict.update ({
+                    'mask': group['mask'],
+                    'sysport_gid': int(group['sysport_gid']),
+                    'mac': group['mac'],
+                    'vlan': int(group['vlan']),
+                    'client_pid': int(group['client_pid']),
+                    'client_vlan': int(group['client_vlan']),
+                    'drop': int(group['drop']),
+                    'policy': group['policy'],
+                    'ovrd_vlan': int(group['ovrd_vlan']),
+                })
+                continue
+
+            # P : Port_id 0xff
+            # MAC : MAC FFFF.FFFF.FFFF
+            # V : Vid 0xfff
+            m2 = p2.match(line)
+            if m2:
+                group = m2.groupdict()
+                mask_type=result_dict.setdefault('mask_type',{})
+                mask_type.update({group['type']:group['desc']})
+
+        return result_dict
+        
+class ShowPlatformHardwareFedSwitchFwdAsicInsightAccsecClientClassificationEnablementSchema(MetaParser):
+    """
+    Schema for:
+    show platform hardware fed switch <switch_id> fwd-asic insight accsec_client_classification_enablement()
+    """
+    schema = {
+        'asic': {
+            int: {
+                'entries': {
+                    int: {
+                        'sysport_gid': int,
+                        'npp_attrib_index': int,
+                        'client_classification': int
+                    }
+                }
+            }
+        }
+    }
+
+class ShowPlatformHardwareFedSwitchFwdAsicInsightAccsecClientClassificationEnablement(
+    ShowPlatformHardwareFedSwitchFwdAsicInsightAccsecClientClassificationEnablementSchema
+):
+    """
+    Parser for:
+    show platform hardware fed switch <switch_id> fwd-asic insight accsec_client_classification_enablement()
+    """
+
+    cli_command = 'show platform hardware fed switch {switch_id} fwd-asic insight accsec_client_classification_enablement()'
+
+    def cli(self, switch_id="", output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(switch_id=switch_id))
+
+        ret_dict = {}
+        current_asic = None
+
+        # ASIC - 0
+        p_asic_header = re.compile(r'^ASIC\s*-\s*(?P<asic_id>\d+)\s*:.*$')
+        
+        # ------------------------------------------------------------------------------------------------
+        # |  No  |  Sysport-GID                |  NPP-Attrib-Index          |  Client-Classification     |
+        # ------------------------------------------------------------------------------------------------
+        # |  1   |  10                         |  0                         |  0                         |
+        p_entry = re.compile(
+            r'^\|\s*(?P<no>\d+)\s*\|\s*(?P<sysport_gid>\d+)\s*\|\s*(?P<npp_attrib_index>\d+)\s*\|\s*(?P<client_classification>\d+)\s*\|'
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line or line.startswith('--'):
+                continue
+
+            # ASIC - 0
+            m_asic = p_asic_header.match(line)
+            if m_asic:
+                current_asic = int(m_asic.group('asic_id'))
+                if 'asic' not in ret_dict:
+                    ret_dict['asic'] = {}
+                if current_asic not in ret_dict['asic']:
+                    ret_dict['asic'][current_asic] = {'entries': {}}
+                continue
+
+            # ------------------------------------------------------------------------------------------------
+            # |  No  |  Sysport-GID                |  NPP-Attrib-Index          |  Client-Classification     |
+            # ------------------------------------------------------------------------------------------------
+            # |  1   |  10                         |  0                         |  0                         |
+            m_entry = p_entry.match(line)
+            if m_entry and current_asic is not None:
+                group = m_entry.groupdict()
+                no = int(group['no'])
+                ret_dict['asic'][current_asic]['entries'][no] = {
+                    'sysport_gid': int(group['sysport_gid']),
+                    'npp_attrib_index': int(group['npp_attrib_index']),
+                    'client_classification': int(group['client_classification'])
+                }
+
+        return ret_dict
+       
+class ShowPlatformHardwareFedActiveQosQueueConfigInternalPortTypeRecyclePortPortNumAllAsicSchema(MetaParser):
+    """Schema for 
+    - show platform hardware fed active qos queue config internal port_type recycle-port port_num all asic {asic_number}
+    - show platform hardware fed standby qos queue config internal port_type recycle-port port_num all asic {asic_number}
+    """
+
+    schema = {
+        'voq_details': {
+            Any(): {  # Interface name
+                'interface': str,
+                'interface_hex': str,
+                'voq_oid': int,
+                'voq_oid_hex': str,
+                'voq_set_size': int,
+                'base_voq_id': int,
+                'base_vsc_ids': ListOf(int),
+                'voq_state': str,
+                'voq_flush': str,
+                'is_empty': str,
+                Optional('voq_profile_details'): {
+                    'profile_oid': int,
+                    'profile_oid_hex': str,
+                    'device_id': int,
+                    'cgm_type': str,
+                    'profile_reference_count': int,
+                    'is_reserved': str,
+                    'for_speeds': int,
+                    'associated_voq_offsets': ListOf(int),
+                    'hbm_enabled': str,
+                    'q_block_size': int,
+                    'red_enabled': str,
+                    'fcn_enabled': str,
+                    'queue_user_config': {
+                        'q_limit_bytes': int,
+                        'red_ema_coefficient': float,
+                        'red_green': {
+                            'minimum': int,
+                            'maximum': int,
+                            'maximum_probability': int,
+                        },
+                        'red_yellow': {
+                            'minimum': int,
+                            'maximum': int,
+                            'maximum_probability': int,
+                        },
+                    },
+                    'queue_hw_values': {
+                        'red_ema_coefficient': float,
+                        'red_action': str,
+                        'red_drop_thresholds': str,
+                    },
+                },
+            },
+        },
+    }
+
+class ShowPlatformHardwareFedActiveQosQueueConfigInternalPortTypeRecyclePortPortNumAllAsic(ShowPlatformHardwareFedActiveQosQueueConfigInternalPortTypeRecyclePortPortNumAllAsicSchema):
+    """Parser for 
+    - show platform hardware fed active qos queue config internal port_type recycle-port port_num all asic {asic_number}
+    - show platform hardware fed standby qos queue config internal port_type recycle-port port_num all asic {asic_number}
+    """
+
+    cli_command = ['show platform hardware fed active qos queue config internal port_type recycle-port port_num all asic {asic_number}',
+                   'show platform hardware fed standby qos queue config internal port_type recycle-port port_num all asic {asic_number}']
+
+    def cli(self, asic_number, active=True, output=None):
+        if output is None:
+            if active:
+                output = self.device.execute(self.cli_command[0].format(asic_number=asic_number))
+            else:
+                output = self.device.execute(self.cli_command[1].format(asic_number=asic_number))
+
+        # Initialize the result dictionary
+        result_dict = {}
+        
+        # Interface : Recircport/1 (0x1)
+        p1 = re.compile(r'^Interface\s*:\s*(?P<interface>\S+)\s*\((?P<interface_hex>0x\w+)\)$')
+        
+        # VOQ OID        : 285(0x11D)
+        p2 = re.compile(r'^VOQ OID\s*:\s*(?P<voq_oid>\d+)\((?P<voq_oid_hex>0x\w+)\)$')
+        
+        # VOQ Set Size   : 8
+        p3 = re.compile(r'^VOQ Set Size\s*:\s*(?P<voq_set_size>\d+)$')
+        
+        # Base VOQ ID    : 256
+        p4 = re.compile(r'^Base VOQ ID\s*:\s*(?P<base_voq_id>\d+)$')
+        
+        # Base VSC IDs   : 128, 208, 288
+        p5 = re.compile(r'^Base VSC IDs\s*:\s*(?P<base_vsc_ids>[\d,\s]+)$')
+        
+        # VOQ State      : Active
+        p6 = re.compile(r'^VOQ State\s*:\s*(?P<voq_state>\w+)$')
+        
+        # VOQ Flush      : Flush not active
+        p7 = re.compile(r'^VOQ Flush\s*:\s*(?P<voq_flush>.+)$')
+        
+        # Is Empty       : Yes
+        p8 = re.compile(r'^Is Empty\s*:\s*(?P<is_empty>\w+)$')
+        
+        # Profile OID            : 284(0x11C)
+        p9 = re.compile(r'^Profile OID\s*:\s*(?P<profile_oid>\d+)\((?P<profile_oid_hex>0x\w+)\)$')
+        
+        # Device ID              : 0
+        p10 = re.compile(r'^Device ID\s*:\s*(?P<device_id>\d+)$')
+        
+        # CGM Type               : Unicast
+        p11 = re.compile(r'^CGM Type\s*:\s*(?P<cgm_type>\w+)$')
+        
+        # Profile reference count: 32
+        p12 = re.compile(r'^Profile reference count\s*:\s*(?P<profile_reference_count>\d+)$')
+        
+        # Is Reserved            : Yes
+        p13 = re.compile(r'^Is Reserved\s*:\s*(?P<is_reserved>\w+)$')
+        
+        # For speeds             : 400000000000
+        p14 = re.compile(r'^For speeds\s*:\s*(?P<for_speeds>\d+)$')
+        
+        # Associated VOQ Offsets : 0, 1, 2, 3, 4, 5, 6, 7
+        p15 = re.compile(r'^Associated VOQ Offsets\s*:\s*(?P<associated_voq_offsets>[\d,\s]+)$')
+        
+        # HBM Enabled            : Disabled
+        p16 = re.compile(r'^HBM Enabled\s*:\s*(?P<hbm_enabled>\w+)$')
+        
+        # Q   Block Size         : 384
+        p17 = re.compile(r'^Q\s+Block Size\s*:\s*(?P<q_block_size>\d+)$')
+        
+        # RED Enabled            : Enabled
+        p18 = re.compile(r'^RED Enabled\s*:\s*(?P<red_enabled>\w+)$')
+        
+        # FCN Enabled           : Enabled
+        p19 = re.compile(r'^FCN Enabled\s*:\s*(?P<fcn_enabled>\w+)$')
+        
+        # Queue User Config
+        p20 = re.compile(r'^Q-Limit\(Bytes\s*\)\s*:\s*(?P<q_limit_bytes>\d+)$')
+        
+        # RED EMA Coefficient   : 0.5
+        p21 = re.compile(r'^RED EMA Coefficient\s*:\s*(?P<red_ema_coefficient>[\d.]+)$')
+        
+        # RED Green
+        # Minimum : 1000
+        p22 = re.compile(r'^Minimum\s*:\s*(?P<minimum>\d+)$')
+        
+        # Maximum : 2000
+        p23 = re.compile(r'^Maximum\s*:\s*(?P<maximum>\d+)$')
+        
+        # Maximum Probability : 100
+        p24 = re.compile(r'^Maximum Probability\s*:\s*(?P<maximum_probability>\d+)$')
+        
+        # RED actions
+        p25 = re.compile(r'^RED Action\s*:\s*(?P<red_action>\w+)$')
+        
+        # RED Drop thresholds : 1000, 2000, 3000
+        p26 = re.compile(r'^RED Drop thresholds\s*:\s*(?P<red_drop_thresholds>.*)$')
+
+        current_interface = None
+        current_section = None
+        red_color = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Interface : Recircport/1 (0x1)
+            m = p1.match(line)
+            if m:
+                interface = m.group('interface')
+                current_interface = interface
+                interface_dict = result_dict.setdefault('voq_details', {}).setdefault(interface, {})
+                interface_dict['interface'] = interface
+                interface_dict['interface_hex'] = m.group('interface_hex')
+                continue
+
+            if current_interface is None:
+                continue
+
+            # VOQ OID        : 285(0x11D)
+            m = p2.match(line)
+            if m:
+                interface_dict['voq_oid'] = int(m.group('voq_oid'))
+                interface_dict['voq_oid_hex'] = m.group('voq_oid_hex')
+                continue
+
+            # VOQ Set Size   : 8
+            m = p3.match(line)
+            if m:
+                interface_dict['voq_set_size'] = int(m.group('voq_set_size'))
+                continue
+
+            # Base VOQ ID    : 256
+            m = p4.match(line)
+            if m:
+                interface_dict['base_voq_id'] = int(m.group('base_voq_id'))
+                continue
+
+            # Base VSC IDs   : 128, 208, 288
+            m = p5.match(line)
+            if m:
+                vsc_ids = [int(x.strip()) for x in m.group('base_vsc_ids').split(',')]
+                interface_dict['base_vsc_ids'] = vsc_ids
+                continue
+
+            # VOQ State      : Active
+            m = p6.match(line)
+            if m:
+                interface_dict['voq_state'] = m.group('voq_state')
+                continue
+
+            # VOQ Flush      : Flush not active
+            m = p7.match(line)
+            if m:
+                interface_dict['voq_flush'] = m.group('voq_flush')
+                continue
+
+            # Is Empty       : Yes
+            m = p8.match(line)
+            if m:
+                interface_dict['is_empty'] = m.group('is_empty')
+                continue
+
+            # Profile OID            : 284(0x11C)
+            m = p9.match(line)
+            if m:
+                profile_dict = interface_dict.setdefault('voq_profile_details', {})
+                profile_dict['profile_oid'] = int(m.group('profile_oid'))
+                profile_dict['profile_oid_hex'] = m.group('profile_oid_hex')
+                continue
+
+            # Device ID              : 0
+            m = p10.match(line)
+            if m:
+                profile_dict['device_id'] = int(m.group('device_id'))
+                continue
+
+            # CGM Type               : Unicast
+            m = p11.match(line)
+            if m:
+                profile_dict['cgm_type'] = m.group('cgm_type')
+                continue
+
+            # Profile reference count: 32
+            m = p12.match(line)
+            if m:
+                profile_dict['profile_reference_count'] = int(m.group('profile_reference_count'))
+                continue
+
+            # Is Reserved            : Yes
+            m = p13.match(line)
+            if m:
+                profile_dict['is_reserved'] = m.group('is_reserved')
+                continue
+
+            # For speeds             : 400000000000
+            m = p14.match(line)
+            if m:
+                profile_dict['for_speeds'] = int(m.group('for_speeds'))
+                continue
+
+            # Associated VOQ Offsets : 0, 1, 2, 3, 4, 5, 6, 7
+            m = p15.match(line)
+            if m:
+                offsets = [int(x.strip()) for x in m.group('associated_voq_offsets').split(',')]
+                profile_dict['associated_voq_offsets'] = offsets
+                continue
+
+            # HBM Enabled            : Disabled
+            m = p16.match(line)
+            if m:
+                profile_dict['hbm_enabled'] = m.group('hbm_enabled')
+                continue
+
+            # Q   Block Size         : 384
+            m = p17.match(line)
+            if m:
+                profile_dict['q_block_size'] = int(m.group('q_block_size'))
+                continue
+
+            # RED Enabled            : Enabled
+            m = p18.match(line)
+            if m:
+                profile_dict['red_enabled'] = m.group('red_enabled')
+                continue
+
+            # FCN Enabled            : Disabled
+            m = p19.match(line)
+            if m:
+                profile_dict['fcn_enabled'] = m.group('fcn_enabled')
+                continue
+
+            # Check for section headers
+            if 'Queue User Config' in line:
+                current_section = 'user_config'
+                profile_dict.setdefault('queue_user_config', {})
+                continue
+            elif 'Queue H/W Values' in line:
+                current_section = 'hw_values'
+                profile_dict.setdefault('queue_hw_values', {})
+                continue
+            elif 'RED Green' in line:
+                red_color = 'green'
+                profile_dict['queue_user_config'].setdefault('red_green', {})
+                continue
+            elif 'RED Yellow' in line:
+                red_color = 'yellow'
+                profile_dict['queue_user_config'].setdefault('red_yellow', {})
+                continue
+
+            # Q-Limit(Bytes    )    : 983040
+            m = p20.match(line)
+            if m and current_section == 'user_config':
+                profile_dict['queue_user_config']['q_limit_bytes'] = int(m.group('q_limit_bytes'))
+                continue
+
+            # RED EMA Coefficient    : 1.000000
+            m = p21.match(line)
+            if m:
+                if current_section == 'user_config':
+                    profile_dict['queue_user_config']['red_ema_coefficient'] = float(m.group('red_ema_coefficient'))
+                elif current_section == 'hw_values':
+                    profile_dict['queue_hw_values']['red_ema_coefficient'] = float(m.group('red_ema_coefficient'))
+                continue
+
+            # Minimum              : 0
+            m = p22.match(line)
+            if m and red_color:
+                profile_dict['queue_user_config'][f'red_{red_color}']['minimum'] = int(m.group('minimum'))
+                continue
+
+            # Maximum              : 983040
+            m = p23.match(line)
+            if m and red_color:
+                profile_dict['queue_user_config'][f'red_{red_color}']['maximum'] = int(m.group('maximum'))
+                continue
+
+            # Maximum Probability  : 0
+            m = p24.match(line)
+            if m and red_color:
+                profile_dict['queue_user_config'][f'red_{red_color}']['maximum_probability'] = int(m.group('maximum_probability'))
+                continue
+
+            # RED Action                     : Drop
+            m = p25.match(line)
+            if m and current_section == 'hw_values':
+                profile_dict['queue_hw_values']['red_action'] = m.group('red_action')
+                continue
+
+            # RED Drop thresholds            :
+            m = p26.match(line)
+            if m and current_section == 'hw_values':
+                profile_dict['queue_hw_values']['red_drop_thresholds'] = m.group('red_drop_thresholds').strip()
+                continue
+
+        return result_dict
+    
+# ================================================================================
+# Parser for 'show platform hardware fed switch 1 fwd-asic insight acl_table_statistics'
+# ================================================================================
+class ShowPlatformHardwareFedSwitchFwdAsicInsightAclTableStatisticsSchema(MetaParser):
+    """Schema for 'show platform hardware fed switch {switch} fwd-asic insight acl_table_statistics'"""
+    schema = {
+        'acl_tables': {
+            Any(): {
+                'ace_count': int,
+                'max_available_space': int,
+                'max_position': int,
+                'app_type': str,
+                Optional('netflow_profile_id'): int,
+                'is_compressed': bool,
+                Optional('acl_cookie'): str,
+            }
+        }
+    }
+
+class ShowPlatformHardwareFedSwitchFwdAsicInsightAclTableStatistics(ShowPlatformHardwareFedSwitchFwdAsicInsightAclTableStatisticsSchema):
+    """Parser for 'show platform hardware fed switch {switch} fwd-asic insight acl_table_statistics'"""
+
+    cli_command = ['show platform hardware fed {switch} {switch_var} fwd-asic insight acl_table_statistics()',
+                'show platform hardware fed {switch_var} fwd-asic insight acl_table_statistics()']
+
+    def cli(self, switch="", switch_var="", output=None):
+        if output is None:
+            if switch:
+                self.cli_command = self.cli_command[0].format(switch=switch, switch_var=switch_var)
+            else:
+                self.cli_command = self.cli_command[1].format(switch_var=switch_var)
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+        current_acl_oid = None
+
+        # | acl_oid:1313 |         1 |               59160 |        65534 | STANDARD |                  0 |     False     |
+        p1 = re.compile(
+            r'^\|\s*acl_oid:(?P<acl_oid>\d+)\s*\|\s*(?P<ace_count>\d+)\s*\|\s*(?P<max_available_space>\d+)\s*\|\s*(?P<max_position>\d+)\s*\|\s*(?P<app_type>\S+)\s*\|\s*(?P<netflow_profile_id>\d+)\s*\|\s*(?P<is_compressed>\w+)\s*\|$'
+        )
+        # | acl_cookie:Racl::IN::17::Outbound_RACL_Deny_IN |           |                     |              |          |                    |               |
+        p2 = re.compile(
+            r'^\|\s*acl_cookie:(?P<acl_cookie>[\S]+)?\s*\|\s*\|\s*\|\s*\|\s*\|\s*\|\s*\|$'
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # | acl_oid:1313 |         1 |               59160 |        65534 | STANDARD |                  0 |     False     |
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                acl_tables = ret_dict.setdefault('acl_tables', {})
+                current_acl_oid = int(group['acl_oid'])
+                acl_tables[current_acl_oid] = {
+                    'ace_count': int(group['ace_count']),
+                    'max_available_space': int(group['max_available_space']),
+                    'max_position': int(group['max_position']),
+                    'app_type': group['app_type'],
+                    'netflow_profile_id': int(group['netflow_profile_id']),
+                    'is_compressed': group['is_compressed'].lower() == 'true',
+                }
+                continue
+
+            # | acl_cookie:Racl::IN::17::Outbound_RACL_Deny_IN |           |                     |              |          |                    |               |
+            m = p2.match(line)
+            if m and current_acl_oid is not None:
+                group = m.groupdict()
+                if group['acl_cookie']:
+                    acl_tables[current_acl_oid]['acl_cookie'] = group['acl_cookie'].strip()
+                continue
+
+        return ret_dict
+
+
+class ShowPlatformHardwareFedSwitchFwdAsicInsightL2SwitchAttachmentCircuitSchema(MetaParser):
+    """Schema for 'show platform hardware fed {switch} {switch_id} fwd-asic insight l2_switch_attachment_circuits({l2_ac_gid})'"""
+
+    schema = {
+        'l2_circuit_status': {
+            'l2_ac_info': {
+                Any(): {
+                    'ac_type': str,
+                    Optional('switch_gid'): int,
+                    Optional('eth_port_oid'): int,
+                    Optional('vlan_tag'): int,
+                    'sysport_gid': int,
+                    'ac_gid': int,
+                    Optional('switch_cookie'): int,
+                    'sysport_cookie': str,
+                    Optional('ac_cookie'): str
+                }
+            }
+        }
+    }
+    
+class ShowPlatformHardwareFedSwitchFwdAsicInsightL2SwitchAttachmentCircuit(ShowPlatformHardwareFedSwitchFwdAsicInsightL2SwitchAttachmentCircuitSchema):
+    """Parser for 'show platform hardware fed {switch} {switch_id} fwd-asic insight l2_switch_attachment_circuits({l2_ac_gid})'"""
+
+    cli_command = 'show platform hardware fed {switch} {switch_id} fwd-asic insight l2_switch_attachment_circuits({l2_ac_gid})'
+    def cli(self, switch='' , switch_id='', l2_ac_gid= "", output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(
+                switch=switch,
+                switch_id=switch_id,
+                l2_ac_gid=l2_ac_gid
+            ))
+
+        parsed_data = {}
+        current_entry = None
+        entry_key = None
+
+        # | ac_type: L2-DENSE  |             | vlan_tag: 1           | sysport_gid: 300        |
+        # | ac_type: L2        | switch_gid: 300    | eth_port_oid: 1925    | sysport_gid: 320         |
+        p1 = re.compile('^ac_type:\s+(?P<ac_type>\S+)\s*\|(?:\s*switch_gid:\s+(?P<switch_gid>\d+))?\s*\|(?:\s*vlan_tag:\s+(?P<vlan_tag>\d+)|\s*eth_port_oid:\s+(?P<eth_port_oid>\d+))?\s*\|(?:\s*sysport_gid:\s+(?P<sysport_gid>\d+))?\s*$')
+
+        # | ac_gid: 122906     |             | eth_port_oid: 1677    | sysport_cookie: Gi2/0/2 |
+        # | ac_gid: 6           | switch_cookie: 300 |                       | sysport_cookie: Gi2/0/24 |
+        p2 = re.compile('^ac_gid:\s+(?P<ac_gid>\d+)\s*\|(?:\s*switch_cookie:\s+(?P<switch_cookie>\d+))?\s*\|(?:\s*eth_port_oid:\s+(?P<eth_port_oid>\d+))?\s*\|(?:\s*sysport_cookie:\s+(?P<sysport_cookie>\S+))?\s*$')
+
+        # | ac_cookie: Gi2/0/2 |             |                       |                         |
+        p3 = re.compile(r'^ac_cookie:\s+(?P<ac_cookie>\S+)$')
+
+        for line in output.splitlines():
+            line = line.strip('| ').strip()
+            if not line:
+                continue
+
+            # | ac_type: L2-DENSE  |             | vlan_tag: 1           | sysport_gid: 300        |
+            # | ac_type: L2        | switch_gid: 300    | eth_port_oid: 1925    | sysport_gid: 320         |
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                # Use eth_port_oid, vlan_tag, or sysport_gid as entry key (in that order)
+                if group.get('eth_port_oid'):
+                    entry_key = int(group['eth_port_oid'])
+                elif group.get('vlan_tag'):
+                    entry_key = int(group['vlan_tag'])
+                elif group.get('sysport_gid'):
+                    entry_key = int(group['sysport_gid'])
+                else:
+                    continue
+
+                current_entry = parsed_data.setdefault('l2_circuit_status', {}).setdefault('l2_ac_info', {}).setdefault(entry_key, {})
+                current_entry['ac_type'] = group['ac_type']
+                if group.get('switch_gid'):
+                    current_entry['switch_gid'] = int(group['switch_gid'])
+                if group.get('eth_port_oid'):
+                    current_entry['eth_port_oid'] = int(group['eth_port_oid'])
+                if group.get('vlan_tag'):
+                    current_entry['vlan_tag'] = int(group['vlan_tag'])
+                if group.get('sysport_gid'):
+                    current_entry['sysport_gid'] = int(group['sysport_gid'])
+                continue
+
+            # | ac_gid: 122906     |             | eth_port_oid: 1677    | sysport_cookie: Gi2/0/2 |
+            # | ac_gid: 6           | switch_cookie: 300 |                       | sysport_cookie: Gi2/0/24 |
+            m = p2.match(line)
+            if m and current_entry is not None:
+                group = m.groupdict()
+                current_entry['ac_gid'] = int(group['ac_gid'])
+                if group.get('switch_cookie'):
+                    current_entry['switch_cookie'] = int(group['switch_cookie'])
+                if group.get('eth_port_oid'):
+                    current_entry['eth_port_oid'] = int(group['eth_port_oid'])
+                if group.get('sysport_cookie'):
+                    current_entry['sysport_cookie'] = group['sysport_cookie']
+                continue
+
+            # | ac_cookie: Gi2/0/2 |             |                       |                         |
+            m = p3.match(line)
+            if m and current_entry is not None:
+                group = m.groupdict()
+                current_entry['ac_cookie'] = group['ac_cookie']
+                continue
+
+        return parsed_data

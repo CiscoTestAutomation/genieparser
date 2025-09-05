@@ -6,6 +6,7 @@ IOSXE parsers for the following show commands:
     * show monitor capture
     * show monitor event-trace crypto pki event all
     * show monitor event-trace crypto pki error all
+    * show monitor event-trace crypto ikev2 event all
 
 '''
 
@@ -2142,5 +2143,124 @@ class ShowMonitorEventTraceCryptoPkiErrorAll(ShowMonitorEventTraceCryptoPkiError
                 event_dict = parsed_dict['event_trace']['event'][current_event]
                 event_dict['event_message'] += '\n' + m.group('cont')
                 continue
+
+        return parsed_dict
+
+# =================================================
+#  Schema for 'show monitor event-trace crypto ikev2 event all'
+# =================================================
+class ShowMonitorEventTraceCryptoIkev2EventAllSchema(MetaParser):
+    """Schema for `show monitor event-trace crypto ikev2 event all`"""
+    schema = {
+        'event_trace': {
+            'events': {
+                int: {
+                    'timestamp': str,
+                    'sa_id': int,
+                    'session_id': int,
+                    'remote': str,
+                    'local': str,
+                    'event_message': str,
+                    Optional('direction'): str,
+                    Optional('exchange_type'): str,
+                    Optional('spi'): str,
+                    Optional('ispi'): str,
+                    Optional('rspi'): str,
+                    Optional('ike_id_pair'): str
+                }
+            }
+        }
+    }
+
+
+# =================================================
+#  Parser for 'show monitor event-trace crypto ikev2 event all'
+# =================================================
+class ShowMonitorEventTraceCryptoIkev2EventAll(ShowMonitorEventTraceCryptoIkev2EventAllSchema):
+    """Parser for `show monitor event-trace crypto ikev2 event all`"""
+
+    cli_command = 'show monitor event-trace crypto ikev2 event all'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        parsed_dict = {}
+        event_idx = 1
+
+        # Main pattern for IKEv2 event entries
+        # *Apr  4 00:16:59.484: SA ID:2 SESSION ID:1 Remote: 30.1.1.2/500 Local: 30.1.1.1/500  Sending DELETE INFO message for IPsec SA [SPI: 0x28DC063C]
+        p1 = re.compile(r'^\*(?P<timestamp>\w{3}\s+\d+\s+\d{2}:\d{2}:\d{2}\.\d{3}):\s+'
+                       r'SA\s+ID:(?P<sa_id>\d+)\s+'
+                       r'SESSION\s+ID:(?P<session_id>\d+)\s+'
+                       r'Remote:\s+(?P<remote>\S+)\s+'
+                       r'Local:\s+(?P<local>\S+)\s+'
+                       r'(?P<event_message>.*)$')
+
+        # Pattern to extract direction from event message (Initiator/Responder)
+        # "(I) Sending IKEv2 INFORMATIONAL Exchange REQUEST" or "(R) Received IKEv2 IKE_SA_INIT Exchange REQUEST"
+        p2 = re.compile(r'^\((?P<direction>[IR])\)')
+
+        # Pattern to extract SPI from event message (but not ISPI/RSPI)
+        # "Sending DELETE INFO message for IPsec SA [SPI: 0x28DC063C]"
+        p3 = re.compile(r'.*(?<!I)SPI:\s+(?P<spi>0x[0-9A-F]+)(?!\s+RSPI)')
+
+        # Pattern to extract ISPI and RSPI from event message
+        # "Sending DELETE INFO message for IKEv2 SA [ISPI: 0x52C79670608A3068 RSPI: 0x0063AAED5563FDAE]"
+        p4 = re.compile(r'.*ISPI:\s+(?P<ispi>0x[0-9A-F]+)\s+RSPI:\s+(?P<rspi>0x[0-9A-F]+)')
+
+        # Pattern to extract IKE ID pair
+        # "Session with IKE ID PAIR(30.1.1.2 , 30.1.1.1) is UP"
+        p5 = re.compile(r'.*IKE\s+ID\s+PAIR\((?P<ike_id_pair>[^)]+)\)')
+
+        # Pattern to extract exchange type
+        # "(I) Sending IKEv2 INFORMATIONAL Exchange REQUEST" or "(R) Received IKEv2 IKE_AUTH Exchange RESPONSE"
+        p6 = re.compile(r'.*IKEv2\s+(?P<exchange_type>\w+)\s+Exchange')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # *Apr 4 00:16:59.484: SA ID:2 SESSION ID:1 Remote: 30.1.1.2/500 Local: 30.1.1.1/500  Sending DELETE INFO message for IPsec SA [SPI: 0x28DC063C]
+            m = p1.match(line)
+            if m:
+                event_dict = parsed_dict.setdefault('event_trace', {}).setdefault('events', {}).setdefault(event_idx, {})
+
+                event_dict['timestamp'] = m.group('timestamp')
+                event_dict['sa_id'] = int(m.group('sa_id'))
+                event_dict['session_id'] = int(m.group('session_id'))
+                event_dict['remote'] = m.group('remote')
+                event_dict['local'] = m.group('local')
+                event_dict['event_message'] = m.group('event_message').strip()
+
+                # Extract optional fields from event message
+                event_message = event_dict['event_message']
+
+                # Extract direction (I or R)
+                m_dir = p2.match(event_message)
+                if m_dir:
+                    event_dict['direction'] = m_dir.group('direction')
+
+                # Extract ISPI and RSPI first (more specific pattern)
+                m_ispi_rspi = p4.match(event_message)
+                if m_ispi_rspi:
+                    event_dict['ispi'] = m_ispi_rspi.group('ispi')
+                    event_dict['rspi'] = m_ispi_rspi.group('rspi')
+                else:
+                    # Only check for single SPI if no ISPI/RSPI found
+                    m_spi = p3.match(event_message)
+                    if m_spi:
+                        event_dict['spi'] = m_spi.group('spi')
+
+                # Extract IKE ID pair
+                m_ike_id = p5.match(event_message)
+                if m_ike_id:
+                    event_dict['ike_id_pair'] = m_ike_id.group('ike_id_pair')
+
+                # Extract exchange type
+                m_exchange = p6.match(event_message)
+                if m_exchange:
+                    event_dict['exchange_type'] = m_exchange.group('exchange_type')
+
+                event_idx += 1
 
         return parsed_dict

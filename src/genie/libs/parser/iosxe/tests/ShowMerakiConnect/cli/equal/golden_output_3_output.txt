@@ -6,11 +6,11 @@ Meraki Tunnel Config
   Fetch Fail:
   Last Fetch(UTC):            2025-06-16 22:35:06
   Next Fetch(UTC):            2025-06-16 23:49:10
-  Config Server:              cs109-2037.meraki.com
-  Primary:                    usw.nt.meraki.com
-  Secondary:                  use.nt.meraki.com
-  Client IPv6 Addr:           FD0A:9B09:1F7:1:8E84:42FF:FE60:900
-  Network Name:               C9K Meraki Development - switch
+  Config Server:              example-config.meraki.com
+  Primary:                    primary.nt.meraki.com
+  Secondary:                  secondary.nt.meraki.com
+  Client IPv6 Addr:           XXXX:XXXX:XXXX:X:XXXX:XXXX:XXXX:XXX
+  Network Name:               Example Network - switch
 
 Meraki Tunnel State
 ------------------------------------
@@ -38,11 +38,11 @@ Meraki Tunnel Interface
 
 Meraki Device Registration
 ------------------------------------
-  url:                        https://catalyst.meraki.com/nodes/register
+  url:                        https://example.meraki.com/nodes/register
   Device Number:              1
   PID:                        C9200L-24P-4G
-  Serial Number:              FOC26420QKU
-  Cloud ID:                   Q2ZZ-8ZNE-VURY
-  Mac Address:                8C:84:42:60:09:00
+  Serial Number:              XXXXXXXXXXX
+  Cloud ID:                   XXXX-XXXX-XXXX
+  Mac Address:                XX:XX:XX:XX:XX:XX
   Status:                     Registered
   Timestamp(UTC):             2025-06-12 15:04:22

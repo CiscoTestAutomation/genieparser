@@ -36,6 +36,11 @@ IOSXE parsers for the following show commands:
     * 'test platform software database get-n all ios_oper/platform_component'
     * 'test platform software database get-n all ios_oper/transceiver'
     * 'show rep topology detail'
+    * 'show xdr linecard'
+    * 'show zone-pair security'
+    * 'show platform software wccp web-cache counters'
+    * 'show platform hardware qfp active feature nat datapath port'
+    * 'show platform hardware qfp active feature nat datapath map'
     '''
 
 # Python
@@ -48,7 +53,7 @@ from xml.dom import minidom
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional, Use, And
+from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional, Use, And, ListOf
 from genie.libs.parser.utils.common import Common
 from genie.parsergen import oper_fill_tabular
 # genie.parsergen
@@ -1531,13 +1536,24 @@ class Dir(DirSchema):
         else:
             out = output
 
+        # dir
+        p1 = re.compile(r'^\s*[Dd]irectory +of +(?P<dir>.+)$')
+
+        # filename, index, permissions, size and last_modified_date
+        p2 = re.compile(r'\s*(?P<index>\d+) +(?P<permissions>\S+) +(?P<size>\d+) +'
+                        r'(?P<last_modified_date>\S+ +\d+ +\d+ +\d+\:\d+\:\d+ +\S+) +(?P<filename>.+)$')
+
+        # Attributes        Size         Name
+        p2_2 = re.compile(r'^(?P<attributes>[\w-]+)\s*(?P<size>\d+)\s*(?P<name>[\w_.]+)$')
+
+        # bytes_total and bytes_free
+        p3 = re.compile(r'\s*(?P<bytes_total>\d+) +bytes +total +\((?P<bytes_free>\d+) +bytes +free\)')
+
         dir_dict = {}
         for line in out.splitlines():
-            line = line.rstrip()
+            line = line.strip()
 
             # dir
-            p1 = re.compile(
-                r'^\s*[Dd]irectory +of +(?P<dir>.+)$')
             m = p1.match(line)
             if m:
                 dir1 = m.groupdict()['dir']
@@ -1549,8 +1565,6 @@ class Dir(DirSchema):
                 continue
 
             # filename, index, permissions, size and last_modified_date
-            p2 = re.compile(
-                r'\s*(?P<index>\d+) +(?P<permissions>\S+) +(?P<size>\d+) +(?P<last_modified_date>\S+ +\d+ +\d+ +\d+\:\d+\:\d+ +\S+) +(?P<filename>.+)$')
             m = p2.match(line)
             if m:
                 filename = m.groupdict()['filename']
@@ -1564,8 +1578,19 @@ class Dir(DirSchema):
                 dir_dict['dir'][dir1]['files'][filename]['last_modified_date'] = m.groupdict()['last_modified_date']
                 continue
 
+            # Attributes        Size         Name
+            m = p2_2.match(line)
+            if m:
+                root_dir = dir_dict.setdefault('dir', {})
+                root_dir.setdefault('dir', directory)
+                dir = root_dir.setdefault(directory, {})
+                filename = m.groupdict()['name']
+                dir.setdefault('files', {}).setdefault(filename, {}).update({
+                    'permissions': m.groupdict()['attributes'],
+                    'size': m.groupdict()['size']
+                })
+
             # bytes_total and bytes_free
-            p3 = re.compile(r'\s*(?P<bytes_total>\d+) +bytes +total +\((?P<bytes_free>\d+) +bytes +free\)')
             m = p3.match(line)
             if m:
                 dir_dict['dir'][dir1]['bytes_total'] = m.groupdict()['bytes_total']
@@ -3396,7 +3421,7 @@ class ShowEnvironmentSchema(MetaParser):
                     'red_threshold': str
                 },
                 Optional('hotspot_temperature'): {
-                    'value': str,
+                    'value': Or(int,str),
                     'state': str,
                     'yellow_threshold': str,
                     'red_threshold': str
@@ -3408,7 +3433,7 @@ class ShowEnvironmentSchema(MetaParser):
                     'red_threshold': str
                 },
                 Optional('outlet_temperature'): {
-                    'value': str,
+                    'value': Or(int,str),
                     'state': str,
                     'yellow_threshold': str,
                     'red_threshold': str
@@ -3425,7 +3450,20 @@ class ShowEnvironmentSchema(MetaParser):
                         Optional('serial_num'): str,
                         Optional('port_num'): str,
                     }
-                }
+                },
+                Optional('external_1_temperature'): {
+                    'value': Or(int,str),
+                    'state': str,
+                    'yellow_threshold': str,
+                    'red_threshold': str
+                },
+                Optional('external_2_temperature'): {
+                    'value': Or(int,str),
+                    'state': str,       
+                    'yellow_threshold': str,
+                    'red_threshold': str
+                },
+                Optional(None): {}
             }
         }
 
@@ -3454,7 +3492,8 @@ class ShowEnvironmentSuperParser(ShowEnvironmentSchema):
         ret_dict = {}
 
         # SWITCH: 1
-        p0 = re.compile(r'^SWITCH: +(?P<switch>\d+)$')
+        # Switch : 1
+        p0 = re.compile(r'^SWITCH|Switch : +(?P<switch>\d+)$')
 
         # Switch 1 FAN 1 is OK
         p1 = re.compile(r'^Switch\s+(?P<switch>\d+)\s+FAN\s+(?P<fan>\d+)\s+is\s+(?P<state>\S+)$')
@@ -3487,14 +3526,32 @@ class ShowEnvironmentSuperParser(ShowEnvironmentSchema):
         # Temperature Value: 28 Degree Celsius
         p4 = re.compile(r'^((?P<type>\w+)\s+)?Temperature\s+Value:\s+(?P<temperature>\d+)\s+Degree\s+Celsius$')
 
+        # Switch 1 - Inlet Temp Sensor 40 C
+        p4_1 = re.compile(r'^Switch\s+(?P<switch>\d+)\s+-\s+(?P<sensor_type>[\w\s]+)\s+(?P<temperature>\d+)\s+C$')
+
+        # Switch 1 - HotSpot Temp Sensor 55 C
+        p4_2 = re.compile(r'^Switch\s+(?P<switch>\d+)\s+-\s+(?P<sensor_type>[\w\s]+)\s+(?P<temperature>\d+)\s+C$')
+
+        # Switch 2 - Outlet Temp Sensor 55 C
+        p4_3 = re.compile(r'^Switch\s+(?P<switch>\d+)\s+-\s+(?P<sensor_type>[\w\s]+)\s+(?P<temperature>\d+)\s+C$')
+
+        # Switch 2 - External-1 Temp Sensor 53 C
+        p4_4 = re.compile(r'^Switch\s+(?P<switch>\d+)\s+-\s+(?P<sensor_type>[\w\-\d\s]+)\s+(?P<temperature>\d+)\s+C$')
+
+        # Switch 2 - External-2 Temp Sensor 53 C
+        p4_5 = re.compile(r'^Switch\s+(?P<switch>\d+)\s+-\s+(?P<sensor_type>[\w\-\d\s]+)\s+(?P<temperature>\d+)\s+C$')    
+
         # System Temperature State: GREEN
         # Temperature State: GREEN
         p5 = re.compile(r'^(System\s+)?Temperature\s+State:\s+(?P<state>\w+)$')
 
 
         # Yellow Threshold : 66 Degree Celsius
+        # Yellow Threshold : 80 C
         # Red Threshold    : 76 Degree Celsius
-        p6 = re.compile(r'^(?P<color>\w+)\s+Threshold\s*:\s+(?P<temperature>\d+)\s+Degree\s+Celsius$')
+        # Red Threshold    : 90 C        
+        #p6 = re.compile(r'^(?P<color>\w+)\s+Threshold\s*:\s+(?P<temperature>\d+)\s+Degree\s+Celsius|C$')
+        p6 = re.compile(r'^(?P<color>\w+)\s+Threshold\s*:\s+(?P<temperature>[\d\s]+)(\s+Degree\s+Celsius|C)$')
 
         # POWER SUPPLY 1A TEMPERATURE: OK
         # POWER SUPPLY 1B TEMPERATURE: Not Present
@@ -3642,6 +3699,66 @@ class ShowEnvironmentSuperParser(ShowEnvironmentSchema):
                 temp_dict['value'] = group['temperature']
                 continue
 
+            # Switch 1 - Inlet Temp Sensor 40 C
+            m = p4_1.match(line)
+            if m:
+                group = m.groupdict()
+                switch = group['switch']
+                sensor_type = group['sensor_type'].lower().replace(" ", "_").replace("temp_sensor", "").strip()
+                temp_type = sensor_type + 'temperature'
+                root_dict = ret_dict.setdefault('switch', {}).setdefault(switch, {})
+                temp_dict = root_dict.setdefault(temp_type, {})
+                temp_dict['value'] = int(group['temperature'])
+                continue    
+
+            # Switch 1 - HotSpot Temp Sensor 55 C
+            m = p4_2.match(line)
+            if m:
+                group = m.groupdict()
+                switch = group['switch']
+                sensor_type = group['sensor_type'].lower().replace(" ", "_").replace("temp_sensor", "").strip()
+                temp_type = sensor_type + 'temperature'
+                root_dict = ret_dict.setdefault('switch', {}).setdefault(switch, {})
+                temp_dict = root_dict.setdefault(temp_type, {})
+                temp_dict['value'] = int(group['temperature'])
+                continue
+
+            # Switch 2 - Outlet Temp Sensor 55 C
+            m = p4_3.match(line)
+            if m:
+                group = m.groupdict()
+                switch = group['switch']
+                sensor_type = group['sensor_type'].lower().replace(" ", "_").replace("temp_sensor", "").strip()
+                temp_type = sensor_type + 'temperature'
+                root_dict = ret_dict.setdefault('switch', {}).setdefault(switch, {})
+                temp_dict = root_dict.setdefault(temp_type, {})
+                temp_dict['value'] = int(group['temperature'])
+                continue
+
+            # Switch 2 - External-1 Temp Sensor 53 C
+            m = p4_4.match(line)
+            if m:
+                group = m.groupdict()
+                switch = group['switch']
+                sensor_type = group['sensor_type'].lower().replace(" ", "_").replace("temp_sensor", "").replace("-", "_").strip()
+                temp_type = sensor_type + 'temperature'
+                root_dict = ret_dict.setdefault('switch', {}).setdefault(switch, {})
+                temp_dict = root_dict.setdefault(temp_type, {})
+                temp_dict['value'] = int(group['temperature'])
+                continue
+
+            # Switch 2 - External-2 Temp Sensor 53 C
+            m = p4_5.match(line)
+            if m:
+                group = m.groupdict()
+                switch = group['switch']
+                sensor_type = group['sensor_type'].lower().replace("-", "_").replace("temp_sensor", "").replace(" ", "_").strip()
+                temp_type = sensor_type + 'temperature'
+                root_dict = ret_dict.setdefault('switch', {}).setdefault(switch, {})
+                temp_dict = root_dict.setdefault(temp_type, {})
+                temp_dict['value'] = int(group['temperature'])
+                continue
+
             # Temperature State: GREEN
             m = p5.match(line)
             if m:
@@ -3654,12 +3771,14 @@ class ShowEnvironmentSuperParser(ShowEnvironmentSchema):
                 continue
 
             # Yellow Threshold : 46 Degree Celsius
+            # Yellow Threshold : 66 C
             # Red Threshold    : 56 Degree Celsius
+            # Red Threshold    : 80 C
             m = p6.match(line)
             if m:
                 group = m.groupdict()
                 color_type = group['color'].lower() + '_threshold'
-                temp_dict[color_type] = group['temperature']
+                temp_dict[color_type] = group['temperature'].strip()
                 continue
 
             # POWER SUPPLY 1A TEMPERATURE: OK
@@ -7270,7 +7389,7 @@ class ShowPlatformPacketTracePacket(ShowPlatformPacketTracePacketSchema):
             if packet_id is None:
                 cmd = self.cli_command[0]
             else:
-                cmd = self.cli_command[0].format(packet_id=packet_id)
+                cmd = self.cli_command[1].format(packet_id=packet_id)
             output = self.device.execute(cmd)
 
         # Packet: 0           CBUG ID: 104
@@ -10545,3 +10664,689 @@ class ShowEnvironmentTemperatureAll(ShowEnvironmentTemperatureAllSchema):
 
         return ret_dict
 
+
+# ======================================================
+# Schema for 'show platform software wccp web-cache counters'
+# ======================================================
+class ShowPlatformSoftwareWccpWebCacheCountersSchema(MetaParser):
+    """Schema for show platform software wccp web-cache counters"""
+
+    schema = {
+        'service_group': {
+            Any(): {  # Service group tuple like "(0, 0, 0)"
+                'unassigned_count': int,
+                'dropped_due_to_closed_service_count': int,
+                'bypass_count': int,
+                'bypass_failed_count': int,
+                'denied_count': int,
+                'redirect_count': int,
+                Optional('cache_engines'): {
+                    Any(): {  # CE IP address
+                        'obj_id': int,
+                        'redirect_packets': int
+                    }
+                }
+            }
+        }
+    }
+
+
+# ======================================================
+# Parser for 'show platform software wccp web-cache counters'
+# ======================================================
+class ShowPlatformSoftwareWccpWebCacheCounters(ShowPlatformSoftwareWccpWebCacheCountersSchema):
+    """Parser for show platform software wccp web-cache counters"""
+
+    cli_command = 'show platform software wccp web-cache counters'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+
+        # Service Group (0, 0, 0) counters
+        p1 = re.compile(r'^Service\s+Group\s+(?P<service_group>\([^)]+\))\s+counters$')
+
+        # Unassigned count = 0
+        p2 = re.compile(r'^Unassigned\s+count\s+=\s+(?P<unassigned_count>\d+)$')
+
+        # Dropped due to closed service count = 0
+        p3 = re.compile(r'^Dropped\s+due\s+to\s+closed\s+service\s+count\s+=\s+(?P<dropped_count>\d+)$')
+
+        # Bypass count = 100
+        p4 = re.compile(r'^Bypass\s+count\s+=\s+(?P<bypass_count>\d+)$')
+
+        # Bypass failed count = 0
+        p5 = re.compile(r'^Bypass\s+failed\s+count\s+=\s+(?P<bypass_failed_count>\d+)$')
+
+        # Denied count = 0
+        p6 = re.compile(r'^Denied\s+count\s+=\s+(?P<denied_count>\d+)$')
+
+        # Redirect count = 100
+        p7 = re.compile(r'^Redirect\s+count\s+=\s+(?P<redirect_count>\d+)$')
+
+        # CE = 60.1.1.2, obj_id = 43, Redirect Packets = 100
+        p8 = re.compile(r'^CE\s+=\s+(?P<ce_ip>\S+),\s+obj_id\s+=\s+(?P<obj_id>\d+),\s+Redirect\s+Packets\s+=\s+(?P<redirect_packets>\d+)$')
+
+        current_service_group = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Service Group (0, 0, 0) counters
+            m = p1.match(line)
+            if m:
+                service_group = m.group('service_group')
+                current_service_group = ret_dict.setdefault('service_group', {}).setdefault(service_group, {})
+                continue
+
+            # Unassigned count = 0
+            m = p2.match(line)
+            if m and current_service_group is not None:
+                current_service_group['unassigned_count'] = int(m.group('unassigned_count'))
+                continue
+
+            # Dropped due to closed service count = 0
+            m = p3.match(line)
+            if m and current_service_group is not None:
+                current_service_group['dropped_due_to_closed_service_count'] = int(m.group('dropped_count'))
+                continue
+
+            # Bypass count = 100
+            m = p4.match(line)
+            if m and current_service_group is not None:
+                current_service_group['bypass_count'] = int(m.group('bypass_count'))
+                continue
+
+            # Bypass failed count = 0
+            m = p5.match(line)
+            if m and current_service_group is not None:
+                current_service_group['bypass_failed_count'] = int(m.group('bypass_failed_count'))
+                continue
+
+            # Denied count = 0
+            m = p6.match(line)
+            if m and current_service_group is not None:
+                current_service_group['denied_count'] = int(m.group('denied_count'))
+                continue
+
+            # Redirect count = 100
+            m = p7.match(line)
+            if m and current_service_group is not None:
+                current_service_group['redirect_count'] = int(m.group('redirect_count'))
+                continue
+
+            # CE = 60.1.1.2, obj_id = 43, Redirect Packets = 100
+            m = p8.match(line)
+            if m and current_service_group is not None:
+                ce_ip = m.group('ce_ip')
+                obj_id = int(m.group('obj_id'))
+                redirect_packets = int(m.group('redirect_packets'))
+
+                ce_dict = current_service_group.setdefault('cache_engines', {}).setdefault(ce_ip, {})
+                ce_dict['obj_id'] = obj_id
+                ce_dict['redirect_packets'] = redirect_packets
+                continue
+
+        return ret_dict
+
+
+
+# ====================================================
+# Schema for 'show xdr linecard'
+# ====================================================
+class ShowXdrLinecardSchema(MetaParser):
+    """Schema for show xdr linecard"""
+    
+    schema = {
+        'xdr_slots': {
+            Any(): {
+                'slot_number': int,
+                'status': str,
+                'ipc_messages_sent': int,
+                'next_sequence_number_to_send': int,
+                'maximum_sequence_number_expected': int,
+            }
+        }
+    }
+
+
+# ====================================================
+# Parser for 'show xdr linecard'
+# ====================================================
+class ShowXdrLinecard(ShowXdrLinecardSchema):
+    """Parser for show xdr linecard"""
+    
+    cli_command = 'show xdr linecard'
+    
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        
+        # Initialize return dictionary
+        ret_dict = {}
+        
+        # XDR slot number 1, status  PEER UP
+        p1 = re.compile(r'^XDR\s+slot\s+number\s+(?P<slot_number>\d+),\s+status\s+(?P<status>.+)$')
+        
+        # IPC messages sent 48
+        p2 = re.compile(r'^\s*IPC\s+messages\s+sent\s+(?P<ipc_messages_sent>\d+)$')
+        
+        # Next sequence number to send     21
+        p3 = re.compile(r'^\s*Next\s+sequence\s+number\s+to\s+send\s+(?P<next_seq_num>\d+)$')
+        
+        # Maximum sequence number expected 36
+        p4 = re.compile(r'^\s*Maximum\s+sequence\s+number\s+expected\s+(?P<max_seq_num>\d+)$')
+        
+        current_slot = None
+        
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # XDR slot number 1, status  PEER UP
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                slot_number = int(groups['slot_number'])
+                current_slot = slot_number
+                
+                # Initialize xdr_slots if not exists
+                if 'xdr_slots' not in ret_dict:
+                    ret_dict['xdr_slots'] = {}
+                
+                ret_dict['xdr_slots'][slot_number] = {
+                    'slot_number': slot_number,
+                    'status': groups['status'].strip()
+                }
+                continue
+            
+            # IPC messages sent 48
+            m = p2.match(line)
+            if m and current_slot is not None:
+                groups = m.groupdict()
+                ret_dict['xdr_slots'][current_slot]['ipc_messages_sent'] = int(groups['ipc_messages_sent'])
+                continue
+            
+            # Next sequence number to send     21
+            m = p3.match(line)
+            if m and current_slot is not None:
+                groups = m.groupdict()
+                ret_dict['xdr_slots'][current_slot]['next_sequence_number_to_send'] = int(groups['next_seq_num'])
+                continue
+            
+            # Maximum sequence number expected 36
+            m = p4.match(line)
+            if m and current_slot is not None:
+                groups = m.groupdict()
+                ret_dict['xdr_slots'][current_slot]['maximum_sequence_number_expected'] = int(groups['max_seq_num'])
+                continue
+        
+        return ret_dict
+
+
+# ====================================================
+# Schema for 'show zone-pair security'
+# ====================================================
+class ShowZonePairSecuritySchema(MetaParser):
+    """Schema for show zone-pair security"""
+    
+    schema = {
+        'zone_pairs': {
+            Any(): {
+                'zone_pair_name': str,
+                'zone_pair_id': int,
+                'source_zone': str,
+                'destination_zone': str,
+                Optional('service_policy'): str,
+            }
+        }
+    }
+# ====================================================
+# Parser for 'show zone-pair security'
+# ====================================================
+class ShowZonePairSecurity(ShowZonePairSecuritySchema):
+    """Parser for show zone-pair security"""
+    
+    cli_command = 'show zone-pair security'
+    
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        
+        # Initialize return dictionary
+        ret_dict = {}
+        
+        # Zone-pair name inter-vrf-zp 1
+        p1 = re.compile(r'^Zone-pair\s+name\s+(?P<zone_pair_name>\S+)\s+(?P<zone_pair_id>\d+)$')
+
+        # Source-Zone vpn1-zone  Destination-Zone vpn2-zone
+        p2 = re.compile(r'^\s*Source-Zone\s+(?P<source_zone>\S+)\s+Destination-Zone\s+(?P<destination_zone>\S+)$')
+        
+        # service-policy not configured
+        p3 = re.compile(r'^\s*service-policy\s+(?P<service_policy>.+)$')
+        
+        current_zone_pair_name = None
+        
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # Zone-pair name inter-vrf-zp 1
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                zone_pair_name = groups['zone_pair_name']
+                zone_pair_id = int(groups['zone_pair_id'])
+                
+                current_zone_pair_name = zone_pair_name
+                
+                # Initialize zone_pairs if not exists
+                if 'zone_pairs' not in ret_dict:
+                    ret_dict['zone_pairs'] = {}
+                
+                ret_dict['zone_pairs'][zone_pair_name] = {
+                    'zone_pair_name': zone_pair_name,
+                    'zone_pair_id': zone_pair_id
+                }
+                continue
+            
+            # Source-Zone vpn1-zone  Destination-Zone vpn2-zone
+            m = p2.match(line)
+            if m and current_zone_pair_name is not None:
+                groups = m.groupdict()
+                ret_dict['zone_pairs'][current_zone_pair_name]['source_zone'] = groups['source_zone']
+                ret_dict['zone_pairs'][current_zone_pair_name]['destination_zone'] = groups['destination_zone']
+                continue
+
+            # service-policy not configured
+            m = p3.match(line)
+            if m and current_zone_pair_name is not None:
+                groups = m.groupdict()
+                ret_dict['zone_pairs'][current_zone_pair_name]['service_policy'] = groups['service_policy'].strip()
+                continue
+        
+        return ret_dict
+
+# ====================================================
+# Schema for 'show platform hardware qfp active feature nat datapath port'
+# ====================================================
+class ShowPlatformHardwareQfpActiveFeatureNatDatapathPortSchema(MetaParser):
+    """Schema for show platform hardware qfp active feature nat datapath port"""
+
+    schema = {
+        Optional('static_portlist'): str,
+        'bit_stats': {
+            'firstword': int,
+            'scan': int,
+            'scanread': int,
+        },
+        'tcp_alg_ports': ListOf(str),
+        'udp_alg_ports': ListOf(str),
+        Optional('tcp_high_range_ports'): ListOf(str),
+        Optional('udp_high_range_ports'): ListOf(str),
+        'if_overload': {
+            Any(): {
+                'gaddr': str,
+                'proto': int,
+                'pool_id': str,
+                'mapping_id': str,
+                'vrf_id': int,
+                'flags': str,
+                'max_ports_available': {
+                    'lo': int,
+                    'hi': str,
+                },
+                'ports_allocated_nat': int,
+                'ports_used': {
+                    'lo': int,
+                    'hi': int,
+                },
+                'ports_free': {
+                    'lo': int,
+                    'hi': int,
+                },
+            }
+        }
+    }
+
+
+# ====================================================
+# Parser for 'show platform hardware qfp active feature nat datapath port'
+# ====================================================
+class ShowPlatformHardwareQfpActiveFeatureNatDatapathPort(ShowPlatformHardwareQfpActiveFeatureNatDatapathPortSchema):
+    """Parser for show platform hardware qfp active feature nat datapath port"""
+
+    cli_command = 'show platform hardware qfp active feature nat datapath port'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize return dictionary
+        ret_dict = {}
+
+        # Static Portlist:
+        p1 = re.compile(r'^Static\s+Portlist:\s*(?P<portlist>.*)$')
+
+        # Bit stats: 1stword 217 scan 4 scanread 132
+        p2 = re.compile(r'^Bit\s+stats:\s+1stword\s+(?P<firstword>\d+)\s+scan\s+(?P<scan>\d+)\s+scanread\s+(?P<scanread>\d+)$')
+
+        # TCP ALG Ports: 5060 1723 1720 139 137 135 389 111 8554 53 554 21 514 513 512
+        p3 = re.compile(r'^TCP\s+ALG\s+Ports:\s+(?P<ports>.*)$')
+
+        # UDP ALG Ports: 5060 1719 1718 138 137 111 8554 69 53 554 496
+        p4 = re.compile(r'^UDP\s+ALG\s+Ports:\s+(?P<ports>.*)$')
+
+        # TCP high range Ports:
+        p5 = re.compile(r'^TCP\s+high\s+range\s+Ports:\s*(?P<ports>.*)$')
+
+        # UDP high range Ports:
+        p6 = re.compile(r'^UDP\s+high\s+range\s+Ports:\s*(?P<ports>.*)$')
+
+        # IF Overload gaddr 100.64.100.2 Proto 17 PoolID 0x490400 MappingID 0x2 VrfID 0 Flags0x1
+        p7 = re.compile(r'^IF\s+Overload\s+gaddr\s+(?P<gaddr>\S+)\s+Proto\s+(?P<proto>\d+)\s+PoolID\s+(?P<pool_id>\S+)\s+MappingID\s+(?P<mapping_id>\S+)\s+VrfID\s+(?P<vrf_id>\d+)\s+Flags(?P<flags>\S+)$')
+
+        # Max ports could be available:lo 512 hi 58k Ports allocated(NAT): 1097
+        p8 = re.compile(r'^Max\s+ports\s+could\s+be\s+available:lo\s+(?P<lo>\d+)\s+hi\s+(?P<hi>\S+)\s+Ports\s+allocated\(NAT\):\s+(?P<allocated>\d+)$')
+
+        # Ports used: lo 0 hi 0 Ports free: lo 73 hi 1024
+        p9 = re.compile(r'^Ports\s+used:\s+lo\s+(?P<used_lo>\d+)\s+hi\s+(?P<used_hi>\d+)\s+Ports\s+free:\s+lo\s+(?P<free_lo>\d+)\s+hi\s+(?P<free_hi>\d+)$')
+
+        current_if_overload = None
+        if_overload_index = 0
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Static Portlist:
+            m = p1.match(line)
+            if m:
+                portlist = m.group('portlist').strip()
+                if portlist:  # Only include if not empty
+                    ret_dict['static_portlist'] = portlist
+                continue
+
+            # Bit stats: 1stword 217 scan 4 scanread 132
+            m = p2.match(line)
+            if m:
+                ret_dict['bit_stats'] = {
+                    'firstword': int(m.group('firstword')),
+                    'scan': int(m.group('scan')),
+                    'scanread': int(m.group('scanread'))
+                }
+                continue
+
+            # TCP ALG Ports: 5060 1723 1720 139 137 135 389 111 8554 53 554 21 514 513 512
+            m = p3.match(line)
+            if m:
+                ports_str = m.group('ports').strip()
+                if ports_str:
+                    ret_dict['tcp_alg_ports'] = ports_str.split()
+                else:
+                    ret_dict['tcp_alg_ports'] = []
+                continue
+
+            # UDP ALG Ports: 5060 1719 1718 138 137 111 8554 69 53 554 496
+            m = p4.match(line)
+            if m:
+                ports_str = m.group('ports').strip()
+                if ports_str:
+                    ret_dict['udp_alg_ports'] = ports_str.split()
+                else:
+                    ret_dict['udp_alg_ports'] = []
+                continue
+
+            # TCP high range Ports:
+            m = p5.match(line)
+            if m:
+                ports_str = m.group('ports').strip()
+                if ports_str:  # Only include if not empty
+                    ret_dict['tcp_high_range_ports'] = ports_str.split()
+                continue
+
+            # UDP high range Ports:
+            m = p6.match(line)
+            if m:
+                ports_str = m.group('ports').strip()
+                if ports_str:  # Only include if not empty
+                    ret_dict['udp_high_range_ports'] = ports_str.split()
+                continue
+
+            # IF Overload gaddr 100.64.100.2 Proto 17 PoolID 0x490400 MappingID 0x2 VrfID 0 Flags0x1
+            m = p7.match(line)
+            if m:
+                if_overload_index += 1
+                current_if_overload = if_overload_index
+
+                if 'if_overload' not in ret_dict:
+                    ret_dict['if_overload'] = {}
+
+                ret_dict['if_overload'][current_if_overload] = {
+                    'gaddr': m.group('gaddr'),
+                    'proto': int(m.group('proto')),
+                    'pool_id': m.group('pool_id'),
+                    'mapping_id': m.group('mapping_id'),
+                    'vrf_id': int(m.group('vrf_id')),
+                    'flags': m.group('flags')
+                }
+                continue
+
+            # Max ports could be available:lo 512 hi 58k Ports allocated(NAT): 1097
+            m = p8.match(line)
+            if m and current_if_overload is not None:
+                ret_dict['if_overload'][current_if_overload]['max_ports_available'] = {
+                    'lo': int(m.group('lo')),
+                    'hi': m.group('hi')
+                }
+                ret_dict['if_overload'][current_if_overload]['ports_allocated_nat'] = int(m.group('allocated'))
+                continue
+
+            # Ports used: lo 0 hi 0 Ports free: lo 73 hi 1024
+            m = p9.match(line)
+            if m and current_if_overload is not None:
+                ret_dict['if_overload'][current_if_overload]['ports_used'] = {
+                    'lo': int(m.group('used_lo')),
+                    'hi': int(m.group('used_hi'))
+                }
+                ret_dict['if_overload'][current_if_overload]['ports_free'] = {
+                    'lo': int(m.group('free_lo')),
+                    'hi': int(m.group('free_hi'))
+                }
+                continue
+
+        return ret_dict
+
+
+# ====================================================
+# Schema for 'show platform hardware qfp active feature nat datapath map'
+# ====================================================
+class ShowPlatformHardwareQfpActiveFeatureNatDatapathMapSchema(MetaParser):
+    """Schema for show platform hardware qfp active feature nat datapath map"""
+
+    schema = {
+        'if_map_table': {
+            Any(): {
+                'if_handle': int,
+                'next': str,
+                'hash_index': int,
+                'laddr': str,
+                'lport': int,
+                'map': str,
+                'refcnt': int,
+                'gaddr': str,
+                'gport': int,
+                'proto': int,
+                'vrfid': str,
+                'src_type': int,
+                'flags': str,
+                'cpmapid': int,
+            }
+        },
+        'edm_maps': int,
+        'mapping_entries': {
+            Any(): {
+                'mapping_id': int,
+                'pool_id': int,
+                'if_handle': str,
+                'match_type': int,
+                'source_type': int,
+                'domain': int,
+                'proto': int,
+                'local_ip': str,
+                'local_port': int,
+                'global_ip': str,
+                'global_port': int,
+                'flags': str,
+                'refcount': int,
+                'cp_mapping_id': int,
+                'next': str,
+                'hashidx': int,
+                'vrfid': int,
+                'vrf_tableid': str,
+                'rg': int,
+                'pap_enabled': int,
+                'egress_ifh': str,
+            }
+        }
+    }
+
+
+# ====================================================
+# Parser for 'show platform hardware qfp active feature nat datapath map'
+# ====================================================
+class ShowPlatformHardwareQfpActiveFeatureNatDatapathMap(ShowPlatformHardwareQfpActiveFeatureNatDatapathMapSchema):
+    """Parser for show platform hardware qfp active feature nat datapath map"""
+
+    cli_command = 'show platform hardware qfp active feature nat datapath map'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize return dictionary
+        ret_dict = {}
+
+        # if_handle 65529 next 0x0 hash_index 220
+        p1 = re.compile(r'^if_handle\s+(?P<if_handle>\d+)\s+next\s+(?P<next>\S+)\s+hash_index\s+(?P<hash_index>\d+)$')
+
+        # laddr 0.0.0.0 lport 0 map 0xdec942c0 refcnt 0
+        p2 = re.compile(r'^laddr\s+(?P<laddr>\S+)\s+lport\s+(?P<lport>\d+)\s+map\s+(?P<map>\S+)\s+refcnt\s+(?P<refcnt>\d+)$')
+
+        # gaddr 200.60.10.1 gport 0 proto 0 vrfid 0x0
+        p3 = re.compile(r'^gaddr\s+(?P<gaddr>\S+)\s+gport\s+(?P<gport>\d+)\s+proto\s+(?P<proto>\d+)\s+vrfid\s+(?P<vrfid>\S+)$')
+
+        # src_type 1 flags 0x80100 cpmapid 3
+        p4 = re.compile(r'^src_type\s+(?P<src_type>\d+)\s+flags\s+(?P<flags>\S+)\s+cpmapid\s+(?P<cpmapid>\d+)$')
+
+        # edm maps 0
+        p5 = re.compile(r'^edm\s+maps\s+(?P<edm_maps>\d+)$')
+
+        # mapping id 1 pool_id 0 if_handle 0xfff9 match_type 0 source_type 1 domain 0 proto 0 Local IP 0.0.0.0, Local Port 0 Global IP 200.60.10.1
+        # Global Port 0 Flags 0x80100 refcount 0 cp_mapping_id 3 next 0x0 hashidx 50 vrfid 0 vrf_tableid 0x0 rg 0 pap_enabled 0 egress_ifh 0x14
+        p6 = re.compile(r'^mapping\s+id\s+(?P<mapping_id>\d+)\s+pool_id\s+(?P<pool_id>\d+)\s+if_handle\s+(?P<if_handle>\S+)\s+match_type\s+(?P<match_type>\d+)\s+source_type\s+(?P<source_type>\d+)\s+domain\s+(?P<domain>\d+)\s+proto\s+(?P<proto>\d+)\s+Local\s+IP\s+(?P<local_ip>[\d\.]+),\s+Local\s+Port\s+(?P<local_port>\d+)\s+Global\s+IP\s+(?P<global_ip>[\d\.]+)\s*$')
+
+        # Global Port 0 Flags 0x80100 refcount 0 cp_mapping_id 3 next 0x0 hashidx 50 vrfid 0 vrf_tableid 0x0 rg 0 pap_enabled 0 egress_ifh 0x14
+        p7 = re.compile(r'^Global\s+Port\s+(?P<global_port>\d+)\s+Flags\s+(?P<flags>\S+)\s+refcount\s+(?P<refcount>\d+)\s+cp_mapping_id\s+(?P<cp_mapping_id>\d+)\s+next\s+(?P<next>\S+)\s+hashidx\s+(?P<hashidx>\d+)\s+vrfid\s+(?P<vrfid>\d+)\s+vrf_tableid\s+(?P<vrf_tableid>\S+)\s+rg\s+(?P<rg>\d+)\s+pap_enabled\s+(?P<pap_enabled>\d+)\s+egress_ifh\s+(?P<egress_ifh>\S+)$')
+
+        current_if_map_entry = None
+        current_mapping_entry = None
+        if_map_index = 0
+        mapping_index = 0
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # if_handle 65529 next 0x0 hash_index 220
+            m = p1.match(line)
+            if m:
+                if_map_index += 1
+                if 'if_map_table' not in ret_dict:
+                    ret_dict['if_map_table'] = {}
+
+                current_if_map_entry = if_map_index
+                ret_dict['if_map_table'][current_if_map_entry] = {
+                    'if_handle': int(m.group('if_handle')),
+                    'next': m.group('next'),
+                    'hash_index': int(m.group('hash_index'))
+                }
+                continue
+
+            # laddr 0.0.0.0 lport 0 map 0xdec942c0 refcnt 0
+            m = p2.match(line)
+            if m and current_if_map_entry is not None:
+                ret_dict['if_map_table'][current_if_map_entry].update({
+                    'laddr': m.group('laddr'),
+                    'lport': int(m.group('lport')),
+                    'map': m.group('map'),
+                    'refcnt': int(m.group('refcnt'))
+                })
+                continue
+
+            # gaddr 200.60.10.1 gport 0 proto 0 vrfid 0x0
+            m = p3.match(line)
+            if m and current_if_map_entry is not None:
+                ret_dict['if_map_table'][current_if_map_entry].update({
+                    'gaddr': m.group('gaddr'),
+                    'gport': int(m.group('gport')),
+                    'proto': int(m.group('proto')),
+                    'vrfid': m.group('vrfid')
+                })
+                continue
+
+            # src_type 1 flags 0x80100 cpmapid 3
+            m = p4.match(line)
+            if m and current_if_map_entry is not None:
+                ret_dict['if_map_table'][current_if_map_entry].update({
+                    'src_type': int(m.group('src_type')),
+                    'flags': m.group('flags'),
+                    'cpmapid': int(m.group('cpmapid'))
+                })
+                continue
+
+            # edm maps 0
+            m = p5.match(line)
+            if m:
+                ret_dict['edm_maps'] = int(m.group('edm_maps'))
+                continue
+
+            # mapping id 1 pool_id 0 if_handle 0xfff9 match_type 0 source_type 1 domain 0 proto 0 Local IP 0.0.0.0, Local Port 0 Global IP 200.60.10.1
+            m = p6.match(line)
+            if m:
+                mapping_index += 1
+                if 'mapping_entries' not in ret_dict:
+                    ret_dict['mapping_entries'] = {}
+
+                current_mapping_entry = mapping_index
+                ret_dict['mapping_entries'][current_mapping_entry] = {
+                    'mapping_id': int(m.group('mapping_id')),
+                    'pool_id': int(m.group('pool_id')),
+                    'if_handle': m.group('if_handle'),
+                    'match_type': int(m.group('match_type')),
+                    'source_type': int(m.group('source_type')),
+                    'domain': int(m.group('domain')),
+                    'proto': int(m.group('proto')),
+                    'local_ip': m.group('local_ip'),
+                    'local_port': int(m.group('local_port')),
+                    'global_ip': m.group('global_ip')
+                }
+                continue
+
+            # Global Port 0 Flags 0x80100 refcount 0 cp_mapping_id 3 next 0x0 hashidx 50 vrfid 0 vrf_tableid 0x0 rg 0 pap_enabled 0 egress_ifh 0x14
+            m = p7.match(line)
+            if m and current_mapping_entry is not None:
+                ret_dict['mapping_entries'][current_mapping_entry].update({
+                    'global_port': int(m.group('global_port')),
+                    'flags': m.group('flags'),
+                    'refcount': int(m.group('refcount')),
+                    'cp_mapping_id': int(m.group('cp_mapping_id')),
+                    'next': m.group('next'),
+                    'hashidx': int(m.group('hashidx')),
+                    'vrfid': int(m.group('vrfid')),
+                    'vrf_tableid': m.group('vrf_tableid'),
+                    'rg': int(m.group('rg')),
+                    'pap_enabled': int(m.group('pap_enabled')),
+                    'egress_ifh': m.group('egress_ifh')
+                })
+                continue
+
+        return ret_dict

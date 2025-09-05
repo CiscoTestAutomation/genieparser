@@ -1,0 +1,49 @@
+MRP Ring 20 Beacon statistics
+
+Ring state     : OPEN
+Beacon Interval: 20
+
+Port-1 GigabitEthernet1/0/7 statistics:
+Beacon RX      : 0
+Beacon TX      : 0
+Beacon Drop    : 0
+NAck RX        : 0
+NAck TX        : 0
+NAck Drop      : 0
+Propagate RX   : 0
+Propagate TX   : 0
+Propagate Drop : 0
+
+Port-2 GigabitEthernet1/0/8 statistics:
+Beacon RX      : 0
+Beacon TX      : 0
+Beacon Drop    : 0
+NAck RX        : 0
+NAck TX        : 0
+NAck Drop      : 0
+Propagate RX   : 0
+Propagate TX   : 0
+Propagate Drop : 0
+
+MRP Node event Statistics for Ring 20 :
+MRP Auto Manager stats: Events -----------------------------
+    auto_manager_conf_notif_events      = 1         	
+    auto_manager_stat1_mautypechange_in = 1         	
+    auto_manager_prm_testtimer_expiry_e = 1         	
+    auto_manager_prm_ro_rc_testring_ind = 1         	
+
+------------------------------------------------
+
+MRP event Statistics for Ring 20 : 
+
+[transmission statistics for each packet type]
+Port GigabitEthernet1/0/7 transmission statistics:
+Port GigabitEthernet1/0/8 transmission statistics:
+
+[receiving statistics for each packet type]
+Port GigabitEthernet1/0/7 receive statistics:
+Port GigabitEthernet1/0/8 receive statistics:
+
+------------------------------------------------
+
+
