@@ -1,0 +1,14 @@
+9400-HA#show running-config aaa username
+!
+! You may also need to setup a common criteria policy for testing:
+!    aaa new-model
+!    aaa common-criteria policy Test-CC
+!      min-length 1
+username testuser07 privilege 3 nopassword
+username testuser08 privilege 15 common-criteria-policy Test-CC secret 9 $9$oNguEA9um9vRx.$MsDk0DOy1rzBjKAcySWdNjoKcA7GetG9YNnKOs8S67A
+! Some usernames can span multiple lines:
+username testuser09 privilege 15 secret 9 $9$UuxZCcqGu2IgBU$teHrzSPJK5FgLH0YAnUezoA1JwaqGBcJI4Xb6c3S7tU
+username testuser09 autocommand show ip bgp summary
+username testuser10 privilege 15 common-criteria-policy Test-CC password 0 lab
+! username with privilege and no password can happen if SSH pubkey auth is used:
+username testuser11 privilege 15
