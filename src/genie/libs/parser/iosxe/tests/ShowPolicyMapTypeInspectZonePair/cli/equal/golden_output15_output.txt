@@ -1,0 +1,23 @@
+show policy-map type inspect zone-pair in-out
+  Zone-pair: in-out
+  Service-policy inspect : pmap
+
+    Class-map: cmap (match-any)
+      Match: access-group name OGACL
+      Inspect
+        Packet inspection statistics [process switch:fast switch]
+        tcp packets: [0:70]
+        udp packets: [0:55]
+        icmp packets: [0:100]
+        Session creations since subsystem startup or last reset 30
+        Current session counts (estab/half-open/terminating) [20:10:0]
+        Maxever session counts (estab/half-open/terminating) [20:15:0]
+        Last session created 00:00:14
+        Last statistic reset 00:00:08
+        Last session creation rate 30
+        Last half-open session total 0
+
+    Class-map: class-default (match-any)
+      Match: any
+      Drop (default action)
+        0 packets, 0 bytes

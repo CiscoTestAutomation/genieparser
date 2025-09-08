@@ -1,0 +1,12 @@
+show flow monitor ipv4_monitor_in cache format table
+  Cache type:                               Normal (Platform cache)
+  Cache size:                                40000
+  Current entries:                              31
+
+  Flows added:                                  73
+  Flows aged:                                   42
+    - Active timeout      (    60 secs)         42
+
+IPV4 SRC ADDR    IPV4 DST ADDR    TRNS SRC PORT  TRNS DST PORT  INTF INPUT            IP PROT             pkts long  time abs first  time abs last     bytes layer2 long
+===============  ===============  =============  =============  ====================  =======  ====================  ==============  =============  ====================
+102.1.1.52       101.1.1.52                   0              0  Po10                       61                     1    11:22:19.297   11:22:19.297                     0

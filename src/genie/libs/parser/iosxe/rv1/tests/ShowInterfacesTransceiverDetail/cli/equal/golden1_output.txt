@@ -1,0 +1,39 @@
+Transceiver is internally calibrated.
+mA: milliamperes, dBm: decibels (milliwatts), NA or N/A: not applicable.
+++ : high alarm, +  : high warning, -  : low warning, -- : low alarm.
+A2D readouts (if they differ), are reported in parentheses.
+The threshold values are calibrated.
+                                High Alarm  High Warn  Low Warn   Low Alarm
+             Temperature        Threshold   Threshold  Threshold  Threshold
+Port         (Celsius)          (Celsius)   (Celsius)  (Celsius)  (Celsius)
+---------    -----------------  ----------  ---------  ---------  ---------
+Hu2/6/0/15     40.9                   65.0       60.0       10.0        5.0
+                                High Alarm  High Warn  Low Warn   Low Alarm
+             Voltage            Threshold   Threshold  Threshold  Threshold
+Port         (Volts)            (Volts)     (Volts)    (Volts)    (Volts)
+---------    -----------------  ----------  ---------  ---------  ---------
+Hu2/6/0/15     3.26                   3.63       3.46       3.13       2.97
+                                  High Alarm  High Warn  Low Warn   Low Alarm
+                 Current          Threshold   Threshold  Threshold  Threshold
+Port       Lane  (milliamperes)   (mA)        (mA)       (mA)       (mA)
+---------  ----  ---------------  ----------  ---------  ---------  ---------
+Hu2/6/0/15   1      7.5                 10.0        8.5        3.0        2.0
+Hu2/6/0/15   2      7.5                 10.0        8.5        3.0        2.0
+Hu2/6/0/15   3      7.5                 10.0        8.5        3.0        2.0
+Hu2/6/0/15   4      7.5                 10.0        8.5        3.0        2.0
+                 Optical          High Alarm  High Warn  Low Warn   Low Alarm
+                 Transmit Power   Threshold   Threshold  Threshold  Threshold
+Port       Lane  (dBm)            (dBm)       (dBm)      (dBm)      (dBm)
+---------  ----  ---------------  ----------  ---------  ---------  ---------
+Hu2/6/0/15   1     0.93                 7.00       4.00      -6.00     -10.01
+Hu2/6/0/15   2     0.93                 7.00       4.00      -6.00     -10.01
+Hu2/6/0/15   3     0.73                 7.00       4.00      -6.00     -10.01
+Hu2/6/0/15   4     0.73                 7.00       4.00      -6.00     -10.01
+                 Optical          High Alarm  High Warn  Low Warn   Low Alarm
+                 Receive Power    Threshold   Threshold  Threshold  Threshold
+Port       Lane  (dBm)            (dBm)       (dBm)      (dBm)      (dBm)
+---------  ----  ---------------  ----------  ---------  ---------  ---------
+Hu2/6/0/15   1     0.43                 7.00       4.00      -7.90     -11.91
+Hu2/6/0/15   2     0.43                 7.00       4.00      -7.90     -11.91
+Hu2/6/0/15   3     0.42                 7.00       4.00      -7.90     -11.91
+Hu2/6/0/15   4     0.42                 7.00       4.00      -7.90     -11.91

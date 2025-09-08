@@ -1208,6 +1208,7 @@ class ShowL2vpnServiceAllSchema(MetaParser):
                   show l2vpn service xconnect all
                   show l2vpn service xconnect interface {interface}
                   show l2vpn service xconnect name {name}
+                  show l2vpm service vfi all
     """
 
     schema = {
@@ -1238,6 +1239,7 @@ class ShowL2vpnServiceAll(ShowL2vpnServiceAllSchema):
                    show l2vpn service xconnect all
                    show l2vpn service xconnect interface {interface}
                    show l2vpn service xconnect name {name}
+                   show l2vpm service vfi all
      """
 
     cli_command = [
@@ -1246,12 +1248,15 @@ class ShowL2vpnServiceAll(ShowL2vpnServiceAllSchema):
                   'show l2vpn service name {name}',
                   'show l2vpn service {xconnect} all',
                   'show l2vpn service {xconnect} interface {interface}',
-                  'show l2vpn service {xconnect} name {name}'
+                  'show l2vpn service {xconnect} name {name}',
+                  'show l2vpm service {vfi} all'  
     ]
 
-    def cli(self, interface=None, name=None, xconnect=None, output=None):
+    def cli(self, interface=None, name=None, xconnect=None, vfi=None, output=None):
         if output is None:
-            if xconnect and interface:
+            if vfi and all:
+                cli_cmd = self.cli_command[6].format(vfi=vfi)
+            elif xconnect and interface:
                 cli_cmd = self.cli_command[4].format(xconnect=xconnect, interface=interface)
             elif xconnect and name:
                 cli_cmd = self.cli_command[5].format(xconnect=xconnect, name=name)

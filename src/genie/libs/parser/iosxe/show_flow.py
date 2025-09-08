@@ -41,10 +41,15 @@ class ShowFlowMonitorSchema(MetaParser):
                             Any(): {
                                 'trns_src_port': int,
                                 'trns_dst_port': int,
-                                'ip_tos': str,
-                                'ip_port': int,
-                                'bytes_long': int,
+                                Optional('ip_tos'): str,
+                                Optional('ip_port'): int,
+                                Optional('bytes_long'): int,
                                 'pkts_long': int,
+                                Optional('time_abs_first'): str,
+                                Optional('time_abs_last'): str,
+                                Optional('bytes_layer2_long'): int,
+                                Optional('intf_input'): str,
+                                Optional('ip_prot'): int,
                             }
                         }
                     }
@@ -92,11 +97,24 @@ class ShowFlowMonitor(ShowFlowMonitorSchema):
         # Flows aged:                                   0
         p6 = re.compile(r'^Flows +aged: +(?P<flows_aged>\d+)$')
 
-        # 10.4.1.10         10.4.10.1                    0              0  0xC0         89                   100                     1
+        # 10.4.1.10         10.4.10.1                    0              0  0xC0         89                   100 
         p7 = re.compile(r'^(?P<ipv4_src_addr>\S+) +(?P<ipv4_dst_addr>\S+) +'
                         r'(?P<trns_src_port>\d+) +(?P<trns_dst_port>\d+) +'
                         r'(?P<ip_tos>\S+) +(?P<ip_port>\d+) +(?P<bytes_long>\d+) +'
                         r'(?P<pkts_long>\d+)$')
+        
+        # 102.1.1.52       101.1.1.52                   0              0  Po10                       61                     1    11:22:19.297   11:22:19.297                     0                    1
+        p8 = re.compile(r'^(?P<ipv4_src_addr>\S+)\s+'
+                 r'(?P<ipv4_dst_addr>\S+)\s+'
+                 r'(?P<trns_src_port>\d+)\s+'
+                 r'(?P<trns_dst_port>\d+)\s+'
+                 r'(?P<intf_input>\S+)\s+'
+                 r'(?P<ip_prot>\d+)\s+'
+                 r'(?P<pkts_long>\d+)\s+'
+                 r'(?P<time_abs_first>\S+)\s+'
+                 r'(?P<time_abs_last>\S+)\s+'
+                 r'(?P<bytes_layer2_long>\d+)$')
+        
         for line in out.splitlines():
 
             line = line.strip()
@@ -144,7 +162,8 @@ class ShowFlowMonitor(ShowFlowMonitorSchema):
                 continue
 
             # 10.4.1.10         10.4.10.1                    0              0  0xC0         89                   100                     1
-            m = p7.match(line)
+            # 102.1.1.52       101.1.1.52                   0              0  Po10                       61                     1    11:22:19.297   11:22:19.297                     0                    1
+            m = p7.match(line) or p8.match(line)
             if m:
                 group = m.groupdict()
 
@@ -156,18 +175,29 @@ class ShowFlowMonitor(ShowFlowMonitorSchema):
                     setdefault(group['ipv4_dst_addr'], {}).\
                     setdefault('index', {}).\
                     setdefault(index, {})
-
                 ipv4_dst_addr_dict.update({'trns_src_port': int(group['trns_src_port'])})
                 ipv4_dst_addr_dict.update({'trns_dst_port': int(group['trns_dst_port'])})
-                ipv4_dst_addr_dict.update({'ip_tos': group['ip_tos']})
-                ipv4_dst_addr_dict.update({'ip_port': int(group['ip_port'])})
-                ipv4_dst_addr_dict.update({'bytes_long': int(group['bytes_long'])})
+                if 'intf_input' in group:
+                    ipv4_dst_addr_dict.update({'intf_input': group['intf_input']})
+                if 'ip_prot' in group:
+                    ipv4_dst_addr_dict.update({'ip_prot': int(group['ip_prot'])})
+                if 'ip_port' in group:
+                    ipv4_dst_addr_dict.update({'ip_port': int(group['ip_port'])})
                 ipv4_dst_addr_dict.update({'pkts_long': int(group['pkts_long'])})
+                if 'time_abs_first' in group:
+                    ipv4_dst_addr_dict.update({'time_abs_first': group['time_abs_first']})
+                if 'time_abs_last' in group:
+                    ipv4_dst_addr_dict.update({'time_abs_last': group['time_abs_last']})
+                if 'bytes_layer2_long' in group:
+                    ipv4_dst_addr_dict.update({'bytes_layer2_long': int(group['bytes_layer2_long'])})
+                if 'ip_tos' in group:
+                    ipv4_dst_addr_dict.update({'ip_tos': group['ip_tos']})
+                if 'bytes_long' in group:
+                    ipv4_dst_addr_dict.update({'bytes_long': int(group['bytes_long'])})
 
                 dst_addr_index.update({group['ipv4_dst_addr']: index})
 
                 continue
-
         return ret_dict
 
 
@@ -2719,4 +2749,305 @@ class ShowFlowMonitorS1InputCacheFilter(ShowFlowMonitorS1InputCacheFilterSchema)
                     'pkts_long': int(group['pkts_long']),
                 })
         
+        return ret_dict
+        
+        
+class ShowRunningConfigFlowMonitorExpandSchema(MetaParser):
+    """Schema for 'show running-config flow monitor {name} expand'"""
+    schema = {
+        'flow_monitor': {
+            Any(): {
+                'record': str,
+                'exporters': ListOf(str),
+                'cache_entries': int,
+            }
+        },
+        'flow_record': {
+            Any(): {
+                'matches': ListOf(str),
+                Optional('collects'): ListOf(str),
+            }
+        },
+        'flow_exporter': {
+            Any(): {
+                'destination': str,
+                'source': str,
+                'dscp': int,
+                'ttl': int,
+                'transport_protocol': str,
+                'port': int,
+                Optional('match_counter_packets_long_gt'): int,
+                Optional('export_protocol'): str,
+            }
+        }
+    }
+
+class ShowRunningConfigFlowMonitorExpand(ShowRunningConfigFlowMonitorExpandSchema):
+    """Parser for 'show running-config flow monitor {monitor_name} expand'"""
+
+    cli_command = 'show running-config flow monitor {monitor_name} expand'
+
+    def cli(self, monitor_name, output=None):
+        if output is None:
+            cmd = self.cli_command.format(monitor_name=monitor_name)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+        current_section = None
+
+        # flow record DreamLine-Record
+        p1 = re.compile(r'^flow\s+record\s+(?P<record_name>\S+)$')
+
+        # match ipv4 protocol
+        # match datalink mac source address input
+        p2 = re.compile(r'^match\s+(?P<match_field>.*)$')
+
+        # collect counter bytes
+        p3 = re.compile(r'^collect\s+(?P<collect_field>.*)$')
+
+        # flow exporter DDoS-Exporter
+        p4 = re.compile(r'^flow\s+exporter\s+(?P<exporter_name>\S+)$')
+
+        # destination 220.64.0.236
+        p5 = re.compile(r'^destination\s+(?P<destination>\S+)$')
+
+        # source Loopback0
+        p6 = re.compile(r'^source\s+(?P<source>\S+)$')
+
+        # dscp 57
+        p7 = re.compile(r'^dscp\s+(?P<dscp>\d+)$')
+
+        # ttl 67
+        p8 = re.compile(r'^ttl\s+(?P<ttl>\d+)$')
+
+        # transport udp 5000
+        p9 = re.compile(r'^transport\s+(?P<protocol>\S+)\s+(?P<port>\d+)$')
+
+        # match counter packets long gt 456677
+        p10 = re.compile(r'^match\s+counter\s+packets\s+long\s+gt\s+(?P<match_counter_packets_long_gt>\d+)$')
+
+        # export-protocol ipfix
+        p11 = re.compile(r'^export-protocol\s+(?P<export_protocol>\S+)$')
+
+        # flow monitor DreamLine-Monitor
+        p12 = re.compile(r'^flow\s+monitor\s+(?P<monitor_name>\S+)$')
+
+        # exporter DDoS-Exporter
+        p13 = re.compile(r'^exporter\s+(?P<exporter_name>\S+)$')
+
+        # cache entries 40000
+        p14 = re.compile(r'^cache\s+entries\s+(?P<cache_entries>\d+)$')
+
+        # record DreamLine-Record
+        p15 = re.compile(r'^record\s+(?P<record_name>\S+)$')
+
+        for line in output.splitlines():
+
+            line = line.strip()
+
+            # flow record DreamLine-Record
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                record_name = group['record_name']
+                record_dict = ret_dict.setdefault('flow_record', {}).setdefault(record_name, {})
+                current_section = 'flow_record'
+                continue
+
+            # match ipv4 protocol
+            m = p2.match(line)
+            if m and current_section == 'flow_record':
+                group = m.groupdict()
+                matches = record_dict.setdefault('matches', [])
+                matches.append(group['match_field'])
+                continue
+
+            # collect counter bytes
+            m = p3.match(line)
+            if m and current_section == 'flow_record':
+                group = m.groupdict()
+                collects = record_dict.setdefault('collects', [])
+                collects.append(group['collect_field'])
+                continue
+
+            # flow exporter DDoS-Exporter
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                exporter_name = group['exporter_name']
+                exporter_dict = ret_dict.setdefault('flow_exporter', {}).setdefault(exporter_name, {})
+                current_section = 'flow_exporter'
+                continue
+
+            # destination 220.64.0.236
+            m = p5.match(line)
+            if m and current_section == 'flow_exporter':
+                group = m.groupdict()
+                exporter_dict['destination'] = group['destination']
+                continue
+
+            # source Loopback0
+            m = p6.match(line)
+            if m and current_section == 'flow_exporter':
+                group = m.groupdict()
+                exporter_dict['source'] = group['source']
+                continue
+
+            # dscp 57
+            m = p7.match(line)
+            if m and current_section == 'flow_exporter':
+                group = m.groupdict()
+                exporter_dict['dscp'] = int(group['dscp'])
+                continue
+
+            # ttl 67
+            m = p8.match(line)
+            if m and current_section == 'flow_exporter':
+                group = m.groupdict()
+                exporter_dict['ttl'] = int(group['ttl'])
+                continue
+
+            # transport udp 5000
+            m = p9.match(line)
+            if m and current_section == 'flow_exporter':
+                group = m.groupdict()
+                exporter_dict['transport_protocol'] = group['protocol']
+                exporter_dict['port'] = int(group['port'])
+                continue
+
+            # match counter packets long gt 456677
+            m = p10.match(line)
+            if m and current_section == 'flow_exporter':
+                group = m.groupdict()
+                exporter_dict['match_counter_packets_long_gt'] = int(group['match_counter_packets_long_gt'])
+                continue
+
+            # export-protocol ipfix
+            m = p11.match(line)
+            if m and current_section == 'flow_exporter':
+                group = m.groupdict()
+                exporter_dict['export_protocol'] = group['export_protocol']
+                continue
+
+            # flow monitor DreamLine-Monitor
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                monitor_name = group['monitor_name']
+                monitor_dict = ret_dict.setdefault('flow_monitor', {}).setdefault(monitor_name, {})
+                current_section = 'flow_monitor'
+                continue
+
+            # exporter DDoS-Exporter
+            m = p13.match(line)
+            if m and current_section == 'flow_monitor':
+                group = m.groupdict()
+                exporters = monitor_dict.setdefault('exporters', [])
+                exporters.append(group['exporter_name'])
+                continue
+
+            # cache entries 40000
+            m = p14.match(line)
+            if m and current_section == 'flow_monitor':
+                group = m.groupdict()
+                monitor_dict['cache_entries'] = int(group['cache_entries'])
+                continue
+
+            # record DreamLine-Record
+            m = p15.match(line)
+            if m and current_section == 'flow_monitor':
+                group = m.groupdict()
+                monitor_dict['record'] = group['record_name']
+                continue
+
+        return ret_dict
+        
+class ShowFlowInterfaceSchema(MetaParser):
+    """Schema for 'show flow interface'"""
+    schema = {
+        'interface': {
+            Any(): {
+                'fnf': {
+                    Any(): {  # Monitor name
+                        'direction': {
+                            Any(): {  # Input or Output
+                                'traffic': {
+                                    'type': str,
+                                    Optional('sampler'): str,
+                                    Optional('status'): str,
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+class ShowFlowInterface(ShowFlowInterfaceSchema):
+    """Parser for 'show flow interface'"""
+
+    cli_command = 'show flow interface'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+
+        # Interface Vlan300
+        p1 = re.compile(r'^Interface\s+(?P<interface>\S+)$')
+
+        # FNF:  monitor:          FlowMonitor-1
+        p2 = re.compile(r'^FNF:\s+monitor:\s+(?P<monitor>\S+)$')
+
+        # direction:        Input
+        p3 = re.compile(r'^direction:\s+(?P<direction>\S+)$')
+
+        # traffic(ip):      sampler Netflow-Sample
+        # traffic(ip):      on
+        p4 = re.compile(r'^traffic\((?P<type>\S+)\):\s*(sampler\s+(?P<sampler>\S+)|(?P<status>on))$')
+
+        current_interface = None
+        current_monitor = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Interface Vlan300
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                current_interface = group['interface']
+                intf_dict = ret_dict.setdefault('interface', {}).setdefault(current_interface, {})
+                continue
+
+            # FNF:  monitor:          FlowMonitor-1
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                current_monitor = group['monitor']
+                fnf_dict = intf_dict.setdefault('fnf', {}).setdefault(current_monitor, {})
+                continue
+
+            # direction:        Input
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                direction = group['direction']
+                direction_dict = fnf_dict.setdefault('direction', {}).setdefault(direction, {})
+                continue
+
+            # traffic(ip):      sampler Netflow-Sample
+            # traffic(ip):      on
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                traffic_dict = direction_dict.setdefault('traffic', {})
+                traffic_dict['type'] = group['type']
+                if group.get('sampler'):
+                    traffic_dict['sampler'] = group['sampler']
+                elif group.get('status') == 'on':
+                    traffic_dict['status'] = 'on'
+                continue
+
         return ret_dict

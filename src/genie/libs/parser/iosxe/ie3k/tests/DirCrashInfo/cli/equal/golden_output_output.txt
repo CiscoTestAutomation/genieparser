@@ -1,0 +1,4 @@
+Directory of crashinfo:
+
+    1  drwx          4096  Jan  1 2023  12:00:00 +00:00  directory1
+    2  -rw-        123456  Feb 15 2023  08:30:45 +00:00  file1.txt

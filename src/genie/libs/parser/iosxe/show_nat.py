@@ -26,6 +26,12 @@ IOSXE parser for the following show commands:
    * show nat66 statistics
    * show nat66 nd
    * show nat66 prefix
+   * show nat64 map-t
+   * show nat64 map-t domain {domain_id}
+   * show nat64 mappings static tcp
+   * show nat64 mappings static key-port {port}
+   * show nat64 mappings static key-address {address}
+   * show ip nat limits all-host
 '''
 # Python
 import re
@@ -1994,4 +2000,781 @@ class ShowPlatformSoftwareFedSwitchActiveNatPools(ShowPlatformSoftwareFedSwitchA
                 ret_dict['number_of_pools'] = int(group['number_of_pools'])
                 continue
        
+        return ret_dict
+
+# ====================================
+# Schema for 'show nat64 map-t'
+# ====================================
+
+class ShowNat64MapTSchema(MetaParser):
+    """Schema for show nat64 map-t"""
+
+    schema = {
+        'map_t_domains': {
+            Any(): {
+                'mode': str,
+                Optional('default_mapping_rule'): {
+                    'ipv6_prefix': str,
+                },
+                Optional('basic_mapping_rule'): {
+                    'ipv6_prefix': str,
+                    'ipv4_prefix': str,
+                    'port_parameters': {
+                        'share_ratio': int,
+                        'contiguous_ports': int,
+                        'start_port': int,
+                        'share_ratio_bits': int,
+                        'contiguous_ports_bits': int,
+                        'port_offset_bits': int,
+                    }
+                }
+            }
+        }
+    }
+
+
+# ====================================
+# Parser for 'show nat64 map-t'
+# ====================================
+
+class ShowNat64MapT(ShowNat64MapTSchema):
+    """Parser for show nat64 map-t"""
+
+    cli_command = 'show nat64 map-t'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize return dictionary
+        ret_dict = {}
+
+        # MAP-T Domain 1
+        p1 = re.compile(r'^MAP-T Domain (?P<domain_id>\d+)$')
+
+        # Mode MAP
+        p2 = re.compile(r'^Mode (?P<mode>\S+)$')
+
+        # Default-mapping-rule
+        p3 = re.compile(r'^Default-mapping-rule$')
+
+        # Basic-mapping-rule
+        p4 = re.compile(r'^Basic-mapping-rule$')
+
+        # Ip-v6-prefix 2001:DA8:B001:FFFF::/64
+        p5 = re.compile(r'^Ip-v6-prefix (?P<ipv6_prefix>\S+)$')
+
+        # Ip-v4-prefix 202.1.0.128/28
+        p6 = re.compile(r'^Ip-v4-prefix (?P<ipv4_prefix>\S+)$')
+
+        # Port-parameters
+        p7 = re.compile(r'^Port-parameters$')
+
+        # Share-ratio 16   Contiguous-ports 64   Start-port 1024
+        p8 = re.compile(r'^Share-ratio (?P<share_ratio>\d+)\s+Contiguous-ports (?P<contiguous_ports>\d+)\s+Start-port (?P<start_port>\d+)$')
+
+        # Share-ratio-bits 4   Contiguous-ports-bits 6   Port-offset-bits 6
+        p9 = re.compile(r'^Share-ratio-bits (?P<share_ratio_bits>\d+)\s+Contiguous-ports-bits (?P<contiguous_ports_bits>\d+)\s+Port-offset-bits (?P<port_offset_bits>\d+)$')
+
+        # State tracking variables
+        current_domain = None
+        current_rule_type = None
+        in_port_parameters = False
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Skip empty lines
+            if not line:
+                continue
+
+            # MAP-T Domain 1
+            m = p1.match(line)
+            if m:
+                domain_id = m.group('domain_id')
+                current_domain = domain_id
+                ret_dict.setdefault('map_t_domains', {})[domain_id] = {}
+                current_rule_type = None
+                in_port_parameters = False
+                continue
+
+            # Mode MAP
+            m = p2.match(line)
+            if m and current_domain:
+                ret_dict['map_t_domains'][current_domain]['mode'] = m.group('mode')
+                continue
+
+            # Default-mapping-rule
+            m = p3.match(line)
+            if m and current_domain:
+                current_rule_type = 'default'
+                ret_dict['map_t_domains'][current_domain]['default_mapping_rule'] = {}
+                in_port_parameters = False
+                continue
+
+            # Basic-mapping-rule
+            m = p4.match(line)
+            if m and current_domain:
+                current_rule_type = 'basic'
+                ret_dict['map_t_domains'][current_domain]['basic_mapping_rule'] = {}
+                in_port_parameters = False
+                continue
+
+            # Ip-v6-prefix 2001:DA8:B001:FFFF::/64
+            m = p5.match(line)
+            if m and current_domain and current_rule_type:
+                ipv6_prefix = m.group('ipv6_prefix')
+                if current_rule_type == 'default':
+                    ret_dict['map_t_domains'][current_domain]['default_mapping_rule']['ipv6_prefix'] = ipv6_prefix
+                elif current_rule_type == 'basic':
+                    ret_dict['map_t_domains'][current_domain]['basic_mapping_rule']['ipv6_prefix'] = ipv6_prefix
+                continue
+
+            # Ip-v4-prefix 202.1.0.128/28
+            m = p6.match(line)
+            if m and current_domain and current_rule_type == 'basic':
+                ret_dict['map_t_domains'][current_domain]['basic_mapping_rule']['ipv4_prefix'] = m.group('ipv4_prefix')
+                continue
+
+            # Port-parameters
+            m = p7.match(line)
+            if m and current_domain and current_rule_type == 'basic':
+                in_port_parameters = True
+                ret_dict['map_t_domains'][current_domain]['basic_mapping_rule']['port_parameters'] = {}
+                continue
+
+            # Share-ratio 16   Contiguous-ports 64   Start-port 1024
+            m = p8.match(line)
+            if m and current_domain and current_rule_type == 'basic' and in_port_parameters:
+                port_params = ret_dict['map_t_domains'][current_domain]['basic_mapping_rule']['port_parameters']
+                port_params['share_ratio'] = int(m.group('share_ratio'))
+                port_params['contiguous_ports'] = int(m.group('contiguous_ports'))
+                port_params['start_port'] = int(m.group('start_port'))
+                continue
+
+            # Share-ratio-bits 4   Contiguous-ports-bits 6   Port-offset-bits 6
+            m = p9.match(line)
+            if m and current_domain and current_rule_type == 'basic' and in_port_parameters:
+                port_params = ret_dict['map_t_domains'][current_domain]['basic_mapping_rule']['port_parameters']
+                port_params['share_ratio_bits'] = int(m.group('share_ratio_bits'))
+                port_params['contiguous_ports_bits'] = int(m.group('contiguous_ports_bits'))
+                port_params['port_offset_bits'] = int(m.group('port_offset_bits'))
+                continue
+
+        return ret_dict
+
+# ====================================
+# Schema for 'show nat64 map-t domain'
+# ====================================
+
+class ShowNat64MapTDomainSchema(MetaParser):
+    """Schema for show nat64 map-t domain <domain_id>"""
+
+    schema = {
+        'map_t_domain': {
+            'domain_id': str,
+            'mode': str,
+            Optional('default_mapping_rule'): {
+                'ipv6_prefix': str,
+            },
+            Optional('basic_mapping_rule'): {
+                'ipv6_prefix': str,
+                'ipv4_prefix': str,
+                'port_parameters': {
+                    'share_ratio': int,
+                    'contiguous_ports': int,
+                    'start_port': int,
+                    'share_ratio_bits': int,
+                    'contiguous_ports_bits': int,
+                    'port_offset_bits': int,
+                }
+            }
+        }
+    }
+
+
+# ====================================
+# Parser for 'show nat64 map-t domain'
+# ====================================
+
+class ShowNat64MapTDomain(ShowNat64MapTDomainSchema):
+    """Parser for show nat64 map-t domain <domain_id>"""
+
+    cli_command = [
+        'show nat64 map-t',
+        'show nat64 map-t domain {domain_id}'
+    ]
+
+    def cli(self, domain_id="", output=None):
+        if output is None:
+            if domain_id:
+                cmd = self.cli_command[1].format(domain_id=domain_id)
+            else:
+                cmd = self.cli_command[0]
+            output = self.device.execute(cmd)
+
+        # Ensure output is not None
+        if output is None:
+            output = ""
+
+        # Initialize return dictionary
+        ret_dict = {}
+
+        # MAP-T Domain 1
+        p1 = re.compile(r'^MAP-T Domain (?P<domain_id>\d+)$')
+
+        # Mode MAP-T
+        p2 = re.compile(r'^Mode (?P<mode>\S+)$')
+
+        # Default-mapping-rule
+        p3 = re.compile(r'^Default-mapping-rule$')
+
+        # Basic-mapping-rule
+        p4 = re.compile(r'^Basic-mapping-rule$')
+
+        # Ip-v6-prefix 2001:DA8:B001:FFFF::/64
+        p5 = re.compile(r'^Ip-v6-prefix (?P<ipv6_prefix>\S+)$')
+
+        # Ip-v4-prefix 202.1.0.128/28
+        p6 = re.compile(r'^Ip-v4-prefix (?P<ipv4_prefix>\S+)$')
+
+        # Port-parameters
+        p7 = re.compile(r'^Port-parameters$')
+
+        # Share-ratio 16   Contiguous-ports 64   Start-port 1024
+        p8 = re.compile(r'^Share-ratio (?P<share_ratio>\d+)\s+Contiguous-ports (?P<contiguous_ports>\d+)\s+Start-port (?P<start_port>\d+)$')
+
+        # Share-ratio-bits 4   Contiguous-ports-bits 6   Port-offset-bits 6
+        p9 = re.compile(r'^Share-ratio-bits (?P<share_ratio_bits>\d+)\s+Contiguous-ports-bits (?P<contiguous_ports_bits>\d+)\s+Port-offset-bits (?P<port_offset_bits>\d+)$')
+
+        # State tracking variables
+        current_rule_type = None
+        in_port_parameters = False
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Skip empty lines
+            if not line:
+                continue
+
+            # MAP-T Domain 1
+            m = p1.match(line)
+            if m:
+                domain_id = m.group('domain_id')
+                ret_dict['map_t_domain'] = {
+                    'domain_id': domain_id
+                }
+                current_rule_type = None
+                in_port_parameters = False
+                continue
+
+            # Mode MAP-T
+            m = p2.match(line)
+            if m:
+                ret_dict['map_t_domain']['mode'] = m.group('mode')
+                continue
+
+            # Default-mapping-rule
+            m = p3.match(line)
+            if m:
+                current_rule_type = 'default'
+                ret_dict['map_t_domain']['default_mapping_rule'] = {}
+                in_port_parameters = False
+                continue
+
+            # Basic-mapping-rule
+            m = p4.match(line)
+            if m:
+                current_rule_type = 'basic'
+                ret_dict['map_t_domain']['basic_mapping_rule'] = {}
+                in_port_parameters = False
+                continue
+
+            # Ip-v6-prefix 2001:DA8:B001:FFFF::/64
+            m = p5.match(line)
+            if m and current_rule_type:
+                ipv6_prefix = m.group('ipv6_prefix')
+                if current_rule_type == 'default':
+                    ret_dict['map_t_domain']['default_mapping_rule']['ipv6_prefix'] = ipv6_prefix
+                elif current_rule_type == 'basic':
+                    ret_dict['map_t_domain']['basic_mapping_rule']['ipv6_prefix'] = ipv6_prefix
+                continue
+
+            # Ip-v4-prefix 202.1.0.128/28
+            m = p6.match(line)
+            if m and current_rule_type == 'basic':
+                ret_dict['map_t_domain']['basic_mapping_rule']['ipv4_prefix'] = m.group('ipv4_prefix')
+                continue
+
+            # Port-parameters
+            m = p7.match(line)
+            if m and current_rule_type == 'basic':
+                in_port_parameters = True
+                ret_dict['map_t_domain']['basic_mapping_rule']['port_parameters'] = {}
+                continue
+
+            # Share-ratio 16   Contiguous-ports 64   Start-port 1024
+            m = p8.match(line)
+            if m and current_rule_type == 'basic' and in_port_parameters:
+                port_params = ret_dict['map_t_domain']['basic_mapping_rule']['port_parameters']
+                port_params['share_ratio'] = int(m.group('share_ratio'))
+                port_params['contiguous_ports'] = int(m.group('contiguous_ports'))
+                port_params['start_port'] = int(m.group('start_port'))
+                continue
+
+            # Share-ratio-bits 4   Contiguous-ports-bits 6   Port-offset-bits 6
+            m = p9.match(line)
+            if m and current_rule_type == 'basic' and in_port_parameters:
+                port_params = ret_dict['map_t_domain']['basic_mapping_rule']['port_parameters']
+                port_params['share_ratio_bits'] = int(m.group('share_ratio_bits'))
+                port_params['contiguous_ports_bits'] = int(m.group('contiguous_ports_bits'))
+                port_params['port_offset_bits'] = int(m.group('port_offset_bits'))
+                continue
+
+        return ret_dict
+
+# ====================================
+# Schema for 'show nat64 mappings static tcp'
+# ====================================
+
+class ShowNat64MappingsStaticTcpSchema(MetaParser):
+    """Schema for show nat64 mappings static tcp"""
+
+    schema = {
+        'protocol': str,
+        'translations': {
+            Any(): {
+                'original_ipv4': str,
+                'translated_ipv4': str,
+                'translated_ipv6': str,
+                'original_ipv6': str,
+            }
+        },
+        'total_translations': int,
+    }
+
+
+# ====================================
+# Parser for 'show nat64 mappings static tcp'
+# ====================================
+
+class ShowNat64MappingsStaticTcp(ShowNat64MappingsStaticTcpSchema):
+    """Parser for show nat64 mappings static tcp"""
+
+    cli_command = 'show nat64 mappings static tcp'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize return dictionary
+        ret_dict = {}
+
+        # Proto  Original IPv4         Translated IPv4
+        p1 = re.compile(r'^Proto\s+Original IPv4\s+Translated IPv4$')
+
+        # Translated IPv6       Original IPv6
+        p2 = re.compile(r'^Translated IPv6\s+Original IPv6$')
+
+        # separator line with dashes (e.g., "-------")
+        p3 = re.compile(r'^-+$')
+
+        # tcp    203.0.113.1:8080      [2001:db8:1::1]:80
+        p4 = re.compile(r'^(?P<protocol>\w+)\s+(?P<original_ipv4>\S+)\s+(?P<translated_ipv4>\S+)$')
+
+        # 198.51.100.1:80       [2001:db8:1::2]:8080
+        p5 = re.compile(r'^(?P<translated_ipv6>\S+)\s+(?P<original_ipv6>\S+)$')
+
+        # Total number of translations: 2
+        p6 = re.compile(r'^Total number of translations:\s+(?P<total>\d+)$')
+
+        # State tracking
+        translation_count = 0
+        current_translation = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Skip empty lines
+            if not line:
+                continue
+
+            # Proto  Original IPv4         Translated IPv4
+            m = p1.match(line)
+            if m:
+                continue
+
+            # Translated IPv6       Original IPv6
+            m = p2.match(line)
+            if m:
+                continue
+
+            # dashes (e.g., "-------")
+            m = p3.match(line)
+            if m:
+                continue
+
+            # tcp    203.0.113.1:8080      [2001:db8:1::1]:80
+            m = p4.match(line)
+            if m:
+                protocol = m.group('protocol')
+                original_ipv4 = m.group('original_ipv4')
+                translated_ipv4 = m.group('translated_ipv4')
+
+                # Set protocol (should be consistent across all entries)
+                ret_dict['protocol'] = protocol
+
+                # Create new translation entry
+                translation_count += 1
+                current_translation = str(translation_count)
+
+                ret_dict.setdefault('translations', {})[current_translation] = {
+                    'original_ipv4': original_ipv4,
+                    'translated_ipv4': translated_ipv4,
+                }
+                continue
+
+            # 198.51.100.1:80       [2001:db8:1::2]:8080
+            m = p5.match(line)
+            if m and current_translation:
+                translated_ipv6 = m.group('translated_ipv6')
+                original_ipv6 = m.group('original_ipv6')
+
+                ret_dict['translations'][current_translation]['translated_ipv6'] = translated_ipv6
+                ret_dict['translations'][current_translation]['original_ipv6'] = original_ipv6
+                continue
+
+            # Total number of translations: 2
+            m = p6.match(line)
+            if m:
+                ret_dict['total_translations'] = int(m.group('total'))
+                continue
+
+        return ret_dict
+
+# ====================================
+# Schema for 'show nat64 mappings static key-port'
+# ====================================
+
+class ShowNat64MappingsStaticKeyPortSchema(MetaParser):
+    """Schema for show nat64 mappings static key-port <port>"""
+
+    schema = {
+        'protocol': str,
+        'key_port': str,
+        'translations': {
+            Any(): {
+                'original_ipv4': str,
+                'translated_ipv4': str,
+                'translated_ipv6': str,
+                'original_ipv6': str,
+            }
+        },
+        'total_translations': int,
+    }
+
+
+# ====================================
+# Parser for 'show nat64 mappings static key-port'
+# ====================================
+
+class ShowNat64MappingsStaticKeyPort(ShowNat64MappingsStaticKeyPortSchema):
+    """Parser for show nat64 mappings static key-port <port>"""
+
+    cli_command = [
+        'show nat64 mappings static',
+        'show nat64 mappings static key-port {port}'
+    ]
+
+    def cli(self, port="", output=None):
+        if output is None:
+            if port:
+                cmd = self.cli_command[1].format(port=port)
+            else:
+                cmd = self.cli_command[0]
+            output = self.device.execute(cmd)
+
+        # Ensure output is not None
+        if output is None:
+            output = ""
+
+        # Initialize return dictionary
+        ret_dict = {}
+
+        # Proto  Original IPv4         Translated IPv4
+        p1 = re.compile(r'^Proto\s+Original IPv4\s+Translated IPv4$')
+
+        # Translated IPv6       Original IPv6
+        p2 = re.compile(r'^Translated IPv6\s+Original IPv6$')
+
+        # separator line with dashes (e.g., "-------")
+        p3 = re.compile(r'^-+$')
+
+        # tcp    203.0.113.10:21       [2001:db8:abcd::1]:21
+        p4 = re.compile(r'^(?P<protocol>\w+)\s+(?P<original_ipv4>\S+)\s+(?P<translated_ipv4>\S+)$')
+
+        # 198.51.100.10:21      [2001:db8:abcd::2]:21
+        p5 = re.compile(r'^(?P<translated_ipv6>\S+)\s+(?P<original_ipv6>\S+)$')
+
+        # Total number of translations: 2
+        p6 = re.compile(r'^Total number of translations:\s+(?P<total>\d+)$')
+
+        # State tracking
+        translation_count = 0
+        current_translation = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Skip empty lines
+            if not line:
+                continue
+
+            # Proto  Original IPv4         Translated IPv4
+            m = p1.match(line)
+            if m:
+                continue
+
+            # Translated IPv6       Original IPv6
+            m = p2.match(line)
+            if m:
+                continue
+
+            # dashes (e.g., "-------")
+            m = p3.match(line)
+            if m:
+                continue
+
+            # tcp    203.0.113.10:21       [2001:db8:abcd::1]:21
+            m = p4.match(line)
+            if m:
+                protocol = m.group('protocol')
+                original_ipv4 = m.group('original_ipv4')
+                translated_ipv4 = m.group('translated_ipv4')
+
+                # Set protocol (should be consistent across all entries)
+                ret_dict['protocol'] = protocol
+
+                # Set key_port if provided
+                if port:
+                    ret_dict['key_port'] = str(port)
+
+                # Create new translation entry
+                translation_count += 1
+                current_translation = str(translation_count)
+
+                ret_dict.setdefault('translations', {})[current_translation] = {
+                    'original_ipv4': original_ipv4,
+                    'translated_ipv4': translated_ipv4,
+                }
+                continue
+
+            # 198.51.100.10:21      [2001:db8:abcd::2]:21
+            m = p5.match(line)
+            if m and current_translation:
+                translated_ipv6 = m.group('translated_ipv6')
+                original_ipv6 = m.group('original_ipv6')
+
+                ret_dict['translations'][current_translation]['translated_ipv6'] = translated_ipv6
+                ret_dict['translations'][current_translation]['original_ipv6'] = original_ipv6
+                continue
+
+            # Total number of translations: 2
+            m = p6.match(line)
+            if m:
+                ret_dict['total_translations'] = int(m.group('total'))
+                continue
+
+        return ret_dict
+
+# ====================================
+# Schema for 'show nat64 mappings static key-address'
+# ====================================
+
+class ShowNat64MappingsStaticKeyAddressSchema(MetaParser):
+    """Schema for show nat64 mappings static key-address <address>"""
+
+    schema = {
+        'key_address': str,
+        'translations': {
+            Any(): {
+                'protocol': str,
+                'original_ipv4': str,
+                'translated_ipv4': str,
+                'translated_ipv6': str,
+                'original_ipv6': str,
+            }
+        },
+        'total_translations': int,
+    }
+
+
+# ====================================
+# Parser for 'show nat64 mappings static key-address'
+# ====================================
+
+class ShowNat64MappingsStaticKeyAddress(ShowNat64MappingsStaticKeyAddressSchema):
+    """Parser for show nat64 mappings static key-address <address>"""
+
+    cli_command = [
+        'show nat64 mappings static',
+        'show nat64 mappings static key-address {address}'
+    ]
+
+    def cli(self, address="", output=None):
+        if output is None:
+            if address:
+                cmd = self.cli_command[1].format(address=address)
+            else:
+                cmd = self.cli_command[0]
+            output = self.device.execute(cmd)
+
+        # Ensure output is not None
+        if output is None:
+            output = ""
+
+        # Initialize return dictionary
+        ret_dict = {}
+
+        # Proto  Original IPv4        Translated IPv4
+        p1 = re.compile(r'^Proto\s+Original IPv4\s+Translated IPv4$')
+
+        # Translated IPv6      Original IPv6
+        p2 = re.compile(r'^Translated IPv6\s+Original IPv6$')
+
+        # separator line with dashes (e.g., "-------")
+        p3 = re.compile(r'^-+$')
+
+        # tcp    198.51.100.10:80     [2001::1]:80
+        p4 = re.compile(r'^(?P<protocol>\w+)\s+(?P<original_ipv4>\S+)\s+(?P<translated_ipv4>\S+)$')
+
+        # 203.0.113.5:8080     [2001::1]:8080
+        p5 = re.compile(r'^(?P<translated_ipv6>\S+)\s+(?P<original_ipv6>\S+)$')
+
+        # Total number of translations: 2
+        p6 = re.compile(r'^Total number of translations:\s+(?P<total>\d+)$')
+
+        # State tracking
+        translation_count = 0
+        current_translation = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Skip empty lines
+            if not line:
+                continue
+
+            # Proto  Original IPv4        Translated IPv4
+            m = p1.match(line)
+            if m:
+                continue
+
+            # Translated IPv6      Original IPv6
+            m = p2.match(line)
+            if m:
+                continue
+
+            # dashes (e.g., "-------")
+            m = p3.match(line)
+            if m:
+                continue
+
+            # tcp    198.51.100.10:80     [2001::1]:80
+            m = p4.match(line)
+            if m:
+                protocol = m.group('protocol')
+                original_ipv4 = m.group('original_ipv4')
+                translated_ipv4 = m.group('translated_ipv4')
+
+                # Set key_address if provided
+                if address:
+                    ret_dict['key_address'] = str(address)
+
+                # Create new translation entry
+                translation_count += 1
+                current_translation = str(translation_count)
+
+                ret_dict.setdefault('translations', {})[current_translation] = {
+                    'protocol': protocol,
+                    'original_ipv4': original_ipv4,
+                    'translated_ipv4': translated_ipv4,
+                }
+                continue
+
+            # 203.0.113.5:8080     [2001::1]:8080
+            m = p5.match(line)
+            if m and current_translation:
+                translated_ipv6 = m.group('translated_ipv6')
+                original_ipv6 = m.group('original_ipv6')
+
+                ret_dict['translations'][current_translation]['translated_ipv6'] = translated_ipv6
+                ret_dict['translations'][current_translation]['original_ipv6'] = original_ipv6
+                continue
+
+            # Total number of translations: 2
+            m = p6.match(line)
+            if m:
+                ret_dict['total_translations'] = int(m.group('total'))
+                continue
+
+        return ret_dict
+
+class ShowIpNatLimitsAllHostSchema(MetaParser):
+    """ Schema for 'show ip nat limits all-host' """
+
+    schema = {
+        Optional('host'): {
+            Any(): {
+                'max_entries': int,
+                'use_count': int,
+                'miss_count': int,
+            },
+        },
+        'total_number_of_limit_entries': int,
+    }
+
+
+class ShowIpNatLimitsAllHost(ShowIpNatLimitsAllHostSchema):
+    """ parser for 'show ip nat limits all-host' """
+
+    cli_command = "show ip nat limits all-host"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+
+        # Host            Max Entries Use Count  Miss Count
+        # -------------------------------------------------
+        # 15.0.0.5        100         1          0
+        p1 = re.compile(r'^(?P<host>[\d\.]+)\s+(?P<max_entries>\d+)\s+(?P<use_count>\d+)\s+(?P<miss_count>\d+)$')
+
+        # Total number of limit entries: 1
+        p2 = re.compile(r'^Total number of limit entries:\s*(?P<total_count>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # 15.0.0.5        100         1          0
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                host_dict = ret_dict.setdefault('host', {})
+                host = groups['host']
+                host_info = host_dict.setdefault(host, {})
+                host_info['max_entries'] = int(groups['max_entries'])
+                host_info['use_count'] = int(groups['use_count'])
+                host_info['miss_count'] = int(groups['miss_count'])
+                continue
+
+            # Total number of limit entries: 1
+            m = p2.match(line)
+            if m:
+                groups = m.groupdict()
+                ret_dict['total_number_of_limit_entries'] = int(groups['total_count'])
+                continue
+
         return ret_dict

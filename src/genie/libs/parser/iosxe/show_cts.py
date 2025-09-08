@@ -3698,27 +3698,31 @@ class ShowCtsPolicyServerDetails(ShowCtsPolicyServerDetailsSchema):
         results_dict = {}
         
         # Server Name  : cts-auto-cls1-ise1.cisco.com
-        p0 = re.compile(r'^server +name +: +(?P<server_name>\S+)$')
+        # Server Name   : CTS-HTTP-IPV4-1
+        p0 = re.compile(r'^\s*[Ss]erver +[Nn]ame\s*: +(?P<server_name>\S+)$')
         # Server Status : Inactive
-        p1 = re.compile(r'^server +status +: +(?P<server_status>\S+)$')
+        p1 = re.compile(r'^\s*[Ss]erver +[Ss]tatus\s*: +(?P<server_status>\S+)$')
         # IPv4 Address     : 10.76.119.181 (Reachable)
-        p2 = re.compile(r'^ipv4\s+address\s*: +(?P<ipv4_address>\S+)(:?\s*\((?P<ipv4_status>\S+)\))?$')
+        p2 = re.compile(r'^\s*[Ii][Pp][Vv]4\s+[Aa]ddress\s*: +(?P<ipv4_address>\S+)(?:\s*\((?P<ipv4_status>\S+)\))?$')
         # Domain-name      : cts-auto-cls1-ise3.cisco.com (Reachable)
-        p3 = re.compile(r'^domain-name\s*: +(?P<domain_name>\S+) +\((?P<domain_status>\S+)\)$')
+        # Domain-name      : CTS-HTTP-IPV4-1.cisco.com (Reachable)
+        p3 = re.compile(r'^\s*[Dd]omain-[Nn]ame\s*: +(?P<domain_name>\S+) +\((?P<domain_status>\S+)\)$')
         # Trustpoint       : cts_tp_cts-auto-cls1-ise3.cisco.com_2
-        p4 = re.compile(r'^trustpoint +: +(?P<trustpoint>\S+)$')
+        # Trustpoint       : CTS-HTTP-IPV4-1
+        p4 = re.compile(r'^\s*[Tt]rustpoint\s*: +(?P<trustpoint>\S+)$')
         # Port-num         : 9063
-        p5 = re.compile(r'^port-num +: +(?P<port_num>\d+)$')
+        p5 = re.compile(r'^\s*[Pp]ort-[Nn]um\s*: +(?P<port_num>\d+)$')
         #     Retransmit count : 3
-        p6 = re.compile(r'^retransmit +count +: +(?P<retransmit_count>\d+)$')
+        p6 = re.compile(r'^\s*[Rr]etransmit +[Cc]ount\s*: +(?P<retransmit_count>\d+)$')
         #     Timeout          : 15
-        p7 = re.compile(r'^timeout +: +(?P<timeout>\d+)$')
+        p7 = re.compile(r'^\s*[Tt]imeout\s*: +(?P<timeout>\d+)$')
         #    App Content type : JSON
-        p8 = re.compile(r'^app +content +type +: +(?P<app_content_type>\S+)$')
+        p8 = re.compile(r'^\s*[Aa]pp +[Cc]ontent +[Tt]ype\s*: +(?P<app_content_type>\S+)$')
         #    Trustpoint chain : NOT CONFIGURED
-        p9 = re.compile(r'^trustpoint +chain +: +(?P<trustpoint_chain>.*)$')
+        p9 = re.compile(r'^\s*[Tt]rustpoint +[Cc]hain\s*: +(?P<trustpoint_chain>.*)$')
         # IPv6 Address     : 1100::101 (Reachable)
-        p10 = re.compile(r'^ipv6\s+address\s+:\s+(?P<ipv6_address>[\w:]+)(:?\s*\((?P<ipv6_status>\w+)\))?$')
+        p10 = re.compile(r'^\s*[Ii][Pp][Vv]6\s+[Aa]ddress\s*: +(?P<ipv6_address>[\w:]+)(?:\s*\((?P<ipv6_status>\w+)\))?$')
+
         
         for line in output.splitlines():
             line = line.strip()
@@ -4140,3 +4144,147 @@ class ShowCtsPolicySgt(ShowCtsPolicySgtSchema):
 
         return ret_dict
 
+# ===================================
+# Schema for:
+#  * 'show cts ha sync-status'
+# ===================================
+class ShowCtsHaSyncStatusSchema(MetaParser):
+    """Schema for show cts ha sync-status."""
+
+    schema = {
+        "cts_ha_sync_status": {
+            "environment_data_sync": str,
+            "policy_sync": str,
+        }
+    }
+
+
+# ===================================
+# Parser for:
+#  * 'show cts ha sync-status'
+# ===================================
+class ShowCtsHaSyncStatus(ShowCtsHaSyncStatusSchema):
+    """Parser for show cts ha sync-status"""
+
+    cli_command = 'show cts ha sync-status'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # CTS environment-data sync to standby is complete or not started.
+        p1 = re.compile(r"^CTS\s+environment-data\s+sync\s+to\s+standby\s+is\s+(?P<environment_data_sync>.+)\.$")
+
+        # CTS policy sync to standby is complete or not started.
+        p2 = re.compile(r"^CTS\s+policy\s+sync\s+to\s+standby\s+is\s+(?P<policy_sync>.+)\.$")
+
+        for line in out.splitlines():
+            line = line.strip()
+            
+            # CTS environment-data sync to standby is complete or not started.
+            m = p1.match(line)
+            if m:
+                if "cts_ha_sync_status" not in ret_dict:
+                    ret_dict["cts_ha_sync_status"] = {}
+                ret_dict["cts_ha_sync_status"]["environment_data_sync"] = m.group('environment_data_sync')
+                continue
+
+            # CTS policy sync to standby is complete or not started.
+            m = p2.match(line)
+            if m:
+                if "cts_ha_sync_status" not in ret_dict:
+                    ret_dict["cts_ha_sync_status"] = {}
+                ret_dict["cts_ha_sync_status"]["policy_sync"] = m.group('policy_sync')
+                continue
+
+        return ret_dict
+
+
+# ===================================
+# Schema for:
+#  * 'show cts provisioning queue'
+# ===================================
+class ShowCtsProvisioningQueueSchema(MetaParser):
+    """Schema for show cts provisioning queue."""
+
+    schema = {
+        "cts_provisioning_queue": {
+            "servers": {
+                Any(): {
+                    "server_ip": str,
+                    "server_type": str,
+                    "provisioned": str,
+                    "aid": str
+                }
+            }
+        }
+    }
+
+
+# ===================================
+# Parser for:
+#  * 'show cts provisioning queue'
+# ===================================
+class ShowCtsProvisioningQueue(ShowCtsProvisioningQueueSchema):
+    """Parser for show cts provisioning queue"""
+
+    cli_command = 'show cts provisioning queue'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # Server: 10.77.128.95, Type: Radius, Provisioned: YES     
+        p1 = re.compile(r"^Server:\s+(?P<server_ip>\d+\.\d+\.\d+\.\d+),\s+Type:\s+(?P<server_type>.*?),\s+Provisioned:\s+(?P<provisioned>YES|NO)")
+
+        # AID: 1695af86d38b22dc7c9500408e2dd35d
+        p2 = re.compile(r"^AID:\s+(?P<aid>\S+)")
+
+        server_index = 1
+        current_server = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+            
+            # Skip empty lines
+            if not line:
+                continue
+
+            # Server: 10.77.128.95, Type: Radius, Provisioned: YES
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                current_server = {
+                    "server_ip": groups['server_ip'],
+                    "server_type": groups['server_type'],
+                    "provisioned": groups['provisioned']
+                }
+                continue
+
+            # AID: 1695af86d38b22dc7c9500408e2dd35d
+            m = p2.match(line)
+            if m:
+                groups = m.groupdict()
+                current_server["aid"] = groups['aid']
+                
+                # Initialize the dictionary structure if not exists
+                if "cts_provisioning_queue" not in ret_dict:
+                    ret_dict["cts_provisioning_queue"] = {}
+                if "servers" not in ret_dict["cts_provisioning_queue"]:
+                    ret_dict["cts_provisioning_queue"]["servers"] = {}
+                
+                # Add the complete server entry
+                ret_dict["cts_provisioning_queue"]["servers"][server_index] = current_server
+                server_index += 1
+                current_server = {}
+                continue
+
+        return ret_dict

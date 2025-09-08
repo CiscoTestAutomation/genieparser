@@ -1,0 +1,218 @@
+#RP/0/RP0/CPU0:ios#show controllers optics * db
+Tue Jul 15 10:05:01.864 UTC
+ Port:    Optics0/2/0/0
+
+ Transport Admin State: In Service
+
+ Controller State: Down
+-----------------------------------------------
+ Port:    Optics0/2/0/1
+
+ Transport Admin State: In Service
+
+ Controller State: Down
+-----------------------------------------------
+ Port:    Optics0/2/0/2
+
+ Transport Admin State: In Service
+
+ Controller State: Down
+-----------------------------------------------
+ Port:    Optics0/2/0/3
+
+ Transport Admin State: In Service
+
+ Controller State: Down
+-----------------------------------------------
+ Port:    Optics0/2/0/4
+
+ Transport Admin State: In Service
+
+ Controller State: Up
+-----------------------------------------------
+ Port:    Optics0/2/0/5
+
+ Transport Admin State: In Service
+
+ Controller State: Up
+-----------------------------------------------
+ Port:    Optics0/2/0/6
+
+ Transport Admin State: In Service
+
+ Controller State: Down
+-----------------------------------------------
+ Port:    Optics0/2/0/7
+
+ Transport Admin State: In Service
+
+ Controller State: Down
+-----------------------------------------------
+ Port:    Optics0/2/0/8
+
+ Transport Admin State: In Service
+
+ Controller State: Down
+-----------------------------------------------
+ Port:    Optics0/2/0/9
+
+ Transport Admin State: In Service
+
+ Controller State: Down
+-----------------------------------------------
+ Port:    Optics0/2/0/10
+
+ Transport Admin State: In Service
+
+ Controller State: Up
+-----------------------------------------------
+ Port:    Optics0/2/0/11
+
+ Transport Admin State: In Service
+
+ Controller State: Down
+-----------------------------------------------
+ Port:    Optics0/2/0/12
+
+ Transport Admin State: In Service
+
+ Controller State: Down
+-----------------------------------------------
+ Port:    Optics0/2/0/13
+
+ Transport Admin State: In Service
+
+ Controller State: Down
+-----------------------------------------------
+ Port:    Optics0/2/0/14
+
+ Transport Admin State: In Service
+
+ Controller State: Down
+-----------------------------------------------
+ Port:    Optics0/2/0/15
+
+ Transport Admin State: In Service
+
+ Controller State: Down
+-----------------------------------------------
+ Port:    Optics0/2/0/16
+
+ Transport Admin State: In Service
+
+ Controller State: Down
+-----------------------------------------------
+ Port:    Optics0/2/0/17
+
+ Transport Admin State: In Service
+
+ Controller State: Down
+-----------------------------------------------
+ Port:    Optics0/2/0/18
+
+ Transport Admin State: In Service
+
+ Controller State: Down
+-----------------------------------------------
+ Port:    Optics0/2/0/19
+
+ Transport Admin State: In Service
+
+ Controller State: Down
+-----------------------------------------------
+ Port:    Optics0/2/0/20
+
+ Transport Admin State: In Service
+
+ Controller State: Down
+-----------------------------------------------
+ Port:    Optics0/2/0/21
+
+ Transport Admin State: In Service
+
+ Controller State: Down
+-----------------------------------------------
+ Port:    Optics0/2/0/22
+
+ Transport Admin State: In Service
+
+ Controller State: Up
+-----------------------------------------------
+ Port:    Optics0/2/0/23
+
+ Transport Admin State: In Service
+
+ Controller State: Down
+-----------------------------------------------
+ Port:    Optics0/2/0/24
+
+ Transport Admin State: In Service
+
+ Controller State: Down
+-----------------------------------------------
+ Port:    Optics0/2/0/25
+
+ Transport Admin State: In Service
+
+ Controller State: Down
+-----------------------------------------------
+ Port:    Optics0/2/0/26
+
+ Transport Admin State: In Service
+
+ Controller State: Down
+-----------------------------------------------
+ Port:    Optics0/2/0/27
+
+ Transport Admin State: In Service
+
+ Controller State: Down
+-----------------------------------------------
+ Port:    Optics0/2/0/28
+
+ Transport Admin State: In Service
+
+ Controller State: Down
+-----------------------------------------------
+ Port:    Optics0/2/0/29
+
+ Transport Admin State: In Service
+
+ Controller State: Down
+-----------------------------------------------
+ Port:    Optics0/2/0/30
+
+ Transport Admin State: In Service
+
+ Controller State: Down
+-----------------------------------------------
+ Port:    Optics0/2/0/31
+
+ Transport Admin State: In Service
+
+ Controller State: Down
+-----------------------------------------------
+ Port:    Optics0/2/0/32
+
+ Transport Admin State: In Service
+
+ Controller State: Down
+-----------------------------------------------
+ Port:    Optics0/2/0/33
+
+ Transport Admin State: In Service
+
+ Controller State: Down
+-----------------------------------------------
+ Port:    Optics0/2/0/34
+
+ Transport Admin State: In Service
+
+ Controller State: Down
+-----------------------------------------------
+ Port:    Optics0/2/0/35
+
+ Transport Admin State: In Service
+
+ Controller State: Down
+-----------------------------------------------

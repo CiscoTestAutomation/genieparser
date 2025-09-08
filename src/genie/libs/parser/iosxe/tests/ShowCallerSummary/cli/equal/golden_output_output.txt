@@ -1,0 +1,13 @@
+show caller summary
+
+        0   Analog calls (0 VPDN Calls)
+
+        0   ISDN calls (0 VPDN Calls)
+
+        0   VPDN calls
+
+        0   PPPoA calls
+
+        0   PPPoE calls
+
+        0   Total unique users logged in

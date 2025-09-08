@@ -3573,3 +3573,103 @@ class ShowPolicyMapTypeQueueingPolicyname(ShowPolicyMapTypeQueueingPolicynameSch
                 class_map_dict['priority_level'] = int(m.groupdict()['priority_level'])
 
         return ret_dict
+    
+# =============================================
+# Schema for 'show policy-map type packet-service'
+# =============================================
+
+class ShowPolicyMapTypePacketServiceSchema(MetaParser):
+    """
+    Schema for show policy-map type packet-service
+    """
+    schema = {
+        'packet_services': { 
+            str: {
+                'classes': {
+                    str: {
+                        'capture': {
+                            'name': str,
+                            'limit': int,
+                            'ip_type': str,
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+# =============================================
+# Parser for 'show policy-map type packet-service'
+# =============================================
+
+class ShowPolicyMapTypePacketService(ShowPolicyMapTypePacketServiceSchema):
+    """Parser for show policy-map type packet-service
+    """
+    cli_command = 'show policy-map type packet-service'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+            
+        ret_dict = {}
+        
+        if out:
+            ret_dict.setdefault('packet_services', {})
+        
+        # Policy Map type packet-service epc_policy_match_any_MAC_test1
+        p0 = re.compile(r'Policy Map type packet-service\s+(?P<policy_map>\S+(?:\s+\S+)*)')
+        
+        # Class epc_class_match_any_MAC_test1
+        p1 = re.compile(r'Class\s+(?P<class_name>\S+(?:\s+\S+)*)')
+        
+        # name match_any_MAC_test1
+        p2 = re.compile(r'\s*name\s+(?P<capture_name>\S+)')
+        
+        # limit packet-rate 1000
+        p3 = re.compile(r'\s*limit\s+packet-rate\s+(?P<limit>\d+)')
+        
+        # ip_type ipv4
+        p4 = re.compile(r'\s*ip_type\s+(?P<ip_type>\S+)')
+
+        current_policy_map = ''
+        current_class = ''
+        capture_config = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+            
+            # Policy Map type packet-service epc_policy_match_any_MAC_test1
+            policy_map_match = p0.match(line)
+            if policy_map_match:
+                current_policy_map = policy_map_match.group('policy_map')
+                ret_dict['packet_services'].setdefault(current_policy_map, {'classes': {}})
+                continue
+            
+            # Class epc_class_match_any_MAC_test1
+            class_match = p1.match(line)
+            if class_match and current_policy_map:
+                current_class = class_match.group('class_name')
+                ret_dict['packet_services'][current_policy_map]['classes'].setdefault(current_class, {'capture': {}})
+                capture_config = {}
+                continue
+            
+            # name match_any_MAC_test1
+            name_match = p2.match(line)
+            if name_match:
+                capture_config['name'] = name_match.group('capture_name')
+            
+            # limit packet-rate 1000    
+            limit_match = p3.match(line)
+            if limit_match:
+                capture_config['limit'] = int(limit_match.group('limit'))
+            
+            # ip_type ipv4    
+            ip_type_match = p4.match(line)
+            if ip_type_match:
+                capture_config['ip_type'] = ip_type_match.group('ip_type')
+                if current_policy_map and current_class:
+                    ret_dict['packet_services'][current_policy_map]['classes'][current_class]['capture'] = capture_config.copy()
+            
+        return ret_dict

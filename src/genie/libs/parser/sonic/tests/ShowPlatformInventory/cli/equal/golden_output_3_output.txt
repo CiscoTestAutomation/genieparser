@@ -1,0 +1,70 @@
+2025-02-27 19:44:51,988: %UNICON-INFO: +++ sonic(alias=device) with via 'a': executing command 'show platform inventory' +++
+show platform inventory
+    Name                Product ID      Version              Serial Number   Description
+
+Chassis
+    CHASSIS             8808            1.0                  FOX2605P0GP     Cisco 8808 8-slot Chassis
+
+Route Processors
+    RP0                 8800-RP-O       1.0                  FOC2430PCS7     Cisco 8800 Route Processor - Open
+    RP1 -- not present
+
+Line Cards
+    LC0                 88-LC0-36FH-MO  0.32                 FOC2431NVH1     Cisco 8800 36x400GE QSFP56-DD Line Card with MACsec
+    LC1 -- not present
+    LC2 -- not present
+    LC3 -- not present
+    LC4 -- not present
+    LC5 -- not present
+    LC6 Card type unknown; Board type unknown -- not initialized
+    LC7                 8800-LC-48H-O   1.0                  FOC2434PLMK     Cisco 8800 48x100GE QSFP28 Line Card
+
+Fabric Cards
+    FC0                 8808-FC0        1.0                  FOC2648NHKZ     Cisco 8808 Fabric Card for 14.4T Line Cards
+    FC1 -- not present
+    FC2 -- not present
+    FC3 -- not present
+    FC4 -- not present
+    FC5 -- not present
+    FC6 -- not present
+    FC7 -- not present
+
+Power Supplies
+    psutray0            8800-HV-TRAY    1.0                  FOC2549NLQG     Cisco 8800 Power Tray for AC/HVAC/HVDC Power Supply
+        psutray0.psu0   PSU6.3KW-20A-HV 1.0                  DTM2503026D     6.3KW AC/HVAC/HVDC Power Supply-20A
+        psutray0.psu1   PSU6.3KW-20A-HV 1.0                  DTM2451037Q     6.3KW AC/HVAC/HVDC Power Supply-20A
+        psutray0.psu2   PSU6.3KW-20A-HV 1.0                  DTM24520094     6.3KW AC/HVAC/HVDC Power Supply-20A
+    psutray1            8800-HV-TRAY    1.0                  FOC2552N0P6     Cisco 8800 Power Tray for AC/HVAC/HVDC Power Supply
+        psutray1.psu0   PSU6.3KW-20A-HV 1.0                  DTM255000NP     6.3KW AC/HVAC/HVDC Power Supply-20A
+        psutray1.psu1   PSU6.3KW-20A-HV 1.0                  DTM255000EH     6.3KW AC/HVAC/HVDC Power Supply-20A
+        psutray1.psu2   PSU6.3KW-20A-HV 1.0                  DTM253404GE     6.3KW AC/HVAC/HVDC Power Supply-20A
+    psutray2            8800-HV-TRAY    1.0                  FOC2551N2W1     Cisco 8800 Power Tray for AC/HVAC/HVDC Power Supply
+        psutray2.psu0   PSU6.3KW-20A-HV 1.0                  DTM255001LY     6.3KW AC/HVAC/HVDC Power Supply-20A
+        psutray2.psu1   PSU6.3KW-20A-HV 1.0                  DTM255001HS     6.3KW AC/HVAC/HVDC Power Supply-20A
+        psutray2.psu2   PSU6.3KW-20A-HV 1.0                  DTM255000NW     6.3KW AC/HVAC/HVDC Power Supply-20A
+    psutray3 -- not present
+    psutray4 -- not present
+    psutray5 -- not present
+
+Cooling Devices
+    fantray0            8808-FAN        1.0                  FOC2553N1JK     Cisco 8808 Fan Tray
+    fantray1            8808-FAN        1.0                  FOC2601NVES     Cisco 8808 Fan Tray
+    fantray2            8808-FAN        1.0                  FOC2553N185     Cisco 8808 Fan Tray
+    fantray3            8808-FAN        1.0                  FOC2553N19U     Cisco 8808 Fan Tray
+
+FPDs
+    LC0/exeter                          1.6.0-206                            Exeter FPGA
+    LC0/kirkwall                        1.11.0-696                           Kirkwall FPGA
+    LC7/exeter                          1.11.0-595                           Exeter FPGA
+    LC7/kenley                          1.1.0-142                            Kenley FPGA
+    RP0/fc0/fowlmere                    1.0.0-104                            Fowlmere FPGA
+    RP0/ft0/warmwell                    1.0.0-188                            Warmwell FPGA
+    RP0/ft1/warmwell                    1.0.0-188                            Warmwell FPGA
+    RP0/ft2/warmwell                    1.0.0-188                            Warmwell FPGA
+    RP0/ft3/warmwell                    1.0.0-188                            Warmwell FPGA
+    RP0/info.62.auto                    1.0.0-776                            \_SB_.PCI0.BR1A.PMBR.P2PM.SL14
+    RP0/kenley                          1.1.0-142                            Kenley FPGA
+    RP0/kirkwall                        1.11.0-696                           Kirkwall FPGA
+    RP0/pembrey                         1.10.0-658                           Pembrey FPGA
+    RP0/zenith                          1.1.0-977                            Zenith FPGA
+cisco@sonic:~$

@@ -1,0 +1,101 @@
+show platform  diag  
+Chassis type: ISR4461/K9
+
+Slot: 0, ISR4461/K9
+  Running state               : ok
+  Internal state              : online
+  Internal operational state  : ok
+  Physical insert detect time : 00:00:40 (1w1d ago)
+  Software declared up time   : 00:01:17 (1w1d ago)
+  CPLD version                : 18012322
+  Firmware version            : 17.15(1r)
+
+Sub-slot: 0/0, ISR4461-4x1G-2xTG
+  Operational status          : ok
+  Internal state              : inserted
+  Physical insert detect time : 00:01:28 (1w1d ago)
+  Logical insert detect time  : 00:01:28 (1w1d ago)
+
+Sub-slot: 0/1, NIM-2GE-CU-SFP
+  Operational status          : ok
+  Internal state              : inserted
+  Physical insert detect time : 00:01:28 (1w1d ago)
+  Logical insert detect time  : 00:01:28 (1w1d ago)
+
+Slot: 1, ISR4461/K9
+  Running state               : ok
+  Internal state              : online
+  Internal operational state  : ok
+  Physical insert detect time : 00:00:40 (1w1d ago)
+  Software declared up time   : 00:01:18 (1w1d ago)
+  CPLD version                : 18012322
+  Firmware version            : 17.15(1r)
+
+Sub-slot: 1/0, SM-X-6X1G
+  Operational status          : ok
+  Internal state              : inserted
+  Physical insert detect time : 1d14h (6d14h ago)
+  Logical insert detect time  : 1d14h (6d14h ago)
+
+Slot: 2, ISR4461/K9
+  Running state               : ok
+  Internal state              : online
+  Internal operational state  : ok
+  Physical insert detect time : 00:00:40 (1w1d ago)
+  Software declared up time   : 00:01:19 (1w1d ago)
+  CPLD version                : 18012322
+  Firmware version            : 17.15(1r)
+
+Slot: 3, ISR4461/K9
+  Running state               : ok
+  Internal state              : online
+  Internal operational state  : ok
+  Physical insert detect time : 00:00:40 (1w1d ago)
+  Software declared up time   : 00:01:20 (1w1d ago)
+  CPLD version                : 18012322
+  Firmware version            : 17.15(1r)
+
+Slot: R0, ISR4461/K9
+  Running state               : ok, active
+  Internal state              : online
+  Internal operational state  : ok
+  Physical insert detect time : 00:00:40 (1w1d ago)
+  Software declared up time   : 00:00:40 (1w1d ago)
+  CPLD version                : 18012322
+  Firmware version            : 17.15(1r)
+
+Slot: F0, ISR4461/K9
+  Running state               : ok, active
+  Internal state              : online
+  Internal operational state  : ok
+  Physical insert detect time : 00:00:40 (1w1d ago)
+  Software declared up time   : 00:01:12 (1w1d ago)
+  Hardware ready signal time  : 00:01:10 (1w1d ago)
+  Packet ready signal time    : 00:02:11 (1w1d ago)
+  CPLD version                : 18012322
+  Firmware version            : 17.15(1r)
+
+Slot: P0, PWR-4450-1000W-AC
+  State                       : ok
+  Physical insert detect time : 00:01:06 (1w1d ago)
+
+Slot: P1, Unknown
+  State                       : empty
+  Physical insert detect time : 00:00:00 (never ago)
+
+Slot: P2, ACS-4460-FANASSY
+  State                       : ok
+  Physical insert detect time : 00:01:06 (1w1d ago)
+
+Slot: POE0, Unknown
+  State                       : empty
+  Physical insert detect time : 00:00:00 (never ago)
+
+Slot: POE1, Unknown
+  State                       : empty
+  Physical insert detect time : 00:00:00 (never ago)
+
+Slot: GE-POE, Unknown
+  State                       : NA
+  Physical insert detect time : 00:00:00 (never ago)
+

@@ -1,0 +1,32 @@
+NAME: "Switch 1 Chassis", DESCR: "Cisco Catalyst 9600 Series 6 Slot Chassis"
+PID: C9606R            , VID: V01  , SN: FXS2410Q1MA
+
+NAME: "Switch 1 Slot 2 Linecard", DESCR: "24-Port 40GE/12-Port 100GE"
+PID: C9600-LC-24C      , VID: V01  , SN: CAT2418L08D
+
+NAME: "Switch 1 Power Supply Module 2", DESCR: "Cisco Catalyst 9600 Series 2000W AC Power Supply"
+PID: C9600-PWR-2KWAC   , VID: V01  , SN: QCS24064YJR
+
+NAME: "Switch 1 Fan Tray", DESCR: "Cisco Catalyst 9600 Series C9606 Chassis Fan Tray"
+PID: C9606-FAN         , VID: V01  , SN: DCH2311W05L
+
+NAME: "Switch 2 Chassis", DESCR: "Cisco Catalyst 9600 Series 6 Slot Chassis"
+PID: C9606R            , VID: V01  , SN: FXS2410Q1MH
+
+NAME: "Switch 2 Slot 2 Linecard", DESCR: "24-Port 40GE/12-Port 100GE"
+PID: C9600-LC-24C      , VID: V01  , SN: CAT2415L0WZ
+
+NAME: "FortyGigabitEthernet2/2/0/1", DESCR: "QSFP 40GE CU2M"
+PID: QSFP-H40G-CU2M      , VID: V01  , SN: JPC2012003Z-B
+
+NAME: "Switch 2 Slot 6 Linecard", DESCR: "48-Port 10GE / 25GE"
+PID: C9600-LC-48YL     , VID: V01  , SN: CAT2312L2G3
+
+NAME: "TwentyFiveGigE2/6/0/11", DESCR: "SFP 25GE AOC1M"
+PID: SFP-25G-AOC1M       , VID: V01  , SN: FOF220300PF-B
+
+NAME: "Switch 2 Power Supply Module 3", DESCR: "Cisco Catalyst 9600 Series 2000W AC Power Supply"
+PID: C9600-PWR-2KWAC   , VID: V01  , SN: QCS24064Y7L
+
+NAME: "Switch 2 Fan Tray", DESCR: "Cisco Catalyst 9600 Series C9606 Chassis Fan Tray"
+PID: C9606-FAN         , VID: V01  , SN: DCH2413W0E7

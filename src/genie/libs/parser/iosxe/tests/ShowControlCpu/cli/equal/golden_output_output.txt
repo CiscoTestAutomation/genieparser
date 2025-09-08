@@ -1,0 +1,28 @@
+queue                      retrieved   dropped     invalid     hol-block
+-------------------------------------------------------------------------
+Routing Protocol           327         0           0           0
+L2 Protocol                23362       0           0           0
+sw forwarding              433         425         0           0
+broadcast                  0           0           0           0
+icmp gen                   0           0           0           0
+icmp redirect              0           0           0           0
+logging                    0           0           0           0
+rpf-fail                   0           0           0           0
+DOT1X authentication       0           0           0           0
+Forus Traffic              26032       0           0           0
+Forus Resolution           516148      0           0           0
+Inter FED                  0           0           0           0
+L2 LVX control             0           0           0           0
+EWLC control               0           0           0           0
+EWLC data                  0           0           0           0
+L2 LVX data                0           0           0           0
+Openflow                   0           0           0           0
+Topology control           136276      0           0           0
+Proto snooping             0           0           0           0
+DHCP snooping              0           0           0           0
+Transit Traffic            0           0           0           0
+Multi End station          0           0           0           0
+Webauth                    0           0           0           0
+High rate app              0           0           0           0
+Exception                  0           0           0           0
+System Critical            0           0           0           0

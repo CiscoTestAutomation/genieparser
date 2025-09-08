@@ -1,0 +1,19 @@
+ parameter-map type inspect-vrf test_vrf (refcount = 1)
+
+   total_session  unlimited 
+
+   aggressive aging disabled
+
+   tcp syn_flood_limit  unlimited 
+
+   alert on
+
+   max_incomplete 1000
+
+   aggressive aging disabled
+
+   max_incomplete TCP unlimited
+
+   max_incomplete UDP unlimited
+
+   max_incomplete ICMP unlimited

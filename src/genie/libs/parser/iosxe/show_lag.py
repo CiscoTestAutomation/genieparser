@@ -1492,8 +1492,8 @@ class ShowEtherchannelPortChannelSchema(MetaParser):
                 Optional('gc'): str,
                 'protocol': str,
                 'port_security': str,
-                'switchover': str,
-                'dampening': str,
+                Optional('switchover'): str,
+                Optional('dampening'): str,
                 'ports': {
                     Any(): {
                         'ec_state': str,

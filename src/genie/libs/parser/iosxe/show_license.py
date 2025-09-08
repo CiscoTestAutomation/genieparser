@@ -1872,16 +1872,13 @@ class ShowLicenseAll(ShowLicenseAllSchema):
           m = p11.match(line)
           if m:
             group = m.groupdict()
-            if group['trust_code_installed']:
-              if group['trust_code_installed'].strip()=='<none>':
-                continue
-              # else:
-                # trust_code_installed_dict=smart_licensing_status_dict.setdefault('trust_code_installed',group['trust_code_installed'].strip())
-                # continue
+            if group['trust_code_installed'].strip() == '<none>':
+              continue
             else:
               trust_code_installed_dict=smart_licensing_status_dict.setdefault('trust_code_installed',{})
               continue
           #Active: PID:C9300-24UX,SN:FCW2303D16Y
+          #Active: PID:C9350-48T,SN:FOC2820Y07F
           m = p11_1.match(line)
           if m:
             group = m.groupdict()
@@ -2590,12 +2587,17 @@ class ShowLicenseTechSupportSchema(MetaParser):
                     'count': int,
                     'version': str,
                     'status': str,
+                    Optional('authorized_count'): int,
+                    Optional('outofcompliance_count'): int,
+                    Optional('insufficient_count'): int,
+                    Optional('no_license'): int,
                     'status_time':str,
                     'request_time':str,
                     'export_status': str,
                     'feature_name': str,
                     'feature_description': str,
                     Optional('enforcement_type'): str,
+                    Optional('day0_verification'): str,
                     Optional('license_type'): str,
                     Optional('measurements'):{
                         Optional('entitlement'):{
@@ -2718,6 +2720,11 @@ class ShowLicenseTechSupportSchema(MetaParser):
             Optional('mia'):str,
             Optional('report_module_status'):str,
         },
+        Optional('product_analytics_report_summary'):{
+            Optional('product_analytics'): str,
+            Optional('not_available_reason'): str,
+            Optional('total_current_product_analytics_reports'): int,
+        },
         Optional('telemetry_report_summary'):{
             'device_telemetry':str,
             'total_current_telemetry_reports':int,
@@ -2801,6 +2808,8 @@ class ShowLicenseTechSupportSchema(MetaParser):
             Optional('smartagentpurgeallreports'):str,
             Optional('smartagentslpenhanced'):str,
             Optional('smartagentmaxermnotifylistsize'):int,
+            Optional('smartagentday0enforcement'):str,
+            Optional('smartagentunifiedlicensing'):str,
             Optional('smartagentmaxsinglereportsize'):int,
             Optional('smartagentslacreturnforcedallowed'):str,
             Optional('smartagenttelemetryrumreportmax'):int,
@@ -2996,8 +3005,9 @@ class ShowLicenseTechSupport(ShowLicenseTechSupportSchema):
         #Device Telemetry Report Summary
         p14 = re.compile(r'^(?P<device_telemetry_report_summary>Device +Telemetry +Report +Summary)\:$')      
         #Trust Code Installed:
-        p14_1 = re.compile(r'^(?P<trust_code_installed>Trust +Code +Installed)\:$') 
-        
+        #Trust Code Installed:    Trust Code Type: CSSM
+        p14_1 = re.compile(r'^Trust +Code +Installed:(?:\s+Trust +Code +Type: +\S+)?$')
+
         #Below set of expressions are for capturing data lines (For eg. key-value pairs)
         #<none>
         p0_2 = re.compile(r'^\s*\<(?P<value>none)\>$')
@@ -3058,7 +3068,25 @@ class ShowLicenseTechSupport(ShowLicenseTechSupportSchema):
         
         #Trust Code Installed: <none> 
         #Trust Code Installed: Feb 27 09:06:59 2024 IST
-        p14_data1 = re.compile(r'^Trust +Code +Installed\: +(?P<trust_code_installed>.*)$')
+        #Trust Code Installed:    Trust Code Type: CSSM
+        p14_data1 = re.compile(r'^Trust +Code +Installed\: +(?P<trust_code_installed>(<none>|\w{3} +\d{1,2} +[\d:]+ +\d{4} +\w+))$')
+        # Authorized Count: 0
+        p2_2 = re.compile(r'^Authorized Count:\s+(?P<authorized_count>\d+)$')
+        # Out-Of-Compliance Count: 0
+        p2_3 = re.compile(r'^Out-Of-Compliance Count:\s+(?P<outofcompliance_count>\d+)$')
+        # Insufficient Count: 0
+        p2_4 = re.compile(r'^Insufficient Count:\s+(?P<insufficient_count>\d+)$')
+        # No license: 0
+        p2_5 = re.compile(r'^No license:\s+(?P<no_license>\d+)$')
+        # Day-0 Verification: NO
+        p2_6 = re.compile(r'^Day-0 Verification:\s+(?P<day0_verification>\w+)$')
+        #Product Analytics: AVAILABLE
+        #Product Analytics: NOT AVAILABLE
+        p16 = re.compile(r'^Product Analytics:\s+(?P<product_analytics>AVAILABLE|NOT AVAILABLE)$')
+        #Not Available Reason: <empty>
+        p16_1 = re.compile(r'^Not Available Reason:\s+(?P<not_available_reason>.*)$')
+        #Total current Product Analytics reports: 0
+        p16_2 = re.compile(r'^Total current Product Analytics reports:\s+(?P<total_current_product_analytics_reports>\d+)$')
         
         for line in output.splitlines():
             line=line.strip()            
@@ -3138,6 +3166,30 @@ class ShowLicenseTechSupport(ShowLicenseTechSupportSchema):
                 group=m.groupdict()
                 current_dict=ret_dict.setdefault('usage_report_summary', {})
                 continue
+                        
+            # Product Analytics Report Summary:
+            # ================================
+            # Product Analytics: AVAILABLE
+            m = p16.match(line)
+            if m:
+               group = m.groupdict()
+               product_analytics_dict = ret_dict.setdefault('product_analytics_report_summary', {})
+               product_analytics_dict.setdefault('product_analytics',group['product_analytics'])
+               continue
+            
+            # Match Not Available Reason
+            m = p16_1.match(line)
+            if m:
+               group = m.groupdict()
+               product_analytics_dict.setdefault('not_available_reason',group['not_available_reason'])
+               continue
+            
+            # Match Total current reports
+            m = p16_2.match(line)
+            if m:
+                group = m.groupdict()
+                product_analytics_dict.setdefault('total_current_product_analytics_reports',int(group['total_current_product_analytics_reports']))
+                continue 
 
             m = p11.match(line)
             if m:
@@ -3150,18 +3202,21 @@ class ShowLicenseTechSupport(ShowLicenseTechSupportSchema):
                 group=m.groupdict()
                 current_dict=ret_dict.setdefault('platform_provided_mapping_table', {})                  
                 continue
+            
             #Telemetry Report Summary (new output section in 17.11.1)
             m = p13.match(line)
             if m:
                 group=m.groupdict()
                 current_dict=ret_dict.setdefault('telemetry_report_summary', {})
                 continue
+            
         #Device telemetry  report  summary (new  output  section  in 17.11.1)
             m = p14.match(line)
             if m:
                 group=m.groupdict()
                 current_dict=ret_dict.setdefault('device_telemetry_report_summary', {})
                 continue
+            
         #Setting the dictionary position for sub headings (2nd level and further levels down)
             m = p1_1.match(line)
             if m:
@@ -3263,7 +3318,42 @@ class ShowLicenseTechSupport(ShowLicenseTechSupportSchema):
             if m:
                 group=m.groupdict()
                 current_dict = handle_dict.setdefault('measurements',{}).setdefault('entitlement',{})
-                continue 
+                continue
+            
+            #Authorized Count: 0
+            m = p2_2.match(line)
+            if m:
+                group=m.groupdict()
+                handle_dict['authorized_count'] = int(group['authorized_count'])
+                continue
+            
+            #Out-Of-Compliance Count: 0
+            m = p2_3.match(line)
+            if m:
+               group=m.groupdict()
+               handle_dict['outofcompliance_count'] = int(group['outofcompliance_count'])
+               continue
+            
+            #Insufficient Count: 0
+            m = p2_4.match(line)
+            if m:
+                group=m.groupdict()
+                handle_dict['insufficient_count'] = int(group['insufficient_count'])
+                continue
+            
+            #No license: 0
+            m = p2_5.match(line)
+            if m:
+                group=m.groupdict()
+                handle_dict['no_license'] = int(group['no_license'])
+                continue
+            
+            #Day-0 Verification: NO
+            m = p2_6.match(line)
+            if m:
+                group=m.groupdict()
+                handle_dict['day0_verification'] = group['day0_verification']
+                continue
 
             m = p3_1.match(line)
             if m:

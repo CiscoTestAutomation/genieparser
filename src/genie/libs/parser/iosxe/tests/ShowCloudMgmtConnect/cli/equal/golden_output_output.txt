@@ -1,0 +1,42 @@
+Service cloud-mgmt connect: enable
+
+Cloud-Mgmt Tunnel Config
+------------------------------------
+  Fetch State:                Config fetch succeeded
+  Fetch Fail:                 
+  Last Fetch(UTC):            2025-03-21 09:13:31
+  Next Fetch(UTC):            2025-03-21 10:24:03
+  Config Server:              cs1-2037.meraki.com
+  Primary:                    usw.nt.meraki.com
+  Secondary:                  use.nt.meraki.com
+  Client IPv6 Addr:           FD0A:9B09:1F7:1:D67F:35FF:FEFF:D880
+  Network Name:               meraki admin network - wireless
+
+Cloud-Mgmt Tunnel State
+------------------------------------
+  Primary:                    Up
+  Secondary:                  Up
+  Primary Last Change(UTC):   2025-03-21 09:13:37
+  Secondary Last Change(UTC): 2025-03-21 09:13:37
+  Client Last Restart(UTC):   2025-03-21 09:13:31
+
+Cloud-Mgmt Tunnel Interface
+------------------------------------
+  Status:                     Enable
+  Rx Packets:                 53
+  Tx Packets:                 63
+  Rx Errors:                  0
+  Tx Errors:                  0
+  Rx Drop Packets:            0
+  Tx Drop Packets:            0
+
+Cloud-Mgmt Device Registration
+------------------------------------
+  url:                        https://catalyst.meraki.com/nodes/register
+  Device Number:              1
+  PID:                        C9350-48U
+  Serial Number:              FOC2829Y10T
+  Cloud ID:                   Q5CF-TM95-4VEL
+  Mac Address:                D4:7F:35:FF:D8:80
+  Status:                     Registered
+  Timestamp(UTC):             2025-03-21 09:12:19

@@ -20,7 +20,7 @@ from genie.metaparser.util.schemaengine import Schema, \
 
 # import parser utils
 from genie.libs.parser.utils.common import Common
-
+from genie.libs.parser.iosxe.show_fdb import ShowMacAddressTable as ShowMacAddressTable_iosxe
 
 
 # ==============================================
@@ -415,12 +415,12 @@ class ShowPlatformSoftwareMatmSwitchTable(ShowPlatformSoftwareMatmSwitchTableSch
                 continue
 
         return ret_dict
-    
+
 # ================================================================================================
 # Parser for 'show mac address-table dynamic'& 'show mac address-table dynamic interface {intf_name}'
 # =================================================================================================
 class ShowMacAddressTableDynamicAllSchema(MetaParser):
-    """ 
+    """
     Schema for:
         * show mac address-table dynamic
         * show mac address-table dynamic interface {intf_name}
@@ -458,7 +458,7 @@ class ShowMacAddressTableDynamicAll(ShowMacAddressTableDynamicAllSchema):
 
         # initializing dictionary
         ret_dict = {}
-        
+
         # Vlan    Mac Address       Type        Ports
         # ----    -----------       --------    -----
         #    1    00bf.7715.6a0b    DYNAMIC     Tw1/0/25
@@ -491,3 +491,13 @@ class ShowMacAddressTableDynamicAll(ShowMacAddressTableDynamicAllSchema):
                 continue
         return ret_dict
 
+class ShowMacAddressTableDynamicVlan(ShowMacAddressTable_iosxe):
+    """ Parser for show mac address-table dynamic vlan {vlan_id} """
+    cli_command = 'show mac address-table dynamic interface {intf} vlan {vlanid}'
+
+    def cli(self, intf="",vlanid="",output = None):
+        if output is None:
+            show_output = self.device.execute(self.cli_command.format(intf = intf, vlanid = vlanid))
+        else:
+            show_output = output
+        return super().cli(output = show_output)

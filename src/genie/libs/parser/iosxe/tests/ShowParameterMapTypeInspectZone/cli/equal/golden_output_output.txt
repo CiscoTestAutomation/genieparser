@@ -1,0 +1,5 @@
+ parameter-map type inspect-zone test-zone
+ tcp syn-flood-rate 10 
+ max-destination 10000 
+ alert off
+ threat detection disabled

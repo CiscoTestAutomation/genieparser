@@ -165,7 +165,8 @@ class ShowCallHomeSmartLicensing(ShowCallHomeSmartLicensingSchema):
 class ShowCallHomeProfileAllSchema(MetaParser):
     """
     Schema for
-        * 'show call-home profile all'
+        * 'show call-home profile all',
+          'show call-home profile {include}
     """
 
     schema = {
@@ -204,15 +205,22 @@ class ShowCallHomeProfileAllSchema(MetaParser):
 class ShowCallHomeProfileAll(ShowCallHomeProfileAllSchema):
     """
     Parser for
-        * 'show call-home profile all'
+        * 'show call-home profile all',
+          'show call-home profile {include}
     """
-    cli_command = ['show call-home profile all']
+    cli_command = [
+        'show archive log config {include}',
+        'show call-home profile all'
+     ]
 
-    def cli(self, output=None):
+    def cli(self, include='', output=None):
         cmd = self.cli_command[0]
 
         if output is None:
-            output = self.device.execute(self.cli_command[0])
+            if include:
+                output = self.device.execute(self.cli_command[0].format(include=include))
+            else: 
+                output = self.device.execute(self.cli_command[1])
         
         # initializing dictionary
         ret_dict = {}

@@ -1,0 +1,10 @@
+ALARM CONTACT 1
+   Status:      not asserted
+   Description: external alarm contact 1
+   Severity:    minor
+   Trigger:     closed
+ALARM CONTACT 2
+   Status:      not asserted
+   Description: external alarm contact 2
+   Severity:    minor
+   Trigger:     closed

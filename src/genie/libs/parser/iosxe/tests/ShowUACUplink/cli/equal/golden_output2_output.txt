@@ -1,0 +1,20 @@
+Uplink Autoconfig: Enable
+Configured IPv4 Uplink interface: Vlan 1 (Default)
+Uplink IPv4 interface: GigabitEthernet1/0/1
+        IP Address: 20.20.20.33/255.255.255.0
+        Type:       DHCP
+        SVI:        NotApplicable
+        Port Used:  NotApplicable
+        GW IP:      20.20.20.1
+        GW MAC:     00b6.7032.8f64
+        Score:      0
+Configured IPv6 Uplink interface: Vlan 1 (Default)
+Uplink IPv6 interface: GigabitEthernet1/0/1
+        IP Address: 2001:20::4664:3CFF:FEE7:A64/64 
+        Type:       SLAAC
+        SVI:        NotApplicable
+        Port Used:  NotApplicable
+        GW IP:      FE80::2B6:70FF:FE32:8F64
+        GW MAC:     00b6.7032.8f64
+        Score:      3
+Uplink Reachable: IPv6

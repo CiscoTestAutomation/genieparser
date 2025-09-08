@@ -1,5 +1,6 @@
 expected_output = {
-    'os': 'iosxr',
-    'platform': 'asr9k',
-    'version': '6.1.4.10I',
+    "os": "iosxr",
+    "version": "6.1.4.10I",
+    "platform": "asr9k",
+    "pid": "ASR-9006"
 }

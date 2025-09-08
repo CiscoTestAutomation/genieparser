@@ -3,10 +3,12 @@ show_igmp.py
 
 IOSXE parsers for the following show commands:
 
-    * show ip igmp interface 
+    * show ip igmp interface
+    * show ip igmp interface <WORD>
     * show ip igmp vrf <WORD> interface 
     * show ip igmp groups detail
     * show ip igmp vrf <WORD> groups detail
+    * show ip igmp groups  <WORD> detail
     * show ip igmp ssm-mapping
     * show ip igmp ssm-mapping <WORD>
     * show ip igmp vrf <WORD> ssm-mapping <WORD>
@@ -15,6 +17,7 @@ IOSXE parsers for the following show commands:
     * show ip igmp snooping groups
     * show ip igmp vrf {vrf} snooping groups
     * show platform software fed switch active ip igmp snooping groups count
+    * show ip igmp groups <WORD>
 """
 
 # Python
@@ -36,6 +39,7 @@ class ShowIpIgmpInterfaceSchema(MetaParser):
     """
     Schema for 'show ip igmp interface'
     Schema for 'show ip igmp vrf <WORD> interface'
+    Schema for 'show ip igmp interface <WORD>'
     """
 
     schema = {'vrf':
@@ -89,14 +93,17 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
     """
     Parser for 'show ip igmp interface'
     Parser for 'show ip igmp vrf <WORD> interface'
+    Parser for 'show ip igmp interface <WORD>'
     """
-    cli_command = ['show ip igmp vrf {vrf} interface','show ip igmp interface']
+    cli_command = ['show ip igmp vrf {vrf} interface','show ip igmp interface', 'show ip igmp interface {interface}']
     exclude = ['joins', 'leaves']
 
-    def cli(self, vrf='',output=None):
+    def cli(self, vrf='', interface= '', output=None):
         if output is None:
             if vrf:
                 cmd = self.cli_command[0].format(vrf=vrf)
+            elif interface:
+                cmd = self.cli_command[2].format(interface=interface)
             else:
                 cmd = self.cli_command[1]
 
@@ -359,6 +366,7 @@ class ShowIpIgmpGroupsDetailSchema(MetaParser):
     """
     Schema for 'show ip igmp groups detail'
     Schema for 'show ip igmp vrf <WORD> groups detail'
+    Schema for 'show ip igmp groups  <WORD> detail'
     """
 
     schema = {'vrf':
@@ -421,6 +429,7 @@ class ShowIpIgmpGroupsDetail(ShowIpIgmpGroupsDetailSchema):
     """
     Parser for 'show ip igmp groups detail'
     Parser for 'show ip igmp vrf <WORD> groups detail'
+    Parser for 'show ip igmp groups  <WORD> detail'
     """
     exclude = ['expire', 'up_time', 'ast_reporter']
 
@@ -436,12 +445,15 @@ class ShowIpIgmpGroupsDetail(ShowIpIgmpGroupsDetailSchema):
                 pass
         return ret_dict
 
-    cli_command = ['show ip igmp vrf {vrf} groups detail', 'show ip igmp groups detail']
+    cli_command = ['show ip igmp vrf {vrf} groups detail', 'show ip igmp groups detail', 'show ip igmp groups {ip} detail']
 
-    def cli(self, vrf='',output=None):
+    def cli(self, vrf='', ip='', output=None):
         if output is None:
             if vrf:
                 cmd = self.cli_command[0].format(vrf=vrf)
+            elif ip:
+                vrf = 'default'
+                cmd = self.cli_command[2].format(ip=ip)
             else:
                 vrf = 'default'
                 cmd = self.cli_command[1]
@@ -1214,6 +1226,7 @@ class ShowIpIgmpVrfSnoopingGroups(ShowIpIgmpVrfSnoopingGroupsSchema):
 class ShowIpIgmpGroupsSchema(MetaParser):
     """
     Schema for 'show ip igmp groups'
+    Schema for 'show ip igmp groups <WORD>'
     """
 
     schema = {
@@ -1231,12 +1244,17 @@ class ShowIpIgmpGroupsSchema(MetaParser):
 class ShowIpIgmpGroups(ShowIpIgmpGroupsSchema):
     """
     Parser for 'show ip igmp groups'
+    Parser for 'show ip igmp groups <WORD>'
     """
-    cli_command = 'show ip igmp groups'
+    cli_command = ['show ip igmp groups', 'show ip igmp groups {interface}']
 
-    def cli(self, output=None):
+    def cli(self, interface = '', output=None):
         if output is None:
-            output = self.device.execute(self.cli_command)
+            if interface:
+                cmd = self.cli_command[1].format(interface=interface)
+            else:
+                cmd = self.cli_command[0]
+            output = self.device.execute(cmd)
 
         # initial variables
         igmp_dict = {}
@@ -1326,7 +1344,7 @@ class ShowIpIgmpSnoopingQuerierVlanDetailSchema(MetaParser):
             'tcn_query_count': int,
             'tcn_query_interval': int,
         },
-        'vlan': {     
+        Optional('vlan'): {     
             Any(): {       
                 'admin_state': str,                             
                 'admin_version': int,
@@ -1576,4 +1594,91 @@ class ShowIpIgmpSnoopingGroupsVlanGroup(ShowIpIgmpSnoopingGroupsVlanGroupSchema)
             if m:
                 group = m.groupdict()
                 ret_dict.setdefault('igmp_groups', {}).setdefault(group.pop('group'), group)
+        return ret_dict
+
+class ShowIpIgmpMembershipSchema(MetaParser):
+    """Schema for 'show ip igmp membership'"""
+
+    schema = {
+        'group': {
+            Any(): {
+                'reporter': str,
+                'uptime': str,
+                'expire': str,
+                'flags': str,
+                'interface': str,
+            }
+        }
+    }
+
+class ShowIpIgmpMembership(ShowIpIgmpMembershipSchema):
+    """Parser for 'show ip igmp membership'"""
+
+    cli_command = 'show ip igmp membership'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # initial variables
+        ret_dict = {}
+
+        # Matching Patterns
+        #  Channel/Group                  Reporter        Uptime   Exp.  Flags  Interface
+        # *,225.1.1.1                    4.1.1.2         00:02:06 02:34 2A     Tw1/0/36
+        p1 = re.compile(r'^(?P<group>[\*\d\.,]+)\s+(?P<reporter>[\d\.]+)\s+(?P<uptime>[\d:]+)\s+(?P<expire>[\d:]+)\s+(?P<flags>\w+)\s+(?P<interface>\S+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # *,225.1.1.1                    4.1.1.2         00:02:06 02:34 2A     Tw1/0/36
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()['group']
+                group_dict = ret_dict.setdefault('group', {}).setdefault(group, {})
+                group_dict['reporter'] = m.groupdict()['reporter']
+                group_dict['uptime'] = m.groupdict()['uptime']
+                group_dict['expire'] = m.groupdict()['expire']
+                group_dict['flags'] = m.groupdict()['flags']
+                group_dict['interface'] = m.groupdict()['interface']
+                continue
+
+        return ret_dict
+    
+class ShowIpIgmpSnoopingGroupsVlanCountSchema(MetaParser):
+    """Schema for 'show ip igmp snooping groups vlan {vlan} count'"""
+
+    schema = {
+        'vlan': {
+            Any(): {
+                'count': int,
+            }
+        }
+    }
+
+class ShowIpIgmpSnoopingGroupsVlanCount(ShowIpIgmpSnoopingGroupsVlanCountSchema):
+    """Parser for 'show ip igmp snooping groups vlan {vlan} count'"""
+
+    cli_command = 'show ip igmp snooping groups vlan {vlan} count'
+
+    def cli(self, vlan, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(vlan=vlan))
+
+        # initial variables
+        ret_dict = {}
+
+        # Total number of groups in Vlan 100:   16000
+        p1 = re.compile(r"^Total number of groups in Vlan (?P<vlan>\d+):\s+(?P<count>\d+)$")
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Total number of groups in Vlan 100:   16000
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault('vlan', {}).setdefault(group['vlan'], {})['count'] = int(group['count'])
+                continue
+
         return ret_dict

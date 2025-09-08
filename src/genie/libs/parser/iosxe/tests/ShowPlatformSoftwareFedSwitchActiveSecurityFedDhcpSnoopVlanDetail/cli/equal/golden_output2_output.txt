@@ -1,0 +1,6 @@
+FED DHCP SNOOPING VLAN Data :
+  Vlan= 20
+  DHCP SNOOP enable: FALSE
+  Valid Snooping DI handle:none
+  Punject Switch Profile: FALSE
+  No trust ports for this vlan

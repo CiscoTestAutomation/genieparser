@@ -42,6 +42,11 @@
         *  show mpls traffic-eng autoroute
         *  show mpls traffic-eng topology
         *  show mpls traffic-eng fast-reroute database detail
+	*  show mpls tp summary
+        *  show mpls l2transport summary
+        *  show mpls tp tunnel-tp 1 lsps detail
+        *  show mpls tp lsps detail
+        *  show mpls traffic-eng fast-reroute database
 """
 
 import re
@@ -5099,3 +5104,1152 @@ class ShowMplsTrafficEngFastRerouteDatabaseDetail \
                 continue
 
         return ret_dict
+
+class ShowMplsTpSummarySchema(MetaParser):
+    """Schema for show mpls tp summary"""
+    schema = {
+        'mpls_tp': {
+	    str: {
+                'path_protection_mode': str,
+                'psc': str,
+                'timers': {
+                    'fault_oam': str,
+                    'wait_to_restore': str,
+                    'psc': {
+                        'fast_timer': str,
+                        'messages': int,
+                        'slow_timer': str,
+                    }
+                },
+                'endpoints': {
+                    'total': int,
+                    'up': int,
+                    'down': int,
+                    'shut': int,
+                    'working': {
+                        'total': int,
+                        'up': int,
+                        'down': int,
+                    },
+                    'protect': {
+                        'total': int,
+                        'up': int,
+                        'down': int,
+                    }
+                },
+                'midpoints': {
+                    'total': int,
+                    'working': int,
+                    'protect': int,
+                },
+                'platform_max_tp_interfaces': int,
+            }
+        }
+    }
+
+class ShowMplsTpSummary(ShowMplsTpSummarySchema):
+    """Parser for show mpls tp summary"""
+
+    cli_command = 'show mpls tp summary'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # Regular expressions for parsing the MPLS-TP output
+        # Matches: "MPLS-TP:     0::101.1.1.1"
+        p1 = re.compile(r'^MPLS-TP:\s+(?P<mpls_tp_id>\S+)$')
+        # Matches: "Path protection mode: 1:1 revertive"
+        p2 = re.compile(r'^Path protection mode:\s+(?P<path_protection_mode>.+)$')
+        # Matches: "PSC: Disabled"
+        p3 = re.compile(r'^PSC:\s+(?P<psc>\S+)$')
+        # Matches: "Timers:  Fault OAM: 20 seconds  Wait-to-Restore: 10 seconds"
+        p4 = re.compile(r'^Timers:\s+Fault OAM:\s+(?P<fault_oam>\d+\s+\w+)\s+Wait-to-Restore:\s+(?P<wait_to_restore>\d+\s+\w+)$')
+        # Matches: "PSC: Fast-Timer: 1000 milli seconds, 3 messages"
+        p5 = re.compile(r'^\s*PSC:\s+Fast-Timer:\s+(?P<fast_timer>\d+)\s+\w+\s+\w+,\s+(?P<messages>\d+)\s+messages\s*$') 
+        # Matches: "Slow-Timer: 5 seconds"
+        p6 = re.compile(r'^Slow-Timer:\s+(?P<slow_timer>\d+\s+\w+)$')
+        # Matches: "Endpoints: 500    up: 500    down: 0      shut: 0"
+        p7 = re.compile(r'^Endpoints:\s+(?P<total>\d+)\s+up:\s+(?P<up>\d+)\s+down:\s+(?P<down>\d+)\s+shut:\s+(?P<shut>\d+)$')
+        # Matches: "    Working: 500    up: 500    down: 0"
+        p8 = re.compile(r'^Working:\s+(?P<total>\d+)\s+up:\s+(?P<up>\d+)\s+down:\s+(?P<down>\d+)$')
+        # Matches: "    Protect: 500    up: 500    down: 0"
+        p9 = re.compile(r'^Protect:\s+(?P<total>\d+)\s+up:\s+(?P<up>\d+)\s+down:\s+(?P<down>\d+)$')
+        # Matches: "Midpoints: 0      working: 0      protect: 0"
+        p10 = re.compile(r'^Midpoints:\s+(?P<total>\d+)\s+working:\s+(?P<working>\d+)\s+protect:\s+(?P<protect>\d+)$')
+        # Matches: "Platform max TP interfaces: 65536"
+        p11 = re.compile(r'^Platform max TP interfaces:\s+(?P<platform_max_tp_interfaces>\d+)$')
+
+        # Parse each line of the output
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Match MPLS-TP ID
+            m = p1.match(line)
+            if m:
+                mpls_tp_id = m.group('mpls_tp_id')
+                mpls_tp_dict = parsed_dict.setdefault('mpls_tp', {}).setdefault(mpls_tp_id, {})
+                continue
+
+            # Match Path protection mode
+            m = p2.match(line)
+            if m:
+                mpls_tp_dict['path_protection_mode'] = m.group('path_protection_mode')
+                continue
+
+            # Match PSC:
+            m = p3.match(line)
+            if m:
+                mpls_tp_dict['psc'] = m.group('psc')
+                continue
+
+            # Match Timers: Fault OAM and Wait-to-Restore
+            m = p4.match(line)
+            if m:
+                timers_dict = mpls_tp_dict.setdefault('timers', {})
+                timers_dict['fault_oam'] = m.group('fault_oam')
+                timers_dict['wait_to_restore'] = m.group('wait_to_restore')
+                continue
+
+            m = p6.match(line)
+            if m:
+                psc_dict = timers_dict.setdefault('psc', {})
+
+            # Match PSC: Fast-Timer and messages.
+            m = p5.match(line)
+            if m:
+                psc_dict = timers_dict.setdefault('psc', {})
+                psc_dict['fast_timer'] = m.group('fast_timer')
+                psc_dict['messages'] = int(m.group('messages'))
+                continue
+
+            # Match Slow-Timer
+            m = p6.match(line)
+            if m:
+                psc_dict = timers_dict.setdefault('psc', {})
+                psc_dict['slow_timer'] = m.group('slow_timer')
+                continue
+
+            # Match Endpoints
+            m = p7.match(line)
+            if m:
+                endpoints_dict = mpls_tp_dict.setdefault('endpoints', {})
+                endpoints_dict['total'] = int(m.group('total'))
+                endpoints_dict['up'] = int(m.group('up'))
+                endpoints_dict['down'] = int(m.group('down'))
+                endpoints_dict['shut'] = int(m.group('shut'))
+                continue
+
+            # Match Working
+            m = p8.match(line)
+            if m:
+                working_dict = endpoints_dict.setdefault('working', {})
+                working_dict['total'] = int(m.group('total'))
+                working_dict['up'] = int(m.group('up'))
+                working_dict['down'] = int(m.group('down'))
+                continue
+
+            # Match Protect
+            m = p9.match(line)
+            if m:
+                protect_dict = endpoints_dict.setdefault('protect', {})
+                protect_dict['total'] = int(m.group('total'))
+                protect_dict['up'] = int(m.group('up'))
+                protect_dict['down'] = int(m.group('down'))
+                continue
+
+            # Match Midpoints
+            m = p10.match(line)
+            if m:
+                midpoints_dict = mpls_tp_dict.setdefault('midpoints', {})
+                midpoints_dict['total'] = int(m.group('total'))
+                midpoints_dict['working'] = int(m.group('working'))
+                midpoints_dict['protect'] = int(m.group('protect'))
+                continue
+
+            # Match Platform max TP interfaces.
+            m = p11.match(line)
+            if m:
+                mpls_tp_dict['platform_max_tp_interfaces'] = int(m.group('platform_max_tp_interfaces'))
+                continue
+
+        return parsed_dict
+
+class ShowMplsL2TransportSummarySchema(MetaParser):
+    '''Schema for show mpls l2transport summary'''
+    schema = {
+        'destination_address': str,
+        'total_number_of_vc': int,
+        'vc_status': {
+            'unknown': int,
+            'up': int,
+            'down': int,
+            'admin_down': int,
+            'recovering': int,
+            'standby': int,
+            'hotstandby': int,
+        },
+        'active_vc': {
+            'count': int,
+            'interface': str,
+        }
+    }
+
+class ShowMplsL2TransportSummary(ShowMplsL2TransportSummarySchema):
+    '''Parser for show mpls l2transport summary'''
+    cli_command = 'show mpls l2transport summary'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        parsed = {}
+
+        #Destination address: 2.2.2.2, total number of vc: 3
+        p1 = re.compile(r'^Destination address: +(?P<destination_address>[\d\.]+), +total number of vc: +(?P<total_number_of_vc>\d+)$')
+
+        #0 unknown, 3 up, 0 down, 0 admin down, 0 recovering, 0 standby, 0 hotstandby
+        p2 = re.compile(r'^(?P<unknown>\d+) unknown, +(?P<up>\d+) up, +(?P<down>\d+) down, +(?P<admin_down>\d+) admin down, +(?P<recovering>\d+) recovering, +(?P<standby>\d+) standby, +(?P<hotstandby>\d+) hotstandby$')
+
+        #3 active vc on MPLS interface Tp1
+        p3 = re.compile(r'^(?P<count>\d+) active vc on MPLS interface +(?P<interface>\S+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            #Destination address: 2.2.2.2, total number of vc: 3
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                parsed['destination_address'] = group['destination_address']
+                parsed['total_number_of_vc'] = int(group['total_number_of_vc'])
+                continue
+
+            #0 unknown, 3 up, 0 down, 0 admin down, 0 recovering, 0 standby, 0 hotstandby
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                parsed['vc_status'] = {k: int(v) for k, v in group.items()}
+                continue
+
+            #3 active vc on MPLS interface Tp1
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                parsed['active_vc'] = {k: int(v) if k == 'count' else v for k, v in group.items()}
+
+        return parsed
+
+class ShowMplsTpTunnelTpSchema(MetaParser):
+    """Schema for 'show mpls tp tunnel-tp 1 lsps detail'"""
+    schema = {
+        'mpls_tp_tunnel': {
+            int: {  # Tunnel ID
+                'src_global_id': int,
+                'src_node_id': str,
+                'src_tunnel': int,
+                'dst_global_id': int,
+                'dst_node_id': str,
+                'dst_tunnel': int,
+                Optional('description'): str,
+                Optional('admin'): str,
+                Optional('oper'): str,
+                Optional('bandwidth'): int,
+                Optional('bfd_template'): str,
+                Optional('protection_trigger'): str,
+                Optional('psc'): str,
+                Optional('working_lsp'): {
+                    Optional('status'): str,
+                    Optional('lsp_num'): int,
+                    Optional('bfd_state'): str,
+                    Optional('lockout'): str,
+                    Optional('fault_oam'): str,
+                    Optional('signal_degrade'): str,
+                    Optional('path'): {
+                        str: {  # Path identifier
+                            Optional('in_label'): int,
+                            Optional('label_table'): int,
+                            Optional('out_label'): int,
+                            Optional('outgoing_tp_link'): int,
+                            Optional('interface'): str,
+                            Optional('forwarding'): str,
+                            Optional('bandwidth_admitted'): int,
+                        }
+                    }
+                },
+                Optional('protect_lsp'): {
+                    Optional('status'): str,
+                    Optional('lsp_num'): int,
+                    Optional('bfd_state'): str,
+                    Optional('lockout'): str,
+                    Optional('fault_oam'): str,
+                    Optional('signal_degrade'): str,
+                    Optional('path'): {
+                        str: {  # Path identifier
+                            Optional('in_label'): int,
+                            Optional('label_table'): int,
+                            Optional('out_label'): int,
+                            Optional('outgoing_tp_link'): int,
+                            Optional('interface'): str,
+                            Optional('forwarding'): str,
+                            Optional('bandwidth_admitted'): int,
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+class ShowMplsTpTunnelTp(ShowMplsTpTunnelTpSchema):
+    """Parser for 'show mpls tp tunnel-tp 1 lsps detail'"""
+
+    cli_command = 'show mpls tp tunnel-tp 1 lsps detail'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize parsed dictionary
+        parsed_dict = {}
+
+        # Regular expressions for parsing
+        # Example: MPLS-TP tunnel 1:
+        p1 = re.compile(r'^MPLS-TP tunnel (?P<tunnel_id>\d+):$')
+        # Example: src global id: 0     node id: 101.1.1.1  tunnel: 1
+        p2 = re.compile(r'^src global id: (?P<src_global_id>\d+)\s+node id: (?P<src_node_id>[\d\.]+)\s+tunnel: (?P<src_tunnel>\d+)$')
+        # Example: dst global id: 0     node id: 103.3.3.3  tunnel: 1
+        p3 = re.compile(r'^dst global id: (?P<dst_global_id>\d+)\s+node id: (?P<dst_node_id>[\d\.]+)\s+tunnel: (?P<dst_tunnel>\d+)$')
+        # Example: description:
+        p4 = re.compile(r'^description:\s*(?P<description>.*)$')
+        # Example: Admin: up           Oper: up
+        p5 = re.compile(r'^Admin: (?P<admin>\w+)\s+Oper: (?P<oper>\w+)$')
+        # Example: bandwidth:         0
+        p6 = re.compile(r'^bandwidth:\s+(?P<bandwidth>\d+)$')
+        # Example: BFD template:  BFD
+        p7 = re.compile(r'^BFD template:\s+(?P<bfd_template>\w+)$')
+        # Example: protection trigger: LDI LKR
+        p8 = re.compile(r'^protection trigger:\s+(?P<protection_trigger>[\w\s]+)$')
+        # Example: PSC: Disabled
+        p9 = re.compile(r'^PSC:\s+(?P<psc>\w+)$')
+        # Example: working-lsp: Standby      lsp num 0
+        p10 = re.compile(r'^(?P<lsp_type>working|protect)-lsp:\s+(?P<state>\w+)\s+lsp num (?P<lsp_num>\d+)$')
+        # Example: BFD State: Up
+        p11 = re.compile(r'^BFD State:\s+(?P<bfd_state>\w+)$')
+        # Example: Lockout  : Clear
+        p12 = re.compile(r'^Lockout\s+:\s+(?P<lockout>\w+)$')
+        # Example: Fault OAM: Clear
+        p13 = re.compile(r'^Fault OAM:\s+(?P<fault_oam>\w+)$')
+        # Example: Signal Degrade: No
+        p14 = re.compile(r'^Signal Degrade:\s+(?P<signal_degrade>\w+)$')
+        # Example: 0::101.1.1.1::1::0::103.3.3.3::1::0  (working/standby)
+        p15 = re.compile(r'^(?P<path_id>[\d\.:]+)\s+\((?P<path_type>[\w/]+)\)$')
+        # Example: in label 4100    label table 0      out label 5200
+        p16 = re.compile(r'^in label (?P<in_label>\d+)\s+label table (?P<label_table>\d+)\s+out label (?P<out_label>\d+)$')
+        # Example: outgoing tp-link 1   interface Te0/0/13
+        p17 = re.compile(r'^outgoing tp-link (?P<outgoing_tp_link>\d+)\s+interface (?P<interface>\S+)$')
+        # Example: Forwarding: Installed,  Bandwidth: 0 Admitted
+        p18 = re.compile(r'^Forwarding:\s+(?P<forwarding>\w+),\s+Bandwidth:\s+(?P<bandwidth_admitted>\d+)\s+Admitted$')
+
+        # Variables to keep track of current state
+        current_tunnel = None
+        current_lsp = None
+        current_path = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Example: MPLS-TP tunnel 1:
+            m = p1.match(line)
+            if m:
+                tunnel_id = int(m.group('tunnel_id'))
+                current_tunnel = parsed_dict.setdefault('mpls_tp_tunnel', {}).setdefault(tunnel_id, {})
+                continue
+
+            # Example: src global id: 0     node id: 101.1.1.1  tunnel: 1
+            m = p2.match(line)
+            if m and current_tunnel is not None:
+                current_tunnel.update({
+                    'src_global_id': int(m.group('src_global_id')),
+                    'src_node_id': m.group('src_node_id'),
+                    'src_tunnel': int(m.group('src_tunnel')),
+                })
+                continue
+
+            # Example: dst global id: 0     node id: 103.3.3.3  tunnel: 1
+            m = p3.match(line)
+            if m and current_tunnel is not None:
+                current_tunnel.update({
+                    'dst_global_id': int(m.group('dst_global_id')),
+                    'dst_node_id': m.group('dst_node_id'),
+                    'dst_tunnel': int(m.group('dst_tunnel')),
+                })
+                continue
+
+            # Example: description:
+            m = p4.match(line)
+            if m and current_tunnel is not None:
+                description = m.group('description').strip()
+                if description:  # Only add description if it's not empty
+                    current_tunnel['description'] = description
+                continue
+
+            # Example: Admin: up           Oper: up
+            m = p5.match(line)
+            if m and current_tunnel is not None:
+                current_tunnel.update({
+                    'admin': m.group('admin'),
+                    'oper': m.group('oper'),
+                })
+                continue
+
+            # Example: bandwidth:         0
+            m = p6.match(line)
+            if m and current_tunnel is not None:
+                current_tunnel['bandwidth'] = int(m.group('bandwidth'))
+                continue
+
+            # Example: BFD template:  BFD
+            m = p7.match(line)
+            if m and current_tunnel is not None:
+                current_tunnel['bfd_template'] = m.group('bfd_template')
+                continue
+
+            # Example: protection trigger: LDI LKR
+            m = p8.match(line)
+            if m and current_tunnel is not None:
+                current_tunnel['protection_trigger'] = m.group('protection_trigger')
+                continue
+
+            # Example: PSC: Disabled
+            m = p9.match(line)
+            if m and current_tunnel is not None:
+                current_tunnel['psc'] = m.group('psc')
+                continue
+
+            # Example: working-lsp: Standby      lsp num 0
+            m = p10.match(line)
+            if m and current_tunnel is not None:
+                lsp_type = m.group('lsp_type') + '_lsp'
+                current_lsp = current_tunnel.setdefault(lsp_type, {})
+                current_lsp.update({
+                    'status': m.group('state'),
+                    'lsp_num': int(m.group('lsp_num')),
+                })
+                continue
+
+            # Example: BFD State: Up
+            m = p11.match(line)
+            if m and current_lsp is not None:
+                current_lsp['bfd_state'] = m.group('bfd_state')
+                continue
+
+            # Example: Lockout  : Clear
+            m = p12.match(line)
+            if m and current_lsp is not None:
+                current_lsp['lockout'] = m.group('lockout')
+                continue
+
+            # Example: Fault OAM: Clear
+            m = p13.match(line)
+            if m and current_lsp is not None:
+                current_lsp['fault_oam'] = m.group('fault_oam')
+                continue
+
+            # Example: Signal Degrade: No
+            m = p14.match(line)
+            if m and current_lsp is not None:
+                current_lsp['signal_degrade'] = m.group('signal_degrade')
+                continue
+
+            # Example: 0::101.1.1.1::1::0::103.3.3.3::1::0  (working/standby)
+            m = p15.match(line)
+            if m and current_lsp is not None:
+                path_id = f"{m.group('path_id')} ({m.group('path_type')})"
+                current_path = current_lsp.setdefault('path', {}).setdefault(path_id, {})
+                continue
+
+            # Example: in label 4100    label table 0      out label 5200
+            m = p16.match(line)
+            if m and current_path is not None:
+                current_path.update({
+                    'in_label': int(m.group('in_label')),
+                    'label_table': int(m.group('label_table')),
+                    'out_label': int(m.group('out_label')),
+                })
+                continue
+
+            # Example: outgoing tp-link 1   interface Te0/0/13
+            m = p17.match(line)
+            if m and current_path is not None:
+                current_path.update({
+                    'outgoing_tp_link': int(m.group('outgoing_tp_link')),
+                    'interface': m.group('interface'),
+                })
+                continue
+
+            # Example: Forwarding: Installed,  Bandwidth: 0 Admitted
+            m = p18.match(line)
+            if m and current_path is not None:
+                current_path.update({
+                    'forwarding': m.group('forwarding'),
+                    'bandwidth_admitted': int(m.group('bandwidth_admitted')),
+                })
+                continue
+
+        return parsed_dict
+
+# ================================================================================
+# Schema for 'show mpls tp lsps detail'
+# ================================================================================
+class ShowMplsTpLspsDetailSchema(MetaParser):
+    """Schema for show mpls tp lsps detail"""
+
+    schema = {
+        'lsps': {
+            Any(): {  # LSP Name
+                'id': int,
+                'source': str,
+                'destination': str,
+                'state': str,
+                'role': str,
+                'oam_profile': str,
+                'bfd_profile': str,
+                'cc_cv_state': str,
+                'cc_cv_session_id': int,
+                'working_lsp': {
+                    'in_label': str,
+                    'out_label': str,
+                    'interface': str,
+                    'fec': str,
+                    'weight': int,
+                    'backup': str,
+                },
+                Optional('protect_lsp'): {
+                    Optional('in_label'): str,
+                    Optional('out_label'): str,
+                    Optional('interface'): str,
+                    Optional('fec'): str,
+                    Optional('weight'): int,
+                    Optional('backup'): str,
+                    Optional('status'): str,
+                }
+            }
+        }
+    }
+
+# ================================================================================
+# Parser for 'show mpls tp lsps detail'
+# ================================================================================
+class ShowMplsTpLspsDetail(ShowMplsTpLspsDetailSchema):
+    """Parser for show mpls tp lsps detail"""
+
+    cli_command = ['show mpls tp lsps detail']
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command[0])
+
+        # Initialize result dictionary
+        parsed_dict = {}
+
+        # Regular expressions for parsing
+        # MPLS-TP LSP Name: my_tp_tunnel_1_1, ID: 1
+        p1 = re.compile(r'^MPLS-TP LSP Name:\s+(?P<name>\S+),\s+ID:\s+(?P<id>\d+)$')
+
+        # Source: my_tp_tunnel (R1:1)
+        p2 = re.compile(r'^\s*Source:\s+(?P<source>.+)$')
+
+        # Destination: my_tp_tunnel (R2:1)
+        p3 = re.compile(r'^\s*Destination:\s+(?P<destination>.+)$')
+
+        # State: Up, Role: Head
+        p4 = re.compile(r'^\s*State:\s+(?P<state>\w+),\s+Role:\s+(?P<role>\w+)$')
+
+        # OAM-Profile: default, BFD-Profile: default
+        p5 = re.compile(r'^\s*OAM-Profile:\s+(?P<oam_profile>\S+),\s+BFD-Profile:\s+(?P<bfd_profile>\S+)$')
+
+        # CC-CV State: Down, CC-CV Session ID: 0
+        p6 = re.compile(r'^\s*CC-CV State:\s+(?P<cc_cv_state>\w+),\s+CC-CV Session ID:\s+(?P<cc_cv_session_id>\d+)$')
+
+        # Working LSP:
+        p7 = re.compile(r'^\s*Working LSP:$')
+
+        # Protect LSP:
+        p8 = re.compile(r'^\s*Protect LSP:$')
+
+        # InLabel: Pop, OutLabel: 16, Interface: GigabitEthernet3
+        p9 = re.compile(r'^\s*InLabel:\s+(?P<in_label>\S+),\s+OutLabel:\s+(?P<out_label>\S+),\s+Interface:\s+(?P<interface>\S+)$')
+
+        # FEC: 1.1.1.1/32, Weight: 1, Backup: No
+        p10 = re.compile(r'^\s*FEC:\s+(?P<fec>\S+),\s+Weight:\s+(?P<weight>\d+),\s+Backup:\s+(?P<backup>\w+)$')
+
+        # Not established
+        p11 = re.compile(r'^\s*Not established$')
+
+        current_lsp = None
+        current_lsp_section = None
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # MPLS-TP LSP Name: my_tp_tunnel_1_1, ID: 1
+            m = p1.match(line)
+            if m:
+                lsp_name = m.group('name')
+                lsp_id = int(m.group('id'))
+
+                if 'lsps' not in parsed_dict:
+                    parsed_dict['lsps'] = {}
+
+                parsed_dict['lsps'][lsp_name] = {
+                    'id': lsp_id
+                }
+                current_lsp = parsed_dict['lsps'][lsp_name]
+                current_lsp_section = None
+                continue
+
+            if current_lsp is None:
+                continue
+
+            # Source: my_tp_tunnel (R1:1)
+            m = p2.match(line)
+            if m:
+                current_lsp['source'] = m.group('source')
+                continue
+
+            # Destination: my_tp_tunnel (R2:1)
+            m = p3.match(line)
+            if m:
+                current_lsp['destination'] = m.group('destination')
+                continue
+
+            # State: Up, Role: Head
+            m = p4.match(line)
+            if m:
+                current_lsp['state'] = m.group('state')
+                current_lsp['role'] = m.group('role')
+                continue
+
+            # OAM-Profile: default, BFD-Profile: default
+            m = p5.match(line)
+            if m:
+                current_lsp['oam_profile'] = m.group('oam_profile')
+                current_lsp['bfd_profile'] = m.group('bfd_profile')
+                continue
+
+            # CC-CV State: Down, CC-CV Session ID: 0
+            m = p6.match(line)
+            if m:
+                current_lsp['cc_cv_state'] = m.group('cc_cv_state')
+                current_lsp['cc_cv_session_id'] = int(m.group('cc_cv_session_id'))
+                continue
+
+            # Working LSP:
+            m = p7.match(line)
+            if m:
+                current_lsp_section = 'working'
+                continue
+
+            # Protect LSP:
+            m = p8.match(line)
+            if m:
+                current_lsp_section = 'protect'
+                continue
+
+            # Not established
+            m = p11.match(line)
+            if m and current_lsp_section == 'protect':
+                if 'protect_lsp' not in current_lsp:
+                    current_lsp['protect_lsp'] = {}
+                current_lsp['protect_lsp']['status'] = 'Not established'
+                current_lsp_section = None
+                continue
+
+            # InLabel: Pop, OutLabel: 16, Interface: GigabitEthernet3
+            m = p9.match(line)
+            if m and current_lsp_section:
+                section_key = 'working_lsp' if current_lsp_section == 'working' else 'protect_lsp'
+                if section_key not in current_lsp:
+                    current_lsp[section_key] = {}
+
+                current_lsp[section_key].update({
+                    'in_label': m.group('in_label'),
+                    'out_label': m.group('out_label'),
+                    'interface': m.group('interface')
+                })
+                continue
+
+            # FEC: 1.1.1.1/32, Weight: 1, Backup: No
+            m = p10.match(line)
+            if m and current_lsp_section:
+                section_key = 'working_lsp' if current_lsp_section == 'working' else 'protect_lsp'
+                if section_key in current_lsp:
+                    current_lsp[section_key].update({
+                        'fec': m.group('fec'),
+                        'weight': int(m.group('weight')),
+                        'backup': m.group('backup')
+                    })
+                continue
+
+        return parsed_dict
+
+
+# ================================================================================
+# Schema for 'show mpls traffic-eng link-management summary'
+# ================================================================================
+class ShowMplsTrafficEngLinkManagementSummarySchema(MetaParser):
+    """Schema for show mpls traffic-eng link-management summary"""
+
+    schema = {
+        'system_information': {
+            'links_count': int,
+            'flooding_system': str,
+        },
+        'igp_areas': {
+            Any(): {
+                'flooding_protocol': str,
+                'flooding_status': str,
+                'periodic_flooding': str,
+                'flooded_links': int,
+                'igp_system_id': str,
+                'mpls_te_router_id': str,
+                'neighbors': int,
+            }
+        },
+        'links': {
+            Any(): {
+                'interface': str,
+                'remote_ip': str,
+                'local_intfc_id': int,
+                'srlgs': str,
+                'intfc_switching_capability_descriptors': {
+                    'default': str,
+                },
+                'link_label_type': str,
+                'physical_bandwidth': str,
+                'max_res_global_bw': str,
+                'max_res_sub_bw': str,
+                'mpls_te_link_state': str,
+                'inbound_admission': str,
+                'outbound_admission': str,
+                'link_mtu': {
+                    'ip': int,
+                    'mpls': int,
+                }
+            }
+        }
+    }
+
+
+# ================================================================================
+# Parser for 'show mpls traffic-eng link-management summary'
+# ================================================================================
+class ShowMplsTrafficEngLinkManagementSummary(ShowMplsTrafficEngLinkManagementSummarySchema):
+    """Parser for show mpls traffic-eng link-management summary"""
+
+    cli_command = ['show mpls traffic-eng link-management summary']
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command[0])
+
+        # Initialize result dictionary
+        parsed_dict = {}
+
+        # Regular expressions for parsing
+        # Links Count: 4
+        p1 = re.compile(r'^Links Count:\s+(?P<links_count>\d+)$')
+
+        # Flooding System: enabled
+        p2 = re.compile(r'^Flooding System:\s+(?P<flooding_system>\w+)$')
+
+        # IGP Area ID:: ospf 100  area 0
+        p3 = re.compile(r'^IGP Area ID::\s+(?P<igp_area>.+)$')
+
+        # Flooding Protocol: OSPF
+        p4 = re.compile(r'^Flooding Protocol:\s+(?P<flooding_protocol>\w+)$')
+
+        # Flooding Status: data flooded
+        p5 = re.compile(r'^Flooding Status:\s+(?P<flooding_status>.+)$')
+
+        # Periodic Flooding: enabled (every 60 seconds, next in 12 seconds)
+        p6 = re.compile(r'^Periodic Flooding:\s+(?P<periodic_flooding>.+)$')
+
+        # Flooded Links: 3
+        p7 = re.compile(r'^Flooded Links:\s+(?P<flooded_links>\d+)$')
+
+        # IGP System ID: 10.2.1.1
+        p8 = re.compile(r'^IGP System ID:\s+(?P<igp_system_id>[\d\.]+)$')
+
+        # MPLS TE Router ID: 10.2.1.1
+        p9 = re.compile(r'^MPLS TE Router ID:\s+(?P<mpls_te_router_id>[\d\.]+)$')
+
+        # Neighbors: 3
+        p10 = re.compile(r'^Neighbors:\s+(?P<neighbors>\d+)$')
+
+        # Link ID:: Gi0/1/2 (172.2.5.2)
+        p11 = re.compile(r'^Link ID::\s+(?P<interface>\S+)\s+\((?P<remote_ip>[\d\.]+)\)$')
+
+        # Local Intfc ID: 13
+        p12 = re.compile(r'^Local Intfc ID:\s+(?P<local_intfc_id>\d+)$')
+
+        # SRLGs: None
+        p13 = re.compile(r'^SRLGs:\s+(?P<srlgs>.+)$')
+
+        # Default: Intfc Switching Cap psc1, Encoding ethernet
+        p14 = re.compile(r'^Default:\s+(?P<default>.+)$')
+
+        # Link Label Type: Packet
+        p15 = re.compile(r'^Link Label Type:\s+(?P<link_label_type>.+)$')
+
+        # Physical Bandwidth: 1000000 kbits/sec
+        p16 = re.compile(r'^Physical Bandwidth:\s+(?P<physical_bandwidth>.+)$')
+
+        # Max Res Global BW: 750000 kbits/sec (reserved: 0% in, 0% out)
+        p17 = re.compile(r'^Max Res Global BW:\s+(?P<max_res_global_bw>.+)$')
+
+        # Max Res Sub BW: 0 kbits/sec (reserved: 100% in, 100% out)
+        p18 = re.compile(r'^Max Res Sub BW:\s+(?P<max_res_sub_bw>.+)$')
+
+        # MPLS TE Link State: MPLS TE on, RSVP on, admin-up, flooded
+        p19 = re.compile(r'^MPLS TE Link State:\s+(?P<mpls_te_link_state>.+)$')
+
+        # Inbound Admission: reject-huge
+        p20 = re.compile(r'^Inbound Admission:\s+(?P<inbound_admission>.+)$')
+
+        # Outbound Admission: allow-if-room
+        p21 = re.compile(r'^Outbound Admission:\s+(?P<outbound_admission>.+)$')
+
+        # Link MTU: IP 1500, MPLS 1500
+        p22 = re.compile(r'^Link MTU:\s+IP\s+(?P<ip>\d+),\s+MPLS\s+(?P<mpls>\d+)$')
+
+        current_igp_area = None
+        current_link = None
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # Links Count: 4
+            m = p1.match(line)
+            if m:
+                if 'system_information' not in parsed_dict:
+                    parsed_dict['system_information'] = {}
+                parsed_dict['system_information']['links_count'] = int(m.group('links_count'))
+                continue
+
+            # Flooding System: enabled
+            m = p2.match(line)
+            if m:
+                if 'system_information' not in parsed_dict:
+                    parsed_dict['system_information'] = {}
+                parsed_dict['system_information']['flooding_system'] = m.group('flooding_system')
+                continue
+
+            # IGP Area ID:: ospf 100  area 0
+            m = p3.match(line)
+            if m:
+                current_igp_area = m.group('igp_area')
+                if 'igp_areas' not in parsed_dict:
+                    parsed_dict['igp_areas'] = {}
+                parsed_dict['igp_areas'][current_igp_area] = {}
+                continue
+
+            if current_igp_area is None:
+                continue
+
+            # Flooding Protocol: OSPF
+            m = p4.match(line)
+            if m:
+                parsed_dict['igp_areas'][current_igp_area]['flooding_protocol'] = m.group('flooding_protocol')
+                continue
+
+            # Flooding Status: data flooded
+            m = p5.match(line)
+            if m:
+                parsed_dict['igp_areas'][current_igp_area]['flooding_status'] = m.group('flooding_status')
+                continue
+
+            # Periodic Flooding: enabled (every 60 seconds, next in 12 seconds)
+            m = p6.match(line)
+            if m:
+                parsed_dict['igp_areas'][current_igp_area]['periodic_flooding'] = m.group('periodic_flooding')
+                continue
+
+            # Flooded Links: 3
+            m = p7.match(line)
+            if m:
+                parsed_dict['igp_areas'][current_igp_area]['flooded_links'] = int(m.group('flooded_links'))
+                continue
+
+            # IGP System ID: 10.2.1.1
+            m = p8.match(line)
+            if m:
+                parsed_dict['igp_areas'][current_igp_area]['igp_system_id'] = m.group('igp_system_id')
+                continue
+
+            # MPLS TE Router ID: 10.2.1.1
+            m = p9.match(line)
+            if m:
+                parsed_dict['igp_areas'][current_igp_area]['mpls_te_router_id'] = m.group('mpls_te_router_id')
+                continue
+
+            # Neighbors: 3
+            m = p10.match(line)
+            if m:
+                parsed_dict['igp_areas'][current_igp_area]['neighbors'] = int(m.group('neighbors'))
+                continue
+
+            # Link ID:: Gi0/1/2 (172.2.5.2)
+            m = p11.match(line)
+            if m:
+                interface = m.group('interface')
+                remote_ip = m.group('remote_ip')
+                current_link = f"{interface}_{remote_ip}"
+                if 'links' not in parsed_dict:
+                    parsed_dict['links'] = {}
+                parsed_dict['links'][current_link] = {
+                    'interface': interface,
+                    'remote_ip': remote_ip
+                }
+                continue
+
+            if current_link is None:
+                continue
+
+            # Local Intfc ID: 13
+            m = p12.match(line)
+            if m:
+                parsed_dict['links'][current_link]['local_intfc_id'] = int(m.group('local_intfc_id'))
+                continue
+
+            # SRLGs: None
+            m = p13.match(line)
+            if m:
+                parsed_dict['links'][current_link]['srlgs'] = m.group('srlgs')
+                continue
+
+            # Default: Intfc Switching Cap psc1, Encoding ethernet
+            m = p14.match(line)
+            if m:
+                if 'intfc_switching_capability_descriptors' not in parsed_dict['links'][current_link]:
+                    parsed_dict['links'][current_link]['intfc_switching_capability_descriptors'] = {}
+                parsed_dict['links'][current_link]['intfc_switching_capability_descriptors']['default'] = m.group('default')
+                continue
+
+            # Link Label Type: Packet
+            m = p15.match(line)
+            if m:
+                parsed_dict['links'][current_link]['link_label_type'] = m.group('link_label_type')
+                continue
+
+            # Physical Bandwidth: 1000000 kbits/sec
+            m = p16.match(line)
+            if m:
+                parsed_dict['links'][current_link]['physical_bandwidth'] = m.group('physical_bandwidth')
+                continue
+
+            # Max Res Global BW: 750000 kbits/sec (reserved: 0% in, 0% out)
+            m = p17.match(line)
+            if m:
+                parsed_dict['links'][current_link]['max_res_global_bw'] = m.group('max_res_global_bw')
+                continue
+
+            # Max Res Sub BW: 0 kbits/sec (reserved: 100% in, 100% out)
+            m = p18.match(line)
+            if m:
+                parsed_dict['links'][current_link]['max_res_sub_bw'] = m.group('max_res_sub_bw')
+                continue
+
+            # MPLS TE Link State: MPLS TE on, RSVP on, admin-up, flooded
+            m = p19.match(line)
+            if m:
+                parsed_dict['links'][current_link]['mpls_te_link_state'] = m.group('mpls_te_link_state')
+                continue
+
+            # Inbound Admission: reject-huge
+            m = p20.match(line)
+            if m:
+                parsed_dict['links'][current_link]['inbound_admission'] = m.group('inbound_admission')
+                continue
+
+            # Outbound Admission: allow-if-room
+            m = p21.match(line)
+            if m:
+                parsed_dict['links'][current_link]['outbound_admission'] = m.group('outbound_admission')
+                continue
+
+            # Link MTU: IP 1500, MPLS 1500
+            m = p22.match(line)
+            if m:
+                parsed_dict['links'][current_link]['link_mtu'] = {
+                    'ip': int(m.group('ip')),
+                    'mpls': int(m.group('mpls'))
+                }
+                continue
+
+        return parsed_dict
+
+# ====================================================
+# Schema for 'show mpls traffic-eng fast-reroute database'
+# ====================================================
+
+class ShowMplsTrafficEngFastRerouteDatabaseSchema(MetaParser):
+    """Schema for show mpls traffic-eng fast-reroute database"""
+
+    schema = {
+        Optional('tunnel_head_end_item_frr_information'): {
+            Any(): {  # Tunnel name
+                'protected_tunnel': str,
+                'in_label': str,
+                'out_intf_label': str,
+                'frr_intf_label': str,
+                'status': str,
+            }
+        },
+        Optional('prefix_item_frr_information'): {
+            Any(): {  # Prefix
+                'prefix': str,
+                'tunnel': str,
+                'in_label': str,
+                'out_intf_label': str,
+                'frr_intf_label': str,
+                'status': str,
+            }
+        },
+        Optional('lsp_midpoint_item_frr_information'): {
+            Any(): {  # LSP identifier
+                'lsp_identifier': str,
+                'in_label': str,
+                'out_intf_label': str,
+                'frr_intf_label': str,
+                'status': str,
+            }
+        }
+    }
+
+
+# ====================================================
+# Parser for 'show mpls traffic-eng fast-reroute database'
+# ====================================================
+
+class ShowMplsTrafficEngFastRerouteDatabase(ShowMplsTrafficEngFastRerouteDatabaseSchema):
+    """Parser for show mpls traffic-eng fast-reroute database"""
+
+    cli_command = 'show mpls traffic-eng fast-reroute database'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize result dictionary
+        ret_dict = {}
+
+        # Regular expressions for parsing
+        # Section headers
+        # Tunnel head end item frr information:
+        p1 = re.compile(r'^\s*Tunnel head end item frr information:\s*$')
+
+        # Prefix item frr information:
+        p2 = re.compile(r'^\s*Prefix item frr information:\s*$')
+
+        # LSP midpoint item frr information:
+        p3 = re.compile(r'^\s*LSP midpoint item frr information:\s*$')
+
+        # Data parsing patterns
+        # Tunnel head end: Tunnel500                     Tun hd   AT4/0.100:Untagg Tu501:20         ready
+        p4 = re.compile(r'^\s*(?P<tunnel_name>\S+)\s+(?P<in_label>\S+\s+\S+)\s+(?P<out_intf_label>\S+)\s+(?P<frr_intf_label>\S+)\s+(?P<status>\S+)\s*$')
+
+        # Prefix item: 10.0.0.8/32        Tu500      18       AT4/0.100:Pop ta  Tu501:20        ready
+        p5 = re.compile(r'^\s*(?P<prefix>\S+)\s+(?P<tunnel>\S+)\s+(?P<in_label>\S+)\s+(?P<out_intf_label>\S+(?:\s+\S+)?)\s+(?P<frr_intf_label>\S+)\s+(?P<status>\S+)\s*$')
+
+        # LSP midpoint: LSP_ID  in_label  out_intf_label  frr_intf_label  status
+        p6 = re.compile(r'^\s*(?P<lsp_id>\S+)\s+(?P<in_label>\S+)\s+(?P<out_intf_label>\S+)\s+(?P<frr_intf_label>\S+)\s+(?P<status>\S+)\s*$')
+
+        # State tracking
+        current_section = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Skip empty lines
+            if not line:
+                continue
+
+            # Section headers
+            # Tunnel head end item frr information:
+            m = p1.match(line)
+            if m:
+                current_section = 'tunnel_head_end'
+                continue
+
+            # Prefix item frr information:
+            m = p2.match(line)
+            if m:
+                current_section = 'prefix_item'
+                continue
+
+            # LSP midpoint item frr information:
+            m = p3.match(line)
+            if m:
+                current_section = 'lsp_midpoint'
+                continue
+
+            # Parse data lines based on current section
+            if current_section == 'tunnel_head_end':
+                # Parse tunnel head end entries
+                # Example: Tunnel500                     Tun hd   AT4/0.100:Untagg Tu501:20         ready
+                m = p4.match(line)
+                if m:
+                    tunnel_name = m.group('tunnel_name')
+
+                    ret_dict.setdefault('tunnel_head_end_item_frr_information', {})
+                    ret_dict['tunnel_head_end_item_frr_information'][tunnel_name] = {
+                        'protected_tunnel': tunnel_name,
+                        'in_label': m.group('in_label'),
+                        'out_intf_label': m.group('out_intf_label'),
+                        'frr_intf_label': m.group('frr_intf_label'),
+                        'status': m.group('status'),
+                    }
+
+            elif current_section == 'prefix_item':
+                # Parse prefix entries
+                # Example: 10.0.0.8/32        Tu500      18       AT4/0.100:Pop ta  Tu501:20        ready
+                m = p5.match(line)
+                if m:
+                    prefix = m.group('prefix')
+
+                    ret_dict.setdefault('prefix_item_frr_information', {})
+                    ret_dict['prefix_item_frr_information'][prefix] = {
+                        'prefix': prefix,
+                        'tunnel': m.group('tunnel'),
+                        'in_label': m.group('in_label'),
+                        'out_intf_label': m.group('out_intf_label'),
+                        'frr_intf_label': m.group('frr_intf_label'),
+                        'status': m.group('status'),
+                    }
+
+            elif current_section == 'lsp_midpoint':
+                # Parse LSP midpoint entries
+                # Example: LSP_ID  in_label  out_intf_label  frr_intf_label  status
+                m = p6.match(line)
+                if m:
+                    lsp_id = m.group('lsp_id')
+
+                    ret_dict.setdefault('lsp_midpoint_item_frr_information', {})
+                    ret_dict['lsp_midpoint_item_frr_information'][lsp_id] = {
+                        'lsp_identifier': lsp_id,
+                        'in_label': m.group('in_label'),
+                        'out_intf_label': m.group('out_intf_label'),
+                        'frr_intf_label': m.group('frr_intf_label'),
+                        'status': m.group('status'),
+                    }
+
+        return ret_dict
+

@@ -1,0 +1,5 @@
+show users
+    Line       User       Host(s)              Idle       Location
+* vty 322                 idle                 00:00:00 10.24.69.196
+
+  Interface    User               Mode         Idle     Peer Address

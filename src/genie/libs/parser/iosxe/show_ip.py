@@ -3,8 +3,8 @@ show_ip.py
 
 IOSXE parsers for the following show commands:
     * show ip aliases
-	* show ip aliases default-vrf
-	* show ip aliases vrf {vrf}
+    * show ip aliases default-vrf
+    * show ip aliases vrf {vrf}
     * show ip vrf
     * show ip vrf <vrf>
     * show ip vrf detail
@@ -14,9 +14,11 @@ IOSXE parsers for the following show commands:
     * show ip nbar version
     * show ip nat translations
     * show ip nat translations total
-    * show ip nat translations vrf {vrf} total    
+    * show ip nat translation {protocol} total
+    * show ip nat translations vrf {vrf} total
     * show ip nat translations verbose
     * show ip nat statistics
+    * show ip nat translation filter range inside global 5.1.1.2 5.1.1.2 total
     * show ip dhcp database
     * show ip dhcp snooping database
     * show ip dhcp snooping database detail
@@ -59,12 +61,13 @@ IOSXE parsers for the following show commands:
     * show ip nhrp detail
     * show ip nhrp nhs
     * show ip nhrp nhs {tunnel}
+    * show ip nhrp redirect
     * show nhrp stats
     * show nhrp stats {tunnel}
     * show nhrp stats detail
     * show nhrp stats {tunnel} detail
     * show ip dhcp binding
-    * show ip dhcp binding vrf {vrf_name} 
+    * show ip dhcp binding vrf {vrf_name}
     * show ip dhcp binding vrf {vrf_name} {ip_address}
     * show ip dhcp binding {ip_address}
     * show ip dhcp binding | count Active
@@ -86,6 +89,17 @@ IOSXE parsers for the following show commands:
     * show ip name-servers
     * show ip name-servers vrf {vrf}
     * show ip dhcp pool
+    * show ip nhrp self
+    * show ip subscriber ip {ip_address}
+    * show ip sla application
+    * show ip sla configuration
+    * show ip sla configuration {entry_number}
+    * show ip subscriber mac {mac_address}
+    * show ip virtual-assembly {interface}
+    * show ipv mld vrf {vrf} groups {group}
+    * show ip wccp web-cache detail
+    * show ip wccp web-cache clients
+    * show ip nat pool name {pool}
     '''
 
 # Python
@@ -1033,7 +1047,7 @@ class ShowIpNatStatistics(ShowIpNatStatisticsSchema):
         p4 = re.compile(r'^(?P<name_1>[\w|\s|\-]+)\: +(?P<number_1>\w+)'
                         r'(?:[\,|\s*]+(?P<name_2>[\w|\s|\-]+)(?:\:|\s*)? '
                         r'+(?P<number_2>\S+)(?: +ago)?)?$')
-        
+
         # Dynamic mappings:
         p5 = re.compile(r'^(?P<dynamic>\w+) +mappings\:$')
 
@@ -1182,7 +1196,7 @@ class ShowIpNatStatistics(ShowIpNatStatisticsSchema):
             m4 = p4.match(line)
             if m4:
                 group = m4.groupdict()
-                
+
                 if group['name_1']:
                     if self.INT_MAPPING.get(group['name_1']):
                         name_1 = self.INT_MAPPING.get(group['name_1'])
@@ -1323,11 +1337,45 @@ class ShowIpNatStatistics(ShowIpNatStatisticsSchema):
                 mypool_dict.update({'addr_hash': int(group['addr_hash'])})
                 mypool_dict.update({'average_len': int(group['average_len'])})
                 mypool_dict.update({'chains': group['chains']})
-                
+
                 continue
 
         return parsed_dict
 
+class ShowIpNatTranslationFilterRangeSchema(MetaParser):
+    """Schema for show ip nat translation filter range inside global {address1} {address2} total"""
+    schema = {
+        'total_translations': int,
+    }
+
+class ShowIpNatTranslationFilterRange(ShowIpNatTranslationFilterRangeSchema):
+    """Parser for show ip nat translation filter range inside global {address1} {address2} total"""
+
+    cli_command = 'show ip nat translation filter range inside global {address1} {address2} total'
+
+    def cli(self, address1, address2, output=None):
+        if output is None:
+            # Execute the command on the device
+            output = self.device.execute(self.cli_command.format(address1=address1, address2=address2))
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # Total number of translations: 1
+        p1 = re.compile(r'^Total +number +of +translations: +(?P<total>\d+)$')
+
+        # Iterate over each line in the output
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Total number of translations: 1
+            m = p1.match(line)
+            if m:
+                # Use setdefault to avoid KeyError
+                parsed_dict.setdefault('total_translations', int(m.group('total')))
+                continue
+
+        return parsed_dict
 
 # =======================================
 # Schema for 'show ip dhcp database'
@@ -1726,7 +1774,7 @@ class ShowIpDhcpSnoopingDatabaseDetail(ShowIpDhcpSnoopingDatabase):
 
 
 # ===================================================
-# Schema for 
+# Schema for
 #    * 'show ip dhcp snooping binding'
 #    * 'show ip dhcp snooping binding interface {interface}'
 #    * 'show ip dhcp snooping binding {mac}'
@@ -1739,11 +1787,10 @@ class ShowIpDhcpSnoopingBindingSchema(MetaParser):
     '''
 
     schema = {
-        'total_bindings': int,
         Optional('interfaces'): {
             Any(): {
                 'vlan': {
-                    Any(): {
+                    Any():{
                         'mac': str,
                         'ip': str,
                         'lease': int,
@@ -1752,6 +1799,7 @@ class ShowIpDhcpSnoopingBindingSchema(MetaParser):
                 },
             },
         },
+        'total_bindings': int,
     }
 
 
@@ -1768,7 +1816,7 @@ class ShowIpDhcpSnoopingBinding(ShowIpDhcpSnoopingBindingSchema):
         * 'show ip dhcp snooping binding {mac}'
      '''
 
-    cli_command = ['show ip dhcp snooping binding', 
+    cli_command = ['show ip dhcp snooping binding',
                 'show ip dhcp snooping binding interface {interface}',
                 'show ip dhcp snooping binding {mac}']
 
@@ -1780,7 +1828,7 @@ class ShowIpDhcpSnoopingBinding(ShowIpDhcpSnoopingBindingSchema):
                 cmd = self.cli_command[1].format(interface=interface)
             else:
                 cmd = self.cli_command[0]
-            
+
             output = self.device.execute(cmd)
 
         # Init vars
@@ -1817,7 +1865,7 @@ class ShowIpDhcpSnoopingBinding(ShowIpDhcpSnoopingBindingSchema):
                     'type': group['type']
                 })
                 continue
-            
+
             # Total number of bindings: 1
             m = p2.match(line)
             if m:
@@ -1879,11 +1927,11 @@ class ShowIpDhcpPool(ShowIpDhcpPoolSchema):
         # Matches the name of a pool in the configuration, e.g., "Pool pool1:"
         pool_pattern = re.compile(r'^Pool\s+(?P<pool_name>\S+)\s*:')
 
-        # Matches the utilization mark line, capturing high and low marks,  
+        # Matches the utilization mark line, capturing high and low marks,
         # e.g : "Utilization mark (high/low) : 100 / 0"
         utilization_pattern = re.compile(r'^Utilization mark.*?:\s+(?P<high>\d+)\s*/\s*(?P<low>\d+)$')
 
-        # Matches the subnet size line, capturing the first and next subnet sizes, 
+        # Matches the subnet size line, capturing the first and next subnet sizes,
         # e.g : "Subnet size (first/next): 0 / 0"
         subnet_size_pattern = re.compile(r'^Subnet size.*?:\s+(?P<first>\d+)\s*/\s*(?P<next>\d+)$')
 
@@ -1891,19 +1939,19 @@ class ShowIpDhcpPool(ShowIpDhcpPoolSchema):
         # e.g : "Total addresses : 254"
         total_addresses_pattern = re.compile(r'^Total addresses\s*:\s+(?P<total_addresses>\d+)$')
 
-        # Matches the leased addresses line, capturing the leased count, 
+        # Matches the leased addresses line, capturing the leased count,
         # e.g : "Leased addresses : 0"
         leased_addresses_pattern = re.compile(r'^Leased addresses\s*:\s+(?P<leased_addresses>\d+)$')
 
-        # Matches the excluded addresses line, capturing the excluded count,  
+        # Matches the excluded addresses line, capturing the excluded count,
         # e.g : "Excluded addresses : 0"
         excluded_addresses_pattern = re.compile(r'^Excluded addresses\s*:\s+(?P<excluded_addresses>\d+)$')
 
-        # Matches the pending event line, capturing the event description,  
+        # Matches the pending event line, capturing the event description,
         # e.g : "Pending event : none"
         pending_event_pattern = re.compile(r'^Pending event\s*:\s+(?P<pending_event>.+)$')
 
-        # Matches a subnet entry, capturing details like index, IP range, and address stats, 
+        # Matches a subnet entry, capturing details like index, IP range, and address stats,
         # e.g : 192.168.1.1 - 192.168.1.254   0 / 0 / 254"
         subnet_entry_pattern = re.compile(
             r'^(?P<current_index>\S+)\s+(?P<start_ip>\S+)\s+-\s+(?P<end_ip>\S+)\s+'
@@ -2031,7 +2079,7 @@ class ShowIpMfibStatus(ShowIpMfibStatusSchema):
     def cli(self,output=None):
         if output is None:
             output = self.device.execute(self.cli_command)
-        
+
         # Configuration Status: enabled
         p1 = re.compile(r'^Configuration Status: +(?P<configuration_status>\w+)$')
 
@@ -2049,7 +2097,7 @@ class ShowIpMfibStatus(ShowIpMfibStatusSchema):
 
         # Tables 1/1/0 (active/mrib/io)
         p6 = re.compile(r'^Tables (?P<active>\d)+(\/)+(?P<mrib>\d)(\/)+(?P<io>\d) +(\()+active+(\/)+mrib+(\/)+io+(\))$')
-        
+
         ret_dict = {}
 
         for line in output.splitlines():
@@ -2172,12 +2220,15 @@ class ShowIpMfibSchema(MetaParser):
                                                      Optional('ingress_vxlan_cap'): str,
                                                      Optional('ingress_vxlan_vni'): str,
                                                      Optional('ingress_vxlan_nxthop'): str,
+                                                     Optional('ingress_mdt_ip'): str,
                                                     }
                                                 },
                                             Optional('outgoing_interfaces'):
                                                 {Any():
                                                     {
                                                      Optional('egress_flags'): str,
+                                                     Optional('egress_mdt_decap'): str,
+                                                     Optional('egress_mdt_ip'): str,
                                                      Optional('egress_rloc'): str,
                                                      Optional('egress_underlay_mcast'): str,
                                                      Optional('egress_adj_mac'): str,
@@ -2305,8 +2356,10 @@ class ShowIpMfib(ShowIpMfibSchema):
         #Vlan500, VXLAN v4 Encap (50000, 239.1.1.0) Flags: A
         #Vlan500, VXLAN v6 Encap (50000, FF13::1) Flags: A
         #Port-channel5 Flags: RA A MA
+        # Tunnel1, MDT/232.0.0.1 Flags: A
 
         p7 = re.compile(r'^(?P<ingress_if>[\w\/\.\-\:]+)'
+                        r'(\,\s+MDT\/(?P<ingress_mdt_ip>[\d\.]+)\s*)?'
                          r'(\,\s+VXLAN +(?P<ingress_vxlan_version>[v0-9]+)?(\s+)?(?P<ingress_vxlan_cap>[\w]+)(\s+)?(\(?(?P<ingress_vxlan_vni>[0-9]+)(\,\s+)?(?P<ingress_vxlan_nxthop>[\w:./]+)?\)?)?)?'
                          r' +Flags\: +(?P<ingress_flags>A[\s\w]+|[\s\w]+ +A[\s\w]+|A$)')
 
@@ -2318,7 +2371,12 @@ class ShowIpMfib(ShowIpMfibSchema):
         #L2LISP0.699, L2LISP Decap Flags: F NS
         #Null0, LISPv4 Decap Flags: RF F NS
         #Port-channel5 Flags: RF F NS
+        #Tunnel2, MDT Decap Flags: F NS
+        #Tunnel2, MDT/239.192.20.41 Flags: F NS
+
         p8 = re.compile(r'^(?P<egress_if>[\w\/\.\-\:]+)'
+                        r'(?P<egress_mdt_decap>\,\s+MDT\s*Decap\s*)?'
+                        r'(\,\s+MDT\/(?P<egress_mdt_ip>[\d\.]+)\s*)?'
                         r'(\,\s+LISPv4\s*Decap\s*)?'
                         r'(\,\s+L2LISP\s*Decap\s*)?'
                         r'(\,\s+\(?(?P<egress_rloc>[\w\.]+)(\,\s+)?(?P<egress_underlay_mcast>[\w\.]+)?\)?)?'
@@ -2414,6 +2472,8 @@ class ShowIpMfib(ShowIpMfibSchema):
                     ing_intf_dict['ingress_vxlan_version']=group['ingress_vxlan_version']
                     ing_intf_dict['ingress_vxlan_vni']=group['ingress_vxlan_vni']
                     ing_intf_dict['ingress_vxlan_nxthop']=group['ingress_vxlan_nxthop']
+                if group['ingress_mdt_ip']:
+                    ing_intf_dict['ingress_mdt_ip']=group['ingress_mdt_ip']
                 continue
 
 
@@ -2457,6 +2517,10 @@ class ShowIpMfib(ShowIpMfibSchema):
                     egress_data['egress_vxlan_vni']=group['egress_vxlan_vni']
                 if group['egress_vxlan_nxthop']:
                     egress_data['egress_vxlan_nxthop']=group['egress_vxlan_nxthop']
+                if group['egress_mdt_decap'] :
+                    egress_data['egress_mdt_decap']=group['egress_mdt_decap']
+                if group['egress_mdt_ip']:
+                    egress_data['egress_mdt_ip']=group['egress_mdt_ip']
 
                 continue
             #CEF: Adjacency with MAC: 01005E010101000A000120010800
@@ -3293,7 +3357,7 @@ class ShowIpDhcpBinding(ShowIpDhcpBindingSchema):
                    "show ip dhcp binding vrf {vrf_name} {ip_address}"
                    "show ip dhcp binding {ip_address}"
     '''
-    cli_command = ['show ip dhcp binding', 'show ip dhcp binding vrf {vrf_name}', 
+    cli_command = ['show ip dhcp binding', 'show ip dhcp binding vrf {vrf_name}',
                    'show ip dhcp binding vrf {vrf_name} {ip_address}', 'show ip dhcp binding {ip_address}']
 
     # Defines a function to run the cli_command
@@ -3302,9 +3366,9 @@ class ShowIpDhcpBinding(ShowIpDhcpBindingSchema):
             if vrf_name:
                 cmd = self.cli_command[1].format(vrf_name=vrf_name)
             elif vrf_name and ip_address:
-                cmd = self.cli_command[2].format(vrf_name=vrf_name, ip_address=ip_address)   
+                cmd = self.cli_command[2].format(vrf_name=vrf_name, ip_address=ip_address)
             elif ip_address:
-                cmd = self.cli_command[3].format(ip_address=ip_address)   
+                cmd = self.cli_command[3].format(ip_address=ip_address)
             else:
                 cmd = self.cli_command[0]
 
@@ -3320,8 +3384,19 @@ class ShowIpDhcpBinding(ShowIpDhcpBindingSchema):
         # 		User name
         # 100.1.0.3       0100.1094.0000.01       Feb 08 2022 11:11 AM    Automatic  Active     TenGigabitEthernet1/0/2
         # 100.0.0.12      0010.9400.0004          May 13 2022 04:29 PM    Relay      Active     Port-channel40.2
+        # 110.1.1.13      0063.6973.636f.2d35.    Infinite                Automatic  Active     GigabitEthernet1/0/23
+        #                 6335.612e.6337.3737.
+        #                 2e62.3764.352d.4769.
+        #                 312f.302f.3437
+        # 110.1.1.12      0063.6973.636f.2d32.    Mar 07 2025 10:30 AM    Automatic  Active     GigabitEthernet1/0/24
+        #                 6335.612e.6337.3732.
+        #                 2e62.3764.352d.4269.
+        #                 312f.302f.3237
         p1 = re.compile(r'^\s*(?P<ip_address>(\d+\.\d+\.\d+\.\d+))\s+(?P<client_id>([0-9a-f\.]+))\s+(?P<lease_expiration>([a-zA-Z]{3}\s\d{1,2}\s\d{4}\s\d{1,2}\:\d{1,2}\s[a-zA-Z]{2}|Infinite))\s+(?P<type>\w+)\s+(?P<state>\w+)\s+(?P<interface>[\w\.\-\/]+)\s*$')
 
+        # Additional pattern to match multiline Client-ID
+        p2 = re.compile(r'^\s*(?P<client_id>([0-9a-f\.]+))\s*$')
+        #
         # Defines the "for" loop, to pattern match each line of output
         for line in output.splitlines():
             line = line.strip()
@@ -3341,6 +3416,12 @@ class ShowIpDhcpBinding(ShowIpDhcpBindingSchema):
                 var+=1
                 continue
 
+            # Match multiline Client-ID
+            m = p2.match(line)
+            if m and var > 1:
+                group = m.groupdict()
+                parsed_dict['dhcp_binding'][var-1]['client_id'] += str(group['client_id'])
+                continue
         return parsed_dict
 
 # ==========================================
@@ -6766,7 +6847,7 @@ class ShowIpVerifySource(ShowIpVerifySourceSchema):
         # Gi1/0/13   ip-mac       active       10.1.1.101       00:0A:00:0B:00:01  10
         # Gi1/0/2    ip          active       192.168.100.2                       100
         # Gi2/0/3    ip           active       192.168.100.3                       100
-        
+
         p1 = re.compile(r"^(?P<interface_name>\S+)\s+(?P<filter_type>ip(\s?\S+)?)\s+(?P<filter_mode>\S+)\s+(?P<ip_address>\S+)\s+(?P<mac_address>\S+)?\s+(?P<vlan>[\d,]*)$")
 
         ret_dict = {}
@@ -6905,7 +6986,7 @@ class ShowIpIgmpSnoopingVlan(ShowIpIgmpSnoopingVlanSchema):
 
         # Vlan 10:
         p0 = re.compile(r"^Vlan\s+(?P<vlan>\d+):\s*$")
-        
+
         # IGMP snooping : Enabled
         p1 = re.compile(r"^IGMP\s+snooping\s+:\s+(?P<igmp_snooping>\w+)$")
 
@@ -6968,7 +7049,7 @@ class ShowIpIgmpSnoopingVlan(ShowIpIgmpSnoopingVlanSchema):
                     "igmp_snooping": m.groupdict()["igmp_snooping"]
                 })
                 continue
-            
+
             # Global PIM Snooping : Disabled
             m = p2.match(line)
             if m:
@@ -7159,7 +7240,7 @@ class ShowIpHttpServerAll(ShowIpHttpServerAllSchema):
     def cli(self, output=None):
         if output is None:
             output = self.device.execute(self.cli_command)
-        
+
         # HTTP server status: Enabled
         p0 = re.compile(r'^HTTP server status: (?P<status>\w+)$')
 
@@ -7234,12 +7315,12 @@ class ShowIpHttpServerAll(ShowIpHttpServerAllSchema):
 
         # HTTP secure server ciphersuite:  rsa-aes-cbc-sha2 rsa-aes-gcm-sha2
         p21_3 = re.compile(r'^HTTP secure server ciphersuite:\s+(?P<ciphersuite>.+)$')
-        
+
         #         dhe-aes-cbc-sha2 dhe-aes-gcm-sha2 ecdhe-rsa-aes-cbc-sha2
         #         ecdhe-rsa-aes-gcm-sha2 ecdhe-ecdsa-aes-gcm-sha2 tls13-aes128-gcm-sha256
         #         tls13-aes256-gcm-sha384 tls13-chacha20-poly1305-sha256
         p21_4 = re.compile(r'^(?P<ciphersuite>(dhe|ecdhe|tls|rsa)[a-z\d\s\-]+)$')
-        
+
         # HTTP secure server TLS version:  TLSv1.3 TLSv1.2
         p21_5 = re.compile(r'^HTTP secure server TLS version:\s+(?P<tls_version>.+)$')
 
@@ -7655,7 +7736,7 @@ class ShowIpHttpServerAll(ShowIpHttpServerAllSchema):
             if m:
                 http_server_dict['help_path'] = m.groupdict()['help_path']
                 continue
-        
+
         return ret_dict
 
 
@@ -7674,11 +7755,11 @@ class ShowIpNatTranslationsTotalSchema(MetaParser):
             * show ip nat translations total
             * show ip nat translations vrf {vrf} total
     """
-        
+
     schema = {
         'total_number_of_translations': int
     }
- 
+
 class ShowIpNatTranslationsTotal(ShowIpNatTranslationsTotalSchema):
     """
         * show ip nat translations total
@@ -7686,7 +7767,7 @@ class ShowIpNatTranslationsTotal(ShowIpNatTranslationsTotalSchema):
     """
 
     cli_command = ['show ip nat translations total', 'show ip nat translations vrf {vrf} total']
-    def cli(self, vrf='', output=None):        
+    def cli(self, vrf='', output=None):
         cmd = ""
         if output is None:
             if vrf:
@@ -7695,11 +7776,11 @@ class ShowIpNatTranslationsTotal(ShowIpNatTranslationsTotalSchema):
                 cmd = self.cli_command[0]
             out = self.device.execute(cmd)
         else:
-            out = output        
+            out = output
 
         # Total number of translations: 0
         p1 = re.compile(r'^\s*Total\s+number\s+of\s+translations:\s+(?P<number_of_translations>\d+)$')
- 
+
         ret_dict = {}
         for line in out.splitlines():
             line = line.strip()
@@ -7709,8 +7790,46 @@ class ShowIpNatTranslationsTotal(ShowIpNatTranslationsTotalSchema):
             if m1:
                 group = m1.groupdict()
                 ret_dict['total_number_of_translations'] = int(group['number_of_translations'])
-       
+
         return ret_dict
+
+# ===============================================
+# Schema for 'show ip nat translation {protocol} total'
+# ===============================================
+
+class ShowIpNatTranslationUdpTotalSchema(MetaParser):
+    """Schema for show ip nat translation {protocol} total"""
+    schema = {
+        'total_translations': int
+    }
+
+class ShowIpNatTranslationUdpTotal(ShowIpNatTranslationUdpTotalSchema):
+    """Parser for show ip nat translations {protocol} total"""
+
+    cli_command = 'show ip nat translations {protocol} total'
+
+    def cli(self, protocol='', output=None):
+        if output is None:
+            # Execute the command on the device
+            output = self.device.execute(self.cli_command.format(protocol=protocol))
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # Total number of translations: 2
+        p1 = re.compile(r'^Total +number +of +translations: +(?P<total>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            #Total number of translations: 2
+            m = p1.match(line)
+            if m:
+                # Use setdefault to avoid KeyError
+                parsed_dict.setdefault('total_translations', int(m.group('total')))
+                continue
+
+        return parsed_dict
 
 # ==============================
 # Schema for 'show ip name-servers', 'show ip name-servers vrf {vrf}'
@@ -7739,7 +7858,7 @@ class ShowIPNameServer(ShowIPNameServerSchema):
     '''
     cli_command = ['show ip name-servers',
         'show ip name-servers vrf {vrf}']
-            
+
     def cli(self, vrf = '', output = None):
         if output is None:
             if vrf:
@@ -7763,10 +7882,10 @@ class ShowIPNameServer(ShowIPNameServerSchema):
             line = line.strip()
 
             # match the line with ipv4 address
-            m1 = p1.match(line)      
+            m1 = p1.match(line)
             # match the line with ipv6 address
-            m2 = p2.match(line)      
-            if m1 or m2  :     
+            m2 = p2.match(line)
+            if m1 or m2  :
                ip_flow = parsed_dict.setdefault("vrf", {}).setdefault(
                     (vrf), []
                )
@@ -7800,9 +7919,9 @@ class ShowIpSockets(ShowIpSocketsSchema):
     """
 
     cli_command = 'show ip sockets'
-    
+
     def cli(self, output=None):
-        
+
         if output is None:
             output = self.device.execute(self.cli_command)
 
@@ -7813,10 +7932,10 @@ class ShowIpSockets(ShowIpSocketsSchema):
         #17           0.0.0.0      0       --any--      2228   0  0    211   0
         p1 = re.compile(r'^(?P<proto>[\d]+)\s+(?P<remote>[\d.]+)\s+(?P<remote_port>\d+)\s+(?P<local>\S+)\s+(?P<local_port>\d+)\s+(?P<in>\d+)\s+(?P<out>\d+)\s+(?P<stat>\d+)\s+(?P<tty>\d+)(\s+(?P<output_if>[\S]+))?$')
 
-        
-        for line in output.splitlines(): 
+
+        for line in output.splitlines():
             line = line.strip()
-            
+
             #Proto        Remote      Port      Local       Port  In Out  Stat TTY OutputIF
             #17           0.0.0.0      0       --any--      2228   0  0    211   0
             m = p1.match(line)
@@ -7878,43 +7997,44 @@ class ShowIpDhcpSnooping(ShowIpDhcpSnoopingSchema):
         # Initialize the dictionary for parsed output.
         ret_dict = {}
 
-        # Switch DHCP snooping is enabled 
+        # Switch DHCP snooping is enabled
         p1 = re.compile(r'^Switch DHCP snooping is (?P<dhcp_snooping_status>\S+)')
 
-        # Switch DHCP gleaning is disabled 
+        # Switch DHCP gleaning is disabled
         p2 = re.compile(r'^Switch DHCP gleaning is (?P<dhcp_gleaning_status>\S+)')
 
-        # DHCP snooping is configured on following VLANs: 
+        # DHCP snooping is configured on following VLANs:
         p3 = re.compile(r'^DHCP snooping is configured on following VLANs:$')
 
-        # 20,30,40,50,60 
-        p3_1 = re.compile(r'^(?P<vlans>[\d,]+|none)$')
+        # 20,30,40,50,60
+        # 3701-3702,580-581
+        p3_1 = re.compile(r'^(?P<vlans>[\d,\-]+|none)$')
 
-        # DHCP snooping is operational on following VLANs: 
+        # DHCP snooping is operational on following VLANs:
         p4 = re.compile(r'^DHCP snooping is operational on following VLANs:$')
 
-        #  Proxy bridge is configured on following VLANs: 
+        #  Proxy bridge is configured on following VLANs:
         p5 = re.compile(r'^Proxy bridge is configured on following VLANs:$')
 
         # Proxy bridge is operational on following VLANs:
         p6 = re.compile(r'^Proxy bridge is operational on following VLANs:$')
 
-        # Insertion of option 82 is disabled 
+        # Insertion of option 82 is disabled
         p7 = re.compile(r'^Insertion of option 82 is (?P<option_82_status>\S+)')
 
         # circuit-id default format: vlan-mod-port
         p8 = re.compile(r'^circuit-id default format: (?P<circuit_id_default_format>\S+)')
 
-        # remote-id: f4ee.3181.ab80 (MAC) 
+        # remote-id: f4ee.3181.ab80 (MAC)
         p9 = re.compile(r'^remote-id: (?P<remote_id>\S+)')
 
-        # Option 82 on untrusted port is not allowed 
+        # Option 82 on untrusted port is not allowed
         p10 = re.compile(r'^Option 82 on untrusted port is (?P<untrusted_port_status>\S+\s\S+)')
 
-        # Verification of hwaddr field is enabled 
+        # Verification of hwaddr field is enabled
         p11 = re.compile(r'^Verification of hwaddr field is (?P<hwaddr_field_status>\S+)')
 
-        # Verification of giaddr field is enabled 
+        # Verification of giaddr field is enabled
         p12 = re.compile(r'^Verification of giaddr field is (?P<giaddr_field_status>\S+)')
 
         # GigabitEthernet1/0/13            yes        yes             unlimited
@@ -7929,31 +8049,31 @@ class ShowIpDhcpSnooping(ShowIpDhcpSnoopingSchema):
         for line in output.splitlines():
             line = line.strip()
 
-            # Switch DHCP snooping is enabled 
+            # Switch DHCP snooping is enabled
             m = p1.match(line)
             if m:
                 ret_dict['dhcp_snooping_status'] = m.group('dhcp_snooping_status')
                 continue
 
-            # Switch DHCP gleaning is disabled 
+            # Switch DHCP gleaning is disabled
             m = p2.match(line)
             if m:
                 ret_dict['dhcp_gleaning_status'] = m.group('dhcp_gleaning_status')
                 continue
 
-            # DHCP snooping is configured on following VLANs: 
+            # DHCP snooping is configured on following VLANs:
             m = p3.match(line)
             if m:
                 current_section = 'dhcp_configured_vlans'
                 continue
 
-            # DHCP snooping is operational on following VLANs: 
+            # DHCP snooping is operational on following VLANs:
             m = p4.match(line)
             if m:
                 current_section = 'dhcp_operational_vlans'
                 continue
 
-            # Proxy bridge is configured on following VLANs: 
+            # Proxy bridge is configured on following VLANs:
             m = p5.match(line)
             if m:
                 current_section = 'proxy_bridge_configured'
@@ -7965,7 +8085,7 @@ class ShowIpDhcpSnooping(ShowIpDhcpSnoopingSchema):
                 current_section = 'proxy_bridge_operational'
                 continue
 
-            # Insertion of option 82 is disabled 
+            # Insertion of option 82 is disabled
             m = p7.match(line)
             if m:
                 ret_dict.setdefault('option_82', {})['option_82_status'] = m.group('option_82_status')
@@ -7977,25 +8097,25 @@ class ShowIpDhcpSnooping(ShowIpDhcpSnoopingSchema):
                 ret_dict['option_82']['circuit_id_default_format'] = m.group('circuit_id_default_format')
                 continue
 
-            # remote-id: f4ee.3181.ab80 (MAC) 
+            # remote-id: f4ee.3181.ab80 (MAC)
             m = p9.match(line)
             if m:
                 ret_dict['option_82']['remote_id'] = m.group('remote_id')
                 continue
 
-            # Option 82 on untrusted port is not allowed 
+            # Option 82 on untrusted port is not allowed
             m = p10.match(line)
             if m:
                 ret_dict['option_82']['untrusted_port_status'] = m.group('untrusted_port_status')
                 continue
 
-            # Verification of hwaddr field is enabled 
+            # Verification of hwaddr field is enabled
             m = p11.match(line)
             if m:
                 ret_dict.setdefault('option_82', {}).setdefault('verification', {})['hwaddr_field_status'] = m.group('hwaddr_field_status')
                 continue
 
-            # Verification of giaddr field is enabled 
+            # Verification of giaddr field is enabled
             m = p12.match(line)
             if m:
                 ret_dict['option_82']['verification']['giaddr_field_status'] = m.group('giaddr_field_status')
@@ -8032,7 +8152,7 @@ class ShowIpDhcpSnooping(ShowIpDhcpSnoopingSchema):
 
 
 class ShowIpSourceBindingSchema(MetaParser):
-    """Schema for 
+    """Schema for
     * 'show ip source binding'
     *   'show ip source binding dhcp-snooping',
     *   'show ip source binding static',
@@ -8041,14 +8161,14 @@ class ShowIpSourceBindingSchema(MetaParser):
     *   'show ip source binding vlan {vlan_id} interface {interface_name}',
     *   'show ip source binding {ip_address}',
     *   'show ip source binding {mac_address}'
-    
+
     """
     schema = {
         'bindings': {
             Any(): {
                 'mac_address': str,
                 'ip_address': str,
-                'lease': int,
+                'lease': Or(int, str),
                 'type': str,
                 'vlan': int,
             }
@@ -8057,7 +8177,7 @@ class ShowIpSourceBindingSchema(MetaParser):
     }
 
 class ShowIpSourceBinding(ShowIpSourceBindingSchema):
-    """Parser for 
+    """Parser for
     *   'show ip source binding'
     *   'show ip source binding dhcp-snooping',
     *   'show ip source binding static',
@@ -8096,8 +8216,9 @@ class ShowIpSourceBinding(ShowIpSourceBindingSchema):
         # Initialize the parsed dictionary
         ret_dict = {}
 
+        # 00:00:00:00:00:14   192.168.199.10   infinite    static          101   TenGigabitEthernet1/0/44
         # 00:12:01:00:00:01   30.0.0.2         297         dhcp-snooping   30    GigabitEthernet1/0/20
-        p1 = re.compile(r'^(?P<mac_address>[\w:]+)\s+(?P<ip_address>[\d\.]+)\s+(?P<lease>\d+)\s+(?P<type>[\w-]+)\s+(?P<vlan>\d+)\s+(?P<interface>\S+)$')
+        p1 = re.compile(r'^(?P<mac_address>[\w:]+)\s+(?P<ip_address>[\d\.]+)\s+(?P<lease>\d+|infinite)\s+(?P<type>[\w-]+)\s+(?P<vlan>\d+)\s+(?P<interface>\S+)$')
 
         # Total number of bindings: 1
         p2 = re.compile(r'^Total number of bindings: (?P<total_bindings>\d+)$')
@@ -8112,7 +8233,7 @@ class ShowIpSourceBinding(ShowIpSourceBindingSchema):
                 result_dict=ret_dict.setdefault('bindings',{}).setdefault(group['interface'], {})
                 result_dict['mac_address']= group['mac_address']
                 result_dict['ip_address']= group['ip_address']
-                result_dict['lease']= int(group['lease'])
+                result_dict['lease']= int(group['lease']) if group['lease'].isdigit() else group['lease']
                 result_dict['type']= group['type']
                 result_dict['vlan']= int(group['vlan'])
                 continue
@@ -8124,7 +8245,7 @@ class ShowIpSourceBinding(ShowIpSourceBindingSchema):
                 continue
 
         return ret_dict
-  
+
 # ========================================================
 # Schema for 'show ip dhcp import'
 # ========================================================
@@ -8142,7 +8263,7 @@ class ShowIPDhcpImport(ShowIPDhcpImportSchema):
     """Parser for:
        show ip dhcp import
     """
-    
+
     cli_command = 'show ip dhcp import'
 
     def cli(self, output=None):
@@ -8170,7 +8291,7 @@ class ShowIPDhcpImport(ShowIPDhcpImportSchema):
                 ret_dict['class_name'] = m2.group('class_name')
 
         return ret_dict
-      
+
 # ==============================
 # Schema for 'show ip dhcp conflicts'
 # ==============================
@@ -8189,7 +8310,7 @@ class ShowIpDhcpConflictSchema(MetaParser):
             },
         },
     }
-    
+
 
 # ==============================
 # Parser for 'show ip dhcp conflicts'
@@ -8201,7 +8322,7 @@ class ShowIpDhcpConflict(ShowIpDhcpConflictSchema):
     show ip dhcp conflict
     """
     cli_command = 'show ip dhcp conflict'
-    
+
     def cli(self, output=None):
         if output is None:
             out = self.device.execute(self.cli_command)
@@ -8213,7 +8334,7 @@ class ShowIpDhcpConflict(ShowIpDhcpConflictSchema):
         index = 1
 
         # Regex pattern for extracting information
-        # 192.168.1.1                       ping                      Feb 07 2025 03:26           Mgmt-vrf  
+        # 192.168.1.1                       ping                      Feb 07 2025 03:26           Mgmt-vrf
         p1 = re.compile(r'(?P<ip_address>\S+)\s+(?P<detect_method>\S+)\s+(?P<detect_time>.+?)(?:\s+(?P<vrf>\S+))?$')
 
         for line in out.splitlines():
@@ -8236,7 +8357,7 @@ class ShowIpDhcpConflict(ShowIpDhcpConflictSchema):
 
         return parsed_dict
 
-    
+
 # ===========================================
 # Schema for 'show ip policy
 # ===========================================
@@ -8277,3 +8398,2153 @@ class ShowIpPolicy(ShowIpPolicySchema):
                 continue
 
         return ret_dict
+
+
+# ===========================================
+# Schema for 'show ip nhrp self'
+# ===========================================
+class ShowIpNhrpSelfSchema(MetaParser):
+    """Schema for show ip nhrp self"""
+    schema = {
+        'entries': {
+            Any(): {
+                'ip': str,
+                'via': str,
+                'tunnel': str,
+                'created': str,
+                'expires': str,
+                'type': str,
+                'flags': str,
+                'nbma_address': str,
+                Optional('services'): str,
+                'metadata_exchange_framework': {
+                    Any(): {
+                        'state': str,
+                        'mef_ext_data': str,
+                    }
+                }
+            }
+        }
+    }
+
+
+# ===========================================
+# Parser for 'show ip nhrp self'
+# ===========================================
+class ShowIpNhrpSelf(ShowIpNhrpSelfSchema):
+    """Parser for show ip nhrp self"""
+
+    cli_command = 'show ip nhrp self'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize parsed dictionary
+        parsed_dict = {}
+
+        # 192.240.1.6/32 via 192.240.1.6
+        p1 = re.compile(r'^(?P<ip>[\d\.]+\/\d+) +via +(?P<via>[\d\.]+)$')
+
+        # Tunnel11 created 00:55:35, never expire
+        p2 = re.compile(r'^Tunnel(?P<tunnel>\d+) +created +(?P<created>[\w:]+), +(?P<expires>[\w\s]+)$')
+
+        # Type: static, Flags: router unique local
+        p3 = re.compile(r'^Type: +(?P<type>\w+), +Flags: +(?P<flags>[\w\s]+)$')
+
+        # NBMA address: 17.0.1.1
+        p4 = re.compile(r'^NBMA +address: +(?P<nbma_address>[\d\.]+)$')
+
+        # Services: CTS-SGT
+        p5 = re.compile(r'^Services: +(?P<services>[\w\-]+)$')
+
+        # 1   	Reset
+        p6 = re.compile(r'^(?P<type>\d+) +(?P<state>\w+)$')
+
+        # MEF ext data:0x80000000
+        p7 = re.compile(r'^MEF +ext +data:(?P<mef_ext_data>0x[\da-fA-F]+)$')
+
+        current_entry = None
+        current_mef_type = None
+
+        for line in output.splitlines():
+            # replace tabs with spaces
+            line = line.replace("\t", "    ").strip()
+
+            # 192.240.1.6/32 via 192.240.1.6
+            m = p1.match(line)
+            if m:
+                sess_dict = parsed_dict.setdefault('entries',{})
+                current_entry = m.groupdict()['ip']
+                sess_dict[current_entry] = m.groupdict()
+                continue
+
+            # Tunnel11 created 00:55:35, never expires
+            m = p2.match(line)
+            if m and current_entry:
+                sess_dict[current_entry].update(m.groupdict())
+                continue
+
+            # Type: static, Flags: router unique local
+            m = p3.match(line)
+            if m and current_entry:
+                sess_dict[current_entry].update(m.groupdict())
+                continue
+
+            # NBMA address: 17.0.1.1
+            m = p4.match(line)
+            if m and current_entry:
+                sess_dict[current_entry]['nbma_address'] = m.groupdict()['nbma_address']
+                continue
+
+            # Services: CTS-SGT
+            m = p5.match(line)
+            if m and current_entry:
+                sess_dict[current_entry]['services'] = m.groupdict()['services']
+                continue
+
+            # 1   	Reset
+            m = p6.match(line)
+            if m and current_entry:
+                current_mef_type = m.groupdict()['type']
+                if 'metadata_exchange_framework' not in sess_dict[current_entry]:
+                    sess_dict[current_entry]['metadata_exchange_framework'] = {}
+                sess_dict[current_entry]['metadata_exchange_framework'][current_mef_type] = {
+                    'state': m.groupdict()['state']
+                }
+                continue
+
+            # MEF ext data:0x80000000
+            m = p7.match(line)
+            if m and current_entry and current_mef_type:
+                sess_dict[current_entry]['metadata_exchange_framework'][current_mef_type]['mef_ext_data'] = m.groupdict()['mef_ext_data']
+                continue
+
+        return parsed_dict
+
+
+# ===========================================
+# Schema for 'show ip nhrp redirect'
+# ===========================================
+class ShowIpNhrpRedirectSchema(MetaParser):
+    """Schema for show ip nhrp redirect"""
+    schema = {
+        'entries': {
+            Any(): {
+                'ip': str,
+                'via': str,
+                'type': str,
+                'flags': str,
+                'nbma_address': str,
+                'hold_time': int,
+                'authentication': str,
+            }
+        }
+    }
+
+
+class ShowIpNhrpRedirect(ShowIpNhrpRedirectSchema):
+    """Parser for show ip nhrp redirect"""
+
+    cli_command = 'show ip nhrp redirect'
+
+    def cli(self, output=None):
+        if output is None:
+            # Execute the command on the device
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # 10.0.0.2/32 via 192.168.1.2
+        p1 = re.compile(r'^(?P<ip>[\d\.\/]+) +via +(?P<via>[\d\.]+)$')
+
+        # Type: dynamic, Flags: authoritative
+        p2 = re.compile(r'^Type: +(?P<type>\w+), +Flags: +(?P<flags>\w+)$')
+
+        # NBMA address: 192.168.1.3
+        p3 = re.compile(r'^NBMA +address: +(?P<nbma_address>[\d\.]+)$')
+
+        # Hold time: 600 sec
+        p4 = re.compile(r'^Hold +time: +(?P<hold_time>\d+) +sec$')
+
+        # Authentication: enabled
+        p5 = re.compile(r'^Authentication: +(?P<authentication>\w+)$')
+
+        # Temporary storage for current entry
+        current_entry = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # 10.0.0.2/32 via 192.168.1.2
+            m = p1.match(line)
+            if m:
+                sess_dict = parsed_dict.setdefault('entries',{})
+                current_entry = m.groupdict()['ip']
+                sess_dict[current_entry] = m.groupdict()
+                continue
+
+            # Type: dynamic, Flags: authoritative
+            m = p2.match(line)
+            if m and current_entry:
+                sess_dict[current_entry].update(m.groupdict())
+                continue
+
+            # NBMA address: 192.168.1.3
+            m = p3.match(line)
+            if m and current_entry:
+                sess_dict[current_entry]['nbma_address'] = m.groupdict()['nbma_address']
+                continue
+
+            # Hold time: 600 sec
+            m = p4.match(line)
+            if m and current_entry:
+                sess_dict[current_entry]['hold_time'] = int(m.groupdict()['hold_time'])
+                continue
+
+            # Authentication: enabled
+            m = p5.match(line)
+            if m and current_entry:
+                sess_dict[current_entry]['authentication'] = m.groupdict()['authentication']
+                continue
+
+        return parsed_dict
+
+# ===========================================
+# Schema for 'show ip sla configuration'
+# ===========================================
+class ShowIpSlaConfigurationSchema(MetaParser):
+    """Schema for
+    'show ip sla configuration'
+    'show ip sla configuration {entry_number}'"""
+
+    schema = {
+        'ip_slas_configuration': {
+                int: {
+                    'entry_number': int,
+                    'owner': str,
+                    'tag': str,
+                    'type_of_operation_to_perform': str,
+                    'target_address': str,
+                    'source_address': str,
+                    'request_size_arr_data_bytes': int,
+                    'timeout_milliseconds': int,
+                    'frequency_seconds': int,
+                    Optional('verify_data'): str,
+                    'status_of_entry_snmp_rowstatus': str,
+                    'threshold_milliseconds': int,
+                    'distribution_statistics': {
+                        'number_of_statistics_hours_kept': int,
+                        'number_of_statistics_distributions_buckets_kept': int,
+                        'statistic_distribution_interval_milliseconds': int,
+                    },
+                    'enhanced_history': {
+                        'number_of_history_lives_kept': int,
+                        'number_of_history_buckets_kept': int,
+                        'history_filter_type': str,
+                    }
+                }
+            }
+        }
+
+# ===========================================
+# Parser for 'show ip sla configuration'
+# ===========================================
+class ShowIpSlaConfiguration(ShowIpSlaConfigurationSchema):
+    """Parser for
+    'show ip sla configuration'
+    'show ip sla configuration {entry_number}'"""
+
+    cli_command = ['show ip sla configuration',
+                    'show ip sla configuration {entry_number}']
+
+    def cli(self, entry_number=None, output=None):
+        if output is None:
+            if entry_number:
+                cmd = self.cli_command[1].format(entry_number=entry_number)
+            else:
+                cmd = self.cli_command[0]
+
+            output = self.device.execute(cmd)
+
+        # Initialize parsed dictionary and entry number index
+        parsed_dict = {}
+        current_entry = None
+
+        # IP SLAs Configuration:
+        p1 = re.compile(r'^IP SLAs Configuration')
+
+        # Entry Number: 1
+        p2 = re.compile(r'^Entry Number: (\d+)')
+
+        # Owner: -
+        p3 = re.compile(r'^Owner: (.+)')
+
+        # Tag: -
+        p4 = re.compile(r'^Tag: (.+)')
+
+        # Type of operation to perform: udp-jitter
+        p5 = re.compile(r'^Type of operation to perform: (.+)')
+
+        # Target address: 192.168.1.1
+        p6 = re.compile(r'^Target address: (.+)')
+
+        # Source address: 192.168.1.2
+        p7 = re.compile(r'^Source address: (.+)')
+
+        # Request size (ARR data bytes): 28
+        p8 = re.compile(r'^Request size \(ARR data bytes\): (\d+)')
+
+        # Timeout (milliseconds): 5000
+        p9 = re.compile(r'^Timeout \(milliseconds\): (\d+)')
+
+        # Frequency (seconds): 60
+        p10 = re.compile(r'^Frequency \(seconds\): (\d+)')
+
+        # Verify data: No
+        p11 = re.compile(r'^Verify data: (.+)')
+
+        # Status of entry (SNMP RowStatus): Active
+        p12 = re.compile(r'^Status of entry \(SNMP RowStatus\): (.+)')
+
+        # Threshold (milliseconds): 2000
+        p13 = re.compile(r'^Threshold \(milliseconds\): (\d+)')
+
+        # Distribution Statistics:
+        p14 = re.compile(r'^Distribution Statistics:')
+
+        # Number of statistics hours kept: 2
+        p15 = re.compile(r'^Number of statistics hours kept: (\d+)')
+
+        # Number of statistics distributions buckets kept: 1
+        p26 = re.compile(r'^Number of statistics distributions buckets kept: (\d+)')
+
+        # Statistic distribution interval (milliseconds): 20
+        p27 = re.compile(r'^Statistic distribution interval \(milliseconds\): (\d+)')
+
+        # Enhanced History:
+        p28 = re.compile(r'^Enhanced History:')
+
+        # Number of history Lives kept: 0
+        p29 = re.compile(r'^Number of history Lives kept: (\d+)')
+
+        # Number of history Buckets kept: 15
+        p30 = re.compile(r'^Number of history Buckets kept: (\d+)')
+
+        # History Filter Type: None
+        p31 = re.compile(r'^History Filter Type: (.+)')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # IP SLAs Configuration:
+            m = p1.match(line)
+            if m:
+                ip_sla_dict = parsed_dict.setdefault('ip_slas_configuration', {})
+
+            # Entry Number: 1
+            m = p2.match(line)
+            if m:
+                current_entry = int(m.group(1))
+                ip_sla_dict.setdefault(current_entry, {})
+                ip_sla_dict[current_entry]['entry_number'] = int(m.group(1))
+            elif current_entry is not None:
+
+                # Owner: -
+                m = p3.match(line)
+                if m:
+                    ip_sla_dict[current_entry]['owner'] = m.group(1)
+
+                # Tag: -
+                m = p4.match(line)
+                if m:
+                    ip_sla_dict[current_entry]['tag'] = m.group(1)
+
+                # Type of operation to perform: udp-jitter
+                m = p5.match(line)
+                if m:
+                    ip_sla_dict[current_entry]['type_of_operation_to_perform'] = m.group(1)
+
+                # Target address: 192.168.1.1
+                m = p6.match(line)
+                if m:
+                    ip_sla_dict[current_entry]['target_address'] = m.group(1)
+
+                # Source address: 192.168.1.2
+                m = p7.match(line)
+                if m:
+                    ip_sla_dict[current_entry]['source_address'] = m.group(1)
+
+                # Request size (ARR data bytes): 28
+                m = p8.match(line)
+                if m:
+                    ip_sla_dict[current_entry]['request_size_arr_data_bytes'] = int(m.group(1))
+
+                # Timeout (milliseconds): 5000
+                m = p9.match(line)
+                if m:
+                    ip_sla_dict[current_entry]['timeout_milliseconds'] = int(m.group(1))
+
+                # Frequency (seconds): 60
+                m = p10.match(line)
+                if m:
+                    ip_sla_dict[current_entry]['frequency_seconds'] = int(m.group(1))
+
+                # Verify data: No
+                m = p11.match(line)
+                if m:
+                    ip_sla_dict[current_entry]['verify_data'] = m.group(1)
+
+                # Status of entry (SNMP RowStatus): Active
+                m = p12.match(line)
+                if m:
+                    ip_sla_dict[current_entry]['status_of_entry_snmp_rowstatus'] = p12.match(line).group(1)
+
+                # Threshold (milliseconds): 2000
+                m = p13.match(line)
+                if m:
+                    ip_sla_dict[current_entry]['threshold_milliseconds'] = int(m.group(1))
+
+                # Distribution Statistics:
+                m = p14.match(line)
+                if m:
+                    distribution_statistics_dict = ip_sla_dict[current_entry].setdefault('distribution_statistics', {})
+
+                # Number of statistics hours kept: 2
+                m = p15.match(line)
+                if m:
+                    distribution_statistics_dict['number_of_statistics_hours_kept'] = int(m.group(1))
+
+                # Number of statistics distributions buckets kept: 1
+                m = p26.match(line)
+                if m:
+                    distribution_statistics_dict['number_of_statistics_distributions_buckets_kept'] = int(m.group(1))
+
+                # Statistic distribution interval (milliseconds): 20
+                m = p27.match(line)
+                if m:
+                    distribution_statistics_dict['statistic_distribution_interval_milliseconds'] = int(m.group(1))
+
+                # Enhanced History:
+                m = p28.match(line)
+                if m:
+                    enhanced_history_dict = ip_sla_dict[current_entry].setdefault('enhanced_history', {})
+
+                # Number of history Lives kept: 0
+                m = p29.match(line)
+                if m:
+                    enhanced_history_dict['number_of_history_lives_kept'] = int(m.group(1))
+
+                # Number of history Buckets kept: 15
+                m = p30.match(line)
+                if m:
+                    enhanced_history_dict['number_of_history_buckets_kept'] = int(m.group(1))
+
+                # History Filter Type: None
+                m = p31.match(line)
+                if m:
+                    enhanced_history_dict['history_filter_type'] = m.group(1)
+
+        return parsed_dict
+
+# ===========================================
+# Schema for 'show ip nhrp vrf <vrf>
+#            'show ip nhrp vrf <vrf> <ip>
+# ===========================================
+class ShowIpNhrpVrfSchema(MetaParser):
+    """Schema for
+       * 'show ip nhrp vrf <vrf>'
+       * 'show ip nhrp vrf <vrf> <ip>'
+    """
+    schema = {
+        'entries': {
+            Any(): {
+                'via': str,
+                'tunnel': str,
+                'created': str,
+                'expire': str,
+                'type': str,
+                'flags': ListOf(str),
+                'nbma_address': str,
+                Optional('group'): str,
+            }
+        }
+    }
+
+
+class ShowIpNhrpVrf(ShowIpNhrpVrfSchema):
+    """Parser for
+       * show ip nhrp vrf <vrf> <ip>
+       * show ip nhrp vrf <vrf>"""
+
+    cli_command = ['show ip nhrp vrf {vrf}',
+                   'show ip nhrp vrf {vrf} {ip}']
+
+    def cli(self, vrf='global', ip=None, output=None):
+        if output is None:
+            if ip:
+                cmd = self.cli_command[1].format(vrf=vrf, ip=ip)
+            else:
+                cmd = self.cli_command[0].format(vrf=vrf)
+            output = self.device.execute(cmd)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # 192.240.1.1/32 via 192.240.1.1
+        p1 = re.compile(r'^(?P<ip>[\d\.]+\/\d+) +via +(?P<via>[\d\.]+)$')
+
+        # Tunnel11 created 2d00h, never expire
+        p2 = re.compile(r'^Tunnel(?P<tunnel>\d+) +created +(?P<created>[\w\d:]+), +(?P<expire>[\w\d\s:]+)$')
+
+        # Type: static, Flags: used bfd
+        p3 = re.compile(r'^Type: +(?P<type>\w+), +Flags: +(?P<flags>[\w\s]+)$')
+
+        # NBMA address: 14.13.1.1
+        p4 = re.compile(r'^NBMA +address: +(?P<nbma_address>[\d\.]+)$')
+
+        # Group: HUB
+        p5 = re.compile(r'^Group: +(?P<group>\w+)$')
+
+        current_ip = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # 192.240.1.1/32 via 192.240.1.1
+            m = p1.match(line)
+            if m:
+                sess_dict = parsed_dict.setdefault('entries', {})
+                current_ip = m.group('ip')
+                sess_dict[current_ip] = {
+                    'via': m.group('via')
+                }
+                continue
+
+            # Tunnel11 created 2d00h, never expire
+            m = p2.match(line)
+            if m and current_ip:
+                sess_dict[current_ip].update({
+                    'tunnel': m.group('tunnel'),
+                    'created': m.group('created'),
+                    'expire': m.group('expire')
+                })
+                continue
+
+            # Type: static, Flags: used bfd
+            m = p3.match(line)
+            if m and current_ip:
+                sess_dict[current_ip].update({
+                    'type': m.group('type'),
+                    'flags': m.group('flags').split()
+                })
+                continue
+
+            # NBMA address: 14.13.1.1
+            m = p4.match(line)
+            if m and current_ip:
+                sess_dict[current_ip].update({
+                    'nbma_address': m.group('nbma_address')
+                })
+                continue
+
+            # Group: HUB
+            m = p5.match(line)
+            if m and current_ip:
+                parsed_dict['entries'][current_ip].update({
+                    'group': m.group('group')
+                })
+                continue
+
+        return parsed_dict
+
+# ================================================
+# Schema for 'show ip subscriber ip {ip_address}'
+# ================================================
+class ShowIpSubscriberIpSchema(MetaParser):
+    """Schema for show ip subscriber ip {ip_address}"""
+    schema = {
+        'subscriber_session_information': {
+            'ip_address': str,
+            'session_id': str,
+            'state': str,
+            'username': str,
+            'mac_address': str,
+            'interface': str,
+            'vrf': str,
+            'service_policy': str,
+            'authentication_status': str,
+            'session_duration': str,
+            'last_status_change': str,
+            'accounting_method': str,
+            'accounting_status': str,
+            'total_input_packets': int,
+            'total_output_packets': int,
+            'total_input_bytes': int,
+            'total_output_bytes': int,
+        },
+        'additional_subscriber_attributes': {
+            int: {
+                    'attribute_type': str,
+                    'attribute_value': str,
+                }
+        },
+        'subscriber_feature_information': {
+            int: {
+                    'feature_name': str,
+                    'feature_status': str,
+                    Optional('feature_configuration'): str,
+                }
+            }
+        }
+
+# ================================================
+# Parser for 'show ip subscriber ip {ip_address}'
+# ================================================
+class ShowIpSubscriberIp(ShowIpSubscriberIpSchema):
+    """Parser for show ip subscriber ip {ip_address}"""
+
+    cli_command = 'show ip subscriber ip {ip_address}'
+
+    def cli(self, ip_address=None, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(ip_address=ip_address))
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # IP Address: 11.11.11.2
+        p1 = re.compile(r'^IP Address:\s+(?P<ip_address>.+)$')
+
+        # Session ID: 000123456
+        p2 = re.compile(r'^Session ID:\s+(?P<session_id>.+)$')
+
+        # State: Active
+        p3 = re.compile(r'^State:\s+(?P<state>.+)$')
+
+        # Username: user@example.com
+        p4 = re.compile(r'^Username:\s+(?P<username>.+)$')
+
+        # MAC Address: aa:bb:cc:dd:ee:ff
+        p5 = re.compile(r'^MAC Address:\s+(?P<mac_address>.+)$')
+
+        # Interface: GigabitEthernet0/0/1
+        p6 = re.compile(r'^Interface:\s+(?P<interface>.+)$')
+
+        # VRF: default
+        p7 = re.compile(r'^VRF:\s+(?P<vrf>.+)$')
+
+        # Service Policy: qos_policy
+        p8 = re.compile(r'^Service Policy:\s+(?P<service_policy>.+)$')
+
+        # Authentication Status: Authenticated
+        p9 = re.compile(r'^Authentication Status:\s+(?P<authentication_status>.+)$')
+
+        # Session Duration: 00:45:23
+        p10 = re.compile(r'^Session Duration:\s+(?P<session_duration>.+)$')
+
+         # Last Status Change: 2023-10-05 14:30:00 UTC
+        p11 = re.compile(r'^Last Status Change:\s+(?P<last_status_change>.+)$')
+
+        # Accounting Method: Radius
+        p12 = re.compile(r'^Accounting Method:\s+(?P<accounting_method>.+)$')
+
+        # Accounting Status: Accounting-Active
+        p13 = re.compile(r'^Accounting Status:\s+(?P<accounting_status>.+)$')
+
+        # Total Input Packets: 123456
+        p14 = re.compile(r'^Total Input Packets:\s+(?P<total_input_packets>\d+)$')
+
+        # Total Output Packets: 654321
+        p15 = re.compile(r'^Total Output Packets:\s+(?P<total_output_packets>\d+)$')
+
+        # Total Input Bytes: 12345678
+        p16 = re.compile(r'^Total Input Bytes:\s+(?P<total_input_bytes>\d+)$')
+
+        # Total Output Bytes: 87654321
+        p17 = re.compile(r'^Total Output Bytes:\s+(?P<total_output_bytes>\d+)$')
+
+        # Attribute Type: Custom
+        p18 = re.compile(r'^Attribute Type:\s+(?P<attribute_type>.+)$')
+
+        # Attribute Value: Value
+        p19 = re.compile(r'^Attribute Value:\s+(?P<attribute_value>.+)$')
+
+        # Feature Name: QoS
+        p20 = re.compile(r'^Feature Name:\s+(?P<feature_name>.+)$')
+
+        # Feature Status: Enabled
+        p21 = re.compile(r'^Feature Status:\s+(?P<feature_status>.+)$')
+
+        # Feature Configuration: Standard
+        p22 = re.compile(r'^Feature Configuration:\s+(?P<feature_configuration>.+)$')
+
+        attribute_index = 0
+        feature_index = 0
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # IP Address: 11.11.11.2
+            m = p1.match(line)
+            if m:
+                subscriber_session_dict = parsed_dict.setdefault('subscriber_session_information', {})
+                subscriber_session_dict['ip_address'] = m.group('ip_address')
+                continue
+
+            # Session ID: 000123456
+            m = p2.match(line)
+            if m:
+                subscriber_session_dict['session_id'] = m.group('session_id')
+                continue
+
+            # State: Active
+            m = p3.match(line)
+            if m:
+                subscriber_session_dict['state'] = m.group('state')
+                continue
+
+            # Username: user@example.com
+            m = p4.match(line)
+            if m:
+                subscriber_session_dict['username'] = m.group('username')
+                continue
+
+            # MAC Address: aa:bb:cc:dd:ee:ff
+            m = p5.match(line)
+            if m:
+                subscriber_session_dict['mac_address'] = m.group('mac_address')
+                continue
+
+            # Interface: GigabitEthernet0/0/1
+            m = p6.match(line)
+            if m:
+                subscriber_session_dict['interface'] = m.group('interface')
+                continue
+
+            # VRF: default
+            m = p7.match(line)
+            if m:
+                subscriber_session_dict['vrf'] = m.group('vrf')
+                continue
+
+            # Service Policy: qos_policy
+            m = p8.match(line)
+            if m:
+                subscriber_session_dict['service_policy'] = m.group('service_policy')
+                continue
+
+            # Authentication Status: Authenticated
+            m = p9.match(line)
+            if m:
+                subscriber_session_dict['authentication_status'] = m.group('authentication_status')
+                continue
+
+            # Session Duration: 00:45:23
+            m = p10.match(line)
+            if m:
+                subscriber_session_dict['session_duration'] = m.group('session_duration')
+                continue
+
+            # Last Status Change: 2023-10-05 14:30:00 UTC
+            m = p11.match(line)
+            if m:
+                subscriber_session_dict['last_status_change'] = m.group('last_status_change')
+                continue
+
+            # Accounting Method: Radius
+            m = p12.match(line)
+            if m:
+                subscriber_session_dict['accounting_method'] = m.group('accounting_method')
+                continue
+
+            # Accounting Status: Accounting-Active
+            m = p13.match(line)
+            if m:
+                subscriber_session_dict['accounting_status'] = m.group('accounting_status')
+                continue
+
+            #  Total Input Packets: 123456
+            m = p14.match(line)
+            if m:
+                subscriber_session_dict['total_input_packets'] = int(m.group('total_input_packets'))
+                continue
+
+            # Total Output Packets: 654321
+            m = p15.match(line)
+            if m:
+                subscriber_session_dict['total_output_packets'] = int(m.group('total_output_packets'))
+                continue
+
+            # Total Input Bytes: 12345678
+            m = p16.match(line)
+            if m:
+                subscriber_session_dict['total_input_bytes'] = int(m.group('total_input_bytes'))
+                continue
+
+            #  Total Output Bytes: 87654321
+            m = p17.match(line)
+            if m:
+                subscriber_session_dict['total_output_bytes'] = int(m.group('total_output_bytes'))
+                continue
+
+            # Attribute Type: Custom
+            m = p18.match(line)
+            if m:
+                subscriber_attributes_dict = parsed_dict.setdefault('additional_subscriber_attributes', {}).setdefault(attribute_index, {})
+                subscriber_attributes_dict['attribute_type'] = m.group('attribute_type')
+                continue
+
+            # Attribute Value: Value
+            m = p19.match(line)
+            if m:
+                subscriber_attributes_dict['attribute_value'] = m.group('attribute_value')
+                attribute_index += 1
+                continue
+
+            # Feature Name: QoS
+            m = p20.match(line)
+            if m:
+                subscriber_feature_dict = parsed_dict.setdefault('subscriber_feature_information', {}).setdefault(feature_index, {})
+                subscriber_feature_dict['feature_name'] = m.group('feature_name')
+                continue
+
+            # Feature Status: Enabled
+            m = p21.match(line)
+            if m:
+                subscriber_feature_dict['feature_status'] = m.group('feature_status')
+                continue
+
+            # Feature Configuration: Standard
+            m = p22.match(line)
+            if m:
+                subscriber_feature_dict['feature_configuration'] = m.group('feature_configuration')
+                feature_index += 1
+                continue
+
+        return parsed_dict
+
+# ===========================================
+# Schema for 'show ip sla application'
+# ===========================================
+class ShowIpSlaApplicationSchema(MetaParser):
+    """Schema for 'show ip sla application'"""
+    schema = {'ip_service_level_agreements':{
+        'version': str,
+        'supported_operation_types': ListOf(str),
+        'supported_features': ListOf(str),
+        'ip_slas_low_memory_water_mark': int,
+        'estimated_system_max_number_of_entries': int,
+        'estimated_number_of_configurable_operations': int,
+        'number_of_entries_configured': int,
+        'number_of_active_entries': int,
+        'number_of_pending_entries': int,
+        'number_of_inactive_entries': int,
+        'time_of_last_change': str,
+    }
+    }
+
+# ===========================================
+# Parser for 'show ip sla application'
+# ===========================================
+class ShowIpSlaApplication(ShowIpSlaApplicationSchema):
+    """Parser for 'show ip sla application'"""
+
+    cli_command = 'show ip sla application'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize parsed dictionary
+        parsed_dict = {}
+
+        # IP Service Level Agreements
+        p1 = re.compile(r'^\s*IP Service Level Agreements$')
+
+        # Version: Round Trip Time MIB 2.2.0, Infrastructure Engine-III
+        p2 = re.compile(r'^Version:\s+(?P<version>[\S\s]+)$')
+
+        # Supported Operation Types:
+        p3 = re.compile(r'^Supported Operation Types:$')
+
+        # Supported Features:
+        p4 = re.compile(r'^Supported Features:$')
+
+        # IP SLAs low memory water mark: 1623380481
+        p5 = re.compile(r'^IP SLAs low memory water mark:\s+(?P<value>\d+)$')
+
+        # Estimated system max number of entries: 140423
+        p6 = re.compile(r'^Estimated system max number of entries:\s+(?P<value>\d+)$')
+
+        # Estimated number of configurable operations: 139923
+        p7 = re.compile(r'^Estimated number of configurable operations:\s+(?P<value>\d+)$')
+
+        # Number of Entries configured  : 500
+        p8 = re.compile(r'^Number of Entries configured\s+:\s+(?P<value>\d+)$')
+
+        # Number of active Entries      : 500
+        p9 = re.compile(r'^Number of active Entries\s+:\s+(?P<value>\d+)$')
+
+        # Number of pending Entries     : 0
+        p10 = re.compile(r'^Number of pending Entries\s+:\s+(?P<value>\d+)$')
+
+        # Number of inactive Entries    : 0
+        p11 = re.compile(r'^Number of inactive Entries\s+:\s+(?P<value>\d+)$')
+
+        # Time of last change in whole IP SLAs: 22:34:37.309 PST Sun Feb 9 2025
+        p12 = re.compile(r'^Time of last change in whole IP SLAs:\s+(?P<value>[\S\s]+)$')
+
+        in_supported_operation_types = False
+        in_supported_features = False
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # excluding empty lines
+            if not line:
+                continue
+
+            # IP Service Level Agreements
+            m = p1.match(line)
+            if m:
+                ip_sla_dict = parsed_dict.setdefault('ip_service_level_agreements', {})
+                continue
+
+            # Version: Round Trip Time MIB 2.2.0, Infrastructure Engine-III
+            m = p2.match(line)
+            if m:
+                ip_sla_dict['version'] = m.group('version')
+                continue
+
+            # Supported Operation Types:
+            if p3.match(line):
+                in_supported_operation_types = True
+                in_supported_features = False
+                ip_sla_dict.setdefault('supported_operation_types', [])
+                continue
+
+            # Supported Features:   
+            if p4.match(line):
+                in_supported_operation_types = False
+                in_supported_features = True
+                ip_sla_dict.setdefault('supported_features', [])
+                continue
+
+            # IP SLAs low memory water mark: 1623380481
+            m = p5.match(line)
+            if m:
+                in_supported_operation_types = False
+                in_supported_features = False
+                ip_sla_dict['ip_slas_low_memory_water_mark'] = int(m.group('value'))
+                continue
+
+            # icmpEcho, path-echo, path-jitter, udpEcho, tcpConnect, http
+	    # dns, udpJitter, dhcp, ftp, lsp Group, icmpJitter, lspPing
+	    # lspTrace, 802.1agEcho VLAN, EVC, Port
+	    # 802.1agJitter VLAN, EVC, Port, pseudowirePing, y1731Delay
+	    # y1731Loss, y1731SyntheticLoss,, udpApp, wspApp, mcast
+	    # generic, https
+            if in_supported_operation_types:
+                # replacing double commas with single commas
+                line = line.replace(',,', ',')
+                ip_sla_dict['supported_operation_types'].extend(line.split(', '))
+                continue
+
+            # IPSLAs Event Publisher
+            if in_supported_features:
+                ip_sla_dict['supported_features'].append(line)
+                continue
+
+            # Estimated system max number of entries: 140423
+            m = p6.match(line)
+            if m:
+                ip_sla_dict['estimated_system_max_number_of_entries'] = int(m.group('value'))
+                continue
+
+            # Estimated number of configurable operations: 139923
+            m = p7.match(line)
+            if m:
+                ip_sla_dict['estimated_number_of_configurable_operations'] = int(m.group('value'))
+                continue
+
+            # Number of Entries configured  : 500
+            m = p8.match(line)
+            if m:
+                ip_sla_dict['number_of_entries_configured'] = int(m.group('value'))
+                continue
+
+            # Number of active Entries      : 500
+            m = p9.match(line)
+            if m:
+                ip_sla_dict['number_of_active_entries'] = int(m.group('value'))
+                continue
+
+            # Number of pending Entries     : 0
+            m = p10.match(line)
+            if m:
+                ip_sla_dict['number_of_pending_entries'] = int(m.group('value'))
+                continue
+
+            # Number of inactive Entries    : 0
+            m = p11.match(line)
+            if m:
+                ip_sla_dict['number_of_inactive_entries'] = int(m.group('value'))
+                continue
+
+            # Time of last change in whole IP SLAs: 22:34:37.309 PST Sun Feb 9 2025
+            m = p12.match(line)
+            if m:
+                ip_sla_dict['time_of_last_change'] = m.group('value')
+                continue
+
+        return parsed_dict
+
+
+
+# ================================================
+# Schema for 'show ip subscriber mac {mac_address}'
+# ================================================
+class ShowIpSubscriberMacSchema(MetaParser):
+    """Schema for show ip subscriber mac {mac_address}"""
+    schema = {
+        'subscriber_session_information': {
+            'mac_address': str,
+            'ip_address': str,
+            'session_id': str,
+            'state': str,
+            'username': str,
+            'interface': str,
+            'vrf': str,
+            'service_policy': str,
+            'authentication_status': str,
+            'session_duration': str,
+            'last_status_change': str,
+            'accounting_method': str,
+            'accounting_status': str,
+            'total_input_packets': int,
+            'total_output_packets': int,
+            'total_input_bytes': int,
+            'total_output_bytes': int,
+        },
+        'subscriber_attributes': {
+            int: {
+                    'attribute_type': str,
+                    'attribute_value': str,
+                }
+        },
+        'subscriber_features': {
+            int: {
+                    'feature_name': str,
+                    'feature_status': str,
+                    Optional('feature_configuration'): str,
+                }
+            }
+        }
+
+# ================================================
+# Parser for 'show ip subscriber mac {mac_address}'
+# ================================================
+class ShowIpSubscriberMac(ShowIpSubscriberMacSchema):
+    """Parser for show ip subscriber mac {mac_address}"""
+
+    cli_command = 'show ip subscriber mac {mac_address}'
+
+    def cli(self, mac_address='', output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(mac_address=mac_address))
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # MAC Address: aaaa.bbbb.1111
+        p1 = re.compile(r'^MAC Address:\s+(?P<mac_address>.+)$')
+
+        # IP Address: 11.11.11.2   
+        p2 = re.compile(r'^IP Address: +(?P<ip_address>[\d\.]+)$')
+
+        # Session ID: 000123456
+        p3 = re.compile(r'^Session ID: +(?P<session_id>\S+)$')
+
+        # State: Active
+        p4 = re.compile(r'^State: +(?P<state>\w+)$')
+
+        # Interface: GigabitEthernet0/0/1
+        p5 = re.compile(r'^Interface: +(?P<interface>\S+)$')
+
+        # VRF: default
+        p6 = re.compile(r'^VRF: +(?P<vrf>\S+)$')
+
+        # Username: user@example.com
+        p7 = re.compile(r'^Username: +(?P<username>\S+)$')
+
+        # Service Policy: qos_poliy
+        p8 = re.compile(r'^Service Policy: +(?P<service_policy>\S+)$')
+
+        # Authentication Status: Authenticated
+        p9 = re.compile(r'^Authentication Status: +(?P<authentication_status>\w+)$')
+
+        # Session Duration: 00:45:23
+        p10 = re.compile(r'^Session Duration: +(?P<session_duration>[\w:]+)$')
+
+        # Last Status Change: 2023-10-05 14:30:00 UTC
+        p11 = re.compile(r'^Last Status Change: +(?P<last_status_change>.+)$')
+
+        # Accounting Method: Radius
+        p12 = re.compile(r'^Accounting Method: +(?P<accounting_method>\S+)$')
+
+        # Accounting Status: Accounting-Active
+        p13 = re.compile(r'^Accounting Status: +(?P<accounting_status>[\w\-]+)$')
+
+        # Total Input Packets: 123456
+        p14 = re.compile(r'^Total Input Packets: +(?P<total_input_packets>\d+)$')
+
+        # Total Output Packets: 654321
+        p15 = re.compile(r'^Total Output Packets: +(?P<total_output_packets>\d+)$')
+
+        # Total Input Bytes: 123456789
+        p16 = re.compile(r'^Total Input Bytes: +(?P<total_input_bytes>\d+)$')
+
+        # Total Output Bytes: 987654321
+        p17 = re.compile(r'^Total Output Bytes: +(?P<total_output_bytes>\d+)$')
+
+        # Attribute Type: Location
+        p18 = re.compile(r'^Attribute Type: +(?P<attribute_type>.+)$')
+
+        # Attribute_Value: New_York
+        p19 = re.compile(r'^Attribute Value: +(?P<attribute_value>.+)$')
+
+        # Feature Name: QoS
+        p20 = re.compile(r'^Feature Name: +(?P<feature_name>.+)$')
+
+        # Feature Status: Enabled
+        p21 = re.compile(r'^Feature Status: +(?P<feature_status>\w+)$')
+
+        # Feature Configuration: Standard
+        p22 = re.compile(r'^Feature Configuration: +(?P<feature_configuration>.+)$')
+
+        # Initialize counters for attributes and features
+        attribute_index = 0
+        feature_index = 0
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Mac Address: aaaa.bbbb.1111
+            m = p1.match(line)
+            if m:
+                subscriber_session_dict = parsed_dict.setdefault('subscriber_session_information', {})
+                subscriber_session_dict['mac_address'] = m.group('mac_address')
+                continue
+
+            # Ip Address: 11.11.11.2
+            m = p2.match(line)
+            if m:
+                subscriber_session_dict['ip_address'] = m.group('ip_address')
+                continue
+
+            # Session ID: 000123456
+            m = p3.match(line)
+            if m:
+                subscriber_session_dict['session_id'] = m.group('session_id')
+                continue
+
+            # State: Active
+            m = p4.match(line)
+            if m:
+                subscriber_session_dict['state'] = m.group('state')
+                continue
+
+            # Interface: GigabitEthernet0/0/1
+            m = p5.match(line)
+            if m:
+                subscriber_session_dict['interface'] = m.group('interface')
+                continue
+
+            # VRF: default
+            m = p6.match(line)
+            if m:
+                subscriber_session_dict['vrf'] = m.group('vrf')
+                continue
+
+            # Username: user@example.com
+            m = p7.match(line)
+            if m:
+                subscriber_session_dict['username'] = m.group('username')
+                continue
+
+            # Service Policy: qos_policy
+            m = p8.match(line)
+            if m:
+                subscriber_session_dict['service_policy'] = m.group('service_policy')
+                continue
+
+            # Authentication Status: Authenticated
+            m = p9.match(line)
+            if m:
+                subscriber_session_dict['authentication_status'] = m.group('authentication_status')
+                continue
+
+            # Session Duration: 00:45:23
+            m = p10.match(line)
+            if m:
+                subscriber_session_dict['session_duration'] = m.group('session_duration')
+                continue
+
+            # Last Status Change: 2023-10-05 14:30:00 UTC
+            m = p11.match(line)
+            if m:
+                subscriber_session_dict['last_status_change'] = m.group('last_status_change')
+                continue
+
+            # Accounting Method: Radius
+            m = p12.match(line)
+            if m:
+                subscriber_session_dict['accounting_method'] = m.group('accounting_method')
+                continue
+
+            # Accounting Status: Accounting-Active
+            m = p13.match(line)
+            if m:
+                subscriber_session_dict['accounting_status'] = m.group('accounting_status')
+                continue
+
+            # Total Input Packets: 123456
+            m = p14.match(line)
+            if m:
+                subscriber_session_dict['total_input_packets'] = int(m.group('total_input_packets'))
+                continue
+
+            # Total Output Packets: 654321
+            m = p15.match(line)
+            if m:
+                subscriber_session_dict['total_output_packets'] = int(m.group('total_output_packets'))
+                continue
+
+            # Total Input Bytes: 123456789
+            m = p16.match(line)
+            if m:
+                subscriber_session_dict['total_input_bytes'] = int(m.group('total_input_bytes'))
+                continue
+
+            # Total Output Bytes: 987654321
+            m = p17.match(line)
+            if m:
+                subscriber_session_dict['total_output_bytes'] = int(m.group('total_output_bytes'))
+                continue
+
+            # Attribute Type: Location
+            m = p18.match(line)
+            if m:
+                attributes_dict = parsed_dict.setdefault('subscriber_attributes', {}).setdefault(attribute_index, {})
+                attributes_dict['attribute_type'] = m.group('attribute_type')
+                continue
+
+            # Attribute Value: New_York
+            m = p19.match(line)
+            if m:
+                attributes_dict['attribute_value'] = m.group('attribute_value')
+                attribute_index += 1
+                continue
+
+            # Feature Name: QoS
+            m = p20.match(line)
+            if m:
+                features_dict = parsed_dict.setdefault('subscriber_features', {}).setdefault(feature_index, {})
+                features_dict['feature_name'] = m.group('feature_name')
+                continue
+
+            # Feature Status: Enabled
+            m = p21.match(line)
+            if m:
+                features_dict['feature_status'] = m.group('feature_status')
+                continue
+
+            # Feature Configuration: Standard
+            m = p22.match(line)
+            if m:
+                features_dict['feature_configuration'] = m.group('feature_configuration')
+                feature_index += 1
+                continue
+
+        return parsed_dict
+
+
+# ====================================================
+# Schema for 'show ip virtual-reassembly {interface}'
+# ====================================================
+class ShowIpVirtualReassemblyInterfaceSchema(MetaParser):
+    """Schema for show ip virtual-reassembly {interface}"""
+    schema = {
+        'virtual_fragment_reassembly_information': {
+                'interface': str,
+                'vfr_enabled': bool,
+                'maximum_number_of_fragments': int,
+                'maximum_packet_length_bytes': int,
+                'timeout_seconds': int,
+                'current_number_of_reassembly_contexts': int,
+                'current_number_of_fragments': int,
+                'reassembly_timeout_events': int,
+                'reassembly_fail_events': int,
+                'reassembly_success_events': int,
+                'last_packet_dropped_due_to_vfr': {
+                    'fragment_count_exceeded': bool,
+                    'packet_length_exceeded': bool,
+                },
+                'statistics_since_last_clear': {
+                    'total_packets_received': int,
+                    'total_fragments_received': int,
+                    'total_packets_reassembled': int,
+                    'total_packets_dropped_due_to_vfr': int,
+                }
+            }
+        }
+
+# ====================================================
+# Parser for 'show ip virtual-reassembly {interface}'
+# ====================================================
+class ShowIpVirtualReassemblyInterface(ShowIpVirtualReassemblyInterfaceSchema):
+    """Parser for show ip virtual-reassembly {interface}"""
+
+    cli_command = 'show ip virtual-reassembly {interface}'
+
+    def cli(self, interface='', output=None):
+        if output is None:
+            cmd = self.cli_command.format(interface=interface)
+            output = self.device.execute(cmd)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # Virtual Fragment Reassembly (VFR) Information for interface GigabitEthernet4:
+        p1 = re.compile(r'^Virtual Fragment Reassembly \(VFR\) Information for interface (?P<interface>\S+):$')
+
+        # VFR is enabled
+        p2 = re.compile(r'^VFR is (?P<status>\w+)$')
+
+        # Maximum number of fragments: 128
+        p3 = re.compile(r'^Maximum number of fragments: (?P<maximum_number_of_fragments>\d+)$')
+
+        # Maximum packet length: 1500 bytes
+        p4 = re.compile(r'^Maximum packet length: (?P<maximum_packet_length_bytes>\d+) bytes$')
+
+        # Timeout (seconds): 30
+        p5 = re.compile(r'^Timeout \(seconds\): (?P<timeout_seconds>\d+)$')
+
+        # Current number of reassembly contexts: 3
+        p6 = re.compile(r'^Current number of reassembly contexts: (?P<current_number_of_reassembly_contexts>\d+)$')
+
+        # Current number of fragments: 15
+        p7 = re.compile(r'^Current number of fragments: (?P<current_number_of_fragments>\d+)$')
+
+        # Reassembly timeout events: 2
+        p8 = re.compile(r'^Reassembly timeout events: (?P<reassembly_timeout_events>\d+)$')
+
+        # Reassembly fail events: 1
+        p9 = re.compile(r'^Reassembly fail events: (?P<reassembly_fail_events>\d+)$')
+
+        # Reassembly success events: 20
+        p10 = re.compile(r'^Reassembly success events: (?P<reassembly_success_events>\d+)$')
+
+        # Last packet dropped due to VFR:
+        p11 = re.compile(r'^Last packet dropped due to VFR:$')
+
+        # Fragment count exceeded
+        p12 = re.compile(r'^Fragment count exceeded$')
+
+        # Fragment count exceeded
+        p13 = re.compile(r'^Packet length exceeded$')
+
+        # Statistics since last clear:
+        p14 = re.compile(r'^Statistics since last clear:$')
+
+        # Total packets received: 1000
+        p15 = re.compile(r'^Total packets received: (?P<total_packets_received>\d+)$')
+
+        # Total fragments received: 200
+        p16 = re.compile(r'^Total fragments received: (?P<total_fragments_received>\d+)$')
+
+        # Total packets reassembled: 950
+        p17 = re.compile(r'^Total packets reassembled: (?P<total_packets_reassembled>\d+)$')
+
+        # Total packets dropped due to VFR: 50
+        p18 = re.compile(r'^Total packets dropped due to VFR: (?P<total_packets_dropped_due_to_vfr>\d+)$')
+
+        current_interface = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Virtual Fragment Reassembly (VFR) Information for interface GigabitEthernet4:
+            m = p1.match(line)
+            if m:
+                interface_dict = parsed_dict.setdefault('virtual_fragment_reassembly_information', {})
+                interface_dict['interface'] = m.group('interface')
+                continue
+
+            # VFR is enabled
+            m = p2.match(line)
+            if m:
+                interface_dict['vfr_enabled'] = True if m.group('status') == 'enabled' else False
+                continue
+
+            # Maximum number of fragments: 128
+            m = p3.match(line)
+            if m:
+                interface_dict['maximum_number_of_fragments'] = int(m.group('maximum_number_of_fragments'))
+                continue
+
+            # Maximum packet length: 1500 bytes
+            m = p4.match(line)
+            if m:
+                interface_dict['maximum_packet_length_bytes'] = int(m.group('maximum_packet_length_bytes'))
+                continue
+
+            # Timeout (seconds): 30
+            m = p5.match(line)
+            if m:
+                interface_dict['timeout_seconds'] = int(m.group('timeout_seconds'))
+                continue
+
+            # Current number of reassembly contexts: 3
+            m = p6.match(line)
+            if m:
+                interface_dict['current_number_of_reassembly_contexts'] = int(m.group('current_number_of_reassembly_contexts'))
+                continue
+
+            # Current number of fragments: 15
+            m = p7.match(line)
+            if m:
+                interface_dict['current_number_of_fragments'] = int(m.group('current_number_of_fragments'))
+                continue
+
+            # Reassembly timeout events: 2
+            m = p8.match(line)
+            if m:
+                interface_dict['reassembly_timeout_events'] = int(m.group('reassembly_timeout_events'))
+                continue
+
+            # Reassembly fail events: 1
+            m = p9.match(line)
+            if m:
+                interface_dict['reassembly_fail_events'] = int(m.group('reassembly_fail_events'))
+                continue
+
+            # Reassembly success events: 20
+            m = p10.match(line)
+            if m:
+                interface_dict['reassembly_success_events'] = int(m.group('reassembly_success_events'))
+                continue
+
+            # Last packet dropped due to VFR:
+            m = p11.match(line)
+            if m:
+                last_packet_dropped = {'fragment_count_exceeded': False , 'packet_length_exceeded': False}
+                interface_dict['last_packet_dropped_due_to_vfr'] = last_packet_dropped
+                continue
+
+            # Fragment count exceeded
+            m = p12.match(line)
+            if m:
+                last_packet_dropped['fragment_count_exceeded'] = True
+                continue
+
+            # P
+            m = p13.match(line)
+            if m:
+                last_packet_dropped['packet_length_exceeded'] = True
+                continue
+
+            # Statistics since last clear:
+            m = p14.match(line)
+            if m:
+                statistics_dict = interface_dict.setdefault('statistics_since_last_clear', {})
+                continue
+
+            # Total packets received: 1000
+            m = p15.match(line)
+            if m:
+                statistics_dict['total_packets_received'] = int(m.group('total_packets_received'))
+                continue
+
+            # Total fragments received: 200
+            m = p16.match(line)
+            if m:
+                statistics_dict['total_fragments_received'] = int(m.group('total_fragments_received'))
+                continue
+
+            # Total packets reassembled: 950
+            m = p17.match(line)
+            if m:
+                statistics_dict['total_packets_reassembled'] = int(m.group('total_packets_reassembled'))
+                continue
+
+            # Total packets dropped due to VFR: 50
+            m = p18.match(line)
+            if m:
+                statistics_dict['total_packets_dropped_due_to_vfr'] = int(m.group('total_packets_dropped_due_to_vfr'))
+                continue
+
+        return parsed_dict
+
+
+
+# ====================================================
+# Schema for 'show ipv mld vrf {vrf} groups {group}'
+# ====================================================
+class ShowIpvMldVrfGroupsSchema(MetaParser):
+    """Schema for show ipv mld vrf {vrf} groups {group}"""
+
+    schema = {
+        'mld_connected_group_membership': ListOf({
+            'group_address': str,
+            'interface': str,
+            'uptime': str,
+            'expires': str,
+        })
+    }
+
+
+# ====================================================
+# Parser for 'show ipv mld vrf {vrf} groups {group}'
+# ====================================================
+class ShowIpvMldVrfGroups(ShowIpvMldVrfGroupsSchema):
+    """Parser for show ipv mld vrf {vrf} groups {group}"""
+
+    cli_command = 'show ipv mld vrf {vrf} groups {group}'
+
+    def cli(self, vrf="", group="", output=None):
+        if output is None:
+            cmd = self.cli_command.format(vrf=vrf, group=group)
+            output = self.device.execute(cmd)
+
+        # Initialize parsed dictionary
+        parsed_dict = {}
+
+        # Define regex patterns
+        # Group entry: "FF08:4000::1                            Gi0/2/3.2                                            00:00:00  00:04:19"
+        p_group_entry = re.compile(
+            r'^(?P<group_address>[0-9A-Fa-f:]+)\s+'
+            r'(?P<interface>\S+)\s+'
+            r'(?P<uptime>\d{2}:\d{2}:\d{2})\s+'
+            r'(?P<expires>\d{2}:\d{2}:\d{2})$'
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            if not line:
+                continue
+
+            # Skip header lines
+            if 'MLD Connected Group Membership' in line or 'Group Address' in line or 'Interface' in line:
+                continue
+
+            # Match group entry
+            # Example: "FF08:4000::1                            Gi0/2/3.2                                            00:00:00  00:04:19"
+            m = p_group_entry.match(line)
+            if m:
+                group_address = m.group('group_address')
+
+                mld_groups = parsed_dict.setdefault('mld_connected_group_membership', [])
+
+                group_dict = {
+                    'group_address': group_address,
+                    'interface': m.group('interface'),
+                    'uptime': m.group('uptime'),
+                    'expires': m.group('expires')
+                }
+
+                mld_groups.append(group_dict)
+                continue
+
+        return parsed_dict
+
+class ShowIpMrmStatusSchema(MetaParser):
+    """Schema for 'show ip mrm status'"""
+    schema = {
+        'status_report_cache': {
+            'timestamp': ListOf({
+                'date': str,
+                'manager': str,
+                'test_sender': str,
+                'test_receiver': str,
+                'pkt_loss_dup': str,
+                'ehsr': int,
+            })
+        }
+    }
+
+class ShowIpMrmStatus(ShowIpMrmStatusSchema):
+    """Parser for 'show ip mrm status'"""
+
+    cli_command = 'show ip mrm status'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # Regular expression to match the p0 and p1
+        # "Jun 20 12:30:45"
+        p0 = re.compile(r'^(?P<date>\w+\s+\d+\s+\d+:\d+:\d+)$')
+        # manager: 10.1.1.2, test sender: 10.1.1.1, test receiver:10.1.1.3, packet loss/duplication:  (0%) , and EHSR (Error Handling Success Rate): 304.
+        p1 = re.compile(
+            r'^(?P<manager>\S+)\s+(?P<test_sender>\S+)\s+(?P<test_receiver>\S+)\s+'
+            r'(?P<pkt_loss_dup>\d+\s+\(\d+%\))\s+(?P<ehsr>\d+)$'
+        )
+
+        # Iterate over each line in the output
+        current_date = None
+        for line in output.splitlines():
+            line = line.strip()
+
+            # "jun 20 12:30:45"
+            m0 = p0.match(line)
+            if m0:
+                current_date = m0.group('date')
+                continue
+
+            # manager: 10.1.1.2, test sender: 10.1.1.1, test receiver:10.1.1.3, packet loss/duplication:  (0%) , and EHSR (Error Handling Success Rate): 304.
+            m1 = p1.match(line)
+            if m1 and current_date:
+                # Extract data using named groups
+                manager = m1.group('manager')
+                test_sender = m1.group('test_sender')
+                test_receiver = m1.group('test_receiver')
+                pkt_loss_dup = m1.group('pkt_loss_dup')
+                ehsr = int(m1.group('ehsr'))
+
+                # Use setdefault to avoid KeyError
+                timestamp_list = parsed_dict.setdefault('status_report_cache', {}).setdefault('timestamp', [])
+
+                # Append the extracted data to the list
+                timestamp_list.append({
+                    'date': current_date,
+                    'manager': manager,
+                    'test_sender': test_sender,
+                    'test_receiver': test_receiver,
+                    'pkt_loss_dup': pkt_loss_dup,
+                    'ehsr': ehsr,
+                })
+
+        return parsed_dict
+
+class ShowIpPimInterfaceCountSchema(MetaParser):
+    """Schema for 'show ip pim interface count'"""
+    schema = {
+        'interfaces': {
+            str: {  # Interface name
+                'address': str,
+                'fs': str,
+                'mpackets_in': int,
+                'mpackets_out': int,
+            }
+        }
+    }
+
+
+class ShowIpPimInterfaceCount(ShowIpPimInterfaceCountSchema):
+    """Parser for 'show ip pim interface count'"""
+
+    cli_command = 'show ip pim interface count'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # address: 10.1.1.3, interface: GigabitEthernet0/1,fs: *, mpackets In/out: 0/0
+        p1 = re.compile(r'^(?P<address>\d+\.\d+\.\d+\.\d+)\s+'
+                        r'(?P<interface>\S+)\s+'
+                        r'(?P<fs>\S+)\s+'
+                        r'(?P<mpackets_in>\d+)/(?P<mpackets_out>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # address: 10.1.1.3, interface: GigabitEthernet0/1, fs: *, mpackets In/out: 0/0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                interface = group['interface']
+                # Use setdefault to avoid KeyError
+                interface_dict = parsed_dict.setdefault('interfaces', {}).setdefault(interface, {})
+                interface_dict['address'] = group['address']
+                interface_dict['fs'] = group['fs']
+                interface_dict['mpackets_in'] = int(group['mpackets_in'])
+                interface_dict['mpackets_out'] = int(group['mpackets_out'])
+
+        return parsed_dict
+
+
+# ================================================================================
+# Schema for 'show ip wccp web-cache detail'
+# ================================================================================
+class ShowIpWccpWebCacheDetailSchema(MetaParser):
+    """Schema for show ip wccp web-cache detail"""
+
+    schema = {
+        'wccp_client_information': {
+            Any(): {  # WCCP Client ID (IP address)
+                'client_id': str,
+                'protocol_version': str,
+                'state': str,
+                'redirection': str,
+                'packet_return': str,
+                'assignment': str,
+                'connect_time': str,
+                'redirected_packets': {
+                    'process': int,
+                    'cef': int,
+                },
+                'gre_bypassed_packets': {
+                    'process': int,
+                    'cef': int,
+                },
+                'hash_allotment': str,
+                'hash_allotment_percentage': float,
+                'initial_hash_info': str,
+                'assigned_hash_info': str,
+            }
+        }
+    }
+
+# ================================================================================
+# Parser for 'show ip wccp web-cache detail'
+# ================================================================================
+class ShowIpWccpWebCacheDetail(ShowIpWccpWebCacheDetailSchema):
+    """Parser for show ip wccp web-cache detail"""
+
+    cli_command = ['show ip wccp web-cache detail']
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command[0])
+
+        # Initialize result dictionary
+        parsed_dict = {}
+
+        # Regular expressions for parsing
+        # WCCP Client ID:          209.165.200.225
+        p1 = re.compile(r'^\s*WCCP Client ID:\s+(?P<client_id>\S+)$')
+        # Protocol Version:        2.0
+        p2 = re.compile(r'^\s*Protocol Version:\s+(?P<protocol_version>\S+)$')
+        # State:                   Usable
+        p3 = re.compile(r'^\s*State:\s+(?P<state>\S+)$')
+        # Redirection:             GRE
+        p4 = re.compile(r'^\s*Redirection:\s+(?P<redirection>\S+)$')
+        # Packet Return:           GRE
+        p5 = re.compile(r'^\s*Packet Return:\s+(?P<packet_return>\S+)$')
+        # Assignment:              HASH
+        p6 = re.compile(r'^\s*Assignment:\s+(?P<assignment>\S+)$')
+        # Connect Time:            1w5d
+        p7 = re.compile(r'^\s*Connect Time:\s+(?P<connect_time>\S+)$')
+        # Process:               0
+        p8 = re.compile(r'^\s*Process:\s+(?P<process>\d+)$')
+        # CEF:                   0
+        p9 = re.compile(r'^\s*CEF:\s+(?P<cef>\d+)$')
+        # Hash Allotment:          128 of 256 (50.00%)
+        p10 = re.compile(r'^\s*Hash Allotment:\s+(?P<hash_allotment>\d+ of \d+) \((?P<percentage>[\d.]+)%\)$')
+        # Initial Hash Info:       00000000000000000000000000000000
+        p11 = re.compile(r'^\s*Initial Hash Info:\s+(?P<initial_hash>.+)$')
+        # Assigned Hash Info:      AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        p12 = re.compile(r'^\s*Assigned Hash Info:\s+(?P<assigned_hash>.+)$')
+        # Continuation lines for hash info (starting with spaces)
+        p13 = re.compile(r'^\s+(?P<hash_continuation>[A-F0-9]+)$')
+
+        current_client = None
+        current_section = None
+        hash_continuation_type = None
+
+        for line in output.splitlines():
+            if not line.strip():
+                continue
+
+            # WCCP Client ID:          209.165.200.225
+            m = p1.match(line)
+            if m:
+                client_id = m.group('client_id')
+
+                parsed_dict.setdefault('wccp_client_information', {})[client_id] = {
+                    'client_id': client_id
+                }
+                current_client = parsed_dict['wccp_client_information'][client_id]
+                current_section = None
+                hash_continuation_type = None
+                continue
+
+            if current_client is None:
+                continue
+
+            # Protocol Version:        2.0
+            m = p2.match(line)
+            if m:
+                current_client['protocol_version'] = m.group('protocol_version')
+                continue
+
+            # State:                   Usable
+            m = p3.match(line)
+            if m:
+                current_client['state'] = m.group('state')
+                continue
+
+            # Redirection:             GRE
+            m = p4.match(line)
+            if m:
+                current_client['redirection'] = m.group('redirection')
+                continue
+
+            # Packet Return:           GRE
+            m = p5.match(line)
+            if m:
+                current_client['packet_return'] = m.group('packet_return')
+                continue
+
+            # Assignment:              HASH
+            m = p6.match(line)
+            if m:
+                current_client['assignment'] = m.group('assignment')
+                continue
+
+            # Connect Time:            1w5d
+            m = p7.match(line)
+            if m:
+                current_client['connect_time'] = m.group('connect_time')
+                continue
+
+            # Redirected Packets:
+            if 'Redirected Packets:' in line:
+                current_section = 'redirected_packets'
+                current_client.setdefault('redirected_packets', {})
+                continue
+
+            # GRE Bypassed Packets:
+            if 'GRE Bypassed Packets:' in line:
+                current_section = 'gre_bypassed_packets'
+                current_client.setdefault('gre_bypassed_packets', {})
+                continue
+
+            # Process:               0
+            m = p8.match(line)
+            if m and current_section:
+                current_client[current_section]['process'] = int(m.group('process'))
+                continue
+
+            # CEF:                   0
+            m = p9.match(line)
+            if m and current_section:
+                current_client[current_section]['cef'] = int(m.group('cef'))
+                current_section = None  # Reset after CEF (last item in section)
+                continue
+
+            # Hash Allotment:          128 of 256 (50.00%)
+            m = p10.match(line)
+            if m:
+                current_client['hash_allotment'] = m.group('hash_allotment')
+                current_client['hash_allotment_percentage'] = float(m.group('percentage'))
+                continue
+
+            # Initial Hash Info:       00000000000000000000000000000000
+            m = p11.match(line)
+            if m:
+                current_client['initial_hash_info'] = m.group('initial_hash')
+                hash_continuation_type = 'initial'
+                continue
+
+            # Assigned Hash Info:      AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+            m = p12.match(line)
+            if m:
+                current_client['assigned_hash_info'] = m.group('assigned_hash')
+                hash_continuation_type = 'assigned'
+                continue
+
+            # Hash continuation lines
+            m = p13.match(line)
+            if m and hash_continuation_type:
+                hash_value = m.group('hash_continuation')
+                if hash_continuation_type == 'initial':
+                    current_client['initial_hash_info'] += hash_value
+                elif hash_continuation_type == 'assigned':
+                    current_client['assigned_hash_info'] += hash_value
+                continue
+
+        return parsed_dict
+
+# ====================================================
+# Schema for 'show ip wccp web-cache clients'
+# ====================================================
+
+class ShowIpWccpWebCacheClientsSchema(MetaParser):
+    """Schema for show ip wccp web-cache clients"""
+
+    schema = {
+        'wccp_client_information': {
+            Any(): {  # Client ID
+                'client_id': str,
+                'protocol_version': str,
+                'state': str,
+                'redirection': str,
+                'packet_return': str,
+                'assignment': str,
+                'packets_redirected': int,
+                'connect_time': str,
+            }
+        }
+    }
+
+
+# ====================================================
+# Parser for 'show ip wccp web-cache clients'
+# ====================================================
+
+class ShowIpWccpWebCacheClients(ShowIpWccpWebCacheClientsSchema):
+    """Parser for show ip wccp web-cache clients"""
+
+    cli_command = 'show ip wccp web-cache clients'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize result dictionary
+        parsed_dict = {}
+
+        # Regular expressions for parsing
+        # WCCP Client information:
+        p1 = re.compile(r'^\s*WCCP Client information:\s*$')
+        # WCCP Client ID:          10.1.100.10
+        p2 = re.compile(r'^\s*WCCP Client ID:\s+(?P<client_id>\S+)$')
+        # Protocol Version:        2.0
+        p3 = re.compile(r'^\s*Protocol Version:\s+(?P<protocol_version>\S+)$')
+        # State:                   Usable
+        p4 = re.compile(r'^\s*State:\s+(?P<state>\S+)$')
+        # Redirection:             GRE
+        p5 = re.compile(r'^\s*Redirection:\s+(?P<redirection>\S+)$')
+        # Packet Return:           GRE
+        p6 = re.compile(r'^\s*Packet Return:\s+(?P<packet_return>\S+)$')
+        # Assignment:              HASH
+        p7 = re.compile(r'^\s*Assignment:\s+(?P<assignment>\S+)$')
+        # Packets Redirected:      1234567
+        p8 = re.compile(r'^\s*Packets Redirected:\s+(?P<packets_redirected>\d+)$')
+        # Connect Time:            01:12:45
+        p9 = re.compile(r'^\s*Connect Time:\s+(?P<connect_time>\S+)$')
+
+        current_client = None
+
+        for line in output.splitlines():
+            # Skip empty lines
+            if not line.strip():
+                continue
+
+            # WCCP Client information:
+            m = p1.match(line)
+            if m:
+                # Reset current client for new client block
+                current_client = None
+                continue
+
+            # WCCP Client ID:          10.1.100.10
+            m = p2.match(line)
+            if m:
+                client_id = m.group('client_id')
+                parsed_dict.setdefault('wccp_client_information', {})
+                parsed_dict['wccp_client_information'][client_id] = {
+                    'client_id': client_id
+                }
+                current_client = parsed_dict['wccp_client_information'][client_id]
+                continue
+
+            if current_client is None:
+                continue
+
+            # Protocol Version:        2.0
+            m = p3.match(line)
+            if m:
+                current_client['protocol_version'] = m.group('protocol_version')
+                continue
+
+            # State:                   Usable
+            m = p4.match(line)
+            if m:
+                current_client['state'] = m.group('state')
+                continue
+
+            # Redirection:             GRE
+            m = p5.match(line)
+            if m:
+                current_client['redirection'] = m.group('redirection')
+                continue
+
+            # Packet Return:           GRE
+            m = p6.match(line)
+            if m:
+                current_client['packet_return'] = m.group('packet_return')
+                continue
+
+            # Assignment:              HASH
+            m = p7.match(line)
+            if m:
+                current_client['assignment'] = m.group('assignment')
+                continue
+
+            # Packets Redirected:      1234567
+            m = p8.match(line)
+            if m:
+                current_client['packets_redirected'] = int(m.group('packets_redirected'))
+                continue
+
+            # Connect Time:            01:12:45
+            m = p9.match(line)
+            if m:
+                current_client['connect_time'] = m.group('connect_time')
+                continue
+
+        return parsed_dict
+
+# ===========================================
+# Schema for 'show ip nat pool name {pool_name}'
+# ===========================================
+class ShowIpNatPoolNameSchema(MetaParser):
+    """Schema for show ip nat pool name {pool_name}"""
+    schema = {
+        'pool_name': {
+            Any(): {
+                'id': int,
+                'addresses': {
+                    'assigned': str,
+                    'available': str,
+                },
+                'udp_low_ports': {
+                    'assigned': str,
+                    'available': str,
+                },
+                'tcp_low_ports': {
+                    'assigned': str,
+                    'available': str,
+                },
+                'udp_high_ports': {
+                    'assigned': str,
+                    'available': str,
+                },
+                'tcp_high_ports': {
+                    'assigned': str,
+                    'available': str,
+                },
+            }
+        }
+    }
+
+# ===========================================
+# Parser for 'show ip nat pool name {pool_name}'
+# ===========================================
+class ShowIpNatPoolName(ShowIpNatPoolNameSchema):
+    """Parser for show ip nat pool name {pool_name}"""
+
+    cli_command = 'show ip nat pool name {pool_name}'
+
+    def cli(self, pool_name, output=None):
+        if output is None:
+            cmd = self.cli_command.format(pool_name=pool_name)
+            output = self.device.execute(cmd)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # Regular expressions for parsing the output
+        #Pool name natpool1, id 1
+        p1 = re.compile(r'^Pool +name +(?P<pool_name>\S+), +id +(?P<id>\d+)$')
+
+        #Addresses                          0                  254
+        p2 = re.compile(r'^Addresses +(?P<assigned>\d+) +(?P<available>\d+)$')
+
+        #  UDP Low Ports                      0               130048
+        p3 = re.compile(r'^UDP +Low +Ports +(?P<assigned>\d+) +(?P<available>\d+)$')
+
+        #  TCP Low Ports                      0               130048
+        p4 = re.compile(r'^TCP +Low +Ports +(?P<assigned>\d+) +(?P<available>\d+)$')
+
+        #  UDP High Ports                     0             1638604
+        p5 = re.compile(r'^UDP +High +Ports +(?P<assigned>\d+) +(?P<available>\d+)$')
+
+        #  TCP High Ports                     0             16386048
+        p6 = re.compile(r'^TCP +High +Ports +(?P<assigned>\d+) +(?P<available>\d+)$')
+
+        # Variables to hold the current pool name
+        current_pool_name = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Match pool name and id
+            #Pool name natpool1, id 1
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                current_pool_name = group['pool_name']
+                pool_id = int(group['id'])
+                pool_dict = parsed_dict.setdefault('pool_name', {}).setdefault(current_pool_name, {})
+                pool_dict['id'] = pool_id
+                continue
+
+            # Match addresses
+            #Addresses                          0                  254
+            m = p2.match(line)
+            if m and current_pool_name:
+                group = m.groupdict()
+                pool_dict['addresses'] = {
+                    'assigned': group['assigned'],
+                    'available': group['available'],
+                }
+                continue
+
+            # Match UDP low ports
+            #  UDP Low Ports                      0               130048 
+            m = p3.match(line)
+            if m and current_pool_name:
+                group = m.groupdict()
+                pool_dict['udp_low_ports'] = {
+                    'assigned': group['assigned'],
+                    'available': group['available'],
+                }
+                continue
+
+            # Match TCP low ports
+            #  TCP Low Ports                      0               130048
+            m = p4.match(line)
+            if m and current_pool_name:
+                group = m.groupdict()
+                pool_dict['tcp_low_ports'] = {
+                    'assigned': group['assigned'],
+                    'available': group['available'],
+                }
+                continue
+
+            # Match UDP high ports
+            #  UDP High Ports                     0             16386048
+            m = p5.match(line)
+            if m and current_pool_name:
+                group = m.groupdict()
+                pool_dict['udp_high_ports'] = {
+                    'assigned': group['assigned'],
+                    'available': group['available'],
+                }
+                continue
+
+            # Match TCP high ports
+            # TCP High Ports                     0             16386048
+            m = p6.match(line)
+            if m and current_pool_name:
+                group = m.groupdict()
+                pool_dict['tcp_high_ports'] = {
+                    'assigned': group['assigned'],
+                    'available': group['available'],
+                }
+                continue
+
+        return parsed_dict

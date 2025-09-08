@@ -1,0 +1,32 @@
+Edge-1#show device-tracking database mac b811.4b0e.2630 details
+TID Vlan MAC Interface
+7DD585 2045 b811.4b0e.2630 Te1/0/14
+AC5B4B 2045 b811.4b0e.2630 Te1/0/14
+D60548 2045 b811.4b0e.2630 Te1/0/14
+
+Binding table configuration:
+max/box : no limit
+max/vlan : no limit
+max/port : no limit
+max/mac : no limit
+
+Binding table current counters:
+dynamic : 5
+local : 13
+total : 18
+
+Binding table counters by state:
+REACHABLE : 17
+UNKNOWN : 1
+total : 18
+
+Codes: L - Local, S - Static, ND - Neighbor Discovery, ARP - Address Resolution Protocol, DH4 - IPv4 DHCP, DH6 - IPv6 DHCP, PKT - Other Packet, API - API created
+Preflevel flags (prlvl):
+0001:MAC and LLA match 0002:Orig trunk 0004:Orig access
+0008:Orig trusted trunk 0010:Orig trusted access 0020:DHCP assigned
+0040:Cga authenticated 0080:Cert authenticated 0100:Statically assigned
+
+Network Layer Address Link Layer Address Interface mode vlan(prim) prlvl age state Time left Filter In Crimson Client ID Session ID Policy (feature)
+macDB has 2 entries for mac b811.4b0e.2630,vlan 2045, 2 dynamic
+DH4 172.19.5.10 b811.4b0e.2630(R) Te1/0/14 trunk 2045(2045) 0024 9s REACHABLE 233 s(691141 s) no yes b811.4b0e.2630 (unspecified) LISP-DT-GUARD-VLAN (Device-tracking)
+ND FE80::A2BB:E8BC:FC85:EF11 b811.4b0e.2630(R) Te1/0/14 trunk 2045(2045) 0005 3s REACHABLE 240 s no yes 0000.0000.0000 (unspecified) LISP-DT-GUARD-VLAN (Device-tracking)

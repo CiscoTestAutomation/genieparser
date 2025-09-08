@@ -1,0 +1,9 @@
+Process ID 108 [Crimson Database Memory Audit Process], TTY 0
+Memory usage [in bytes]
+  Holding: 29960, Maximum: 29960, Allocated: 0, Freed: 0
+  Getbufs: 0, Retbufs: 0, Stack: 21272/24000
+CPU usage
+  PC: 58A4183B9C8D, Invoked: 127, Giveups: 84, uSec: 5960
+  5Sec: 0.00%, 1Min: 0.00%, 5Min: 0.00%, Average: 0.00%
+  Age: 12851289 msec, Runtime: 757 msec
+  State: Sleeping (Periodic), Priority: Low

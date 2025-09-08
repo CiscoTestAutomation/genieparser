@@ -125,8 +125,8 @@ class Ping(PingSchema):
             r'Packet +sent +with +a +source +address +of +(?P<source>[\S\s]+)')
 
         # !!!!!!!
-        # !.UQM?&
-        p3 = re.compile(r'[!\.UQM\?&]+')
+        # !.UQMB?&
+        p3 = re.compile(r'[!\.UQMB\?&]+')
 
         # Success rate is 100 percent (100/100), round-trip min/avg/max = 1/2/14 ms
         # Success rate is 0 percent (0/10)

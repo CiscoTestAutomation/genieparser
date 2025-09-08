@@ -1,0 +1,36 @@
+show platform hardware fed act fwd-asic insight hcam_usage(1,1) | begin Slice
+| Slices   | Directions | Num of entries |
++----------+------------+----------------+
+| Slice #1 | rx         |  0083 / 8192   |
+|          | tx         |  0025 / 8192   |
++----------+------------+----------------+
+^[[1;31mCAUTION: THIS CLI IS RESOURCE INTENSIVE AND CAN CAUSE ROUTE UPDATES TO GET BLOCKED TEMPORARILY, DO NOT RUN IT PERIODICALLY. THIS IS A DEBUG CLI AND SHOULD BE RUN ONLY WHEN NECESSARY.^[[0;0m
+Slice index: 1 ==>
+	Direction: rx ==>
++--------+-------------------+
+|  Tile  | Number Of Entries |
++--------+-------------------+
+| Tile 0 |   00002 / 16384   |
+| Tile 1 |   00011 / 16384   |
+| Tile 2 |   00010 / 16384   |
+| Tile 3 |   00008 / 16384   |
+| Tile 4 |   00008 / 16384   |
+| Tile 5 |   00006 / 16384   |
+| Tile 6 |   00015 / 16384   |
+| Tile 7 |   00009 / 16384   |
+| Total  |  000069 / 131072  |
++--------+-------------------+
+	Direction: tx ==>
++--------+-------------------+
+|  Tile  | Number Of Entries |
++--------+-------------------+
+| Tile 0 |   00000 / 16384   |
+| Tile 1 |   00000 / 16384   |
+| Tile 2 |   00000 / 16384   |
+| Tile 3 |   00000 / 16384   |
+| Tile 4 |   00000 / 16384   |
+| Tile 5 |   00000 / 16384   |
+| Tile 6 |   00000 / 16384   |
+| Tile 7 |   00000 / 16384   |
+| Total  |  000000 / 131072  |
++--------+-------------------+

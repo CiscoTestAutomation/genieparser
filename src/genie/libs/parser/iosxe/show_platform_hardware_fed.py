@@ -33,6 +33,9 @@
     * 'show platform hardware fed switch {sw_number} qos scheduler interface {interface} | include {match}'
     * 'show platform software fed switch {sw_number} qos interface {interface} ingress npd detailed | include {match}'
     * 'show platform hardware fed switch {switch} fwd-asic insight l3u_nexthop{nh_gid}'
+    * 'show platform hardware fed {switch} {state} fwd-asic insight vrf_route_table'
+    * 'show platform hardware fed {switch} {state} fwd-asic insight vrf_ports_detail'
+    * 'show platform hardware fed {switch} {state} fwd-asic insight vrf_ports'
 
 """
 # Python
@@ -3623,6 +3626,7 @@ class ShowPlatformHardwareFedSwitchActiveNpuSlotPortLinkstatusSchema(MetaParser)
             Any(): int,
         },
         "port": int,
+        Optional("slot"): int,
         "cmd": str,
         "rc": str,
         "rsn": str,
@@ -3671,9 +3675,13 @@ class ShowPlatformHardwareFedSwitchActiveNpuSlotPortLinkstatus(
 
         # Port = 22 cmd = (port_diag unit 0 port 22 slot 0) rc = 0x0 rsn = success
         p7 = re.compile(
-            r"^Port +\= +(?P<port>\d+) +cmd +\= +\((?P<cmd>[\s*\w]+)\) +rc +\= +(?P<rc>\w+) +rsn +\= +(?P<rsn>\w+)$"
+        r"^Port\s*=\s*(?P<port>\d+)"
+        r"(?:\s+Slot\s*=\s*(?P<slot>\d+))?"
+        r"\s+cmd\s*=\s*\((?P<cmd>[^)]+)\)"
+        r"\s+rc\s*=\s*(?P<rc>\S+)"
+        r"\s+(?:rsn|reason)\s*=\s*(?P<rsn>.+)$"
         )
-
+        
         for line in output.splitlines():
             line = line.strip()
 
@@ -3739,147 +3747,8 @@ class ShowPlatformHardwareFedSwitchActiveNpuSlotPortLinkstatus(
             if m:
                 group = m.groupdict()
                 ret_dict["port"] = int(group["port"])
-                ret_dict["cmd"] = group["cmd"]
-                ret_dict["rc"] = group["rc"]
-                ret_dict["rsn"] = group["rsn"]
-                continue
-
-        return ret_dict
-
-
-class ShowPlatformHardwareFedSwitchActiveNpuSlotPortLinkstatusSchema(MetaParser):
-    """Schema for show  platform  hardware fed  switch  active  npu  slot  1  port 23 link_status"""
-
-    schema = {
-        "mpp_port_details": {
-            Any(): Or(int, str),
-        },
-        "autoneg_details": {
-            Any(): Or(int, str),
-        },
-        "autoneg_status": {
-            Any(): Or(int, str),
-        },
-        "mib_counters": {
-            Any(): int,
-        },
-        "port": int,
-        "cmd": str,
-        "rc": str,
-        "rsn": str,
-    }
-
-
-class ShowPlatformHardwareFedSwitchActiveNpuSlotPortLinkstatus(
-    ShowPlatformHardwareFedSwitchActiveNpuSlotPortLinkstatusSchema
-):
-    """
-    ShowPlatformHardwareFedSwitchActiveNpuSlotPortLinkstatus
-    """
-
-    cli_command = "show platform hardware fed switch {mode} npu slot 1 port {port_num} link_status"
-
-    def cli(self, mode, port_num, output=None):
-        if output is None:
-            output = self.device.execute(
-                self.cli_command.format(mode=mode, port_num=port_num)
-            )
-
-        ret_dict = {}
-
-        # MPP PORT DETAILS
-        p0 = re.compile(r"^MPP +PORT +DETAILS$")
-
-        # link_state: 1 pcs_status: 0  high_ber: 0
-        p1 = re.compile(
-            r"^link_state\: +(?P<link_state>\d+) +pcs_status\: +(?P<pcs_status>\d+) +high_ber\: +(?P<high_ber>\d+)$"
-        )
-
-        # get_state = LINK_UP
-        p2 = re.compile(r"^get_state +\= +(?P<get_state>.*)$")
-
-        # Autoneg Details
-        p3 = re.compile(r"^Autoneg +Details$")
-
-        # Autoneg Status
-        p4 = re.compile(r"^Autoneg +Status$")
-
-        # MIB counters
-        p5 = re.compile(r"^MIB +counters$")
-
-        # Genral - Speed:         speed_gbps1
-        p6 = re.compile(r"^(?P<key>[\s*\w]+.*)\: +(?P<value>[\S\s]+.*)$")
-
-        # Port = 22 cmd = (port_diag unit 0 port 22 slot 0) rc = 0x0 rsn = success
-        p7 = re.compile(
-            r"^Port +\= +(?P<port>\d+) +cmd +\= +\((?P<cmd>[\s*\w]+)\) +rc +\= +(?P<rc>\w+) +rsn +\= +(?P<rsn>\w+)$"
-        )
-
-        for line in output.splitlines():
-            line = line.strip()
-
-            # MPP PORT DETAILS
-            m = p0.match(line)
-            if m:
-                root_dict = ret_dict.setdefault("mpp_port_details", {})
-                continue
-
-            #'114      329      0     0'
-            m = p1.match(line)
-            if m:
-                group = m.groupdict()
-                root_dict["link_state"] = int(group["link_state"])
-                root_dict["pcs_status"] = int(group["pcs_status"])
-                root_dict["high_ber"] = int(group["high_ber"])
-                continue
-
-            # get_state = LINK_UP
-            m = p2.match(line)
-            if m:
-                group = m.groupdict()
-                root_dict["get_state"] = group["get_state"].strip()
-                continue
-
-            # Autoneg Details
-            m = p3.match(line)
-            if m:
-                root_dict = ret_dict.setdefault("autoneg_details", {})
-                continue
-
-            # Autoneg Status
-            m = p4.match(line)
-            if m:
-                root_dict = ret_dict.setdefault("autoneg_status", {})
-                continue
-
-            # MIB counters
-            m = p5.match(line)
-            if m:
-                root_dict = ret_dict.setdefault("mib_counters", {})
-                continue
-
-            # Genral - Speed:         speed_gbps1
-            m = p6.match(line)
-            if m:
-                group = m.groupdict()
-                key = (
-                    group["key"]
-                    .strip()
-                    .lower()
-                    .replace(":", "")
-                    .replace("-", "_")
-                    .replace(" ", "_")
-                )
-                if group["value"].isdigit():
-                    root_dict.update({key: int(group["value"])})
-                else:
-                    root_dict.update({key: group["value"]})
-                continue
-
-            m = p7.match(line)
-            if m:
-                group = m.groupdict()
-                ret_dict["port"] = int(group["port"])
+                if group.get("slot") and group["slot"].isdigit():
+                    ret_dict["slot"] = int(group["slot"])
                 ret_dict["cmd"] = group["cmd"]
                 ret_dict["rc"] = group["rc"]
                 ret_dict["rsn"] = group["rsn"]
@@ -5116,8 +4985,8 @@ class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightL3unexthop(ShowPlatformHa
                 continue
 
         return ret_dict
-        
-      
+
+
 class ShowPlatformHardwareFedNpuDscDumpSchema(MetaParser):
     """Schema for show platform hardware fed switch active npu slot 1 port 23 link_status"""
 
@@ -5136,17 +5005,18 @@ class ShowPlatformHardwareFedNpuDscDumpSchema(MetaParser):
                 },
                 'mib_counters': {
                     Any(): Or(int,str),
-                },     
+                },
                 Optional('state_transition_history'): {
                     Any():{
                        'state': str,
                        'timestamp': str,
-                    },    
-                },    
+                    },
+                },
             },
         },
         'multiport_detail': {
             Any(): {
+                Optional('save_state_timestamp'): str,
                 'device_info': {
                     Any(): str,
                 },
@@ -5165,12 +5035,12 @@ class ShowPlatformHardwareFedNpuDscDumpSchema(MetaParser):
                 'mac_port_status': {
                     'am_lock': {
                         Any(): str,
-                    },    
+                    },
                     Any(): Or(int,str),
                     'mac_pcs_lane_mapping': {
                         Any(): Or(int,str),
                     },
-                },                    
+                },
                 'mac_port_soft_state': {
                     Any(): Or(int,str),
                 },
@@ -5187,7 +5057,7 @@ class ShowPlatformHardwareFedNpuDscDumpSchema(MetaParser):
                     },
                     Optional('rx_xoff_state_duration'): {
                         Any(): Or(int,str),
-                    },                                       
+                    },
                 },
                 'test_mode': {
                     Any(): Or(int,str),
@@ -5196,7 +5066,7 @@ class ShowPlatformHardwareFedNpuDscDumpSchema(MetaParser):
                     Any():{
                        'state': str,
                        'timestamp': str,
-                    },    
+                    },
                 },
                 'serdes_parameters': {
                     'index_0': {
@@ -5209,18 +5079,18 @@ class ShowPlatformHardwareFedNpuDscDumpSchema(MetaParser):
                             Any(): Or(int,str),
                             'targ_shadow':{
                                 Any(): Or(int,str),
-                            }    
+                            }
                         },
                         'tx_settings': {
                             Any(): Or(int,str),
                             'tx_fir': {
                                 Any(): Or(int,str),
-                            },    
+                            },
                         },
                         'flow_chart_settings': {
                             Any(): Or(int,str),
                         },
-                    },    
+                    },
                 },
                 'serdes_status':{
                     'firmware_version': {
@@ -5230,21 +5100,21 @@ class ShowPlatformHardwareFedNpuDscDumpSchema(MetaParser):
                         Any(): Or(int,str),
                         'firs': {
                             Any(): Or(int,str),
-                        }    
+                        }
                     },
                     'fw_rx_status': {
                         Any(): Or(int,str),
                     },
                     'fir_shadow': {
                         Any(): Or(int,str),
-                    },    
-                },    
+                    },
+                },
                 'eye_capture':{
                     'veye_data': {
                         Any(): Or(int,str),
                         'veye_values': {
                             Any(): Or(int,str),
-                        },   
+                        },
                     },
                 },
                 'reg_dump':{
@@ -5284,7 +5154,7 @@ class ShowPlatformHardwareFedNpuDscDumpSchema(MetaParser):
                     'lt_debug_2':{
                         Any(): Or(int,str),
                     },
-                },    
+                },
             },
         },
         'mac_port_link_down': {
@@ -5295,236 +5165,236 @@ class ShowPlatformHardwareFedNpuDscDumpSchema(MetaParser):
                 },
                 'rx_pma_sig_ok_loss_interrupt_register_count': {
                     Any(): Or(int,str),
-                },  
-            },        
+                },
+            },
         },
-        'mac_port_link_error': { 
+        'mac_port_link_error': {
             Any(): {
-                Any(): Or(int,str),  
+                Any(): Or(int,str),
             },
         },
         'mac_port_link_debounce': {
             Any(): {
-                Any(): Or(int,str), 
-            },    
-        }, 
+                Any(): Or(int,str),
+            },
+        },
         'port': int,
         Optional('slot'): int,
         'cmd': str,
         'rc': str,
-        Optional('rsn'): str, 
-        Optional('reason'): str,               
-    }      
+        Optional('rsn'): str,
+        Optional('reason'): str,
+    }
 
 class ShowPlatformHardwareFedNpuDscDump(ShowPlatformHardwareFedNpuDscDumpSchema):
     """
     ShowPlatformHardwareFedSwitchActiveNpuSlotPortDscDump
     """
-    
-    cli_command = 'show platform hardware fed switch {mode} npu slot 1 port {port_num} dsc_dump'        
 
-    def cli(self, mode, port_num, output=None): 
+    cli_command = 'show platform hardware fed switch {mode} npu slot 1 port {port_num} dsc_dump'
+
+    def cli(self, mode, port_num, output=None):
 
         if output is None:
-            output = self.device.execute(self.cli_command.format(mode=mode,port_num=port_num))         
+            output = self.device.execute(self.cli_command.format(mode=mode,port_num=port_num))
 
-        ret_dict = {} 
-        
+        ret_dict = {}
+
         # npu_pdsf_procagent_get_eye_common : asic inst 0 port 14 link 32 command 8
-        p1 = re.compile(r'^npu_pdsf_procagent_get_eye_common\s*\: +(?P<npu_pdsf_procagent_get_eye_common>[\S\s]+.*)$')        
-        
+        p1 = re.compile(r'^npu_pdsf_procagent_get_eye_common\s*\: +(?P<npu_pdsf_procagent_get_eye_common>[\S\s]+.*)$')
+
         # "mpp_port_0_0_36:7": {
-        p2  =  re.compile(r'^\"(?P<key>mpp_port_\d+_\d+_\d+\:\d+)\"\:\s*\{$')        
-       
+        p2  =  re.compile(r'^\"(?P<key>mpp_port_\d+_\d+_\d+\:\d+)\"\:\s*\{$')
+
         # "mac_state_histogram": {
-        p2_1  =  re.compile(r'^\"mac_state_histogram\"\:\s*\{$')        
-       
-        # "mac_port_status": { 
+        p2_1  =  re.compile(r'^\"mac_state_histogram\"\:\s*\{$')
+
+        # "mac_port_status": {
         p2_2 = re.compile(r'^\"mac_port_status\"\:\s*\{$')
-        
+
         # "mib_counters": {
         p2_3 = re.compile(r'^\"mib_counters\"\:\s*\{$')
-        
-        # "tx_mac_tc_fc_frames_ok": [ 
+
+        # "tx_mac_tc_fc_frames_ok": [
         p2_3_1 = re.compile(r'^\"tx_mac_tc_fc_frames_ok\"\:\s*\[$')
-        
+
         # "tx_xoff_state_duration": [
         p2_3_2 = re.compile(r'^\"tx_xoff_state_duration\"\:\s*\[$')
-        
+
         # "rx_mac_tc_fc_frames_ok": [
         p2_3_3 = re.compile(r'^\"rx_mac_tc_fc_frames_ok\"\:\s*\[$')
-        
+
         # "rx_xoff_state_duration": [
-        p2_3_4 = re.compile(r'^\"rx_xoff_state_duration\"\:\s*\[$')        
-        
-        # "multiport_phy_0_0_36": { 
+        p2_3_4 = re.compile(r'^\"rx_xoff_state_duration\"\:\s*\[$')
+
+        # "multiport_phy_0_0_36": {
         p3 = re.compile(r'^\"(?P<key>multiport_phy_\d+_\d+_\d+)\"\: +\{$')
-        
+
         # "device_info": {
         p3_1 = re.compile(r'^\"device_info\"\:\s*\{$')
-        
-        # "serdes_0": { 
-        p3_1_1 = re.compile(r'^\"serdes_\d+\"\:\s*\{$')        
-        
+
+        # "serdes_0": {
+        p3_1_1 = re.compile(r'^\"serdes_\d+\"\:\s*\{$')
+
         # "mac_port_config": {
         p3_2 =  re.compile(r'^\"mac_port_config\"\:\s*\{$')
-        
-        # "serdes_info_36": { 
-        p3_2_1 = re.compile(r'^\"serdes_info_\d+\"\:\s*\{$')        
-       
-        # am_lock": [ 
-        p3_3_1 = re.compile(r'^\"am_lock\"\:\s*\[$')        
-       
-        # "mac_pcs_lane_mapping": [ 
-        p3_3_2 =  re.compile(r'^\"mac_pcs_lane_mapping\"\:\s*\[$') 
-        
+
+        # "serdes_info_36": {
+        p3_2_1 = re.compile(r'^\"serdes_info_\d+\"\:\s*\{$')
+
+        # am_lock": [
+        p3_3_1 = re.compile(r'^\"am_lock\"\:\s*\[$')
+
+        # "mac_pcs_lane_mapping": [
+        p3_3_2 =  re.compile(r'^\"mac_pcs_lane_mapping\"\:\s*\[$')
+
         # "mac_port_soft_state": {
         p3_4  = re.compile(r'^\"mac_port_soft_state\"\:\s*\{$')
-        
+
         # "test_mode": {
-        p3_5 = re.compile(r'^\"test_mode\"\:\s*\{$')        
-        
-        # "state_transition_history": [ 
+        p3_5 = re.compile(r'^\"test_mode\"\:\s*\{$')
+
+        # "state_transition_history": [
         p3_6 = re.compile(r'^\"state_transition_history\"\:\s*\[$')
-        
+
         # "serdes_parameters": {
         p3_7 = re.compile(r'^\"serdes_parameters\"\:\s*\{$')
-        
+
         # "index_0": {
         p3_7_1 = re.compile(r'^\"index_0\"\:\s*\{$')
-        
+
         # "serdes_config": {
         p3_8 = re.compile(r'^\"serdes_config\"\:\s*\{$')
-        
-        #  "serdes_settings": [ 
+
+        #  "serdes_settings": [
         p3_8_1 = re.compile(r'^\"serdes_settings\"\:\s*\[$')
-        
-        # "rx_settings": { 
+
+        # "rx_settings": {
         p3_8_1_1 = re.compile(r'^\"rx_settings\"\:\s*\{$')
-        
-        # "targ_shadow": [ 
+
+        # "targ_shadow": [
         p3_8_1_1_1 =  re.compile(r'^\"targ_shadow\"\:\s*\[$')
-        
+
         # "tx_settings": {
         p3_8_1_2  =  re.compile(r'^\"tx_settings\"\:\s*\{$')
-        
+
         # "tx_fir": [
         p3_8_1_2_1 = re.compile(r'^\"tx_fir\"\:\s*\[$')
-        
-        # "flow_chart_settings": { 
+
+        # "flow_chart_settings": {
         p3_8_1_3 =  re.compile(r'^\"flow_chart_settings\"\:\s*\{$')
-        
+
         # "serdes_status": {
         p3_9 = re.compile(r'^\"serdes_status\"\:\s*\{$')
-        
-        # "Firmware_Version": { 
+
+        # "Firmware_Version": {
         p3_9_1 =  re.compile(r'^\"Firmware_Version\"\:\s*\{$')
-        
+
         # "rx_status": [
         p3_9_2 = re.compile(r'^\"rx_status\"\:\s*\[$')
-        
+
         # "firs": [
         p3_9_2_1 = re.compile(r'^\"firs\":\s*\[$')
-        
+
         # "fw_rx_status": [
         p3_9_3 = re.compile(r'^\"fw_rx_status\"\:\s*\[$')
-        
-        # "fir_shadow": [ 
+
+        # "fir_shadow": [
         p3_9_4 =  re.compile(r'^\"fir_shadow\"\:\s*\[$')
-        
+
         # "eye_capture": {
         p3_10 = re.compile (r'^\"eye_capture\"\:\s*\{$')
-        
+
         # "veye_data": [
         p3_10_1 = re.compile(r'^\"veye_data\"\:\s*\[$')
-        
+
         # "veye_values": [
         p3_10_1_1 = re.compile(r'^\"veye_values\"\:\s*\[$')
-        
+
         # "reg_dump": {
         p3_11 = re.compile(r'^\"reg_dump\"\:\s*\{$')
-        
-        # "Quad_Reg": [
-        p3_11_1 = re.compile(r'^\"Quad_Reg\"\:\s*\[$')        
 
-        # "P_Reg": [ 
+        # "Quad_Reg": [
+        p3_11_1 = re.compile(r'^\"Quad_Reg\"\:\s*\[$')
+
+        # "P_Reg": [
         p3_11_2 = re.compile(r'^\"P_Reg\"\:\s*\[$')
-        
+
         # "S_reg": [
         p3_11_3 = re.compile(r'^\"S_reg\"\:\s*\[$')
-        
+
         # "RXDTOP": [
         p3_11_4 = re.compile(r'^\"RXDTOP\"\:\s*\[$')
-        
+
         # "TXDTOP": [
         p3_11_5 = re.compile(r'^\"TXDTOP\"\:\s*\[$')
-        
+
         # "AutoNeg": [
         p3_11_6 = re.compile(r'^\"AutoNeg\"\:\s*\[$')
-        
+
         # "LinkTraining": [
         p3_11_7 = re.compile(r'^\"LinkTraining\"\:\s*\[$')
-        
+
         # "RX_STS": [
         p3_11_8 = re.compile(r'^\"RX_STS\"\:\s*\[$')
-        
+
         # "an_debug_1": [
         p3_11_9 = re.compile(r'^\"an_debug_1\"\:\s*\[$')
-        
+
         # ""an_debug_2": [
         p3_11_10 = re.compile(r'^\"an_debug_2\"\:\s*\[$')
-        
+
         # "lt_debug_1": [
         p3_11_11 = re.compile(r'^\"lt_debug_1\"\:\s*\[$')
-        
+
         # "lt_debug_2": [
         p3_11_12 = re.compile(r'^\"lt_debug_2\"\:\s*\[$')
-        
+
         # "mac_port_0_0_36.link_down_histogram": {
-        p4= re.compile(r'^\"(?P<key>mac_port_\d+_\d+_\d+\.link_down_histogram)\"\:\s*\{$')        
-        
+        p4= re.compile(r'^\"(?P<key>mac_port_\d+_\d+_\d+\.link_down_histogram)\"\:\s*\{$')
+
         # "rx_deskew_fifo_overflow_count": [
         p4_1 = re.compile(r'^\"rx_deskew_fifo_overflow_count\"\:\s*\[$')
-        
-        # "rx_pma_sig_ok_loss_interrupt_register_count": [ 
+
+        # "rx_pma_sig_ok_loss_interrupt_register_count": [
         p4_2 = re.compile(r'^\"rx_pma_sig_ok_loss_interrupt_register_count\"\:\s*\[$')
-        
+
         # "mac_port_0_0_36.link_error_histogram": {
         p5 =  re.compile(r'^\"(?P<key>mac_port_\d+_\d+_\d+\.link_error_histogram)\"\:\s*\{$')
-        
+
         # "mac_port_0_0_36.link_debounce_state": {
         p6 = re.compile(r'^\"(?P<key>mac_port_\d+_\d+_\d+.link_debounce_state)\"\:\s*\{$')
-        
+
         # Port = 40 Slot = 1 cmd = () rc = 0x16 reason = (null)
         p7 = re.compile(r'^Port +\= +(?P<port>\d+) +Slot +\= +(?P<slot>\d+) +cmd +\= +(?P<cmd>\([\s*\S]*\)) +rc +\= +(?P<rc>\w+) +reason(?P<reason>.*)$')
-        
+
         # Port = 39 cmd = (prbs_stop unit 0 port 39 slot 1 serdes_level 1 polynomial 31) rc = 0x0 rsn = success
-        p7_1 = re.compile(r'^Port +\= +(?P<port>\d+) +cmd +\= +(?P<cmd>\([\s*\S]*\)) +rc +\= +(?P<rc>\w+) +rsn +\= +(?P<rsn>.*)$')               
-        
+        p7_1 = re.compile(r'^Port +\= +(?P<port>\d+) +cmd +\= +(?P<cmd>\([\s*\S]*\)) +rc +\= +(?P<rc>\w+) +rsn +\= +(?P<rsn>.*)$')
+
         # "PRE_INIT": 0,
-        p8 = re.compile(r'^\"(?P<key>\w+)\"\:\s*(?P<value>.*)$')        
-        
-        # false 
-        p8_1 = re.compile(r'^(?P<value>\w+)$')        
-        
+        p8 = re.compile(r'^\"(?P<key>\w+)\"\:\s*(?P<value>.*)$')
+
+        # false
+        p8_1 = re.compile(r'^(?P<value>\w+)$')
+
         # 64,
         p8_2 = re.compile(r'^(?P<value>[-]?\d+)\,$')
-        
-        #], 
-        p8_3 =  re.compile(r'^\]\,?$')      
-        
+
+        #],
+        p8_3 =  re.compile(r'^\]\,?$')
+
         cnt = index_flag = stat_cnt = multiport_flag = 0
-        
+
         for line in output.splitlines():
-            line = line.strip() 
-            
+            line = line.strip()
+
             # npu_pdsf_procagent_get_eye_common : asic inst 0 port 14 link 32 command 8
             m = p1.match(line)
             if m:
                 group = m.groupdict()
                 ret_dict['npu_pdsf_procagent_get_eye_common'] =  group['npu_pdsf_procagent_get_eye_common']
                 continue
-            
+
             # "mpp_port_0_0_36:7": {
             m = p2.match(line)
             if m:
@@ -5532,55 +5402,55 @@ class ShowPlatformHardwareFedNpuDscDump(ShowPlatformHardwareFedNpuDscDumpSchema)
                 port  =  group['key']
                 curr_dict = ret_dict.setdefault('mpp_port_detai1', {}).setdefault(group['key'], {})
                 continue
-            
+
             # "mac_state_histogram": {
             m = p2_1.match(line)
-            if m:                
+            if m:
                 group = m.groupdict()
                 if multiport_flag == 1:
                     curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('mac_state_histogram', {})
-                else:    
-                    curr_dict =  ret_dict.setdefault('mpp_port_detai1', {}).setdefault(port, {}).setdefault('mac_state_histogram', {})                
+                else:
+                    curr_dict =  ret_dict.setdefault('mpp_port_detai1', {}).setdefault(port, {}).setdefault('mac_state_histogram', {})
                 continue
-            
+
             # "mac_port_status": {
             m = p2_2.match(line)
             if m:
-                group = m.groupdict()                
+                group = m.groupdict()
                 if multiport_flag == 1:
                     curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('mac_port_status', {})
-                else:    
-                    curr_dict =  ret_dict.setdefault('mpp_port_detai1', {}).setdefault(port, {}).setdefault('mac_port_status', {})                
+                else:
+                    curr_dict =  ret_dict.setdefault('mpp_port_detai1', {}).setdefault(port, {}).setdefault('mac_port_status', {})
                 continue
-                
+
             # "mib_counters": {
             m = p2_3.match(line)
             if m:
-                group = m.groupdict()               
+                group = m.groupdict()
                 if multiport_flag == 1:
                     curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('mib_counters', {})
-                else:    
-                    curr_dict = ret_dict.setdefault('mpp_port_detai1', {}).setdefault(port, {}).setdefault('mib_counters', {})                
+                else:
+                    curr_dict = ret_dict.setdefault('mpp_port_detai1', {}).setdefault(port, {}).setdefault('mib_counters', {})
                 continue
-                
-            # "tx_mac_tc_fc_frames_ok": [     
+
+            # "tx_mac_tc_fc_frames_ok": [
             m = p2_3_1.match(line)
-            if m:                
+            if m:
                 index_flag  =  1
                 group = m.groupdict()
                 handle_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('mib_counters', {})
                 curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('mib_counters', {}).setdefault('tx_mac_tc_fc_frames_ok', {})
-                continue   
-            
+                continue
+
             # "tx_xoff_state_duration": [
             m = p2_3_2.match(line)
-            if m:                
+            if m:
                 index_flag  =  1
                 group = m.groupdict()
                 handle_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('mib_counters', {})
                 curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('mib_counters', {}).setdefault('tx_xoff_state_duration', {})
-                continue 
-            
+                continue
+
             # "rx_mac_tc_fc_frames_ok": [
             m = p2_3_3.match(line)
             if m:
@@ -5588,8 +5458,8 @@ class ShowPlatformHardwareFedNpuDscDump(ShowPlatformHardwareFedNpuDscDumpSchema)
                 group = m.groupdict()
                 handle_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('mib_counters', {})
                 curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('mib_counters', {}).setdefault('rx_mac_tc_fc_frames_ok', {})
-                continue     
-            
+                continue
+
             # "rx_xoff_state_duration": [
             m = p2_3_4.match(line)
             if m:
@@ -5597,9 +5467,9 @@ class ShowPlatformHardwareFedNpuDscDump(ShowPlatformHardwareFedNpuDscDumpSchema)
                 group = m.groupdict()
                 handle_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('mib_counters', {})
                 curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('mib_counters', {}).setdefault('rx_xoff_state_duration', {})
-                continue    
-            
-            # "multiport_phy_0_0_36": { 
+                continue
+
+            # "multiport_phy_0_0_36": {
             m = p3.match(line)
             if m:
                 multiport_flag = 1
@@ -5607,39 +5477,39 @@ class ShowPlatformHardwareFedNpuDscDump(ShowPlatformHardwareFedNpuDscDumpSchema)
                 port  =  group['key']
                 curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {})
                 continue
-            
+
             # "device_info": {
             m = p3_1.match(line)
             if  m:
                 group = m.groupdict()
                 curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('device_info', {})
                 continue
-            
-            # "serdes_0": { 
+
+            # "serdes_0": {
             m = p3_1_1.match(line)
             if m:
                 group = m.groupdict()
                 curr_dict = curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('mac_state_histogram', {}).setdefault('serdes_0', {})
                 continue
-            
+
             # "mac_port_config": {
             m = p3_2.match(line)
             if m:
                 group = m.groupdict()
-                if multiport_flag == 1:                    
+                if multiport_flag == 1:
                     curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('mac_port_config', {})
                 else:
                     curr_dict = ret_dict.setdefault('mpp_port_detai1', {}).setdefault(port, {}).setdefault('mac_port_config', {})
                 continue
-                
-            # "serdes_info_36": {     
+
+            # "serdes_info_36": {
             m = p3_2_1.match(line)
             if  m:
                 group = m.groupdict()
                 curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('mac_port_config', {}).setdefault('serdes_info', {})
                 continue
-                
-            # am_lock": [     
+
+            # am_lock": [
             m = p3_3_1.match(line)
             if m:
                 index_flag  =  1
@@ -5647,8 +5517,8 @@ class ShowPlatformHardwareFedNpuDscDump(ShowPlatformHardwareFedNpuDscDumpSchema)
                 handle_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('mac_port_status', {})
                 curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('mac_port_status', {}).setdefault('am_lock', {})
                 continue
-                
-            # "mac_pcs_lane_mapping": [     
+
+            # "mac_pcs_lane_mapping": [
             m = p3_3_2.match(line)
             if m:
                 index_flag = 1
@@ -5656,321 +5526,321 @@ class ShowPlatformHardwareFedNpuDscDump(ShowPlatformHardwareFedNpuDscDumpSchema)
                 handle_dict  = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('mac_port_status', {})
                 curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('mac_port_status', {}).setdefault('mac_pcs_lane_mapping', {})
                 continue
-                
-            # "mac_port_soft_state": {    
+
+            # "mac_port_soft_state": {
             m = p3_4.match(line)
             if m:
                 group = m.groupdict()
                 curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('mac_port_soft_state', {})
                 continue
-                
-            # "test_mode": {    
+
+            # "test_mode": {
             m = p3_5.match(line)
             if m:
                 group = m.groupdict()
                 curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('test_mode', {})
                 continue
-                
-            # "state_transition_history": [     
+
+            # "state_transition_history": [
             m = p3_6.match(line)
             if m:
-                group = m.groupdict()   
+                group = m.groupdict()
                 index_flag = 1
-                if multiport_flag == 1:                     
+                if multiport_flag == 1:
                     curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('state_transition_history', {})
                 else:
                     curr_dict = ret_dict.setdefault('mpp_port_detai1', {}).setdefault(port, {}).setdefault('state_transition_history', {})
-                handle_dict  =  curr_dict 
+                handle_dict  =  curr_dict
                 continue
-                
-            # "serdes_parameters": {    
+
+            # "serdes_parameters": {
             m = p3_7.match(line)
             if m:
-                group = m.groupdict()                
+                group = m.groupdict()
                 curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_parameters', {})
                 continue
-                
-            # "index_0": {    
+
+            # "index_0": {
             m = p3_7_1.match(line)
             if m:
                 group = m.groupdict()
                 curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_parameters', {}).setdefault('index_0', {})
                 continue
-                
-            # "serdes_config": {    
+
+            # "serdes_config": {
             m = p3_8.match(line)
             if m:
                 group = m.groupdict()
                 curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_config', {})
                 continue
-                
-            #  "serdes_settings": [     
+
+            #  "serdes_settings": [
             m = p3_8_1.match(line)
             if m:
                 group = m.groupdict()
-                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_config', {}).setdefault('serdes_settings', {})                
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_config', {}).setdefault('serdes_settings', {})
                 continue
-                
-            # "rx_settings": {     
+
+            # "rx_settings": {
             m = p3_8_1_1.match(line)
             if  m:
                 group = m.groupdict()
-                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_config', {}).setdefault('serdes_settings', {}).setdefault('rx_settings', {})                
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_config', {}).setdefault('serdes_settings', {}).setdefault('rx_settings', {})
                 continue
-                
-            # "targ_shadow": [     
-            m = p3_8_1_1_1.match(line)    
+
+            # "targ_shadow": [
+            m = p3_8_1_1_1.match(line)
             if  m:
                 group = m.groupdict()
                 index_flag = 1
                 handle_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_config', {}).setdefault('serdes_settings', {}).setdefault('rx_settings', {})
                 curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_config', {}).setdefault('serdes_settings', {}).setdefault('rx_settings', {}).setdefault('targ_shadow', {})
-                continue    
-            
+                continue
+
             # "tx_settings": {
             m = p3_8_1_2.match(line)
             if  m:
                 group = m.groupdict()
-                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_config', {}).setdefault('serdes_settings', {}).setdefault('tx_settings', {})                
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_config', {}).setdefault('serdes_settings', {}).setdefault('tx_settings', {})
                 continue
-                
-            # "tx_fir": [    
+
+            # "tx_fir": [
             m = p3_8_1_2_1.match(line)
             if  m:
                 group = m.groupdict()
                 index_flag = 1
                 handle_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_config', {}).setdefault('serdes_settings', {}).setdefault('tx_settings', {})
-                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_config', {}).setdefault('serdes_settings', {}).setdefault('tx_settings', {}).setdefault('tx_fir', {})                
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_config', {}).setdefault('serdes_settings', {}).setdefault('tx_settings', {}).setdefault('tx_fir', {})
                 continue
-                
-            # "flow_chart_settings": {     
+
+            # "flow_chart_settings": {
             m = p3_8_1_3.match(line)
             if  m:
                 group = m.groupdict()
-                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_config', {}).setdefault('serdes_settings', {}).setdefault('flow_chart_settings', {}) 
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_config', {}).setdefault('serdes_settings', {}).setdefault('flow_chart_settings', {})
                 continue
-                
-            # "serdes_status": {    
+
+            # "serdes_status": {
             m = p3_9.match(line)
             if m:
                 group = m.groupdict()
                 curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_status', {})
                 continue
-                
-            # "Firmware_Version": { 
+
+            # "Firmware_Version": {
             m = p3_9_1.match(line)
             if m:
                 group = m.groupdict()
-                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_status', {}).setdefault('firmware_version', {})                
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_status', {}).setdefault('firmware_version', {})
                 continue
-                
-            # "rx_status": [    
+
+            # "rx_status": [
             m = p3_9_2.match(line)
             if m:
                 group = m.groupdict()
-                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_status', {}).setdefault('rx_status', {})                
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_status', {}).setdefault('rx_status', {})
                 continue
-                
-            # "firs": [    
+
+            # "firs": [
             m = p3_9_2_1.match(line)
             if m:
                 group = m.groupdict()
                 index_flag = 1
                 handle_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_status', {}).setdefault('rx_status', {})
-                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_status', {}).setdefault('rx_status', {}).setdefault('firs',{})                
-                continue                
-                
-            # "fw_rx_status": [   
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_status', {}).setdefault('rx_status', {}).setdefault('firs',{})
+                continue
+
+            # "fw_rx_status": [
             m = p3_9_3.match(line)
             if m:
                 group = m.groupdict()
-                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_status', {}).setdefault('fw_rx_status', {})                
-                continue   
-                
-            # "fir_shadow": [ 
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_status', {}).setdefault('fw_rx_status', {})
+                continue
+
+            # "fir_shadow": [
             m = p3_9_4.match(line)
-            if m:                
+            if m:
                 group = m.groupdict()
-                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_status', {}).setdefault('fir_shadow', {})                
-                continue  
-                
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_status', {}).setdefault('fir_shadow', {})
+                continue
+
             # "eye_capture": {
             m = p3_10.match(line)
             if m:
                 group = m.groupdict()
-                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('eye_capture', {})                
-                continue 
-                
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('eye_capture', {})
+                continue
+
             # "veye_data": [
             m = p3_10_1.match(line)
             if m:
                 group = m.groupdict()
-                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('eye_capture', {}).setdefault('veye_data',{})                
-                continue  
-                
-            # "veye_values": [    
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('eye_capture', {}).setdefault('veye_data',{})
+                continue
+
+            # "veye_values": [
             m = p3_10_1_1.match(line)
             if m:
                 group = m.groupdict()
                 index_flag = 1
                 handle_dict  = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('eye_capture', {}).setdefault('veye_data',{})
-                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('eye_capture', {}).setdefault('veye_data',{}).setdefault('veye_values', {})                
-                continue  
-                
-            # "reg_dump": {    
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('eye_capture', {}).setdefault('veye_data',{}).setdefault('veye_values', {})
+                continue
+
+            # "reg_dump": {
             m = p3_11.match(line)
             if m:
                 group = m.groupdict()
-                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('reg_dump', {})                
-                continue  
-                
-            # "Quad_Reg": [ 
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('reg_dump', {})
+                continue
+
+            # "Quad_Reg": [
             m = p3_11_1.match(line)
             if m:
                 group = m.groupdict()
-                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('reg_dump', {}).setdefault('quad_reg',{})                
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('reg_dump', {}).setdefault('quad_reg',{})
                 continue
-                
-            # "P_Reg": [ 
+
+            # "P_Reg": [
             m = p3_11_2.match(line)
             if m:
                 group = m.groupdict()
-                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('reg_dump', {}).setdefault('p_reg',{})                
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('reg_dump', {}).setdefault('p_reg',{})
                 continue
-            
+
             # "S_reg": [
             m = p3_11_3.match(line)
             if m:
                 group = m.groupdict()
-                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('reg_dump', {}).setdefault('s_reg',{})                
-                continue 
-                
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('reg_dump', {}).setdefault('s_reg',{})
+                continue
+
             # "RXDTOP": [
             m = p3_11_4.match(line)
             if m:
                 group = m.groupdict()
-                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('reg_dump', {}).setdefault('rxdtop',{})                
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('reg_dump', {}).setdefault('rxdtop',{})
                 continue
-                
+
             # "TXDTOP": [
             m = p3_11_5.match(line)
             if m:
                 group = m.groupdict()
-                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('reg_dump', {}).setdefault('txdtop',{})                
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('reg_dump', {}).setdefault('txdtop',{})
                 continue
-                
+
             # "AutoNeg": [
             m = p3_11_6.match(line)
             if m:
                 group = m.groupdict()
-                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('reg_dump', {}).setdefault('autoneg',{})                
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('reg_dump', {}).setdefault('autoneg',{})
                 continue
-                
-            # "LinkTraining": [    
+
+            # "LinkTraining": [
             m = p3_11_7.match(line)
             if m:
                 group = m.groupdict()
-                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('reg_dump', {}).setdefault('linktraining',{})                
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('reg_dump', {}).setdefault('linktraining',{})
                 continue
-                
+
             # "RX_STS": [
             m = p3_11_8.match(line)
             if m:
                 group = m.groupdict()
-                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('reg_dump', {}).setdefault('rx_sts',{})                
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('reg_dump', {}).setdefault('rx_sts',{})
                 continue
-                
-            # "an_debug_1": [    
+
+            # "an_debug_1": [
             m = p3_11_9.match(line)
             if m:
                 group = m.groupdict()
-                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('reg_dump', {}).setdefault('an_debug_1',{})                
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('reg_dump', {}).setdefault('an_debug_1',{})
                 continue
-                
-            # ""an_debug_2": [    
+
+            # ""an_debug_2": [
             m = p3_11_10.match(line)
             if m:
                 group = m.groupdict()
-                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('reg_dump', {}).setdefault('an_debug_2',{})                
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('reg_dump', {}).setdefault('an_debug_2',{})
                 continue
-                
-            # "lt_debug_1": [    
+
+            # "lt_debug_1": [
             m = p3_11_11.match(line)
             if m:
                 group = m.groupdict()
-                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('reg_dump', {}).setdefault('lt_debug_1',{})                
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('reg_dump', {}).setdefault('lt_debug_1',{})
                 continue
-                
-            # "lt_debug_2": [    
+
+            # "lt_debug_2": [
             m = p3_11_12.match(line)
             if m:
                 group = m.groupdict()
-                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('reg_dump', {}).setdefault('lt_debug_2',{})                
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('reg_dump', {}).setdefault('lt_debug_2',{})
                 continue
-                
+
             # "mac_port_0_0_36.link_down_histogram": {
             m = p4.match(line)
             if  m:
                 group = m.groupdict()
                 port = group['key']
-                curr_dict = ret_dict.setdefault('mac_port_link_down', {}).setdefault(group['key'], {})                
-                continue  
-                
+                curr_dict = ret_dict.setdefault('mac_port_link_down', {}).setdefault(group['key'], {})
+                continue
+
             # "rx_deskew_fifo_overflow_count": [
             m = p4_1.match(line)
-            if m:                
+            if m:
                 group = m.groupdict()
                 index_flag = 1
                 handle_dict = ret_dict.setdefault('mac_port_link_down', {}).setdefault(port, {})
-                curr_dict = ret_dict.setdefault('mac_port_link_down', {}).setdefault(port, {}).setdefault('rx_deskew_fifo_overflow_count',{})               
-                continue 
-                
-            # "rx_pma_sig_ok_loss_interrupt_register_count": [     
+                curr_dict = ret_dict.setdefault('mac_port_link_down', {}).setdefault(port, {}).setdefault('rx_deskew_fifo_overflow_count',{})
+                continue
+
+            # "rx_pma_sig_ok_loss_interrupt_register_count": [
             m = p4_2.match(line)
             if  m:
                 group = m.groupdict()
                 index_flag = 1
                 handle_dict = ret_dict.setdefault('mac_port_link_down', {}).setdefault(port, {})
-                curr_dict = ret_dict.setdefault('mac_port_link_down', {}).setdefault(port, {}).setdefault('rx_pma_sig_ok_loss_interrupt_register_count',{})               
-                continue 
-                
+                curr_dict = ret_dict.setdefault('mac_port_link_down', {}).setdefault(port, {}).setdefault('rx_pma_sig_ok_loss_interrupt_register_count',{})
+                continue
+
             # "mac_port_0_0_36.link_error_histogram": {
             m = p5.match(line)
             if  m:
                 group = m.groupdict()
                 port = group['key']
-                curr_dict = ret_dict.setdefault('mac_port_link_error', {}).setdefault(group['key'], {})                
-                continue  
-                
-            # "mac_port_0_0_36.link_debounce_state": {    
+                curr_dict = ret_dict.setdefault('mac_port_link_error', {}).setdefault(group['key'], {})
+                continue
+
+            # "mac_port_0_0_36.link_debounce_state": {
             m = p6.match(line)
-            if m:                
+            if m:
                 group = m.groupdict()
                 port = group['key']
-                curr_dict = ret_dict.setdefault('mac_port_link_debounce', {}).setdefault(group['key'], {})                
+                curr_dict = ret_dict.setdefault('mac_port_link_debounce', {}).setdefault(group['key'], {})
                 continue
-                
+
             # Port = 40 Slot = 1 cmd = () rc = 0x16 reason = (null)
             m = p7.match(line)
             if  m:
                 group = m.groupdict()
                 ret_dict['port'] = int(group['port'])
-                ret_dict['slot'] = int(group['slot'])                
+                ret_dict['slot'] = int(group['slot'])
                 ret_dict['cmd'] = group['cmd']
-                ret_dict['rc'] = group['rc']                
+                ret_dict['rc'] = group['rc']
                 ret_dict['reason'] = group['reason']
                 continue
-            
+
             # Port = 39 cmd = (prbs_stop unit 0 port 39 slot 1 serdes_level 1 polynomial 31) rc = 0x0 rsn = success
             m = p7_1.match(line)
             if  m:
                 group = m.groupdict()
-                ret_dict['port'] = int(group['port'])                         
+                ret_dict['port'] = int(group['port'])
                 ret_dict['cmd'] = group['cmd']
                 ret_dict['rc'] = group['rc']
-                ret_dict['rsn'] = group['rsn']                
+                ret_dict['rsn'] = group['rsn']
                 continue
-            
+
             # "PRE_INIT": 0,
             m = p8.match(line)
             if m:
@@ -5993,11 +5863,11 @@ class ShowPlatformHardwareFedNpuDscDump(ShowPlatformHardwareFedNpuDscDumpSchema)
                         value = int(value)
                     except ValueError:
                         pass
-                    curr_dict[key] = value    
-                    
-            # false        
-            m = p8_1.match(line)            
-            if  m:                
+                    curr_dict[key] = value
+
+            # false
+            m = p8_1.match(line)
+            if  m:
                 group = m.groupdict()
                 cnt  = cnt + 1
                 key = cnt
@@ -6007,29 +5877,29 @@ class ShowPlatformHardwareFedNpuDscDump(ShowPlatformHardwareFedNpuDscDumpSchema)
                     #If it is a word, do not convert it to int.
                     pass
                 curr_dict.update({key: group['value']})
-                continue  
-                
-            # 64,   
+                continue
+
+            # 64,
             m = p8_2.match(line)
             if m:
                 group = m.groupdict()
                 cnt  = cnt + 1
-                key  = cnt                 
+                key  = cnt
                 group['value'] = int(group['value'])
                 curr_dict.update({key: group['value']})
                 continue
-            
-            # ], 
-            m = p8_3.match(line)                             
-            if  m:                
+
+            # ],
+            m = p8_3.match(line)
+            if  m:
                 if index_flag == 1:
                     curr_dict  = handle_dict
-                    index_flag = 0   
+                    index_flag = 0
                     cnt = 0
-                continue    
-          
-        return ret_dict     
-        
+                continue
+
+        return ret_dict
+
 
 class ShowPlatformHardwareFedSwitchActiveFwdAsicResourceTcamTableSghashSchema(MetaParser):
     """Schema for show platform hardware fed switch active fwd-asic resource tcam table sghash all"""
@@ -6049,7 +5919,7 @@ class ShowPlatformHardwareFedSwitchActiveFwdAsicResourceTcamTableSghashSchema(Me
     }
 
 class ShowPlatformHardwareFedSwitchActiveFwdAsicResourceTcamTableSghash(ShowPlatformHardwareFedSwitchActiveFwdAsicResourceTcamTableSghashSchema):
-    """Parser for 
+    """Parser for
     * 'show platform hardware fed switch active fwd-asic resource tcam table sghash all'
     * 'show platform hardware fed switch {switch_var} fwd-asic resource tcam table sghash asic_no {asic_no}'
     * 'show platform hardware fed switch {switch_var} fwd-asic insight sgmatrix({max_asic})'
@@ -6072,15 +5942,15 @@ class ShowPlatformHardwareFedSwitchActiveFwdAsicResourceTcamTableSghash(ShowPlat
             output = self.device.execute(cmd)
 
         ret_dict = {}
-        
+
         # List of SG-ACL Matrix Cells for Device ID = 0
         p1 = re.compile(r'^.*List of SG-ACL Matrix Cells for Device ID = (?P<device_id>\d+).*$')
-        
-        # Total Entries: 7 
+
+        # Total Entries: 7
         p2 = re.compile(r'^Total Entries: (?P<total_entries>\d+)$')
-        
-        # S_NO    SGT        DGT             Monitor Mode    ACL_ID     IP_version 
-        # 1       4          6               0               5          ipv4       
+
+        # S_NO    SGT        DGT             Monitor Mode    ACL_ID     IP_version
+        # 1       4          6               0               5          ipv4
         p3 = re.compile(r'^(?P<s_no>\d+)\s+(?P<sgt>\d+)\s+(?P<dgt>\d+)\s+(?P<monitor_mode>\d+)\s+(?P<acl_id>\d+)\s+(?P<ip_version>\w+)$')
 
         for line in output.splitlines():
@@ -6092,14 +5962,14 @@ class ShowPlatformHardwareFedSwitchActiveFwdAsicResourceTcamTableSghash(ShowPlat
                 ret_dict['device_id'] = int(m.group('device_id'))
                 continue
 
-            # Total Entries: 7 
+            # Total Entries: 7
             m = p2.match(line)
             if m:
                 ret_dict['total_entries'] = int(m.group('total_entries'))
                 continue
 
-            # S_NO    SGT        DGT             Monitor Mode    ACL_ID     IP_version 
-            # 1       4          6               0               5          ipv4       
+            # S_NO    SGT        DGT             Monitor Mode    ACL_ID     IP_version
+            # 1       4          6               0               5          ipv4
             m = p3.match(line)
             if m:
                 group = m.groupdict()
@@ -6111,7 +5981,7 @@ class ShowPlatformHardwareFedSwitchActiveFwdAsicResourceTcamTableSghash(ShowPlat
                 sec_dict["acl_id"] = int(group["acl_id"])
                 sec_dict["ip_version"] = group["ip_version"]
                 continue
-                
+
         return ret_dict
 
 
@@ -6120,7 +5990,7 @@ class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightSdkObjectsSchema(MetaPars
     schema = {
         'sdk_objects': {
             Any(): {
-                'cookie': str,
+                Optional('cookie'): str,
                 'device_oid': str,
                 'oid': str
             }
@@ -6130,67 +6000,75 @@ class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightSdkObjectsSchema(MetaPars
 class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightSdkObjects(ShowPlatformHardwareFedSwitchActiveFwdAsicInsightSdkObjectsSchema):
     """Parser for 'show platform hardware fed switch active fwd-asic insight sdk_objects'"""
 
-    cli_command = "show platform hardware fed switch active fwd-asic insight sdk_objects({otype})"
-    
-    def cli(self, otype, output=None):
+    cli_command = [
+        "show platform hardware fed {switch} {switch_var} fwd-asic insight sdk_objects({otype})",
+        "show platform hardware fed {switch_var} fwd-asic insight sdk_objects({otype})"
+        ]
+
+    def cli(self, otype, switch='', switch_var='', output=None):
         if output is None:
-            output = self.device.execute(self.cli_command.format(otype=otype))
-        
+            if switch:
+                cmd = self.cli_command[0].format(switch=switch, switch_var=switch_var, otype=otype)
+            else:
+                cmd = self.cli_command[1].format(switch_var=switch_var, otype=otype)
+            output = self.device.execute(cmd)
+
         # Initialize the parsed dictionary
         ret_dict = {}
-        
+
         # - # 1
         p1 = re.compile(r'^- # (?P<object_id>\d+)$')
-        
+
         # cookie: ''
-        p2 = re.compile(r"^cookie:\s*'(?P<cookie>.*)'$")
-        
+        # cookie: Gi1/0/21
+        p2 = re.compile(r"^cookie:\s+'?(?P<cookie>[\w\s\-\/\.]+)?'?$")
+
         # device: =oref('device', oid=0x0)
         p3 = re.compile(r'^device: =oref\(\'device\', oid=(?P<device_oid>.*)\)$')
-        
+
         # oid: =0x225
         p4 = re.compile(r'^oid: =(?P<oid>.*)$')
-        
+
         for line in output.splitlines():
             line = line.strip()
-        
+
             # - # 1
             m = p1.match(line)
             if m:
                 group = m.groupdict()
                 result_dict=ret_dict.setdefault("sdk_objects", {}).setdefault(int(group['object_id']), {})
                 continue
-            
+
             # cookie: ''
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                result_dict['cookie'] = group['cookie']
+                if group['cookie']:
+                    result_dict['cookie'] = group['cookie']
                 continue
-        
+
             # device: =oref('device', oid=0x0)
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                result_dict['device_oid'] = group['device_oid']        
+                result_dict['device_oid'] = group['device_oid']
                 continue
-        
+
             # oid: =0x226
             m = p4.match(line)
             if m:
                 group = m.groupdict()
-                result_dict['oid'] = group['oid']    
+                result_dict['oid'] = group['oid']
                 continue
-                
+
         return ret_dict
-        
 
 class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightSdkObjectSchema(MetaParser):
     """Schema for 'show platform hardware fed switch active fwd-asic insight sdk_object'"""
     schema = {
         'sdk_objects':{
             Optional('aggregation_mode'): str,
-            'cookie': str,
+            Optional('cookie'): str,
             'device_oid': str,
             'oid': str,
             Optional('set_size'): str
@@ -6200,11 +6078,18 @@ class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightSdkObjectSchema(MetaParse
 class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightSdkObject(ShowPlatformHardwareFedSwitchActiveFwdAsicInsightSdkObjectSchema):
     """Parser for 'show platform hardware fed switch active fwd-asic insight sdk_object'"""
 
-    cli_command = "show platform hardware fed switch active fwd-asic insight sdk_object({otype})"
+    cli_command = [
+        "show platform hardware fed {switch} {switch_var} fwd-asic insight sdk_object({otype})",
+        "show platform hardware fed {switch_var} fwd-asic insight sdk_object({otype})"
+        ]
 
-    def cli(self, otype, output=None):
+    def cli(self, otype, switch='', switch_var='', output=None):
         if output is None:
-            output = self.device.execute(self.cli_command.format(otype=otype))
+            if switch:
+                cmd = self.cli_command[0].format(switch=switch, switch_var=switch_var, otype=otype)
+            else:
+                cmd = self.cli_command[1].format(switch_var=switch_var, otype=otype)
+            output = self.device.execute(cmd)
 
         # Initialize the parsed dictionary
         ret_dict = {}
@@ -6213,7 +6098,8 @@ class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightSdkObject(ShowPlatformHar
         p1 = re.compile(r'^aggregation_mode: =(?P<aggregation_mode>.*)$')
 
         # cookie: ''
-        p2 = re.compile(r"^cookie:\s*'(?P<cookie>.*)'$")
+        # cookie: Gi1/0/21
+        p2 = re.compile(r"^cookie:\s+'?(?P<cookie>[\w\s\-\/\.]+)?'?$")
 
         # device: =oref('device', oid=0x0)
         p3 = re.compile(r'^device: =oref\(\'device\', oid=(?P<device_oid>.*)\)$')
@@ -6226,13 +6112,13 @@ class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightSdkObject(ShowPlatformHar
 
         for line in output.splitlines():
             line = line.strip()
-            
+
             result_dict = ret_dict.setdefault("sdk_objects", {})
-            
+
             # aggregation_mode: =0x0
             m = p1.match(line)
             if m:
-                group = m.groupdict()                
+                group = m.groupdict()
                 result_dict['aggregation_mode'] = group['aggregation_mode']
                 continue
 
@@ -6240,21 +6126,22 @@ class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightSdkObject(ShowPlatformHar
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                result_dict['cookie'] = group['cookie']
+                if group['cookie']:
+                    result_dict['cookie'] = group['cookie']
                 continue
 
             # device: =oref('device', oid=0x0)
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                result_dict['device_oid'] = group['device_oid']        
+                result_dict['device_oid'] = group['device_oid']
                 continue
 
             # oid: =0x226
             m = p4.match(line)
             if m:
                 group = m.groupdict()
-                result_dict['oid'] = group['oid']    
+                result_dict['oid'] = group['oid']
                 continue
 
             # set_size: =0x1
@@ -6287,40 +6174,40 @@ class ShowPlatformHardwareFedSwitchFwdAsicInsightIpv4SgtMapping(ShowPlatformHard
 
     def cli(self, switch_var, devid, output=None):
         if output is None:
-            output = self.device.execute(self.cli_command.format(switch_var=switch_var, devid=devid))            
+            output = self.device.execute(self.cli_command.format(switch_var=switch_var, devid=devid))
 
         # Initialize the parsed dictionary
         parsed_dict = {}
         entries = []
 
-        # Total IPv4-SGT EM entries = 4 
+        # Total IPv4-SGT EM entries = 4
         p1 = re.compile(r'^Total IPv4-SGT EM entries\s*=\s*(?P<total_ipv4_sgt_em_entries>\d+)$')
 
-        # Total IPv4-SGT LPM entries = 3 
+        # Total IPv4-SGT LPM entries = 3
         p2 = re.compile(r'^Total IPv4-SGT LPM entries\s*=\s*(?P<total_ipv4_sgt_lpm_entries>\d+)$')
 
-        # SNo.   IPv4-ADDRESS   MASKLEN VRFID SGT   VALID 
-        # 0      30.0.0.2       32      0     4     1     
+        # SNo.   IPv4-ADDRESS   MASKLEN VRFID SGT   VALID
+        # 0      30.0.0.2       32      0     4     1
         p3 = re.compile(r'^(?P<sno>\d+)\s+(?P<ipv4_address>\S+)\s+(?P<masklen>\d+)\s+(?P<vrfid>\d+)\s+(?P<sgt>\d+)\s+(?P<valid>\d+)$')
 
         # Process each line of the output
         for line in output.splitlines():
             line = line.strip()
 
-            # Total IPv4-SGT EM entries = 4 
+            # Total IPv4-SGT EM entries = 4
             m = p1.match(line)
             if m:
                 parsed_dict['total_ipv4_sgt_em_entries'] = int(m.group('total_ipv4_sgt_em_entries'))
                 continue
 
-            # Total IPv4-SGT LPM entries = 3 
+            # Total IPv4-SGT LPM entries = 3
             m = p2.match(line)
             if m:
                 parsed_dict['total_ipv4_sgt_lpm_entries'] = int(m.group('total_ipv4_sgt_lpm_entries'))
                 continue
 
-            # SNo.   IPv4-ADDRESS   MASKLEN VRFID SGT   VALID 
-            # 0      30.0.0.2       32      0     4     1     
+            # SNo.   IPv4-ADDRESS   MASKLEN VRFID SGT   VALID
+            # 0      30.0.0.2       32      0     4     1
             m = p3.match(line)
             if m:
                 entries.append({
@@ -6359,20 +6246,20 @@ class ShowPlatformHardwareFedSwitchFwdAsicInsightIpv6SgtMapping(ShowPlatformHard
 
     def cli(self, switch_var, devid, output=None):
         if output is None:
-            output = self.device.execute(self.cli_command.format(switch_var=switch_var, devid=devid))            
+            output = self.device.execute(self.cli_command.format(switch_var=switch_var, devid=devid))
 
         # Initialize the parsed dictionary
         parsed_dict = {}
         entries = []
 
-        # Total IPv6-SGT EM entries = 2 
+        # Total IPv6-SGT EM entries = 2
         p1 = re.compile(r'^Total IPv6-SGT EM entries\s*=\s*(?P<total_ipv6_sgt_em_entries>\d+)$')
 
         # Total IPv6-SGT LPM entries = 4
         p2 = re.compile(r'^Total IPv6-SGT LPM entries\s*=\s*(?P<total_ipv6_sgt_lpm_entries>\d+)$')
 
-        # SNo.   IPv6-ADDRESS  MASKLEN VRFID SGT   VALID 
-        # 0      30::2          128     0     40002 1    
+        # SNo.   IPv6-ADDRESS  MASKLEN VRFID SGT   VALID
+        # 0      30::2          128     0     40002 1
         p3 = re.compile(r'^(?P<sno>\d+)\s+(?P<ipv6_address>[0-9a-fA-F:.]+)\s+(?P<masklen>\d+)\s+(?P<vrfid>\d+)\s+(?P<sgt>\d+)\s+(?P<valid>\d+)$')
 
         for line in output.splitlines():
@@ -6390,8 +6277,8 @@ class ShowPlatformHardwareFedSwitchFwdAsicInsightIpv6SgtMapping(ShowPlatformHard
                 parsed_dict['total_ipv6_sgt_lpm_entries'] = int(m.group('total_ipv6_sgt_lpm_entries'))
                 continue
 
-            # SNo.   IPv6-ADDRESS    MASKLEN VRFID SGT   VALID 
-            # 0      30::2           128     0     40002 1    
+            # SNo.   IPv6-ADDRESS    MASKLEN VRFID SGT   VALID
+            # 0      30::2           128     0     40002 1
             m = p3.match(line)
             if m:
                 entries.append({
@@ -6440,10 +6327,10 @@ class ShowPlatformHardwareFedSwitchFwdAsicInsightIpSourceGuardDef(ShowPlatformHa
         # Initialize the parsed dictionary
         ret_dict = {}
 
-        #| 1358    | 1115                | SA                   | 1357                | IPSG_VIOLATION_DROP   | 
+        #| 1358    | 1115                | SA                   | 1357                | IPSG_VIOLATION_DROP   |
         p1 = re.compile(r'^\|\s+(?P<acl_oid>\d+)\s+\|\s+(?P<acl_key_profile_oid>\d+)\s+\|\s+(?P<acl_match_key_fields>.+?)\s+\|\s+(?P<acl_cmd_profile_oid>\d+)\s+\|\s+(?P<acl_commands>.+?)\s+\|$')
 
-        #|         |                     | VLAN_OUTER           |                     | FORCE_TRAP_WITH_EVENT | 
+        #|         |                     | VLAN_OUTER           |                     | FORCE_TRAP_WITH_EVENT |
         p2 = re.compile(r'^\|\s+\|\s+\|(?P<acl_match_key_fields>.+?)\s+\|\s+\|\s+(?P<acl_commands>.+?)\s+\|')
 
 
@@ -6462,7 +6349,7 @@ class ShowPlatformHardwareFedSwitchFwdAsicInsightIpSourceGuardDef(ShowPlatformHa
                 result_dict['acl_commands']= [group['acl_commands']]
                 continue
 
-            # |         |                     | VRF_GID              |                     | COUNTER               | 
+            # |         |                     | VRF_GID              |                     | COUNTER               |
             m = p2.match(line)
             if m :
                 group = m.groupdict()
@@ -6520,7 +6407,7 @@ class ShowPlatformHardwareFedSwitchFwdAsicInsightIpSourceGuardAcl(ShowPlatformHa
         # | 0        |     |                        |                          |      | 17       | 67    | 68    |      | 18        | 1359        |
         p1 = re.compile(r'^\|\s+(?P<priority>\d+)\s+\|\s+(?P<ssp>\S*)\s+\|\s+(?P<ipv4_sip>\S*)\s+\|\s+(?P<source_mac>\S*)\s+\|\s+(?P<vlan>\S*)\s+\|\s+(?P<protocol>\S*)\s+\|\s+(?P<dport>\S*)\s+\|\s+(?P<sport>\S*)\s+\|\s+(?P<drop>\S*)\s+\|\s+(?P<hit_count>\d+)\s+\|\s+(?P<counter_oid>\d+)\s+\|$')
 
-        # | 3        | 60  | IP   : 30.0.0.2        | Mac  : 00:12:01:00:00:01 | 30   |          |       |       |      | 0         | 2479        |        
+        # | 3        | 60  | IP   : 30.0.0.2        | Mac  : 00:12:01:00:00:01 | 30   |          |       |       |      | 0         | 2479        |
         p1_1 = re.compile(r'^\|\s+(?P<priority>\d+)\s+\|\s+(?P<ssp>\S*)\s+\|\s+IP\s*:\s*(?P<ipv4_sip>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+\|\s+Mac\s*:\s*(?P<source_mac>[\w:]+)\s+\|\s+(?P<vlan>\S*)\s+\|\s+(?P<protocol>\S*)\s+\|\s+(?P<dport>\S*)\s+\|\s+(?P<sport>\S*)\s+\|\s+(?P<drop>\S*)\s+\|\s+(?P<hit_count>\d+)\s+\|\s+(?P<counter_oid>\d+)\s+\|$')
 
         # |          |     | Mask : 255.255.255.255 | Mask : ff:ff:ff:ff:ff:ff |      |          |       |       |      |           |             |
@@ -6581,7 +6468,7 @@ class ShowPlatformHardwareFedSwitchFwdAsicInsightIpSourceGuardAcl(ShowPlatformHa
 
 class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightS1SgtMappingStatusV4Schema(MetaParser):
     """Schema for
-    * 'show platform hardware fed switch {switch} fwd-asic insight s1_sgt_mapping_status_v4({devid})'
+    * 'show platform hardware fed {switch} {state} fwd-asic insight s1_sgt_mapping_status_v4({devid})'
     """
 
     schema = {
@@ -6597,14 +6484,14 @@ class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightS1SgtMappingStatusV4Schem
 
 class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightS1SgtMappingStatusV4(ShowPlatformHardwareFedSwitchActiveFwdAsicInsightS1SgtMappingStatusV4Schema):
     """Parser for
-    * 'show platform hardware fed switch {switch} fwd-asic insight s1_sgt_mapping_status_v4({devid})'
+    * 'show platform hardware fed {switch} {state} fwd-asic insight s1_sgt_mapping_status_v4({devid})'
     """
 
-    cli_command = 'show platform hardware fed switch {switch} fwd-asic insight s1_sgt_mapping_status_v4({devid})'
+    cli_command = 'show platform hardware fed {switch} {state} fwd-asic insight s1_sgt_mapping_status_v4({devid})'
 
-    def cli(self, switch, devid, output=None):
+    def cli(self, switch='', state='', devid='', output=None):
         if output is None:
-            output = self.device.execute(self.cli_command.format(switch=switch, devid=devid))
+            output = self.device.execute(self.cli_command.format(switch=switch, state=state, devid=devid))
 
         # Initialize the parsed dictionary
         ret_dict = {}
@@ -6632,7 +6519,7 @@ class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightS1SgtMappingStatusV4(Show
 
 class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightS1SgtMappingStatusV6Schema(MetaParser):
     """Schema for
-    'show platform hardware fed switch {switch} fwd-asic insight s1_sgt_mapping_status_v6({devid})'
+    'show platform hardware fed {switch} {state} fwd-asic insight s1_sgt_mapping_status_v6({devid})'
     """
 
     schema = {
@@ -6648,14 +6535,14 @@ class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightS1SgtMappingStatusV6Schem
 
 class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightS1SgtMappingStatusV6(ShowPlatformHardwareFedSwitchActiveFwdAsicInsightS1SgtMappingStatusV6Schema):
     """Parser for
-    * 'show platform hardware fed switch {switch} fwd-asic insight s1_sgt_mapping_status_v6({devid})'
+    * 'show platform hardware fed {switch} {state} fwd-asic insight s1_sgt_mapping_status_v6({devid})'
     """
 
-    cli_command = 'show platform hardware fed switch {switch} fwd-asic insight s1_sgt_mapping_status_v6({devid})'
+    cli_command = 'show platform hardware fed {switch} {state} fwd-asic insight s1_sgt_mapping_status_v6({devid})'
 
-    def cli(self, switch, devid, output=None):
+    def cli(self, switch='', state='', devid='', output=None):
         if output is None:
-            output = self.device.execute(self.cli_command.format(switch=switch, devid=devid))
+            output = self.device.execute(self.cli_command.format(switch=switch, state=state, devid=devid))
 
         # Initialize the parsed dictionary
         ret_dict = {}
@@ -6685,7 +6572,7 @@ class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightS1SgtMappingStatusV6(Show
 
 
 class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightS1SecGroupsMatrixMapStatusSchema(MetaParser):
-    """Schema for 'show platform hardware fed switch active fwd-asic insight s1_sec_groups_matrix_map_status({devid})'"""
+    """Schema for 'show platform hardware fed {switch} {state} fwd-asic insight s1_sec_groups_matrix_map_status({devid})'"""
     schema = {
         'sec_groups_matrix_map_status': {
             Any(): {
@@ -6704,25 +6591,25 @@ class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightS1SecGroupsMatrixMapStatu
     }
 
 class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightS1SecGroupsMatrixMapStatus(ShowPlatformHardwareFedSwitchActiveFwdAsicInsightS1SecGroupsMatrixMapStatusSchema):
-    """Parser for 'show platform hardware fed switch active fwd-asic insight s1_sec_groups_matrix_map_status({devid})'"""
+    """Parser for 'show platform hardware fed {switch} {state} fwd-asic insight s1_sec_groups_matrix_map_status({devid})'"""
 
-    cli_command = "show platform hardware fed switch {switch} fwd-asic insight s1_sec_groups_matrix_map_status({devid})"
-    
-    def cli(self, switch, devid, output=None):
+    cli_command = "show platform hardware fed {switch} {state} fwd-asic insight s1_sec_groups_matrix_map_status({devid})"
+
+    def cli(self, switch, state, devid, output=None):
         if output is None:
-            output = self.device.execute(self.cli_command.format(switch=switch, devid=devid))
-        
+            output = self.device.execute(self.cli_command.format(switch=switch, state=state, devid=devid))
+
         # Initialize the parsed dictionary
         ret_dict = {}
-        
-        # R| 65535 | 65534 | IPV4       | True         | 1       | 2000    |            | 1999             | 0              | 0            | 
+
+        # R| 65535 | 65534 | IPV4       | True         | 1       | 2000    |            | 1999             | 0              | 0            |
         p1 = re.compile(r'^\|\s*(?P<sgt>\d+)\s*\|\s*(?P<dgt>\d+)\s*\|\s*(?P<ip_version>\S+)\s*\|\s*(?P<monitor_mode>\S+)\s*\|\s*(?P<bincode>\d+)\s*\|\s*(?P<acl_oid>\d+)\s*\|\s*(?P<acl_cookie>\S*)\s*\|\s*(?P<cell_counter_oid>\d+)\s*\|\s*(?P<permit_counter>\d+)\s*\|\s*(?P<deny_counter>\d+)\s*\|$')
-        
+
         for line in output.splitlines():
             line = line.strip()
-            
+
             # Match the table rows
-            # | 65535 | 65534 | IPV4       | True         | 1       | 2000    |            | 1999             | 0              | 0            | 
+            # | 65535 | 65534 | IPV4       | True         | 1       | 2000    |            | 1999             | 0              | 0            |
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -6740,13 +6627,14 @@ class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightS1SecGroupsMatrixMapStatu
                 }
                 ret_dict.setdefault('sec_groups_matrix_map_status', {}).setdefault(f"{group['sgt']}_{group['dgt']}_{group['ip_version']}", entry)
                 continue
-                
+
         return ret_dict
 
 
 class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightL2MirrorCommandErspanSchema(MetaParser):
     """Schema for:
-        show platform hardware fed switch active fwd-asic insight l2_mirror_command_erspan({mirror_gid})
+        'show platform hardware fed switch {switch_type} fwd-asic insight l2_mirror_command_erspan({mirror_gid})',
+        'show platform hardware fed {switch} {switch_type} fwd-asic insight l2_mirror_command_erspan({mirror_gid})'
     """
     schema = {
         'l2_mirror_command_erspan': {
@@ -6767,14 +6655,21 @@ class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightL2MirrorCommandErspanSche
             }
         }
     }
-    
-class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightL2MirrorCommandErspan(ShowPlatformHardwareFedSwitchActiveFwdAsicInsightL2MirrorCommandErspanSchema):
-    cli_command = "show platform hardware fed switch active fwd-asic insight l2_mirror_command_erspan({mirror_gid})"
 
-    def cli(self, mirror_gid, output=None):
+class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightL2MirrorCommandErspan(ShowPlatformHardwareFedSwitchActiveFwdAsicInsightL2MirrorCommandErspanSchema):
+    cli_command = [
+        'show platform hardware fed switch {switch_type} fwd-asic insight l2_mirror_command_erspan({mirror_gid})',
+        'show platform hardware fed {switch} {switch_type} fwd-asic insight l2_mirror_command_erspan({mirror_gid})'
+    ]
+
+    def cli(self, mirror_gid, switch_type=None, switch=None, output=None):
         if output is None:
-            output = self.device.execute(self.cli_command.format(mirror_gid=mirror_gid))
-    
+            if switch:
+                cmd = self.cli_command[1].format(switch=switch, switch_type=switch_type, mirror_gid=mirror_gid)
+            else:
+                cmd = self.cli_command[0].format(switch_type=switch_type, mirror_gid=mirror_gid)
+            output = self.device.execute(cmd)
+
         ret_dict = {}
 
         # +------------+--------------+---------------+-------------+-------------------+-------------------+----------+-----------+---------+-----------+-----+-----------------+
@@ -6790,7 +6685,7 @@ class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightL2MirrorCommandErspan(Sho
             r"(?P<vlan_tag>\d+)\s*\|\s*(?P<source_ip>[\d.]+)\s*\|\s*(?P<dest_ip>[\d.]+)\s*"
             r"\|\s*(?P<dest_port>\d+)\s*\|\s*(?P<ttl>\d+)\s*\|\s*(?P<counter_data>\[.*?\])\s*\|$"
         )
-        
+
         for line in output.splitlines():
             line = line.strip()
 
@@ -6822,7 +6717,8 @@ class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightL2MirrorCommandErspan(Sho
 
 class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightL2MirrorCommandStatusSchema(MetaParser):
     """Schema for:
-        show platform hardware fed switch active fwd-asic insight l2_mirror_command_status
+        * show platform hardware fed switch {switch_id} fwd-asic insight l2_mirror_command_status,
+        * show platform hardware fed switch {switch_id} fwd-asic insight l2_mirror_command_status({mirror_gid})
     """
     schema = {
         'l2_mirror_command_status': {
@@ -6838,14 +6734,25 @@ class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightL2MirrorCommandStatusSche
 
 class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightL2MirrorCommandStatus(ShowPlatformHardwareFedSwitchActiveFwdAsicInsightL2MirrorCommandStatusSchema):
     """Parser for:
-        show platform hardware fed switch active fwd-asic insight l2_mirror_command_status
-    """
-
-    cli_command = "show platform hardware fed switch active fwd-asic insight l2_mirror_command_status"
-
-    def cli(self, output=None):
+        * show platform hardware fed switch {switch_id} fwd-asic insight l2_mirror_command_status,
+        * show platform hardware fed switch {switch_id} fwd-asic insight l2_mirror_command_status({mirror_gid})
+    """                
+    cli_command = [
+        "show platform hardware fed switch {switch_id} fwd-asic insight l2_mirror_command_status",
+        "show platform hardware fed switch {switch_id} fwd-asic insight l2_mirror_command_status({mirror_gid})"
+    ]
+    
+    def cli(self, switch_id=None, mirror_gid=None, output=None):
         if output is None:
-            output = self.device.execute(self.cli_command)
+            if mirror_gid is not None:
+                cmd = self.cli_command[1].format(switch_id=switch_id,mirror_gid=mirror_gid)
+            else:
+                cmd = self.cli_command[0].format(switch_id=switch_id)
+
+            out = self.device.execute(cmd)
+        else:
+            out = output
+        
         ret_dict = {}
 
         # +------------+-------------+---------------+--------------+
@@ -6854,8 +6761,8 @@ class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightL2MirrorCommandStatus(Sho
         # |         21 |      L2     |           260 |            2 |
         p1 = re.compile(r"^\|\s*(?P<mirror_gid>\d+)\s*\|\s*(?P<mirror_type>\S+)\s*\|\s*"
                         r"(?P<dest_port_gid>\d+)\s*\|\s*(?P<dest_port_tc>\d+)\s*\|$")
-                        
-        for line in output.splitlines():
+
+        for line in out.splitlines():
             line = line.strip()
 
             # +------------+-------------+---------------+--------------+
@@ -6897,21 +6804,21 @@ class ShowPlatformHardwareFedSwitchFwdAsicInsightL2mRoutes(ShowPlatformHardwareF
     def cli(self, switch_id, switch_gid, output=None):
         if output is None:
             output = self.device.execute(self.cli_command.format(switch_id=switch_id, switch_gid=switch_gid))
-        
+
         ret_dict = {}
 
         # +------------+---------------+------------+-----------------------------------------+------------+------------+----------------+
         # | switch-gid | switch-cookie | ip-version | saddr                                   | gaddr      | l2-mcg-gid | l2-mcg-cookie  |
         # +------------+---------------+------------+-----------------------------------------+------------+------------+----------------+
         # | 100        |      100      | 6          | ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff | ff1e::21:1 | 8271       | urid:0x20::657 |
-        # |            |               |            |                                         |            |            |                |
+        # | 101        |      101      | 4          | 255.255.255.255                         | 255.0.0.1  | 8272       | urid:0x20::658 |
         # +------------+---------------+------------+-----------------------------------------+------------+------------+----------------+
         p1 = re.compile(
             r"^\|\s*(?P<switch_gid>\d+)\s*\|\s*(?P<switch_cookie>\d+)\s*\|\s*(?P<ip_version>\d+)\s*\|\s*"
-            r"(?P<saddr>[\da-fA-F:]+)\s*\|\s*(?P<gaddr>[\da-fA-F:]+)\s*\|\s*(?P<l2_mcg_gid>\d+)\s*\|\s*"
+            r"(?P<saddr>[\da-fA-F:.]+)\s*\|\s*(?P<gaddr>[\da-fA-F:.]+)\s*\|\s*(?P<l2_mcg_gid>\d+)\s*\|\s*"
             r"(?P<l2_mcg_cookie>[\w:]+)\s*\|$"
         )
-        
+
         for line in output.splitlines():
             line = line.strip()
             # +------------+---------------+------------+-----------------------------------------+------------+------------+----------------+
@@ -6933,7 +6840,6 @@ class ShowPlatformHardwareFedSwitchFwdAsicInsightL2mRoutes(ShowPlatformHardwareF
                 continue
 
         return ret_dict
-
 
 class ShowPlatformHardwareFedSwitchFwdAsicInsightL2mGroupsSchema(MetaParser):
     schema = {
@@ -6957,7 +6863,7 @@ class ShowPlatformHardwareFedSwitchFwdAsicInsightL2mGroups(ShowPlatformHardwareF
     def cli(self, switch_id, l2_mcg_gid, output=None):
         if output is None:
             output = self.device.execute(self.cli_command.format(switch_id=switch_id, l2_mcg_gid=l2_mcg_gid))
-        
+
         ret_dict = {}
 
         # +------------+----------------+-------------+----------------------+-------------------+---------------------+
@@ -6970,7 +6876,7 @@ class ShowPlatformHardwareFedSwitchFwdAsicInsightL2mGroups(ShowPlatformHardwareF
             r"^\|\s*(?P<l2_mcg_gid>\d+)\s*\|\s*(?P<l2_mcg_cookie>[\w:]+)\s*\|\s*(?P<num_members>\d+)\s*\|\s*"
             r"(?P<replication_paradigm>\w+)\s*\|\s*(?P<egress_counter_id>\d+)\s*\|\s*(?P<egress_counter_data>\[.*?\])\s*\|$"
         )
-        
+
         for line in output.splitlines():
             line = line.strip()
 
@@ -7036,7 +6942,7 @@ class ShowPlatformHardwareFedSwitchFwdAsicInsightIfmPortStatus(ShowPlatformHardw
     def cli(self, switch_id, system_port_gid, output=None):
         if output is None:
             output = self.device.execute(self.cli_command.format(switch_id=switch_id,system_port_gid=system_port_gid))
-        
+
         ret_dict = {}
 
         # | sysport_gid: 305        | port_type: MPP_PORT | status: EN-UP | mpp_port_id: 1 | rx_fc_mode: PAUSE | speed: 1.0          |
@@ -7047,11 +6953,11 @@ class ShowPlatformHardwareFedSwitchFwdAsicInsightIfmPortStatus(ShowPlatformHardw
 
         # | serdes:                 |                     |               |                |                   | fec_mode: NONE      |
         p3 = re.compile(r'^\|\s*serdes:\s*(?P<serdes>\S*)\s*\|\s*\|\s*\|\s*\|\s*\|\s*(?P<feature>\S+):\s*(?P<value>\S+)\s*\|$')
-        
+
         # |                         |                     |               |                |                   | auto_neg: False     |
         # |                         |                     |               |                |                   | link_state: UP      |
         p4 = re.compile(r'^\|\s*\|\s*\|\s*\|\s*\|\s*\|\s*(?P<feature>\S+):\s*(?P<value>[A-Za-z]+)\s*\|$')
-        
+
         # |                         |                     |               |                |                   | mtu: 1522           |
         p5 = re.compile(r'^\|\s*\|\s*\|\s*\|\s*\|\s*\|\s*(?P<feature>\S+):\s*(?P<value>\d+)\s*\|$')
 
@@ -7148,20 +7054,20 @@ class ShowPlatformHardwareFedSwitchFwdAsicInsightPortSerdesStatus(ShowPlatformHa
     def cli(self, switch_id, system_port_gid, output=None):
         if output is None:
             output = self.device.execute(self.cli_command.format(switch_id=switch_id, system_port_gid=system_port_gid))
-        
+
         ret_dict = {}
 
         # | port_oid: 1910 |             | sysport_gid: 305 | serdes: 0/0/29-29 | speed: 1.0                       |
         p1 = re.compile(r'^\|\s*port_oid:\s*(?P<port_oid>\d+)\s*\|\s*(?P<port_cookie>\S*)\s*\|\s*sysport_gid:\s*(?P<sysport_gid>\d+)\s*\|\s*serdes:\s*(?P<serdes>\S+)\s*\|\s*(?P<lane>\S+):\s*(?P<value>\S+)\s*\|$')
-        
+
         # |                |             |                  |                   | serdes_rx_ready: True            |
-        # |                |             |                  |                   | signal_strength_type: SERDES_MSE |        
+        # |                |             |                  |                   | signal_strength_type: SERDES_MSE |
         p2 = re.compile(r'^\|\s*\|\s*\|\s*\|\s*\|\s*(?P<lane>\S+):\s*(?P<value>[A-Za-z-_]+|N/A)\s*\|$')
-        
+
         # |                |             |                  |                   | signal_strength_val: 184328.0    |
-        # |                |             |                  |                   | rx_ffe_taps: N/A                 |        
+        # |                |             |                  |                   | rx_ffe_taps: N/A                 |
         p3 = re.compile(r'^\|\s*\|\s*\|\s*\|\s*\|\s*(?P<lane>\S+):\s*(?P<value>\d+\.\d+)\s*\|$')
-        
+
         # |                |             |                  |                   | lane: 0                          |
         p4 = re.compile(r'^\|\s*\|\s*\|\s*\|\s*\|\s*(?P<lane>\S+):\s*(?P<value>\d+)\s*\|$')
 
@@ -7180,7 +7086,7 @@ class ShowPlatformHardwareFedSwitchFwdAsicInsightPortSerdesStatus(ShowPlatformHa
                     'serdes': group['serdes'],
                     'port_cookie': group['port_cookie'] if group['port_cookie'] else None
                 })
-                
+
                 lane_info = port_data.setdefault('lane_info', {})
                 lane_info[group["lane"]] = float(group["value"]) if group["lane"] == "speed" else group["value"]
                 continue
@@ -7245,7 +7151,7 @@ class ShowPlatformHardwareFedSwitchFwdAsicInsightIfmPortAn37Status(ShowPlatformH
     def cli(self, switch_id, system_port_gid, output=None):
         if output is None:
             output = self.device.execute(self.cli_command.format(switch_id=switch_id, system_port_gid=system_port_gid))
-            
+
         parsed_data = {}
 
         # | port_oid: 1910 |             | sysport_gid: 305 | sysport_cookie: Gi2/0/9 | serdes: 0/0/29-29 | mpp_port_idx: 0 | port_state: LINK_UP | an37_mode: AN37_SGMII |     port_speed: 1.0     |
@@ -7283,7 +7189,7 @@ class ShowPlatformHardwareFedSwitchFwdAsicInsightIfmPortAn37Status(ShowPlatformH
                 })
                 port_an37_info = port_data.setdefault('port_an37_info', {})
                 port_an37_info[group["port_an37_info"]] = float(group["value"]) if group["port_an37_info"] == "port_speed" else group["value"]
-                
+
                 continue
 
             # |                |             |                  |                         |                   |                 |                     |                       |   an_completed: False   |
@@ -7293,8 +7199,8 @@ class ShowPlatformHardwareFedSwitchFwdAsicInsightIfmPortAn37Status(ShowPlatformH
                 group = m.groupdict()
                 port_an37_info[group["port_an37_info"]] = group["value"]
                 continue
-                
-            # |                |             |                  |                         |                   |                 |                     |                       |       rx_state: 2       |    
+
+            # |                |             |                  |                         |                   |                 |                     |                       |       rx_state: 2       |
             # |                |             |                  |                         |                   |                 |                     |                       |       tx_state: 0       |
             m = p3.match(line)
             if m:
@@ -7375,7 +7281,7 @@ class ShowPlatformHardwareFedSwitch1FwdAsicInsightIfmLagMembersSchema(MetaParser
     """Schema for 'show platform hardware fed switch {switch_id} fwd-asic insight ifm_lag_members({lag_gid})'"""
     schema = {
         'ifm_lag_members': {
-            Any(): {  
+            Any(): {
                 'lag_gid': int,
                 'member_index': int,
                 'port_type': str,
@@ -7387,7 +7293,7 @@ class ShowPlatformHardwareFedSwitch1FwdAsicInsightIfmLagMembersSchema(MetaParser
                 'sysport_detail': {
                     'sysport_gid': int,
                     'sysport_cookie': str,
-                    'serdes': str 
+                    'serdes': str
                 }
             }
         }
@@ -7396,16 +7302,25 @@ class ShowPlatformHardwareFedSwitch1FwdAsicInsightIfmLagMembersSchema(MetaParser
 class ShowPlatformHardwareFedSwitch1FwdAsicInsightIfmLagMembers(ShowPlatformHardwareFedSwitch1FwdAsicInsightIfmLagMembersSchema):
     """Parser for 'show platform hardware fed switch {switch_id} fwd-asic insight ifm_lag_members({lag_gid})'"""
 
-    cli_command = 'show platform hardware fed switch {switch_id} fwd-asic insight ifm_lag_members({lag_gid})'
+    cli_command = [
+        'show platform hardware fed switch {switch_id} fwd-asic insight ifm_lag_members({lag_gid})',
+        'show platform hardware fed {switch} {switch_id} fwd-asic insight ifm_lag_members({lag_gid})'
+    ]
 
-    def cli(self, switch_id, lag_gid, output=None):
+    def cli(self, switch_id, lag_gid, switch='', output=None):
         if output is None:
-            output = self.device.execute(self.cli_command.format(switch_id=switch_id, lag_gid=lag_gid))
+            if switch:
+                cmd = self.cli_command[1].format(switch=switch, switch_id=switch_id, lag_gid=lag_gid)
+            else:
+                cmd = self.cli_command[0].format(switch_id=switch_id, lag_gid=lag_gid)
+            output = self.device.execute(cmd)
 
         parsed_data = {}
-        
+
         # |      41 |      3       | MPP_PORT    |    2200 |    True    |    True    |  0.25  |     False      | {'sysport_gid': 85, 'sysport_cookie': 'Gi1/0/45', 'serdes': ''} |
-        p1 = re.compile(r'^\S\s+(?P<lag_gid>\d+)\s+\S\s+(?P<member_index>\d+)\s+\S\s+(?P<port_type>\S+)\s+\S\s+(?P<port_id>\d+)\s+\S\s+(?P<rx_enabled>\S+)\s+\S\s+(?P<tx_enabled>\S+)\s+\S\s+(?P<weight>[\d\.]+)\s+\S\s+(?P<empty_lag_port>\S+)\s+\S\s+\S\S+:\s+(?P<sysport_gid>\d+),\s+\S+\s+\S(?P<sysport_cookie>\w+\/\d\/\d)\S+\s+\S+\s+(?P<serdes>\S*)\S\s+\S$')
+        p1 = re.compile(
+            r'^\S\s+(?P<lag_gid>\d+)\s+\S\s+(?P<member_index>\d+)\s+\S\s+(?P<port_type>\S+)\s+\S\s+(?P<port_id>\d+)\s+\S\s+(?P<rx_enabled>\S+)\s+\S\s+(?P<tx_enabled>\S+)\s+\S\s+(?P<weight>[\d\.]+)\s+\S\s+(?P<empty_lag_port>\S+)\s+\S\s+\S\S+:\s+(?P<sysport_gid>\d+),\s+\S+\s+\S(?P<sysport_cookie>[\w\/]*)\S+\s+\S+\s+(?P<serdes>\S*)\S\s+\S$'
+        )
 
         for line in output.splitlines():
             line = line.strip()
@@ -7426,20 +7341,20 @@ class ShowPlatformHardwareFedSwitch1FwdAsicInsightIfmLagMembers(ShowPlatformHard
                     'weight': float(group['weight']),
                     'empty_lag_port': group['empty_lag_port']
                 })
-                
+
                 sysport_detail=lag_data.setdefault("sysport_detail",{})
                 sysport_detail.update({
                     'sysport_gid': int(group['sysport_gid']),
                     'sysport_cookie': group['sysport_cookie'],
                     'serdes': group['serdes']
                 })
-                
+
         return parsed_data
 
 
 class ShowPlatformHardwareFedSwitchFwdAsicInsightL2AttachmentCircuitStatusSchema(MetaParser):
     """Schema for show platform hardware fed switch {switch_id} fwd-asic insight l2_attachment_circuit_status()"""
-    
+
     schema = {
         'l2_circuit_status': {
             'l2_ace_info': {
@@ -7475,10 +7390,10 @@ class ShowPlatformHardwareFedSwitchFwdAsicInsightL2AttachmentCircuitStatusSchema
             }
         }
     }
-    
+
 class ShowPlatformHardwareFedSwitchFwdAsicInsightL2AttachmentCircuitStatus(ShowPlatformHardwareFedSwitchFwdAsicInsightL2AttachmentCircuitStatusSchema):
     """Parser for show platform hardware fed switch {switch_id} fwd-asic insight l2_attachment_circuit_status()"""
-    
+
     cli_command = 'show platform hardware fed switch {switch_id} fwd-asic insight l2_attachment_circuit_status()'
 
     def cli(self, switch_id, output=None):
@@ -7486,31 +7401,31 @@ class ShowPlatformHardwareFedSwitchFwdAsicInsightL2AttachmentCircuitStatus(ShowP
             output = self.device.execute(self.cli_command.format(switch_id=switch_id))
 
         parsed_data = {}
-        
+
         # | ac_type: L2-DENSE   |                    | eth_port_oid: 1440    | sysport_gid: 41          |
         p1 = re.compile(r'^\S\s+ac_type:\s+(?P<ac_type>\S+)\s+\S\s+\S\s+eth_port_oid:\s+(?P<eth_port_oid>\d+)\s+\S\s+sysport_gid:\s+(?P<sysport_gid>\d+)\s+\S$')
 
         # | ac_gid: 122880      |                    |                       | sysport_cookie: Gi1/0/1  |
         p2 = re.compile(r'^\S\s+ac_gid:\s+(?P<ac_gid>\d+)\s+\S\s+\S\s+\S\s+sysport_cookie:\s+(?P<sysport_cookie>\S+)\s+\S$')
-        
+
         #| ac_cookie: Gi1/0/1  |                    |                       |                          |
         p3 = re.compile(r'^\S\s+ac_cookie:\s+(?P<ac_cookie>\S+)\s+\S\s+\S\s+\S\s+\S$')
-        
+
         #| ac_type: L3         |                    | vlan_tag: 1           | sysport_gid: 10          |
         p1_1 = re.compile(r'^\S\s+ac_type:\s+(?P<ac_type>\S+)\s+\S\s+\S\s+vlan_tag:\s+(?P<vlan_tag>\d+)\s+\S\s+sysport_gid:\s+(?P<sysport_gid>\d+)\s+\S$')
-        
+
         #| ac_gid: 4098        |                    | eth_port_oid: 578     | sysport_cookie: Re1      |
         p2_1 = re.compile(r'^\S\s+ac_gid:\s+(?P<ac_gid>\d+)\s+\S\s+\S\s+eth_port_oid:\s+(?P<eth_port_oid>\d+)\s+\S\s+sysport_cookie:\s+(?P<sysport_cookie>\S+)\s+\S$')
-        
+
         #| ac_gid: 4135        |                    | vlan_tag2: 4001       | sysport_cookie: Re1      |
         p2_2 = re.compile(r'^\S\s+ac_gid:\s+(?P<ac_gid>\d+)\s+\S\s+\S\s+vlan_tag2:\s+(?P<vlan_tag2>\d+)\s+\S\s+sysport_cookie:\s+(?P<sysport_cookie>\S+)\s+\S$')
 
         # |                     |                    | eth_port_oid: 578     |                          |
         p3_2 = re.compile(r'^\S\s+\S\s+\S\s+eth_port_oid:\s+(?P<eth_port_oid>\d+)\s+\S\s+\S$')
-        
+
         #| ac_type: SVI        | switch_gid: 1      | vlan_tag: 1           |                          |
         p4 = re.compile(r'^\S\s+ac_type:\s+(?P<ac_type>\S+)\s+\S\s+switch_gid:\s+(?P<switch_gid>\d+)\s+\S\s+vlan_tag:\s+(?P<vlan_tag>\d+)\s+\S\s+\S$')
-        
+
         #| svi_gid: 1          | switch_cookie: 1   |                       |                          |
         p5 = re.compile(r'^\S\s+svi_gid:\s+(?P<svi_gid>\d+)\s+\S\s+switch_cookie:\s+(?P<switch_cookie>\d+)\s+\S\s+\S\s+\S$')
 
@@ -7527,24 +7442,24 @@ class ShowPlatformHardwareFedSwitchFwdAsicInsightL2AttachmentCircuitStatus(ShowP
                 port_data["ac_type"]=group['ac_type']
                 port_data["eth_port_oid"]= int(group['eth_port_oid'])
                 port_data["sysport_gid"]=int(group['sysport_gid'])
-                
-                
+
+
                 continue
             # | ac_gid: 122880      |                    |                       | sysport_cookie: Gi1/0/1  |
             m = p2.match(line)
             if m:
-                group = m.groupdict()  
+                group = m.groupdict()
                 port_data["ac_gid"]=int(group['ac_gid'])
                 port_data["sysport_cookie"]=group['sysport_cookie']
                 continue
-                
+
             # | ac_cookie: Gi1/0/1  |                    |                       |                          |
             m = p3.match(line)
             if m:
-                group = m.groupdict()  
+                group = m.groupdict()
                 port_data["ac_cookie"]=group['ac_cookie']
                 continue
-                
+
             # | ac_type: L3         |                    | vlan_tag: 1           | sysport_gid: 10          |
             m = p1_1.match(line)
             if m:
@@ -7555,20 +7470,20 @@ class ShowPlatformHardwareFedSwitchFwdAsicInsightL2AttachmentCircuitStatus(ShowP
                 port_data["vlan_tag"]= int(group['vlan_tag'])
                 port_data["sysport_gid"]=int(group['sysport_gid'])
                 continue
-                
+
             # | ac_gid: 4098        |                    | eth_port_oid: 578     | sysport_cookie: Re1      |
             m = p2_1.match(line)
             if m:
-                group = m.groupdict()  
+                group = m.groupdict()
                 port_data["ac_gid"]=int(group['ac_gid'])
                 port_data["eth_port_oid"]= int(group['eth_port_oid'])
                 port_data["sysport_cookie"]=group['sysport_cookie']
                 continue
-                
+
             # | ac_gid: 4135        |                    | vlan_tag2: 4001       | sysport_cookie: Re1      |
             m = p2_2.match(line)
             if m:
-                group = m.groupdict()  
+                group = m.groupdict()
                 port_data["ac_gid"]=int(group['ac_gid'])
                 port_data["vlan_tag2"]= int(group['vlan_tag2'])
                 port_data["sysport_cookie"]=group['sysport_cookie']
@@ -7577,27 +7492,3017 @@ class ShowPlatformHardwareFedSwitchFwdAsicInsightL2AttachmentCircuitStatus(ShowP
             # |                     |                    | eth_port_oid: 578     |                          |
             m = p3_2.match(line)
             if m:
-                group = m.groupdict()  
+                group = m.groupdict()
                 port_data["eth_port_oid"]=int(group['eth_port_oid'])
                 continue
-                
+
             #| ac_type: SVI        | switch_gid: 1      | vlan_tag: 1           |                          |
             m = p4.match(line)
             if m:
-                group = m.groupdict()  
+                group = m.groupdict()
                 switch_gid= int(group['switch_gid'])
                 port_data = parsed_data.setdefault('l2_circuit_status', {}).setdefault("svi_ace_info",{}).setdefault(switch_gid, {})
                 port_data["ac_type"]=group['ac_type']
                 port_data["switch_gid"]= int(group['switch_gid'])
                 port_data["vlan_tag"]=int(group['vlan_tag'])
                 continue
-                
+
             #| svi_gid: 1          | switch_cookie: 1   |                       |                          |
             m = p5.match(line)
             if m:
-                group = m.groupdict()  
+                group = m.groupdict()
                 port_data["svi_gid"]=int(group['svi_gid'])
                 port_data["switch_cookie"]=int(group['switch_cookie'])
                 continue
-                
+
         return parsed_data
+
+class ShowPlatformHardwareFedSwitchFwdAsicResourceTcamTableNflAclFormat0Schema(MetaParser):
+    """Schema for 'show platform hardware fed switch {switch_num} fwd-asic resource tcam table nfl_acl format 0'"""
+    schema = {
+        'regions': {
+            Any(): {
+                'type': int,
+                'asic': int,
+                'entries': list
+            }
+        }
+    }
+
+class ShowPlatformHardwareFedSwitchFwdAsicResourceTcamTableNflAclFormat0(ShowPlatformHardwareFedSwitchFwdAsicResourceTcamTableNflAclFormat0Schema):
+    """Parser for 'show platform hardware fed switch {switch_num} fwd-asic resource tcam table nfl_acl format 0'"""
+
+    cli_command = 'show platform hardware fed switch {switch_num} fwd-asic resource tcam table nfl_acl format 0'
+
+    def cli(self, switch_num, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(switch_num=switch_num))
+
+        ret_dict = {}
+
+        # Printing entries for region INGRESS_NFL_ACL_CONTROL (325) type 6 asic 0
+        p1 = re.compile(r'^Printing entries for region (?P<region>\S+) \((?P<region_id>\d+)\) type (?P<type>\d+) asic (?P<asic>\d+)$')
+
+        # TAQ-5 Index-224 (A:0,C:0) Valid StartF-1 StartA-1 SkipF-0 SkipA-0
+        p2 = re.compile(r'^(?P<entry>TAQ-\d+ Index-\d+ \(A:\d+,C:\d+\) Valid StartF-\d+ StartA-\d+ SkipF-\d+ SkipA-\d+)$')
+
+        # Mask1 00f00000:00000000:00000000:00000000:00000000:00000000:00000000:00000000
+        p3 = re.compile(r'^(?P<mask>Mask\d+ [0-9a-fA-F:]+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Printing entries for region INGRESS_NFL_ACL_CONTROL (325) type 6 asic 0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                current_region = group['region']
+                region_dict = ret_dict.setdefault('regions', {}).setdefault(current_region, {})
+                region_dict['type'] = int(group['type'])
+                region_dict['asic'] = int(group['asic'])
+                region_dict['entries'] = []
+                continue
+
+            # TAQ-5 Index-224 (A:0,C:0) Valid StartF-1 StartA-1 SkipF-0 SkipA-0
+            m = p2.match(line)
+            if m:
+                entry = m.group('entry')
+                if current_region:
+                    ret_dict['regions'][current_region]['entries'].append(entry)
+                continue
+
+            # Mask1 00f00000:00000000:00000000:00000000:00000000:00000000:00000000:00000000
+            m = p3.match(line)
+            if m:
+                mask = m.group('mask')
+                if current_region:
+                    ret_dict['regions'][current_region]['entries'].append(mask)
+                continue
+
+        return ret_dict   
+
+class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightVrfRouteTableSchema(MetaParser):
+    """Schema for 'show platform hardware fed {switch} {state} fwd-asic insight vrf_route_table'"""
+    schema = {
+        'vrf_route_table': {
+            Any(): {
+                'ip_version': int,
+                'routes': ListOf({
+                    'ip_prefix': str,
+                    'dest_type': str,
+                    'dest_id': int,
+                    'dest_info': str,
+                    'class_id': int,
+                    'drop': bool,
+                    'route_user_data': str
+                })
+            }
+        }
+    }
+
+class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightVrfRouteTable(ShowPlatformHardwareFedSwitchActiveFwdAsicInsightVrfRouteTableSchema):
+    """Parser for `show platform hardware fed {switch} {state} fwd-asic insight vrf_route_table`"""
+
+    cli_command = 'show platform hardware fed {switch} {state} fwd-asic insight vrf_route_table'
+
+    def cli(self, switch, state, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(switch=switch, state=state))
+
+        ret_dict = {}
+
+        # +---------+------------+--------------------+--------------+---------+-----------+----------+-------+-----------------+
+        # | Vrf GID | IP Version | IP Prefix          | Dest Type    | Dest ID | Dest Info | Class ID | Drop  | Route User Data |
+        # +---------+------------+--------------------+--------------+---------+-----------+----------+-------+-----------------+
+        # | 2       | 4          | 14.1.0.255/32      | for_us       | 0       | N/A       | 0        | False | 104865530382056 |
+        p1 = re.compile(
+            r'^\|\s*(?P<vrf_gid>\d*)\s*\|'
+            r'\s*(?P<ip_version>\d*)\s*\|'
+            r'\s*(?P<ip_prefix>[^|]*)\|'
+            r'\s*(?P<dest_type>[^|]*)\|'
+            r'\s*(?P<dest_id>\d*)\s*\|'
+            r'\s*(?P<dest_info>[^|]*)\|'
+            r'\s*(?P<class_id>\d*)\s*\|'
+            r'\s*(?P<drop>\w*)\s*\|'
+            r'\s*(?P<route_user_data>[^|]*)\|$'
+        )
+
+        current_vrf_gid = None
+        current_ip_version = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # +---------+------------+--------------------+--------------+---------+-----------+----------+-------+-----------------+
+            # | Vrf GID | IP Version | IP Prefix          | Dest Type    | Dest ID | Dest Info | Class ID | Drop  | Route User Data |
+            # +---------+------------+--------------------+--------------+---------+-----------+----------+-------+-----------------+
+            # | 2       | 4          | 14.1.0.255/32      | for_us       | 0       | N/A       | 0        | False | 104865530382056 |
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                if group['vrf_gid'] and group['ip_version']:
+                    current_vrf_gid = int(group['vrf_gid'])
+                    current_ip_version = int(group['ip_version'])
+                elif current_vrf_gid is not None and current_ip_version is not None:
+                    pass
+                else:
+                    continue
+
+                vrf_dict = ret_dict.setdefault('vrf_route_table', {}).setdefault(current_vrf_gid, {})
+                vrf_dict['ip_version'] = current_ip_version
+                vrf_dict.setdefault('routes', [])
+
+                ip_prefix = group['ip_prefix'].strip()
+                dest_type = group['dest_type'].strip()
+                dest_id = int(group['dest_id']) if group['dest_id'] else 0
+                dest_info = group['dest_info'].strip()
+                class_id = int(group['class_id']) if group['class_id'] else 0
+                drop = group['drop'].strip().lower() == 'true'
+                route_user_data = group['route_user_data'].strip()
+
+                if ip_prefix:
+                    vrf_dict['routes'].append({
+                        'ip_prefix': ip_prefix,
+                        'dest_type': dest_type,
+                        'dest_id': dest_id,
+                        'dest_info': dest_info,
+                        'class_id': class_id,
+                        'drop': drop,
+                        'route_user_data': route_user_data
+                    })
+
+        return ret_dict
+        
+class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightL2MirrorCommandL2Schema(MetaParser):
+    """Schema for:
+       * show platform hardware fed switch {switch_id} fwd-asic insight l2_mirror_command_l2,
+       * show platform hardware fed {switch} {switch_id} fwd-asic insight l2_mirror_command_l2({mirror_gid})
+    """
+    schema = {
+        'l2_mirror_command_l2': {
+            'mirror_gid': {
+                Any(): {
+                    'dest_port_gid': int,
+                    'dest_port_tc': int,
+                    'probability': float,
+                    Optional('source_mac'): str,
+                    Optional('dest_mac'): str,
+                    'vlan_tag': int,
+                    Optional('admit_counter_data'): str,
+                    Optional('drop_counter_data'): str,
+                }
+            }
+        }
+    }
+
+class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightL2MirrorCommandL2(ShowPlatformHardwareFedSwitchActiveFwdAsicInsightL2MirrorCommandL2Schema):
+    """Parser for:
+       * show platform hardware fed switch {switch_id} fwd-asic insight l2_mirror_command_l2,
+       * show platform hardware fed {switch} {switch_id} fwd-asic insight l2_mirror_command_l2({mirror_gid})
+    """
+
+    cli_command = [
+        "show platform hardware fed switch {switch_id} fwd-asic insight l2_mirror_command_l2",
+        "show platform hardware fed {switch} {switch_id} fwd-asic insight l2_mirror_command_l2({mirror_gid})"
+    ]
+
+    def cli(self, switch=None, switch_id=None, mirror_gid=None, output=None):
+        if output is None:
+            if mirror_gid is not None:
+                cmd = self.cli_command[1].format(switch=switch, switch_id=switch_id, mirror_gid=mirror_gid)
+            else:
+                cmd = self.cli_command[0].format(switch_id=switch_id)
+                
+            out = self.device.execute(cmd)
+        else:
+            out = output
+            
+        ret_dict = {}    
+        # +------------+---------------+--------------+-------------+------------+----------+----------+--------------------+-------------------+
+        # | Mirror GID | Dest port GID | Dest port TC | Probability | Source Mac | Dest Mac | Vlan Tag | Admit Counter Data | Drop Counter Data |
+        # +------------+---------------+--------------+-------------+------------+----------+----------+--------------------+-------------------+
+        # |          2 |          1367 |            0 |         1.0 |            |          |        0 |                    |                   |
+        p1 = re.compile(
+            r"^\|\s*(?P<mirror_gid>\d+)\s*\|\s*(?P<dest_port_gid>\d+)\s*\|\s*(?P<dest_port_tc>\d+)\s*\|\s*"
+            r"(?P<probability>[\d.]+)\s*\|\s*(?P<source_mac>\S*)\s*\|\s*(?P<dest_mac>\S*)\s*\|\s*"
+            r"(?P<vlan_tag>\d+)\s*\|\s*(?P<admit_counter_data>\S*)\s*\|\s*(?P<drop_counter_data>\S*)\s*\|$"
+        )
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Match the table rows
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                mirror_gid = int(group['mirror_gid'])
+                mirror_dict = ret_dict.setdefault('l2_mirror_command_l2', {}).setdefault('mirror_gid', {}).setdefault(mirror_gid, {})
+                mirror_dict['dest_port_gid'] = int(group['dest_port_gid'])
+                mirror_dict['dest_port_tc'] = int(group['dest_port_tc'])
+                mirror_dict['probability'] = float(group['probability'])
+                if group['source_mac']:
+                    mirror_dict['source_mac'] = group['source_mac']
+                if group['dest_mac']:
+                    mirror_dict['dest_mac'] = group['dest_mac']
+                mirror_dict['vlan_tag'] = int(group['vlan_tag'])
+                if group['admit_counter_data']:
+                    mirror_dict['admit_counter_data'] = group['admit_counter_data']
+                if group['drop_counter_data']:
+                    mirror_dict['drop_counter_data'] = group['drop_counter_data']
+                continue
+
+        return ret_dict   
+
+        
+class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightVrfPortsSchema(MetaParser):
+    """Schema for:
+       show platform hardware fed {switch} {state} fwd-asic insight vrf_ports
+    """
+    schema = {
+        'vrf_ports': {
+            Any(): {
+                'vrf_gid': int,
+                Optional('vrf_cookie'): str,
+                'l3_port_gid': int,
+                'l3_port_type': str,
+                'mac_address': str,
+                'ether_port_oid': int,
+                'l3_ac_ing_vlan_tag1': int,
+                'l3_ac_egr_vlan_tag1': int,
+            }
+        }
+    }
+
+class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightVrfPorts(ShowPlatformHardwareFedSwitchActiveFwdAsicInsightVrfPortsSchema):
+    """Parser for:
+       show platform hardware fed {switch} {state} fwd-asic insight vrf_ports
+    """
+
+    cli_command = 'show platform hardware fed {switch} {state} fwd-asic insight vrf_ports'
+
+    def cli(self, switch, state, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(switch=switch, state=state))
+
+        ret_dict = {}
+
+        # +---------+---------------+-------------+--------------+-------------------+----------------+---------------------+---------------------+
+        # | Vrf GID | Vrf Cookie    | L3 Port GID | L3 Port Type |    MAC Address    | Ether Port OID | L3-AC Ing VLAN Tag1 | L3-AC Egr VLAN Tag1 |
+        # +---------+---------------+-------------+--------------+-------------------+----------------+---------------------+---------------------+
+        # | 2       |               | 4099        | l3-ac-gid    | 4e:41:50:00:01:14 | 302            | 3                   | 3                   |
+        p1 = re.compile(
+            r'^\|\s*(?P<vrf_gid>\d+)\s*\|\s*(?P<vrf_cookie>\S*)\s*\|\s*(?P<l3_port_gid>\d+)\s*\|\s*(?P<l3_port_type>\S+)\s*\|\s*(?P<mac_address>[0-9a-fA-F:]+)\s*\|\s*(?P<ether_port_oid>\d+)\s*\|\s*(?P<l3_ac_ing_vlan_tag1>\d+)\s*\|\s*(?P<l3_ac_egr_vlan_tag1>\d+)\s*\|$'
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+            # +---------+---------------+-------------+--------------+-------------------+----------------+---------------------+---------------------+
+            # | Vrf GID | Vrf Cookie    | L3 Port GID | L3 Port Type |    MAC Address    | Ether Port OID | L3-AC Ing VLAN Tag1 | L3-AC Egr VLAN Tag1 |
+            # +---------+---------------+-------------+--------------+-------------------+----------------+---------------------+---------------------+
+            # | 2       |               | 4099        | l3-ac-gid    | 4e:41:50:00:01:14 | 302            | 3                   | 3                   |
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                vrf_gid = int(group['vrf_gid'])
+                l3_port_gid = int(group['l3_port_gid'])
+                key = f"{vrf_gid}_{l3_port_gid}"
+                entry = ret_dict.setdefault('vrf_ports', {}).setdefault(key, {})
+                entry['vrf_gid'] = vrf_gid
+                if group.get('vrf_cookie'):
+                    entry['vrf_cookie'] = group['vrf_cookie'] if group['vrf_cookie'] != '' else None
+                entry['l3_port_gid'] = l3_port_gid
+                entry['l3_port_type'] = group['l3_port_type']
+                entry['mac_address'] = group['mac_address']
+                entry['ether_port_oid'] = int(group['ether_port_oid'])
+                entry['l3_ac_ing_vlan_tag1'] = int(group['l3_ac_ing_vlan_tag1'])
+                entry['l3_ac_egr_vlan_tag1'] = int(group['l3_ac_egr_vlan_tag1'])
+                continue
+
+        return ret_dict
+    
+
+class ShowPlatformHardwareFedSwitchFwdAsicInsightIfmLagStatusSchema(MetaParser):
+    """Schema for 'show platform hardware fed switch {switch_id} fwd-asic insight ifm_lag_status({lag_gid})'"""
+    schema = {
+        'ifm_lag_status': {
+            Any(): {
+                'lag_gid': int,
+                'member_count': int,
+                'lag_info': {
+                    'ordering_mode': str,
+                    'lb_mode': str,
+                    'egress_tm_enable': str,
+                    'lag_cookie': str
+                }
+            }
+        }
+    }
+
+class ShowPlatformHardwareFedSwitchFwdAsicInsightIfmLagStatus(ShowPlatformHardwareFedSwitchFwdAsicInsightIfmLagStatusSchema):
+    """Parser for 'show platform hardware fed switch {switch_id} fwd-asic insight ifm_lag_status({lag_gid})'"""
+
+    cli_command =[
+        'show platform hardware fed switch {switch_id} fwd-asic insight ifm_lag_status({lag_gid})',
+        'show platform hardware fed {switch} {switch_id} fwd-asic insight ifm_lag_status({lag_gid})'
+    ]
+    def cli(self, lag_gid, switch_id, switch=None, output=None):
+        if output is None:
+            if switch:
+                cmd = self.cli_command[1].format(switch=switch, switch_id=switch_id, lag_gid=lag_gid)
+            else:
+                cmd = self.cli_command[0].format(switch_id=switch_id, lag_gid=lag_gid)
+            output = self.device.execute(cmd)
+
+        parsed_data = {}
+
+        # | lag_gid: 41 | member_count: 4 | ordering_mode: UNORDERED |
+        p1 = re.compile(r'^\|\s*lag_gid:\s*(?P<lag_gid>\d+)\s*\|\s*member_count:\s*(?P<member_count>\d+)\s*\|\s*(?P<feature>\S+):\s*(?P<value>\S+)\s*\|$')
+        
+        # |             |                 | lb_mode: DYNAMIC         |
+        # |             |                 | egress_tm_enable: False  |
+        # |             |                 | lag_cookie:              |
+        p2 = re.compile(r'^\|\s*\|\s*\|\s*(?P<feature>\S+):\s*(?P<value>\S*)\s*\|$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # | lag_gid: 41 | member_count: 4 | ordering_mode: UNORDERED |
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                lag_gid = int(group['lag_gid'])
+                lag_data = parsed_data.setdefault('ifm_lag_status', {}).setdefault(lag_gid, {})
+
+                lag_data.update({
+                    'lag_gid': int(group["lag_gid"]),
+                    'member_count': int(group['member_count'])
+                })
+                lag_info = lag_data.setdefault('lag_info', {})
+                lag_info[group["feature"]] = group["value"]
+                
+                continue
+            
+            # |             |                 | lb_mode: DYNAMIC         |
+            # |             |                 | egress_tm_enable: False  |
+            # |             |                 | lag_cookie:              |
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                lag_info[group["feature"]] = group["value"]
+        
+                continue
+
+        return parsed_data
+
+
+class ShowPlatformHardwareFedSwitchFwdAsicInsightIfmPortErrStatusSchema(MetaParser):
+    """Schema for show platform hardware fed switch {switch_id} fwd-asic insight ifm_port_err_status({system_port_gid})"""
+
+    schema = {
+        'port_info': {
+            Any(): {
+                'port_oid': int,
+                'sysport_gid': int,
+                'serdes': str,
+                'speed': float,
+                'mac_port_state': str,
+                Optional('port_cookie'): str,
+                'port_err_status_info': {
+                    'link_status': str,
+                    'link_fault_status': str,
+                    'high_ber': str,
+                    'pcs_status': str,
+                    'port_signal_ok': str,
+                    'mac_port_link_stt_changed': str,
+                    'auto_neg_enabled': str,
+                    'kr_fec_lock': str,
+                    'pcs_lock': str,
+                    'pcs_an_lock': str,
+                },
+            }
+        }
+    }
+
+class ShowPlatformHardwareFedSwitchFwdAsicInsightIfmPortErrStatus(ShowPlatformHardwareFedSwitchFwdAsicInsightIfmPortErrStatusSchema):
+    """Parser for show platform hardware fed switch {switch_id} fwd-asic insight ifm_port_err_status({system_port_gid})"""
+
+    cli_command = 'show platform hardware fed switch {switch_id} fwd-asic insight ifm_port_err_status({system_port_gid})'
+
+    def cli(self, switch_id, system_port_gid, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(switch_id=switch_id, system_port_gid=system_port_gid))
+
+        parsed_data = {}
+
+        # | port_oid: 1910 |             | sys_port_gid: 305 | serdes: 0/0/29-29 | speed: 1.0 | mac_port_state: LINK_UP |         link_status: True          |
+        p1 = re.compile(r'^\|\s*port_oid:\s*(?P<port_oid>\d+)\s*\|\s*(?P<port_cookie>\S*)\s*\|\s*sys_port_gid:\s*(?P<sysport_gid>\d+)\s*\|\s*serdes:\s*(?P<serdes>\S+)\s*\|\s*speed:\s*(?P<speed>\d+\.\d+)\s*\|\s*mac_port_state:\s*(?P<mac_port_state>\S+)\s*\|\s*(?P<port_err_info>\S+):\s*(?P<err_status>\S+)\s*\|$')
+
+        # |                |             |                   |                   |            |                         |     link_fault_status: Unknown     |
+        # |                |             |                   |                   |            |                         |           high_ber: True           |
+        # |                |             |                   |                   |            |                         |          pcs_status: True          |
+        # |                |             |                   |                   |            |                         |        port_signal_ok: True        |
+        p2 = re.compile(r'^\|\s*\|\s*\|\s*\|\s*\|\s*\|\s*\|\s*(?P<port_err_info>\S+):\s*(?P<err_status>\S+)\s*\|$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # | port_oid: 1910 |             | sys_port_gid: 305 | serdes: 0/0/29-29 | speed: 1.0 | mac_port_state: LINK_UP |         link_status: True          |
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                port_oid = int(group['port_oid'])
+                port_data = parsed_data.setdefault('port_info', {}).setdefault(port_oid, {})
+
+                port_data.update({
+                    'port_oid': int(group['port_oid']),
+                    'sysport_gid': int(group["sysport_gid"]),
+                    'serdes': group['serdes'],
+                    'speed': float(group['speed']),
+                    'mac_port_state': group['mac_port_state'],
+                })
+                if group['port_cookie']:
+                    port_data['port_cookie'] = group['port_cookie']                
+                port_err_status_info = port_data.setdefault('port_err_status_info', {})
+                port_err_status_info[group["port_err_info"]] = group["err_status"]
+                continue
+
+            # |                |             |                   |                   |            |                         |     link_fault_status: Unknown     |
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                port_err_status_info[group["port_err_info"]] = group["err_status"]
+                continue
+
+        return parsed_data
+
+class ShowPlatformHardwareFedSwitchFwdAsicInsightL3mRoutesSchema(MetaParser):
+
+    schema = {
+        'l3m_routes': {
+            'l3_mcg_gid': {
+                int: {
+                    'gaddr': {
+                        str: {
+                            'ip_version': {
+                                int: {
+                                    'vrf_gid': int,
+                                    'counter_id': int,
+                                    'vrf_cookie': str,
+                                    'saddr': str,
+                                    'l3_mcg_cookie': str,
+                                    'snoop': str,
+                                    'rpf_enabled': str,
+                                    'rpf_path_type': str,
+                                    'rpf_path_id': int,
+                                    'rpf_fail_punt': str,
+                                    'counter_data': str,
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+class ShowPlatformHardwareFedSwitchFwdAsicInsightL3mRoutes(ShowPlatformHardwareFedSwitchFwdAsicInsightL3mRoutesSchema):
+    cli_command = "show platform hardware fed switch {switch_id} fwd-asic insight l3m_routes({filter})"
+
+    def cli(self, switch_id, filter, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(switch_id=switch_id, filter=filter))
+
+        ret_dict = {}
+
+        # +---------+------------+------------+-------------+---------+------------+----------------+-------+-------------+---------------+-------------+---------------+------------+-----------------+
+        # | vrf-gid | vrf-cookie | ip-version | saddr       | gaddr   | l3-mcg-gid | l3-mcg-cookie  | snoop | rpf-enabled | rpf-path-type | rpf-path-id | rpf-fail-punt | counter-id | counter-data    |
+        # +---------+------------+------------+-------------+---------+------------+----------------+-------+-------------+---------------+-------------+---------------+------------+-----------------+
+        # | 0       |    N/A     | 6          | 14:14:14::2 | ff13::1 | 8275       | urid:0x30::1de | False |     True    |   L3_SVI_GID  | 13          |      True     | 3609       | [14386,7308088] |
+        # |         |            |            |             |         |            |                |       |             |               |             |               |            |                 |
+        # +---------+------------+------------+-------------+---------+------------+----------------+-------+-------------+---------------+-------------+---------------+------------+-----------------+
+        p1 = re.compile(
+            r"^\|\s*(?P<vrf_gid>\d+)\s*\|\s*(?P<vrf_cookie>[\w\/]+)\s*\|\s*(?P<ip_version>\d+)\s*\|\s*"
+            r"(?P<saddr>[\da-fA-F:.]+)\s*\|\s*(?P<gaddr>[\da-fA-F:.]+)\s*\|\s*(?P<l3_mcg_gid>\d+)\s*\|\s*"
+            r"(?P<l3_mcg_cookie>[\w:]+)\s*\|\s*(?P<snoop>\w+)\s*\|\s*(?P<rpf_enabled>\w+)\s*\|\s*"
+            r"(?P<rpf_path_type>\w+)\s*\|\s*(?P<rpf_path_id>\d+)\s*\|\s*(?P<rpf_fail_punt>[\-\w]+)\s*\|\s*"
+            r"(?P<counter_id>\d+)\s*\|\s+\[(?P<counter_data>[\d,]+)\]\s+\|$"
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # +---------+------------+------------+-------------+---------+------------+----------------+-------+-------------+---------------+-------------+---------------+------------+-----------------+
+            # | vrf-gid | vrf-cookie | ip-version | saddr       | gaddr   | l3-mcg-gid | l3-mcg-cookie  | snoop | rpf-enabled | rpf-path-type | rpf-path-id | rpf-fail-punt | counter-id | counter-data    |
+            # +---------+------------+------------+-------------+---------+------------+----------------+-------+-------------+---------------+-------------+---------------+------------+-----------------+
+            # | 0       |    N/A     | 6          | 14:14:14::2 | ff13::1 | 8275       | urid:0x30::1de | False |     True    |   L3_SVI_GID  | 13          |      True     | 3609       | [14386,7308088] |
+            # |         |            |            |             |         |            |                |       |             |               |             |               |            |                 |
+            # +---------+------------+------------+-------------+---------+------------+----------------+-------+-------------+---------------+-------------+---------------+------------+-----------------+            
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                l3_mcg_gid = ret_dict.setdefault('l3m_routes', {}).setdefault('l3_mcg_gid', {}).setdefault(int(group['l3_mcg_gid']), {})
+                counter_dict = l3_mcg_gid.setdefault('gaddr', {}).setdefault(group['gaddr'], {})
+                ip_dict = counter_dict.setdefault('ip_version', {}).setdefault(int(group['ip_version']), {})
+                ip_dict['vrf_gid'] = int(group['vrf_gid'])
+                ip_dict['vrf_cookie'] = group['vrf_cookie']
+                ip_dict['counter_id'] = int(group['counter_id'])
+                ip_dict['saddr'] = group['saddr']
+                ip_dict['l3_mcg_cookie'] = group['l3_mcg_cookie']
+                ip_dict['snoop'] = group['snoop']
+                ip_dict['rpf_enabled'] = group['rpf_enabled']
+                ip_dict['rpf_path_type'] = group['rpf_path_type']
+                ip_dict['rpf_path_id'] = int(group['rpf_path_id'])
+                ip_dict['rpf_fail_punt'] = group['rpf_fail_punt']
+                ip_dict['counter_data'] = group['counter_data']
+                continue
+
+        return ret_dict			
+
+class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightVrfPropertiesSchema(MetaParser):
+    """Schema for show platform hardware fed switch {switch} fwd-asic insight vrf_properties()"""
+    schema = {
+        'vrf_properties': {
+            Any(): {
+                Optional('vrf_cookie'): str,
+                Optional('ipv4_route_count'): int,
+                Optional('ipv6_route_count'): int,
+                Optional('urpf_allow_default'): str
+            }
+        }
+    }
+
+class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightVrfProperties(ShowPlatformHardwareFedSwitchActiveFwdAsicInsightVrfPropertiesSchema):
+    """Parser for show platform hardware fed switch {switch} fwd-asic insight vrf_properties()"""
+
+    cli_command =[
+        'show platform hardware fed switch {switch_type} fwd-asic insight vrf_properties()',
+        'show platform hardware fed {switch} {switch_type} fwd-asic insight vrf_properties()'
+    ]
+
+    def cli(self, switch_type, switch=None, output=None):
+        if output is None:
+            if switch:
+                cmd = self.cli_command[1].format(switch=switch, switch_type=switch_type)
+            else:
+                cmd = self.cli_command[0].format(switch_type=switch_type)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+
+        # +---------+---------------+------------------+------------------+--------------------+
+        # | Vrf GID | Vrf Cookie    | IPv4 Route Count | IPv6 Route Count | Urpf Allow Default |
+        # +---------+---------------+------------------+------------------+--------------------+
+        # | 2       | TwoH1/10/0/41 | 12               | 8                |       False        |
+        # |         |               |                  |                  |                    |
+        # | 0       |               | 4056             | 1877             |       False        |
+        # |         |               |                  |                  |                    |
+        # +---------+---------------+------------------+------------------+--------------------+
+
+        # Regex to match the table rows 
+        p1 = re.compile(
+            r'^\|\s*(?P<vrf_gid>\d+)?\s*\|\s*(?P<vrf_cookie>\S+)?\s*\|\s*(?P<ipv4_route_count>\d+)?\s*\|\s*(?P<ipv6_route_count>\d+)?\s*\|\s*(?P<urpf_allow_default>\S+)?\s*\|$'
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # | 2       | TwoH1/10/0/41 | 12               | 8                |       False        |
+            # | 0       |               | 4056             | 1877             |       False        |
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                if group['vrf_gid']:
+                    vrf_gid = int(group['vrf_gid'])
+                    vrf_dict = ret_dict.setdefault('vrf_properties', {}).setdefault(vrf_gid, {})
+                    if group['vrf_cookie']:
+                        vrf_dict['vrf_cookie'] = group['vrf_cookie']
+                    if group['ipv4_route_count']:
+                        vrf_dict['ipv4_route_count'] = int(group['ipv4_route_count'])
+                    if group['ipv6_route_count']:
+                        vrf_dict['ipv6_route_count'] = int(group['ipv6_route_count'])
+                    if group['urpf_allow_default']:
+                        vrf_dict['urpf_allow_default'] = group['urpf_allow_default']
+                continue
+
+        return ret_dict
+        
+
+class ShowPlatformHardwareFedSwitchFwdAsicInsightL2AttachmentCircuitL2Schema(MetaParser):
+    """Schema for show platform hardware fed switch {switch_id} fwd-asic insight l2_attachment_circuit_l2({sys_port_gid})"""
+
+    schema = {
+        'eth_logical_port_info': {
+            Any(): {
+                'l2_ac_gid': int,
+                Optional('vlan_tag'): int,
+                'eth_port_oid': int,
+                'sysport_gid': int,
+                'ing_acl': str,
+                'l2_ac_cookie': str,
+                'sysport_cookie': str,
+                'eg_acl': str
+            }
+        }
+    }
+
+class ShowPlatformHardwareFedSwitchFwdAsicInsightL2AttachmentCircuitL2(ShowPlatformHardwareFedSwitchFwdAsicInsightL2AttachmentCircuitL2Schema):
+    """Parser for show platform hardware fed switch {switch_id} fwd-asic insight l2_attachment_circuit_l2({sys_port_gid})"""
+
+    cli_command = 'show platform hardware fed switch {switch_id} fwd-asic insight l2_attachment_circuit_l2({sys_port_gid})'
+
+    def cli(self, switch_id, sys_port_gid, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(sys_port_gid=sys_port_gid, switch_id=switch_id))
+
+        parsed_data = {}
+
+        # Regex patterns
+        # | l2_ac_gid: 122880      |             | eth_port_oid: 1440    | sysport_gid: 41          | ing_acl: False |
+        p1 = re.compile(r'^\S\s+l2_ac_gid:\s+(?P<l2_ac_gid>\S+)\s+\S\s+\S\s+eth_port_oid:\s+(?P<eth_port_oid>\d+)\s+\S\s+sysport_gid:\s+(?P<sysport_gid>\d+)\s+\S\s+ing_acl:\s+(?P<ing_acl>\S+)\s+\S$')
+
+        # | l2_ac_cookie: Gi1/0/1  |             |                       | sysport_cookie: Gi1/0/1  | eg_acl: False  |
+        p2 = re.compile(r'^\S\s+l2_ac_cookie:\s+(?P<l2_ac_cookie>\S+)\s+\S\s+\S\s+\S\s+sysport_cookie:\s+(?P<sysport_cookie>\S+)\s+\S\s+eg_acl:\s+(?P<eg_acl>\S+)\s+\S$')
+
+        # Match l2_ac_gid, vlan_tag, sysport_gid, and ing_acl
+        p1_1 = re.compile(r'^\| l2_ac_gid:\s+(?P<l2_ac_gid>\d+)\s+\|\s+.*\|\s+vlan_tag:\s+(?P<vlan_tag>\d+)\s+\|\s+sysport_gid:\s+(?P<sysport_gid>\d+)\s+\|\s+ing_acl:\s+(?P<ing_acl>\S+)\s+\|$')
+
+        # Match l2_ac_cookie, eth_port_oid, sysport_cookie, and eg_acl
+        p2_1 = re.compile(r'^\| l2_ac_cookie:\s+(?P<l2_ac_cookie>\S+)\s+\|\s+.*\|\s+eth_port_oid:\s+(?P<eth_port_oid>\d+)\s+\|\s+sysport_cookie:\s+(?P<sysport_cookie>\S+)\s+\|\s+eg_acl:\s+(?P<eg_acl>\S+)\s+\|$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # | l2_ac_gid: 122880      |             | eth_port_oid: 1440    | sysport_gid: 41          | ing_acl: False |
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                eth_port_oid= int(group['eth_port_oid'])
+                port_data = parsed_data.setdefault('eth_logical_port_info', {}).setdefault(eth_port_oid, {})
+                port_data["l2_ac_gid"]=int(group['l2_ac_gid'])
+                port_data["eth_port_oid"]= int(group['eth_port_oid'])
+                port_data["sysport_gid"]=int(group['sysport_gid'])
+                port_data["ing_acl"]=group['ing_acl']                
+                continue
+            
+            # | l2_ac_cookie: Gi1/0/1  |             |                       | sysport_cookie: Gi1/0/1  | eg_acl: False  |
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()  
+                port_data["l2_ac_cookie"]=group['l2_ac_cookie']
+                port_data["sysport_cookie"]=group['sysport_cookie']
+                port_data["eg_acl"]=group['eg_acl']
+                continue
+
+            # Match l2_ac_gid, vlan_tag, sysport_gid, and ing_acl
+            m = p1_1.match(line)
+            if m:
+                group = m.groupdict()
+                eth_port_oid = None  # Initialize eth_port_oid (will be updated later)
+                port_data = parsed_data.setdefault('eth_logical_port_info', {}).setdefault('temp', {})
+                port_data["l2_ac_gid"] = int(group['l2_ac_gid'])
+                port_data["vlan_tag"] = int(group['vlan_tag'])
+                port_data["sysport_gid"] = int(group['sysport_gid'])
+                port_data["ing_acl"] = group['ing_acl']
+                continue
+
+            # Match l2_ac_cookie, eth_port_oid, sysport_cookie, and eg_acl
+            m = p2_1.match(line)
+            if m:
+                group = m.groupdict()
+                eth_port_oid = int(group['eth_port_oid'])
+                port_data = parsed_data['eth_logical_port_info'].pop('temp', {})
+                parsed_data['eth_logical_port_info'][eth_port_oid] = port_data
+                port_data["l2_ac_cookie"] = group['l2_ac_cookie']
+                port_data["eth_port_oid"] = eth_port_oid
+                port_data["sysport_cookie"] = group['sysport_cookie']
+                port_data["eg_acl"] = group['eg_acl']
+                continue
+
+        return parsed_data
+
+
+class ShowPlatformHardwareFedSwitchFwdAsicInsightL2AttachmentCircuitL2DetailSchema(MetaParser):
+    """Schema for show platform hardware fed switch {switch_id} fwd-asic insight l2_attachment_circuit_l2_detail({sys_port_gid})"""
+
+    schema = {
+        'l2_circuit_detail': {
+            'l2_ac_gid': int,
+            'ive': str,
+            'stp_state': str,
+            'ing_qos_profile_oid': int,
+            'eg_qos_profile_oid': int,
+            'l2_copc_profile': int
+        }
+    }
+    
+class ShowPlatformHardwareFedSwitchFwdAsicInsightL2AttachmentCircuitL2Detail(ShowPlatformHardwareFedSwitchFwdAsicInsightL2AttachmentCircuitL2DetailSchema):
+    """Parser for show platform hardware fed switch {switch_id} fwd-asic insight l2_attachment_circuit_l2_detail({l2_ac_gid})"""
+
+    cli_command = 'show platform hardware fed switch {switch_id} fwd-asic insight l2_attachment_circuit_l2_detail({l2_ac_gid})'
+
+    def cli(self, switch_id, l2_ac_gid, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(l2_ac_gid=l2_ac_gid,switch_id=switch_id))
+
+        parsed_data = {}
+
+        # | l2_ac_gid: 2 | ive: True | stp_state: FORWARDING | ing_qos_profile_oid: 478 | eg_qos_profile_oid: 479 | l2_copc_profile: 0 |
+        p1 = re.compile(r'^\S\s+l2_ac_gid:\s+(?P<l2_ac_gid>\d+)\s+\S\s+ive:\s+(?P<ive>\S+)\s+\S\s+stp_state:\s+(?P<stp_state>\S+)\s+\S\s+ing_qos_profile_oid:\s+(?P<ing_qos_profile_oid>\d+)\s+\S\s+eg_qos_profile_oid:\s+(?P<eg_qos_profile_oid>\d+)\s+\S\s+l2_copc_profile:\s+(?P<l2_copc_profile>\d+)\s+\S+')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # | l2_ac_gid: 2 | ive: True | stp_state: FORWARDING | ing_qos_profile_oid: 478 | eg_qos_profile_oid: 479 | l2_copc_profile: 0 |
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                port_data = parsed_data.setdefault('l2_circuit_detail', {})
+                port_data["l2_ac_gid"]=int(group['l2_ac_gid'])
+                port_data["ive"]=group['ive']
+                port_data["stp_state"]=group['stp_state']
+                port_data["ing_qos_profile_oid"]= int(group['ing_qos_profile_oid'])
+                port_data["eg_qos_profile_oid"]=int(group['eg_qos_profile_oid'])
+                port_data["l2_copc_profile"]=int(group['l2_copc_profile'])
+                
+                continue
+  
+        return parsed_data
+
+class ShowPlatformHardwareFedSwitchFwdAsicInsightL2mGroupMembersSchema(MetaParser):
+    """Schema for:
+        show platform hardware fed switch active fwd-asic insight l2m_group_members(l2_mcg_gid)
+    """    
+    schema = {
+        'l2m_group_members': {
+            'l2_mcg_gid': {
+                int: {
+                    'idx': {
+                        int: {
+                            'l2_dest_gid': int,
+                            'type': str,
+                            'l3_port_type': str,
+                            'l2_dest_type': str,
+                            'l2_mcg_member_gid': int,
+                            'next_hop_gid': int,
+                            'stack_port_oid': int,
+                            'sys_port_gid': int,
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+class ShowPlatformHardwareFedSwitchFwdAsicInsightL2mGroupMembers(ShowPlatformHardwareFedSwitchFwdAsicInsightL2mGroupMembersSchema):
+    """Parser for:
+        show platform hardware fed switch <switch> fwd-asic insight l2m_group_members(l2_mcg_gid={l2_mcg_gid})
+    """   
+    cli_command = "show platform hardware fed switch {switch_id} fwd-asic insight l2m_group_members({l2_mcg_gid})"
+
+    def cli(self, l2_mcg_gid, switch_id='', output=None):
+        if output is None:
+            cmd = self.cli_command.format(switch_id=switch_id, l2_mcg_gid=l2_mcg_gid)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+
+        # +------------+-----+-------+--------------+--------------+-------------+-------------------+--------------+----------------+-------------+
+        # | l2-mcg-gid | idx | type  | l3-port-type | l2-dest-type | l2-dest-gid | l2-mcg-member-gid | next-hop-gid | stack-port-oid | sysport-gid |
+        # +------------+-----+-------+--------------+--------------+-------------+-------------------+--------------+----------------+-------------+
+        # | 8200       | 1   | L2_AC |     NONE     | DENSE_AC     | 123004      | 0                 | 0            | 0              | 52          |
+        # |            |     |       |              |              |             |                   |              |                |             |
+        # +------------+-----+-------+--------------+--------------+-------------+-------------------+--------------+----------------+-------------+
+        p1 = re.compile(
+            r"^\|\s*(?P<l2_mcg_gid>\d+)\s*\|\s*(?P<idx>[\d]+)\s*\|\s*(?P<type>\w+)\s*\|\s*(?P<l3_port_type>\w+)\s*\|\s*"
+            r"(?P<l2_dest_type>\w+)\s*\|\s*(?P<l2_dest_gid>\d+)\s*\|\s*(?P<l2_mcg_member_gid>\d+)\s*\|\s*"
+            r"(?P<next_hop_gid>\d+)\s*\|\s*(?P<stack_port_oid>\d+)\s*\|\s*(?P<sys_port_gid>\d+)\s*\|$"
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # | 8200       | 1   | L2_AC |     NONE     | DENSE_AC     | 123004      | 0                 | 0            | 0              | 52          |
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                mcg_dict = ret_dict.setdefault('l2m_group_members', {}).setdefault('l2_mcg_gid', {}).setdefault(int(group['l2_mcg_gid']), {})
+                group_dict = mcg_dict.setdefault('idx', {}).setdefault(int(group['idx']), {})
+                group_dict.update({
+                    'l2_dest_gid': int(group['l2_dest_gid']),
+                    'type': group['type'],
+                    'l3_port_type': group['l3_port_type'],
+                    'l2_dest_type': group['l2_dest_type'],
+                    'l2_mcg_member_gid': int(group['l2_mcg_member_gid']),
+                    'next_hop_gid': int(group['next_hop_gid']),
+                    'stack_port_oid': int(group['stack_port_oid']),
+                    'sys_port_gid': int(group['sys_port_gid'])
+                })
+
+        return ret_dict    
+
+class ShowPlatformHardwareFedSwitchFwdAsicInsightL3mGroupMembersSchema(MetaParser):
+    schema = {
+        'l3m_group_members': {
+            'l3_mcg_gid': {
+                int: {
+                    'idx': {
+                        int: {
+                            'l3_port_gid': int,
+                            'type': str,
+                            'l3_port_type': str,
+                            'l2_port_type': str,
+                            'l2_port_gid': int,
+                            'l2_mcg_gid': int,
+                            'l3_mcg_member_gid': int,
+                            'next_hop_gid': int,
+                            'mc_fanout_group_oid': int,
+                            'mc_gre_encap_oid': int,
+                            'stack_port_oid': int,
+                            'sysport_gid': int,
+                        }
+                    }                    
+                }
+            }
+        }
+    }
+
+class ShowPlatformHardwareFedSwitchFwdAsicInsightL3mGroupMembers(ShowPlatformHardwareFedSwitchFwdAsicInsightL3mGroupMembersSchema):
+    """Parser for:
+        show platform hardware fed switch active fwd-asic insight l3m_group_members(l3_mcg_gid)
+    """   
+    cli_command = [
+        "show platform hardware fed {switch} {switch_id} fwd-asic insight l3m_group_members({l3_mcg_gid})",
+        "show platform hardware fed {switch_id} fwd-asic insight l3m_group_members({l3_mcg_gid})"
+        ]
+
+    def cli(self, l3_mcg_gid, switch='', switch_id='', output=None):
+        if output is None:
+            if switch:
+                cmd = self.cli_command[0].format(switch=switch, switch_id=switch_id, l3_mcg_gid=l3_mcg_gid)
+            else:
+                cmd = self.cli_command[1].format(switch_id=switch_id, l3_mcg_gid=l3_mcg_gid)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+
+        # +------------+-----+--------+--------------+-------------+--------------+-------------+------------+-------------------+--------------+---------------------+------------------+----------------+-------------+
+        # | l3-mcg-gid | idx | type   | l3-port-type | l3-port-gid | l2-port-type | l2-port-gid | l2-mcg-gid | l3-mcg-member-gid | next-hop-gid | mc-fanout-group-oid | mc-gre-encap-oid | stack-port-oid | sysport-gid |
+        # +------------+-----+--------+--------------+-------------+--------------+-------------+------------+-------------------+--------------+---------------------+------------------+----------------+-------------+
+        # | 8210       | 1   | L2_MCG | L3_SVI_PORT  | 369         |     NONE     | 0           | 8209       | 0                 | 0            | 0                   | 0                | 0              | 0           |
+        # |            |     |        |              |             |              |             |            |                   |              |                     |                  |                |             |
+        # | 8210       | 2   | NONE   |     NONE     | 0           |     NONE     | 0           | 0          | 0                 | 0            | 0                   | 0                | 0              | 0           |
+        # |            |     |        |              |             |              |             |            |                   |              |                     |                  |                |             |
+        # | 8210       | 3   | L2_MCG | L3_SVI_PORT  | 379         |     NONE     | 0           | 8201       | 0                 | 0            | 0                   | 0                | 0              | 0           |
+        # |            |     |        |              |             |              |             |            |                   |              |                     |                  |                |             |
+        # +------------+-----+--------+--------------+-------------+--------------+-------------+------------+-------------------+--------------+---------------------+------------------+----------------+-------------+
+        p1 = re.compile(
+            r"^\|\s*(?P<l3_mcg_gid>\d+)\s*\|\s*(?P<idx>[\d]+)\s*\|\s*(?P<type>\w+)\s*\|\s*(?P<l3_port_type>\w+)\s*\|\s*"
+            r"(?P<l3_port_gid>\d+)\s*\|\s*(?P<l2_port_type>\w+)\s*\|\s*(?P<l2_port_gid>\d+)\s*\|\s*"
+            r"(?P<l2_mcg_gid>\d+)\s*\|\s*(?P<l3_mcg_member_gid>\d+)\s*\|\s*(?P<next_hop_gid>\d+)\s*\|\s*(?P<mc_fanout_group_oid>\d+)\s*\|\s*"
+            r"(?P<mc_gre_encap_oid>\d+)\s*\|\s*(?P<stack_port_oid>\d+)\s*\|\s*(?P<sysport_gid>\d+)\s*\|$"
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # | 8210       | 1   | L2_MCG | L3_SVI_PORT  | 369         |     NONE     | 0           | 8209       | 0                 | 0            | 0                   | 0                | 0              | 0           |
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                mcg_dict = ret_dict.setdefault('l3m_group_members', {}).setdefault('l3_mcg_gid', {}).setdefault(int(group['l3_mcg_gid']), {})
+                group_dict = mcg_dict.setdefault('idx', {}).setdefault(int(group['idx']), {})
+                group_dict.update({
+                    'l3_port_gid' : int(group['l3_port_gid']),
+                    'type' : group['type'],
+                    'l3_port_type' : group['l3_port_type'],
+                    'l2_port_type' : group['l2_port_type'],
+                    'l2_port_gid' : int(group['l2_port_gid']),
+                    'l2_mcg_gid' : int(group['l2_mcg_gid']),
+                    'l3_mcg_member_gid' : int(group['l3_mcg_member_gid']),
+                    'next_hop_gid' : int(group['next_hop_gid']),
+                    'mc_fanout_group_oid' : int(group['mc_fanout_group_oid']),
+                    'mc_gre_encap_oid' : int(group['mc_gre_encap_oid']),
+                    'stack_port_oid' : int(group['stack_port_oid']),
+                    'sysport_gid' : int(group['sysport_gid']),
+                })                
+
+        return ret_dict                                           
+
+class ShowPlatformHardwareFedSwitchFwdAsicInsightL3mGroupsSchema(MetaParser):
+    schema = {
+        'l3m_groups': {
+            'l3_mcg_gid': {
+                int: {
+                    'replication_paradigm': {
+                        str: {
+                            'l3_mcg_cookie': str,
+                            'num_members': int,
+                            'egress_counter_id': int,
+                            'egress_counter_data': ListOf(int),
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+class ShowPlatformHardwareFedSwitchFwdAsicInsightL3mGroups(ShowPlatformHardwareFedSwitchFwdAsicInsightL3mGroupsSchema):
+    cli_command = "show platform hardware fed switch {switch} fwd-asic insight l3m_groups({filter})"
+
+    def cli(self, switch, filter=None, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(filter=filter,switch=switch))
+
+        ret_dict = {}
+
+        # +------------+----------------+-------------+----------------------+-------------------+---------------------+
+        # | l3-mcg-gid | l3-mcg-cookie  | num-members | replication-paradigm | egress-counter-id | egress-counter-data |
+        # +------------+----------------+-------------+----------------------+-------------------+---------------------+
+        # | 8230       | urid:0x30::4   | 1           |        EGRESS        | 0                 | [0,0]               |
+        # |            |                |             |                      |                   |                     |
+        # +------------+----------------+-------------+----------------------+-------------------+---------------------+
+        p1 = re.compile(
+            r"^\|\s+(?P<l3_mcg_gid>\d+)\s+\|\s+(?P<l3_mcg_cookie>\S+)\s+\|\s+(?P<num_members>\d+)\s+\|\s+(?P<replication_paradigm>\S+)\s+\|\s+(?P<egress_counter_id>\d+)\s+\|\s+\[(?P<egress_counter_data>[\d,]+)\]\s+\|$"
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # +------------+---------------+-------------+----------------------+-------------------+---------------------+
+            # | l3-mcg-gid | l3-mcg-cookie | num-members | replication-paradigm | egress-counter-id | egress-counter-data |
+            # +------------+---------------+-------------+----------------------+-------------------+---------------------+
+            # | 8230       | urid:0x30::4  | 1           |       INGRESS        | 0                 | [0,0]               |
+            # |            |               |             |                      |                   |                     |
+            # +------------+---------------+-------------+----------------------+-------------------+---------------------+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                mcg_dict = ret_dict.setdefault('l3m_groups', {}).setdefault('l3_mcg_gid', {}).setdefault(int(group['l3_mcg_gid']), {})
+                group_dict = mcg_dict.setdefault('replication_paradigm', {}).setdefault(group['replication_paradigm'], {})
+                group_dict.update({
+                    'l3_mcg_cookie': group['l3_mcg_cookie'],
+                    'num_members': int(group['num_members']),
+                    'egress_counter_id': int(group['egress_counter_id']),
+                    'egress_counter_data': [int(i) for i in group['egress_counter_data'].split(",")]
+                })
+                continue
+
+        return ret_dict
+
+class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightVrfHostRouteSchema(MetaParser):
+    """Schema for 'show platform hardware fed {switch} {state} fwd-asic insight vrf_host_routes'"""
+    schema = {
+        'vrf_host_routes': {
+            Any(): {
+                Optional('vrf_cookie'): str,
+                'l3_port_gid': int,
+                'l3_port_type': str,
+                'ip_version': int,
+                'ip_address': str,
+                'dest_mac_address': str
+            }
+        }
+    }
+
+class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightVrfHostRoute(ShowPlatformHardwareFedSwitchActiveFwdAsicInsightVrfHostRouteSchema):
+    """Parser for 'show platform hardware fed {switch} {state} fwd-asic insight vrf_host_routes'"""
+
+    cli_command = 'show platform hardware fed {switch} {state} fwd-asic insight vrf_host_routes'
+
+    def cli(self, switch, state, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(switch=switch, state=state))
+
+        ret_dict = {}
+
+        # | 0       |               | 4136        | l3-ac-gid    | 4          | 12.100.0.2 | 40:b5:c1:ff:e5:02 |
+        p1 = re.compile(r'^\|\s*(?P<vrf_gid>\d+)\s*\|\s*(?P<vrf_cookie>\S*)\s*\|\s*(?P<l3_port_gid>\d+)\s*\|\s*(?P<l3_port_type>\S+)\s*\|\s*(?P<ip_version>\d+)\s*\|\s*(?P<ip_address>\S+)\s*\|\s*(?P<dest_mac_address>[\da-fA-F:]+)\s*\|$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # | 0       |               | 4136        | l3-ac-gid    | 4          | 12.100.0.2 | 40:b5:c1:ff:e5:02 |
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                vrf_gid = int(group['vrf_gid'])
+                vrf_data = ret_dict.setdefault('vrf_host_routes', {}).setdefault(vrf_gid, {})
+                vrf_data.update({
+                    'l3_port_gid': int(group['l3_port_gid']),
+                    'l3_port_type': group['l3_port_type'],
+                    'ip_version': int(group['ip_version']),
+                    'ip_address': group['ip_address'],
+                    'dest_mac_address': group['dest_mac_address']
+                })
+                if group['vrf_cookie']:
+                    vrf_data['vrf_cookie'] = group['vrf_cookie']
+
+        return ret_dict
+
+
+class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightVrfForUsRouteSchema(MetaParser):
+    """Schema for 'show platform hardware fed {switch} {state} fwd-asic insight vrf_for_us_routes'"""
+    schema = {
+        'for_us_oid': int,
+        'ref_count': int,
+        'routes': ListOf({
+            'vrf_gid': int,
+            'ip_version': int,
+            'ip_prefix': str,
+            'user_data': int
+        })
+    }
+
+class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightVrfForUsRoute(ShowPlatformHardwareFedSwitchActiveFwdAsicInsightVrfForUsRouteSchema):
+    """Parser for 'show platform hardware fed {switch} {state} fwd-asic insight vrf_for_us_routes'"""
+
+    cli_command = 'show platform hardware fed {switch} {state} fwd-asic insight vrf_for_us_routes'
+
+    def cli(self, switch, state, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(switch=switch, state=state))
+
+        ret_dict = {}
+        routes = []
+        for_us_oid = None
+        ref_count = None
+
+        # |     53     |     11    |    0    |     4      |     0.0.0.0/32     | 99559565091352 |
+        p1 = re.compile(
+            r'^\|\s*(?P<for_us_oid>\d+)\s*\|\s*(?P<ref_count>\d+)\s*\|\s*(?P<vrf_gid>\d+)\s*\|\s*(?P<ip_version>\d+)\s*\|\s*(?P<ip_prefix>[\w\.:/]+)\s*\|\s*(?P<user_data>\d+)\s*\|$'
+        )
+        # |            |           |    0    |     4      |     1.1.1.1/32     | 99559563885112 |
+        p2 = re.compile(
+            r'^\|\s*\|\s*\|\s*(?P<vrf_gid>\d+)\s*\|\s*(?P<ip_version>\d+)\s*\|\s*(?P<ip_prefix>[\w\.:/]+)\s*\|\s*(?P<user_data>\d+)\s*\|$'
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+            # |     53     |     11    |    0    |     4      |     0.0.0.0/32     | 99559565091352 |
+            m1 = p1.match(line)
+            # |            |           |    0    |     4      |     1.1.1.1/32     | 99559563885112 |
+            m2 = p2.match(line)
+            if m1:
+                group = m1.groupdict()
+                for_us_oid = int(group['for_us_oid'])
+                ref_count = int(group['ref_count'])
+                routes.append({
+                    'vrf_gid': int(group['vrf_gid']),
+                    'ip_version': int(group['ip_version']),
+                    'ip_prefix': group['ip_prefix'],
+                    'user_data': int(group['user_data'])
+                })
+            elif m2:
+                group = m2.groupdict()
+                routes.append({
+                    'vrf_gid': int(group['vrf_gid']),
+                    'ip_version': int(group['ip_version']),
+                    'ip_prefix': group['ip_prefix'],
+                    'user_data': int(group['user_data'])
+                })
+
+        if for_us_oid is not None and ref_count is not None:
+            ret_dict['for_us_oid'] = for_us_oid
+            ret_dict['ref_count'] = ref_count
+            ret_dict['routes'] = routes
+
+        return ret_dict
+
+class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightVrfNextHopSchema(MetaParser):
+    """Schema for 'show platform hardware fed {switch} {state} fwd-asic insight vrf_next_hops'"""
+    schema = {
+        'vrf_next_hops': {
+            Any(): {
+                'nhop_gid': int,
+                'nhop_type': str,
+                'mac_address': str,
+                'l3_port_gid': int,
+                'l3_port_type': str,
+                'ether_port_oid': int
+            }
+        }
+    }
+
+class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightVrfNextHop(ShowPlatformHardwareFedSwitchActiveFwdAsicInsightVrfNextHopSchema):
+    """Parser for 'show platform hardware fed {switch} {state} fwd-asic insight vrf_next_hops'"""
+
+    cli_command = 'show platform hardware fed {switch} {state} fwd-asic insight vrf_next_hops'
+
+    def cli(self, switch, state, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(switch=switch, state=state))
+
+        ret_dict = {}
+
+        # | 0       | 32767    | DROP       |                   | 0           |              | 0              |
+        p1 = re.compile(r'^\|\s*(?P<vrf_gid>\d+)\s*\|\s*(?P<nhop_gid>\d+)\s*\|\s*(?P<nhop_type>\S+)\s*\|\s*(?P<mac_address>[\da-fA-F:]*?)\s*\|\s*(?P<l3_port_gid>\d+)\s*\|\s*(?P<l3_port_type>\S*?)\s*\|\s*(?P<ether_port_oid>\d+)\s*\|$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Match the table rows
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                vrf_gid = int(group['vrf_gid'])
+                nhop_data = ret_dict.setdefault('vrf_next_hops', {}).setdefault(vrf_gid, {})
+                nhop_data.update({
+                    'nhop_gid': int(group['nhop_gid']),
+                    'nhop_type': group['nhop_type'],
+                    'mac_address': group['mac_address'],
+                    'l3_port_gid': int(group['l3_port_gid']),
+                    'l3_port_type': group['l3_port_type'],
+                    'ether_port_oid': int(group['ether_port_oid'])
+                })
+
+        return ret_dict
+
+class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightAclEthPortSpecialLkupOrderSchema(MetaParser):
+    """Schema for ShowPlatformHardwareFedSwitchActiveFwdAsicInsightAclEthPortSpecialLkupOrder()"""
+    schema = {
+        'acl_eth_port_special_lkup_order': {
+            Any(): {
+                'eth_port_oid': int,
+                'eth_port_underlay_type': str,
+                'underlay_port_gid': int,
+                'acl_direction': str,
+                'acl_packet_format': str,
+                'entries': ListOf({
+                    'acl_plkp_oid': int,
+                    'acl_kp_oid': int,
+                    'acl_interface': str,
+                    'acl_stage': str,
+                    'acl_label_type': str
+                })
+            }
+        }
+    }
+
+class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightAclEthPortSpecialLkupOrder(ShowPlatformHardwareFedSwitchActiveFwdAsicInsightAclEthPortSpecialLkupOrderSchema):
+    """Parser for ShowPlatformHardwareFedSwitchActiveFwdAsicInsightAclEthPortSpecialLkupOrder()"""
+
+    cli_command = 'show platform hardware fed switch {switch_type} fwd-asic insight acl_eth_port_special_lkup_order'
+
+    def cli(self, switch_type, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(switch_type=switch_type))
+
+        ret_dict = {}
+
+        # | Eth Port OID | Eth Port Underlay Type | Underlay Port GID | ACL Direction | ACL Packet Format | ACL PLKP OID | ACL KP OID | ACL Interface |   ACL Stage | ACL Label Type |
+        p1 = re.compile(
+            r'^\|\s*(?P<eth_port_oid>\d+)\s*\|\s*(?P<eth_port_underlay_type>\S+)\s*\|\s*(?P<underlay_port_gid>\d+)\s*\|\s*(?P<acl_direction>\S+)\s*\|\s*(?P<acl_packet_format>\S+)\s*\|\s*(?P<acl_plkp_oid>\d+)\s*\|\s*(?P<acl_kp_oid>\d+)\s*\|\s*(?P<acl_interface>\S+)\s*\|\s*(?P<acl_stage>\S+)\s*\|\s*(?P<acl_label_type>\S+)\s*\|$'
+        )
+
+        # |              |                        |                   |               |                   |          557 |        497 |           E_0 | TERMINATION |   PORT_LABEL   |
+        p2 = re.compile(
+            r'^\|\s*\|\s*\|\s*\|\s*\|\s*\|\s*(?P<acl_plkp_oid>\d+)\s*\|\s*(?P<acl_kp_oid>\d+)\s*\|\s*(?P<acl_interface>\S+)\s*\|\s*(?P<acl_stage>\S+)\s*\|\s*(?P<acl_label_type>\S+)\s*\|$'
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # | Eth Port OID | Eth Port Underlay Type | Underlay Port GID | ACL Direction | ACL Packet Format | ACL PLKP OID | ACL KP OID | ACL Interface |   ACL Stage | ACL Label Type |
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                current_eth_port_oid = int(group['eth_port_oid'])
+                eth_port_dict = ret_dict.setdefault('acl_eth_port_special_lkup_order', {}).setdefault(current_eth_port_oid, {})
+                eth_port_dict.update({
+                    'eth_port_oid': current_eth_port_oid,
+                    'eth_port_underlay_type': group['eth_port_underlay_type'],
+                    'underlay_port_gid': int(group['underlay_port_gid']),
+                    'acl_direction': group['acl_direction'],
+                    'acl_packet_format': group['acl_packet_format'],
+                    'entries': []
+                })
+                eth_port_dict['entries'].append({
+                    'acl_plkp_oid': int(group['acl_plkp_oid']),
+                    'acl_kp_oid': int(group['acl_kp_oid']),
+                    'acl_interface': group['acl_interface'],
+                    'acl_stage': group['acl_stage'],
+                    'acl_label_type': group['acl_label_type']
+                })
+                continue
+
+            # |              |                        |                   |               |                   |          557 |        497 |           E_0 | TERMINATION |   PORT_LABEL   |
+            m = p2.match(line)
+            if m and current_eth_port_oid is not None:
+                group = m.groupdict()
+                ret_dict['acl_eth_port_special_lkup_order'][current_eth_port_oid]['entries'].append({
+                    'acl_plkp_oid': int(group['acl_plkp_oid']),
+                    'acl_kp_oid': int(group['acl_kp_oid']),
+                    'acl_interface': group['acl_interface'],
+                    'acl_stage': group['acl_stage'],
+                    'acl_label_type': group['acl_label_type']
+                })
+                continue
+
+        return ret_dict
+
+
+class ShowPlatformHardwareFedSwitchL2SwitchMacTableSchema(MetaParser):
+    """Schema for:
+        * show platform hardware fed switch {switch_no} fwd-asic insight l2_switch_mac_table({vlan_or_switch_gid})
+    """
+    schema = {
+        'mac_table': {
+            'mac_address': {
+                Any(): {
+                    'switch_gid': str,
+                    'dest_type': str,
+                    Optional('dest_gid'): str,
+                    'dest_cookie': str,
+                    'aging': str,
+                    'switch_cookie': str,
+                }
+            }
+        }
+    }
+
+class ShowPlatformHardwareFedSwitchL2SwitchMacTable(ShowPlatformHardwareFedSwitchL2SwitchMacTableSchema):
+    """Parser for:
+        * show platform hardware fed switch {switch_no} fwd-asic insight l2_switch_mac_table({vlan_or_switch_gid})
+    """
+
+    cli_command = 'show platform hardware fed switch {switch_no} fwd-asic insight l2_switch_mac_table({vlan_or_switch_gid})'
+
+    def cli(self, switch_no, vlan_or_switch_gid, output=None):
+        if output is None:
+            cmd = self.cli_command.format(switch_no=switch_no, vlan_or_switch_gid=vlan_or_switch_gid)
+            output = self.device.execute(cmd)
+
+        parsed_dict = {}
+
+        # | Switch GID |       MAC Address | Dest Type | Dest Gid | Dest Cookie |  Aging | Switch Cookie |
+        # +------------+-------------------+-----------+----------+-------------+--------+---------------+
+        # |        100 | 00:aa:00:bb:00:01 |   INVALID |          |    Te4/0/47 | static |           100 |
+        p1 = re.compile(
+            r'^\|\s+(?P<switch_gid>\d+)\s+\|\s+(?P<mac_address>[0-9a-fA-F:]+)\s+\|\s+(?P<dest_type>\S+)\s+\|\s*(?P<dest_gid>\S*)\s+\|\s+(?P<dest_cookie>\S+)\s+\|\s+(?P<aging>\S+)\s+\|\s+(?P<switch_cookie>\S+)\s+\|$'
+        )
+
+        # Parse the output line by line
+        for line in output.splitlines():
+            line = line.strip()
+
+        # | Switch GID |       MAC Address | Dest Type | Dest Gid | Dest Cookie |  Aging | Switch Cookie |
+        # +------------+-------------------+-----------+----------+-------------+--------+---------------+
+        # |        100 | 00:aa:00:bb:00:01 |   INVALID |          |    Te4/0/47 | static |           100 |
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                mac_address = parsed_dict.setdefault('mac_table', {}).setdefault('mac_address', {}).setdefault(group['mac_address'], {})
+                mac_address['switch_gid'] = group['switch_gid']
+                mac_address['dest_type'] = group['dest_type']
+                if group['dest_gid']:
+                    mac_address['dest_gid'] = group['dest_gid']
+                mac_address['dest_cookie'] = group['dest_cookie']
+                mac_address['aging'] = group['aging']
+                mac_address['switch_cookie'] = group['switch_cookie']
+
+        return parsed_dict
+
+class ShowPlatformHardwareFedFwdAsicInsightAclEthPortMixModeSchema(MetaParser):
+    """Schema for 'show platform hardware fed {switch} {state} fwd-asic insight acl_eth_port_mix_mode'"""
+    schema = {
+        'ac_entries': {
+            Any(): ListOf({
+                Optional('ac_type'): str,
+                Optional('ac_gid'): int,
+                Optional('direction'): str,
+                Optional('acl_group_packet_format'): str,
+                Optional('eth_port_oid'): int,
+                Optional('attached_type'): str,
+                Optional('acl_group_oid'): int,
+                Optional('acl_oid_and_cookie'): int,
+                Optional('acl_kp_oid'): int,
+                Optional('acl_interface'): str,
+                Optional('acl_plkp_oid'): int,
+                Optional('acl_stage'): str,
+                Optional('acl_label_type'): str
+            })
+        }
+    }
+
+class ShowPlatformHardwareFedFwdAsicInsightAclEthPortMixMode(ShowPlatformHardwareFedFwdAsicInsightAclEthPortMixModeSchema):
+    """Parser for 'show platform hardware fed {switch} {state} fwd-asic insight acl_eth_port_mix_mode'"""
+
+    cli_command = 'show platform hardware fed {switch} {state} fwd-asic insight acl_eth_port_mix_mode'
+
+    def cli(self, switch, state, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(switch=switch, state=state))
+
+        ret_dict = {}
+
+        # | L2      | 123    | INGRESS   | IPV4                    | 456          | PORT          | 789           | 1011               | 1213       | Gi1/0/1       | 1415         | INGRESS   | STANDARD       |
+        p1 = re.compile(r'^\|\s*(?P<ac_type>\S+)\s*\|\s*(?P<ac_gid>\d+)\s*\|\s*(?P<direction>\S+)\s*\|\s*(?P<acl_group_packet_format>\S+)\s*\|\s*(?P<eth_port_oid>\d+)\s*\|\s*(?P<attached_type>\S+)\s*\|\s*(?P<acl_group_oid>\d+)\s*\|\s*(?P<acl_oid_and_cookie>\d+)\s*\|\s*(?P<acl_kp_oid>\d+)\s*\|\s*(?P<acl_interface>\S+)\s*\|\s*(?P<acl_plkp_oid>\d+)\s*\|\s*(?P<acl_stage>\S+)\s*\|\s*(?P<acl_label_type>\S+)\s*\|$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # | L2      | 123    | INGRESS   | IPV4                    | 456          | PORT          | 789           | 1011               | 1213       | Gi1/0/1       | 1415         | INGRESS   | STANDARD       |
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ac_gid = int(group['ac_gid'])
+                ac_entry = {
+                    'ac_type': group['ac_type'],
+                    'ac_gid': ac_gid,
+                    'direction': group['direction'],
+                    'acl_group_packet_format': group['acl_group_packet_format'],
+                    'eth_port_oid': int(group['eth_port_oid']),
+                    'attached_type': group['attached_type'],
+                    'acl_group_oid': int(group['acl_group_oid']),
+                    'acl_oid_and_cookie': int(group['acl_oid_and_cookie']),
+                    'acl_kp_oid': int(group['acl_kp_oid']),
+                    'acl_interface': group['acl_interface'],
+                    'acl_plkp_oid': int(group['acl_plkp_oid']),
+                    'acl_stage': group['acl_stage'],
+                    'acl_label_type': group['acl_label_type']
+                }
+                # Append the entry to the list for the GID
+                ret_dict.setdefault('ac_entries', {}).setdefault(ac_gid, []).append(ac_entry)
+                continue
+
+        return ret_dict
+
+class ShowPlatformHardwareFedFwdAsicInsightAclEthPortDenseSchema(MetaParser):
+    """Schema for 'show platform hardware fed {switch} {state} fwd-asic insight acl_eth_port_dense'"""
+    schema = {
+        'acl_eth_port_dense': {
+            Any(): {
+                Optional('direction'): str,
+                Optional('acl_group_packet_format'): str,
+                Optional('acl_group_oid'): int,
+                Optional('acl_oid'): int,
+                Optional('acl_cookie'): str, 
+                Optional('acl_kp_oid'): int,
+                Optional('acl_interface'): str,
+                Optional('acl_plkp_oid'): int,
+                Optional('acl_stage'): str,
+                Optional('acl_label_type'): str
+            }
+        }
+    }
+
+class ShowPlatformHardwareFedFwdAsicInsightAclEthPortDense(ShowPlatformHardwareFedFwdAsicInsightAclEthPortDenseSchema):
+    """Parser for 'show platform hardware fed {switch} {state} fwd-asic insight acl_eth_port_dense'"""
+
+    cli_command = 'show platform hardware fed {switch} {state} fwd-asic insight acl_eth_port_dense'
+
+    def cli(self, switch, state, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(switch=switch, state=state))
+
+        ret_dict = {}
+
+        # | 123 | INGRESS | IPV4 | 456 | acl_oid:789 | 1011 | Gi1/0/1 | 1213 | STAGE1 | LABEL1 |
+        p1 = re.compile(
+            r'^\|\s*(?P<eth_port_oid>\d+)\s*\|\s*(?P<direction>\S+)\s*\|\s*(?P<acl_group_packet_format>\S+)\s*\|\s*(?P<acl_group_oid>\d+)\s*\|\s*acl_oid:(?P<acl_oid>\d+)\s*\|\s*(?P<acl_kp_oid>\d+)\s*\|\s*(?P<acl_interface>\S+)\s*\|\s*(?P<acl_plkp_oid>\d+)\s*\|\s*(?P<acl_stage>\S+)\s*\|\s*(?P<acl_label_type>\S+)\s*\|$'
+        )
+
+        # |         |         |         |         | acl_cookie:cookie123 |         |         |         |         |         |
+        p2 = re.compile(
+            r'^\|\s*\|\s*\|\s*\|\s*\|\s*acl_cookie:(?P<acl_cookie>\S*)\s*\|\s*\|\s*\|\s*\|\s*\|\s*\|$'
+        )
+
+        current_eth_port_oid = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # | 123 | INGRESS | IPV4 | 456 | acl_oid:789 | 1011 | Gi1/0/1 | 1213 | STAGE1 | LABEL1 |
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                current_eth_port_oid = int(group['eth_port_oid'])
+                acl_entry = ret_dict.setdefault('acl_eth_port_dense', {}).setdefault(current_eth_port_oid, {})
+                acl_entry.update({
+                    'direction': group['direction'],
+                    'acl_group_packet_format': group['acl_group_packet_format'],
+                    'acl_group_oid': int(group['acl_group_oid']),
+                    'acl_oid': int(group['acl_oid']),
+                    'acl_kp_oid': int(group['acl_kp_oid']),
+                    'acl_interface': group['acl_interface'],
+                    'acl_plkp_oid': int(group['acl_plkp_oid']),
+                    'acl_stage': group['acl_stage'],
+                    'acl_label_type': group['acl_label_type']
+                })
+                continue
+
+            # |         |         |         |         | acl_cookie:cookie123 |         |         |         |         |         |
+            m = p2.match(line)
+            if m and current_eth_port_oid is not None:
+                group = m.groupdict()
+                if group['acl_cookie']:  # Only add acl_cookie if it exists
+                    ret_dict['acl_eth_port_dense'][current_eth_port_oid]['acl_cookie'] = group['acl_cookie']
+                continue
+
+        return ret_dict
+
+class ShowPlatformHardwareFedFwdAsicInsightAclGroupDetailsSchema(MetaParser):
+    """Schema for 'show platform hardware fed {switch} {state} fwd-asic insight acl_group_details'"""
+
+    schema = {
+        'acl_group_details': {
+            Any(): {
+                Optional('acl_group_oid'): int,
+                Optional('packet_format'): str,
+                Optional('direction'): str,
+                Optional('acl_oid'): int,
+                Optional('key_profile_oid'): int,
+                Optional('key_lookup_interface'): str,
+                Optional('plkp_oid'): int,
+                Optional('stage'): str,
+                Optional('ac_type'): str
+            }
+        }
+    }
+
+class ShowPlatformHardwareFedFwdAsicInsightAclGroupDetails(ShowPlatformHardwareFedFwdAsicInsightAclGroupDetailsSchema):
+    """Parser for 'show platform hardware fed {switch} {state} fwd-asic insight acl_group_details'"""
+
+    cli_command = 'show platform hardware fed {switch} {state} fwd-asic insight acl_group_details'
+
+    def cli(self, switch, state, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(switch=switch, state=state))
+
+        ret_dict = {}
+
+        # |          1667 |                ETHERNET |   INGRESS |     711 |                 508 |                  E_0 |          557 | TERMINATION |  switch |
+        p1 = re.compile(r'^\|\s*(?P<acl_group_oid>\d+)\s*\|\s*(?P<packet_format>\S+)\s*\|\s*(?P<direction>\S+)\s*\|\s*(?P<acl_oid>\d+)\s*\|\s*(?P<key_profile_oid>\d+)\s*\|\s*(?P<key_lookup_interface>\S+)\s*\|\s*(?P<plkp_oid>\d+)\s*\|\s*(?P<stage>\S+)\s*\|\s*(?P<ac_type>\S+)\s*\|$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # |          1667 |                ETHERNET |   INGRESS |     711 |                 508 |                  E_0 |          557 | TERMINATION |  switch |
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                acl_group_oid = int(group['acl_group_oid'])
+                acl_group_dict = ret_dict.setdefault('acl_group_details', {}).setdefault(acl_group_oid, {})
+                acl_group_dict['acl_group_oid'] = acl_group_oid
+                acl_group_dict['packet_format'] = group['packet_format']
+                acl_group_dict['direction'] = group['direction']
+                acl_group_dict['acl_oid'] = int(group['acl_oid'])
+                acl_group_dict['key_profile_oid'] = int(group['key_profile_oid'])
+                acl_group_dict['key_lookup_interface'] = group['key_lookup_interface']
+                acl_group_dict['plkp_oid'] = int(group['plkp_oid'])
+                acl_group_dict['stage'] = group['stage']
+                acl_group_dict['ac_type'] = group['ac_type']
+                continue
+
+        return ret_dict
+
+class ShowPlatformHardwareFedFwdAsicInsightAclAttachmentCircuitSchema(MetaParser):
+    """Schema for 'show platform hardware fed {switch} {state} fwd-asic insight acl_attachment_circuit'"""
+    schema = {
+        'acl_attachment_circuit': {
+            Any(): {
+                Optional('ac_gid'): int,
+                Optional('acl_group_packet_format'): str,
+                Optional('direction'): str,
+                Optional('attached_type'): str,
+                Optional('acl_group_oid'): int,
+                Optional('acl_oid'): int,
+                Optional('acl_key_profile_oid'): int,
+                Optional('key_lookup_interface'): str,
+                Optional('parallel_lookup_key_oid'): int,
+                Optional('stage'): str
+            }
+        }
+    }
+
+class ShowPlatformHardwareFedFwdAsicInsightAclAttachmentCircuit(ShowPlatformHardwareFedFwdAsicInsightAclAttachmentCircuitSchema):
+    """Parser for 'show platform hardware fed {switch} {state} fwd-asic insight acl_attachment_circuit'"""
+
+    cli_command = 'show platform hardware fed {switch} {state} fwd-asic insight acl_attachment_circuit'
+
+    def cli(self, switch, state, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(switch=switch, state=state))
+
+        ret_dict = {}
+
+        # | l2-ac-port-gid |      3 |                ETHERNET |   INGRESS |        switch |          1683 |     711 |                 508 |                  E_0 |                     557 | TERMINATION |
+        p1 = re.compile(
+            r'^\|\s*(?P<ac_type>\S+)\s*\|\s*(?P<ac_gid>\d+)\s*\|\s*(?P<acl_group_packet_format>\S+)\s*\|\s*(?P<direction>\S+)\s*\|\s*(?P<attached_type>\S+)\s*\|\s*(?P<acl_group_oid>\d+)\s*\|\s*(?P<acl_oid>\d+)\s*\|\s*(?P<acl_key_profile_oid>\d+)\s*\|\s*(?P<key_lookup_interface>\S+)\s*\|\s*(?P<parallel_lookup_key_oid>\d+)\s*\|\s*(?P<stage>\S+)\s*\|$'
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # | l2-ac-port-gid |      3 |                ETHERNET |   INGRESS |        switch |          1683 |     711 |                 508 |                  E_0 |                     557 | TERMINATION |
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ac_type = group.pop('ac_type')
+                ac_data = ret_dict.setdefault('acl_attachment_circuit', {}).setdefault(ac_type, {})
+                ac_data.update({k: int(v) if v.isdigit() else v for k, v in group.items()})
+                continue
+
+        return ret_dict
+
+class ShowPlatformHardwareFedSwitchFwdAsicInsightAclSviAttachmentCircuitsSchema(MetaParser):
+    """Schema for:
+       * show platform hardware fed {switch} active fwd-asic insight acl_svi_attachment_circuits
+    """
+    schema = {
+        'svi_gid': {
+            Any(): {
+                Optional('svi_cookie'): str,
+                Optional('ingress_acl_group_oid'): int,
+                Optional('egress_acl_group_oid'): int
+            }
+        }
+    }
+
+
+class ShowPlatformHardwareFedSwitchFwdAsicInsightAclSviAttachmentCircuits(
+    ShowPlatformHardwareFedSwitchFwdAsicInsightAclSviAttachmentCircuitsSchema
+):
+    """Parser for:
+       * show platform hardware fed {switch} active fwd-asic insight acl_svi_attachment_circuits
+    """
+
+    cli_command = 'show platform hardware fed {switch} {mode} fwd-asic insight acl_svi_attachment_circuits'
+
+    def cli(self, switch='', mode='', output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(switch=switch, mode=mode))
+
+        # Initialize the parsed dictionary
+        ret_dict = {}
+
+        # Regex pattern
+        # | SVI GID | SVI Cookie | Ingress ACL Group OID | Egress ACL Group OID |
+        p1 = re.compile(
+            r'^\|\s*(?P<svi_gid>\d+)\s*\|\s*(?P<svi_cookie>\S*?)\s*\|\s*(?P<ingress_acl_group_oid>\d*?)\s*\|\s*(?P<egress_acl_group_oid>\d*?)\s*\|$'
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # |     110 |            |                  1678 |                 2898 |
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                svi_gid = int(group['svi_gid'])
+                svi_data = ret_dict.setdefault('svi_gid', {}).setdefault(svi_gid, {})
+                if group['svi_cookie']:
+                    svi_data['svi_cookie'] = group['svi_cookie']
+                if group['ingress_acl_group_oid']:
+                    svi_data['ingress_acl_group_oid'] = int(group['ingress_acl_group_oid'])
+                if group['egress_acl_group_oid']:
+                    svi_data['egress_acl_group_oid'] = int(group['egress_acl_group_oid'])
+
+        return ret_dict
+
+class ShowPlatformHardwareFedSwitchFwdAsicInsightL2AttachmentCircuitSchema(MetaParser):
+    """Schema for:
+       * show platform hardware fed {switch} {switch_id} fwd-asic insight l2_attachment_circuit_status(lag_gid={lag_gid})
+    """
+    schema = {
+        'l2_attachment_circuit_status': {
+            'ac_info': {
+                'ac_type': str,
+                'vlan_tag': int,
+                'lag_gid': int,
+                'ac_gid': int,
+                'ac_cookie': str,
+            },
+            'eth_logical_port_info': {
+                'eth_port_oid': int,
+            },
+            'eth_port_info': {
+                'lag_cookie': str,
+            }
+        }
+    }
+
+
+class ShowPlatformHardwareFedSwitchFwdAsicInsightL2AttachmentCircuit(ShowPlatformHardwareFedSwitchFwdAsicInsightL2AttachmentCircuitSchema):
+    """Parser for:
+       * show platform hardware fed switch {switch_id} fwd-asic insight l2_attachment_circuit_status(lag_gid={lag_gid})
+    """
+
+    cli_command="show platform hardware fed {switch} {switch_id} fwd-asic insight l2_attachment_circuit_status({lag_gid})"
+
+    def cli(self, switch='', switch_id='', lag_gid=None, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(switch=switch, switch_id=switch_id, lag_gid=lag_gid))
+
+        # Initialize the parsed dictionary
+        ret_dict = {}
+
+        # ac_type: L2-DENSE, vlan_tag: 1, lag_gid: 429
+        p1 = re.compile(r'^\|\s*ac_type:\s*(?P<ac_type>\S+)\s*\|.*vlan_tag:\s*(?P<vlan_tag>\d+)\s*\|.*lag_gid:\s*(?P<lag_gid>\d+)\s*\|$')
+        # ac_gid: 123261, eth_port_oid: 10483, lag_cookie: Po5
+        p2 = re.compile(r'^\|\s*ac_gid:\s*(?P<ac_gid>\d+)\s*\|.*eth_port_oid:\s*(?P<eth_port_oid>\d+)\s*\|.*lag_cookie:\s*(?P<lag_cookie>\S+)\s*\|$')
+        # ac_cookie: Po5
+        p3 = re.compile(r'^\|\s*ac_cookie:\s*(?P<ac_cookie>\S+)\s*\|.*$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # ac_type: L2-DENSE, vlan_tag: 1, lag_gid: 429
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ac_info = ret_dict.setdefault('l2_attachment_circuit_status', {}).setdefault('ac_info', {})
+                ac_info['ac_type'] = group['ac_type']
+                ac_info['vlan_tag'] = int(group['vlan_tag'])
+                ac_info['lag_gid'] = int(group['lag_gid'])
+                continue
+
+            # ac_gid: 123261, eth_port_oid: 10483, lag_cookie: Po5
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ac_info = ret_dict['l2_attachment_circuit_status']['ac_info']
+                ac_info['ac_gid'] = int(group['ac_gid'])
+                eth_logical_port_info = ret_dict['l2_attachment_circuit_status'].setdefault('eth_logical_port_info', {})
+                eth_logical_port_info['eth_port_oid'] = int(group['eth_port_oid'])
+                eth_port_info = ret_dict['l2_attachment_circuit_status'].setdefault('eth_port_info', {})
+                eth_port_info['lag_cookie'] = group['lag_cookie']
+                continue
+
+            # ac_cookie: Po5
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                ac_info = ret_dict['l2_attachment_circuit_status']['ac_info']
+                ac_info['ac_cookie'] = group['ac_cookie']
+                continue
+
+        return ret_dict
+    
+class ShowPlatformHardwareFedSwitchFwdAsicInsightAclL2AclAttachmentCircuitsSchema(MetaParser):
+    """Schema for:
+       show platform hardware fed {switch} {state} fwd-asic insight acl_l2_acl_attachment_circuits()
+    """
+    schema = {
+        'l2_ac_gid': {
+            Any(): {
+                Optional('l2_ac_cookie'): str,
+                Optional('sysport_gid'): int,
+                Optional('sysport_cookie'): str,
+                Optional('lag_gid'): str,
+                Optional('lag_cookie'): str,
+                Optional('vlan_tag'): str,
+                Optional('vlan_tag_2'): str,
+                Optional('ingress_acl_group_oid'): str,
+                Optional('egress_acl_group_oid'): str,
+                Optional('acl_oid'): str,
+                Optional('acl_cookie'): str,
+            }
+        }
+    }
+
+class ShowPlatformHardwareFedSwitchFwdAsicInsightAclL2AclAttachmentCircuits(
+    ShowPlatformHardwareFedSwitchFwdAsicInsightAclL2AclAttachmentCircuitsSchema
+):
+    """Parser for:
+       show platform hardware fed {switch} {state} fwd-asic insight acl_l2_acl_attachment_circuits()
+    """
+
+    cli_command = "show platform hardware fed {switch} {state} fwd-asic insight acl_l2_acl_attachment_circuits()"
+
+    def cli(self, switch, state, output=None):
+        if output is None:
+            cmd = self.cli_command.format(switch=switch, state=state)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+
+        # |    122880 |      Hu8/0/1 |          31 |                |         |            |            |            |                       |                      | acl_oid:           |
+        p1 = re.compile(
+            r"^\|\s*(?P<l2_ac_gid>\d+)\s*\|\s*(?P<l2_ac_cookie>\S*)\s*\|\s*(?P<sysport_gid>\d+)\s*\|\s*(?P<sysport_cookie>\S*)\s*\|\s*(?P<lag_gid>\S*)\s*\|\s*(?P<lag_cookie>\S*)\s*\|\s*(?P<vlan_tag>\S*)\s*\|\s*(?P<vlan_tag_2>\S*)\s*\|\s*(?P<ingress_acl_group_oid>\S*)\s*\|\s*(?P<egress_acl_group_oid>\S*)\s*\|\s*acl_oid:\s*(?P<acl_oid>\S*)\s*\|$"
+        )
+
+        # |           |              |             |                |         |            |            |            |                       |                      | acl_cookie:        |
+        p2 = re.compile(r"^\|\s*acl_cookie:\s*(?P<acl_cookie>\S*)\s*\|$")
+
+        current_gid = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # |    122880 |      Hu8/0/1 |          31 |                |         |            |            |            |                       |                      | acl_oid:           |
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                current_gid = int(group['l2_ac_gid'])
+                attachment_dict = ret_dict.setdefault('l2_ac_gid', {}).setdefault(current_gid, {})
+                if group['l2_ac_cookie']:
+                    attachment_dict['l2_ac_cookie'] = group['l2_ac_cookie']
+                if group['sysport_gid']:    
+                    attachment_dict['sysport_gid'] = int(group['sysport_gid'])
+                if group['sysport_cookie']:    
+                    attachment_dict['sysport_cookie'] = group['sysport_cookie']
+                if group['lag_gid']:
+                    attachment_dict['lag_gid'] = group['lag_gid']
+                if group['lag_cookie']:
+                    attachment_dict['lag_cookie'] = group['lag_cookie']
+                if group['vlan_tag']:
+                    attachment_dict['vlan_tag'] = group['vlan_tag']
+                if group['vlan_tag_2']:
+                    attachment_dict['vlan_tag_2'] = group['vlan_tag_2']
+                if group['ingress_acl_group_oid']:
+                    attachment_dict['ingress_acl_group_oid'] = group['ingress_acl_group_oid']
+                if group['egress_acl_group_oid']:
+                    attachment_dict['egress_acl_group_oid'] = group['egress_acl_group_oid']
+                if group['acl_oid']:
+                    attachment_dict['acl_oid'] = group['acl_oid']
+                continue
+
+            # |           |              |             |                |         |            |            |            |                       |                      | acl_cookie:        |
+            m = p2.match(line)
+            if m and current_gid is not None:
+                group = m.groupdict()
+                if group['acl_cookie']:   
+                    ret_dict['attachment_circuits'][current_gid]['acl_cookie'] = group['acl_cookie']
+                continue
+
+        return ret_dict    
+    
+class ShowPlatformHardwareFedSwitchFwdAsicInsightS1TrapStatusSchema(MetaParser):
+    """Schema for 'show platform hardware fed {switch} {state} fwd-asic insight s1_trap_status()'"""
+    schema = {
+        'trap_status': {
+            Any(): {
+                Optional('direction'): str,
+                Optional('priority'): int,
+                Optional('traffic_class'): int,
+                Optional('l2_punt_oid'): int,
+                Optional('skip_inject_up'): bool,
+                Optional('skip_p2p'): bool,
+                Optional('overwrite_phb'): bool
+            }
+        }
+    }
+
+
+class ShowPlatformHardwareFedSwitchFwdAsicInsightS1TrapStatus(ShowPlatformHardwareFedSwitchFwdAsicInsightS1TrapStatusSchema):
+    """Parser for 'show platform hardware fed {switch} {state} fwd-asic insight s1_trap_status()'"""
+
+    cli_command = 'show platform hardware fed {switch} {state} fwd-asic insight s1_trap_status()'
+
+    def cli(self, switch, state, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(switch=switch, state=state))
+
+        ret_dict = {}
+
+        # | ETHERNET_CISCO_PROTOCOLS                        | INGRESS   |    3     |       5       |     375     | True           | True     | True          |
+        p1 = re.compile(
+            r'^\|\s*(?P<trap_type>[A-Z_]+)\s*\|\s*(?P<direction>[A-Z]+|)\s*\|\s*(?P<priority>\d*|)\s*\|\s*(?P<traffic_class>\d*|)\s*\|\s*(?P<l2_punt_oid>\d*|)\s*\|\s*(?P<skip_inject_up>\w*|)\s*\|\s*(?P<skip_p2p>\w*|)\s*\|\s*(?P<overwrite_phb>\w*|)\s*\|$'
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # | ETHERNET_CISCO_PROTOCOLS                        | INGRESS   |    3     |       5       |     375     | True           | True     | True          |
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                trap_type = group['trap_type']
+                trap_data = ret_dict.setdefault('trap_status', {}).setdefault(trap_type, {})
+                if group['direction']:
+                    trap_data['direction'] = group['direction']    
+                if group['priority']:
+                    trap_data['priority'] = int(group['priority'])  
+                if group['traffic_class']:
+                    trap_data['traffic_class'] = int(group['traffic_class'])
+                if group['l2_punt_oid']:
+                    trap_data['l2_punt_oid'] = int(group['l2_punt_oid'])
+                if group['skip_inject_up']:    
+                    trap_data['skip_inject_up'] = group['skip_inject_up'].lower() == 'true'
+                if group['skip_p2p']:
+                    trap_data['skip_p2p'] = group['skip_p2p'].lower() == 'true'  
+                if group['overwrite_phb']:    
+                    trap_data['overwrite_phb'] = group['overwrite_phb'].lower() == 'true'
+                continue
+
+        return ret_dict  
+
+class ShowPlatformHardwareFedSwitchFwdAsicInsightAclTableDefSchema(MetaParser):
+    """Schema for 'show platform hardware fed {switch} {state} fwd-asic insight acl_table_def()'"""
+    schema = {
+        'acl_entries': {
+            'acl_oid': int,
+            Optional('acl_cookie'): str,
+            'acl_key_profile_oid': int,
+            Optional('acl_key_profile_cookie'): str,
+            'acl_match_key_fields': ListOf(str),
+            Optional('acl_range_cookie'): str,
+            Optional('acl_range_direction'): str,
+            Optional('acl_range_count'): str,
+            'acl_cmd_profile_oid': int,
+            'acl_commands': ListOf(str),
+            Optional('source_pcl_info'): str,
+            Optional('destination_pcl_info'): str,
+        }
+    }
+
+class ShowPlatformHardwareFedSwitchFwdAsicInsightAclTableDef(ShowPlatformHardwareFedSwitchFwdAsicInsightAclTableDefSchema):
+    """Parser for 'show platform hardware fed {switch} {state} fwd-asic insight acl_table_def()'"""
+
+    cli_command = "show platform hardware fed {switch} {state} fwd-asic insight acl_table_def()"
+
+    def cli(self, switch, state, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(switch=switch, state=state))
+
+        ret_dict = {}
+        result_dict = None
+
+        # |  acl_oid:583 | acl_key_profile_oid:511 | IPV4_SIP | acl_range_cookie: | 581 | DROP | | |
+        p1 = re.compile(
+            r'^\|\s*acl_oid:(?P<acl_oid>\d+)\s*\|'
+            r'\s*acl_key_profile_oid:(?P<acl_key_profile_oid>\d+)\s*\|'
+            r'\s*(?P<acl_match_key_fields>\S+)\s*\|'
+            r'\s*acl_range_cookie:(?P<acl_range_cookie>\d*)\s*\|'
+            r'\s*(?P<acl_cmd_profile_oid>\d+)\s*\|'
+            r'\s*(?P<acl_commands>\S+)\s*\|'
+            r'\s*(?P<source_pcl_info>\S*)\s*\|'
+            r'\s*(?P<destination_pcl_info>\S*)\s*\|$'
+        )
+        # |  acl_cookie: | acl_key_profile_cookie: | IPV4_DIP | acl_range_direction: | | FORCE_TRAP_WITH_EVENT | | |
+        p2 = re.compile(
+            r'^\|\s*acl_cookie:(?P<acl_cookie>\S*)\s*\|'
+            r'\s*acl_key_profile_cookie:(?P<acl_key_profile_cookie>\S*)\s*\|'
+            r'\s*(?P<acl_match_key_fields>\S+)\s*\|'
+            r'\s*acl_range_direction:(?P<acl_range_direction>\S*)\s*\|'
+            r'\s*(?P<acl_cmd_profile_oid>\S*)\s*\|'
+            r'\s*(?P<acl_commands>\S+)\s*\|'
+            r'\s*(?P<source_pcl_info>\S*)\s*\|'
+            r'\s*(?P<destination_pcl_info>\S*)\s*\|$'
+        )
+        # |              |                         | TOS | acl_range_count: | | COUNTER | | |
+        p3 = re.compile(
+            r'^\|\s*\|\s*\|\s*(?P<acl_match_key_fields>\S+)\s*\|'
+            r'\s*acl_range_count:(?P<acl_range_count>\S*)\s*\|'
+            r'\s*\|\s*(?P<acl_commands>\S+)\s*\|'
+            r'\s*(?P<source_pcl_info>\S*)\s*\|'
+            r'\s*(?P<destination_pcl_info>\S*)\s*\|$'
+        )
+        # |              |                         | PROTOCOL | | | DO_MIRROR | | |
+        p4 = re.compile(
+            r'^\|\s*\|\s*\|\s*(?P<acl_match_key_fields>\S+)\s*\|\s*\|\s*\|\s*(?P<acl_commands>\S+)\s*\|'
+            r'\s*(?P<source_pcl_info>\S*)\s*\|'
+            r'\s*(?P<destination_pcl_info>\S*)\s*\|$'
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line or line.startswith('+') or line.startswith('|     ACL Info'):
+                continue
+
+            # |  acl_oid:583 | acl_key_profile_oid:511 | IPV4_SIP | acl_range_cookie: | 581 | DROP | | |
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                result_dict = ret_dict.setdefault("acl_entries", {})
+                result_dict['acl_oid'] = int(group['acl_oid'])
+                result_dict['acl_key_profile_oid'] = int(group['acl_key_profile_oid'])
+                result_dict['acl_match_key_fields'] = [group['acl_match_key_fields']]
+                if group['acl_range_cookie']:
+                    result_dict['acl_range_cookie'] = group['acl_range_cookie']
+                result_dict['acl_cmd_profile_oid'] = int(group['acl_cmd_profile_oid'])
+                result_dict['acl_commands'] = [group['acl_commands']]
+                if group['source_pcl_info']:
+                    result_dict['source_pcl_info'] = group['source_pcl_info']
+                if group['destination_pcl_info']:
+                    result_dict['destination_pcl_info'] = group['destination_pcl_info']
+                continue
+
+            # |  acl_cookie: | acl_key_profile_cookie: | IPV4_DIP | acl_range_direction: | | FORCE_TRAP_WITH_EVENT | | |
+            m = p2.match(line)
+            if m and result_dict is not None:
+                group = m.groupdict()
+                if group['acl_cookie']:
+                    result_dict['acl_cookie'] = group['acl_cookie']
+                if group['acl_key_profile_cookie']:
+                    result_dict['acl_key_profile_cookie'] = group['acl_key_profile_cookie']
+                result_dict['acl_match_key_fields'].append(group['acl_match_key_fields'])
+                if group['acl_range_direction']:
+                    result_dict['acl_range_direction'] = group['acl_range_direction']
+                if group['acl_commands']:
+                    result_dict['acl_commands'].append(group['acl_commands'])
+                continue
+
+            # |              |                         | TOS | acl_range_count: | | COUNTER | | |
+            m = p3.match(line)
+            if m and result_dict is not None:
+                group = m.groupdict()
+                result_dict['acl_match_key_fields'].append(group['acl_match_key_fields'])
+                if group['acl_range_count']:
+                    result_dict['acl_range_count'] = group['acl_range_count']
+                if group['acl_commands']:
+                    result_dict['acl_commands'].append(group['acl_commands'])
+                continue
+
+            # |              |                         | PROTOCOL | | | DO_MIRROR | | |
+            m = p4.match(line)
+            if m and result_dict is not None:
+                group = m.groupdict()
+                result_dict['acl_match_key_fields'].append(group['acl_match_key_fields'])
+                if group['acl_commands']:
+                    result_dict['acl_commands'].append(group['acl_commands'])
+                continue
+
+        return ret_dict              
+
+class ShowPlatformHardwareFedSwitchFwdAsicInsightL2SwitchMacTableSchema(MetaParser):
+    """Schema for:
+       * show platform hardware fed {switch} {switch_id} fwd-asic insight l2_switch_mac_table({mac_address},{vlan_or_switch_gid})'
+    """
+    schema = {
+        'mac_table': {
+            Any(): {
+                'mac_address': str,
+                'dest_type': str,
+                'dest_gid': Or(int, str, None),
+                'dest_cookie': str,
+                'aging': str,
+                'switch_cookie': int
+            }
+        }
+    }
+
+class ShowPlatformHardwareFedSwitchFwdAsicInsightL2SwitchMacTable(ShowPlatformHardwareFedSwitchFwdAsicInsightL2SwitchMacTableSchema):
+    """Parser for:
+       * show platform hardware fed {switch} {switch_id} fwd-asic insight l2_switch_mac_table({mac_address},{vlan_or_switch_gid})'
+    """
+
+    cli_command = 'show platform hardware fed {switch} {switch_id} fwd-asic insight l2_switch_mac_table{files_compare}'
+
+    def cli(self,switch='', switch_id='', files_compare= "", output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(
+                switch=switch, switch_id=switch_id, files_compare=files_compare
+            ))
+
+        # Initialize the parsed dictionary
+        ret_dict = {}
+        # +------------+-------------------+-----------+----------+-------------+---------+---------------+
+        # Switch GID |       MAC Address | Dest Type | Dest Gid | Dest Cookie |   Aging | Switch Cookie |
+        # +------------+-------------------+-----------+----------+-------------+---------+---------------+
+        # |        100 | 00:11:00:00:00:01 |   INVALID |          |  Hu1/7/0/30 | dynamic |           100 |
+        # |            |                   |           |          |             |         |               |
+
+        p1 = re.compile(r'^\|\s*(?P<switch_gid>\d+)\s*\|\s*(?P<mac_address>[0-9a-fA-F:]+)\s*\|\s*(?P<dest_type>\S+)\s*\|\s*(?P<dest_gid>\S*)\s*\|\s*(?P<dest_cookie>\S+)\s*\|\s*(?P<aging>\S+)\s*\|\s*(?P<switch_cookie>\d+)\s*\|$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            # +------------+-------------------+-----------+----------+-------------+---------+---------------+
+            # Switch GID |       MAC Address | Dest Type | Dest Gid | Dest Cookie |   Aging | Switch Cookie |
+            # +------------+-------------------+-----------+----------+-------------+---------+---------------+
+            # |        100 | 00:11:00:00:00:01 |   INVALID |          |  Hu1/7/0/30 | dynamic |           100 |
+            # |            |                   |           |          |             |         |               |
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                switch_gid = int(group['switch_gid'])
+                mac_entry = ret_dict.setdefault('mac_table', {}).setdefault(switch_gid, {})
+                mac_entry['mac_address'] = group['mac_address']
+                mac_entry['dest_type'] = group['dest_type']
+                mac_entry['dest_gid'] = int(group['dest_gid']) if group['dest_gid'].isdigit() else None
+                mac_entry['dest_cookie'] = group['dest_cookie']
+                mac_entry['aging'] = group['aging']
+                mac_entry['switch_cookie'] = int(group['switch_cookie'])
+                continue
+
+        return ret_dict
+
+class ShowPlatformHardwareFedSwitchFwdAsicInsightL2AttachmentCircuitL2LaggidSchema(MetaParser):
+    """Schema for:
+       * show platform hardware fed {switch} {switch_id} fwd-asic insight l2_attachment_circuit_l2({lag_gid})
+    """
+    schema = {
+        'l2_attachment_circuit': {
+            'ac_info': {
+                'l2_ac_gid': int,
+                'l2_ac_cookie': str,
+            },
+            Optional('switch_info'): dict,
+            Optional('eth_logical_port_info'): {
+                'vlan_tag': int,
+                'eth_port_oid': int,
+            },
+            Optional('eth_port_info'): {
+                'lag_gid': int,
+                'lag_cookie': str,
+            },
+            Optional('acl_info'): {
+                'ing_acl': bool,
+                'eg_acl': bool,
+            }
+        }
+    }
+
+
+
+class ShowPlatformHardwareFedSwitchFwdAsicInsightL2AttachmentCircuitL2Laggid(ShowPlatformHardwareFedSwitchFwdAsicInsightL2AttachmentCircuitL2LaggidSchema):
+    """Parser for:
+       * show platform hardware fed {switch} {switch_id} fwd-asic insight l2_attachment_circuit_l2(lag_gid={lag_gid})
+    """
+    cli_command = 'show platform hardware fed {switch} {switch_id} fwd-asic insight l2_attachment_circuit_l2({lag_gid})'
+
+    def cli(self,switch='' ,switch_id='', lag_gid='', output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(switch=switch, switch_id=switch_id, lag_gid=lag_gid))
+
+        # Initialize the parsed dictionary
+        ret_dict = {}
+
+        # Example: "| l2_ac_gid: 123261 |"
+        p1 = re.compile(r'^\|\s*l2_ac_gid:\s*(?P<l2_ac_gid>\d+)\s*\|.*$')
+        # Example: "| l2_ac_cookie: Po5 |"
+        p2 = re.compile(r'^\|\s*l2_ac_cookie:\s*(?P<l2_ac_cookie>\S+)\s*\|.*$')
+        # Example: "| vlan_tag: 1 |"
+        p3 = re.compile(r'^\|\s*vlan_tag:\s*(?P<vlan_tag>\d+)\s*\|.*$')
+        # Example: "| eth_port_oid: 10483 |"
+        p4 = re.compile(r'^\|\s*eth_port_oid:\s*(?P<eth_port_oid>\d+)\s*\|.*$')
+        # Example: "| lag_gid: 429 |"
+        p5 = re.compile(r'^\|\s*lag_gid:\s*(?P<lag_gid>\d+)\s*\|.*$')
+        # Example: "| lag_cookie: Po5 | "
+        p6 = re.compile(r'^\|\s*lag_cookie:\s*(?P<lag_cookie>\S+)\s*\|.*$')
+        # Example: "| ing_acl: False |"
+        p7 = re.compile(r'^\|\s*ing_acl:\s*(?P<ing_acl>\S+)\s*\|.*$')
+        # Example: "| eg_acl: False | "
+        p8 = re.compile(r'^\|\s*eg_acl:\s*(?P<eg_acl>\S+)\s*\|.*$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # l2_ac_gid: 123261
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ac_info = ret_dict.setdefault('l2_attachment_circuit', {}).setdefault('ac_info', {})
+                ac_info['l2_ac_gid'] = int(group['l2_ac_gid'])
+                continue
+
+            # l2_ac_cookie': 'Po5'
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ac_info = ret_dict['l2_attachment_circuit']['ac_info']
+                ac_info['l2_ac_cookie'] = group['l2_ac_cookie']
+                continue
+
+            # vlan_tag: 1
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                if 'eth_logical_port_info' not in ret_dict['l2_attachment_circuit']:
+                    eth_logical_port_info = {}
+                else:
+                    eth_logical_port_info = ret_dict['l2_attachment_circuit']['eth_logical_port_info']
+                eth_logical_port_info['vlan_tag'] = int(group['vlan_tag'])
+                ret_dict['l2_attachment_circuit']['eth_logical_port_info'] = eth_logical_port_info
+                continue
+
+            # eth_port_oid: 10483
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                if 'eth_logical_port_info' not in ret_dict['l2_attachment_circuit']:
+                    eth_logical_port_info = {}
+                else:
+                    eth_logical_port_info = ret_dict['l2_attachment_circuit']['eth_logical_port_info']
+                eth_logical_port_info['eth_port_oid'] = int(group['eth_port_oid'])
+                ret_dict['l2_attachment_circuit']['eth_logical_port_info'] = eth_logical_port_info
+                continue
+
+            # lag_gid: 429
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                if 'eth_port_info' not in ret_dict['l2_attachment_circuit']:
+                    eth_port_info = {}
+                else:
+                    eth_port_info = ret_dict['l2_attachment_circuit']['eth_port_info']
+                eth_port_info['lag_gid'] = int(group['lag_gid'])
+                ret_dict['l2_attachment_circuit']['eth_port_info'] = eth_port_info
+                continue
+
+            # l2_ac_cookie: Po5
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                if 'eth_port_info' not in ret_dict['l2_attachment_circuit']:
+                    eth_port_info = {}
+                else:
+                    eth_port_info = ret_dict['l2_attachment_circuit']['eth_port_info']
+                eth_port_info['lag_cookie'] = group['lag_cookie']
+                ret_dict['l2_attachment_circuit']['eth_port_info'] = eth_port_info
+                continue
+
+            # ing_acl: False
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                if 'acl_info' not in ret_dict['l2_attachment_circuit']:
+                    acl_info = {}
+                else:
+                    acl_info = ret_dict['l2_attachment_circuit']['acl_info']
+                acl_info['ing_acl'] = group['ing_acl'].lower() == 'true'
+                ret_dict['l2_attachment_circuit']['acl_info'] = acl_info
+                continue
+
+            # eg_acl: False
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                if 'acl_info' not in ret_dict['l2_attachment_circuit']:
+                    acl_info = {}
+                else:
+                    acl_info = ret_dict['l2_attachment_circuit']['acl_info']
+                acl_info['eg_acl'] = group['eg_acl'].lower() == 'true'
+                ret_dict['l2_attachment_circuit']['acl_info'] = acl_info
+                continue
+
+        return ret_dict
+
+class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightVrfPortsDetailSchema(MetaParser):
+    """Schema for:
+       show platform hardware fed {switch} {state} fwd-asic insight vrf_ports_detail
+    """
+    schema = {
+        'vrf_ports': {
+            Any(): {
+                'vrf_gid': int,
+                'l3_port_gid': int,
+                'l3_port_type': str,
+                'ether_port_oid': int,
+                'mac_address': list,
+                Optional('active_state'): str,
+                Optional('urpf_mode'): str,
+                Optional('l3_ac_ing_vlan_tag1'): int,
+                Optional('l3_ac_egr_vlan_tag1'): int,
+                Optional('vrf_cookie'): str
+            }
+        }
+    }
+
+class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightVrfPortsDetail(ShowPlatformHardwareFedSwitchActiveFwdAsicInsightVrfPortsDetailSchema):
+    """
+    Parser for:
+      show platform hardware fed {switch} {state} fwd-asic insight vrf_ports_detail
+    """
+    cli_command = 'show platform hardware fed {switch} {state} fwd-asic insight vrf_ports_detail'
+
+    def cli(self, switch, state, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(switch=switch, state=state))
+
+        ret_dict = {}
+
+        # +---------+-------------+--------------+----------------+-----------------------+--------------+-----------+---------------------+---------------------+
+        # | Vrf GID | L3 Port GID | L3 Port Type | Ether Port OID |      MAC Address      | Active State | URPF mode | L3-AC Ing VLAN Tag1 | L3-AC Egr VLAN Tag1 |
+        # +---------+-------------+--------------+----------------+-----------------------+--------------+-----------+---------------------+---------------------+
+        # | 2       | 4099        | L3_AC_PORT   | 302            | ['4e:41:50:00:01:14'] |              | NONE      | {'val': 3}          | {'val': 3}          |
+        p1 = re.compile(
+            r'^\|\s*(?P<vrf_gid>\d+)\s*\|'
+            r'\s*(?P<l3_port_gid>\d+)\s*\|'
+            r'\s*(?P<l3_port_type>\S+)\s*\|'
+            r'\s*(?P<ether_port_oid>\d+)\s*\|'
+            r'\s*(?P<mac_address>\[.*?\])\s*\|'
+            r'\s*(?P<active_state>\S*)\s*\|'
+            r'\s*(?P<urpf_mode>\S*)\s*\|'
+            r'\s*(?P<l3_ac_ing_vlan_tag1>\{.*?\}|)\s*\|'
+            r'\s*(?P<l3_ac_egr_vlan_tag1>\{.*?\}|)\s*\|$'
+        )
+
+        # | 0 | TwoH1/10/0/41 | 4099 | l3-ac-gid | 4e:41:50:00:01:14 | 302 | 3 | 3 |
+        p2 = re.compile(
+            r'^\|\s*(?P<vrf_gid>\d+)\s*\|'
+            r'\s*(?P<vrf_cookie>\S+)\s*\|'
+            r'\s*(?P<l3_port_gid>\d+)\s*\|'
+            r'\s*(?P<l3_port_type>\S+)\s*\|'
+            r'\s*(?P<mac_address>\S+)\s*\|'
+            r'\s*(?P<ether_port_oid>\d+)\s*\|'
+            r'\s*(?P<l3_ac_ing_vlan_tag1>\d+)\s*\|'
+            r'\s*(?P<l3_ac_egr_vlan_tag1>\d+)\s*\|$'
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # +---------+-------------+--------------+----------------+-----------------------+--------------+-----------+---------------------+---------------------+
+            # | Vrf GID | L3 Port GID | L3 Port Type | Ether Port OID |      MAC Address      | Active State | URPF mode | L3-AC Ing VLAN Tag1 | L3-AC Egr VLAN Tag1 |
+            # +---------+-------------+--------------+----------------+-----------------------+--------------+-----------+---------------------+---------------------+
+            # | 2       | 4099        | L3_AC_PORT   | 302            | ['4e:41:50:00:01:14'] |              | NONE      | {'val': 3}          | {'val': 3}          |
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                vrf_gid = int(group['vrf_gid'])
+                l3_port_gid = int(group['l3_port_gid'])
+                key = f"{vrf_gid}_{l3_port_gid}"
+                entry = ret_dict.setdefault('vrf_ports', {}).setdefault(key, {})
+                entry['vrf_gid'] = vrf_gid
+                entry['l3_port_gid'] = l3_port_gid
+                entry['l3_port_type'] = group['l3_port_type']
+                entry['ether_port_oid'] = int(group['ether_port_oid'])
+                try:
+                    entry['mac_address'] = eval(group['mac_address'])
+                except Exception:
+                    entry['mac_address'] = [group['mac_address']]
+                if group['active_state']:
+                    entry['active_state'] = group['active_state']
+                if group['urpf_mode']:
+                    entry['urpf_mode'] = group['urpf_mode']
+                if group['l3_ac_ing_vlan_tag1']:
+                    try:
+                        entry['l3_ac_ing_vlan_tag1'] = int(eval(group['l3_ac_ing_vlan_tag1'])['val'])
+                    except Exception:
+                        pass
+                if group['l3_ac_egr_vlan_tag1']:
+                    try:
+                        entry['l3_ac_egr_vlan_tag1'] = int(eval(group['l3_ac_egr_vlan_tag1'])['val'])
+                    except Exception:
+                        pass
+                continue
+
+            # | 0 | TwoH1/10/0/41 | 4099 | l3-ac-gid | 4e:41:50:00:01:14 | 302 | 3 | 3 |
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                vrf_gid = int(group['vrf_gid'])
+                l3_port_gid = int(group['l3_port_gid'])
+                key = f"{vrf_gid}_{l3_port_gid}"
+                entry = ret_dict.setdefault('vrf_ports', {}).setdefault(key, {})
+                entry['vrf_gid'] = vrf_gid
+                entry['l3_port_gid'] = l3_port_gid
+                entry['l3_port_type'] = group['l3_port_type']
+                entry['ether_port_oid'] = int(group['ether_port_oid'])
+                entry['mac_address'] = [group['mac_address']]
+                entry['vrf_cookie'] = group['vrf_cookie']
+                entry['l3_ac_ing_vlan_tag1'] = int(group['l3_ac_ing_vlan_tag1'])
+                entry['l3_ac_egr_vlan_tag1'] = int(group['l3_ac_egr_vlan_tag1'])
+                continue
+
+        return ret_dict
+
+
+class ShowPlatformHardwareFedActiveFwdAsicInsightHcamUsageSliceSchema(MetaParser):
+    """Schema for 'show platform hardware fed {state} fwd-asic insight hcam_usage(1,1) | begin Slice'"""
+
+    schema = {
+        "slices": {
+            Any(): {
+                "directions": {
+                    Any(): {
+                        "entries": {
+                            "used": int,
+                            "max": int
+                        },
+                        "tiles": {
+                            Any(): {
+                                "used": int,
+                                "max": int
+                            }
+                        },
+                        "total": {
+                            "used": int,
+                            "max": int
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+class ShowPlatformHardwareFedActiveFwdAsicInsightHcamUsageSlice(ShowPlatformHardwareFedActiveFwdAsicInsightHcamUsageSliceSchema):
+    """
+    Parser for:
+      show platform hardware fed {state} fwd-asic insight hcam_usage(1,1) | begin Slice
+    """
+
+    cli_command = "show platform hardware fed {state} fwd-asic insight hcam_usage(1,1) | begin Slice"
+
+    def cli(self, state, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(state=state))
+
+        ret_dict = {}
+        current_slice = None
+        current_direction = None
+
+        # | Slice #1 | rx         |  0083 / 8192   |
+        p1 = re.compile(r'^\|\s*Slice\s*#(?P<slice>\d+)\s*\|\s*(?P<direction>\w+)\s*\|\s*(?P<used>\d+)\s*/\s*(?P<max>\d+)\s*\|$')
+        
+        # |          | tx         |  0025 / 8192   |
+        p2 = re.compile(r'^\|\s*\|\s*(?P<direction>\w+)\s*\|\s*(?P<used>\d+)\s*/\s*(?P<max>\d+)\s*\|$')
+        
+        # Slice index: 1 ==>
+        p3 = re.compile(r'^Slice index:\s*(?P<slice>\d+)\s*==>')
+        
+        # Direction: rx ==>
+        p4 = re.compile(r'^\s*Direction:\s*(?P<direction>\w+)\s*==>')
+        
+        # | Tile 0 |   00002 / 16384   |
+        p5 = re.compile(r'^\|\s*Tile\s*(?P<tile>\d+)\s*\|\s*(?P<used>\d+)\s*/\s*(?P<max>\d+)\s*\|$')
+        
+        # | Total  |  000069 / 131072  |
+        p6 = re.compile(r'^\|\s*Total\s*\|\s*(?P<used>\d+)\s*/\s*(?P<max>\d+)\s*\|$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # | Slice #1 | rx         |  0083 / 8192   |
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                current_slice = int(group["slice"])
+                current_direction = group["direction"]
+                slices = ret_dict.setdefault("slices", {})
+                slice_dict = slices.setdefault(current_slice, {})
+                directions = slice_dict.setdefault("directions", {})
+                dir_dict = directions.setdefault(current_direction, {})
+                dir_dict["entries"] = {
+                    "used": int(group["used"]),
+                    "max": int(group["max"])
+                }
+                dir_dict["tiles"] = {}
+                continue
+            
+            # |          | tx         |  0025 / 8192   |
+            m = p2.match(line)
+            if m and current_slice is not None:
+                group = m.groupdict()
+                current_direction = group["direction"]
+                directions = ret_dict["slices"][current_slice]["directions"]
+                dir_dict = directions.setdefault(current_direction, {})
+                dir_dict["entries"] = {
+                    "used": int(group["used"]),
+                    "max": int(group["max"])
+                }
+                dir_dict["tiles"] = {}
+                continue
+
+            # | Tile 0 |   00002 / 16384   |
+            m = p3.match(line)
+            if m:
+                current_slice = int(m.group("slice"))
+                continue
+
+            # | Direction: rx ==>
+            m = p4.match(line)
+            if m:
+                current_direction = m.group("direction")
+                continue
+
+            # | Tile 0 |   00002 / 16384   |
+            m = p5.match(line)
+            if m and current_slice is not None and current_direction is not None:
+                group = m.groupdict()
+                tiles = ret_dict["slices"][current_slice]["directions"][current_direction].setdefault("tiles", {})
+                tiles[int(group["tile"])] = {
+                    "used": int(group["used"]),
+                    "max": int(group["max"])
+                }
+                continue
+            
+            # | Total  |  000069 / 131072  |
+            m = p6.match(line)
+            if m and current_slice is not None and current_direction is not None:
+                group = m.groupdict()
+                ret_dict["slices"][current_slice]["directions"][current_direction]["total"] = {
+                    "used": int(group["used"]),
+                    "max": int(group["max"])
+                }
+                continue
+
+        return ret_dict        
+
+class ShowPlatformHardwareFedSwitchFwdAsicInsightIfmIngressVlanMemberTblSchema(MetaParser):
+    """Schema for:
+       * show platform hardware fed {switch} {switch_id} fwd-asic insight ifm_ingress_vlan_member_tbl({npp_attrib_index},{vlan_id},{stp_learn_type},{stp_state_block})
+    """
+    schema = {
+        'number_of_entries': int,
+        'ingress_entry': {
+            'npp_attrib_index': int,
+            'vlan_id': int,
+            'stp_learn_type': int,
+            'stp_state_block': int,
+        }
+    }
+
+class ShowPlatformHardwareFedSwitchFwdAsicInsightIfmIngressVlanMemberTbl(ShowPlatformHardwareFedSwitchFwdAsicInsightIfmIngressVlanMemberTblSchema):
+    """Parser for:
+       * show platform hardware fed {switch} {switch_id} fwd-asic insight ifm_ingress_vlan_member_tbl({npp_attrib_index},{vlan_id},{stp_learn_type},{stp_state_block})
+    """
+
+    cli_command = 'show platform hardware fed {switch} {switch_id} fwd-asic insight ifm_ingress_vlan_member_tbl{files}'
+
+    def cli(self, switch='' , switch_id='', files= "", output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(
+                switch=switch,
+                switch_id=switch_id,
+                files=files
+            ))
+
+        # Initialize the parsed dictionary
+        ret_dict = {}
+
+        # Number of entries:524288
+        p1 = re.compile(r'^Number of entries:(?P<number_of_entries>\d+)$')
+
+        # NPP-Attrib-Index     VLAN-id     STP-Learn-Type STP-State-Block
+        # 12                   100         0              1 
+        p2 = re.compile(r'^(?P<npp_attrib_index>\d+)\s+(?P<vlan_id>\d+)\s+(?P<stp_learn_type>\d+)\s+(?P<stp_state_block>\d+)$')
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Number of entries:524288
+            m = p1.match(line)
+            if m:
+                ret_dict['number_of_entries'] = int(m.group('number_of_entries'))
+                continue
+
+            # NPP-Attrib-Index     VLAN-id     STP-Learn-Type STP-State-Block
+            # 12                   100         0              1 
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['ingress_entry'] = {
+                    'npp_attrib_index': int(group['npp_attrib_index']),
+                    'vlan_id': int(group['vlan_id']),
+                    'stp_learn_type': int(group['stp_learn_type']),
+                    'stp_state_block': int(group['stp_state_block']),
+                }
+                continue
+
+        return ret_dict   
+
+class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightSanetClientDefinitionSchema(MetaParser):
+    """Schema for 'show platform hardware fed switch active fwd-asic insight sanet_client_definition()'"""
+    schema = {
+        'acl_oid': {
+            int : {
+                'identity_key_p_oid': int,
+                'acl_match_fields': ListOf(str),
+                'acl_p_oid': int,
+                'acl_commands': ListOf(str)
+            }
+        }
+    }
+
+class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightSanetClientDefinition(
+    ShowPlatformHardwareFedSwitchActiveFwdAsicInsightSanetClientDefinitionSchema
+):
+    """Parser for 'show platform hardware fed {switch} {state} fwd-asic insight sanet_client_definition()'"""
+
+    cli_command = ['show platform hardware fed {switch} {state} fwd-asic insight sanet_client_definition',
+                   "show platform hardware fed {switch} {state} fwd-asic insight sanet_client_definition({filterwith})"]
+
+    def cli(self, switch="",state="",filterwith="",output=None):
+        if output is None:
+            if filterwith:
+                self.cli_command = self.cli_command[1].format(switch=switch, state=state, filterwith=filterwith)
+            else:
+                self.cli_command = self.cli_command[0].format(switch=switch, state=state)
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+
+        # |    1230 |               1009 | SA                 |      1229 | IDENTITY_CLIENT_POLICY     |
+        p1 = re.compile(
+            r'^\|\s*(?P<acl_oid>\d+)\s*\|\s*(?P<identity_key_p_oid>\d+)\s*\|\s*(?P<acl_match_field>\S+)\s*\|\s*(?P<acl_p_oid>\d+)\s*\|\s*(?P<acl_command>\S.*?)\s*\|$'
+        )
+
+        # |         |                    | VRF_GID            |           | DROP                       |
+        # |         |                    | IPV4_SIP           |           | COUNTER                    |
+        # |         |                    | SOURCE_SYSTEM_PORT |           | IPV4_CLIENT_POLICY_APPLIED |
+        # |         |                    |                    |           | IPV6_CLIENT_POLICY_APPLIED |
+        # |         |                    |                    |           |                            |
+        p2 = re.compile(
+            r'^\|\s*\|\s*\|\s*(?P<acl_match_field>\S*)\s*\|\s*\|\s*(?P<acl_command>\S*)\s*\|$'
+        )
+
+        acl_match_fields = []
+        acl_commands = []
+        for line in output.splitlines():
+            line = line.strip()
+            if not line or line.startswith('+'):
+                continue
+
+            # |    1230 |               1009 | SA                 |      1229 | IDENTITY_CLIENT_POLICY     |
+            m = p1.match(line)
+            if m:
+                acl_match_fields = []
+                acl_commands = []                
+                group = m.groupdict()
+                result_dict = ret_dict.setdefault("acl_oid", {}).setdefault(int(group['acl_oid']), {})                
+                result_dict.update({
+                    "identity_key_p_oid": int(group['identity_key_p_oid']),
+                    "acl_p_oid": int(group['acl_p_oid'])}
+                    )
+                if group['acl_match_field']:
+                    acl_match_fields.append(group['acl_match_field'])
+                    result_dict.update({"acl_match_fields": acl_match_fields})
+                if group['acl_command']:
+                    acl_commands.append(group['acl_command'])
+                    result_dict.update({"acl_commands": acl_commands})
+                continue
+
+            # |         |                    | VRF_GID            |           | DROP                       |
+            # |         |                    | IPV4_SIP           |           | COUNTER                    |
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                if group['acl_match_field']:
+                    acl_match_fields.append(group['acl_match_field'])
+                    result_dict.update({"acl_match_fields": acl_match_fields})
+                if group['acl_command']:
+                    acl_commands.append(group['acl_command'])
+                    result_dict.update({"acl_commands": acl_commands})
+                continue
+
+        return ret_dict
+
+class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightSanetClientAclSchema(MetaParser):
+    """Schema for 'show platform hardware fed switch active fwd-asic insight sanet_client_acl()'"""
+    schema = {
+        'client_policy': {
+            int : {
+                'priority': {
+                    int: {
+                        'acl_rule_keys': ListOf({
+                            'field': str,
+                            'key_value': str,
+                        }),
+                        'acl_rule_actions': ListOf({
+                            'command': str,
+                            'action_value': str,
+                        }),
+                        'identity_acl_group_info': str,
+                        'packet_count': int,
+                    }
+                }
+            }
+        }
+    }
+
+class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightSanetClientAcl(
+    ShowPlatformHardwareFedSwitchActiveFwdAsicInsightSanetClientAclSchema
+):
+    """Parser for 'show platform hardware fed {switch} {active} fwd-asic insight sanet_client_acl()'"""
+
+    cli_command = ['show platform hardware fed {switch} {active} fwd-asic insight sanet_client_acl',
+                     "show platform hardware fed {switch} {active} fwd-asic insight sanet_client_acl({options})"]
+
+    def cli(self, switch="", active="", options="", output=None):
+        if output is None:
+            if options:
+                self.cli_command = self.cli_command[1].format(switch=switch, active=active, options=options)
+            else:
+                self.cli_command = self.cli_command[0].format(switch=switch, active=active)
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+
+        # |              1225 |        0 | VLAN_OUTER: vid:5         | DROP: false                       |                    1226 |           14 |
+        p1 = re.compile(
+            r'^\|\s*(?P<client_policy_oid>\d+)\s*\|\s*(?P<priority>\d+)\s*\|\s*(?P<acl_rule_key_fields>.+?):\s*(?P<acl_rule_key_value>.+?)\s*\|\s*(?P<acl_rule_action_commands>.+?):\s*(?P<acl_rule_action_value>.+?)\s*\|\s*(?P<identity_acl_group_info>\d+)\s*\|\s*(?P<packet_count>\d+)\s*\|$'
+        )
+
+        # |                   |          | SOURCE_SYSTEM_PORT: 0x22d | IPV4_CLIENT_POLICY_APPLIED: false |                         |              |
+        # |                   |          |                           | IPV6_CLIENT_POLICY_APPLIED: false |                         |              |
+        p2 = re.compile(
+            r'^\|\s*\|\s*\|\s*(?P<acl_rule_key_fields>.+?):\s*(?P<acl_rule_key_value>.+?)\s*\|\s*(?P<acl_rule_action_commands>.+?):\s*(?P<acl_rule_action_value>.+?)\s*\|\s*\|\s*\|$'
+        )
+
+        # |                   |          |                           | COUNTER: 1942                     |                         |              |
+        p3 = re.compile(
+            r'^\|\s*\|\s*\|\s*\|\s*(?P<acl_rule_action_commands>.+?):\s*(?P<acl_rule_action_value>.+?)\s*\|\s*\|\s*\|$'
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line or line.startswith('+'):
+                continue
+
+            # |              1225 |        0 | VLAN_OUTER: vid:5         | DROP: false                       |                    1226 |           14 |            
+            m = p1.match(line)
+            if m:                                  
+                group = m.groupdict()
+                priority_dict = ret_dict.setdefault('client_policy', {}).setdefault(int(group['client_policy_oid']), {})
+                client_dict = priority_dict.setdefault('priority', {}).setdefault(int(group['priority']), {})
+                client_dict.update({
+                    'identity_acl_group_info': group['identity_acl_group_info'].strip(),
+                    'packet_count': int(group['packet_count'])
+                })
+
+                key_list = client_dict.setdefault('acl_rule_keys', [])
+                key_list.append({
+                    'field': m.groupdict()['acl_rule_key_fields'],
+                    'key_value': m.groupdict()['acl_rule_key_value'],
+                })
+
+                action_list = client_dict.setdefault('acl_rule_actions', [])
+                action_list.append({
+                    'command': m.groupdict()['acl_rule_action_commands'],
+                    'action_value': m.groupdict()['acl_rule_action_value'],
+                })
+                continue
+
+            # |                   |          | SOURCE_SYSTEM_PORT: 0x22d | IPV4_CLIENT_POLICY_APPLIED: false |                         |              |
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                key_list.append({
+                    'field': group['acl_rule_key_fields'].strip(),
+                    'key_value': group['acl_rule_key_value'].strip(),
+                })
+                action_list.append({
+                    'command': group['acl_rule_action_commands'].strip(),
+                    'action_value': group['acl_rule_action_value'].strip(),
+                })
+                continue
+
+            # |                   |          |                           | COUNTER: 1942                     |                         |              |
+
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                action_list.append({
+                    'command': group['acl_rule_action_commands'].strip(),
+                    'action_value': group['acl_rule_action_value'].strip(),
+                })
+                continue
+
+        return ret_dict
+
+class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightAclTableRulesSchema(MetaParser):
+    """Schema for 'show platform hardware fed switch active fwd-asic insight acl_table_rules()'"""
+    schema = {
+        Optional('acl_cookie'): str,
+        'acl_oid': {
+            int : {
+                'rule_priority': int,
+                'acl_rule_action': ListOf(dict),
+                'acl_rule_counter_pkts': int,
+                Optional('acl_rule_match'): {
+                    'key_type': {
+                        str: ListOf({
+                            'mask': str,
+                            'value': str,
+                        })
+                    }
+                }
+            }
+        }
+    }
+
+class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightAclTableRules(
+    ShowPlatformHardwareFedSwitchActiveFwdAsicInsightAclTableRulesSchema
+):
+    """Parser for 'show platform hardware fed {switch} {state} fwd-asic insight acl_table_rules({acl_oid})'"""
+
+    cli_command = ["show platform hardware fed {switch} {state} fwd-asic insight acl_table_rules({acl_oid})",
+                   "show platform hardware fed {state} fwd-asic insight acl_table_rules({acl_oid})"]
+
+    def cli(self, switch="", state="", acl_oid="", output=None):
+        if output is None:
+            if switch:
+                self.cli_command = self.cli_command[0].format(switch=switch, state=state, acl_oid=acl_oid)
+            else:
+                self.cli_command = self.cli_command[1].format(acl_oid=acl_oid, state=state)
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+
+        # | ACL Table Rules (acl-oid : 1321, acl-cookie : ) |
+        p1 = re.compile(
+            r'^\|\s+ACL Table Rules \(acl-oid\s*:\s*(?P<acl_oid>\d+), acl-cookie\s*:\s*(?P<acl_cookie>.*?)\s*?\)\s*\|$'
+        )
+
+        # | 0             | key-type: IS_IDENTITY_CLIENT_POLICY_APPLIED | action-type: DROP                  | 0                     |
+        p2 = re.compile(
+            r'^\|\s+(?P<rule_priority>\d+)\s+\|\s+key-type:(?P<key_type>.+?)\s+\|\s+action-type:\s+(?P<acl_rule_action_field>.+?)\s+\|\s+(?P<acl_rule_counter_pkts>\d+)\s+\|$'
+        )
+
+
+        # |              | key-type: IS_IDENTITY_CLIENT_POLICY_APPLIED | action-type: DROP                  |                     |
+        p3 = re.compile(
+            r'^\|\s+\|\s+key-type:(?P<key_type>.+?)\s+\|\s+action-type:\s+(?P<acl_rule_action_field>.+?)\s+\|\s+\|$'
+        )
+
+        # |              | key-type: IS_IDENTITY_CLIENT_POLICY_APPLIED | action-data: 1                  |                     |
+        p4 = re.compile(
+            r'^\|\s+\|\s+key-type:(?P<key_type>.+?)\s+\|\s+action-data:\s+(?P<acl_rule_action_value>.+?)\s+\|\s+\|$'
+        )
+
+        # | 0             |             | action-type: DROP                  | 0                     |
+        p5 = re.compile(
+            r'^\|\s+(?P<rule_priority>\d+)\s+\|\s+\|\s+action-type:\s+(?P<acl_rule_action_field>.+?)\s*\|\s+(?P<acl_rule_counter_pkts>\d+)\s+\|$'
+        )
+
+        # |               | mask: 1                                     | action-type: COUNTER               |                       |
+        p6 = re.compile(
+            r'^\|\s+\|\s+mask:\s+(?P<mask>.+?)\s+\|\s+action-type:\s+(?P<acl_rule_action_field>.+?)\s*\|\s+\|$'
+        )
+
+        # |               | value: 0                                    | action-data: 1                     |                       |
+        p7 = re.compile(
+            r'^\|\s+\|\s+value:\s+(?P<value>.+?)\s+\|\s+action-data:\s+(?P<acl_rule_action_value>.+?)\s*\|\s+\|$'
+        )
+
+        # |               |                                             | action-type: SUPPRESS_MAC_LEARNING |                       |
+        p8 = re.compile(r'^\|\s+\|\s+\|\s+action-type:\s+(?P<acl_rule_action_field>.+?)\s*\|\s+\|$')
+
+        # |               |                                             | action-data: ['OID':'1322']        |                       |
+        p9 = re.compile(r'^\|\s+\|\s+\|\s+action-data:\s+(?P<acl_rule_action_value>.+?)\s*\|\s+\|$')
+
+        # |               | mask: 1                                     | action-data: 1               |                       |
+        p10 = re.compile(
+            r'^\|\s+\|\s+mask:\s+(?P<mask>.+?)\s+\|\s+action-data:\s+(?P<acl_rule_action_value>.+?)\s+\|\s+\|$'
+        )
+
+        # |               | value: 0                                    | action-type: COUNTER                    |                       |
+        p11 = re.compile(
+            r'^\|\s+\|\s+value:\s+(?P<value>.+?)\s+\|\s+action-type:\s+(?P<acl_rule_action_field>.+?)\s+\|\s+\|$'
+        )
+
+        # |               | key-type: IS_ROUTED                                                       |                                    |                       |
+        p12 = re.compile(
+            r'^\|\s+\|\s+key-type:\s+(?P<key_type>.+?)\s+\|\s+\|\s+\|$'
+        )
+
+        # |               | mask: 1                                                                    |                                    |                       |
+        p13 = re.compile(
+            r'^\|\s+\|\s+mask:\s+(?P<mask>.+?)\s+\|\s+\|\s+\|$'
+        )       
+
+        # |               | value: 0                                                                   |                                    |                       |
+        p14 = re.compile(
+            r'^\|\s+\|\s+value:\s+(?P<value>.+?)\s+\|\s+\|\s+\|$'
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line or line.startswith('+'):
+                continue
+
+            # | ACL Table Rules (acl-oid : 1321, acl-cookie : ) |
+            m = p1.match(line)
+            if m:                                  
+                group = m.groupdict()
+                client_dict = ret_dict.setdefault('acl_oid', {}).setdefault(int(group['acl_oid']), {})
+                if group['acl_cookie']:
+                    ret_dict['acl_cookie']=group['acl_cookie']
+                continue
+
+            # | 0             | key-type: IS_IDENTITY_CLIENT_POLICY_APPLIED | action-type: DROP                  | 0                     |
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                client_dict.update({
+                    'rule_priority': int(group['rule_priority']),
+                    'acl_rule_counter_pkts': int(group['acl_rule_counter_pkts'])
+                })
+
+                action_list = client_dict.setdefault('acl_rule_action', [])
+                action_list.append({
+                    'type': group['acl_rule_action_field'],
+                })
+
+                key_dict = client_dict.setdefault('acl_rule_match', {}).setdefault('key_type', {})
+                match_list = key_dict.setdefault(group['key_type'].strip(), [])
+                continue
+
+            # |             | key-type: IS_IDENTITY_CLIENT_POLICY_APPLIED | action-type: DROP                  |                 |
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                action_list.append({
+                    'type': group['acl_rule_action_field'],
+                })
+
+                match_list = key_dict.setdefault(group['key_type'].strip(), [])
+                continue
+
+            # |             | key-type: IS_IDENTITY_CLIENT_POLICY_APPLIED | action-data: DROP                  |                 |
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                action_list[-1].update({
+                    'data': group['acl_rule_action_value'],
+                })
+                match_list = key_dict.setdefault(group['key_type'].strip(), [])
+                continue
+
+            # | 0             |             | action-type: DROP                  | 0                     |
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                client_dict.update({
+                    'rule_priority': int(group['rule_priority']),
+                    'acl_rule_counter_pkts': int(group['acl_rule_counter_pkts'])
+                })
+
+                action_list = client_dict.setdefault('acl_rule_action', [])
+                action_list.append({
+                    'type': group['acl_rule_action_field'],
+                })
+                continue
+
+            # |               | mask: 1                                     | action-type: COUNTER               |                       |
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                match_list[-1].update({
+                    'mask': group['mask'],
+                })                
+                action_list.append({
+                    'type': group['acl_rule_action_field'],
+                })
+                continue
+
+            # |               | value: 0                                    | action-data: 1                     |                       |
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                match_list.append({
+                    'value': group['value'],
+                })                
+                action_list[-1].update({
+                    'data': group['acl_rule_action_value'],
+                })
+                continue
+
+            # |               |                                             | action-type: SUPPRESS_MAC_LEARNING |                       |
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                action_list.append({
+                    'type': group['acl_rule_action_field'],
+                })
+                continue
+
+            # |               |                                             | action-data: ['OID':'1322']        |                       |
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                action_list[-1].update({
+                    'data': group['acl_rule_action_value'],
+                })
+                continue
+
+            # |               | mask: 1                                     | action-data: 1               |                       |
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                match_list[-1].update({
+                    'mask': m.groupdict()['mask'],
+                })                
+                action_list[-1].update({
+                    'data': group['acl_rule_action_value'],
+                })
+                continue
+
+            # |               | value: 0                                    | action-type: COUNTER                     |                       |
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                match_list.append({
+                    'value': m.groupdict()['value'],
+                })                
+                action_list.append({
+                    'type': group['acl_rule_action_field'],
+                })
+                continue
+
+            # |               | key-type: IS_ROUTED                                                       |                                    |                       |
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                match_list = key_dict.setdefault(group['key_type'].strip(), [])              
+                continue
+
+            # |               | mask: 1                                                                    |                                    |                       |
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                match_list[-1].update({
+                    'mask': group['mask'],
+                })
+                continue
+
+            # |               | value: 0                                                                   |                                    |                       |
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                match_list.append({
+                    'value': group['value'],
+                })
+                continue
+
+        return ret_dict    
+
+class ShowPlatformHardwareFedSwitchActiveFwdAsicTrapsTmTrapsAsicSchema(MetaParser):
+    """
+    Schema for
+        show platform hardware fed {switch} {state} fwd-asic traps tm-traps asic {asic}
+    """
+    schema = {
+        'tm_traps': {
+            Any(): {
+                'trap_id': str,
+                'asic': str,
+                'tm_trap': str,
+                'prev': int,
+                'current': int,
+                'delta': int
+            }
+        }
+    }
+
+class ShowPlatformHardwareFedSwitchActiveFwdAsicTrapsTmTrapsAsic(ShowPlatformHardwareFedSwitchActiveFwdAsicTrapsTmTrapsAsicSchema):
+    """
+    Parser for
+        show platform hardware fed {switch} {state} fwd-asic traps tm-traps asic {asic}
+    """
+    cli_command = 'show platform hardware fed {switch} {state} fwd-asic traps tm-traps asic {asic}'
+
+    def cli(self, switch='', state='', asic='', output=None):
+        if output is None:
+            cmd = self.cli_command.format(switch=switch, state=state, asic=asic)
+            output = self.device.execute(cmd)
+
+        # 2 | 0 | STATISTICAL_METER_PACKET_GOT_DROPPED_DUE_TO_STATISTICAL_METER | 118459634 | 4333278472 | 4214818838
+        p1 = re.compile(r'^(?P<trap_id>\d+)\s+\|\s+(?P<asic>\d+)\s+\|\s+(?P<tm_trap>.+?)\s+\|\s+(?P<prev>\d+)\s+\|\s+(?P<current>\d+)\s+\|\s+(?P<delta>-?\d+)$')
+
+        ret_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+
+            # 2 | 0 | STATISTICAL_METER_PACKET_GOT_DROPPED_DUE_TO_STATISTICAL_METER | 118459634 | 4333278472 | 4214818838
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                # Create a unique key using trap_id and asic
+                key = f"trap_{group['trap_id']}_asic_{group['asic']}"
+                
+                tm_traps_dict = ret_dict.setdefault('tm_traps', {})
+                tm_traps_dict[key] = {
+                    'trap_id': group['trap_id'],
+                    'asic': group['asic'], 
+                    'tm_trap': group['tm_trap'].strip(),
+                    'prev': int(group['prev']),
+                    'current': int(group['current']),
+                    'delta': int(group['delta'])
+                }
+                continue
+
+        return ret_dict

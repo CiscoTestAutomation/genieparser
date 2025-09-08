@@ -34,6 +34,8 @@
     * show interfaces {interface} capabilities
     * show interfaces {interface} vlan mapping
     * show interfaces {interface} human-readable
+    * show interfaces transceiver properties
+    * show interfaces transceiver module {mod}
 """
 
 import os
@@ -290,8 +292,11 @@ class ShowInterfaces(ShowInterfacesSchema):
                         r' *\(bia *(?P<phys_address>[a-z0-9\.]+)\))?$')
 
         # Hardware is LTE Adv CAT6 - Multimode LTE/DC-HSPA+/HSPA+/HSPA/UMTS/EDGE/GPRS
-        p2_2 = re.compile(r'Hardware +is +(?P<type>[a-zA-Z0-9\-\/\+ ]+)'
-                          r'(?P<mac_address>.*)(?P<phys_address>.*)')
+        # Hardware is BUILT-IN-4x2_5GE, address is 8c1e.8068.9f6c (bia 8c1e.8068.9f6c)
+        p2_2 = re.compile(r'Hardware +is +(?P<type>[a-zA-Z0-9\-\/\\_+ ]+)(, +address +is +(?P<mac_address>[a-f0-9\.]+)( +\(bia +(?P<phys_address>.*)\))?)?')
+
+        # Hardware is not present
+        p2_3 = re.compile(r'^Hardware +is +not +present$')
 
         # Hardware is not present
         p2_3 = re.compile(r'^Hardware +is +not +present$')
@@ -4132,7 +4137,6 @@ class ShowInterfacesTransceiverDetail(ShowInterfacesTransceiverDetailSchema):
                     intf_dict[stat]['LowWarnThreshold'] = float(m.groupdict()['LWT'])
                     intf_dict[stat]['LowAlarmThreshold'] = float(m.groupdict()['LAT'])
                     continue
-
         return result_dict
 
 
@@ -4825,10 +4829,10 @@ class ShowPmPortInterface(ShowPmPortInterfaceSchema):
         # dtp special no  pagp special no
         p1_7 = re.compile(r"^dtp\s+special\s+(?P<dtp_special>\w+)\s+pagp\s+"
                r"special\s+(?P<pagp_special>\w+)$")
-        # speed: 100M   duplex: full   mode: access   encap: native 
+        # speed: 100M   duplex: full   mode: access   encap: native
         p1_8 = re.compile(r"^speed:\s+(?P<speed>\S+)\s+duplex:\s+(?P<duplex>\w+)"
                r"\s+mode:\s+(?P<mode>\w+)\s+encap:\s+(?P<encap>\w+)$")
-        # dtp nonegotiate: FALSE 
+        # dtp nonegotiate: FALSE
         p1_9 = re.compile(r"^dtp\s+nonegotiate:\s+(?P<dtp_nonego>\w+)$")
         # flowcontrol receive: on   flowcontrol send: off
         p1_10 = re.compile(r"^flowcontrol\s+receive:\s+(?P<flow_ctrl_receive>\w+)"
@@ -4836,7 +4840,7 @@ class ShowPmPortInterface(ShowPmPortInterfaceSchema):
         # linkflapcnt: 0  dtpflapcnt: 0  pagpflapcnt: 0
         p1_11 = re.compile(r"^linkflapcnt:\s+(?P<link_flap_cnt>\d+)\s+dtpflapcnt:"
                 r"\s+(?P<dtp_flap_cnt>\d+)\s+pagpflapcnt:\s+(?P<pagp_flap_cnt>\d+)$")
-        # unidirectional: off 
+        # unidirectional: off
         p1_12 = re.compile(r"^unidirectional:\s+(?P<unidirectional>\w+)$")
         # operVlan: 0
         p1_13 = re.compile(r"^operVlan:\s+(?P<oper_vlan>\d+)$")
@@ -4845,7 +4849,7 @@ class ShowPmPortInterface(ShowPmPortInterfaceSchema):
         # sm(pm_port 1/24), running yes, state access_multi
         p1_15 = re.compile(r"^sm\((?P<sm>\S+\s+\S+)\),\s+running\s+"
                 r"(?P<running>\w+),\s+state\s+(?P<state>\S+)$")
-        # Last transition recorded: (cfg_access_vvlanid)-> pagp_port_cleanup (cfg_access_vvlanid)-> pagp (cfg_access_vvlanid)-> pre_pagp_may_suspend (cfg_access_vvlanid)-> pagp_may_suspend (pagp_continue)-> start_pagp (pagp_continue)-> pagp (dont_bundle)-> pre_post_pagp (dont_bundle)-> post_pagp (dtp_access_multi)-> access_multi (bulk_sync)-> access_multi 
+        # Last transition recorded: (cfg_access_vvlanid)-> pagp_port_cleanup (cfg_access_vvlanid)-> pagp (cfg_access_vvlanid)-> pre_pagp_may_suspend (cfg_access_vvlanid)-> pagp_may_suspend (pagp_continue)-> start_pagp (pagp_continue)-> pagp (dont_bundle)-> pre_post_pagp (dont_bundle)-> post_pagp (dtp_access_multi)-> access_multi (bulk_sync)-> access_multi
         p1_16 = re.compile(r"^Last\s+transition\s+recorded:\s+"
                 r"(?P<last_transition>\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+"
                 r"\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+"
@@ -4883,18 +4887,18 @@ class ShowPmPortInterface(ShowPmPortInterfaceSchema):
         p2_5 = re.compile(r"^speed:\s+(?P<speed>\w+)\s+speedauto:\s+"
                r"(?P<speed_auto>\S+)\s+duplex:\s+(?P<duplex>\w+)\s+"
                r"mode:\s+(?P<mode>\w+)$")
-        # encap: dot1q   nonegotiate: false 
+        # encap: dot1q   nonegotiate: false
         p2_6 = re.compile(r"^encap:\s+(?P<encap>\S+)\s+nonegotiate:\s+"
                r"(?P<nonego>\w+)$")
         # jumbo cap: true   jumbo: false  mtu: 1500  sync-delay: 210  HOL: Enable
         p2_7 = re.compile(r"^jumbo\s+cap:\s+(?P<jumbo_cap>\w+)\s+jumbo:\s+"
                r"(?P<jumbo>\w+)\s+mtu:\s+(?P<mtu>\d+)\s+sync-delay:\s+"
                r"(?P<sync_delay>\d+)\s+HOL:\s+(?P<hol>\w+)$")
-        # bcast-supp-level: 10000   mcast-supp-level: 10000   ucast-supp-level: 10000 
+        # bcast-supp-level: 10000   mcast-supp-level: 10000   ucast-supp-level: 10000
         p2_8 = re.compile(r"^bcast-supp-level:\s+(?P<bcast_sup_level>\d+)\s+"
                r"mcast-supp-level:\s+(?P<mcast_sup_level>\d+)\s+ucast-supp-level:"
                r"\s+(?P<ucast_sup_level>\d+)$")
-        # disl: off   dtp nonegotiate: FALSE   media: unknown   dualmode 0 
+        # disl: off   dtp nonegotiate: FALSE   media: unknown   dualmode 0
         p2_9 = re.compile(r"^disl:\s+(?P<disl>\w+)\s+dtp\s+nonegotiate:\s+"
                r"(?P<dtp_nonego>\w+)\s+media:\s+(?P<media>\w+)\s+dualmode\s+"
                r"(?P<dualmode>\d+)$")
@@ -5749,6 +5753,236 @@ class ShowInterfaceHumanReadable(ShowInterfaceHumanReadableSchema):
                 ret_dict.update({
                     group['dir']: group['rate']
                 })
+                continue
+
+        return ret_dict
+
+
+# ======================================================
+# Schema for 'show interfaces transceiver properties'
+# ======================================================
+
+class ShowInterfacesTransceiverPropertiesSchema(MetaParser):
+    """Schema for show interfaces transceiver properties"""
+
+    schema = {
+        'interface': {
+            Any(): {
+                Optional('administrative_speed'): str,
+                Optional('administrative_duplex'): str,
+                Optional('administrative_auto_mdix'): str,
+                Optional('administrative_power_inline'): str,
+                Optional('operational_speed'): str,
+                Optional('operational_duplex'): str,
+                Optional('operational_auto_mdix'): str,
+                Optional('media_type'): str,
+                Optional('max_allocated_power'): str,
+                Optional('transceiver_max_power'): str                
+            }
+        }
+    }
+    
+# ======================================================
+# Parser for 'show interfaces transceiver properties'
+# ======================================================
+
+class ShowInterfacesTransceiverProperties(ShowInterfacesTransceiverPropertiesSchema):
+    """Parser for show interfaces transceiver properties"""
+
+    cli_command = 'show interfaces transceiver properties'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Name: Te1/0/1
+        p1 = re.compile(r'^Name\s+:\s+(?P<interface>\S+)$')
+
+        # Administrative Speed: 1000 Mbps
+        p2 = re.compile(r'^Administrative Speed:\s+(?P<value>\S+)$')
+
+        # Administrative Duplex: full
+        p3 = re.compile(r'^Administrative Duplex:\s+(?P<value>\S+)$')
+
+        # Administrative Auto-MDIX: off
+        p4 = re.compile(r'^Administrative Auto-MDIX:\s+(?P<value>\S+)$')
+
+        # Administrative Power Inline: off
+        p5 = re.compile(r'^Administrative Power Inline:\s+(?P<value>\S+)$')
+
+        # Operational Speed: 1000 Mbps
+        p6 = re.compile(r'^Operational Speed:\s+(?P<value>\S+)$')
+
+        # Operational Duplex: full
+        p7 = re.compile(r'^Operational Duplex:\s+(?P<value>\S+)$')
+
+        # Operational Auto-MDIX: off
+        p8 = re.compile(r'^Operational Auto-MDIX:\s+(?P<value>\S+)$')
+
+        # Media Type: SFP
+        p9 = re.compile(r'^Media Type:\s+(?P<value>.+)$')
+
+        # Max Allocated Power: Max
+        p10 = re.compile(r'^Max Allocated Power:\s+(?P<value>.+)$')
+
+        # Transceiver Max Power: N/A
+        p11 = re.compile(r'^Transceiver Max Power:\s+(?P<value>.+)$')
+
+        # Configured Media: 1000BASE-T
+        p12 = re.compile(r'^Configured\s+Media\s*:\s*(?P<value>.+)$')
+
+        # Active Media: 1000BASE-T
+        p13 = re.compile(r'^Active\s+Media\s*:\s*(?P<value>.+)$')
+
+        ret_dict = {}
+        int_dict = None
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # Name: Te1/0/1
+            m = p1.match(line)
+            if m:
+                intf = m.group("interface")
+                int_dict = ret_dict.setdefault("interface", {}).setdefault(intf, {})
+                continue
+   
+
+            # Administrative Speed: 1000 Mbps
+            m = p2.match(line)
+            if m:
+                int_dict["administrative_speed"] = m.group("value")
+                continue
+
+            # Administrative Duplex: full   
+            m = p3.match(line) 
+            if m:
+                int_dict["administrative_duplex"] = m.group("value")
+                continue
+
+            # Administrative Auto-MDIX: off
+            m = p4.match(line)
+            if m :
+                int_dict["administrative_auto_mdix"] = m.group("value") 
+                continue           
+
+            # Administrative Power Inline: off
+            m = p5.match(line)
+            if m:
+                int_dict["administrative_power_inline"] = m.group("value")
+                continue
+            
+            # Operational Speed: 1000 Mbps
+            m = p6.match(line)
+            if m:         
+                int_dict["operational_speed"] = m.group("value")
+                continue
+            
+            # Operational Duplex: full
+            m = p7.match(line)
+            if m:
+                int_dict["operational_duplex"] = m.group("value")
+                continue
+            
+            # Operational Auto-MDIX: off
+            m = p8.match(line)
+            if m :
+                int_dict["operational_auto_mdix"] = m.group("value")
+                continue
+
+            # Media Type: SFP
+            m = p9.match(line)  
+            if m :
+                int_dict["media_type"] = m.group("value")
+                continue
+
+            # Max Allocated Power: Max
+            m = p10.match(line)
+            if m :
+                int_dict["max_allocated_power"] = m.group("value")  
+                continue
+
+            # Transceiver Max Power: N/A
+            m = p11.match(line)
+            if m :
+                int_dict["transceiver_max_power"] = m.group("value")
+                continue
+                        
+        return ret_dict
+
+# ======================================================
+# Schema for 'show interfaces transceiver module {mod}'
+# ======================================================
+
+class ShowInterfacesTransceiverModuleSchema(MetaParser):
+    """Schema for show interfaces transceiver module {mod}"""
+
+    schema = {
+        'interface': {
+            Any() : {
+            Optional('temperature'): str,
+            Optional('voltage'): str,
+            Optional('current'): str,
+            Optional('tx_power'): str,
+            Optional('rx_power'): str,
+            }
+        }
+    }
+
+# ======================================================
+# Parser for 'show interfaces transceiver module {mod}'
+# ======================================================
+
+class ShowInterfacesTransceiverModule(ShowInterfacesTransceiverModuleSchema):
+    """Parser for show interfaces transceiver module {mod}"""
+
+    cli_command = 'show interfaces transceiver module {mod}'
+
+    def cli(self, mod, output=None):
+
+        if output is None:
+            output = self.device.execute(self.cli_command.format(mod=mod))
+        
+        #                                             Optical   Optical
+        #             Temperature  Voltage  Current   Tx Power  Rx Power
+        # Port         (Celsius)    (Volts)  (mA)      (dBm)     (dBm)
+        # ---------    -----------  -------  --------  --------  --------
+        # Te1/2        50.3       3.25       9.9      -5.7      -4.4
+
+        p1 = re.compile(
+            r'^(?P<interface>\S+)\s+'
+            r'(?P<temperature>[-+]?\d+(\.\d+)?)\s+'
+            r'(?P<voltage>[-+]?\d+(\.\d+)?)\s+'
+            r'(?P<current>[-+]?\d+(\.\d+)?)\s+'
+            r'(?P<tx_power>[-+]?\d+(\.\d+)?)\s+'
+            r'(?P<rx_power>[-+]?\d+(\.\d+)?)$'
+        )
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Skip headers or empty lines
+            if not line or line.startswith(("Port", "Temperature", "-", "Optical")):
+                continue
+
+            #                                             Optical   Optical
+            #             Temperature  Voltage  Current   Tx Power  Rx Power
+            # Port         (Celsius)    (Volts)  (mA)      (dBm)     (dBm)
+            # ---------    -----------  -------  --------  --------  --------
+            # Te1/2        50.3       3.25       9.9      -5.7      -4.4
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict = ret_dict.setdefault('interface', {}).setdefault(group['interface'], {})
+                intf_dict['temperature'] = f"{group['temperature']}"
+                intf_dict['voltage'] = f"{group['voltage']}"
+                intf_dict['current'] = f"{group['current']}"
+                intf_dict['tx_power'] = f"{group['tx_power']}"
+                intf_dict['rx_power'] = f"{group['rx_power']}"
                 continue
 
         return ret_dict

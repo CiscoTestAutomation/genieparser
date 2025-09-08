@@ -58,6 +58,7 @@ IOSXE parsers for the following show commands:
     * show bgp {address_family} vrf {vrf} {route}
     * show bgp {address_family} {route}
     * show bgp l2vpn evpn evi {evi_id} route-type {route_type}
+    * 'show bgp * all summary | include network'
 '''
 
 # Python
@@ -6444,3 +6445,58 @@ class ShowBgpL2vpnEvpnEviRouteType(ShowBgpL2vpnEvpnEviRouteTypeSchema):
                 continue
 
         return ret_dict
+
+class ShowBgpAllSummaryNetworkSchema(MetaParser):
+    """Schema for show bgp * all summary | include network"""
+    schema = {
+        'network_entries': {
+            'total_network_entries': int,
+            'memory_usage_bytes': int,
+            'total_network_peaked': int,
+            'peaked_at': str,
+            'peaked_duration': str,
+        }
+    }
+
+class ShowBgpAllSummaryNetwork(ShowBgpAllSummaryNetworkSchema):
+    """Parser for show bgp * all summary | include network"""
+
+    cli_command = 'show bgp * all summary'
+    include = ['network']
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # Regular expressions for parsing the output
+        # 2049580 network entries using 590279040 bytes of memory
+        p1 = re.compile(r'^(?P<total_network_entries>\d+) network entries using (?P<memory_usage_bytes>\d+) bytes of memory$')
+        # 2049580 networks peaked at 15:32:57 Jan 16 2024 EST (00:00:27.974 ago)
+        p2 = re.compile(r'^(?P<total_network_peaked>\d+) networks peaked at (?P<peaked_time>\d{2}:\d{2}:\d{2} [A-Za-z]{3} \d{1,2} \d{4} [A-Z]{3}) (?P<peaked_duration>\(\d{2}:\d{2}:\d{2}\.\d{3} ago\))')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # 2049580 network entries using 590279040 bytes of memory
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                network_entries = parsed_dict.setdefault('network_entries', {})
+                network_entries['total_network_entries'] = int(group['total_network_entries'])
+                network_entries['memory_usage_bytes'] = int(group['memory_usage_bytes'])
+                continue
+
+            # 2049580 networks peaked at 15:32:57 Jan 16 2024 EST (00:00:27.974 ago)
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                network_entries = parsed_dict.setdefault('network_entries', {})
+                network_entries['total_network_peaked'] = int(group['total_network_peaked'])
+                network_entries['peaked_at'] = group['peaked_time']
+                network_entries['peaked_duration'] = group['peaked_duration']
+                continue
+
+        return parsed_dict

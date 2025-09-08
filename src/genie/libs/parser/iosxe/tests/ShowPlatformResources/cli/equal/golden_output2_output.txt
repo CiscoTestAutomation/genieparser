@@ -1,0 +1,18 @@
+ show platform resources
+**State Acronym: H - Healthy, W - Warning, C - Critical                                             
+Resource                 Usage                 Max             Warning         Critical        State
+----------------------------------------------------------------------------------------------------
+RP0 (ok, active)                                                                               H    
+Control Processor       3.05%                 100%            80%             90%             H    
+DRAM                   4200MB(26%)           15803MB         88%             93%             H    
+bootflash              1945MB(6%)            28748MB         88%             93%             H    
+harddisk               0MB(0%)               0MB             88%             93%             H    
+ESP0(ok, active)                                                                               H    
+QFP                                                                                           H    
+TCAM                   8cells(0%)            1048576cells    65%             85%             H    
+DRAM                   665706KB(15%)         4194304KB       85%             95%             H    
+IRAM                   14038KB(10%)          131072KB        85%             95%             H    
+CPU Utilization        1.00%                 100%            90%             95%             H    
+Crypto Utilization     1.00%                 100%            90%             95%             H    
+Pkt Buf Mem (0)        67KB(0%)              524288KB        85%             95%             H    
+Pkt Buf Mem (1)        67KB(0%)              524288KB        85%             95%             H  

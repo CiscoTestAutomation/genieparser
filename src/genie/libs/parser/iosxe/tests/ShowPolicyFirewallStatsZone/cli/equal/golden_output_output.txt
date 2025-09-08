@@ -1,0 +1,9 @@
+Zone: zone1
+Parameter-map: pmap-zone
+TCP SYN packet conform limit: 79
+TCP SYN packet exceed limit: 609
+Threat Detection Statistics:
+                        Average(eps)    Current(eps)    Threats Total Events
+10-min SYN attack:      0               0               0               0
+10-min FW inspect:      0               0               0               0
+10-min FW policy:       0               0               0               0

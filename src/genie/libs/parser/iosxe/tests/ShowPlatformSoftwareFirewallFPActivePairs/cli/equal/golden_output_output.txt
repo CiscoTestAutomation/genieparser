@@ -1,0 +1,4 @@
+Zone-Pair Name          Source Zone             Destination Zone        Obj-id
+------------------------------------------------------------------------------
+z1-z2                   z1                      z2                      1
+z2-z1                   z2                      z1                      2

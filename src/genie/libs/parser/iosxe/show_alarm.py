@@ -90,7 +90,8 @@ class ShowAlarmSettingsSchema(MetaParser):
     """
     schema = {
             'alarm_relay_mode' : str,
-            'power_supply' : {
+            Optional('alarm_logger_level') : str,
+            Optional('power_supply') : {
                 Optional('alarm') : str,
                 Optional('relay') : str,
                 Optional('notifies') : str,
@@ -116,12 +117,24 @@ class ShowAlarmSettingsSchema(MetaParser):
                 Optional('notifies') : str,
                 Optional('syslog') : str,
                 },
-            'sd_card':{
+            Optional('sd_card'):{
                 Optional('alarm') : str,
                 Optional('relay') : str,
                 Optional('notifies') : str,
                 Optional('syslog') : str,
                 },
+            Optional('rep'):{
+                Optional('alarm') : str,
+                Optional('relay') : str,
+                Optional('notifies') : str,
+                Optional('syslog') : str,
+                },
+            Optional('license_file_corrupt'):{
+                Optional('alarm') : str,
+                Optional('relay') : str,
+                Optional('notifies') : str,
+                Optional('syslog') : str,
+                },  
             'input_alarm_1':{
                 Optional('alarm') : str,
                 Optional('relay') : str,
@@ -147,6 +160,12 @@ class ShowAlarmSettingsSchema(MetaParser):
                 Optional('syslog') : str,
                 },
             Optional('ptp'):{
+                Optional('alarm') : str,
+                Optional('relay') : str,
+                Optional('notifies') : str,
+                Optional('syslog') : str,
+                },
+            Optional('hsr'):{
                 Optional('alarm') : str,
                 Optional('relay') : str,
                 Optional('notifies') : str,
@@ -182,7 +201,7 @@ class ShowAlarmSettings(ShowAlarmSettingsSchema):
         pd = re.compile(r'Notifies(?P<notifies>((\s+\w+)?))')
         pe = re.compile(r'Syslog(?P<syslog>((\s+\w+)?))')
         
-        p1= re.compile(r'Alarm relay mode:\s(?P<status>(\w+))')
+        p1 = re.compile(r'Alarm relay mode:\s*(?P<status>[\w-]+)')
         p2 = re.compile(r'Power Supply')
         p3 = re.compile(r'Temperature-Primary')
         p4 = re.compile(r'Temperature-Secondary')
@@ -191,10 +210,20 @@ class ShowAlarmSettings(ShowAlarmSettingsSchema):
         p7 = re.compile(r'Input-Alarm 2')
         p8 = re.compile(r'Input-Alarm 3')
         p9 = re.compile(r'Input-Alarm 4')
+        # PTP
         p10 = re.compile(r'PTP')
+        # DLR
         p11 = re.compile(r'DLR')
-        item = ''
-
+        # HSR
+        p12 = re.compile(r'HSR')
+        # Alarm logger level: Disabled
+        p13 = re.compile(r'Alarm logger level:\s*(?P<status>[\w-]+)')
+        # REP
+        p14 = re.compile(r'REP')
+        # License-File-Corrupt
+        p15 = re.compile(r'License-File-Corrupt')
+       
+        item = ''       
         for line in out.splitlines():
             line = line.strip()
             m = p1.match(line)
@@ -241,21 +270,57 @@ class ShowAlarmSettings(ShowAlarmSettingsSchema):
                 group = m.groupdict()
                 ret_dict.update({'input_alarm_4' : {}})
                 item = 'input_alarm_4'
+
+            # PTP    
             m = p10.match(line)
             if m:
                 group = m.groupdict()
                 ret_dict.update({'ptp' : {}})
                 item = 'ptp'
+
+            # DLR
             m = p11.match(line)
             if m:
                 group = m.groupdict()
                 ret_dict.update({'dlr' : {}})
                 item = 'dlr'
+
+            # HSR
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({'hsr' : {}})
+                item = 'hsr'
+
+            # Alarm logger level: Disabled
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({'alarm_logger_level' : group['status'] })
+
+            # REP
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({'rep' : {}})
+                item = 'rep'
+                continue
+
+            # License-File-Corrupt
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({'license_file_corrupt' : {}})
+                item = 'license_file_corrupt'
+                continue
+
             if item:
                 m = pa.match(line)
                 if m:
                     group = m.groupdict()
                     ret_dict[item].update({'alarm' : group['alarm'].strip() })
+                    continue
+                
                 m = pb.match(line)
                 if m:
                     group = m.groupdict()
@@ -362,5 +427,3 @@ class ShowFacilityAlarmStatus(ShowFacilityAlarmStatusSchema):
                 alarm_dict.update({'severity' : group['severity'].strip() , 'description':group['description'].strip(), 'index' : int(group['index'].strip()), 'time' : group['time'].strip() })
 
         return ret_dict
-
-

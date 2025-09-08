@@ -1,0 +1,23 @@
+(ipv6, vlan: 50)
+      Snoop State             : OFF
+      STP TCN State           : OFF
+      Flood Mode              : ON
+      IOS Flood Mode          : OFF
+      Pim state               : OFF
+      Evpn Proxy              : OFF
+      Secondary Vlan          : NO
+      Vlan Urid               : 0x50000000000000d2
+      Fset Urid ( hash )      : 0x20000000000000d2 ( afc0c589 )
+      Fset Aux Urid           : 0x0
+      Dependant users count   : 0
+      Mrouter ports           : 0
+      Flood ports             :
+          GigabitEthernet1/0/6
+          GigabitEthernet2/0/10
+          GigabitEthernet3/0/10
+          Port-channel126
+      Gid                     : 8425
+      Mcid Asic[0]            : 3225
+      Hw Info ASIC[0]:
+          Hw Vlan Mcid Oid    : 3225 (cookie:urid:0x20::d2)
+          Multicast state     : disabled

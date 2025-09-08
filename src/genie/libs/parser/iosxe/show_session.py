@@ -139,6 +139,7 @@ class ShowLine(ShowLineSchema):
         return ret_dict
 
 
+
 class ShowUsersSchema(MetaParser):
     """Schema for show users"""
     schema = {
@@ -148,7 +149,8 @@ class ShowUsersSchema(MetaParser):
                 Optional('user'): str,
                 'host': str,
                 Optional('idle'): str,
-                Optional('location'): str, 
+                Optional('location'): str,
+                Optional('tty'): str
             },
         },
         Optional('interface'): {
@@ -194,12 +196,19 @@ class ShowUsers(ShowUsersSchema):
         #    0 con 0                idle
         # *   2 vty 0         user1           idle            0   SERVICE1.CISCO.COM
         # *868 vty 0/1/0 lab        idle                 00:00:00 10.61.105.18
-        p1 = re.compile(r'^(?:(?P<active>\*))?( +)?(?P<line>(\d+)(?:\s*\S+ (\d+(?:/\d+)*))?)(?: {1,9}(?P<user>\S+))? '
-                        r'+(?P<host>\S+)( +)?(?P<idle>\S+)?(?: +(?P<location>\S+))?')
+        # * vty 322                 idle                 00:00:00 10.24.69.196
+        p1 = re.compile(r'^(?:(?P<active>\*))?( +)?(?P<line>(\d+)?(?:\s*\S+ (\d+(?:/\d+)*))?)(?: {1,9}(?P<user>\S+))? '
+                        r'+(?P<host>\S+)( +)?(?P<idle>\S+)?(?: +(?P<location>\S+))?$')
         # counting spaces from 1-9, check if class errors in future releases
 
         #                                                    			 foo-bar.cisco.com
         p1_1 = re.compile(r'^(?P<location>\S+)$')
+
+        # regex to find the tty line number
+        # 3 vty 1  -> 3
+        # * vty 322  -> 322
+        # tty 1/0  -> 1/0
+        p1_2 = re.compile(r'[\d\/]+')
 
         #  Interface    User               Mode         Idle     Peer Address
         #  unknown      NETCONF(ONEP)      com.cisco.ne 00:00:49
@@ -241,6 +250,11 @@ class ShowUsers(ShowUsersSchema):
                 line_dict.update(group)
                 line_dict.update({'active': active})
 
+                tty_lines = p1_2.findall(term_line)
+                if tty_lines:
+                    line_dict.update({'tty': tty_lines[0]})
+                continue
+
             #                                                    			 foo-bar.cisco.com
             m = p1_1.match(line)
             if m:
@@ -248,6 +262,7 @@ class ShowUsers(ShowUsersSchema):
                     line_dict.update(m.groupdict())
                 else:
                     intf_dict.update({'peer_address': m.groupdict()['location']})
+                continue
 
             #  unknown      NETCONF(ONEP)      com.cisco.ne 00:00:49
             m = p2.match(line)
@@ -268,6 +283,7 @@ class ShowUsers(ShowUsersSchema):
                     intf_dict.update({'peer_address': group['peer_address']})
 
                 inter_flag = True
+                continue
 
             # Vi2.1        lns@cisco.com      PPPoVPDN     -        21.21.21.7
             m = p3.match(line)
@@ -281,5 +297,6 @@ class ShowUsers(ShowUsersSchema):
                 ret_dict["connection_details"][var]['idle_time'] = groups['idle_time']
                 ret_dict["connection_details"][var]['peer_address'] = groups['peer_address']
                 var += 1
+                continue
 
         return ret_dict

@@ -1,0 +1,12 @@
+RP/0/RP0/CPU0:P1#show isis database
+Wed Mar 12 14:27:13.142 UTC
+
+IS-IS CORE (Level-2) Link State Database
+LSPID                 LSP Seq Num  LSP Checksum  LSP Holdtime/Rcvd  ATT/P/OL
+PE-1.00-00            0x00000024   0xd0b6        45401/65535        0/0/0
+P1.00-00            * 0x00000046   0x273f        43588/*            0/0/0
+RR-1.00-00            0x00000028   0xaae1        45099/65535        0/0/0
+PECE-1.00-00          0x0000002f   0xdb5b        10783/65534        0/0/0
+PECE-2.00-00          0x00000030   0x63c6        52756/65534        0/0/0
+
+ Total Level-2 LSP count: 5     Local Level-2 LSP count: 1

@@ -1,0 +1,3 @@
+|        AC Type | AC GID | ACL Group Packet Format | Direction | Attached Type | ACL Group OID | ACL OID | ACL Key Profile OID | Key Lookup Interface | Parallel Lookup Key OID |       Stage |
++----------------+--------+-------------------------+-----------+---------------+---------------+---------+---------------------+----------------------+-------------------------+-------------+
+| l2-ac-port-gid |      3 |                    IPV6 |   INGRESS |        switch |          1683 |     717 |                 510 |                  E_0 |                     565 | TERMINATION |

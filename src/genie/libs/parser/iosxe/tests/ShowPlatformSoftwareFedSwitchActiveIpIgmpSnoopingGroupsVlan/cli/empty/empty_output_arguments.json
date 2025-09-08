@@ -1,0 +1,7 @@
+{
+    "switch_type":"active",
+    "ip_type": "ipv6",
+    "snooping_type": "mld",
+    "vlan_id": "4000",
+    "group": "ff1e::1"
+}

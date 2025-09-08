@@ -1,0 +1,18 @@
+match mode mdt-subscription-mode command no update-policy
+ action skip
+match mode mdt-subscription-mode command no stream
+ action skip
+match mode mdt-subscription-mode command no filter
+ action skip
+match mode mdt-subscription-mode command no encoding
+ action skip
+match mode rogue-rule command no match
+ action skip
+match mode rogue-rule command no classify malicious
+ action skip
+match mode main-cpu command no main-cpu
+ action post-apply
+match mode flowmon command no record wireless
+ action skip
+match mode configure command no wireless country
+ action skip

@@ -1,0 +1,4 @@
+IPv4 Crypto ISAKMP SA
+dst             src             state          conn-id slot status
+10.165.201.3   10.165.200.225 QM_IDLE              5    0 ACTIVE
+10.165.202.3   10.165.200.225 QM_IDLE              5    0 STDBY

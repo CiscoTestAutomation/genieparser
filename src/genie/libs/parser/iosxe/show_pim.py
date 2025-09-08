@@ -161,6 +161,7 @@ class ShowIpv6PimBsrElectionSchema(MetaParser):
                     Any(): {
                         'rp': {
                             'bsr': {
+                                Optional('bsr_system'): str,
                                 Optional('bsr_candidate'): {
                                     Optional('address'): str,
                                     Optional('hash_mask_length'): int,
@@ -175,7 +176,6 @@ class ShowIpv6PimBsrElectionSchema(MetaParser):
                                     Optional('expires'): str,
                                     Optional('rpf_interface'): str,
                                     Optional('rpf_address'): str,
-
                                 },
                             },
                         },
@@ -212,6 +212,12 @@ class ShowIpv6PimBsrElection(ShowIpv6PimBsrElectionSchema):
         # initial variables
         ret_dict = {}
         af_name = 'ipv6'
+
+        # This system is the Bootstrap Router (BSR)
+        p7 = re.compile(r'^\s*This system is the Bootstrap Router \(BSR\)$')
+
+        # This system is candidate BSR
+        p8 = re.compile(r'^\s*This system is candidate BSR$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -317,6 +323,16 @@ class ShowIpv6PimBsrElection(ShowIpv6PimBsrElectionSchema):
                 ret_dict['vrf'][vrf]['address_family'][af_name] \
                     ['rp']['bsr']['bsr_candidate']['priority'] = can_priority
                 continue
+
+            # This system is the Bootstrap Router (BSR)
+            m = p7.match(line)
+            if m:
+                continue
+            # This system is candidate BSR
+            m = p8.match(line)
+            if m:
+                continue
+
 
         return ret_dict
 
@@ -1145,6 +1161,8 @@ class ShowIpPimRpMapping(ShowIpPimRpMappingSchema):
                 info_source_address = m.groupdict()['info_source']
                 if rp_group:
                     protocol = m.groupdict()['protocol']
+                    if protocol is None and  m.groupdict()['elected'] is not None:
+                        protocol = m.groupdict()['elected']
                     protocol_others = protocol.lower().replace('-', '') if protocol else ''
 
                     rp_group_protocol = rp_group + " " + protocol_others
@@ -1775,7 +1793,8 @@ class ShowPimNeighbor(ShowPimNeighborSchema):
 
             # Neighbor Address           Interface          Uptime    Expires  Mode DR pri
             # FE80::21A:30FF:FE47:6EC1   Port-channel2.100  1d09h     00:01:17 B G     1
-            p2 = re.compile(r'^(?P<nei_address>[\w\:]+) +'
+            # ::FFFF:4.4.4.4             Tunnel8            1d00h     00:01:31 B G     1
+            p2 = re.compile(r'^(?P<nei_address>[\w\:.]+) +'
                             r'(?P<intf>[\w\.\/\-]+) +'
                             r'(?P<uptime>[\w\.\:]+) +'
                             r'(?P<expires>[\w\.\:]+) +'
@@ -2165,7 +2184,7 @@ class ShowIpPimAutorp(ShowIpPimAutorpSchema):
             output = self.device.execute(self.cli_command.format(vrf_ID=vrf_ID))
         else:
             output = output
-        
+
         ret_dict = {}
 
         #AutoRP is enabled.
@@ -2193,14 +2212,14 @@ class ShowIpPimAutorp(ShowIpPimAutorpSchema):
                 groups = m.groupdict()
                 ret_dict['autorp'] = groups['autorp']
                 continue
-            
+
             #RP Discovery packet MTU is 1496.
             m = p2.match(line)
             if m:
                 groups = m.groupdict()
                 ret_dict['mtu'] = groups['mtu']
                 continue
-            
+
             #224.0.1.40 is joined on Loopback0.
             m = p3.match(line)
             if m:
@@ -2208,14 +2227,14 @@ class ShowIpPimAutorp(ShowIpPimAutorpSchema):
                 ret_dict['group'] = groups['group']
                 ret_dict['interface'] = groups['interface']
                 continue
-            
+
             #AutoRP groups over sparse mode interface is enabled
             m = p4.match(line)
             if m:
                 groups = m.groupdict()
                 ret_dict['mode'] = groups['mode']
                 continue
-            
+
             #RP Announce: 3078/1303, RP Discovery: 3780/10412
             m = p5.match(line)
             if m:
@@ -2227,14 +2246,75 @@ class ShowIpPimAutorp(ShowIpPimAutorpSchema):
                 continue
 
         return ret_dict
-    
-    
+
+
+# ===========================================================
+# schema Parser for 'show ip pim vrf {vrf id} mdt bgp'
+# ===========================================================
+class ShowIpPimVrfMdtBgpSchema(MetaParser):
+    """Schema for:
+        show ip pim vrf {vrf} mdt bgp"""
+
+    schema = {
+        'mdt': {
+            Any(): {
+                Optional('rid'): str,
+                Optional('next_hop'): str,
+            }
+        }
+    }
+
+
+# ===========================================================
+# Parser for 'show ip pim vrf {vrf id} mdt bgp'
+# ===========================================================
+class ShowIpPimVrfMdtBgp(ShowIpPimVrfMdtBgpSchema):
+    """Parser for:
+        show ip pim vrf {vrf} mdt bgp"""
+
+    cli_command = 'show ip pim vrf {vrf} mdt bgp'
+
+    def cli(self, vrf='', output=None):
+        if output is None:
+            cmd = self.cli_command.format(vrf=vrf)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+
+        # MDT-default group 232.2.1.4
+        p1 = re.compile(r'^MDT-default group (?P<mdt_default_group>[\d\.]+)$')
+
+        # rid:1.1.1.1 next_hop:1.1.1.1
+        p2 = re.compile(r'^rid:(?P<rid>[\d\.]+) +next_hop:(?P<next_hop>[\d\.]+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # MDT-default group
+            m = p1.match(line)
+            if m:
+                mdt_default_group = m.group('mdt_default_group')
+
+                # Build VRF and MDT group structure
+                mdt_dict = ret_dict.setdefault('mdt', {}).setdefault(mdt_default_group, {})
+                continue
+
+            # RID and next hop
+            m = p2.match(line)
+            if m:
+                mdt_dict['rid'] = m.group('rid')
+                mdt_dict['next_hop'] = m.group('next_hop')
+                continue
+
+        return ret_dict
+
+
 # ==========================================================
 # Schema Parser for 'show ip pim vrf {vrf_name} mdt send'
 # ==========================================================
 class ShowIpPimVrfMdtSendSchema(MetaParser):
     """Schema for 'show ip pim vrf {vrf_name} mdt send' """
-    
+
     schema = {
         'mdt' : {
             Any(): {
@@ -2243,24 +2323,25 @@ class ShowIpPimVrfMdtSendSchema(MetaParser):
                 'mdt_data_group':str,
                 'ref_count':int
             }
-        }       
+        }
     }
-    
+
+
 # =======================================================================
 # Parser for 'show ip pim vrf {vrf_name} mdt send'
 # =======================================================================
 class ShowIpPimVrfMdtSend(ShowIpPimVrfMdtSendSchema):
     """Parser for 'show ip pim vrf {vrf} mdt send' """
-    
+
     cli_command = "show ip pim vrf {vrf} mdt send"
-    
+
     def cli(self, vrf='', output=None):
         if output is None:
             output = self.device.execute(self.cli_command.format(vrf=vrf))
-        
+
         ret_dict = {}
         index=0
-        # (source, group)             MDT-data group   ref_count      
+        # (source, group)             MDT-data group   ref_count
         # (10.100.8.10, 225.1.8.1)      232.2.8.0       1
         # (10.100.8.10, 225.1.8.2)      232.2.8.1       1
         # (10.100.8.10, 225.1.8.3)      232.2.8.2       1
@@ -2271,12 +2352,12 @@ class ShowIpPimVrfMdtSend(ShowIpPimVrfMdtSendSchema):
         # (10.100.8.10, 225.1.8.8)      232.2.8.7       1
         # (10.100.8.10, 225.1.8.9)      232.2.8.8       1
         # (10.100.8.10, 225.1.8.10)     232.2.8.9       1
-        
+
         p1 = re.compile(r'\((?P<source>[\d\.]+),\s+(?P<group>[\d\.]+)\)\s+(?P<mdt_data_group>[\d\.]+)\s+(?P<ref_count>\d+)')
-        
+
         for line in output.splitlines():
             line = line.strip()
-            
+
             #  source: 10.100.8.10  group: 225.1.8.1)    mdt_data_group: 232.2.8.0     ref_count: 1
             m = p1.match(line)
             if m:
@@ -2290,16 +2371,16 @@ class ShowIpPimVrfMdtSend(ShowIpPimVrfMdtSendSchema):
                 sub_dict['ref_count'] = int(groups['ref_count'])
                 index+=1
                 continue
-                
+
         return ret_dict
-                
-                
+
+
 # =================================================================
 # Schema Parser for 'show ip pim vrf {vrf ID} mdt receive detail'
 # =================================================================
 class ShowIpPimVrfMdtReceiveDetailSchema(MetaParser):
     """Schema for 'show ip pim vrf {vrf} mdt receive detail'  """
-    
+
     schema = {
         'data_mdt_source': str,
         'data_mdt_group': str,
@@ -2313,37 +2394,37 @@ class ShowIpPimVrfMdtReceiveDetailSchema(MetaParser):
             }
         }
     }
-    
-    
+
+
 # =================================================================
 # Parser for 'show ip pim vrf {vrf ID} mdt receive detail'
 # =================================================================
 class ShowIpVrfMdtReceiveDetail(ShowIpPimVrfMdtReceiveDetailSchema):
     """Parser for 'show ip pim vrf {vrf} mdt receive detail'  """
-    
+
     cli_command = 'show ip pim vrf {vrf} mdt receive detail'
-    
+
     def cli(self, vrf='', output=None):
         if output is None:
             output = self.device.execute(self.cli_command.format(vrf=vrf))
-        
+
         #   group:172.16.8.0 source:10.0.0.100 ref_count:13
         #  (10.101.8.10, 225.1.8.1), 1d13h/00:03:28/00:02:26, OIF count:1, flags:TY
         #  (10.102.8.10, 225.1.8.1), 1d13h/00:03:28/00:02:27, OIF count:1, flags:TY
-        
+
         ret_dict = {}
         index= 0
-        
+
         # group:172.16.8.0 source:10.0.0.100 ref_count:13
         p1 = re.compile(r'^\s*group\:(?P<group>\S+)\s+source\:(?P<source>\S+)\s+ref_count\:(?P<ref_count>\d+)$')
-        
+
         # (10.101.8.10, 225.1.8.1), 1d13h/00:03:28/00:02:26, OIF count:1, flags:TY
         p2 = re.compile(r'^\((?P<source>\S+), +(?P<group>\S+)\), +\S+/+\S+/+\S+, +OIF +count:(?P<oif_count>\d+), +flags:(?P<flags>\S+)$')
-        
+
         for line in output.splitlines():
             if not line:
                 continue
-            
+
             # group: 172.16.8.0  source: 10.0.0.100   ref_count: 13
             m = p1.match(line)
             if m:
@@ -2352,7 +2433,7 @@ class ShowIpVrfMdtReceiveDetail(ShowIpPimVrfMdtReceiveDetailSchema):
                 ret_dict['data_mdt_source'] = groups['source']
                 ret_dict['reference_count'] = int(groups['ref_count'])
                 continue
-            
+
             # (10.102.8.10, 225.1.8.1),  1d13h/00:03:28/00:02:27,  OIF count:1,  flags:TY
             m = p2.match(line)
             if m:
@@ -2366,11 +2447,11 @@ class ShowIpVrfMdtReceiveDetail(ShowIpPimVrfMdtReceiveDetailSchema):
                 }
                 index += 1
                 continue
-            
+
         return ret_dict
-        
-    
-    
+
+
+
 # ==============================================================================
 # Schema Parser for 'show ip pim vrf {vrf id} mdt history interval {interval}
 # ==============================================================================
@@ -2403,29 +2484,29 @@ class ShowIpPimVrfMdtHistoryInterval(ShowIpPimVrfMdtHistoryIntervalSchema):
 
         ret_dict = {}
         index=0
-        
-        # MDT-data group        Number of reuse 
-        #     10.9.9.8           3 
-        #     10.9.9.9           2 
+
+        # MDT-data group        Number of reuse
+        #     10.9.9.8           3
+        #     10.9.9.9           2
         p1 = re.compile(r'^(?P<mdt_data_group>[\d\.]+)\s+(?P<no_of_reuse>\d+)$')
-        
+
         for line in output.splitlines():
             line = line.strip()
-            
+
             # MDT-data group, Number of reuse
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                
+
                 mdt_data_group_dict = ret_dict.setdefault('mdt_data_groups', {})
                 sub_dict = mdt_data_group_dict.setdefault(index, {})
                 index += 1
                 sub_dict['mdt_data_group'] = group['mdt_data_group']
                 sub_dict['no_of_reuse'] = int(group['no_of_reuse'])
-        
+
         return ret_dict
-    
-    
+
+
 # ==============================================================================
 # Schema Parser for 'show ip pim mdt receive'
 # ==============================================================================
@@ -2441,7 +2522,7 @@ class ShowIpPimMdtReceiveSchema(MetaParser):
             }
         }
     }
-    
+
 # ==============================================================================
 # Parser for 'show ip pim mdt receive'
 # ==============================================================================
@@ -2456,7 +2537,7 @@ class ShowIpPimMdtReceive(ShowIpPimMdtReceiveSchema):
             output = self.device.execute(self.cli_command)
 
         ret_dict = {}
-        
+
         # Data MDT group:
         #  [239.192.20.32 : 2.2.2.2]  00:01:25/00:02:34
         #  [239.192.20.33 : 2.2.2.2]  00:01:25/00:02:34
@@ -2474,22 +2555,187 @@ class ShowIpPimMdtReceive(ShowIpPimMdtReceiveSchema):
         #  [239.192.20.45 : 2.2.2.2]  00:01:25/00:02:34
         #  [239.192.20.46 : 2.2.2.2]  00:01:25/00:02:34
         #  [239.192.20.47 : 2.2.2.2]  00:01:25/00:02:34
-        
+
         p1 = re.compile(r'^\s*\[(?P<data_mdt_group>\d+\.\d+\.\d+\.\d+)\s*:\s*(?P<source_address>\d+\.\d+\.\d+\.\d+)\]\s+(?P<up_time>\S+)/(?P<expires>\S+)$')
-        
+
         for line in output.splitlines():
             line = line.strip()
-            
+
             # [239.192.20.38 : 2.2.2.2]  00:01:25/00:02:34
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                
+
                 data_mdt_group_dict = ret_dict.setdefault('data_mdt_group', {})
                 sub_dict = data_mdt_group_dict.setdefault(group['data_mdt_group'], {})
                 sub_dict['source'] = group['source_address']
                 sub_dict['up_time'] = group['up_time']
                 sub_dict['expires'] = group['expires']
                 continue
+
+        return ret_dict
+
+
+# ==========================================================
+# Schema parser for 'show ipv6 pim mdt send'
+# Schema Parser for 'show ipv6 pim vrf {vrf_name} mdt send'
+# ==========================================================
+class ShowIpv6PimMdtSendSchema(MetaParser):
+    """Schema for 'show ipv6 pim vrf {vrf_name} mdt send' """
+
+    schema = {
+        'vrf' : {
+            Any(): {
+                'mdt' : {
+                    Any(): {
+                        'source':str,
+                        'group':str,
+                        'mdt_data_group':str,
+                        'ref_count':int
+                    }
+                }
+            }
+        }
+    }
+class ShowIpv6PimMdtSend(ShowIpv6PimMdtSendSchema):
+    """Parser for:
+    show ipv6 pim vrf {vrf_name} mdt send
+    show ipv6 pim mdt send"""
+
+    cli_command = ["show ipv6 pim mdt send", "show ipv6 pim vrf {vrf} mdt send"]
+
+    def cli(self, vrf='', output=None):
+
+        if output is None:
+            if vrf:
+                output = self.device.execute(self.cli_command[1].format(vrf=vrf))
+            else:
+                output = self.device.execute(self.cli_command[0])
+                vrf = 'Default'
+
+        ret_dict = {}
+        index=0
+        source_ip = None
+        # MDT-data send list for VRF: vrf1
+        # (source, group)                     MDT-data group/num   ref_count
+        # (2001::2,
+        # FF8E::)                            239.192.20.41        1
+        # (2001::2,
+        # FF8E::1)                           239.192.20.40        1
+        # (2001::2,
+        # FF8E::2)                           239.192.20.39        1
+
+        # (2001::2,
+        p1 = re.compile(r'\(\s*(?P<source>[0-9A-Fa-f:.]+),?\s*')
+
+        # FF8E::)         239.192.20.41        1
+        p2 = re.compile(r'(?P<group>[0-9A-Fa-f:.]+)\)\s+(?P<mdt_data_group>[\d\.]+)\s+(?P<ref_count>\d+)')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # (2001::2,
+            m1 = p1.match(line)
+            if m1:
+
+                if 'vrf' not in ret_dict:
+                    ret_dict['vrf'] = {}
+                if vrf not in ret_dict['vrf']:
+                    ret_dict['vrf'][vrf] = {}
+
+                source_ip = m1.group("source")
+                continue
+
+            # FF8E::)         239.192.20.41        1
+            m2 = p2.match(line)
+            if m2 and source_ip:
+                groups = m2.groupdict()
+                if "mdt" not in ret_dict['vrf'][vrf]:
+                    ret_dict['vrf'][vrf]["mdt"] = {}
+
+                sub_dict = ret_dict['vrf'][vrf]["mdt"].setdefault(index, {})
+                sub_dict["source"] = source_ip
+                sub_dict["group"] = groups["group"]
+                sub_dict["mdt_data_group"] = groups["mdt_data_group"]
+                sub_dict["ref_count"] = int(groups["ref_count"])
+
+                index += 1
+                source_ip = None  # Reset after processing a complete pair
+                continue
+
+        return ret_dict
+    
+
+# ==============================================================================
+# Schema Parser for 'show ipv6 pim mdt receive'
+# Schema Parser for 'show ipv6 pim vrf {vrf_name} mdt receive'
+# ==============================================================================
+class ShowIpv6PimMdtReceiveSchema(MetaParser):
+    """Schema for:
+        show ipv6 pim mdt receive
+        show ipv6 pim vrf {vrf_name} mdt receive """
+        
+    schema = {
+        'vrf' : {
+            Any(): {
+                'mdt' : {
+                    Any(): {
+                        Optional('source'):str,
+                        Optional('group'):str,
+                        Optional('up_time') : str,
+                        Optional('expires') : str,
+                    }
+                }       
+            }
+        }       
+    }
+    
+# ==============================================================================
+# Parser for 'show ipv6 pim mdt receive'
+# Parser for 'show ipv6 pim vrf {vrf_name} mdt receive'
+# ==============================================================================
+class ShowIpv6PimMdtReceive(ShowIpv6PimMdtReceiveSchema):
+    """Parser for:
+        show ipv6 pim mdt receive
+        show ipv6 pim vrf {vrf} mdt receive """
+
+    cli_command = ['show ipv6 pim mdt receive', 'show ipv6 pim vrf {vrf} mdt receive']
+
+    def cli(self, vrf='', output=None):
+        if output is None:
+            if vrf:
+                output = self.device.execute(self.cli_command[1].format(vrf=vrf))
+            else:
+                output = self.device.execute(self.cli_command[0])
+                vrf = 'Default'
                 
+        ret_dict = {}
+        index=0
+
+        # Joined MDT-data [group/mdt number : source]  uptime/expires for VRF: vrf1
+        #  [239.192.20.32 : 2.2.2.2]  00:12:56/00:02:05
+        #  [239.192.20.33 : 2.2.2.2]  00:12:56/00:02:05
+        #  [239.192.20.34 : 2.2.2.2]  00:12:56/00:02:05
+        #  [239.192.20.35 : 2.2.2.2]  00:12:56/00:02:05
+        
+        p1 = re.compile(r'^\s*\[(?P<data_mdt_group>\d+\.\d+\.\d+\.\d+)\s*:\s*(?P<source_address>\d+\.\d+\.\d+\.\d+)\]\s+(?P<up_time>\S+)/(?P<expires>\S+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            #  [239.192.20.32 : 2.2.2.2]  00:12:56/00:02:05
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                
+                ret_dict.setdefault('vrf', {}).setdefault(vrf, {}).setdefault('mdt', {})  
+                sub_dict = ret_dict['vrf'][vrf]["mdt"].setdefault(index, {})
+                sub_dict['source'] = group['source_address']
+                sub_dict['group'] = group['data_mdt_group']
+                sub_dict['up_time'] = group['up_time']
+                sub_dict['expires'] = group['expires']
+                
+                index += 1
+                continue  
+
         return ret_dict

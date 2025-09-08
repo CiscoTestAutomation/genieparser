@@ -1,0 +1,10 @@
+show ip dhcp snooping binding
+MacAddress IpAddress Lease(sec) Type VLAN Interface
+------------------ --------------- ---------- ------------- ---- --------------------
+00:00:00:00:00:14 192.168.101.104 1784 dhcp-snooping 101 GigabitEthernet2/0/3
+00:00:00:00:00:12 192.168.101.103 1784 dhcp-snooping 101 GigabitEthernet2/0/3
+00:00:00:00:00:15 192.168.101.102 1784 dhcp-snooping 101 GigabitEthernet2/0/3
+00:00:00:00:00:17 192.168.101.105 1784 dhcp-snooping 101 GigabitEthernet2/0/3
+00:00:00:00:00:16 192.168.101.106 1784 dhcp-snooping 101 GigabitEthernet2/0/3
+00:00:00:00:00:13 192.168.101.101 1784 dhcp-snooping 101 GigabitEthernet2/0/3
+Total number of bindings: 6

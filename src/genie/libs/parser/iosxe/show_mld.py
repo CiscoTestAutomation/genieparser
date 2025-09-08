@@ -6,6 +6,7 @@ IOSXE parsers for the following show commands:
     * show ipv6 mld vrf <WORD> interface 
     * show ipv6 mld groups detail
     * show ipv6 mld vrf <WORD> groups detail
+    * show ipv6 mld groups <group> <interface> detail
     * show ipv6 mld ssm-map
     * show ipv6 mld ssm-map <WORD>
     * show ipv6 mld vrf <WORD> ssm-map <WORD>
@@ -226,15 +227,18 @@ class ShowIpv6MldInterface(ShowIpv6MldInterfaceSchema):
 
 
 
-# ==================================================
+# ============================================================
 # Parser for 'show ipv6 mld groups detail'
 # Parser for 'show ipv6 mld vrf <WORD> groups detail'
-# ==================================================
+# Parser for 'show ipv6 mld groups <group> <interface> detail'
+# ============================================================
 
 class ShowIpv6MldGroupsDetailSchema(MetaParser):
     """Schema for:
         show ipv6 mld groups detail
-        show ipv6 mld vrf <vrf> groups detail"""
+        show ipv6 mld vrf <vrf> groups detail
+        show ipv6 mld groups <group> <interface> detail
+        """
 
     schema = {'vrf':
                 {Any(): {
@@ -278,22 +282,32 @@ class ShowIpv6MldGroupsDetailSchema(MetaParser):
 class ShowIpv6MldGroupsDetail(ShowIpv6MldGroupsDetailSchema):
     """Parser for:
         show ipv6 mld groups detail
-        show ipv6 mld vrf <vrf> groups detail"""
+        show ipv6 mld vrf <vrf> groups detail
+        show ipv6 mld groups <group> <interface> detail
+    """
 
-    cli_command = ['show ipv6 mld vrf {vrf} groups detail', 'show ipv6 mld groups detail']
+    cli_command = ['show ipv6 mld groups detail',
+                   'show ipv6 mld vrf {vrf} groups detail',
+                   'show ipv6 mld groups {group} {interface} detail']
     exclude = ['expire', 'up_time']
 
 
-    def cli(self, vrf='', output=None):
+    def cli(self, vrf='', group='', interface='', output=None):
         if output is None:
             if vrf:
-                cmd = self.cli_command[0].format(vrf=vrf)
+                cmd = self.cli_command[1].format(vrf=vrf)
+            elif group and interface:
+                vrf = 'default'
+                cmd = self.cli_command[2].format(group=group, interface=interface)
             else:
                 vrf = 'default'
-                cmd = self.cli_command[1]
+                cmd = self.cli_command[0]
             out = self.device.execute(cmd)
         else:
             out = output
+            # Set default vrf if not provided and no output given
+            if not vrf:
+                vrf = 'default'
 
         # initial variables
         ret_dict = {}
@@ -366,6 +380,13 @@ class ShowIpv6MldGroupsDetail(ShowIpv6MldGroupsDetailSchema):
             if m:
                 last_reporter = m.groupdict()['last_reporter']
                 ret_dict['vrf'][vrf]['interface'][intf]['group'][group]['last_reporter'] = last_reporter
+                continue
+
+            # Source list is empty
+            p6_1 = re.compile(r'^Source +list +is +empty$')
+            m = p6_1.match(line)
+            if m:
+                # When source list is empty, we continue without creating source entries
                 continue
 
             # Source Address                          Uptime    Expires   Fwd  Flags
@@ -795,7 +816,8 @@ class ShowIpv6MldGroups(ShowIpv6MldGroupsSchema):
         
         # FF1E::         Vlan10         00:00:27  not used
         # FF1E::1        Te1/0/3        00:01:49  00:01:46
-        p1=re.compile(r'(?P<group>[\w\.\:]+) +(?P<intf>[\w\.\/\-]+) +(?P<uptime>[\d\:]+) +(?P<expires>(?:[\d\:]+)|(?:[\w\s]+)|(?:not used))$')
+        # FF8E::4        Vlan100        1d00h     00:03:11
+        p1 = re.compile(r'(?P<group>[\w\.\:]+) +(?P<intf>[\w\.\/\-]+) +(?P<uptime>[\d\:dh]+) +(?P<expires>(?:[\d\:]+)|(?:[\w\s]+)|(?:not used))$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -810,26 +832,34 @@ class ShowIpv6MldGroups(ShowIpv6MldGroupsSchema):
 
 class ShowPlatformSoftwareMldSnoopingGroupsCountSchema(MetaParser):
     schema = {
-             'ipv6_mld_snooping_entries': int
-             }
+        Optional('ipv6_mld_snooping_entries'): int,
+        Optional('total_group_count'): int,
+        Optional('total_stub_group_count'): int
+        }
 
 class ShowPlatformSoftwareMldSnoopingGroupsCount(ShowPlatformSoftwareMldSnoopingGroupsCountSchema):
 
     cli_command = [
-                  'show platform software fed {switch} active ipv6 mld snooping groups count',
-                  'show platform software fed active ipv6 mld snooping groups count'
+                  'show platform software fed {switch} {active} ipv6 mld snooping groups count',
+                  'show platform software fed {active} ipv6 mld snooping groups count'
                   ]
 
-    def cli(self, output=None, switch=''):
+    def cli(self, output=None, switch='', active=''):
         if output is None:
             if switch:
-                cmd = self.cli_command[0].format(switch=switch)
+                cmd = self.cli_command[0].format(switch=switch, active=active)
             else:
-                cmd = self.cli_command[1]
+                cmd = self.cli_command[1].format(active=active)
             output = self.device.execute(cmd)
         dict_count = {}
         # Total number of entries:8000
         p1 = re.compile(r'^Total\s+number\s+of\s+entries\:(?P<ipv6_mld_snooping_entries>\d+)$')
+
+        # Total Group Count       : 9789
+        p2 = re.compile(r'(Total Group Count +\: +(?P<total_group_count>\d+))')
+
+        # Total Stub Group Count  : 9787
+        p3 = re.compile(r'(Total Stub Group Count +\: +(?P<total_stub_group_count>\d+))')
 
         for line in output.splitlines():
             line = line.strip()
@@ -840,5 +870,20 @@ class ShowPlatformSoftwareMldSnoopingGroupsCount(ShowPlatformSoftwareMldSnooping
                 groups = m.groupdict()
                 count = int(groups['ipv6_mld_snooping_entries'])
                 dict_count['ipv6_mld_snooping_entries'] = count
+                continue
 
-        return (dict_count)
+            # Total Group Count       : 9789
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                dict_count['total_group_count'] = int(group['total_group_count'])
+                continue
+
+            # Total Stub Group Count  : 9787
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                dict_count['total_stub_group_count'] = int(group['total_stub_group_count'])
+                continue
+
+        return dict_count

@@ -1,0 +1,24 @@
+Profile Name: CiscoTAC-1
+    Profile status: ACTIVE
+    Profile mode: Full Reporting
+    Reporting Data: Smart Call Home, Smart Licensing
+    Preferred Message Format: xml
+    Message Size Limit: 3145728 Bytes
+    Transport Method: email
+    Email address(es): callhome@cisco.com
+    Other address(es): default
+
+    Periodic configuration info message is scheduled every 17 day of the month at 10:11
+
+    Periodic inventory info message is scheduled every 17 day of the month at 09:56
+
+    Alert-group               Severity
+    ------------------------  ------------
+    crash                     debug
+    diagnostic                minor
+    environment               minor
+    inventory                 normal
+
+    Syslog-Pattern            Severity
+    ------------------------  ------------
+    .*                        major

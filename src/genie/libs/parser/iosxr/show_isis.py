@@ -5614,9 +5614,12 @@ class ShowIsisDatabase(ShowIsisDatabaseSchema):
         # PE-9001-1.00-00 0x0000039f 0xa464 931 /1199 0/0/0
         # XRv9k-PE1.00-00     * 0x0000141f   0xfc84        432             0/0/0
         # AGG-PE-A.00-00        0x00001430   0x09c6        917             0/0/0
-        p3 = re.compile(r'^(?P<lspid>[A-Za-z\-0-9\.]+)\s+(?P<lsp_seq_num>[\w \*]+)\s+'
-                        r'(?P<lsp_checksum>\w+)\s+(?P<lsp_holdtime>\d+)\s+(?:\/'
-                        r'(?P<rcvd>[\d\*]+)\s+)?(?P<attach_bit>[\d]+)\/(?P<p_bit>[\d]+)\/(?P<overload_bit>[\d]+)$')
+        # P1.00-00 * 0x00000046 0x273f 43588/* 0/0/0
+        p3 = re.compile(r'^(?P<lspid>[A-Za-z0-9\-\s\.]+?)\s+'
+                r'(?P<lsp_seq_num>\*?\s*0x[0-9A-Fa-f]+)\s+'
+                r'(?P<lsp_checksum>0x[0-9A-Fa-f]+)\s+'
+                r'(?P<lsp_holdtime>\d+)(?:\s*\/\s*(?P<rcvd>[\d\*]+))?\s+'
+                r'(?P<attach_bit>\d+)\/(?P<p_bit>\d+)\/(?P<overload_bit>\d+)$')
 
         # Total Level-2 LSP count: 4 Local Level-2 LSP count: 1
         p4 = re.compile(r'^Total\s+Level-(?P<total_level>\d+)\s+LSP\s+count:\s+(?P<total_lsp_count>\d+)\s+'

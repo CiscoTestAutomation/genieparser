@@ -1,0 +1,18 @@
+RP/0/RP0/CPU0:HUB-1#show vrf all detail
+Sat Mar 15 21:04:14.245 UTC
+
+VRF MGMT; RD not set; VPN ID not set
+VRF mode: Regular
+Description not set
+Interfaces:
+  MgmtEth0/RP0/CPU0/0
+Address family IPV4 Unicast
+  No import VPN route-target communities
+  No export VPN route-target communities
+  No import route policy
+  No export route policy
+Address family IPV6 Unicast
+  No import VPN route-target communities
+  No export VPN route-target communities
+  No import route policy
+  No export route policy

@@ -1,0 +1,6 @@
+greenday_hub#  show ip nhrp vrf VRF_CLOUD_11 192.240.1.1
+192.240.1.1/32 via 192.240.1.1
+   Tunnel11 created 2d00h, never expire 
+   Type: static, Flags: used bfd 
+   NBMA address: 14.13.1.1
+   Group: HUB

@@ -1,0 +1,5 @@
+Thu May  1 03:40:06.214 UTC
+  Jid       Pid Tid          ProcessName        State   TimeInState    Blocked-on
+  122     13635 47914         pm_collector        Reply 0000:00:00.0005    7321 sysdb_mc
+  122     13635 47910         pm_collector        Reply 0000:00:00.0005    7321 sysdb_mc
+  206     11833 11963              lpts_fm        Reply 0017:08:12.0626    9035 lpts_pa

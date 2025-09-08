@@ -1,0 +1,15 @@
+show platform hardware qfp active feature bfd datapath session
+
+Total number of session: 2
+
+LD     RD         TX         RX         State  PFCADM  Interface
+
+1      1          2099       2098       Up     001000  TenGigabitEthernet0/0/4.2
+
+3      3          2138       2142       Up     001000  TenGigabitEthernet0/0/4.1
+
+
+
+EN#
+
+--- 02:52:20 ---

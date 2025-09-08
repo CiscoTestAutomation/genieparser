@@ -1,0 +1,5 @@
+show ip source binding
+MacAddress          IpAddress        Lease(sec)  Type           VLAN  Interface
+------------------  ---------------  ----------  -------------  ----  --------------------
+00:00:00:00:00:14   192.168.199.10   infinite    static          101   TenGigabitEthernet1/0/44
+Total number of bindings: 1

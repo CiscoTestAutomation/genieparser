@@ -1,0 +1,12 @@
+PKI Sessions Started: 12
+PKI Sessions Ended: 12
+PKI Sessions Active: 0
+Successful Validations: 6
+Failed Validations: 0
+Bypassed Validations: 0
+Pending Validations: 0
+CRLs checked: 0
+CRL - fetch attempts: 0
+CRL - failed attempts: 0
+CRL - rejected busy fetching: 0
+AAA authorizations: 0

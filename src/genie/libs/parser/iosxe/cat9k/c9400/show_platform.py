@@ -237,13 +237,18 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
         # Sensor List:  Environmental Monitoring
         p4 = re.compile(r'Sensor\s+List:\s+(?P<sensor_list>.+)')
 
-        #  Sensor           Location          State          Reading           Threshold(Minor,Major,Critical,Shutdown)
-        #  Temp: Coretemp   R0                Normal            48 Celsius          	(107,117,123,125)(Celsius)
-        #  Temp: UADP       R0                Normal            56 Celsius          	(107,117,123,125)(Celsius)
-        #  V1: VX1          R0                Normal            869 mV               	na
-        #  Temp:    inlet   R0                Normal            32 Celsius          	(56 ,66 ,96 ,98 )(Celsius)
+        # Sensor           Location          State          Reading           Threshold(Minor,Major,Critical,Shutdown)
+        # Temp: Coretemp   Chassis1-R0       Normal            46 Celsius                (107,117,123,125)(Celsius)
+        # Temp: UADP       Chassis1-R0       Normal            54 Celsius                (107,117,123,125)(Celsius)
+        # V1: VX1          Chassis1-R0       Normal            871 mV                    na
+        # V1: VX2          Chassis1-R0       Normal            1498 mV                   na
+        # V1: VX3          Chassis1-R0       Normal            1055 mV                   na
+        # V1: VX4          Chassis1-R0       Normal            852 mV                    na
+        # V1: VX5          Chassis1-R0       Normal            1507 mV                   na
+        # V1: VX6          Chassis1-R0       Normal            1301 mV                   na
+        # V1: VX7          Chassis1-R0       Normal            1005 mV                   na
         p5 = re.compile(
-            r'(?P<sensor_name>\S+(:\s+\S+)?)\s+(?P<slot>([A-Z][0-9]|\d/\d))\s+(?P<state>\S+)\s+(?P<reading>\d+\s+\S+(\s+(AC|DC))?)\s+(\((?P<minor>\d+\s*),(?P<major>\d+\s*),(?P<critical>\d+\s*),(?P<shutdown>\d+\s*)\)\((?P<unit>\S+)\))?'
+            r'(?P<sensor_name>\S+(:\s+\S+)?)\s+(?P<slot>\S+[0-9])\s+(?P<state>\S+)\s+(?P<reading>\d+\s+\S+(\s+(AC|DC))?)\s+(\((?P<minor>\d+\s*),(?P<major>\d+\s*),(?P<critical>\d+\s*),(?P<shutdown>\d+\s*)\)\((?P<unit>\S+)\))?'
         )
 
         # Power                                                       Fan States
@@ -1346,3 +1351,46 @@ class ShowPlatformHardwareChassisPowerSupplyDetailSwitchAll(ShowPlatformHardware
 
         return ret_dict
 
+class ShowPlatformUplinksSchema(MetaParser):
+    """
+    Schema for show platform uplinks
+    """
+    schema = {
+        'uplinks': {
+            str: {
+                'status': str,
+            },
+        }
+    }
+
+class ShowPlatformUplinks(ShowPlatformUplinksSchema):
+    """ Parser for show platform uplinks"""
+
+    cli_command = "show platform uplink"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Opening empty dictionary
+        ret_dict = {}
+
+        # matches the "Uplink port" and "Status" information
+        # TenGigabitEthernet4/0/6  Up
+        p1 = re.compile(r'^(?P<uplink_port>[A-Za-z0-9/]+)\s+(?P<status>\S+)$')
+
+        # Process each line of the output
+        for line in output.splitlines():
+            line = line.strip()
+
+            # TenGigabitEthernet4/0/6  Up
+            m = p1.match(line)
+            if m:
+                uplink_port = m.groupdict()['uplink_port']
+                status = m.groupdict()['status']
+                # Store the information in the dictionary
+                uplink_dict = ret_dict.setdefault('uplinks', {}).setdefault(uplink_port, {})
+                uplink_dict['status'] = status
+                continue
+
+        return ret_dict

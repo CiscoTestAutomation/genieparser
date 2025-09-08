@@ -1,0 +1,38 @@
+show monitor event-trace crypto ipsec event back 1:10
+*Apr  4 00:10:51.829: IPSEC-EVENT:IPSEC-DELETE-SA:  sa delete : (sa) sa_dest = 30.1.1.1, sa_proto = 50, sa_spi = 0xB820B40F(3089150991), sa_trans = esp-aes esp-sha-hmac , sa_conn_id = 2021, sa_lifetime(k/sec) = (4608000/3600)
+*Apr  4 00:10:51.829: IPSEC-EVENT:IPSEC-DELETE-SA:  sa delete : (sa),  loc: 30.1.1.1, rem: 30.1.1.2, l_proxy: 0.0.0.0/0/256, r_proxy: 0.0.0.0/0/256
+*Apr  4 00:10:51.829: IPSEC-EVENT:IPSEC-DELETE-SA:  sa delete : (sa) sa_dest = 30.1.1.2, sa_proto = 50, sa_spi = 0xF070E037(4033929271), sa_trans = esp-aes esp-sha-hmac , sa_conn_id = 2022, sa_lifetime(k/sec) = (4608000/3600)
+*Apr  4 00:10:51.829: IPSEC-EVENT:IPSEC-DELETE-SA:  sa delete : (sa),  loc: 30.1.1.1, rem: 30.1.1.2, l_proxy: 0.0.0.0/0/256, r_proxy: 0.0.0.0/0/256
+*Apr  4 00:10:51.829: IPSEC-EVENT:IPSEC-DELETE-SA:  SESSION ID:0, sa delete : (sa) sa_dest = 30.1.1.1, sa_proto = 50, sa_spi = 0xB820B40F(3089150991), sa_trans = esp-aes esp-sha-hmac , sa_conn_id = 2021, sa_lifetime(k/sec) = (4608000/3600)
+*Apr  4 00:10:51.829: IPSEC-EVENT:IPSEC-DELETE-SA:  SESSION ID:0, sa delete : (sa),  loc: 30.1.1.1, rem: 30.1.1.2, l_proxy: 0.0.0.0/0/256, r_proxy: 0.0.0.0/0/256
+*Apr  4 00:10:51.829: IPSEC-EVENT:IPSEC-DELETE-SA:  SESSION ID:0, sa delete : (sa) sa_dest = 30.1.1.2, sa_proto = 50, sa_spi = 0xF070E037(4033929271), sa_trans = esp-aes esp-sha-hmac , sa_conn_id = 2022, sa_lifetime(k/sec) = (4608000/3600)
+*Apr  4 00:10:51.829: IPSEC-EVENT:IPSEC-DELETE-SA:  SESSION ID:0, sa delete : (sa),  loc: 30.1.1.1, rem: 30.1.1.2, l_proxy: 0.0.0.0/0/256, r_proxy: 0.0.0.0/0/256
+*Apr  4 00:10:51.829: IPSEC-EVENT:IPSEC-SEND-KMI:  SESSION ID:0, KMI Sent: IPSEC key engine->Crypto IKMP:KEY_ENG_NOTIFY_DECR_COUNT
+*Apr  4 00:10:51.829: IPSEC-EVENT:IPSEC-SEND-KMI:  SESSION ID:0, KMI Sent: IPSEC key engine->Crypto IKMP:KEY_ENG_DELETE_SAS, loc: 30.1.1.1, rem: 30.1.1.2, port loc/rem: 0/500, prot: DOI-3
+*Apr  4 00:10:52.173: IPSEC-EVENT:IPSEC-RECV-KMI:  SESSION ID:0, KMI Received: Crypto IKMP->IPSEC key engine:KEY_MGR_SESSION_CLOSED, loc: 30.1.1.1, rem: 30.1.1.2, port loc/rem: 500/500
+*Apr  4 00:10:52.793: IPSEC-EVENT:IPSEC-SEND-KMI:  SESSION ID:0, KMI Sent: IPSEC key engine->Crypto IKMP:KEY_ENG_REQUEST_SAS, loc: 30.1.1.1, rem: 30.1.1.2, l_proxy: 0.0.0.0/0/256, r_proxy: 0.0.0.0/0/256
+*Apr  4 00:10:52.813: IPSEC-EVENT:IPSEC-RECV-KMI:  SESSION ID:0, KMI Received: Crypto IKMP->IPSEC key engine:KEY_MGR_CREATE_IPSEC_SAS, loc: 30.1.1.1, rem: 30.1.1.2, l_proxy: 0.0.0.0/500/256, r_proxy: 0.0.0.0/500/256
+*Apr  4 00:10:52.813: IPSEC-EVENT:IPSEC-SEND-KMI:  SESSION ID:0, KMI Sent: IPSEC key engine->Crypto IKMP:KEY_ENG_NOTIFY_QOS_GROUP, loc: UNKNOWN, rem: UNKNOWN, port loc/rem: 0/0, prot: 0
+*Apr  4 00:10:52.813: IPSEC-EVENT:IPSEC-SEND-KMI:  SESSION ID:0, KMI Sent: IPSEC key engine->Crypto IKMP:KEY_ENG_NOTIFY_INTF
+*Apr  4 00:10:52.813: IPSEC-EVENT:IPSEC-CREATE-SA:  SESSION ID:0, sa create : (sa) sa_dest= 30.1.1.1, sa_proto= 50, sa_spi= 0xC5C89787(3318257543), sa_trans= esp-aes esp-sha-hmac , sa_conn_id= 2023, sa_lifetime(k/sec)= (4608000/3600)
+*Apr  4 00:10:52.814: IPSEC-EVENT:IPSEC-CREATE-SA:  SESSION ID:0, sa create : (sa),  loc: 30.1.1.1, rem: 30.1.1.2, l_proxy: 0.0.0.0/0/256, r_proxy: 0.0.0.0/0/256
+*Apr  4 00:10:52.814: IPSEC-EVENT:IPSEC-CREATE-SA:  SESSION ID:0, sa create : (sa) sa_dest= 30.1.1.2, sa_proto= 50, sa_spi= 0xFE24CD35(4263824693), sa_trans= esp-aes esp-sha-hmac , sa_conn_id= 2024, sa_lifetime(k/sec)= (4608000/3600)
+*Apr  4 00:10:52.814: IPSEC-EVENT:IPSEC-CREATE-SA:  SESSION ID:0, sa create : (sa),  loc: 30.1.1.1, rem: 30.1.1.2, l_proxy: 0.0.0.0/0/256, r_proxy: 0.0.0.0/0/256
+*Apr  4 00:10:52.822: IPSEC-EVENT:IPSEC-SEND-KMI:  SESSION ID:0, KMI Sent: IPSEC key engine->Crypto IKMP:KEY_ENG_NOTIFY_INCR_COUNT
+*Apr  4 00:10:52.902: IPSEC-EVENT:IPSEC-RECV-KMI:  SESSION ID:0, KMI Received: Crypto IKMP->IPSEC key engine:KEY_MGR_DELETE_SAS, loc: 30.1.1.1, rem: 30.1.1.2, port loc/rem: 0/500, prot: DOI-3
+*Apr  4 00:10:52.902: IPSEC-EVENT:IPSEC-DELETE-SA:  SESSION ID:0, sa delete : (sa) sa_dest = 30.1.1.1, sa_proto = 50, sa_spi = 0xC5C89787(3318257543), sa_trans = esp-aes esp-sha-hmac , sa_conn_id = 2023, sa_lifetime(k/sec) = (4608000/3600)
+*Apr  4 00:10:52.902: IPSEC-EVENT:IPSEC-DELETE-SA:  SESSION ID:0, sa delete : (sa),  loc: 30.1.1.1, rem: 30.1.1.2, l_proxy: 0.0.0.0/0/256, r_proxy: 0.0.0.0/0/256
+*Apr  4 00:10:52.902: IPSEC-EVENT:IPSEC-DELETE-SA:  SESSION ID:0, sa delete : (sa) sa_dest = 30.1.1.2, sa_proto = 50, sa_spi = 0xFE24CD35(4263824693), sa_trans = esp-aes esp-sha-hmac , sa_conn_id = 2024, sa_lifetime(k/sec) = (4608000/3600)
+*Apr  4 00:10:52.902: IPSEC-EVENT:IPSEC-DELETE-SA:  SESSION ID:0, sa delete : (sa),  loc: 30.1.1.1, rem: 30.1.1.2, l_proxy: 0.0.0.0/0/256, r_proxy: 0.0.0.0/0/256
+*Apr  4 00:10:52.902: IPSEC-EVENT:IPSEC-SEND-KMI:  SESSION ID:0, KMI Sent: IPSEC key engine->Crypto IKMP:KEY_ENG_NOTIFY_DECR_COUNT
+*Apr  4 00:10:52.906: IPSEC-EVENT:IPSEC-RECV-KMI:  SESSION ID:0, KMI Received: Crypto IKMP->IPSEC key engine:KEY_MGR_SESSION_CLOSED, loc: 30.1.1.1, rem: 30.1.1.2, port loc/rem: 500/500
+*Apr  4 00:10:53.238: IPSEC-EVENT:IPSEC-RECV-KMI:  SESSION ID:0, KMI Received: Crypto IKMP->IPSEC key engine:KEY_MGR_CLEAR_ENDPT_SAS, loc: 30.1.1.1, rem: 30.1.1.2, port loc/rem: 500/500, prot: DOI-0
+*Apr  4 00:10:53.238: IPSEC-EVENT:IPSEC-RECV-KMI:  SESSION ID:0, KMI Received: Crypto IKMP->IPSEC key engine:KEY_MGR_CREATE_IPSEC_SAS, loc: 30.1.1.1, rem: 30.1.1.2, l_proxy: 0.0.0.0/500/256, r_proxy: 0.0.0.0/500/256
+*Apr  4 00:10:53.238: IPSEC-EVENT:IPSEC-SEND-KMI:  SESSION ID:0, KMI Sent: IPSEC key engine->Crypto IKMP:KEY_ENG_NOTIFY_QOS_GROUP, loc: UNKNOWN, rem: UNKNOWN, port loc/rem: 0/0, prot: 0
+*Apr  4 00:10:53.238: IPSEC-EVENT:IPSEC-SEND-KMI:  SESSION ID:0, KMI Sent: IPSEC key engine->Crypto IKMP:KEY_ENG_NOTIFY_INTF
+*Apr  4 00:10:53.238: IPSEC-EVENT:IPSEC-CREATE-SA:  SESSION ID:0, sa create : (sa) sa_dest= 30.1.1.1, sa_proto= 50, sa_spi= 0x3B9191B7(999395767), sa_trans= esp-aes esp-sha-hmac , sa_conn_id= 2025, sa_lifetime(k/sec)= (4608000/3600)
+*Apr  4 00:10:53.238: IPSEC-EVENT:IPSEC-CREATE-SA:  SESSION ID:0, sa create : (sa),  loc: 30.1.1.1, rem: 30.1.1.2, l_proxy: 0.0.0.0/0/256, r_proxy: 0.0.0.0/0/256
+*Apr  4 00:10:53.238: IPSEC-EVENT:IPSEC-CREATE-SA:  SESSION ID:0, sa create : (sa) sa_dest= 30.1.1.2, sa_proto= 50, sa_spi= 0xDCBBB53F(3703289151), sa_trans= esp-aes esp-sha-hmac , sa_conn_id= 2026, sa_lifetime(k/sec)= (4608000/3600)
+*Apr  4 00:10:53.238: IPSEC-EVENT:IPSEC-CREATE-SA:  SESSION ID:0, sa create : (sa),  loc: 30.1.1.1, rem: 30.1.1.2, l_proxy: 0.0.0.0/0/256, r_proxy: 0.0.0.0/0/256
+*Apr  4 00:10:53.242: IPSEC-EVENT:IPSEC-SEND-KMI:  SESSION ID:0, KMI Sent: IPSEC key engine->Crypto IKMP:KEY_ENG_NOTIFY_INCR_COUNT
+*Apr  4 00:10:53.250: IPSEC-EVENT:IPSEC-RECV-KMI:  SESSION ID:0, KMI Received: Crypto IKMP->IPSEC key engine:KEY_MGR_SA_ENABLE_OUTBOUND, loc: 30.1.1.1, rem: 30.1.1.2, prot: 3

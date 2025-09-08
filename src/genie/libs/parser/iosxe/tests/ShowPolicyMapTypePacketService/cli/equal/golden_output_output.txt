@@ -1,0 +1,20 @@
+Policy Map type packet-service epc_policy_match_any_IPV6_test
+    Class epc_class_match_any_IPV6_test
+    capture
+        name match_any_IPV6_test
+        limit packet-rate 1000
+        ip_type ipv6
+
+Policy Map type packet-service epc_policy_match_any_MAC_test1
+    Class epc_class_match_any_MAC_test1
+    capture
+        name match_any_MAC_test1
+        limit packet-rate 1000
+        ip_type mac
+
+Policy Map type packet-service epc_policy_match_any_IPV4_test
+    Class epc_class_match_any_IPV4_test
+    capture
+        name match_any_IPV4_test
+        limit packet-rate 1000
+        ip_type ipv4

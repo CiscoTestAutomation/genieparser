@@ -1,0 +1,14 @@
+Flags: A  - aggregate, T - tracked
+       L  - Local, S - static, V - virtual, R - Reported through v3
+       I - v3lite, U - Urd, M - SSM (S,G) channel
+       1,2,3 - The version of IGMP, the group is in
+Channel/Group-Flags:
+       / - Filtering entry (Exclude mode (S,G), Include mode (G))
+Reporter:
+       <mac-or-ip-address> - last reporter if group is not explicitly tracked
+       <n>/<m>      - <n> reporter in include mode, <m> reporter in exclude
+
+ Channel/Group                  Reporter        Uptime   Exp.  Flags  Interface
+ *,225.1.1.1                    4.1.1.2         00:02:06 02:34 2A     Tw1/0/36
+ *,225.1.1.2                    4.1.1.2         00:02:06 02:34 2A     Tw1/0/36
+ *,224.0.1.40                   4.1.1.1         00:03:34 02:33 2LA    Tw1/0/36

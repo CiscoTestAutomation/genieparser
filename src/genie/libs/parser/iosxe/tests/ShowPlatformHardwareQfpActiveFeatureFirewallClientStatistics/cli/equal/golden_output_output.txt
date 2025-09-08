@@ -1,0 +1,50 @@
+Zonepair table entry count: 1
+Filler block count: 2
+Action block count: 2
+L7 params block count: 0
+Statistics table count: 2
+Statistics block count: 8
+Class name table entry count: 2
+Number of vrf interfaces with zone: 0
+Number of zoned interfaces: 2
+Number of zones: 2
+Number of zone pairs with policy: 1
+Number of AVC policy: 0
+Inspect parameter map count: 1
+Multi-tenancy: No
+Pending Multi-tenancy: No
+VRF related objects:
+	VRF-ParameterMap count: 1,
+	VRF-ParameterMap Binding count: 0,
+	VRF stats: 1,
+	VRF drop stats: 1
+Zone related objects:
+	Zone-ParameterMap count: 0,
+	Zone-ParameterMap Binding count: 0
+SCB pool:
+	number of entries: 16384,
+	entry limit: 1048576,
+	size: 8913728,
+	number of additions: 0
+Synflood Hostdb pool:
+	number of entries: 5120,
+	entry limit: 0, size: 983872,
+	number of additions: 0
+Session Teardown pool:
+	number of entries: 160,
+	entry limit: 0,
+	size: 11072, number of additions: 0
+Syncookie Destination pool:
+	number of entries: 5120,
+	entry limit: 262144,
+	size: 656192, number of additions: 0
+Errors:
+	Failed to zero global drop stats: 0,
+	Failed to allocate drop stats: 0,
+	Failed to zero global resource stats: 0,
+	Failed to allocate resource stats: 0,
+	Failed to walk vrf domains: 0,
+	Failed to re-enable firewall: 0,
+	Failed to disable firewall: 0,
+	Failed to allocate clear command buffer: 0,
+	Failed to send clear session IPC: 0

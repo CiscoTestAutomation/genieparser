@@ -1684,7 +1684,8 @@ class ShowPowerInlineModule(ShowPowerInlineModuleSchema):
         # 1           675.0       16.6       658.4
         p1 = re.compile(r"^(?P<mod>\d+)\s+(?P<available_power>\S+)\s+(?P<used_power>\S+)\s+(?P<remaining_power>\S+)$")
         # Gi1/0/1   auto   off        0.0     n/a                 n/a   60.0 
-        p2 = re.compile(r"^(?P<interface>\S+)\s+(?P<admin>\w+)\s+(?P<oper>\w+)\s+(?P<power>\d+\.\d+)\s+(?P<device>[\S\s]+\S+)\s+(?P<class>\S+)\s+(?P<max>\S+)$")
+        # Gi1/0/24  static power-deny 6.9     n/a                 n/a   6.9
+        p2 = re.compile(r"^(?P<interface>\S+)\s+(?P<admin>\w+)\s+(?P<oper>[\w-]+)\s+(?P<power>\d+\.\d+)\s+(?P<device>\S+(?:\s+\S+)*)\s+(?P<class>\S+)\s+(?P<max>\S+)$")
 
 
         ret_dict = {}

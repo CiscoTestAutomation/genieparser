@@ -1,0 +1,8 @@
+
+Meraki Process Summary:
+----------------------------------------------
+Meraki Mgrd                    : Running
+Meraki Tunnel Client           : Running
+IOS Console Service            : Running
+Nextunnel Packet Capture       : Not Running
+Meraki Ncmd                    : Running

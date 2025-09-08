@@ -1,0 +1,16 @@
+show l2protocol-tunnel summary
+COS for Encapsulated Packets: 5
+Drop Threshold for Encapsulated Packets: 0
+Tunnel: Rewrites the destination MAC address of L2 PDUs with Cisco proprietary multicast address
+Forward: Transport L2 PDUs to peer device
+
+Port                Status      Protocol     Action  Shutdown    Drop
+                                  Name               Threshold Threshold
+------------------- ----------- ----------- -------- --------- ---------  
+Gi1/0/3             up          cdp         tunnel    ----      ----
+                                stp         tunnel    ----      ----
+                                vtp         tunnel    ----      ----
+                                lldp        tunnel    ----      ----
+                                pagp        tunnel    ----      ----
+                                lacp        tunnel    ----      ----
+                                udld        tunnel    ----      ----

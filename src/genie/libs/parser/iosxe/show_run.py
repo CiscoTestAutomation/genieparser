@@ -467,6 +467,8 @@ class ShowRunInterfaceSchema(MetaParser):
                 Optional('ip_verify_unicast_source_reachable_via_rx'): str,
                 Optional('ip_verify_unicast_source_reachable_via_rx_allow_self_ping'): bool,
                 Optional('ip_verify_unicast_source_reachable_via_rx_acl'): str,
+                Optional('pnp_startup_vlan'): int,
+
             }
         }
     }
@@ -865,6 +867,9 @@ class ShowRunInterface(ShowRunInterfaceSchema):
         
         # ip verify unicast source reachable-via rx 102
         p116 = re.compile(r'^ip verify unicast source reachable-via rx (?P<acl>\S+)$')
+
+        # pnp startup-vlan 100
+        p117 = re.compile(r'^pnp startup-vlan (?P<vlan>\d+)$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -1779,6 +1784,13 @@ class ShowRunInterface(ShowRunInterfaceSchema):
                 intf_dict.update({'ip_verify_unicast_source_reachable_via_rx_acl': group['acl']})
                 continue
             
+            # Add this block in the main parsing loop
+            m = p117.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict['pnp_startup_vlan'] = int(group['vlan'])
+                continue
+
         return config_dict
 
 

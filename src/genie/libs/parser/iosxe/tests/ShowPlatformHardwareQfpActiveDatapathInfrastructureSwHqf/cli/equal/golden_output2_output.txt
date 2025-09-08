@@ -1,0 +1,3 @@
+C8300-2N2S-4T2X# show platform hardware qfp active datapath infrastructure sw-hqf
+Name : Pri1 Pri2 None / Inflight pkts
+

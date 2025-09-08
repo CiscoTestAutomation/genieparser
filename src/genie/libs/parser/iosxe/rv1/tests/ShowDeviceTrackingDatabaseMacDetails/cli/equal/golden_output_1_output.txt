@@ -1,0 +1,5 @@
+     MAC                    Interface  vlan(prim) prlvl      state            Time left        Policy           Input_index
+L    00ea.bd88.0448         Vl201      201 ( 201) TRUSTED    MAC-REACHABLE    N/A              evpn-device-track 158
+         Attached IP: 192.168.1.200
+L3F  0000.0000.0001         Gi2/0/3    202 ( 201) NO TRUST   MAC-STALE        93559 s          evpn-device-track 34
+         Attached IP: 192.168.1.201   

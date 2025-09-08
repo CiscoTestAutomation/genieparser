@@ -1,0 +1,30 @@
+show platform hardware qfp active feature alg statistics sunrpc
+Global info:
+	Total pkts passed inspection:2
+	   Call: 1
+	   Reply: 1
+	   Non Data: 0
+	Procedures - GetPort: 1, CallIt: 0, Dump: 0, Other: 0
+	RPCBIND (V3/V4): 0
+	Duplicate XID: 0
+	VFRed packets: 0
+
+Drop counters:
+	Total dropped: 0
+	Fatal error:
+	   Internal SW error: 0
+	Info:
+	   Pkt malformed: 0
+	   Pkt too short: 0
+	   XID mismatch: 0
+	   RPC ver not supported: 0
+	   TCP record is not last frag: 0
+	Packets subject to policy inspection:
+	   Policy not-exist: 0
+	   Policy dirty-bit set: 0
+	   Policy-mismatch: 0
+
+Memory management:
+   Chunk -  requested: 0, returned: 0
+   L7 scb - allocated: 1, freed: 0, failed: 0
+   L7 pkt - allocated: 0, freed: 0, failed: 0

@@ -1,0 +1,5 @@
+Source             Description                         Relay    Time
+--------------------------------------------------------------------------------
+Power Supply 1     Power supply failure                1        2023-10-01 12:34
+Temperature Sensor High temperature detected           2        2023-10-01 12:40
+Fan Tray 2         Fan speed below threshold           3        2023-10-01 12:45 

@@ -1,0 +1,18 @@
+  (ipv4, vlan: 3000)
+      Snoop State             : ON
+      STP TCN State           : OFF
+      Flood Mode              : OFF
+      IOS Flood Mode          : OFF
+      Pim state               : ON
+      Evpn Proxy              : OFF
+      Secondary Vlan          : NO
+      Vlan Urid               : 0x4000000000000021
+      Fset Urid ( hash )      : 0x2000000000000021 ( 48700e8a )
+      Dependant users count   : 0
+      Mrouter ports           : 1
+          Port-channel10 (Port:HundredGigE1/0/5)
+      Flood ports             :
+          HundredGigE2/0/12
+          Port-channel10
+      Gid                     : 8216
+      Mcid Asic[0]            : 669

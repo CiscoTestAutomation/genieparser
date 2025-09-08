@@ -829,8 +829,8 @@ class ShowPlatformSoftwareFedActiveAclInfoDbDetail(ShowPlatformSoftwareFedActive
     '''Parser for:
         * 'show platform software fed switch active acl info db detail'
     '''
-    cli_command = ['show platform software fed switch active acl info db detail', 
-                   'show platform software fed {switch} {mode} acl info db detail', 
+    cli_command = ['show platform software fed switch active acl info db detail',
+                   'show platform software fed {switch} {mode} acl info db detail',
                    'show platform software fed {mode} acl info db detail']
 
     def cli(self, switch=None, mode=None, output=None):
@@ -957,7 +957,7 @@ class ShowPlatformSoftwareFedActiveAclInfoDbDetail(ShowPlatformSoftwareFedActive
                     seq_dict['ipv4_dst_value'] = group['ipv4_dst_value']
                     seq_dict['ipv4_dst_mask'] = group['ipv4_dst_mask']
                 continue
-            
+
             # ipv6_src: value = 0x00001100.0x01000000.0x00000000.0x30000000
             m = p7_1.match(line)
             if m:
@@ -965,7 +965,7 @@ class ShowPlatformSoftwareFedActiveAclInfoDbDetail(ShowPlatformSoftwareFedActive
                 if 'seq_dict' in locals():
                     seq_dict['ipv6_src_value'] = group['ipv6_src_value']
                 continue
-            
+
             # ipv6_dst: value = 0x00001100.0x00000000.0x00000000.0x3000000
             m = p7_2.match(line)
             if m:
@@ -973,7 +973,7 @@ class ShowPlatformSoftwareFedActiveAclInfoDbDetail(ShowPlatformSoftwareFedActive
                 if 'seq_dict' in locals():
                     seq_dict['ipv6_dst_value'] = group['ipv6_dst_value']
                 continue
-            
+
             # mask = 0xffffffff.0xffffffff.0xffffffff.0xffffffff
             m = p7_3.match(line)
             if m:
@@ -1582,5 +1582,175 @@ class ShowPlatformHardwareFedSwitchQosQueueConfig(
                     m.groupdict()["hbm_voq_thresholds"].replace(" ", "").split(",")
                 )
                 continue
-        
+
+        return ret_dict
+
+# =============================================================================
+# Schema for 'show platform hardware fed {switch} active qos queue stats internal port_type punt queue {voq_id}'
+# =============================================================================
+class ShowPlatformHardwareFedSwitchActiveQosQueueStatsInternalPortTypePuntQueueSchema(MetaParser):
+    """Schema for show platform hardware fed {switch} active qos queue stats internal port_type punt queue {voq_id}"""
+    schema = {
+        'voq_id': {
+            Any(): {
+                'packets': {
+                    'enqueued': int,
+                    'dropped': int,
+                    'total': int
+                },
+                'bytes': {
+                    'enqueued': int,
+                    'dropped': int,
+                    'total': int
+                },
+                'slice': {
+                    Any(): {
+                        'sms_bytes': int,
+                        'hbm_blocks': int,
+                        'hbm_bytes': int
+                    }
+                }
+            }
+        }
+    }
+
+# =============================================================================
+# Parser for 'show platform hardware fed {switch} active qos queue stats internal port_type punt queue {voq_id}'
+# =============================================================================
+
+class ShowPlatformHardwareFedSwitchActiveQosQueueStatsInternalPortTypePuntQueue(ShowPlatformHardwareFedSwitchActiveQosQueueStatsInternalPortTypePuntQueueSchema):
+    """Parser for show platform hardware fed {switch} active qos queue stats internal port_type punt queue {voq_id}"""
+
+    cli_command = ['show platform hardware fed {switch} active qos queue stats internal port_type punt queue {voq_id}',
+    'show platform hardware fed switch active qos queue stats internal port_type punt queue {voq_id}']
+
+    def cli(self,voq_id='', switch='',  output=None):
+        if output is None:
+            if switch:
+                output = self.device.execute(self.cli_command[0].format(switch=switch, voq_id=voq_id))
+            else:
+                output = self.device.execute(self.cli_command[1].format(voq_id=voq_id))
+
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # 0      | Enqueued |                        1194566957 |                       78841419162 |
+        #        | Dropped  |                                 0 |                                 0 |
+        #        | Total    |                        1194566957 |                       78841419162 |
+        #        |----------|-----------------------------------------------------------------------|
+        p2 = re.compile(r'^(?P<voq_id>\d+)?\s*\|\s+(?P<header>\w+)\s+\|\s+(?P<packets>\d+)\s+\|\s+(?P<bytes>\d+)\s+\|$')
+
+        # |   Slice  |         0 |         1 |         2 |         3 |         4 |         5 |
+        p3 = re.compile(r'^\|\s+Slice\s+\|\s+(?P<slice0>\d+)\s\|\s+(?P<slice1>\d+)\s\|\s+(?P<slice2>\d+)\s\|'
+                            r'\s+(?P<slice3>\d+)\s\|\s+(?P<slice4>\d+)\s\|\s+(?P<slice5>\d+)\s\|$')
+
+        # |SMS Bytes |         0 |         0 |         0 |         0 |         0 |         0 |
+        p4 = re.compile(r'^\|\s*(?P<slice_type>SMS Bytes|HBM Blocks|HBM Bytes)\s*\|\s+(?P<slice0>\d+)\s\|\s+(?P<slice1>\d+)\s\|'
+                    r'\s+(?P<slice2>\d+)\s\|\s+(?P<slice3>\d+)\s\|\s+(?P<slice4>\d+)\s\|\s+(?P<slice5>\d+)\s\|$')
+
+
+        for line in output.splitlines():
+            line = line.strip()
+
+
+            # 0      | Enqueued |                        1194566957 |                       78841419162 |
+            #        | Dropped  |                                 0 |                                 0 |
+            #        | Total    |                        1194566957 |                       78841419162 |
+            #        |----------|-----------------------------------------------------------------------|
+            m = p2.match(line)
+            if m:
+                res_dict = m.groupdict()
+                if res_dict['voq_id']:
+                    voq_dict = ret_dict.setdefault('voq_id', {}).setdefault(res_dict['voq_id'], {})
+                pkts_dict = voq_dict.setdefault('packets', {})
+                bytes_dict = voq_dict.setdefault('bytes', {})
+                pkts_dict.setdefault(res_dict['header'].lower(), int(res_dict['packets']))
+                bytes_dict.setdefault(res_dict['header'].lower(), int(res_dict['bytes']))
+                continue
+            # |   Slice  |         0 |         1 |         2 |         3 |         4 |         5 |
+            m = p3.match(line)
+            if m:
+                slice_dict = voq_dict.setdefault('slice', {})
+                slice_dict0 = slice_dict.setdefault(m.groupdict()['slice0'], {})
+                slice_dict1 = slice_dict.setdefault(m.groupdict()['slice1'], {})
+                slice_dict2 = slice_dict.setdefault(m.groupdict()['slice2'], {})
+                slice_dict3 = slice_dict.setdefault(m.groupdict()['slice3'], {})
+                slice_dict4 = slice_dict.setdefault(m.groupdict()['slice4'], {})
+                slice_dict5 = slice_dict.setdefault(m.groupdict()['slice5'], {})
+                continue
+            # |SMS Bytes |         0 |         0 |         0 |         0 |         0 |         0 |
+            m = p4.match(line)
+            if m:
+                grp_output = m.groupdict()
+                slice_type = grp_output['slice_type'].replace(' ', '_').lower()
+                slice_dict0.setdefault(slice_type, int(grp_output['slice0']))
+                slice_dict1.setdefault(slice_type, int(grp_output['slice1']))
+                slice_dict2.setdefault(slice_type, int(grp_output['slice2']))
+                slice_dict3.setdefault(slice_type, int(grp_output['slice3']))
+                slice_dict4.setdefault(slice_type, int(grp_output['slice4']))
+                slice_dict5.setdefault(slice_type, int(grp_output['slice5']))
+                continue
+
+        return ret_dict
+
+
+# =============================================================================
+# Schema for 'show  platform software fed {switch} active punt asic-cause brief'
+# =============================================================================
+class ShowPlatformSoftwareFedActivePuntAsicCauseBriefSchema(MetaParser):
+    """Schema for show platform software fed {switch} active punt asic-cause brief"""
+    schema = {
+        'cause_name':{
+             Any(): {
+                'source': str,
+                'rx_cur': int,
+                'rx_delta': int,
+                'drop_cur': int,
+                'drop_delta': int,
+            }
+        }
+    }
+
+# =============================================================================
+# Parser for 'show  platform software fed {switch} active punt asic-cause brief'
+# =============================================================================
+
+class ShowPlatformSoftwareFedActivePuntAsicCauseBrief(ShowPlatformSoftwareFedActivePuntAsicCauseBriefSchema):
+    """Parser for show platform software fed {switch} active punt asic-cause brief"""
+
+    cli_command = ['show platform software fed {switch} active punt asic-cause brief',\
+                    'show platform software fed active punt asic-cause brief']
+
+    def cli(self, switch='', output=None):
+        if output is None:
+            if switch:
+                output = self.device.execute(self.cli_command[0].format(switch=switch))
+            else:
+                output = self.device.execute(self.cli_command[1])
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # UKNWN   UNKNOWN                       218          218          218          218
+        # INMIR   ARP MIRROR                    368          368            0            0
+        p1 = re.compile(r'^(?P<source>\w+)(?:\s*)'
+                        r'(?P<cause_name>\w+(\s(\S{1,}))+|(\w+\s)+\w*\S\w*\S*|\w*\S\w*\S|\w+((\s\w+){1,}))(?:\s*)'
+                        r'(?P<rx_cur>\d+)(?:\s*)(?P<rx_delta>\d+)(?:\s*)(?P<drop_cur>\d+)(?:\s*)(?P<drop_delta>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # UKNWN   UNKNOWN                       218          218          218          218
+            # INMIR   ARP MIRROR                    368          368            0            0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                cause_name = group.pop('cause_name')
+                sub_dict = ret_dict.setdefault('cause_name', {}).setdefault(cause_name, {})
+                source = group.pop('source')
+                sub_dict['source'] = source
+                sub_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
         return ret_dict

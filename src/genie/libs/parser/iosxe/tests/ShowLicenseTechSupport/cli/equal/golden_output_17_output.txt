@@ -1,0 +1,418 @@
+show license tech support
+Load for five secs: 2%/0%; one minute: 2%; five minutes: 1%
+Time source is NTP, 15:08:49.347 IST Wed Mar 19 2025
+
+Smart Licensing Tech Support info
+
+Smart Licensing Status
+======================
+
+Smart Licensing is ENABLED
+
+License Conversion:
+  Automatic Conversion Enabled: False
+  Last Data Push: <none>
+  Last File Export: <none>
+
+Export Authorization Key:
+  Features Authorized:
+    <none>
+
+Utility:
+  Status: DISABLED
+
+Smart Licensing Using Policy:
+  Status: ENABLED
+  Reporting Mode: STANDARD
+
+Account Information:
+  Smart Account: <none>
+  Virtual Account: <none>
+
+Data Privacy:
+  Sending Hostname: yes
+    Callhome hostname privacy: DISABLED
+    Smart Licensing hostname privacy: DISABLED
+  Version privacy: DISABLED
+
+Transport:
+  Type: Smart
+  URL: https://smartreceiver.cisco.com/licservice/license
+  Proxy:
+    Address: 173.36.224.108
+    Port: 80
+    Username: <empty>
+    Password: <empty>
+  Server Identity Check: True
+  VRF: <empty>
+  IP Mode: IPv4 ONLY
+  Trust Point: SLA-TrustPoint
+
+Miscellaneous:
+  Custom Id: <empty>
+
+Policy:
+  Policy in use: Merged from multiple sources.
+  Reporting ACK required: yes (CISCO default)
+  Unenforced/Non-Export Perpetual Attributes:
+    First report requirement (days): 365 (CISCO default)
+    Reporting frequency (days): 0 (CISCO default)
+    Report on change (days): 90 (CISCO default)
+  Unenforced/Non-Export Subscription Attributes:
+    First report requirement (days): 90 (CISCO default)
+    Reporting frequency (days): 90 (CISCO default)
+    Report on change (days): 90 (CISCO default)
+  Enforced (Perpetual/Subscription) License Attributes:
+    First report requirement (days): 0 (CISCO default)
+    Reporting frequency (days): 0 (CISCO default)
+    Report on change (days): 0 (CISCO default)
+  Export (Perpetual/Subscription) License Attributes:
+    First report requirement (days): 0 (CISCO default)
+    Reporting frequency (days): 0 (CISCO default)
+    Report on change (days): 0 (CISCO default)
+
+Usage Reporting:
+  Last ACK received: <none>
+  Next ACK deadline: Jun 17 15:04:29 2025 IST
+  Reporting push interval: 30  days State(2) InPolicy(90)
+  Next ACK push check: <none>
+  Next report push: Mar 19 15:06:29 2025 IST
+  Last report push: <none>
+  Last report file write: <none>
+
+Trust Code Installed: <none>
+
+License Usage
+=============
+Handle: 2
+  License: network-advantage
+  Entitlement Tag: regid.2017-03.com.cisco.advantagek9-Nyquist-C9500,1.0_f1563759-2e03-4a4c-bec5-5feec525a12c
+  Description: C9500 Network Advantage
+  Count: 2
+  Version: 1.0
+  Status: IN USE(15)
+    Authorized Count: 0
+    Out-Of-Compliance Count: 0
+    Insufficient Count: 0
+    No license: 0
+  Status time: Mar 19 15:03:39 2025 IST
+  Request Time: Mar 19 15:04:26 2025 IST
+  Export status: NOT RESTRICTED
+  Feature Name: network-advantage
+  Feature Description: C9500 Network Advantage
+  Enforcement type: NOT ENFORCED
+  Day-0 Verification: NO
+  License type: Perpetual
+  Measurements:
+    ENTITLEMENT:
+      Interval: 00:15:00
+      Current Value: 2
+      Current Report: 1742378619       Previous: 1742378617
+  Soft Enforced: True
+
+Handle: 3
+  License: dna-advantage
+  Entitlement Tag: regid.2018-01.com.cisco.C9500-DNA-32QC-A,1.0_1fd2bf73-201e-472b-a287-65f23ec80f3e
+  Description: C9500-32QC DNA Advantage
+  Count: 2
+  Version: 1.0
+  Status: IN USE(15)
+    Authorized Count: 0
+    Out-Of-Compliance Count: 0
+    Insufficient Count: 0
+    No license: 0
+  Status time: Mar 19 15:03:39 2025 IST
+  Request Time: Mar 19 15:04:26 2025 IST
+  Export status: NOT RESTRICTED
+  Feature Name: dna-advantage
+  Feature Description: C9500-32QC DNA Advantage
+  Enforcement type: NOT ENFORCED
+  Day-0 Verification: NO
+  License type: Subscription
+  Measurements:
+    ENTITLEMENT:
+      Interval: 00:15:00
+      Current Value: 2
+      Current Report: 1742378620       Previous: 1742378618
+  Soft Enforced: True
+
+Handle: 4
+  License: cisco-wireless-advantage
+  Entitlement Tag: regid.2024-08.com.cisco.CNS_CW_A,1.0_5c973b43-3728-4489-9c45-42197a411835
+  Description: cisco-wireless-advantage
+  Count: 0
+  Version: 1.0
+  Status: NOT IN USE(1)
+  Status time: Mar 19 15:03:45 2025 IST
+  Request Time: None
+  Export status: NOT RESTRICTED
+  Feature Name: cisco-wireless-advantage
+  Feature Description: cisco-wireless-advantage
+  Enforcement type: NOT ENFORCED
+  Day-0 Verification: NO
+  License type: Subscription
+  Measurements:
+    ENTITLEMENT:
+      Interval: 00:15:00
+      Current Value: 0
+      Current Report: 0       Previous: 0
+  Soft Enforced: True
+
+Product Information
+===================
+UDI: PID:C9500-32QC,SN:CAT2209L0KS
+
+HA UDI List:
+    Active:PID:C9500-32QC,SN:CAT2209L0KS
+    Standby:PID:C9500-32QC,SN:CAT2210L3GH
+
+Agent Version
+=============
+Smart Agent for Licensing: 6.3.7/b37215cd0
+
+Upcoming Scheduled Jobs
+=======================
+Current time: Mar 19 15:08:49 2025 IST
+Daily: Mar 20 15:03:41 2025 IST (23 hours, 54 minutes, 52 seconds remaining)
+Init Flag Check: Expired Not Rescheduled
+Reservation configuration mismatch between nodes in HA mode: Expired Not Rescheduled
+Start Utility Measurements: Mar 19 15:22:41 2025 IST (13 minutes, 52 seconds remaining)
+Send Utility RUM reports: Mar 20 15:05:38 2025 IST (23 hours, 56 minutes, 49 seconds remaining)
+Save unreported RUM Reports: Mar 19 16:08:11 2025 IST (59 minutes, 22 seconds remaining)
+Process Utility RUM reports: Mar 20 15:04:29 2025 IST (23 hours, 55 minutes, 40 seconds remaining)
+Data Synchronization: Expired Not Rescheduled
+External Event: Mar 19 15:09:18 2025 IST (29 seconds remaining)
+Operational Model: Expired Not Rescheduled
+
+Communication Statistics:
+=======================
+Communication Level Allowed: INDIRECT
+Overall State: Device configured for Offline transport
+Trust Establishment:
+  Attempts: Total=0, Success=0, Fail=0  Ongoing Failure: Overall=0 Communication=0
+  Last Response: <none>
+    Failure Reason: <none>
+  Last Success Time: <none>
+  Last Failure Time: <none>
+Trust Acknowledgement:
+  Attempts: Total=0, Success=0, Fail=0  Ongoing Failure: Overall=0 Communication=0
+  Last Response: <none>
+    Failure Reason: <none>
+  Last Success Time: <none>
+  Last Failure Time: <none>
+Usage Reporting:
+  Attempts: Total=0, Success=0, Fail=0  Ongoing Failure: Overall=0 Communication=0
+  Last Response: <none>
+    Failure Reason: <none>
+  Last Success Time: <none>
+  Last Failure Time: <none>
+Result Polling:
+  Attempts: Total=0, Success=0, Fail=0  Ongoing Failure: Overall=0 Communication=0
+  Last Response: <none>
+    Failure Reason: <none>
+  Last Success Time: <none>
+  Last Failure Time: <none>
+Authorization Request:
+  Attempts: Total=0, Success=0, Fail=0  Ongoing Failure: Overall=0 Communication=0
+  Last Response: <none>
+    Failure Reason: <none>
+  Last Success Time: <none>
+  Last Failure Time: <none>
+Authorization Confirmation:
+  Attempts: Total=0, Success=0, Fail=0  Ongoing Failure: Overall=0 Communication=0
+  Last Response: <none>
+    Failure Reason: <none>
+  Last Success Time: <none>
+  Last Failure Time: <none>
+Authorization Return:
+  Attempts: Total=0, Success=0, Fail=0  Ongoing Failure: Overall=0 Communication=0
+  Last Response: <none>
+    Failure Reason: <none>
+  Last Success Time: <none>
+  Last Failure Time: <none>
+Trust Sync:
+  Attempts: Total=0, Success=0, Fail=0  Ongoing Failure: Overall=0 Communication=0
+  Last Response: <none>
+    Failure Reason: <none>
+  Last Success Time: <none>
+  Last Failure Time: <none>
+Hello Message:
+  Attempts: Total=0, Success=0, Fail=0  Ongoing Failure: Overall=0 Communication=0
+  Last Response: <none>
+    Failure Reason: <none>
+  Last Success Time: <none>
+  Last Failure Time: <none>
+Telemetry Reporting:
+  Attempts: Total=0, Success=0, Fail=0  Ongoing Failure: Overall=0 Communication=0
+  Last Response: <none>
+    Failure Reason: <none>
+  Last Success Time: <none>
+  Last Failure Time: <none>
+
+License Certificates
+====================
+Production Cert: True
+Not registered. No certificates installed
+
+HA Info
+==========
+RP Role: Active
+Chassis Role: Active
+Behavior Role: Active
+RMF: True
+CF: True
+CF State: Stateless
+Message Flow Allowed: False
+
+Reservation Info
+================
+License reservation: DISABLED
+Last Data Push: <none>
+Last File Export: <none>
+
+Overall status:
+  Active: PID:C9500-32QC,SN:CAT2209L0KS
+    Reservation status: NOT INSTALLED
+    Request code: <none>
+    Last return code: <none>
+    Last Confirmation code: <none>
+    Reservation authorization code: <none>
+  Standby: PID:C9500-32QC,SN:CAT2210L3GH
+    Reservation status: NOT INSTALLED
+    Request code: <none>
+    Last return code: <none>
+    Last Confirmation code: <none>
+    Reservation authorization code: <none>
+
+Specified license reservations:
+
+Purchased Licenses:
+  No Purchase Information Available
+
+
+Device Enforcement State:
+NOT APPLICABLE
+
+Usage Report Summary:
+=====================
+Total: 6,  Purged: 0(0)
+Total Acknowledged Received: 0,  Waiting for Ack: 0(6)
+Available to Report: 6  Collecting Data: 2
+Maximum Display: 6  In Storage: 6,  MIA: 0(0)
+Report Module Status: Ready
+
+Product Analytics Report Summary:
+================================
+Product Analytics: AVAILABLE
+Not Available Reason: <empty>
+Total current Product Analytics reports: 0
+
+Other Info
+==========
+Software ID: regid.2017-05.com.cisco.C9500,v1_7435cf27-0075-4bfb-b67c-b42f3054e82a
+Agent State: authorized
+TS enable: True
+Transport: Smart
+  Default URL: https://smartreceiver.cisco.com/licservice/license
+Locale: en_US.UTF-8
+Debug flags: 0x7
+Privacy Send Hostname: True
+Privacy Send IP: True
+Build type:: Production
+sizeof(char)  : 1
+sizeof(int)   : 4
+sizeof(long)  : 4
+sizeof(char *): 8
+sizeof(time_t): 4
+sizeof(size_t): 8
+Endian: Big
+Write Erase Occurred: False
+XOS version: 0.12.0.0
+Config Persist Received: False
+Message Version: 1.3
+connect_info.name: <empty>
+connect_info.version: <empty>
+connect_info.additional: <empty>
+connect_info.prod: False
+connect_info.capabilities: <empty>
+agent.capabilities: UTILITY, DLC, AppHA, MULTITIER, EXPORT_2, OK_TRY_AGAIN, POLICY_USAGE, TELEMETRY, PRODUCT-ANALYTICS, TELEMETRY_POLICY
+Check Point Interface: True
+Config Management Interface: False
+License Map Interface: True
+HA Interface: True
+Trusted Store Interface: True
+Platform Data Interface: True
+Crypto Version 2 Interface: False
+SAPluginMgmtInterfaceMutex: True
+SAPluginMgmtIPDomainName: True
+SmartTransportVRFSupport: True
+SmartAgentClientWaitForServer: 2000
+SmartAgentCmReTrySend: True
+SmartAgentClientIsUnified: True
+SmartAgentCmClient: True
+SmartAgentClientName: UnifiedClient
+builtInEncryption: True
+enableOnInit: True
+routingReadyByEvent: True
+systemInitByEvent: True
+SmartTransportServerIdCheck: True
+SmartTransportProxySupport: True
+SmartAgentMaxERMNotifyListSize: 6000
+SmartAgentDay0Enforcement: False
+SmartAgentUnifiedLicensing: False
+SmartAgentSLPEnhanced: False
+SmartAgentPurgeAllReports: False
+trustpointEnrollmentOnBoot: False
+SmartAgentMaxSingleReportSize: 0
+SmartAgentSLACReturnForcedAllowed: False
+SmartAgentComplianceStatus: False
+SmartAgentTelemetryRumReportMax: 600
+SmartAgentRumTelemetryRumStoreMin: 500
+SmartAgentPolicyDisplayFormat: 0
+SmartAgentReportOnUpgrade: False
+SmartAgentIndividualRUMEncrypt: 2
+SmartAgentMaxRumMemory: 50
+SmartAgentConcurrentThreadMax: 10
+SmartAgentPolicyControllerModel: False
+SmartAgentDisableCacheSWID: False
+SmartAgentPolicyModel: True
+SmartAgentFederalLicense: True
+SmartAgentMultiTenant: False
+attr365DayEvalSyslog: True
+checkPointWriteOnly: False
+SmartAgentDelayCertValidation: False
+enableByDefault: False
+conversionAutomatic: False
+conversionAllowed: False
+storageEncryptDisable: False
+storageLoadUnencryptedDisable: False
+TSPluginDisable: False
+bypassUDICheck: False
+loggingAddTStamp: False
+loggingAddTid: True
+HighAvailabilityOverrideEvent: UnknownPlatformEvent
+platformIndependentOverrideEvent: UnknownPlatformEvent
+platformOverrideEvent: SmartAgentSystemDataListChanged
+WaitForHaRole: False
+standbyIsHot: True
+chkPtType: 2
+delayCommInit: False
+roleByEvent: True
+maxTraceLength: 150
+traceAlwaysOn: True
+debugFlags: 0
+Event log max size: 5120 KB
+Event log current size: 1 KB
+P:C9500-32QC,S:CAT2209L0KS: No Trust Data
+P:C9500-32QC,S:CAT2210L3GH: No Trust Data
+Overall Trust: No ID
+Clock sync-ed with NTP: True
+
+Platform Provided Mapping Table
+===============================
+  C9500-32QC: Total licenses found: 224
+Enforced Licenses:
+  P:C9500-32QC,S:CAT2209L0KS:
+    No PD enforced licenses
+  P:C9500-32QC,S:CAT2210L3GH:
+    No PD enforced licenses

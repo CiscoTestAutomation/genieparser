@@ -13,6 +13,8 @@ IOSXE parsers for the following show commands:
     * show logging onboard rp {rp} {feature} detail
     * show logging process smd reverse
     * show logging process smd {switch} {mode} reverse
+    * show logging onboard slot {slot} uptime latest
+    * show logging process ios module pki level notice
 '''
 
 # Python
@@ -230,7 +232,9 @@ class ShowLogging(ShowLoggingSchema):
                         r'+messages +logged, +xml +(?P<xml>\S+),$')
 
         # filtering disabled
-        p5 = re.compile(r'^filtering +(?P<filtering>\S+)$')
+        # filtering enabled (0 messages logged)
+        p5 = re.compile(r'^filtering +(?P<filtering>\S+)(?: +\(\d+ messages logged\))?$')
+
 
         # Exception Logging: size (4096 bytes)
         # Exception Logging: Disabled
@@ -1875,3 +1879,211 @@ class ShowLoggingProcess(ShowLoggingProcessSchema):
 
         return ret_dict
 
+
+class ShowLoggingOnboardSlotUptimeSchema(MetaParser):
+    """Schema for show logging onboard slot {slot} uptime latest"""
+    schema = {
+        'slot': {
+            str: {
+                'resets': ListOf(
+                    {
+                        'reset_reason': str,
+                        'power_on': str
+                    }
+                )
+            }
+        }
+    }
+
+
+
+class ShowLoggingOnboardSlotUptime(ShowLoggingOnboardSlotUptimeSchema):
+    """Parser for show logging onboard slot {slot} uptime latest"""
+
+    cli_command = 'show logging onboard slot {slot} uptime latest'
+
+    def cli(self, slot='R0', output=None):
+        if output is None:
+            cmd = self.cli_command.format(slot=slot)
+            output = self.device.execute(cmd)
+
+        parsed_dict = {}
+        # R0      PowerCycle            05/17/25 15:40:12
+        p1 = re.compile(r'^(?P<slot>\S+)\s+(?P<reset_reason>[\w\s]+)\s+(?P<power_on>\d{2}/\d{2}/\d{2} \d{2}:\d{2}:\d{2})$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            # R0      PowerCycle            05/17/25 15:40:12
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                slot_dict = parsed_dict.setdefault('slot', {}).setdefault(group['slot'], {})
+                resets_list = slot_dict.setdefault('resets', [])
+                resets_list.append({
+                    'reset_reason': group['reset_reason'].strip(),
+                    'power_on': group['power_on'].strip()
+                })
+
+        return parsed_dict
+
+class ShowLoggingCountSchema(MetaParser):
+    """Schema for:
+        * 'show logging count'
+    """
+    schema = {
+        'facility': {
+            Any(): {
+                'message_name': {
+                    Any(): {
+                        'severity': int,
+                        'occurrences': int,
+                        'last_time': str
+                    }
+                },
+                Optional('total'): int
+            }
+        }
+    }
+
+
+class ShowLoggingCount(ShowLoggingCountSchema):
+    """Parser for:
+        * 'show logging count'
+    """
+
+    cli_command = 'show logging count'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize variables
+        ret_dict = {}
+
+        # Facility       Message Name                     Sev Occur      Last Time
+        # ==================================================================================
+        # SYS            CONFIG_I                           5    1 *May  1 06:13:57.803
+        # SYS            LOGGINGHOST_STARTSTOP              6    2 *May  1 06:13:56.862
+        # -------------  -------------------------------  ----------------------------------
+        # SYS TOTAL                                              3
+        p1 = re.compile(r'^(?P<facility>\S+)\s+(?P<message_name>[\S ]+?)\s+(?P<severity>\d+)\s+(?P<occurrences>\d+)\s+(?P<last_time>[\S ]+)$')
+        # Facility  ,SYS TOTAL                                              3
+        p2 = re.compile(r'^(?P<facility>\S+)\s+TOTAL\s+(?P<total>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Facility       Message Name                     Sev Occur      Last Time
+            # ==================================================================================
+            # SYS            CONFIG_I                           5    1 *May  1 06:13:57.803
+            # SYS            LOGGINGHOST_STARTSTOP              6    2 *May  1 06:13:56.862
+            # -------------  -------------------------------  ----------------------------------
+            # SYS TOTAL                                                  3
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                facility = group['facility']
+                message_name = group['message_name'].strip()
+                severity = int(group['severity'])
+                occurrences = int(group['occurrences'])
+                last_time = group['last_time']
+
+                facility_dict = ret_dict.setdefault('facility', {}).setdefault(facility, {})
+                message_dict = facility_dict.setdefault('message_name', {}).setdefault(message_name, {})
+                message_dict.update({
+                    'severity': severity,
+                    'occurrences': occurrences,
+                    'last_time': last_time
+                })
+                continue
+
+            # Facility  ,SYS TOTAL                                              3
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                facility = group['facility']
+                total = int(group['total'])
+
+                facility_dict = ret_dict.setdefault('facility', {}).setdefault(facility, {})
+                facility_dict['total'] = total
+                continue
+
+        return ret_dict
+
+# =================================================
+# Schema for 'show logging process ios module pki level notice'
+# =================================================
+class ShowLoggingProcessIosModulePkiLevelNoticeSchema(MetaParser):
+    """Schema for `show logging process ios module pki level notice`"""
+    schema = {
+        'logs': ListOf(
+            {
+                'timestamp': str,
+                'location': str,
+                'facility': str,
+                'pid': str,
+                'level': str,
+                'message': str,
+            }
+        )
+    }
+
+# =================================================
+# Parser for 'show logging process ios module pki level notice'
+# =================================================
+class ShowLoggingProcessIosModulePkiLevelNotice(ShowLoggingProcessIosModulePkiLevelNoticeSchema):
+    """Parser for `show logging process ios module pki level notice`"""
+
+    cli_command = 'show logging process ios module pki level notice'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        parsed_dict = {}
+
+        if output and output.strip():
+            logs = []
+
+            # Example log line:
+            # 2024/06/09 13:30:43.826000 {R0}{123}: [PKI] [1234]: (notice): This is a log message
+            p1 = re.compile(
+                r'^(?P<timestamp>\d{4}/\d{2}/\d{2} \d{2}:\d{2}:\d{2}\.\d+)\s+'
+                r'\{(?P<location>[^}]+)\}\{\d+\}:\s+\[(?P<facility>[^\]]+)\] '
+                r'\[(?P<pid>\d+)\]:\s+\((?P<level>\w+)\):\s+(?P<message>.+)'
+            )
+
+            multiline_msg = ''
+            current_log = None
+
+            for line in output.splitlines():
+                line = line.strip()
+
+                # Regex to match log lines with timestamp, location, facility, pid, level, and message in the format:
+                # 2024/06/09 13:30:43.826000 {R0}{123}: [PKI] [1234]: (notice): This is a log message
+                match = p1.match(line)
+                if match:
+                    # If there is a previously matched log, finalize its message and store it
+                    if current_log:
+                        current_log['message'] = multiline_msg.strip()
+                        logs.append(current_log)
+
+                    # Start a new log entry using named groups from the regex match
+                    current_log = match.groupdict()
+                    multiline_msg = current_log['message']  # Initialize multiline message
+                elif current_log and line.startswith('%'):
+                    # If the line is a continuation (starts with %), append to current message
+                    multiline_msg += ' ' + line.strip()
+
+            # Add the last log entry if present
+            if current_log:
+                current_log['message'] = multiline_msg.strip()
+                logs.append(current_log)
+
+            # Only add 'logs' key to parsed_dict if logs were actually parsed
+            if logs:
+                parsed_dict['logs'] = logs
+
+        # DEVAT-compliant single return
+        return parsed_dict

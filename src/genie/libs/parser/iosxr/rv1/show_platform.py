@@ -116,7 +116,18 @@ class ShowDiagDetailsSchema(MetaParser):
                     Optional('epld_b'): str,
                     Optional('port_type_num'): str,
                     Optional('sram_size'): int,
+                    Optional('stackmib_oid'): int,
+                    Optional('cooling_capacity'): int,
                     Optional('sensor'): {
+                        Any(): str
+                    },
+                    Optional('current_volt'): {
+                        Any(): str
+                    },
+                    Optional('current_mode'): {
+                        Any(): str
+                    },
+                    Optional('max_float_current_mode'): {
                         Any(): str
                     },
                     Optional('max_connector_power'): str,
@@ -200,10 +211,10 @@ class ShowDiagDetails(ShowDiagDetailsSchema):
         p2 = re.compile(r'^Controller Type\s+:\s+(?P<controller_type>\w+)$')
 
         # PID                        : 8201-32FH
-        p3 = re.compile(r'^(PID|Product ID)\s+:\s+(?P<pid>[\w\.-]+)$')
+        p3 = re.compile(r'^(PID|Product ID)\s*:\s+(?P<pid>[\w\.-]+)$')
 
         # Version Identifier         : V03
-        p4 = re.compile(r'^(VID|Version Identifier)\s+:\s+(?P<version_identifier>.+?)$')
+        p4 = re.compile(r'^(VID|Version Identifier)\s*:\s+(?P<version_identifier>.+?)$')
 
         # UDI Description            : Cisco 8000 Series 32x400G QSFPDD 1RU Fixed System w/HBM
         p5 = re.compile(r'^UDI Description\s+:\s+(?P<udi_description>.+?)$')
@@ -223,11 +234,14 @@ class ShowDiagDetails(ShowDiagDetailsSchema):
         # PCA Number                 : 73-20364-02
         p10 = re.compile(r'^PCA Number\s+:\s+(?P<serial_number>.+?)$')
 
+        # PCA:   73-17858-02 rev N/A
+        p10_1 = re.compile(r'^PCA:\s+(?P<serial_number>[\w-]+)(\s+rev +(?P<pca_rev>\S+))*$')
+        
         # PCA Revision               : E0
-        p11 = re.compile(r'^PCA Revision\s+:\s+(?P<serial_number>.+?)$')
+        p11 = re.compile(r'^PCA Revision\s+:\s+(?P<pca_rev>.+?)$')
 
         # CLEI Code                  : CMM6210ARC
-        p12 = re.compile(r'^CLEI Code\s+:\s+(?P<clei_code>\w+)$')
+        p12 = re.compile(r'^CLEI Code\s*:\s+(?P<clei_code>\w+)$')
 
         # ECI Number                 : 477690
         p13 = re.compile(r'^ECI Number\s+:\s+(?P<eci_num>\w+)$')
@@ -375,7 +389,7 @@ class ShowDiagDetails(ShowDiagDetailsSchema):
         p60 = re.compile(r'^Cooling Requirement:\s+(?P<cooling_req>\d+)$')
 
         # Ambient Temperature: 55
-        p61 = re.compile(r'^Ambient Temperature:\s+(?P<ambient_temp>\d+)$')
+        p61 = re.compile(r'^Ambient Temperature\s*:\s+(?P<ambient_temp>\d+)$')
 
         # Temperature Sensor Block:
         p62 = re.compile(r'^Temperature Sensor Block:$')
@@ -393,7 +407,7 @@ class ShowDiagDetails(ShowDiagDetailsSchema):
         p66 = re.compile(r'^MAIN:\s+board type (?P<board_type>.+?)$')
 
         # S/N:   FOC1910NMC0
-        p67 = re.compile(r'^S\/N:\s+(?P<sn>.+)$')
+        p67 = re.compile(r'^S\/N:?\s+(?P<sn>.+)$')
 
         # Top Assy. Number:   68-3661-04
         p68 = re.compile(r'^Top Assy. Number:\s+(?P<top_assy_num>.+)$')
@@ -553,6 +567,42 @@ class ShowDiagDetails(ShowDiagDetailsSchema):
         # Device values            : 0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0
         p117 = re.compile(r'^Device values\s+:\s+(?P<device_values>.+)$')
 
+        # MPA 0/0/1 : ASR 9000 20-port 1GE Modular Port Adapter
+        p118 = re.compile(r'^MPA+\s+(?P<item>.+?)\s+:+\s+(?P<description>.+?)$')
+
+        # RP Module Specific Block:
+        p119 = re.compile(r'^RP Module Specific Block+\:$')
+
+        # Chassis Specific Block:
+        p120 = re.compile(r'^Chassis Specific Block+\:$')
+
+        # Second Serial Number Specific Block:
+        p121 = re.compile(r'^Second Serial Number Specific Block+\:$')
+
+        # Top Assembly Block
+        p122 = re.compile(r'^Top Assembly Block+\:$')
+
+        # Power Supply Specific Block:
+        p123 = re.compile(r'^Power Supply Specific Block+\:$')
+
+        # Fan Module Specific Block:
+        p124 = re.compile(r'^Fan Module Specific Block+\:$')
+        
+        # Stackmib OID    : 0
+        p125 = re.compile(r'^Stackmib OID\s+:\s+(?P<stackmib_oid>\d+)$')
+
+        # Cooling Capacity    : 0
+        p126 = re.compile(r'^Cooling Capacity\s+:\s+(?P<cooling_capacity>\d+)$')
+
+        # Current 110v    : 8300
+        p127 = re.compile(r'^Current+\s(?P<volt>\d+v)\s+:+\s+(?P<current>\d+)$')
+
+        # Current mode1   : 0
+        p128 = re.compile(r'^Current+\s(?P<mode>\S+)\s+:+\s+(?P<current_mode>\d+)$')
+
+        # Max Float Current mode1: 0
+        p129 = re.compile(r'^Max Float Current +(?P<mode>\S+):+\s+(?P<max_float>\d+)$')
+
         pointer_block = {}
         item = None
 
@@ -565,7 +615,7 @@ class ShowDiagDetails(ShowDiagDetailsSchema):
 
             # p65
             # NODE module 0/RSP0/CPU0  ASR9K Route Switch Processor with 440G/slot Fabric and 12GB
-            m = p0.match(line) or p65.match(line)
+            m = p0.match(line) or p65.match(line) or p118.match(line)
             if m:
                 match_dict = m.groupdict()
                 item = match_dict['item']
@@ -605,7 +655,6 @@ class ShowDiagDetails(ShowDiagDetailsSchema):
                 # if this is a daughter board and PID not set for parent module, update it
                 if item and '-DB' in item:
                     item = item.replace('-DB', '')
-                    item_dict = ret_dict.setdefault('item', {}).setdefault(item, {})
                     item_dict.setdefault('pid', match_dict['pid'])
                 continue
 
@@ -652,17 +701,20 @@ class ShowDiagDetails(ShowDiagDetailsSchema):
                 continue
 
             # PCA Number                 : 73-20364-02
-            m = p10.match(line)
+            # PCA:   73-13152-04 rev N/A 
+            m = p10.match(line) or p10_1.match(line)
             if m:
                 match_dict = m.groupdict()
                 pointer_block['pca_number'] = match_dict['serial_number']
+                if 'rev' in line:
+                    pointer_block['pca_revision'] = match_dict['pca_rev']
                 continue
 
             # PCA Revision               : E0
             m = p11.match(line)
             if m:
                 match_dict = m.groupdict()
-                pointer_block['pca_revision'] = match_dict['serial_number']
+                pointer_block['pca_revision'] = match_dict['pca_rev']
                 continue
 
             # CLEI Code                  : CMM6210ARC
@@ -1363,6 +1415,83 @@ class ShowDiagDetails(ShowDiagDetailsSchema):
             if m:
                 match_dict = m.groupdict()
                 pointer_block['device_values'] = match_dict['device_values']
+
+            # RP Module Specific Block:
+            m = p119.match(line)
+            if m:
+                rp_module_specifc_blocks = item_dict.setdefault('rp_module_specifc_blocks', {})
+                pointer_block = rp_module_specifc_blocks
+                continue
+
+            # Chassis Specific Block:
+            m = p120.match(line)
+            if m:
+                chassis_specific_blocks = item_dict.setdefault('chassis_specific_blocks', {})
+                pointer_block = chassis_specific_blocks
+                continue
+
+            # Second Serial Number Specific Block:
+            m = p121.match(line)
+            if m:
+                second_serial_no_specific_blocks = item_dict.setdefault('second_serial_no_specific_blocks', {})
+                pointer_block = second_serial_no_specific_blocks
+                continue
+            
+            # Top Assembly Block
+            m = p122.match(line)
+            if m:
+                top_assesmbly_blocks = item_dict.setdefault('top_assesmbly_blocks', {})
+                pointer_block = top_assesmbly_blocks
+                continue
+            
+            # Power Supply Specific Block:
+            m = p123.match(line)
+            if m:
+                power_supply_specific_blocks = item_dict.setdefault('power_supply_specific_blocks', {})
+                pointer_block = power_supply_specific_blocks
+                continue
+
+            # Fan Module Specific Block:
+            m = p124.match(line)
+            if m:
+                fan_module_specific_blocks = item_dict.setdefault('fan_module_specific_blocks', {})
+                pointer_block = fan_module_specific_blocks
+                continue
+
+            # Stackmib OID    : 0
+            m = p125.match(line)
+            if m:
+                match_dict = m.groupdict()
+                pointer_block['stackmib_oid'] = int(match_dict['stackmib_oid'])
+                continue
+            
+            # Cooling Capacity    : 0
+            m = p126.match(line)
+            if m:
+                match_dict = m.groupdict()
+                pointer_block['cooling_capacity'] = int(match_dict['cooling_capacity'])
+                continue
+
+            # Current 110v    : 8300
+            m = p127.match(line)
+            if m:
+                match_dict = m.groupdict()
+                pointer_block.setdefault('current_volt', {}).setdefault(match_dict['volt'], match_dict['current'])
+                continue
+
+            # Current 110v    : 8300
+            m = p128.match(line)
+            if m:
+                match_dict = m.groupdict()
+                pointer_block.setdefault('current_mode', {}).setdefault(match_dict['mode'], match_dict['current_mode'])
+                continue
+
+            # Current 110v    : 8300
+            m = p129.match(line)
+            if m:
+                match_dict = m.groupdict()
+                pointer_block.setdefault('max_float_current_mode', {}).setdefault(match_dict['mode'], match_dict['max_float'])
+                continue
 
         return ret_dict
 

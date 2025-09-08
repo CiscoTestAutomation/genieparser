@@ -10,7 +10,7 @@ import re
 import logging
 
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional, Use, And
+from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional, Use, And, ListOf
 from genie.libs.parser.utils.common import Common, INTERFACE_ABBREVIATION_MAPPING_TABLE
 
 # pyATS
@@ -283,7 +283,8 @@ class ShowInventory(ShowInventorySchema):
         p1 = re.compile(r"^NAME: +\"(?P<name>.*)\"," r" +DESCR: +\"(?P<descr>.*)\"$")
 
         # Switch 1
-        p1_1 = re.compile(r"^Switch +(?P<slot>(\S+))$")
+        # Switch 1 Chassis
+        p1_1 = re.compile(r"^Switch +(?P<slot>(\S+))( Chassis)?$")
 
         # Power Supply Module 0
         # Power Supply Module 1
@@ -1139,3 +1140,72 @@ class ShowPlatform(ShowPlatformSchema):
                 continue
 
         return platform_dict
+
+class ShowPlatformHostAccessTableIntfSchema(MetaParser):
+    """Schema for show platform host-access-table <intf>"""
+
+    schema = {
+        'current_feature': str,
+        'default': str,
+        Optional('vlan'): {
+            int: ListOf({
+                'src_address': str,
+                'access_mode': str,
+                'feature': str,
+                'type': str,
+            }),
+        },
+    }
+
+class ShowPlatformHostAccessTableIntf(ShowPlatformHostAccessTableIntfSchema):
+    """Parser for show platform host-access-table <intf>"""
+
+    cli_command = 'show platform host-access-table {intf}'
+
+    def cli(self, intf=None, output=None):
+        if output is None:
+            cmd = self.cli_command.format(intf=intf)
+            output = self.device.execute(cmd)
+
+        # 001b.0c18.918d       100         permit         dot1x        dynamic
+        p1 = re.compile(r"^(?P<src_address>\S+)\s+(?P<vlan_id>\d+)\s+(?P<access_mode>\w+)\s+(?P<feature>\S+)\s+(?P<type>\w+)$")
+        
+        # Current feature:  dot1x
+        p2 = re.compile(r"^Current\s+feature:\s+(?P<current_feature>\S+)$")
+
+        # Default            ask
+        p3 = re.compile(r"^Default\s+(?P<default>\w+)$")
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # 001b.0c18.918d       100         permit         dot1x        dynamic
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                vlan_dict = ret_dict.setdefault('vlan', {}).setdefault(int(group['vlan_id']), [])
+                vlan_dict.append({
+                    'src_address': group['src_address'],
+                    'access_mode': group['access_mode'],
+                    'feature': group['feature'],
+                    'type': group['type']
+                })
+                continue
+
+            # Current feature:  dot1x
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['current_feature'] = group['current_feature']
+                continue
+
+            # Default            ask
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['default'] = group['default']
+                continue
+
+        return ret_dict

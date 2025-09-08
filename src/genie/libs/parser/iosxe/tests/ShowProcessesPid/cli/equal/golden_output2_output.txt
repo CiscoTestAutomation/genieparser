@@ -1,0 +1,10 @@
+Process ID 89 [IF-MGR control process], TTY 0
+Memory usage [in bytes]
+  Holding: 51360, Maximum: 51360, Allocated: 21400, Freed: 0
+  Getbufs: 0, Retbufs: 0, Stack: 21496/24000
+CPU usage
+  PC: 58A41AD6E415, Invoked: 256, Giveups: 0, uSec: 113
+  5Sec: 0.00%, 1Min: 0.00%, 5Min: 0.00%, Average: 0.00%
+  Age: 12674710 msec, Runtime: 29 msec
+  State: Waiting for Event, Priority: Normal
+

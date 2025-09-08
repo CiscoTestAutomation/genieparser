@@ -1,0 +1,21 @@
+IP SLAs Configuration:
+Entry Number: 1
+   Owner: -
+   Tag: -
+   Type of operation to perform: icmp-echo
+   Target address: 192.168.1.1
+   Source address: 192.168.1.2
+   Request size (ARR data bytes): 28
+   Timeout (milliseconds): 5000
+   Frequency (seconds): 60
+   Verify data: No
+   Status of entry (SNMP RowStatus): Active
+   Threshold (milliseconds): 2000
+   Distribution Statistics:
+      Number of statistics hours kept: 2
+      Number of statistics distributions buckets kept: 1
+      Statistic distribution interval (milliseconds): 20
+   Enhanced History:
+      Number of history Lives kept: 0
+      Number of history Buckets kept: 15
+      History Filter Type: None

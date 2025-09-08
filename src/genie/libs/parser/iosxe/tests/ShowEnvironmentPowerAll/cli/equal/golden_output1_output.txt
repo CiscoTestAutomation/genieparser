@@ -1,0 +1,8 @@
+SW  PID                 Serial#     Status           Sys Pwr  PoE Pwr  Watts
+--  ------------------  ----------  ---------------  -------  -------  -----
+1A  Not Present
+1B  PWR-C1-1100WAC      DTN2214V09K  OK              Good     Good     1100
+2A  Not Present
+2B  PWR-C1-1100WAC-P    DCC2401D608  OK              Good     Good     1100
+3A  Not Present
+3B  PWR-C1-715WAC       DCA2124G6RV  OK              Good     Good     715

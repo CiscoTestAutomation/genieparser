@@ -1,0 +1,46 @@
+expected_output = {
+     'alert': 'on',
+     'application_inspect': 'all',
+     'audit_trail': 'off',
+     'dns_timeout': 5,
+     'icmp': {
+         'ageout_time': 10,
+         'idle_time': 10,
+     },
+     'icmp_unreachable': 'drop',
+     'log_dropped_packet': 'off',
+     'log_flow': 'off',
+     'max_incomplete': {
+         'level': 'high',
+         'value': 'unlimited',
+     },
+     'number_of_packet_per_flow': 'default',
+     'one_minute': {
+         'level': 'high',
+         'value': 'unlimited',
+     },
+     'sessions_maximum': 'unlimited',
+     'sessions_rate': {
+         'level': 'high',
+         'value': 'unlimited',
+     },
+     'tcp': {
+         'ageout_time': 30,
+         'block_time': 0,
+         'finwait_time': 1,
+         'half_close': 'on',
+         'half_open': 'on',
+         'idle': 'on',
+         'idle_time': 3600,
+         'max_incomplete_host': 'unlimited',
+         'synwait_time': 30,
+         'window_scaling_enforcement': 'on',
+     },
+     'udp': {
+         'ageout_time': 30,
+         'halfopen_ageout_time': 30000,
+         'halfopen_idle_time': 30000,
+         'idle_time': 30,
+     },
+     'zone_mismatch_drop': 'off',
+ }

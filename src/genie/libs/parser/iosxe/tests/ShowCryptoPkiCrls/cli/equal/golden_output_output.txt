@@ -1,0 +1,16 @@
+CRL Issuer Name:
+    cn=root C=pki
+    LastUpdate: 12:39:13 IST Jan 27 2025
+    NextUpdate: 13:09:13 IST Jan 27 2025
+
+    CRL downloaded at: 12:40:18 IST Jan 27 2025
+
+    Retrieved from CRL Distribution Point:
+      ** CDP Not Published - Retrieved via SCEP
+
+ CRL DER is 350 bytes
+ CRL is stored in parsed CRL cache
+
+
+Parsed CRL cache current size is 350 bytes
+Parsed CRL cache maximum size is 65536 bytes

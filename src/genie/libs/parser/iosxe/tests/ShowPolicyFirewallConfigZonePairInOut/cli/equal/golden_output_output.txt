@@ -1,0 +1,18 @@
+show policy-firewall config zone-pair in-out
+Zone-pair              : in-out
+Source Zone            : inside
+  Member Interfaces:
+    GigabitEthernet0/1/3
+Destination Zone       : outside
+  Member Interfaces:
+    GigabitEthernet0/1/0
+Service-policy inspect : pmap
+  Class-map : nested_cmap (match-any)
+   Match class-map cmap
+   Match protocol tcp
+  Action : inspect
+   Parameter-map : param
+  Class-map : class-default (match-any)
+   Match any
+  Action : drop log
+   Parameter-map : Default

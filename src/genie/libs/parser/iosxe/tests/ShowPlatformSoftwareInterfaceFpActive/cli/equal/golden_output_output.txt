@@ -1,0 +1,79 @@
+show platform software interface fp active name Port-channel32
+
+Name: Port-channel32, ID: 2337, QFP ID: 1017, Schedules: 4096
+
+Type: EC, State: enabled, SNMP ID: 2581, MTU: 1530
+
+IP Address: 100.0.0.3
+
+IPV6 Address: 2001:100::3
+
+Flags: ipv4
+
+ICMP Flags: unreachables, redirects, no-info-reply, no-mask-reply
+
+ICMP6 Flags: unreachables, redirects
+
+SMI enabled on protocol(s): UNKNOWN
+
+Authenticated-user: 
+
+FRR linkdown ID: 65535
+
+vNet Name: , vNet Tag: 0, vNet Extra Information: 0
+
+Dirty: unknown
+
+AOM dependency sanity check: PASS
+
+AOM Obj ID: 213643
+
+
+
+Ether-Channel ID: 32, Load-balancing method: Flow
+
+Number of member links: 4
+
+  Members: GigabitEthernet0/0/1, GigabitEthernet0/0/2, GigabitEthernet0/0/3, GigabitEthernet0/0/4
+
+Number of buckets: 16
+
+  ID: 0, link: GigabitEthernet0/0/1
+
+  ID: 1, link: GigabitEthernet0/0/1
+
+  ID: 2, link: GigabitEthernet0/0/1
+
+  ID: 3, link: GigabitEthernet0/0/1
+
+  ID: 4, link: GigabitEthernet0/0/2
+
+  ID: 5, link: GigabitEthernet0/0/2
+
+  ID: 6, link: GigabitEthernet0/0/2
+
+  ID: 7, link: GigabitEthernet0/0/2
+
+  ID: 8, link: GigabitEthernet0/0/3
+
+  ID: 9, link: GigabitEthernet0/0/3
+
+  ID: 10, link: GigabitEthernet0/0/3
+
+  ID: 11, link: GigabitEthernet0/0/3
+
+  ID: 12, link: GigabitEthernet0/0/4
+
+  ID: 13, link: GigabitEthernet0/0/4
+
+  ID: 14, link: GigabitEthernet0/0/4
+
+  ID: 15, link: GigabitEthernet0/0/4
+
+
+
+
+
+FRY3#
+
+--- 10:41:24 ---

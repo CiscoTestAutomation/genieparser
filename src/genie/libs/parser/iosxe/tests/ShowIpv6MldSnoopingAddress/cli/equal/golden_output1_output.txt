@@ -1,0 +1,6 @@
+Flags: M -- MLD snooping, S -- Static, E -- EVPN sync
+
+Vlan      Group                    Type        Version     Port List
+-----------------------------------------------------------------------
+100       FF33::2:1                M           v2          Fif1/0/33
+            /101:1:1::11           M                       Fif1/0/33

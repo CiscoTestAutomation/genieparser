@@ -1,0 +1,11 @@
+Type: vlan_group           State: allocated       MD5:(d7cc48995242c698:167e8ad0954671bd)
+    Fset Urid              : 0x2000000000000002
+    Parent URID            : 0x0
+    Remote Port Count      : 0
+    Users Count            : 1
+    VP OIF Count           : 0
+    FSET Gid               : 8194
+    Asic[0] mcid_oid       : 2224
+    Hw L2 Mcg Info Asic[0] :
+    Users :
+      urid:0x5000000000000002 (l2m_vlan:ipv6 vlan:1)

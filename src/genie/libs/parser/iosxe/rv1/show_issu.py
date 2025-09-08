@@ -154,7 +154,8 @@ class ShowIssuStateDetail(ShowIssuStateDetailSchema):
         p18 = re.compile(r'Variable\s+Store\s*=\s*(?P<variable_store>.+)')
 
         # Current ISSU Status: Disabled
-        p19 = re.compile(r'^Current +ISSU +Status: +(?P<current_status>(\S+))$')
+        # Current ISSU Status: In Progress
+        p19 = re.compile(r'^Current +ISSU +Status: +(?P<current_status>.+)$')
 
         # Previous ISSU Operation: N/A
         p20 = re.compile(r'^Previous +ISSU +Operation: +(?P<previous_operation>(\S+))$')
@@ -364,6 +365,7 @@ class ShowIssuStateDetail(ShowIssuStateDetailSchema):
                 continue
 
             # Current ISSU Status: Disabled
+            # Current ISSU Status: In Progress
             # p19 = re.compile(r'^Current +ISSU +Status: +(?P<current_status>(\S+))$')
             m = p19.match(line)
             if m:

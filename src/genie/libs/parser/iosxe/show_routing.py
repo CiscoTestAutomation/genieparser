@@ -1308,13 +1308,14 @@ class ShowIpv6RouteUpdated(ShowIpv6RouteUpdatedSchema):
 class ShowIpRouteWordSchema(MetaParser):
     """Schema for show ip route <WORD>"""
     schema = {
-        'entry': {
+        Optional('entry'): {
             Any(): {
-                'ip': str,
-                'mask': str,
-                'known_via': str,
-                'distance': str,
-                'metric': str,
+                Optional('ip'): str,
+                Optional('mask'): str,
+                Optional('known_via'): str,
+                Optional('distance'): str,
+                Optional('metric'): str,
+                Optional('default_gateway'): str,
                 Optional('type'): str,
                 Optional('net'): str,
                 Optional('redist_via'): str,
@@ -1328,7 +1329,7 @@ class ShowIpRouteWordSchema(MetaParser):
                     Optional('interface'): str,
                     'age': str
                 },
-                'paths': {
+                Optional('paths'): {
                     Any(): {
                         Optional('nexthop'): str,
                         Optional('from'): str,
@@ -1351,7 +1352,8 @@ class ShowIpRouteWordSchema(MetaParser):
             }
         },
         Optional('routing_table'): str,
-        'total_prefixes': int,
+        Optional('total_prefixes'): int,
+        Optional('default_gateway'): str,
     }
 
 
@@ -1481,6 +1483,9 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
 
         # Advertised by eigrp 10 route-map GENIE_STATIC_INTO_EIGRP
         p18 = re.compile(r'^Advertised +by +(?P<advertised_by>[\S ]+)$')
+
+        # Default gateway is 172.27.147.1
+        p19 = re.compile(r'^Default +gateway +is +(?P<default_gateway>\S+)$')
 
         # initial variables
         ret_dict = {}
@@ -1682,6 +1687,16 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
             m18 = p18.match(line)
             if m18:
                 entry_dict.update({'advertised_by': m18.groupdict()['advertised_by']})
+                continue
+
+            # Default gateway is 172.27.147.1
+            m19 = p19.match(line)
+            if m19:
+                group = m19.groupdict()
+                try:
+                    entry_dict.update({'default_gateway': group['default_gateway']})
+                except UnboundLocalError:
+                    ret_dict.update({'default_gateway': group['default_gateway']})
                 continue
 
         ret_dict.update({'total_prefixes': index}) if ret_dict else None

@@ -1,0 +1,3 @@
+     Interface    Logical-ID Position   Asic# Auth-Act           Restore-Auth-Act   Flag         Policy-OID Packets    
+---- ------------ ---------- ---------- ----- ------------------ ------------------ ------------ ---------- ---------- 
+   1 Gi2/0/10     0          24576      0     DROP_ALL_LRN_DATA  None               NONE         573        152725830 

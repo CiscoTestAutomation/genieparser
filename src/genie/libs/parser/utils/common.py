@@ -42,6 +42,7 @@ INTERFACE_ABBREVIATION_MAPPING_TABLE = {
         # generic keys for when no OS detected
         {
             'Eth': 'Ethernet',
+            'SEth': 'Service-Ethernet',
             'Lo': 'Loopback',
             'lo': 'Loopback',
             'Fa': 'FastEthernet',
@@ -1095,7 +1096,7 @@ class Common:
             final_hours = "0{}".format(final_hours)
 
         return "{}:{}:{}".format(final_hours, final_minutes, final_seconds)
-    
+
 
 def check_for_duplicate(data):
     """
@@ -1123,7 +1124,7 @@ def check_for_duplicate(data):
                 log.warning(f'{cmd} is a duplicate')
                 duplicates.append(cmd)
     return duplicates
-         
+
 def _check_tree(tree, sub_tree_dict):
     """
     Recursively constructs a dictionary representation of a tree structure.
@@ -1146,8 +1147,8 @@ def _check_tree(tree, sub_tree_dict):
             for key, value in node_value.nodes.items():
                 node_output = node_dict.setdefault(key, {})
                 _check_tree(value, node_output)
-                    
-                
+
+
 def _find_duplicate(tree_dict):
     """
     Determines if there are duplicate structures within a tree dictionary.
@@ -1172,7 +1173,7 @@ def _find_duplicate(tree_dict):
                 if _check_branch(base[key], tree_dict[node][key]):
                     return True
     return False
-               
+
 
 def _check_branch(base, other):
     """

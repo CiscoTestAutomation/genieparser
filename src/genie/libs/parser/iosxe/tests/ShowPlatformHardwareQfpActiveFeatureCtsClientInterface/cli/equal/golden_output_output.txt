@@ -1,0 +1,9 @@
+Interface GigabitEthernet0/1/1(11):
+            Enable=1, Policy=0, Trust=1, Propagate=1, Internal=0    
+            SGT=2, SGT_caching_in=1 SGT_caching_eg=0    
+            IN_dbg/ IN_err=0/0, OUT_dbg/ OUT_err=0/0
+Interface GigabitEthernet0/1/2(11):
+            Enable=1, Policy=0, Trust=1, Propagate=1, Internal=0    
+            SGT=2, SGT_caching_in=1 SGT_caching_eg=0    
+            IN_dbg/ IN_err=0/0, OUT_dbg/ OUT_err=0/0
+

@@ -1125,8 +1125,7 @@ class ShowControllersEthernetControllersPhyDetail(ShowControllersEthernetControl
 
         #  0000 : 1140                  Control Register :  0001 0001 0100 0000
         #  0001 : 796d                    Control STATUS :  0111 1001 0110 1101
-        registers_reg = re.compile(
-            r'(?P<register_number>\S{4})\s\:\s(?P<hex_bit_value>\S{4})\s+(?P<register_name>.*)\s\:\s+(?P<bits>.*)')
+        registers_reg = re.compile(r'(?P<register_number>\S+)\s+\:\s+(?P<hex_bit_value>\S{4})\s+(?P<register_name>.*?)\s+\:\s+(?P<bits>.*)')
 
         # --------------------------------------------------------------
         # Build the parsed output
@@ -1173,7 +1172,7 @@ class ShowControllerEthernetControllerLinkstatusSchema(MetaParser):
             'mpp_port_details': {
                     Any():Or(int,str),
             },
-            'autoneg_details':{
+            Optional('autoneg_details'):{
                     Any():Or(int,str),
             },
             'autoneg_status': {
@@ -1372,7 +1371,7 @@ class ShowControllersEthernetControllerPortInfoSchema(MetaParser):
         'port_context_information': {
             'lpn': int,
             'asic_num': int,
-            'asic_port': int,
+            Optional('asic_port'): Or(int, str),
             'is_init': int,
             'context_name': str,
             'is_disabled': int,
@@ -1417,7 +1416,7 @@ class ShowControllersEthernetControllerPortInfo(ShowControllersEthernetControlle
         p4 = re.compile(r'^AsicNum\s+\.+\s+\[(?P<asic_num>\d+)\]$')
         
         # AsicPort ................... [-604733568]
-        p5 = re.compile(r'AsicPort\s+\.+\s+\[(?P<asic_port>\-*\d+)\]$')
+        p5 = re.compile(r'^AsicPort.*\[\s*(?P<asic_port>[^\]]+)\]')
         
         # IsInit ..................... [1]
         p6 = re.compile(r'^IsInit\s+\.+\s+\[(?P<is_init>\d+)\]$')
@@ -1493,11 +1492,13 @@ class ShowControllersEthernetControllerPortInfo(ShowControllersEthernetControlle
                 curr_dict['asic_num'] = int(group['asic_num'])
                 continue
             
-            # AsicPort ................... [-604733568]
             m = p5.match(line)
             if m:
-                group = m.groupdict()
-                curr_dict['asic_port'] = int(group['asic_port'])
+                val = m.group('asic_port').strip().upper()
+                try:
+                    curr_dict['asic_port'] = int(val)
+                except ValueError:
+                    curr_dict['asic_port'] = val  # keep as string, e.g., "NA"
                 continue
             
             # IsInit ..................... [1]
@@ -1629,6 +1630,7 @@ class ShowControllerEthernetControllerInterfaceMacSchema(MetaParser):
         },
         'multiport_detail': {
             Any(): {
+                Optional('save_state_timestamp'): str,
                 'device_info': {
                     Any(): str,
                 },
@@ -2962,4 +2964,4 @@ class ShowControllersEthernetControllerPreemptionStats(ShowControllersEthernetCo
                 continue
 
         return config_dict
-
+    

@@ -1,0 +1,5 @@
+Type escape sequence to abort.
+Sending 5, 1379-byte ICMP Echos to 6800::6, timeout is 1 seconds:
+Packet sent with a source address of 1700::1%vpn-101
+B!!!!
+Success rate is 80 percent (4/5), round-trip min/avg/max = 1/1/1 ms

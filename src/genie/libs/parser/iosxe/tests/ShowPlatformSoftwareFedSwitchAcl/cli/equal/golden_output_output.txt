@@ -1,0 +1,13 @@
+INTERFACE: Port-channel2.200
+MAC 0000.0000.0000
+Policy handle       : 0x6400024c
+Policy name         : epc_class_match_any_MAC_test3
+ID                  : 4894880
+Protocol            : [1] MAC
+Feature             : [139] AAL_FEATURE_EPC_RACL
+Number of ACLs      : 1
+Acl number          : 1
+Acl handle          : 0x2b00028f
+Acl flags           : 0x00000000
+Number of ACEs      : 1
+Ace handle [1]      : 0x710003fa

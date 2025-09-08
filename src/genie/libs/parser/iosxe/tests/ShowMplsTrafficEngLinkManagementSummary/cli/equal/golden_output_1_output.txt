@@ -1,0 +1,25 @@
+System Information::
+    Links Count:          4
+    Flooding System:      enabled
+IGP Area ID::  ospf 100  area 0
+    Flooding Protocol:    OSPF
+    Flooding Status:      data flooded
+    Periodic Flooding:    enabled (every 60 seconds, next in 12 seconds)
+    Flooded Links:        3
+    IGP System ID:        10.2.1.1
+    MPLS TE Router ID:    10.2.1.1
+    Neighbors:            3
+Link ID::  Gi0/1/2 (172.2.5.2)
+    Local Intfc ID:         13
+    Link Status:
+      SRLGs:                None
+      Intfc Switching Capability Descriptors:  
+         Default:           Intfc Switching Cap psc1, Encoding ethernet
+      Link Label Type:      Packet
+      Physical Bandwidth:   1000000 kbits/sec
+      Max Res Global BW:    750000 kbits/sec (reserved: 0% in, 0% out)
+      Max Res Sub BW:       0 kbits/sec (reserved: 100% in, 100% out)
+      MPLS TE Link State:   MPLS TE on, RSVP on, admin-up, flooded
+      Inbound Admission:    reject-huge
+      Outbound Admission:   allow-if-room
+      Link MTU:             IP 1500, MPLS 1500

@@ -1,0 +1,41 @@
+greenday_hub#  show ip nhrp vrf VRF_CLOUD_11            
+192.240.1.1/32 via 192.240.1.1
+   Tunnel11 created 2d00h, never expire 
+   Type: static, Flags: used bfd 
+   NBMA address: 14.13.1.1
+   Group: HUB
+192.240.1.2/32 via 192.240.1.2
+   Tunnel11 created 1d00h, expire 00:07:37
+   Type: dynamic, Flags: registered nhop bfd 
+   NBMA address: 75.76.1.1
+   Group: SPOKE_SCALE
+192.240.1.4/32 via 192.240.1.4
+   Tunnel11 created 1d00h, expire 00:09:47
+   Type: dynamic, Flags: registered nhop bfd 
+   NBMA address: 15.0.1.1
+   Group: SPOKE_10G
+192.240.1.5/32 via 192.240.1.5
+   Tunnel11 created 1d00h, expire 00:07:32
+   Type: dynamic, Flags: registered nhop bfd 
+   NBMA address: 16.0.1.1
+   Group: SPOKE_1G
+192.240.1.6/32 via 192.240.1.6
+   Tunnel11 created 1d00h, expire 00:09:36
+   Type: dynamic, Flags: registered nhop bfd 
+   NBMA address: 17.0.1.1
+   Group: SPOKE_1G
+192.240.1.7/32 via 192.240.1.7
+   Tunnel11 created 1d00h, expire 00:07:17
+   Type: dynamic, Flags: registered nhop bfd 
+   NBMA address: 18.0.1.1
+   Group: SPOKE_1G
+192.240.1.8/32 via 192.240.1.8
+   Tunnel11 created 1d00h, expire 00:08:07
+   Type: dynamic, Flags: registered nhop bfd 
+   NBMA address: 19.0.1.1
+   Group: SPOKE_1G_SCALE
+192.240.1.22/32 via 192.240.1.22
+   Tunnel11 created 2d00h, never expire 
+   Type: static, Flags: bfd 
+   NBMA address: 85.76.1.1
+greenday_hub#

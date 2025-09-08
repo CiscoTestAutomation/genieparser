@@ -7,6 +7,8 @@ IOSXE parsers for the following show commands:
     * show hardware led port {port} {mode}
     * hw-module beacon RP {supervisor} status
     * hw-module beacon slot {slot_num} status
+    * show hw-module subslot all oir
+    * show hw-module subslot {subslot} entity
 '''
 
 # Python
@@ -14,7 +16,7 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any, Optional
+from genie.metaparser.util.schemaengine import Any, Optional, Or
 
 # parser utils
 from genie.libs.parser.utils.common import Common
@@ -822,4 +824,417 @@ class HardwareModuleBeaconSlotStatus(HardwareModuleBeaconSlotStatusSchema):
                 ret_dict['slot_status'] = m.groupdict()['slot_status']
                 continue
   
+        return ret_dict
+
+class ShowHwModuleSubslotOirSchema(MetaParser):
+    """Schema for show hw-module subslot {slot} oir"""
+    schema = {
+        'subslots': {
+            str: {
+                'model': str,
+                'operational_status': str,
+            }
+        }
+    }
+
+class ShowHwModuleSubslotOir(ShowHwModuleSubslotOirSchema):
+    """Parser for show hw-module subslot {slot} oir"""
+
+    cli_command = 'show hw-module subslot {slot} oir'
+
+    def cli(self, slot='', output=None):
+        if output is None:
+            # Execute the command on the device
+            output = self.device.execute(self.cli_command.format(slot=slot))
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # Define the regular expression pattern to match each line of the output
+        # subslot 0/0             ISR4451-X-4x1GE      ok 
+        p0 = re.compile(r'^subslot\s+(?P<subslot>\S+)\s+(?P<model>\S+)\s+(?P<operational_status>\S+)$')
+
+        # Iterate over each line in the output
+        for line in output.splitlines():
+            line = line.strip()
+            # subslot 0/0             ISR4451-X-4x1GE      ok
+            if not line:
+                continue
+
+            # subslot 0/0             ISR4451-X-4x1GE      ok
+            m = p0.match(line)
+            if m:
+                # Extract the matched groups
+                subslot = m.group('subslot')
+                model = m.group('model')
+                operational_status = m.group('operational_status')
+
+                # Use setdefault to avoid key errors
+                subslot_dict = parsed_dict.setdefault('subslots', {}).setdefault(subslot, {})
+                subslot_dict['model'] = model
+                subslot_dict['operational_status'] = operational_status
+
+        return parsed_dict
+
+# ==========================
+# Schema for:
+#  * 'show hw-module subslot {subslot} entity'
+# ==========================
+class ShowHwModuleSubslotEntitySchema(MetaParser):
+    """Schema for show hw-module subslot {subslot} entity"""
+
+    schema = {
+        'entity_state': {
+            'subslot': str,
+            'spa_type': str,
+            'spa_type_hex': str,
+            'last_spa_type': str,
+            'last_spa_type_hex': str,
+            'oper_status': str,
+            'oper_status_code': int,
+            'card_status': str,
+            'card_status_code': int,
+            'last_trap_spa_type': str,
+            'last_trap_spa_type_hex': str,
+            'last_trap_oper_status': str,
+            'last_trap_oper_status_code': int,
+            'last_spa_env_get_ok': bool,
+            'last_spa_env_read_time': int,
+            'last_spa_env_read_time_str': str,
+            'resync_reqd': bool,
+            'resync_count': int,
+            'spa_physical_index': int,
+            'spa_container_index': int,
+            Optional('transceiver'): {
+                Any(): {
+                    'container_index': int,
+                    Optional('module_entity_index'): int,
+                    Optional('port_index'): int,
+                    'chassis_index': int,
+                    'operational_status': str,
+                    'operational_status_code': int,
+                    Optional('non_zero_xcvr_sensors'): {
+                        Any(): int,
+                    },
+                },
+            },
+            Optional('non_zero_spa_temp_sensors'): {
+                Any(): int,
+            },
+            Optional('non_zero_spa_volt_sensors'): {
+                Any(): int,
+            },
+            Optional('non_zero_spa_power_sensors'): str,
+        },
+    }
+
+
+# ==========================
+# Parser for:
+#  * 'show hw-module subslot {subslot} entity'
+# ==========================
+class ShowHwModuleSubslotEntity(ShowHwModuleSubslotEntitySchema):
+    """Parser for show hw-module subslot {subslot} entity"""
+
+    cli_command = 'show hw-module subslot {subslot} entity'
+
+    def cli(self, subslot='', output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(subslot=subslot))
+
+        # Initial variables
+        ret_dict = {}
+        current_transceiver = None
+        current_transceiver_dict = None
+
+        # Entity state for SPA in subslot 0/1
+        p1 = re.compile(r'^Entity\s+state\s+for\s+SPA\s+in\s+subslot\s+(?P<subslot>\S+)$')
+
+        # SPA type:                 (0xC55) EPA-18X1GE
+        p2 = re.compile(r'^SPA\s+type:\s+\((?P<hex>0x\w+)\)\s+(?P<type>\S+)$')
+
+        # last spa type:            (0xC55) EPA-18X1GE
+        p3 = re.compile(r'^last\s+spa\s+type:\s+\((?P<hex>0x\w+)\)\s+(?P<type>\S+)$')
+
+        # oper_status:              (1) ok
+        p4 = re.compile(r'^oper_status:\s+\((?P<code>\d+)\)\s+(?P<status>\S+)$')
+
+        # card status:              (2) full
+        p5 = re.compile(r'^card\s+status:\s+\((?P<code>\d+)\)\s+(?P<status>\S+)$')
+
+        # last trap: spa type:      (0xC55) EPA-18X1GE
+        p6 = re.compile(r'^last\s+trap:\s+spa\s+type:\s+\((?P<hex>0x\w+)\)\s+(?P<type>\S+)$')
+
+        # last trap: oper status:   (1) ok
+        p7 = re.compile(r'^last\s+trap:\s+oper\s+status:\s+\((?P<code>\d+)\)\s+(?P<status>\S+)$')
+
+        # last_spa_env_get_ok:      false
+        p8 = re.compile(r'^last_spa_env_get_ok:\s+(?P<status>true|false)$')
+
+        # last_spa_env_read_time:   (0) 145245938 msecs ago
+        p9 = re.compile(r'^last_spa_env_read_time:\s+\((?P<value>\d+)\)\s+(?P<time>\d+)\s+msecs\s+ago$')
+
+        # resync_reqd:              false
+        p10 = re.compile(r'^resync_reqd:\s+(?P<status>true|false)$')
+
+        # resync_count:             0
+        p11 = re.compile(r'^resync_count:\s+(?P<count>\d+)$')
+
+        # SPA physical index:       1520
+        p12 = re.compile(r'^SPA\s+physical\s+index:\s+(?P<index>\d+)$')
+
+        # SPA container index:      1028
+        p13 = re.compile(r'^SPA\s+container\s+index:\s+(?P<index>\d+)$')
+
+        # transceiver 0
+        p14 = re.compile(r'^transceiver\s+(?P<transceiver>\d+)$')
+
+        #   container index:        1571
+        p15 = re.compile(r'^container\s+index:\s+(?P<index>\d+)$')
+
+        #   module entity index:    1572
+        p16 = re.compile(r'^\s+module\s+entity\s+index:\s+(?P<index>\d+)$')
+
+        #   port index:             1573
+        p17 = re.compile(r'^\s+port\s+index:\s+(?P<index>\d+)$')
+
+        #   chassis index:          0
+        p18 = re.compile(r'^chassis\s+index:\s+(?P<index>\d+)$')
+
+        #   operational status:     (2) ok
+        p19 = re.compile(r'^operational\s+status:\s+\((?P<code>\d+)\)\s+(?P<status>\S+)$')
+
+        #   non-zero xcvr sensors:
+        p20 = re.compile(r'^\s+non-zero\s+xcvr\s+sensors:$')
+
+        #     sensor 0:     1599
+        p21 = re.compile(r'^\s+sensor\s+(?P<sensor>\d+):\s+(?P<index>\d+)$')
+
+        # non-zero SPA temp sensors:
+        p22 = re.compile(r'^non-zero\s+SPA\s+temp\s+sensors:$')
+
+        # sensor 0 has index 1546
+        p23 = re.compile(r'^sensor\s+(?P<sensor>\d+)\s+has\s+index\s+(?P<index>\d+)$')
+
+        # non-zero SPA volt sensors:
+        p24 = re.compile(r'^non-zero\s+SPA\s+volt\s+sensors:$')
+
+        # non-zero SPA power sensors:
+        p25 = re.compile(r'^non-zero\s+SPA\s+power\s+sensors:$')
+
+        # all power sensor indices are zero
+        p26 = re.compile(r'^all\s+power\s+sensor\s+indices\s+are\s+zero$')
+
+        current_section = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Entity state for SPA in subslot 0/1
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                entity_dict = ret_dict.setdefault('entity_state', {})
+                entity_dict['subslot'] = group['subslot']
+                continue
+
+            # SPA type:                 (0xC55) EPA-18X1GE
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                entity_dict['spa_type'] = group['type']
+                entity_dict['spa_type_hex'] = group['hex']
+                continue
+
+            # last spa type:            (0xC55) EPA-18X1GE
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                entity_dict['last_spa_type'] = group['type']
+                entity_dict['last_spa_type_hex'] = group['hex']
+                continue
+
+            # oper_status:              (1) ok
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                entity_dict['oper_status'] = group['status']
+                entity_dict['oper_status_code'] = int(group['code'])
+                continue
+
+            # card status:              (2) full
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                entity_dict['card_status'] = group['status']
+                entity_dict['card_status_code'] = int(group['code'])
+                continue
+
+            # last trap: spa type:      (0xC55) EPA-18X1GE
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                entity_dict['last_trap_spa_type'] = group['type']
+                entity_dict['last_trap_spa_type_hex'] = group['hex']
+                continue
+
+            # last trap: oper status:   (1) ok
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                entity_dict['last_trap_oper_status'] = group['status']
+                entity_dict['last_trap_oper_status_code'] = int(group['code'])
+                continue
+
+            # last_spa_env_get_ok:      false
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                entity_dict['last_spa_env_get_ok'] = group['status'] == 'true'
+                continue
+
+            # last_spa_env_read_time:   (0) 145245938 msecs ago
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                entity_dict['last_spa_env_read_time'] = int(group['time'])
+                entity_dict['last_spa_env_read_time_str'] = f"({group['value']}) {group['time']} msecs ago"
+                continue
+
+            # resync_reqd:              false
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                entity_dict['resync_reqd'] = group['status'] == 'true'
+                continue
+
+            # resync_count:             0
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                entity_dict['resync_count'] = int(group['count'])
+                continue
+
+            # SPA physical index:       1520
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                entity_dict['spa_physical_index'] = int(group['index'])
+                continue
+
+            # SPA container index:      1028
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                entity_dict['spa_container_index'] = int(group['index'])
+                continue
+
+            # transceiver 0
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                current_transceiver = group['transceiver']
+                current_section = 'transceiver'
+                if 'transceiver' not in entity_dict:
+                    entity_dict['transceiver'] = {}
+                entity_dict['transceiver'][current_transceiver] = {}
+                current_transceiver_dict = entity_dict['transceiver'][current_transceiver]
+                continue
+
+            # For transceiver section
+            if current_section == 'transceiver' and current_transceiver_dict is not None:
+                #   container index:        1571
+                m = p15.match(line)
+                if m:
+                    group = m.groupdict()
+                    current_transceiver_dict['container_index'] = int(group['index'])
+                    continue
+
+                #   module entity index:    1572
+                m = p16.match(line)
+                if m:
+                    group = m.groupdict()
+                    index = int(group['index'])
+                    if index != 0:  # Only include non-zero values
+                        current_transceiver_dict['module_entity_index'] = index
+                    continue
+
+                #   port index:             1573
+                m = p17.match(line)
+                if m:
+                    group = m.groupdict()
+                    index = int(group['index'])
+                    if index != 0:  # Only include non-zero values
+                        current_transceiver_dict['port_index'] = index
+                    continue
+
+                #   chassis index:          0
+                m = p18.match(line)
+                if m:
+                    group = m.groupdict()
+                    current_transceiver_dict['chassis_index'] = int(group['index'])
+                    continue
+
+                #   operational status:     (2) ok
+                m = p19.match(line)
+                if m:
+                    group = m.groupdict()
+                    current_transceiver_dict['operational_status'] = group['status']
+                    current_transceiver_dict['operational_status_code'] = int(group['code'])
+                    continue
+
+                #   non-zero xcvr sensors:
+                m = p20.match(line)
+                if m:
+                    # This line indicates start of sensor section
+                    continue
+
+                #     sensor 0:     1599
+                m = p21.match(line)
+                if m:
+                    group = m.groupdict()
+                    if 'non_zero_xcvr_sensors' not in current_transceiver_dict:
+                        current_transceiver_dict['non_zero_xcvr_sensors'] = {}
+                    current_transceiver_dict['non_zero_xcvr_sensors'][group['sensor']] = int(group['index'])
+                    continue
+
+            # non-zero SPA temp sensors:
+            m = p22.match(line)
+            if m:
+                current_section = 'temp_sensors'
+                continue
+
+            # non-zero SPA volt sensors:
+            m = p24.match(line)
+            if m:
+                current_section = 'volt_sensors'
+                continue
+
+            # non-zero SPA power sensors:
+            m = p25.match(line)
+            if m:
+                current_section = 'power_sensors'
+                continue
+
+            # all power sensor indices are zero
+            m = p26.match(line)
+            if m:
+                entity_dict['non_zero_spa_power_sensors'] = 'all power sensor indices are zero'
+                current_section = None
+                continue
+
+            # sensor 0 has index 1546
+            m = p23.match(line)
+            if m:
+                group = m.groupdict()
+                if current_section == 'temp_sensors':
+                    if 'non_zero_spa_temp_sensors' not in entity_dict:
+                        entity_dict['non_zero_spa_temp_sensors'] = {}
+                    entity_dict['non_zero_spa_temp_sensors'][group['sensor']] = int(group['index'])
+                elif current_section == 'volt_sensors':
+                    if 'non_zero_spa_volt_sensors' not in entity_dict:
+                        entity_dict['non_zero_spa_volt_sensors'] = {}
+                    entity_dict['non_zero_spa_volt_sensors'][group['sensor']] = int(group['index'])
+                continue
+
         return ret_dict

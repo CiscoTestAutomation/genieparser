@@ -1,0 +1,45 @@
+Configlet Name      : metatest
+Terminal, User      : TTY0, 
+CLI Count           : 5
+Configlet Data      : 
+1   crypto pki certificate pool
+2   ipv6 access-list unmanaged_isolation_v6
+3     sequence 10 deny ipv6 any 2620:10D:C011:3000::/52
+4     sequence 20 deny ipv6 any 2620:10D:C011:4000::/52
+5     sequence 30 permit ipv6 any any
+
+Configlet Name      : metatest2
+Terminal, User      : TTY0, 
+CLI Count           : 4
+Configlet Data      : 
+1   ipv6 access-list unmanaged_isolation_v6
+2     sequence 10 deny ipv6 any 2620:10D:C011:3000::/52
+3     sequence 20 deny ipv6 any 2620:10D:C011:4000::/52
+4     sequence 30 permit ipv6 any any
+
+Configlet Name      : mgmt-vrf
+Terminal, User      : TTY0, 
+CLI Count           : 1
+Configlet Data      : 
+1   vrf definition Mgmt-vrf
+
+Configlet Name      : skm
+Terminal, User      : TTY0, 
+CLI Count           : 1
+Configlet Data      : 
+1   vrf definition Mgmt-vrf
+
+Configlet Name      : s1
+Terminal, User      : TTY0, 
+CLI Count           : 2
+Configlet Data      : 
+1   vrf definition Mgmt-vrf
+2   vrf definition Mgmt-vrf 
+
+Configlet Name      : s10
+Terminal, User      : TTY0, 
+CLI Count           : 3
+Configlet Data      : 
+1   vrf definition Mgmt-vrf
+2   vrf definition red
+3   ip vrf Red

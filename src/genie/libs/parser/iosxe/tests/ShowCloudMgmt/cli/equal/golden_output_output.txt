@@ -1,0 +1,4 @@
+Switch                 Serial                                               Cloud
+Num    PID             Number             Cloud ID        Mac Address       Managed
+-----------------------------------------------------------------------------------------------
+1   C9350-48U          FOC2829Y10T        Q5CF-TM95-4VEL  d47f:35ff:d880    Yes  

@@ -1,0 +1,1 @@
+Switch and Stacking are in Fips Not-Configured state and not SESA Ready

@@ -257,6 +257,11 @@ class ShowL2vpnXconnectDetailSchema(MetaParser):
                                             Optional('transmit_mtu_zero'): str,
                                             Optional('status_tlv'): str,
                                             Optional('sequencing'): str,
+                                            Optional('load_balancing_hashing'): str,
+                                            Optional('configured_tx'): int,
+                                            Optional('configured_rx'): int,
+                                            Optional('negotiated_tx'): int,
+                                            Optional('negotiated_rx'): int,
                                             Optional('mpls'): {
                                                 Any(): {
                                                     'local': str,
@@ -348,6 +353,7 @@ class ShowL2vpnXconnectDetailSchema(MetaParser):
                                             'protocol': str,
                                             Optional('source_address'): str,
                                             Optional('lsp'): str,
+                                            Optional('load_balancing_hashing'): str,
                                             Optional('type'): str,
                                             Optional('control_word'): str,
                                             Optional('interworking'): str,
@@ -591,6 +597,13 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
 
         #Last time PW went down: 13/03/2024 07:31:51 (7w1d ago)
         p48 = re.compile(r'^Last +time +PW +went +down: +(?P<last_time_pw_went_down>[\S ]+)$')
+
+        # Pattern 1: Load Balance Hashing
+        p49 = re.compile(r"Load Balance Hashing: (?P<load_balancing_hashing>\S+)")
+
+        # Flow Label flags configured (Tx=0,Rx=0), negotiated (Tx=0,Rx=0)
+        p50 = re.compile(r"Flow Label flags configured \(Tx=(?P<configured_tx>\d+),Rx=(?P<configured_rx>\d+)\), "
+                         r"negotiated \(Tx=(?P<negotiated_tx>\d+),Rx=(?P<negotiated_rx>\d+)\)")
 
         for line in out.splitlines():
             original_line = line
@@ -1077,6 +1090,23 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
             if m:
                 group = m.groupdict()
                 current_dict.update({'lsp': group['lsp']})
+                continue
+
+            # Pattern 1: Load Balance Hashing
+            m = p49.match(line)
+            if m:
+                group = m.groupdict()
+                current_dict.update({'load_balancing_hashing': group['load_balancing_hashing']})
+                continue
+
+            # Flow Label flags configured (Tx=0,Rx=0), negotiated (Tx=0,Rx=0)
+            m = p50.match(line)
+            if m:
+                group = m.groupdict()
+                current_dict.update({'configured_tx': int(group['configured_tx'])})
+                current_dict.update({'configured_rx': int(group['configured_rx'])})
+                current_dict.update({'negotiated_tx': int(group['negotiated_tx'])})
+                current_dict.update({'negotiated_rx': int(group['negotiated_rx'])})
                 continue
 
             # Ignore MTU mismatch: Enabled

@@ -36,7 +36,9 @@
     * show ipv6 dhcp binding 
     * show ipv6 dhcp relay binding
     * show ipv6 general-prefix
-
+    * show ipv6 pim neighbor {intf}
+    * show ipv6 cef exact-route {source} {destination}
+    * show ipv6 mfib count
 """
 
 # Python
@@ -1167,6 +1169,7 @@ class ShowIpv6MfibSchema(MetaParser):
                                                      Optional('ingress_vxlan_cap'): str,
                                                      Optional('ingress_vxlan_vni'): str,
                                                      Optional('ingress_vxlan_nxthop'): str,
+                                                     Optional('ingress_mdt_ip'): str,
                                                     }
                                                 },
                                             Optional('outgoing_interfaces'): {
@@ -1183,6 +1186,7 @@ class ShowIpv6MfibSchema(MetaParser):
                                                      Optional('egress_vxlan_cap'): str,
                                                      Optional('egress_vxlan_vni'): str,
                                                      Optional('egress_vxlan_nxthop'): str,
+                                                     Optional('egress_mdt_ip'): str,
                                                     },
                                                 },
                                             },
@@ -1299,21 +1303,24 @@ class ShowIpv6Mfib(ShowIpv6MfibSchema):
         #Tunnel0, VXLAN Decap Flags: A
         #Vlan500, VXLAN v6 Encap (50000, 239.1.1.0) Flags: A
         #Port-channel5 Flags: RA A MA
+        # Tunnel0, MDTv6overv4/::FFFF:226.10.10.10 Flags: A
 
         p7 = re.compile(r'^(?P<ingress_if>[\w\/\.\-\:]+)'
-                         r'(\,\s+VXLAN +(?P<ingress_vxlan_version>[v0-9]+)?(\s+)?(?P<ingress_vxlan_cap>[\w]+)(\s+)?(\(?(?P<ingress_vxlan_vni>[0-9]+)(\,\s+)?(?P<ingress_vxlan_nxthop>[\w:./]+)?\)?)?)?'
-                         r' +Flags\: +(?P<ingress_flags>A[\s\w]+|[\s\w]+ +A[\s\w]+|A$)')
+                        r'(?:,\s*MDTv6overv4\/(?:::FFFF:)?(?P<ingress_mdt_ip>\d+\.\d+\.\d+\.\d+))?'
+                        r'(\,\s+VXLAN +(?P<ingress_vxlan_version>[v0-9]+)?(\s+)?(?P<ingress_vxlan_cap>[\w]+)(\s+)?(\(?(?P<ingress_vxlan_vni>[0-9]+)(\,\s+)?(?P<ingress_vxlan_nxthop>[\w:./]+)?\)?)?)?'
+                        r' +Flags\: +(?P<ingress_flags>A[\s\w]+|[\s\w]+ +A[\s\w]+|A$)')
 
         #Vlan2001 Flags: F NS
         #LISP0.1, (100.11.11.11, 235.1.3.167) Flags:
-        
         #Tunnel1, VXLAN v6 Decap Flags: F NS
         # Vlan200, VXLAN v4 Encap (10100, 239.1.1.1) Flags: F
         #L2LISP0.1502, L2LISP v6 Decap Flags: F NS
         #LISP0.101, 100:88:88::88 Flags: F
         #Port-channel5 Flags: RF F NS
+        # Tunnel8, MDTv6overv4/::FFFF:226.10.10.10 Flags: F NS
         p8 = re.compile(r'^(?P<egress_if>[\w\/\.\-\:]+)'
                         r'(\,\s+L2LISP\s*v6\s*Decap\s*)?'
+                        r'(?:,\s*MDTv6overv4\/(?:::FFFF:)?(?P<egress_mdt_ip>\d+\.\d+\.\d+\.\d+))?'
                         r'(\,\s+\(?(?P<egress_rloc>[\w:\.]+)(\,\s+)?(?P<egress_underlay_mcast>[\w\.]+)?\)?)?'
                         r'(\,\s+VXLAN +(?P<egress_vxlan_version>[v0-9]+)?(\s+)?(?P<egress_vxlan_cap>[\w]+)(\s+)?'
                         r'(\(?(?P<egress_vxlan_vni>[0-9]+)(\,\s+)?(?P<egress_vxlan_nxthop>[\w:.]+)?\)?)?)?'
@@ -1405,6 +1412,8 @@ class ShowIpv6Mfib(ShowIpv6MfibSchema):
                     ing_intf_dict['ingress_vxlan_nxthop']=group['ingress_vxlan_nxthop']
                 if group['ingress_vxlan_vni']:
                     ing_intf_dict['ingress_vxlan_vni']=group['ingress_vxlan_vni']
+                if group['ingress_mdt_ip']:
+                    ing_intf_dict['ingress_mdt_ip']=group['ingress_mdt_ip']
                 continue
 
 
@@ -1446,6 +1455,8 @@ class ShowIpv6Mfib(ShowIpv6MfibSchema):
                     egress_data['egress_vxlan_vni'] = group['egress_vxlan_vni']
                 if group['egress_vxlan_nxthop']:
                     egress_data['egress_vxlan_nxthop'] = group['egress_vxlan_nxthop']
+                if group['egress_mdt_ip']:
+                    egress_data['egress_mdt_ip']=group['egress_mdt_ip']
                 continue
             #CEF: Adjacency with MAC: 01005E010101000A000120010800
             m=p9_1.match(line)
@@ -2536,4 +2547,323 @@ class ShowIpv6GeneralPrefix(ShowIpv6GeneralPrefixSchema):
                 interfaces.append(group['interface'])
                 continue
 
+        return ret_dict
+    
+
+class ShowIpv6PimNeighborIntfSchema(MetaParser):
+    """Schema for show ipv6 pim neighbor Te0/0/4"""
+    schema = {
+        'interface': str,
+        'neighbors': {
+            Any(): {
+                'uptime': str,
+                'expires': str,
+                'mode': str,
+                'dr_priority': int,
+                'bsr_priority': int,
+                'hello_interval': str,
+                'neighbor_interface': str,
+                'neighbor_state': str,
+            }
+        }
+    }
+
+class ShowIpv6PimNeighborIntf(ShowIpv6PimNeighborIntfSchema):
+    """Parser for show ipv6 pim neighbor Te0/0/4"""
+
+    cli_command = 'show ipv6 pim neighbor {interface}'
+
+    def cli(self, interface=None, output=None):
+        if output is None:
+            cmd = self.cli_command.format(interface=interface)
+            output = self.device.execute(cmd)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # Regular expressions for parsing the output
+        # Example: "PIM Neighbor Table for Interface: GigabitEthernet0/0/0"
+        p1 = re.compile(r'^PIM +Neighbor +Table +for +Interface: +(?P<interface>\S+)$')
+
+        # Example: "Neighbor Address: 192.168.1.1"
+        p2 = re.compile(r'^Neighbor +Address: +(?P<neighbor_address>\S+)$')
+
+        # Example: "Uptime: 00:15:23"
+        p3 = re.compile(r'^Uptime: +(?P<uptime>\S+)$')
+
+        # Example: "Expires: 00:01:47"
+        p4 = re.compile(r'^Expires: +(?P<expires>\S+)$')
+
+        # Example: "Mode: Dense"
+        p5 = re.compile(r'^Mode: +(?P<mode>\S+)$')
+
+        # Example: "DR Priority: 1"
+        p6 = re.compile(r'^DR +Priority: +(?P<dr_priority>\d+)$')
+
+        # Example: "BSR Priority: 5"
+        p7 = re.compile(r'^BSR +Priority: +(?P<bsr_priority>\d+)$')
+
+        # Example: "Hello Interval: 30 seconds"
+        p8 = re.compile(r'^Hello +Interval: +(?P<hello_interval>[\d\s\w]+)$')
+
+        # Example: "Neighbor Interface: GigabitEthernet0/0/0"
+        p9 = re.compile(r'^Neighbor +Interface: +(?P<neighbor_interface>\S+)$')
+
+        # Example: "Neighbor State: Up"
+        p10 = re.compile(r'^Neighbor +State: +(?P<neighbor_state>\S+)$')
+
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # PIM Neighbor Table for Interface: GigabitEthernet0/0/0
+            m = p1.match(line)
+            if m:
+                interface = m.group('interface')
+                parsed_dict['interface'] = interface
+                continue
+
+            # Neighbor Address: 192.168.1.1
+            m = p2.match(line)
+            if m:
+                neighbor_address = m.group('neighbor_address')
+                neighbor_dict = parsed_dict.setdefault('neighbors', {}).setdefault(neighbor_address, {})
+                continue
+
+            # Uptime: 00:15:23
+            m = p3.match(line)
+            if m:
+                neighbor_dict['uptime'] = m.group('uptime')
+                continue
+
+            # Expires: 00:01:47
+            m = p4.match(line)
+            if m:
+                neighbor_dict['expires'] = m.group('expires')
+                continue
+
+            # Mode: Dense
+            m = p5.match(line)
+            if m:
+                neighbor_dict['mode'] = m.group('mode')
+                continue
+
+            # DR Priority: 1
+            m = p6.match(line)
+            if m:
+                neighbor_dict['dr_priority'] = int(m.group('dr_priority'))
+                continue
+
+            # BSR Priority: 5
+            m = p7.match(line)
+            if m:
+                neighbor_dict['bsr_priority'] = int(m.group('bsr_priority'))
+                continue
+
+            # Hello Interval: 30 seconds
+            m = p8.match(line)
+            if m:
+                neighbor_dict['hello_interval'] = m.group('hello_interval')
+                continue
+
+            # Neighbor Interface: GigabitEthernet0/0/1
+            m = p9.match(line)
+            if m:
+                neighbor_dict['neighbor_interface'] = m.group('neighbor_interface')
+                continue
+
+            # Neighbor State: Up
+            m = p10.match(line)
+            if m:
+                neighbor_dict['neighbor_state'] = m.group('neighbor_state')
+                continue
+
+        return parsed_dict
+
+
+
+# ====================================================
+#  schema for show ipv6 mfib count
+# ====================================================
+class ShowIpv6MfibCountSchema(MetaParser):
+    """Schema for show ipv6 mfib count"""
+    
+    schema = {
+        'ip_multicast_statistics': {
+            'total_routes': int,
+            'total_groups': int,
+            'average_sources_per_group': float,
+            'forwarding_counts_description': str,
+            'other_counts_description': str,
+            'groups': {
+                Any(): {
+                    Optional('rp_tree'): {
+                        'forwarding': {
+                            'pkt_count': int,
+                            'pkts_per_second': int,
+                            'avg_pkt_size': int,
+                            'kilobits_per_second': int,
+                        },
+                        'other': {
+                            'total': int,
+                            'rpf_failed': int,
+                            'other_drops': int,
+                        }
+                    },
+                    Optional('sources'): {
+                        Any(): {
+                            'forwarding': {
+                                'pkt_count': int,
+                                'pkts_per_second': int,
+                                'avg_pkt_size': int,
+                                'kilobits_per_second': int,
+                            },
+                            'other': {
+                                'total': int,
+                                'rpf_failed': int,
+                                'other_drops': int,
+                            }
+                        }
+                    },
+                    Optional('total_shown'): {
+                        'source_count': int,
+                        'pkt_count': int,
+                    }
+                }
+            }
+        }
+    }
+
+# ====================================================
+#  parser for show ipv6 mfib count
+# ====================================================
+class ShowIpv6MfibCount(ShowIpv6MfibCountSchema):
+    """Parser for show ipv6 mfib count"""
+    
+    cli_command = 'show ipv6 mfib count'
+    
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        
+        # Initialize return dictionary
+        ret_dict = {}
+        
+        # IP Multicast Statistics
+        p1 = re.compile(r'^IP Multicast Statistics$')
+        
+        # 54 routes, 7 groups, 0.14 average sources per group
+        p2 = re.compile(r'^(?P<routes>\d+) routes, (?P<groups>\d+) groups, (?P<avg_sources>[\d\.]+) average sources per group$')
+        
+        # Forwarding Counts: Pkt Count/Pkts per second/Avg Pkt Size/Kilobits per second
+        p3 = re.compile(r'^Forwarding Counts: (?P<forward_desc>.+)$')
+        
+        # Other counts: Total/RPF failed/Other drops(OIF-null, rate-limit etc)
+        p4 = re.compile(r'^Other counts: (?P<other_desc>.+)$')
+        
+        # Group: FF00::/8
+        p5 = re.compile(r'^Group: (?P<group>[\w\:\/]+)$')
+        
+        # RP-tree:    Forwarding: 0/0/0/0, Other: 0/0/0
+        p6 = re.compile(r'^RP-tree:\s+Forwarding: (?P<pkt_count>\d+)/(?P<pkts_per_sec>\d+)/(?P<avg_pkt_size>\d+)/(?P<kbps>\d+), Other: (?P<total>\d+)/(?P<rpf_failed>\d+)/(?P<other_drops>\d+)$')
+        
+        # Source: 10::1:1:200,   Forwarding: 367/10/100/7, Other: 0/0/0
+        p7 = re.compile(r'^Source: (?P<source>[\w\:\.]+),\s+Forwarding: (?P<pkt_count>\d+)/(?P<pkts_per_sec>\d+)/(?P<avg_pkt_size>\d+)/(?P<kbps>\d+), Other: (?P<total>\d+)/(?P<rpf_failed>\d+)/(?P<other_drops>\d+)$')
+        
+        # Tot. shown: Source count: 1, pkt count: 369
+        p8 = re.compile(r'^Tot\. shown: Source count: (?P<source_count>\d+), pkt count: (?P<pkt_count>\d+)$')
+        
+        current_group = None
+        
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # IP Multicast Statistics
+            m = p1.match(line)
+            if m:
+                stats_dict = ret_dict.setdefault('ip_multicast_statistics', {})
+                continue
+            
+            # 54 routes, 7 groups, 0.14 average sources per group
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                stats_dict['total_routes'] = int(group['routes'])
+                stats_dict['total_groups'] = int(group['groups'])
+                stats_dict['average_sources_per_group'] = float(group['avg_sources'])
+                continue
+            
+            # Forwarding Counts: Pkt Count/Pkts per second/Avg Pkt Size/Kilobits per second
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                stats_dict['forwarding_counts_description'] = group['forward_desc']
+                continue
+            
+            # Other counts: Total/RPF failed/Other drops(OIF-null, rate-limit etc)
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                stats_dict['other_counts_description'] = group['other_desc']
+                continue
+            
+            # Group: FF00::/8
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                current_group = group['group']
+                groups_dict = stats_dict.setdefault('groups', {})
+                groups_dict.setdefault(current_group, {})
+                continue
+            
+            # RP-tree:    Forwarding: 0/0/0/0, Other: 0/0/0
+            m = p6.match(line)
+            if m and current_group:
+                group = m.groupdict()
+                group_dict = stats_dict['groups'][current_group]
+                rp_tree_dict = group_dict.setdefault('rp_tree', {})
+                
+                forwarding_dict = rp_tree_dict.setdefault('forwarding', {})
+                forwarding_dict['pkt_count'] = int(group['pkt_count'])
+                forwarding_dict['pkts_per_second'] = int(group['pkts_per_sec'])
+                forwarding_dict['avg_pkt_size'] = int(group['avg_pkt_size'])
+                forwarding_dict['kilobits_per_second'] = int(group['kbps'])
+                
+                other_dict = rp_tree_dict.setdefault('other', {})
+                other_dict['total'] = int(group['total'])
+                other_dict['rpf_failed'] = int(group['rpf_failed'])
+                other_dict['other_drops'] = int(group['other_drops'])
+                continue
+            
+            # Source: 10::1:1:200,   Forwarding: 367/10/100/7, Other: 0/0/0
+            m = p7.match(line)
+            if m and current_group:
+                group = m.groupdict()
+                group_dict = stats_dict['groups'][current_group]
+                sources_dict = group_dict.setdefault('sources', {})
+                source_name = group['source']
+                source_dict = sources_dict.setdefault(source_name, {})
+                
+                forwarding_dict = source_dict.setdefault('forwarding', {})
+                forwarding_dict['pkt_count'] = int(group['pkt_count'])
+                forwarding_dict['pkts_per_second'] = int(group['pkts_per_sec'])
+                forwarding_dict['avg_pkt_size'] = int(group['avg_pkt_size'])
+                forwarding_dict['kilobits_per_second'] = int(group['kbps'])
+                
+                other_dict = source_dict.setdefault('other', {})
+                other_dict['total'] = int(group['total'])
+                other_dict['rpf_failed'] = int(group['rpf_failed'])
+                other_dict['other_drops'] = int(group['other_drops'])
+                continue
+            
+            # Tot. shown: Source count: 1, pkt count: 369
+            m = p8.match(line)
+            if m and current_group:
+                group = m.groupdict()
+                group_dict = stats_dict['groups'][current_group]
+                total_shown_dict = group_dict.setdefault('total_shown', {})
+                total_shown_dict['source_count'] = int(group['source_count'])
+                total_shown_dict['pkt_count'] = int(group['pkt_count'])
+                continue
+        
         return ret_dict

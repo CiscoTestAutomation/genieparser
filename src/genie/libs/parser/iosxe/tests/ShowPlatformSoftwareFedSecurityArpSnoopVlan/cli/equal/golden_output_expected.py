@@ -1,0 +1,21 @@
+expected_output = {
+    "acls":[
+        {
+            "oid":1443,
+            "asic":0,
+            "position":0,
+            "action":"PUNT",
+            "counter_oid":1444
+        },
+        {
+            "oid":1377,
+            "asic":1,
+            "position":0,
+            "action":"PUNT",
+            "counter_oid":1378
+        }
+    ],
+    "arp_snoop_enable":"TRUE",
+    "punject_switch_profile":"FALSE",
+    "vlan":50
+}
