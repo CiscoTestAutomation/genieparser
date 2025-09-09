@@ -29,7 +29,6 @@ from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional, And, D
 # import parser utils
 from genie.libs.parser.utils.common import Common
 
-
 # ==========================================================================
 # Schema for :
 #   * 'show policy-map interface {interface} input class {class_name}',
@@ -3673,3 +3672,63 @@ class ShowPolicyMapTypePacketService(ShowPolicyMapTypePacketServiceSchema):
                     ret_dict['packet_services'][current_policy_map]['classes'][current_class]['capture'] = capture_config.copy()
             
         return ret_dict
+
+class ShowPolicyMapTypeInspectPmapSchema(MetaParser):
+    """Schema for show policy-map type inspect pmap"""
+    schema = {
+        'policy_map': {
+            str: {  # Policy map name
+                'class': {
+                    str: {  # Class name
+                        'action': str,  # Action taken (e.g., 'Inspect', 'Drop log')
+                    }
+                }
+            }
+        }
+    }
+
+
+class ShowPolicyMapTypeInspectPmap(ShowPolicyMapTypeInspectPmapSchema):
+    """Parser for show policy-map type inspect pmap"""
+
+    cli_command = 'show policy-map type inspect pmap'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+        # Policy Map type inspect pmap
+        p1 = re.compile(r'^Policy +Map +type +inspect +(?P<policy_map>\S+)$')
+        # Class cmap
+        p2 = re.compile(r'^Class +(?P<class>\S+)$')
+        # Inspect
+        p3 = re.compile(r'^(?P<action>Inspect|Drop log)$')
+
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Policy Map type inspect pmap
+            m = p1.match(line)  
+            if m:  
+                current_policy_map = m.group('policy_map')  
+                policy_map_dict = parsed_dict.setdefault('policy_map', {}).setdefault(current_policy_map, {})  
+                continue  
+
+            # Class cmap
+            m = p2.match(line)  
+            if m:
+                current_class = m.group('class')  
+                class_dict = policy_map_dict.setdefault('class', {}).setdefault(current_class, {})  
+                continue  
+
+            #  Inspect
+            m = p3.match(line)  
+            if m and current_class:  
+                action = m.group('action')  
+                class_dict['action'] = action
+                continue  
+        
+        return parsed_dict 

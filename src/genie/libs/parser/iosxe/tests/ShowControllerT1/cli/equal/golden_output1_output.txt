@@ -1,0 +1,17 @@
+T1 0/1/0 is up
+  Applique type is Channelized T1
+  Cablelength is long gain36 0db
+  No alarms detected.
+  alarm-trigger is not set
+  Soaking time: 3, Clearance time: 10
+  AIS State:Clear  LOS State:Clear  LOF State:Clear
+  Framing is ESF, Line Code is B8ZS, Clock Source is Line.
+  BER thresholds:  SF = 10e-3  SD = 10e-6
+  Data in current interval (446 seconds elapsed):
+     0 Line Code Violations, 0 Path Code Violations
+     0 Slip Secs, 0 Fr Loss Secs, 0 Line Err Secs, 0 Degraded Mins
+     0 Errored Secs, 0 Bursty Err Secs, 0 Severely Err Secs, 0 Unavail Secs
+  Total Data (last 24 hours)
+     0 Line Code Violations, 0 Path Code Violations,
+     0 Slip Secs, 0 Fr Loss Secs, 0 Line Err Secs, 0 Degraded Mins,
+     0 Errored Secs, 0 Bursty Err Secs, 0 Severely Err Secs, 0 Unavail Secs

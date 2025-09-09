@@ -2,6 +2,7 @@
 IOSXE parsers for the following show commands:
     * show mrp ports
     * show platform software fed switch active ifm mappings
+    * show mrp ring <ring-id> statistics all
 '''
 # Python
 import re
@@ -45,7 +46,8 @@ class ShowMrpPorts(ShowMrpPortsSchema):
         #Gi1/0/1                 Forwarding
         #Gi1/0/2                 Blocked
         #n/a                     n/a
-        p2 = re.compile(r"^(?P<portname>\S+)\s+(?P<port_status>(Forwarding|Blocked|n\/a|Not Connected))$")
+        #Gi1/0/1                 Disabled
+        p2 = re.compile(r"^(?P<portname>\S+)\s+(?P<port_status>(Forwarding|Blocked|n\/a|Not Connected|Disabled|Unknown))$")
 
         for line in output.splitlines():
 
@@ -397,3 +399,240 @@ class ShowMrpRing(ShowMrpRingSchema):
         return result_dict
 
 
+class ShowPlatformMrpMappingsSchema(MetaParser):
+    """Schema for show platform mrp mappings """
+
+    schema = {
+        'mrp_rings': {
+            Any(): {
+                Optional('ring_instance'): str
+            }
+        }
+    }
+
+class ShowPlatformMrpMappings(ShowPlatformMrpMappingsSchema):
+    """Parser for: show platform mrp mappings"""
+
+    cli_command = 'show platform mrp mappings'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        ret_dict = {}
+
+        #MRP Ring-id Instance Mappings
+        p1 = re.compile(r"^Ring-id\s+Ring-instance$")
+
+        #2                     3
+        p2 = re.compile(r"^(?P<ring_id>\d+)\s+(?P<ring_instance>\d+)$")
+
+        for line in output.splitlines():
+
+            # MRP Ring-id Instance Mappings
+            m = p1.match(line)
+            if m:
+                mrp_ring_dict = ret_dict.setdefault('mrp_rings', {})
+
+            #2                     3
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ring_id_dict = mrp_ring_dict.setdefault(group['ring_id'], {})
+                ring_id_dict['ring_instance'] = group['ring_instance']
+
+        return ret_dict
+
+# ===========================================
+#  * Parser for
+#  * show mrp ring <ring-id> statistics all
+# ============================================
+
+class ShowMrpRingStatisticsAllSchema(MetaParser):
+            """Schema for show mrp ring {ring_id} statistics all"""
+            schema = {
+                'ring_id': {
+                    Any(): {
+                        'ring_state': str,
+                        'beacon_interval': int,
+                        'ports': {
+                            Any(): {
+                                'interface': str,
+                                'beacon_rx': int,
+                                'beacon_tx': int,
+                                'beacon_drop': int,
+                                'nack_rx': int,
+                                'nack_tx': int,
+                                'nack_drop': int,
+                                'propagate_rx': int,
+                                'propagate_tx': int,
+                                'propagate_drop': int,
+                            }
+                        },
+                        Optional('node_event_statistics'): {
+                            Optional('auto_manager_stats'): {
+                                Any(): int
+                            }
+                        }
+                    }
+                }
+            } 
+
+class ShowMrpRingStatisticsAll(ShowMrpRingStatisticsAllSchema):
+            """Parser for show mrp ring {ring_id} statistics all"""
+
+            cli_command = 'show mrp ring {ring_id} statistics all'
+
+            def cli(self, ring_id, output = None):
+                if output is None:
+                    output = self.device.execute(self.cli_command.format(ring_id = ring_id))
+
+                ret_dict = {}
+                port = None
+                mrp_ring_dict = None
+                auto_mgr_stats = None
+
+                # MRP Ring 20 Beacon statistics
+                p1 = re.compile(r"^MRP Ring (?P<ring_id>\d+) Beacon statistics$")
+                # Ring state     : OPEN
+                p2 = re.compile(r"^Ring state\s*:\s*(?P<ring_state>\S+)$")
+                # Beacon Interval: 20
+                p3 = re.compile(r"^Beacon Interval\s*:\s*(?P<beacon_interval>\d+)$")
+                # Port-1 GigabitEthernet1/0/7 statistics:
+                p4 = re.compile(r"^Port-(?P<port_num>\d+)\s+(?P<interface>\S+)\s+statistics:$")
+                # Beacon RX      : 0
+                p5 = re.compile(r"^Beacon RX\s*:\s*(?P<beacon_rx>\d+)$")
+                # Beacon TX      : 0
+                p6 = re.compile(r"^Beacon TX\s*:\s*(?P<beacon_tx>\d+)$")
+                # Beacon Drop    : 0
+                p7 = re.compile(r"^Beacon Drop\s*:\s*(?P<beacon_drop>\d+)$")
+                # NAck RX        : 0
+                p8 = re.compile(r"^NAck RX\s*:\s*(?P<nack_rx>\d+)$")
+                # NAck TX        : 0
+                p9 = re.compile(r"^NAck TX\s*:\s*(?P<nack_tx>\d+)$")
+                # NAck Drop      : 0
+                p10 = re.compile(r"^NAck Drop\s*:\s*(?P<nack_drop>\d+)$")
+                # Propagate RX   : 0
+                p11 = re.compile(r"^Propagate RX\s*:\s*(?P<propagate_rx>\d+)$")
+                # Propagate TX   : 0
+                p12 = re.compile(r"^Propagate TX\s*:\s*(?P<propagate_tx>\d+)$")
+                # Propagate Drop : 0
+                p13 = re.compile(r"^Propagate Drop\s*:\s*(?P<propagate_drop>\d+)$")
+                # MRP Node event Statistics for Ring 20 :
+                p14 = re.compile(r"^MRP Node event Statistics for Ring (?P<ring_id>\d+) :$")
+                # MRP Auto Manager stats: Events -----------------------------
+                p15 = re.compile(r"^MRP Auto Manager stats: Events")
+                # auto_manager_conf_notif_events      = 1
+                p16 = re.compile(r"^(?P<event_name>\w[\w\d_]+)\s*=\s*(?P<event_value>\d+)$")
+
+                for line in output.splitlines():
+                    line = line.strip()
+                    if not line:
+                        continue
+
+                    # MRP Ring 20 Beacon statistics
+                    m = p1.match(line)
+                    if m:
+                        ring_id_val = int(m.group('ring_id'))
+                        mrp_rings = ret_dict.setdefault('ring_id', {})
+                        mrp_ring_dict = mrp_rings.setdefault(ring_id_val, {})
+                        continue
+
+                    # Ring state     : OPEN
+                    m = p2.match(line)
+                    if m and mrp_ring_dict is not None:
+                        mrp_ring_dict['ring_state'] = m.group('ring_state')
+                        continue
+
+                    # Beacon Interval: 20
+                    m = p3.match(line)
+                    if m and mrp_ring_dict is not None:
+                        mrp_ring_dict['beacon_interval'] = int(m.group('beacon_interval'))
+                        continue
+                    
+                    # Port-1 GigabitEthernet1/0/7 statistics:
+                    m = p4.match(line)
+                    if m and mrp_ring_dict is not None:
+                        port_num = int(m.group('port_num'))
+                        interface = m.group('interface')
+                        ports = mrp_ring_dict.setdefault('ports', {})
+                        port = ports.setdefault(port_num, {})
+                        port['interface'] = Common.convert_intf_name(interface)
+                        continue
+
+                    # Beacon RX      : 0
+                    m = p5.match(line)
+                    if m and port is not None:
+                        port['beacon_rx'] = int(m.group('beacon_rx'))
+                        continue
+
+                    # Beacon TX      : 0
+                    m = p6.match(line)
+                    if m and port is not None:
+                        port['beacon_tx'] = int(m.group('beacon_tx'))
+                        continue
+
+                    # Beacon Drop    : 0
+                    m = p7.match(line)
+                    if m and port is not None:
+                        port['beacon_drop'] = int(m.group('beacon_drop'))
+                        continue
+
+                    # NAck RX        : 0
+                    m = p8.match(line)
+                    if m and port is not None:
+                        port['nack_rx'] = int(m.group('nack_rx'))
+                        continue
+
+                    # NAck TX        : 0
+                    m = p9.match(line)
+                    if m and port is not None:
+                        port['nack_tx'] = int(m.group('nack_tx'))
+                        continue
+
+                    # NAck Drop      : 0
+                    m = p10.match(line)
+                    if m and port is not None:
+                        port['nack_drop'] = int(m.group('nack_drop'))
+                        continue
+
+                    # Propagate RX   : 0
+                    m = p11.match(line)
+                    if m and port is not None:
+                        port['propagate_rx'] = int(m.group('propagate_rx'))
+                        continue
+                    
+                    # Propagate TX   : 0
+                    m = p12.match(line)
+                    if m and port is not None:
+                        port['propagate_tx'] = int(m.group('propagate_tx'))
+                        continue
+                    
+                    # Propagate Drop : 0
+                    m = p13.match(line)
+                    if m and port is not None:
+                        port['propagate_drop'] = int(m.group('propagate_drop'))
+                        continue
+
+                    # MRP Node event Statistics for Ring 20 :
+                    m = p14.match(line)
+                    if m and mrp_ring_dict is not None:
+                        node_stats = mrp_ring_dict.setdefault('node_event_statistics', {})
+                        continue
+                    
+                    # MRP Auto Manager stats: Events -----------------------------
+                    m = p15.match(line)
+                    if m and mrp_ring_dict is not None:
+                        node_stats = mrp_ring_dict.setdefault('node_event_statistics', {})
+                        auto_mgr_stats = node_stats.setdefault('auto_manager_stats', {})
+                        continue
+
+                    # auto_manager_conf_notif_events      = 1
+                    m = p16.match(line)
+                    if m and auto_mgr_stats is not None:
+                        event_name = m.group('event_name')
+                        event_value = int(m.group('event_value'))
+                        auto_mgr_stats[event_name] = event_value
+                        continue
+
+                return ret_dict
+            

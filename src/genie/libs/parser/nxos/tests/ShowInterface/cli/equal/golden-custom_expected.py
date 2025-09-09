@@ -3,6 +3,7 @@ expected_output = {
         "port_channel": {"port_channel_member": False},
         "link_state": "up",
         "oper_status": "up",
+        "link_down_reason": "XCVR not inserted",
         "enabled": True,
         "admin_state": "up",
         "dedicated_interface": True,

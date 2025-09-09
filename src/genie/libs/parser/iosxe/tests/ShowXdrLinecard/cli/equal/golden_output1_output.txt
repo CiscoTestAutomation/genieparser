@@ -1,0 +1,14 @@
+XDR slot number 1, status  PEER UP
+    IPC messages sent 48
+    Next sequence number to send     21
+    Maximum sequence number expected 36
+
+XDR slot number 2, status  PEER UP
+    IPC messages sent 52
+    Next sequence number to send     31
+    Maximum sequence number expected 46
+
+XDR slot number 3, status  PEER UP
+    IPC messages sent 55
+    Next sequence number to send     17
+    Maximum sequence number expected 32

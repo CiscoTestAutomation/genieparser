@@ -1,0 +1,8 @@
+{
+    "name": "m2o",
+    "protocol": "mac",
+    "value": 15,
+    "direction": "output",
+    "destination": "destination",
+    "order": "highest"
+}

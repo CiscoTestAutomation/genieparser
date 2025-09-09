@@ -1,0 +1,7 @@
+{
+    "name": "m6i",
+    "counter_type": "packets",
+    "value": 5,
+    "layer2": false,
+    "order": "highest"
+}

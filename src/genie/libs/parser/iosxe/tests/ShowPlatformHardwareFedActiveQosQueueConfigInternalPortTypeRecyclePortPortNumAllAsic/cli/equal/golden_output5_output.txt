@@ -1,0 +1,46 @@
+===================================================================================
+|                                VOQ Details                                      |
+===================================================================================
+Interface : Recircport/1 (0x1)
+VOQ OID        : 353(0x161) 
+VOQ Set Size   : 8
+Base VOQ ID    : 264
+Base VSC IDs   : 136, 216, 296
+VOQ State      : Active
+VOQ Flush      : Flush not active
+Is Empty       : Yes
+
+  --------------------------------------------------------------------------------
+  |                         VOQ Profile details                                  |
+  --------------------------------------------------------------------------------
+
+  Profile OID            : 352(0x160) 
+    Device ID              : 3
+    CGM Type               : Unicast
+    Profile reference count: 172
+    Is Reserved            : Yes
+    For speeds             : 10000000000
+    Associated VOQ Offsets : 0, 1, 2, 3, 4, 5, 6, 7
+    HBM Enabled            : Disabled
+    Q   Block Size         : 384
+    RED Enabled            : Enabled 
+    FCN Enabled            : Disabled
+    Queue User Config      :
+      Q-Limit(Bytes    )    : 98304
+      RED EMA Coefficient    : 1.000000 
+      RED Green :
+        Minimum              : 0
+        Maximum              : 98304
+        Maximum Probability  : 0
+      RED Yellow :
+        Minimum              : 0
+        Maximum              : 0
+        Maximum Probability  : 0
+    Queue H/W Values       :
+      RED EMA Coefficient            : 1.000000 
+      RED Action                     : Drop
+      RED Drop thresholds            : 
+
+  -------------------------------------------------------------------------------------------
+
+===================================================================================

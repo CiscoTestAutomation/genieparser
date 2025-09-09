@@ -387,6 +387,395 @@ class ACMLogIndexNumber(ACMLogIndexNumberSchema):
 
         return ret_dict
 
+class ACMMergeSchema(MetaParser):
+    schema = {
+        Optional("validation_stage"): {
+            "status": str,
+            "time": str
+        },
+        Optional("apply_stage"): {
+            "status": str,
+            "time": str
+        },
+        Optional("config_merge_status"): str,
+        Optional("configlet"): str,
+        Optional("confirm_commit_timeout"): int,
+        Optional("error"): str   # <-- allow error
+    }
+
+class AcmMerge(ACMMergeSchema):
+    """Parser for 'acm merge <configlet>' or with optional timeout"""
+
+    cli_command = ['acm merge {configlet}', 'acm merge {configlet} timeout {timeout}']
+
+    def cli(self, configlet='', timeout='', output=None):
+        if output is None:
+            if timeout:
+                cmd = self.cli_command[1].format(configlet=configlet, timeout=timeout)
+            else:
+                cmd = self.cli_command[0].format(configlet=configlet)
+            output = self.device.execute(cmd)
+        if not output.strip():
+            return {}
+
+
+        ret_dict = {}
+        lines = output.splitlines()
+        current_stage = None
+
+        # Config Merge of Configlet: test_config.cfg
+        p1 = re.compile(r'^Config Merge of Configlet:\s*(?P<configlet>\S+)')
+
+        # Status : Success
+        p2 = re.compile(r'^Status\s*:\s*(?P<status>\S+)')
+
+        # Time : 1234 msec
+        p3 = re.compile(r'^Time\s*:\s*(?P<time>\d+)\s*msec')
+
+        # Config Merge Status: Success
+        p4 = re.compile(r'^Config Merge Status:\s*(?P<status>\S+)')
+
+        # Started confirm commit timer for 10 minutes
+        p5 = re.compile(r'^Started confirm commit timer for\s+(?P<minutes>\d+)\s+minutes')
+
+        # Error: File doesn't exist
+        p6 = re.compile(r'^Error: File doesn\'t exist')        
+
+        for line in lines:
+            line = line.strip()
+            if not line:
+                continue
+
+            # Ignore syslog/prompt
+            if line.startswith("*") or line.startswith("%") or line.endswith("#"):
+                continue
+
+            # Handle file not found / error case
+            m = p6.match(line)
+            if m:
+                ret_dict['configlet'] = configlet
+                ret_dict['config_merge_status'] = "Failed"
+                ret_dict['error'] = line   # optional: keep full error message
+                return ret_dict  # exit early
+
+            # Configlet URL
+            m = p1.match(line)
+            if m:
+                ret_dict['configlet'] = m.group('configlet')
+                continue
+
+            # Validation or Apply stage headers
+            if 'Validation Stage' in line:
+                current_stage = 'validation_stage'
+                ret_dict.setdefault(current_stage, {})
+                continue
+            elif 'Apply Stage' in line:
+                current_stage = 'apply_stage'
+                ret_dict.setdefault(current_stage, {})
+                continue
+
+            # Status within current stage
+            m = p2.match(line)
+            if m and current_stage:
+                ret_dict[current_stage]['status'] = m.group('status')
+                continue
+
+            # Time within current stage
+            m = p3.match(line)
+            if m and current_stage:
+                ret_dict[current_stage]['time'] = f"{m.group('time')} msec"
+                continue
+
+            # Merge Status
+            m = p4.match(line)
+            if m:
+                ret_dict['config_merge_status'] = m.group('status')
+                continue
+
+            # Confirm Commit Timer
+            m = p5.match(line)
+            if m:
+                ret_dict['confirm_commit_timeout'] = int(m.group('minutes'))
+                continue
+
+        # Ensure config_merge_status always set
+        if 'config_merge_status' not in ret_dict:
+            ret_dict['config_merge_status'] = "Failed"
+
+        return ret_dict
+            
+class ACMRollbackSchema(MetaParser):
+    schema = {
+        Optional("target"): str,
+        Optional("validation"): {
+            "status": str,
+            "time_ms": int
+        },
+        Optional("apply"): {
+            "status": str,
+            "time_ms": int
+        },
+        Optional("net_diff"): str,
+        Optional("rollback_status"): str,
+        Optional("no_diff"): bool,
+        Optional("error"): str,     # <-- add this
+        Optional("details"): str    # <-- add this
+    }
+
+class AcmRollback(ACMRollbackSchema):
+    """Parser for 'acm rollback <id>'"""
+
+    cli_command = ['acm rollback {rollback_id}']
+
+    def cli(self, rollback_id='', output=None):
+        if output is None:
+            cmd = self.cli_command[0].format(rollback_id=rollback_id)
+            try:
+                output = self.device.execute(cmd)
+            except Exception as e:
+                # Handle Unicon SubCommandFailure or InvalidCommandError
+                error_msg = str(e)
+                return {
+                    "target": rollback_id,
+                    "rollback_status": "Failed",
+                    "error": "Invalid input or unsupported rollback ID",
+                    "details": error_msg
+                }
+
+        if not output.strip():
+            return {}
+
+        ret_dict = {}
+        current_stage = None
+        lines = output.splitlines()
+
+        # Config Rollback to Target : rollback_config.txt
+        p1 = re.compile(r'^Config Rollback to Target\s*:\s*(?P<target>\S+)')
+
+        # Status : Success
+        p2 = re.compile(r'^Status\s*:\s*(?P<status>\S+)')
+
+        # Time : 1423 msec
+        p3 = re.compile(r'^Time\s*:\s*(?P<time>\d+)\s*msec')
+
+        # Config Net-Diff: net_diff_output.txt
+        p4 = re.compile(r'^Config Net-Diff:\s*(?P<net_diff>\S+)')
+
+        # Config Rollback Status: Failed
+        p5 = re.compile(r'^Config Rollback Status:\s*(?P<status>\S+)')        
+        
+        for line in lines:
+            line = line.strip()
+            if not line:
+                continue
+
+            # Ignore syslog/prompt
+            if line.startswith("*") or line.startswith("%") or line.endswith("#"):
+                if "Invalid input" in line:
+                    ret_dict["target"] = rollback_id
+                    ret_dict["rollback_status"] = "Failed"
+                    ret_dict["error"] = line
+                continue
+
+            # Target line
+            m = p1.match(line)
+            if m:
+                ret_dict['target'] = m.group('target')
+                continue
+
+            # No diff case
+            if 'Config diff empty. No Diff to Validate/Apply' in line:
+                ret_dict['no_diff'] = True
+                continue
+
+            # Identify stages
+            if 'Validation Stage' in line:
+                current_stage = 'validation'
+                ret_dict.setdefault(current_stage, {})
+                continue
+            if 'Apply Stage' in line:
+                current_stage = 'apply'
+                ret_dict.setdefault(current_stage, {})
+                continue
+
+            # Status
+            m = p2.match(line)
+            if m and current_stage:
+                ret_dict[current_stage]['status'] = m.group('status')
+                continue
+
+            # Time
+            m = p3.match(line)
+            if m and current_stage:
+                ret_dict[current_stage]['time_ms'] = int(m.group('time'))
+                continue
+
+            # Config Net-Diff
+            m = p4.match(line)
+            if m:
+                ret_dict['net_diff'] = m.group('net_diff')
+                continue
+
+            # Rollback Status
+            m = p5.match(line)
+            if m:
+                ret_dict['rollback_status'] = m.group('status')
+
+        # If rollback_status not found, default to Failed
+        if 'rollback_status' not in ret_dict:
+            ret_dict['rollback_status'] = "Failed"
+
+        return ret_dict
+            
+class ACMReplaceSchema(MetaParser):
+    schema = {
+        Optional("target"): str,
+        Optional("validation_stage"): {
+            "status": str,
+            "time_ms": int,
+            Optional("failed_command"): str,
+            Optional("failed_reason"): str,
+        },
+        Optional("apply_stage"): {
+            "status": str,
+            "time_ms": int
+        },
+        Optional("net_diff"): str,
+        "replace_status": str,
+        Optional("timeout_min"): int,
+        Optional("error"): str   # <-- Add this for error cases
+    }
+
+class AcmReplace(ACMReplaceSchema):
+    """Parser for 'acm replace <source>'"""
+    
+    cli_command = [
+        'acm replace {source} timeout {timeout}',
+        'acm replace {source}'
+    ]
+
+    def cli(self, source='', timeout=None, output=None):
+        if output is None:
+            if timeout:
+                cmd = self.cli_command[0].format(source=source, timeout=timeout)
+            else:
+                cmd = self.cli_command[1].format(source=source)
+            output = self.device.execute(cmd)
+        if not output.strip():
+            return {}
+
+        ret_dict = {}
+        lines = output.splitlines()
+        current_stage = None
+
+        # Config Replace to Target: target_config.cfg
+        p1 = re.compile(r'^Config Replace to Target:\s*(?P<target>\S+)')
+
+        # Status : Success
+        p2 = re.compile(r'^Status\s*:\s*(?P<status>\S+)')
+
+        # Time : 1234 msec
+        p3 = re.compile(r'^Time\s*:\s*(?P<time>\d+)\s*msec')
+
+        # no interface GigabitEthernet0/0/0
+        p4 = re.compile(r'^no\s+.*')
+
+        # Config Net-Diff: some_diff_id
+        p5 = re.compile(r'^Config Net-Diff:\s*(?P<net_diff>\S+)')
+
+        # Config Replace Status: Success
+        p6 = re.compile(r'^Config Replace Status:\s*(?P<status>\S+)')
+
+        # Started confirm commit timer for 10 minutes
+        p7 = re.compile(r'^Started confirm commit timer for\s+(?P<timeout>\d+)\s+minutes')
+       
+        for line in lines:
+            line = line.strip()
+            if not line:
+                continue
+
+            # Ignore syslog/prompt noise
+            if line.startswith("*") or line.startswith("%") or line.endswith("#"):
+                continue
+
+            # Target
+            m = p1.match(line)
+            if m:
+                ret_dict['target'] = m.group('target')
+                continue
+
+            # Handle file not found / error case
+            if line.startswith("Error: File doesn't exist"):
+                ret_dict['replace_status'] = "Failed"
+                ret_dict['error'] = line   # optional, keep error message
+                return ret_dict  # exit early since nothing else will be parsed
+
+            # Validation Stage
+            if 'Validation Stage' in line:
+                current_stage = 'validation_stage'
+                ret_dict.setdefault(current_stage, {})
+                continue
+
+            # Apply Stage
+            if 'Apply Stage' in line:
+                current_stage = 'apply_stage'
+                ret_dict.setdefault(current_stage, {})
+                continue
+
+            # Status
+            m = p2.match(line)
+            if m and current_stage:
+                ret_dict[current_stage]['status'] = m.group('status')
+                continue
+
+            # Time
+            m = p3.match(line)
+            if m and current_stage:
+                ret_dict[current_stage]['time_ms'] = int(m.group('time'))
+                continue
+
+            # Failed Command
+            if 'Failed Command:' in line:
+                current_stage = 'validation_stage'
+                continue
+            m = p4.match(line)
+            if m and current_stage == 'validation_stage':
+                ret_dict[current_stage]['failed_command'] = m.group(0)
+                continue
+
+            # Failed Reason
+            if 'Failed Reason:' in line:
+                continue
+            if current_stage == 'validation_stage' and ('%' in line or 'Remove' in line):
+                prev_reason = ret_dict[current_stage].get('failed_reason', '')
+                ret_dict[current_stage]['failed_reason'] = (
+                    (prev_reason + '\n' + line).strip() if prev_reason else line
+                )
+                continue
+
+            # Config Net-Diff
+            m = p5.match(line)
+            if m:
+                ret_dict['net_diff'] = m.group('net_diff')
+                continue
+
+            # Replace Status
+            m = p6.match(line)
+            if m:
+                ret_dict['replace_status'] = m.group('status')
+                continue
+
+            # Timeout
+            m = p7.match(line)
+            if m:
+                ret_dict['timeout_min'] = int(m.group('timeout'))
+
+        # Ensure replace_status is always set (default to Failed if missing)
+        if 'replace_status' not in ret_dict:
+            ret_dict['replace_status'] = "Failed"
+
+        return ret_dict
+                
 class ShowAcmRulesSchema(MetaParser):
     """Schema for show acm rules"""
     schema = {

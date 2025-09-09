@@ -1,0 +1,8 @@
+Last clearing of QFP drops statistics : never
+Connection: 1 - 1
+ Current State: UP
+ Segment 1: E1 0/3/0 00
+  TDM timeslots in use: 1-24 (24 total)
+ Segment 2: E1 0/3/1 00
+  TDM timeslots in use: 1-24
+Internal Switching Elements: VIC TDM Switch

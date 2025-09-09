@@ -10,6 +10,7 @@ expected_output = {
         'port_channel': {
             'port_channel_member': False
         },
-        'types': '100/1000/10000/25000 Ethernet'
+        'types': '100/1000/10000/25000 Ethernet',
+        "link_down_reason": "Transceiver validation failed"
     }
 } 

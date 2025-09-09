@@ -1,0 +1,14 @@
+Forwarding Counts: Pkt Count/Pkts per second/Avg Pkt Size/Kilobits per second
+Other counts:      Total/RPF failed/Other drops(OIF-null, rate-limit etc)
+Default
+ 56 routes, 9 (*,G)s, 46 (*,G/m)s
+Group: FF03::1:1:1
+  RP-tree,
+   SW Forwarding: 0/0/0/0, Other: 0/0/0
+   HW Forwarding:   0/0/0/0, Other: 0/0/0
+  Source: 10::1:1:200,
+   SW Forwarding: 0/0/0/0, Other: 0/0/0
+   HW Forwarding:   5/0/80/0, Other: 0/0/0
+  Totals - Source count: 1, Packet count: 5
+
+Groups: 1, 1.00 average sources per group

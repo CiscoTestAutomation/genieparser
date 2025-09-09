@@ -32,12 +32,12 @@ Meraki Tunnel Interface
 
 Meraki Device Registration
 ------------------------------------
-  url:                        https://catalyst.meraki.com/nodes/register
+  url:                        https://example.meraki.com/nodes/register
   Device Number:              1
   PID:                        C9300-24U
-  Serial Number:              FJC2342S0TH
+  Serial Number:              XXXXXXXXXXX
   Cloud ID:                   N/A
-  Mac Address:                6C:71:0D:3D:EA:80
+  Mac Address:                XX:XX:XX:XX:XX:XX
   Status:                     Failed
   Error:                      Product type is not supported
   Timestamp(UTC):             2024-02-14 03:22:48

@@ -138,6 +138,7 @@ class ShowMerakiConnectSchema(MetaParser):
             Optional('client_last_restart(utc)'): str,
         },
         Optional('meraki_tunnel_interface'): {
+            Optional('vrf'): str,
             'status': str,
             'rx_packets': int,
             'tx_packets': int,

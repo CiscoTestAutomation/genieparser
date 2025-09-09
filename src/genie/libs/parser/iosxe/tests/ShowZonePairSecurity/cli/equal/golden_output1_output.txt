@@ -1,0 +1,4 @@
+show zone-pair security
+Zone-pair name inter-vrf-zp 1
+    Source-Zone vpn1-zone  Destination-Zone vpn2-zone
+    service-policy not configured

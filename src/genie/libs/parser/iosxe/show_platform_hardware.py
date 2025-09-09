@@ -56,6 +56,8 @@
     * 'show platform hardware qfp active feature alg statistics msrpc'
     * 'show platform hardware qfp active feature alg statistics msrpc {clear}'
     * 'show platform hardware qa active fe alg sta sip clear'
+    * 'show platform hardware qfp active feature firewall datapath scb any any any any any all any detail'
+    * 'show platform hardware qfp active feature nat datapath edm'
 """
 import re
 import logging
@@ -12534,3 +12536,589 @@ class ShowPlatformHardwareQfpActiveFeatureAlgStatisticsSipClear(ShowPlatformHard
                 continue
 
         return parsed_dict
+
+# =======================================================
+# Schema for 'show platform hardware qfp active feature firewall datapath scb any any any any any all any detail'
+# =======================================================
+
+class ShowPlatformHardwareQfpActiveFeatureFirewallDatapathScbDetailSchema(MetaParser):
+    '''Schema for show platform hardware qfp active feature firewall datapath scb any any any any any all any detail'''
+    schema = {
+        'sessions': {
+            Any(): {
+                'session_id': str,
+                'src_ip': str,
+                'src_port': int,
+                'dst_ip': str,
+                'dst_port': int,
+                'protocol': int,
+                'vrf_src': str,
+                'vrf_dst': str,
+                'protocol_name': str,
+                'flags': str,
+                'pscb': str,
+                'key1_flags': str,
+                'bucket': int,
+                'prev': str,
+                'next': str,
+                'fw_flags': ListOf(str),
+                Optional('vrf_flags'): ListOf(str),
+                'protocol_state': ListOf(str),
+                'icmp_error_count': int,
+                'ureachable_arrived': str,
+                'scb_state': str,
+                'nxt_timeout': int,
+                'refcnt': int,
+                'nbar_verdict_count': int,
+                'ha_nak_cnt': int,
+                'rg': int,
+                'hostdb': str,
+                'l7': str,
+                'stats': str,
+                'child': str,
+                'octets_in': int,
+                'packets_in': int,
+                'octets_out': int,
+                'packets_out': int,
+                'cl6_word': str,
+                'l7_proto': str,
+                'l7_ooo_drop': str,
+                'root_scb': str,
+                'act_blk': str,
+                'ingress_intf': str,
+                'ingress_intf_id': int,
+                'egress_intf': str,
+                'egress_intf_id': int,
+                Optional('current_time'): int,
+                Optional('create_tstamp'): int,
+                Optional('last_access'): int,
+                Optional('now'): int,
+                Optional('csec_left'): str,
+                'nat_out_local_addr': str,
+                'nat_out_local_port': int,
+                'nat_in_global_addr': str,
+                'nat_in_global_port': int,
+                'ip6_addr1': str,
+                'ip6_addr2': str,
+                'key_ip4_addr1': str,
+                'key_ip4_port1': int,
+                'key_ip4_addr2': str,
+                'key_ip4_port2': int,
+                'syncookie_fixup': str,
+                'halfopen_linkage': ListOf(str),
+                'cxsc_cft_fid': str,
+                'tw_timer': ListOf(str),
+                'domain_ab1': str,
+                'l4_per_filter_stats': str,
+                'avc_class_id': str,
+                'sgt': int,
+                'dgt': int,
+                'nat_handles': ListOf(str),
+                'flowdb_in2out': str,
+                'flowdb_in2out_alloc_epoch': int,
+                'flowdb_out2in': str,
+                'flowdb_out2in_alloc_epoch': int,
+                'ppe_tid': int,
+                'icmp_err_time': int,
+                'utd_context_id': int,
+                'classification_epoch_scb': str,
+                'classification_epoch_actblk': str,
+                'avc_class_stats': str,
+                'vpn_id_src': int,
+                'vpn_id_dst': int,
+                'zone_pair': str,
+                'zone_class': str,
+                Optional('timer_info'): {
+                    'bucket': int,
+                    'flags': str,
+                    'func': int,
+                    'idx': int,
+                    'wheel': str,
+                    'timer_status': str,
+                    'num_buckets': int,
+                    'cur': int,
+                    'mask': str,
+                    'gran': int,
+                    'flag': str,
+                    'ticks': int,
+                }
+            }
+        }
+    }
+
+
+class ShowPlatformHardwareQfpActiveFeatureFirewallDatapathScbDetail(ShowPlatformHardwareQfpActiveFeatureFirewallDatapathScbDetailSchema):
+    '''Parser for show platform hardware qfp active feature firewall datapath scb any any any any any all any detail'''
+
+    cli_command = 'show platform hardware qfp active feature firewall datapath scb any any any any any all any detail'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        parsed = {}
+
+        # Regex patterns
+        # Session ID:0x00000001 10.1.1.2 10001 20.1.1.2 20001 proto 17 (-global-:0:-global-:0) (0x2:udp)	[sc]
+        p1 = re.compile(r'^Session ID:(?P<session_id>0x[0-9a-fA-F]+)\s+(?P<src_ip>\S+)\s+(?P<src_port>\d+)\s+(?P<dst_ip>\S+)\s+(?P<dst_port>\d+)\s+proto\s+(?P<protocol>\d+)\s+\((?P<vrf_src>[^:]+):(?P<vrf_src_id>\d+):(?P<vrf_dst>[^:]+):(?P<vrf_dst_id>\d+)\)\s+\((?P<protocol_hex>0x[0-9a-fA-F]+):(?P<protocol_name>[^)]+)\)\s+\[(?P<flags>[^\]]+)\]$')
+
+        # pscb : 0x9d00320,  key1_flags: 0x00000000
+        p2 = re.compile(r'^\s*pscb\s*:\s*(?P<pscb>0x[0-9a-fA-F]+),\s*key1_flags:\s*(?P<key1_flags>0x[0-9a-fA-F]+)$')
+
+        # bucket : 35444, prev 0x0, next 0x0    fw_flags: 0x00000004 0x2041b841,
+        p3 = re.compile(r'^\s*bucket\s*:\s*(?P<bucket>\d+),\s*prev\s+(?P<prev>0x[0-9a-fA-F]+),\s*next\s+(?P<next>0x[0-9a-fA-F]+)\s*fw_flags:\s*(?P<fw_flags>.+),$')
+
+        # VRF1-rsrc-limit
+        p4 = re.compile(r'^\s*(?P<vrf_flags>VRF\d+-[^,\s]+(?:\s+[^,\s]+)*)$')
+
+        # Root Protocol-UDP Alert Proto-State:Resp-Init No-halfopen-list Active-cnt Session-db Max-session
+        p5 = re.compile(r'^\s*(?P<protocol_state>Root\s+Protocol-\S+.*?)$')
+
+        # icmp_error count 0 ureachable arrived: no
+        p6 = re.compile(r'^\s*icmp_error count\s+(?P<icmp_error_count>\d+)\s+ureachable arrived:\s+(?P<ureachable_arrived>\S+)$')
+
+        # scb state: active, nxt_timeout: 6000, refcnt: 1 NBAR verdict count 0
+        p7 = re.compile(r'^\s*scb state:\s+(?P<scb_state>\S+),\s*nxt_timeout:\s+(?P<nxt_timeout>\d+),\s*refcnt:\s+(?P<refcnt>\d+)\s+NBAR verdict count\s+(?P<nbar_verdict_count>\d+)$')
+
+        # ha nak cnt: 0, rg: 0
+        p8 = re.compile(r'^\s*ha nak cnt:\s+(?P<ha_nak_cnt>\d+),\s*rg:\s+(?P<rg>\d+)$')
+
+        # hostdb: 0x0, L7: 0x0, stats: 0xb2c7480, child: 0x0
+        p9 = re.compile(r'^\s*hostdb:\s+(?P<hostdb>0x[0-9a-fA-F]+),\s*L7:\s+(?P<l7>0x[0-9a-fA-F]+),\s*stats:\s+(?P<stats>0x[0-9a-fA-F]+),\s*child:\s+(?P<child>0x[0-9a-fA-F]+)$')
+
+        # octets:     1000    packets:         10    octets:     0   packets:     0
+        p10 = re.compile(r'^\s*octets:\s+(?P<octets_in>\d+)\s+packets:\s+(?P<packets_in>\d+)\s+octets:\s+(?P<octets_out>\d+)\s+packets:\s+(?P<packets_out>\d+)$')
+
+        # cl6 word 1:    0x00000000 proto: 0002: l7 ooo drop 0x010 l7_prot 0x2 - udp
+        p11 = re.compile(r'^\s*cl6 word 1:\s+(?P<cl6_word>0x[0-9a-fA-F]+)\s+proto:\s+(?P<proto>\d+):\s+l7 ooo drop\s+(?P<l7_ooo_drop>0x[0-9a-fA-F]+)\s+l7_prot\s+(?P<l7_prot>0x[0-9a-fA-F]+)\s+-\s+(?P<l7_proto>\S+)$')
+
+        # root scb: 0x0 act_blk: 0xb2bf400
+        p12 = re.compile(r'^\s*root scb:\s+(?P<root_scb>0x[0-9a-fA-F]+)\s+act_blk:\s+(?P<act_blk>0x[0-9a-fA-F]+)$')
+
+        # ingress/egress intf: GigabitEthernet0/0/2 (1021), GigabitEthernet0/0/4 (65525)
+        p13 = re.compile(r'^\s*ingress/egress intf:\s+(?P<ingress_intf>\S+)\s+\((?P<ingress_intf_id>\d+)\),\s+(?P<egress_intf>\S+)\s+\((?P<egress_intf_id>\d+)\)$')
+
+        # current time 414144656200 create tstamp: 401211845026 last access: 403012409726 now 414144657011 csec left
+        p14 = re.compile(r'^\s*current time\s+(?P<current_time>\d+)\s+create tstamp:\s+(?P<create_tstamp>\d+)\s+last access:\s+(?P<last_access>\d+)\s+now\s+(?P<now>\d+)\s+(?P<csec_left>.+)$')
+
+        # nat_out_local_addr:port: 0.0.0.0:0
+        p15 = re.compile(r'^\s*nat_out_local_addr:port:\s+(?P<nat_out_local_addr>[^:]+):(?P<nat_out_local_port>\d+)$')
+
+        # nat_in_global_addr:port: 0.0.0.0:0
+        p16 = re.compile(r'^\s*nat_in_global_addr:port:\s+(?P<nat_in_global_addr>[^:]+):(?P<nat_in_global_port>\d+)$')
+
+        # ip6: addr1 :: addr2 ::
+        p17 = re.compile(r'^\s*ip6:\s+addr1\s+(?P<ip6_addr1>\S+)\s+addr2\s+(?P<ip6_addr2>\S+)$')
+
+        # key ip4: addr1 10.1.1.2:10001 addr2 20.1.1.2:20001
+        p18 = re.compile(r'^\s*key ip4:\s+addr1\s+(?P<key_ip4_addr1>[^:]+):(?P<key_ip4_port1>\d+)\s+addr2\s+(?P<key_ip4_addr2>[^:]+):(?P<key_ip4_port2>\d+)$')
+
+        # syncookie fixup: 0x0,  halfopen linkage: 0x0 0x0
+        p19 = re.compile(r'^\s*syncookie fixup:\s+(?P<syncookie_fixup>0x[0-9a-fA-F]+),\s*halfopen linkage:\s+(?P<halfopen_linkage>.+)$')
+
+        # cxsc_cft_fid: 0x00000000
+        p20 = re.compile(r'^\s*cxsc_cft_fid:\s+(?P<cxsc_cft_fid>0x[0-9a-fA-F]+)$')
+
+        # tw timer: 0x00000000 0x00000000 0x00000000 0x01adc101
+        p21 = re.compile(r'^\s*tw timer:\s+(?P<tw_timer>.+)$')
+
+        # domain_ab1 0x8468d470 l4 per filter stats 0x0 avc class id 0x0  SGT: 0 DGT: 0
+        p22 = re.compile(r'^\s*domain_ab1\s+(?P<domain_ab1>0x[0-9a-fA-F]+)\s+l4 per filter stats\s+(?P<l4_per_filter_stats>0x[0-9a-fA-F]+)\s+avc class id\s+(?P<avc_class_id>0x[0-9a-fA-F]+)\s+SGT:\s+(?P<sgt>\d+)\s+DGT:\s+(?P<dgt>\d+)$')
+
+        # NAT handles 0x00000000 0x00000000
+        p23 = re.compile(r'^\s*NAT handles\s+(?P<nat_handles>.+)$')
+
+        # FlowDB in2out 0x00000000 alloc_epoch 0 out2in 0x00000000 alloc_epoch 0 ppe tid 0
+        p24 = re.compile(r'^\s*FlowDB in2out\s+(?P<flowdb_in2out>0x[0-9a-fA-F]+)\s+alloc_epoch\s+(?P<flowdb_in2out_alloc_epoch>\d+)\s+out2in\s+(?P<flowdb_out2in>0x[0-9a-fA-F]+)\s+alloc_epoch\s+(?P<flowdb_out2in_alloc_epoch>\d+)\s+ppe tid\s+(?P<ppe_tid>\d+)$')
+
+        # icmp_err_time 0 utd_context_id 0, classification epoch scb: 0x1 actblk :0x1 avc class stats 0x0
+        p25 = re.compile(r'^\s*icmp_err_time\s+(?P<icmp_err_time>\d+)\s+utd_context_id\s+(?P<utd_context_id>\d+),\s+classification epoch scb:\s+(?P<classification_epoch_scb>0x[0-9a-fA-F]+)\s+actblk\s+:(?P<classification_epoch_actblk>0x[0-9a-fA-F]+)\s+avc class stats\s+(?P<avc_class_stats>0x[0-9a-fA-F]+)$')
+
+        # VPN id src 65535, dst 65535
+        p26 = re.compile(r'^\s*VPN id src\s+(?P<vpn_id_src>\d+),\s+dst\s+(?P<vpn_id_dst>\d+)$')
+
+        # zone pair in-out class nested_cmap
+        p27 = re.compile(r'^\s*zone pair\s+(?P<zone_pair>\S+)\s+class\s+(?P<zone_class>\S+)$')
+
+        # Timer information parsing
+        # bucket 6909 flags 0x00000001 func 1 idx 0 wheel 0x0a48d020
+        p28 = re.compile(r'^\s*bucket\s+(?P<bucket>\d+)\s+flags\s+(?P<flags>0x[0-9a-fA-F]+)\s+func\s+(?P<func>\d+)\s+idx\s+(?P<idx>\d+)\s+wheel\s+(?P<wheel>0x[0-9a-fA-F]+)$')
+
+        # Timer within range
+        p29 = re.compile(r'^\s*(?P<timer_status>Timer within range)$')
+
+        # num buckets 131072 cur 2033 mask 0x1ffff gran 160 flag 0x0 ticks 0
+        p30 = re.compile(r'^\s*num buckets\s+(?P<num_buckets>\d+)\s+cur\s+(?P<cur>\d+)\s+mask\s+(?P<mask>0x[0-9a-fA-F]+)\s+gran\s+(?P<gran>\d+)\s+flag\s+(?P<flag>0x[0-9a-fA-F]+)\s+ticks\s+(?P<ticks>\d+)$')
+
+        current_session = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Skip header lines
+            if line.startswith('[s=session') or not line:
+                continue
+
+            # Parse session header
+            # Session ID:0x00000001 10.1.1.2 10001 20.1.1.2 20001 proto 17 (-global-:0:-global-:0) (0x2:udp)	[sc]
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                session_key = group['session_id']
+                current_session = session_key
+
+                parsed.setdefault('sessions', {})[session_key] = {
+                    'session_id': group['session_id'],
+                    'src_ip': group['src_ip'],
+                    'src_port': int(group['src_port']),
+                    'dst_ip': group['dst_ip'],
+                    'dst_port': int(group['dst_port']),
+                    'protocol': int(group['protocol']),
+                    'vrf_src': group['vrf_src'],
+                    'vrf_dst': group['vrf_dst'],
+                    'protocol_name': group['protocol_name'],
+                    'flags': group['flags']
+                }
+                continue
+
+            if not current_session:
+                continue
+
+            # Parse pscb and key1_flags
+            # pscb : 0x9d00320,  key1_flags: 0x00000000
+            m = p2.match(line)
+            if m:
+                parsed['sessions'][current_session]['pscb'] = m.group('pscb')
+                parsed['sessions'][current_session]['key1_flags'] = m.group('key1_flags')
+                continue
+
+            # Parse bucket information
+            # bucket : 35444, prev 0x0, next 0x0    fw_flags: 0x00000004 0x2041b841,
+            m = p3.match(line)
+            if m:
+                parsed['sessions'][current_session]['bucket'] = int(m.group('bucket'))
+                parsed['sessions'][current_session]['prev'] = m.group('prev')
+                parsed['sessions'][current_session]['next'] = m.group('next')
+                parsed['sessions'][current_session]['fw_flags'] = m.group('fw_flags').split()
+                continue
+
+            # Parse VRF flags
+            # VRF1-rsrc-limit
+            m = p4.match(line)
+            if m:
+                parsed['sessions'][current_session]['vrf_flags'] = m.group('vrf_flags').split()
+                continue
+
+            # Parse protocol state
+            # Root Protocol-UDP Alert Proto-State:Resp-Init No-halfopen-list Active-cnt Session-db Max-session
+            m = p5.match(line)
+            if m:
+                parsed['sessions'][current_session]['protocol_state'] = m.group('protocol_state').split()
+                continue
+
+            # Parse ICMP error
+            # icmp_error count 0 ureachable arrived: no
+            m = p6.match(line)
+            if m:
+                parsed['sessions'][current_session]['icmp_error_count'] = int(m.group('icmp_error_count'))
+                parsed['sessions'][current_session]['ureachable_arrived'] = m.group('ureachable_arrived')
+                continue
+
+            # Parse SCB state
+            # scb state: active, nxt_timeout: 6000, refcnt: 1 NBAR verdict count 0
+            m = p7.match(line)
+            if m:
+                parsed['sessions'][current_session]['scb_state'] = m.group('scb_state')
+                parsed['sessions'][current_session]['nxt_timeout'] = int(m.group('nxt_timeout'))
+                parsed['sessions'][current_session]['refcnt'] = int(m.group('refcnt'))
+                parsed['sessions'][current_session]['nbar_verdict_count'] = int(m.group('nbar_verdict_count'))
+                continue
+
+            # Parse HA NAK
+            # ha nak cnt: 0, rg: 0
+            m = p8.match(line)
+            if m:
+                parsed['sessions'][current_session]['ha_nak_cnt'] = int(m.group('ha_nak_cnt'))
+                parsed['sessions'][current_session]['rg'] = int(m.group('rg'))
+                continue
+
+            # Parse hostdb
+            # hostdb: 0x0, L7: 0x0, stats: 0xb2c7480, child: 0x0
+            m = p9.match(line)
+            if m:
+                parsed['sessions'][current_session]['hostdb'] = m.group('hostdb')
+                parsed['sessions'][current_session]['l7'] = m.group('l7')
+                parsed['sessions'][current_session]['stats'] = m.group('stats')
+                parsed['sessions'][current_session]['child'] = m.group('child')
+                continue
+
+            # Parse octets
+            # octets:     1000    packets:         10    octets:     0   packets:     0
+            m = p10.match(line)
+            if m:
+                parsed['sessions'][current_session]['octets_in'] = int(m.group('octets_in'))
+                parsed['sessions'][current_session]['packets_in'] = int(m.group('packets_in'))
+                parsed['sessions'][current_session]['octets_out'] = int(m.group('octets_out'))
+                parsed['sessions'][current_session]['packets_out'] = int(m.group('packets_out'))
+                continue
+
+            # Parse cl6 word
+            # cl6 word 1:    0x00000000 proto: 0002: l7 ooo drop 0x010 l7_prot 0x2 - udp
+            m = p11.match(line)
+            if m:
+                parsed['sessions'][current_session]['cl6_word'] = m.group('cl6_word')
+                parsed['sessions'][current_session]['l7_ooo_drop'] = m.group('l7_ooo_drop')
+                parsed['sessions'][current_session]['l7_proto'] = m.group('l7_proto')
+                continue
+
+            # Parse root scb
+            # root scb: 0x0 act_blk: 0xb2bf400
+            m = p12.match(line)
+            if m:
+                parsed['sessions'][current_session]['root_scb'] = m.group('root_scb')
+                parsed['sessions'][current_session]['act_blk'] = m.group('act_blk')
+                continue
+
+            # Parse interfaces
+            # ingress/egress intf: GigabitEthernet0/0/2 (1021), GigabitEthernet0/0/4 (65525)
+            m = p13.match(line)
+            if m:
+                parsed['sessions'][current_session]['ingress_intf'] = m.group('ingress_intf')
+                parsed['sessions'][current_session]['ingress_intf_id'] = int(m.group('ingress_intf_id'))
+                parsed['sessions'][current_session]['egress_intf'] = m.group('egress_intf')
+                parsed['sessions'][current_session]['egress_intf_id'] = int(m.group('egress_intf_id'))
+                continue
+
+            # Parse time information
+            # current time 414144656200 create tstamp: 401211845026 last access: 403012409726 now 414144657011 csec left
+            m = p14.match(line)
+            if m:
+                parsed['sessions'][current_session]['current_time'] = int(m.group('current_time'))
+                parsed['sessions'][current_session]['create_tstamp'] = int(m.group('create_tstamp'))
+                parsed['sessions'][current_session]['last_access'] = int(m.group('last_access'))
+                parsed['sessions'][current_session]['now'] = int(m.group('now'))
+                parsed['sessions'][current_session]['csec_left'] = m.group('csec_left')
+                continue
+
+            # Parse NAT out
+            # nat_out_local_addr:port: 0.0.0.0:0
+            m = p15.match(line)
+            if m:
+                parsed['sessions'][current_session]['nat_out_local_addr'] = m.group('nat_out_local_addr')
+                parsed['sessions'][current_session]['nat_out_local_port'] = int(m.group('nat_out_local_port'))
+                continue
+
+            # Parse NAT in
+            # nat_in_global_addr:port: 0.0.0.0:0
+            m = p16.match(line)
+            if m:
+                parsed['sessions'][current_session]['nat_in_global_addr'] = m.group('nat_in_global_addr')
+                parsed['sessions'][current_session]['nat_in_global_port'] = int(m.group('nat_in_global_port'))
+                continue
+
+            # Parse IP6
+            # ip6: addr1 :: addr2 ::
+            m = p17.match(line)
+            if m:
+                parsed['sessions'][current_session]['ip6_addr1'] = m.group('ip6_addr1')
+                parsed['sessions'][current_session]['ip6_addr2'] = m.group('ip6_addr2')
+                continue
+
+            # Parse key IP4
+            # key ip4: addr1 10.1.1.2:10001 addr2 20.1.1.2:20001
+            m = p18.match(line)
+            if m:
+                parsed['sessions'][current_session]['key_ip4_addr1'] = m.group('key_ip4_addr1')
+                parsed['sessions'][current_session]['key_ip4_port1'] = int(m.group('key_ip4_port1'))
+                parsed['sessions'][current_session]['key_ip4_addr2'] = m.group('key_ip4_addr2')
+                parsed['sessions'][current_session]['key_ip4_port2'] = int(m.group('key_ip4_port2'))
+                continue
+
+            # Parse syncookie
+            # syncookie fixup: 0x0,  halfopen linkage: 0x0 0x0
+            m = p19.match(line)
+            if m:
+                parsed['sessions'][current_session]['syncookie_fixup'] = m.group('syncookie_fixup')
+                parsed['sessions'][current_session]['halfopen_linkage'] = m.group('halfopen_linkage').split()
+                continue
+
+            # Parse cxsc
+            # cxsc_cft_fid: 0x00000000
+            m = p20.match(line)
+            if m:
+                parsed['sessions'][current_session]['cxsc_cft_fid'] = m.group('cxsc_cft_fid')
+                continue
+
+            # Parse tw timer
+            # tw timer: 0x00000000 0x00000000 0x00000000 0x01adc101
+            m = p21.match(line)
+            if m:
+                parsed['sessions'][current_session]['tw_timer'] = m.group('tw_timer').split()
+                continue
+
+            # Parse domain_ab1
+            # domain_ab1 0x8468d470 l4 per filter stats 0x0 avc class id 0x0  SGT: 0 DGT: 0
+            m = p22.match(line)
+            if m:
+                parsed['sessions'][current_session]['domain_ab1'] = m.group('domain_ab1')
+                parsed['sessions'][current_session]['l4_per_filter_stats'] = m.group('l4_per_filter_stats')
+                parsed['sessions'][current_session]['avc_class_id'] = m.group('avc_class_id')
+                parsed['sessions'][current_session]['sgt'] = int(m.group('sgt'))
+                parsed['sessions'][current_session]['dgt'] = int(m.group('dgt'))
+                continue
+
+            # Parse NAT handles
+            # NAT handles 0x00000000 0x00000000
+            m = p23.match(line)
+            if m:
+                parsed['sessions'][current_session]['nat_handles'] = m.group('nat_handles').split()
+                continue
+
+            # Parse FlowDB
+            # FlowDB in2out 0x00000000 alloc_epoch 0 out2in 0x00000000 alloc_epoch 0 ppe tid 0
+            m = p24.match(line)
+            if m:
+                parsed['sessions'][current_session]['flowdb_in2out'] = m.group('flowdb_in2out')
+                parsed['sessions'][current_session]['flowdb_in2out_alloc_epoch'] = int(m.group('flowdb_in2out_alloc_epoch'))
+                parsed['sessions'][current_session]['flowdb_out2in'] = m.group('flowdb_out2in')
+                parsed['sessions'][current_session]['flowdb_out2in_alloc_epoch'] = int(m.group('flowdb_out2in_alloc_epoch'))
+                parsed['sessions'][current_session]['ppe_tid'] = int(m.group('ppe_tid'))
+                continue
+
+            # Parse classification
+            # icmp_err_time 0 utd_context_id 0, classification epoch scb: 0x1 actblk :0x1 avc class stats 0x0
+            m = p25.match(line)
+            if m:
+                parsed['sessions'][current_session]['icmp_err_time'] = int(m.group('icmp_err_time'))
+                parsed['sessions'][current_session]['utd_context_id'] = int(m.group('utd_context_id'))
+                parsed['sessions'][current_session]['classification_epoch_scb'] = m.group('classification_epoch_scb')
+                parsed['sessions'][current_session]['classification_epoch_actblk'] = m.group('classification_epoch_actblk')
+                parsed['sessions'][current_session]['avc_class_stats'] = m.group('avc_class_stats')
+                continue
+
+            # Parse VPN ID
+            # VPN id src 65535, dst 65535
+            m = p26.match(line)
+            if m:
+                parsed['sessions'][current_session]['vpn_id_src'] = int(m.group('vpn_id_src'))
+                parsed['sessions'][current_session]['vpn_id_dst'] = int(m.group('vpn_id_dst'))
+                continue
+
+            # Parse zone pair
+            # zone pair in-out class nested_cmap
+            m = p27.match(line)
+            if m:
+                parsed['sessions'][current_session]['zone_pair'] = m.group('zone_pair')
+                parsed['sessions'][current_session]['zone_class'] = m.group('zone_class')
+                continue
+
+            # Parse timer bucket
+            # bucket 6909 flags 0x00000001 func 1 idx 0 wheel 0x0a48d020
+            m = p28.match(line)
+            if m:
+                timer_info = parsed['sessions'][current_session].setdefault('timer_info', {})
+                timer_info['bucket'] = int(m.group('bucket'))
+                timer_info['flags'] = m.group('flags')
+                timer_info['func'] = int(m.group('func'))
+                timer_info['idx'] = int(m.group('idx'))
+                timer_info['wheel'] = m.group('wheel')
+                continue
+
+            # Parse timer status
+            # Timer within range
+            m = p29.match(line)
+            if m:
+                if 'timer_info' in parsed['sessions'][current_session]:
+                    parsed['sessions'][current_session]['timer_info']['timer_status'] = m.group('timer_status')
+                continue
+
+            # Parse timer details
+            #num buckets 131072 cur 2033 mask 0x1ffff gran 160 flag 0x0 ticks 0
+            m = p30.match(line)
+            if m:
+                if 'timer_info' in parsed['sessions'][current_session]:
+                    timer_info = parsed['sessions'][current_session]['timer_info']
+                    timer_info['num_buckets'] = int(m.group('num_buckets'))
+                    timer_info['cur'] = int(m.group('cur'))
+                    timer_info['mask'] = m.group('mask')
+                    timer_info['gran'] = int(m.group('gran'))
+                    timer_info['flag'] = m.group('flag')
+                    timer_info['ticks'] = int(m.group('ticks'))
+                continue
+
+        return parsed
+
+# =============================================================================================
+# Schema for 'show platform hardware qfp active feature nat datapath edm'
+# =============================================================================================
+class ShowPlatformHardwareQfpActiveFeatureNatDatapathEdmSchema(MetaParser):
+    """Schema for show platform hardware qfp active feature nat datapath edm"""
+    schema = {
+        "bit_stats": {
+            "firstword": int,
+            "scan": int,
+            "scanread": int,
+        },
+        "tcp_alg_ports": ListOf(int),
+        "udp_alg_ports": ListOf(int),
+    }
+
+# =============================================================================================
+# Parser for 'show platform hardware qfp active feature nat datapath edm'
+# =============================================================================================
+class ShowPlatformHardwareQfpActiveFeatureNatDatapathEdm(ShowPlatformHardwareQfpActiveFeatureNatDatapathEdmSchema):
+    """Parser for show platform hardware qfp active feature nat datapath edm"""
+    
+    cli_command = "show platform hardware qfp active feature nat datapath edm"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the dictionary to store parsed data
+        ret_dict = {}
+
+        # Regex patterns to match the different sections
+        # Bit stats: 1stword 1360962 scan 43888 scanread 4140272
+        p1 = re.compile(r"^Bit stats:\s+1stword\s+(?P<firstword>\d+)\s+scan\s+(?P<scan>\d+)\s+scanread\s+(?P<scanread>\d+)$")
+        
+        # TCP ALG Ports: 2000 5060 1723 1720 139 137 135 389 111 8554 53 554 21 514 513 512
+        p2 = re.compile(r"^TCP ALG Ports:\s+(?P<ports>[\d\s]+)$")
+        
+        # UDP ALG Ports: 5060 1719 1718 138 137 111 8554 69 53 554 496
+        p3 = re.compile(r"^UDP ALG Ports:\s+(?P<ports>[\d\s]+)$")
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # Match bit stats line
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                bit_stats_dict = ret_dict.setdefault("bit_stats", {})
+                bit_stats_dict["firstword"] = int(group["firstword"])
+                bit_stats_dict["scan"] = int(group["scan"])
+                bit_stats_dict["scanread"] = int(group["scanread"])
+                continue
+
+            # Match TCP ALG Ports line
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ports_str = group["ports"].strip()
+                tcp_ports = [int(port) for port in ports_str.split()]
+                ret_dict["tcp_alg_ports"] = tcp_ports
+                continue
+
+            # Match UDP ALG Ports line
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                ports_str = group["ports"].strip()
+                udp_ports = [int(port) for port in ports_str.split()]
+                ret_dict["udp_alg_ports"] = udp_ports
+                continue
+                
+        return ret_dict

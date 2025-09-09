@@ -2299,12 +2299,18 @@ class ShowBgpSummarySuperParser(ShowBgpSummarySchema):
                 if m :
                     # Add neighbor to dictionary
                     neighbor = str(m.groupdict()['neighbor'])
-                    if sum_dict.get('vrf'):
-                        if 'neighbor' not in sum_dict['vrf'][vrf]:
-                            sum_dict['vrf'][vrf]['neighbor'] = {}
-                        if neighbor not in sum_dict['vrf'][vrf]['neighbor']:
-                            sum_dict['vrf'][vrf]['neighbor'][neighbor] = {}
-                        nbr_dict = sum_dict['vrf'][vrf]['neighbor'][neighbor]
+                    
+                    # Initialize nbr_dict - ensure it's always created
+                    if 'vrf' not in sum_dict:
+                        sum_dict['vrf'] = {}
+                    if vrf not in sum_dict['vrf']:
+                        sum_dict['vrf'][vrf] = {}
+                    if 'neighbor' not in sum_dict['vrf'][vrf]:
+                        sum_dict['vrf'][vrf]['neighbor'] = {}
+                    if neighbor not in sum_dict['vrf'][vrf]['neighbor']:
+                        sum_dict['vrf'][vrf]['neighbor'][neighbor] = {}
+                    
+                    nbr_dict = sum_dict['vrf'][vrf]['neighbor'][neighbor]
 
                     # Add address family to this neighbor
                     if 'address_family' not in nbr_dict:

@@ -1,0 +1,15 @@
+E1 0/2/0 is up
+  Applique type is Channelized E1 - balanced
+  No alarms detected.
+  alarm-trigger is not set
+  Framing is crc4, Line Code is HDB3, Clock Source is Line Primary.
+  BER thresholds:  SF = 10e-3  SD = 10e-6
+  International Bit: 1, National Bits: 11111
+  Data in current interval (813 seconds elapsed):
+     0 Line Code Violations, 0 Path Code Violations
+     0 Slip Secs, 0 Fr Loss Secs, 0 Line Err Secs, 0 Degraded Mins
+     0 Errored Secs, 0 Bursty Err Secs, 0 Severely Err Secs, 0 Unavail Secs
+  Total Data (last 24 hours)
+     0 Line Code Violations, 0 Path Code Violations,
+     0 Slip Secs, 0 Fr Loss Secs, 0 Line Err Secs, 0 Degraded Mins,
+     0 Errored Secs, 0 Bursty Err Secs, 0 Severely Err Secs, 0 Unavail Secs

@@ -11517,6 +11517,8 @@ class ShowPlatformSoftwareFedSwitchActiveAclInfoSdkDetailSchema(MetaParser):
                         'mirror': str,
                         'counter': str,
                         'counter_value': int,
+                        Optional('mir_cum'): str,
+                        Optional('mir_cmd'): str,
                     }
                 }
             }
@@ -11605,6 +11607,9 @@ class ShowPlatformSoftwareFedSwitchActiveAclInfoSdkDetail(ShowPlatformSoftwareFe
 
         # Punt : N    Drop : N    Mirror: N    Counter: 0x0 (0)
         p14 = re.compile(r'^Punt\s*:\s*(?P<punt>\S+)\s+Drop\s*:\s*(?P<drop>\S+)\s+Mirror\s*:\s*(?P<mirror>\S+)\s+Counter:\s*(?P<counter>\S+)\s*\((?P<counter_value>\d+)\)$')
+
+        # Punt: Y    Drop: N    Mir: N    Mir_Cum: 0x0   Mir_cmd: 0x0    Counter: 0x7bb (0)
+        p15 = re.compile(r'^Punt\s*:\s*(?P<punt>\S+)\s+Drop\s*:\s*(?P<drop>\S+)\s+Mir\s*:\s*(?P<mirror>\S+)\s+Mir_Cum\s*:\s*(?P<mir_cum>\S+)\s+Mir_cmd\s*:\s*(?P<mir_cmd>\S+)\s+Counter:\s*(?P<counter>\S+)\s*\((?P<counter_value>\d+)\)$')
 
         current_protocol = None
         current_key_mask = None
@@ -11792,6 +11797,22 @@ class ShowPlatformSoftwareFedSwitchActiveAclInfoSdkDetail(ShowPlatformSoftwareFe
                         'punt': group["punt"],
                         'drop': group["drop"],
                         'mirror': group["mirror"],
+                        'counter': group["counter"],
+                        'counter_value': int(group["counter_value"])
+                    }
+                continue
+
+            # Punt: Y    Drop: N    Mir: N    Mir_Cum: 0x0   Mir_cmd: 0x0    Counter: 0x7bb (0)
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                if current_key_mask is not None:
+                    current_key_mask['result_actions'] = {
+                        'punt': group["punt"],
+                        'drop': group["drop"],
+                        'mirror': group["mirror"],
+                        'mir_cum': group["mir_cum"],
+                        'mir_cmd': group["mir_cmd"],
                         'counter': group["counter"],
                         'counter_value': int(group["counter_value"])
                     }
@@ -18296,6 +18317,249 @@ class ShowPlatformSoftwareFedSwitchAclManagerAclGroupIifId(ShowPlatformSoftwareF
                 group = m.groupdict()
                 acl_groups = ret_dict.setdefault('acl_groups', {})
                 acl_groups[group['acl_group']] = group['value']
+                continue
+
+        return ret_dict
+
+class ShowPlatformSoftwareFedSwitchWdavcFlowsSchema(MetaParser):
+    """
+    Schema for show platform software fed switch {switch_num} wdavc flows
+    """
+    schema = {
+        "index": {
+            Any(): {
+                "ip1": str,
+                "ip2": str,
+                "port1": int,
+                "port2": int,
+                "l3_proto": int,
+                "l4_proto": int,
+                "vrf_vlan": int,
+                "timeout_sec": int,
+                "app_name": str,
+                "tuple_type": str,
+                "flow_type": str,
+                "swapped": str,
+                "clients": str,
+                "allow_bp": bool,
+                "final": bool,
+                "pkts": int,
+                "bypass_pkt": int
+            }
+        }
+    }
+
+
+class ShowPlatformSoftwareFedSwitchWdavcFlows(ShowPlatformSoftwareFedSwitchWdavcFlowsSchema):
+    """
+    Parser for show platform software fed switch {switch_num} wdavc flows
+    """
+
+    cli_command = "show platform software fed switch {switch_num} wdavc flows"
+
+    def cli(self, switch_num="", output=None):
+        if output is None:
+            cmd = self.cli_command.format(switch_num=switch_num)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+        index = 1
+
+        #IX  |IP1                                     |IP2                                     |PORT1|PORT2|L3   |L4   |VRF |TIMEOUT|APP                             |TUPLE   |FLOW     |IS FIF  |CLIENTS|BYPASS|FINAL |#PKTS |BYPASS|
+            #|                                        |                                        |     |     |PROTO|PROTO|VLAN|SEC  HL|NAME                            |TYPE    |TYPE     |SWAPPED |ALLW BP|      |      |      |PKT   |
+        #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        #1   |10.10.1.166                             |66.220.146.224                          |52059|80   |1    |6    |0   |360  HW|facebook                        |Full    |Real Flow|No      |0x01   |True  |True  |69    |21    |
+        
+        p1 = re.compile(r'^(?P<ix>\d+)\s+\|(?P<ip1>[^\|]+)\|(?P<ip2>[^\|]+)\|(?P<port1>[^\|]+)\|(?P<port2>[^\|]+)\|(?P<l3_proto>[^\|]+)\|(?P<l4_proto>[^\|]+)\|(?P<vrf_vlan>[^\|]+)\|(?P<timeout_sec>\d+)\s+HW\|(?P<app_name>[^\|]+)\|(?P<tuple_type>[^\|]+)\|(?P<flow_type>[^\|]+)\|(?P<swapped>[^\|]+)\|(?P<clients>[^\|]+)\|(?P<allow_bp>[^\|]+)\|(?P<final>[^\|]+)\|(?P<pkts>[^\|]+)\|(?P<bypass_pkt>[^\|]+)\|$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            
+            #IX  |IP1                                     |IP2                                     |PORT1|PORT2|L3   |L4   |VRF |TIMEOUT|APP                             |TUPLE   |FLOW     |IS FIF  |CLIENTS|BYPASS|FINAL |#PKTS |BYPASS|
+            #|                                        |                                        |     |     |PROTO|PROTO|VLAN|SEC  HL|NAME                            |TYPE    |TYPE     |SWAPPED |ALLW BP|      |      |      |PKT   |
+            #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+            #1   |10.10.1.166                             |66.220.146.224                          |52059|80   |1    |6    |0   |360  HW|facebook                        |Full    |Real Flow|No      |0x01   |True  |True  |69    |21    |
+            
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                idx = int(group.pop("ix"))
+
+                index_dict = ret_dict.setdefault("index", {}).setdefault(idx, {})
+                index_dict["ip1"] = group["ip1"].strip()
+                index_dict["ip2"] = group["ip2"].strip()
+                index_dict["port1"] = int(group["port1"])
+                index_dict["port2"] = int(group["port2"])
+                index_dict["l3_proto"] = int(group["l3_proto"])
+                index_dict["l4_proto"] = int(group["l4_proto"])
+                index_dict["vrf_vlan"] = int(group["vrf_vlan"])
+                index_dict["timeout_sec"] = int(group["timeout_sec"])
+                index_dict["app_name"] = group["app_name"].strip()
+                index_dict["tuple_type"] = group["tuple_type"].strip()
+                index_dict["flow_type"] = group["flow_type"].strip()
+                index_dict["swapped"] = group["swapped"].strip()
+                index_dict["clients"] = group["clients"].strip()
+                index_dict["allow_bp"] = group["allow_bp"].strip().lower() == "true"
+                index_dict["final"] = group["final"].strip().lower() == "true"
+                index_dict["pkts"] = int(group["pkts"])
+                index_dict["bypass_pkt"] = int(group["bypass_pkt"])
+
+        return ret_dict
+
+class ShowPlatformSoftwareFedSwitchWdavcFunctionFlowsSchema(MetaParser):
+    """
+    Schema for show platform software fed switch <switch> wdavc function wdavc_ft_show_all_flows_seg_ui
+    """
+    schema = {
+    "index": {
+        Any(): {
+            "ip1": str,
+            "ip2": str,
+            "port1": int,
+            "port2": int,
+            "l3_proto": int,
+            "l4_proto": int,
+            "vrf_vlan": int,
+            "timeout_sec": int,
+            "timeout_hl": str,
+            "app_name": str,
+            "tuple_type": str,
+            "flow_type": str,
+            "is_swapped": str,
+            "clients": str,
+            "bypass_type": bool,
+            "final": bool,
+            "pkts": int,
+            "bypass_pkt": int,
+            "seg_index": {
+                Any(): {
+                    "if_id": int,
+                    "opst_if": int,
+                    "seg_dir": str,
+                    "vlan": int,
+                    "fif_dir": bool,
+                    "seen": bool,
+                    "is_set": bool,
+                    "dop_id": int,
+                    "nfl_hdl_st": str,
+                    "bps_pnd": int,
+                    "app_pnd": int,
+                    "frst_ts": int,
+                    "last_ts": int,
+                    "bytes": int,
+                    "pkts": int,
+                    "tcp_flgs": int
+                },
+            },
+         },
+    },
+}
+
+
+class ShowPlatformSoftwareFedSwitchWdavcFunctionFlows(ShowPlatformSoftwareFedSwitchWdavcFunctionFlowsSchema):
+    """
+    Parser for:
+    show platform software fed switch <switch> wdavc function wdavc_ft_show_all_flows_seg_ui
+    """
+
+    cli_command = 'show platform software fed switch {switch} wdavc function wdavc_ft_show_all_flows_seg_ui'
+
+    def cli(self, switch="", output=None):
+        if output is None:
+            cmd = self.cli_command.format(switch=switch)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+        current_index = None
+        seg_index_counter = 0
+
+        #IX  |IP1                                     |IP2                                     |PORT1|PORT2|L3   |L4   |VRF |TIMEOUT|APP                             |TUPLE   |FLOW     |IS FIF  |CLIENTS|BYPASS|FINAL |#PKTS |BYPASS|
+        #    |                                        |                                        |     |     |PROTO|PROTO|VLAN|SEC  HL|NAME                            |TYPE    |TYPE     |SWAPPED |ALLW BP|      |      |      |PKT   |
+        #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        #1   |10.10.1.166                             |66.220.146.224                          |52059|80   |1    |6    |0   |360  HW|facebook                        |Full    |Real Flow|No      |0x01   |True  |True  |69    |21    |    
+        
+        p1 = re.compile(r'^(?P<ix>\d+)\s+\|(?P<ip1>[^\|]+)\|(?P<ip2>[^\|]+)\|(?P<port1>[^\|]+)\|(?P<port2>[^\|]+)\|(?P<l3_proto>[^\|]+)\|(?P<l4_proto>[^\|]+)\|(?P<vrf_vlan>[^\|]+)\|(?P<timeout_sec>\d+)\s+(?P<timeout_hl>\w+)\|(?P<app_name>[^\|]+)\|(?P<tuple_type>[^\|]+)\|(?P<flow_type>[^\|]+)\|(?P<is_swapped>[^\|]+)\|(?P<clients>[^\|]+)\|(?P<bypass_type>[^\|]+)\|(?P<final>[^\|]+)\|(?P<pkts>[^\|]+)\|(?P<bypass_pkt>[^\|]+)\|$'
+        )
+
+        #SEG IDX |I/F ID |OPST I/F |SEG DIR |.1Q VLAN|FIF DIR | SEEN  |Is SET |DOP ID |NFL HDL ST |BPS PND |APP PND |FRST TS |LAST TS |BYTES  |PKTS   |TCP FLGS|
+            #-------------------------------------------------------------------------------------------------------------------------------------------------------
+            #0       |1050   |1051     |Ingress |0       |True    |True   |True   |0      |0        VV|0       |0       |1753712193000|1753712240000|283178 |265    |0       |
+            
+        p2 = re.compile(
+            r'^\s*(?P<seg_idx>\d+)\s*\|\s*(?P<if_id>\d+)\s*\|\s*(?P<opst_if>\d+)\s*\|\s*'
+            r'(?P<seg_dir>\w+)\s*\|\s*(?P<vlan>\d+)\s*\|\s*(?P<fif_dir>\w+)\s*\|\s*'
+            r'(?P<seen>\w+)\s*\|\s*(?P<is_set>\w+)\s*\|\s*(?P<dop_id>\d+)\s*\|\s*'
+            r'(?P<nfl_hdl_st>[\w ]+)\s*\|\s*(?P<bps_pnd>\d+)\s*\|\s*(?P<app_pnd>\d+)\s*\|\s*'
+            r'(?P<frst_ts>\d+)\s*\|\s*(?P<last_ts>\d+)\s*\|\s*(?P<bytes>\d+)\s*\|\s*(?P<pkts>\d+)\s*\|\s*(?P<tcp_flgs>\d+)'
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+        
+            if not line or line.startswith(("IX", "---", "CurrFlows")):
+                continue
+            
+            #IX  |IP1                                     |IP2                                     |PORT1|PORT2|L3   |L4   |VRF |TIMEOUT|APP                             |TUPLE   |FLOW     |IS FIF  |CLIENTS|BYPASS|FINAL |#PKTS |BYPASS|
+            #    |                                        |                                        |     |     |PROTO|PROTO|VLAN|SEC  HL|NAME                            |TYPE    |TYPE     |SWAPPED |ALLW BP|      |      |      |PKT   |
+            #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+            #1   |10.10.1.166                             |66.220.146.224                          |52059|80   |1    |6    |0   |360  HW|facebook                        |Full    |Real Flow|No      |0x01   |True  |True  |69    |21    |   
+            m1 = p1.match(line)
+            if m1:
+                group = m1.groupdict()
+                current_index = int(group["ix"])
+                seg_index_counter = 0 
+                flow_dict = ret_dict.setdefault("index", {}).setdefault(current_index, {})
+        
+                flow_dict.update({
+                    "ip1": group["ip1"].strip(),
+                    "ip2": group["ip2"].strip(),
+                    "port1": int(group["port1"]),
+                    "port2": int(group["port2"]),
+                    "l3_proto": int(group["l3_proto"]),
+                    "l4_proto": int(group["l4_proto"]),
+                    "vrf_vlan": int(group["vrf_vlan"]),
+                    "timeout_sec": int(group["timeout_sec"]),
+                    "timeout_hl": group["timeout_hl"].strip(),
+                    "app_name": group["app_name"].strip(),
+                    "tuple_type": group["tuple_type"].strip(),
+                    "flow_type": group["flow_type"].strip(),
+                    "is_swapped": group["is_swapped"].strip(),
+                    "clients": group["clients"].strip(),
+                    "bypass_type": group["bypass_type"].strip().lower() == "true",
+                    "final": group["final"].strip().lower() == "true",
+                    "pkts": int(group["pkts"]),
+                    "bypass_pkt": int(group["bypass_pkt"]),
+                    "seg_index": {}  
+                })
+                continue
+            
+            #SEG IDX |I/F ID |OPST I/F |SEG DIR |.1Q VLAN|FIF DIR | SEEN  |Is SET |DOP ID |NFL HDL ST |BPS PND |APP PND |FRST TS |LAST TS |BYTES  |PKTS   |TCP FLGS|
+            #-------------------------------------------------------------------------------------------------------------------------------------------------------
+            #0       |1050   |1051     |Ingress |0       |True    |True   |True   |0      |0        VV|0       |0       |1753712193000|1753712240000|283178 |265    |0       |
+            m2 = p2.match(line)
+            if m2 and current_index is not None:
+                group = m2.groupdict()
+                seg_dict = ret_dict["index"][current_index]["seg_index"].setdefault(seg_index_counter, {})
+        
+                seg_dict.update({
+                    "if_id": int(group["if_id"]),
+                    "opst_if": int(group["opst_if"]),
+                    "seg_dir": group["seg_dir"],
+                    "vlan": int(group["vlan"]),
+                    "fif_dir": group["fif_dir"].lower() == "true",
+                    "seen": group["seen"].lower() == "true",
+                    "is_set": group["is_set"].lower() == "true",
+                    "dop_id": int(group["dop_id"]),
+                    "nfl_hdl_st": group["nfl_hdl_st"].strip(),
+                    "bps_pnd": int(group["bps_pnd"]),
+                    "app_pnd": int(group["app_pnd"]),
+                    "frst_ts": int(group["frst_ts"]),
+                    "last_ts": int(group["last_ts"]),
+                    "bytes": int(group["bytes"]),
+                    "pkts": int(group["pkts"]),
+                    "tcp_flgs": int(group["tcp_flgs"]),
+                })
+                seg_index_counter += 1
                 continue
 
         return ret_dict

@@ -1,0 +1,12 @@
+acm merge tftp://10.85.64.40/auto/tftp-ott-users2/mohmahm3/day3
+Config Merge of Configlet: tftp://10.85.64.40/auto/tftp-ott-users2/mohmahm3/day3
+    Validation Stage 
+	Status : Fail
+	Time   : 253 msec
+	Failed command: 
+	    ips Multicast-routing
+	Failed reason: 
+	    ips Multicast-routing
+	      ^
+	    % Invalid input detected at '^' marker.
+    Config Merge Status: Fail

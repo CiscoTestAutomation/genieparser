@@ -1,0 +1,7 @@
+{
+    "name": "m2o",
+    "counter_type": "packets",
+    "value": 15,
+    "layer2": false,
+    "order": "highest"
+}

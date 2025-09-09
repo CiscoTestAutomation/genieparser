@@ -1,0 +1,6 @@
+Paired Address Pooling (PAP)
+ Limit:            1000 local addresses per global address
+Bulk Port Allocation (BPA)
+ Port set size:    64 ports in each port set allocation
+ Port step size:   16
+ Single set:       True

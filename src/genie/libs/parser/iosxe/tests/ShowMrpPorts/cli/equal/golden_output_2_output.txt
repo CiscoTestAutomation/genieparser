@@ -1,0 +1,48 @@
+show mrp ports
+
+Ring ID : 1
+PortName                Status
+--------------------------------------
+Gi1/0/1                 Disabled
+Gi1/0/2                 Disabled
+
+
+
+Ring ID : 2
+PortName                Status
+--------------------------------------
+n/a                     n/a
+n/a                     n/a
+
+
+
+Ring ID : 3
+PortName                Status
+--------------------------------------
+n/a                     n/a
+n/a                     n/a
+
+
+
+Ring ID : 4
+PortName                Status
+--------------------------------------
+n/a                     n/a
+n/a                     n/a
+
+
+
+Ring ID : 5
+PortName                Status
+--------------------------------------
+n/a                     n/a
+n/a                     n/a
+
+
+
+Ring ID : 6
+PortName                Status
+--------------------------------------
+n/a                     n/a
+n/a                     n/a
+

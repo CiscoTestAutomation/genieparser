@@ -1,0 +1,14 @@
+Config Replace to Target: tftp://10.85.64.40/auto/tftp-ott-users2/mohmahm3/rep_file
+*Jul 30 20:22:44.884: %LINK-3-UPDOWN: Interface GigabitEthernet0/0, changed state to up
+*Jul 30 20:22:45.883: %LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet0/0, changed state to up
+    Validation Stage
+	Status : Fail
+	Time   : 284 msec
+	Failed Command: 
+	    license boot level network-essentials addon dna-advantage
+	Failed Reason: 
+	    license boot level network-essentials addon dna-advantage
+	                                                    ^
+	    % Invalid input detected at '^' marker.
+    Config Net-Diff: flash:acm/acm_cfg_REPLACE_diff_39628957691.cfg
+    Config Replace Status: Fail

@@ -674,7 +674,8 @@ class ShowControllersOptics(ShowControllersOpticsSchema):
         p35 = re.compile(r'^Optics +type +: +(?P<optics_type>[\S\s]+)$')
 
         # Name                   : CISCO-AVAGO
-        p36 = re.compile(r'^Name +: +(?P<name>\S+)$')
+        # Name                   : Sicoya GmbH
+        p36 = re.compile(r'^Name +: +(?P<name>[\S\s]+)$')
 
         # OUI Number             : 00.17.6a
         p37 = re.compile(r'^OUI +Number +: +(?P<oui_number>\S+)$')
@@ -1073,6 +1074,7 @@ class ShowControllersOptics(ShowControllersOpticsSchema):
                 continue
 
             # Name                   : CISCO-AVAGO
+            # Name                   : Sicoya GmbH
             m = p36.match(line)
             if m:
                 group = m.groupdict()

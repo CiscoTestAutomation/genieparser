@@ -161,6 +161,7 @@ expected_output = {
         "last_link_flapped": "82week(s) 6day(s)",
         "last_clear_counters": "never",
         "interface_reset": 16,
+        "link_down_reason": "Administratively down",
         "counters": {
             "rate": {
                 "load_interval": 30,

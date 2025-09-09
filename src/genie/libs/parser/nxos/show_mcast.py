@@ -40,7 +40,8 @@ class ShowIpMrouteVrfAllSchema(MetaParser):
                                              Optional('incoming_interface_list'):
                                                 {Any(): 
                                                     {Optional('rpf_nbr'): str,
-                                                     Optional('internal'): bool
+                                                     Optional('internal'): bool,
+                                                     Optional('router_id'): str
                                                     },
                                                 },
                                              Optional('outgoing_interface_list'): 
@@ -147,15 +148,17 @@ class ShowIpMrouteVrfAll(ShowIpMrouteVrfAllSchema):
                 continue
 
             # Incoming interface: Null, RPF nbr: 0.0.0.0 
-            # Incoming interface: Ethernet1/9, RPF nbr: 10.234.1.2, internal.
+            # Incoming interface: Ethernet1/9, RPF nbr: 10.234.1.2, internal (Router-Id: 2.2.2.2)
             p3 = re.compile(r'^\s*Incoming +interface:'
-                             r' +(?P<incoming_interface>[a-zA-Z0-9\/\-\.]+),'
-                             r' +RPF +nbr: +(?P<rpf_nbr>[0-9\.]+)(, *(?P<internal>internal)\.?)?$')
+                            r' +(?P<incoming_interface>[a-zA-Z0-9\/\-\.]+),'
+                            r' +RPF +nbr: +(?P<rpf_nbr>[0-9\.]+)(, *(?P<internal>internal))?'
+                            r'(?: +\(Router-Id: +(?P<router_id>[0-9\.]+)\))?$')
             m = p3.match(line)
             if m:
                 incoming_interface = m.groupdict()['incoming_interface']
                 rpf_nbr = m.groupdict()['rpf_nbr']
                 internal = m.groupdict().get('internal')
+                router_id = m.groupdict().get('router_id')
                 if 'incoming_interface_list' not in mroute_dict['vrf'][vrf]['address_family'][address_family]\
                 ['multicast_group'][multicast_group]['source_address'][source_address]:
                     mroute_dict['vrf'][vrf]['address_family'][address_family]['multicast_group'][multicast_group]\
@@ -170,6 +173,9 @@ class ShowIpMrouteVrfAll(ShowIpMrouteVrfAllSchema):
                 if internal:
                     mroute_dict['vrf'][vrf]['address_family'][address_family]['multicast_group'][multicast_group]['source_address']\
                     [source_address]['incoming_interface_list'][incoming_interface]['internal'] = True
+                if router_id:
+                    mroute_dict['vrf'][vrf]['address_family'][address_family]['multicast_group'][multicast_group]\
+                    ['source_address'][source_address]['incoming_interface_list'][incoming_interface]['router_id'] = router_id
                 continue
 
             # Outgoing interface list: (count: 0) 
@@ -240,7 +246,8 @@ class ShowIpv6MrouteVrfAllSchema(MetaParser):
                                              Optional('incoming_interface_list'):
                                                 {Any(): 
                                                     {Optional('rpf_nbr'): str,
-                                                     Optional('internal'): bool
+                                                     Optional('internal'): bool,
+                                                     Optional('router_id'): str
                                                     },
                                                 },
                                              Optional('outgoing_interface_list'): 
@@ -291,9 +298,11 @@ class ShowIpv6MrouteVrfAll(ShowIpv6MrouteVrfAllSchema):
                             r' +(?P<uptime>[0-9a-zA-Z\:\.]+)(,)?(?:'
                             r' *(?P<flag>[a-zA-Z0-9\s]+))?$')
         # Incoming interface: Null, RPF nbr: 0::
-        # Incoming interface: Vlan71, RPF nbr: 2001:1:1:4d::1, internal
-        p3 =  re.compile(r'^\s*Incoming +interface: +(?P<incoming_interface>[a-zA-Z0-9\/\.]+),'
-                             r' +RPF +nbr: +(?P<rpf_nbr>[a-zA-Z0-9\:\.]+),? *(?P<internal>internal)?$')
+        # Incoming interface: Vlan71, RPF nbr: 2001:1:1:4d::1, internal (Router-Id: 2.2.2.2)
+        p3 = re.compile(r'^\s*Incoming +interface: +(?P<incoming_interface>[a-zA-Z0-9\/\.]+), +'
+                            r'RPF +nbr: +(?P<rpf_nbr>[a-zA-Z0-9\:\.]+)'
+                            r'(?: *, *(?P<internal>internal))?'
+                            r'(?: +\(Router-Id: +(?P<router_id>[0-9\.]+)\))?$')
         # Outgoing interface list: (count: 0)
         # Outgoing interface list: (count: 2) (Fabric OIF)
         p4 =  re.compile(r'^\s*Outgoing +interface +list: +\(count:'
@@ -362,7 +371,8 @@ class ShowIpv6MrouteVrfAll(ShowIpv6MrouteVrfAllSchema):
             if m:
                 incoming_interface = m.groupdict()['incoming_interface']
                 rpf_nbr = m.groupdict()['rpf_nbr']
-                internal = m.groupdict().get('internal') 
+                internal = m.groupdict().get('internal')
+                router_id = m.groupdict().get('router_id')
                 if 'incoming_interface_list' not in ipv6_mroute_vrf_all_dict['vrf']\
                 [vrf]['address_family'][address_family]['multicast_group'][multicast_group]['source_address'][source_address]:
                     ipv6_mroute_vrf_all_dict['vrf'][vrf]['address_family'][address_family]['multicast_group'][multicast_group]\
@@ -378,6 +388,8 @@ class ShowIpv6MrouteVrfAll(ShowIpv6MrouteVrfAllSchema):
                 ['incoming_interface_list'][incoming_interface]['rpf_nbr'] = rpf_nbr
                 if internal:
                     ipv6_mroute_vrf_all_dict['vrf'][vrf]['address_family'][address_family]['multicast_group'][multicast_group]['source_address'][source_address]['incoming_interface_list'][incoming_interface]['internal'] = True
+                if router_id:
+                    ipv6_mroute_vrf_all_dict['vrf'][vrf]['address_family'][address_family]['multicast_group'][multicast_group]['source_address'][source_address]['incoming_interface_list'][incoming_interface]['router_id'] = router_id
                 continue
             m = p4.match(line)
             if m:
