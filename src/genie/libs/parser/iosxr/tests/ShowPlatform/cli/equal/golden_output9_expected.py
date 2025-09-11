@@ -78,6 +78,20 @@ expected_output = {
                 "full_slot": "0/1/CPU0",
                 "state": "IOS XR RUN",
                 "config_state": "NSHUT",
+                "subslot": {
+                    "0": {
+                        "name": "A9K-MPA-20X10GE",
+                        "state": "OK",
+                        "config_state": "None",
+                        "redundancy_state": "None",
+                    },
+                    "1": {
+                        "name": "A9K-MPA-20X10GE",
+                        "state": "OK",
+                        "config_state": "None",
+                        "redundancy_state": "None",
+                    },
+                },
             },
             "0/3": {
                 "name": "A99-32X100GE-CM",
@@ -90,6 +104,20 @@ expected_output = {
                 "full_slot": "0/5/CPU0",
                 "state": "IOS XR RUN",
                 "config_state": "NSHUT",
+                "subslot": {
+                    "0": {
+                        "name": "A9K-MPA-20X10GE",
+                        "state": "OK",
+                        "config_state": "None",
+                        "redundancy_state": "None",
+                    },
+                    "1": {
+                        "name": "A9K-MPA-20X10GE",
+                        "state": "OK",
+                        "config_state": "None",
+                        "redundancy_state": "None",
+                    },
+                },
             },
             "0/6": {
                 "name": "A99-32X100GE-TR",
