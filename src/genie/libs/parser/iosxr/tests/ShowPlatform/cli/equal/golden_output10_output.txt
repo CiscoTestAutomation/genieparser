@@ -1,0 +1,13 @@
+RP/0/RP0/CPU0:Router#show platform
+Thu Sep 11 10:42:18.531 GMT+6
+Node              Type                       State             Config state
+--------------------------------------------------------------------------------
+0/RP0/CPU0        A99-RP-F(Active)           IOS XR RUN        NSHUT
+0/RP1/CPU0        A99-RP-F(Standby)          IOS XR RUN        NSHUT
+0/FT0             ASR-9903-FAN               OPERATIONAL       NSHUT
+0/FT1             ASR-9903-FAN               OPERATIONAL       NSHUT
+0/FT2             ASR-9903-FAN               OPERATIONAL       NSHUT
+0/FT3             ASR-9903-FAN               OPERATIONAL       NSHUT
+0/0/CPU0          ASR-9903-LC                IOS XR RUN        NSHUT
+0/0/1             A9903-20HG-PEC             OK
+0/PT0             ASR-9900-DC-PEM            OPERATIONAL       NSHUT
