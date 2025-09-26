@@ -1,0 +1,28 @@
+RP/0/RSP0/CPU0:Router#show subscriber session all summary
+Thu Jan 01 00:00:00.000 UTC
+
+Session Summary Information for all nodes
+
+                Type            PPPoE           IPSub           IPSub
+                                                (DHCP)          (PKT)
+                ====            =====           ======          =====
+
+Session Counts by State:
+        initializing            0               0               0
+          connecting            0               0               0
+           connected            0               0               0
+           activated            0               0               666
+                idle            0               0               0
+       disconnecting            0               0               0
+                 end            0               0               0
+              Total:            0               0               666
+
+
+Session Counts by Address-Family/LAC:
+         in progress            0               0               0
+           ipv4-only            0               0               333
+           ipv6-only            0               0               333
+     dual-partial-up            0               0               0
+             dual-up            0               0               0
+                 lac            0               0               0
+              Total:            0               0               666
