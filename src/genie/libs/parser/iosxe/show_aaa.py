@@ -197,8 +197,8 @@ class ShowAAServers(ShowAAServersSchema):
         # RADIUS: id 9, priority 1, host 11.15.24.174, auth-port 1812, acct-port 1813, hostname ISE-RAD
         p1a = re.compile(r'(^.*)\:\s+id\s+(?P<id>\d+)\,\s+priority\s+(?P<priority>(\d+))\,\s+host\s+(?P<host>(.*))\,\s+auth\-port\s+(?P<auth_port>(\d+))\,\s+acct\-port\s+(?P<acct_port>(\d+))\,\s*hostname\s*(?P<hostname>(.*))$')
 
-        # RADIUS: id 9, priority 1, host 11.15.24.174, RADSEC-port 1812,hostname ISE-RAD
-        p1b = re.compile(r'(.*)\:\s+id\s+(?P<id>\d+)\,\s+priority\s+(?P<priority>(\d+))\,\s+host\s+(?P<host>(.*))\,\s*(RADSEC\-port\s*(?P<radsec_port>(\d+)))\,\s*hostname\s+(?P<hostname>(.*))$')
+        # RADIUS: id 9, priority 1, host 11.15.24.174, RADSEC[- ]port 1812,hostname ISE-RAD
+        p1b = re.compile(r'(.*)\:\s+id\s+(?P<id>\d+)\,\s+priority\s+(?P<priority>(\d+))\,\s+host\s+(?P<host>(.*))\,\s*(RADSEC[- ]port\s*(?P<radsec_port>(\d+)))\,\s*hostname\s+(?P<hostname>(.*))$')
 
         # RADIUS: id 9, priority 1, host 11.15.24.174, auth-port 1812, acct-port 1813
         p1c = re.compile(r'(^.*)\:\s+id\s+(?P<id>\d+)\,\s+priority\s+(?P<priority>(\d+))\,\s+host\s+(?P<host>(.*))\,\s+auth\-port\s+(?P<auth_port>(\d+))\,\s+acct\-port\s+(?P<acct_port>(\d+))$')
