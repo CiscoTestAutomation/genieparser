@@ -359,6 +359,7 @@ class ShowFacilityAlarmStatusSchema(MetaParser):
                     Any() : {
                         Optional('severity'): str,
                         Optional('description'): str,
+                        Optional('syslog_string'): str,
                         Optional('relay'): str,
                         Optional('time'): str,
                         Optional('index'): int,
@@ -395,6 +396,14 @@ class ShowFacilityAlarmStatus(ShowFacilityAlarmStatusSchema):
         # xcvr container 0/0/3       Jan 21 2024 19:15:56   CRITICAL      Transceiver Missing - Link Down [1]
         p4 = re.compile(r'^(?P<source>([\w\/\d\-\_ ]+))\s\s+()?(?P<time>([\w\d\s\:]+))\s\s+(?P<severity>([A-Z]+))\s\s+(?P<description>([\w\s\d\/\/\-]+))\s+(\[(?P<index>(\d+))\])$')
         
+        # Source                     Time                   Severity      Syslog String                  Description [Index]
+        p5 = re.compile(r'^Source(\s+Time)\s+Severity\s+Syslog(\s+String)\s+Description(\s+\[Index])$')
+
+        # Power Supply Module 1      Sep 11 2023 08:06:40   CRITICAL      PSU_FAILURE                    Power Supply Failure [0]
+        # GigabitEthernet0           May 11 2023 02:55:45   INFO          ETHERNET_PORT_ADMIN_DOWN       Physical Port Administrative State Down [2]
+        # xcvr container 0/0/6       May 11 2023 02:57:56   INFO          XCVR_MISSING                   Transceiver Missing [0]
+        p6 = re.compile(r'^(?P<source>([\w\/\d\-\_ ]+))\s\s+()?(?P<time>([\w\d\s\:]+))\s\s+(?P<severity>([A-Z]+))\s\s+(?P<syslog_string>([\w\/\d\-\_ ]+))\s\s+(?P<description>([\w\s\d\/\/\-]+))\s+(\[(?P<index>(\d+))\])$')
+
         for line in out.splitlines():
             line = line.strip()
 
@@ -425,5 +434,20 @@ class ShowFacilityAlarmStatus(ShowFacilityAlarmStatusSchema):
                 group = m.groupdict()
                 alarm_dict = root_dict.setdefault(group['source'].strip().replace(" ","_").lower() , {})
                 alarm_dict.update({'severity' : group['severity'].strip() , 'description':group['description'].strip(), 'index' : int(group['index'].strip()), 'time' : group['time'].strip() })
+
+            # Source                     Time                   Severity      Syslog String                  Description [Index]
+            m = p5.match(line)
+            if m:
+                root_dict = ret_dict.setdefault('alarms', {})
+                continue
+                
+            # Power Supply Module 1      Sep 11 2023 08:06:40   CRITICAL      PSU_FAILURE                    Power Supply Failure [0]
+            # GigabitEthernet0           May 11 2023 02:55:45   INFO          ETHERNET_PORT_ADMIN_DOWN       Physical Port Administrative State Down [2]
+            # xcvr container 0/0/6       May 11 2023 02:57:56   INFO          XCVR_MISSING                   Transceiver Missing [0]
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                alarm_dict = root_dict.setdefault(group['source'].strip().replace(" ","_").lower() , {})
+                alarm_dict.update({'severity' : group['severity'].strip() , 'description':group['description'].strip(), 'syslog_string': group['syslog_string'].strip(),'index' : int(group['index'].strip()), 'time' : group['time'].strip() })
 
         return ret_dict
