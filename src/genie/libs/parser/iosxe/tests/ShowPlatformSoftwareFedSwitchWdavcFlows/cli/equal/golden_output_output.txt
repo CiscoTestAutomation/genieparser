@@ -1,0 +1,8 @@
+show platform software fed switch 3 wdavc flows
+CurrFlows=2, Watermark=3
+
+IX  |IP1                                     |IP2                                     |PORT1|PORT2|L3   |L4   |VRF |TIMEOUT|APP                             |TUPLE   |FLOW     |IS FIF  |CLIENTS|BYPASS|FINAL |#PKTS |BYPASS|
+    |                                        |                                        |     |     |PROTO|PROTO|VLAN|SEC  HL|NAME                            |TYPE    |TYPE     |SWAPPED |ALLW BP|      |      |      |PKT   |
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+1   |20.0.0.2                                |30.0.0.2                                |52059|80   |1    |6    |0   |360  HW|facebook                        |Full    |Real Flow|Yes     |0x01   |True  |True  |40    |3     |
+2   |20.0.0.2                                |30.0.0.2                                |80   |52059|1    |6    |0   |360  HW|http                            |Full    |Real Flow|Yes     |0x01   |True  |True  |40    |3     |

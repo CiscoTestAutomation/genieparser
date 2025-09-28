@@ -40,13 +40,18 @@ class ShowCdpNeighborsSchema(MetaParser):
 # ================================
 class ShowCdpNeighbors(ShowCdpNeighborsSchema):
 
-    cli_command = 'show cdp neighbors'
+    cli_command = ['show cdp neighbors', 'show cdp neighbors interface {interface}']
     exclude = ['hold_time']
 
-    def cli(self, output=None):
+    def cli(self, output=None, interface=None):
 
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if interface:
+                cmd = self.cli_command[1].format(interface=interface)
+            else:
+                cmd = self.cli_command[0]
+            
+            out = self.device.execute(cmd)
         else:
             out = output
 
@@ -239,13 +244,18 @@ class ShowCdpNeighborsDetailSchema(MetaParser):
 # Parser for 'show cdp neighbors details'
 # =======================================
 class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
-    cli_command = 'show cdp neighbors detail'
+    cli_command = ['show cdp neighbors detail', 'show cdp neighbors interface {interface} detail']
     exclude = ['hold_time']
 
-    def cli(self, output=None):
+    def cli(self, output=None, interface=None):
 
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if interface:
+                cmd = self.cli_command[1].format(interface=interface)
+            else:
+                cmd = self.cli_command[0]
+
+            out = self.device.execute(cmd)
         else:
             out = output
 

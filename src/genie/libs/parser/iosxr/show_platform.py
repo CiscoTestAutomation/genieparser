@@ -401,13 +401,23 @@ class ShowPlatform(ShowPlatformSchema):
         # 0/0               NCS1K4-OTN-XP              POWERED_ON        NSHUT
         # 1/3/3         MSC(SPA)          OC192RPR-XFP       DISABLED        NPWR,SHUT,MON
         # 1/10/CPU0     FP-X              N/A                UNPOWERED       NPWR,NSHUT,MON
+        
+        # 0/RP0/CPU0        A99-RP-F(Active)           IOS XR RUN        NSHUT
+        # 0/RP1/CPU0        A99-RP-F(Standby)          IOS XR RUN        NSHUT
+        # 0/FT0             ASR-9903-FAN               OPERATIONAL       NSHUT
+        # 0/FT1             ASR-9903-FAN               OPERATIONAL       NSHUT
+        # 0/FT2             ASR-9903-FAN               OPERATIONAL       NSHUT
+        # 0/FT3             ASR-9903-FAN               OPERATIONAL       NSHUT
+        # 0/0/CPU0          ASR-9903-LC                IOS XR RUN        NSHUT
+        # 0/0/1             A9903-20HG-PEC             OK
+        # 0/PT0             ASR-9900-DC-PEM            OPERATIONAL       NSHUT
 
         p1 = re.compile(r'^\s*(?P<node>[a-zA-Z0-9\/]+)'
                             r'\s+(?P<name>[a-zA-Z0-9\-\.]+)'
                             r'(?:\((?P<redundancy_state>[a-zA-Z]+)\))?'
-                            r'(?: +(?P<plim>[a-zA-Z0-9(\/|\-| )]+))?'
+                            r'(?:\s+(?P<plim>[a-zA-Z0-9(\/|\-| )]+))?'
                             r'\s+(?P<state>(SW_INACTIVE|IN-RESET|UNPOWERED|DISABLED|IOS XR RUN|OK|OPERATIONAL|POWERED_ON))'
-                            r'\s+(?P<config_state>[a-zA-Z\,]+)$')
+                            r'(?:\s+(?P<config_state>[a-zA-Z\,]+))?$')
 
         # Init vars
         show_platform = {}

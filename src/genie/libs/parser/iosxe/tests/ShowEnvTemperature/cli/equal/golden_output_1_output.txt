@@ -1,0 +1,10 @@
+Switch 1: SYSTEM TEMPERATURE is OK
+Switch 1 - Inlet Temp Sensor 40 C
+Temperature State: GREEN
+Yellow Threshold : 80 C
+Red Threshold    : 96 C
+
+Switch 1 - HotSpot Temp Sensor 55 C
+Temperature State: GREEN
+Yellow Threshold : 105 C
+Red Threshold    : 125 C

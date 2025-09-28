@@ -1,0 +1,11 @@
+         Neighbor summary for selected OSPFv3 processes
+
+DOWN         0
+ATTEMPT      5
+INIT         6
+2WAY         1
+EXSTART      1
+EXCHANGE     3
+LOADING      5
+FULL         10
+Total count  31    (Undergoing GR 0)

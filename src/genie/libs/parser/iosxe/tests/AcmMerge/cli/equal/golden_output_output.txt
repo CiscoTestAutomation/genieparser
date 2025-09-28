@@ -1,0 +1,8 @@
+Config Merge of Configlet: tftp://10.85.64.40/auto/tftp-ott-users2/mohmahm3/day3
+    Validation Stage 
+	Status : Success
+	Time   : 248 msec
+    Apply Stage 
+	Status : Success
+	Time   : 21 msec
+    Config Merge Status: Sucess

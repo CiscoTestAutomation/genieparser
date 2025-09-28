@@ -1,0 +1,19 @@
+OSPF Router with ID (1.1.1.1) (Process ID 1)
+
+		Type-7 AS External Link States (Area 40)
+
+  LS age: 117
+  Options: (No TOS-capability, Type 7/5 translation, DC)
+  LS Type: AS External Link
+  Link State ID: 223.255.0.0 (External Network Number )
+  Advertising Router: 1.1.1.1
+  LS Seq Number: 80000001
+  Checksum: 0x66B7
+  Length: 36
+  Network Mask: /16
+	Metric Type: 1 (Comparable directly to link state metric)
+	MTID: 0
+	Metric: 10
+	Forward Address: 10.10.10.1
+	External Route Tag: 0
+

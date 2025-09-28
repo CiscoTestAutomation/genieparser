@@ -1,0 +1,8 @@
+Service Group (0, 0, 0) counters
+Unassigned count = 0
+Dropped due to closed service count = 0
+Bypass count = 100
+Bypass failed count = 0
+Denied count = 0
+Redirect count = 100
+CE = 60.1.1.2, obj_id = 43, Redirect Packets = 100

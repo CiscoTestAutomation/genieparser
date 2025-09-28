@@ -52,8 +52,9 @@ class ShowClock(ShowClockSchema):
         # initial regexp pattern
         # 05:26:38.035 EST Wed JAN 4 2019
         # *05:26:38.035 EST Wed JAN 4 2019
+        # .05:26:38.035 EST Wed JAN 4 2019
         p1 = re.compile(
-            r"^\*?(?P<time>[\d\:\.]+) +(?P<timezone>\w+)"
+            r"^[\*|\.]?(?P<time>[\d\:\.]+) +(?P<timezone>\w+)"
             r" +(?P<day_of_week>\w+) +(?P<month>\w+) +"
             r"(?P<day>\d+) +(?P<year>\d+)$"
         )

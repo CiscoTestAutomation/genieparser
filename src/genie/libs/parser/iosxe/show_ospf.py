@@ -21,12 +21,14 @@ IOSXE parsers for the following show commands:
     * show ip ospf segment-routing global-block
     * show ip ospf {process_id} segment-routing global-block
     * show ip ospf segment-routing
+    * show ip ospf neighbor summary
     * show ipv6 ospf neighbor
     * show ipv6 ospf neighbor {interface}
     * show ip ospf rib redistribution
     * show ipv6 ospf interface {interface}
     * show ipv6 ospf neighbor detail
-'''
+    * show ipv6 ospf neighbor summary
+    '''
 
 # Python
 import re
@@ -9120,6 +9122,151 @@ class ShowIpOspfRibRoute(ShowIpOspfRibRouteSchema):
                     repair_dict['strict_label'] = int(strict_label)
                 if (cost):
                     repair_dict['cost'] = int(cost)
+                continue
+
+        return ret_dict
+       
+# ================================================================
+# Schema for:
+#   * 'show ip ospf neighbor summary'
+# ================================================================
+class ShowIpOspfNeighborSummarySchema(MetaParser):
+    ''' Schema for:
+        * 'show ip ospf neighbor summary'
+    '''
+    schema = {
+            'down': int,
+            'attempt': int,
+            'init': int,
+            '2way': int,
+            'exstart': int,
+            'exchange': int,
+            'loading': int,
+            'full': int,
+            'total_count': int,
+            'undergoing_nsf': int
+    }
+
+# ================================================================
+# Parser for:
+#   * 'show ip ospf neighbor summary'
+# ================================================================
+class ShowIpOspfNeighborSummary(ShowIpOspfNeighborSummarySchema):
+    ''' Parser for:
+        * 'show ip ospf neighbor summary'
+    '''
+    cli_command = "show ip ospf neighbor summary"
+
+    def cli(self, output=None):
+        if output is None:
+            cmd = self.cli_command
+        
+        output = self.device.execute(cmd)
+
+        ret_dict = {}
+
+        # DOWN         0
+        # ATTEMPT      0
+        # INIT         0
+        # 2WAY         0
+        # EXSTART      0
+        # EXCHANGE     0
+        # LOADING      0
+        # FULL         0
+        p1 = re.compile(r'^(?P<state>DOWN|ATTEMPT|INIT|2WAY|EXSTART|EXCHANGE|LOADING|FULL)\s+(?P<count>\d+)$', re.IGNORECASE)
+
+        #Total count  0    (Undergoing NSF 0)
+        p2 = re.compile(r'^Total\s+count\s+(?P<total>\d+)\s+\(Undergoing\s+NSF\s+(?P<undergoing_nsf>\d+)\)$', re.IGNORECASE)
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # DOWN         0
+            # ATTEMPT      0
+            m1 = p1.match(line)
+            if m1:
+                state = m1.group('state').lower()
+                count = int(m1.group('count'))
+                ret_dict[state] = count
+                continue
+            
+            #Total count  0    (Undergoing NSF 0)
+            m2 = p2.match(line)
+            if m2:
+                ret_dict['total_count'] = int(m2.group('total'))
+                ret_dict['undergoing_nsf'] = int(m2.group('undergoing_nsf'))
+                continue
+
+        return ret_dict
+
+# ================================================================
+# Schema for:
+#   * 'show ipv6 ospf neighbor summary'
+# ================================================================
+class ShowIpv6OspfNeighborSummarySchema(MetaParser):
+    ''' Schema for:
+        * 'show ipv6 ospf neighbor summary'
+    '''
+    schema = {
+            'down': int,
+            'attempt': int,
+            'init': int,
+            '2way': int,
+            'exstart': int,
+            'exchange': int,
+            'loading': int,
+            'full': int,
+            'total_count': int,
+            'undergoing_gr': int
+    }
+
+# ================================================================
+# Parser for:
+#   * 'show ipv6 ospf neighbor summary'
+# ================================================================
+class ShowIpv6OspfNeighborSummary(ShowIpv6OspfNeighborSummarySchema):
+    ''' Parser for:
+        * 'show ipv6 ospf neighbor summary'
+    '''
+    cli_command = "show ipv6 ospf neighbor summary"
+
+    def cli(self, output=None):
+        if output is None:
+            cmd = self.cli_command
+        
+        output = self.device.execute(cmd)
+        ret_dict = {}
+
+        # DOWN         0
+        # ATTEMPT      0
+        # INIT         0
+        # 2WAY         0
+        # EXSTART      0
+        # EXCHANGE     0
+        # LOADING      0
+        # FULL         0
+        p1 = re.compile(r'^(?P<state>DOWN|ATTEMPT|INIT|2WAY|EXSTART|EXCHANGE|LOADING|FULL)\s+(?P<count>\d+)$', re.IGNORECASE)
+
+        #Total count  0    (Undergoing GR 0)
+        p2 = re.compile(r'^Total\s+count\s+(?P<total>\d+)\s+\(Undergoing\s+GR\s+(?P<undergoing_gr>\d+)\)$', re.IGNORECASE)
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # DOWN         0
+            # ATTEMPT      0
+            m1 = p1.match(line)
+            if m1:
+                state = m1.group('state').lower()
+                count = int(m1.group('count'))
+                ret_dict[state] = count
+                continue
+
+            #Total count  0    (Undergoing GR 0)
+            m2 = p2.match(line)
+            if m2:
+                ret_dict['total_count'] = int(m2.group('total'))
+                ret_dict['undergoing_gr'] = int(m2.group('undergoing_gr'))
                 continue
 
         return ret_dict

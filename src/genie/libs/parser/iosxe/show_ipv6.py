@@ -39,6 +39,9 @@
     * show ipv6 pim neighbor {intf}
     * show ipv6 cef exact-route {source} {destination}
     * show ipv6 mfib count
+    * sh ipv6 mfib FF03::1:1:1 count
+    * sh ipv6 mfib FF03::1:1:1 10::1:1:200 count
+    * show ipv6 virtual-reassembly features
 """
 
 # Python
@@ -2867,3 +2870,339 @@ class ShowIpv6MfibCount(ShowIpv6MfibCountSchema):
                 continue
         
         return ret_dict
+
+# ==============================================================================
+# Schema and Parser for 'show ipv6 mfib {group} (source} count'
+# ==============================================================================
+class ShowIpv6MfibGroupCountSchema(MetaParser):
+    """Schema for show ipv6 mfib {group} count
+                  show ipv6 mfib {group} {source} count"""
+    schema = {
+        'vrf': {
+            Any(): {
+                'routes': int,
+                'star_g': int,
+                'star_g_m': int,
+                'group': {
+                    Any(): {
+                        Optional('rp_tree'): {
+                            'sw_forwarding': {
+                                'pkt_count': int,
+                                'pkts_per_second': int,
+                                'avg_pkt_size': int,
+                                'kilobits_per_second': int,
+                            },
+                            'other': {
+                                'total': int,
+                                'rpf_failed': int,
+                                'other_drops': int,
+                            },
+                            'hw_forwarding': {
+                                'pkt_count': int,
+                                'pkts_per_second': int,
+                                'avg_pkt_size': int,
+                                'kilobits_per_second': int,
+                            },
+                            'hw_other': {
+                                'total': int,
+                                'rpf_failed': int,
+                                'other_drops': int,
+                            },
+                        },
+                        'source': {
+                            Any(): {
+                                'sw_forwarding': {
+                                    'pkt_count': int,
+                                    'pkts_per_second': int,
+                                    'avg_pkt_size': int,
+                                    'kilobits_per_second': int,
+                                },
+                                'other': {
+                                    'total': int,
+                                    'rpf_failed': int,
+                                    'other_drops': int,
+                                },
+                                'hw_forwarding': {
+                                    'pkt_count': int,
+                                    'pkts_per_second': int,
+                                    'avg_pkt_size': int,
+                                    'kilobits_per_second': int,
+                                },
+                                'hw_other': {
+                                    'total': int,
+                                    'rpf_failed': int,
+                                    'other_drops': int,
+                                },
+                            }
+                        },
+                        'totals': {
+                            'source_count': int,
+                            'packet_count': int,
+                        }
+                    }
+                },
+                'groups': int,
+                'average_sources_per_group': float,
+            }
+        }
+    }
+
+
+class ShowIpv6MfibGroupCount(ShowIpv6MfibGroupCountSchema):
+    """Parser for show ipv6 mfib {group} count"""
+
+    cli_command = 'show ipv6 mfib {group} {source} count'
+
+    def cli(self, group="", source="", output=None):
+        if output is None:
+            cmd = self.cli_command.format(group=group, source=source)
+            output = self.device.execute(cmd)
+
+        ret = {} # Changed 'parsed' to 'ret' for consistency with later usage
+
+        # Regex patterns
+        # Default
+        p1 = re.compile(r'^(?P<vrf_name>Default)$')
+
+        # 56 routes, 9 (*,G)s, 46 (*,G/m)s
+        p2 = re.compile(r'(?P<routes>\d+)\s+routes,\s+(?P<g_count>\d+)\s+\(\*,G\)s,\s+(?P<gm_count>\d+)\s+\(\*,G/m\)s')
+
+        # Group: FF03::1:1:1
+        p3 = re.compile(r'Group:\s+(?P<group>[0-9A-Fa-f:]+)')
+
+        # RP-tree,
+        p4 = re.compile(r'^\s*RP-tree,\s*$')
+
+        # SW Forwarding: 0/0/0/0, Other: 0/0/0
+        p5 = re.compile(r'SW Forwarding:\s*(?P<sw_pkts>\d+)/(?P<sw_pps>\d+)/(?P<sw_avg>\d+)/(?P<sw_kbps>\d+),\s*Other:\s*(?P<sw_tot>\d+)/(?P<sw_rpf>\d+)/(?P<sw_other>\d+)')
+
+        # HW Forwarding:   0/0/0/0, Other: 0/0/0
+        p6 = re.compile(r'HW Forwarding:\s*(?P<hw_pkts>\d+)/(?P<hw_pps>\d+)/(?P<hw_avg>\d+)/(?P<hw_kbps>\d+),\s*Other:\s*(?P<hw_tot>\d+)/(?P<hw_rpf>\d+)/(?P<hw_other>\d+)')
+
+        # Source: 10::1:1:200,
+        p7 = re.compile(r'Source:\s*(?P<src_ip>[0-9A-Fa-f:]+),')
+
+        # Totals - Source count: 1, Packet count: 5
+        p8 = re.compile(r'Totals\s*-\s*Source count:\s*(?P<source_count>\d+),\s*Packet count:\s*(?P<packet_count>\d+)')
+
+        # Groups: 1, 1.00 average sources per group
+        p9 = re.compile(r'Groups:\s*(?P<groups>\d+),\s*(?P<avg_sources>[\d.]+)\s+average sources per group')
+
+
+        # Skip header lines
+        lines = output.splitlines()
+        current_vrf = None 
+        current_group = None
+        current_source = None
+
+        for line in lines:
+            line = line.strip()
+
+            # Skip empty lines and header lines
+            if not line or line.startswith('Forwarding Counts:') or line.startswith('Other counts:'):
+                continue
+
+            # Default
+            m = p1.match(line)
+            if m:
+                current_vrf = m.group('vrf_name')
+                continue
+
+            # Parse route summary line
+            # 56 routes, 9 (*,G)s, 46 (*,G/m)s
+            m = p2.match(line)
+            if m:
+                vrf_dict = ret.setdefault('vrf', {}).setdefault(current_vrf, {})
+                vrf_dict['routes'] = int(m.group('routes'))
+                vrf_dict['star_g'] = int(m.group('g_count'))
+                vrf_dict['star_g_m'] = int(m.group('gm_count'))
+                continue
+
+            # Parse group line
+            # Group: FF03::1:1:1
+            m = p3.match(line)
+            if m:
+                current_group = m.group('group')
+                vrf_dict = ret.setdefault('vrf', {}).setdefault(current_vrf, {})
+                group_dict = vrf_dict.setdefault('group', {}).setdefault(current_group, {})
+                continue
+
+            # Parse RP-tree line
+            # RP-tree,
+            m = p4.match(line)
+            if m:
+                group_dict = ret['vrf'][current_vrf]['group'][current_group]
+                group_dict.setdefault('rp_tree', {})
+                continue
+
+            # Parse Source line
+            # Source: 10::1:1:200,
+            m = p7.match(line)
+            if m:
+                current_source = m.group('src_ip')
+                group_dict = ret['vrf'][current_vrf]['group'][current_group]
+                sources = group_dict.setdefault('source', {})
+                sources.setdefault(current_source, {})
+                continue
+
+            # Parse SW Forwarding line
+            # SW Forwarding: 0/0/0/0, Other: 0/0/0
+            m = p5.match(line)
+            if m:
+                group_dict = ret['vrf'][current_vrf]['group'][current_group]
+                if 'rp_tree' in group_dict and current_source is None:
+                    # RP-tree SW forwarding
+                    group_dict['rp_tree']['sw_forwarding'] = {
+                        'pkt_count': int(m.group('sw_pkts')),
+                        'pkts_per_second': int(m.group('sw_pps')),
+                        'avg_pkt_size': int(m.group('sw_avg')),
+                        'kilobits_per_second': int(m.group('sw_kbps')),
+                    }
+                    group_dict['rp_tree']['other'] = {
+                        'total': int(m.group('sw_tot')),
+                        'rpf_failed': int(m.group('sw_rpf')),
+                        'other_drops': int(m.group('sw_other')),
+                    }
+                elif current_source:
+                    # Source SW forwarding
+                    sources = group_dict.setdefault('source', {})
+                    sources[current_source]['sw_forwarding'] = {
+                        'pkt_count': int(m.group('sw_pkts')),
+                        'pkts_per_second': int(m.group('sw_pps')),
+                        'avg_pkt_size': int(m.group('sw_avg')),
+                        'kilobits_per_second': int(m.group('sw_kbps')),
+                    }
+                    sources[current_source]['other'] = {
+                        'total': int(m.group('sw_tot')),
+                        'rpf_failed': int(m.group('sw_rpf')),
+                        'other_drops': int(m.group('sw_other')),
+                    }
+                continue
+
+            # Parse HW Forwarding line
+            # HW Forwarding:   0/0/0/0, Other: 0/0/0
+            m = p6.match(line)
+            if m:
+                group_dict = ret['vrf'][current_vrf]['group'][current_group]
+                if 'rp_tree' in group_dict and current_source is None:
+                    # RP-tree HW forwarding
+                    group_dict['rp_tree']['hw_forwarding'] = {
+                        'pkt_count': int(m.group('hw_pkts')),
+                        'pkts_per_second': int(m.group('hw_pps')),
+                        'avg_pkt_size': int(m.group('hw_avg')),
+                        'kilobits_per_second': int(m.group('hw_kbps')),
+                    }
+                    group_dict['rp_tree']['hw_other'] = {
+                        'total': int(m.group('hw_tot')),
+                        'rpf_failed': int(m.group('hw_rpf')),
+                        'other_drops': int(m.group('hw_other')),
+                    }
+                elif current_source:
+                    # Source HW forwarding
+                    sources = group_dict.setdefault('source', {})
+                    sources[current_source]['hw_forwarding'] = {
+                        'pkt_count': int(m.group('hw_pkts')),
+                        'pkts_per_second': int(m.group('hw_pps')),
+                        'avg_pkt_size': int(m.group('hw_avg')),
+                        'kilobits_per_second': int(m.group('hw_kbps')),
+                    }
+                    sources[current_source]['hw_other'] = {
+                        'total': int(m.group('hw_tot')),
+                        'rpf_failed': int(m.group('hw_rpf')),
+                        'other_drops': int(m.group('hw_other')),
+                    }
+                continue
+
+
+            # Parse Totals line
+            # Totals - Source count: 1, Packet count: 5
+            m = p8.match(line)
+            if m:
+                group_dict = ret['vrf'][current_vrf]['group'][current_group]
+                group_dict['totals'] = {
+                    'source_count': int(m.group('source_count')),
+                    'packet_count': int(m.group('packet_count')),
+                }
+                # Reset current_source after processing totals
+                current_source = None
+                continue
+
+            # Parse Groups summary line
+            # Groups: 1, 1.00 average sources per group
+            m = p9.match(line)
+            if m:
+                vrf_dict = ret['vrf'][current_vrf]
+                vrf_dict['groups'] = int(m.group('groups'))
+                vrf_dict['average_sources_per_group'] = float(m.group('avg_sources'))
+                continue
+
+        return ret
+
+# ==============================================
+# Schema for show ipv6 virtual-reassembly features
+# ==============================================
+class ShowIpv6VirtualReassemblyFeaturesSchema(MetaParser):
+    """Schema for show ipv6 virtual-reassembly features"""
+
+    schema = {
+        'interfaces': {
+            Any(): {
+                'status': str,
+                'direction': str,
+                'enabled_features': str
+            }
+        }
+    }
+
+
+# ==============================================
+# Parser for show ipv6 virtual-reassembly features
+# ==============================================
+class ShowIpv6VirtualReassemblyFeatures(ShowIpv6VirtualReassemblyFeaturesSchema):
+    """Parser for show ipv6 virtual-reassembly features"""
+
+    cli_command = 'show ipv6 virtual-reassembly features'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the result dict
+        result_dict = {}
+
+        # NVI0:
+        p1 = re.compile(r'^(?P<interface>\S+):$')
+
+        # IPV6 Virtual Fragment Reassembly (IPV6 VFR) Current Status is ENABLED [out]
+        p2 = re.compile(r'^IPV6 Virtual Fragment Reassembly \(IPV6 VFR\) Current Status is'
+                        r' (?P<status>\w+)(?: \[(?P<direction>\w+)\])?$')
+
+        # Features to use if IPV6 VFR is Enabled:NAT64
+        p3 = re.compile(r'^Features to use if IPV6 VFR is Enabled:(?P<features>\S+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # NVI0:
+            m = p1.match(line)
+            if m:
+                interface = m.groupdict()['interface']
+                intf_dict = result_dict.setdefault('interfaces', {}).setdefault(interface, {})
+                continue
+
+            # IPV6 Virtual Fragment Reassembly (IPV6 VFR) Current Status is ENABLED [out]
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict['status'] = group['status']
+                if group['direction']:
+                    intf_dict['direction'] = group['direction'].lower()
+                continue
+
+            # Features to use if IPV6 VFR is Enabled:NAT64
+            m = p3.match(line)
+            if m:
+                intf_dict['enabled_features'] = m.groupdict()['features']
+                continue
+
+        return result_dict

@@ -1,0 +1,9 @@
+dir drec0:
+
+Attributes        Size         Name
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+-rwxrwxrwx   490586943   cat9k_lite_iosxe.17.09.01.SPA.bin
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - -

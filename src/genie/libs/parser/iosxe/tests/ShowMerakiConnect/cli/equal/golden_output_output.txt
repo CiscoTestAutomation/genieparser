@@ -6,10 +6,10 @@ Meraki Tunnel Config
   Fetch Fail:                 no failure
   Last Fetch(UTC):            2015-01-04 10:46:06
   Next Fetch(UTC):            2015-01-04 11:53:13
-  Config Server:              cs556-2037.meraki.com
-  Primary:                    usw.nt.meraki.com
-  Secondary:                  use.nt.meraki.com
-  Client IPv6 Addr:           FD0A:9B09:1F7:1:229:C2FF:FE9A:8E00
+  Config Server:              example-config.meraki.com
+  Primary:                    primary.nt.meraki.com
+  Secondary:                  secondary.nt.meraki.com
+  Client IPv6 Addr:           XXXX:XXXX:XXXX:X:XXX:XXXX:XXXX:XXXX
 
 Meraki Tunnel State
 ------------------------------------
@@ -31,27 +31,27 @@ Meraki Tunnel Interface
 
 Meraki Device Registration
 ------------------------------------
-  url:                        https://catalyst.meraki.com/nodes/register
+  url:                        https://example.meraki.com/nodes/register
   Device Number:              1
   PID:                        C9300-24U
-  Serial Number:              FJC2342S0TH
-  Meraki ID:                  Q5TC-J9PK-HK4R
-  Mac Address:                6C:71:0D:3D:EA:80
+  Serial Number:              XXXXXXXXXXX
+  Meraki ID:                  XXXX-XXXX-XXXX
+  Mac Address:                XX:XX:XX:XX:XX:XX
   Status:                     Registered
   Timestamp(UTC):             2015-01-04 06:59:22
 
   Device Number:              2
   PID:                        C9300-24T
-  Serial Number:              FJC2401U0E5
-  Meraki ID:                  Q5TB-4ZR3-DCKP
-  Mac Address:                5C:E1:76:50:C9:80
+  Serial Number:              YYYYYYYYYYY
+  Meraki ID:                  YYYY-YYYY-YYYY
+  Mac Address:                YY:YY:YY:YY:YY:YY
   Status:                     Registered
   Timestamp(UTC):             2015-01-04 06:59:22
 
   Device Number:              3
   PID:                        C9300-24UX
-  Serial Number:              FCW2248D19Q
-  Meraki ID:                  Q5TD-GJZW-GLBA
-  Mac Address:                00:29:C2:9A:8E:00
+  Serial Number:              ZZZZZZZZZZZ
+  Meraki ID:                  ZZZZ-ZZZZ-ZZZZ
+  Mac Address:                ZZ:ZZ:ZZ:ZZ:ZZ:ZZ
   Status:                     Registered
   Timestamp(UTC):             2015-01-04 06:59:20

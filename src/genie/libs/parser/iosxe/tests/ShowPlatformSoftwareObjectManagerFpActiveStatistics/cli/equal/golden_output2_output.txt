@@ -1,0 +1,14 @@
+Forwarding Manager Asynchronous Object Manager Statistics
+
+Object update: Pending-issue: 0, Pending-acknowledgement: 0
+Batch begin:   Pending-issue: 0, Pending-acknowledgement: 0
+Batch end:     Pending-issue: 0, Pending-acknowledgement: 0
+Command:       Pending-acknowledgement: 0
+Total-objects: 1520
+Stale-objects: 0
+Resolve-objects: 0
+Childless-delete-objects: 0
+Backplane-objects: 0
+Error-objects: 0
+Number of bundles: 166
+Paused-types: 8

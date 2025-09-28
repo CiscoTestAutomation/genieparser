@@ -6,6 +6,7 @@ expected_output = {
             "line_protocol": "down",
             "txload": "1/255",
             "oper_status": "down",
+            "link_down_reason": "Administratively down",
             'port_channel': {'port_channel_member': False},
             "enabled": False,
             "mtu": 1500,

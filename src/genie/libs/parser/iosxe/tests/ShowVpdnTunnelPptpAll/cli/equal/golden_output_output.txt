@@ -1,0 +1,11 @@
+PPTP Tunnel Information Total tunnels 1 sessions 1
+
+Tunnel id 40512, 1 active sessions
+  Tunnel state is wt-cnnct, time since change 00:00:10
+  Remote tunnel name is 100.1.1.1
+    Internet Address 100.1.1.1, port 1723
+  Local tunnel name is PG2
+    Internet Address 11.1.1.1, port 0
+  VPDN group: PPTP
+  0 packets sent, 0 received, 0 bytes sent, 0 received
+  Last clearing of "show vpdn" counters never

@@ -146,7 +146,7 @@ class ShowControlLocalPropertiesSchema(MetaParser):
         "retry_interval": str,
         "no_activity_exp_interval": str,
         "dns_cache_ttl": str,
-        "port_hopped": str,
+        Optional("port_hopped"): str,
         "time_since_last_port_hop": str,
         Optional("pairwise_keying"): str,
         Optional("embargo_check"): str,
