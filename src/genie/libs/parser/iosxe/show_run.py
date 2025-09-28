@@ -13,6 +13,7 @@ IOSXE parsers for the following show commands:
 
 # Python
 import re
+import logging
 
 # Metaparser
 from genie.metaparser import MetaParser
@@ -21,6 +22,8 @@ from genie.metaparser.util.schemaengine import Schema, Any, Or, ListOf, \
 
 # import parser utils
 from genie.libs.parser.utils.common import Common
+
+log = logging.getLogger(__name__)
 
 # =================================================
 # Schema for:
@@ -2964,18 +2967,24 @@ class ShowRunningConfigAAAUsername(ShowRunningConfigAAAUsernameSchema):
                 # GOAL: parse through the line an argument at a time,
                 # shortening the line as we go.
 
+                # GOAL: match the 'common-criteria-policy' option and return its parameter
+                # Sample: "common-criteria-policy MyPolicy"
                 if m := common_criteria_policy.match(line):
                     group = m.groupdict()
                     users_dict['common_criteria_policy'] = group['common_criteria_policy']
                     line = line[m.end():]
                     continue
 
+                # GOAL: match the 'privilege' option and return its parameter
+                # Sample: "privilege 15"
                 if m := privilege.match(line):
                     group = m.groupdict()
                     users_dict['privilege'] = int(group['privilege'])
                     line = line[m.end():]
                     continue
 
+                # GOAL: match the 'secret' option and return its parameters ('type' and 'secret')
+                # Sample: "secret 9 $9$oNguEA9um9vRx.$MsDk0DOy1rzBjKAcySWdNjoKcA7GetG9YNnKOs8S67A"
                 if m := secret.match(line):
                     group = m.groupdict()
                     pass_dict = users_dict.setdefault('secret', {})
@@ -2984,24 +2993,32 @@ class ShowRunningConfigAAAUsername(ShowRunningConfigAAAUsernameSchema):
                     line = line[m.end():]
                     continue
 
+                # GOAL: match the 'onetime' flag
+                # Sample: "onetime"
                 if m := onetime.match(line):
                     group = m.groupdict()
                     users_dict['onetime'] = True
                     line = line[m.end():]
                     continue
 
+                # GOAL: match the 'nopassword' flag
+                # Sample: "nopassword"
                 if m := nopassword.match(line):
                     group = m.groupdict()
                     users_dict['nopassword'] = True
                     line = line[m.end():]
                     continue
 
+                # GOAL: match the 'autocommand' option and return all subsequent text
+                # Sample: "autocommand show ip bgp summary"
                 if m := autocommand.match(line):
                     group = m.groupdict()
                     users_dict['autocommand'] = group['autocommand']
                     line = line[m.end():]
                     continue
 
+                # GOAL: match the 'password' option and return its parameters ('type' and 'password')
+                # Sample: "password 0 lab"
                 if m := password.match(line):
                     group = m.groupdict()
                     pass_dict = users_dict.setdefault('password', {})
@@ -3011,7 +3028,7 @@ class ShowRunningConfigAAAUsername(ShowRunningConfigAAAUsernameSchema):
                     continue
 
                 # CLAIM: There is an unhandled argument.
-                Common.log.warning(f"Unhandled argument in parser 'show running-config aaa username': {line}")
+                log.warning(f"Unhandled argument in parser 'show running-config aaa username': {line}")
                 break
 
         return ret_dict
