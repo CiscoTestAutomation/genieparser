@@ -1,0 +1,5 @@
+Pwr Supply         Type     Status
+
+------------------------------------
+
+POWER SUPPLY        DC      OK

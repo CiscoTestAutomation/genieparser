@@ -103,6 +103,8 @@ expected_output = {
                                 "active_router_priority": 120,
                                 "configured_priority": 110,
                                 "group_number": 10,
+                                "last_state_change": "00:00:08",
+                                "statistics": {"num_state_changes": 1},
                                 "hsrp_router_state": "standby",
                                 "local_virtual_mac_address": "0000.0cff.b311",
                                 "local_virtual_mac_address_conf": "v1 default",

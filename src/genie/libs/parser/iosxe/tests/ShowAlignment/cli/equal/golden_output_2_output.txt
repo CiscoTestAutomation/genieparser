@@ -1,0 +1,13 @@
+Router#show alignment
+Alignment data for: 
+RSP Software (RSP-ISV-M), Version 11.3(3a), RELEASE SOFTWARE (fc1) 
+Compiled Fri 01-May-98 18:28 by phanguye
+
+Total Corrections 6, Recorded 2, Reads 6, Writes 0 
+
+Initial Initial 
+Address    Count  Access  Type  Traceback 
+60EF3765   3      32bit   read  0x60262474 0x601AC594 0x601AC580 
+60EF3761   3      32bit   read  0x60262478 0x601AC594 0x601AC580 
+
+No spurious memory references have been recorded. 

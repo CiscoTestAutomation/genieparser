@@ -13,6 +13,7 @@ IOSXE c9610 parsers for the following show commands:
     * show platform hardware authentication status
     * show platform software fed {switch} {mode} ipv6 route summary | include {match}'
     * show platform hardware fed {switch} {mode} qos queue stats internal port_type {port_type} port_num {port_num} asic {asic}
+    * show platform hardware chassis fantray detail all
 '''
 from genie.metaparser import MetaParser
 from genie.libs.parser.utils.common import Common
@@ -1785,6 +1786,154 @@ class ShowPlatformHardwareFedQosQueueStatsInternalPortTypePortNumAsic(ShowPlatfo
                 slice_dict3.setdefault(slice_type, int(grp_output['slice3']))
                 slice_dict4.setdefault(slice_type, int(grp_output['slice4']))
                 slice_dict5.setdefault(slice_type, int(grp_output['slice5']))
+                continue
+
+        return ret_dict
+
+class ShowPlatformHardwareChassisFantrayDetailAllSchema(MetaParser):
+    """Schema for:
+       show platform hardware chassis fantray detail all
+    """
+    schema = {
+        'fantrays': {
+            Any(): {
+                Optional('fans'): {
+                    Any(): {
+                        Optional('inlet_rpm'): int,
+                        Optional('outlet_rpm'): int,
+                        Optional('pwm_percent'): int,
+                    }
+                },
+                Optional('air_flow_direction'): str,
+                Optional('auto_poll_status'): str,
+                Optional('auto_poll_interval_seconds'): float,
+                Optional('control_mode'): str,
+                Optional('temperatures'): {
+                    Optional('slot_5'): int,
+                    Optional('slot_6'): int,
+                    Optional('local_a'): int,
+                    Optional('local_b'): int,
+                },
+                Optional('input_voltage_v'): float,
+                Optional('input_current_a'): float,
+                Optional('input_power_w'): float,
+                Optional('beacon_led'): str,
+                Optional('status_led'): str,
+            }
+        }
+    }
+
+
+class ShowPlatformHardwareChassisFantrayDetailAll(ShowPlatformHardwareChassisFantrayDetailAllSchema):
+    """Parser for:
+       show platform hardware chassis fantray detail all
+    """
+
+    cli_command = 'show platform hardware chassis fantray detail all'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # FT1:
+        p1 = re.compile(r'^\s*(?P<tray>FT\d+):\s*$')
+
+        #      1    4975    4972      33%
+        p2 = re.compile(r'^\s*(?P<row>\d+)\s+(?P<inlet>\d+)\s+(?P<outlet>\d+)\s+(?P<pwm>\d+)%\s*$')
+
+        #     Fantray Air Flow Direction   : Port-Side-Intake
+        p3 = re.compile(r'^\s*Fantray\s+(?P<key>[^:]+?)\s*:\s*(?P<val>.+?)\s*$')
+
+        current_tray = None
+
+        def first_number(s):
+            m = re.search(r'(-?\d+(?:\.\d+)?)', s)
+            return float(m.group(1)) if m else None
+
+        for line in out.splitlines():
+            line = line.rstrip()
+
+            # FT1:
+            m = p1.match(line)
+            if m:
+                
+                current_tray = m.group('tray')
+                td = ret_dict.setdefault('fantrays', {}).setdefault(current_tray, {})
+                td.setdefault('fans', {})
+                td.setdefault('temperatures', {})
+                continue
+
+            if not current_tray:
+                continue
+
+            #     Row   Inlet  Outlet     PWM
+            m = p2.match(line)
+            if m:
+                row = int(m.group('row'))
+                inlet = int(m.group('inlet'))
+                outlet = int(m.group('outlet'))
+                pwm = int(m.group('pwm'))
+                ret_dict['fantrays'][current_tray]['fans'][row] = {
+                    'inlet_rpm': inlet,
+                    'outlet_rpm': outlet,
+                    'pwm_percent': pwm
+                }
+                continue
+
+            #     Fantray Air Flow Direction   : Port-Side-Intake
+            m = p3.match(line)
+            if m:
+                key = m.group('key').strip()
+                val = m.group('val').strip()
+                td = ret_dict['fantrays'][current_tray]
+
+                if key.lower() == 'air flow direction':
+                    td['air_flow_direction'] = val
+                elif key.lower() == 'auto poll status':
+                    td['auto_poll_status'] = val
+                elif key.lower() == 'auto poll interval':
+                    num = first_number(val)
+                    if num is not None:
+                        td['auto_poll_interval_seconds'] = float(num)
+                elif key.lower() == 'control mode':
+                    td['control_mode'] = val
+                elif key.lower() == 'temperature slot-5':
+                    num = first_number(val)
+                    if num is not None:
+                        td['temperatures']['slot_5'] = int(num)
+                elif key.lower() == 'temperature slot-6':
+                    num = first_number(val)
+                    if num is not None:
+                        td['temperatures']['slot_6'] = int(num)
+                elif key.lower() == 'temperature local-a':
+                    num = first_number(val)
+                    if num is not None:
+                        td['temperatures']['local_a'] = int(num)
+                elif key.lower() == 'temperature local-b':
+                    num = first_number(val)
+                    if num is not None:
+                        td['temperatures']['local_b'] = int(num)
+                elif key.lower() == 'input voltage':
+                    num = first_number(val)
+                    if num is not None:
+                        td['input_voltage_v'] = float(num)
+                elif key.lower() == 'input current':
+                    num = first_number(val)
+                    if num is not None:
+                        td['input_current_a'] = float(num)
+                elif key.lower() == 'input power':
+                    num = first_number(val)
+                    if num is not None:
+                        td['input_power_w'] = float(num)
+                elif key.lower() == 'beacon led':
+                    td['beacon_led'] = val
+                elif key.lower() == 'status led':
+                    td['status_led'] = val
+
                 continue
 
         return ret_dict

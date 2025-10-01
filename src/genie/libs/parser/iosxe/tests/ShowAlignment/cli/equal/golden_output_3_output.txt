@@ -1,0 +1,15 @@
+Router#show alignment 
+Alignment data for: 
+GS Software (RSP-PV-M), Version 11.1(26.1)CC, EARLY DEPLOYMENT MAINTENANCE INTER 
+IM SOFTWARE 
+Compiled Thu 27-May-99 20:48 by jjgreen 
+
+No alignment data has been recorded. 
+
+Total Spurious Accesses 26, Recorded 14
+
+ Address  Count  Traceback
+    1DC8      1  0x60299BF4 0x6061B010 0x60334FB8 0x6061D8E0
+                 0x6062065C 0x60519A70 0x6051913C 0x6050BE88
+    1DE0      1  0x60299BFC 0x6061B010 0x60334FB8 0x6061D8E0
+                 0x6062065C 0x60519A70 0x6051913C 0x6050BE88

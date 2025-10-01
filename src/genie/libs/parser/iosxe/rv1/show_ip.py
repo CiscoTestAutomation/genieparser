@@ -145,11 +145,11 @@ class ShowIpPolicy(ShowIpPolicySchema):
     Parser for:
         show ip policy
     '''
-    cli_command = ['show ip policy']
+    cli_command = ['show ip policy', 'show ipv6 policy']
 
-    def cli(self, output=None):
+    def cli(self, command=None, output=None, **kwargs):
         if output is None:
-            output = self.device.execute(self.cli_command)
+            output = self.device.execute(command)
         # interface Gi5          route-map AAA
         # Vlan101        pbr_green_1
         p1 = re.compile(r'^(?P<interface>\S+)\s+(?P<route_map>\S+)$')

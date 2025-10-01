@@ -42,6 +42,7 @@
     * sh ipv6 mfib FF03::1:1:1 count
     * sh ipv6 mfib FF03::1:1:1 10::1:1:200 count
     * show ipv6 virtual-reassembly features
+    * show ipv6 mfib {group} active
 """
 
 # Python
@@ -3206,3 +3207,78 @@ class ShowIpv6VirtualReassemblyFeatures(ShowIpv6VirtualReassemblyFeaturesSchema)
                 continue
 
         return result_dict
+
+# ==============================================================================
+# Schema and Parser for 'show ipv6 mfib {group} active'
+# ==============================================================================
+
+class ShowIpv6MfibGroupActiveSchema(MetaParser):
+    """Schema for show ipv6 mfib {group} active"""
+    schema = {
+        'active_multicast_sources': {
+            'threshold_kbps': int,
+            Optional('sources'): {
+                Any(): {  # Source IP address
+                    'group': str,
+                    'rate_kbps': int,
+                    Optional('interface'): str,
+                }
+            }
+        }
+    }
+
+class ShowIpv6MfibGroupActive(ShowIpv6MfibGroupActiveSchema):
+    """Parser for show ipv6 mfib {group} active"""
+
+    cli_command = 'show ipv6 mfib {group} active'
+
+    def cli(self, group="", output=None):
+        if output is None:
+            cmd = self.cli_command.format(group=group)
+            output = self.device.execute(cmd)
+
+        ret = {}
+
+        # Active Multicast Sources - sending >= 4 kbps
+        p1 = re.compile(r'^Active Multicast Sources - sending >= (?P<unit>\d+) kbps$')
+
+        # Default
+        p2 = re.compile(r'^(?P<vrf_name>Default)$')
+
+        # (2001:DB8::1, FF03::1:1:1) 100 kbps GigabitEthernet0/0/1
+        p3 = re.compile(r'\((?P<source_ip>[0-9A-Fa-f:]+),\s*(?P<group_ip>[0-9A-Fa-f:]+)\)\s+(?P<rate>\d+)\s*kbps(?:\s+(?P<interface>\S+))?')
+
+        lines = output.strip().splitlines()
+
+        for line in lines:
+            # Active Multicast Sources - sending >= 4 kbps
+            m = p1.match(line)
+            if m:
+                threshold = int(m.group('unit'))
+                active_dict = ret.setdefault('active_multicast_sources', {})
+                active_dict['threshold_kbps'] = threshold
+                continue
+
+            # Parse VRF line
+            # Default
+            m = p2.match(line)
+            if m:
+                continue
+
+            # (2001:DB8::1, FF03::1:1:1) 100 kbps GigabitEthernet0/0/1
+            m = p3.match(line)
+            if m:
+                source_ip = m.group('source_ip').strip()
+                group_ip = m.group('group_ip').strip()
+                rate = int(m.group('rate'))
+                interface = m.group('interface')
+                vrf_dict = ret['active_multicast_sources']
+                sources = vrf_dict.setdefault('sources', {})
+                source_dict = sources.setdefault(source_ip, {})
+                source_dict['group'] = group_ip
+                source_dict['rate_kbps'] = rate
+                if interface:
+                    source_dict['interface'] = interface
+                continue
+
+        return ret

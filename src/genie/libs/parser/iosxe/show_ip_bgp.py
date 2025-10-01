@@ -48,6 +48,8 @@
     * show ip bgp {address_family} vrf {vrf} {route}
     * show ip bgp {address_family} rd {rd} {route}
     * show ip bgp {address_family} vrf {vrf} neighbors {neighbor} advertised-routes
+    * show ip bgp neighbors {neighbor} received prefix-filter
+    * show ip bgp {address_family} vrf {vrf} neighbors {neighbor} received prefix-filter
 """
 
 # Python
@@ -1660,3 +1662,106 @@ class ShowIpBgpMdtVrf(ShowBgpSuperParser, ShowBgpSchema):
         # Call Super
         return super().cli(output=output, address_family=address_family, vrf=vrf)
 
+# ===================================================================================
+# show ip bgp neighbors {neighbor} received prefix-filter
+# show ip bgp {address_family} vrf {vrf} neighbors {neighbor} received prefix-filter
+# ===================================================================================
+
+class ShowIpBgpNeighborReceivedPrefixFilterSchema(MetaParser):
+    """Schema for:
+       * 'show ip bgp neighbors {neighbor} received prefix-filter'
+       * 'show ip bgp {address_family} vrf {vrf} neighbors {neighbor} received prefix-filter'
+    """
+    schema = {
+        'address_family': {
+            Any(): {
+                'ip_prefix_list': {
+                    Any(): {
+                        'entries': int,
+                        'sequences': {
+                            Any(): {
+                                'action': str,
+                                'prefix': str,
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+    
+class ShowIpBgpNeighborReceivedPrefixFilter(ShowIpBgpNeighborReceivedPrefixFilterSchema):
+    """Parser for:
+       * 'show ip bgp neighbors {neighbor} received prefix-filter'
+       * 'show ip bgp {address_family} vrf {vrf} neighbors {neighbor} received prefix-filter'
+    """
+
+    cli_command = ['show ip bgp {address_family} vrf {vrf} neighbors {neighbor} received prefix-filter', 
+                   'show ip bgp neighbors {neighbor} received prefix-filter',
+                  ]
+            
+    def cli(self, neighbor=None, address_family='', vrf='', output=None):
+
+        if output is None:
+            # Build command
+
+            if address_family and vrf:
+                cmd = self.cli_command[0].format(neighbor=neighbor, 
+                                                 address_family=address_family, 
+                                                 vrf=vrf)
+            else:
+                cmd = self.cli_command[1].format(neighbor=neighbor)
+            # Execute command
+            output = self.device.execute(cmd)
+
+        # Schema initialization
+        result_dict = {}
+
+        # Regex patterns for parsing lines
+        #Address family: IPv4 Unicast
+        p1 = re.compile(r'^\s*Address +family: +(?P<address_family>[\S\s]+)$')
+        #ip prefix-list 3.3.3.3: 3 entries
+        p2 = re.compile(r'^\s*ip +prefix-list +(?P<ip_prefix_list>[\S\s]+): +(?P<entries>\d+) +entries$')
+        #seq 10 permit 3.3.3.0/24
+        p3 = re.compile(r'^\s*seq +(?P<seq>\d+) +(?P<action>\S+) +(?P<prefix>[\d\.\/]+)$')
+
+        # Variables for current context
+        address_family = None
+        ip_prefix_list = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Address family: IPv4 Unicast
+            m = p1.match(line)
+            if m:
+                address_family = m.group('address_family')
+                result_dict.setdefault('address_family', {}).setdefault(address_family, {})
+                continue
+
+            # ip prefix-list 3.3.3.3: 3 entries
+            m = p2.match(line)
+            if m:
+                ip_prefix_list = m.group('ip_prefix_list')
+                entries = int(m.group('entries'))
+                af_dict = result_dict['address_family'][address_family]
+                af_dict.setdefault('ip_prefix_list', {}).setdefault(ip_prefix_list, {
+                    'entries': entries,
+                    'sequences': {},
+                })
+                continue
+
+            # seq 10 permit 3.3.3.0/24
+            m = p3.match(line)
+            if m:
+                seq = int(m.group('seq'))
+                action = m.group('action')
+                prefix = m.group('prefix')
+                seq_dict = result_dict['address_family'][address_family]['ip_prefix_list'][ip_prefix_list]['sequences']
+                seq_dict[seq] = {
+                    'action': action,
+                    'prefix': prefix,
+                }
+                continue
+
+        return result_dict

@@ -1,0 +1,23 @@
+expected_output = {
+            'Not a session initiator [FW_DROP_NOT_INITIATOR_TYPE]': 8,
+            'Firewall invalid zone [FW_DROP_INVALID_ZONE_TYPE]': 25,
+            'Policy drop:classify result [FW_DROP_POLICY_TYPE_ACTION_DROP]': 9,
+            'No Zone-pair found [FW_DROP_INSP_TYPE_ZONE_PAIR_NOT_PRESENT]': 1,
+            'SYN cookie being triggered [FW_DROP_SYNCOOKIE_TYPE_SYNCOOKIE_TRIGGER]': 120,
+            'Firewall Create Session fail [FW_DROP_NONSESSION_TYPE]': 794,
+            'Invalid TCP initiator [FW_DROP_L4_TYPE_INVALID_TCP_INITIATOR]': 24,
+            'UDP - Half-open session limit exceed [FW_DROP_L4_TYPE_MAX_HALFSESSION]': 172,
+            'SYN inside current window [FW_DROP_L4_TYPE_SYN_IN_WIN]': 1,
+            'SYN with data [FW_DROP_L4_TYPE_SYN_WITH_DATA]': 1,
+            'Invalid Segment in SYNSENT [FW_DROP_L4_TYPE_INVALID_SEG_SYNSENT_STATE]': 1,
+            'Retrans with invalid flags [FW_DROP_L4_TYPE_RETRANS_INVALID_FLAGS]': 1,
+            'Invalid ACK flag [FW_DROP_L4_TYPE_INVALID_ACK_FLAG]': 1,
+            'Invalid sequence number [FW_DROP_L4_TYPE_INVALID_SEQ]': 1,
+            'RST sent to responder [FW_DROP_L4_TYPE_RST_TO_RESP]': 1,
+            'Invalid ACK number [FW_DROP_L4_TYPE_INVALID_ACK_NUM]': 1,
+            'Same zone without Policy [FW_DROP_INSP_TYPE_SESS_MISS_POLICY_NOT_PRESENT]': 10,
+            'Invalid L4 header [FW_DROP_L4_TYPE_INVALID_HDR]': 10,
+            'Invalid TCP flags [FW_DROP_L4_TYPE_INVALID_FLAGS]': 24,
+            'RST inside current window [FW_DROP_L4_TYPE_RST_IN_WIN]': 1,
+            'Unexpect TCP pyld in handshake [FW_DROP_L4_TYPE_UNEXPECT_TCP_PYLD]': 1
+    }

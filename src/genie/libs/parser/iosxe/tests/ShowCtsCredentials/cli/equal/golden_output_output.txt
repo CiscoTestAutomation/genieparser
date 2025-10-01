@@ -1,0 +1,2 @@
+show cts credentials
+No CTS credentials exist.

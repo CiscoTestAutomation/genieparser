@@ -210,3 +210,151 @@ class ShowL2tpSessionPackets(ShowL2tpSessionPacketsSuperParser):
 
         # Call super
         return super().cli(output=show_output)
+
+# =======================================================
+# Schema for 'show l2tp'
+# =======================================================
+class ShowL2tpSchema(MetaParser):
+    """Schema for show l2tp"""
+
+    schema = {
+        'total_tunnels': int,
+        'total_sessions': int,
+        Optional('tunnels'): {
+            Any(): {
+                'loc_tunnel_id': int,
+                'rem_tunnel_id': int,
+                'remote_name': str,
+                'state': str,
+                'remote_address': str,
+                'session_count': int,
+                'l2tp_class_vpdn_group': str,
+                Optional('sessions'): {
+                    Any(): {
+                        'loc_id': int,
+                        'rem_id': int,
+                        'tunnel_id': int,
+                        'username': str,
+                        'interface_vcid_circuit': str,
+                        'state': str,
+                        'last_change': str,
+                        'unique_id': int,
+                    }
+                }
+            }
+        }
+    }
+
+
+# =======================================================
+# Parser for 'show l2tp'
+# =======================================================
+class ShowL2tp(ShowL2tpSchema):
+    """Parser for show l2tp"""
+
+    cli_command = 'show l2tp'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize return dictionary
+        ret_dict = {}
+
+        # Regex patterns
+        # L2TP Tunnel and Session Information Total tunnels 1 sessions 1
+        p1 = re.compile(r'^L2TP Tunnel and Session Information Total tunnels (?P<total_tunnels>\d+) sessions (?P<total_sessions>\d+)$')
+
+        # 3217474068 2611998623 fg4           est    100.3.1.1       1     l2tp_class_1
+        p2 = re.compile(
+            r'^(?P<loc_tunnel_id>\d+)\s+'
+            r'(?P<rem_tunnel_id>\d+)\s+'
+            r'(?P<remote_name>\S+)\s+'
+            r'(?P<state>\S+)\s+'
+            r'(?P<remote_address>\S+)\s+'
+            r'(?P<session_count>\d+)\s+'
+            r'(?P<l2tp_class_vpdn_group>\S+)$'
+        )
+
+        # 2409671146 3648835555 3217474068 101, Gi0/0/0         est    00:00:22 0
+        p3 = re.compile(
+            r'^(?P<loc_id>\d+)\s+'
+            r'(?P<rem_id>\d+)\s+'
+            r'(?P<tunnel_id>\d+)\s+'
+            r'(?P<username>[^,]+),\s+'
+            r'(?P<interface_vcid_circuit>\S+)\s+'
+            r'(?P<state>\S+)\s+'
+            r'(?P<last_change>\S+)\s+'
+            r'(?P<unique_id>\d+)$'
+        )
+
+        current_tunnel_id = None
+        session_counter = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Skip empty lines
+            if not line:
+                continue
+
+            # Parse total tunnels and sessions
+            # L2TP Tunnel and Session Information Total tunnels 1 sessions 1
+            m = p1.match(line)
+            if m:
+                ret_dict['total_tunnels'] = int(m.group('total_tunnels'))
+                ret_dict['total_sessions'] = int(m.group('total_sessions'))
+                continue
+
+            # Parse tunnel information
+            # 3217474068 2611998623 fg4           est    100.3.1.1       1     l2tp_class_1
+            m = p2.match(line)
+            if m:
+                tunnel_id = m.group('loc_tunnel_id')
+                current_tunnel_id = tunnel_id
+                session_counter[tunnel_id] = 0
+                
+                tunnels_dict = ret_dict.setdefault('tunnels', {})
+                tunnel_dict = tunnels_dict.setdefault(tunnel_id, {})
+                
+                tunnel_dict['loc_tunnel_id'] = int(m.group('loc_tunnel_id'))
+                tunnel_dict['rem_tunnel_id'] = int(m.group('rem_tunnel_id'))
+                tunnel_dict['remote_name'] = m.group('remote_name')
+                tunnel_dict['state'] = m.group('state')
+                tunnel_dict['remote_address'] = m.group('remote_address')
+                tunnel_dict['session_count'] = int(m.group('session_count'))
+                tunnel_dict['l2tp_class_vpdn_group'] = m.group('l2tp_class_vpdn_group')
+                continue
+
+            # Parse session information
+            # 2409671146 3648835555 3217474068 101, Gi0/0/0         est    00:00:22 0
+            m = p3.match(line)
+            if m and current_tunnel_id:
+                tunnel_id_from_session = m.group('tunnel_id')
+                
+                # Find the correct tunnel for this session
+                tunnel_key = None
+                for t_key, t_data in ret_dict.get('tunnels', {}).items():
+                    if str(t_data['loc_tunnel_id']) == tunnel_id_from_session:
+                        tunnel_key = t_key
+                        break
+                
+                if tunnel_key:
+                    session_counter.setdefault(tunnel_key, 0)
+                    session_counter[tunnel_key] += 1
+                    session_key = f"session_{session_counter[tunnel_key]}"
+                    
+                    sessions_dict = ret_dict['tunnels'][tunnel_key].setdefault('sessions', {})
+                    session_dict = sessions_dict.setdefault(session_key, {})
+                    
+                    session_dict['loc_id'] = int(m.group('loc_id'))
+                    session_dict['rem_id'] = int(m.group('rem_id'))
+                    session_dict['tunnel_id'] = int(m.group('tunnel_id'))
+                    session_dict['username'] = m.group('username').strip()
+                    session_dict['interface_vcid_circuit'] = m.group('interface_vcid_circuit')
+                    session_dict['state'] = m.group('state')
+                    session_dict['last_change'] = m.group('last_change')
+                    session_dict['unique_id'] = int(m.group('unique_id'))
+                continue
+
+        return ret_dict

@@ -822,11 +822,9 @@ class ShowPlatform(ShowPlatformSchema):
         #  1       32     WS-C3850-24P-E        FCW1947C0HH  0057.d2ff.e71b  V07           16.6.1
         #  1       32     C9200-24P             JAD2310213C  dc8c.37ff.ad21  V01           17.05.01
         #  1       32     C9200-24P             JAD2310213C  dc8c.37ff.ad21  V01           2021-03-03_18.
+        #  1       24     N/A                   N/A          0ccf.1ab0.0000  N/A           N/A 
         p3 = re.compile(
-            r"^(?P<switch>\d+) +(?P<ports>\d+) +"
-            r"(?P<model>[\w\-]+) +(?P<serial_no>\w+) +"
-            r"(?P<mac_address>[\w\.\:]+) +"
-            r"(?P<hw_ver>\w+) +(?P<sw_ver>[\s\S]+)$"
+            r"^(?P<switch>\d+) +(?P<ports>\d+) +(?P<model>[\w\-\/]+) +(?P<serial_no>[\w\/]+) +(?P<mac_address>[\w\.\:]+) +(?P<hw_ver>[\w+\/]+) +(?P<sw_ver>[\s\S]+)$"
         )
 
         #                                     Current

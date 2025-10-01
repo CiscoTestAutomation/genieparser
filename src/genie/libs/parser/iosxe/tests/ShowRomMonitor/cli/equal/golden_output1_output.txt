@@ -1,0 +1,4 @@
+show rom-monitor 0
+
+System Bootstrap, Version 16.12(2r), RELEASE SOFTWARE
+Copyright (c) 1994-2019  by cisco Systems, Inc.

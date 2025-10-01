@@ -1,0 +1,74 @@
+show run vrf
+
+Building configuration...
+
+Current configuration : 1952 bytes
+ip vrf CUST_A
+ rd 100:1
+ route-target export 100:1
+ route-target import 100:1
+!
+!
+interface TenGigabitEthernet0/0/8
+ ip vrf forwarding CUST_A
+ ip address 15.0.0.1 255.255.255.0
+ ip nbar protocol-discovery
+ ip nat inside
+ negotiation auto
+!
+interface TenGigabitEthernet0/0/9
+ ip vrf forwarding CUST_A
+ ip address 80.0.0.1 255.255.255.0
+ ip nbar protocol-discovery
+ ip nat outside
+ negotiation auto
+ip nat inside source static 15.0.0.2 16.0.0.2 vrf CUST_A match-in-vrf
+ip nat inside source static 15.1.1.1 16.1.1.1 vrf CUST_A match-in-vrf
+!
+ip route vrf CUST_A 15.0.0.0 255.0.0.0 TenGigabitEthernet0/0/8 15.0.0.2
+ip route vrf CUST_A 16.0.0.0 255.0.0.0 TenGigabitEthernet0/0/8 15.0.0.2
+ip route vrf CUST_A 70.0.0.0 255.0.0.0 TenGigabitEthernet0/0/9 80.0.0.2
+ip route vrf CUST_A 80.0.0.0 255.0.0.0 TenGigabitEthernet0/0/9 80.0.0.2
+ip vrf CUST_B
+ rd 101:1
+ route-target export 101:1
+ route-target import 101:1
+!
+!
+interface TenGigabitEthernet0/0/7
+ ip vrf forwarding CUST_B
+ ip address 15.0.0.1 255.255.255.0
+ ip nbar protocol-discovery
+ ip nat inside
+ negotiation auto
+!
+interface TenGigabitEthernet0/0/10
+ ip vrf forwarding CUST_B
+ ip address 80.0.0.1 255.255.255.0
+ ip nbar protocol-discovery
+ ip nat outside
+ negotiation auto
+ip nat inside source static 15.0.0.2 16.0.0.2 vrf CUST_B match-in-vrf
+ip nat inside source static 15.1.1.1 16.1.1.1 vrf CUST_B match-in-vrf
+!
+ip route vrf CUST_B 15.0.0.0 255.0.0.0 TenGigabitEthernet0/0/7 15.0.0.2
+ip route vrf CUST_B 16.0.0.0 255.0.0.0 TenGigabitEthernet0/0/7 15.0.0.2
+ip route vrf CUST_B 70.0.0.0 255.0.0.0 TenGigabitEthernet0/0/10 80.0.0.2
+ip route vrf CUST_B 80.0.0.0 255.0.0.0 TenGigabitEthernet0/0/10 80.0.0.2
+vrf definition Mgmt-intf
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family ipv6
+ exit-address-family
+!
+!
+interface GigabitEthernet0
+ vrf forwarding Mgmt-intf
+ ip address 1.46.18.179 255.255.0.0
+ negotiation auto
+!
+ip route vrf Mgmt-intf 223.255.254.0 255.255.255.0 1.46.0.1
+!
+end

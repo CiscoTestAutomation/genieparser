@@ -462,6 +462,64 @@ class ShowSystemIntegrityAllComplianceNonce(ShowSystemIntegrityAllComplianceNonc
                 slot[tmp]["signature"].update({"value": group["value"]})
                 continue
         return ret_dict
+
+    def yang(self, nonce="", output=None):
+        if not output:
+            output = self.device.get(filter=('xpath', f'/system-integrity-oper-data/location/integrity[nonce={nonce}][request="choice-compliance"]')).data_xml
+        log.debug(minidom.parseString(output).toprettyxml())
+        root = ET.fromstring(output)
+        system_integrity_oper_data = Common.retrieve_xml_child(root=root, key='system-integrity-oper-data')
+        ret_dict = {}
+        for parent in system_integrity_oper_data:
+            for child in parent:
+                if child.tag.endswith('slot'):
+                    slot = int(child.text)
+                    slot_dict = ret_dict.setdefault('slot', {})
+                    slot_id = slot_dict.setdefault(slot, {})
+                elif child.tag.endswith('fru'):
+                    ret_dict.update({'fru': child.text})
+                elif child.tag.endswith('chassis'):
+                    ret_dict.update({'chassis': child.text})
+                elif child.tag.endswith('bay'):
+                    ret_dict.update({'bay': child.text})
+                elif child.tag.endswith('node'):
+                    ret_dict.update({'node': child.text})
+                elif child.tag.endswith('integrity'):
+                    for sub_child in child:
+                        if sub_child.tag.endswith('compliance'):
+                            for comp_child in sub_child:
+                                if comp_child.tag.endswith('capability'):
+                                    attr = None
+                                    val = None
+                                    for cap_elem in comp_child:
+                                        if cap_elem.tag.endswith('attribute'):
+                                            attr = cap_elem.text
+                                        elif cap_elem.tag.endswith('value'):
+                                            val = cap_elem.text
+                                    if attr and val is not None:
+                                        # Map XML attribute names to dict keys
+                                        key_map = {
+                                            'secure_boot': 'secure_boot',
+                                            'tam_service': 'tam_service',
+                                            'ldwm_envelope': 'ldwm_envelope',
+                                            'num_btlstage': 'num_btlstage',
+                                            'bivlen': 'bivlen',
+                                            'register.pcr0.disabled': 'register_pcr0_disabled',
+                                            'register.pcr8.disabled': 'register_pcr8_disabled',
+                                        }
+                                        dict_key = key_map.get(attr, attr)
+                                        # Convert to int if appropriate
+                                        if dict_key in ['num_btlstage', 'bivlen']:
+                                            val = int(val)
+                                        slot_id.setdefault('compliance', {}).update({dict_key: val})
+                                elif comp_child.tag.endswith('signature'):
+                                    sign_dict = slot_id.setdefault('signature', {})
+                                    for sign_elem in comp_child:
+                                        if sign_elem.tag.endswith('signature'):
+                                            sign_dict.update({'value': sign_elem.text})
+                                        elif sign_elem.tag.endswith('version'):
+                                            sign_dict.update({'version': int(sign_elem.text)})
+        return ret_dict
     
 
 class ShowSystemIntegrityAllTrustChainNonceSchema(MetaParser):

@@ -1,0 +1,5 @@
+show key chain Test-KC1 mode decrypt
+Key-Chain Test-KC1 Macsec
+  Key 10000000 -- text 0 "*****"
+    cryptographic-algorithm AES_256_CMAC
+    send lifetime (always valid) [active]

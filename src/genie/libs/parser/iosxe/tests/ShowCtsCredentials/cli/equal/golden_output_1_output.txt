@@ -1,0 +1,2 @@
+show cts credentials
+CTS password is defined in keystore, device-id = cts_admin

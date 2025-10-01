@@ -1,0 +1,22 @@
+expected_output = {
+    'keychains' : {
+    'Test-KC1': {
+        'key_type': 'Macsec', 
+        '10000000': {
+            'encryption_type': '0', 
+            'key_octet_string': '*****', 
+            'crypto_algorithm': 'AES_256_CMAC', 
+            'lifetime_state': ' (always valid) [active]'
+        }
+    },
+    'Test-KC2': {
+        'key_type': 'Macsec', 
+        '10100000': {
+            'encryption_type': '0', 
+            'key_octet_string': '*****', 
+            'crypto_algorithm': 'AES_256_CMAC', 
+            'lifetime_state': ' (always valid) [active]'
+        }
+    }
+    }
+}

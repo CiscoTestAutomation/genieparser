@@ -1,0 +1,36 @@
+pki_event:
+
+
+pki_internal_event:
+
+Tracing currently disabled, from exec command
+
+
+pki_error:
+
+
+ikev2_event:
+
+Tracing currently disabled, from exec command
+
+
+ikev2_internal_event:
+
+
+ikev2_error:
+
+
+ikev2_exception:
+
+
+ipsec_event:
+
+Tracing currently disabled, from exec command
+
+
+ipsec_error:
+
+
+ipsec_exception:
+
+interrupt context allocation count = 0

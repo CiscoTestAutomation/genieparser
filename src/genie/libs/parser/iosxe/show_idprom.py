@@ -698,3 +698,235 @@ class ShowIdpromTan(ShowIdpromTanSchema):
 
 
         return ret_dict 
+
+class ShowIdpromFantrayEepromDetailSchema(MetaParser):
+    """Schema for show idprom [switch {switch_num}] fan-tray {fantray_num} eeprom detail"""
+    schema = {
+        'eeprom_version': str,
+        'compatible_type': str,
+        'controller_type': str,
+        'hardware_revision': str,
+        'top_assy_part_number': str,
+        'top_assy_revision': str,
+        'pcb_part_number': str,
+        'board_revision': str,
+        'deviation_number': str,
+        'pcb_serial_number': str,
+        'chassis_serial_number': str,
+        'rma_test_history': str,
+        'rma_number': str,
+        'rma_history': str,
+        Optional('clei_code'): str,
+        'product_identifier': str,
+        'version_identifier': str,
+        'chassis_mac_address': str,
+        'manufacturing_test_data': str,
+        'field_diagnostics_data': str,
+    }
+
+class ShowIdpromFantrayEepromDetail(ShowIdpromFantrayEepromDetailSchema):
+    """
+    Parser for:
+      - show idprom switch {switch_num} fan-tray {fantray_num} eeprom detail
+      - show idprom fan-tray {fantray_num} eeprom detail
+    """
+
+    cli_command = [
+        'show idprom switch {switch_num} fan-tray {fantray_num} eeprom detail',
+        'show idprom fan-tray {fantray_num} eeprom detail'
+    ]
+
+    def cli(self, fantray_num="", switch_num=None, output=None):
+        if output is None:
+            if switch_num:
+                cmd = self.cli_command[0].format(switch_num=switch_num, fantray_num=fantray_num)
+            else:
+                cmd = self.cli_command[1].format(fantray_num=fantray_num)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+
+        # EEPROM version           : 4
+        p1  = re.compile(r'^EEPROM version\s*:\s*(.+)$')
+
+        # Compatible Type          : 0xFF
+        p2  = re.compile(r'^Compatible Type\s*:\s*(.+)$')
+
+        # Controller Type          : 4577
+        p3  = re.compile(r'^Controller Type\s*:\s*(.+)$')
+
+        # Hardware Revision        : 0.5
+        p4  = re.compile(r'^Hardware Revision\s*:\s*(.+)$')
+
+        # Top Assy. Part Number    : 800-51430-01
+        p5  = re.compile(r'^Top Assy\. Part Number\s*:\s*(.+)$')
+
+        # Top Assy. Revision       : 05
+        p6  = re.compile(r'^Top Assy\. Revision\s*:\s*(.+)$')
+
+        # PCB Part Number          : 73-20972-03
+        p7  = re.compile(r'^PCB Part Number\s*:\s*(.+)$')
+
+        # Board Revision           : 02
+        p8  = re.compile(r'^Board Revision\s*:\s*(.+)$')
+
+        # Deviation Number         : 0
+        p9  = re.compile(r'^Deviation Number\s*:\s*(.+)$')
+
+        # PCB Serial Number        : FOX2813PQ4Z
+        p10 = re.compile(r'^PCB Serial Number\s*:\s*(.+)$')
+
+        # Chassis Serial Number    : FOX2813PQ4Z
+        p11 = re.compile(r'^Chassis Serial Number\s*:\s*(.+)$')
+
+        # RMA Test History         : 00
+        p12 = re.compile(r'^RMA Test History\s*:\s*(.+)$')
+
+        # RMA Number               : 0-0-0-0
+        p13 = re.compile(r'^RMA Number\s*:\s*(.+)$')
+
+        # RMA History              : 00
+        p14 = re.compile(r'^RMA History\s*:\s*(.+)$')
+
+        # CLEI Code                :
+        p15 = re.compile(r'^CLEI Code\s*:\s*(.*)$')
+
+        # Product Identifier (PID) : C9610-FAN
+        p16 = re.compile(r'^Product Identifier \(PID\)\s*:\s*(.+)$')
+
+        # Version Identifier (VID) : V00
+        p17 = re.compile(r'^Version Identifier \(VID\)\s*:\s*(.+)$')
+
+        # Chassis MAC Address      : 0000.0000.0000
+        p18 = re.compile(r'^Chassis MAC Address\s*:\s*(.+)$')
+
+        # Manufacturing Test Data  : 00 00 00 00 00 00 00 00
+        p19 = re.compile(r'^Manufacturing Test Data\s*:\s*(.+)$')
+
+        # Field Diagnostics Data   : 00 00 00 00 00 00 00 00
+        p20 = re.compile(r'^Field Diagnostics Data\s*:\s*(.+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # EEPROM version           : 4
+            m = p1.match(line)
+            if m:
+                ret_dict['eeprom_version'] = m.group(1)
+                continue
+
+            # Compatible Type          : 0xFF
+            m = p2.match(line)
+            if m:
+                ret_dict['compatible_type'] = m.group(1)
+                continue
+
+            # Controller Type          : 4577
+            m = p3.match(line)
+            if m:
+                ret_dict['controller_type'] = m.group(1)
+                continue
+
+            # Hardware Revision        : 0.5
+            m = p4.match(line)
+            if m:
+                ret_dict['hardware_revision'] = m.group(1)
+                continue
+
+            # Top Assy. Part Number    : 800-51430-01
+            m = p5.match(line)
+            if m:
+                ret_dict['top_assy_part_number'] = m.group(1)
+                continue
+
+            # Top Assy. Revision       : 05
+            m = p6.match(line)
+            if m:
+                ret_dict['top_assy_revision'] = m.group(1)
+                continue
+
+            # PCB Part Number          : 73-20972-03
+            m = p7.match(line)
+            if m:
+                ret_dict['pcb_part_number'] = m.group(1)
+                continue
+
+            # Board Revision           : 02
+            m = p8.match(line)
+            if m:
+                ret_dict['board_revision'] = m.group(1)
+                continue
+
+            # Deviation Number         : 0
+            m = p9.match(line)
+            if m:
+                ret_dict['deviation_number'] = m.group(1)
+                continue
+
+            # PCB Serial Number        : FOX2813PQ4Z
+            m = p10.match(line)
+            if m:
+                ret_dict['pcb_serial_number'] = m.group(1)
+                continue
+
+            # Chassis Serial Number    : FOX2813PQ4Z
+            m = p11.match(line)
+            if m:
+                ret_dict['chassis_serial_number'] = m.group(1)
+                continue
+
+            # RMA Test History         : 00
+            m = p12.match(line)
+            if m:
+                ret_dict['rma_test_history'] = m.group(1)
+                continue
+
+            # RMA Number               : 0-0-0-0
+            m = p13.match(line)
+            if m:
+                ret_dict['rma_number'] = m.group(1)
+                continue
+
+            # RMA History              : 00
+            m = p14.match(line)
+            if m:
+                ret_dict['rma_history'] = m.group(1)
+                continue
+
+            # CLEI Code                :
+            m = p15.match(line)
+            if m:
+                ret_dict['clei_code'] = m.group(1)
+                continue
+
+            # Product Identifier (PID) : C9610-FAN
+            m = p16.match(line)
+            if m:
+                ret_dict['product_identifier'] = m.group(1)
+                continue
+
+            # Version Identifier (VID) : V00
+            m = p17.match(line)
+            if m:
+                ret_dict['version_identifier'] = m.group(1)
+                continue
+
+            # Chassis MAC Address      : 0000.0000.0000
+            m = p18.match(line)
+            if m:
+                ret_dict['chassis_mac_address'] = m.group(1)
+                continue
+
+            # Manufacturing Test Data  : 00 00 00 00 00 00 00 00
+            m = p19.match(line)
+            if m:
+                ret_dict['manufacturing_test_data'] = m.group(1)
+                continue
+
+            # Field Diagnostics Data   : 00 00 00 00 00 00 00 00
+            m = p20.match(line)
+            if m:
+                ret_dict['field_diagnostics_data'] = m.group(1)
+                continue
+
+        return ret_dict

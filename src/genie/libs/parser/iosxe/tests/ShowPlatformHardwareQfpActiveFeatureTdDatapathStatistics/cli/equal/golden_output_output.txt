@@ -1,0 +1,45 @@
+show platform hardware qfp active feature td datapath statistics
+
+Pool Usage
+
+vtcp info alloc:             2 free:                 0 fail:                 0
+
+pkt buf alloc:               0 free:                 0 fail:                 0
+
+buf size alloc:              0 free:                 0 
+
+
+
+Receive 
+
+alg_proc_csum:               0 off_csum:             0 lisp_seg:             0
+
+out of order:                0 retrans:              0 overlap:              0
+
+dup ack:                     3 
+
+
+
+Send 
+
+rx ack:                      0 rst:                  0 hold_rst:             0
+
+tx_hold_rexmit:              0 tx_rexmit:            0 tx_seg:               0
+
+
+
+Events Errors
+
+tcp_fixup_drop:              0 invalid_sync:         0 invalid_opt:          0
+
+tcp_invalid_rx:              0 invalid_tx:           0 pkt_err:              0
+
+mem_err:                     0 pa_err:               0 hex_limit:            0
+
+tcp_flag_noack:              0 punt_err:             0 L2_not_supported      0
+
+first_pkt_non_syn:          0
+
+
+
+D1#

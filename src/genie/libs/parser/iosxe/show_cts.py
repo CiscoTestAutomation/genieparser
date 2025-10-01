@@ -4288,3 +4288,47 @@ class ShowCtsProvisioningQueue(ShowCtsProvisioningQueueSchema):
                 continue
 
         return ret_dict
+        
+class ShowCtsCredentialsSchema(MetaParser):
+    """Parser for `show cts credentials`"""
+    schema = {
+        'credentials_exist': bool,
+        Optional('username'): str
+    }
+
+class ShowCtsCredentials(ShowCtsCredentialsSchema):
+    """Parser for `show cts credentials`"""
+
+    cli_command = 'show cts credentials'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # No CTS credentials exist
+        p1 = re.compile(r'^No\s+CTS\s+credentials\s+exist\.$')
+        # CTS password is defined in keystore, device-id = cts_admin
+        p2 = re.compile(
+            r'^CTS\s+password\s+is\s+defined\s+in\s+keystore,'
+            r'\s+device-id\s*=\s*(?P<username>\S+)$'
+        )
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # No CTS credentials exist
+            m = p1.match(line)
+            if m:
+                ret_dict['credentials_exist'] = False
+                continue
+
+            # CTS password is defined in keystore, device-id = cts_admin
+            m = p2.match(line)
+            if m:
+                ret_dict['credentials_exist'] = True
+                ret_dict['username'] = m.group('username')
+                continue
+
+        return ret_dict

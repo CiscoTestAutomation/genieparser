@@ -9,6 +9,7 @@ IOSXE parsers for the following show commands:
     * 'show running-config nve'
     * 'show running-config | section bgp'
     * 'show running-config all | section class {class_map}'
+    * 'show running-config vrf'
 '''
 
 # Python
@@ -5007,6 +5008,337 @@ class ShowRunningConfigAAARadiusServer(ShowRunningConfigAAARadiusServerSchema):
             m = p8.match(line)
             if m:
                 radius_server_dict.update({'dtls_trustpoint_server': m.groupdict()['dtls_trustpoint_server']})
+                continue
+
+        return ret_dict
+
+# =======================================================
+# Schema for 'show running-config vrf'
+# =======================================================
+class ShowRunningConfigVrfSchema(MetaParser):
+    """Schema for show running-config vrf"""
+    schema = {
+        Optional('vrf'): {
+            Any(): {
+                'type': str,  # 'ip vrf' or 'vrf definition'
+                Optional('rd'): str,
+                Optional('route_target'): {
+                    Optional('export'): list,
+                    Optional('import'): list,
+                },
+                Optional('address_family'): {
+                    Optional('ipv4'): dict,
+                    Optional('ipv6'): dict,
+                },
+                Optional('interfaces'): {
+                    Any(): {
+                        'ip_vrf_forwarding': str,
+                        Optional('ip_address'): str,
+                        Optional('ip_mask'): str,
+                        Optional('ip_nbar_protocol_discovery'): bool,
+                        Optional('ip_nat_inside'): bool,
+                        Optional('ip_nat_outside'): bool,
+                        Optional('negotiation_auto'): bool,
+                    }
+                },
+                Optional('nat_rules'): {
+                    Any(): {
+                        'type': str,  # 'inside' or 'outside'
+                        'local_ip': str,
+                        'global_ip': str,
+                        'vrf': str,
+                        Optional('match_in_vrf'): bool,
+                    }
+                },
+                Optional('routes'): {
+                    Any(): {
+                        'network': str,
+                        'mask': str,
+                        Optional('interface'): str,
+                        Optional('next_hop'): str,
+                    }
+                }
+            }
+        }
+    }
+
+
+# =======================================================
+# Parser for 'show run vrf'
+# =======================================================
+class ShowRunningConfigVrf(ShowRunningConfigVrfSchema):
+    """Parser for show running-config vrf"""
+
+    cli_command = 'show running-config vrf'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize return dictionary
+        ret_dict = {}
+
+        # Regex patterns
+        # ip vrf CUST_A
+        p1 = re.compile(r'^ip vrf (?P<vrf_name>\S+)$')
+
+        # vrf definition Mgmt-intf
+        p2 = re.compile(r'^vrf definition (?P<vrf_name>\S+)$')
+
+        # rd 100:1
+        p3 = re.compile(r'^\s*rd (?P<rd>\S+)$')
+
+        # route-target export 100:1
+        p4 = re.compile(r'^\s*route-target export (?P<rt_export>\S+)$')
+
+        # route-target import 100:1
+        p5 = re.compile(r'^\s*route-target import (?P<rt_import>\S+)$')
+
+        # address-family ipv4
+        p6 = re.compile(r'^\s*address-family ipv4$')
+
+        # address-family ipv6
+        p7 = re.compile(r'^\s*address-family ipv6$')
+
+        # exit-address-family
+        p8 = re.compile(r'^\s*exit-address-family$')
+
+        # interface TenGigabitEthernet0/0/8
+        p9 = re.compile(r'^interface (?P<interface>\S+)$')
+
+        # ip vrf forwarding CUST_A
+        p10 = re.compile(r'^\s*ip vrf forwarding (?P<vrf_name>\S+)$')
+
+        # vrf forwarding Mgmt-intf
+        p11 = re.compile(r'^\s*vrf forwarding (?P<vrf_name>\S+)$')
+
+        # ip address 15.0.0.1 255.255.255.0
+        # ip address 15.0.0.1/24
+        p12 = re.compile(r'^\s*ip address (?P<ip_address>\S+) (?P<ip_mask>\S+)$')
+
+        # ip nbar protocol-discovery
+        p13 = re.compile(r'^\s*ip nbar protocol-discovery$')
+
+        # ip nat inside
+        p14 = re.compile(r'^\s*ip nat inside$')
+
+        # ip nat outside
+        p15 = re.compile(r'^\s*ip nat outside$')
+
+        # negotiation auto
+        p16 = re.compile(r'^\s*negotiation auto$')
+
+        # ip nat inside source static 15.0.0.2 16.0.0.2 vrf CUST_A match-in-vrf
+        p17 = re.compile(r'^ip nat (?P<type>inside|outside) source static '
+                                  r'(?P<local_ip>\S+) (?P<global_ip>\S+) vrf '
+                                  r'(?P<vrf_name>\S+)(?P<match_in_vrf>\s+match-in-vrf)?$')
+
+        # ip route vrf CUST_A 15.0.0.0 255.0.0.0 TenGigabitEthernet0/0/8 15.0.0.2
+        p18 = re.compile(r'^ip route vrf (?P<vrf_name>\S+) (?P<network>\S+) (?P<mask>\S+) (?P<interface>\S+) (?P<next_hop>\S+)$')
+
+        # ip route vrf Mgmt-intf 223.255.254.0 255.255.255.0 1.46.0.1
+        p19 = re.compile(r'^ip route vrf (?P<vrf_name>\S+) (?P<network>\S+) (?P<mask>\S+) (?P<next_hop>\S+)$')
+
+        current_vrf = None
+        current_interface = None
+        current_interface_vrf = None
+        in_address_family = False
+        nat_counter = {}
+        route_counter = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Parse ip vrf
+            # ip vrf CUST_A
+            m = p1.match(line)
+            if m:
+                vrf_name = m.group('vrf_name')
+                current_vrf = vrf_name
+                vrf_dict = ret_dict.setdefault('vrf', {}).setdefault(vrf_name, {})
+                vrf_dict['type'] = 'ip vrf'
+                nat_counter[vrf_name] = 0
+                route_counter[vrf_name] = 0
+                continue
+
+            # Parse vrf definition
+            # vrf definition Mgmt-intf
+            m = p2.match(line)
+            if m:
+                vrf_name = m.group('vrf_name')
+                current_vrf = vrf_name
+                vrf_dict = ret_dict.setdefault('vrf', {}).setdefault(vrf_name, {})
+                vrf_dict['type'] = 'vrf definition'
+                nat_counter[vrf_name] = 0
+                route_counter[vrf_name] = 0
+                continue
+
+            # Parse rd
+            # rd 100:1
+            m = p3.match(line)
+            if m and current_vrf:
+                ret_dict['vrf'][current_vrf]['rd'] = m.group('rd')
+                continue
+
+            # Parse route-target export
+            # route-target export 100:1
+            m = p4.match(line)
+            if m and current_vrf:
+                rt_dict = ret_dict['vrf'][current_vrf].setdefault('route_target', {})
+                rt_export_list = rt_dict.setdefault('export', [])
+                rt_export_list.append(m.group('rt_export'))
+                continue
+
+            # Parse route-target import
+            # route-target import 100:1
+            m = p5.match(line)
+            if m and current_vrf:
+                rt_dict = ret_dict['vrf'][current_vrf].setdefault('route_target', {})
+                rt_import_list = rt_dict.setdefault('import', [])
+                rt_import_list.append(m.group('rt_import'))
+                continue
+
+            # Parse address-family ipv4
+            # address-family ipv4
+            m = p6.match(line)
+            if m and current_vrf:
+                af_dict = ret_dict['vrf'][current_vrf].setdefault('address_family', {})
+                af_dict['ipv4'] = {}
+                in_address_family = True
+                continue
+
+            # Parse address-family ipv6
+            # address-family ipv6
+            m = p7.match(line)
+            if m and current_vrf:
+                af_dict = ret_dict['vrf'][current_vrf].setdefault('address_family', {})
+                af_dict['ipv6'] = {}
+                in_address_family = True
+                continue
+
+            # Parse exit-address-family
+            # exit-address-family
+            m = p8.match(line)
+            if m:
+                in_address_family = False
+                continue
+
+            # Parse interface
+            # interface TenGigabitEthernet0/0/8
+            m = p9.match(line)
+            if m:
+                current_interface = m.group('interface')
+                current_interface_vrf = None
+                continue
+
+            # Parse ip vrf forwarding
+            # ip vrf forwarding CUST_A
+            m = p10.match(line)
+            if m and current_interface:
+                vrf_name = m.group('vrf_name')
+                current_interface_vrf = vrf_name
+                if vrf_name in ret_dict.get('vrf', {}):
+                    intf_dict = ret_dict['vrf'][vrf_name].setdefault('interfaces', {}).setdefault(current_interface, {})
+                    intf_dict['ip_vrf_forwarding'] = vrf_name
+                continue
+
+            # Parse vrf forwarding
+            # vrf forwarding Mgmt-intf
+            m = p11.match(line)
+            if m and current_interface:
+                vrf_name = m.group('vrf_name')
+                current_interface_vrf = vrf_name
+                if vrf_name in ret_dict.get('vrf', {}):
+                    intf_dict = ret_dict['vrf'][vrf_name].setdefault('interfaces', {}).setdefault(current_interface, {})
+                    intf_dict['ip_vrf_forwarding'] = vrf_name
+                continue
+
+            # Parse ip address
+            # ip address 15.0.0.1 255.255.255.0
+            # ip address 15.0.0.1/24
+            m = p12.match(line)
+            if m and current_interface and current_interface_vrf:
+                intf_dict = ret_dict['vrf'][current_interface_vrf]['interfaces'][current_interface]
+                intf_dict['ip_address'] = m.group('ip_address')
+                intf_dict['ip_mask'] = m.group('ip_mask')
+                continue
+
+            # Parse ip nbar protocol-discovery
+            # ip nbar protocol-discovery
+            m = p13.match(line)
+            if m and current_interface and current_interface_vrf:
+                intf_dict = ret_dict['vrf'][current_interface_vrf]['interfaces'][current_interface]
+                intf_dict['ip_nbar_protocol_discovery'] = True
+                continue
+
+            # Parse ip nat inside
+            # ip nat inside
+            m = p14.match(line)
+            if m and current_interface and current_interface_vrf:
+                intf_dict = ret_dict['vrf'][current_interface_vrf]['interfaces'][current_interface]
+                intf_dict['ip_nat_inside'] = True
+                continue
+
+            # Parse ip nat outside
+            # ip nat outside
+            m = p15.match(line)
+            if m and current_interface and current_interface_vrf:
+                intf_dict = ret_dict['vrf'][current_interface_vrf]['interfaces'][current_interface]
+                intf_dict['ip_nat_outside'] = True
+                continue
+
+            # Parse negotiation auto
+            # negotiation auto
+            m = p16.match(line)
+            if m and current_interface and current_interface_vrf:
+                intf_dict = ret_dict['vrf'][current_interface_vrf]['interfaces'][current_interface]
+                intf_dict['negotiation_auto'] = True
+                continue
+
+            # Parse NAT static rules
+            # ip nat inside source static 15.0.0.2 16.0.0.2 vrf CUST_A match-in-vrf
+            m = p17.match(line)
+            if m:
+                vrf_name = m.group('vrf_name')
+                if vrf_name in ret_dict.get('vrf', {}):
+                    nat_counter[vrf_name] += 1
+                    nat_key = f"nat_rule_{nat_counter[vrf_name]}"
+                    nat_dict = ret_dict['vrf'][vrf_name].setdefault('nat_rules', {}).setdefault(nat_key, {})
+                    nat_dict['type'] = m.group('type')
+                    nat_dict['local_ip'] = m.group('local_ip')
+                    nat_dict['global_ip'] = m.group('global_ip')
+                    nat_dict['vrf'] = vrf_name
+                    if m.group('match_in_vrf'):
+                        nat_dict['match_in_vrf'] = True
+                continue
+
+            # Parse routes with interface
+            # ip route vrf CUST_A 15.0.0.0 255.0.0.0 TenGigabitEthernet0/0/8 15.0.0.2
+            m = p18.match(line)
+            if m:
+                vrf_name = m.group('vrf_name')
+                if vrf_name in ret_dict.get('vrf', {}):
+                    route_counter[vrf_name] += 1
+                    route_key = f"route_{route_counter[vrf_name]}"
+                    route_dict = ret_dict['vrf'][vrf_name].setdefault('routes', {}).setdefault(route_key, {})
+                    route_dict['network'] = m.group('network')
+                    route_dict['mask'] = m.group('mask')
+                    route_dict['interface'] = m.group('interface')
+                    route_dict['next_hop'] = m.group('next_hop')
+                continue
+
+            # Parse routes without interface
+            # ip route vrf Mgmt-intf 223.255.254.0 255.255.255.0 1.46.0.1
+            m = p19.match(line)
+            if m:
+                vrf_name = m.group('vrf_name')
+                if vrf_name in ret_dict.get('vrf', {}):
+                    route_counter[vrf_name] += 1
+                    route_key = f"route_{route_counter[vrf_name]}"
+                    route_dict = ret_dict['vrf'][vrf_name].setdefault('routes', {}).setdefault(route_key, {})
+                    route_dict['network'] = m.group('network')
+                    route_dict['mask'] = m.group('mask')
+                    route_dict['next_hop'] = m.group('next_hop')
                 continue
 
         return ret_dict

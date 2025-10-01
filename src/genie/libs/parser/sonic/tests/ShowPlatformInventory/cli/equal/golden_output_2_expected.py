@@ -18,12 +18,12 @@ expected_output = {
     },
     "fpds": {
         "RP0/info.0": {
-            "description": "\_SB_.PCI0.SE0_.BR2A.BR3A.IOFP.INFO",
+            "description": r"\_SB_.PCI0.SE0_.BR2A.BR3A.IOFP.INFO",
             "name": "RP0/info.0",
             "version": "0.1.1-0",
         },
         "RP0/info.1": {
-            "description": "\_SB_.PCI0.SE0_.BR2A.BR3B.VLTN.INFO",
+            "description": r"\_SB_.PCI0.SE0_.BR2A.BR3B.VLTN.INFO",
             "name": "RP0/info.1",
             "version": "0.24.0-0",
         },

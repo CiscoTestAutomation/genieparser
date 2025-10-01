@@ -1,0 +1,3 @@
+Router#show alignment
+No alignment data recorded
+No spurious memory references have been recorded

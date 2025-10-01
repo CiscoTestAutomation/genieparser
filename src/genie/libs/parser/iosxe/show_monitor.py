@@ -7,6 +7,9 @@ IOSXE parsers for the following show commands:
     * show monitor event-trace crypto pki event all
     * show monitor event-trace crypto pki error all
     * show monitor event-trace crypto ikev2 event all
+    * show monitor event-trace crypto all detail
+    * show monitor event-trace crypto from-boot 
+    * show monitor event-trace crypto from-boot {timer}
 
 '''
 
@@ -16,7 +19,7 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any, Optional
+from genie.metaparser.util.schemaengine import Any, Optional, ListOf
 
 
 # =========================================
@@ -2172,7 +2175,6 @@ class ShowMonitorEventTraceCryptoIkev2EventAllSchema(MetaParser):
         }
     }
 
-
 # =================================================
 #  Parser for 'show monitor event-trace crypto ikev2 event all'
 # =================================================
@@ -2262,5 +2264,352 @@ class ShowMonitorEventTraceCryptoIkev2EventAll(ShowMonitorEventTraceCryptoIkev2E
                     event_dict['exchange_type'] = m_exchange.group('exchange_type')
 
                 event_idx += 1
+
+        return parsed_dict
+
+
+# =================================================
+#  Schema for 'show monitor event-trace crypto all detail'
+# =================================================
+class ShowMonitorEventTraceCryptoAllDetailSchema(MetaParser):
+    """Schema for `show monitor event-trace crypto all detail`"""
+    schema = {
+        'event_trace': {
+            Optional('pki_event'): {
+                Optional('events'): ListOf({
+                    Optional('timestamp'): str,
+                    Optional('message'): str,
+                    Optional('traceback'): str,
+                }),
+                Optional('status'): str,
+            },
+            Optional('pki_internal_event'): {
+                Optional('events'): ListOf({
+                    Optional('timestamp'): str,
+                    Optional('message'): str,
+                    Optional('traceback'): str,
+                }),
+                Optional('status'): str,
+            },
+            Optional('pki_error'): {
+                Optional('events'): ListOf({
+                    Optional('timestamp'): str,
+                    Optional('message'): str,
+                    Optional('traceback'): str,
+                }),
+                Optional('status'): str,
+            },
+            Optional('ikev2_event'): {
+                Optional('events'): ListOf({
+                    Optional('timestamp'): str,
+                    Optional('message'): str,
+                    Optional('traceback'): str,
+                }),
+                Optional('status'): str,
+            },
+            Optional('ikev2_internal_event'): {
+                Optional('events'): ListOf({
+                    Optional('timestamp'): str,
+                    Optional('message'): str,
+                    Optional('traceback'): str,
+                }),
+                Optional('status'): str,
+            },
+            Optional('ikev2_error'): {
+                Optional('events'): ListOf({
+                    Optional('timestamp'): str,
+                    Optional('message'): str,
+                    Optional('traceback'): str,
+                }),
+                Optional('status'): str,
+            },
+            Optional('ikev2_exception'): {
+                Optional('events'): ListOf({
+                    Optional('timestamp'): str,
+                    Optional('message'): str,
+                    Optional('traceback'): str,
+                }),
+                Optional('status'): str,
+            },
+            Optional('ipsec_event'): {
+                Optional('events'): ListOf({
+                    Optional('timestamp'): str,
+                    Optional('message'): str,
+                    Optional('traceback'): str,
+                }),
+                Optional('status'): str,
+            },
+            Optional('ipsec_error'): {
+                Optional('events'): ListOf({
+                    Optional('timestamp'): str,
+                    Optional('message'): str,
+                    Optional('traceback'): str,
+                }),
+                Optional('status'): str,
+            },
+            Optional('ipsec_exception'): {
+                Optional('events'): ListOf({
+                    Optional('timestamp'): str,
+                    Optional('message'): str,
+                    Optional('traceback'): str,
+                }),
+                Optional('status'): str,
+                'interrupt_context_allocation_count': int,
+            },
+        }
+    }
+
+# =================================================
+#  Parser for 'show monitor event-trace crypto all detail'
+# =================================================
+class ShowMonitorEventTraceCryptoAllDetail(ShowMonitorEventTraceCryptoAllDetailSchema):
+    """Parser for `show monitor event-trace crypto all detail`"""
+
+    cli_command = 'show monitor event-trace crypto all detail'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        parsed_dict = {}
+        current_section = None
+        current_events = []
+
+        # pki_event:
+        p1 = re.compile(r'^(?P<section>\w+):\s*$')
+
+        # *Apr  3 23:53:30.374: EST client initialized.
+        p2 = re.compile(r'^\*(?P<timestamp>\w{3}\s+\d+\s+\d{2}:\d{2}:\d{2}\.\d{3}):\s*(?P<message>.*)$')
+
+        # -Traceback= 1#3c677f5693d4a1da4989c9342fd445a2 :AAAACD000000+B371FD8  :AAAACD000000+6CA9C90  :AAAACD000000+6CAFFD4  :AAAACD000000+802A094  :AAAACD000000+8029AEC  :AAAACD000000+7F8E788  :AAAACD000000+896EBD8
+        p3 = re.compile(r'^-Traceback=\s*(?P<traceback>.*)$')
+
+        # Tracing currently disabled, from exec command
+        p4 = re.compile(r'^Tracing currently disabled, from exec command\s*$')
+
+        # interrupt context allocation count = 0
+        p5 = re.compile(r'^interrupt context allocation count = (?P<count>\d+)\s*$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # pki_event:
+            m1 = p1.match(line)
+            if m1:
+                current_section = m1.group('section')
+                if current_section not in parsed_dict:
+                    section_dict = parsed_dict.setdefault('event_trace', {}).setdefault(current_section, {})
+                else:
+                    continue
+
+            # *Apr  3 23:53:30.374: EST client initialized.
+            m2 = p2.match(line)
+            if m2:
+                event = {
+                    'timestamp': m2.group('timestamp'),
+                    'message': m2.group('message')
+                }                
+                if 'events' in section_dict:
+                    section_dict['events'].append(event)
+                else:
+                    section_dict.setdefault('events', [event])    
+                continue
+
+            # -Traceback= 1#3c677f5693d4a1da4989c9342fd445a2 :AAAACD000000+B371FD8  :AAAACD000000+6CA9C90  :AAAACD000000+6CAFFD4  :AAAACD000000+802A094  :AAAACD000000+8029AEC  :AAAACD000000+7F8E788  :AAAACD000000+896EBD8
+            m3 = p3.match(line)
+            if m3:
+                section_dict['events'][-1]['traceback'] = m3.group('traceback')
+                continue
+
+            # Tracing currently disabled, from exec command
+            m4 = p4.match(line)
+            if m4:
+                section_dict['status'] = 'Tracing currently disabled, from exec command'
+                continue
+
+           # interrupt context allocation count = 0
+            m5 = p5.match(line)
+            if m5:
+                section_dict['interrupt_context_allocation_count'] = int(m5.group('count'))
+                continue
+
+        return parsed_dict
+
+
+# =================================================
+#  Schema for 'show monitor event-trace crypto from-boot'
+#  Schema for 'show monitor event-trace crypto from-boot {timer}'
+# =================================================
+class ShowMonitorEventTraceCryptoFromBootSchema(MetaParser):
+    """Schema for :
+        'show monitor event-trace crypto from-boot'
+        'show monitor event-trace crypto from-boot {timer}'"""
+    schema = {
+        'event_trace': {
+            Optional('pki_event'): {
+                Optional('events'): ListOf({
+                    Optional('timestamp'): str,
+                    Optional('message'): str,
+                    Optional('traceback'): str,
+                }),
+                Optional('status'): str,
+            },
+            Optional('pki_internal_event'): {
+                Optional('events'): ListOf({
+                    Optional('timestamp'): str,
+                    Optional('message'): str,
+                    Optional('traceback'): str,
+                }),
+                Optional('status'): str,
+            },
+            Optional('pki_error'): {
+                Optional('events'): ListOf({
+                    Optional('timestamp'): str,
+                    Optional('message'): str,
+                    Optional('traceback'): str,
+                }),
+                Optional('status'): str,
+            },
+            Optional('ikev2_event'): {
+                Optional('events'): ListOf({
+                    Optional('timestamp'): str,
+                    Optional('message'): str,
+                    Optional('traceback'): str,
+                }),
+                Optional('status'): str,
+            },
+            Optional('ikev2_internal_event'): {
+                Optional('events'): ListOf({
+                    Optional('timestamp'): str,
+                    Optional('message'): str,
+                    Optional('traceback'): str,
+                }),
+                Optional('status'): str,
+            },
+            Optional('ikev2_error'): {
+                Optional('events'): ListOf({
+                    Optional('timestamp'): str,
+                    Optional('message'): str,
+                    Optional('traceback'): str,
+                }),
+                Optional('status'): str,
+            },
+            Optional('ikev2_exception'): {
+                Optional('events'): ListOf({
+                    Optional('timestamp'): str,
+                    Optional('message'): str,
+                    Optional('traceback'): str,
+                }),
+                Optional('status'): str,
+            },
+            Optional('ipsec_event'): {
+                Optional('events'): ListOf({
+                    Optional('timestamp'): str,
+                    Optional('message'): str,
+                    Optional('traceback'): str,
+                }),
+                Optional('status'): str,
+            },
+            Optional('ipsec_error'): {
+                Optional('events'): ListOf({
+                    Optional('timestamp'): str,
+                    Optional('message'): str,
+                    Optional('traceback'): str,
+                }),
+                Optional('status'): str,
+            },
+            Optional('ipsec_exception'): {
+                Optional('events'): ListOf({
+                    Optional('timestamp'): str,
+                    Optional('message'): str,
+                    Optional('traceback'): str,
+                }),
+                Optional('status'): str,
+                Optional('interrupt_context_allocation_count'): int,
+            },
+        }
+    }
+
+# =================================================
+#  Parser for 'show monitor event-trace crypto from-boot'
+#  Parser for 'show monitor event-trace crypto from-boot {timer}'
+# =================================================
+class ShowMonitorEventTraceCryptoFromBoot(ShowMonitorEventTraceCryptoFromBootSchema):
+    """Parser for :
+        'show monitor event-trace crypto from-boot'
+        'show monitor event-trace crypto from-boot {timer}'"""
+
+    cli_command = ['show monitor event-trace crypto from-boot',
+                   'show monitor event-trace crypto from-boot {timer}']
+
+    def cli(self, timer='', output=None):
+        if output is None:
+            if timer:
+                cmd = self.cli_command[1].format(timer=timer)
+            else:
+                cmd = self.cli_command[0]
+            output = self.device.execute(cmd)
+
+        parsed_dict = {}
+        current_section = None
+        current_events = []
+
+        # pki_event:
+        p1 = re.compile(r'^(?P<section>\w+):\s*$')
+
+        # Aug 11 09:10:26.036: SA ID:1 SESSION ID:1 Remote: 40.181.251.101/500 Local: 40.185.80.1/500  (I) Sending IKEv2 IKE_SA_INIT Exchange REQUEST
+        p2 = re.compile(r'^(?P<timestamp>\w{3}\s+\d+\s+\d{2}:\d{2}:\d{2}\.\d{3}):\s*(?P<message>.*)$')
+
+        # -Traceback= 1#3c677f5693d4a1da4989c9342fd445a2 :AAAACD000000+B371FD8  :AAAACD000000+6CA9C90  :AAAACD000000+6CAFFD4  :AAAACD000000+802A094  :AAAACD000000+8029AEC  :AAAACD000000+7F8E788  :AAAACD000000+896EBD8
+        p3 = re.compile(r'^-Traceback=\s*(?P<traceback>.*)$')
+
+        # Tracing currently disabled, from exec command
+        p4 = re.compile(r'^Tracing currently disabled, from exec command\s*$')
+
+        # interrupt context allocation count = 0
+        p5 = re.compile(r'^interrupt context allocation count = (?P<count>\d+)\s*$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # pki_event:
+            m1 = p1.match(line)
+            if m1:
+                current_section = m1.group('section')
+                if current_section not in parsed_dict:
+                    section_dict = parsed_dict.setdefault('event_trace', {}).setdefault(current_section, {})
+                else:
+                    continue
+
+            # Aug 11 09:10:26.036: SA ID:1 SESSION ID:1 Remote: 40.181.251.101/500 Local: 40.185.80.1/500  (I) Sending IKEv2 IKE_SA_INIT Exchange REQUEST
+            m2 = p2.match(line)
+            if m2:
+                event = {
+                    'timestamp': m2.group('timestamp'),
+                    'message': m2.group('message')
+                }                
+                if 'events' in section_dict:
+                    section_dict['events'].append(event)
+                else:
+                    section_dict.setdefault('events', [event])    
+                continue
+
+            # -Traceback= 1#3c677f5693d4a1da4989c9342fd445a2 :AAAACD000000+B371FD8  :AAAACD000000+6CA9C90  :AAAACD000000+6CAFFD4  :AAAACD000000+802A094  :AAAACD000000+8029AEC  :AAAACD000000+7F8E788  :AAAACD000000+896EBD8
+            m3 = p3.match(line)
+            if m3:
+                section_dict['events'][-1]['traceback'] = m3.group('traceback')
+                continue
+
+            # Tracing currently disabled, from exec command
+            m4 = p4.match(line)
+            if m4:
+                section_dict['status'] = 'Tracing currently disabled, from exec command'
+                continue
+
+            # interrupt context allocation count = 0
+            m5 = p5.match(line)
+            if m5:
+                section_dict['interrupt_context_allocation_count'] = int(m5.group('count'))
+                continue
 
         return parsed_dict

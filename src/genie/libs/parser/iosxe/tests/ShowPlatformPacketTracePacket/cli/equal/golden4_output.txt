@@ -1,0 +1,42 @@
+Packet: 2           CBUG ID: 2
+Summary
+  Input     : GigabitEthernet0/0/2
+  Output    : GigabitEthernet0/0/0
+  State     : FWD
+  Timestamp
+    Start   : 5809844186559 ns (08/22/2025 14:39:37.513661 UTC)
+    Stop    : 5809844267255 ns (08/22/2025 14:39:37.513742 UTC)
+Path Trace
+  Feature: IPV4(Output)
+    Input       : GigabitEthernet0/0/2
+    Output      : GigabitEthernet0/0/0
+    Source      : 10.1.1.1
+    Destination : 20.1.1.1
+    Protocol    : 17 (UDP)
+      SrcPort   : 10001
+      DstPort   : 20001
+  Feature: ZBFW
+    Action  : Fwd
+    Zone-pair name         :
+    Class-map name         : cmap
+    Policy    name         :
+    Input interface        : GigabitEthernet0/0/2
+    Egress interface       : GigabitEthernet0/0/0
+    Input  VPN ID          : 65535
+    Output VPN ID          : 65535
+    Input  VRF ID:Name     : 0:
+    Output VRF ID:Name     : 0:
+    AVC Classification ID  : 0
+    AVC Classification name: N/A
+    UTD Context ID         : 0
+  Feature: QOS
+    Direction        : Egress
+    Action           : FWD
+    Pak Priority     : FALSE
+    Priority         : FALSE
+    Queue ID         : 114 (0x72)
+    PAL Queue ID     : 0 (0x0)
+    Queue Limit      : 4377
+    WRED enabled     : FALSE
+    Inst Queue len   : 0
+    Avg Queue len    : n/a
