@@ -13,6 +13,7 @@ IOSXE parsers for the following show commands:
 
 # Python
 import re
+import logging
 
 # Metaparser
 from genie.metaparser import MetaParser
@@ -21,6 +22,8 @@ from genie.metaparser.util.schemaengine import Schema, Any, Or, ListOf, \
 
 # import parser utils
 from genie.libs.parser.utils.common import Common
+
+log = logging.getLogger(__name__)
 
 # =================================================
 # Schema for:
@@ -2750,7 +2753,9 @@ class ShowRunningConfigAAAUsernameSchema(MetaParser):
                 Optional('common_criteria_policy'): str,
                 Optional('view'): str,
                 Optional('type'): str,
+                Optional('autocommand'): str,
                 Optional('onetime'): bool,
+                Optional('nopassword'): bool,
                 Optional('secret'): {
                     Optional('type'): int,
                     Optional('secret'): str,
@@ -2896,36 +2901,44 @@ class ShowRunningConfigAAAUsername(ShowRunningConfigAAAUsernameSchema):
         else:
             out = output
 
-        # username testuser password 0 lab
-        p1 = re.compile(r'^username +(?P<username>\S+) +password +(?P<type>\d) +(?P<password>.*)$')
+        # NOTE: All of the following regular expressions should be anchored to
+        # the begining of the line ('^'). As each is used the line will be
+        # shortened. Think of this as popping arguments (and their parameters)
+        # off of a stack (the front of the line).
+        #
+        # There are some arguments that cannot have any subsequent arguments.
+        # These are:
+        # 1) password
+        # 2) secret
+        # 3) autocommand
+        # These arguments shall also match the end of the line ('$').
+        #
+        # All arguments that are not matched to the end of the line shall match
+        # an optional trailing space (' ?').
 
-        # username testuser common-criteria-policy Test-CC password 0 password
-        p2 = re.compile(
-            r'^username +(?P<username>\S+) +common-criteria-policy +(?P<common_criteria_policy>.*) '
-            r'+password +(?P<type>\d) +(?P<password>.*)$')
+        # username testuser
+        username_cmd = re.compile(r'^username (?P<username>\S+) ?')
 
-        # username testuser secret 9 $9$A2OfV.30kNlIhE$ZEJQIT6aUj.TfCzqGQr.h4AmjQd/bWikQaGRlaLv0nQ
-        p3 = re.compile(r'^username +(?P<username>\S+) +secret +(?P<type>\d) +(?P<secret>.*)$')
+        # common-criteria-policy Test-CC
+        common_criteria_policy = re.compile(r'^common-criteria-policy (?P<common_criteria_policy>\S+) ?')
 
-        # username testuser one-time secret 9 $9$AuJ8xgW8aBBuF.$HyAzLk.3ILFsKrEvd4YjaAHbtonVMLikXw2pnrlkYJY
-        p4 = re.compile(
-            r'^username +(?P<username>\S+) +one-time +(?P<Onetime>)\s*secret +(?P<type>\d+) +(?P<secret>.*)$')
+        # secret 9 $9$A2OfV.30kNlIhE$ZEJQIT6aUj.TfCzqGQr.h4AmjQd/bWikQaGRlaLv0nQ
+        secret = re.compile(r'^secret (?P<type>\d) (?P<secret>.*)$')
 
-        # username testuser privilege 15 password 0 lab
-        p5 = re.compile(
-            r'^username +(?P<username>\S+) +privilege +(?P<privilege>\d+) +password +(?P<type>\d) +(?P<password>.*)$')
+        # privilege 15
+        privilege = re.compile(r'^privilege (?P<privilege>\d+) ?')
 
-        # username testuser common-criteria-policy Test-CC secret 9 $9$7K9qbCZMJa2Vuk$6bS3.Bv7AkBXhTHpTH9V9fhMnJCQe1a9O7xBWHtOKo.
-        p6 = re.compile(
-            r'^username +(?P<username>\S+) +common-criteria-policy +(?P<common_criteria_policy>.*) '
-            r'+secret +(?P<type>\d) +(?P<secret>.*)$')
+        # one-time
+        onetime = re.compile(r'^one-time ?')
 
-        # username testuser one-time password 0 password
-        p7 = re.compile(
-            r'^username +(?P<username>\S+) +one-time +(?P<Onetime>)\s*password +(?P<type>\d) +(?P<password>.*)$')
+        # nopassword
+        nopassword = re.compile(r'^nopassword ?')
 
-        # username developer privilege 15 secret 9 $9$oNguEA9um9vRx.$MsDk0DOy1rzBjKAcySWdNjoKcA7GetG9YNnKOs8S67A
-        p8 = re.compile(r'^username +(?P<username>\S+) +privilege +(?P<privilege>\d+) +secret +(?P<secret_type>\d+) +(?P<secret>\S+)$')
+        # password 0 lab
+        password = re.compile(r'^password (?P<type>\d) (?P<password>.*)$')
+
+        # autocommand show ip bgp summary
+        autocommand = re.compile(r'^autocommand (?P<autocommand>.*)$')
 
         # Initial return dictionary
         ret_dict = {}
@@ -2933,102 +2946,90 @@ class ShowRunningConfigAAAUsername(ShowRunningConfigAAAUsernameSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # username testuser password 0 lab
-            m = p1.match(line)
-            if m:
-                group = m.groupdict()
-                username = group['username']
-                users_dict = ret_dict.setdefault('username', {}).setdefault(username, {})
-                pass_dict = users_dict.setdefault('password', {})
-                pass_dict['type'] = int(group['type'])
-                pass_dict['password'] = group['password']
+            # username testuser
+            m = username_cmd.match(line)
+            if not m:
+                # CLAIM: This is not a line with a 'username' command.
                 continue
 
-            # username testuser common-criteria-policy Test-CC password 0 password
-            m = p2.match(line)
-            if m:
-                group = m.groupdict()
-                username = group['username']
-                users_dict = ret_dict.setdefault('username', {}).setdefault(username, {})
-                users_dict['common_criteria_policy'] = group['common_criteria_policy']
-                pass_dict = users_dict.setdefault('password', {})
-                pass_dict['type'] = int(group['type'])
-                pass_dict['password'] = group['password']
-                continue
+            # CLAIM: this is a username line
+            # GOAL: extract the specified username and switch to that
+            # sub-dictionary:
+            group = m.groupdict()
+            username = group['username']
+            users_dict = ret_dict.setdefault('username', {}).setdefault(username, {})
 
-            # username testuser secret 9 $9$A2OfV.30kNlIhE$ZEJQIT6aUj.TfCzqGQr.h4AmjQd/bWikQaGRlaLv0nQ
-            m = p3.match(line)
-            if m:
-                group = m.groupdict()
-                username = group['username']
-                users_dict = ret_dict.setdefault('username', {}).setdefault(username, {})
-                secret_dict = users_dict.setdefault('secret', {})
-                secret_dict['type'] = int(group['type'])
-                secret_dict['secret'] = group['secret']
-                continue
+            # GOAL: remove the matched portion from the begining of the line
+            # so that we can match the subsequent argument (if any):
+            line = line[m.end():]
 
-            # username testuser one-time secret 9 $9$AuJ8xgW8aBBuF.$HyAzLk.3ILFsKrEvd4YjaAHbtonVMLikXw2pnrlkYJY
-            m = p4.match(line)
-            if m:
-                group = m.groupdict()
-                username = group['username']
-                users_dict = ret_dict.setdefault('username', {}).setdefault(username, {})
-                users_dict['onetime'] = True
-                secret_dict = users_dict.setdefault('secret', {})
-                secret_dict['type'] = int(group['type'])
-                secret_dict['secret'] = group['secret']
-                continue
+            while line:
+                # GOAL: parse through the line an argument at a time,
+                # shortening the line as we go.
 
-            # username testuser privilege 15 password 0 lab
-            m = p5.match(line)
-            if m:
-                group = m.groupdict()
-                username = group['username']
-                users_dict = ret_dict.setdefault('username', {}).setdefault(username, {})
-                users_dict['privilege'] = int(group['privilege'])
-                pass_dict = users_dict.setdefault('password', {})
-                pass_dict['type'] = int(group['type'])
-                pass_dict['password'] = group['password']
-                continue
+                # GOAL: match the 'common-criteria-policy' option and return its parameter
+                # Sample: "common-criteria-policy MyPolicy"
+                if m := common_criteria_policy.match(line):
+                    group = m.groupdict()
+                    users_dict['common_criteria_policy'] = group['common_criteria_policy']
+                    line = line[m.end():]
+                    continue
 
-            # username testuser common-criteria-policy Test-CC secret 9 $9$7K9qbCZMJa2Vuk$6bS3.Bv7AkBXhTHpTH9V9fhMnJCQe1a9O7xBWHtOKo.
-            m = p6.match(line)
-            if m:
-                group = m.groupdict()
-                username = group['username']
-                users_dict = ret_dict.setdefault('username', {}).setdefault(username, {})
-                users_dict['common_criteria_policy'] = group['common_criteria_policy']
-                secret_dict = users_dict.setdefault('secret', {})
-                secret_dict['type'] = int(group['type'])
-                secret_dict['secret'] = group['secret']
-                continue
+                # GOAL: match the 'privilege' option and return its parameter
+                # Sample: "privilege 15"
+                if m := privilege.match(line):
+                    group = m.groupdict()
+                    users_dict['privilege'] = int(group['privilege'])
+                    line = line[m.end():]
+                    continue
 
-            # username testuser one-time password 0 password
-            m = p7.match(line)
-            if m:
-                group = m.groupdict()
-                username = group['username']
-                users_dict = ret_dict.setdefault('username', {}).setdefault(username, {})
-                users_dict['onetime'] = True
-                pass_dict = users_dict.setdefault('password', {})
-                pass_dict['type'] = int(group['type'])
-                pass_dict['password'] = group['password']
-                continue
+                # GOAL: match the 'secret' option and return its parameters ('type' and 'secret')
+                # Sample: "secret 9 $9$oNguEA9um9vRx.$MsDk0DOy1rzBjKAcySWdNjoKcA7GetG9YNnKOs8S67A"
+                if m := secret.match(line):
+                    group = m.groupdict()
+                    pass_dict = users_dict.setdefault('secret', {})
+                    pass_dict['type'] = int(group['type'])
+                    pass_dict['secret'] = group['secret']
+                    line = line[m.end():]
+                    continue
 
-            # username developer privilege 15 secret 9 $9$oNguEA9um9vRx.$MsDk0DOy1rzBjKAcySWdNjoKcA7GetG9YNnKOs8S67A
-            m = p8.match(line)
-            if m:
-                group = m.groupdict()
-                user_dict = ret_dict.setdefault('username', {}).setdefault(group['username'], {})
-                user_dict.update({
-                    'privilege': int(group['privilege']),
-                })
+                # GOAL: match the 'onetime' flag
+                # Sample: "onetime"
+                if m := onetime.match(line):
+                    group = m.groupdict()
+                    users_dict['onetime'] = True
+                    line = line[m.end():]
+                    continue
 
-                secret_dict = user_dict.setdefault('secret', {})
-                secret_dict.update({
-                    'type': int(group['secret_type']),
-                    'secret': group['secret']
-                })
+                # GOAL: match the 'nopassword' flag
+                # Sample: "nopassword"
+                if m := nopassword.match(line):
+                    group = m.groupdict()
+                    users_dict['nopassword'] = True
+                    line = line[m.end():]
+                    continue
+
+                # GOAL: match the 'autocommand' option and return all subsequent text
+                # Sample: "autocommand show ip bgp summary"
+                if m := autocommand.match(line):
+                    group = m.groupdict()
+                    users_dict['autocommand'] = group['autocommand']
+                    line = line[m.end():]
+                    continue
+
+                # GOAL: match the 'password' option and return its parameters ('type' and 'password')
+                # Sample: "password 0 lab"
+                if m := password.match(line):
+                    group = m.groupdict()
+                    pass_dict = users_dict.setdefault('password', {})
+                    pass_dict['type'] = int(group['type'])
+                    pass_dict['password'] = group['password']
+                    line = line[m.end():]
+                    continue
+
+                # CLAIM: There is an unhandled argument.
+                log.warning(f"Unhandled argument in parser 'show running-config aaa username': {line}")
+                break
 
         return ret_dict
 
