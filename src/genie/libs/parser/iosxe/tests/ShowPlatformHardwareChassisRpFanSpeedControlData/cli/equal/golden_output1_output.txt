@@ -1,0 +1,8 @@
+Slot Type   PWM      I/O PWM
+---- ---- -------    -------
+   1   LC      76     102
+   3   LC      76      76
+   4   LC      76      76
+   5  SUP      76     N/A
+   6  SUP      76     N/A
+   9   LC      76     102

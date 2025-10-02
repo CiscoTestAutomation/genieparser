@@ -797,6 +797,9 @@ class ShowEnvironmentPowerDetailSchema(MetaParser):
                     Optional('Pin'): float,
                     Optional('Vin'): float,
                     Optional('Iin'): float,
+                    Optional('PinB'): float,
+                    Optional('VinB'): float,
+                    Optional('IinB'): float,
                     Optional('Pout'): float,
                     Optional('Vout'): float,
                     Optional('Iout'): float,
@@ -804,7 +807,10 @@ class ShowEnvironmentPowerDetailSchema(MetaParser):
                     Optional('connected_to'): str,
                     Optional('software_alarm'): str,
                     Optional('hardware_alarm'): str,
-                    Optional('hw_registers'): list
+                    Optional('hw_registers'): list,
+                    Optional('pin_total'): float,
+                    Optional('inlet'): str,
+                    Optional('units'): str
                 }
             }
         }
@@ -833,12 +839,13 @@ class ShowEnvironmentPowerDetail(ShowEnvironmentPowerDetailSchema):
         p1 = re.compile(r'^\s*Voltage: +(?P<voltage>[0-9]+)\s+Volts')
 
         #1        N9K-PAC-3000W-B      1087 W             1150 W      3000 W      Ok
-        p2 = re.compile(r'^\s*(?P<ps_id>\d+)\s+(?P<model>[A-Z0-9-]+)\s*(?P<act_out>\d+)\s?W\s*(?P<act_in>\d+)\s?W\s*(?P<tot_cap>\d+)\s?W\s+(?P<status>\w+)\s*')
+        p2 = re.compile(r'^\s*(?P<ps_id>\d+)\s+(?P<model>[A-Z0-9-.]+)\s*(?P<act_out>\d+)\s?W\s*(?P<act_in>\d+)\s?W\s*(?P<tot_cap>\d+)\s?W\s+(?P<status>\w+)\s*')
 
         #1        N9K-X9736Q-FX           401.00 W     936.00 W    Powered-Up
         #Xb22     N9K-C9508-FM-E          175.00 W     564.00 W    Powered-Up
         #fan1     N9K-C9508-FAN            81.00 W     249.00 W    Powered-Up
-        p3 = re.compile(r'^\s*(?P<module>[fanXb0-9]+)\s+(?P<model>[A-Za-z0-9-]+)\s*(?P<act_draw>[0-9.]+)\s+W\s+(?P<powr_alloc>[0-9.]+)\s+W\s+(?P<status>[a-zA-Z-]+)\s*')
+        #28       supervisor                N/A         90.00 W    Absent
+        p3 = re.compile(r'^\s*(?P<module>[fanXb0-9]+)\s+(?P<model>[A-Za-z0-9-+]+)\s*(?P<act_draw>[0-9.NA/]+)\s+W?\s+(?P<powr_alloc>[0-9.NA/]+)\s+W?\s+(?P<status>[a-zA-Z-]+)\s*')
         
         #Power Supply redundancy mode (configured)                Non-Redundant(combined)
         p4 = re.compile(r'^\s*Power Supply redundancy mode \(configured\)\s+(?P<conf_mode>[-\w\(\)]+)')
@@ -892,11 +899,17 @@ class ShowEnvironmentPowerDetail(ShowEnvironmentPowerDetailSchema):
 
         # Pin:1143.68W  Vin:236.07V    Iin:4.89A    Pout:1076.82W    Vout:12.08V    Iout:90.03A
         # Pin:0.00W  Vin:0.00V    Iin:0.00A    Pout:0.00W    Vout:0.00V    Iout:0.00A
-        p20 = re.compile(r'^\s*Pin:(?P<power_in>[0-9.]+)W\s+Vin:(?P<volt_in>[0-9.]+)V\s+Iin:(?P<cur_in>[0-9.]+)A\s+Pout:(?P<power_out>[0-9.]+)W\s+Vout:(?P<volt_out>[0-9.]+)V\s+Iout:(?P<cur_out>[0-9.]+)A\s*')
+        # Pin total:612.00W  Pin A:333.68W  Vin:207.00V    Iin:1.61A    Pout:510.00W    Vout:55.00V    Iout:9.24A
+        p20 = re.compile(r'^(Pin total:)?(?P<pin_total>[0-9.]+)?(W\s+)?Pin( A)?:(?P<Pin>[0-9.]+)W\s+Vin:(?P<Vin>[0-9.]+)V\s+Iin:(?P<Iin>[0-9.]+)A\s+Pout:(?P<Pout>[0-9.]+)W\s+Vout:(?P<Vout>[0-9.]+)V\s+Iout:(?P<Iout>[0-9.]+)A$')
 
+        #Pin B:0.00W    Iin B:0.00A    Vin B:0.00V
+        p20_1 = re.compile(r'^\s*Pin\s+B:(?P<PinB>[0-9.]+)W\s+Iin\s+B:(?P<IinB>[0-9.]+)A\s+Vin\s+B:(?P<VinB>[0-9.]+)V\s*')
+         
         # Cord connected to 220V AC
         # Cord not connected
-        p21 = re.compile(r'^\s*(?P<cord_connected>[Cord connected]+)\s?to?\s?(?P<input>\d+)?V?')
+        # Cord connected to inlet1 220V AC
+        # Cord both connected to 220V AC
+        p21 = re.compile(r'^\s*(?P<cord_connected>Cord connected|Cord not connected|Cord both connected)\s?(to)?\s?(?P<inlet>inlet1|inlet2)?\s?(?P<input>\d+)?V?\s?(?P<units>AC)?$')
 
         # Software-Alarm: No
         p22 = re.compile(r'^\s*Software-Alarm: (?P<soft_alarm>.*)')
@@ -910,12 +923,13 @@ class ShowEnvironmentPowerDetail(ShowEnvironmentPowerDetailSchema):
         p24 = re.compile(r'^\s*(?P<reg_bit>Reg\d+ bit\d+): (?P<reg_val>.*)\s*')
 
         parsed_env_power_dict = {}
-        parsed_env_power_dict.setdefault('power', {}).setdefault('power_supply', {})
-        parsed_env_power_dict.setdefault('power', {}).setdefault('power_supply_mode', {})
-        parsed_env_power_dict.setdefault('power', {}).setdefault('power_usage_summary', {})
-        parsed_env_power_dict.setdefault('power', {}).setdefault('power_usage_details', {})
-        parsed_env_power_dict.setdefault('power', {}).setdefault('power_supply_details', {})
-        
+        if out:
+            parsed_env_power_dict.setdefault('power', {}).setdefault('power_supply', {})
+            parsed_env_power_dict.setdefault('power', {}).setdefault('power_supply_mode', {})
+            parsed_env_power_dict.setdefault('power', {}).setdefault('power_usage_summary', {})
+            parsed_env_power_dict.setdefault('power', {}).setdefault('power_usage_details', {})
+            parsed_env_power_dict.setdefault('power', {}).setdefault('power_supply_details', {})
+            
         ps = ''
 
         for line in out.splitlines():
@@ -1045,8 +1059,8 @@ class ShowEnvironmentPowerDetail(ShowEnvironmentPowerDetailSchema):
             m = p19.match(line)
             if m:
                 ps = m.group('ps')
-                parsed_env_power_dict['power']['power_supply_details'][ps] = {'total_capacity_watts': int(m.group('tot_cap')), 'voltage': int(m.group('voltage'))}
-                continue
+                ps_dict = parsed_env_power_dict['power']['power_supply_details'].setdefault(ps, {})
+                ps_dict.update({'total_capacity_watts': int(m.group('tot_cap')), 'voltage': int(m.group('voltage'))})
             
             # Pin:1143.68W  Vin:236.07V    Iin:4.89A    Pout:1076.82W    Vout:12.08V    Iout:90.03A
             # Pin:0.00W  Vin:0.00V    Iin:0.00A    Pout:0.00W    Vout:0.00V    Iout:0.00A
@@ -1054,28 +1068,64 @@ class ShowEnvironmentPowerDetail(ShowEnvironmentPowerDetailSchema):
             if m:
                 p_dict = m.groupdict()
                 if ps:
-                    parsed_env_power_dict['power']['power_supply_details'][ps].update({'Pin': float(p_dict['power_in']), \
-                        'Pout': float(p_dict['power_out']), \
-                        'Vin': float(p_dict['volt_in']), \
-                        'Vout': float(p_dict['volt_out']), \
-                        'Iin': float(p_dict['cur_in']), \
-                        'Iout': float(p_dict['cur_out'])})
+                    pdata = m.groupdict()
+                    ps_dict.update({
+                        'Pin': float(p_dict['Pin']),
+                        'Pout': float(p_dict['Pout']),
+                        'Vin': float(p_dict['Vin']),
+                        'Vout': float(p_dict['Vout']),
+                        'Iin': float(p_dict['Iin']),
+                        'Iout': float(p_dict['Iout'])
+                        })
+
+                    if p_dict['pin_total']:
+                        ps_dict.update({
+                            'pin_total': float(p_dict['pin_total'])
+                            })
                 continue
 
+            #Pin B:0.00W    Iin B:0.00A    Vin B:0.00V
+            m = p20_1.match(line) 
+            if m:
+                p_dict = m.groupdict()
+                if ps:
+                    pdata = m.groupdict()
+                    ps_dict.update({
+                            'PinB': float(p_dict['PinB']),
+                            'VinB': float(p_dict['VinB']),
+                            'IinB': float(p_dict['IinB']),
+                            })
+                continue
+            
             # Cord connected to 220V AC
             # Cord not connected
+            # Cord connected to inlet1 220V AC
+            # Cord both connected to 220V AC
             m = p21.match(line)
             if m:
+                connected_data =  m.groupdict()
                 if ps:
-                    parsed_env_power_dict['power']['power_supply_details'][ps].update({'cord_connected': False if 'not' in m.group('cord_connected') else True, \
-                        'connected_to': str(m.group('input'))})
+                    if 'not connected' in connected_data['cord_connected']:
+                        ps_dict.update({
+                            'cord_connected': False
+                        })
+                    else:
+                        ps_dict.update({
+                            'cord_connected': True,
+                            'connected_to': connected_data['input'],
+                            'units': connected_data['units']
+                        })
+
+                    if connected_data['inlet']:
+                        ps_dict['inlet'] =  connected_data['inlet']
                 continue
 
             # Software-Alarm: No
             m = p22.match(line)
             if m:
                 if ps:
-                    parsed_env_power_dict['power']['power_supply_details'][ps]['software_alarm'] = m.group('soft_alarm')
+                    ps_dict['software_alarm'] = m.group('soft_alarm')
+                continue
 
             # Hardware alarm_bits reg0:20, reg2: 1,
             # Hardware alarm_bits
@@ -1083,16 +1133,17 @@ class ShowEnvironmentPowerDetail(ShowEnvironmentPowerDetailSchema):
             if m:
                 v_dict = m.groupdict()
                 if ps:
-                    parsed_env_power_dict['power']['power_supply_details'][ps]['hardware_alarm'] = v_dict['hard_alarm']
+                     ps_dict['hardware_alarm'] = v_dict['hard_alarm']
+                continue
             
             # Reg0 bit5: No input detected
             # Reg2 bit0: Vin out of range
             m = p24.match(line)
             if m:
                 if ps:
-                    if 'hw_registers' not in parsed_env_power_dict['power']['power_supply_details'][ps]:
-                        parsed_env_power_dict['power']['power_supply_details'][ps]['hw_registers'] = []
-                    parsed_env_power_dict['power']['power_supply_details'][ps]['hw_registers'].append({m.group('reg_bit'): m.group('reg_val')})
+                    if 'hw_registers' not in ps_dict:
+                        ps_dict['hw_registers'] = []
+                    ps_dict['hw_registers'].append({m.group('reg_bit'): m.group('reg_val')})
                 continue
 
         return parsed_env_power_dict
@@ -1139,11 +1190,11 @@ class ShowEnvironmentTemperature(ShowEnvironmentTemperatureSchema):
         #Match Temperatures
         #1        CPU             85              75          53         Ok
         p1 = re.compile(r'^\s*(?P<mod>\d+)\s+'
-                        r'(?P<sensor>\w+)\s+'
+                        r'(?P<sensor>\S+)\s+'
                         r'(?P<major_thresh>\d+)\s+'
                         r'(?P<minor_thresh>\d+)\s+'
                         r'(?P<curr_temp>\d+)\s+'
-                        r'(?P<status>\w+)\s*')
+                        r'(?P<status>\S+)\s*')
 
 
         parsed_env_temp_dict = {}

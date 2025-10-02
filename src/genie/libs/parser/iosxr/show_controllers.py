@@ -1197,11 +1197,11 @@ class ShowControllersOpticsFecThresholds(ShowControllersOpticsFecThresholdsSchem
         result_dict = {}
 
         # regex for scientific notation number
-        scientific_notation_regex = '[\d.]+E[+-]\d+'
+        scientific_notation_regex = r'[\d.]+E[+-]\d+'
         # regex for scientific notation number under 'raise' column
-        raise_regex = f'?P<raise>{scientific_notation_regex}'
+        raise_regex = fr'?P<raise>{scientific_notation_regex}'
         # regex for scientific notation number under 'clear' column
-        clear_regex = f'?P<clear>{scientific_notation_regex}'
+        clear_regex = fr'?P<clear>{scientific_notation_regex}'
 
         #  Media FEC excess degrade   :   2.0500E-02               2.0200E-02
         #  Media FEC excess degrade   :   0.0000E+00               0.0000E+00

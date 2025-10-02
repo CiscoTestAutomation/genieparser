@@ -1,0 +1,15 @@
+Routing entry for 201:201::/64
+  Known via "bgp 65001", distance 200, metric 0
+  Tag 65003, type internal
+  Route count is 2/2, share count 0
+  Routing paths:
+    172.16.254.5%default, Vlan901%default
+      Route metric is 0, traffic share count is 1
+      From ::FFFF:172.16.255.1
+      opaque_ptr 0x738C7C51F820
+      Last updated 00:04:59 ago
+    172.16.254.4%default, Vlan901%default
+      Route metric is 0, traffic share count is 1
+      From ::FFFF:172.16.255.1
+      opaque_ptr 0x738C7C51F168
+      Last updated 00:04:59 ago

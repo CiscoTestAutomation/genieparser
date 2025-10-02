@@ -1,0 +1,87 @@
+show cef table consistency-check
+
+Consistency checker master control: enabled
+
+IPv4:
+ Table consistency checker state:
+  lc-detect: disabled
+   0/0/0/0 queries sent/ignored/checked/iterated
+  scan-lc-rp: disabled
+   0/0/0/0 queries sent/ignored/checked/iterated
+  scan-rp-lc: disabled
+   0/0/0/0 queries sent/ignored/checked/iterated
+  scan-rib-ios: disabled
+   0/0/0/0 queries sent/ignored/checked/iterated
+  scan-ios-rib: disabled
+   0/0/0/0 queries sent/ignored/checked/iterated
+  full-scan-rib-ios: enabled [1000 prefixes checked every 60s]
+   0/0/0/0 queries sent/ignored/checked/iterated
+  full-scan-ios-rib: enabled [1000 prefixes checked every 60s]
+   0/0/0/0 queries sent/ignored/checked/iterated
+  full-scan-rp-lc: enabled [0 prefixes checked every 60s]
+   0/0/0/0 queries sent/ignored/checked/iterated
+  full-scan-lc-rp: enabled [0 prefixes checked every 60s]
+   0/0/0/0 queries sent/ignored/checked/iterated
+ Checksum data checking disabled
+ Inconsistency error messages are disabled
+ Inconsistency auto-repair is enabled (10s delay, 300s holddown)
+ Inconsistency auto-repair runs: 0
+ Inconsistency statistics: 0 confirmed, 0/16 recorded
+
+IPv6:
+ Table consistency checker state:
+  lc-detect: disabled
+   0/0/0/0 queries sent/ignored/checked/iterated
+  scan-lc-rp: disabled
+   0/0/0/0 queries sent/ignored/checked/iterated
+  scan-rp-lc: disabled
+   0/0/0/0 queries sent/ignored/checked/iterated
+  scan-ios-rib: disabled
+   0/0/0/0 queries sent/ignored/checked/iterated
+  full-scan-rib-ios: enabled [1000 prefixes checked every 60s]
+   0/0/0/0 queries sent/ignored/checked/iterated
+  full-scan-ios-rib: enabled [1000 prefixes checked every 60s]
+   0/0/0/0 queries sent/ignored/checked/iterated
+  full-scan-rp-lc: enabled [0 prefixes checked every 60s]
+   0/0/0/0 queries sent/ignored/checked/iterated
+  full-scan-lc-rp: enabled [0 prefixes checked every 60s]
+   0/0/0/0 queries sent/ignored/checked/iterated
+ Checksum data checking disabled
+ Inconsistency error messages are disabled
+ Inconsistency auto-repair is enabled (10s delay, 300s holddown)
+ Inconsistency auto-repair runs: 0
+ Inconsistency statistics: 0 confirmed, 0/16 recorded
+
+Binding-Label:
+ Table consistency checker state:
+  lc-detect: disabled
+   0/0/0/0 queries sent/ignored/checked/iterated
+  scan-lc-rp: disabled
+   0/0/0/0 queries sent/ignored/checked/iterated
+  scan-rp-lc: disabled
+   0/0/0/0 queries sent/ignored/checked/iterated
+  scan-rib-ios: disabled
+   0/0/0/0 queries sent/ignored/checked/iterated
+  scan-ios-rib: disabled
+   0/0/0/0 queries sent/ignored/checked/iterated
+  scan-hw-sw: disabled
+   0/0/0/0 queries sent/ignored/checked/iterated
+  scan-sw-hw: disabled
+   0/0/0/0 queries sent/ignored/checked/iterated
+  full-scan-rib-ios: enabled [1000 prefixes checked every 60s]
+   0/0/0/0 queries sent/ignored/checked/iterated
+  full-scan-ios-rib: enabled [1000 prefixes checked every 60s]
+   0/0/0/0 queries sent/ignored/checked/iterated
+  full-scan-rp-lc: enabled [0 prefixes checked every 60s]
+   0/0/0/0 queries sent/ignored/checked/iterated
+  full-scan-lc-rp: enabled [0 prefixes checked every 60s]
+   0/0/0/0 queries sent/ignored/checked/iterated
+  full-scan-hw-sw: disabled
+   0/0/0/0 queries sent/ignored/checked/iterated
+  full-scan-sw-hw: disabled
+   0/0/0/0 queries sent/ignored/checked/iterated
+ Checksum data checking disabled
+ Inconsistency error messages are disabled
+ Inconsistency auto-repair is enabled (10s delay, 300s holddown)
+ Inconsistency auto-repair runs: 0
+ Inconsistency statistics: 0 confirmed, 0/16 recorded

@@ -41,6 +41,7 @@ IOSXE parsers for the following show commands:
     * 'show platform software wccp web-cache counters'
     * 'show platform hardware qfp active feature nat datapath port'
     * 'show platform hardware qfp active feature nat datapath map'
+    * 'show platform hardware qfp active feature nat datapath esp'
     '''
 
 # Python
@@ -7308,7 +7309,15 @@ class ShowPlatformPacketTracePacketSchema(MetaParser):
                     Optional('qos'): {
                         'direction': str,
                         'action': str,
-                        'fields': str
+                        Optional('fields'): str,
+                        Optional('pak_priority'): str,
+                        Optional('priority'): str,
+                        Optional('queue_id'): str,
+                        Optional('pal_queue_id'): str,
+                        Optional('queue_limit'): str,
+                        Optional('wred_enabled'): str,
+                        Optional('inst_queue_len'): str,
+                        Optional('avg_queue_len'): str
                     },
                     Optional('ipsec'): {
                         'action': str,
@@ -11350,3 +11359,50 @@ class ShowPlatformHardwareQfpActiveFeatureNatDatapathMap(ShowPlatformHardwareQfp
                 continue
 
         return ret_dict
+
+
+# =============================================================================================
+# Schema for 'show platform hardware qfp active feature nat datapath esp'
+# =============================================================================================
+class ShowPlatformHardwareQfpActiveFeatureNatDatapathEspSchema(MetaParser):
+    """Schema for show platform hardware qfp active feature nat datapath esp"""
+    
+    schema = {
+        'esp_global_stats': {
+            'esp_count': int,
+            'esp_limit_fail_count': int,
+        }
+    }
+
+
+# =============================================================================================
+# Parser for 'show platform hardware qfp active feature nat datapath esp'
+# =============================================================================================
+class ShowPlatformHardwareQfpActiveFeatureNatDatapathEsp(ShowPlatformHardwareQfpActiveFeatureNatDatapathEspSchema):
+    """Parser for show platform hardware qfp active feature nat datapath esp"""
+
+    cli_command = 'show platform hardware qfp active feature nat datapath esp'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # ESP global stats: esp_count 0  esp_limit_fail_count 0
+        p1 = re.compile(r'^ESP\s+global\s+stats:\s+esp_count\s+(?P<esp_count>\d+)\s+esp_limit_fail_count\s+(?P<esp_limit_fail_count>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # ESP global stats: esp_count 0  esp_limit_fail_count 0
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                esp_stats_dict = parsed_dict.setdefault('esp_global_stats', {})
+                esp_stats_dict['esp_count'] = int(groups['esp_count'])
+                esp_stats_dict['esp_limit_fail_count'] = int(groups['esp_limit_fail_count'])
+                continue
+
+        return parsed_dict

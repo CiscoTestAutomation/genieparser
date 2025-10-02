@@ -415,11 +415,11 @@ class ShowPlatformHardwareFedSwitchFwdAsicInsightL2AttachmentCircuitStatus(ShowP
 
         # | ac_type: L2-DENSE  |             | vlan_tag: 1           | sysport_gid: 300        |
         # | ac_type: L2        | switch_gid: 300    | eth_port_oid: 1925    | sysport_gid: 320         |
-        p1 = re.compile('^ac_type:\s+(?P<ac_type>\S+)\s*\|(?:\s*switch_gid:\s+(?P<switch_gid>\d+))?\s*\|(?:\s*vlan_tag:\s+(?P<vlan_tag>\d+)|\s*eth_port_oid:\s+(?P<eth_port_oid>\d+))?\s*\|(?:\s*sysport_gid:\s+(?P<sysport_gid>\d+))?\s*$')
+        p1 = re.compile(r'^ac_type:\s+(?P<ac_type>\S+)\s*\|(?:\s*switch_gid:\s+(?P<switch_gid>\d+))?\s*\|(?:\s*vlan_tag:\s+(?P<vlan_tag>\d+)|\s*eth_port_oid:\s+(?P<eth_port_oid>\d+))?\s*\|(?:\s*sysport_gid:\s+(?P<sysport_gid>\d+))?\s*$')
 
         # | ac_gid: 122906     |             | eth_port_oid: 1677    | sysport_cookie: Gi2/0/2 |
         # | ac_gid: 6           | switch_cookie: 300 |                       | sysport_cookie: Gi2/0/24 |
-        p2 = re.compile('^ac_gid:\s+(?P<ac_gid>\d+)\s*\|(?:\s*switch_cookie:\s+(?P<switch_cookie>\d+))?\s*\|(?:\s*eth_port_oid:\s+(?P<eth_port_oid>\d+))?\s*\|(?:\s*sysport_cookie:\s+(?P<sysport_cookie>\S+))?\s*$')
+        p2 = re.compile(r'^ac_gid:\s+(?P<ac_gid>\d+)\s*\|(?:\s*switch_cookie:\s+(?P<switch_cookie>\d+))?\s*\|(?:\s*eth_port_oid:\s+(?P<eth_port_oid>\d+))?\s*\|(?:\s*sysport_cookie:\s+(?P<sysport_cookie>\S+))?\s*$')
 
         # | ac_cookie: Gi2/0/2 |             |                       |                         |
         p3 = re.compile(r'^ac_cookie:\s+(?P<ac_cookie>\S+)$')
@@ -477,4 +477,168 @@ class ShowPlatformHardwareFedSwitchFwdAsicInsightL2AttachmentCircuitStatus(ShowP
                 current_entry['ac_cookie'] = group['ac_cookie']
                 continue
 
-        return parsed_data 
+        return parsed_data
+
+class ShowPlatformHardwareFedSwitchFwdAsicInsightAclTableDefSchema(MetaParser):
+    """Schema for 'show platform hardware fed {switch} {state} fwd-asic insight acl_table_def()'"""
+    schema = {
+        'acl_entries': {
+            int: {
+                'acl_oid': int,
+                Optional('acl_cookie'): str,
+                'acl_key_profile_oid': int,
+                Optional('acl_key_profile_cookie'): str,
+                'acl_match_key_fields': ListOf(str),
+                Optional('acl_range_cookie'): str,
+                Optional('acl_range_direction'): str,
+                Optional('acl_range_count'): str,
+                Optional('acl_cmd_profile_oid'): int,
+                Optional('acl_commands'): ListOf(str),
+                Optional('source_pcl_info'): str,
+                Optional('destination_pcl_info'): str,
+            }
+        }
+    }
+
+
+class ShowPlatformHardwareFedSwitchFwdAsicInsightAclTableDef(ShowPlatformHardwareFedSwitchFwdAsicInsightAclTableDefSchema):
+    """Parser for 'show platform hardware fed {switch} {state} fwd-asic insight acl_table_def()'"""
+
+    cli_command = "show platform hardware fed {switch} {state} fwd-asic insight acl_table_def()"
+
+    def cli(self, switch, state, output=None):
+        if output is None:
+            output = self.device.execute(
+                self.cli_command.format(switch=switch, state=state)
+            )
+
+        result_dict = {}
+
+        # |  acl_oid:583 | acl_key_profile_oid:511 | IPV4_SIP | acl_range_cookie: | 581 | DROP | | |
+        # |  acl_oid:1319| acl_key_profile_oid:1227| IPV4_SIP | acl_range_cookie: |     |      | | |
+        p1 = re.compile(
+            r'^\|\s*acl_oid:(?P<acl_oid>\d+)\s*\|'
+            r'\s*acl_key_profile_oid:(?P<acl_key_profile_oid>\d+)\s*\|'
+            r'\s*(?P<acl_match_key_fields>\S*)\s*\|'
+            r'\s*acl_range_cookie:(?P<acl_range_cookie>\S*)\s*\|'
+            r'\s*(?P<acl_cmd_profile_oid>\S*)\s*\|'
+            r'\s*(?P<acl_commands>\S*)\s*\|'
+            r'\s*(?P<source_pcl_info>\S*)\s*\|'
+            r'\s*(?P<destination_pcl_info>\S*)\s*\|$'
+        )
+
+        # |  acl_cookie: | acl_key_profile_cookie: | IPV4_DIP | acl_range_direction: | | FORCE_TRAP_WITH_EVENT | | |
+        # |  acl_cookie: | acl_key_profile_cookie: | IPV4_DIP | acl_range_direction: | |                       | | |           
+        p2 = re.compile(
+            r'^\|\s*acl_cookie:(?P<acl_cookie>\S*)\s*\|'
+            r'\s*acl_key_profile_cookie:(?P<acl_key_profile_cookie>\S*)\s*\|'
+            r'\s*(?P<acl_match_key_fields>\S*)\s*\|'
+            r'\s*acl_range_direction:(?P<acl_range_direction>\S*)\s*\|'
+            r'\s*(?P<acl_cmd_profile_oid>\S*)\s*\|'
+            r'\s*(?P<acl_commands>\S*)\s*\|'
+            r'\s*(?P<source_pcl_info>\S*)\s*\|'
+            r'\s*(?P<destination_pcl_info>\S*)\s*\|$'
+        )
+
+        # |              |                         | TOS | acl_range_count: | | COUNTER | | |
+        # |              |                         | TOS | acl_range_count: | |         | | |       
+        p3 = re.compile(
+            r'^\|\s*\|\s*\|\s*(?P<acl_match_key_fields>\S*)\s*\|'
+            r'\s*acl_range_count:(?P<acl_range_count>\S*)\s*\|'
+            r'\s*\|\s*(?P<acl_commands>\S*)\s*\|'
+            r'\s*(?P<source_pcl_info>\S*)\s*\|'
+            r'\s*(?P<destination_pcl_info>\S*)\s*\|$'
+        )
+
+        # |              |                         | PROTOCOL | | | DO_MIRROR | | |
+        # |              |                         | PROTOCOL | | |           | | |                    
+        p4 = re.compile(
+            r'^\|\s*\|\s*\|\s*(?P<acl_match_key_fields>\S*)\s*\|\s*\|\s*\|\s*(?P<acl_commands>\S*)\s*\|'
+            r'\s*(?P<source_pcl_info>\S*)\s*\|'
+            r'\s*(?P<destination_pcl_info>\S*)\s*\|$'
+        )
+
+        current_acl_oid = None
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line or line.startswith('+') or line.startswith('|     ACL Info'):
+                continue
+
+            # |  acl_oid:583 | acl_key_profile_oid:511 | IPV4_SIP | acl_range_cookie: | 581 | DROP | | |
+            # |  acl_oid:1319| acl_key_profile_oid:1227| IPV4_SIP | acl_range_cookie: |     |      | | |
+            m1 = p1.match(line)
+            if m1:
+                group = m1.groupdict()
+                current_acl_oid = int(group['acl_oid'])
+                entry = result_dict.setdefault('acl_entries', {}).setdefault(current_acl_oid, {
+                    'acl_oid': current_acl_oid,
+                    'acl_key_profile_oid': int(group['acl_key_profile_oid']),
+                    'acl_match_key_fields': [],
+                    'acl_commands': [],
+                })
+                if group['acl_match_key_fields']:
+                    entry['acl_match_key_fields'].append(group['acl_match_key_fields'])
+                if group['acl_range_cookie'] and group['acl_range_cookie'] != 'None':
+                    entry['acl_range_cookie'] = group['acl_range_cookie']
+                if group['acl_cmd_profile_oid'] and group['acl_cmd_profile_oid'] != 'None':
+                    entry['acl_cmd_profile_oid'] = int(group['acl_cmd_profile_oid'])
+                if group['acl_commands']:
+                    entry['acl_commands'].append(group['acl_commands'])
+                if group['source_pcl_info'] and group['source_pcl_info'] != 'None':
+                    entry['source_pcl_info'] = group['source_pcl_info']
+                if group['destination_pcl_info'] and group['destination_pcl_info'] != 'None':
+                    entry['destination_pcl_info'] = group['destination_pcl_info']
+                continue
+
+            # |  acl_cookie: | acl_key_profile_cookie: | IPV4_DIP | acl_range_direction: | | FORCE_TRAP_WITH_EVENT | | |
+            # |  acl_cookie: | acl_key_profile_cookie: | IPV4_DIP | acl_range_direction: | |                       | | | 
+            m2 = p2.match(line)
+            if m2 and current_acl_oid is not None:
+                group = m2.groupdict()
+                entry = result_dict['acl_entries'][current_acl_oid]
+                if group['acl_cookie'] and group['acl_cookie'] != 'None':
+                    entry['acl_cookie'] = group['acl_cookie']
+                if group['acl_key_profile_cookie'] and group['acl_key_profile_cookie'] != 'None':
+                    entry['acl_key_profile_cookie'] = group['acl_key_profile_cookie']
+                if group['acl_match_key_fields']:
+                    entry['acl_match_key_fields'].append(group['acl_match_key_fields'])
+                if group['acl_range_direction'] and group['acl_range_direction'] != 'None':
+                    entry['acl_range_direction'] = group['acl_range_direction']
+                if group['acl_commands']:
+                    entry['acl_commands'].append(group['acl_commands'])
+                continue
+
+            # |              |                         | TOS | acl_range_count: | | COUNTER | | |
+            # |              |                         | TOS | acl_range_count: | |         | | |
+            m3 = p3.match(line)
+            if m3 and current_acl_oid is not None:
+                group = m3.groupdict()
+                entry = result_dict['acl_entries'][current_acl_oid]
+                if group['acl_match_key_fields']:
+                    entry['acl_match_key_fields'].append(group['acl_match_key_fields'])
+                if group['acl_range_count'] and group['acl_range_count'] != 'None':
+                    entry['acl_range_count'] = group['acl_range_count']
+                if group['acl_commands']:
+                    entry['acl_commands'].append(group['acl_commands'])
+                continue
+
+            # |              |                         | PROTOCOL | | | DO_MIRROR | | |
+            # |              |                         | PROTOCOL | | |           | | |
+            m4 = p4.match(line)
+            if m4 and current_acl_oid is not None:
+                group = m4.groupdict()
+                entry = result_dict['acl_entries'][current_acl_oid]
+                if group['acl_match_key_fields']:
+                    entry['acl_match_key_fields'].append(group['acl_match_key_fields'])
+                if group['acl_commands']:
+                    entry['acl_commands'].append(group['acl_commands'])
+                continue
+        
+        # Iterate through all parsed ACL entries
+        for acl_id, acl_data in result_dict.get('acl_entries', {}).items():
+            # If 'acl_commands' key exists and its list is empty, delete the key
+            if 'acl_commands' in acl_data and not acl_data['acl_commands']:
+                del acl_data['acl_commands']
+
+        return result_dict 

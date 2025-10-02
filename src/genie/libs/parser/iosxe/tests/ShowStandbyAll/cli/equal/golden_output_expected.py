@@ -101,6 +101,8 @@ expected_output = {
                                 "active_ip_address": "10.1.2.1",
                                 "active_router": "10.1.2.1",
                                 "active_router_priority": 120,
+                                "last_state_change": "00:00:08",
+                                "statistics": {"num_state_changes": 1},
                                 "configured_priority": 110,
                                 "group_number": 10,
                                 "hsrp_router_state": "standby",

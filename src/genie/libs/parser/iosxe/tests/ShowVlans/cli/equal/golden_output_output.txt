@@ -1,0 +1,15 @@
+VLAN ID: 901 (IEEE 802.1Q Encapsulation)
+
+   Protocols Configured:          Received:        Transmitted:
+                     IP                  1                   0
+
+VLAN trunk interfaces for VLAN ID 901:
+GigabitEthernet3.901
+
+GigabitEthernet3.901 (901)
+
+                     IP: 200.4.1.1
+
+      Total 2 packets, 128 bytes input
+      Total 2 packets, 110 bytes output
+No subinterface configured with ISL VLAN ID 901

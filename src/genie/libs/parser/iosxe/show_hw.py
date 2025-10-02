@@ -9,6 +9,7 @@ IOSXE parsers for the following show commands:
     * hw-module beacon slot {slot_num} status
     * show hw-module subslot all oir
     * show hw-module subslot {subslot} entity
+    * show platform hardware chassis rp {rp_state} fan-speed-control-data
 '''
 
 # Python
@@ -1235,6 +1236,64 @@ class ShowHwModuleSubslotEntity(ShowHwModuleSubslotEntitySchema):
                     if 'non_zero_spa_volt_sensors' not in entity_dict:
                         entity_dict['non_zero_spa_volt_sensors'] = {}
                     entity_dict['non_zero_spa_volt_sensors'][group['sensor']] = int(group['index'])
+                continue
+
+        return ret_dict
+
+
+class ShowPlatformHardwareChassisRpFanSpeedControlDataSchema(MetaParser):
+    """Schema for:
+       show platform hardware chassis rp {rp_state} fan-speed-control-data
+    """
+    schema = {
+        'slots': {
+            Any(): {  
+                'type': str,
+                'pwm': int,
+                Optional('io_pwm'): Or(str,int),
+            }
+        }
+    }
+
+
+class ShowPlatformHardwareChassisRpFanSpeedControlData(ShowPlatformHardwareChassisRpFanSpeedControlDataSchema):
+    """Parser for:
+       show platform hardware chassis rp {rp_state} fan-speed-control-data
+    """
+
+    cli_command = 'show platform hardware chassis rp {rp_state} fan-speed-control-data'
+
+    def cli(self, rp_state='', output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command.format(rp_state=rp_state))
+        else:
+            out = output
+
+        ret_dict = {}
+
+        #    1   LC      76     102
+        #    5  SUP      76     N/A
+        p1 = re.compile(
+            r'^\s*(?P<slot>\d+)\s+(?P<type>\S+)\s+(?P<pwm>\d+)\s+(?P<io_pwm>(?:\d+|N/?A))\s*$',
+            re.IGNORECASE
+        )
+
+        for line in out.splitlines():
+            line = line.rstrip()
+
+            if not line or line.lstrip().startswith('Slot ') or set(line.strip()) == {'-'}:
+                continue
+
+            #   1   LC      76      91
+            #   3   LC      76      76
+            m = p1.match(line)
+            if m:
+                slot = int(m.group('slot'))
+                entry = ret_dict.setdefault('slots', {}).setdefault(slot, {})
+                entry['type'] = m.group('type')
+                entry['pwm'] = int(m.group('pwm'))
+                entry['io_pwm'] = m.group('io_pwm')
+
                 continue
 
         return ret_dict

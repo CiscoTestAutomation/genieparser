@@ -53,6 +53,7 @@
     * 'show platform software trace level ios rp active | in pki'
     * 'show platform software firewall RP active zones'
     * 'show platform software firewall FP active zones'
+    * 'show platform software nat fp active mapping static'
 """
 
 # Python
@@ -12615,4 +12616,190 @@ class ShowPlatformSoftwareFirewallRPActiveZones(ShowPlatformSoftwareFirewallRPAc
                     'parameter_map': group['parameter_map'],
                     'obj_id': int(group['obj_id']),
                 }
+        return parsed
+
+class ShowPlatformSoftwareNatFpActiveMappingStaticSchema(MetaParser):
+    """Schema for:
+        show platform software nat fp active mapping static
+    """
+
+    schema = {
+        "mappings": {
+            Any(): {
+                "vrf_name": str,
+                "vrf_id": int,
+                "table_id": int,
+                "domain": str,
+                "lookup": str,
+                "proto": str,
+                "flags": str,
+                "local_addr": str,
+                "local_port": int,
+                "global_addr": str,
+                "global_port": int,
+                "network_mask": str,
+                "pool_id": int,
+                "ig_interface_address": str,
+                "route_map_name": str,
+                "last_stats_update": str,
+                "last_refcount_value": int,
+            }
+        }
+    }
+
+
+class ShowPlatformSoftwareNatFpActiveMappingStatic(ShowPlatformSoftwareNatFpActiveMappingStaticSchema):
+    """Parser for:
+        show platform software nat fp active mapping static
+    """
+
+    cli_command = "show platform software nat fp active mapping static"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Check for empty output
+        if not output.strip():
+            return {}
+
+        # Init return dict
+        parsed = {}
+
+        # Regex patterns
+        # Mapping id
+        p1 = re.compile(r"^Mapping +id:\s+(?P<id>\d+)$")
+        # VRF line
+        p2 = re.compile(
+            r"^VRF +name:\s+(?P<vrf_name>\S+), +VRF +id:\s+(?P<vrf_id>\d+), +Table +id:\s+(?P<table_id>\d+)$"
+        )
+        # Domain / Lookup / Proto
+        p3 = re.compile(
+            r"^Domain:\s+(?P<domain>\S+), +Lookup:\s+(?P<lookup>\S+), +Proto:\s+(?P<proto>\S+)$"
+        )
+        # Flags
+        p4 = re.compile(r"^Flags:\s+(?P<flags>.+)$")
+        # Local addr / port
+        p5 = re.compile(
+            r"^Local +addr:\s+(?P<local_addr>[\d\.]+), +Local +port:\s+(?P<local_port>\d+)$"
+        )
+        # Global addr / port
+        p6 = re.compile(
+            r"^Global +addr:\s+(?P<global_addr>[\d\.]+), +Global +port:\s+(?P<global_port>\d+)$"
+        )
+        # Network mask
+        p7 = re.compile(r"^Network +mask:\s+(?P<network_mask>[\d\.]+)$")
+        # Pool ID
+        p8 = re.compile(r"^Pool +ID:\s+(?P<pool_id>\d+)$")
+        # IG interface address
+        p9 = re.compile(r"^IG +is +interface +address:\s+(?P<ig_interface_address>\S+)$")
+        # Route-map name
+        p10 = re.compile(r"^Route-map +name:\s*(?P<route_map_name>.*)$")
+        # Last stats update
+        p11 = re.compile(r"^Last +stats +update:\s+(?P<last_stats_update>.*)$")
+        # Last refcount value
+        p12 = re.compile(r"^Last +refcount +value:\s+(?P<last_refcount_value>\d+)$")
+
+        cur_id = None
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # Mapping id
+            m = p1.match(line)
+            if m:
+                cur_id = int(m.group("id"))
+                mapping_dict = parsed.setdefault("mappings", {}).setdefault(cur_id, {})
+                continue
+
+            # VRF line
+            m = p2.match(line)
+            if m and cur_id is not None:
+                mapping_dict.update(
+                    {
+                        "vrf_name": m.group("vrf_name"),
+                        "vrf_id": int(m.group("vrf_id")),
+                        "table_id": int(m.group("table_id")),
+                    }
+                )
+                continue
+
+            # Domain / Lookup / Proto
+            m = p3.match(line)
+            if m and cur_id is not None:
+                mapping_dict.update(
+                    {
+                        "domain": m.group("domain"),
+                        "lookup": m.group("lookup"),
+                        "proto": m.group("proto"),
+                    }
+                )
+                continue
+
+            # Flags
+            m = p4.match(line)
+            if m and cur_id is not None:
+                mapping_dict["flags"] = m.group("flags")
+                continue
+
+            # Local addr / port
+            m = p5.match(line)
+            if m and cur_id is not None:
+                mapping_dict.update(
+                    {
+                        "local_addr": m.group("local_addr"),
+                        "local_port": int(m.group("local_port")),
+                    }
+                )
+                continue
+
+            # Global addr / port
+            m = p6.match(line)
+            if m and cur_id is not None:
+                mapping_dict.update(
+                    {
+                        "global_addr": m.group("global_addr"),
+                        "global_port": int(m.group("global_port")),
+                    }
+                )
+                continue
+
+            # Network mask
+            m = p7.match(line)
+            if m and cur_id is not None:
+                mapping_dict["network_mask"] = m.group("network_mask")
+                continue
+
+            # Pool ID
+            m = p8.match(line)
+            if m and cur_id is not None:
+                mapping_dict["pool_id"] = int(m.group("pool_id"))
+                continue
+
+            # IG interface address
+            m = p9.match(line)
+            if m and cur_id is not None:
+                mapping_dict["ig_interface_address"] = m.group("ig_interface_address")
+                continue
+
+            # Route-map name
+            m = p10.match(line)
+            if m and cur_id is not None:
+                mapping_dict["route_map_name"] = m.group("route_map_name")
+                continue
+
+            # Last stats update
+            m = p11.match(line)
+            if m and cur_id is not None:
+                mapping_dict["last_stats_update"] = m.group("last_stats_update")
+                continue
+
+            # Last refcount value
+            m = p12.match(line)
+            if m and cur_id is not None:
+                mapping_dict["last_refcount_value"] = int(m.group("last_refcount_value"))
+                continue
+
         return parsed

@@ -33,6 +33,7 @@
     * 'show platform hardware qfp active feature cts client interface'
     * 'show platform hardware cpp active feature firewall session create {session_context} {num_sessions}'
     * 'show platform hardware cpp active statistics drop'
+    * 'show platform hardware cpp active system state'
     * 'show platform hardware qfp active feature ipsec state'
     * 'show platform hardware qfp active feature tcp stats detail'
     * 'show platform hardware qfp active classification class-group-manager class-group client cce all'
@@ -42,6 +43,7 @@
     * 'show platform hardware qfp active feature nat datapath stats'
     * 'show platform hardware qfp active feature bfd datapath session'
     * 'show platform hardware qfp active feature alg statistics sip l7data'
+    * 'show platform hardware qfp active feature ipsec sa 3'
     * 'show platform hardware qfp active feature firewall memory'
     * 'show platform hardware qfp active feature alg statistics'
     * 'show platform hardware qfp active feature alg statistics dns'
@@ -57,7 +59,16 @@
     * 'show platform hardware qfp active feature alg statistics msrpc {clear}'
     * 'show platform hardware qa active fe alg sta sip clear'
     * 'show platform hardware qfp active feature firewall datapath scb any any any any any all any detail'
+    * 'show platform hardware qfp active feature firewall drop'
+    * 'show platform hardware qfp active feature firewall drop all'
+    * 'show platform hardware qfp active feature firewall drop clear'
+    * 'show platform hardware qfp active feature firewall drop verbose'
     * 'show platform hardware qfp active feature nat datapath edm'
+    * 'show platform hardware qfp active feature evc client l2cp-actions interface {interface}'
+    * 'show platform hardware qfp active feature firewall runtime'
+    * 'show platform hardware qfp active feature nat datapath gatein'
+    * 'show platform hardware qfp active feature nat datapath gateout'
+    * 'show platform hardware qfp active feature td datapath statistics'
 """
 import re
 import logging
@@ -3710,23 +3721,33 @@ class ShowPlatformHardwareAuthenticationStatusSchema(MetaParser):
             },
         },
         Optional("SUP0 Authentication"): str,
-        Optional("Fan Tray Authentication"): str,
-        Optional("Line Card:6 Authentication"): str,
-        Optional("Line Card:1 Authentication"): str,
         Optional("SUP1 Authentication"): str,
-        Optional("Line Card:5 Authentication"): str,
-        Optional("Line Card:2 Authentication"): str,
-        Optional("Line Card:7 Authentication"): str,
-        Optional("Line Card 1 Authentication"): str,
-        Optional("Line Card 2 Authentication"): str,
-        Optional("Line Card 5 Authentication"): str,
-        Optional("Line Card:4 Authentication"): str,
-        Optional("Line Card 6 Authentication"): str,
-        Optional("Fan Tray 1 Authentication"): str,
-        Optional("Chassis Authentication"): str,
-        Optional("SSD FRU Authentication"): str,
         Optional("SUP 0 Authentication"): str,
         Optional("SUP 1 Authentication"): str,
+        Optional("Fan Tray Authentication"): str,
+        Optional("Fan Tray 1 Authentication"): str,
+        Optional("Line Card:1 Authentication"): str,
+        Optional("Line Card 1 Authentication"): str,
+        Optional("Line Card:2 Authentication"): str,
+        Optional("Line Card 2 Authentication"): str,
+        Optional("Line Card:3 Authentication"): str,
+        Optional("Line Card 3 Authentication"): str,
+        Optional("Line Card:4 Authentication"): str,
+        Optional("Line Card 4 Authentication"): str,
+        Optional("Line Card:5 Authentication"): str,
+        Optional("Line Card 5 Authentication"): str,
+        Optional("Line Card:6 Authentication"): str,
+        Optional("Line Card 6 Authentication"): str,
+        Optional("Line Card:7 Authentication"): str,
+        Optional("Line Card 7 Authentication"): str,
+        Optional("Line Card:8 Authentication"): str,
+        Optional("Line Card 8 Authentication"): str,
+        Optional("Line Card:9 Authentication"): str,
+        Optional("Line Card 9 Authentication"): str,
+        Optional("Line Card:10 Authentication"): str,
+        Optional("Line Card 10 Authentication"): str,
+        Optional("Chassis Authentication"): str,
+        Optional("SSD FRU Authentication"): str,
     }
 
 
@@ -8901,6 +8922,331 @@ class ShowPlatformHardwareQfpActiveFeatureBfdDatapathSession(ShowPlatformHardwar
                 continue
         return parsed_dict
 
+class ShowPlatformHardwareQfpActiveFeatureIpsecSa3Schema(MetaParser):
+    """Schema for show platform hardware qfp active feature ipsec sa 3"""
+    schema = {
+        'qfp_ipsec_sa_information': {
+            'qfp_sa_id': int,
+            'pal_sa_id': int,
+            'qfp_spd_id': int,
+            'qfp_sp_id': int,
+            'qfp_spi': str,
+            'crypto_ctx': str,
+            'flags': str,
+            'flags_details': ListOf(str),
+            'flags_parsed': {str: str},
+            'qos_group': str,
+            'mtu': str,
+            'mtu_adj': str,
+            'ext_ar_window_size': int,
+            'ext_ar_window_top': int,
+            'sar_delta': int,
+            'sar_window': str,
+            'sibling_sa': str,
+            'sp_ptr': str,
+            'sbs_ptr': str,
+            'local_endpoint': str,
+            'remote_endpoint': str,
+            'cgid_cid_fid_rid': str,
+            'ivrf': int,
+            'fvrf': int,
+            'trans_udp_sport': int,
+            'trans_udp_dport': int,
+            'first_intf_name': str,
+            'nat_fixup_src_port': int,
+            'nat_fixup_ip': str
+        }
+    }
+
+class ShowPlatformHardwareQfpActiveFeatureIpsecSa3(ShowPlatformHardwareQfpActiveFeatureIpsecSa3Schema):
+    """Parser for:
+        show platform hardware qfp active feature ipsec sa 3
+    """
+    cli_command = 'show platform hardware qfp active feature ipsec sa 3'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        parsed_dict = {}
+        # QFP sa  id: 12345
+        p1 = re.compile(r'^QFP sa  id: (?P<qfp_sa_id>\d+)$')
+
+        # pal sa id: 67890
+        p2 = re.compile(r'^pal sa id: (?P<pal_sa_id>\d+)$')
+
+        # QFP spd id: 23456
+        p3 = re.compile(r'^QFP spd id: (?P<qfp_spd_id>\d+)$')
+
+        # sp id: 78901
+        p4 = re.compile(r'^QFP sp id: (?P<qfp_sp_id>\d+)$')
+
+        # QFP spi: 0x12abc(456)
+        p5 = re.compile(r'^QFP spi: (?P<qfp_spi>0x[0-9a-fA-F]+\(\d+\))$')
+
+        # crypto ctx: 0x123abc
+        p6 = re.compile(r'^crypto ctx: (?P<crypto_ctx>0x[0-9a-fA-F]+)$')
+
+        #  flags: 0x1F (Details below)
+        p7 = re.compile(r'^flags: (?P<flags>0x[0-9a-fA-F]+) \(Details below\)$')
+
+        # FLAG1 FLAG2 VAL1:abc VAL2:def
+        p8 = re.compile(r'^: (?P<details>.+)$')
+
+        # qos_group: 0x2F
+        p9 = re.compile(r'^qos_group: (?P<qos_group>0x[0-9a-fA-F]+)$')  # "qos_group"
+
+        # mtu: 0x1000=0
+        p10 = re.compile(r'^mtu: (?P<mtu>0x[0-9a-fA-F]+=0)$')
+
+        # mtu_adj: 0x1100=0
+        p11 = re.compile(r'^mtu_adj: (?P<mtu_adj>0x[0-9a-fA-F]+=0)$')
+
+        #  ext_ar window_size: 50
+        p12 = re.compile(r'^ext_ar window_size: (?P<ext_ar_window_size>\d+)$')
+
+        # ext_ar window top: 10
+        p13 = re.compile(r'^ext_ar window top: (?P<ext_ar_window_top>\d+)$')
+
+        # sar_delta: 5
+        p14 = re.compile(r'^sar_delta: (?P<sar_delta>\d+)$') 
+
+        # sar_window: 0x1A2B
+        p15 = re.compile(r'^sar_window: (?P<sar_window>0x[0-9a-fA-F]+)$')
+
+        # sibling_sa: 0x3F4E
+        p16 = re.compile(r'^sibling_sa: (?P<sibling_sa>0x[0-9a-fA-F]+)$') 
+
+        # sp_ptr: 0x5A6B
+        p17 = re.compile(r'^sp_ptr: (?P<sp_ptr>0x[0-9a-fA-F]+)$')
+
+        # sbs_ptr: 0x7C8D
+        p18 = re.compile(r'^sbs_ptr: (?P<sbs_ptr>0x[0-9a-fA-F]+)$')  
+
+        # local endpoint: 192.168.1.1
+        p19 = re.compile(r'^local endpoint: (?P<local_endpoint>[0-9.]+)$')  
+
+        #  remote endpoint: 192.168.1.2
+        p20 = re.compile(r'^remote endpoint: (?P<remote_endpoint>[0-9.]+)$') 
+
+        # cgid.cid.fid.rid: 1.2.3.4
+        p21 = re.compile(r'^cgid.cid.fid.rid: (?P<cgid_cid_fid_rid>[0-9.]+)$')  
+
+        #  ivrf: 100
+        p22 = re.compile(r'^ivrf: (?P<ivrf>\d+)$') 
+
+        # fvrf: 200
+        p23 = re.compile(r'^fvrf: (?P<fvrf>\d+)$')
+
+        #  trans udp sport: 12345
+        p24 = re.compile(r'^trans udp sport: (?P<trans_udp_sport>\d+)$')
+
+        #  trans udp dport: 54321
+        p25 = re.compile(r'^trans udp dport: (?P<trans_udp_dport>\d+)$')
+
+        #  first intf name: Ethernet0/1
+        p26 = re.compile(r'^first intf name: (?P<first_intf_name>.+)$')
+
+        #  nat fixup src port: 9999
+        p27 = re.compile(r'^nat fixup src port: (?P<nat_fixup_src_port>\d+)$')
+
+        # nat fixup  ip: 10.0.0.1
+        p28 = re.compile(r'^nat fixup  ip: (?P<nat_fixup_ip>[0-9.]+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            sa_dict = parsed_dict.setdefault('qfp_ipsec_sa_information', {})
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            sa_dict = parsed_dict.setdefault('qfp_ipsec_sa_information', {})
+
+            # QFP sa  id: 12345
+            m = p1.match(line)  
+            if m:
+                sa_dict['qfp_sa_id'] = int(m.group('qfp_sa_id'))
+                continue
+
+            # pal sa id: 67890
+            m = p2.match(line)  
+            if m:
+                sa_dict['pal_sa_id'] = int(m.group('pal_sa_id'))
+                continue
+
+            # QFP spd id: 23456
+            m = p3.match(line)  
+            if m:
+                sa_dict['qfp_spd_id'] = int(m.group('qfp_spd_id'))
+                continue
+
+            # QFP sp id: 78901
+            m = p4.match(line)  
+            if m:
+                sa_dict['qfp_sp_id'] = int(m.group('qfp_sp_id'))
+                continue
+
+            # QFP spi: 0x12abc(456)
+            m = p5.match(line)  
+            if m:
+                sa_dict['qfp_spi'] = m.group('qfp_spi')
+                continue
+
+            # crypto ctx: 0x123abc
+            m = p6.match(line)  
+            if m:
+                sa_dict['crypto_ctx'] = m.group('crypto_ctx')
+                continue
+
+            # flags: 0x1F (Details below)
+            m = p7.match(line)  
+            if m:
+                sa_dict['flags'] = m.group('flags')
+                sa_dict['flags_details'] = []
+                sa_dict['flags_parsed'] = {}
+                continue
+
+            # FLAG1 VAL1:abc FLAG2 VAL2:def
+            m = p8.match(line)  
+            if m:
+                detail_line = m.group('details')
+                sa_dict['flags_details'].append(detail_line)
+                for part in detail_line.split():
+                    if ':' in part:
+                        k, v = part.split(':', 1)
+                        sa_dict['flags_parsed'][k.strip()] = v.strip()
+                    else:
+                        sa_dict['flags_parsed'][part.strip()] = 'True'
+                continue
+
+            # qos_group: 0x2F
+            m = p9.match(line)  
+            if m:
+                sa_dict['qos_group'] = m.group('qos_group')
+                continue
+
+            # mtu: 0x1000=0
+            m = p10.match(line)  
+            if m:
+                sa_dict['mtu'] = m.group('mtu')
+                continue
+
+            # mtu_adj: 0x1100=0
+            m = p11.match(line)  
+            if m:
+                sa_dict['mtu_adj'] = m.group('mtu_adj')
+                continue
+
+            # ext_ar window_size: 50
+            m = p12.match(line)  
+            if m:
+                sa_dict['ext_ar_window_size'] = int(m.group('ext_ar_window_size'))
+                continue
+
+            # ext_ar window top: 10
+            m = p13.match(line)  
+            if m:
+                sa_dict['ext_ar_window_top'] = int(m.group('ext_ar_window_top'))
+                continue
+
+            # sar_delta: 5
+            m = p14.match(line)  
+            if m:
+                sa_dict['sar_delta'] = int(m.group('sar_delta'))
+                continue
+
+            # sar_window: 0x1A2B
+            m = p15.match(line)  
+            if m:
+                sa_dict['sar_window'] = m.group('sar_window')
+                continue
+
+            # sibling_sa: 0x3F4E
+            m = p16.match(line)  
+            if m:
+                sa_dict['sibling_sa'] = m.group('sibling_sa')
+                continue
+
+            # sp_ptr: 0x5A6B
+            m = p17.match(line)  
+            if m:
+                sa_dict['sp_ptr'] = m.group('sp_ptr')
+                continue
+
+            # sbs_ptr: 0x7C8D
+            m = p18.match(line)  
+            if m:
+                sa_dict['sbs_ptr'] = m.group('sbs_ptr')
+                continue
+
+            # local endpoint: 192.168.1.1
+            m = p19.match(line)  
+            if m:
+                sa_dict['local_endpoint'] = m.group('local_endpoint')
+                continue
+
+            # remote endpoint: 192.168.1.2
+            m = p20.match(line)  
+            if m:
+                sa_dict['remote_endpoint'] = m.group('remote_endpoint')
+                continue
+
+            # cgid.cid.fid.rid: 1.2.3.4
+            m = p21.match(line)  
+            if m:
+                sa_dict['cgid_cid_fid_rid'] = m.group('cgid_cid_fid_rid')
+                continue
+
+            # ivrf: 100
+            m = p22.match(line)  
+            if m:
+                sa_dict['ivrf'] = int(m.group('ivrf'))
+                continue
+
+            # fvrf: 200
+            m = p23.match(line)  
+            if m:
+                sa_dict['fvrf'] = int(m.group('fvrf'))
+                continue
+
+            # trans udp sport: 12345
+            m = p24.match(line)  
+            if m:
+                sa_dict['trans_udp_sport'] = int(m.group('trans_udp_sport'))
+                continue
+
+            # trans udp dport: 54321
+            m = p25.match(line)  
+            if m:
+                sa_dict['trans_udp_dport'] = int(m.group('trans_udp_dport'))
+                continue
+
+            # first intf name: Ethernet0/1
+            m = p26.match(line)  
+            if m:
+                sa_dict['first_intf_name'] = m.group('first_intf_name')
+                continue
+
+            # nat fixup src port: 9999
+            m = p27.match(line)  
+            if m:
+                sa_dict['nat_fixup_src_port'] = int(m.group('nat_fixup_src_port'))
+                continue
+
+            # nat fixup  ip: 10.0.0.1
+            m = p28.match(line)  
+            if m:
+                sa_dict['nat_fixup_ip'] = m.group('nat_fixup_ip')
+                continue
+
+        return parsed_dict
+
+
 class ShowPlatformHardwareQfpActiveInterfaceIfNameSchema(MetaParser):
     schema = {
         "interface": {
@@ -11847,9 +12193,8 @@ class ShowPlatformHardwareQfpActiveFeatureFirewallDatapathScbAnyAnyAnyAnyAnyAllA
                 vpn_id['src'] = int(m.group('src_vpn'))
                 vpn_id['dst'] = int(m.group('dst_vpn'))
                 continue
-
         return result
-
+      
 class ShowPlatformHardwareQfpActiveFeatureAlgStatisticsSipClearSchema(MetaParser):
     """Schema for show platform hardware qfp active feature alg statistics sip clear"""
 
@@ -12537,6 +12882,197 @@ class ShowPlatformHardwareQfpActiveFeatureAlgStatisticsSipClear(ShowPlatformHard
 
         return parsed_dict
 
+class ShowPlatformHardwareQfpActiveFeatureTdDatapathStatisticsSchema(MetaParser):
+    """Schema for show platform hardware qfp active feature td datapath statistics"""
+    schema = {
+        'pool_usage': {
+            'vtcp_info_alloc': {
+                'alloc': int,
+                'free': int,
+                'fail': int
+            },
+            'pkt_buf_alloc': {
+                'alloc': int,
+                'free': int,
+                'fail': int
+            },
+            'buf_size_alloc': {
+                'alloc': int,
+                'free': int
+            }
+        },
+        'receive': {
+            'alg_proc_csum': int,
+            'off_csum': int,
+            'lisp_seg': int,
+            'out_of_order': int,
+            'retrans': int,
+            'overlap': int,
+            'dup_ack': int
+        },
+        'send': {
+            'rx_ack': int,
+            'rst': int,
+            'hold_rst': int,
+            'tx_hold_rexmit': int,
+            'tx_rexmit': int,
+            'tx_seg': int
+        },
+        'events_errors': {
+            'tcp_fixup_drop': int,
+            'invalid_sync': int,
+            'invalid_opt': int,
+            'tcp_invalid_rx': int,
+            'invalid_tx': int,
+            'pkt_err': int,
+            'mem_err': int,
+            'pa_err': int,
+            'hex_limit': int,
+            'tcp_flag_noack': int,
+            'punt_err': int,
+            'l2_not_supported': int,
+            'first_pkt_non_syn': int
+        }
+    }
+class ShowPlatformHardwareQfpActiveFeatureTdDatapathStatistics(
+    ShowPlatformHardwareQfpActiveFeatureTdDatapathStatisticsSchema
+):
+    """Parser for show platform hardware qfp active feature td datapath statistics"""
+
+    cli_command = 'show platform hardware qfp active feature td datapath statistics'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        parsed_dict = {}
+
+        # vtcp info alloc: 2 free: 0 fail: 0
+        p1 = re.compile(r'^vtcp info alloc:\s+(?P<alloc>\d+)\s+free:\s+(?P<free>\d+)\s+fail:\s+(?P<fail>\d+)$')
+
+        # pkt buf alloc: 0 free: 0 fail: 0
+        p2 = re.compile(r'^pkt buf alloc:\s+(?P<alloc>\d+)\s+free:\s+(?P<free>\d+)\s+fail:\s+(?P<fail>\d+)$')
+
+        # buf size alloc: 0 free: 0
+        p3 = re.compile(r'^buf size alloc:\s+(?P<alloc>\d+)\s+free:\s+(?P<free>\d+)$')
+
+        # alg_proc_csum: 0 off_csum: 0 lisp_seg: 0
+        p4 = re.compile(r'^alg_proc_csum:\s+(?P<alg_proc_csum>\d+)\s+off_csum:\s+(?P<off_csum>\d+)\s+lisp_seg:\s+(?P<lisp_seg>\d+)$')
+
+        # out of order: 0 retrans: 0 overlap: 0
+        p5 = re.compile(r'^out of order:\s+(?P<out_of_order>\d+)\s+retrans:\s+(?P<retrans>\d+)\s+overlap:\s+(?P<overlap>\d+)$')
+
+        # dup ack: 3
+        p6 = re.compile(r'^dup ack:\s+(?P<dup_ack>\d+)$')
+
+        # rx ack: 0 rst: 0 hold_rst: 0
+        p7 = re.compile(r'^rx ack:\s+(?P<rx_ack>\d+)\s+rst:\s+(?P<rst>\d+)\s+hold_rst:\s+(?P<hold_rst>\d+)$')
+
+        # tx_hold_rexmit: 0 tx_rexmit: 0 tx_seg: 0
+        p8 = re.compile(r'^tx_hold_rexmit:\s+(?P<tx_hold_rexmit>\d+)\s+tx_rexmit:\s+(?P<tx_rexmit>\d+)\s+tx_seg:\s+(?P<tx_seg>\d+)$')
+
+        # tcp_fixup_drop: 0 invalid_sync: 0 invalid_opt: 0
+        p9 = re.compile(r'^tcp_fixup_drop:\s+(?P<tcp_fixup_drop>\d+)\s+invalid_sync:\s+(?P<invalid_sync>\d+)\s+invalid_opt:\s+(?P<invalid_opt>\d+)$')
+
+        # tcp_invalid_rx: 0 invalid_tx: 0 pkt_err: 0
+        p10 = re.compile(r'^tcp_invalid_rx:\s+(?P<tcp_invalid_rx>\d+)\s+invalid_tx:\s+(?P<invalid_tx>\d+)\s+pkt_err:\s+(?P<pkt_err>\d+)$')
+
+        # mem_err: 0 pa_err: 0 hex_limit: 0
+        p11 = re.compile(r'^mem_err:\s+(?P<mem_err>\d+)\s+pa_err:\s+(?P<pa_err>\d+)\s+hex_limit:\s+(?P<hex_limit>\d+)$')
+
+        # tcp_flag_noack: 0 punt_err: 0 L2_not_supported 0
+        p12 = re.compile(r'^tcp_flag_noack:\s+(?P<tcp_flag_noack>\d+)\s+punt_err:\s+(?P<punt_err>\d+)\s+L2_not_supported\s+(?P<l2_not_supported>\d+)$')
+
+        # first_pkt_non_syn: 0
+        p13 = re.compile(r'^first_pkt_non_syn:\s+(?P<first_pkt_non_syn>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # vtcp info alloc: 2 free: 0 fail: 0
+            m = p1.match(line)
+            if m:
+                parsed_dict.setdefault('pool_usage', {})['vtcp_info_alloc'] = {k: int(v) for k, v in m.groupdict().items()}
+                continue
+
+            # pkt buf alloc: 0 free: 0 fail: 0
+            m = p2.match(line)
+            if m:
+                parsed_dict['pool_usage']['pkt_buf_alloc'] = {k: int(v) for k, v in m.groupdict().items()}
+                continue
+
+            # buf size alloc: 0 free: 0
+            m = p3.match(line)
+            if m:
+                parsed_dict['pool_usage']['buf_size_alloc'] = {k: int(v) for k, v in m.groupdict().items()}
+                continue
+
+            # alg_proc_csum: 0 off_csum: 0 lisp_seg: 0
+            m = p4.match(line)
+            if m:
+                parsed_dict.setdefault('receive', {}).update({k: int(v) for k, v in m.groupdict().items()})
+                continue
+
+            # out of order: 0 retrans: 0 overlap: 0
+            m = p5.match(line)
+            if m:
+                parsed_dict['receive'].update({k: int(v) for k, v in m.groupdict().items()})
+                continue
+
+            # dup ack: 3
+            m = p6.match(line)
+            if m:
+                parsed_dict['receive']['dup_ack'] = int(m.group('dup_ack'))
+                continue
+
+            # rx ack: 0 rst: 0 hold_rst: 0
+            m = p7.match(line)
+            if m:
+                parsed_dict.setdefault('send', {}).update({k: int(v) for k, v in m.groupdict().items()})
+                continue
+
+            # tx_hold_rexmit: 0 tx_rexmit: 0 tx_seg: 0
+            m = p8.match(line)
+            if m:
+                parsed_dict['send'].update({k: int(v) for k, v in m.groupdict().items()})
+                continue
+
+            # tcp_fixup_drop: 0 invalid_sync: 0 invalid_opt: 0
+            m = p9.match(line)
+            if m:
+                parsed_dict.setdefault('events_errors', {}).update({k: int(v) for k, v in m.groupdict().items()})
+                continue
+
+            # tcp_invalid_rx: 0 invalid_tx: 0 pkt_err: 0
+            m = p10.match(line)
+            if m:
+                parsed_dict['events_errors'].update({k: int(v) for k, v in m.groupdict().items()})
+                continue
+
+            # mem_err: 0 pa_err: 0 hex_limit: 0
+            m = p11.match(line)
+            if m:
+                parsed_dict['events_errors'].update({k: int(v) for k, v in m.groupdict().items()})
+                continue
+
+            # tcp_flag_noack: 0 punt_err: 0 L2_not_supported 0
+            m = p12.match(line)
+            if m:
+                parsed_dict['events_errors'].update({
+                    'tcp_flag_noack': int(m.group('tcp_flag_noack')),
+                    'punt_err': int(m.group('punt_err')),
+                    'l2_not_supported': int(m.group('l2_not_supported'))
+                })
+                continue
+
+            # first_pkt_non_syn: 0
+            m = p13.match(line)
+            if m:
+                parsed_dict['events_errors']['first_pkt_non_syn'] = int(m.group('first_pkt_non_syn'))
+                continue
+
+        return parsed_dict
+
 # =======================================================
 # Schema for 'show platform hardware qfp active feature firewall datapath scb any any any any any all any detail'
 # =======================================================
@@ -13048,6 +13584,61 @@ class ShowPlatformHardwareQfpActiveFeatureFirewallDatapathScbDetail(ShowPlatform
 
         return parsed
 
+class ShowPlatformHardwareQfpActiveFeatureFirewallDropSchema(MetaParser):
+    """Schema for show platform hardware qfp active feature firewall drop
+                  show platform hardware qfp active feature firewall drop all
+                  show platform hardware qfp active feature firewall drop clear
+                  show platform hardware qfp active feature firewall drop verbose"""
+    schema = {
+            str: int
+    }
+
+class ShowPlatformHardwareQfpActiveFeatureFirewallDrop(ShowPlatformHardwareQfpActiveFeatureFirewallDropSchema):
+    """Parser for show platform hardware qfp active feature firewall drop
+                  show platform hardware qfp active feature firewall drop all
+                  show platform hardware qfp active feature firewall drop clear
+                  show platform hardware qfp active feature firewall drop verbose"""
+
+
+    cli_command = 'show platform hardware qfp active feature firewall drop {actions}'
+ 
+    def cli(self, actions="", output=None):
+        if output is None:
+            cmd = self.cli_command.format(actions=actions)
+            output = self.device.execute(cmd)
+
+        parsed_dict = {}
+
+        #-------------------------------------------------------------------------------
+        #Drop Reason                                                             Packets
+        #-------------------------------------------------------------------------------
+        #Policy drop:classify result                                                  10
+
+        p1 = re.compile(r'^(?P<drop_reason>.+?)\s{2,}(?P<packets>\d+)$')
+
+        # Split the output into lines
+        lines = output.splitlines()
+
+        # Iterate over each line
+        for line in lines:
+            line = line.strip()
+            # Skip the header lines
+            if line.startswith('Drop Reason') or line.startswith('---') or line.startswith('All drop counts cleared.'):
+                continue
+
+            #-------------------------------------------------------------------------------
+            #Drop Reason                                                             Packets
+            #-------------------------------------------------------------------------------
+            #Policy drop:classify result                                                  10
+
+            m = p1.match(line)
+            if m:
+                drop_reason = m.group("drop_reason").strip()
+                packets = int(m.group("packets"))
+                parsed_dict[drop_reason] = packets
+
+        return parsed_dict
+            
 # =============================================================================================
 # Schema for 'show platform hardware qfp active feature nat datapath edm'
 # =============================================================================================
@@ -13120,5 +13711,1199 @@ class ShowPlatformHardwareQfpActiveFeatureNatDatapathEdm(ShowPlatformHardwareQfp
                 udp_ports = [int(port) for port in ports_str.split()]
                 ret_dict["udp_alg_ports"] = udp_ports
                 continue
+                
+        return ret_dict
+
+# =======================================================
+# Schema for 'show platform hardware qfp active feature evc client l2cp-actions interface {interface}'
+# =======================================================
+class ShowPlatformHardwareQfpActiveFeatureEvcClientL2cpActionsInterfaceSchema(MetaParser):
+    """Schema for show platform hardware qfp active feature evc client l2cp-actions interface {interface}"""
+    
+    schema = {
+        "efp_l2cp_actions": {
+            Any(): str  # Protocol name mapped to action (Drop, Fwrd, etc.)
+        }
+    }
+
+
+# =======================================================
+# Parser for 'show platform hardware qfp active feature evc client l2cp-actions interface {interface}'
+# =======================================================
+class ShowPlatformHardwareQfpActiveFeatureEvcClientL2cpActionsInterface(
+    ShowPlatformHardwareQfpActiveFeatureEvcClientL2cpActionsInterfaceSchema
+):
+    """Parser for show platform hardware qfp active feature evc client l2cp-actions interface {interface}"""
+
+    cli_command = "show platform hardware qfp active feature evc client l2cp-actions interface {interface}"
+
+    def cli(self, interface, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(interface=interface))
+
+        # Initialize the dictionary to store parsed data
+        ret_dict = {}
+
+        # Regex patterns to match the different L2CP protocol actions
+        # VTP           : Drop
+        p1 = re.compile(r"^\s*(?P<protocol>\w+)\s*:\s*(?P<action>\w+)\s*$")
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Skip header lines
+            if line == "EFP L2CP actions" or not line:
+                continue
+
+            # Match protocol and action lines
+            # VTP           : Drop
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                protocol = group["protocol"]
+                action = group["action"]
+
+                # Store in the efp_l2cp_actions dictionary
+                efp_dict = ret_dict.setdefault("efp_l2cp_actions", {})
+                efp_dict[protocol] = action
+                continue
+
+        return ret_dict
+
+# ========================================================================
+# Schema for 'show platform hardware qfp active feature firewall runtime'
+# ========================================================================
+
+class ShowPlatformHardwareQfpActiveFeatureFirewallRuntimeSchema(MetaParser):
+    '''Schema for show platform hardware qfp active feature firewall runtime'''
+    schema = {
+        'global': {
+            Any(): {
+                'value': str,
+                Optional('ha_state'): str,
+                Optional('fw_configured'): str,
+                Optional('init_done'): str,
+                Optional('init_requested'): str,
+                Optional('syslog_deployed'): str,
+                Optional('salt'): int,
+                Optional('global_simultaneous_packets_per_session'): int,
+                Optional('default_simultaneous_packets_per_session'): int,
+                Optional('half_open'): str,
+            }
+        },
+        Optional('teardowns'): int,
+        Optional('pam_cce'): str,
+        Optional('num_zp_with_policy'): int,
+        Optional('high_priority_recycle_queue_address'): str,
+        Optional('low_priority_recycle_queue_address'): str,
+        Optional('lock_upgrades'): int,
+        Optional('half_open_aggressive_aging'): int,
+        Optional('num_ack_exceeds_limit'): int,
+        Optional('num_rst_exceeds_limit'): int,
+        Optional('unknown_vrf_limit_exceeds'): int,
+        Optional('syncookie_over_rate_cnt'): int,
+        Optional('fw_tcp_session_termination'): {
+            'halfopen': {
+                'rst_sent': int,
+                'blocked': int,
+            },
+            'idle': {
+                'rst_sent': int,
+                'blocked': int,
+            },
+            'halfclose': {
+                'rst_sent': int,
+                'blocked': int,
+            }
+        },
+        Optional('nat_caching'): {
+            'nat_registration': int,
+            'nat_unregistration': int,
+            'too_many_nat_sessions': int,
+            'cant_register_with_nat': int,
+            'invalid_nat_session': int,
+            'no_nat_session_caching': int,
+            'nat_cached_session': int,
+        },
+        Optional('l2_firewall'): {
+            'l2_unknown_encap': int,
+            'l2_skip_tcp_pkt': int,
+            'timer_stop_failed': int,
+        },
+        Optional('vrf_global_action_block'): {
+            'l7_inspection_disable_flags': str,
+            'total_sessions': {
+                'max_limit': int,
+                'current_count': int,
+                'exceed': int,
+                'aggr_age_high_watermark': int,
+                'aggr_age_low_watermark': int,
+                'num_times_enter_aggr_age': int,
+                'aggr_age_period': str,
+            },
+            'tcp_syn_cookie': {
+                'max_limit': int,
+                'current_count': int,
+                'exceed': int,
+            },
+            'total_half_open_sessions': {
+                'max_limit': int,
+                'current_count': int,
+                'exceed': int,
+                'aggr_age_high_watermark': int,
+                'aggr_age_low_watermark': int,
+                'num_times_enter_aggr_age': int,
+                'aggr_age_period': str,
+            },
+            'tcp_half_open_sessions': {
+                'max_limit': int,
+                'current_count': int,
+                'exceed': int,
+            },
+            'udp_half_open_sessions': {
+                'max_limit': int,
+                'current_count': int,
+                'exceed': int,
+            },
+            'icmp_half_open_sessions': {
+                'max_limit': int,
+                'current_count': int,
+                'exceed': int,
+            },
+            'domain_flags': str,
+        },
+        Optional('box_action_block'): {
+            'l7_inspection_disable_flags': str,
+            'total_sessions': {
+                'current_count': int,
+                'aggr_age_high_watermark': int,
+                'aggr_age_low_watermark': int,
+                'num_times_enter_aggr_age': int,
+                'aggr_age_period': str,
+            },
+            'tcp_syn_cookie': {
+                'max_limit': int,
+                'current_count': int,
+                'exceed': int,
+            },
+            'total_half_open_sessions': {
+                'max_limit': int,
+                'current_count': int,
+                'exceed': int,
+                'aggr_age_high_watermark': int,
+                'aggr_age_low_watermark': int,
+                'num_times_enter_aggr_age': int,
+                'aggr_age_period': str,
+            },
+            'tcp_half_open_sessions': {
+                'max_limit': int,
+                'current_count': int,
+                'exceed': int,
+            },
+            'udp_half_open_sessions': {
+                'max_limit': int,
+                'current_count': int,
+                'exceed': int,
+            },
+            'icmp_half_open_sessions': {
+                'max_limit': int,
+                'current_count': int,
+                'exceed': int,
+            },
+            'domain_flags': str,
+        },
+        Optional('fw_persona_alert_rlimit'): int,
+        Optional('fw_persona_backpressure'): str,
+        Optional('invalid_rg_exceeds_max'): int,
+        Optional('invalid_ha_message_version'): int,
+        Optional('rii_hash_table'): {
+            'address': str,
+            'size': int,
+        },
+        Optional('vrf_action_table'): {
+            'address': str,
+            'size': int,
+        },
+        Optional('avc_stats_table_index_out_of_range'): int,
+        Optional('vrf_id_name_table'): {
+            Any(): {
+                'id': int,
+                'name': str,
+                'vrf_namehash': str,
+                'ipv4': int,
+                'ipv6': int,
+            }
+        },
+        Optional('fw_persona_address'): str,
+        Optional('vpn_zone_table'): {
+            'address': str,
+            'size': int,
+        }
+    }
+
+class ShowPlatformHardwareQfpActiveFeatureFirewallRuntime(ShowPlatformHardwareQfpActiveFeatureFirewallRuntimeSchema):
+    '''Parser for show platform hardware qfp active feature firewall runtime'''
+
+    cli_command = 'show platform hardware qfp active feature firewall runtime'
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        parsed = {}
+        # global 0x020001a1:
+        p1 = re.compile(r'^global(?P<num>\d*)\s+(?P<value>0x[0-9a-fA-F]+):$')
+
+
+        # HA state                               Allow-New-Sess
+        p2 = re.compile(r'^\s*HA state\s+(?P<ha_state>\S+)$')
+
+        # FW Configured                          (0x00000020)
+        p3 = re.compile(r'^\s*FW Configured\s+\((?P<fw_configured>0x[0-9a-fA-F]+)\)$')
+
+        # Init Done                              (0x00000080)
+        p4 = re.compile(r'^\s*Init Done\s+\((?P<init_done>0x[0-9a-fA-F]+)\)$')
+
+        # Init Requested                         (0x00000100)
+        p5 = re.compile(r'^\s*Init Requested\s+\((?P<init_requested>0x[0-9a-fA-F]+)\)$')
+
+        # Syslog Deployed                        (0x02000000)
+        p6 = re.compile(r'^\s*Syslog Deployed\s+\((?P<syslog_deployed>0x[0-9a-fA-F]+)\)$')
+
+        # Salt                                   196
+        p7 = re.compile(r'^\s*Salt\s+(?P<salt>\d+)$')
+
+        # Global number of simultaneous packet per session allowed  0
+        p8 = re.compile(r'^\s*Global number of simultaneous packet per session allowed\s+(?P<global_simultaneous>\d+)$')
+
+        # Default number of simultaneous packet per session allowed 25
+        p9 = re.compile(r'^\s*Default number of simultaneous packet per session allowed\s+(?P<default_simultaneous>\d+)$')
+
+        # half-open                              (0x00000080)
+        p10 = re.compile(r'^\s*half-open\s+\((?P<half_open>0x[0-9a-fA-F]+)\)$')
+
+        # teardowns 0, pam_cce 0x0 00000000
+        p11 = re.compile(r'^teardowns\s+(?P<teardowns>\d+),\s+pam_cce\s+(?P<pam_cce>\S+\s+\S+)$')
+
+        # num zp with policy                       1
+        p12 = re.compile(r'^num zp with policy\s+(?P<num_zp>\d+)$')
+
+        # High priority recycle queue address      0x846519c0
+        p13 = re.compile(r'^High priority recycle queue address\s+(?P<high_priority>0x[0-9a-fA-F]+)$')
+
+        # Low priority recycle queue address       0x846519d0
+        p14 = re.compile(r'^Low priority recycle queue address\s+(?P<low_priority>0x[0-9a-fA-F]+)$')
+
+        # Lock upgrades                                   190
+        p15 = re.compile(r'^Lock upgrades\s+(?P<lock_upgrades>\d+)$')
+
+        # Half open aggressive aging:              1
+        p16 = re.compile(r'^Half open aggressive aging:\s+(?P<half_open_aging>\d+)$')
+
+        # Num of ACK exceeds limit(5):             0
+        p17 = re.compile(r'^Num of ACK exceeds limit\(\d+\):\s+(?P<ack_exceeds>\d+)$')
+
+        # Num of RST exceeds limit(5)              0
+        p18 = re.compile(r'^Num of RST exceeds limit\(\d+\)\s+(?P<rst_exceeds>\d+)$')
+
+        # Unknown VRF limit exceeds                0
+        p19 = re.compile(r'^Unknown VRF limit exceeds\s+(?P<unknown_vrf>\d+)$')
+
+        # syncookie over rate cnt                  0
+        p20 = re.compile(r'^syncookie over rate cnt\s+(?P<syncookie_rate>\d+)$')
+
+        # fw tcp session termination RST segment control:
+        p21 = re.compile(r'^fw tcp session termination RST segment control:$')
+
+        # halfopen:  RST sent 0, blocked 0
+        p22 = re.compile(r'^\s*halfopen:\s+RST sent\s+(?P<rst_sent>\d+),\s+blocked\s+(?P<blocked>\d+)$')
+
+        # idle:      RST sent 0, blocked 0
+        p23 = re.compile(r'^\s*idle:\s+RST sent\s+(?P<rst_sent>\d+),\s+blocked\s+(?P<blocked>\d+)$')
+
+        # halfclose: RST sent 0, blocked 0
+        p24 = re.compile(r'^\s*halfclose:\s+RST sent\s+(?P<rst_sent>\d+),\s+blocked\s+(?P<blocked>\d+)$')
+
+        # NAT caching:
+        p25 = re.compile(r'^NAT caching:$')
+
+        # NAT registration                         100
+        p26 = re.compile(r'^NAT registration\s+(?P<nat_registration>\d+)$')
+
+        # NAT unregistration                       100
+        p27 = re.compile(r'^NAT unregistration\s+(?P<nat_unregistration>\d+)$')
+
+        # Too many nat sessions                    0
+        p28 = re.compile(r'^Too many nat sessions\s+(?P<too_many_nat>\d+)$')
+
+        # Can't register with NAT                0
+        p29 = re.compile(r'^\s*Can\'t register with NAT\s+(?P<cant_register>\d+)$')
+
+        # Invalid nat session                    0
+        p30 = re.compile(r'^\s*Invalid nat session\s+(?P<invalid_nat>\d+)$')
+
+        # No NAT session caching                 0
+        p31 = re.compile(r'^\s*No NAT session caching\s+(?P<no_nat_caching>\d+)$')
+
+        # NAT cached session                     0
+        p32 = re.compile(r'^\s*NAT cached session\s+(?P<nat_cached>\d+)$')
+
+        # L2 Firewall:
+        p33 = re.compile(r'^L2 Firewall:$')
+
+        # L2 unknown encap                       0
+        p34 = re.compile(r'^\s*L2 unknown encap\s+(?P<l2_unknown>\d+)$')
+
+        # L2 skip tcp pkt                        0
+        p35 = re.compile(r'^\s*L2 skip tcp pkt\s+(?P<l2_skip>\d+)$')
+
+        # Timer stop failed                      0
+        p36 = re.compile(r'^\s*Timer stop failed\s+(?P<timer_stop>\d+)$')
+
+        # VRF Global Action Block:
+        p37 = re.compile(r'^VRF Global Action Block:$')
+
+        # Box Action Block:
+        p38 = re.compile(r'^Box Action Block:$')
+
+        # L7 Inspection disable flags: 0x0
+        p39 = re.compile(r'^\s*L7 Inspection disable flags:\s+(?P<l7_flags>0x[0-9a-fA-F]+)$')
+
+        # Total Sessions:
+        p40 = re.compile(r'^\s*Total Sessions:$')
+
+        # max limit: 4294967295, current count: 0, exceed: 0
+        p41 = re.compile(r'^\s*max limit:\s+(?P<max_limit>\d+),\s+current count:\s+(?P<current_count>\d+),\s+exceed:\s+(?P<exceed>\d+)$')
+
+        # aggr-age high watermark: 4294967295, low watermark: 0
+        p42 = re.compile(r'^\s*aggr-age high watermark:\s+(?P<high_watermark>\d+),\s+low watermark:\s+(?P<low_watermark>\d+)$')
+
+        # num of times enter aggr-age: 0, aggr-age period: off
+        p43 = re.compile(r'^\s*num of times enter aggr-age:\s+(?P<num_times>\d+),\s+aggr-age period:\s+(?P<period>\S+)$')
+
+        # TCP SYN Cookie:
+        p44 = re.compile(r'^\s*TCP SYN Cookie:$')
+
+        # max limit: 4294967295, current count: 0, exceed: 0
+        p45 = re.compile(r'^\s*max limit:\s+(?P<max_limit>\d+),\s+current count:\s+(?P<current_count>\d+),\s+exceed:\s+(?P<exceed>\d+)$')
+
+        # Total Half Open Sessions:
+        p46 = re.compile(r'^\s*Total Half Open Sessions:$')
+
+        # TCP Half Open Sessions:
+        p47 = re.compile(r'^\s*TCP Half Open Sessions:$')
+
+        # UDP Half Open Sessions:
+        p48 = re.compile(r'^\s*UDP Half Open Sessions:$')
+
+        # ICMP Half Open Sessions:
+        p49 = re.compile(r'^\s*ICMP Half Open Sessions:$')
+
+        # max limit: 4294967295, current count: 0, exceed: 0
+        p50 = re.compile(r'^\s*max limit:\s+(?P<max_limit>\d+),\s+current count:\s+(?P<current_count>\d+),\s+exceed:\s+(?P<exceed>\d+)$')
+
+        # Domain flags: 0x0
+        p51 = re.compile(r'^\s*Domain flags:\s+(?P<domain_flags>0x[0-9a-fA-F]+)$')
+
+        # Current count::
+        p52 = re.compile(r'^\s*Current count::$')
+
+        # Total Sessions                         0
+        p53 = re.compile(r'^\s*Total Sessions\s+(?P<current_count>\d+)$')
+
+        # FW persona alert_rlimit: 0, backpressure: 0x0
+        p54 = re.compile(r'^FW persona alert_rlimit:\s+(?P<alert_rlimit>\d+),\s+backpressure:\s+(?P<backpressure>0x[0-9a-fA-F]+)$')
+
+        # Invalid RG (exceeds max RG): 0
+        p55 = re.compile(r'^Invalid RG \(exceeds max RG\):\s+(?P<invalid_rg>\d+)$')
+
+        # Invalid HA message version: 0
+        p56 = re.compile(r'^Invalid HA message version:\s+(?P<invalid_ha>\d+)$')
+
+        # RII Hash Table:  address 0xc7335810  size 128
+        p57 = re.compile(r'^RII Hash Table:\s+address\s+(?P<address>0x[0-9a-fA-F]+)\s+size\s+(?P<size>\d+)$')
+
+        # VRF Action Table Addr 0x0xc80ab800, Size 4096
+        p58 = re.compile(r'^VRF Action Table Addr\s+(?P<address>0x[0-9a-fA-Fx]+),\s+Size\s+(?P<size>\d+)$')
+
+        # AVC stats table index out-of-range 0
+        p59 = re.compile(r'^AVC stats table index out-of-range\s+(?P<avc_stats>\d+)$')
+
+        # VRF ID-Name Table:
+        p60 = re.compile(r'^VRF ID-Name Table:$')
+
+        # VRF:(id=1:name=Mgmt-intf)
+        p61 = re.compile(r'^\s*VRF:\(id=(?P<id>\d+):name=(?P<name>[^)]+)\)$')
+
+        # vrf_namehash 712b9b92383e5f4 ipv4 1, ipv6 65535
+        p62 = re.compile(r'^\s*vrf_namehash\s+(?P<vrf_namehash>\S+)\s+ipv4\s+(?P<ipv4>\d+),\s+ipv6\s+(?P<ipv6>\d+)$')
+
+        # fw_persona: 0x846519e0 vpn zone table address: 0xc873b400, size 65536
+        p63 = re.compile(r'^fw_persona:\s+(?P<persona_address>0x[0-9a-fA-F]+)\s+vpn zone table address:\s+(?P<vpn_address>0x[0-9a-fA-F]+),\s+size\s+(?P<vpn_size>\d+)$')
+
+        current_global = None
+        current_section = None
+        current_subsection = None
+        current_vrf_entry = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Parse global sections
+            # global 0x624001a1:
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                global_key = f"global{group['num']}" if group['num'] else 'global'
+                current_global = global_key
+                parsed.setdefault('global', {})[current_global] = {'value': group['value']}
+                continue
+
+            # Parse HA state
+            # HA state                               Allow-New-Sess
+            m = p2.match(line)
+            if m and current_global:
+                parsed['global'][current_global]['ha_state'] = m.group('ha_state')
+                continue
+
+            # Parse FW Configured
+            # FW Configured                          (0x00000020)
+            m = p3.match(line)
+            if m and current_global:
+                parsed['global'][current_global]['fw_configured'] = m.group('fw_configured')
+                continue
+
+            # Parse Init Done
+            # Init Done                              (0x00000080)
+            m = p4.match(line)
+            if m and current_global:
+                parsed['global'][current_global]['init_done'] = m.group('init_done')
+                continue
+
+            # Parse Init Requested
+            # Init Requested                         (0x00000100)
+            m = p5.match(line)
+            if m and current_global:
+                parsed['global'][current_global]['init_requested'] = m.group('init_requested')
+                continue
+
+            # Parse Syslog Deployed
+            # Syslog Deployed                        (0x02000000)
+            m = p6.match(line)
+            if m and current_global:
+                parsed['global'][current_global]['syslog_deployed'] = m.group('syslog_deployed')
+                continue
+
+            # Parse Salt
+            # Salt                                   30
+            m = p7.match(line)
+            if m and current_global:
+                parsed['global'][current_global]['salt'] = int(m.group('salt'))
+                continue
+
+            # Parse Global simultaneous packets
+            # Global number of simultaneous packet per session allowed  0
+            m = p8.match(line)
+            if m and current_global:
+                parsed['global'][current_global]['global_simultaneous_packets_per_session'] = int(m.group('global_simultaneous'))
+                continue
+
+            # Parse Default simultaneous packets
+            # Default number of simultaneous packet per session allowed 25
+            m = p9.match(line)
+            if m and current_global:
+                parsed['global'][current_global]['default_simultaneous_packets_per_session'] = int(m.group('default_simultaneous'))
+                continue
+
+            # Parse half-open
+            # half-open                              (0x00000080)
+            m = p10.match(line)
+            if m and current_global:
+                parsed['global'][current_global]['half_open'] = m.group('half_open')
+                continue
+
+            # Parse teardowns and pam_cce
+            # teardowns 0, pam_cce 0x0 00000000
+            m = p11.match(line)
+            if m:
+                parsed['teardowns'] = int(m.group('teardowns'))
+                parsed['pam_cce'] = m.group('pam_cce')
+                continue
+
+            # Parse num zp with policy
+            # num zp with policy                       1
+            m = p12.match(line)
+            if m:
+                parsed['num_zp_with_policy'] = int(m.group('num_zp'))
+                continue
+
+            # Parse High priority recycle queue address
+            # High priority recycle queue address      0x820dbbd0
+            m = p13.match(line)
+            if m:
+                parsed['high_priority_recycle_queue_address'] = m.group('high_priority')
+                continue
+
+            # Parse Low priority recycle queue address
+            # Low priority recycle queue address       0x820dbbe0
+            m = p14.match(line)
+            if m:
+                parsed['low_priority_recycle_queue_address'] = m.group('low_priority')
+                continue
+
+            # Parse Lock upgrades
+            # Lock upgrades                            190
+            m = p15.match(line)
+            if m:
+                parsed['lock_upgrades'] = int(m.group('lock_upgrades'))
+                continue
+
+            # Parse Half open aggressive aging
+            # Half open aggressive aging:              1
+            m = p16.match(line)
+            if m:
+                parsed['half_open_aggressive_aging'] = int(m.group('half_open_aging'))
+                continue
+
+            # Parse Num of ACK exceeds limit
+            # Num of ACK exceeds limit(5):             0
+            m = p17.match(line)
+            if m:
+                parsed['num_ack_exceeds_limit'] = int(m.group('ack_exceeds'))
+                continue
+
+            # Parse Num of RST exceeds limit
+            # Num of RST exceeds limit(5)              0
+            m = p18.match(line)
+            if m:
+                parsed['num_rst_exceeds_limit'] = int(m.group('rst_exceeds'))
+                continue
+
+            # Parse Unknown VRF limit exceeds
+            # Unknown VRF limit exceeds                0
+            m = p19.match(line)
+            if m:
+                parsed['unknown_vrf_limit_exceeds'] = int(m.group('unknown_vrf'))
+                continue
+
+            # Parse syncookie over rate cnt
+            # syncookie over rate cnt                  0
+            m = p20.match(line)
+            if m:
+                parsed['syncookie_over_rate_cnt'] = int(m.group('syncookie_rate'))
+                continue
+
+            # Parse fw tcp session termination
+            # fw tcp session termination RST segment control:
+            m = p21.match(line)
+            if m:
+                current_section = 'fw_tcp_session_termination'
+                parsed[current_section] = {}
+                continue
+
+            # Parse halfopen RST
+            # halfopen:  RST sent 0, blocked 0
+            m = p22.match(line)
+            if m and current_section == 'fw_tcp_session_termination':
+                parsed[current_section]['halfopen'] = {
+                    'rst_sent': int(m.group('rst_sent')),
+                    'blocked': int(m.group('blocked'))
+                }
+                continue
+
+            # Parse idle RST
+            # idle:      RST sent 0, blocked 0
+            m = p23.match(line)
+            if m and current_section == 'fw_tcp_session_termination':
+                parsed[current_section]['idle'] = {
+                    'rst_sent': int(m.group('rst_sent')),
+                    'blocked': int(m.group('blocked'))
+                }
+                continue
+
+            # Parse halfclose RST
+            # halfclose: RST sent 0, blocked 0
+            m = p24.match(line)
+            if m and current_section == 'fw_tcp_session_termination':
+                parsed[current_section]['halfclose'] = {
+                    'rst_sent': int(m.group('rst_sent')),
+                    'blocked': int(m.group('blocked'))
+                }
+                continue
+
+            # Parse NAT caching section
+            # NAT caching:
+            m = p25.match(line)
+            if m:
+                current_section = 'nat_caching'
+                parsed[current_section] = {}
+                continue
+
+            # Parse NAT registration
+            # NAT registration                         100
+            m = p26.match(line)
+            if m and current_section == 'nat_caching':
+                parsed[current_section]['nat_registration'] = int(m.group('nat_registration'))
+                continue
+
+            # Parse NAT unregistration
+            # NAT unregistration                       100
+            m = p27.match(line)
+            if m and current_section == 'nat_caching':
+                parsed[current_section]['nat_unregistration'] = int(m.group('nat_unregistration'))
+                continue
+
+            # Parse Too many nat sessions
+            # Too many nat sessions                    0
+            m = p28.match(line)
+            if m and current_section == 'nat_caching':
+                parsed[current_section]['too_many_nat_sessions'] = int(m.group('too_many_nat'))
+                continue
+
+            # Parse Can't register with NAT
+            # Can't register with NAT                0
+            m = p29.match(line)
+            if m and current_section == 'nat_caching':
+                parsed[current_section]['cant_register_with_nat'] = int(m.group('cant_register'))
+                continue
+
+            # Parse Invalid nat session
+            # Invalid nat session                    0
+            m = p30.match(line)
+            if m and current_section == 'nat_caching':
+                parsed[current_section]['invalid_nat_session'] = int(m.group('invalid_nat'))
+                continue
+
+            # Parse No NAT session caching
+            # No NAT session caching                 0
+            m = p31.match(line)
+            if m and current_section == 'nat_caching':
+                parsed[current_section]['no_nat_session_caching'] = int(m.group('no_nat_caching'))
+                continue
+
+            # Parse NAT cached session
+            # NAT cached session                     0
+            m = p32.match(line)
+            if m and current_section == 'nat_caching':
+                parsed[current_section]['nat_cached_session'] = int(m.group('nat_cached'))
+                continue
+
+            # Parse L2 Firewall section
+            # L2 Firewall:
+            m = p33.match(line)
+            if m:
+                current_section = 'l2_firewall'
+                parsed[current_section] = {}
+                continue
+
+            # Parse L2 unknown encap
+            # L2 unknown encap                       0
+            m = p34.match(line)
+            if m and current_section == 'l2_firewall':
+                parsed[current_section]['l2_unknown_encap'] = int(m.group('l2_unknown'))
+                continue
+
+            # Parse L2 skip tcp pkt
+            # L2 skip tcp pkt                        0
+            m = p35.match(line)
+            if m and current_section == 'l2_firewall':
+                parsed[current_section]['l2_skip_tcp_pkt'] = int(m.group('l2_skip'))
+                continue
+
+            # Parse Timer stop failed
+            # Timer stop failed                      0
+            m = p36.match(line)
+            if m and current_section == 'l2_firewall':
+                parsed[current_section]['timer_stop_failed'] = int(m.group('timer_stop'))
+                continue
+
+            # Parse VRF Global Action Block
+            # VRF Global Action Block:
+            m = p37.match(line)
+            if m:
+                current_section = 'vrf_global_action_block'
+                parsed[current_section] = {}
+                current_subsection = None
+                continue
+
+            # Parse Box Action Block
+            # Box Action Block:
+            m = p38.match(line)
+            if m:
+                current_section = 'box_action_block'
+                parsed[current_section] = {}
+                current_subsection = None
+                continue
+
+            # Parse L7 Inspection disable flags
+            # L7 Inspection disable flags: 0x0
+            m = p39.match(line)
+            if m and current_section in ['vrf_global_action_block', 'box_action_block']:
+                parsed[current_section]['l7_inspection_disable_flags'] = m.group('l7_flags')
+                continue
+
+            # Parse Total Sessions
+            # Total Sessions:
+            m = p40.match(line)
+            if m and current_section in ['vrf_global_action_block', 'box_action_block']:
+                current_subsection = 'total_sessions'
+                parsed[current_section][current_subsection] = {}
+                continue
+
+            # Parse session limits
+            # max limit: 4294967295, current count: 0, exceed: 0
+            m = p41.match(line)
+            if m and current_subsection == 'total_sessions':
+                parsed[current_section][current_subsection].update({
+                    'max_limit': int(m.group('max_limit')),
+                    'current_count': int(m.group('current_count')),
+                    'exceed': int(m.group('exceed'))
+                })
+                continue
+
+            # Parse aggr-age watermark
+            # aggr-age high watermark: 4294967295, low watermark: 0
+            m = p42.match(line)
+            if m and current_subsection in ['total_sessions', 'total_half_open_sessions']:
+                parsed[current_section][current_subsection].update({
+                    'aggr_age_high_watermark': int(m.group('high_watermark')),
+                    'aggr_age_low_watermark': int(m.group('low_watermark'))
+                })
+                continue
+
+            # Parse aggr-age period
+            # num of times enter aggr-age: 0, aggr-age period: off
+            m = p43.match(line)
+            if m and current_subsection in ['total_sessions', 'total_half_open_sessions']:
+                parsed[current_section][current_subsection].update({
+                    'num_times_enter_aggr_age': int(m.group('num_times')),
+                    'aggr_age_period': m.group('period')
+                })
+                continue
+
+            # Parse TCP SYN Cookie
+            # TCP SYN Cookie:
+            m = p44.match(line)
+            if m and current_section in ['vrf_global_action_block', 'box_action_block']:
+                current_subsection = 'tcp_syn_cookie'
+                parsed[current_section][current_subsection] = {}
+                continue
+
+            # Parse syn cookie limits
+            # max limit: 4294967295, current count: 0, exceed: 0
+            m = p45.match(line)
+            if m and current_subsection == 'tcp_syn_cookie':
+                parsed[current_section][current_subsection].update({
+                    'max_limit': int(m.group('max_limit')),
+                    'current_count': int(m.group('current_count')),
+                    'exceed': int(m.group('exceed'))
+                })
+                continue
+
+            # Parse Total Half Open Sessions
+            # Total Half Open Sessions:
+            m = p46.match(line)
+            if m and current_section in ['vrf_global_action_block', 'box_action_block']:
+                current_subsection = 'total_half_open_sessions'
+                parsed[current_section][current_subsection] = {}
+                continue
+
+            # Parse TCP Half Open Sessions
+            # TCP Half Open Sessions:
+            m = p47.match(line)
+            if m and current_section in ['vrf_global_action_block', 'box_action_block']:
+                current_subsection = 'tcp_half_open_sessions'
+                parsed[current_section][current_subsection] = {}
+                continue
+
+            # Parse UDP Half Open Sessions
+            # UDP Half Open Sessions:
+            m = p48.match(line)
+            if m and current_section in ['vrf_global_action_block', 'box_action_block']:
+                current_subsection = 'udp_half_open_sessions'
+                parsed[current_section][current_subsection] = {}
+                continue
+
+            # Parse ICMP Half Open Sessions
+            # ICMP Half Open Sessions:
+            m = p49.match(line)
+            if m and current_section in ['vrf_global_action_block', 'box_action_block']:
+                current_subsection = 'icmp_half_open_sessions'
+                parsed[current_section][current_subsection] = {}
+                continue
+
+            # Parse half open limits
+            # max limit: 4294967295, current count: 0, exceed: 0
+            m = p50.match(line)
+            if m and current_subsection in ['tcp_half_open_sessions', 'udp_half_open_sessions', 'icmp_half_open_sessions', 'total_half_open_sessions']:
+                parsed[current_section][current_subsection].update({
+                    'max_limit': int(m.group('max_limit')),
+                    'current_count': int(m.group('current_count')),
+                    'exceed': int(m.group('exceed'))
+                })
+                continue
+
+            # Parse Domain flags
+            # Domain flags: 0x0
+            m = p51.match(line)
+            if m and current_section in ['vrf_global_action_block', 'box_action_block']:
+                parsed[current_section]['domain_flags'] = m.group('domain_flags')
+                continue
+
+            # Parse Current count
+            # Current count::
+            m = p52.match(line)
+            if m and current_section == 'box_action_block':
+                current_subsection = 'total_sessions'
+                parsed[current_section][current_subsection] = {}
+                continue
+
+            # Parse Box total sessions
+            # Total Sessions                      0
+            m = p53.match(line)
+            if m and current_section == 'box_action_block' and current_subsection == 'total_sessions':
+                parsed[current_section][current_subsection]['current_count'] = int(m.group('current_count'))
+                continue
+
+            # Parse FW persona
+            # FW persona alert_rlimit: 0, backpressure: 0x0
+            m = p54.match(line)
+            if m:
+                parsed['fw_persona_alert_rlimit'] = int(m.group('alert_rlimit'))
+                parsed['fw_persona_backpressure'] = m.group('backpressure')
+                continue
+
+            # Parse Invalid RG
+            # Invalid RG (exceeds max RG): 0
+            m = p55.match(line)
+            if m:
+                parsed['invalid_rg_exceeds_max'] = int(m.group('invalid_rg'))
+                continue
+
+            # Parse Invalid HA message version
+            # Invalid HA message version: 0
+            m = p56.match(line)
+            if m:
+                parsed['invalid_ha_message_version'] = int(m.group('invalid_ha'))
+                continue
+
+            # Parse RII Hash Table
+            # RII Hash Table:  address 0x40b8ec10  size 128
+            m = p57.match(line)
+            if m:
+                parsed['rii_hash_table'] = {
+                    'address': m.group('address'),
+                    'size': int(m.group('size'))
+                }
+                continue
+
+            # Parse VRF Action Table
+            # VRF Action Table Addr 0x0x43abb000, Size 4096
+            m = p58.match(line)
+            if m:
+                parsed['vrf_action_table'] = {
+                    'address': m.group('address'),
+                    'size': int(m.group('size'))
+                }
+                continue
+
+            # Parse AVC stats
+            # AVC stats table index out-of-range 0
+            m = p59.match(line)
+            if m:
+                parsed['avc_stats_table_index_out_of_range'] = int(m.group('avc_stats'))
+                continue
+
+            # Parse VRF ID-Name Table
+            # VRF ID-Name Table:
+            m = p60.match(line)
+            if m:
+                current_section = 'vrf_id_name_table'
+                parsed[current_section] = {}
+                continue
+
+            # Parse VRF entry
+            # VRF:(id=3:name=green)
+            m = p61.match(line)
+            if m and current_section == 'vrf_id_name_table':
+                vrf_key = f"vrf_{m.group('id')}"
+                current_vrf_entry = vrf_key
+                parsed[current_section][vrf_key] = {
+                    'id': int(m.group('id')),
+                    'name': m.group('name')
+                }
+                continue
+
+            # Parse VRF hash
+            # vrf_namehash 9f27410725ab8cc8 ipv4 3, ipv6 503316483
+            m = p62.match(line)
+            if m and current_vrf_entry and current_section == 'vrf_id_name_table':
+                parsed[current_section][current_vrf_entry].update({
+                    'vrf_namehash': m.group('vrf_namehash'),
+                    'ipv4': int(m.group('ipv4')),
+                    'ipv6': int(m.group('ipv6'))
+                })
+                continue
+
+            # Parse fw_persona and vpn zone table
+            # fw_persona: 0x820dbbf0 vpn zone table address: 0x42b07400, size 65536
+            m = p63.match(line)
+            if m:
+                parsed['fw_persona_address'] = m.group('persona_address')
+                parsed['vpn_zone_table'] = {
+                    'address': m.group('vpn_address'),
+                    'size': int(m.group('vpn_size'))
+                }
+                continue
+
+        return parsed
+ 
+# ===============================================================
+# Schema for:
+#  * 'show platform hardware qfp active feature nat datapath gatein'
+#  * 'show platform hardware qfp active feature nat datapath gateout'
+# ===============================================================
+class ShowPlatformHardwareQfpActiveFeatureNatDatapathGateSchema(MetaParser):
+    """Schema for:
+    * 'show platform hardware qfp active feature nat datapath gatein'
+    * 'show platform hardware qfp active feature nat datapath gateout'
+    """
+    
+    schema = {
+        'gatekeeper_status': str,
+        Optional('entries'): {
+            Any(): {  # sip address as key
+                'sip': str,
+                'vrf': int,
+                'cnt': int,
+                'ts': str,
+                'idx': int,
+            }
+        }
+    }
+
+# ===============================================================
+# Parser for:
+#  * 'show platform hardware qfp active feature nat datapath gatein'
+#  * 'show platform hardware qfp active feature nat datapath gateout'
+# ===============================================================
+class ShowPlatformHardwareQfpActiveFeatureNatDatapathGate(ShowPlatformHardwareQfpActiveFeatureNatDatapathGateSchema):
+    """Parser for:
+    * 'show platform hardware qfp active feature nat datapath gatein'
+    * 'show platform hardware qfp active feature nat datapath gateout'
+    """
+    
+    cli_command = [
+        'show platform hardware qfp active feature nat datapath {direction}',
+    ]
+    
+    def cli(self, direction='gatein', output=None):
+        if output is None:
+            if direction in ['gatein', 'gateout']:
+                cmd = self.cli_command[0].format(direction=direction)
+            else:
+                cmd = self.cli_command[0].format(direction='gatein')  # default to gatein
+            out = self.device.execute(cmd)
+        else:
+            out = output
+            
+        # Initial return dictionary
+        parsed_dict = {}
+        
+        # Gatekeeper on
+        p1 = re.compile(r'^Gatekeeper\s+(?P<status>\w+)$')
+        
+        # sip 203.0.113.231 vrf 0 cnt 1 ts 0x17ba3f idx 74
+        p2 = re.compile(r'^sip\s+(?P<sip>\S+)\s+vrf\s+(?P<vrf>\d+)\s+cnt\s+(?P<cnt>\d+)\s+ts\s+(?P<ts>0x[a-fA-F0-9]+)\s+idx\s+(?P<idx>\d+)$')
+        
+        gatekeeper_status = None
+        entries_found = False
+        
+        for line in out.splitlines():
+            line = line.strip()
+            
+            # Gatekeeper on
+            m = p1.match(line)
+            if m:
+                gatekeeper_status = m.groupdict()['status']
+                continue
+                
+            # sip 203.0.113.231 vrf 0 cnt 1 ts 0x17ba3f idx 74
+            m = p2.match(line)
+            if m:
+                entries_found = True
+                group = m.groupdict()
+                sip = group['sip']
+                
+                # Only add gatekeeper_status when we have actual entries
+                if gatekeeper_status is not None and 'gatekeeper_status' not in parsed_dict:
+                    parsed_dict['gatekeeper_status'] = gatekeeper_status
+                
+                entries = parsed_dict.setdefault('entries', {})
+                entry = entries.setdefault(sip, {})
+                
+                entry['sip'] = sip
+                entry['vrf'] = int(group['vrf'])
+                entry['cnt'] = int(group['cnt'])
+                entry['ts'] = group['ts']
+                entry['idx'] = int(group['idx'])
+                continue            
+        return parsed_dict
+
+
+class ShowPlatformHardwareCppActiveSystemStateSchema(MetaParser):
+    """Schema for show platform hardware cpp active system state"""
+    schema = {
+        'cpp_ha': str,
+        'cpp_cp': str,
+        'cpp_sp': str,
+        'fman_fp': str,
+        'cpp_driver0': str,
+        'platform_state': {
+            'curr': str,
+            'next': str
+        },
+        'ha_state': {
+            'cpp': int,
+            'dir': str,
+            'role': {
+                'curr': str,
+                'next': str
+            }
+        },
+        'client_state': str,
+        'image': str,
+        'load_cnt': int,
+        'time': str,
+        'active_threads': str,
+        'fault_manager_flags': {
+            'ignore_fault': str,
+            'ignore_stuck_thread': str,
+            'crashdump_in_progress': str
+        }
+    }
+
+
+class ShowPlatformHardwareCppActiveSystemState(ShowPlatformHardwareCppActiveSystemStateSchema):
+    """Parser for show platform hardware cpp active system state"""
+    
+    cli_command = "show platform hardware cpp active system state"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the dictionary to store parsed data
+        ret_dict = {}
+
+        # cpp_cp : Initialized
+        # cpp_sp : Initialized
+        # FMAN-FP : Initialized
+        # cpp_driver0 : Initialized
+        p1 = re.compile(r'^(?P<component>\w+(?:-\w+)*)\s*:\s*(?P<status>\w+)\s*$')
+        
+        # Platform State: curr=ACTIVE_SOLO next=ACTIVE_SOLO
+        p2 = re.compile(r'^Platform State:\s*curr=(?P<curr>\S+)\s*next=(?P<next>\S+)\s*$')
+        
+        # HA State: CPP=0 dir=BOTH Role: curr=ACTIVE_SOLO next=ACTIVE_SOLO
+        p3 = re.compile(r'^HA State:\s*CPP=(?P<cpp>\d+)\s*dir=(?P<dir>\S+)\s*Role:\s*curr=(?P<curr>\S+)\s*next=(?P<next>\S+)\s*$')
+        
+        # Client State: ENABLE
+        p4 = re.compile(r'^Client State:\s*(?P<state>\S+)\s*$')
+        
+        # Image: /tmp/sw/fp/0/0/fp/mount/usr/cpp/bin/qfp-ucode-fugazi
+        p5 = re.compile(r'^Image:\s*(?P<image>\S+)\s*$')
+        
+        # Load Cnt: 1 Time: Sep 04, 2025 01:36:17
+        p6 = re.compile(r'^Load Cnt:\s*(?P<load_cnt>\d+)\s*Time:\s*(?P<time>.*)\s*$')
+        
+        # Active Threads: 0-15
+        p7 = re.compile(r'^Active Threads:\s*(?P<threads>.*)\s*$')
+        
+        # Fault Manager Flags:
+        p8 = re.compile(r'^Fault Manager Flags:\s*$')
+        
+        # ignore_fault:          FALSE
+        # ignore_stuck_thread:   FALSE
+        # crashdump_in_progress: FALSE
+        p9 = re.compile(r'^\s*(?P<flag_name>\w+):\s*(?P<flag_value>\w+)\s*$')
+
+        fault_manager_section = False
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # Fault Manager Flags:
+            m = p8.match(line)
+            if m:
+                fault_manager_section = True
+                ret_dict['fault_manager_flags'] = {}
+                continue
+
+            # Component status lines (cpp_cp, cpp_sp, FMAN-FP, cpp_driver0)
+            if not fault_manager_section:
+                m = p1.match(line)
+                if m:
+                    component = m.group('component').lower().replace('-', '_')
+                    status = m.group('status')
+                    ret_dict[component] = status
+                    continue
+
+            # Platform State: curr=ACTIVE_SOLO next=ACTIVE_SOLO
+            m = p2.match(line)
+            if m:
+                ret_dict['platform_state'] = {
+                    'curr': m.group('curr'),
+                    'next': m.group('next')
+                }
+                continue
+
+            # HA State: CPP=0 dir=BOTH Role: curr=ACTIVE_SOLO next=ACTIVE_SOLO
+            m = p3.match(line)
+            if m:
+                ret_dict['ha_state'] = {
+                    'cpp': int(m.group('cpp')),
+                    'dir': m.group('dir'),
+                    'role': {
+                        'curr': m.group('curr'),
+                        'next': m.group('next')
+                    }
+                }
+                continue
+
+            # Client State: ENABLE
+            m = p4.match(line)
+            if m:
+                ret_dict['client_state'] = m.group('state')
+                continue
+
+            # Image: /tmp/sw/fp/0/0/fp/mount/usr/cpp/bin/qfp-ucode-fugazi
+            m = p5.match(line)
+            if m:
+                ret_dict['image'] = m.group('image')
+                continue
+
+            # Load Cnt: 1 Time: Sep 04, 2025 01:36:17
+            m = p6.match(line)
+            if m:
+                ret_dict['load_cnt'] = int(m.group('load_cnt'))
+                ret_dict['time'] = m.group('time').strip()
+                continue
+
+            # Active Threads: 0-15
+            m = p7.match(line)
+            if m:
+                ret_dict['active_threads'] = m.group('threads').strip()
+                continue
+
+            # Flag lines under Fault Manager Flags
+            if fault_manager_section:
+                m = p9.match(line)
+                if m:
+                    flag_name = m.group('flag_name')
+                    flag_value = m.group('flag_value')
+                    ret_dict['fault_manager_flags'][flag_name] = flag_value
+                    continue
                 
         return ret_dict

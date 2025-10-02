@@ -1,0 +1,14 @@
+show key chain detail
+Key-Chain Test-KC1 Macsec
+  Key 10000000 -- text 7 "0729701e1d5d4c53404a522d26090f010e63647040534355560e007971772a263e30080a0407070303530227257b73213556550958525a771b1650382734362e2a"
+    cryptographic-algorithm AES_256_CMAC
+    send lifetime (always valid) [active]
+
+  youngest active send key: 10000000
+
+Key-Chain Test-KC2 Macsec
+  Key 10100000 -- text 7 "0729701e1d5d4c53404a522d26090f010e63647040534355560e007971772a263e30080a0407070303530227257b73213556550958525a771b1650382734362e2a"
+    cryptographic-algorithm AES_256_CMAC
+    send lifetime (always valid) [active]
+
+  youngest active send key: 10100000

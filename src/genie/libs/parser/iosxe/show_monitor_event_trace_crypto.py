@@ -351,3 +351,43 @@ class ShowMonitorEventTraceCryptoLatestDetail(ShowMonitorEventTraceCryptoLatestD
                     details['status'] = 'enabled_no_events'
 
         return parsed_dict
+
+class ShowMonitorEventTraceCryptoIpsecEventAllSchema(MetaParser):
+    ''' Schema for show monitor event-trace crypto ipsec event all '''
+    schema = {
+        'tracing_status': str,
+        Optional('source'): str,
+    }
+
+class ShowMonitorEventTraceCryptoIpsecEventAll(ShowMonitorEventTraceCryptoIpsecEventAllSchema):
+    """
+    Parser for:
+        show monitor event-trace crypto ipsec event all
+    """
+    cli_command = "show monitor event-trace crypto ipsec event all"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # Tracing currently disabled, from exec command
+        p1 = re.compile(r'^Tracing currently (?P<status>disabled|enabled)(?:, from (?P<source>.+))?$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # Tracing currently disabled, from exec command
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                parsed_dict['tracing_status'] = groups['status']
+                if groups.get('source'):
+                    parsed_dict['source'] = groups['source']
+                continue
+
+        return parsed_dict

@@ -1,0 +1,2 @@
+show platform hardware qfp active feature nat datapath gatein
+Gatekeeper on

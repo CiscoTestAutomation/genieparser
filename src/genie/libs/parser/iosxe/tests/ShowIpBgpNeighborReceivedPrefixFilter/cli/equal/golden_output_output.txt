@@ -1,0 +1,5 @@
+Address family: IPv4 Unicast
+ip prefix-list 3.3.3.3: 3 entries
+   seq 10 permit 3.3.3.0/24
+   seq 20 permit 33.33.33.11/32
+   seq 30 permit 84.0.0.0/8

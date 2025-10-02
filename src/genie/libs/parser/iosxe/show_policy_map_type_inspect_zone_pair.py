@@ -315,6 +315,22 @@ class ShowPolicyMapTypeInspectZonePairSessionsSchema(MetaParser):
                                         }
                                     },
                                 },
+                                Optional("terminating_sessions"): {
+                                    Any():{
+                                        "initiator_ip": str,
+                                        "initiator_port": str,
+                                        "responder_ip": str,
+                                        "responder_port": str,
+                                        "protocol": str,
+                                        "state": str,
+                                        "created": str,
+                                        "last_heard": str,
+                                        "bytes_sent": {
+                                            "initiator": str,
+                                            "responder": int
+                                        }
+                                    },
+                                },
                                 Optional("packets"): int,
                                 Optional("bytes"): int
                             },
@@ -372,12 +388,13 @@ class ShowPolicyMapTypeInspectZonePairSessions(ShowPolicyMapTypeInspectZonePairS
             r'^Bytes sent \(initiator:responder\) +\[(?P<initiator_bytes>[\d\*]+):(?P<responder_bytes>\d+)\]$'
         )
         #Established Sessions
-        p10 = re.compile(r'^(?P<session_type>Established Sessions|Half-open Sessions)$')
+        p10 = re.compile(r'^(?P<session_type>Established Sessions|Half-open Sessions|Terminating Sessions)$')
         # Context tracking variables
         zone_pair_dict = None
         service_policy_dict = None
         class_map_dict = None
         sessions_dict = None
+        current_session_type = None
 
         for line in out.splitlines():
             line = line.strip()
@@ -445,25 +462,29 @@ class ShowPolicyMapTypeInspectZonePairSessions(ShowPolicyMapTypeInspectZonePairS
                     "state": groups["state"]
                 })
                 continue
-                
+
             # Created 00:00:22, Last heard 00:00:13
             m8 = p8.match(line)
             if m8:
                 groups = m8.groupdict()
-                sessions_dict.update({
-                    "created": groups["created"],
-                    "last_heard": groups["last_heard"]
-                })
+                # Only proceed if sessions_dict is set
+                if sessions_dict:
+                    sessions_dict.update({
+                        "created": groups["created"],
+                        "last_heard": groups["last_heard"]
+                    })
                 continue
                 
             # Bytes sent (initiator:responder) [10000:0]
             m9 = p9.match(line)
             if m9:
                 groups = m9.groupdict()
-                sessions_dict["bytes_sent"] = {
-                    "initiator": groups["initiator_bytes"],
-                    "responder": int(groups["responder_bytes"])
-                }
+                # Only proceed if sessions_dict is set
+                if sessions_dict:
+                    sessions_dict["bytes_sent"] = {
+                        "initiator": groups["initiator_bytes"],
+                        "responder": int(groups["responder_bytes"])
+                    }
                 continue
                 
             #Established Sessions
@@ -474,6 +495,8 @@ class ShowPolicyMapTypeInspectZonePairSessions(ShowPolicyMapTypeInspectZonePairS
                     current_session_type = "established_sessions"
                 elif groups["session_type"] == "Half-open Sessions":
                     current_session_type = "half_open_sessions"
+                elif groups["session_type"] == "Terminating Sessions":
+                    current_session_type = "terminating_sessions"
                 continue
         return parsed_dict
 

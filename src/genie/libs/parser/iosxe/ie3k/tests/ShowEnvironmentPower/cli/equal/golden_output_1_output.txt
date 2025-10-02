@@ -1,0 +1,7 @@
+Pwr Supply         Type     Status
+
+------------------------------------
+
+POWER SUPPLY A      DC      Disabled
+
+POWER SUPPLY B      DC      OK

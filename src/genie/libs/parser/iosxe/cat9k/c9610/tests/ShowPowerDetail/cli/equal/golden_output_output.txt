@@ -1,0 +1,45 @@
+Power                                                    Fan States
+Supply  Model No              Type  Capacity  Status     1     2
+------  --------------------  ----  --------  ---------  -----------
+PS1     C9600-PWR-3KWAC       ac    3000 W    active     good  good 
+PS2     C9600-PWR-3KWAC       ac    3000 W    active     good  good 
+PS3     C9600-PWR-3KWAC       ac    3000 W    active     good  good 
+PS4     C9600-PWR-3KWAC       ac    3000 W    active     good  good 
+PS5     C9600-PWR-3KWAC       ac    3000 W    active     good  good 
+PS6     C9600-PWR-3KWAC       ac    3000 W    active     good  good 
+PS7     C9600-PWR-3KWAC       ac    3000 W    active     good  good 
+PS8     C9600-PWR-3KWAC       ac    3000 W    active     good  good 
+
+PS Current Configuration Mode : Combined
+PS Current Operating State    : Normal
+Redundant Power               : 0
+
+Power supplies currently active    : 8
+Power supplies currently available : 8
+
+Power Summary          Maximum
+ (in Watts)    Used    Available
+-------------  ------  ---------
+System Power   8671    23580    
+-------------  ------  ---------
+Total          8671    23580    
+
+Power Budget Mode           : Dual Sup
+
+                           Power                                  Out of  In
+Mod  Model No              State     Budget  Instantaneous  Peak  Reset   Reset
+---  --------------------  --------  ------  -------------  ----  ------  -----
+1    C9600X-LC-32CD                  0       0              0     0       0    
+2    C9600X-LC-56YL4C                0       0              0     0       0    
+3    C9610-LC-32CD         accepted  450     27             105   450     10   
+4    C9610-LC-40YL4CD      accepted  420     22             58    420     10   
+5    C9610-SUP-3           accepted  1500    406            455   1500    650  
+6    C9610-SUP-3           accepted  1500    418            455   1500    650  
+10   C9600-LC-48TX         ---       1       0              0     0       1    
+FT1  C9610-FAN             accepted  1200    47             69    1200    --   
+FT2  C9610-FAN             accepted  1200    46             69    1200    --   
+FT3  C9610-FAN             accepted  1200    47             69    1200    --   
+FT4  C9610-FAN             accepted  1200    47             69    1200    --   
+---  --------------------  --------  ------  -------------  ----  ------  -----
+Total allocated power:	8671
+Total required power:	8670

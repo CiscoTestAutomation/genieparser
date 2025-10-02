@@ -1,0 +1,32 @@
+ All IDBs List contains 4 configured interfaces
+  Port: TenGigabitEthernet0/0/0 (index: 0)
+  Port: TenGigabitEthernet0/0/1 (index: 1)
+  Port: TenGigabitEthernet0/0/2 (index: 2)
+  Port: TenGigabitEthernet0/0/3 (index: 3)
+
+ Active Member List contains 4 interfaces
+  Port: TenGigabitEthernet0/0/0
+    LACP Mode: Active
+
+  Port: TenGigabitEthernet0/0/1
+    LACP Mode: Active
+
+  Port: TenGigabitEthernet0/0/2
+    LACP Mode: Active
+
+  Port: TenGigabitEthernet0/0/3
+    LACP Mode: Active
+
+ Passive Member List contains 0 interfaces
+ Load-Balancing method applied: flow-based
+
+ Bucket Information for Flow-Based LB:
+ Interface:                                Buckets
+    TenGigabitEthernet0/0/0:
+                           Bucket 0 , Bucket 1 , Bucket 2 , Bucket 3
+    TenGigabitEthernet0/0/1:
+                           Bucket 4 , Bucket 5 , Bucket 6 , Bucket 7
+    TenGigabitEthernet0/0/2:
+                           Bucket 8 , Bucket 9 , Bucket 10, Bucket 11
+    TenGigabitEthernet0/0/3:
+                           Bucket 12, Bucket 13, Bucket 14, Bucket 15

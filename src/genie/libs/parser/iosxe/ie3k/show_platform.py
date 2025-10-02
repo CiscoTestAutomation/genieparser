@@ -324,12 +324,16 @@ class ShowEnvironmentPower(ShowEnvironmentPowerSchema):
             output = self.device.execute(self.cli_command)
 
         ret_dict = {}
-
+        
         # POWER SUPPLY-A      DC      OK      24V
-        p1 = re.compile(r'^(?P<name>\w+\s\S+)\s+(?P<type>\S+)\s+(?P<status>\S+)\s{2,}(?P<voltage>\S+)$')
+        # POWER SUPPLY B      DC      OK      54V
+        # POWER SUPPLY        DC      OK      24V
+        p1 = re.compile(r'^(?P<name>(\w+\s\w+\-\w+(\s{2}))|((\w+\s){2}(\w+)(\s{2}))|(\w+\s\w+(\s{2})))\s+(?P<type>\S+)\s+(?P<status>\S+)\s{2,}(?P<voltage>\S+)$')
 
         # POWER SUPPLY-B      DC      OK
-        p2 = re.compile(r'^(?P<name>\w+\s\S+)\s+(?P<type>\S+)\s+(?P<status>.+)$')
+        # POWER SUPPLY B      DC      OK
+        # POWER SUPPLY        DC      OK
+        p2 = re.compile(r'^(?P<name>(\w+\s\w+\-\w+(\s{2}))|((\w+\s){2}(\w+)(\s{2}))|(\w+\s\w+(\s{2})))\s+(?P<type>\S+)\s+(?P<status>.+)$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -341,7 +345,7 @@ class ShowEnvironmentPower(ShowEnvironmentPowerSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                name = group['name']
+                name = group['name'].strip()
                 power_supply_dict = ret_dict.setdefault('power_supplies', {}).setdefault(name, {})
                 power_supply_dict.update({
                     'type': group['type'],
@@ -354,7 +358,7 @@ class ShowEnvironmentPower(ShowEnvironmentPowerSchema):
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                name = group['name']
+                name = group['name'].strip()
                 power_supply_dict = ret_dict.setdefault('power_supplies', {}).setdefault(name, {})
                 power_supply_dict.update({
                     'type': group['type'],
@@ -444,7 +448,7 @@ class ShowEnvironmentTemperature(ShowEnvironmentTemperatureSchema):
         return ret_dict
 
 class ShowEnvironmentAlarmContactSchema(MetaParser):
-    """Schema for show environment alarm contact"""
+    """Schema for show environment alarm-contact"""
 
     schema = {
         Any(): {
@@ -456,9 +460,9 @@ class ShowEnvironmentAlarmContactSchema(MetaParser):
     }
 
 class ShowEnvironmentAlarmContact(ShowEnvironmentAlarmContactSchema):
-    """Parser for show environment alarm contact"""
+    """Parser for show environment alarm-contact"""
 
-    cli_command = 'show environment alarm contact'
+    cli_command = 'show environment alarm-contact'
 
     def cli(self, output=None):
         if output is None:

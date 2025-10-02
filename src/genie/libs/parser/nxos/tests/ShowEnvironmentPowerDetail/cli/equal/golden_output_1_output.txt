@@ -1,0 +1,123 @@
+Power Supply:
+Voltage: 54 Volts
+Power                      Actual             Actual        Total
+Supply    Model            Output             Input        Capacity     Status
+                           (Watts )           (Watts )     (Watts )
+-------  ----------  ---------------  ------  ----------  --------------------
+1        NXK-HV-6.3KW30A-A    1129 W             1249 W      6300 W      Ok
+2        NXK-HV-6.3KW30A-A     823 W              890 W      4800 W      Ok
+3        NXK-HV-6.3KW30A-A     911 W              971 W      4800 W      Ok
+4        NXK-HV-6.3KW30A-A       0 W                0 W         0 W   Shutdown
+5        NXK-HV-6.3KW30A-A       0 W                0 W         0 W   Shutdown
+6        NXK-HV-6.3KW30A-A       0 W                0 W         0 W   Shutdown
+
+
+                                  Actual        Power
+Module    Model                     Draw    Allocated    Status
+                                 (Watts )     (Watts )
+-------  -------------------  -----------  -----------  --------------
+1        N9K-X9836DM-A           672.00 W     2435.94 W    Powered-Up
+4        N9K-X98900CD-A          501.00 W     2435.94 W    Powered-Up
+Xb19     N9K-C9804-FM-A          129.00 W     229.50 W    Powered-Up
+Xb20     xbar                      N/A          0.00 W    Absent
+Xb21     xbar                      N/A          0.00 W    Absent
+Xb22     xbar                      N/A          0.00 W    Absent
+Xb23     xbar                      N/A          0.00 W    Absent
+Xb24     xbar                      N/A          0.00 W    Absent
+Xb25     xbar                      N/A          0.00 W    Absent
+Xb26     N9K-C9804-FM-A          134.00 W     229.50 W    Powered-Up
+27       N9K-C9800-SUP-A          76.00 W     104.76 W    Powered-Up
+28       N9K-C9800-SUP-A          76.00 W     104.76 W    Powered-Up
+fan1     N9K-C9804-FAN-A         322.00 W     329.00 W    Powered-Up
+fan2     N9K-C9804-FAN-A         330.00 W     329.00 W    Powered-Up
+fan3                               0.00 W     329.00 W    Powered-Up
+fan4     N9K-C9804-FAN-A         328.00 W     329.00 W    Powered-Up
+
+N/A - Per module power not available
+
+
+Power Usage Summary:
+--------------------
+Power Supply redundancy mode (configured)                Non-Redundant(combined)
+Power Supply redundancy mode (operational)               Non-Redundant(combined)
+
+Total Power Capacity (based on configured mode)            15899.00 W
+Total Grid-A (first inlet of all PS slots) Power Capacity  4800.00 W
+Total Grid-B (second inlet of all PS slots) Power Capacity 14399.00 W
+Total Power of all Inputs (cumulative)                     15899.00 W
+Total Power Output (actual draw)                           2863.00 W
+Total Power Input (actual draw)                            3110.00 W
+Total Power Allocated (budget)                             6860.00 W
+Total Power Available for additional modules               9038.68 W
+
+
+Power Usage details:
+--------------------
+Power reserved for Supervisor(s):                              209 W
+Power reserved for Fabric Module(s):                           459 W
+Power reserved for Fan Module(s):                             1319 W
+Total power reserved for Sups,Fabrics,Fans:                   1988 W
+
+Are all inlet cords connected: No
+
+Power supply details:
+---------------------
+PS_1 total capacity:    6300 W   Voltage:54V
+
+Pin total:1249.00W  Pin A:637.35W  Vin:207.00V    Iin:3.08A    Pout:1129.00W    Vout:55.00V    Iout:20.46A
+
+Pin B:622.04W    Iin B:3.01A    Vin B:207.00V
+
+ Cord both connected to 220V AC
+Software-Alarm: No
+Hardware alarm_bits
+
+PS_2 total capacity:    4800 W   Voltage:54V
+
+Pin total:890.00W  Pin A:0.00W  Vin:0.00V    Iin:0.00A    Pout:823.00W    Vout:55.00V    Iout:14.92A
+
+Pin B:895.27W    Iin B:4.32A    Vin B:207.00V
+
+ Cord connected to inlet2 220V AC
+Software-Alarm: No
+Hardware alarm_bits
+
+PS_3 total capacity:    4800 W   Voltage:54V
+
+Pin total:971.00W  Pin A:0.00W  Vin:0.00V    Iin:0.00A    Pout:911.00W    Vout:55.00V    Iout:16.49A
+
+Pin B:971.24W    Iin B:4.69A    Vin B:207.00V
+
+ Cord connected to inlet2 220V AC
+Software-Alarm: No
+Hardware alarm_bits
+
+PS_4 total capacity:       0 W   Voltage:54V
+
+Pin total:0.00W  Pin A:0.00W  Vin:0.00V    Iin:0.00A    Pout:0.00W    Vout:0.00V    Iout:0.00A
+
+Pin B:0.00W    Iin B:0.00A    Vin B:0.00V
+
+ Cord not connected
+Software-Alarm: No
+Hardware alarm_bits
+
+PS_5 total capacity:       0 W   Voltage:54V
+
+Pin total:0.00W  Pin A:0.00W  Vin:0.00V    Iin:0.00A    Pout:0.00W    Vout:0.00V    Iout:0.00A
+
+Pin B:0.00W    Iin B:0.00A    Vin B:0.00V
+
+ Cord not connected
+Software-Alarm: No
+Hardware alarm_bits
+
+PS_6 total capacity:       0 W   Voltage:54V
+
+Pin total:0.00W  Pin A:0.00W  Vin:0.00V    Iin:0.00A    Pout:0.00W    Vout:0.00V    Iout:0.00A
+
+Pin B:0.00W    Iin B:0.00A    Vin B:0.00V
+
+ Cord not connected
+Software-Alarm: No
+Hardware alarm_bits

@@ -231,7 +231,71 @@ class ShowInterfacesSchema(MetaParser):
                 },
             },
             Optional('peer_ip'): str,
-            Optional('vc_id'): int
+            Optional('vc_id'): int,
+            Optional('x25'): {
+                Optional('dte'): bool,
+                Optional('version'): str,
+                Optional('address'): str,
+                Optional('state'): str,
+                Optional('modulo'): int,
+                Optional('timer'): int,
+                Optional('idle_vc_timeout'): int,
+                Optional('encapsulation'): str,
+                Optional('input_window_size'): int,
+                Optional('output_window_size'): int,
+                Optional('input_packet_size'): int,
+                Optional('output_packet_size'): int,
+                Optional('timers'): {
+                    Optional('t20'): int,
+                    Optional('t21'): int,
+                    Optional('t22'): int,
+                    Optional('t23'): int,
+                },
+                Optional('channels'): {
+                    Optional('incoming_only'): str,
+                    Optional('two_way'): str,
+                    Optional('outgoing_only'): str,
+                },
+                Optional('restarts'): str,
+                Optional('calls'): str,
+                Optional('diags'): str,
+            },
+            Optional('lapb'): {
+                Optional('dte'): bool,
+                Optional('state'): str,
+                Optional('modulo'): int,
+                Optional('k'): int,
+                Optional('n1'): int,
+                Optional('n2'): int,
+                Optional('t1'): int,
+                Optional('t2'): int,
+                Optional('t3'): int,
+                Optional('t4'): int,
+                Optional('vs'): int,
+                Optional('vr'): int,
+                Optional('tx_nr'): int,
+                Optional('remote_vr'): int,
+                Optional('retransmissions'): int,
+                Optional('queues'): {
+                    Optional('u_s_frames'): int,
+                    Optional('i_frames'): int,
+                    Optional('unack'): int,
+                    Optional('retx'): int,
+                },
+                Optional('iframes'): str,
+                Optional('rnrs'): str,
+                Optional('rejs'): str,
+                Optional('sabm_es'): str,
+                Optional('frmrs'): str,
+                Optional('discs'): str,
+            },
+            Optional('serial_signals'): {
+                Optional('rts'): str,
+                Optional('cts'): str,
+                Optional('dtr'): str,
+                Optional('dcd'): str,
+                Optional('dsr'): str,
+            },
         },
     }
 
@@ -580,6 +644,45 @@ class ShowInterfaces(ShowInterfacesSchema):
 
         # 0 packets 0 bytes 0 drops
         p58 = re.compile(r'^(?P<pkts>\d+) packets (?P<octets>\d+) bytes (?P<drops>\d+) drops$')
+
+        # X.25 DTE, version 1984, address 170091, state R1, modulo 8, timer 0
+        p59 = re.compile(r'^X\.25 +(?P<dte>DTE), +version +(?P<version>\d+), +address +(?P<address>\d+), +state +(?P<state>\w+), +modulo +(?P<modulo>\d+), +timer +(?P<timer>\d+)$')
+
+        # Defaults: idle VC timeout 0
+        p60 = re.compile(r'^Defaults: +idle +VC +timeout +(?P<idle_vc_timeout>\d+)$')
+
+        # cisco encapsulation
+        p61 = re.compile(r'^(?P<encapsulation>cisco) +encapsulation$')
+
+        # input/output window sizes 5/5, packet sizes 128/128
+        p62 = re.compile(r'^input/output +window +sizes +(?P<input_window>\d+)/(?P<output_window>\d+), +packet +sizes +(?P<input_packet>\d+)/(?P<output_packet>\d+)$')
+
+        # Timers: T20 180, T21 200, T22 180, T23 180
+        p63 = re.compile(r'^Timers: +T20 +(?P<t20>\d+), +T21 +(?P<t21>\d+), +T22 +(?P<t22>\d+), +T23 +(?P<t23>\d+)$')
+
+        # Channels: Incoming-only none, Two-way 1-1024, Outgoing-only none
+        p64 = re.compile(r'^Channels: +Incoming-only +(?P<incoming_only>\w+), +Two-way +(?P<two_way>[\d\-]+), +Outgoing-only +(?P<outgoing_only>\w+)$')
+
+        # RESTARTs 1/0 CALLs 0+0/0+0/0+0 DIAGs 0/0
+        p65 = re.compile(r'^RESTARTs +(?P<restarts>[\d\/]+) +CALLs +(?P<calls>[\d\+\/]+) +DIAGs +(?P<diags>[\d\/]+)$')
+
+        # LAPB DTE, state CONNECT, modulo 8, k 7, N1 12056, N2 20
+        p66 = re.compile(r'^LAPB +(?P<dte>DTE), +state +(?P<state>\w+), +modulo +(?P<modulo>\d+), +k +(?P<k>\d+), +N1 +(?P<n1>\d+), +N2 +(?P<n2>\d+)$')
+
+        # T1 3000, T2 0, interface outage (partial T3) 0, T4 0
+        p67 = re.compile(r'^T1 +(?P<t1>\d+), +T2 +(?P<t2>\d+), +interface +outage +\(partial +T3\) +(?P<t3>\d+), +T4 +(?P<t4>\d+)$')
+
+        # VS 1, VR 1, tx NR 1, Remote VR 1, Retransmissions 0
+        p68 = re.compile(r'^VS +(?P<vs>\d+), +VR +(?P<vr>\d+), +tx +NR +(?P<tx_nr>\d+), +Remote +VR +(?P<remote_vr>\d+), +Retransmissions +(?P<retransmissions>\d+)$')
+
+        # Queues: U/S frames 0, I frames 0, unack. 0, reTx 0
+        p69 = re.compile(r'^Queues: +U/S +frames +(?P<u_s_frames>\d+), +I +frames +(?P<i_frames>\d+), +unack\. +(?P<unack>\d+), +reTx +(?P<retx>\d+)$')
+
+        # IFRAMEs 1/1 RNRs 0/0 REJs 0/0 SABM/Es 0/1 FRMRs 0/0 DISCs 0/0
+        p70 = re.compile(r'^IFRAMEs +(?P<iframes>[\d\/]+) +RNRs +(?P<rnrs>[\d\/]+) +REJs +(?P<rejs>[\d\/]+) +SABM/Es +(?P<sabm_es>[\d\/]+) +FRMRs +(?P<frmrs>[\d\/]+) +DISCs +(?P<discs>[\d\/]+)$')
+
+        # RTS up, CTS up, DTR up, DCD up, DSR up
+        p71 = re.compile(r'^RTS +(?P<rts>\w+), +CTS +(?P<cts>\w+), +DTR +(?P<dtr>\w+), +DCD +(?P<dcd>\w+), +DSR +(?P<dsr>\w+)$')
 
         interface_dict = {}
         unnumbered_dict = {}
@@ -1388,6 +1491,152 @@ class ShowInterfaces(ShowInterfacesSchema):
                 coutners_dict[f'{direction}_pkts'] = int(group['pkts'])
                 coutners_dict[f'{direction}_octets'] = int(group['octets'])
                 coutners_dict[f'{direction}_drops'] = int(group['drops'])
+                continue
+
+            # X.25 DTE, version 1984, address 170091, state R1, modulo 8, timer 0
+            m = p59.match(line)
+            if m:
+                group = m.groupdict()
+                x25_dict = interface_dict[interface].setdefault('x25', {})
+                x25_dict['dte'] = True if group['dte'] == 'DTE' else False
+                x25_dict['version'] = group['version']
+                x25_dict['address'] = group['address']
+                x25_dict['state'] = group['state']
+                x25_dict['modulo'] = int(group['modulo'])
+                x25_dict['timer'] = int(group['timer'])
+                continue
+
+            # Defaults: idle VC timeout 0
+            m = p60.match(line)
+            if m:
+                group = m.groupdict()
+                x25_dict = interface_dict[interface].setdefault('x25', {})
+                x25_dict['idle_vc_timeout'] = int(group['idle_vc_timeout'])
+                continue
+
+            # cisco encapsulation
+            m = p61.match(line)
+            if m:
+                group = m.groupdict()
+                x25_dict = interface_dict[interface].setdefault('x25', {})
+                x25_dict['encapsulation'] = group['encapsulation']
+                continue
+
+            # input/output window sizes 5/5, packet sizes 128/128
+            m = p62.match(line)
+            if m:
+                group = m.groupdict()
+                x25_dict = interface_dict[interface].setdefault('x25', {})
+                x25_dict['input_window_size'] = int(group['input_window'])
+                x25_dict['output_window_size'] = int(group['output_window'])
+                x25_dict['input_packet_size'] = int(group['input_packet'])
+                x25_dict['output_packet_size'] = int(group['output_packet'])
+                continue
+
+            # Timers: T20 180, T21 200, T22 180, T23 180
+            m = p63.match(line)
+            if m:
+                group = m.groupdict()
+                x25_dict = interface_dict[interface].setdefault('x25', {})
+                timers_dict = x25_dict.setdefault('timers', {})
+                timers_dict['t20'] = int(group['t20'])
+                timers_dict['t21'] = int(group['t21'])
+                timers_dict['t22'] = int(group['t22'])
+                timers_dict['t23'] = int(group['t23'])
+                continue
+
+            # Channels: Incoming-only none, Two-way 1-1024, Outgoing-only none
+            m = p64.match(line)
+            if m:
+                group = m.groupdict()
+                x25_dict = interface_dict[interface].setdefault('x25', {})
+                channels_dict = x25_dict.setdefault('channels', {})
+                channels_dict['incoming_only'] = group['incoming_only']
+                channels_dict['two_way'] = group['two_way']
+                channels_dict['outgoing_only'] = group['outgoing_only']
+                continue
+
+            # RESTARTs 1/0 CALLs 0+0/0+0/0+0 DIAGs 0/0
+            m = p65.match(line)
+            if m:
+                group = m.groupdict()
+                x25_dict = interface_dict[interface].setdefault('x25', {})
+                x25_dict['restarts'] = group['restarts']
+                x25_dict['calls'] = group['calls']
+                x25_dict['diags'] = group['diags']
+                continue
+
+            # LAPB DTE, state CONNECT, modulo 8, k 7, N1 12056, N2 20
+            m = p66.match(line)
+            if m:
+                group = m.groupdict()
+                lapb_dict = interface_dict[interface].setdefault('lapb', {})
+                lapb_dict['dte'] = True if group['dte'] == 'DTE' else False
+                lapb_dict['state'] = group['state']
+                lapb_dict['modulo'] = int(group['modulo'])
+                lapb_dict['k'] = int(group['k'])
+                lapb_dict['n1'] = int(group['n1'])
+                lapb_dict['n2'] = int(group['n2'])
+                continue
+
+            # T1 3000, T2 0, interface outage (partial T3) 0, T4 0
+            m = p67.match(line)
+            if m:
+                group = m.groupdict()
+                lapb_dict = interface_dict[interface].setdefault('lapb', {})
+                lapb_dict['t1'] = int(group['t1'])
+                lapb_dict['t2'] = int(group['t2'])
+                lapb_dict['t3'] = int(group['t3'])
+                lapb_dict['t4'] = int(group['t4'])
+                continue
+
+            # VS 1, VR 1, tx NR 1, Remote VR 1, Retransmissions 0
+            m = p68.match(line)
+            if m:
+                group = m.groupdict()
+                lapb_dict = interface_dict[interface].setdefault('lapb', {})
+                lapb_dict['vs'] = int(group['vs'])
+                lapb_dict['vr'] = int(group['vr'])
+                lapb_dict['tx_nr'] = int(group['tx_nr'])
+                lapb_dict['remote_vr'] = int(group['remote_vr'])
+                lapb_dict['retransmissions'] = int(group['retransmissions'])
+                continue
+
+            # Queues: U/S frames 0, I frames 0, unack. 0, reTx 0
+            m = p69.match(line)
+            if m:
+                group = m.groupdict()
+                lapb_dict = interface_dict[interface].setdefault('lapb', {})
+                queues_dict = lapb_dict.setdefault('queues', {})
+                queues_dict['u_s_frames'] = int(group['u_s_frames'])
+                queues_dict['i_frames'] = int(group['i_frames'])
+                queues_dict['unack'] = int(group['unack'])
+                queues_dict['retx'] = int(group['retx'])
+                continue
+
+            # IFRAMEs 1/1 RNRs 0/0 REJs 0/0 SABM/Es 0/1 FRMRs 0/0 DISCs 0/0
+            m = p70.match(line)
+            if m:
+                group = m.groupdict()
+                lapb_dict = interface_dict[interface].setdefault('lapb', {})
+                lapb_dict['iframes'] = group['iframes']
+                lapb_dict['rnrs'] = group['rnrs']
+                lapb_dict['rejs'] = group['rejs']
+                lapb_dict['sabm_es'] = group['sabm_es']
+                lapb_dict['frmrs'] = group['frmrs']
+                lapb_dict['discs'] = group['discs']
+                continue
+
+            # RTS up, CTS up, DTR up, DCD up, DSR up
+            m = p71.match(line)
+            if m:
+                group = m.groupdict()
+                signals_dict = interface_dict[interface].setdefault('serial_signals', {})
+                signals_dict['rts'] = group['rts']
+                signals_dict['cts'] = group['cts']
+                signals_dict['dtr'] = group['dtr']
+                signals_dict['dcd'] = group['dcd']
+                signals_dict['dsr'] = group['dsr']
                 continue
 
         # create strucutre for unnumbered interface
@@ -4682,7 +4931,9 @@ class ShowInterfacesTransceiverSupportedlist(ShowInterfacesTransceiverSupportedl
 
         #   GLC-FE-100FX-RGD         ALL
         #   GLC-SX-MM                NONE
-        p2 = re.compile(r"^(?P<transceiver>[\w-]+)\s+(?P<pin_version>(ALL|NONE))")
+        p2 = re.compile(r"^(?P<transceiver>[\w-]+)\s+(?P<pin_version>.+)$")
+
+        transceiver_dict = {}
 
         for line in out.splitlines():
             line = line.strip()
@@ -4691,14 +4942,17 @@ class ShowInterfacesTransceiverSupportedlist(ShowInterfacesTransceiverSupportedl
             m1 = p1.match(line)
             if m1:
                 transceiver_dict = transceivers_supported_list.setdefault('transceiver_type',{})
+                continue
 
             #   GLC-FE-100FX-RGD         ALL
             #   GLC-SX-MM                NONE
+            #   GLC-SX-MM-RGD            CPN 2274-02
             m2 = p2.match(line)
             if m2:
                 transceiver_dict.update({m2.groupdict()['transceiver'] :
                                         { "cisco_pin_min_version_supporting_dom" :
                                         m2.groupdict()['pin_version']}})
+                continue
 
         return transceivers_supported_list
 
@@ -5343,16 +5597,16 @@ class ShowInterfaceEtherchannelSchema(MetaParser):
     """Schema for show interface {interface_id} etherchannel"""
 
     schema = {
-        'port_state': str,
-        'channel_group': int,
-        'mode': str,
-        'gcchange': str,
-        'port_channel': str,
-        'gc': str,
-        'pseudo_port_channel': str,
-        'port_index': int,
-        'load': str,
-        'protocol': str,
+        Optional('port_state'): str,
+        Optional('channel_group'): int,
+        Optional('mode'): str,
+        Optional('gcchange'): str,
+        Optional('port_channel'): str,
+        Optional('gc'): str,
+        Optional('pseudo_port_channel'): str,
+        Optional('port_index'): int,
+        Optional('load'): str,
+        Optional('protocol'): str,
         Optional('flags'): {
             str: str
         },
@@ -5366,7 +5620,35 @@ class ShowInterfaceEtherchannelSchema(MetaParser):
             'port_number': str,
             'port_state': str,
         },
-        'port_age': str
+        Optional('port_age'): str,
+        Optional('all_idbs_list'): {
+            'total_configured_interfaces': int,
+            'interfaces': {
+                Any(): {
+                    'interface': str,
+                    'index': int
+                }
+            }
+        },
+        Optional('active_member_list'): {
+            'total_interfaces': int,
+            'interfaces': {
+                Any(): {
+                    'interface': str,
+                    'lacp_mode': str
+                }
+            }
+        },
+        Optional('passive_member_list'): {
+            'total_interfaces': int,
+        },
+        Optional('load_balancing_method'): str,
+        Optional('bucket_information'): {
+            Any(): {
+                'interface': str,
+                'buckets': list
+            }
+        }
     }
 
 # ======================================================
@@ -5403,8 +5685,33 @@ class ShowInterfaceEtherchannel(ShowInterfaceEtherchannelSchema):
                         r'\s+(?P<admin_key>\w+)\s+(?P<oper_key>\w+)\s+(?P<port_number>\w+)\s+(?P<port_state>\w+)$')
         #Age of the port in the current state: 0d:00h:00m:29s
         p7 = re.compile(r'^Age of the port in the current state:\s+(?P<age_of_port>\S+)$')
+        
+        # New patterns for Port-channel etherchannel output
+        # All IDBs List contains 4 configured interfaces
+        p8 = re.compile(r'^All IDBs List contains (?P<total>\d+) configured interfaces$')
+        #  Port: TenGigabitEthernet0/0/0 (index: 0)
+        p9 = re.compile(r'^\s*Port:\s+(?P<interface>\S+)\s+\(index:\s+(?P<index>\d+)\)$')
+        # Active Member List contains 4 interfaces
+        p10 = re.compile(r'^Active Member List contains (?P<total>\d+) interfaces$')
+        #  Port: TenGigabitEthernet0/0/0
+        p11 = re.compile(r'^\s*Port:\s+(?P<interface>\S+)$')
+        #    LACP Mode: Active
+        p12 = re.compile(r'^\s*LACP Mode:\s+(?P<lacp_mode>\w+)$')
+        # Passive Member List contains 0 interfaces
+        p13 = re.compile(r'^Passive Member List contains (?P<total>\d+) interfaces$')
+        # Load-Balancing method applied: flow-based
+        p14 = re.compile(r'^Load-Balancing method applied:\s+(?P<method>[\w-]+)$')
+        # Bucket Information for Flow-Based LB:
+        p15 = re.compile(r'^Bucket Information for Flow-Based LB:$')
+        #    TenGigabitEthernet0/0/0:
+        p16 = re.compile(r'^\s*(?P<interface>\S+):$')
+        #                           Bucket 0 , Bucket 1 , Bucket 2 , Bucket 3
+        p17 = re.compile(r'^\s*(?P<buckets>Bucket\s+\d+(?:\s*,\s*Bucket\s+\d+)*)$')
 
         ret_dict = {}
+        current_section = None
+        current_active_member = None
+        bucket_section = False
 
         for line in output.splitlines():
             line = line.strip()
@@ -5484,6 +5791,99 @@ class ShowInterfaceEtherchannel(ShowInterfaceEtherchannelSchema):
             if m:
                 group = m.groupdict()
                 ret_dict['port_age'] = group['age_of_port']
+                continue
+
+            # All IDBs List contains 4 configured interfaces
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                all_idbs_dict = ret_dict.setdefault('all_idbs_list', {})
+                all_idbs_dict['total_configured_interfaces'] = int(group['total'])
+                all_idbs_dict.setdefault('interfaces', {})
+                current_section = 'all_idbs'
+                continue
+
+            #  Port: TenGigabitEthernet0/0/0 (index: 0)
+            m = p9.match(line)
+            if m and current_section == 'all_idbs':
+                group = m.groupdict()
+                interface_name = group['interface']
+                interface_dict = ret_dict['all_idbs_list']['interfaces'].setdefault(interface_name, {})
+                interface_dict['interface'] = interface_name
+                interface_dict['index'] = int(group['index'])
+                continue
+
+            # Active Member List contains 4 interfaces
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                active_member_dict = ret_dict.setdefault('active_member_list', {})
+                active_member_dict['total_interfaces'] = int(group['total'])
+                active_member_dict.setdefault('interfaces', {})
+                current_section = 'active_members'
+                continue
+
+            #  Port: TenGigabitEthernet0/0/0
+            m = p11.match(line)
+            if m and current_section == 'active_members':
+                group = m.groupdict()
+                interface_name = group['interface']
+                current_active_member = interface_name
+                interface_dict = ret_dict['active_member_list']['interfaces'].setdefault(interface_name, {})
+                interface_dict['interface'] = interface_name
+                continue
+
+            #    LACP Mode: Active
+            m = p12.match(line)
+            if m and current_active_member:
+                group = m.groupdict()
+                ret_dict['active_member_list']['interfaces'][current_active_member]['lacp_mode'] = group['lacp_mode']
+                continue
+
+            # Passive Member List contains 0 interfaces
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                passive_member_dict = ret_dict.setdefault('passive_member_list', {})
+                passive_member_dict['total_interfaces'] = int(group['total'])
+                current_section = 'passive_members'
+                continue
+
+            # Load-Balancing method applied: flow-based
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['load_balancing_method'] = group['method']
+                continue
+
+            # Bucket Information for Flow-Based LB:
+            m = p15.match(line)
+            if m:
+                bucket_section = True
+                ret_dict.setdefault('bucket_information', {})
+                continue
+
+            #    TenGigabitEthernet0/0/0:
+            m = p16.match(line)
+            if m and bucket_section:
+                group = m.groupdict()
+                interface_name = group['interface']
+                bucket_dict = ret_dict['bucket_information'].setdefault(interface_name, {})
+                bucket_dict['interface'] = interface_name
+                current_bucket_interface = interface_name
+                continue
+
+            #                           Bucket 0 , Bucket 1 , Bucket 2 , Bucket 3
+            m = p17.match(line)
+            if m and bucket_section and 'current_bucket_interface' in locals():
+                group = m.groupdict()
+                bucket_list = []
+                buckets_text = group['buckets']
+                # Parse individual buckets
+                bucket_matches = re.findall(r'Bucket\s+(\d+)', buckets_text)
+                for bucket_num in bucket_matches:
+                    bucket_list.append(int(bucket_num))
+                ret_dict['bucket_information'][current_bucket_interface]['buckets'] = bucket_list
                 continue
 
         return ret_dict

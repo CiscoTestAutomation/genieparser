@@ -1,0 +1,11 @@
+show l2tp
+
+L2TP Tunnel and Session Information Total tunnels 1 sessions 1
+
+LocTunID   RemTunID   Remote Name   State  Remote Address  Sessn L2TP Class/
+                                                           Count VPDN Group
+3217474068 2611998623 fg4           est    100.3.1.1       1     l2tp_class_1
+
+LocID      RemID      TunID      Username, Intf/      State  Last Chg Uniq ID
+                                 Vcid, Circuit
+2409671146 3648835555 3217474068 101, Gi0/0/0         est    00:00:22 0

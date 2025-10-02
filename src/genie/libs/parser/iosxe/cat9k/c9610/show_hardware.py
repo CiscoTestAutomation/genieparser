@@ -1,6 +1,7 @@
 ''' show_hardware.py
 IOSXE parsers for the following show commands:
     * show hardware led
+    * hw-module beacon fan-tray {fantray_num} status
 '''
 
 # Python
@@ -222,4 +223,37 @@ class ShowHardwareLed(ShowHardwareLedSchema):
                 root_dict['fantray_beacon'] = m.groupdict()['fantray_beacon']
                 continue
 
+        return ret_dict
+
+class HardwareModuleBeaconFantrayStatusSchema(MetaParser):
+    """
+    Schema for hw-module beacon fan-tray {fantray_num} status
+    """
+    schema = {
+        'fantray_status': str
+    }
+
+class HardwareModuleBeaconFantrayStatus(HardwareModuleBeaconFantrayStatusSchema):
+    """Parser for hw-module beacon fan-tray {fantray_num} status"""
+
+    cli_command = "hw-module beacon fan-tray {fantray_num} status"
+    
+    def cli(self, fantray_num=None, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command[0].format(fantray_num=fantray_num))
+
+        # OFF
+        # SOLID BLUE
+        p1 = re.compile(r'^(?P<fantray_status>[\w\s]+)$')
+
+        ret_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+            
+            #OFF
+            m = p1.match(line)
+            if m:
+                ret_dict['fantray_status'] = m.groupdict()['fantray_status']
+                continue
+  
         return ret_dict

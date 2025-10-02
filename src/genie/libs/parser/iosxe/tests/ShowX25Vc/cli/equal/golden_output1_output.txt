@@ -1,0 +1,11 @@
+show x25 vc
+
+SVC 1024,  State: D1,  Interface: Serial0/3/1
+  Started 00:00:18, last input 00:00:15, output 00:00:15
+  Connects 170092 <-> ip 1.0.0.2
+  Call PID cisco, Data PID none
+  Window size input: 5, output: 5
+  Packet size input: 128, output: 128
+  PS: 0  PR: 0  ACK: 4  Remote PR: 0  RCNT: 4  RNR: no
+  P/D state timeouts: 0  timer (secs): 0
+  data bytes 10000/10000 packets 80/80 Resets 0/0 RNRs 0/0 REJs 0/0 INTs 0/0

@@ -218,12 +218,26 @@ class ShowUACUplinkDBSchema(MetaParser):
 
     schema = {
         "autoconfig_status": str,
+        Optional("uplink_allow_list_enforce"): {
+            "ipv4": bool,
+            "ipv6": bool,
+        },
         Optional("ipv4_uplink"): {
             "interface": str,
             "ping_pass_count": int,
             "gw_arp_pass_count": int,
         },
+        Optional("ipv4_preferred_uplink"): {
+            "interface": str,
+            "ping_pass_count": int,
+            "gw_arp_pass_count": int,
+        },
         Optional("ipv6_uplink"): {
+            "interface": str,
+            "ping_pass_count": int,
+            "gw_arp_pass_count": int,
+        },
+        Optional("ipv6_preferred_uplink"): {
             "interface": str,
             "ping_pass_count": int,
             "gw_arp_pass_count": int,
@@ -240,6 +254,7 @@ class ShowUACUplinkDBSchema(MetaParser):
                     "gw_probe": str,
                     "ping": str,
                     "rescore": int,
+                    Optional("allowed"): int,
                 },
             },
             Optional("ipv6"): {
@@ -253,6 +268,7 @@ class ShowUACUplinkDBSchema(MetaParser):
                     "gw_probe": str,
                     "ping": str,
                     "rescore": int,
+                    Optional("allowed"): int,
                 },
             },
         },
@@ -276,24 +292,33 @@ class ShowUACUplinkDB(ShowUACUplinkDBSchema):
         # Regex patterns to match the output lines
         # Uplink Autoconfig: Enable
         p0 = re.compile(r"^Uplink Autoconfig: (\w+)$")
-        # IPV4 Uplink: Vlan 91
-        p1 = re.compile(r"^IPV4 Uplink: (.+)$")
-        # IPV6 Uplink: None
-        p2 = re.compile(r"^IPV6 Uplink: (.+)$")
+        # Uplink Allow-list enforce: IPv4:No  IPv6:No
+        p1 = re.compile(r"^Uplink Allow-list enforce: IPv4:(?P<ipv4>\w+)\s+IPv6:(?P<ipv6>\w+)$")
+        # IPV4 Uplink: Vlan 91 (case insensitive)
+        p2 = re.compile(r"^ipv4 uplink: (.+)$", re.IGNORECASE)
+        # IPv4 Preferred Uplink: Vlan 1 (case insensitive)
+        p3 = re.compile(r"^ipv4 preferred uplink: (.+)$", re.IGNORECASE)
+        # IPV6 Uplink: None (case insensitive)
+        p4 = re.compile(r"^ipv6 uplink: (.+)$", re.IGNORECASE)
+        # IPv6 Preferred Uplink: Vlan 1 (case insensitive)
+        p5 = re.compile(r"^ipv6 preferred uplink: (.+)$", re.IGNORECASE)
         # Ping Pass Count: 69
-        p3 = re.compile(r"^Ping Pass Count: (\d+)$")
+        p6 = re.compile(r"^Ping Pass Count:\s*(\d+)$")
         # GW ARP Pass Count:3
-        p4 = re.compile(r"^GW ARP Pass Count:(\d+)$")
+        p7 = re.compile(r"^GW ARP Pass Count:\s*(\d+)$")
         # IfName      Score  State  IPAddress
-        p5 = re.compile(
+        p8 = re.compile(
             r"^IfName\s+Score\s+State\s+IPAddress"
         )
         # IfName      Score  State  IPv6Address
-        p6 = re.compile(
+        p9 = re.compile(
             r"^IfName\s+Score\s+State\s+IPv6Address"
         )
         # Vlan91 3 11 91.91.91.176 255.255.255.0 0 0 FCCF0DC 10347E28 0
-        p7 = re.compile(
+        p10 = re.compile(
+            r"^(\S+)\s+(\d+)\s+(\d+)\s+(\S+)\s+(\S+)\s+(\d+)\s+(\d+)\s+(\S+)\s+(\S+)\s+(\d+)\s+(\d+)$"
+        )
+        p11 = re.compile(
             r"^(\S+)\s+(\d+)\s+(\d+)\s+(\S+)\s+(\S+)\s+(\d+)\s+(\d+)\s+(\S+)\s+(\S+)\s+(\d+)$"
         )
 
@@ -311,88 +336,130 @@ class ShowUACUplinkDB(ShowUACUplinkDBSchema):
                 parsed_dict["autoconfig_status"] = m.group(1)
                 continue
 
-            # IPV4 Uplink: Vlan 91
+            # Uplink Allow-list enforce: IPv4:No  IPv6:No
             m = p1.match(line)
             if m:
+                parsed_dict["uplink_allow_list_enforce"] = {
+                    "ipv4": True if m.group('ipv4') == 'Yes' else False,
+                    "ipv6": True if m.group('ipv6') == 'Yes' else False,
+                }
+                continue
+
+            # IPv4 Preferred Uplink: Vlan 1 (check this first)
+            m = p3.match(line)
+            if m:
+                parsed_dict["ipv4_preferred_uplink"] = {
+                    "interface": Common.convert_intf_name(m.group(1)),
+                    "ping_pass_count": 0,
+                    "gw_arp_pass_count": 0,
+                }
+                current_section = "ipv4_preferred_uplink"
+                continue
+
+            # IPV4 Uplink: Vlan 91 (check after preferred)
+            m = p2.match(line)
+            if m and "Preferred" not in line:
                 parsed_dict["ipv4_uplink"] = {
-                    "interface": Common.convert_intf_name(m.group(1))
+                    "interface": Common.convert_intf_name(m.group(1)),
+                    "ping_pass_count": 0,
+                    "gw_arp_pass_count": 0,
                 }
                 current_section = "ipv4_uplink"
                 continue
 
-            # IPV6 Uplink: None
-            m = p2.match(line)
+            # IPv6 Preferred Uplink: Vlan 1 (check this first)
+            m = p5.match(line)
             if m:
+                parsed_dict["ipv6_preferred_uplink"] = {
+                    "interface": Common.convert_intf_name(m.group(1)),
+                    "ping_pass_count": 0,
+                    "gw_arp_pass_count": 0,
+                }
+                current_section = "ipv6_preferred_uplink"
+                continue
+
+            # IPV6 Uplink: None (check after preferred)
+            m = p4.match(line)
+            if m and "Preferred" not in line:
                 parsed_dict["ipv6_uplink"] = {
-                    "interface": Common.convert_intf_name(m.group(1))
+                    "interface": Common.convert_intf_name(m.group(1)),
+                    "ping_pass_count": 0,
+                    "gw_arp_pass_count": 0,
                 }
                 current_section = "ipv6_uplink"
                 continue
 
-            if current_section in ["ipv4_uplink", "ipv6_uplink"]:
-                # Ping Pass Count: 69
-                m = p3.match(line)
-                if m:
+            # Ping Pass Count: 69
+            m = p6.match(line)
+            if m:
+                if current_section in ["ipv4_uplink", "ipv6_uplink", "ipv4_preferred_uplink", "ipv6_preferred_uplink"]:
                     parsed_dict[current_section]["ping_pass_count"] = int(
                         m.group(1)
                     )
-                    continue
+                continue
 
-                # GW ARP Pass Count:3
-                m = p4.match(line)
-                if m:
+            # GW ARP Pass Count:3
+            m = p7.match(line)
+            if m:
+                if current_section in ["ipv4_uplink", "ipv6_uplink", "ipv4_preferred_uplink", "ipv6_preferred_uplink"]:
                     parsed_dict[current_section]["gw_arp_pass_count"] = int(
                         m.group(1)
                     )
-                    continue
+                continue
 
             # IfName      Score  State  IPAddress
-            m = p5.match(line)
+            m = p8.match(line)
             if m:
                 current_section = "ipv4_interfaces"
                 continue
 
             # IfName      Score  State  IPv6Address
-            m = p6.match(line)
+            m = p9.match(line)
             if m:
                 current_section = "ipv6_interfaces"
                 continue
 
             if current_section == "ipv4_interfaces" and line.strip():
                 # Vlan91 3 11 91.91.91.176 255.255.255.0 0 0 FCCF0DC 10347E28 0
-                m = p7.match(line)
+                m = p10.match(line) or p11.match(line)
                 if m:
-                    interface_name = Common.convert_intf_name(m.group(1))
+                    groups = m.groups()
+                    interface_name = Common.convert_intf_name(groups[0])
                     ipv4_interfaces[interface_name] = {
-                        "score": int(m.group(2)),
-                        "state": int(m.group(3)),
-                        "ip_address": m.group(4),
-                        "subnet_mask": m.group(5),
-                        "arp_fail": int(m.group(6)),
-                        "ping_fail": int(m.group(7)),
-                        "gw_probe": m.group(8),
-                        "ping": m.group(9),
-                        "rescore": int(m.group(10)),
+                        "score": int(groups[1]),
+                        "state": int(groups[2]),
+                        "ip_address": groups[3],
+                        "subnet_mask": groups[4],
+                        "arp_fail": int(groups[5]),
+                        "ping_fail": int(groups[6]),
+                        "gw_probe": groups[7],
+                        "ping": groups[8],
+                        "rescore": int(groups[9]),
                     }
+                    if len(groups) > 10:
+                        ipv4_interfaces[interface_name]['allowed'] = int(groups[10])
                     continue
 
             # IPv6 interface entries
             if current_section == "ipv6_interfaces" and line.strip():
                 # Vlan91 3 11 91.91.91.176 255.255.255.0 0 0 FCCF0DC 10347E28 0
-                m = p7.match(line)
+                m = p10.match(line) or p11.match(line)
                 if m:
-                    interface_name = Common.convert_intf_name(m.group(1))
+                    groups = m.groups()
+                    interface_name = Common.convert_intf_name(groups[0])
                     ipv6_interfaces[interface_name] = {
-                        "score": int(m.group(2)),
-                        "state": int(m.group(3)),
-                        "ipv6_address": m.group(4),
-                        "prefix": m.group(5),
-                        "arp_fail": int(m.group(6)),
-                        "ping_fail": int(m.group(7)),
-                        "gw_probe": m.group(8),
-                        "ping": m.group(9),
-                        "rescore": int(m.group(10)),
+                        "score": int(groups[1]),
+                        "state": int(groups[2]),
+                        "ipv6_address": groups[3],
+                        "prefix": groups[4],
+                        "arp_fail": int(groups[5]),
+                        "ping_fail": int(groups[6]),
+                        "gw_probe": groups[7],
+                        "ping": groups[8],
+                        "rescore": int(groups[9]),
                     }
+                    if len(groups) > 10:
+                        ipv6_interfaces[interface_name]['allowed'] = int(groups[10])
                     continue
 
         # Add interfaces to parsed_dict if they exist

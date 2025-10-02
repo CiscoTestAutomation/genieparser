@@ -1429,7 +1429,7 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
         # 0.0.0.0, from 0.0.0.0, 00:00:00 ago, via GigabitEthernet0/0/0
         # * 10.101.146.10, from 10.101.146.10, 2d07h ago
         # * 10.255.207.129
-        p5 = re.compile(r'^(?:\* +)?(?P<nexthop>[\w\.]+)(?:, +from +(?P<from>[\w\.]+)?, +'
+        p5 = re.compile(r'^(?:\* +)?(?P<nexthop>[\w\.]+)(\s*\(\w+\))?(?:, +from +(?P<from>[\w\.]+)?, +'
                         r'(?P<age>[\w\.\:]+) +ago(?:, +via +(?P<interface>\S+))?(?:, +'
                         r'(?P<rib_labels>prefer-non-rib-labels))?(:?, +(?P<merge_labels>merge-labels))?)?$')
 
@@ -1447,7 +1447,8 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
 
         # FE80::EEBD:1DFF:FE09:56C2, Vlan202
         # FE80::EEBD:1DFF:FE09:56C2
-        p8 = re.compile(r'^(?P<fwd_ip>[\w\:]+)(, +(?P<fwd_intf>[\w\.\/\-]+)'
+        # 172.16.254.5%default, Vlan901%default
+        p8 = re.compile(r'^(?P<fwd_ip>[\w\:\.]+)([\s%]*default[\(\w\)]*)?(, +(?P<fwd_intf>[\w\.\/\-]+)([\s%]*default[\(\w\)]*)?'
                         r'( indirectly connected)?)?$')
 
         # receive via Loopback4

@@ -516,6 +516,10 @@ expected_output = {
                                 "authentication_type": "MD5",
                                 "configured_priority": 110,
                                 "group_number": 31,
+                                "last_state_change": "1y47w",
+                                "statistics": {
+                                    "num_state_changes": 1
+                                },
                                 "hsrp_router_state": "active",
                                 "local_virtual_mac_address": "0000.0c07.ac1f",
                                 "local_virtual_mac_address_conf": "v1 default",
